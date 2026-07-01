@@ -1,9 +1,10 @@
 import { getApp, getApps, initializeApp, type FirebaseApp, type FirebaseOptions } from 'firebase/app';
 import {
-  getAuth,
   initializeAuth,
   type Auth,
 } from 'firebase/auth';
+import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getStorage, type FirebaseStorage } from 'firebase/storage';
 
 const env = process.env as Record<string, string | undefined>;
 
@@ -20,10 +21,14 @@ const isFirebaseConfigured = Object.values(firebaseConfig).every((value) => Bool
 
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
+let db: Firestore | null = null;
+let storage: FirebaseStorage | null = null;
 
 if (isFirebaseConfigured) {
   app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
   auth = initializeAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
 }
 
 export function getFirebaseAuth(): Auth | null {
@@ -34,6 +39,15 @@ export function getFirebaseApp(): FirebaseApp | null {
   return app;
 }
 
-export function isFirebaseReady(): boolean {
-  return Boolean(app && auth);
+export function getFirestoreDb(): Firestore | null {
+  return db;
 }
+
+export function getFirebaseStorage(): FirebaseStorage | null {
+  return storage;
+}
+
+export function isFirebaseReady(): boolean {
+  return Boolean(app && auth && db && storage);
+}
+

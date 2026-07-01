@@ -6,7 +6,8 @@ import {
   onAuthStateChanged,
   type User,
 } from 'firebase/auth';
-import { getFirebaseAuth, isFirebaseReady } from '@/config/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirebaseAuth, getFirestoreDb, isFirebaseReady } from '@/config/firebase';
 import {
   AuthError,
   type AuthUser,
@@ -14,6 +15,8 @@ import {
   type SignInPayload,
   type SignUpPayload,
 } from '@/features/auth/types';
+import { UserModel } from '@/features/player-profile/models/UserModel';
+import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
 
 function toAuthUser(user: User | null): AuthUser | null {
   if (!user) {
@@ -59,29 +62,59 @@ function mapFirebaseError(error: unknown): AuthError {
 
 export function initializeAuthListener(callback: (user: AuthUser | null) => void): () => void {
   const auth = getFirebaseAuth();
-  if (!auth || !isFirebaseReady()) {
+  const db = getFirestoreDb();
+  if (!auth || !db || !isFirebaseReady()) {
     callback(null);
     return () => undefined;
   }
 
-  return onAuthStateChanged(auth, (user) => {
-    callback(toAuthUser(user));
+  return onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      callback(null);
+      return;
+    }
+
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        const userModel = UserModel.fromFirestore(user.uid, userData);
+        callback(userModel.toAuthUser());
+      } else {
+        callback(toAuthUser(user));
+      }
+    } catch (error) {
+      console.error('Error fetching user doc in auth listener:', error);
+      callback(toAuthUser(user));
+    }
   });
 }
 
 export async function signInWithFirebase(payload: SignInPayload): Promise<AuthUser> {
   const auth = getFirebaseAuth();
-  if (!auth || !isFirebaseReady()) {
+  const db = getFirestoreDb();
+  if (!auth || !db || !isFirebaseReady()) {
     throw new AuthError('Firebase authentication is not configured.', 'invalid-credentials');
   }
 
   try {
     const credential = await signInWithEmailAndPassword(auth, payload.email, payload.password);
-    const user = toAuthUser(credential.user);
-    if (!user) {
+    const baseUser = toAuthUser(credential.user);
+    if (!baseUser) {
       throw new AuthError('Unable to sign in.', 'invalid-credentials');
     }
-    return user;
+
+    const userDocRef = doc(db, 'users', credential.user.uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+      const userModel = UserModel.fromFirestore(credential.user.uid, userData);
+      return userModel.toAuthUser();
+    }
+    return baseUser;
   } catch (error) {
     throw mapFirebaseError(error);
   }
@@ -89,7 +122,8 @@ export async function signInWithFirebase(payload: SignInPayload): Promise<AuthUs
 
 export async function signUpWithFirebase(payload: SignUpPayload): Promise<AuthUser> {
   const auth = getFirebaseAuth();
-  if (!auth || !isFirebaseReady()) {
+  const db = getFirestoreDb();
+  if (!auth || !db || !isFirebaseReady()) {
     throw new AuthError('Firebase authentication is not configured.', 'invalid-credentials');
   }
 
@@ -99,7 +133,24 @@ export async function signUpWithFirebase(payload: SignUpPayload): Promise<AuthUs
     if (!user) {
       throw new AuthError('Unable to create the account.', 'invalid-credentials');
     }
-    return user;
+
+    // Save user info to users collection in Firestore
+    await setDoc(doc(db, 'users', user.id), {
+      name: payload.fullName || user.name,
+      email: user.email,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    // Also initialize their profile with the default profile
+    const defaultProfile = ProfileModel.getDefaultProfile(user.id, user.email);
+    defaultProfile.fullName = payload.fullName || user.name;
+    await setDoc(doc(db, 'profiles', user.id), ProfileModel.toFirestore(defaultProfile));
+
+    return {
+      ...user,
+      name: payload.fullName || user.name,
+    };
   } catch (error) {
     throw mapFirebaseError(error);
   }
@@ -126,3 +177,4 @@ export async function signOutFromFirebase(): Promise<void> {
 
   await firebaseSignOut(auth);
 }
+

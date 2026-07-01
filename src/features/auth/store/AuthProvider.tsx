@@ -7,6 +7,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
+import { getFirestoreDb } from '@/config/firebase';
 import { useAuthSession } from '@/features/auth/hooks/useAuthSession';
 import {
   resetPasswordWithFirebase,
@@ -145,6 +147,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const selectRole = useCallback((role: AuthRole) => {
+    const userId = state.user?.id;
+    if (userId) {
+      const db = getFirestoreDb();
+      if (db) {
+        void setDoc(doc(db, 'users', userId), { role, updatedAt: new Date().toISOString() }, { merge: true })
+          .catch((err) => console.error('Error saving role to Firestore:', err));
+      }
+    }
+
     setState((current) => ({
       ...current,
       role,
@@ -152,7 +163,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       user: current.user ? { ...current.user, role } : current.user,
       successMessage: `You’re ready to explore ScoutX as a ${role}.`,
     }));
-  }, []);
+  }, [state.user?.id]);
 
   const signOut = useCallback(async () => {
     setState((current) => ({ ...current, isSubmitting: true }));
