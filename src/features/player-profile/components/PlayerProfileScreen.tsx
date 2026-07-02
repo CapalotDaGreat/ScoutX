@@ -9,6 +9,7 @@ import { ProfileDetails } from '@/features/player-profile/components/ProfileDeta
 import { ProfileHero } from '@/features/player-profile/components/ProfileHero';
 import { ProfileStatsGrid } from '@/features/player-profile/components/ProfileStatsGrid';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { PlayerStatisticsSection } from '@/features/player-statistics';
 
 export type PlayerProfileScreenProps = {
   profile?: PlayerProfile | null;
@@ -16,6 +17,7 @@ export type PlayerProfileScreenProps = {
   error?: string | null;
   onRetry?: () => void;
   onEditPress?: () => void;
+  onLogMatchPress?: () => void;
 };
 
 export function PlayerProfileScreen({
@@ -24,6 +26,7 @@ export function PlayerProfileScreen({
   error: controlledError,
   onRetry,
   onEditPress,
+  onLogMatchPress,
 }: PlayerProfileScreenProps) {
   const { profile, isLoading, error } = usePlayerProfile();
   const resolvedProfile = controlledProfile ?? profile;
@@ -69,6 +72,10 @@ export function PlayerProfileScreen({
       <View className="gap-4">
         <ProfileHero profile={resolvedProfile} onEditPress={onEditPress} />
         <ProfileStatsGrid stats={resolvedProfile.stats} />
+        <PlayerStatisticsSection
+          matches={resolvedProfile.statisticsMatches}
+          onLogMatchPress={onLogMatchPress}
+        />
         <ProfileDetails profile={resolvedProfile} />
         <PerformanceSummary items={resolvedProfile.performanceSummary} />
         <Button variant="secondary" onPress={onEditPress}>

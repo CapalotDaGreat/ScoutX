@@ -7,4 +7,3 @@ export { ProfileField, type ProfileFieldProps } from './components/ProfileField'
 export { usePlayerProfile } from './hooks/usePlayerProfile';
 export { EditProfileModal, type EditProfileModalProps } from './components/EditProfileModal';
 export type { PlayerProfile, PlayerProfileStat, PlayerProfilePerformanceItem } from './types';
-

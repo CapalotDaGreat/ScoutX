@@ -1,3 +1,5 @@
+import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+
 export type PlayerProfileStat = {
   label: string;
   value: string;
@@ -28,4 +30,5 @@ export type PlayerProfile = {
   avatarUrl: string;
   stats: PlayerProfileStat[];
   performanceSummary: PlayerProfilePerformanceItem[];
+  statisticsMatches?: PlayerMatchStatistics[];
 };

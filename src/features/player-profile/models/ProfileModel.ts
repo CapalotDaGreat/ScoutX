@@ -1,4 +1,49 @@
 import { type PlayerProfile, type PlayerProfileStat, type PlayerProfilePerformanceItem } from '@/features/player-profile/types';
+import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import { serializeMatchStatistics } from '@/features/player-statistics/models/MatchLogModel';
+import { mockPlayerStatisticsMatches } from '@/features/player-statistics/services/mockPlayerStatisticsService';
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+export function parsePlayerMatchStatistics(value: unknown): PlayerMatchStatistics[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const matches: PlayerMatchStatistics[] = [];
+
+  for (const item of value) {
+    const match = asRecord(item);
+    if (!match) {
+      continue;
+    }
+
+    matches.push({
+      id: typeof match.id === 'string' ? match.id : `match-${matches.length + 1}`,
+      date: typeof match.date === 'string' ? match.date : new Date().toISOString(),
+      opponent: typeof match.opponent === 'string' ? match.opponent : 'Unknown opponent',
+      competition: typeof match.competition === 'string' ? match.competition : 'Match',
+      result: typeof match.result === 'string' ? match.result : 'N/A',
+      minutes: typeof match.minutes === 'number' ? match.minutes : 0,
+      goals: typeof match.goals === 'number' ? match.goals : 0,
+      assists: typeof match.assists === 'number' ? match.assists : 0,
+      cleanSheet: typeof match.cleanSheet === 'boolean' ? match.cleanSheet : false,
+      passAccuracy: typeof match.passAccuracy === 'number' ? match.passAccuracy : 0,
+      shots: typeof match.shots === 'number' ? match.shots : 0,
+      tackles: typeof match.tackles === 'number' ? match.tackles : 0,
+      yellowCards: typeof match.yellowCards === 'number' ? match.yellowCards : 0,
+      redCards: typeof match.redCards === 'number' ? match.redCards : 0,
+      matchRating: typeof match.matchRating === 'number' ? match.matchRating : 0,
+      notes: typeof match.notes === 'string' ? match.notes : '',
+    });
+  }
+
+  return matches;
+}
 
 export class ProfileModel {
   public static getDefaultProfile(userId: string, email: string): PlayerProfile {
@@ -25,6 +70,7 @@ export class ProfileModel {
         { label: 'Shots on Target', value: 6, max: 10, hint: 'Clinical finishing' },
         { label: 'Pressing Intensity', value: 8, max: 10, hint: 'Consistent defensive work' },
       ],
+      statisticsMatches: mockPlayerStatisticsMatches,
     };
   }
 
@@ -32,11 +78,12 @@ export class ProfileModel {
     const stats: PlayerProfileStat[] = [];
     if (Array.isArray(data.stats)) {
       for (const s of data.stats) {
-        if (s && typeof s === 'object') {
-          const trend = s.trend && typeof s.trend === 'object' ? s.trend : {};
+        const stat = asRecord(s);
+        if (stat) {
+          const trend = asRecord(stat.trend) ?? {};
           stats.push({
-            label: typeof s.label === 'string' ? s.label : '',
-            value: typeof s.value === 'string' ? s.value : '',
+            label: typeof stat.label === 'string' ? stat.label : '',
+            value: typeof stat.value === 'string' ? stat.value : '',
             trend: {
               value: typeof trend.value === 'string' ? trend.value : '',
               direction:
@@ -52,16 +99,19 @@ export class ProfileModel {
     const performanceSummary: PlayerProfilePerformanceItem[] = [];
     if (Array.isArray(data.performanceSummary)) {
       for (const p of data.performanceSummary) {
-        if (p && typeof p === 'object') {
+        const performanceItem = asRecord(p);
+        if (performanceItem) {
           performanceSummary.push({
-            label: typeof p.label === 'string' ? p.label : '',
-            value: typeof p.value === 'number' ? p.value : 0,
-            max: typeof p.max === 'number' ? p.max : 10,
-            hint: typeof p.hint === 'string' ? p.hint : '',
+            label: typeof performanceItem.label === 'string' ? performanceItem.label : '',
+            value: typeof performanceItem.value === 'number' ? performanceItem.value : 0,
+            max: typeof performanceItem.max === 'number' ? performanceItem.max : 10,
+            hint: typeof performanceItem.hint === 'string' ? performanceItem.hint : '',
           });
         }
       }
     }
+
+    const statisticsMatches = parsePlayerMatchStatistics(data.statisticsMatches);
 
     return {
       id,
@@ -86,6 +136,7 @@ export class ProfileModel {
         { label: 'Shots on Target', value: 0, max: 10, hint: 'Finishing level' },
         { label: 'Pressing Intensity', value: 0, max: 10, hint: 'Defensive level' },
       ],
+      statisticsMatches: statisticsMatches.length > 0 ? statisticsMatches : mockPlayerStatisticsMatches,
     };
   }
 
@@ -119,6 +170,9 @@ export class ProfileModel {
         max: p.max,
         hint: p.hint,
       }));
+    }
+    if (profile.statisticsMatches !== undefined) {
+      data.statisticsMatches = profile.statisticsMatches.map(serializeMatchStatistics);
     }
 
     return data;

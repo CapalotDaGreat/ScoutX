@@ -1,8 +1,21 @@
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, runTransaction, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestoreDb, getFirebaseStorage } from '@/config/firebase';
-import { type PlayerProfile } from '@/features/player-profile/types';
-import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
+import { type PlayerProfile, type PlayerProfileStat } from '@/features/player-profile/types';
+import {
+  parsePlayerMatchStatistics,
+  ProfileModel,
+} from '@/features/player-profile/models/ProfileModel';
+import {
+  createMatchStatistics,
+  serializeMatchStatistics,
+} from '@/features/player-statistics/models/MatchLogModel';
+import { calculatePlayerStatistics } from '@/features/player-statistics/services/statisticsCalculator';
+import {
+  type MatchLogPayload,
+  type PlayerMatchStatistics,
+  type StatisticMetricKey,
+} from '@/features/player-statistics/types';
 
 export class PlayerProfileRepository {
   private static instance: PlayerProfileRepository | null = null;
@@ -91,6 +104,42 @@ export class PlayerProfileRepository {
     }
   }
 
+  public async appendMatch(
+    userId: string,
+    payload: MatchLogPayload,
+  ): Promise<PlayerMatchStatistics> {
+    const db = getFirestoreDb();
+    if (!db) {
+      throw new Error('Firestore is not initialized.');
+    }
+
+    const docRef = doc(db, 'profiles', userId);
+    const match = createMatchStatistics(payload, `match-${Date.now()}`);
+
+    try {
+      await runTransaction(db, async (transaction) => {
+        const snapshot = await transaction.get(docRef);
+        const currentData = snapshot.exists() ? snapshot.data() : {};
+        const currentMatches = parsePlayerMatchStatistics(currentData.statisticsMatches);
+        const nextMatches = [...currentMatches, match];
+
+        transaction.set(
+          docRef,
+          {
+            statisticsMatches: nextMatches.map(serializeMatchStatistics),
+            stats: this.createProfileStats(nextMatches),
+          },
+          { merge: true },
+        );
+      });
+
+      return match;
+    } catch (error) {
+      console.error('Error appending player match:', error);
+      throw error;
+    }
+  }
+
   public async uploadImage(userId: string, fileUri: string, type: 'avatar' | 'cover'): Promise<string> {
     const storage = getFirebaseStorage();
     if (!storage) {
@@ -112,5 +161,23 @@ export class PlayerProfileRepository {
       console.error('Error uploading image to storage:', error);
       throw error;
     }
+  }
+
+  private createProfileStats(matches: PlayerMatchStatistics[]): PlayerProfileStat[] {
+    const overview = calculatePlayerStatistics(matches);
+    const displayKeys: StatisticMetricKey[] = ['goals', 'assists', 'passAccuracy', 'shots'];
+
+    return displayKeys.map((key) => {
+      const summary = overview.totals.find((item) => item.key === key);
+
+      return {
+        label: summary?.label ?? key,
+        value: summary?.formattedValue ?? '0',
+        trend: {
+          value: summary?.trend.value ?? 'No change',
+          direction: summary?.trend.direction ?? 'neutral',
+        },
+      };
+    });
   }
 }

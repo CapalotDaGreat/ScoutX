@@ -1,4 +1,5 @@
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { mockPlayerStatisticsMatches } from '@/features/player-statistics';
 
 const mockProfile: PlayerProfile = {
   id: 'player-01',
@@ -26,6 +27,7 @@ const mockProfile: PlayerProfile = {
     { label: 'Shots on Target', value: 6, max: 10, hint: 'Clinical finishing' },
     { label: 'Pressing Intensity', value: 8, max: 10, hint: 'Consistent defensive work' },
   ],
+  statisticsMatches: mockPlayerStatisticsMatches,
 };
 
 export async function getMockPlayerProfile(): Promise<PlayerProfile> {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { PlayerProfileRepository } from '@/features/player-profile/repositories/PlayerProfileRepository';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { type MatchLogPayload } from '@/features/player-statistics';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 
 export function usePlayerProfile() {
@@ -99,6 +100,28 @@ export function usePlayerProfile() {
     }
   }, [user?.id]);
 
+  const saveMatch = useCallback(
+    async (payload: MatchLogPayload) => {
+      if (!user?.id) {
+        throw new Error('User is not authenticated.');
+      }
+
+      setIsSaving(true);
+      setError(null);
+      try {
+        const repository = PlayerProfileRepository.getInstance();
+        return await repository.appendMatch(user.id, payload);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to save match.';
+        setError(message);
+        throw err;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [user?.id],
+  );
+
   return useMemo(
     () => ({
       profile,
@@ -106,9 +129,10 @@ export function usePlayerProfile() {
       isSaving,
       error,
       saveProfile,
+      saveMatch,
       uploadImage,
       refreshProfile,
     }),
-    [error, isLoading, isSaving, profile, saveProfile, uploadImage, refreshProfile]
+    [error, isLoading, isSaving, profile, saveMatch, saveProfile, uploadImage, refreshProfile]
   );
 }
