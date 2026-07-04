@@ -53,3 +53,6 @@ export {
 // Forms
 export { FormField, type FormFieldProps } from './forms';
 export { FormActions, type FormActionsProps } from './forms';
+
+// Lists
+export { FlashListView, type FlashListViewProps } from './lists/FlashListView';

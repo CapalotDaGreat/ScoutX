@@ -1,0 +1,36 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "discoverablePlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "discoverablePlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "overallRating", "order": "DESCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "discoverablePlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "nationality", "order": "ASCENDING" },
+        { "fieldPath": "overallRating", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "discoverablePlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "club", "order": "ASCENDING" },
+        { "fieldPath": "potentialRating", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

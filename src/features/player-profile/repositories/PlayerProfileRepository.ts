@@ -10,11 +10,10 @@ import {
   createMatchStatistics,
   serializeMatchStatistics,
 } from '@/features/player-statistics/models/MatchLogModel';
-import { calculatePlayerStatistics } from '@/features/player-statistics/services/statisticsCalculator';
+import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import {
   type MatchLogPayload,
   type PlayerMatchStatistics,
-  type StatisticMetricKey,
 } from '@/features/player-statistics/types';
 
 export class PlayerProfileRepository {
@@ -164,20 +163,6 @@ export class PlayerProfileRepository {
   }
 
   private createProfileStats(matches: PlayerMatchStatistics[]): PlayerProfileStat[] {
-    const overview = calculatePlayerStatistics(matches);
-    const displayKeys: StatisticMetricKey[] = ['goals', 'assists', 'passAccuracy', 'shots'];
-
-    return displayKeys.map((key) => {
-      const summary = overview.totals.find((item) => item.key === key);
-
-      return {
-        label: summary?.label ?? key,
-        value: summary?.formattedValue ?? '0',
-        trend: {
-          value: summary?.trend.value ?? 'No change',
-          direction: summary?.trend.direction ?? 'neutral',
-        },
-      };
-    });
+    return mapMatchesToProfileStats(matches);
   }
 }

@@ -1,6 +1,6 @@
 import { getApp, getApps, initializeApp, type FirebaseApp, type FirebaseOptions } from 'firebase/app';
 import {
-  initializeAuth,
+  getAuth,
   type Auth,
 } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
@@ -26,7 +26,7 @@ let storage: FirebaseStorage | null = null;
 
 if (isFirebaseConfigured) {
   app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-  auth = initializeAuth(app);
+  auth = getAuth(app);
   db = getFirestore(app);
   storage = getStorage(app);
 }

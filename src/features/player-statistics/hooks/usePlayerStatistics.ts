@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { calculatePlayerStatistics } from '@/features/player-statistics/services/statisticsCalculator';
 import { getMockPlayerStatistics } from '@/features/player-statistics/services/mockPlayerStatisticsService';
+import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import {
   type PlayerMatchStatistics,
   type PlayerStatisticsOverview,
 } from '@/features/player-statistics/types';
+import { type PlayerProfileStat } from '@/features/player-profile/types';
 
 export type UsePlayerStatisticsOptions = {
   matches?: PlayerMatchStatistics[];
@@ -52,13 +54,19 @@ export function usePlayerStatistics({ matches }: UsePlayerStatisticsOptions = {}
     [loadedMatches],
   );
 
+  const profileStats = useMemo<PlayerProfileStat[]>(
+    () => mapMatchesToProfileStats(loadedMatches),
+    [loadedMatches],
+  );
+
   return useMemo(
     () => ({
       overview,
       matches: loadedMatches,
+      profileStats,
       isLoading,
       error,
     }),
-    [error, isLoading, loadedMatches, overview],
+    [error, isLoading, loadedMatches, overview, profileStats],
   );
 }

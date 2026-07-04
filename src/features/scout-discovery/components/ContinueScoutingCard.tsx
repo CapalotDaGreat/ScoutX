@@ -1,0 +1,59 @@
+import { Image, Pressable, View } from 'react-native';
+import { Card } from '@/components/primitives/Card';
+import { Text } from '@/components/primitives/Text';
+import { Heading } from '@/components/primitives/Heading';
+import { Button } from '@/components/primitives/Button';
+import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
+import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { ArrowRight } from 'lucide-react-native';
+import { useTheme } from '@/theme';
+
+export type ContinueScoutingCardProps = {
+  player: DiscoverablePlayer;
+  onPress: (player: DiscoverablePlayer) => void;
+};
+
+export function ContinueScoutingCard({ player, onPress }: ContinueScoutingCardProps) {
+  const { colors } = useTheme();
+
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Continue scouting ${player.fullName}`}
+      onPress={() => onPress(player)}
+    >
+      <Card variant="elevated" padding="lg" className="overflow-hidden">
+        <View className="absolute right-0 top-0 h-24 w-24 rounded-full bg-accent/10" />
+        <View className="gap-4">
+          <View>
+            <Text variant="overline" color="secondary" className="uppercase">
+              Continue Scouting
+            </Text>
+            <Heading level={3} className="mt-1">
+              Pick up where you left off
+            </Heading>
+          </View>
+
+          <View className="flex-row items-center gap-3">
+            <Image source={{ uri: player.avatarUrl }} className="h-14 w-14 rounded-full" />
+            <View className="flex-1 gap-1">
+              <Text weight="semibold">{player.fullName}</Text>
+              <Text variant="body-sm" color="secondary">
+                {player.club} · OVR {player.overallRating} · POT {player.potentialRating}
+              </Text>
+              <PlayerFormStrip form={player.form} size="md" />
+            </View>
+          </View>
+
+          <Button
+            variant="accent"
+            rightIcon={<ArrowRight size={18} color={colors.accentForeground} />}
+            onPress={() => onPress(player)}
+          >
+            Open Scouting Report
+          </Button>
+        </View>
+      </Card>
+    </Pressable>
+  );
+}

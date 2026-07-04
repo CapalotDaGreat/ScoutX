@@ -72,6 +72,8 @@ export type StatisticSummaryItem = {
   formattedValue: string;
   average: number;
   formattedAverage: string;
+  averageLabel: string;
+  displaySubtitle: string;
   trend: StatisticTrend;
 };
 

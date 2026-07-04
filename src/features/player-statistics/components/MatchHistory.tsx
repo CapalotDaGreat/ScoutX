@@ -6,6 +6,7 @@ import { type MatchHistoryItem } from '@/features/player-statistics/types';
 
 export type MatchHistoryProps = {
   items: MatchHistoryItem[];
+  maxItems?: number;
 };
 
 function formatMatchDate(date: string): string {
@@ -15,7 +16,8 @@ function formatMatchDate(date: string): string {
   }).format(new Date(date));
 }
 
-export function MatchHistory({ items }: MatchHistoryProps) {
+export function MatchHistory({ items, maxItems }: MatchHistoryProps) {
+  const visibleItems = maxItems ? items.slice(0, maxItems) : items;
   return (
     <Card variant="default" padding="lg" className="gap-4">
       <View>
@@ -26,7 +28,7 @@ export function MatchHistory({ items }: MatchHistoryProps) {
       </View>
 
       <View className="gap-3">
-        {items.slice(0, 6).map((item) => (
+        {visibleItems.map((item) => (
           <View
             key={item.id}
             className="rounded-lg border border-border bg-background-secondary p-4 dark:border-neutral-800 dark:bg-neutral-950"

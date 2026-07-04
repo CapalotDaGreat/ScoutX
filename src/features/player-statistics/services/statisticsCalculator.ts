@@ -1,9 +1,8 @@
 import {
   formatStatisticValue,
-  getMatchMetricValue,
-  statisticMetricDefinitions,
+  getMetricModel,
   statisticMetricKeys,
-} from '@/features/player-statistics/models/StatisticMetricModel';
+} from '@/features/player-statistics/models/statisticMetricRegistry';
 import {
   type MatchHistoryItem,
   type PlayerMatchStatistics,
@@ -16,41 +15,17 @@ import {
   type StatisticTrendDirection,
 } from '@/features/player-statistics/types';
 
-const defaultProgressMetrics: StatisticMetricKey[] = ['goals', 'assists', 'passAccuracy', 'tackles'];
+const defaultProgressMetrics: StatisticMetricKey[] = [
+  'goals',
+  'assists',
+  'passAccuracy',
+  'tackles',
+];
 
 function sortMatchesByDate(matches: PlayerMatchStatistics[]): PlayerMatchStatistics[] {
   return [...matches].sort(
     (first, second) => new Date(first.date).getTime() - new Date(second.date).getTime(),
   );
-}
-
-function getTotal(matches: PlayerMatchStatistics[], key: StatisticMetricKey): number {
-  if (key === 'passAccuracy') {
-    const playedMatches = matches.filter((match) => match.minutes > 0);
-    if (playedMatches.length === 0) {
-      return 0;
-    }
-
-    const totalAccuracy = playedMatches.reduce(
-      (sum, match) => sum + getMatchMetricValue(match, key),
-      0,
-    );
-    return totalAccuracy / playedMatches.length;
-  }
-
-  return matches.reduce((sum, match) => sum + getMatchMetricValue(match, key), 0);
-}
-
-function getAverage(matches: PlayerMatchStatistics[], key: StatisticMetricKey): number {
-  if (matches.length === 0) {
-    return 0;
-  }
-
-  if (key === 'passAccuracy') {
-    return getTotal(matches, key);
-  }
-
-  return getTotal(matches, key) / matches.length;
 }
 
 function createTrendLabel(key: StatisticMetricKey, delta: number): string {
@@ -83,11 +58,12 @@ function calculateTrend(matches: PlayerMatchStatistics[], key: StatisticMetricKe
     };
   }
 
+  const metric = getMetricModel(key);
   const midpoint = Math.ceil(matches.length / 2);
   const previousMatches = matches.slice(0, midpoint);
   const recentMatches = matches.slice(midpoint);
-  const previousAverage = getAverage(previousMatches, key);
-  const recentAverage = getAverage(recentMatches, key);
+  const previousAverage = metric.getAverage(previousMatches);
+  const recentAverage = metric.getAverage(recentMatches);
   const delta = recentAverage - previousAverage;
 
   return {
@@ -101,18 +77,20 @@ function createSummaryItem(
   matches: PlayerMatchStatistics[],
   key: StatisticMetricKey,
 ): StatisticSummaryItem {
-  const definition = statisticMetricDefinitions[key];
-  const total = getTotal(matches, key);
-  const average = getAverage(matches, key);
+  const metric = getMetricModel(key);
+  const total = metric.getTotal(matches);
+  const average = metric.getAverage(matches);
 
   return {
     key,
-    label: definition.label,
+    label: metric.definition.label,
     value: total,
-    formattedValue: formatStatisticValue(key, total),
+    formattedValue: metric.formatValue(total),
     average,
-    formattedAverage: formatStatisticValue(key, average),
+    formattedAverage: metric.formatValue(average),
     trend: calculateTrend(matches, key),
+    averageLabel: metric.getAverageLabel(),
+    displaySubtitle: metric.getDisplaySubtitle(average),
   };
 }
 
@@ -120,14 +98,14 @@ function createRadarPoint(
   matches: PlayerMatchStatistics[],
   key: StatisticMetricKey,
 ): RadarChartPoint {
-  const definition = statisticMetricDefinitions[key];
-  const value = getTotal(matches, key);
+  const metric = getMetricModel(key);
+  const value = metric.getTotal(matches);
 
   return {
     key,
-    label: definition.shortLabel,
+    label: metric.definition.shortLabel,
     value,
-    normalizedValue: Math.min(value / definition.maxRadarValue, 1),
+    normalizedValue: metric.normalizeForRadar(value),
   };
 }
 
@@ -135,19 +113,19 @@ function createProgressGraph(
   matches: PlayerMatchStatistics[],
   key: StatisticMetricKey,
 ): ProgressGraph {
-  const definition = statisticMetricDefinitions[key];
+  const metric = getMetricModel(key);
 
   return {
     key,
-    label: definition.label,
+    label: metric.definition.label,
     trend: calculateTrend(matches, key),
     points: matches.map((match, index) => {
-      const value = getMatchMetricValue(match, key);
+      const value = metric.getMatchValue(match);
       return {
         matchId: match.id,
         label: `M${index + 1}`,
         value,
-        formattedValue: formatStatisticValue(key, value),
+        formattedValue: metric.formatValue(value),
       };
     }),
   };

@@ -2,6 +2,7 @@ export {
   PlayerStatisticsSection,
   type PlayerStatisticsSectionProps,
 } from './components/PlayerStatisticsSection';
+export { StatisticsScreen, type StatisticsScreenProps } from './components/StatisticsScreen';
 export { StatisticsCards, type StatisticsCardsProps } from './components/StatisticsCards';
 export { RadarChart, type RadarChartProps } from './components/RadarChart';
 export { ProgressGraphs, type ProgressGraphsProps } from './components/ProgressGraphs';
@@ -13,6 +14,24 @@ export {
   mockPlayerStatisticsMatches,
   getMockPlayerStatistics,
 } from './services/mockPlayerStatisticsService';
+export { mapMatchesToProfileStats } from './utils/profileStatsMapper';
+export {
+  statisticMetricDefinitions,
+  statisticMetricKeys,
+  statisticMetricRegistry,
+  statisticMetrics,
+  getMetricModel,
+  getMatchMetricValue,
+  formatStatisticValue,
+  goalsMetric,
+  assistsMetric,
+  minutesMetric,
+  matchesMetric,
+  cleanSheetsMetric,
+  passAccuracyMetric,
+  shotsMetric,
+  tacklesMetric,
+} from './models/StatisticMetricModel';
 export type {
   MatchHistoryItem,
   PlayerMatchStatistics,

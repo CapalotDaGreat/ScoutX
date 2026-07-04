@@ -2,6 +2,7 @@ import { type PlayerProfile, type PlayerProfileStat, type PlayerProfilePerforman
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
 import { serializeMatchStatistics } from '@/features/player-statistics/models/MatchLogModel';
 import { mockPlayerStatisticsMatches } from '@/features/player-statistics/services/mockPlayerStatisticsService';
+import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -59,12 +60,7 @@ export class ProfileModel {
       biography: 'Introduce yourself to scouts here...',
       coverImageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80',
       avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-      stats: [
-        { label: 'Goals', value: '18', trend: { value: '+4 this month', direction: 'up' } },
-        { label: 'Assists', value: '12', trend: { value: '+2 this week', direction: 'up' } },
-        { label: 'Passing', value: '91%', trend: { value: 'Top 3 league', direction: 'neutral' } },
-        { label: 'Recoveries', value: '66', trend: { value: '+8 vs last match', direction: 'up' } },
-      ],
+      stats: mapMatchesToProfileStats(mockPlayerStatisticsMatches),
       performanceSummary: [
         { label: 'Key Passes', value: 7, max: 10, hint: 'Excellent vision' },
         { label: 'Shots on Target', value: 6, max: 10, hint: 'Clinical finishing' },
@@ -111,7 +107,10 @@ export class ProfileModel {
       }
     }
 
-    const statisticsMatches = parsePlayerMatchStatistics(data.statisticsMatches);
+    const statisticsMatches =
+      parsePlayerMatchStatistics(data.statisticsMatches).length > 0
+        ? parsePlayerMatchStatistics(data.statisticsMatches)
+        : mockPlayerStatisticsMatches;
 
     return {
       id,
@@ -125,18 +124,19 @@ export class ProfileModel {
       biography: typeof data.biography === 'string' ? data.biography : '',
       coverImageUrl: typeof data.coverImageUrl === 'string' ? data.coverImageUrl : '',
       avatarUrl: typeof data.avatarUrl === 'string' ? data.avatarUrl : '',
-      stats: stats.length > 0 ? stats : [
-        { label: 'Goals', value: '0', trend: { value: '0 this month', direction: 'neutral' } },
-        { label: 'Assists', value: '0', trend: { value: '0 this week', direction: 'neutral' } },
-        { label: 'Passing', value: '0%', trend: { value: 'N/A', direction: 'neutral' } },
-        { label: 'Recoveries', value: '0', trend: { value: '0 vs last match', direction: 'neutral' } },
-      ],
-      performanceSummary: performanceSummary.length > 0 ? performanceSummary : [
-        { label: 'Key Passes', value: 0, max: 10, hint: 'Vision level' },
-        { label: 'Shots on Target', value: 0, max: 10, hint: 'Finishing level' },
-        { label: 'Pressing Intensity', value: 0, max: 10, hint: 'Defensive level' },
-      ],
-      statisticsMatches: statisticsMatches.length > 0 ? statisticsMatches : mockPlayerStatisticsMatches,
+      stats:
+        stats.length > 0
+          ? stats
+          : mapMatchesToProfileStats(statisticsMatches),
+      performanceSummary:
+        performanceSummary.length > 0
+          ? performanceSummary
+          : [
+              { label: 'Key Passes', value: 0, max: 10, hint: 'Vision level' },
+              { label: 'Shots on Target', value: 0, max: 10, hint: 'Finishing level' },
+              { label: 'Pressing Intensity', value: 0, max: 10, hint: 'Defensive level' },
+            ],
+      statisticsMatches,
     };
   }
 

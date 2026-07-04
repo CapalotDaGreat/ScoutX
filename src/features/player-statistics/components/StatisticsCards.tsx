@@ -20,7 +20,7 @@ export function StatisticsCards({ items }: StatisticsCardsProps) {
             variant="elevated"
           />
           <Text variant="caption" color="secondary" className="mt-1 px-1">
-            Avg {item.formattedAverage}/match
+            {item.displaySubtitle}
           </Text>
         </View>
       ))}

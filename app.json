@@ -28,7 +28,14 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-video"
+      "expo-video",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "ScoutX uses your location to record match movement, distance, and heatmaps.",
+          "locationAlwaysAndWhenInUsePermission": "ScoutX uses your location to record match movement during sessions."
+        }
+      ]
     ]
   }
 }

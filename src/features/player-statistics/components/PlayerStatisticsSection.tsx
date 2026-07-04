@@ -68,7 +68,7 @@ export function PlayerStatisticsSection({ matches, onLogMatchPress }: PlayerStat
           <StatisticsCards items={overview.totals} />
           <RadarChart points={overview.radar} />
           <ProgressGraphs graphs={overview.progressGraphs} />
-          <MatchHistory items={overview.matchHistory} />
+          <MatchHistory items={overview.matchHistory} maxItems={6} />
           <Text variant="caption" color="secondary">
             Trends compare recent match averages against the previous sample.
           </Text>

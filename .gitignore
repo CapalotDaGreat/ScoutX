@@ -11,3 +11,6 @@ npm-debug.*
 web-build/
 .DS_Store
 *.log
+
+# Environment variables (contains secrets - never commit)
+.env
