@@ -143,11 +143,11 @@ export type FilterPreset = {
 };
 
 export type ScoutWorkspaceSnapshot = {
-  favouriteIds: string[];
   recentlyViewedIds: string[];
   recentSearches: string[];
   filterPresets: FilterPreset[];
   lastViewedPlayerId: string | null;
+  comparisonPlayerIds: string[];
 };
 
 export type FilterChip = {

@@ -11,6 +11,12 @@ import {
   useScoutWorkspace,
 } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { type DiscoverablePlayer, type FilterPreset } from '@/features/scout-discovery/types';
+import { PlayerComparisonScreen } from '@/features/player-comparison';
+import {
+  RecruitmentPipelineScreen,
+  RecruitmentProvider,
+  useRecruitment,
+} from '@/features/scout-recruitment';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 
 export type ScoutAuthenticatedScreenProps = {
@@ -20,6 +26,7 @@ export type ScoutAuthenticatedScreenProps = {
 function ScoutAuthenticatedContent({ onSignOut }: ScoutAuthenticatedScreenProps) {
   const { user } = useAuth();
   const workspace = useScoutWorkspace();
+  const recruitment = useRecruitment();
   const [activeTab, setActiveTab] = useState<ScoutTab>('dashboard');
   const [search, setSearch] = useState('');
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
@@ -51,6 +58,10 @@ function ScoutAuthenticatedContent({ onSignOut }: ScoutAuthenticatedScreenProps)
 
   const handleDiscoverPress = useCallback(() => {
     setActiveTab('discover');
+  }, []);
+
+  const handlePipelinePress = useCallback(() => {
+    setActiveTab('pipeline');
   }, []);
 
   const handleSearchSubmit = useCallback(() => {
@@ -86,7 +97,8 @@ function ScoutAuthenticatedContent({ onSignOut }: ScoutAuthenticatedScreenProps)
     <ScoutShell
       activeTab={activeTab}
       onTabChange={setActiveTab}
-      savedCount={workspace.favouriteIds.length}
+      compareCount={workspace.comparisonPlayerIds.length}
+      pipelineCount={recruitment.savedCount}
     >
       {activeTab === 'dashboard' ? (
         <ScoutDashboardScreen
@@ -95,7 +107,8 @@ function ScoutAuthenticatedContent({ onSignOut }: ScoutAuthenticatedScreenProps)
           onSearchChange={setSearch}
           onSearchSubmit={handleSearchSubmit}
           onDiscoverPress={handleDiscoverPress}
-          onSavedPress={() => setActiveTab('saved')}
+          onPipelinePress={handlePipelinePress}
+          pipelineCount={recruitment.savedCount}
           onPlayerPress={(player) => openPlayer(player, 'dashboard')}
           onSignOut={onSignOut}
         />
@@ -103,7 +116,6 @@ function ScoutAuthenticatedContent({ onSignOut }: ScoutAuthenticatedScreenProps)
 
       {activeTab === 'discover' ? (
         <PlayerDiscoveryScreen
-          mode="discover"
           search={search}
           onSearchChange={setSearch}
           onPlayerPress={(player) => openPlayer(player, 'discover')}
@@ -120,23 +132,17 @@ function ScoutAuthenticatedContent({ onSignOut }: ScoutAuthenticatedScreenProps)
         />
       ) : null}
 
-      {activeTab === 'saved' ? (
-        <PlayerDiscoveryScreen
-          mode="saved"
-          search={search}
-          onSearchChange={setSearch}
-          onPlayerPress={(player) => openPlayer(player, 'saved')}
+      {activeTab === 'compare' ? (
+        <PlayerComparisonScreen onDiscoverPress={handleDiscoverPress} />
+      ) : null}
+
+      {activeTab === 'pipeline' ? (
+        <RecruitmentPipelineScreen
           onDiscoverPress={handleDiscoverPress}
-          filters={filters}
-          sort={sort}
-          activeFilterCount={activeFilterCount}
-          activePresetId={activePresetId}
-          onFilterChange={updateFilter}
-          onFiltersReplace={setFilters}
-          onSortChange={setSort}
-          onResetFilters={resetFilters}
-          onApplyPreset={applyPreset}
-          onSaveCurrentPreset={handleSaveCurrentPreset}
+          onPlayerPress={(playerId) => {
+            setDetailOrigin('pipeline');
+            setSelectedPlayerId(playerId);
+          }}
         />
       ) : null}
     </ScoutShell>
@@ -144,11 +150,15 @@ function ScoutAuthenticatedContent({ onSignOut }: ScoutAuthenticatedScreenProps)
 }
 
 export function ScoutAuthenticatedScreen({ onSignOut }: ScoutAuthenticatedScreenProps) {
+  const { user } = useAuth();
+
   return (
-    <ScoutWorkspaceProvider>
-      <View className="flex-1">
-        <ScoutAuthenticatedContent onSignOut={onSignOut} />
-      </View>
+    <ScoutWorkspaceProvider scoutId={user?.id ?? null}>
+      <RecruitmentProvider scoutId={user?.id ?? null}>
+        <View className="flex-1">
+          <ScoutAuthenticatedContent onSignOut={onSignOut} />
+        </View>
+      </RecruitmentProvider>
     </ScoutWorkspaceProvider>
   );
 }

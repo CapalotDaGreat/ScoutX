@@ -3,6 +3,22 @@ import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
 import { serializeMatchStatistics } from '@/features/player-statistics/models/MatchLogModel';
 import { mockPlayerStatisticsMatches } from '@/features/player-statistics/services/mockPlayerStatisticsService';
 import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
+import {
+  createDefaultFootballIdentity,
+  parseFootballIdentity,
+  serializeFootballIdentity,
+  syncLegacyProfileFields,
+} from '@/features/player-profile/models/FootballIdentityModel';
+import {
+  parseFootballJourney,
+  serializeFootballJourney,
+} from '@/features/football-journey/models/JourneyModel';
+import { mockJourneyEntries } from '@/features/football-journey/services/mockJourneyData';
+import {
+  parseHighlightVideoLibrary,
+  serializeHighlightVideoLibrary,
+} from '@/features/highlight-videos/models/HighlightVideoModel';
+import { getMockHighlightVideoLibrary } from '@/features/highlight-videos/services/mockHighlightVideos';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -48,11 +64,18 @@ export function parsePlayerMatchStatistics(value: unknown): PlayerMatchStatistic
 
 export class ProfileModel {
   public static getDefaultProfile(userId: string, email: string): PlayerProfile {
+    const fullName = email.split('@')[0] || 'New Player';
+    const identity = createDefaultFootballIdentity({
+      club: 'Free Agent',
+      position: 'Attacking Midfielder',
+      preferredFoot: 'Right',
+    });
+
     return {
       id: userId,
-      fullName: email.split('@')[0] || 'New Player',
-      position: 'Attacking Midfielder',
-      club: 'Free Agent',
+      fullName,
+      position: identity.preferredPositions[0] ?? 'Attacking Midfielder',
+      club: identity.currentClub,
       nationality: 'Unknown',
       preferredFoot: 'Right',
       height: '180 cm',
@@ -67,6 +90,12 @@ export class ProfileModel {
         { label: 'Pressing Intensity', value: 8, max: 10, hint: 'Consistent defensive work' },
       ],
       statisticsMatches: mockPlayerStatisticsMatches,
+      identity,
+      footballJourney: {
+        entries: mockJourneyEntries,
+        updatedAt: new Date().toISOString(),
+      },
+      highlightVideos: getMockHighlightVideoLibrary(),
     };
   }
 
@@ -112,16 +141,29 @@ export class ProfileModel {
         ? parsePlayerMatchStatistics(data.statisticsMatches)
         : mockPlayerStatisticsMatches;
 
+    const legacyFields = {
+      club: typeof data.club === 'string' ? data.club : '',
+      position: typeof data.position === 'string' ? data.position : '',
+      preferredFoot: typeof data.preferredFoot === 'string' ? data.preferredFoot : '',
+      biography: typeof data.biography === 'string' ? data.biography : '',
+    };
+
+    const identity = parseFootballIdentity(data.identity, legacyFields);
+    const synced = syncLegacyProfileFields(
+      identity,
+      typeof data.biography === 'string' ? data.biography : '',
+    );
+
     return {
       id,
       fullName: typeof data.fullName === 'string' ? data.fullName : '',
-      position: typeof data.position === 'string' ? data.position : '',
-      club: typeof data.club === 'string' ? data.club : '',
+      position: synced.position,
+      club: synced.club,
       nationality: typeof data.nationality === 'string' ? data.nationality : '',
-      preferredFoot: typeof data.preferredFoot === 'string' ? data.preferredFoot : '',
+      preferredFoot: synced.preferredFoot,
       height: typeof data.height === 'string' ? data.height : '',
       weight: typeof data.weight === 'string' ? data.weight : '',
-      biography: typeof data.biography === 'string' ? data.biography : '',
+      biography: legacyFields.biography,
       coverImageUrl: typeof data.coverImageUrl === 'string' ? data.coverImageUrl : '',
       avatarUrl: typeof data.avatarUrl === 'string' ? data.avatarUrl : '',
       stats:
@@ -137,6 +179,9 @@ export class ProfileModel {
               { label: 'Pressing Intensity', value: 0, max: 10, hint: 'Defensive level' },
             ],
       statisticsMatches,
+      identity,
+      footballJourney: parseFootballJourney(data.footballJourney),
+      highlightVideos: parseHighlightVideoLibrary(data.highlightVideos),
     };
   }
 
@@ -153,6 +198,17 @@ export class ProfileModel {
     if (profile.biography !== undefined) data.biography = profile.biography;
     if (profile.coverImageUrl !== undefined) data.coverImageUrl = profile.coverImageUrl;
     if (profile.avatarUrl !== undefined) data.avatarUrl = profile.avatarUrl;
+
+    if (profile.identity !== undefined) {
+      data.identity = serializeFootballIdentity(profile.identity);
+      const synced = syncLegacyProfileFields(
+        profile.identity,
+        profile.biography ?? '',
+      );
+      data.club = synced.club;
+      data.position = synced.position;
+      data.preferredFoot = synced.preferredFoot;
+    }
     if (profile.stats !== undefined) {
       data.stats = profile.stats.map((s) => ({
         label: s.label,
@@ -173,6 +229,12 @@ export class ProfileModel {
     }
     if (profile.statisticsMatches !== undefined) {
       data.statisticsMatches = profile.statisticsMatches.map(serializeMatchStatistics);
+    }
+    if (profile.footballJourney !== undefined) {
+      data.footballJourney = serializeFootballJourney(profile.footballJourney);
+    }
+    if (profile.highlightVideos !== undefined) {
+      data.highlightVideos = serializeHighlightVideoLibrary(profile.highlightVideos);
     }
 
     return data;

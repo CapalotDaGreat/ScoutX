@@ -1,0 +1,109 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ScoutingReportRepository } from '@/features/scouting-reports/repositories/ScoutingReportRepository';
+import { getMockReportsForPlayer } from '@/features/scouting-reports/services/mockScoutingReports';
+import { type ScoutingReport, type ScoutingReportDraft } from '@/features/scouting-reports/types';
+import { useAuth } from '@/features/auth/store/AuthProvider';
+
+export function useScoutingReports(playerId: string, playerName: string) {
+  const { user } = useAuth();
+  const scoutId = user?.id ?? '';
+  const [reports, setReports] = useState<ScoutingReport[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const repository = useMemo(() => ScoutingReportRepository.getInstance(), []);
+
+  useEffect(() => {
+    if (!scoutId || !playerId) {
+      setReports([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    const unsubscribe = repository.subscribeToPlayerReports(
+      scoutId,
+      playerId,
+      (nextReports) => {
+        if (nextReports.length === 0) {
+          const mockReports = getMockReportsForPlayer(playerId, scoutId);
+          setReports(mockReports);
+        } else {
+          setReports(nextReports);
+        }
+        setIsLoading(false);
+      },
+      (err) => {
+        setError(err.message);
+        setReports(getMockReportsForPlayer(playerId, scoutId));
+        setIsLoading(false);
+      },
+    );
+
+    return unsubscribe;
+  }, [playerId, repository, scoutId]);
+
+  const saveReport = useCallback(
+    async (draft: ScoutingReportDraft, existing?: ScoutingReport) => {
+      if (!scoutId) {
+        throw new Error('Scout is not authenticated.');
+      }
+
+      setIsSaving(true);
+      setError(null);
+      try {
+        const nextDraft: ScoutingReportDraft = {
+          ...draft,
+          scoutName: draft.scoutName ?? user?.name,
+        };
+        return await repository.saveReport(
+          scoutId,
+          playerId,
+          playerName,
+          nextDraft,
+          existing,
+        );
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to save report.';
+        setError(message);
+        throw err;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [playerId, playerName, repository, scoutId, user?.name],
+  );
+
+  const deleteReport = useCallback(
+    async (reportId: string) => {
+      if (!scoutId) {
+        throw new Error('Scout is not authenticated.');
+      }
+
+      setIsSaving(true);
+      setError(null);
+      try {
+        await repository.deleteReport(scoutId, playerId, reportId);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to delete report.';
+        setError(message);
+        throw err;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [playerId, repository, scoutId],
+  );
+
+  return {
+    reports,
+    isLoading,
+    isSaving,
+    error,
+    saveReport,
+    deleteReport,
+  };
+}

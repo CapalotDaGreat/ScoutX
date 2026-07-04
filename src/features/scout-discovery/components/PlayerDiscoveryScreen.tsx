@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -16,7 +16,7 @@ import { FilterPresetBar } from '@/features/scout-discovery/components/FilterPre
 import { PlayerDiscoveryCard } from '@/features/scout-discovery/components/PlayerDiscoveryCard';
 import { usePlayerDiscovery } from '@/features/scout-discovery/hooks/usePlayerDiscovery';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
-import { mockDiscoverablePlayers } from '@/features/scout-discovery/services/mockPlayerDiscoveryData';
+import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import {
   type DiscoverablePlayer,
   type DiscoveryFilters,
@@ -29,11 +29,9 @@ import { SlidersHorizontal } from 'lucide-react-native';
 const CARD_ESTIMATED_HEIGHT = 300;
 
 export type PlayerDiscoveryScreenProps = {
-  mode?: 'discover' | 'saved';
   search: string;
   onSearchChange: (value: string) => void;
   onPlayerPress: (player: DiscoverablePlayer) => void;
-  onDiscoverPress?: () => void;
   filters: DiscoveryFilters;
   sort: DiscoverySortOption;
   activeFilterCount: number;
@@ -50,11 +48,9 @@ export type PlayerDiscoveryScreenProps = {
 };
 
 export function PlayerDiscoveryScreen({
-  mode = 'discover',
   search,
   onSearchChange,
   onPlayerPress,
-  onDiscoverPress,
   filters,
   sort,
   activeFilterCount,
@@ -68,20 +64,16 @@ export function PlayerDiscoveryScreen({
 }: PlayerDiscoveryScreenProps) {
   const { colors } = useTheme();
   const workspace = useScoutWorkspace();
+  const playerSave = useScoutPlayerSave();
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
 
-  const { players, isLoading, isLoadingMore, error, loadMore, refresh } =
-    usePlayerDiscovery({ search, filters, sort, enabled: mode === 'discover' });
-
-  const savedPlayers = useMemo(() => {
-    const lookup = new Map(mockDiscoverablePlayers.map((player) => [player.id, player]));
-    return workspace.favouriteIds
-      .map((id) => lookup.get(id))
-      .filter((player): player is DiscoverablePlayer => Boolean(player));
-  }, [workspace.favouriteIds]);
-
-  const isSavedMode = mode === 'saved';
+  const { players, isLoading, isLoadingMore, error, loadMore, refresh } = usePlayerDiscovery({
+    search,
+    filters,
+    sort,
+    enabled: true,
+  });
 
   const handleSearchSelect = useCallback(
     (term: string) => {
@@ -99,21 +91,6 @@ export function PlayerDiscoveryScreen({
     setSearchFocused(false);
   }, [search, workspace]);
 
-  const filteredSavedPlayers = useMemo(() => {
-    if (!isSavedMode) {
-      return savedPlayers;
-    }
-    if (!search.trim()) {
-      return savedPlayers;
-    }
-    const query = search.trim().toLowerCase();
-    return savedPlayers.filter((player) =>
-      player.searchKeywords.some((keyword) => keyword.includes(query)),
-    );
-  }, [isSavedMode, savedPlayers, search]);
-
-  const finalPlayers = isSavedMode ? filteredSavedPlayers : players;
-
   const renderItem = useCallback(
     ({ item, index }: { item: DiscoverablePlayer; index: number }) => (
       <View className="mb-3 px-4">
@@ -121,12 +98,23 @@ export function PlayerDiscoveryScreen({
           player={item}
           index={index}
           onPress={onPlayerPress}
-          isFavourite={workspace.isFavourite(item.id)}
-          onToggleFavourite={workspace.toggleFavourite}
+          isSaved={playerSave.isSaved(item.id)}
+          onToggleSave={() => {
+            void playerSave.toggleSave(item);
+          }}
+          isInComparison={workspace.isInComparison(item.id)}
+          canAddToComparison={workspace.canAddToComparison}
+          onToggleCompare={(playerId) => {
+            if (workspace.isInComparison(playerId)) {
+              workspace.removeFromComparison(playerId);
+              return;
+            }
+            workspace.addToComparison(playerId);
+          }}
         />
       </View>
     ),
-    [onPlayerPress, workspace],
+    [onPlayerPress, playerSave, workspace],
   );
 
   const listHeader = (
@@ -135,56 +123,42 @@ export function PlayerDiscoveryScreen({
         value={search}
         onChangeText={onSearchChange}
         onClear={() => onSearchChange('')}
-        placeholder={
-          isSavedMode
-            ? 'Search within saved players...'
-            : 'Search by name, club, nationality, position...'
-        }
+        placeholder="Search by name, club, nationality, position..."
         onFocus={() => setSearchFocused(true)}
         onBlur={() => setSearchFocused(false)}
         onSubmitEditing={handleSearchSubmit}
       />
 
-      {!isSavedMode ? (
-        <DiscoverySearchPanel
-          visible={searchFocused}
-          search={search}
-          recentSearches={workspace.recentSearches}
-          onSelectSearch={handleSearchSelect}
-          onClearRecent={workspace.clearRecentSearches}
-        />
-      ) : null}
+      <DiscoverySearchPanel
+        visible={searchFocused}
+        search={search}
+        recentSearches={workspace.recentSearches}
+        onSelectSearch={handleSearchSelect}
+        onClearRecent={workspace.clearRecentSearches}
+      />
 
-      {!isSavedMode ? (
-        <>
-          <FilterPresetBar
-            presets={workspace.filterPresets}
-            activePresetId={activePresetId}
-            onApplyPreset={onApplyPreset}
-            onSaveCurrent={onSaveCurrentPreset}
-          />
-          <View className="flex-row items-center gap-3">
-            <Button
-              variant="secondary"
-              className="flex-1"
-              leftIcon={<SlidersHorizontal size={18} color={colors.textPrimary} />}
-              onPress={() => setFiltersVisible(true)}
-            >
-              Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
-            </Button>
-          </View>
-          <ActiveFilterChips
-            filters={filters}
-            onChange={onFiltersReplace}
-            onClearAll={onResetFilters}
-          />
-          <DiscoverySortBar sort={sort} onSortChange={onSortChange} />
-        </>
-      ) : null}
+      <FilterPresetBar
+        presets={workspace.filterPresets}
+        activePresetId={activePresetId}
+        onApplyPreset={onApplyPreset}
+        onSaveCurrent={onSaveCurrentPreset}
+      />
+      <View className="flex-row items-center gap-3">
+        <Button
+          variant="secondary"
+          className="flex-1"
+          leftIcon={<SlidersHorizontal size={18} color={colors.textPrimary} />}
+          onPress={() => setFiltersVisible(true)}
+        >
+          Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+        </Button>
+      </View>
+      <ActiveFilterChips filters={filters} onChange={onFiltersReplace} onClearAll={onResetFilters} />
+      <DiscoverySortBar sort={sort} onSortChange={onSortChange} />
     </View>
   );
 
-  if (!isSavedMode && isLoading && players.length === 0) {
+  if (isLoading && players.length === 0) {
     return (
       <SafeAreaView className="flex-1" edges={['top']}>
         <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
@@ -201,18 +175,16 @@ export function PlayerDiscoveryScreen({
   return (
     <SafeAreaView className="flex-1" edges={['top']}>
       <FlashListView
-        data={finalPlayers}
+        data={players}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         estimatedItemSize={CARD_ESTIMATED_HEIGHT}
         ListHeaderComponent={
           <>
             <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
-              <Heading level={2}>{isSavedMode ? 'Saved Players' : 'Discover Players'}</Heading>
+              <Heading level={2}>Discover Players</Heading>
               <Text variant="body-sm" color="secondary" className="mt-1">
-                {isSavedMode
-                  ? `${workspace.favouriteIds.length} players in your shortlist`
-                  : 'Advanced scouting search with instant results'}
+                Advanced scouting search with instant results
               </Text>
             </View>
             {listHeader}
@@ -220,33 +192,24 @@ export function PlayerDiscoveryScreen({
         }
         ListEmptyComponent={
           <View className="px-4 py-8">
-            {isSavedMode ? (
-              <EmptyState
-                title="No saved players yet"
-                description="Tap the bookmark icon on any player card to build your shortlist."
-                actionLabel={onDiscoverPress ? 'Discover Players' : undefined}
-                onAction={onDiscoverPress}
-              />
-            ) : (
-              <EmptyState
-                title={search ? 'No players match your search' : 'No players available'}
-                description={
-                  search
-                    ? 'Try a different keyword, remove filter chips, or apply a saved preset.'
-                    : 'Players will appear here once profiles are indexed in ScoutX.'
-                }
-                actionLabel={activeFilterCount > 0 ? 'Clear Filters' : undefined}
-                onAction={activeFilterCount > 0 ? onResetFilters : undefined}
-              />
-            )}
+            <EmptyState
+              title={search ? 'No players match your search' : 'No players available'}
+              description={
+                search
+                  ? 'Try a different keyword, remove filter chips, or apply a saved preset.'
+                  : 'Players will appear here once profiles are indexed in ScoutX.'
+              }
+              actionLabel={activeFilterCount > 0 ? 'Clear Filters' : undefined}
+              onAction={activeFilterCount > 0 ? onResetFilters : undefined}
+            />
           </View>
         }
-        onEndReached={isSavedMode ? undefined : loadMore}
+        onEndReached={loadMore}
         onEndReachedThreshold={0.4}
-        refreshing={!isSavedMode && isLoading}
-        onRefresh={isSavedMode ? undefined : refresh}
+        refreshing={isLoading}
+        onRefresh={refresh}
         ListFooterComponent={
-          !isSavedMode && isLoadingMore ? (
+          isLoadingMore ? (
             <View className="gap-3 px-4 py-4">
               <DiscoveryCardSkeleton />
               <ActivityIndicator color={colors.accent} />
@@ -255,7 +218,7 @@ export function PlayerDiscoveryScreen({
         }
       />
 
-      {error && !isSavedMode ? (
+      {error ? (
         <View className="px-4 pb-4">
           <EmptyState
             title="Unable to load players"

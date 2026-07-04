@@ -52,7 +52,7 @@ export function DashboardHeader({
         </Card>
         <Card variant="outlined" padding="sm" className="flex-1">
           <Text variant="caption" color="secondary">
-            Saved
+            Pipeline
           </Text>
           <Text variant="body-sm" weight="semibold">
             {savedCount}

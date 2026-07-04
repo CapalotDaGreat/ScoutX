@@ -14,7 +14,7 @@ export { usePlayerDiscovery } from './hooks/usePlayerDiscovery';
 export { useDiscoveryFilters } from './hooks/useDiscoveryFilters';
 export { useScoutDashboard } from './hooks/useScoutDashboard';
 export { usePlayerDetail } from './hooks/usePlayerDetail';
-export { useScoutWorkspace, ScoutWorkspaceProvider } from './hooks/useScoutWorkspace';
+export { ScoutWorkspaceProvider, useScoutWorkspace } from './hooks/useScoutWorkspace';
 
 export { PlayerDiscoveryRepository } from './repositories/PlayerDiscoveryRepository';
 

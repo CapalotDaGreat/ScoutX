@@ -6,7 +6,6 @@ import { Section } from '@/components/layout/Section';
 import { DiscoveryListSkeleton } from '@/features/scout-discovery/components/DiscoveryCardSkeleton';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
-import { Input } from '@/components/primitives/Input';
 import { StatCard } from '@/components/primitives/StatCard';
 import { Text } from '@/components/primitives/Text';
 import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
@@ -14,11 +13,15 @@ import { generateHeatmapGrid } from '@/features/gps/services/gpsSessionCalculato
 import { type GpsPoint } from '@/features/gps/types';
 import { RadarChart } from '@/features/player-statistics/components/RadarChart';
 import { type RadarChartPoint, type StatisticMetricKey } from '@/features/player-statistics/types';
+import { ScoutingReportsSection } from '@/features/scouting-reports';
+import { ScoutTrialInvitationsSection } from '@/features/trial-invitations';
+import { RecruitmentPlayerSection } from '@/features/scout-recruitment/components/RecruitmentPlayerSection';
 import { ScoutReportHero } from '@/features/scout-discovery/components/ScoutReportHero';
 import { usePlayerDetail } from '@/features/scout-discovery/hooks/usePlayerDetail';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
+import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
-import { ArrowLeft, Bookmark, Mail, Video } from 'lucide-react-native';
+import { ArrowLeft, Bookmark, GitCompare, Mail, Video } from 'lucide-react-native';
 import { useTheme } from '@/theme';
 
 const RADAR_KEYS: StatisticMetricKey[] = [
@@ -63,8 +66,9 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
   const workspace = useScoutWorkspace();
-  const { recordPlayerView, isFavourite, toggleFavourite } = workspace;
-  const [scoutNote, setScoutNote] = useState('');
+  const playerSave = useScoutPlayerSave();
+  const { recordPlayerView, isInComparison, canAddToComparison, addToComparison, removeFromComparison } = workspace;
+  const [inviteSignal, setInviteSignal] = useState(0);
 
   useEffect(() => {
     if (playerId) {
@@ -78,7 +82,8 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
   );
 
   const radarPoints = useMemo(() => (player ? toRadarPoints(player) : []), [player]);
-  const saved = isFavourite(playerId);
+  const saved = playerSave.isSaved(playerId);
+  const inComparison = isInComparison(playerId);
 
   if (isLoading) {
     return (
@@ -123,14 +128,35 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
         onRefresh={reload}
         contentClassName="gap-6 pb-28"
         header={
-          <View className="flex-row items-center justify-between">
+          <View className="flex-row flex-wrap items-center justify-between gap-2">
             <Button
               variant="ghost"
               size="sm"
               leftIcon={<ArrowLeft size={18} color={colors.textPrimary} />}
               onPress={onBack}
             >
-              Back to list
+              Back
+            </Button>
+            <View className="flex-row gap-2">
+            <Button
+              variant={inComparison ? 'accent' : 'secondary'}
+              size="sm"
+              leftIcon={
+                <GitCompare
+                  size={16}
+                  color={inComparison ? colors.accentForeground : colors.textPrimary}
+                />
+              }
+              disabled={!inComparison && !canAddToComparison}
+              onPress={() => {
+                if (inComparison) {
+                  removeFromComparison(player.id);
+                } else {
+                  addToComparison(player.id);
+                }
+              }}
+            >
+              {inComparison ? 'Comparing' : 'Compare'}
             </Button>
             <Button
               variant={saved ? 'accent' : 'secondary'}
@@ -142,10 +168,15 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
                   fill={saved ? colors.accentForeground : 'transparent'}
                 />
               }
-              onPress={() => toggleFavourite(player.id)}
+              onPress={() => {
+                if (player) {
+                  void playerSave.toggleSave(player);
+                }
+              }}
             >
               {saved ? 'Saved' : 'Save'}
             </Button>
+            </View>
           </View>
         }
       >
@@ -153,14 +184,30 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
           <ScoutReportHero player={player} />
         </View>
 
+        <Animated.View entering={FadeInDown.delay(65).duration(350)} className="px-4">
+          <RecruitmentPlayerSection player={player} />
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(70).duration(350)} className="px-4">
+          <ScoutTrialInvitationsSection
+            playerId={player.id}
+            playerName={player.fullName}
+            inviteSignal={inviteSignal}
+          />
+        </Animated.View>
+
         <Animated.View entering={FadeInDown.delay(80).duration(350)} className="px-4">
+          <ScoutingReportsSection playerId={player.id} playerName={player.fullName} />
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay(100).duration(350)} className="px-4">
           <Card variant="outlined" padding="md" className="gap-2">
             <Text variant="overline" color="secondary">
-              Evaluation Summary
+              Player Overview
             </Text>
             <Text variant="body">{player.biography}</Text>
             <Text variant="caption" color="secondary">
-              Report ref · {player.id.toUpperCase()} · Updated{' '}
+              Ref · {player.id.toUpperCase()} · Updated{' '}
               {new Date(player.updatedAt).toLocaleDateString()}
             </Text>
           </Card>
@@ -244,19 +291,6 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
             )}
           </Section>
         </Animated.View>
-
-        <Animated.View entering={FadeInDown.delay(400).duration(350)} className="px-4">
-          <Section title="Scout Notes" subtitle="Private — visible only to your account">
-            <Input
-              label="Observations"
-              value={scoutNote}
-              onChangeText={setScoutNote}
-              placeholder="Strengths, concerns, fit for your club..."
-              multiline
-              numberOfLines={4}
-            />
-          </Section>
-        </Animated.View>
       </Screen>
 
       <View className="absolute bottom-0 left-0 right-0 border-t border-divider bg-surface px-4 pb-6 pt-3 dark:border-neutral-800 dark:bg-neutral-950">
@@ -268,7 +302,11 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
           >
             Contact
           </Button>
-          <Button variant="accent" className="flex-1">
+          <Button
+            variant="accent"
+            className="flex-1"
+            onPress={() => setInviteSignal((current) => current + 1)}
+          >
             Invite to Trial
           </Button>
         </View>

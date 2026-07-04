@@ -1,0 +1,71 @@
+import { ScrollView, View } from 'react-native';
+import { Text } from '@/components/primitives/Text';
+import { RecruitmentPipelineCard } from '@/features/scout-recruitment/components/RecruitmentPipelineCard';
+import {
+  RECRUITMENT_STAGE_COLORS,
+  RECRUITMENT_STAGE_LABELS,
+} from '@/features/scout-recruitment/constants';
+import { type RecruitmentEntry, type RecruitmentStage } from '@/features/scout-recruitment/types';
+
+export type RecruitmentStageColumnProps = {
+  stage: RecruitmentStage;
+  entries: RecruitmentEntry[];
+  onCardPress?: (entry: RecruitmentEntry) => void;
+  onMovePress?: (entry: RecruitmentEntry) => void;
+};
+
+export function RecruitmentStageColumn({
+  stage,
+  entries,
+  onCardPress,
+  onMovePress,
+}: RecruitmentStageColumnProps) {
+  const color = RECRUITMENT_STAGE_COLORS[stage];
+
+  return (
+    <View
+      className="mr-3 w-[272px] rounded-2xl border border-border bg-background-secondary dark:border-neutral-800 dark:bg-neutral-950"
+      testID={`recruitment-column-${stage}`}
+    >
+      <View className="border-b border-divider px-3 py-3 dark:border-neutral-800">
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
+            <Text weight="semibold">{RECRUITMENT_STAGE_LABELS[stage]}</Text>
+          </View>
+          <View
+            className="min-w-[24px] rounded-full px-2 py-0.5"
+            style={{ backgroundColor: `${color}22` }}
+          >
+            <Text variant="caption" className="text-center font-sans-bold" style={{ color }}>
+              {entries.length}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <ScrollView
+        className="max-h-[420px] px-2 py-2"
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+      >
+        {entries.length === 0 ? (
+          <View className="items-center px-3 py-8">
+            <Text variant="caption" color="secondary" className="text-center">
+              Drop players here in a future release. Use move actions for now.
+            </Text>
+          </View>
+        ) : (
+          entries.map((entry) => (
+            <RecruitmentPipelineCard
+              key={entry.id}
+              entry={entry}
+              onPress={onCardPress}
+              onMovePress={onMovePress}
+            />
+          ))
+        )}
+      </ScrollView>
+    </View>
+  );
+}

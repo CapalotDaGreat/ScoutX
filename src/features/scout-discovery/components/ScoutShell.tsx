@@ -2,25 +2,33 @@ import { type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { cn } from '@/utils/cn';
-import { Bookmark, Compass, Home } from 'lucide-react-native';
+import { Compass, GitCompare, Home, Kanban } from 'lucide-react-native';
 import { useTheme } from '@/theme';
 
-export type ScoutTab = 'dashboard' | 'discover' | 'saved';
+export type ScoutTab = 'dashboard' | 'discover' | 'compare' | 'pipeline';
 
 export type ScoutShellProps = {
   activeTab: ScoutTab;
   onTabChange: (tab: ScoutTab) => void;
-  savedCount: number;
+  compareCount: number;
+  pipelineCount: number;
   children: ReactNode;
 };
 
 const tabs: Array<{ id: ScoutTab; label: string; icon: typeof Home }> = [
   { id: 'dashboard', label: 'Home', icon: Home },
   { id: 'discover', label: 'Discover', icon: Compass },
-  { id: 'saved', label: 'Saved', icon: Bookmark },
+  { id: 'compare', label: 'Compare', icon: GitCompare },
+  { id: 'pipeline', label: 'Pipeline', icon: Kanban },
 ];
 
-export function ScoutShell({ activeTab, onTabChange, savedCount, children }: ScoutShellProps) {
+export function ScoutShell({
+  activeTab,
+  onTabChange,
+  compareCount,
+  pipelineCount,
+  children,
+}: ScoutShellProps) {
   const { colors } = useTheme();
 
   return (
@@ -31,7 +39,12 @@ export function ScoutShell({ activeTab, onTabChange, savedCount, children }: Sco
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
-            const badge = tab.id === 'saved' && savedCount > 0 ? savedCount : null;
+            const badge =
+              tab.id === 'pipeline' && pipelineCount > 0
+                ? pipelineCount
+                : tab.id === 'compare' && compareCount > 0
+                  ? compareCount
+                  : null;
 
             return (
               <Pressable

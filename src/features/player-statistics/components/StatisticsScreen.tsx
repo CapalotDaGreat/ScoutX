@@ -8,12 +8,15 @@ import { MatchHistory } from '@/features/player-statistics/components/MatchHisto
 import { ProgressGraphs } from '@/features/player-statistics/components/ProgressGraphs';
 import { RadarChart } from '@/features/player-statistics/components/RadarChart';
 import { StatisticsCards } from '@/features/player-statistics/components/StatisticsCards';
+import { AiInsightPanel } from '@/features/ai-insights';
+import { type AiInsightContext } from '@/features/ai-insights';
 import { usePlayerStatistics } from '@/features/player-statistics/hooks/usePlayerStatistics';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
 import { useTheme } from '@/theme';
 
 export type StatisticsScreenProps = {
   matches?: PlayerMatchStatistics[];
+  aiInsightContext?: AiInsightContext | null;
   onLogMatchPress?: () => void;
   onRefresh?: () => void;
   refreshing?: boolean;
@@ -21,6 +24,7 @@ export type StatisticsScreenProps = {
 
 export function StatisticsScreen({
   matches,
+  aiInsightContext = null,
   onLogMatchPress,
   onRefresh,
   refreshing = false,
@@ -74,6 +78,16 @@ export function StatisticsScreen({
         contentClassName="gap-8"
       >
         <StatisticsCards items={overview.totals} />
+        <AiInsightPanel
+          insightType="performance_summary"
+          context={aiInsightContext}
+          enabled={Boolean(aiInsightContext)}
+        />
+        <AiInsightPanel
+          insightType="improvement_suggestions"
+          context={aiInsightContext}
+          enabled={Boolean(aiInsightContext)}
+        />
         <RadarChart points={overview.radar} />
         <ProgressGraphs graphs={overview.progressGraphs} />
         <MatchHistory items={overview.matchHistory} />

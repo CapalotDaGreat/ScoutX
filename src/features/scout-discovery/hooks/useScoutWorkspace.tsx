@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { DEFAULT_FILTER_PRESETS } from '@/features/scout-discovery/constants';
+import { MAX_COMPARISON_PLAYERS } from '@/features/player-comparison/constants';
 import {
   type DiscoverablePlayer,
   type FilterPreset,
@@ -20,11 +21,11 @@ import {
 
 function createEmptyWorkspace(): ScoutWorkspaceSnapshot {
   return {
-    favouriteIds: [],
     recentlyViewedIds: [],
     recentSearches: [],
     filterPresets: DEFAULT_FILTER_PRESETS,
     lastViewedPlayerId: null,
+    comparisonPlayerIds: [],
   };
 }
 
@@ -33,64 +34,69 @@ const MAX_RECENTLY_VIEWED = 12;
 
 type ScoutWorkspaceContextValue = {
   isReady: boolean;
-  favouriteIds: string[];
   recentlyViewedIds: string[];
   recentSearches: string[];
   filterPresets: FilterPreset[];
   lastViewedPlayerId: string | null;
-  isFavourite: (playerId: string) => boolean;
-  toggleFavourite: (playerId: string) => void;
+  comparisonPlayerIds: string[];
   recordPlayerView: (playerId: string) => void;
   recordSearch: (term: string) => void;
   clearRecentSearches: () => void;
   saveFilterPreset: (preset: FilterPreset) => void;
   removeFilterPreset: (presetId: string) => void;
   resolvePlayers: (ids: string[], pool: DiscoverablePlayer[]) => DiscoverablePlayer[];
+  addToComparison: (playerId: string) => boolean;
+  removeFromComparison: (playerId: string) => void;
+  replaceComparisonPlayer: (currentId: string, nextId: string) => void;
+  clearComparison: () => void;
+  isInComparison: (playerId: string) => boolean;
+  canAddToComparison: boolean;
 };
 
 const ScoutWorkspaceContext = createContext<ScoutWorkspaceContextValue | null>(null);
 
-function persistSnapshot(snapshot: ScoutWorkspaceSnapshot) {
-  void saveScoutWorkspace(snapshot).catch(() => undefined);
-}
+type ScoutWorkspaceProviderProps = {
+  scoutId: string | null;
+  children: ReactNode;
+};
 
-export function ScoutWorkspaceProvider({ children }: { children: ReactNode }) {
+export function ScoutWorkspaceProvider({ scoutId, children }: ScoutWorkspaceProviderProps) {
   const [snapshot, setSnapshot] = useState<ScoutWorkspaceSnapshot>(createEmptyWorkspace);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    void loadScoutWorkspace().then((loaded) => {
+    if (!scoutId) {
+      setSnapshot(createEmptyWorkspace());
+      setIsHydrated(true);
+      return;
+    }
+
+    setIsHydrated(false);
+    void loadScoutWorkspace(scoutId).then((loaded) => {
       setSnapshot(loaded);
       setIsHydrated(true);
     });
-  }, []);
+  }, [scoutId]);
 
-  const updateSnapshot = useCallback((updater: (current: ScoutWorkspaceSnapshot) => ScoutWorkspaceSnapshot) => {
-    setSnapshot((current) => {
-      const next = updater(current);
-      persistSnapshot(next);
-      return next;
-    });
-  }, []);
-
-  const isFavourite = useCallback(
-    (playerId: string) => snapshot.favouriteIds.includes(playerId),
-    [snapshot.favouriteIds],
+  const persistSnapshot = useCallback(
+    (next: ScoutWorkspaceSnapshot) => {
+      if (!scoutId) {
+        return;
+      }
+      void saveScoutWorkspace(scoutId, next).catch(() => undefined);
+    },
+    [scoutId],
   );
 
-  const toggleFavourite = useCallback(
-    (playerId: string) => {
-      updateSnapshot((current) => {
-        const exists = current.favouriteIds.includes(playerId);
-        return {
-          ...current,
-          favouriteIds: exists
-            ? current.favouriteIds.filter((id) => id !== playerId)
-            : [playerId, ...current.favouriteIds],
-        };
+  const updateSnapshot = useCallback(
+    (updater: (current: ScoutWorkspaceSnapshot) => ScoutWorkspaceSnapshot) => {
+      setSnapshot((current) => {
+        const next = updater(current);
+        persistSnapshot(next);
+        return next;
       });
     },
-    [updateSnapshot],
+    [persistSnapshot],
   );
 
   const recordPlayerView = useCallback(
@@ -159,34 +165,98 @@ export function ScoutWorkspaceProvider({ children }: { children: ReactNode }) {
     return ids.map((id) => lookup.get(id)).filter((player): player is DiscoverablePlayer => Boolean(player));
   }, []);
 
+  const isInComparison = useCallback(
+    (playerId: string) => snapshot.comparisonPlayerIds.includes(playerId),
+    [snapshot.comparisonPlayerIds],
+  );
+
+  const canAddToComparison = snapshot.comparisonPlayerIds.length < MAX_COMPARISON_PLAYERS;
+
+  const addToComparison = useCallback(
+    (playerId: string) => {
+      if (snapshot.comparisonPlayerIds.includes(playerId)) {
+        return true;
+      }
+      if (snapshot.comparisonPlayerIds.length >= MAX_COMPARISON_PLAYERS) {
+        return false;
+      }
+      updateSnapshot((current) => ({
+        ...current,
+        comparisonPlayerIds: [...current.comparisonPlayerIds, playerId],
+      }));
+      return true;
+    },
+    [snapshot.comparisonPlayerIds, updateSnapshot],
+  );
+
+  const removeFromComparison = useCallback(
+    (playerId: string) => {
+      updateSnapshot((current) => ({
+        ...current,
+        comparisonPlayerIds: current.comparisonPlayerIds.filter((id) => id !== playerId),
+      }));
+    },
+    [updateSnapshot],
+  );
+
+  const replaceComparisonPlayer = useCallback(
+    (currentId: string, nextId: string) => {
+      if (currentId === nextId) {
+        return;
+      }
+      updateSnapshot((current) => {
+        const withoutDuplicate = current.comparisonPlayerIds.filter((id) => id !== nextId);
+        return {
+          ...current,
+          comparisonPlayerIds: withoutDuplicate.map((id) =>
+            id === currentId ? nextId : id,
+          ),
+        };
+      });
+    },
+    [updateSnapshot],
+  );
+
+  const clearComparison = useCallback(() => {
+    updateSnapshot((current) => ({ ...current, comparisonPlayerIds: [] }));
+  }, [updateSnapshot]);
+
   const value = useMemo<ScoutWorkspaceContextValue>(
     () => ({
       isReady: isHydrated,
-      favouriteIds: snapshot.favouriteIds,
       recentlyViewedIds: snapshot.recentlyViewedIds,
       recentSearches: snapshot.recentSearches,
       filterPresets: snapshot.filterPresets,
       lastViewedPlayerId: snapshot.lastViewedPlayerId,
-      isFavourite,
-      toggleFavourite,
+      comparisonPlayerIds: snapshot.comparisonPlayerIds,
       recordPlayerView,
       recordSearch,
       clearRecentSearches,
       saveFilterPreset,
       removeFilterPreset,
       resolvePlayers,
+      addToComparison,
+      removeFromComparison,
+      replaceComparisonPlayer,
+      clearComparison,
+      isInComparison,
+      canAddToComparison,
     }),
     [
+      addToComparison,
+      canAddToComparison,
+      clearComparison,
       clearRecentSearches,
-      isFavourite,
+      isInComparison,
+      isHydrated,
       recordPlayerView,
       recordSearch,
+      removeFromComparison,
       removeFilterPreset,
+      replaceComparisonPlayer,
       resolvePlayers,
       saveFilterPreset,
       snapshot,
-      toggleFavourite,
-      isHydrated,
     ],
   );
 

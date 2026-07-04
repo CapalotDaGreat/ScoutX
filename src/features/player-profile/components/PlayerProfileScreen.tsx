@@ -8,8 +8,18 @@ import { PerformanceSummary } from '@/features/player-profile/components/Perform
 import { ProfileDetails } from '@/features/player-profile/components/ProfileDetails';
 import { ProfileHero } from '@/features/player-profile/components/ProfileHero';
 import { ProfileStatsGrid } from '@/features/player-profile/components/ProfileStatsGrid';
+import { BiographyIdentitySection } from '@/features/player-profile/components/identity/BiographyIdentitySection';
+import { CareerIdentitySection } from '@/features/player-profile/components/identity/CareerIdentitySection';
+import { PersonalIdentitySection } from '@/features/player-profile/components/identity/ProfessionalIdentitySection';
+import { PlayingIdentitySection } from '@/features/player-profile/components/identity/PlayingIdentitySection';
+import { ProfessionalIdentitySection } from '@/features/player-profile/components/identity/ProfessionalIdentitySection';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { PlayerStatisticsSection } from '@/features/player-statistics';
+import {
+  FootballJourneySection,
+  useFootballJourney,
+} from '@/features/football-journey';
+import { HighlightVideosSection } from '@/features/highlight-videos';
 
 export type PlayerProfileScreenProps = {
   profile?: PlayerProfile | null;
@@ -17,6 +27,8 @@ export type PlayerProfileScreenProps = {
   error?: string | null;
   onRetry?: () => void;
   onEditPress?: () => void;
+  onEditJourneyPress?: () => void;
+  onManageVideosPress?: () => void;
   onLogMatchPress?: () => void;
 };
 
@@ -26,12 +38,15 @@ export function PlayerProfileScreen({
   error: controlledError,
   onRetry,
   onEditPress,
+  onEditJourneyPress,
+  onManageVideosPress,
   onLogMatchPress,
 }: PlayerProfileScreenProps) {
   const { profile, isLoading, error } = usePlayerProfile();
   const resolvedProfile = controlledProfile ?? profile;
   const resolvedLoading = controlledLoading ?? isLoading;
   const resolvedError = controlledError ?? error;
+  const { entries: journeyEntries } = useFootballJourney(resolvedProfile);
 
   if (resolvedLoading) {
     return (
@@ -68,18 +83,36 @@ export function PlayerProfileScreen({
   }
 
   return (
-    <Screen title="Player Profile" subtitle="Athletic profile overview" safeArea>
+    <Screen title="Player Profile" subtitle="Your football identity on ScoutX" safeArea>
       <View className="gap-4">
         <ProfileHero profile={resolvedProfile} onEditPress={onEditPress} />
+        <BiographyIdentitySection
+          identity={resolvedProfile.identity}
+          biography={resolvedProfile.biography}
+        />
+        <FootballJourneySection
+          entries={journeyEntries}
+          editable={Boolean(onEditJourneyPress)}
+          onEditPress={onEditJourneyPress}
+        />
+        <HighlightVideosSection
+          library={resolvedProfile.highlightVideos}
+          editable={Boolean(onManageVideosPress)}
+          onManagePress={onManageVideosPress}
+        />
+        <PlayingIdentitySection identity={resolvedProfile.identity} />
+        <PersonalIdentitySection identity={resolvedProfile.identity} />
+        <CareerIdentitySection identity={resolvedProfile.identity} />
+        <ProfessionalIdentitySection identity={resolvedProfile.identity} />
+        <ProfileDetails profile={resolvedProfile} />
         <ProfileStatsGrid stats={resolvedProfile.stats} />
         <PlayerStatisticsSection
           matches={resolvedProfile.statisticsMatches}
           onLogMatchPress={onLogMatchPress}
         />
-        <ProfileDetails profile={resolvedProfile} />
         <PerformanceSummary items={resolvedProfile.performanceSummary} />
         <Button variant="secondary" onPress={onEditPress}>
-          Edit Profile
+          Edit Football Identity
         </Button>
       </View>
     </Screen>

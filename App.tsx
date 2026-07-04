@@ -14,6 +14,7 @@ import { LoadingScreen } from '@/components';
 import { ThemeProvider } from '@/theme';
 import { AuthProvider } from '@/features/auth/store/AuthProvider';
 import { AuthNavigator } from '@/features/auth/navigation/AuthNavigator';
+import { AiInsightsProvider } from '@/features/ai-insights';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -23,20 +24,22 @@ export default function App() {
     Inter_700Bold,
   });
 
-  if (!fontsLoaded) {
-    return <LoadingScreen message="Loading fonts" />;
-  }
-
   return (
     <GestureHandlerRootView className="flex-1">
       <SafeAreaProvider>
         <ThemeProvider>
-          <BottomSheetModalProvider>
-            <StatusBar style="auto" />
-            <AuthProvider>
-              <AuthNavigator />
-            </AuthProvider>
-          </BottomSheetModalProvider>
+          {!fontsLoaded ? (
+            <LoadingScreen message="Loading fonts" />
+          ) : (
+            <BottomSheetModalProvider>
+              <StatusBar style="auto" />
+              <AuthProvider>
+                <AiInsightsProvider>
+                  <AuthNavigator />
+                </AiInsightsProvider>
+              </AuthProvider>
+            </BottomSheetModalProvider>
+          )}
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
