@@ -8,22 +8,19 @@ import { Text } from '@/components/primitives/Text';
 import {
   AVAILABILITY_OPTIONS,
   TRANSFER_STATUS_OPTIONS,
+  getOptionLabel,
 } from '@/features/player-profile/constants/footballIdentityOptions';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { VerificationBadgeStrip } from '@/features/trust-system';
+import { type TrustProfile } from '@/features/trust-system/types';
 
 export type ProfileHeroProps = {
   profile: PlayerProfile;
+  trustProfile?: TrustProfile | null;
   onEditPress?: () => void;
 };
 
-function getOptionLabel<T extends string>(
-  options: { label: string; value: T }[],
-  value: T,
-): string {
-  return options.find((option) => option.value === value)?.label ?? value;
-}
-
-export function ProfileHero({ profile, onEditPress }: ProfileHeroProps) {
+export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroProps) {
   const { identity } = profile;
   const primaryPosition = identity.preferredPositions[0] ?? profile.position;
 
@@ -76,6 +73,12 @@ export function ProfileHero({ profile, onEditPress }: ProfileHeroProps) {
             size="sm"
           />
         </View>
+
+        {trustProfile ? (
+          <View className="mt-2">
+            <VerificationBadgeStrip profile={trustProfile} compact />
+          </View>
+        ) : null}
 
         <View className="mt-3 flex-row flex-wrap gap-3">
           <Text variant="body-sm" color="secondary">

@@ -6,17 +6,14 @@ import { Text } from '@/components/primitives/Text';
 import { Heading } from '@/components/primitives/Heading';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
 import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
+import { VerificationBadge } from '@/features/trust-system';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
-import { CheckCircle2 } from 'lucide-react-native';
-import { useTheme } from '@/theme';
 
 export type ScoutReportHeroProps = {
   player: DiscoverablePlayer;
 };
 
 export function ScoutReportHero({ player }: ScoutReportHeroProps) {
-  const { colors } = useTheme();
-
   return (
     <Animated.View entering={FadeInDown.duration(400)} className="gap-4">
       <View className="overflow-hidden rounded-2xl">
@@ -33,11 +30,13 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
               className="border-4 border-white/20"
             />
             <View className="flex-1 pb-1">
-              <View className="flex-row items-center gap-2">
+              <View className="flex-row flex-wrap items-center gap-2">
                 <Heading level={2} className="text-white">
                   {player.fullName}
                 </Heading>
-                {player.verified ? <CheckCircle2 size={18} color={colors.accent} /> : null}
+                {player.verified ? (
+                  <VerificationBadge entity="player" size="sm" />
+                ) : null}
               </View>
               <Text variant="body-sm" className="text-white/85">
                 {player.age} yrs · {player.nationality} · {player.club}

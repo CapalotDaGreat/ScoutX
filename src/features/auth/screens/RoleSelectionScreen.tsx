@@ -9,7 +9,7 @@ import { useAuthRoleSelection } from '@/features/auth/hooks/useAuthForm';
 import { type AuthRole } from '@/features/auth/types';
 
 export type RoleSelectionScreenProps = {
-  onContinue: (role: AuthRole) => void;
+  onContinue: (role: Extract<AuthRole, 'player' | 'scout'>) => void;
   onBack: () => void;
   successMessage?: string | null;
 };

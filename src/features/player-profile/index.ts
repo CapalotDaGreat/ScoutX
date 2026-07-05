@@ -12,8 +12,8 @@ export { PlayingIdentitySection } from './components/identity/PlayingIdentitySec
 export { CareerIdentitySection } from './components/identity/CareerIdentitySection';
 export {
   ProfessionalIdentitySection,
-  PersonalIdentitySection,
 } from './components/identity/ProfessionalIdentitySection';
+export { PersonalIdentitySection } from './components/identity/PersonalIdentitySection';
 export { BiographyIdentitySection } from './components/identity/BiographyIdentitySection';
 export type {
   PlayerProfile,

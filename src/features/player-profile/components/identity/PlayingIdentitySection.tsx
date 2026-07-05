@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Text } from '@/components/primitives/Text';
+import { IdentityFieldCard } from '@/features/player-profile/components/identity/IdentityFieldCard';
 import { IdentityRatingField } from '@/features/player-profile/components/identity/IdentityRatingField';
 import { IdentityTagList } from '@/features/player-profile/components/identity/IdentityTagList';
 import { ProfileSection } from '@/features/player-profile/components/identity/ProfileSection';
@@ -16,32 +16,21 @@ export function PlayingIdentitySection({ identity }: PlayingIdentitySectionProps
       <IdentityTagList label="Preferred Positions" values={identity.preferredPositions} />
       <IdentityTagList label="Secondary Positions" values={identity.secondaryPositions} />
       <View className="flex-row flex-wrap gap-3">
-        <View className="min-w-[45%] flex-1 gap-1 rounded-xl border border-border bg-background-secondary/70 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900/80">
-          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
-            Preferred Formation
-          </Text>
-          <Text variant="body" className="font-sans-medium">
-            {identity.preferredFormation || '—'}
-          </Text>
-        </View>
-        <View className="min-w-[45%] flex-1 gap-1 rounded-xl border border-border bg-background-secondary/70 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900/80">
-          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
-            Playing Style
-          </Text>
-          <Text variant="body" className="font-sans-medium">
-            {identity.preferredPlayingStyle || '—'}
-          </Text>
-        </View>
+        <IdentityFieldCard
+          label="Preferred Formation"
+          value={identity.preferredFormation || '—'}
+        />
+        <IdentityFieldCard
+          label="Playing Style"
+          value={identity.preferredPlayingStyle || '—'}
+        />
       </View>
       <View className="flex-row flex-wrap gap-3">
-        <View className="min-w-[30%] flex-1 gap-1 rounded-xl border border-border bg-background-secondary/70 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900/80">
-          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
-            Strong Foot
-          </Text>
-          <Text variant="body" className="font-sans-medium">
-            {formatFootLabel(identity.strongFoot)}
-          </Text>
-        </View>
+        <IdentityFieldCard
+          label="Strong Foot"
+          value={formatFootLabel(identity.strongFoot)}
+          className="min-w-[30%]"
+        />
         <View className="min-w-[30%] flex-1">
           <IdentityRatingField label="Weak Foot" value={identity.weakFootRating} />
         </View>

@@ -29,6 +29,17 @@ export {
 // Layout
 export { Screen, type ScreenProps } from './layout/Screen';
 export { Section, type SectionProps } from './layout/Section';
+export { CollapsibleSection, type CollapsibleSectionProps } from './layout/CollapsibleSection';
+export { RevealSection, staggeredFadeIn, type RevealSectionProps } from './layout/RevealSection';
+
+// Navigation
+export {
+  AppTabBar,
+  MobileStackHeader,
+  type AppTabBarItem,
+  type AppTabBarProps,
+  type MobileStackHeaderProps,
+} from './navigation';
 
 // Feedback
 export { EmptyState, type EmptyStateProps } from './feedback/EmptyState';

@@ -13,21 +13,33 @@ import {
 import { type TrialInvitation } from '@/features/trial-invitations/types';
 import { Section } from '@/components/layout/Section';
 
-export function PlayerTrialsScreen() {
+export type PlayerTrialsScreenProps = {
+  embeddedInTabShell?: boolean;
+};
+
+export function PlayerTrialsScreen({ embeddedInTabShell = false }: PlayerTrialsScreenProps) {
   const { trials, isLoading, isSaving, acceptTrial, declineTrial } = usePlayerTrialInvitations();
   const { notifications, markRead } = useTrialNotifications();
   const [activeTrial, setActiveTrial] = useState<TrialInvitation | null>(null);
 
+  const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
+
   if (isLoading) {
     return (
-      <Screen title="Trials" subtitle="Your recruitment invitations" safeArea>
+      <Screen title="Trials" subtitle="Your recruitment invitations" safeArea {...screenProps}>
         <SkeletonLoader variant="card" count={2} />
       </Screen>
     );
   }
 
   return (
-    <Screen title="Trials" subtitle="Accept, decline, and track professional trial invitations" scrollable safeArea>
+    <Screen
+      title="Trials"
+      subtitle="Accept, decline, and track professional trial invitations"
+      scrollable
+      safeArea
+      {...screenProps}
+    >
       <View className="gap-6">
         {notifications.length > 0 ? (
           <Section title="Notifications" subtitle="Trial updates for your account">

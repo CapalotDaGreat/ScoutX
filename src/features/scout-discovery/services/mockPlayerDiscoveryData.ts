@@ -59,7 +59,7 @@ function createMockPlayers(): DiscoverablePlayer[] {
       form: ['W', 'W', 'D', 'W', 'L'],
       radarStats: baseRadar,
       distanceKm: 12,
-      clubHistory: [{ club: 'Ajax U19', period: '2023–Present' }],
+      clubHistory: [{ club: 'Ajax U19', period: '2023–Present', yearsAtClub: 3 }],
       achievements: ['Youth Player of the Year', 'Top Assists U19'],
     },
     {

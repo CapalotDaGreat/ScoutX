@@ -33,8 +33,20 @@ const mockProfile: PlayerProfile = {
   identity: {
     currentClub: 'Northstar FC',
     clubHistory: [
-      { club: 'Northstar FC', period: '2023–Present', league: 'Chilean Primera', appearances: 48 },
-      { club: 'Universidad Academy', period: '2020–2023', league: 'Youth', appearances: 62 },
+      {
+        club: 'Northstar FC',
+        period: '2023–Present',
+        league: 'Chilean Primera',
+        appearances: 48,
+        yearsAtClub: 3,
+      },
+      {
+        club: 'Universidad Academy',
+        period: '2020–2023',
+        league: 'Youth',
+        appearances: 62,
+        yearsAtClub: 3,
+      },
     ],
     careerTimeline: [
       {

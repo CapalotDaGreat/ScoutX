@@ -6,6 +6,7 @@ import {
   RECRUITMENT_STAGE_LABELS,
 } from '@/features/scout-recruitment/constants';
 import { type RecruitmentEntry, type RecruitmentStage } from '@/features/scout-recruitment/types';
+import { useCompactLayout } from '@/hooks/useCompactLayout';
 
 export type RecruitmentStageColumnProps = {
   stage: RecruitmentStage;
@@ -21,10 +22,12 @@ export function RecruitmentStageColumn({
   onMovePress,
 }: RecruitmentStageColumnProps) {
   const color = RECRUITMENT_STAGE_COLORS[stage];
+  const { pipelineColumnWidth } = useCompactLayout();
 
   return (
     <View
-      className="mr-3 w-[272px] rounded-2xl border border-border bg-background-secondary dark:border-neutral-800 dark:bg-neutral-950"
+      className="mr-3 rounded-2xl border border-border bg-background-secondary dark:border-neutral-800 dark:bg-neutral-950"
+      style={{ width: pipelineColumnWidth }}
       testID={`recruitment-column-${stage}`}
     >
       <View className="border-b border-divider px-3 py-3 dark:border-neutral-800">

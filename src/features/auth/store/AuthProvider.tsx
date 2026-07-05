@@ -9,14 +9,17 @@ import {
 } from 'react';
 import { doc, setDoc } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
+import { isGuestRole } from '@/features/auth/services/authAccess';
 import { useAuthSession } from '@/features/auth/hooks/useAuthSession';
 import {
   resetPasswordWithFirebase,
+  signInAnonymouslyWithFirebase,
   signInWithFirebase,
   signOutFromFirebase,
   signUpWithFirebase,
 } from '@/features/auth/services/authService';
 import {
+  type AccountUpgradeIntent,
   type AuthRole,
   type AuthStatus,
   type AuthUser,
@@ -29,14 +32,19 @@ type AuthContextValue = {
   status: AuthStatus;
   user: AuthUser | null;
   role: AuthRole | null;
+  isGuest: boolean;
   pendingRoleSelection: boolean;
+  upgradeIntent: AccountUpgradeIntent | null;
   isSubmitting: boolean;
   error: string | null;
   successMessage: string | null;
   signIn: (payload: SignInPayload) => Promise<void>;
   signUp: (payload: SignUpPayload) => Promise<void>;
+  signInAsGuest: () => Promise<void>;
   forgotPassword: (payload: ForgotPasswordPayload) => Promise<void>;
-  selectRole: (role: AuthRole) => void;
+  selectRole: (role: Exclude<AuthRole, 'guest' | 'club'>) => void;
+  beginUpgrade: (intent: AccountUpgradeIntent) => void;
+  clearUpgrade: () => void;
   signOut: () => Promise<void>;
   clearMessages: () => void;
 };
@@ -50,6 +58,7 @@ type AuthState = {
   user: AuthUser | null;
   role: AuthRole | null;
   pendingRoleSelection: boolean;
+  upgradeIntent: AccountUpgradeIntent | null;
   isSubmitting: boolean;
   error: string | null;
   successMessage: string | null;
@@ -62,6 +71,7 @@ const initialState: AuthState = {
   user: null,
   role: null,
   pendingRoleSelection: false,
+  upgradeIntent: null,
   isSubmitting: false,
   error: null,
   successMessage: null,
@@ -72,13 +82,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [state, setState] = useState<AuthState>(initialState);
 
   const syncSession = useCallback(() => {
+    const isGuest = isGuestRole(user?.role, user?.isAnonymous);
+    const pendingRoleSelection = Boolean(
+      user && !isGuest && (user.role === undefined || (user.role !== 'player' && user.role !== 'scout')),
+    );
+
     setState((current) => ({
       ...current,
       status: isLoading ? 'loading' : user ? 'authenticated' : 'unauthenticated',
       user,
       role: user?.role ?? null,
-      pendingRoleSelection: Boolean(user && !user.role),
-      error: null,
+      pendingRoleSelection,
+      error: current.isSubmitting ? current.error : null,
     }));
   }, [isLoading, user]);
 
@@ -90,16 +105,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setState((current) => ({ ...current, error: null, successMessage: null }));
   }, []);
 
+  const signInAsGuest = useCallback(async () => {
+    setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
+
+    try {
+      const nextUser = await signInAnonymouslyWithFirebase();
+      setState({
+        status: 'authenticated',
+        user: nextUser,
+        role: 'guest',
+        pendingRoleSelection: false,
+        upgradeIntent: null,
+        isSubmitting: false,
+        error: null,
+        successMessage: 'Welcome to ScoutX guest mode.',
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to continue as guest.';
+      setState((current) => ({ ...current, isSubmitting: false, error: message }));
+    }
+  }, []);
+
   const signIn = useCallback(async (payload: SignInPayload) => {
     setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
 
     try {
-      const user = await signInWithFirebase(payload);
+      const nextUser = await signInWithFirebase(payload);
       setState({
         status: 'authenticated',
-        user,
-        role: user.role ?? null,
-        pendingRoleSelection: !user.role,
+        user: nextUser,
+        role: nextUser.role ?? null,
+        pendingRoleSelection: !isGuestRole(nextUser.role, nextUser.isAnonymous) && !nextUser.role,
+        upgradeIntent: null,
         isSubmitting: false,
         error: null,
         successMessage: null,
@@ -114,12 +151,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
 
     try {
-      const user = await signUpWithFirebase(payload);
+      const nextUser = await signUpWithFirebase(payload);
       setState({
         status: 'authenticated',
-        user,
-        role: null,
+        user: nextUser,
+        role: nextUser.role ?? null,
         pendingRoleSelection: true,
+        upgradeIntent: null,
         isSubmitting: false,
         error: null,
         successMessage: 'Welcome to ScoutX. Choose your role to continue.',
@@ -146,13 +184,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  const selectRole = useCallback((role: AuthRole) => {
-    const userId = state.user?.id;
+  const selectRole = useCallback((role: Exclude<AuthRole, 'guest' | 'club'>) => {
+    const userId = state.user?.uid;
     if (userId) {
       const db = getFirestoreDb();
       if (db) {
-        void setDoc(doc(db, 'users', userId), { role, updatedAt: new Date().toISOString() }, { merge: true })
-          .catch((err) => console.error('Error saving role to Firestore:', err));
+        void setDoc(
+          doc(db, 'users', userId),
+          { role, isAnonymous: false, updatedAt: new Date().toISOString() },
+          { merge: true },
+        ).catch((err) => console.error('Error saving role to Firestore:', err));
       }
     }
 
@@ -160,10 +201,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
       ...current,
       role,
       pendingRoleSelection: false,
-      user: current.user ? { ...current.user, role } : current.user,
+      upgradeIntent: null,
+      user: current.user ? { ...current.user, role, isAnonymous: false } : current.user,
       successMessage: `You’re ready to explore ScoutX as a ${role}.`,
     }));
-  }, [state.user?.id]);
+  }, [state.user?.uid]);
+
+  const beginUpgrade = useCallback((intent: AccountUpgradeIntent) => {
+    setState((current) => ({
+      ...current,
+      upgradeIntent: intent,
+      error: null,
+      successMessage: null,
+    }));
+  }, []);
+
+  const clearUpgrade = useCallback(() => {
+    setState((current) => ({ ...current, upgradeIntent: null, error: null }));
+  }, []);
 
   const signOut = useCallback(async () => {
     setState((current) => ({ ...current, isSubmitting: true }));
@@ -173,29 +228,56 @@ export function AuthProvider({ children }: AuthProviderProps) {
       user: null,
       role: null,
       pendingRoleSelection: false,
+      upgradeIntent: null,
       isSubmitting: false,
       error: null,
       successMessage: 'Signed out successfully.',
     });
   }, []);
 
+  const isGuest = isGuestRole(state.role ?? undefined, state.user?.isAnonymous);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       status: state.status,
       user: state.user,
       role: state.role,
+      isGuest,
       pendingRoleSelection: state.pendingRoleSelection,
+      upgradeIntent: state.upgradeIntent,
       isSubmitting: state.isSubmitting,
       error: state.error,
       successMessage: state.successMessage,
       signIn,
       signUp,
+      signInAsGuest,
       forgotPassword,
       selectRole,
+      beginUpgrade,
+      clearUpgrade,
       signOut,
       clearMessages,
     }),
-    [clearMessages, forgotPassword, selectRole, signIn, signOut, signUp, state.error, state.isSubmitting, state.pendingRoleSelection, state.role, state.status, state.successMessage, state.user],
+    [
+      beginUpgrade,
+      clearMessages,
+      clearUpgrade,
+      forgotPassword,
+      isGuest,
+      selectRole,
+      signIn,
+      signInAsGuest,
+      signOut,
+      signUp,
+      state.error,
+      state.isSubmitting,
+      state.pendingRoleSelection,
+      state.role,
+      state.status,
+      state.successMessage,
+      state.upgradeIntent,
+      state.user,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

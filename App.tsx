@@ -1,4 +1,5 @@
 import './global.css';
+import { enableScreens } from 'react-native-screens';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -13,8 +14,11 @@ import { StatusBar } from 'expo-status-bar';
 import { LoadingScreen } from '@/components';
 import { ThemeProvider } from '@/theme';
 import { AuthProvider } from '@/features/auth/store/AuthProvider';
-import { AuthNavigator } from '@/features/auth/navigation/AuthNavigator';
+import { RootNavigator } from '@/navigation';
 import { AiInsightsProvider } from '@/features/ai-insights';
+import { ActivityProvider } from '@/features/activity-feed';
+
+enableScreens();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -34,9 +38,11 @@ export default function App() {
             <BottomSheetModalProvider>
               <StatusBar style="auto" />
               <AuthProvider>
-                <AiInsightsProvider>
-                  <AuthNavigator />
-                </AiInsightsProvider>
+                <ActivityProvider>
+                  <AiInsightsProvider>
+                    <RootNavigator />
+                  </AiInsightsProvider>
+                </ActivityProvider>
               </AuthProvider>
             </BottomSheetModalProvider>
           )}

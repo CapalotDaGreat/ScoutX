@@ -15,17 +15,23 @@ import { ComparisonTrendChart } from '@/features/player-comparison/components/Co
 import { ComparisonVideosSection } from '@/features/player-comparison/components/ComparisonVideosSection';
 import { COMPARISON_SECTION_LABELS } from '@/features/player-comparison/constants';
 import { usePlayerComparison } from '@/features/player-comparison/hooks/usePlayerComparison';
+import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { type ComparisonSectionKey } from '@/features/player-comparison/types';
 
 export type PlayerComparisonScreenProps = {
   onDiscoverPress?: () => void;
+  embeddedInTabShell?: boolean;
 };
 
 type PickerMode =
   | { type: 'add' }
   | { type: 'replace'; playerId: string };
 
-export function PlayerComparisonScreen({ onDiscoverPress }: PlayerComparisonScreenProps) {
+export function PlayerComparisonScreen({
+  onDiscoverPress,
+  embeddedInTabShell = false,
+}: PlayerComparisonScreenProps) {
+  const { isTablet } = useCompactLayout();
   const {
     players,
     profiles,
@@ -149,6 +155,7 @@ export function PlayerComparisonScreen({ onDiscoverPress }: PlayerComparisonScre
         title="Player Comparison"
         subtitle="Compare up to four players across radar, stats, trends, and career signals."
         safeArea
+        embeddedInTabShell={embeddedInTabShell}
         empty={players.length === 0}
         emptyTitle="Add players to compare"
         emptyDescription="Select players from Discover or use the compare action on any player card."
@@ -184,10 +191,29 @@ export function PlayerComparisonScreen({ onDiscoverPress }: PlayerComparisonScre
           </View>
         ) : (
           <>
-            <ComparisonSectionNav activeSection={activeSection} onSectionChange={setActiveSection} />
-            <Section title={COMPARISON_SECTION_LABELS[activeSection]} subtitle={metricSubtitle}>
-              {renderSection()}
-            </Section>
+            {isTablet ? (
+              <View className="flex-row gap-6">
+                <View className="w-[220px]">
+                  <ComparisonSectionNav
+                    activeSection={activeSection}
+                    onSectionChange={setActiveSection}
+                    layout="vertical"
+                  />
+                </View>
+                <View className="min-w-0 flex-1">
+                  <Section title={COMPARISON_SECTION_LABELS[activeSection]} subtitle={metricSubtitle}>
+                    {renderSection()}
+                  </Section>
+                </View>
+              </View>
+            ) : (
+              <>
+                <ComparisonSectionNav activeSection={activeSection} onSectionChange={setActiveSection} />
+                <Section title={COMPARISON_SECTION_LABELS[activeSection]} subtitle={metricSubtitle}>
+                  {renderSection()}
+                </Section>
+              </>
+            )}
           </>
         )}
       </Screen>

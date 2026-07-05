@@ -32,6 +32,7 @@ export type RadarStat = {
 export type ClubHistoryEntry = {
   club: string;
   period: string;
+  yearsAtClub?: number;
 };
 
 export type DiscoverablePlayer = {

@@ -45,6 +45,7 @@ export type PlayerDiscoveryScreenProps = {
   onResetFilters: () => void;
   onApplyPreset: (preset: FilterPreset) => void;
   onSaveCurrentPreset: () => void;
+  guestMode?: boolean;
 };
 
 export function PlayerDiscoveryScreen({
@@ -61,6 +62,7 @@ export function PlayerDiscoveryScreen({
   onResetFilters,
   onApplyPreset,
   onSaveCurrentPreset,
+  guestMode = false,
 }: PlayerDiscoveryScreenProps) {
   const { colors } = useTheme();
   const workspace = useScoutWorkspace();
@@ -98,23 +100,31 @@ export function PlayerDiscoveryScreen({
           player={item}
           index={index}
           onPress={onPlayerPress}
-          isSaved={playerSave.isSaved(item.id)}
-          onToggleSave={() => {
-            void playerSave.toggleSave(item);
-          }}
-          isInComparison={workspace.isInComparison(item.id)}
-          canAddToComparison={workspace.canAddToComparison}
-          onToggleCompare={(playerId) => {
-            if (workspace.isInComparison(playerId)) {
-              workspace.removeFromComparison(playerId);
-              return;
-            }
-            workspace.addToComparison(playerId);
-          }}
+          isSaved={guestMode ? false : playerSave.isSaved(item.id)}
+          onToggleSave={
+            guestMode
+              ? undefined
+              : () => {
+                  void playerSave.toggleSave(item);
+                }
+          }
+          isInComparison={guestMode ? false : workspace.isInComparison(item.id)}
+          canAddToComparison={guestMode ? false : workspace.canAddToComparison}
+          onToggleCompare={
+            guestMode
+              ? undefined
+              : (playerId) => {
+                  if (workspace.isInComparison(playerId)) {
+                    workspace.removeFromComparison(playerId);
+                    return;
+                  }
+                  workspace.addToComparison(playerId);
+                }
+          }
         />
       </View>
     ),
-    [onPlayerPress, playerSave, workspace],
+    [guestMode, onPlayerPress, playerSave, workspace],
   );
 
   const listHeader = (
@@ -141,7 +151,7 @@ export function PlayerDiscoveryScreen({
         presets={workspace.filterPresets}
         activePresetId={activePresetId}
         onApplyPreset={onApplyPreset}
-        onSaveCurrent={onSaveCurrentPreset}
+        onSaveCurrent={guestMode ? undefined : onSaveCurrentPreset}
       />
       <View className="flex-row items-center gap-3">
         <Button

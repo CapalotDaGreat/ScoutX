@@ -20,6 +20,7 @@ export type StatisticsScreenProps = {
   onLogMatchPress?: () => void;
   onRefresh?: () => void;
   refreshing?: boolean;
+  embeddedInTabShell?: boolean;
 };
 
 export function StatisticsScreen({
@@ -28,13 +29,16 @@ export function StatisticsScreen({
   onLogMatchPress,
   onRefresh,
   refreshing = false,
+  embeddedInTabShell = false,
 }: StatisticsScreenProps) {
   const { colors } = useTheme();
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
+  const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
+  const fabBottomOffset = embeddedInTabShell ? 72 : undefined;
 
   if (isLoading) {
     return (
-      <Screen title="Statistics" subtitle="Loading performance data" safeArea>
+      <Screen title="Statistics" subtitle="Loading performance data" safeArea {...screenProps}>
         <SkeletonLoader variant="card" count={4} />
       </Screen>
     );
@@ -48,6 +52,7 @@ export function StatisticsScreen({
         error={error}
         onRetry={onRefresh}
         safeArea
+        {...screenProps}
       >
         <View />
       </Screen>
@@ -56,7 +61,7 @@ export function StatisticsScreen({
 
   if (overview.matchCount === 0) {
     return (
-      <Screen title="Statistics" subtitle="Performance analytics" safeArea>
+      <Screen title="Statistics" subtitle="Performance analytics" safeArea {...screenProps}>
         <EmptyState
           title="No match data yet"
           description="Log your first match to unlock totals, averages, trends, and charts."
@@ -76,6 +81,7 @@ export function StatisticsScreen({
         refreshing={refreshing}
         safeArea
         contentClassName="gap-8"
+        {...screenProps}
       >
         <StatisticsCards items={overview.totals} />
         <AiInsightPanel
@@ -98,6 +104,7 @@ export function StatisticsScreen({
           icon={<BarChart3 size={24} color={colors.accentForeground} strokeWidth={2} />}
           accessibilityLabel="Log match"
           onPress={onLogMatchPress}
+          bottomOffset={fabBottomOffset}
         />
       ) : null}
     </View>

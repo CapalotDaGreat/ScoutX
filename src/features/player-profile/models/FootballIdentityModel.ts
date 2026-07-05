@@ -42,6 +42,7 @@ function parseClubHistory(value: unknown): ClubHistoryEntry[] {
       period: record.period,
       league: typeof record.league === 'string' ? record.league : undefined,
       appearances: typeof record.appearances === 'number' ? record.appearances : undefined,
+      yearsAtClub: typeof record.yearsAtClub === 'number' ? record.yearsAtClub : undefined,
     });
   }
 

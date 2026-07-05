@@ -14,9 +14,13 @@ import { type GpsSession } from '@/features/gps/types';
 
 export type GpsTrackingScreenProps = {
   playerId: string | null;
+  embeddedInTabShell?: boolean;
 };
 
-export function GpsTrackingScreen({ playerId }: GpsTrackingScreenProps) {
+export function GpsTrackingScreen({
+  playerId,
+  embeddedInTabShell = false,
+}: GpsTrackingScreenProps) {
   const {
     status,
     matchLabel,
@@ -62,6 +66,7 @@ export function GpsTrackingScreen({ playerId }: GpsTrackingScreenProps) {
       onRetry={refreshSessions}
       safeArea
       contentClassName="gap-8"
+      embeddedInTabShell={embeddedInTabShell}
     >
       <Section title="Live Session" gap="md">
         <GpsRecordingControls

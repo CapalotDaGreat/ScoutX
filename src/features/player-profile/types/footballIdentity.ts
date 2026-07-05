@@ -35,6 +35,7 @@ export type ClubHistoryEntry = {
   period: string;
   league?: string;
   appearances?: number;
+  yearsAtClub?: number;
 };
 
 export type CareerTimelineEntry = {

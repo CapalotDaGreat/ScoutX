@@ -5,8 +5,10 @@ import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { type AuthRole } from '@/features/auth/types';
 
+export type SelectableAuthRole = Extract<AuthRole, 'player' | 'scout'>;
+
 export type RoleOptionProps = {
-  role: AuthRole;
+  role: SelectableAuthRole;
   selected?: boolean;
   onPress?: () => void;
   accessibilityLabel?: string;
@@ -19,7 +21,7 @@ type RoleMeta = {
   icon: typeof UserRound;
 };
 
-const roleMeta: Record<AuthRole, RoleMeta> = {
+const roleMeta: Record<SelectableAuthRole, RoleMeta> = {
   player: {
     title: 'Player',
     description: 'Create a profile, showcase your stats, and connect with scouts.',

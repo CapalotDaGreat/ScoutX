@@ -7,7 +7,6 @@ export { DiscoverySortBar } from './components/DiscoverySortBar';
 export { FeaturedPlayersCarousel } from './components/FeaturedPlayersCarousel';
 export { PlayerCarousel } from './components/PlayerCarousel';
 export { MiniRadarChart } from './components/MiniRadarChart';
-export { ScoutShell } from './components/ScoutShell';
 export { ScoutReportHero } from './components/ScoutReportHero';
 
 export { usePlayerDiscovery } from './hooks/usePlayerDiscovery';

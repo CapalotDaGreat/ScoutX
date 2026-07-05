@@ -15,6 +15,7 @@ import {
 } from '@/features/highlight-videos/types';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 
 export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
   const { user } = useAuth();
@@ -33,6 +34,21 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
   );
 
   const repository = useMemo(() => HighlightVideoRepository.getInstance(), []);
+
+  const recordVideoUploaded = useCallback(
+    (video: HighlightVideo) => {
+      if (!user?.id) {
+        return;
+      }
+      ActivityRecorder.getInstance().recordVideoUploaded({
+        playerId: user.id,
+        playerName: profile?.fullName ?? user.name,
+        videoId: video.id,
+        videoTitle: video.title,
+      });
+    },
+    [profile?.fullName, user?.id, user?.name],
+  );
 
   const uploadWithMetadata = useCallback(
     async (metadata: Omit<HighlightVideo, 'id' | 'videoUrl' | 'thumbnailUrl' | 'storagePath' | 'thumbnailStoragePath' | 'fileSizeBytes' | 'uploadStatus' | 'uploadError' | 'createdAt' | 'updatedAt' | 'analysis'>) => {
@@ -73,13 +89,17 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
           },
         });
 
+        if (video.uploadStatus === 'ready') {
+          recordVideoUploaded(video);
+        }
+
         return video;
       } finally {
         setIsUploading(false);
         setUploadProgress(null);
       }
     },
-    [library, repository, user?.id],
+    [library, recordVideoUploaded, repository, user?.id],
   );
 
   const pickAndPrepareUpload = useCallback(async () => {
@@ -124,13 +144,18 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
               phase,
             });
           },
+        }).then((video) => {
+          if (video.uploadStatus === 'ready') {
+            recordVideoUploaded(video);
+          }
+          return video;
         });
       } finally {
         setIsUploading(false);
         setUploadProgress(null);
       }
     },
-    [library, repository, user?.id],
+    [library, recordVideoUploaded, repository, user?.id],
   );
 
   const deleteVideo = useCallback(
@@ -199,7 +224,7 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
 
         setIsUploading(true);
         try {
-          return await repository.retryUpload(
+          const video = await repository.retryUpload(
             user.id,
             library,
             videoId,
@@ -215,6 +240,10 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
               });
             },
           );
+          if (video?.uploadStatus === 'ready') {
+            recordVideoUploaded(video);
+          }
+          return video;
         } finally {
           setIsUploading(false);
           setUploadProgress(null);
@@ -229,7 +258,7 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
 
       setIsUploading(true);
       try {
-        return await repository.retryUpload(
+        const video = await repository.retryUpload(
           user.id,
           library,
           videoId,
@@ -245,12 +274,16 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
             });
           },
         );
+        if (video?.uploadStatus === 'ready') {
+          recordVideoUploaded(video);
+        }
+        return video;
       } finally {
         setIsUploading(false);
         setUploadProgress(null);
       }
     },
-    [library, pendingRetryUri, repository, user?.id],
+    [library, pendingRetryUri, recordVideoUploaded, repository, user?.id],
   );
 
   return {

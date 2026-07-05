@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react-native';
+import { ArrowRight, ShieldCheck, Sparkles, UserRound } from 'lucide-react-native';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Screen } from '@/components/layout/Screen';
@@ -10,9 +10,16 @@ import { useTheme } from '@/theme';
 export type WelcomeScreenProps = {
   onGetStarted: () => void;
   onSignIn: () => void;
+  onContinueAsGuest: () => void;
+  isSubmitting?: boolean;
 };
 
-export function WelcomeScreen({ onGetStarted, onSignIn }: WelcomeScreenProps) {
+export function WelcomeScreen({
+  onGetStarted,
+  onSignIn,
+  onContinueAsGuest,
+  isSubmitting = false,
+}: WelcomeScreenProps) {
   const { colors } = useTheme();
 
   return (
@@ -38,12 +45,20 @@ export function WelcomeScreen({ onGetStarted, onSignIn }: WelcomeScreenProps) {
             <Button variant="secondary" onPress={onSignIn}>
               I already have an account
             </Button>
+            <Button
+              variant="ghost"
+              loading={isSubmitting}
+              onPress={onContinueAsGuest}
+              leftIcon={<UserRound size={18} color={colors.textSecondary} strokeWidth={1.75} />}
+            >
+              Continue as Guest
+            </Button>
           </View>
 
           <View className="flex-row items-center justify-center gap-2 pt-2">
             <Sparkles size={16} color={colors.textSecondary} strokeWidth={1.5} />
             <Text variant="caption" color="secondary">
-              Mock authentication • no backend yet
+              Guest mode preserves your session for easy account upgrade
             </Text>
           </View>
         </AuthCard>

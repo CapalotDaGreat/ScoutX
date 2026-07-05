@@ -19,6 +19,7 @@ import {
   type RecruitmentWorkspace,
 } from '@/features/scout-recruitment/types';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 
 type RecruitmentContextValue = {
   isReady: boolean;
@@ -48,10 +49,15 @@ const RecruitmentContext = createContext<RecruitmentContextValue | null>(null);
 
 type RecruitmentProviderProps = {
   scoutId: string | null;
+  scoutName?: string;
   children: ReactNode;
 };
 
-export function RecruitmentProvider({ scoutId, children }: RecruitmentProviderProps) {
+export function RecruitmentProvider({
+  scoutId,
+  scoutName = 'Scout',
+  children,
+}: RecruitmentProviderProps) {
   const repository = useMemo(() => RecruitmentRepository.getInstance(), []);
   const [workspace, setWorkspace] = useState<RecruitmentWorkspace | null>(null);
   const [isReady, setIsReady] = useState(false);
@@ -108,11 +114,20 @@ export function RecruitmentProvider({ scoutId, children }: RecruitmentProviderPr
       if (!scoutId) {
         return;
       }
+      const wasTracked = isPlayerTracked(player.id);
       await runMutation(() =>
         repository.savePlayer(scoutId, toPlayerSnapshot(player), stage, folderId),
       );
+      if (!wasTracked) {
+        ActivityRecorder.getInstance().recordPlayerSaved({
+          scoutId,
+          scoutName,
+          playerId: player.id,
+          playerName: player.fullName,
+        });
+      }
     },
-    [repository, runMutation, scoutId],
+    [isPlayerTracked, repository, runMutation, scoutId, scoutName],
   );
 
   const removePlayer = useCallback(

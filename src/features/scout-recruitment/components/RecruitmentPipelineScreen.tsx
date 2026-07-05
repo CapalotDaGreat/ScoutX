@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Kanban, LayoutList } from 'lucide-react-native';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
+import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { CreateRecruitmentFolderModal } from '@/features/scout-recruitment/components/CreateRecruitmentFolderModal';
@@ -10,12 +12,15 @@ import { CreateRecruitmentShortlistModal } from '@/features/scout-recruitment/co
 import { RecruitmentEntryActionsModal } from '@/features/scout-recruitment/components/RecruitmentEntryActionsModal';
 import { RecruitmentFolderBar } from '@/features/scout-recruitment/components/RecruitmentFolderBar';
 import { RecruitmentPipelineBoard } from '@/features/scout-recruitment/components/RecruitmentPipelineBoard';
+import { RecruitmentPipelineListView } from '@/features/scout-recruitment/components/RecruitmentPipelineListView';
 import { RecruitmentShortlistBar } from '@/features/scout-recruitment/components/RecruitmentShortlistBar';
 import { groupEntriesByStage } from '@/features/scout-recruitment/models/RecruitmentModel';
 import { useRecruitment } from '@/features/scout-recruitment/context/RecruitmentProvider';
 import { type RecruitmentEntry } from '@/features/scout-recruitment/types';
-import { Kanban } from 'lucide-react-native';
+import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useTheme } from '@/theme';
+
+export type PipelineViewMode = 'kanban' | 'list';
 
 export type RecruitmentPipelineScreenProps = {
   onDiscoverPress?: () => void;
@@ -27,6 +32,7 @@ export function RecruitmentPipelineScreen({
   onPlayerPress,
 }: RecruitmentPipelineScreenProps) {
   const { colors } = useTheme();
+  const { isCompact, isTablet } = useCompactLayout();
   const {
     isReady,
     workspace,
@@ -38,6 +44,7 @@ export function RecruitmentPipelineScreen({
   const [folderModalVisible, setFolderModalVisible] = useState(false);
   const [shortlistModalVisible, setShortlistModalVisible] = useState(false);
   const [activeEntry, setActiveEntry] = useState<RecruitmentEntry | null>(null);
+  const [viewMode, setViewMode] = useState<PipelineViewMode>(isTablet ? 'kanban' : 'list');
 
   const filteredEntriesByStage = useMemo(() => {
     const entries = workspace?.entries ?? [];
@@ -74,6 +81,28 @@ export function RecruitmentPipelineScreen({
             </Text>
           </View>
         </View>
+        {isCompact ? (
+          <View className="mt-3 flex-row gap-2">
+            <Button
+              variant={viewMode === 'list' ? 'accent' : 'secondary'}
+              size="sm"
+              className="flex-1"
+              leftIcon={<LayoutList size={16} color={viewMode === 'list' ? colors.accentForeground : colors.textPrimary} />}
+              onPress={() => setViewMode('list')}
+            >
+              List
+            </Button>
+            <Button
+              variant={viewMode === 'kanban' ? 'accent' : 'secondary'}
+              size="sm"
+              className="flex-1"
+              leftIcon={<Kanban size={16} color={viewMode === 'kanban' ? colors.accentForeground : colors.textPrimary} />}
+              onPress={() => setViewMode('kanban')}
+            >
+              Board
+            </Button>
+          </View>
+        ) : null}
       </View>
 
       {totalPlayers === 0 ? (
@@ -99,11 +128,19 @@ export function RecruitmentPipelineScreen({
             onCreateShortlist={() => setShortlistModalVisible(true)}
           />
 
-          <RecruitmentPipelineBoard
-            entriesByStage={filteredEntriesByStage}
-            onCardPress={(entry) => onPlayerPress?.(entry.playerId)}
-            onMovePress={setActiveEntry}
-          />
+          {viewMode === 'kanban' ? (
+            <RecruitmentPipelineBoard
+              entriesByStage={filteredEntriesByStage}
+              onCardPress={(entry) => onPlayerPress?.(entry.playerId)}
+              onMovePress={setActiveEntry}
+            />
+          ) : (
+            <RecruitmentPipelineListView
+              entriesByStage={filteredEntriesByStage}
+              onCardPress={(entry) => onPlayerPress?.(entry.playerId)}
+              onMovePress={setActiveEntry}
+            />
+          )}
         </View>
       )}
 

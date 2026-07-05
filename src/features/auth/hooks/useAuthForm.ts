@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { type AuthRole } from '@/features/auth/types';
 
+export type SelectableAuthRole = Extract<AuthRole, 'player' | 'scout'>;
+
 export type FormErrors<T> = Partial<Record<keyof T, string>>;
 
 export function useAuthForm<T extends Record<string, string>>(initialValues: T) {
@@ -37,7 +39,7 @@ export function useAuthForm<T extends Record<string, string>>(initialValues: T) 
   );
 }
 
-export function useAuthRoleSelection(initialRole: AuthRole | null = null) {
-  const [role, setRole] = useState<AuthRole | null>(initialRole);
+export function useAuthRoleSelection(initialRole: SelectableAuthRole | null = null) {
+  const [role, setRole] = useState<SelectableAuthRole | null>(initialRole);
   return { role, setRole };
 }

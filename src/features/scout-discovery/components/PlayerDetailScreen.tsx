@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/layout/Screen';
+import { RevealSection } from '@/components/layout/RevealSection';
 import { Section } from '@/components/layout/Section';
 import { DiscoveryListSkeleton } from '@/features/scout-discovery/components/DiscoveryCardSkeleton';
 import { Button } from '@/components/primitives/Button';
@@ -13,6 +13,7 @@ import { generateHeatmapGrid } from '@/features/gps/services/gpsSessionCalculato
 import { type GpsPoint } from '@/features/gps/types';
 import { RadarChart } from '@/features/player-statistics/components/RadarChart';
 import { type RadarChartPoint, type StatisticMetricKey } from '@/features/player-statistics/types';
+import { TrustProfileSection } from '@/features/trust-system';
 import { ScoutingReportsSection } from '@/features/scouting-reports';
 import { ScoutTrialInvitationsSection } from '@/features/trial-invitations';
 import { RecruitmentPlayerSection } from '@/features/scout-recruitment/components/RecruitmentPlayerSection';
@@ -60,9 +61,10 @@ function toRadarPoints(player: DiscoverablePlayer): RadarChartPoint[] {
 export type PlayerDetailScreenProps = {
   playerId: string;
   onBack: () => void;
+  guestMode?: boolean;
 };
 
-export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps) {
+export function PlayerDetailScreen({ playerId, onBack, guestMode = false }: PlayerDetailScreenProps) {
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
   const workspace = useScoutWorkspace();
@@ -138,6 +140,8 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
               Back
             </Button>
             <View className="flex-row gap-2">
+            {!guestMode ? (
+              <>
             <Button
               variant={inComparison ? 'accent' : 'secondary'}
               size="sm"
@@ -176,6 +180,8 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
             >
               {saved ? 'Saved' : 'Save'}
             </Button>
+              </>
+            ) : null}
             </View>
           </View>
         }
@@ -184,23 +190,39 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
           <ScoutReportHero player={player} />
         </View>
 
-        <Animated.View entering={FadeInDown.delay(65).duration(350)} className="px-4">
-          <RecruitmentPlayerSection player={player} />
-        </Animated.View>
+        {!guestMode ? (
+          <RevealSection step={0} className="px-4">
+            <RecruitmentPlayerSection player={player} />
+          </RevealSection>
+        ) : null}
 
-        <Animated.View entering={FadeInDown.delay(70).duration(350)} className="px-4">
-          <ScoutTrialInvitationsSection
+        {!guestMode ? (
+          <RevealSection step={1} className="px-4">
+            <ScoutTrialInvitationsSection
+              playerId={player.id}
+              playerName={player.fullName}
+              inviteSignal={inviteSignal}
+            />
+          </RevealSection>
+        ) : null}
+
+        <RevealSection step={2} className="px-4">
+          <TrustProfileSection
             playerId={player.id}
             playerName={player.fullName}
-            inviteSignal={inviteSignal}
+            currentClub={player.club}
+            clubHistory={player.clubHistory ?? []}
+            allowScoutEndorsement={!guestMode}
           />
-        </Animated.View>
+        </RevealSection>
 
-        <Animated.View entering={FadeInDown.delay(80).duration(350)} className="px-4">
-          <ScoutingReportsSection playerId={player.id} playerName={player.fullName} />
-        </Animated.View>
+        {!guestMode ? (
+          <RevealSection step={3} className="px-4">
+            <ScoutingReportsSection playerId={player.id} playerName={player.fullName} />
+          </RevealSection>
+        ) : null}
 
-        <Animated.View entering={FadeInDown.delay(100).duration(350)} className="px-4">
+        <RevealSection step={4} className="px-4">
           <Card variant="outlined" padding="md" className="gap-2">
             <Text variant="overline" color="secondary">
               Player Overview
@@ -211,15 +233,15 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
               {new Date(player.updatedAt).toLocaleDateString()}
             </Text>
           </Card>
-        </Animated.View>
+        </RevealSection>
 
-        <Animated.View entering={FadeInDown.delay(120).duration(350)} className="px-4">
+        <RevealSection step={5} className="px-4">
           <Section title="Attribute Profile">
             <RadarChart points={radarPoints} />
           </Section>
-        </Animated.View>
+        </RevealSection>
 
-        <Animated.View entering={FadeInDown.delay(160).duration(350)} className="px-4">
+        <RevealSection step={6} className="px-4">
           <Section title="Season Output">
             <View className="flex-row flex-wrap gap-3">
               <StatCard label="Goals" value={player.goals} className="min-w-[45%] flex-1" />
@@ -228,9 +250,9 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
               <StatCard label="Profile Views" value={player.viewCount} className="min-w-[45%] flex-1" />
             </View>
           </Section>
-        </Animated.View>
+        </RevealSection>
 
-        <Animated.View entering={FadeInDown.delay(200).duration(350)} className="px-4">
+        <RevealSection step={7} className="px-4">
           <Section title="Technical Ratings">
             <View className="flex-row flex-wrap gap-3">
               <StatCard label="Passing" value={player.ratings.passing} className="min-w-[45%] flex-1" />
@@ -239,9 +261,9 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
               <StatCard label="Physical" value={player.ratings.physical} className="min-w-[45%] flex-1" />
             </View>
           </Section>
-        </Animated.View>
+        </RevealSection>
 
-        <Animated.View entering={FadeInDown.delay(240).duration(350)} className="px-4">
+        <RevealSection step={8} className="px-4">
           <Section title="Club History">
             {player.clubHistory.map((entry) => (
               <Card key={`${entry.club}-${entry.period}`} variant="default" padding="md" className="mb-2">
@@ -252,16 +274,16 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
               </Card>
             ))}
           </Section>
-        </Animated.View>
+        </RevealSection>
 
         {heatmap ? (
-          <Animated.View entering={FadeInDown.delay(280).duration(350)} className="px-4">
+          <RevealSection step={9} className="px-4">
             <GpsHeatmap heatmap={heatmap} title="Movement Intelligence" />
-          </Animated.View>
+          </RevealSection>
         ) : null}
 
         {player.hasHighlightVideos ? (
-          <Animated.View entering={FadeInDown.delay(320).duration(350)} className="px-4">
+          <RevealSection step={10} className="px-4">
             <Section title="Match Footage">
               <Card variant="default" padding="lg" className="flex-row items-center gap-3">
                 <Video size={24} color={colors.accent} />
@@ -273,10 +295,10 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
                 </View>
               </Card>
             </Section>
-          </Animated.View>
+          </RevealSection>
         ) : null}
 
-        <Animated.View entering={FadeInDown.delay(360).duration(350)} className="px-4">
+        <RevealSection step={11} className="px-4">
           <Section title="Honours">
             {player.achievements.length > 0 ? (
               player.achievements.map((achievement) => (
@@ -290,9 +312,10 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
               </Text>
             )}
           </Section>
-        </Animated.View>
+        </RevealSection>
       </Screen>
 
+      {!guestMode ? (
       <View className="absolute bottom-0 left-0 right-0 border-t border-divider bg-surface px-4 pb-6 pt-3 dark:border-neutral-800 dark:bg-neutral-950">
         <View className="flex-row gap-3">
           <Button
@@ -311,6 +334,7 @@ export function PlayerDetailScreen({ playerId, onBack }: PlayerDetailScreenProps
           </Button>
         </View>
       </View>
+      ) : null}
     </View>
   );
 }

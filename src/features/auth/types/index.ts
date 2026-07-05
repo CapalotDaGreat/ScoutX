@@ -1,11 +1,19 @@
-export type AuthRole = 'player' | 'scout';
+export type AuthRole = 'guest' | 'player' | 'scout' | 'club';
 
 export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 
+export type AccountUpgradeIntent = 'register' | 'login';
+
 export type AuthUser = {
+  /** Firebase UID — canonical identifier */
+  uid: string;
+  /** @deprecated Use `uid` — kept for backward compatibility with existing hooks */
   id: string;
+  isAnonymous: boolean;
+  displayName?: string;
+  /** Display name alias used across the app */
   name: string;
-  email: string;
+  email?: string;
   role?: AuthRole;
 };
 
@@ -25,6 +33,26 @@ export type ForgotPasswordPayload = {
   email: string;
 };
 
+export function createAuthUser(fields: {
+  uid: string;
+  isAnonymous?: boolean;
+  displayName?: string;
+  name?: string;
+  email?: string;
+  role?: AuthRole;
+}): AuthUser {
+  const displayName = fields.displayName ?? fields.name ?? 'ScoutX User';
+  return {
+    uid: fields.uid,
+    id: fields.uid,
+    isAnonymous: fields.isAnonymous ?? false,
+    displayName,
+    name: displayName,
+    email: fields.email,
+    role: fields.role,
+  };
+}
+
 export class AuthError extends Error {
   constructor(
     message: string,
@@ -34,7 +62,9 @@ export class AuthError extends Error {
       | 'weak-password'
       | 'password-mismatch'
       | 'invalid-email'
-      | 'not-found',
+      | 'not-found'
+      | 'anonymous-disabled'
+      | 'credential-already-in-use',
   ) {
     super(message);
     this.name = 'AuthError';

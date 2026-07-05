@@ -7,6 +7,7 @@ import { cn } from '@/utils/cn';
 export type ComparisonSectionNavProps = {
   activeSection: ComparisonSectionKey;
   onSectionChange: (section: ComparisonSectionKey) => void;
+  layout?: 'horizontal' | 'vertical';
 };
 
 const sections = Object.entries(COMPARISON_SECTION_LABELS) as Array<
@@ -16,12 +17,18 @@ const sections = Object.entries(COMPARISON_SECTION_LABELS) as Array<
 export function ComparisonSectionNav({
   activeSection,
   onSectionChange,
+  layout = 'horizontal',
 }: ComparisonSectionNavProps) {
+  const isVertical = layout === 'vertical';
+
   return (
     <ScrollView
-      horizontal
+      horizontal={!isVertical}
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ gap: 8, paddingHorizontal: 4 }}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={
+        isVertical ? { gap: 8, paddingVertical: 4 } : { gap: 8, paddingHorizontal: 4 }
+      }
     >
       {sections.map(([key, label]) => {
         const isActive = activeSection === key;
@@ -32,7 +39,7 @@ export function ComparisonSectionNav({
             accessibilityState={{ selected: isActive }}
             onPress={() => onSectionChange(key)}
             className={cn(
-              'rounded-full border px-3 py-2',
+              isVertical ? 'rounded-xl border px-3 py-3' : 'rounded-full border px-3 py-2',
               isActive
                 ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
                 : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',

@@ -8,6 +8,7 @@ import {
 import {
   SafeAreaView,
   useSafeAreaInsets,
+  type Edge,
 } from 'react-native-safe-area-context';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
@@ -38,6 +39,8 @@ export type ScreenProps = ScrollViewProps & {
   scrollable?: boolean;
   padded?: boolean;
   safeArea?: boolean;
+  safeAreaEdges?: Edge[];
+  embeddedInTabShell?: boolean;
   loadingComponent?: ReactNode;
   className?: string;
   contentClassName?: string;
@@ -63,6 +66,8 @@ export function Screen({
   scrollable = true,
   padded = true,
   safeArea = true,
+  safeAreaEdges,
+  embeddedInTabShell = false,
   loadingComponent,
   className,
   contentClassName,
@@ -70,6 +75,9 @@ export function Screen({
 }: ScreenProps) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const resolvedSafeAreaEdges: Edge[] =
+    safeAreaEdges ?? (embeddedInTabShell ? ['top', 'left', 'right'] : ['top', 'bottom', 'left', 'right']);
+  const scrollBottomPadding = embeddedInTabShell ? 16 : insets.bottom + 16;
 
   const renderContent = () => {
     if (loading) {
@@ -87,7 +95,7 @@ export function Screen({
             {error}
           </Text>
           {onRetry ? (
-            <Button variant="secondary" className="mt-6" onPress={onRetry}>
+            <Button variant="secondary" className="mt-6" onPress={onRetry} accessibilityLabel="Try again">
               Try Again
             </Button>
           ) : null}
@@ -151,21 +159,28 @@ export function Screen({
   );
 
   const Container = safeArea ? SafeAreaView : View;
+  const containerProps = safeArea ? { edges: resolvedSafeAreaEdges } : {};
 
   if (!scrollable) {
     return (
-      <Container className={cn('flex-1 bg-background dark:bg-neutral-950', className)}>
+      <Container
+        {...containerProps}
+        className={cn('flex-1 bg-background dark:bg-neutral-950', className)}
+      >
         {body}
       </Container>
     );
   }
 
   return (
-    <Container className={cn('flex-1 bg-background dark:bg-neutral-950', className)}>
+    <Container
+      {...containerProps}
+      className={cn('flex-1 bg-background dark:bg-neutral-950', className)}
+    >
       <ScrollView
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 16 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: scrollBottomPadding }}
         refreshControl={
           onRefresh ? (
             <RefreshControl

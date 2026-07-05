@@ -23,6 +23,7 @@ export function ClubHistoryList({ entries }: ClubHistoryListProps) {
           <Text weight="semibold">{entry.club}</Text>
           <Text variant="body-sm" color="secondary">
             {entry.period}
+            {entry.yearsAtClub !== undefined ? ` · ${entry.yearsAtClub} yr${entry.yearsAtClub === 1 ? '' : 's'}` : ''}
             {entry.league ? ` · ${entry.league}` : ''}
             {entry.appearances !== undefined ? ` · ${entry.appearances} apps` : ''}
           </Text>

@@ -3,6 +3,7 @@ import { PlayerProfileRepository } from '@/features/player-profile/repositories/
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type MatchLogPayload } from '@/features/player-statistics';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 
 export function usePlayerProfile() {
   const { user } = useAuth();
@@ -48,6 +49,11 @@ export function usePlayerProfile() {
       try {
         const repository = PlayerProfileRepository.getInstance();
         await repository.updateProfile(user.id, data);
+        const playerName =
+          (typeof data.fullName === 'string' ? data.fullName : undefined) ??
+          profile?.fullName ??
+          user.name;
+        ActivityRecorder.getInstance().recordProfileUpdated(user.id, playerName);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to update profile.';
         setError(message);
@@ -56,7 +62,7 @@ export function usePlayerProfile() {
         setIsSaving(false);
       }
     },
-    [user?.id]
+    [profile?.fullName, user?.id, user?.name],
   );
 
   const uploadImage = useCallback(
@@ -72,7 +78,11 @@ export function usePlayerProfile() {
         
         const field = type === 'avatar' ? 'avatarUrl' : 'coverImageUrl';
         await repository.updateProfile(user.id, { [field]: downloadUrl });
-        
+        ActivityRecorder.getInstance().recordProfileUpdated(
+          user.id,
+          profile?.fullName ?? user.name,
+        );
+
         return downloadUrl;
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to upload image.';
@@ -82,7 +92,7 @@ export function usePlayerProfile() {
         setIsSaving(false);
       }
     },
-    [user?.id]
+    [profile?.fullName, user?.id, user?.name],
   );
 
   const refreshProfile = useCallback(async () => {

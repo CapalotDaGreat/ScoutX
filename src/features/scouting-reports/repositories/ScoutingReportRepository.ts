@@ -3,13 +3,13 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  onSnapshot,
   query,
   setDoc,
   where,
   orderBy,
 } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
+import { subscribeToQuery } from '@/firebase/firestoreSubscriptions';
 import {
   createScoutingReportFromDraft,
   parseScoutingReport,
@@ -23,6 +23,7 @@ import {
 } from '@/features/scouting-reports/services/scoutingReportStorage';
 import { SCOUTING_REPORT_COLLECTION } from '@/features/scouting-reports/constants';
 import { type ScoutingReport, type ScoutingReportDraft } from '@/features/scouting-reports/types';
+import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 
 export class ScoutingReportRepository {
   private static instance: ScoutingReportRepository | null = null;
@@ -56,19 +57,15 @@ export class ScoutingReportRepository {
       orderBy('updatedAt', 'desc'),
     );
 
-    return onSnapshot(
-      reportsQuery,
-      (snapshot) => {
-        const reports = snapshot.docs
-          .map((document) => parseScoutingReport(document.data(), document.id))
-          .filter((report): report is ScoutingReport => report !== null);
-        callback(sortScoutingReports(reports));
-      },
-      (error) => {
+    return subscribeToQuery({
+      firestoreQuery: reportsQuery,
+      parse: (data, id) => parseScoutingReport(data, id),
+      onData: (reports) => callback(sortScoutingReports(reports)),
+      onFallback: () => {
         void loadLocalScoutingReports(scoutId, playerId).then(callback);
-        onError?.(error);
       },
-    );
+      onError,
+    });
   }
 
   public async fetchPlayerReports(scoutId: string, playerId: string): Promise<ScoutingReport[]> {
@@ -122,6 +119,27 @@ export class ScoutingReportRepository {
     } else {
       await saveLocalScoutingReport(report);
     }
+
+    const scoutName = report.scoutName ?? 'Scout';
+    const recorder = ActivityRecorder.getInstance();
+    recorder.recordScoutingReport({
+      recipientId: scoutId,
+      recipientRole: 'scout',
+      scoutId,
+      scoutName,
+      playerId,
+      playerName,
+      reportId: report.id,
+    });
+    recorder.recordScoutingReport({
+      recipientId: playerId,
+      recipientRole: 'player',
+      scoutId,
+      scoutName,
+      playerId,
+      playerName,
+      reportId: report.id,
+    });
 
     return report;
   }
