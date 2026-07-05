@@ -207,7 +207,7 @@ export function PlayerDiscoveryScreen({
               description={
                 search
                   ? 'Try a different keyword, remove filter chips, or apply a saved preset.'
-                  : 'Players will appear here once profiles are indexed in ScoutX.'
+                  : 'Players appear here when they opt in to scout discovery. Invite athletes in your network to build their ScoutX identity.'
               }
               actionLabel={activeFilterCount > 0 ? 'Clear Filters' : undefined}
               onAction={activeFilterCount > 0 ? onResetFilters : undefined}

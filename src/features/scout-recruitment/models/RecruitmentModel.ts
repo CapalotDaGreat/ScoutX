@@ -101,6 +101,8 @@ function parseEntry(value: unknown): RecruitmentEntry | null {
     folderId: typeof record.folderId === 'string' ? record.folderId : null,
     shortlistIds: parseStringList(record.shortlistIds),
     notes: parseString(record.notes),
+    trialInvitationId:
+      typeof record.trialInvitationId === 'string' ? record.trialInvitationId : null,
     dragMetadata: parseDragMetadata(record.dragMetadata, stage, sortIndex),
     createdAt: parseString(record.createdAt, now),
     updatedAt: parseString(record.updatedAt, now),
@@ -264,6 +266,7 @@ export function addPlayerToWorkspace(
     folderId,
     shortlistIds: [],
     notes: '',
+    trialInvitationId: null,
     dragMetadata: { columnId: stage, sortIndex },
     createdAt: now,
     updatedAt: now,
@@ -308,6 +311,28 @@ export function moveEntryStage(
             ...entry,
             stage: nextStage,
             dragMetadata: { columnId: nextStage, sortIndex },
+            updatedAt: now,
+          }
+        : entry,
+    ),
+  });
+}
+
+export function updateEntryTrialMetadata(
+  workspace: RecruitmentWorkspace,
+  playerId: string,
+  trialInvitationId: string,
+  notes: string,
+): RecruitmentWorkspace {
+  const now = new Date().toISOString();
+  return touchWorkspace({
+    ...workspace,
+    entries: workspace.entries.map((entry) =>
+      entry.playerId === playerId
+        ? {
+            ...entry,
+            trialInvitationId,
+            notes,
             updatedAt: now,
           }
         : entry,

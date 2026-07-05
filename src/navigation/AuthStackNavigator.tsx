@@ -11,12 +11,13 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 function WelcomeRoute({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Welcome'>) {
-  const { signInAsGuest, isSubmitting } = useAuth();
+  const { signInAsGuest, signInWithApple, isSubmitting } = useAuth();
   return (
     <WelcomeScreen
       onGetStarted={() => navigation.navigate('Register')}
       onSignIn={() => navigation.navigate('Login')}
       onContinueAsGuest={() => void signInAsGuest()}
+      onSignInWithApple={() => void signInWithApple()}
       isSubmitting={isSubmitting}
     />
   );
@@ -70,7 +71,7 @@ function RoleSelectionRoute({
   return (
     <RoleSelectionScreen
       onContinue={(role) => {
-        if (role === 'player' || role === 'scout') {
+        if (role === 'player' || role === 'scout' || role === 'coach') {
           selectRole(role);
         }
       }}

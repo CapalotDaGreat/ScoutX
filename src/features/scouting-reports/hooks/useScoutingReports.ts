@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMockData } from '@/config/appMode';
 import { ScoutingReportRepository } from '@/features/scouting-reports/repositories/ScoutingReportRepository';
 import { getMockReportsForPlayer } from '@/features/scouting-reports/services/mockScoutingReports';
 import { type ScoutingReport, type ScoutingReportDraft } from '@/features/scouting-reports/types';
@@ -29,8 +30,7 @@ export function useScoutingReports(playerId: string, playerName: string) {
       playerId,
       (nextReports) => {
         if (nextReports.length === 0) {
-          const mockReports = getMockReportsForPlayer(playerId, scoutId);
-          setReports(mockReports);
+          setReports(useMockData() ? getMockReportsForPlayer(playerId, scoutId) : []);
         } else {
           setReports(nextReports);
         }
@@ -38,7 +38,7 @@ export function useScoutingReports(playerId: string, playerName: string) {
       },
       (err) => {
         setError(err.message);
-        setReports(getMockReportsForPlayer(playerId, scoutId));
+        setReports(useMockData() ? getMockReportsForPlayer(playerId, scoutId) : []);
         setIsLoading(false);
       },
     );

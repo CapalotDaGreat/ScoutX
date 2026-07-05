@@ -24,4 +24,5 @@ export type BlockedUser = {
   blockedUserId: string;
   blockedUserName: string;
   createdAt: string;
+  active: boolean;
 };

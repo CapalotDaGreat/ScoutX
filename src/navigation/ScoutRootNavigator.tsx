@@ -13,7 +13,7 @@ import { useAuth } from '@/features/auth/store/AuthProvider';
 import { ScoutFlowProvider, useScoutFlow } from '@/navigation/context/ScoutFlowContext';
 import { ScoutTabNavigator } from '@/navigation/ScoutTabNavigator';
 import { ActivityInboxScreen } from '@/features/activity-feed';
-import { PublicPortfolioScreen } from '@/features/public-portfolio';
+import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
 import { type ScoutStackParamList } from '@/navigation/types';
 
 const Stack = createNativeStackNavigator<ScoutStackParamList>();
@@ -39,6 +39,7 @@ function PlayerDetailRoute({
     <PlayerDetailScreen
       playerId={route.params.playerId}
       onBack={() => navigation.goBack()}
+      onViewPortfolio={(playerId) => navigation.navigate('PublicPortfolio', { playerId })}
     />
   );
 }
@@ -54,8 +55,9 @@ function PublicPortfolioRoute({
   route,
 }: NativeStackScreenProps<ScoutStackParamList, 'PublicPortfolio'>) {
   return (
-    <PublicPortfolioScreen
+    <PublicPortfolioStackScreen
       playerId={route.params.playerId}
+      slug={route.params.slug}
       onBack={() => navigation.goBack()}
     />
   );

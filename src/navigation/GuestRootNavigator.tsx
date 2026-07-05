@@ -12,7 +12,7 @@ import { useDiscoveryFilters } from '@/features/scout-discovery/hooks/useDiscove
 import { ScoutWorkspaceProvider } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
-import { PublicPortfolioScreen } from '@/features/public-portfolio';
+import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
 import { type GuestStackParamList } from '@/navigation/types';
 
 const Stack = createNativeStackNavigator<GuestStackParamList>();
@@ -73,6 +73,7 @@ function GuestPlayerDetailRoute({
       playerId={route.params.playerId}
       onBack={() => navigation.goBack()}
       guestMode
+      onViewPortfolio={(playerId) => navigation.navigate('PublicPortfolio', { playerId })}
     />
   );
 }
@@ -82,8 +83,9 @@ function GuestPublicPortfolioRoute({
   route,
 }: NativeStackScreenProps<GuestStackParamList, 'PublicPortfolio'>) {
   return (
-    <PublicPortfolioScreen
+    <PublicPortfolioStackScreen
       playerId={route.params.playerId}
+      slug={route.params.slug}
       onBack={() => navigation.goBack()}
     />
   );

@@ -1,86 +1,107 @@
-import { type ReactNode } from 'react';
-import { Image, ScrollView, View } from 'react-native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useEffect, useRef, useState } from 'react';
+import { ScrollView, View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
-import { Avatar } from '@/components/primitives/Avatar';
-import { Badge } from '@/components/primitives/Badge';
 import { Button } from '@/components/primitives/Button';
+import { Badge } from '@/components/primitives/Badge';
 import { Text } from '@/components/primitives/Text';
+import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 import { FootballJourneySection } from '@/features/football-journey';
 import { HighlightVideosSection } from '@/features/highlight-videos';
 import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
 import { PerformanceSummary } from '@/features/player-profile/components/PerformanceSummary';
 import { ProfileStatsGrid } from '@/features/player-profile/components/ProfileStatsGrid';
 import { RecommendationCard } from '@/features/trust-system/components/RecommendationCard';
+import { CoachEndorsementModal } from '@/features/trust-system/components/CoachEndorsementModal';
 import { PlayerStatisticsSection } from '@/features/player-statistics';
+import { FootballPassportHero } from '@/features/public-portfolio/components/FootballPassportHero';
+import { PortfolioSection } from '@/features/public-portfolio/components/PortfolioSection';
 import { isPortfolioSectionVisible } from '@/features/public-portfolio/models/PortfolioModel';
+import { useCanWriteCoachEndorsement } from '@/features/public-portfolio/hooks/useCanWriteCoachEndorsement';
 import { usePublicPortfolio } from '@/features/public-portfolio/hooks/usePublicPortfolio';
-import { useOwnPortfolioPreview } from '@/features/public-portfolio/hooks/useOwnPortfolioPreview';
 import { type PublicPortfolioData } from '@/features/public-portfolio/types';
+import { PortfolioAnalyticsRepository } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
+import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
+import { usePlayerTrust } from '@/features/trust-system/hooks/usePlayerTrust';
+import { useAuth } from '@/features/auth/store/AuthProvider';
+import { type AuthRole } from '@/features/auth/types';
 
 export type PublicPortfolioScreenProps = {
   playerId: string;
+  slug?: string;
   onBack?: () => void;
   previewMode?: boolean;
   previewData?: PublicPortfolioData;
+  previewLoading?: boolean;
+  endorseMode?: boolean;
 };
 
-function PortfolioSection({
-  title,
-  subtitle,
-  children,
-  index,
-}: {
-  title: string;
-  subtitle?: string;
-  children: ReactNode;
-  index: number;
-}) {
-  return (
-    <Animated.View
-      entering={FadeInUp.delay(Math.min(index, 6) * 50).duration(350)}
-      className="gap-3 rounded-2xl border border-border bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-950"
-    >
-      <View>
-        <Text variant="overline" color="secondary">
-          Portfolio
-        </Text>
-        <Text weight="semibold" className="text-xl">
-          {title}
-        </Text>
-        {subtitle ? (
-          <Text variant="body-sm" color="secondary">
-            {subtitle}
-          </Text>
-        ) : null}
-      </View>
-      {children}
-    </Animated.View>
-  );
+function isScoutLikeRole(role: AuthRole | null | undefined): boolean {
+  return role === 'scout' || role === 'coach';
 }
 
 export function PublicPortfolioScreen({
   playerId,
+  slug,
   onBack,
   previewMode = false,
   previewData,
+  previewLoading = false,
+  endorseMode = false,
 }: PublicPortfolioScreenProps) {
+  const { user, role } = useAuth();
   const fetched = usePublicPortfolio(previewData || previewMode ? null : playerId);
-  const ownPreview = useOwnPortfolioPreview(previewMode && !previewData);
-  const data = previewData ?? ownPreview ?? fetched.data;
-  const isLoading = previewData
-    ? false
-    : previewMode
-      ? !ownPreview
-      : fetched.isLoading;
+  const data = previewData ?? fetched.data;
+  const isLoading = previewData ? false : previewMode ? previewLoading : fetched.isLoading;
   const error = previewData || previewMode ? null : fetched.error;
   const refresh = fetched.refresh;
 
+  const trust = usePlayerTrust(playerId, {
+    currentClub: data?.profile.identity.currentClub ?? '',
+    clubHistory: data?.profile.identity.clubHistory ?? [],
+    playerName: data?.profile.fullName ?? 'Player',
+  });
+
+  const [endorsementVisible, setEndorsementVisible] = useState(false);
+  const canEndorse = useCanWriteCoachEndorsement(playerId);
+  const viewedRef = useRef(false);
+
+  useEffect(() => {
+    if (
+      previewMode ||
+      !playerId ||
+      !user?.id ||
+      user.id === playerId ||
+      !data?.profile.fullName ||
+      viewedRef.current
+    ) {
+      return;
+    }
+
+    viewedRef.current = true;
+    const isScoutView = isScoutLikeRole(role);
+    void PortfolioAnalyticsRepository.getInstance().recordPortfolioView(playerId, isScoutView);
+    void PlayerDiscoveryRepository.getInstance().recordProfileView(playerId);
+    ActivityRecorder.getInstance().recordPortfolioViewed({
+      playerId,
+      playerName: data.profile.fullName,
+      viewerId: user.id,
+      viewerName: user.name ?? 'Visitor',
+      viewerRole: role === 'coach' ? 'coach' : role === 'scout' ? 'scout' : 'player',
+      isScoutView,
+    });
+  }, [data?.profile.fullName, playerId, previewMode, role, user?.id, user?.name]);
+
+  useEffect(() => {
+    if (endorseMode && canEndorse && data) {
+      setEndorsementVisible(true);
+    }
+  }, [canEndorse, data, endorseMode]);
+
   if (isLoading) {
     return (
-      <Screen title="Portfolio" subtitle="Loading football résumé" safeArea>
+      <Screen title="Football Passport" subtitle="Loading shareable résumé" safeArea>
         <SkeletonLoader variant="profile" />
         <SkeletonLoader variant="card" count={2} />
       </Screen>
@@ -89,14 +110,14 @@ export function PublicPortfolioScreen({
 
   if (!data) {
     return (
-      <Screen title="Portfolio" subtitle="Unavailable" safeArea onRetry={refresh} error={error}>
+      <Screen title="Football Passport" subtitle="Unavailable" safeArea onRetry={refresh} error={error}>
         <EmptyState
           title={previewMode ? 'Portfolio unavailable' : 'Portfolio is private'}
           description={
             error ??
             (previewMode
               ? 'Unable to load portfolio preview.'
-              : 'This player has not enabled a public portfolio yet.')
+              : 'This player has not enabled a public Football Passport yet.')
           }
           actionLabel={onBack ? 'Go back' : 'Retry'}
           onAction={onBack ?? refresh}
@@ -106,59 +127,42 @@ export function PublicPortfolioScreen({
   }
 
   const { profile, privacy, recommendations, gpsHighlights } = data;
+  const displayUsername = profile.username ?? slug ?? null;
   let sectionIndex = 0;
+
+  const handleSaveEndorsement = async (
+    draft: Parameters<typeof trust.saveRecommendation>[3],
+  ) => {
+    if (!user?.id) {
+      throw new Error('You must be signed in to endorse a player.');
+    }
+
+    await trust.saveRecommendation(user.id, user.name ?? 'Coach', '', draft);
+  };
 
   return (
     <Screen
-      title={previewMode ? 'Portfolio preview' : 'ScoutX Portfolio'}
-      subtitle="Premium shareable football résumé"
+      title={previewMode ? 'Passport preview' : 'Football Passport'}
+      subtitle="ScoutX shareable football résumé"
       safeArea
       onRefresh={refresh}
       header={
-        onBack ? (
-          <View className="mb-2">
+        <View className="mb-2 gap-2">
+          {onBack ? (
             <Button variant="ghost" size="sm" onPress={onBack} className="self-start">
               Back
             </Button>
-          </View>
-        ) : undefined
+          ) : null}
+          {canEndorse ? (
+            <Button variant="accent" size="sm" onPress={() => setEndorsementVisible(true)}>
+              Write coach endorsement
+            </Button>
+          ) : null}
+        </View>
       }
     >
       <ScrollView contentContainerClassName="gap-6 pb-10" showsVerticalScrollIndicator={false}>
-        <View className="overflow-hidden rounded-3xl border border-border bg-white dark:border-neutral-800 dark:bg-neutral-950">
-          {profile.coverImageUrl ? (
-            <Image
-              source={{ uri: profile.coverImageUrl }}
-              className="h-40 w-full"
-              resizeMode="cover"
-            />
-          ) : (
-            <View className="h-40 bg-accent-muted dark:bg-green-950" />
-          )}
-          <View className="-mt-10 px-5 pb-5">
-            <Avatar
-              name={profile.fullName}
-              source={profile.avatarUrl ? { uri: profile.avatarUrl } : undefined}
-              size="2xl"
-              showBorder
-            />
-            <View className="mt-3 gap-2">
-              <Text weight="semibold" className="text-2xl">
-                {profile.fullName}
-              </Text>
-              <View className="flex-row flex-wrap gap-2">
-                <Badge variant="accent" label={profile.position} />
-                <Badge variant="default" label={profile.club} />
-                <Badge variant="info" label={profile.nationality} />
-              </View>
-              {profile.biography ? (
-                <Text variant="body-sm" color="secondary" className="mt-2">
-                  {profile.biography}
-                </Text>
-              ) : null}
-            </View>
-          </View>
-        </View>
+        <FootballPassportHero data={data} username={displayUsername} />
 
         {isPortfolioSectionVisible(privacy, 'careerTimeline') && profile.footballJourney ? (
           <PortfolioSection
@@ -209,7 +213,7 @@ export function PublicPortfolioScreen({
         ) : null}
 
         {isPortfolioSectionVisible(privacy, 'recommendations') && recommendations.length > 0 ? (
-          <PortfolioSection title="Recommendations" subtitle="Trusted endorsements" index={sectionIndex++}>
+          <PortfolioSection title="Coach Endorsements" subtitle="Trusted recommendations" index={sectionIndex++}>
             <View className="gap-3">
               {recommendations.map((recommendation, index) => (
                 <RecommendationCard key={recommendation.id} recommendation={recommendation} index={index} />
@@ -231,6 +235,16 @@ export function PublicPortfolioScreen({
           </PortfolioSection>
         ) : null}
       </ScrollView>
+
+      {canEndorse ? (
+        <CoachEndorsementModal
+          visible={endorsementVisible}
+          playerName={profile.fullName}
+          saving={trust.isSaving}
+          onClose={() => setEndorsementVisible(false)}
+          onSave={handleSaveEndorsement}
+        />
+      ) : null}
     </Screen>
   );
 }

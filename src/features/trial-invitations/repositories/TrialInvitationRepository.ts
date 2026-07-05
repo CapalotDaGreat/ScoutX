@@ -41,6 +41,7 @@ import {
   saveLocalTrialInvitation,
   saveLocalTrialNotification,
 } from '@/features/trial-invitations/services/trialInvitationStorage';
+import { syncRecruitmentStageFromTrial } from '@/features/scout-recruitment/services/recruitmentTrialSyncService';
 import {
   type TrialInvitation,
   type TrialInvitationDraft,
@@ -254,12 +255,14 @@ export class TrialInvitationRepository {
           doc(db, TRIAL_INVITATION_COLLECTION, invitation.id),
           serializeTrialInvitation(invitation),
         );
+        await syncRecruitmentStageFromTrial(invitation).catch(() => undefined);
         return;
       } catch {
         // Fall through to local storage.
       }
     }
     await saveLocalTrialInvitation(invitation);
+    await syncRecruitmentStageFromTrial(invitation).catch(() => undefined);
   }
 
   private async persistNotifications(notifications: TrialNotification[]): Promise<void> {

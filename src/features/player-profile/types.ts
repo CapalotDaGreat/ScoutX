@@ -1,4 +1,5 @@
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import { type EarnedMilestone } from '@/features/career-milestones/types';
 import {
   type FootballIdentity,
   defaultFootballIdentity,
@@ -60,4 +61,7 @@ export type PlayerProfile = {
   footballJourney?: FootballJourney;
   highlightVideos?: HighlightVideoLibrary;
   privacy?: PrivacySettings;
+  username?: string;
+  hiddenEndorsementIds?: string[];
+  earnedMilestones?: EarnedMilestone[];
 };

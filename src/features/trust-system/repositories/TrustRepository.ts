@@ -37,6 +37,7 @@ import {
   getMockTrustProfile,
   getMockTrustRecommendations,
 } from '@/features/trust-system/services/mockTrustData';
+import { useMockData } from '@/config/appMode';
 import {
   type TrustProfile,
   type TrustRecommendation,
@@ -214,7 +215,7 @@ export class TrustRepository {
       return local;
     }
 
-    const mock = getMockTrustProfile(playerId);
+    const mock = useMockData() ? getMockTrustProfile(playerId) : null;
     if (mock) {
       return mock;
     }
@@ -228,6 +229,6 @@ export class TrustRepository {
       return local;
     }
 
-    return getMockTrustRecommendations(playerId);
+    return useMockData() ? getMockTrustRecommendations(playerId) : [];
   }
 }

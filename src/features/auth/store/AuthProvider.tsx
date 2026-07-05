@@ -18,6 +18,7 @@ import {
   signOutFromFirebase,
   signUpWithFirebase,
 } from '@/features/auth/services/authService';
+import { signInWithAppleFirebase } from '@/features/auth/services/appleAuthService';
 import {
   type AccountUpgradeIntent,
   type AuthRole,
@@ -39,6 +40,7 @@ type AuthContextValue = {
   error: string | null;
   successMessage: string | null;
   signIn: (payload: SignInPayload) => Promise<void>;
+  signInWithApple: () => Promise<void>;
   signUp: (payload: SignUpPayload) => Promise<void>;
   signInAsGuest: () => Promise<void>;
   forgotPassword: (payload: ForgotPasswordPayload) => Promise<void>;
@@ -147,6 +149,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
+  const signInWithApple = useCallback(async () => {
+    setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
+
+    try {
+      const nextUser = await signInWithAppleFirebase();
+      if (!nextUser) {
+        setState((current) => ({ ...current, isSubmitting: false }));
+        return;
+      }
+
+      setState({
+        status: 'authenticated',
+        user: nextUser,
+        role: nextUser.role ?? null,
+        pendingRoleSelection: !isGuestRole(nextUser.role, nextUser.isAnonymous) && !nextUser.role,
+        upgradeIntent: null,
+        isSubmitting: false,
+        error: null,
+        successMessage: null,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to sign in with Apple.';
+      setState((current) => ({ ...current, isSubmitting: false, error: message }));
+    }
+  }, []);
+
   const signUp = useCallback(async (payload: SignUpPayload) => {
     setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
 
@@ -249,6 +277,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       error: state.error,
       successMessage: state.successMessage,
       signIn,
+      signInWithApple,
       signUp,
       signInAsGuest,
       forgotPassword,
@@ -266,6 +295,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isGuest,
       selectRole,
       signIn,
+      signInWithApple,
       signInAsGuest,
       signOut,
       signUp,

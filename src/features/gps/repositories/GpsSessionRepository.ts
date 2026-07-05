@@ -1,4 +1,4 @@
-import { doc, getDocs, collection, setDoc, query, orderBy, limit } from 'firebase/firestore';
+import { doc, getDocs, collection, setDoc, query, orderBy, limit, where } from 'firebase/firestore';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { getFirestoreDb, getFirebaseStorage } from '@/config/firebase';
 import { finalizeGpsSession } from '@/features/gps/models/GpsSessionModel';
@@ -136,6 +136,7 @@ export class GpsSessionRepository {
       const sessionsRef = collection(db, 'gpsSessions');
       const sessionsQuery = query(
         sessionsRef,
+        where('playerId', '==', playerId),
         orderBy('startedAt', 'desc'),
         limit(20),
       );
@@ -143,8 +144,7 @@ export class GpsSessionRepository {
 
       return snapshot.docs
         .map((document) => parseGpsSession({ id: document.id, ...document.data() }))
-        .filter((session): session is GpsSession => session !== null)
-        .filter((session) => session.playerId === playerId);
+        .filter((session): session is GpsSession => session !== null);
     } catch {
       const localSessions = await loadLocalSessions();
       return localSessions.filter((session) => session.playerId === playerId);

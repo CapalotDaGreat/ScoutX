@@ -3,6 +3,7 @@ import { Switch } from 'react-native';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { type PrivacySettings } from '@/features/player-profile/types/privacySettings';
+import { useTheme } from '@/theme';
 
 export type PortfolioPrivacySettingsProps = {
   settings: PrivacySettings;
@@ -19,6 +20,8 @@ type ToggleRowProps = {
 };
 
 function ToggleRow({ label, description, value, onValueChange, disabled }: ToggleRowProps) {
+  const { colors } = useTheme();
+
   return (
     <View className="flex-row items-center justify-between gap-4 py-3">
       <View className="flex-1">
@@ -27,7 +30,13 @@ function ToggleRow({ label, description, value, onValueChange, disabled }: Toggl
           {description}
         </Text>
       </View>
-      <Switch value={value} onValueChange={onValueChange} disabled={disabled} />
+      <Switch
+        value={value}
+        onValueChange={onValueChange}
+        disabled={disabled}
+        trackColor={{ false: colors.border, true: colors.accent }}
+        thumbColor={colors.surface}
+      />
     </View>
   );
 }
@@ -41,9 +50,9 @@ export function PortfolioPrivacySettings({
 
   return (
     <Card variant="outlined" padding="md" className="gap-1">
-      <Text weight="semibold">Portfolio & feed privacy</Text>
+      <Text weight="semibold">Portfolio & discovery privacy</Text>
       <Text variant="body-sm" color="secondary" className="mb-2">
-        Control what appears on your public portfolio and in the social feed.
+        Control your shareable football identity and scout visibility.
       </Text>
 
       <ToggleRow
@@ -51,6 +60,13 @@ export function PortfolioPrivacySettings({
         description="Allow anyone with the link to view your football résumé."
         value={settings.publicPortfolioEnabled}
         onValueChange={(value) => update({ publicPortfolioEnabled: value })}
+        disabled={disabled}
+      />
+      <ToggleRow
+        label="Discoverable by scouts"
+        description="Appear in scout search when clubs are looking for talent like you."
+        value={settings.discoverableByScouts}
+        onValueChange={(value) => update({ discoverableByScouts: value })}
         disabled={disabled}
       />
       <ToggleRow

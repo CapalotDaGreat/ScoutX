@@ -4,15 +4,15 @@ import {
   buildPublicPortfolioUrl,
 } from '@/features/public-portfolio/constants';
 
-export function usePortfolioSharing(playerId: string | null) {
+export function usePortfolioSharing(playerId: string | null, username?: string | null) {
   return useMemo(() => {
     if (!playerId) {
       return { shareUrl: '', deepLink: '' };
     }
 
     return {
-      shareUrl: buildPublicPortfolioUrl(playerId),
-      deepLink: buildPublicPortfolioDeepLink(playerId),
+      shareUrl: buildPublicPortfolioUrl(playerId, username),
+      deepLink: buildPublicPortfolioDeepLink(playerId, username),
     };
-  }, [playerId]);
+  }, [playerId, username]);
 }

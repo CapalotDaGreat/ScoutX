@@ -2,6 +2,8 @@
 export type PrivacySettings = {
   /** Opt-in public shareable portfolio (link / QR). */
   publicPortfolioEnabled: boolean;
+  /** When true, profile appears in signed-in scout discovery search. */
+  discoverableByScouts: boolean;
   showCareerTimeline: boolean;
   showStatistics: boolean;
   showVideos: boolean;
@@ -15,6 +17,7 @@ export type PrivacySettings = {
 
 export const defaultPrivacySettings = (): PrivacySettings => ({
   publicPortfolioEnabled: false,
+  discoverableByScouts: false,
   showCareerTimeline: true,
   showStatistics: true,
   showVideos: true,

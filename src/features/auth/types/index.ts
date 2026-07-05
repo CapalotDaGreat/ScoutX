@@ -1,4 +1,4 @@
-export type AuthRole = 'guest' | 'player' | 'scout' | 'club';
+export type AuthRole = 'guest' | 'player' | 'scout' | 'coach' | 'club';
 
 export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
 

@@ -30,6 +30,7 @@ export type TrustRecommendation = {
   authorOrganization: string;
   authorAvatarUrl: string;
   type: TrustRecommendationType;
+  category: string | null;
   relationship: string;
   headline: string;
   body: string;
@@ -42,6 +43,7 @@ export type TrustRecommendation = {
 
 export type TrustRecommendationDraft = {
   type: TrustRecommendationType;
+  category?: string | null;
   relationship: string;
   headline: string;
   body: string;

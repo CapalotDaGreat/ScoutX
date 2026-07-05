@@ -17,12 +17,15 @@ import { TrustProfileSection } from '@/features/trust-system';
 import { ScoutingReportsSection } from '@/features/scouting-reports';
 import { ScoutTrialInvitationsSection } from '@/features/trial-invitations';
 import { RecruitmentPlayerSection } from '@/features/scout-recruitment/components/RecruitmentPlayerSection';
+import { ClubProfileChip, ClubProfileRepository } from '@/features/club-profiles';
+import { VerificationBadge } from '@/features/verification-system';
+import { type ClubProfile } from '@/features/club-profiles/types';
 import { ScoutReportHero } from '@/features/scout-discovery/components/ScoutReportHero';
 import { usePlayerDetail } from '@/features/scout-discovery/hooks/usePlayerDetail';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
-import { ArrowLeft, Bookmark, GitCompare, Mail, Video } from 'lucide-react-native';
+import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Mail, Video } from 'lucide-react-native';
 import { useTheme } from '@/theme';
 
 const RADAR_KEYS: StatisticMetricKey[] = [
@@ -62,21 +65,40 @@ export type PlayerDetailScreenProps = {
   playerId: string;
   onBack: () => void;
   guestMode?: boolean;
+  onViewPortfolio?: (playerId: string) => void;
 };
 
-export function PlayerDetailScreen({ playerId, onBack, guestMode = false }: PlayerDetailScreenProps) {
+export function PlayerDetailScreen({
+  playerId,
+  onBack,
+  guestMode = false,
+  onViewPortfolio,
+}: PlayerDetailScreenProps) {
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
   const workspace = useScoutWorkspace();
   const playerSave = useScoutPlayerSave();
   const { recordPlayerView, isInComparison, canAddToComparison, addToComparison, removeFromComparison } = workspace;
   const [inviteSignal, setInviteSignal] = useState(0);
+  const [clubProfile, setClubProfile] = useState<ClubProfile | null>(null);
 
   useEffect(() => {
     if (playerId) {
       recordPlayerView(playerId);
     }
   }, [playerId, recordPlayerView]);
+
+  useEffect(() => {
+    if (!player?.club) {
+      setClubProfile(null);
+      return;
+    }
+
+    void ClubProfileRepository.getInstance()
+      .fetchByClubName(player.club)
+      .then(setClubProfile)
+      .catch(() => setClubProfile(null));
+  }, [player?.club]);
 
   const heatmap = useMemo(
     () => (player ? generateHeatmapGrid(buildMockGpsPoints(player.id)) : null),
@@ -188,6 +210,20 @@ export function PlayerDetailScreen({ playerId, onBack, guestMode = false }: Play
       >
         <View className="px-4">
           <ScoutReportHero player={player} />
+          <View className="mt-3 gap-2">
+            {player.verified ? <VerificationBadge level="verified" /> : null}
+            {clubProfile ? <ClubProfileChip club={clubProfile} /> : null}
+          </View>
+          {onViewPortfolio ? (
+            <Button
+              variant="secondary"
+              className="mt-4"
+              leftIcon={<ExternalLink size={16} color={colors.textPrimary} />}
+              onPress={() => onViewPortfolio(player.id)}
+            >
+              View public portfolio
+            </Button>
+          ) : null}
         </View>
 
         {!guestMode ? (

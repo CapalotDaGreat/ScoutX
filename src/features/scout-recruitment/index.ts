@@ -7,6 +7,7 @@ export { RecruitmentStageBadge } from './components/RecruitmentStageBadge';
 export { RecruitmentProvider, useRecruitment } from './context/RecruitmentProvider';
 export { RecruitmentRepository } from './repositories/RecruitmentRepository';
 export { useScoutPlayerSave } from './hooks/useScoutPlayerSave';
+export { syncRecruitmentStageFromTrial } from './services/recruitmentTrialSyncService';
 
 export {
   RECRUITMENT_STAGES,

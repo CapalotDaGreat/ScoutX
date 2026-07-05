@@ -13,6 +13,7 @@ const activityTypes: ActivityType[] = [
   'video_uploaded',
   'player_saved',
   'recommendation_received',
+  'portfolio_viewed',
 ];
 
 const activityCategories: ActivityCategory[] = [

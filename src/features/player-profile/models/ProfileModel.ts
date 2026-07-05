@@ -1,3 +1,4 @@
+import { useMockData } from '@/config/appMode';
 import { type PlayerProfile, type PlayerProfileStat, type PlayerProfilePerformanceItem } from '@/features/player-profile/types';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
 import { serializeMatchStatistics } from '@/features/player-statistics/models/MatchLogModel';
@@ -13,12 +14,11 @@ import {
   parseFootballJourney,
   serializeFootballJourney,
 } from '@/features/football-journey/models/JourneyModel';
-import { mockJourneyEntries } from '@/features/football-journey/services/mockJourneyData';
 import {
   parseHighlightVideoLibrary,
   serializeHighlightVideoLibrary,
 } from '@/features/highlight-videos/models/HighlightVideoModel';
-import { getMockHighlightVideoLibrary } from '@/features/highlight-videos/services/mockHighlightVideos';
+import { emptyHighlightVideoLibrary } from '@/features/highlight-videos/types';
 import { defaultPrivacySettings } from '@/features/player-profile/types/privacySettings';
 import {
   parsePrivacySettings,
@@ -29,6 +29,22 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : null;
+}
+
+function parseEarnedMilestones(value: unknown) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const milestones: NonNullable<PlayerProfile['earnedMilestones']> = [];
+  for (const item of value) {
+    const record = asRecord(item);
+    if (!record || typeof record.id !== 'string' || typeof record.earnedAt !== 'string') {
+      continue;
+    }
+    milestones.push({ id: record.id, earnedAt: record.earnedAt });
+  }
+  return milestones;
 }
 
 export function parsePlayerMatchStatistics(value: unknown): PlayerMatchStatistics[] {
@@ -85,23 +101,25 @@ export class ProfileModel {
       preferredFoot: 'Right',
       height: '180 cm',
       weight: '75 kg',
-      biography: 'Introduce yourself to scouts here...',
-      coverImageUrl: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80',
-      avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
-      stats: mapMatchesToProfileStats(mockPlayerStatisticsMatches),
+      biography: 'Tell scouts who you are — your story starts here.',
+      coverImageUrl: '',
+      avatarUrl: '',
+      stats: mapMatchesToProfileStats([]),
       performanceSummary: [
-        { label: 'Key Passes', value: 7, max: 10, hint: 'Excellent vision' },
-        { label: 'Shots on Target', value: 6, max: 10, hint: 'Clinical finishing' },
-        { label: 'Pressing Intensity', value: 8, max: 10, hint: 'Consistent defensive work' },
+        { label: 'Key Passes', value: 0, max: 10, hint: 'Log matches to track vision' },
+        { label: 'Shots on Target', value: 0, max: 10, hint: 'Log matches to track finishing' },
+        { label: 'Pressing Intensity', value: 0, max: 10, hint: 'Log matches to track work rate' },
       ],
-      statisticsMatches: mockPlayerStatisticsMatches,
+      statisticsMatches: [],
       identity,
       footballJourney: {
-        entries: mockJourneyEntries,
+        entries: [],
         updatedAt: new Date().toISOString(),
       },
-      highlightVideos: getMockHighlightVideoLibrary(),
+      highlightVideos: emptyHighlightVideoLibrary(),
       privacy: defaultPrivacySettings(),
+      username: undefined,
+      hiddenEndorsementIds: [],
     };
   }
 
@@ -142,10 +160,9 @@ export class ProfileModel {
       }
     }
 
+    const parsedMatches = parsePlayerMatchStatistics(data.statisticsMatches);
     const statisticsMatches =
-      parsePlayerMatchStatistics(data.statisticsMatches).length > 0
-        ? parsePlayerMatchStatistics(data.statisticsMatches)
-        : mockPlayerStatisticsMatches;
+      parsedMatches.length > 0 ? parsedMatches : useMockData() ? mockPlayerStatisticsMatches : [];
 
     const legacyFields = {
       club: typeof data.club === 'string' ? data.club : '',
@@ -189,6 +206,11 @@ export class ProfileModel {
       footballJourney: parseFootballJourney(data.footballJourney),
       highlightVideos: parseHighlightVideoLibrary(data.highlightVideos),
       privacy: parsePrivacySettings(data.privacy),
+      username: typeof data.username === 'string' ? data.username : undefined,
+      hiddenEndorsementIds: Array.isArray(data.hiddenEndorsementIds)
+        ? data.hiddenEndorsementIds.filter((item): item is string => typeof item === 'string')
+        : [],
+      earnedMilestones: parseEarnedMilestones(data.earnedMilestones),
     };
   }
 
@@ -245,6 +267,18 @@ export class ProfileModel {
     }
     if (profile.privacy !== undefined) {
       data.privacy = serializePrivacySettings(profile.privacy);
+    }
+    if (profile.username !== undefined) {
+      data.username = profile.username;
+    }
+    if (profile.hiddenEndorsementIds !== undefined) {
+      data.hiddenEndorsementIds = profile.hiddenEndorsementIds;
+    }
+    if (profile.earnedMilestones !== undefined) {
+      data.earnedMilestones = profile.earnedMilestones.map((item) => ({
+        id: item.id,
+        earnedAt: item.earnedAt,
+      }));
     }
 
     return data;

@@ -14,28 +14,58 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.scoutx.app"
+      "bundleIdentifier": "com.scoutx.app",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "ScoutX sends alerts when scouts view your Football Passport, you receive coach endorsements, trial invitations, and weekly career updates.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A0A0A"
       },
-      "package": "com.scoutx.app"
+      "package": "com.scoutx.app",
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "output": "single"
     },
     "plugins": [
       "expo-video",
+      "expo-apple-authentication",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "scoutx",
+          "project": "scoutx-mobile"
+        }
+      ],
       [
         "expo-location",
         {
           "locationWhenInUsePermission": "ScoutX uses your location to record match movement, distance, and heatmaps.",
           "locationAlwaysAndWhenInUsePermission": "ScoutX uses your location to record match movement during sessions."
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#16a34a"
+        }
       ]
-    ]
+    ],
+    "scheme": "scoutx",
+    "extra": {
+      "privacyPolicyUrl": "https://scoutx.app/privacy",
+      "termsOfServiceUrl": "https://scoutx.app/terms",
+      "supportUrl": "https://scoutx.app/support"
+    }
   }
 }

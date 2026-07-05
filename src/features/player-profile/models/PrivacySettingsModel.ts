@@ -23,6 +23,7 @@ export function parsePrivacySettings(value: unknown): PrivacySettings {
 
   return {
     publicPortfolioEnabled: readBool(record, 'publicPortfolioEnabled', defaults.publicPortfolioEnabled),
+    discoverableByScouts: readBool(record, 'discoverableByScouts', defaults.discoverableByScouts),
     showCareerTimeline: readBool(record, 'showCareerTimeline', defaults.showCareerTimeline),
     showStatistics: readBool(record, 'showStatistics', defaults.showStatistics),
     showVideos: readBool(record, 'showVideos', defaults.showVideos),

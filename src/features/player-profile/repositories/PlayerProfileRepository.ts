@@ -11,6 +11,9 @@ import {
   serializeMatchStatistics,
 } from '@/features/player-statistics/models/MatchLogModel';
 import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
+import { syncDiscoverablePlayer } from '@/features/scout-discovery/services/discoverablePlayerSyncService';
+import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
+import { serializeFootballJourney } from '@/features/football-journey/models/JourneyModel';
 import {
   type MatchLogPayload,
   type PlayerMatchStatistics,
@@ -97,6 +100,12 @@ export class PlayerProfileRepository {
       const docRef = doc(db, 'profiles', userId);
       const updateData = ProfileModel.toFirestore(data);
       await setDoc(docRef, updateData, { merge: true });
+
+      const snapshot = await getDoc(docRef);
+      if (snapshot.exists()) {
+        const profile = ProfileModel.fromFirestore(userId, snapshot.data());
+        await syncDiscoverablePlayer(profile);
+      }
     } catch (error) {
       console.error('Error updating player profile:', error);
       throw error;
@@ -119,18 +128,30 @@ export class PlayerProfileRepository {
       await runTransaction(db, async (transaction) => {
         const snapshot = await transaction.get(docRef);
         const currentData = snapshot.exists() ? snapshot.data() : {};
+        const currentProfile = ProfileModel.fromFirestore(userId, currentData);
         const currentMatches = parsePlayerMatchStatistics(currentData.statisticsMatches);
         const nextMatches = [...currentMatches, match];
+        const nextJourney = appendSystemJourneyEvents(currentProfile.footballJourney, {
+          type: 'match_logged',
+          match,
+        });
 
         transaction.set(
           docRef,
           {
             statisticsMatches: nextMatches.map(serializeMatchStatistics),
             stats: this.createProfileStats(nextMatches),
+            footballJourney: serializeFootballJourney(nextJourney),
           },
           { merge: true },
         );
       });
+
+      const refreshed = await getDoc(docRef);
+      if (refreshed.exists()) {
+        const profile = ProfileModel.fromFirestore(userId, refreshed.data());
+        await syncDiscoverablePlayer(profile);
+      }
 
       return match;
     } catch (error) {

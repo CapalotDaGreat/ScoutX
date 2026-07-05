@@ -56,6 +56,7 @@ const mockRecommendations: TrustRecommendation[] = [
     authorAvatarUrl:
       'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80',
     type: 'coach_recommendation',
+    category: 'Technical',
     relationship: 'Coached Mateo at Northstar FC U21',
     headline: 'Elite creator with professional habits',
     body: 'Mateo consistently elevates training standards. His vision between the lines is rare at this age, and he handles pressure with maturity beyond his years. I would recommend him without hesitation for a first-team pathway.',
@@ -76,6 +77,7 @@ const mockRecommendations: TrustRecommendation[] = [
     authorAvatarUrl:
       'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
     type: 'coach_recommendation',
+    category: 'Technical',
     relationship: 'Developed Mateo through youth ranks (2020–2023)',
     headline: 'Technically outstanding with high football IQ',
     body: 'One of the most coachable players I have worked with. Mateo reads space early, links play intelligently, and maintains intensity in defensive transitions.',
@@ -96,6 +98,7 @@ const mockRecommendations: TrustRecommendation[] = [
     authorAvatarUrl:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
     type: 'scout_endorsement',
+    category: null,
     relationship: 'Observed across 12 competitive matches',
     headline: 'Top-tier creative profile for Eredivisie-level projects',
     body: 'Mateo profiles as a modern 10/8 hybrid. His progressive passing and press resistance stand out in transition-heavy leagues. Strong recommendation for clubs building possession-based systems.',
@@ -116,6 +119,7 @@ const mockRecommendations: TrustRecommendation[] = [
     authorAvatarUrl:
       'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80',
     type: 'coach_recommendation',
+    category: 'Technical',
     relationship: 'Coached Lucas at Ajax U19',
     headline: 'Explosive winger with elite 1v1 profile',
     body: 'Lucas has the tools to break lines individually while maintaining team structure. His decision-making in the final third has improved significantly this season.',
@@ -136,6 +140,7 @@ const mockRecommendations: TrustRecommendation[] = [
     authorAvatarUrl:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
     type: 'scout_endorsement',
+    category: null,
     relationship: 'Tracked across Eredivisie U21 fixtures',
     headline: 'High-ceiling wide forward for top-five league projects',
     body: 'Lucas combines directness with end-product consistency. Profiles well for clubs needing vertical width and counter-attacking threat.',

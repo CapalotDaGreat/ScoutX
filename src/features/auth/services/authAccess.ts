@@ -30,10 +30,13 @@ const scoutFeatures: AuthFeature[] = [
   'scout.invite',
 ];
 
+const coachFeatures: AuthFeature[] = ['scout.discovery', 'scout.endorse'];
+
 const roleFeatureMap: Record<AuthRole, AuthFeature[]> = {
   guest: guestFeatures,
   player: playerFeatures,
   scout: scoutFeatures,
+  coach: coachFeatures,
   club: ['scout.discovery'],
 };
 

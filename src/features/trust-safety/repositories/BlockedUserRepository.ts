@@ -13,11 +13,16 @@ function parseBlockedUser(data: Record<string, unknown>, id: string): BlockedUse
     return null;
   }
 
+  if (data.active === false) {
+    return null;
+  }
+
   return {
     blockerId: data.blockerId,
     blockedUserId: data.blockedUserId,
     blockedUserName: typeof data.blockedUserName === 'string' ? data.blockedUserName : 'User',
     createdAt: typeof data.createdAt === 'string' ? data.createdAt : new Date().toISOString(),
+    active: true,
   };
 }
 
@@ -44,6 +49,7 @@ export class BlockedUserRepository {
       const blockedQuery = query(
         collection(db, BLOCKED_USERS_COLLECTION),
         where('blockerId', '==', blockerId),
+        where('active', '==', true),
       );
       const snapshot = await getDocs(blockedQuery);
       return snapshot.docs
@@ -64,6 +70,7 @@ export class BlockedUserRepository {
       blockedUserId,
       blockedUserName,
       createdAt: new Date().toISOString(),
+      active: true,
     };
 
     const db = getFirestoreDb();

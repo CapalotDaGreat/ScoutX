@@ -3,9 +3,12 @@ import {
   buildPlayerSavedActivity,
   buildProfileUpdatedActivity,
   buildRecommendationReceivedActivity,
+  buildPortfolioViewedActivity,
   buildScoutingReportActivity,
   buildTrialInvitationActivity,
   buildVideoUploadedActivity,
+  buildMilestoneEarnedActivity,
+  buildWeeklyReportReadyActivity,
 } from '@/features/activity-feed/services/activityEmitters';
 import { type ActivityDraft } from '@/features/activity-feed/types';
 
@@ -50,5 +53,17 @@ export class ActivityRecorder {
     input: Parameters<typeof buildRecommendationReceivedActivity>[0],
   ): void {
     this.record(buildRecommendationReceivedActivity(input));
+  }
+
+  public recordPortfolioViewed(input: Parameters<typeof buildPortfolioViewedActivity>[0]): void {
+    this.record(buildPortfolioViewedActivity(input));
+  }
+
+  public recordMilestoneEarned(input: Parameters<typeof buildMilestoneEarnedActivity>[0]): void {
+    this.record(buildMilestoneEarnedActivity(input));
+  }
+
+  public recordWeeklyReportReady(input: Parameters<typeof buildWeeklyReportReadyActivity>[0]): void {
+    this.record(buildWeeklyReportReadyActivity(input));
   }
 }

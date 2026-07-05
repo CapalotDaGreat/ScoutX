@@ -3,15 +3,12 @@ import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigat
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Compass, GitCompare, Home, Kanban, Newspaper } from 'lucide-react-native';
-import { SocialFeedScreen } from '@/features/social-feed';
+import { Compass, Home, Kanban } from 'lucide-react-native';
 import { ScoutDashboardScreen } from '@/features/scout-discovery/components/ScoutDashboardScreen';
 import { PlayerDiscoveryScreen } from '@/features/scout-discovery/components/PlayerDiscoveryScreen';
-import { PlayerComparisonScreen } from '@/features/player-comparison';
 import { RecruitmentPipelineScreen } from '@/features/scout-recruitment';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useScoutFlow } from '@/navigation/context/ScoutFlowContext';
-import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { useRecruitment } from '@/features/scout-recruitment';
 import { createNavigationTabBar } from '@/navigation/NavigationTabBar';
 import { type ScoutStackParamList, type ScoutTabParamList } from '@/navigation/types';
@@ -105,21 +102,6 @@ function ScoutDiscoverRoute() {
   );
 }
 
-function ScoutFeedRoute() {
-  return <SocialFeedScreen embeddedInTabShell allowCreate />;
-}
-
-function ScoutCompareRoute() {
-  const navigation = useScoutTabNavigation();
-
-  return (
-    <PlayerComparisonScreen
-      onDiscoverPress={() => navigation.navigate('Discover')}
-      embeddedInTabShell
-    />
-  );
-}
-
 function ScoutPipelineRoute() {
   const navigation = useScoutTabNavigation();
   const flow = useScoutFlow();
@@ -133,7 +115,6 @@ function ScoutPipelineRoute() {
 }
 
 function ScoutTabBarContainer() {
-  const workspace = useScoutWorkspace();
   const recruitment = useRecruitment();
 
   const ScoutTabBar = useMemo(
@@ -142,22 +123,17 @@ function ScoutTabBarContainer() {
         tabs: [
           { id: 'Dashboard', label: 'Home', icon: Home },
           { id: 'Discover', label: 'Discover', icon: Compass },
-          { id: 'Feed', label: 'Feed', icon: Newspaper },
-          { id: 'Compare', label: 'Compare', icon: GitCompare },
           { id: 'Pipeline', label: 'Pipeline', icon: Kanban },
         ],
         resolveBadge: (tabId) => {
           if (tabId === 'Pipeline') {
             return recruitment.savedCount;
           }
-          if (tabId === 'Compare') {
-            return workspace.comparisonPlayerIds.length;
-          }
           return null;
         },
         testID: 'scout-tab-bar',
       }),
-    [recruitment.savedCount, workspace.comparisonPlayerIds.length],
+    [recruitment.savedCount],
   );
 
   return (
@@ -167,8 +143,6 @@ function ScoutTabBarContainer() {
     >
       <Tab.Screen name="Dashboard" component={ScoutDashboardRoute} />
       <Tab.Screen name="Discover" component={ScoutDiscoverRoute} />
-      <Tab.Screen name="Feed" component={ScoutFeedRoute} />
-      <Tab.Screen name="Compare" component={ScoutCompareRoute} />
       <Tab.Screen name="Pipeline" component={ScoutPipelineRoute} />
     </Tab.Navigator>
   );

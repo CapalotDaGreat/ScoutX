@@ -136,3 +136,69 @@ export function buildRecommendationReceivedActivity(input: {
     },
   };
 }
+
+export function buildPortfolioViewedActivity(input: {
+  playerId: string;
+  playerName: string;
+  viewerId: string;
+  viewerName: string;
+  viewerRole: 'player' | 'scout' | 'coach';
+  isScoutView: boolean;
+}): ActivityDraft {
+  const actorRole = input.viewerRole === 'coach' ? 'scout' : input.viewerRole;
+
+  return {
+    recipientId: input.playerId,
+    recipientRole: 'player',
+    type: 'portfolio_viewed',
+    category: 'profile',
+    title: input.isScoutView ? 'Scout viewed your passport' : 'Portfolio viewed',
+    body: input.isScoutView
+      ? `${input.viewerName} viewed your Football Passport.`
+      : `${input.viewerName} opened your public Football Passport.`,
+    actorId: input.viewerId,
+    actorName: input.viewerName,
+    actorRole,
+    reference: { entityType: 'player', entityId: input.playerId, label: input.playerName },
+  };
+}
+
+export function buildMilestoneEarnedActivity(input: {
+  playerId: string;
+  playerName: string;
+  milestoneId: string;
+  milestoneTitle: string;
+  milestoneDescription: string;
+}): ActivityDraft {
+  return {
+    recipientId: input.playerId,
+    recipientRole: 'player',
+    type: 'milestone_earned',
+    category: 'system',
+    title: 'Milestone unlocked',
+    body: `${input.milestoneTitle}: ${input.milestoneDescription}`,
+    actorId: 'system',
+    actorName: 'ScoutX',
+    actorRole: 'system',
+    reference: { entityType: 'player', entityId: input.playerId, label: input.milestoneTitle },
+  };
+}
+
+export function buildWeeklyReportReadyActivity(input: {
+  playerId: string;
+  playerName: string;
+  summary: string;
+}): ActivityDraft {
+  return {
+    recipientId: input.playerId,
+    recipientRole: 'player',
+    type: 'weekly_report_ready',
+    category: 'system',
+    title: 'Weekly Football Report ready',
+    body: input.summary,
+    actorId: 'system',
+    actorName: 'ScoutX',
+    actorRole: 'system',
+    reference: { entityType: 'player', entityId: input.playerId, label: input.playerName },
+  };
+}

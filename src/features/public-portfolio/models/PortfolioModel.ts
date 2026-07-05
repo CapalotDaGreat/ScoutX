@@ -4,7 +4,19 @@ import {
   type PrivacySettings,
 } from '@/features/player-profile/types/privacySettings';
 import { parsePrivacySettings } from '@/features/player-profile/models/PrivacySettingsModel';
+import { type TrustRecommendation } from '@/features/trust-system/types';
 import { type PublicPortfolioData, type PublicPortfolioSectionKey } from '@/features/public-portfolio/types';
+
+export function filterVisibleRecommendations(
+  recommendations: TrustRecommendation[],
+  hiddenIds?: string[],
+): TrustRecommendation[] {
+  if (!hiddenIds?.length) {
+    return recommendations;
+  }
+  const hidden = new Set(hiddenIds);
+  return recommendations.filter((item) => !hidden.has(item.id));
+}
 
 export function isPortfolioSectionVisible(
   privacy: PrivacySettings,
@@ -45,7 +57,7 @@ export function buildPublicPortfolioData(
     playerId: profile.id,
     profile,
     privacy,
-    recommendations,
+    recommendations: filterVisibleRecommendations(recommendations, profile.hiddenEndorsementIds),
     gpsHighlights,
     isPublic: privacy.publicPortfolioEnabled,
   };

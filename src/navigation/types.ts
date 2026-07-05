@@ -9,8 +9,8 @@ export type AuthStackParamList = {
 };
 
 export type PlayerTabParamList = {
-  Profile: undefined;
-  Feed: undefined;
+  Portfolio: undefined;
+  Career: undefined;
   Statistics: undefined;
   Gps: undefined;
   Trials: undefined;
@@ -18,14 +18,13 @@ export type PlayerTabParamList = {
 
 export type PlayerStackParamList = {
   PlayerTabs: NavigatorScreenParams<PlayerTabParamList>;
-  PublicPortfolio: { playerId: string; previewMode?: boolean };
+  PublicPortfolio: { playerId?: string; slug?: string; previewMode?: boolean };
+  CareerReplay: undefined;
 };
 
 export type ScoutTabParamList = {
   Dashboard: undefined;
   Discover: undefined;
-  Feed: undefined;
-  Compare: undefined;
   Pipeline: undefined;
 };
 
@@ -33,13 +32,13 @@ export type ScoutStackParamList = {
   ScoutTabs: NavigatorScreenParams<ScoutTabParamList>;
   PlayerDetail: { playerId: string };
   ActivityInbox: undefined;
-  PublicPortfolio: { playerId: string };
+  PublicPortfolio: { playerId?: string; slug?: string };
 };
 
 export type GuestStackParamList = {
   GuestMain: undefined;
   PlayerDetail: { playerId: string };
-  PublicPortfolio: { playerId: string };
+  PublicPortfolio: { playerId?: string; slug?: string };
   GuestRegister: undefined;
   GuestLogin: undefined;
 };

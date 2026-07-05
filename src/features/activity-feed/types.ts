@@ -13,7 +13,10 @@ export type ActivityType =
   | 'scouting_report_created'
   | 'video_uploaded'
   | 'player_saved'
-  | 'recommendation_received';
+  | 'recommendation_received'
+  | 'portfolio_viewed'
+  | 'milestone_earned'
+  | 'weekly_report_ready';
 
 export type ActivityActorRole = 'player' | 'scout' | 'system';
 

@@ -1,15 +1,21 @@
 import {
   collection,
+  doc,
+  getDoc,
   getDocs,
+  increment,
   limit,
   orderBy,
   query,
+  setDoc,
   startAfter,
   type DocumentSnapshot,
-  type QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
+import { useMockData } from '@/config/appMode';
+import { resolveQueryCursor } from '@/firebase/firestorePagination';
 import { DISCOVERY_PAGE_SIZE } from '@/features/scout-discovery/constants';
+import { parseDiscoverablePlayer } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { filterAndSortPlayers } from '@/features/scout-discovery/services/discoveryQueryService';
 import {
   getMockPlayerById,
@@ -21,26 +27,6 @@ import {
   type DiscoveryQuery,
   type ScoutDashboardData,
 } from '@/features/scout-discovery/types';
-
-function asRecord(value: unknown): Record<string, unknown> | null {
-  return value && typeof value === 'object' && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : null;
-}
-
-function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | null {
-  const record = asRecord(value);
-  if (!record || typeof record.id !== 'string') {
-    return null;
-  }
-
-  const mock = getMockPlayerById(record.id);
-  if (mock) {
-    return mock;
-  }
-
-  return null;
-}
 
 function paginatePlayers(
   players: DiscoverablePlayer[],
@@ -55,6 +41,33 @@ function paginatePlayers(
     players: slice,
     nextCursor,
     hasMore: startIndex + pageSize < players.length,
+  };
+}
+
+function emptyDashboard(): ScoutDashboardData {
+  return {
+    featured: [],
+    recommended: [],
+    recentlyViewed: [],
+    trending: [],
+    nearby: [],
+    matchingPreferences: [],
+    matchingCount: 0,
+  };
+}
+
+function buildDashboard(players: DiscoverablePlayer[]): ScoutDashboardData {
+  const sorted = [...players].sort((a, b) => b.overallRating - a.overallRating);
+  return {
+    featured: sorted.filter((player) => player.verified).slice(0, 5),
+    recommended: sorted.slice(0, 6),
+    recentlyViewed: [],
+    trending: [...sorted].sort((a, b) => b.viewCount - a.viewCount).slice(0, 6),
+    nearby: sorted.filter((player) => player.distanceKm !== null).slice(0, 4),
+    matchingPreferences: sorted
+      .filter((player) => player.potentialRating >= 70 && player.age <= 23)
+      .slice(0, 8),
+    matchingCount: sorted.filter((player) => player.potentialRating >= 70 && player.age <= 23).length,
   };
 }
 
@@ -78,30 +91,27 @@ export class PlayerDiscoveryRepository {
     const db = getFirestoreDb();
 
     if (!db) {
-      const filtered = filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery);
-      return paginatePlayers(filtered, cursor, pageSize);
+      if (useMockData()) {
+        const filtered = filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery);
+        return paginatePlayers(filtered, cursor, pageSize);
+      }
+      return { players: [], nextCursor: null, hasMore: false };
     }
 
     try {
       const playersRef = collection(db, 'discoverablePlayers');
+      const cursorSnapshot = await resolveQueryCursor(db, 'discoverablePlayers', cursor);
       const playersQuery = query(
         playersRef,
         orderBy('updatedAt', 'desc'),
+        ...(cursorSnapshot ? [startAfter(cursorSnapshot)] : []),
         limit(pageSize),
-        ...(cursor
-          ? [startAfter({ id: cursor } as unknown as QueryDocumentSnapshot)]
-          : []),
       );
 
       const snapshot = await getDocs(playersQuery);
       const players = snapshot.docs
         .map((docSnap) => parseDiscoverablePlayer({ id: docSnap.id, ...docSnap.data() }))
         .filter((player): player is DiscoverablePlayer => player !== null);
-
-      if (players.length === 0) {
-        const filtered = filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery);
-        return paginatePlayers(filtered, cursor, pageSize);
-      }
 
       const filtered = filterAndSortPlayers(players, discoveryQuery);
       const lastDoc = snapshot.docs[snapshot.docs.length - 1] as DocumentSnapshot | undefined;
@@ -112,59 +122,81 @@ export class PlayerDiscoveryRepository {
         hasMore: snapshot.docs.length === pageSize,
       };
     } catch {
-      const filtered = filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery);
-      return paginatePlayers(filtered, cursor, pageSize);
+      if (useMockData()) {
+        const filtered = filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery);
+        return paginatePlayers(filtered, cursor, pageSize);
+      }
+      return { players: [], nextCursor: null, hasMore: false };
     }
   }
 
   public async fetchPlayerById(playerId: string): Promise<DiscoverablePlayer | null> {
-    return getMockPlayerById(playerId) ?? null;
+    if (useMockData()) {
+      return getMockPlayerById(playerId) ?? null;
+    }
+
+    const db = getFirestoreDb();
+    if (!db) {
+      return null;
+    }
+
+    try {
+      const docSnap = await getDoc(doc(db, 'discoverablePlayers', playerId));
+      if (!docSnap.exists()) {
+        return null;
+      }
+      return parseDiscoverablePlayer({ id: docSnap.id, ...docSnap.data() });
+    } catch {
+      return null;
+    }
+  }
+
+  public async fetchPlayersByIds(playerIds: string[]): Promise<DiscoverablePlayer[]> {
+    const uniqueIds = [...new Set(playerIds)];
+    const results = await Promise.all(uniqueIds.map((id) => this.fetchPlayerById(id)));
+    return results.filter((player): player is DiscoverablePlayer => player !== null);
+  }
+
+  public async fetchAllDiscoverablePlayers(limitCount = 100): Promise<DiscoverablePlayer[]> {
+    const db = getFirestoreDb();
+    if (!db) {
+      return useMockData() ? mockDiscoverablePlayers : [];
+    }
+
+    try {
+      const snapshot = await getDocs(
+        query(collection(db, 'discoverablePlayers'), orderBy('updatedAt', 'desc'), limit(limitCount)),
+      );
+      return snapshot.docs
+        .map((docSnap) => parseDiscoverablePlayer({ id: docSnap.id, ...docSnap.data() }))
+        .filter((player): player is DiscoverablePlayer => player !== null);
+    } catch {
+      return useMockData() ? mockDiscoverablePlayers : [];
+    }
   }
 
   public async fetchDashboard(): Promise<ScoutDashboardData> {
-    const sorted = filterAndSortPlayers(mockDiscoverablePlayers, {
-      search: '',
-      filters: {
-        ageMin: null,
-        ageMax: null,
-        positions: [],
-        nationalities: [],
-        preferredFoot: null,
-        heightMin: null,
-        heightMax: null,
-        weightMin: null,
-        weightMax: null,
-        clubs: [],
-        leagues: [],
-        availability: null,
-        overallMin: null,
-        potentialMin: null,
-        distanceMaxKm: null,
-        sprintSpeedMin: null,
-        passingMin: null,
-        shootingMin: null,
-        defendingMin: null,
-        physicalMin: null,
-        weakFootMin: null,
-        skillMovesMin: null,
-        matchCountMin: null,
-        recentlyActive: false,
-        hasHighlightVideos: false,
-        verifiedOnly: false,
-      },
-      sort: 'overall',
-    });
+    const players = await this.fetchAllDiscoverablePlayers(50);
+    if (players.length === 0) {
+      return emptyDashboard();
+    }
+    return buildDashboard(players);
+  }
 
-    return {
-      featured: sorted.filter((p) => p.verified).slice(0, 5),
-      recommended: sorted.slice(0, 6),
-      recentlyViewed: sorted.slice(2, 6),
-      trending: [...sorted].sort((a, b) => b.viewCount - a.viewCount).slice(0, 6),
-      nearby: sorted.filter((p) => p.distanceKm !== null).slice(0, 4),
-      matchingPreferences: sorted
-        .filter((p) => p.potentialRating >= 80 && p.age <= 23 && p.verified)
-        .slice(0, 8),
-      matchingCount: sorted.filter((p) => p.potentialRating >= 80 && p.age <= 23).length,
-    };
+  public async recordProfileView(playerId: string): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db) {
+      return;
+    }
+
+    try {
+      await setDoc(
+        doc(db, 'discoverablePlayers', playerId),
+        { viewCount: increment(1), updatedAt: new Date().toISOString() },
+        { merge: true },
+      );
+    } catch {
+      // Non-critical analytics.
+    }
   }
 }

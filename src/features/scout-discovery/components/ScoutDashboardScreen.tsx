@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { MapPin, Search } from 'lucide-react-native';
 import { Screen } from '@/components/layout/Screen';
@@ -14,7 +14,7 @@ import { DashboardSection } from '@/features/scout-discovery/components/Dashboar
 import { PlayerCarousel } from '@/features/scout-discovery/components/PlayerCarousel';
 import { useScoutDashboard } from '@/features/scout-discovery/hooks/useScoutDashboard';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
-import { getMockPlayerById, mockDiscoverablePlayers } from '@/features/scout-discovery/services/mockPlayerDiscoveryData';
+import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useTheme } from '@/theme';
@@ -51,18 +51,40 @@ export function ScoutDashboardScreen({
   const { data, isLoading, error, refresh } = useScoutDashboard();
   const { unreadCount } = useActivities();
   const workspace = useScoutWorkspace();
+  const [resolvedPlayers, setResolvedPlayers] = useState<DiscoverablePlayer[]>([]);
+
+  useEffect(() => {
+    const ids = [
+      ...(workspace.lastViewedPlayerId ? [workspace.lastViewedPlayerId] : []),
+      ...workspace.recentlyViewedIds,
+    ];
+    if (ids.length === 0) {
+      setResolvedPlayers([]);
+      return;
+    }
+
+    void PlayerDiscoveryRepository.getInstance()
+      .fetchPlayersByIds(ids)
+      .then(setResolvedPlayers)
+      .catch(() => setResolvedPlayers([]));
+  }, [workspace.lastViewedPlayerId, workspace.recentlyViewedIds]);
 
   const continuePlayer = useMemo(() => {
     if (!workspace.lastViewedPlayerId) {
       return null;
     }
-    return getMockPlayerById(workspace.lastViewedPlayerId) ?? null;
-  }, [workspace.lastViewedPlayerId]);
+    return resolvedPlayers.find((player) => player.id === workspace.lastViewedPlayerId) ?? null;
+  }, [resolvedPlayers, workspace.lastViewedPlayerId]);
 
   const recentlyViewedPlayers = useMemo(
-    () => workspace.resolvePlayers(workspace.recentlyViewedIds, mockDiscoverablePlayers),
-    [workspace],
+    () => workspace.resolvePlayers(workspace.recentlyViewedIds, resolvedPlayers),
+    [resolvedPlayers, workspace],
   );
+
+  const hasDiscoverablePlayers =
+    (data?.matchingPreferences.length ?? 0) > 0 ||
+    (data?.trending.length ?? 0) > 0 ||
+    (data?.featured.length ?? 0) > 0;
 
   const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
 
@@ -123,7 +145,7 @@ export function ScoutDashboardScreen({
         <ContinueScoutingCard player={continuePlayer} onPress={onPlayerPress} />
       ) : null}
 
-      {data ? (
+      {data && hasDiscoverablePlayers ? (
         <>
           {isTablet ? (
             <View className="flex-row gap-4">
@@ -267,14 +289,14 @@ export function ScoutDashboardScreen({
         </>
       ) : (
         <EmptyState
-          title="Your scouting feed is warming up"
-          description="Pull to refresh or start discovering players across leagues and academies."
-          actionLabel="Start Discovering"
+          title="No discoverable players yet"
+          description="Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network."
+          actionLabel="Open Discover"
           onAction={onDiscoverPress}
         />
       )}
 
-      {!data && !isLoading ? (
+      {!hasDiscoverablePlayers && !isLoading ? (
         <View className="items-center gap-2 py-4">
           <Search size={20} color={colors.textTertiary} />
           <Text variant="body-sm" color="secondary" className="text-center">

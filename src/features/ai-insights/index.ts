@@ -19,7 +19,9 @@ export {
 } from './services/aiContextService';
 export { parseAiInsightResponse } from './services/aiResponseParser';
 
+export { AiCareerCoachCard } from './components/AiCareerCoachCard';
 export { createAiProvider } from './providers/createAiProvider';
+export { CloudFunctionAiProvider } from './providers/cloudFunctionAiProvider';
 export { MockAiProvider } from './providers/mockAiProvider';
 export { OpenRouterAiProvider } from './providers/openRouterProvider';
 export type { AiProvider } from './providers/types';

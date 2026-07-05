@@ -11,7 +11,16 @@ service cloud.firestore {
     }
 
     function publicPortfolioEnabled(userId) {
-      return get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.publicPortfolioEnabled == true;
+      return exists(/databases/$(database)/documents/profiles/$(userId))
+        && get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.publicPortfolioEnabled == true;
+    }
+
+    function validReportReason(reason) {
+      return reason in ['spam', 'harassment', 'inappropriate', 'impersonation', 'other'];
+    }
+
+    function validVerificationLevel(level) {
+      return level in ['none', 'basic'];
     }
 
     match /users/{userId} {
@@ -20,28 +29,38 @@ service cloud.firestore {
 
     match /profiles/{userId} {
       allow read: if isOwner(userId) || publicPortfolioEnabled(userId);
-      allow write: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update, delete: if isOwner(userId);
     }
 
     match /trustProfiles/{playerId} {
       allow read: if isSignedIn() || publicPortfolioEnabled(playerId);
-      allow write: if isOwner(playerId);
+      allow create: if isOwner(playerId);
+      allow update, delete: if isOwner(playerId);
     }
 
     match /trustRecommendations/{recommendationId} {
-      allow read: if isSignedIn() || publicPortfolioEnabled(resource.data.playerId);
-      allow create: if isSignedIn();
+      allow read: if isSignedIn()
+        || (resource != null && publicPortfolioEnabled(resource.data.playerId));
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.authorId;
       allow update, delete: if isSignedIn()
         && request.auth.uid == resource.data.authorId;
     }
 
     match /scoutingReports/{reportId} {
-      allow read, write: if isSignedIn()
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.scoutId;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.scoutId;
+      allow update, delete: if isSignedIn()
         && request.auth.uid == resource.data.scoutId;
     }
 
     match /recruitmentWorkspaces/{scoutId} {
-      allow read, write: if isOwner(scoutId);
+      allow read: if isOwner(scoutId);
+      allow create: if isOwner(scoutId);
+      allow update, delete: if isOwner(scoutId);
     }
 
     match /activities/{activityId} {
@@ -52,39 +71,122 @@ service cloud.firestore {
 
     match /gpsSessions/{sessionId} {
       allow read: if isSignedIn()
-        || publicPortfolioEnabled(resource.data.playerId);
-      allow write: if isSignedIn()
+        || (resource != null && publicPortfolioEnabled(resource.data.playerId));
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId;
+      allow update, delete: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
     }
 
-    match /posts/{postId} {
-      allow read: if resource.data.visibility == 'public'
-        || (isSignedIn() && request.auth.uid == resource.data.authorId);
-      allow create: if isSignedIn()
-        && request.auth.uid == request.resource.data.authorId;
-      allow update: if isSignedIn()
-        && request.auth.uid == resource.data.authorId;
-      allow delete: if isSignedIn()
-        && request.auth.uid == resource.data.authorId;
-    }
-
-    match /postReactions/{reactionId} {
-      allow read: if isSignedIn();
-      allow create, update: if isSignedIn()
-        && request.auth.uid == request.resource.data.userId;
-      allow delete: if isSignedIn()
-        && request.auth.uid == resource.data.userId;
-    }
-
     match /blockedUsers/{blockId} {
-      allow read, write: if isSignedIn()
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.blockerId
+        && resource.data.active != false;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.blockerId
+        && request.resource.data.active == true;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.blockerId;
+      allow delete: if isSignedIn()
         && request.auth.uid == resource.data.blockerId;
     }
 
     match /contentReports/{reportId} {
       allow create: if isSignedIn()
-        && request.auth.uid == request.resource.data.reporterId;
-      allow read: if false;
+        && request.auth.uid == request.resource.data.reporterId
+        && request.resource.data.targetType in ['post', 'user']
+        && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() > 0
+        && validReportReason(request.resource.data.reason)
+        && request.resource.data.createdAt is string;
+      allow read, update, delete: if false;
+    }
+
+    match /trialInvitations/{invitationId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.playerId
+        || request.auth.uid == resource.data.scoutId
+      );
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.scoutId;
+      allow update: if isSignedIn() && (
+        request.auth.uid == resource.data.scoutId
+        || request.auth.uid == resource.data.playerId
+      );
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.scoutId;
+    }
+
+    match /trialNotifications/{notificationId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId;
+    }
+
+    match /discoverablePlayers/{playerId} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isOwner(playerId);
+    }
+
+    match /portfolioAnalytics/{playerId} {
+      allow read: if isOwner(playerId);
+      allow create, update, delete: if false;
+    }
+
+    match /portfolioSlugs/{username} {
+      allow read: if true;
+      allow create, update: if isSignedIn()
+        && request.resource.data.playerId == request.auth.uid;
+      allow delete: if isSignedIn()
+        && resource.data.playerId == request.auth.uid;
+    }
+
+    match /pushTokens/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    match /careerReplays/{replayId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+      allow create, update: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId;
+    }
+
+    match /verificationRequests/{requestId} {
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.requesterId
+        && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.entityId == request.auth.uid
+        && request.resource.data.entityType == 'player'
+        && request.resource.data.status == 'pending'
+        && request.resource.data.evidence is string
+        && request.resource.data.evidence.size() > 0
+        && request.resource.data.createdAt is string;
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.requesterId;
+      allow update, delete: if false;
+    }
+
+    match /verificationStates/{stateId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.entityId == request.auth.uid
+        && validVerificationLevel(request.resource.data.level);
+      allow update: if isSignedIn()
+        && resource.data.entityId == request.auth.uid
+        && request.resource.data.entityId == request.auth.uid
+        && (
+          (resource.data.level != 'verified' && validVerificationLevel(request.resource.data.level))
+          || (resource.data.level == 'verified' && request.resource.data.level == 'verified')
+        );
+    }
+
+    match /clubProfiles/{clubId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && request.auth.uid == request.resource.data.ownerId;
     }
   }
 }

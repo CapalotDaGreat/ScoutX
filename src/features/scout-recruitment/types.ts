@@ -47,6 +47,7 @@ export type RecruitmentEntry = {
   folderId: string | null;
   shortlistIds: string[];
   notes: string;
+  trialInvitationId?: string | null;
   dragMetadata: RecruitmentDragMetadata;
   createdAt: string;
   updatedAt: string;

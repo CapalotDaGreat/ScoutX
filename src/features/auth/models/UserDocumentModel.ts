@@ -50,7 +50,7 @@ export function parseUserDocument(uid: string, data: Record<string, unknown>): F
 }
 
 function parseAuthRole(value: unknown): AuthRole | undefined {
-  if (value === 'guest' || value === 'player' || value === 'scout' || value === 'club') {
+  if (value === 'guest' || value === 'player' || value === 'scout' || value === 'coach' || value === 'club') {
     return value;
   }
   return undefined;

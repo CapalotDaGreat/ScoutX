@@ -1,16 +1,38 @@
+import { isProductionApp } from '@/config/appMode';
+
 export type AiProviderId = 'mock' | 'openrouter';
 
 const env = process.env as Record<string, string | undefined>;
 
 export type AiConfig = {
   providerId: AiProviderId;
+  useCloudFunction: boolean;
   openRouterApiKey: string | null;
   openRouterModel: string;
   openRouterBaseUrl: string;
   requestTimeoutMs: number;
 };
 
+function resolveUseCloudFunction(): boolean {
+  if (isProductionApp()) {
+    return true;
+  }
+
+  const explicit = env.EXPO_PUBLIC_USE_CLOUD_AI?.trim().toLowerCase();
+  if (explicit === 'true') {
+    return true;
+  }
+  if (explicit === 'false') {
+    return false;
+  }
+  return !env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim();
+}
+
 function resolveProviderId(): AiProviderId {
+  if (isProductionApp()) {
+    return 'mock';
+  }
+
   const explicit = env.EXPO_PUBLIC_AI_PROVIDER;
   if (explicit === 'mock' || explicit === 'openrouter') {
     return explicit;
@@ -21,10 +43,12 @@ function resolveProviderId(): AiProviderId {
 }
 
 export function getAiConfig(): AiConfig {
-  const apiKey = env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim() ?? '';
+  const isProd = isProductionApp();
+  const apiKey = isProd ? '' : env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim() ?? '';
 
   return {
     providerId: resolveProviderId(),
+    useCloudFunction: resolveUseCloudFunction(),
     openRouterApiKey: apiKey.length > 0 ? apiKey : null,
     openRouterModel: env.EXPO_PUBLIC_OPENROUTER_MODEL?.trim() || 'google/gemma-2-9b-it:free',
     openRouterBaseUrl:
@@ -35,5 +59,8 @@ export function getAiConfig(): AiConfig {
 
 export function isAiConfigured(): boolean {
   const config = getAiConfig();
+  if (config.useCloudFunction) {
+    return true;
+  }
   return config.providerId === 'openrouter' && Boolean(config.openRouterApiKey);
 }

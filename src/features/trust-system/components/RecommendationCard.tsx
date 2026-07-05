@@ -50,6 +50,9 @@ export function RecommendationCard({ recommendation, index = 0 }: Recommendation
             variant={recommendation.type === 'coach_recommendation' ? 'info' : 'accent'}
             size="sm"
           />
+          {recommendation.category ? (
+            <Badge label={recommendation.category} variant="outline" size="sm" />
+          ) : null}
           {recommendation.yearsKnown ? (
             <Badge
               label={`${recommendation.yearsKnown} yr${recommendation.yearsKnown === 1 ? '' : 's'} known`}

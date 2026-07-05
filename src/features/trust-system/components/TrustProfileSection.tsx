@@ -26,6 +26,7 @@ export type TrustProfileSectionProps = {
   currentClub: string;
   clubHistory: ClubHistoryEntry[];
   allowScoutEndorsement?: boolean;
+  onInviteCoachPress?: () => void;
   /** Pass shared trust state to avoid duplicate Firestore subscriptions on the same screen. */
   trustState?: UsePlayerTrustResult;
 };
@@ -60,6 +61,7 @@ type TrustProfileSectionContentProps = Omit<TrustProfileSectionProps, 'trustStat
 function TrustProfileSectionContent({
   playerName,
   allowScoutEndorsement = false,
+  onInviteCoachPress,
   trust,
 }: TrustProfileSectionContentProps) {
   const { colors } = useTheme();
@@ -113,7 +115,7 @@ function TrustProfileSectionContent({
     clubTenures.length > 0 ||
     recommendations.length > 0;
 
-  if (!isLoading && !hasTrustSignals && !allowScoutEndorsement) {
+  if (!isLoading && !hasTrustSignals && !allowScoutEndorsement && !onInviteCoachPress) {
     return null;
   }
 
@@ -126,6 +128,10 @@ function TrustProfileSectionContent({
           allowScoutEndorsement ? (
             <Button variant="accent" size="sm" onPress={openCreateEndorsement}>
               {ownEndorsement ? 'Edit Endorsement' : 'Endorse'}
+            </Button>
+          ) : onInviteCoachPress ? (
+            <Button variant="secondary" size="sm" onPress={onInviteCoachPress}>
+              Invite coach
             </Button>
           ) : undefined
         }
@@ -150,6 +156,11 @@ function TrustProfileSectionContent({
                 <Text variant="body-sm" color="secondary" className="text-center">
                   No coach recommendations or scout endorsements yet.
                 </Text>
+                {onInviteCoachPress ? (
+                  <Button variant="accent" size="sm" className="mt-4 self-center" onPress={onInviteCoachPress}>
+                    Invite your coach
+                  </Button>
+                ) : null}
               </View>
             ) : (
               <View className="gap-5">

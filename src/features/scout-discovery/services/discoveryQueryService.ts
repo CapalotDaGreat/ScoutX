@@ -4,6 +4,7 @@ import {
   type DiscoveryQuery,
   type DiscoverySortOption,
 } from '@/features/scout-discovery/types';
+import { rankPlayersBySearchRelevance } from '@/features/scout-discovery/services/smartDiscoveryService';
 
 function matchesSearch(player: DiscoverablePlayer, search: string): boolean {
   const query = search.trim().toLowerCase();
@@ -61,6 +62,10 @@ export function filterAndSortPlayers(
   const filtered = players.filter(
     (player) => matchesSearch(player, query.search) && matchesFilters(player, query.filters),
   );
+
+  if (query.search.trim() && query.sort === 'relevance') {
+    return rankPlayersBySearchRelevance(filtered, query.search);
+  }
 
   return sortPlayers(filtered, query.sort);
 }

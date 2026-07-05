@@ -53,6 +53,9 @@ const activityTypes: ActivityType[] = [
   'video_uploaded',
   'player_saved',
   'recommendation_received',
+  'portfolio_viewed',
+  'milestone_earned',
+  'weekly_report_ready',
 ];
 
 const activityCategories: ActivityCategory[] = [

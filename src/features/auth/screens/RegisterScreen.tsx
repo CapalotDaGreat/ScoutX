@@ -6,6 +6,7 @@ import { FormActions } from '@/components/forms/FormActions';
 import { FormField } from '@/components/forms/FormField';
 import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
+import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type SignUpPayload } from '@/features/auth/types';
 
@@ -120,6 +121,7 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
             Back
           </Button>
         </FormActions>
+        <LegalFooterLinks className="pt-2" />
       </AuthCard>
     </Screen>
   );

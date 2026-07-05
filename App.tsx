@@ -12,6 +12,7 @@ import {
 } from '@expo-google-fonts/inter';
 import { StatusBar } from 'expo-status-bar';
 import { LoadingScreen } from '@/components';
+import { initSentry, wrapWithSentry } from '@/config/sentry';
 import { ThemeProvider } from '@/theme';
 import { AuthProvider } from '@/features/auth/store/AuthProvider';
 import { RootNavigator } from '@/navigation';
@@ -19,8 +20,9 @@ import { AiInsightsProvider } from '@/features/ai-insights';
 import { ActivityProvider } from '@/features/activity-feed';
 
 enableScreens();
+initSentry();
 
-export default function App() {
+function App() {
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -51,3 +53,5 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+
+export default wrapWithSentry(App);

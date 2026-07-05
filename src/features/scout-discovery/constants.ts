@@ -8,6 +8,7 @@ import {
 export const DISCOVERY_PAGE_SIZE = 12;
 
 export const SORT_OPTIONS: { value: DiscoverySortOption; label: string }[] = [
+  { value: 'relevance', label: 'Best Match' },
   { value: 'overall', label: 'Overall Rating' },
   { value: 'potential', label: 'Potential' },
   { value: 'age', label: 'Age' },

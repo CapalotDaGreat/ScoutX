@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMockData } from '@/config/appMode';
 import { TrialInvitationRepository } from '@/features/trial-invitations/repositories/TrialInvitationRepository';
 import { getMockTrialsForPlayer, getMockTrialsForScoutPlayer } from '@/features/trial-invitations/services/mockTrialInvitations';
 import {
@@ -30,12 +31,12 @@ export function usePlayerTrialInvitations() {
     const unsubscribe = repository.subscribeToPlayerTrials(
       playerId,
       (nextTrials) => {
-        setTrials(nextTrials.length > 0 ? nextTrials : getMockTrialsForPlayer(playerId));
+        setTrials(nextTrials.length > 0 ? nextTrials : useMockData() ? getMockTrialsForPlayer(playerId) : []);
         setIsLoading(false);
       },
       (err) => {
         setError(err.message);
-        setTrials(getMockTrialsForPlayer(playerId));
+        setTrials(useMockData() ? getMockTrialsForPlayer(playerId) : []);
         setIsLoading(false);
       },
     );
@@ -103,13 +104,17 @@ export function useScoutTrialInvitations(playerId: string, playerName: string) {
       playerId,
       (nextTrials) => {
         setTrials(
-          nextTrials.length > 0 ? nextTrials : getMockTrialsForScoutPlayer(scoutId, playerId),
+          nextTrials.length > 0
+            ? nextTrials
+            : useMockData()
+              ? getMockTrialsForScoutPlayer(scoutId, playerId)
+              : [],
         );
         setIsLoading(false);
       },
       (err) => {
         setError(err.message);
-        setTrials(getMockTrialsForScoutPlayer(scoutId, playerId));
+        setTrials(useMockData() ? getMockTrialsForScoutPlayer(scoutId, playerId) : []);
         setIsLoading(false);
       },
     );

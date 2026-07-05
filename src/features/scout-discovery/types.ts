@@ -70,6 +70,7 @@ export type DiscoverablePlayer = {
   clubHistory: ClubHistoryEntry[];
   achievements: string[];
   searchKeywords: string[];
+  username?: string;
 };
 
 export type DiscoverySortOption =
@@ -83,7 +84,8 @@ export type DiscoverySortOption =
   | 'sprint_speed'
   | 'goals'
   | 'assists'
-  | 'newest';
+  | 'newest'
+  | 'relevance';
 
 export type DiscoveryFilters = {
   ageMin: number | null;
