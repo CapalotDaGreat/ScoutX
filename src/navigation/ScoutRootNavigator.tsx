@@ -13,6 +13,7 @@ import { useAuth } from '@/features/auth/store/AuthProvider';
 import { ScoutFlowProvider, useScoutFlow } from '@/navigation/context/ScoutFlowContext';
 import { ScoutTabNavigator } from '@/navigation/ScoutTabNavigator';
 import { ActivityInboxScreen } from '@/features/activity-feed';
+import { PublicPortfolioScreen } from '@/features/public-portfolio';
 import { type ScoutStackParamList } from '@/navigation/types';
 
 const Stack = createNativeStackNavigator<ScoutStackParamList>();
@@ -48,6 +49,18 @@ function ActivityInboxRoute({
   return <ActivityInboxScreen onBack={() => navigation.goBack()} embeddedInTabShell />;
 }
 
+function PublicPortfolioRoute({
+  navigation,
+  route,
+}: NativeStackScreenProps<ScoutStackParamList, 'PublicPortfolio'>) {
+  return (
+    <PublicPortfolioScreen
+      playerId={route.params.playerId}
+      onBack={() => navigation.goBack()}
+    />
+  );
+}
+
 export function ScoutRootNavigator() {
   const { user } = useAuth();
 
@@ -59,6 +72,7 @@ export function ScoutRootNavigator() {
             <Stack.Screen name="ScoutTabs" component={ScoutTabsRoute} />
             <Stack.Screen name="PlayerDetail" component={PlayerDetailRoute} />
             <Stack.Screen name="ActivityInbox" component={ActivityInboxRoute} />
+            <Stack.Screen name="PublicPortfolio" component={PublicPortfolioRoute} />
           </Stack.Navigator>
         </ScoutFlowProvider>
       </RecruitmentProvider>

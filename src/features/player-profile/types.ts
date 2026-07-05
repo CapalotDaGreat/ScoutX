@@ -5,6 +5,12 @@ import {
 } from '@/features/player-profile/types/footballIdentity';
 import { type FootballJourney } from '@/features/football-journey/types';
 import { type HighlightVideoLibrary } from '@/features/highlight-videos/types';
+import { type PrivacySettings } from '@/features/player-profile/types/privacySettings';
+
+export type {
+  PrivacySettings,
+} from '@/features/player-profile/types/privacySettings';
+export { defaultPrivacySettings } from '@/features/player-profile/types/privacySettings';
 
 export type {
   FootballIdentity,
@@ -53,4 +59,5 @@ export type PlayerProfile = {
   identity: FootballIdentity;
   footballJourney?: FootballJourney;
   highlightVideos?: HighlightVideoLibrary;
+  privacy?: PrivacySettings;
 };

@@ -22,6 +22,8 @@ import {
 } from '@/features/football-journey';
 import { HighlightVideosSection } from '@/features/highlight-videos';
 import { ActivityBellButton, ActivityFeedSection, useActivities } from '@/features/activity-feed';
+import { PortfolioPrivacySettings } from '@/features/public-portfolio';
+import { defaultPrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { TrustProfileSection, usePlayerTrust } from '@/features/trust-system';
 
 export type PlayerProfileScreenProps = {
@@ -34,6 +36,9 @@ export type PlayerProfileScreenProps = {
   onManageVideosPress?: () => void;
   onLogMatchPress?: () => void;
   onActivityPress?: () => void;
+  onPortfolioPress?: () => void;
+  onSharePortfolioPress?: () => void;
+  onPrivacyChange?: (privacy: PlayerProfile['privacy']) => Promise<void>;
   onSignOut?: () => void;
   embeddedInTabShell?: boolean;
 };
@@ -48,6 +53,9 @@ export function PlayerProfileScreen({
   onManageVideosPress,
   onLogMatchPress,
   onActivityPress,
+  onPortfolioPress,
+  onSharePortfolioPress,
+  onPrivacyChange,
   onSignOut,
   embeddedInTabShell = false,
 }: PlayerProfileScreenProps) {
@@ -121,6 +129,35 @@ export function PlayerProfileScreen({
           onEditPress={onEditPress}
         />
         {onActivityPress ? <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} /> : null}
+
+        <CollapsibleSection
+          title="Public Portfolio"
+          subtitle="Shareable football résumé and privacy controls"
+        >
+          <View className="gap-3">
+            <PortfolioPrivacySettings
+              settings={resolvedProfile.privacy ?? defaultPrivacySettings()}
+              onChange={(next) => {
+                if (onPrivacyChange) {
+                  void onPrivacyChange(next);
+                }
+              }}
+            />
+            <View className="flex-row flex-wrap gap-2">
+              {onPortfolioPress ? (
+                <Button variant="secondary" onPress={onPortfolioPress}>
+                  Preview portfolio
+                </Button>
+              ) : null}
+              {onSharePortfolioPress ? (
+                <Button variant="accent" onPress={onSharePortfolioPress}>
+                  Share portfolio
+                </Button>
+              ) : null}
+            </View>
+          </View>
+        </CollapsibleSection>
+
         <TrustProfileSection
           playerId={resolvedProfile.id}
           playerName={resolvedProfile.fullName}

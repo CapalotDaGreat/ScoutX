@@ -3,7 +3,8 @@ import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigat
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Compass, GitCompare, Home, Kanban } from 'lucide-react-native';
+import { Compass, GitCompare, Home, Kanban, Newspaper } from 'lucide-react-native';
+import { SocialFeedScreen } from '@/features/social-feed';
 import { ScoutDashboardScreen } from '@/features/scout-discovery/components/ScoutDashboardScreen';
 import { PlayerDiscoveryScreen } from '@/features/scout-discovery/components/PlayerDiscoveryScreen';
 import { PlayerComparisonScreen } from '@/features/player-comparison';
@@ -104,6 +105,10 @@ function ScoutDiscoverRoute() {
   );
 }
 
+function ScoutFeedRoute() {
+  return <SocialFeedScreen embeddedInTabShell allowCreate />;
+}
+
 function ScoutCompareRoute() {
   const navigation = useScoutTabNavigation();
 
@@ -137,6 +142,7 @@ function ScoutTabBarContainer() {
         tabs: [
           { id: 'Dashboard', label: 'Home', icon: Home },
           { id: 'Discover', label: 'Discover', icon: Compass },
+          { id: 'Feed', label: 'Feed', icon: Newspaper },
           { id: 'Compare', label: 'Compare', icon: GitCompare },
           { id: 'Pipeline', label: 'Pipeline', icon: Kanban },
         ],
@@ -161,6 +167,7 @@ function ScoutTabBarContainer() {
     >
       <Tab.Screen name="Dashboard" component={ScoutDashboardRoute} />
       <Tab.Screen name="Discover" component={ScoutDiscoverRoute} />
+      <Tab.Screen name="Feed" component={ScoutFeedRoute} />
       <Tab.Screen name="Compare" component={ScoutCompareRoute} />
       <Tab.Screen name="Pipeline" component={ScoutPipelineRoute} />
     </Tab.Navigator>

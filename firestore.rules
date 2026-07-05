@@ -10,21 +10,26 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    function publicPortfolioEnabled(userId) {
+      return get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.publicPortfolioEnabled == true;
+    }
+
     match /users/{userId} {
       allow read, write: if isOwner(userId);
     }
 
     match /profiles/{userId} {
-      allow read, write: if isOwner(userId);
+      allow read: if isOwner(userId) || publicPortfolioEnabled(userId);
+      allow write: if isOwner(userId);
     }
 
     match /trustProfiles/{playerId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() || publicPortfolioEnabled(playerId);
       allow write: if isOwner(playerId);
     }
 
     match /trustRecommendations/{recommendationId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() || publicPortfolioEnabled(resource.data.playerId);
       allow create: if isSignedIn();
       allow update, delete: if isSignedIn()
         && request.auth.uid == resource.data.authorId;
@@ -37,6 +42,49 @@ service cloud.firestore {
 
     match /recruitmentWorkspaces/{scoutId} {
       allow read, write: if isOwner(scoutId);
+    }
+
+    match /activities/{activityId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.recipientId;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && request.auth.uid == resource.data.recipientId;
+    }
+
+    match /gpsSessions/{sessionId} {
+      allow read: if isSignedIn()
+        || publicPortfolioEnabled(resource.data.playerId);
+      allow write: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+    }
+
+    match /posts/{postId} {
+      allow read: if resource.data.visibility == 'public'
+        || (isSignedIn() && request.auth.uid == resource.data.authorId);
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.authorId;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.authorId;
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.authorId;
+    }
+
+    match /postReactions/{reactionId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && request.auth.uid == request.resource.data.userId;
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.userId;
+    }
+
+    match /blockedUsers/{blockId} {
+      allow read, write: if isSignedIn()
+        && request.auth.uid == resource.data.blockerId;
+    }
+
+    match /contentReports/{reportId} {
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.reporterId;
+      allow read: if false;
     }
   }
 }

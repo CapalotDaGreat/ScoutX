@@ -12,6 +12,7 @@ import { useDiscoveryFilters } from '@/features/scout-discovery/hooks/useDiscove
 import { ScoutWorkspaceProvider } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { PublicPortfolioScreen } from '@/features/public-portfolio';
 import { type GuestStackParamList } from '@/navigation/types';
 
 const Stack = createNativeStackNavigator<GuestStackParamList>();
@@ -72,6 +73,18 @@ function GuestPlayerDetailRoute({
       playerId={route.params.playerId}
       onBack={() => navigation.goBack()}
       guestMode
+    />
+  );
+}
+
+function GuestPublicPortfolioRoute({
+  navigation,
+  route,
+}: NativeStackScreenProps<GuestStackParamList, 'PublicPortfolio'>) {
+  return (
+    <PublicPortfolioScreen
+      playerId={route.params.playerId}
+      onBack={() => navigation.goBack()}
     />
   );
 }
@@ -140,6 +153,7 @@ function GuestStackContent() {
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
         <Stack.Screen name="GuestMain" component={GuestMainRoute} />
         <Stack.Screen name="PlayerDetail" component={GuestPlayerDetailRoute} />
+        <Stack.Screen name="PublicPortfolio" component={GuestPublicPortfolioRoute} />
         <Stack.Screen name="GuestRegister" component={GuestRegisterRoute} />
         <Stack.Screen name="GuestLogin" component={GuestLoginRoute} />
       </Stack.Navigator>

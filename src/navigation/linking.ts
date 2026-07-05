@@ -16,10 +16,16 @@ export const linking: LinkingOptions<RootStackParamList> = {
       },
       PlayerApp: {
         screens: {
-          Profile: 'player/profile',
-          Statistics: 'player/stats',
-          Gps: 'player/gps',
-          Trials: 'player/trials',
+          PlayerTabs: {
+            screens: {
+              Profile: 'player/profile',
+              Feed: 'player/feed',
+              Statistics: 'player/stats',
+              Gps: 'player/gps',
+              Trials: 'player/trials',
+            },
+          },
+          PublicPortfolio: 'portfolio/:playerId',
         },
       },
       ScoutApp: {
@@ -28,18 +34,21 @@ export const linking: LinkingOptions<RootStackParamList> = {
             screens: {
               Dashboard: 'scout',
               Discover: 'scout/discover',
+              Feed: 'scout/feed',
               Compare: 'scout/compare',
               Pipeline: 'scout/pipeline',
             },
           },
           PlayerDetail: 'scout/player/:playerId',
           ActivityInbox: 'scout/activity',
+          PublicPortfolio: 'portfolio/:playerId',
         },
       },
       GuestApp: {
         screens: {
           GuestMain: 'guest',
           PlayerDetail: 'guest/player/:playerId',
+          PublicPortfolio: 'portfolio/:playerId',
           GuestRegister: 'guest/register',
           GuestLogin: 'guest/login',
         },

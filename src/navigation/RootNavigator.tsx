@@ -5,7 +5,7 @@ import { AuthStackNavigator } from '@/navigation/AuthStackNavigator';
 import { GuestRootNavigator } from '@/navigation/GuestRootNavigator';
 import { linking } from '@/navigation/linking';
 import { useNavigationTheme } from '@/navigation/navigationTheme';
-import { PlayerTabNavigator } from '@/navigation/PlayerTabNavigator';
+import { PlayerRootNavigator } from '@/navigation/PlayerRootNavigator';
 import { ScoutRootNavigator } from '@/navigation/ScoutRootNavigator';
 
 export function RootNavigator() {
@@ -26,7 +26,7 @@ export function RootNavigator() {
         ) : role === 'scout' ? (
           <ScoutRootNavigator />
         ) : (
-          <PlayerTabNavigator />
+          <PlayerRootNavigator />
         )
       ) : (
         <AuthStackNavigator />

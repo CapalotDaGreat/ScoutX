@@ -19,6 +19,11 @@ import {
   serializeHighlightVideoLibrary,
 } from '@/features/highlight-videos/models/HighlightVideoModel';
 import { getMockHighlightVideoLibrary } from '@/features/highlight-videos/services/mockHighlightVideos';
+import { defaultPrivacySettings } from '@/features/player-profile/types/privacySettings';
+import {
+  parsePrivacySettings,
+  serializePrivacySettings,
+} from '@/features/player-profile/models/PrivacySettingsModel';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -96,6 +101,7 @@ export class ProfileModel {
         updatedAt: new Date().toISOString(),
       },
       highlightVideos: getMockHighlightVideoLibrary(),
+      privacy: defaultPrivacySettings(),
     };
   }
 
@@ -182,6 +188,7 @@ export class ProfileModel {
       identity,
       footballJourney: parseFootballJourney(data.footballJourney),
       highlightVideos: parseHighlightVideoLibrary(data.highlightVideos),
+      privacy: parsePrivacySettings(data.privacy),
     };
   }
 
@@ -235,6 +242,9 @@ export class ProfileModel {
     }
     if (profile.highlightVideos !== undefined) {
       data.highlightVideos = serializeHighlightVideoLibrary(profile.highlightVideos);
+    }
+    if (profile.privacy !== undefined) {
+      data.privacy = serializePrivacySettings(profile.privacy);
     }
 
     return data;

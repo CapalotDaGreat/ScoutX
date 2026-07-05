@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { BarChart3, CalendarDays, MapPin, UserRound } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BarChart3, CalendarDays, MapPin, Newspaper, UserRound } from 'lucide-react-native';
 import { buildPerformanceContext } from '@/features/ai-insights';
 import { EditJourneyModal } from '@/features/football-journey';
 import { HighlightVideosManagerModal } from '@/features/highlight-videos';
@@ -8,10 +10,12 @@ import { PlayerProfileScreen, EditProfileModal, usePlayerProfile } from '@/featu
 import { LogMatchModal, StatisticsScreen } from '@/features/player-statistics';
 import { GpsTrackingScreen } from '@/features/gps';
 import { PlayerTrialsScreen } from '@/features/trial-invitations';
+import { SharePortfolioSheet } from '@/features/public-portfolio';
 import { ActivityInboxModal } from '@/features/activity-feed';
+import { SocialFeedScreen } from '@/features/social-feed';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { createNavigationTabBar } from '@/navigation/NavigationTabBar';
-import { type PlayerTabParamList } from '@/navigation/types';
+import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation/types';
 
 const Tab = createBottomTabNavigator<PlayerTabParamList>();
 
@@ -20,6 +24,7 @@ type PlayerTabId = keyof PlayerTabParamList;
 const PlayerTabBar = createNavigationTabBar<PlayerTabId>({
   tabs: [
     { id: 'Profile', label: 'Profile', icon: UserRound },
+    { id: 'Feed', label: 'Feed', icon: Newspaper },
     { id: 'Statistics', label: 'Stats', icon: BarChart3 },
     { id: 'Gps', label: 'GPS', icon: MapPin },
     { id: 'Trials', label: 'Trials', icon: CalendarDays },
@@ -27,7 +32,12 @@ const PlayerTabBar = createNavigationTabBar<PlayerTabId>({
   testID: 'player-tab-bar',
 });
 
+function usePlayerStackNavigation() {
+  return useNavigation<NativeStackNavigationProp<PlayerStackParamList>>();
+}
+
 function PlayerTabsContainer() {
+  const stackNavigation = usePlayerStackNavigation();
   const { user, signOut } = useAuth();
   const {
     profile,
@@ -44,6 +54,7 @@ function PlayerTabsContainer() {
   const [isVideosModalVisible, setIsVideosModalVisible] = useState(false);
   const [isLogMatchModalVisible, setIsLogMatchModalVisible] = useState(false);
   const [isActivityInboxVisible, setIsActivityInboxVisible] = useState(false);
+  const [isSharePortfolioVisible, setIsSharePortfolioVisible] = useState(false);
 
   const statisticsAiContext = useMemo(() => {
     if (!user?.id || !profile) {
@@ -84,10 +95,25 @@ function PlayerTabsContainer() {
               onManageVideosPress={() => setIsVideosModalVisible(true)}
               onLogMatchPress={openLogMatch}
               onActivityPress={() => setIsActivityInboxVisible(true)}
+              onPortfolioPress={() =>
+                user?.id
+                  ? stackNavigation.navigate('PublicPortfolio', {
+                      playerId: user.id,
+                      previewMode: true,
+                    })
+                  : undefined
+              }
+              onSharePortfolioPress={() => setIsSharePortfolioVisible(true)}
+              onPrivacyChange={async (privacy) => {
+                await saveProfile({ privacy });
+              }}
               onSignOut={() => void signOut()}
               embeddedInTabShell
             />
           )}
+        </Tab.Screen>
+        <Tab.Screen name="Feed">
+          {() => <SocialFeedScreen embeddedInTabShell allowCreate />}
         </Tab.Screen>
         <Tab.Screen name="Statistics">
           {() => (
@@ -147,6 +173,15 @@ function PlayerTabsContainer() {
         visible={isActivityInboxVisible}
         onClose={() => setIsActivityInboxVisible(false)}
       />
+
+      {user?.id && profile ? (
+        <SharePortfolioSheet
+          visible={isSharePortfolioVisible}
+          playerId={user.id}
+          playerName={profile.fullName}
+          onClose={() => setIsSharePortfolioVisible(false)}
+        />
+      ) : null}
     </>
   );
 }
