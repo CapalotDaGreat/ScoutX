@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
+import { PlayerComparisonScreen } from '@/features/player-comparison';
 import {
   RecruitmentProvider,
 } from '@/features/scout-recruitment';
@@ -14,6 +15,7 @@ import { ScoutFlowProvider, useScoutFlow } from '@/navigation/context/ScoutFlowC
 import { ScoutTabNavigator } from '@/navigation/ScoutTabNavigator';
 import { ActivityInboxScreen } from '@/features/activity-feed';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
+import { SettingsScreen } from '@/features/settings';
 import { type ScoutStackParamList } from '@/navigation/types';
 
 const Stack = createNativeStackNavigator<ScoutStackParamList>();
@@ -40,6 +42,19 @@ function PlayerDetailRoute({
       playerId={route.params.playerId}
       onBack={() => navigation.goBack()}
       onViewPortfolio={(playerId) => navigation.navigate('PublicPortfolio', { playerId })}
+      onOpenComparisonPress={() => navigation.navigate('PlayerComparison')}
+    />
+  );
+}
+
+function PlayerComparisonRoute({
+  navigation,
+}: NativeStackScreenProps<ScoutStackParamList, 'PlayerComparison'>) {
+  return (
+    <PlayerComparisonScreen
+      embeddedInTabShell
+      onBack={() => navigation.goBack()}
+      onDiscoverPress={() => navigation.navigate('ScoutTabs', { screen: 'Discover' })}
     />
   );
 }
@@ -63,6 +78,19 @@ function PublicPortfolioRoute({
   );
 }
 
+function SettingsRoute({
+  navigation,
+}: NativeStackScreenProps<ScoutStackParamList, 'Settings'>) {
+  const { signOut } = useAuth();
+
+  return (
+    <SettingsScreen
+      onBack={() => navigation.goBack()}
+      onSignOut={() => void signOut()}
+    />
+  );
+}
+
 export function ScoutRootNavigator() {
   const { user } = useAuth();
 
@@ -73,8 +101,10 @@ export function ScoutRootNavigator() {
           <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
             <Stack.Screen name="ScoutTabs" component={ScoutTabsRoute} />
             <Stack.Screen name="PlayerDetail" component={PlayerDetailRoute} />
+            <Stack.Screen name="PlayerComparison" component={PlayerComparisonRoute} />
             <Stack.Screen name="ActivityInbox" component={ActivityInboxRoute} />
             <Stack.Screen name="PublicPortfolio" component={PublicPortfolioRoute} />
+            <Stack.Screen name="Settings" component={SettingsRoute} />
           </Stack.Navigator>
         </ScoutFlowProvider>
       </RecruitmentProvider>

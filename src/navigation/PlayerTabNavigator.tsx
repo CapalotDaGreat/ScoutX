@@ -177,6 +177,7 @@ function PlayerTabsContainer() {
                 await refreshProfile();
               }}
               onPrivacyChange={handlePrivacyChange}
+              onSettingsPress={() => stackNavigation.navigate('Settings')}
               onSignOut={() => void signOut()}
               embeddedInTabShell
             />

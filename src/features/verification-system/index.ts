@@ -1,5 +1,6 @@
 export { VerificationBadge } from '@/features/verification-system/components/VerificationBadge';
 export { PlayerVerificationCard } from '@/features/verification-system/components/PlayerVerificationCard';
+export { usePlayerVerification } from '@/features/verification-system/hooks/usePlayerVerification';
 export {
   fetchPlayerVerificationState,
   isDiscoverableVerified,

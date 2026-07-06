@@ -44,7 +44,7 @@ type AuthContextValue = {
   signUp: (payload: SignUpPayload) => Promise<void>;
   signInAsGuest: () => Promise<void>;
   forgotPassword: (payload: ForgotPasswordPayload) => Promise<void>;
-  selectRole: (role: Exclude<AuthRole, 'guest' | 'club'>) => void;
+  selectRole: (role: 'player' | 'scout') => void;
   beginUpgrade: (intent: AccountUpgradeIntent) => void;
   clearUpgrade: () => void;
   signOut: () => Promise<void>;
@@ -212,7 +212,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  const selectRole = useCallback((role: Exclude<AuthRole, 'guest' | 'club'>) => {
+  const selectRole = useCallback((role: 'player' | 'scout') => {
     const userId = state.user?.uid;
     if (userId) {
       const db = getFirestoreDb();

@@ -51,6 +51,7 @@ export type PlayerProfileScreenProps = {
   onDismissOnboarding?: () => void;
   onUsernameClaimed?: (username: string) => Promise<void>;
   onPrivacyChange?: (privacy: PlayerProfile['privacy']) => Promise<void>;
+  onSettingsPress?: () => void;
   onSignOut?: () => void;
   embeddedInTabShell?: boolean;
 };
@@ -75,6 +76,7 @@ export function PlayerProfileScreen({
   onDismissOnboarding,
   onUsernameClaimed,
   onPrivacyChange,
+  onSettingsPress,
   onSignOut,
   embeddedInTabShell = false,
 }: PlayerProfileScreenProps) {
@@ -150,8 +152,17 @@ export function PlayerProfileScreen({
           profile={profile}
           recommendations={recommendations}
         />
-        <PortfolioAnalyticsCard playerId={profile.id} profile={profile} />
-        <PlayerVerificationCard playerId={profile.id} playerName={profile.fullName} />
+
+        <CollapsibleSection
+          title="Passport insights"
+          subtitle="Scout views and verification status"
+        >
+          <View className="gap-3">
+            <PortfolioAnalyticsCard playerId={profile.id} profile={profile} />
+            <PlayerVerificationCard playerId={profile.id} playerName={profile.fullName} />
+          </View>
+        </CollapsibleSection>
+
         {isAdminUser(profile.id) ? <AdminReviewCard /> : null}
 
         <CollapsibleSection
@@ -254,7 +265,11 @@ export function PlayerProfileScreen({
         <Button variant="secondary" onPress={onEditPress}>
           Edit profile
         </Button>
-        {onSignOut ? (
+        {onSettingsPress ? (
+          <Button variant="ghost" onPress={onSettingsPress}>
+            Settings
+          </Button>
+        ) : onSignOut ? (
           <Button variant="ghost" onPress={onSignOut}>
             Sign out
           </Button>

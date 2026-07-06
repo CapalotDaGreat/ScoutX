@@ -9,7 +9,7 @@ import {
 } from '@/features/career-milestones/services/milestoneEngine';
 import { PlayerProfileRepository } from '@/features/player-profile/repositories/PlayerProfileRepository';
 import { type PlayerProfile } from '@/features/player-profile/types';
-import { getPortfolioOverallScore } from '@/features/public-portfolio/services/portfolioHealthService';
+import { getPortfolioOverallScore } from '@/features/public-portfolio/services/footballPassportScoreService';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 
 export function buildMilestoneEvaluationContext(

@@ -2,7 +2,7 @@ import { type GpsSession } from '@/features/gps/types';
 import { type WeeklyGrowthMetrics } from '@/features/player-growth/services/growthMetricsService';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type PortfolioAnalytics } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
-import { getPortfolioOverallScore } from '@/features/public-portfolio/services/portfolioHealthService';
+import { getPortfolioOverallScore } from '@/features/public-portfolio/services/footballPassportScoreService';
 
 export type PerformanceInsight = {
   id: string;

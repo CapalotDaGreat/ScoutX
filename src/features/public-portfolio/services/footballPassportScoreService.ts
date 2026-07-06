@@ -274,3 +274,11 @@ export function buildFootballPassportScoreReport(
     focusHints,
   };
 }
+
+export function getPortfolioOverallScore(
+  profile: PlayerProfile,
+  recommendations: TrustRecommendation[] = [],
+  pushRegistered = false,
+): number {
+  return buildFootballPassportScoreReport(profile, recommendations, pushRegistered).overallScore;
+}

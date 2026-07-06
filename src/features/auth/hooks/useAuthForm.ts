@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { type AuthRole } from '@/features/auth/types';
 
-export type SelectableAuthRole = Extract<AuthRole, 'player' | 'scout' | 'coach'>;
+export type SelectableAuthRole = Extract<AuthRole, 'player' | 'scout'>;
 
 export type FormErrors<T> = Partial<Record<keyof T, string>>;
 

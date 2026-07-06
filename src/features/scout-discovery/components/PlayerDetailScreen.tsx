@@ -66,6 +66,7 @@ export type PlayerDetailScreenProps = {
   onBack: () => void;
   guestMode?: boolean;
   onViewPortfolio?: (playerId: string) => void;
+  onOpenComparisonPress?: () => void;
 };
 
 export function PlayerDetailScreen({
@@ -73,12 +74,13 @@ export function PlayerDetailScreen({
   onBack,
   guestMode = false,
   onViewPortfolio,
+  onOpenComparisonPress,
 }: PlayerDetailScreenProps) {
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
   const workspace = useScoutWorkspace();
   const playerSave = useScoutPlayerSave();
-  const { recordPlayerView, isInComparison, canAddToComparison, addToComparison, removeFromComparison } = workspace;
+  const { recordPlayerView, isInComparison, canAddToComparison, addToComparison, removeFromComparison, comparisonPlayerIds } = workspace;
   const [inviteSignal, setInviteSignal] = useState(0);
   const [clubProfile, setClubProfile] = useState<ClubProfile | null>(null);
 
@@ -184,6 +186,11 @@ export function PlayerDetailScreen({
             >
               {inComparison ? 'Comparing' : 'Compare'}
             </Button>
+            {onOpenComparisonPress && comparisonPlayerIds.length > 0 ? (
+              <Button variant="secondary" size="sm" onPress={onOpenComparisonPress}>
+                Queue ({comparisonPlayerIds.length})
+              </Button>
+            ) : null}
             <Button
               variant={saved ? 'accent' : 'secondary'}
               size="sm"

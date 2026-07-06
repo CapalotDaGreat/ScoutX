@@ -35,6 +35,8 @@ export const linking: LinkingOptions<RootStackParamList> = {
               Trials: 'player/trials',
             },
           },
+          PublicPortfolio: 'player/:slug',
+          Settings: 'player/settings',
         },
       },
       ScoutApp: {
@@ -47,7 +49,10 @@ export const linking: LinkingOptions<RootStackParamList> = {
             },
           },
           PlayerDetail: 'scout/player/:playerId',
+          PlayerComparison: 'scout/compare',
           ActivityInbox: 'scout/activity',
+          PublicPortfolio: 'player/:slug',
+          Settings: 'scout/settings',
         },
       },
       GuestApp: {

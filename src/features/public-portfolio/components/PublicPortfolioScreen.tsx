@@ -14,6 +14,7 @@ import { PerformanceSummary } from '@/features/player-profile/components/Perform
 import { ProfileStatsGrid } from '@/features/player-profile/components/ProfileStatsGrid';
 import { RecommendationCard } from '@/features/trust-system/components/RecommendationCard';
 import { CoachEndorsementModal } from '@/features/trust-system/components/CoachEndorsementModal';
+import { CoachEndorsementPrompt } from '@/features/public-portfolio/components/CoachEndorsementPrompt';
 import { PlayerStatisticsSection } from '@/features/player-statistics';
 import { FootballPassportHero } from '@/features/public-portfolio/components/FootballPassportHero';
 import { PortfolioSection } from '@/features/public-portfolio/components/PortfolioSection';
@@ -25,6 +26,7 @@ import { PortfolioAnalyticsRepository } from '@/features/portfolio-analytics/rep
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { usePlayerTrust } from '@/features/trust-system/hooks/usePlayerTrust';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { isGuestRole } from '@/features/auth/services/authAccess';
 import { type AuthRole } from '@/features/auth/types';
 
 export type PublicPortfolioScreenProps = {
@@ -35,6 +37,8 @@ export type PublicPortfolioScreenProps = {
   previewData?: PublicPortfolioData;
   previewLoading?: boolean;
   endorseMode?: boolean;
+  onSignInForEndorsement?: () => void;
+  onRegisterForEndorsement?: () => void;
 };
 
 function isScoutLikeRole(role: AuthRole | null | undefined): boolean {
@@ -49,6 +53,8 @@ export function PublicPortfolioScreen({
   previewData,
   previewLoading = false,
   endorseMode = false,
+  onSignInForEndorsement,
+  onRegisterForEndorsement,
 }: PublicPortfolioScreenProps) {
   const { user, role } = useAuth();
   const fetched = usePublicPortfolio(previewData || previewMode ? null : playerId);
@@ -65,6 +71,8 @@ export function PublicPortfolioScreen({
 
   const [endorsementVisible, setEndorsementVisible] = useState(false);
   const canEndorse = useCanWriteCoachEndorsement(playerId);
+  const isGuest = isGuestRole(role ?? undefined, user?.isAnonymous);
+  const isPlayerAccount = role === 'player' && user?.id !== playerId;
   const viewedRef = useRef(false);
 
   useEffect(() => {
@@ -162,6 +170,16 @@ export function PublicPortfolioScreen({
       }
     >
       <ScrollView contentContainerClassName="gap-6 pb-10" showsVerticalScrollIndicator={false}>
+        {endorseMode && !canEndorse ? (
+          <CoachEndorsementPrompt
+            playerName={profile.fullName}
+            isGuest={isGuest}
+            isPlayerAccount={isPlayerAccount}
+            onSignInPress={onSignInForEndorsement}
+            onRegisterPress={onRegisterForEndorsement}
+          />
+        ) : null}
+
         <FootballPassportHero data={data} username={displayUsername} />
 
         {isPortfolioSectionVisible(privacy, 'careerTimeline') && profile.footballJourney ? (

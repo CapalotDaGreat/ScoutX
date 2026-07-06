@@ -82,11 +82,21 @@ function GuestPublicPortfolioRoute({
   navigation,
   route,
 }: NativeStackScreenProps<GuestStackParamList, 'PublicPortfolio'>) {
+  const { beginUpgrade } = useAuth();
+
   return (
     <PublicPortfolioStackScreen
       playerId={route.params.playerId}
       slug={route.params.slug}
       onBack={() => navigation.goBack()}
+      onSignInForEndorsement={() => {
+        beginUpgrade('login');
+        navigation.navigate('GuestLogin');
+      }}
+      onRegisterForEndorsement={() => {
+        beginUpgrade('register');
+        navigation.navigate('GuestRegister');
+      }}
     />
   );
 }

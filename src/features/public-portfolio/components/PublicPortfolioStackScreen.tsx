@@ -9,6 +9,8 @@ export type PublicPortfolioStackScreenProps = {
   previewData?: PublicPortfolioData;
   previewLoading?: boolean;
   onBack?: () => void;
+  onSignInForEndorsement?: () => void;
+  onRegisterForEndorsement?: () => void;
 };
 
 export function PublicPortfolioStackScreen({
@@ -18,6 +20,8 @@ export function PublicPortfolioStackScreen({
   previewData,
   previewLoading,
   onBack,
+  onSignInForEndorsement,
+  onRegisterForEndorsement,
 }: PublicPortfolioStackScreenProps) {
   const endorseMode = useEndorseModeFromLinking();
 
@@ -29,6 +33,8 @@ export function PublicPortfolioStackScreen({
       previewData={previewData}
       previewLoading={previewLoading}
       endorseMode={endorseMode}
+      onSignInForEndorsement={onSignInForEndorsement}
+      onRegisterForEndorsement={onRegisterForEndorsement}
       onBack={onBack}
     />
   );

@@ -1,11 +1,10 @@
 import { Pressable, View } from 'react-native';
-import { CheckCircle2, GraduationCap, Shield, UserRound } from 'lucide-react-native';
+import { CheckCircle2, Shield, UserRound } from 'lucide-react-native';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
-import { type AuthRole } from '@/features/auth/types';
 
-export type SelectableAuthRole = Extract<AuthRole, 'player' | 'scout' | 'coach'>;
+export type SelectableAuthRole = 'player' | 'scout';
 
 export type RoleOptionProps = {
   role: SelectableAuthRole;
@@ -29,13 +28,8 @@ const roleMeta: Record<SelectableAuthRole, RoleMeta> = {
   },
   scout: {
     title: 'Scout',
-    description: 'Discover talent, manage shortlists, and track development progress.',
+    description: 'Discover talent, compare players, manage your pipeline, and send trials.',
     icon: Shield,
-  },
-  coach: {
-    title: 'Coach',
-    description: 'Endorse players and review Football Passports from your network.',
-    icon: GraduationCap,
   },
 };
 

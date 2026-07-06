@@ -3,7 +3,7 @@ import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { PortfolioAnalyticsRepository } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
-import { getPortfolioOverallScore } from '@/features/public-portfolio/services/portfolioHealthService';
+import { getPortfolioOverallScore } from '@/features/public-portfolio/services/footballPassportScoreService';
 
 export type PortfolioAnalyticsCardProps = {
   playerId: string;

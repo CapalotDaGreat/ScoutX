@@ -12,6 +12,8 @@ export type PublicPortfolioRouteContainerProps = {
   previewData?: PublicPortfolioData;
   previewLoading?: boolean;
   endorseMode?: boolean;
+  onSignInForEndorsement?: () => void;
+  onRegisterForEndorsement?: () => void;
   onBack?: () => void;
 };
 
@@ -22,6 +24,8 @@ export function PublicPortfolioRouteContainer({
   previewData,
   previewLoading = false,
   endorseMode = false,
+  onSignInForEndorsement,
+  onRegisterForEndorsement,
   onBack,
 }: PublicPortfolioRouteContainerProps) {
   const { resolvedPlayerId, isResolving, resolveError } = useResolvedPlayerId(playerId, slug);
@@ -55,6 +59,8 @@ export function PublicPortfolioRouteContainer({
       previewData={previewData}
       previewLoading={previewLoading}
       endorseMode={endorseMode}
+      onSignInForEndorsement={onSignInForEndorsement}
+      onRegisterForEndorsement={onRegisterForEndorsement}
       onBack={onBack}
     />
   );

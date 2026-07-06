@@ -6,10 +6,6 @@ export { SharePortfolioSheet } from '@/features/public-portfolio/components/Shar
 export { PortfolioPrivacySettings } from '@/features/public-portfolio/components/PortfolioPrivacySettings';
 export { PortfolioQrCode } from '@/features/public-portfolio/components/PortfolioQrCode';
 export { FootballPassportHero } from '@/features/public-portfolio/components/FootballPassportHero';
-export {
-  PortfolioHealthCard,
-  ScoutReadinessCard,
-} from '@/features/public-portfolio/components/PortfolioHealthCard';
 export { FootballPassportScoreCard } from '@/features/public-portfolio/components/FootballPassportScoreCard';
 export { UsernameClaimField } from '@/features/public-portfolio/components/UsernameClaimField';
 export { RequestCoachEndorsementSheet } from '@/features/public-portfolio/components/RequestCoachEndorsementSheet';
@@ -27,11 +23,9 @@ export {
 } from '@/features/public-portfolio/constants';
 export { exportFootballCvPdf } from '@/features/public-portfolio/services/footballCvExportService';
 export {
-  buildPortfolioHealthReport,
-  buildScoutReadinessReport,
+  buildFootballPassportScoreReport,
   getPortfolioOverallScore,
-} from '@/features/public-portfolio/services/portfolioHealthService';
-export { buildFootballPassportScoreReport } from '@/features/public-portfolio/services/footballPassportScoreService';
+} from '@/features/public-portfolio/services/footballPassportScoreService';
 export {
   filterVisibleRecommendations,
   buildPublicPortfolioData,

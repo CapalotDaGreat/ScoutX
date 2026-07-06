@@ -26,7 +26,7 @@ function useScoutTabNavigation() {
 }
 
 function ScoutDashboardRoute() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigation = useScoutTabNavigation();
   const flow = useScoutFlow();
   const recruitment = useRecruitment();
@@ -56,6 +56,14 @@ function ScoutDashboardRoute() {
     navigation.navigate('ActivityInbox');
   }, [navigation]);
 
+  const handleOpenComparisonPress = useCallback(() => {
+    navigation.navigate('PlayerComparison');
+  }, [navigation]);
+
+  const handleSettingsPress = useCallback(() => {
+    navigation.navigate('Settings');
+  }, [navigation]);
+
   return (
     <ScoutDashboardScreen
       scoutName={scoutName}
@@ -67,7 +75,8 @@ function ScoutDashboardRoute() {
       onActivityPress={handleActivityPress}
       pipelineCount={recruitment.savedCount}
       onPlayerPress={handlePlayerPress}
-      onSignOut={() => void signOut()}
+      onOpenComparisonPress={handleOpenComparisonPress}
+      onSettingsPress={handleSettingsPress}
       embeddedInTabShell
     />
   );

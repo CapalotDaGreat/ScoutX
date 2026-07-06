@@ -20,6 +20,7 @@ export type PlayerStackParamList = {
   PlayerTabs: NavigatorScreenParams<PlayerTabParamList>;
   PublicPortfolio: { playerId?: string; slug?: string; previewMode?: boolean };
   CareerReplay: undefined;
+  Settings: undefined;
 };
 
 export type ScoutTabParamList = {
@@ -31,8 +32,10 @@ export type ScoutTabParamList = {
 export type ScoutStackParamList = {
   ScoutTabs: NavigatorScreenParams<ScoutTabParamList>;
   PlayerDetail: { playerId: string };
+  PlayerComparison: undefined;
   ActivityInbox: undefined;
   PublicPortfolio: { playerId?: string; slug?: string };
+  Settings: undefined;
 };
 
 export type GuestStackParamList = {

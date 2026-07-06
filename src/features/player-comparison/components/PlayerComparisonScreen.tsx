@@ -20,6 +20,7 @@ import { type ComparisonSectionKey } from '@/features/player-comparison/types';
 
 export type PlayerComparisonScreenProps = {
   onDiscoverPress?: () => void;
+  onBack?: () => void;
   embeddedInTabShell?: boolean;
 };
 
@@ -29,6 +30,7 @@ type PickerMode =
 
 export function PlayerComparisonScreen({
   onDiscoverPress,
+  onBack,
   embeddedInTabShell = false,
 }: PlayerComparisonScreenProps) {
   const { isTablet } = useCompactLayout();
@@ -156,6 +158,13 @@ export function PlayerComparisonScreen({
         subtitle="Compare up to four players across radar, stats, trends, and career signals."
         safeArea
         embeddedInTabShell={embeddedInTabShell}
+        footer={
+          onBack ? (
+            <Button variant="secondary" onPress={onBack} fullWidth>
+              Back
+            </Button>
+          ) : undefined
+        }
         empty={players.length === 0}
         emptyTitle="Add players to compare"
         emptyDescription="Select players from Discover or use the compare action on any player card."

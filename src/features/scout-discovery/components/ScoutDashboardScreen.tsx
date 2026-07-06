@@ -7,6 +7,7 @@ import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { SearchBar } from '@/components/primitives/SearchBar';
 import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
+import { ComparisonQueueCard } from '@/features/player-comparison/components/ComparisonQueueCard';
 import { ContinueScoutingCard } from '@/features/scout-discovery/components/ContinueScoutingCard';
 import { DashboardHeader } from '@/features/scout-discovery/components/DashboardHeader';
 import { ActivityBellButton, ActivityFeedSection, useActivities } from '@/features/activity-feed';
@@ -26,7 +27,9 @@ export type ScoutDashboardScreenProps = {
   onActivityPress: () => void;
   pipelineCount: number;
   onPlayerPress: (player: DiscoverablePlayer) => void;
-  onSignOut: () => void;
+  onOpenComparisonPress?: () => void;
+  onSettingsPress?: () => void;
+  onSignOut?: () => void;
   searchValue: string;
   onSearchChange: (value: string) => void;
   onSearchSubmit: () => void;
@@ -40,6 +43,8 @@ export function ScoutDashboardScreen({
   onActivityPress,
   pipelineCount,
   onPlayerPress,
+  onOpenComparisonPress,
+  onSettingsPress,
   onSignOut,
   searchValue,
   onSearchChange,
@@ -108,9 +113,15 @@ export function ScoutDashboardScreen({
       header={
         <View className="mb-2 flex-row items-center justify-end gap-2">
           <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
-          <Button variant="ghost" size="sm" onPress={onSignOut}>
-            Sign out
-          </Button>
+          {onSettingsPress ? (
+            <Button variant="ghost" size="sm" onPress={onSettingsPress}>
+              Settings
+            </Button>
+          ) : onSignOut ? (
+            <Button variant="ghost" size="sm" onPress={onSignOut}>
+              Sign out
+            </Button>
+          ) : null}
         </View>
       }
     >
@@ -138,6 +149,10 @@ export function ScoutDashboardScreen({
           Pipeline ({pipelineCount})
         </Button>
       </View>
+
+      {onOpenComparisonPress ? (
+        <ComparisonQueueCard onOpenComparison={onOpenComparisonPress} />
+      ) : null}
 
       <ActivityFeedSection onViewAllPress={onActivityPress} />
 

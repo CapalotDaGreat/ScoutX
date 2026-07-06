@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
+import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Text } from '@/components/primitives/Text';
@@ -10,11 +11,10 @@ import { buildUnifiedCareerTimeline } from '@/features/career-timeline/services/
 import { CareerReplayCard } from '@/features/career-replay/components/CareerReplayCard';
 import { FootballJourneySection } from '@/features/football-journey';
 import { PerformanceInsightsCard } from '@/features/performance-insights/components/PerformanceInsightsCard';
-import { usePortfolioAnalytics } from '@/features/portfolio-analytics/hooks/usePortfolioAnalytics';
-import { PortfolioAnalyticsCard } from '@/features/portfolio-analytics/components/PortfolioAnalyticsCard';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { WeeklyFootballReportCard } from '@/features/weekly-report/components/WeeklyFootballReportCard';
 import { useWeeklyReportNotifier } from '@/features/weekly-report/hooks/useWeeklyReportNotifier';
+import { usePortfolioAnalytics } from '@/features/portfolio-analytics/hooks/usePortfolioAnalytics';
 
 export type CareerScreenProps = {
   embeddedInTabShell?: boolean;
@@ -69,11 +69,19 @@ export function CareerScreen({
           profile={profile}
           recommendations={trustState.recommendations}
         />
-        <AiCareerCoachCard profile={profile} />
         <CareerReplayCard profile={profile} onOpenPress={onCareerReplayPress} />
         <MilestonesSection earned={earned} recentlyEarned={recentlyEarned} />
-        <PerformanceInsightsCard profile={profile} />
-        <PortfolioAnalyticsCard playerId={profile.id} profile={profile} />
+
+        <CollapsibleSection
+          title="Coaching & insights"
+          subtitle="AI coach and performance signals"
+        >
+          <View className="gap-3">
+            <AiCareerCoachCard profile={profile} />
+            <PerformanceInsightsCard profile={profile} />
+          </View>
+        </CollapsibleSection>
+
         <View className="rounded-2xl border border-border bg-white p-4 dark:border-neutral-800 dark:bg-neutral-950">
           <Text variant="overline" color="secondary">
             Football timeline

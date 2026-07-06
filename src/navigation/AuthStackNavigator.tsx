@@ -71,9 +71,7 @@ function RoleSelectionRoute({
   return (
     <RoleSelectionScreen
       onContinue={(role) => {
-        if (role === 'player' || role === 'scout' || role === 'coach') {
-          selectRole(role);
-        }
+        selectRole(role);
       }}
       onBack={() => navigation.canGoBack() ? navigation.goBack() : navigation.navigate('Welcome')}
       successMessage={successMessage}

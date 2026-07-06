@@ -1,4 +1,5 @@
 export { PlayerComparisonScreen } from './components/PlayerComparisonScreen';
+export { ComparisonQueueCard } from './components/ComparisonQueueCard';
 export { ComparisonMetricTable } from './components/ComparisonMetricTable';
 export { ComparisonRadarChart } from './components/ComparisonRadarChart';
 export { ComparisonTrendChart } from './components/ComparisonTrendChart';

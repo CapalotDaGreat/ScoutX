@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { mockDiscoverablePlayers } from '@/features/scout-discovery/services/mockPlayerDiscoveryData';
+import { useDiscoverablePlayerPool } from '@/features/scout-discovery/hooks/useDiscoverablePlayerPool';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import {
   buildComparisonProfiles,
@@ -15,6 +15,7 @@ import { MAX_COMPARISON_PLAYERS } from '@/features/player-comparison/constants';
 
 export function usePlayerComparison() {
   const workspace = useScoutWorkspace();
+  const { players: playerPool } = useDiscoverablePlayerPool();
   const {
     comparisonPlayerIds,
     addToComparison,
@@ -26,8 +27,8 @@ export function usePlayerComparison() {
   } = workspace;
 
   const players = useMemo(
-    () => workspace.resolvePlayers(comparisonPlayerIds, mockDiscoverablePlayers),
-    [comparisonPlayerIds, workspace],
+    () => workspace.resolvePlayers(comparisonPlayerIds, playerPool),
+    [comparisonPlayerIds, playerPool, workspace],
   );
 
   const profiles = useMemo(() => buildComparisonProfiles(players), [players]);
@@ -55,6 +56,6 @@ export function usePlayerComparison() {
     clearComparison,
     isInComparison,
     canAddToComparison,
-    playerPool: mockDiscoverablePlayers,
+    playerPool,
   };
 }

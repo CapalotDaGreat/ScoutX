@@ -46,4 +46,21 @@ export class PushTokenRepository {
     const token = snapshot.data()?.token;
     return typeof token === 'string' && token.length > 0;
   }
+
+  public async clearToken(userId: string): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db) {
+      return;
+    }
+
+    await setDoc(
+      doc(db, COLLECTION, userId),
+      {
+        token: null,
+        userId,
+        updatedAt: new Date().toISOString(),
+      },
+      { merge: true },
+    );
+  }
 }
