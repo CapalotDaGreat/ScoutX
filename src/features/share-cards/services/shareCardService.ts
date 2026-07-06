@@ -9,7 +9,7 @@ export type ShareCaptureOptions = {
 };
 
 export async function shareCapturedView(
-  viewRef: RefObject<View>,
+  viewRef: RefObject<View | null>,
   options: ShareCaptureOptions,
 ): Promise<void> {
   const uri = await captureRef(viewRef, {

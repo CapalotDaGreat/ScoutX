@@ -1,101 +1,128 @@
 import {
-  forwardRef,
-  useCallback,
-  useMemo,
+  useEffect,
+  useRef,
   type ReactNode,
 } from 'react';
-import { View } from 'react-native';
-import BottomSheetLib, {
-  BottomSheetBackdrop,
-  BottomSheetView,
-  type BottomSheetBackdropProps,
-  type BottomSheetProps as LibBottomSheetProps,
-} from '@gorhom/bottom-sheet';
-
-export type BottomSheetRef = BottomSheetLib;
+import {
+  Animated,
+  Easing,
+  Modal,
+  Pressable,
+  View,
+  type ViewProps,
+} from 'react-native';
 import { Heading } from '@/components/primitives/Heading';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 
-export type BottomSheetProps = Omit<
-  LibBottomSheetProps,
-  'children' | 'snapPoints' | 'backdropComponent'
-> & {
+export type BottomSheetRef = undefined;
+
+export type BottomSheetProps = ViewProps & {
   children: ReactNode;
   title?: string;
-  snapPoints?: (string | number)[];
+  visible?: boolean;
   onClose?: () => void;
   showHandle?: boolean;
   contentClassName?: string;
 };
 
-export const BottomSheet = forwardRef<BottomSheetLib, BottomSheetProps>(
-  function BottomSheet(
-    {
-      children,
-      title,
-      snapPoints: snapPointsProp,
-      onClose,
-      showHandle = true,
-      contentClassName,
-      index = -1,
-      enablePanDownToClose = true,
-      ...props
-    },
-    ref,
-  ) {
-    const { colors, isDark } = useTheme();
+export function BottomSheet({
+  children,
+  title,
+  visible = false,
+  onClose,
+  showHandle = true,
+  contentClassName,
+  style,
+  ...props
+}: BottomSheetProps) {
+  const { colors, isDark } = useTheme();
+  const translateY = useRef(new Animated.Value(1)).current;
 
-    const snapPoints = useMemo(
-      () => snapPointsProp ?? ['50%', '85%'],
-      [snapPointsProp],
-    );
+  useEffect(() => {
+    if (!visible) {
+      return;
+    }
 
-    const renderBackdrop = useCallback(
-      (backdropProps: BottomSheetBackdropProps) => (
-        <BottomSheetBackdrop
-          {...backdropProps}
-          disappearsOnIndex={-1}
-          appearsOnIndex={0}
-          opacity={isDark ? 0.6 : 0.4}
-          pressBehavior="close"
+    translateY.setValue(1);
+    Animated.timing(translateY, {
+      toValue: 0,
+      duration: 220,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  }, [translateY, visible]);
+
+  if (!visible) {
+    return null;
+  }
+
+  const handleClose = (): void => {
+    Animated.timing(translateY, {
+      toValue: 1,
+      duration: 200,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) {
+        onClose?.();
+      }
+    });
+  };
+
+  return (
+    <Modal
+      transparent
+      visible={visible}
+      animationType="none"
+      onRequestClose={handleClose}
+    >
+      <View className="flex-1 justify-end">
+        <Pressable
+          className="absolute inset-0"
+          onPress={handleClose}
+          style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.4)' }}
         />
-      ),
-      [isDark],
-    );
-
-    return (
-      <BottomSheetLib
-        ref={ref}
-        index={index}
-        snapPoints={snapPoints}
-        enablePanDownToClose={enablePanDownToClose}
-        backdropComponent={renderBackdrop}
-        handleIndicatorStyle={{
-          backgroundColor: colors.borderStrong,
-          width: 36,
-          display: showHandle ? 'flex' : 'none',
-        }}
-        backgroundStyle={{
-          backgroundColor: colors.surface,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-        }}
-        onClose={onClose}
-        {...props}
-      >
-        <BottomSheetView className={cn('flex-1 px-4', contentClassName)}>
+        <Animated.View
+          style={[
+            {
+              transform: [
+                {
+                  translateY: translateY.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 400],
+                  }),
+                },
+              ],
+            },
+            style,
+          ]}
+          className="w-full rounded-t-2xl bg-surface p-4 pb-6"
+          {...props}
+        >
+          {showHandle ? (
+            <View className="mb-3 items-center">
+              <View
+                style={{
+                  backgroundColor: colors.borderStrong,
+                  height: 4,
+                  width: 36,
+                  borderRadius: 999,
+                }}
+              />
+            </View>
+          ) : null}
           {title ? (
             <Heading level={3} className="mb-4">
               {title}
             </Heading>
           ) : null}
-          {children}
-        </BottomSheetView>
-      </BottomSheetLib>
-    );
-  },
-);
+          <View className={cn('flex-1', contentClassName)}>{children}</View>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
 
 export type BottomSheetContainerProps = {
   children: ReactNode;

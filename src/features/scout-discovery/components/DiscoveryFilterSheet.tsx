@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
-import BottomSheetLib from '@gorhom/bottom-sheet';
 import { BottomSheet } from '@/components/feedback/BottomSheet';
 import { Button } from '@/components/primitives/Button';
 import { Input } from '@/components/primitives/Input';
@@ -68,7 +67,6 @@ export function DiscoveryFilterSheet({
   onReset,
   onApply,
 }: DiscoveryFilterSheetProps) {
-  const sheetRef = useRef<BottomSheetLib>(null);
   const snapPoints = useMemo(() => ['85%'], []);
 
   const togglePosition = useCallback(
@@ -98,9 +96,7 @@ export function DiscoveryFilterSheet({
   return (
     <View className="absolute inset-0 z-50">
       <BottomSheet
-        ref={sheetRef}
-        index={0}
-        snapPoints={snapPoints}
+        visible={visible}
         onClose={onClose}
         title="Advanced Filters"
         contentClassName="px-0"

@@ -6,7 +6,7 @@ import { CareerReplayShareCardView } from '@/features/share-cards/components/Car
 import { shareCapturedView } from '@/features/share-cards/services/shareCardService';
 
 export type UseCareerReplayShareResult = {
-  captureRef: RefObject<View>;
+  captureRef: RefObject<View | null>;
   isSharing: boolean;
   shareError: string | null;
   shareAsImage: () => Promise<void>;

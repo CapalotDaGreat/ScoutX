@@ -26,8 +26,6 @@ import {
 import { useTheme } from '@/theme';
 import { SlidersHorizontal } from 'lucide-react-native';
 
-const CARD_ESTIMATED_HEIGHT = 300;
-
 export type PlayerDiscoveryScreenProps = {
   search: string;
   onSearchChange: (value: string) => void;
@@ -188,7 +186,6 @@ export function PlayerDiscoveryScreen({
         data={players}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        estimatedItemSize={CARD_ESTIMATED_HEIGHT}
         ListHeaderComponent={
           <>
             <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
