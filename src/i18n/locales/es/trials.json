@@ -1,0 +1,20 @@
+{
+  "title": "Trials",
+  "subtitle": "Trial invitations and responses",
+  "loadingSubtitle": "Your recruitment invitations",
+  "fullSubtitle": "Accept, decline, and track professional trial invitations",
+  "invitations": "Trial invitations",
+  "noInvitations": "No trial invitations",
+  "noInvitationsDescription": "When scouts invite you to trials, they will appear here.",
+  "noInvitationsDescriptionFull": "When scouts invite you to trials, they will appear here with full details and history.",
+  "notificationsTitle": "Notifications",
+  "notificationsSubtitle": "Trial updates for your account",
+  "yourInvitations": "Your Invitations",
+  "accept": "Accept",
+  "decline": "Decline",
+  "pending": "Pending",
+  "accepted": "Accepted",
+  "declined": "Declined",
+  "invitePlayer": "Invite to trial",
+  "createInvitation": "Create invitation"
+}

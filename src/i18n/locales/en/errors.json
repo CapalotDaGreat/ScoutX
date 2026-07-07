@@ -1,0 +1,17 @@
+{
+  "generic": "Something went wrong. Please try again.",
+  "network": "Network error. Check your connection and try again.",
+  "unauthorized": "You are not authorized to perform this action.",
+  "notFound": "The requested resource was not found.",
+  "deleteAccount": "Unable to delete account.",
+  "loadProfile": "We couldn't load your portfolio.",
+  "loadPlayers": "Unable to load players.",
+  "saveFailed": "Unable to save changes.",
+  "shareFailed": "Unable to share.",
+  "exportFailed": "Unable to export.",
+  "uploadFailed": "Unable to upload file.",
+  "signInFailed": "Sign in failed. Check your credentials.",
+  "registerFailed": "Registration failed. Please try again.",
+  "resetPasswordFailed": "Unable to send reset link.",
+  "endorseSignInRequired": "You must be signed in to endorse a player."
+}

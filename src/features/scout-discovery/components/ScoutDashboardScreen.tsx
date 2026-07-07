@@ -18,6 +18,7 @@ import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWork
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type ScoutDashboardScreenProps = {
@@ -51,6 +52,7 @@ export function ScoutDashboardScreen({
   onSearchSubmit,
   embeddedInTabShell = false,
 }: ScoutDashboardScreenProps) {
+  const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { colors } = useTheme();
   const { isTablet } = useCompactLayout();
   const { data, isLoading, error, refresh } = useScoutDashboard();
@@ -115,11 +117,11 @@ export function ScoutDashboardScreen({
           <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
           {onSettingsPress ? (
             <Button variant="ghost" size="sm" onPress={onSettingsPress}>
-              Settings
+              {t('common:settings')}
             </Button>
           ) : onSignOut ? (
             <Button variant="ghost" size="sm" onPress={onSignOut}>
-              Sign out
+              {t('common:signOut')}
             </Button>
           ) : null}
         </View>
@@ -136,17 +138,17 @@ export function ScoutDashboardScreen({
         value={searchValue}
         onChangeText={onSearchChange}
         onClear={() => onSearchChange('')}
-        placeholder="Search players, clubs, positions..."
+        placeholder={t('scout:dashboard.searchPlaceholder')}
         onSubmitEditing={onSearchSubmit}
         returnKeyType="search"
       />
 
       <View className="flex-row gap-3">
         <Button variant="accent" className="flex-1" onPress={onDiscoverPress}>
-          Discover Talent
+          {t('scout:dashboard.discoverTalent')}
         </Button>
         <Button variant="secondary" className="flex-1" onPress={onPipelinePress}>
-          Pipeline ({pipelineCount})
+          {t('scout:dashboard.pipelineWithCount', { count: pipelineCount })}
         </Button>
       </View>
 
@@ -166,9 +168,9 @@ export function ScoutDashboardScreen({
             <View className="flex-row gap-4">
               <View className="flex-1 gap-8">
                 <DashboardSection
-                  title="Players Matching Your Preferences"
-                  subtitle="Based on age, potential and verification signals"
-                  actionLabel="See all"
+                  title={t('scout:dashboard.matchingPreferencesTitle')}
+                  subtitle={t('scout:dashboard.matchingPreferencesSubtitle')}
+                  actionLabel={t('scout:dashboard.seeAll')}
                   onActionPress={onDiscoverPress}
                 >
                   <PlayerCarousel
@@ -179,9 +181,9 @@ export function ScoutDashboardScreen({
                 </DashboardSection>
 
                 <DashboardSection
-                  title="Trending Players"
-                  subtitle="Most viewed talent this week"
-                  actionLabel="Explore"
+                  title={t('scout:dashboard.trendingTitle')}
+                  subtitle={t('scout:dashboard.trendingSubtitle')}
+                  actionLabel={t('scout:dashboard.explore')}
                   onActionPress={onDiscoverPress}
                 >
                   <PlayerCarousel players={data.trending} onPlayerPress={onPlayerPress} />
@@ -191,9 +193,9 @@ export function ScoutDashboardScreen({
               <View className="flex-1 gap-8">
                 {recentlyViewedPlayers.length > 0 ? (
                   <DashboardSection
-                    title="Recently Viewed"
-                    subtitle="Continue evaluating profiles you opened recently"
-                    actionLabel="Browse"
+                    title={t('scout:dashboard.recentlyViewedTitle')}
+                    subtitle={t('scout:dashboard.recentlyViewedSubtitle')}
+                    actionLabel={t('scout:dashboard.browse')}
                     onActionPress={onDiscoverPress}
                   >
                     <PlayerCarousel
@@ -205,17 +207,17 @@ export function ScoutDashboardScreen({
                 ) : null}
 
                 <DashboardSection
-                  title="Featured Prospects"
-                  subtitle="Verified players with standout potential"
-                  actionLabel="View more"
+                  title={t('scout:dashboard.featuredTitle')}
+                  subtitle={t('scout:dashboard.featuredSubtitle')}
+                  actionLabel={t('scout:dashboard.viewMore')}
                   onActionPress={onDiscoverPress}
                 >
                   <PlayerCarousel players={data.featured} onPlayerPress={onPlayerPress} variant="premium" />
                 </DashboardSection>
 
                 <DashboardSection
-                  title="Nearby Players"
-                  subtitle="Location-based discovery — ready for GPS rollout"
+                  title={t('scout:dashboard.nearbyTitle')}
+                  subtitle={t('scout:dashboard.nearbySubtitle')}
                 >
                   {data.nearby.length > 0 ? (
                     <PlayerCarousel players={data.nearby} onPlayerPress={onPlayerPress} variant="compact" />
@@ -223,9 +225,9 @@ export function ScoutDashboardScreen({
                     <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4 dark:border-neutral-800 dark:bg-neutral-950">
                       <MapPin size={18} color={colors.textSecondary} />
                       <View className="flex-1">
-                        <Text weight="semibold">Proximity scouting</Text>
+                        <Text weight="semibold">{t('scout:dashboard.proximityTitle')}</Text>
                         <Text variant="body-sm" color="secondary">
-                          Enable location to surface players training near you.
+                          {t('scout:dashboard.proximityDescription')}
                         </Text>
                       </View>
                     </View>
@@ -236,9 +238,9 @@ export function ScoutDashboardScreen({
           ) : (
             <>
           <DashboardSection
-            title="Players Matching Your Preferences"
-            subtitle="Based on age, potential and verification signals"
-            actionLabel="See all"
+            title={t('scout:dashboard.matchingPreferencesTitle')}
+            subtitle={t('scout:dashboard.matchingPreferencesSubtitle')}
+            actionLabel={t('scout:dashboard.seeAll')}
             onActionPress={onDiscoverPress}
           >
             <PlayerCarousel
@@ -250,9 +252,9 @@ export function ScoutDashboardScreen({
 
           {recentlyViewedPlayers.length > 0 ? (
             <DashboardSection
-              title="Recently Viewed"
-              subtitle="Continue evaluating profiles you opened recently"
-              actionLabel="Browse"
+              title={t('scout:dashboard.recentlyViewedTitle')}
+              subtitle={t('scout:dashboard.recentlyViewedSubtitle')}
+              actionLabel={t('scout:dashboard.browse')}
               onActionPress={onDiscoverPress}
             >
               <PlayerCarousel
@@ -264,26 +266,26 @@ export function ScoutDashboardScreen({
           ) : null}
 
           <DashboardSection
-            title="Trending Players"
-            subtitle="Most viewed talent this week"
-            actionLabel="Explore"
+            title={t('scout:dashboard.trendingTitle')}
+            subtitle={t('scout:dashboard.trendingSubtitle')}
+            actionLabel={t('scout:dashboard.explore')}
             onActionPress={onDiscoverPress}
           >
             <PlayerCarousel players={data.trending} onPlayerPress={onPlayerPress} />
           </DashboardSection>
 
           <DashboardSection
-            title="Featured Prospects"
-            subtitle="Verified players with standout potential"
-            actionLabel="View more"
+            title={t('scout:dashboard.featuredTitle')}
+            subtitle={t('scout:dashboard.featuredSubtitle')}
+            actionLabel={t('scout:dashboard.viewMore')}
             onActionPress={onDiscoverPress}
           >
             <PlayerCarousel players={data.featured} onPlayerPress={onPlayerPress} variant="premium" />
           </DashboardSection>
 
           <DashboardSection
-            title="Nearby Players"
-            subtitle="Location-based discovery — ready for GPS rollout"
+            title={t('scout:dashboard.nearbyTitle')}
+            subtitle={t('scout:dashboard.nearbySubtitle')}
           >
             {data.nearby.length > 0 ? (
               <PlayerCarousel players={data.nearby} onPlayerPress={onPlayerPress} variant="compact" />
@@ -291,9 +293,9 @@ export function ScoutDashboardScreen({
               <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4 dark:border-neutral-800 dark:bg-neutral-950">
                 <MapPin size={18} color={colors.textSecondary} />
                 <View className="flex-1">
-                  <Text weight="semibold">Proximity scouting</Text>
+                  <Text weight="semibold">{t('scout:dashboard.proximityTitle')}</Text>
                   <Text variant="body-sm" color="secondary">
-                    Enable location to surface players training near you.
+                    {t('scout:dashboard.proximityDescription')}
                   </Text>
                 </View>
               </View>
@@ -304,9 +306,9 @@ export function ScoutDashboardScreen({
         </>
       ) : (
         <EmptyState
-          title="No discoverable players yet"
-          description="Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network."
-          actionLabel="Open Discover"
+          title={t('scout:dashboard.emptyTitle')}
+          description={t('scout:dashboard.emptyDescription')}
+          actionLabel={t('scout:dashboard.emptyAction')}
           onAction={onDiscoverPress}
         />
       )}
@@ -315,7 +317,7 @@ export function ScoutDashboardScreen({
         <View className="items-center gap-2 py-4">
           <Search size={20} color={colors.textTertiary} />
           <Text variant="body-sm" color="secondary" className="text-center">
-            Tip: use presets in Discover to save your preferred scouting filters.
+            {t('scout:dashboard.presetTip')}
           </Text>
         </View>
       ) : null}

@@ -1,0 +1,131 @@
+{
+  "title": "Portfolio",
+  "subtitle": "Your Football Passport on ScoutX",
+  "loadingSubtitle": "Preparing your Football Passport",
+  "errorSubtitle": "We couldn't load your portfolio",
+  "emptySubtitle": "No portfolio data available",
+  "unavailableTitle": "Portfolio unavailable",
+  "buildTitle": "Build your Football Passport",
+  "buildDescription": "Add your story, stats, and videos so scouts can discover the real you.",
+  "editProfile": "Edit profile",
+  "passportInsights": "Passport insights",
+  "passportInsightsSubtitle": "Scout views and verification status",
+  "publicPassport": "Public Football Passport",
+  "publicPassportSubtitle": "Shareable link, username, and privacy controls",
+  "previewPassport": "Preview passport",
+  "sharePassport": "Share passport",
+  "inviteCoach": "Invite coach",
+  "exportCv": "Export Football CV",
+  "storyMedia": "Story & Media",
+  "storyMediaSubtitle": "Biography, journey, and highlight videos",
+  "playerProfile": "Player Profile",
+  "playerProfileSubtitle": "Positions, career path, and professional details",
+  "performanceSnapshot": "Performance Snapshot",
+  "performanceSnapshotSubtitle": "Stats, match logs, and performance summary",
+  "footballPassport": "Football Passport",
+  "passportPreview": "Passport preview",
+  "passportSubtitle": "ScoutX shareable football résumé",
+  "loadingPassportSubtitle": "Loading shareable résumé",
+  "passportUnavailable": "Unavailable",
+  "privatePortfolioTitle": "Portfolio is private",
+  "previewUnavailableDescription": "Unable to load portfolio preview.",
+  "privatePortfolioDescription": "This player has not enabled a public Football Passport yet.",
+  "writeCoachEndorsement": "Write coach endorsement",
+  "goBack": "Go back",
+  "defaultPlayerName": "Player",
+  "defaultVisitorName": "Visitor",
+  "defaultCoachName": "Coach",
+  "sections": {
+    "careerTimeline": {
+      "title": "Career Timeline",
+      "subtitle": "Clubs, milestones, and football journey"
+    },
+    "statistics": {
+      "title": "Statistiken",
+      "subtitle": "Season and match performance"
+    },
+    "performanceCharts": {
+      "title": "Performance Charts",
+      "subtitle": "Radar and progress trends"
+    },
+    "videos": {
+      "title": "Highlight Videos",
+      "subtitle": "Featured reels and clips"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "subtitle": "Honours and standout moments"
+    },
+    "recommendations": {
+      "title": "Coach Endorsements",
+      "subtitle": "Trusted recommendations"
+    },
+    "gpsHighlights": {
+      "title": "GPS Highlights",
+      "subtitle": "Movement intelligence snapshots"
+    }
+  },
+  "shareSheet": {
+    "title": "Share portfolio",
+    "description": "Share your Football Passport via social card, link, or QR code.",
+    "copyLink": "Copy link",
+    "shareLink": "Share link",
+    "shareSocialCard": "Share social card",
+    "linkCopied": "Link copied",
+    "shareTitle": "{{playerName}} — ScoutX Portfolio",
+    "shareMessage": "View {{playerName}}'s football portfolio on ScoutX: {{url}}",
+    "tagline": "Football Passport on ScoutX"
+  },
+  "privacy": {
+    "title": "Portfolio & discovery privacy",
+    "description": "Control your shareable football identity and scout visibility.",
+    "publicPortfolio": "Public portfolio",
+    "publicPortfolioDescription": "Allow anyone with the link to view your football résumé.",
+    "discoverable": "Discoverable by scouts",
+    "discoverableDescription": "Appear in scout search when clubs are looking for talent like you.",
+    "careerTimeline": "Career timeline",
+    "careerTimelineDescription": "Show journey and club history on your portfolio.",
+    "statistics": "Statistiken",
+    "statisticsDescription": "Show match stats and performance snapshot.",
+    "videos": "Videos",
+    "videosDescription": "Show highlight reels on your portfolio.",
+    "achievements": "Achievements",
+    "achievementsDescription": "Show honours and milestone entries.",
+    "recommendations": "Recommendations",
+    "recommendationsDescription": "Show scout endorsements on your portfolio.",
+    "gpsHighlights": "GPS highlights",
+    "gpsHighlightsDescription": "Show movement heatmaps from recorded sessions.",
+    "performanceCharts": "Performance charts",
+    "performanceChartsDescription": "Show radar and progress charts.",
+    "socialFeed": "Social feed visibility",
+    "socialFeedDescription": "Allow your posts to appear in the public For You feed."
+  },
+  "username": {
+    "title": "Public link username",
+    "description": "Claim your link-in-bio address for Instagram, TikTok, and email signatures.",
+    "label": "Username",
+    "claim": "Claim username",
+    "update": "Update username",
+    "invalidTitle": "Invalid username",
+    "claimedTitle": "Username claimed",
+    "claimedMessage": "Your public link is {{url}}",
+    "claimFailedTitle": "Unable to claim username",
+    "claimFailedFallback": "Try another username.",
+    "placeholder": "your-name",
+    "available": "Username is available",
+    "checking": "Checking availability…"
+  },
+  "endorsementInvite": {
+    "title": "Invite your coach",
+    "description": "Send this link to a coach or academy staff member. They can write a signed recommendation that appears on your Football Passport.",
+    "shareInvite": "Share invite",
+    "copyInviteLink": "Copy invite link",
+    "linkCopied": "Link copied",
+    "shareTitle": "Coach endorsement for {{playerName}}",
+    "shareMessage": "Hi coach, could you endorse my Football Passport on ScoutX? {{url}}"
+  },
+  "score": {
+    "title": "Football Passport Score",
+    "subtitle": "Overall readiness and completeness"
+  }
+}

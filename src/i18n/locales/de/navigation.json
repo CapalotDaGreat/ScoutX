@@ -1,0 +1,20 @@
+{
+  "tabs": {
+    "portfolio": "Portfolio",
+    "career": "Karriere",
+    "statistics": "Stats",
+    "gps": "GPS",
+    "trials": "Trials",
+    "home": "Home",
+    "discover": "Discover",
+    "pipeline": "Pipeline"
+  },
+  "screens": {
+    "settings": "Einstellungen",
+    "settingsSubtitle": "Account, notifications, and language",
+    "activityInbox": "Activity",
+    "playerComparison": "Player comparison",
+    "careerReplay": "Career replay",
+    "publicPortfolio": "Football Passport"
+  }
+}

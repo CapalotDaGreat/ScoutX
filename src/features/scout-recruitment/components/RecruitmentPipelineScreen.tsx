@@ -18,6 +18,7 @@ import { groupEntriesByStage } from '@/features/scout-recruitment/models/Recruit
 import { useRecruitment } from '@/features/scout-recruitment/context/RecruitmentProvider';
 import { type RecruitmentEntry } from '@/features/scout-recruitment/types';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type PipelineViewMode = 'kanban' | 'list';
@@ -31,6 +32,7 @@ export function RecruitmentPipelineScreen({
   onDiscoverPress,
   onPlayerPress,
 }: RecruitmentPipelineScreenProps) {
+  const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { colors } = useTheme();
   const { isCompact, isTablet } = useCompactLayout();
   const {
@@ -73,11 +75,13 @@ export function RecruitmentPipelineScreen({
         <View className="flex-row items-center gap-2">
           <Kanban size={22} color={colors.accent} />
           <View className="flex-1">
-            <Heading level={2}>Recruitment Pipeline</Heading>
+            <Heading level={2}>{t('scout:pipeline.title')}</Heading>
             <Text variant="body-sm" color="secondary" className="mt-1">
-              {totalPlayers} saved player{totalPlayers === 1 ? '' : 's'} across{' '}
-              {workspace?.folders.length ?? 0} folders and {workspace?.shortlists.length ?? 0}{' '}
-              shortlists
+              {t('scout:pipeline.savedPlayersSummary', {
+                count: totalPlayers,
+                folders: workspace?.folders.length ?? 0,
+                shortlists: workspace?.shortlists.length ?? 0,
+              })}
             </Text>
           </View>
         </View>
@@ -90,7 +94,7 @@ export function RecruitmentPipelineScreen({
               leftIcon={<LayoutList size={16} color={viewMode === 'list' ? colors.accentForeground : colors.textPrimary} />}
               onPress={() => setViewMode('list')}
             >
-              List
+              {t('scout:pipeline.list')}
             </Button>
             <Button
               variant={viewMode === 'kanban' ? 'accent' : 'secondary'}
@@ -99,7 +103,7 @@ export function RecruitmentPipelineScreen({
               leftIcon={<Kanban size={16} color={viewMode === 'kanban' ? colors.accentForeground : colors.textPrimary} />}
               onPress={() => setViewMode('kanban')}
             >
-              Board
+              {t('scout:pipeline.board')}
             </Button>
           </View>
         ) : null}
@@ -107,9 +111,9 @@ export function RecruitmentPipelineScreen({
 
       {totalPlayers === 0 ? (
         <EmptyState
-          title="Your pipeline is empty"
-          description="Save players from Discover to start tracking them through recruitment stages."
-          actionLabel={onDiscoverPress ? 'Discover Players' : undefined}
+          title={t('scout:pipeline.emptyTitle')}
+          description={t('scout:pipeline.emptyActionDescription')}
+          actionLabel={onDiscoverPress ? t('scout:pipeline.discoverPlayers') : undefined}
           onAction={onDiscoverPress}
         />
       ) : (

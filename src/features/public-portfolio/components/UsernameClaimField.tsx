@@ -10,6 +10,7 @@ import {
   validateUsername,
 } from '@/features/public-portfolio/services/usernameService';
 import { buildPublicPortfolioUrl } from '@/features/public-portfolio/constants';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type UsernameClaimFieldProps = {
   playerId: string;
@@ -18,21 +19,34 @@ export type UsernameClaimFieldProps = {
   onClaimed: (username: string) => Promise<void>;
 };
 
+const USERNAME_VALIDATION_KEYS: Record<string, 'usernameMinLength' | 'usernameMaxLength' | 'usernameFormat' | 'usernameReserved'> = {
+  'Username must be at least 3 characters.': 'usernameMinLength',
+  'Username must be 30 characters or fewer.': 'usernameMaxLength',
+  'Use lowercase letters, numbers, and hyphens only.': 'usernameFormat',
+  'This username is reserved.': 'usernameReserved',
+};
+
 export function UsernameClaimField({
   playerId,
   fullName,
   username,
   onClaimed,
 }: UsernameClaimFieldProps) {
+  const { t } = useAppTranslation(['portfolio', 'validation']);
   const [draft, setDraft] = useState(username ?? suggestUsernameFromName(fullName));
   const [saving, setSaving] = useState(false);
 
   const preview = buildPublicPortfolioUrl(playerId, slugifyUsername(draft));
 
+  const translateValidationError = (error: string) => {
+    const key = USERNAME_VALIDATION_KEYS[error];
+    return key ? t(key, { ns: 'validation' }) : error;
+  };
+
   const handleClaim = async () => {
     const validationError = validateUsername(draft);
     if (validationError) {
-      Alert.alert('Invalid username', validationError);
+      Alert.alert(t('username.invalidTitle'), translateValidationError(validationError));
       return;
     }
 
@@ -40,9 +54,15 @@ export function UsernameClaimField({
     try {
       const next = await PortfolioSlugRepository.getInstance().claimUsername(playerId, draft);
       await onClaimed(next);
-      Alert.alert('Username claimed', `Your public link is ${buildPublicPortfolioUrl(playerId, next)}`);
+      Alert.alert(
+        t('username.claimedTitle'),
+        t('username.claimedMessage', { url: buildPublicPortfolioUrl(playerId, next) }),
+      );
     } catch (error) {
-      Alert.alert('Unable to claim username', error instanceof Error ? error.message : 'Try another username.');
+      Alert.alert(
+        t('username.claimFailedTitle'),
+        error instanceof Error ? error.message : t('username.claimFailedFallback'),
+      );
     } finally {
       setSaving(false);
     }
@@ -50,12 +70,12 @@ export function UsernameClaimField({
 
   return (
     <View className="gap-2 rounded-xl border border-border p-4 dark:border-neutral-800">
-      <Text weight="semibold">Public link username</Text>
+      <Text weight="semibold">{t('username.title')}</Text>
       <Text variant="caption" color="secondary">
-        Claim your link-in-bio address for Instagram, TikTok, and email signatures.
+        {t('username.description')}
       </Text>
       <Input
-        label="Username"
+        label={t('username.label')}
         value={draft}
         onChangeText={setDraft}
         autoCapitalize="none"
@@ -65,7 +85,7 @@ export function UsernameClaimField({
         {preview}
       </Text>
       <Button variant="secondary" loading={saving} onPress={() => void handleClaim()}>
-        {username ? 'Update username' : 'Claim username'}
+        {username ? t('username.update') : t('username.claim')}
       </Button>
     </View>
   );

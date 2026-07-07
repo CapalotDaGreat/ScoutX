@@ -12,6 +12,7 @@ import { AiInsightPanel } from '@/features/ai-insights';
 import { type AiInsightContext } from '@/features/ai-insights';
 import { usePlayerStatistics } from '@/features/player-statistics/hooks/usePlayerStatistics';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type StatisticsScreenProps = {
@@ -31,6 +32,7 @@ export function StatisticsScreen({
   refreshing = false,
   embeddedInTabShell = false,
 }: StatisticsScreenProps) {
+  const { t } = useAppTranslation(['statistics', 'common', 'errors']);
   const { colors } = useTheme();
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
   const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};

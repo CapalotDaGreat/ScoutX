@@ -8,6 +8,7 @@ import { Screen } from '@/components/layout/Screen';
 import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type WelcomeScreenProps = {
@@ -26,6 +27,7 @@ export function WelcomeScreen({
   isSubmitting = false,
 }: WelcomeScreenProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('auth');
   const [appleSignInAvailable, setAppleSignInAvailable] = useState(false);
 
   useEffect(() => {
@@ -33,27 +35,27 @@ export function WelcomeScreen({
   }, []);
 
   return (
-    <Screen title="ScoutX" subtitle="Your football career, in one place." safeArea>
+    <Screen title={t('welcome.title')} subtitle={t('welcome.subtitle')} safeArea>
       <View className="flex-1 justify-center">
-        <AuthCard title="Welcome to ScoutX" subtitle="Build your verified football identity, share your portfolio, and get discovered by scouts worldwide.">
+        <AuthCard title={t('welcome.cardTitle')} subtitle={t('welcome.cardSubtitle')}>
           <View className="items-center justify-center rounded-2xl border border-border bg-background-secondary p-6 dark:border-neutral-800 dark:bg-neutral-900">
             <View className="mb-4 rounded-full bg-accent-muted p-3 dark:bg-green-950">
               <ShieldCheck size={28} color={colors.accent} strokeWidth={1.75} />
             </View>
             <Heading level={3} className="text-center">
-              Your football identity platform
+              {t('welcome.heroTitle')}
             </Heading>
             <Text variant="body-sm" color="secondary" className="mt-2 text-center">
-              One shareable career hub for stats, videos, GPS, endorsements, and trials — built for real players and real scouts.
+              {t('welcome.heroDescription')}
             </Text>
           </View>
 
           <View className="gap-3">
             <Button variant="accent" onPress={onGetStarted} rightIcon={<ArrowRight size={18} color={colors.accentForeground} strokeWidth={2} />}>
-              Create your account
+              {t('welcome.createAccount')}
             </Button>
             <Button variant="secondary" onPress={onSignIn}>
-              I already have an account
+              {t('welcome.signIn')}
             </Button>
             {appleSignInAvailable && onSignInWithApple ? (
               <AppleAuthentication.AppleAuthenticationButton
@@ -70,14 +72,14 @@ export function WelcomeScreen({
               onPress={onContinueAsGuest}
               leftIcon={<UserRound size={18} color={colors.textSecondary} strokeWidth={1.75} />}
             >
-              Continue as Guest
+              {t('welcome.continueAsGuest')}
             </Button>
           </View>
 
           <View className="flex-row items-center justify-center gap-2 pt-2">
             <Sparkles size={16} color={colors.textSecondary} strokeWidth={1.5} />
             <Text variant="caption" color="secondary">
-              Guest mode preserves your session for easy account upgrade
+              {t('welcome.guestHint')}
             </Text>
           </View>
           <LegalFooterLinks className="pt-2" />

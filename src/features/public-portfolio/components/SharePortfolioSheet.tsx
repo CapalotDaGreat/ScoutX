@@ -9,6 +9,7 @@ import { usePortfolioSharing } from '@/features/public-portfolio/hooks/usePortfo
 import { usePassportShare } from '@/features/public-portfolio/hooks/usePassportShare';
 import { usePublicPortfolio } from '@/features/public-portfolio/hooks/usePublicPortfolio';
 import { buildPassportShareCardData } from '@/features/share-cards/services/passportShareCardData';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type SharePortfolioSheetProps = {
   visible: boolean;
@@ -25,6 +26,7 @@ export function SharePortfolioSheet({
   username,
   onClose,
 }: SharePortfolioSheetProps) {
+  const { t } = useAppTranslation('portfolio');
   const { shareUrl } = usePortfolioSharing(playerId, username);
   const { data: portfolioData } = usePublicPortfolio(visible ? playerId : null);
   const [copied, setCopied] = useState(false);
@@ -47,14 +49,14 @@ export function SharePortfolioSheet({
       matches: 0,
       endorsements: 0,
       portfolioUrl: shareUrl,
-      tagline: 'Football Passport on ScoutX',
+      tagline: t('shareSheet.tagline'),
     },
   );
 
   const handleShareLink = async () => {
     await Share.share({
-      title: `${playerName} — ScoutX Portfolio`,
-      message: `View ${playerName}'s football portfolio on ScoutX: ${shareUrl}`,
+      title: t('shareSheet.shareTitle', { playerName }),
+      message: t('shareSheet.shareMessage', { playerName, url: shareUrl }),
       url: shareUrl,
     });
   };
@@ -67,10 +69,10 @@ export function SharePortfolioSheet({
   return (
     <>
       {shareCardData ? <ShareCaptureLayer /> : null}
-      <Modal visible={visible} onClose={onClose} title="Share portfolio" size="md">
+      <Modal visible={visible} onClose={onClose} title={t('shareSheet.title')} size="md">
         <View className="items-center gap-5">
           <Text variant="body-sm" color="secondary" className="text-center">
-            Share your Football Passport via social card, link, or QR code.
+            {t('shareSheet.description')}
           </Text>
 
           <PortfolioQrCode value={shareUrl} />
@@ -92,13 +94,13 @@ export function SharePortfolioSheet({
               disabled={!shareCardData}
               onPress={() => void shareAsImage()}
             >
-              Share social card
+              {t('shareSheet.shareSocialCard')}
             </Button>
             <Button variant="secondary" onPress={() => void handleShareLink()}>
-              Share link
+              {t('shareSheet.shareLink')}
             </Button>
             <Button variant="secondary" onPress={() => void handleCopy()}>
-              {copied ? 'Link copied' : 'Copy link'}
+              {copied ? t('shareSheet.linkCopied') : t('shareSheet.copyLink')}
             </Button>
           </View>
         </View>

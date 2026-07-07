@@ -26,6 +26,7 @@ import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWork
 import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Mail, Video } from 'lucide-react-native';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 const RADAR_KEYS: StatisticMetricKey[] = [
@@ -76,6 +77,7 @@ export function PlayerDetailScreen({
   onViewPortfolio,
   onOpenComparisonPress,
 }: PlayerDetailScreenProps) {
+  const { t } = useAppTranslation(['scout', 'statistics', 'common', 'errors']);
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
   const workspace = useScoutWorkspace();
@@ -123,7 +125,7 @@ export function PlayerDetailScreen({
             leftIcon={<ArrowLeft size={18} color={colors.textPrimary} />}
             onPress={onBack}
           >
-            Back
+            {t('common:back')}
           </Button>
         }
       >
@@ -134,13 +136,13 @@ export function PlayerDetailScreen({
 
   if (error || !player) {
     return (
-      <Screen title="Scouting Report" error={error ?? 'Player not found'} onRetry={reload} safeArea>
+      <Screen title={t('scout:playerDetail.report')} error={error ?? t('scout:playerDetail.playerNotFound')} onRetry={reload} safeArea>
         <Button
           variant="secondary"
           leftIcon={<ArrowLeft size={18} color={colors.textPrimary} />}
           onPress={onBack}
         >
-          Go Back
+          {t('scout:playerDetail.goBack')}
         </Button>
       </Screen>
     );
@@ -161,7 +163,7 @@ export function PlayerDetailScreen({
               leftIcon={<ArrowLeft size={18} color={colors.textPrimary} />}
               onPress={onBack}
             >
-              Back
+              {t('common:back')}
             </Button>
             <View className="flex-row gap-2">
             {!guestMode ? (
@@ -184,11 +186,11 @@ export function PlayerDetailScreen({
                 }
               }}
             >
-              {inComparison ? 'Comparing' : 'Compare'}
+              {inComparison ? t('scout:playerDetail.comparing') : t('scout:playerDetail.compare')}
             </Button>
             {onOpenComparisonPress && comparisonPlayerIds.length > 0 ? (
               <Button variant="secondary" size="sm" onPress={onOpenComparisonPress}>
-                Queue ({comparisonPlayerIds.length})
+                {t('scout:playerDetail.queueWithCount', { count: comparisonPlayerIds.length })}
               </Button>
             ) : null}
             <Button
@@ -207,7 +209,7 @@ export function PlayerDetailScreen({
                 }
               }}
             >
-              {saved ? 'Saved' : 'Save'}
+              {saved ? t('scout:playerDetail.saved') : t('scout:playerDetail.save')}
             </Button>
               </>
             ) : null}
@@ -228,7 +230,7 @@ export function PlayerDetailScreen({
               leftIcon={<ExternalLink size={16} color={colors.textPrimary} />}
               onPress={() => onViewPortfolio(player.id)}
             >
-              View public portfolio
+              {t('scout:playerDetail.viewPublicPortfolio')}
             </Button>
           ) : null}
         </View>
@@ -268,46 +270,48 @@ export function PlayerDetailScreen({
         <RevealSection step={4} className="px-4">
           <Card variant="outlined" padding="md" className="gap-2">
             <Text variant="overline" color="secondary">
-              Player Overview
+              {t('scout:playerDetail.playerOverview')}
             </Text>
             <Text variant="body">{player.biography}</Text>
             <Text variant="caption" color="secondary">
-              Ref · {player.id.toUpperCase()} · Updated{' '}
-              {new Date(player.updatedAt).toLocaleDateString()}
+              {t('scout:playerDetail.refUpdated', {
+                id: player.id.toUpperCase(),
+                date: new Date(player.updatedAt).toLocaleDateString(),
+              })}
             </Text>
           </Card>
         </RevealSection>
 
         <RevealSection step={5} className="px-4">
-          <Section title="Attribute Profile">
+          <Section title={t('scout:playerDetail.attributeProfile')}>
             <RadarChart points={radarPoints} />
           </Section>
         </RevealSection>
 
         <RevealSection step={6} className="px-4">
-          <Section title="Season Output">
+          <Section title={t('scout:playerDetail.seasonOutput')}>
             <View className="flex-row flex-wrap gap-3">
-              <StatCard label="Goals" value={player.goals} className="min-w-[45%] flex-1" />
-              <StatCard label="Assists" value={player.assists} className="min-w-[45%] flex-1" />
-              <StatCard label="Matches" value={player.matchCount} className="min-w-[45%] flex-1" />
-              <StatCard label="Profile Views" value={player.viewCount} className="min-w-[45%] flex-1" />
+              <StatCard label={t('statistics:metrics.goals')} value={player.goals} className="min-w-[45%] flex-1" />
+              <StatCard label={t('statistics:metrics.assists')} value={player.assists} className="min-w-[45%] flex-1" />
+              <StatCard label={t('statistics:metrics.matches')} value={player.matchCount} className="min-w-[45%] flex-1" />
+              <StatCard label={t('scout:playerDetail.profileViews')} value={player.viewCount} className="min-w-[45%] flex-1" />
             </View>
           </Section>
         </RevealSection>
 
         <RevealSection step={7} className="px-4">
-          <Section title="Technical Ratings">
+          <Section title={t('scout:playerDetail.technicalRatings')}>
             <View className="flex-row flex-wrap gap-3">
-              <StatCard label="Passing" value={player.ratings.passing} className="min-w-[45%] flex-1" />
-              <StatCard label="Shooting" value={player.ratings.shooting} className="min-w-[45%] flex-1" />
-              <StatCard label="Defending" value={player.ratings.defending} className="min-w-[45%] flex-1" />
-              <StatCard label="Physical" value={player.ratings.physical} className="min-w-[45%] flex-1" />
+              <StatCard label={t('scout:playerDetail.passing')} value={player.ratings.passing} className="min-w-[45%] flex-1" />
+              <StatCard label={t('scout:playerDetail.shooting')} value={player.ratings.shooting} className="min-w-[45%] flex-1" />
+              <StatCard label={t('scout:playerDetail.defending')} value={player.ratings.defending} className="min-w-[45%] flex-1" />
+              <StatCard label={t('scout:playerDetail.physical')} value={player.ratings.physical} className="min-w-[45%] flex-1" />
             </View>
           </Section>
         </RevealSection>
 
         <RevealSection step={8} className="px-4">
-          <Section title="Club History">
+          <Section title={t('scout:playerDetail.clubHistory')}>
             {player.clubHistory.map((entry) => (
               <Card key={`${entry.club}-${entry.period}`} variant="default" padding="md" className="mb-2">
                 <Text weight="semibold">{entry.club}</Text>
@@ -321,19 +325,19 @@ export function PlayerDetailScreen({
 
         {heatmap ? (
           <RevealSection step={9} className="px-4">
-            <GpsHeatmap heatmap={heatmap} title="Movement Intelligence" />
+            <GpsHeatmap heatmap={heatmap} title={t('scout:playerDetail.movementIntelligence')} />
           </RevealSection>
         ) : null}
 
         {player.hasHighlightVideos ? (
           <RevealSection step={10} className="px-4">
-            <Section title="Match Footage">
+            <Section title={t('scout:playerDetail.matchFootage')}>
               <Card variant="default" padding="lg" className="flex-row items-center gap-3">
                 <Video size={24} color={colors.accent} />
                 <View className="flex-1">
-                  <Text weight="semibold">Highlights on file</Text>
+                  <Text weight="semibold">{t('scout:playerDetail.highlightsOnFile')}</Text>
                   <Text variant="body-sm" color="secondary">
-                    Video playback will connect to Firebase Storage in the next release.
+                    {t('scout:playerDetail.videoPlaybackNote')}
                   </Text>
                 </View>
               </Card>
@@ -342,7 +346,7 @@ export function PlayerDetailScreen({
         ) : null}
 
         <RevealSection step={11} className="px-4">
-          <Section title="Honours">
+          <Section title={t('scout:playerDetail.honours')}>
             {player.achievements.length > 0 ? (
               player.achievements.map((achievement) => (
                 <Text key={achievement} variant="body-sm" className="mb-1">
@@ -351,7 +355,7 @@ export function PlayerDetailScreen({
               ))
             ) : (
               <Text variant="body-sm" color="secondary">
-                No honours recorded yet.
+                {t('scout:playerDetail.noHonours')}
               </Text>
             )}
           </Section>
@@ -366,14 +370,14 @@ export function PlayerDetailScreen({
             className="flex-1"
             leftIcon={<Mail size={18} color={colors.textPrimary} />}
           >
-            Contact
+            {t('scout:playerDetail.contact')}
           </Button>
           <Button
             variant="accent"
             className="flex-1"
             onPress={() => setInviteSignal((current) => current + 1)}
           >
-            Invite to Trial
+            {t('scout:playerDetail.inviteToTrial')}
           </Button>
         </View>
       </View>

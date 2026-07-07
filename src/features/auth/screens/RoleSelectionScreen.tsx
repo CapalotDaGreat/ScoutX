@@ -6,6 +6,7 @@ import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
 import { RoleOption, type SelectableAuthRole } from '@/features/auth/components/RoleOption';
 import { useAuthRoleSelection } from '@/features/auth/hooks/useAuthForm';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RoleSelectionScreenProps = {
   onContinue: (role: SelectableAuthRole) => void;
@@ -14,14 +15,12 @@ export type RoleSelectionScreenProps = {
 };
 
 export function RoleSelectionScreen({ onContinue, onBack, successMessage }: RoleSelectionScreenProps) {
+  const { t } = useAppTranslation(['auth', 'common']);
   const { role, setRole } = useAuthRoleSelection();
 
   return (
-    <Screen title="Choose your role" subtitle="Pick the experience that fits you best">
-      <AuthCard
-        title="Role selection"
-        subtitle="Coaches endorse players via invite links — no separate app required."
-      >
+    <Screen title={t('roleSelection.title')} subtitle={t('roleSelection.subtitle')}>
+      <AuthCard title={t('roleSelection.cardTitle')} subtitle={t('roleSelection.cardSubtitle')}>
         {successMessage ? (
           <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3 dark:border-green-800/40 dark:bg-green-950/40">
             <Text variant="body-sm" color="accent">
@@ -35,10 +34,10 @@ export function RoleSelectionScreen({ onContinue, onBack, successMessage }: Role
 
         <FormActions>
           <Button variant="accent" disabled={!role} onPress={() => role && onContinue(role)}>
-            Continue
+            {t('roleSelection.continue')}
           </Button>
           <Button variant="secondary" onPress={onBack}>
-            Back
+            {t('common:back')}
           </Button>
         </FormActions>
       </AuthCard>

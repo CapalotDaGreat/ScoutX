@@ -8,6 +8,7 @@ import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type SignInPayload } from '@/features/auth/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type LoginScreenProps = {
   onSubmit: (payload: SignInPayload) => Promise<void>;
@@ -19,6 +20,7 @@ export type LoginScreenProps = {
 };
 
 export function LoginScreen({ onSubmit, onBack, onForgotPassword, isSubmitting = false, error, successMessage }: LoginScreenProps) {
+  const { t } = useAppTranslation(['auth', 'validation', 'common']);
   const { values, errors, updateValue, validate } = useAuthForm<SignInPayload>({ email: '', password: '' });
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -26,12 +28,12 @@ export function LoginScreen({ onSubmit, onBack, onForgotPassword, isSubmitting =
     const isValid = validate((nextValues) => {
       const nextErrors: Partial<Record<keyof SignInPayload, string>> = {};
       if (!nextValues.email.trim()) {
-        nextErrors.email = 'Email is required.';
+        nextErrors.email = t('validation:emailRequired');
       } else if (!/.+@.+\..+/.test(nextValues.email)) {
-        nextErrors.email = 'Enter a valid email address.';
+        nextErrors.email = t('validation:emailInvalid');
       }
       if (!nextValues.password.trim()) {
-        nextErrors.password = 'Password is required.';
+        nextErrors.password = t('validation:passwordRequired');
       }
       return nextErrors;
     });
@@ -48,8 +50,8 @@ export function LoginScreen({ onSubmit, onBack, onForgotPassword, isSubmitting =
   const combinedError = useMemo(() => error ?? localError, [error, localError]);
 
   return (
-    <Screen title="Welcome back" subtitle="Sign in to continue" onRefresh={undefined} refreshing={false}>
-      <AuthCard title="Log in" subtitle="Use your ScoutX credentials to continue.">
+    <Screen title={t('login.title')} subtitle={t('login.subtitle')} onRefresh={undefined} refreshing={false}>
+      <AuthCard title={t('login.cardTitle')} subtitle={t('login.cardSubtitle')}>
         {combinedError ? (
           <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
             <Text variant="body-sm" color="error">
@@ -67,37 +69,37 @@ export function LoginScreen({ onSubmit, onBack, onForgotPassword, isSubmitting =
         ) : null}
 
         <FormField
-          label="Email"
-          placeholder="you@club.com"
+          label={t('login.email')}
+          placeholder={t('login.emailPlaceholder')}
           value={values.email}
           onChangeText={(value) => updateValue('email', value)}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
           error={errors.email}
-          accessibilityLabel="Email"
+          accessibilityLabel={t('login.email')}
         />
 
         <FormField
-          label="Password"
-          placeholder="Enter your password"
+          label={t('login.password')}
+          placeholder={t('login.passwordPlaceholder')}
           value={values.password}
           onChangeText={(value) => updateValue('password', value)}
           secureTextEntry
           error={errors.password}
-          accessibilityLabel="Password"
+          accessibilityLabel={t('login.password')}
         />
 
         <Text variant="body-sm" color="accent" className="self-end" onPress={onForgotPassword}>
-          Forgot password?
+          {t('login.forgotPassword')}
         </Text>
 
         <FormActions>
           <Button variant="accent" loading={isSubmitting} onPress={handleSubmit}>
-            Sign in
+            {t('login.signIn')}
           </Button>
           <Button variant="secondary" onPress={onBack}>
-            Back
+            {t('common:back')}
           </Button>
         </FormActions>
       </AuthCard>

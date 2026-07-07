@@ -1,0 +1,21 @@
+{
+  "title": "Einstellungen",
+  "subtitle": "Account, notifications, and language",
+  "account": "Konto",
+  "notifications": "Notifications",
+  "notificationsDescription": "Push alerts for portfolio views, endorsements, trials, and weekly reports.",
+  "pushNotifications": "Push-Benachrichtigungen",
+  "pushChecking": "Checking status…",
+  "pushRegistered": "Registered on this device",
+  "pushNotRegistered": "Not registered on this device",
+  "legal": "Rechtliches",
+  "dangerZone": "Danger zone",
+  "deleteAccountDescription": "Permanently delete your ScoutX account and profile data.",
+  "deleteAccount": "Delete account",
+  "deleteAccountTitle": "Delete account",
+  "deleteAccountMessage": "This permanently removes your ScoutX account, profile, and push settings. This cannot be undone.",
+  "language": "Sprache",
+  "languageDescription": "Choose your preferred language. This overrides automatic device detection.",
+  "languageAutomatic": "Automatic (device)",
+  "languageManual": "Manual selection"
+}

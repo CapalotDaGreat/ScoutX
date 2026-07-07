@@ -24,6 +24,7 @@ import {
   type FilterPreset,
 } from '@/features/scout-discovery/types';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { SlidersHorizontal } from 'lucide-react-native';
 
 export type PlayerDiscoveryScreenProps = {
@@ -62,6 +63,7 @@ export function PlayerDiscoveryScreen({
   onSaveCurrentPreset,
   guestMode = false,
 }: PlayerDiscoveryScreenProps) {
+  const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { colors } = useTheme();
   const workspace = useScoutWorkspace();
   const playerSave = useScoutPlayerSave();
@@ -131,7 +133,7 @@ export function PlayerDiscoveryScreen({
         value={search}
         onChangeText={onSearchChange}
         onClear={() => onSearchChange('')}
-        placeholder="Search by name, club, nationality, position..."
+        placeholder={t('scout:discover.searchPlaceholder')}
         onFocus={() => setSearchFocused(true)}
         onBlur={() => setSearchFocused(false)}
         onSubmitEditing={handleSearchSubmit}
@@ -158,7 +160,9 @@ export function PlayerDiscoveryScreen({
           leftIcon={<SlidersHorizontal size={18} color={colors.textPrimary} />}
           onPress={() => setFiltersVisible(true)}
         >
-          Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+          {activeFilterCount > 0
+            ? t('scout:discover.filtersWithCount', { count: activeFilterCount })
+            : t('scout:discover.filters')}
         </Button>
       </View>
       <ActiveFilterChips filters={filters} onChange={onFiltersReplace} onClearAll={onResetFilters} />
@@ -170,9 +174,9 @@ export function PlayerDiscoveryScreen({
     return (
       <SafeAreaView className="flex-1" edges={['top']}>
         <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
-          <Heading level={2}>Discover Players</Heading>
+          <Heading level={2}>{t('scout:discover.title')}</Heading>
           <Text variant="body-sm" color="secondary" className="mt-1">
-            Search the global talent pool
+            {t('scout:discover.loadingSubtitle')}
           </Text>
         </View>
         <DiscoveryListSkeleton count={4} />
@@ -189,9 +193,9 @@ export function PlayerDiscoveryScreen({
         ListHeaderComponent={
           <>
             <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
-              <Heading level={2}>Discover Players</Heading>
+              <Heading level={2}>{t('scout:discover.title')}</Heading>
               <Text variant="body-sm" color="secondary" className="mt-1">
-                Advanced scouting search with instant results
+                {t('scout:discover.subtitle')}
               </Text>
             </View>
             {listHeader}
@@ -200,13 +204,17 @@ export function PlayerDiscoveryScreen({
         ListEmptyComponent={
           <View className="px-4 py-8">
             <EmptyState
-              title={search ? 'No players match your search' : 'No players available'}
+              title={
+                search
+                  ? t('scout:discover.noSearchResults')
+                  : t('scout:discover.noPlayersAvailable')
+              }
               description={
                 search
-                  ? 'Try a different keyword, remove filter chips, or apply a saved preset.'
-                  : 'Players appear here when they opt in to scout discovery. Invite athletes in your network to build their ScoutX identity.'
+                  ? t('scout:discover.noSearchResultsDescription')
+                  : t('scout:discover.noPlayersDescription')
               }
-              actionLabel={activeFilterCount > 0 ? 'Clear Filters' : undefined}
+              actionLabel={activeFilterCount > 0 ? t('scout:discover.clearFilters') : undefined}
               onAction={activeFilterCount > 0 ? onResetFilters : undefined}
             />
           </View>
@@ -228,9 +236,9 @@ export function PlayerDiscoveryScreen({
       {error ? (
         <View className="px-4 pb-4">
           <EmptyState
-            title="Unable to load players"
+            title={t('errors:loadPlayers')}
             description={error}
-            actionLabel="Retry"
+            actionLabel={t('common:retry')}
             onAction={refresh}
           />
         </View>

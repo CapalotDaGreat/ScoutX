@@ -8,6 +8,7 @@ import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type ForgotPasswordPayload } from '@/features/auth/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ForgotPasswordScreenProps = {
   onSubmit: (payload: ForgotPasswordPayload) => Promise<void>;
@@ -18,6 +19,7 @@ export type ForgotPasswordScreenProps = {
 };
 
 export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, error, successMessage }: ForgotPasswordScreenProps) {
+  const { t } = useAppTranslation(['auth', 'validation', 'common']);
   const { values, errors, updateValue, validate } = useAuthForm<ForgotPasswordPayload>({ email: '' });
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -25,9 +27,9 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
     const isValid = validate((nextValues) => {
       const nextErrors: Partial<Record<keyof ForgotPasswordPayload, string>> = {};
       if (!nextValues.email.trim()) {
-        nextErrors.email = 'Email is required.';
+        nextErrors.email = t('validation:emailRequired');
       } else if (!/.+@.+\..+/.test(nextValues.email)) {
-        nextErrors.email = 'Enter a valid email address.';
+        nextErrors.email = t('validation:emailInvalid');
       }
       return nextErrors;
     });
@@ -44,8 +46,8 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
   const combinedError = useMemo(() => error ?? localError, [error, localError]);
 
   return (
-    <Screen title="Reset password" subtitle="We’ll help you recover access" >
-      <AuthCard title="Forgot password" subtitle="Enter your email and we’ll prepare reset instructions.">
+    <Screen title={t('forgotPassword.title')} subtitle={t('forgotPassword.subtitle')}>
+      <AuthCard title={t('forgotPassword.cardTitle')} subtitle={t('forgotPassword.cardSubtitle')}>
         {combinedError ? (
           <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
             <Text variant="body-sm" color="error">
@@ -63,23 +65,23 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
         ) : null}
 
         <FormField
-          label="Email"
-          placeholder="you@club.com"
+          label={t('forgotPassword.email')}
+          placeholder={t('forgotPassword.emailPlaceholder')}
           value={values.email}
           onChangeText={(value) => updateValue('email', value)}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
           error={errors.email}
-          accessibilityLabel="Email"
+          accessibilityLabel={t('forgotPassword.email')}
         />
 
         <FormActions>
           <Button variant="accent" loading={isSubmitting} onPress={handleSubmit}>
-            Send reset instructions
+            {t('forgotPassword.sendLink')}
           </Button>
           <Button variant="secondary" onPress={onBack}>
-            Back
+            {t('common:back')}
           </Button>
         </FormActions>
       </AuthCard>

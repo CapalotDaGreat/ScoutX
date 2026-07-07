@@ -13,9 +13,9 @@ import { ComparisonRadarChart } from '@/features/player-comparison/components/Co
 import { ComparisonSectionNav } from '@/features/player-comparison/components/ComparisonSectionNav';
 import { ComparisonTrendChart } from '@/features/player-comparison/components/ComparisonTrendChart';
 import { ComparisonVideosSection } from '@/features/player-comparison/components/ComparisonVideosSection';
-import { COMPARISON_SECTION_LABELS } from '@/features/player-comparison/constants';
 import { usePlayerComparison } from '@/features/player-comparison/hooks/usePlayerComparison';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type ComparisonSectionKey } from '@/features/player-comparison/types';
 
 export type PlayerComparisonScreenProps = {
@@ -33,6 +33,7 @@ export function PlayerComparisonScreen({
   onBack,
   embeddedInTabShell = false,
 }: PlayerComparisonScreenProps) {
+  const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { isTablet } = useCompactLayout();
   const {
     players,
@@ -142,40 +143,43 @@ export function PlayerComparisonScreen({
     }
   };
 
+  const sectionTitle = (key: ComparisonSectionKey) =>
+    t(`scout:comparison.sections.${key}` as const);
+
   const needsTwoPlayers = players.length < 2;
   const metricSubtitle =
     activeSection === 'statistics' ||
     activeSection === 'physical' ||
     activeSection === 'technical' ||
     activeSection === 'gps'
-      ? 'Best values highlighted in green; weakest in red.'
+      ? t('scout:comparison.metricSubtitle')
       : undefined;
 
   return (
     <>
       <Screen
-        title="Player Comparison"
-        subtitle="Compare up to four players across radar, stats, trends, and career signals."
+        title={t('scout:comparison.title')}
+        subtitle={t('scout:comparison.subtitleFull')}
         safeArea
         embeddedInTabShell={embeddedInTabShell}
         footer={
           onBack ? (
             <Button variant="secondary" onPress={onBack} fullWidth>
-              Back
+              {t('common:back')}
             </Button>
           ) : undefined
         }
         empty={players.length === 0}
-        emptyTitle="Add players to compare"
-        emptyDescription="Select players from Discover or use the compare action on any player card."
-        emptyActionLabel={onDiscoverPress ? 'Discover Players' : undefined}
+        emptyTitle={t('scout:comparison.emptyTitle')}
+        emptyDescription={t('scout:comparison.emptyDescription')}
+        emptyActionLabel={onDiscoverPress ? t('scout:pipeline.discoverPlayers') : undefined}
         onEmptyAction={onDiscoverPress}
         contentClassName="gap-6"
       >
         {players.length > 0 ? (
           <View className="flex-row justify-end">
             <Button variant="ghost" size="sm" onPress={clearComparison}>
-              Clear all
+              {t('scout:comparison.clearAll')}
             </Button>
           </View>
         ) : null}
@@ -190,11 +194,11 @@ export function PlayerComparisonScreen({
         {needsTwoPlayers ? (
           <View className="items-center gap-3 py-6">
             <Text variant="body-sm" color="secondary" className="text-center">
-              Add at least two players to unlock side-by-side charts and metric tables.
+              {t('scout:comparison.needsTwoPlayers')}
             </Text>
             {onDiscoverPress ? (
               <Button variant="secondary" onPress={onDiscoverPress}>
-                Discover Players
+                {t('scout:pipeline.discoverPlayers')}
               </Button>
             ) : null}
           </View>
@@ -210,7 +214,7 @@ export function PlayerComparisonScreen({
                   />
                 </View>
                 <View className="min-w-0 flex-1">
-                  <Section title={COMPARISON_SECTION_LABELS[activeSection]} subtitle={metricSubtitle}>
+                  <Section title={sectionTitle(activeSection)} subtitle={metricSubtitle}>
                     {renderSection()}
                   </Section>
                 </View>
@@ -218,7 +222,7 @@ export function PlayerComparisonScreen({
             ) : (
               <>
                 <ComparisonSectionNav activeSection={activeSection} onSectionChange={setActiveSection} />
-                <Section title={COMPARISON_SECTION_LABELS[activeSection]} subtitle={metricSubtitle}>
+                <Section title={sectionTitle(activeSection)} subtitle={metricSubtitle}>
                   {renderSection()}
                 </Section>
               </>
@@ -229,7 +233,11 @@ export function PlayerComparisonScreen({
 
       <ComparisonPlayerPickerModal
         visible={pickerMode !== null}
-        title={pickerMode?.type === 'replace' ? 'Replace player' : 'Add player to comparison'}
+        title={
+          pickerMode?.type === 'replace'
+            ? t('scout:comparison.replacePlayer')
+            : t('scout:comparison.addPlayerToComparison')
+        }
         players={playerPool}
         excludedIds={excludedPickerIds}
         onClose={() => setPickerMode(null)}

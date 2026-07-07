@@ -28,6 +28,7 @@ import { usePlayerTrust } from '@/features/trust-system/hooks/usePlayerTrust';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { isGuestRole } from '@/features/auth/services/authAccess';
 import { type AuthRole } from '@/features/auth/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PublicPortfolioScreenProps = {
   playerId: string;
@@ -56,6 +57,7 @@ export function PublicPortfolioScreen({
   onSignInForEndorsement,
   onRegisterForEndorsement,
 }: PublicPortfolioScreenProps) {
+  const { t } = useAppTranslation(['portfolio', 'common', 'errors']);
   const { user, role } = useAuth();
   const fetched = usePublicPortfolio(previewData || previewMode ? null : playerId);
   const data = previewData ?? fetched.data;
@@ -66,7 +68,7 @@ export function PublicPortfolioScreen({
   const trust = usePlayerTrust(playerId, {
     currentClub: data?.profile.identity.currentClub ?? '',
     clubHistory: data?.profile.identity.clubHistory ?? [],
-    playerName: data?.profile.fullName ?? 'Player',
+    playerName: data?.profile.fullName ?? t('portfolio:defaultPlayerName'),
   });
 
   const [endorsementVisible, setEndorsementVisible] = useState(false);
@@ -95,11 +97,11 @@ export function PublicPortfolioScreen({
       playerId,
       playerName: data.profile.fullName,
       viewerId: user.id,
-      viewerName: user.name ?? 'Visitor',
+      viewerName: user.name ?? t('portfolio:defaultVisitorName'),
       viewerRole: role === 'coach' ? 'coach' : role === 'scout' ? 'scout' : 'player',
       isScoutView,
     });
-  }, [data?.profile.fullName, playerId, previewMode, role, user?.id, user?.name]);
+  }, [data?.profile.fullName, playerId, previewMode, role, t, user?.id, user?.name]);
 
   useEffect(() => {
     if (endorseMode && canEndorse && data) {
@@ -109,7 +111,7 @@ export function PublicPortfolioScreen({
 
   if (isLoading) {
     return (
-      <Screen title="Football Passport" subtitle="Loading shareable résumé" safeArea>
+      <Screen title={t('portfolio:footballPassport')} subtitle={t('portfolio:loadingPassportSubtitle')} safeArea>
         <SkeletonLoader variant="profile" />
         <SkeletonLoader variant="card" count={2} />
       </Screen>
@@ -118,16 +120,22 @@ export function PublicPortfolioScreen({
 
   if (!data) {
     return (
-      <Screen title="Football Passport" subtitle="Unavailable" safeArea onRetry={refresh} error={error}>
+      <Screen
+        title={t('portfolio:footballPassport')}
+        subtitle={t('portfolio:passportUnavailable')}
+        safeArea
+        onRetry={refresh}
+        error={error}
+      >
         <EmptyState
-          title={previewMode ? 'Portfolio unavailable' : 'Portfolio is private'}
+          title={previewMode ? t('portfolio:unavailableTitle') : t('portfolio:privatePortfolioTitle')}
           description={
             error ??
             (previewMode
-              ? 'Unable to load portfolio preview.'
-              : 'This player has not enabled a public Football Passport yet.')
+              ? t('portfolio:previewUnavailableDescription')
+              : t('portfolio:privatePortfolioDescription'))
           }
-          actionLabel={onBack ? 'Go back' : 'Retry'}
+          actionLabel={onBack ? t('portfolio:goBack') : t('common:retry')}
           onAction={onBack ?? refresh}
         />
       </Screen>
@@ -142,28 +150,28 @@ export function PublicPortfolioScreen({
     draft: Parameters<typeof trust.saveRecommendation>[3],
   ) => {
     if (!user?.id) {
-      throw new Error('You must be signed in to endorse a player.');
+      throw new Error(t('errors:endorseSignInRequired'));
     }
 
-    await trust.saveRecommendation(user.id, user.name ?? 'Coach', '', draft);
+    await trust.saveRecommendation(user.id, user.name ?? t('portfolio:defaultCoachName'), '', draft);
   };
 
   return (
     <Screen
-      title={previewMode ? 'Passport preview' : 'Football Passport'}
-      subtitle="ScoutX shareable football résumé"
+      title={previewMode ? t('portfolio:passportPreview') : t('portfolio:footballPassport')}
+      subtitle={t('portfolio:passportSubtitle')}
       safeArea
       onRefresh={refresh}
       header={
         <View className="mb-2 gap-2">
           {onBack ? (
             <Button variant="ghost" size="sm" onPress={onBack} className="self-start">
-              Back
+              {t('common:back')}
             </Button>
           ) : null}
           {canEndorse ? (
             <Button variant="accent" size="sm" onPress={() => setEndorsementVisible(true)}>
-              Write coach endorsement
+              {t('portfolio:writeCoachEndorsement')}
             </Button>
           ) : null}
         </View>
@@ -184,8 +192,8 @@ export function PublicPortfolioScreen({
 
         {isPortfolioSectionVisible(privacy, 'careerTimeline') && profile.footballJourney ? (
           <PortfolioSection
-            title="Career Timeline"
-            subtitle="Clubs, milestones, and football journey"
+            title={t('portfolio:sections.careerTimeline.title')}
+            subtitle={t('portfolio:sections.careerTimeline.subtitle')}
             index={sectionIndex++}
           >
             <FootballJourneySection entries={profile.footballJourney.entries} />
@@ -193,26 +201,42 @@ export function PublicPortfolioScreen({
         ) : null}
 
         {isPortfolioSectionVisible(privacy, 'statistics') ? (
-          <PortfolioSection title="Statistics" subtitle="Season and match performance" index={sectionIndex++}>
+          <PortfolioSection
+            title={t('portfolio:sections.statistics.title')}
+            subtitle={t('portfolio:sections.statistics.subtitle')}
+            index={sectionIndex++}
+          >
             <ProfileStatsGrid stats={profile.stats} />
             <PlayerStatisticsSection matches={profile.statisticsMatches} />
           </PortfolioSection>
         ) : null}
 
         {isPortfolioSectionVisible(privacy, 'performanceCharts') ? (
-          <PortfolioSection title="Performance Charts" subtitle="Radar and progress trends" index={sectionIndex++}>
+          <PortfolioSection
+            title={t('portfolio:sections.performanceCharts.title')}
+            subtitle={t('portfolio:sections.performanceCharts.subtitle')}
+            index={sectionIndex++}
+          >
             <PerformanceSummary items={profile.performanceSummary} />
           </PortfolioSection>
         ) : null}
 
         {isPortfolioSectionVisible(privacy, 'videos') && profile.highlightVideos ? (
-          <PortfolioSection title="Highlight Videos" subtitle="Featured reels and clips" index={sectionIndex++}>
+          <PortfolioSection
+            title={t('portfolio:sections.videos.title')}
+            subtitle={t('portfolio:sections.videos.subtitle')}
+            index={sectionIndex++}
+          >
             <HighlightVideosSection library={profile.highlightVideos} />
           </PortfolioSection>
         ) : null}
 
         {isPortfolioSectionVisible(privacy, 'achievements') ? (
-          <PortfolioSection title="Achievements" subtitle="Honours and standout moments" index={sectionIndex++}>
+          <PortfolioSection
+            title={t('portfolio:sections.achievements.title')}
+            subtitle={t('portfolio:sections.achievements.subtitle')}
+            index={sectionIndex++}
+          >
             <View className="gap-2">
               {profile.identity.careerTimeline
                 .filter((entry) => entry.type === 'achievement')
@@ -231,7 +255,11 @@ export function PublicPortfolioScreen({
         ) : null}
 
         {isPortfolioSectionVisible(privacy, 'recommendations') && recommendations.length > 0 ? (
-          <PortfolioSection title="Coach Endorsements" subtitle="Trusted recommendations" index={sectionIndex++}>
+          <PortfolioSection
+            title={t('portfolio:sections.recommendations.title')}
+            subtitle={t('portfolio:sections.recommendations.subtitle')}
+            index={sectionIndex++}
+          >
             <View className="gap-3">
               {recommendations.map((recommendation, index) => (
                 <RecommendationCard key={recommendation.id} recommendation={recommendation} index={index} />
@@ -241,7 +269,11 @@ export function PublicPortfolioScreen({
         ) : null}
 
         {isPortfolioSectionVisible(privacy, 'gpsHighlights') && gpsHighlights.length > 0 ? (
-          <PortfolioSection title="GPS Highlights" subtitle="Movement intelligence snapshots" index={sectionIndex++}>
+          <PortfolioSection
+            title={t('portfolio:sections.gpsHighlights.title')}
+            subtitle={t('portfolio:sections.gpsHighlights.subtitle')}
+            index={sectionIndex++}
+          >
             <View className="gap-4">
               {gpsHighlights.map((session) => (
                 <View key={session.id} className="gap-2">

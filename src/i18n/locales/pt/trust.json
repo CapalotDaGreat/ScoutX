@@ -1,0 +1,15 @@
+{
+  "title": "Trust & Verification",
+  "verification": "Verification",
+  "endorsements": "Coach endorsements",
+  "recommendations": "Recommendations",
+  "inviteCoach": "Invite coach",
+  "requestEndorsement": "Request endorsement",
+  "endorsePlayer": "Endorse player",
+  "verified": "Verified",
+  "pending": "Pending",
+  "unverified": "Unverified",
+  "clubTenure": "Club tenure",
+  "reportContent": "Report content",
+  "blockUser": "Block user"
+}

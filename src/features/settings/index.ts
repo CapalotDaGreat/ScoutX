@@ -1,1 +1,2 @@
-export { SettingsScreen } from '@/features/settings/components/SettingsScreen';
+export { SettingsScreen } from './components/SettingsScreen';
+export { LanguageSettingsSection } from './components/LanguageSettingsSection';

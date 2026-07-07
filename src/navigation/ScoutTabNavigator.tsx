@@ -4,6 +4,7 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Compass, Home, Kanban } from 'lucide-react-native';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { ScoutDashboardScreen } from '@/features/scout-discovery/components/ScoutDashboardScreen';
 import { PlayerDiscoveryScreen } from '@/features/scout-discovery/components/PlayerDiscoveryScreen';
 import { RecruitmentPipelineScreen } from '@/features/scout-recruitment';
@@ -125,14 +126,15 @@ function ScoutPipelineRoute() {
 
 function ScoutTabBarContainer() {
   const recruitment = useRecruitment();
+  const { t, i18n } = useAppTranslation('navigation');
 
   const ScoutTabBar = useMemo(
     () =>
       createNavigationTabBar<ScoutTabId>({
         tabs: [
-          { id: 'Dashboard', label: 'Home', icon: Home },
-          { id: 'Discover', label: 'Discover', icon: Compass },
-          { id: 'Pipeline', label: 'Pipeline', icon: Kanban },
+          { id: 'Dashboard', label: t('tabs.home'), icon: Home },
+          { id: 'Discover', label: t('tabs.discover'), icon: Compass },
+          { id: 'Pipeline', label: t('tabs.pipeline'), icon: Kanban },
         ],
         resolveBadge: (tabId) => {
           if (tabId === 'Pipeline') {
@@ -142,7 +144,7 @@ function ScoutTabBarContainer() {
         },
         testID: 'scout-tab-bar',
       }),
-    [recruitment.savedCount],
+    [recruitment.savedCount, t, i18n.language],
   );
 
   return (

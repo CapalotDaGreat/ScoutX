@@ -30,6 +30,7 @@ import { type PlayerOnboardingReport } from '@/features/player-onboarding/types'
 import { PlayerVerificationCard } from '@/features/verification-system/components/PlayerVerificationCard';
 import { defaultPrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { TrustProfileSection, type UsePlayerTrustResult } from '@/features/trust-system';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerProfileScreenProps = {
   profile: PlayerProfile | null;
@@ -80,6 +81,7 @@ export function PlayerProfileScreen({
   onSignOut,
   embeddedInTabShell = false,
 }: PlayerProfileScreenProps) {
+  const { t } = useAppTranslation(['portfolio', 'common', 'settings', 'auth']);
   const { trustProfile, recommendations, ...trustStateRest } = trustState;
   const { entries: journeyEntries } = useFootballJourney(profile);
   const { unreadCount } = useActivities();
@@ -88,7 +90,7 @@ export function PlayerProfileScreen({
 
   if (loading) {
     return (
-      <Screen title="Portfolio" subtitle="Preparing your Football Passport" safeArea {...screenProps}>
+      <Screen title={t('portfolio:title')} subtitle={t('portfolio:loadingSubtitle')} safeArea {...screenProps}>
         <SkeletonLoader variant="profile" />
       </Screen>
     );
@@ -96,11 +98,11 @@ export function PlayerProfileScreen({
 
   if (error) {
     return (
-      <Screen title="Portfolio" subtitle="We couldn’t load your portfolio" safeArea {...screenProps}>
+      <Screen title={t('portfolio:title')} subtitle={t('portfolio:errorSubtitle')} safeArea {...screenProps}>
         <EmptyState
-          title="Portfolio unavailable"
+          title={t('portfolio:unavailableTitle')}
           description={error}
-          actionLabel="Try again"
+          actionLabel={t('common:retry')}
           onAction={onRetry}
         />
       </Screen>
@@ -109,11 +111,11 @@ export function PlayerProfileScreen({
 
   if (!profile) {
     return (
-      <Screen title="Portfolio" subtitle="No portfolio data available" safeArea {...screenProps}>
+      <Screen title={t('portfolio:title')} subtitle={t('portfolio:emptySubtitle')} safeArea {...screenProps}>
         <EmptyState
-          title="Build your Football Passport"
-          description="Add your story, stats, and videos so scouts can discover the real you."
-          actionLabel="Refresh"
+          title={t('portfolio:buildTitle')}
+          description={t('portfolio:buildDescription')}
+          actionLabel={t('common:refresh')}
           onAction={onRetry}
         />
       </Screen>
@@ -122,8 +124,8 @@ export function PlayerProfileScreen({
 
   return (
     <Screen
-      title="Portfolio"
-      subtitle="Your Football Passport on ScoutX"
+      title={t('portfolio:title')}
+      subtitle={t('portfolio:subtitle')}
       safeArea
       {...screenProps}
       header={
@@ -154,8 +156,8 @@ export function PlayerProfileScreen({
         />
 
         <CollapsibleSection
-          title="Passport insights"
-          subtitle="Scout views and verification status"
+          title={t('portfolio:passportInsights')}
+          subtitle={t('portfolio:passportInsightsSubtitle')}
         >
           <View className="gap-3">
             <PortfolioAnalyticsCard playerId={profile.id} profile={profile} />
@@ -166,8 +168,8 @@ export function PlayerProfileScreen({
         {isAdminUser(profile.id) ? <AdminReviewCard /> : null}
 
         <CollapsibleSection
-          title="Public Football Passport"
-          subtitle="Shareable link, username, and privacy controls"
+          title={t('portfolio:publicPassport')}
+          subtitle={t('portfolio:publicPassportSubtitle')}
           defaultOpen
         >
           <View className="gap-3">
@@ -190,22 +192,22 @@ export function PlayerProfileScreen({
             <View className="flex-row flex-wrap gap-2">
               {onPortfolioPress ? (
                 <Button variant="secondary" onPress={onPortfolioPress}>
-                  Preview passport
+                  {t('portfolio:previewPassport')}
                 </Button>
               ) : null}
               {onSharePortfolioPress ? (
                 <Button variant="accent" onPress={onSharePortfolioPress}>
-                  Share passport
+                  {t('portfolio:sharePassport')}
                 </Button>
               ) : null}
               {onInviteCoachPress ? (
                 <Button variant="secondary" onPress={onInviteCoachPress}>
-                  Invite coach
+                  {t('portfolio:inviteCoach')}
                 </Button>
               ) : null}
               {onExportCvPress ? (
                 <Button variant="secondary" onPress={onExportCvPress}>
-                  Export Football CV
+                  {t('portfolio:exportCv')}
                 </Button>
               ) : null}
             </View>
@@ -222,8 +224,8 @@ export function PlayerProfileScreen({
         />
 
         <CollapsibleSection
-          title="Story & Media"
-          subtitle="Biography, journey, and highlight videos"
+          title={t('portfolio:storyMedia')}
+          subtitle={t('portfolio:storyMediaSubtitle')}
           defaultOpen
         >
           <BiographyIdentitySection identity={profile.identity} biography={profile.biography} />
@@ -240,8 +242,8 @@ export function PlayerProfileScreen({
         </CollapsibleSection>
 
         <CollapsibleSection
-          title="Player Profile"
-          subtitle="Positions, career path, and professional details"
+          title={t('portfolio:playerProfile')}
+          subtitle={t('portfolio:playerProfileSubtitle')}
         >
           <PlayingIdentitySection identity={profile.identity} />
           <PersonalIdentitySection identity={profile.identity} />
@@ -251,8 +253,8 @@ export function PlayerProfileScreen({
         </CollapsibleSection>
 
         <CollapsibleSection
-          title="Performance Snapshot"
-          subtitle="Stats, match logs, and performance summary"
+          title={t('portfolio:performanceSnapshot')}
+          subtitle={t('portfolio:performanceSnapshotSubtitle')}
         >
           <ProfileStatsGrid stats={profile.stats} />
           <PlayerStatisticsSection
@@ -263,15 +265,15 @@ export function PlayerProfileScreen({
         </CollapsibleSection>
 
         <Button variant="secondary" onPress={onEditPress}>
-          Edit profile
+          {t('portfolio:editProfile')}
         </Button>
         {onSettingsPress ? (
           <Button variant="ghost" onPress={onSettingsPress}>
-            Settings
+            {t('settings:title')}
           </Button>
         ) : onSignOut ? (
           <Button variant="ghost" onPress={onSignOut}>
-            Sign out
+            {t('auth:signOut')}
           </Button>
         ) : null}
       </View>

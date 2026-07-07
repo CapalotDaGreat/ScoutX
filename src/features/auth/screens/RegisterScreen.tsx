@@ -9,6 +9,7 @@ import { AuthCard } from '@/features/auth/components/AuthCard';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type SignUpPayload } from '@/features/auth/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RegisterScreenProps = {
   onSubmit: (payload: SignUpPayload) => Promise<void>;
@@ -18,6 +19,7 @@ export type RegisterScreenProps = {
 };
 
 export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }: RegisterScreenProps) {
+  const { t } = useAppTranslation(['auth', 'validation', 'common']);
   const { values, errors, updateValue, validate } = useAuthForm<SignUpPayload>({
     fullName: '',
     email: '',
@@ -30,22 +32,22 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
     const isValid = validate((nextValues) => {
       const nextErrors: Partial<Record<keyof SignUpPayload, string>> = {};
       if (!nextValues.fullName.trim()) {
-        nextErrors.fullName = 'Full name is required.';
+        nextErrors.fullName = t('validation:nameRequired');
       }
       if (!nextValues.email.trim()) {
-        nextErrors.email = 'Email is required.';
+        nextErrors.email = t('validation:emailRequired');
       } else if (!/.+@.+\..+/.test(nextValues.email)) {
-        nextErrors.email = 'Enter a valid email address.';
+        nextErrors.email = t('validation:emailInvalid');
       }
       if (!nextValues.password.trim()) {
-        nextErrors.password = 'Password is required.';
+        nextErrors.password = t('validation:passwordRequired');
       } else if (nextValues.password.length < 8) {
-        nextErrors.password = 'Use at least 8 characters.';
+        nextErrors.password = t('validation:passwordMinLength', { count: 8 });
       }
       if (!nextValues.confirmPassword.trim()) {
-        nextErrors.confirmPassword = 'Please confirm your password.';
+        nextErrors.confirmPassword = t('validation:confirmPasswordRequired');
       } else if (nextValues.confirmPassword !== nextValues.password) {
-        nextErrors.confirmPassword = 'Passwords do not match.';
+        nextErrors.confirmPassword = t('validation:passwordMismatch');
       }
       return nextErrors;
     });
@@ -62,8 +64,8 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
   const combinedError = useMemo(() => error ?? localError, [error, localError]);
 
   return (
-    <Screen title="Create account" subtitle="Join the ScoutX community" >
-      <AuthCard title="Register" subtitle="Set up your account and define your role later.">
+    <Screen title={t('register.title')} subtitle={t('register.subtitle')}>
+      <AuthCard title={t('register.cardTitle')} subtitle={t('register.cardSubtitle')}>
         {combinedError ? (
           <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
             <Text variant="body-sm" color="error">
@@ -73,52 +75,52 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
         ) : null}
 
         <FormField
-          label="Full name"
-          placeholder="Marcus Silva"
+          label={t('register.fullName')}
+          placeholder={t('register.fullNamePlaceholder')}
           value={values.fullName}
           onChangeText={(value) => updateValue('fullName', value)}
           error={errors.fullName}
-          accessibilityLabel="Full name"
+          accessibilityLabel={t('register.fullName')}
         />
 
         <FormField
-          label="Email"
-          placeholder="you@club.com"
+          label={t('register.email')}
+          placeholder={t('register.emailPlaceholder')}
           value={values.email}
           onChangeText={(value) => updateValue('email', value)}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
           error={errors.email}
-          accessibilityLabel="Email"
+          accessibilityLabel={t('register.email')}
         />
 
         <FormField
-          label="Password"
-          placeholder="Create a password"
+          label={t('register.password')}
+          placeholder={t('register.passwordPlaceholder')}
           value={values.password}
           onChangeText={(value) => updateValue('password', value)}
           secureTextEntry
           error={errors.password}
-          accessibilityLabel="Password"
+          accessibilityLabel={t('register.password')}
         />
 
         <FormField
-          label="Confirm password"
-          placeholder="Repeat your password"
+          label={t('register.confirmPassword')}
+          placeholder={t('register.confirmPasswordPlaceholder')}
           value={values.confirmPassword}
           onChangeText={(value) => updateValue('confirmPassword', value)}
           secureTextEntry
           error={errors.confirmPassword}
-          accessibilityLabel="Confirm password"
+          accessibilityLabel={t('register.confirmPassword')}
         />
 
         <FormActions>
           <Button variant="accent" loading={isSubmitting} onPress={handleSubmit}>
-            Create account
+            {t('register.createAccount')}
           </Button>
           <Button variant="secondary" onPress={onBack}>
-            Back
+            {t('common:back')}
           </Button>
         </FormActions>
         <LegalFooterLinks className="pt-2" />

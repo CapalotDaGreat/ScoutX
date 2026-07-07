@@ -11,6 +11,7 @@ import { GpsSessionHistory } from '@/features/gps/components/GpsSessionHistory';
 import { useGpsSessions } from '@/features/gps/hooks/useGpsSessions';
 import { useGpsTracking } from '@/features/gps/hooks/useGpsTracking';
 import { type GpsSession } from '@/features/gps/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type GpsTrackingScreenProps = {
   playerId: string | null;
@@ -21,6 +22,7 @@ export function GpsTrackingScreen({
   playerId,
   embeddedInTabShell = false,
 }: GpsTrackingScreenProps) {
+  const { t } = useAppTranslation(['gps', 'common', 'errors']);
   const {
     status,
     matchLabel,
@@ -58,8 +60,8 @@ export function GpsTrackingScreen({
 
   return (
     <Screen
-      title="GPS Tracking"
-      subtitle="Record match movement with battery-optimized sampling"
+      title={t('gps:title')}
+      subtitle={t('gps:recordingSubtitle')}
       onRefresh={refreshSessions}
       refreshing={isLoading}
       error={error ?? sessionsError ?? null}
@@ -68,7 +70,7 @@ export function GpsTrackingScreen({
       contentClassName="gap-8"
       embeddedInTabShell={embeddedInTabShell}
     >
-      <Section title="Live Session" gap="md">
+      <Section title={t('gps:liveSession')} gap="md">
         <GpsRecordingControls
           status={status}
           matchLabel={matchLabel}
@@ -86,9 +88,12 @@ export function GpsTrackingScreen({
       </Section>
 
       {completedSession ? (
-        <Section title="Session Summary" gap="md">
+        <Section title={t('gps:sessionSummary')} gap="md">
           <Text variant="body-sm" color="secondary">
-            {completedSession.matchLabel} saved with {completedSession.metrics.pointCount} points.
+            {t('gps:sessionSavedSummary', {
+              label: completedSession.matchLabel,
+              count: completedSession.metrics.pointCount,
+            })}
           </Text>
           <GpsLiveMetrics metrics={completedSession.metrics} />
           <GpsMovementZones zones={completedSession.zones} />
@@ -97,13 +102,13 @@ export function GpsTrackingScreen({
       ) : null}
 
       {!completedSession && previewZones.length > 0 ? (
-        <Section title="Latest Analysis" gap="md">
+        <Section title={t('gps:latestAnalysis')} gap="md">
           <GpsMovementZones zones={previewZones} />
           {previewHeatmap ? <GpsHeatmap heatmap={previewHeatmap} /> : null}
         </Section>
       ) : null}
 
-      <Section title="History" gap="md">
+      <Section title={t('gps:history')} gap="md">
         {isLoading ? <SkeletonLoader variant="card" count={2} /> : <GpsSessionHistory sessions={sessions} />}
       </Section>
     </Screen>

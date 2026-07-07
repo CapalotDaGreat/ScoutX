@@ -1,0 +1,19 @@
+{
+  "emailRequired": "Email is required.",
+  "emailInvalid": "Enter a valid email address.",
+  "passwordRequired": "Password is required.",
+  "passwordMinLength": "Password must be at least {{count}} characters.",
+  "passwordMismatch": "Passwords do not match.",
+  "confirmPasswordRequired": "Please confirm your password.",
+  "nameRequired": "Full name is required.",
+  "fieldRequired": "This field is required.",
+  "invalidNumber": "Enter a valid number.",
+  "minValue": "Must be at least {{min}}.",
+  "maxValue": "Must be at most {{max}}.",
+  "usernameInvalid": "Username can only contain letters, numbers, and underscores.",
+  "usernameTaken": "This username is already taken.",
+  "usernameMinLength": "Username must be at least 3 characters.",
+  "usernameMaxLength": "Username must be 30 characters or fewer.",
+  "usernameFormat": "Use lowercase letters, numbers, and hyphens only.",
+  "usernameReserved": "This username is reserved."
+}

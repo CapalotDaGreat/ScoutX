@@ -18,6 +18,7 @@ import { EmptyState } from '@/components/feedback/EmptyState';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { WifiOff, AlertCircle } from 'lucide-react-native';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ScreenProps = ScrollViewProps & {
   children: ReactNode;
@@ -55,7 +56,7 @@ export function Screen({
   loading = false,
   error = null,
   empty = false,
-  emptyTitle = 'Nothing here yet',
+  emptyTitle,
   emptyDescription,
   emptyActionLabel,
   onEmptyAction,
@@ -74,7 +75,9 @@ export function Screen({
   ...scrollProps
 }: ScreenProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('common');
   const insets = useSafeAreaInsets();
+  const resolvedEmptyTitle = emptyTitle ?? t('emptyTitle');
   const resolvedSafeAreaEdges: Edge[] =
     safeAreaEdges ?? (embeddedInTabShell ? ['top', 'left', 'right'] : ['top', 'bottom', 'left', 'right']);
   const scrollBottomPadding = embeddedInTabShell ? 16 : insets.bottom + 16;
@@ -89,14 +92,14 @@ export function Screen({
         <View className="flex-1 items-center justify-center px-6 py-12">
           <AlertCircle size={48} color={colors.error} strokeWidth={1.5} />
           <Heading level={3} className="mt-6 text-center">
-            Something went wrong
+            {t('errorTitle')}
           </Heading>
           <Text variant="body-sm" color="secondary" className="mt-2 text-center">
             {error}
           </Text>
           {onRetry ? (
-            <Button variant="secondary" className="mt-6" onPress={onRetry} accessibilityLabel="Try again">
-              Try Again
+            <Button variant="secondary" className="mt-6" onPress={onRetry} accessibilityLabel={t('retry')}>
+              {t('retry')}
             </Button>
           ) : null}
         </View>
@@ -106,7 +109,7 @@ export function Screen({
     if (empty) {
       return (
         <EmptyState
-          title={emptyTitle}
+          title={resolvedEmptyTitle}
           description={emptyDescription}
           actionLabel={emptyActionLabel}
           onAction={onEmptyAction}
@@ -126,7 +129,7 @@ export function Screen({
         >
           <WifiOff size={14} color={colors.warning} strokeWidth={2} />
           <Text variant="caption" className="font-sans-medium text-warning dark:text-yellow-400">
-            You&apos;re offline
+            {t('offline')}
           </Text>
         </View>
       ) : null}

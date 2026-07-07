@@ -1,12 +1,14 @@
 import { Linking, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { getPrivacyPolicyUrl, getTermsOfServiceUrl } from '@/config/legal';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type LegalFooterLinksProps = {
   className?: string;
 };
 
 export function LegalFooterLinks({ className }: LegalFooterLinksProps) {
+  const { t } = useAppTranslation('common');
   const privacyUrl = getPrivacyPolicyUrl();
   const termsUrl = getTermsOfServiceUrl();
 
@@ -22,7 +24,7 @@ export function LegalFooterLinks({ className }: LegalFooterLinksProps) {
           color="secondary"
           onPress={() => void Linking.openURL(privacyUrl)}
         >
-          Privacy Policy
+          {t('privacyPolicy')}
         </Text>
       ) : null}
       {privacyUrl && termsUrl ? (
@@ -36,7 +38,7 @@ export function LegalFooterLinks({ className }: LegalFooterLinksProps) {
           color="secondary"
           onPress={() => void Linking.openURL(termsUrl)}
         >
-          Terms of Service
+          {t('termsOfService')}
         </Text>
       ) : null}
     </View>

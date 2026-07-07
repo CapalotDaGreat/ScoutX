@@ -8,6 +8,8 @@ import { Card } from '@/components/primitives/Card';
 import { deleteCurrentAccount } from '@/features/auth/services/accountService';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useNotificationPreferences } from '@/features/notifications/hooks/useNotificationPreferences';
+import { LanguageSettingsSection } from '@/features/settings/components/LanguageSettingsSection';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type AuthRole } from '@/features/auth/types';
 
 export type SettingsScreenProps = {
@@ -15,17 +17,24 @@ export type SettingsScreenProps = {
   onSignOut: () => void;
 };
 
-function formatRole(role: AuthRole | null | undefined): string {
+function formatRole(
+  role: AuthRole | null | undefined,
+  t: ReturnType<typeof useAppTranslation>['t'],
+): string {
   if (!role || role === 'guest') {
-    return 'Guest';
+    return t('guest', { ns: 'common' });
   }
   if (role === 'coach') {
-    return 'Scout';
+    return t('scout', { ns: 'common' });
+  }
+  if (role === 'player') {
+    return t('player', { ns: 'common' });
   }
   return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
 export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
+  const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors']);
   const { user, role } = useAuth();
   const {
     pushEnabled,
@@ -42,42 +51,40 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
       return;
     }
 
-    Alert.alert(
-      'Delete account',
-      'This permanently removes your ScoutX account, profile, and push settings. This cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            setIsDeleting(true);
-            setDeleteError(null);
-            void deleteCurrentAccount(user.uid)
-              .catch((error) => {
-                setDeleteError(error instanceof Error ? error.message : 'Unable to delete account.');
-              })
-              .finally(() => {
-                setIsDeleting(false);
-              });
-          },
+    Alert.alert(t('deleteAccountTitle'), t('deleteAccountMessage'), [
+      { text: t('cancel', { ns: 'common' }), style: 'cancel' },
+      {
+        text: t('delete', { ns: 'common' }),
+        style: 'destructive',
+        onPress: () => {
+          setIsDeleting(true);
+          setDeleteError(null);
+          void deleteCurrentAccount(user.uid)
+            .catch((error) => {
+              setDeleteError(
+                error instanceof Error ? error.message : t('errors:deleteAccount'),
+              );
+            })
+            .finally(() => {
+              setIsDeleting(false);
+            });
         },
-      ],
-    );
+      },
+    ]);
   };
 
   return (
     <Screen
-      title="Settings"
-      subtitle="Account, notifications, and legal"
+      title={t('settings:title')}
+      subtitle={t('settings:subtitle')}
       safeArea
       footer={
         <View className="gap-2">
           <Button variant="ghost" onPress={onSignOut}>
-            Sign out
+            {t('auth:signOut')}
           </Button>
           <Button variant="secondary" onPress={onBack} fullWidth>
-            Back
+            {t('common:back')}
           </Button>
         </View>
       }
@@ -85,35 +92,42 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
       <View className="gap-4">
         <Card variant="outlined" padding="md" className="gap-2">
           <Text variant="overline" color="secondary">
-            Account
+            {t('settings:account')}
           </Text>
-          <Text weight="semibold">{user?.name ?? 'ScoutX user'}</Text>
+          <Text weight="semibold">{user?.name ?? t('common:scoutXUser')}</Text>
           {user?.email ? (
             <Text variant="body-sm" color="secondary">
               {user.email}
             </Text>
           ) : null}
           <Text variant="caption" color="secondary">
-            Role · {formatRole(role)}
+            {t('common:roleLabel')} · {formatRole(role, t)}
           </Text>
         </Card>
 
         <Card variant="outlined" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
-            Notifications
+            {t('settings:language')}
+          </Text>
+          <LanguageSettingsSection />
+        </Card>
+
+        <Card variant="outlined" padding="md" className="gap-3">
+          <Text variant="overline" color="secondary">
+            {t('settings:notifications')}
           </Text>
           <Text variant="body-sm" color="secondary">
-            Push alerts for portfolio views, endorsements, trials, and weekly reports.
+            {t('settings:notificationsDescription')}
           </Text>
           <View className="flex-row items-center justify-between gap-3">
             <View className="flex-1">
-              <Text weight="semibold">Push notifications</Text>
+              <Text weight="semibold">{t('settings:pushNotifications')}</Text>
               <Text variant="caption" color="secondary">
                 {notificationsLoading
-                  ? 'Checking status…'
+                  ? t('settings:pushChecking')
                   : hasToken
-                    ? 'Registered on this device'
-                    : 'Not registered on this device'}
+                    ? t('settings:pushRegistered')
+                    : t('settings:pushNotRegistered')}
               </Text>
             </View>
             <Switch
@@ -126,7 +140,7 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
 
         <Card variant="outlined" padding="md" className="gap-2">
           <Text variant="overline" color="secondary">
-            Legal
+            {t('settings:legal')}
           </Text>
           <LegalFooterLinks />
         </Card>
@@ -134,10 +148,10 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
         {!user?.isAnonymous ? (
           <Card variant="outlined" padding="md" className="gap-3">
             <Text variant="overline" color="secondary">
-              Danger zone
+              {t('settings:dangerZone')}
             </Text>
             <Text variant="body-sm" color="secondary">
-              Permanently delete your ScoutX account and profile data.
+              {t('settings:deleteAccountDescription')}
             </Text>
             {deleteError ? (
               <Text variant="body-sm" color="error">
@@ -145,7 +159,7 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
               </Text>
             ) : null}
             <Button variant="ghost" loading={isDeleting} onPress={handleDeleteAccount}>
-              Delete account
+              {t('settings:deleteAccount')}
             </Button>
           </Card>
         ) : null}

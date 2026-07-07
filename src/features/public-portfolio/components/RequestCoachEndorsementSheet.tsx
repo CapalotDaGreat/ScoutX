@@ -5,6 +5,7 @@ import { Modal } from '@/components/feedback/Modal';
 import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
 import { buildCoachEndorsementInviteUrl } from '@/features/public-portfolio/constants';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RequestCoachEndorsementSheetProps = {
   visible: boolean;
@@ -21,6 +22,7 @@ export function RequestCoachEndorsementSheet({
   username,
   onClose,
 }: RequestCoachEndorsementSheetProps) {
+  const { t } = useAppTranslation('portfolio');
   const inviteUrl = useMemo(
     () => buildCoachEndorsementInviteUrl(playerId, username),
     [playerId, username],
@@ -29,8 +31,8 @@ export function RequestCoachEndorsementSheet({
 
   const handleShare = async () => {
     await Share.share({
-      title: `Coach endorsement for ${playerName}`,
-      message: `Hi coach, could you endorse my Football Passport on ScoutX? ${inviteUrl}`,
+      title: t('endorsementInvite.shareTitle', { playerName }),
+      message: t('endorsementInvite.shareMessage', { url: inviteUrl }),
       url: inviteUrl,
     });
   };
@@ -41,18 +43,17 @@ export function RequestCoachEndorsementSheet({
   };
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Invite your coach" size="md">
+    <Modal visible={visible} onClose={onClose} title={t('endorsementInvite.title')} size="md">
       <View className="gap-4">
         <Text variant="body-sm" color="secondary">
-          Send this link to a coach or academy staff member. They can write a signed recommendation that
-          appears on your Football Passport.
+          {t('endorsementInvite.description')}
         </Text>
         <Text variant="body-sm">{inviteUrl}</Text>
         <Button variant="accent" onPress={() => void handleShare()}>
-          Share invite
+          {t('endorsementInvite.shareInvite')}
         </Button>
         <Button variant="secondary" onPress={() => void handleCopy()}>
-          {copied ? 'Link copied' : 'Copy invite link'}
+          {copied ? t('endorsementInvite.linkCopied') : t('endorsementInvite.copyInviteLink')}
         </Button>
       </View>
     </Modal>

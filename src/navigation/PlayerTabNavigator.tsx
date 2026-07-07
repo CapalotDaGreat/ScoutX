@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ComponentType } from 'react';
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -24,21 +24,35 @@ import { ActivityInboxModal } from '@/features/activity-feed';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { createNavigationTabBar } from '@/navigation/NavigationTabBar';
 import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 const Tab = createBottomTabNavigator<PlayerTabParamList>();
 
 type PlayerTabId = keyof PlayerTabParamList;
 
-const PlayerTabBar = createNavigationTabBar<PlayerTabId>({
-  tabs: [
-    { id: 'Portfolio', label: 'Portfolio', icon: UserRound },
-    { id: 'Career', label: 'Career', icon: Route },
-    { id: 'Statistics', label: 'Stats', icon: BarChart3 },
-    { id: 'Gps', label: 'GPS', icon: MapPin },
-    { id: 'Trials', label: 'Trials', icon: CalendarDays },
-  ],
-  testID: 'player-tab-bar',
-});
+const PlayerTabBar = createDynamicPlayerTabBar();
+
+function createDynamicPlayerTabBar() {
+  function PlayerTabBarComponent(props: BottomTabBarProps) {
+    const { t, i18n } = useAppTranslation('navigation');
+    const TabBar = useMemo(() => {
+      return createNavigationTabBar<PlayerTabId>({
+        tabs: [
+          { id: 'Portfolio', label: t('tabs.portfolio'), icon: UserRound },
+          { id: 'Career', label: t('tabs.career'), icon: Route },
+          { id: 'Statistics', label: t('tabs.statistics'), icon: BarChart3 },
+          { id: 'Gps', label: t('tabs.gps'), icon: MapPin },
+          { id: 'Trials', label: t('tabs.trials'), icon: CalendarDays },
+        ],
+        testID: 'player-tab-bar',
+      });
+    }, [t, i18n.language]) as ComponentType<BottomTabBarProps>;
+
+    return <TabBar {...props} />;
+  }
+
+  return PlayerTabBarComponent;
+}
 
 function usePlayerStackNavigation() {
   return useNavigation<NativeStackNavigationProp<PlayerStackParamList>>();

@@ -16,6 +16,7 @@ import {
   type PlayerPosition,
   type PreferredFoot,
 } from '@/features/scout-discovery/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type DiscoveryFilterSheetProps = {
   visible: boolean;
@@ -67,6 +68,7 @@ export function DiscoveryFilterSheet({
   onReset,
   onApply,
 }: DiscoveryFilterSheetProps) {
+  const { t } = useAppTranslation(['scout', 'common']);
   const snapPoints = useMemo(() => ['85%'], []);
 
   const togglePosition = useCallback(
@@ -98,7 +100,7 @@ export function DiscoveryFilterSheet({
       <BottomSheet
         visible={visible}
         onClose={onClose}
-        title="Advanced Filters"
+        title={t('scout:discover.advancedFilters')}
         contentClassName="px-0"
       >
         <ScrollView
@@ -109,7 +111,7 @@ export function DiscoveryFilterSheet({
           <View className="gap-5">
             <View className="flex-row gap-3">
               <Input
-                label="Min Age"
+                label={t('scout:filters.minAge')}
                 value={filters.ageMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('ageMin', value ? Number(value) : null)
@@ -118,7 +120,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Max Age"
+                label={t('scout:filters.maxAge')}
                 value={filters.ageMax?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('ageMax', value ? Number(value) : null)
@@ -129,21 +131,21 @@ export function DiscoveryFilterSheet({
             </View>
 
             <ChipSelect
-              label="Position"
+              label={t('scout:filters.position')}
               options={POSITION_OPTIONS}
               selected={filters.positions}
               onToggle={togglePosition}
             />
 
             <ChipSelect
-              label="Nationality"
+              label={t('scout:filters.nationality')}
               options={NATIONALITY_OPTIONS.map((n) => ({ value: n, label: n }))}
               selected={filters.nationalities}
               onToggle={toggleNationality}
             />
 
             <View className="gap-2">
-              <Text variant="label">Preferred Foot</Text>
+              <Text variant="label">{t('scout:filters.preferredFoot')}</Text>
               <View className="flex-row gap-2">
                 {(['left', 'right', 'both'] as PreferredFoot[]).map((foot) => (
                   <Button
@@ -155,7 +157,7 @@ export function DiscoveryFilterSheet({
                       onChange('preferredFoot', filters.preferredFoot === foot ? null : foot)
                     }
                   >
-                    {foot}
+                    {t(`scout:filters.${foot}`)}
                   </Button>
                 ))}
               </View>
@@ -163,7 +165,7 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label="Min Height (cm)"
+                label={t('scout:filters.minHeight')}
                 value={filters.heightMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('heightMin', value ? Number(value) : null)
@@ -172,7 +174,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Min Weight (kg)"
+                label={t('scout:filters.minWeight')}
                 value={filters.weightMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('weightMin', value ? Number(value) : null)
@@ -184,7 +186,7 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label="Max Height (cm)"
+                label={t('scout:filters.maxHeight')}
                 value={filters.heightMax?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('heightMax', value ? Number(value) : null)
@@ -193,7 +195,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Max Weight (kg)"
+                label={t('scout:filters.maxWeight')}
                 value={filters.weightMax?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('weightMax', value ? Number(value) : null)
@@ -204,9 +206,12 @@ export function DiscoveryFilterSheet({
             </View>
 
             <View className="gap-2">
-              <Text variant="label">Availability</Text>
+              <Text variant="label">{t('scout:filters.availability')}</Text>
               <View className="flex-row flex-wrap gap-2">
-                {(['available', 'unavailable', 'on_loan'] as PlayerAvailability[]).map((status) => (
+                {(['available', 'unavailable', 'on_loan'] as PlayerAvailability[]).map((status) => {
+                  const statusKey =
+                    status === 'on_loan' ? 'onLoan' : status;
+                  return (
                   <Button
                     key={status}
                     variant={filters.availability === status ? 'accent' : 'secondary'}
@@ -215,14 +220,15 @@ export function DiscoveryFilterSheet({
                       onChange('availability', filters.availability === status ? null : status)
                     }
                   >
-                    {status.replace('_', ' ')}
+                    {t(`scout:filters.${statusKey}`)}
                   </Button>
-                ))}
+                  );
+                })}
               </View>
             </View>
 
             <ChipSelect
-              label="Club"
+              label={t('scout:filters.club')}
               options={CLUB_OPTIONS.map((c) => ({ value: c, label: c }))}
               selected={filters.clubs}
               onToggle={(value) => {
@@ -234,7 +240,7 @@ export function DiscoveryFilterSheet({
             />
 
             <ChipSelect
-              label="League"
+              label={t('scout:filters.league')}
               options={LEAGUE_OPTIONS.map((l) => ({ value: l, label: l }))}
               selected={filters.leagues}
               onToggle={(value) => {
@@ -247,7 +253,7 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label="Min Overall"
+                label={t('scout:filters.minOverall')}
                 value={filters.overallMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('overallMin', value ? Number(value) : null)
@@ -256,7 +262,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Min Potential"
+                label={t('scout:filters.minPotential')}
                 value={filters.potentialMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('potentialMin', value ? Number(value) : null)
@@ -268,7 +274,7 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label="Max Distance (km)"
+                label={t('scout:filters.maxDistance')}
                 value={filters.distanceMaxKm?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('distanceMaxKm', value ? Number(value) : null)
@@ -277,7 +283,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Min Sprint (km/h)"
+                label={t('scout:filters.minSprint')}
                 value={filters.sprintSpeedMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('sprintSpeedMin', value ? Number(value) : null)
@@ -289,7 +295,7 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label="Min Passing"
+                label={t('scout:filters.minPassing')}
                 value={filters.passingMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('passingMin', value ? Number(value) : null)
@@ -298,7 +304,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Min Shooting"
+                label={t('scout:filters.minShooting')}
                 value={filters.shootingMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('shootingMin', value ? Number(value) : null)
@@ -310,7 +316,7 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label="Min Defending"
+                label={t('scout:filters.minDefending')}
                 value={filters.defendingMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('defendingMin', value ? Number(value) : null)
@@ -319,7 +325,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Min Physical"
+                label={t('scout:filters.minPhysical')}
                 value={filters.physicalMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('physicalMin', value ? Number(value) : null)
@@ -331,7 +337,7 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label="Min Weak Foot"
+                label={t('scout:filters.minWeakFoot')}
                 value={filters.weakFootMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('weakFootMin', value ? Number(value) : null)
@@ -340,7 +346,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Min Skill Moves"
+                label={t('scout:filters.minSkillMoves')}
                 value={filters.skillMovesMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('skillMovesMin', value ? Number(value) : null)
@@ -349,7 +355,7 @@ export function DiscoveryFilterSheet({
                 containerClassName="flex-1"
               />
               <Input
-                label="Min Matches"
+                label={t('scout:filters.minMatches')}
                 value={filters.matchCountMin?.toString() ?? ''}
                 onChangeText={(value) =>
                   onChange('matchCountMin', value ? Number(value) : null)
@@ -365,14 +371,14 @@ export function DiscoveryFilterSheet({
                 className="flex-1"
                 onPress={() => onChange('recentlyActive', !filters.recentlyActive)}
               >
-                Recently Active
+                {t('scout:filters.recentlyActive')}
               </Button>
               <Button
                 variant={filters.hasHighlightVideos ? 'accent' : 'secondary'}
                 className="flex-1"
                 onPress={() => onChange('hasHighlightVideos', !filters.hasHighlightVideos)}
               >
-                Has Videos
+                {t('scout:filters.hasVideos')}
               </Button>
             </View>
 
@@ -380,15 +386,15 @@ export function DiscoveryFilterSheet({
               variant={filters.verifiedOnly ? 'accent' : 'secondary'}
               onPress={() => onChange('verifiedOnly', !filters.verifiedOnly)}
             >
-              Verified Players Only
+              {t('scout:filters.verifiedOnly')}
             </Button>
 
             <View className="flex-row gap-3 pt-2">
               <Button variant="secondary" className="flex-1" onPress={onReset}>
-                Reset
+                {t('scout:filters.reset')}
               </Button>
               <Button variant="accent" className="flex-1" onPress={onApply}>
-                Apply Filters
+                {t('scout:filters.apply')}
               </Button>
             </View>
           </View>
