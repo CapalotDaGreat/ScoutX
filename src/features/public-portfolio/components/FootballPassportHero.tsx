@@ -17,8 +17,8 @@ export function FootballPassportHero({ data, username }: FootballPassportHeroPro
   const secondaryPositions = profile.identity.secondaryPositions.slice(0, 2);
 
   return (
-    <View className="overflow-hidden rounded-3xl border-2 border-accent/30 bg-white dark:border-green-500/30 dark:bg-neutral-950">
-      <View className="bg-accent px-5 py-3 dark:bg-green-900">
+    <View className="overflow-hidden rounded-3xl border-2 border-accent/30 bg-surface">
+      <View className="bg-accent px-5 py-3">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-2">
             <ShieldCheck size={18} color={colors.accentForeground} />
@@ -59,7 +59,7 @@ export function FootballPassportHero({ data, username }: FootballPassportHeroPro
           </View>
         </View>
 
-        <View className="gap-2 rounded-2xl border border-border bg-background-secondary/60 p-4 dark:border-neutral-800 dark:bg-neutral-900/60">
+        <View className="gap-2 rounded-2xl border border-border bg-background-secondary/60 p-4">
           <View className="flex-row flex-wrap gap-x-6 gap-y-2">
             <View>
               <Text variant="caption" color="secondary">

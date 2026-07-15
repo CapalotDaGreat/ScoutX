@@ -17,9 +17,9 @@ export type StatCardProps = {
 };
 
 const trendColors = {
-  up: 'text-success dark:text-green-400',
-  down: 'text-error dark:text-red-400',
-  neutral: 'text-foreground-secondary dark:text-neutral-400',
+  up: 'text-success',
+  down: 'text-error',
+  neutral: 'text-foreground-secondary',
 } as const;
 
 export function StatCard({
@@ -43,7 +43,7 @@ export function StatCard({
           <Text variant="caption" color="secondary" className="mb-1 uppercase tracking-wider">
             {label}
           </Text>
-          <Text className="font-sans-bold text-stat-lg text-foreground dark:text-white">
+          <Text className="font-sans-bold text-stat-lg text-foreground">
             {value}
           </Text>
           {trend ? (

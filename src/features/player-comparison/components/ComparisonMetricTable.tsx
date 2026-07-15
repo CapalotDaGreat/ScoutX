@@ -20,8 +20,8 @@ const deltaStyles = {
 } as const;
 
 const deltaTextStyles = {
-  best: 'text-accent dark:text-green-400',
-  worst: 'text-error dark:text-red-400',
+  best: 'text-accent',
+  worst: 'text-error',
   neutral: '',
 } as const;
 
@@ -36,7 +36,7 @@ export const ComparisonMetricTable = memo(function ComparisonMetricTable({
 
   return (
     <Card variant="outlined" padding="none" className="overflow-hidden">
-      <View className="flex-row border-b border-divider bg-background-secondary dark:border-neutral-800 dark:bg-neutral-950">
+      <View className="flex-row border-b border-divider bg-background-secondary">
         <View className="w-[38%] justify-center px-3 py-3">
           <Text variant="caption" className="font-sans-semibold uppercase text-foreground-secondary">
             Metric
@@ -61,7 +61,7 @@ export const ComparisonMetricTable = memo(function ComparisonMetricTable({
         <View
           key={row.key}
           className={cn(
-            'flex-row border-b border-divider dark:border-neutral-800',
+            'flex-row border-b border-divider',
             rowIndex === rows.length - 1 && 'border-b-0',
           )}
         >

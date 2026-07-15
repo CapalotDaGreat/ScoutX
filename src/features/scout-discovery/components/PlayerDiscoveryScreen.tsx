@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppSafeAreaView } from '@/components/layout/AppSafeAreaView';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
@@ -172,27 +172,27 @@ export function PlayerDiscoveryScreen({
 
   if (isLoading && players.length === 0) {
     return (
-      <SafeAreaView className="flex-1" edges={['top']}>
-        <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
+      <AppSafeAreaView className="flex-1" edges={['top']}>
+        <View className="border-b border-divider px-4 pb-4 pt-4">
           <Heading level={2}>{t('scout:discover.title')}</Heading>
           <Text variant="body-sm" color="secondary" className="mt-1">
             {t('scout:discover.loadingSubtitle')}
           </Text>
         </View>
         <DiscoveryListSkeleton count={4} />
-      </SafeAreaView>
+      </AppSafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1" edges={['top']}>
+    <AppSafeAreaView className="flex-1" edges={['top']}>
       <FlashListView
         data={players}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         ListHeaderComponent={
           <>
-            <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
+            <View className="border-b border-divider px-4 pb-4 pt-4">
               <Heading level={2}>{t('scout:discover.title')}</Heading>
               <Text variant="body-sm" color="secondary" className="mt-1">
                 {t('scout:discover.subtitle')}
@@ -252,6 +252,6 @@ export function PlayerDiscoveryScreen({
         onReset={onResetFilters}
         onApply={() => setFiltersVisible(false)}
       />
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 }

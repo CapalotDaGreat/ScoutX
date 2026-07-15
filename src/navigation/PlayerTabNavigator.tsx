@@ -1,10 +1,8 @@
-import { useCallback, useEffect, useMemo, useState, type ComponentType } from 'react';
+import { useCallback, useMemo, useState, type ComponentType } from 'react';
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BarChart3, CalendarDays, MapPin, Route, UserRound } from 'lucide-react-native';
-import { buildPerformanceContext } from '@/features/ai-insights';
-import { CareerScreen } from '@/features/career-timeline/components/CareerScreen';
+import { Activity, Home, MapPin, Search } from 'lucide-react-native';
 import { EditJourneyModal } from '@/features/football-journey';
 import { HighlightVideosManagerModal } from '@/features/highlight-videos';
 import { PlayerProfileScreen, EditProfileModal } from '@/features/player-profile';
@@ -12,9 +10,7 @@ import { usePlayerOnboarding } from '@/features/player-onboarding';
 import { type OnboardingStepId } from '@/features/player-onboarding/types';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
-import { LogMatchModal, StatisticsScreen } from '@/features/player-statistics';
-import { GpsTrackingScreen } from '@/features/gps';
-import { PlayerTrialsScreen } from '@/features/trial-invitations';
+import { LogMatchModal } from '@/features/player-statistics';
 import {
   RequestCoachEndorsementSheet,
   SharePortfolioSheet,
@@ -23,6 +19,9 @@ import { exportFootballCvPdf } from '@/features/public-portfolio/services/footba
 import { ActivityInboxModal } from '@/features/activity-feed';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { createNavigationTabBar } from '@/navigation/NavigationTabBar';
+import { PlayerDiscoverTab } from '@/navigation/PlayerDiscoverTab';
+import { PlayerPerformanceTab } from '@/navigation/PlayerPerformanceTab';
+import { PlayerTrackTab } from '@/navigation/PlayerTrackTab';
 import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
@@ -30,20 +29,19 @@ const Tab = createBottomTabNavigator<PlayerTabParamList>();
 
 type PlayerTabId = keyof PlayerTabParamList;
 
-const PlayerTabBar = createDynamicPlayerTabBar();
-
-function createDynamicPlayerTabBar() {
+function createDynamicPlayerTabBar(onLogMatch: () => void, logMatchLabel: string) {
   function PlayerTabBarComponent(props: BottomTabBarProps) {
     const { t, i18n } = useAppTranslation('navigation');
     const TabBar = useMemo(() => {
       return createNavigationTabBar<PlayerTabId>({
         tabs: [
-          { id: 'Portfolio', label: t('tabs.portfolio'), icon: UserRound },
-          { id: 'Career', label: t('tabs.career'), icon: Route },
-          { id: 'Statistics', label: t('tabs.statistics'), icon: BarChart3 },
-          { id: 'Gps', label: t('tabs.gps'), icon: MapPin },
-          { id: 'Trials', label: t('tabs.trials'), icon: CalendarDays },
+          { id: 'Home', label: t('tabs.home'), icon: Home },
+          { id: 'Performance', label: t('tabs.performance'), icon: Activity },
+          { id: 'Track', label: t('tabs.track'), icon: MapPin },
+          { id: 'Search', label: t('tabs.search'), icon: Search },
         ],
+        onCenterAction: onLogMatch,
+        centerActionLabel: logMatchLabel,
         testID: 'player-tab-bar',
       });
     }, [t, i18n.language]) as ComponentType<BottomTabBarProps>;
@@ -61,6 +59,7 @@ function usePlayerStackNavigation() {
 function PlayerTabsContainer() {
   const stackNavigation = usePlayerStackNavigation();
   const { user, signOut } = useAuth();
+  const { t } = useAppTranslation(['common', 'statistics']);
   const {
     profile,
     isLoading,
@@ -83,26 +82,14 @@ function PlayerTabsContainer() {
   const [isSharePortfolioVisible, setIsSharePortfolioVisible] = useState(false);
   const [isCoachInviteVisible, setIsCoachInviteVisible] = useState(false);
 
-  const statisticsAiContext = useMemo(() => {
-    if (!user?.id || !profile) {
-      return null;
-    }
-
-    return buildPerformanceContext(
-      {
-        playerId: user.id,
-        playerName: profile.fullName,
-        position: profile.position ? [profile.position] : undefined,
-        club: profile.club,
-        nationality: profile.nationality,
-      },
-      profile.statisticsMatches ?? [],
-    );
-  }, [profile, user?.id]);
-
   const openLogMatch = useCallback(() => {
     setIsLogMatchModalVisible(true);
   }, []);
+
+  const PlayerTabBar = useMemo(
+    () => createDynamicPlayerTabBar(openLogMatch, t('statistics:logMatch')),
+    [openLogMatch, t],
+  );
 
   const handlePrivacyChange = useCallback(
     async (privacy: NonNullable<typeof profile>['privacy']) => {
@@ -151,10 +138,11 @@ function PlayerTabsContainer() {
   return (
     <>
       <Tab.Navigator
+        initialRouteName="Home"
         tabBar={(props: BottomTabBarProps) => <PlayerTabBar {...props} />}
         screenOptions={{ headerShown: false, lazy: true }}
       >
-        <Tab.Screen name="Portfolio">
+        <Tab.Screen name="Home">
           {() => (
             <PlayerProfileScreen
               profile={profile}
@@ -197,33 +185,16 @@ function PlayerTabsContainer() {
             />
           )}
         </Tab.Screen>
-        <Tab.Screen name="Career">
+        <Tab.Screen name="Performance">
           {() => (
-            <CareerScreen
-              embeddedInTabShell
-              onEditJourneyPress={() => setIsJourneyModalVisible(true)}
-              onCareerReplayPress={() => stackNavigation.navigate('CareerReplay')}
-            />
-          )}
-        </Tab.Screen>
-        <Tab.Screen name="Statistics">
-          {() => (
-            <StatisticsScreen
-              matches={profile?.statisticsMatches}
-              aiInsightContext={statisticsAiContext}
+            <PlayerPerformanceTab
               onLogMatchPress={openLogMatch}
-              onRefresh={refreshProfile}
-              refreshing={isLoading}
-              embeddedInTabShell
+              onEditJourneyPress={() => setIsJourneyModalVisible(true)}
             />
           )}
         </Tab.Screen>
-        <Tab.Screen name="Gps">
-          {() => <GpsTrackingScreen playerId={user?.id ?? null} embeddedInTabShell />}
-        </Tab.Screen>
-        <Tab.Screen name="Trials">
-          {() => <PlayerTrialsScreen embeddedInTabShell />}
-        </Tab.Screen>
+        <Tab.Screen name="Track" component={PlayerTrackTab} />
+        <Tab.Screen name="Search" component={PlayerDiscoverTab} />
       </Tab.Navigator>
 
       {profile ? (

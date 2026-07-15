@@ -56,7 +56,7 @@ export function ScoutingReportsSection({ playerId, playerName }: ScoutingReports
         {isLoading ? (
           <SkeletonLoader variant="card" count={2} />
         ) : reports.length === 0 ? (
-          <View className="rounded-xl border border-dashed border-border px-4 py-8 dark:border-neutral-800">
+          <View className="rounded-xl border border-dashed border-border px-4 py-8">
             <Text variant="body-sm" color="secondary" className="text-center">
               No scouting reports yet. Create your first structured evaluation for {playerName}.
             </Text>

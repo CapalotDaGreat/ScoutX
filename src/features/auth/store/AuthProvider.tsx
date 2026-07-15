@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -13,12 +14,16 @@ import { isGuestRole } from '@/features/auth/services/authAccess';
 import { useAuthSession } from '@/features/auth/hooks/useAuthSession';
 import {
   resetPasswordWithFirebase,
+  getPasswordResetSuccessMessage,
   signInAnonymouslyWithFirebase,
   signInWithFirebase,
   signOutFromFirebase,
   signUpWithFirebase,
 } from '@/features/auth/services/authService';
+import { mockSignInAsGuest } from '@/features/auth/services/mockAuthService';
 import { signInWithAppleFirebase } from '@/features/auth/services/appleAuthService';
+import { signInWithGoogleFirebase } from '@/features/auth/services/googleAuthService';
+import { useAppleCredentialRevokeListener } from '@/features/auth/hooks/useAppleCredentialRevokeListener';
 import {
   type AccountUpgradeIntent,
   type AuthRole,
@@ -29,11 +34,14 @@ import {
   type SignUpPayload,
 } from '@/features/auth/types';
 
+const ANONYMOUS_BOOTSTRAP_TIMEOUT_MS = 8_000;
+
 type AuthContextValue = {
   status: AuthStatus;
   user: AuthUser | null;
   role: AuthRole | null;
   isGuest: boolean;
+  isBootstrappingSession: boolean;
   pendingRoleSelection: boolean;
   upgradeIntent: AccountUpgradeIntent | null;
   isSubmitting: boolean;
@@ -41,6 +49,7 @@ type AuthContextValue = {
   successMessage: string | null;
   signIn: (payload: SignInPayload) => Promise<void>;
   signInWithApple: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signUp: (payload: SignUpPayload) => Promise<void>;
   signInAsGuest: () => Promise<void>;
   forgotPassword: (payload: ForgotPasswordPayload) => Promise<void>;
@@ -82,26 +91,187 @@ const initialState: AuthState = {
 export function AuthProvider({ children }: AuthProviderProps) {
   const { user, isLoading } = useAuthSession();
   const [state, setState] = useState<AuthState>(initialState);
+  const [isEnsuringAnonymousSession, setIsEnsuringAnonymousSession] = useState(false);
+  const [anonymousBootstrapFailed, setAnonymousBootstrapFailed] = useState(false);
+  const anonymousBootstrapStartedRef = useRef(false);
 
   const syncSession = useCallback(() => {
-    const isGuest = isGuestRole(user?.role, user?.isAnonymous);
+    if (isLoading) {
+      setState((current) => {
+        if (current.status === 'authenticated' && current.user) {
+          return current;
+        }
+
+        return {
+          ...current,
+          status: 'loading',
+          error: current.isSubmitting ? current.error : null,
+        };
+      });
+      return;
+    }
+
+    if (!user) {
+      setState((current) => {
+        // Keep a local anonymous/mock session while the Firebase listener catches up.
+        if (current.status === 'authenticated' && current.user) {
+          return current;
+        }
+
+        if (isEnsuringAnonymousSession) {
+          return {
+            ...current,
+            status: 'loading',
+            error: current.isSubmitting ? current.error : null,
+          };
+        }
+
+        return {
+          ...current,
+          status: 'unauthenticated',
+          user: null,
+          role: null,
+          pendingRoleSelection: false,
+          error: current.isSubmitting ? current.error : null,
+        };
+      });
+      return;
+    }
+
+    const isGuest = isGuestRole(user.role, user.isAnonymous);
     const pendingRoleSelection = Boolean(
-      user && !isGuest && (user.role === undefined || (user.role !== 'player' && user.role !== 'scout')),
+      !isGuest && (user.role === undefined || (user.role !== 'player' && user.role !== 'scout')),
     );
 
     setState((current) => ({
       ...current,
-      status: isLoading ? 'loading' : user ? 'authenticated' : 'unauthenticated',
+      status: 'authenticated',
       user,
-      role: user?.role ?? null,
+      role: user.role ?? null,
       pendingRoleSelection,
       error: current.isSubmitting ? current.error : null,
     }));
-  }, [isLoading, user]);
+  }, [isEnsuringAnonymousSession, isLoading, user]);
 
   useEffect(() => {
     syncSession();
   }, [syncSession]);
+
+  useEffect(() => {
+    if (
+      isLoading ||
+      user ||
+      anonymousBootstrapStartedRef.current ||
+      anonymousBootstrapFailed
+    ) {
+      return;
+    }
+
+    let cancelled = false;
+    anonymousBootstrapStartedRef.current = true;
+    setIsEnsuringAnonymousSession(true);
+
+    const finishAsGuest = (nextUser: AuthUser) => {
+      setAnonymousBootstrapFailed(false);
+      setState({
+        status: 'authenticated',
+        user: nextUser,
+        role: 'guest',
+        pendingRoleSelection: false,
+        upgradeIntent: null,
+        isSubmitting: false,
+        error: null,
+        successMessage: null,
+      });
+    };
+
+    const failBootstrap = (message: string) => {
+      setState((current) => ({
+        ...current,
+        status: 'unauthenticated',
+        error: message,
+      }));
+      setAnonymousBootstrapFailed(true);
+    };
+
+    const bootstrapTimeout = setTimeout(() => {
+      if (cancelled) {
+        return;
+      }
+
+      void mockSignInAsGuest()
+        .then((guestUser) => {
+          if (!cancelled) {
+            if (__DEV__) {
+              console.warn(
+                '[auth] Anonymous Firebase bootstrap timed out — using local guest session.',
+              );
+            }
+            finishAsGuest(guestUser);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            failBootstrap('Unable to start your session. Check your connection and try again.');
+          }
+        })
+        .finally(() => {
+          if (!cancelled) {
+            setIsEnsuringAnonymousSession(false);
+          }
+        });
+    }, ANONYMOUS_BOOTSTRAP_TIMEOUT_MS);
+
+    void signInAnonymouslyWithFirebase()
+      .then((nextUser) => {
+        if (cancelled) {
+          return;
+        }
+
+        clearTimeout(bootstrapTimeout);
+        finishAsGuest(nextUser);
+        setIsEnsuringAnonymousSession(false);
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
+        }
+
+        clearTimeout(bootstrapTimeout);
+
+        void mockSignInAsGuest()
+          .then((guestUser) => {
+            if (cancelled) {
+              return;
+            }
+            if (__DEV__) {
+              console.warn(
+                '[auth] Anonymous Firebase sign-in failed — using local guest session.',
+                error,
+              );
+            }
+            finishAsGuest(guestUser);
+          })
+          .catch(() => {
+            if (cancelled) {
+              return;
+            }
+            const message =
+              error instanceof Error ? error.message : 'Unable to start your session.';
+            failBootstrap(message);
+          })
+          .finally(() => {
+            if (!cancelled) {
+              setIsEnsuringAnonymousSession(false);
+            }
+          });
+      });
+
+    return () => {
+      cancelled = true;
+      clearTimeout(bootstrapTimeout);
+    };
+  }, [anonymousBootstrapFailed, isLoading, user]);
 
   const clearMessages = useCallback(() => {
     setState((current) => ({ ...current, error: null, successMessage: null }));
@@ -175,6 +345,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
+  const signInWithGoogle = useCallback(async () => {
+    setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
+
+    try {
+      const nextUser = await signInWithGoogleFirebase();
+      if (!nextUser) {
+        setState((current) => ({ ...current, isSubmitting: false }));
+        return;
+      }
+
+      setState({
+        status: 'authenticated',
+        user: nextUser,
+        role: nextUser.role ?? null,
+        pendingRoleSelection: !isGuestRole(nextUser.role, nextUser.isAnonymous) && !nextUser.role,
+        upgradeIntent: null,
+        isSubmitting: false,
+        error: null,
+        successMessage: null,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to sign in with Google.';
+      setState((current) => ({ ...current, isSubmitting: false, error: message }));
+    }
+  }, []);
+
   const signUp = useCallback(async (payload: SignUpPayload) => {
     setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
 
@@ -204,7 +400,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setState((current) => ({
         ...current,
         isSubmitting: false,
-        successMessage: 'A recovery link has been prepared for your email.',
+        successMessage: getPasswordResetSuccessMessage(),
       }));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to send reset instructions.';
@@ -221,7 +417,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
           doc(db, 'users', userId),
           { role, isAnonymous: false, updatedAt: new Date().toISOString() },
           { merge: true },
-        ).catch((err) => console.error('Error saving role to Firestore:', err));
+        ).catch(() => {
+          if (__DEV__) {
+            console.error('Error saving role to Firestore.');
+          }
+        });
       }
     }
 
@@ -249,21 +449,43 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const signOut = useCallback(async () => {
-    setState((current) => ({ ...current, isSubmitting: true }));
+    setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
     await signOutFromFirebase();
-    setState({
-      status: 'unauthenticated',
-      user: null,
-      role: null,
-      pendingRoleSelection: false,
-      upgradeIntent: null,
-      isSubmitting: false,
-      error: null,
-      successMessage: 'Signed out successfully.',
-    });
+
+    try {
+      const nextUser = await signInAnonymouslyWithFirebase().catch(() => mockSignInAsGuest());
+      setState({
+        status: 'authenticated',
+        user: nextUser,
+        role: 'guest',
+        pendingRoleSelection: false,
+        upgradeIntent: null,
+        isSubmitting: false,
+        error: null,
+        successMessage: null,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unable to restart your session.';
+      setState({
+        status: 'unauthenticated',
+        user: null,
+        role: null,
+        pendingRoleSelection: false,
+        upgradeIntent: null,
+        isSubmitting: false,
+        error: message,
+        successMessage: null,
+      });
+    }
   }, []);
 
+  useAppleCredentialRevokeListener(() => {
+    void signOut();
+  });
+
   const isGuest = isGuestRole(state.role ?? undefined, state.user?.isAnonymous);
+  const isBootstrappingSession =
+    state.status !== 'authenticated' && (isLoading || isEnsuringAnonymousSession);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -271,6 +493,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       user: state.user,
       role: state.role,
       isGuest,
+      isBootstrappingSession,
       pendingRoleSelection: state.pendingRoleSelection,
       upgradeIntent: state.upgradeIntent,
       isSubmitting: state.isSubmitting,
@@ -278,6 +501,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       successMessage: state.successMessage,
       signIn,
       signInWithApple,
+      signInWithGoogle,
       signUp,
       signInAsGuest,
       forgotPassword,
@@ -292,10 +516,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       clearMessages,
       clearUpgrade,
       forgotPassword,
+      isBootstrappingSession,
       isGuest,
       selectRole,
       signIn,
       signInWithApple,
+      signInWithGoogle,
       signInAsGuest,
       signOut,
       signUp,

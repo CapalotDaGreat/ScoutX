@@ -7,48 +7,48 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#0A0A0A',
-          foreground: '#FFFFFF',
+          DEFAULT: 'var(--color-primary)',
+          foreground: 'var(--color-primary-foreground)',
         },
         accent: {
-          DEFAULT: '#16A34A',
-          foreground: '#FFFFFF',
-          muted: '#DCFCE7',
+          DEFAULT: 'var(--color-accent)',
+          foreground: 'var(--color-accent-foreground)',
+          muted: 'var(--color-accent-muted)',
         },
         background: {
-          DEFAULT: '#FFFFFF',
-          secondary: '#F5F5F5',
+          DEFAULT: 'var(--color-background)',
+          secondary: 'var(--color-background-secondary)',
         },
         surface: {
-          DEFAULT: '#FFFFFF',
-          elevated: '#FFFFFF',
+          DEFAULT: 'var(--color-surface)',
+          elevated: 'var(--color-surface-elevated)',
         },
         foreground: {
-          DEFAULT: '#0A0A0A',
-          secondary: '#737373',
-          tertiary: '#A3A3A3',
-          inverse: '#FFFFFF',
+          DEFAULT: 'var(--color-foreground)',
+          secondary: 'var(--color-foreground-secondary)',
+          tertiary: 'var(--color-foreground-tertiary)',
+          inverse: 'var(--color-foreground-inverse)',
         },
         border: {
-          DEFAULT: '#E5E5E5',
-          strong: '#D4D4D4',
+          DEFAULT: 'var(--color-border)',
+          strong: 'var(--color-border-strong)',
         },
-        divider: '#F0F0F0',
+        divider: 'var(--color-divider)',
         success: {
-          DEFAULT: '#16A34A',
-          muted: '#DCFCE7',
+          DEFAULT: 'var(--color-success)',
+          muted: 'var(--color-success-muted)',
         },
         warning: {
-          DEFAULT: '#CA8A04',
-          muted: '#FEF9C3',
+          DEFAULT: 'var(--color-warning)',
+          muted: 'var(--color-warning-muted)',
         },
         error: {
-          DEFAULT: '#DC2626',
-          muted: '#FEE2E2',
+          DEFAULT: 'var(--color-error)',
+          muted: 'var(--color-error-muted)',
         },
         info: {
-          DEFAULT: '#2563EB',
-          muted: '#DBEAFE',
+          DEFAULT: 'var(--color-info)',
+          muted: 'var(--color-info-muted)',
         },
       },
       borderRadius: {

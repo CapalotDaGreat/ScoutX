@@ -1,19 +1,29 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
+import type { FirebaseAuthActionMode } from '@/config/deepLinking';
+
 export type AuthStackParamList = {
   Welcome: undefined;
   Login: undefined;
   Register: undefined;
   ForgotPassword: undefined;
   RoleSelection: undefined;
+  AuthAction: {
+    mode: FirebaseAuthActionMode;
+    oobCode: string;
+    apiKey?: string;
+  };
+  CompletePasswordReset: {
+    oobCode: string;
+    email?: string;
+  };
 };
 
 export type PlayerTabParamList = {
-  Portfolio: undefined;
-  Career: undefined;
-  Statistics: undefined;
-  Gps: undefined;
-  Trials: undefined;
+  Home: undefined;
+  Performance: undefined;
+  Track: undefined;
+  Search: undefined;
 };
 
 export type PlayerStackParamList = {
@@ -21,6 +31,10 @@ export type PlayerStackParamList = {
   PublicPortfolio: { playerId?: string; slug?: string; previewMode?: boolean };
   CareerReplay: undefined;
   Settings: undefined;
+  PlayerDetail: { playerId: string };
+  PlayerLogin: undefined;
+  PlayerRegister: undefined;
+  PlayerForgotPassword: undefined;
 };
 
 export type ScoutTabParamList = {
@@ -44,6 +58,7 @@ export type GuestStackParamList = {
   PublicPortfolio: { playerId?: string; slug?: string };
   GuestRegister: undefined;
   GuestLogin: undefined;
+  GuestForgotPassword: undefined;
 };
 
 export type RootStackParamList = {

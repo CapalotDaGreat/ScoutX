@@ -27,7 +27,7 @@ export function ClubHistoryEditor({ entries, onChange }: ClubHistoryEditorProps)
         Club History
       </Text>
       {entries.map((entry, index) => (
-        <View key={`${entry.club}-${index}`} className="gap-2 rounded-xl border border-border p-3 dark:border-neutral-800">
+        <View key={`${entry.club}-${index}`} className="gap-2 rounded-xl border border-border p-3">
           <Input
             label="Club"
             value={entry.club}

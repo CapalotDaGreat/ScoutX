@@ -1,13 +1,15 @@
 {
   "title": "Portfolio",
+  "homeTitle": "Inicio",
+  "homeSubtitle": "Tu juego. Tu progreso.",
   "subtitle": "Your Football Passport on ScoutX",
-  "loadingSubtitle": "Preparing your Football Passport",
+  "loadingSubtitle": "Preparando tu perfil…",
   "errorSubtitle": "We couldn't load your portfolio",
   "emptySubtitle": "No portfolio data available",
   "unavailableTitle": "Portfolio unavailable",
   "buildTitle": "Build your Football Passport",
   "buildDescription": "Add your story, stats, and videos so scouts can discover the real you.",
-  "editProfile": "Edit profile",
+  "editProfile": "Editar perfil",
   "passportInsights": "Passport insights",
   "passportInsightsSubtitle": "Scout views and verification status",
   "publicPassport": "Public Football Passport",
@@ -22,10 +24,13 @@
   "playerProfileSubtitle": "Positions, career path, and professional details",
   "performanceSnapshot": "Performance Snapshot",
   "performanceSnapshotSubtitle": "Stats, match logs, and performance summary",
+  "performanceOverview": "Performance Overview",
+  "performanceOverviewSubtitle": "Your attribute profile this season",
+  "recentMatches": "Recent Matches",
   "footballPassport": "Football Passport",
   "passportPreview": "Passport preview",
-  "passportSubtitle": "ScoutX shareable football résumé",
-  "loadingPassportSubtitle": "Loading shareable résumé",
+  "passportSubtitle": "ScoutX shareable football rÃ©sumÃ©",
+  "loadingPassportSubtitle": "Loading shareable rÃ©sumÃ©",
   "passportUnavailable": "Unavailable",
   "privatePortfolioTitle": "Portfolio is private",
   "previewUnavailableDescription": "Unable to load portfolio preview.",
@@ -41,7 +46,7 @@
       "subtitle": "Clubs, milestones, and football journey"
     },
     "statistics": {
-      "title": "Estadísticas",
+      "title": "EstadÃ­sticas",
       "subtitle": "Season and match performance"
     },
     "performanceCharts": {
@@ -72,7 +77,7 @@
     "shareLink": "Share link",
     "shareSocialCard": "Share social card",
     "linkCopied": "Link copied",
-    "shareTitle": "{{playerName}} — ScoutX Portfolio",
+    "shareTitle": "{{playerName}} â€” ScoutX Portfolio",
     "shareMessage": "View {{playerName}}'s football portfolio on ScoutX: {{url}}",
     "tagline": "Football Passport on ScoutX"
   },
@@ -80,12 +85,12 @@
     "title": "Portfolio & discovery privacy",
     "description": "Control your shareable football identity and scout visibility.",
     "publicPortfolio": "Public portfolio",
-    "publicPortfolioDescription": "Allow anyone with the link to view your football résumé.",
+    "publicPortfolioDescription": "Allow anyone with the link to view your football rÃ©sumÃ©.",
     "discoverable": "Discoverable by scouts",
     "discoverableDescription": "Appear in scout search when clubs are looking for talent like you.",
     "careerTimeline": "Career timeline",
     "careerTimelineDescription": "Show journey and club history on your portfolio.",
-    "statistics": "Estadísticas",
+    "statistics": "EstadÃ­sticas",
     "statisticsDescription": "Show match stats and performance snapshot.",
     "videos": "Videos",
     "videosDescription": "Show highlight reels on your portfolio.",
@@ -113,7 +118,7 @@
     "claimFailedFallback": "Try another username.",
     "placeholder": "your-name",
     "available": "Username is available",
-    "checking": "Checking availability…"
+    "checking": "Checking availabilityâ€¦"
   },
   "endorsementInvite": {
     "title": "Invite your coach",
@@ -127,5 +132,6 @@
   "score": {
     "title": "Football Passport Score",
     "subtitle": "Overall readiness and completeness"
-  }
+  },
+  "captain": "Capitán"
 }

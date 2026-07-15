@@ -15,14 +15,21 @@ import { Section } from '@/components/layout/Section';
 
 export type PlayerTrialsScreenProps = {
   embeddedInTabShell?: boolean;
+  nestedUnderSegment?: boolean;
 };
 
-export function PlayerTrialsScreen({ embeddedInTabShell = false }: PlayerTrialsScreenProps) {
+export function PlayerTrialsScreen({
+  embeddedInTabShell = false,
+  nestedUnderSegment = false,
+}: PlayerTrialsScreenProps) {
   const { trials, isLoading, isSaving, acceptTrial, declineTrial } = usePlayerTrialInvitations();
   const { notifications, markRead } = useTrialNotifications();
   const [activeTrial, setActiveTrial] = useState<TrialInvitation | null>(null);
 
-  const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
+  const screenProps = {
+    ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
+    ...(nestedUnderSegment ? { safeAreaEdges: ['left', 'right'] as Array<'left' | 'right'> } : {}),
+  };
 
   if (isLoading) {
     return (

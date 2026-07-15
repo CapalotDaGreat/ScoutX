@@ -84,6 +84,7 @@ export function Modal({
 
   const isSheet = size === 'sheet';
   const isFullscreen = size === 'fullscreen';
+  const sheetMaxHeight = height * 0.85;
 
   return (
     <RNModal
@@ -100,7 +101,7 @@ export function Modal({
         <View className="flex-1 justify-end">
           <Animated.View
             style={backdropStyle}
-            className="absolute inset-0 bg-black/40 dark:bg-black/60"
+            className="absolute inset-0 bg-black/40"
           >
             <Pressable
               accessibilityRole="button"
@@ -114,7 +115,10 @@ export function Modal({
             style={[
               contentStyle,
               isSheet
-                ? { maxHeight: height * 0.85, paddingBottom: insets.bottom }
+                ? {
+                    maxHeight: sheetMaxHeight,
+                    paddingBottom: insets.bottom,
+                  }
                 : isFullscreen
                   ? { paddingTop: insets.top, paddingBottom: insets.bottom }
                   : undefined,
@@ -122,52 +126,68 @@ export function Modal({
             className={cn(
               'mx-auto w-full',
               isSheet
-                ? 'rounded-t-xl bg-surface dark:bg-neutral-900'
+                ? 'rounded-t-xl bg-surface'
                 : isFullscreen
-                  ? 'flex-1 bg-background dark:bg-neutral-950'
-                  : 'm-4 rounded-xl bg-surface dark:bg-neutral-900',
+                  ? 'flex-1 bg-background'
+                  : 'm-4 rounded-xl bg-surface',
               !isSheet && !isFullscreen && sizeWidth[size],
               className,
             )}
           >
-            {isSheet ? (
-              <View className="items-center py-2">
-                <View className="h-1 w-9 rounded-full bg-border-strong dark:bg-neutral-600" />
-              </View>
-            ) : null}
+            <View
+              className={cn(isSheet && 'max-h-full')}
+              style={
+                isSheet
+                  ? { maxHeight: sheetMaxHeight - insets.bottom, flexShrink: 1 }
+                  : undefined
+              }
+            >
+              {isSheet ? (
+                <View className="items-center py-2">
+                  <View className="h-1 w-9 rounded-full bg-border-strong" />
+                </View>
+              ) : null}
 
-            {title || showCloseButton ? (
-              <View className="flex-row items-center justify-between border-b border-divider px-4 py-4 dark:border-neutral-800">
-                {title ? (
-                  <Heading level={3} className="flex-1 pr-3">
-                    {title}
-                  </Heading>
-                ) : (
-                  <View className="flex-1" />
-                )}
-                {showCloseButton ? (
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="Close"
-                    hitSlop={8}
-                    onPress={handleClose}
-                    className="h-8 w-8 items-center justify-center rounded-full bg-background-secondary dark:bg-neutral-800"
-                  >
-                    <X size={18} color={colors.textPrimary} strokeWidth={2} />
-                  </Pressable>
-                ) : null}
-              </View>
-            ) : null}
+              {title || showCloseButton ? (
+                <View className="flex-row items-center justify-between border-b border-divider px-4 py-4">
+                  {title ? (
+                    <Heading level={3} className="flex-1 pr-3">
+                      {title}
+                    </Heading>
+                  ) : (
+                    <View className="flex-1" />
+                  )}
+                  {showCloseButton ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Close"
+                      hitSlop={8}
+                      onPress={handleClose}
+                      className="h-8 w-8 items-center justify-center rounded-full bg-background-secondary"
+                    >
+                      <X size={18} color={colors.textPrimary} strokeWidth={2} />
+                    </Pressable>
+                  ) : null}
+                </View>
+              ) : null}
 
-            <View className={cn('flex-1', isSheet ? 'min-h-[200px]' : '')}>
-              {children}
+              <View
+                style={
+                  isSheet
+                    ? { maxHeight: sheetMaxHeight * 0.72, flexShrink: 1, minHeight: 0 }
+                    : undefined
+                }
+                className={cn(isSheet ? 'min-h-[200px]' : 'flex-1')}
+              >
+                {children}
+              </View>
+
+              {footer ? (
+                <View className="border-t border-divider px-4 py-4">
+                  {footer}
+                </View>
+              ) : null}
             </View>
-
-            {footer ? (
-              <View className="border-t border-divider px-4 py-4 dark:border-neutral-800">
-                {footer}
-              </View>
-            ) : null}
           </Animated.View>
         </View>
       </KeyboardAvoidingView>

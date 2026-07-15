@@ -53,7 +53,7 @@ export function HighlightVideosSection({
         </View>
 
         {readyCount === 0 ? (
-          <View className="rounded-xl border border-dashed border-border bg-background-secondary/50 px-4 py-8 dark:border-neutral-800 dark:bg-neutral-900/50">
+          <View className="rounded-xl border border-dashed border-border bg-background-secondary/50 px-4 py-8/50">
             <Text variant="body-sm" color="secondary" className="text-center">
               Upload your first highlight to showcase your best moments to scouts.
             </Text>

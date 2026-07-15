@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.scoutx.app",
+        "paths": [
+          "/auth/*",
+          "/player/*"
+        ]
+      }
+    ]
+  }
+}

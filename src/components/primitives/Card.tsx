@@ -4,14 +4,11 @@ import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 
 const variantStyles = {
-  default:
-    'bg-surface dark:bg-neutral-900 border border-border dark:border-neutral-800',
-  outlined:
-    'bg-surface dark:bg-neutral-900 border border-border dark:border-neutral-700',
-  elevated:
-    'bg-surface-elevated dark:bg-neutral-800 border border-border dark:border-neutral-700 shadow-sm',
-  media: 'bg-surface dark:bg-neutral-900 border border-border dark:border-neutral-800 overflow-hidden',
-  glass: 'bg-white/10 dark:bg-white/5 border border-white/20 overflow-hidden',
+  default: 'bg-surface border border-border',
+  outlined: 'bg-surface border border-border',
+  elevated: 'bg-surface-elevated border border-border shadow-sm',
+  media: 'bg-surface border border-border overflow-hidden',
+  glass: 'bg-foreground/10 border border-foreground/20 overflow-hidden',
 } as const;
 
 export type CardVariant = keyof typeof variantStyles;

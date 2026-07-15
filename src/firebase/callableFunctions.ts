@@ -1,9 +1,19 @@
 import { getFunctions, httpsCallable, type Functions } from 'firebase/functions';
-import { getFirebaseApp } from '@/config/firebase';
+import {
+  ensureFirebaseInitialized,
+  getFirebaseApp,
+  isFirebaseConfiguredForProject,
+} from '@/config/firebase';
 
 let functionsClient: Functions | null = null;
 
-export function getFirebaseFunctionsClient(): Functions | null {
+export async function getFirebaseFunctionsClient(): Promise<Functions | null> {
+  if (!isFirebaseConfiguredForProject()) {
+    return null;
+  }
+
+  await ensureFirebaseInitialized();
+
   const app = getFirebaseApp();
   if (!app) {
     return null;
@@ -21,11 +31,17 @@ export type CallableRequest<T> = (input: T) => Promise<{ data: unknown }>;
 export function createCallableFunction<TRequest>(
   name: string,
 ): CallableRequest<TRequest> | null {
-  const functions = getFirebaseFunctionsClient();
-  if (!functions) {
+  if (!isFirebaseConfiguredForProject()) {
     return null;
   }
 
-  const callable = httpsCallable<TRequest, unknown>(functions, name);
-  return async (input: TRequest) => callable(input);
+  return async (input: TRequest) => {
+    const functions = await getFirebaseFunctionsClient();
+    if (!functions) {
+      throw new Error('Firebase Functions is not configured.');
+    }
+
+    const callable = httpsCallable<TRequest, unknown>(functions, name);
+    return callable(input);
+  };
 }

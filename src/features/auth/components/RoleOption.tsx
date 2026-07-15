@@ -46,17 +46,17 @@ export function RoleOption({ role, selected = false, ...props }: RoleOptionProps
         'w-full rounded-xl border px-4 py-4',
         selected
           ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-          : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',
+          : 'border-border bg-surface',
       )}
       {...props}
     >
       <View className="flex-row items-start justify-between gap-3">
         <View className="flex-row items-start gap-3">
-          <View className="mt-0.5 rounded-full bg-background-secondary p-2 dark:bg-neutral-800">
+          <View className="mt-0.5 rounded-full bg-background-secondary p-2">
             <Icon size={18} color={selected ? colors.accent : colors.textSecondary} strokeWidth={1.75} />
           </View>
           <View className="flex-1">
-            <Text variant="label" className={cn(selected ? 'text-accent dark:text-green-400' : 'text-foreground dark:text-white')}>
+            <Text variant="label" className={cn(selected ? 'text-accent' : 'text-foreground')}>
               {meta.title}
             </Text>
             <Text variant="body-sm" color="secondary" className="mt-1">

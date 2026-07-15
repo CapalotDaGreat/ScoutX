@@ -30,7 +30,7 @@ export function CollapsibleSection({
   return (
     <View
       className={cn(
-        'overflow-hidden rounded-2xl border border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900',
+        'overflow-hidden rounded-2xl border border-border bg-surface',
         className,
       )}
     >
@@ -59,7 +59,7 @@ export function CollapsibleSection({
           <ChevronDown size={18} color={colors.textSecondary} accessibilityElementsHidden importantForAccessibility="no" />
         )}
       </Pressable>
-      {open ? <View className="gap-4 border-t border-divider px-4 pb-4 pt-3 dark:border-neutral-800">{children}</View> : null}
+      {open ? <View className="gap-4 border-t border-divider px-4 pb-4 pt-3">{children}</View> : null}
     </View>
   );
 }

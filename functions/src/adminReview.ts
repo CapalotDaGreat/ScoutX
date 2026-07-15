@@ -2,6 +2,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { defineSecret } from 'firebase-functions/params';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
+import { createCallableOptions } from './callableOptions';
 
 const adminUserIdsSecret = defineSecret('ADMIN_USER_IDS');
 
@@ -19,7 +20,7 @@ function assertAdmin(uid: string | undefined, adminIds: Set<string>): void {
 }
 
 export const listAdminReviewQueue = onCall(
-  { secrets: [adminUserIdsSecret], cors: true },
+  createCallableOptions({ secrets: [adminUserIdsSecret] }),
   async (request) => {
     assertAdmin(request.auth?.uid, parseAdminUserIds(adminUserIdsSecret.value()));
 
@@ -43,7 +44,7 @@ export const listAdminReviewQueue = onCall(
 );
 
 export const resolveVerificationRequest = onCall(
-  { secrets: [adminUserIdsSecret], cors: true },
+  createCallableOptions({ secrets: [adminUserIdsSecret] }),
   async (request) => {
     assertAdmin(request.auth?.uid, parseAdminUserIds(adminUserIdsSecret.value()));
 
@@ -107,7 +108,7 @@ export const resolveVerificationRequest = onCall(
 );
 
 export const archiveContentReport = onCall(
-  { secrets: [adminUserIdsSecret], cors: true },
+  createCallableOptions({ secrets: [adminUserIdsSecret] }),
   async (request) => {
     assertAdmin(request.auth?.uid, parseAdminUserIds(adminUserIdsSecret.value()));
 

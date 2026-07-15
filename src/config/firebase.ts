@@ -1,20 +1,25 @@
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getApp, getApps, initializeApp, type FirebaseApp, type FirebaseOptions } from 'firebase/app';
 import {
   getAuth,
+  initializeAuth,
+  // @ts-expect-error RN export exists in the react-native auth bundle; missing from default typings.
+  getReactNativePersistence,
   type Auth,
 } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
+import { initializeFirebaseAppCheck } from '@/config/firebaseAppCheck';
 
-const env = process.env as Record<string, string | undefined>;
-
+// Expo only inlines static process.env.EXPO_PUBLIC_* references (not env[key]).
 const firebaseConfig: FirebaseOptions = {
-  apiKey: env.EXPO_PUBLIC_FIREBASE_API_KEY ?? '',
-  authDomain: env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
-  projectId: env.EXPO_PUBLIC_FIREBASE_PROJECT_ID ?? '',
-  storageBucket: env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET ?? '',
-  messagingSenderId: env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
-  appId: env.EXPO_PUBLIC_FIREBASE_APP_ID ?? '',
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY ?? '',
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID ?? '',
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET ?? '',
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID ?? '',
 };
 
 const isFirebaseConfigured = Object.values(firebaseConfig).every((value) => Boolean(value));
@@ -23,12 +28,57 @@ let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let db: Firestore | null = null;
 let storage: FirebaseStorage | null = null;
+let initializationPromise: Promise<void> | null = null;
+let isInitialized = false;
 
-if (isFirebaseConfigured) {
+function createAuth(firebaseApp: FirebaseApp): Auth {
+  if (Platform.OS === 'web') {
+    return getAuth(firebaseApp);
+  }
+
+  try {
+    if (typeof getReactNativePersistence !== 'function') {
+      return getAuth(firebaseApp);
+    }
+
+    return initializeAuth(firebaseApp, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    });
+  } catch {
+    return getAuth(firebaseApp);
+  }
+}
+
+async function bootstrapFirebase(): Promise<void> {
+  if (!isFirebaseConfigured || isInitialized) {
+    return;
+  }
+
   app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-  auth = getAuth(app);
+  await initializeFirebaseAppCheck(app);
+
+  auth = createAuth(app);
   db = getFirestore(app);
   storage = getStorage(app);
+  isInitialized = true;
+}
+
+export async function ensureFirebaseInitialized(): Promise<void> {
+  if (!isFirebaseConfigured) {
+    throw new Error(
+      'Firebase Auth is not configured. Add EXPO_PUBLIC_FIREBASE_* values to the .env file.',
+    );
+  }
+
+  if (isInitialized) {
+    return;
+  }
+
+  if (!initializationPromise) {
+    initializationPromise = bootstrapFirebase();
+  }
+
+  await initializationPromise;
 }
 
 export function getFirebaseAuth(): Auth | null {
@@ -48,6 +98,9 @@ export function getFirebaseStorage(): FirebaseStorage | null {
 }
 
 export function isFirebaseReady(): boolean {
-  return Boolean(app && auth && db && storage);
+  return Boolean(isInitialized && app && auth && db && storage);
 }
 
+export function isFirebaseConfiguredForProject(): boolean {
+  return isFirebaseConfigured;
+}

@@ -31,8 +31,8 @@ export function PlayerCarousel({
               onPress={() => onPlayerPress(player)}
               className={
                 variant === 'premium'
-                  ? 'w-64 overflow-hidden rounded-2xl border border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900'
-                  : 'w-52 overflow-hidden rounded-xl border border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900'
+                  ? 'w-64 overflow-hidden rounded-2xl border border-border bg-surface'
+                  : 'w-52 overflow-hidden rounded-xl border border-border bg-surface'
               }
             >
               <View className="relative h-28">

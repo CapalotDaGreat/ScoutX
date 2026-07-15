@@ -1,7 +1,9 @@
 {
   "title": "Portfolio",
+  "homeTitle": "Home",
+  "homeSubtitle": "Your game. Your progress.",
   "subtitle": "Your Football Passport on ScoutX",
-  "loadingSubtitle": "Preparing your Football Passport",
+  "loadingSubtitle": "Preparing your profile…",
   "errorSubtitle": "We couldn't load your portfolio",
   "emptySubtitle": "No portfolio data available",
   "unavailableTitle": "Portfolio unavailable",
@@ -22,6 +24,9 @@
   "playerProfileSubtitle": "Positions, career path, and professional details",
   "performanceSnapshot": "Performance Snapshot",
   "performanceSnapshotSubtitle": "Stats, match logs, and performance summary",
+  "performanceOverview": "Performance Overview",
+  "performanceOverviewSubtitle": "Your attribute profile this season",
+  "recentMatches": "Recent Matches",
   "footballPassport": "Football Passport",
   "passportPreview": "Passport preview",
   "passportSubtitle": "ScoutX shareable football résumé",
@@ -127,5 +132,6 @@
   "score": {
     "title": "Football Passport Score",
     "subtitle": "Overall readiness and completeness"
-  }
+  },
+  "captain": "Captain"
 }

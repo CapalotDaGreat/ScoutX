@@ -18,7 +18,7 @@ export function PerformanceSummary({ items }: PerformanceSummaryProps) {
         {items.map((item) => (
           <View key={item.label} className="gap-2">
             <View className="flex-row items-center justify-between">
-              <Text className="font-sans-medium text-foreground dark:text-white">{item.label}</Text>
+              <Text className="font-sans-medium text-foreground">{item.label}</Text>
               <Text variant="caption" color="secondary">
                 {item.value}/{item.max}
               </Text>

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.recordPortfolioView = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
+const callableOptions_1 = require("./callableOptions");
 function currentWeekStart() {
     const now = new Date();
     const day = now.getDay();
@@ -21,7 +22,7 @@ function emptyAnalytics() {
         lastViewedAt: null,
     };
 }
-exports.recordPortfolioView = (0, https_1.onCall)({ cors: true }, async (request) => {
+exports.recordPortfolioView = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
     if (!request.auth?.uid) {
         throw new https_1.HttpsError('unauthenticated', 'Sign in required to record portfolio views.');
     }

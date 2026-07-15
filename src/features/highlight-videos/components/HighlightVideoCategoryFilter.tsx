@@ -44,14 +44,14 @@ export function HighlightVideoCategoryFilter({
               'rounded-full border px-3 py-1.5',
               isActive
                 ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-                : 'border-border bg-background-secondary/70 dark:border-neutral-700 dark:bg-neutral-900/80',
+                : 'border-border bg-background-secondary/70',
             )}
           >
             <Text
               variant="caption"
               className={cn(
                 'font-sans-semibold',
-                isActive ? 'text-accent dark:text-green-400' : 'text-foreground-secondary',
+                isActive ? 'text-accent' : 'text-foreground-secondary',
               )}
             >
               {filter.label}

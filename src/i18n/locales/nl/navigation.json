@@ -6,8 +6,17 @@
     "gps": "GPS",
     "trials": "Trials",
     "home": "Home",
+    "performance": "Prestaties",
+    "track": "Activiteit",
+    "search": "Zoeken",
     "discover": "Discover",
     "pipeline": "Pipeline"
+  },
+  "segments": {
+    "stats": "Stats",
+    "career": "Carrière",
+    "gps": "GPS",
+    "trials": "Trials"
   },
   "screens": {
     "settings": "Instellingen",

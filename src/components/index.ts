@@ -28,6 +28,9 @@ export {
 
 // Layout
 export { Screen, type ScreenProps } from './layout/Screen';
+export { AmbientBackdrop } from './layout/AmbientBackdrop';
+export { StadiumPitchBackground } from './layout/StadiumPitchBackground';
+export { AppSafeAreaView, getSafeAreaPadding, type AppSafeAreaViewProps } from './layout/AppSafeAreaView';
 export { Section, type SectionProps } from './layout/Section';
 export { CollapsibleSection, type CollapsibleSectionProps } from './layout/CollapsibleSection';
 export { RevealSection, staggeredFadeIn, type RevealSectionProps } from './layout/RevealSection';
@@ -36,9 +39,12 @@ export { RevealSection, staggeredFadeIn, type RevealSectionProps } from './layou
 export {
   AppTabBar,
   MobileStackHeader,
+  TabSegmentControl,
   type AppTabBarItem,
   type AppTabBarProps,
   type MobileStackHeaderProps,
+  type TabSegmentControlProps,
+  type TabSegmentOption,
 } from './navigation';
 
 // Feedback

@@ -2,7 +2,7 @@ import { isProductionApp } from '@/config/appMode';
 
 export type AiProviderId = 'mock' | 'openrouter';
 
-const env = process.env as Record<string, string | undefined>;
+// Expo only inlines static process.env.EXPO_PUBLIC_* references (not env[key]).
 
 export type AiConfig = {
   providerId: AiProviderId;
@@ -18,14 +18,14 @@ function resolveUseCloudFunction(): boolean {
     return true;
   }
 
-  const explicit = env.EXPO_PUBLIC_USE_CLOUD_AI?.trim().toLowerCase();
+  const explicit = process.env.EXPO_PUBLIC_USE_CLOUD_AI?.trim().toLowerCase();
   if (explicit === 'true') {
     return true;
   }
   if (explicit === 'false') {
     return false;
   }
-  return !env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim();
+  return !process.env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim();
 }
 
 function resolveProviderId(): AiProviderId {
@@ -33,26 +33,27 @@ function resolveProviderId(): AiProviderId {
     return 'mock';
   }
 
-  const explicit = env.EXPO_PUBLIC_AI_PROVIDER;
+  const explicit = process.env.EXPO_PUBLIC_AI_PROVIDER;
   if (explicit === 'mock' || explicit === 'openrouter') {
     return explicit;
   }
 
-  const apiKey = env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim();
+  const apiKey = process.env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim();
   return apiKey ? 'openrouter' : 'mock';
 }
 
 export function getAiConfig(): AiConfig {
   const isProd = isProductionApp();
-  const apiKey = isProd ? '' : env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim() ?? '';
+  const apiKey = isProd ? '' : process.env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim() ?? '';
 
   return {
     providerId: resolveProviderId(),
     useCloudFunction: resolveUseCloudFunction(),
     openRouterApiKey: apiKey.length > 0 ? apiKey : null,
-    openRouterModel: env.EXPO_PUBLIC_OPENROUTER_MODEL?.trim() || 'google/gemma-2-9b-it:free',
+    openRouterModel:
+      process.env.EXPO_PUBLIC_OPENROUTER_MODEL?.trim() || 'google/gemma-2-9b-it:free',
     openRouterBaseUrl:
-      env.EXPO_PUBLIC_OPENROUTER_BASE_URL?.trim() || 'https://openrouter.ai/api/v1',
+      process.env.EXPO_PUBLIC_OPENROUTER_BASE_URL?.trim() || 'https://openrouter.ai/api/v1',
     requestTimeoutMs: 45_000,
   };
 }

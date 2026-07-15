@@ -3,9 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "module": "esnext",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"],

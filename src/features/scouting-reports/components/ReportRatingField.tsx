@@ -28,8 +28,8 @@ export function ReportRatingField({
   return (
     <View
       className={cn(
-        'rounded-xl border border-border p-3 dark:border-neutral-800',
-        emphasis ? 'bg-accent-muted/40 dark:bg-green-950/30' : 'bg-background-secondary/50 dark:bg-neutral-900/50',
+        'rounded-xl border border-border p-3',
+        emphasis ? 'bg-accent-muted/40 dark:bg-green-950/30' : 'bg-background-secondary/50/50',
         className,
       )}
     >
@@ -39,20 +39,20 @@ export function ReportRatingField({
       <View className="mt-2 flex-row items-center justify-between">
         <Pressable
           onPress={decrement}
-          className="h-9 w-9 items-center justify-center rounded-md bg-surface dark:bg-neutral-800"
+          className="h-9 w-9 items-center justify-center rounded-md bg-surface"
           accessibilityLabel={`Decrease ${label}`}
         >
           <Minus size={16} color={colors.textPrimary} />
         </Pressable>
         <Text
           variant="body-lg"
-          className={cn('font-sans-bold', emphasis ? 'text-accent dark:text-green-400' : undefined)}
+          className={cn('font-sans-bold', emphasis ? 'text-accent' : undefined)}
         >
           {value}
         </Text>
         <Pressable
           onPress={increment}
-          className="h-9 w-9 items-center justify-center rounded-md bg-surface dark:bg-neutral-800"
+          className="h-9 w-9 items-center justify-center rounded-md bg-surface"
           accessibilityLabel={`Increase ${label}`}
         >
           <Plus size={16} color={colors.textPrimary} />

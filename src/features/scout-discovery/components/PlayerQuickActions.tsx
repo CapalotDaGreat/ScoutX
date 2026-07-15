@@ -59,7 +59,7 @@ export function PlayerQuickActions({
             'h-9 w-9 items-center justify-center rounded-full border',
             isInComparison
               ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-              : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',
+              : 'border-border bg-surface',
             !isInComparison && !canAddToComparison && 'opacity-50',
           )}
         >
@@ -78,7 +78,7 @@ export function PlayerQuickActions({
             'h-9 w-9 items-center justify-center rounded-full border',
             isFavourite
               ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-              : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',
+              : 'border-border bg-surface',
           )}
         >
           <Bookmark
@@ -93,7 +93,7 @@ export function PlayerQuickActions({
           accessibilityRole="button"
           accessibilityLabel="Open scouting report"
           onPress={onOpenReport}
-          className="h-9 w-9 items-center justify-center rounded-full border border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900"
+          className="h-9 w-9 items-center justify-center rounded-full border border-border bg-surface"
         >
           <FileText size={16} color={colors.textSecondary} />
         </Pressable>

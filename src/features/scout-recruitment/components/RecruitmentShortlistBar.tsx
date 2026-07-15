@@ -30,10 +30,10 @@ export function RecruitmentShortlistBar({
           accessibilityRole="button"
           accessibilityLabel="Create shortlist"
           onPress={onCreateShortlist}
-          className="flex-row items-center gap-1 rounded-full border border-border px-2.5 py-1 dark:border-neutral-700"
+          className="flex-row items-center gap-1 rounded-full border border-border px-2.5 py-1"
         >
           <ListPlus size={14} color={colors.accent} />
-          <Text variant="caption" className="font-sans-semibold text-accent dark:text-green-400">
+          <Text variant="caption" className="font-sans-semibold text-accent">
             New
           </Text>
         </Pressable>
@@ -51,7 +51,7 @@ export function RecruitmentShortlistBar({
             'rounded-full border px-3 py-2',
             activeShortlistId === null
               ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-              : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',
+              : 'border-border bg-surface',
           )}
         >
           <Text
@@ -59,7 +59,7 @@ export function RecruitmentShortlistBar({
             className={cn(
               'font-sans-semibold',
               activeShortlistId === null
-                ? 'text-accent dark:text-green-400'
+                ? 'text-accent'
                 : 'text-foreground-secondary',
             )}
           >
@@ -78,14 +78,14 @@ export function RecruitmentShortlistBar({
                 'rounded-full border px-3 py-2',
                 isActive
                   ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-                  : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',
+                  : 'border-border bg-surface',
               )}
             >
               <Text
                 variant="caption"
                 className={cn(
                   'font-sans-semibold',
-                  isActive ? 'text-accent dark:text-green-400' : 'text-foreground-secondary',
+                  isActive ? 'text-accent' : 'text-foreground-secondary',
                 )}
               >
                 {shortlist.name} ({shortlist.playerIds.length})

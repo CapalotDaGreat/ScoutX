@@ -21,7 +21,7 @@ export function MobileStackHeader({ title, subtitle, onBack, rightAction }: Mobi
         accessibilityRole="button"
         accessibilityLabel="Go back"
         onPress={onBack}
-        className="h-10 w-10 items-center justify-center rounded-full bg-background-secondary dark:bg-neutral-900"
+        className="h-10 w-10 items-center justify-center rounded-full bg-background-secondary"
       >
         <ChevronLeft size={20} color={colors.textPrimary} />
       </Pressable>

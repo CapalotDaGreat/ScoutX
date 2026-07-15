@@ -16,7 +16,7 @@ export function RatingPill({ label, value, emphasis = 'secondary', className }: 
         'rounded-lg px-3 py-2',
         emphasis === 'primary'
           ? 'bg-accent-muted dark:bg-green-950'
-          : 'bg-background-secondary dark:bg-neutral-950',
+          : 'bg-background-secondary',
         className,
       )}
     >
@@ -27,7 +27,7 @@ export function RatingPill({ label, value, emphasis = 'secondary', className }: 
         variant="body-sm"
         className={cn(
           'font-sans-bold',
-          emphasis === 'primary' ? 'text-accent dark:text-green-400' : undefined,
+          emphasis === 'primary' ? 'text-accent' : undefined,
         )}
       >
         {value}

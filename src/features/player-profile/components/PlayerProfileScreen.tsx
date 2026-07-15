@@ -1,8 +1,11 @@
-import { View } from 'react-native';import { Screen } from '@/components/layout/Screen';
+import { useMemo } from 'react';
+import { View } from 'react-native';
+import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
+import { HomePerformanceOverview } from '@/features/player-profile/components/HomePerformanceOverview';
 import { PerformanceSummary } from '@/features/player-profile/components/PerformanceSummary';
 import { ProfileDetails } from '@/features/player-profile/components/ProfileDetails';
 import { ProfileHero } from '@/features/player-profile/components/ProfileHero';
@@ -13,12 +16,13 @@ import { PersonalIdentitySection } from '@/features/player-profile/components/id
 import { PlayingIdentitySection } from '@/features/player-profile/components/identity/PlayingIdentitySection';
 import { ProfessionalIdentitySection } from '@/features/player-profile/components/identity/ProfessionalIdentitySection';
 import { type PlayerProfile } from '@/features/player-profile/types';
-import { PlayerStatisticsSection } from '@/features/player-statistics';
+import { mapMatchesToHomeQuickStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import { FootballJourneySection, useFootballJourney } from '@/features/football-journey';
 import { HighlightVideosSection } from '@/features/highlight-videos';
 import { ActivityBellButton, ActivityFeedSection, useActivities } from '@/features/activity-feed';
 import { AdminReviewCard } from '@/features/admin-review/components/AdminReviewCard';
 import { isAdminUser } from '@/config/admin';
+import { useAuth } from '@/features/auth/store/AuthProvider';
 import {
   FootballPassportScoreCard,
   PortfolioPrivacySettings,
@@ -82,23 +86,41 @@ export function PlayerProfileScreen({
   embeddedInTabShell = false,
 }: PlayerProfileScreenProps) {
   const { t } = useAppTranslation(['portfolio', 'common', 'settings', 'auth']);
+  const { user } = useAuth();
   const { trustProfile, recommendations, ...trustStateRest } = trustState;
   const { entries: journeyEntries } = useFootballJourney(profile);
   const { unreadCount } = useActivities();
+
+  const homeQuickStats = useMemo(
+    () => mapMatchesToHomeQuickStats(profile?.statisticsMatches ?? []),
+    [profile?.statisticsMatches],
+  );
 
   const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
 
   if (loading) {
     return (
-      <Screen title={t('portfolio:title')} subtitle={t('portfolio:loadingSubtitle')} safeArea {...screenProps}>
-        <SkeletonLoader variant="profile" />
+      <Screen
+        title={embeddedInTabShell ? t('portfolio:homeTitle') : t('portfolio:title')}
+        subtitle={t('portfolio:loadingSubtitle')}
+        safeArea
+        {...screenProps}
+      >
+        <View className="gap-4 rounded-xl bg-surface p-4">
+          <SkeletonLoader variant="profile" />
+        </View>
       </Screen>
     );
   }
 
   if (error) {
     return (
-      <Screen title={t('portfolio:title')} subtitle={t('portfolio:errorSubtitle')} safeArea {...screenProps}>
+      <Screen
+        title={embeddedInTabShell ? t('portfolio:homeTitle') : t('portfolio:title')}
+        subtitle={t('portfolio:errorSubtitle')}
+        safeArea
+        {...screenProps}
+      >
         <EmptyState
           title={t('portfolio:unavailableTitle')}
           description={error}
@@ -111,7 +133,12 @@ export function PlayerProfileScreen({
 
   if (!profile) {
     return (
-      <Screen title={t('portfolio:title')} subtitle={t('portfolio:emptySubtitle')} safeArea {...screenProps}>
+      <Screen
+        title={embeddedInTabShell ? t('portfolio:homeTitle') : t('portfolio:title')}
+        subtitle={t('portfolio:emptySubtitle')}
+        safeArea
+        {...screenProps}
+      >
         <EmptyState
           title={t('portfolio:buildTitle')}
           description={t('portfolio:buildDescription')}
@@ -124,20 +151,34 @@ export function PlayerProfileScreen({
 
   return (
     <Screen
-      title={t('portfolio:title')}
-      subtitle={t('portfolio:subtitle')}
+      title={embeddedInTabShell ? t('portfolio:homeTitle') : t('portfolio:title')}
+      subtitle={embeddedInTabShell ? t('portfolio:homeSubtitle') : t('portfolio:subtitle')}
       safeArea
       {...screenProps}
       header={
-        onActivityPress ? (
-          <View className="mb-2 flex-row justify-end">
-            <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
+        onActivityPress || onSettingsPress ? (
+          <View className="mb-2 flex-row items-center justify-end gap-2">
+            {onActivityPress ? (
+              <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
+            ) : null}
+            {onSettingsPress ? (
+              <Button variant="secondary" size="sm" onPress={onSettingsPress}>
+                {t('common:settings')}
+              </Button>
+            ) : null}
           </View>
         ) : undefined
       }
     >
       <View className="gap-4">
+        {/* First viewport: who am I / how am I doing */}
         <ProfileHero profile={profile} trustProfile={trustProfile} onEditPress={onEditPress} />
+        <ProfileStatsGrid stats={homeQuickStats} compact />
+        <HomePerformanceOverview
+          matches={profile.statisticsMatches}
+          onLogMatchPress={onLogMatchPress}
+        />
+
         {onboardingReport && onOnboardingStepPress && onDismissOnboarding ? (
           <PlayerOnboardingCard
             steps={onboardingReport.steps}
@@ -147,8 +188,10 @@ export function PlayerProfileScreen({
             onDismiss={onDismissOnboarding}
           />
         ) : null}
+
         {onActivityPress ? <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} /> : null}
 
+        {/* Below-fold: passport, identity, trust */}
         <FootballPassportScoreCard
           playerId={profile.id}
           profile={profile}
@@ -165,12 +208,11 @@ export function PlayerProfileScreen({
           </View>
         </CollapsibleSection>
 
-        {isAdminUser(profile.id) ? <AdminReviewCard /> : null}
+        {isAdminUser(user?.uid) ? <AdminReviewCard /> : null}
 
         <CollapsibleSection
           title={t('portfolio:publicPassport')}
           subtitle={t('portfolio:publicPassportSubtitle')}
-          defaultOpen
         >
           <View className="gap-3">
             {onUsernameClaimed ? (
@@ -226,7 +268,6 @@ export function PlayerProfileScreen({
         <CollapsibleSection
           title={t('portfolio:storyMedia')}
           subtitle={t('portfolio:storyMediaSubtitle')}
-          defaultOpen
         >
           <BiographyIdentitySection identity={profile.identity} biography={profile.biography} />
           <FootballJourneySection
@@ -257,10 +298,6 @@ export function PlayerProfileScreen({
           subtitle={t('portfolio:performanceSnapshotSubtitle')}
         >
           <ProfileStatsGrid stats={profile.stats} />
-          <PlayerStatisticsSection
-            matches={profile.statisticsMatches}
-            onLogMatchPress={onLogMatchPress}
-          />
           <PerformanceSummary items={profile.performanceSummary} />
         </CollapsibleSection>
 

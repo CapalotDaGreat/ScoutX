@@ -1,10 +1,10 @@
 import { hasPrivacyPolicyUrl, hasTermsOfServiceUrl } from '@/config/legal';
 import { isProductionApp } from '@/config/appMode';
 
-const env = process.env as Record<string, string | undefined>;
+// Expo only inlines static process.env.EXPO_PUBLIC_* references (not env[key]).
 
 export function isSentryConfigured(): boolean {
-  const dsn = env.EXPO_PUBLIC_SENTRY_DSN?.trim();
+  const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN?.trim();
   if (!dsn) {
     return false;
   }

@@ -36,16 +36,16 @@ export function GpsSessionCard({ session }: GpsSessionCardProps) {
       </View>
 
       <View className="flex-row flex-wrap gap-2">
-        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1 dark:bg-neutral-900">
+        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
           {formatDistance(session.metrics.distanceM)}
         </Text>
-        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1 dark:bg-neutral-900">
+        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
           Avg {formatSpeed(session.metrics.avgSpeedKmh)}
         </Text>
-        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1 dark:bg-neutral-900">
+        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
           Max {formatSpeed(session.metrics.maxSpeedKmh)}
         </Text>
-        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1 dark:bg-neutral-900">
+        <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
           {formatDuration(session.metrics.durationSec)}
         </Text>
       </View>

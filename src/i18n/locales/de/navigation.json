@@ -5,16 +5,25 @@
     "statistics": "Stats",
     "gps": "GPS",
     "trials": "Trials",
-    "home": "Home",
-    "discover": "Discover",
+    "home": "Start",
+    "performance": "Leistung",
+    "track": "Aktivität",
+    "search": "Suche",
+    "discover": "Entdecken",
     "pipeline": "Pipeline"
+  },
+  "segments": {
+    "stats": "Stats",
+    "career": "Karriere",
+    "gps": "GPS",
+    "trials": "Trials"
   },
   "screens": {
     "settings": "Einstellungen",
-    "settingsSubtitle": "Account, notifications, and language",
-    "activityInbox": "Activity",
-    "playerComparison": "Player comparison",
-    "careerReplay": "Career replay",
+    "settingsSubtitle": "Konto, Benachrichtigungen und Sprache",
+    "activityInbox": "Aktivität",
+    "playerComparison": "Spieler vergleichen",
+    "careerReplay": "Karriere-Replay",
     "publicPortfolio": "Football Passport"
   }
 }

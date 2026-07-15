@@ -60,7 +60,7 @@ export function ComparisonPlayerPickerModal({
                   onSelect(item);
                   setSearch('');
                 }}
-                className="mb-2 flex-row items-center gap-3 rounded-xl border border-border bg-surface p-3 dark:border-neutral-800 dark:bg-neutral-900"
+                className="mb-2 flex-row items-center gap-3 rounded-xl border border-border bg-surface p-3"
               >
                 <Image source={{ uri: item.avatarUrl }} className="h-11 w-11 rounded-full" />
                 <View className="flex-1">

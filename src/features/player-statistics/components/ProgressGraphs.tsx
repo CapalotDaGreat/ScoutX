@@ -17,9 +17,9 @@ const graphHeight = 52;
 const graphPadding = 8;
 
 const trendColors = {
-  up: 'text-success dark:text-green-400',
-  down: 'text-error dark:text-red-400',
-  neutral: 'text-foreground-secondary dark:text-neutral-400',
+  up: 'text-success',
+  down: 'text-error',
+  neutral: 'text-foreground-secondary',
 } as const;
 
 function getPolylinePoints(graph: ProgressGraph): string {
@@ -64,7 +64,7 @@ export function ProgressGraphs({ graphs }: ProgressGraphsProps) {
           return (
             <View
               key={graph.key}
-              className="min-w-[45%] flex-1 rounded-lg border border-border bg-background-secondary p-3 dark:border-neutral-800 dark:bg-neutral-950"
+              className="min-w-[45%] flex-1 rounded-lg border border-border bg-background-secondary p-3"
             >
               <View className="mb-2 flex-row items-start justify-between gap-2">
                 <View className="flex-1">

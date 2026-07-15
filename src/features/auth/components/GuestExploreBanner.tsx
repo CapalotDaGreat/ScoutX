@@ -16,7 +16,7 @@ export function GuestExploreBanner({ onSignOut }: GuestExploreBannerProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <View className="mx-4 mt-2 rounded-2xl border border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900">
+    <View className="mx-4 mt-2 rounded-2xl border border-border bg-surface">
       <Pressable
         accessibilityRole="button"
         onPress={() => setExpanded((current) => !current)}
@@ -39,7 +39,7 @@ export function GuestExploreBanner({ onSignOut }: GuestExploreBannerProps) {
       </Pressable>
 
       {expanded ? (
-        <View className="gap-3 border-t border-divider px-4 pb-4 pt-3 dark:border-neutral-800">
+        <View className="gap-3 border-t border-divider px-4 pb-4 pt-3">
           <Text variant="body-sm" color="secondary">
             Create a free account to unlock your profile, scouting tools, and saved data. Your guest
             UID is preserved when you upgrade.

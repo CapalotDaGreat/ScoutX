@@ -10,7 +10,7 @@ export type MilestonesSectionProps = {
 
 function MilestoneBadge({ milestone }: { milestone: MilestoneDefinition }) {
   return (
-    <View className="min-w-[46%] flex-1 rounded-xl border border-border bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-900">
+    <View className="min-w-[46%] flex-1 rounded-xl border border-border bg-neutral-50 p-3">
       <Text className="text-xl">{milestone.icon}</Text>
       <Text weight="semibold" className="mt-1 text-sm">
         {milestone.title}
@@ -39,11 +39,11 @@ export function MilestonesSection({ earned, recentlyEarned = [] }: MilestonesSec
 
       {recentlyEarned.length > 0 ? (
         <View className="rounded-xl border border-green-200 bg-green-50 p-3 dark:border-green-900 dark:bg-green-950">
-          <Text weight="semibold" className="text-green-800 dark:text-green-200">
+          <Text weight="semibold" className="text-green-800">
             New milestone{recentlyEarned.length === 1 ? '' : 's'} unlocked
           </Text>
           {recentlyEarned.map((milestone) => (
-            <Text key={milestone.id} variant="body-sm" className="text-green-700 dark:text-green-300">
+            <Text key={milestone.id} variant="body-sm" className="text-green-700">
               {milestone.icon} {milestone.title}
             </Text>
           ))}

@@ -12,7 +12,7 @@ export function CareerIdentitySection({ identity }: CareerIdentitySectionProps) 
   return (
     <>
       <ProfileSection title="Current Club" subtitle="Where you are playing right now">
-        <View className="rounded-xl border border-border bg-background-secondary/70 px-4 py-4 dark:border-neutral-800 dark:bg-neutral-900/80">
+        <View className="rounded-xl border border-border bg-background-secondary/70 px-4 py-4">
           <Text variant="body-lg" className="font-sans-semibold">
             {identity.currentClub}
           </Text>

@@ -18,12 +18,14 @@ import { usePortfolioAnalytics } from '@/features/portfolio-analytics/hooks/useP
 
 export type CareerScreenProps = {
   embeddedInTabShell?: boolean;
+  nestedUnderSegment?: boolean;
   onEditJourneyPress?: () => void;
   onCareerReplayPress?: () => void;
 };
 
 export function CareerScreen({
   embeddedInTabShell = false,
+  nestedUnderSegment = false,
   onEditJourneyPress,
   onCareerReplayPress,
 }: CareerScreenProps) {
@@ -36,7 +38,10 @@ export function CareerScreen({
     [profile?.footballJourney],
   );
 
-  const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
+  const screenProps = {
+    ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
+    ...(nestedUnderSegment ? { safeAreaEdges: ['left', 'right'] as Array<'left' | 'right'> } : {}),
+  };
 
   if (isLoading) {
     return (
@@ -82,7 +87,7 @@ export function CareerScreen({
           </View>
         </CollapsibleSection>
 
-        <View className="rounded-2xl border border-border bg-white p-4 dark:border-neutral-800 dark:bg-neutral-950">
+        <View className="rounded-2xl border border-border bg-surface p-4">
           <Text variant="overline" color="secondary">
             Football timeline
           </Text>

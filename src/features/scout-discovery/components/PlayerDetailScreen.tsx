@@ -363,7 +363,7 @@ export function PlayerDetailScreen({
       </Screen>
 
       {!guestMode ? (
-      <View className="absolute bottom-0 left-0 right-0 border-t border-divider bg-surface px-4 pb-6 pt-3 dark:border-neutral-800 dark:bg-neutral-950">
+      <View className="absolute bottom-0 left-0 right-0 border-t border-divider bg-surface px-4 pb-6 pt-3">
         <View className="flex-row gap-3">
           <Button
             variant="secondary"

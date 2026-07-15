@@ -29,7 +29,7 @@ export function AiRecommendationList({ items, title }: AiRecommendationListProps
       {items.map((item) => (
         <View
           key={item.id}
-          className="rounded-xl border border-border bg-background-secondary px-3 py-3 dark:border-neutral-800 dark:bg-neutral-950"
+          className="rounded-xl border border-border bg-background-secondary px-3 py-3"
         >
           <View className="mb-1 flex-row items-center justify-between gap-2">
             <Text variant="body-sm" className="flex-1 font-sans-semibold">

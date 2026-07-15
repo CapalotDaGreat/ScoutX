@@ -152,7 +152,7 @@ function TrustProfileSectionContent({
             <ClubTenureStrip tenures={clubTenures} />
 
             {recommendations.length === 0 ? (
-              <View className="rounded-xl border border-dashed border-border px-4 py-8 dark:border-neutral-800">
+              <View className="rounded-xl border border-dashed border-border px-4 py-8">
                 <Text variant="body-sm" color="secondary" className="text-center">
                   No coach recommendations or scout endorsements yet.
                 </Text>

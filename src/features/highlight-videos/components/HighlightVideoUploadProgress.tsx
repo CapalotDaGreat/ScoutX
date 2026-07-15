@@ -19,7 +19,7 @@ export function HighlightVideoUploadProgress({ progress }: HighlightVideoUploadP
   }
 
   return (
-    <View className="gap-2 rounded-xl border border-border bg-background-secondary/70 p-3 dark:border-neutral-800 dark:bg-neutral-900/80">
+    <View className="gap-2 rounded-xl border border-border bg-background-secondary/70 p-3">
       <View className="flex-row items-center justify-between">
         <Text variant="body-sm" weight="semibold">
           {phaseLabels[progress.phase]}

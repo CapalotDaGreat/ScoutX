@@ -1,5 +1,6 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
+import { createCallableOptions } from './callableOptions';
 
 type PortfolioAnalyticsDoc = {
   totalViews: number;
@@ -30,7 +31,7 @@ function emptyAnalytics(): PortfolioAnalyticsDoc {
   };
 }
 
-export const recordPortfolioView = onCall({ cors: true }, async (request) => {
+export const recordPortfolioView = onCall(createCallableOptions(), async (request) => {
   if (!request.auth?.uid) {
     throw new HttpsError('unauthenticated', 'Sign in required to record portfolio views.');
   }

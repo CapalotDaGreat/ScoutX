@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onActivityCreatedPush = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateAiInsight = void 0;
+exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
+require("./authSecurityPolicy");
 const app_1 = require("firebase-admin/app");
 const firestore_1 = require("firebase-admin/firestore");
 const firestore_2 = require("firebase-functions/v2/firestore");
 const firebase_functions_1 = require("firebase-functions");
 var aiCoach_1 = require("./aiCoach");
 Object.defineProperty(exports, "generateAiInsight", { enumerable: true, get: function () { return aiCoach_1.generateAiInsight; } });
+var matchAnalysis_1 = require("./matchAnalysis");
+Object.defineProperty(exports, "analyzeMatchFootage", { enumerable: true, get: function () { return matchAnalysis_1.analyzeMatchFootage; } });
 var weeklyReportScheduler_1 = require("./weeklyReportScheduler");
 Object.defineProperty(exports, "scheduleWeeklyFootballReports", { enumerable: true, get: function () { return weeklyReportScheduler_1.scheduleWeeklyFootballReports; } });
 var adminReview_1 = require("./adminReview");
@@ -15,6 +18,9 @@ Object.defineProperty(exports, "listAdminReviewQueue", { enumerable: true, get: 
 Object.defineProperty(exports, "resolveVerificationRequest", { enumerable: true, get: function () { return adminReview_1.resolveVerificationRequest; } });
 var portfolioAnalytics_1 = require("./portfolioAnalytics");
 Object.defineProperty(exports, "recordPortfolioView", { enumerable: true, get: function () { return portfolioAnalytics_1.recordPortfolioView; } });
+var appleAuth_1 = require("./appleAuth");
+Object.defineProperty(exports, "deleteAuthenticatedAccount", { enumerable: true, get: function () { return appleAuth_1.deleteAuthenticatedAccount; } });
+Object.defineProperty(exports, "persistAppleAuthorizationCode", { enumerable: true, get: function () { return appleAuth_1.persistAppleAuthorizationCode; } });
 (0, app_1.initializeApp)();
 const PUSHABLE_ACTIVITY_TYPES = new Set([
     'portfolio_viewed',

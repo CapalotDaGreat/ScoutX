@@ -31,7 +31,7 @@ export function DiscoverySearchPanel({
   ).slice(0, 4);
 
   return (
-    <View className="gap-4 rounded-xl border border-border bg-surface p-3 dark:border-neutral-800 dark:bg-neutral-900">
+    <View className="gap-4 rounded-xl border border-border bg-surface p-3">
       {recentSearches.length > 0 ? (
         <View className="gap-2">
           <View className="flex-row items-center justify-between">
@@ -76,7 +76,7 @@ export function DiscoverySearchPanel({
               key={term}
               accessibilityRole="button"
               onPress={() => onSelectSearch(term)}
-              className="rounded-full bg-background-secondary px-3 py-2 dark:bg-neutral-950"
+              className="rounded-full bg-background-secondary px-3 py-2"
             >
               <Text variant="body-sm">{term}</Text>
             </Pressable>

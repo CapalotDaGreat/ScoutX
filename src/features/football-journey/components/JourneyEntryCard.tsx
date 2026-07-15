@@ -40,7 +40,7 @@ export function JourneyEntryCard({ entry, index, isLast = false }: JourneyEntryC
           <Icon size={18} color={colors.accent} />
         </View>
         {!isLast ? (
-          <View className="mt-1 w-0.5 flex-1 bg-border dark:bg-neutral-700" />
+          <View className="mt-1 w-0.5 flex-1 bg-border" />
         ) : null}
       </View>
 

@@ -42,7 +42,7 @@ export function GpsHeatmap({ heatmap, title = 'Movement Heatmap' }: GpsHeatmapPr
         </Text>
       </View>
 
-      <View className="items-center rounded-lg bg-background-secondary p-3 dark:bg-neutral-950">
+      <View className="items-center rounded-lg bg-background-secondary p-3">
         {heatmap.cells.length === 0 ? (
           <Text variant="body-sm" color="secondary" className="py-10">
             Heatmap will appear after GPS points are recorded.

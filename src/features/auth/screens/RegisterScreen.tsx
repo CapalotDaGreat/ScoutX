@@ -6,6 +6,7 @@ import { FormActions } from '@/components/forms/FormActions';
 import { FormField } from '@/components/forms/FormField';
 import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
+import { AuthOAuthActions } from '@/features/auth/components/AuthOAuthActions';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type SignUpPayload } from '@/features/auth/types';
@@ -14,13 +15,22 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 export type RegisterScreenProps = {
   onSubmit: (payload: SignUpPayload) => Promise<void>;
   onBack: () => void;
+  onSignInWithApple?: () => void;
+  onSignInWithGoogle?: () => void;
   isSubmitting?: boolean;
   error?: string | null;
 };
 
-export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }: RegisterScreenProps) {
+export function RegisterScreen({
+  onSubmit,
+  onBack,
+  onSignInWithApple,
+  onSignInWithGoogle,
+  isSubmitting = false,
+  error,
+}: RegisterScreenProps) {
   const { t } = useAppTranslation(['auth', 'validation', 'common']);
-  const { values, errors, updateValue, validate } = useAuthForm<SignUpPayload>({
+  const { values, errors, updateValue, validate, reset } = useAuthForm<SignUpPayload>({
     fullName: '',
     email: '',
     password: '',
@@ -58,7 +68,12 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
     }
 
     setLocalError(null);
-    await onSubmit(values);
+    try {
+      await onSubmit(values);
+      reset();
+    } catch {
+      // Error is surfaced by the auth provider.
+    }
   };
 
   const combinedError = useMemo(() => error ?? localError, [error, localError]);
@@ -101,6 +116,8 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
           value={values.password}
           onChangeText={(value) => updateValue('password', value)}
           secureTextEntry
+          textContentType="newPassword"
+          autoComplete="new-password"
           error={errors.password}
           accessibilityLabel={t('register.password')}
         />
@@ -111,6 +128,8 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
           value={values.confirmPassword}
           onChangeText={(value) => updateValue('confirmPassword', value)}
           secureTextEntry
+          textContentType="newPassword"
+          autoComplete="new-password"
           error={errors.confirmPassword}
           accessibilityLabel={t('register.confirmPassword')}
         />
@@ -119,6 +138,12 @@ export function RegisterScreen({ onSubmit, onBack, isSubmitting = false, error }
           <Button variant="accent" loading={isSubmitting} onPress={handleSubmit}>
             {t('register.createAccount')}
           </Button>
+          <AuthOAuthActions
+            onSignInWithApple={onSignInWithApple}
+            onSignInWithGoogle={onSignInWithGoogle}
+            isSubmitting={isSubmitting}
+            appleButtonType="sign-up"
+          />
           <Button variant="secondary" onPress={onBack}>
             {t('common:back')}
           </Button>

@@ -31,7 +31,7 @@ function renderInsightBody(insight: AiInsight) {
               {insight.highlights.map((highlight) => (
                 <View
                   key={`${highlight.label}-${highlight.value}`}
-                  className="rounded-lg border border-border px-3 py-2 dark:border-neutral-800"
+                  className="rounded-lg border border-border px-3 py-2"
                 >
                   <Text variant="caption" color="secondary">
                     {highlight.label}

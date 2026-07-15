@@ -4,6 +4,7 @@ exports.generateAiInsight = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const params_1 = require("firebase-functions/params");
 const firebase_functions_1 = require("firebase-functions");
+const callableOptions_1 = require("./callableOptions");
 const openRouterApiKey = (0, params_1.defineSecret)('OPENROUTER_API_KEY');
 function extractJsonFromModelText(text) {
     const trimmed = text.trim();
@@ -15,11 +16,10 @@ function extractJsonFromModelText(text) {
     }
     return parsed;
 }
-exports.generateAiInsight = (0, https_1.onCall)({
+exports.generateAiInsight = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)({
     secrets: [openRouterApiKey],
     timeoutSeconds: 60,
-    cors: true,
-}, async (request) => {
+}), async (request) => {
     if (!request.auth?.uid) {
         throw new https_1.HttpsError('unauthenticated', 'Authentication is required.');
     }

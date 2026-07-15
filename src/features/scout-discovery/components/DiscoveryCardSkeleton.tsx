@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/feedback/SkeletonLoader';
 
 export function DiscoveryCardSkeleton() {
   return (
-    <View className="overflow-hidden rounded-2xl border border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900">
+    <View className="overflow-hidden rounded-2xl border border-border bg-surface">
       <Skeleton height={112} radius="none" />
       <View className="gap-3 p-4">
         <View className="flex-row gap-3">

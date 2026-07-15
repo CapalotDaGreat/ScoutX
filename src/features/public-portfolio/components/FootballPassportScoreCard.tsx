@@ -17,7 +17,7 @@ export type FootballPassportScoreCardProps = {
 
 function ProgressBar({ value }: { value: number }) {
   return (
-    <View className="h-2 overflow-hidden rounded-full bg-background-secondary dark:bg-neutral-800">
+    <View className="h-2 overflow-hidden rounded-full bg-background-secondary">
       <View className="h-full rounded-full bg-accent" style={{ width: `${Math.min(100, value)}%` }} />
     </View>
   );

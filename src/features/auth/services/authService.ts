@@ -12,7 +12,18 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { getFirebaseAuth, getFirestoreDb, isFirebaseReady } from '@/config/firebase';
+import { getFirebaseActionCodeSettings } from '@/config/deepLinking';
+import {
+  assertProductionAuthConfigured,
+  PASSWORD_RESET_SUCCESS_MESSAGE,
+  shouldUseMockAuth,
+} from '@/config/authSecurity';
+import { sendVerificationEmailForUser } from '@/features/auth/services/authActionLinkService';
 import { parseUserDocument } from '@/features/auth/models/UserDocumentModel';
+import {
+  mapFirebaseAuthError,
+  mapFirebasePasswordResetError,
+} from '@/features/auth/services/authErrorMapping';
 import {
   AuthError,
   createAuthUser,
@@ -89,58 +100,14 @@ async function resolveAuthUserFromFirestore(user: User): Promise<AuthUser> {
   return mapFirebaseUser(user);
 }
 
-function mapFirebaseError(error: unknown): AuthError {
-  if (error instanceof AuthError) {
-    return error;
-  }
-
-  const message = error instanceof Error ? error.message : 'Authentication failed.';
-  const code = error instanceof Error && 'code' in error ? String(error.code) : '';
-
-  if (message.includes('invalid-email') || code.includes('invalid-email')) {
-    return new AuthError('Please enter a valid email address.', 'invalid-email');
-  }
-
-  if (
-    message.includes('wrong-password') ||
-    message.includes('invalid-credential') ||
-    code.includes('invalid-credential')
-  ) {
-    return new AuthError('The email or password is incorrect.', 'invalid-credentials');
-  }
-
-  if (message.includes('email-already-in-use') || code.includes('email-already-in-use')) {
-    return new AuthError('This email is already registered.', 'email-in-use');
-  }
-
-  if (message.includes('credential-already-in-use') || code.includes('credential-already-in-use')) {
-    return new AuthError('This email is already linked to another account.', 'credential-already-in-use');
-  }
-
-  if (message.includes('weak-password') || code.includes('weak-password')) {
-    return new AuthError('Password must be at least 8 characters long.', 'weak-password');
-  }
-
-  if (message.includes('user-not-found') || code.includes('user-not-found')) {
-    return new AuthError('We could not find an account for this email.', 'not-found');
-  }
-
-  if (message.includes('admin-restricted-operation') || code.includes('admin-restricted-operation')) {
-    return new AuthError(
-      'Anonymous sign-in is disabled for this Firebase project. Enable it in the Firebase console.',
-      'anonymous-disabled',
-    );
-  }
-
-  return new AuthError(message, 'invalid-credentials');
-}
-
 function getCurrentFirebaseUser(): User | null {
   return getFirebaseAuth()?.currentUser ?? null;
 }
 
 export function initializeAuthListener(callback: (user: AuthUser | null) => void): () => void {
-  if (!isFirebaseReady()) {
+  assertProductionAuthConfigured();
+
+  if (shouldUseMockAuth()) {
     void mockInitializeSession().then((guest) => {
       callback(guest);
     });
@@ -155,23 +122,34 @@ export function initializeAuthListener(callback: (user: AuthUser | null) => void
     return () => undefined;
   }
 
-  return onAuthStateChanged(auth, async (user) => {
+  return onAuthStateChanged(auth, (user) => {
     if (!user) {
       callback(null);
       return;
     }
 
-    try {
-      callback(await resolveAuthUserFromFirestore(user));
-    } catch (error) {
-      console.error('Error resolving auth user:', error);
-      callback(mapFirebaseUser(user));
-    }
+    // Unblock the UI immediately — Firestore resolution must not stall session start.
+    callback(mapFirebaseUser(user));
+
+    void resolveAuthUserFromFirestore(user)
+      .then((resolved) => {
+        callback(resolved);
+      })
+      .catch((error) => {
+        if (__DEV__) {
+          console.error('Error resolving auth user.');
+          if (error instanceof Error) {
+            console.error(error.message);
+          }
+        }
+      });
   });
 }
 
 export async function signInAnonymouslyWithFirebase(): Promise<AuthUser> {
-  if (!isFirebaseReady()) {
+  assertProductionAuthConfigured();
+
+  if (shouldUseMockAuth()) {
     return mockSignInAsGuest();
   }
 
@@ -180,27 +158,54 @@ export async function signInAnonymouslyWithFirebase(): Promise<AuthUser> {
     throw new AuthError('Firebase authentication is not configured.', 'invalid-credentials');
   }
 
-  try {
+  const runAnonymousSignIn = async (): Promise<AuthUser> => {
     const currentUser = auth.currentUser;
     if (currentUser?.isAnonymous) {
-      return resolveAuthUserFromFirestore(currentUser);
+      return resolveAuthUserFromFirestore(currentUser).catch(() => mapFirebaseUser(currentUser));
     }
 
     const credential = await signInAnonymously(auth);
-    const guestDoc = await createGuestUserDocument(credential.user.uid);
-    return createAuthUser({
-      uid: guestDoc.uid,
-      isAnonymous: true,
-      displayName: guestDoc.name,
-      role: 'guest',
-    });
+
+    try {
+      const guestDoc = await Promise.race([
+        createGuestUserDocument(credential.user.uid),
+        new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('Guest profile write timed out.')), 5_000);
+        }),
+      ]);
+      return createAuthUser({
+        uid: guestDoc.uid,
+        isAnonymous: true,
+        displayName: guestDoc.name,
+        role: 'guest',
+      });
+    } catch (documentError) {
+      if (__DEV__) {
+        console.warn('Guest profile write failed; continuing with anonymous session.', documentError);
+      }
+      return mapFirebaseUser(credential.user);
+    }
+  };
+
+  try {
+    return await Promise.race([
+      runAnonymousSignIn(),
+      new Promise<never>((_, reject) => {
+        setTimeout(
+          () => reject(new AuthError('Anonymous sign-in timed out.', 'anonymous-disabled')),
+          7_000,
+        );
+      }),
+    ]);
   } catch (error) {
-    throw mapFirebaseError(error);
+    throw mapFirebaseAuthError(error);
   }
 }
 
 export async function signInWithFirebase(payload: SignInPayload): Promise<AuthUser> {
-  if (!isFirebaseReady()) {
+  assertProductionAuthConfigured();
+
+  if (shouldUseMockAuth()) {
     return mockSignIn(payload);
   }
 
@@ -246,12 +251,14 @@ export async function signInWithFirebase(payload: SignInPayload): Promise<AuthUs
     const signedIn = await signInWithEmailAndPassword(auth, payload.email, payload.password);
     return resolveAuthUserFromFirestore(signedIn.user);
   } catch (error) {
-    throw mapFirebaseError(error);
+    throw mapFirebaseAuthError(error);
   }
 }
 
 export async function signUpWithFirebase(payload: SignUpPayload): Promise<AuthUser> {
-  if (!isFirebaseReady()) {
+  assertProductionAuthConfigured();
+
+  if (shouldUseMockAuth()) {
     return mockSignUp(payload);
   }
 
@@ -292,6 +299,8 @@ export async function signUpWithFirebase(payload: SignUpPayload): Promise<AuthUs
         );
       }
 
+      await sendVerificationEmailForUser(linked.user);
+
       return createAuthUser({
         uid: userDoc.uid,
         isAnonymous: false,
@@ -315,6 +324,8 @@ export async function signUpWithFirebase(payload: SignUpPayload): Promise<AuthUs
     defaultProfile.fullName = displayName;
     await setDoc(doc(db, 'profiles', created.user.uid), ProfileModel.toFirestore(defaultProfile));
 
+    await sendVerificationEmailForUser(created.user);
+
     return createAuthUser({
       uid: userDoc.uid,
       isAnonymous: false,
@@ -323,12 +334,14 @@ export async function signUpWithFirebase(payload: SignUpPayload): Promise<AuthUs
       role: undefined,
     });
   } catch (error) {
-    throw mapFirebaseError(error);
+    throw mapFirebaseAuthError(error);
   }
 }
 
 export async function resetPasswordWithFirebase(payload: ForgotPasswordPayload): Promise<void> {
-  if (!isFirebaseReady()) {
+  assertProductionAuthConfigured();
+
+  if (shouldUseMockAuth()) {
     await mockForgotPassword(payload);
     return;
   }
@@ -339,14 +352,22 @@ export async function resetPasswordWithFirebase(payload: ForgotPasswordPayload):
   }
 
   try {
-    await sendPasswordResetEmail(auth, payload.email);
+    await sendPasswordResetEmail(auth, payload.email, getFirebaseActionCodeSettings());
   } catch (error) {
-    throw mapFirebaseError(error);
+    const mapped = mapFirebasePasswordResetError(error);
+    if (mapped) {
+      throw mapped;
+    }
+    // Intentionally succeed without revealing whether the email is registered.
   }
 }
 
+export function getPasswordResetSuccessMessage(): string {
+  return PASSWORD_RESET_SUCCESS_MESSAGE;
+}
+
 export async function signOutFromFirebase(): Promise<void> {
-  if (!isFirebaseReady()) {
+  if (shouldUseMockAuth()) {
     await mockSignOut();
     return;
   }
@@ -355,6 +376,16 @@ export async function signOutFromFirebase(): Promise<void> {
   if (!auth) {
     return;
   }
+
+  // Clear native Google session and allowlisted SecureStore secrets.
+  // Firebase Auth session material is owned by Firebase persistence — never mirrored here.
+  void import('@/features/auth/services/googleAuthService')
+    .then(({ clearGoogleSignInSession }) => clearGoogleSignInSession())
+    .catch(() => undefined);
+
+  void import('@/services/secureStorage')
+    .then(({ secureStorageService }) => secureStorageService.clearAllowlistedItems())
+    .catch(() => undefined);
 
   await firebaseSignOut(auth);
 }

@@ -1,8 +1,9 @@
 import { View } from 'react-native';
-import { BarChart3 } from 'lucide-react-native';
+import { BarChart3, Clapperboard } from 'lucide-react-native';
 import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
+import { Button } from '@/components/primitives/Button';
 import { FloatingActionButton } from '@/components/primitives/FloatingActionButton';
 import { MatchHistory } from '@/features/player-statistics/components/MatchHistory';
 import { ProgressGraphs } from '@/features/player-statistics/components/ProgressGraphs';
@@ -19,23 +20,30 @@ export type StatisticsScreenProps = {
   matches?: PlayerMatchStatistics[];
   aiInsightContext?: AiInsightContext | null;
   onLogMatchPress?: () => void;
+  onAnalyzeMatchVideoPress?: () => void;
   onRefresh?: () => void;
   refreshing?: boolean;
   embeddedInTabShell?: boolean;
+  nestedUnderSegment?: boolean;
 };
 
 export function StatisticsScreen({
   matches,
   aiInsightContext = null,
   onLogMatchPress,
+  onAnalyzeMatchVideoPress,
   onRefresh,
   refreshing = false,
   embeddedInTabShell = false,
+  nestedUnderSegment = false,
 }: StatisticsScreenProps) {
   const { t } = useAppTranslation(['statistics', 'common', 'errors']);
   const { colors } = useTheme();
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
-  const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
+  const screenProps = {
+    ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
+    ...(nestedUnderSegment ? { safeAreaEdges: ['left', 'right'] as Array<'left' | 'right'> } : {}),
+  };
   const fabBottomOffset = embeddedInTabShell ? 72 : undefined;
 
   if (isLoading) {
@@ -64,12 +72,23 @@ export function StatisticsScreen({
   if (overview.matchCount === 0) {
     return (
       <Screen title="Statistics" subtitle="Performance analytics" safeArea {...screenProps}>
-        <EmptyState
-          title="No match data yet"
-          description="Log your first match to unlock totals, averages, trends, and charts."
-          actionLabel="Log Match"
-          onAction={onLogMatchPress}
-        />
+        <View className="gap-4">
+          <EmptyState
+            title="No match data yet"
+            description="Log a match or upload match film for AI stats and coaching feedback."
+            actionLabel="Log Match"
+            onAction={onLogMatchPress}
+          />
+          {onAnalyzeMatchVideoPress ? (
+            <Button
+              variant="accent"
+              onPress={onAnalyzeMatchVideoPress}
+              leftIcon={<Clapperboard size={18} color={colors.accentForeground} />}
+            >
+              Analyze match video
+            </Button>
+          ) : null}
+        </View>
       </Screen>
     );
   }
@@ -78,13 +97,22 @@ export function StatisticsScreen({
     <View className="flex-1">
       <Screen
         title="Statistics"
-        subtitle={`${overview.matchCount} matches tracked with automatic totals, averages and trends`}
+        subtitle={`${overview.matchCount} matches tracked with automatic totals, averages and trends.`}
         onRefresh={onRefresh}
         refreshing={refreshing}
         safeArea
         contentClassName="gap-8"
         {...screenProps}
       >
+        {onAnalyzeMatchVideoPress ? (
+          <Button
+            variant="secondary"
+            onPress={onAnalyzeMatchVideoPress}
+            leftIcon={<Clapperboard size={18} color={colors.accent} />}
+          >
+            Analyze match video with AI
+          </Button>
+        ) : null}
         <StatisticsCards items={overview.totals} />
         <AiInsightPanel
           insightType="performance_summary"
@@ -101,7 +129,7 @@ export function StatisticsScreen({
         <MatchHistory items={overview.matchHistory} />
       </Screen>
 
-      {onLogMatchPress ? (
+      {onLogMatchPress && !embeddedInTabShell ? (
         <FloatingActionButton
           icon={<BarChart3 size={24} color={colors.accentForeground} strokeWidth={2} />}
           accessibilityLabel="Log match"

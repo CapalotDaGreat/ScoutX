@@ -62,7 +62,7 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
         accessibilityLabel={`${player.fullName}, ${player.position.join('/')}, overall ${player.overallRating}`}
         onPress={handlePress}
         className={cn(
-          'overflow-hidden rounded-2xl border border-border bg-surface shadow-sm dark:border-neutral-800 dark:bg-neutral-900',
+          'overflow-hidden rounded-2xl border border-border bg-surface shadow-sm',
           className,
         )}
         style={({ pressed }) =>
@@ -112,7 +112,7 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
           <View className="flex-row items-start gap-3">
             <Image
               source={{ uri: player.avatarUrl }}
-              className="h-12 w-12 rounded-full border-2 border-surface dark:border-neutral-900"
+              className="h-12 w-12 rounded-full border-2 border-surface"
             />
             <View className="flex-1">
               <View className="flex-row items-center gap-1">

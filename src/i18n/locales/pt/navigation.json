@@ -5,9 +5,18 @@
     "statistics": "Stats",
     "gps": "GPS",
     "trials": "Trials",
-    "home": "Home",
+    "home": "Início",
+    "performance": "Desempenho",
+    "track": "Atividade",
+    "search": "Pesquisar",
     "discover": "Discover",
     "pipeline": "Pipeline"
+  },
+  "segments": {
+    "stats": "Stats",
+    "career": "Carreira",
+    "gps": "GPS",
+    "trials": "Trials"
   },
   "screens": {
     "settings": "Definições",

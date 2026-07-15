@@ -1,18 +1,47 @@
+import * as Linking from 'expo-linking';
 import type { LinkingOptions } from '@react-navigation/native';
+import {
+  getDeepLinkPrefixes,
+  normalizeIncomingDeepLink,
+  parseAuthActionLink,
+} from '@/config/deepLinking';
+import { stashPendingAuthAction } from '@/features/auth/services/pendingAuthDeepLinkService';
 import type { RootStackParamList } from '@/navigation/types';
+
+function captureAndNormalize(url: string): string {
+  const authAction = parseAuthActionLink(url);
+  if (authAction) {
+    stashPendingAuthAction(authAction);
+  }
+  return normalizeIncomingDeepLink(url);
+}
 
 /**
  * Public Football Passport URLs use `player/:slug` once (GuestApp) to avoid
- * React Navigation "conflicting screens" errors. Player and scout in-app
- * preview uses `navigation.navigate()` without URL paths.
+ * React Navigation "conflicting screens" errors with PlayerApp tab paths.
+ *
+ * Firebase auth action links (`auth/action`, `__/auth/action`) open AuthAction
+ * and return users to ScoutX after email verification or password reset.
  */
 export const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [
-    'scoutx://',
-    'https://scoutx.app',
-    'http://localhost:8081',
-    'http://localhost:19006',
-  ],
+  prefixes: getDeepLinkPrefixes(),
+  async getInitialURL() {
+    const url = await Linking.getInitialURL();
+    if (!url) {
+      return null;
+    }
+
+    return captureAndNormalize(url);
+  },
+  subscribe(listener) {
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      listener(captureAndNormalize(url));
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  },
   config: {
     screens: {
       Auth: {
@@ -22,21 +51,38 @@ export const linking: LinkingOptions<RootStackParamList> = {
           Register: 'register',
           ForgotPassword: 'forgot-password',
           RoleSelection: 'role',
+          AuthAction: {
+            path: 'auth/action',
+            parse: {
+              mode: (value: string) => value,
+              oobCode: (value: string) => value,
+              apiKey: (value: string) => value,
+            },
+          },
+          CompletePasswordReset: {
+            path: 'auth/reset-password',
+            parse: {
+              oobCode: (value: string) => value,
+              email: (value: string) => value,
+            },
+          },
         },
       },
       PlayerApp: {
         screens: {
           PlayerTabs: {
             screens: {
-              Portfolio: 'player/portfolio',
-              Career: 'player/career',
-              Statistics: 'player/stats',
-              Gps: 'player/gps',
-              Trials: 'player/trials',
+              Home: 'player/home',
+              Performance: 'player/performance',
+              Track: 'player/track',
+              Search: 'player/search',
             },
           },
-          PublicPortfolio: 'player/:slug',
+          PlayerDetail: 'player/detail/:playerId',
           Settings: 'player/settings',
+          PlayerRegister: 'player/register',
+          PlayerLogin: 'player/login',
+          PlayerForgotPassword: 'player/forgot-password',
         },
       },
       ScoutApp: {
@@ -51,7 +97,6 @@ export const linking: LinkingOptions<RootStackParamList> = {
           PlayerDetail: 'scout/player/:playerId',
           PlayerComparison: 'scout/compare',
           ActivityInbox: 'scout/activity',
-          PublicPortfolio: 'player/:slug',
           Settings: 'scout/settings',
         },
       },
@@ -59,9 +104,15 @@ export const linking: LinkingOptions<RootStackParamList> = {
         screens: {
           GuestMain: 'guest',
           PlayerDetail: 'guest/player/:playerId',
-          PublicPortfolio: 'player/:slug',
+          PublicPortfolio: {
+            path: 'player/:slug',
+            parse: {
+              slug: (value: string) => value,
+            },
+          },
           GuestRegister: 'guest/register',
           GuestLogin: 'guest/login',
+          GuestForgotPassword: 'guest/forgot-password',
         },
       },
     },

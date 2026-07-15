@@ -30,13 +30,13 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
       accessibilityHint="Drag handle prepared for future reordering"
       testID={`recruitment-card-${entry.playerId}`}
       onPress={() => onPress?.(entry)}
-      className="mb-2 overflow-hidden rounded-xl border border-border bg-surface shadow-sm dark:border-neutral-800 dark:bg-neutral-900"
+      className="mb-2 overflow-hidden rounded-xl border border-border bg-surface shadow-sm"
     >
       <View className="flex-row">
         <View
           accessibilityLabel="Drag handle"
           testID={`recruitment-drag-handle-${entry.playerId}`}
-          className="items-center justify-center border-r border-divider px-1.5 py-3 dark:border-neutral-800"
+          className="items-center justify-center border-r border-divider px-1.5 py-3"
         >
           <GripVertical size={14} color={colors.textSecondary} />
         </View>
@@ -60,7 +60,7 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
                 accessibilityRole="button"
                 accessibilityLabel={`Move ${entry.playerName}`}
                 onPress={() => onMovePress(entry)}
-                className="h-8 w-8 items-center justify-center rounded-full bg-background-secondary dark:bg-neutral-800"
+                className="h-8 w-8 items-center justify-center rounded-full bg-background-secondary"
               >
                 <MoreHorizontal size={16} color={colors.textSecondary} />
               </Pressable>

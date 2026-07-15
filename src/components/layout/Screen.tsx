@@ -5,11 +5,8 @@ import {
   View,
   type ScrollViewProps,
 } from 'react-native';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-  type Edge,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets, type Edge } from 'react-native-safe-area-context';
+import { getSafeAreaPadding } from '@/components/layout/AppSafeAreaView';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { Button } from '@/components/primitives/Button';
@@ -128,7 +125,7 @@ export function Screen({
           className="flex-row items-center justify-center gap-2 bg-warning-muted px-4 py-2 dark:bg-yellow-950"
         >
           <WifiOff size={14} color={colors.warning} strokeWidth={2} />
-          <Text variant="caption" className="font-sans-medium text-warning dark:text-yellow-400">
+          <Text variant="caption" className="font-sans-medium text-warning">
             {t('offline')}
           </Text>
         </View>
@@ -152,7 +149,7 @@ export function Screen({
 
       {footer ? (
         <View
-          className="border-t border-divider bg-surface px-4 pt-4 dark:border-neutral-800 dark:bg-neutral-900"
+          className="border-t border-divider bg-background px-4 pt-4"
           style={{ paddingBottom: Math.max(insets.bottom, 16) }}
         >
           {footer}
@@ -161,24 +158,23 @@ export function Screen({
     </>
   );
 
-  const Container = safeArea ? SafeAreaView : View;
-  const containerProps = safeArea ? { edges: resolvedSafeAreaEdges } : {};
+  const safeAreaStyle = safeArea ? getSafeAreaPadding(insets, resolvedSafeAreaEdges) : undefined;
 
   if (!scrollable) {
     return (
-      <Container
-        {...containerProps}
-        className={cn('flex-1 bg-background dark:bg-neutral-950', className)}
+      <View
+        className={cn('flex-1 bg-background', className)}
+        style={safeAreaStyle}
       >
         {body}
-      </Container>
+      </View>
     );
   }
 
   return (
-    <Container
-      {...containerProps}
-      className={cn('flex-1 bg-background dark:bg-neutral-950', className)}
+    <View
+      className={cn('flex-1 bg-background', className)}
+      style={safeAreaStyle}
     >
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -198,6 +194,6 @@ export function Screen({
       >
         {body}
       </ScrollView>
-    </Container>
+    </View>
   );
 }

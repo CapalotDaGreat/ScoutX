@@ -8,7 +8,7 @@ export type ClubProfileChipProps = {
 
 export function ClubProfileChip({ club }: ClubProfileChipProps) {
   return (
-    <View className="rounded-xl border border-border bg-neutral-50 px-3 py-2 dark:border-neutral-800 dark:bg-neutral-900">
+    <View className="rounded-xl border border-border bg-neutral-50 px-3 py-2">
       <Text variant="caption" color="secondary">
         Club profile
       </Text>

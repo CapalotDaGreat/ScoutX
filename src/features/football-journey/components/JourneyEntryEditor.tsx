@@ -44,7 +44,7 @@ export function JourneyEntryEditor({ entry, onChange, onRemove }: JourneyEntryEd
   };
 
   return (
-    <View className="gap-3 rounded-xl border border-border p-3 dark:border-neutral-800">
+    <View className="gap-3 rounded-xl border border-border p-3">
       <Dropdown
         label="Entry Type"
         value={entry.type}
@@ -95,7 +95,7 @@ export function JourneyEntryEditor({ entry, onChange, onRemove }: JourneyEntryEd
         Media
       </Text>
       {entry.media.map((item, index) => (
-        <View key={`media-${index}`} className="gap-2 rounded-lg bg-background-secondary/60 p-2 dark:bg-neutral-900/60">
+        <View key={`media-${index}`} className="gap-2 rounded-lg bg-background-secondary/60 p-2">
           <Text variant="caption" color="secondary">
             {item.type === 'video' ? 'Video' : 'Image'} #{index + 1}
           </Text>

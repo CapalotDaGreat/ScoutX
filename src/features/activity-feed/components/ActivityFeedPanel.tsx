@@ -20,7 +20,7 @@ export function ActivityUnreadBadge({ count }: ActivityUnreadBadgeProps) {
   const label = count > 9 ? '9+' : String(count);
 
   return (
-    <View className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-accent px-1 py-0.5 dark:bg-green-500">
+    <View className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-accent px-1 py-0.5">
       <Text variant="caption" className="text-center font-sans-bold text-white">
         {label}
       </Text>
@@ -92,7 +92,7 @@ export function ActivityFeedSection({
       {isLoading ? (
         <SkeletonLoader variant="card" count={2} />
       ) : items.length === 0 ? (
-        <View className="rounded-xl border border-dashed border-border px-4 py-8 dark:border-neutral-800">
+        <View className="rounded-xl border border-dashed border-border px-4 py-8">
           <Text variant="body-sm" color="secondary" className="text-center">
             Important actions will appear here as activity updates.
           </Text>

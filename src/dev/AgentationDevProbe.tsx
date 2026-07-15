@@ -1,14 +1,20 @@
 import type { ReactElement } from 'react';
+import Constants from 'expo-constants';
 
 type AgentationProbeComponent = () => ReactElement | null;
 
+const isExpoGo = Constants.executionEnvironment === 'storeClient';
+
+function loadAgentationProbe(): AgentationProbeComponent {
+  try {
+    return require('@re-agentation/probe').AgentationProbe as AgentationProbeComponent;
+  } catch {
+    return () => null;
+  }
+}
+
 /**
- * Re-agentation in-app probe — dev only.
- * @see https://github.com/Re-agentation/re-agentation
- *
- * Tap the floating probe in the simulator, select a component, describe a change,
- * and route it to your AI agent via Metro + MCP.
+ * Re-agentation in-app probe — dev only, not in Expo Go.
  */
-export const AgentationDevProbe: AgentationProbeComponent = __DEV__
-  ? require('@re-agentation/probe').AgentationProbe
-  : () => null;
+export const AgentationDevProbe: AgentationProbeComponent =
+  __DEV__ && !isExpoGo ? loadAgentationProbe() : () => null;

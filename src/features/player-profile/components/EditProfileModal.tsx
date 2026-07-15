@@ -136,11 +136,15 @@ export function EditProfileModal({
         keyboardShouldPersistTaps="handled"
       >
         <View className="relative mb-6 overflow-hidden rounded-xl bg-neutral-800">
-          <Image
-            source={{ uri: profile.coverImageUrl }}
-            className="h-32 w-full opacity-60"
-            resizeMode="cover"
-          />
+          {profile.coverImageUrl.trim() ? (
+            <Image
+              source={{ uri: profile.coverImageUrl }}
+              className="h-32 w-full opacity-60"
+              resizeMode="cover"
+            />
+          ) : (
+            <View className="h-32 w-full bg-neutral-800" />
+          )}
           {uploadingCover ? (
             <View className="absolute inset-0 items-center justify-center bg-black/50">
               <ActivityIndicator color={colors.accent} />
@@ -159,8 +163,12 @@ export function EditProfileModal({
         </View>
 
         <View className="-mt-16 mb-6 items-center">
-          <View className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-surface bg-neutral-800 dark:border-neutral-900">
-            <Image source={{ uri: profile.avatarUrl }} className="h-full w-full opacity-70" />
+          <View className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-surface bg-neutral-800">
+            {profile.avatarUrl.trim() ? (
+              <Image source={{ uri: profile.avatarUrl }} className="h-full w-full opacity-70" />
+            ) : (
+              <View className="h-full w-full bg-neutral-700" />
+            )}
             {uploadingAvatar ? (
               <View className="absolute inset-0 items-center justify-center bg-black/50">
                 <ActivityIndicator color={colors.accent} />

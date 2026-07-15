@@ -40,8 +40,7 @@ export function PlayerOnboardingCard({
             fullWidth
             className="justify-start"
           >
-            {step.complete ? '✓ ' : ''}
-            {step.title}
+            {step.complete ? `✓ ${step.title}` : step.title}
           </Button>
         ))}
       </View>

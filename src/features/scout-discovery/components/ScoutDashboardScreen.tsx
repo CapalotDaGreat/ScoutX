@@ -116,7 +116,7 @@ export function ScoutDashboardScreen({
         <View className="mb-2 flex-row items-center justify-end gap-2">
           <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
           {onSettingsPress ? (
-            <Button variant="ghost" size="sm" onPress={onSettingsPress}>
+            <Button variant="secondary" size="sm" onPress={onSettingsPress}>
               {t('common:settings')}
             </Button>
           ) : onSignOut ? (
@@ -222,7 +222,7 @@ export function ScoutDashboardScreen({
                   {data.nearby.length > 0 ? (
                     <PlayerCarousel players={data.nearby} onPlayerPress={onPlayerPress} variant="compact" />
                   ) : (
-                    <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4 dark:border-neutral-800 dark:bg-neutral-950">
+                    <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4">
                       <MapPin size={18} color={colors.textSecondary} />
                       <View className="flex-1">
                         <Text weight="semibold">{t('scout:dashboard.proximityTitle')}</Text>
@@ -290,7 +290,7 @@ export function ScoutDashboardScreen({
             {data.nearby.length > 0 ? (
               <PlayerCarousel players={data.nearby} onPlayerPress={onPlayerPress} variant="compact" />
             ) : (
-              <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4 dark:border-neutral-800 dark:bg-neutral-950">
+              <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4">
                 <MapPin size={18} color={colors.textSecondary} />
                 <View className="flex-1">
                   <Text weight="semibold">{t('scout:dashboard.proximityTitle')}</Text>

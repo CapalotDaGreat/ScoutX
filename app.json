@@ -37,8 +37,8 @@
       "output": "single"
     },
     "plugins": [
-      "expo-video",
       "expo-apple-authentication",
+      "expo-video",
       [
         "@sentry/react-native/expo",
         {
@@ -65,7 +65,11 @@
     "extra": {
       "privacyPolicyUrl": "https://scoutx.app/privacy",
       "termsOfServiceUrl": "https://scoutx.app/terms",
-      "supportUrl": "https://scoutx.app/support"
+      "supportUrl": "https://scoutx.app/support",
+      "appLinkHost": "scoutx.app",
+      "eas": {
+        "projectId": "303c79c7-d494-48c3-becb-f64b2a0c9e65"
+      }
     }
   }
 }

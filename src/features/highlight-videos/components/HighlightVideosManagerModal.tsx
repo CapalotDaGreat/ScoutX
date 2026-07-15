@@ -166,7 +166,7 @@ export function HighlightVideosManagerModal({
               </Text>
             ) : (
               sortedVideos.map((video, index) => (
-                <View key={video.id} className="gap-2 rounded-xl border border-border p-3 dark:border-neutral-800">
+                <View key={video.id} className="gap-2 rounded-xl border border-border p-3">
                   <HighlightVideoCard video={video} index={index} onPress={setPlayerVideo} />
                   <View className="flex-row flex-wrap gap-2">
                     <Button

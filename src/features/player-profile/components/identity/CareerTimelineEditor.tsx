@@ -42,7 +42,7 @@ export function CareerTimelineEditor({ entries, onChange }: CareerTimelineEditor
         Career Timeline
       </Text>
       {entries.map((entry, index) => (
-        <View key={entry.id} className="gap-2 rounded-xl border border-border p-3 dark:border-neutral-800">
+        <View key={entry.id} className="gap-2 rounded-xl border border-border p-3">
           <Dropdown
             label="Type"
             value={entry.type}

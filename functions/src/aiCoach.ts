@@ -1,6 +1,7 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { defineSecret } from 'firebase-functions/params';
 import { logger } from 'firebase-functions';
+import { createCallableOptions } from './callableOptions';
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
 
@@ -34,11 +35,10 @@ function extractJsonFromModelText(text: string): Record<string, unknown> {
 }
 
 export const generateAiInsight = onCall(
-  {
+  createCallableOptions({
     secrets: [openRouterApiKey],
     timeoutSeconds: 60,
-    cors: true,
-  },
+  }),
   async (request) => {
     if (!request.auth?.uid) {
       throw new HttpsError('unauthenticated', 'Authentication is required.');

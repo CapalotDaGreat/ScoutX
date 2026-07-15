@@ -14,7 +14,7 @@ export function PortfolioSection({ title, subtitle, children, index }: Portfolio
   return (
     <Animated.View
       entering={FadeInUp.delay(Math.min(index, 6) * 50).duration(350)}
-      className="gap-3 rounded-2xl border border-border bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-950"
+      className="gap-3 rounded-2xl border border-border bg-surface p-5 shadow-sm"
     >
       <View>
         <Text variant="overline" color="secondary">

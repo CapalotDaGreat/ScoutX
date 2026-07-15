@@ -16,11 +16,13 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 export type GpsTrackingScreenProps = {
   playerId: string | null;
   embeddedInTabShell?: boolean;
+  nestedUnderSegment?: boolean;
 };
 
 export function GpsTrackingScreen({
   playerId,
   embeddedInTabShell = false,
+  nestedUnderSegment = false,
 }: GpsTrackingScreenProps) {
   const { t } = useAppTranslation(['gps', 'common', 'errors']);
   const {
@@ -69,6 +71,7 @@ export function GpsTrackingScreen({
       safeArea
       contentClassName="gap-8"
       embeddedInTabShell={embeddedInTabShell}
+      safeAreaEdges={nestedUnderSegment ? (['left', 'right'] as Array<'left' | 'right'>) : undefined}
     >
       <Section title={t('gps:liveSession')} gap="md">
         <GpsRecordingControls

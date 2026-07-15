@@ -1,213 +1,237 @@
 import { Platform } from 'react-native';
+import { OAuthProvider } from 'firebase/auth';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import Constants from 'expo-constants';
+import { getFirebaseAuth, isFirebaseReady } from '@/config/firebase';
+import { assertProductionAuthConfigured } from '@/config/authSecurity';
+import { mapAppleAuthError } from '@/features/auth/services/authErrorMapping';
+import { generateRawOAuthNonce, hashOAuthNonce } from '@/features/auth/services/oauth/oauthNonce';
 import {
-  OAuthProvider,
-  linkWithCredential,
-  signInWithCredential,
-  updateProfile,
-  type User,
-} from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { getFirebaseAuth, getFirestoreDb, isFirebaseReady } from '@/config/firebase';
+  clearOAuthPendingState,
+  createOAuthPendingState,
+  resolveOAuthRawNonce,
+} from '@/features/auth/services/oauth/oauthSecureStateService';
+import { secureStorageService } from '@/services/secureStorage';
 import {
-  AuthError,
-  createAuthUser,
-  type AuthUser,
-} from '@/features/auth/types';
-import {
-  ensureUserDocument,
-  fetchUserDocument,
-  migrateAnonymousUserData,
-  upgradeUserDocument,
-} from '@/features/auth/services/userService';
-import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
-import { UserModel } from '@/features/player-profile/models/UserModel';
+  isOAuthProviderLinkedForCurrentUser,
+  signInOrLinkOAuthCredential,
+} from '@/features/auth/services/oauth/oauthAccountLinking';
+import type { OAuthCredentialBundle } from '@/features/auth/services/oauth/types';
+import { persistAppleAuthorizationCode } from '@/features/auth/services/appleTokenPersistenceService';
+import { AuthError, type AuthUser } from '@/features/auth/types';
 
+const APPLE_PROVIDER_ID = 'apple.com' as const;
+
+export type AppleSignInEnvironment = 'expo-go' | 'development-build' | 'standalone' | 'unsupported';
+
+function buildAppleDisplayName(
+  fullName: AppleAuthentication.AppleAuthenticationCredential['fullName'],
+): string | undefined {
+  const displayName = [fullName?.givenName, fullName?.familyName]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+
+  return displayName || undefined;
+}
+
+export function isAppleSignInSupportedPlatform(): boolean {
+  return Platform.OS === 'ios';
+}
+
+export function getAppleSignInEnvironment(): AppleSignInEnvironment {
+  if (!isAppleSignInSupportedPlatform()) {
+    return 'unsupported';
+  }
+
+  const executionEnvironment = Constants.executionEnvironment;
+
+  if (executionEnvironment === 'storeClient') {
+    return 'expo-go';
+  }
+
+  if (executionEnvironment === 'bare' || executionEnvironment === 'standalone') {
+    return 'standalone';
+  }
+
+  return 'development-build';
+}
+
+/**
+ * Sign in with Apple works in Expo Go on supported iOS devices via the Expo Go binary.
+ * Full App Store compliance (token revoke on delete) requires a development/EAS build with Functions secrets.
+ */
 export async function isAppleSignInAvailable(): Promise<boolean> {
-  if (Platform.OS !== 'ios') {
+  if (!isAppleSignInSupportedPlatform()) {
     return false;
   }
 
   try {
-    const AppleAuthentication = await import('expo-apple-authentication');
-    return AppleAuthentication.isAvailableAsync();
+    return await AppleAuthentication.isAvailableAsync();
   } catch {
     return false;
   }
 }
 
-async function resolveAuthUserFromFirestore(user: User): Promise<AuthUser> {
-  const db = getFirestoreDb();
-  if (!db) {
-    return createAuthUser({
-      uid: user.uid,
-      isAnonymous: user.isAnonymous,
-      displayName: user.displayName ?? 'ScoutX User',
-      email: user.email ?? undefined,
-      role: user.isAnonymous ? 'guest' : undefined,
-    });
-  }
-
-  const userDoc = await fetchUserDocument(user.uid);
-  if (userDoc) {
-    return createAuthUser({
-      uid: userDoc.uid,
-      isAnonymous: userDoc.isAnonymous,
-      displayName: userDoc.name,
-      email: userDoc.email || undefined,
-      role: userDoc.role,
-    });
-  }
-
-  const legacySnap = await getDoc(doc(db, 'users', user.uid));
-  if (legacySnap.exists()) {
-    return UserModel.fromFirestore(user.uid, legacySnap.data()).toAuthUser();
-  }
-
-  return createAuthUser({
-    uid: user.uid,
-    isAnonymous: false,
-    displayName: user.displayName ?? 'ScoutX User',
-    email: user.email ?? undefined,
-  });
-}
-
-function mapAppleAuthError(error: unknown): AuthError | null {
-  if (error instanceof AuthError) {
-    return error;
-  }
-
-  if (error instanceof Error && 'code' in error && error.code === 'ERR_REQUEST_CANCELED') {
+export async function getAppleCredentialState(
+  appleUserId: string,
+): Promise<AppleAuthentication.AppleAuthenticationCredentialState | null> {
+  if (!isAppleSignInSupportedPlatform()) {
     return null;
   }
 
-  const message = error instanceof Error ? error.message : 'Apple Sign In failed.';
-  return new AuthError(message, 'invalid-credentials');
+  try {
+    return await AppleAuthentication.getCredentialStateAsync(appleUserId);
+  } catch {
+    return null;
+  }
 }
 
-export async function signInWithAppleFirebase(): Promise<AuthUser | null> {
-  if (!isFirebaseReady()) {
-    throw new AuthError('Apple Sign In requires Firebase.', 'invalid-credentials');
+async function buildAppleNonce(): Promise<{
+  state: string;
+  rawNonce: string;
+  hashedNonce: string;
+}> {
+  if (await secureStorageService.isAvailable()) {
+    return createOAuthPendingState();
   }
 
-  const auth = getFirebaseAuth();
-  const db = getFirestoreDb();
-  if (!auth || !db) {
-    throw new AuthError('Firebase authentication is not configured.', 'invalid-credentials');
-  }
+  const state = generateRawOAuthNonce();
+  const rawNonce = generateRawOAuthNonce();
+  const hashedNonce = await hashOAuthNonce(rawNonce);
+  return { state, rawNonce, hashedNonce };
+}
 
+export async function requestAppleOAuthCredential(): Promise<OAuthCredentialBundle | null> {
   const available = await isAppleSignInAvailable();
   if (!available) {
     throw new AuthError('Apple Sign In is not available on this device.', 'invalid-credentials');
   }
 
+  const { state, rawNonce: pendingRawNonce, hashedNonce } = await buildAppleNonce();
+
   try {
-    const AppleAuthentication = await import('expo-apple-authentication');
     const appleResult = await AppleAuthentication.signInAsync({
       requestedScopes: [
         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
         AppleAuthentication.AppleAuthenticationScope.EMAIL,
       ],
+      nonce: hashedNonce,
     });
 
     if (!appleResult.identityToken) {
       return null;
     }
 
-    const provider = new OAuthProvider('apple.com');
-    const oauthCredential = provider.credential({
-      idToken: appleResult.identityToken,
+    const rawNonce = await resolveOAuthRawNonce({
+      state,
+      fallbackRawNonce: pendingRawNonce,
     });
 
-    const displayName =
-      [appleResult.fullName?.givenName, appleResult.fullName?.familyName]
-        .filter(Boolean)
-        .join(' ')
-        .trim() || undefined;
+    const provider = new OAuthProvider(APPLE_PROVIDER_ID);
+    const credential = provider.credential({
+      idToken: appleResult.identityToken,
+      rawNonce,
+    });
 
-    const anonymousUser = auth.currentUser;
+    return {
+      providerId: APPLE_PROVIDER_ID,
+      credential,
+      displayName: buildAppleDisplayName(appleResult.fullName),
+      email: appleResult.email ?? undefined,
+      appleAuthorizationCode: appleResult.authorizationCode ?? undefined,
+      appleUserId: appleResult.user || undefined,
+    };
+  } finally {
+    await clearOAuthPendingState();
+  }
+}
 
-    if (anonymousUser?.isAnonymous) {
-      try {
-        const linked = await linkWithCredential(anonymousUser, oauthCredential);
-        if (displayName) {
-          await updateProfile(linked.user, { displayName });
-        }
+async function finalizeAppleSession(
+  user: AuthUser,
+  bundle: OAuthCredentialBundle,
+): Promise<AuthUser> {
+  if (bundle.appleAuthorizationCode) {
+    await persistAppleAuthorizationCode({
+      authorizationCode: bundle.appleAuthorizationCode,
+      appleUserId: bundle.appleUserId,
+    });
+  }
 
-        const userDoc = await upgradeUserDocument(linked.user.uid, {
-          name: displayName ?? linked.user.displayName ?? 'ScoutX User',
-          email: linked.user.email ?? '',
-        });
+  return user;
+}
 
-        const profileRef = doc(db, 'profiles', linked.user.uid);
-        const profileSnap = await getDoc(profileRef);
-        if (!profileSnap.exists()) {
-          const defaultProfile = ProfileModel.getDefaultProfile(
-            linked.user.uid,
-            linked.user.email ?? '',
-          );
-          if (displayName) {
-            defaultProfile.fullName = displayName;
-          }
-          await setDoc(profileRef, ProfileModel.toFirestore(defaultProfile));
-        }
+export function isAppleLinkedToCurrentAccount(): boolean {
+  return isOAuthProviderLinkedForCurrentUser(APPLE_PROVIDER_ID);
+}
 
-        return createAuthUser({
-          uid: userDoc.uid,
-          isAnonymous: false,
-          displayName: userDoc.name,
-          email: userDoc.email || undefined,
-          role: userDoc.role === 'guest' ? undefined : userDoc.role,
-        });
-      } catch (linkError) {
-        if (
-          linkError instanceof Error &&
-          'code' in linkError &&
-          (String(linkError.code).includes('credential-already-in-use') ||
-            String(linkError.code).includes('email-already-in-use'))
-        ) {
-          const anonymousUid = anonymousUser.uid;
-          const signedIn = await signInWithCredential(auth, oauthCredential);
-          await migrateAnonymousUserData(anonymousUid, signedIn.user.uid);
-          return resolveAuthUserFromFirestore(signedIn.user);
-        }
-        throw linkError;
-      }
+export async function signInWithAppleFirebase(): Promise<AuthUser | null> {
+  assertProductionAuthConfigured();
+
+  if (!isFirebaseReady()) {
+    throw new AuthError('Apple Sign In requires Firebase.', 'invalid-credentials');
+  }
+
+  const auth = getFirebaseAuth();
+  if (!auth) {
+    throw new AuthError('Firebase authentication is not configured.', 'invalid-credentials');
+  }
+
+  try {
+    const bundle = await requestAppleOAuthCredential();
+    if (!bundle) {
+      return null;
     }
 
-    const signedIn = await signInWithCredential(auth, oauthCredential);
+    const user = await signInOrLinkOAuthCredential(bundle.credential, bundle.providerId, {
+      displayName: bundle.displayName,
+      email: bundle.email,
+    });
 
-    if (displayName && !signedIn.user.displayName) {
-      await updateProfile(signedIn.user, { displayName });
-    }
-
-    const existingDoc = await fetchUserDocument(signedIn.user.uid);
-    if (!existingDoc) {
-      await ensureUserDocument({
-        uid: signedIn.user.uid,
-        name: displayName ?? signedIn.user.displayName ?? 'ScoutX User',
-        email: signedIn.user.email ?? '',
-        isAnonymous: false,
-      });
-
-      const profileRef = doc(db, 'profiles', signedIn.user.uid);
-      const profileSnap = await getDoc(profileRef);
-      if (!profileSnap.exists()) {
-        const defaultProfile = ProfileModel.getDefaultProfile(
-          signedIn.user.uid,
-          signedIn.user.email ?? '',
-        );
-        if (displayName) {
-          defaultProfile.fullName = displayName;
-        }
-        await setDoc(profileRef, ProfileModel.toFirestore(defaultProfile));
-      }
-    }
-
-    return resolveAuthUserFromFirestore(signedIn.user);
+    return finalizeAppleSession(user, bundle);
   } catch (error) {
     const mapped = mapAppleAuthError(error);
     if (!mapped) {
       return null;
+    }
+    throw mapped;
+  }
+}
+
+export async function linkAppleToCurrentAccount(): Promise<AuthUser> {
+  assertProductionAuthConfigured();
+
+  if (!isFirebaseReady()) {
+    throw new AuthError('Apple Sign In requires Firebase.', 'invalid-credentials');
+  }
+
+  const auth = getFirebaseAuth();
+  const currentUser = auth?.currentUser;
+
+  if (!currentUser || currentUser.isAnonymous) {
+    throw new AuthError('Sign in before linking Apple to your account.', 'invalid-credentials');
+  }
+
+  if (isAppleLinkedToCurrentAccount()) {
+    throw new AuthError('Apple Sign In is already linked to this account.', 'credential-already-in-use');
+  }
+
+  try {
+    const bundle = await requestAppleOAuthCredential();
+    if (!bundle) {
+      throw new AuthError('Apple Sign In was cancelled.', 'invalid-credentials');
+    }
+
+    const user = await signInOrLinkOAuthCredential(bundle.credential, bundle.providerId, {
+      displayName: bundle.displayName,
+      email: bundle.email,
+    });
+
+    return finalizeAppleSession(user, bundle);
+  } catch (error) {
+    const mapped = mapAppleAuthError(error);
+    if (!mapped) {
+      throw new AuthError('Apple Sign In was cancelled.', 'invalid-credentials');
     }
     throw mapped;
   }

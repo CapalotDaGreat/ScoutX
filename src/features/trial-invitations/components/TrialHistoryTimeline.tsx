@@ -31,9 +31,9 @@ export function TrialHistoryTimeline({ history }: TrialHistoryTimelineProps) {
       {history.map((entry, index) => (
         <View key={entry.id} className="flex-row gap-3">
           <View className="items-center">
-            <View className="h-2.5 w-2.5 rounded-full bg-accent dark:bg-green-500" />
+            <View className="h-2.5 w-2.5 rounded-full bg-accent" />
             {index < history.length - 1 ? (
-              <View className="mt-1 w-px flex-1 bg-border dark:bg-neutral-700" />
+              <View className="mt-1 w-px flex-1 bg-border" />
             ) : null}
           </View>
           <View className="mb-2 flex-1">

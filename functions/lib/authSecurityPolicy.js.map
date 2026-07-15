@@ -1,0 +1,1 @@
+{"version":3,"file":"authSecurityPolicy.js","sourceRoot":"","sources":["../src/authSecurityPolicy.ts"],"names":[],"mappings":";;;AAAA;;;;;GAKG;AACU,QAAA,oBAAoB,GAAG;IAClC,kBAAkB,EAAE,8BAA8B;IAClD,sBAAsB,EAAE,CAAC,UAAU,EAAE,cAAc,EAAE,cAAc,EAAE,aAAa,EAAE,QAAQ,CAAC;CACrF,CAAC"}

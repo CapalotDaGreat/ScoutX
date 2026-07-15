@@ -1,4 +1,5 @@
 import { createCallableFunction } from '@/firebase/callableFunctions';
+import { isFirebaseConfiguredForProject } from '@/config/firebase';
 import { type AiProvider } from '@/features/ai-insights/providers/types';
 import { parseAiInsightResponse } from '@/features/ai-insights/services/aiResponseParser';
 import { type AiCompletionRequest, type AiInsightMap, type AiInsightType } from '@/features/ai-insights/types';
@@ -17,7 +18,7 @@ export class CloudFunctionAiProvider implements AiProvider {
   };
 
   isAvailable(): boolean {
-    return createCallableFunction('generateAiInsight') !== null;
+    return isFirebaseConfiguredForProject();
   }
 
   async completeStructured<T extends AiInsightType>(

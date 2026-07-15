@@ -1,9 +1,11 @@
+import './authSecurityPolicy';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions';
 
 export { generateAiInsight } from './aiCoach';
+export { analyzeMatchFootage } from './matchAnalysis';
 export { scheduleWeeklyFootballReports } from './weeklyReportScheduler';
 export {
   archiveContentReport,
@@ -11,6 +13,7 @@ export {
   resolveVerificationRequest,
 } from './adminReview';
 export { recordPortfolioView } from './portfolioAnalytics';
+export { deleteAuthenticatedAccount, persistAppleAuthorizationCode } from './appleAuth';
 
 initializeApp();
 

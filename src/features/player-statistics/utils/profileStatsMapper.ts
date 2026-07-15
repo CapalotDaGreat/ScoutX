@@ -30,3 +30,39 @@ export function mapMatchesToProfileStats(
     };
   });
 }
+
+/** Mockup-style row: Matches · Goals · Assists · Avg Rating */
+export function mapMatchesToHomeQuickStats(
+  matches: PlayerMatchStatistics[],
+): PlayerProfileStat[] {
+  const overview = calculatePlayerStatistics(matches);
+  const goals = overview.totals.find((item) => item.key === 'goals');
+  const assists = overview.totals.find((item) => item.key === 'assists');
+  const avgRating =
+    matches.length > 0
+      ? matches.reduce((sum, match) => sum + match.matchRating, 0) / matches.length
+      : 0;
+
+  return [
+    {
+      label: 'Matches',
+      value: String(overview.matchCount),
+      trend: { value: '', direction: 'neutral' },
+    },
+    {
+      label: 'Goals',
+      value: goals?.formattedValue ?? '0',
+      trend: goals?.trend ?? { value: '', direction: 'neutral' },
+    },
+    {
+      label: 'Assists',
+      value: assists?.formattedValue ?? '0',
+      trend: assists?.trend ?? { value: '', direction: 'neutral' },
+    },
+    {
+      label: 'Avg Rating',
+      value: avgRating > 0 ? avgRating.toFixed(1) : '—',
+      trend: { value: '', direction: 'neutral' },
+    },
+  ];
+}

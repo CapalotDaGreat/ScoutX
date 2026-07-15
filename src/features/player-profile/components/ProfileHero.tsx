@@ -13,6 +13,7 @@ import {
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { VerificationBadgeStrip } from '@/features/trust-system';
 import { type TrustProfile } from '@/features/trust-system/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ProfileHeroProps = {
   profile: PlayerProfile;
@@ -21,28 +22,37 @@ export type ProfileHeroProps = {
 };
 
 export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroProps) {
+  const { t } = useAppTranslation('portfolio');
   const { identity } = profile;
   const primaryPosition = identity.preferredPositions[0] ?? profile.position;
+  const coverUri = profile.coverImageUrl.trim();
+  const avatarUri = profile.avatarUrl.trim();
 
   return (
     <Animated.View
       entering={FadeInUp.duration(500)}
-      className="overflow-hidden rounded-3xl border border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900"
+      className="overflow-hidden rounded-3xl border border-border bg-surface dark:bg-surface"
     >
-      <Image source={{ uri: profile.coverImageUrl }} className="h-44 w-full" resizeMode="cover" />
+      {coverUri ? (
+        <Image source={{ uri: coverUri }} className="h-36 w-full" resizeMode="cover" />
+      ) : (
+        <View className="h-36 w-full bg-background-secondary" />
+      )}
 
       <View className="px-5 pb-5 pt-0">
         <View className="-mt-8 flex-row items-end justify-between">
           <Avatar
-            source={{ uri: profile.avatarUrl }}
+            source={avatarUri ? { uri: avatarUri } : undefined}
             name={profile.fullName}
             size="2xl"
             showBorder
-            className="border-4 border-surface dark:border-neutral-900"
+            className="border-4 border-surface dark:border-surface"
           />
-          <Button variant="accent" size="sm" onPress={onEditPress}>
-            Edit Profile
-          </Button>
+          {onEditPress ? (
+            <Button variant="accent" size="sm" onPress={onEditPress}>
+              {t('editProfile')}
+            </Button>
+          ) : null}
         </View>
 
         <View className="mt-4 gap-2">
@@ -96,7 +106,7 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
                 •
               </Text>
               <Text variant="body-sm" color="secondary">
-                Captain
+                {t('captain')}
               </Text>
             </>
           ) : null}

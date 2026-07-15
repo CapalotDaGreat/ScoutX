@@ -1,9 +1,20 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { PlayerProfileRepository } from '@/features/player-profile/repositories/PlayerProfileRepository';
+import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type MatchLogPayload } from '@/features/player-statistics';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
+
+const PROFILE_LOAD_TIMEOUT_MS = 4_000;
+
+function buildSeedProfile(userId: string, name?: string | null, email?: string | null): PlayerProfile {
+  const seeded = ProfileModel.getDefaultProfile(userId, email?.trim() || 'player@scoutx.app');
+  if (name?.trim()) {
+    seeded.fullName = name.trim();
+  }
+  return seeded;
+}
 
 export function usePlayerProfile() {
   const { user } = useAuth();
@@ -11,8 +22,11 @@ export function usePlayerProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasResolvedRef = useRef(false);
 
   useEffect(() => {
+    hasResolvedRef.current = false;
+
     if (!user?.id) {
       setProfile(null);
       setIsLoading(false);
@@ -23,21 +37,49 @@ export function usePlayerProfile() {
     setError(null);
 
     const repository = PlayerProfileRepository.getInstance();
-    
+    const userId = user.id;
+
+    const resolveWithSeed = () => {
+      if (hasResolvedRef.current) {
+        return;
+      }
+      hasResolvedRef.current = true;
+      const seeded = buildSeedProfile(userId, user.name, user.email);
+      setProfile(seeded);
+      setIsLoading(false);
+      void repository.updateProfile(userId, seeded).catch(() => {
+        // Offline / rules — keep local seed so Home still renders
+      });
+    };
+
     const unsubscribe = repository.subscribeToProfile(
-      user.id,
+      userId,
       (nextProfile) => {
-        setProfile(nextProfile);
-        setIsLoading(false);
+        if (nextProfile) {
+          hasResolvedRef.current = true;
+          setProfile(nextProfile);
+          setIsLoading(false);
+          return;
+        }
+        resolveWithSeed();
       },
       (err) => {
         setError(err.message || 'Unable to sync profile.');
-        setIsLoading(false);
-      }
+        resolveWithSeed();
+      },
     );
 
-    return unsubscribe;
-  }, [user?.id]);
+    const timeoutId = setTimeout(() => {
+      if (!hasResolvedRef.current) {
+        resolveWithSeed();
+      }
+    }, PROFILE_LOAD_TIMEOUT_MS);
+
+    return () => {
+      clearTimeout(timeoutId);
+      unsubscribe();
+    };
+  }, [user?.email, user?.id, user?.name]);
 
   const saveProfile = useCallback(
     async (data: Partial<PlayerProfile>) => {
@@ -75,7 +117,7 @@ export function usePlayerProfile() {
       try {
         const repository = PlayerProfileRepository.getInstance();
         const downloadUrl = await repository.uploadImage(user.id, fileUri, type);
-        
+
         const field = type === 'avatar' ? 'avatarUrl' : 'coverImageUrl';
         await repository.updateProfile(user.id, { [field]: downloadUrl });
         ActivityRecorder.getInstance().recordProfileUpdated(
@@ -102,13 +144,17 @@ export function usePlayerProfile() {
     try {
       const repository = PlayerProfileRepository.getInstance();
       const nextProfile = await repository.fetchProfile(user.id);
-      setProfile(nextProfile);
+      if (nextProfile) {
+        setProfile(nextProfile);
+      } else {
+        setProfile(buildSeedProfile(user.id, user.name, user.email));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to refresh profile.');
     } finally {
       setIsLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.email, user?.id, user?.name]);
 
   const saveMatch = useCallback(
     async (payload: MatchLogPayload) => {
@@ -143,6 +189,6 @@ export function usePlayerProfile() {
       uploadImage,
       refreshProfile,
     }),
-    [error, isLoading, isSaving, profile, saveMatch, saveProfile, uploadImage, refreshProfile]
+    [error, isLoading, isSaving, profile, saveMatch, saveProfile, uploadImage, refreshProfile],
   );
 }

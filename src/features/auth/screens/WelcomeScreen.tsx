@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { ArrowRight, ShieldCheck, Sparkles, UserRound } from 'lucide-react-native';
-import * as AppleAuthentication from 'expo-apple-authentication';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Screen } from '@/components/layout/Screen';
 import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
+import { AuthOAuthActions } from '@/features/auth/components/AuthOAuthActions';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -16,6 +15,7 @@ export type WelcomeScreenProps = {
   onSignIn: () => void;
   onContinueAsGuest: () => void;
   onSignInWithApple?: () => void;
+  onSignInWithGoogle?: () => void;
   isSubmitting?: boolean;
 };
 
@@ -24,21 +24,17 @@ export function WelcomeScreen({
   onSignIn,
   onContinueAsGuest,
   onSignInWithApple,
+  onSignInWithGoogle,
   isSubmitting = false,
 }: WelcomeScreenProps) {
   const { colors } = useTheme();
   const { t } = useAppTranslation('auth');
-  const [appleSignInAvailable, setAppleSignInAvailable] = useState(false);
-
-  useEffect(() => {
-    void AppleAuthentication.isAvailableAsync().then(setAppleSignInAvailable);
-  }, []);
 
   return (
     <Screen title={t('welcome.title')} subtitle={t('welcome.subtitle')} safeArea>
       <View className="flex-1 justify-center">
         <AuthCard title={t('welcome.cardTitle')} subtitle={t('welcome.cardSubtitle')}>
-          <View className="items-center justify-center rounded-2xl border border-border bg-background-secondary p-6 dark:border-neutral-800 dark:bg-neutral-900">
+          <View className="items-center justify-center rounded-2xl border border-border bg-background-secondary p-6">
             <View className="mb-4 rounded-full bg-accent-muted p-3 dark:bg-green-950">
               <ShieldCheck size={28} color={colors.accent} strokeWidth={1.75} />
             </View>
@@ -51,21 +47,22 @@ export function WelcomeScreen({
           </View>
 
           <View className="gap-3">
-            <Button variant="accent" onPress={onGetStarted} rightIcon={<ArrowRight size={18} color={colors.accentForeground} strokeWidth={2} />}>
+            <Button
+              variant="accent"
+              onPress={onGetStarted}
+              rightIcon={<ArrowRight size={18} color={colors.accentForeground} strokeWidth={2} />}
+            >
               {t('welcome.createAccount')}
             </Button>
             <Button variant="secondary" onPress={onSignIn}>
               {t('welcome.signIn')}
             </Button>
-            {appleSignInAvailable && onSignInWithApple ? (
-              <AppleAuthentication.AppleAuthenticationButton
-                buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-                buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-                cornerRadius={12}
-                style={{ width: '100%', height: 48 }}
-                onPress={onSignInWithApple}
-              />
-            ) : null}
+            <AuthOAuthActions
+              onSignInWithApple={onSignInWithApple}
+              onSignInWithGoogle={onSignInWithGoogle}
+              isSubmitting={isSubmitting}
+              appleButtonType="sign-in"
+            />
             <Button
               variant="ghost"
               loading={isSubmitting}

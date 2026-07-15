@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppSafeAreaView } from '@/components/layout/AppSafeAreaView';
 import { Kanban, LayoutList } from 'lucide-react-native';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
@@ -61,17 +61,17 @@ export function RecruitmentPipelineScreen({
 
   if (!isReady) {
     return (
-      <SafeAreaView className="flex-1 bg-background px-4 pt-4 dark:bg-neutral-950">
+      <AppSafeAreaView className="flex-1 bg-background px-4 pt-4">
         <SkeletonLoader variant="card" count={3} />
-      </SafeAreaView>
+      </AppSafeAreaView>
     );
   }
 
   const totalPlayers = workspace?.entries.length ?? 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-background dark:bg-neutral-950" edges={['top']}>
-      <View className="border-b border-divider px-4 pb-4 pt-4 dark:border-neutral-800">
+    <AppSafeAreaView className="flex-1 bg-background" edges={['top']}>
+      <View className="border-b border-divider px-4 pb-4 pt-4">
         <View className="flex-row items-center gap-2">
           <Kanban size={22} color={colors.accent} />
           <View className="flex-1">
@@ -166,6 +166,6 @@ export function RecruitmentPipelineScreen({
         entry={activeEntry}
         onClose={() => setActiveEntry(null)}
       />
-    </SafeAreaView>
+    </AppSafeAreaView>
   );
 }

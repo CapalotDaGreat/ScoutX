@@ -93,7 +93,7 @@ export function NotificationCard({
         ) : (
           <View className="mt-1">
             {!read ? (
-              <View className="h-2 w-2 rounded-full bg-accent dark:bg-green-500" />
+              <View className="h-2 w-2 rounded-full bg-accent" />
             ) : (
               <View className="h-2 w-2" />
             )}
@@ -106,7 +106,7 @@ export function NotificationCard({
               variant="label"
               className={cn(
                 'flex-1 font-sans-semibold',
-                !read && 'text-foreground dark:text-white',
+                !read && 'text-foreground',
               )}
               numberOfLines={1}
             >

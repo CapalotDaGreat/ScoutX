@@ -3,6 +3,8 @@ import { WelcomeScreen } from '@/features/auth/screens/WelcomeScreen';
 import { LoginScreen } from '@/features/auth/screens/LoginScreen';
 import { RegisterScreen } from '@/features/auth/screens/RegisterScreen';
 import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
+import { AuthActionScreen } from '@/features/auth/screens/AuthActionScreen';
+import { CompletePasswordResetScreen } from '@/features/auth/screens/CompletePasswordResetScreen';
 import { RoleSelectionScreen } from '@/features/auth/screens/RoleSelectionScreen';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { type AuthStackParamList } from '@/navigation/types';
@@ -11,25 +13,28 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 function WelcomeRoute({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Welcome'>) {
-  const { signInAsGuest, signInWithApple, isSubmitting } = useAuth();
+  const { signInAsGuest, signInWithApple, signInWithGoogle, isSubmitting } = useAuth();
   return (
     <WelcomeScreen
       onGetStarted={() => navigation.navigate('Register')}
       onSignIn={() => navigation.navigate('Login')}
       onContinueAsGuest={() => void signInAsGuest()}
       onSignInWithApple={() => void signInWithApple()}
+      onSignInWithGoogle={() => void signInWithGoogle()}
       isSubmitting={isSubmitting}
     />
   );
 }
 
 function LoginRoute({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Login'>) {
-  const { signIn, isSubmitting, error, successMessage } = useAuth();
+  const { signIn, signInWithApple, signInWithGoogle, isSubmitting, error, successMessage } = useAuth();
   return (
     <LoginScreen
       onSubmit={signIn}
       onBack={() => navigation.goBack()}
       onForgotPassword={() => navigation.navigate('ForgotPassword')}
+      onSignInWithApple={() => void signInWithApple()}
+      onSignInWithGoogle={() => void signInWithGoogle()}
       isSubmitting={isSubmitting}
       error={error}
       successMessage={successMessage}
@@ -38,11 +43,13 @@ function LoginRoute({ navigation }: NativeStackScreenProps<AuthStackParamList, '
 }
 
 function RegisterRoute({ navigation }: NativeStackScreenProps<AuthStackParamList, 'Register'>) {
-  const { signUp, isSubmitting, error } = useAuth();
+  const { signUp, signInWithApple, signInWithGoogle, isSubmitting, error } = useAuth();
   return (
     <RegisterScreen
       onSubmit={signUp}
       onBack={() => navigation.goBack()}
+      onSignInWithApple={() => void signInWithApple()}
+      onSignInWithGoogle={() => void signInWithGoogle()}
       isSubmitting={isSubmitting}
       error={error}
     />
@@ -96,6 +103,8 @@ export function AuthStackNavigator({ initialRouteName = 'Welcome' }: AuthStackNa
       <Stack.Screen name="Login" component={LoginRoute} />
       <Stack.Screen name="Register" component={RegisterRoute} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordRoute} />
+      <Stack.Screen name="AuthAction" component={AuthActionScreen} />
+      <Stack.Screen name="CompletePasswordReset" component={CompletePasswordResetScreen} />
       <Stack.Screen name="RoleSelection" component={RoleSelectionRoute} />
     </Stack.Navigator>
   );

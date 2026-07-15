@@ -25,7 +25,7 @@ export function FormField({
     <View className={cn('w-full', containerClassName)}>
       {label ? (
         <View className="mb-1 flex-row items-center justify-between gap-2">
-          <Text variant="label" className="text-foreground dark:text-white">
+          <Text variant="label" className="text-foreground">
             {label}
           </Text>
           {info ? <View>{info}</View> : null}

@@ -3,14 +3,17 @@ import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { GuestExploreBanner } from '@/features/auth/components/GuestExploreBanner';
+import { AccountUpgradePrompt } from '@/features/auth/components/AccountUpgradePrompt';
+import { useAccountUpgradePrompt } from '@/features/auth/hooks/useAccountUpgradePrompt';
 import { LoginScreen } from '@/features/auth/screens/LoginScreen';
+import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
 import { RegisterScreen } from '@/features/auth/screens/RegisterScreen';
 import { PlayerDiscoveryScreen } from '@/features/scout-discovery/components/PlayerDiscoveryScreen';
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
 import { useDiscoveryFilters } from '@/features/scout-discovery/hooks/useDiscoveryFilters';
 import { ScoutWorkspaceProvider } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { RecruitmentProvider } from '@/features/scout-recruitment';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
 import { type GuestStackParamList } from '@/navigation/types';
@@ -18,7 +21,6 @@ import { type GuestStackParamList } from '@/navigation/types';
 const Stack = createNativeStackNavigator<GuestStackParamList>();
 
 function GuestMainRoute({ navigation }: NativeStackScreenProps<GuestStackParamList, 'GuestMain'>) {
-  const { signOut } = useAuth();
   const [search, setSearch] = useState('');
   const {
     filters,
@@ -40,8 +42,7 @@ function GuestMainRoute({ navigation }: NativeStackScreenProps<GuestStackParamLi
   );
 
   return (
-    <View className="flex-1 bg-background dark:bg-neutral-950">
-      <GuestExploreBanner onSignOut={() => void signOut()} />
+    <View className="flex-1 bg-background">
       <View className="flex-1">
         <PlayerDiscoveryScreen
           search={search}
@@ -104,7 +105,7 @@ function GuestPublicPortfolioRoute({
 function GuestRegisterRoute({
   navigation,
 }: NativeStackScreenProps<GuestStackParamList, 'GuestRegister'>) {
-  const { signUp, isSubmitting, error, clearUpgrade } = useAuth();
+  const { signUp, signInWithApple, signInWithGoogle, isSubmitting, error, clearUpgrade } = useAuth();
 
   return (
     <RegisterScreen
@@ -115,6 +116,8 @@ function GuestRegisterRoute({
         clearUpgrade();
         navigation.goBack();
       }}
+      onSignInWithApple={() => void signInWithApple()}
+      onSignInWithGoogle={() => void signInWithGoogle()}
       isSubmitting={isSubmitting}
       error={error}
     />
@@ -122,7 +125,7 @@ function GuestRegisterRoute({
 }
 
 function GuestLoginRoute({ navigation }: NativeStackScreenProps<GuestStackParamList, 'GuestLogin'>) {
-  const { signIn, isSubmitting, error, successMessage, clearUpgrade } = useAuth();
+  const { signIn, signInWithApple, signInWithGoogle, isSubmitting, error, successMessage, clearUpgrade } = useAuth();
 
   return (
     <LoginScreen
@@ -133,7 +136,25 @@ function GuestLoginRoute({ navigation }: NativeStackScreenProps<GuestStackParamL
         clearUpgrade();
         navigation.goBack();
       }}
-      onForgotPassword={() => undefined}
+      onForgotPassword={() => navigation.navigate('GuestForgotPassword')}
+      onSignInWithApple={() => void signInWithApple()}
+      onSignInWithGoogle={() => void signInWithGoogle()}
+      isSubmitting={isSubmitting}
+      error={error}
+      successMessage={successMessage}
+    />
+  );
+}
+
+function GuestForgotPasswordRoute({
+  navigation,
+}: NativeStackScreenProps<GuestStackParamList, 'GuestForgotPassword'>) {
+  const { forgotPassword, isSubmitting, error, successMessage } = useAuth();
+
+  return (
+    <ForgotPasswordScreen
+      onSubmit={forgotPassword}
+      onBack={() => navigation.goBack()}
       isSubmitting={isSubmitting}
       error={error}
       successMessage={successMessage}
@@ -157,22 +178,39 @@ function GuestUpgradeListener() {
 }
 
 function GuestStackContent() {
-  const { user } = useAuth();
+  const { beginUpgrade } = useAuth();
+  const { visible, dismiss } = useAccountUpgradePrompt();
 
   return (
-    <ScoutWorkspaceProvider scoutId={user?.uid ?? null}>
+    <>
       <GuestUpgradeListener />
+      <AccountUpgradePrompt
+        visible={visible}
+        onDismiss={() => void dismiss()}
+        onCreateAccount={() => beginUpgrade('register')}
+        onSignIn={() => beginUpgrade('login')}
+      />
       <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
         <Stack.Screen name="GuestMain" component={GuestMainRoute} />
         <Stack.Screen name="PlayerDetail" component={GuestPlayerDetailRoute} />
         <Stack.Screen name="PublicPortfolio" component={GuestPublicPortfolioRoute} />
         <Stack.Screen name="GuestRegister" component={GuestRegisterRoute} />
         <Stack.Screen name="GuestLogin" component={GuestLoginRoute} />
+        <Stack.Screen name="GuestForgotPassword" component={GuestForgotPasswordRoute} />
       </Stack.Navigator>
-    </ScoutWorkspaceProvider>
+    </>
   );
 }
 
 export function GuestRootNavigator() {
-  return <GuestStackContent />;
+  const { user } = useAuth();
+
+  return (
+    <ScoutWorkspaceProvider scoutId={user?.uid ?? null}>
+      {/* Provider required by discovery hooks; guest UI does not persist recruitment. */}
+      <RecruitmentProvider scoutId={null} scoutName={user?.name ?? 'Guest'}>
+        <GuestStackContent />
+      </RecruitmentProvider>
+    </ScoutWorkspaceProvider>
+  );
 }

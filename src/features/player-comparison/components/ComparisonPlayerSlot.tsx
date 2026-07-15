@@ -31,7 +31,7 @@ export function ComparisonPlayerSlot({
         accessibilityRole="button"
         accessibilityLabel="Add player to comparison"
         onPress={onAdd}
-        className="min-h-[108px] flex-1 items-center justify-center rounded-xl border border-dashed border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900"
+        className="min-h-[108px] flex-1 items-center justify-center rounded-xl border border-dashed border-border bg-surface"
       >
         <Plus size={20} color={colors.textSecondary} />
         <Text variant="caption" color="secondary" className="mt-1 font-sans-semibold">
@@ -44,7 +44,7 @@ export function ComparisonPlayerSlot({
   return (
     <View
       className={cn(
-        'min-h-[108px] flex-1 overflow-hidden rounded-xl border bg-surface dark:bg-neutral-900',
+        'min-h-[108px] flex-1 overflow-hidden rounded-xl border bg-surface',
       )}
       style={{ borderColor: accentColor }}
     >
@@ -68,7 +68,7 @@ export function ComparisonPlayerSlot({
               accessibilityRole="button"
               accessibilityLabel={`Replace ${player.fullName}`}
               onPress={onReplace}
-              className="h-7 w-7 items-center justify-center rounded-full bg-background-secondary dark:bg-neutral-800"
+              className="h-7 w-7 items-center justify-center rounded-full bg-background-secondary"
             >
               <ArrowLeftRight size={13} color={colors.textSecondary} />
             </Pressable>
@@ -78,7 +78,7 @@ export function ComparisonPlayerSlot({
               accessibilityRole="button"
               accessibilityLabel={`Remove ${player.fullName}`}
               onPress={onRemove}
-              className="h-7 w-7 items-center justify-center rounded-full bg-background-secondary dark:bg-neutral-800"
+              className="h-7 w-7 items-center justify-center rounded-full bg-background-secondary"
             >
               <X size={13} color={colors.textSecondary} />
             </Pressable>

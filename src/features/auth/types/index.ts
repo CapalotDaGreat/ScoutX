@@ -64,7 +64,9 @@ export class AuthError extends Error {
       | 'invalid-email'
       | 'not-found'
       | 'anonymous-disabled'
-      | 'credential-already-in-use',
+      | 'credential-already-in-use'
+      | 'requires-recent-login'
+      | 'account-exists-with-different-credential',
   ) {
     super(message);
     this.name = 'AuthError';

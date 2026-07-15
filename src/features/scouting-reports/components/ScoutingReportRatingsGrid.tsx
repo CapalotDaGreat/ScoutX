@@ -39,7 +39,7 @@ export function ScoutingReportRatingsGrid({
             <View
               key={field.key}
               className={cn(
-                'min-w-[47%] flex-1 rounded-lg border border-border px-3 py-2 dark:border-neutral-800',
+                'min-w-[47%] flex-1 rounded-lg border border-border px-3 py-2',
                 tier === 'elite' && 'bg-accent-muted/30 dark:bg-green-950/20',
               )}
             >

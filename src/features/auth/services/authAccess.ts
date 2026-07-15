@@ -12,14 +12,15 @@ export type AuthFeature =
   | 'scout.endorse'
   | 'scout.invite';
 
-const guestFeatures: AuthFeature[] = ['scout.discovery'];
-
 const playerFeatures: AuthFeature[] = [
   'player.profile.edit',
   'player.statistics.log',
   'player.gps.track',
   'player.trials.manage',
 ];
+
+/** Guests get the full player toolset plus read-only talent search. */
+const guestFeatures: AuthFeature[] = [...playerFeatures, 'scout.discovery'];
 
 const scoutFeatures: AuthFeature[] = [
   'scout.discovery',

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Alert, Switch, View } from 'react-native';
+import { Alert, Linking, Switch, View } from 'react-native';
+import Constants from 'expo-constants';
 import { Screen } from '@/components/layout/Screen';
 import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
@@ -8,7 +9,14 @@ import { Card } from '@/components/primitives/Card';
 import { deleteCurrentAccount } from '@/features/auth/services/accountService';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useNotificationPreferences } from '@/features/notifications/hooks/useNotificationPreferences';
+import { AppearanceSettingsSection } from '@/features/settings/components/AppearanceSettingsSection';
 import { LanguageSettingsSection } from '@/features/settings/components/LanguageSettingsSection';
+import { ChangePasswordSection } from '@/features/settings/components/ChangePasswordSection';
+import { LinkAppleAccountSection } from '@/features/settings/components/LinkAppleAccountSection';
+import { LinkGoogleAccountSection } from '@/features/settings/components/LinkGoogleAccountSection';
+import { isAppleSignInSupportedPlatform } from '@/features/auth/services/appleAuthService';
+import { isGoogleSignInSupportedPlatform } from '@/features/auth/services/googleAuthService';
+import { getPrivacyPolicyUrl } from '@/config/legal';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type AuthRole } from '@/features/auth/types';
 
@@ -33,6 +41,14 @@ function formatRole(
   return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
+function getAppVersion(): string {
+  return (
+    Constants.expoConfig?.version ??
+    Constants.nativeAppVersion ??
+    '1.0.0'
+  );
+}
+
 export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
   const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors']);
   const { user, role } = useAuth();
@@ -45,6 +61,8 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
   } = useNotificationPreferences(user?.uid);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const privacyUrl = getPrivacyPolicyUrl();
+  const appVersion = getAppVersion();
 
   const handleDeleteAccount = () => {
     if (!user?.uid || user.isAnonymous) {
@@ -71,6 +89,10 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
         },
       },
     ]);
+  };
+
+  const handleSupport = () => {
+    void Linking.openURL('mailto:support@scoutx.app?subject=ScoutX%20Support');
   };
 
   return (
@@ -107,10 +129,28 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
 
         <Card variant="outlined" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
+            {t('settings:appearance')}
+          </Text>
+          <AppearanceSettingsSection />
+        </Card>
+
+        <Card variant="outlined" padding="md" className="gap-3">
+          <Text variant="overline" color="secondary">
             {t('settings:language')}
           </Text>
           <LanguageSettingsSection />
         </Card>
+
+        {!user?.isAnonymous ? (
+          <Card variant="outlined" padding="md" className="gap-3">
+            <Text variant="overline" color="secondary">
+              {t('settings:security')}
+            </Text>
+            {user?.email ? <ChangePasswordSection email={user.email} /> : null}
+            {isGoogleSignInSupportedPlatform() ? <LinkGoogleAccountSection /> : null}
+            {isAppleSignInSupportedPlatform() ? <LinkAppleAccountSection /> : null}
+          </Card>
+        ) : null}
 
         <Card variant="outlined" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
@@ -136,6 +176,39 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
               onValueChange={(value) => void setPushPreference(value)}
             />
           </View>
+        </Card>
+
+        <Card variant="outlined" padding="md" className="gap-3">
+          <Text variant="overline" color="secondary">
+            {t('settings:privacyData')}
+          </Text>
+          <Text variant="body-sm" color="secondary">
+            {t('settings:privacyDataDescription')}
+          </Text>
+          {privacyUrl ? (
+            <Button
+              variant="secondary"
+              onPress={() => void Linking.openURL(privacyUrl)}
+            >
+              {t('settings:viewPrivacyPolicy')}
+            </Button>
+          ) : null}
+        </Card>
+
+        <Card variant="outlined" padding="md" className="gap-3">
+          <Text variant="overline" color="secondary">
+            {t('settings:about')}
+          </Text>
+          <Text weight="semibold">{t('settings:aboutAppName')}</Text>
+          <Text variant="body-sm" color="secondary">
+            {t('settings:aboutVersion', { version: appVersion })}
+          </Text>
+          <Text variant="body-sm" color="secondary">
+            {t('settings:aboutDescription')}
+          </Text>
+          <Button variant="secondary" onPress={handleSupport}>
+            {t('settings:contactSupport')}
+          </Button>
         </Card>
 
         <Card variant="outlined" padding="md" className="gap-2">

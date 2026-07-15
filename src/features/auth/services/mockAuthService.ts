@@ -12,28 +12,35 @@ const GUEST_SESSION_KEY = '@scoutx/mock-guest-session';
 
 type MockCredentialUser = AuthUser & { password: string };
 
-const mockUsers: MockCredentialUser[] = [
-  {
-    uid: 'demo-player',
-    id: 'demo-player',
-    isAnonymous: false,
-    name: 'Alex Rivera',
-    displayName: 'Alex Rivera',
-    email: 'player@scoutx.app',
-    password: 'Password123!',
-    role: 'player',
-  },
-  {
-    uid: 'demo-scout',
-    id: 'demo-scout',
-    isAnonymous: false,
-    name: 'Mina Chen',
-    displayName: 'Mina Chen',
-    email: 'scout@scoutx.app',
-    password: 'Password123!',
-    role: 'scout',
-  },
-];
+// Expo only inlines static process.env.EXPO_PUBLIC_* references (not env[key]).
+const mockDemoPassword = process.env.EXPO_PUBLIC_MOCK_DEMO_PASSWORD?.trim() ?? '';
+
+const mockUsers: MockCredentialUser[] = [];
+
+if (__DEV__ && mockDemoPassword) {
+  mockUsers.push(
+    {
+      uid: 'demo-player',
+      id: 'demo-player',
+      isAnonymous: false,
+      name: 'Alex Rivera',
+      displayName: 'Alex Rivera',
+      email: 'player@scoutx.app',
+      password: mockDemoPassword,
+      role: 'player',
+    },
+    {
+      uid: 'demo-scout',
+      id: 'demo-scout',
+      isAnonymous: false,
+      name: 'Mina Chen',
+      displayName: 'Mina Chen',
+      email: 'scout@scoutx.app',
+      password: mockDemoPassword,
+      role: 'scout',
+    },
+  );
+}
 
 let activeGuestSession: AuthUser | null = null;
 let sessionListeners: Array<(user: AuthUser | null) => void> = [];
@@ -55,7 +62,11 @@ function notifySessionListeners(user: AuthUser | null) {
 async function persistGuestSession(user: AuthUser | null): Promise<void> {
   activeGuestSession = user;
   if (user) {
-    await AsyncStorage.setItem(GUEST_SESSION_KEY, JSON.stringify(user));
+    const { uid, id, isAnonymous, displayName, name, email, role } = user;
+    await AsyncStorage.setItem(
+      GUEST_SESSION_KEY,
+      JSON.stringify({ uid, id, isAnonymous, displayName, name, email, role }),
+    );
   } else {
     await AsyncStorage.removeItem(GUEST_SESSION_KEY);
   }
@@ -178,15 +189,9 @@ export async function mockSignUp(payload: SignUpPayload): Promise<AuthUser> {
   return newUser;
 }
 
-export async function mockForgotPassword(payload: ForgotPasswordPayload): Promise<void> {
+export async function mockForgotPassword(_payload: ForgotPasswordPayload): Promise<void> {
   await wait(700);
-
-  const normalizedEmail = normalizeEmail(payload.email);
-  const match = mockUsers.find((user) => user.email && normalizeEmail(user.email) === normalizedEmail);
-
-  if (!match) {
-    throw new AuthError('We could not find an account for this email.', 'not-found');
-  }
+  // Always succeed in mock mode to avoid email enumeration.
 }
 
 export async function mockSignOut(): Promise<void> {

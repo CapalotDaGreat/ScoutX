@@ -40,7 +40,7 @@ export function FootballJourneyTimeline({
 
   if (entries.length === 0) {
     return (
-      <View className="rounded-xl border border-dashed border-border bg-background-secondary/50 px-4 py-8 dark:border-neutral-800 dark:bg-neutral-900/50">
+      <View className="rounded-xl border border-dashed border-border bg-background-secondary/50 px-4 py-8/50">
         <Text variant="body-sm" color="secondary" className="text-center">
           {emptyMessage}
         </Text>

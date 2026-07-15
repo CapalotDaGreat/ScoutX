@@ -12,15 +12,11 @@ import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 
 const variantStyles = {
-  primary:
-    'bg-primary dark:bg-white border border-transparent active:opacity-90',
-  accent:
-    'bg-accent dark:bg-green-500 border border-transparent active:opacity-90',
-  secondary:
-    'bg-transparent border border-border dark:border-neutral-700 active:opacity-80',
+  primary: 'bg-primary border border-transparent active:opacity-90',
+  accent: 'bg-accent border border-transparent active:opacity-90',
+  secondary: 'bg-transparent border border-border active:opacity-80',
   ghost: 'bg-transparent border border-transparent active:opacity-70',
-  destructive:
-    'bg-error-muted dark:bg-red-950 border border-transparent active:opacity-90',
+  destructive: 'bg-error-muted border border-transparent active:opacity-90',
   link: 'bg-transparent border border-transparent',
 } as const;
 
@@ -31,12 +27,12 @@ const sizeStyles = {
 } as const;
 
 const textVariantStyles = {
-  primary: 'text-primary-foreground dark:text-neutral-900',
-  accent: 'text-accent-foreground dark:text-neutral-900',
-  secondary: 'text-foreground dark:text-white',
-  ghost: 'text-foreground-secondary dark:text-neutral-400',
-  destructive: 'text-error dark:text-red-400',
-  link: 'text-accent dark:text-green-400',
+  primary: 'text-primary-foreground',
+  accent: 'text-accent-foreground',
+  secondary: 'text-foreground',
+  ghost: 'text-foreground-secondary',
+  destructive: 'text-error',
+  link: 'text-accent',
 } as const;
 
 const textSizeStyles = {

@@ -69,7 +69,7 @@ export function UsernameClaimField({
   };
 
   return (
-    <View className="gap-2 rounded-xl border border-border p-4 dark:border-neutral-800">
+    <View className="gap-2 rounded-xl border border-border p-4">
       <Text weight="semibold">{t('username.title')}</Text>
       <Text variant="caption" color="secondary">
         {t('username.description')}

@@ -149,8 +149,16 @@ export function parseHighlightVideoLibrary(value: unknown): HighlightVideoLibrar
   };
 }
 
+function omitUndefinedFields(
+  value: Record<string, unknown>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, fieldValue]) => fieldValue !== undefined),
+  );
+}
+
 export function serializeHighlightVideo(video: HighlightVideo): Record<string, unknown> {
-  return {
+  return omitUndefinedFields({
     id: video.id,
     title: video.title,
     description: video.description,
@@ -170,20 +178,20 @@ export function serializeHighlightVideo(video: HighlightVideo): Record<string, u
     fileSizeBytes: video.fileSizeBytes,
     uploadStatus: video.uploadStatus,
     uploadError: video.uploadError,
-    analysis: video.analysis,
+    analysis: omitUndefinedFields({ ...video.analysis }),
     createdAt: video.createdAt,
     updatedAt: video.updatedAt,
-  };
+  });
 }
 
 export function serializeHighlightVideoLibrary(
   library: HighlightVideoLibrary,
 ): Record<string, unknown> {
-  return {
+  return omitUndefinedFields({
     videos: library.videos.map(serializeHighlightVideo),
     featuredVideoId: library.featuredVideoId,
     updatedAt: library.updatedAt,
-  };
+  });
 }
 
 export function sortHighlightVideos(videos: HighlightVideo[]): HighlightVideo[] {

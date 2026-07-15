@@ -2,14 +2,14 @@ import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
 import { cn } from '@/utils/cn';
 
 const variantStyles = {
-  'body-lg': 'text-body-lg font-sans text-foreground dark:text-white',
-  body: 'text-body font-sans text-foreground dark:text-white',
-  'body-sm': 'text-body-sm font-sans text-foreground-secondary dark:text-neutral-400',
-  label: 'text-label font-sans-medium text-foreground dark:text-white',
-  caption: 'text-caption font-sans-medium text-foreground-secondary dark:text-neutral-400',
-  overline: 'text-overline font-sans-semibold uppercase text-foreground-secondary dark:text-neutral-400',
-  link: 'text-body font-sans text-accent dark:text-green-400',
-  inverse: 'text-body font-sans text-foreground-inverse dark:text-neutral-900',
+  'body-lg': 'text-body-lg font-sans text-foreground',
+  body: 'text-body font-sans text-foreground',
+  'body-sm': 'text-body-sm font-sans text-foreground-secondary',
+  label: 'text-label font-sans-medium text-foreground',
+  caption: 'text-caption font-sans-medium text-foreground-secondary',
+  overline: 'text-overline font-sans-semibold uppercase text-foreground-secondary',
+  link: 'text-body font-sans text-accent',
+  inverse: 'text-body font-sans text-foreground-inverse',
 } as const;
 
 const weightStyles = {
@@ -20,14 +20,14 @@ const weightStyles = {
 } as const;
 
 const colorStyles = {
-  primary: 'text-foreground dark:text-white',
-  secondary: 'text-foreground-secondary dark:text-neutral-400',
-  tertiary: 'text-foreground-tertiary dark:text-neutral-500',
-  accent: 'text-accent dark:text-green-400',
-  success: 'text-success dark:text-green-400',
-  warning: 'text-warning dark:text-yellow-400',
-  error: 'text-error dark:text-red-400',
-  inverse: 'text-foreground-inverse dark:text-neutral-900',
+  primary: 'text-foreground',
+  secondary: 'text-foreground-secondary',
+  tertiary: 'text-foreground-tertiary',
+  accent: 'text-accent',
+  success: 'text-success',
+  warning: 'text-warning',
+  error: 'text-error',
+  inverse: 'text-foreground-inverse',
 } as const;
 
 export type TextVariant = keyof typeof variantStyles;

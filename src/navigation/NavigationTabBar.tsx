@@ -5,6 +5,8 @@ import { AppTabBar, type AppTabBarItem } from '@/components/navigation/AppTabBar
 export type NavigationTabBarConfig<T extends string> = {
   tabs: Array<AppTabBarItem<T>>;
   resolveBadge?: (tabId: T) => number | null;
+  onCenterAction?: () => void;
+  centerActionLabel?: string;
   testID?: string;
 };
 
@@ -20,6 +22,8 @@ export function createNavigationTabBar<T extends string>(config: NavigationTabBa
       <AppTabBar
         tabs={tabs}
         activeTab={activeTab}
+        onCenterAction={config.onCenterAction}
+        centerActionLabel={config.centerActionLabel}
         onTabChange={(tabId) => {
           const route = state.routes.find(
             (item: NavigationRoute<ParamListBase, string>) => item.name === tabId,

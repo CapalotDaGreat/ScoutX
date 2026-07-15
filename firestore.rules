@@ -23,8 +23,36 @@ service cloud.firestore {
       return level in ['none', 'basic'];
     }
 
+    function hasForbiddenCredentialFields(data) {
+      return data.keys().hasAny(['password', 'passwordHash', 'passwordSalt', 'credentials', 'secret']);
+    }
+
+    function validClientUserRole(role) {
+      return role in ['guest', 'player', 'scout'];
+    }
+
+    function isValidUserCreate() {
+      return !hasForbiddenCredentialFields(request.resource.data)
+        && request.resource.data.uid == userId
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'email', 'role', 'isAnonymous', 'createdAt', 'updatedAt'])
+        && validClientUserRole(request.resource.data.role);
+    }
+
+    function isValidUserUpdate() {
+      return !hasForbiddenCredentialFields(request.resource.data)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])
+          || validClientUserRole(request.resource.data.role)
+        );
+    }
+
     match /users/{userId} {
-      allow read, write: if isOwner(userId);
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUserCreate();
+      allow update: if isOwner(userId) && isValidUserUpdate();
+      allow delete: if isOwner(userId);
     }
 
     match /profiles/{userId} {
@@ -154,6 +182,17 @@ service cloud.firestore {
         && request.auth.uid == request.resource.data.playerId;
     }
 
+    match /matchAnalysisJobs/{jobId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+    }
+
     match /verificationRequests/{requestId} {
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.requesterId
@@ -187,6 +226,11 @@ service cloud.firestore {
       allow read: if isSignedIn();
       allow create, update: if isSignedIn()
         && request.auth.uid == request.resource.data.ownerId;
+    }
+
+    // Server-only Apple / OAuth provider tokens (Admin SDK). Never client-accessible.
+    match /authProviderTokens/{userId} {
+      allow read, write: if false;
     }
   }
 }

@@ -26,11 +26,11 @@ export function RecruitmentStageColumn({
 
   return (
     <View
-      className="mr-3 rounded-2xl border border-border bg-background-secondary dark:border-neutral-800 dark:bg-neutral-950"
+      className="mr-3 rounded-2xl border border-border bg-background-secondary"
       style={{ width: pipelineColumnWidth }}
       testID={`recruitment-column-${stage}`}
     >
-      <View className="border-b border-divider px-3 py-3 dark:border-neutral-800">
+      <View className="border-b border-divider px-3 py-3">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-2">
             <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />

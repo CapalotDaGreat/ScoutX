@@ -31,7 +31,7 @@ export function MatchHistory({ items, maxItems }: MatchHistoryProps) {
         {visibleItems.map((item) => (
           <View
             key={item.id}
-            className="rounded-lg border border-border bg-background-secondary p-4 dark:border-neutral-800 dark:bg-neutral-950"
+            className="rounded-lg border border-border bg-background-secondary p-4"
           >
             <View className="flex-row items-start justify-between gap-3">
               <View className="flex-1">
@@ -55,25 +55,25 @@ export function MatchHistory({ items, maxItems }: MatchHistoryProps) {
             </View>
 
             <View className="mt-3 flex-row flex-wrap gap-2">
-              <Text variant="caption" className="rounded bg-surface px-2 py-1 dark:bg-neutral-900">
+              <Text variant="caption" className="rounded bg-surface px-2 py-1">
                 {item.stats.minutes} min
               </Text>
-              <Text variant="caption" className="rounded bg-surface px-2 py-1 dark:bg-neutral-900">
+              <Text variant="caption" className="rounded bg-surface px-2 py-1">
                 {item.stats.goals}G
               </Text>
-              <Text variant="caption" className="rounded bg-surface px-2 py-1 dark:bg-neutral-900">
+              <Text variant="caption" className="rounded bg-surface px-2 py-1">
                 {item.stats.assists}A
               </Text>
-              <Text variant="caption" className="rounded bg-surface px-2 py-1 dark:bg-neutral-900">
+              <Text variant="caption" className="rounded bg-surface px-2 py-1">
                 {item.stats.shots} shots
               </Text>
-              <Text variant="caption" className="rounded bg-surface px-2 py-1 dark:bg-neutral-900">
+              <Text variant="caption" className="rounded bg-surface px-2 py-1">
                 {item.stats.tackles} tackles
               </Text>
-              <Text variant="caption" className="rounded bg-surface px-2 py-1 dark:bg-neutral-900">
+              <Text variant="caption" className="rounded bg-surface px-2 py-1">
                 {item.stats.yellowCards} YC
               </Text>
-              <Text variant="caption" className="rounded bg-surface px-2 py-1 dark:bg-neutral-900">
+              <Text variant="caption" className="rounded bg-surface px-2 py-1">
                 {item.stats.redCards} RC
               </Text>
             </View>

@@ -73,7 +73,7 @@ export function AdminReviewCard() {
       ) : null}
 
       {pendingVerifications.slice(0, 3).map((item) => (
-        <View key={item.id} className="gap-2 rounded-xl border border-border p-3 dark:border-neutral-800">
+        <View key={item.id} className="gap-2 rounded-xl border border-border p-3">
           <Text weight="semibold">{item.requesterName}</Text>
           <Text variant="body-sm" color="secondary">
             {item.evidence}
@@ -106,7 +106,7 @@ export function AdminReviewCard() {
       ))}
 
       {openReports.slice(0, 3).map((item) => (
-        <View key={item.id} className="gap-2 rounded-xl border border-border p-3 dark:border-neutral-800">
+        <View key={item.id} className="gap-2 rounded-xl border border-border p-3">
           <Text weight="semibold">
             Report · {item.targetType} · {item.reason}
           </Text>

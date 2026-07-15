@@ -46,7 +46,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
             accessibilityLabel="Clear search"
             hitSlop={8}
             onPress={onClear}
-            className="h-6 w-6 items-center justify-center rounded-full bg-background-secondary dark:bg-neutral-800"
+            className="h-6 w-6 items-center justify-center rounded-full bg-background-secondary"
           >
             <X size={14} color={colors.textSecondary} strokeWidth={2} />
           </Pressable>

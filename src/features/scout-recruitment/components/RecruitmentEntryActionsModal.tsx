@@ -95,7 +95,7 @@ export function RecruitmentEntryActionsModal({
                     'flex-row items-center justify-between rounded-xl border px-3 py-2.5',
                     isCurrent
                       ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-                      : 'border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900',
+                      : 'border-border bg-surface',
                   )}
                 >
                   <View className="flex-row items-center gap-2">
@@ -130,7 +130,7 @@ export function RecruitmentEntryActionsModal({
                     'flex-row items-center gap-2 rounded-full border px-3 py-2',
                     isActive
                       ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-                      : 'border-border bg-surface dark:border-neutral-700 dark:bg-neutral-900',
+                      : 'border-border bg-surface',
                   )}
                 >
                   <View className="h-2 w-2 rounded-full" style={{ backgroundColor: folder.color }} />
@@ -163,7 +163,7 @@ export function RecruitmentEntryActionsModal({
                     'flex-row items-center justify-between rounded-xl border px-3 py-2.5',
                     isMember
                       ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
-                      : 'border-border bg-surface dark:border-neutral-800 dark:bg-neutral-900',
+                      : 'border-border bg-surface',
                   )}
                 >
                   <View>

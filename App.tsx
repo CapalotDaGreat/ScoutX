@@ -1,5 +1,6 @@
 import './global.css';
 import { enableScreens } from 'react-native-screens';
+import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
@@ -11,8 +12,10 @@ import {
 } from '@expo-google-fonts/inter';
 import { StatusBar } from 'expo-status-bar';
 import { LoadingScreen } from '@/components';
+import { AmbientBackdrop } from '@/components/layout/AmbientBackdrop';
+import { FirebaseBootstrap } from '@/components/bootstrap/FirebaseBootstrap';
 import { initSentry, wrapWithSentry } from '@/config/sentry';
-import { ThemeProvider } from '@/theme';
+import { ThemeProvider, useTheme } from '@/theme';
 import { I18nProvider } from '@/i18n/I18nProvider';
 import { AuthProvider } from '@/features/auth/store/AuthProvider';
 import { RootNavigator } from '@/navigation';
@@ -26,6 +29,7 @@ initSentry();
 
 function AppContent() {
   const { t } = useAppTranslation('common');
+  const { isDark } = useTheme();
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -39,7 +43,7 @@ function AppContent() {
 
   return (
     <>
-      <StatusBar style="auto" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <AuthProvider>
         <ActivityProvider>
           <AiInsightsProvider>
@@ -57,8 +61,15 @@ function App() {
       <SafeAreaProvider>
         <ThemeProvider>
           <I18nProvider>
-            <AppContent />
-            {__DEV__ ? <AgentationDevProbe /> : null}
+            <FirebaseBootstrap>
+              <View className="flex-1 bg-background">
+                <AmbientBackdrop />
+                <View className="flex-1 bg-transparent">
+                  <AppContent />
+                </View>
+              </View>
+              {__DEV__ ? <AgentationDevProbe /> : null}
+            </FirebaseBootstrap>
           </I18nProvider>
         </ThemeProvider>
       </SafeAreaProvider>

@@ -28,9 +28,9 @@ export function CareerTimelineList({ entries }: CareerTimelineListProps) {
       {entries.map((entry, index) => (
         <View key={entry.id} className="flex-row gap-3">
           <View className="items-center">
-            <View className="h-3 w-3 rounded-full bg-accent dark:bg-green-500" />
+            <View className="h-3 w-3 rounded-full bg-accent" />
             {index < entries.length - 1 ? (
-              <View className="mt-1 w-px flex-1 bg-border dark:bg-neutral-700" />
+              <View className="mt-1 w-px flex-1 bg-border" />
             ) : null}
           </View>
           <Card variant="outlined" padding="md" className="mb-1 flex-1">

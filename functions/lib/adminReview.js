@@ -5,6 +5,7 @@ const https_1 = require("firebase-functions/v2/https");
 const params_1 = require("firebase-functions/params");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
+const callableOptions_1 = require("./callableOptions");
 const adminUserIdsSecret = (0, params_1.defineSecret)('ADMIN_USER_IDS');
 function parseAdminUserIds(raw) {
     if (!raw?.trim()) {
@@ -17,7 +18,7 @@ function assertAdmin(uid, adminIds) {
         throw new https_1.HttpsError('permission-denied', 'Admin access required.');
     }
 }
-exports.listAdminReviewQueue = (0, https_1.onCall)({ secrets: [adminUserIdsSecret], cors: true }, async (request) => {
+exports.listAdminReviewQueue = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)({ secrets: [adminUserIdsSecret] }), async (request) => {
     assertAdmin(request.auth?.uid, parseAdminUserIds(adminUserIdsSecret.value()));
     const db = (0, firestore_1.getFirestore)();
     const [verificationSnapshot, reportSnapshot] = await Promise.all([
@@ -35,7 +36,7 @@ exports.listAdminReviewQueue = (0, https_1.onCall)({ secrets: [adminUserIdsSecre
         })),
     };
 });
-exports.resolveVerificationRequest = (0, https_1.onCall)({ secrets: [adminUserIdsSecret], cors: true }, async (request) => {
+exports.resolveVerificationRequest = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)({ secrets: [adminUserIdsSecret] }), async (request) => {
     assertAdmin(request.auth?.uid, parseAdminUserIds(adminUserIdsSecret.value()));
     const data = request.data;
     if (!data.requestId || (data.status !== 'approved' && data.status !== 'rejected')) {
@@ -74,7 +75,7 @@ exports.resolveVerificationRequest = (0, https_1.onCall)({ secrets: [adminUserId
     });
     return { success: true };
 });
-exports.archiveContentReport = (0, https_1.onCall)({ secrets: [adminUserIdsSecret], cors: true }, async (request) => {
+exports.archiveContentReport = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)({ secrets: [adminUserIdsSecret] }), async (request) => {
     assertAdmin(request.auth?.uid, parseAdminUserIds(adminUserIdsSecret.value()));
     const data = request.data;
     if (!data.reportId) {

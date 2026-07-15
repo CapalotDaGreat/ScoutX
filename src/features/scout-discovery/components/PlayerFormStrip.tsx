@@ -27,7 +27,7 @@ export function PlayerFormStrip({ form, size = 'sm', className }: PlayerFormStri
             sizeStyles[size],
             'items-center justify-center rounded-sm',
             result === 'W' && 'bg-success-muted dark:bg-green-950',
-            result === 'D' && 'bg-background-secondary dark:bg-neutral-800',
+            result === 'D' && 'bg-background-secondary',
             result === 'L' && 'bg-error-muted dark:bg-red-950',
           )}
         >

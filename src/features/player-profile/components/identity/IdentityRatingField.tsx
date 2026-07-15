@@ -12,7 +12,7 @@ export function IdentityRatingField({ label, value, max = 5 }: IdentityRatingFie
   const percentage = (value / max) * 100;
 
   return (
-    <View className="gap-2 rounded-xl border border-border bg-background-secondary/70 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900/80">
+    <View className="gap-2 rounded-xl border border-border bg-background-secondary/70 px-4 py-3">
       <View className="flex-row items-center justify-between">
         <Text variant="caption" color="secondary" className="uppercase tracking-wider">
           {label}

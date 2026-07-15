@@ -108,16 +108,16 @@ export function Dropdown<T extends string = string>({
                 disabled={item.disabled}
                 onPress={() => handleSelect(item)}
                 className={cn(
-                  'flex-row items-center justify-between border-b border-divider px-4 py-4 dark:border-neutral-800',
+                  'flex-row items-center justify-between border-b border-divider px-4 py-4',
                   item.disabled && 'opacity-40',
-                  isSelected && 'bg-background-secondary dark:bg-neutral-900',
+                  isSelected && 'bg-background-secondary',
                 )}
               >
                 <View className="flex-1 pr-3">
                   <Text
                     variant="body"
                     className={cn(
-                      isSelected && 'font-sans-semibold text-accent dark:text-green-400',
+                      isSelected && 'font-sans-semibold text-accent',
                     )}
                   >
                     {item.label}

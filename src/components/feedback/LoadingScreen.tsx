@@ -2,7 +2,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
-import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import i18n from '@/i18n';
 
 export type LoadingScreenProps = {
   message?: string;
@@ -14,8 +14,8 @@ export function LoadingScreen({
   className,
 }: LoadingScreenProps) {
   const { colors } = useTheme();
-  const { t } = useAppTranslation('common');
-  const resolvedMessage = message ?? t('loading');
+  const resolvedMessage =
+    message ?? (i18n.isInitialized ? i18n.t('common:loading') : 'Loading…');
 
   return (
     <View

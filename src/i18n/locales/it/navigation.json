@@ -6,8 +6,17 @@
     "gps": "GPS",
     "trials": "Trials",
     "home": "Home",
+    "performance": "Prestazioni",
+    "track": "Attività",
+    "search": "Cerca",
     "discover": "Discover",
     "pipeline": "Pipeline"
+  },
+  "segments": {
+    "stats": "Stats",
+    "career": "Carriera",
+    "gps": "GPS",
+    "trials": "Trials"
   },
   "screens": {
     "settings": "Impostazioni",

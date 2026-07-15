@@ -58,7 +58,7 @@ export function CareerReplayScreen({ onBack }: CareerReplayScreenProps) {
         }
       >
         <View className="gap-4">
-          <View className="rounded-2xl border border-border bg-white p-4 dark:border-neutral-800 dark:bg-neutral-950">
+          <View className="rounded-2xl border border-border bg-surface p-4">
             <Text variant="overline" color="secondary">
               {replay.seasonLabel}
             </Text>
@@ -70,7 +70,7 @@ export function CareerReplayScreen({ onBack }: CareerReplayScreenProps) {
             </Text>
             <Text className="mt-3">{replay.narrative}</Text>
             {replay.bestRating !== null && replay.bestRatingOpponent ? (
-              <Text variant="body-sm" className="mt-2 text-green-700 dark:text-green-300">
+              <Text variant="body-sm" className="mt-2 text-green-700">
                 Best match rating {replay.bestRating.toFixed(1)} vs {replay.bestRatingOpponent}
               </Text>
             ) : null}

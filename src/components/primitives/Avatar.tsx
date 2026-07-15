@@ -43,6 +43,22 @@ function getInitials(name: string): string {
   return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
 }
 
+function isUsableImageSource(source?: ImageSourcePropType): boolean {
+  if (!source) {
+    return false;
+  }
+  if (typeof source === 'number') {
+    return true;
+  }
+  if (Array.isArray(source)) {
+    return source.some((entry) => isUsableImageSource(entry));
+  }
+  if (typeof source === 'object' && 'uri' in source) {
+    return typeof source.uri === 'string' && source.uri.trim().length > 0;
+  }
+  return true;
+}
+
 export function Avatar({
   source,
   name = '',
@@ -54,6 +70,7 @@ export function Avatar({
   const { colors } = useTheme();
   const initials = getInitials(name);
   const label = name ? `${name} avatar` : 'User avatar';
+  const hasImage = isUsableImageSource(source);
 
   return (
     <View
@@ -61,13 +78,13 @@ export function Avatar({
       accessibilityLabel={label}
       accessibilityRole="image"
       className={cn(
-        'items-center justify-center overflow-hidden rounded-full bg-background-secondary dark:bg-neutral-800',
+        'items-center justify-center overflow-hidden rounded-full bg-background-secondary',
         sizeStyles[size],
-        showBorder && 'border-2 border-surface dark:border-neutral-900',
+        showBorder && 'border-2 border-surface',
         className,
       )}
     >
-      {source ? (
+      {hasImage && source ? (
         <Image
           source={source}
           className="h-full w-full"

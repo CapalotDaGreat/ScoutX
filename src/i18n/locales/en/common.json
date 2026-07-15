@@ -2,6 +2,8 @@
   "appName": "ScoutX",
   "loading": "Loading",
   "loadingFonts": "Loading fonts",
+  "initializingServices": "Securing your connection",
+  "firebaseBootstrapFailed": "Unable to initialize Firebase services. Please restart the app.",
   "back": "Back",
   "cancel": "Cancel",
   "save": "Save",

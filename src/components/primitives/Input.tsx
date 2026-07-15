@@ -45,19 +45,19 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
   return (
     <View className={cn('w-full', containerClassName)}>
       {label ? (
-        <Text variant="label" className="mb-1 text-foreground dark:text-white">
+        <Text variant="label" className="mb-1 text-foreground">
           {label}
         </Text>
       ) : null}
 
       <View
         className={cn(
-          'min-h-12 flex-row items-center rounded-md border bg-surface px-4 dark:bg-neutral-900',
+          'min-h-12 flex-row items-center rounded-md border bg-surface px-4',
           hasError
-            ? 'border-error dark:border-red-500'
+            ? 'border-error'
             : isFocused
-              ? 'border-accent dark:border-green-500'
-              : 'border-border dark:border-neutral-700',
+              ? 'border-accent'
+              : 'border-border',
           !editable && 'opacity-50',
           fieldClassName,
         )}
@@ -79,7 +79,7 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
             onBlur?.(event);
           }}
           className={cn(
-            'flex-1 py-3 text-body text-foreground dark:text-white',
+            'flex-1 py-3 text-body text-foreground',
             inputClassName,
           )}
           {...props}
