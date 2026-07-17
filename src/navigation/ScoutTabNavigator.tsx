@@ -3,7 +3,7 @@ import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigat
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Compass, Home, Kanban } from 'lucide-react-native';
+import { ClipboardList, Compass, Home, Kanban } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { ScoutDashboardScreen } from '@/features/scout-discovery/components/ScoutDashboardScreen';
 import { PlayerDiscoveryScreen } from '@/features/scout-discovery/components/PlayerDiscoveryScreen';
@@ -11,7 +11,9 @@ import { RecruitmentPipelineScreen } from '@/features/scout-recruitment';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useScoutFlow } from '@/navigation/context/ScoutFlowContext';
 import { useRecruitment } from '@/features/scout-recruitment';
+import { useScoutAllTrialInvitations } from '@/features/trial-invitations/hooks/useTrialInvitations';
 import { createNavigationTabBar } from '@/navigation/NavigationTabBar';
+import { ScoutTrialsTab } from '@/navigation/ScoutTrialsTab';
 import { type ScoutStackParamList, type ScoutTabParamList } from '@/navigation/types';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 
@@ -84,6 +86,7 @@ function ScoutDashboardRoute() {
 }
 
 function ScoutDiscoverRoute() {
+  const navigation = useScoutTabNavigation();
   const flow = useScoutFlow();
 
   const handlePlayerPress = useCallback(
@@ -108,6 +111,7 @@ function ScoutDiscoverRoute() {
       onResetFilters={flow.resetFilters}
       onApplyPreset={flow.applyPreset}
       onSaveCurrentPreset={flow.saveCurrentFilterPreset}
+      onSettingsPress={() => navigation.navigate('Settings')}
     />
   );
 }
@@ -120,12 +124,26 @@ function ScoutPipelineRoute() {
     <RecruitmentPipelineScreen
       onDiscoverPress={() => navigation.navigate('Discover')}
       onPlayerPress={(playerId) => flow.openPlayerDetail(playerId)}
+      onSettingsPress={() => navigation.navigate('Settings')}
+    />
+  );
+}
+
+function ScoutTrialsRoute() {
+  const navigation = useScoutTabNavigation();
+  const flow = useScoutFlow();
+
+  return (
+    <ScoutTrialsTab
+      onPlayerPress={(playerId) => flow.openPlayerDetail(playerId)}
+      onSettingsPress={() => navigation.navigate('Settings')}
     />
   );
 }
 
 function ScoutTabBarContainer() {
   const recruitment = useRecruitment();
+  const { pendingCount } = useScoutAllTrialInvitations();
   const { t, i18n } = useAppTranslation('navigation');
 
   const ScoutTabBar = useMemo(
@@ -135,16 +153,20 @@ function ScoutTabBarContainer() {
           { id: 'Dashboard', label: t('tabs.home'), icon: Home },
           { id: 'Discover', label: t('tabs.discover'), icon: Compass },
           { id: 'Pipeline', label: t('tabs.pipeline'), icon: Kanban },
+          { id: 'Trials', label: t('tabs.trials'), icon: ClipboardList },
         ],
         resolveBadge: (tabId) => {
           if (tabId === 'Pipeline') {
             return recruitment.savedCount;
           }
+          if (tabId === 'Trials') {
+            return pendingCount > 0 ? pendingCount : null;
+          }
           return null;
         },
         testID: 'scout-tab-bar',
       }),
-    [recruitment.savedCount, t, i18n.language],
+    [pendingCount, recruitment.savedCount, t, i18n.language],
   );
 
   return (
@@ -155,6 +177,7 @@ function ScoutTabBarContainer() {
       <Tab.Screen name="Dashboard" component={ScoutDashboardRoute} />
       <Tab.Screen name="Discover" component={ScoutDiscoverRoute} />
       <Tab.Screen name="Pipeline" component={ScoutPipelineRoute} />
+      <Tab.Screen name="Trials" component={ScoutTrialsRoute} />
     </Tab.Navigator>
   );
 }

@@ -7,6 +7,7 @@ import { Heading } from '@/components/primitives/Heading';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { useMatchAnalysis } from '@/features/match-analysis/hooks/useMatchAnalysis';
+import { waitForModalDismiss } from '@/features/highlight-videos/services/videoLibraryPermission';
 import {
   estimatedStatsToMatchLogPayload,
   type MatchAnalysisJob,
@@ -164,6 +165,7 @@ export function MatchAnalysisModal({
   const [result, setResult] = useState('');
   const [notes, setNotes] = useState('');
   const [applying, setApplying] = useState(false);
+  const [isPicking, setIsPicking] = useState(false);
 
   const showReport = activeJob?.status === 'complete' && activeJob.report;
 
@@ -177,6 +179,8 @@ export function MatchAnalysisModal({
 
   const handlePick = async () => {
     try {
+      setIsPicking(true);
+      await waitForModalDismiss();
       const video = await pickVideo();
       if (video) {
         setPicked(video);
@@ -184,6 +188,8 @@ export function MatchAnalysisModal({
       }
     } catch (err) {
       Alert.alert('Video', err instanceof Error ? err.message : 'Could not pick video.');
+    } finally {
+      setIsPicking(false);
     }
   };
 
@@ -245,12 +251,13 @@ export function MatchAnalysisModal({
   };
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Analyze match video" size="fullscreen">
+    <Modal visible={visible && !isPicking} onClose={onClose} title="Analyze match video" size="fullscreen">
       <ScrollView className="flex-1" contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         <Text variant="body-sm" color="secondary">
-          Upload up to 150 minutes of match film. ScoutX samples frames across the match, finds your
-          jersey, and returns coaching feedback plus estimated personal stats (passes, shots, duels,
-          and more).
+          Choose up to 150 minutes of match film from Photos / Gallery — ideal for full Veo camera
+          recordings from grassroots games. iCloud videos work too: ScoutX downloads them
+          automatically, so just stay online while it prepares. ScoutX samples frames across the match,
+          finds your jersey, and returns coaching feedback plus estimated personal stats.
         </Text>
 
         {error ? (
@@ -267,8 +274,8 @@ export function MatchAnalysisModal({
           />
         ) : (
           <View className="gap-3">
-            <Button variant="secondary" onPress={() => void handlePick()} disabled={isBusy}>
-              {picked ? 'Change match video' : 'Choose match video'}
+            <Button variant="secondary" onPress={() => void handlePick()} disabled={isBusy || isPicking}>
+              {picked ? 'Change video from Photos' : 'Choose from Photos / Gallery'}
             </Button>
             {durationLabel ? (
               <Text variant="caption" color="secondary">

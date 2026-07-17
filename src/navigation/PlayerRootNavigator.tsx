@@ -11,6 +11,9 @@ import { PublicPortfolioStackScreen } from '@/features/public-portfolio/componen
 import { CareerReplayScreen } from '@/features/career-replay/components/CareerReplayScreen';
 import { SettingsScreen } from '@/features/settings';
 import { PlayerWorkspaceProvider, usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
+import { defaultPrivacySettings, type PrivacySettings } from '@/features/player-profile/types/privacySettings';
+import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
+import { PlayerTrialsScreen } from '@/features/trial-invitations';
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
 import { PlayerTabNavigator } from '@/navigation/PlayerTabNavigator';
 import { type PlayerStackParamList } from '@/navigation/types';
@@ -63,15 +66,45 @@ function CareerReplayRoute({
   return <CareerReplayScreen onBack={() => navigation.goBack()} />;
 }
 
+function TrialsRoute({
+  navigation,
+}: NativeStackScreenProps<PlayerStackParamList, 'Trials'>) {
+  return <PlayerTrialsScreen onBack={() => navigation.goBack()} />;
+}
+
 function SettingsRoute({
   navigation,
 }: NativeStackScreenProps<PlayerStackParamList, 'Settings'>) {
   const { signOut } = useAuth();
+  const { profile, isSaving, saveProfile } = usePlayerWorkspace();
+
+  const handlePrivacyChange = async (privacy: PrivacySettings) => {
+    if (!profile) {
+      await saveProfile({ privacy });
+      return;
+    }
+
+    let nextJourney = profile.footballJourney;
+    if (privacy.publicPortfolioEnabled && !profile.privacy?.publicPortfolioEnabled) {
+      nextJourney = appendSystemJourneyEvents(nextJourney, { type: 'portfolio_enabled' });
+    }
+    if (privacy.discoverableByScouts && !profile.privacy?.discoverableByScouts) {
+      nextJourney = appendSystemJourneyEvents(nextJourney, { type: 'discoverable_enabled' });
+    }
+
+    await saveProfile({
+      privacy,
+      ...(nextJourney !== profile.footballJourney ? { footballJourney: nextJourney } : {}),
+    });
+  };
 
   return (
     <SettingsScreen
       onBack={() => navigation.goBack()}
       onSignOut={() => void signOut()}
+      privacySettings={profile?.privacy ?? defaultPrivacySettings()}
+      onPrivacyChange={handlePrivacyChange}
+      privacyDisabled={isSaving || !profile}
     />
   );
 }
@@ -188,6 +221,7 @@ function PlayerStackContent() {
         <Stack.Screen name="PublicPortfolio" component={PublicPortfolioRoute} />
         <Stack.Screen name="CareerReplay" component={CareerReplayRoute} />
         <Stack.Screen name="Settings" component={SettingsRoute} />
+        <Stack.Screen name="Trials" component={TrialsRoute} />
         <Stack.Screen name="PlayerDetail" component={PlayerDetailRoute} />
         <Stack.Screen name="PlayerRegister" component={PlayerRegisterRoute} />
         <Stack.Screen name="PlayerLogin" component={PlayerLoginRoute} />

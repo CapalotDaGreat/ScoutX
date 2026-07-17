@@ -22,18 +22,18 @@ export async function shareCareerReplayPdf(data: CareerReplayData, playerId?: st
       <head>
         <meta charset="utf-8" />
         <style>
-          body { font-family: Helvetica, Arial, sans-serif; color: #111; padding: 32px; background: #f8fafc; }
-          .card { background: #fff; border-radius: 16px; padding: 28px; border: 1px solid #e2e8f0; }
-          .badge { display: inline-block; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 999px; font-size: 12px; }
+          body { font-family: Helvetica, Arial, sans-serif; color: #151617; padding: 32px; background: #F7F6F3; }
+          .card { background: #FFFFFF; border-radius: 18px; padding: 28px; border: 1px solid #E2E0DB; }
+          .badge { display: inline-block; background: #F5EBD3; color: #D9A441; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
           h1 { margin: 12px 0 4px; font-size: 28px; }
-          .meta { color: #64748b; margin-bottom: 16px; }
+          .meta { color: #5C6570; margin-bottom: 16px; }
           .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-          .stat { background: #f1f5f9; border-radius: 12px; padding: 12px; }
-          .stat span { display: block; font-size: 11px; color: #64748b; text-transform: uppercase; }
+          .stat { background: #EEEEEC; border-radius: 14px; padding: 12px; }
+          .stat span { display: block; font-size: 11px; color: #5C6570; text-transform: uppercase; }
           .stat strong { font-size: 22px; }
-          .narrative { line-height: 1.5; color: #334155; }
-          .best { margin-top: 12px; color: #166534; font-weight: 600; }
-          .footer { margin-top: 24px; font-size: 11px; color: #94a3b8; }
+          .narrative { line-height: 1.5; color: #5C6570; }
+          .best { margin-top: 12px; color: #2FBF71; font-weight: 600; }
+          .footer { margin-top: 24px; font-size: 11px; color: #8B939E; }
         </style>
       </head>
       <body>
@@ -59,9 +59,4 @@ export async function shareCareerReplayPdf(data: CareerReplayData, playerId?: st
     dialogTitle: `${data.playerName} — Career Replay`,
     mimeType: 'application/pdf',
   });
-}
-
-/** @deprecated Use shareCareerReplayPdf or useCareerReplayShare().shareAsImage */
-export async function shareCareerReplayCard(data: CareerReplayData, playerId?: string): Promise<void> {
-  await shareCareerReplayPdf(data, playerId);
 }

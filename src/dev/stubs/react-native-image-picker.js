@@ -1,24 +1,24 @@
-type ImagePickerResponse = {
-  didCancel?: boolean;
-  assets?: Array<{ uri?: string }>;
-};
+/**
+ * Expo Go / Metro stub for react-native-image-picker.
+ * Plain JS — keep free of TypeScript syntax so ESLint can parse it.
+ */
 
-type ImageLibraryOptions = Record<string, unknown>;
+function cancelledResponse() {
+  return { didCancel: true, assets: [] };
+}
 
-export function launchImageLibrary(
-  _options: ImageLibraryOptions,
-  callback?: (response: ImagePickerResponse) => void,
-): Promise<ImagePickerResponse> {
-  const response: ImagePickerResponse = { didCancel: true, assets: [] };
-  callback?.(response);
+export function launchImageLibrary(_options, callback) {
+  const response = cancelledResponse();
+  if (typeof callback === 'function') {
+    callback(response);
+  }
   return Promise.resolve(response);
 }
 
-export function launchCamera(
-  _options: ImageLibraryOptions,
-  callback?: (response: ImagePickerResponse) => void,
-): Promise<ImagePickerResponse> {
-  const response: ImagePickerResponse = { didCancel: true, assets: [] };
-  callback?.(response);
+export function launchCamera(_options, callback) {
+  const response = cancelledResponse();
+  if (typeof callback === 'function') {
+    callback(response);
+  }
   return Promise.resolve(response);
 }

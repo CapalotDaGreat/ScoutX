@@ -50,7 +50,7 @@ export function RecruitmentShortlistBar({
           className={cn(
             'rounded-full border px-3 py-2',
             activeShortlistId === null
-              ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+              ? 'border-accent bg-accent-muted'
               : 'border-border bg-surface',
           )}
         >
@@ -77,7 +77,7 @@ export function RecruitmentShortlistBar({
               className={cn(
                 'rounded-full border px-3 py-2',
                 isActive
-                  ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+                  ? 'border-accent bg-accent-muted'
                   : 'border-border bg-surface',
               )}
             >

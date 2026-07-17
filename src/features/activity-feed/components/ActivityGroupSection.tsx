@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { PreviewList } from '@/components/layout/PreviewList';
 import { Text } from '@/components/primitives/Text';
 import { NotificationCard } from '@/components/primitives/NotificationCard';
 import { ACTIVITY_CATEGORY_NOTIFICATION_TYPE } from '@/features/activity-feed/constants';
@@ -28,12 +29,14 @@ export type ActivityGroupSectionProps = {
   title: string;
   activities: ActivityItem[];
   onActivityPress?: (activity: ActivityItem) => void;
+  previewCount?: number;
 };
 
 export function ActivityGroupSection({
   title,
   activities,
   onActivityPress,
+  previewCount = 3,
 }: ActivityGroupSectionProps) {
   if (activities.length === 0) {
     return null;
@@ -44,9 +47,14 @@ export function ActivityGroupSection({
       <Text variant="overline" color="secondary">
         {title}
       </Text>
-      {activities.map((activity) => (
-        <ActivityCard key={activity.id} activity={activity} onPress={onActivityPress} />
-      ))}
+      <PreviewList
+        items={activities}
+        previewCount={previewCount}
+        keyExtractor={(activity) => activity.id}
+        renderItem={(activity) => (
+          <ActivityCard activity={activity} onPress={onActivityPress} />
+        )}
+      />
     </View>
   );
 }

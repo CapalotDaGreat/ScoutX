@@ -31,12 +31,12 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
   return (
     <Animated.View
       entering={FadeInUp.duration(500)}
-      className="overflow-hidden rounded-3xl border border-border bg-surface dark:bg-surface"
+      className="overflow-hidden rounded-3xl border border-gold/30 bg-surface"
     >
       {coverUri ? (
         <Image source={{ uri: coverUri }} className="h-36 w-full" resizeMode="cover" />
       ) : (
-        <View className="h-36 w-full bg-background-secondary" />
+        <View className="h-36 w-full bg-gold-muted" />
       )}
 
       <View className="px-5 pb-5 pt-0">
@@ -46,10 +46,10 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
             name={profile.fullName}
             size="2xl"
             showBorder
-            className="border-4 border-surface dark:border-surface"
+            className="border-4 border-surface"
           />
           {onEditPress ? (
-            <Button variant="accent" size="sm" onPress={onEditPress}>
+            <Button variant="prestige" size="sm" onPress={onEditPress}>
               {t('editProfile')}
             </Button>
           ) : null}
@@ -64,9 +64,9 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
           <View className="flex-row flex-wrap items-center gap-2">
             <Heading level={2}>{profile.fullName}</Heading>
             {identity.jerseyNumber ? (
-              <Badge label={`#${identity.jerseyNumber}`} variant="outline" size="sm" />
+              <Badge label={`#${identity.jerseyNumber}`} variant="prestige" size="sm" />
             ) : null}
-            <Badge label={primaryPosition} variant="accent" />
+            <Badge label={primaryPosition} variant="prestige" />
           </View>
         </View>
 
@@ -79,7 +79,7 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
           />
           <Badge
             label={getOptionLabel(TRANSFER_STATUS_OPTIONS, identity.transferStatus)}
-            variant="accent"
+            variant="outline"
             size="sm"
           />
         </View>

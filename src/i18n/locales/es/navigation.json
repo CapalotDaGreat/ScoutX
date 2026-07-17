@@ -1,29 +1,34 @@
-{
-  "tabs": {
-    "portfolio": "Portfolio",
-    "career": "Carrera",
-    "statistics": "Stats",
-    "gps": "GPS",
-    "trials": "Trials",
-    "home": "Inicio",
-    "performance": "Rendimiento",
-    "track": "Actividad",
-    "search": "Buscar",
-    "discover": "Discover",
-    "pipeline": "Pipeline"
-  },
-  "segments": {
-    "stats": "Stats",
-    "career": "Carrera",
-    "gps": "GPS",
-    "trials": "Trials"
-  },
-  "screens": {
-    "settings": "Ajustes",
-    "settingsSubtitle": "Account, notifications, and language",
-    "activityInbox": "Activity",
-    "playerComparison": "Player comparison",
-    "careerReplay": "Career replay",
-    "publicPortfolio": "Football Passport"
-  }
+﻿{
+    "tabs":  {
+                 "portfolio":  "Portfolio",
+                 "career":  "Carrera",
+                 "statistics":  "Stats",
+                 "gps":  "GPS",
+                 "trials":  "Trials",
+                 "home":  "Inicio",
+                 "performance":  "Progreso",
+                 "track":  "Actividad",
+                 "search":  "Buscar",
+                 "discover":  "Discover",
+                 "pipeline":  "Pipeline",
+                 "media":  "Medios"
+             },
+    "segments":  {
+                     "stats":  "Stats",
+                     "career":  "Carrera",
+                     "gps":  "GPS",
+                     "trials":  "Trials",
+                     "highlights":  "Highlights",
+                     "reports":  "Informes"
+                 },
+    "screens":  {
+                    "settings":  "Ajustes",
+                    "settingsSubtitle":  "Account, notifications, and language",
+                    "activityInbox":  "Activity",
+                    "playerComparison":  "Player comparison",
+                    "careerReplay":  "Career replay",
+                    "publicPortfolio":  "Football Passport",
+                    "highlights":  "Videos destacados",
+                    "highlightsSubtitle":  "Clips para scouts y partidos"
+                }
 }

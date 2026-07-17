@@ -21,7 +21,7 @@ export function GoogleSignInButton({
   disabled = false,
   loading = false,
 }: GoogleSignInButtonProps) {
-  const { isDark } = useTheme();
+  const { colors } = useTheme();
   const { t } = useAppTranslation('auth');
   const isDisabled = disabled || loading;
 
@@ -32,11 +32,11 @@ export function GoogleSignInButton({
       accessibilityState={{ disabled: isDisabled, busy: loading }}
       disabled={isDisabled}
       onPress={onPress}
-      className="min-h-12 w-full flex-row items-center justify-center rounded-xl border border-border bg-white px-4"
+      className="min-h-12 w-full flex-row items-center justify-center rounded-xl border border-border bg-surface-elevated px-4"
       style={{ opacity: isDisabled ? 0.55 : 1 }}
     >
       {loading ? (
-        <ActivityIndicator color={isDark ? '#ffffff' : '#111111'} />
+        <ActivityIndicator color={colors.textPrimary} />
       ) : (
         <>
           <View

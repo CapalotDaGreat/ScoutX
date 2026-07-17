@@ -3,7 +3,7 @@ import { BlockedUserRepository } from '@/features/trust-safety/repositories/Bloc
 import { type BlockedUser } from '@/features/trust-safety/types';
 
 export function useBlockedUsers(blockerId: string | null) {
-  const repository = useMemo(() => BlockedUserRepository.getInstance(), []);
+  const repository = BlockedUserRepository.getInstance();
   const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 

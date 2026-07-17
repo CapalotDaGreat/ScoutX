@@ -34,7 +34,7 @@ export function ComparisonCareerSection({ profiles }: ComparisonCareerSectionPro
             </Text>
             {profile.career.clubs.map((club, clubIndex) => (
               <View key={`${profile.player.id}-${club}`} className="flex-row items-center gap-2">
-                <View className="h-5 w-5 items-center justify-center rounded-full bg-accent-muted dark:bg-green-950">
+                <View className="h-5 w-5 items-center justify-center rounded-full bg-accent-muted">
                   <Text variant="caption" className="font-sans-bold text-accent">
                     {clubIndex + 1}
                   </Text>

@@ -10,6 +10,10 @@ import { AuthOAuthActions } from '@/features/auth/components/AuthOAuthActions';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type SignUpPayload } from '@/features/auth/types';
+import {
+  validateEmailField,
+  validatePasswordConfirmation,
+} from '@/features/auth/utils/authValidation';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RegisterScreenProps = {
@@ -40,24 +44,15 @@ export function RegisterScreen({
 
   const handleSubmit = async () => {
     const isValid = validate((nextValues) => {
-      const nextErrors: Partial<Record<keyof SignUpPayload, string>> = {};
+      const nextErrors: Partial<Record<keyof SignUpPayload, string>> = {
+        ...validatePasswordConfirmation(nextValues.password, nextValues.confirmPassword, t),
+      };
       if (!nextValues.fullName.trim()) {
         nextErrors.fullName = t('validation:nameRequired');
       }
-      if (!nextValues.email.trim()) {
-        nextErrors.email = t('validation:emailRequired');
-      } else if (!/.+@.+\..+/.test(nextValues.email)) {
-        nextErrors.email = t('validation:emailInvalid');
-      }
-      if (!nextValues.password.trim()) {
-        nextErrors.password = t('validation:passwordRequired');
-      } else if (nextValues.password.length < 8) {
-        nextErrors.password = t('validation:passwordMinLength', { count: 8 });
-      }
-      if (!nextValues.confirmPassword.trim()) {
-        nextErrors.confirmPassword = t('validation:confirmPasswordRequired');
-      } else if (nextValues.confirmPassword !== nextValues.password) {
-        nextErrors.confirmPassword = t('validation:passwordMismatch');
+      const emailError = validateEmailField(nextValues.email, t);
+      if (emailError) {
+        nextErrors.email = emailError;
       }
       return nextErrors;
     });
@@ -82,7 +77,7 @@ export function RegisterScreen({
     <Screen title={t('register.title')} subtitle={t('register.subtitle')}>
       <AuthCard title={t('register.cardTitle')} subtitle={t('register.cardSubtitle')}>
         {combinedError ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
+          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {combinedError}
             </Text>

@@ -54,7 +54,16 @@ export {
   createEmptyHighlightVideo,
 } from '@/features/highlight-videos/models/HighlightVideoModel';
 
-export { pickHighlightVideo, requestVideoLibraryPermission } from '@/features/highlight-videos/services/videoPickerService';
+export { pickHighlightVideo } from '@/features/highlight-videos/services/videoPickerService';
+export {
+  launchVideoFromLibrary,
+  photosExportErrorMessage,
+} from '@/features/highlight-videos/services/launchVideoFromLibrary';
+export {
+  requestVideoLibraryPermission,
+  ensureVideoLibraryPermission,
+  waitForModalDismiss,
+} from '@/features/highlight-videos/services/videoLibraryPermission';
 export {
   compressHighlightVideo,
   formatFileSize,
@@ -71,7 +80,6 @@ export {
   uploadThumbnailBlob,
   deleteVideoStorageFiles,
 } from '@/features/highlight-videos/services/highlightVideoStorageService';
-export { mockHighlightVideos, getMockHighlightVideoLibrary } from '@/features/highlight-videos/services/mockHighlightVideos';
 
 export {
   VIDEO_CATEGORY_META,

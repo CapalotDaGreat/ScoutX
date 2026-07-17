@@ -30,7 +30,7 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
       accessibilityHint="Drag handle prepared for future reordering"
       testID={`recruitment-card-${entry.playerId}`}
       onPress={() => onPress?.(entry)}
-      className="mb-2 overflow-hidden rounded-xl border border-border bg-surface shadow-sm"
+      className="mb-2 overflow-hidden rounded-2xl border border-border bg-surface"
     >
       <View className="flex-row">
         <View

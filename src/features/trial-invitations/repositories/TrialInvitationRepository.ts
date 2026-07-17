@@ -35,6 +35,7 @@ import {
 } from '@/features/trial-invitations/services/trialNotificationService';
 import {
   loadLocalTrialInvitationsForPlayer,
+  loadLocalTrialInvitationsForScout,
   loadLocalTrialInvitationsForScoutPlayer,
   loadLocalTrialNotifications,
   markLocalNotificationRead,
@@ -87,6 +88,38 @@ export class TrialInvitationRepository {
       },
       (error) => {
         void loadLocalTrialInvitationsForPlayer(playerId).then(callback);
+        onError?.(error);
+      },
+    );
+  }
+
+  public subscribeToScoutTrials(
+    scoutId: string,
+    callback: (trials: TrialInvitation[]) => void,
+    onError?: (error: Error) => void,
+  ): () => void {
+    const db = getFirestoreDb();
+    if (!db) {
+      void loadLocalTrialInvitationsForScout(scoutId).then(callback);
+      return () => undefined;
+    }
+
+    const trialsQuery = query(
+      collection(db, TRIAL_INVITATION_COLLECTION),
+      where('scoutId', '==', scoutId),
+      orderBy('updatedAt', 'desc'),
+    );
+
+    return onSnapshot(
+      trialsQuery,
+      (snapshot) => {
+        const trials = snapshot.docs
+          .map((document) => parseTrialInvitation(document.data(), document.id))
+          .filter((trial): trial is TrialInvitation => trial !== null);
+        callback(sortTrialInvitations(trials));
+      },
+      (error) => {
+        void loadLocalTrialInvitationsForScout(scoutId).then(callback);
         onError?.(error);
       },
     );

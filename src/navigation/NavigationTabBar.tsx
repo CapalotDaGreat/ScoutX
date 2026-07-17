@@ -49,14 +49,3 @@ export function createNavigationTabBar<T extends string>(config: NavigationTabBa
 
   return NavigationTabBar;
 }
-
-export function createDynamicNavigationTabBar<T extends string>(
-  getConfig: () => NavigationTabBarConfig<T>,
-) {
-  function NavigationTabBar(props: BottomTabBarProps) {
-    const TabBar = createNavigationTabBar(getConfig());
-    return <TabBar {...props} />;
-  }
-
-  return NavigationTabBar;
-}

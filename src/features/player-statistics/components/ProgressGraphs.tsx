@@ -98,15 +98,16 @@ export function ProgressGraphs({ graphs }: ProgressGraphsProps) {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                {currentGraphPoints?.points.split(' ').map((point) => {
+                {currentGraphPoints?.points.split(' ').map((point, index, all) => {
                   const [xValue, yValue] = point.split(',');
+                  const isPeak = index === all.length - 1 && graph.trend.direction === 'up';
                   return (
                     <Circle
                       key={point}
                       cx={Number(xValue)}
                       cy={Number(yValue)}
-                      r={2}
-                      fill={colors.accent}
+                      r={isPeak ? 3 : 2}
+                      fill={isPeak ? colors.gold : colors.accent}
                     />
                   );
                 })}

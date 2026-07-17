@@ -1,5 +1,3 @@
-import { type ActivityDraft } from '@/features/activity-feed/types';
-
 export type PushNotificationPayload = {
   messageId?: string;
   title: string;

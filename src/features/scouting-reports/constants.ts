@@ -12,15 +12,7 @@ export const ABILITY_RATING_FIELDS = [
   { key: 'mentality' as const, label: 'Mentality' },
 ];
 
-export const FORMATION_OPTIONS = [
-  '4-3-3',
-  '4-2-3-1',
-  '4-4-2',
-  '3-5-2',
-  '3-4-3',
-  '4-1-4-1',
-  '5-3-2',
-] as const;
+export { FORMATION_OPTIONS } from '@/features/player-profile/constants/footballIdentityOptions';
 
 export const PLAYING_STYLE_OPTIONS = [
   'Possession-based',

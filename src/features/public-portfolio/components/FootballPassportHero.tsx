@@ -17,16 +17,16 @@ export function FootballPassportHero({ data, username }: FootballPassportHeroPro
   const secondaryPositions = profile.identity.secondaryPositions.slice(0, 2);
 
   return (
-    <View className="overflow-hidden rounded-3xl border-2 border-accent/30 bg-surface">
-      <View className="bg-accent px-5 py-3">
+    <View className="overflow-hidden rounded-3xl border-2 border-gold/30 bg-surface">
+      <View className="bg-gold-muted px-5 py-3">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-2">
-            <ShieldCheck size={18} color={colors.accentForeground} />
-            <Text weight="semibold" className="text-accent-foreground">
+            <ShieldCheck size={18} color={colors.gold} />
+            <Text weight="semibold" className="text-gold">
               FOOTBALL PASSPORT
             </Text>
           </View>
-          <Text variant="caption" className="text-accent-foreground/90">
+          <Text variant="caption" className="text-gold">
             ScoutX Verified Identity
           </Text>
         </View>
@@ -50,7 +50,7 @@ export function FootballPassportHero({ data, username }: FootballPassportHeroPro
               </Text>
             ) : null}
             <View className="flex-row flex-wrap gap-2">
-              <Badge variant="accent" label={profile.position} />
+              <Badge variant="prestige" label={profile.position} />
               {secondaryPositions.map((position) => (
                 <Badge key={position} variant="default" label={position} />
               ))}

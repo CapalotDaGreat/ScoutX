@@ -122,7 +122,7 @@ export function AuthActionScreen({ navigation, route }: AuthActionScreenProps) {
         ) : null}
 
         {error ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
+          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {error}
             </Text>
@@ -130,7 +130,7 @@ export function AuthActionScreen({ navigation, route }: AuthActionScreenProps) {
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3 dark:border-green-800/40 dark:bg-green-950/40">
+          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
             <Text variant="body-sm" color="accent">
               {successMessage}
             </Text>

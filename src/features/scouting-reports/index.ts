@@ -19,7 +19,8 @@ export {
   type ReportRatingFieldProps,
 } from '@/features/scouting-reports/components/ReportRatingField';
 
-export { useScoutingReports } from '@/features/scouting-reports/hooks/useScoutingReports';
+export { useScoutingReports, useScoutAllReports } from '@/features/scouting-reports/hooks/useScoutingReports';
+export { ScoutReportsInboxScreen } from '@/features/scouting-reports/components/ScoutReportsInboxScreen';
 export { ScoutingReportRepository } from '@/features/scouting-reports/repositories/ScoutingReportRepository';
 
 export {

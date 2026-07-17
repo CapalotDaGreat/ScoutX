@@ -28,41 +28,41 @@ export function DashboardHeader({
   recentlyViewedCount,
 }: DashboardHeaderProps) {
   return (
-    <View className="gap-4">
-      <View className="gap-1">
-        <Text variant="overline" color="secondary" className="uppercase">
-          Scout Command Center
+    <View className="gap-5">
+      <View className="gap-1.5">
+        <Text variant="overline" color="secondary" className="uppercase tracking-widest">
+          Scout workspace
         </Text>
         <Heading level={1}>
           {getGreeting()}, {scoutName}
         </Heading>
-        <Text variant="body-sm" color="secondary">
+        <Text variant="body-sm" color="secondary" className="mt-0.5">
           {matchingCount} players match your preferences today.
         </Text>
       </View>
 
       <View className="flex-row gap-3">
-        <Card variant="outlined" padding="sm" className="flex-1">
-          <Text variant="caption" color="secondary">
+        <Card variant="elevated" padding="sm" className="flex-1">
+          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
             Matching
           </Text>
-          <Text variant="body-sm" weight="semibold">
+          <Text className="mt-1 font-sans-bold text-stat-lg text-foreground">
             {matchingCount}
           </Text>
         </Card>
-        <Card variant="outlined" padding="sm" className="flex-1">
-          <Text variant="caption" color="secondary">
+        <Card variant="elevated" padding="sm" className="flex-1">
+          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
             Pipeline
           </Text>
-          <Text variant="body-sm" weight="semibold">
+          <Text className="mt-1 font-sans-bold text-stat-lg text-foreground">
             {savedCount}
           </Text>
         </Card>
-        <Card variant="outlined" padding="sm" className="flex-1">
-          <Text variant="caption" color="secondary">
+        <Card variant="elevated" padding="sm" className="flex-1">
+          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
             Recent
           </Text>
-          <Text variant="body-sm" weight="semibold">
+          <Text className="mt-1 font-sans-bold text-stat-lg text-foreground">
             {recentlyViewedCount}
           </Text>
         </Card>

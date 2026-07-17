@@ -1,3 +1,8 @@
+/**
+ * Player Home — slimmed IA:
+ * hero, passport score, onboarding, quick stats/activity, trust,
+ * passport CTAs (no privacy editor), identity entry, Settings footer.
+ */
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
@@ -5,9 +10,9 @@ import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
+import { Text } from '@/components/primitives/Text';
+import { HeaderActionCluster, HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 import { HomePerformanceOverview } from '@/features/player-profile/components/HomePerformanceOverview';
-import { PerformanceSummary } from '@/features/player-profile/components/PerformanceSummary';
-import { ProfileDetails } from '@/features/player-profile/components/ProfileDetails';
 import { ProfileHero } from '@/features/player-profile/components/ProfileHero';
 import { ProfileStatsGrid } from '@/features/player-profile/components/ProfileStatsGrid';
 import { BiographyIdentitySection } from '@/features/player-profile/components/identity/BiographyIdentitySection';
@@ -15,25 +20,23 @@ import { CareerIdentitySection } from '@/features/player-profile/components/iden
 import { PersonalIdentitySection } from '@/features/player-profile/components/identity/PersonalIdentitySection';
 import { PlayingIdentitySection } from '@/features/player-profile/components/identity/PlayingIdentitySection';
 import { ProfessionalIdentitySection } from '@/features/player-profile/components/identity/ProfessionalIdentitySection';
+import { ProfileDetails } from '@/features/player-profile/components/ProfileDetails';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { mapMatchesToHomeQuickStats } from '@/features/player-statistics/utils/profileStatsMapper';
-import { FootballJourneySection, useFootballJourney } from '@/features/football-journey';
-import { HighlightVideosSection } from '@/features/highlight-videos';
 import { ActivityBellButton, ActivityFeedSection, useActivities } from '@/features/activity-feed';
 import { AdminReviewCard } from '@/features/admin-review/components/AdminReviewCard';
 import { isAdminUser } from '@/config/admin';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import {
   FootballPassportScoreCard,
-  PortfolioPrivacySettings,
   UsernameClaimField,
 } from '@/features/public-portfolio';
 import { PortfolioAnalyticsCard } from '@/features/portfolio-analytics/components/PortfolioAnalyticsCard';
 import { PlayerOnboardingCard } from '@/features/player-onboarding/components/PlayerOnboardingCard';
 import { type PlayerOnboardingReport } from '@/features/player-onboarding/types';
 import { PlayerVerificationCard } from '@/features/verification-system/components/PlayerVerificationCard';
-import { defaultPrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { TrustProfileSection, type UsePlayerTrustResult } from '@/features/trust-system';
+import { HomeTrialsQuickAction } from '@/features/trial-invitations/components/HomeTrialsQuickAction';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerProfileScreenProps = {
@@ -43,21 +46,22 @@ export type PlayerProfileScreenProps = {
   trustState: UsePlayerTrustResult;
   onRetry?: () => void;
   onEditPress?: () => void;
-  onEditJourneyPress?: () => void;
-  onManageVideosPress?: () => void;
   onLogMatchPress?: () => void;
+  onViewPerformancePress?: () => void;
   onActivityPress?: () => void;
   onPortfolioPress?: () => void;
   onSharePortfolioPress?: () => void;
   onInviteCoachPress?: () => void;
   onExportCvPress?: () => void;
+  onTrialsPress?: () => void;
+  pendingTrialsCount?: number;
   onboardingReport?: PlayerOnboardingReport | null;
   onOnboardingStepPress?: (stepId: PlayerOnboardingReport['steps'][number]['id']) => void;
   onDismissOnboarding?: () => void;
   onUsernameClaimed?: (username: string) => Promise<void>;
-  onPrivacyChange?: (privacy: PlayerProfile['privacy']) => Promise<void>;
+  /** Bumps when onboarding asks the player to finish passport link/username. */
+  passportSettingsFocusKey?: number | null;
   onSettingsPress?: () => void;
-  onSignOut?: () => void;
   embeddedInTabShell?: boolean;
 };
 
@@ -68,27 +72,26 @@ export function PlayerProfileScreen({
   trustState,
   onRetry,
   onEditPress,
-  onEditJourneyPress,
-  onManageVideosPress,
   onLogMatchPress,
+  onViewPerformancePress,
   onActivityPress,
   onPortfolioPress,
   onSharePortfolioPress,
   onInviteCoachPress,
   onExportCvPress,
+  onTrialsPress,
+  pendingTrialsCount = 0,
   onboardingReport,
   onOnboardingStepPress,
   onDismissOnboarding,
   onUsernameClaimed,
-  onPrivacyChange,
+  passportSettingsFocusKey = null,
   onSettingsPress,
-  onSignOut,
   embeddedInTabShell = false,
 }: PlayerProfileScreenProps) {
-  const { t } = useAppTranslation(['portfolio', 'common', 'settings', 'auth']);
+  const { t } = useAppTranslation(['portfolio', 'common', 'settings']);
   const { user } = useAuth();
   const { trustProfile, recommendations, ...trustStateRest } = trustState;
-  const { entries: journeyEntries } = useFootballJourney(profile);
   const { unreadCount } = useActivities();
 
   const homeQuickStats = useMemo(
@@ -155,28 +158,29 @@ export function PlayerProfileScreen({
       subtitle={embeddedInTabShell ? t('portfolio:homeSubtitle') : t('portfolio:subtitle')}
       safeArea
       {...screenProps}
-      header={
+      headerActions={
         onActivityPress || onSettingsPress ? (
-          <View className="mb-2 flex-row items-center justify-end gap-2">
+          <HeaderActionCluster>
             {onActivityPress ? (
               <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
             ) : null}
             {onSettingsPress ? (
-              <Button variant="secondary" size="sm" onPress={onSettingsPress}>
-                {t('common:settings')}
-              </Button>
+              <HeaderIconButton
+                accessibilityLabel={t('common:settings')}
+                onPress={onSettingsPress}
+              />
             ) : null}
-          </View>
+          </HeaderActionCluster>
         ) : undefined
       }
     >
-      <View className="gap-4">
-        {/* First viewport: who am I / how am I doing */}
+      <View className="gap-6">
         <ProfileHero profile={profile} trustProfile={trustProfile} onEditPress={onEditPress} />
-        <ProfileStatsGrid stats={homeQuickStats} compact />
-        <HomePerformanceOverview
-          matches={profile.statisticsMatches}
-          onLogMatchPress={onLogMatchPress}
+
+        <FootballPassportScoreCard
+          playerId={profile.id}
+          profile={profile}
+          recommendations={recommendations}
         />
 
         {onboardingReport && onOnboardingStepPress && onDismissOnboarding ? (
@@ -189,21 +193,26 @@ export function PlayerProfileScreen({
           />
         ) : null}
 
+        <ProfileStatsGrid stats={homeQuickStats} compact />
+        <HomePerformanceOverview
+          matches={profile.statisticsMatches}
+          onLogMatchPress={onLogMatchPress}
+          onViewAllMatchesPress={onViewPerformancePress}
+        />
+
         {onActivityPress ? <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} /> : null}
 
-        {/* Below-fold: passport, identity, trust */}
-        <FootballPassportScoreCard
-          playerId={profile.id}
-          profile={profile}
-          recommendations={recommendations}
-        />
+        {onTrialsPress ? (
+          <HomeTrialsQuickAction pendingCount={pendingTrialsCount} onPress={onTrialsPress} />
+        ) : null}
 
         <CollapsibleSection
           title={t('portfolio:passportInsights')}
           subtitle={t('portfolio:passportInsightsSubtitle')}
+          persistKey="home-passport-insights"
         >
-          <View className="gap-3">
-            <PortfolioAnalyticsCard playerId={profile.id} profile={profile} />
+          <View className="gap-4">
+            <PortfolioAnalyticsCard playerId={profile.id} />
             <PlayerVerificationCard playerId={profile.id} playerName={profile.fullName} />
           </View>
         </CollapsibleSection>
@@ -213,8 +222,11 @@ export function PlayerProfileScreen({
         <CollapsibleSection
           title={t('portfolio:publicPassport')}
           subtitle={t('portfolio:publicPassportSubtitle')}
+          defaultOpen={!profile.username}
+          forceOpenKey={passportSettingsFocusKey}
+          persistKey="home-public-passport"
         >
-          <View className="gap-3">
+          <View className="gap-4">
             {onUsernameClaimed ? (
               <UsernameClaimField
                 playerId={profile.id}
@@ -223,14 +235,9 @@ export function PlayerProfileScreen({
                 onClaimed={onUsernameClaimed}
               />
             ) : null}
-            <PortfolioPrivacySettings
-              settings={profile.privacy ?? defaultPrivacySettings()}
-              onChange={(next) => {
-                if (onPrivacyChange) {
-                  void onPrivacyChange(next);
-                }
-              }}
-            />
+            <Text variant="caption" color="secondary">
+              {t('portfolio:privacyManagedInSettings')}
+            </Text>
             <View className="flex-row flex-wrap gap-2">
               {onPortfolioPress ? (
                 <Button variant="secondary" onPress={onPortfolioPress}>
@@ -238,7 +245,7 @@ export function PlayerProfileScreen({
                 </Button>
               ) : null}
               {onSharePortfolioPress ? (
-                <Button variant="accent" onPress={onSharePortfolioPress}>
+                <Button variant="prestige" onPress={onSharePortfolioPress}>
                   {t('portfolio:sharePassport')}
                 </Button>
               ) : null}
@@ -252,65 +259,51 @@ export function PlayerProfileScreen({
                   {t('portfolio:exportCv')}
                 </Button>
               ) : null}
+              {onSettingsPress ? (
+                <Button variant="ghost" onPress={onSettingsPress}>
+                  {t('portfolio:managePrivacy')}
+                </Button>
+              ) : null}
             </View>
           </View>
         </CollapsibleSection>
 
-        <TrustProfileSection
-          playerId={profile.id}
-          playerName={profile.fullName}
-          currentClub={profile.identity.currentClub}
-          clubHistory={profile.identity.clubHistory}
-          trustState={{ trustProfile, recommendations, ...trustStateRest }}
-          onInviteCoachPress={onInviteCoachPress}
-        />
-
         <CollapsibleSection
-          title={t('portfolio:storyMedia')}
-          subtitle={t('portfolio:storyMediaSubtitle')}
+          title="Trust & endorsements"
+          subtitle="Verification and coach recommendations"
+          persistKey="home-trust"
         >
-          <BiographyIdentitySection identity={profile.identity} biography={profile.biography} />
-          <FootballJourneySection
-            entries={journeyEntries}
-            editable={Boolean(onEditJourneyPress)}
-            onEditPress={onEditJourneyPress}
-          />
-          <HighlightVideosSection
-            library={profile.highlightVideos}
-            editable={Boolean(onManageVideosPress)}
-            onManagePress={onManageVideosPress}
+          <TrustProfileSection
+            playerId={profile.id}
+            playerName={profile.fullName}
+            currentClub={profile.identity.currentClub}
+            clubHistory={profile.identity.clubHistory}
+            trustState={{ trustProfile, recommendations, ...trustStateRest }}
+            onInviteCoachPress={onInviteCoachPress}
           />
         </CollapsibleSection>
 
         <CollapsibleSection
           title={t('portfolio:playerProfile')}
           subtitle={t('portfolio:playerProfileSubtitle')}
+          persistKey="home-player-profile"
         >
+          <BiographyIdentitySection identity={profile.identity} biography={profile.biography} />
           <PlayingIdentitySection identity={profile.identity} />
           <PersonalIdentitySection identity={profile.identity} />
           <CareerIdentitySection identity={profile.identity} />
           <ProfessionalIdentitySection identity={profile.identity} />
           <ProfileDetails profile={profile} />
+          {onEditPress ? (
+            <Button variant="secondary" onPress={onEditPress}>
+              {t('portfolio:editProfile')}
+            </Button>
+          ) : null}
         </CollapsibleSection>
 
-        <CollapsibleSection
-          title={t('portfolio:performanceSnapshot')}
-          subtitle={t('portfolio:performanceSnapshotSubtitle')}
-        >
-          <ProfileStatsGrid stats={profile.stats} />
-          <PerformanceSummary items={profile.performanceSummary} />
-        </CollapsibleSection>
-
-        <Button variant="secondary" onPress={onEditPress}>
-          {t('portfolio:editProfile')}
-        </Button>
         {onSettingsPress ? (
           <Button variant="ghost" onPress={onSettingsPress}>
             {t('settings:title')}
-          </Button>
-        ) : onSignOut ? (
-          <Button variant="ghost" onPress={onSignOut}>
-            {t('auth:signOut')}
           </Button>
         ) : null}
       </View>

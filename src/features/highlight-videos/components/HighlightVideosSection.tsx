@@ -14,12 +14,14 @@ export type HighlightVideosSectionProps = {
   library?: HighlightVideoLibrary;
   editable?: boolean;
   onManagePress?: () => void;
+  onAnalyzeMatchVideoPress?: () => void;
 };
 
 export function HighlightVideosSection({
   library = emptyHighlightVideoLibrary(),
   editable = false,
   onManagePress,
+  onAnalyzeMatchVideoPress,
 }: HighlightVideosSectionProps) {
   const { colors } = useTheme();
   const [playerVideo, setPlayerVideo] = useState<HighlightVideo | null>(null);
@@ -43,23 +45,36 @@ export function HighlightVideosSection({
         subtitle="Professional match reels organized for scouts — goals, skills, defending, and more"
         action={action}
         variant="outlined"
-        className="border-accent/20 dark:border-green-900/40"
+        className="border-gold/30"
       >
-        <View className="mb-2 flex-row items-center gap-2 rounded-lg bg-accent-muted/50 px-3 py-2 dark:bg-green-950/40">
-          <Clapperboard size={16} color={colors.accent} />
-          <Text variant="caption" color="accent" className="flex-1">
+        <View className="mb-2 flex-row items-center gap-2 rounded-lg bg-gold-muted/70 px-3 py-2">
+          <Clapperboard size={16} color={colors.gold} />
+          <Text variant="caption" color="prestige" className="flex-1">
             {readyCount} highlight{readyCount === 1 ? '' : 's'} in your reel
           </Text>
         </View>
 
+        {editable ? (
+          <Text variant="caption" color="secondary" className="mb-2">
+            Short clips for scouts (up to 3 min). Full Veo match recordings belong under Growth →
+            Analyze match video.
+          </Text>
+        ) : null}
+
         {readyCount === 0 ? (
-          <View className="rounded-xl border border-dashed border-border bg-background-secondary/50 px-4 py-8/50">
+          <View className="rounded-xl border border-dashed border-border bg-background-secondary/50 px-4 py-8">
             <Text variant="body-sm" color="secondary" className="text-center">
-              Upload your first highlight to showcase your best moments to scouts.
+              Upload a trimmed clip from your Veo export or phone recording to showcase your best
+              moments to scouts.
             </Text>
             {editable && onManagePress ? (
-              <Button variant="accent" className="mt-4" onPress={onManagePress}>
-                Upload Highlight
+              <Button variant="prestige" className="mt-4" onPress={onManagePress}>
+                Upload Highlight Clip
+              </Button>
+            ) : null}
+            {editable && onAnalyzeMatchVideoPress ? (
+              <Button variant="secondary" className="mt-3" onPress={onAnalyzeMatchVideoPress}>
+                Analyze full Veo match
               </Button>
             ) : null}
           </View>

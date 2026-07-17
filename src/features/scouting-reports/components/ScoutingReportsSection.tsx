@@ -46,7 +46,7 @@ export function ScoutingReportsSection({ playerId, playerName }: ScoutingReports
           </Button>
         }
       >
-        <View className="mb-3 flex-row items-center gap-2 rounded-lg bg-accent-muted/40 px-3 py-2 dark:bg-green-950/30">
+        <View className="mb-3 flex-row items-center gap-2 rounded-lg bg-accent-muted/40 px-3 py-2">
           <ClipboardList size={16} color={colors.accent} />
           <Text variant="caption" color="accent" className="flex-1">
             {reports.length} report{reports.length === 1 ? '' : 's'} on file

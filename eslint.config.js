@@ -1,4 +1,3 @@
-const tseslint = require('@typescript-eslint/eslint-plugin');
 const tsParser = require('@typescript-eslint/parser');
 
 module.exports = [
@@ -12,12 +11,12 @@ module.exports = [
         ecmaFeatures: { jsx: true },
       },
     },
-    plugins: {
-      '@typescript-eslint': tseslint,
-    },
     rules: {
       semi: ['error', 'always'],
       quotes: ['error', 'single', { avoidEscape: true }],
     },
+  },
+  {
+    ignores: ['src/dev/stubs/**', 'dist-web/**', 'tmp/**', 'functions/lib/**'],
   },
 ];

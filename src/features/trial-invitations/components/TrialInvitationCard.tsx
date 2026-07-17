@@ -31,7 +31,7 @@ export function TrialInvitationCard({
         padding="md"
         interactive={Boolean(onPress)}
         onPress={onPress ? () => onPress(invitation) : undefined}
-        className="gap-3 border-accent/15 dark:border-green-900/30"
+        className="gap-3 border-accent/15/30"
       >
         <View className="flex-row items-start justify-between gap-2">
           <View className="flex-1 gap-1">

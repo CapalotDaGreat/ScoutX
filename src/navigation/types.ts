@@ -19,11 +19,12 @@ export type AuthStackParamList = {
   };
 };
 
+/** Player tabs: Home | Growth | Media | Discover */
 export type PlayerTabParamList = {
   Home: undefined;
   Performance: undefined;
-  Track: undefined;
-  Search: undefined;
+  Media: undefined;
+  Discover: undefined;
 };
 
 export type PlayerStackParamList = {
@@ -31,16 +32,20 @@ export type PlayerStackParamList = {
   PublicPortfolio: { playerId?: string; slug?: string; previewMode?: boolean };
   CareerReplay: undefined;
   Settings: undefined;
+  /** Player trial invitations inbox (stack, not a tab). */
+  Trials: undefined;
   PlayerDetail: { playerId: string };
   PlayerLogin: undefined;
   PlayerRegister: undefined;
   PlayerForgotPassword: undefined;
 };
 
+/** Scout tabs: Home | Discover | Pipeline | Trials */
 export type ScoutTabParamList = {
   Dashboard: undefined;
   Discover: undefined;
   Pipeline: undefined;
+  Trials: undefined;
 };
 
 export type ScoutStackParamList = {

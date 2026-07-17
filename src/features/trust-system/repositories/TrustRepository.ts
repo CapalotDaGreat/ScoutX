@@ -23,7 +23,6 @@ import {
   createDefaultTrustProfile,
   parseTrustProfile,
   parseTrustRecommendation,
-  serializeTrustProfile,
   serializeTrustRecommendation,
   sortRecommendations,
 } from '@/features/trust-system/models/TrustModel';

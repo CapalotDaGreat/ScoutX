@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
+import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -21,10 +22,13 @@ export function TabSegmentControl<T extends string>({
   onSegmentChange,
   testID,
 }: TabSegmentControlProps<T>) {
+  const { colors } = useTheme();
+
   return (
     <View
       testID={testID}
-      className="mx-4 mb-3 flex-row rounded-xl border border-border bg-surface p-1"
+      className="mx-5 mb-4 flex-row rounded-2xl border border-gold/30 bg-gold-muted/40 p-1.5"
+      style={{ backgroundColor: `${colors.goldMuted}66` }}
     >
       {segments.map((segment) => {
         const isActive = segment.id === activeSegment;
@@ -38,16 +42,15 @@ export function TabSegmentControl<T extends string>({
               onSegmentChange(segment.id);
             }}
             className={cn(
-              'min-h-[40px] flex-1 items-center justify-center rounded-lg px-3 py-2',
-              isActive && 'bg-accent',
+              'min-h-[44px] flex-1 items-center justify-center rounded-xl px-3 py-2.5',
+              isActive && 'bg-gold',
             )}
+            style={isActive ? { backgroundColor: colors.gold } : undefined}
           >
             <Text
               variant="label"
-              weight="semibold"
-              className={cn(
-                isActive ? 'text-accent-foreground' : 'text-foreground-secondary',
-              )}
+              weight={isActive ? 'semibold' : 'medium'}
+              color={isActive ? 'onGold' : 'secondary'}
             >
               {segment.label}
             </Text>

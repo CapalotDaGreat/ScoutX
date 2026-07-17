@@ -58,7 +58,7 @@ export function PlayerQuickActions({
           className={cn(
             'h-9 w-9 items-center justify-center rounded-full border',
             isInComparison
-              ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+              ? 'border-accent bg-accent-muted'
               : 'border-border bg-surface',
             !isInComparison && !canAddToComparison && 'opacity-50',
           )}
@@ -77,7 +77,7 @@ export function PlayerQuickActions({
           className={cn(
             'h-9 w-9 items-center justify-center rounded-full border',
             isFavourite
-              ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+              ? 'border-accent bg-accent-muted'
               : 'border-border bg-surface',
           )}
         >

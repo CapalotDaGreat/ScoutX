@@ -102,38 +102,3 @@ export function rankPlayersBySearchRelevance(
 
   return scored.map((item) => item.player);
 }
-
-export function buildSearchSuggestions(
-  players: DiscoverablePlayer[],
-  query: string,
-  limit = 6,
-): string[] {
-  const trimmed = query.trim().toLowerCase();
-  if (!trimmed) {
-    return [];
-  }
-
-  const suggestions = new Set<string>();
-
-  for (const player of players) {
-    if (player.fullName.toLowerCase().includes(trimmed)) {
-      suggestions.add(player.fullName);
-    }
-    if (player.username?.toLowerCase().includes(trimmed)) {
-      suggestions.add(`@${player.username}`);
-    }
-    if (player.club.toLowerCase().includes(trimmed)) {
-      suggestions.add(player.club);
-    }
-    for (const position of player.position) {
-      if (position.toLowerCase().includes(trimmed)) {
-        suggestions.add(position);
-      }
-    }
-    if (suggestions.size >= limit) {
-      break;
-    }
-  }
-
-  return [...suggestions].slice(0, limit);
-}

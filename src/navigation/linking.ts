@@ -17,8 +17,10 @@ function captureAndNormalize(url: string): string {
 }
 
 /**
- * Public Football Passport URLs use `player/:slug` once (GuestApp) to avoid
- * React Navigation "conflicting screens" errors with PlayerApp tab paths.
+ * Public Football Passport URLs use `player/:slug` once (GuestApp) so unauthenticated
+ * visitors and deep links can open a passport without conflicting with PlayerApp tab paths.
+ *
+ * Authenticated guests build in PlayerApp; public slug links still resolve via GuestApp.
  *
  * Firebase auth action links (`auth/action`, `__/auth/action`) open AuthAction
  * and return users to ScoutX after email verification or password reset.
@@ -74,12 +76,13 @@ export const linking: LinkingOptions<RootStackParamList> = {
             screens: {
               Home: 'player/home',
               Performance: 'player/performance',
-              Track: 'player/track',
-              Search: 'player/search',
+              Media: 'player/media',
+              Discover: 'player/discover',
             },
           },
           PlayerDetail: 'player/detail/:playerId',
           Settings: 'player/settings',
+          Trials: 'player/trials',
           PlayerRegister: 'player/register',
           PlayerLogin: 'player/login',
           PlayerForgotPassword: 'player/forgot-password',
@@ -92,6 +95,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
               Dashboard: 'scout',
               Discover: 'scout/discover',
               Pipeline: 'scout/pipeline',
+              Trials: 'scout/trials',
             },
           },
           PlayerDetail: 'scout/player/:playerId',

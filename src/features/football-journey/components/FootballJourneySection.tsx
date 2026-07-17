@@ -36,9 +36,9 @@ export function FootballJourneySection({
       subtitle="The story of your career — academies, transfers, milestones, and moments scouts remember"
       action={action}
       variant="outlined"
-      className="border-accent/20 dark:border-green-900/40"
+      className="border-accent/20"
     >
-      <View className="mb-2 flex-row items-center gap-2 rounded-lg bg-accent-muted/50 px-3 py-2 dark:bg-green-950/40">
+      <View className="mb-2 flex-row items-center gap-2 rounded-lg bg-accent-muted/50 px-3 py-2">
         <Route size={16} color={colors.accent} />
         <Text variant="caption" color="accent" className="flex-1">
           {entries.length} milestone{entries.length === 1 ? '' : 's'} on your timeline

@@ -8,7 +8,7 @@ import { useTheme } from '@/theme';
 const entityVariants: Record<TrustEntityType, BadgeVariant> = {
   player: 'info',
   scout: 'accent',
-  club: 'success',
+  club: 'prestige',
 };
 
 const entityIcons = {
@@ -37,9 +37,15 @@ export function VerificationBadge({
   return (
     <View className="flex-row items-center gap-1">
       {showIcon ? (
-        <Icon size={size === 'lg' ? 16 : 14} color={colors.accent} />
+        <Icon
+          size={size === 'lg' ? 16 : 14}
+          color={entity === 'club' ? colors.gold : colors.accent}
+        />
       ) : (
-        <BadgeCheck size={size === 'lg' ? 16 : 14} color={colors.accent} />
+        <BadgeCheck
+          size={size === 'lg' ? 16 : 14}
+          color={entity === 'club' ? colors.gold : colors.accent}
+        />
       )}
       <Badge label={resolvedLabel} variant={entityVariants[entity]} size={size} />
     </View>

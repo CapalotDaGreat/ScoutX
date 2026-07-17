@@ -22,7 +22,7 @@ export function RoleSelectionScreen({ onContinue, onBack, successMessage }: Role
     <Screen title={t('roleSelection.title')} subtitle={t('roleSelection.subtitle')}>
       <AuthCard title={t('roleSelection.cardTitle')} subtitle={t('roleSelection.cardSubtitle')}>
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3 dark:border-green-800/40 dark:bg-green-950/40">
+          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
             <Text variant="body-sm" color="accent">
               {successMessage}
             </Text>

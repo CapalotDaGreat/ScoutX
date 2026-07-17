@@ -21,7 +21,15 @@ export type ScreenProps = ScrollViewProps & {
   children: ReactNode;
   title?: string;
   subtitle?: string;
+  /**
+   * Full custom header row. Prefer `headerLeading` + `headerActions` when you
+   * still want the screen title visible.
+   */
   header?: ReactNode;
+  /** Leading control (e.g. Back) composed beside the title. */
+  headerLeading?: ReactNode;
+  /** Trailing actions (e.g. Activity / Settings) composed beside the title. */
+  headerActions?: ReactNode;
   footer?: ReactNode;
   loading?: boolean;
   error?: string | null;
@@ -39,6 +47,11 @@ export type ScreenProps = ScrollViewProps & {
   safeArea?: boolean;
   safeAreaEdges?: Edge[];
   embeddedInTabShell?: boolean;
+  /**
+   * Extra bottom padding for the scroll content so sticky overlays (action
+   * bars, FABs) rendered as siblings don't cover the last content.
+   */
+  contentBottomInset?: number;
   loadingComponent?: ReactNode;
   className?: string;
   contentClassName?: string;
@@ -49,6 +62,8 @@ export function Screen({
   title,
   subtitle,
   header,
+  headerLeading,
+  headerActions,
   footer,
   loading = false,
   error = null,
@@ -66,6 +81,7 @@ export function Screen({
   safeArea = true,
   safeAreaEdges,
   embeddedInTabShell = false,
+  contentBottomInset = 0,
   loadingComponent,
   className,
   contentClassName,
@@ -77,7 +93,10 @@ export function Screen({
   const resolvedEmptyTitle = emptyTitle ?? t('emptyTitle');
   const resolvedSafeAreaEdges: Edge[] =
     safeAreaEdges ?? (embeddedInTabShell ? ['top', 'left', 'right'] : ['top', 'bottom', 'left', 'right']);
-  const scrollBottomPadding = embeddedInTabShell ? 16 : insets.bottom + 16;
+  const scrollBottomPadding =
+    (embeddedInTabShell ? 24 : insets.bottom + 24) + contentBottomInset;
+  const hasComposedHeader = Boolean(title || headerLeading || headerActions);
+  const hasHeaderChrome = Boolean(header || hasComposedHeader);
 
   const renderContent = () => {
     if (loading) {
@@ -122,7 +141,7 @@ export function Screen({
       {offline ? (
         <View
           accessibilityRole="alert"
-          className="flex-row items-center justify-center gap-2 bg-warning-muted px-4 py-2 dark:bg-yellow-950"
+          className="flex-row items-center justify-center gap-2 bg-warning-muted px-5 py-2.5"
         >
           <WifiOff size={14} color={colors.warning} strokeWidth={2} />
           <Text variant="caption" className="font-sans-medium text-warning">
@@ -131,26 +150,49 @@ export function Screen({
         </View>
       ) : null}
 
-      {header ??
-        (title ? (
-          <View className={cn('mb-6', padded && 'px-4')}>
-            <Heading level={1}>{title}</Heading>
-            {subtitle ? (
-              <Text variant="body-sm" color="secondary" className="mt-1">
-                {subtitle}
-              </Text>
-            ) : null}
-          </View>
-        ) : null)}
+      {hasHeaderChrome ? (
+        <View className={cn('mb-6 overflow-visible', padded && 'px-5')}>
+          {header ? (
+            <View className="overflow-visible">{header}</View>
+          ) : (
+            <View className="flex-row items-start gap-3 overflow-visible">
+              {headerLeading ? (
+                <View className="shrink-0 overflow-visible pt-0.5">{headerLeading}</View>
+              ) : null}
+              {title || subtitle ? (
+                <View className="min-w-0 flex-1">
+                  {title ? <Heading level={1}>{title}</Heading> : null}
+                  <View className="mt-2 h-0.5 w-10 rounded-full bg-gold" />
+                  {subtitle ? (
+                    <Text variant="body-sm" color="secondary" className="mt-1.5 leading-5">
+                      {subtitle}
+                    </Text>
+                  ) : null}
+                </View>
+              ) : (
+                <View className="min-w-0 flex-1" />
+              )}
+              {headerActions ? (
+                <View className="shrink-0 flex-row items-center gap-2.5 overflow-visible pt-0.5 pr-1">
+                  {headerActions}
+                </View>
+              ) : null}
+            </View>
+          )}
+        </View>
+      ) : null}
 
-      <View className={cn('flex-1', padded && 'px-4', contentClassName)}>
+      <View className={cn('flex-1', padded && 'px-5', contentClassName)}>
         {renderContent()}
       </View>
 
       {footer ? (
         <View
-          className="border-t border-divider bg-background px-4 pt-4"
-          style={{ paddingBottom: Math.max(insets.bottom, 16) }}
+          className="border-t border-divider bg-background px-5 pt-4"
+          style={{
+            backgroundColor: colors.background,
+            paddingBottom: Math.max(insets.bottom, 16),
+          }}
         >
           {footer}
         </View>
@@ -160,11 +202,16 @@ export function Screen({
 
   const safeAreaStyle = safeArea ? getSafeAreaPadding(insets, resolvedSafeAreaEdges) : undefined;
 
+  const rootStyle = [
+    { backgroundColor: colors.background },
+    safeAreaStyle,
+  ];
+
   if (!scrollable) {
     return (
       <View
         className={cn('flex-1 bg-background', className)}
-        style={safeAreaStyle}
+        style={rootStyle}
       >
         {body}
       </View>
@@ -174,7 +221,7 @@ export function Screen({
   return (
     <View
       className={cn('flex-1 bg-background', className)}
-      style={safeAreaStyle}
+      style={rootStyle}
     >
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -185,8 +232,8 @@ export function Screen({
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor={colors.accent}
-              colors={[colors.accent]}
+              tintColor={colors.gold}
+              colors={[colors.gold, colors.accent]}
             />
           ) : undefined
         }

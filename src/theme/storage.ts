@@ -19,7 +19,3 @@ export async function setStoredThemePreference(
   }
   await AsyncStorage.setItem(THEME_STORAGE_KEY, preference);
 }
-
-export async function clearStoredThemePreference(): Promise<void> {
-  await AsyncStorage.removeItem(THEME_STORAGE_KEY);
-}

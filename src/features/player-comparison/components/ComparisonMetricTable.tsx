@@ -14,8 +14,8 @@ export type ComparisonMetricTableProps = {
 };
 
 const deltaStyles = {
-  best: 'bg-accent-muted dark:bg-green-950',
-  worst: 'bg-error-muted dark:bg-red-950',
+  best: 'bg-accent-muted',
+  worst: 'bg-error-muted',
   neutral: '',
 } as const;
 

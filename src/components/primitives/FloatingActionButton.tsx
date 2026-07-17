@@ -87,7 +87,7 @@ export const FloatingActionButton = forwardRef<View, FloatingActionButtonProps>(
           style={({ pressed }) => [
             {
               backgroundColor,
-              shadowColor: isDark ? '#000' : colors.accent,
+              shadowColor: colors.primary,
               shadowOpacity: isDark ? 0.3 : 0.25,
               shadowRadius: 8,
               shadowOffset: { width: 0, height: 4 },

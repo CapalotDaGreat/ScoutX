@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Share, Switch, View } from 'react-native';
+import { Share, View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { Modal } from '@/components/feedback/Modal';
 import { Button } from '@/components/primitives/Button';

@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { MapPin, Search } from 'lucide-react-native';
+import { Search } from 'lucide-react-native';
 import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { SearchBar } from '@/components/primitives/SearchBar';
 import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
+import { HeaderActionCluster, HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 import { ComparisonQueueCard } from '@/features/player-comparison/components/ComparisonQueueCard';
 import { ContinueScoutingCard } from '@/features/scout-discovery/components/ContinueScoutingCard';
 import { DashboardHeader } from '@/features/scout-discovery/components/DashboardHeader';
@@ -17,6 +18,7 @@ import { useScoutDashboard } from '@/features/scout-discovery/hooks/useScoutDash
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { useRecruitment, RECRUITMENT_STAGE_LABELS } from '@/features/scout-recruitment';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -58,6 +60,7 @@ export function ScoutDashboardScreen({
   const { data, isLoading, error, refresh } = useScoutDashboard();
   const { unreadCount } = useActivities();
   const workspace = useScoutWorkspace();
+  const recruitment = useRecruitment();
   const [resolvedPlayers, setResolvedPlayers] = useState<DiscoverablePlayer[]>([]);
 
   useEffect(() => {
@@ -83,6 +86,14 @@ export function ScoutDashboardScreen({
     return resolvedPlayers.find((player) => player.id === workspace.lastViewedPlayerId) ?? null;
   }, [resolvedPlayers, workspace.lastViewedPlayerId]);
 
+  const continuePipelineStageLabel = useMemo(() => {
+    if (!continuePlayer) {
+      return null;
+    }
+    const entry = recruitment.getEntry(continuePlayer.id);
+    return entry ? RECRUITMENT_STAGE_LABELS[entry.stage] : null;
+  }, [continuePlayer, recruitment]);
+
   const recentlyViewedPlayers = useMemo(
     () => workspace.resolvePlayers(workspace.recentlyViewedIds, resolvedPlayers),
     [resolvedPlayers, workspace],
@@ -90,7 +101,6 @@ export function ScoutDashboardScreen({
 
   const hasDiscoverablePlayers =
     (data?.matchingPreferences.length ?? 0) > 0 ||
-    (data?.trending.length ?? 0) > 0 ||
     (data?.featured.length ?? 0) > 0;
 
   const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
@@ -112,19 +122,20 @@ export function ScoutDashboardScreen({
       safeArea
       contentClassName="gap-8 pb-6"
       {...screenProps}
-      header={
-        <View className="mb-2 flex-row items-center justify-end gap-2">
+      headerActions={
+        <HeaderActionCluster>
           <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
           {onSettingsPress ? (
-            <Button variant="secondary" size="sm" onPress={onSettingsPress}>
-              {t('common:settings')}
-            </Button>
+            <HeaderIconButton
+              accessibilityLabel={t('common:settings')}
+              onPress={onSettingsPress}
+            />
           ) : onSignOut ? (
             <Button variant="ghost" size="sm" onPress={onSignOut}>
               {t('common:signOut')}
             </Button>
           ) : null}
-        </View>
+        </HeaderActionCluster>
       }
     >
       <DashboardHeader
@@ -156,10 +167,15 @@ export function ScoutDashboardScreen({
         <ComparisonQueueCard onOpenComparison={onOpenComparisonPress} />
       ) : null}
 
-      <ActivityFeedSection onViewAllPress={onActivityPress} />
+      <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} />
 
       {continuePlayer ? (
-        <ContinueScoutingCard player={continuePlayer} onPress={onPlayerPress} />
+        <ContinueScoutingCard
+          player={continuePlayer}
+          onPress={onPlayerPress}
+          pipelineStageLabel={continuePipelineStageLabel}
+          onOpenPipelinePress={onPipelinePress}
+        />
       ) : null}
 
       {data && hasDiscoverablePlayers ? (
@@ -178,15 +194,6 @@ export function ScoutDashboardScreen({
                     onPlayerPress={onPlayerPress}
                     variant="premium"
                   />
-                </DashboardSection>
-
-                <DashboardSection
-                  title={t('scout:dashboard.trendingTitle')}
-                  subtitle={t('scout:dashboard.trendingSubtitle')}
-                  actionLabel={t('scout:dashboard.explore')}
-                  onActionPress={onDiscoverPress}
-                >
-                  <PlayerCarousel players={data.trending} onPlayerPress={onPlayerPress} />
                 </DashboardSection>
               </View>
 
@@ -213,25 +220,6 @@ export function ScoutDashboardScreen({
                   onActionPress={onDiscoverPress}
                 >
                   <PlayerCarousel players={data.featured} onPlayerPress={onPlayerPress} variant="premium" />
-                </DashboardSection>
-
-                <DashboardSection
-                  title={t('scout:dashboard.nearbyTitle')}
-                  subtitle={t('scout:dashboard.nearbySubtitle')}
-                >
-                  {data.nearby.length > 0 ? (
-                    <PlayerCarousel players={data.nearby} onPlayerPress={onPlayerPress} variant="compact" />
-                  ) : (
-                    <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4">
-                      <MapPin size={18} color={colors.textSecondary} />
-                      <View className="flex-1">
-                        <Text weight="semibold">{t('scout:dashboard.proximityTitle')}</Text>
-                        <Text variant="body-sm" color="secondary">
-                          {t('scout:dashboard.proximityDescription')}
-                        </Text>
-                      </View>
-                    </View>
-                  )}
                 </DashboardSection>
               </View>
             </View>
@@ -266,40 +254,12 @@ export function ScoutDashboardScreen({
           ) : null}
 
           <DashboardSection
-            title={t('scout:dashboard.trendingTitle')}
-            subtitle={t('scout:dashboard.trendingSubtitle')}
-            actionLabel={t('scout:dashboard.explore')}
-            onActionPress={onDiscoverPress}
-          >
-            <PlayerCarousel players={data.trending} onPlayerPress={onPlayerPress} />
-          </DashboardSection>
-
-          <DashboardSection
             title={t('scout:dashboard.featuredTitle')}
             subtitle={t('scout:dashboard.featuredSubtitle')}
             actionLabel={t('scout:dashboard.viewMore')}
             onActionPress={onDiscoverPress}
           >
             <PlayerCarousel players={data.featured} onPlayerPress={onPlayerPress} variant="premium" />
-          </DashboardSection>
-
-          <DashboardSection
-            title={t('scout:dashboard.nearbyTitle')}
-            subtitle={t('scout:dashboard.nearbySubtitle')}
-          >
-            {data.nearby.length > 0 ? (
-              <PlayerCarousel players={data.nearby} onPlayerPress={onPlayerPress} variant="compact" />
-            ) : (
-              <View className="flex-row items-center gap-3 rounded-xl border border-dashed border-border bg-background-secondary p-4">
-                <MapPin size={18} color={colors.textSecondary} />
-                <View className="flex-1">
-                  <Text weight="semibold">{t('scout:dashboard.proximityTitle')}</Text>
-                  <Text variant="body-sm" color="secondary">
-                    {t('scout:dashboard.proximityDescription')}
-                  </Text>
-                </View>
-              </View>
-            )}
           </DashboardSection>
             </>
           )}

@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { VIDEO_STORAGE_LIMITS } from '@/features/highlight-videos/constants';
 import { type CompressedVideoResult, type PickedVideoAsset } from '@/features/highlight-videos/types';
 
@@ -24,7 +24,7 @@ export async function compressHighlightVideo(
   if (asset.durationSec > VIDEO_STORAGE_LIMITS.maxDurationSec) {
     throw new VideoCompressionError(
       'too_long',
-      `Videos must be ${VIDEO_STORAGE_LIMITS.maxDurationSec} seconds or shorter.`,
+      `Highlight clips must be ${VIDEO_STORAGE_LIMITS.maxDurationSec} seconds or shorter. Trim a moment from your Veo export, or upload the full match under Growth → Analyze match video.`,
     );
   }
 

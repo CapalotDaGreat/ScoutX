@@ -12,7 +12,8 @@ import {
   type ViewProps,
 } from 'react-native';
 import { Heading } from '@/components/primitives/Heading';
-import { useTheme } from '@/theme';
+import { useTheme, useThemeCssVars } from '@/theme';
+import { motion } from '@/theme/tokens/motion';
 import { cn } from '@/utils/cn';
 
 export type BottomSheetRef = undefined;
@@ -36,7 +37,8 @@ export function BottomSheet({
   style,
   ...props
 }: BottomSheetProps) {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
+  const themeCssVars = useThemeCssVars();
   const translateY = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export function BottomSheet({
     translateY.setValue(1);
     Animated.timing(translateY, {
       toValue: 0,
-      duration: 220,
+      duration: motion.fast,
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
     }).start();
@@ -60,7 +62,7 @@ export function BottomSheet({
   const handleClose = (): void => {
     Animated.timing(translateY, {
       toValue: 1,
-      duration: 200,
+      duration: motion.instant,
       easing: Easing.in(Easing.ease),
       useNativeDriver: true,
     }).start(({ finished }) => {
@@ -77,15 +79,18 @@ export function BottomSheet({
       animationType="none"
       onRequestClose={handleClose}
     >
-      <View className="flex-1 justify-end">
+      <View style={themeCssVars} className="flex-1 justify-end">
         <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Close sheet"
           className="absolute inset-0"
           onPress={handleClose}
-          style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.4)' }}
+          style={{ backgroundColor: colors.surfaceOverlay }}
         />
         <Animated.View
           style={[
             {
+              backgroundColor: colors.surface,
               transform: [
                 {
                   translateY: translateY.interpolate({
@@ -97,23 +102,23 @@ export function BottomSheet({
             },
             style,
           ]}
-          className="w-full rounded-t-2xl bg-surface p-4 pb-6"
+          className="w-full rounded-t-2xl bg-surface px-5 pb-8 pt-3"
           {...props}
         >
           {showHandle ? (
-            <View className="mb-3 items-center">
+            <View className="mb-4 items-center">
               <View
                 style={{
                   backgroundColor: colors.borderStrong,
                   height: 4,
-                  width: 36,
+                  width: 40,
                   borderRadius: 999,
                 }}
               />
             </View>
           ) : null}
           {title ? (
-            <Heading level={3} className="mb-4">
+            <Heading level={3} className="mb-5">
               {title}
             </Heading>
           ) : null}
@@ -122,12 +127,4 @@ export function BottomSheet({
       </View>
     </Modal>
   );
-}
-
-export type BottomSheetContainerProps = {
-  children: ReactNode;
-};
-
-export function BottomSheetContainer({ children }: BottomSheetContainerProps) {
-  return <View className="absolute inset-0">{children}</View>;
 }

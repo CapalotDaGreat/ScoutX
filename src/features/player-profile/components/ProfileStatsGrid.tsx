@@ -15,7 +15,7 @@ export function ProfileStatsGrid({ stats, compact = false }: ProfileStatsGridPro
     return (
       <Animated.View
         entering={FadeInUp.delay(80).duration(400)}
-        className="flex-row gap-2 rounded-xl border border-border bg-surface p-3 dark:bg-surface"
+        className="flex-row gap-2 rounded-xl border border-border bg-surface p-3"
       >
         {stats.map((stat) => (
           <View key={stat.label} className="flex-1 items-center gap-1">

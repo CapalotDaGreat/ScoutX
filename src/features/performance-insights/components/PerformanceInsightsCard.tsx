@@ -73,9 +73,9 @@ export function PerformanceInsightsCard({ profile }: PerformanceInsightsCardProp
                 {item.value}/{item.max}
               </Text>
             </View>
-            <View className="h-2 overflow-hidden rounded-full bg-neutral-100">
+            <View className="h-2 overflow-hidden rounded-full bg-background-secondary">
               <View
-                className="h-full rounded-full bg-green-600"
+                className="h-full rounded-full bg-accent"
                 style={{ width: `${Math.min(100, (item.value / item.max) * 100)}%` }}
               />
             </View>

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
+import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { RevealSection } from '@/components/layout/RevealSection';
+import { PreviewList } from '@/components/layout/PreviewList';
 import { Section } from '@/components/layout/Section';
 import { DiscoveryListSkeleton } from '@/features/scout-discovery/components/DiscoveryCardSkeleton';
 import { Button } from '@/components/primitives/Button';
@@ -25,6 +27,7 @@ import { usePlayerDetail } from '@/features/scout-discovery/hooks/usePlayerDetai
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { TrustSafetyActions } from '@/features/trust-safety/components/TrustSafetyActions';
 import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Mail, Video } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -233,6 +236,9 @@ export function PlayerDetailScreen({
               {t('scout:playerDetail.viewPublicPortfolio')}
             </Button>
           ) : null}
+          <View className="mt-3">
+            <TrustSafetyActions targetUserId={player.id} targetUserName={player.fullName} />
+          </View>
         </View>
 
         {!guestMode ? (
@@ -252,43 +258,52 @@ export function PlayerDetailScreen({
         ) : null}
 
         <RevealSection step={2} className="px-4">
-          <TrustProfileSection
-            playerId={player.id}
-            playerName={player.fullName}
-            currentClub={player.club}
-            clubHistory={player.clubHistory ?? []}
-            allowScoutEndorsement={!guestMode}
-          />
+          <CollapsibleSection
+            title="Trust & endorsements"
+            subtitle="Verification and coach recommendations"
+            persistKey={`detail-trust-${player.id}`}
+          >
+            <TrustProfileSection
+              playerId={player.id}
+              playerName={player.fullName}
+              currentClub={player.club}
+              clubHistory={player.clubHistory ?? []}
+              allowScoutEndorsement={!guestMode}
+            />
+          </CollapsibleSection>
         </RevealSection>
 
         {!guestMode ? (
           <RevealSection step={3} className="px-4">
-            <ScoutingReportsSection playerId={player.id} playerName={player.fullName} />
+            <CollapsibleSection
+              title="Scouting reports"
+              subtitle="Your notes and ratings for this player"
+              persistKey={`detail-reports-${player.id}`}
+            >
+              <ScoutingReportsSection playerId={player.id} playerName={player.fullName} />
+            </CollapsibleSection>
           </RevealSection>
         ) : null}
 
         <RevealSection step={4} className="px-4">
-          <Card variant="outlined" padding="md" className="gap-2">
-            <Text variant="overline" color="secondary">
-              {t('scout:playerDetail.playerOverview')}
-            </Text>
-            <Text variant="body">{player.biography}</Text>
-            <Text variant="caption" color="secondary">
-              {t('scout:playerDetail.refUpdated', {
-                id: player.id.toUpperCase(),
-                date: new Date(player.updatedAt).toLocaleDateString(),
-              })}
-            </Text>
-          </Card>
+          <CollapsibleSection
+            title={t('scout:playerDetail.playerOverview')}
+            subtitle="Biography and reference"
+            persistKey={`detail-bio-${player.id}`}
+          >
+            <Card variant="outlined" padding="md" className="gap-2">
+              <Text variant="body">{player.biography}</Text>
+              <Text variant="caption" color="secondary">
+                {t('scout:playerDetail.refUpdated', {
+                  id: player.id.toUpperCase(),
+                  date: new Date(player.updatedAt).toLocaleDateString(),
+                })}
+              </Text>
+            </Card>
+          </CollapsibleSection>
         </RevealSection>
 
         <RevealSection step={5} className="px-4">
-          <Section title={t('scout:playerDetail.attributeProfile')}>
-            <RadarChart points={radarPoints} />
-          </Section>
-        </RevealSection>
-
-        <RevealSection step={6} className="px-4">
           <Section title={t('scout:playerDetail.seasonOutput')}>
             <View className="flex-row flex-wrap gap-3">
               <StatCard label={t('statistics:metrics.goals')} value={player.goals} className="min-w-[45%] flex-1" />
@@ -299,39 +314,65 @@ export function PlayerDetailScreen({
           </Section>
         </RevealSection>
 
-        <RevealSection step={7} className="px-4">
-          <Section title={t('scout:playerDetail.technicalRatings')}>
-            <View className="flex-row flex-wrap gap-3">
-              <StatCard label={t('scout:playerDetail.passing')} value={player.ratings.passing} className="min-w-[45%] flex-1" />
-              <StatCard label={t('scout:playerDetail.shooting')} value={player.ratings.shooting} className="min-w-[45%] flex-1" />
-              <StatCard label={t('scout:playerDetail.defending')} value={player.ratings.defending} className="min-w-[45%] flex-1" />
-              <StatCard label={t('scout:playerDetail.physical')} value={player.ratings.physical} className="min-w-[45%] flex-1" />
+        <RevealSection step={6} className="px-4">
+          <CollapsibleSection
+            title={t('scout:playerDetail.attributeProfile')}
+            subtitle="Radar and technical ratings"
+            persistKey={`detail-attributes-${player.id}`}
+          >
+            <View className="gap-5">
+              <RadarChart points={radarPoints} />
+              <View className="flex-row flex-wrap gap-3">
+                <StatCard label={t('scout:playerDetail.passing')} value={player.ratings.passing} className="min-w-[45%] flex-1" />
+                <StatCard label={t('scout:playerDetail.shooting')} value={player.ratings.shooting} className="min-w-[45%] flex-1" />
+                <StatCard label={t('scout:playerDetail.defending')} value={player.ratings.defending} className="min-w-[45%] flex-1" />
+                <StatCard label={t('scout:playerDetail.physical')} value={player.ratings.physical} className="min-w-[45%] flex-1" />
+              </View>
             </View>
-          </Section>
+          </CollapsibleSection>
         </RevealSection>
 
-        <RevealSection step={8} className="px-4">
-          <Section title={t('scout:playerDetail.clubHistory')}>
-            {player.clubHistory.map((entry) => (
-              <Card key={`${entry.club}-${entry.period}`} variant="default" padding="md" className="mb-2">
-                <Text weight="semibold">{entry.club}</Text>
-                <Text variant="body-sm" color="secondary">
-                  {entry.period}
-                </Text>
-              </Card>
-            ))}
-          </Section>
+        <RevealSection step={7} className="px-4">
+          <CollapsibleSection
+            title={t('scout:playerDetail.clubHistory')}
+            subtitle={`${player.clubHistory.length} clubs`}
+            persistKey={`detail-clubs-${player.id}`}
+          >
+            <PreviewList
+              items={player.clubHistory}
+              previewCount={3}
+              keyExtractor={(entry) => `${entry.club}-${entry.period}`}
+              renderItem={(entry) => (
+                <Card variant="default" padding="md">
+                  <Text weight="semibold">{entry.club}</Text>
+                  <Text variant="body-sm" color="secondary">
+                    {entry.period}
+                  </Text>
+                </Card>
+              )}
+            />
+          </CollapsibleSection>
         </RevealSection>
 
         {heatmap ? (
-          <RevealSection step={9} className="px-4">
-            <GpsHeatmap heatmap={heatmap} title={t('scout:playerDetail.movementIntelligence')} />
+          <RevealSection step={8} className="px-4">
+            <CollapsibleSection
+              title={t('scout:playerDetail.movementIntelligence')}
+              subtitle="GPS heatmap preview"
+              persistKey={`detail-gps-${player.id}`}
+            >
+              <GpsHeatmap heatmap={heatmap} title={t('scout:playerDetail.movementIntelligence')} />
+            </CollapsibleSection>
           </RevealSection>
         ) : null}
 
         {player.hasHighlightVideos ? (
-          <RevealSection step={10} className="px-4">
-            <Section title={t('scout:playerDetail.matchFootage')}>
+          <RevealSection step={9} className="px-4">
+            <CollapsibleSection
+              title={t('scout:playerDetail.matchFootage')}
+              subtitle="Highlight videos on file"
+              persistKey={`detail-footage-${player.id}`}
+            >
               <Card variant="default" padding="lg" className="flex-row items-center gap-3">
                 <Video size={24} color={colors.accent} />
                 <View className="flex-1">
@@ -341,24 +382,31 @@ export function PlayerDetailScreen({
                   </Text>
                 </View>
               </Card>
-            </Section>
+            </CollapsibleSection>
           </RevealSection>
         ) : null}
 
-        <RevealSection step={11} className="px-4">
-          <Section title={t('scout:playerDetail.honours')}>
+        <RevealSection step={10} className="px-4">
+          <CollapsibleSection
+            title={t('scout:playerDetail.honours')}
+            subtitle="Career achievements"
+            persistKey={`detail-honours-${player.id}`}
+          >
             {player.achievements.length > 0 ? (
-              player.achievements.map((achievement) => (
-                <Text key={achievement} variant="body-sm" className="mb-1">
-                  • {achievement}
-                </Text>
-              ))
+              <PreviewList
+                items={player.achievements}
+                previewCount={4}
+                keyExtractor={(achievement) => achievement}
+                renderItem={(achievement) => (
+                  <Text variant="body-sm">• {achievement}</Text>
+                )}
+              />
             ) : (
               <Text variant="body-sm" color="secondary">
                 {t('scout:playerDetail.noHonours')}
               </Text>
             )}
-          </Section>
+          </CollapsibleSection>
         </RevealSection>
       </Screen>
 

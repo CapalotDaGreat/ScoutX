@@ -51,7 +51,3 @@ export function canAccessFeature(role: AuthRole | undefined, feature: AuthFeatur
 export function isGuestRole(role: AuthRole | undefined, isAnonymous = false): boolean {
   return isAnonymous || role === 'guest';
 }
-
-export function requiresFullAccount(role: AuthRole | undefined, isAnonymous = false): boolean {
-  return isGuestRole(role, isAnonymous);
-}

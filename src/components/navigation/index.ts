@@ -4,4 +4,8 @@ export {
   type TabSegmentControlProps,
   type TabSegmentOption,
 } from '@/components/navigation/TabSegmentControl';
-export { MobileStackHeader, type MobileStackHeaderProps } from '@/components/navigation/MobileStackHeader';
+export {
+  HeaderIconButton,
+  HeaderActionCluster,
+  type HeaderIconButtonProps,
+} from '@/components/navigation/HeaderIconButton';

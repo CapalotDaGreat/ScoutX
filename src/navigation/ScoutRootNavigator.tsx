@@ -16,6 +16,7 @@ import { ScoutTabNavigator } from '@/navigation/ScoutTabNavigator';
 import { ActivityInboxScreen } from '@/features/activity-feed';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
 import { SettingsScreen } from '@/features/settings';
+import { usePushNotificationRegistration } from '@/features/notifications/hooks/usePushNotificationRegistration';
 import { type ScoutStackParamList } from '@/navigation/types';
 
 const Stack = createNativeStackNavigator<ScoutStackParamList>();
@@ -93,6 +94,7 @@ function SettingsRoute({
 
 export function ScoutRootNavigator() {
   const { user } = useAuth();
+  usePushNotificationRegistration(Boolean(user?.uid));
 
   return (
     <ScoutWorkspaceProvider scoutId={user?.uid ?? null}>

@@ -9,6 +9,7 @@ import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { completePasswordResetWithCode } from '@/features/auth/services/authActionLinkService';
+import { validatePasswordConfirmation } from '@/features/auth/utils/authValidation';
 import type { AuthStackParamList } from '@/navigation/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
@@ -41,23 +42,9 @@ export function CompletePasswordResetScreen({ navigation, route }: CompletePassw
   }, [email, t]);
 
   const handleSubmit = async () => {
-    const isValid = validate((nextValues) => {
-      const nextErrors: Partial<Record<keyof CompletePasswordResetValues, string>> = {};
-
-      if (!nextValues.password.trim()) {
-        nextErrors.password = t('validation:passwordRequired');
-      } else if (nextValues.password.length < 8) {
-        nextErrors.password = t('validation:passwordMinLength', { count: 8 });
-      }
-
-      if (!nextValues.confirmPassword.trim()) {
-        nextErrors.confirmPassword = t('validation:confirmPasswordRequired');
-      } else if (nextValues.confirmPassword !== nextValues.password) {
-        nextErrors.confirmPassword = t('validation:passwordMismatch');
-      }
-
-      return nextErrors;
-    });
+    const isValid = validate((nextValues) =>
+      validatePasswordConfirmation(nextValues.password, nextValues.confirmPassword, t),
+    );
 
     if (!isValid) {
       setError(null);
@@ -92,7 +79,7 @@ export function CompletePasswordResetScreen({ navigation, route }: CompletePassw
         subtitle={t('auth:completePasswordReset.cardSubtitle')}
       >
         {error ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
+          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {error}
             </Text>
@@ -100,7 +87,7 @@ export function CompletePasswordResetScreen({ navigation, route }: CompletePassw
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3 dark:border-green-800/40 dark:bg-green-950/40">
+          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
             <Text variant="body-sm" color="accent">
               {successMessage}
             </Text>

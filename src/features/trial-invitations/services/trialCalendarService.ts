@@ -2,10 +2,13 @@ import { Linking, Platform } from 'react-native';
 import { formatTrialDate } from '@/features/trial-invitations/models/TrialInvitationModel';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
 
+function formatIcsDate(date: Date): string {
+  return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+}
+
 export function buildGoogleCalendarUrl(invitation: TrialInvitation): string {
   const start = new Date(invitation.scheduledDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
-  const format = (date: Date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
   const title = `Trial — ${invitation.playerName} @ ${invitation.club}`;
   const details = [
@@ -19,7 +22,7 @@ export function buildGoogleCalendarUrl(invitation: TrialInvitation): string {
   const params = new URLSearchParams({
     action: 'TEMPLATE',
     text: title,
-    dates: `${format(start)}/${format(end)}`,
+    dates: `${formatIcsDate(start)}/${formatIcsDate(end)}`,
     details,
     location: invitation.location,
   });
@@ -30,8 +33,7 @@ export function buildGoogleCalendarUrl(invitation: TrialInvitation): string {
 export function buildIcsContent(invitation: TrialInvitation): string {
   const start = new Date(invitation.scheduledDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
-  const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  const formatIcs = (date: Date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  const stamp = formatIcsDate(new Date());
   const uid = `${invitation.id}@scoutx.app`;
 
   return [
@@ -41,8 +43,8 @@ export function buildIcsContent(invitation: TrialInvitation): string {
     'BEGIN:VEVENT',
     `UID:${uid}`,
     `DTSTAMP:${stamp}`,
-    `DTSTART:${formatIcs(start)}`,
-    `DTEND:${formatIcs(end)}`,
+    `DTSTART:${formatIcsDate(start)}`,
+    `DTEND:${formatIcsDate(end)}`,
     `SUMMARY:Trial - ${invitation.playerName} @ ${invitation.club}`,
     `LOCATION:${invitation.location}`,
     `DESCRIPTION:Coach ${invitation.coach}. ${invitation.notes}`,

@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
+import { Button } from '@/components/primitives/Button';
 import { NotificationCard } from '@/components/primitives/NotificationCard';
 import { TrialInvitationCard } from '@/features/trial-invitations/components/TrialInvitationCard';
 import { TrialInvitationResponseModal } from '@/features/trial-invitations/components/TrialInvitationResponseModal';
@@ -16,11 +17,13 @@ import { Section } from '@/components/layout/Section';
 export type PlayerTrialsScreenProps = {
   embeddedInTabShell?: boolean;
   nestedUnderSegment?: boolean;
+  onBack?: () => void;
 };
 
 export function PlayerTrialsScreen({
   embeddedInTabShell = false,
   nestedUnderSegment = false,
+  onBack,
 }: PlayerTrialsScreenProps) {
   const { trials, isLoading, isSaving, acceptTrial, declineTrial } = usePlayerTrialInvitations();
   const { notifications, markRead } = useTrialNotifications();
@@ -46,6 +49,13 @@ export function PlayerTrialsScreen({
       scrollable
       safeArea
       {...screenProps}
+      footer={
+        onBack ? (
+          <Button variant="secondary" onPress={onBack} fullWidth>
+            Back
+          </Button>
+        ) : undefined
+      }
     >
       <View className="gap-6">
         {notifications.length > 0 ? (

@@ -171,24 +171,3 @@ export function getMockTrustRecommendations(playerId: string): TrustRecommendati
     (item) => item.playerId === resolvedId || item.playerId === playerId,
   );
 }
-
-export function getMockTrustSnapshot(playerId: string): {
-  profile: TrustProfile;
-  recommendations: TrustRecommendation[];
-} {
-  const resolvedId = resolvePlayerId(playerId);
-  const profile =
-    getMockTrustProfile(playerId) ??
-    ({
-      playerId: resolvedId,
-      player: { verified: false, verifiedAt: null },
-      scout: { verified: false, verifiedAt: null },
-      club: { verified: false, verifiedAt: null, clubId: null, clubName: null },
-      updatedAt: new Date().toISOString(),
-    } satisfies TrustProfile);
-
-  return {
-    profile,
-    recommendations: getMockTrustRecommendations(playerId),
-  };
-}

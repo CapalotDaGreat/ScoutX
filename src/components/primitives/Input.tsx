@@ -1,6 +1,5 @@
 import { forwardRef, useState, type ReactNode } from 'react';
 import {
-  Pressable,
   TextInput,
   View,
   type TextInputProps,
@@ -52,12 +51,12 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
 
       <View
         className={cn(
-          'min-h-12 flex-row items-center rounded-md border bg-surface px-4',
+          'min-h-12 flex-row items-center rounded-xl border bg-surface px-4',
           hasError
             ? 'border-error'
             : isFocused
-              ? 'border-accent'
-              : 'border-border',
+              ? 'border-gold'
+              : 'border-gold/30',
           !editable && 'opacity-50',
           fieldClassName,
         )}
@@ -79,9 +78,10 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
             onBlur?.(event);
           }}
           className={cn(
-            'flex-1 py-3 text-body text-foreground',
+            'flex-1 py-3 text-body',
             inputClassName,
           )}
+          style={[{ color: colors.textPrimary }, props.style]}
           {...props}
         />
 

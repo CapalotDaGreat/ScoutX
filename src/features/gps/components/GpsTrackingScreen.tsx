@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { Screen } from '@/components/layout/Screen';
 import { Section } from '@/components/layout/Section';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
+import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
 import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
 import { GpsLiveMetrics } from '@/features/gps/components/GpsLiveMetrics';
@@ -48,6 +50,7 @@ export function GpsTrackingScreen({
   } = useGpsSessions({ playerId });
 
   const [completedSession, setCompletedSession] = useState<GpsSession | null>(null);
+  const [showFullHistory, setShowFullHistory] = useState(false);
 
   const handleStop = async () => {
     const session = await stopRecording();
@@ -59,6 +62,7 @@ export function GpsTrackingScreen({
 
   const previewHeatmap = completedSession?.heatmap ?? sessions[0]?.heatmap;
   const previewZones = completedSession?.zones ?? sessions[0]?.zones ?? [];
+  const historySessions = showFullHistory ? sessions : sessions.slice(0, 3);
 
   return (
     <Screen
@@ -99,20 +103,49 @@ export function GpsTrackingScreen({
             })}
           </Text>
           <GpsLiveMetrics metrics={completedSession.metrics} />
-          <GpsMovementZones zones={completedSession.zones} />
-          <GpsHeatmap heatmap={completedSession.heatmap} />
+          <CollapsibleSection
+            title="Movement detail"
+            subtitle="Zones and heatmap for this session"
+            defaultOpen
+            persistKey="gps-completed-detail"
+          >
+            <GpsMovementZones zones={completedSession.zones} />
+            <GpsHeatmap heatmap={completedSession.heatmap} />
+          </CollapsibleSection>
         </Section>
       ) : null}
 
       {!completedSession && previewZones.length > 0 ? (
-        <Section title={t('gps:latestAnalysis')} gap="md">
+        <CollapsibleSection
+          title={t('gps:latestAnalysis')}
+          subtitle="Zones and heatmap from your latest session"
+          persistKey="gps-latest-analysis"
+        >
           <GpsMovementZones zones={previewZones} />
           {previewHeatmap ? <GpsHeatmap heatmap={previewHeatmap} /> : null}
-        </Section>
+        </CollapsibleSection>
       ) : null}
 
       <Section title={t('gps:history')} gap="md">
-        {isLoading ? <SkeletonLoader variant="card" count={2} /> : <GpsSessionHistory sessions={sessions} />}
+        {isLoading ? (
+          <SkeletonLoader variant="card" count={2} />
+        ) : (
+          <>
+            <GpsSessionHistory sessions={historySessions} />
+            {sessions.length > 3 ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onPress={() => setShowFullHistory((current) => !current)}
+                className="self-start"
+              >
+                {showFullHistory
+                  ? 'Show less'
+                  : `${t('common:seeMore')} · ${sessions.length - 3}`}
+              </Button>
+            ) : null}
+          </>
+        )}
       </Section>
     </Screen>
   );

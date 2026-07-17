@@ -11,9 +11,16 @@ import { useTheme } from '@/theme';
 export type ContinueScoutingCardProps = {
   player: DiscoverablePlayer;
   onPress: (player: DiscoverablePlayer) => void;
+  pipelineStageLabel?: string | null;
+  onOpenPipelinePress?: () => void;
 };
 
-export function ContinueScoutingCard({ player, onPress }: ContinueScoutingCardProps) {
+export function ContinueScoutingCard({
+  player,
+  onPress,
+  pipelineStageLabel = null,
+  onOpenPipelinePress,
+}: ContinueScoutingCardProps) {
   const { colors } = useTheme();
 
   return (
@@ -22,7 +29,7 @@ export function ContinueScoutingCard({ player, onPress }: ContinueScoutingCardPr
       accessibilityLabel={`Continue scouting ${player.fullName}`}
       onPress={() => onPress(player)}
     >
-      <Card variant="elevated" padding="lg" className="overflow-hidden">
+      <Card variant="elevated" padding="lg" className="overflow-hidden bg-surface-cool">
         <View className="absolute right-0 top-0 h-24 w-24 rounded-full bg-accent/10" />
         <View className="gap-4">
           <View>
@@ -32,6 +39,11 @@ export function ContinueScoutingCard({ player, onPress }: ContinueScoutingCardPr
             <Heading level={3} className="mt-1">
               Pick up where you left off
             </Heading>
+            {pipelineStageLabel ? (
+              <Text variant="body-sm" color="secondary" className="mt-1">
+                Pipeline · {pipelineStageLabel}
+              </Text>
+            ) : null}
           </View>
 
           <View className="flex-row items-center gap-3">
@@ -45,13 +57,20 @@ export function ContinueScoutingCard({ player, onPress }: ContinueScoutingCardPr
             </View>
           </View>
 
-          <Button
-            variant="accent"
-            rightIcon={<ArrowRight size={18} color={colors.accentForeground} />}
-            onPress={() => onPress(player)}
-          >
-            Open Scouting Report
-          </Button>
+          <View className="gap-2">
+            <Button
+              variant="accent"
+              rightIcon={<ArrowRight size={18} color={colors.accentForeground} />}
+              onPress={() => onPress(player)}
+            >
+              Open Scouting Report
+            </Button>
+            {onOpenPipelinePress ? (
+              <Button variant="secondary" onPress={onOpenPipelinePress}>
+                Open pipeline
+              </Button>
+            ) : null}
+          </View>
         </View>
       </Card>
     </Pressable>

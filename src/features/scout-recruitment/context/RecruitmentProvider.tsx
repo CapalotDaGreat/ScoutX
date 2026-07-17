@@ -58,7 +58,7 @@ export function RecruitmentProvider({
   scoutName = 'Scout',
   children,
 }: RecruitmentProviderProps) {
-  const repository = useMemo(() => RecruitmentRepository.getInstance(), []);
+  const repository = RecruitmentRepository.getInstance();
   const [workspace, setWorkspace] = useState<RecruitmentWorkspace | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [isSaving, setIsSaving] = useState(false);

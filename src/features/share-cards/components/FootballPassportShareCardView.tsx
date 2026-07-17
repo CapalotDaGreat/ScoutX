@@ -19,17 +19,17 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
 
   return (
     <View
-      className="overflow-hidden rounded-3xl bg-neutral-950"
+      className="overflow-hidden rounded-3xl bg-[#151617]"
       style={{ width: PASSPORT_SHARE_CARD_WIDTH, height: PASSPORT_SHARE_CARD_HEIGHT }}
     >
-      <View className="bg-green-800 px-6 py-4">
-        <Text variant="caption" className="uppercase tracking-widest text-green-100">
+      <View className="bg-[#1C1E22] px-6 py-4 border-b border-[#2F343A]">
+        <Text variant="caption" className="uppercase tracking-widest text-[#D9A441]">
           Football Passport
         </Text>
-        <Text weight="semibold" className="text-3xl text-white">
+        <Text weight="semibold" className="text-3xl text-[#F7F6F3]">
           {data.playerName}
         </Text>
-        <Text variant="body-sm" className="text-green-100">
+        <Text variant="body-sm" className="text-[#B7BDC8]">
           {data.position} · {data.club} · {data.nationality}
         </Text>
       </View>
@@ -39,12 +39,12 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
           {stats.map((item) => (
             <View
               key={item.label}
-              className="min-w-[45%] flex-1 rounded-2xl bg-neutral-900 px-3 py-3"
+              className="min-w-[45%] flex-1 rounded-2xl bg-[#25282D] px-3 py-3"
             >
-              <Text variant="caption" className="uppercase text-neutral-500">
+              <Text variant="caption" className="uppercase text-[#8B939E]">
                 {item.label}
               </Text>
-              <Text weight="semibold" className="text-2xl text-white">
+              <Text weight="semibold" className="text-2xl text-[#F7F6F3]">
                 {item.value}
               </Text>
             </View>
@@ -52,13 +52,13 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
         </View>
 
         <View className="gap-2">
-          <Text variant="body-sm" className="text-neutral-300">
+          <Text variant="body-sm" className="text-[#B7BDC8]">
             {data.tagline}
           </Text>
-          <Text variant="caption" className="text-green-300">
+          <Text variant="caption" className="text-[#2FBF71]">
             {data.portfolioUrl.replace('https://', '')}
           </Text>
-          <Text variant="caption" className="text-neutral-600">
+          <Text variant="caption" className="text-[#8B939E]">
             scoutx.app · ScoutX Football Passport
           </Text>
         </View>

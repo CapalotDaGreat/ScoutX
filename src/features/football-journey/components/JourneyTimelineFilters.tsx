@@ -1,4 +1,4 @@
-import { ScrollView, Pressable, View } from 'react-native';
+import { ScrollView, Pressable } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { JOURNEY_FILTER_ALL, JOURNEY_TYPE_META, type JourneyFilterOption } from '@/features/football-journey/constants';
 import { type JourneyEntryType } from '@/features/football-journey/types';
@@ -41,7 +41,7 @@ export function JourneyTimelineFilters({
             className={cn(
               'rounded-full border px-3 py-1.5',
               isActive
-                ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+                ? 'border-accent bg-accent-muted'
                 : 'border-border bg-background-secondary/70',
             )}
           >

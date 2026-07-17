@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { View, type ViewProps } from 'react-native';
+import { View } from 'react-native';
 import { Input, type InputProps } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { cn } from '@/utils/cn';

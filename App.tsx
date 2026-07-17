@@ -12,7 +12,7 @@ import {
 } from '@expo-google-fonts/inter';
 import { StatusBar } from 'expo-status-bar';
 import { LoadingScreen } from '@/components';
-import { AmbientBackdrop } from '@/components/layout/AmbientBackdrop';
+import { RoleAwareAmbientBackdrop } from '@/components/layout/RoleAwareAmbientBackdrop';
 import { FirebaseBootstrap } from '@/components/bootstrap/FirebaseBootstrap';
 import { initSentry, wrapWithSentry } from '@/config/sentry';
 import { ThemeProvider, useTheme } from '@/theme';
@@ -21,11 +21,14 @@ import { AuthProvider } from '@/features/auth/store/AuthProvider';
 import { RootNavigator } from '@/navigation';
 import { AiInsightsProvider } from '@/features/ai-insights';
 import { ActivityProvider } from '@/features/activity-feed';
+import { createExpoPushNotificationPort } from '@/features/notifications/services/expoPushNotificationPort';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { AgentationDevProbe } from '@/dev/AgentationDevProbe';
 
 enableScreens();
 initSentry();
+
+const pushNotificationPort = createExpoPushNotificationPort();
 
 function AppContent() {
   const { t } = useAppTranslation('common');
@@ -44,13 +47,11 @@ function AppContent() {
   return (
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
-      <AuthProvider>
-        <ActivityProvider>
-          <AiInsightsProvider>
-            <RootNavigator />
-          </AiInsightsProvider>
-        </ActivityProvider>
-      </AuthProvider>
+      <ActivityProvider pushPort={pushNotificationPort}>
+        <AiInsightsProvider>
+          <RootNavigator />
+        </AiInsightsProvider>
+      </ActivityProvider>
     </>
   );
 }
@@ -62,12 +63,14 @@ function App() {
         <ThemeProvider>
           <I18nProvider>
             <FirebaseBootstrap>
-              <View className="flex-1 bg-background">
-                <AmbientBackdrop />
-                <View className="flex-1 bg-transparent">
-                  <AppContent />
+              <AuthProvider>
+                <View className="flex-1">
+                  <RoleAwareAmbientBackdrop />
+                  <View className="flex-1 bg-transparent">
+                    <AppContent />
+                  </View>
                 </View>
-              </View>
+              </AuthProvider>
               {__DEV__ ? <AgentationDevProbe /> : null}
             </FirebaseBootstrap>
           </I18nProvider>

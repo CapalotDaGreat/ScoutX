@@ -1,6 +1,5 @@
 import { ScrollView, View } from 'react-native';
 import { Button } from '@/components/primitives/Button';
-import { Text } from '@/components/primitives/Text';
 import { SORT_OPTIONS } from '@/features/scout-discovery/constants';
 import { type DiscoverySortOption } from '@/features/scout-discovery/types';
 import { cn } from '@/utils/cn';

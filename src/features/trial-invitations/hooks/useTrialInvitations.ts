@@ -18,7 +18,7 @@ export function usePlayerTrialInvitations() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const repository = useMemo(() => TrialInvitationRepository.getInstance(), []);
+  const repository = TrialInvitationRepository.getInstance();
 
   useEffect(() => {
     if (!playerId) {
@@ -80,6 +80,46 @@ export function usePlayerTrialInvitations() {
   return { trials, isLoading, isSaving, error, acceptTrial, declineTrial };
 }
 
+export function useScoutAllTrialInvitations() {
+  const { user } = useAuth();
+  const scoutId = user?.id ?? '';
+  const [trials, setTrials] = useState<TrialInvitation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const repository = TrialInvitationRepository.getInstance();
+
+  useEffect(() => {
+    if (!scoutId) {
+      setTrials([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    const unsubscribe = repository.subscribeToScoutTrials(
+      scoutId,
+      (nextTrials) => {
+        setTrials(nextTrials);
+        setIsLoading(false);
+      },
+      (err) => {
+        setError(err.message);
+        setTrials([]);
+        setIsLoading(false);
+      },
+    );
+    return unsubscribe;
+  }, [repository, scoutId]);
+
+  const pendingCount = useMemo(
+    () => trials.filter((trial) => trial.status === 'pending').length,
+    [trials],
+  );
+
+  return { trials, pendingCount, isLoading, error };
+}
+
 export function useScoutTrialInvitations(playerId: string, playerName: string) {
   const { user } = useAuth();
   const scoutId = user?.id ?? '';
@@ -89,7 +129,7 @@ export function useScoutTrialInvitations(playerId: string, playerName: string) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const repository = useMemo(() => TrialInvitationRepository.getInstance(), []);
+  const repository = TrialInvitationRepository.getInstance();
 
   useEffect(() => {
     if (!scoutId || !playerId) {
@@ -187,7 +227,7 @@ export function useTrialNotifications() {
   const [notifications, setNotifications] = useState<TrialNotification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const repository = useMemo(() => TrialInvitationRepository.getInstance(), []);
+  const repository = TrialInvitationRepository.getInstance();
 
   useEffect(() => {
     if (!recipientId) {

@@ -32,6 +32,13 @@ export async function loadLocalTrialInvitationsForPlayer(
   return sortTrialInvitations(parsed.filter((item) => item.playerId === playerId));
 }
 
+export async function loadLocalTrialInvitationsForScout(
+  scoutId: string,
+): Promise<TrialInvitation[]> {
+  const parsed = await loadAllInvitations();
+  return sortTrialInvitations(parsed.filter((item) => item.scoutId === scoutId));
+}
+
 export async function loadLocalTrialInvitationsForScoutPlayer(
   scoutId: string,
   playerId: string,

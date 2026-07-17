@@ -30,7 +30,7 @@ export function FeaturedPlayersCarousel({
               accessibilityRole="button"
               accessibilityLabel={`View ${player.fullName}`}
               onPress={() => onPlayerPress(player)}
-              className="w-56 overflow-hidden rounded-2xl border border-border bg-surface"
+              className="w-56 overflow-hidden rounded-2xl border border-border bg-surface-cool"
             >
               <Image
                 source={{ uri: player.coverImageUrl }}

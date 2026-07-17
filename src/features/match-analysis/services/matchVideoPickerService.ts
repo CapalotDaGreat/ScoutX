@@ -1,45 +1,38 @@
-import * as ImagePicker from 'expo-image-picker';
 import { MATCH_ANALYSIS_LIMITS } from '@/features/match-analysis/constants';
+import { launchVideoFromLibrary } from '@/features/highlight-videos/services/launchVideoFromLibrary';
 import { type PickedVideoAsset } from '@/features/highlight-videos/types';
 
+/**
+ * Opens Photos / Gallery for full-match footage (Veo exports, phone recordings, etc.).
+ *
+ * Uses the fast no-transcode path first so long on-device matches load instantly;
+ * iCloud-only matches fall back to a download+export attempt.
+ */
 export async function pickMatchFootageVideo(): Promise<PickedVideoAsset | null> {
-  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (status !== 'granted') {
-    throw new Error('Permission to access the media library is required.');
-  }
-
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+  const picked = await launchVideoFromLibrary({
+    // Editing caps ~10 min on iOS — keep off for full-match Veo film.
     allowsEditing: false,
-    videoQuality: ImagePicker.UIImagePickerControllerQualityType.Medium,
-    // Allow long fixtures; device still may truncate depending on OS.
-    videoMaxDuration: MATCH_ANALYSIS_LIMITS.maxDurationSec,
+    preferFastPath: true,
   });
 
-  if (result.canceled || !result.assets?.length) {
+  if (!picked) {
     return null;
   }
 
-  const asset = result.assets[0];
-  const durationSec = asset.duration ? Math.round(asset.duration / 1000) : 0;
-
-  if (durationSec > MATCH_ANALYSIS_LIMITS.maxDurationSec) {
+  if (picked.durationSec > MATCH_ANALYSIS_LIMITS.maxDurationSec) {
     throw new Error(
-      `Match video must be ${MATCH_ANALYSIS_LIMITS.maxDurationSec / 60} minutes or shorter.`,
+      `Match video must be ${MATCH_ANALYSIS_LIMITS.maxDurationSec / 60} minutes or shorter. Trim your Veo export or choose a shorter recording from Photos.`,
     );
   }
 
   if (
-    typeof asset.fileSize === 'number' &&
-    asset.fileSize > MATCH_ANALYSIS_LIMITS.maxFileSizeBytes
+    typeof picked.fileSizeBytes === 'number' &&
+    picked.fileSizeBytes > MATCH_ANALYSIS_LIMITS.maxFileSizeBytes
   ) {
-    throw new Error('This video file is too large to upload. Compress it or choose a shorter cut.');
+    throw new Error(
+      'This video file is too large to upload. Export a lower quality cut from Veo or choose a shorter recording from Photos / Gallery.',
+    );
   }
 
-  return {
-    uri: asset.uri,
-    durationSec,
-    fileSizeBytes: asset.fileSize,
-    fileName: asset.fileName ?? undefined,
-  };
+  return picked;
 }

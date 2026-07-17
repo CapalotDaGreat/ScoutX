@@ -8,6 +8,7 @@ import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type ForgotPasswordPayload } from '@/features/auth/types';
+import { validateEmailField } from '@/features/auth/utils/authValidation';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ForgotPasswordScreenProps = {
@@ -26,10 +27,9 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
   const handleSubmit = async () => {
     const isValid = validate((nextValues) => {
       const nextErrors: Partial<Record<keyof ForgotPasswordPayload, string>> = {};
-      if (!nextValues.email.trim()) {
-        nextErrors.email = t('validation:emailRequired');
-      } else if (!/.+@.+\..+/.test(nextValues.email)) {
-        nextErrors.email = t('validation:emailInvalid');
+      const emailError = validateEmailField(nextValues.email, t);
+      if (emailError) {
+        nextErrors.email = emailError;
       }
       return nextErrors;
     });
@@ -49,7 +49,7 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
     <Screen title={t('forgotPassword.title')} subtitle={t('forgotPassword.subtitle')}>
       <AuthCard title={t('forgotPassword.cardTitle')} subtitle={t('forgotPassword.cardSubtitle')}>
         {combinedError ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
+          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {combinedError}
             </Text>
@@ -57,7 +57,7 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3 dark:border-green-800/40 dark:bg-green-950/40">
+          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
             <Text variant="body-sm" color="accent">
               {successMessage}
             </Text>

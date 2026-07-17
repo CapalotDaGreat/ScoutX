@@ -43,7 +43,7 @@ export function HighlightVideoCategoryFilter({
             className={cn(
               'rounded-full border px-3 py-1.5',
               isActive
-                ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+                ? 'border-accent bg-accent-muted'
                 : 'border-border bg-background-secondary/70',
             )}
           >

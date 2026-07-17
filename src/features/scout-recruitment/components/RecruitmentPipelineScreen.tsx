@@ -7,6 +7,7 @@ import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
+import { HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 import { CreateRecruitmentFolderModal } from '@/features/scout-recruitment/components/CreateRecruitmentFolderModal';
 import { CreateRecruitmentShortlistModal } from '@/features/scout-recruitment/components/CreateRecruitmentShortlistModal';
 import { RecruitmentEntryActionsModal } from '@/features/scout-recruitment/components/RecruitmentEntryActionsModal';
@@ -26,11 +27,13 @@ export type PipelineViewMode = 'kanban' | 'list';
 export type RecruitmentPipelineScreenProps = {
   onDiscoverPress?: () => void;
   onPlayerPress?: (playerId: string) => void;
+  onSettingsPress?: () => void;
 };
 
 export function RecruitmentPipelineScreen({
   onDiscoverPress,
   onPlayerPress,
+  onSettingsPress,
 }: RecruitmentPipelineScreenProps) {
   const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { colors } = useTheme();
@@ -74,7 +77,7 @@ export function RecruitmentPipelineScreen({
       <View className="border-b border-divider px-4 pb-4 pt-4">
         <View className="flex-row items-center gap-2">
           <Kanban size={22} color={colors.accent} />
-          <View className="flex-1">
+          <View className="min-w-0 flex-1">
             <Heading level={2}>{t('scout:pipeline.title')}</Heading>
             <Text variant="body-sm" color="secondary" className="mt-1">
               {t('scout:pipeline.savedPlayersSummary', {
@@ -84,6 +87,14 @@ export function RecruitmentPipelineScreen({
               })}
             </Text>
           </View>
+          {onSettingsPress ? (
+            <View className="shrink-0">
+              <HeaderIconButton
+                accessibilityLabel={t('common:settings')}
+                onPress={onSettingsPress}
+              />
+            </View>
+          ) : null}
         </View>
         {isCompact ? (
           <View className="mt-3 flex-row gap-2">

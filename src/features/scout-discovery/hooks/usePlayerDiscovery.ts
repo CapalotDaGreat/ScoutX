@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useAuth } from '@/features/auth/store/AuthProvider';
+import { useBlockedUsers } from '@/features/trust-safety/hooks/useBlockedUsers';
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import {
   type DiscoverablePlayer,
@@ -20,6 +22,8 @@ export function usePlayerDiscovery({
   sort,
   enabled = true,
 }: UsePlayerDiscoveryOptions) {
+  const { user } = useAuth();
+  const { blockedIds } = useBlockedUsers(user?.id ?? null);
   const [players, setPlayers] = useState<DiscoverablePlayer[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
@@ -46,9 +50,10 @@ export function usePlayerDiscovery({
       try {
         const repository = PlayerDiscoveryRepository.getInstance();
         const result = await repository.fetchPlayersPage(discoveryQuery, nextCursor);
+        const visiblePlayers = result.players.filter((player) => !blockedIds.has(player.id));
 
         setPlayers((current) =>
-          append ? [...current, ...result.players] : result.players,
+          append ? [...current, ...visiblePlayers] : visiblePlayers,
         );
         setCursor(result.nextCursor);
         setHasMore(result.hasMore);
@@ -59,7 +64,7 @@ export function usePlayerDiscovery({
         setIsLoadingMore(false);
       }
     },
-    [discoveryQuery],
+    [blockedIds, discoveryQuery],
   );
 
   useEffect(() => {

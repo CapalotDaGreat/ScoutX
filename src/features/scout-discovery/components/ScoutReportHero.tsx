@@ -49,7 +49,6 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
       <View className="flex-row gap-3">
         <RatingPill label="Overall" value={player.overallRating} emphasis="primary" className="flex-1" />
         <RatingPill label="Potential" value={player.potentialRating} className="flex-1" />
-        <RatingPill label="Sprint" value={`${player.sprintSpeedKmh}`} className="flex-1" />
       </View>
 
       <View className="flex-row flex-wrap gap-2">

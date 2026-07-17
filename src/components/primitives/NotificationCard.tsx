@@ -1,4 +1,4 @@
-import { Pressable, View, type ViewProps } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { Avatar } from '@/components/primitives/Avatar';
@@ -74,8 +74,7 @@ export function NotificationCard({
       padding="sm"
       onPress={onPress ? handlePress : undefined}
       className={cn(
-        'w-full',
-        !read && 'border-accent/20 dark:border-green-500/20',
+        !read && 'border-accent/25',
         className,
       )}
       accessibilityRole="button"
@@ -83,7 +82,7 @@ export function NotificationCard({
       accessibilityState={{ selected: !read }}
       {...props}
     >
-      <View className="flex-row items-start gap-3">
+      <View className="flex-row items-start gap-3.5">
         {avatarName || avatarUri ? (
           <Avatar
             name={avatarName}
@@ -91,7 +90,7 @@ export function NotificationCard({
             size="md"
           />
         ) : (
-          <View className="mt-1">
+          <View className="mt-1.5">
             {!read ? (
               <View className="h-2 w-2 rounded-full bg-accent" />
             ) : (
@@ -100,19 +99,19 @@ export function NotificationCard({
           </View>
         )}
 
-        <View className="flex-1">
-          <View className="mb-1 flex-row items-center justify-between gap-2">
+        <View className="min-w-0 flex-1 gap-1">
+          <View className="flex-row items-center justify-between gap-2">
             <Text
               variant="label"
               className={cn(
-                'flex-1 font-sans-semibold',
+                'min-w-0 flex-1 font-sans-semibold',
                 !read && 'text-foreground',
               )}
               numberOfLines={1}
             >
               {title}
             </Text>
-            <Text variant="caption" color="tertiary">
+            <Text variant="caption" color="tertiary" className="shrink-0">
               {timestamp}
             </Text>
           </View>
@@ -121,10 +120,12 @@ export function NotificationCard({
             {body}
           </Text>
 
-          <View className="mt-2">
+          <View className="mt-1.5">
             <Badge
               label={typeBadgeLabels[type]}
-              variant={typeBadgeVariants[type]}
+              variant={
+                type === 'achievement' ? 'prestige' : typeBadgeVariants[type]
+              }
               size="sm"
             />
           </View>

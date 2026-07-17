@@ -31,7 +31,7 @@ export function DiscoverySearchPanel({
   ).slice(0, 4);
 
   return (
-    <View className="gap-4 rounded-xl border border-border bg-surface p-3">
+    <View className="gap-4 rounded-xl border border-border bg-surface-cool p-3">
       {recentSearches.length > 0 ? (
         <View className="gap-2">
           <View className="flex-row items-center justify-between">

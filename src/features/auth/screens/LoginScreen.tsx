@@ -9,6 +9,7 @@ import { AuthCard } from '@/features/auth/components/AuthCard';
 import { AuthOAuthActions } from '@/features/auth/components/AuthOAuthActions';
 import { useAuthForm } from '@/features/auth/hooks/useAuthForm';
 import { type SignInPayload } from '@/features/auth/types';
+import { validateEmailField } from '@/features/auth/utils/authValidation';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type LoginScreenProps = {
@@ -42,10 +43,9 @@ export function LoginScreen({
   const handleSubmit = async () => {
     const isValid = validate((nextValues) => {
       const nextErrors: Partial<Record<keyof SignInPayload, string>> = {};
-      if (!nextValues.email.trim()) {
-        nextErrors.email = t('validation:emailRequired');
-      } else if (!/.+@.+\..+/.test(nextValues.email)) {
-        nextErrors.email = t('validation:emailInvalid');
+      const emailError = validateEmailField(nextValues.email, t);
+      if (emailError) {
+        nextErrors.email = emailError;
       }
       if (!nextValues.password.trim()) {
         nextErrors.password = t('validation:passwordRequired');
@@ -73,7 +73,7 @@ export function LoginScreen({
     <Screen title={t('login.title')} subtitle={t('login.subtitle')} onRefresh={undefined} refreshing={false}>
       <AuthCard title={t('login.cardTitle')} subtitle={t('login.cardSubtitle')}>
         {combinedError ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3 dark:border-red-800/40 dark:bg-red-950/40">
+          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {combinedError}
             </Text>
@@ -81,7 +81,7 @@ export function LoginScreen({
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3 dark:border-green-800/40 dark:bg-green-950/40">
+          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
             <Text variant="body-sm" color="accent">
               {successMessage}
             </Text>

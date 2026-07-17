@@ -6,7 +6,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useEffect } from 'react';
 import { Text } from '@/components/primitives/Text';
-import { useTheme } from '@/theme';
+import { resolveProgressAccentColor, useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { motion } from '@/theme/tokens/motion';
 
@@ -15,15 +15,16 @@ export type ProgressBarProps = ViewProps & {
   max?: number;
   showLabel?: boolean;
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'accent' | 'primary' | 'success';
+  /** `progress` uses stone→info→emerald→gold by percentage */
+  variant?: 'accent' | 'primary' | 'success' | 'gold' | 'progress';
   className?: string;
   accessibilityLabel?: string;
 };
 
 const sizeStyles = {
-  sm: 'h-1',
-  md: 'h-1.5',
-  lg: 'h-2',
+  sm: 'h-1.5',
+  md: 'h-2',
+  lg: 'h-2.5',
 } as const;
 
 export function ProgressBar({
@@ -50,11 +51,15 @@ export function ProgressBar({
   }));
 
   const fillColor =
-    variant === 'accent'
-      ? colors.accent
-      : variant === 'success'
-        ? colors.success
-        : colors.primary;
+    variant === 'progress'
+      ? resolveProgressAccentColor(colors, percentage)
+      : variant === 'gold'
+        ? colors.gold
+        : variant === 'accent'
+          ? colors.accent
+          : variant === 'success'
+            ? colors.success
+            : colors.primary;
 
   return (
     <View

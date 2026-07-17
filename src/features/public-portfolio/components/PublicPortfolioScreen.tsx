@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
+import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
+import { PreviewList } from '@/components/layout/PreviewList';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
@@ -25,6 +27,7 @@ import { type PublicPortfolioData } from '@/features/public-portfolio/types';
 import { PortfolioAnalyticsRepository } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { usePlayerTrust } from '@/features/trust-system/hooks/usePlayerTrust';
+import { TrustSafetyActions } from '@/features/trust-safety/components/TrustSafetyActions';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { isGuestRole } from '@/features/auth/services/authAccess';
 import { type AuthRole } from '@/features/auth/types';
@@ -169,11 +172,16 @@ export function PublicPortfolioScreen({
               {t('common:back')}
             </Button>
           ) : null}
-          {canEndorse ? (
-            <Button variant="accent" size="sm" onPress={() => setEndorsementVisible(true)}>
-              {t('portfolio:writeCoachEndorsement')}
-            </Button>
-          ) : null}
+          <View className="flex-row flex-wrap items-center gap-2">
+            {canEndorse ? (
+              <Button variant="accent" size="sm" onPress={() => setEndorsementVisible(true)}>
+                {t('portfolio:writeCoachEndorsement')}
+              </Button>
+            ) : null}
+            {!previewMode ? (
+              <TrustSafetyActions targetUserId={playerId} targetUserName={profile.fullName} />
+            ) : null}
+          </View>
         </View>
       }
     >
@@ -190,24 +198,49 @@ export function PublicPortfolioScreen({
 
         <FootballPassportHero data={data} username={displayUsername} />
 
-        {isPortfolioSectionVisible(privacy, 'careerTimeline') && profile.footballJourney ? (
-          <PortfolioSection
-            title={t('portfolio:sections.careerTimeline.title')}
-            subtitle={t('portfolio:sections.careerTimeline.subtitle')}
-            index={sectionIndex++}
-          >
-            <FootballJourneySection entries={profile.footballJourney.entries} />
-          </PortfolioSection>
-        ) : null}
-
         {isPortfolioSectionVisible(privacy, 'statistics') ? (
           <PortfolioSection
             title={t('portfolio:sections.statistics.title')}
             subtitle={t('portfolio:sections.statistics.subtitle')}
             index={sectionIndex++}
           >
-            <ProfileStatsGrid stats={profile.stats} />
-            <PlayerStatisticsSection matches={profile.statisticsMatches} />
+            <View className="gap-5">
+              <ProfileStatsGrid stats={profile.stats} compact />
+              <CollapsibleSection
+                title="Full performance"
+                subtitle="Detailed match analytics and charts"
+                persistKey={`public-stats-${playerId}`}
+              >
+                <ProfileStatsGrid stats={profile.stats} />
+                <PlayerStatisticsSection matches={profile.statisticsMatches} />
+              </CollapsibleSection>
+            </View>
+          </PortfolioSection>
+        ) : null}
+
+        {isPortfolioSectionVisible(privacy, 'careerTimeline') && profile.footballJourney ? (
+          <PortfolioSection
+            title={t('portfolio:sections.careerTimeline.title')}
+            subtitle={t('portfolio:sections.careerTimeline.subtitle')}
+            index={sectionIndex++}
+          >
+            <CollapsibleSection
+              title="Career timeline"
+              subtitle={`${profile.footballJourney.entries.length} moments`}
+              defaultOpen
+              persistKey={`public-timeline-${playerId}`}
+            >
+              <FootballJourneySection entries={profile.footballJourney.entries.slice(0, 5)} />
+              {profile.footballJourney.entries.length > 5 ? (
+                <CollapsibleSection
+                  title="Full timeline"
+                  subtitle={`${profile.footballJourney.entries.length - 5} more moments`}
+                  persistKey={`public-timeline-full-${playerId}`}
+                >
+                  <FootballJourneySection entries={profile.footballJourney.entries} />
+                </CollapsibleSection>
+              ) : null}
+            </CollapsibleSection>
           </PortfolioSection>
         ) : null}
 
@@ -217,7 +250,13 @@ export function PublicPortfolioScreen({
             subtitle={t('portfolio:sections.performanceCharts.subtitle')}
             index={sectionIndex++}
           >
-            <PerformanceSummary items={profile.performanceSummary} />
+            <CollapsibleSection
+              title="Performance charts"
+              subtitle="Season trends"
+              persistKey={`public-charts-${playerId}`}
+            >
+              <PerformanceSummary items={profile.performanceSummary} />
+            </CollapsibleSection>
           </PortfolioSection>
         ) : null}
 
@@ -227,7 +266,14 @@ export function PublicPortfolioScreen({
             subtitle={t('portfolio:sections.videos.subtitle')}
             index={sectionIndex++}
           >
-            <HighlightVideosSection library={profile.highlightVideos} />
+            <CollapsibleSection
+              title="Highlight videos"
+              subtitle="Match footage"
+              defaultOpen
+              persistKey={`public-videos-${playerId}`}
+            >
+              <HighlightVideosSection library={profile.highlightVideos} />
+            </CollapsibleSection>
           </PortfolioSection>
         ) : null}
 
@@ -240,11 +286,13 @@ export function PublicPortfolioScreen({
             <View className="gap-2">
               {profile.identity.careerTimeline
                 .filter((entry) => entry.type === 'achievement')
+                .slice(0, 6)
                 .map((entry) => (
-                  <Badge key={entry.id} variant="success" label={entry.title} />
+                  <Badge key={entry.id} variant="prestige" label={entry.title} />
                 ))}
               {profile.footballJourney?.entries
                 .filter((entry) => entry.type === 'achievement')
+                .slice(0, 6)
                 .map((entry) => (
                   <Text key={entry.id} variant="body-sm">
                     {entry.title}
@@ -260,11 +308,14 @@ export function PublicPortfolioScreen({
             subtitle={t('portfolio:sections.recommendations.subtitle')}
             index={sectionIndex++}
           >
-            <View className="gap-3">
-              {recommendations.map((recommendation, index) => (
-                <RecommendationCard key={recommendation.id} recommendation={recommendation} index={index} />
-              ))}
-            </View>
+            <PreviewList
+              items={recommendations}
+              previewCount={3}
+              keyExtractor={(recommendation) => recommendation.id}
+              renderItem={(recommendation, index) => (
+                <RecommendationCard recommendation={recommendation} index={index} />
+              )}
+            />
           </PortfolioSection>
         ) : null}
 
@@ -274,14 +325,37 @@ export function PublicPortfolioScreen({
             subtitle={t('portfolio:sections.gpsHighlights.subtitle')}
             index={sectionIndex++}
           >
-            <View className="gap-4">
-              {gpsHighlights.map((session) => (
-                <View key={session.id} className="gap-2">
-                  <Text weight="semibold">{session.matchLabel}</Text>
-                  <GpsHeatmap heatmap={session.heatmap} />
-                </View>
-              ))}
-            </View>
+            <CollapsibleSection
+              title="GPS highlights"
+              subtitle={`${gpsHighlights.length} sessions`}
+              defaultOpen
+              persistKey={`public-gps-${playerId}`}
+            >
+              <View className="gap-4">
+                {gpsHighlights.slice(0, 1).map((session) => (
+                  <View key={session.id} className="gap-2">
+                    <Text weight="semibold">{session.matchLabel}</Text>
+                    <GpsHeatmap heatmap={session.heatmap} />
+                  </View>
+                ))}
+                {gpsHighlights.length > 1 ? (
+                  <CollapsibleSection
+                    title="More sessions"
+                    subtitle={`${gpsHighlights.length - 1} additional`}
+                    persistKey={`public-gps-more-${playerId}`}
+                  >
+                    <View className="gap-4">
+                      {gpsHighlights.slice(1).map((session) => (
+                        <View key={session.id} className="gap-2">
+                          <Text weight="semibold">{session.matchLabel}</Text>
+                          <GpsHeatmap heatmap={session.heatmap} />
+                        </View>
+                      ))}
+                    </View>
+                  </CollapsibleSection>
+                ) : null}
+              </View>
+            </CollapsibleSection>
           </PortfolioSection>
         ) : null}
       </ScrollView>

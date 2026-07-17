@@ -15,13 +15,14 @@ export const spacing = {
 } as const;
 
 export const layout = {
-  screenPadding: 16,
-  sectionGap: 32,
+  screenPadding: 20,
+  sectionGap: 28,
   listItemGap: 12,
   minTouchTarget: 44,
-  tabBarHeight: 56,
+  tabBarHeight: 64,
   inputHeight: 48,
-  buttonHeightMd: 44,
-  buttonHeightSm: 36,
-  buttonHeightLg: 52,
+  buttonHeightMd: 48,
+  buttonHeightSm: 40,
+  buttonHeightLg: 56,
+  headerActionGap: 10,
 } as const;

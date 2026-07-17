@@ -23,7 +23,7 @@ export function CoachEndorsementPrompt({
   }
 
   return (
-    <Card variant="outlined" padding="md" className="gap-3 border-accent/30 bg-accent-muted/30 dark:border-green-800 dark:bg-green-950/40">
+    <Card variant="outlined" padding="md" className="gap-3 border-accent/30 bg-accent-muted/40">
       <View>
         <Text variant="overline" color="secondary">
           Coach endorsement invite

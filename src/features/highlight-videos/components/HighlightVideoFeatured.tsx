@@ -21,7 +21,7 @@ export function HighlightVideoFeatured({ video, onPress }: HighlightVideoFeature
     <Animated.View entering={FadeInDown.duration(400)}>
       <Pressable
         onPress={() => onPress?.(video)}
-        className="overflow-hidden rounded-2xl border border-accent/30 dark:border-green-900/50 active:opacity-95"
+        className="overflow-hidden rounded-2xl border border-accent/30/50 active:opacity-95"
       >
         <View className="relative">
           <Image

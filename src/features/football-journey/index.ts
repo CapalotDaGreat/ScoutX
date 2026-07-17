@@ -44,8 +44,6 @@ export {
   getJourneyEntryAccent,
 } from '@/features/football-journey/services/journeyTimelineService';
 
-export { mockJourneyEntries } from '@/features/football-journey/services/mockJourneyData';
-
 export {
   JOURNEY_TYPE_META,
   JOURNEY_TYPE_OPTIONS,

@@ -1,29 +1,34 @@
-{
-  "tabs": {
-    "portfolio": "Portfolio",
-    "career": "Carriera",
-    "statistics": "Stats",
-    "gps": "GPS",
-    "trials": "Trials",
-    "home": "Home",
-    "performance": "Prestazioni",
-    "track": "Attività",
-    "search": "Cerca",
-    "discover": "Discover",
-    "pipeline": "Pipeline"
-  },
-  "segments": {
-    "stats": "Stats",
-    "career": "Carriera",
-    "gps": "GPS",
-    "trials": "Trials"
-  },
-  "screens": {
-    "settings": "Impostazioni",
-    "settingsSubtitle": "Account, notifications, and language",
-    "activityInbox": "Activity",
-    "playerComparison": "Player comparison",
-    "careerReplay": "Career replay",
-    "publicPortfolio": "Football Passport"
-  }
+﻿{
+    "tabs":  {
+                 "portfolio":  "Portfolio",
+                 "career":  "Carriera",
+                 "statistics":  "Stats",
+                 "gps":  "GPS",
+                 "trials":  "Trials",
+                 "home":  "Home",
+                 "performance":  "Crescita",
+                 "track":  "AttivitÃ ",
+                 "search":  "Cerca",
+                 "discover":  "Discover",
+                 "pipeline":  "Pipeline",
+                 "media":  "Media"
+             },
+    "segments":  {
+                     "stats":  "Stats",
+                     "career":  "Carriera",
+                     "gps":  "GPS",
+                     "trials":  "Trials",
+                     "highlights":  "Highlights",
+                     "reports":  "Report"
+                 },
+    "screens":  {
+                    "settings":  "Impostazioni",
+                    "settingsSubtitle":  "Account, notifications, and language",
+                    "activityInbox":  "Activity",
+                    "playerComparison":  "Player comparison",
+                    "careerReplay":  "Career replay",
+                    "publicPortfolio":  "Football Passport",
+                    "highlights":  "Video highlight",
+                    "highlightsSubtitle":  "Clip per scout e partite"
+                }
 }

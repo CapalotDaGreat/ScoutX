@@ -1,5 +1,4 @@
 import { type PortfolioAnalytics } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
-import { PortfolioAnalyticsRepository } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
 import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
 import { type MilestoneDefinition } from '@/features/career-milestones/types';

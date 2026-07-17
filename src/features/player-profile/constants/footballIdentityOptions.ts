@@ -40,28 +40,6 @@ export const PLAYING_STYLE_OPTIONS = [
   'Physical',
 ] as const;
 
-export const LANGUAGE_OPTIONS = [
-  'English',
-  'Spanish',
-  'French',
-  'German',
-  'Portuguese',
-  'Dutch',
-  'Italian',
-] as const;
-
-export const COUNTRY_OPTIONS = [
-  'England',
-  'Spain',
-  'Germany',
-  'France',
-  'Netherlands',
-  'Portugal',
-  'Italy',
-  'USA',
-  'Brazil',
-] as const;
-
 export const LEAGUE_OPTIONS = [
   'Premier League',
   'La Liga',

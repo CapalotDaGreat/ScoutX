@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type ReactElement, type RefObject } from 'react';
+import { useCallback, useRef, useState, type ReactElement } from 'react';
 import { View } from 'react-native';
 import { FootballPassportShareCardView } from '@/features/share-cards/components/FootballPassportShareCardView';
 import { type PassportShareCardData } from '@/features/share-cards/services/passportShareCardData';

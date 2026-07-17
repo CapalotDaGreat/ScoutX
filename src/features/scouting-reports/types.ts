@@ -41,7 +41,7 @@ export const defaultScoutingReportRatings = (): ScoutingReportRatings => ({
 });
 
 export const createEmptyScoutingReportDraft = (
-  playerName: string,
+  _playerName?: string,
 ): ScoutingReportDraft => ({
   scoutName: undefined,
   ratings: defaultScoutingReportRatings(),

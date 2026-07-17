@@ -32,27 +32,21 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
   return (
     <>
       <ShareCaptureLayer />
-      <Card variant="outlined" padding="md" className="gap-3">
-        <View>
+      <Card variant="outlined" padding="md" className="gap-4">
+        <View className="gap-1">
           <Text variant="overline" color="secondary">
             Career Replay
           </Text>
           <Text weight="semibold">{replay.seasonLabel} recap</Text>
-          <Text variant="body-sm" color="secondary">
+          <Text variant="body-sm" color="secondary" numberOfLines={3}>
             {replay.narrative}
           </Text>
         </View>
 
         {hasSeasonActivity ? (
-          <View className="flex-row flex-wrap gap-3">
-            <StatCard label="Matches" value={replay.matchCount} className="min-w-[45%] flex-1" />
-            <StatCard label="Goals" value={replay.totalGoals} className="min-w-[45%] flex-1" />
-            <StatCard label="Assists" value={replay.totalAssists} className="min-w-[45%] flex-1" />
-            <StatCard
-              label="Scout views"
-              value={replay.scoutViews}
-              className="min-w-[45%] flex-1"
-            />
+          <View className="flex-row gap-3">
+            <StatCard label="Matches" value={replay.matchCount} className="flex-1" />
+            <StatCard label="Goals" value={replay.totalGoals} className="flex-1" />
           </View>
         ) : null}
 
@@ -64,21 +58,21 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
 
         <View className="flex-row gap-2">
           {onOpenPress ? (
-            <Button variant="secondary" onPress={onOpenPress} className="flex-1">
+            <Button variant="accent" onPress={onOpenPress} className="flex-1">
               Open replay
             </Button>
           ) : null}
           <Button
-            variant="primary"
+            variant="secondary"
             loading={isSharing}
             onPress={() => void shareAsImage()}
             className="flex-1"
             disabled={!hasSeasonActivity}
           >
-            Share card
+            Share
           </Button>
           <Button
-            variant="secondary"
+            variant="ghost"
             onPress={() => void shareCareerReplayPdf(replay, profile.id)}
             className="flex-1"
             disabled={!hasSeasonActivity}

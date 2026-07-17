@@ -1,16 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
-import { type PlayerProfile } from '@/features/player-profile/types';
 import { PortfolioAnalyticsRepository } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
-import { getPortfolioOverallScore } from '@/features/public-portfolio/services/footballPassportScoreService';
 
 export type PortfolioAnalyticsCardProps = {
   playerId: string;
-  profile?: PlayerProfile | null;
 };
 
-export function PortfolioAnalyticsCard({ playerId, profile }: PortfolioAnalyticsCardProps) {
+/** Reach metrics only — passport score lives on FootballPassportScoreCard. */
+export function PortfolioAnalyticsCard({ playerId }: PortfolioAnalyticsCardProps) {
   const [stats, setStats] = useState({
     totalViews: 0,
     viewsThisWeek: 0,
@@ -18,11 +16,6 @@ export function PortfolioAnalyticsCard({ playerId, profile }: PortfolioAnalytics
     scoutViewsThisWeek: 0,
     lastViewedAt: null as string | null,
   });
-
-  const healthScore = useMemo(
-    () => (profile ? getPortfolioOverallScore(profile) : null),
-    [profile],
-  );
 
   useEffect(() => {
     void PortfolioAnalyticsRepository.getInstance()
@@ -50,11 +43,6 @@ export function PortfolioAnalyticsCard({ playerId, profile }: PortfolioAnalytics
       <Text variant="body-sm" color="secondary">
         {stats.scoutViews} scout views · {stats.scoutViewsThisWeek} scout views this week
       </Text>
-      {healthScore !== null ? (
-        <Text variant="body-sm" color="secondary">
-          Passport score {healthScore}/100
-        </Text>
-      ) : null}
       <Text variant="caption" color="secondary">
         Last viewed {lastViewedLabel}
       </Text>

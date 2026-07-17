@@ -1,6 +1,7 @@
 import { doc, getDoc } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { createCallableFunction } from '@/firebase/callableFunctions';
+import { startOfWeekMondayIso } from '@/utils/dateWeek';
 
 export type PortfolioAnalytics = {
   totalViews: number;
@@ -13,22 +14,13 @@ export type PortfolioAnalytics = {
 
 const COLLECTION = 'portfolioAnalytics';
 
-function currentWeekStart(): string {
-  const now = new Date();
-  const day = now.getDay();
-  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-  const monday = new Date(now.setDate(diff));
-  monday.setHours(0, 0, 0, 0);
-  return monday.toISOString();
-}
-
 function emptyAnalytics(): PortfolioAnalytics {
   return {
     totalViews: 0,
     viewsThisWeek: 0,
     scoutViews: 0,
     scoutViewsThisWeek: 0,
-    weekStartedAt: currentWeekStart(),
+    weekStartedAt: startOfWeekMondayIso(),
     lastViewedAt: null,
   };
 }
@@ -58,8 +50,8 @@ export class PortfolioAnalyticsRepository {
       }
       const data = snapshot.data();
       const weekStartedAt =
-        typeof data.weekStartedAt === 'string' ? data.weekStartedAt : currentWeekStart();
-      const sameWeek = weekStartedAt === currentWeekStart();
+        typeof data.weekStartedAt === 'string' ? data.weekStartedAt : startOfWeekMondayIso();
+      const sameWeek = weekStartedAt === startOfWeekMondayIso();
 
       return {
         totalViews: typeof data.totalViews === 'number' ? data.totalViews : 0,

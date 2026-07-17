@@ -11,7 +11,7 @@ import {
   type User,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { getFirebaseAuth, getFirestoreDb, isFirebaseReady } from '@/config/firebase';
+import { getFirebaseAuth, getFirestoreDb } from '@/config/firebase';
 import { getFirebaseActionCodeSettings } from '@/config/deepLinking';
 import {
   assertProductionAuthConfigured,

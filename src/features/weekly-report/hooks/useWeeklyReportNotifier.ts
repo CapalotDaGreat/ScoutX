@@ -6,17 +6,9 @@ import { buildWeeklyGrowthMetrics } from '@/features/player-growth/services/grow
 import { type PortfolioAnalytics } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type TrustRecommendation } from '@/features/trust-system/types';
+import { startOfWeekMondayKey } from '@/utils/dateWeek';
 
 const STORAGE_PREFIX = '@scoutx/weekly-report-notified/';
-
-function currentWeekKey(): string {
-  const now = new Date();
-  const day = now.getDay();
-  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-  const monday = new Date(now.setDate(diff));
-  monday.setHours(0, 0, 0, 0);
-  return monday.toISOString().slice(0, 10);
-}
 
 export function useWeeklyReportNotifier(
   profile: PlayerProfile | null,
@@ -33,7 +25,7 @@ export function useWeeklyReportNotifier(
     let cancelled = false;
 
     const run = async () => {
-      const weekKey = currentWeekKey();
+      const weekKey = startOfWeekMondayKey();
       const storageKey = `${STORAGE_PREFIX}${profile.id}/${weekKey}`;
       const alreadyNotified = await AsyncStorage.getItem(storageKey);
       if (alreadyNotified === 'true') {

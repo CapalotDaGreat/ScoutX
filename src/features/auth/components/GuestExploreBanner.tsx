@@ -22,7 +22,7 @@ export function GuestExploreBanner({ onSignOut }: GuestExploreBannerProps) {
         onPress={() => setExpanded((current) => !current)}
         className="flex-row items-center gap-3 px-4 py-3"
       >
-        <View className="rounded-full bg-accent-muted p-2 dark:bg-green-950">
+        <View className="rounded-full bg-accent-muted p-2">
           <UserRound size={16} color={colors.accent} />
         </View>
         <View className="flex-1">

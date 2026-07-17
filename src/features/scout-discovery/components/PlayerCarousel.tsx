@@ -43,7 +43,7 @@ export function PlayerCarousel({
                 />
                 <View className="absolute inset-0 bg-black/20" />
                 <View className="absolute left-3 top-3">
-                  {player.verified ? <Badge label="Verified" variant="accent" size="sm" /> : null}
+                  {player.verified ? <Badge label="Verified" variant="prestige" size="sm" /> : null}
                 </View>
                 <View className="absolute bottom-3 right-3 rounded-md bg-black/55 px-2 py-1">
                   <Text variant="caption" className="font-sans-bold text-white">

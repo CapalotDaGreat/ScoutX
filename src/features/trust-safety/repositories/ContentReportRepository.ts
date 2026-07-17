@@ -1,4 +1,4 @@
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { CONTENT_REPORTS_COLLECTION } from '@/features/trust-safety/constants';
 import { type ContentReport, type ContentReportDraft } from '@/features/trust-safety/types';

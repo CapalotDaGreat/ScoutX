@@ -50,7 +50,7 @@ export function RecruitmentFolderBar({
           className={cn(
             'rounded-full border px-3 py-2',
             activeFolderId === null
-              ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+              ? 'border-accent bg-accent-muted'
               : 'border-border bg-surface',
           )}
         >
@@ -75,7 +75,7 @@ export function RecruitmentFolderBar({
               className={cn(
                 'flex-row items-center gap-2 rounded-full border px-3 py-2',
                 isActive
-                  ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+                  ? 'border-accent bg-accent-muted'
                   : 'border-border bg-surface',
               )}
             >

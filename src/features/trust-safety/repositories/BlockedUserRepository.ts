@@ -8,7 +8,7 @@ import {
 } from '@/features/trust-safety/services/blockStorage';
 import { type BlockedUser } from '@/features/trust-safety/types';
 
-function parseBlockedUser(data: Record<string, unknown>, id: string): BlockedUser | null {
+function parseBlockedUser(data: Record<string, unknown>, _id: string): BlockedUser | null {
   if (typeof data.blockerId !== 'string' || typeof data.blockedUserId !== 'string') {
     return null;
   }

@@ -29,7 +29,7 @@ export function ReportRatingField({
     <View
       className={cn(
         'rounded-xl border border-border p-3',
-        emphasis ? 'bg-accent-muted/40 dark:bg-green-950/30' : 'bg-background-secondary/50/50',
+        emphasis ? 'bg-accent-muted/40' : 'bg-background-secondary/50/50',
         className,
       )}
     >

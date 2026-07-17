@@ -26,7 +26,7 @@ export function RecruitmentStageColumn({
 
   return (
     <View
-      className="mr-3 rounded-2xl border border-border bg-background-secondary"
+      className="mr-3 rounded-2xl border border-border bg-surface-cool"
       style={{ width: pipelineColumnWidth }}
       testID={`recruitment-column-${stage}`}
     >

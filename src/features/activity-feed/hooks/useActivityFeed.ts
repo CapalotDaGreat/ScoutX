@@ -23,7 +23,7 @@ export function useActivityFeed({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const repository = useMemo(() => ActivityRepository.getInstance(), []);
+  const repository = ActivityRepository.getInstance();
 
   useEffect(() => {
     if (!recipientId) {

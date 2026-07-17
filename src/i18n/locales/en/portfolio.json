@@ -133,5 +133,9 @@
     "title": "Football Passport Score",
     "subtitle": "Overall readiness and completeness"
   },
-  "captain": "Captain"
+  "captain": "Captain",
+  "trialsQuickActionTitle": "Trial invitations",
+  "trialsQuickActionSubtitle": "Accept, decline, and track scout invitations",
+  "privacyManagedInSettings": "Portfolio & discovery privacy is managed in Settings.",
+  "managePrivacy": "Manage privacy"
 }

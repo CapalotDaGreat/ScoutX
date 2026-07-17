@@ -21,7 +21,7 @@ export function IdentityRatingField({ label, value, max = 5 }: IdentityRatingFie
           {value}/{max}
         </Text>
       </View>
-      <ProgressBar value={percentage} max={100} size="sm" />
+      <ProgressBar value={percentage} max={100} size="sm" variant="progress" />
     </View>
   );
 }

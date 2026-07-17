@@ -14,21 +14,23 @@ import { triggerHaptic } from '@/utils/haptics';
 const variantStyles = {
   primary: 'bg-primary border border-transparent active:opacity-90',
   accent: 'bg-accent border border-transparent active:opacity-90',
-  secondary: 'bg-transparent border border-border active:opacity-80',
+  prestige: 'bg-gold border border-transparent active:opacity-90',
+  secondary: 'bg-surface border border-gold/30 active:opacity-80',
   ghost: 'bg-transparent border border-transparent active:opacity-70',
   destructive: 'bg-error-muted border border-transparent active:opacity-90',
   link: 'bg-transparent border border-transparent',
 } as const;
 
 const sizeStyles = {
-  sm: 'h-9 px-3 rounded-md',
-  md: 'h-11 px-4 rounded-md',
-  lg: 'h-[52px] px-6 rounded-md',
+  sm: 'min-h-10 px-3.5 rounded-xl',
+  md: 'min-h-12 px-5 rounded-xl',
+  lg: 'min-h-14 px-6 rounded-xl',
 } as const;
 
 const textVariantStyles = {
   primary: 'text-primary-foreground',
   accent: 'text-accent-foreground',
+  prestige: 'text-gold-foreground',
   secondary: 'text-foreground',
   ghost: 'text-foreground-secondary',
   destructive: 'text-error',
@@ -79,12 +81,22 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
   const { colors } = useTheme();
   const isDisabled = disabled || loading;
 
-  const spinnerColor =
+  const labelColor =
     variant === 'primary'
       ? colors.primaryForeground
       : variant === 'accent'
         ? colors.accentForeground
-        : colors.textPrimary;
+        : variant === 'prestige'
+          ? colors.goldForeground
+          : variant === 'destructive'
+            ? colors.error
+            : variant === 'link'
+              ? colors.textLink
+              : variant === 'ghost'
+                ? colors.textSecondary
+                : colors.textPrimary;
+
+  const spinnerColor = labelColor;
 
   const handlePress: PressableProps['onPress'] = (event) => {
     if (haptic && !isDisabled) {
@@ -108,12 +120,12 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
         variantStyles[variant],
         sizeStyles[size],
         fullWidth && 'w-full',
-        isDisabled && 'opacity-40',
+        isDisabled && 'opacity-45',
         className,
       )}
       style={({ pressed }) =>
         pressed && !isDisabled
-          ? ({ transform: [{ scale: 0.97 }] } satisfies ViewStyle)
+          ? ({ transform: [{ scale: 0.98 }] } satisfies ViewStyle)
           : undefined
       }
       {...props}
@@ -126,11 +138,12 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
           {typeof children === 'string' ? (
             <Text
               className={cn(
-                'font-sans-medium',
+                'font-sans-semibold',
                 textVariantStyles[variant],
                 textSizeStyles[size],
                 textClassName,
               )}
+              style={{ color: labelColor }}
             >
               {children}
             </Text>

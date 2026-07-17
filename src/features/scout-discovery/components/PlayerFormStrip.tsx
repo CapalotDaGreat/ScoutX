@@ -26,9 +26,9 @@ export function PlayerFormStrip({ form, size = 'sm', className }: PlayerFormStri
           className={cn(
             sizeStyles[size],
             'items-center justify-center rounded-sm',
-            result === 'W' && 'bg-success-muted dark:bg-green-950',
+            result === 'W' && 'bg-success-muted',
             result === 'D' && 'bg-background-secondary',
-            result === 'L' && 'bg-error-muted dark:bg-red-950',
+            result === 'L' && 'bg-error-muted',
           )}
         >
           <Text variant="caption" className="font-sans-bold">

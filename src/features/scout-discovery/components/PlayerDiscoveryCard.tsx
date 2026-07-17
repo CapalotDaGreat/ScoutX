@@ -3,7 +3,6 @@ import { Image, Pressable, View, type ViewStyle } from 'react-native';
 import { Badge } from '@/components/primitives/Badge';
 import { Text } from '@/components/primitives/Text';
 import { AnimatedListItem } from '@/components/feedback/AnimatedListItem';
-import { MiniRadarChart } from '@/features/scout-discovery/components/MiniRadarChart';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
 import { PlayerQuickActions } from '@/features/scout-discovery/components/PlayerQuickActions';
 import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
@@ -62,7 +61,7 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
         accessibilityLabel={`${player.fullName}, ${player.position.join('/')}, overall ${player.overallRating}`}
         onPress={handlePress}
         className={cn(
-          'overflow-hidden rounded-2xl border border-border bg-surface shadow-sm',
+          'overflow-hidden rounded-2xl border border-border bg-surface',
           className,
         )}
         style={({ pressed }) =>
@@ -73,7 +72,7 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
           <Image source={{ uri: player.coverImageUrl }} className="h-full w-full" resizeMode="cover" />
           <View className="absolute inset-0 bg-black/30" />
           <View className="absolute left-3 top-3 flex-row gap-2">
-            {player.verified ? <Badge label="Verified" variant="accent" size="sm" /> : null}
+            {player.verified ? <Badge label="Verified" variant="prestige" size="sm" /> : null}
             <Badge
               label={availabilityLabel[player.availability]}
               variant={availabilityVariant[player.availability]}
@@ -114,9 +113,9 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
               source={{ uri: player.avatarUrl }}
               className="h-12 w-12 rounded-full border-2 border-surface"
             />
-            <View className="flex-1">
+            <View className="min-w-0 flex-1">
               <View className="flex-row items-center gap-1">
-                <Text weight="semibold" numberOfLines={1}>
+                <Text weight="semibold" numberOfLines={1} className="flex-shrink">
                   {player.fullName}
                 </Text>
                 {player.verified ? (
@@ -126,18 +125,8 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
               <Text variant="caption" color="secondary">
                 {player.age} · {player.nationality} · {player.position.join(' / ')}
               </Text>
-              <Text variant="caption" color="secondary">
-                {player.preferredFoot} foot · {player.heightCm}cm · {player.weightKg}kg
-              </Text>
             </View>
-            <MiniRadarChart stats={player.radarStats} size={64} />
-          </View>
-
-          <View className="flex-row gap-2">
-            <RatingPill label="Potential" value={player.potentialRating} emphasis="primary" className="flex-1" />
-            <RatingPill label="Goals" value={player.goals} className="flex-1" />
-            <RatingPill label="Assists" value={player.assists} className="flex-1" />
-            <RatingPill label="Sprint" value={`${player.sprintSpeedKmh}`} className="flex-1" />
+            <RatingPill label="POT" value={player.potentialRating} emphasis="primary" />
           </View>
 
           <View className="flex-row items-center justify-between">

@@ -83,10 +83,9 @@ export function LogMatchModal({
   );
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Log Match" size="sheet" footer={footer}>
+    <Modal visible={visible} onClose={onClose} title="Log Match" size="fullscreen" footer={footer}>
       <ScrollView
         className="flex-1"
-        style={{ flex: 1 }}
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled

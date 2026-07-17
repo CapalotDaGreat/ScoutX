@@ -2,56 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Fallback tokens for web / first paint.
+ * Runtime light/dark switching on native is driven by ThemeProvider + vars().
+ */
 :root {
-  --color-primary: #0a0a0a;
-  --color-primary-foreground: #ffffff;
-  --color-accent: #65a30d;
-  --color-accent-foreground: #ffffff;
-  --color-accent-muted: #ecfccb;
-  --color-background: #ffffff;
-  --color-background-secondary: #f5f5f5;
-  --color-surface: #ffffff;
-  --color-surface-elevated: #ffffff;
-  --color-foreground: #0a0a0a;
-  --color-foreground-secondary: #737373;
-  --color-foreground-tertiary: #a3a3a3;
-  --color-foreground-inverse: #ffffff;
-  --color-border: #e5e5e5;
-  --color-border-strong: #d4d4d4;
-  --color-divider: #f0f0f0;
-  --color-success: #65a30d;
-  --color-success-muted: #ecfccb;
-  --color-warning: #ca8a04;
-  --color-warning-muted: #fef9c3;
-  --color-error: #dc2626;
-  --color-error-muted: #fee2e2;
-  --color-info: #2563eb;
-  --color-info-muted: #dbeafe;
+  --color-primary: #1a1814;
+  --color-primary-foreground: #f7f4ef;
+  --color-accent: #2fbf71;
+  --color-accent-foreground: #0f1412;
+  --color-accent-muted: #d8f5e6;
+  --color-gold: #c49a2c;
+  --color-gold-foreground: #1a1814;
+  --color-gold-muted: #f0e2b8;
+  --color-background: #f4efe6;
+  --color-background-secondary: #ebe3d4;
+  --color-surface: #fbf7f0;
+  --color-surface-elevated: #fffcf6;
+  --color-surface-cool: #f1ebe1;
+  --color-foreground: #1a1814;
+  --color-foreground-secondary: #4a453c;
+  --color-foreground-tertiary: #7a7368;
+  --color-foreground-inverse: #f7f4ef;
+  --color-border: #e0d4c0;
+  --color-border-strong: #cdbe9e;
+  --color-divider: #ebe3d6;
+  --color-success: #2fbf71;
+  --color-success-muted: #d8f5e6;
+  --color-warning: #d4892a;
+  --color-warning-muted: #f8e6c8;
+  --color-error: #c94b47;
+  --color-error-muted: #f6e0de;
+  --color-info: #3d8f7a;
+  --color-info-muted: #d9efe8;
 }
 
 .dark {
-  --color-primary: #fafafa;
-  --color-primary-foreground: #0b0f0c;
-  --color-accent: #a3e635;
-  --color-accent-foreground: #0b0f0c;
-  --color-accent-muted: #1a2e0a;
-  --color-background: #0b0f0c;
-  --color-background-secondary: #101612;
-  --color-surface: #141a16;
-  --color-surface-elevated: #1c241e;
-  --color-foreground: #fafafa;
-  --color-foreground-secondary: #a3a3a3;
-  --color-foreground-tertiary: #737373;
-  --color-foreground-inverse: #0b0f0c;
-  --color-border: #243028;
-  --color-border-strong: #2f3d34;
-  --color-divider: #1a221c;
-  --color-success: #a3e635;
-  --color-success-muted: #1a2e0a;
-  --color-warning: #eab308;
-  --color-warning-muted: #422006;
-  --color-error: #ef4444;
-  --color-error-muted: #450a0a;
-  --color-info: #3b82f6;
-  --color-info-muted: #1e3a5f;
+  --color-primary: #f7f4ef;
+  --color-primary-foreground: #1a1814;
+  --color-accent: #2fbf71;
+  --color-accent-foreground: #0f1412;
+  --color-accent-muted: #163528;
+  --color-gold: #d4af37;
+  --color-gold-foreground: #1a1814;
+  --color-gold-muted: #3f3418;
+  --color-background: #161412;
+  --color-background-secondary: #1e1c19;
+  --color-surface: #1e1c19;
+  --color-surface-elevated: #282522;
+  --color-surface-cool: #1c1a17;
+  --color-foreground: #f7f4ef;
+  --color-foreground-secondary: #c4bdb2;
+  --color-foreground-tertiary: #958e84;
+  --color-foreground-inverse: #1a1814;
+  --color-border: #35312c;
+  --color-border-strong: #454039;
+  --color-divider: #2a2723;
+  --color-success: #2fbf71;
+  --color-success-muted: #163528;
+  --color-warning: #e0a04a;
+  --color-warning-muted: #3d2a12;
+  --color-error: #e06a66;
+  --color-error-muted: #3a1a19;
+  --color-info: #5cb89e;
+  --color-info-muted: #1a332c;
 }

@@ -1,9 +1,45 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMockData } from '@/config/appMode';
 import { ScoutingReportRepository } from '@/features/scouting-reports/repositories/ScoutingReportRepository';
 import { getMockReportsForPlayer } from '@/features/scouting-reports/services/mockScoutingReports';
 import { type ScoutingReport, type ScoutingReportDraft } from '@/features/scouting-reports/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+
+/** Cross-player reports inbox for the scout Trials tab. */
+export function useScoutAllReports() {
+  const { user } = useAuth();
+  const scoutId = user?.id ?? '';
+  const [reports, setReports] = useState<ScoutingReport[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const repository = ScoutingReportRepository.getInstance();
+
+  useEffect(() => {
+    if (!scoutId) {
+      setReports([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    const unsubscribe = repository.subscribeToScoutReports(
+      scoutId,
+      (nextReports) => {
+        setReports(nextReports);
+        setIsLoading(false);
+      },
+      (err) => {
+        setError(err.message);
+        setReports([]);
+        setIsLoading(false);
+      },
+    );
+    return unsubscribe;
+  }, [repository, scoutId]);
+
+  return { reports, isLoading, error };
+}
 
 export function useScoutingReports(playerId: string, playerName: string) {
   const { user } = useAuth();
@@ -13,7 +49,7 @@ export function useScoutingReports(playerId: string, playerName: string) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const repository = useMemo(() => ScoutingReportRepository.getInstance(), []);
+  const repository = ScoutingReportRepository.getInstance();
 
   useEffect(() => {
     if (!scoutId || !playerId) {

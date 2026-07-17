@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { View } from 'react-native';
 import { BarChart3, Clapperboard } from 'lucide-react-native';
+import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
@@ -13,7 +15,6 @@ import { AiInsightPanel } from '@/features/ai-insights';
 import { type AiInsightContext } from '@/features/ai-insights';
 import { usePlayerStatistics } from '@/features/player-statistics/hooks/usePlayerStatistics';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
-import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type StatisticsScreenProps = {
@@ -37,9 +38,9 @@ export function StatisticsScreen({
   embeddedInTabShell = false,
   nestedUnderSegment = false,
 }: StatisticsScreenProps) {
-  const { t } = useAppTranslation(['statistics', 'common', 'errors']);
   const { colors } = useTheme();
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
+  const [showFullHistory, setShowFullHistory] = useState(false);
   const screenProps = {
     ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
     ...(nestedUnderSegment ? { safeAreaEdges: ['left', 'right'] as Array<'left' | 'right'> } : {}),
@@ -75,7 +76,7 @@ export function StatisticsScreen({
         <View className="gap-4">
           <EmptyState
             title="No match data yet"
-            description="Log a match or upload match film for AI stats and coaching feedback."
+            description="Log a match or upload a full Veo recording for AI stats and coaching feedback."
             actionLabel="Log Match"
             onAction={onLogMatchPress}
           />
@@ -85,7 +86,7 @@ export function StatisticsScreen({
               onPress={onAnalyzeMatchVideoPress}
               leftIcon={<Clapperboard size={18} color={colors.accentForeground} />}
             >
-              Analyze match video
+              Upload / analyze match video
             </Button>
           ) : null}
         </View>
@@ -97,7 +98,7 @@ export function StatisticsScreen({
     <View className="flex-1">
       <Screen
         title="Statistics"
-        subtitle={`${overview.matchCount} matches tracked with automatic totals, averages and trends.`}
+        subtitle={`${overview.matchCount} matches · headline metrics first`}
         onRefresh={onRefresh}
         refreshing={refreshing}
         safeArea
@@ -110,23 +111,56 @@ export function StatisticsScreen({
             onPress={onAnalyzeMatchVideoPress}
             leftIcon={<Clapperboard size={18} color={colors.accent} />}
           >
-            Analyze match video with AI
+            Upload / analyze match video with AI
           </Button>
         ) : null}
+
         <StatisticsCards items={overview.totals} />
-        <AiInsightPanel
-          insightType="performance_summary"
-          context={aiInsightContext}
-          enabled={Boolean(aiInsightContext)}
+
+        <CollapsibleSection
+          title="Attribute profile"
+          subtitle="Radar of your current strengths"
+          persistKey="stats-radar"
+        >
+          <RadarChart points={overview.radar} />
+        </CollapsibleSection>
+
+        <CollapsibleSection
+          title="AI coaching"
+          subtitle="Performance summary and improvement ideas"
+          persistKey="stats-ai-coaching"
+        >
+          <View className="gap-4">
+            <AiInsightPanel
+              insightType="performance_summary"
+              context={aiInsightContext}
+              enabled={Boolean(aiInsightContext)}
+            />
+            <AiInsightPanel
+              insightType="improvement_suggestions"
+              context={aiInsightContext}
+              enabled={Boolean(aiInsightContext)}
+            />
+          </View>
+        </CollapsibleSection>
+
+        <CollapsibleSection
+          title="Performance trends"
+          subtitle="Progress graphs over recent matches"
+          persistKey="stats-trends"
+        >
+          <ProgressGraphs graphs={overview.progressGraphs} />
+        </CollapsibleSection>
+
+        <MatchHistory
+          items={overview.matchHistory}
+          maxItems={showFullHistory ? undefined : 5}
+          onViewAllPress={
+            overview.matchHistory.length > 5 && !showFullHistory
+              ? () => setShowFullHistory(true)
+              : undefined
+          }
         />
-        <AiInsightPanel
-          insightType="improvement_suggestions"
-          context={aiInsightContext}
-          enabled={Boolean(aiInsightContext)}
-        />
-        <RadarChart points={overview.radar} />
-        <ProgressGraphs graphs={overview.progressGraphs} />
-        <MatchHistory items={overview.matchHistory} />
       </Screen>
 
       {onLogMatchPress && !embeddedInTabShell ? (

@@ -1,8 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SCOUTING_REPORTS_STORAGE_KEY } from '@/features/scouting-reports/constants';
 import { sortScoutingReports } from '@/features/scouting-reports/models/ScoutingReportModel';
 import { type ScoutingReport } from '@/features/scouting-reports/types';
 import {
+  readKeyedRecord,
   readKeyedValue,
   removeKeyedListItem,
   upsertKeyedListItem,
@@ -17,6 +17,16 @@ export async function loadLocalScoutingReports(
   playerId: string,
 ): Promise<ScoutingReport[]> {
   const reports = (await readKeyedValue<ScoutingReport[]>(storageKey(scoutId), playerId)) ?? [];
+  return sortScoutingReports(
+    reports.filter((report): report is ScoutingReport => typeof report?.id === 'string'),
+  );
+}
+
+export async function loadAllLocalScoutingReportsForScout(
+  scoutId: string,
+): Promise<ScoutingReport[]> {
+  const record = await readKeyedRecord<ScoutingReport[]>(storageKey(scoutId));
+  const reports = Object.values(record).flat();
   return sortScoutingReports(
     reports.filter((report): report is ScoutingReport => typeof report?.id === 'string'),
   );

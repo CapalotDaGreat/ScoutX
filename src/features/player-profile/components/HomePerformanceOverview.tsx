@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
@@ -13,13 +14,16 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 export type HomePerformanceOverviewProps = {
   matches?: PlayerMatchStatistics[];
   onLogMatchPress?: () => void;
+  /** Opens the full Statistics experience (View all matches). */
+  onViewAllMatchesPress?: () => void;
 };
 
 export function HomePerformanceOverview({
   matches,
   onLogMatchPress,
+  onViewAllMatchesPress,
 }: HomePerformanceOverviewProps) {
-  const { t } = useAppTranslation(['portfolio', 'statistics']);
+  const { t } = useAppTranslation(['portfolio', 'statistics', 'common']);
   const { overview, isLoading } = usePlayerStatistics({ matches });
 
   if (isLoading) {
@@ -42,23 +46,31 @@ export function HomePerformanceOverview({
   }
 
   return (
-    <Animated.View entering={FadeInUp.delay(120).duration(450)} className="gap-4">
-      <Card variant="elevated" padding="lg" className="gap-3">
-        <View>
-          <Heading level={3}>{t('portfolio:performanceOverview')}</Heading>
-          <Text variant="body-sm" color="secondary" className="mt-1">
-            {t('portfolio:performanceOverviewSubtitle')}
-          </Text>
-        </View>
-        <RadarChart points={overview.radar} />
-      </Card>
-
-      <View className="gap-2">
+    <Animated.View entering={FadeInUp.delay(120).duration(450)} className="gap-5">
+      <View className="gap-3">
         <View className="flex-row items-center justify-between px-1">
-          <Heading level={3}>{t('portfolio:recentMatches')}</Heading>
+          <View className="min-w-0 flex-1 pr-3">
+            <Heading level={3}>{t('portfolio:recentMatches')}</Heading>
+            <Text variant="caption" color="secondary" className="mt-0.5">
+              Latest form at a glance
+            </Text>
+          </View>
         </View>
-        <MatchHistory items={overview.matchHistory} maxItems={3} />
+        <MatchHistory
+          items={overview.matchHistory}
+          maxItems={3}
+          onViewAllPress={onViewAllMatchesPress}
+          compact
+        />
       </View>
+
+      <CollapsibleSection
+        title={t('portfolio:performanceOverview')}
+        subtitle={t('portfolio:performanceOverviewSubtitle')}
+        persistKey="home-performance-radar"
+      >
+        <RadarChart points={overview.radar} />
+      </CollapsibleSection>
     </Animated.View>
   );
 }

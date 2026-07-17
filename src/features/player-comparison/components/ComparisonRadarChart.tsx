@@ -5,6 +5,11 @@ import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants';
 import { type ComparisonPlayerProfile } from '@/features/player-comparison/types';
+import {
+  getRadarCoordinate,
+  RADAR_GRID_LEVELS,
+  toRadarPointString,
+} from '@/features/player-statistics/utils/radarGeometry';
 import { useTheme } from '@/theme';
 
 export type ComparisonRadarChartProps = {
@@ -15,19 +20,6 @@ const chartSize = 280;
 const center = chartSize / 2;
 const radius = 88;
 const labelRadius = 118;
-const gridLevels = [0.25, 0.5, 0.75, 1];
-
-function getCoordinate(index: number, total: number, distance: number) {
-  const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
-  return {
-    x: center + Math.cos(angle) * distance,
-    y: center + Math.sin(angle) * distance,
-  };
-}
-
-function toPointString(coordinates: Array<{ x: number; y: number }>): string {
-  return coordinates.map((coordinate) => `${coordinate.x},${coordinate.y}`).join(' ');
-}
 
 export const ComparisonRadarChart = memo(function ComparisonRadarChart({
   profiles,
@@ -38,23 +30,25 @@ export const ComparisonRadarChart = memo(function ComparisonRadarChart({
     const axisLabels = profiles[0]?.radarStats.map((stat) => stat.label) ?? [];
     const total = Math.max(axisLabels.length, 1);
 
-    const grids = gridLevels.map((level) =>
-      toPointString(axisLabels.map((_, index) => getCoordinate(index, total, radius * level))),
+    const grids = RADAR_GRID_LEVELS.map((level) =>
+      toRadarPointString(
+        axisLabels.map((_, index) => getRadarCoordinate(center, index, total, radius * level)),
+      ),
     );
 
     const axes = axisLabels.map((label, index) => ({
       label,
-      end: getCoordinate(index, total, radius),
-      text: getCoordinate(index, total, labelRadius),
+      end: getRadarCoordinate(center, index, total, radius),
+      text: getRadarCoordinate(center, index, total, labelRadius),
     }));
 
     const polygons = profiles.map((profile) => {
       const valueCoordinates = axisLabels.map((label, index) => {
         const stat = profile.radarStats.find((item) => item.label === label);
         const value = stat?.value ?? 0;
-        return getCoordinate(index, total, radius * Math.min(value, 1));
+        return getRadarCoordinate(center, index, total, radius * Math.min(value, 1));
       });
-      return toPointString(valueCoordinates);
+      return toRadarPointString(valueCoordinates);
     });
 
     return { total, grids, axes, polygons };

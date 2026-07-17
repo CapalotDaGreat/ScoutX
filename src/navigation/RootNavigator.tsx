@@ -37,6 +37,21 @@ function resolveRootRouteName(
   return 'PlayerApp';
 }
 
+function isGuestPublicBrowseState(
+  state: ReturnType<NavigationContainerRef<RootStackParamList>['getRootState']> | undefined,
+): boolean {
+  if (!state) {
+    return false;
+  }
+  const route = state.routes[state.index ?? 0];
+  if (route?.name !== 'GuestApp') {
+    return false;
+  }
+  const nested = route.state as { routes?: Array<{ name?: string }>; index?: number } | undefined;
+  const nestedRoute = nested?.routes?.[nested.index ?? 0];
+  return nestedRoute?.name === 'PublicPortfolio' || nestedRoute?.name === 'PlayerDetail';
+}
+
 export function RootNavigator() {
   const navigationTheme = useNavigationTheme();
   const { status, pendingRoleSelection, isGuest, role, isBootstrappingSession } = useAuth();
@@ -77,6 +92,13 @@ export function RootNavigator() {
           },
         }),
       );
+      return;
+    }
+
+    // Allow unauthenticated deep links into GuestApp public passport / player detail
+    // without immediately resetting back to Auth.
+    if (status !== 'authenticated' && isGuestPublicBrowseState(navigation.getRootState())) {
+      lastSyncedRootRef.current = 'GuestApp';
       return;
     }
 

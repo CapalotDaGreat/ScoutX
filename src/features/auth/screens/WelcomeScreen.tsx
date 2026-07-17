@@ -34,9 +34,9 @@ export function WelcomeScreen({
     <Screen title={t('welcome.title')} subtitle={t('welcome.subtitle')} safeArea>
       <View className="flex-1 justify-center">
         <AuthCard title={t('welcome.cardTitle')} subtitle={t('welcome.cardSubtitle')}>
-          <View className="items-center justify-center rounded-2xl border border-border bg-background-secondary p-6">
-            <View className="mb-4 rounded-full bg-accent-muted p-3 dark:bg-green-950">
-              <ShieldCheck size={28} color={colors.accent} strokeWidth={1.75} />
+          <View className="items-center justify-center rounded-2xl border border-gold/30 bg-gold-muted/50 p-6">
+            <View className="mb-4 rounded-full bg-gold-muted p-3">
+              <ShieldCheck size={28} color={colors.gold} strokeWidth={1.75} />
             </View>
             <Heading level={3} className="text-center">
               {t('welcome.heroTitle')}
@@ -48,9 +48,9 @@ export function WelcomeScreen({
 
           <View className="gap-3">
             <Button
-              variant="accent"
+              variant="prestige"
               onPress={onGetStarted}
-              rightIcon={<ArrowRight size={18} color={colors.accentForeground} strokeWidth={2} />}
+              rightIcon={<ArrowRight size={18} color={colors.goldForeground} strokeWidth={2} />}
             >
               {t('welcome.createAccount')}
             </Button>
@@ -74,8 +74,8 @@ export function WelcomeScreen({
           </View>
 
           <View className="flex-row items-center justify-center gap-2 pt-2">
-            <Sparkles size={16} color={colors.textSecondary} strokeWidth={1.5} />
-            <Text variant="caption" color="secondary">
+            <Sparkles size={16} color={colors.gold} strokeWidth={1.5} />
+            <Text variant="caption" color="prestige">
               {t('welcome.guestHint')}
             </Text>
           </View>

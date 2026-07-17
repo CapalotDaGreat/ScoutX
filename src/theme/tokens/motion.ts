@@ -1,10 +1,10 @@
 export const motion = {
-  instant: 100,
-  fast: 200,
-  normal: 300,
-  slow: 500,
+  instant: 120,
+  fast: 220,
+  normal: 380,
+  slow: 560,
   spring: {
-    damping: 15,
-    stiffness: 150,
+    damping: 18,
+    stiffness: 120,
   },
 } as const;

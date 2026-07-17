@@ -46,7 +46,7 @@ export function usePlayerTrust(playerId: string, options: UsePlayerTrustOptions 
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const repository = useMemo(() => TrustRepository.getInstance(), []);
+  const repository = TrustRepository.getInstance();
 
   useEffect(() => {
     if (!playerId) {

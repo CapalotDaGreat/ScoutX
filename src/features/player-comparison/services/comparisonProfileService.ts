@@ -17,7 +17,7 @@ function buildPerformanceTrend(player: DiscoverablePlayer): ComparisonTrendPoint
     return { label: `M${index + 1}`, values: { [player.id]: points } };
   });
 
-  const rolling = player.form.map((result, index) => {
+  const rolling = player.form.map((_result, index) => {
     const slice = player.form.slice(0, index + 1);
     const total = slice.reduce((sum, item) => sum + (item === 'W' ? 3 : item === 'D' ? 1 : 0), 0);
     const avg = total / slice.length;

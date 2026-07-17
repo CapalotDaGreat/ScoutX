@@ -3,7 +3,6 @@ export { ActivityTimeline } from '@/features/activity-feed/components/ActivityTi
 export {
   ActivityBellButton,
   ActivityFeedSection,
-  ActivityUnreadBadge,
 } from '@/features/activity-feed/components/ActivityFeedPanel';
 export { ActivityInboxScreen } from '@/features/activity-feed/components/ActivityInboxScreen';
 export { ActivityInboxModal } from '@/features/activity-feed/components/ActivityInboxModal';

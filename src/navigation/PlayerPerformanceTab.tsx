@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabSegmentControl } from '@/components/navigation/TabSegmentControl';
 import { CareerScreen } from '@/features/career-timeline/components/CareerScreen';
-import { MatchAnalysisModal } from '@/features/match-analysis';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { StatisticsScreen } from '@/features/player-statistics';
 import { buildPerformanceContext } from '@/features/ai-insights';
@@ -18,19 +17,20 @@ type PerformanceSegment = 'stats' | 'career';
 export type PlayerPerformanceTabProps = {
   onLogMatchPress: () => void;
   onEditJourneyPress: () => void;
+  onAnalyzeMatchVideoPress?: () => void;
 };
 
 export function PlayerPerformanceTab({
   onLogMatchPress,
   onEditJourneyPress,
+  onAnalyzeMatchVideoPress,
 }: PlayerPerformanceTabProps) {
   const { t } = useAppTranslation('navigation');
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const stackNavigation = useNavigation<NativeStackNavigationProp<PlayerStackParamList>>();
-  const { profile, isLoading, refreshProfile, saveMatch } = usePlayerWorkspace();
+  const { profile, isLoading, refreshProfile } = usePlayerWorkspace();
   const [segment, setSegment] = useState<PerformanceSegment>('stats');
-  const [matchAnalysisVisible, setMatchAnalysisVisible] = useState(false);
 
   const statisticsAiContext = useMemo(() => {
     if (!user?.id || !profile) {
@@ -70,7 +70,7 @@ export function PlayerPerformanceTab({
           matches={profile?.statisticsMatches}
           aiInsightContext={statisticsAiContext}
           onLogMatchPress={onLogMatchPress}
-          onAnalyzeMatchVideoPress={() => setMatchAnalysisVisible(true)}
+          onAnalyzeMatchVideoPress={onAnalyzeMatchVideoPress}
           onRefresh={refreshProfile}
           refreshing={isLoading}
           embeddedInTabShell
@@ -85,15 +85,6 @@ export function PlayerPerformanceTab({
         />
       )}
 
-      <MatchAnalysisModal
-        visible={matchAnalysisVisible}
-        playerId={user?.id ?? null}
-        onClose={() => setMatchAnalysisVisible(false)}
-        onApplyStats={async (payload) => {
-          await saveMatch(payload);
-          await refreshProfile();
-        }}
-      />
     </View>
   );
 }

@@ -10,13 +10,15 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0A0A0A"
+      "backgroundColor": "#151617"
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scoutx.app",
       "usesAppleSignIn": true,
       "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "ScoutX needs access to Photos so you can upload highlight clips and match recordings from your library.",
+        "NSPhotoLibraryAddUsageDescription": "ScoutX may save processed video thumbnails to your library when needed.",
         "NSUserNotificationsUsageDescription": "ScoutX sends alerts when scouts view your Football Passport, you receive coach endorsements, trial invitations, and weekly career updates.",
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -24,11 +26,16 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0A0A0A"
+        "backgroundColor": "#151617"
       },
       "package": "com.scoutx.app",
       "permissions": [
-        "android.permission.POST_NOTIFICATIONS"
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
+      "blockedPermissions": [
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO"
       ]
     },
     "web": {
@@ -39,6 +46,14 @@
     "plugins": [
       "expo-apple-authentication",
       "expo-video",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "ScoutX needs access to Photos so you can upload highlight clips and match recordings from your library.",
+          "cameraPermission": "ScoutX needs camera access so you can record highlight clips.",
+          "microphonePermission": "ScoutX needs microphone access when recording video clips."
+        }
+      ],
       [
         "@sentry/react-native/expo",
         {
@@ -57,7 +72,7 @@
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#16a34a"
+          "color": "#2FBF71"
         }
       ]
     ],
@@ -65,7 +80,6 @@
     "extra": {
       "privacyPolicyUrl": "https://scoutx.app/privacy",
       "termsOfServiceUrl": "https://scoutx.app/terms",
-      "supportUrl": "https://scoutx.app/support",
       "appLinkHost": "scoutx.app",
       "eas": {
         "projectId": "303c79c7-d494-48c3-becb-f64b2a0c9e65"

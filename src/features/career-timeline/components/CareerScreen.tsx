@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
+import { Button } from '@/components/primitives/Button';
+import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { AiCareerCoachCard } from '@/features/ai-insights/components/AiCareerCoachCard';
 import { MilestonesSection, usePlayerMilestones } from '@/features/career-milestones';
@@ -37,6 +39,7 @@ export function CareerScreen({
     () => buildUnifiedCareerTimeline(profile?.footballJourney),
     [profile?.footballJourney],
   );
+  const [showFullTimeline, setShowFullTimeline] = useState(false);
 
   const screenProps = {
     ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
@@ -62,51 +65,75 @@ export function CareerScreen({
     );
   }
 
+  const previewEntries = showFullTimeline ? timeline : timeline.slice(0, 5);
+
   return (
     <Screen
       title="Career"
-      subtitle="Every match, milestone, and moment in one timeline"
+      subtitle="Your journey, milestones, and weekly growth"
       safeArea
+      contentClassName="gap-6"
       {...screenProps}
     >
-      <View className="gap-4">
+      <View className="gap-6">
         <WeeklyFootballReportCard
           profile={profile}
           recommendations={trustState.recommendations}
         />
         <CareerReplayCard profile={profile} onOpenPress={onCareerReplayPress} />
-        <MilestonesSection earned={earned} recentlyEarned={recentlyEarned} />
+        <MilestonesSection earned={earned} recentlyEarned={recentlyEarned} previewCount={4} />
 
         <CollapsibleSection
           title="Coaching & insights"
           subtitle="AI coach and performance signals"
+          persistKey="career-coaching"
         >
-          <View className="gap-3">
+          <View className="gap-4">
             <AiCareerCoachCard profile={profile} />
             <PerformanceInsightsCard profile={profile} />
           </View>
         </CollapsibleSection>
 
-        <View className="rounded-2xl border border-border bg-surface p-4">
-          <Text variant="overline" color="secondary">
-            Football timeline
-          </Text>
-          <Text weight="semibold" className="mb-3 text-lg">
-            Your career story
-          </Text>
+        <Card variant="outlined" padding="md" className="gap-4">
+          <View>
+            <Text variant="overline" color="secondary">
+              Football timeline
+            </Text>
+            <Text weight="semibold" className="text-lg">
+              Your career story
+            </Text>
+            <Text variant="caption" color="secondary" className="mt-1">
+              {timeline.length === 0
+                ? 'Start logging moments to build your story'
+                : `${timeline.length} moments · newest first`}
+            </Text>
+          </View>
+
           {timeline.length === 0 ? (
             <EmptyState
               title="Your timeline is empty"
               description="Log matches, add journey entries, and enable your portfolio to build your story automatically."
             />
           ) : (
-            <FootballJourneySection
-              entries={timeline}
-              editable={Boolean(onEditJourneyPress)}
-              onEditPress={onEditJourneyPress}
-            />
+            <>
+              <FootballJourneySection
+                entries={previewEntries}
+                editable={Boolean(onEditJourneyPress)}
+                onEditPress={onEditJourneyPress}
+              />
+              {timeline.length > 5 ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onPress={() => setShowFullTimeline((current) => !current)}
+                  className="self-start"
+                >
+                  {showFullTimeline ? 'Show less' : `See more · ${timeline.length - 5}`}
+                </Button>
+              ) : null}
+            </>
           )}
-        </View>
+        </Card>
       </View>
     </Screen>
   );

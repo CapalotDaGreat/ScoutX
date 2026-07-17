@@ -14,8 +14,6 @@ import { getFirestoreDb, isFirebaseConfiguredForProject } from '@/config/firebas
 import { MATCH_ANALYSIS_COLLECTION } from '@/features/match-analysis/constants';
 import {
   type MatchAnalysisJob,
-  type MatchAnalysisReport,
-  type MatchFrameSample,
 } from '@/features/match-analysis/types';
 
 function jobsCollection() {
@@ -91,16 +89,4 @@ export async function listRecentMatchAnalysisJobs(
     .map((item) => item.data() as MatchAnalysisJob)
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     .slice(0, max);
-}
-
-export async function persistMatchAnalysisReport(
-  jobId: string,
-  report: MatchAnalysisReport,
-): Promise<void> {
-  await updateMatchAnalysisJob(jobId, {
-    status: 'complete',
-    report,
-    completedAt: report.generatedAt,
-    error: undefined,
-  });
 }

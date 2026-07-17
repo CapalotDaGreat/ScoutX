@@ -26,6 +26,7 @@ import {
 import { useTheme } from '@/theme';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { SlidersHorizontal } from 'lucide-react-native';
+import { HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 
 export type PlayerDiscoveryScreenProps = {
   search: string;
@@ -44,6 +45,7 @@ export type PlayerDiscoveryScreenProps = {
   onResetFilters: () => void;
   onApplyPreset: (preset: FilterPreset) => void;
   onSaveCurrentPreset: () => void;
+  onSettingsPress?: () => void;
   guestMode?: boolean;
 };
 
@@ -61,6 +63,7 @@ export function PlayerDiscoveryScreen({
   onResetFilters,
   onApplyPreset,
   onSaveCurrentPreset,
+  onSettingsPress,
   guestMode = false,
 }: PlayerDiscoveryScreenProps) {
   const { t } = useAppTranslation(['scout', 'common', 'errors']);
@@ -173,11 +176,21 @@ export function PlayerDiscoveryScreen({
   if (isLoading && players.length === 0) {
     return (
       <AppSafeAreaView className="flex-1" edges={['top']}>
-        <View className="border-b border-divider px-4 pb-4 pt-4">
-          <Heading level={2}>{t('scout:discover.title')}</Heading>
-          <Text variant="body-sm" color="secondary" className="mt-1">
-            {t('scout:discover.loadingSubtitle')}
-          </Text>
+        <View className="flex-row items-start gap-2 border-b border-divider px-4 pb-4 pt-4">
+          <View className="min-w-0 flex-1">
+            <Heading level={2}>{t('scout:discover.title')}</Heading>
+            <Text variant="body-sm" color="secondary" className="mt-1">
+              {t('scout:discover.loadingSubtitle')}
+            </Text>
+          </View>
+          {onSettingsPress ? (
+            <View className="shrink-0">
+              <HeaderIconButton
+                accessibilityLabel={t('common:settings')}
+                onPress={onSettingsPress}
+              />
+            </View>
+          ) : null}
         </View>
         <DiscoveryListSkeleton count={4} />
       </AppSafeAreaView>
@@ -192,11 +205,21 @@ export function PlayerDiscoveryScreen({
         renderItem={renderItem}
         ListHeaderComponent={
           <>
-            <View className="border-b border-divider px-4 pb-4 pt-4">
-              <Heading level={2}>{t('scout:discover.title')}</Heading>
-              <Text variant="body-sm" color="secondary" className="mt-1">
-                {t('scout:discover.subtitle')}
-              </Text>
+            <View className="flex-row items-start gap-2 border-b border-divider px-4 pb-4 pt-4">
+              <View className="min-w-0 flex-1">
+                <Heading level={2}>{t('scout:discover.title')}</Heading>
+                <Text variant="body-sm" color="secondary" className="mt-1">
+                  {t('scout:discover.subtitle')}
+                </Text>
+              </View>
+              {onSettingsPress ? (
+                <View className="shrink-0">
+                  <HeaderIconButton
+                    accessibilityLabel={t('common:settings')}
+                    onPress={onSettingsPress}
+                  />
+                </View>
+              ) : null}
             </View>
             {listHeader}
           </>

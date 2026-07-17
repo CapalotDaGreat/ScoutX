@@ -135,7 +135,7 @@ export function EditProfileModal({
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="relative mb-6 overflow-hidden rounded-xl bg-neutral-800">
+        <View className="relative mb-6 overflow-hidden rounded-xl bg-background-secondary">
           {profile.coverImageUrl.trim() ? (
             <Image
               source={{ uri: profile.coverImageUrl }}
@@ -143,7 +143,7 @@ export function EditProfileModal({
               resizeMode="cover"
             />
           ) : (
-            <View className="h-32 w-full bg-neutral-800" />
+            <View className="h-32 w-full bg-background-secondary" />
           )}
           {uploadingCover ? (
             <View className="absolute inset-0 items-center justify-center bg-black/50">
@@ -163,11 +163,11 @@ export function EditProfileModal({
         </View>
 
         <View className="-mt-16 mb-6 items-center">
-          <View className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-surface bg-neutral-800">
+          <View className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-surface bg-background-secondary">
             {profile.avatarUrl.trim() ? (
               <Image source={{ uri: profile.avatarUrl }} className="h-full w-full opacity-70" />
             ) : (
-              <View className="h-full w-full bg-neutral-700" />
+              <View className="h-full w-full bg-surface-elevated" />
             )}
             {uploadingAvatar ? (
               <View className="absolute inset-0 items-center justify-center bg-black/50">

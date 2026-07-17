@@ -21,8 +21,11 @@ export { TrialHistoryTimeline, type TrialHistoryTimelineProps } from '@/features
 export {
   usePlayerTrialInvitations,
   useScoutTrialInvitations,
+  useScoutAllTrialInvitations,
   useTrialNotifications,
 } from '@/features/trial-invitations/hooks/useTrialInvitations';
+export { HomeTrialsQuickAction } from '@/features/trial-invitations/components/HomeTrialsQuickAction';
+export { ScoutTrialsInboxScreen } from '@/features/trial-invitations/components/ScoutTrialsInboxScreen';
 
 export { TrialInvitationRepository } from '@/features/trial-invitations/repositories/TrialInvitationRepository';
 

@@ -5,7 +5,6 @@ import {
   Shield,
   Sparkles,
   Target,
-  Trophy,
   Wind,
   type LucideIcon,
 } from 'lucide-react-native';

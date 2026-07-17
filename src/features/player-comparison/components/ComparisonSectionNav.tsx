@@ -41,7 +41,7 @@ export function ComparisonSectionNav({
             className={cn(
               isVertical ? 'rounded-xl border px-3 py-3' : 'rounded-full border px-3 py-2',
               isActive
-                ? 'border-accent bg-accent-muted dark:border-green-500 dark:bg-green-950'
+                ? 'border-accent bg-accent-muted'
                 : 'border-border bg-surface',
             )}
           >

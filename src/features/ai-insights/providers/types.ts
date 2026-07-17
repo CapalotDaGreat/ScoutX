@@ -1,6 +1,5 @@
 import {
   type AiCompletionRequest,
-  type AiInsight,
   type AiInsightMap,
   type AiInsightType,
   type AiProviderMetadata,

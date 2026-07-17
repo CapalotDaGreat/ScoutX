@@ -6,6 +6,11 @@ import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { type RadarChartPoint } from '@/features/player-statistics/types';
+import {
+  getRadarCoordinate,
+  RADAR_GRID_LEVELS,
+  toRadarPointString,
+} from '@/features/player-statistics/utils/radarGeometry';
 
 export type RadarChartProps = {
   points: RadarChartPoint[];
@@ -15,19 +20,6 @@ const chartSize = 260;
 const center = chartSize / 2;
 const radius = 84;
 const labelRadius = 112;
-const gridLevels = [0.25, 0.5, 0.75, 1];
-
-function getCoordinate(index: number, total: number, distance: number) {
-  const angle = (Math.PI * 2 * index) / total - Math.PI / 2;
-  return {
-    x: center + Math.cos(angle) * distance,
-    y: center + Math.sin(angle) * distance,
-  };
-}
-
-function toPointString(coordinates: Array<{ x: number; y: number }>): string {
-  return coordinates.map((coordinate) => `${coordinate.x},${coordinate.y}`).join(' ');
-}
 
 export function RadarChart({ points }: RadarChartProps) {
   const { colors } = useTheme();
@@ -35,19 +27,21 @@ export function RadarChart({ points }: RadarChartProps) {
   const chart = useMemo(() => {
     const total = Math.max(points.length, 1);
     const valueCoordinates = points.map((point, index) =>
-      getCoordinate(index, total, radius * point.normalizedValue),
+      getRadarCoordinate(center, index, total, radius * point.normalizedValue),
     );
 
     return {
       total,
-      valuePoints: toPointString(valueCoordinates),
+      valuePoints: toRadarPointString(valueCoordinates),
       axes: points.map((point, index) => ({
         point,
-        end: getCoordinate(index, total, radius),
-        label: getCoordinate(index, total, labelRadius),
+        end: getRadarCoordinate(center, index, total, radius),
+        label: getRadarCoordinate(center, index, total, labelRadius),
       })),
-      grids: gridLevels.map((level) =>
-        toPointString(points.map((_, index) => getCoordinate(index, total, radius * level))),
+      grids: RADAR_GRID_LEVELS.map((level) =>
+        toRadarPointString(
+          points.map((_, index) => getRadarCoordinate(center, index, total, radius * level)),
+        ),
       ),
     };
   }, [points]);

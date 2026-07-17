@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { ScrollView, View } from 'react-native';
 import { BottomSheet } from '@/components/feedback/BottomSheet';
 import { Button } from '@/components/primitives/Button';
@@ -69,7 +69,6 @@ export function DiscoveryFilterSheet({
   onApply,
 }: DiscoveryFilterSheetProps) {
   const { t } = useAppTranslation(['scout', 'common']);
-  const snapPoints = useMemo(() => ['85%'], []);
 
   const togglePosition = useCallback(
     (value: PlayerPosition) => {

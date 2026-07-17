@@ -33,7 +33,7 @@ export function useHighlightVideos(profile: PlayerProfile | null | undefined) {
     [library.videos],
   );
 
-  const repository = useMemo(() => HighlightVideoRepository.getInstance(), []);
+  const repository = HighlightVideoRepository.getInstance();
 
   const recordVideoUploaded = useCallback(
     (video: HighlightVideo) => {

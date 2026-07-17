@@ -40,7 +40,7 @@ export function ScoutingReportRatingsGrid({
               key={field.key}
               className={cn(
                 'min-w-[47%] flex-1 rounded-lg border border-border px-3 py-2',
-                tier === 'elite' && 'bg-accent-muted/30 dark:bg-green-950/20',
+                tier === 'elite' && 'bg-accent-muted/30',
               )}
             >
               <Text variant="caption" color="secondary" numberOfLines={1}>

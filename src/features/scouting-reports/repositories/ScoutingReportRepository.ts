@@ -19,6 +19,7 @@ import {
 import {
   deleteLocalScoutingReport,
   loadLocalScoutingReports,
+  loadAllLocalScoutingReportsForScout,
   saveLocalScoutingReport,
 } from '@/features/scouting-reports/services/scoutingReportStorage';
 import { SCOUTING_REPORT_COLLECTION } from '@/features/scouting-reports/constants';
@@ -35,6 +36,35 @@ export class ScoutingReportRepository {
       this.instance = new ScoutingReportRepository();
     }
     return this.instance;
+  }
+
+  public subscribeToScoutReports(
+    scoutId: string,
+    callback: (reports: ScoutingReport[]) => void,
+    onError?: (error: Error) => void,
+  ): () => void {
+    const db = getFirestoreDb();
+
+    if (!db) {
+      void loadAllLocalScoutingReportsForScout(scoutId).then(callback);
+      return () => undefined;
+    }
+
+    const reportsQuery = query(
+      collection(db, SCOUTING_REPORT_COLLECTION),
+      where('scoutId', '==', scoutId),
+      orderBy('updatedAt', 'desc'),
+    );
+
+    return subscribeToQuery({
+      firestoreQuery: reportsQuery,
+      parse: (data, id) => parseScoutingReport(data, id),
+      onData: (reports) => callback(sortScoutingReports(reports)),
+      onFallback: () => {
+        void loadAllLocalScoutingReportsForScout(scoutId).then(callback);
+      },
+      onError,
+    });
   }
 
   public subscribeToPlayerReports(

@@ -23,7 +23,7 @@ export function PerformanceSummary({ items }: PerformanceSummaryProps) {
                 {item.value}/{item.max}
               </Text>
             </View>
-            <ProgressBar value={item.value} max={item.max} size="lg" variant="accent" />
+            <ProgressBar value={item.value} max={item.max} size="lg" variant="progress" />
             <Text variant="caption" color="secondary">
               {item.hint}
             </Text>

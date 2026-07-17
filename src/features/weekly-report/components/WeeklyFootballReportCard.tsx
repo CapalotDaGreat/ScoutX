@@ -101,7 +101,7 @@ export function WeeklyFootballReportCard({
       </View>
 
       {report.suggestions.length > 0 ? (
-        <View className="rounded-xl bg-neutral-50 p-3">
+        <View className="rounded-xl bg-background-secondary p-3">
           <Text weight="semibold" className="text-sm">
             Focus this week
           </Text>

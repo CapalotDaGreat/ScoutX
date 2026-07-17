@@ -17,12 +17,18 @@ import { LinkGoogleAccountSection } from '@/features/settings/components/LinkGoo
 import { isAppleSignInSupportedPlatform } from '@/features/auth/services/appleAuthService';
 import { isGoogleSignInSupportedPlatform } from '@/features/auth/services/googleAuthService';
 import { getPrivacyPolicyUrl } from '@/config/legal';
+import { PortfolioPrivacySettings } from '@/features/public-portfolio';
+import { type PrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type AuthRole } from '@/features/auth/types';
 
 export type SettingsScreenProps = {
   onBack: () => void;
   onSignOut: () => void;
+  /** Player portfolio & discovery privacy. When provided, editable toggles are shown here. */
+  privacySettings?: PrivacySettings | null;
+  onPrivacyChange?: (next: PrivacySettings) => void | Promise<void>;
+  privacyDisabled?: boolean;
 };
 
 function formatRole(
@@ -49,7 +55,13 @@ function getAppVersion(): string {
   );
 }
 
-export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
+export function SettingsScreen({
+  onBack,
+  onSignOut,
+  privacySettings = null,
+  onPrivacyChange,
+  privacyDisabled = false,
+}: SettingsScreenProps) {
   const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors']);
   const { user, role } = useAuth();
   const {
@@ -111,8 +123,8 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
         </View>
       }
     >
-      <View className="gap-4">
-        <Card variant="outlined" padding="md" className="gap-2">
+      <View className="gap-6">
+        <Card variant="elevated" padding="md" className="gap-2">
           <Text variant="overline" color="secondary">
             {t('settings:account')}
           </Text>
@@ -127,14 +139,14 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
           </Text>
         </Card>
 
-        <Card variant="outlined" padding="md" className="gap-3">
+        <Card variant="elevated" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
             {t('settings:appearance')}
           </Text>
           <AppearanceSettingsSection />
         </Card>
 
-        <Card variant="outlined" padding="md" className="gap-3">
+        <Card variant="elevated" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
             {t('settings:language')}
           </Text>
@@ -142,7 +154,7 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
         </Card>
 
         {!user?.isAnonymous ? (
-          <Card variant="outlined" padding="md" className="gap-3">
+          <Card variant="elevated" padding="md" className="gap-3">
             <Text variant="overline" color="secondary">
               {t('settings:security')}
             </Text>
@@ -152,7 +164,7 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
           </Card>
         ) : null}
 
-        <Card variant="outlined" padding="md" className="gap-3">
+        <Card variant="elevated" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
             {t('settings:notifications')}
           </Text>
@@ -178,13 +190,23 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
           </View>
         </Card>
 
-        <Card variant="outlined" padding="md" className="gap-3">
+        <Card variant="elevated" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
             {t('settings:privacyData')}
           </Text>
-          <Text variant="body-sm" color="secondary">
-            {t('settings:privacyDataDescription')}
-          </Text>
+          {privacySettings && onPrivacyChange ? (
+            <PortfolioPrivacySettings
+              settings={privacySettings}
+              onChange={(next) => {
+                void onPrivacyChange(next);
+              }}
+              disabled={privacyDisabled}
+            />
+          ) : (
+            <Text variant="body-sm" color="secondary">
+              {t('settings:privacyDataDescription')}
+            </Text>
+          )}
           {privacyUrl ? (
             <Button
               variant="secondary"
@@ -195,7 +217,7 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
           ) : null}
         </Card>
 
-        <Card variant="outlined" padding="md" className="gap-3">
+        <Card variant="elevated" padding="md" className="gap-3">
           <Text variant="overline" color="secondary">
             {t('settings:about')}
           </Text>
@@ -211,7 +233,7 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
           </Button>
         </Card>
 
-        <Card variant="outlined" padding="md" className="gap-2">
+        <Card variant="elevated" padding="md" className="gap-2">
           <Text variant="overline" color="secondary">
             {t('settings:legal')}
           </Text>
@@ -219,7 +241,7 @@ export function SettingsScreen({ onBack, onSignOut }: SettingsScreenProps) {
         </Card>
 
         {!user?.isAnonymous ? (
-          <Card variant="outlined" padding="md" className="gap-3">
+          <Card variant="elevated" padding="md" className="gap-3">
             <Text variant="overline" color="secondary">
               {t('settings:dangerZone')}
             </Text>

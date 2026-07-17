@@ -2,14 +2,14 @@ import { useCallback, useMemo, useState, type ComponentType } from 'react';
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Activity, Home, MapPin, Search } from 'lucide-react-native';
+import { Activity, Clapperboard, Compass, Home } from 'lucide-react-native';
 import { EditJourneyModal } from '@/features/football-journey';
 import { HighlightVideosManagerModal } from '@/features/highlight-videos';
+import { MatchAnalysisModal } from '@/features/match-analysis';
 import { PlayerProfileScreen, EditProfileModal } from '@/features/player-profile';
 import { usePlayerOnboarding } from '@/features/player-onboarding';
 import { type OnboardingStepId } from '@/features/player-onboarding/types';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
-import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
 import { LogMatchModal } from '@/features/player-statistics';
 import {
   RequestCoachEndorsementSheet,
@@ -17,11 +17,12 @@ import {
 } from '@/features/public-portfolio';
 import { exportFootballCvPdf } from '@/features/public-portfolio/services/footballCvExportService';
 import { ActivityInboxModal } from '@/features/activity-feed';
+import { usePlayerTrialInvitations } from '@/features/trial-invitations/hooks/useTrialInvitations';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { createNavigationTabBar } from '@/navigation/NavigationTabBar';
 import { PlayerDiscoverTab } from '@/navigation/PlayerDiscoverTab';
+import { PlayerMediaTab } from '@/navigation/PlayerMediaTab';
 import { PlayerPerformanceTab } from '@/navigation/PlayerPerformanceTab';
-import { PlayerTrackTab } from '@/navigation/PlayerTrackTab';
 import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
@@ -37,8 +38,8 @@ function createDynamicPlayerTabBar(onLogMatch: () => void, logMatchLabel: string
         tabs: [
           { id: 'Home', label: t('tabs.home'), icon: Home },
           { id: 'Performance', label: t('tabs.performance'), icon: Activity },
-          { id: 'Track', label: t('tabs.track'), icon: MapPin },
-          { id: 'Search', label: t('tabs.search'), icon: Search },
+          { id: 'Media', label: t('tabs.media'), icon: Clapperboard },
+          { id: 'Discover', label: t('tabs.discover'), icon: Compass },
         ],
         onCenterAction: onLogMatch,
         centerActionLabel: logMatchLabel,
@@ -58,7 +59,7 @@ function usePlayerStackNavigation() {
 
 function PlayerTabsContainer() {
   const stackNavigation = usePlayerStackNavigation();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const { t } = useAppTranslation(['common', 'statistics']);
   const {
     profile,
@@ -74,44 +75,37 @@ function PlayerTabsContainer() {
   } = usePlayerWorkspace();
   const { report: onboardingReport, shouldShow: shouldShowOnboarding, dismiss: dismissOnboarding } =
     usePlayerOnboarding(profile, trustState.recommendations.length);
+  const { trials } = usePlayerTrialInvitations();
+  const pendingTrialsCount = useMemo(
+    () => trials.filter((trial) => trial.status === 'pending').length,
+    [trials],
+  );
+
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isJourneyModalVisible, setIsJourneyModalVisible] = useState(false);
   const [isVideosModalVisible, setIsVideosModalVisible] = useState(false);
+  const [isMatchAnalysisVisible, setIsMatchAnalysisVisible] = useState(false);
   const [isLogMatchModalVisible, setIsLogMatchModalVisible] = useState(false);
   const [isActivityInboxVisible, setIsActivityInboxVisible] = useState(false);
   const [isSharePortfolioVisible, setIsSharePortfolioVisible] = useState(false);
   const [isCoachInviteVisible, setIsCoachInviteVisible] = useState(false);
+  const [passportSettingsFocusKey, setPassportSettingsFocusKey] = useState<number | null>(null);
+
+  const openMatchAnalysis = useCallback(() => {
+    setIsMatchAnalysisVisible(true);
+  }, []);
 
   const openLogMatch = useCallback(() => {
     setIsLogMatchModalVisible(true);
   }, []);
 
+  const focusPassportUsername = useCallback(() => {
+    setPassportSettingsFocusKey(Date.now());
+  }, []);
+
   const PlayerTabBar = useMemo(
     () => createDynamicPlayerTabBar(openLogMatch, t('statistics:logMatch')),
     [openLogMatch, t],
-  );
-
-  const handlePrivacyChange = useCallback(
-    async (privacy: NonNullable<typeof profile>['privacy']) => {
-      if (!profile) {
-        await saveProfile({ privacy });
-        return;
-      }
-
-      let nextJourney = profile.footballJourney;
-      if (privacy?.publicPortfolioEnabled && !profile.privacy?.publicPortfolioEnabled) {
-        nextJourney = appendSystemJourneyEvents(nextJourney, { type: 'portfolio_enabled' });
-      }
-      if (privacy?.discoverableByScouts && !profile.privacy?.discoverableByScouts) {
-        nextJourney = appendSystemJourneyEvents(nextJourney, { type: 'discoverable_enabled' });
-      }
-
-      await saveProfile({
-        privacy,
-        ...(nextJourney !== profile.footballJourney ? { footballJourney: nextJourney } : {}),
-      });
-    },
-    [profile, saveProfile],
   );
 
   const handleOnboardingStepPress = useCallback(
@@ -121,9 +115,11 @@ function PlayerTabsContainer() {
           openLogMatch();
           break;
         case 'claim_username':
+          focusPassportUsername();
           break;
         case 'enable_passport':
         case 'enable_discoverable':
+          stackNavigation.navigate('Settings');
           break;
         case 'invite_coach':
           setIsCoachInviteVisible(true);
@@ -132,7 +128,7 @@ function PlayerTabsContainer() {
           break;
       }
     },
-    [openLogMatch],
+    [focusPassportUsername, openLogMatch, stackNavigation],
   );
 
   return (
@@ -143,7 +139,7 @@ function PlayerTabsContainer() {
         screenOptions={{ headerShown: false, lazy: true }}
       >
         <Tab.Screen name="Home">
-          {() => (
+          {({ navigation: tabNavigation }) => (
             <PlayerProfileScreen
               profile={profile}
               loading={isLoading}
@@ -151,9 +147,8 @@ function PlayerTabsContainer() {
               trustState={trustState}
               onRetry={refreshProfile}
               onEditPress={() => setIsEditModalVisible(true)}
-              onEditJourneyPress={() => setIsJourneyModalVisible(true)}
-              onManageVideosPress={() => setIsVideosModalVisible(true)}
               onLogMatchPress={openLogMatch}
+              onViewPerformancePress={() => tabNavigation.navigate('Performance')}
               onActivityPress={() => setIsActivityInboxVisible(true)}
               onPortfolioPress={() =>
                 user?.id
@@ -171,6 +166,8 @@ function PlayerTabsContainer() {
                   ? () => void exportFootballCvPdf(portfolioPreview)
                   : undefined
               }
+              onTrialsPress={() => stackNavigation.navigate('Trials')}
+              pendingTrialsCount={pendingTrialsCount}
               onboardingReport={shouldShowOnboarding ? onboardingReport : null}
               onOnboardingStepPress={handleOnboardingStepPress}
               onDismissOnboarding={() => void dismissOnboarding()}
@@ -178,9 +175,8 @@ function PlayerTabsContainer() {
                 await saveProfile({ username });
                 await refreshProfile();
               }}
-              onPrivacyChange={handlePrivacyChange}
+              passportSettingsFocusKey={passportSettingsFocusKey}
               onSettingsPress={() => stackNavigation.navigate('Settings')}
-              onSignOut={() => void signOut()}
               embeddedInTabShell
             />
           )}
@@ -190,11 +186,19 @@ function PlayerTabsContainer() {
             <PlayerPerformanceTab
               onLogMatchPress={openLogMatch}
               onEditJourneyPress={() => setIsJourneyModalVisible(true)}
+              onAnalyzeMatchVideoPress={openMatchAnalysis}
             />
           )}
         </Tab.Screen>
-        <Tab.Screen name="Track" component={PlayerTrackTab} />
-        <Tab.Screen name="Search" component={PlayerDiscoverTab} />
+        <Tab.Screen name="Media">
+          {() => (
+            <PlayerMediaTab
+              onManageVideosPress={() => setIsVideosModalVisible(true)}
+              onAnalyzeMatchVideoPress={openMatchAnalysis}
+            />
+          )}
+        </Tab.Screen>
+        <Tab.Screen name="Discover" component={PlayerDiscoverTab} />
       </Tab.Navigator>
 
       {profile ? (
@@ -221,8 +225,22 @@ function PlayerTabsContainer() {
           visible={isVideosModalVisible}
           profile={profile}
           onClose={() => setIsVideosModalVisible(false)}
+          onAnalyzeMatchVideoPress={() => {
+            setIsVideosModalVisible(false);
+            openMatchAnalysis();
+          }}
         />
       ) : null}
+
+      <MatchAnalysisModal
+        visible={isMatchAnalysisVisible}
+        playerId={user?.id ?? null}
+        onClose={() => setIsMatchAnalysisVisible(false)}
+        onApplyStats={async (payload) => {
+          await saveMatch(payload);
+          await refreshProfile();
+        }}
+      />
 
       <LogMatchModal
         visible={isLogMatchModalVisible}

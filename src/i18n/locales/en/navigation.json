@@ -6,8 +6,9 @@
     "gps": "GPS",
     "trials": "Trials",
     "home": "Home",
-    "performance": "Performance",
+    "performance": "Growth",
     "track": "Track",
+    "media": "Media",
     "search": "Search",
     "discover": "Discover",
     "pipeline": "Pipeline"
@@ -16,7 +17,9 @@
     "stats": "Stats",
     "career": "Career",
     "gps": "GPS",
-    "trials": "Trials"
+    "trials": "Trials",
+    "highlights": "Highlights",
+    "reports": "Reports"
   },
   "screens": {
     "settings": "Settings",
@@ -24,6 +27,8 @@
     "activityInbox": "Activity",
     "playerComparison": "Player comparison",
     "careerReplay": "Career replay",
-    "publicPortfolio": "Football Passport"
+    "publicPortfolio": "Football Passport",
+    "highlights": "Highlight Videos",
+    "highlightsSubtitle": "Scout clips and match reels"
   }
 }

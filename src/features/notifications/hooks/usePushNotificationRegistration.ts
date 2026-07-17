@@ -3,15 +3,21 @@ import { Platform } from 'react-native';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { registerForPushNotifications } from '@/features/notifications/services/pushNotificationService';
 
+/**
+ * Registers Expo push tokens for signed-in non-anonymous player and scout/coach sessions.
+ */
 export function usePushNotificationRegistration(enabled: boolean): void {
   const { user, role } = useAuth();
 
   useEffect(() => {
+    const roleAllowed =
+      role === 'player' || role === 'scout' || role === 'coach';
+
     if (
       Platform.OS === 'web' ||
       !enabled ||
       !user?.id ||
-      role !== 'player' ||
+      !roleAllowed ||
       user.isAnonymous
     ) {
       return;

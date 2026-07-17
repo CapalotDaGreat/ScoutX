@@ -1,7 +1,4 @@
-import { doc, getDoc } from 'firebase/firestore';
-import { getFirestoreDb } from '@/config/firebase';
 import { type PlayerProfile } from '@/features/player-profile/types';
-import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
 import { PlayerProfileRepository } from '@/features/player-profile/repositories/PlayerProfileRepository';
 import { TrustRepository } from '@/features/trust-system/repositories/TrustRepository';
 import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
@@ -27,25 +24,10 @@ export class PublicPortfolioRepository {
     const gpsRepository = GpsSessionRepository.getInstance();
 
     let profile: PlayerProfile | null = null;
-    const db = getFirestoreDb();
-
-    if (db) {
-      try {
-        const snapshot = await getDoc(doc(db, 'profiles', playerId));
-        if (snapshot.exists()) {
-          profile = ProfileModel.fromFirestore(playerId, snapshot.data());
-        }
-      } catch {
-        // fall through
-      }
-    }
-
-    if (!profile) {
-      try {
-        profile = await profileRepository.fetchProfile(playerId);
-      } catch {
-        profile = null;
-      }
+    try {
+      profile = await profileRepository.fetchProfile(playerId);
+    } catch {
+      profile = null;
     }
 
     if (!profile) {

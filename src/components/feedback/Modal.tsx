@@ -15,7 +15,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
 import { Heading } from '@/components/primitives/Heading';
-import { useTheme } from '@/theme';
+import { useTheme, useThemeCssVars } from '@/theme';
 import { motion } from '@/theme/tokens/motion';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
@@ -54,6 +54,7 @@ export function Modal({
   className,
 }: ModalProps) {
   const { colors } = useTheme();
+  const themeCssVars = useThemeCssVars();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const backdropOpacity = useSharedValue(0);
@@ -94,14 +95,15 @@ export function Modal({
       statusBarTranslucent
       onRequestClose={handleClose}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        className="flex-1"
-      >
-        <View className="flex-1 justify-end">
+      <View style={themeCssVars} className="flex-1">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          className="flex-1"
+        >
+          <View className="flex-1 justify-end">
           <Animated.View
-            style={backdropStyle}
-            className="absolute inset-0 bg-black/40"
+            style={[backdropStyle, { backgroundColor: colors.surfaceOverlay }]}
+            className="absolute inset-0"
           >
             <Pressable
               accessibilityRole="button"
@@ -114,6 +116,9 @@ export function Modal({
           <Animated.View
             style={[
               contentStyle,
+              {
+                backgroundColor: isFullscreen ? colors.background : colors.surface,
+              },
               isSheet
                 ? {
                     maxHeight: sheetMaxHeight,
@@ -135,7 +140,7 @@ export function Modal({
             )}
           >
             <View
-              className={cn(isSheet && 'max-h-full')}
+              className={cn(isSheet && 'max-h-full', isFullscreen && 'flex-1')}
               style={
                 isSheet
                   ? { maxHeight: sheetMaxHeight - insets.bottom, flexShrink: 1 }
@@ -149,7 +154,7 @@ export function Modal({
               ) : null}
 
               {title || showCloseButton ? (
-                <View className="flex-row items-center justify-between border-b border-divider px-4 py-4">
+                <View className="flex-row items-center justify-between border-b border-divider px-5 py-4">
                   {title ? (
                     <Heading level={3} className="flex-1 pr-3">
                       {title}
@@ -161,11 +166,11 @@ export function Modal({
                     <Pressable
                       accessibilityRole="button"
                       accessibilityLabel="Close"
-                      hitSlop={8}
+                      hitSlop={10}
                       onPress={handleClose}
-                      className="h-8 w-8 items-center justify-center rounded-full bg-background-secondary"
+                      className="h-11 w-11 items-center justify-center rounded-full bg-background-secondary"
                     >
-                      <X size={18} color={colors.textPrimary} strokeWidth={2} />
+                      <X size={20} color={colors.textPrimary} strokeWidth={2} />
                     </Pressable>
                   ) : null}
                 </View>
@@ -190,7 +195,8 @@ export function Modal({
             </View>
           </Animated.View>
         </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </View>
     </RNModal>
   );
 }
