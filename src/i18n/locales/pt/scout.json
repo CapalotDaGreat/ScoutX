@@ -159,5 +159,27 @@
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
     "inviteToTrial": "Invite to Trial"
+  },
+  "search": {
+    "scopeLabel": "Pesquisar em",
+    "scopeHint": "Escolha quais campos do jogador pesquisar",
+    "scopeAll": "Tudo",
+    "scopeName": "Nome",
+    "scopeClub": "Clube",
+    "scopePosition": "Posição",
+    "scopeNationality": "Nacionalidade",
+    "scopeLeague": "Liga",
+    "recentSearches": "Pesquisas recentes",
+    "noRecentSearches": "As suas pesquisas recentes aparecem aqui",
+    "suggestions": "Sugestões",
+    "savedFilters": "Filtros guardados",
+    "saveCurrent": "Guardar filtros",
+    "saveFiltersTitle": "Guardar filtros de pesquisa",
+    "saveFiltersDescription": "Dê um nome a este conjunto de filtros para o reutilizar mais tarde.",
+    "filterNameLabel": "Nome do filtro",
+    "filterNamePlaceholder": "ex. Extremos U21 por perto",
+    "includeSearchLabel": "Incluir pesquisa atual",
+    "includeSearchHint": "Também restaura o texto e o âmbito da pesquisa",
+    "deleteFilter": "Eliminar {{name}}"
   }
 }

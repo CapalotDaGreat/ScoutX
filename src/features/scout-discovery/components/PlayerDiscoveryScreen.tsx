@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { AppSafeAreaView } from '@/components/layout/AppSafeAreaView';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -14,12 +14,15 @@ import { DiscoverySearchPanel } from '@/features/scout-discovery/components/Disc
 import { DiscoverySortBar } from '@/features/scout-discovery/components/DiscoverySortBar';
 import { FilterPresetBar } from '@/features/scout-discovery/components/FilterPresetBar';
 import { PlayerDiscoveryCard } from '@/features/scout-discovery/components/PlayerDiscoveryCard';
+import { SaveSearchFiltersModal } from '@/features/scout-discovery/components/SaveSearchFiltersModal';
+import { SearchScopeDropdown } from '@/features/scout-discovery/components/SearchScopeDropdown';
 import { usePlayerDiscovery } from '@/features/scout-discovery/hooks/usePlayerDiscovery';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import {
   type DiscoverablePlayer,
   type DiscoveryFilters,
+  type DiscoverySearchScope,
   type DiscoverySortOption,
   type FilterPreset,
 } from '@/features/scout-discovery/types';
@@ -31,6 +34,8 @@ import { HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 export type PlayerDiscoveryScreenProps = {
   search: string;
   onSearchChange: (value: string) => void;
+  searchScope: DiscoverySearchScope;
+  onSearchScopeChange: (scope: DiscoverySearchScope) => void;
   onPlayerPress: (player: DiscoverablePlayer) => void;
   filters: DiscoveryFilters;
   sort: DiscoverySortOption;
@@ -44,14 +49,18 @@ export type PlayerDiscoveryScreenProps = {
   onSortChange: (sort: DiscoverySortOption) => void;
   onResetFilters: () => void;
   onApplyPreset: (preset: FilterPreset) => void;
-  onSaveCurrentPreset: () => void;
+  onSaveCurrentPreset: (name: string, includeSearch: boolean) => void;
   onSettingsPress?: () => void;
   guestMode?: boolean;
+  /** Allow naming/saving filter presets even in browse-only (player) mode. */
+  allowSavedFilters?: boolean;
 };
 
 export function PlayerDiscoveryScreen({
   search,
   onSearchChange,
+  searchScope,
+  onSearchScopeChange,
   onPlayerPress,
   filters,
   sort,
@@ -65,6 +74,7 @@ export function PlayerDiscoveryScreen({
   onSaveCurrentPreset,
   onSettingsPress,
   guestMode = false,
+  allowSavedFilters,
 }: PlayerDiscoveryScreenProps) {
   const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { colors } = useTheme();
@@ -72,29 +82,65 @@ export function PlayerDiscoveryScreen({
   const playerSave = useScoutPlayerSave();
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const canSaveFilters = allowSavedFilters ?? !guestMode;
 
   const { players, isLoading, isLoadingMore, error, loadMore, refresh } = usePlayerDiscovery({
     search,
+    searchScope,
     filters,
     sort,
     enabled: true,
   });
 
+  const defaultPresetName = useMemo(() => {
+    const nextIndex = workspace.filterPresets.filter((preset) =>
+      preset.id.startsWith('preset-custom-'),
+    ).length + 1;
+    return `Filter ${nextIndex}`;
+  }, [workspace.filterPresets]);
+
   const handleSearchSelect = useCallback(
-    (term: string) => {
+    (term: string, scope?: DiscoverySearchScope) => {
+      if (scope) {
+        onSearchScopeChange(scope);
+      }
       onSearchChange(term);
-      workspace.recordSearch(term);
+      workspace.recordSearch(term, scope ?? searchScope);
       setSearchFocused(false);
     },
-    [onSearchChange, workspace],
+    [onSearchChange, onSearchScopeChange, searchScope, workspace],
   );
 
   const handleSearchSubmit = useCallback(() => {
     if (search.trim()) {
-      workspace.recordSearch(search);
+      workspace.recordSearch(search, searchScope);
     }
     setSearchFocused(false);
-  }, [search, workspace]);
+  }, [search, searchScope, workspace]);
+
+  const handleApplyPreset = useCallback(
+    (preset: FilterPreset) => {
+      onApplyPreset(preset);
+      if (typeof preset.search === 'string') {
+        onSearchChange(preset.search);
+      }
+      if (preset.searchScope) {
+        onSearchScopeChange(preset.searchScope);
+      }
+    },
+    [onApplyPreset, onSearchChange, onSearchScopeChange],
+  );
+
+  const handleSavePreset = useCallback(
+    (name: string, includeSearch: boolean) => {
+      onSaveCurrentPreset(name, includeSearch);
+      setSaveModalVisible(false);
+    },
+    [onSaveCurrentPreset],
+  );
+
+  const showSearchPanel = searchFocused || search.trim().length === 0;
 
   const renderItem = useCallback(
     ({ item, index }: { item: DiscoverablePlayer; index: number }) => (
@@ -132,19 +178,25 @@ export function PlayerDiscoveryScreen({
 
   const listHeader = (
     <View className="gap-4 px-4 pb-2 pt-2">
-      <SearchBar
-        value={search}
-        onChangeText={onSearchChange}
-        onClear={() => onSearchChange('')}
-        placeholder={t('scout:discover.searchPlaceholder')}
-        onFocus={() => setSearchFocused(true)}
-        onBlur={() => setSearchFocused(false)}
-        onSubmitEditing={handleSearchSubmit}
-      />
+      <View className="flex-row items-center gap-2">
+        <SearchScopeDropdown value={searchScope} onChange={onSearchScopeChange} />
+        <View className="min-w-0 flex-1">
+          <SearchBar
+            value={search}
+            onChangeText={onSearchChange}
+            onClear={() => onSearchChange('')}
+            placeholder={t('scout:discover.searchPlaceholder')}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            onSubmitEditing={handleSearchSubmit}
+          />
+        </View>
+      </View>
 
       <DiscoverySearchPanel
-        visible={searchFocused}
+        visible={showSearchPanel}
         search={search}
+        searchScope={searchScope}
         recentSearches={workspace.recentSearches}
         onSelectSearch={handleSearchSelect}
         onClearRecent={workspace.clearRecentSearches}
@@ -153,8 +205,9 @@ export function PlayerDiscoveryScreen({
       <FilterPresetBar
         presets={workspace.filterPresets}
         activePresetId={activePresetId}
-        onApplyPreset={onApplyPreset}
-        onSaveCurrent={guestMode ? undefined : onSaveCurrentPreset}
+        onApplyPreset={handleApplyPreset}
+        onSaveCurrent={canSaveFilters ? () => setSaveModalVisible(true) : undefined}
+        onRemovePreset={canSaveFilters ? workspace.removeFilterPreset : undefined}
       />
       <View className="flex-row items-center gap-3">
         <Button
@@ -275,6 +328,16 @@ export function PlayerDiscoveryScreen({
         onReset={onResetFilters}
         onApply={() => setFiltersVisible(false)}
       />
+
+      {canSaveFilters ? (
+        <SaveSearchFiltersModal
+          visible={saveModalVisible}
+          defaultName={defaultPresetName}
+          hasSearchQuery={search.trim().length > 0}
+          onClose={() => setSaveModalVisible(false)}
+          onSave={handleSavePreset}
+        />
+      ) : null}
     </AppSafeAreaView>
   );
 }

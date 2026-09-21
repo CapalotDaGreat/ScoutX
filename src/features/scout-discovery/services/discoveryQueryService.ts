@@ -2,17 +2,43 @@ import {
   type DiscoverablePlayer,
   type DiscoveryFilters,
   type DiscoveryQuery,
+  type DiscoverySearchScope,
   type DiscoverySortOption,
 } from '@/features/scout-discovery/types';
 import { rankPlayersBySearchRelevance } from '@/features/scout-discovery/services/smartDiscoveryService';
 
-function matchesSearch(player: DiscoverablePlayer, search: string): boolean {
+function matchesScopedField(value: string, query: string): boolean {
+  return value.toLowerCase().includes(query);
+}
+
+function matchesSearch(
+  player: DiscoverablePlayer,
+  search: string,
+  scope: DiscoverySearchScope = 'all',
+): boolean {
   const query = search.trim().toLowerCase();
   if (!query) {
     return true;
   }
 
-  return player.searchKeywords.some((keyword) => keyword.includes(query));
+  switch (scope) {
+    case 'name':
+      return (
+        matchesScopedField(player.fullName, query) ||
+        Boolean(player.username && matchesScopedField(player.username, query))
+      );
+    case 'club':
+      return matchesScopedField(player.club, query);
+    case 'position':
+      return player.position.some((position) => matchesScopedField(position, query));
+    case 'nationality':
+      return matchesScopedField(player.nationality, query);
+    case 'league':
+      return matchesScopedField(player.league, query);
+    case 'all':
+    default:
+      return player.searchKeywords.some((keyword) => keyword.includes(query));
+  }
 }
 
 function matchesFilters(player: DiscoverablePlayer, filters: DiscoveryFilters): boolean {
@@ -59,8 +85,10 @@ export function filterAndSortPlayers(
   players: DiscoverablePlayer[],
   query: DiscoveryQuery,
 ): DiscoverablePlayer[] {
+  const scope = query.searchScope ?? 'all';
   const filtered = players.filter(
-    (player) => matchesSearch(player, query.search) && matchesFilters(player, query.filters),
+    (player) =>
+      matchesSearch(player, query.search, scope) && matchesFilters(player, query.filters),
   );
 
   if (query.search.trim() && query.sort === 'relevance') {

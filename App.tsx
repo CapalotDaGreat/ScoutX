@@ -1,4 +1,5 @@
 import './global.css';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { enableScreens } from 'react-native-screens';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -24,6 +25,7 @@ import { ActivityProvider } from '@/features/activity-feed';
 import { createExpoPushNotificationPort } from '@/features/notifications/services/expoPushNotificationPort';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { AgentationDevProbe } from '@/dev/AgentationDevProbe';
+import { queryClient } from '@/data/queryClient';
 
 enableScreens();
 initSentry();
@@ -47,11 +49,13 @@ function AppContent() {
   return (
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
-      <ActivityProvider pushPort={pushNotificationPort}>
-        <AiInsightsProvider>
-          <RootNavigator />
-        </AiInsightsProvider>
-      </ActivityProvider>
+      <QueryClientProvider client={queryClient}>
+        <ActivityProvider pushPort={pushNotificationPort}>
+          <AiInsightsProvider>
+            <RootNavigator />
+          </AiInsightsProvider>
+        </ActivityProvider>
+      </QueryClientProvider>
     </>
   );
 }

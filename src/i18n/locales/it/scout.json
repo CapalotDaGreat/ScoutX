@@ -159,5 +159,27 @@
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
     "inviteToTrial": "Invite to Trial"
+  },
+  "search": {
+    "scopeLabel": "Cerca in",
+    "scopeHint": "Scegli quali campi giocatore cercare",
+    "scopeAll": "Tutti",
+    "scopeName": "Nome",
+    "scopeClub": "Club",
+    "scopePosition": "Ruolo",
+    "scopeNationality": "Nazionalità",
+    "scopeLeague": "Campionato",
+    "recentSearches": "Ricerche recenti",
+    "noRecentSearches": "Le tue ricerche recenti appariranno qui",
+    "suggestions": "Suggerimenti",
+    "savedFilters": "Filtri salvati",
+    "saveCurrent": "Salva filtri",
+    "saveFiltersTitle": "Salva filtri di ricerca",
+    "saveFiltersDescription": "Dai un nome a questo set di filtri per riutilizzarlo in seguito.",
+    "filterNameLabel": "Nome del filtro",
+    "filterNamePlaceholder": "es. Ali U21 nelle vicinanze",
+    "includeSearchLabel": "Includi ricerca attuale",
+    "includeSearchHint": "Ripristina anche testo e ambito di ricerca",
+    "deleteFilter": "Elimina {{name}}"
   }
 }

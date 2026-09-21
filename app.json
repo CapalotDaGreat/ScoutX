@@ -6,12 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#151617"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scoutx.app",
@@ -45,6 +39,14 @@
     },
     "plugins": [
       "expo-apple-authentication",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#151617"
+        }
+      ],
       "expo-video",
       [
         "expo-image-picker",

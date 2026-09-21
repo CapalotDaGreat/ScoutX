@@ -12,7 +12,7 @@ import { PlayerDiscoveryScreen } from '@/features/scout-discovery/components/Pla
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
 import { useDiscoveryFilters } from '@/features/scout-discovery/hooks/useDiscoveryFilters';
 import { ScoutWorkspaceProvider } from '@/features/scout-discovery/hooks/useScoutWorkspace';
-import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { type DiscoverablePlayer, type DiscoverySearchScope } from '@/features/scout-discovery/types';
 import { RecruitmentProvider } from '@/features/scout-recruitment';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
@@ -22,6 +22,7 @@ const Stack = createNativeStackNavigator<GuestStackParamList>();
 
 function GuestMainRoute({ navigation }: NativeStackScreenProps<GuestStackParamList, 'GuestMain'>) {
   const [search, setSearch] = useState('');
+  const [searchScope, setSearchScope] = useState<DiscoverySearchScope>('all');
   const {
     filters,
     sort,
@@ -47,6 +48,8 @@ function GuestMainRoute({ navigation }: NativeStackScreenProps<GuestStackParamLi
         <PlayerDiscoveryScreen
           search={search}
           onSearchChange={setSearch}
+          searchScope={searchScope}
+          onSearchScopeChange={setSearchScope}
           filters={filters}
           sort={sort}
           activeFilterCount={activeFilterCount}

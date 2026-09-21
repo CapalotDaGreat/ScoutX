@@ -16,6 +16,7 @@ import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { WifiOff, AlertCircle } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 
 export type ScreenProps = ScrollViewProps & {
   children: ReactNode;
@@ -89,6 +90,7 @@ export function Screen({
 }: ScreenProps) {
   const { colors } = useTheme();
   const { t } = useAppTranslation('common');
+  const { isOffline } = useNetworkStatus();
   const insets = useSafeAreaInsets();
   const resolvedEmptyTitle = emptyTitle ?? t('emptyTitle');
   const resolvedSafeAreaEdges: Edge[] =
@@ -138,7 +140,7 @@ export function Screen({
 
   const body = (
     <>
-      {offline ? (
+      {offline || isOffline ? (
         <View
           accessibilityRole="alert"
           className="flex-row items-center justify-center gap-2 bg-warning-muted px-5 py-2.5"

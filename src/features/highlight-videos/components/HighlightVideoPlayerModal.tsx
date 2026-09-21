@@ -41,7 +41,6 @@ export function HighlightVideoPlayerModal({
             style={{ width: '100%', height: 220 }}
             contentFit="contain"
             nativeControls
-            allowsFullscreen
           />
         </View>
         {video.description ? (

@@ -485,7 +485,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isGuest = isGuestRole(state.role ?? undefined, state.user?.isAnonymous);
   const isBootstrappingSession =
-    state.status !== 'authenticated' && (isLoading || isEnsuringAnonymousSession);
+    state.status === 'loading' && isLoading;
 
   const value = useMemo<AuthContextValue>(
     () => ({

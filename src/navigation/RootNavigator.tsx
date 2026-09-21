@@ -63,8 +63,7 @@ export function RootNavigator() {
     [isGuest, pendingRoleSelection, role, status],
   );
 
-  const showBootstrapOverlay =
-    status !== 'authenticated' && (status === 'loading' || isBootstrappingSession);
+  const showBootstrapOverlay = isBootstrappingSession;
 
   useEffect(() => {
     if (showBootstrapOverlay) {
@@ -143,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 20,
   },
 });

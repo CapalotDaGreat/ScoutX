@@ -8,6 +8,7 @@ const env = {
   ...process.env,
   EXPO_OFFLINE: '1',
   EXPO_PUBLIC_APP_CHECK_ENABLED: '0',
+  EXPO_UNSAFE_DOTENV_KEYS: 'NODE_TLS_REJECT_UNAUTHORIZED',
   CI: '1',
 };
 

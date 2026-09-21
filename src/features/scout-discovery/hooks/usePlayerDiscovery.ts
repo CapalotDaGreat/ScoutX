@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useBlockedUsers } from '@/features/trust-safety/hooks/useBlockedUsers';
@@ -6,11 +7,13 @@ import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositori
 import {
   type DiscoverablePlayer,
   type DiscoveryFilters,
+  type DiscoverySearchScope,
   type DiscoverySortOption,
 } from '@/features/scout-discovery/types';
 
 export type UsePlayerDiscoveryOptions = {
   search: string;
+  searchScope?: DiscoverySearchScope;
   filters: DiscoveryFilters;
   sort: DiscoverySortOption;
   enabled?: boolean;
@@ -18,79 +21,55 @@ export type UsePlayerDiscoveryOptions = {
 
 export function usePlayerDiscovery({
   search,
+  searchScope = 'all',
   filters,
   sort,
   enabled = true,
 }: UsePlayerDiscoveryOptions) {
   const { user } = useAuth();
   const { blockedIds } = useBlockedUsers(user?.id ?? null);
-  const [players, setPlayers] = useState<DiscoverablePlayer[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const debouncedSearch = useDebounce(search, 300);
 
   const discoveryQuery = useMemo(
-    () => ({ search: debouncedSearch, filters, sort }),
-    [debouncedSearch, filters, sort],
+    () => ({ search: debouncedSearch, searchScope, filters, sort }),
+    [debouncedSearch, searchScope, filters, sort],
   );
 
-  const loadPage = useCallback(
-    async (nextCursor: string | null, append: boolean) => {
-      if (append) {
-        setIsLoadingMore(true);
-      } else {
-        setIsLoading(true);
-      }
-      setError(null);
+  const query = useInfiniteQuery({
+    queryKey: ['scout-discovery', discoveryQuery],
+    initialPageParam: null as string | null,
+    enabled,
+    queryFn: ({ pageParam }) =>
+      PlayerDiscoveryRepository.getInstance().fetchPlayersPage(discoveryQuery, pageParam),
+    getNextPageParam: (lastPage) =>
+      lastPage.hasMore ? lastPage.nextCursor ?? undefined : undefined,
+    staleTime: 30_000,
+  });
 
-      try {
-        const repository = PlayerDiscoveryRepository.getInstance();
-        const result = await repository.fetchPlayersPage(discoveryQuery, nextCursor);
-        const visiblePlayers = result.players.filter((player) => !blockedIds.has(player.id));
-
-        setPlayers((current) =>
-          append ? [...current, ...visiblePlayers] : visiblePlayers,
-        );
-        setCursor(result.nextCursor);
-        setHasMore(result.hasMore);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load players.');
-      } finally {
-        setIsLoading(false);
-        setIsLoadingMore(false);
-      }
-    },
-    [blockedIds, discoveryQuery],
+  const players = useMemo(
+    () =>
+      query.data?.pages
+        .flatMap((page) => page.players)
+        .filter((player) => !blockedIds.has(player.id)) ?? [],
+    [blockedIds, query.data],
   );
-
-  useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-    void loadPage(null, false);
-  }, [enabled, loadPage]);
 
   const loadMore = useCallback(() => {
-    if (!hasMore || isLoadingMore || isLoading) {
+    if (!query.hasNextPage || query.isFetchingNextPage) {
       return;
     }
-    void loadPage(cursor, true);
-  }, [cursor, hasMore, isLoading, isLoadingMore, loadPage]);
+    void query.fetchNextPage();
+  }, [query]);
 
-  const refresh = useCallback(() => {
-    void loadPage(null, false);
-  }, [loadPage]);
+  const refresh = useCallback(() => void query.refetch(), [query]);
 
   return {
     players,
-    isLoading,
-    isLoadingMore,
-    error,
-    hasMore,
+    isLoading: query.isLoading,
+    isLoadingMore: query.isFetchingNextPage,
+    error: query.error instanceof Error ? query.error.message : null,
+    hasMore: query.hasNextPage ?? false,
     loadMore,
     refresh,
   };

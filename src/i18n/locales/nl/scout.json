@@ -159,5 +159,27 @@
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
     "inviteToTrial": "Invite to Trial"
+  },
+  "search": {
+    "scopeLabel": "Zoeken in",
+    "scopeHint": "Kies welke spelersvelden je doorzoekt",
+    "scopeAll": "Alles",
+    "scopeName": "Naam",
+    "scopeClub": "Club",
+    "scopePosition": "Positie",
+    "scopeNationality": "Nationaliteit",
+    "scopeLeague": "Competitie",
+    "recentSearches": "Recente zoekopdrachten",
+    "noRecentSearches": "Je recente zoekopdrachten verschijnen hier",
+    "suggestions": "Suggesties",
+    "savedFilters": "Opgeslagen filters",
+    "saveCurrent": "Filters opslaan",
+    "saveFiltersTitle": "Zoekfilters opslaan",
+    "saveFiltersDescription": "Geef deze filterset een naam om hem later opnieuw te gebruiken.",
+    "filterNameLabel": "Filternaam",
+    "filterNamePlaceholder": "bijv. U21 vleugels in de buurt",
+    "includeSearchLabel": "Huidige zoekopdracht meenemen",
+    "includeSearchHint": "Herstelt ook de zoektekst en het bereik",
+    "deleteFilter": "{{name}} verwijderen"
   }
 }

@@ -11,7 +11,9 @@ import { DEFAULT_FILTER_PRESETS } from '@/features/scout-discovery/constants';
 import { MAX_COMPARISON_PLAYERS } from '@/features/player-comparison/constants';
 import {
   type DiscoverablePlayer,
+  type DiscoverySearchScope,
   type FilterPreset,
+  type RecentSearchEntry,
   type ScoutWorkspaceSnapshot,
 } from '@/features/scout-discovery/types';
 import {
@@ -29,18 +31,19 @@ function createEmptyWorkspace(): ScoutWorkspaceSnapshot {
   };
 }
 
-const MAX_RECENT_SEARCHES = 6;
+const MAX_RECENT_SEARCHES = 8;
 const MAX_RECENTLY_VIEWED = 12;
+const MAX_FILTER_PRESETS = 12;
 
 type ScoutWorkspaceContextValue = {
   isReady: boolean;
   recentlyViewedIds: string[];
-  recentSearches: string[];
+  recentSearches: RecentSearchEntry[];
   filterPresets: FilterPreset[];
   lastViewedPlayerId: string | null;
   comparisonPlayerIds: string[];
   recordPlayerView: (playerId: string) => void;
-  recordSearch: (term: string) => void;
+  recordSearch: (term: string, scope?: DiscoverySearchScope) => void;
   clearRecentSearches: () => void;
   saveFilterPreset: (preset: FilterPreset) => void;
   removeFilterPreset: (presetId: string) => void;
@@ -114,18 +117,28 @@ export function ScoutWorkspaceProvider({ scoutId, children }: ScoutWorkspaceProv
   );
 
   const recordSearch = useCallback(
-    (term: string) => {
+    (term: string, scope: DiscoverySearchScope = 'all') => {
       const normalized = term.trim();
       if (!normalized) {
         return;
       }
 
+      const entry: RecentSearchEntry = {
+        term: normalized,
+        scope,
+        searchedAt: new Date().toISOString(),
+      };
+
       updateSnapshot((current) => ({
         ...current,
         recentSearches: [
-          normalized,
+          entry,
           ...current.recentSearches.filter(
-            (item) => item.toLowerCase() !== normalized.toLowerCase(),
+            (item) =>
+              !(
+                item.term.toLowerCase() === normalized.toLowerCase() &&
+                item.scope === scope
+              ),
           ),
         ].slice(0, MAX_RECENT_SEARCHES),
       }));
@@ -143,7 +156,7 @@ export function ScoutWorkspaceProvider({ scoutId, children }: ScoutWorkspaceProv
         const withoutDuplicate = current.filterPresets.filter((item) => item.id !== preset.id);
         return {
           ...current,
-          filterPresets: [preset, ...withoutDuplicate].slice(0, 8),
+          filterPresets: [preset, ...withoutDuplicate].slice(0, MAX_FILTER_PRESETS),
         };
       });
     },
@@ -162,7 +175,9 @@ export function ScoutWorkspaceProvider({ scoutId, children }: ScoutWorkspaceProv
 
   const resolvePlayers = useCallback((ids: string[], pool: DiscoverablePlayer[]) => {
     const lookup = new Map(pool.map((player) => [player.id, player]));
-    return ids.map((id) => lookup.get(id)).filter((player): player is DiscoverablePlayer => Boolean(player));
+    return ids
+      .map((id) => lookup.get(id))
+      .filter((player): player is DiscoverablePlayer => Boolean(player));
   }, []);
 
   const isInComparison = useCallback(

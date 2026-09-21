@@ -159,5 +159,27 @@
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
     "inviteToTrial": "Invite to Trial"
+  },
+  "search": {
+    "scopeLabel": "Rechercher dans",
+    "scopeHint": "Choisissez les champs joueur à rechercher",
+    "scopeAll": "Tout",
+    "scopeName": "Nom",
+    "scopeClub": "Club",
+    "scopePosition": "Poste",
+    "scopeNationality": "Nationalité",
+    "scopeLeague": "Championnat",
+    "recentSearches": "Recherches récentes",
+    "noRecentSearches": "Vos recherches récentes apparaîtront ici",
+    "suggestions": "Suggestions",
+    "savedFilters": "Filtres enregistrés",
+    "saveCurrent": "Enregistrer les filtres",
+    "saveFiltersTitle": "Enregistrer les filtres de recherche",
+    "saveFiltersDescription": "Nommez cet ensemble de filtres pour le réutiliser plus tard.",
+    "filterNameLabel": "Nom du filtre",
+    "filterNamePlaceholder": "ex. Ailiers U21 à proximité",
+    "includeSearchLabel": "Inclure la recherche actuelle",
+    "includeSearchHint": "Restaure aussi le texte et le champ de recherche",
+    "deleteFilter": "Supprimer {{name}}"
   }
 }

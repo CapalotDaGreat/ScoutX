@@ -100,6 +100,8 @@ function ScoutDiscoverRoute() {
     <PlayerDiscoveryScreen
       search={flow.search}
       onSearchChange={flow.setSearch}
+      searchScope={flow.searchScope}
+      onSearchScopeChange={flow.setSearchScope}
       onPlayerPress={handlePlayerPress}
       filters={flow.filters}
       sort={flow.sort}

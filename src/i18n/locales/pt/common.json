@@ -6,6 +6,7 @@
   "firebaseBootstrapFailed": "Unable to initialize Firebase services. Please restart the app.",
   "back": "Voltar",
   "cancel": "Cancelar",
+  "clear": "Limpar",
   "save": "Guardar",
   "delete": "Eliminar",
   "edit": "Edit",

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "module": "esnext",
+    "types": ["node"],
     "paths": {
       "@/*": ["./src/*"]
     }

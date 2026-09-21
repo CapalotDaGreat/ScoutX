@@ -8,13 +8,18 @@ import {
 } from 'react';
 import { useDiscoveryFilters } from '@/features/scout-discovery/hooks/useDiscoveryFilters';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
-import { type FilterPreset } from '@/features/scout-discovery/types';
+import {
+  type DiscoverySearchScope,
+  type FilterPreset,
+} from '@/features/scout-discovery/types';
 
 type ScoutFlowContextValue = ReturnType<typeof useDiscoveryFilters> & {
   search: string;
   setSearch: (value: string) => void;
+  searchScope: DiscoverySearchScope;
+  setSearchScope: (scope: DiscoverySearchScope) => void;
   recordSearchSubmit: () => void;
-  saveCurrentFilterPreset: () => void;
+  saveCurrentFilterPreset: (name: string, includeSearch: boolean) => void;
   openPlayerDetail: (playerId: string) => void;
   setOpenPlayerDetail: (handler: (playerId: string) => void) => void;
 };
@@ -23,6 +28,7 @@ const ScoutFlowContext = createContext<ScoutFlowContextValue | null>(null);
 
 export function ScoutFlowProvider({ children }: { children: ReactNode }) {
   const [search, setSearch] = useState('');
+  const [searchScope, setSearchScope] = useState<DiscoverySearchScope>('all');
   const discovery = useDiscoveryFilters();
   const workspace = useScoutWorkspace();
   const [openPlayerDetailHandler, setOpenPlayerDetailHandler] = useState<
@@ -31,19 +37,29 @@ export function ScoutFlowProvider({ children }: { children: ReactNode }) {
 
   const recordSearchSubmit = useCallback(() => {
     if (search.trim()) {
-      workspace.recordSearch(search);
+      workspace.recordSearch(search, searchScope);
     }
-  }, [search, workspace]);
+  }, [search, searchScope, workspace]);
 
-  const saveCurrentFilterPreset = useCallback(() => {
-    const preset: FilterPreset = {
-      id: `preset-custom-${Date.now()}`,
-      name: `Preset ${workspace.filterPresets.length + 1}`,
-      filters: discovery.filters,
-      sort: discovery.sort,
-    };
-    workspace.saveFilterPreset(preset);
-  }, [discovery.filters, discovery.sort, workspace]);
+  const saveCurrentFilterPreset = useCallback(
+    (name: string, includeSearch: boolean) => {
+      const preset: FilterPreset = {
+        id: `preset-custom-${Date.now()}`,
+        name: name.trim(),
+        filters: discovery.filters,
+        sort: discovery.sort,
+        ...(includeSearch
+          ? {
+              search: search.trim(),
+              searchScope,
+            }
+          : {}),
+      };
+      workspace.saveFilterPreset(preset);
+      discovery.setActivePresetId(preset.id);
+    },
+    [discovery, search, searchScope, workspace],
+  );
 
   const openPlayerDetail = useCallback(
     (playerId: string) => {
@@ -61,6 +77,8 @@ export function ScoutFlowProvider({ children }: { children: ReactNode }) {
       ...discovery,
       search,
       setSearch,
+      searchScope,
+      setSearchScope,
       recordSearchSubmit,
       saveCurrentFilterPreset,
       openPlayerDetail,
@@ -72,6 +90,7 @@ export function ScoutFlowProvider({ children }: { children: ReactNode }) {
       recordSearchSubmit,
       saveCurrentFilterPreset,
       search,
+      searchScope,
       setOpenPlayerDetail,
     ],
   );

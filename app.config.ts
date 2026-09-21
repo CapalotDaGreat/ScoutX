@@ -55,6 +55,25 @@ const plugins = [...(baseConfig.plugins ?? [])].filter((plugin) => {
   return pluginName !== '@sentry/react-native/expo';
 });
 
+const requiredExpoPlugins = [
+  'expo-asset',
+  'expo-build-properties',
+  'expo-font',
+  'expo-localization',
+  'expo-sharing',
+  'expo-status-bar',
+] as const;
+
+for (const pluginName of requiredExpoPlugins) {
+  const hasPlugin = plugins.some((plugin) =>
+    plugin === pluginName || (Array.isArray(plugin) && plugin[0] === pluginName),
+  );
+
+  if (!hasPlugin) {
+    plugins.push(pluginName);
+  }
+}
+
 if (!isExpoGoDev) {
   const hasGooglePlugin = plugins.some((plugin) =>
     plugin === '@react-native-google-signin/google-signin' ||

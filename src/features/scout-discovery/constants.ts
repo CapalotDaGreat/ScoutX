@@ -1,11 +1,21 @@
 import {
   defaultDiscoveryFilters,
+  type DiscoverySearchScope,
   type DiscoverySortOption,
   type FilterPreset,
   type PlayerPosition,
 } from '@/features/scout-discovery/types';
 
 export const DISCOVERY_PAGE_SIZE = 12;
+
+export const SEARCH_SCOPE_OPTIONS: DiscoverySearchScope[] = [
+  'all',
+  'name',
+  'club',
+  'position',
+  'nationality',
+  'league',
+];
 
 export const SORT_OPTIONS: { value: DiscoverySortOption; label: string }[] = [
   { value: 'relevance', label: 'Best Match' },

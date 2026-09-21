@@ -159,5 +159,27 @@
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
     "inviteToTrial": "Invite to Trial"
+  },
+  "search": {
+    "scopeLabel": "Suchen in",
+    "scopeHint": "Wähle, welche Spielerfelder durchsucht werden",
+    "scopeAll": "Alle",
+    "scopeName": "Name",
+    "scopeClub": "Verein",
+    "scopePosition": "Position",
+    "scopeNationality": "Nationalität",
+    "scopeLeague": "Liga",
+    "recentSearches": "Letzte Suchen",
+    "noRecentSearches": "Deine letzten Suchen erscheinen hier",
+    "suggestions": "Vorschläge",
+    "savedFilters": "Gespeicherte Filter",
+    "saveCurrent": "Filter speichern",
+    "saveFiltersTitle": "Suchfilter speichern",
+    "saveFiltersDescription": "Benenne diesen Filtersatz, um ihn später erneut zu verwenden.",
+    "filterNameLabel": "Filtername",
+    "filterNamePlaceholder": "z. B. U21 Flügel nah",
+    "includeSearchLabel": "Aktuelle Suche einschließen",
+    "includeSearchHint": "Stellt auch Text und Suchbereich wieder her",
+    "deleteFilter": "{{name}} löschen"
   }
 }

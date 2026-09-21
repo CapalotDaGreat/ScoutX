@@ -87,6 +87,21 @@ export type DiscoverySortOption =
   | 'newest'
   | 'relevance';
 
+/** Narrows free-text search to a single player attribute group. */
+export type DiscoverySearchScope =
+  | 'all'
+  | 'name'
+  | 'club'
+  | 'position'
+  | 'nationality'
+  | 'league';
+
+export type RecentSearchEntry = {
+  term: string;
+  scope: DiscoverySearchScope;
+  searchedAt: string;
+};
+
 export type DiscoveryFilters = {
   ageMin: number | null;
   ageMax: number | null;
@@ -118,6 +133,7 @@ export type DiscoveryFilters = {
 
 export type DiscoveryQuery = {
   search: string;
+  searchScope: DiscoverySearchScope;
   filters: DiscoveryFilters;
   sort: DiscoverySortOption;
 };
@@ -143,11 +159,14 @@ export type FilterPreset = {
   name: string;
   filters: DiscoveryFilters;
   sort: DiscoverySortOption;
+  /** Optional free-text query restored when the preset is applied. */
+  search?: string;
+  searchScope?: DiscoverySearchScope;
 };
 
 export type ScoutWorkspaceSnapshot = {
   recentlyViewedIds: string[];
-  recentSearches: string[];
+  recentSearches: RecentSearchEntry[];
   filterPresets: FilterPreset[];
   lastViewedPlayerId: string | null;
   comparisonPlayerIds: string[];
