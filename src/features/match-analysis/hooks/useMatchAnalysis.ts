@@ -9,6 +9,7 @@ import {
 import { pickMatchFootageVideo } from '@/features/match-analysis/services/matchVideoPickerService';
 import { requestMatchFootageAnalysis } from '@/features/match-analysis/services/matchAnalysisCallable';
 import { buildMockMatchAnalysisReport } from '@/features/match-analysis/services/mockMatchAnalysisService';
+import { buildConservativePipelineStages } from '@/features/match-analysis/services/matchAnalysisPipelineService';
 import {
   createMatchAnalysisJob,
   getMatchAnalysisJob,
@@ -88,6 +89,8 @@ export function useMatchAnalysis(playerId: string | null) {
         fileSizeBytes: input.fileSizeBytes,
         frames: [],
         uploadProgress: 0,
+        phaseLabel: 'Preparing video',
+        pipelineStages: buildConservativePipelineStages(input.targeting.jerseyNumber || 'player'),
         createdAt: now,
         updatedAt: now,
       };
@@ -110,6 +113,7 @@ export function useMatchAnalysis(playerId: string | null) {
           job = {
             ...job,
             status: 'complete',
+            phaseLabel: 'Finalizing report',
             frames: frames.map((frame) => ({
               index: frame.index,
               timestampSec: frame.timestampSec,
@@ -164,6 +168,7 @@ export function useMatchAnalysis(playerId: string | null) {
         job = {
           ...job,
           status: 'queued',
+          phaseLabel: 'Finding match segments',
           frames: uploadedFrames,
           videoStoragePath: video.storagePath,
           videoDownloadUrl: video.downloadUrl,
@@ -175,7 +180,8 @@ export function useMatchAnalysis(playerId: string | null) {
         setActiveJob(job);
 
         setPhaseLabel('AI is reviewing your player…');
-        await updateMatchAnalysisJob(jobId, { status: 'processing' });
+        job = { ...job, phaseLabel: 'Tracking #player', pipelineStages: buildConservativePipelineStages(input.targeting.jerseyNumber || 'player') };
+        await updateMatchAnalysisJob(jobId, { status: 'processing', phaseLabel: job.phaseLabel, pipelineStages: job.pipelineStages });
         try {
           await requestMatchFootageAnalysis(jobId);
         } catch (callableError) {

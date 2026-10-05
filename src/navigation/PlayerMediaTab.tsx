@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TabSegmentControl } from '@/components/navigation/TabSegmentControl';
 import { GpsTrackingScreen } from '@/features/gps';
 import { HighlightVideosSection } from '@/features/highlight-videos';
+import { HighlightReelStudioModal } from '@/features/highlight-reel-studio';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { Button } from '@/components/primitives/Button';
 import { Screen } from '@/components/layout/Screen';
@@ -16,6 +17,7 @@ type MediaSegment = 'highlights' | 'gps';
 export type PlayerMediaTabProps = {
   onManageVideosPress: () => void;
   onAnalyzeMatchVideoPress?: () => void;
+  onOpenHighlightReelStudio?: () => void;
 };
 
 /**
@@ -25,12 +27,14 @@ export type PlayerMediaTabProps = {
 export function PlayerMediaTab({
   onManageVideosPress,
   onAnalyzeMatchVideoPress,
+  onOpenHighlightReelStudio,
 }: PlayerMediaTabProps) {
   const { t } = useAppTranslation('navigation');
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const { profile } = usePlayerWorkspace();
   const [segment, setSegment] = useState<MediaSegment>('highlights');
+  const [showReelStudio, setShowReelStudio] = useState(false);
 
   const segments = useMemo(
     () => [
@@ -65,6 +69,18 @@ export function PlayerMediaTab({
             <Button variant="prestige" onPress={onManageVideosPress}>
               Upload from Photos
             </Button>
+            <Button
+              variant="secondary"
+              onPress={() => {
+                if (onOpenHighlightReelStudio) {
+                  onOpenHighlightReelStudio();
+                  return;
+                }
+                setShowReelStudio(true);
+              }}
+            >
+              Open Highlight Reel Studio
+            </Button>
             {onAnalyzeMatchVideoPress ? (
               <Button variant="secondary" onPress={onAnalyzeMatchVideoPress}>
                 Analyze match video from Photos
@@ -76,6 +92,11 @@ export function PlayerMediaTab({
             editable
             onManagePress={onManageVideosPress}
             onAnalyzeMatchVideoPress={onAnalyzeMatchVideoPress}
+          />
+          <HighlightReelStudioModal
+            visible={showReelStudio}
+            playerId={user?.id ?? null}
+            onClose={() => setShowReelStudio(false)}
           />
         </Screen>
       ) : (

@@ -20,6 +20,7 @@ export type HighlightVideosManagerModalProps = {
   profile: PlayerProfile;
   onClose: () => void;
   onAnalyzeMatchVideoPress?: () => void;
+  onOpenHighlightReelStudio?: () => void;
 };
 
 type ManagerFlowPhase = 'list' | 'picking' | 'editing';
@@ -29,6 +30,7 @@ export function HighlightVideosManagerModal({
   profile,
   onClose,
   onAnalyzeMatchVideoPress,
+  onOpenHighlightReelStudio,
 }: HighlightVideosManagerModalProps) {
   const { colors } = useTheme();
   const {
@@ -199,6 +201,12 @@ export function HighlightVideosManagerModal({
                   Analyze full match video
                 </Button>
               </View>
+            ) : null}
+
+            {onOpenHighlightReelStudio ? (
+              <Button variant="secondary" onPress={onOpenHighlightReelStudio}>
+                Build highlight reel from match evidence
+              </Button>
             ) : null}
 
             <Button

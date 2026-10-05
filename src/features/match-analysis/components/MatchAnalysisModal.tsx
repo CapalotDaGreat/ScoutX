@@ -21,6 +21,7 @@ export type MatchAnalysisModalProps = {
   playerId: string | null;
   onClose: () => void;
   onApplyStats?: (payload: MatchLogPayload) => Promise<void>;
+  onOpenHighlightReelStudio?: () => void;
 };
 
 function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
@@ -57,14 +58,53 @@ function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
   );
 }
 
+function PipelineStageList({ stages }: { stages: Array<{ label: string; status: string; note?: string }> }) {
+  return (
+    <View className="gap-2">
+      {stages.map((stage) => (
+        <View key={stage.label} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
+          <Text weight="semibold">{stage.label}</Text>
+          <Text variant="caption" color="secondary">
+            {stage.status === 'complete' ? 'Complete' : stage.status === 'active' ? 'Active' : stage.status === 'failed' ? 'Failed' : 'Pending'}
+          </Text>
+          {stage.note ? (
+            <Text variant="body-sm" color="secondary">
+              {stage.note}
+            </Text>
+          ) : null}
+        </View>
+      ))}
+    </View>
+  );
+}
+
+function SegmentList({ segments }: { segments: Array<{ label: string; startSec: number; endSec: number; excludedFromPerformance: boolean }> }) {
+  return (
+    <View className="gap-2">
+      {segments.map((segment) => (
+        <View key={`${segment.label}-${segment.startSec}`} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
+          <Text weight="semibold">{segment.label}</Text>
+          <Text variant="caption" color="secondary">
+            {Math.floor(segment.startSec / 60)}:{String(segment.startSec % 60).padStart(2, '0')}–
+            {Math.floor(segment.endSec / 60)}:{String(segment.endSec % 60).padStart(2, '0')}
+            {segment.excludedFromPerformance ? ' · excluded from performance' : ''}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 function ReportView({
   job,
   applying,
   onApply,
+  onOpenHighlightReelStudio,
 }: {
   job: MatchAnalysisJob;
   applying: boolean;
   onApply?: () => void;
+  onOpenHighlightReelStudio?: () => void;
 }) {
   const report = job.report;
   if (!report) {
@@ -76,7 +116,7 @@ function ReportView({
       <Card variant="elevated" padding="lg" className="gap-2">
         <Heading level={3}>{report.headline}</Heading>
         <Text variant="caption" color="secondary">
-          Confidence {Math.round(report.confidence * 100)}% · AI-estimated for jersey #
+          Confidence {Math.round(report.confidence * 100)}% · Analysis quality: {report.coverage?.confidenceLabel ?? 'Limited'} · jersey #
           {job.targeting.jerseyNumber}
         </Text>
         <Text variant="body-sm" color="secondary" className="mt-1">
@@ -85,11 +125,38 @@ function ReportView({
       </Card>
 
       <Card variant="default" padding="lg" className="gap-3">
+        <Heading level={3}>Analysis coverage</Heading>
+        <View className="gap-1">
+          <Text variant="body-sm">Visible: {report.coverage?.visiblePct ?? 0}%</Text>
+          <Text variant="body-sm">Likely active but off camera: {report.coverage?.likelyOffCameraPct ?? 0}%</Text>
+          <Text variant="body-sm">Unknown: {report.coverage?.unknownPct ?? 100}%</Text>
+          <Text variant="body-sm" color="secondary">
+            {report.coverage?.note ?? 'No reliable player coverage estimate was recorded.'}
+          </Text>
+        </View>
+      </Card>
+
+      <Card variant="default" padding="lg" className="gap-3">
+        <Heading level={3}>Analysis pipeline</Heading>
+        <PipelineStageList stages={report.pipelineStages ?? []} />
+      </Card>
+
+      <Card variant="default" padding="lg" className="gap-3">
+        <Heading level={3}>Match segments</Heading>
+        <SegmentList segments={report.segments ?? []} />
+      </Card>
+
+      <Card variant="default" padding="lg" className="gap-3">
         <Heading level={3}>Estimated match stats</Heading>
         <StatGrid stats={report.estimatedStats} />
         {onApply ? (
           <Button variant="accent" loading={applying} onPress={onApply}>
             Apply stats to my match log
+          </Button>
+        ) : null}
+        {onOpenHighlightReelStudio ? (
+          <Button variant="secondary" onPress={onOpenHighlightReelStudio}>
+            Build highlight reel from this analysis
           </Button>
         ) : null}
       </Card>
@@ -117,6 +184,25 @@ function ReportView({
         <Text variant="body-sm">{report.coachingNotes}</Text>
       </Card>
 
+      {report.evidence?.length ? (
+        <Card variant="default" padding="lg" className="gap-2">
+          <Heading level={3}>Evidence-first review</Heading>
+          {report.evidence.map((item, index) => (
+            <View key={`${item.label}-${index}`} className="gap-1 border-b border-border pb-2 last:border-0 last:pb-0">
+              <Text weight="semibold">
+                {item.kind === 'unknown' ? 'Unknown' : item.kind === 'inference' ? 'Inference' : 'Observation'} · {item.label}
+              </Text>
+              <Text variant="body-sm" color="secondary">
+                {item.detail}
+              </Text>
+              <Text variant="caption" color="secondary">
+                Confidence {Math.round(item.confidence * 100)}%{item.timestampSec != null ? ` · ${Math.floor(item.timestampSec / 60)}:${String(item.timestampSec % 60).padStart(2, '0')}` : ''}
+              </Text>
+            </View>
+          ))}
+        </Card>
+      ) : null}
+
       {report.moments.length > 0 ? (
         <Card variant="default" padding="lg" className="gap-2">
           <Heading level={3}>Key moments</Heading>
@@ -142,6 +228,7 @@ export function MatchAnalysisModal({
   playerId,
   onClose,
   onApplyStats,
+  onOpenHighlightReelStudio,
 }: MatchAnalysisModalProps) {
   const {
     activeJob,
@@ -271,6 +358,7 @@ export function MatchAnalysisModal({
             job={activeJob}
             applying={applying}
             onApply={onApplyStats ? () => void handleApply() : undefined}
+            onOpenHighlightReelStudio={onOpenHighlightReelStudio}
           />
         ) : (
           <View className="gap-3">

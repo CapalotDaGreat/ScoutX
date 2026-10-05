@@ -8,6 +8,67 @@ export type MatchAnalysisJobStatus =
   | 'complete'
   | 'failed';
 
+export type MatchAnalysisPipelineStageId =
+  | 'video-ingestion'
+  | 'match-segmentation'
+  | 'player-identification'
+  | 'player-tracking'
+  | 'event-detection'
+  | 'tactical-context'
+  | 'role-analysis'
+  | 'cross-event-reasoning'
+  | 'coaching-synthesis'
+  | 'validation'
+  | 'final-report';
+
+export type MatchAnalysisPipelineStageStatus = 'pending' | 'active' | 'complete' | 'failed';
+
+export type MatchAnalysisPipelineStage = {
+  id: MatchAnalysisPipelineStageId;
+  label: string;
+  status: MatchAnalysisPipelineStageStatus;
+  note?: string;
+  startedAt?: string;
+  completedAt?: string;
+};
+
+export type MatchSegmentType =
+  | 'warmup'
+  | 'first-half'
+  | 'halftime'
+  | 'second-half'
+  | 'full-time'
+  | 'stoppage'
+  | 'substitution'
+  | 'unknown';
+
+export type MatchSegment = {
+  id: string;
+  type: MatchSegmentType;
+  label: string;
+  startSec: number;
+  endSec: number;
+  confidence: number;
+  excludedFromPerformance: boolean;
+  note: string;
+};
+
+export type PlayerAvailabilityState =
+  | 'confirmed_visible'
+  | 'likely_active_off_camera'
+  | 'confirmed_off_pitch'
+  | 'unknown';
+
+export type PlayerAvailabilityWindow = {
+  id: string;
+  startSec: number;
+  endSec: number;
+  state: PlayerAvailabilityState;
+  confidence: number;
+  label: string;
+  note: string;
+};
+
 export type PlayerTargeting = {
   jerseyNumber: string;
   kitPrimaryColor: string;
@@ -50,6 +111,27 @@ export type MatchMomentsInsight = {
   detail: string;
 };
 
+export type AnalysisConfidenceBand = 'Excellent' | 'Good' | 'Limited' | 'Insufficient';
+
+export type EvidenceKind = 'observation' | 'inference' | 'unknown';
+
+export type MatchAnalysisCoverage = {
+  visiblePct: number;
+  likelyOffCameraPct: number;
+  unknownPct: number;
+  confidenceLabel: AnalysisConfidenceBand;
+  note: string;
+};
+
+export type MatchAnalysisEvidencePoint = {
+  kind: EvidenceKind;
+  label: string;
+  detail: string;
+  confidence: number;
+  timestampSec?: number;
+  source?: string;
+};
+
 export type MatchAnalysisReport = {
   headline: string;
   strengths: string[];
@@ -57,6 +139,12 @@ export type MatchAnalysisReport = {
   coachingNotes: string;
   estimatedStats: MatchEstimatedStats;
   moments: MatchMomentsInsight[];
+  coverage: MatchAnalysisCoverage;
+  evidence: MatchAnalysisEvidencePoint[];
+  pipelineStages: MatchAnalysisPipelineStage[];
+  segments: MatchSegment[];
+  availability: PlayerAvailabilityWindow[];
+  tacticalSummary?: string;
   /** 0–1 overall confidence that the model tracked the right player / events */
   confidence: number;
   /** Short disclaimer for UI */
@@ -84,6 +172,10 @@ export type MatchAnalysisJob = {
   videoDownloadUrl?: string;
   frames: MatchFrameSample[];
   uploadProgress?: number;
+  phaseLabel?: string;
+  pipelineStages?: MatchAnalysisPipelineStage[];
+  segments?: MatchSegment[];
+  availability?: PlayerAvailabilityWindow[];
   error?: string;
   report?: MatchAnalysisReport;
   createdAt: string;
@@ -119,6 +211,32 @@ export function emptyEstimatedStats(): MatchEstimatedStats {
     matchRating: 6,
     cleanSheet: false,
   };
+}
+
+export function buildDefaultAnalysisCoverage(): MatchAnalysisCoverage {
+  return {
+    visiblePct: 0,
+    likelyOffCameraPct: 0,
+    unknownPct: 100,
+    confidenceLabel: 'Insufficient',
+    note: 'No reliable player evidence was available for the full match.',
+  };
+}
+
+export function buildDefaultPipelineStages(): MatchAnalysisPipelineStage[] {
+  return [
+    { id: 'video-ingestion', label: 'Preparing video', status: 'complete' },
+    { id: 'match-segmentation', label: 'Finding match segments', status: 'pending' },
+    { id: 'player-identification', label: 'Identifying players', status: 'pending' },
+    { id: 'player-tracking', label: 'Tracking #player', status: 'pending' },
+    { id: 'event-detection', label: 'Analyzing movements', status: 'pending' },
+    { id: 'tactical-context', label: 'Analyzing decisions', status: 'pending' },
+    { id: 'role-analysis', label: 'Assessing role execution', status: 'pending' },
+    { id: 'cross-event-reasoning', label: 'Connecting key events', status: 'pending' },
+    { id: 'coaching-synthesis', label: 'Building coaching feedback', status: 'pending' },
+    { id: 'validation', label: 'Validating evidence', status: 'pending' },
+    { id: 'final-report', label: 'Finalizing report', status: 'pending' },
+  ];
 }
 
 export function estimatedStatsToMatchLogPayload(

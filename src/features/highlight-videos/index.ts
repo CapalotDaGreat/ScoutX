@@ -54,6 +54,7 @@ export {
   createEmptyHighlightVideo,
 } from '@/features/highlight-videos/models/HighlightVideoModel';
 
+export { HighlightReelStudioModal } from '@/features/highlight-reel-studio';
 export { pickHighlightVideo } from '@/features/highlight-videos/services/videoPickerService';
 export {
   launchVideoFromLibrary,

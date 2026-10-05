@@ -5,6 +5,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Activity, Clapperboard, Compass, Home } from 'lucide-react-native';
 import { EditJourneyModal } from '@/features/football-journey';
 import { HighlightVideosManagerModal } from '@/features/highlight-videos';
+import { HighlightReelStudioModal } from '@/features/highlight-reel-studio';
 import { MatchAnalysisModal } from '@/features/match-analysis';
 import { PlayerProfileScreen, EditProfileModal } from '@/features/player-profile';
 import { usePlayerOnboarding } from '@/features/player-onboarding';
@@ -85,6 +86,7 @@ function PlayerTabsContainer() {
   const [isJourneyModalVisible, setIsJourneyModalVisible] = useState(false);
   const [isVideosModalVisible, setIsVideosModalVisible] = useState(false);
   const [isMatchAnalysisVisible, setIsMatchAnalysisVisible] = useState(false);
+  const [isHighlightReelStudioVisible, setIsHighlightReelStudioVisible] = useState(false);
   const [isLogMatchModalVisible, setIsLogMatchModalVisible] = useState(false);
   const [isActivityInboxVisible, setIsActivityInboxVisible] = useState(false);
   const [isSharePortfolioVisible, setIsSharePortfolioVisible] = useState(false);
@@ -195,6 +197,7 @@ function PlayerTabsContainer() {
             <PlayerMediaTab
               onManageVideosPress={() => setIsVideosModalVisible(true)}
               onAnalyzeMatchVideoPress={openMatchAnalysis}
+              onOpenHighlightReelStudio={() => setIsHighlightReelStudioVisible(true)}
             />
           )}
         </Tab.Screen>
@@ -229,6 +232,10 @@ function PlayerTabsContainer() {
             setIsVideosModalVisible(false);
             openMatchAnalysis();
           }}
+          onOpenHighlightReelStudio={() => {
+            setIsVideosModalVisible(false);
+            setIsHighlightReelStudioVisible(true);
+          }}
         />
       ) : null}
 
@@ -240,6 +247,16 @@ function PlayerTabsContainer() {
           await saveMatch(payload);
           await refreshProfile();
         }}
+        onOpenHighlightReelStudio={() => {
+          setIsMatchAnalysisVisible(false);
+          setIsHighlightReelStudioVisible(true);
+        }}
+      />
+
+      <HighlightReelStudioModal
+        visible={isHighlightReelStudioVisible}
+        playerId={user?.id ?? null}
+        onClose={() => setIsHighlightReelStudioVisible(false)}
       />
 
       <LogMatchModal

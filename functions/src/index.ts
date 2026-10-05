@@ -6,6 +6,7 @@ import { logger } from 'firebase-functions';
 
 export { generateAiInsight } from './aiCoach';
 export { analyzeMatchFootage } from './matchAnalysis';
+export { generateHighlightReelPlan } from './highlightReelStudio';
 export { scheduleWeeklyFootballReports } from './weeklyReportScheduler';
 export {
   archiveContentReport,
