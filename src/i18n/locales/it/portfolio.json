@@ -211,10 +211,11 @@
         "description": "La data di revisione è passata. Aggiorna l’obiettivo o segnalo come raggiunto.",
         "reason": "questo obiettivo ha raggiunto la data di revisione senza essere raggiunto"
       },
-      "matchday_prep": {
-        "title": "Prep gara in 60 secondi",
-        "description": "Definisci ruolo e focus per {{opponent}} prima del fischio.",
-        "reason": "hai registrato una partita oggi e non ti sei ancora preparato"
+      "log_post_match": {
+        "title": "Registra la partita in 60 secondi",
+        "description": "Avversario, competizione e minuti bastano. Aggiungi statistiche dopo solo se le hai registrate.",
+        "reasonToday": "Ti sei preparato per una partita oggi e non hai ancora registrato nulla.",
+        "reasonYesterday": "Ti sei preparato per una partita ieri e non hai ancora registrato nulla."
       }
     },
     "continue": {

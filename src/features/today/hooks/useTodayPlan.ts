@@ -261,9 +261,6 @@ export function useTodayPlan({
         if (local.trainingSessions.some((session) => session.date.slice(0, 10) === today)) {
           types.push('log_training');
         }
-        if (local.trainingSessions.some((session) => session.type === 'match_prep' && session.date.slice(0, 10) === today)) {
-          types.push('matchday_prep');
-        }
         return types;
       })(),
     }),

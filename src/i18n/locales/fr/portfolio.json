@@ -211,10 +211,11 @@
         "description": "La date de revue est passée. Mets à jour l’objectif ou marque-le comme atteint.",
         "reason": "cet objectif a atteint sa date de revue sans être atteint"
       },
-      "matchday_prep": {
-        "title": "Préparation match de 60 secondes",
-        "description": "Définis ton rôle et ton focus pour {{opponent}} avant le coup d’envoi.",
-        "reason": "tu as enregistré un match aujourd’hui sans préparation"
+      "log_post_match": {
+        "title": "Enregistre ton match en 60 secondes",
+        "description": "Adversaire, compétition et minutes suffisent. Ajoute des stats plus tard seulement si tu les as relevées.",
+        "reasonToday": "Tu t'es préparé pour un match aujourd'hui et rien n'est encore enregistré.",
+        "reasonYesterday": "Tu t'es préparé pour un match hier et rien n'est encore enregistré."
       }
     },
     "continue": {

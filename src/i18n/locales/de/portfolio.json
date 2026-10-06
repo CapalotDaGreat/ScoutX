@@ -211,10 +211,11 @@
         "description": "Das Prüfdatum ist vorbei. Aktualisiere das Ziel oder markiere es als erreicht.",
         "reason": "dieses Ziel hat das Prüfdatum ohne Erfolg erreicht"
       },
-      "matchday_prep": {
-        "title": "60-Sekunden-Spieltagvorbereitung",
-        "description": "Lege Rolle und Fokus für {{opponent}} vor dem Anpfiff fest.",
-        "reason": "du hast heute ein Spiel eingetragen und dich noch nicht vorbereitet"
+      "log_post_match": {
+        "title": "Spiel in 60 Sekunden erfassen",
+        "description": "Gegner, Wettbewerb und Minuten reichen. Statistiken nur ergänzen, wenn du sie erfasst hast.",
+        "reasonToday": "Du hast dich heute auf ein Spiel vorbereitet und noch nichts erfasst.",
+        "reasonYesterday": "Du hast dich gestern auf ein Spiel vorbereitet und noch nichts erfasst."
       }
     },
     "continue": {

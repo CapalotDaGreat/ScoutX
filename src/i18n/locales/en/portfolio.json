@@ -211,10 +211,11 @@
         "description": "The review date passed. Update the goal or mark it achieved.",
         "reason": "this goal reached its review date without being achieved"
       },
-      "matchday_prep": {
-        "title": "60-second matchday prep",
-        "description": "Set your role and focus for {{opponent}} before kick-off.",
-        "reason": "you logged a match today and have not prepared yet"
+      "log_post_match": {
+        "title": "Log today's match in 60 seconds",
+        "description": "Opponent, competition and minutes are enough. Add stats later only if you recorded them.",
+        "reasonToday": "You prepared for a match today and nothing is logged yet.",
+        "reasonYesterday": "You prepared for a match yesterday and nothing is logged yet."
       }
     },
     "continue": {

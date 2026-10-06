@@ -211,10 +211,11 @@
         "description": "A data de revisão passou. Atualiza o objetivo ou marca-o como alcançado.",
         "reason": "este objetivo chegou à data de revisão sem ser alcançado"
       },
-      "matchday_prep": {
-        "title": "Preparação de 60 segundos",
-        "description": "Define o teu papel e foco para {{opponent}} antes do pontapé de saída.",
-        "reason": "registaste um jogo hoje e ainda não te preparaste"
+      "log_post_match": {
+        "title": "Regista o jogo em 60 segundos",
+        "description": "Adversário, competição e minutos chegam. Adiciona estatísticas depois só se as registaste.",
+        "reasonToday": "Preparaste-te para um jogo hoje e ainda não há nada registado.",
+        "reasonYesterday": "Preparaste-te para um jogo ontem e ainda não há nada registado."
       }
     },
     "continue": {

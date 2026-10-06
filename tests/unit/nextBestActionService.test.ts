@@ -239,3 +239,37 @@ describe('buildTodayPlan', () => {
     assert.equal(plan.primary?.type, 'log_training');
   });
 });
+
+describe('post-match log', () => {
+  const prep = (date: string) => ({ id: `prep-${date}`, date, type: 'match_prep' });
+
+  test('after a matchday-prep session today, asks for a 60-second match log', () => {
+    const plan = buildTodayPlan(input({ matches: [recentMatch], trainingSessions: [prep('2026-10-06')] }));
+    assert.equal(plan.primary?.type, 'log_post_match');
+    assert.equal(plan.primary?.route, 'logMatch');
+    assert.equal(plan.primary?.params.days, 0);
+  });
+
+  test('still asks the day after, but not two days later', () => {
+    const yesterday = buildTodayPlan(input({ matches: [recentMatch], trainingSessions: [prep('2026-10-05')] }));
+    assert.equal(yesterday.primary?.type, 'log_post_match');
+    assert.equal(yesterday.primary?.params.days, 1);
+    const stale = buildTodayPlan(input({ matches: [recentMatch], trainingSessions: [prep('2026-10-04')] }));
+    assert.notEqual(stale.primary?.type, 'log_post_match');
+  });
+
+  test('stops asking once a match dated on or after the prep is logged', () => {
+    const plan = buildTodayPlan(
+      input({
+        matches: [{ id: 'm2', date: '2026-10-06', opponent: 'FC Later' }, recentMatch],
+        trainingSessions: [prep('2026-10-06')],
+      }),
+    );
+    assert.ok(![plan.primary, ...plan.secondary].some((action) => action?.type === 'log_post_match'));
+  });
+
+  test('never suggests matchday prep for a match that was already logged', () => {
+    const plan = buildTodayPlan(input({ matches: [{ id: 'm3', date: '2026-10-06', opponent: 'FC Today' }] }));
+    assert.ok(![plan.primary, ...plan.secondary].some((action) => action?.type === 'log_post_match'));
+  });
+});

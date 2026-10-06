@@ -211,10 +211,11 @@
         "description": "De evaluatiedatum is voorbij. Werk het doel bij of markeer het als behaald.",
         "reason": "dit doel bereikte de evaluatiedatum zonder te zijn behaald"
       },
-      "matchday_prep": {
-        "title": "60 seconden wedstrijdvoorbereiding",
-        "description": "Zet je rol en focus voor {{opponent}} vóór de aftrap.",
-        "reason": "je hebt vandaag een wedstrijd gelogd en je nog niet voorbereid"
+      "log_post_match": {
+        "title": "Leg je wedstrijd vast in 60 seconden",
+        "description": "Tegenstander, competitie en minuten zijn genoeg. Voeg statistieken later alleen toe als je ze hebt bijgehouden.",
+        "reasonToday": "Je hebt je vandaag voorbereid op een wedstrijd en er is nog niets vastgelegd.",
+        "reasonYesterday": "Je hebt je gisteren voorbereid op een wedstrijd en er is nog niets vastgelegd."
       }
     },
     "continue": {

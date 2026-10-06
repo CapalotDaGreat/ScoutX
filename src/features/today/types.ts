@@ -21,7 +21,7 @@ export type NextBestActionType =
   | 'set_goal'
   | 'log_training'
   | 'review_goal'
-  | 'matchday_prep';
+  | 'log_post_match';
 
 export type ActionParams = Record<string, string | number>;
 

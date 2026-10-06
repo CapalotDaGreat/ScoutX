@@ -159,11 +159,14 @@ function actionCopy(t: Translate, action: NextBestAction): ActionCopy {
         description: t('portfolio:today.actions.review_goal.description', { title: str(params.title) }),
         reason: t('portfolio:today.actions.review_goal.reason'),
       };
-    case 'matchday_prep':
+    case 'log_post_match':
       return {
-        title: t('portfolio:today.actions.matchday_prep.title'),
-        description: t('portfolio:today.actions.matchday_prep.description', { opponent: str(params.opponent) }),
-        reason: t('portfolio:today.actions.matchday_prep.reason'),
+        title: t('portfolio:today.actions.log_post_match.title'),
+        description: t('portfolio:today.actions.log_post_match.description'),
+        reason:
+          num(params.days) === 0
+            ? t('portfolio:today.actions.log_post_match.reasonToday')
+            : t('portfolio:today.actions.log_post_match.reasonYesterday'),
       };
   }
 }

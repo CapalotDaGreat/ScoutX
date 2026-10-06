@@ -12,6 +12,7 @@ const REVIEW_WINDOW_DAYS = 14;
 const ANALYZE_WINDOW_DAYS = 7;
 const STALE_MATCH_DAYS = 7;
 const TRIAL_PREP_WINDOW_DAYS = 7;
+const POST_MATCH_WINDOW_DAYS = 1;
 const MAX_SECONDARY = 2;
 
 function daysBetween(fromIso: string, now: Date): number {
@@ -284,14 +285,25 @@ export function buildTodayPlan(input: TodayInput): TodayPlan {
     }
   }
 
-  if (latestMatch && daysBetween(latestMatch.date, now) === 0 && !trainingSessions.some((session) => session.type === 'match_prep' && session.date.slice(0, 10) === today)) {
-    actions.push({
-      id: 'matchday-prep',
-      type: 'matchday_prep',
-      priority: 70,
-      route: 'development',
-      params: { opponent: latestMatch.opponent },
-    });
+  // ScoutX has no fixture list, so a match-prep session is the only honest signal that a
+  // match was played. Ask for the result once, until a match dated on/after the prep exists.
+  const recentPrep = newestFirst(
+    trainingSessions.filter((session) => session.type === 'match_prep'),
+    (session) => session.date,
+  )[0];
+  if (recentPrep) {
+    const prepDay = recentPrep.date.slice(0, 10);
+    const prepAge = daysBetween(prepDay, new Date(`${today}T00:00:00Z`));
+    const loggedSince = matches.some((match) => match.date.slice(0, 10) >= prepDay);
+    if (prepAge >= 0 && prepAge <= POST_MATCH_WINDOW_DAYS && !loggedSince) {
+      actions.push({
+        id: `post-match-${recentPrep.id}`,
+        type: 'log_post_match',
+        priority: 92,
+        route: 'logMatch',
+        params: { days: prepAge },
+      });
+    }
   }
 
   const activeGoal = openGoals[0];
