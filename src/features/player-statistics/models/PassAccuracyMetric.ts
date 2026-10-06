@@ -15,7 +15,15 @@ export class PassAccuracyMetric extends BaseStatisticMetric {
   };
 
   getMatchValue(match: PlayerMatchStatistics): number {
-    return match.passAccuracy;
+    return match.passAccuracy ?? 0;
+  }
+
+  override hasMatchValue(match: PlayerMatchStatistics): boolean {
+    return match.passAccuracy !== null;
+  }
+
+  override getPlayedMatches(matches: PlayerMatchStatistics[]): PlayerMatchStatistics[] {
+    return super.getPlayedMatches(matches).filter((match) => this.hasMatchValue(match));
   }
 
   override getTotal(matches: PlayerMatchStatistics[]): number {

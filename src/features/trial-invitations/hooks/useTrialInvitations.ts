@@ -36,7 +36,7 @@ export function usePlayerTrialInvitations() {
         setIsLoading(false);
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Could not load your trials.'));
         setTrials(useMockData() ? getMockTrialsForPlayer(playerId) : []);
         setIsLoading(false);
       },
@@ -105,7 +105,7 @@ export function useScoutAllTrialInvitations() {
         setIsLoading(false);
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Could not load trials.'));
         setTrials([]);
         setIsLoading(false);
       },
@@ -154,7 +154,7 @@ export function useScoutTrialInvitations(playerId: string, playerName: string) {
         setIsLoading(false);
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Could not load trials.'));
         setTrials(useMockData() ? getMockTrialsForScoutPlayer(scoutId, playerId) : []);
         setIsLoading(false);
       },

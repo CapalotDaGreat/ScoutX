@@ -9,5 +9,5 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"],
-  "exclude": ["functions", "node_modules"]
+  "exclude": ["functions", "node_modules", "tests"]
 }

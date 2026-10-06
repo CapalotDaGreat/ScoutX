@@ -49,5 +49,11 @@
   "optional": "Optional",
   "required": "Required",
   "settings": "Ajustes",
-  "signOut": "Cerrar sesión"
+  "signOut": "Cerrar sesión",
+  "undo": "Deshacer",
+  "discard": "Descartar",
+  "removedItem": "«{{name}}» eliminado",
+  "removeFailed": "No se pudo eliminar. Ha vuelto a tu lista: inténtalo de nuevo.",
+  "remove": "Quitar",
+  "allRemoved": "Has quitado todos los momentos sugeridos. Deshaz o cierra y vuelve a abrir el estudio."
 }

@@ -7,6 +7,7 @@ import {
   type AiStatisticsContext,
 } from '@/features/ai-insights/types';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import { averageOfRecorded } from '@/features/player-statistics/utils/recordedStats';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 
 export function playerContextFromDiscoverable(player: DiscoverablePlayer): AiPlayerContext {
@@ -39,20 +40,20 @@ export function statisticsContextFromMatches(
   );
 
   const matchCount = matches.length;
+  const averages: Record<string, number> = {
+    goals: Number((totals.goals / matchCount).toFixed(2)),
+    assists: Number((totals.assists / matchCount).toFixed(2)),
+    minutes: Number((totals.minutes / matchCount).toFixed(0)),
+  };
+  const passAccuracy = averageOfRecorded(matches, 'passAccuracy');
+  if (passAccuracy !== null) {
+    averages.passAccuracy = Number(passAccuracy.toFixed(1));
+  }
 
   return {
     matchCount,
     totals,
-    averages: {
-      goals: Number((totals.goals / matchCount).toFixed(2)),
-      assists: Number((totals.assists / matchCount).toFixed(2)),
-      minutes: Number((totals.minutes / matchCount).toFixed(0)),
-      passAccuracy: Number(
-        (
-          matches.reduce((sum, match) => sum + match.passAccuracy, 0) / matchCount
-        ).toFixed(1),
-      ),
-    },
+    averages,
     recentResults: matches.slice(0, 5).map((match) => match.result),
   };
 }

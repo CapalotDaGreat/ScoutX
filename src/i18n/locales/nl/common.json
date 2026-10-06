@@ -49,5 +49,11 @@
   "optional": "Optional",
   "required": "Required",
   "settings": "Instellingen",
-  "signOut": "Uitloggen"
+  "signOut": "Uitloggen",
+  "undo": "Ongedaan maken",
+  "discard": "Weggooien",
+  "removedItem": "\"{{name}}\" verwijderd",
+  "removeFailed": "Verwijderen mislukt. Het staat weer in je lijst — probeer het opnieuw.",
+  "remove": "Verwijderen",
+  "allRemoved": "Je hebt alle voorgestelde momenten verwijderd. Maak het ongedaan of open de studio opnieuw."
 }

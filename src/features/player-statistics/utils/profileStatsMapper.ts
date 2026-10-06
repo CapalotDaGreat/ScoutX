@@ -4,6 +4,7 @@ import {
   type PlayerMatchStatistics,
   type StatisticMetricKey,
 } from '@/features/player-statistics/types';
+import { averageOfRecorded } from '@/features/player-statistics/utils/recordedStats';
 
 const profileHighlightKeys: StatisticMetricKey[] = [
   'goals',
@@ -38,10 +39,7 @@ export function mapMatchesToHomeQuickStats(
   const overview = calculatePlayerStatistics(matches);
   const goals = overview.totals.find((item) => item.key === 'goals');
   const assists = overview.totals.find((item) => item.key === 'assists');
-  const avgRating =
-    matches.length > 0
-      ? matches.reduce((sum, match) => sum + match.matchRating, 0) / matches.length
-      : 0;
+  const avgRating = averageOfRecorded(matches, 'matchRating') ?? 0;
 
   return [
     {

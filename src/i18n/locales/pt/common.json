@@ -49,5 +49,11 @@
   "optional": "Optional",
   "required": "Required",
   "settings": "Definições",
-  "signOut": "Terminar sessão"
+  "signOut": "Terminar sessão",
+  "undo": "Desfazer",
+  "discard": "Descartar",
+  "removedItem": "\"{{name}}\" removido",
+  "removeFailed": "Não foi possível remover. Voltou à tua lista — tenta novamente.",
+  "remove": "Remover",
+  "allRemoved": "Removeste todos os momentos sugeridos. Desfaz, ou fecha e volta a abrir o estúdio."
 }

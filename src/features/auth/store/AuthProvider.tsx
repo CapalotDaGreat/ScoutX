@@ -415,7 +415,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (db) {
         void setDoc(
           doc(db, 'users', userId),
-          { role, isAnonymous: false, updatedAt: new Date().toISOString() },
+          { role, roleConfirmed: true, isAnonymous: false, updatedAt: new Date().toISOString() },
           { merge: true },
         ).catch(() => {
           if (__DEV__) {

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { ChevronDown, ChevronUp, Trash2, Upload } from 'lucide-react-native';
 import { Modal } from '@/components/feedback/Modal';
+import { useSnackbar } from '@/components/feedback/Snackbar';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
 import { HighlightVideoCard } from '@/features/highlight-videos/components/HighlightVideoCard';
@@ -52,7 +54,14 @@ export function HighlightVideosManagerModal({
   const [editingVideo, setEditingVideo] = useState<HighlightVideo | null>(null);
   const [preparedUpload, setPreparedUpload] = useState<Awaited<ReturnType<typeof pickAndPrepareUpload>>>(null);
 
-  const sortedVideos = useMemo(() => sortHighlightVideos(library.videos), [library.videos]);
+  const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
+  const { showSnackbar } = useSnackbar();
+  const { t } = useAppTranslation(['common']);
+
+  const sortedVideos = useMemo(
+    () => sortHighlightVideos(library.videos).filter((video) => !pendingDeleteIds.includes(video.id)),
+    [library.videos, pendingDeleteIds],
+  );
 
   useEffect(() => {
     if (!visible) {
@@ -136,19 +145,23 @@ export function HighlightVideosManagerModal({
     await reorderVideos(next);
   };
 
+  const unhide = (videoId: string) =>
+    setPendingDeleteIds((current) => current.filter((id) => id !== videoId));
+
   const confirmDelete = (video: HighlightVideo) => {
-    Alert.alert('Delete Video', `Remove "${video.title}" from your library?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => {
-          void deleteVideo(video.id).catch((error: unknown) => {
-            Alert.alert('Delete Error', toUserMessage(error, 'Could not delete video.'));
-          });
-        },
+    setPendingDeleteIds((current) => [...current, video.id]);
+    showSnackbar({
+      message: t('common:removedItem', { name: video.title }),
+      actionLabel: t('common:undo'),
+      onAction: () => unhide(video.id),
+      onTimeout: () => {
+        deleteVideo(video.id)
+          .catch((error: unknown) => {
+            Alert.alert(t('common:errorTitle'), toUserMessage(error, t('common:removeFailed')));
+          })
+          .finally(() => unhide(video.id));
       },
-    ]);
+    });
   };
 
   const handleRetryUpload = async (videoId: string) => {
@@ -263,7 +276,12 @@ export function HighlightVideosManagerModal({
                     <Button variant="secondary" size="sm" onPress={() => void moveVideo(video.id, 'down')}>
                       <ChevronDown size={16} color={colors.textPrimary} />
                     </Button>
-                    <Button variant="secondary" size="sm" onPress={() => confirmDelete(video)}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      accessibilityLabel={`${t('common:delete')}: ${video.title}`}
+                      onPress={() => confirmDelete(video)}
+                    >
                       <Trash2 size={16} color={colors.error} />
                     </Button>
                   </View>

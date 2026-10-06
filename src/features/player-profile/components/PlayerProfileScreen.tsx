@@ -3,7 +3,7 @@
  * hero, passport score, onboarding, quick stats/activity, trust,
  * passport CTAs (no privacy editor), identity entry, Settings footer.
  */
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
@@ -63,6 +63,8 @@ export type PlayerProfileScreenProps = {
   passportSettingsFocusKey?: number | null;
   onSettingsPress?: () => void;
   embeddedInTabShell?: boolean;
+  /** Today section (next best action, continue, snapshots) rendered directly under the hero. */
+  todaySlot?: ReactNode;
 };
 
 export function PlayerProfileScreen({
@@ -88,6 +90,7 @@ export function PlayerProfileScreen({
   passportSettingsFocusKey = null,
   onSettingsPress,
   embeddedInTabShell = false,
+  todaySlot,
 }: PlayerProfileScreenProps) {
   const { t } = useAppTranslation(['portfolio', 'common', 'settings']);
   const { user } = useAuth();
@@ -177,6 +180,14 @@ export function PlayerProfileScreen({
       <View className="gap-6">
         <ProfileHero profile={profile} trustProfile={trustProfile} onEditPress={onEditPress} />
 
+        {todaySlot}
+
+        <HomePerformanceOverview
+          matches={profile.statisticsMatches}
+          onLogMatchPress={onLogMatchPress}
+          onViewAllMatchesPress={onViewPerformancePress}
+        />
+
         <FootballPassportScoreCard
           playerId={profile.id}
           profile={profile}
@@ -194,11 +205,6 @@ export function PlayerProfileScreen({
         ) : null}
 
         <ProfileStatsGrid stats={homeQuickStats} compact />
-        <HomePerformanceOverview
-          matches={profile.statisticsMatches}
-          onLogMatchPress={onLogMatchPress}
-          onViewAllMatchesPress={onViewPerformancePress}
-        />
 
         {onActivityPress ? <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} /> : null}
 

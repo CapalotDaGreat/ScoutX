@@ -8,15 +8,32 @@ service firebase.storage {
 
     match /profiles/{userId}/videos/{videoId}/{fileName} {
       allow read: if isOwner(userId);
-      allow write: if isOwner(userId)
-        && request.resource.size < 100 * 1024 * 1024;
+      allow create, update: if isOwner(userId)
+        && (
+          (fileName == 'video.mp4'
+            && request.resource.contentType.matches('video/.*')
+            && request.resource.size < 100 * 1024 * 1024)
+          || (fileName == 'thumb.jpg'
+            && request.resource.contentType.matches('image/.*')
+            && request.resource.size < 5 * 1024 * 1024)
+        );
       allow delete: if isOwner(userId);
     }
 
-    match /profiles/{userId}/matchFootage/{jobId}/{allPaths=**} {
+    match /profiles/{userId}/matchFootage/{jobId}/video.mp4 {
       allow read: if isOwner(userId);
-      allow write: if isOwner(userId)
+      allow create, update: if isOwner(userId)
+        && request.resource.contentType.matches('video/.*')
         && request.resource.size < 4 * 1024 * 1024 * 1024;
+      allow delete: if isOwner(userId);
+    }
+
+    match /profiles/{userId}/matchFootage/{jobId}/frames/{fileName} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && fileName.matches('frame_[0-9]+\\.jpg')
+        && request.resource.contentType.matches('image/.*')
+        && request.resource.size < 2 * 1024 * 1024;
       allow delete: if isOwner(userId);
     }
 

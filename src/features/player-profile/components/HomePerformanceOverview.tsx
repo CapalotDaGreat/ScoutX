@@ -52,7 +52,7 @@ export function HomePerformanceOverview({
           <View className="min-w-0 flex-1 pr-3">
             <Heading level={3}>{t('portfolio:recentMatches')}</Heading>
             <Text variant="caption" color="secondary" className="mt-0.5">
-              Latest form at a glance
+              {t('portfolio:today.recentFormSubtitle')}
             </Text>
           </View>
         </View>

@@ -22,42 +22,28 @@ export type StatisticMetricDefinition = {
   maxRadarValue: number;
 };
 
+/** `null` means the player did not record the value — never substitute a default. */
 export type PlayerMatchStatistics = {
   id: string;
   date: string;
   opponent: string;
   competition: string;
   result: string;
+  position?: string;
   minutes: number;
   goals: number;
   assists: number;
   cleanSheet: boolean;
-  passAccuracy: number;
+  passAccuracy: number | null;
   shots: number;
   tackles: number;
   yellowCards: number;
   redCards: number;
-  matchRating: number;
+  matchRating: number | null;
   notes: string;
 };
 
-export type MatchLogPayload = {
-  date: string;
-  opponent: string;
-  competition: string;
-  result: string;
-  minutes: number;
-  goals: number;
-  assists: number;
-  cleanSheet: boolean;
-  passAccuracy: number;
-  shots: number;
-  tackles: number;
-  yellowCards: number;
-  redCards: number;
-  matchRating: number;
-  notes: string;
-};
+export type MatchLogPayload = Omit<PlayerMatchStatistics, 'id'>;
 
 export type StatisticTrend = {
   value: string;

@@ -137,5 +137,124 @@
     "trialsQuickActionTitle":  "Trial invitations",
     "trialsQuickActionSubtitle":  "Accept, decline, and track scout invitations",
     "privacyManagedInSettings":  "Portfolio \u0026 discovery privacy is managed in Settings.",
-    "managePrivacy":  "Manage privacy"
+    "managePrivacy":  "Manage privacy",
+    "today":  {
+        "title": "Aujourd'hui",
+        "nextBestAction": "Prochaine action conseillée",
+        "why": "Pourquoi : {{reason}}",
+        "alsoWorthDoing": "À faire aussi",
+        "continueTitle": "Reprendre là où tu en étais",
+        "continueAction": "Reprendre",
+        "upToDateTitle": "Tu es à jour",
+        "upToDateDescription": "Rien d'urgent pour l'instant. Enregistre ton prochain match après avoir joué.",
+        "analysesUnavailable": "Impossible de charger tes analyses, les suggestions d'analyse sont donc en pause. Tire pour actualiser.",
+        "actions": {
+            "log_first_match": {
+                "title": "Enregistre ton premier match",
+                "description": "Moins d'une minute pour lancer ton histoire footballistique.",
+                "reason": "tu n'as encore enregistré aucun match"
+            },
+            "log_match": {
+                "title": "Enregistre ton dernier match",
+                "description": "Garde ton historique et ton Passport à jour.",
+                "reason": "ton dernier match enregistré date de {{days}} jours"
+            },
+            "retry_analysis": {
+                "title": "Relance l'analyse de ton match",
+                "description": "Ta vidéo est déjà en ligne : un seul geste suffit.",
+                "reason": "l'analyse de ton match contre {{opponent}} n'a pas abouti"
+            },
+            "review_coaching": {
+                "title": "Consulte ton retour coaching",
+                "description": "Vois ce que l'analyse a observé contre {{opponent}} et ce qu'il faut travailler.",
+                "reason": "ton analyse contre {{opponent}} est prête et tu ne l'as pas encore ouverte"
+            },
+            "analyze_match": {
+                "title": "Analyse ton match contre {{opponent}}",
+                "description": "Importe la vidéo pour un coaching fondé sur des preuves.",
+                "reason": "tu as enregistré ce match mais il n'a pas encore d'analyse"
+            },
+            "respond_trial": {
+                "title": "Réponds à ton invitation à l'essai",
+                "description": "{{club}} attend ta réponse.",
+                "reason": "une invitation à l'essai attend ta réponse"
+            },
+            "prepare_trial": {
+                "title": "Prépare ton essai à {{club}}",
+                "description": "Vérifie les détails et prépare ton Passport.",
+                "reasonToday": "ton essai a lieu aujourd'hui",
+                "reasonTomorrow": "ton essai a lieu demain",
+                "reasonDays": "ton essai a lieu dans {{days}} jours"
+            },
+            "improve_passport": {
+                "title": "Complète ton Football Passport",
+                "description": "Prochaine étape : {{step}}",
+                "reason": "{{done}} étapes sur {{total}} du Passport sont terminées"
+            },
+            "build_reel": {
+                "title": "Crée ton premier reel de highlights",
+                "description": "Transforme les moments de ton match analysé en reel.",
+                "reason": "tu as un match analysé mais pas encore de vidéo de highlights"
+            }
+        },
+        "continue": {
+            "match_draft": {
+                "title": "Saisie de match inachevée",
+                "description": "contre {{opponent}} · enregistré {{time}}",
+                "descriptionNoOpponent": "Enregistré {{time}}"
+            },
+            "failed_analysis": {
+                "title": "L'analyse doit être relancée",
+                "description": "Match contre {{opponent}}"
+            },
+            "analysis_in_progress": {
+                "title": "Analyse en cours",
+                "description": "Match contre {{opponent}}"
+            },
+            "failed_upload": {
+                "title": "L'import de la vidéo n'a pas abouti",
+                "description": "{{title}}"
+            },
+            "incomplete_passport": {
+                "title": "Configuration du Passport",
+                "description": "{{done}} étapes sur {{total}} terminées"
+            }
+        },
+        "latestMatch": {
+            "title": "Dernier match",
+            "emptyTitle": "Aucun match pour le moment",
+            "emptyDescription": "Enregistre ton premier match pour commencer ton histoire footballistique.",
+            "emptyAction": "Enregistrer un match",
+            "minutes": "{{count}} min",
+            "goalsAssists": "{{goals}} B · {{assists}} PD",
+            "rating": "Note {{rating}}",
+            "viewAll": "Tous les matchs"
+        },
+        "latestAnalysis": {
+            "title": "Dernière analyse",
+            "emptyTitle": "Aucune analyse pour le moment",
+            "emptyDescription": "Importe une vidéo de match pour recevoir une analyse de ta performance fondée sur des preuves.",
+            "emptyAction": "Analyser une vidéo",
+            "complete": "Prête à consulter",
+            "failed": "À relancer",
+            "processing": "Analyse en cours…",
+            "uploading": "Import interrompu",
+            "open": "Ouvrir",
+            "loadError": "Impossible de charger tes analyses pour le moment. Tes données sont en sécurité."
+        },
+        "upcomingTrial": {
+            "title": "Essai à venir",
+            "pending": "En attente de ta réponse",
+            "accepted": "Confirmé",
+            "open": "Voir l'essai"
+        },
+        "recentFormSubtitle": "La forme récente en un coup d'œil",
+        "passportSteps": {
+            "log_first_match": "Enregistre ton premier match",
+            "claim_username": "Réserve ton lien Passport",
+            "enable_passport": "Publie ton Football Passport",
+            "invite_coach": "Invite un coach à te recommander",
+            "enable_discoverable": "Deviens visible pour les recruteurs"
+        }
+    }
 }

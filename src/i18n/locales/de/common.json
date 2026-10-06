@@ -49,5 +49,11 @@
   "optional": "Optional",
   "required": "Required",
   "settings": "Einstellungen",
-  "signOut": "Abmelden"
+  "signOut": "Abmelden",
+  "undo": "Rückgängig",
+  "discard": "Verwerfen",
+  "removedItem": "„{{name}}“ entfernt",
+  "removeFailed": "Entfernen fehlgeschlagen. Es ist wieder in deiner Liste – versuche es erneut.",
+  "remove": "Entfernen",
+  "allRemoved": "Du hast alle vorgeschlagenen Momente entfernt. Mach es rückgängig oder öffne das Studio erneut."
 }

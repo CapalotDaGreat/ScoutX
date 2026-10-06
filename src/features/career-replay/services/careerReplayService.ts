@@ -33,7 +33,10 @@ export function buildCareerReplayData(
   const assists = stats.totals.find((item) => item.key === 'assists')?.value ?? 0;
   const bestMatch = seasonMatches.reduce<(typeof seasonMatches)[number] | null>(
     (best, match) => {
-      if (!best || match.matchRating > best.matchRating) {
+      if (match.matchRating === null) {
+        return best;
+      }
+      if (!best || match.matchRating > (best.matchRating ?? 0)) {
         return match;
       }
       return best;

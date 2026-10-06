@@ -29,7 +29,49 @@ type ActivityDoc = {
   title?: string;
   body?: string;
   type?: string;
+  reference?: { entityType?: string; entityId?: string } | null;
 };
+
+/**
+ * Push copy is fixed server-side: activity title/body are client-written and must not be
+ * relayed to another user's lock screen (phishing / harassment vector).
+ */
+const PUSH_COPY: Record<string, { title: string; body: string }> = {
+  portfolio_viewed: {
+    title: 'Football Passport viewed',
+    body: 'Someone viewed your Football Passport. Open ScoutX to see details.',
+  },
+  recommendation_received: {
+    title: 'New recommendation',
+    body: 'You received a new recommendation on your Football Passport.',
+  },
+  trial_invitation: {
+    title: 'Trial invitation',
+    body: 'You have a new trial invitation. Open ScoutX to respond.',
+  },
+};
+
+/** Self-addressed system activities may use their own copy (the author is the recipient). */
+function resolvePushCopy(activity: ActivityDoc): { title: string; body: string } | null {
+  const type = activity.type ?? '';
+  if (PUSH_COPY[type]) {
+    return PUSH_COPY[type];
+  }
+  if (activity.actorId === 'system' && activity.title && activity.body) {
+    return { title: activity.title.slice(0, 120), body: activity.body.slice(0, 300) };
+  }
+  return null;
+}
+
+async function isGenuineTrialInvitation(activity: ActivityDoc): Promise<boolean> {
+  const trialId = activity.reference?.entityId;
+  if (!trialId || typeof trialId !== 'string') {
+    return false;
+  }
+  const trial = await getFirestore().collection('trialInvitations').doc(trialId).get();
+  const data = trial.data() as { scoutId?: string; playerId?: string } | undefined;
+  return data?.scoutId === activity.actorId && data?.playerId === activity.recipientId;
+}
 
 const HOUR_MS = 60 * 60 * 1000;
 
@@ -39,7 +81,7 @@ const PUSH_COOLDOWN_MS: Record<string, number> = {
   recommendation_received: 0.25 * HOUR_MS,
   milestone_earned: 1 * HOUR_MS,
   weekly_report_ready: 24 * HOUR_MS,
-  trial_invitation: 0,
+  trial_invitation: 2 * 60 * 1000,
 };
 
 const PUSH_THROTTLE_COLLECTION = 'pushThrottle';
@@ -102,6 +144,18 @@ export const onActivityCreatedPush = onDocumentCreated(
       return;
     }
 
+    const copy = resolvePushCopy(activity);
+    if (!copy) {
+      return;
+    }
+
+    if (activity.type === 'trial_invitation' && !(await isGenuineTrialInvitation(activity))) {
+      logger.warn('Skipping push for unverified trial invitation activity', {
+        recipientId: activity.recipientId,
+      });
+      return;
+    }
+
     if (!(await claimPushSlot(activity.recipientId, activity.type))) {
       logger.info('Push throttled', { recipientId: activity.recipientId, type: activity.type });
       return;
@@ -119,7 +173,7 @@ export const onActivityCreatedPush = onDocumentCreated(
     }
 
     try {
-      await sendExpoPush(tokenData.token, activity.title, activity.body);
+      await sendExpoPush(tokenData.token, copy.title, copy.body);
       logger.info('Push notification sent', {
         recipientId: activity.recipientId,
         type: activity.type,

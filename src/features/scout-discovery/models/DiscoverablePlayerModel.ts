@@ -8,6 +8,7 @@ import {
   type RadarStat,
 } from '@/features/scout-discovery/types';
 import { calculatePlayerStatistics } from '@/features/player-statistics/services/statisticsCalculator';
+import { averageOfRecorded } from '@/features/player-statistics/utils/recordedStats';
 
 const POSITION_ALIASES: Record<string, PlayerPosition> = {
   gk: 'GK',
@@ -123,7 +124,10 @@ function computeOverallRating(profile: PlayerProfile): number {
   if (matches.length === 0) {
     return 55;
   }
-  const avgRating = matches.reduce((sum, match) => sum + match.matchRating, 0) / matches.length;
+  const avgRating = averageOfRecorded(matches, 'matchRating');
+  if (avgRating === null) {
+    return 55;
+  }
   return Math.min(99, Math.max(40, Math.round(avgRating * 10)));
 }
 

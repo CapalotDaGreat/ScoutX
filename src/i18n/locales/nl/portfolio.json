@@ -137,5 +137,124 @@
     "trialsQuickActionTitle":  "Trial invitations",
     "trialsQuickActionSubtitle":  "Accept, decline, and track scout invitations",
     "privacyManagedInSettings":  "Portfolio \u0026 discovery privacy is managed in Settings.",
-    "managePrivacy":  "Manage privacy"
+    "managePrivacy":  "Manage privacy",
+    "today":  {
+        "title": "Vandaag",
+        "nextBestAction": "Beste volgende stap",
+        "why": "Waarom: {{reason}}",
+        "alsoWorthDoing": "Ook de moeite waard",
+        "continueTitle": "Ga verder waar je gebleven was",
+        "continueAction": "Doorgaan",
+        "upToDateTitle": "Je bent helemaal bij",
+        "upToDateDescription": "Niets dringends op dit moment. Leg je volgende wedstrijd vast nadat je hebt gespeeld.",
+        "analysesUnavailable": "We konden je analyses niet laden, dus analysesuggesties staan op pauze. Trek omlaag om te vernieuwen.",
+        "actions": {
+            "log_first_match": {
+                "title": "Leg je eerste wedstrijd vast",
+                "description": "Duurt minder dan een minuut en start je voetbalgeschiedenis.",
+                "reason": "je hebt nog geen wedstrijd vastgelegd"
+            },
+            "log_match": {
+                "title": "Leg je laatste wedstrijd vast",
+                "description": "Houd je wedstrijdhistorie en Passport actueel.",
+                "reason": "je laatst vastgelegde wedstrijd is {{days}} dagen geleden"
+            },
+            "retry_analysis": {
+                "title": "Probeer je wedstrijdanalyse opnieuw",
+                "description": "Je beelden zijn al geüpload — één tik is genoeg.",
+                "reason": "de analyse van je wedstrijd tegen {{opponent}} is niet afgerond"
+            },
+            "review_coaching": {
+                "title": "Bekijk je coachingsfeedback",
+                "description": "Zie wat de analyse tegen {{opponent}} heeft waargenomen en waaraan je kunt werken.",
+                "reason": "je analyse tegen {{opponent}} is klaar en je hebt hem nog niet geopend"
+            },
+            "analyze_match": {
+                "title": "Analyseer je wedstrijd tegen {{opponent}}",
+                "description": "Upload de beelden voor onderbouwde coaching.",
+                "reason": "je hebt deze wedstrijd vastgelegd, maar er is nog geen analyse"
+            },
+            "respond_trial": {
+                "title": "Reageer op je uitnodiging voor een proeftraining",
+                "description": "{{club}} wacht op je antwoord.",
+                "reason": "een uitnodiging voor een proeftraining wacht op je antwoord"
+            },
+            "prepare_trial": {
+                "title": "Bereid je voor op je proeftraining bij {{club}}",
+                "description": "Controleer de details en zorg dat je Passport klaar is.",
+                "reasonToday": "je proeftraining is vandaag",
+                "reasonTomorrow": "je proeftraining is morgen",
+                "reasonDays": "je proeftraining is over {{days}} dagen"
+            },
+            "improve_passport": {
+                "title": "Maak je Football Passport compleet",
+                "description": "Volgende stap: {{step}}",
+                "reason": "{{done}} van {{total}} Passport-stappen zijn voltooid"
+            },
+            "build_reel": {
+                "title": "Maak je eerste highlight-reel",
+                "description": "Maak van momenten uit je geanalyseerde wedstrijd een reel.",
+                "reason": "je hebt een geanalyseerde wedstrijd maar nog geen highlightvideo’s"
+            }
+        },
+        "continue": {
+            "match_draft": {
+                "title": "Onafgemaakte wedstrijdinvoer",
+                "description": "tegen {{opponent}} · opgeslagen {{time}}",
+                "descriptionNoOpponent": "Opgeslagen {{time}}"
+            },
+            "failed_analysis": {
+                "title": "Analyse moet opnieuw",
+                "description": "Wedstrijd tegen {{opponent}}"
+            },
+            "analysis_in_progress": {
+                "title": "Analyse bezig",
+                "description": "Wedstrijd tegen {{opponent}}"
+            },
+            "failed_upload": {
+                "title": "Video-upload niet afgerond",
+                "description": "{{title}}"
+            },
+            "incomplete_passport": {
+                "title": "Passport instellen",
+                "description": "{{done}} van {{total}} stappen voltooid"
+            }
+        },
+        "latestMatch": {
+            "title": "Laatste wedstrijd",
+            "emptyTitle": "Nog geen wedstrijden",
+            "emptyDescription": "Leg je eerste wedstrijd vast om je voetbalgeschiedenis op te bouwen.",
+            "emptyAction": "Wedstrijd vastleggen",
+            "minutes": "{{count}} min",
+            "goalsAssists": "{{goals}} D · {{assists}} A",
+            "rating": "Cijfer {{rating}}",
+            "viewAll": "Alle wedstrijden"
+        },
+        "latestAnalysis": {
+            "title": "Laatste analyse",
+            "emptyTitle": "Nog geen analyse",
+            "emptyDescription": "Upload wedstrijdbeelden voor een onderbouwde analyse van je prestatie.",
+            "emptyAction": "Beelden analyseren",
+            "complete": "Klaar om te bekijken",
+            "failed": "Moet opnieuw",
+            "processing": "Wordt geanalyseerd…",
+            "uploading": "Upload onderbroken",
+            "open": "Openen",
+            "loadError": "We konden je analyses nu niet laden. Je gegevens zijn veilig."
+        },
+        "upcomingTrial": {
+            "title": "Komende proeftraining",
+            "pending": "Wacht op je antwoord",
+            "accepted": "Bevestigd",
+            "open": "Proeftraining bekijken"
+        },
+        "recentFormSubtitle": "Recente vorm in één oogopslag",
+        "passportSteps": {
+            "log_first_match": "Leg je eerste wedstrijd vast",
+            "claim_username": "Claim je Passport-link",
+            "enable_passport": "Publiceer je Football Passport",
+            "invite_coach": "Vraag een trainer om een aanbeveling",
+            "enable_discoverable": "Word zichtbaar voor scouts"
+        }
+    }
 }

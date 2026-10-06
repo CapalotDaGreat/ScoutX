@@ -49,5 +49,11 @@
   "optional": "Optional",
   "required": "Required",
   "settings": "Impostazioni",
-  "signOut": "Esci"
+  "signOut": "Esci",
+  "undo": "Annulla",
+  "discard": "Scarta",
+  "removedItem": "\"{{name}}\" rimosso",
+  "removeFailed": "Impossibile rimuoverlo. È tornato nell'elenco: riprova.",
+  "remove": "Rimuovi",
+  "allRemoved": "Hai rimosso tutti i momenti suggeriti. Annulla, oppure chiudi e riapri lo studio."
 }

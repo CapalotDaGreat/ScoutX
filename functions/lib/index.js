@@ -24,6 +24,44 @@ var appleAuth_1 = require("./appleAuth");
 Object.defineProperty(exports, "deleteAuthenticatedAccount", { enumerable: true, get: function () { return appleAuth_1.deleteAuthenticatedAccount; } });
 Object.defineProperty(exports, "persistAppleAuthorizationCode", { enumerable: true, get: function () { return appleAuth_1.persistAppleAuthorizationCode; } });
 (0, app_1.initializeApp)();
+/**
+ * Push copy is fixed server-side: activity title/body are client-written and must not be
+ * relayed to another user's lock screen (phishing / harassment vector).
+ */
+const PUSH_COPY = {
+    portfolio_viewed: {
+        title: 'Football Passport viewed',
+        body: 'Someone viewed your Football Passport. Open ScoutX to see details.',
+    },
+    recommendation_received: {
+        title: 'New recommendation',
+        body: 'You received a new recommendation on your Football Passport.',
+    },
+    trial_invitation: {
+        title: 'Trial invitation',
+        body: 'You have a new trial invitation. Open ScoutX to respond.',
+    },
+};
+/** Self-addressed system activities may use their own copy (the author is the recipient). */
+function resolvePushCopy(activity) {
+    const type = activity.type ?? '';
+    if (PUSH_COPY[type]) {
+        return PUSH_COPY[type];
+    }
+    if (activity.actorId === 'system' && activity.title && activity.body) {
+        return { title: activity.title.slice(0, 120), body: activity.body.slice(0, 300) };
+    }
+    return null;
+}
+async function isGenuineTrialInvitation(activity) {
+    const trialId = activity.reference?.entityId;
+    if (!trialId || typeof trialId !== 'string') {
+        return false;
+    }
+    const trial = await (0, firestore_1.getFirestore)().collection('trialInvitations').doc(trialId).get();
+    const data = trial.data();
+    return data?.scoutId === activity.actorId && data?.playerId === activity.recipientId;
+}
 const HOUR_MS = 60 * 60 * 1000;
 /** Minimum gap between pushes of the same type to one recipient, to prevent notification spam. */
 const PUSH_COOLDOWN_MS = {
@@ -31,7 +69,7 @@ const PUSH_COOLDOWN_MS = {
     recommendation_received: 0.25 * HOUR_MS,
     milestone_earned: 1 * HOUR_MS,
     weekly_report_ready: 24 * HOUR_MS,
-    trial_invitation: 0,
+    trial_invitation: 2 * 60 * 1000,
 };
 const PUSH_THROTTLE_COLLECTION = 'pushThrottle';
 /** Atomically claims a push slot; returns false when the recipient was notified too recently. */
@@ -84,6 +122,16 @@ exports.onActivityCreatedPush = (0, firestore_2.onDocumentCreated)('activities/{
     if (activity.type === 'portfolio_viewed' && activity.actorId === activity.recipientId) {
         return;
     }
+    const copy = resolvePushCopy(activity);
+    if (!copy) {
+        return;
+    }
+    if (activity.type === 'trial_invitation' && !(await isGenuineTrialInvitation(activity))) {
+        firebase_functions_1.logger.warn('Skipping push for unverified trial invitation activity', {
+            recipientId: activity.recipientId,
+        });
+        return;
+    }
     if (!(await claimPushSlot(activity.recipientId, activity.type))) {
         firebase_functions_1.logger.info('Push throttled', { recipientId: activity.recipientId, type: activity.type });
         return;
@@ -98,7 +146,7 @@ exports.onActivityCreatedPush = (0, firestore_2.onDocumentCreated)('activities/{
         return;
     }
     try {
-        await sendExpoPush(tokenData.token, activity.title, activity.body);
+        await sendExpoPush(tokenData.token, copy.title, copy.body);
         firebase_functions_1.logger.info('Push notification sent', {
             recipientId: activity.recipientId,
             type: activity.type,

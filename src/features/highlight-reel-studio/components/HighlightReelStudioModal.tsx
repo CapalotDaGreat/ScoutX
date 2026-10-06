@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
+import { useSnackbar } from '@/components/feedback/Snackbar';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
@@ -15,12 +17,32 @@ import {
   type HighlightCandidate,
 } from '@/features/highlight-reel-studio/types';
 
-function CandidateCard({ candidate }: { candidate: HighlightCandidate }) {
+function CandidateCard({
+  candidate,
+  onRemove,
+  removeLabel,
+}: {
+  candidate: HighlightCandidate;
+  onRemove: () => void;
+  removeLabel: string;
+}) {
   return (
     <Card variant="default" padding="md" className="gap-1">
-      <Text weight="semibold">{candidate.title}</Text>
+      <View className="flex-row items-center justify-between gap-2">
+        <Text weight="semibold" className="min-w-0 flex-1">
+          {candidate.title}
+        </Text>
+        <Button
+          variant="ghost"
+          size="sm"
+          accessibilityLabel={`${removeLabel}: ${candidate.title}`}
+          onPress={onRemove}
+        >
+          {removeLabel}
+        </Button>
+      </View>
       <Text variant="caption" color="secondary">
-        {candidate.eventType} · {candidate.status} · {Math.round(candidate.confidence * 100)}% confidence
+        {`${candidate.eventType} · ${candidate.status === 'needs-confirmation' ? 'Needs your review' : 'AI-suggested'} · ${Math.round(candidate.confidence * 100)}% AI confidence`}
       </Text>
       <Text variant="body-sm" color="secondary">
         {candidate.reason}
@@ -45,14 +67,36 @@ export function HighlightReelStudioModal({ visible, playerId, onClose }: Highlig
   const [preset, setPreset] = useState<HighlightReelPreset>('best-of');
   const [targetSeconds, setTargetSeconds] = useState(45);
 
-  const latestReport = recentJobs[0]?.report;
+  const latestCompleteJob = recentJobs.find((job) => job.status === 'complete' && job.report);
+  const latestReport = latestCompleteJob?.report;
+
+  const { showSnackbar } = useSnackbar();
+  const { t } = useAppTranslation(['common']);
+  const [removedIds, setRemovedIds] = useState<string[]>([]);
+  const latestJobId = latestCompleteJob?.id;
+
+  useEffect(() => {
+    setRemovedIds([]);
+  }, [latestJobId, visible]);
 
   const candidates = useMemo(() => {
-    if (!latestReport) {
+    if (!latestCompleteJob?.report) {
       return [];
     }
-    return buildHighlightCandidatesFromReport(latestReport, recentJobs[0]?.targeting.jerseyNumber);
-  }, [latestReport, recentJobs]);
+    return buildHighlightCandidatesFromReport(
+      latestCompleteJob.report,
+      latestCompleteJob.targeting.jerseyNumber,
+    ).filter((candidate) => !removedIds.includes(candidate.id));
+  }, [latestCompleteJob, removedIds]);
+
+  const removeCandidate = (candidate: HighlightCandidate) => {
+    setRemovedIds((current) => [...current, candidate.id]);
+    showSnackbar({
+      message: t('common:removedItem', { name: candidate.title }),
+      actionLabel: t('common:undo'),
+      onAction: () => setRemovedIds((current) => current.filter((id) => id !== candidate.id)),
+    });
+  };
 
   const reelPlan = useMemo(() => {
     if (!candidates.length) {
@@ -105,7 +149,7 @@ export function HighlightReelStudioModal({ visible, playerId, onClose }: Highlig
               <Heading level={3}>{reelPlan.title}</Heading>
               <Text variant="body-sm" color="secondary">{reelPlan.description}</Text>
               <Text variant="caption" color="secondary">
-                Quality score {reelPlan.qualityScore}/100 · {reelPlan.coverage}
+                {`Average AI confidence ${reelPlan.qualityScore}% · ${reelPlan.coverage}`}
               </Text>
             </Card>
 
@@ -113,11 +157,22 @@ export function HighlightReelStudioModal({ visible, playerId, onClose }: Highlig
               <Heading level={3}>AI-selected moments</Heading>
               <View className="gap-2">
                 {reelPlan.candidates.map((candidate) => (
-                  <CandidateCard key={candidate.id} candidate={candidate} />
+                  <CandidateCard
+                    key={candidate.id}
+                    candidate={candidate}
+                    removeLabel={t('common:remove')}
+                    onRemove={() => removeCandidate(candidate)}
+                  />
                 ))}
               </View>
             </Card>
           </>
+        ) : latestReport && removedIds.length > 0 ? (
+          <Card variant="default" padding="lg">
+            <Text variant="body-sm" color="secondary">
+              {t('common:allRemoved')}
+            </Text>
+          </Card>
         ) : (
           <Card variant="default" padding="lg">
             <Text variant="body-sm" color="secondary">

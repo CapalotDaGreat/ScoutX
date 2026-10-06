@@ -137,5 +137,124 @@
   "trialsQuickActionTitle": "Trial invitations",
   "trialsQuickActionSubtitle": "Accept, decline, and track scout invitations",
   "privacyManagedInSettings": "Portfolio & discovery privacy is managed in Settings.",
-  "managePrivacy": "Manage privacy"
+  "managePrivacy": "Manage privacy",
+  "today": {
+    "title": "Today",
+    "nextBestAction": "Next best action",
+    "why": "Why: {{reason}}",
+    "alsoWorthDoing": "Also worth doing",
+    "continueTitle": "Continue where you left off",
+    "continueAction": "Continue",
+    "upToDateTitle": "You're up to date",
+    "upToDateDescription": "Nothing urgent right now. Log your next match after you play.",
+    "analysesUnavailable": "We couldn't load your analyses, so analysis suggestions are paused. Pull to refresh.",
+    "actions": {
+      "log_first_match": {
+        "title": "Log your first match",
+        "description": "It takes under a minute and starts your football history.",
+        "reason": "you haven't logged a match yet"
+      },
+      "log_match": {
+        "title": "Log your latest match",
+        "description": "Keep your match history and Passport current.",
+        "reason": "your last logged match was {{days}} days ago"
+      },
+      "retry_analysis": {
+        "title": "Retry your match analysis",
+        "description": "Your footage is already uploaded — retrying takes one tap.",
+        "reason": "the analysis of your match vs {{opponent}} did not finish"
+      },
+      "review_coaching": {
+        "title": "Review your coaching feedback",
+        "description": "See what the analysis observed vs {{opponent}} and what to work on.",
+        "reason": "your analysis vs {{opponent}} is ready and you haven't opened it yet"
+      },
+      "analyze_match": {
+        "title": "Analyze your match vs {{opponent}}",
+        "description": "Upload the footage to get evidence-based coaching.",
+        "reason": "you logged this match but it has no analysis yet"
+      },
+      "respond_trial": {
+        "title": "Reply to your trial invitation",
+        "description": "{{club}} is waiting for your answer.",
+        "reason": "a trial invitation is waiting for your reply"
+      },
+      "prepare_trial": {
+        "title": "Prepare for your trial at {{club}}",
+        "description": "Check the details and make sure your Passport is ready.",
+        "reasonToday": "your trial is today",
+        "reasonTomorrow": "your trial is tomorrow",
+        "reasonDays": "your trial is in {{days}} days"
+      },
+      "improve_passport": {
+        "title": "Complete your Football Passport",
+        "description": "Next step: {{step}}",
+        "reason": "{{done}} of {{total}} Passport steps are complete"
+      },
+      "build_reel": {
+        "title": "Build your first highlight reel",
+        "description": "Turn moments from your analyzed match into a reel.",
+        "reason": "you have an analyzed match but no highlight videos yet"
+      }
+    },
+    "continue": {
+      "match_draft": {
+        "title": "Unfinished match log",
+        "description": "vs {{opponent}} · saved {{time}}",
+        "descriptionNoOpponent": "Saved {{time}}"
+      },
+      "failed_analysis": {
+        "title": "Analysis needs a retry",
+        "description": "Match vs {{opponent}}"
+      },
+      "analysis_in_progress": {
+        "title": "Analysis in progress",
+        "description": "Match vs {{opponent}}"
+      },
+      "failed_upload": {
+        "title": "Video upload didn't finish",
+        "description": "{{title}}"
+      },
+      "incomplete_passport": {
+        "title": "Passport setup",
+        "description": "{{done}} of {{total}} steps complete"
+      }
+    },
+    "latestMatch": {
+      "title": "Latest match",
+      "emptyTitle": "No matches yet",
+      "emptyDescription": "Log your first match to start building your football history.",
+      "emptyAction": "Log match",
+      "minutes": "{{count}} min",
+      "goalsAssists": "{{goals}} G · {{assists}} A",
+      "rating": "Rating {{rating}}",
+      "viewAll": "All matches"
+    },
+    "latestAnalysis": {
+      "title": "Latest analysis",
+      "emptyTitle": "No analysis yet",
+      "emptyDescription": "Upload match footage to receive evidence-based analysis of your performance.",
+      "emptyAction": "Analyze footage",
+      "complete": "Ready to review",
+      "failed": "Needs a retry",
+      "processing": "Analyzing…",
+      "uploading": "Upload interrupted",
+      "open": "Open",
+      "loadError": "We couldn't load your analyses right now. Your data is safe."
+    },
+    "upcomingTrial": {
+      "title": "Upcoming trial",
+      "pending": "Awaiting your reply",
+      "accepted": "Confirmed",
+      "open": "View trial"
+    },
+    "recentFormSubtitle": "Latest form at a glance",
+    "passportSteps": {
+      "log_first_match": "Log your first match",
+      "claim_username": "Claim your Passport link",
+      "enable_passport": "Publish your Football Passport",
+      "invite_coach": "Invite a coach endorsement",
+      "enable_discoverable": "Opt in to scout discovery"
+    }
+  }
 }

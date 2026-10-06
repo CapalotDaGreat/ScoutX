@@ -14,6 +14,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { LoadingScreen } from '@/components';
 import { RoleAwareAmbientBackdrop } from '@/components/layout/RoleAwareAmbientBackdrop';
+import { SnackbarProvider } from '@/components/feedback/Snackbar';
 import { FirebaseBootstrap } from '@/components/bootstrap/FirebaseBootstrap';
 import { initSentry, wrapWithSentry } from '@/config/sentry';
 import { ThemeProvider, useTheme } from '@/theme';
@@ -50,11 +51,13 @@ function AppContent() {
     <>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <QueryClientProvider client={queryClient}>
-        <ActivityProvider pushPort={pushNotificationPort}>
-          <AiInsightsProvider>
-            <RootNavigator />
-          </AiInsightsProvider>
-        </ActivityProvider>
+        <SnackbarProvider>
+          <ActivityProvider pushPort={pushNotificationPort}>
+            <AiInsightsProvider>
+              <RootNavigator />
+            </AiInsightsProvider>
+          </ActivityProvider>
+        </SnackbarProvider>
       </QueryClientProvider>
     </>
   );

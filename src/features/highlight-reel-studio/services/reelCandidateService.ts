@@ -30,48 +30,71 @@ function mapCategory(label: string): HighlightCandidate['category'] {
   return 'story';
 }
 
+function isValidTimestamp(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+}
+
+/**
+ * Turns AI report moments into reel candidates. Only moments with a real timestamp are used,
+ * confidence comes from the model as-is, and AI-derived clips are never labelled "verified"
+ * because nobody has confirmed them yet.
+ */
 export function buildHighlightCandidatesFromReport(
   report: MatchAnalysisReport,
   playerJersey?: string,
 ): HighlightCandidate[] {
-  const baseMoments = (report.moments ?? []).map((moment, index) => ({
-    id: `moment-${index}`,
-    title: moment.label,
-    description: moment.detail,
-    timestampSec: moment.timestampSec,
-    confidence: clamp(report.confidence * 1.1, 0.2, 0.98),
-  }));
+  const reportConfidence = isValidTimestamp(report.confidence) ? clamp(report.confidence, 0, 1) : null;
 
-  const evidence = (report.evidence ?? []).slice(0, 5).map((item, index) => ({
-    id: `evidence-${index}`,
-    title: item.label,
-    description: item.detail,
-    timestampSec: item.timestampSec ?? 0,
-    confidence: item.confidence ?? 0.5,
-  }));
+  const baseMoments = (report.moments ?? []).flatMap((moment, index) =>
+    isValidTimestamp(moment.timestampSec) && reportConfidence !== null
+      ? [
+          {
+            id: `moment-${index}`,
+            title: moment.label,
+            description: moment.detail,
+            timestampSec: moment.timestampSec,
+            confidence: reportConfidence,
+          },
+        ]
+      : [],
+  );
 
-  const candidates: HighlightCandidate[] = [...baseMoments, ...evidence].map((item, index) => {
+  const evidence = (report.evidence ?? []).slice(0, 5).flatMap((item, index) =>
+    isValidTimestamp(item.timestampSec) && typeof item.confidence === 'number'
+      ? [
+          {
+            id: `evidence-${index}`,
+            title: item.label,
+            description: item.detail,
+            timestampSec: item.timestampSec,
+            confidence: clamp(item.confidence, 0, 1),
+          },
+        ]
+      : [],
+  );
+
+  const candidates: HighlightCandidate[] = [...baseMoments, ...evidence].map((item) => {
     const eventType = buildEventType(item.title);
     const category = mapCategory(item.title);
-    const confidence = clamp(item.confidence ?? 0.65, 0.3, 0.98);
-    const highlightValue = Math.round(confidence * 100 * (category === 'technical' ? 1.2 : category === 'tactical' ? 1.15 : 1)) / 10;
+    const confidence = item.confidence;
+    const highlightValue =
+      Math.round(confidence * 100 * (category === 'technical' ? 1.2 : category === 'tactical' ? 1.15 : 1)) / 10;
 
     return {
-      id: `candidate-${item.id ?? index}`,
+      id: `candidate-${item.id}`,
       title: normalizeTitle(item.title),
       eventType,
       category,
-      description: item.description || 'Evidence-backed match moment selected from the player analysis.',
-      reason: `Selected because it aligns with the player's role and the available match evidence.`,
-      timestampSec: item.timestampSec ?? 0,
+      description: item.description || 'Match moment identified by the AI analysis.',
+      reason: 'Suggested from your match analysis. Review the clip before using it.',
+      timestampSec: item.timestampSec,
       confidence,
       highlightValue,
-      status: confidence >= 0.8 ? 'verified' : confidence >= 0.6 ? 'high-confidence' : 'needs-confirmation',
-      matchId: report.modelId,
+      status: confidence >= 0.6 ? 'high-confidence' : 'needs-confirmation',
       source: 'match-analysis',
       evidence: [
-        `Player detection confidence ${(confidence * 100).toFixed(0)}%`,
-        playerJersey ? `Target jersey #${playerJersey}` : 'Jersey continuity reviewed',
+        `AI analysis confidence ${(confidence * 100).toFixed(0)}% (not verified)`,
+        ...(playerJersey ? [`Target jersey #${playerJersey}`] : []),
         `Coverage: ${report.coverage?.confidenceLabel ?? 'Limited'}`,
       ],
     };
@@ -115,7 +138,10 @@ export function buildHighlightReelPlan(
     description: descriptions[preset],
     targetDurationSec,
     candidates: selected,
-    qualityScore: Math.round((avgConfidence + selected.length / 10) * 100),
-    coverage: selected.length > 0 ? 'Verified + high-confidence moments selected' : 'No reliable moments available',
+    qualityScore: Math.min(100, Math.round(avgConfidence * 100)),
+    coverage:
+      selected.length > 0
+        ? 'AI-suggested moments — review each clip before sharing'
+        : 'No reliable moments available',
   };
 }

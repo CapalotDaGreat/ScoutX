@@ -9,7 +9,11 @@ import { HighlightReelStudioModal } from '@/features/highlight-reel-studio';
 import { MatchAnalysisModal } from '@/features/match-analysis';
 import { PlayerProfileScreen, EditProfileModal } from '@/features/player-profile';
 import { usePlayerOnboarding } from '@/features/player-onboarding';
-import { type OnboardingStepId } from '@/features/player-onboarding/types';
+import { type OnboardingStep, type OnboardingStepId } from '@/features/player-onboarding/types';
+import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import { PlayerTodayContainer } from '@/features/today/components/PlayerTodayContainer';
+import { workflowEvents } from '@/features/today/services/workflowStores';
+import { type TodayRoute } from '@/features/today/types';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { LogMatchModal } from '@/features/player-statistics';
 import {
@@ -28,6 +32,20 @@ import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 const Tab = createBottomTabNavigator<PlayerTabParamList>();
+
+const EMPTY_ONBOARDING_STEPS: OnboardingStep[] = [];
+const EMPTY_MATCHES: PlayerMatchStatistics[] = [];
+const ONBOARDING_STEP_IDS: readonly OnboardingStepId[] = [
+  'log_first_match',
+  'claim_username',
+  'enable_passport',
+  'invite_coach',
+  'enable_discoverable',
+];
+
+function isOnboardingStepId(value: string | undefined): value is OnboardingStepId {
+  return ONBOARDING_STEP_IDS.some((id) => id === value);
+}
 
 type PlayerTabId = keyof PlayerTabParamList;
 
@@ -93,8 +111,24 @@ function PlayerTabsContainer() {
   const [isCoachInviteVisible, setIsCoachInviteVisible] = useState(false);
   const [passportSettingsFocusKey, setPassportSettingsFocusKey] = useState<number | null>(null);
 
+  const [matchAnalysisJobId, setMatchAnalysisJobId] = useState<string | null>(null);
+  const [matchAnalysisPrefill, setMatchAnalysisPrefill] = useState<{
+    opponent: string;
+    competition: string;
+    date: string;
+  } | null>(null);
+
   const openMatchAnalysis = useCallback(() => {
+    setMatchAnalysisJobId(null);
+    setMatchAnalysisPrefill(null);
     setIsMatchAnalysisVisible(true);
+  }, []);
+
+  const closeMatchAnalysis = useCallback(() => {
+    setIsMatchAnalysisVisible(false);
+    setMatchAnalysisJobId(null);
+    setMatchAnalysisPrefill(null);
+    workflowEvents.emit();
   }, []);
 
   const openLogMatch = useCallback(() => {
@@ -131,6 +165,48 @@ function PlayerTabsContainer() {
       }
     },
     [focusPassportUsername, openLogMatch, stackNavigation],
+  );
+
+  const handleTodayAction = useCallback(
+    (route: TodayRoute, entityId?: string) => {
+      switch (route) {
+        case 'logMatch':
+          openLogMatch();
+          break;
+        case 'matchAnalysis': {
+          const loggedMatch = entityId
+            ? profile?.statisticsMatches?.find((match) => match.id === entityId)
+            : undefined;
+          setMatchAnalysisJobId(loggedMatch ? null : (entityId ?? null));
+          setMatchAnalysisPrefill(
+            loggedMatch
+              ? {
+                  opponent: loggedMatch.opponent,
+                  competition: loggedMatch.competition,
+                  date: loggedMatch.date,
+                }
+              : null,
+          );
+          setIsMatchAnalysisVisible(true);
+          break;
+        }
+        case 'highlightStudio':
+          setIsHighlightReelStudioVisible(true);
+          break;
+        case 'manageVideos':
+          setIsVideosModalVisible(true);
+          break;
+        case 'trials':
+          stackNavigation.navigate('Trials');
+          break;
+        case 'passportSetup':
+          if (isOnboardingStepId(entityId)) {
+            handleOnboardingStepPress(entityId);
+          }
+          break;
+      }
+    },
+    [handleOnboardingStepPress, openLogMatch, profile?.statisticsMatches, stackNavigation],
   );
 
   return (
@@ -180,6 +256,15 @@ function PlayerTabsContainer() {
               passportSettingsFocusKey={passportSettingsFocusKey}
               onSettingsPress={() => stackNavigation.navigate('Settings')}
               embeddedInTabShell
+              todaySlot={
+                <PlayerTodayContainer
+                  userId={user?.id ?? null}
+                  profile={profile}
+                  trials={trials}
+                  onboardingSteps={onboardingReport?.steps ?? EMPTY_ONBOARDING_STEPS}
+                  onAction={handleTodayAction}
+                />
+              }
             />
           )}
         </Tab.Screen>
@@ -242,13 +327,15 @@ function PlayerTabsContainer() {
       <MatchAnalysisModal
         visible={isMatchAnalysisVisible}
         playerId={user?.id ?? null}
-        onClose={() => setIsMatchAnalysisVisible(false)}
+        initialJobId={matchAnalysisJobId}
+        prefillMatch={matchAnalysisPrefill}
+        onClose={closeMatchAnalysis}
         onApplyStats={async (payload) => {
           await saveMatch(payload);
           await refreshProfile();
         }}
         onOpenHighlightReelStudio={() => {
-          setIsMatchAnalysisVisible(false);
+          closeMatchAnalysis();
           setIsHighlightReelStudioVisible(true);
         }}
       />
@@ -264,6 +351,9 @@ function PlayerTabsContainer() {
         saving={isSaving}
         onClose={() => setIsLogMatchModalVisible(false)}
         onSave={saveMatch}
+        previousMatches={profile?.statisticsMatches ?? EMPTY_MATCHES}
+        profilePosition={profile?.position ?? ''}
+        userId={user?.id ?? null}
       />
 
       <ActivityInboxModal

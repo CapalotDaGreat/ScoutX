@@ -63,7 +63,7 @@ export function appendSystemJourneyEvents(
           goals: match.goals,
           assists: match.assists,
           minutes: match.minutes,
-          rating: match.matchRating,
+          ...(match.matchRating !== null ? { rating: match.matchRating } : {}),
         },
       ),
     );

@@ -35,6 +35,11 @@ service cloud.firestore {
         );
     }
 
+    function hasRecruiterRole() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['scout', 'coach', 'club'];
+    }
+
     function onlyChanges(keys) {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
     }
@@ -66,9 +71,17 @@ service cloud.firestore {
       return !hasForbiddenCredentialFields(request.resource.data)
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.createdAt == resource.data.createdAt
+        // A role can be chosen once during onboarding; after confirmation it is immutable.
         && (
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])
-          || validClientUserRole(request.resource.data.role)
+          || (
+            validClientUserRole(request.resource.data.role)
+            && resource.data.get('roleConfirmed', false) != true
+          )
+        )
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['roleConfirmed'])
+          || request.resource.data.roleConfirmed == true
         );
     }
 
@@ -95,9 +108,16 @@ service cloud.firestore {
     match /trustRecommendations/{recommendationId} {
       allow read: if isSignedIn()
         || (resource != null && publicPortfolioEnabled(resource.data.playerId));
+      // No self-endorsement; author and subject are immutable after creation.
       allow create: if isSignedIn()
-        && request.auth.uid == request.resource.data.authorId;
-      allow update, delete: if isSignedIn()
+        && request.auth.uid == request.resource.data.authorId
+        && request.resource.data.playerId is string
+        && request.resource.data.playerId != request.auth.uid;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.authorId
+        && request.resource.data.authorId == resource.data.authorId
+        && request.resource.data.playerId == resource.data.playerId;
+      allow delete: if isSignedIn()
         && request.auth.uid == resource.data.authorId;
     }
 
@@ -121,6 +141,11 @@ service cloud.firestore {
       allow read: if isSignedIn() && request.auth.uid == resource.data.recipientId;
       allow create: if isSignedIn()
         && request.resource.data.recipientId is string
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 200
+        && request.resource.data.body is string
+        && request.resource.data.body.size() <= 2000
+        && request.resource.data.read == false
         && (
           request.resource.data.actorId == request.auth.uid
           || (request.resource.data.actorId == 'system'
@@ -149,7 +174,8 @@ service cloud.firestore {
         && request.auth.uid == request.resource.data.blockerId
         && request.resource.data.active == true;
       allow update: if isSignedIn()
-        && request.auth.uid == resource.data.blockerId;
+        && request.auth.uid == resource.data.blockerId
+        && request.resource.data.blockerId == resource.data.blockerId;
       allow delete: if isSignedIn()
         && request.auth.uid == resource.data.blockerId;
     }
@@ -172,7 +198,10 @@ service cloud.firestore {
       );
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.scoutId
-        && request.resource.data.status == 'pending';
+        && request.resource.data.playerId is string
+        && request.resource.data.playerId != request.auth.uid
+        && request.resource.data.status == 'pending'
+        && hasRecruiterRole();
       // Scouts manage invitation details; players may only accept or decline.
       allow update: if isSignedIn() && (
         (
@@ -218,9 +247,13 @@ service cloud.firestore {
       allow create, update, delete: if false;
     }
 
+    // Usernames are first-come; only the current holder may change or release one.
     match /portfolioSlugs/{username} {
       allow read: if true;
-      allow create, update: if isSignedIn()
+      allow create: if isSignedIn()
+        && request.resource.data.playerId == request.auth.uid;
+      allow update: if isSignedIn()
+        && resource.data.playerId == request.auth.uid
         && request.resource.data.playerId == request.auth.uid;
       allow delete: if isSignedIn()
         && resource.data.playerId == request.auth.uid;
@@ -282,6 +315,7 @@ service cloud.firestore {
       allow read: if isSignedIn();
       allow create: if isSignedIn()
         && request.resource.data.entityId == request.auth.uid
+        && stateId == request.resource.data.entityType + '-' + request.auth.uid
         && validVerificationLevel(request.resource.data.level);
       allow update: if isSignedIn()
         && resource.data.entityId == request.auth.uid

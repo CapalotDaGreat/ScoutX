@@ -49,5 +49,11 @@
   "optional": "Optional",
   "required": "Required",
   "settings": "Paramètres",
-  "signOut": "Se déconnecter"
+  "signOut": "Se déconnecter",
+  "undo": "Annuler",
+  "discard": "Supprimer",
+  "removedItem": "« {{name}} » supprimé",
+  "removeFailed": "Suppression impossible. L'élément est revenu dans ta liste — réessaie.",
+  "remove": "Retirer",
+  "allRemoved": "Tu as retiré tous les moments suggérés. Annule, ou ferme et rouvre le studio."
 }

@@ -3,6 +3,7 @@ import { type PublicPortfolioData } from '@/features/public-portfolio/types';
 import { buildPublicPortfolioUrl } from '@/features/public-portfolio/constants';
 import { shareFileUri } from '@/features/share-cards/services/shareCardService';
 import { escapeHtml } from '@/utils/htmlEscape';
+import { formatRating } from '@/features/player-statistics/utils/recordedStats';
 
 export async function exportFootballCvPdf(data: PublicPortfolioData): Promise<void> {
   const { profile, recommendations } = data;
@@ -13,7 +14,7 @@ export async function exportFootballCvPdf(data: PublicPortfolioData): Promise<vo
     .slice(-8)
     .map(
       (match) =>
-        `<tr><td>${escapeHtml(match.date.slice(0, 10))}</td><td>${escapeHtml(match.opponent)}</td><td>${match.goals}</td><td>${match.assists}</td><td>${match.matchRating.toFixed(1)}</td></tr>`,
+        `<tr><td>${escapeHtml(match.date.slice(0, 10))}</td><td>${escapeHtml(match.opponent)}</td><td>${match.goals}</td><td>${match.assists}</td><td>${formatRating(match.matchRating)}</td></tr>`,
     )
     .join('');
 

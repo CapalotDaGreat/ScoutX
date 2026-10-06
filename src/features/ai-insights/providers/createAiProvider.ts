@@ -4,6 +4,7 @@ import { CloudFunctionAiProvider } from '@/features/ai-insights/providers/cloudF
 import { MockAiProvider } from '@/features/ai-insights/providers/mockAiProvider';
 import { OpenRouterAiProvider } from '@/features/ai-insights/providers/openRouterProvider';
 import { type AiProvider } from '@/features/ai-insights/providers/types';
+import { UnavailableAiProvider } from '@/features/ai-insights/providers/unavailableAiProvider';
 
 export function createAiProvider(): AiProvider {
   const config = getAiConfig();
@@ -16,7 +17,7 @@ export function createAiProvider(): AiProvider {
   }
 
   if (isProductionApp()) {
-    return new MockAiProvider();
+    return new UnavailableAiProvider();
   }
 
   if (config.providerId === 'openrouter') {

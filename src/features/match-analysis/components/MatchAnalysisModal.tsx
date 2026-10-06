@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
 import { Button } from '@/components/primitives/Button';
@@ -19,6 +19,7 @@ import {
 } from '@/features/match-analysis/types';
 import { type MatchLogPayload } from '@/features/player-statistics/types';
 import { type PickedVideoAsset } from '@/features/highlight-videos/types';
+import { markAnalysisReviewed, workflowEvents } from '@/features/today/services/workflowStores';
 
 export type MatchAnalysisModalProps = {
   visible: boolean;
@@ -26,7 +27,15 @@ export type MatchAnalysisModalProps = {
   onClose: () => void;
   onApplyStats?: (payload: MatchLogPayload) => Promise<void>;
   onOpenHighlightReelStudio?: () => void;
+  /** Opens this existing job (report or retry) once recent jobs have loaded. */
+  initialJobId?: string | null;
+  /** Prefills the match form when analyzing a match the player already logged. */
+  prefillMatch?: { opponent: string; competition: string; date: string } | null;
 };
+
+function canApplyEstimatedStats(stats: MatchEstimatedStats): boolean {
+  return stats.minutesPlayed > 0 && stats.matchRating >= 1;
+}
 
 function jobStatusLabel(job: MatchAnalysisJob): string {
   switch (job.status) {
@@ -56,7 +65,7 @@ function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
     ['Tackles', String(stats.tackles)],
     ['Duels', `${stats.duelsWon}W / ${stats.duelsLost}L`],
     ['Cards', `${stats.yellowCards}Y / ${stats.redCards}R`],
-    ['Rating', stats.matchRating.toFixed(1)],
+    ['Rating', stats.matchRating >= 1 ? stats.matchRating.toFixed(1) : 'Not rated'],
   ];
 
   return (
@@ -169,10 +178,16 @@ function ReportView({
       <Card variant="default" padding="lg" className="gap-3">
         <Heading level={3}>Estimated match stats</Heading>
         <StatGrid stats={report.estimatedStats} />
-        {onApply ? (
+        {onApply && canApplyEstimatedStats(report.estimatedStats) ? (
           <Button variant="accent" loading={applying} onPress={onApply}>
             Apply stats to my match log
           </Button>
+        ) : null}
+        {onApply && !canApplyEstimatedStats(report.estimatedStats) ? (
+          <Text variant="caption" color="secondary">
+            The AI couldn't determine your minutes or a match rating from this footage, so these
+            estimates can't be added to your match log automatically. Log the match yourself instead.
+          </Text>
         ) : null}
         {onOpenHighlightReelStudio ? (
           <Button variant="secondary" onPress={onOpenHighlightReelStudio}>
@@ -199,10 +214,12 @@ function ReportView({
         ))}
       </Card>
 
-      <Card variant="default" padding="lg" className="gap-2">
-        <Heading level={3}>Coach notes</Heading>
-        <Text variant="body-sm">{report.coachingNotes}</Text>
-      </Card>
+      {report.coachingNotes.trim() ? (
+        <Card variant="default" padding="lg" className="gap-2">
+          <Heading level={3}>Coach notes</Heading>
+          <Text variant="body-sm">{report.coachingNotes}</Text>
+        </Card>
+      ) : null}
 
       {report.evidence?.length ? (
         <Card variant="default" padding="lg" className="gap-2">
@@ -249,6 +266,8 @@ export function MatchAnalysisModal({
   onClose,
   onApplyStats,
   onOpenHighlightReelStudio,
+  initialJobId = null,
+  prefillMatch = null,
 }: MatchAnalysisModalProps) {
   const {
     activeJob,
@@ -277,6 +296,45 @@ export function MatchAnalysisModal({
 
   const showReport = activeJob?.status === 'complete' && activeJob.report;
   const retryable = !isBusy && canRetryMatchAnalysis(activeJob);
+
+  const appliedInitialRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!visible) {
+      appliedInitialRef.current = null;
+      return;
+    }
+    if (!initialJobId || appliedInitialRef.current === initialJobId) {
+      return;
+    }
+    const job = recentJobs.find((item) => item.id === initialJobId);
+    if (job) {
+      appliedInitialRef.current = initialJobId;
+      setActiveJob(job);
+    }
+  }, [initialJobId, recentJobs, setActiveJob, visible]);
+
+  useEffect(() => {
+    if (!visible || !prefillMatch) {
+      return;
+    }
+    setOpponent(prefillMatch.opponent);
+    setCompetition(prefillMatch.competition);
+    setDate(prefillMatch.date.slice(0, 10));
+  }, [prefillMatch, visible]);
+
+  const shownReportJobId = visible && showReport ? activeJob.id : null;
+  useEffect(() => {
+    if (!shownReportJobId || !playerId) {
+      return;
+    }
+    markAnalysisReviewed(playerId, shownReportJobId)
+      .then(() => workflowEvents.emit())
+      .catch((reviewError: unknown) => {
+        if (__DEV__) {
+          console.warn('[MatchAnalysisModal] Could not store reviewed state', reviewError);
+        }
+      });
+  }, [playerId, shownReportJobId]);
 
   const durationLabel = useMemo(() => {
     if (!picked) {

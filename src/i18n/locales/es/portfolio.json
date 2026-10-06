@@ -137,5 +137,124 @@
     "trialsQuickActionTitle":  "Trial invitations",
     "trialsQuickActionSubtitle":  "Accept, decline, and track scout invitations",
     "privacyManagedInSettings":  "Portfolio \u0026 discovery privacy is managed in Settings.",
-    "managePrivacy":  "Manage privacy"
+    "managePrivacy":  "Manage privacy",
+    "today":  {
+        "title": "Hoy",
+        "nextBestAction": "Siguiente paso recomendado",
+        "why": "Por qué: {{reason}}",
+        "alsoWorthDoing": "También vale la pena",
+        "continueTitle": "Continúa donde lo dejaste",
+        "continueAction": "Continuar",
+        "upToDateTitle": "Estás al día",
+        "upToDateDescription": "No hay nada urgente ahora. Registra tu próximo partido cuando juegues.",
+        "analysesUnavailable": "No pudimos cargar tus análisis, así que las sugerencias de análisis están en pausa. Desliza para actualizar.",
+        "actions": {
+            "log_first_match": {
+                "title": "Registra tu primer partido",
+                "description": "Lleva menos de un minuto y empieza tu historia futbolística.",
+                "reason": "aún no has registrado ningún partido"
+            },
+            "log_match": {
+                "title": "Registra tu último partido",
+                "description": "Mantén tu historial y tu Passport al día.",
+                "reason": "tu último partido registrado fue hace {{days}} días"
+            },
+            "retry_analysis": {
+                "title": "Reintenta el análisis del partido",
+                "description": "Tu vídeo ya está subido: reintentar es un toque.",
+                "reason": "el análisis de tu partido contra {{opponent}} no terminó"
+            },
+            "review_coaching": {
+                "title": "Revisa tu feedback de entrenamiento",
+                "description": "Mira lo que observó el análisis contra {{opponent}} y qué trabajar.",
+                "reason": "tu análisis contra {{opponent}} está listo y aún no lo has abierto"
+            },
+            "analyze_match": {
+                "title": "Analiza tu partido contra {{opponent}}",
+                "description": "Sube el vídeo para recibir coaching basado en evidencias.",
+                "reason": "registraste este partido pero aún no tiene análisis"
+            },
+            "respond_trial": {
+                "title": "Responde a tu invitación a prueba",
+                "description": "{{club}} espera tu respuesta.",
+                "reason": "una invitación a prueba espera tu respuesta"
+            },
+            "prepare_trial": {
+                "title": "Prepárate para tu prueba en {{club}}",
+                "description": "Revisa los detalles y asegúrate de que tu Passport esté listo.",
+                "reasonToday": "tu prueba es hoy",
+                "reasonTomorrow": "tu prueba es mañana",
+                "reasonDays": "tu prueba es en {{days}} días"
+            },
+            "improve_passport": {
+                "title": "Completa tu Football Passport",
+                "description": "Siguiente paso: {{step}}",
+                "reason": "{{done}} de {{total}} pasos del Passport completados"
+            },
+            "build_reel": {
+                "title": "Crea tu primer vídeo de highlights",
+                "description": "Convierte momentos de tu partido analizado en un reel.",
+                "reason": "tienes un partido analizado pero aún no tienes vídeos de highlights"
+            }
+        },
+        "continue": {
+            "match_draft": {
+                "title": "Registro de partido sin terminar",
+                "description": "contra {{opponent}} · guardado {{time}}",
+                "descriptionNoOpponent": "Guardado {{time}}"
+            },
+            "failed_analysis": {
+                "title": "El análisis necesita reintentarse",
+                "description": "Partido contra {{opponent}}"
+            },
+            "analysis_in_progress": {
+                "title": "Análisis en curso",
+                "description": "Partido contra {{opponent}}"
+            },
+            "failed_upload": {
+                "title": "La subida del vídeo no terminó",
+                "description": "{{title}}"
+            },
+            "incomplete_passport": {
+                "title": "Configuración del Passport",
+                "description": "{{done}} de {{total}} pasos completados"
+            }
+        },
+        "latestMatch": {
+            "title": "Último partido",
+            "emptyTitle": "Aún no hay partidos",
+            "emptyDescription": "Registra tu primer partido para empezar a construir tu historia futbolística.",
+            "emptyAction": "Registrar partido",
+            "minutes": "{{count}} min",
+            "goalsAssists": "{{goals}} G · {{assists}} A",
+            "rating": "Valoración {{rating}}",
+            "viewAll": "Todos los partidos"
+        },
+        "latestAnalysis": {
+            "title": "Último análisis",
+            "emptyTitle": "Aún no hay análisis",
+            "emptyDescription": "Sube vídeos de partidos para recibir un análisis de tu rendimiento basado en evidencias.",
+            "emptyAction": "Analizar vídeo",
+            "complete": "Listo para revisar",
+            "failed": "Necesita reintentarse",
+            "processing": "Analizando…",
+            "uploading": "Subida interrumpida",
+            "open": "Abrir",
+            "loadError": "No pudimos cargar tus análisis ahora mismo. Tus datos están a salvo."
+        },
+        "upcomingTrial": {
+            "title": "Próxima prueba",
+            "pending": "Esperando tu respuesta",
+            "accepted": "Confirmada",
+            "open": "Ver prueba"
+        },
+        "recentFormSubtitle": "Forma reciente de un vistazo",
+        "passportSteps": {
+            "log_first_match": "Registra tu primer partido",
+            "claim_username": "Reserva tu enlace del Passport",
+            "enable_passport": "Publica tu Football Passport",
+            "invite_coach": "Invita a un entrenador a recomendarte",
+            "enable_discoverable": "Hazte visible para los ojeadores"
+        }
+    }
 }

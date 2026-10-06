@@ -120,7 +120,7 @@ function normalizeSegments(value: unknown): Array<Record<string, unknown>> {
         label: typeof row.label === 'string' ? row.label : 'Match segment',
         startSec: Math.max(0, Math.round(asNumber(row.startSec))),
         endSec: Math.max(0, Math.round(asNumber(row.endSec))),
-        confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0.5))),
+        confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0))),
         excludedFromPerformance: Boolean(row.excludedFromPerformance),
         note: typeof row.note === 'string' ? row.note : '',
       };
@@ -149,7 +149,7 @@ function normalizeAvailability(value: unknown): Array<Record<string, unknown>> {
           row.state === 'confirmed_off_pitch'
             ? row.state
             : 'unknown',
-        confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0.5))),
+        confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0))),
         label: typeof row.label === 'string' ? row.label : 'Availability',
         note: typeof row.note === 'string' ? row.note : '',
       };
@@ -157,9 +157,25 @@ function normalizeAvailability(value: unknown): Array<Record<string, unknown>> {
     .filter(Boolean) as Array<Record<string, unknown>>;
 }
 
+function clampTimestamp(value: unknown, durationSec: number): number | null {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return null;
+  }
+  const rounded = Math.round(value);
+  if (rounded < 0 || (durationSec > 0 && rounded > durationSec)) {
+    return null;
+  }
+  return rounded;
+}
+
+/**
+ * Missing model fields become explicit "unknown" values (0 / empty) rather than plausible
+ * defaults, so the report never shows numbers the model did not produce.
+ */
 function normalizeReport(
   raw: Record<string, unknown>,
   modelId: string,
+  durationSec: number,
 ): Record<string, unknown> {
   const statsRaw =
     raw.estimatedStats && typeof raw.estimatedStats === 'object' && !Array.isArray(raw.estimatedStats)
@@ -189,8 +205,12 @@ function normalizeReport(
             return null;
           }
           const row = item as Record<string, unknown>;
+          const timestampSec = clampTimestamp(row.timestampSec, durationSec);
+          if (timestampSec === null) {
+            return null;
+          }
           return {
-            timestampSec: Math.max(0, Math.round(asNumber(row.timestampSec))),
+            timestampSec,
             label: typeof row.label === 'string' ? row.label : 'Moment',
             detail: typeof row.detail === 'string' ? row.detail : '',
           };
@@ -215,8 +235,8 @@ function normalizeReport(
               row.kind === 'inference' || row.kind === 'unknown' ? row.kind : 'observation',
             label: typeof row.label === 'string' ? row.label : 'Evidence',
             detail: typeof row.detail === 'string' ? row.detail : '',
-            confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0.5))),
-            timestampSec: row.timestampSec == null ? undefined : Math.max(0, Math.round(asNumber(row.timestampSec))),
+            confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0))),
+            timestampSec: clampTimestamp(row.timestampSec, durationSec) ?? undefined,
             source: typeof row.source === 'string' ? row.source : 'analysis',
           };
         })
@@ -247,12 +267,15 @@ function normalizeReport(
     headline: typeof raw.headline === 'string' ? raw.headline : 'Match analysis complete',
     strengths: asStringArray(raw.strengths).slice(0, 6),
     improvements: asStringArray(raw.improvements).slice(0, 6),
-    coachingNotes:
-      typeof raw.coachingNotes === 'string'
-        ? raw.coachingNotes
-        : 'Focus on decision speed in the final third.',
+    coachingNotes: typeof raw.coachingNotes === 'string' ? raw.coachingNotes : '',
     estimatedStats: {
-      minutesPlayed: Math.max(0, Math.round(asNumber(statsRaw.minutesPlayed, 90))),
+      minutesPlayed: Math.max(
+        0,
+        Math.min(
+          durationSec > 0 ? Math.ceil(durationSec / 60) : 150,
+          Math.round(asNumber(statsRaw.minutesPlayed, 0)),
+        ),
+      ),
       goals: Math.max(0, Math.round(asNumber(statsRaw.goals))),
       assists: Math.max(0, Math.round(asNumber(statsRaw.assists))),
       shots,
@@ -267,7 +290,13 @@ function normalizeReport(
       foulsCommitted: Math.max(0, Math.round(asNumber(statsRaw.foulsCommitted))),
       yellowCards: Math.max(0, Math.round(asNumber(statsRaw.yellowCards))),
       redCards: Math.max(0, Math.round(asNumber(statsRaw.redCards))),
-      matchRating: Math.max(1, Math.min(10, Number(asNumber(statsRaw.matchRating, 6.5).toFixed(1)))),
+      // 0 means "not rated"; ratings are only kept when the model returned one in range.
+      matchRating:
+        typeof statsRaw.matchRating === 'number' &&
+        statsRaw.matchRating >= 1 &&
+        statsRaw.matchRating <= 10
+          ? Number(statsRaw.matchRating.toFixed(1))
+          : 0,
       cleanSheet: Boolean(statsRaw.cleanSheet),
     },
     coverage,
@@ -280,7 +309,7 @@ function normalizeReport(
       typeof raw.tacticalSummary === 'string'
         ? raw.tacticalSummary
         : 'Analysis is evidence-first and avoids fabricating player actions when the footage is incomplete.',
-    confidence: Math.max(0, Math.min(1, asNumber(raw.confidence, 0.5))),
+    confidence: Math.max(0, Math.min(1, asNumber(raw.confidence, 0))),
     methodology:
       typeof raw.methodology === 'string'
         ? raw.methodology
@@ -290,20 +319,39 @@ function normalizeReport(
   };
 }
 
-async function fetchFrameAsDataUrl(downloadUrl: string): Promise<string | null> {
+const MAX_FRAME_BYTES = 1.8 * 1024 * 1024;
+
+/**
+ * Reads a frame from the owner's own job folder via the Admin SDK. Client-supplied
+ * download URLs are never fetched (they could point at other users' files or internal hosts).
+ */
+async function readOwnedFrameAsDataUrl(
+  uid: string,
+  jobId: string,
+  storagePath: unknown,
+): Promise<string | null> {
+  const prefix = `profiles/${uid}/matchFootage/${jobId}/frames/`;
+  if (
+    typeof storagePath !== 'string' ||
+    !storagePath.startsWith(prefix) ||
+    storagePath.includes('..')
+  ) {
+    return null;
+  }
   try {
-    const response = await fetch(downloadUrl);
-    if (!response.ok) {
+    const file = getStorage().bucket().file(storagePath);
+    const [metadata] = await file.getMetadata();
+    const size = Number(metadata.size ?? 0);
+    if (!size || size > MAX_FRAME_BYTES || !String(metadata.contentType ?? '').startsWith('image/')) {
       return null;
     }
-    const buffer = Buffer.from(await response.arrayBuffer());
-    // Keep payload manageable for multimodal APIs
-    if (buffer.byteLength > 1.8 * 1024 * 1024) {
-      return null;
-    }
+    const [buffer] = await file.download();
     return `data:image/jpeg;base64,${buffer.toString('base64')}`;
   } catch (error) {
-    logger.warn('Failed to download frame', { error, downloadUrl });
+    logger.warn('Failed to read frame', {
+      jobId,
+      message: error instanceof Error ? error.message : 'unknown',
+    });
     return null;
   }
 }
@@ -351,18 +399,22 @@ export const analyzeMatchFootage = onCall(
       'google/gemini-2.0-flash-001';
     const baseUrl = process.env.OPENROUTER_BASE_URL?.trim() || 'https://openrouter.ai/api/v1';
 
-    const frameSamples = (job.frames ?? []).slice(0, 18);
+    const candidateFrames = (Array.isArray(job.frames) ? job.frames : []).slice(0, 18);
     const imageContents: Array<{ type: 'image_url'; image_url: { url: string } }> = [];
+    // Only frames that actually loaded are described to the model, so image numbers and
+    // timestamps stay aligned.
+    const frameSamples: Array<{ timestampSec: number }> = [];
 
-    for (const frame of frameSamples) {
-      const dataUrl = await fetchFrameAsDataUrl(frame.downloadUrl);
+    for (const frame of candidateFrames) {
+      if (typeof frame?.timestampSec !== 'number' || !Number.isFinite(frame.timestampSec)) {
+        continue;
+      }
+      const dataUrl = await readOwnedFrameAsDataUrl(request.auth.uid, jobId, frame.storagePath);
       if (dataUrl) {
         imageContents.push({ type: 'image_url', image_url: { url: dataUrl } });
+        frameSamples.push({ timestampSec: frame.timestampSec });
       }
     }
-
-    // Touch Storage API so the dependency is kept for deploy packaging
-    void getStorage();
 
     if (imageContents.length < 3) {
       await jobRef.set(
@@ -510,7 +562,11 @@ export const analyzeMatchFootage = onCall(
     }
 
     try {
-      const report = normalizeReport(extractJsonFromModelText(content), model);
+      const report = normalizeReport(
+        extractJsonFromModelText(content),
+        model,
+        asNumber(job.durationSec, 0),
+      );
       await jobRef.set(
         {
           status: 'complete',

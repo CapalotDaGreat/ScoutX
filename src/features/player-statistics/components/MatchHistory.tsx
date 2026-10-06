@@ -5,6 +5,7 @@ import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { type MatchHistoryItem } from '@/features/player-statistics/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { formatRating } from '@/features/player-statistics/utils/recordedStats';
 
 export type MatchHistoryProps = {
   items: MatchHistoryItem[];
@@ -55,7 +56,7 @@ export function MatchHistory({
               {item.summary}
             </Text>
             <Text weight="semibold" color="accent">
-              {item.stats.matchRating.toFixed(1)}
+              {formatRating(item.stats.matchRating)}
             </Text>
           </View>
 

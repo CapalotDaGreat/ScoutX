@@ -49,5 +49,11 @@
   "optional": "Optional",
   "required": "Required",
   "settings": "Settings",
-  "signOut": "Sign out"
+  "signOut": "Sign out",
+  "undo": "Undo",
+  "discard": "Discard",
+  "removedItem": "\"{{name}}\" removed",
+  "removeFailed": "Couldn't remove it. It's back in your list — try again.",
+  "remove": "Remove",
+  "allRemoved": "You removed every suggested moment. Undo, or close and reopen the studio to start again."
 }

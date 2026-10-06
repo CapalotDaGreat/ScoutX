@@ -119,7 +119,7 @@ function createProgressGraph(
     key,
     label: metric.definition.label,
     trend: calculateTrend(matches, key),
-    points: matches.map((match, index) => {
+    points: matches.filter((match) => metric.hasMatchValue(match)).map((match, index) => {
       const value = metric.getMatchValue(match);
       return {
         matchId: match.id,
@@ -141,7 +141,10 @@ function createMatchHistoryItem(match: PlayerMatchStatistics): MatchHistoryItem 
     opponent: match.opponent,
     competition: match.competition,
     result: match.result,
-    summary: `${contributions} G/A, ${match.passAccuracy}% passing, ${cleanSheetLabel}`,
+    summary:
+      match.passAccuracy !== null
+        ? `${contributions} G/A, ${match.passAccuracy}% passing, ${cleanSheetLabel}`
+        : `${contributions} G/A, ${cleanSheetLabel}`,
     stats: {
       minutes: match.minutes,
       goals: match.goals,

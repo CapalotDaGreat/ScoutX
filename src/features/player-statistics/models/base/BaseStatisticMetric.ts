@@ -10,6 +10,12 @@ export abstract class BaseStatisticMetric {
 
   abstract getMatchValue(match: PlayerMatchStatistics): number;
 
+  /** False when the player did not record this metric for the match. */
+  hasMatchValue(match: PlayerMatchStatistics): boolean {
+    void match;
+    return true;
+  }
+
   getPlayedMatches(matches: PlayerMatchStatistics[]): PlayerMatchStatistics[] {
     return matches.filter((match) => match.minutes > 0);
   }

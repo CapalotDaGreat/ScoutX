@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X } from 'lucide-react-native';
+import { SnackbarHost } from '@/components/feedback/Snackbar';
 import { Heading } from '@/components/primitives/Heading';
 import { useTheme, useThemeCssVars } from '@/theme';
 import { motion } from '@/theme/tokens/motion';
@@ -196,6 +197,7 @@ export function Modal({
           </Animated.View>
         </View>
         </KeyboardAvoidingView>
+        {visible ? <SnackbarHost /> : null}
       </View>
     </RNModal>
   );
