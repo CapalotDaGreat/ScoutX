@@ -16,6 +16,7 @@ const UID_KEYED_COLLECTIONS = [
     'portfolioAnalytics',
     'recruitmentWorkspaces',
     'pushThrottle',
+    'analysisQuotas',
 ];
 /** Collections queried by an owner/participant field. */
 const OWNED_QUERIES = [

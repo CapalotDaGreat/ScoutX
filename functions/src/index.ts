@@ -16,6 +16,7 @@ export {
 export { recordPortfolioView } from './portfolioAnalytics';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
+export { askThisMatch } from './askThisMatch';
 export { deleteAuthenticatedAccount, persistAppleAuthorizationCode } from './appleAuth';
 
 initializeApp();

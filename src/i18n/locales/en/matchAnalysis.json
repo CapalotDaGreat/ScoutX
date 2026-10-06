@@ -1,0 +1,70 @@
+{
+  "preview": {
+    "title": "Analysis preview",
+    "quality": "Footage quality",
+    "frames": "{{count}} frames will be sampled",
+    "cvUnavailable": "Continuous tracking and event detection are not available. Unknown stays unknown."
+  },
+  "identity": {
+    "title": "Confirm this is you",
+    "hint": "Select sampled frames that show your jersey. Stats stay unknown until identity is confirmed.",
+    "confirm": "These frames show me",
+    "reject": "None of these show me",
+    "confirmed": "Identity confirmed for the selected frames.",
+    "rejected": "Identity was not confirmed. Countable stats stay unknown."
+  },
+  "ask": {
+    "title": "Ask this match",
+    "hint": "Questions are answered only from stored observations and events. Nothing is invented.",
+    "question": "Your question",
+    "placeholder": "e.g. Did you see a shot?",
+    "submit": "Ask",
+    "insufficient": "Not enough evidence yet"
+  },
+  "report": {
+    "title": "Match analysis",
+    "back": "Back",
+    "missing": "This analysis could not be loaded.",
+    "coverageBand": "Coverage: {{band}}",
+    "stats": "Estimated stats",
+    "statsUnknown": "Countable stats stay unknown until validated events exist.",
+    "stages": "Pipeline",
+    "emptyTimeline": "No timestamped observations were stored.",
+    "cvUnavailable": "This view needs computer-vision tracking, which is not deployed.",
+    "noVideo": "No video is available to seek.",
+    "open": "Open full report"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "timeline": "Timeline",
+    "technical": "Technical",
+    "tactical": "Tactical",
+    "coaching": "Coaching",
+    "video": "Video",
+    "ask": "Ask"
+  },
+  "band": {
+    "Excellent": "Excellent",
+    "Good": "Good",
+    "Limited": "Limited",
+    "Insufficient": "Insufficient"
+  },
+  "stageStatus": {
+    "pending": "Pending",
+    "active": "Active",
+    "complete": "Complete",
+    "failed": "Failed",
+    "unavailable": "Unavailable"
+  },
+  "modal": {
+    "title": "Analyze match video",
+    "intro": "ScoutX samples still frames across your film, asks you to confirm identity, and reports only what those frames support. Tracking and match stats stay unknown without a computer-vision worker.",
+    "pick": "Choose from Photos / Gallery",
+    "change": "Change video from Photos",
+    "analyze": "Upload & analyze",
+    "retry": "Retry analysis",
+    "recent": "Recent analyses",
+    "another": "Analyze another match",
+    "close": "Close"
+  }
+}

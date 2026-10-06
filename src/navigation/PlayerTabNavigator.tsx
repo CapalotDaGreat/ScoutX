@@ -345,6 +345,10 @@ function PlayerTabsContainer() {
           closeMatchAnalysis();
           setIsHighlightReelStudioVisible(true);
         }}
+        onOpenReport={(jobId) => {
+          closeMatchAnalysis();
+          stackNavigation.navigate('AnalysisReport', { jobId });
+        }}
       />
 
       <HighlightReelStudioModal

@@ -1,0 +1,70 @@
+{
+  "preview": {
+    "title": "Aperçu de l’analyse",
+    "quality": "Qualité de la vidéo",
+    "frames": "{{count}} images seront échantillonnées",
+    "cvUnavailable": "Le suivi continu et la détection d’événements ne sont pas disponibles. L’inconnu reste inconnu."
+  },
+  "identity": {
+    "title": "Confirme que c’est toi",
+    "hint": "Sélectionne les images qui montrent ton maillot. Les stats restent inconnues tant que l’identité n’est pas confirmée.",
+    "confirm": "Ces images me montrent",
+    "reject": "Aucune ne me montre",
+    "confirmed": "Identité confirmée pour les images sélectionnées.",
+    "rejected": "Identité non confirmée. Les stats dénombrables restent inconnues."
+  },
+  "ask": {
+    "title": "Interroger ce match",
+    "hint": "Les questions ne s’appuient que sur les observations et événements enregistrés. Rien n’est inventé.",
+    "question": "Ta question",
+    "placeholder": "ex. Y a-t-il eu un tir ?",
+    "submit": "Demander",
+    "insufficient": "Pas encore assez de preuves"
+  },
+  "report": {
+    "title": "Analyse du match",
+    "back": "Retour",
+    "missing": "Cette analyse n’a pas pu être chargée.",
+    "coverageBand": "Couverture : {{band}}",
+    "stats": "Stats estimées",
+    "statsUnknown": "Les stats dénombrables restent inconnues tant qu’il n’y a pas d’événements validés.",
+    "stages": "Pipeline",
+    "emptyTimeline": "Aucune observation horodatée n’a été enregistrée.",
+    "cvUnavailable": "Cette vue nécessite un suivi par vision, qui n’est pas déployé.",
+    "noVideo": "Aucune vidéo à parcourir.",
+    "open": "Ouvrir le rapport complet"
+  },
+  "tabs": {
+    "overview": "Aperçu",
+    "timeline": "Chronologie",
+    "technical": "Technique",
+    "tactical": "Tactique",
+    "coaching": "Coaching",
+    "video": "Vidéo",
+    "ask": "Demander"
+  },
+  "band": {
+    "Excellent": "Excellent",
+    "Good": "Bon",
+    "Limited": "Limité",
+    "Insufficient": "Insuffisant"
+  },
+  "stageStatus": {
+    "pending": "En attente",
+    "active": "Actif",
+    "complete": "Terminé",
+    "failed": "Échoué",
+    "unavailable": "Indisponible"
+  },
+  "modal": {
+    "title": "Analyser la vidéo du match",
+    "intro": "ScoutX échantillonne des images, demande une confirmation d’identité et ne rapporte que ce que ces images soutiennent. Suivi et stats restent inconnus sans worker de vision.",
+    "pick": "Choisir dans Photos / Galerie",
+    "change": "Changer la vidéo",
+    "analyze": "Téléverser et analyser",
+    "retry": "Réessayer l’analyse",
+    "recent": "Analyses récentes",
+    "another": "Analyser un autre match",
+    "close": "Fermer"
+  }
+}

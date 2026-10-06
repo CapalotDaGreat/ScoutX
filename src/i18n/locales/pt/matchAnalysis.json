@@ -1,0 +1,70 @@
+{
+  "preview": {
+    "title": "Pré-visualização da análise",
+    "quality": "Qualidade do vídeo",
+    "frames": "{{count}} fotogramas serão amostrados",
+    "cvUnavailable": "O tracking contínuo e a deteção de eventos não estão disponíveis. O desconhecido permanece desconhecido."
+  },
+  "identity": {
+    "title": "Confirma que és tu",
+    "hint": "Seleciona fotogramas que mostrem a tua camisola. As estatísticas ficam desconhecidas até a identidade ser confirmada.",
+    "confirm": "Estes fotogramas mostram-me",
+    "reject": "Nenhum me mostra",
+    "confirmed": "Identidade confirmada para os fotogramas selecionados.",
+    "rejected": "Identidade não confirmada. Estatísticas contáveis ficam desconhecidas."
+  },
+  "ask": {
+    "title": "Perguntar a este jogo",
+    "hint": "As perguntas usam apenas observações e eventos guardados. Nada é inventado.",
+    "question": "A tua pergunta",
+    "placeholder": "ex. Houve um remate?",
+    "submit": "Perguntar",
+    "insufficient": "Ainda não há evidência suficiente"
+  },
+  "report": {
+    "title": "Análise do jogo",
+    "back": "Voltar",
+    "missing": "Não foi possível carregar esta análise.",
+    "coverageBand": "Cobertura: {{band}}",
+    "stats": "Estatísticas estimadas",
+    "statsUnknown": "Estatísticas contáveis ficam desconhecidas até existirem eventos validados.",
+    "stages": "Pipeline",
+    "emptyTimeline": "Não há observações com tempo guardadas.",
+    "cvUnavailable": "Esta vista precisa de tracking por visão, que não está implantado.",
+    "noVideo": "Não há vídeo para saltar.",
+    "open": "Abrir relatório completo"
+  },
+  "tabs": {
+    "overview": "Resumo",
+    "timeline": "Linha do tempo",
+    "technical": "Técnico",
+    "tactical": "Tático",
+    "coaching": "Coaching",
+    "video": "Vídeo",
+    "ask": "Perguntar"
+  },
+  "band": {
+    "Excellent": "Excelente",
+    "Good": "Boa",
+    "Limited": "Limitada",
+    "Insufficient": "Insuficiente"
+  },
+  "stageStatus": {
+    "pending": "Pendente",
+    "active": "Ativo",
+    "complete": "Concluído",
+    "failed": "Falhou",
+    "unavailable": "Indisponível"
+  },
+  "modal": {
+    "title": "Analisar vídeo do jogo",
+    "intro": "O ScoutX amostra fotogramas, pede confirmação de identidade e só relata o que esses fotogramas sustentam. Tracking e estatísticas ficam desconhecidos sem um worker de visão.",
+    "pick": "Escolher de Fotos / Galeria",
+    "change": "Mudar vídeo",
+    "analyze": "Carregar e analisar",
+    "retry": "Repetir análise",
+    "recent": "Análises recentes",
+    "another": "Analisar outro jogo",
+    "close": "Fechar"
+  }
+}

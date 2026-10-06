@@ -35,6 +35,7 @@ export type PlayerStackParamList = {
   /** Player trial invitations inbox (stack, not a tab). */
   Trials: undefined;
   PlayerDetail: { playerId: string };
+  AnalysisReport: { jobId: string };
   PlayerLogin: undefined;
   PlayerRegister: undefined;
   PlayerForgotPassword: undefined;

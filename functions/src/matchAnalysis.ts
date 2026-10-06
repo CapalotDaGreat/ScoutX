@@ -4,14 +4,24 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { canAcquireLease, canTransitionJob, type JobStatus } from './analysis/stateMachine';
+import { normalizeObservations } from './analysis/validation';
+import {
+  ANALYSIS_DAILY_QUOTA,
+  ANALYSIS_LEASE_MS,
+  ANALYSIS_MAX_ATTEMPTS,
+  CV_UNAVAILABLE_REASON,
+  isCvWorkerStage,
+} from './analysis/workerContract';
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
 
 const MATCH_COLLECTION = 'matchAnalysisJobs';
+const QUOTA_COLLECTION = 'analysisQuotas';
 
 type MatchJobDoc = {
   playerId: string;
-  status: string;
+  status: JobStatus | string;
   targeting: {
     jerseyNumber: string;
     kitPrimaryColor: string;
@@ -27,11 +37,17 @@ type MatchJobDoc = {
   };
   durationSec: number;
   frames: Array<{
+    id?: string;
     index: number;
     timestampSec: number;
     storagePath: string;
     downloadUrl: string;
   }>;
+  idempotencyKey?: string;
+  lease?: { holder: string; until: string };
+  attempts?: number;
+  cancelRequested?: boolean;
+  identityConfirmation?: { state?: string };
 };
 
 type OpenRouterChatResponse = {
@@ -56,10 +72,6 @@ function extractJsonFromModelText(text: string): Record<string, unknown> {
   return parsed as Record<string, unknown>;
 }
 
-function asNumber(value: unknown, fallback = 0): number {
-  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
-}
-
 function asStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) {
     return [];
@@ -67,253 +79,179 @@ function asStringArray(value: unknown): string[] {
   return value.filter((item): item is string => typeof item === 'string');
 }
 
-function normalizePipelineStages(value: unknown): Array<Record<string, unknown>> {
-  if (!Array.isArray(value)) {
-    return [
-      { id: 'video-ingestion', label: 'Preparing video', status: 'complete' },
-      { id: 'match-segmentation', label: 'Finding match segments', status: 'pending' },
-      { id: 'player-identification', label: 'Identifying players', status: 'pending' },
-      { id: 'player-tracking', label: 'Tracking player', status: 'pending' },
-      { id: 'event-detection', label: 'Analyzing movements', status: 'pending' },
-      { id: 'tactical-context', label: 'Analyzing decisions', status: 'pending' },
-      { id: 'role-analysis', label: 'Assessing role execution', status: 'pending' },
-      { id: 'cross-event-reasoning', label: 'Connecting key events', status: 'pending' },
-      { id: 'coaching-synthesis', label: 'Building coaching feedback', status: 'pending' },
-      { id: 'validation', label: 'Validating evidence', status: 'pending' },
-      { id: 'final-report', label: 'Finalizing report', status: 'pending' },
-    ];
-  }
-
-  return value
-    .map((item) => {
-      if (!item || typeof item !== 'object') {
-        return null;
-      }
-      const row = item as Record<string, unknown>;
-      return {
-        id: typeof row.id === 'string' ? row.id : 'final-report',
-        label: typeof row.label === 'string' ? row.label : 'Analysis stage',
-        status:
-          row.status === 'active' || row.status === 'complete' || row.status === 'failed'
-            ? row.status
-            : 'pending',
-        note: typeof row.note === 'string' ? row.note : undefined,
-      };
-    })
-    .filter(Boolean) as Array<Record<string, unknown>>;
+function emptyStats(): Record<string, number | boolean | null> {
+  return {
+    minutesPlayed: null,
+    goals: null,
+    assists: null,
+    shots: null,
+    shotsOnTarget: null,
+    passesAttempted: null,
+    passesCompleted: null,
+    passCompletionPct: null,
+    keyPasses: null,
+    tackles: null,
+    duelsWon: null,
+    duelsLost: null,
+    foulsCommitted: null,
+    yellowCards: null,
+    redCards: null,
+    matchRating: null,
+    cleanSheet: null,
+  };
 }
 
-function normalizeSegments(value: unknown): Array<Record<string, unknown>> {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  return value
-    .map((item) => {
-      if (!item || typeof item !== 'object') {
-        return null;
-      }
-      const row = item as Record<string, unknown>;
-      return {
-        id: typeof row.id === 'string' ? row.id : 'segment',
-        type: typeof row.type === 'string' ? row.type : 'unknown',
-        label: typeof row.label === 'string' ? row.label : 'Match segment',
-        startSec: Math.max(0, Math.round(asNumber(row.startSec))),
-        endSec: Math.max(0, Math.round(asNumber(row.endSec))),
-        confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0))),
-        excludedFromPerformance: Boolean(row.excludedFromPerformance),
-        note: typeof row.note === 'string' ? row.note : '',
-      };
-    })
-    .filter(Boolean) as Array<Record<string, unknown>>;
+function honestPipelineStages(identityConfirmed: boolean): Array<Record<string, unknown>> {
+  return [
+    { id: 'video-ingestion', label: 'Preparing video', status: 'complete' },
+    {
+      id: 'match-segmentation',
+      label: 'Finding match segments',
+      status: 'unavailable',
+      note: CV_UNAVAILABLE_REASON,
+    },
+    {
+      id: 'player-identification',
+      label: 'Identifying players in sampled frames',
+      status: 'complete',
+    },
+    {
+      id: 'identity-confirmation',
+      label: 'Confirm this is you',
+      status: identityConfirmed ? 'complete' : 'pending',
+    },
+    {
+      id: 'player-tracking',
+      label: 'Continuous player tracking',
+      status: 'unavailable',
+      note: CV_UNAVAILABLE_REASON,
+    },
+    {
+      id: 'event-detection',
+      label: 'Computer-vision event detection',
+      status: 'unavailable',
+      note: CV_UNAVAILABLE_REASON,
+    },
+    {
+      id: 'tactical-context',
+      label: 'Tactical phase and pitch mapping',
+      status: 'unavailable',
+      note: CV_UNAVAILABLE_REASON,
+    },
+    {
+      id: 'role-analysis',
+      label: 'Role execution from tracking',
+      status: 'unavailable',
+      note: CV_UNAVAILABLE_REASON,
+    },
+    {
+      id: 'cross-event-reasoning',
+      label: 'Connecting detected events',
+      status: 'unavailable',
+      note: 'No validated event stream exists until event detection is available.',
+    },
+    { id: 'coaching-synthesis', label: 'Building coaching feedback', status: 'complete' },
+    { id: 'validation', label: 'Validating evidence', status: 'complete' },
+    { id: 'final-report', label: 'Finalizing report', status: 'complete' },
+  ];
 }
 
-function normalizeAvailability(value: unknown): Array<Record<string, unknown>> {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  return value
-    .map((item) => {
-      if (!item || typeof item !== 'object') {
-        return null;
-      }
-      const row = item as Record<string, unknown>;
-      return {
-        id: typeof row.id === 'string' ? row.id : 'availability-window',
-        startSec: Math.max(0, Math.round(asNumber(row.startSec))),
-        endSec: Math.max(0, Math.round(asNumber(row.endSec))),
-        state:
-          row.state === 'confirmed_visible' ||
-          row.state === 'likely_active_off_camera' ||
-          row.state === 'confirmed_off_pitch'
-            ? row.state
-            : 'unknown',
-        confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0))),
-        label: typeof row.label === 'string' ? row.label : 'Availability',
-        note: typeof row.note === 'string' ? row.note : '',
-      };
-    })
-    .filter(Boolean) as Array<Record<string, unknown>>;
+function utcDay(now: Date): string {
+  return now.toISOString().slice(0, 10);
 }
 
-function clampTimestamp(value: unknown, durationSec: number): number | null {
-  if (typeof value !== 'number' || !Number.isFinite(value)) {
-    return null;
-  }
-  const rounded = Math.round(value);
-  if (rounded < 0 || (durationSec > 0 && rounded > durationSec)) {
-    return null;
-  }
-  return rounded;
-}
-
-/**
- * Missing model fields become explicit "unknown" values (0 / empty) rather than plausible
- * defaults, so the report never shows numbers the model did not produce.
- */
 function normalizeReport(
   raw: Record<string, unknown>,
   modelId: string,
   durationSec: number,
+  frameIds: string[],
+  identityConfirmed: boolean,
 ): Record<string, unknown> {
-  const statsRaw =
-    raw.estimatedStats && typeof raw.estimatedStats === 'object' && !Array.isArray(raw.estimatedStats)
-      ? (raw.estimatedStats as Record<string, unknown>)
-      : {};
+  const knownFrameIds = new Set(frameIds);
+  const observations = normalizeObservations(raw.observations ?? raw.evidence, knownFrameIds, durationSec);
 
-  const passesAttempted = Math.max(0, Math.round(asNumber(statsRaw.passesAttempted)));
-  const passesCompleted = Math.max(
-    0,
-    Math.min(passesAttempted, Math.round(asNumber(statsRaw.passesCompleted))),
-  );
-  const passCompletionPct =
-    passesAttempted > 0
-      ? Math.round((passesCompleted / passesAttempted) * 100)
-      : Math.max(0, Math.min(100, Math.round(asNumber(statsRaw.passCompletionPct))));
+  const evidence = observations.map((item, index) => ({
+    id: `obs_${index + 1}`,
+    kind: item.kind,
+    label: item.label,
+    detail: item.detail,
+    confidence: item.kind === 'observation' ? 0.5 : 0,
+    timestampSec: item.timestampSec,
+    source: 'sampled-frame',
+    frameIds: [item.frameId],
+  }));
 
-  const shots = Math.max(0, Math.round(asNumber(statsRaw.shots)));
-  const shotsOnTarget = Math.max(
-    0,
-    Math.min(shots, Math.round(asNumber(statsRaw.shotsOnTarget))),
-  );
+  const coachingNotes =
+    typeof raw.coachingNotes === 'string' && identityConfirmed && evidence.some((item) => item.kind === 'observation')
+      ? raw.coachingNotes
+      : '';
 
-  const moments = Array.isArray(raw.moments)
-    ? raw.moments
-        .map((item) => {
-          if (!item || typeof item !== 'object') {
-            return null;
-          }
-          const row = item as Record<string, unknown>;
-          const timestampSec = clampTimestamp(row.timestampSec, durationSec);
-          if (timestampSec === null) {
-            return null;
-          }
-          return {
-            timestampSec,
-            label: typeof row.label === 'string' ? row.label : 'Moment',
-            detail: typeof row.detail === 'string' ? row.detail : '',
-          };
-        })
-        .filter(Boolean)
-    : [];
+  const strengths = identityConfirmed ? asStringArray(raw.strengths).slice(0, 6) : [];
+  const improvements = identityConfirmed ? asStringArray(raw.improvements).slice(0, 6) : [];
 
-  const coverageRaw =
-    raw.coverage && typeof raw.coverage === 'object' && !Array.isArray(raw.coverage)
-      ? (raw.coverage as Record<string, unknown>)
-      : {};
-
-  const evidence = Array.isArray(raw.evidence)
-    ? raw.evidence
-        .map((item) => {
-          if (!item || typeof item !== 'object') {
-            return null;
-          }
-          const row = item as Record<string, unknown>;
-          return {
-            kind:
-              row.kind === 'inference' || row.kind === 'unknown' ? row.kind : 'observation',
-            label: typeof row.label === 'string' ? row.label : 'Evidence',
-            detail: typeof row.detail === 'string' ? row.detail : '',
-            confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0))),
-            timestampSec: clampTimestamp(row.timestampSec, durationSec) ?? undefined,
-            source: typeof row.source === 'string' ? row.source : 'analysis',
-          };
-        })
-        .filter(Boolean)
-    : [];
-
-  const coverage = {
-    visiblePct: Math.max(0, Math.min(100, Math.round(asNumber(coverageRaw.visiblePct, 0)))),
-    likelyOffCameraPct: Math.max(
-      0,
-      Math.min(100, Math.round(asNumber(coverageRaw.likelyOffCameraPct, 0))),
-    ),
-    unknownPct: Math.max(0, Math.min(100, Math.round(asNumber(coverageRaw.unknownPct, 100)))),
-    confidenceLabel:
-      coverageRaw.confidenceLabel === 'Excellent' ||
-      coverageRaw.confidenceLabel === 'Good' ||
-      coverageRaw.confidenceLabel === 'Limited' ||
-      coverageRaw.confidenceLabel === 'Insufficient'
-        ? coverageRaw.confidenceLabel
-        : 'Limited',
-    note:
-      typeof coverageRaw.note === 'string'
-        ? coverageRaw.note
-        : 'Coverage and player availability are conservative estimates based on visible frames only.',
-  };
+  const identifiedFrameCount = new Set(observations.map((item) => item.frameId)).size;
+  let overallCoverage: 'Excellent' | 'Good' | 'Limited' | 'Insufficient' = 'Insufficient';
+  if (identifiedFrameCount >= 8) {
+    overallCoverage = 'Good';
+  } else if (identifiedFrameCount >= 3) {
+    overallCoverage = 'Limited';
+  }
 
   return {
-    headline: typeof raw.headline === 'string' ? raw.headline : 'Match analysis complete',
-    strengths: asStringArray(raw.strengths).slice(0, 6),
-    improvements: asStringArray(raw.improvements).slice(0, 6),
-    coachingNotes: typeof raw.coachingNotes === 'string' ? raw.coachingNotes : '',
-    estimatedStats: {
-      minutesPlayed: Math.max(
-        0,
-        Math.min(
-          durationSec > 0 ? Math.ceil(durationSec / 60) : 150,
-          Math.round(asNumber(statsRaw.minutesPlayed, 0)),
-        ),
-      ),
-      goals: Math.max(0, Math.round(asNumber(statsRaw.goals))),
-      assists: Math.max(0, Math.round(asNumber(statsRaw.assists))),
-      shots,
-      shotsOnTarget,
-      passesAttempted,
-      passesCompleted,
-      passCompletionPct,
-      keyPasses: Math.max(0, Math.round(asNumber(statsRaw.keyPasses))),
-      tackles: Math.max(0, Math.round(asNumber(statsRaw.tackles))),
-      duelsWon: Math.max(0, Math.round(asNumber(statsRaw.duelsWon))),
-      duelsLost: Math.max(0, Math.round(asNumber(statsRaw.duelsLost))),
-      foulsCommitted: Math.max(0, Math.round(asNumber(statsRaw.foulsCommitted))),
-      yellowCards: Math.max(0, Math.round(asNumber(statsRaw.yellowCards))),
-      redCards: Math.max(0, Math.round(asNumber(statsRaw.redCards))),
-      // 0 means "not rated"; ratings are only kept when the model returned one in range.
-      matchRating:
-        typeof statsRaw.matchRating === 'number' &&
-        statsRaw.matchRating >= 1 &&
-        statsRaw.matchRating <= 10
-          ? Number(statsRaw.matchRating.toFixed(1))
-          : 0,
-      cleanSheet: Boolean(statsRaw.cleanSheet),
+    headline:
+      typeof raw.headline === 'string' && raw.headline.trim()
+        ? raw.headline
+        : identifiedFrameCount > 0
+          ? 'Sampled-frame review complete'
+          : 'Not enough evidence yet',
+    strengths,
+    improvements,
+    coachingNotes,
+    estimatedStats: emptyStats(),
+    coverage: {
+      visiblePct: 0,
+      likelyOffCameraPct: 0,
+      unknownPct: 100,
+      confidenceLabel: overallCoverage,
+      note: 'Coverage is based on how many sampled frames cited the nominated player. Percentages of the full match are unknown without tracking.',
     },
-    coverage,
+    sampledCoverage: {
+      sampledFrameCount: frameIds.length,
+      identifiedFrameCount,
+      confidenceLabel: overallCoverage,
+    },
     evidence,
-    moments,
-    pipelineStages: normalizePipelineStages(raw.pipelineStages),
-    segments: normalizeSegments(raw.segments),
-    availability: normalizeAvailability(raw.availability),
+    events: [],
+    coachingMoments: [],
+    moments: evidence
+      .filter((item) => item.kind === 'observation')
+      .slice(0, 8)
+      .map((item) => ({
+        timestampSec: item.timestampSec,
+        label: item.label,
+        detail: item.detail,
+      })),
+    pipelineStages: honestPipelineStages(identityConfirmed).map((stage) => {
+      if (typeof stage.id === 'string' && isCvWorkerStage(stage.id)) {
+        return { ...stage, status: 'unavailable', note: CV_UNAVAILABLE_REASON };
+      }
+      return stage;
+    }),
+    segments: [],
+    availability: [],
+    confidenceDimensions: {
+      videoQuality: frameIds.length >= 6 ? 'Limited' : 'Insufficient',
+      playerIdentity: identityConfirmed ? 'Limited' : 'Insufficient',
+      cameraCoverage: overallCoverage,
+      trackingStability: 'Insufficient',
+      eventConfidence: 'Insufficient',
+      overallCoverage,
+    },
     tacticalSummary:
-      typeof raw.tacticalSummary === 'string'
-        ? raw.tacticalSummary
-        : 'Analysis is evidence-first and avoids fabricating player actions when the footage is incomplete.',
-    confidence: Math.max(0, Math.min(1, asNumber(raw.confidence, 0))),
+      'Tracking, pitch maps and event detection are unavailable. Coaching is limited to observations bound to sampled frames.',
+    confidence: null,
     methodology:
-      typeof raw.methodology === 'string'
-        ? raw.methodology
-        : 'Vision model reviewed evenly sampled frames and counted only events clearly involving the nominated jersey.',
+      'Vision model reviewed sampled still frames only. Countable match stats stay unknown until a computer-vision worker produces validated events.',
     modelId,
     generatedAt: new Date().toISOString(),
   };
@@ -321,10 +259,6 @@ function normalizeReport(
 
 const MAX_FRAME_BYTES = 1.8 * 1024 * 1024;
 
-/**
- * Reads a frame from the owner's own job folder via the Admin SDK. Client-supplied
- * download URLs are never fetched (they could point at other users' files or internal hosts).
- */
 async function readOwnedFrameAsDataUrl(
   uid: string,
   jobId: string,
@@ -356,6 +290,75 @@ async function readOwnedFrameAsDataUrl(
   }
 }
 
+async function acquireJobLease(
+  uid: string,
+  jobId: string,
+  requestId: string,
+  idempotencyKey: string | undefined,
+): Promise<MatchJobDoc> {
+  const db = getFirestore();
+  const jobRef = db.collection(MATCH_COLLECTION).doc(jobId);
+  const quotaRef = db.collection(QUOTA_COLLECTION).doc(uid);
+  const now = new Date();
+  const nowMs = now.getTime();
+  const day = utcDay(now);
+
+  return db.runTransaction(async (tx) => {
+    const snap = await tx.get(jobRef);
+    if (!snap.exists) {
+      throw new HttpsError('not-found', 'Match analysis job not found.');
+    }
+    const job = snap.data() as MatchJobDoc;
+    if (job.playerId !== uid) {
+      throw new HttpsError('permission-denied', 'You can only analyze your own footage.');
+    }
+    if (job.cancelRequested) {
+      throw new HttpsError('aborted', 'Analysis was cancelled.');
+    }
+    if (job.status === 'complete') {
+      throw new HttpsError('already-exists', 'This analysis is already complete.');
+    }
+    if (idempotencyKey && job.idempotencyKey && job.idempotencyKey !== idempotencyKey) {
+      throw new HttpsError('failed-precondition', 'Idempotency key does not match this job.');
+    }
+
+    const status = (job.status as JobStatus) || 'queued';
+    if (!canTransitionJob(status, 'processing') && status !== 'processing') {
+      throw new HttpsError('failed-precondition', `Job cannot move from ${status} to processing.`);
+    }
+    if (!canAcquireLease(job.lease, requestId, nowMs)) {
+      throw new HttpsError('aborted', 'Another analysis run holds this job.');
+    }
+
+    const attempts = typeof job.attempts === 'number' ? job.attempts : 0;
+    if (attempts >= ANALYSIS_MAX_ATTEMPTS) {
+      throw new HttpsError('resource-exhausted', 'Retry limit reached for this job.');
+    }
+
+    const quotaSnap = await tx.get(quotaRef);
+    const quota = quotaSnap.data() as { day?: string; count?: number } | undefined;
+    const count = quota?.day === day && typeof quota.count === 'number' ? quota.count : 0;
+    if (count >= ANALYSIS_DAILY_QUOTA) {
+      throw new HttpsError('resource-exhausted', 'Daily match-analysis quota reached.');
+    }
+
+    tx.set(
+      jobRef,
+      {
+        status: 'processing',
+        attempts: attempts + 1,
+        lease: { holder: requestId, until: new Date(nowMs + ANALYSIS_LEASE_MS).toISOString() },
+        updatedAt: now.toISOString(),
+        error: null,
+        ...(idempotencyKey ? { idempotencyKey } : {}),
+      },
+      { merge: true },
+    );
+    tx.set(quotaRef, { day, count: count + 1, updatedAt: now.toISOString() }, { merge: true });
+    return job;
+  });
+}
+
 export const analyzeMatchFootage = onCall(
   createCallableOptions({
     secrets: [openRouterApiKey],
@@ -367,10 +370,14 @@ export const analyzeMatchFootage = onCall(
       throw new HttpsError('unauthenticated', 'Authentication is required.');
     }
 
-    const jobId = (request.data as { jobId?: string } | null)?.jobId;
+    const payloadIn = (request.data as { jobId?: string; idempotencyKey?: string } | null) ?? {};
+    const jobId = payloadIn.jobId;
     if (!jobId || typeof jobId !== 'string') {
       throw new HttpsError('invalid-argument', 'jobId is required.');
     }
+    const idempotencyKey =
+      typeof payloadIn.idempotencyKey === 'string' ? payloadIn.idempotencyKey : undefined;
+    const requestId = `${request.auth.uid}:${jobId}:${Date.now()}`;
 
     const apiKey = openRouterApiKey.value();
     if (!apiKey) {
@@ -378,20 +385,15 @@ export const analyzeMatchFootage = onCall(
     }
 
     const jobRef = getFirestore().collection(MATCH_COLLECTION).doc(jobId);
-    const snap = await jobRef.get();
-    if (!snap.exists) {
-      throw new HttpsError('not-found', 'Match analysis job not found.');
+    let job: MatchJobDoc;
+    try {
+      job = await acquireJobLease(request.auth.uid, jobId, requestId, idempotencyKey);
+    } catch (error) {
+      if (error instanceof HttpsError) {
+        throw error;
+      }
+      throw new HttpsError('internal', 'Could not acquire analysis lease.');
     }
-
-    const job = snap.data() as MatchJobDoc;
-    if (job.playerId !== request.auth.uid) {
-      throw new HttpsError('permission-denied', 'You can only analyze your own footage.');
-    }
-
-    await jobRef.set(
-      { status: 'processing', updatedAt: new Date().toISOString(), error: null },
-      { merge: true },
-    );
 
     const model =
       process.env.OPENROUTER_VISION_MODEL?.trim() ||
@@ -401,18 +403,17 @@ export const analyzeMatchFootage = onCall(
 
     const candidateFrames = (Array.isArray(job.frames) ? job.frames : []).slice(0, 18);
     const imageContents: Array<{ type: 'image_url'; image_url: { url: string } }> = [];
-    // Only frames that actually loaded are described to the model, so image numbers and
-    // timestamps stay aligned.
-    const frameSamples: Array<{ timestampSec: number }> = [];
+    const frameSamples: Array<{ id: string; timestampSec: number }> = [];
 
-    for (const frame of candidateFrames) {
+    for (const [index, frame] of candidateFrames.entries()) {
       if (typeof frame?.timestampSec !== 'number' || !Number.isFinite(frame.timestampSec)) {
         continue;
       }
       const dataUrl = await readOwnedFrameAsDataUrl(request.auth.uid, jobId, frame.storagePath);
       if (dataUrl) {
+        const id = typeof frame.id === 'string' && frame.id ? frame.id : `frame_${frame.index ?? index}`;
         imageContents.push({ type: 'image_url', image_url: { url: dataUrl } });
-        frameSamples.push({ timestampSec: frame.timestampSec });
+        frameSamples.push({ id, timestampSec: frame.timestampSec });
       }
     }
 
@@ -421,6 +422,7 @@ export const analyzeMatchFootage = onCall(
         {
           status: 'failed',
           error: 'Not enough readable frames to analyze.',
+          lease: null,
           updatedAt: new Date().toISOString(),
         },
         { merge: true },
@@ -429,22 +431,23 @@ export const analyzeMatchFootage = onCall(
     }
 
     const frameIndexGuide = frameSamples
-      .map((frame, index) => `Image ${index + 1}: ~${frame.timestampSec}s into the match`)
+      .map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s into the recording`)
       .join('\n');
 
+    const identityConfirmed = job.identityConfirmation?.state === 'confirmed';
+
     const systemPrompt = [
-      'You are ScoutX Match Analyst, a professional football coach and performance analyst.',
-      'You ONLY evaluate ONE nominated player visible in the provided still frames from a match film.',
-      'Ignore all other players except when they interact directly with the target.',
-      'Never fabricate player actions, identity, position, movement, or match events.',
-      'If the player is off-camera, substituted, or the jersey is unreadable, prefer "insufficient evidence" over a made-up event.',
-      'Separate observation, inference, and unknown clearly in the report.',
-      'When uncertain, under-count rather than over-count and lower confidence.',
+      'You are ScoutX Match Analyst.',
+      'You ONLY describe what is visible in the provided still frames.',
+      'Never fabricate player actions, identity, position, movement, match events, or countable stats.',
+      'Do not count passes, shots, tackles, or minutes.',
+      'If the jersey is unreadable or the player is not in the frame, say so.',
+      'Every observation MUST cite a frameId from the timeline guide.',
       'Return STRICT JSON only.',
     ].join(' ');
 
     const userText = [
-      'Analyze this amateur/prosumer match footage for ONE player only.',
+      'Review sampled still frames for ONE nominated player.',
       `Target jersey number: #${job.targeting.jerseyNumber}`,
       `Kit colors: primary ${job.targeting.kitPrimaryColor}, secondary ${job.targeting.kitSecondaryColor}`,
       `Team side hint: ${job.targeting.teamSide ?? 'unknown'}`,
@@ -456,10 +459,10 @@ export const analyzeMatchFootage = onCall(
       frameIndexGuide,
       '',
       'Tasks:',
-      '1) Locate #jersey using kit colors whenever possible.',
-      '2) Report player availability and coverage, with explicit note when the player is off-camera or the footage is insufficient.',
-      '3) Estimate countable match stats for THAT player only across the visible/active periods, not by inventing a full 90-minute performance when footage is incomplete.',
-      '4) Produce coaching feedback specific to that player and call out uncertainty when needed.',
+      '1) For each frame, report whether the nominated jersey is visible.',
+      '2) Describe only visible actions, bound to frameId.',
+      '3) Do not estimate match stats or a rating.',
+      identityConfirmed ? '4) Identity was confirmed by the player for selected frames.' : '4) Identity is not confirmed.',
       '',
       'JSON schema:',
       JSON.stringify({
@@ -467,43 +470,13 @@ export const analyzeMatchFootage = onCall(
         strengths: ['string'],
         improvements: ['string'],
         coachingNotes: 'string',
-        estimatedStats: {
-          minutesPlayed: 0,
-          goals: 0,
-          assists: 0,
-          shots: 0,
-          shotsOnTarget: 0,
-          passesAttempted: 0,
-          passesCompleted: 0,
-          passCompletionPct: 0,
-          keyPasses: 0,
-          tackles: 0,
-          duelsWon: 0,
-          duelsLost: 0,
-          foulsCommitted: 0,
-          yellowCards: 0,
-          redCards: 0,
-          matchRating: 6.5,
-          cleanSheet: false,
-        },
-        coverage: {
-          visiblePct: 0,
-          likelyOffCameraPct: 0,
-          unknownPct: 0,
-          confidenceLabel: 'Limited',
-          note: 'string',
-        },
-        evidence: [{
+        observations: [{
+          frameId: 'frame_0',
+          timestampSec: 0,
           kind: 'observation',
           label: 'string',
           detail: 'string',
-          confidence: 0.0,
-          timestampSec: 0,
-          source: 'string',
         }],
-        moments: [{ timestampSec: 0, label: 'string', detail: 'string' }],
-        confidence: 0.0,
-        methodology: 'string',
       }),
     ]
       .filter(Boolean)
@@ -538,6 +511,7 @@ export const analyzeMatchFootage = onCall(
         {
           status: 'failed',
           error: payload.error?.message ?? `Vision request failed (${response.status})`,
+          lease: null,
           updatedAt: new Date().toISOString(),
         },
         { merge: true },
@@ -554,6 +528,7 @@ export const analyzeMatchFootage = onCall(
         {
           status: 'failed',
           error: 'Empty vision model response',
+          lease: null,
           updatedAt: new Date().toISOString(),
         },
         { merge: true },
@@ -565,15 +540,20 @@ export const analyzeMatchFootage = onCall(
       const report = normalizeReport(
         extractJsonFromModelText(content),
         model,
-        asNumber(job.durationSec, 0),
+        typeof job.durationSec === 'number' ? job.durationSec : 0,
+        frameSamples.map((frame) => frame.id),
+        identityConfirmed,
       );
       await jobRef.set(
         {
           status: 'complete',
           report,
+          events: [],
           completedAt: report.generatedAt,
           updatedAt: new Date().toISOString(),
           error: null,
+          lease: null,
+          pipelineStages: report.pipelineStages,
         },
         { merge: true },
       );
@@ -588,6 +568,7 @@ export const analyzeMatchFootage = onCall(
         {
           status: 'failed',
           error: 'AI response could not be parsed',
+          lease: null,
           updatedAt: new Date().toISOString(),
         },
         { merge: true },

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
+exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.askThisMatch = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
 require("./authSecurityPolicy");
 const app_1 = require("firebase-admin/app");
 const firestore_1 = require("firebase-admin/firestore");
@@ -25,6 +25,8 @@ Object.defineProperty(exports, "confirmRole", { enumerable: true, get: function 
 var publicPassport_1 = require("./publicPassport");
 Object.defineProperty(exports, "onProfileWrittenProjectPassport", { enumerable: true, get: function () { return publicPassport_1.onProfileWrittenProjectPassport; } });
 Object.defineProperty(exports, "refreshPublicPassport", { enumerable: true, get: function () { return publicPassport_1.refreshPublicPassport; } });
+var askThisMatch_1 = require("./askThisMatch");
+Object.defineProperty(exports, "askThisMatch", { enumerable: true, get: function () { return askThisMatch_1.askThisMatch; } });
 var appleAuth_1 = require("./appleAuth");
 Object.defineProperty(exports, "deleteAuthenticatedAccount", { enumerable: true, get: function () { return appleAuth_1.deleteAuthenticatedAccount; } });
 Object.defineProperty(exports, "persistAppleAuthorizationCode", { enumerable: true, get: function () { return appleAuth_1.persistAppleAuthorizationCode; } });

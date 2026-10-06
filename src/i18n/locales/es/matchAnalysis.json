@@ -1,0 +1,70 @@
+{
+  "preview": {
+    "title": "Vista previa del análisis",
+    "quality": "Calidad del vídeo",
+    "frames": "Se muestrearán {{count}} fotogramas",
+    "cvUnavailable": "El seguimiento continuo y la detección de eventos no están disponibles. Lo desconocido permanece desconocido."
+  },
+  "identity": {
+    "title": "Confirma que eres tú",
+    "hint": "Selecciona fotogramas que muestren tu dorsal. Las estadísticas siguen desconocidas hasta confirmar la identidad.",
+    "confirm": "Estos fotogramas me muestran",
+    "reject": "Ninguno me muestra",
+    "confirmed": "Identidad confirmada para los fotogramas seleccionados.",
+    "rejected": "Identidad no confirmada. Las estadísticas contables siguen desconocidas."
+  },
+  "ask": {
+    "title": "Preguntar a este partido",
+    "hint": "Las preguntas se responden solo con observaciones y eventos guardados. Nada se inventa.",
+    "question": "Tu pregunta",
+    "placeholder": "p. ej. ¿Hubo un tiro?",
+    "submit": "Preguntar",
+    "insufficient": "Aún no hay evidencia suficiente"
+  },
+  "report": {
+    "title": "Análisis del partido",
+    "back": "Atrás",
+    "missing": "No se pudo cargar este análisis.",
+    "coverageBand": "Cobertura: {{band}}",
+    "stats": "Estadísticas estimadas",
+    "statsUnknown": "Las estadísticas contables siguen desconocidas hasta que existan eventos validados.",
+    "stages": "Pipeline",
+    "emptyTimeline": "No hay observaciones con marca de tiempo.",
+    "cvUnavailable": "Esta vista necesita seguimiento por visión, que no está desplegado.",
+    "noVideo": "No hay vídeo para buscar.",
+    "open": "Abrir informe completo"
+  },
+  "tabs": {
+    "overview": "Resumen",
+    "timeline": "Línea de tiempo",
+    "technical": "Técnico",
+    "tactical": "Táctico",
+    "coaching": "Entrenamiento",
+    "video": "Vídeo",
+    "ask": "Preguntar"
+  },
+  "band": {
+    "Excellent": "Excelente",
+    "Good": "Buena",
+    "Limited": "Limitada",
+    "Insufficient": "Insuficiente"
+  },
+  "stageStatus": {
+    "pending": "Pendiente",
+    "active": "Activo",
+    "complete": "Completo",
+    "failed": "Fallido",
+    "unavailable": "No disponible"
+  },
+  "modal": {
+    "title": "Analizar vídeo del partido",
+    "intro": "ScoutX muestrea fotogramas, pide confirmar identidad y solo informa lo que esos fotogramas sostienen. El seguimiento y las estadísticas siguen desconocidos sin un worker de visión.",
+    "pick": "Elegir de Fotos / Galería",
+    "change": "Cambiar vídeo",
+    "analyze": "Subir y analizar",
+    "retry": "Reintentar análisis",
+    "recent": "Análisis recientes",
+    "another": "Analizar otro partido",
+    "close": "Cerrar"
+  }
+}

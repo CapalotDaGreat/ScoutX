@@ -25,6 +25,11 @@ import {
   type MatchFrameSample,
   type PlayerTargeting,
 } from '@/features/match-analysis/types';
+import {
+  candidatesFromFrames,
+  confirmIdentity as buildIdentityConfirmation,
+  pendingIdentityConfirmation,
+} from '@/features/match-analysis/services/identityConfirmation';
 import { toUserMessage } from '@/utils/userFacingError';
 
 const ANALYSIS_FAILED_MESSAGE =
@@ -123,7 +128,7 @@ export function useMatchAnalysis(playerId: string | null) {
       setActiveJob({ ...job, status: 'processing', pipelineStages, error: undefined });
 
       try {
-        await requestMatchFootageAnalysis(job.id);
+        await requestMatchFootageAnalysis(job.id, job.idempotencyKey);
       } catch (callableError) {
         const message = toUserMessage(callableError, ANALYSIS_FAILED_MESSAGE);
         const failed: MatchAnalysisJob = {
@@ -191,6 +196,9 @@ export function useMatchAnalysis(playerId: string | null) {
         durationSec: input.durationSec,
         fileSizeBytes: input.fileSizeBytes,
         frames: [],
+        identityConfirmation: pendingIdentityConfirmation(),
+        identityCandidates: [],
+        idempotencyKey: jobId,
         uploadProgress: 0,
         phaseLabel: 'Preparing video',
         pipelineStages: buildConservativePipelineStages(input.targeting.jerseyNumber || 'player'),
@@ -219,11 +227,21 @@ export function useMatchAnalysis(playerId: string | null) {
             status: 'complete',
             phaseLabel: 'Finalizing report',
             frames: frames.map((frame) => ({
+              id: frame.id,
               index: frame.index,
               timestampSec: frame.timestampSec,
               storagePath: `local://${frame.index}`,
               downloadUrl: frame.uri,
             })),
+            identityCandidates: candidatesFromFrames(
+              frames.map((frame) => ({
+                id: frame.id,
+                index: frame.index,
+                timestampSec: frame.timestampSec,
+                storagePath: `local://${frame.index}`,
+                downloadUrl: frame.uri,
+              })),
+            ),
             report,
             completedAt: report.generatedAt,
             uploadProgress: 100,
@@ -242,6 +260,7 @@ export function useMatchAnalysis(playerId: string | null) {
         for (const frame of frames) {
           const uploaded = await uploadMatchFrame(playerId, jobId, frame.index, frame.uri);
           uploadedFrames.push({
+            id: `frame_${frame.index}`,
             index: frame.index,
             timestampSec: frame.timestampSec,
             storagePath: uploaded.storagePath,
@@ -273,8 +292,9 @@ export function useMatchAnalysis(playerId: string | null) {
         job = {
           ...job,
           status: 'queued',
-          phaseLabel: 'Finding match segments',
+          phaseLabel: 'Queued for sampled-frame review',
           frames: uploadedFrames,
+          identityCandidates: candidatesFromFrames(uploadedFrames),
           videoStoragePath: video.storagePath,
           videoDownloadUrl: video.downloadUrl,
           fileSizeBytes: video.fileSizeBytes,
@@ -328,6 +348,24 @@ export function useMatchAnalysis(playerId: string | null) {
     [runServerAnalysis],
   );
 
+  const confirmPlayerIdentity = useCallback(
+    async (job: MatchAnalysisJob, frameIds: string[]) => {
+      const identityConfirmation = buildIdentityConfirmation(frameIds, new Date().toISOString());
+      const pipelineStages = (job.pipelineStages ?? buildConservativePipelineStages(job.targeting.jerseyNumber)).map(
+        (stage) =>
+          stage.id === 'identity-confirmation'
+            ? { ...stage, status: identityConfirmation.state === 'confirmed' ? 'complete' as const : 'failed' as const }
+            : stage,
+      );
+      await updateMatchAnalysisJob(job.id, { identityConfirmation, pipelineStages });
+      const next = { ...job, identityConfirmation, pipelineStages, updatedAt: new Date().toISOString() };
+      setActiveJob(next);
+      setRecentJobs((prev) => prev.map((item) => (item.id === next.id ? next : item)));
+      return next;
+    },
+    [],
+  );
+
   const resetActive = useCallback(() => {
     setActiveJob(null);
     setError(null);
@@ -343,6 +381,7 @@ export function useMatchAnalysis(playerId: string | null) {
     pickVideo,
     startAnalysis,
     retryAnalysis,
+    confirmPlayerIdentity,
     resetActive,
     refreshRecent,
     setActiveJob,

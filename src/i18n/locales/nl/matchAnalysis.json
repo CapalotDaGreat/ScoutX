@@ -1,0 +1,70 @@
+{
+  "preview": {
+    "title": "Analysevoorvertoning",
+    "quality": "Beeldkwaliteit",
+    "frames": "{{count}} frames worden gesampled",
+    "cvUnavailable": "Continue tracking en eventdetectie zijn niet beschikbaar. Onbekend blijft onbekend."
+  },
+  "identity": {
+    "title": "Bevestig dat jij het bent",
+    "hint": "Selecteer frames die jouw shirt tonen. Stats blijven onbekend tot identiteit is bevestigd.",
+    "confirm": "Deze frames tonen mij",
+    "reject": "Geen van deze toont mij",
+    "confirmed": "Identiteit bevestigd voor de geselecteerde frames.",
+    "rejected": "Identiteit niet bevestigd. Telbare stats blijven onbekend."
+  },
+  "ask": {
+    "title": "Vraag deze wedstrijd",
+    "hint": "Vragen worden alleen beantwoord met opgeslagen observaties en events. Niets wordt verzonnen.",
+    "question": "Jouw vraag",
+    "placeholder": "bijv. Was er een schot?",
+    "submit": "Vragen",
+    "insufficient": "Nog niet genoeg bewijs"
+  },
+  "report": {
+    "title": "Wedstrijdanalyse",
+    "back": "Terug",
+    "missing": "Deze analyse kon niet worden geladen.",
+    "coverageBand": "Dekking: {{band}}",
+    "stats": "Geschatte stats",
+    "statsUnknown": "Telbare stats blijven onbekend tot er gevalideerde events zijn.",
+    "stages": "Pipeline",
+    "emptyTimeline": "Geen observaties met tijdstempel opgeslagen.",
+    "cvUnavailable": "Deze weergave heeft computer-vision-tracking nodig, die niet is uitgerold.",
+    "noVideo": "Geen video om naartoe te springen.",
+    "open": "Volledig rapport openen"
+  },
+  "tabs": {
+    "overview": "Overzicht",
+    "timeline": "Tijdlijn",
+    "technical": "Technisch",
+    "tactical": "Tactisch",
+    "coaching": "Coaching",
+    "video": "Video",
+    "ask": "Vragen"
+  },
+  "band": {
+    "Excellent": "Uitstekend",
+    "Good": "Goed",
+    "Limited": "Beperkt",
+    "Insufficient": "Onvoldoende"
+  },
+  "stageStatus": {
+    "pending": "In afwachting",
+    "active": "Actief",
+    "complete": "Voltooid",
+    "failed": "Mislukt",
+    "unavailable": "Niet beschikbaar"
+  },
+  "modal": {
+    "title": "Wedstrijdvideo analyseren",
+    "intro": "ScoutX samplet stills, vraagt identiteitsbevestiging en rapporteert alleen wat die beelden ondersteunen. Tracking en stats blijven onbekend zonder een vision-worker.",
+    "pick": "Kiezen uit Foto’s / Galerij",
+    "change": "Video wijzigen",
+    "analyze": "Uploaden en analyseren",
+    "retry": "Analyse opnieuw",
+    "recent": "Recente analyses",
+    "another": "Nog een wedstrijd analyseren",
+    "close": "Sluiten"
+  }
+}

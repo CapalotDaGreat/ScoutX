@@ -9,6 +9,7 @@ import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScre
 import { RegisterScreen } from '@/features/auth/screens/RegisterScreen';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
 import { CareerReplayScreen } from '@/features/career-replay/components/CareerReplayScreen';
+import { AnalysisReportScreen } from '@/features/match-analysis/components/AnalysisReportScreen';
 import { SettingsScreen } from '@/features/settings';
 import { PlayerWorkspaceProvider, usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { defaultPrivacySettings, type PrivacySettings } from '@/features/player-profile/types/privacySettings';
@@ -107,6 +108,13 @@ function SettingsRoute({
       privacyDisabled={isSaving || !profile}
     />
   );
+}
+
+function AnalysisReportRoute({
+  navigation,
+  route,
+}: NativeStackScreenProps<PlayerStackParamList, 'AnalysisReport'>) {
+  return <AnalysisReportScreen jobId={route.params.jobId} onBack={() => navigation.goBack()} />;
 }
 
 function PlayerDetailRoute({
@@ -223,6 +231,7 @@ function PlayerStackContent() {
         <Stack.Screen name="Settings" component={SettingsRoute} />
         <Stack.Screen name="Trials" component={TrialsRoute} />
         <Stack.Screen name="PlayerDetail" component={PlayerDetailRoute} />
+        <Stack.Screen name="AnalysisReport" component={AnalysisReportRoute} />
         <Stack.Screen name="PlayerRegister" component={PlayerRegisterRoute} />
         <Stack.Screen name="PlayerLogin" component={PlayerLoginRoute} />
         <Stack.Screen name="PlayerForgotPassword" component={PlayerForgotPasswordRoute} />

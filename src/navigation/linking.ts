@@ -83,6 +83,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
           PlayerDetail: 'player/detail/:playerId',
           Settings: 'player/settings',
           Trials: 'player/trials',
+          AnalysisReport: 'match/:jobId',
           PlayerRegister: 'player/register',
           PlayerLogin: 'player/login',
           PlayerForgotPassword: 'player/forgot-password',

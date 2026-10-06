@@ -23,6 +23,7 @@ const uidKeyed = [
   'portfolioAnalytics',
   'recruitmentWorkspaces',
   'pushThrottle',
+  'analysisQuotas',
 ];
 
 const ownedByField = [

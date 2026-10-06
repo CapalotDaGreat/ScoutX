@@ -319,6 +319,28 @@ describe('match analysis jobs', () => {
     await denied(setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ playerId: OTHER_PLAYER })), 'reassign');
     await denied(getDocument(OUTSIDER, 'matchAnalysisJobs/j5'), 'outsider read');
   });
+
+  test('clients may confirm identity but cannot write events, lease, or quota', async () => {
+    await seed('matchAnalysisJobs/j6', job({ status: 'processing' }));
+    await allowed(
+      setDocument(PLAYER, 'matchAnalysisJobs/j6', job({
+        status: 'processing',
+        identityConfirmation: { state: 'confirmed', frameIds: ['frame_0'], confirmedAt: '2026-10-06T00:00:00.000Z' },
+      })),
+      'identity confirmation',
+    );
+    await denied(
+      setDocument(PLAYER, 'matchAnalysisJobs/j6', job({ status: 'processing', events: [{ eventId: 'fake' }] })),
+      'inject events',
+    );
+    await denied(
+      setDocument(PLAYER, 'matchAnalysisJobs/j6', job({ status: 'processing', lease: { holder: 'x', until: '2099-01-01' } })),
+      'inject lease',
+    );
+    await seed(`analysisQuotas/${PLAYER}`, { day: '2026-10-06', count: 1 });
+    await allowed(getDocument(PLAYER, `analysisQuotas/${PLAYER}`), 'quota read owner');
+    await denied(setDocument(PLAYER, `analysisQuotas/${PLAYER}`, { day: '2026-10-06', count: 9 }), 'quota write');
+  });
 });
 
 describe('player match logs and evidence', () => {

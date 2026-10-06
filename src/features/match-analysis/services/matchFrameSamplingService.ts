@@ -2,6 +2,7 @@ import * as VideoThumbnails from 'expo-video-thumbnails';
 import { MATCH_ANALYSIS_LIMITS } from '@/features/match-analysis/constants';
 
 export type SampledFrame = {
+  id: string;
   index: number;
   timestampSec: number;
   uri: string;
@@ -35,6 +36,7 @@ export async function sampleMatchFrames(
         quality: MATCH_ANALYSIS_LIMITS.frameThumbnailQuality,
       });
       frames.push({
+        id: `frame_${i}`,
         index: i,
         timestampSec,
         uri: thumb.uri,

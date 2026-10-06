@@ -2,6 +2,7 @@ import { createCallableFunction } from '@/firebase/callableFunctions';
 
 export type AnalyzeMatchFootageRequest = {
   jobId: string;
+  idempotencyKey?: string;
 };
 
 export type AnalyzeMatchFootageResponse = {
@@ -12,12 +13,36 @@ export type AnalyzeMatchFootageResponse = {
 
 export async function requestMatchFootageAnalysis(
   jobId: string,
+  idempotencyKey?: string,
 ): Promise<AnalyzeMatchFootageResponse> {
   const callable = createCallableFunction<AnalyzeMatchFootageRequest>('analyzeMatchFootage');
   if (!callable) {
     throw new Error('Cloud Functions unavailable.');
   }
 
-  const result = await callable({ jobId });
+  const result = await callable({ jobId, idempotencyKey });
   return result.data as AnalyzeMatchFootageResponse;
+}
+
+export type AskThisMatchRequest = {
+  jobId: string;
+  question: string;
+};
+
+export type AskThisMatchResponse = {
+  state: 'answered' | 'insufficient';
+  answer: string;
+  citations: Array<{ evidenceId: string; label: string }>;
+};
+
+export async function requestAskThisMatch(
+  jobId: string,
+  question: string,
+): Promise<AskThisMatchResponse> {
+  const callable = createCallableFunction<AskThisMatchRequest>('askThisMatch');
+  if (!callable) {
+    throw new Error('Cloud Functions unavailable.');
+  }
+  const result = await callable({ jobId, question });
+  return result.data as AskThisMatchResponse;
 }

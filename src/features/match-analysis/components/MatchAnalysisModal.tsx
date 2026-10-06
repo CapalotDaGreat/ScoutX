@@ -14,9 +14,14 @@ import { toUserMessage } from '@/utils/userFacingError';
 import { waitForModalDismiss } from '@/features/highlight-videos/services/videoLibraryPermission';
 import {
   estimatedStatsToMatchLogPayload,
+  hasApplyableEstimatedStats,
   type MatchAnalysisJob,
   type MatchEstimatedStats,
 } from '@/features/match-analysis/types';
+import { AnalysisPreviewCard } from '@/features/match-analysis/components/AnalysisPreviewCard';
+import { IdentityConfirmationCard } from '@/features/match-analysis/components/IdentityConfirmationCard';
+import { buildAnalysisPreview } from '@/features/match-analysis/services/analysisPreviewService';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type MatchLogPayload } from '@/features/player-statistics/types';
 import { type PickedVideoAsset } from '@/features/highlight-videos/types';
 import { markAnalysisReviewed, workflowEvents } from '@/features/today/services/workflowStores';
@@ -27,14 +32,21 @@ export type MatchAnalysisModalProps = {
   onClose: () => void;
   onApplyStats?: (payload: MatchLogPayload) => Promise<void>;
   onOpenHighlightReelStudio?: () => void;
+  onOpenReport?: (jobId: string) => void;
   /** Opens this existing job (report or retry) once recent jobs have loaded. */
   initialJobId?: string | null;
   /** Prefills the match form when analyzing a match the player already logged. */
   prefillMatch?: { opponent: string; competition: string; date: string } | null;
 };
 
-function canApplyEstimatedStats(stats: MatchEstimatedStats): boolean {
-  return stats.minutesPlayed > 0 && stats.matchRating >= 1;
+function formatUnknown(value: number | boolean | null | undefined): string {
+  if (value === null || value === undefined) {
+    return '—';
+  }
+  if (typeof value === 'boolean') {
+    return value ? 'Yes' : 'No';
+  }
+  return String(value);
 }
 
 function jobStatusLabel(job: MatchAnalysisJob): string {
@@ -55,17 +67,17 @@ function jobStatusLabel(job: MatchAnalysisJob): string {
 
 function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
   const rows: Array<[string, string]> = [
-    ['Minutes', String(stats.minutesPlayed)],
-    ['Goals', String(stats.goals)],
-    ['Assists', String(stats.assists)],
-    ['Shots', `${stats.shotsOnTarget}/${stats.shots} OT`],
-    ['Pass %', `${stats.passCompletionPct}%`],
-    ['Passes', `${stats.passesCompleted}/${stats.passesAttempted}`],
-    ['Key passes', String(stats.keyPasses)],
-    ['Tackles', String(stats.tackles)],
-    ['Duels', `${stats.duelsWon}W / ${stats.duelsLost}L`],
-    ['Cards', `${stats.yellowCards}Y / ${stats.redCards}R`],
-    ['Rating', stats.matchRating >= 1 ? stats.matchRating.toFixed(1) : 'Not rated'],
+    ['Minutes', formatUnknown(stats.minutesPlayed)],
+    ['Goals', formatUnknown(stats.goals)],
+    ['Assists', formatUnknown(stats.assists)],
+    ['Shots', `${formatUnknown(stats.shotsOnTarget)}/${formatUnknown(stats.shots)} OT`],
+    ['Pass %', formatUnknown(stats.passCompletionPct)],
+    ['Passes', `${formatUnknown(stats.passesCompleted)}/${formatUnknown(stats.passesAttempted)}`],
+    ['Key passes', formatUnknown(stats.keyPasses)],
+    ['Tackles', formatUnknown(stats.tackles)],
+    ['Duels', `${formatUnknown(stats.duelsWon)}W / ${formatUnknown(stats.duelsLost)}L`],
+    ['Cards', `${formatUnknown(stats.yellowCards)}Y / ${formatUnknown(stats.redCards)}R`],
+    ['Rating', formatUnknown(stats.matchRating)],
   ];
 
   return (
@@ -94,7 +106,15 @@ function PipelineStageList({ stages }: { stages: Array<{ label: string; status: 
         <View key={stage.label} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
           <Text weight="semibold">{stage.label}</Text>
           <Text variant="caption" color="secondary">
-            {stage.status === 'complete' ? 'Complete' : stage.status === 'active' ? 'Active' : stage.status === 'failed' ? 'Failed' : 'Pending'}
+            {stage.status === 'complete'
+              ? 'Complete'
+              : stage.status === 'active'
+                ? 'Active'
+                : stage.status === 'failed'
+                  ? 'Failed'
+                  : stage.status === 'unavailable'
+                    ? 'Unavailable'
+                    : 'Pending'}
           </Text>
           {stage.note ? (
             <Text variant="body-sm" color="secondary">
@@ -129,11 +149,13 @@ function ReportView({
   applying,
   onApply,
   onOpenHighlightReelStudio,
+  onOpenReport,
 }: {
   job: MatchAnalysisJob;
   applying: boolean;
   onApply?: () => void;
   onOpenHighlightReelStudio?: () => void;
+  onOpenReport?: () => void;
 }) {
   const report = job.report;
   if (!report) {
@@ -145,7 +167,7 @@ function ReportView({
       <Card variant="elevated" padding="lg" className="gap-2">
         <Heading level={3}>{report.headline}</Heading>
         <Text variant="caption" color="secondary">
-          Confidence {Math.round(report.confidence * 100)}% · Analysis quality: {report.coverage?.confidenceLabel ?? 'Limited'} · jersey #
+          Analysis quality: {report.coverage?.confidenceLabel ?? 'Insufficient'} · jersey #
           {job.targeting.jerseyNumber}
         </Text>
         <Text variant="body-sm" color="secondary" className="mt-1">
@@ -178,15 +200,19 @@ function ReportView({
       <Card variant="default" padding="lg" className="gap-3">
         <Heading level={3}>Estimated match stats</Heading>
         <StatGrid stats={report.estimatedStats} />
-        {onApply && canApplyEstimatedStats(report.estimatedStats) ? (
+        {onOpenReport ? (
+          <Button variant="secondary" onPress={onOpenReport}>
+            Open full report
+          </Button>
+        ) : null}
+        {onApply && hasApplyableEstimatedStats(report.estimatedStats) && job.identityConfirmation?.state === 'confirmed' ? (
           <Button variant="accent" loading={applying} onPress={onApply}>
             Apply stats to my match log
           </Button>
         ) : null}
-        {onApply && !canApplyEstimatedStats(report.estimatedStats) ? (
+        {onApply && (!hasApplyableEstimatedStats(report.estimatedStats) || job.identityConfirmation?.state !== 'confirmed') ? (
           <Text variant="caption" color="secondary">
-            The AI couldn't determine your minutes or a match rating from this footage, so these
-            estimates can't be added to your match log automatically. Log the match yourself instead.
+            Countable stats stay unknown until identity is confirmed and validated events exist. Log the match yourself instead.
           </Text>
         ) : null}
         {onOpenHighlightReelStudio ? (
@@ -266,6 +292,7 @@ export function MatchAnalysisModal({
   onClose,
   onApplyStats,
   onOpenHighlightReelStudio,
+  onOpenReport,
   initialJobId = null,
   prefillMatch = null,
 }: MatchAnalysisModalProps) {
@@ -278,9 +305,12 @@ export function MatchAnalysisModal({
     pickVideo,
     startAnalysis,
     retryAnalysis,
+    confirmPlayerIdentity,
     resetActive,
     setActiveJob,
   } = useMatchAnalysis(playerId);
+  const { t } = useAppTranslation('matchAnalysis');
+  const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
 
   const [picked, setPicked] = useState<PickedVideoAsset | null>(null);
   const [jerseyNumber, setJerseyNumber] = useState('');
@@ -296,6 +326,10 @@ export function MatchAnalysisModal({
 
   const showReport = activeJob?.status === 'complete' && activeJob.report;
   const retryable = !isBusy && canRetryMatchAnalysis(activeJob);
+
+  useEffect(() => {
+    setSelectedFrameIds(activeJob?.identityConfirmation?.frameIds ?? []);
+  }, [activeJob?.id, activeJob?.identityConfirmation?.state]);
 
   const appliedInitialRef = useRef<string | null>(null);
   useEffect(() => {
@@ -344,6 +378,11 @@ export function MatchAnalysisModal({
     return `${mins} min film selected`;
   }, [picked]);
 
+  const preview = useMemo(
+    () => (picked ? buildAnalysisPreview({ durationSec: picked.durationSec, fileSizeBytes: picked.fileSizeBytes }) : null),
+    [picked],
+  );
+
   const handlePick = async () => {
     try {
       setIsPicking(true);
@@ -371,6 +410,10 @@ export function MatchAnalysisModal({
     }
     if (!opponent.trim()) {
       Alert.alert('Match', 'Enter the opponent.');
+      return;
+    }
+    if (preview && !preview.canProceed) {
+      Alert.alert('Video', preview.blockers[0] ?? 'This video cannot be analysed.');
       return;
     }
 
@@ -417,8 +460,12 @@ export function MatchAnalysisModal({
       const payload = estimatedStatsToMatchLogPayload(
         activeJob.match,
         activeJob.report.estimatedStats,
-        `AI match analysis (${Math.round(activeJob.report.confidence * 100)}% confidence). ${activeJob.report.coachingNotes}`,
+        `AI match analysis. ${activeJob.report.coachingNotes}`.trim(),
       );
+      if (!payload) {
+        Alert.alert('Not enough evidence yet', 'Countable stats were not estimated from this footage.');
+        return;
+      }
       await onApplyStats(payload);
       Alert.alert('Saved', 'Estimated stats were added to your match log.');
     } catch (err) {
@@ -429,13 +476,10 @@ export function MatchAnalysisModal({
   };
 
   return (
-    <Modal visible={visible && !isPicking} onClose={onClose} title="Analyze match video" size="fullscreen">
+    <Modal visible={visible && !isPicking} onClose={onClose} title={t('modal.title')} size="fullscreen">
       <ScrollView className="flex-1" contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         <Text variant="body-sm" color="secondary">
-          Choose up to 150 minutes of match film from Photos / Gallery — ideal for full Veo camera
-          recordings from grassroots games. iCloud videos work too: ScoutX downloads them
-          automatically, so just stay online while it prepares. ScoutX samples frames across the match,
-          finds your jersey, and returns coaching feedback plus estimated personal stats.
+          {t('modal.intro')}
         </Text>
 
         {error && !retryable ? (
@@ -457,7 +501,7 @@ export function MatchAnalysisModal({
                 Your footage is already uploaded, so retrying won't upload it again.
               </Text>
               <Button variant="accent" onPress={() => void handleRetry()}>
-                Retry analysis
+                {t('modal.retry')}
               </Button>
             </View>
           </Card>
@@ -469,12 +513,14 @@ export function MatchAnalysisModal({
             applying={applying}
             onApply={onApplyStats ? () => void handleApply() : undefined}
             onOpenHighlightReelStudio={onOpenHighlightReelStudio}
+            onOpenReport={onOpenReport ? () => onOpenReport(activeJob.id) : undefined}
           />
         ) : (
           <View className="gap-3">
             <Button variant="secondary" onPress={() => void handlePick()} disabled={isBusy || isPicking}>
-              {picked ? 'Change video from Photos' : 'Choose from Photos / Gallery'}
+              {picked ? t('modal.change') : t('modal.pick')}
             </Button>
+            {preview ? <AnalysisPreviewCard preview={preview} /> : null}
             {durationLabel ? (
               <Text variant="caption" color="secondary">
                 {durationLabel}
@@ -530,8 +576,8 @@ export function MatchAnalysisModal({
               placeholder="e.g. I played right mid after minute 60"
             />
 
-            <Button variant="accent" loading={isBusy} onPress={() => void handleAnalyze()}>
-              {phaseLabel ?? 'Upload & analyze my performance'}
+            <Button variant="accent" loading={isBusy} onPress={() => void handleAnalyze()} disabled={Boolean(preview && !preview.canProceed)}>
+              {phaseLabel ?? t('modal.analyze')}
             </Button>
 
             {isBusy && activeJob?.uploadProgress != null ? (
@@ -544,7 +590,7 @@ export function MatchAnalysisModal({
 
         {recentJobs.length > 0 ? (
           <View className="gap-2">
-            <Heading level={3}>Recent analyses</Heading>
+            <Heading level={3}>{t('modal.recent')}</Heading>
             {recentJobs.slice(0, 5).map((job) => (
               <Button
                 key={job.id}
@@ -567,12 +613,28 @@ export function MatchAnalysisModal({
               setPicked(null);
             }}
           >
-            Analyze another match
+            {t('modal.another')}
           </Button>
         ) : null}
 
+        {activeJob && (activeJob.identityCandidates ?? []).length > 0 ? (
+          <IdentityConfirmationCard
+            candidates={activeJob.identityCandidates ?? []}
+            confirmation={activeJob.identityConfirmation}
+            selectedFrameIds={selectedFrameIds}
+            onToggleFrame={(frameId) => {
+              setSelectedFrameIds((current) =>
+                current.includes(frameId) ? current.filter((id) => id !== frameId) : [...current, frameId],
+              );
+            }}
+            onConfirm={() => void confirmPlayerIdentity(activeJob, selectedFrameIds)}
+            onReject={() => void confirmPlayerIdentity(activeJob, [])}
+            frameUrls={Object.fromEntries(activeJob.frames.map((frame) => [frame.id, frame.downloadUrl]))}
+          />
+        ) : null}
+
         <Button variant="ghost" onPress={onClose}>
-          Close
+          {t('modal.close')}
         </Button>
       </ScrollView>
     </Modal>

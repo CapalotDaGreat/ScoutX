@@ -15,6 +15,7 @@ const UID_KEYED_COLLECTIONS = [
   'portfolioAnalytics',
   'recruitmentWorkspaces',
   'pushThrottle',
+  'analysisQuotas',
 ] as const;
 
 /** Collections queried by an owner/participant field. */

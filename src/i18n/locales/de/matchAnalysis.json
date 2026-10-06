@@ -1,0 +1,70 @@
+{
+  "preview": {
+    "title": "Analysevorschau",
+    "quality": "Bildqualität",
+    "frames": "{{count}} Bilder werden gesampelt",
+    "cvUnavailable": "Kontinuierliches Tracking und Ereigniserkennung sind nicht verfügbar. Unbekannt bleibt unbekannt."
+  },
+  "identity": {
+    "title": "Bestätige, dass du es bist",
+    "hint": "Wähle Standbilder, die dein Trikot zeigen. Statistiken bleiben unbekannt, bis die Identität bestätigt ist.",
+    "confirm": "Diese Bilder zeigen mich",
+    "reject": "Keines zeigt mich",
+    "confirmed": "Identität für die ausgewählten Bilder bestätigt.",
+    "rejected": "Identität nicht bestätigt. Zählbare Statistiken bleiben unbekannt."
+  },
+  "ask": {
+    "title": "Diese Analyse fragen",
+    "hint": "Fragen werden nur aus gespeicherten Beobachtungen und Ereignissen beantwortet. Nichts wird erfunden.",
+    "question": "Deine Frage",
+    "placeholder": "z. B. Gab es einen Torschuss?",
+    "submit": "Fragen",
+    "insufficient": "Noch nicht genug Evidenz"
+  },
+  "report": {
+    "title": "Spielanalyse",
+    "back": "Zurück",
+    "missing": "Diese Analyse konnte nicht geladen werden.",
+    "coverageBand": "Abdeckung: {{band}}",
+    "stats": "Geschätzte Statistiken",
+    "statsUnknown": "Zählbare Statistiken bleiben unbekannt, bis validierte Ereignisse vorliegen.",
+    "stages": "Pipeline",
+    "emptyTimeline": "Keine zeitgestempelten Beobachtungen gespeichert.",
+    "cvUnavailable": "Diese Ansicht braucht Computer-Vision-Tracking, das nicht bereitsteht.",
+    "noVideo": "Kein Video zum Springen verfügbar.",
+    "open": "Vollständigen Bericht öffnen"
+  },
+  "tabs": {
+    "overview": "Überblick",
+    "timeline": "Zeitlinie",
+    "technical": "Technisch",
+    "tactical": "Taktisch",
+    "coaching": "Coaching",
+    "video": "Video",
+    "ask": "Fragen"
+  },
+  "band": {
+    "Excellent": "Ausgezeichnet",
+    "Good": "Gut",
+    "Limited": "Begrenzt",
+    "Insufficient": "Unzureichend"
+  },
+  "stageStatus": {
+    "pending": "Ausstehend",
+    "active": "Aktiv",
+    "complete": "Fertig",
+    "failed": "Fehlgeschlagen",
+    "unavailable": "Nicht verfügbar"
+  },
+  "modal": {
+    "title": "Spielvideo analysieren",
+    "intro": "ScoutX sampelt Standbilder, lässt dich die Identität bestätigen und berichtet nur, was diese Bilder stützen. Tracking und Spielstatistiken bleiben ohne Computer-Vision-Worker unbekannt.",
+    "pick": "Aus Fotos / Galerie wählen",
+    "change": "Video aus Fotos ändern",
+    "analyze": "Hochladen und analysieren",
+    "retry": "Analyse erneut versuchen",
+    "recent": "Letzte Analysen",
+    "another": "Weiteres Spiel analysieren",
+    "close": "Schließen"
+  }
+}
