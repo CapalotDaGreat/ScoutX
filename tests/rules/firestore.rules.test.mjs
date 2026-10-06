@@ -7,13 +7,17 @@ import {
   getDocument,
   isDenied,
   setDocument,
+  withClaims,
 } from './emulator.mjs';
 
-const PLAYER = 'player-1';
-const OTHER_PLAYER = 'player-2';
-const SCOUT = 'scout-1';
-const COACH = 'coach-1';
+// Roles live in custom auth claims (set server-side by confirmRole), not in a client doc.
+const PLAYER = withClaims('player-1', { role: 'player' });
+const OTHER_PLAYER = withClaims('player-2', { role: 'player' });
+const SCOUT = withClaims('scout-1', { role: 'scout' });
+const COACH = withClaims('coach-1', { role: 'coach' });
 const OUTSIDER = 'outsider-1';
+/** Has a scout role in the users doc only; no claim. Must be treated as a non-recruiter. */
+const FORGED_SCOUT = 'forged-scout';
 
 async function allowed(statusPromise, message) {
   const status = await statusPromise;
@@ -37,6 +41,7 @@ beforeEach(async () => {
   await seed(`users/${COACH}`, userDoc(COACH, 'coach'));
   await seed(`users/${PLAYER}`, userDoc(PLAYER, 'player'));
   await seed(`users/${OTHER_PLAYER}`, userDoc(OTHER_PLAYER, 'player'));
+  await seed(`users/${FORGED_SCOUT}`, { ...userDoc(FORGED_SCOUT, 'scout'), roleConfirmed: true });
 });
 
 describe('users', () => {
@@ -117,10 +122,24 @@ describe('profiles and GPS privacy', () => {
     await seed('gpsSessions/private-gps', { playerId: 'private-player' });
   });
 
-  test('public profiles are readable by anyone; private profiles only by the owner', async () => {
-    await allowed(getDocument(null, `profiles/${PLAYER}`), 'guest reads public profile');
+  test('private profiles are owner-only even when the passport is public', async () => {
+    await denied(getDocument(null, `profiles/${PLAYER}`), 'guest reads raw profile');
+    await denied(getDocument(SCOUT, `profiles/${PLAYER}`), 'scout reads raw profile');
     await denied(getDocument(OUTSIDER, 'profiles/private-player'), 'outsider reads private profile');
     await allowed(getDocument('private-player', 'profiles/private-player'), 'owner reads own profile');
+  });
+
+  test('public passports are server-projected: readable when public, never client-written', async () => {
+    await seed(`publicPassports/${PLAYER}`, { playerId: PLAYER, isPublic: true, fullName: 'P' });
+    await seed('publicPassports/private-player', { playerId: 'private-player', isPublic: false });
+    await allowed(getDocument(null, `publicPassports/${PLAYER}`), 'guest reads public passport');
+    await allowed(getDocument(SCOUT, `publicPassports/${PLAYER}`), 'scout reads public passport');
+    await denied(getDocument(OUTSIDER, 'publicPassports/private-player'), 'outsider reads unpublished passport');
+    await allowed(getDocument('private-player', 'publicPassports/private-player'), 'owner reads own projection');
+    await denied(
+      setDocument(PLAYER, `publicPassports/${PLAYER}`, { playerId: PLAYER, isPublic: true, fullName: 'Forged' }),
+      'owner writes projection directly',
+    );
   });
 
   test('GPS sessions are owner-only unless the passport is public with GPS highlights on', async () => {
@@ -235,6 +254,13 @@ describe('trials', () => {
     await denied(setDocument(SCOUT, 'trialInvitations/t4', invitation({ status: 'accepted' })), 'pre-accepted');
   });
 
+  test('a scout role written only to the users document is not trusted', async () => {
+    await denied(
+      setDocument(FORGED_SCOUT, 'trialInvitations/t-forged', invitation({ scoutId: FORGED_SCOUT })),
+      'forged users-doc role invites',
+    );
+  });
+
   test('players may only accept or decline', async () => {
     await seed('trialInvitations/t5', invitation({}));
     await allowed(
@@ -286,6 +312,38 @@ describe('match analysis jobs', () => {
     );
     await denied(setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ playerId: OTHER_PLAYER })), 'reassign');
     await denied(getDocument(OUTSIDER, 'matchAnalysisJobs/j5'), 'outsider read');
+  });
+});
+
+describe('player match logs and evidence', () => {
+  const match = (overrides) => ({
+    id: 'm1',
+    date: '2026-03-01',
+    opponent: 'FC Example',
+    result: 'win',
+    minutes: 90,
+    goals: 1,
+    ...overrides,
+  });
+
+  test('owners write valid match logs; others cannot read or write them', async () => {
+    await allowed(setDocument(PLAYER, `players/${PLAYER}/matches/m1`, match({})), 'owner logs match');
+    await allowed(getDocument(PLAYER, `players/${PLAYER}/matches/m1`), 'owner reads');
+    await denied(getDocument(SCOUT, `players/${PLAYER}/matches/m1`), 'scout reads raw log');
+    await denied(setDocument(OUTSIDER, `players/${PLAYER}/matches/m2`, match({ id: 'm2' })), 'outsider writes');
+  });
+
+  test('match logs must be internally consistent', async () => {
+    await denied(setDocument(PLAYER, `players/${PLAYER}/matches/m3`, match({ id: 'other' })), 'id mismatch');
+    await denied(setDocument(PLAYER, `players/${PLAYER}/matches/m4`, match({ id: 'm4', minutes: 400 })), 'impossible minutes');
+    await denied(setDocument(PLAYER, `players/${PLAYER}/matches/m5`, match({ id: 'm5', date: 20260301 })), 'non-string date');
+  });
+
+  test('evidence items are owner-scoped', async () => {
+    const item = { id: 'e1', ownerId: PLAYER, kind: 'match_log', provenance: 'self_reported', state: 'available', title: 'Match' };
+    await allowed(setDocument(PLAYER, `players/${PLAYER}/evidenceItems/e1`, item), 'owner writes evidence');
+    await denied(setDocument(PLAYER, `players/${PLAYER}/evidenceItems/e2`, { ...item, id: 'e2', ownerId: OTHER_PLAYER }), 'wrong owner');
+    await denied(getDocument(SCOUT, `players/${PLAYER}/evidenceItems/e1`), 'scout reads evidence');
   });
 });
 

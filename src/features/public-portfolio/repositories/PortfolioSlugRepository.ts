@@ -29,8 +29,9 @@ export class PortfolioSlugRepository {
       return typeof playerId === 'string' ? playerId : null;
     }
 
-    const profileSnap = await getDoc(doc(db, 'profiles', slugOrId));
-    if (profileSnap.exists()) {
+    // Raw ids resolve against the public projection; private profiles are owner-only.
+    const passportSnap = await getDoc(doc(db, 'publicPassports', slugOrId)).catch(() => null);
+    if (passportSnap?.exists()) {
       return slugOrId;
     }
 

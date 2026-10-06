@@ -23,9 +23,11 @@ export function ComparisonCareerSection({ profiles }: ComparisonCareerSectionPro
               style={{ backgroundColor: COMPARISON_PLAYER_COLORS[index] }}
             />
             <Text weight="semibold">{profile.player.fullName}</Text>
-            <Text variant="caption" color="secondary">
-              · {profile.career.journeyMilestones} milestones
-            </Text>
+            {profile.career.journeyMilestones !== null ? (
+              <Text variant="caption" color="secondary">
+                · {profile.career.journeyMilestones} milestones
+              </Text>
+            ) : null}
           </View>
 
           <View className="gap-2">

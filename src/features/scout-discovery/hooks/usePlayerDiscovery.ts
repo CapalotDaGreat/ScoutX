@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { queryKeys } from '@/data/queryKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useBlockedUsers } from '@/features/trust-safety/hooks/useBlockedUsers';
@@ -37,7 +38,7 @@ export function usePlayerDiscovery({
   );
 
   const query = useInfiniteQuery({
-    queryKey: ['scout-discovery', discoveryQuery],
+    queryKey: queryKeys.scoutDiscovery.page(discoveryQuery),
     initialPageParam: null as string | null,
     enabled,
     queryFn: ({ pageParam }) =>

@@ -256,5 +256,12 @@
       "invite_coach": "Invite a coach endorsement",
       "enable_discoverable": "Opt in to scout discovery"
     }
+  },
+  "passportHero": {
+    "title": "FOOTBALL PASSPORT",
+    "club": "Club",
+    "preferredFoot": "Preferred foot",
+    "height": "Height",
+    "selfReportedNote": "Profile details are self-reported by the player."
   }
 }

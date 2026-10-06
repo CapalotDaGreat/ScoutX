@@ -125,7 +125,12 @@
       "career": "Career Progression",
       "videos": "Highlight Videos",
       "achievements": "Achievements"
-    }
+    },
+    "videosOnFile": "Highlightvideo's beschikbaar",
+    "videoCount_one": "{{count}} highlight beschikbaar",
+    "videoCount_other": "{{count}} highlights beschikbaar",
+    "videoCountUnknown": "Bekijk in het Football Passport van de speler",
+    "noVideos": "Geen highlightvideo's beschikbaar."
   },
   "playerDetail": {
     "title": "Player Profile",
@@ -159,7 +164,18 @@
     "honours": "Honours",
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
-    "inviteToTrial": "Invite to Trial"
+    "inviteToTrial": "Invite to Trial",
+    "ageYears_one": "{{count}} jaar",
+    "ageYears_other": "{{count}} jaar",
+    "overall": "Totaal",
+    "potential": "Potentieel",
+    "notRated": "Niet beoordeeld",
+    "noAttributeRatings": "Geen attribuutbeoordelingen beschikbaar. Beoordelingen verschijnen zodra een coach, club of analyse ze aanlevert.",
+    "noRadarData": "Niet genoeg gelogde wedstrijden om een attribuutradar te maken.",
+    "noGpsData": "Deze speler heeft geen GPS-sessies gedeeld.",
+    "ageUnknown": "Leeftijd niet opgegeven",
+    "positionUnknown": "Positie niet ingesteld",
+    "ratingSource": "Bron van beoordeling"
   },
   "search": {
     "scopeLabel": "Zoeken in",
@@ -182,5 +198,12 @@
     "includeSearchLabel": "Huidige zoekopdracht meenemen",
     "includeSearchHint": "Herstelt ook de zoektekst en het bereik",
     "deleteFilter": "{{name}} verwijderen"
+  },
+  "reports": {
+    "notRatedTapToSet": "Niet beoordeeld · tik om in te stellen",
+    "setRating": "Beoordeling {{label}} instellen",
+    "clearRating": "Beoordeling {{label}} wissen",
+    "decreaseRating": "{{label}} verlagen",
+    "increaseRating": "{{label}} verhogen"
   }
 }

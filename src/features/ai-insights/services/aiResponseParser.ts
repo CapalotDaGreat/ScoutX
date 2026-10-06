@@ -1,11 +1,25 @@
 import { type AiInsight, type AiInsightMap, type AiInsightType } from '@/features/ai-insights/types';
-import { asRecord, parseIsoDate, parseNumber, parseString, parseStringList } from '@/utils/firestoreParsing';
+import { asRecord, parseIsoDate, parseString, parseStringList } from '@/utils/firestoreParsing';
 
 function parseConfidence(value: unknown): AiInsight['confidence'] {
   if (value === 'low' || value === 'medium' || value === 'high') {
     return value;
   }
-  return 'medium';
+  // Unknown confidence stays unknown rather than being reported as "medium".
+  return null;
+}
+
+function parseNullableNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+/** Accepts mm:ss or hh:mm:ss; anything else means the model did not give a usable timestamp. */
+function parseTimestamp(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  const trimmed = value.trim();
+  return /^\d{1,2}(:\d{2}){1,2}$/.test(trimmed) ? trimmed : null;
 }
 
 function parseTrend(value: unknown): 'up' | 'down' | 'neutral' | undefined {
@@ -22,20 +36,24 @@ function parsePriority(value: unknown): 'low' | 'medium' | 'high' {
   return 'medium';
 }
 
-function parseTrajectory(value: unknown): 'rising' | 'stable' | 'plateauing' {
+function parseTrajectory(value: unknown): 'rising' | 'stable' | 'plateauing' | null {
   if (value === 'rising' || value === 'stable' || value === 'plateauing') {
     return value;
   }
-  return 'stable';
+  return null;
 }
 
 function parseBase(record: Record<string, unknown>, expectedType: AiInsightType) {
+  const summary = parseString(record.summary);
+  if (!summary) {
+    throw new Error('AI response did not include a summary.');
+  }
   return {
     type: expectedType,
     generatedAt: parseIsoDate(record.generatedAt),
     confidence: parseConfidence(record.confidence),
     title: parseString(record.title, AI_FALLBACK_TITLE[expectedType]),
-    summary: parseString(record.summary, 'Insight generated from available player data.'),
+    summary,
   };
 }
 
@@ -128,7 +146,7 @@ export function parseAiInsightResponse<T extends AiInsightType>(
       return {
         ...base,
         type: 'training_recommendations',
-        weeklyFocus: parseString(record.weeklyFocus, 'Balanced technical and physical development'),
+        weeklyFocus: parseString(record.weeklyFocus),
         drills: parseRecommendations(record.drills),
       } as AiInsightMap[T];
 
@@ -136,8 +154,8 @@ export function parseAiInsightResponse<T extends AiInsightType>(
       return {
         ...base,
         type: 'potential_analysis',
-        currentRating: parseNumber(record.currentRating, 70),
-        potentialRating: parseNumber(record.potentialRating, 80),
+        currentRating: parseNullableNumber(record.currentRating),
+        potentialRating: parseNullableNumber(record.potentialRating),
         growthAreas: parseStringList(record.growthAreas),
         trajectory: parseTrajectory(record.trajectory),
         scoutNotes: parseString(record.scoutNotes, base.summary),
@@ -176,9 +194,13 @@ export function parseAiInsightResponse<T extends AiInsightType>(
                 if (!moment) {
                   return null;
                 }
+                const description = parseString(moment.description);
+                if (!description) {
+                  return null;
+                }
                 return {
-                  timestamp: parseString(moment.timestamp, '00:00'),
-                  description: parseString(moment.description),
+                  timestamp: parseTimestamp(moment.timestamp),
+                  description,
                 };
               })
               .filter((item): item is NonNullable<typeof item> => item !== null)

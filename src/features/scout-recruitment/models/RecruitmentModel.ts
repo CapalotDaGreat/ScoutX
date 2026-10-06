@@ -96,7 +96,10 @@ function parseEntry(value: unknown): RecruitmentEntry | null {
     playerClub: parseString(record.playerClub),
     playerPosition: parseString(record.playerPosition),
     playerAvatarUrl: parseString(record.playerAvatarUrl),
-    playerOverallRating: parseNumber(record.playerOverallRating),
+    playerOverallRating:
+      typeof record.playerOverallRating === 'number' && record.playerOverallRating > 0
+        ? record.playerOverallRating
+        : null,
     stage,
     folderId: typeof record.folderId === 'string' ? record.folderId : null,
     shortlistIds: parseStringList(record.shortlistIds),
@@ -520,7 +523,7 @@ export function toPlayerSnapshot(player: {
   club: string;
   position: string[];
   avatarUrl: string;
-  overallRating: number;
+  overallRating: number | null;
 }): RecruitmentPlayerSnapshot {
   return {
     playerId: player.id,

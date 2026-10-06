@@ -2,6 +2,7 @@ import { ScrollView, View } from 'react-native';
 import { Image, Pressable } from 'react-native';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
+import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 
 export type FeaturedPlayersCarouselProps = {
@@ -42,7 +43,10 @@ export function FeaturedPlayersCarousel({
                   {player.fullName}
                 </Text>
                 <Text variant="caption" color="secondary">
-                  {player.club} · OVR {player.overallRating}
+                  {joinKnown([
+                    player.club,
+                    player.overallRating !== null ? `OVR ${formatRating(player.overallRating)}` : null,
+                  ])}
                 </Text>
               </View>
             </Pressable>

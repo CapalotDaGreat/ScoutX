@@ -147,7 +147,12 @@
       "career": "Career Progression",
       "videos": "Highlight Videos",
       "achievements": "Achievements"
-    }
+    },
+    "videosOnFile": "Highlight videos on file",
+    "videoCount_one": "{{count}} highlight on file",
+    "videoCount_other": "{{count}} highlights on file",
+    "videoCountUnknown": "Watch on the player's Football Passport",
+    "noVideos": "No highlight videos on file."
   },
   "playerDetail": {
     "title": "Player Profile",
@@ -181,6 +186,24 @@
     "honours": "Honours",
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
-    "inviteToTrial": "Invite to Trial"
+    "inviteToTrial": "Invite to Trial",
+    "ageYears_one": "{{count}} yr",
+    "ageYears_other": "{{count}} yrs",
+    "overall": "Overall",
+    "potential": "Potential",
+    "notRated": "Not rated",
+    "noAttributeRatings": "No attribute ratings on file. Ratings appear when a coach, club or analysis provides them.",
+    "noRadarData": "Not enough logged matches to build an attribute radar.",
+    "noGpsData": "No GPS sessions shared by this player.",
+    "ageUnknown": "Age not provided",
+    "positionUnknown": "Position not set",
+    "ratingSource": "Rating source"
+  },
+  "reports": {
+    "notRatedTapToSet": "Not rated · tap to set",
+    "setRating": "Set {{label}} rating",
+    "clearRating": "Clear {{label}} rating",
+    "decreaseRating": "Decrease {{label}}",
+    "increaseRating": "Increase {{label}}"
   }
 }

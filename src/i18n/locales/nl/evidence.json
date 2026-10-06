@@ -1,0 +1,53 @@
+{
+  "provenance": {
+    "self_reported": "Zelf opgegeven",
+    "match_derived": "Afgeleid uit wedstrijden",
+    "ai_derived": "Afgeleid door AI",
+    "ai_estimated": "Geschat door AI",
+    "coach_provided": "Door coach aangeleverd",
+    "club_provided": "Door club aangeleverd",
+    "gps_derived": "Afgeleid uit GPS",
+    "verified": "Geverifieerd",
+    "unverified": "Niet geverifieerd",
+    "observed": "Waargenomen",
+    "inferred": "Afgeleid",
+    "unknown": "Onbekende bron"
+  },
+  "state": {
+    "available": "Bewijs beschikbaar",
+    "partial": "Gedeeltelijk bewijs",
+    "insufficient": "Onvoldoende bewijs",
+    "pending": "Bewijs in behandeling",
+    "failed": "Bewijs mislukt",
+    "unknown": "Onbekend"
+  },
+  "confidence": {
+    "high": "Hoge zekerheid",
+    "medium": "Gemiddelde zekerheid",
+    "low": "Lage zekerheid"
+  },
+  "kind": {
+    "match_log": "Wedstrijdlog",
+    "match_analysis": "Wedstrijdanalyse",
+    "video": "Video",
+    "reel": "Highlightreel",
+    "gps_session": "GPS-sessie",
+    "coach_observation": "Observatie van coach",
+    "club_record": "Clubgegevens",
+    "verification": "Verificatie",
+    "training_session": "Trainingssessie",
+    "goal": "Doel",
+    "milestone": "Mijlpaal",
+    "document": "Document",
+    "other": "Overig"
+  },
+  "dateUnknown": "Datum onbekend",
+  "untitled": "Bewijs zonder titel",
+  "sourcesCount_one": "{{count}} bron",
+  "sourcesCount_other": "{{count}} bronnen",
+  "notRecorded": "Niet vastgelegd",
+  "noRating": "Nog geen beoordeling",
+  "noRatingHint": "Beoordelingen verschijnen pas zodra wedstrijden met een wedstrijdcijfer zijn gelogd.",
+  "unknownAge": "Leeftijd niet opgegeven",
+  "confidenceUnknown": "Zekerheid niet opgegeven"
+}

@@ -13,7 +13,19 @@ function base64Url(value) {
   return Buffer.from(JSON.stringify(value)).toString('base64url');
 }
 
-export function tokenFor(uid) {
+/**
+ * Custom claims attached to test identities. The production `confirmRole` function sets
+ * `role` as a custom claim; tests mirror that here so rules see `request.auth.token.role`.
+ * Register a uid with `withClaims(uid, { role: 'scout' })` before using it.
+ */
+const claimsByUid = new Map();
+
+export function withClaims(uid, claims) {
+  claimsByUid.set(uid, { ...claims });
+  return uid;
+}
+
+export function tokenFor(uid, claims = claimsByUid.get(uid) ?? {}) {
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: 'none', kid: 'fakekid', typ: 'JWT' };
   const payload = {
@@ -25,6 +37,7 @@ export function tokenFor(uid) {
     sub: uid,
     user_id: uid,
     firebase: { sign_in_provider: 'custom', identities: {} },
+    ...claims,
   };
   return `${base64Url(header)}.${base64Url(payload)}.`;
 }

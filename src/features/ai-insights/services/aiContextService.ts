@@ -15,7 +15,7 @@ export function playerContextFromDiscoverable(player: DiscoverablePlayer): AiPla
     playerId: player.id,
     playerName: player.fullName,
     position: player.position,
-    age: player.age,
+    ...(player.age !== null ? { age: player.age } : {}),
     club: player.club,
     nationality: player.nationality,
   };

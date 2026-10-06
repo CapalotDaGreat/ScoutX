@@ -3,6 +3,7 @@ import Animated, { FadeInRight } from 'react-native-reanimated';
 import { Badge } from '@/components/primitives/Badge';
 import { Text } from '@/components/primitives/Text';
 import { MiniRadarChart } from '@/features/scout-discovery/components/MiniRadarChart';
+import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 
 export type PlayerCarouselProps = {
@@ -45,11 +46,13 @@ export function PlayerCarousel({
                 <View className="absolute left-3 top-3">
                   {player.verified ? <Badge label="Verified" variant="prestige" size="sm" /> : null}
                 </View>
-                <View className="absolute bottom-3 right-3 rounded-md bg-black/55 px-2 py-1">
-                  <Text variant="caption" className="font-sans-bold text-white">
-                    OVR {player.overallRating}
-                  </Text>
-                </View>
+                {player.overallRating !== null ? (
+                  <View className="absolute bottom-3 right-3 rounded-md bg-black/55 px-2 py-1">
+                    <Text variant="caption" className="font-sans-bold text-white">
+                      OVR {formatRating(player.overallRating)}
+                    </Text>
+                  </View>
+                ) : null}
               </View>
               <View className="gap-2 p-3">
                 <View className="flex-row items-center gap-2">
@@ -62,13 +65,23 @@ export function PlayerCarousel({
                       {player.fullName}
                     </Text>
                     <Text variant="caption" color="secondary" numberOfLines={1}>
-                      {player.club} · {player.position.join('/')}
+                      {joinKnown([
+                        player.club,
+                        player.position.length > 0 ? player.position.join('/') : null,
+                      ])}
                     </Text>
                   </View>
-                  {variant === 'premium' ? <MiniRadarChart stats={player.radarStats} size={56} /> : null}
+                  {variant === 'premium' && player.radarStats.length >= 3 ? (
+                    <MiniRadarChart stats={player.radarStats} size={56} />
+                  ) : null}
                 </View>
                 <Text variant="caption" color="secondary">
-                  POT {player.potentialRating} · {player.nationality}
+                  {joinKnown([
+                    player.potentialRating !== null
+                      ? `POT ${formatRating(player.potentialRating)}`
+                      : null,
+                    player.nationality,
+                  ])}
                 </Text>
               </View>
             </Pressable>

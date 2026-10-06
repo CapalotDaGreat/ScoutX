@@ -1,0 +1,53 @@
+{
+  "provenance": {
+    "self_reported": "Déclaré par le joueur",
+    "match_derived": "Issu des matchs",
+    "ai_derived": "Issu de l'IA",
+    "ai_estimated": "Estimé par l'IA",
+    "coach_provided": "Fourni par l'entraîneur",
+    "club_provided": "Fourni par le club",
+    "gps_derived": "Issu du GPS",
+    "verified": "Vérifié",
+    "unverified": "Non vérifié",
+    "observed": "Observé",
+    "inferred": "Déduit",
+    "unknown": "Source inconnue"
+  },
+  "state": {
+    "available": "Preuve disponible",
+    "partial": "Preuve partielle",
+    "insufficient": "Preuve insuffisante",
+    "pending": "Preuve en attente",
+    "failed": "Preuve échouée",
+    "unknown": "Inconnu"
+  },
+  "confidence": {
+    "high": "Confiance élevée",
+    "medium": "Confiance moyenne",
+    "low": "Confiance faible"
+  },
+  "kind": {
+    "match_log": "Journal de match",
+    "match_analysis": "Analyse de match",
+    "video": "Vidéo",
+    "reel": "Reel de highlights",
+    "gps_session": "Session GPS",
+    "coach_observation": "Observation de l'entraîneur",
+    "club_record": "Dossier du club",
+    "verification": "Vérification",
+    "training_session": "Séance d'entraînement",
+    "goal": "Objectif",
+    "milestone": "Étape",
+    "document": "Document",
+    "other": "Autre"
+  },
+  "dateUnknown": "Date inconnue",
+  "untitled": "Preuve sans titre",
+  "sourcesCount_one": "{{count}} source",
+  "sourcesCount_other": "{{count}} sources",
+  "notRecorded": "Non renseigné",
+  "noRating": "Pas encore de note",
+  "noRatingHint": "Les notes n'apparaissent qu'une fois des matchs avec note de match enregistrés.",
+  "unknownAge": "Âge non renseigné",
+  "confidenceUnknown": "Confiance non indiquée"
+}

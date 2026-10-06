@@ -6,6 +6,7 @@ import { AnimatedListItem } from '@/components/feedback/AnimatedListItem';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
 import { PlayerQuickActions } from '@/features/scout-discovery/components/PlayerQuickActions';
 import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
+import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
@@ -58,7 +59,11 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
     <AnimatedListItem index={index}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`${player.fullName}, ${player.position.join('/')}, overall ${player.overallRating}`}
+        accessibilityLabel={joinKnown([
+          player.fullName,
+          player.position.length > 0 ? player.position.join('/') : null,
+          player.overallRating !== null ? `overall ${formatRating(player.overallRating)}` : null,
+        ])}
         onPress={handlePress}
         className={cn(
           'overflow-hidden rounded-2xl border border-border bg-surface',
@@ -99,11 +104,13 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
                 {player.club}
               </Text>
             </View>
-            <View className="rounded-lg bg-black/55 px-2.5 py-1">
-              <Text variant="caption" className="font-sans-bold text-white">
-                OVR {player.overallRating}
-              </Text>
-            </View>
+            {player.overallRating !== null ? (
+              <View className="rounded-lg bg-black/55 px-2.5 py-1">
+                <Text variant="caption" className="font-sans-bold text-white">
+                  OVR {formatRating(player.overallRating)}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
 
@@ -123,10 +130,16 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
                 ) : null}
               </View>
               <Text variant="caption" color="secondary">
-                {player.age} · {player.nationality} · {player.position.join(' / ')}
+                {joinKnown([
+                  player.age,
+                  player.nationality,
+                  player.position.length > 0 ? player.position.join(' / ') : null,
+                ])}
               </Text>
             </View>
-            <RatingPill label="POT" value={player.potentialRating} emphasis="primary" />
+            {player.potentialRating !== null ? (
+              <RatingPill label="POT" value={formatRating(player.potentialRating)} emphasis="primary" />
+            ) : null}
           </View>
 
           <View className="flex-row items-center justify-between">

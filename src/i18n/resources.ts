@@ -15,6 +15,7 @@ import enValidation from '@/i18n/locales/en/validation.json';
 import enTrust from '@/i18n/locales/en/trust.json';
 import enTrials from '@/i18n/locales/en/trials.json';
 import enActivity from '@/i18n/locales/en/activity.json';
+import enEvidence from '@/i18n/locales/en/evidence.json';
 
 import deCommon from '@/i18n/locales/de/common.json';
 import deNavigation from '@/i18n/locales/de/navigation.json';
@@ -31,6 +32,7 @@ import deValidation from '@/i18n/locales/de/validation.json';
 import deTrust from '@/i18n/locales/de/trust.json';
 import deTrials from '@/i18n/locales/de/trials.json';
 import deActivity from '@/i18n/locales/de/activity.json';
+import deEvidence from '@/i18n/locales/de/evidence.json';
 
 import frCommon from '@/i18n/locales/fr/common.json';
 import frNavigation from '@/i18n/locales/fr/navigation.json';
@@ -47,6 +49,7 @@ import frValidation from '@/i18n/locales/fr/validation.json';
 import frTrust from '@/i18n/locales/fr/trust.json';
 import frTrials from '@/i18n/locales/fr/trials.json';
 import frActivity from '@/i18n/locales/fr/activity.json';
+import frEvidence from '@/i18n/locales/fr/evidence.json';
 
 import itCommon from '@/i18n/locales/it/common.json';
 import itNavigation from '@/i18n/locales/it/navigation.json';
@@ -63,6 +66,7 @@ import itValidation from '@/i18n/locales/it/validation.json';
 import itTrust from '@/i18n/locales/it/trust.json';
 import itTrials from '@/i18n/locales/it/trials.json';
 import itActivity from '@/i18n/locales/it/activity.json';
+import itEvidence from '@/i18n/locales/it/evidence.json';
 
 import esCommon from '@/i18n/locales/es/common.json';
 import esNavigation from '@/i18n/locales/es/navigation.json';
@@ -79,6 +83,7 @@ import esValidation from '@/i18n/locales/es/validation.json';
 import esTrust from '@/i18n/locales/es/trust.json';
 import esTrials from '@/i18n/locales/es/trials.json';
 import esActivity from '@/i18n/locales/es/activity.json';
+import esEvidence from '@/i18n/locales/es/evidence.json';
 
 import ptCommon from '@/i18n/locales/pt/common.json';
 import ptNavigation from '@/i18n/locales/pt/navigation.json';
@@ -95,6 +100,7 @@ import ptValidation from '@/i18n/locales/pt/validation.json';
 import ptTrust from '@/i18n/locales/pt/trust.json';
 import ptTrials from '@/i18n/locales/pt/trials.json';
 import ptActivity from '@/i18n/locales/pt/activity.json';
+import ptEvidence from '@/i18n/locales/pt/evidence.json';
 
 import nlCommon from '@/i18n/locales/nl/common.json';
 import nlNavigation from '@/i18n/locales/nl/navigation.json';
@@ -111,6 +117,7 @@ import nlValidation from '@/i18n/locales/nl/validation.json';
 import nlTrust from '@/i18n/locales/nl/trust.json';
 import nlTrials from '@/i18n/locales/nl/trials.json';
 import nlActivity from '@/i18n/locales/nl/activity.json';
+import nlEvidence from '@/i18n/locales/nl/evidence.json';
 
 function bundleLocale(
   common: typeof enCommon,
@@ -128,6 +135,7 @@ function bundleLocale(
   trust: typeof enTrust,
   trials: typeof enTrials,
   activity: typeof enActivity,
+  evidence: typeof enEvidence,
 ) {
   return {
     common,
@@ -145,6 +153,7 @@ function bundleLocale(
     trust,
     trials,
     activity,
+    evidence,
   };
 }
 
@@ -165,6 +174,7 @@ export const resources = {
     enTrust,
     enTrials,
     enActivity,
+    enEvidence,
   ),
   de: bundleLocale(
     deCommon,
@@ -182,6 +192,7 @@ export const resources = {
     deTrust,
     deTrials,
     deActivity,
+    deEvidence,
   ),
   fr: bundleLocale(
     frCommon,
@@ -199,6 +210,7 @@ export const resources = {
     frTrust,
     frTrials,
     frActivity,
+    frEvidence,
   ),
   it: bundleLocale(
     itCommon,
@@ -216,6 +228,7 @@ export const resources = {
     itTrust,
     itTrials,
     itActivity,
+    itEvidence,
   ),
   es: bundleLocale(
     esCommon,
@@ -233,6 +246,7 @@ export const resources = {
     esTrust,
     esTrials,
     esActivity,
+    esEvidence,
   ),
   pt: bundleLocale(
     ptCommon,
@@ -250,6 +264,7 @@ export const resources = {
     ptTrust,
     ptTrials,
     ptActivity,
+    ptEvidence,
   ),
   nl: bundleLocale(
     nlCommon,
@@ -267,6 +282,7 @@ export const resources = {
     nlTrust,
     nlTrials,
     nlActivity,
+    nlEvidence,
   ),
 } as const satisfies Record<SupportedLanguageCode, Record<string, object>>;
 

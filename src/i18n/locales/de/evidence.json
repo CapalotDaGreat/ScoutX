@@ -1,0 +1,53 @@
+{
+  "provenance": {
+    "self_reported": "Selbst angegeben",
+    "match_derived": "Aus Spielen abgeleitet",
+    "ai_derived": "KI-abgeleitet",
+    "ai_estimated": "KI-geschätzt",
+    "coach_provided": "Vom Trainer",
+    "club_provided": "Vom Verein",
+    "gps_derived": "Aus GPS abgeleitet",
+    "verified": "Verifiziert",
+    "unverified": "Nicht verifiziert",
+    "observed": "Beobachtet",
+    "inferred": "Erschlossen",
+    "unknown": "Unbekannte Quelle"
+  },
+  "state": {
+    "available": "Nachweis vorhanden",
+    "partial": "Teilweiser Nachweis",
+    "insufficient": "Unzureichender Nachweis",
+    "pending": "Nachweis ausstehend",
+    "failed": "Nachweis fehlgeschlagen",
+    "unknown": "Unbekannt"
+  },
+  "confidence": {
+    "high": "Hohe Sicherheit",
+    "medium": "Mittlere Sicherheit",
+    "low": "Geringe Sicherheit"
+  },
+  "kind": {
+    "match_log": "Spielprotokoll",
+    "match_analysis": "Spielanalyse",
+    "video": "Video",
+    "reel": "Highlight-Reel",
+    "gps_session": "GPS-Session",
+    "coach_observation": "Trainerbeobachtung",
+    "club_record": "Vereinsdaten",
+    "verification": "Verifizierung",
+    "training_session": "Trainingseinheit",
+    "goal": "Ziel",
+    "milestone": "Meilenstein",
+    "document": "Dokument",
+    "other": "Sonstiges"
+  },
+  "dateUnknown": "Datum unbekannt",
+  "untitled": "Nachweis ohne Titel",
+  "sourcesCount_one": "{{count}} Quelle",
+  "sourcesCount_other": "{{count}} Quellen",
+  "notRecorded": "Nicht erfasst",
+  "noRating": "Noch keine Bewertung",
+  "noRatingHint": "Bewertungen erscheinen erst, wenn Spiele mit Spielbewertung erfasst wurden.",
+  "unknownAge": "Alter nicht angegeben",
+  "confidenceUnknown": "Sicherheit nicht angegeben"
+}

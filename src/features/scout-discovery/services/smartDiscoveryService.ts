@@ -97,7 +97,7 @@ export function rankPlayersBySearchRelevance(
     if (b.relevance.score !== a.relevance.score) {
       return b.relevance.score - a.relevance.score;
     }
-    return b.player.overallRating - a.player.overallRating;
+    return (b.player.overallRating ?? -1) - (a.player.overallRating ?? -1);
   });
 
   return scored.map((item) => item.player);

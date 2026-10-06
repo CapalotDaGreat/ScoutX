@@ -256,5 +256,12 @@
             "invite_coach": "Vraag een trainer om een aanbeveling",
             "enable_discoverable": "Word zichtbaar voor scouts"
         }
+    },
+    "passportHero":  {
+        "title":  "FOOTBALL PASSPORT",
+        "club":  "Club",
+        "preferredFoot":  "Voorkeursvoet",
+        "height":  "Lengte",
+        "selfReportedNote":  "Profielgegevens zijn door de speler zelf opgegeven."
     }
 }

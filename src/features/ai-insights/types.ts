@@ -18,7 +18,8 @@ export type AiTrajectory = 'rising' | 'stable' | 'plateauing';
 export type AiInsightBase = {
   type: AiInsightType;
   generatedAt: string;
-  confidence: AiConfidence;
+  /** Null when the model did not report a confidence; never defaulted. */
+  confidence: AiConfidence | null;
   title: string;
   summary: string;
 };
@@ -57,10 +58,11 @@ export type TrainingRecommendationsInsight = AiInsightBase & {
 
 export type PotentialAnalysisInsight = AiInsightBase & {
   type: 'potential_analysis';
-  currentRating: number;
-  potentialRating: number;
+  /** Ratings are null unless the model returned a number; the UI must not invent one. */
+  currentRating: number | null;
+  potentialRating: number | null;
   growthAreas: string[];
-  trajectory: AiTrajectory;
+  trajectory: AiTrajectory | null;
   scoutNotes: string;
 };
 
@@ -77,7 +79,8 @@ export type CareerProgressionSummaryInsight = AiInsightBase & {
 };
 
 export type VideoMoment = {
-  timestamp: string;
+  /** Null when the model described a moment without a verifiable timestamp. */
+  timestamp: string | null;
   description: string;
 };
 

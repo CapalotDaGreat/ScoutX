@@ -256,5 +256,12 @@
             "invite_coach": "Invita un allenatore a raccomandarti",
             "enable_discoverable": "Diventa visibile agli scout"
         }
+    },
+    "passportHero":  {
+        "title":  "FOOTBALL PASSPORT",
+        "club":  "Club",
+        "preferredFoot":  "Piede preferito",
+        "height":  "Altezza",
+        "selfReportedNote":  "I dati del profilo sono dichiarati dal giocatore."
     }
 }

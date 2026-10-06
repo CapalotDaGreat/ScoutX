@@ -5,6 +5,7 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { type MatchLogPayload } from '@/features/player-statistics';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
+import { ensurePublicPassportProjected } from '@/features/public-portfolio/services/publicPassportSyncService';
 import { toUserMessage } from '@/utils/userFacingError';
 
 const PROFILE_LOAD_TIMEOUT_MS = 4_000;
@@ -57,6 +58,9 @@ export function usePlayerProfile() {
       userId,
       (nextProfile) => {
         if (nextProfile) {
+          if (!hasResolvedRef.current && nextProfile.privacy?.publicPortfolioEnabled) {
+            void ensurePublicPassportProjected(userId);
+          }
           hasResolvedRef.current = true;
           setProfile(nextProfile);
           setIsLoading(false);

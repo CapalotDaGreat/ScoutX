@@ -116,7 +116,7 @@ export function useMatchAnalysis(playerId: string | null) {
       const pipelineStages = buildConservativePipelineStages(job.targeting.jerseyNumber || 'player');
       await updateMatchAnalysisJob(job.id, {
         status: 'processing',
-        phaseLabel: 'Tracking #player',
+        phaseLabel: 'Analyzing match footage',
         pipelineStages,
         error: undefined,
       });

@@ -42,7 +42,8 @@ export type RecruitmentEntry = {
   playerClub: string;
   playerPosition: string;
   playerAvatarUrl: string;
-  playerOverallRating: number;
+  /** Snapshot of the discovery rating at save time; null when the player had none. */
+  playerOverallRating: number | null;
   stage: RecruitmentStage;
   folderId: string | null;
   shortlistIds: string[];
@@ -78,5 +79,5 @@ export type RecruitmentPlayerSnapshot = {
   playerClub: string;
   playerPosition: string;
   playerAvatarUrl: string;
-  playerOverallRating: number;
+  playerOverallRating: number | null;
 };

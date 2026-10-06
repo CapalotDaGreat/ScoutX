@@ -21,6 +21,7 @@ import {
   signUpWithFirebase,
 } from '@/features/auth/services/authService';
 import { mockSignInAsGuest } from '@/features/auth/services/mockAuthService';
+import { confirmRoleWithServer, readRoleClaim } from '@/features/auth/services/roleClaimService';
 import { signInWithAppleFirebase } from '@/features/auth/services/appleAuthService';
 import { signInWithGoogleFirebase } from '@/features/auth/services/googleAuthService';
 import { useAppleCredentialRevokeListener } from '@/features/auth/hooks/useAppleCredentialRevokeListener';
@@ -156,6 +157,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     syncSession();
   }, [syncSession]);
+
+  // Users who chose a role before roles were mirrored into auth claims have the role only
+  // in their users document. Re-assert it once per session so rules can trust the token.
+  const claimSyncedForUid = useRef<string | null>(null);
+  useEffect(() => {
+    const role = user?.role;
+    const uid = user?.uid;
+    if (!uid || !role || user.isAnonymous || claimSyncedForUid.current === uid) {
+      return;
+    }
+    if (role !== 'player' && role !== 'scout' && role !== 'coach') {
+      return;
+    }
+    claimSyncedForUid.current = uid;
+    void readRoleClaim()
+      .then((claim) => (claim === role ? undefined : confirmRoleWithServer(role)))
+      .catch(() => {
+        if (__DEV__) {
+          console.warn('Role claim re-sync deferred.');
+        }
+      });
+  }, [user]);
 
   useEffect(() => {
     if (
@@ -411,18 +434,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const selectRole = useCallback((role: 'player' | 'scout') => {
     const userId = state.user?.uid;
     if (userId) {
-      const db = getFirestoreDb();
-      if (db) {
-        void setDoc(
-          doc(db, 'users', userId),
-          { role, roleConfirmed: true, isAnonymous: false, updatedAt: new Date().toISOString() },
-          { merge: true },
-        ).catch(() => {
-          if (__DEV__) {
-            console.error('Error saving role to Firestore.');
+      // The confirmRole function writes the users doc and mirrors the role into a custom
+      // claim; rules trust only the claim. The users-doc write is a fallback for projects
+      // without Cloud Functions (dev/mocks) and is never used for authorization.
+      void confirmRoleWithServer(role).then(async (confirmed) => {
+        if (!confirmed) {
+          const db = getFirestoreDb();
+          if (db) {
+            await setDoc(
+              doc(db, 'users', userId),
+              { role, roleConfirmed: true, isAnonymous: false, updatedAt: new Date().toISOString() },
+              { merge: true },
+            );
           }
-        });
-      }
+        }
+      }).catch(() => {
+        if (__DEV__) {
+          console.error('Error saving role.');
+        }
+      });
     }
 
     setState((current) => ({

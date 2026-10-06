@@ -8,12 +8,16 @@ import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFor
 import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
 import { VerificationBadge } from '@/features/trust-system';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
+import { ProvenanceBadge } from '@/components/evidence/ProvenanceBadge';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ScoutReportHeroProps = {
   player: DiscoverablePlayer;
 };
 
 export function ScoutReportHero({ player }: ScoutReportHeroProps) {
+  const { t } = useAppTranslation(['scout', 'evidence']);
   return (
     <Animated.View entering={FadeInDown.duration(400)} className="gap-4">
       <View className="overflow-hidden rounded-2xl">
@@ -39,16 +43,41 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
                 ) : null}
               </View>
               <Text variant="body-sm" className="text-white/85">
-                {player.age} yrs · {player.nationality} · {player.club}
+                {joinKnown([
+                  player.age !== null ? t('scout:playerDetail.ageYears', { count: player.age }) : null,
+                  player.nationality,
+                  player.club,
+                ])}
               </Text>
             </View>
           </View>
         </View>
       </View>
 
-      <View className="flex-row gap-3">
-        <RatingPill label="Overall" value={player.overallRating} emphasis="primary" className="flex-1" />
-        <RatingPill label="Potential" value={player.potentialRating} className="flex-1" />
+      <View className="gap-2">
+        <View className="flex-row gap-3">
+          <RatingPill
+            label={t('scout:playerDetail.overall')}
+            value={formatRating(player.overallRating)}
+            emphasis="primary"
+            className="flex-1"
+          />
+          <RatingPill
+            label={t('scout:playerDetail.potential')}
+            value={formatRating(player.potentialRating)}
+            className="flex-1"
+          />
+        </View>
+        <View className="flex-row flex-wrap items-center gap-2">
+          {player.overallRating !== null && player.overallRatingSource ? (
+            <ProvenanceBadge provenance={player.overallRatingSource} />
+          ) : null}
+          {player.overallRating === null ? (
+            <Text variant="caption" color="secondary">
+              {t('evidence:noRatingHint')}
+            </Text>
+          ) : null}
+        </View>
       </View>
 
       <View className="flex-row flex-wrap gap-2">

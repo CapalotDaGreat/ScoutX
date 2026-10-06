@@ -256,5 +256,12 @@
             "invite_coach": "Invita a un entrenador a recomendarte",
             "enable_discoverable": "Hazte visible para los ojeadores"
         }
+    },
+    "passportHero":  {
+        "title":  "FOOTBALL PASSPORT",
+        "club":  "Club",
+        "preferredFoot":  "Pie preferido",
+        "height":  "Altura",
+        "selfReportedNote":  "Los datos del perfil los declara el propio jugador."
     }
 }

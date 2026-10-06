@@ -24,10 +24,9 @@ export class CloudFunctionAiProvider implements AiProvider {
   async completeStructured<T extends AiInsightType>(
     request: AiCompletionRequest,
   ): Promise<AiInsightMap[T]> {
+    // The server owns prompts and schemas; the client only ships structured context.
     const callable = createCallableFunction<{
       insightType: string;
-      systemPrompt: string;
-      userPrompt: string;
       contextJson: string;
     }>('generateAiInsight');
 
@@ -37,8 +36,6 @@ export class CloudFunctionAiProvider implements AiProvider {
 
     const result = await callable({
       insightType: request.insightType,
-      systemPrompt: request.systemPrompt,
-      userPrompt: request.userPrompt,
       contextJson: request.contextJson,
     });
 

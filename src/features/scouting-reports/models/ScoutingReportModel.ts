@@ -7,35 +7,26 @@ import {
 } from '@/features/scouting-reports/types';
 import { asRecord, parseStringList } from '@/utils/firestoreParsing';
 
-function clampRating(value: number): number {
+function clampRating(value: unknown): number | null {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return null;
+  }
   return Math.min(RATING_MAX, Math.max(RATING_MIN, Math.round(value)));
 }
 
 function parseRatings(value: unknown): ScoutingReportRatings {
   const record = asRecord(value);
-  const defaults = defaultScoutingReportRatings();
-
   if (!record) {
-    return defaults;
+    return defaultScoutingReportRatings();
   }
 
   return {
-    overall: clampRating(typeof record.overall === 'number' ? record.overall : defaults.overall),
-    potential: clampRating(typeof record.potential === 'number' ? record.potential : defaults.potential),
-    technicalAbility: clampRating(
-      typeof record.technicalAbility === 'number' ? record.technicalAbility : defaults.technicalAbility,
-    ),
-    tacticalIntelligence: clampRating(
-      typeof record.tacticalIntelligence === 'number'
-        ? record.tacticalIntelligence
-        : defaults.tacticalIntelligence,
-    ),
-    physicalAbility: clampRating(
-      typeof record.physicalAbility === 'number' ? record.physicalAbility : defaults.physicalAbility,
-    ),
-    mentality: clampRating(
-      typeof record.mentality === 'number' ? record.mentality : defaults.mentality,
-    ),
+    overall: clampRating(record.overall),
+    potential: clampRating(record.potential),
+    technicalAbility: clampRating(record.technicalAbility),
+    tacticalIntelligence: clampRating(record.tacticalIntelligence),
+    physicalAbility: clampRating(record.physicalAbility),
+    mentality: clampRating(record.mentality),
   };
 }
 
@@ -146,7 +137,12 @@ export function formatMultilineList(items: string[]): string {
   return items.join('\n');
 }
 
-export function getRatingTier(value: number): 'elite' | 'strong' | 'solid' | 'developing' {
+export function getRatingTier(
+  value: number | null,
+): 'elite' | 'strong' | 'solid' | 'developing' | 'unrated' {
+  if (value === null) {
+    return 'unrated';
+  }
   if (value >= 85) {
     return 'elite';
   }

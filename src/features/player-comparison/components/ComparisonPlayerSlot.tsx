@@ -2,6 +2,7 @@ import { Pressable, View } from 'react-native';
 import { Image } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants';
+import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { cn } from '@/utils/cn';
 import { ArrowLeftRight, Plus, X } from 'lucide-react-native';
@@ -56,7 +57,10 @@ export function ComparisonPlayerSlot({
             {player.fullName}
           </Text>
           <Text variant="caption" color="secondary" numberOfLines={1}>
-            {player.position.join('/')} · OVR {player.overallRating}
+            {joinKnown([
+              player.position.length > 0 ? player.position.join('/') : null,
+              player.overallRating !== null ? `OVR ${formatRating(player.overallRating)}` : null,
+            ])}
           </Text>
           <Text variant="caption" color="secondary" numberOfLines={1}>
             {player.club}

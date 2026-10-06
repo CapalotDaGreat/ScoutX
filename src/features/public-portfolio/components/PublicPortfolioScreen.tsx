@@ -196,7 +196,11 @@ export function PublicPortfolioScreen({
           />
         ) : null}
 
-        <FootballPassportHero data={data} username={displayUsername} />
+        <FootballPassportHero
+          data={data}
+          username={displayUsername}
+          verification={trust.isLoading ? undefined : (trust.trustProfile?.player ?? null)}
+        />
 
         {isPortfolioSectionVisible(privacy, 'statistics') ? (
           <PortfolioSection

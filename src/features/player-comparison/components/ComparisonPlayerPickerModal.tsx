@@ -3,6 +3,7 @@ import { Image, Pressable, ScrollView, View } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
 import { SearchBar } from '@/components/primitives/SearchBar';
 import { Text } from '@/components/primitives/Text';
+import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 
 export type ComparisonPlayerPickerModalProps = {
@@ -66,7 +67,10 @@ export function ComparisonPlayerPickerModal({
                 <View className="flex-1">
                   <Text weight="semibold">{item.fullName}</Text>
                   <Text variant="caption" color="secondary">
-                    {item.club} · OVR {item.overallRating}
+                    {joinKnown([
+                      item.club,
+                      item.overallRating !== null ? `OVR ${formatRating(item.overallRating)}` : null,
+                    ])}
                   </Text>
                 </View>
               </Pressable>

@@ -10,9 +10,7 @@ import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { StatCard } from '@/components/primitives/StatCard';
 import { Text } from '@/components/primitives/Text';
-import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
-import { generateHeatmapGrid } from '@/features/gps/services/gpsSessionCalculator';
-import { type GpsPoint } from '@/features/gps/types';
+import { ProvenanceBadge } from '@/components/evidence/ProvenanceBadge';
 import { RadarChart } from '@/features/player-statistics/components/RadarChart';
 import { type RadarChartPoint, type StatisticMetricKey } from '@/features/player-statistics/types';
 import { TrustProfileSection } from '@/features/trust-system';
@@ -27,6 +25,7 @@ import { usePlayerDetail } from '@/features/scout-discovery/hooks/usePlayerDetai
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { formatRating } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { TrustSafetyActions } from '@/features/trust-safety/components/TrustSafetyActions';
 import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Mail, Video } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -40,21 +39,6 @@ const RADAR_KEYS: StatisticMetricKey[] = [
   'tackles',
   'minutes',
 ];
-
-function buildMockGpsPoints(playerId: string): GpsPoint[] {
-  const seed = playerId.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  const baseLat = 52.37 + (seed % 10) * 0.002;
-  const baseLng = 4.9 + (seed % 7) * 0.002;
-  const now = Date.now();
-
-  return Array.from({ length: 48 }, (_, index) => ({
-    latitude: baseLat + Math.sin(index / 6) * 0.0008,
-    longitude: baseLng + Math.cos(index / 5) * 0.0012,
-    timestamp: now - index * 5000,
-    speed: 2 + (index % 5),
-    accuracy: 8,
-  }));
-}
 
 function toRadarPoints(player: DiscoverablePlayer): RadarChartPoint[] {
   return player.radarStats.map((stat, index) => ({
@@ -107,12 +91,10 @@ export function PlayerDetailScreen({
       .catch(() => setClubProfile(null));
   }, [player?.club]);
 
-  const heatmap = useMemo(
-    () => (player ? generateHeatmapGrid(buildMockGpsPoints(player.id)) : null),
-    [player],
-  );
-
   const radarPoints = useMemo(() => (player ? toRadarPoints(player) : []), [player]);
+  const hasAttributeRatings =
+    player !== null &&
+    Object.values(player.ratings).some((value) => value !== null);
   const saved = playerSave.isSaved(playerId);
   const inComparison = isInComparison(playerId);
 
@@ -321,13 +303,44 @@ export function PlayerDetailScreen({
             persistKey={`detail-attributes-${player.id}`}
           >
             <View className="gap-5">
-              <RadarChart points={radarPoints} />
-              <View className="flex-row flex-wrap gap-3">
-                <StatCard label={t('scout:playerDetail.passing')} value={player.ratings.passing} className="min-w-[45%] flex-1" />
-                <StatCard label={t('scout:playerDetail.shooting')} value={player.ratings.shooting} className="min-w-[45%] flex-1" />
-                <StatCard label={t('scout:playerDetail.defending')} value={player.ratings.defending} className="min-w-[45%] flex-1" />
-                <StatCard label={t('scout:playerDetail.physical')} value={player.ratings.physical} className="min-w-[45%] flex-1" />
-              </View>
+              {radarPoints.length >= 3 ? (
+                <>
+                  <RadarChart points={radarPoints} />
+                  <ProvenanceBadge provenance="match_derived" />
+                </>
+              ) : (
+                <Text variant="body-sm" color="secondary">
+                  {t('scout:playerDetail.noRadarData')}
+                </Text>
+              )}
+              {hasAttributeRatings ? (
+                <View className="flex-row flex-wrap gap-3">
+                  <StatCard
+                    label={t('scout:playerDetail.passing')}
+                    value={formatRating(player.ratings.passing)}
+                    className="min-w-[45%] flex-1"
+                  />
+                  <StatCard
+                    label={t('scout:playerDetail.shooting')}
+                    value={formatRating(player.ratings.shooting)}
+                    className="min-w-[45%] flex-1"
+                  />
+                  <StatCard
+                    label={t('scout:playerDetail.defending')}
+                    value={formatRating(player.ratings.defending)}
+                    className="min-w-[45%] flex-1"
+                  />
+                  <StatCard
+                    label={t('scout:playerDetail.physical')}
+                    value={formatRating(player.ratings.physical)}
+                    className="min-w-[45%] flex-1"
+                  />
+                </View>
+              ) : (
+                <Text variant="body-sm" color="secondary">
+                  {t('scout:playerDetail.noAttributeRatings')}
+                </Text>
+              )}
             </View>
           </CollapsibleSection>
         </RevealSection>
@@ -354,17 +367,18 @@ export function PlayerDetailScreen({
           </CollapsibleSection>
         </RevealSection>
 
-        {heatmap ? (
-          <RevealSection step={8} className="px-4">
-            <CollapsibleSection
-              title={t('scout:playerDetail.movementIntelligence')}
-              subtitle="GPS heatmap preview"
-              persistKey={`detail-gps-${player.id}`}
-            >
-              <GpsHeatmap heatmap={heatmap} title={t('scout:playerDetail.movementIntelligence')} />
-            </CollapsibleSection>
-          </RevealSection>
-        ) : null}
+        <RevealSection step={8} className="px-4">
+          <CollapsibleSection
+            title={t('scout:playerDetail.movementIntelligence')}
+            subtitle={t('scout:playerDetail.noGpsData')}
+            persistKey={`detail-gps-${player.id}`}
+            defaultOpen={false}
+          >
+            <Text variant="body-sm" color="secondary">
+              {t('scout:playerDetail.noGpsData')}
+            </Text>
+          </CollapsibleSection>
+        </RevealSection>
 
         {player.hasHighlightVideos ? (
           <RevealSection step={9} className="px-4">

@@ -14,6 +14,8 @@ export {
   resolveVerificationRequest,
 } from './adminReview';
 export { recordPortfolioView } from './portfolioAnalytics';
+export { confirmRole } from './roleClaims';
+export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
 export { deleteAuthenticatedAccount, persistAppleAuthorizationCode } from './appleAuth';
 
 initializeApp();

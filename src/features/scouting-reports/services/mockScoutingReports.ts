@@ -1,5 +1,4 @@
 import { type ScoutingReport } from '@/features/scouting-reports/types';
-import { defaultScoutingReportRatings } from '@/features/scouting-reports/types';
 
 const now = '2025-06-10T10:00:00.000Z';
 
@@ -36,10 +35,7 @@ export const mockScoutingReports: ScoutingReport[] = [
 ];
 
 export function getMockReportsForPlayer(playerId: string, scoutId: string): ScoutingReport[] {
-  return mockScoutingReports
-    .filter((report) => report.playerId === playerId && report.scoutId === scoutId)
-    .map((report) => ({
-      ...report,
-      ratings: { ...defaultScoutingReportRatings(), ...report.ratings },
-    }));
+  return mockScoutingReports.filter(
+    (report) => report.playerId === playerId && report.scoutId === scoutId,
+  );
 }

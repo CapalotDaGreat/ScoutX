@@ -41,9 +41,29 @@ function matchesSearch(
   }
 }
 
+/**
+ * A minimum/maximum filter can only be satisfied by a known value. Unknown values are
+ * excluded when the scout explicitly filters on that dimension.
+ */
+function meetsMin(value: number | null, min: number | null): boolean {
+  return min === null || (value !== null && value >= min);
+}
+
+function meetsMax(value: number | null, max: number | null): boolean {
+  return max === null || (value !== null && value <= max);
+}
+
+/** Sort helper: known values first (per direction), unknown values last. */
+function compareNullable(a: number | null, b: number | null, direction: 'asc' | 'desc'): number {
+  if (a === null && b === null) return 0;
+  if (a === null) return 1;
+  if (b === null) return -1;
+  return direction === 'desc' ? b - a : a - b;
+}
+
 function matchesFilters(player: DiscoverablePlayer, filters: DiscoveryFilters): boolean {
-  if (filters.ageMin !== null && player.age < filters.ageMin) return false;
-  if (filters.ageMax !== null && player.age > filters.ageMax) return false;
+  if (!meetsMin(player.age, filters.ageMin)) return false;
+  if (!meetsMax(player.age, filters.ageMax)) return false;
   if (filters.positions.length > 0 && !filters.positions.some((p) => player.position.includes(p))) {
     return false;
   }
@@ -51,28 +71,28 @@ function matchesFilters(player: DiscoverablePlayer, filters: DiscoveryFilters): 
     return false;
   }
   if (filters.preferredFoot && player.preferredFoot !== filters.preferredFoot) return false;
-  if (filters.heightMin !== null && player.heightCm < filters.heightMin) return false;
-  if (filters.heightMax !== null && player.heightCm > filters.heightMax) return false;
-  if (filters.weightMin !== null && player.weightKg < filters.weightMin) return false;
-  if (filters.weightMax !== null && player.weightKg > filters.weightMax) return false;
+  if (!meetsMin(player.heightCm, filters.heightMin)) return false;
+  if (!meetsMax(player.heightCm, filters.heightMax)) return false;
+  if (!meetsMin(player.weightKg, filters.weightMin)) return false;
+  if (!meetsMax(player.weightKg, filters.weightMax)) return false;
   if (filters.clubs.length > 0 && !filters.clubs.includes(player.club)) return false;
   if (filters.leagues.length > 0 && !filters.leagues.includes(player.league)) return false;
   if (filters.availability && player.availability !== filters.availability) return false;
-  if (filters.overallMin !== null && player.overallRating < filters.overallMin) return false;
-  if (filters.potentialMin !== null && player.potentialRating < filters.potentialMin) return false;
+  if (!meetsMin(player.overallRating, filters.overallMin)) return false;
+  if (!meetsMin(player.potentialRating, filters.potentialMin)) return false;
   if (
     filters.distanceMaxKm !== null &&
     (player.distanceKm === null || player.distanceKm > filters.distanceMaxKm)
   ) {
     return false;
   }
-  if (filters.sprintSpeedMin !== null && player.sprintSpeedKmh < filters.sprintSpeedMin) return false;
-  if (filters.passingMin !== null && player.ratings.passing < filters.passingMin) return false;
-  if (filters.shootingMin !== null && player.ratings.shooting < filters.shootingMin) return false;
-  if (filters.defendingMin !== null && player.ratings.defending < filters.defendingMin) return false;
-  if (filters.physicalMin !== null && player.ratings.physical < filters.physicalMin) return false;
-  if (filters.weakFootMin !== null && player.weakFoot < filters.weakFootMin) return false;
-  if (filters.skillMovesMin !== null && player.skillMoves < filters.skillMovesMin) return false;
+  if (!meetsMin(player.sprintSpeedKmh, filters.sprintSpeedMin)) return false;
+  if (!meetsMin(player.ratings.passing, filters.passingMin)) return false;
+  if (!meetsMin(player.ratings.shooting, filters.shootingMin)) return false;
+  if (!meetsMin(player.ratings.defending, filters.defendingMin)) return false;
+  if (!meetsMin(player.ratings.physical, filters.physicalMin)) return false;
+  if (!meetsMin(player.weakFoot, filters.weakFootMin)) return false;
+  if (!meetsMin(player.skillMoves, filters.skillMovesMin)) return false;
   if (filters.matchCountMin !== null && player.matchCount < filters.matchCountMin) return false;
   if (filters.recentlyActive && !player.recentlyActive) return false;
   if (filters.hasHighlightVideos && !player.hasHighlightVideos) return false;
@@ -107,11 +127,11 @@ export function sortPlayers(
   sorted.sort((a, b) => {
     switch (sort) {
       case 'overall':
-        return b.overallRating - a.overallRating;
+        return compareNullable(a.overallRating, b.overallRating, 'desc');
       case 'potential':
-        return b.potentialRating - a.potentialRating;
+        return compareNullable(a.potentialRating, b.potentialRating, 'desc');
       case 'age':
-        return a.age - b.age;
+        return compareNullable(a.age, b.age, 'asc');
       case 'name':
         return a.fullName.localeCompare(b.fullName);
       case 'distance':
@@ -121,7 +141,7 @@ export function sortPlayers(
       case 'most_viewed':
         return b.viewCount - a.viewCount;
       case 'sprint_speed':
-        return b.sprintSpeedKmh - a.sprintSpeedKmh;
+        return compareNullable(a.sprintSpeedKmh, b.sprintSpeedKmh, 'desc');
       case 'goals':
         return b.goals - a.goals;
       case 'assists':

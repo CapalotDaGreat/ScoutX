@@ -1,0 +1,53 @@
+{
+  "provenance": {
+    "self_reported": "Autodeclarado",
+    "match_derived": "Derivado de jogos",
+    "ai_derived": "Derivado por IA",
+    "ai_estimated": "Estimado por IA",
+    "coach_provided": "Fornecido pelo treinador",
+    "club_provided": "Fornecido pelo clube",
+    "gps_derived": "Derivado de GPS",
+    "verified": "Verificado",
+    "unverified": "Não verificado",
+    "observed": "Observado",
+    "inferred": "Inferido",
+    "unknown": "Fonte desconhecida"
+  },
+  "state": {
+    "available": "Evidência disponível",
+    "partial": "Evidência parcial",
+    "insufficient": "Evidência insuficiente",
+    "pending": "Evidência pendente",
+    "failed": "Evidência falhou",
+    "unknown": "Desconhecido"
+  },
+  "confidence": {
+    "high": "Confiança alta",
+    "medium": "Confiança média",
+    "low": "Confiança baixa"
+  },
+  "kind": {
+    "match_log": "Registo de jogo",
+    "match_analysis": "Análise de jogo",
+    "video": "Vídeo",
+    "reel": "Reel de destaques",
+    "gps_session": "Sessão GPS",
+    "coach_observation": "Observação do treinador",
+    "club_record": "Registo do clube",
+    "verification": "Verificação",
+    "training_session": "Sessão de treino",
+    "goal": "Objetivo",
+    "milestone": "Marco",
+    "document": "Documento",
+    "other": "Outro"
+  },
+  "dateUnknown": "Data desconhecida",
+  "untitled": "Evidência sem título",
+  "sourcesCount_one": "{{count}} fonte",
+  "sourcesCount_other": "{{count}} fontes",
+  "notRecorded": "Não registado",
+  "noRating": "Ainda sem avaliação",
+  "noRatingHint": "As avaliações só aparecem depois de registar jogos com nota de jogo.",
+  "unknownAge": "Idade não indicada",
+  "confidenceUnknown": "Confiança não indicada"
+}

@@ -17,12 +17,19 @@ export type PlayerAvailability = 'available' | 'unavailable' | 'on_loan';
 
 export type FormResult = 'W' | 'D' | 'L';
 
+/**
+ * Attribute ratings are only populated when a real source exists (coach/club/analysis).
+ * `null` means "not rated"; the UI must render it as such and never substitute a default.
+ */
 export type PlayerRatings = {
-  passing: number;
-  shooting: number;
-  defending: number;
-  physical: number;
+  passing: number | null;
+  shooting: number | null;
+  defending: number | null;
+  physical: number | null;
 };
+
+/** Where a discovery value came from; mirrors `DataProvenance` from the evidence model. */
+export type DiscoveryRatingSource = 'match_derived' | 'coach_provided' | 'club_provided' | 'ai_derived';
 
 export type RadarStat = {
   label: string;
@@ -38,23 +45,30 @@ export type ClubHistoryEntry = {
 export type DiscoverablePlayer = {
   id: string;
   fullName: string;
-  age: number;
+  /** Null when the player has not provided a birth date. */
+  age: number | null;
   nationality: string;
   club: string;
   league: string;
+  /** Empty when the player has not set a position. */
   position: PlayerPosition[];
   preferredFoot: PreferredFoot;
-  heightCm: number;
-  weightKg: number;
+  heightCm: number | null;
+  weightKg: number | null;
   avatarUrl: string;
   coverImageUrl: string;
   biography: string;
-  overallRating: number;
-  potentialRating: number;
+  /** Average of logged match ratings (×10). Null until at least one match rating exists. */
+  overallRating: number | null;
+  overallRatingSource: DiscoveryRatingSource | null;
+  /** Only present when produced by an explicit source; never derived from overall. */
+  potentialRating: number | null;
+  potentialRatingSource: DiscoveryRatingSource | null;
   availability: PlayerAvailability;
   verified: boolean;
-  weakFoot: number;
-  skillMoves: number;
+  /** Self-reported 1–5 stars; null when never set. */
+  weakFoot: number | null;
+  skillMoves: number | null;
   matchCount: number;
   recentlyActive: boolean;
   hasHighlightVideos: boolean;
@@ -62,7 +76,8 @@ export type DiscoverablePlayer = {
   viewCount: number;
   goals: number;
   assists: number;
-  sprintSpeedKmh: number;
+  /** Only populated from GPS sessions. */
+  sprintSpeedKmh: number | null;
   ratings: PlayerRatings;
   form: FormResult[];
   radarStats: RadarStat[];

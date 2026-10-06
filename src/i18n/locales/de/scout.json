@@ -125,7 +125,12 @@
       "career": "Career Progression",
       "videos": "Highlight Videos",
       "achievements": "Achievements"
-    }
+    },
+    "videosOnFile": "Highlight-Videos vorhanden",
+    "videoCount_one": "{{count}} Highlight vorhanden",
+    "videoCount_other": "{{count}} Highlights vorhanden",
+    "videoCountUnknown": "Im Football Passport des Spielers ansehen",
+    "noVideos": "Keine Highlight-Videos vorhanden."
   },
   "playerDetail": {
     "title": "Player Profile",
@@ -159,7 +164,18 @@
     "honours": "Honours",
     "noHonours": "No honours recorded yet.",
     "contact": "Contact",
-    "inviteToTrial": "Invite to Trial"
+    "inviteToTrial": "Invite to Trial",
+    "ageYears_one": "{{count}} Jahr",
+    "ageYears_other": "{{count}} Jahre",
+    "overall": "Gesamt",
+    "potential": "Potenzial",
+    "notRated": "Nicht bewertet",
+    "noAttributeRatings": "Keine Attributbewertungen vorhanden. Bewertungen erscheinen, wenn Trainer, Verein oder Analyse sie liefern.",
+    "noRadarData": "Nicht genug erfasste Spiele für ein Attribut-Radar.",
+    "noGpsData": "Dieser Spieler hat keine GPS-Sessions geteilt.",
+    "ageUnknown": "Alter nicht angegeben",
+    "positionUnknown": "Position nicht gesetzt",
+    "ratingSource": "Quelle der Bewertung"
   },
   "search": {
     "scopeLabel": "Suchen in",
@@ -182,5 +198,12 @@
     "includeSearchLabel": "Aktuelle Suche einschließen",
     "includeSearchHint": "Stellt auch Text und Suchbereich wieder her",
     "deleteFilter": "{{name}} löschen"
+  },
+  "reports": {
+    "notRatedTapToSet": "Nicht bewertet · tippen zum Festlegen",
+    "setRating": "Bewertung für {{label}} festlegen",
+    "clearRating": "Bewertung für {{label}} löschen",
+    "decreaseRating": "{{label}} verringern",
+    "increaseRating": "{{label}} erhöhen"
   }
 }

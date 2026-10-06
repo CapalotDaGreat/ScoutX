@@ -1,0 +1,53 @@
+{
+  "provenance": {
+    "self_reported": "Autodichiarato",
+    "match_derived": "Derivato dalle partite",
+    "ai_derived": "Derivato dall'IA",
+    "ai_estimated": "Stimato dall'IA",
+    "coach_provided": "Fornito dall'allenatore",
+    "club_provided": "Fornito dal club",
+    "gps_derived": "Derivato dal GPS",
+    "verified": "Verificato",
+    "unverified": "Non verificato",
+    "observed": "Osservato",
+    "inferred": "Dedotto",
+    "unknown": "Fonte sconosciuta"
+  },
+  "state": {
+    "available": "Prova disponibile",
+    "partial": "Prova parziale",
+    "insufficient": "Prova insufficiente",
+    "pending": "Prova in attesa",
+    "failed": "Prova non riuscita",
+    "unknown": "Sconosciuto"
+  },
+  "confidence": {
+    "high": "Affidabilità alta",
+    "medium": "Affidabilità media",
+    "low": "Affidabilità bassa"
+  },
+  "kind": {
+    "match_log": "Registro partita",
+    "match_analysis": "Analisi partita",
+    "video": "Video",
+    "reel": "Reel highlights",
+    "gps_session": "Sessione GPS",
+    "coach_observation": "Osservazione dell'allenatore",
+    "club_record": "Dati del club",
+    "verification": "Verifica",
+    "training_session": "Sessione di allenamento",
+    "goal": "Obiettivo",
+    "milestone": "Traguardo",
+    "document": "Documento",
+    "other": "Altro"
+  },
+  "dateUnknown": "Data sconosciuta",
+  "untitled": "Prova senza titolo",
+  "sourcesCount_one": "{{count}} fonte",
+  "sourcesCount_other": "{{count}} fonti",
+  "notRecorded": "Non registrato",
+  "noRating": "Nessuna valutazione",
+  "noRatingHint": "Le valutazioni compaiono solo dopo aver registrato partite con voto partita.",
+  "unknownAge": "Età non indicata",
+  "confidenceUnknown": "Affidabilità non indicata"
+}

@@ -256,5 +256,12 @@
             "invite_coach": "Lade einen Trainer zur Empfehlung ein",
             "enable_discoverable": "Für Scouts sichtbar werden"
         }
+    },
+    "passportHero":  {
+        "title":  "FOOTBALL PASSPORT",
+        "club":  "Verein",
+        "preferredFoot":  "Starker Fuß",
+        "height":  "Größe",
+        "selfReportedNote":  "Profilangaben stammen vom Spieler selbst."
     }
 }

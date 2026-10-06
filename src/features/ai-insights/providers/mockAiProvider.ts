@@ -102,8 +102,8 @@ function buildMockInsight<T extends AiInsightType>(
       return {
         ...base,
         type: 'potential_analysis',
-        currentRating: context.ratings?.overallRating ?? 72,
-        potentialRating: context.ratings?.potentialRating ?? 82,
+        currentRating: context.ratings?.overallRating ?? null,
+        potentialRating: context.ratings?.potentialRating ?? null,
         growthAreas: ['Decision making', 'Physical robustness', 'Weak-foot usage'],
         trajectory: 'rising',
         scoutNotes: `${playerName} profiles as a high-upside talent with development-focused minutes.`,

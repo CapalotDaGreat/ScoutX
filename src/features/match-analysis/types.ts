@@ -228,7 +228,7 @@ export function buildDefaultPipelineStages(): MatchAnalysisPipelineStage[] {
     { id: 'video-ingestion', label: 'Preparing video', status: 'complete' },
     { id: 'match-segmentation', label: 'Finding match segments', status: 'pending' },
     { id: 'player-identification', label: 'Identifying players', status: 'pending' },
-    { id: 'player-tracking', label: 'Tracking #player', status: 'pending' },
+    { id: 'player-tracking', label: 'Following the player in sampled frames', status: 'pending' },
     { id: 'event-detection', label: 'Analyzing movements', status: 'pending' },
     { id: 'tactical-context', label: 'Analyzing decisions', status: 'pending' },
     { id: 'role-analysis', label: 'Assessing role execution', status: 'pending' },

@@ -59,8 +59,12 @@ export function buildHighlightCandidatesFromReport(
       : [],
   );
 
+  // Only observed evidence can become a clip. Inferred or unknown-kind evidence has no
+  // visual backing at that timestamp, so it is never offered as a highlight.
   const evidence = (report.evidence ?? []).slice(0, 5).flatMap((item, index) =>
-    isValidTimestamp(item.timestampSec) && typeof item.confidence === 'number'
+    item.kind === 'observation' &&
+    isValidTimestamp(item.timestampSec) &&
+    typeof item.confidence === 'number'
       ? [
           {
             id: `evidence-${index}`,

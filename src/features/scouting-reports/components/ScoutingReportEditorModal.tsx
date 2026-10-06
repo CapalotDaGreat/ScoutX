@@ -64,7 +64,7 @@ export function ScoutingReportEditorModal({
     setWeaknessesText('');
   }, [playerName, report, visible]);
 
-  const updateRating = (key: keyof ScoutingReportDraft['ratings'], value: number) => {
+  const updateRating = (key: keyof ScoutingReportDraft['ratings'], value: number | null) => {
     setDraft((current) => ({
       ...current,
       ratings: { ...current.ratings, [key]: value },

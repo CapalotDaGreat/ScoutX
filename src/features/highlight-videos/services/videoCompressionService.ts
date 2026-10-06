@@ -15,8 +15,9 @@ export class VideoCompressionError extends Error {
 }
 
 /**
- * Applies picker-level compression (medium quality) and validates size/duration.
- * Native transcoding can be plugged in here later without changing callers.
+ * Validates size/duration of a picked clip. The picker itself is asked for medium quality;
+ * no transcoding happens here, so `compressionApplied` is reported as false until a native
+ * transcoder is plugged in.
  */
 export async function compressHighlightVideo(
   asset: PickedVideoAsset,
@@ -48,7 +49,8 @@ export async function compressHighlightVideo(
     uri: asset.uri,
     fileSizeBytes,
     durationSec: asset.durationSec,
-    compressionApplied: true,
+    // No transcoding happens in this service; only picker-quality selection and validation.
+    compressionApplied: false,
   };
 }
 

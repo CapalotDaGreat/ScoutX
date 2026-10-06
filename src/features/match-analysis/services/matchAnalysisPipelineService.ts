@@ -12,8 +12,11 @@ export function buildConservativePipelineStages(jerseyNumber: string): MatchAnal
     if (stage.id === 'player-tracking') {
       return {
         ...stage,
-        label: `Tracking #${jerseyNumber}`,
-        note: 'Follow jersey continuity and motion through visible intervals only.',
+        label:
+          jerseyNumber && jerseyNumber !== 'player'
+            ? `Looking for #${jerseyNumber} in sampled frames`
+            : 'Looking for the player in sampled frames',
+        note: 'The model reasons over sampled frames; it does not run continuous tracking. Only visible intervals are credited.',
       };
     }
     if (stage.id === 'final-report') {

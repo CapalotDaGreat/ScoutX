@@ -4,6 +4,7 @@ import { Text } from '@/components/primitives/Text';
 import { Heading } from '@/components/primitives/Heading';
 import { Button } from '@/components/primitives/Button';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
+import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { ArrowRight } from 'lucide-react-native';
 import { useTheme } from '@/theme';
@@ -51,7 +52,11 @@ export function ContinueScoutingCard({
             <View className="flex-1 gap-1">
               <Text weight="semibold">{player.fullName}</Text>
               <Text variant="body-sm" color="secondary">
-                {player.club} · OVR {player.overallRating} · POT {player.potentialRating}
+                {joinKnown([
+                  player.club,
+                  player.overallRating !== null ? `OVR ${formatRating(player.overallRating)}` : null,
+                  player.potentialRating !== null ? `POT ${formatRating(player.potentialRating)}` : null,
+                ])}
               </Text>
               <PlayerFormStrip form={player.form} size="md" />
             </View>

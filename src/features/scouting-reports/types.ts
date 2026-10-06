@@ -1,10 +1,14 @@
+/**
+ * A rating is null until the scout explicitly sets it. Reports never start from a
+ * pre-filled number, so an unrated dimension is visibly unrated.
+ */
 export type ScoutingReportRatings = {
-  overall: number;
-  potential: number;
-  technicalAbility: number;
-  tacticalIntelligence: number;
-  physicalAbility: number;
-  mentality: number;
+  overall: number | null;
+  potential: number | null;
+  technicalAbility: number | null;
+  tacticalIntelligence: number | null;
+  physicalAbility: number | null;
+  mentality: number | null;
 };
 
 export type ScoutingReport = {
@@ -31,14 +35,18 @@ export type ScoutingReportDraft = Omit<
   scoutName?: string;
 };
 
+/** All dimensions unrated. */
 export const defaultScoutingReportRatings = (): ScoutingReportRatings => ({
-  overall: 70,
-  potential: 75,
-  technicalAbility: 70,
-  tacticalIntelligence: 70,
-  physicalAbility: 70,
-  mentality: 70,
+  overall: null,
+  potential: null,
+  technicalAbility: null,
+  tacticalIntelligence: null,
+  physicalAbility: null,
+  mentality: null,
 });
+
+/** Value a rating field starts from when the scout taps "set rating" (midpoint of the scale). */
+export const SCOUTING_RATING_START = 50;
 
 export const createEmptyScoutingReportDraft = (
   _playerName?: string,
@@ -48,7 +56,12 @@ export const createEmptyScoutingReportDraft = (
   strengths: [],
   weaknesses: [],
   recommendations: '',
-  suitablePlayingStyle: 'Possession-based',
-  suggestedFormation: '4-2-3-1',
+  // Style and formation are the scout's judgement; leave them blank until chosen.
+  suitablePlayingStyle: '',
+  suggestedFormation: '',
   scoutNotes: '',
 });
+
+export function hasAnyScoutingRating(ratings: ScoutingReportRatings): boolean {
+  return Object.values(ratings).some((value) => value !== null);
+}

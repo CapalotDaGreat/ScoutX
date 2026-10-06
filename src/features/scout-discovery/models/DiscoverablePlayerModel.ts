@@ -1,6 +1,7 @@
 import { type PlayerProfile } from '@/features/player-profile/types';
 import {
   type DiscoverablePlayer,
+  type DiscoveryRatingSource,
   type FormResult,
   type PlayerAvailability,
   type PlayerPosition,
@@ -43,14 +44,32 @@ function asRecord(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
-function parseHeightCm(height: string): number {
+function parseHeightCm(height: string): number | null {
   const match = height.match(/(\d{2,3})/);
-  return match ? Number(match[1]) : 0;
+  return match ? Number(match[1]) : null;
 }
 
-function parseWeightKg(weight: string): number {
+function parseWeightKg(weight: string): number | null {
   const match = weight.match(/(\d{2,3})/);
-  return match ? Number(match[1]) : 0;
+  return match ? Number(match[1]) : null;
+}
+
+function nullableNumber(value: unknown): number | null {
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function parseRatingSource(value: unknown): DiscoveryRatingSource | null {
+  return value === 'match_derived' ||
+    value === 'coach_provided' ||
+    value === 'club_provided' ||
+    value === 'ai_derived'
+    ? value
+    : null;
+}
+
+/** Self-reported 1–5 star ratings; anything outside that range is treated as unset. */
+function parseStarRating(value: unknown): number | null {
+  return typeof value === 'number' && value >= 1 && value <= 5 ? value : null;
 }
 
 function mapPosition(value: string): PlayerPosition | null {
@@ -75,22 +94,7 @@ function resolvePositions(profile: PlayerProfile): PlayerPosition[] {
   const mapped = candidates
     .map(mapPosition)
     .filter((position): position is PlayerPosition => position !== null);
-  return mapped.length > 0 ? [...new Set(mapped)] : ['CM'];
-}
-
-function resolveAge(profile: PlayerProfile, recordAge?: unknown): number {
-  if (typeof recordAge === 'number' && recordAge > 0) {
-    return recordAge;
-  }
-  if (typeof profile.identity.academicStatus === 'string') {
-    if (profile.identity.academicStatus === 'in_school') {
-      return 17;
-    }
-    if (profile.identity.academicStatus === 'university') {
-      return 20;
-    }
-  }
-  return 18;
+  return [...new Set(mapped)];
 }
 
 function mapAvailability(value: string): PlayerAvailability {
@@ -100,35 +104,54 @@ function mapAvailability(value: string): PlayerAvailability {
   return 'available';
 }
 
+/**
+ * Radar stats are only produced from values a player actually recorded. Each axis is a
+ * per-match average normalised against an explicit, documented ceiling so axes are
+ * comparable. Axes without recorded data are omitted rather than defaulted.
+ */
+const RADAR_AXES: ReadonlyArray<{
+  key: 'goals' | 'assists' | 'shots' | 'tackles' | 'passAccuracy';
+  label: string;
+  perMatchCeiling: number;
+}> = [
+  { key: 'goals', label: 'Goals / match', perMatchCeiling: 2 },
+  { key: 'assists', label: 'Assists / match', perMatchCeiling: 2 },
+  { key: 'shots', label: 'Shots / match', perMatchCeiling: 6 },
+  { key: 'tackles', label: 'Tackles / match', perMatchCeiling: 8 },
+  { key: 'passAccuracy', label: 'Pass accuracy', perMatchCeiling: 100 },
+];
+
 function buildRadarStats(profile: PlayerProfile): RadarStat[] {
   const matches = profile.statisticsMatches ?? [];
-  const overview = calculatePlayerStatistics(matches);
-  const pick = (key: string, label: string, fallback: number): RadarStat => {
-    const metric = overview.totals.find((item) => item.key === key);
-    const raw = metric?.value ?? fallback;
-    return { label, value: Math.min(1, Math.max(0, raw / 100)) };
-  };
-
-  return [
-    pick('minutes', 'PAC', 0.5),
-    pick('goals', 'SHO', 0.4),
-    pick('passAccuracy', 'PAS', 0.5),
-    pick('assists', 'DRI', 0.45),
-    pick('tackles', 'DEF', 0.4),
-    pick('minutes', 'PHY', 0.5),
-  ];
+  if (matches.length === 0) {
+    return [];
+  }
+  return RADAR_AXES.flatMap((axis) => {
+    const values = matches
+      .map((match) => match[axis.key])
+      .filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+    if (values.length === 0) {
+      return [];
+    }
+    const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+    return [{ label: axis.label, value: Math.min(1, Math.max(0, average / axis.perMatchCeiling)) }];
+  });
 }
 
-function computeOverallRating(profile: PlayerProfile): number {
+/**
+ * Overall rating is the mean of recorded match ratings (0–10) scaled to 0–100. There is no
+ * baseline: a player without a single recorded match rating has no overall rating.
+ */
+function computeOverallRating(profile: PlayerProfile): number | null {
   const matches = profile.statisticsMatches ?? [];
   if (matches.length === 0) {
-    return 55;
+    return null;
   }
   const avgRating = averageOfRecorded(matches, 'matchRating');
   if (avgRating === null) {
-    return 55;
+    return null;
   }
-  return Math.min(99, Math.max(40, Math.round(avgRating * 10)));
+  return Math.min(100, Math.max(0, Math.round(avgRating * 10)));
 }
 
 function buildSearchKeywords(profile: DiscoverablePlayer): string[] {
@@ -161,7 +184,8 @@ export function buildDiscoverablePlayerFromProfile(profile: PlayerProfile): Disc
   const player: DiscoverablePlayer = {
     id: profile.id,
     fullName: profile.fullName,
-    age: resolveAge(profile),
+    // The profile has no birth date field; age stays unknown instead of being guessed.
+    age: null,
     nationality: profile.nationality || 'Unknown',
     club: profile.club || profile.identity.currentClub || 'Free Agent',
     league,
@@ -173,11 +197,15 @@ export function buildDiscoverablePlayerFromProfile(profile: PlayerProfile): Disc
     coverImageUrl: profile.coverImageUrl,
     biography: profile.biography || profile.identity.biographyHeadline,
     overallRating,
-    potentialRating: Math.min(99, overallRating + 8),
+    overallRatingSource: overallRating === null ? null : 'match_derived',
+    // No potential model exists; never derive potential from overall.
+    potentialRating: null,
+    potentialRatingSource: null,
     availability: mapAvailability(profile.identity.availability),
-    verified: profile.privacy?.publicPortfolioEnabled ?? false,
-    weakFoot: profile.identity.weakFootRating,
-    skillMoves: profile.identity.skillMovesRating,
+    // Verification is asserted server-side (trust sync); a public portfolio is not verification.
+    verified: false,
+    weakFoot: parseStarRating(profile.identity.weakFootRating),
+    skillMoves: parseStarRating(profile.identity.skillMovesRating),
     matchCount: matches.length,
     recentlyActive: matches.some((match) => {
       const days = (Date.now() - new Date(match.date).getTime()) / (1000 * 60 * 60 * 24);
@@ -188,12 +216,14 @@ export function buildDiscoverablePlayerFromProfile(profile: PlayerProfile): Disc
     viewCount: 0,
     goals: typeof goals === 'number' ? goals : 0,
     assists: typeof assists === 'number' ? assists : 0,
-    sprintSpeedKmh: 0,
+    // Sprint speed only comes from GPS sessions, which are not part of the profile.
+    sprintSpeedKmh: null,
+    // Attribute ratings require an explicit source (coach/club/analysis); none exists here.
     ratings: {
-      passing: Math.min(99, overallRating + 2),
-      shooting: Math.min(99, overallRating),
-      defending: Math.min(99, overallRating - 4),
-      physical: Math.min(99, overallRating - 2),
+      passing: null,
+      shooting: null,
+      defending: null,
+      physical: null,
     },
     form: matches.slice(-5).map((match): FormResult => {
       if (match.result.startsWith('W')) return 'W';
@@ -237,22 +267,30 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
   const player: DiscoverablePlayer = {
     id: record.id,
     fullName: record.fullName,
-    age: typeof record.age === 'number' ? record.age : 18,
+    age: nullableNumber(record.age),
     nationality: typeof record.nationality === 'string' ? record.nationality : 'Unknown',
     club: typeof record.club === 'string' ? record.club : 'Free Agent',
     league: typeof record.league === 'string' ? record.league : 'Amateur',
-    position: position.length > 0 ? position : ['CM'],
+    position,
     preferredFoot:
       record.preferredFoot === 'left' || record.preferredFoot === 'right' || record.preferredFoot === 'both'
         ? record.preferredFoot
         : 'right',
-    heightCm: typeof record.heightCm === 'number' ? record.heightCm : 0,
-    weightKg: typeof record.weightKg === 'number' ? record.weightKg : 0,
+    heightCm: nullableNumber(record.heightCm),
+    weightKg: nullableNumber(record.weightKg),
     avatarUrl: typeof record.avatarUrl === 'string' ? record.avatarUrl : '',
     coverImageUrl: typeof record.coverImageUrl === 'string' ? record.coverImageUrl : '',
     biography: typeof record.biography === 'string' ? record.biography : '',
-    overallRating: typeof record.overallRating === 'number' ? record.overallRating : 50,
-    potentialRating: typeof record.potentialRating === 'number' ? record.potentialRating : 60,
+    overallRating: nullableNumber(record.overallRating),
+    overallRatingSource:
+      nullableNumber(record.overallRating) === null
+        ? null
+        : parseRatingSource(record.overallRatingSource),
+    potentialRating: nullableNumber(record.potentialRating),
+    potentialRatingSource:
+      nullableNumber(record.potentialRating) === null
+        ? null
+        : parseRatingSource(record.potentialRatingSource),
     availability:
       record.availability === 'available' ||
       record.availability === 'unavailable' ||
@@ -260,8 +298,8 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
         ? record.availability
         : 'available',
     verified: record.verified === true,
-    weakFoot: typeof record.weakFoot === 'number' ? record.weakFoot : 3,
-    skillMoves: typeof record.skillMoves === 'number' ? record.skillMoves : 3,
+    weakFoot: parseStarRating(record.weakFoot),
+    skillMoves: parseStarRating(record.skillMoves),
     matchCount: typeof record.matchCount === 'number' ? record.matchCount : 0,
     recentlyActive: record.recentlyActive === true,
     hasHighlightVideos: record.hasHighlightVideos === true,
@@ -269,12 +307,12 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
     viewCount: typeof record.viewCount === 'number' ? record.viewCount : 0,
     goals: typeof record.goals === 'number' ? record.goals : 0,
     assists: typeof record.assists === 'number' ? record.assists : 0,
-    sprintSpeedKmh: typeof record.sprintSpeedKmh === 'number' ? record.sprintSpeedKmh : 0,
+    sprintSpeedKmh: nullableNumber(record.sprintSpeedKmh),
     ratings: {
-      passing: typeof ratingsRecord.passing === 'number' ? ratingsRecord.passing : 50,
-      shooting: typeof ratingsRecord.shooting === 'number' ? ratingsRecord.shooting : 50,
-      defending: typeof ratingsRecord.defending === 'number' ? ratingsRecord.defending : 50,
-      physical: typeof ratingsRecord.physical === 'number' ? ratingsRecord.physical : 50,
+      passing: nullableNumber(ratingsRecord.passing),
+      shooting: nullableNumber(ratingsRecord.shooting),
+      defending: nullableNumber(ratingsRecord.defending),
+      physical: nullableNumber(ratingsRecord.physical),
     },
     form: Array.isArray(record.form)
       ? record.form.filter((item): item is FormResult => item === 'W' || item === 'D' || item === 'L')
@@ -322,4 +360,17 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
 
 export function serializeDiscoverablePlayer(player: DiscoverablePlayer): Record<string, unknown> {
   return { ...player };
+}
+
+/** Formats a nullable rating for display; unknown values render as an em dash. */
+export function formatRating(value: number | null | undefined): string {
+  return typeof value === 'number' && Number.isFinite(value) ? String(Math.round(value)) : '—';
+}
+
+/** Joins the parts of a meta line, skipping unknown values instead of printing them. */
+export function joinKnown(parts: ReadonlyArray<string | number | null | undefined>): string {
+  return parts
+    .filter((part): part is string | number => part !== null && part !== undefined && part !== '')
+    .map(String)
+    .join(' · ');
 }

@@ -1,6 +1,7 @@
 import { doc, getDoc, onSnapshot, runTransaction, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestoreDb, getFirebaseStorage } from '@/config/firebase';
+import { getFirebaseAuth, getFirestoreDb, getFirebaseStorage } from '@/config/firebase';
+import { MatchRepository } from '@/features/player-statistics/repositories/MatchRepository';
 import { type PlayerProfile, type PlayerProfileStat } from '@/features/player-profile/types';
 import {
   parsePlayerMatchStatistics,
@@ -42,6 +43,7 @@ export class PlayerProfileRepository {
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
+        void this.migrateLegacyMatches(userId);
         return ProfileModel.fromFirestore(userId, docSnap.data());
       }
       return null;
@@ -125,6 +127,7 @@ export class PlayerProfileRepository {
     const match = createMatchStatistics(payload, `match-${Date.now()}`);
 
     try {
+      await this.migrateLegacyMatches(userId);
       await runTransaction(db, async (transaction) => {
         const snapshot = await transaction.get(docRef);
         const currentData = snapshot.exists() ? snapshot.data() : {};
@@ -145,6 +148,8 @@ export class PlayerProfileRepository {
           },
           { merge: true },
         );
+        // Canonical per-match document (evidence source) written atomically with the array.
+        MatchRepository.getInstance().setInTransaction(transaction, db, userId, match);
       });
 
       const refreshed = await getDoc(docRef);
@@ -185,5 +190,29 @@ export class PlayerProfileRepository {
 
   private createProfileStats(matches: PlayerMatchStatistics[]): PlayerProfileStat[] {
     return mapMatchesToProfileStats(matches);
+  }
+
+  /**
+   * Lazily copies legacy `statisticsMatches` into `players/{uid}/matches`. Only the signed-in
+   * owner can write there, so this is a no-op for other viewers. Failures are logged and
+   * swallowed: the array remains the fallback source until the next attempt.
+   */
+  private async migrateLegacyMatches(userId: string): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db || getFirebaseAuth()?.currentUser?.uid !== userId) {
+      return;
+    }
+    try {
+      const snapshot = await getDoc(doc(db, 'profiles', userId));
+      if (!snapshot.exists()) {
+        return;
+      }
+      const legacy = parsePlayerMatchStatistics(snapshot.data().statisticsMatches);
+      await MatchRepository.getInstance().ensureMigrated(userId, legacy);
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('Match log migration deferred:', error);
+      }
+    }
   }
 }

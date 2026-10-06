@@ -52,7 +52,9 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
                 {entry.playerClub}
               </Text>
               <Text variant="caption" color="secondary">
-                {entry.playerPosition} · OVR {entry.playerOverallRating}
+                {entry.playerOverallRating !== null
+                  ? `${entry.playerPosition} · OVR ${Math.round(entry.playerOverallRating)}`
+                  : entry.playerPosition}
               </Text>
             </View>
             {onMovePress ? (

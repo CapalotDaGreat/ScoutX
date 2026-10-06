@@ -7,69 +7,81 @@ import {
 } from '@/features/player-comparison/types';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 
-function seedFromId(playerId: string): number {
-  return playerId.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0);
+function formPoints(result: 'W' | 'D' | 'L'): number {
+  return result === 'W' ? 3 : result === 'D' ? 1 : 0;
 }
 
+/**
+ * Trend points derived only from recorded data: recent form results, per-match goal and
+ * assist averages, and the rolling form average. Nothing here is seeded or guessed.
+ */
 function buildPerformanceTrend(player: DiscoverablePlayer): ComparisonTrendPoint[] {
-  const formValues = player.form.map((result, index) => {
-    const points = result === 'W' ? 3 : result === 'D' ? 1 : 0;
-    return { label: `M${index + 1}`, values: { [player.id]: points } };
-  });
+  const formValues = player.form.map((result, index) => ({
+    label: `M${index + 1}`,
+    values: { [player.id]: formPoints(result) },
+  }));
 
   const rolling = player.form.map((_result, index) => {
     const slice = player.form.slice(0, index + 1);
-    const total = slice.reduce((sum, item) => sum + (item === 'W' ? 3 : item === 'D' ? 1 : 0), 0);
+    const total = slice.reduce((sum, item) => sum + formPoints(item), 0);
     const avg = total / slice.length;
     return { label: `Form ${index + 1}`, values: { [player.id]: Number(avg.toFixed(2)) } };
   });
 
-  return [
-    ...formValues.slice(-5),
-    {
-      label: 'Goals/90',
-      values: { [player.id]: Number((player.goals / Math.max(player.matchCount, 1)).toFixed(2)) },
-    },
-    {
-      label: 'Assists/90',
-      values: { [player.id]: Number((player.assists / Math.max(player.matchCount, 1)).toFixed(2)) },
-    },
-    ...rolling.slice(-3),
-  ];
+  const perMatch: ComparisonTrendPoint[] =
+    player.matchCount > 0
+      ? [
+          {
+            label: 'Goals/match',
+            values: { [player.id]: Number((player.goals / player.matchCount).toFixed(2)) },
+          },
+          {
+            label: 'Assists/match',
+            values: { [player.id]: Number((player.assists / player.matchCount).toFixed(2)) },
+          },
+        ]
+      : [];
+
+  return [...formValues.slice(-5), ...perMatch, ...rolling.slice(-3)];
 }
 
-function buildGpsSummary(player: DiscoverablePlayer): ComparisonGpsSummary {
-  const seed = seedFromId(player.id);
+/**
+ * GPS summaries only exist when the discovery projection carries GPS-derived values.
+ * `distanceKm` on a discoverable player is the scout's distance to the player, not a
+ * running distance, so it is never used here.
+ */
+function buildGpsSummary(player: DiscoverablePlayer): ComparisonGpsSummary | null {
+  if (player.sprintSpeedKmh === null) {
+    return null;
+  }
   return {
     playerId: player.id,
-    distanceKm: player.distanceKm ?? 10 + (seed % 5),
+    distanceKm: null,
     sprintSpeedKmh: player.sprintSpeedKmh,
-    sessionsCount: 4 + (seed % 8),
-    topSpeedKmh: Number((player.sprintSpeedKmh + 0.4).toFixed(1)),
+    sessionsCount: null,
+    topSpeedKmh: null,
   };
 }
 
-function buildVideoSummary(player: DiscoverablePlayer): ComparisonVideoSummary {
-  const seed = seedFromId(player.id);
-  const categories = player.hasHighlightVideos
-    ? ['goals', 'skills', 'assists'].slice(0, 1 + (seed % 3))
-    : [];
-
+function buildVideoSummary(player: DiscoverablePlayer): ComparisonVideoSummary | null {
+  if (!player.hasHighlightVideos) {
+    return null;
+  }
+  // The discovery projection only knows that videos exist, not how many or which.
   return {
     playerId: player.id,
-    videoCount: player.hasHighlightVideos ? 2 + (seed % 5) : 0,
-    featuredTitle: player.hasHighlightVideos ? `${player.fullName} — Match Highlights` : 'No videos',
-    categories,
+    videoCount: null,
+    featuredTitle: null,
+    categories: [],
   };
 }
 
 function buildCareerSummary(player: DiscoverablePlayer): ComparisonCareerSummary {
-  const seed = seedFromId(player.id);
   return {
     playerId: player.id,
     clubs: player.clubHistory.map((entry) => entry.club),
     achievements: player.achievements,
-    journeyMilestones: 3 + (seed % 6),
+    journeyMilestones: null,
   };
 }
 

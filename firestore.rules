@@ -35,9 +35,26 @@ service cloud.firestore {
         );
     }
 
+    // Roles are asserted by the confirmRole Cloud Function as a custom auth claim. The
+    // client-writable users document is never trusted for authorization decisions.
+    function tokenRole() {
+      return request.auth.token.get('role', '');
+    }
+
     function hasRecruiterRole() {
-      return exists(/databases/$(database)/documents/users/$(request.auth.uid))
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['scout', 'coach', 'club'];
+      return isSignedIn() && tokenRole() in ['scout', 'coach', 'club', 'admin'];
+    }
+
+    function validMatchLog(data) {
+      return data.id is string
+        && data.id.size() > 0
+        && data.date is string
+        && data.opponent is string
+        && data.opponent.size() <= 120
+        && data.result is string
+        && data.minutes is number
+        && data.minutes >= 0
+        && data.minutes <= 150;
     }
 
     function onlyChanges(keys) {
@@ -92,10 +109,43 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    // The private profile is owner-only. Everyone else reads the server-projected
+    // publicPassports document, which already applies the player's privacy settings.
     match /profiles/{userId} {
-      allow read: if isOwner(userId) || publicPortfolioEnabled(userId);
+      allow read: if isOwner(userId);
       allow create: if isOwner(userId);
       allow update, delete: if isOwner(userId);
+    }
+
+    match /publicPassports/{userId} {
+      allow read: if isOwner(userId) || resource.data.isPublic == true;
+      allow write: if false;
+    }
+
+    // Per-player subcollections. Match logs are the canonical evidence source for
+    // statistics; evidence items index other proof (videos, analyses, observations).
+    match /players/{userId}/matches/{matchId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && request.resource.data.id == matchId
+        && validMatchLog(request.resource.data);
+      allow update: if isOwner(userId)
+        && request.resource.data.id == matchId
+        && validMatchLog(request.resource.data);
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/evidenceItems/{evidenceId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == evidenceId
+        && request.resource.data.kind is string
+        && request.resource.data.provenance is string
+        && request.resource.data.state is string
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 200;
+      allow delete: if isOwner(userId);
     }
 
     // Trust scores are server-maintained; players must not be able to inflate their own.

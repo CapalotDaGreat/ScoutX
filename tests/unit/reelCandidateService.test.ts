@@ -24,8 +24,8 @@ describe('buildHighlightCandidatesFromReport', () => {
           { label: 'No time', detail: 'd', timestampSec: Number.NaN },
         ],
         evidence: [
-          { kind: 'unknown', label: 'No timestamp', detail: 'd', confidence: 0.9 },
-          { kind: 'unknown', label: 'Recovery', detail: 'd', confidence: 0.8, timestampSec: 300 },
+          { kind: 'observation', label: 'No timestamp', detail: 'd', confidence: 0.9 },
+          { kind: 'observation', label: 'Recovery', detail: 'd', confidence: 0.8, timestampSec: 300 },
         ],
       } as Partial<MatchAnalysisReport>),
     );
@@ -33,6 +33,18 @@ describe('buildHighlightCandidatesFromReport', () => {
       candidates.map((item) => item.timestampSec),
       [120, 300],
     );
+  });
+
+  test('inferred or unknown-kind evidence never becomes a clip even with a timestamp', () => {
+    const candidates = buildHighlightCandidatesFromReport(
+      report({
+        evidence: [
+          { kind: 'unknown', label: 'Recovery', detail: 'd', confidence: 0.8, timestampSec: 300 },
+          { kind: 'inference', label: 'Pressing', detail: 'd', confidence: 0.9, timestampSec: 310 },
+        ],
+      } as Partial<MatchAnalysisReport>),
+    );
+    assert.equal(candidates.length, 0);
   });
 
   test('uses model confidence as-is and never labels AI clips as verified', () => {
@@ -50,7 +62,7 @@ describe('buildHighlightCandidatesFromReport', () => {
   test('evidence without a model confidence is excluded rather than given a default', () => {
     const candidates = buildHighlightCandidatesFromReport(
       report({
-        evidence: [{ kind: 'unknown', label: 'Shot', detail: 'd', timestampSec: 50 }],
+        evidence: [{ kind: 'observation', label: 'Shot', detail: 'd', timestampSec: 50 }],
       } as Partial<MatchAnalysisReport>),
     );
     assert.equal(candidates.length, 0);

@@ -5,6 +5,7 @@ import { Text } from '@/components/primitives/Text';
 import { type AiConfidence, type AiInsightBase } from '@/features/ai-insights/types';
 import { Sparkles } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type AiInsightCardProps = {
   insight: AiInsightBase;
@@ -26,6 +27,7 @@ export function AiInsightCard({
   children,
 }: AiInsightCardProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation(['evidence']);
 
   return (
     <Card variant="outlined" padding="md" className="gap-3">
@@ -39,7 +41,11 @@ export function AiInsightCard({
             </Text>
           </View>
         </View>
-        <Badge label={insight.confidence} variant={confidenceVariant[insight.confidence]} size="sm" />
+        {insight.confidence ? (
+          <Badge label={insight.confidence} variant={confidenceVariant[insight.confidence]} size="sm" />
+        ) : (
+          <Badge label={t('evidence:confidenceUnknown')} variant="default" size="sm" />
+        )}
       </View>
 
       {children}

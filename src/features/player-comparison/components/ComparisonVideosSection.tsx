@@ -6,6 +6,7 @@ import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants
 import { type ComparisonPlayerProfile } from '@/features/player-comparison/types';
 import { Video } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ComparisonVideosSectionProps = {
   profiles: ComparisonPlayerProfile[];
@@ -13,6 +14,7 @@ export type ComparisonVideosSectionProps = {
 
 export function ComparisonVideosSection({ profiles }: ComparisonVideosSectionProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation(['scout']);
 
   if (profiles.length === 0) {
     return null;
@@ -33,22 +35,27 @@ export function ComparisonVideosSection({ profiles }: ComparisonVideosSectionPro
           <View className="flex-row items-start gap-3">
             <Video size={22} color={colors.accent} />
             <View className="flex-1 gap-2">
-              <Text variant="body-sm" className="font-sans-semibold">
-                {profile.videos.featuredTitle}
-              </Text>
-              <Text variant="caption" color="secondary">
-                {profile.videos.videoCount} highlight{profile.videos.videoCount === 1 ? '' : 's'}{' '}
-                on file
-              </Text>
-              {profile.videos.categories.length > 0 ? (
-                <View className="flex-row flex-wrap gap-2">
-                  {profile.videos.categories.map((category) => (
-                    <Badge key={category} label={category} variant="default" size="sm" />
-                  ))}
-                </View>
+              {profile.videos ? (
+                <>
+                  <Text variant="body-sm" className="font-sans-semibold">
+                    {profile.videos.featuredTitle ?? t('scout:comparison.videosOnFile')}
+                  </Text>
+                  <Text variant="caption" color="secondary">
+                    {profile.videos.videoCount !== null
+                      ? t('scout:comparison.videoCount', { count: profile.videos.videoCount })
+                      : t('scout:comparison.videoCountUnknown')}
+                  </Text>
+                  {profile.videos.categories.length > 0 ? (
+                    <View className="flex-row flex-wrap gap-2">
+                      {profile.videos.categories.map((category) => (
+                        <Badge key={category} label={category} variant="default" size="sm" />
+                      ))}
+                    </View>
+                  ) : null}
+                </>
               ) : (
-                <Text variant="caption" color="secondary">
-                  No categorized footage yet.
+                <Text variant="body-sm" color="secondary">
+                  {t('scout:comparison.noVideos')}
                 </Text>
               )}
             </View>

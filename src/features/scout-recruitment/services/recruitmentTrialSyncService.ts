@@ -36,7 +36,7 @@ export async function syncRecruitmentStageFromTrial(
         playerClub: invitation.club,
         playerPosition: 'Unknown',
         playerAvatarUrl: '',
-        playerOverallRating: 0,
+        playerOverallRating: null,
       },
       nextStage,
     );

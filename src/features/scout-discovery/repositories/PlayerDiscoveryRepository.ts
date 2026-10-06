@@ -57,17 +57,24 @@ function emptyDashboard(): ScoutDashboardData {
 }
 
 function buildDashboard(players: DiscoverablePlayer[]): ScoutDashboardData {
-  const sorted = [...players].sort((a, b) => b.overallRating - a.overallRating);
+  // Players with a known rating first (highest first); unknown ratings keep their order.
+  const sorted = [...players].sort((a, b) => (b.overallRating ?? -1) - (a.overallRating ?? -1));
+  // "Matching preferences" requires both a known potential rating and a known age.
+  const matching = sorted.filter(
+    (player) =>
+      player.potentialRating !== null &&
+      player.potentialRating >= 70 &&
+      player.age !== null &&
+      player.age <= 23,
+  );
   return {
     featured: sorted.filter((player) => player.verified).slice(0, 5),
     recommended: sorted.slice(0, 6),
     recentlyViewed: [],
     trending: [...sorted].sort((a, b) => b.viewCount - a.viewCount).slice(0, 6),
     nearby: sorted.filter((player) => player.distanceKm !== null).slice(0, 4),
-    matchingPreferences: sorted
-      .filter((player) => player.potentialRating >= 70 && player.age <= 23)
-      .slice(0, 8),
-    matchingCount: sorted.filter((player) => player.potentialRating >= 70 && player.age <= 23).length,
+    matchingPreferences: matching.slice(0, 8),
+    matchingCount: matching.length,
   };
 }
 

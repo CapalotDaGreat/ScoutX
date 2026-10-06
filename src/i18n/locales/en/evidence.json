@@ -1,0 +1,53 @@
+{
+  "provenance": {
+    "self_reported": "Self-reported",
+    "match_derived": "Match-derived",
+    "ai_derived": "AI-derived",
+    "ai_estimated": "AI-estimated",
+    "coach_provided": "Coach-provided",
+    "club_provided": "Club-provided",
+    "gps_derived": "GPS-derived",
+    "verified": "Verified",
+    "unverified": "Unverified",
+    "observed": "Observed",
+    "inferred": "Inferred",
+    "unknown": "Unknown source"
+  },
+  "state": {
+    "available": "Evidence available",
+    "partial": "Partial evidence",
+    "insufficient": "Insufficient evidence",
+    "pending": "Evidence pending",
+    "failed": "Evidence failed",
+    "unknown": "Unknown"
+  },
+  "confidence": {
+    "high": "High confidence",
+    "medium": "Medium confidence",
+    "low": "Low confidence"
+  },
+  "kind": {
+    "match_log": "Match log",
+    "match_analysis": "Match analysis",
+    "video": "Video",
+    "reel": "Highlight reel",
+    "gps_session": "GPS session",
+    "coach_observation": "Coach observation",
+    "club_record": "Club record",
+    "verification": "Verification",
+    "training_session": "Training session",
+    "goal": "Goal",
+    "milestone": "Milestone",
+    "document": "Document",
+    "other": "Other"
+  },
+  "dateUnknown": "Date unknown",
+  "untitled": "Untitled evidence",
+  "sourcesCount_one": "{{count}} source",
+  "sourcesCount_other": "{{count}} sources",
+  "notRecorded": "Not recorded",
+  "noRating": "No rating yet",
+  "noRatingHint": "Ratings only appear once matches with a match rating are logged.",
+  "unknownAge": "Age not provided",
+  "confidenceUnknown": "Confidence not reported"
+}

@@ -69,11 +69,13 @@ export function ScoutReportsInboxScreen({
                       Updated {new Date(report.updatedAt).toLocaleDateString()}
                     </Text>
                   </View>
-                  <Badge
-                    variant="prestige"
-                    label={`OVR ${report.ratings.overall}`}
-                    size="sm"
-                  />
+                  {report.ratings.overall !== null ? (
+                    <Badge
+                      variant="prestige"
+                      label={`OVR ${report.ratings.overall}`}
+                      size="sm"
+                    />
+                  ) : null}
                 </View>
                 {report.recommendations ? (
                   <Text variant="body-sm" color="secondary" numberOfLines={2}>

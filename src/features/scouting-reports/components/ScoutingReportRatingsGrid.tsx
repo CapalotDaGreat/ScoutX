@@ -4,6 +4,8 @@ import { ABILITY_RATING_FIELDS } from '@/features/scouting-reports/constants';
 import { getRatingTier } from '@/features/scouting-reports/models/ScoutingReportModel';
 import { type ScoutingReportRatings } from '@/features/scouting-reports/types';
 import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
+import { formatRating } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { cn } from '@/utils/cn';
 
 export type ScoutingReportRatingsGridProps = {
@@ -17,6 +19,7 @@ const tierColor = {
   strong: 'success',
   solid: 'secondary',
   developing: 'tertiary',
+  unrated: 'tertiary',
 } as const;
 
 export function ScoutingReportRatingsGrid({
@@ -24,11 +27,21 @@ export function ScoutingReportRatingsGrid({
   compact = false,
   className,
 }: ScoutingReportRatingsGridProps) {
+  const { t } = useAppTranslation(['scout']);
   return (
     <View className={cn('gap-3', className)}>
       <View className="flex-row gap-3">
-        <RatingPill label="Overall" value={ratings.overall} emphasis="primary" className="flex-1" />
-        <RatingPill label="Potential" value={ratings.potential} className="flex-1" />
+        <RatingPill
+          label={t('scout:playerDetail.overall')}
+          value={formatRating(ratings.overall)}
+          emphasis="primary"
+          className="flex-1"
+        />
+        <RatingPill
+          label={t('scout:playerDetail.potential')}
+          value={formatRating(ratings.potential)}
+          className="flex-1"
+        />
       </View>
 
       <View className={cn('flex-row flex-wrap gap-2', compact ? 'gap-2' : 'gap-3')}>
@@ -47,9 +60,9 @@ export function ScoutingReportRatingsGrid({
                 {field.label}
               </Text>
               <View className="mt-1 flex-row items-center justify-between">
-                <Text weight="semibold">{value}</Text>
+                <Text weight="semibold">{formatRating(value)}</Text>
                 <Text variant="caption" color={tierColor[tier]} className="capitalize">
-                  {tier}
+                  {tier === 'unrated' ? t('scout:playerDetail.notRated') : tier}
                 </Text>
               </View>
             </View>

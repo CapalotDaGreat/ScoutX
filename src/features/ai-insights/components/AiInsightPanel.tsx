@@ -61,9 +61,11 @@ function renderInsightBody(insight: AiInsight) {
     case 'training_recommendations':
       return (
         <>
-          <Text variant="body-sm" className="font-sans-semibold">
-            Weekly focus: {insight.weeklyFocus}
-          </Text>
+          {insight.weeklyFocus ? (
+            <Text variant="body-sm" className="font-sans-semibold">
+              Weekly focus: {insight.weeklyFocus}
+            </Text>
+          ) : null}
           <AiRecommendationList items={insight.drills} title="Recommended drills" />
         </>
       );
@@ -71,10 +73,19 @@ function renderInsightBody(insight: AiInsight) {
     case 'potential_analysis':
       return (
         <>
-          <Text variant="body-sm">
-            Current {insight.currentRating} · Potential {insight.potentialRating} · Trajectory{' '}
-            {insight.trajectory}
-          </Text>
+          {insight.currentRating !== null ||
+          insight.potentialRating !== null ||
+          insight.trajectory !== null ? (
+            <Text variant="body-sm">
+              {[
+                insight.currentRating !== null ? `Current ${insight.currentRating}` : null,
+                insight.potentialRating !== null ? `Potential ${insight.potentialRating}` : null,
+                insight.trajectory !== null ? `Trajectory ${insight.trajectory}` : null,
+              ]
+                .filter((part): part is string => part !== null)
+                .join(' · ')}
+            </Text>
+          ) : null}
           <Text variant="body-sm">{insight.scoutNotes}</Text>
           {insight.growthAreas.length > 0 ? (
             <Text variant="caption" color="secondary">
@@ -108,9 +119,9 @@ function renderInsightBody(insight: AiInsight) {
     case 'video_summary':
       return (
         <>
-          {insight.keyMoments.map((moment) => (
-            <Text key={`${moment.timestamp}-${moment.description}`} variant="body-sm">
-              {moment.timestamp} — {moment.description}
+          {insight.keyMoments.map((moment, index) => (
+            <Text key={`${moment.timestamp ?? 'no-ts'}-${index}`} variant="body-sm">
+              {moment.timestamp ? `${moment.timestamp} — ${moment.description}` : moment.description}
             </Text>
           ))}
           <Text variant="caption" color="secondary">

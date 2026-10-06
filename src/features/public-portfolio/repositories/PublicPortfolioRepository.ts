@@ -1,4 +1,7 @@
+import { doc, getDoc } from 'firebase/firestore';
+import { getFirebaseAuth, getFirestoreDb } from '@/config/firebase';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
 import { PlayerProfileRepository } from '@/features/player-profile/repositories/PlayerProfileRepository';
 import { TrustRepository } from '@/features/trust-system/repositories/TrustRepository';
 import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
@@ -18,18 +21,16 @@ export class PublicPortfolioRepository {
     return this.instance;
   }
 
+  /**
+   * Loads the passport as other users see it. Non-owners read the server-projected
+   * `publicPassports/{playerId}` document (private profiles are owner-only); the owner reads
+   * their own profile so the preview reflects unsaved privacy changes immediately.
+   */
   public async fetchPublicPortfolio(playerId: string): Promise<PublicPortfolioData | null> {
-    const profileRepository = PlayerProfileRepository.getInstance();
     const trustRepository = TrustRepository.getInstance();
     const gpsRepository = GpsSessionRepository.getInstance();
 
-    let profile: PlayerProfile | null = null;
-    try {
-      profile = await profileRepository.fetchProfile(playerId);
-    } catch {
-      profile = null;
-    }
-
+    const profile = await this.loadVisibleProfile(playerId);
     if (!profile) {
       return null;
     }
@@ -43,6 +44,35 @@ export class PublicPortfolioRepository {
     const gpsHighlights = gpsSessions.slice(0, 3);
 
     return buildPublicPortfolioData(profile, recommendations, gpsHighlights);
+  }
+
+  private async loadVisibleProfile(playerId: string): Promise<PlayerProfile | null> {
+    const isOwner = getFirebaseAuth()?.currentUser?.uid === playerId;
+    if (isOwner) {
+      try {
+        return await PlayerProfileRepository.getInstance().fetchProfile(playerId);
+      } catch {
+        return null;
+      }
+    }
+
+    const db = getFirestoreDb();
+    if (!db) {
+      return null;
+    }
+    try {
+      const snapshot = await getDoc(doc(db, 'publicPassports', playerId));
+      if (!snapshot.exists()) {
+        return null;
+      }
+      const data = snapshot.data();
+      if (data.isPublic !== true) {
+        return null;
+      }
+      return ProfileModel.fromFirestore(playerId, data);
+    } catch {
+      return null;
+    }
   }
 
   private loadRecommendations(
