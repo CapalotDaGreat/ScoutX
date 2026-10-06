@@ -287,5 +287,23 @@
     "preferredFoot": "Preferred foot",
     "height": "Height",
     "selfReportedNote": "Profile details are self-reported by the player."
+  },
+  "editModal": {
+    "title": "Edit Football Identity",
+    "changeCover": "Change Cover Photo",
+    "tapAvatar": "Tap avatar to upload new photo",
+    "basics": "Basics",
+    "fullName": "Full Name",
+    "nationality": "Nationality",
+    "height": "Height",
+    "weight": "Weight",
+    "biography": "Biography",
+    "biographyPlaceholder": "Write a professional overview scouts can trust...",
+    "fullNameRequired": "Full Name is required.",
+    "saveFailed": "Failed to save changes.",
+    "permissionDenied": "Permission to access gallery is required to pick an image.",
+    "permissionTitle": "Permission Denied",
+    "uploadFailed": "Failed to upload image.",
+    "pickFailed": "An error occurred while picking image."
   }
 }

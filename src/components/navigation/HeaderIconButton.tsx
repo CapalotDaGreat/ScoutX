@@ -1,13 +1,13 @@
 import { type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
-import { Settings } from 'lucide-react-native';
+import { Search, Settings } from 'lucide-react-native';
 import { useTheme } from '@/theme';
 import { triggerHaptic } from '@/utils/haptics';
 
 export type HeaderIconButtonProps = {
   onPress: () => void;
   accessibilityLabel: string;
-  icon?: 'settings';
+  icon?: 'settings' | 'search';
 };
 
 /** Consistent 44pt circular header action used next to Activity bell. */
@@ -32,9 +32,11 @@ export function HeaderIconButton({
         pressed ? { opacity: 0.75, transform: [{ scale: 0.96 }] } : undefined
       }
     >
-      {icon === 'settings' ? (
+      {icon === 'search' ? (
+        <Search size={20} color={colors.textPrimary} strokeWidth={2} />
+      ) : (
         <Settings size={20} color={colors.textPrimary} strokeWidth={2} />
-      ) : null}
+      )}
     </Pressable>
   );
 }

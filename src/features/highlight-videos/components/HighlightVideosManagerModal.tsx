@@ -56,7 +56,7 @@ export function HighlightVideosManagerModal({
 
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
   const { showSnackbar } = useSnackbar();
-  const { t } = useAppTranslation(['common']);
+  const { t } = useAppTranslation(['common', 'media']);
 
   const sortedVideos = useMemo(
     () => sortHighlightVideos(library.videos).filter((video) => !pendingDeleteIds.includes(video.id)),
@@ -296,7 +296,7 @@ export function HighlightVideosManagerModal({
         visible={visible && flowPhase === 'editing'}
         initialVideo={editingVideo ?? { durationSec: preparedUpload?.compressed.durationSec ?? 0 }}
         saving={isUploading}
-        title={editingVideo ? 'Edit Highlight Video' : 'Add Highlight Video'}
+        title={editingVideo ? t('media:editor.editTitle') : t('media:editor.addTitle')}
         onClose={() => {
           setEditingVideo(null);
           setPreparedUpload(null);

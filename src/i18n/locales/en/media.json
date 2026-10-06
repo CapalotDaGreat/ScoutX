@@ -38,5 +38,28 @@
     "export": "Export",
     "saveFailed": "Could not save reel",
     "loadFailed": "Could not load reels."
+  },
+  "editor": {
+    "addTitle": "Add Highlight Video",
+    "editTitle": "Edit Highlight Video",
+    "title": "Title",
+    "titlePlaceholder": "Match-winning free kick",
+    "description": "Description",
+    "descriptionPlaceholder": "What makes this clip special for scouts?",
+    "category": "Category",
+    "tags": "Tags",
+    "tagsPlaceholder": "set-piece, clutch, vision",
+    "tagsHint": "Comma-separated tags",
+    "match": "Match",
+    "matchPlaceholder": "Northstar FC vs Rangers",
+    "opponent": "Opponent",
+    "opponentPlaceholder": "Rangers",
+    "competition": "Competition",
+    "competitionPlaceholder": "Primera División",
+    "dateIso": "Date (ISO)",
+    "featured": "Featured ✓",
+    "setFeatured": "Set as Featured",
+    "titleRequired": "Title is required.",
+    "analysisReserved": "AI analysis metadata is reserved for a future release and will attach automatically once enabled."
   }
 }

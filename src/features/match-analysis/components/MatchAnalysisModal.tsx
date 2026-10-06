@@ -582,7 +582,7 @@ export function MatchAnalysisModal({
 
             {isBusy && activeJob?.uploadProgress != null ? (
               <Text variant="caption" color="secondary">
-                Progress {Math.round(activeJob.uploadProgress)}%
+                {t('matchAnalysis:modal.uploadProgress', { percent: Math.round(activeJob.uploadProgress) })}
               </Text>
             ) : null}
           </View>

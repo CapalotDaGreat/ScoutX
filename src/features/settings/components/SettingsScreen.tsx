@@ -9,6 +9,7 @@ import { Card } from '@/components/primitives/Card';
 import { deleteCurrentAccount } from '@/features/auth/services/accountService';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useNotificationPreferences } from '@/features/notifications/hooks/useNotificationPreferences';
+import { NOTIFICATION_CATEGORIES } from '@/features/notifications/services/notificationPreferencesService';
 import { AppearanceSettingsSection } from '@/features/settings/components/AppearanceSettingsSection';
 import { LanguageSettingsSection } from '@/features/settings/components/LanguageSettingsSection';
 import { ChangePasswordSection } from '@/features/settings/components/ChangePasswordSection';
@@ -66,10 +67,12 @@ export function SettingsScreen({
   const { user, role } = useAuth();
   const {
     pushEnabled,
+    categories,
     hasToken,
     isLoading: notificationsLoading,
     isUpdating,
     setPushPreference,
+    setCategoryPreference,
   } = useNotificationPreferences(user?.uid);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -186,8 +189,22 @@ export function SettingsScreen({
               value={pushEnabled && hasToken}
               disabled={notificationsLoading || isUpdating || !user?.uid}
               onValueChange={(value) => void setPushPreference(value)}
+              accessibilityLabel={t('settings:pushNotifications')}
             />
           </View>
+          {pushEnabled && hasToken
+            ? NOTIFICATION_CATEGORIES.map((category) => (
+                <View key={category} className="flex-row items-center justify-between gap-3">
+                  <Text className="flex-1">{t(`settings:category.${category}`)}</Text>
+                  <Switch
+                    value={categories[category]}
+                    disabled={isUpdating || !user?.uid}
+                    onValueChange={(value) => void setCategoryPreference(category, value)}
+                    accessibilityLabel={t(`settings:category.${category}`)}
+                  />
+                </View>
+              ))
+            : null}
         </Card>
 
         <Card variant="elevated" padding="md" className="gap-3">

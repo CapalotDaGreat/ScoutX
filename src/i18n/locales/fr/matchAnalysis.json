@@ -65,6 +65,7 @@
     "retry": "Réessayer l’analyse",
     "recent": "Analyses récentes",
     "another": "Analyser un autre match",
-    "close": "Fermer"
+    "close": "Fermer",
+    "uploadProgress": "Telechargement {{percent}}%"
   }
 }

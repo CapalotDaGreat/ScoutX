@@ -38,5 +38,28 @@
     "export": "Exportar",
     "saveFailed": "Não foi possível guardar o reel",
     "loadFailed": "Não foi possível carregar os reels."
+  },
+  "editor": {
+    "addTitle": "Adicionar vídeo destaque",
+    "editTitle": "Editar vídeo destaque",
+    "title": "Título",
+    "titlePlaceholder": "Livre decisivo",
+    "description": "Descrição",
+    "descriptionPlaceholder": "O que torna este clip especial para scouts?",
+    "category": "Categoria",
+    "tags": "Etiquetas",
+    "tagsPlaceholder": "bola parada, clutch, visão",
+    "tagsHint": "Etiquetas separadas por vírgulas",
+    "match": "Jogo",
+    "matchPlaceholder": "Northstar FC vs Rangers",
+    "opponent": "Adversário",
+    "opponentPlaceholder": "Rangers",
+    "competition": "Competição",
+    "competitionPlaceholder": "Primera División",
+    "dateIso": "Data (ISO)",
+    "featured": "Destaque ✓",
+    "setFeatured": "Definir como destaque",
+    "titleRequired": "O título é obrigatório.",
+    "analysisReserved": "Os metadados de análise IA ficam para uma versão futura e serão anexados automaticamente."
   }
 }

@@ -65,6 +65,7 @@
     "retry": "Reintentar análisis",
     "recent": "Análisis recientes",
     "another": "Analizar otro partido",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "uploadProgress": "Subida {{percent}}%"
   }
 }

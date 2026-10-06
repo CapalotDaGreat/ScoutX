@@ -1,291 +1,309 @@
-﻿{
-    "title":  "Portfolio",
-    "homeTitle":  "InÃ­cio",
-    "homeSubtitle":  "O teu jogo. O teu progresso.",
-    "subtitle":  "Your Football Passport on ScoutX",
-    "loadingSubtitle":  "A preparar o teu perfilâ€¦",
-    "errorSubtitle":  "We couldn\u0027t load your portfolio",
-    "emptySubtitle":  "No portfolio data available",
-    "unavailableTitle":  "Portfolio unavailable",
-    "buildTitle":  "Build your Football Passport",
-    "buildDescription":  "Add your story, stats, and videos so scouts can discover the real you.",
-    "editProfile":  "Editar perfil",
-    "passportInsights":  "Passport insights",
-    "passportInsightsSubtitle":  "Scout views and verification status",
-    "publicPassport":  "Public Football Passport",
-    "publicPassportSubtitle":  "Shareable link, username, and privacy controls",
-    "previewPassport":  "Preview passport",
-    "sharePassport":  "Share passport",
-    "inviteCoach":  "Invite coach",
-    "exportCv":  "Export Football CV",
-    "storyMedia":  "Story \u0026 Media",
-    "storyMediaSubtitle":  "Biography, journey, and highlight videos",
-    "playerProfile":  "Player Profile",
-    "playerProfileSubtitle":  "Positions, career path, and professional details",
-    "performanceSnapshot":  "Performance Snapshot",
-    "performanceSnapshotSubtitle":  "Stats, match logs, and performance summary",
-    "performanceOverview":  "Performance Overview",
-    "performanceOverviewSubtitle":  "Your attribute profile this season",
-    "recentMatches":  "Recent Matches",
-    "footballPassport":  "Football Passport",
-    "passportPreview":  "Passport preview",
-    "passportSubtitle":  "ScoutX shareable football rÃƒÂ©sumÃƒÂ©",
-    "loadingPassportSubtitle":  "Loading shareable rÃƒÂ©sumÃƒÂ©",
-    "passportUnavailable":  "Unavailable",
-    "privatePortfolioTitle":  "Portfolio is private",
-    "previewUnavailableDescription":  "Unable to load portfolio preview.",
-    "privatePortfolioDescription":  "This player has not enabled a public Football Passport yet.",
-    "writeCoachEndorsement":  "Write coach endorsement",
-    "goBack":  "Go back",
-    "defaultPlayerName":  "Player",
-    "defaultVisitorName":  "Visitor",
-    "defaultCoachName":  "Coach",
-    "sections":  {
-                     "careerTimeline":  {
-                                            "title":  "Career Timeline",
-                                            "subtitle":  "Clubs, milestones, and football journey"
-                                        },
-                     "statistics":  {
-                                        "title":  "EstatÃƒÂ­sticas",
-                                        "subtitle":  "Season and match performance"
-                                    },
-                     "performanceCharts":  {
-                                               "title":  "Performance Charts",
-                                               "subtitle":  "Radar and progress trends"
-                                           },
-                     "videos":  {
-                                    "title":  "Highlight Videos",
-                                    "subtitle":  "Featured reels and clips"
-                                },
-                     "achievements":  {
-                                          "title":  "Achievements",
-                                          "subtitle":  "Honours and standout moments"
-                                      },
-                     "recommendations":  {
-                                             "title":  "Coach Endorsements",
-                                             "subtitle":  "Trusted recommendations"
-                                         },
-                     "gpsHighlights":  {
-                                           "title":  "GPS Highlights",
-                                           "subtitle":  "Movement intelligence snapshots"
-                                       }
-                 },
-    "shareSheet":  {
-                       "title":  "Share portfolio",
-                       "description":  "Share your Football Passport via social card, link, or QR code.",
-                       "copyLink":  "Copy link",
-                       "shareLink":  "Share link",
-                       "shareSocialCard":  "Share social card",
-                       "linkCopied":  "Link copied",
-                       "shareTitle":  "{{playerName}} Ã¢â‚¬â€ ScoutX Portfolio",
-                       "shareMessage":  "View {{playerName}}\u0027s football portfolio on ScoutX: {{url}}",
-                       "tagline":  "Football Passport on ScoutX"
-                   },
-    "privacy":  {
-                    "title":  "Portfolio \u0026 discovery privacy",
-                    "description":  "Control your shareable football identity and scout visibility.",
-                    "publicPortfolio":  "Public portfolio",
-                    "publicPortfolioDescription":  "Allow anyone with the link to view your football rÃƒÂ©sumÃƒÂ©.",
-                    "discoverable":  "Discoverable by scouts",
-                    "discoverableDescription":  "Appear in scout search when clubs are looking for talent like you.",
-                    "careerTimeline":  "Career timeline",
-                    "careerTimelineDescription":  "Show journey and club history on your portfolio.",
-                    "statistics":  "EstatÃƒÂ­sticas",
-                    "statisticsDescription":  "Show match stats and performance snapshot.",
-                    "videos":  "Videos",
-                    "videosDescription":  "Show highlight reels on your portfolio.",
-                    "achievements":  "Achievements",
-                    "achievementsDescription":  "Show honours and milestone entries.",
-                    "recommendations":  "Recommendations",
-                    "recommendationsDescription":  "Show scout endorsements on your portfolio.",
-                    "gpsHighlights":  "GPS highlights",
-                    "gpsHighlightsDescription":  "Show movement heatmaps from recorded sessions.",
-                    "performanceCharts":  "Performance charts",
-                    "performanceChartsDescription":  "Show radar and progress charts.",
-                    "socialFeed":  "Social feed visibility",
-                    "socialFeedDescription":  "Allow your posts to appear in the public For You feed."
-                },
-    "username":  {
-                     "title":  "Public link username",
-                     "description":  "Claim your link-in-bio address for Instagram, TikTok, and email signatures.",
-                     "label":  "Username",
-                     "claim":  "Claim username",
-                     "update":  "Update username",
-                     "invalidTitle":  "Invalid username",
-                     "claimedTitle":  "Username claimed",
-                     "claimedMessage":  "Your public link is {{url}}",
-                     "claimFailedTitle":  "Unable to claim username",
-                     "claimFailedFallback":  "Try another username.",
-                     "placeholder":  "your-name",
-                     "available":  "Username is available",
-                     "checking":  "Checking availabilityÃ¢â‚¬Â¦"
-                 },
-    "endorsementInvite":  {
-                              "title":  "Invite your coach",
-                              "description":  "Send this link to a coach or academy staff member. They can write a signed recommendation that appears on your Football Passport.",
-                              "shareInvite":  "Share invite",
-                              "copyInviteLink":  "Copy invite link",
-                              "linkCopied":  "Link copied",
-                              "shareTitle":  "Coach endorsement for {{playerName}}",
-                              "shareMessage":  "Hi coach, could you endorse my Football Passport on ScoutX? {{url}}"
-                          },
-    "score":  {
-                  "title":  "Football Passport Score",
-                  "subtitle":  "Overall readiness and completeness"
-              },
-    "captain":  "CapitÃ£o",
-    "trialsQuickActionTitle":  "Trial invitations",
-    "trialsQuickActionSubtitle":  "Accept, decline, and track scout invitations",
-    "privacyManagedInSettings":  "Portfolio \u0026 discovery privacy is managed in Settings.",
-    "managePrivacy":  "Manage privacy",
-    "today":  {
-        "title": "Hoje",
-        "nextBestAction": "Próximo passo recomendado",
-        "why": "Porquê: {{reason}}",
-        "alsoWorthDoing": "Também vale a pena",
-        "continueTitle": "Continua de onde paraste",
-        "continueAction": "Continuar",
-        "upToDateTitle": "Estás em dia",
-        "upToDateDescription": "Nada urgente agora. Regista o teu próximo jogo depois de jogares.",
-        "analysesUnavailable": "Não conseguimos carregar as tuas análises, por isso as sugestões de análise estão em pausa. Puxa para atualizar.",
-        "actions": {
-            "log_first_match": {
-                "title": "Regista o teu primeiro jogo",
-                "description": "Leva menos de um minuto e começa a tua história no futebol.",
-                "reason": "ainda não registaste nenhum jogo"
-            },
-            "log_match": {
-                "title": "Regista o teu último jogo",
-                "description": "Mantém o teu histórico e o Passport atualizados.",
-                "reason": "o teu último jogo registado foi há {{days}} dias"
-            },
-            "retry_analysis": {
-                "title": "Tenta novamente a análise do jogo",
-                "description": "O teu vídeo já está carregado — basta um toque.",
-                "reason": "a análise do teu jogo contra {{opponent}} não terminou"
-            },
-            "review_coaching": {
-                "title": "Revê o teu feedback de treino",
-                "description": "Vê o que a análise observou contra {{opponent}} e o que trabalhar.",
-                "reason": "a tua análise contra {{opponent}} está pronta e ainda não a abriste"
-            },
-            "analyze_match": {
-                "title": "Analisa o teu jogo contra {{opponent}}",
-                "description": "Carrega o vídeo para receber coaching baseado em evidências.",
-                "reason": "registaste este jogo mas ainda não tem análise"
-            },
-            "respond_trial": {
-                "title": "Responde ao teu convite para captação",
-                "description": "{{club}} aguarda a tua resposta.",
-                "reason": "um convite para captação aguarda a tua resposta"
-            },
-            "prepare_trial": {
-                "title": "Prepara-te para a captação no {{club}}",
-                "description": "Confirma os detalhes e prepara o teu Passport.",
-                "reasonToday": "a tua captação é hoje",
-                "reasonTomorrow": "a tua captação é amanhã",
-                "reasonDays": "a tua captação é daqui a {{days}} dias"
-            },
-            "improve_passport": {
-                "title": "Completa o teu Football Passport",
-                "description": "Próximo passo: {{step}}",
-                "reason": "{{done}} de {{total}} passos do Passport concluídos"
-            },
-            "build_reel": {
-                "title": "Cria o teu primeiro reel de highlights",
-                "description": "Transforma momentos do teu jogo analisado num reel.",
-                "reason": "tens um jogo analisado mas ainda não tens vídeos de highlights"
-            },
-            "set_goal": {
-                "title": "Definir um objetivo de desenvolvimento",
-                "description": "Escolhe uma coisa em que trabalhar. O progresso vem dos jogos que registas.",
-                "reason": "tens histórico de jogos mas nenhum objetivo ativo"
-            },
-            "log_training": {
-                "title": "Registar um treino",
-                "description": "Trabalha {{title}} e mantém o registo honesto.",
-                "reason": "tens um objetivo ativo e nenhum treino recente"
-            },
-            "review_goal": {
-                "title": "Rever {{title}}",
-                "description": "A data de revisão passou. Atualiza o objetivo ou marca-o como alcançado.",
-                "reason": "este objetivo chegou à data de revisão sem ser alcançado"
-            },
-            "matchday_prep": {
-                "title": "Preparação de 60 segundos",
-                "description": "Define o teu papel e foco para {{opponent}} antes do pontapé de saída.",
-                "reason": "registaste um jogo hoje e ainda não te preparaste"
-            }
-        },
-        "continue": {
-            "match_draft": {
-                "title": "Registo de jogo por terminar",
-                "description": "contra {{opponent}} · guardado {{time}}",
-                "descriptionNoOpponent": "Guardado {{time}}"
-            },
-            "failed_analysis": {
-                "title": "A análise precisa de nova tentativa",
-                "description": "Jogo contra {{opponent}}"
-            },
-            "analysis_in_progress": {
-                "title": "Análise em curso",
-                "description": "Jogo contra {{opponent}}"
-            },
-            "failed_upload": {
-                "title": "O carregamento do vídeo não terminou",
-                "description": "{{title}}"
-            },
-            "incomplete_passport": {
-                "title": "Configuração do Passport",
-                "description": "{{done}} de {{total}} passos concluídos"
-            },
-            "goal_in_progress": {
-                "title": "Continuar {{title}}",
-                "description": "Abre Desenvolvimento para adicionar uma nota ou um treino"
-            }
-        },
-        "latestMatch": {
-            "title": "Último jogo",
-            "emptyTitle": "Ainda sem jogos",
-            "emptyDescription": "Regista o teu primeiro jogo para começar a construir a tua história no futebol.",
-            "emptyAction": "Registar jogo",
-            "minutes": "{{count}} min",
-            "goalsAssists": "{{goals}} G · {{assists}} A",
-            "rating": "Nota {{rating}}",
-            "viewAll": "Todos os jogos"
-        },
-        "latestAnalysis": {
-            "title": "Última análise",
-            "emptyTitle": "Ainda sem análise",
-            "emptyDescription": "Carrega vídeos de jogos para receberes uma análise do teu desempenho baseada em evidências.",
-            "emptyAction": "Analisar vídeo",
-            "complete": "Pronta para rever",
-            "failed": "Precisa de nova tentativa",
-            "processing": "A analisar…",
-            "uploading": "Carregamento interrompido",
-            "open": "Abrir",
-            "loadError": "Não conseguimos carregar as tuas análises agora. Os teus dados estão seguros."
-        },
-        "upcomingTrial": {
-            "title": "Próxima captação",
-            "pending": "A aguardar a tua resposta",
-            "accepted": "Confirmada",
-            "open": "Ver captação"
-        },
-        "recentFormSubtitle": "Forma recente num relance",
-        "passportSteps": {
-            "log_first_match": "Regista o teu primeiro jogo",
-            "claim_username": "Reserva o teu link do Passport",
-            "enable_passport": "Publica o teu Football Passport",
-            "invite_coach": "Convida um treinador a recomendar-te",
-            "enable_discoverable": "Fica visível para olheiros"
-        }
+{
+  "title": "Portfolio",
+  "homeTitle": "InÃ­cio",
+  "homeSubtitle": "O teu jogo. O teu progresso.",
+  "subtitle": "Your Football Passport on ScoutX",
+  "loadingSubtitle": "A preparar o teu perfilâ€¦",
+  "errorSubtitle": "We couldn't load your portfolio",
+  "emptySubtitle": "No portfolio data available",
+  "unavailableTitle": "Portfolio unavailable",
+  "buildTitle": "Build your Football Passport",
+  "buildDescription": "Add your story, stats, and videos so scouts can discover the real you.",
+  "editProfile": "Editar perfil",
+  "passportInsights": "Passport insights",
+  "passportInsightsSubtitle": "Scout views and verification status",
+  "publicPassport": "Public Football Passport",
+  "publicPassportSubtitle": "Shareable link, username, and privacy controls",
+  "previewPassport": "Preview passport",
+  "sharePassport": "Share passport",
+  "inviteCoach": "Invite coach",
+  "exportCv": "Export Football CV",
+  "storyMedia": "Story & Media",
+  "storyMediaSubtitle": "Biography, journey, and highlight videos",
+  "playerProfile": "Player Profile",
+  "playerProfileSubtitle": "Positions, career path, and professional details",
+  "performanceSnapshot": "Performance Snapshot",
+  "performanceSnapshotSubtitle": "Stats, match logs, and performance summary",
+  "performanceOverview": "Performance Overview",
+  "performanceOverviewSubtitle": "Your attribute profile this season",
+  "recentMatches": "Recent Matches",
+  "footballPassport": "Football Passport",
+  "passportPreview": "Passport preview",
+  "passportSubtitle": "ScoutX shareable football rÃƒÂ©sumÃƒÂ©",
+  "loadingPassportSubtitle": "Loading shareable rÃƒÂ©sumÃƒÂ©",
+  "passportUnavailable": "Unavailable",
+  "privatePortfolioTitle": "Portfolio is private",
+  "previewUnavailableDescription": "Unable to load portfolio preview.",
+  "privatePortfolioDescription": "This player has not enabled a public Football Passport yet.",
+  "writeCoachEndorsement": "Write coach endorsement",
+  "goBack": "Go back",
+  "defaultPlayerName": "Player",
+  "defaultVisitorName": "Visitor",
+  "defaultCoachName": "Coach",
+  "sections": {
+    "careerTimeline": {
+      "title": "Career Timeline",
+      "subtitle": "Clubs, milestones, and football journey"
     },
-    "passportHero":  {
-        "title":  "FOOTBALL PASSPORT",
-        "club":  "Clube",
-        "preferredFoot":  "Pé preferido",
-        "height":  "Altura",
-        "selfReportedNote":  "Os dados do perfil são declarados pelo próprio jogador."
+    "statistics": {
+      "title": "EstatÃƒÂ­sticas",
+      "subtitle": "Season and match performance"
+    },
+    "performanceCharts": {
+      "title": "Performance Charts",
+      "subtitle": "Radar and progress trends"
+    },
+    "videos": {
+      "title": "Highlight Videos",
+      "subtitle": "Featured reels and clips"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "subtitle": "Honours and standout moments"
+    },
+    "recommendations": {
+      "title": "Coach Endorsements",
+      "subtitle": "Trusted recommendations"
+    },
+    "gpsHighlights": {
+      "title": "GPS Highlights",
+      "subtitle": "Movement intelligence snapshots"
     }
+  },
+  "shareSheet": {
+    "title": "Share portfolio",
+    "description": "Share your Football Passport via social card, link, or QR code.",
+    "copyLink": "Copy link",
+    "shareLink": "Share link",
+    "shareSocialCard": "Share social card",
+    "linkCopied": "Link copied",
+    "shareTitle": "{{playerName}} Ã¢â‚¬â€ ScoutX Portfolio",
+    "shareMessage": "View {{playerName}}'s football portfolio on ScoutX: {{url}}",
+    "tagline": "Football Passport on ScoutX"
+  },
+  "privacy": {
+    "title": "Portfolio & discovery privacy",
+    "description": "Control your shareable football identity and scout visibility.",
+    "publicPortfolio": "Public portfolio",
+    "publicPortfolioDescription": "Allow anyone with the link to view your football rÃƒÂ©sumÃƒÂ©.",
+    "discoverable": "Discoverable by scouts",
+    "discoverableDescription": "Appear in scout search when clubs are looking for talent like you.",
+    "careerTimeline": "Career timeline",
+    "careerTimelineDescription": "Show journey and club history on your portfolio.",
+    "statistics": "EstatÃƒÂ­sticas",
+    "statisticsDescription": "Show match stats and performance snapshot.",
+    "videos": "Videos",
+    "videosDescription": "Show highlight reels on your portfolio.",
+    "achievements": "Achievements",
+    "achievementsDescription": "Show honours and milestone entries.",
+    "recommendations": "Recommendations",
+    "recommendationsDescription": "Show scout endorsements on your portfolio.",
+    "gpsHighlights": "GPS highlights",
+    "gpsHighlightsDescription": "Show movement heatmaps from recorded sessions.",
+    "performanceCharts": "Performance charts",
+    "performanceChartsDescription": "Show radar and progress charts.",
+    "socialFeed": "Social feed visibility",
+    "socialFeedDescription": "Allow your posts to appear in the public For You feed."
+  },
+  "username": {
+    "title": "Public link username",
+    "description": "Claim your link-in-bio address for Instagram, TikTok, and email signatures.",
+    "label": "Username",
+    "claim": "Claim username",
+    "update": "Update username",
+    "invalidTitle": "Invalid username",
+    "claimedTitle": "Username claimed",
+    "claimedMessage": "Your public link is {{url}}",
+    "claimFailedTitle": "Unable to claim username",
+    "claimFailedFallback": "Try another username.",
+    "placeholder": "your-name",
+    "available": "Username is available",
+    "checking": "Checking availabilityÃ¢â‚¬Â¦"
+  },
+  "endorsementInvite": {
+    "title": "Invite your coach",
+    "description": "Send this link to a coach or academy staff member. They can write a signed recommendation that appears on your Football Passport.",
+    "shareInvite": "Share invite",
+    "copyInviteLink": "Copy invite link",
+    "linkCopied": "Link copied",
+    "shareTitle": "Coach endorsement for {{playerName}}",
+    "shareMessage": "Hi coach, could you endorse my Football Passport on ScoutX? {{url}}"
+  },
+  "score": {
+    "title": "Football Passport Score",
+    "subtitle": "Overall readiness and completeness"
+  },
+  "captain": "CapitÃ£o",
+  "trialsQuickActionTitle": "Trial invitations",
+  "trialsQuickActionSubtitle": "Accept, decline, and track scout invitations",
+  "privacyManagedInSettings": "Portfolio & discovery privacy is managed in Settings.",
+  "managePrivacy": "Manage privacy",
+  "today": {
+    "title": "Hoje",
+    "nextBestAction": "Próximo passo recomendado",
+    "why": "Porquê: {{reason}}",
+    "alsoWorthDoing": "Também vale a pena",
+    "continueTitle": "Continua de onde paraste",
+    "continueAction": "Continuar",
+    "upToDateTitle": "Estás em dia",
+    "upToDateDescription": "Nada urgente agora. Regista o teu próximo jogo depois de jogares.",
+    "analysesUnavailable": "Não conseguimos carregar as tuas análises, por isso as sugestões de análise estão em pausa. Puxa para atualizar.",
+    "actions": {
+      "log_first_match": {
+        "title": "Regista o teu primeiro jogo",
+        "description": "Leva menos de um minuto e começa a tua história no futebol.",
+        "reason": "ainda não registaste nenhum jogo"
+      },
+      "log_match": {
+        "title": "Regista o teu último jogo",
+        "description": "Mantém o teu histórico e o Passport atualizados.",
+        "reason": "o teu último jogo registado foi há {{days}} dias"
+      },
+      "retry_analysis": {
+        "title": "Tenta novamente a análise do jogo",
+        "description": "O teu vídeo já está carregado — basta um toque.",
+        "reason": "a análise do teu jogo contra {{opponent}} não terminou"
+      },
+      "review_coaching": {
+        "title": "Revê o teu feedback de treino",
+        "description": "Vê o que a análise observou contra {{opponent}} e o que trabalhar.",
+        "reason": "a tua análise contra {{opponent}} está pronta e ainda não a abriste"
+      },
+      "analyze_match": {
+        "title": "Analisa o teu jogo contra {{opponent}}",
+        "description": "Carrega o vídeo para receber coaching baseado em evidências.",
+        "reason": "registaste este jogo mas ainda não tem análise"
+      },
+      "respond_trial": {
+        "title": "Responde ao teu convite para captação",
+        "description": "{{club}} aguarda a tua resposta.",
+        "reason": "um convite para captação aguarda a tua resposta"
+      },
+      "prepare_trial": {
+        "title": "Prepara-te para a captação no {{club}}",
+        "description": "Confirma os detalhes e prepara o teu Passport.",
+        "reasonToday": "a tua captação é hoje",
+        "reasonTomorrow": "a tua captação é amanhã",
+        "reasonDays": "a tua captação é daqui a {{days}} dias"
+      },
+      "improve_passport": {
+        "title": "Completa o teu Football Passport",
+        "description": "Próximo passo: {{step}}",
+        "reason": "{{done}} de {{total}} passos do Passport concluídos"
+      },
+      "build_reel": {
+        "title": "Cria o teu primeiro reel de highlights",
+        "description": "Transforma momentos do teu jogo analisado num reel.",
+        "reason": "tens um jogo analisado mas ainda não tens vídeos de highlights"
+      },
+      "set_goal": {
+        "title": "Definir um objetivo de desenvolvimento",
+        "description": "Escolhe uma coisa em que trabalhar. O progresso vem dos jogos que registas.",
+        "reason": "tens histórico de jogos mas nenhum objetivo ativo"
+      },
+      "log_training": {
+        "title": "Registar um treino",
+        "description": "Trabalha {{title}} e mantém o registo honesto.",
+        "reason": "tens um objetivo ativo e nenhum treino recente"
+      },
+      "review_goal": {
+        "title": "Rever {{title}}",
+        "description": "A data de revisão passou. Atualiza o objetivo ou marca-o como alcançado.",
+        "reason": "este objetivo chegou à data de revisão sem ser alcançado"
+      },
+      "matchday_prep": {
+        "title": "Preparação de 60 segundos",
+        "description": "Define o teu papel e foco para {{opponent}} antes do pontapé de saída.",
+        "reason": "registaste um jogo hoje e ainda não te preparaste"
+      }
+    },
+    "continue": {
+      "match_draft": {
+        "title": "Registo de jogo por terminar",
+        "description": "contra {{opponent}} · guardado {{time}}",
+        "descriptionNoOpponent": "Guardado {{time}}"
+      },
+      "failed_analysis": {
+        "title": "A análise precisa de nova tentativa",
+        "description": "Jogo contra {{opponent}}"
+      },
+      "analysis_in_progress": {
+        "title": "Análise em curso",
+        "description": "Jogo contra {{opponent}}"
+      },
+      "failed_upload": {
+        "title": "O carregamento do vídeo não terminou",
+        "description": "{{title}}"
+      },
+      "incomplete_passport": {
+        "title": "Configuração do Passport",
+        "description": "{{done}} de {{total}} passos concluídos"
+      },
+      "goal_in_progress": {
+        "title": "Continuar {{title}}",
+        "description": "Abre Desenvolvimento para adicionar uma nota ou um treino"
+      }
+    },
+    "latestMatch": {
+      "title": "Último jogo",
+      "emptyTitle": "Ainda sem jogos",
+      "emptyDescription": "Regista o teu primeiro jogo para começar a construir a tua história no futebol.",
+      "emptyAction": "Registar jogo",
+      "minutes": "{{count}} min",
+      "goalsAssists": "{{goals}} G · {{assists}} A",
+      "rating": "Nota {{rating}}",
+      "viewAll": "Todos os jogos"
+    },
+    "latestAnalysis": {
+      "title": "Última análise",
+      "emptyTitle": "Ainda sem análise",
+      "emptyDescription": "Carrega vídeos de jogos para receberes uma análise do teu desempenho baseada em evidências.",
+      "emptyAction": "Analisar vídeo",
+      "complete": "Pronta para rever",
+      "failed": "Precisa de nova tentativa",
+      "processing": "A analisar…",
+      "uploading": "Carregamento interrompido",
+      "open": "Abrir",
+      "loadError": "Não conseguimos carregar as tuas análises agora. Os teus dados estão seguros."
+    },
+    "upcomingTrial": {
+      "title": "Próxima captação",
+      "pending": "A aguardar a tua resposta",
+      "accepted": "Confirmada",
+      "open": "Ver captação"
+    },
+    "recentFormSubtitle": "Forma recente num relance",
+    "passportSteps": {
+      "log_first_match": "Regista o teu primeiro jogo",
+      "claim_username": "Reserva o teu link do Passport",
+      "enable_passport": "Publica o teu Football Passport",
+      "invite_coach": "Convida um treinador a recomendar-te",
+      "enable_discoverable": "Fica visível para olheiros"
+    }
+  },
+  "passportHero": {
+    "title": "FOOTBALL PASSPORT",
+    "club": "Clube",
+    "preferredFoot": "Pé preferido",
+    "height": "Altura",
+    "selfReportedNote": "Os dados do perfil são declarados pelo próprio jogador."
+  },
+  "editModal": {
+    "title": "Editar identidade de futebol",
+    "changeCover": "Alterar foto de capa",
+    "tapAvatar": "Toca no avatar para carregar uma foto nova",
+    "basics": "Dados básicos",
+    "fullName": "Nome completo",
+    "nationality": "Nacionalidade",
+    "height": "Altura",
+    "weight": "Peso",
+    "biography": "Biografia",
+    "biographyPlaceholder": "Escreve um resumo profissional em que os scouts possam confiar…",
+    "fullNameRequired": "O nome completo é obrigatório.",
+    "saveFailed": "Não foi possível guardar as alterações.",
+    "permissionDenied": "É preciso acesso à galeria para escolher uma imagem.",
+    "permissionTitle": "Permissão recusada",
+    "uploadFailed": "Não foi possível carregar a imagem.",
+    "pickFailed": "Ocorreu um erro ao escolher a imagem."
+  }
 }

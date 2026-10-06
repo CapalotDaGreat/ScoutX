@@ -38,5 +38,28 @@
     "export": "Exporteren",
     "saveFailed": "Reel kon niet worden opgeslagen",
     "loadFailed": "Reels konden niet worden geladen."
+  },
+  "editor": {
+    "addTitle": "Highlightvideo toevoegen",
+    "editTitle": "Highlightvideo bewerken",
+    "title": "Titel",
+    "titlePlaceholder": "Beslissende vrije trap",
+    "description": "Beschrijving",
+    "descriptionPlaceholder": "Wat maakt deze clip bijzonder voor scouts?",
+    "category": "Categorie",
+    "tags": "Tags",
+    "tagsPlaceholder": "dead ball, clutch, visie",
+    "tagsHint": "Kommagescheiden tags",
+    "match": "Wedstrijd",
+    "matchPlaceholder": "Northstar FC vs Rangers",
+    "opponent": "Tegenstander",
+    "opponentPlaceholder": "Rangers",
+    "competition": "Competitie",
+    "competitionPlaceholder": "Primera División",
+    "dateIso": "Datum (ISO)",
+    "featured": "Uitgelicht ✓",
+    "setFeatured": "Als uitgelicht zetten",
+    "titleRequired": "Titel is verplicht.",
+    "analysisReserved": "AI-analysemetadata is gereserveerd voor een latere release en wordt dan automatisch toegevoegd."
   }
 }

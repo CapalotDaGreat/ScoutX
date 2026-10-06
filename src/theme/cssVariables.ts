@@ -34,5 +34,10 @@ export function themeColorsToCssVars(colors: ThemeColors): Record<string, string
     '--color-error-muted': colors.errorMuted,
     '--color-info': colors.info,
     '--color-info-muted': colors.infoMuted,
+    '--color-evidence': colors.evidence,
+    '--color-ai-derived': colors.aiDerived,
+    '--color-verification': colors.verification,
+    '--color-achievement': colors.achievement,
+    '--color-disabled': colors.disabled,
   };
 }

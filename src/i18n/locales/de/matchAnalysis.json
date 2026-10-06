@@ -65,6 +65,7 @@
     "retry": "Analyse erneut versuchen",
     "recent": "Letzte Analysen",
     "another": "Weiteres Spiel analysieren",
-    "close": "Schließen"
+    "close": "Schließen",
+    "uploadProgress": "Upload {{percent}}%"
   }
 }

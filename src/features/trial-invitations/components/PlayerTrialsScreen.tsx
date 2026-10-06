@@ -14,6 +14,7 @@ import {
 } from '@/features/trial-invitations/hooks/useTrialInvitations';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
 import { Section } from '@/components/layout/Section';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerTrialsScreenProps = {
   embeddedInTabShell?: boolean;
@@ -26,6 +27,7 @@ export function PlayerTrialsScreen({
   nestedUnderSegment = false,
   onBack,
 }: PlayerTrialsScreenProps) {
+  const { t } = useAppTranslation(['trials', 'common']);
   const { trials, isLoading, isSaving, acceptTrial, declineTrial } = usePlayerTrialInvitations();
   const { notifications, markRead } = useTrialNotifications();
   const [activeTrial, setActiveTrial] = useState<TrialInvitation | null>(null);
@@ -37,7 +39,7 @@ export function PlayerTrialsScreen({
 
   if (isLoading) {
     return (
-      <Screen title="Trials" subtitle="Your recruitment invitations" safeArea {...screenProps}>
+      <Screen title={t('title')} subtitle={t('loadingSubtitle')} safeArea {...screenProps}>
         <SkeletonLoader variant="card" count={2} />
       </Screen>
     );
@@ -45,22 +47,22 @@ export function PlayerTrialsScreen({
 
   return (
     <Screen
-      title="Trials"
-      subtitle="Accept, decline, and track professional trial invitations"
+      title={t('title')}
+      subtitle={t('fullSubtitle')}
       scrollable
       safeArea
       {...screenProps}
       footer={
         onBack ? (
           <Button variant="secondary" onPress={onBack} fullWidth>
-            Back
+            {t('common:back')}
           </Button>
         ) : undefined
       }
     >
       <View className="gap-6">
         {notifications.length > 0 ? (
-          <Section title="Notifications" subtitle="Trial updates for your account">
+          <Section title={t('notificationsTitle')} subtitle={t('notificationsSubtitle')}>
             <View className="gap-2">
               {notifications.slice(0, 5).map((notification) => (
                 <NotificationCard
@@ -84,12 +86,9 @@ export function PlayerTrialsScreen({
         ) : null}
 
         {trials.length === 0 ? (
-          <EmptyState
-            title="No trial invitations"
-            description="When scouts invite you to trials, they will appear here with full details and history."
-          />
+          <EmptyState title={t('noInvitations')} description={t('noInvitationsDescriptionFull')} />
         ) : (
-          <Section title="Your Invitations">
+          <Section title={t('yourInvitations')}>
             <View className="gap-3">
               {trials.map((trial, index) => (
                 <TrialInvitationCard

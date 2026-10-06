@@ -62,6 +62,7 @@ export type PlayerProfileScreenProps = {
   /** Bumps when onboarding asks the player to finish passport link/username. */
   passportSettingsFocusKey?: number | null;
   onSettingsPress?: () => void;
+  onSearchPress?: () => void;
   embeddedInTabShell?: boolean;
   /** Today section (next best action, continue, snapshots) rendered directly under the hero. */
   todaySlot?: ReactNode;
@@ -89,6 +90,7 @@ export function PlayerProfileScreen({
   onUsernameClaimed,
   passportSettingsFocusKey = null,
   onSettingsPress,
+  onSearchPress,
   embeddedInTabShell = false,
   todaySlot,
 }: PlayerProfileScreenProps) {
@@ -162,8 +164,15 @@ export function PlayerProfileScreen({
       safeArea
       {...screenProps}
       headerActions={
-        onActivityPress || onSettingsPress ? (
+        onActivityPress || onSettingsPress || onSearchPress ? (
           <HeaderActionCluster>
+            {onSearchPress ? (
+              <HeaderIconButton
+                icon="search"
+                accessibilityLabel={t('common:search')}
+                onPress={onSearchPress}
+              />
+            ) : null}
             {onActivityPress ? (
               <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
             ) : null}

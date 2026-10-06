@@ -19,5 +19,31 @@
   "createInvitation": "Create invitation",
   "replayTitle": "Replay do trial",
   "replayEmpty": "Ainda nao ha historico de trial registado.",
-  "replayLabel": "Replay do historico de convite armazenado — nada inventado."
+  "replayLabel": "Replay do historico de convite armazenado — nada inventado.",
+  "historyEmpty": "Ainda sem histórico.",
+  "history": {
+    "created": "Convite criado",
+    "accepted": "Jogador aceitou",
+    "declined": "Jogador recusou",
+    "rescheduled": "Trial reagendado",
+    "cancelled": "Convite cancelado",
+    "completed": "Trial concluído",
+    "note_added": "Nota adicionada"
+  },
+  "scoutInboxSubtitle": "Convites no teu pipeline",
+  "scoutInboxFullSubtitle": "Todos os convites de trial que enviaste",
+  "scoutInboxEmptyTitle": "Ainda sem convites de trial",
+  "scoutInboxEmptyDescription": "Convida jogadores a partir do perfil. Os convites enviados de todos os jogadores aparecem aqui.",
+  "sectionTitle": "Convites de trial",
+  "sectionSubtitle": "Fluxo profissional de recrutamento para este jogador",
+  "invite": "Convidar",
+  "sectionEmpty": "Ainda sem convites. Envia um convite estruturado com clube, treinador e detalhes da sessão.",
+  "cancelTrialTitle": "Cancelar trial",
+  "cancelTrialMessage": "Cancelar este convite de trial?",
+  "keep": "Manter",
+  "cancelTrial": "Cancelar trial",
+  "cancelFailed": "Não foi possível cancelar o trial.",
+  "reschedule": "Reagendar",
+  "responseNote": "Nota de resposta (opcional)",
+  "responseNotePlaceholder": "Confirmação de disponibilidade ou perguntas para o scout…"
 }

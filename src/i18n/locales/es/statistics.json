@@ -104,5 +104,15 @@
       "notWhole": "{{field}} debe ser un número entero.",
       "outOfRange": "{{field}} debe estar entre {{min}} y {{max}}."
     }
-  }
+  },
+  "emptyDescriptionVideo": "Registra un partido o sube una grabación completa de Veo para estadísticas IA y feedback de coaching.",
+  "uploadAnalyze": "Subir / analizar vídeo del partido",
+  "uploadAnalyzeAi": "Subir / analizar vídeo del partido con IA",
+  "headlineSubtitle": "{{count}} partidos · primero las métricas clave",
+  "attributeProfile": "Perfil de atributos",
+  "attributeProfileSubtitle": "Radar de tus fortalezas actuales",
+  "aiCoaching": "Coaching IA",
+  "aiCoachingSubtitle": "Resumen de rendimiento e ideas de mejora",
+  "performanceTrends": "Tendencias de rendimiento",
+  "performanceTrendsSubtitle": "Gráficos de progreso en partidos recientes"
 }

@@ -104,5 +104,15 @@
       "notWhole": "{{field}} moet een heel getal zijn.",
       "outOfRange": "{{field}} moet tussen {{min}} en {{max}} liggen."
     }
-  }
+  },
+  "emptyDescriptionVideo": "Log een wedstrijd of upload een volledige Veo-opname voor AI-stats en coachingfeedback.",
+  "uploadAnalyze": "Wedstrijdvideo uploaden / analyseren",
+  "uploadAnalyzeAi": "Wedstrijdvideo met AI uploaden / analyseren",
+  "headlineSubtitle": "{{count}} wedstrijden · eerst de kerngerichte metrics",
+  "attributeProfile": "Attribuutprofiel",
+  "attributeProfileSubtitle": "Radar van je huidige sterktes",
+  "aiCoaching": "AI-coaching",
+  "aiCoachingSubtitle": "Prestatiesamenvatting en verbeterideeën",
+  "performanceTrends": "Prestatietrends",
+  "performanceTrendsSubtitle": "Voortgangsgrafieken over recente wedstrijden"
 }

@@ -38,5 +38,28 @@
     "export": "Esporta",
     "saveFailed": "Impossibile salvare il reel",
     "loadFailed": "Impossibile caricare i reel."
+  },
+  "editor": {
+    "addTitle": "Aggiungi video highlight",
+    "editTitle": "Modifica video highlight",
+    "title": "Titolo",
+    "titlePlaceholder": "Punizione decisiva",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Cosa rende questo clip speciale per gli scout?",
+    "category": "Categoria",
+    "tags": "Tag",
+    "tagsPlaceholder": "calcio da fermo, clutch, visione",
+    "tagsHint": "Tag separati da virgola",
+    "match": "Partita",
+    "matchPlaceholder": "Northstar FC vs Rangers",
+    "opponent": "Avversario",
+    "opponentPlaceholder": "Rangers",
+    "competition": "Competizione",
+    "competitionPlaceholder": "Primera División",
+    "dateIso": "Data (ISO)",
+    "featured": "In evidenza ✓",
+    "setFeatured": "Imposta come evidenza",
+    "titleRequired": "Il titolo è obbligatorio.",
+    "analysisReserved": "I metadati di analisi IA sono riservati a una versione futura e verranno aggiunti automaticamente."
   }
 }

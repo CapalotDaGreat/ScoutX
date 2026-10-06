@@ -7,6 +7,7 @@ import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { VIDEO_CATEGORY_OPTIONS } from '@/features/highlight-videos/constants';
 import { type HighlightVideo, type VideoCategory } from '@/features/highlight-videos/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type HighlightVideoEditorModalProps = {
   visible: boolean;
@@ -35,12 +36,14 @@ export function HighlightVideoEditorModal({
   visible,
   initialVideo,
   saving = false,
-  title = 'Add Highlight Video',
+  title,
   onClose,
   onSubmit,
 }: HighlightVideoEditorModalProps) {
+  const { t } = useAppTranslation(['media', 'common', 'validation']);
   const [draft, setDraft] = useState(defaultDraft);
   const [tagsInput, setTagsInput] = useState('');
+  const modalTitle = title ?? t('editor.addTitle');
 
   useEffect(() => {
     if (visible) {
@@ -63,7 +66,7 @@ export function HighlightVideoEditorModal({
 
   const handleSubmit = () => {
     if (!draft.title.trim()) {
-      Alert.alert('Validation', 'Title is required.');
+      Alert.alert(t('validation:fieldRequired'), t('editor.titleRequired'));
       return;
     }
 
@@ -85,16 +88,16 @@ export function HighlightVideoEditorModal({
   const footer = (
     <View className="flex-row gap-3">
       <Button variant="secondary" className="flex-1" onPress={onClose} disabled={saving}>
-        Cancel
+        {t('common:cancel')}
       </Button>
       <Button variant="accent" className="flex-1" onPress={handleSubmit} loading={saving}>
-        Save
+        {t('common:save')}
       </Button>
     </View>
   );
 
   return (
-    <Modal visible={visible} onClose={onClose} title={title} size="sheet" footer={footer}>
+    <Modal visible={visible} onClose={onClose} title={modalTitle} size="sheet" footer={footer}>
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ padding: 16, paddingBottom: 32 }}
@@ -102,53 +105,53 @@ export function HighlightVideoEditorModal({
       >
         <View className="gap-4">
           <Input
-            label="Title"
+            label={t('editor.title')}
             value={draft.title}
             onChangeText={(value) => setDraft((current) => ({ ...current, title: value }))}
-            placeholder="Match-winning free kick"
+            placeholder={t('editor.titlePlaceholder')}
           />
           <Input
-            label="Description"
+            label={t('editor.description')}
             value={draft.description}
             onChangeText={(value) => setDraft((current) => ({ ...current, description: value }))}
-            placeholder="What makes this clip special for scouts?"
+            placeholder={t('editor.descriptionPlaceholder')}
             multiline
             numberOfLines={3}
             inputClassName="min-h-[80px] text-top"
           />
           <Dropdown
-            label="Category"
+            label={t('editor.category')}
             value={draft.category}
             onChange={(value) => setDraft((current) => ({ ...current, category: value as VideoCategory }))}
             options={VIDEO_CATEGORY_OPTIONS}
           />
           <Input
-            label="Tags"
+            label={t('editor.tags')}
             value={tagsInput}
             onChangeText={setTagsInput}
-            placeholder="set-piece, clutch, vision"
-            hint="Comma-separated tags"
+            placeholder={t('editor.tagsPlaceholder')}
+            hint={t('editor.tagsHint')}
           />
           <Input
-            label="Match"
+            label={t('editor.match')}
             value={draft.match}
             onChangeText={(value) => setDraft((current) => ({ ...current, match: value }))}
-            placeholder="Northstar FC vs Rangers"
+            placeholder={t('editor.matchPlaceholder')}
           />
           <Input
-            label="Opponent"
+            label={t('editor.opponent')}
             value={draft.opponent}
             onChangeText={(value) => setDraft((current) => ({ ...current, opponent: value }))}
-            placeholder="Rangers"
+            placeholder={t('editor.opponentPlaceholder')}
           />
           <Input
-            label="Competition"
+            label={t('editor.competition')}
             value={draft.competition}
             onChangeText={(value) => setDraft((current) => ({ ...current, competition: value }))}
-            placeholder="Primera División"
+            placeholder={t('editor.competitionPlaceholder')}
           />
           <Input
-            label="Date (ISO)"
+            label={t('editor.dateIso')}
             value={draft.date}
             onChangeText={(value) => setDraft((current) => ({ ...current, date: value }))}
             placeholder="2025-03-18T00:00:00.000Z"
@@ -159,11 +162,11 @@ export function HighlightVideoEditorModal({
               className="flex-1"
               onPress={() => setDraft((current) => ({ ...current, featured: !current.featured }))}
             >
-              {draft.featured ? 'Featured ✓' : 'Set as Featured'}
+              {draft.featured ? t('editor.featured') : t('editor.setFeatured')}
             </Button>
           </View>
           <Text variant="caption" color="secondary">
-            AI analysis metadata is reserved for a future release and will attach automatically once enabled.
+            {t('editor.analysisReserved')}
           </Text>
         </View>
       </ScrollView>

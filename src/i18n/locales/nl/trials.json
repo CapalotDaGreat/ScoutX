@@ -19,5 +19,31 @@
   "createInvitation": "Create invitation",
   "replayTitle": "Trialreplay",
   "replayEmpty": "Nog geen vastgelegde trialgeschiedenis.",
-  "replayLabel": "Replay van opgeslagen uitnodigingsgeschiedenis — niets verzonnen."
+  "replayLabel": "Replay van opgeslagen uitnodigingsgeschiedenis — niets verzonnen.",
+  "historyEmpty": "Nog geen geschiedenis.",
+  "history": {
+    "created": "Uitnodiging aangemaakt",
+    "accepted": "Speler geaccepteerd",
+    "declined": "Speler afgewezen",
+    "rescheduled": "Trial verzet",
+    "cancelled": "Uitnodiging geannuleerd",
+    "completed": "Trial afgerond",
+    "note_added": "Notitie toegevoegd"
+  },
+  "scoutInboxSubtitle": "Uitnodigingen in je pipeline",
+  "scoutInboxFullSubtitle": "Alle trialuitnodigingen die je hebt verstuurd",
+  "scoutInboxEmptyTitle": "Nog geen trialuitnodigingen",
+  "scoutInboxEmptyDescription": "Nodig spelers uit via hun profiel. Verstuurde uitnodigingen van alle spelers staan hier.",
+  "sectionTitle": "Trialuitnodigingen",
+  "sectionSubtitle": "Professionele wervingsworkflow voor deze speler",
+  "invite": "Uitnodigen",
+  "sectionEmpty": "Nog geen uitnodigingen. Stuur een gestructureerde uitnodiging met club, trainer en sessiedetails.",
+  "cancelTrialTitle": "Trial annuleren",
+  "cancelTrialMessage": "Deze trialuitnodiging annuleren?",
+  "keep": "Behouden",
+  "cancelTrial": "Trial annuleren",
+  "cancelFailed": "Trial kon niet worden geannuleerd.",
+  "reschedule": "Verzetten",
+  "responseNote": "Antwoordnotitie (optioneel)",
+  "responseNotePlaceholder": "Beschikbaarheid of vragen voor de scout…"
 }

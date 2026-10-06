@@ -38,5 +38,28 @@
     "export": "Exportieren",
     "saveFailed": "Reel konnte nicht gespeichert werden",
     "loadFailed": "Reels konnten nicht geladen werden."
+  },
+  "editor": {
+    "addTitle": "Highlight-Video hinzufügen",
+    "editTitle": "Highlight-Video bearbeiten",
+    "title": "Titel",
+    "titlePlaceholder": "Siegbringender Freistoß",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Was macht diesen Clip für Scouts besonders?",
+    "category": "Kategorie",
+    "tags": "Tags",
+    "tagsPlaceholder": "Standardsituation, clutch, Übersicht",
+    "tagsHint": "Kommagetrennte Tags",
+    "match": "Spiel",
+    "matchPlaceholder": "Northstar FC vs Rangers",
+    "opponent": "Gegner",
+    "opponentPlaceholder": "Rangers",
+    "competition": "Wettbewerb",
+    "competitionPlaceholder": "Primera División",
+    "dateIso": "Datum (ISO)",
+    "featured": "Hervorgehoben ✓",
+    "setFeatured": "Als Highlight setzen",
+    "titleRequired": "Titel ist erforderlich.",
+    "analysisReserved": "KI-Analysemetadaten sind für eine spätere Version vorgesehen und werden dann automatisch ergänzt."
   }
 }

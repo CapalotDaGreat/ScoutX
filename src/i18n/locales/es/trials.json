@@ -19,5 +19,31 @@
   "createInvitation": "Create invitation",
   "replayTitle": "Repeticion del trial",
   "replayEmpty": "Aun no hay historial de trial registrado.",
-  "replayLabel": "Repeticion del historial de invitacion almacenado — nada inventado."
+  "replayLabel": "Repeticion del historial de invitacion almacenado — nada inventado.",
+  "historyEmpty": "Aún no hay historial.",
+  "history": {
+    "created": "Invitación creada",
+    "accepted": "El jugador aceptó",
+    "declined": "El jugador rechazó",
+    "rescheduled": "Prueba reprogramada",
+    "cancelled": "Invitación cancelada",
+    "completed": "Prueba completada",
+    "note_added": "Nota añadida"
+  },
+  "scoutInboxSubtitle": "Invitaciones de tu pipeline",
+  "scoutInboxFullSubtitle": "Todas las invitaciones a pruebas que has enviado",
+  "scoutInboxEmptyTitle": "Aún no hay invitaciones a pruebas",
+  "scoutInboxEmptyDescription": "Invita jugadores desde su perfil. Las invitaciones enviadas de todos los jugadores aparecen aquí.",
+  "sectionTitle": "Invitaciones a pruebas",
+  "sectionSubtitle": "Flujo profesional de captación para este jugador",
+  "invite": "Invitar",
+  "sectionEmpty": "Aún no hay invitaciones. Envía una invitación estructurada con club, entrenador y detalles de la sesión.",
+  "cancelTrialTitle": "Cancelar prueba",
+  "cancelTrialMessage": "¿Cancelar esta invitación a prueba?",
+  "keep": "Mantener",
+  "cancelTrial": "Cancelar prueba",
+  "cancelFailed": "No se pudo cancelar la prueba.",
+  "reschedule": "Reprogramar",
+  "responseNote": "Nota de respuesta (opcional)",
+  "responseNotePlaceholder": "Confirmación de disponibilidad o preguntas para el scout…"
 }

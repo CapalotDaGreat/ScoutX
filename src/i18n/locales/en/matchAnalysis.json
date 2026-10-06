@@ -65,6 +65,7 @@
     "retry": "Retry analysis",
     "recent": "Recent analyses",
     "another": "Analyze another match",
-    "close": "Close"
+    "close": "Close",
+    "uploadProgress": "Upload {{percent}}%"
   }
 }

@@ -104,5 +104,15 @@
       "notWhole": "{{field}} must be a whole number.",
       "outOfRange": "{{field}} must be between {{min}} and {{max}}."
     }
-  }
+  },
+  "emptyDescriptionVideo": "Log a match or upload a full Veo recording for AI stats and coaching feedback.",
+  "uploadAnalyze": "Upload / analyze match video",
+  "uploadAnalyzeAi": "Upload / analyze match video with AI",
+  "headlineSubtitle": "{{count}} matches · headline metrics first",
+  "attributeProfile": "Attribute profile",
+  "attributeProfileSubtitle": "Radar of your current strengths",
+  "aiCoaching": "AI coaching",
+  "aiCoachingSubtitle": "Performance summary and improvement ideas",
+  "performanceTrends": "Performance trends",
+  "performanceTrendsSubtitle": "Progress graphs over recent matches"
 }

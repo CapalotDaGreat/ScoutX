@@ -20,6 +20,7 @@ import {
   type ScoutingReportDraft,
   createEmptyScoutingReportDraft,
 } from '@/features/scouting-reports/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
 
 export type ScoutingReportEditorModalProps = {
@@ -41,6 +42,7 @@ export function ScoutingReportEditorModal({
   onSave,
   onDelete,
 }: ScoutingReportEditorModalProps) {
+  const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const [draft, setDraft] = useState<ScoutingReportDraft>(createEmptyScoutingReportDraft(playerName));
   const [strengthsText, setStrengthsText] = useState('');
   const [weaknessesText, setWeaknessesText] = useState('');
@@ -83,7 +85,7 @@ export function ScoutingReportEditorModal({
     };
 
     if (payload.strengths.length === 0) {
-      Alert.alert('Validation', 'Add at least one strength.');
+      Alert.alert(t('reports.editor.validationTitle'), t('reports.editor.strengthRequired'));
       return;
     }
 
@@ -91,7 +93,7 @@ export function ScoutingReportEditorModal({
       await onSave(payload);
       onClose();
     } catch (error) {
-      Alert.alert('Error', toUserMessage(error, 'Could not save report.'));
+      Alert.alert(t('common:errorTitle'), toUserMessage(error, t('reports.editor.saveFailed')));
     }
   };
 
@@ -100,16 +102,16 @@ export function ScoutingReportEditorModal({
       return;
     }
 
-    Alert.alert('Delete Report', 'This scouting report will be permanently removed.', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('reports.editor.deleteTitle'), t('reports.editor.deleteMessage'), [
+      { text: t('common:cancel'), style: 'cancel' },
       {
-        text: 'Delete',
+        text: t('common:delete'),
         style: 'destructive',
         onPress: () => {
           void onDelete(report.id)
             .then(onClose)
             .catch((error: unknown) => {
-              Alert.alert('Error', toUserMessage(error, 'Could not delete report.'));
+              Alert.alert(t('common:errorTitle'), toUserMessage(error, t('reports.editor.deleteFailed')));
             });
         },
       },
@@ -120,15 +122,15 @@ export function ScoutingReportEditorModal({
     <View className="gap-3">
       {report && onDelete ? (
         <Button variant="destructive" onPress={handleDelete} disabled={saving}>
-          Delete Report
+          {t('reports.editor.deleteReport')}
         </Button>
       ) : null}
       <View className="flex-row gap-3">
         <Button variant="secondary" className="flex-1" onPress={onClose} disabled={saving}>
-          Cancel
+          {t('common:cancel')}
         </Button>
         <Button variant="accent" className="flex-1" onPress={() => void handleSave()} loading={saving}>
-          Save Report
+          {t('reports.editor.saveReport')}
         </Button>
       </View>
     </View>
@@ -138,7 +140,7 @@ export function ScoutingReportEditorModal({
     <Modal
       visible={visible}
       onClose={onClose}
-      title={report ? 'Edit Scouting Report' : 'New Scouting Report'}
+      title={report ? t('reports.editor.editTitle') : t('reports.editor.newTitle')}
       size="sheet"
       footer={footer}
     >
@@ -149,22 +151,22 @@ export function ScoutingReportEditorModal({
       >
         <View className="gap-4">
           <Text variant="body-sm" color="secondary">
-            Evaluating {playerName}
+            {t('reports.editor.evaluating', { playerName })}
           </Text>
 
           <Text variant="label" color="secondary">
-            Headline Ratings
+            {t('reports.editor.headlineRatings')}
           </Text>
           <View className="flex-row gap-3">
             <ReportRatingField
-              label="Overall Rating"
+              label={t('reports.editor.overallRating')}
               value={draft.ratings.overall}
               onChange={(value) => updateRating('overall', value)}
               emphasis
               className="flex-1"
             />
             <ReportRatingField
-              label="Potential Rating"
+              label={t('reports.editor.potentialRating')}
               value={draft.ratings.potential}
               onChange={(value) => updateRating('potential', value)}
               emphasis
@@ -173,29 +175,29 @@ export function ScoutingReportEditorModal({
           </View>
 
           <Text variant="label" color="secondary">
-            Ability Profile
+            {t('reports.editor.abilityProfile')}
           </Text>
           <View className="flex-row flex-wrap gap-3">
             <ReportRatingField
-              label="Technical"
+              label={t('reports.editor.technical')}
               value={draft.ratings.technicalAbility}
               onChange={(value) => updateRating('technicalAbility', value)}
               className="min-w-[47%] flex-1"
             />
             <ReportRatingField
-              label="Tactical"
+              label={t('reports.editor.tactical')}
               value={draft.ratings.tacticalIntelligence}
               onChange={(value) => updateRating('tacticalIntelligence', value)}
               className="min-w-[47%] flex-1"
             />
             <ReportRatingField
-              label="Physical"
+              label={t('reports.editor.physical')}
               value={draft.ratings.physicalAbility}
               onChange={(value) => updateRating('physicalAbility', value)}
               className="min-w-[47%] flex-1"
             />
             <ReportRatingField
-              label="Mentality"
+              label={t('reports.editor.mentality')}
               value={draft.ratings.mentality}
               onChange={(value) => updateRating('mentality', value)}
               className="min-w-[47%] flex-1"
@@ -203,41 +205,41 @@ export function ScoutingReportEditorModal({
           </View>
 
           <Input
-            label="Strengths"
+            label={t('reports.editor.strengths')}
             value={strengthsText}
             onChangeText={setStrengthsText}
-            placeholder="One strength per line"
+            placeholder={t('reports.editor.strengthsPlaceholder')}
             multiline
             numberOfLines={4}
             inputClassName="min-h-[90px] text-top"
-            hint="Line-separated list"
+            hint={t('reports.editor.strengthsHint')}
           />
           <Input
-            label="Weaknesses"
+            label={t('reports.editor.weaknesses')}
             value={weaknessesText}
             onChangeText={setWeaknessesText}
-            placeholder="One weakness per line"
+            placeholder={t('reports.editor.weaknessesPlaceholder')}
             multiline
             numberOfLines={3}
             inputClassName="min-h-[70px] text-top"
           />
           <Input
-            label="Concerns"
+            label={t('reports.editor.concerns')}
             value={concernsText}
             onChangeText={setConcernsText}
-            placeholder="One concern per line. Leave empty if none are evidenced."
+            placeholder={t('reports.editor.concernsPlaceholder')}
             multiline
             numberOfLines={3}
             inputClassName="min-h-[70px] text-top"
           />
           <Input
-            label="Role fit"
+            label={t('reports.editor.roleFit')}
             value={draft.roleFit}
             onChangeText={(value) => setDraft((current) => ({ ...current, roleFit: value }))}
-            placeholder="Position and role this judgement applies to"
+            placeholder={t('reports.editor.roleFitPlaceholder')}
           />
           <Dropdown
-            label="Recommendation"
+            label={t('reports.editor.recommendation')}
             value={draft.recommendation ?? 'insufficient_evidence'}
             onChange={(value) =>
               setDraft((current) => ({
@@ -246,15 +248,15 @@ export function ScoutingReportEditorModal({
               }))
             }
             options={[
-              { label: 'Not enough evidence', value: 'insufficient_evidence' },
-              { label: 'Monitor', value: 'monitor' },
-              { label: 'Invite', value: 'invite' },
-              { label: 'Trial', value: 'trial' },
-              { label: 'Pass', value: 'pass' },
+              { label: t('intelligence.recommendation.insufficient_evidence'), value: 'insufficient_evidence' },
+              { label: t('intelligence.recommendation.monitor'), value: 'monitor' },
+              { label: t('intelligence.recommendation.invite'), value: 'invite' },
+              { label: t('intelligence.recommendation.trial'), value: 'trial' },
+              { label: t('intelligence.recommendation.pass'), value: 'pass' },
             ]}
           />
           <Dropdown
-            label="Suitable Playing Style"
+            label={t('reports.editor.playingStyle')}
             value={draft.suitablePlayingStyle}
             onChange={(value) =>
               setDraft((current) => ({ ...current, suitablePlayingStyle: value }))
@@ -262,7 +264,7 @@ export function ScoutingReportEditorModal({
             options={PLAYING_STYLE_OPTIONS.map((option) => ({ label: option, value: option }))}
           />
           <Dropdown
-            label="Suggested Formation"
+            label={t('reports.editor.formation')}
             value={draft.suggestedFormation}
             onChange={(value) =>
               setDraft((current) => ({ ...current, suggestedFormation: value }))
@@ -270,10 +272,10 @@ export function ScoutingReportEditorModal({
             options={FORMATION_OPTIONS.map((option) => ({ label: option, value: option }))}
           />
           <Input
-            label="Scout Notes"
+            label={t('reports.editor.scoutNotes')}
             value={draft.scoutNotes}
             onChangeText={(value) => setDraft((current) => ({ ...current, scoutNotes: value }))}
-            placeholder="Detailed observations, context, and match-specific notes..."
+            placeholder={t('reports.editor.scoutNotesPlaceholder')}
             multiline
             numberOfLines={5}
             inputClassName="min-h-[110px] text-top"

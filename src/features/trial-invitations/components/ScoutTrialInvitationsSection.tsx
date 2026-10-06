@@ -14,6 +14,7 @@ import {
 } from '@/features/trial-invitations/constants';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
 import { toUserMessage } from '@/utils/userFacingError';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ScoutTrialInvitationsSectionProps = {
   playerId: string;
@@ -28,6 +29,7 @@ export function ScoutTrialInvitationsSection({
   onInvitePress,
   inviteSignal = 0,
 }: ScoutTrialInvitationsSectionProps) {
+  const { t } = useAppTranslation(['trials', 'common']);
   const { trials, isLoading, isSaving, createTrial, rescheduleTrial, cancelTrial } =
     useScoutTrialInvitations(playerId, playerName);
   const [editorVisible, setEditorVisible] = useState(false);
@@ -57,14 +59,14 @@ export function ScoutTrialInvitationsSection({
   };
 
   const confirmCancel = (trial: TrialInvitation) => {
-    Alert.alert('Cancel Trial', 'Cancel this trial invitation?', [
-      { text: 'Keep', style: 'cancel' },
+    Alert.alert(t('cancelTrialTitle'), t('cancelTrialMessage'), [
+      { text: t('keep'), style: 'cancel' },
       {
-        text: 'Cancel Trial',
+        text: t('cancelTrial'),
         style: 'destructive',
         onPress: () => {
           void cancelTrial(trial).catch((error: unknown) => {
-            Alert.alert('Error', toUserMessage(error, 'Could not cancel trial.'));
+            Alert.alert(t('common:errorTitle'), toUserMessage(error, t('cancelFailed')));
           });
         },
       },
@@ -74,11 +76,11 @@ export function ScoutTrialInvitationsSection({
   return (
     <>
       <Section
-        title="Trial Invitations"
-        subtitle="Professional recruitment workflow for this player"
+        title={t('sectionTitle')}
+        subtitle={t('sectionSubtitle')}
         action={
           <Button variant="accent" size="sm" onPress={openCreate}>
-            Invite
+            {t('invite')}
           </Button>
         }
       >
@@ -86,7 +88,7 @@ export function ScoutTrialInvitationsSection({
           <SkeletonLoader variant="card" count={1} />
         ) : trials.length === 0 ? (
           <Text variant="body-sm" color="secondary">
-            No trial invitations yet. Send a structured invite with club, coach, and session details.
+            {t('sectionEmpty')}
           </Text>
         ) : (
           <View className="gap-3">
@@ -105,7 +107,7 @@ export function ScoutTrialInvitationsSection({
                           className="flex-1"
                           onPress={() => openReschedule(trial)}
                         >
-                          Reschedule
+                          {t('reschedule')}
                         </Button>
                         {SCOUT_CANCELLABLE_STATUSES.includes(trial.status) ? (
                           <Button
@@ -114,7 +116,7 @@ export function ScoutTrialInvitationsSection({
                             className="flex-1"
                             onPress={() => confirmCancel(trial)}
                           >
-                            Cancel
+                            {t('common:cancel')}
                           </Button>
                         ) : null}
                       </View>

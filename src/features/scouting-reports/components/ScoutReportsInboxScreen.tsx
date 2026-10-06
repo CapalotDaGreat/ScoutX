@@ -20,7 +20,7 @@ export function ScoutReportsInboxScreen({
   onSettingsPress,
   nestedUnderSegment = false,
 }: ScoutReportsInboxScreenProps) {
-  const { t } = useAppTranslation(['navigation', 'common']);
+  const { t } = useAppTranslation(['navigation', 'common', 'scout']);
   const { reports, isLoading, error } = useScoutAllReports();
 
   const screenProps = nestedUnderSegment
@@ -29,7 +29,7 @@ export function ScoutReportsInboxScreen({
 
   if (isLoading) {
     return (
-      <Screen title={t('segments.reports')} subtitle="Your scouting notes" safeArea {...screenProps}>
+      <Screen title={t('segments.reports')} subtitle={t('scout:reports.inbox.loadingSubtitle')} safeArea {...screenProps}>
         <SkeletonLoader variant="card" count={3} />
       </Screen>
     );
@@ -38,7 +38,7 @@ export function ScoutReportsInboxScreen({
   return (
     <Screen
       title={t('segments.reports')}
-      subtitle="Reports across all players you have evaluated"
+      subtitle={t('scout:reports.inbox.subtitle')}
       safeArea
       {...screenProps}
       headerActions={
@@ -50,8 +50,8 @@ export function ScoutReportsInboxScreen({
     >
       {reports.length === 0 ? (
         <EmptyState
-          title="No scouting reports yet"
-          description="Write reports from a player profile. All of your reports appear here as a cross-player index."
+          title={t('scout:reports.inbox.emptyTitle')}
+          description={t('scout:reports.inbox.emptyDescription')}
         />
       ) : (
         <View className="gap-3">
@@ -66,7 +66,7 @@ export function ScoutReportsInboxScreen({
                   <View className="min-w-0 flex-1">
                     <Text weight="semibold">{report.playerName}</Text>
                     <Text variant="caption" color="secondary">
-                      Updated {new Date(report.updatedAt).toLocaleDateString()}
+                      {t('scout:reports.inbox.updated', { date: new Date(report.updatedAt).toLocaleDateString() })}
                     </Text>
                   </View>
                   {report.ratings.overall !== null ? (

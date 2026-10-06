@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -15,6 +15,9 @@ import { PlayerWorkspaceProvider, usePlayerWorkspace } from '@/features/player-p
 import { defaultPrivacySettings, type PrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
 import { PlayerTrialsScreen } from '@/features/trial-invitations';
+import { usePlayerTrialInvitations } from '@/features/trial-invitations/hooks/useTrialInvitations';
+import { GlobalSearchScreen } from '@/features/global-search/components/GlobalSearchScreen';
+import { buildPlayerSearchRecords } from '@/features/global-search/services/buildSearchRecords';
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
 import { PlayerTabNavigator } from '@/navigation/PlayerTabNavigator';
 import { type PlayerStackParamList } from '@/navigation/types';
@@ -106,6 +109,38 @@ function SettingsRoute({
       privacySettings={profile?.privacy ?? defaultPrivacySettings()}
       onPrivacyChange={handlePrivacyChange}
       privacyDisabled={isSaving || !profile}
+    />
+  );
+}
+
+function GlobalSearchRoute({
+  navigation,
+}: NativeStackScreenProps<PlayerStackParamList, 'GlobalSearch'>) {
+  const { profile } = usePlayerWorkspace();
+  const { trials } = usePlayerTrialInvitations();
+  const records = useMemo(
+    () =>
+      buildPlayerSearchRecords({
+        matches: profile?.statisticsMatches ?? [],
+        journey: profile?.footballJourney?.entries ?? [],
+        trials,
+      }),
+    [profile, trials],
+  );
+
+  return (
+    <GlobalSearchScreen
+      records={records}
+      onBack={() => navigation.goBack()}
+      onOpenHit={(hit) => {
+        if (hit.route === 'trials') {
+          navigation.navigate('Trials');
+          return;
+        }
+        if (hit.route === 'career' || hit.route === 'match') {
+          navigation.navigate('PlayerTabs', { screen: 'Performance', params: { segment: 'career' } });
+        }
+      }}
     />
   );
 }
@@ -229,6 +264,7 @@ function PlayerStackContent() {
         <Stack.Screen name="PublicPortfolio" component={PublicPortfolioRoute} />
         <Stack.Screen name="CareerReplay" component={CareerReplayRoute} />
         <Stack.Screen name="Settings" component={SettingsRoute} />
+        <Stack.Screen name="GlobalSearch" component={GlobalSearchRoute} />
         <Stack.Screen name="Trials" component={TrialsRoute} />
         <Stack.Screen name="PlayerDetail" component={PlayerDetailRoute} />
         <Stack.Screen name="AnalysisReport" component={AnalysisReportRoute} />

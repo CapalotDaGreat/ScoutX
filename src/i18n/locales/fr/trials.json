@@ -19,5 +19,31 @@
   "createInvitation": "Create invitation",
   "replayTitle": "Replay d essai",
   "replayEmpty": "Pas encore d historique d essai enregistre.",
-  "replayLabel": "Replay de l historique d invitation enregistre — rien d invente."
+  "replayLabel": "Replay de l historique d invitation enregistre — rien d invente.",
+  "historyEmpty": "Pas encore d’historique.",
+  "history": {
+    "created": "Invitation créée",
+    "accepted": "Joueur a accepté",
+    "declined": "Joueur a refusé",
+    "rescheduled": "Essai reporté",
+    "cancelled": "Invitation annulée",
+    "completed": "Essai terminé",
+    "note_added": "Note ajoutée"
+  },
+  "scoutInboxSubtitle": "Invitations dans ton pipeline",
+  "scoutInboxFullSubtitle": "Toutes les invitations d’essai que tu as envoyées",
+  "scoutInboxEmptyTitle": "Pas encore d’invitations d’essai",
+  "scoutInboxEmptyDescription": "Invite des joueurs depuis leur profil. Toutes les invitations envoyées apparaissent ici.",
+  "sectionTitle": "Invitations d’essai",
+  "sectionSubtitle": "Parcours de recrutement professionnel pour ce joueur",
+  "invite": "Inviter",
+  "sectionEmpty": "Pas encore d’invitations. Envoie une invitation structurée avec club, coach et détails de séance.",
+  "cancelTrialTitle": "Annuler l’essai",
+  "cancelTrialMessage": "Annuler cette invitation d’essai ?",
+  "keep": "Garder",
+  "cancelTrial": "Annuler l’essai",
+  "cancelFailed": "Impossible d’annuler l’essai.",
+  "reschedule": "Reporter",
+  "responseNote": "Note de réponse (optionnel)",
+  "responseNotePlaceholder": "Confirmation de disponibilité ou questions pour le scout…"
 }

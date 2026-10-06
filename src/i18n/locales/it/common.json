@@ -56,5 +56,10 @@
   "removedItem": "\"{{name}}\" rimosso",
   "removeFailed": "Impossibile rimuoverlo. È tornato nell'elenco: riprova.",
   "remove": "Rimuovi",
-  "allRemoved": "Hai rimosso tutti i momenti suggeriti. Annulla, oppure chiudi e riapri lo studio."
+  "allRemoved": "Hai rimosso tutti i momenti suggeriti. Annulla, oppure chiudi e riapri lo studio.",
+  "searchOwnedHint": "Cerca partite, voci del percorso e trial su questo dispositivo",
+  "searchOwnedPlaceholder": "Cerca i tuoi record",
+  "searchEmpty": "Nessun record corrispondente",
+  "searchEmptyHint": "ScoutX cerca solo cio che hai gia registrato.",
+  "offlineDrafts": "Offline — le bozze restano su questo dispositivo fino alla riconnessione"
 }

@@ -7,10 +7,12 @@ import {
   setDoc,
   where,
   orderBy,
+  limit,
 } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import {
   documentRef,
+  LISTENER_LIMITS,
   subscribeToDocument,
   subscribeToQuery,
 } from '@/firebase/firestoreSubscriptions';
@@ -97,6 +99,7 @@ export class TrustRepository {
       collection(db, TRUST_RECOMMENDATIONS_COLLECTION),
       where('playerId', '==', playerId),
       orderBy('updatedAt', 'desc'),
+      limit(LISTENER_LIMITS.recommendations),
     );
 
     return subscribeToQuery({

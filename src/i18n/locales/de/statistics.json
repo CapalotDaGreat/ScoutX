@@ -104,5 +104,15 @@
       "notWhole": "{{field}} muss eine ganze Zahl sein.",
       "outOfRange": "{{field}} muss zwischen {{min}} und {{max}} liegen."
     }
-  }
+  },
+  "emptyDescriptionVideo": "Trage ein Spiel ein oder lade eine vollständige Veo-Aufnahme für KI-Statistiken und Coaching-Feedback hoch.",
+  "uploadAnalyze": "Spielvideo hochladen / analysieren",
+  "uploadAnalyzeAi": "Spielvideo mit KI hochladen / analysieren",
+  "headlineSubtitle": "{{count}} Spiele · zuerst die Kernwerte",
+  "attributeProfile": "Attributprofil",
+  "attributeProfileSubtitle": "Radar deiner aktuellen Stärken",
+  "aiCoaching": "KI-Coaching",
+  "aiCoachingSubtitle": "Leistungsüberblick und Verbesserungsvorschläge",
+  "performanceTrends": "Leistungstrends",
+  "performanceTrendsSubtitle": "Verlaufsgrafiken der letzten Spiele"
 }

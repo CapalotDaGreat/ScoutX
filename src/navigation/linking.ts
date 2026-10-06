@@ -84,6 +84,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
           Settings: 'player/settings',
           Trials: 'player/trials',
           AnalysisReport: 'match/:jobId',
+          GlobalSearch: 'player/search',
           PlayerRegister: 'player/register',
           PlayerLogin: 'player/login',
           PlayerForgotPassword: 'player/forgot-password',
@@ -103,6 +104,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
           PlayerComparison: 'scout/compare',
           ActivityInbox: 'scout/activity',
           Settings: 'scout/settings',
+          GlobalSearch: 'scout/search',
         },
       },
       GuestApp: {

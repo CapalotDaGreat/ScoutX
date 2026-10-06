@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type SkeletonProps = ViewProps & {
   width?: number | `${number}%`;
@@ -28,10 +29,12 @@ const radiusStyles = {
 
 function ShimmerOverlay({ animate }: { animate: boolean }) {
   const { colors } = useTheme();
+  const reducedMotion = useReducedMotion();
+  const shouldAnimate = animate && !reducedMotion;
   const translateX = useSharedValue(-120);
 
   useEffect(() => {
-    if (!animate) {
+    if (!shouldAnimate) {
       return;
     }
     translateX.value = withRepeat(
@@ -39,13 +42,13 @@ function ShimmerOverlay({ animate }: { animate: boolean }) {
       -1,
       false,
     );
-  }, [animate, translateX]);
+  }, [shouldAnimate, translateX]);
 
   const shimmerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
   }));
 
-  if (!animate) {
+  if (!shouldAnimate) {
     return null;
   }
 
@@ -196,6 +199,16 @@ export function SkeletonLoader({
           </View>
         </View>
       ))}
+    </View>
+  );
+}
+
+export function SectionSkeleton({ className }: { className?: string }) {
+  return (
+    <View className={cn('gap-3', className)} accessibilityRole="progressbar" accessibilityLabel="Loading section">
+      <Skeleton height={12} width="40%" radius="sm" />
+      <SkeletonCard />
+      <SkeletonText lines={2} />
     </View>
   );
 }

@@ -67,6 +67,10 @@ function ScoutDashboardRoute() {
     navigation.navigate('Settings');
   }, [navigation]);
 
+  const handleGlobalSearchPress = useCallback(() => {
+    navigation.navigate('GlobalSearch');
+  }, [navigation]);
+
   return (
     <ScoutDashboardScreen
       scoutName={scoutName}
@@ -80,6 +84,7 @@ function ScoutDashboardRoute() {
       onPlayerPress={handlePlayerPress}
       onOpenComparisonPress={handleOpenComparisonPress}
       onSettingsPress={handleSettingsPress}
+      onSearchPress={handleGlobalSearchPress}
       embeddedInTabShell
     />
   );

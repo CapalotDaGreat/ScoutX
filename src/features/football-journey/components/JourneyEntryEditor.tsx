@@ -5,6 +5,7 @@ import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { JOURNEY_TYPE_OPTIONS } from '@/features/football-journey/constants';
 import { type JourneyEntry, type JourneyEntryType } from '@/features/football-journey/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type JourneyEntryEditorProps = {
   entry: JourneyEntry;
@@ -13,6 +14,8 @@ export type JourneyEntryEditorProps = {
 };
 
 export function JourneyEntryEditor({ entry, onChange, onRemove }: JourneyEntryEditorProps) {
+  const { t } = useAppTranslation(['career']);
+
   const update = (patch: Partial<JourneyEntry>) => {
     onChange({ ...entry, ...patch, updatedAt: new Date().toISOString() });
   };
@@ -46,68 +49,68 @@ export function JourneyEntryEditor({ entry, onChange, onRemove }: JourneyEntryEd
   return (
     <View className="gap-3 rounded-xl border border-border p-3">
       <Dropdown
-        label="Entry Type"
+        label={t('journeyEditor.entryType')}
         value={entry.type}
         onChange={(value) => update({ type: value as JourneyEntryType })}
         options={JOURNEY_TYPE_OPTIONS}
       />
       <Input
-        label="Title"
+        label={t('journeyEditor.title')}
         value={entry.title}
         onChangeText={(value) => update({ title: value })}
-        placeholder="e.g. Signed professional contract"
+        placeholder={t('journeyEditor.titlePlaceholder')}
       />
       <Input
-        label="Subtitle"
+        label={t('journeyEditor.subtitle')}
         value={entry.subtitle ?? ''}
         onChangeText={(value) => update({ subtitle: value })}
-        placeholder="Optional highlight"
+        placeholder={t('journeyEditor.subtitlePlaceholder')}
       />
       <Input
-        label="Organization"
+        label={t('journeyEditor.organization')}
         value={entry.organization ?? ''}
         onChangeText={(value) => update({ organization: value })}
-        placeholder="Club, federation, or academy"
+        placeholder={t('journeyEditor.organizationPlaceholder')}
       />
       <Input
-        label="Date (ISO)"
+        label={t('journeyEditor.dateIso')}
         value={entry.date}
         onChangeText={(value) => update({ date: value })}
         placeholder="2025-01-15T00:00:00.000Z"
       />
       <Input
-        label="End Date (ISO, optional)"
+        label={t('journeyEditor.endDateIso')}
         value={entry.endDate ?? ''}
         onChangeText={(value) => update({ endDate: value || undefined })}
-        placeholder="For ranges or recoveries"
+        placeholder={t('journeyEditor.endDatePlaceholder')}
       />
       <Input
-        label="Description"
+        label={t('journeyEditor.description')}
         value={entry.description ?? ''}
         onChangeText={(value) => update({ description: value })}
-        placeholder="Tell scouts what happened and why it matters"
+        placeholder={t('journeyEditor.descriptionPlaceholder')}
         multiline
         numberOfLines={3}
         inputClassName="min-h-[80px] text-top"
       />
 
       <Text variant="label" color="secondary">
-        Media
+        {t('journeyEditor.media')}
       </Text>
       {entry.media.map((item, index) => (
         <View key={`media-${index}`} className="gap-2 rounded-lg bg-background-secondary/60 p-2">
           <Text variant="caption" color="secondary">
-            {item.type === 'video' ? 'Video' : 'Image'} #{index + 1}
+            {item.type === 'video' ? t('journeyEditor.video') : t('journeyEditor.image')} #{index + 1}
           </Text>
           <Input
-            label="URL"
+            label={t('journeyEditor.url')}
             value={item.url}
             onChangeText={(value) => updateMediaUrl(index, value)}
             placeholder="https://..."
           />
           {item.type === 'video' ? (
             <Input
-              label="Thumbnail URL"
+              label={t('journeyEditor.thumbnailUrl')}
               value={item.thumbnailUrl ?? ''}
               onChangeText={(value) => {
                 const media = entry.media.map((mediaItem, itemIndex) =>
@@ -119,21 +122,21 @@ export function JourneyEntryEditor({ entry, onChange, onRemove }: JourneyEntryEd
             />
           ) : null}
           <Button variant="secondary" size="sm" onPress={() => removeMedia(index)}>
-            Remove Media
+            {t('journeyEditor.removeMedia')}
           </Button>
         </View>
       ))}
       <View className="flex-row gap-2">
         <Button variant="secondary" size="sm" className="flex-1" onPress={addImageMedia}>
-          Add Image
+          {t('journeyEditor.addImage')}
         </Button>
         <Button variant="secondary" size="sm" className="flex-1" onPress={addVideoMedia}>
-          Add Video
+          {t('journeyEditor.addVideo')}
         </Button>
       </View>
 
       <Button variant="secondary" size="sm" onPress={onRemove}>
-        Remove Entry
+        {t('journeyEditor.removeEntry')}
       </Button>
     </View>
   );

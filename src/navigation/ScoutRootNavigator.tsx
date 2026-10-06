@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +16,9 @@ import { ScoutTabNavigator } from '@/navigation/ScoutTabNavigator';
 import { ActivityInboxScreen } from '@/features/activity-feed';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
 import { SettingsScreen } from '@/features/settings';
+import { GlobalSearchScreen } from '@/features/global-search/components/GlobalSearchScreen';
+import { buildScoutSearchRecords } from '@/features/global-search/services/buildSearchRecords';
+import { useRecruitment } from '@/features/scout-recruitment';
 import { usePushNotificationRegistration } from '@/features/notifications/hooks/usePushNotificationRegistration';
 import { type ScoutStackParamList } from '@/navigation/types';
 
@@ -80,6 +83,28 @@ function PublicPortfolioRoute({
   );
 }
 
+function GlobalSearchRoute({
+  navigation,
+}: NativeStackScreenProps<ScoutStackParamList, 'GlobalSearch'>) {
+  const recruitment = useRecruitment();
+  const records = useMemo(
+    () => buildScoutSearchRecords(recruitment.workspace?.entries ?? []),
+    [recruitment.workspace?.entries],
+  );
+
+  return (
+    <GlobalSearchScreen
+      records={records}
+      onBack={() => navigation.goBack()}
+      onOpenHit={(hit) => {
+        if (hit.route === 'player') {
+          navigation.navigate('PlayerDetail', { playerId: hit.entityId });
+        }
+      }}
+    />
+  );
+}
+
 function SettingsRoute({
   navigation,
 }: NativeStackScreenProps<ScoutStackParamList, 'Settings'>) {
@@ -108,6 +133,7 @@ export function ScoutRootNavigator() {
             <Stack.Screen name="ActivityInbox" component={ActivityInboxRoute} />
             <Stack.Screen name="PublicPortfolio" component={PublicPortfolioRoute} />
             <Stack.Screen name="Settings" component={SettingsRoute} />
+            <Stack.Screen name="GlobalSearch" component={GlobalSearchRoute} />
           </Stack.Navigator>
         </ScoutFlowProvider>
       </RecruitmentProvider>

@@ -36,5 +36,28 @@
   "momentsCount_other": "{{count}} momenti registrati",
   "coachNotesTitle": "Osservazioni dell allenatore",
   "coachNotesLabel": "Solo note fornite dall allenatore — ScoutX non inventa feedback.",
-  "coachNotesEmpty": "Nessuna osservazione allenatore registrata per te."
+  "coachNotesEmpty": "Nessuna osservazione allenatore registrata per te.",
+  "journeyEditor": {
+    "entryType": "Tipo di voce",
+    "title": "Titolo",
+    "titlePlaceholder": "es. Firmato contratto professionistico",
+    "subtitle": "Sottotitolo",
+    "subtitlePlaceholder": "Highlight opzionale",
+    "organization": "Organizzazione",
+    "organizationPlaceholder": "Club, federazione o accademia",
+    "dateIso": "Data (ISO)",
+    "endDateIso": "Data di fine (ISO, opzionale)",
+    "endDatePlaceholder": "Per intervalli o recuperi",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Spiega agli scout cosa è successo e perché conta",
+    "media": "Media",
+    "video": "Video",
+    "image": "Immagine",
+    "url": "URL",
+    "thumbnailUrl": "URL miniatura",
+    "removeMedia": "Rimuovi media",
+    "addImage": "Aggiungi immagine",
+    "addVideo": "Aggiungi video",
+    "removeEntry": "Rimuovi voce"
+  }
 }

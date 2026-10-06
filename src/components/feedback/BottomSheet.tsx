@@ -15,6 +15,7 @@ import { Heading } from '@/components/primitives/Heading';
 import { useTheme, useThemeCssVars } from '@/theme';
 import { motion } from '@/theme/tokens/motion';
 import { cn } from '@/utils/cn';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type BottomSheetRef = undefined;
 
@@ -38,6 +39,7 @@ export function BottomSheet({
   ...props
 }: BottomSheetProps) {
   const { colors } = useTheme();
+  const reducedMotion = useReducedMotion();
   const themeCssVars = useThemeCssVars();
   const translateY = useRef(new Animated.Value(1)).current;
 
@@ -49,11 +51,11 @@ export function BottomSheet({
     translateY.setValue(1);
     Animated.timing(translateY, {
       toValue: 0,
-      duration: motion.fast,
+      duration: reducedMotion ? 0 : motion.fast,
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
     }).start();
-  }, [translateY, visible]);
+  }, [translateY, visible, reducedMotion]);
 
   if (!visible) {
     return null;

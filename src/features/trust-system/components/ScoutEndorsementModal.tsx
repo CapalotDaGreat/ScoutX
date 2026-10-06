@@ -6,6 +6,7 @@ import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { parseMultilineList } from '@/features/scouting-reports/models/ScoutingReportModel';
 import { type TrustRecommendation, type TrustRecommendationDraft } from '@/features/trust-system/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ScoutEndorsementModalProps = {
   visible: boolean;
@@ -40,6 +41,7 @@ export function ScoutEndorsementModal({
   onSave,
   onDelete,
 }: ScoutEndorsementModalProps) {
+  const { t } = useAppTranslation(['trust', 'common']);
   const [relationship, setRelationship] = useState('');
   const [headline, setHeadline] = useState('');
   const [body, setBody] = useState('');
@@ -76,7 +78,7 @@ export function ScoutEndorsementModal({
 
   const handleSave = async () => {
     if (!relationship.trim() || !body.trim()) {
-      Alert.alert('Missing fields', 'Relationship context and endorsement body are required.');
+      Alert.alert(t('endorsement.missingTitle'), t('endorsement.missingMessage'));
       return;
     }
 
@@ -102,10 +104,10 @@ export function ScoutEndorsementModal({
       return;
     }
 
-    Alert.alert('Remove endorsement', 'This endorsement will be permanently removed.', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('endorsement.removeTitle'), t('endorsement.removeMessage'), [
+      { text: t('common:cancel'), style: 'cancel' },
       {
-        text: 'Remove',
+        text: t('common:remove'),
         style: 'destructive',
         onPress: () => {
           void onDelete(endorsement.id).then(onClose);
@@ -118,49 +120,49 @@ export function ScoutEndorsementModal({
     <Modal
       visible={visible}
       onClose={onClose}
-      title={endorsement ? 'Edit Scout Endorsement' : 'Add Scout Endorsement'}
+      title={endorsement ? t('endorsement.editTitle') : t('endorsement.addTitle')}
     >
       <ScrollView className="max-h-[70vh]" keyboardShouldPersistTaps="handled">
         <View className="gap-4 pb-4">
           <Text variant="body-sm" color="secondary">
-            Professional endorsement for {playerName}
+            {t('endorsement.forPlayer', { playerName })}
           </Text>
           <Input
-            label="Your title"
+            label={t('endorsement.yourTitle')}
             value={authorTitle}
             onChangeText={setAuthorTitle}
-            placeholder="Senior Talent Scout"
+            placeholder={t('endorsement.yourTitlePlaceholder')}
           />
           <Input
-            label="Organization"
+            label={t('endorsement.organization')}
             value={authorOrganization}
             onChangeText={setAuthorOrganization}
-            placeholder="ScoutX Network"
+            placeholder={t('endorsement.organizationPlaceholder')}
           />
           <Input
-            label="Relationship context"
+            label={t('endorsement.relationship')}
             value={relationship}
             onChangeText={setRelationship}
-            placeholder="Observed across 8 competitive matches"
+            placeholder={t('endorsement.relationshipPlaceholder')}
           />
           <Input
-            label="Headline"
+            label={t('endorsement.headline')}
             value={headline}
             onChangeText={setHeadline}
-            placeholder="High-ceiling wide forward for top-five league projects"
+            placeholder={t('endorsement.headlinePlaceholder')}
           />
           <Input
-            label="Endorsement"
+            label={t('endorsement.body')}
             value={body}
             onChangeText={setBody}
-            placeholder="Share your professional assessment..."
+            placeholder={t('endorsement.bodyPlaceholder')}
             multiline
             numberOfLines={5}
             textAlignVertical="top"
             className="min-h-[120px]"
           />
           <Input
-            label="Highlighted skills (one per line)"
+            label={t('endorsement.skills')}
             value={skillsText}
             onChangeText={setSkillsText}
             placeholder={'Progressive passing\nPress resistance'}
@@ -170,7 +172,7 @@ export function ScoutEndorsementModal({
             className="min-h-[96px]"
           />
           <Input
-            label="Years known (optional)"
+            label={t('endorsement.yearsKnown')}
             value={yearsKnown}
             onChangeText={setYearsKnown}
             keyboardType="number-pad"
@@ -180,20 +182,19 @@ export function ScoutEndorsementModal({
           <View className="flex-row gap-2">
             {endorsement && onDelete ? (
               <Button variant="ghost" onPress={handleDelete} disabled={saving} className="flex-1">
-                Remove
+                {t('common:remove')}
               </Button>
             ) : null}
             <Button variant="secondary" onPress={onClose} disabled={saving} className="flex-1">
-              Cancel
+              {t('common:cancel')}
             </Button>
             <Button variant="accent" onPress={() => void handleSave()} loading={saving} className="flex-1">
-              Save
+              {t('common:save')}
             </Button>
           </View>
 
           <Text variant="caption" color="secondary">
-            Coach recommendations are submitted by verified club staff. Scouts can publish endorsements
-            visible on the player trust profile.
+            {t('endorsement.footerNote')}
           </Text>
         </View>
       </ScrollView>

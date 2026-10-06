@@ -56,5 +56,10 @@
   "removedItem": "„{{name}}“ entfernt",
   "removeFailed": "Entfernen fehlgeschlagen. Es ist wieder in deiner Liste – versuche es erneut.",
   "remove": "Entfernen",
-  "allRemoved": "Du hast alle vorgeschlagenen Momente entfernt. Mach es rückgängig oder öffne das Studio erneut."
+  "allRemoved": "Du hast alle vorgeschlagenen Momente entfernt. Mach es rückgängig oder öffne das Studio erneut.",
+  "searchOwnedHint": "Durchsuche Spiele, Journey-Eintraege und Trials auf diesem Geraet",
+  "searchOwnedPlaceholder": "Deine Eintraege durchsuchen",
+  "searchEmpty": "Keine passenden Eintraege",
+  "searchEmptyHint": "ScoutX durchsucht nur, was du bereits erfasst hast.",
+  "offlineDrafts": "Offline — Entwuerfe bleiben auf diesem Geraet, bis du wieder online bist"
 }

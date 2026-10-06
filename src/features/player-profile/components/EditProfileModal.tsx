@@ -11,6 +11,7 @@ import { FootballIdentityFields } from '@/features/player-profile/components/ide
 import { useFootballIdentityForm } from '@/features/player-profile/hooks/useFootballIdentityForm';
 import { syncLegacyProfileFields } from '@/features/player-profile/models/FootballIdentityModel';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
 
 export type EditProfileModalProps = {
@@ -28,6 +29,7 @@ export function EditProfileModal({
   onSave,
   onUploadImage,
 }: EditProfileModalProps) {
+  const { t } = useAppTranslation(['portfolio', 'common']);
   const { colors } = useTheme();
 
   const [fullName, setFullName] = useState('');
@@ -54,7 +56,7 @@ export function EditProfileModal({
 
   const handleSave = async () => {
     if (!fullName.trim()) {
-      Alert.alert('Validation Error', 'Full Name is required.');
+      Alert.alert(t('common:errorTitle'), t('editModal.fullNameRequired'));
       return;
     }
 
@@ -75,7 +77,7 @@ export function EditProfileModal({
       });
       onClose();
     } catch (err) {
-      Alert.alert('Error', toUserMessage(err, 'Failed to save changes.'));
+      Alert.alert(t('common:errorTitle'), toUserMessage(err, t('editModal.saveFailed')));
     } finally {
       setSaving(false);
     }
@@ -85,7 +87,7 @@ export function EditProfileModal({
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'Permission to access gallery is required to pick an image.');
+        Alert.alert(t('editModal.permissionTitle'), t('editModal.permissionDenied'));
         return;
       }
 
@@ -107,30 +109,30 @@ export function EditProfileModal({
         try {
           await onUploadImage(uri, type);
         } catch (uploadErr) {
-          Alert.alert('Upload Error', toUserMessage(uploadErr, 'Failed to upload image.'));
+          Alert.alert(t('common:errorTitle'), toUserMessage(uploadErr, t('editModal.uploadFailed')));
         } finally {
           setUploadingAvatar(false);
           setUploadingCover(false);
         }
       }
     } catch (err) {
-      Alert.alert('Error', toUserMessage(err, 'An error occurred while picking image.'));
+      Alert.alert(t('common:errorTitle'), toUserMessage(err, t('editModal.pickFailed')));
     }
   };
 
   const footer = (
     <View className="flex-row gap-3">
       <Button variant="secondary" className="flex-1" onPress={onClose} disabled={saving}>
-        Cancel
+        {t('common:cancel')}
       </Button>
       <Button variant="accent" className="flex-1" onPress={handleSave} loading={saving}>
-        Save
+        {t('common:save')}
       </Button>
     </View>
   );
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Edit Football Identity" size="sheet" footer={footer}>
+    <Modal visible={visible} onClose={onClose} title={t('editModal.title')} size="sheet" footer={footer}>
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
@@ -157,7 +159,7 @@ export function EditProfileModal({
             >
               <View className="flex-row items-center gap-2 rounded-full bg-black/60 px-4 py-2">
                 <Camera size={16} color="white" />
-                <Text className="font-sans-medium text-xs text-white">Change Cover Photo</Text>
+                <Text className="font-sans-medium text-xs text-white">{t('editModal.changeCover')}</Text>
               </View>
             </Pressable>
           )}
@@ -184,26 +186,26 @@ export function EditProfileModal({
             )}
           </View>
           <Text variant="caption" color="secondary" className="mt-2">
-            Tap avatar to upload new photo
+            {t('editModal.tapAvatar')}
           </Text>
         </View>
 
         <View className="gap-5">
           <Text variant="label" color="secondary">
-            Basics
+            {t('editModal.basics')}
           </Text>
-          <Input label="Full Name" value={fullName} onChangeText={setFullName} placeholder="Mateo Alvarez" />
-          <Input label="Nationality" value={nationality} onChangeText={setNationality} placeholder="Chilean" />
+          <Input label={t('editModal.fullName')} value={fullName} onChangeText={setFullName} placeholder="Mateo Alvarez" />
+          <Input label={t('editModal.nationality')} value={nationality} onChangeText={setNationality} placeholder="Chilean" />
           <View className="flex-row gap-4">
             <Input
-              label="Height"
+              label={t('editModal.height')}
               value={height}
               onChangeText={setHeight}
               placeholder="178 cm"
               containerClassName="flex-1"
             />
             <Input
-              label="Weight"
+              label={t('editModal.weight')}
               value={weight}
               onChangeText={setWeight}
               placeholder="72 kg"
@@ -211,10 +213,10 @@ export function EditProfileModal({
             />
           </View>
           <Input
-            label="Biography"
+            label={t('editModal.biography')}
             value={biography}
             onChangeText={setBiography}
-            placeholder="Write a professional overview scouts can trust..."
+            placeholder={t('editModal.biographyPlaceholder')}
             multiline
             numberOfLines={4}
             inputClassName="min-h-[100px] text-top"

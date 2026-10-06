@@ -20,6 +20,7 @@ import { useTheme, useThemeCssVars } from '@/theme';
 import { motion } from '@/theme/tokens/motion';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'sheet' | 'fullscreen';
 
@@ -55,6 +56,7 @@ export function Modal({
   className,
 }: ModalProps) {
   const { colors } = useTheme();
+  const reducedMotion = useReducedMotion();
   const themeCssVars = useThemeCssVars();
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -62,14 +64,16 @@ export function Modal({
   const contentTranslateY = useSharedValue(24);
 
   useEffect(() => {
+    const duration = reducedMotion ? 0 : motion.fast;
+    const enterDuration = reducedMotion ? 0 : motion.normal;
     if (visible) {
-      backdropOpacity.value = withTiming(1, { duration: motion.fast });
-      contentTranslateY.value = withTiming(0, { duration: motion.normal });
+      backdropOpacity.value = withTiming(1, { duration });
+      contentTranslateY.value = withTiming(0, { duration: enterDuration });
     } else {
-      backdropOpacity.value = withTiming(0, { duration: motion.fast });
-      contentTranslateY.value = withTiming(24, { duration: motion.fast });
+      backdropOpacity.value = withTiming(0, { duration });
+      contentTranslateY.value = withTiming(reducedMotion ? 0 : 24, { duration });
     }
-  }, [visible, backdropOpacity, contentTranslateY]);
+  }, [visible, backdropOpacity, contentTranslateY, reducedMotion]);
 
   const backdropStyle = useAnimatedStyle(() => ({
     opacity: backdropOpacity.value,

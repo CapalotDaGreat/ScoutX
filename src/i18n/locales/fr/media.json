@@ -38,5 +38,28 @@
     "export": "Exporter",
     "saveFailed": "Impossible d’enregistrer le reel",
     "loadFailed": "Impossible de charger les reels."
+  },
+  "editor": {
+    "addTitle": "Ajouter une vidéo highlight",
+    "editTitle": "Modifier la vidéo highlight",
+    "title": "Titre",
+    "titlePlaceholder": "Coup franc décisif",
+    "description": "Description",
+    "descriptionPlaceholder": "Pourquoi ce clip intéresse les scouts ?",
+    "category": "Catégorie",
+    "tags": "Tags",
+    "tagsPlaceholder": "coup de pied arrêté, clutch, vision",
+    "tagsHint": "Tags séparés par des virgules",
+    "match": "Match",
+    "matchPlaceholder": "Northstar FC vs Rangers",
+    "opponent": "Adversaire",
+    "opponentPlaceholder": "Rangers",
+    "competition": "Compétition",
+    "competitionPlaceholder": "Primera División",
+    "dateIso": "Date (ISO)",
+    "featured": "Mis en avant ✓",
+    "setFeatured": "Mettre en avant",
+    "titleRequired": "Le titre est requis.",
+    "analysisReserved": "Les métadonnées d’analyse IA sont réservées à une version future et s’ajouteront automatiquement."
   }
 }

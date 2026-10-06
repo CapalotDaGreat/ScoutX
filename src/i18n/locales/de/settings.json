@@ -38,5 +38,11 @@
   "aboutAppName": "ScoutX",
   "aboutVersion": "Version {{version}}",
   "aboutDescription": "Football Passport für Spieler und Scouts.",
-  "contactSupport": "Support kontaktieren"
+  "contactSupport": "Support kontaktieren",
+  "category": {
+    "trials": "Trial-Einladungen",
+    "watchlist": "Watchlist-Aenderungen",
+    "analysis": "Spielanalyse",
+    "recommendations": "Empfehlungen"
+  }
 }

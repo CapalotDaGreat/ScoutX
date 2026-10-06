@@ -36,5 +36,28 @@
   "momentsCount_other": "{{count}} vastgelegde momenten",
   "coachNotesTitle": "Trainerobservaties",
   "coachNotesLabel": "Alleen notities van de trainer — ScoutX verzint geen feedback.",
-  "coachNotesEmpty": "Nog geen trainerobservaties voor jou vastgelegd."
+  "coachNotesEmpty": "Nog geen trainerobservaties voor jou vastgelegd.",
+  "journeyEditor": {
+    "entryType": "Type item",
+    "title": "Titel",
+    "titlePlaceholder": "bijv. Professioneel contract getekend",
+    "subtitle": "Ondertitel",
+    "subtitlePlaceholder": "Optioneel highlight",
+    "organization": "Organisatie",
+    "organizationPlaceholder": "Club, bond of academie",
+    "dateIso": "Datum (ISO)",
+    "endDateIso": "Einddatum (ISO, optioneel)",
+    "endDatePlaceholder": "Voor periodes of herstel",
+    "description": "Beschrijving",
+    "descriptionPlaceholder": "Vertel scouts wat er gebeurde en waarom het telt",
+    "media": "Media",
+    "video": "Video",
+    "image": "Afbeelding",
+    "url": "URL",
+    "thumbnailUrl": "Thumbnail-URL",
+    "removeMedia": "Media verwijderen",
+    "addImage": "Afbeelding toevoegen",
+    "addVideo": "Video toevoegen",
+    "removeEntry": "Item verwijderen"
+  }
 }

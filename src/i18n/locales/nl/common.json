@@ -56,5 +56,10 @@
   "removedItem": "\"{{name}}\" verwijderd",
   "removeFailed": "Verwijderen mislukt. Het staat weer in je lijst — probeer het opnieuw.",
   "remove": "Verwijderen",
-  "allRemoved": "Je hebt alle voorgestelde momenten verwijderd. Maak het ongedaan of open de studio opnieuw."
+  "allRemoved": "Je hebt alle voorgestelde momenten verwijderd. Maak het ongedaan of open de studio opnieuw.",
+  "searchOwnedHint": "Zoek wedstrijden, journey-items en trials op dit apparaat",
+  "searchOwnedPlaceholder": "Zoek je records",
+  "searchEmpty": "Geen overeenkomende records",
+  "searchEmptyHint": "ScoutX zoekt alleen wat je al hebt vastgelegd.",
+  "offlineDrafts": "Offline — concepten blijven op dit apparaat tot je weer online bent"
 }

@@ -38,5 +38,11 @@
   "newPassword": "New password",
   "confirmNewPassword": "Confirm new password",
   "changePasswordSuccess": "Your password has been updated.",
-  "changePasswordFailed": "Unable to change password. Check your current password and try again."
+  "changePasswordFailed": "Unable to change password. Check your current password and try again.",
+  "category": {
+    "trials": "Trial invitations",
+    "watchlist": "Watchlist changes",
+    "analysis": "Match analysis",
+    "recommendations": "Recommendations"
+  }
 }

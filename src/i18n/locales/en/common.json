@@ -56,5 +56,10 @@
   "removedItem": "\"{{name}}\" removed",
   "removeFailed": "Couldn't remove it. It's back in your list — try again.",
   "remove": "Remove",
-  "allRemoved": "You removed every suggested moment. Undo, or close and reopen the studio to start again."
+  "allRemoved": "You removed every suggested moment. Undo, or close and reopen the studio to start again.",
+  "searchOwnedHint": "Search matches, journey entries, and trials stored on this device",
+  "searchOwnedPlaceholder": "Search your records",
+  "searchEmpty": "No matching records",
+  "searchEmptyHint": "ScoutX only searches what you have already logged.",
+  "offlineDrafts": "Offline — drafts stay on this device until you reconnect"
 }

@@ -147,7 +147,7 @@ export function Screen({
         >
           <WifiOff size={14} color={colors.warning} strokeWidth={2} />
           <Text variant="caption" className="font-sans-medium text-warning">
-            {t('offline')}
+            {t('common:offlineDrafts')}
           </Text>
         </View>
       ) : null}

@@ -65,6 +65,7 @@
     "retry": "Repetir análise",
     "recent": "Análises recentes",
     "another": "Analisar outro jogo",
-    "close": "Fechar"
+    "close": "Fechar",
+    "uploadProgress": "Carregamento {{percent}}%"
   }
 }

@@ -3,6 +3,7 @@ import { type PublicPortfolioData } from '@/features/public-portfolio/types';
 import { buildPublicPortfolioUrl } from '@/features/public-portfolio/constants';
 import { shareFileUri } from '@/features/share-cards/services/shareCardService';
 import { escapeHtml } from '@/utils/htmlEscape';
+import { lightColors } from '@/theme/tokens/colors';
 import { formatRating } from '@/features/player-statistics/utils/recordedStats';
 
 export async function exportFootballCvPdf(data: PublicPortfolioData): Promise<void> {
@@ -31,15 +32,15 @@ export async function exportFootballCvPdf(data: PublicPortfolioData): Promise<vo
       <head>
         <meta charset="utf-8" />
         <style>
-          body { font-family: Helvetica, Arial, sans-serif; color: #151617; padding: 32px; background: #F7F6F3; }
+          body { font-family: Helvetica, Arial, sans-serif; color: ${lightColors.textPrimary}; padding: 32px; background: ${lightColors.background}; }
           h1 { margin: 0 0 8px; font-size: 28px; }
-          h2 { margin: 24px 0 8px; font-size: 16px; color: #2FBF71; text-transform: uppercase; letter-spacing: 1px; }
-          .badge { display: inline-block; background: #F5EBD3; color: #D9A441; padding: 4px 10px; border-radius: 999px; font-size: 12px; margin-right: 8px; font-weight: 600; }
-          .meta { color: #5C6570; margin-bottom: 16px; }
+          h2 { margin: 24px 0 8px; font-size: 16px; color: ${lightColors.accent}; text-transform: uppercase; letter-spacing: 1px; }
+          .badge { display: inline-block; background: ${lightColors.goldMuted}; color: ${lightColors.verification}; padding: 4px 10px; border-radius: 999px; font-size: 12px; margin-right: 8px; font-weight: 600; }
+          .meta { color: ${lightColors.textSecondary}; margin-bottom: 16px; }
           table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-          td, th { border-bottom: 1px solid #E2E0DB; padding: 8px; text-align: left; font-size: 12px; }
-          .rec { border-left: 3px solid #D9A441; padding-left: 12px; margin: 12px 0; }
-          .footer { margin-top: 32px; font-size: 11px; color: #8B939E; }
+          td, th { border-bottom: 1px solid ${lightColors.border}; padding: 8px; text-align: left; font-size: 12px; }
+          .rec { border-left: 3px solid ${lightColors.verification}; padding-left: 12px; margin: 12px 0; }
+          .footer { margin-top: 32px; font-size: 11px; color: ${lightColors.textTertiary}; }
         </style>
       </head>
       <body>

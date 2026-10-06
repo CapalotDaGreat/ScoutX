@@ -19,5 +19,31 @@
   "createInvitation": "Create invitation",
   "replayTitle": "Trial replay",
   "replayEmpty": "No recorded trial history yet.",
-  "replayLabel": "Replay of stored invitation history — nothing invented."
+  "replayLabel": "Replay of stored invitation history — nothing invented.",
+  "historyEmpty": "No history yet.",
+  "history": {
+    "created": "Invitation created",
+    "accepted": "Player accepted",
+    "declined": "Player declined",
+    "rescheduled": "Trial rescheduled",
+    "cancelled": "Invitation cancelled",
+    "completed": "Trial completed",
+    "note_added": "Note added"
+  },
+  "scoutInboxSubtitle": "Invitations across your pipeline",
+  "scoutInboxFullSubtitle": "All trial invitations you have sent",
+  "scoutInboxEmptyTitle": "No trial invitations yet",
+  "scoutInboxEmptyDescription": "Invite players from their profile. Sent invitations across all players appear here.",
+  "sectionTitle": "Trial Invitations",
+  "sectionSubtitle": "Professional recruitment workflow for this player",
+  "invite": "Invite",
+  "sectionEmpty": "No trial invitations yet. Send a structured invite with club, coach, and session details.",
+  "cancelTrialTitle": "Cancel trial",
+  "cancelTrialMessage": "Cancel this trial invitation?",
+  "keep": "Keep",
+  "cancelTrial": "Cancel trial",
+  "cancelFailed": "Could not cancel trial.",
+  "reschedule": "Reschedule",
+  "responseNote": "Response note (optional)",
+  "responseNotePlaceholder": "Availability confirmation or questions for the scout..."
 }

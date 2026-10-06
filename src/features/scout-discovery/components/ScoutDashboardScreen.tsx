@@ -35,6 +35,7 @@ export type ScoutDashboardScreenProps = {
   onPlayerPress: (player: DiscoverablePlayer) => void;
   onOpenComparisonPress?: () => void;
   onSettingsPress?: () => void;
+  onSearchPress?: () => void;
   onSignOut?: () => void;
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -51,6 +52,7 @@ export function ScoutDashboardScreen({
   onPlayerPress,
   onOpenComparisonPress,
   onSettingsPress,
+  onSearchPress,
   onSignOut,
   searchValue,
   onSearchChange,
@@ -128,6 +130,13 @@ export function ScoutDashboardScreen({
       {...screenProps}
       headerActions={
         <HeaderActionCluster>
+          {onSearchPress ? (
+            <HeaderIconButton
+              icon="search"
+              accessibilityLabel={t('common:search')}
+              onPress={onSearchPress}
+            />
+          ) : null}
           <ActivityBellButton unreadCount={unreadCount} onPress={onActivityPress} />
           {onSettingsPress ? (
             <HeaderIconButton

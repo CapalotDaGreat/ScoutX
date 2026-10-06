@@ -20,7 +20,7 @@ export function ScoutTrialsInboxScreen({
   onSettingsPress,
   nestedUnderSegment = false,
 }: ScoutTrialsInboxScreenProps) {
-  const { t } = useAppTranslation(['navigation', 'common']);
+  const { t } = useAppTranslation(['navigation', 'common', 'trials']);
   const { trials, isLoading, error } = useScoutAllTrialInvitations();
 
   const screenProps = nestedUnderSegment
@@ -29,7 +29,7 @@ export function ScoutTrialsInboxScreen({
 
   if (isLoading) {
     return (
-      <Screen title={t('tabs.trials')} subtitle="Invitations across your pipeline" safeArea {...screenProps}>
+      <Screen title={t('tabs.trials')} subtitle={t('trials:scoutInboxSubtitle')} safeArea {...screenProps}>
         <SkeletonLoader variant="card" count={3} />
       </Screen>
     );
@@ -38,7 +38,7 @@ export function ScoutTrialsInboxScreen({
   return (
     <Screen
       title={t('tabs.trials')}
-      subtitle="All trial invitations you have sent"
+      subtitle={t('trials:scoutInboxFullSubtitle')}
       safeArea
       {...screenProps}
       headerActions={
@@ -50,8 +50,8 @@ export function ScoutTrialsInboxScreen({
     >
       {trials.length === 0 ? (
         <EmptyState
-          title="No trial invitations yet"
-          description="Invite players from their profile. Sent invitations across all players appear here."
+          title={t('trials:scoutInboxEmptyTitle')}
+          description={t('trials:scoutInboxEmptyDescription')}
         />
       ) : (
         <View className="gap-3">

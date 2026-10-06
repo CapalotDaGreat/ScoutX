@@ -8,6 +8,14 @@ import {
   type QuerySnapshot,
 } from 'firebase/firestore';
 
+/** Hard caps for live listeners so shells cannot subscribe to unbounded collections. */
+export const LISTENER_LIMITS = {
+  activities: 40,
+  trials: 50,
+  trialNotifications: 40,
+  recommendations: 40,
+} as const;
+
 export function subscribeToDocument<T>({
   docRef,
   parse,

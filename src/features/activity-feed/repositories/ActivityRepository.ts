@@ -5,10 +5,11 @@ import {
   setDoc,
   where,
   orderBy,
+  limit,
 } from 'firebase/firestore';
 import { useMockData } from '@/config/appMode';
 import { getFirestoreDb } from '@/config/firebase';
-import { subscribeToQuery } from '@/firebase/firestoreSubscriptions';
+import { LISTENER_LIMITS, subscribeToQuery } from '@/firebase/firestoreSubscriptions';
 import { ACTIVITY_COLLECTION } from '@/features/activity-feed/constants';
 import {
   buildActivityFromDraft,
@@ -54,6 +55,7 @@ export class ActivityRepository {
       collection(db, ACTIVITY_COLLECTION),
       where('recipientId', '==', recipientId),
       orderBy('createdAt', 'desc'),
+      limit(LISTENER_LIMITS.activities),
     );
 
     return subscribeToQuery({

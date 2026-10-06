@@ -56,5 +56,10 @@
   "removedItem": "« {{name}} » supprimé",
   "removeFailed": "Suppression impossible. L'élément est revenu dans ta liste — réessaie.",
   "remove": "Retirer",
-  "allRemoved": "Tu as retiré tous les moments suggérés. Annule, ou ferme et rouvre le studio."
+  "allRemoved": "Tu as retiré tous les moments suggérés. Annule, ou ferme et rouvre le studio.",
+  "searchOwnedHint": "Cherche matchs, entrees de parcours et essais sur cet appareil",
+  "searchOwnedPlaceholder": "Chercher tes enregistrements",
+  "searchEmpty": "Aucun enregistrement correspondant",
+  "searchEmptyHint": "ScoutX ne cherche que ce que tu as deja enregistre.",
+  "offlineDrafts": "Hors ligne — les brouillons restent sur cet appareil jusqu a la reconnexion"
 }

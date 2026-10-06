@@ -2,26 +2,29 @@ import { View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { formatTrialDate } from '@/features/trial-invitations/models/TrialInvitationModel';
 import { type TrialHistoryEntry } from '@/features/trial-invitations/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type TrialHistoryTimelineProps = {
   history: TrialHistoryEntry[];
 };
 
-const actionLabels: Record<TrialHistoryEntry['action'], string> = {
-  created: 'Invitation created',
-  accepted: 'Player accepted',
-  declined: 'Player declined',
-  rescheduled: 'Trial rescheduled',
-  cancelled: 'Invitation cancelled',
-  completed: 'Trial completed',
-  note_added: 'Note added',
-};
+const HISTORY_ACTION_KEYS = {
+  created: 'history.created',
+  accepted: 'history.accepted',
+  declined: 'history.declined',
+  rescheduled: 'history.rescheduled',
+  cancelled: 'history.cancelled',
+  completed: 'history.completed',
+  note_added: 'history.note_added',
+} as const;
 
 export function TrialHistoryTimeline({ history }: TrialHistoryTimelineProps) {
+  const { t } = useAppTranslation(['trials']);
+
   if (history.length === 0) {
     return (
       <Text variant="body-sm" color="secondary">
-        No history yet.
+        {t('historyEmpty')}
       </Text>
     );
   }
@@ -37,7 +40,7 @@ export function TrialHistoryTimeline({ history }: TrialHistoryTimelineProps) {
             ) : null}
           </View>
           <View className="mb-2 flex-1">
-            <Text weight="semibold">{actionLabels[entry.action]}</Text>
+            <Text weight="semibold">{t(HISTORY_ACTION_KEYS[entry.action])}</Text>
             <Text variant="caption" color="secondary">
               {entry.actorName} · {new Date(entry.timestamp).toLocaleString()}
             </Text>

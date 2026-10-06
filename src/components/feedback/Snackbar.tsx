@@ -13,6 +13,7 @@ import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type SnackbarOptions = {
   message: string;
@@ -122,6 +123,7 @@ export function SnackbarHost() {
   const [hostId, setHostId] = useState(0);
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
+  const reducedMotion = useReducedMotion();
   const registerHost = context?.registerHost;
 
   useEffect(() => {
@@ -145,8 +147,8 @@ export function SnackbarHost() {
     >
       <Animated.View
         key={active.id}
-        entering={FadeInDown.duration(180)}
-        exiting={FadeOutDown.duration(150)}
+        entering={reducedMotion ? undefined : FadeInDown.duration(180)}
+        exiting={reducedMotion ? undefined : FadeOutDown.duration(150)}
         accessibilityRole="alert"
         accessibilityLiveRegion="polite"
         style={{

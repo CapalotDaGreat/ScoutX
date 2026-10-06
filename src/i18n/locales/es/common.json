@@ -56,5 +56,10 @@
   "removedItem": "«{{name}}» eliminado",
   "removeFailed": "No se pudo eliminar. Ha vuelto a tu lista: inténtalo de nuevo.",
   "remove": "Quitar",
-  "allRemoved": "Has quitado todos los momentos sugeridos. Deshaz o cierra y vuelve a abrir el estudio."
+  "allRemoved": "Has quitado todos los momentos sugeridos. Deshaz o cierra y vuelve a abrir el estudio.",
+  "searchOwnedHint": "Busca partidos, entradas de trayectoria y trials en este dispositivo",
+  "searchOwnedPlaceholder": "Busca tus registros",
+  "searchEmpty": "Sin registros coincidentes",
+  "searchEmptyHint": "ScoutX solo busca lo que ya has registrado.",
+  "offlineDrafts": "Sin conexion — los borradores se quedan en este dispositivo hasta que reconectes"
 }

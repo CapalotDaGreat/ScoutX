@@ -6,8 +6,10 @@ import {
   setDoc,
   where,
   orderBy,
+  limit,
 } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
+import { LISTENER_LIMITS } from '@/firebase/firestoreSubscriptions';
 import {
   TRIAL_INVITATION_COLLECTION,
   TRIAL_NOTIFICATION_COLLECTION,
@@ -76,6 +78,7 @@ export class TrialInvitationRepository {
       collection(db, TRIAL_INVITATION_COLLECTION),
       where('playerId', '==', playerId),
       orderBy('updatedAt', 'desc'),
+      limit(LISTENER_LIMITS.trials),
     );
 
     return onSnapshot(
@@ -108,6 +111,7 @@ export class TrialInvitationRepository {
       collection(db, TRIAL_INVITATION_COLLECTION),
       where('scoutId', '==', scoutId),
       orderBy('updatedAt', 'desc'),
+      limit(LISTENER_LIMITS.trials),
     );
 
     return onSnapshot(
@@ -142,6 +146,7 @@ export class TrialInvitationRepository {
       where('scoutId', '==', scoutId),
       where('playerId', '==', playerId),
       orderBy('updatedAt', 'desc'),
+      limit(LISTENER_LIMITS.trials),
     );
 
     return onSnapshot(
@@ -174,6 +179,7 @@ export class TrialInvitationRepository {
       collection(db, TRIAL_NOTIFICATION_COLLECTION),
       where('recipientId', '==', recipientId),
       orderBy('createdAt', 'desc'),
+      limit(LISTENER_LIMITS.trialNotifications),
     );
 
     return onSnapshot(

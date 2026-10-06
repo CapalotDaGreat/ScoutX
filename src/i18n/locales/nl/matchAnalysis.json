@@ -65,6 +65,7 @@
     "retry": "Analyse opnieuw",
     "recent": "Recente analyses",
     "another": "Nog een wedstrijd analyseren",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "uploadProgress": "Upload {{percent}}%"
   }
 }

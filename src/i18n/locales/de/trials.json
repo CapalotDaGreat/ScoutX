@@ -19,5 +19,31 @@
   "createInvitation": "Create invitation",
   "replayTitle": "Trial-Wiedergabe",
   "replayEmpty": "Noch kein gespeicherter Trial-Verlauf.",
-  "replayLabel": "Wiedergabe des gespeicherten Einladungsverlaufs — nichts erfunden."
+  "replayLabel": "Wiedergabe des gespeicherten Einladungsverlaufs — nichts erfunden.",
+  "historyEmpty": "Noch kein Verlauf.",
+  "history": {
+    "created": "Einladung erstellt",
+    "accepted": "Spieler angenommen",
+    "declined": "Spieler abgelehnt",
+    "rescheduled": "Trial verschoben",
+    "cancelled": "Einladung storniert",
+    "completed": "Trial abgeschlossen",
+    "note_added": "Notiz hinzugefügt"
+  },
+  "scoutInboxSubtitle": "Einladungen in deiner Pipeline",
+  "scoutInboxFullSubtitle": "Alle Trial-Einladungen, die du gesendet hast",
+  "scoutInboxEmptyTitle": "Noch keine Trial-Einladungen",
+  "scoutInboxEmptyDescription": "Lade Spieler über ihr Profil ein. Gesendete Einladungen aller Spieler erscheinen hier.",
+  "sectionTitle": "Trial-Einladungen",
+  "sectionSubtitle": "Professioneller Rekrutierungsablauf für diesen Spieler",
+  "invite": "Einladen",
+  "sectionEmpty": "Noch keine Trial-Einladungen. Sende eine strukturierte Einladung mit Verein, Trainer und Session-Details.",
+  "cancelTrialTitle": "Trial stornieren",
+  "cancelTrialMessage": "Diese Trial-Einladung stornieren?",
+  "keep": "Behalten",
+  "cancelTrial": "Trial stornieren",
+  "cancelFailed": "Trial konnte nicht storniert werden.",
+  "reschedule": "Verschieben",
+  "responseNote": "Antwortnotiz (optional)",
+  "responseNotePlaceholder": "Verfügbarkeit oder Fragen an den Scout…"
 }

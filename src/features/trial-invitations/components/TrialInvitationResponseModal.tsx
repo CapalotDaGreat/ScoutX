@@ -14,6 +14,7 @@ import {
 } from '@/features/trial-invitations/services/trialCalendarService';
 import { PLAYER_RESPONDABLE_STATUSES } from '@/features/trial-invitations/constants';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
 
 export type TrialInvitationResponseModalProps = {
@@ -33,6 +34,7 @@ export function TrialInvitationResponseModal({
   onAccept,
   onDecline,
 }: TrialInvitationResponseModalProps) {
+  const { t } = useAppTranslation(['trials']);
   const [note, setNote] = useState('');
 
   if (!invitation) {
@@ -121,10 +123,10 @@ export function TrialInvitationResponseModal({
 
           {canRespond ? (
             <Input
-              label="Response note (optional)"
+              label={t('responseNote')}
               value={note}
               onChangeText={setNote}
-              placeholder="Availability confirmation or questions for the scout..."
+              placeholder={t('responseNotePlaceholder')}
               multiline
               numberOfLines={3}
               inputClassName="min-h-[70px] text-top"

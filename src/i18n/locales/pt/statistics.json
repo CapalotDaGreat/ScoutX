@@ -104,5 +104,15 @@
       "notWhole": "{{field}} tem de ser um número inteiro.",
       "outOfRange": "{{field}} tem de estar entre {{min}} e {{max}}."
     }
-  }
+  },
+  "emptyDescriptionVideo": "Regista um jogo ou carrega uma gravação Veo completa para estatísticas IA e feedback de coaching.",
+  "uploadAnalyze": "Carregar / analisar vídeo do jogo",
+  "uploadAnalyzeAi": "Carregar / analisar vídeo do jogo com IA",
+  "headlineSubtitle": "{{count}} jogos · primeiro as métricas principais",
+  "attributeProfile": "Perfil de atributos",
+  "attributeProfileSubtitle": "Radar das tuas forças atuais",
+  "aiCoaching": "Coaching IA",
+  "aiCoachingSubtitle": "Resumo de desempenho e ideias de melhoria",
+  "performanceTrends": "Tendências de desempenho",
+  "performanceTrendsSubtitle": "Gráficos de progresso nos jogos recentes"
 }

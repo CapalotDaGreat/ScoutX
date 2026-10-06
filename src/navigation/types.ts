@@ -36,6 +36,7 @@ export type PlayerStackParamList = {
   Trials: undefined;
   PlayerDetail: { playerId: string };
   AnalysisReport: { jobId: string };
+  GlobalSearch: undefined;
   PlayerLogin: undefined;
   PlayerRegister: undefined;
   PlayerForgotPassword: undefined;
@@ -56,6 +57,7 @@ export type ScoutStackParamList = {
   ActivityInbox: undefined;
   PublicPortfolio: { playerId?: string; slug?: string };
   Settings: undefined;
+  GlobalSearch: undefined;
 };
 
 export type GuestStackParamList = {

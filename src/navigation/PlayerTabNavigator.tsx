@@ -261,6 +261,7 @@ function PlayerTabsContainer() {
               }}
               passportSettingsFocusKey={passportSettingsFocusKey}
               onSettingsPress={() => stackNavigation.navigate('Settings')}
+              onSearchPress={() => stackNavigation.navigate('GlobalSearch')}
               embeddedInTabShell
               todaySlot={
                 <PlayerTodayContainer

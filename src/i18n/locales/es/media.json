@@ -38,5 +38,28 @@
     "export": "Exportar",
     "saveFailed": "No se pudo guardar el reel",
     "loadFailed": "No se pudieron cargar los reels."
+  },
+  "editor": {
+    "addTitle": "Añadir vídeo destacado",
+    "editTitle": "Editar vídeo destacado",
+    "title": "Título",
+    "titlePlaceholder": "Falta ganadora",
+    "description": "Descripción",
+    "descriptionPlaceholder": "¿Qué hace especial este clip para los scouts?",
+    "category": "Categoría",
+    "tags": "Etiquetas",
+    "tagsPlaceholder": "balón parado, clutch, visión",
+    "tagsHint": "Etiquetas separadas por comas",
+    "match": "Partido",
+    "matchPlaceholder": "Northstar FC vs Rangers",
+    "opponent": "Rival",
+    "opponentPlaceholder": "Rangers",
+    "competition": "Competición",
+    "competitionPlaceholder": "Primera División",
+    "dateIso": "Fecha (ISO)",
+    "featured": "Destacado ✓",
+    "setFeatured": "Marcar como destacado",
+    "titleRequired": "El título es obligatorio.",
+    "analysisReserved": "Los metadatos de análisis IA están reservados para una versión futura y se añadirán automáticamente."
   }
 }

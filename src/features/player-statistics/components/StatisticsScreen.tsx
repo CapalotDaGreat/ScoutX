@@ -15,6 +15,7 @@ import { AiInsightPanel } from '@/features/ai-insights';
 import { type AiInsightContext } from '@/features/ai-insights';
 import { usePlayerStatistics } from '@/features/player-statistics/hooks/usePlayerStatistics';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type StatisticsScreenProps = {
@@ -38,6 +39,7 @@ export function StatisticsScreen({
   embeddedInTabShell = false,
   nestedUnderSegment = false,
 }: StatisticsScreenProps) {
+  const { t } = useAppTranslation(['statistics']);
   const { colors } = useTheme();
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
   const [showFullHistory, setShowFullHistory] = useState(false);
@@ -49,7 +51,7 @@ export function StatisticsScreen({
 
   if (isLoading) {
     return (
-      <Screen title="Statistics" subtitle="Loading performance data" safeArea {...screenProps}>
+      <Screen title={t('title')} subtitle={t('loadingSubtitle')} safeArea {...screenProps}>
         <SkeletonLoader variant="card" count={4} />
       </Screen>
     );
@@ -58,8 +60,8 @@ export function StatisticsScreen({
   if (error) {
     return (
       <Screen
-        title="Statistics"
-        subtitle="Performance analytics"
+        title={t('title')}
+        subtitle={t('analyticsSubtitle')}
         error={error}
         onRetry={onRefresh}
         safeArea
@@ -72,12 +74,12 @@ export function StatisticsScreen({
 
   if (overview.matchCount === 0) {
     return (
-      <Screen title="Statistics" subtitle="Performance analytics" safeArea {...screenProps}>
+      <Screen title={t('title')} subtitle={t('analyticsSubtitle')} safeArea {...screenProps}>
         <View className="gap-4">
           <EmptyState
-            title="No match data yet"
-            description="Log a match or upload a full Veo recording for AI stats and coaching feedback."
-            actionLabel="Log Match"
+            title={t('emptyTitle')}
+            description={t('emptyDescriptionVideo')}
+            actionLabel={t('logMatch')}
             onAction={onLogMatchPress}
           />
           {onAnalyzeMatchVideoPress ? (
@@ -86,7 +88,7 @@ export function StatisticsScreen({
               onPress={onAnalyzeMatchVideoPress}
               leftIcon={<Clapperboard size={18} color={colors.accentForeground} />}
             >
-              Upload / analyze match video
+              {t('uploadAnalyze')}
             </Button>
           ) : null}
         </View>
@@ -97,8 +99,8 @@ export function StatisticsScreen({
   return (
     <View className="flex-1">
       <Screen
-        title="Statistics"
-        subtitle={`${overview.matchCount} matches · headline metrics first`}
+        title={t('title')}
+        subtitle={t('headlineSubtitle', { count: overview.matchCount })}
         onRefresh={onRefresh}
         refreshing={refreshing}
         safeArea
@@ -111,23 +113,23 @@ export function StatisticsScreen({
             onPress={onAnalyzeMatchVideoPress}
             leftIcon={<Clapperboard size={18} color={colors.accent} />}
           >
-            Upload / analyze match video with AI
+            {t('uploadAnalyzeAi')}
           </Button>
         ) : null}
 
         <StatisticsCards items={overview.totals} />
 
         <CollapsibleSection
-          title="Attribute profile"
-          subtitle="Radar of your current strengths"
+          title={t('attributeProfile')}
+          subtitle={t('attributeProfileSubtitle')}
           persistKey="stats-radar"
         >
           <RadarChart points={overview.radar} />
         </CollapsibleSection>
 
         <CollapsibleSection
-          title="AI coaching"
-          subtitle="Performance summary and improvement ideas"
+          title={t('aiCoaching')}
+          subtitle={t('aiCoachingSubtitle')}
           persistKey="stats-ai-coaching"
         >
           <View className="gap-4">
@@ -145,8 +147,8 @@ export function StatisticsScreen({
         </CollapsibleSection>
 
         <CollapsibleSection
-          title="Performance trends"
-          subtitle="Progress graphs over recent matches"
+          title={t('performanceTrends')}
+          subtitle={t('performanceTrendsSubtitle')}
           persistKey="stats-trends"
         >
           <ProgressGraphs graphs={overview.progressGraphs} />
@@ -166,7 +168,7 @@ export function StatisticsScreen({
       {onLogMatchPress && !embeddedInTabShell ? (
         <FloatingActionButton
           icon={<BarChart3 size={24} color={colors.accentForeground} strokeWidth={2} />}
-          accessibilityLabel="Log match"
+          accessibilityLabel={t('logMatch')}
           onPress={onLogMatchPress}
           bottomOffset={fabBottomOffset}
         />

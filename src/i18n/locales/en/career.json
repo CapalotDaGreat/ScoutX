@@ -36,5 +36,28 @@
   "momentsCount_other": "{{count}} recorded moments",
   "coachNotesTitle": "Coach observations",
   "coachNotesLabel": "Coach-provided notes only — ScoutX does not invent feedback.",
-  "coachNotesEmpty": "No coach observations recorded for you yet."
+  "coachNotesEmpty": "No coach observations recorded for you yet.",
+  "journeyEditor": {
+    "entryType": "Entry Type",
+    "title": "Title",
+    "titlePlaceholder": "e.g. Signed professional contract",
+    "subtitle": "Subtitle",
+    "subtitlePlaceholder": "Optional highlight",
+    "organization": "Organization",
+    "organizationPlaceholder": "Club, federation, or academy",
+    "dateIso": "Date (ISO)",
+    "endDateIso": "End Date (ISO, optional)",
+    "endDatePlaceholder": "For ranges or recoveries",
+    "description": "Description",
+    "descriptionPlaceholder": "Tell scouts what happened and why it matters",
+    "media": "Media",
+    "video": "Video",
+    "image": "Image",
+    "url": "URL",
+    "thumbnailUrl": "Thumbnail URL",
+    "removeMedia": "Remove Media",
+    "addImage": "Add Image",
+    "addVideo": "Add Video",
+    "removeEntry": "Remove Entry"
+  }
 }

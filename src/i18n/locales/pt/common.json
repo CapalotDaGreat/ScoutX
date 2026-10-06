@@ -56,5 +56,10 @@
   "removedItem": "\"{{name}}\" removido",
   "removeFailed": "Não foi possível remover. Voltou à tua lista — tenta novamente.",
   "remove": "Remover",
-  "allRemoved": "Removeste todos os momentos sugeridos. Desfaz, ou fecha e volta a abrir o estúdio."
+  "allRemoved": "Removeste todos os momentos sugeridos. Desfaz, ou fecha e volta a abrir o estúdio.",
+  "searchOwnedHint": "Pesquisa jogos, entradas de percurso e trials neste dispositivo",
+  "searchOwnedPlaceholder": "Pesquisar os teus registos",
+  "searchEmpty": "Sem registos correspondentes",
+  "searchEmptyHint": "O ScoutX so pesquisa o que ja registaste.",
+  "offlineDrafts": "Offline — os rascunhos ficam neste dispositivo ate voltares a ligar"
 }

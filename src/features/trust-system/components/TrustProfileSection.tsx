@@ -19,6 +19,7 @@ import { TRUST_RECOMMENDATION_SECTION_LABELS } from '@/features/trust-system/con
 import { type ClubHistoryEntry } from '@/features/player-profile/types/footballIdentity';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type TrustProfileSectionProps = {
@@ -65,6 +66,7 @@ function TrustProfileSectionContent({
   onInviteCoachPress,
   trust,
 }: TrustProfileSectionContentProps) {
+  const { t } = useAppTranslation(['trust']);
   const { colors } = useTheme();
   const { user } = useAuth();
   const {
@@ -124,16 +126,16 @@ function TrustProfileSectionContent({
   return (
     <>
       <Section
-        title="Professional Trust"
-        subtitle="Verified credentials, club tenure, and recommendations"
+        title={t('trust:title')}
+        subtitle={t('trust:professionalSubtitle')}
         action={
           allowScoutEndorsement ? (
             <Button variant="accent" size="sm" onPress={openCreateEndorsement}>
-              {ownEndorsement ? 'Edit Endorsement' : 'Endorse'}
+              {ownEndorsement ? t('editEndorsement') : t('endorse')}
             </Button>
           ) : onInviteCoachPress ? (
             <Button variant="secondary" size="sm" onPress={onInviteCoachPress}>
-              Invite coach
+              {t('inviteCoach')}
             </Button>
           ) : undefined
         }
@@ -145,8 +147,7 @@ function TrustProfileSectionContent({
             <View className="flex-row items-center gap-2 rounded-lg bg-accent-muted/40 px-3 py-2">
               <Award size={16} color={colors.accent} />
               <Text variant="caption" color="accent" className="flex-1">
-                {recommendations.length} recommendation
-                {recommendations.length === 1 ? '' : 's'} on profile
+                {t('recommendationsCount', { count: recommendations.length })}
               </Text>
             </View>
 
@@ -157,11 +158,11 @@ function TrustProfileSectionContent({
             {recommendations.length === 0 ? (
               <View className="rounded-xl border border-dashed border-border px-4 py-8">
                 <Text variant="body-sm" color="secondary" className="text-center">
-                  No coach recommendations or scout endorsements yet.
+                  {t('emptyRecommendations')}
                 </Text>
                 {onInviteCoachPress ? (
                   <Button variant="accent" size="sm" className="mt-4 self-center" onPress={onInviteCoachPress}>
-                    Invite your coach
+                    {t('inviteYourCoach')}
                   </Button>
                 ) : null}
               </View>
@@ -180,7 +181,7 @@ function TrustProfileSectionContent({
 
             {allowScoutEndorsement && ownEndorsement ? (
               <Button variant="secondary" size="sm" onPress={() => openEditEndorsement(ownEndorsement)}>
-                Edit your endorsement
+                {t('editYourEndorsement')}
               </Button>
             ) : null}
           </View>

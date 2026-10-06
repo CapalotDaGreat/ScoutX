@@ -104,5 +104,15 @@
       "notWhole": "{{field}} doit être un nombre entier.",
       "outOfRange": "{{field}} doit être compris entre {{min}} et {{max}}."
     }
-  }
+  },
+  "emptyDescriptionVideo": "Enregistre un match ou importe une vidéo Veo complète pour des stats IA et un retour coaching.",
+  "uploadAnalyze": "Importer / analyser la vidéo du match",
+  "uploadAnalyzeAi": "Importer / analyser la vidéo du match avec l’IA",
+  "headlineSubtitle": "{{count}} matchs · d’abord les indicateurs clés",
+  "attributeProfile": "Profil d’attributs",
+  "attributeProfileSubtitle": "Radar de tes forces actuelles",
+  "aiCoaching": "Coaching IA",
+  "aiCoachingSubtitle": "Synthèse de performance et pistes d’amélioration",
+  "performanceTrends": "Tendances de performance",
+  "performanceTrendsSubtitle": "Graphiques de progression sur les matchs récents"
 }

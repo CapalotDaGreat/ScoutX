@@ -36,5 +36,28 @@
   "momentsCount_other": "{{count}} erfasste Momente",
   "coachNotesTitle": "Trainerbeobachtungen",
   "coachNotesLabel": "Nur vom Trainer bereitgestellte Notizen — ScoutX erfindet kein Feedback.",
-  "coachNotesEmpty": "Noch keine Trainerbeobachtungen fuer dich erfasst."
+  "coachNotesEmpty": "Noch keine Trainerbeobachtungen fuer dich erfasst.",
+  "journeyEditor": {
+    "entryType": "Eintragstyp",
+    "title": "Titel",
+    "titlePlaceholder": "z. B. Profi-Vertrag unterschrieben",
+    "subtitle": "Untertitel",
+    "subtitlePlaceholder": "Optionales Highlight",
+    "organization": "Organisation",
+    "organizationPlaceholder": "Verein, Verband oder Akademie",
+    "dateIso": "Datum (ISO)",
+    "endDateIso": "Enddatum (ISO, optional)",
+    "endDatePlaceholder": "Für Zeiträume oder Genesung",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Erkläre Scouts, was passiert ist und warum es zählt",
+    "media": "Medien",
+    "video": "Video",
+    "image": "Bild",
+    "url": "URL",
+    "thumbnailUrl": "Thumbnail-URL",
+    "removeMedia": "Medium entfernen",
+    "addImage": "Bild hinzufügen",
+    "addVideo": "Video hinzufügen",
+    "removeEntry": "Eintrag entfernen"
+  }
 }
