@@ -309,7 +309,12 @@
       "limited": "Limited",
       "insufficient": "Insufficient"
     },
-    "lastEvidence": "Ultima evidencia {{date}}"
+    "lastEvidence": "Ultima evidencia {{date}}",
+    "watchNew": "Nuevo",
+    "watchNewCount_one": "{{count}} nuevo",
+    "watchNewCount_other": "{{count}} nuevos",
+    "watchlistError": "No se pudieron cargar los cambios de la lista de seguimiento.",
+    "watchUnknownPlayer": "Jugador seguido"
   },
   "coach": {
     "rosterTitle": "Plantilla del entrenador",
@@ -322,5 +327,31 @@
     "observationEmpty": "No hay observaciones registradas para este jugador.",
     "saveFailed": "No se pudo guardar el cambio de plantilla.",
     "loadFailed": "No se pudo cargar la plantilla."
+  },
+  "brief": {
+    "title": "Frente a tu perfil buscado «{{name}}»",
+    "summary": "{{met}} de {{total}} criterios cumplidos",
+    "whyNot": "Por qué no",
+    "unknown": "No indicado por el jugador",
+    "unknownHint": "Los datos desconocidos no cuentan en contra del jugador.",
+    "allMet": "Cumple todos los criterios de este perfil.",
+    "wantedVsActual": "{{label}}: buscado {{wanted}}, jugador {{actual}}",
+    "criteria": {
+      "age": "Edad",
+      "position": "Posición",
+      "foot": "Pie dominante",
+      "height": "Altura (cm)",
+      "availability": "Disponibilidad",
+      "nationality": "Nacionalidad",
+      "league": "Liga",
+      "club": "Club",
+      "weak_foot": "Pie débil (autoevaluado)",
+      "skill_moves": "Regates (autoevaluados)",
+      "match_count": "Partidos registrados",
+      "recently_active": "Activo recientemente",
+      "video": "Vídeo de highlights",
+      "verified": "Verificado",
+      "sprint_speed": "Velocidad de sprint (km/h, GPS)"
+    }
   }
 }

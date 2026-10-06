@@ -309,7 +309,12 @@
       "limited": "Limited",
       "insufficient": "Insufficient"
     },
-    "lastEvidence": "Last evidence {{date}}"
+    "lastEvidence": "Last evidence {{date}}",
+    "watchNew": "New",
+    "watchNewCount_one": "{{count}} new",
+    "watchNewCount_other": "{{count}} new",
+    "watchlistError": "Watchlist changes could not be loaded.",
+    "watchUnknownPlayer": "Tracked player"
   },
   "coach": {
     "rosterTitle": "Coach roster",
@@ -322,5 +327,31 @@
     "observationEmpty": "No observations recorded for this player.",
     "saveFailed": "Could not save this roster change.",
     "loadFailed": "Could not load the roster."
+  },
+  "brief": {
+    "title": "Against your brief “{{name}}”",
+    "summary": "{{met}} of {{total}} criteria met",
+    "whyNot": "Why not",
+    "unknown": "Not stated by the player",
+    "unknownHint": "Unknown facts are not counted against the player.",
+    "allMet": "Meets every criterion in this brief.",
+    "wantedVsActual": "{{label}}: brief {{wanted}}, player {{actual}}",
+    "criteria": {
+      "age": "Age",
+      "position": "Position",
+      "foot": "Preferred foot",
+      "height": "Height (cm)",
+      "availability": "Availability",
+      "nationality": "Nationality",
+      "league": "League",
+      "club": "Club",
+      "weak_foot": "Weak foot (self-rated)",
+      "skill_moves": "Skill moves (self-rated)",
+      "match_count": "Logged matches",
+      "recently_active": "Recently active",
+      "video": "Highlight video",
+      "verified": "Verified",
+      "sprint_speed": "Sprint speed (km/h, GPS)"
+    }
   }
 }

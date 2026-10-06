@@ -309,7 +309,12 @@
       "limited": "Limited",
       "insufficient": "Insufficient"
     },
-    "lastEvidence": "Laatste evidence {{date}}"
+    "lastEvidence": "Laatste evidence {{date}}",
+    "watchNew": "Nieuw",
+    "watchNewCount_one": "{{count}} nieuw",
+    "watchNewCount_other": "{{count}} nieuw",
+    "watchlistError": "Watchlist-wijzigingen konden niet worden geladen.",
+    "watchUnknownPlayer": "Gevolgde speler"
   },
   "coach": {
     "rosterTitle": "Trainersselectie",
@@ -322,5 +327,31 @@
     "observationEmpty": "Geen observaties vastgelegd voor deze speler.",
     "saveFailed": "Selectiewijziging kon niet worden opgeslagen.",
     "loadFailed": "Selectie kon niet worden geladen."
+  },
+  "brief": {
+    "title": "Vergeleken met je zoekprofiel “{{name}}”",
+    "summary": "{{met}} van {{total}} criteria gehaald",
+    "whyNot": "Waarom niet",
+    "unknown": "Niet opgegeven door de speler",
+    "unknownHint": "Onbekende gegevens tellen niet tegen de speler.",
+    "allMet": "Voldoet aan alle criteria van dit profiel.",
+    "wantedVsActual": "{{label}}: gezocht {{wanted}}, speler {{actual}}",
+    "criteria": {
+      "age": "Leeftijd",
+      "position": "Positie",
+      "foot": "Voorkeursvoet",
+      "height": "Lengte (cm)",
+      "availability": "Beschikbaarheid",
+      "nationality": "Nationaliteit",
+      "league": "Competitie",
+      "club": "Club",
+      "weak_foot": "Zwakke voet (zelf ingeschat)",
+      "skill_moves": "Skill moves (zelf ingeschat)",
+      "match_count": "Vastgelegde wedstrijden",
+      "recently_active": "Recent actief",
+      "video": "Highlightvideo",
+      "verified": "Geverifieerd",
+      "sprint_speed": "Sprintsnelheid (km/u, GPS)"
+    }
   }
 }

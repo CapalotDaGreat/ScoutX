@@ -33,6 +33,7 @@ export type ScoutDashboardScreenProps = {
   onActivityPress: () => void;
   pipelineCount: number;
   onPlayerPress: (player: DiscoverablePlayer) => void;
+  onPlayerIdPress?: (playerId: string) => void;
   onOpenComparisonPress?: () => void;
   onSettingsPress?: () => void;
   onSearchPress?: () => void;
@@ -50,6 +51,7 @@ export function ScoutDashboardScreen({
   onActivityPress,
   pipelineCount,
   onPlayerPress,
+  onPlayerIdPress,
   onOpenComparisonPress,
   onSettingsPress,
   onSearchPress,
@@ -68,6 +70,13 @@ export function ScoutDashboardScreen({
   const workspace = useScoutWorkspace();
   const recruitment = useRecruitment();
   const [resolvedPlayers, setResolvedPlayers] = useState<DiscoverablePlayer[]>([]);
+  const watchedPlayerNames = useMemo(
+    () =>
+      Object.fromEntries(
+        (recruitment.workspace?.entries ?? []).map((entry) => [entry.playerId, entry.playerName]),
+      ),
+    [recruitment.workspace?.entries],
+  );
 
   useEffect(() => {
     const ids = [
@@ -180,7 +189,11 @@ export function ScoutDashboardScreen({
         <ComparisonQueueCard onOpenComparison={onOpenComparisonPress} />
       ) : null}
 
-      <WatchlistEventsCard scoutId={recruitment.workspace?.scoutId ?? null} />
+      <WatchlistEventsCard
+        scoutId={recruitment.workspace?.scoutId ?? null}
+        playerNames={watchedPlayerNames}
+        onPlayerPress={onPlayerIdPress}
+      />
       {role === 'coach' ? <CoachRosterCard coachId={user?.uid ?? null} /> : null}
 
       <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} />

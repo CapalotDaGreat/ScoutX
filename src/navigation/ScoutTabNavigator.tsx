@@ -82,6 +82,7 @@ function ScoutDashboardRoute() {
       onActivityPress={handleActivityPress}
       pipelineCount={recruitment.savedCount}
       onPlayerPress={handlePlayerPress}
+      onPlayerIdPress={(playerId) => flow.openPlayerDetail(playerId)}
       onOpenComparisonPress={handleOpenComparisonPress}
       onSettingsPress={handleSettingsPress}
       onSearchPress={handleGlobalSearchPress}

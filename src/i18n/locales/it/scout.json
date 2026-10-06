@@ -309,7 +309,12 @@
       "limited": "Limited",
       "insufficient": "Insufficient"
     },
-    "lastEvidence": "Ultima evidenza {{date}}"
+    "lastEvidence": "Ultima evidenza {{date}}",
+    "watchNew": "Nuovo",
+    "watchNewCount_one": "{{count}} nuovo",
+    "watchNewCount_other": "{{count}} nuovi",
+    "watchlistError": "Impossibile caricare le modifiche alla watchlist.",
+    "watchUnknownPlayer": "Giocatore seguito"
   },
   "coach": {
     "rosterTitle": "Rosa dell allenatore",
@@ -322,5 +327,31 @@
     "observationEmpty": "Nessuna osservazione registrata per questo giocatore.",
     "saveFailed": "Impossibile salvare la modifica alla rosa.",
     "loadFailed": "Impossibile caricare la rosa."
+  },
+  "brief": {
+    "title": "Rispetto al tuo profilo cercato «{{name}}»",
+    "summary": "{{met}} di {{total}} criteri soddisfatti",
+    "whyNot": "Perché no",
+    "unknown": "Non indicato dal giocatore",
+    "unknownHint": "I dati sconosciuti non vengono contati contro il giocatore.",
+    "allMet": "Soddisfa tutti i criteri di questo profilo.",
+    "wantedVsActual": "{{label}}: cercato {{wanted}}, giocatore {{actual}}",
+    "criteria": {
+      "age": "Età",
+      "position": "Ruolo",
+      "foot": "Piede preferito",
+      "height": "Altezza (cm)",
+      "availability": "Disponibilità",
+      "nationality": "Nazionalità",
+      "league": "Campionato",
+      "club": "Club",
+      "weak_foot": "Piede debole (autovalutato)",
+      "skill_moves": "Abilità tecniche (autovalutate)",
+      "match_count": "Partite registrate",
+      "recently_active": "Attivo di recente",
+      "video": "Video highlights",
+      "verified": "Verificato",
+      "sprint_speed": "Velocità di sprint (km/h, GPS)"
+    }
   }
 }

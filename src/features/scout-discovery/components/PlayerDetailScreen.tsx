@@ -28,6 +28,8 @@ import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { formatRating } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { ScoutBriefCard } from '@/features/scout-intelligence/components/ScoutBriefCard';
 import { WhyThisPlayerCard } from '@/features/scout-intelligence/components/WhyThisPlayerCard';
+import { BriefMatchCard } from '@/features/scout-intelligence/components/BriefMatchCard';
+import { bestBriefMatch } from '@/features/scout-intelligence/services/briefMatch';
 import { SimilarPlayersCard } from '@/features/scout-intelligence/components/SimilarPlayersCard';
 import { EvidenceRequestComposer } from '@/features/scout-intelligence/components/EvidenceRequestComposer';
 import { buildScoutBrief } from '@/features/scout-intelligence/services/scoutBrief';
@@ -103,7 +105,18 @@ export function PlayerDetailScreen({
   }, [player?.club]);
 
   const radarPoints = useMemo(() => (player ? toRadarPoints(player) : []), [player]);
-  const whyReasons = useMemo(() => (player ? explainWhyThisPlayer(player) : []), [player]);
+  const briefMatch = useMemo(
+    () => (player ? bestBriefMatch(player, workspace.filterPresets) : null),
+    [player, workspace.filterPresets],
+  );
+  const briefPositions = useMemo(
+    () => workspace.filterPresets.find((preset) => preset.id === briefMatch?.presetId)?.filters.positions,
+    [briefMatch?.presetId, workspace.filterPresets],
+  );
+  const whyReasons = useMemo(
+    () => (player ? explainWhyThisPlayer(player, { positions: briefPositions }) : []),
+    [briefPositions, player],
+  );
   const similar = useMemo(
     () => (player ? rankSimilarPlayers(player, playerPool) : []),
     [player, playerPool],
@@ -231,6 +244,7 @@ export function PlayerDetailScreen({
           {!guestMode && brief ? (
             <View className="mt-3 gap-3">
               <WhyThisPlayerCard reasons={whyReasons} />
+              {briefMatch ? <BriefMatchCard match={briefMatch} /> : null}
               <ScoutBriefCard brief={brief} />
               <SimilarPlayersCard
                 scores={similar}

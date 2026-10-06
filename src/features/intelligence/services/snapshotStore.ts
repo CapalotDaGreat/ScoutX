@@ -24,6 +24,24 @@ export async function loadSeenSnapshot(
   }
 }
 
+/** ISO time the viewer last looked at a feed (e.g. watchlist changes); null if never. */
+export async function loadSeenAt(viewerId: string, scope: string): Promise<string | null> {
+  try {
+    const raw = await AsyncStorage.getItem(key(viewerId, `${scope}:at`));
+    return raw && !Number.isNaN(Date.parse(raw)) ? raw : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function saveSeenAt(viewerId: string, scope: string, at: string): Promise<void> {
+  try {
+    await AsyncStorage.setItem(key(viewerId, `${scope}:at`), at);
+  } catch {
+    // Non-critical: items may be marked new once more.
+  }
+}
+
 export async function saveSeenSnapshot(
   viewerId: string,
   scope: string,

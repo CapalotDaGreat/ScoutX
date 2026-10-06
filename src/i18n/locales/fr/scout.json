@@ -309,7 +309,12 @@
       "limited": "Limited",
       "insufficient": "Insufficient"
     },
-    "lastEvidence": "Derniere preuve {{date}}"
+    "lastEvidence": "Derniere preuve {{date}}",
+    "watchNew": "Nouveau",
+    "watchNewCount_one": "{{count}} nouveau",
+    "watchNewCount_other": "{{count}} nouveaux",
+    "watchlistError": "Impossible de charger les changements de la watchlist.",
+    "watchUnknownPlayer": "Joueur suivi"
   },
   "coach": {
     "rosterTitle": "Effectif de l entraineur",
@@ -322,5 +327,31 @@
     "observationEmpty": "Aucune observation enregistree pour ce joueur.",
     "saveFailed": "Impossible d enregistrer ce changement d effectif.",
     "loadFailed": "Impossible de charger l effectif."
+  },
+  "brief": {
+    "title": "Par rapport à ton profil recherché « {{name}} »",
+    "summary": "{{met}} critères remplis sur {{total}}",
+    "whyNot": "Pourquoi pas",
+    "unknown": "Non renseigné par le joueur",
+    "unknownHint": "Les informations inconnues ne sont pas retenues contre le joueur.",
+    "allMet": "Remplit tous les critères de ce profil.",
+    "wantedVsActual": "{{label}} : recherché {{wanted}}, joueur {{actual}}",
+    "criteria": {
+      "age": "Âge",
+      "position": "Poste",
+      "foot": "Pied fort",
+      "height": "Taille (cm)",
+      "availability": "Disponibilité",
+      "nationality": "Nationalité",
+      "league": "Ligue",
+      "club": "Club",
+      "weak_foot": "Mauvais pied (auto-évalué)",
+      "skill_moves": "Gestes techniques (auto-évalués)",
+      "match_count": "Matchs enregistrés",
+      "recently_active": "Actif récemment",
+      "video": "Vidéo de highlights",
+      "verified": "Vérifié",
+      "sprint_speed": "Vitesse de sprint (km/h, GPS)"
+    }
   }
 }

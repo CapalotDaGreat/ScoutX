@@ -9,7 +9,13 @@ import {
   sharedPositionGroup,
   statisticKeysForGroup,
 } from '../../src/features/scout-intelligence/services/positionComparison.ts';
-import type { DiscoverablePlayer } from '../../src/features/scout-discovery/types.ts';
+import { bestBriefMatch, evaluateBrief } from '../../src/features/scout-intelligence/services/briefMatch.ts';
+import {
+  defaultDiscoveryFilters,
+  type DiscoverablePlayer,
+  type DiscoveryFilters,
+  type FilterPreset,
+} from '../../src/features/scout-discovery/types.ts';
 
 const EMPTY_EVIDENCE_COVERAGE: DiscoverablePlayer['evidenceCoverage'] = {
   technical: 'insufficient',
@@ -159,5 +165,54 @@ describe('scout brief', () => {
   test('returns insufficient evidence when nothing is recorded', () => {
     const reasons = explainWhyThisPlayer(player({ id: 'p1', fullName: 'A' }));
     assert.equal(reasons.length, 0);
+  });
+});
+
+describe('brief match', () => {
+  const brief = (filters: Partial<DiscoveryFilters>, id = 'mine'): FilterPreset => ({
+    id,
+    name: 'U19 left-footed winger',
+    sort: 'relevance',
+    filters: { ...defaultDiscoveryFilters, ...filters },
+  });
+
+  test('unstated facts are unknown, never a miss', () => {
+    const p = player({ id: 'p', fullName: 'P', age: null, preferredFoot: null, position: ['LW'] });
+    const criteria = evaluateBrief(p, brief({ ageMax: 19, preferredFoot: 'left', positions: ['LW', 'RW'] }).filters);
+    assert.deepEqual(
+      criteria.map((item) => [item.id, item.result]),
+      [['age', 'unknown'], ['position', 'met'], ['foot', 'unknown']],
+    );
+  });
+
+  test('explains why not with the wanted and actual values', () => {
+    const p = player({ id: 'p', fullName: 'P', age: 23, preferredFoot: 'right' });
+    const criteria = evaluateBrief(p, brief({ ageMin: 16, ageMax: 19, preferredFoot: 'left' }).filters);
+    const age = criteria.find((item) => item.id === 'age');
+    assert.equal(age?.result, 'not_met');
+    assert.equal(age?.wanted, '16–19');
+    assert.equal(age?.actual, '23');
+    assert.equal(criteria.find((item) => item.id === 'foot')?.result, 'not_met');
+  });
+
+  test('a two-footed player satisfies a foot requirement', () => {
+    const p = player({ id: 'p', fullName: 'P', preferredFoot: 'both' });
+    assert.equal(evaluateBrief(p, brief({ preferredFoot: 'left' }).filters)[0].result, 'met');
+  });
+
+  test('ignores built-in example presets and empty briefs', () => {
+    const p = player({ id: 'p', fullName: 'P' });
+    assert.equal(bestBriefMatch(p, [brief({ ageMax: 21 }, 'preset-u21'), brief({}, 'empty')]), null);
+  });
+
+  test('picks the brief with the fewest misses', () => {
+    const p = player({ id: 'p', fullName: 'P', age: 18, position: ['ST'] });
+    const best = bestBriefMatch(p, [
+      brief({ positions: ['GK'], ageMax: 19 }, 'keepers'),
+      brief({ positions: ['ST'], ageMax: 19 }, 'strikers'),
+    ]);
+    assert.equal(best?.presetId, 'strikers');
+    assert.equal(best?.met, 2);
+    assert.equal(best?.notMet, 0);
   });
 });

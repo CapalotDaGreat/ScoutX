@@ -309,7 +309,12 @@
       "limited": "Begrenzt",
       "insufficient": "Unzureichend"
     },
-    "lastEvidence": "Letzte Evidenz {{date}}"
+    "lastEvidence": "Letzte Evidenz {{date}}",
+    "watchNew": "Neu",
+    "watchNewCount_one": "{{count}} neu",
+    "watchNewCount_other": "{{count}} neu",
+    "watchlistError": "Watchlist-Änderungen konnten nicht geladen werden.",
+    "watchUnknownPlayer": "Beobachteter Spieler"
   },
   "coach": {
     "rosterTitle": "Trainerkader",
@@ -322,5 +327,31 @@
     "observationEmpty": "Keine Beobachtungen fuer diesen Spieler erfasst.",
     "saveFailed": "Kaderaenderung konnte nicht gespeichert werden.",
     "loadFailed": "Kader konnte nicht geladen werden."
+  },
+  "brief": {
+    "title": "Abgleich mit deinem Profil „{{name}}“",
+    "summary": "{{met}} von {{total}} Kriterien erfüllt",
+    "whyNot": "Warum nicht",
+    "unknown": "Vom Spieler nicht angegeben",
+    "unknownHint": "Unbekannte Angaben werden nicht gegen den Spieler gewertet.",
+    "allMet": "Erfüllt alle Kriterien dieses Profils.",
+    "wantedVsActual": "{{label}}: gesucht {{wanted}}, Spieler {{actual}}",
+    "criteria": {
+      "age": "Alter",
+      "position": "Position",
+      "foot": "Starker Fuß",
+      "height": "Größe (cm)",
+      "availability": "Verfügbarkeit",
+      "nationality": "Nationalität",
+      "league": "Liga",
+      "club": "Verein",
+      "weak_foot": "Schwacher Fuß (Selbsteinschätzung)",
+      "skill_moves": "Tricks (Selbsteinschätzung)",
+      "match_count": "Erfasste Spiele",
+      "recently_active": "Kürzlich aktiv",
+      "video": "Highlight-Video",
+      "verified": "Verifiziert",
+      "sprint_speed": "Sprinttempo (km/h, GPS)"
+    }
   }
 }
