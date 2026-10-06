@@ -195,6 +195,26 @@
                 "title": "Erstelle dein erstes Highlight-Reel",
                 "description": "Mach aus Momenten deines analysierten Spiels ein Reel.",
                 "reason": "du hast ein analysiertes Spiel, aber noch keine Highlight-Videos"
+            },
+            "set_goal": {
+                "title": "Entwicklungsziel setzen",
+                "description": "Wähle eine Sache, an der du arbeitest. Fortschritt kommt aus deinen Spielen.",
+                "reason": "du hast Spielhistorie, aber kein aktives Ziel"
+            },
+            "log_training": {
+                "title": "Training eintragen",
+                "description": "Arbeite an {{title}} und halte den Verlauf ehrlich.",
+                "reason": "du hast ein aktives Ziel und kein aktuelles Training"
+            },
+            "review_goal": {
+                "title": "{{title}} prüfen",
+                "description": "Das Prüfdatum ist vorbei. Aktualisiere das Ziel oder markiere es als erreicht.",
+                "reason": "dieses Ziel hat das Prüfdatum ohne Erfolg erreicht"
+            },
+            "matchday_prep": {
+                "title": "60-Sekunden-Spieltagvorbereitung",
+                "description": "Lege Rolle und Fokus für {{opponent}} vor dem Anpfiff fest.",
+                "reason": "du hast heute ein Spiel eingetragen und dich noch nicht vorbereitet"
             }
         },
         "continue": {
@@ -218,6 +238,10 @@
             "incomplete_passport": {
                 "title": "Passport einrichten",
                 "description": "{{done}} von {{total}} Schritten erledigt"
+            },
+            "goal_in_progress": {
+                "title": "Weiter an {{title}} arbeiten",
+                "description": "Öffne Entwicklung, um eine Notiz oder ein Training festzuhalten"
             }
         },
         "latestMatch": {

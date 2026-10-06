@@ -58,6 +58,9 @@ function upcomingAcceptedTrial(trials: TodayTrial[], now: Date): TodayTrial | nu
  */
 export function buildTodayPlan(input: TodayInput): TodayPlan {
   const { now } = input;
+  const goals = input.goals ?? [];
+  const trainingSessions = input.trainingSessions ?? [];
+  const recentlyCompletedTypes = input.recentlyCompletedTypes ?? [];
   const actions: NextBestAction[] = [];
   const continueItems: ContinueItem[] = [];
 
@@ -238,7 +241,74 @@ export function buildTodayPlan(input: TodayInput): TodayPlan {
     }
   }
 
-  const ranked = actions
+  const today = now.toISOString().slice(0, 10);
+  const trainedToday = trainingSessions.some((session) => session.date.slice(0, 10) === today);
+  const openGoals = goals.filter((goal) => goal.status === 'active' || goal.status === 'improving' || goal.status === 'not_started');
+  const revisitGoal = goals.find((goal) => goal.status === 'revisit');
+  const lastTraining = newestFirst(trainingSessions, (session) => session.date)[0] ?? null;
+
+  if (revisitGoal) {
+    actions.push({
+      id: `review-goal-${revisitGoal.id}`,
+      type: 'review_goal',
+      priority: 58,
+      route: 'development',
+      entityId: revisitGoal.id,
+      params: { title: revisitGoal.title },
+    });
+  }
+
+  const recentlyAchieved = goals.some(
+    (goal) => goal.status === 'achieved' && daysBetween(goal.updatedAt, now) <= 7,
+  );
+  if (latestMatch && openGoals.length === 0 && !recentlyAchieved) {
+    actions.push({
+      id: 'set-goal',
+      type: 'set_goal',
+      priority: 52,
+      route: 'development',
+      params: {},
+    });
+  }
+
+  if (openGoals.length > 0 && !trainedToday) {
+    const daysSinceTraining = lastTraining ? daysBetween(lastTraining.date, now) : Number.POSITIVE_INFINITY;
+    if (!Number.isFinite(daysSinceTraining) || daysSinceTraining >= 2) {
+      actions.push({
+        id: 'log-training',
+        type: 'log_training',
+        priority: 48,
+        route: 'development',
+        params: { title: openGoals[0].title },
+      });
+    }
+  }
+
+  if (latestMatch && daysBetween(latestMatch.date, now) === 0 && !trainingSessions.some((session) => session.type === 'match_prep' && session.date.slice(0, 10) === today)) {
+    actions.push({
+      id: 'matchday-prep',
+      type: 'matchday_prep',
+      priority: 70,
+      route: 'development',
+      params: { opponent: latestMatch.opponent },
+    });
+  }
+
+  const activeGoal = openGoals[0];
+  if (activeGoal && daysBetween(activeGoal.updatedAt, now) >= 7) {
+    continueItems.push({
+      id: `continue-goal-${activeGoal.id}`,
+      kind: 'goal_in_progress',
+      route: 'development',
+      entityId: activeGoal.id,
+      params: { title: activeGoal.title },
+    });
+  }
+
+  const completed = new Set(recentlyCompletedTypes);
+  const filteredActions = actions.filter((action) => !completed.has(action.type));
+
+  const ranked = filteredActions
     .map((action, index) => ({ action, index }))
     .sort((a, b) => b.action.priority - a.action.priority || a.index - b.index)
     .map(({ action }) => action);

@@ -195,6 +195,26 @@
                 "title": "Maak je eerste highlight-reel",
                 "description": "Maak van momenten uit je geanalyseerde wedstrijd een reel.",
                 "reason": "je hebt een geanalyseerde wedstrijd maar nog geen highlightvideo’s"
+            },
+            "set_goal": {
+                "title": "Stel een ontwikkeldoel",
+                "description": "Kies één ding om aan te werken. Voortgang komt uit de wedstrijden die je logt.",
+                "reason": "je hebt wedstrijdgeschiedenis maar geen actief doel"
+            },
+            "log_training": {
+                "title": "Log een training",
+                "description": "Werk aan {{title}} en houd het eerlijk.",
+                "reason": "je hebt een actief doel en geen recente training"
+            },
+            "review_goal": {
+                "title": "Bekijk {{title}} opnieuw",
+                "description": "De evaluatiedatum is voorbij. Werk het doel bij of markeer het als behaald.",
+                "reason": "dit doel bereikte de evaluatiedatum zonder te zijn behaald"
+            },
+            "matchday_prep": {
+                "title": "60 seconden wedstrijdvoorbereiding",
+                "description": "Zet je rol en focus voor {{opponent}} vóór de aftrap.",
+                "reason": "je hebt vandaag een wedstrijd gelogd en je nog niet voorbereid"
             }
         },
         "continue": {
@@ -218,6 +238,10 @@
             "incomplete_passport": {
                 "title": "Passport instellen",
                 "description": "{{done}} van {{total}} stappen voltooid"
+            },
+            "goal_in_progress": {
+                "title": "Ga door met {{title}}",
+                "description": "Open Ontwikkeling om een notitie of training toe te voegen"
             }
         },
         "latestMatch": {

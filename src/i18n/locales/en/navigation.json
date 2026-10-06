@@ -19,7 +19,8 @@
     "gps": "GPS",
     "trials": "Trials",
     "highlights": "Highlights",
-    "reports": "Reports"
+    "reports": "Reports",
+    "development": "Development"
   },
   "screens": {
     "settings": "Settings",

@@ -148,6 +148,42 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    match /players/{userId}/developmentGoals/{goalId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == goalId
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 160
+        && request.resource.data.category in ['technical', 'tactical', 'physical', 'mental', 'consistency']
+        && request.resource.data.status in ['not_started', 'active', 'improving', 'achieved', 'revisit'];
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/trainingSessions/{sessionId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == sessionId
+        && request.resource.data.date is string
+        && request.resource.data.focus is string
+        && request.resource.data.focus.size() > 0
+        && request.resource.data.focus.size() <= 200
+        && request.resource.data.type in ['team', 'individual', 'gym', 'recovery', 'match_prep', 'other'];
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/identitySnapshots/{snapshotId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == snapshotId
+        && request.resource.data.effectiveFrom is string
+        && request.resource.data.source in ['self_reported', 'club_provided', 'coach_provided'];
+      allow delete: if isOwner(userId);
+    }
+
     // Trust scores are server-maintained; players must not be able to inflate their own.
     match /trustProfiles/{playerId} {
       allow read: if isSignedIn() || publicPortfolioEnabled(playerId);

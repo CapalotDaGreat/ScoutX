@@ -345,6 +345,27 @@ describe('player match logs and evidence', () => {
     await denied(setDocument(PLAYER, `players/${PLAYER}/evidenceItems/e2`, { ...item, id: 'e2', ownerId: OTHER_PLAYER }), 'wrong owner');
     await denied(getDocument(SCOUT, `players/${PLAYER}/evidenceItems/e1`), 'scout reads evidence');
   });
+
+  test('development goals, training and identity snapshots are owner-only', async () => {
+    const goal = {
+      id: 'g1', ownerId: PLAYER, title: 'Pressing', category: 'tactical', status: 'active',
+    };
+    await allowed(setDocument(PLAYER, `players/${PLAYER}/developmentGoals/g1`, goal), 'owner writes goal');
+    await denied(getDocument(SCOUT, `players/${PLAYER}/developmentGoals/g1`), 'scout reads goal');
+    await denied(setDocument(PLAYER, `players/${PLAYER}/developmentGoals/g2`, { ...goal, id: 'g2', ownerId: OTHER_PLAYER }), 'wrong owner');
+
+    const session = {
+      id: 's1', ownerId: PLAYER, date: '2026-10-06', focus: 'First touch', type: 'individual',
+    };
+    await allowed(setDocument(PLAYER, `players/${PLAYER}/trainingSessions/s1`, session), 'owner writes training');
+    await denied(getDocument(OUTSIDER, `players/${PLAYER}/trainingSessions/s1`), 'outsider reads training');
+
+    const snapshot = {
+      id: 'i1', ownerId: PLAYER, effectiveFrom: '2026-10-01', source: 'self_reported', position: 'AM',
+    };
+    await allowed(setDocument(PLAYER, `players/${PLAYER}/identitySnapshots/i1`, snapshot), 'owner writes identity');
+    await denied(setDocument(OUTSIDER, `players/${PLAYER}/identitySnapshots/i2`, { ...snapshot, id: 'i2', ownerId: PLAYER }), 'outsider writes identity');
+  });
 });
 
 describe('ownership of shared documents', () => {

@@ -19,8 +19,9 @@
                      "gps":  "GPS",
                      "trials":  "Trials",
                      "highlights":  "Highlights",
-                     "reports":  "Rapports"
-                 },
+                     "reports":  "Rapports",
+        "development": "Développement"
+    },
     "screens":  {
                     "settings":  "ParamÃ¨tres",
                     "settingsSubtitle":  "Account, notifications, and language",

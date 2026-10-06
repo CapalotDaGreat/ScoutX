@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
 import { useSnackbar } from '@/components/feedback/Snackbar';
 import { Button } from '@/components/primitives/Button';
+import { ChoiceChip } from '@/components/primitives/ChoiceChip';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import {
@@ -22,7 +23,6 @@ import {
 import { type MatchLogPayload, type PlayerMatchStatistics } from '@/features/player-statistics/types';
 import { matchLogDraftStore, workflowEvents } from '@/features/today/services/workflowStores';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
-import { cn } from '@/utils/cn';
 import { toUserMessage } from '@/utils/userFacingError';
 
 export type LogMatchModalProps = {
@@ -95,32 +95,6 @@ function validationMessage(t: Translate, error: MatchLogValidationError): string
         max: error.max,
       });
   }
-}
-
-function ChoiceChip({
-  label,
-  selected,
-  onPress,
-}: {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
-      onPress={onPress}
-      className={cn(
-        'min-h-11 justify-center rounded-full border px-4',
-        selected ? 'border-accent bg-accent-muted' : 'border-border bg-surface',
-      )}
-    >
-      <Text weight={selected ? 'semibold' : 'regular'} color={selected ? 'accent' : 'primary'}>
-        {label}
-      </Text>
-    </Pressable>
-  );
 }
 
 function FieldLabel({ children }: { children: string }) {

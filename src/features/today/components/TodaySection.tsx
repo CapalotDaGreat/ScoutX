@@ -130,6 +130,30 @@ function actionCopy(t: Translate, action: NextBestAction): ActionCopy {
         description: t('portfolio:today.actions.build_reel.description'),
         reason: t('portfolio:today.actions.build_reel.reason'),
       };
+    case 'set_goal':
+      return {
+        title: t('portfolio:today.actions.set_goal.title'),
+        description: t('portfolio:today.actions.set_goal.description'),
+        reason: t('portfolio:today.actions.set_goal.reason'),
+      };
+    case 'log_training':
+      return {
+        title: t('portfolio:today.actions.log_training.title'),
+        description: t('portfolio:today.actions.log_training.description', { title: str(params.title) }),
+        reason: t('portfolio:today.actions.log_training.reason'),
+      };
+    case 'review_goal':
+      return {
+        title: t('portfolio:today.actions.review_goal.title'),
+        description: t('portfolio:today.actions.review_goal.description', { title: str(params.title) }),
+        reason: t('portfolio:today.actions.review_goal.reason'),
+      };
+    case 'matchday_prep':
+      return {
+        title: t('portfolio:today.actions.matchday_prep.title'),
+        description: t('portfolio:today.actions.matchday_prep.description', { opponent: str(params.opponent) }),
+        reason: t('portfolio:today.actions.matchday_prep.reason'),
+      };
   }
 }
 
@@ -198,6 +222,11 @@ function continueCopy(
           done: num(params.done),
           total: num(params.total),
         }),
+      };
+    case 'goal_in_progress':
+      return {
+        title: t('portfolio:today.continue.goal_in_progress.title'),
+        description: t('portfolio:today.continue.goal_in_progress.description', { title: str(params.title) }),
       };
   }
 }

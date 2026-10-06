@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState, type ComponentType } from 'react';
-import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { useCallback, useMemo, useRef, useState, type ComponentType } from 'react';
+import { createBottomTabNavigator, type BottomTabBarProps, type BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Activity, Clapperboard, Compass, Home } from 'lucide-react-native';
@@ -78,6 +78,7 @@ function usePlayerStackNavigation() {
 
 function PlayerTabsContainer() {
   const stackNavigation = usePlayerStackNavigation();
+  const tabNavigationRef = useRef<BottomTabNavigationProp<PlayerTabParamList> | null>(null);
   const { user } = useAuth();
   const { t } = useAppTranslation(['common', 'statistics']);
   const {
@@ -204,6 +205,9 @@ function PlayerTabsContainer() {
             handleOnboardingStepPress(entityId);
           }
           break;
+        case 'development':
+          tabNavigationRef.current?.navigate('Performance', { segment: 'development' });
+          break;
       }
     },
     [handleOnboardingStepPress, openLogMatch, profile?.statisticsMatches, stackNavigation],
@@ -217,7 +221,9 @@ function PlayerTabsContainer() {
         screenOptions={{ headerShown: false, lazy: true }}
       >
         <Tab.Screen name="Home">
-          {({ navigation: tabNavigation }) => (
+          {({ navigation: tabNavigation }) => {
+            tabNavigationRef.current = tabNavigation;
+            return (
             <PlayerProfileScreen
               profile={profile}
               loading={isLoading}
@@ -266,7 +272,8 @@ function PlayerTabsContainer() {
                 />
               }
             />
-          )}
+          );
+          }}
         </Tab.Screen>
         <Tab.Screen name="Performance">
           {() => (

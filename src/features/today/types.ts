@@ -5,7 +5,8 @@ export type TodayRoute =
   | 'highlightStudio'
   | 'manageVideos'
   | 'trials'
-  | 'passportSetup';
+  | 'passportSetup'
+  | 'development';
 
 export type NextBestActionType =
   | 'log_first_match'
@@ -16,7 +17,11 @@ export type NextBestActionType =
   | 'respond_trial'
   | 'prepare_trial'
   | 'improve_passport'
-  | 'build_reel';
+  | 'build_reel'
+  | 'set_goal'
+  | 'log_training'
+  | 'review_goal'
+  | 'matchday_prep';
 
 export type ActionParams = Record<string, string | number>;
 
@@ -36,7 +41,8 @@ export type ContinueItemKind =
   | 'failed_analysis'
   | 'analysis_in_progress'
   | 'failed_upload'
-  | 'incomplete_passport';
+  | 'incomplete_passport'
+  | 'goal_in_progress';
 
 export type ContinueItem = {
   id: string;
@@ -83,6 +89,20 @@ export type TodayPassportStep = {
   complete: boolean;
 };
 
+export type TodayGoal = {
+  id: string;
+  title: string;
+  status: 'not_started' | 'active' | 'improving' | 'achieved' | 'revisit';
+  updatedAt: string;
+  createdAt: string;
+};
+
+export type TodayTraining = {
+  id: string;
+  date: string;
+  type: string;
+};
+
 export type TodayInput = {
   now: Date;
   matches: TodayMatch[];
@@ -94,6 +114,13 @@ export type TodayInput = {
   passportSteps: TodayPassportStep[];
   reviewedAnalysisIds: string[];
   matchDraft: { savedAt: string; opponent: string } | null;
+  goals: TodayGoal[];
+  trainingSessions: TodayTraining[];
+  /**
+   * Action types completed in the last day. Prevents the same suggestion looping
+   * immediately after the player already did it.
+   */
+  recentlyCompletedTypes: NextBestActionType[];
 };
 
 export type TodayPlan = {

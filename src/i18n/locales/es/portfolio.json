@@ -195,6 +195,26 @@
                 "title": "Crea tu primer vídeo de highlights",
                 "description": "Convierte momentos de tu partido analizado en un reel.",
                 "reason": "tienes un partido analizado pero aún no tienes vídeos de highlights"
+            },
+            "set_goal": {
+                "title": "Define un objetivo de desarrollo",
+                "description": "Elige una cosa en la que trabajar. El progreso sale de los partidos que registras.",
+                "reason": "tienes historial de partidos pero ningún objetivo activo"
+            },
+            "log_training": {
+                "title": "Registra un entrenamiento",
+                "description": "Trabaja {{title}} y mantén el registro honesto.",
+                "reason": "tienes un objetivo activo y ningún entrenamiento reciente"
+            },
+            "review_goal": {
+                "title": "Revisa {{title}}",
+                "description": "Pasó la fecha de revisión. Actualiza el objetivo o márcalo como logrado.",
+                "reason": "este objetivo llegó a su fecha de revisión sin cumplirse"
+            },
+            "matchday_prep": {
+                "title": "Preparación de 60 segundos",
+                "description": "Define tu rol y foco para {{opponent}} antes del saque.",
+                "reason": "registraste un partido hoy y aún no te has preparado"
             }
         },
         "continue": {
@@ -218,6 +238,10 @@
             "incomplete_passport": {
                 "title": "Configuración del Passport",
                 "description": "{{done}} de {{total}} pasos completados"
+            },
+            "goal_in_progress": {
+                "title": "Sigue con {{title}}",
+                "description": "Abre Desarrollo para añadir una nota o un entrenamiento"
             }
         },
         "latestMatch": {

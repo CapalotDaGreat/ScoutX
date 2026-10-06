@@ -1,18 +1,20 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabSegmentControl } from '@/components/navigation/TabSegmentControl';
 import { CareerScreen } from '@/features/career-timeline/components/CareerScreen';
+import { DevelopmentDashboard } from '@/features/development/components/DevelopmentDashboard';
+import { useDevelopment } from '@/features/development/hooks/useDevelopment';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { StatisticsScreen } from '@/features/player-statistics';
 import { buildPerformanceContext } from '@/features/ai-insights';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
-import { type PlayerStackParamList } from '@/navigation/types';
+import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation/types';
 
-type PerformanceSegment = 'stats' | 'career';
+type PerformanceSegment = 'development' | 'stats' | 'career';
 
 export type PlayerPerformanceTabProps = {
   onLogMatchPress: () => void;
@@ -29,8 +31,23 @@ export function PlayerPerformanceTab({
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const stackNavigation = useNavigation<NativeStackNavigationProp<PlayerStackParamList>>();
+  const route = useRoute<RouteProp<PlayerTabParamList, 'Performance'>>();
   const { profile, isLoading, refreshProfile } = usePlayerWorkspace();
-  const [segment, setSegment] = useState<PerformanceSegment>('stats');
+  const [segment, setSegment] = useState<PerformanceSegment>(route.params?.segment ?? 'development');
+
+  useEffect(() => {
+    const requested = route.params?.segment;
+    if (requested) {
+      setSegment(requested);
+    }
+  }, [route.params?.segment]);
+
+  const matches = profile?.statisticsMatches ?? [];
+  const development = useDevelopment({
+    userId: user?.id ?? null,
+    profile,
+    matches,
+  });
 
   const statisticsAiContext = useMemo(() => {
     if (!user?.id || !profile) {
@@ -51,6 +68,7 @@ export function PlayerPerformanceTab({
 
   const segments = useMemo(
     () => [
+      { id: 'development' as const, label: t('segments.development') },
       { id: 'stats' as const, label: t('segments.stats') },
       { id: 'career' as const, label: t('segments.career') },
     ],
@@ -65,7 +83,13 @@ export function PlayerPerformanceTab({
         onSegmentChange={setSegment}
         testID="player-performance-segments"
       />
-      {segment === 'stats' ? (
+      {segment === 'development' ? (
+        <DevelopmentDashboard
+          development={development}
+          embeddedInTabShell
+          nestedUnderSegment
+        />
+      ) : segment === 'stats' ? (
         <StatisticsScreen
           matches={profile?.statisticsMatches}
           aiInsightContext={statisticsAiContext}

@@ -16,6 +16,9 @@ function input(overrides: Partial<TodayInput> = {}): TodayInput {
     passportSteps: [],
     reviewedAnalysisIds: [],
     matchDraft: null,
+    goals: [],
+    trainingSessions: [],
+    recentlyCompletedTypes: [],
     ...overrides,
   };
 }
@@ -50,6 +53,8 @@ describe('buildTodayPlan', () => {
         analyses: [job({})],
         reviewedAnalysisIds: ['job-1'],
         videos: [{ id: 'v1', title: 'Goal', uploadStatus: 'ready' }],
+        goals: [{ id: 'g1', title: 'Pressing', status: 'active', updatedAt: '2026-10-05T10:00:00Z', createdAt: '2026-09-01T00:00:00Z' }],
+        trainingSessions: [{ id: 'tr1', date: '2026-10-06', type: 'individual' }],
       }),
     );
     assert.equal(plan.primary, null);
@@ -103,7 +108,14 @@ describe('buildTodayPlan', () => {
   });
 
   test('when analyses failed to load, no analysis-based action is guessed', () => {
-    const plan = buildTodayPlan(input({ matches: [recentMatch], analysesLoaded: false }));
+    const plan = buildTodayPlan(
+      input({
+        matches: [recentMatch],
+        analysesLoaded: false,
+        goals: [{ id: 'g1', title: 'Pressing', status: 'active', updatedAt: '2026-10-05T10:00:00Z', createdAt: '2026-09-01T00:00:00Z' }],
+        trainingSessions: [{ id: 'tr1', date: '2026-10-06', type: 'individual' }],
+      }),
+    );
     assert.equal(plan.primary, null);
   });
 
@@ -151,6 +163,8 @@ describe('buildTodayPlan', () => {
           { id: 'log_first_match', title: 'Log your first match', complete: true },
           { id: 'claim_username', title: 'Claim your link', complete: false },
         ],
+        goals: [{ id: 'g1', title: 'Pressing', status: 'active', updatedAt: '2026-10-05T10:00:00Z', createdAt: '2026-09-01T00:00:00Z' }],
+        trainingSessions: [{ id: 'tr1', date: '2026-10-06', type: 'individual' }],
       }),
     );
     assert.equal(plan.primary?.type, 'improve_passport');
@@ -170,5 +184,58 @@ describe('buildTodayPlan', () => {
       }),
     );
     assert.ok(plan.secondary.length <= 2);
+  });
+
+  test('a player with matches but no goal is asked to set one', () => {
+    const plan = buildTodayPlan(
+      input({
+        matches: [recentMatch],
+        analyses: [job({})],
+        reviewedAnalysisIds: ['job-1'],
+        videos: [{ id: 'v1', title: 'Goal', uploadStatus: 'ready' }],
+      }),
+    );
+    assert.equal(plan.primary?.type, 'set_goal');
+  });
+
+  test('loop prevention: a recently completed set_goal is not suggested again', () => {
+    const plan = buildTodayPlan(
+      input({
+        matches: [recentMatch],
+        analyses: [job({})],
+        reviewedAnalysisIds: ['job-1'],
+        videos: [{ id: 'v1', title: 'Goal', uploadStatus: 'ready' }],
+        recentlyCompletedTypes: ['set_goal'],
+      }),
+    );
+    assert.notEqual(plan.primary?.type, 'set_goal');
+  });
+
+  test('a revisit goal is offered for review', () => {
+    const plan = buildTodayPlan(
+      input({
+        matches: [recentMatch],
+        analyses: [job({})],
+        reviewedAnalysisIds: ['job-1'],
+        videos: [{ id: 'v1', title: 'Goal', uploadStatus: 'ready' }],
+        goals: [{ id: 'g-old', title: 'First touch', status: 'revisit', updatedAt: '2026-09-01T00:00:00Z', createdAt: '2026-08-01T00:00:00Z' }],
+        trainingSessions: [{ id: 'tr1', date: '2026-10-06', type: 'individual' }],
+      }),
+    );
+    assert.equal(plan.primary?.type, 'review_goal');
+    assert.equal(plan.primary?.params.title, 'First touch');
+  });
+
+  test('training is suggested for an open goal when nothing was logged recently', () => {
+    const plan = buildTodayPlan(
+      input({
+        matches: [recentMatch],
+        analyses: [job({})],
+        reviewedAnalysisIds: ['job-1'],
+        videos: [{ id: 'v1', title: 'Goal', uploadStatus: 'ready' }],
+        goals: [{ id: 'g1', title: 'Pressing', status: 'active', updatedAt: '2026-10-05T10:00:00Z', createdAt: '2026-09-01T00:00:00Z' }],
+      }),
+    );
+    assert.equal(plan.primary?.type, 'log_training');
   });
 });

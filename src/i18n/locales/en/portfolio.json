@@ -195,6 +195,26 @@
         "title": "Build your first highlight reel",
         "description": "Turn moments from your analyzed match into a reel.",
         "reason": "you have an analyzed match but no highlight videos yet"
+      },
+      "set_goal": {
+        "title": "Set a development goal",
+        "description": "Pick one thing to work on. Progress comes from the matches you log.",
+        "reason": "you have match history but no active goal"
+      },
+      "log_training": {
+        "title": "Log a training session",
+        "description": "Work on {{title}} and keep the streak honest.",
+        "reason": "you have an active goal and no recent training log"
+      },
+      "review_goal": {
+        "title": "Revisit {{title}}",
+        "description": "The review date passed. Update the goal or mark it achieved.",
+        "reason": "this goal reached its review date without being achieved"
+      },
+      "matchday_prep": {
+        "title": "60-second matchday prep",
+        "description": "Set your role and focus for {{opponent}} before kick-off.",
+        "reason": "you logged a match today and have not prepared yet"
       }
     },
     "continue": {
@@ -218,6 +238,10 @@
       "incomplete_passport": {
         "title": "Passport setup",
         "description": "{{done}} of {{total}} steps complete"
+      },
+      "goal_in_progress": {
+        "title": "Keep working on {{title}}",
+        "description": "Open Development to add a note or log training"
       }
     },
     "latestMatch": {

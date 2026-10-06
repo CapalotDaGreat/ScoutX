@@ -1,0 +1,136 @@
+{
+  "title": "Development",
+  "subtitle": "Goals, training, and what your matches actually show",
+  "category": {
+    "technical": "Technical",
+    "tactical": "Tactical",
+    "physical": "Physical",
+    "mental": "Mental",
+    "consistency": "Consistency"
+  },
+  "metric": {
+    "none": "Notes only",
+    "goals": "Goals / match",
+    "assists": "Assists / match",
+    "shots": "Shots / match",
+    "tackles": "Tackles / match",
+    "passAccuracy": "Pass accuracy",
+    "matchRating": "Match rating",
+    "minutes": "Minutes / match"
+  },
+  "status": {
+    "not_started": "Not started",
+    "active": "Active",
+    "improving": "Improving",
+    "achieved": "Achieved",
+    "revisit": "Revisit"
+  },
+  "goal": {
+    "add": "New goal",
+    "newTitle": "Set a goal",
+    "save": "Save goal",
+    "titleLabel": "What are you working on?",
+    "titlePlaceholder": "e.g. Win more second balls",
+    "categoryLabel": "Category",
+    "metricLabel": "Measure it from matches",
+    "metricHint": "Leave as notes only if this goal cannot be measured from logged matches. Percentages appear only when a baseline, a current value and a target all exist.",
+    "targetLabel": "Target value",
+    "targetPlaceholder": "e.g. 0.5",
+    "targetHint": "Average per match (or percent / rating) you want to reach.",
+    "targetLabelFree": "Success looks like",
+    "targetLabelPlaceholder": "Optional: describe it in your own words",
+    "timeframeLabel": "Review by",
+    "timeframeHint": "Optional. After this date the goal is marked Revisit if it is not achieved.",
+    "emptyTitle": "No goals yet",
+    "emptyDescription": "Set one thing to work on. Progress is measured from matches you log, never estimated.",
+    "currentValue": "{{value}} from {{count}} recent matches",
+    "noMeasurement": "Not enough match data yet to measure this.",
+    "notesOnly": "Tracked from your notes, not from match stats.",
+    "percentComplete": "{{percent}}% of the way from your baseline to the target",
+    "daysLeft": "{{days}} days until review",
+    "overdue": "Review was {{days}} days ago",
+    "markAchieved": "Mark achieved",
+    "errors": {
+      "titleRequired": "Give the goal a name.",
+      "targetRequired": "A measured goal needs a target value.",
+      "invalidTarget": "Enter a target of 0 or more.",
+      "invalidDate": "Use a date like 2026-12-31."
+    }
+  },
+  "training": {
+    "add": "Log training",
+    "newTitle": "Training session",
+    "save": "Save session",
+    "repeatLast": "Repeat last session",
+    "matchdayPrep": "Matchday prep",
+    "typeLabel": "Session type",
+    "dateLabel": "Date",
+    "durationLabel": "Duration (minutes)",
+    "durationHint": "Optional. Leave blank if you did not time it.",
+    "focusLabel": "Focus",
+    "focusPlaceholder": "What did you work on?",
+    "goalsLabel": "Linked goals",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Optional",
+    "wentWell": "What went well",
+    "wentWellPlaceholder": "Optional",
+    "improve": "What to improve",
+    "improvePlaceholder": "Optional",
+    "emptyTitle": "No training logged",
+    "emptyDescription": "Log a session in under a minute, or repeat the last one with one tap.",
+    "minutesShort": "{{count}} min",
+    "types": {
+      "team": "Team",
+      "individual": "Individual",
+      "gym": "Gym",
+      "recovery": "Recovery",
+      "match_prep": "Match prep",
+      "other": "Other"
+    },
+    "errors": {
+      "invalidDate": "Use a date like 2026-10-06.",
+      "invalidDuration": "Duration must be a whole number of minutes.",
+      "focusRequired": "Say what you worked on."
+    }
+  },
+  "beforeVsNow": {
+    "subtitle": "Shown only with {{count}} logged matches that recorded the metric",
+    "needMatches": "{{have}} of {{need}} matches logged — comparison is not shown yet.",
+    "needRecorded": "Recorded in {{have}} of {{need}} matches in each window.",
+    "values": "Then {{before}} → now {{now}} ({{sample}} matches)",
+    "improved": "Up {{delta}}",
+    "declined": "Down {{delta}}",
+    "unchanged": "Unchanged"
+  },
+  "dna": {
+    "goal_threat": "Goal threat",
+    "creator": "Creator",
+    "ball_retention": "Ball retention",
+    "defensive_presence": "Defensive presence",
+    "discipline": "Discipline",
+    "availability": "Availability",
+    "perMatch": "per match",
+    "percent": "%",
+    "minutesUnit": "minutes",
+    "notRecorded": "Not recorded in logged matches",
+    "value": "{{value}} {{unit}} · {{count}} matches"
+  },
+  "howIPlay": {
+    "selfReportedTitle": "How you describe it",
+    "noPosition": "No position recorded",
+    "noStyle": "No playing style recorded",
+    "foot": "Strong foot: {{foot}}",
+    "matchDerivedHint": "What {{count}} logged matches show — not a scout rating"
+  },
+  "identity": {
+    "empty": "Identity changes will appear here after you update position, club or style.",
+    "unspecified": "Details not recorded"
+  },
+  "sections": {
+    "goals": "Goals",
+    "training": "Training",
+    "beforeVsNow": "Before vs now",
+    "howIPlay": "How I play",
+    "identity": "Identity timeline"
+  }
+}

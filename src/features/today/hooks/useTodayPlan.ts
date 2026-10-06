@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { isFirebaseConfiguredForProject } from '@/config/firebase';
+import { DevelopmentRepository } from '@/features/development/repositories/DevelopmentRepository';
 import { canRetryMatchAnalysis } from '@/features/match-analysis/hooks/useMatchAnalysis';
 import { listRecentMatchAnalysisJobs } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
 import { type MatchAnalysisJob } from '@/features/match-analysis/types';
@@ -15,8 +16,10 @@ import {
 } from '@/features/today/services/workflowStores';
 import {
   type TodayAnalysisJob,
+  type TodayGoal,
   type TodayInput,
   type TodayPlan,
+  type TodayTraining,
   type TodayTrial,
 } from '@/features/today/types';
 
@@ -42,6 +45,8 @@ type LocalState = {
   analysesLoaded: boolean;
   reviewedAnalysisIds: string[];
   matchDraft: TodayInput['matchDraft'];
+  goals: TodayGoal[];
+  trainingSessions: TodayTraining[];
 };
 
 const INITIAL_LOCAL_STATE: LocalState = {
@@ -49,6 +54,8 @@ const INITIAL_LOCAL_STATE: LocalState = {
   analysesLoaded: false,
   reviewedAnalysisIds: [],
   matchDraft: null,
+  goals: [],
+  trainingSessions: [],
 };
 
 function toTodayAnalysis(job: MatchAnalysisJob): TodayAnalysisJob {
@@ -108,10 +115,16 @@ export function useTodayPlan({
     }
     let cancelled = false;
     void (async () => {
-      const [analyses, reviewedAnalysisIds, draft] = await Promise.all([
+      const [analyses, reviewedAnalysisIds, draft, goals, trainingSessions] = await Promise.all([
         loadAnalyses(userId),
         loadReviewedAnalysisIds(userId),
         matchLogDraftStore.load(userId).catch(() => null),
+        DevelopmentRepository.getInstance()
+          .listGoals(userId)
+          .catch(() => []),
+        DevelopmentRepository.getInstance()
+          .listTrainingSessions(userId)
+          .catch(() => []),
       ]);
       if (cancelled) {
         return;
@@ -121,6 +134,18 @@ export function useTodayPlan({
         analysesLoaded: analyses !== null,
         reviewedAnalysisIds,
         matchDraft: draft ? { savedAt: draft.savedAt, opponent: draft.data.opponent.trim() } : null,
+        goals: goals.map((goal) => ({
+          id: goal.id,
+          title: goal.title,
+          status: goal.status,
+          updatedAt: goal.updatedAt,
+          createdAt: goal.createdAt,
+        })),
+        trainingSessions: trainingSessions.map((session) => ({
+          id: session.id,
+          date: session.date,
+          type: session.type,
+        })),
       });
       setIsLoading(false);
     })();
@@ -160,6 +185,22 @@ export function useTodayPlan({
       })),
       reviewedAnalysisIds: local.reviewedAnalysisIds,
       matchDraft: local.matchDraft,
+      goals: local.goals,
+      trainingSessions: local.trainingSessions,
+      recentlyCompletedTypes: (() => {
+        const today = new Date().toISOString().slice(0, 10);
+        const types: TodayInput['recentlyCompletedTypes'] = [];
+        if (local.goals.some((goal) => goal.createdAt.slice(0, 10) === today)) {
+          types.push('set_goal');
+        }
+        if (local.trainingSessions.some((session) => session.date.slice(0, 10) === today)) {
+          types.push('log_training');
+        }
+        if (local.trainingSessions.some((session) => session.type === 'match_prep' && session.date.slice(0, 10) === today)) {
+          types.push('matchday_prep');
+        }
+        return types;
+      })(),
     }),
     [local, matches, onboardingSteps, trials, videos],
   );
