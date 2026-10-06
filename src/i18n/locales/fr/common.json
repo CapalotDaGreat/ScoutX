@@ -61,5 +61,12 @@
   "searchOwnedPlaceholder": "Chercher tes enregistrements",
   "searchEmpty": "Aucun enregistrement correspondant",
   "searchEmptyHint": "ScoutX ne cherche que ce que tu as deja enregistre.",
-  "offlineDrafts": "Hors ligne — les brouillons restent sur cet appareil jusqu a la reconnexion"
+  "offlineDrafts": "Hors ligne — les brouillons restent sur cet appareil jusqu a la reconnexion",
+  "stars": {
+    "value": "{{value}} sur {{max}} étoiles",
+    "unknown": "Non évalué",
+    "option_one": "{{count}} étoile",
+    "option_other": "{{count}} étoiles",
+    "clearHint": "Touchez à nouveau pour effacer"
+  }
 }

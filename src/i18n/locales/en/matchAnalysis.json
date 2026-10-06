@@ -67,5 +67,32 @@
     "another": "Analyze another match",
     "close": "Close",
     "uploadProgress": "Upload {{percent}}%"
+  },
+  "technique": {
+    "title": "Technique stars",
+    "basis": "Estimated from sampled still frames on a 1–5 star scale. This is an AI read of a few moments, not a verified rating.",
+    "unavailable": "This report has no technique assessment. Run a new analysis to get star ratings for weak foot, skill moves and more.",
+    "identityRequired": "Technique stars need you to confirm which frames show you before the analysis runs. Confirm your identity, then analyse again.",
+    "noneRated": "The sampled frames did not show enough of you on the ball to give a star rating. Footage closer to the action helps.",
+    "tip": "Drill: {{tip}}",
+    "seekA11y": "Jump to {{time}} in the video",
+    "dimensions": {
+      "weakFoot": "Weak foot",
+      "skillMoves": "Skill moves",
+      "firstTouch": "First touch",
+      "passing": "Passing",
+      "dribbling": "Dribbling",
+      "shooting": "Shooting"
+    },
+    "status": {
+      "rated": "Rated",
+      "insufficient_evidence": "Not enough footage",
+      "identity_unconfirmed": "Identity not confirmed"
+    },
+    "compare": {
+      "matches": "Matches your self-rating ({{self}}★)",
+      "footage_lower": "Footage showed {{footage}}★, you rated yourself {{self}}★",
+      "footage_higher": "Footage showed {{footage}}★, above your {{self}}★"
+    }
   }
 }

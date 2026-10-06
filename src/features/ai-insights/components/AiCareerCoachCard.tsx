@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { buildPerformanceContext } from '@/features/ai-insights/services/aiContextService';
+import {
+  buildPerformanceContext,
+  selfReportedStars,
+} from '@/features/ai-insights/services/aiContextService';
 import { AiInsightPanel } from '@/features/ai-insights/components/AiInsightPanel';
 import { type PlayerProfile } from '@/features/player-profile/types';
 
@@ -17,6 +20,8 @@ export function AiCareerCoachCard({ profile }: AiCareerCoachCardProps) {
           position: profile.position ? [profile.position] : undefined,
           club: profile.club,
           nationality: profile.nationality,
+          ...(profile.identity.strongFoot ? { strongFoot: profile.identity.strongFoot } : {}),
+          ...selfReportedStars(profile.identity.weakFootRating, profile.identity.skillMovesRating),
         },
         profile.statisticsMatches ?? [],
       ),

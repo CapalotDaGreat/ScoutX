@@ -104,6 +104,7 @@ export function buildUserPrompt(insightType: AiInsightType, contextJson: string)
     `Generate a ${insightType.replace(/_/g, ' ')} for the player using this structured context:`,
     contextJson,
     'Base every claim on the provided data. If data is sparse, lower confidence and state limitations in the summary.',
+    'player.selfReportedStars are the player\'s own 1-5 star claims (EA FC scale: 1 = rarely uses that foot / basic moves, 5 = equally strong with both feet / elite skill moves). Treat them as unverified claims, never as measured ability. When they suggest a clear weakness (for example weak foot 1-2), you may give practical drills to improve it.',
   ].join('\n\n');
 }
 

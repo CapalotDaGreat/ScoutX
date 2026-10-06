@@ -138,6 +138,8 @@ export type DiscoverySortOption =
   | 'recently_updated'
   | 'most_viewed'
   | 'sprint_speed'
+  | 'weak_foot'
+  | 'skill_moves'
   | 'goals'
   | 'assists'
   | 'newest'

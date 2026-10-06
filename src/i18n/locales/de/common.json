@@ -61,5 +61,12 @@
   "searchOwnedPlaceholder": "Deine Eintraege durchsuchen",
   "searchEmpty": "Keine passenden Eintraege",
   "searchEmptyHint": "ScoutX durchsucht nur, was du bereits erfasst hast.",
-  "offlineDrafts": "Offline — Entwuerfe bleiben auf diesem Geraet, bis du wieder online bist"
+  "offlineDrafts": "Offline — Entwuerfe bleiben auf diesem Geraet, bis du wieder online bist",
+  "stars": {
+    "value": "{{value}} von {{max}} Sternen",
+    "unknown": "Nicht bewertet",
+    "option_one": "{{count}} Stern",
+    "option_other": "{{count}} Sterne",
+    "clearHint": "Erneut tippen zum Entfernen"
+  }
 }

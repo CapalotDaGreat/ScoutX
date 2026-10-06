@@ -18,6 +18,23 @@ export function playerContextFromDiscoverable(player: DiscoverablePlayer): AiPla
     ...(player.age !== null ? { age: player.age } : {}),
     club: player.club,
     nationality: player.nationality,
+    ...(player.preferredFoot ? { strongFoot: player.preferredFoot } : {}),
+    ...selfReportedStars(player.weakFoot, player.skillMoves),
+  };
+}
+
+export function selfReportedStars(
+  weakFoot: number | null,
+  skillMoves: number | null,
+): Pick<AiPlayerContext, 'selfReportedStars'> {
+  if (weakFoot === null && skillMoves === null) {
+    return {};
+  }
+  return {
+    selfReportedStars: {
+      ...(weakFoot !== null ? { weakFoot } : {}),
+      ...(skillMoves !== null ? { skillMoves } : {}),
+    },
   };
 }
 

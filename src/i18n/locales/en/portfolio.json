@@ -489,6 +489,22 @@
         "Technical": "Technical",
         "Physical": "Physical"
       }
+    },
+    "starGuide": {
+      "weakFoot": {
+        "one": "1★ – rarely uses the weaker foot",
+        "two": "2★ – uses it only when needed",
+        "three": "3★ – reliable for simple passes",
+        "four": "4★ – confident passing and shooting",
+        "five": "5★ – equally strong with both feet"
+      },
+      "skillMoves": {
+        "one": "1★ – basic ball control",
+        "two": "2★ – simple feints and turns",
+        "three": "3★ – regular skill moves to beat players",
+        "four": "4★ – advanced skills under pressure",
+        "five": "5★ – elite, unpredictable skill moves"
+      }
     }
   }
 }

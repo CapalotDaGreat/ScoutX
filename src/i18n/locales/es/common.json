@@ -61,5 +61,12 @@
   "searchOwnedPlaceholder": "Busca tus registros",
   "searchEmpty": "Sin registros coincidentes",
   "searchEmptyHint": "ScoutX solo busca lo que ya has registrado.",
-  "offlineDrafts": "Sin conexion — los borradores se quedan en este dispositivo hasta que reconectes"
+  "offlineDrafts": "Sin conexion — los borradores se quedan en este dispositivo hasta que reconectes",
+  "stars": {
+    "value": "{{value}} de {{max}} estrellas",
+    "unknown": "Sin valorar",
+    "option_one": "{{count}} estrella",
+    "option_other": "{{count}} estrellas",
+    "clearHint": "Toca de nuevo para borrar"
+  }
 }

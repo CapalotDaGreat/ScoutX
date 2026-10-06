@@ -156,8 +156,8 @@ export function evaluateBrief(player: DiscoverablePlayer, filters: DiscoveryFilt
     push(
       'weak_foot',
       player.weakFoot === null ? 'unknown' : player.weakFoot >= filters.weakFootMin ? 'met' : 'not_met',
-      `≥ ${filters.weakFootMin}`,
-      String(player.weakFoot ?? ''),
+      `≥ ${filters.weakFootMin}★`,
+      player.weakFoot === null ? '' : `${player.weakFoot}★`,
     );
   }
 
@@ -165,8 +165,8 @@ export function evaluateBrief(player: DiscoverablePlayer, filters: DiscoveryFilt
     push(
       'skill_moves',
       player.skillMoves === null ? 'unknown' : player.skillMoves >= filters.skillMovesMin ? 'met' : 'not_met',
-      `≥ ${filters.skillMovesMin}`,
-      String(player.skillMoves ?? ''),
+      `≥ ${filters.skillMovesMin}★`,
+      player.skillMoves === null ? '' : `${player.skillMoves}★`,
     );
   }
 

@@ -489,6 +489,22 @@
         "Technical": "Técnico",
         "Physical": "Físico"
       }
+    },
+    "starGuide": {
+      "weakFoot": {
+        "one": "1★ – casi no usa la pierna mala",
+        "two": "2★ – solo cuando no hay más remedio",
+        "three": "3★ – fiable en pases sencillos",
+        "four": "4★ – seguro al pasar y chutar",
+        "five": "5★ – igual de fuerte con ambas piernas"
+      },
+      "skillMoves": {
+        "one": "1★ – control de balón básico",
+        "two": "2★ – amagos y giros sencillos",
+        "three": "3★ – filigranas habituales para regatear",
+        "four": "4★ – filigranas avanzadas bajo presión",
+        "five": "5★ – filigranas de élite, imprevisibles"
+      }
     }
   }
 }

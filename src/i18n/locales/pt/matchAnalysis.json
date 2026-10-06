@@ -67,5 +67,32 @@
     "another": "Analisar outro jogo",
     "close": "Fechar",
     "uploadProgress": "Carregamento {{percent}}%"
+  },
+  "technique": {
+    "title": "Estrelas técnicas",
+    "basis": "Estimado a partir de imagens fixas numa escala de 1 a 5 estrelas. É uma leitura de IA de poucos momentos, não uma avaliação verificada.",
+    "unavailable": "Este relatório não tem avaliação técnica. Faz uma nova análise para obter estrelas de pé fraco, fintas e mais.",
+    "identityRequired": "As estrelas técnicas exigem que confirmes em que imagens apareces antes da análise. Confirma a tua identidade e analisa novamente.",
+    "noneRated": "As imagens não te mostram o suficiente com a bola para dar uma avaliação. Imagens mais próximas da jogada ajudam.",
+    "tip": "Exercício: {{tip}}",
+    "seekA11y": "Ir para {{time}} no vídeo",
+    "dimensions": {
+      "weakFoot": "Pé fraco",
+      "skillMoves": "Fintas",
+      "firstTouch": "Primeiro toque",
+      "passing": "Passe",
+      "dribbling": "Drible",
+      "shooting": "Remate"
+    },
+    "status": {
+      "rated": "Avaliado",
+      "insufficient_evidence": "Imagens insuficientes",
+      "identity_unconfirmed": "Identidade não confirmada"
+    },
+    "compare": {
+      "matches": "Coincide com a tua autoavaliação ({{self}}★)",
+      "footage_lower": "O vídeo mostrou {{footage}}★, deste-te {{self}}★",
+      "footage_higher": "O vídeo mostrou {{footage}}★, acima das tuas {{self}}★"
+    }
   }
 }

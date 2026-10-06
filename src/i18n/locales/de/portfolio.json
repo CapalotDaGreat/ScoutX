@@ -489,6 +489,22 @@
         "Technical": "Technisch",
         "Physical": "Physisch"
       }
+    },
+    "starGuide": {
+      "weakFoot": {
+        "one": "1★ – nutzt den schwachen Fuß kaum",
+        "two": "2★ – nur wenn es sein muss",
+        "three": "3★ – zuverlässig bei einfachen Pässen",
+        "four": "4★ – sicher beim Passen und Schießen",
+        "five": "5★ – mit beiden Füßen gleich stark"
+      },
+      "skillMoves": {
+        "one": "1★ – einfache Ballkontrolle",
+        "two": "2★ – einfache Finten und Drehungen",
+        "three": "3★ – regelmäßige Tricks im Eins-gegen-eins",
+        "four": "4★ – anspruchsvolle Tricks unter Druck",
+        "five": "5★ – Weltklasse-Tricks, unberechenbar"
+      }
     }
   }
 }

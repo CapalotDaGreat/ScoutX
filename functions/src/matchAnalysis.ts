@@ -7,6 +7,12 @@ import { createCallableOptions } from './callableOptions';
 import { canAcquireLease, canTransitionJob, type JobStatus } from './analysis/stateMachine';
 import { normalizeObservations } from './analysis/validation';
 import {
+  MIN_TECHNIQUE_FRAMES,
+  normalizeTechniqueAssessment,
+  parseSelfReportedStars,
+  type SelfReportedStars,
+} from './analysis/technique';
+import {
   ANALYSIS_DAILY_QUOTA,
   ANALYSIS_LEASE_MS,
   ANALYSIS_MAX_ATTEMPTS,
@@ -168,9 +174,16 @@ function normalizeReport(
   durationSec: number,
   frameIds: string[],
   identityConfirmed: boolean,
+  selfReported: SelfReportedStars,
 ): Record<string, unknown> {
   const knownFrameIds = new Set(frameIds);
   const observations = normalizeObservations(raw.observations ?? raw.evidence, knownFrameIds, durationSec);
+  const techniqueAssessment = normalizeTechniqueAssessment(
+    raw.techniqueAssessment,
+    knownFrameIds,
+    identityConfirmed,
+    selfReported,
+  );
 
   const evidence = observations.map((item, index) => ({
     id: `obs_${index + 1}`,
@@ -210,6 +223,7 @@ function normalizeReport(
     improvements,
     coachingNotes,
     estimatedStats: emptyStats(),
+    techniqueAssessment,
     coverage: {
       visiblePct: 0,
       likelyOffCameraPct: 0,
@@ -438,6 +452,17 @@ export const analyzeMatchFootage = onCall(
 
     const identityConfirmed = job.identityConfirmation?.state === 'confirmed';
 
+    let selfReported = parseSelfReportedStars(null);
+    try {
+      const profileSnap = await getFirestore().collection('profiles').doc(request.auth.uid).get();
+      selfReported = parseSelfReportedStars(profileSnap.get('identity'));
+    } catch (error) {
+      logger.warn('Could not read profile identity for technique context', {
+        jobId,
+        message: error instanceof Error ? error.message : 'unknown',
+      });
+    }
+
     const systemPrompt = [
       'You are ScoutX Match Analyst.',
       'You ONLY describe what is visible in the provided still frames.',
@@ -463,8 +488,14 @@ export const analyzeMatchFootage = onCall(
       'Tasks:',
       '1) For each frame, report whether the nominated jersey is visible.',
       '2) Describe only visible actions, bound to frameId.',
-      '3) Do not estimate match stats or a rating.',
+      '3) Do not estimate match stats or a match rating.',
       identityConfirmed ? '4) Identity was confirmed by the player for selected frames.' : '4) Identity is not confirmed.',
+      '5) techniqueAssessment: for weakFoot, skillMoves, firstTouch, passing, dribbling and shooting give stars on a 1-5 scale (EA FC style: 1 = clearly weak or avoided, 3 = competent, 5 = excellent).',
+      `   Only give stars when at least ${MIN_TECHNIQUE_FRAMES} cited frames clearly show the nominated player performing that technique; otherwise set stars to null and say what footage is missing.`,
+      selfReported.strongFoot
+        ? `   The player reports their strong foot as ${selfReported.strongFoot}. weakFoot judges the OTHER foot only.`
+        : '   The strong foot is unknown; only rate weakFoot if the frames show both feet being used.',
+      '   Each tip is one concrete drill to improve that technique.',
       '',
       'JSON schema:',
       JSON.stringify({
@@ -479,6 +510,15 @@ export const analyzeMatchFootage = onCall(
           label: 'string',
           detail: 'string',
         }],
+        techniqueAssessment: {
+          weakFoot: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+          skillMoves: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+          firstTouch: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+          passing: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+          dribbling: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+          shooting: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+          overallSummary: 'string',
+        },
       }),
     ]
       .filter(Boolean)
@@ -545,6 +585,7 @@ export const analyzeMatchFootage = onCall(
         typeof job.durationSec === 'number' ? job.durationSec : 0,
         frameSamples.map((frame) => frame.id),
         identityConfirmed,
+        selfReported,
       );
       await jobRef.set(
         {

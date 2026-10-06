@@ -489,6 +489,22 @@
         "Technical": "Tecnico",
         "Physical": "Fisico"
       }
+    },
+    "starGuide": {
+      "weakFoot": {
+        "one": "1★ – usa raramente il piede debole",
+        "two": "2★ – solo quando serve",
+        "three": "3★ – affidabile nei passaggi semplici",
+        "four": "4★ – sicuro nel passaggio e nel tiro",
+        "five": "5★ – ugualmente forte con entrambi i piedi"
+      },
+      "skillMoves": {
+        "one": "1★ – controllo di palla di base",
+        "two": "2★ – finte e giri semplici",
+        "three": "3★ – skill regolari per saltare l'uomo",
+        "four": "4★ – skill avanzate sotto pressione",
+        "five": "5★ – skill d'élite, imprevedibili"
+      }
     }
   }
 }

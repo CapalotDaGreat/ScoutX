@@ -9,6 +9,7 @@ const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
 const stateMachine_1 = require("./analysis/stateMachine");
 const validation_1 = require("./analysis/validation");
+const technique_1 = require("./analysis/technique");
 const workerContract_1 = require("./analysis/workerContract");
 const openRouterApiKey = (0, params_1.defineSecret)('OPENROUTER_API_KEY');
 const MATCH_COLLECTION = 'matchAnalysisJobs';
@@ -107,9 +108,10 @@ function honestPipelineStages(identityConfirmed) {
 function utcDay(now) {
     return now.toISOString().slice(0, 10);
 }
-function normalizeReport(raw, modelId, durationSec, frameIds, identityConfirmed) {
+function normalizeReport(raw, modelId, durationSec, frameIds, identityConfirmed, selfReported) {
     const knownFrameIds = new Set(frameIds);
     const observations = (0, validation_1.normalizeObservations)(raw.observations ?? raw.evidence, knownFrameIds, durationSec);
+    const techniqueAssessment = (0, technique_1.normalizeTechniqueAssessment)(raw.techniqueAssessment, knownFrameIds, identityConfirmed, selfReported);
     const evidence = observations.map((item, index) => ({
         id: `obs_${index + 1}`,
         kind: item.kind,
@@ -143,6 +145,7 @@ function normalizeReport(raw, modelId, durationSec, frameIds, identityConfirmed)
         improvements,
         coachingNotes,
         estimatedStats: emptyStats(),
+        techniqueAssessment,
         coverage: {
             visiblePct: 0,
             likelyOffCameraPct: 0,
@@ -330,6 +333,17 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
         .map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s into the recording`)
         .join('\n');
     const identityConfirmed = job.identityConfirmation?.state === 'confirmed';
+    let selfReported = (0, technique_1.parseSelfReportedStars)(null);
+    try {
+        const profileSnap = await (0, firestore_1.getFirestore)().collection('profiles').doc(request.auth.uid).get();
+        selfReported = (0, technique_1.parseSelfReportedStars)(profileSnap.get('identity'));
+    }
+    catch (error) {
+        firebase_functions_1.logger.warn('Could not read profile identity for technique context', {
+            jobId,
+            message: error instanceof Error ? error.message : 'unknown',
+        });
+    }
     const systemPrompt = [
         'You are ScoutX Match Analyst.',
         'You ONLY describe what is visible in the provided still frames.',
@@ -354,8 +368,14 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
         'Tasks:',
         '1) For each frame, report whether the nominated jersey is visible.',
         '2) Describe only visible actions, bound to frameId.',
-        '3) Do not estimate match stats or a rating.',
+        '3) Do not estimate match stats or a match rating.',
         identityConfirmed ? '4) Identity was confirmed by the player for selected frames.' : '4) Identity is not confirmed.',
+        '5) techniqueAssessment: for weakFoot, skillMoves, firstTouch, passing, dribbling and shooting give stars on a 1-5 scale (EA FC style: 1 = clearly weak or avoided, 3 = competent, 5 = excellent).',
+        `   Only give stars when at least ${technique_1.MIN_TECHNIQUE_FRAMES} cited frames clearly show the nominated player performing that technique; otherwise set stars to null and say what footage is missing.`,
+        selfReported.strongFoot
+            ? `   The player reports their strong foot as ${selfReported.strongFoot}. weakFoot judges the OTHER foot only.`
+            : '   The strong foot is unknown; only rate weakFoot if the frames show both feet being used.',
+        '   Each tip is one concrete drill to improve that technique.',
         '',
         'JSON schema:',
         JSON.stringify({
@@ -370,6 +390,15 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
                     label: 'string',
                     detail: 'string',
                 }],
+            techniqueAssessment: {
+                weakFoot: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+                skillMoves: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+                firstTouch: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+                passing: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+                dribbling: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+                shooting: { stars: 'number 1-5 or null', summary: 'string', tip: 'string', frameIds: ['frame_0'] },
+                overallSummary: 'string',
+            },
         }),
     ]
         .filter(Boolean)
@@ -417,7 +446,7 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
         throw new https_1.HttpsError('internal', 'Vision model returned an empty response.');
     }
     try {
-        const report = normalizeReport(extractJsonFromModelText(content), model, typeof job.durationSec === 'number' ? job.durationSec : 0, frameSamples.map((frame) => frame.id), identityConfirmed);
+        const report = normalizeReport(extractJsonFromModelText(content), model, typeof job.durationSec === 'number' ? job.durationSec : 0, frameSamples.map((frame) => frame.id), identityConfirmed, selfReported);
         await jobRef.set({
             status: 'complete',
             report,

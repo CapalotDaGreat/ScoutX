@@ -61,5 +61,12 @@
   "searchOwnedPlaceholder": "Cerca i tuoi record",
   "searchEmpty": "Nessun record corrispondente",
   "searchEmptyHint": "ScoutX cerca solo cio che hai gia registrato.",
-  "offlineDrafts": "Offline — le bozze restano su questo dispositivo fino alla riconnessione"
+  "offlineDrafts": "Offline — le bozze restano su questo dispositivo fino alla riconnessione",
+  "stars": {
+    "value": "{{value}} su {{max}} stelle",
+    "unknown": "Non valutato",
+    "option_one": "{{count}} stella",
+    "option_other": "{{count}} stelle",
+    "clearHint": "Tocca di nuovo per cancellare"
+  }
 }

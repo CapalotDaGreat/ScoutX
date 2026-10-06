@@ -61,5 +61,12 @@
   "searchOwnedPlaceholder": "Zoek je records",
   "searchEmpty": "Geen overeenkomende records",
   "searchEmptyHint": "ScoutX zoekt alleen wat je al hebt vastgelegd.",
-  "offlineDrafts": "Offline — concepten blijven op dit apparaat tot je weer online bent"
+  "offlineDrafts": "Offline — concepten blijven op dit apparaat tot je weer online bent",
+  "stars": {
+    "value": "{{value}} van {{max}} sterren",
+    "unknown": "Niet beoordeeld",
+    "option_one": "{{count}} ster",
+    "option_other": "{{count}} sterren",
+    "clearHint": "Tik opnieuw om te wissen"
+  }
 }

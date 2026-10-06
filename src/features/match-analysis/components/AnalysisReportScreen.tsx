@@ -9,6 +9,8 @@ import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { AskThisMatchCard } from '@/features/match-analysis/components/AskThisMatchCard';
 import { IdentityConfirmationCard } from '@/features/match-analysis/components/IdentityConfirmationCard';
+import { TechniqueAssessmentCard } from '@/features/match-analysis/components/TechniqueAssessmentCard';
+import { parseTechniqueAssessment } from '@/features/match-analysis/services/techniqueAssessment';
 import { getMatchAnalysisJob, updateMatchAnalysisJob } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
 import { confirmIdentity, rejectIdentity } from '@/features/match-analysis/services/identityConfirmation';
 import { hasApplyableEstimatedStats, type MatchAnalysisJob, type MatchEstimatedStats } from '@/features/match-analysis/types';
@@ -127,6 +129,9 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
   const frameUrls = Object.fromEntries(
     (job?.frames ?? []).map((frame) => [frame.id, frame.downloadUrl]),
   );
+  const frameTimestamps = Object.fromEntries(
+    (job?.frames ?? []).map((frame) => [frame.id, frame.timestampSec]),
+  );
 
   return (
     <Screen
@@ -201,10 +206,17 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
           ) : null}
 
           {tab === 'technical' ? (
-            <Card padding="lg" className="gap-2">
-              <Heading level={3}>{t('tabs.technical')}</Heading>
-              <Text variant="body-sm" color="secondary">{t('report.cvUnavailable')}</Text>
-            </Card>
+            <View className="gap-4">
+              <TechniqueAssessmentCard
+                assessment={parseTechniqueAssessment(report.techniqueAssessment)}
+                frameTimestamps={frameTimestamps}
+                onSeek={seekTo}
+              />
+              <Card padding="lg" className="gap-2">
+                <Heading level={3}>{t('tabs.technical')}</Heading>
+                <Text variant="body-sm" color="secondary">{t('report.cvUnavailable')}</Text>
+              </Card>
+            </View>
           ) : null}
 
           {tab === 'tactical' ? (

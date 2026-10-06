@@ -67,5 +67,32 @@
     "another": "Weiteres Spiel analysieren",
     "close": "Schließen",
     "uploadProgress": "Upload {{percent}}%"
+  },
+  "technique": {
+    "title": "Technik-Sterne",
+    "basis": "Geschätzt aus einzelnen Standbildern auf einer Skala von 1–5 Sternen. Eine KI-Einschätzung weniger Momente, keine verifizierte Bewertung.",
+    "unavailable": "Dieser Bericht enthält keine Technik-Bewertung. Starte eine neue Analyse, um Sterne für schwachen Fuß, Tricks und mehr zu erhalten.",
+    "identityRequired": "Für Technik-Sterne musst du vor der Analyse bestätigen, auf welchen Bildern du zu sehen bist. Bestätige deine Identität und analysiere erneut.",
+    "noneRated": "Die Bilder zeigen dich nicht oft genug am Ball für eine Sternebewertung. Aufnahmen näher am Geschehen helfen.",
+    "tip": "Übung: {{tip}}",
+    "seekA11y": "Zu {{time}} im Video springen",
+    "dimensions": {
+      "weakFoot": "Schwacher Fuß",
+      "skillMoves": "Tricks",
+      "firstTouch": "Ballannahme",
+      "passing": "Passspiel",
+      "dribbling": "Dribbling",
+      "shooting": "Schießen"
+    },
+    "status": {
+      "rated": "Bewertet",
+      "insufficient_evidence": "Zu wenig Material",
+      "identity_unconfirmed": "Identität nicht bestätigt"
+    },
+    "compare": {
+      "matches": "Passt zu deiner Selbsteinschätzung ({{self}}★)",
+      "footage_lower": "Video zeigte {{footage}}★, du hast dich mit {{self}}★ bewertet",
+      "footage_higher": "Video zeigte {{footage}}★, mehr als deine {{self}}★"
+    }
   }
 }

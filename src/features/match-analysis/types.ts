@@ -225,12 +225,48 @@ export type SampledCoverage = {
   confidenceLabel: AnalysisConfidenceBand;
 };
 
+export type TechniqueDimension =
+  | 'weakFoot'
+  | 'skillMoves'
+  | 'firstTouch'
+  | 'passing'
+  | 'dribbling'
+  | 'shooting';
+
+export type TechniqueRatingStatus = 'rated' | 'insufficient_evidence' | 'identity_unconfirmed';
+
+/** 1–5 star read of one technique. `stars` is null unless enough cited frames showed it. */
+export type TechniqueRating = {
+  dimension: TechniqueDimension;
+  stars: number | null;
+  status: TechniqueRatingStatus;
+  summary: string;
+  tip: string | null;
+  frameIds: string[];
+  confidence: 'Limited' | 'Insufficient';
+};
+
+export type TechniqueAssessment = {
+  scale: 'stars_1_5';
+  basis: 'sampled_frames';
+  ratings: TechniqueRating[];
+  ratedCount: number;
+  overallSummary: string;
+  selfReported: {
+    strongFoot: string | null;
+    weakFoot: number | null;
+    skillMoves: number | null;
+  };
+};
+
 export type MatchAnalysisReport = {
   headline: string;
   strengths: string[];
   improvements: string[];
   coachingNotes: string;
   estimatedStats: MatchEstimatedStats;
+  /** Absent on reports generated before technique stars existed. */
+  techniqueAssessment?: TechniqueAssessment;
   moments: MatchMomentsInsight[];
   coverage: MatchAnalysisCoverage;
   sampledCoverage?: SampledCoverage;

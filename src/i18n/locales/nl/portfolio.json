@@ -489,6 +489,22 @@
         "Technical": "Technisch",
         "Physical": "Fysiek"
       }
+    },
+    "starGuide": {
+      "weakFoot": {
+        "one": "1★ – gebruikt de zwakke voet zelden",
+        "two": "2★ – alleen als het moet",
+        "three": "3★ – betrouwbaar bij simpele passes",
+        "four": "4★ – zeker bij passen en schieten",
+        "five": "5★ – met beide voeten even sterk"
+      },
+      "skillMoves": {
+        "one": "1★ – basis balcontrole",
+        "two": "2★ – eenvoudige schijnbewegingen en draaien",
+        "three": "3★ – regelmatig skills om tegenstanders te passeren",
+        "four": "4★ – geavanceerde skills onder druk",
+        "five": "5★ – topniveau skills, onvoorspelbaar"
+      }
     }
   }
 }

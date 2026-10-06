@@ -3,6 +3,7 @@ import {
   type ComparisonMetricValue,
   type ComparisonPlayerProfile,
 } from '@/features/player-comparison/types';
+import { starGlyphs } from '@/utils/starRating';
 
 function metric(
   key: string,
@@ -50,12 +51,12 @@ export function buildPhysicalRows(profiles: ComparisonPlayerProfile[]): Comparis
     metric(
       'weakFoot',
       'Weak Foot',
-      profiles.map((p) => cell(p.player.id, p.player.weakFoot, (value) => `${value}★`)),
+      profiles.map((p) => cell(p.player.id, p.player.weakFoot, starGlyphs)),
     ),
     metric(
       'skillMoves',
       'Skill Moves',
-      profiles.map((p) => cell(p.player.id, p.player.skillMoves, (value) => `${value}★`)),
+      profiles.map((p) => cell(p.player.id, p.player.skillMoves, starGlyphs)),
     ),
   ];
 }

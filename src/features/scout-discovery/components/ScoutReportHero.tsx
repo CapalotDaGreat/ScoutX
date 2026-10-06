@@ -2,6 +2,7 @@ import { Image, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Avatar } from '@/components/primitives/Avatar';
 import { Badge } from '@/components/primitives/Badge';
+import { StarRating } from '@/components/primitives/StarRating';
 import { Text } from '@/components/primitives/Text';
 import { Heading } from '@/components/primitives/Heading';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
@@ -67,6 +68,26 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
             className="flex-1"
           />
         </View>
+        {player.weakFoot !== null || player.skillMoves !== null ? (
+          <View className="flex-row gap-3">
+            <View className="flex-1 gap-1 rounded-lg bg-background-secondary px-3 py-2">
+              <Text variant="caption" color="secondary">
+                {t('scout:filters.weakFoot')}
+              </Text>
+              <StarRating value={player.weakFoot} label={t('scout:filters.weakFoot')} emptyLabel="—" />
+            </View>
+            <View className="flex-1 gap-1 rounded-lg bg-background-secondary px-3 py-2">
+              <Text variant="caption" color="secondary">
+                {t('scout:filters.skillMoves')}
+              </Text>
+              <StarRating
+                value={player.skillMoves}
+                label={t('scout:filters.skillMoves')}
+                emptyLabel="—"
+              />
+            </View>
+          </View>
+        ) : null}
         <View className="flex-row flex-wrap items-center gap-2">
           {player.lastEvidenceAt ? (
             <Text variant="caption" color="secondary">

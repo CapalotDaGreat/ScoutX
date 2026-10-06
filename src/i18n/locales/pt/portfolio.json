@@ -489,6 +489,22 @@
         "Technical": "Técnico",
         "Physical": "Físico"
       }
+    },
+    "starGuide": {
+      "weakFoot": {
+        "one": "1★ – raramente usa o pé fraco",
+        "two": "2★ – só quando é preciso",
+        "three": "3★ – fiável em passes simples",
+        "four": "4★ – confiante a passar e rematar",
+        "five": "5★ – igualmente forte com os dois pés"
+      },
+      "skillMoves": {
+        "one": "1★ – controlo de bola básico",
+        "two": "2★ – fintas e rotações simples",
+        "three": "3★ – fintas regulares para passar adversários",
+        "four": "4★ – fintas avançadas sob pressão",
+        "five": "5★ – fintas de elite, imprevisíveis"
+      }
     }
   }
 }

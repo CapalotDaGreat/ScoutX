@@ -84,7 +84,14 @@
     "hasVideos": "Has Videos",
     "verifiedOnly": "Verified Players Only",
     "apply": "Apply Filters",
-    "reset": "Reset"
+    "reset": "Reset",
+    "weakFoot": "Piede debole",
+    "skillMoves": "Mosse abilità",
+    "weakFootShort": "PD",
+    "skillMovesShort": "MA",
+    "anyStars": "Qualsiasi valutazione",
+    "atLeastStars_one": "{{count}}★ o più",
+    "atLeastStars_other": "{{count}}★ o più"
   },
   "pipeline": {
     "title": "Recruitment Pipeline",

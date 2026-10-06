@@ -67,5 +67,32 @@
     "another": "Analyser un autre match",
     "close": "Fermer",
     "uploadProgress": "Telechargement {{percent}}%"
+  },
+  "technique": {
+    "title": "Étoiles techniques",
+    "basis": "Estimé à partir d'images fixes échantillonnées sur une échelle de 1 à 5 étoiles. C'est une lecture IA de quelques moments, pas une note vérifiée.",
+    "unavailable": "Ce rapport ne contient pas d'évaluation technique. Lancez une nouvelle analyse pour obtenir des étoiles pour le pied faible, les gestes techniques et plus.",
+    "identityRequired": "Les étoiles techniques nécessitent de confirmer les images où vous apparaissez avant l'analyse. Confirmez votre identité, puis relancez l'analyse.",
+    "noneRated": "Les images ne vous montrent pas assez avec le ballon pour donner une note. Des images plus proches de l'action aident.",
+    "tip": "Exercice : {{tip}}",
+    "seekA11y": "Aller à {{time}} dans la vidéo",
+    "dimensions": {
+      "weakFoot": "Pied faible",
+      "skillMoves": "Gestes techniques",
+      "firstTouch": "Contrôle",
+      "passing": "Passes",
+      "dribbling": "Dribble",
+      "shooting": "Frappe"
+    },
+    "status": {
+      "rated": "Évalué",
+      "insufficient_evidence": "Pas assez d'images",
+      "identity_unconfirmed": "Identité non confirmée"
+    },
+    "compare": {
+      "matches": "Correspond à votre auto-évaluation ({{self}}★)",
+      "footage_lower": "La vidéo montre {{footage}}★, vous vous êtes noté {{self}}★",
+      "footage_higher": "La vidéo montre {{footage}}★, au-dessus de vos {{self}}★"
+    }
   }
 }

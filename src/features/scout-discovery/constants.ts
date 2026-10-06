@@ -27,6 +27,8 @@ export const SORT_OPTIONS: { value: DiscoverySortOption; label: string }[] = [
   { value: 'recently_updated', label: 'Recently Updated' },
   { value: 'most_viewed', label: 'Most Viewed' },
   { value: 'sprint_speed', label: 'Sprint Speed' },
+  { value: 'weak_foot', label: 'Weak Foot ★' },
+  { value: 'skill_moves', label: 'Skill Moves ★' },
   { value: 'goals', label: 'Most Goals' },
   { value: 'assists', label: 'Most Assists' },
   { value: 'newest', label: 'Newest Players' },

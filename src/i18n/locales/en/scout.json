@@ -106,7 +106,14 @@
     "hasVideos": "Has Videos",
     "verifiedOnly": "Verified Players Only",
     "apply": "Apply Filters",
-    "reset": "Reset"
+    "reset": "Reset",
+    "weakFoot": "Weak foot",
+    "skillMoves": "Skill moves",
+    "weakFootShort": "WF",
+    "skillMovesShort": "SM",
+    "anyStars": "Any rating",
+    "atLeastStars_one": "{{count}}★ or better",
+    "atLeastStars_other": "{{count}}★ or better"
   },
   "pipeline": {
     "title": "Recruitment Pipeline",

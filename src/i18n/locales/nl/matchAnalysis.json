@@ -67,5 +67,32 @@
     "another": "Nog een wedstrijd analyseren",
     "close": "Sluiten",
     "uploadProgress": "Upload {{percent}}%"
+  },
+  "technique": {
+    "title": "Techniek-sterren",
+    "basis": "Geschat op basis van losse stilstaande beelden op een schaal van 1–5 sterren. Een AI-inschatting van enkele momenten, geen geverifieerde beoordeling.",
+    "unavailable": "Dit rapport heeft geen techniekbeoordeling. Start een nieuwe analyse voor sterren voor zwakke voet, skillmoves en meer.",
+    "identityRequired": "Voor techniek-sterren moet je vóór de analyse bevestigen op welke beelden jij te zien bent. Bevestig je identiteit en analyseer opnieuw.",
+    "noneRated": "De beelden tonen je niet vaak genoeg aan de bal voor een sterrenbeoordeling. Beelden dichter bij de actie helpen.",
+    "tip": "Oefening: {{tip}}",
+    "seekA11y": "Spring naar {{time}} in de video",
+    "dimensions": {
+      "weakFoot": "Zwakke voet",
+      "skillMoves": "Skillmoves",
+      "firstTouch": "Eerste aanname",
+      "passing": "Passen",
+      "dribbling": "Dribbelen",
+      "shooting": "Schieten"
+    },
+    "status": {
+      "rated": "Beoordeeld",
+      "insufficient_evidence": "Te weinig beelden",
+      "identity_unconfirmed": "Identiteit niet bevestigd"
+    },
+    "compare": {
+      "matches": "Komt overeen met je eigen beoordeling ({{self}}★)",
+      "footage_lower": "Beelden toonden {{footage}}★, jij gaf jezelf {{self}}★",
+      "footage_higher": "Beelden toonden {{footage}}★, hoger dan je {{self}}★"
+    }
   }
 }

@@ -125,6 +125,12 @@ export type AiPlayerContext = {
   age?: number;
   club?: string;
   nationality?: string;
+  strongFoot?: string;
+  /** Self-reported 1–5 star claims (EA FC scale). Never verified ratings. */
+  selfReportedStars?: {
+    weakFoot?: number;
+    skillMoves?: number;
+  };
 };
 
 export type AiStatisticsContext = {

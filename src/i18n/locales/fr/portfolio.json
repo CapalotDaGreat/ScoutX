@@ -489,6 +489,22 @@
         "Technical": "Technique",
         "Physical": "Physique"
       }
+    },
+    "starGuide": {
+      "weakFoot": {
+        "one": "1★ – utilise rarement le pied faible",
+        "two": "2★ – seulement quand c'est nécessaire",
+        "three": "3★ – fiable sur les passes simples",
+        "four": "4★ – à l'aise pour passer et frapper",
+        "five": "5★ – aussi fort des deux pieds"
+      },
+      "skillMoves": {
+        "one": "1★ – contrôle de balle de base",
+        "two": "2★ – feintes et crochets simples",
+        "three": "3★ – gestes techniques réguliers pour éliminer",
+        "four": "4★ – gestes avancés sous pression",
+        "five": "5★ – gestes d'élite, imprévisibles"
+      }
     }
   }
 }

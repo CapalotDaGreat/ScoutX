@@ -142,6 +142,10 @@ export function sortPlayers(
         return b.viewCount - a.viewCount;
       case 'sprint_speed':
         return compareNullable(a.sprintSpeedKmh, b.sprintSpeedKmh, 'desc');
+      case 'weak_foot':
+        return compareNullable(a.weakFoot, b.weakFoot, 'desc');
+      case 'skill_moves':
+        return compareNullable(a.skillMoves, b.skillMoves, 'desc');
       case 'goals':
         return b.goals - a.goals;
       case 'assists':

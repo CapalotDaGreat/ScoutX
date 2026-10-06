@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Image, Pressable, View, type ViewStyle } from 'react-native';
 import { Badge } from '@/components/primitives/Badge';
+import { StarRating } from '@/components/primitives/StarRating';
 import { Text } from '@/components/primitives/Text';
 import { AnimatedListItem } from '@/components/feedback/AnimatedListItem';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
@@ -147,6 +148,31 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
               <RatingPill label="POT" value={formatRating(player.potentialRating)} emphasis="primary" />
             ) : null}
           </View>
+
+          {player.weakFoot !== null || player.skillMoves !== null ? (
+            <View className="flex-row flex-wrap items-center gap-x-4 gap-y-1">
+              {player.weakFoot !== null ? (
+                <View className="flex-row items-center gap-1.5">
+                  <Text variant="caption" color="secondary">
+                    {t('scout:filters.weakFootShort')}
+                  </Text>
+                  <StarRating value={player.weakFoot} size="xs" label={t('scout:filters.weakFoot')} />
+                </View>
+              ) : null}
+              {player.skillMoves !== null ? (
+                <View className="flex-row items-center gap-1.5">
+                  <Text variant="caption" color="secondary">
+                    {t('scout:filters.skillMovesShort')}
+                  </Text>
+                  <StarRating
+                    value={player.skillMoves}
+                    size="xs"
+                    label={t('scout:filters.skillMoves')}
+                  />
+                </View>
+              ) : null}
+            </View>
+          ) : null}
 
           <View className="flex-row items-center justify-between">
             <PlayerFormStrip form={player.form} size="md" />

@@ -84,7 +84,14 @@
     "hasVideos": "Has Videos",
     "verifiedOnly": "Verified Players Only",
     "apply": "Apply Filters",
-    "reset": "Reset"
+    "reset": "Reset",
+    "weakFoot": "Zwakke voet",
+    "skillMoves": "Skillmoves",
+    "weakFootShort": "ZV",
+    "skillMovesShort": "SK",
+    "anyStars": "Elke beoordeling",
+    "atLeastStars_one": "{{count}}★ of beter",
+    "atLeastStars_other": "{{count}}★ of beter"
   },
   "pipeline": {
     "title": "Recruitment Pipeline",

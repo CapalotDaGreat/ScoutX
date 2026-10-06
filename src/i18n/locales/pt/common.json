@@ -61,5 +61,12 @@
   "searchOwnedPlaceholder": "Pesquisar os teus registos",
   "searchEmpty": "Sem registos correspondentes",
   "searchEmptyHint": "O ScoutX so pesquisa o que ja registaste.",
-  "offlineDrafts": "Offline — os rascunhos ficam neste dispositivo ate voltares a ligar"
+  "offlineDrafts": "Offline — os rascunhos ficam neste dispositivo ate voltares a ligar",
+  "stars": {
+    "value": "{{value}} de {{max}} estrelas",
+    "unknown": "Sem avaliação",
+    "option_one": "{{count}} estrela",
+    "option_other": "{{count}} estrelas",
+    "clearHint": "Toque novamente para limpar"
+  }
 }

@@ -3,6 +3,7 @@ import { ScrollView, View } from 'react-native';
 import { BottomSheet } from '@/components/feedback/BottomSheet';
 import { Button } from '@/components/primitives/Button';
 import { Input } from '@/components/primitives/Input';
+import { StarRating } from '@/components/primitives/StarRating';
 import { Text } from '@/components/primitives/Text';
 import {
   CLUB_OPTIONS,
@@ -334,25 +335,37 @@ export function DiscoveryFilterSheet({
               />
             </View>
 
-            <View className="flex-row gap-3">
-              <Input
+            <View className="gap-1">
+              <Text variant="label">{t('scout:filters.minWeakFoot')}</Text>
+              <StarRating
+                value={filters.weakFootMin}
+                size="md"
                 label={t('scout:filters.minWeakFoot')}
-                value={filters.weakFootMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('weakFootMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
+                onChange={(value) => onChange('weakFootMin', value)}
               />
-              <Input
+              <Text variant="caption" color="tertiary">
+                {filters.weakFootMin === null
+                  ? t('scout:filters.anyStars')
+                  : t('scout:filters.atLeastStars', { count: filters.weakFootMin })}
+              </Text>
+            </View>
+
+            <View className="gap-1">
+              <Text variant="label">{t('scout:filters.minSkillMoves')}</Text>
+              <StarRating
+                value={filters.skillMovesMin}
+                size="md"
                 label={t('scout:filters.minSkillMoves')}
-                value={filters.skillMovesMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('skillMovesMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
+                onChange={(value) => onChange('skillMovesMin', value)}
               />
+              <Text variant="caption" color="tertiary">
+                {filters.skillMovesMin === null
+                  ? t('scout:filters.anyStars')
+                  : t('scout:filters.atLeastStars', { count: filters.skillMovesMin })}
+              </Text>
+            </View>
+
+            <View className="flex-row gap-3">
               <Input
                 label={t('scout:filters.minMatches')}
                 value={filters.matchCountMin?.toString() ?? ''}

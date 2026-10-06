@@ -84,7 +84,14 @@
     "hasVideos": "Has Videos",
     "verifiedOnly": "Verified Players Only",
     "apply": "Apply Filters",
-    "reset": "Reset"
+    "reset": "Reset",
+    "weakFoot": "Pierna mala",
+    "skillMoves": "Filigranas",
+    "weakFootShort": "PM",
+    "skillMovesShort": "FIL",
+    "anyStars": "Cualquier valoración",
+    "atLeastStars_one": "{{count}}★ o más",
+    "atLeastStars_other": "{{count}}★ o más"
   },
   "pipeline": {
     "title": "Recruitment Pipeline",

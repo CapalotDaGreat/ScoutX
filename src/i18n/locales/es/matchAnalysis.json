@@ -67,5 +67,32 @@
     "another": "Analizar otro partido",
     "close": "Cerrar",
     "uploadProgress": "Subida {{percent}}%"
+  },
+  "technique": {
+    "title": "Estrellas técnicas",
+    "basis": "Estimado a partir de fotogramas fijos en una escala de 1 a 5 estrellas. Es una lectura de IA de unos pocos momentos, no una valoración verificada.",
+    "unavailable": "Este informe no tiene evaluación técnica. Ejecuta un nuevo análisis para obtener estrellas de pierna mala, filigranas y más.",
+    "identityRequired": "Las estrellas técnicas requieren que confirmes en qué fotogramas apareces antes del análisis. Confirma tu identidad y vuelve a analizar.",
+    "noneRated": "Los fotogramas no te muestran lo suficiente con el balón para dar una valoración. Ayudan las imágenes más cercanas a la jugada.",
+    "tip": "Ejercicio: {{tip}}",
+    "seekA11y": "Ir a {{time}} en el vídeo",
+    "dimensions": {
+      "weakFoot": "Pierna mala",
+      "skillMoves": "Filigranas",
+      "firstTouch": "Primer toque",
+      "passing": "Pase",
+      "dribbling": "Regate",
+      "shooting": "Tiro"
+    },
+    "status": {
+      "rated": "Valorado",
+      "insufficient_evidence": "Faltan imágenes",
+      "identity_unconfirmed": "Identidad sin confirmar"
+    },
+    "compare": {
+      "matches": "Coincide con tu autovaloración ({{self}}★)",
+      "footage_lower": "El vídeo mostró {{footage}}★, tú te pusiste {{self}}★",
+      "footage_higher": "El vídeo mostró {{footage}}★, por encima de tus {{self}}★"
+    }
   }
 }

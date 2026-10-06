@@ -230,9 +230,60 @@ describe('analyzeMatchFootage (mocked OpenRouter vision)', () => {
     // Identity is not confirmed, so player-specific coaching is withheld.
     assert.deepEqual(job.report.strengths, []);
     assert.equal(job.report.coachingNotes, '');
+    assert.equal(job.report.techniqueAssessment.ratedCount, 0);
+    assert.ok(
+      job.report.techniqueAssessment.ratings.every(
+        (rating) => rating.stars === null && rating.status === 'identity_unconfirmed',
+      ),
+    );
     const quota = (await db.collection('analysisQuotas').doc(OWNER).get()).data();
     assert.ok(quota.count >= 1);
     assert.equal(received[0].body.messages[1].content.filter((part) => part.type === 'image_url').length, 3);
+  });
+
+  test('technique stars need confirmed identity and enough cited frames', async () => {
+    await db.collection('profiles').doc(OWNER).set(
+      { identity: { strongFoot: 'right', weakFootRating: 4, skillMovesRating: 3 } },
+      { merge: true },
+    );
+    await seedJob('job-technique', { frames: 4, identity: 'confirmed' });
+    modelReply(
+      JSON.stringify({
+        headline: 'Technique review',
+        observations: [
+          { frameId: 'frame_1', timestampSec: 10, kind: 'observation', label: 'Left-foot pass', detail: '#8 passes with the left' },
+        ],
+        techniqueAssessment: {
+          weakFoot: { stars: 2, summary: 'Left foot used for short passes only', tip: 'Wall passes with the left foot', frameIds: ['frame_1', 'frame_2'] },
+          skillMoves: { stars: 4, summary: 'Step-over', tip: 'Cone dribbling', frameIds: ['frame_1', 'frame_99'] },
+          passing: { stars: 7, summary: 'Out of scale', frameIds: ['frame_1', 'frame_3'] },
+          shooting: { stars: 3, summary: 'No shot visible', frameIds: [] },
+          overallSummary: 'Comfortable on the ball, weaker foot needs work.',
+        },
+      }),
+    );
+    await analyzeMatchFootage.run(analysisRequest(OWNER, 'job-technique'));
+    const { report } = (await db.collection('matchAnalysisJobs').doc('job-technique').get()).data();
+    const byDimension = Object.fromEntries(
+      report.techniqueAssessment.ratings.map((rating) => [rating.dimension, rating]),
+    );
+
+    assert.equal(byDimension.weakFoot.stars, 2);
+    assert.equal(byDimension.weakFoot.status, 'rated');
+    assert.deepEqual(byDimension.weakFoot.frameIds, ['frame_1', 'frame_2']);
+    // One invented frame leaves a single citation: below the minimum, so no stars.
+    assert.equal(byDimension.skillMoves.stars, null);
+    assert.equal(byDimension.skillMoves.status, 'insufficient_evidence');
+    assert.equal(byDimension.passing.stars, null);
+    assert.equal(byDimension.shooting.stars, null);
+    assert.equal(byDimension.shooting.summary, '');
+    assert.equal(report.techniqueAssessment.ratedCount, 1);
+    assert.deepEqual(report.techniqueAssessment.selfReported, {
+      strongFoot: 'right',
+      weakFoot: 4,
+      skillMoves: 3,
+    });
+    assert.match(received[0].body.messages[1].content[0].text, /strong foot as right/);
   });
 
   test('marks the job failed and releases the lease when the model call fails', async () => {
