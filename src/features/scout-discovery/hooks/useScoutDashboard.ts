@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { type ScoutDashboardData } from '@/features/scout-discovery/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export function useScoutDashboard() {
   const [data, setData] = useState<ScoutDashboardData | null>(null);
@@ -16,7 +17,7 @@ export function useScoutDashboard() {
       const dashboard = await repository.fetchDashboard();
       setData(dashboard);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load dashboard.');
+      setError(toUserMessage(err, 'Failed to load dashboard.'));
     } finally {
       setIsLoading(false);
     }

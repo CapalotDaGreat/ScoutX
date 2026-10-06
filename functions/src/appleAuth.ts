@@ -4,6 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { deleteAllUserData } from './accountDeletion';
 import {
   exchangeAppleAuthorizationCode,
   type AppleAuthSecrets,
@@ -93,17 +94,6 @@ async function revokeStoredAppleTokens(uid: string): Promise<void> {
   }
 }
 
-async function deleteUserOwnedDocuments(uid: string): Promise<void> {
-  const db = getFirestore();
-  await Promise.all([
-    db.collection('users').doc(uid).delete().catch(() => undefined),
-    db.collection('profiles').doc(uid).delete().catch(() => undefined),
-    db.collection('pushTokens').doc(uid).delete().catch(() => undefined),
-    db.collection('discoverablePlayers').doc(uid).delete().catch(() => undefined),
-    db.collection(AUTH_PROVIDER_TOKENS_COLLECTION).doc(uid).delete().catch(() => undefined),
-  ]);
-}
-
 /**
  * Exchanges a short-lived Apple authorization code for a refresh token and stores it
  * server-side for App Store Guideline 5.1.1(v) account-deletion revocation.
@@ -161,7 +151,13 @@ export const deleteAuthenticatedAccount = onCall(
     const uid = requireAuthUid(request.auth?.uid);
 
     await revokeStoredAppleTokens(uid);
-    await deleteUserOwnedDocuments(uid);
+    const { failures } = await deleteAllUserData(uid);
+    if (failures.length > 0) {
+      logger.warn('Account deletion completed with partial data cleanup failures', {
+        uid,
+        failures,
+      });
+    }
 
     try {
       await getAuth().deleteUser(uid);

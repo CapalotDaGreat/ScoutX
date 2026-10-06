@@ -10,6 +10,7 @@ import {
   validateMatchLogForm,
 } from '@/features/player-statistics/models/MatchLogModel';
 import { type MatchLogPayload } from '@/features/player-statistics/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type LogMatchModalProps = {
   visible: boolean;
@@ -65,7 +66,7 @@ export function LogMatchModal({
       await onSave(validation.payload);
       onClose();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save match.');
+      Alert.alert('Error', toUserMessage(err, 'Failed to save match.'));
     } finally {
       setSubmitting(false);
     }

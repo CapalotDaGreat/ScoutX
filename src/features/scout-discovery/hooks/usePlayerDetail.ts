@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export function usePlayerDetail(playerId: string | null) {
   const [player, setPlayer] = useState<DiscoverablePlayer | null>(null);
@@ -26,7 +27,7 @@ export function usePlayerDetail(playerId: string | null) {
       }
       setPlayer(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load player.');
+      setError(toUserMessage(err, 'Failed to load player.'));
     } finally {
       setIsLoading(false);
     }

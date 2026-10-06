@@ -13,6 +13,7 @@ import {
   SCOUT_RESCHEDULABLE_STATUSES,
 } from '@/features/trial-invitations/constants';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type ScoutTrialInvitationsSectionProps = {
   playerId: string;
@@ -63,7 +64,7 @@ export function ScoutTrialInvitationsSection({
         style: 'destructive',
         onPress: () => {
           void cancelTrial(trial).catch((error: unknown) => {
-            Alert.alert('Error', error instanceof Error ? error.message : 'Could not cancel trial.');
+            Alert.alert('Error', toUserMessage(error, 'Could not cancel trial.'));
           });
         },
       },

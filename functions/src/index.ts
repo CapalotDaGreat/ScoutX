@@ -25,18 +25,44 @@ type PushTokenDoc = {
 
 type ActivityDoc = {
   recipientId?: string;
+  actorId?: string;
   title?: string;
   body?: string;
   type?: string;
 };
 
-const PUSHABLE_ACTIVITY_TYPES = new Set([
-  'portfolio_viewed',
-  'recommendation_received',
-  'milestone_earned',
-  'weekly_report_ready',
-  'trial_invitation',
-]);
+const HOUR_MS = 60 * 60 * 1000;
+
+/** Minimum gap between pushes of the same type to one recipient, to prevent notification spam. */
+const PUSH_COOLDOWN_MS: Record<string, number> = {
+  portfolio_viewed: 6 * HOUR_MS,
+  recommendation_received: 0.25 * HOUR_MS,
+  milestone_earned: 1 * HOUR_MS,
+  weekly_report_ready: 24 * HOUR_MS,
+  trial_invitation: 0,
+};
+
+const PUSH_THROTTLE_COLLECTION = 'pushThrottle';
+
+/** Atomically claims a push slot; returns false when the recipient was notified too recently. */
+async function claimPushSlot(recipientId: string, type: string): Promise<boolean> {
+  const cooldown = PUSH_COOLDOWN_MS[type] ?? 0;
+  if (cooldown <= 0) {
+    return true;
+  }
+  const db = getFirestore();
+  const ref = db.collection(PUSH_THROTTLE_COLLECTION).doc(recipientId);
+  return db.runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(ref);
+    const lastSent = (snapshot.data()?.[type] as number | undefined) ?? 0;
+    const now = Date.now();
+    if (now - lastSent < cooldown) {
+      return false;
+    }
+    transaction.set(ref, { [type]: now }, { merge: true });
+    return true;
+  });
+}
 
 async function sendExpoPush(token: string, title: string, body: string): Promise<void> {
   const response = await fetch('https://exp.host/--/api/v2/push/send', {
@@ -68,7 +94,16 @@ export const onActivityCreatedPush = onDocumentCreated(
       return;
     }
 
-    if (activity.type && !PUSHABLE_ACTIVITY_TYPES.has(activity.type)) {
+    if (!activity.type || !(activity.type in PUSH_COOLDOWN_MS)) {
+      return;
+    }
+
+    if (activity.type === 'portfolio_viewed' && activity.actorId === activity.recipientId) {
+      return;
+    }
+
+    if (!(await claimPushSlot(activity.recipientId, activity.type))) {
+      logger.info('Push throttled', { recipientId: activity.recipientId, type: activity.type });
       return;
     }
 

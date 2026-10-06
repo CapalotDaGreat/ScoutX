@@ -20,6 +20,7 @@ import {
   type ScoutingReportDraft,
   createEmptyScoutingReportDraft,
 } from '@/features/scouting-reports/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type ScoutingReportEditorModalProps = {
   visible: boolean;
@@ -86,7 +87,7 @@ export function ScoutingReportEditorModal({
       await onSave(payload);
       onClose();
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Could not save report.');
+      Alert.alert('Error', toUserMessage(error, 'Could not save report.'));
     }
   };
 
@@ -104,7 +105,7 @@ export function ScoutingReportEditorModal({
           void onDelete(report.id)
             .then(onClose)
             .catch((error: unknown) => {
-              Alert.alert('Error', error instanceof Error ? error.message : 'Could not delete report.');
+              Alert.alert('Error', toUserMessage(error, 'Could not delete report.'));
             });
         },
       },

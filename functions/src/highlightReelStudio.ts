@@ -1,5 +1,6 @@
 import { getFirestore } from 'firebase-admin/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { createCallableOptions } from './callableOptions';
 
 export type HighlightReelGenerationRequest = {
   jobId?: string;
@@ -21,7 +22,15 @@ export type HighlightReelGenerationResult = {
   }>;
 };
 
-export const generateHighlightReelPlan = onCall(async (request) => {
+type StoredMatchAnalysisJob = {
+  playerId?: string;
+  report?: {
+    moments?: Array<{ label?: string; detail?: string; timestampSec?: number }>;
+    confidence?: number;
+  };
+};
+
+export const generateHighlightReelPlan = onCall(createCallableOptions(), async (request) => {
   const auth = request.auth;
   if (!auth) {
     throw new HttpsError('unauthenticated', 'Authentication is required to generate a highlight reel.');
@@ -43,15 +52,31 @@ export const generateHighlightReelPlan = onCall(async (request) => {
   }
 
   const jobSnapshot = await getFirestore().collection('matchAnalysisJobs').doc(jobId).get();
-  const job = jobSnapshot.data() as { report?: { moments?: Array<{ label?: string; detail?: string; timestampSec?: number }>; confidence?: number } } | undefined;
+  if (!jobSnapshot.exists) {
+    throw new HttpsError('not-found', 'Match analysis not found.');
+  }
+  const job = jobSnapshot.data() as StoredMatchAnalysisJob | undefined;
+  if (job?.playerId !== auth.uid) {
+    throw new HttpsError('permission-denied', 'You can only build reels from your own matches.');
+  }
 
-  const moments = (job?.report?.moments ?? []).map((moment, index) => ({
-    id: `moment-${index}`,
-    title: moment.label ?? 'Match moment',
-    eventType: moment.label?.toLowerCase().includes('goal') ? 'Goal' : 'Match action',
-    confidence: typeof job?.report?.confidence === 'number' ? job.report.confidence : 0.65,
-    timestampSec: moment.timestampSec ?? index * 15,
-  }));
+  const reportConfidence = job.report?.confidence;
+  // Only moments with a real timestamp and a model confidence become reel candidates.
+  const moments =
+    typeof reportConfidence === 'number'
+      ? (job.report?.moments ?? [])
+          .filter(
+            (moment): moment is { label?: string; detail?: string; timestampSec: number } =>
+              typeof moment.timestampSec === 'number' && Number.isFinite(moment.timestampSec),
+          )
+          .map((moment, index) => ({
+            id: `moment-${index}`,
+            title: moment.label ?? 'Match moment',
+            eventType: moment.label?.toLowerCase().includes('goal') ? 'Goal' : 'Match action',
+            confidence: reportConfidence,
+            timestampSec: moment.timestampSec,
+          }))
+      : [];
 
   if (!moments.length) {
     return {

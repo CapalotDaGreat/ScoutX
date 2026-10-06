@@ -9,10 +9,7 @@ import { fetchPlayerVerificationState } from '@/features/verification-system/ser
 
 const COLLECTION = 'discoverablePlayers';
 
-export async function syncDiscoverablePlayer(
-  profile: PlayerProfile,
-  coachRecommendations = 0,
-): Promise<void> {
+export async function syncDiscoverablePlayer(profile: PlayerProfile): Promise<void> {
   const db = getFirestoreDb();
   if (!db) {
     return;
@@ -32,10 +29,8 @@ export async function syncDiscoverablePlayer(
 
   const verification = await fetchPlayerVerificationState(profile.id);
   const payload = buildDiscoverablePlayerFromProfile(profile);
-  payload.verified =
-    verification.level === 'verified' ||
-    (verification.level === 'basic' && (profile.privacy?.publicPortfolioEnabled ?? false)) ||
-    coachRecommendations > 0;
+  // "Verified" is reserved for admin-approved verification (enforced in firestore.rules).
+  payload.verified = verification.level === 'verified';
 
   await setDoc(docRef, serializeDiscoverablePlayer(payload), { merge: true });
 }

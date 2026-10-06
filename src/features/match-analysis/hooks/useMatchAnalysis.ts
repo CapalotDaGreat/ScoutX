@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { isFirebaseConfiguredForProject } from '@/config/firebase';
 import { shouldUseMockAuth } from '@/config/authSecurity';
+import { useMockData } from '@/config/appMode';
 import { sampleMatchFrames } from '@/features/match-analysis/services/matchFrameSamplingService';
 import {
   uploadMatchFrame,
@@ -24,9 +25,46 @@ import {
   type MatchFrameSample,
   type PlayerTargeting,
 } from '@/features/match-analysis/types';
+import { toUserMessage } from '@/utils/userFacingError';
+
+const ANALYSIS_FAILED_MESSAGE =
+  "The AI couldn't finish analyzing this match. Your footage is saved — tap Retry analysis to try again.";
+const ANALYSIS_UNAVAILABLE_MESSAGE =
+  'Match analysis is unavailable right now. Please try again later.';
+const RESULT_WAIT_MS = 90_000;
 
 function createJobId(): string {
   return `match_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+}
+
+/** Demo reports are only allowed in development demo/mock mode — never in production. */
+function isDemoAnalysisMode(): boolean {
+  return useMockData() || shouldUseMockAuth();
+}
+
+function waitForTerminalJob(jobId: string): Promise<MatchAnalysisJob | null> {
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (job: MatchAnalysisJob | null) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      clearTimeout(timer);
+      unsub();
+      resolve(job);
+    };
+    const unsub = subscribeMatchAnalysisJob(jobId, (next) => {
+      if (next && (next.status === 'complete' || next.status === 'failed')) {
+        finish(next);
+      }
+    });
+    const timer = setTimeout(() => finish(null), RESULT_WAIT_MS);
+  });
+}
+
+export function canRetryMatchAnalysis(job: MatchAnalysisJob | null): boolean {
+  return Boolean(job && job.status === 'failed' && job.videoStoragePath && job.frames.length > 0);
 }
 
 export function useMatchAnalysis(playerId: string | null) {
@@ -41,8 +79,11 @@ export function useMatchAnalysis(playerId: string | null) {
       setRecentJobs([]);
       return;
     }
-    const jobs = await listRecentMatchAnalysisJobs(playerId);
-    setRecentJobs(jobs);
+    try {
+      setRecentJobs(await listRecentMatchAnalysisJobs(playerId));
+    } catch {
+      setRecentJobs([]);
+    }
   }, [playerId]);
 
   useEffect(() => {
@@ -53,7 +94,7 @@ export function useMatchAnalysis(playerId: string | null) {
     if (!activeJob?.id || activeJob.status === 'complete' || activeJob.status === 'failed') {
       return;
     }
-    if (!isFirebaseConfiguredForProject() || shouldUseMockAuth()) {
+    if (!isFirebaseConfiguredForProject() || isDemoAnalysisMode()) {
       return;
     }
     return subscribeMatchAnalysisJob(activeJob.id, (job) => {
@@ -68,10 +109,72 @@ export function useMatchAnalysis(playerId: string | null) {
     return pickMatchFootageVideo();
   }, []);
 
+  /** Runs the server analysis for an already-uploaded job and resolves with its final state. */
+  const runServerAnalysis = useCallback(
+    async (job: MatchAnalysisJob): Promise<MatchAnalysisJob> => {
+      setPhaseLabel('AI is reviewing your player…');
+      const pipelineStages = buildConservativePipelineStages(job.targeting.jerseyNumber || 'player');
+      await updateMatchAnalysisJob(job.id, {
+        status: 'processing',
+        phaseLabel: 'Tracking #player',
+        pipelineStages,
+        error: undefined,
+      });
+      setActiveJob({ ...job, status: 'processing', pipelineStages, error: undefined });
+
+      try {
+        await requestMatchFootageAnalysis(job.id);
+      } catch (callableError) {
+        const message = toUserMessage(callableError, ANALYSIS_FAILED_MESSAGE);
+        const failed: MatchAnalysisJob = {
+          ...job,
+          status: 'failed',
+          error: message,
+          updatedAt: new Date().toISOString(),
+        };
+        // The server usually records the failure itself; only fill in if it hasn't.
+        const serverState = await getMatchAnalysisJob(job.id).catch(() => null);
+        if (serverState?.status !== 'failed') {
+          await updateMatchAnalysisJob(job.id, { status: 'failed', error: message }).catch(() => undefined);
+        }
+        setActiveJob(failed);
+        setError(message);
+        await refreshRecent();
+        return failed;
+      }
+
+      const latest = await getMatchAnalysisJob(job.id).catch(() => null);
+      const final =
+        latest && (latest.status === 'complete' || latest.status === 'failed')
+          ? latest
+          : await waitForTerminalJob(job.id);
+
+      if (final) {
+        setActiveJob(final);
+        if (final.status === 'failed') {
+          setError(final.error ?? ANALYSIS_FAILED_MESSAGE);
+        }
+        await refreshRecent();
+        return final;
+      }
+
+      const still: MatchAnalysisJob = { ...job, status: 'processing' };
+      setActiveJob(still);
+      return still;
+    },
+    [refreshRecent],
+  );
+
   const startAnalysis = useCallback(
     async (input: CreateMatchAnalysisInput) => {
       if (!playerId) {
         throw new Error('Sign in to analyze match footage.');
+      }
+
+      const demoMode = isDemoAnalysisMode();
+      if (!demoMode && !isFirebaseConfiguredForProject()) {
+        setError(ANALYSIS_UNAVAILABLE_MESSAGE);
+        throw new Error(ANALYSIS_UNAVAILABLE_MESSAGE);
       }
 
       setIsBusy(true);
@@ -97,19 +200,20 @@ export function useMatchAnalysis(playerId: string | null) {
 
       setActiveJob(job);
       setPhaseLabel('Sampling frames across the match…');
+      let jobPersisted = false;
 
       try {
         const frames = await sampleMatchFrames(input.localVideoUri, input.durationSec);
 
-        const useMock = shouldUseMockAuth() || !isFirebaseConfiguredForProject();
-
-        if (useMock) {
-          setPhaseLabel('Generating coaching report…');
+        if (demoMode) {
+          setPhaseLabel('Generating demo report…');
           const report = buildMockMatchAnalysisReport(
             input.targeting,
             input.match,
             input.durationSec,
           );
+          report.methodology =
+            'DEMO REPORT — generated in development mock mode. It is not based on your footage and must not be used as real analysis.';
           job = {
             ...job,
             status: 'complete',
@@ -131,6 +235,7 @@ export function useMatchAnalysis(playerId: string | null) {
         }
 
         await createMatchAnalysisJob(job);
+        jobPersisted = true;
 
         setPhaseLabel('Uploading sampled frames…');
         const uploadedFrames: MatchFrameSample[] = [];
@@ -179,70 +284,48 @@ export function useMatchAnalysis(playerId: string | null) {
         await updateMatchAnalysisJob(jobId, job);
         setActiveJob(job);
 
-        setPhaseLabel('AI is reviewing your player…');
-        job = { ...job, phaseLabel: 'Tracking #player', pipelineStages: buildConservativePipelineStages(input.targeting.jerseyNumber || 'player') };
-        await updateMatchAnalysisJob(jobId, { status: 'processing', phaseLabel: job.phaseLabel, pipelineStages: job.pipelineStages });
-        try {
-          await requestMatchFootageAnalysis(jobId);
-        } catch (callableError) {
-          // Offline-friendly fallback if Cloud Function is missing
-          const report = buildMockMatchAnalysisReport(
-            input.targeting,
-            input.match,
-            input.durationSec,
-          );
-          report.methodology =
-            'Fallback mock report — deploy analyzeMatchFootage Cloud Function for live vision stats.';
-          await updateMatchAnalysisJob(jobId, {
-            status: 'complete',
-            report,
-            completedAt: report.generatedAt,
-            error: callableError instanceof Error ? callableError.message : 'Callable failed',
-          });
-        }
-
-        const latest =
-          (await getMatchAnalysisJob(jobId)) ??
-          (await new Promise<MatchAnalysisJob | null>((resolve) => {
-            const unsub = subscribeMatchAnalysisJob(jobId, (next) => {
-              if (next && (next.status === 'complete' || next.status === 'failed')) {
-                unsub();
-                resolve(next);
-              }
-            });
-            setTimeout(() => {
-              unsub();
-              resolve(null);
-            }, 90_000);
-          }));
-
-        if (latest) {
-          setActiveJob(latest);
-          await refreshRecent();
-          return latest;
-        }
-
-        const still = { ...job, status: 'processing' as const };
-        setActiveJob(still);
-        return still;
+        return await runServerAnalysis(job);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Match analysis failed.';
+        const message = toUserMessage(err, 'Match analysis failed. Please try again.');
         setError(message);
         setActiveJob((current) =>
           current
             ? { ...current, status: 'failed', error: message, updatedAt: new Date().toISOString() }
             : current,
         );
-        if (isFirebaseConfiguredForProject() && !shouldUseMockAuth()) {
-          await updateMatchAnalysisJob(jobId, { status: 'failed', error: message });
+        if (jobPersisted) {
+          await updateMatchAnalysisJob(jobId, { status: 'failed', error: message }).catch(
+            () => undefined,
+          );
         }
-        throw err;
+        throw new Error(message);
       } finally {
         setIsBusy(false);
         setPhaseLabel(null);
       }
     },
-    [playerId, refreshRecent],
+    [playerId, runServerAnalysis],
+  );
+
+  const retryAnalysis = useCallback(
+    async (job: MatchAnalysisJob) => {
+      if (!canRetryMatchAnalysis(job)) {
+        throw new Error('This analysis cannot be retried. Please upload the video again.');
+      }
+      setIsBusy(true);
+      setError(null);
+      try {
+        return await runServerAnalysis(job);
+      } catch (err) {
+        const message = toUserMessage(err, ANALYSIS_FAILED_MESSAGE);
+        setError(message);
+        throw new Error(message);
+      } finally {
+        setIsBusy(false);
+        setPhaseLabel(null);
+      }
+    },
+    [runServerAnalysis],
   );
 
   const resetActive = useCallback(() => {
@@ -259,6 +342,7 @@ export function useMatchAnalysis(playerId: string | null) {
     error,
     pickVideo,
     startAnalysis,
+    retryAnalysis,
     resetActive,
     refreshRecent,
     setActiveJob,

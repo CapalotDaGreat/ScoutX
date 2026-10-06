@@ -6,7 +6,11 @@ import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
-import { useMatchAnalysis } from '@/features/match-analysis/hooks/useMatchAnalysis';
+import {
+  canRetryMatchAnalysis,
+  useMatchAnalysis,
+} from '@/features/match-analysis/hooks/useMatchAnalysis';
+import { toUserMessage } from '@/utils/userFacingError';
 import { waitForModalDismiss } from '@/features/highlight-videos/services/videoLibraryPermission';
 import {
   estimatedStatsToMatchLogPayload,
@@ -23,6 +27,22 @@ export type MatchAnalysisModalProps = {
   onApplyStats?: (payload: MatchLogPayload) => Promise<void>;
   onOpenHighlightReelStudio?: () => void;
 };
+
+function jobStatusLabel(job: MatchAnalysisJob): string {
+  switch (job.status) {
+    case 'complete':
+      return 'Ready';
+    case 'failed':
+      return canRetryMatchAnalysis(job) ? 'Failed · tap to retry' : 'Failed';
+    case 'processing':
+    case 'queued':
+      return 'Analyzing…';
+    case 'uploading':
+      return 'Upload interrupted';
+    default:
+      return 'Draft';
+  }
+}
 
 function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
   const rows: Array<[string, string]> = [
@@ -238,6 +258,7 @@ export function MatchAnalysisModal({
     error,
     pickVideo,
     startAnalysis,
+    retryAnalysis,
     resetActive,
     setActiveJob,
   } = useMatchAnalysis(playerId);
@@ -255,6 +276,7 @@ export function MatchAnalysisModal({
   const [isPicking, setIsPicking] = useState(false);
 
   const showReport = activeJob?.status === 'complete' && activeJob.report;
+  const retryable = !isBusy && canRetryMatchAnalysis(activeJob);
 
   const durationLabel = useMemo(() => {
     if (!picked) {
@@ -274,7 +296,7 @@ export function MatchAnalysisModal({
         resetActive();
       }
     } catch (err) {
-      Alert.alert('Video', err instanceof Error ? err.message : 'Could not pick video.');
+      Alert.alert('Video', toUserMessage(err, 'Could not pick video.'));
     } finally {
       setIsPicking(false);
     }
@@ -312,8 +334,19 @@ export function MatchAnalysisModal({
           result: result.trim() || undefined,
         },
       });
-    } catch (err) {
-      Alert.alert('Analysis', err instanceof Error ? err.message : 'Analysis failed.');
+    } catch {
+      // The hook surfaces a friendly message through `error`.
+    }
+  };
+
+  const handleRetry = async () => {
+    if (!activeJob) {
+      return;
+    }
+    try {
+      await retryAnalysis(activeJob);
+    } catch {
+      // The hook surfaces a friendly message through `error`.
     }
   };
 
@@ -331,7 +364,7 @@ export function MatchAnalysisModal({
       await onApplyStats(payload);
       Alert.alert('Saved', 'Estimated stats were added to your match log.');
     } catch (err) {
-      Alert.alert('Save failed', err instanceof Error ? err.message : 'Could not save match log.');
+      Alert.alert('Save failed', toUserMessage(err, 'Could not save match log.'));
     } finally {
       setApplying(false);
     }
@@ -347,10 +380,29 @@ export function MatchAnalysisModal({
           finds your jersey, and returns coaching feedback plus estimated personal stats.
         </Text>
 
-        {error ? (
+        {error && !retryable ? (
           <Text variant="body-sm" color="error">
             {error}
           </Text>
+        ) : null}
+
+        {retryable && activeJob ? (
+          <Card>
+            <View className="gap-3">
+              <Heading level={3}>
+                {activeJob.match.date} vs {activeJob.match.opponent}
+              </Heading>
+              <Text variant="body-sm" color="error">
+                {activeJob.error ?? error ?? "The AI couldn't finish this analysis."}
+              </Text>
+              <Text variant="caption" color="secondary">
+                Your footage is already uploaded, so retrying won't upload it again.
+              </Text>
+              <Button variant="accent" onPress={() => void handleRetry()}>
+                Retry analysis
+              </Button>
+            </View>
+          </Card>
         ) : null}
 
         {showReport && activeJob ? (
@@ -443,7 +495,7 @@ export function MatchAnalysisModal({
                   setActiveJob(job);
                 }}
               >
-                {job.match.date} vs {job.match.opponent} · {job.status}
+                {`${job.match.date} vs ${job.match.opponent} · ${jobStatusLabel(job)}`}
               </Button>
             ))}
           </View>

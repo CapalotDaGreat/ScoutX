@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { PublicPortfolioRepository } from '@/features/public-portfolio/repositories/PublicPortfolioRepository';
 import { type PublicPortfolioData } from '@/features/public-portfolio/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export function usePublicPortfolio(playerId: string | null) {
   const [data, setData] = useState<PublicPortfolioData | null>(null);
@@ -26,7 +27,7 @@ export function usePublicPortfolio(playerId: string | null) {
         setData(portfolio);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to load portfolio.');
+      setError(toUserMessage(err, 'Unable to load portfolio.'));
       setData(null);
     } finally {
       setIsLoading(false);

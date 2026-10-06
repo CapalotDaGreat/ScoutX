@@ -11,6 +11,7 @@ import {
 } from '@/features/football-journey/models/JourneyModel';
 import { type JourneyEntry } from '@/features/football-journey/types';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type EditJourneyModalProps = {
   visible: boolean;
@@ -46,7 +47,7 @@ export function EditJourneyModal({ visible, profile, onClose, onSave }: EditJour
       });
       onClose();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save journey.');
+      Alert.alert('Error', toUserMessage(err, 'Failed to save journey.'));
     } finally {
       setSaving(false);
     }

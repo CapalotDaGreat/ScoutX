@@ -7,6 +7,7 @@ const auth_1 = require("firebase-admin/auth");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const accountDeletion_1 = require("./accountDeletion");
 const appleTokenService_1 = require("./appleTokenService");
 const appleTeamIdSecret = (0, params_1.defineSecret)('APPLE_TEAM_ID');
 const appleKeyIdSecret = (0, params_1.defineSecret)('APPLE_KEY_ID');
@@ -70,16 +71,6 @@ async function revokeStoredAppleTokens(uid) {
         await tokenRef.delete().catch(() => undefined);
     }
 }
-async function deleteUserOwnedDocuments(uid) {
-    const db = (0, firestore_1.getFirestore)();
-    await Promise.all([
-        db.collection('users').doc(uid).delete().catch(() => undefined),
-        db.collection('profiles').doc(uid).delete().catch(() => undefined),
-        db.collection('pushTokens').doc(uid).delete().catch(() => undefined),
-        db.collection('discoverablePlayers').doc(uid).delete().catch(() => undefined),
-        db.collection(AUTH_PROVIDER_TOKENS_COLLECTION).doc(uid).delete().catch(() => undefined),
-    ]);
-}
 /**
  * Exchanges a short-lived Apple authorization code for a refresh token and stores it
  * server-side for App Store Guideline 5.1.1(v) account-deletion revocation.
@@ -122,7 +113,13 @@ exports.deleteAuthenticatedAccount = (0, https_1.onCall)((0, callableOptions_1.c
 }), async (request) => {
     const uid = requireAuthUid(request.auth?.uid);
     await revokeStoredAppleTokens(uid);
-    await deleteUserOwnedDocuments(uid);
+    const { failures } = await (0, accountDeletion_1.deleteAllUserData)(uid);
+    if (failures.length > 0) {
+        firebase_functions_1.logger.warn('Account deletion completed with partial data cleanup failures', {
+            uid,
+            failures,
+        });
+    }
     try {
         await (0, auth_1.getAuth)().deleteUser(uid);
     }

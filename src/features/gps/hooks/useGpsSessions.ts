@@ -3,6 +3,7 @@ import { useMockData } from '@/config/appMode';
 import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
 import { getMockGpsSessions } from '@/features/gps/services/mockGpsSessionService';
 import { type GpsSession } from '@/features/gps/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UseGpsSessionsOptions = {
   playerId: string | null;
@@ -34,7 +35,7 @@ export function useGpsSessions({ playerId }: UseGpsSessionsOptions) {
             : [],
       );
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unable to load GPS sessions.';
+      const message = toUserMessage(err, 'Unable to load GPS sessions.');
       setError(message);
       setSessions(useMockData() ? await getMockGpsSessions(playerId) : []);
     } finally {

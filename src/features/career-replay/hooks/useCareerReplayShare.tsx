@@ -4,6 +4,7 @@ import { CareerReplayRepository } from '@/features/career-replay/repositories/Ca
 import { type CareerReplayData } from '@/features/career-replay/types';
 import { CareerReplayShareCardView } from '@/features/share-cards/components/CareerReplayShareCardView';
 import { shareCapturedView } from '@/features/share-cards/services/shareCardService';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UseCareerReplayShareResult = {
   captureRef: RefObject<View | null>;
@@ -40,7 +41,7 @@ export function useCareerReplayShare(
         await CareerReplayRepository.getInstance().saveReplay(playerId, replay);
       }
     } catch (error) {
-      setShareError(error instanceof Error ? error.message : 'Unable to share career replay.');
+      setShareError(toUserMessage(error, 'Unable to share career replay.'));
     } finally {
       setIsSharing(false);
     }

@@ -69,14 +69,18 @@ export function mapFirebaseAuthError(error: unknown): AuthError {
     includesCodeOrMessage('operation-not-allowed', code, message)
   ) {
     return new AuthError(
-      'Anonymous sign-in is disabled for this Firebase project. Enable it in the Firebase console.',
+      __DEV__
+        ? 'Anonymous sign-in is disabled for this Firebase project. Enable it in the Firebase console.'
+        : 'This sign-in option is temporarily unavailable. Please try another way to sign in.',
       'anonymous-disabled',
     );
   }
 
   if (includesCodeOrMessage('configuration-not-found', code, message)) {
     return new AuthError(
-      'Firebase Authentication is not configured for this project. Open Firebase Console → Authentication and click Get started, then enable Anonymous sign-in.',
+      __DEV__
+        ? 'Firebase Authentication is not configured for this project. Open Firebase Console → Authentication and click Get started, then enable Anonymous sign-in.'
+        : 'Sign-in is temporarily unavailable. Please try again later.',
       'anonymous-disabled',
     );
   }

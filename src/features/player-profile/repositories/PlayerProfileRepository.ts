@@ -173,7 +173,7 @@ export class PlayerProfileRepository {
       const fileExtension = 'jpg';
       const storageRef = ref(storage, `profiles/${userId}/${type}_${Date.now()}.${fileExtension}`);
 
-      await uploadBytes(storageRef, blob);
+      await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
 
       const downloadUrl = await getDownloadURL(storageRef);
       return downloadUrl;

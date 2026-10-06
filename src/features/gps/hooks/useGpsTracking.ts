@@ -25,6 +25,7 @@ import {
   type GpsSessionMetrics,
   type GpsSessionStatus,
 } from '@/features/gps/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UseGpsTrackingOptions = {
   playerId: string | null;
@@ -245,7 +246,7 @@ export function useGpsTracking({ playerId }: UseGpsTrackingOptions) {
 
       return completedSession;
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to save GPS session.';
+      const message = toUserMessage(err, 'Failed to save GPS session.');
       setError(message);
       return null;
     } finally {

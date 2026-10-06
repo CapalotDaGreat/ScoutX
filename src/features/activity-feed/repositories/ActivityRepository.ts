@@ -6,6 +6,7 @@ import {
   where,
   orderBy,
 } from 'firebase/firestore';
+import { useMockData } from '@/config/appMode';
 import { getFirestoreDb } from '@/config/firebase';
 import { subscribeToQuery } from '@/firebase/firestoreSubscriptions';
 import { ACTIVITY_COLLECTION } from '@/features/activity-feed/constants';
@@ -103,16 +104,20 @@ export class ActivityRepository {
     await markLocalActivityRead(recipientId, activityId);
   }
 
-  public async markAllActivitiesRead(recipientId: string): Promise<void> {
+  public async markAllActivitiesRead(recipientId: string, unreadIds: string[] = []): Promise<void> {
     const db = getFirestoreDb();
     const local = await loadLocalActivities(recipientId);
-    const unread = local.filter((item) => !item.read);
+    const ids = new Set([
+      ...unreadIds,
+      ...local.filter((item) => !item.read).map((item) => item.id),
+    ]);
 
     if (db) {
       try {
-        await Promise.all(
-          unread.map((item) =>
-            setDoc(doc(db, ACTIVITY_COLLECTION, item.id), { read: true }, { merge: true }),
+        // allSettled: local-only items have no server document and are expected to be rejected.
+        await Promise.allSettled(
+          [...ids].map((id) =>
+            setDoc(doc(db, ACTIVITY_COLLECTION, id), { read: true }, { merge: true }),
           ),
         );
       } catch {
@@ -129,7 +134,7 @@ export class ActivityRepository {
     recipientRole: 'player' | 'scout',
   ): Promise<ActivityItem[]> {
     const local = await loadLocalActivities(recipientId);
-    if (local.length > 0) {
+    if (local.length > 0 || !useMockData()) {
       return local;
     }
 

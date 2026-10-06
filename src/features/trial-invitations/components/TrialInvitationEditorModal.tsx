@@ -9,6 +9,7 @@ import {
   type TrialInvitationDraft,
   createEmptyTrialDraft,
 } from '@/features/trial-invitations/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type TrialInvitationEditorModalProps = {
   visible: boolean;
@@ -58,7 +59,7 @@ export function TrialInvitationEditorModal({
       await onSubmit(draft);
       onClose();
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Could not save trial.');
+      Alert.alert('Error', toUserMessage(error, 'Could not save trial.'));
     }
   };
 

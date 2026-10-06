@@ -15,6 +15,30 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.publicPortfolioEnabled == true;
     }
 
+    // GPS data is location-derived; only expose it on a public passport that opted in.
+    function publicGpsVisible(userId) {
+      return publicPortfolioEnabled(userId)
+        && get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.get('showGpsHighlights', true) == true;
+    }
+
+    function isServerVerifiedPlayer(userId) {
+      return exists(/databases/$(database)/documents/verificationStates/$('player-' + userId))
+        && get(/databases/$(database)/documents/verificationStates/$('player-' + userId)).data.level == 'verified';
+    }
+
+    function isTrialParty(trialId) {
+      return trialId is string
+        && exists(/databases/$(database)/documents/trialInvitations/$(trialId))
+        && (
+          get(/databases/$(database)/documents/trialInvitations/$(trialId)).data.scoutId == request.auth.uid
+          || get(/databases/$(database)/documents/trialInvitations/$(trialId)).data.playerId == request.auth.uid
+        );
+    }
+
+    function onlyChanges(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
     function validReportReason(reason) {
       return reason in ['spam', 'harassment', 'inappropriate', 'impersonation', 'other'];
     }
@@ -28,10 +52,10 @@ service cloud.firestore {
     }
 
     function validClientUserRole(role) {
-      return role in ['guest', 'player', 'scout'];
+      return role in ['guest', 'player', 'scout', 'coach'];
     }
 
-    function isValidUserCreate() {
+    function isValidUserCreate(userId) {
       return !hasForbiddenCredentialFields(request.resource.data)
         && request.resource.data.uid == userId
         && request.resource.data.keys().hasOnly(['uid', 'name', 'email', 'role', 'isAnonymous', 'createdAt', 'updatedAt'])
@@ -50,7 +74,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isOwner(userId);
-      allow create: if isOwner(userId) && isValidUserCreate();
+      allow create: if isOwner(userId) && isValidUserCreate(userId);
       allow update: if isOwner(userId) && isValidUserUpdate();
       allow delete: if isOwner(userId);
     }
@@ -61,10 +85,11 @@ service cloud.firestore {
       allow update, delete: if isOwner(userId);
     }
 
+    // Trust scores are server-maintained; players must not be able to inflate their own.
     match /trustProfiles/{playerId} {
       allow read: if isSignedIn() || publicPortfolioEnabled(playerId);
-      allow create: if isOwner(playerId);
-      allow update, delete: if isOwner(playerId);
+      allow create, update: if false;
+      allow delete: if isOwner(playerId);
     }
 
     match /trustRecommendations/{recommendationId} {
@@ -91,15 +116,25 @@ service cloud.firestore {
       allow update, delete: if isOwner(scoutId);
     }
 
+    // Actors cannot impersonate others; 'system' activities may only target yourself.
     match /activities/{activityId} {
       allow read: if isSignedIn() && request.auth.uid == resource.data.recipientId;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && request.auth.uid == resource.data.recipientId;
+      allow create: if isSignedIn()
+        && request.resource.data.recipientId is string
+        && (
+          request.resource.data.actorId == request.auth.uid
+          || (request.resource.data.actorId == 'system'
+            && request.resource.data.recipientId == request.auth.uid)
+        );
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId
+        && onlyChanges(['read']);
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.recipientId;
     }
 
     match /gpsSessions/{sessionId} {
-      allow read: if isSignedIn()
-        || (resource != null && publicPortfolioEnabled(resource.data.playerId));
+      allow read: if isOwner(resource.data.playerId)
+        || publicGpsVisible(resource.data.playerId);
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.playerId;
       allow update, delete: if isSignedIn()
@@ -136,10 +171,20 @@ service cloud.firestore {
         || request.auth.uid == resource.data.scoutId
       );
       allow create: if isSignedIn()
-        && request.auth.uid == request.resource.data.scoutId;
+        && request.auth.uid == request.resource.data.scoutId
+        && request.resource.data.status == 'pending';
+      // Scouts manage invitation details; players may only accept or decline.
       allow update: if isSignedIn() && (
-        request.auth.uid == resource.data.scoutId
-        || request.auth.uid == resource.data.playerId
+        (
+          request.auth.uid == resource.data.scoutId
+          && request.resource.data.scoutId == resource.data.scoutId
+          && request.resource.data.playerId == resource.data.playerId
+        )
+        || (
+          request.auth.uid == resource.data.playerId
+          && onlyChanges(['status', 'history', 'updatedAt'])
+          && request.resource.data.status in ['accepted', 'declined']
+        )
       );
       allow delete: if isSignedIn()
         && request.auth.uid == resource.data.scoutId;
@@ -148,14 +193,24 @@ service cloud.firestore {
     match /trialNotifications/{notificationId} {
       allow read: if isSignedIn()
         && request.auth.uid == resource.data.recipientId;
-      allow create: if isSignedIn();
+      allow create: if isSignedIn()
+        && isTrialParty(request.resource.data.trialInvitationId);
       allow update: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId
+        && onlyChanges(['read']);
+      allow delete: if isSignedIn()
         && request.auth.uid == resource.data.recipientId;
     }
 
+    // The public "verified" badge requires an admin-approved verification state.
     match /discoverablePlayers/{playerId} {
       allow read: if isSignedIn();
-      allow create, update, delete: if isOwner(playerId);
+      allow create, update: if isOwner(playerId)
+        && (
+          request.resource.data.get('verified', false) == false
+          || isServerVerifiedPlayer(playerId)
+        );
+      allow delete: if isOwner(playerId);
     }
 
     match /portfolioAnalytics/{playerId} {
@@ -178,17 +233,32 @@ service cloud.firestore {
     match /careerReplays/{replayId} {
       allow read: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
-      allow create, update: if isSignedIn()
+      allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.playerId;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId
+        && request.auth.uid == request.resource.data.playerId;
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
     }
 
+    // Analysis reports are written only by the analyzeMatchFootage function so clients
+    // cannot present fabricated AI results as real.
     match /matchAnalysisJobs/{jobId} {
       allow read: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
       allow create: if isSignedIn()
-        && request.auth.uid == request.resource.data.playerId;
+        && request.auth.uid == request.resource.data.playerId
+        && !request.resource.data.keys().hasAny(['report', 'completedAt'])
+        && request.resource.data.status in ['uploading', 'queued'];
       allow update: if isSignedIn()
-        && request.auth.uid == resource.data.playerId;
+        && request.auth.uid == resource.data.playerId
+        && request.resource.data.playerId == resource.data.playerId
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['report', 'completedAt'])
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status'])
+          || request.resource.data.status in ['uploading', 'queued', 'processing', 'failed']
+        );
       allow delete: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
     }
@@ -224,7 +294,10 @@ service cloud.firestore {
 
     match /clubProfiles/{clubId} {
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn()
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.ownerId;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.ownerId
         && request.auth.uid == request.resource.data.ownerId;
     }
 

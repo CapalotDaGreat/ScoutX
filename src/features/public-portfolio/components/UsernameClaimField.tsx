@@ -11,6 +11,7 @@ import {
 } from '@/features/public-portfolio/services/usernameService';
 import { buildPublicPortfolioUrl } from '@/features/public-portfolio/constants';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UsernameClaimFieldProps = {
   playerId: string;
@@ -61,7 +62,7 @@ export function UsernameClaimField({
     } catch (error) {
       Alert.alert(
         t('username.claimFailedTitle'),
-        error instanceof Error ? error.message : t('username.claimFailedFallback'),
+        toUserMessage(error, t('username.claimFailedFallback')),
       );
     } finally {
       setSaving(false);

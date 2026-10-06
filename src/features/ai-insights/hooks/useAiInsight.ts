@@ -5,6 +5,7 @@ import {
   type AiInsightMap,
   type AiInsightType,
 } from '@/features/ai-insights/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UseAiInsightOptions = {
   enabled?: boolean;
@@ -49,7 +50,7 @@ export function useAiInsight<T extends AiInsightType>(
       }
     } catch (err) {
       if (requestIdRef.current === requestId) {
-        const message = err instanceof Error ? err.message : 'Failed to generate AI insight.';
+        const message = toUserMessage(err, 'Failed to generate AI insight.');
         setError(message);
       }
     } finally {

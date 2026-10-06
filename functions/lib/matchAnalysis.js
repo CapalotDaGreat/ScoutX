@@ -28,6 +28,88 @@ function asStringArray(value) {
     }
     return value.filter((item) => typeof item === 'string');
 }
+function normalizePipelineStages(value) {
+    if (!Array.isArray(value)) {
+        return [
+            { id: 'video-ingestion', label: 'Preparing video', status: 'complete' },
+            { id: 'match-segmentation', label: 'Finding match segments', status: 'pending' },
+            { id: 'player-identification', label: 'Identifying players', status: 'pending' },
+            { id: 'player-tracking', label: 'Tracking player', status: 'pending' },
+            { id: 'event-detection', label: 'Analyzing movements', status: 'pending' },
+            { id: 'tactical-context', label: 'Analyzing decisions', status: 'pending' },
+            { id: 'role-analysis', label: 'Assessing role execution', status: 'pending' },
+            { id: 'cross-event-reasoning', label: 'Connecting key events', status: 'pending' },
+            { id: 'coaching-synthesis', label: 'Building coaching feedback', status: 'pending' },
+            { id: 'validation', label: 'Validating evidence', status: 'pending' },
+            { id: 'final-report', label: 'Finalizing report', status: 'pending' },
+        ];
+    }
+    return value
+        .map((item) => {
+        if (!item || typeof item !== 'object') {
+            return null;
+        }
+        const row = item;
+        return {
+            id: typeof row.id === 'string' ? row.id : 'final-report',
+            label: typeof row.label === 'string' ? row.label : 'Analysis stage',
+            status: row.status === 'active' || row.status === 'complete' || row.status === 'failed'
+                ? row.status
+                : 'pending',
+            note: typeof row.note === 'string' ? row.note : undefined,
+        };
+    })
+        .filter(Boolean);
+}
+function normalizeSegments(value) {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+    return value
+        .map((item) => {
+        if (!item || typeof item !== 'object') {
+            return null;
+        }
+        const row = item;
+        return {
+            id: typeof row.id === 'string' ? row.id : 'segment',
+            type: typeof row.type === 'string' ? row.type : 'unknown',
+            label: typeof row.label === 'string' ? row.label : 'Match segment',
+            startSec: Math.max(0, Math.round(asNumber(row.startSec))),
+            endSec: Math.max(0, Math.round(asNumber(row.endSec))),
+            confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0.5))),
+            excludedFromPerformance: Boolean(row.excludedFromPerformance),
+            note: typeof row.note === 'string' ? row.note : '',
+        };
+    })
+        .filter(Boolean);
+}
+function normalizeAvailability(value) {
+    if (!Array.isArray(value)) {
+        return [];
+    }
+    return value
+        .map((item) => {
+        if (!item || typeof item !== 'object') {
+            return null;
+        }
+        const row = item;
+        return {
+            id: typeof row.id === 'string' ? row.id : 'availability-window',
+            startSec: Math.max(0, Math.round(asNumber(row.startSec))),
+            endSec: Math.max(0, Math.round(asNumber(row.endSec))),
+            state: row.state === 'confirmed_visible' ||
+                row.state === 'likely_active_off_camera' ||
+                row.state === 'confirmed_off_pitch'
+                ? row.state
+                : 'unknown',
+            confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0.5))),
+            label: typeof row.label === 'string' ? row.label : 'Availability',
+            note: typeof row.note === 'string' ? row.note : '',
+        };
+    })
+        .filter(Boolean);
+}
 function normalizeReport(raw, modelId) {
     const statsRaw = raw.estimatedStats && typeof raw.estimatedStats === 'object' && !Array.isArray(raw.estimatedStats)
         ? raw.estimatedStats
@@ -54,6 +136,41 @@ function normalizeReport(raw, modelId) {
         })
             .filter(Boolean)
         : [];
+    const coverageRaw = raw.coverage && typeof raw.coverage === 'object' && !Array.isArray(raw.coverage)
+        ? raw.coverage
+        : {};
+    const evidence = Array.isArray(raw.evidence)
+        ? raw.evidence
+            .map((item) => {
+            if (!item || typeof item !== 'object') {
+                return null;
+            }
+            const row = item;
+            return {
+                kind: row.kind === 'inference' || row.kind === 'unknown' ? row.kind : 'observation',
+                label: typeof row.label === 'string' ? row.label : 'Evidence',
+                detail: typeof row.detail === 'string' ? row.detail : '',
+                confidence: Math.max(0, Math.min(1, asNumber(row.confidence, 0.5))),
+                timestampSec: row.timestampSec == null ? undefined : Math.max(0, Math.round(asNumber(row.timestampSec))),
+                source: typeof row.source === 'string' ? row.source : 'analysis',
+            };
+        })
+            .filter(Boolean)
+        : [];
+    const coverage = {
+        visiblePct: Math.max(0, Math.min(100, Math.round(asNumber(coverageRaw.visiblePct, 0)))),
+        likelyOffCameraPct: Math.max(0, Math.min(100, Math.round(asNumber(coverageRaw.likelyOffCameraPct, 0)))),
+        unknownPct: Math.max(0, Math.min(100, Math.round(asNumber(coverageRaw.unknownPct, 100)))),
+        confidenceLabel: coverageRaw.confidenceLabel === 'Excellent' ||
+            coverageRaw.confidenceLabel === 'Good' ||
+            coverageRaw.confidenceLabel === 'Limited' ||
+            coverageRaw.confidenceLabel === 'Insufficient'
+            ? coverageRaw.confidenceLabel
+            : 'Limited',
+        note: typeof coverageRaw.note === 'string'
+            ? coverageRaw.note
+            : 'Coverage and player availability are conservative estimates based on visible frames only.',
+    };
     return {
         headline: typeof raw.headline === 'string' ? raw.headline : 'Match analysis complete',
         strengths: asStringArray(raw.strengths).slice(0, 6),
@@ -80,7 +197,15 @@ function normalizeReport(raw, modelId) {
             matchRating: Math.max(1, Math.min(10, Number(asNumber(statsRaw.matchRating, 6.5).toFixed(1)))),
             cleanSheet: Boolean(statsRaw.cleanSheet),
         },
+        coverage,
+        evidence,
         moments,
+        pipelineStages: normalizePipelineStages(raw.pipelineStages),
+        segments: normalizeSegments(raw.segments),
+        availability: normalizeAvailability(raw.availability),
+        tacticalSummary: typeof raw.tacticalSummary === 'string'
+            ? raw.tacticalSummary
+            : 'Analysis is evidence-first and avoids fabricating player actions when the footage is incomplete.',
         confidence: Math.max(0, Math.min(1, asNumber(raw.confidence, 0.5))),
         methodology: typeof raw.methodology === 'string'
             ? raw.methodology
@@ -162,8 +287,10 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
         'You are ScoutX Match Analyst, a professional football coach and performance analyst.',
         'You ONLY evaluate ONE nominated player visible in the provided still frames from a match film.',
         'Ignore all other players except when they interact directly with the target.',
-        'Never invent events you cannot reasonably infer from the frames and context.',
-        'When uncertain, under-count rather than over-count.',
+        'Never fabricate player actions, identity, position, movement, or match events.',
+        'If the player is off-camera, substituted, or the jersey is unreadable, prefer "insufficient evidence" over a made-up event.',
+        'Separate observation, inference, and unknown clearly in the report.',
+        'When uncertain, under-count rather than over-count and lower confidence.',
         'Return STRICT JSON only.',
     ].join(' ');
     const userText = [
@@ -180,8 +307,9 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
         '',
         'Tasks:',
         '1) Locate #jersey using kit colors whenever possible.',
-        '2) Estimate countable match stats for THAT player only across the whole match (use frames as sparse evidence + football priors; mark lower confidence when frames are sparse).',
-        '3) Produce coaching feedback specific to that player.',
+        '2) Report player availability and coverage, with explicit note when the player is off-camera or the footage is insufficient.',
+        '3) Estimate countable match stats for THAT player only across the visible/active periods, not by inventing a full 90-minute performance when footage is incomplete.',
+        '4) Produce coaching feedback specific to that player and call out uncertainty when needed.',
         '',
         'JSON schema:',
         JSON.stringify({
@@ -208,6 +336,21 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
                 matchRating: 6.5,
                 cleanSheet: false,
             },
+            coverage: {
+                visiblePct: 0,
+                likelyOffCameraPct: 0,
+                unknownPct: 0,
+                confidenceLabel: 'Limited',
+                note: 'string',
+            },
+            evidence: [{
+                    kind: 'observation',
+                    label: 'string',
+                    detail: 'string',
+                    confidence: 0.0,
+                    timestampSec: 0,
+                    source: 'string',
+                }],
             moments: [{ timestampSec: 0, label: 'string', detail: 'string' }],
             confidence: 0.0,
             methodology: 'string',

@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteField,
   doc,
   getDoc,
   onSnapshot,
@@ -28,7 +29,10 @@ export async function createMatchAnalysisJob(job: MatchAnalysisJob): Promise<voi
   if (!isFirebaseConfiguredForProject()) {
     return;
   }
-  await setDoc(doc(jobsCollection(), job.id), job);
+  const payload = Object.fromEntries(
+    Object.entries(job).filter(([, value]) => value !== undefined),
+  );
+  await setDoc(doc(jobsCollection(), job.id), payload);
 }
 
 export async function updateMatchAnalysisJob(
@@ -40,16 +44,14 @@ export async function updateMatchAnalysisJob(
   }
   const ref = doc(jobsCollection(), jobId);
   const existing = await getDoc(ref);
-  const base = (existing.data() ?? {}) as MatchAnalysisJob;
-  await setDoc(
-    ref,
-    {
-      ...base,
-      ...patch,
-      updatedAt: new Date().toISOString(),
-    },
-    { merge: true },
-  );
+  const base = (existing.data() ?? {}) as Record<string, unknown>;
+  const payload: Record<string, unknown> = { ...base };
+  for (const [key, value] of Object.entries(patch)) {
+    // Firestore rejects undefined values; an explicit undefined in the patch clears the field.
+    payload[key] = value === undefined ? deleteField() : value;
+  }
+  payload.updatedAt = new Date().toISOString();
+  await setDoc(ref, payload, { merge: true });
 }
 
 export async function getMatchAnalysisJob(jobId: string): Promise<MatchAnalysisJob | null> {

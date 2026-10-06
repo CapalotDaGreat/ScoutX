@@ -13,6 +13,7 @@ import {
 } from '@/features/trial-invitations/services/trialCalendarService';
 import { PLAYER_RESPONDABLE_STATUSES } from '@/features/trial-invitations/constants';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type TrialInvitationResponseModalProps = {
   visible: boolean;
@@ -57,7 +58,7 @@ export function TrialInvitationResponseModal({
                     .catch((error: unknown) => {
                       Alert.alert(
                         'Error',
-                        error instanceof Error ? error.message : 'Could not decline trial.',
+                        toUserMessage(error, 'Could not decline trial.'),
                       );
                     });
                 },
@@ -77,7 +78,7 @@ export function TrialInvitationResponseModal({
               .catch((error: unknown) => {
                 Alert.alert(
                   'Error',
-                  error instanceof Error ? error.message : 'Could not accept trial.',
+                  toUserMessage(error, 'Could not accept trial.'),
                 );
               });
           }}
@@ -135,7 +136,7 @@ export function TrialInvitationResponseModal({
               void openTrialInCalendar(invitation).catch((error: unknown) => {
                 Alert.alert(
                   'Calendar',
-                  error instanceof Error ? error.message : 'Could not open calendar.',
+                  toUserMessage(error, 'Could not open calendar.'),
                 );
               });
             }}

@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { FootballPassportShareCardView } from '@/features/share-cards/components/FootballPassportShareCardView';
 import { type PassportShareCardData } from '@/features/share-cards/services/passportShareCardData';
 import { shareCapturedView } from '@/features/share-cards/services/shareCardService';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UsePassportShareResult = {
   isSharing: boolean;
@@ -31,7 +32,7 @@ export function usePassportShare(data: PassportShareCardData): UsePassportShareR
         mimeType: 'image/png',
       });
     } catch (error) {
-      setShareError(error instanceof Error ? error.message : 'Unable to share passport card.');
+      setShareError(toUserMessage(error, 'Unable to share passport card.'));
     } finally {
       setIsSharing(false);
     }

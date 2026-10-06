@@ -5,6 +5,7 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { type MatchLogPayload } from '@/features/player-statistics';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
+import { toUserMessage } from '@/utils/userFacingError';
 
 const PROFILE_LOAD_TIMEOUT_MS = 4_000;
 
@@ -97,7 +98,7 @@ export function usePlayerProfile() {
           user.name;
         ActivityRecorder.getInstance().recordProfileUpdated(user.id, playerName);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to update profile.';
+        const message = toUserMessage(err, 'Failed to update profile.');
         setError(message);
         throw err;
       } finally {
@@ -127,7 +128,7 @@ export function usePlayerProfile() {
 
         return downloadUrl;
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to upload image.';
+        const message = toUserMessage(err, 'Failed to upload image.');
         setError(message);
         throw err;
       } finally {
@@ -150,7 +151,7 @@ export function usePlayerProfile() {
         setProfile(buildSeedProfile(user.id, user.name, user.email));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to refresh profile.');
+      setError(toUserMessage(err, 'Unable to refresh profile.'));
     } finally {
       setIsLoading(false);
     }
@@ -168,7 +169,7 @@ export function usePlayerProfile() {
         const repository = PlayerProfileRepository.getInstance();
         return await repository.appendMatch(user.id, payload);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to save match.';
+        const message = toUserMessage(err, 'Failed to save match.');
         setError(message);
         throw err;
       } finally {

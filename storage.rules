@@ -10,12 +10,34 @@ service firebase.storage {
       allow read: if isOwner(userId);
       allow write: if isOwner(userId)
         && request.resource.size < 100 * 1024 * 1024;
+      allow delete: if isOwner(userId);
     }
 
     match /profiles/{userId}/matchFootage/{jobId}/{allPaths=**} {
       allow read: if isOwner(userId);
       allow write: if isOwner(userId)
         && request.resource.size < 4 * 1024 * 1024 * 1024;
+      allow delete: if isOwner(userId);
+    }
+
+    // Avatar and cover photos. Public display uses tokenized download URLs.
+    match /profiles/{userId}/{fileName} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && fileName.matches('(avatar|cover)_[0-9]+\\.jpg')
+        && request.resource.contentType.matches('image/.*')
+        && request.resource.size < 10 * 1024 * 1024;
+      allow delete: if isOwner(userId);
+    }
+
+    // GPS tracks are location data: owner-only, JSON, bounded size.
+    match /gpsSessions/{userId}/{sessionId}/{fileName} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && fileName == 'points.json'
+        && request.resource.contentType == 'application/json'
+        && request.resource.size < 5 * 1024 * 1024;
+      allow delete: if isOwner(userId);
     }
 
     match /{allPaths=**} {

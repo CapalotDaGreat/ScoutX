@@ -14,6 +14,7 @@ import { waitForModalDismiss } from '@/features/highlight-videos/services/videoL
 import { type HighlightVideo } from '@/features/highlight-videos/types';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { useTheme } from '@/theme';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type HighlightVideosManagerModalProps = {
   visible: boolean;
@@ -78,7 +79,7 @@ export function HighlightVideosManagerModal({
       setFlowPhase('editing');
     } catch (error) {
       setFlowPhase('list');
-      Alert.alert('Upload Error', error instanceof Error ? error.message : 'Could not pick video.');
+      Alert.alert('Upload Error', toUserMessage(error, 'Could not pick video.'));
     }
   };
 
@@ -92,7 +93,7 @@ export function HighlightVideosManagerModal({
       setPreparedUpload(null);
       setFlowPhase('list');
     } catch (error) {
-      Alert.alert('Upload Error', error instanceof Error ? error.message : 'Upload failed.');
+      Alert.alert('Upload Error', toUserMessage(error, 'Upload failed.'));
     }
   };
 
@@ -116,7 +117,7 @@ export function HighlightVideosManagerModal({
       setEditingVideo(null);
       setFlowPhase('list');
     } catch (error) {
-      Alert.alert('Save Error', error instanceof Error ? error.message : 'Could not save video.');
+      Alert.alert('Save Error', toUserMessage(error, 'Could not save video.'));
     }
   };
 
@@ -143,7 +144,7 @@ export function HighlightVideosManagerModal({
         style: 'destructive',
         onPress: () => {
           void deleteVideo(video.id).catch((error: unknown) => {
-            Alert.alert('Delete Error', error instanceof Error ? error.message : 'Could not delete video.');
+            Alert.alert('Delete Error', toUserMessage(error, 'Could not delete video.'));
           });
         },
       },
@@ -158,7 +159,7 @@ export function HighlightVideosManagerModal({
       setFlowPhase('list');
     } catch (error) {
       setFlowPhase('list');
-      Alert.alert('Upload Error', error instanceof Error ? error.message : 'Could not retry upload.');
+      Alert.alert('Upload Error', toUserMessage(error, 'Could not retry upload.'));
     }
   };
 

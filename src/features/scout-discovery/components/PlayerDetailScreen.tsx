@@ -373,14 +373,21 @@ export function PlayerDetailScreen({
               subtitle="Highlight videos on file"
               persistKey={`detail-footage-${player.id}`}
             >
-              <Card variant="default" padding="lg" className="flex-row items-center gap-3">
-                <Video size={24} color={colors.accent} />
-                <View className="flex-1">
-                  <Text weight="semibold">{t('scout:playerDetail.highlightsOnFile')}</Text>
-                  <Text variant="body-sm" color="secondary">
-                    {t('scout:playerDetail.videoPlaybackNote')}
-                  </Text>
+              <Card variant="default" padding="lg" className="gap-3">
+                <View className="flex-row items-center gap-3">
+                  <Video size={24} color={colors.accent} />
+                  <View className="flex-1">
+                    <Text weight="semibold">{t('scout:playerDetail.highlightsOnFile')}</Text>
+                    <Text variant="body-sm" color="secondary">
+                      {t('scout:playerDetail.videoPlaybackNote')}
+                    </Text>
+                  </View>
                 </View>
+                {onViewPortfolio ? (
+                  <Button variant="accent" size="sm" onPress={() => onViewPortfolio(player.id)}>
+                    {t('scout:playerDetail.watchHighlights')}
+                  </Button>
+                ) : null}
               </Card>
             </CollapsibleSection>
           </RevealSection>

@@ -79,9 +79,10 @@ export function useActivityFeed({
     if (!recipientId) {
       return;
     }
-    await repository.markAllActivitiesRead(recipientId);
+    const unreadIds = activities.filter((item) => !item.read).map((item) => item.id);
+    await repository.markAllActivitiesRead(recipientId, unreadIds);
     setActivities((current) => current.map((item) => ({ ...item, read: true })));
-  }, [recipientId, repository]);
+  }, [activities, recipientId, repository]);
 
   return {
     activities,

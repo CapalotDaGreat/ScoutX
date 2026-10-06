@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useMockData } from '@/config/appMode';
 import { calculatePlayerStatistics } from '@/features/player-statistics/services/statisticsCalculator';
 import { getMockPlayerStatistics } from '@/features/player-statistics/services/mockPlayerStatisticsService';
 import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
@@ -7,6 +8,7 @@ import {
   type PlayerStatisticsOverview,
 } from '@/features/player-statistics/types';
 import { type PlayerProfileStat } from '@/features/player-profile/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UsePlayerStatisticsOptions = {
   matches?: PlayerMatchStatistics[];
@@ -25,6 +27,13 @@ export function usePlayerStatistics({ matches }: UsePlayerStatisticsOptions = {}
       return;
     }
 
+    if (!useMockData()) {
+      setLoadedMatches([]);
+      setIsLoading(false);
+      setError(null);
+      return;
+    }
+
     let isActive = true;
     setIsLoading(true);
     setError(null);
@@ -38,7 +47,7 @@ export function usePlayerStatistics({ matches }: UsePlayerStatisticsOptions = {}
       })
       .catch((err: unknown) => {
         if (isActive) {
-          const message = err instanceof Error ? err.message : 'Unable to load statistics.';
+          const message = toUserMessage(err, 'Unable to load statistics.');
           setError(message);
           setIsLoading(false);
         }

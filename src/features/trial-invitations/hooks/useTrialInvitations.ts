@@ -8,6 +8,7 @@ import {
   type TrialNotification,
 } from '@/features/trial-invitations/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export function usePlayerTrialInvitations() {
   const { user } = useAuth();
@@ -50,7 +51,7 @@ export function usePlayerTrialInvitations() {
       try {
         return await repository.acceptInvitation(invitation, playerId, playerName, note);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to accept trial.';
+        const message = toUserMessage(err, 'Failed to accept trial.');
         setError(message);
         throw err;
       } finally {
@@ -67,7 +68,7 @@ export function usePlayerTrialInvitations() {
       try {
         return await repository.declineInvitation(invitation, playerId, playerName, note);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to decline trial.';
+        const message = toUserMessage(err, 'Failed to decline trial.');
         setError(message);
         throw err;
       } finally {
@@ -174,7 +175,7 @@ export function useScoutTrialInvitations(playerId: string, playerName: string) {
           draft,
         );
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to create trial.';
+        const message = toUserMessage(err, 'Failed to create trial.');
         setError(message);
         throw err;
       } finally {
@@ -191,7 +192,7 @@ export function useScoutTrialInvitations(playerId: string, playerName: string) {
       try {
         return await repository.rescheduleInvitation(invitation, scoutId, scoutName, draft);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to reschedule trial.';
+        const message = toUserMessage(err, 'Failed to reschedule trial.');
         setError(message);
         throw err;
       } finally {
@@ -208,7 +209,7 @@ export function useScoutTrialInvitations(playerId: string, playerName: string) {
       try {
         return await repository.cancelInvitation(invitation, scoutId, scoutName, note);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to cancel trial.';
+        const message = toUserMessage(err, 'Failed to cancel trial.');
         setError(message);
         throw err;
       } finally {

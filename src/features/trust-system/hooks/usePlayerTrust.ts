@@ -12,6 +12,7 @@ import {
   type TrustRecommendationDraft,
   type ClubTenure,
 } from '@/features/trust-system/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UsePlayerTrustOptions = {
   currentClub?: string;
@@ -128,7 +129,7 @@ export function usePlayerTrust(playerId: string, options: UsePlayerTrustOptions 
           existing,
         );
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to save recommendation.';
+        const message = toUserMessage(err, 'Failed to save recommendation.');
         setError(message);
         throw err;
       } finally {
@@ -145,7 +146,7 @@ export function usePlayerTrust(playerId: string, options: UsePlayerTrustOptions 
       try {
         await repository.deleteRecommendation(playerId, recommendationId);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to delete recommendation.';
+        const message = toUserMessage(err, 'Failed to delete recommendation.');
         setError(message);
         throw err;
       } finally {

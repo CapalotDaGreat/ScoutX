@@ -4,6 +4,7 @@ import { ScoutingReportRepository } from '@/features/scouting-reports/repositori
 import { getMockReportsForPlayer } from '@/features/scouting-reports/services/mockScoutingReports';
 import { type ScoutingReport, type ScoutingReportDraft } from '@/features/scouting-reports/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { toUserMessage } from '@/utils/userFacingError';
 
 /** Cross-player reports inbox for the scout Trials tab. */
 export function useScoutAllReports() {
@@ -103,7 +104,7 @@ export function useScoutingReports(playerId: string, playerName: string) {
           existing,
         );
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to save report.';
+        const message = toUserMessage(err, 'Failed to save report.');
         setError(message);
         throw err;
       } finally {
@@ -124,7 +125,7 @@ export function useScoutingReports(playerId: string, playerName: string) {
       try {
         await repository.deleteReport(scoutId, playerId, reportId);
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to delete report.';
+        const message = toUserMessage(err, 'Failed to delete report.');
         setError(message);
         throw err;
       } finally {

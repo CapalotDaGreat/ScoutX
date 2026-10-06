@@ -14,6 +14,7 @@ import {
   uploadVideoBlob,
 } from '@/features/highlight-videos/services/highlightVideoStorageService';
 import { type HighlightVideo } from '@/features/highlight-videos/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UploadHighlightVideoInput = {
   userId: string;
@@ -128,7 +129,7 @@ export class HighlightVideoRepository {
       await this.saveLibrary(input.userId, nextLibrary);
       return readyVideo;
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Upload failed.';
+      const message = toUserMessage(error, 'Upload failed.');
       const failedLibrary: HighlightVideoLibrary = {
         videos: uploadingLibrary.videos.map((video) =>
           video.id === videoId

@@ -11,6 +11,7 @@ import { FootballIdentityFields } from '@/features/player-profile/components/ide
 import { useFootballIdentityForm } from '@/features/player-profile/hooks/useFootballIdentityForm';
 import { syncLegacyProfileFields } from '@/features/player-profile/models/FootballIdentityModel';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type EditProfileModalProps = {
   visible: boolean;
@@ -74,7 +75,7 @@ export function EditProfileModal({
       });
       onClose();
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to save changes.');
+      Alert.alert('Error', toUserMessage(err, 'Failed to save changes.'));
     } finally {
       setSaving(false);
     }
@@ -106,14 +107,14 @@ export function EditProfileModal({
         try {
           await onUploadImage(uri, type);
         } catch (uploadErr) {
-          Alert.alert('Upload Error', uploadErr instanceof Error ? uploadErr.message : 'Failed to upload image.');
+          Alert.alert('Upload Error', toUserMessage(uploadErr, 'Failed to upload image.'));
         } finally {
           setUploadingAvatar(false);
           setUploadingCover(false);
         }
       }
     } catch (err) {
-      Alert.alert('Error', err instanceof Error ? err.message : 'An error occurred while picking image.');
+      Alert.alert('Error', toUserMessage(err, 'An error occurred while picking image.'));
     }
   };
 
