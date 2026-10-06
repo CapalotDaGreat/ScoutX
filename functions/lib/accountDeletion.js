@@ -54,6 +54,9 @@ const OWNED_QUERIES = [
     ['careerSnapshots', 'playerId'],
     ['coachObservations', 'coachId'],
     ['coachObservations', 'playerId'],
+    ['contentReports', 'reporterId'],
+    ['contentReports', 'targetId'],
+    ['blockedUsers', 'blockedUserId'],
 ];
 const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
 async function deleteQueryInBatches(query) {

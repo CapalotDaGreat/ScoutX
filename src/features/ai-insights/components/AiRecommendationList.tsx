@@ -35,7 +35,9 @@ export function AiRecommendationList({ items, title }: AiRecommendationListProps
             <Text variant="body-sm" className="flex-1 font-sans-semibold">
               {item.title}
             </Text>
-            <Badge label={item.priority} variant={priorityVariant[item.priority]} size="sm" />
+            {item.priority ? (
+              <Badge label={item.priority} variant={priorityVariant[item.priority]} size="sm" />
+            ) : null}
           </View>
           <Text variant="caption" color="secondary">
             {item.description}

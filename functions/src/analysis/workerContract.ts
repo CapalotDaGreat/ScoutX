@@ -41,6 +41,18 @@ export type CvWorkerOutput = {
 export const CV_UNAVAILABLE_REASON =
   'Computer-vision worker is not deployed. ScoutX will not invent tracking, pitch maps, or event counts.';
 
+export function dailyQuotaCount(
+  storedDay: string | undefined,
+  storedCount: number | undefined,
+  day: string,
+): number {
+  return storedDay === day && typeof storedCount === 'number' ? storedCount : 0;
+}
+
+export function isDailyQuotaReached(count: number, limit = ANALYSIS_DAILY_QUOTA): boolean {
+  return count >= limit;
+}
+
 export function unavailableCvOutputs(): CvWorkerOutput[] {
   return CV_WORKER_STAGES.map((stageId) => ({
     stageId,

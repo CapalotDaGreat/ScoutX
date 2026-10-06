@@ -61,6 +61,9 @@ const ownedByField = [
   ['careerSnapshots', 'playerId'],
   ['coachObservations', 'coachId'],
   ['coachObservations', 'playerId'],
+  ['contentReports', 'reporterId'],
+  ['contentReports', 'targetId'],
+  ['blockedUsers', 'blockedUserId'],
 ];
 
 const storageFiles = (uid) => [
@@ -92,6 +95,19 @@ before(async () => {
     for (const path of storageFiles(uid)) {
       await bucket.file(path).save(Buffer.from('x'));
     }
+    for (const sub of [
+      'matches',
+      'evidenceItems',
+      'developmentGoals',
+      'trainingSessions',
+      'identitySnapshots',
+      'media',
+      'trialReflections',
+    ]) {
+      await db.collection('players').doc(uid).collection(sub).doc('item-1').set({ owner: uid });
+    }
+    await db.collection('recruitmentWorkspaces').doc(uid).collection('entries').doc('p1').set({ playerId: 'p1' });
+    await db.collection('playerWatchers').doc(uid).collection('scouts').doc('s1').set({ scoutId: 's1' });
   }
 });
 
@@ -117,6 +133,26 @@ describe('deleteAllUserData', () => {
     for (const path of storageFiles(KEPT)) {
       const [exists] = await bucket.file(path).exists();
       assert.equal(exists, true, `${path} kept`);
+    }
+    for (const sub of [
+      'matches',
+      'evidenceItems',
+      'developmentGoals',
+      'trainingSessions',
+      'identitySnapshots',
+      'media',
+      'trialReflections',
+    ]) {
+      assert.equal(
+        (await db.collection('players').doc(DELETED).collection(sub).get()).size,
+        0,
+        `players/${DELETED}/${sub} cleared`,
+      );
+      assert.equal(
+        (await db.collection('players').doc(KEPT).collection(sub).get()).size,
+        1,
+        `players/${KEPT}/${sub} kept`,
+      );
     }
   });
 });

@@ -11,7 +11,9 @@ import {
   ANALYSIS_LEASE_MS,
   ANALYSIS_MAX_ATTEMPTS,
   CV_UNAVAILABLE_REASON,
+  dailyQuotaCount,
   isCvWorkerStage,
+  isDailyQuotaReached,
 } from './analysis/workerContract';
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
@@ -337,8 +339,8 @@ async function acquireJobLease(
 
     const quotaSnap = await tx.get(quotaRef);
     const quota = quotaSnap.data() as { day?: string; count?: number } | undefined;
-    const count = quota?.day === day && typeof quota.count === 'number' ? quota.count : 0;
-    if (count >= ANALYSIS_DAILY_QUOTA) {
+    const count = dailyQuotaCount(quota?.day, quota?.count, day);
+    if (isDailyQuotaReached(count, ANALYSIS_DAILY_QUOTA)) {
       throw new HttpsError('resource-exhausted', 'Daily match-analysis quota reached.');
     }
 

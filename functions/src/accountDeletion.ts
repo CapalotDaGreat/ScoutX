@@ -54,6 +54,9 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['careerSnapshots', 'playerId'],
   ['coachObservations', 'coachId'],
   ['coachObservations', 'playerId'],
+  ['contentReports', 'reporterId'],
+  ['contentReports', 'targetId'],
+  ['blockedUsers', 'blockedUserId'],
 ];
 
 const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];

@@ -47,4 +47,27 @@ test.describe('Welcome screen', () => {
     await waitForAppReady(page);
     expect(pageErrors).toEqual([]);
   });
+
+  test('guest continue reaches the guest shell without crashing', async ({ page }) => {
+    const pageErrors: string[] = [];
+    page.on('pageerror', (error) => {
+      pageErrors.push(error.message);
+    });
+
+    await waitForAppReady(page);
+    await page.getByRole('button', { name: 'Continue as Guest' }).click();
+    await expect(page.getByRole('button', { name: 'Create your account' })).toBeHidden({
+      timeout: 20_000,
+    });
+    expect(pageErrors).toEqual([]);
+  });
 });
+
+test.describe('Public Football Passport', () => {
+  test('an unknown slug does not invent a player profile', async ({ page }) => {
+    await page.goto('/player/not-a-real-scoutx-slug', { waitUntil: 'domcontentloaded' });
+    await expect(page.getByText('Home').first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText('not-a-real-scoutx-slug')).toHaveCount(0);
+  });
+});
+

@@ -253,8 +253,8 @@ async function acquireJobLease(uid, jobId, requestId, idempotencyKey) {
         }
         const quotaSnap = await tx.get(quotaRef);
         const quota = quotaSnap.data();
-        const count = quota?.day === day && typeof quota.count === 'number' ? quota.count : 0;
-        if (count >= workerContract_1.ANALYSIS_DAILY_QUOTA) {
+        const count = (0, workerContract_1.dailyQuotaCount)(quota?.day, quota?.count, day);
+        if ((0, workerContract_1.isDailyQuotaReached)(count, workerContract_1.ANALYSIS_DAILY_QUOTA)) {
             throw new https_1.HttpsError('resource-exhausted', 'Daily match-analysis quota reached.');
         }
         tx.set(jobRef, {

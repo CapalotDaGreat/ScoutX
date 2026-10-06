@@ -1,4 +1,4 @@
-import { type AiInsight, type AiInsightMap, type AiInsightType } from '@/features/ai-insights/types';
+import { type AiInsight, type AiInsightMap, type AiInsightType, type AiPriority } from '@/features/ai-insights/types';
 import { asRecord, parseIsoDate, parseString, parseStringList } from '@/utils/firestoreParsing';
 
 function parseConfidence(value: unknown): AiInsight['confidence'] {
@@ -29,11 +29,11 @@ function parseTrend(value: unknown): 'up' | 'down' | 'neutral' | undefined {
   return undefined;
 }
 
-function parsePriority(value: unknown): 'low' | 'medium' | 'high' {
+function parsePriority(value: unknown): AiPriority | null {
   if (value === 'low' || value === 'medium' || value === 'high') {
     return value;
   }
-  return 'medium';
+  return null;
 }
 
 function parseTrajectory(value: unknown): 'rising' | 'stable' | 'plateauing' | null {

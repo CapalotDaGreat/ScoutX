@@ -89,28 +89,22 @@ export class ProfileModel {
     const fullName = email.split('@')[0] || 'New Player';
     const identity = createDefaultFootballIdentity({
       club: 'Free Agent',
-      position: 'Attacking Midfielder',
-      preferredFoot: 'Right',
     });
 
     return {
       id: userId,
       fullName,
-      position: identity.preferredPositions[0] ?? 'Attacking Midfielder',
+      position: identity.preferredPositions[0] ?? '',
       club: identity.currentClub,
-      nationality: 'Unknown',
-      preferredFoot: 'Right',
-      height: '180 cm',
-      weight: '75 kg',
-      biography: 'Tell scouts who you are — your story starts here.',
+      nationality: '',
+      preferredFoot: '',
+      height: '',
+      weight: '',
+      biography: '',
       coverImageUrl: '',
       avatarUrl: '',
       stats: mapMatchesToProfileStats([]),
-      performanceSummary: [
-        { label: 'Key Passes', value: 0, max: 10, hint: 'Log matches to track vision' },
-        { label: 'Shots on Target', value: 0, max: 10, hint: 'Log matches to track finishing' },
-        { label: 'Pressing Intensity', value: 0, max: 10, hint: 'Log matches to track work rate' },
-      ],
+      performanceSummary: [],
       statisticsMatches: [],
       identity,
       footballJourney: {

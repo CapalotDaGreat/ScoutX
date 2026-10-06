@@ -563,3 +563,31 @@ describe('scout intelligence collections', () => {
     );
   });
 });
+
+describe('content reports', () => {
+  test('reporters can create but nobody can read client-side, including the author', async () => {
+    await allowed(
+      setDocument(PLAYER, 'contentReports/cr1', {
+        reporterId: PLAYER,
+        targetType: 'user',
+        targetId: OTHER_PLAYER,
+        reason: 'spam',
+        createdAt: '2026-10-06T00:00:00.000Z',
+      }),
+      'owner files a report',
+    );
+    await denied(getDocument(PLAYER, 'contentReports/cr1'), 'reporter reads own report');
+    await denied(getDocument(OTHER_PLAYER, 'contentReports/cr1'), 'target reads report');
+    await denied(getDocument(SCOUT, 'contentReports/cr1'), 'scout reads report');
+    await denied(
+      setDocument(OTHER_PLAYER, 'contentReports/cr2', {
+        reporterId: PLAYER,
+        targetType: 'user',
+        targetId: PLAYER,
+        reason: 'spam',
+        createdAt: '2026-10-06T00:00:00.000Z',
+      }),
+      'cannot file as someone else',
+    );
+  });
+});

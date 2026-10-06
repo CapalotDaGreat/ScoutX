@@ -34,7 +34,8 @@ export type AiRecommendation = {
   id: string;
   title: string;
   description: string;
-  priority: AiPriority;
+  /** Null when the model omitted priority; never defaulted to medium. */
+  priority: AiPriority | null;
   category?: string;
 };
 
