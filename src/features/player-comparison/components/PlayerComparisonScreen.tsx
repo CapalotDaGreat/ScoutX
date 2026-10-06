@@ -43,6 +43,7 @@ export function PlayerComparisonScreen({
     physicalRows,
     technicalRows,
     gpsRows,
+    visibleSections,
     comparisonPlayerIds,
     addToComparison,
     removeFromComparison,
@@ -52,7 +53,7 @@ export function PlayerComparisonScreen({
     playerPool,
   } = usePlayerComparison();
 
-  const [activeSection, setActiveSection] = useState<ComparisonSectionKey>('radar');
+  const [activeSection, setActiveSection] = useState<ComparisonSectionKey>('statistics');
   const [pickerMode, setPickerMode] = useState<PickerMode | null>(null);
 
   const playerNames = useMemo(
@@ -88,8 +89,12 @@ export function PlayerComparisonScreen({
     }
   }, [canAddToComparison]);
 
+  const resolvedSection = visibleSections.includes(activeSection)
+    ? activeSection
+    : (visibleSections[0] ?? 'statistics');
+
   const renderSection = () => {
-    switch (activeSection) {
+    switch (resolvedSection) {
       case 'radar':
         return <ComparisonRadarChart profiles={profiles} />;
       case 'statistics':
@@ -148,10 +153,10 @@ export function PlayerComparisonScreen({
 
   const needsTwoPlayers = players.length < 2;
   const metricSubtitle =
-    activeSection === 'statistics' ||
-    activeSection === 'physical' ||
-    activeSection === 'technical' ||
-    activeSection === 'gps'
+    resolvedSection === 'statistics' ||
+    resolvedSection === 'physical' ||
+    resolvedSection === 'technical' ||
+    resolvedSection === 'gps'
       ? t('scout:comparison.metricSubtitle')
       : undefined;
 
@@ -208,21 +213,26 @@ export function PlayerComparisonScreen({
               <View className="flex-row gap-6">
                 <View className="w-[220px]">
                   <ComparisonSectionNav
-                    activeSection={activeSection}
+                    activeSection={resolvedSection}
                     onSectionChange={setActiveSection}
                     layout="vertical"
+                    sections={visibleSections}
                   />
                 </View>
                 <View className="min-w-0 flex-1">
-                  <Section title={sectionTitle(activeSection)} subtitle={metricSubtitle}>
+                  <Section title={sectionTitle(resolvedSection)} subtitle={metricSubtitle}>
                     {renderSection()}
                   </Section>
                 </View>
               </View>
             ) : (
               <>
-                <ComparisonSectionNav activeSection={activeSection} onSectionChange={setActiveSection} />
-                <Section title={sectionTitle(activeSection)} subtitle={metricSubtitle}>
+                <ComparisonSectionNav
+                  activeSection={resolvedSection}
+                  onSectionChange={setActiveSection}
+                  sections={visibleSections}
+                />
+                <Section title={sectionTitle(resolvedSection)} subtitle={metricSubtitle}>
                   {renderSection()}
                 </Section>
               </>

@@ -3,6 +3,7 @@ import {
   type ScoutingReport,
   type ScoutingReportDraft,
   type ScoutingReportRatings,
+  type ScoutingReportRecommendation,
   defaultScoutingReportRatings,
 } from '@/features/scouting-reports/types';
 import { asRecord, parseStringList } from '@/utils/firestoreParsing';
@@ -30,6 +31,16 @@ function parseRatings(value: unknown): ScoutingReportRatings {
   };
 }
 
+function parseRecommendation(value: unknown): ScoutingReportRecommendation | null {
+  return value === 'monitor' ||
+    value === 'invite' ||
+    value === 'trial' ||
+    value === 'pass' ||
+    value === 'insufficient_evidence'
+    ? value
+    : null;
+}
+
 export function parseScoutingReport(value: unknown, id: string): ScoutingReport | null {
   const record = asRecord(value);
   if (!record || typeof record.scoutId !== 'string' || typeof record.playerId !== 'string') {
@@ -47,6 +58,17 @@ export function parseScoutingReport(value: unknown, id: string): ScoutingReport 
     ratings: parseRatings(record.ratings),
     strengths: parseStringList(record.strengths),
     weaknesses: parseStringList(record.weaknesses),
+    concerns: parseStringList(record.concerns),
+    roleFit: typeof record.roleFit === 'string' ? record.roleFit : '',
+    evidenceIds: parseStringList(record.evidenceIds),
+    recommendation: parseRecommendation(record.recommendation),
+    confidenceLabel:
+      record.confidenceLabel === 'high' ||
+      record.confidenceLabel === 'moderate' ||
+      record.confidenceLabel === 'limited' ||
+      record.confidenceLabel === 'insufficient'
+        ? record.confidenceLabel
+        : 'insufficient',
     recommendations: typeof record.recommendations === 'string' ? record.recommendations : '',
     suitablePlayingStyle:
       typeof record.suitablePlayingStyle === 'string' ? record.suitablePlayingStyle : '',
@@ -67,6 +89,11 @@ export function serializeScoutingReport(report: ScoutingReport): Record<string, 
     ratings: report.ratings,
     strengths: report.strengths,
     weaknesses: report.weaknesses,
+    concerns: report.concerns,
+    roleFit: report.roleFit,
+    evidenceIds: report.evidenceIds,
+    recommendation: report.recommendation,
+    confidenceLabel: report.confidenceLabel,
     recommendations: report.recommendations,
     suitablePlayingStyle: report.suitablePlayingStyle,
     suggestedFormation: report.suggestedFormation,
@@ -98,6 +125,11 @@ export function createScoutingReportFromDraft(
     ratings: draft.ratings,
     strengths: draft.strengths,
     weaknesses: draft.weaknesses,
+    concerns: draft.concerns,
+    roleFit: draft.roleFit,
+    evidenceIds: draft.evidenceIds,
+    recommendation: draft.recommendation,
+    confidenceLabel: draft.confidenceLabel,
     recommendations: draft.recommendations,
     suitablePlayingStyle: draft.suitablePlayingStyle,
     suggestedFormation: draft.suggestedFormation,
@@ -113,6 +145,11 @@ export function scoutingReportToDraft(report: ScoutingReport): ScoutingReportDra
     ratings: report.ratings,
     strengths: report.strengths,
     weaknesses: report.weaknesses,
+    concerns: report.concerns,
+    roleFit: report.roleFit,
+    evidenceIds: report.evidenceIds,
+    recommendation: report.recommendation,
+    confidenceLabel: report.confidenceLabel,
     recommendations: report.recommendations,
     suitablePlayingStyle: report.suitablePlayingStyle,
     suggestedFormation: report.suggestedFormation,

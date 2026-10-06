@@ -1,4 +1,4 @@
-import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { RECRUITMENT_WORKSPACE_COLLECTION } from '@/features/scout-recruitment/constants';
 import {
@@ -115,6 +115,26 @@ export class RecruitmentRepository {
           doc(db, RECRUITMENT_WORKSPACE_COLLECTION, normalized.scoutId),
           serializeRecruitmentWorkspace(normalized),
         );
+        const entriesRef = collection(
+          db,
+          RECRUITMENT_WORKSPACE_COLLECTION,
+          normalized.scoutId,
+          'entries',
+        );
+        const existing = await getDocs(entriesRef);
+        const keep = new Set(normalized.entries.map((entry) => entry.playerId));
+        await Promise.all([
+          ...normalized.entries.map((entry) =>
+            setDoc(doc(entriesRef, entry.playerId), {
+              ...entry,
+              scoutId: normalized.scoutId,
+              playerId: entry.playerId,
+            }),
+          ),
+          ...existing.docs
+            .filter((snapshot) => !keep.has(snapshot.id))
+            .map((snapshot) => deleteDoc(snapshot.ref)),
+        ]);
         return normalized;
       } catch {
         // Fall through to local storage.
@@ -128,7 +148,7 @@ export class RecruitmentRepository {
   public async savePlayer(
     scoutId: string,
     snapshot: RecruitmentPlayerSnapshot,
-    stage: RecruitmentStage = 'observed',
+    stage: RecruitmentStage = 'discovered',
     folderId?: string | null,
   ): Promise<RecruitmentWorkspace> {
     const workspace = await this.loadWorkspace(scoutId);

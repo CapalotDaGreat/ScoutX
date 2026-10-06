@@ -16,6 +16,9 @@ const UID_KEYED_COLLECTIONS = [
   'recruitmentWorkspaces',
   'pushThrottle',
   'analysisQuotas',
+  'publicPassports',
+  'passportSummaries',
+  'playerWatchers',
 ] as const;
 
 /** Collections queried by an owner/participant field. */
@@ -41,6 +44,12 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['mediaGrants', 'ownerId'],
   ['mediaGrants', 'granteeId'],
   ['reelExports', 'ownerId'],
+  ['scoutBriefs', 'scoutId'],
+  ['scoutBriefs', 'playerId'],
+  ['evidenceRequests', 'scoutId'],
+  ['evidenceRequests', 'playerId'],
+  ['watchlistEvents', 'scoutId'],
+  ['watchlistEvents', 'playerId'],
 ];
 
 const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
@@ -105,6 +114,7 @@ export async function deleteAllUserData(uid: string): Promise<{ failures: string
     'trainingSessions',
     'identitySnapshots',
     'media',
+    'trialReflections',
   ];
   for (const sub of playerSubs) {
     try {
@@ -116,6 +126,44 @@ export async function deleteAllUserData(uid: string): Promise<{ failures: string
         message: error instanceof Error ? error.message : 'unknown',
       });
     }
+  }
+
+  try {
+    await deleteQueryInBatches(db.collection('recruitmentWorkspaces').doc(uid).collection('entries'));
+  } catch (error) {
+    failures.push('recruitmentWorkspaces.entries');
+    logger.error('Account deletion: recruitment entries failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    });
+  }
+
+  try {
+    await deleteQueryInBatches(
+      db.collectionGroup('entries').where('playerId', '==', uid),
+    );
+  } catch (error) {
+    failures.push('entries.playerId');
+    logger.error('Account deletion: watched recruitment entries failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    });
+  }
+
+  try {
+    await deleteQueryInBatches(db.collection('playerWatchers').doc(uid).collection('scouts'));
+  } catch (error) {
+    failures.push('playerWatchers.scouts');
+    logger.error('Account deletion: player watchers failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    });
+  }
+
+  try {
+    await deleteQueryInBatches(db.collectionGroup('scouts').where('scoutId', '==', uid));
+  } catch (error) {
+    failures.push('playerWatchers.scoutId');
+    logger.error('Account deletion: scout watcher docs failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    });
   }
 
   const bucket = getStorage().bucket();

@@ -189,6 +189,14 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    match /players/{userId}/trialReflections/{trialId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.trialId == trialId;
+      allow delete: if isOwner(userId);
+    }
+
     match /players/{userId}/media/{mediaId} {
       allow read: if isOwner(userId);
       allow create, update: if isOwner(userId)
@@ -225,17 +233,29 @@ service cloud.firestore {
 
     match /scoutingReports/{reportId} {
       allow read: if isSignedIn()
-        && request.auth.uid == resource.data.scoutId;
+        && request.auth.uid == resource.data.scoutId
+        && hasRecruiterRole();
       allow create: if isSignedIn()
+        && hasRecruiterRole()
         && request.auth.uid == request.resource.data.scoutId;
       allow update, delete: if isSignedIn()
+        && hasRecruiterRole()
         && request.auth.uid == resource.data.scoutId;
     }
 
     match /recruitmentWorkspaces/{scoutId} {
       allow read: if isOwner(scoutId);
-      allow create: if isOwner(scoutId);
-      allow update, delete: if isOwner(scoutId);
+      allow create: if isOwner(scoutId) && hasRecruiterRole();
+      allow update, delete: if isOwner(scoutId) && hasRecruiterRole();
+
+      match /entries/{playerId} {
+        allow read: if isOwner(scoutId);
+        allow create, update: if isOwner(scoutId)
+          && hasRecruiterRole()
+          && request.resource.data.scoutId == scoutId
+          && request.resource.data.playerId == playerId;
+        allow delete: if isOwner(scoutId) && hasRecruiterRole();
+      }
     }
 
     // Actors cannot impersonate others; 'system' activities may only target yourself.
@@ -333,15 +353,46 @@ service cloud.firestore {
         && request.auth.uid == resource.data.recipientId;
     }
 
-    // The public "verified" badge requires an admin-approved verification state.
+    // Discovery listings are projected by Cloud Functions. Clients may read signed-in
+    // but cannot write ratings, coverage, or a verified badge.
     match /discoverablePlayers/{playerId} {
       allow read: if isSignedIn();
-      allow create, update: if isOwner(playerId)
-        && (
-          request.resource.data.get('verified', false) == false
-          || isServerVerifiedPlayer(playerId)
-        );
-      allow delete: if isOwner(playerId);
+      allow write: if false;
+    }
+
+    match /scoutBriefs/{briefId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.scoutId;
+      allow create: if isSignedIn()
+        && hasRecruiterRole()
+        && request.auth.uid == request.resource.data.scoutId;
+      allow update, delete: if isSignedIn()
+        && hasRecruiterRole()
+        && request.auth.uid == resource.data.scoutId;
+    }
+
+    match /evidenceRequests/{requestId} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == resource.data.scoutId || request.auth.uid == resource.data.playerId);
+      allow create: if false;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId
+        && onlyChanges(['status', 'updatedAt'])
+        && request.resource.data.status in ['fulfilled', 'declined'];
+      allow delete: if isSignedIn()
+        && (request.auth.uid == resource.data.scoutId || request.auth.uid == resource.data.playerId);
+    }
+
+    match /watchlistEvents/{eventId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.scoutId;
+      allow write: if false;
+    }
+
+    match /playerWatchers/{playerId} {
+      allow read: if false;
+      allow write: if false;
+      match /scouts/{scoutId} {
+        allow read, write: if false;
+      }
     }
 
     match /portfolioAnalytics/{playerId} {

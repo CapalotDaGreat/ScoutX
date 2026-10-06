@@ -2,18 +2,78 @@ import {
   type DiscoverablePlayer,
   type PlayerPosition,
 } from '@/features/scout-discovery/types';
+import { EMPTY_EVIDENCE_COVERAGE } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 
 function buildPlayer(
-  partial: Omit<DiscoverablePlayer, 'searchKeywords'> & { searchKeywords?: string[] },
+  partial: Partial<DiscoverablePlayer> & Pick<DiscoverablePlayer, 'id' | 'fullName' | 'position'>,
 ): DiscoverablePlayer {
   const keywords = partial.searchKeywords ?? [
     partial.fullName.toLowerCase(),
-    partial.club.toLowerCase(),
-    partial.nationality.toLowerCase(),
+    (partial.club ?? '').toLowerCase(),
+    (partial.nationality ?? '').toLowerCase(),
     ...partial.position.map((p) => p.toLowerCase()),
   ];
+  const matchCount = partial.matchCount ?? 0;
 
-  return { ...partial, searchKeywords: keywords };
+  return {
+    age: null,
+    nationality: 'Unknown',
+    club: 'Free Agent',
+    league: 'Amateur',
+    preferredFoot: 'right',
+    heightCm: null,
+    weightKg: null,
+    avatarUrl: '',
+    coverImageUrl: '',
+    biography: '',
+    overallRating: null,
+    overallRatingSource: null,
+    potentialRating: null,
+    potentialRatingSource: null,
+    availability: 'available',
+    verified: false,
+    weakFoot: null,
+    skillMoves: null,
+    matchCount,
+    recentlyActive: false,
+    hasHighlightVideos: false,
+    updatedAt: new Date().toISOString(),
+    viewCount: 0,
+    goals: 0,
+    assists: 0,
+    sprintSpeedKmh: null,
+    ratings: { passing: null, shooting: null, defending: null, physical: null },
+    form: [],
+    radarStats: [],
+    distanceKm: null,
+    clubHistory: [],
+    achievements: [],
+    ...partial,
+    primaryPosition: partial.primaryPosition ?? partial.position[0] ?? null,
+    secondaryPositions: partial.secondaryPositions ?? partial.position.slice(1),
+    roleDescriptors: partial.roleDescriptors ?? [],
+    styleTags: partial.styleTags ?? [],
+    verificationLevel: partial.verificationLevel ?? (partial.verified ? 'verified' : 'none'),
+    analysisSampleCount: partial.analysisSampleCount ?? 0,
+    lastEvidenceAt: partial.lastEvidenceAt ?? partial.updatedAt ?? null,
+    lastAnalyzedAt: partial.lastAnalyzedAt ?? null,
+    evidenceCoverage: partial.evidenceCoverage ?? {
+      ...EMPTY_EVIDENCE_COVERAGE,
+      video: partial.hasHighlightVideos ? 'limited' : 'insufficient',
+      consistency: matchCount >= 5 ? 'moderate' : matchCount > 0 ? 'limited' : 'insufficient',
+    },
+    metrics: partial.metrics ?? {
+      goals: { value: partial.goals ?? 0, sampleSize: matchCount, provenance: matchCount > 0 ? 'match_derived' : null },
+      assists: { value: partial.assists ?? 0, sampleSize: matchCount, provenance: matchCount > 0 ? 'match_derived' : null },
+      matchCount: { value: matchCount, sampleSize: matchCount, provenance: matchCount > 0 ? 'match_derived' : null },
+      videoCount: {
+        value: partial.hasHighlightVideos ? 1 : 0,
+        sampleSize: partial.hasHighlightVideos ? 1 : 0,
+        provenance: partial.hasHighlightVideos ? 'self_reported' : null,
+      },
+    },
+    searchKeywords: keywords,
+  };
 }
 
 const baseRadar = [
@@ -26,7 +86,7 @@ const baseRadar = [
 ];
 
 function createMockPlayers(): DiscoverablePlayer[] {
-  const templates: Array<Omit<DiscoverablePlayer, 'searchKeywords'>> = [
+  const templates: Array<Partial<DiscoverablePlayer> & Pick<DiscoverablePlayer, 'id' | 'fullName' | 'position'>> = [
     {
       id: 'pl-001',
       fullName: 'Lucas Fernandes',

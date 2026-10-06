@@ -3,11 +3,9 @@ import {
   doc,
   getDoc,
   getDocs,
-  increment,
   limit,
   orderBy,
   query,
-  setDoc,
   startAfter,
   type DocumentSnapshot,
 } from 'firebase/firestore';
@@ -57,22 +55,20 @@ function emptyDashboard(): ScoutDashboardData {
 }
 
 function buildDashboard(players: DiscoverablePlayer[]): ScoutDashboardData {
-  // Players with a known rating first (highest first); unknown ratings keep their order.
-  const sorted = [...players].sort((a, b) => (b.overallRating ?? -1) - (a.overallRating ?? -1));
-  // "Matching preferences" requires both a known potential rating and a known age.
-  const matching = sorted.filter(
-    (player) =>
-      player.potentialRating !== null &&
-      player.potentialRating >= 70 &&
-      player.age !== null &&
-      player.age <= 23,
+  const withEvidence = [...players].sort((a, b) => {
+    const aAt = a.lastEvidenceAt ?? '';
+    const bAt = b.lastEvidenceAt ?? '';
+    return bAt.localeCompare(aAt);
+  });
+  const matching = withEvidence.filter(
+    (player) => player.hasHighlightVideos && player.matchCount > 0 && player.recentlyActive,
   );
   return {
-    featured: sorted.filter((player) => player.verified).slice(0, 5),
-    recommended: sorted.slice(0, 6),
+    featured: withEvidence.filter((player) => player.verified).slice(0, 5),
+    recommended: withEvidence.filter((player) => player.matchCount > 0).slice(0, 6),
     recentlyViewed: [],
-    trending: [...sorted].sort((a, b) => b.viewCount - a.viewCount).slice(0, 6),
-    nearby: sorted.filter((player) => player.distanceKm !== null).slice(0, 4),
+    trending: [...players].sort((a, b) => b.viewCount - a.viewCount).slice(0, 6),
+    nearby: withEvidence.filter((player) => player.distanceKm !== null).slice(0, 4),
     matchingPreferences: matching.slice(0, 8),
     matchingCount: matching.length,
   };
@@ -191,17 +187,14 @@ export class PlayerDiscoveryRepository {
   }
 
   public async recordProfileView(playerId: string): Promise<void> {
-    const db = getFirestoreDb();
-    if (!db) {
+    const callable = (await import('@/firebase/callableFunctions')).createCallableFunction<{
+      playerId: string;
+    }>('recordDiscoverableView');
+    if (!callable) {
       return;
     }
-
     try {
-      await setDoc(
-        doc(db, 'discoverablePlayers', playerId),
-        { viewCount: increment(1), updatedAt: new Date().toISOString() },
-        { merge: true },
-      );
+      await callable({ playerId });
     } catch {
       // Non-critical analytics.
     }

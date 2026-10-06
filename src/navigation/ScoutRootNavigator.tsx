@@ -44,6 +44,7 @@ function PlayerDetailRoute({
       onBack={() => navigation.goBack()}
       onViewPortfolio={(playerId) => navigation.navigate('PublicPortfolio', { playerId })}
       onOpenComparisonPress={() => navigation.navigate('PlayerComparison')}
+      onOpenPlayer={(nextId) => navigation.push('PlayerDetail', { playerId: nextId })}
     />
   );
 }

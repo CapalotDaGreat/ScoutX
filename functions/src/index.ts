@@ -16,6 +16,14 @@ export {
 export { recordPortfolioView } from './portfolioAnalytics';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
+export {
+  onProfileWrittenProjectDiscovery,
+  onPassportSummaryWrittenProjectDiscovery,
+  recordDiscoverableView,
+  searchDiscoverablePlayers,
+} from './discoveryProjection';
+export { onRecruitmentEntryWritten, onPassportSummaryWrittenNotifyWatchers } from './watchlist';
+export { requestEvidence } from './evidenceRequests';
 export { askThisMatch } from './askThisMatch';
 export { getMediaPlaybackUrl, exportReel } from './mediaAccess';
 export { deleteAuthenticatedAccount, persistAppleAuthorizationCode } from './appleAuth';

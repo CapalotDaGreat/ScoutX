@@ -1,12 +1,6 @@
-export type RecruitmentStage =
-  | 'observed'
-  | 'interested'
-  | 'watching'
-  | 'invite_planned'
-  | 'trial_completed'
-  | 'offer'
-  | 'rejected'
-  | 'signed';
+import type { PipelineStage, StageHistoryEntry } from '@/features/scout-intelligence/types';
+
+export type RecruitmentStage = PipelineStage;
 
 export type RecruitmentFolder = {
   id: string;
@@ -50,6 +44,7 @@ export type RecruitmentEntry = {
   notes: string;
   trialInvitationId?: string | null;
   dragMetadata: RecruitmentDragMetadata;
+  stageHistory: StageHistoryEntry[];
   createdAt: string;
   updatedAt: string;
 };

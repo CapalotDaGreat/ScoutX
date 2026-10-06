@@ -195,18 +195,13 @@ describe('trust and verification', () => {
     );
   });
 
-  test('the discovery verified badge requires an admin-approved verification state', async () => {
-    await allowed(setDocument(PLAYER, `discoverablePlayers/${PLAYER}`, { verified: false }), 'unverified listing');
-    await denied(setDocument(PLAYER, `discoverablePlayers/${PLAYER}`, { verified: true }), 'self-claimed badge');
-    await seed(`verificationStates/player-${PLAYER}`, { entityId: PLAYER, entityType: 'player', level: 'verified' });
-    await allowed(setDocument(PLAYER, `discoverablePlayers/${PLAYER}`, { verified: true }), 'approved badge');
-    await denied(setDocument(OUTSIDER, `discoverablePlayers/${PLAYER}`, { verified: false }), 'foreign listing');
-  });
-
-  test('discovery requires sign-in', async () => {
+  test('the discovery listing is server-written', async () => {
+    await denied(setDocument(PLAYER, `discoverablePlayers/${PLAYER}`, { verified: false }), 'player writes listing');
     await seed(`discoverablePlayers/${PLAYER}`, { verified: false });
     await allowed(getDocument(SCOUT, `discoverablePlayers/${PLAYER}`), 'scout reads');
+    await allowed(getDocument(PLAYER, `discoverablePlayers/${PLAYER}`), 'signed-in player reads');
     await denied(getDocument(null, `discoverablePlayers/${PLAYER}`), 'guest reads');
+    await denied(setDocument(SCOUT, `discoverablePlayers/${PLAYER}`, { verified: true }), 'scout writes listing');
   });
 });
 
@@ -456,5 +451,66 @@ describe('media library and reels', () => {
       'self grant',
     );
     await denied(setDocument(PLAYER, 'reelExports/e1', { ownerId: PLAYER, reelId: 'r1', status: 'unavailable' }), 'client export');
+  });
+});
+
+describe('scout intelligence collections', () => {
+  test('watchlist events and evidence requests are not client-created', async () => {
+    await denied(
+      setDocument(SCOUT, 'watchlistEvents/w1', { scoutId: SCOUT, playerId: PLAYER, type: 'added' }),
+      'client watchlist write',
+    );
+    await denied(
+      setDocument(SCOUT, 'evidenceRequests/e1', {
+        scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'pending',
+      }),
+      'client evidence request create',
+    );
+    await seed('watchlistEvents/w1', { scoutId: SCOUT, playerId: PLAYER, type: 'added' });
+    await allowed(getDocument(SCOUT, 'watchlistEvents/w1'), 'scout reads own event');
+    await denied(getDocument(PLAYER, 'watchlistEvents/w1'), 'player reads scout event');
+  });
+
+  test('a player may fulfil an evidence request but cannot rewrite the scout or kinds', async () => {
+    await seed('evidenceRequests/e1', {
+      scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'pending', updatedAt: 't0',
+    });
+    await allowed(
+      setDocument(PLAYER, 'evidenceRequests/e1', {
+        scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'fulfilled', updatedAt: 't1',
+      }),
+      'player fulfils',
+    );
+    await denied(
+      setDocument(PLAYER, 'evidenceRequests/e1', {
+        scoutId: PLAYER, playerId: PLAYER, kinds: ['gps'], status: 'fulfilled', updatedAt: 't2',
+      }),
+      'player rewrites scout',
+    );
+  });
+
+  test('trial reflections stay private to the player', async () => {
+    await allowed(
+      setDocument(PLAYER, `players/${PLAYER}/trialReflections/t1`, {
+        ownerId: PLAYER, trialId: 't1', wentWell: 'press', improve: 'final ball',
+      }),
+      'owner writes reflection',
+    );
+    await denied(getDocument(SCOUT, `players/${PLAYER}/trialReflections/t1`), 'scout reads reflection');
+  });
+
+  test('recruitment entry subcollection is owner-only', async () => {
+    await allowed(
+      setDocument(SCOUT, `recruitmentWorkspaces/${SCOUT}/entries/${PLAYER}`, {
+        scoutId: SCOUT, playerId: PLAYER, stage: 'discovered',
+      }),
+      'scout writes entry',
+    );
+    await denied(
+      setDocument(PLAYER, `recruitmentWorkspaces/${SCOUT}/entries/${PLAYER}`, {
+        scoutId: SCOUT, playerId: PLAYER, stage: 'evaluated',
+      }),
+      'player writes scout entry',
+    );
   });
 });

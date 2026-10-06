@@ -42,6 +42,26 @@ export type ClubHistoryEntry = {
   yearsAtClub?: number;
 };
 
+export type RoleDescriptor = {
+  label: string;
+  source: DiscoveryRatingSource | 'self_reported';
+  confidence: 'high' | 'moderate' | 'limited' | 'insufficient';
+};
+
+export type DiscoveryMetric = {
+  value: number | null;
+  sampleSize: number;
+  provenance: DiscoveryRatingSource | 'self_reported' | 'gps_derived' | null;
+};
+
+export type DiscoveryCoverage = {
+  technical: 'strong' | 'moderate' | 'limited' | 'insufficient';
+  tactical: 'strong' | 'moderate' | 'limited' | 'insufficient';
+  physical: 'strong' | 'moderate' | 'limited' | 'insufficient';
+  consistency: 'strong' | 'moderate' | 'limited' | 'insufficient';
+  video: 'strong' | 'moderate' | 'limited' | 'insufficient';
+};
+
 export type DiscoverablePlayer = {
   id: string;
   fullName: string;
@@ -52,35 +72,54 @@ export type DiscoverablePlayer = {
   league: string;
   /** Empty when the player has not set a position. */
   position: PlayerPosition[];
+  primaryPosition: PlayerPosition | null;
+  secondaryPositions: PlayerPosition[];
+  roleDescriptors: RoleDescriptor[];
+  styleTags: string[];
   preferredFoot: PreferredFoot;
   heightCm: number | null;
   weightKg: number | null;
   avatarUrl: string;
   coverImageUrl: string;
   biography: string;
-  /** Average of logged match ratings (×10). Null until at least one match rating exists. */
+  /**
+   * Legacy field kept for old documents and mock data. Server projections write null.
+   * UI must not treat this as a ScoutX grade.
+   */
   overallRating: number | null;
   overallRatingSource: DiscoveryRatingSource | null;
-  /** Only present when produced by an explicit source; never derived from overall. */
+  /** Always null on the server projection; never derived from overall. */
   potentialRating: number | null;
   potentialRatingSource: DiscoveryRatingSource | null;
   availability: PlayerAvailability;
   verified: boolean;
+  verificationLevel: 'none' | 'basic' | 'verified';
   /** Self-reported 1–5 stars; null when never set. */
   weakFoot: number | null;
   skillMoves: number | null;
   matchCount: number;
+  analysisSampleCount: number;
   recentlyActive: boolean;
   hasHighlightVideos: boolean;
   updatedAt: string;
+  lastEvidenceAt: string | null;
+  lastAnalyzedAt: string | null;
   viewCount: number;
   goals: number;
   assists: number;
   /** Only populated from GPS sessions. */
   sprintSpeedKmh: number | null;
   ratings: PlayerRatings;
+  /** Empty unless axes were recorded. Server projections omit synthetic radars. */
   form: FormResult[];
   radarStats: RadarStat[];
+  evidenceCoverage: DiscoveryCoverage;
+  metrics: {
+    goals: DiscoveryMetric;
+    assists: DiscoveryMetric;
+    matchCount: DiscoveryMetric;
+    videoCount: DiscoveryMetric;
+  };
   distanceKm: number | null;
   clubHistory: ClubHistoryEntry[];
   achievements: string[];

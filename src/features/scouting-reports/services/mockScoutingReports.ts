@@ -23,6 +23,11 @@ export const mockScoutingReports: ScoutingReport[] = [
       'Quick decision-making in transition',
     ],
     weaknesses: ['Defensive intensity drops late in matches', 'Aerial duels need improvement'],
+    concerns: [],
+    roleFit: 'Roaming 10',
+    evidenceIds: [],
+    recommendation: 'monitor',
+    confidenceLabel: 'moderate',
     recommendations:
       'Monitor for six more matches, then recommend U21 national team observation camp.',
     suitablePlayingStyle: 'Possession-based',

@@ -11,7 +11,7 @@
       "collectionGroup": "discoverablePlayers",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "overallRating", "order": "DESCENDING" },
+        { "fieldPath": "lastEvidenceAt", "order": "DESCENDING" },
         { "fieldPath": "updatedAt", "order": "DESCENDING" }
       ]
     },
@@ -19,8 +19,16 @@
       "collectionGroup": "discoverablePlayers",
       "queryScope": "COLLECTION",
       "fields": [
+        { "fieldPath": "primaryPosition", "order": "ASCENDING" },
+        { "fieldPath": "lastEvidenceAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "discoverablePlayers",
+      "queryScope": "COLLECTION",
+      "fields": [
         { "fieldPath": "nationality", "order": "ASCENDING" },
-        { "fieldPath": "overallRating", "order": "DESCENDING" }
+        { "fieldPath": "lastEvidenceAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -28,26 +36,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "club", "order": "ASCENDING" },
-        { "fieldPath": "potentialRating", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "visibility", "order": "ASCENDING" },
-        { "fieldPath": "feedScore", "order": "DESCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "visibility", "order": "ASCENDING" },
-        { "fieldPath": "type", "order": "ASCENDING" },
-        { "fieldPath": "feedScore", "order": "DESCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
+        { "fieldPath": "lastEvidenceAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -79,8 +68,57 @@
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "scoutId", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "trialInvitations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "scoutId", "order": "ASCENDING" },
         { "fieldPath": "playerId", "order": "ASCENDING" },
         { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "scoutingReports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "scoutId", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "scoutingReports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "scoutId", "order": "ASCENDING" },
+        { "fieldPath": "playerId", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "watchlistEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "scoutId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "evidenceRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "playerId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "evidenceRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "scoutId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -105,6 +143,20 @@
       "fields": [
         { "fieldPath": "blockerId", "order": "ASCENDING" },
         { "fieldPath": "active", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "entries",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "playerId", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "scouts",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "scoutId", "order": "ASCENDING" }
       ]
     }
   ],

@@ -35,16 +35,6 @@ export function buildStatisticsRows(profiles: ComparisonPlayerProfile[]): Compar
     metric('goals', 'Goals', profiles.map((p) => cell(p.player.id, p.player.goals))),
     metric('assists', 'Assists', profiles.map((p) => cell(p.player.id, p.player.assists))),
     metric('matches', 'Matches', profiles.map((p) => cell(p.player.id, p.player.matchCount))),
-    metric(
-      'overall',
-      'Overall Rating',
-      profiles.map((p) => cell(p.player.id, p.player.overallRating)),
-    ),
-    metric(
-      'potential',
-      'Potential',
-      profiles.map((p) => cell(p.player.id, p.player.potentialRating)),
-    ),
   ];
 }
 
@@ -111,7 +101,13 @@ export function buildGpsRows(profiles: ComparisonPlayerProfile[]): ComparisonMet
   ];
 }
 
-/** True when at least one player has a known value in the row. */
+export function selectStatisticRows(
+  rows: ComparisonMetricRow[],
+  keys: string[],
+): ComparisonMetricRow[] {
+  const allowed = new Set(keys);
+  return rows.filter((row) => allowed.has(row.key));
+}
 export function rowHasData(row: ComparisonMetricRow): boolean {
   return row.values.some((value) => value.numeric !== undefined);
 }

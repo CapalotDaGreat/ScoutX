@@ -8,8 +8,7 @@ import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFor
 import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
 import { VerificationBadge } from '@/features/trust-system';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
-import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
-import { ProvenanceBadge } from '@/components/evidence/ProvenanceBadge';
+import { joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ScoutReportHeroProps = {
@@ -57,26 +56,27 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
       <View className="gap-2">
         <View className="flex-row gap-3">
           <RatingPill
-            label={t('scout:playerDetail.overall')}
-            value={formatRating(player.overallRating)}
+            label={t('scout:intelligence.matches')}
+            value={String(player.matchCount)}
             emphasis="primary"
             className="flex-1"
           />
           <RatingPill
-            label={t('scout:playerDetail.potential')}
-            value={formatRating(player.potentialRating)}
+            label={t('scout:intelligence.coverage')}
+            value={t(`scout:intelligence.coverageState.${player.evidenceCoverage.consistency}`)}
             className="flex-1"
           />
         </View>
         <View className="flex-row flex-wrap items-center gap-2">
-          {player.overallRating !== null && player.overallRatingSource ? (
-            <ProvenanceBadge provenance={player.overallRatingSource} />
-          ) : null}
-          {player.overallRating === null ? (
+          {player.lastEvidenceAt ? (
+            <Text variant="caption" color="secondary">
+              {t('scout:intelligence.lastEvidence', { date: player.lastEvidenceAt.slice(0, 10) })}
+            </Text>
+          ) : (
             <Text variant="caption" color="secondary">
               {t('evidence:noRatingHint')}
             </Text>
-          ) : null}
+          )}
         </View>
       </View>
 

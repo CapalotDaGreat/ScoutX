@@ -10,8 +10,14 @@ import {
   buildPhysicalRows,
   buildStatisticsRows,
   buildTechnicalRows,
+  selectStatisticRows,
 } from '@/features/player-comparison/services/comparisonMetricsService';
 import { MAX_COMPARISON_PLAYERS } from '@/features/player-comparison/constants';
+import {
+  comparisonSectionsForGroup,
+  sharedPositionGroup,
+  statisticKeysForGroup,
+} from '@/features/scout-intelligence/services/positionComparison';
 
 export function usePlayerComparison() {
   const workspace = useScoutWorkspace();
@@ -35,10 +41,18 @@ export function usePlayerComparison() {
 
   const mergedTrends = useMemo(() => mergeTrendPoints(profiles), [profiles]);
 
-  const statisticsRows = useMemo(() => buildStatisticsRows(profiles), [profiles]);
+  const statisticsRows = useMemo(() => {
+    const rows = buildStatisticsRows(profiles);
+    const group = sharedPositionGroup(players);
+    return selectStatisticRows(rows, statisticKeysForGroup(group));
+  }, [players, profiles]);
   const physicalRows = useMemo(() => buildPhysicalRows(profiles), [profiles]);
   const technicalRows = useMemo(() => buildTechnicalRows(profiles), [profiles]);
   const gpsRows = useMemo(() => buildGpsRows(profiles), [profiles]);
+  const visibleSections = useMemo(
+    () => comparisonSectionsForGroup(sharedPositionGroup(players)),
+    [players],
+  );
 
   return {
     comparisonPlayerIds,
@@ -49,6 +63,7 @@ export function usePlayerComparison() {
     physicalRows,
     technicalRows,
     gpsRows,
+    visibleSections,
     maxPlayers: MAX_COMPARISON_PLAYERS,
     addToComparison,
     removeFromComparison,

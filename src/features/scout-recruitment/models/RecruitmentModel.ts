@@ -14,6 +14,10 @@ import {
   type RecruitmentWorkspace,
 } from '@/features/scout-recruitment/types';
 import {
+  appendStageHistory,
+  migratePipelineStage,
+} from '@/features/scout-intelligence/services/pipelineStageMigration';
+import {
   asRecord,
   parseNumber,
   parseString,
@@ -21,10 +25,7 @@ import {
 } from '@/utils/firestoreParsing';
 
 function parseStage(value: unknown): RecruitmentStage {
-  if (typeof value === 'string' && RECRUITMENT_STAGES.includes(value as RecruitmentStage)) {
-    return value as RecruitmentStage;
-  }
-  return 'observed';
+  return migratePipelineStage(value);
 }
 
 function parseDragMetadata(
@@ -107,6 +108,15 @@ function parseEntry(value: unknown): RecruitmentEntry | null {
     trialInvitationId:
       typeof record.trialInvitationId === 'string' ? record.trialInvitationId : null,
     dragMetadata: parseDragMetadata(record.dragMetadata, stage, sortIndex),
+    stageHistory: Array.isArray(record.stageHistory)
+      ? record.stageHistory.flatMap((item) => {
+          const entry = asRecord(item);
+          if (!entry || typeof entry.at !== 'string') {
+            return [];
+          }
+          return [{ stage: parseStage(entry.stage), at: entry.at }];
+        })
+      : [{ stage, at: parseString(record.createdAt, now) }],
     createdAt: parseString(record.createdAt, now),
     updatedAt: parseString(record.updatedAt, now),
   };
@@ -237,7 +247,7 @@ export function buildEntryId(scoutId: string, playerId: string): string {
 export function addPlayerToWorkspace(
   workspace: RecruitmentWorkspace,
   snapshot: RecruitmentPlayerSnapshot,
-  stage: RecruitmentStage = 'observed',
+  stage: RecruitmentStage = 'discovered',
   folderId: string | null = DEFAULT_RECRUITMENT_FOLDER_ID,
 ): RecruitmentWorkspace {
   const existing = workspace.entries.find((entry) => entry.playerId === snapshot.playerId);
@@ -271,6 +281,7 @@ export function addPlayerToWorkspace(
     notes: '',
     trialInvitationId: null,
     dragMetadata: { columnId: stage, sortIndex },
+    stageHistory: [{ stage, at: now }],
     createdAt: now,
     updatedAt: now,
   };
@@ -314,6 +325,7 @@ export function moveEntryStage(
             ...entry,
             stage: nextStage,
             dragMetadata: { columnId: nextStage, sortIndex },
+            stageHistory: appendStageHistory(entry.stageHistory, nextStage, now),
             updatedAt: now,
           }
         : entry,

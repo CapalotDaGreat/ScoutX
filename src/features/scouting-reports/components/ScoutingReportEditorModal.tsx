@@ -44,6 +44,7 @@ export function ScoutingReportEditorModal({
   const [draft, setDraft] = useState<ScoutingReportDraft>(createEmptyScoutingReportDraft(playerName));
   const [strengthsText, setStrengthsText] = useState('');
   const [weaknessesText, setWeaknessesText] = useState('');
+  const [concernsText, setConcernsText] = useState('');
 
   useEffect(() => {
     if (!visible) {
@@ -55,6 +56,7 @@ export function ScoutingReportEditorModal({
       setDraft(nextDraft);
       setStrengthsText(formatMultilineList(nextDraft.strengths));
       setWeaknessesText(formatMultilineList(nextDraft.weaknesses));
+      setConcernsText(formatMultilineList(nextDraft.concerns));
       return;
     }
 
@@ -62,6 +64,7 @@ export function ScoutingReportEditorModal({
     setDraft(empty);
     setStrengthsText('');
     setWeaknessesText('');
+    setConcernsText('');
   }, [playerName, report, visible]);
 
   const updateRating = (key: keyof ScoutingReportDraft['ratings'], value: number | null) => {
@@ -76,6 +79,7 @@ export function ScoutingReportEditorModal({
       ...draft,
       strengths: parseMultilineList(strengthsText),
       weaknesses: parseMultilineList(weaknessesText),
+      concerns: parseMultilineList(concernsText),
     };
 
     if (payload.strengths.length === 0) {
@@ -218,13 +222,36 @@ export function ScoutingReportEditorModal({
             inputClassName="min-h-[70px] text-top"
           />
           <Input
-            label="Recommendations"
-            value={draft.recommendations}
-            onChangeText={(value) => setDraft((current) => ({ ...current, recommendations: value }))}
-            placeholder="Trial recommendation, follow-up timeline, club fit..."
+            label="Concerns"
+            value={concernsText}
+            onChangeText={setConcernsText}
+            placeholder="One concern per line. Leave empty if none are evidenced."
             multiline
             numberOfLines={3}
             inputClassName="min-h-[70px] text-top"
+          />
+          <Input
+            label="Role fit"
+            value={draft.roleFit}
+            onChangeText={(value) => setDraft((current) => ({ ...current, roleFit: value }))}
+            placeholder="Position and role this judgement applies to"
+          />
+          <Dropdown
+            label="Recommendation"
+            value={draft.recommendation ?? 'insufficient_evidence'}
+            onChange={(value) =>
+              setDraft((current) => ({
+                ...current,
+                recommendation: value as ScoutingReportDraft['recommendation'],
+              }))
+            }
+            options={[
+              { label: 'Not enough evidence', value: 'insufficient_evidence' },
+              { label: 'Monitor', value: 'monitor' },
+              { label: 'Invite', value: 'invite' },
+              { label: 'Trial', value: 'trial' },
+              { label: 'Pass', value: 'pass' },
+            ]}
           />
           <Dropdown
             label="Suitable Playing Style"

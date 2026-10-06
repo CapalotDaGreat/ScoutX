@@ -26,6 +26,14 @@ import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWork
 import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { formatRating } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
+import { ScoutBriefCard } from '@/features/scout-intelligence/components/ScoutBriefCard';
+import { WhyThisPlayerCard } from '@/features/scout-intelligence/components/WhyThisPlayerCard';
+import { SimilarPlayersCard } from '@/features/scout-intelligence/components/SimilarPlayersCard';
+import { EvidenceRequestComposer } from '@/features/scout-intelligence/components/EvidenceRequestComposer';
+import { buildScoutBrief } from '@/features/scout-intelligence/services/scoutBrief';
+import { explainWhyThisPlayer } from '@/features/scout-intelligence/services/whyThisPlayer';
+import { rankSimilarPlayers } from '@/features/scout-intelligence/services/similarPlayers';
+import { useDiscoverablePlayerPool } from '@/features/scout-discovery/hooks/useDiscoverablePlayerPool';
 import { TrustSafetyActions } from '@/features/trust-safety/components/TrustSafetyActions';
 import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Mail, Video } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -55,6 +63,7 @@ export type PlayerDetailScreenProps = {
   guestMode?: boolean;
   onViewPortfolio?: (playerId: string) => void;
   onOpenComparisonPress?: () => void;
+  onOpenPlayer?: (playerId: string) => void;
 };
 
 export function PlayerDetailScreen({
@@ -63,10 +72,12 @@ export function PlayerDetailScreen({
   guestMode = false,
   onViewPortfolio,
   onOpenComparisonPress,
+  onOpenPlayer,
 }: PlayerDetailScreenProps) {
   const { t } = useAppTranslation(['scout', 'statistics', 'common', 'errors']);
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
+  const { players: playerPool } = useDiscoverablePlayerPool();
   const workspace = useScoutWorkspace();
   const playerSave = useScoutPlayerSave();
   const { recordPlayerView, isInComparison, canAddToComparison, addToComparison, removeFromComparison, comparisonPlayerIds } = workspace;
@@ -92,6 +103,19 @@ export function PlayerDetailScreen({
   }, [player?.club]);
 
   const radarPoints = useMemo(() => (player ? toRadarPoints(player) : []), [player]);
+  const whyReasons = useMemo(() => (player ? explainWhyThisPlayer(player) : []), [player]);
+  const similar = useMemo(
+    () => (player ? rankSimilarPlayers(player, playerPool) : []),
+    [player, playerPool],
+  );
+  const similarById = useMemo(
+    () => Object.fromEntries(playerPool.map((item) => [item.id, item])),
+    [playerPool],
+  );
+  const brief = useMemo(
+    () => (player ? buildScoutBrief('scout', player) : null),
+    [player],
+  );
   const hasAttributeRatings =
     player !== null &&
     Object.values(player.ratings).some((value) => value !== null);
@@ -204,6 +228,18 @@ export function PlayerDetailScreen({
       >
         <View className="px-4">
           <ScoutReportHero player={player} />
+          {!guestMode && brief ? (
+            <View className="mt-3 gap-3">
+              <WhyThisPlayerCard reasons={whyReasons} />
+              <ScoutBriefCard brief={brief} />
+              <SimilarPlayersCard
+                scores={similar}
+                playersById={similarById}
+                onPressPlayer={(id) => onOpenPlayer?.(id)}
+              />
+              <EvidenceRequestComposer playerId={player.id} />
+            </View>
+          ) : null}
           <View className="mt-3 gap-2">
             {player.verified ? <VerificationBadge level="verified" /> : null}
             {clubProfile ? <ClubProfileChip club={clubProfile} /> : null}

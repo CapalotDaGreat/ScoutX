@@ -22,6 +22,7 @@ import { useRecruitment, RECRUITMENT_STAGE_LABELS } from '@/features/scout-recru
 import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
+import { WatchlistEventsCard } from '@/features/scout-intelligence/components/WatchlistEventsCard';
 
 export type ScoutDashboardScreenProps = {
   scoutName: string;
@@ -166,6 +167,8 @@ export function ScoutDashboardScreen({
       {onOpenComparisonPress ? (
         <ComparisonQueueCard onOpenComparison={onOpenComparisonPress} />
       ) : null}
+
+      <WatchlistEventsCard scoutId={recruitment.workspace?.scoutId ?? null} />
 
       <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} />
 

@@ -11,6 +11,13 @@ export type ScoutingReportRatings = {
   mentality: number | null;
 };
 
+export type ScoutingReportRecommendation =
+  | 'monitor'
+  | 'invite'
+  | 'trial'
+  | 'pass'
+  | 'insufficient_evidence';
+
 export type ScoutingReport = {
   id: string;
   scoutId: string;
@@ -20,6 +27,11 @@ export type ScoutingReport = {
   ratings: ScoutingReportRatings;
   strengths: string[];
   weaknesses: string[];
+  concerns: string[];
+  roleFit: string;
+  evidenceIds: string[];
+  recommendation: ScoutingReportRecommendation | null;
+  confidenceLabel: 'high' | 'moderate' | 'limited' | 'insufficient';
   recommendations: string;
   suitablePlayingStyle: string;
   suggestedFormation: string;
@@ -55,6 +67,11 @@ export const createEmptyScoutingReportDraft = (
   ratings: defaultScoutingReportRatings(),
   strengths: [],
   weaknesses: [],
+  concerns: [],
+  roleFit: '',
+  evidenceIds: [],
+  recommendation: 'insufficient_evidence',
+  confidenceLabel: 'insufficient',
   recommendations: '',
   // Style and formation are the scout's judgement; leave them blank until chosen.
   suitablePlayingStyle: '',

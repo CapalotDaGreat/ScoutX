@@ -24,6 +24,9 @@ const uidKeyed = [
   'recruitmentWorkspaces',
   'pushThrottle',
   'analysisQuotas',
+  'publicPassports',
+  'passportSummaries',
+  'playerWatchers',
 ];
 
 const ownedByField = [
@@ -48,6 +51,12 @@ const ownedByField = [
   ['mediaGrants', 'ownerId'],
   ['mediaGrants', 'granteeId'],
   ['reelExports', 'ownerId'],
+  ['scoutBriefs', 'scoutId'],
+  ['scoutBriefs', 'playerId'],
+  ['evidenceRequests', 'scoutId'],
+  ['evidenceRequests', 'playerId'],
+  ['watchlistEvents', 'scoutId'],
+  ['watchlistEvents', 'playerId'],
 ];
 
 const storageFiles = (uid) => [

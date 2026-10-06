@@ -7,14 +7,14 @@ function stageForTrialStatus(status: TrialStatus): RecruitmentStage {
     case 'pending':
     case 'accepted':
     case 'rescheduled':
-      return 'invite_planned';
+      return 'invited';
     case 'completed':
-      return 'trial_completed';
+      return 'trial';
     case 'declined':
     case 'cancelled':
-      return 'rejected';
+      return 'follow_up';
     default:
-      return 'watching';
+      return 'contacted';
   }
 }
 

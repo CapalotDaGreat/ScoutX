@@ -55,6 +55,49 @@ function parseHistoryEntry(value: unknown, index: number): TrialHistoryEntry | n
   };
 }
 
+function parsePrep(value: unknown): TrialInvitation['prep'] | undefined {
+  const record = asRecord(value);
+  if (!record || typeof record.notes !== 'string') {
+    return undefined;
+  }
+  return {
+    notes: record.notes,
+    updatedAt: typeof record.updatedAt === 'string' ? record.updatedAt : new Date().toISOString(),
+  };
+}
+
+function parseEvaluation(value: unknown): TrialInvitation['evaluation'] | undefined {
+  const record = asRecord(value);
+  if (!record) {
+    return undefined;
+  }
+  const recommendation =
+    record.recommendation === 'monitor' ||
+    record.recommendation === 'invite' ||
+    record.recommendation === 'trial' ||
+    record.recommendation === 'pass' ||
+    record.recommendation === 'insufficient_evidence'
+      ? record.recommendation
+      : 'insufficient_evidence';
+  const confidenceLabel =
+    record.confidenceLabel === 'high' ||
+    record.confidenceLabel === 'moderate' ||
+    record.confidenceLabel === 'limited' ||
+    record.confidenceLabel === 'insufficient'
+      ? record.confidenceLabel
+      : 'insufficient';
+  return {
+    roleFit: typeof record.roleFit === 'string' ? record.roleFit : '',
+    notes: typeof record.notes === 'string' ? record.notes : '',
+    recommendation,
+    confidenceLabel,
+    evidenceIds: Array.isArray(record.evidenceIds)
+      ? record.evidenceIds.filter((item): item is string => typeof item === 'string')
+      : [],
+    createdAt: typeof record.createdAt === 'string' ? record.createdAt : new Date().toISOString(),
+  };
+}
+
 export function parseTrialInvitation(value: unknown, id: string): TrialInvitation | null {
   const record = asRecord(value);
   if (
@@ -93,6 +136,8 @@ export function parseTrialInvitation(value: unknown, id: string): TrialInvitatio
     notes: typeof record.notes === 'string' ? record.notes : '',
     status,
     history,
+    prep: parsePrep(record.prep),
+    evaluation: parseEvaluation(record.evaluation),
     messageThreadId:
       typeof record.messageThreadId === 'string' ? record.messageThreadId : undefined,
     calendarEventId:
@@ -115,6 +160,8 @@ export function serializeTrialInvitation(invitation: TrialInvitation): Record<st
     notes: invitation.notes,
     status: invitation.status,
     history: invitation.history,
+    prep: invitation.prep,
+    evaluation: invitation.evaluation,
     messageThreadId: invitation.messageThreadId,
     calendarEventId: invitation.calendarEventId,
     createdAt: invitation.createdAt,

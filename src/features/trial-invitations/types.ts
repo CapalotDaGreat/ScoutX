@@ -42,6 +42,15 @@ export type TrialInvitation = {
   notes: string;
   status: TrialStatus;
   history: TrialHistoryEntry[];
+  prep?: { notes: string; updatedAt: string };
+  evaluation?: {
+    roleFit: string;
+    notes: string;
+    recommendation: 'monitor' | 'invite' | 'trial' | 'pass' | 'insufficient_evidence';
+    confidenceLabel: 'high' | 'moderate' | 'limited' | 'insufficient';
+    evidenceIds: string[];
+    createdAt: string;
+  };
   messageThreadId?: string;
   calendarEventId?: string;
   createdAt: string;

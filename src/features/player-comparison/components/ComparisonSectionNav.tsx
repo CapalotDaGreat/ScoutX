@@ -8,18 +8,19 @@ export type ComparisonSectionNavProps = {
   activeSection: ComparisonSectionKey;
   onSectionChange: (section: ComparisonSectionKey) => void;
   layout?: 'horizontal' | 'vertical';
+  sections?: ComparisonSectionKey[];
 };
-
-const sections = Object.entries(COMPARISON_SECTION_LABELS) as Array<
-  [ComparisonSectionKey, string]
->;
 
 export function ComparisonSectionNav({
   activeSection,
   onSectionChange,
   layout = 'horizontal',
+  sections: sectionKeys,
 }: ComparisonSectionNavProps) {
   const isVertical = layout === 'vertical';
+  const sections = (sectionKeys ?? (Object.keys(COMPARISON_SECTION_LABELS) as ComparisonSectionKey[])).map(
+    (key) => [key, COMPARISON_SECTION_LABELS[key]] as const,
+  );
 
   return (
     <ScrollView

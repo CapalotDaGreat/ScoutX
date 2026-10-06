@@ -10,13 +10,13 @@
     "discoverTalent": "Discover Talent",
     "pipelineWithCount": "Pipeline ({{count}})",
     "matchingPreferencesTitle": "Players Matching Your Preferences",
-    "matchingPreferencesSubtitle": "Based on age, potential and verification signals",
+    "matchingPreferencesSubtitle": "Spieler mit aktueller Match-Evidenz und Filmmaterial — keine Potenzialnote",
     "trendingTitle": "Trending Players",
     "trendingSubtitle": "Most viewed talent this week",
     "recentlyViewedTitle": "Recently Viewed",
     "recentlyViewedSubtitle": "Continue evaluating profiles you opened recently",
     "featuredTitle": "Featured Prospects",
-    "featuredSubtitle": "Verified players with standout potential",
+    "featuredSubtitle": "Verifizierte Spieler mit aktueller Evidenz",
     "nearbyTitle": "Nearby Players",
     "nearbySubtitle": "Location-based discovery — ready for GPS rollout",
     "proximityTitle": "Proximity scouting",
@@ -205,5 +205,61 @@
     "clearRating": "Bewertung für {{label}} löschen",
     "decreaseRating": "{{label}} verringern",
     "increaseRating": "{{label}} erhöhen"
+  },
+  "intelligence": {
+    "whyTitle": "Warum dieser Spieler",
+    "whyEmpty": "Zu wenig erfasste Überschneidung mit deiner Suche, um dieses Profil zu erklären.",
+    "why": {
+      "position": "Gelistete Position passt zur Suche",
+      "recent_evidence": "Evidenz in den letzten 30 Tagen aktualisiert",
+      "sample_size": "Genug geloggte Spiele für den Vergleich",
+      "video": "Matchfilm oder Highlights vorhanden",
+      "verified": "Identitätsprüfung ist bestätigt",
+      "coverage": "Mindestens eine Evidenzdimension ist mittel oder stark",
+      "style": "Spielstil-Tags überschneiden sich mit der Suche"
+    },
+    "sampleSize": "{{count}} erfasste Stichproben",
+    "similarTitle": "Ähnliche Spieler",
+    "similarEmpty": "Keine anderen gelisteten Spieler teilen Position, Club, Liga oder Stil-Tags.",
+    "briefTitle": "Scout-Briefing",
+    "gaps": "Fehlt: {{gaps}}",
+    "recommendation": {
+      "monitor": "Beobachten — Evidenz vorhanden, keine Verpflichtungsempfehlung",
+      "invite": "Zum Gespräch einladen",
+      "trial": "Zum Trial einladen",
+      "pass": "Absagen",
+      "insufficient_evidence": "Noch nicht genug Evidenz"
+    },
+    "requestTitle": "Evidenz anfragen",
+    "requestHint": "Fragt den Spieler nach vorhandenem Material. ScoutX erfindet keine fehlenden Filme oder Statistiken.",
+    "requestPlaceholder": "Optionale Notiz an den Spieler",
+    "requestAction": "Anfrage senden",
+    "requestSent": "Anfrage gesendet.",
+    "requestFailed": "Diese Evidenzanfrage konnte nicht gesendet werden.",
+    "requestUnavailable": "Evidenzanfragen brauchen ein verbundenes ScoutX-Backend.",
+    "kinds": {
+      "match_footage": "Matchfilm",
+      "highlight": "Highlights",
+      "gps": "GPS-Session",
+      "statistics": "Spielbericht",
+      "coach_note": "Trainer-Notiz"
+    },
+    "watchlistTitle": "Watchlist-Änderungen",
+    "watchlistEmpty": "Noch keine Watchlist-Ereignisse. Ein Spieler in der Pipeline startet das Tracking.",
+    "watch": {
+      "added": "Zur Pipeline hinzugefügt",
+      "stage_changed": "Pipeline-Stufe geändert",
+      "new_evidence": "Neue Evidenz bei einem beobachteten Spieler",
+      "removed": "Aus der Pipeline entfernt"
+    },
+    "matches": "Geloggte Spiele",
+    "coverage": "Evidenz",
+    "coverageState": {
+      "strong": "Stark",
+      "moderate": "Mittel",
+      "limited": "Begrenzt",
+      "insufficient": "Unzureichend"
+    },
+    "lastEvidence": "Letzte Evidenz {{date}}"
   }
 }

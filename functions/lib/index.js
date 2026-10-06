@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
+exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.requestEvidence = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
 require("./authSecurityPolicy");
 const app_1 = require("firebase-admin/app");
 const firestore_1 = require("firebase-admin/firestore");
@@ -25,6 +25,16 @@ Object.defineProperty(exports, "confirmRole", { enumerable: true, get: function 
 var publicPassport_1 = require("./publicPassport");
 Object.defineProperty(exports, "onProfileWrittenProjectPassport", { enumerable: true, get: function () { return publicPassport_1.onProfileWrittenProjectPassport; } });
 Object.defineProperty(exports, "refreshPublicPassport", { enumerable: true, get: function () { return publicPassport_1.refreshPublicPassport; } });
+var discoveryProjection_1 = require("./discoveryProjection");
+Object.defineProperty(exports, "onProfileWrittenProjectDiscovery", { enumerable: true, get: function () { return discoveryProjection_1.onProfileWrittenProjectDiscovery; } });
+Object.defineProperty(exports, "onPassportSummaryWrittenProjectDiscovery", { enumerable: true, get: function () { return discoveryProjection_1.onPassportSummaryWrittenProjectDiscovery; } });
+Object.defineProperty(exports, "recordDiscoverableView", { enumerable: true, get: function () { return discoveryProjection_1.recordDiscoverableView; } });
+Object.defineProperty(exports, "searchDiscoverablePlayers", { enumerable: true, get: function () { return discoveryProjection_1.searchDiscoverablePlayers; } });
+var watchlist_1 = require("./watchlist");
+Object.defineProperty(exports, "onRecruitmentEntryWritten", { enumerable: true, get: function () { return watchlist_1.onRecruitmentEntryWritten; } });
+Object.defineProperty(exports, "onPassportSummaryWrittenNotifyWatchers", { enumerable: true, get: function () { return watchlist_1.onPassportSummaryWrittenNotifyWatchers; } });
+var evidenceRequests_1 = require("./evidenceRequests");
+Object.defineProperty(exports, "requestEvidence", { enumerable: true, get: function () { return evidenceRequests_1.requestEvidence; } });
 var askThisMatch_1 = require("./askThisMatch");
 Object.defineProperty(exports, "askThisMatch", { enumerable: true, get: function () { return askThisMatch_1.askThisMatch; } });
 var mediaAccess_1 = require("./mediaAccess");

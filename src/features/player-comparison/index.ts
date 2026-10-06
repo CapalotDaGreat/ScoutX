@@ -19,6 +19,7 @@ export {
   buildPhysicalRows,
   buildTechnicalRows,
   buildGpsRows,
+  selectStatisticRows,
   getBestPlayerIdForRow,
   getMetricDelta,
 } from './services/comparisonMetricsService';

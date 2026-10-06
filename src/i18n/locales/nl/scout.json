@@ -10,13 +10,13 @@
     "discoverTalent": "Discover Talent",
     "pipelineWithCount": "Pipeline ({{count}})",
     "matchingPreferencesTitle": "Players Matching Your Preferences",
-    "matchingPreferencesSubtitle": "Based on age, potential and verification signals",
+    "matchingPreferencesSubtitle": "Spelers met recente wedstrijdevidence en film — geen potentieelcijfer",
     "trendingTitle": "Trending Players",
     "trendingSubtitle": "Most viewed talent this week",
     "recentlyViewedTitle": "Recently Viewed",
     "recentlyViewedSubtitle": "Continue evaluating profiles you opened recently",
     "featuredTitle": "Featured Prospects",
-    "featuredSubtitle": "Verified players with standout potential",
+    "featuredSubtitle": "Geverifieerde spelers met recente evidence",
     "nearbyTitle": "Nearby Players",
     "nearbySubtitle": "Location-based discovery — ready for GPS rollout",
     "proximityTitle": "Proximity scouting",
@@ -205,5 +205,61 @@
     "clearRating": "Beoordeling {{label}} wissen",
     "decreaseRating": "{{label}} verlagen",
     "increaseRating": "{{label}} verhogen"
+  },
+  "intelligence": {
+    "whyTitle": "Waarom deze speler",
+    "whyEmpty": "Te weinig vastgelegde overlap met je zoekopdracht om dit profiel te verklaren.",
+    "why": {
+      "position": "Listed position matches your search",
+      "recent_evidence": "Evidence updated in the last 30 days",
+      "sample_size": "Enough logged matches to compare output",
+      "video": "Match film or highlights are on file",
+      "verified": "Identity verification is approved",
+      "coverage": "At least one evidence dimension is moderate or strong",
+      "style": "Playing-style tags overlap your search"
+    },
+    "sampleSize": "{{count}} vastgelegde steekproeven",
+    "similarTitle": "Vergelijkbare spelers",
+    "similarEmpty": "Geen andere gelijste spelers delen positie, club, competitie of stijltags.",
+    "briefTitle": "Scoutbrief",
+    "gaps": "Ontbreekt: {{gaps}}",
+    "recommendation": {
+      "monitor": "Monitor — evidence exists, no sign recommendation",
+      "invite": "Invite to talk",
+      "trial": "Invite to trial",
+      "pass": "Pass",
+      "insufficient_evidence": "Not enough evidence yet"
+    },
+    "requestTitle": "Evidence vragen",
+    "requestHint": "Vraagt de speler om vastgelegd materiaal. ScoutX verzint geen film of stats.",
+    "requestPlaceholder": "Optionele notitie voor de speler",
+    "requestAction": "Verzoek versturen",
+    "requestSent": "Verzoek verstuurd.",
+    "requestFailed": "Dit evidenceverzoek kon niet worden verstuurd.",
+    "requestUnavailable": "Evidenceverzoeken hebben een ScoutX-backend nodig.",
+    "kinds": {
+      "match_footage": "Match footage",
+      "highlight": "Highlights",
+      "gps": "GPS session",
+      "statistics": "Match log",
+      "coach_note": "Coach note"
+    },
+    "watchlistTitle": "Watchlistwijzigingen",
+    "watchlistEmpty": "Nog geen gebeurtenissen. Een speler in de pipeline starten volgt hem.",
+    "watch": {
+      "added": "Added to pipeline",
+      "stage_changed": "Pipeline stage changed",
+      "new_evidence": "New evidence on a watched player",
+      "removed": "Removed from pipeline"
+    },
+    "matches": "Gelogde wedstrijden",
+    "coverage": "Evidence",
+    "coverageState": {
+      "strong": "Strong",
+      "moderate": "Moderate",
+      "limited": "Limited",
+      "insufficient": "Insufficient"
+    },
+    "lastEvidence": "Laatste evidence {{date}}"
   }
 }

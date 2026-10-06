@@ -17,6 +17,9 @@ const UID_KEYED_COLLECTIONS = [
     'recruitmentWorkspaces',
     'pushThrottle',
     'analysisQuotas',
+    'publicPassports',
+    'passportSummaries',
+    'playerWatchers',
 ];
 /** Collections queried by an owner/participant field. */
 const OWNED_QUERIES = [
@@ -41,6 +44,12 @@ const OWNED_QUERIES = [
     ['mediaGrants', 'ownerId'],
     ['mediaGrants', 'granteeId'],
     ['reelExports', 'ownerId'],
+    ['scoutBriefs', 'scoutId'],
+    ['scoutBriefs', 'playerId'],
+    ['evidenceRequests', 'scoutId'],
+    ['evidenceRequests', 'playerId'],
+    ['watchlistEvents', 'scoutId'],
+    ['watchlistEvents', 'playerId'],
 ];
 const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
 async function deleteQueryInBatches(query) {
@@ -99,6 +108,7 @@ async function deleteAllUserData(uid) {
         'trainingSessions',
         'identitySnapshots',
         'media',
+        'trialReflections',
     ];
     for (const sub of playerSubs) {
         try {
@@ -111,6 +121,42 @@ async function deleteAllUserData(uid) {
                 message: error instanceof Error ? error.message : 'unknown',
             });
         }
+    }
+    try {
+        await deleteQueryInBatches(db.collection('recruitmentWorkspaces').doc(uid).collection('entries'));
+    }
+    catch (error) {
+        failures.push('recruitmentWorkspaces.entries');
+        firebase_functions_1.logger.error('Account deletion: recruitment entries failed', {
+            message: error instanceof Error ? error.message : 'unknown',
+        });
+    }
+    try {
+        await deleteQueryInBatches(db.collectionGroup('entries').where('playerId', '==', uid));
+    }
+    catch (error) {
+        failures.push('entries.playerId');
+        firebase_functions_1.logger.error('Account deletion: watched recruitment entries failed', {
+            message: error instanceof Error ? error.message : 'unknown',
+        });
+    }
+    try {
+        await deleteQueryInBatches(db.collection('playerWatchers').doc(uid).collection('scouts'));
+    }
+    catch (error) {
+        failures.push('playerWatchers.scouts');
+        firebase_functions_1.logger.error('Account deletion: player watchers failed', {
+            message: error instanceof Error ? error.message : 'unknown',
+        });
+    }
+    try {
+        await deleteQueryInBatches(db.collectionGroup('scouts').where('scoutId', '==', uid));
+    }
+    catch (error) {
+        failures.push('playerWatchers.scoutId');
+        firebase_functions_1.logger.error('Account deletion: scout watcher docs failed', {
+            message: error instanceof Error ? error.message : 'unknown',
+        });
     }
     const bucket = (0, storage_1.getStorage)().bucket();
     for (const prefix of STORAGE_PREFIXES(uid)) {

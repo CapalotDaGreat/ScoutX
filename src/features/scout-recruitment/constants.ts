@@ -1,39 +1,29 @@
 import { type RecruitmentStage } from '@/features/scout-recruitment/types';
+import { PIPELINE_STAGES } from '@/features/scout-intelligence/services/pipelineStageMigration';
 
 export const RECRUITMENT_WORKSPACE_COLLECTION = 'recruitmentWorkspaces';
 export const RECRUITMENT_STORAGE_KEY = '@scoutx/recruitment-workspaces';
 
-export const RECRUITMENT_STAGES: RecruitmentStage[] = [
-  'observed',
-  'interested',
-  'watching',
-  'invite_planned',
-  'trial_completed',
-  'offer',
-  'rejected',
-  'signed',
-];
+export const RECRUITMENT_STAGES: RecruitmentStage[] = [...PIPELINE_STAGES];
 
 export const RECRUITMENT_STAGE_LABELS: Record<RecruitmentStage, string> = {
-  observed: 'Observed',
-  interested: 'Interested',
-  watching: 'Watching',
-  invite_planned: 'Invite Planned',
-  trial_completed: 'Trial Completed',
-  offer: 'Offer',
-  rejected: 'Rejected',
-  signed: 'Signed',
+  discovered: 'Discovered',
+  shortlisted: 'Shortlisted',
+  contacted: 'Contacted',
+  invited: 'Invited',
+  trial: 'Trial',
+  evaluated: 'Evaluated',
+  follow_up: 'Follow-up',
 };
 
 export const RECRUITMENT_STAGE_COLORS: Record<RecruitmentStage, string> = {
-  observed: '#64748B',
-  interested: '#2563EB',
-  watching: '#7C3AED',
-  invite_planned: '#CA8A04',
-  trial_completed: '#0891B2',
-  offer: '#16A34A',
-  rejected: '#DC2626',
-  signed: '#059669',
+  discovered: '#64748B',
+  shortlisted: '#2563EB',
+  contacted: '#7C3AED',
+  invited: '#CA8A04',
+  trial: '#0891B2',
+  evaluated: '#16A34A',
+  follow_up: '#DC2626',
 };
 
 export const RECRUITMENT_FOLDER_COLORS = [

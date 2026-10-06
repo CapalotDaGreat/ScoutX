@@ -10,13 +10,13 @@
     "discoverTalent": "Discover Talent",
     "pipelineWithCount": "Pipeline ({{count}})",
     "matchingPreferencesTitle": "Players Matching Your Preferences",
-    "matchingPreferencesSubtitle": "Based on age, potential and verification signals",
+    "matchingPreferencesSubtitle": "Players with recent match evidence and film on file — not a potential rating",
     "trendingTitle": "Trending Players",
     "trendingSubtitle": "Most viewed talent this week",
     "recentlyViewedTitle": "Recently Viewed",
     "recentlyViewedSubtitle": "Continue evaluating profiles you opened recently",
     "featuredTitle": "Featured Prospects",
-    "featuredSubtitle": "Verified players with standout potential",
+    "featuredSubtitle": "Verified players with recent evidence",
     "nearbyTitle": "Nearby Players",
     "nearbySubtitle": "Location-based discovery — ready for GPS rollout",
     "proximityTitle": "Proximity scouting",
@@ -205,5 +205,61 @@
     "clearRating": "Clear {{label}} rating",
     "decreaseRating": "Decrease {{label}}",
     "increaseRating": "Increase {{label}}"
+  },
+  "intelligence": {
+    "whyTitle": "Why this player",
+    "whyEmpty": "Not enough recorded overlap with your current search to explain this profile.",
+    "why": {
+      "position": "Listed position matches your search",
+      "recent_evidence": "Evidence updated in the last 30 days",
+      "sample_size": "Enough logged matches to compare output",
+      "video": "Match film or highlights are on file",
+      "verified": "Identity verification is approved",
+      "coverage": "At least one evidence dimension is moderate or strong",
+      "style": "Playing-style tags overlap your search"
+    },
+    "sampleSize": "{{count}} recorded samples",
+    "similarTitle": "Similar players",
+    "similarEmpty": "No other listed players share position, club, league, or style tags.",
+    "briefTitle": "Scout brief",
+    "gaps": "Missing: {{gaps}}",
+    "recommendation": {
+      "monitor": "Monitor — evidence exists, no sign recommendation",
+      "invite": "Invite to talk",
+      "trial": "Invite to trial",
+      "pass": "Pass",
+      "insufficient_evidence": "Not enough evidence yet"
+    },
+    "requestTitle": "Request evidence",
+    "requestHint": "Asks the player for recorded material. ScoutX will not invent missing film or stats.",
+    "requestPlaceholder": "Optional note for the player",
+    "requestAction": "Send request",
+    "requestSent": "Request sent.",
+    "requestFailed": "Could not send this evidence request.",
+    "requestUnavailable": "Evidence requests need a connected ScoutX backend.",
+    "kinds": {
+      "match_footage": "Match footage",
+      "highlight": "Highlights",
+      "gps": "GPS session",
+      "statistics": "Match log",
+      "coach_note": "Coach note"
+    },
+    "watchlistTitle": "Watchlist changes",
+    "watchlistEmpty": "No watchlist events yet. Saving a player to the pipeline starts tracking.",
+    "watch": {
+      "added": "Added to pipeline",
+      "stage_changed": "Pipeline stage changed",
+      "new_evidence": "New evidence on a watched player",
+      "removed": "Removed from pipeline"
+    },
+    "matches": "Matches logged",
+    "coverage": "Evidence",
+    "coverageState": {
+      "strong": "Strong",
+      "moderate": "Moderate",
+      "limited": "Limited",
+      "insufficient": "Insufficient"
+    },
+    "lastEvidence": "Last evidence {{date}}"
   }
 }
