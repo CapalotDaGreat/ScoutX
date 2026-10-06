@@ -60,7 +60,7 @@ export function PublicPortfolioScreen({
   onSignInForEndorsement,
   onRegisterForEndorsement,
 }: PublicPortfolioScreenProps) {
-  const { t } = useAppTranslation(['portfolio', 'common', 'errors']);
+  const { t } = useAppTranslation(['portfolio', 'common', 'errors', 'passport']);
   const { user, role } = useAuth();
   const fetched = usePublicPortfolio(previewData || previewMode ? null : playerId);
   const data = previewData ?? fetched.data;
@@ -201,6 +201,9 @@ export function PublicPortfolioScreen({
           username={displayUsername}
           verification={trust.isLoading ? undefined : (trust.trustProfile?.player ?? null)}
         />
+        <Text variant="caption" color="tertiary">
+          {t('passport:scoutPreview.note')}
+        </Text>
 
         {isPortfolioSectionVisible(privacy, 'statistics') ? (
           <PortfolioSection

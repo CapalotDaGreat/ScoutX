@@ -115,12 +115,34 @@ function buildPublicPassport(playerId, profile) {
 async function projectPassport(playerId, profile) {
     const db = (0, firestore_2.getFirestore)();
     const ref = db.collection('publicPassports').doc(playerId);
+    const summaryRef = db.collection('passportSummaries').doc(playerId);
     const passport = profile ? buildPublicPassport(playerId, profile) : null;
     if (!passport) {
-        await ref.delete().catch(() => undefined);
+        await Promise.all([ref.delete().catch(() => undefined), summaryRef.delete().catch(() => undefined)]);
         return;
     }
-    await ref.set(passport);
+    const matches = Array.isArray(profile?.statisticsMatches) ? profile.statisticsMatches : [];
+    const videos = profile && typeof profile.highlightVideos === 'object' && profile.highlightVideos !== null
+        ? profile.highlightVideos.videos
+        : [];
+    const videoCount = Array.isArray(videos) ? videos.length : 0;
+    await Promise.all([
+        ref.set(passport),
+        summaryRef.set({
+            playerId,
+            isPublic: true,
+            matchCount: matches.length,
+            videoCount,
+            lastEvidenceAt: matches
+                .map((item) => (item && typeof item === 'object' && typeof item.date === 'string'
+                ? item.date
+                : null))
+                .filter((value) => Boolean(value))
+                .sort()
+                .at(-1) ?? null,
+            projectedAt: new Date().toISOString(),
+        }),
+    ]);
 }
 /** Keeps the public projection in sync whenever the private profile changes. */
 exports.onProfileWrittenProjectPassport = (0, firestore_1.onDocumentWritten)('profiles/{playerId}', async (event) => {

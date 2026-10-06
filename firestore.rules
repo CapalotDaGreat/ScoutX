@@ -122,6 +122,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /passportSummaries/{userId} {
+      allow read: if isOwner(userId) || (isSignedIn() && resource.data.isPublic == true);
+      allow write: if false;
+    }
+
     // Per-player subcollections. Match logs are the canonical evidence source for
     // statistics; evidence items index other proof (videos, analyses, observations).
     match /players/{userId}/matches/{matchId} {

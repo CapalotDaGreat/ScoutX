@@ -1,0 +1,39 @@
+{
+  "coverage": {
+    "technical": "Technical",
+    "tactical": "Tactical",
+    "physical": "Physical",
+    "consistency": "Consistency",
+    "video": "Video",
+    "sample": "{{have}} recorded · {{need}} for a strong sample"
+  },
+  "proof": {
+    "empty": "No proof on file yet. Logged matches, videos and coach notes appear here.",
+    "dateUnknown": "Date unknown",
+    "title": "Proof stack"
+  },
+  "coach": {
+    "title": "Passport Coach",
+    "caughtUp": "No evidence gaps to flag right now."
+  },
+  "discoverability": {
+    "title": "Discoverability",
+    "visible": "Visible to scouts who search",
+    "hidden": "Not visible in scout search",
+    "counts": "{{matches}} matches · {{videos}} videos",
+    "blockers": {
+      "public_passport_off": "Public Football Passport is off",
+      "discovery_opt_in_off": "Scout discovery opt-in is off",
+      "no_matches": "No match evidence to show yet"
+    }
+  },
+  "readiness": {
+    "evidenceTitle": "Football evidence",
+    "sharingTitle": "Sharing",
+    "appOpsTitle": "App operations (not football evidence)",
+    "appOpsHint": "These items affect the product, not your playing record."
+  },
+  "scoutPreview": {
+    "note": "This is the public projection. Private profile fields are not shown."
+  }
+}

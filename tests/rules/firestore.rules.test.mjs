@@ -140,6 +140,12 @@ describe('profiles and GPS privacy', () => {
       setDocument(PLAYER, `publicPassports/${PLAYER}`, { playerId: PLAYER, isPublic: true, fullName: 'Forged' }),
       'owner writes projection directly',
     );
+    await seed(`passportSummaries/${PLAYER}`, { playerId: PLAYER, isPublic: true, matchCount: 2 });
+    await allowed(getDocument(SCOUT, `passportSummaries/${PLAYER}`), 'scout reads public summary');
+    await denied(
+      setDocument(PLAYER, `passportSummaries/${PLAYER}`, { playerId: PLAYER, isPublic: true, matchCount: 99 }),
+      'owner writes summary',
+    );
   });
 
   test('GPS sessions are owner-only unless the passport is public with GPS highlights on', async () => {
