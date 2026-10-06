@@ -5,5 +5,57 @@
   "endorsement": "New coach endorsement",
   "trialInvitation": "New trial invitation",
   "weeklyReport": "Your weekly career report is ready",
-  "activityFeed": "Activity feed"
+  "activityFeed": "Activity feed",
+  "activity": {
+    "title": "Activiteit",
+    "subtitle": "Updates, proeftrainingen en carrièremomenten",
+    "subtitleUnread_one": "{{count}} ongelezen · Updates, proeftrainingen en carrièremomenten",
+    "subtitleUnread_other": "{{count}} ongelezen · Updates, proeftrainingen en carrièremomenten",
+    "markAllRead": "Alles als gelezen markeren",
+    "groupedTitle": "Meldingen",
+    "groupedSubtitle": "Gegroepeerd per type zodat je sneller overzicht hebt.",
+    "empty": "Nog geen meldingen.",
+    "timelineTitle": "Tijdlijn",
+    "timelineSubtitle": "Chronologisch overzicht van alle activiteit",
+    "recentTitle": "Recente activiteit",
+    "unreadCount_one": "{{count}} ongelezen melding",
+    "unreadCount_other": "{{count}} ongelezen meldingen",
+    "caughtUp": "Helemaal bij",
+    "viewAll": "Alles bekijken",
+    "recentEmpty": "Belangrijke acties verschijnen hier zodra ze gebeuren.",
+    "bell": "Activiteiten",
+    "bellUnread_one": "Activiteiten, {{count}} ongelezen",
+    "bellUnread_other": "Activiteiten, {{count}} ongelezen",
+    "today": "Vandaag",
+    "yesterday": "Gisteren",
+    "justNow": "Zojuist",
+    "minutesAgo_one": "{{count}} min geleden",
+    "minutesAgo_other": "{{count}} min geleden",
+    "hoursAgo_one": "{{count}} u geleden",
+    "hoursAgo_other": "{{count}} u geleden",
+    "category": {
+      "profile": "Profiel",
+      "trial": "Proeftrainingen",
+      "scouting": "Scouting",
+      "media": "Media",
+      "recruitment": "Werving",
+      "trust": "Vertrouwen",
+      "system": "Systeem"
+    },
+    "type": {
+      "profile_updated": "Profiel bijgewerkt",
+      "trial_invitation": "Uitnodiging proeftraining",
+      "scouting_report_created": "Nieuw scoutingrapport",
+      "video_uploaded": "Video geüpload",
+      "player_saved": "Speler opgeslagen",
+      "recommendation_received": "Aanbeveling ontvangen",
+      "portfolio_viewed": "Passport bekeken",
+      "milestone_earned": "Mijlpaal ontgrendeld",
+      "weekly_report_ready": "Weekrapport klaar",
+      "evidence_requested": "Bewijs aangevraagd"
+    },
+    "systemBody": {
+      "evidence_requested": "Een scout vroeg om meer bewijs. Open je verzoeken om te reageren."
+    }
+  }
 }

@@ -6,6 +6,7 @@ import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { ActivityCard } from '@/features/activity-feed/components/ActivityGroupSection';
 import { useActivities } from '@/features/activity-feed/context/ActivityProvider';
 import { type ActivityItem } from '@/features/activity-feed/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
@@ -54,12 +55,17 @@ export type ActivityBellButtonProps = {
 
 export function ActivityBellButton({ unreadCount, onPress }: ActivityBellButtonProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation(['notifications']);
 
   return (
     <View className="relative h-11 w-11 items-center justify-center overflow-visible">
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`Activity inbox${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
+        accessibilityLabel={
+          unreadCount > 0
+            ? t('notifications:activity.bellUnread', { count: unreadCount })
+            : t('notifications:activity.bell')
+        }
         hitSlop={6}
         onPress={() => {
           void triggerHaptic('light');
@@ -88,6 +94,7 @@ export function ActivityFeedSection({
   onActivityPress,
   limit = 5,
 }: ActivityFeedSectionProps) {
+  const { t } = useAppTranslation(['notifications']);
   const { recentActivities, unreadCount, isLoading, markRead } = useActivities();
   const items = recentActivities.slice(0, limit);
 
@@ -102,16 +109,18 @@ export function ActivityFeedSection({
     <View className="gap-4">
       <View className="flex-row items-center justify-between gap-3">
         <View className="min-w-0 flex-1">
-          <Text weight="semibold">Recent Activity</Text>
+          <Text weight="semibold" accessibilityRole="header">
+            {t('notifications:activity.recentTitle')}
+          </Text>
           <Text variant="caption" color="secondary" className="mt-0.5">
             {unreadCount > 0
-              ? `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`
-              : 'All caught up'}
+              ? t('notifications:activity.unreadCount', { count: unreadCount })
+              : t('notifications:activity.caughtUp')}
           </Text>
         </View>
         {onViewAllPress ? (
           <Button variant="ghost" size="sm" onPress={onViewAllPress}>
-            View all
+            {t('notifications:activity.viewAll')}
           </Button>
         ) : null}
       </View>
@@ -121,7 +130,7 @@ export function ActivityFeedSection({
       ) : items.length === 0 ? (
         <View className="rounded-2xl border border-dashed border-border bg-surface/60 px-5 py-10">
           <Text variant="body-sm" color="secondary" className="text-center">
-            Important actions will appear here as activity updates.
+            {t('notifications:activity.recentEmpty')}
           </Text>
         </View>
       ) : (

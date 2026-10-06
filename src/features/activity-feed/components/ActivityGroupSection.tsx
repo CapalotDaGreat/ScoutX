@@ -3,7 +3,7 @@ import { PreviewList } from '@/components/layout/PreviewList';
 import { Text } from '@/components/primitives/Text';
 import { NotificationCard } from '@/components/primitives/NotificationCard';
 import { ACTIVITY_CATEGORY_NOTIFICATION_TYPE } from '@/features/activity-feed/constants';
-import { formatActivityTimestamp } from '@/features/activity-feed/models/ActivityModel';
+import { useActivityLabels } from '@/features/activity-feed/hooks/useActivityLabels';
 import { type ActivityItem } from '@/features/activity-feed/types';
 
 export type ActivityCardProps = {
@@ -12,11 +12,12 @@ export type ActivityCardProps = {
 };
 
 export function ActivityCard({ activity, onPress }: ActivityCardProps) {
+  const labels = useActivityLabels();
   return (
     <NotificationCard
-      title={activity.title}
-      body={activity.body}
-      timestamp={formatActivityTimestamp(activity.createdAt)}
+      title={labels.title(activity)}
+      body={labels.body(activity)}
+      timestamp={labels.timestamp(activity.createdAt)}
       type={ACTIVITY_CATEGORY_NOTIFICATION_TYPE[activity.category]}
       read={activity.read}
       avatarName={activity.actorName}
@@ -44,7 +45,7 @@ export function ActivityGroupSection({
 
   return (
     <View className="gap-3">
-      <Text variant="overline" color="secondary">
+      <Text variant="overline" color="secondary" accessibilityRole="header">
         {title}
       </Text>
       <PreviewList

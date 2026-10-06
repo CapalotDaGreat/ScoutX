@@ -5,5 +5,57 @@
   "endorsement": "New coach endorsement",
   "trialInvitation": "New trial invitation",
   "weeklyReport": "Your weekly career report is ready",
-  "activityFeed": "Activity feed"
+  "activityFeed": "Activity feed",
+  "activity": {
+    "title": "Activité",
+    "subtitle": "Mises à jour, essais et moments de carrière",
+    "subtitleUnread_one": "{{count}} non lue · Mises à jour, essais et moments de carrière",
+    "subtitleUnread_other": "{{count}} non lues · Mises à jour, essais et moments de carrière",
+    "markAllRead": "Tout marquer comme lu",
+    "groupedTitle": "Notifications",
+    "groupedSubtitle": "Regroupées par type pour un aperçu plus rapide.",
+    "empty": "Aucune notification pour l'instant.",
+    "timelineTitle": "Chronologie",
+    "timelineSubtitle": "Vue chronologique de toute l'activité",
+    "recentTitle": "Activité récente",
+    "unreadCount_one": "{{count}} notification non lue",
+    "unreadCount_other": "{{count}} notifications non lues",
+    "caughtUp": "Tout est à jour",
+    "viewAll": "Tout voir",
+    "recentEmpty": "Les actions importantes apparaîtront ici au fur et à mesure.",
+    "bell": "Boîte d'activité",
+    "bellUnread_one": "Boîte d'activité, {{count}} non lue",
+    "bellUnread_other": "Boîte d'activité, {{count}} non lues",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "justNow": "À l'instant",
+    "minutesAgo_one": "il y a {{count}} min",
+    "minutesAgo_other": "il y a {{count}} min",
+    "hoursAgo_one": "il y a {{count}} h",
+    "hoursAgo_other": "il y a {{count}} h",
+    "category": {
+      "profile": "Profil",
+      "trial": "Essais",
+      "scouting": "Scouting",
+      "media": "Médias",
+      "recruitment": "Recrutement",
+      "trust": "Confiance",
+      "system": "Système"
+    },
+    "type": {
+      "profile_updated": "Profil mis à jour",
+      "trial_invitation": "Invitation à un essai",
+      "scouting_report_created": "Nouveau rapport de scouting",
+      "video_uploaded": "Vidéo importée",
+      "player_saved": "Joueur enregistré",
+      "recommendation_received": "Recommandation reçue",
+      "portfolio_viewed": "Passport consulté",
+      "milestone_earned": "Étape débloquée",
+      "weekly_report_ready": "Rapport hebdomadaire prêt",
+      "evidence_requested": "Preuve demandée"
+    },
+    "systemBody": {
+      "evidence_requested": "Un recruteur a demandé plus de preuves. Ouvre tes demandes pour répondre."
+    }
+  }
 }

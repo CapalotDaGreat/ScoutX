@@ -5,5 +5,57 @@
   "endorsement": "New coach endorsement",
   "trialInvitation": "New trial invitation",
   "weeklyReport": "Your weekly career report is ready",
-  "activityFeed": "Activity feed"
+  "activityFeed": "Activity feed",
+  "activity": {
+    "title": "Activity",
+    "subtitle": "Updates, trials, and career moments",
+    "subtitleUnread_one": "{{count}} unread · Updates, trials, and career moments",
+    "subtitleUnread_other": "{{count}} unread · Updates, trials, and career moments",
+    "markAllRead": "Mark all read",
+    "groupedTitle": "Notifications",
+    "groupedSubtitle": "Grouped by type so you can scan faster.",
+    "empty": "No notifications yet.",
+    "timelineTitle": "Timeline",
+    "timelineSubtitle": "Chronological view of all activity",
+    "recentTitle": "Recent activity",
+    "unreadCount_one": "{{count}} unread notification",
+    "unreadCount_other": "{{count}} unread notifications",
+    "caughtUp": "All caught up",
+    "viewAll": "View all",
+    "recentEmpty": "Important actions will appear here as they happen.",
+    "bell": "Activity inbox",
+    "bellUnread_one": "Activity inbox, {{count}} unread",
+    "bellUnread_other": "Activity inbox, {{count}} unread",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "justNow": "Just now",
+    "minutesAgo_one": "{{count}} min ago",
+    "minutesAgo_other": "{{count}} min ago",
+    "hoursAgo_one": "{{count}} h ago",
+    "hoursAgo_other": "{{count}} h ago",
+    "category": {
+      "profile": "Profile",
+      "trial": "Trials",
+      "scouting": "Scouting",
+      "media": "Media",
+      "recruitment": "Recruitment",
+      "trust": "Trust",
+      "system": "System"
+    },
+    "type": {
+      "profile_updated": "Profile updated",
+      "trial_invitation": "Trial invitation",
+      "scouting_report_created": "New scouting report",
+      "video_uploaded": "Video uploaded",
+      "player_saved": "Player saved",
+      "recommendation_received": "Recommendation received",
+      "portfolio_viewed": "Passport viewed",
+      "milestone_earned": "Milestone unlocked",
+      "weekly_report_ready": "Weekly football report ready",
+      "evidence_requested": "Evidence requested"
+    },
+    "systemBody": {
+      "evidence_requested": "A scout asked for more evidence. Open your requests to respond."
+    }
+  }
 }

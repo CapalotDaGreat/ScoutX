@@ -5,5 +5,57 @@
   "endorsement": "New coach endorsement",
   "trialInvitation": "New trial invitation",
   "weeklyReport": "Your weekly career report is ready",
-  "activityFeed": "Activity feed"
+  "activityFeed": "Activity feed",
+  "activity": {
+    "title": "Actividad",
+    "subtitle": "Novedades, pruebas y momentos de carrera",
+    "subtitleUnread_one": "{{count}} sin leer · Novedades, pruebas y momentos de carrera",
+    "subtitleUnread_other": "{{count}} sin leer · Novedades, pruebas y momentos de carrera",
+    "markAllRead": "Marcar todo como leído",
+    "groupedTitle": "Notificaciones",
+    "groupedSubtitle": "Agrupadas por tipo para revisarlas más rápido.",
+    "empty": "Aún no hay notificaciones.",
+    "timelineTitle": "Cronología",
+    "timelineSubtitle": "Vista cronológica de toda la actividad",
+    "recentTitle": "Actividad reciente",
+    "unreadCount_one": "{{count}} notificación sin leer",
+    "unreadCount_other": "{{count}} notificaciones sin leer",
+    "caughtUp": "Todo al día",
+    "viewAll": "Ver todo",
+    "recentEmpty": "Las acciones importantes aparecerán aquí cuando ocurran.",
+    "bell": "Bandeja de actividad",
+    "bellUnread_one": "Bandeja de actividad, {{count}} sin leer",
+    "bellUnread_other": "Bandeja de actividad, {{count}} sin leer",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "justNow": "Ahora mismo",
+    "minutesAgo_one": "hace {{count}} min",
+    "minutesAgo_other": "hace {{count}} min",
+    "hoursAgo_one": "hace {{count}} h",
+    "hoursAgo_other": "hace {{count}} h",
+    "category": {
+      "profile": "Perfil",
+      "trial": "Pruebas",
+      "scouting": "Scouting",
+      "media": "Multimedia",
+      "recruitment": "Reclutamiento",
+      "trust": "Confianza",
+      "system": "Sistema"
+    },
+    "type": {
+      "profile_updated": "Perfil actualizado",
+      "trial_invitation": "Invitación a prueba",
+      "scouting_report_created": "Nuevo informe de scouting",
+      "video_uploaded": "Vídeo subido",
+      "player_saved": "Jugador guardado",
+      "recommendation_received": "Recomendación recibida",
+      "portfolio_viewed": "Passport visto",
+      "milestone_earned": "Hito desbloqueado",
+      "weekly_report_ready": "Informe semanal listo",
+      "evidence_requested": "Evidencia solicitada"
+    },
+    "systemBody": {
+      "evidence_requested": "Un ojeador pidió más evidencia. Abre tus solicitudes para responder."
+    }
+  }
 }

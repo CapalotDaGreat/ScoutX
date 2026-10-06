@@ -5,5 +5,57 @@
   "endorsement": "New coach endorsement",
   "trialInvitation": "New trial invitation",
   "weeklyReport": "Your weekly career report is ready",
-  "activityFeed": "Activity feed"
+  "activityFeed": "Activity feed",
+  "activity": {
+    "title": "Attività",
+    "subtitle": "Aggiornamenti, provini e momenti di carriera",
+    "subtitleUnread_one": "{{count}} non letta · Aggiornamenti, provini e momenti di carriera",
+    "subtitleUnread_other": "{{count}} non lette · Aggiornamenti, provini e momenti di carriera",
+    "markAllRead": "Segna tutto come letto",
+    "groupedTitle": "Notifiche",
+    "groupedSubtitle": "Raggruppate per tipo per una lettura più rapida.",
+    "empty": "Ancora nessuna notifica.",
+    "timelineTitle": "Cronologia",
+    "timelineSubtitle": "Vista cronologica di tutte le attività",
+    "recentTitle": "Attività recente",
+    "unreadCount_one": "{{count}} notifica non letta",
+    "unreadCount_other": "{{count}} notifiche non lette",
+    "caughtUp": "Tutto aggiornato",
+    "viewAll": "Vedi tutto",
+    "recentEmpty": "Le azioni importanti appariranno qui quando accadono.",
+    "bell": "Attività",
+    "bellUnread_one": "Attività, {{count}} non letta",
+    "bellUnread_other": "Attività, {{count}} non lette",
+    "today": "Oggi",
+    "yesterday": "Ieri",
+    "justNow": "Adesso",
+    "minutesAgo_one": "{{count}} min fa",
+    "minutesAgo_other": "{{count}} min fa",
+    "hoursAgo_one": "{{count}} h fa",
+    "hoursAgo_other": "{{count}} h fa",
+    "category": {
+      "profile": "Profilo",
+      "trial": "Provini",
+      "scouting": "Scouting",
+      "media": "Media",
+      "recruitment": "Reclutamento",
+      "trust": "Fiducia",
+      "system": "Sistema"
+    },
+    "type": {
+      "profile_updated": "Profilo aggiornato",
+      "trial_invitation": "Invito a un provino",
+      "scouting_report_created": "Nuovo report di scouting",
+      "video_uploaded": "Video caricato",
+      "player_saved": "Giocatore salvato",
+      "recommendation_received": "Raccomandazione ricevuta",
+      "portfolio_viewed": "Passport visualizzato",
+      "milestone_earned": "Traguardo sbloccato",
+      "weekly_report_ready": "Report settimanale pronto",
+      "evidence_requested": "Prova richiesta"
+    },
+    "systemBody": {
+      "evidence_requested": "Uno scout ha chiesto altre prove. Apri le tue richieste per rispondere."
+    }
+  }
 }

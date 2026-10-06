@@ -5,5 +5,57 @@
   "endorsement": "New coach endorsement",
   "trialInvitation": "New trial invitation",
   "weeklyReport": "Your weekly career report is ready",
-  "activityFeed": "Activity feed"
+  "activityFeed": "Activity feed",
+  "activity": {
+    "title": "Aktivität",
+    "subtitle": "Updates, Probetrainings und Karrieremomente",
+    "subtitleUnread_one": "{{count}} ungelesen · Updates, Probetrainings und Karrieremomente",
+    "subtitleUnread_other": "{{count}} ungelesen · Updates, Probetrainings und Karrieremomente",
+    "markAllRead": "Alle als gelesen markieren",
+    "groupedTitle": "Benachrichtigungen",
+    "groupedSubtitle": "Nach Typ gruppiert, damit du schneller überblickst.",
+    "empty": "Noch keine Benachrichtigungen.",
+    "timelineTitle": "Zeitleiste",
+    "timelineSubtitle": "Chronologische Ansicht aller Aktivitäten",
+    "recentTitle": "Letzte Aktivität",
+    "unreadCount_one": "{{count}} ungelesene Benachrichtigung",
+    "unreadCount_other": "{{count}} ungelesene Benachrichtigungen",
+    "caughtUp": "Alles erledigt",
+    "viewAll": "Alle anzeigen",
+    "recentEmpty": "Wichtige Ereignisse erscheinen hier, sobald sie passieren.",
+    "bell": "Aktivitäten",
+    "bellUnread_one": "Aktivitäten, {{count}} ungelesen",
+    "bellUnread_other": "Aktivitäten, {{count}} ungelesen",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "justNow": "Gerade eben",
+    "minutesAgo_one": "vor {{count}} Min.",
+    "minutesAgo_other": "vor {{count}} Min.",
+    "hoursAgo_one": "vor {{count}} Std.",
+    "hoursAgo_other": "vor {{count}} Std.",
+    "category": {
+      "profile": "Profil",
+      "trial": "Probetrainings",
+      "scouting": "Scouting",
+      "media": "Medien",
+      "recruitment": "Rekrutierung",
+      "trust": "Vertrauen",
+      "system": "System"
+    },
+    "type": {
+      "profile_updated": "Profil aktualisiert",
+      "trial_invitation": "Probetraining-Einladung",
+      "scouting_report_created": "Neuer Scouting-Bericht",
+      "video_uploaded": "Video hochgeladen",
+      "player_saved": "Spieler gespeichert",
+      "recommendation_received": "Empfehlung erhalten",
+      "portfolio_viewed": "Passport angesehen",
+      "milestone_earned": "Meilenstein freigeschaltet",
+      "weekly_report_ready": "Wochenbericht bereit",
+      "evidence_requested": "Nachweis angefragt"
+    },
+    "systemBody": {
+      "evidence_requested": "Ein Scout hat weitere Nachweise angefragt. Öffne deine Anfragen, um zu antworten."
+    }
+  }
 }

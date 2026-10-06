@@ -7,7 +7,9 @@ import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { ActivityGroupSection } from '@/features/activity-feed/components/ActivityGroupSection';
 import { ActivityTimeline } from '@/features/activity-feed/components/ActivityTimeline';
 import { useActivities } from '@/features/activity-feed/context/ActivityProvider';
+import { useActivityLabels } from '@/features/activity-feed/hooks/useActivityLabels';
 import { type ActivityItem } from '@/features/activity-feed/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ActivityInboxScreenProps = {
   onBack?: () => void;
@@ -15,6 +17,8 @@ export type ActivityInboxScreenProps = {
 };
 
 export function ActivityInboxScreen({ onBack, embeddedInTabShell = false }: ActivityInboxScreenProps) {
+  const { t } = useAppTranslation(['notifications', 'common']);
+  const labels = useActivityLabels();
   const {
     groupedNotifications,
     timeline,
@@ -35,25 +39,25 @@ export function ActivityInboxScreen({ onBack, embeddedInTabShell = false }: Acti
 
   return (
     <Screen
-      title="Activity"
+      title={t('notifications:activity.title')}
       subtitle={
         unreadCount > 0
-          ? `${unreadCount} unread · Updates, trials, and career moments`
-          : 'Updates, trials, and career moments'
+          ? t('notifications:activity.subtitleUnread', { count: unreadCount })
+          : t('notifications:activity.subtitle')
       }
       safeArea
       {...screenProps}
       headerLeading={
         onBack ? (
           <Button variant="ghost" size="sm" onPress={onBack} className="self-start -ml-1">
-            Back
+            {t('common:back')}
           </Button>
         ) : undefined
       }
       headerActions={
         unreadCount > 0 ? (
           <Button variant="secondary" size="sm" onPress={() => void markAllRead()}>
-            Mark all read
+            {t('notifications:activity.markAllRead')}
           </Button>
         ) : undefined
       }
@@ -63,9 +67,11 @@ export function ActivityInboxScreen({ onBack, embeddedInTabShell = false }: Acti
       <View className="gap-8">
         <View className="gap-4">
           <View className="gap-1">
-            <Text weight="semibold">Notifications</Text>
+            <Text weight="semibold" accessibilityRole="header">
+              {t('notifications:activity.groupedTitle')}
+            </Text>
             <Text variant="caption" color="secondary">
-              Grouped by type so you can scan faster.
+              {t('notifications:activity.groupedSubtitle')}
             </Text>
           </View>
           {isLoading ? (
@@ -73,14 +79,14 @@ export function ActivityInboxScreen({ onBack, embeddedInTabShell = false }: Acti
           ) : groupedNotifications.length === 0 ? (
             <View className="rounded-2xl border border-dashed border-border bg-surface/50 px-5 py-10">
               <Text variant="body-sm" color="secondary" className="text-center">
-                No grouped notifications yet.
+                {t('notifications:activity.empty')}
               </Text>
             </View>
           ) : (
             groupedNotifications.map((group) => (
               <ActivityGroupSection
                 key={group.key}
-                title={group.label}
+                title={labels.category(group.key)}
                 activities={group.items}
                 onActivityPress={handleActivityPress}
                 previewCount={3}
@@ -90,8 +96,8 @@ export function ActivityInboxScreen({ onBack, embeddedInTabShell = false }: Acti
         </View>
 
         <CollapsibleSection
-          title="Timeline"
-          subtitle="Chronological view of all activity"
+          title={t('notifications:activity.timelineTitle')}
+          subtitle={t('notifications:activity.timelineSubtitle')}
           persistKey="activity-timeline"
         >
           {isLoading ? (
