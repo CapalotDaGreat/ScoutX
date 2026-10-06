@@ -7,6 +7,7 @@ import { Button } from '@/components/primitives/Button';
 import { NotificationCard } from '@/components/primitives/NotificationCard';
 import { TrialInvitationCard } from '@/features/trial-invitations/components/TrialInvitationCard';
 import { TrialInvitationResponseModal } from '@/features/trial-invitations/components/TrialInvitationResponseModal';
+import { TrialReplayCard } from '@/features/career-story/components/TrialReplayCard';
 import {
   usePlayerTrialInvitations,
   useTrialNotifications,
@@ -98,6 +99,7 @@ export function PlayerTrialsScreen({
                   onPress={setActiveTrial}
                 />
               ))}
+              {trials[0] ? <TrialReplayCard invitation={trials[0]} /> : null}
             </View>
           </Section>
         )}

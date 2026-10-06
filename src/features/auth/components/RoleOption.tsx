@@ -1,10 +1,11 @@
 import { Pressable, View } from 'react-native';
-import { CheckCircle2, Shield, UserRound } from 'lucide-react-native';
+import { CheckCircle2, ClipboardList, Shield, UserRound } from 'lucide-react-native';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
-export type SelectableAuthRole = 'player' | 'scout';
+export type SelectableAuthRole = 'player' | 'scout' | 'coach';
 
 export type RoleOptionProps = {
   role: SelectableAuthRole;
@@ -14,29 +15,16 @@ export type RoleOptionProps = {
   testID?: string;
 };
 
-type RoleMeta = {
-  title: string;
-  description: string;
-  icon: typeof UserRound;
-};
-
-const roleMeta: Record<SelectableAuthRole, RoleMeta> = {
-  player: {
-    title: 'Player',
-    description: 'Create a profile, showcase your stats, and connect with scouts.',
-    icon: UserRound,
-  },
-  scout: {
-    title: 'Scout',
-    description: 'Discover talent, compare players, manage your pipeline, and send trials.',
-    icon: Shield,
-  },
-};
+const roleIcons = {
+  player: UserRound,
+  scout: Shield,
+  coach: ClipboardList,
+} as const;
 
 export function RoleOption({ role, selected = false, ...props }: RoleOptionProps) {
   const { colors } = useTheme();
-  const meta = roleMeta[role];
-  const Icon = meta.icon;
+  const { t } = useAppTranslation(['auth']);
+  const Icon = roleIcons[role];
 
   return (
     <Pressable
@@ -57,10 +45,10 @@ export function RoleOption({ role, selected = false, ...props }: RoleOptionProps
           </View>
           <View className="flex-1">
             <Text variant="label" className={cn(selected ? 'text-gold' : 'text-foreground')}>
-              {meta.title}
+              {t(`auth:roleSelection.${role}Title`)}
             </Text>
             <Text variant="body-sm" color="secondary" className="mt-1">
-              {meta.description}
+              {t(`auth:roleSelection.${role}Description`)}
             </Text>
           </View>
         </View>

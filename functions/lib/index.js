@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.requestEvidence = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
+exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.onVerificationWrittenSyncTrust = exports.requestEvidence = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
 require("./authSecurityPolicy");
 const app_1 = require("firebase-admin/app");
 const firestore_1 = require("firebase-admin/firestore");
@@ -35,6 +35,8 @@ Object.defineProperty(exports, "onRecruitmentEntryWritten", { enumerable: true, 
 Object.defineProperty(exports, "onPassportSummaryWrittenNotifyWatchers", { enumerable: true, get: function () { return watchlist_1.onPassportSummaryWrittenNotifyWatchers; } });
 var evidenceRequests_1 = require("./evidenceRequests");
 Object.defineProperty(exports, "requestEvidence", { enumerable: true, get: function () { return evidenceRequests_1.requestEvidence; } });
+var trustSync_1 = require("./trustSync");
+Object.defineProperty(exports, "onVerificationWrittenSyncTrust", { enumerable: true, get: function () { return trustSync_1.onVerificationWrittenSyncTrust; } });
 var askThisMatch_1 = require("./askThisMatch");
 Object.defineProperty(exports, "askThisMatch", { enumerable: true, get: function () { return askThisMatch_1.askThisMatch; } });
 var mediaAccess_1 = require("./mediaAccess");

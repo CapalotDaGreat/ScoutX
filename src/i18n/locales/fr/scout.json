@@ -261,5 +261,17 @@
       "insufficient": "Insufficient"
     },
     "lastEvidence": "Derniere preuve {{date}}"
+  },
+  "coach": {
+    "rosterTitle": "Effectif de l entraineur",
+    "rosterHint": "Joueurs avec lesquels tu travailles vraiment. Les observations sont etiquetees comme fournies par l entraineur.",
+    "rosterEmpty": "Aucun joueur dans cet effectif.",
+    "addPlayer": "Ajouter un joueur",
+    "playerIdPlaceholder": "ID joueur",
+    "observationPlaceholder": "Observation d une seance reelle",
+    "addObservation": "Enregistrer l observation",
+    "observationEmpty": "Aucune observation enregistree pour ce joueur.",
+    "saveFailed": "Impossible d enregistrer ce changement d effectif.",
+    "loadFailed": "Impossible de charger l effectif."
   }
 }

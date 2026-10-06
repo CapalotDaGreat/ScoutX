@@ -49,5 +49,13 @@
   "noRating": "Ainda sem avaliação",
   "noRatingHint": "As avaliações só aparecem depois de registar jogos com nota de jogo.",
   "unknownAge": "Idade não indicada",
-  "confidenceUnknown": "Confiança não indicada"
+  "confidenceUnknown": "Confiança não indicada",
+  "freshness": {
+    "unknown": "Atualidade desconhecida",
+    "today": "Atualizado hoje",
+    "daysAgo_one": "Atualizado ha {{count}} dia",
+    "daysAgo_other": "Atualizado ha {{count}} dias",
+    "sample_one": "com base em {{count}} amostra registada",
+    "sample_other": "com base em {{count}} amostras registadas"
+  }
 }

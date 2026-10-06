@@ -1,4 +1,4 @@
-export type TrustEntityType = 'player' | 'scout' | 'club';
+export type TrustEntityType = 'player' | 'scout' | 'club' | 'coach';
 
 export type TrustRecommendationType = 'coach_recommendation' | 'scout_endorsement';
 
@@ -17,6 +17,7 @@ export type TrustProfile = {
     clubId: string | null;
     clubName: string | null;
   };
+  coach?: TrustVerificationStatus;
   updatedAt: string;
 };
 

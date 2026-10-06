@@ -261,5 +261,17 @@
       "insufficient": "Insufficient"
     },
     "lastEvidence": "Laatste evidence {{date}}"
+  },
+  "coach": {
+    "rosterTitle": "Trainersselectie",
+    "rosterHint": "Spelers met wie je echt werkt. Observaties zijn gelabeld als van de trainer.",
+    "rosterEmpty": "Nog geen spelers in deze selectie.",
+    "addPlayer": "Speler toevoegen",
+    "playerIdPlaceholder": "Speler-ID",
+    "observationPlaceholder": "Observatie uit een echte sessie",
+    "addObservation": "Observatie opslaan",
+    "observationEmpty": "Geen observaties vastgelegd voor deze speler.",
+    "saveFailed": "Selectiewijziging kon niet worden opgeslagen.",
+    "loadFailed": "Selectie kon niet worden geladen."
   }
 }

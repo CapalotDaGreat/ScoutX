@@ -5,6 +5,7 @@ import { Button } from '@/components/primitives/Button';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { TrialHistoryTimeline } from '@/features/trial-invitations/components/TrialHistoryTimeline';
+import { TrialReplayCard } from '@/features/career-story/components/TrialReplayCard';
 import { TrialStatusBadge } from '@/features/trial-invitations/components/TrialStatusBadge';
 import { formatTrialDate } from '@/features/trial-invitations/models/TrialInvitationModel';
 import {
@@ -148,6 +149,7 @@ export function TrialInvitationResponseModal({
             History
           </Text>
           <TrialHistoryTimeline history={invitation.history} />
+          <TrialReplayCard invitation={invitation} />
         </View>
       </ScrollView>
     </Modal>

@@ -261,5 +261,17 @@
       "insufficient": "Insufficient"
     },
     "lastEvidence": "Ultima evidencia {{date}}"
+  },
+  "coach": {
+    "rosterTitle": "Plantel do treinador",
+    "rosterHint": "Jogadores com quem realmente trabalhas. As observacoes sao marcadas como do treinador.",
+    "rosterEmpty": "Ainda nao ha jogadores neste plantel.",
+    "addPlayer": "Adicionar jogador",
+    "playerIdPlaceholder": "ID do jogador",
+    "observationPlaceholder": "Observacao de uma sessao real",
+    "addObservation": "Guardar observacao",
+    "observationEmpty": "Sem observacoes registadas para este jogador.",
+    "saveFailed": "Nao foi possivel guardar a alteracao do plantel.",
+    "loadFailed": "Nao foi possivel carregar o plantel."
   }
 }

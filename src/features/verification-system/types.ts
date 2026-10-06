@@ -24,9 +24,12 @@ export type VerificationRequestDraft = {
 
 export type VerificationBadgeLevel = 'none' | 'basic' | 'verified';
 
+export type VerificationDimension = 'identity' | 'club' | 'coach' | 'performance' | 'career';
+
 export type EntityVerificationState = {
   entityId: string;
   entityType: VerificationEntityType;
   level: VerificationBadgeLevel;
   verifiedAt: string | null;
+  dimensions: Record<VerificationDimension, VerificationBadgeLevel>;
 };

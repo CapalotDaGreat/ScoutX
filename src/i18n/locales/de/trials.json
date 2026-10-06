@@ -16,5 +16,8 @@
   "accepted": "Accepted",
   "declined": "Declined",
   "invitePlayer": "Invite to trial",
-  "createInvitation": "Create invitation"
+  "createInvitation": "Create invitation",
+  "replayTitle": "Trial-Wiedergabe",
+  "replayEmpty": "Noch kein gespeicherter Trial-Verlauf.",
+  "replayLabel": "Wiedergabe des gespeicherten Einladungsverlaufs — nichts erfunden."
 }

@@ -11,6 +11,7 @@ export const TRUST_ENTITY_LABELS: Record<TrustEntityType, string> = {
   player: 'Verified Player',
   scout: 'Verified Scout',
   club: 'Verified Club',
+  coach: 'Verified Coach',
 };
 
 export const TRUST_RECOMMENDATION_LABELS: Record<TrustRecommendationType, string> = {

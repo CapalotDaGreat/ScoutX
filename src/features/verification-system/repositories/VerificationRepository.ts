@@ -13,12 +13,23 @@ function createRequestId(): string {
   return `verification-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+export function emptyVerificationDimensions(): EntityVerificationState['dimensions'] {
+  return {
+    identity: 'none',
+    club: 'none',
+    coach: 'none',
+    performance: 'none',
+    career: 'none',
+  };
+}
+
 function emptyState(entityId: string, entityType: VerificationRequest['entityType']): EntityVerificationState {
   return {
     entityId,
     entityType,
     level: 'none',
     verifiedAt: null,
+    dimensions: emptyVerificationDimensions(),
   };
 }
 
@@ -51,12 +62,23 @@ export class VerificationRepository {
     const data = snapshot.data();
     const level =
       data.level === 'basic' || data.level === 'verified' ? data.level : 'none';
+    const dimensions = emptyVerificationDimensions();
+    const raw = data.dimensions && typeof data.dimensions === 'object' ? (data.dimensions as Record<string, unknown>) : {};
+    for (const key of Object.keys(dimensions) as Array<keyof typeof dimensions>) {
+      if (raw[key] === 'basic' || raw[key] === 'verified' || raw[key] === 'none') {
+        dimensions[key] = raw[key];
+      }
+    }
+    if (level === 'verified') {
+      dimensions.identity = 'verified';
+    }
 
     return {
       entityId,
       entityType,
       level,
       verifiedAt: typeof data.verifiedAt === 'string' ? data.verifiedAt : null,
+      dimensions,
     };
   }
 
@@ -91,6 +113,10 @@ export class VerificationRepository {
         entityType: draft.entityType,
         level: 'basic',
         verifiedAt: null,
+        dimensions: {
+          ...emptyVerificationDimensions(),
+          identity: 'basic',
+        },
         updatedAt: now,
       },
       { merge: true },

@@ -23,6 +23,8 @@ import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 import { WatchlistEventsCard } from '@/features/scout-intelligence/components/WatchlistEventsCard';
+import { CoachRosterCard } from '@/features/coach-mode/components/CoachRosterCard';
+import { useAuth } from '@/features/auth/store/AuthProvider';
 
 export type ScoutDashboardScreenProps = {
   scoutName: string;
@@ -56,6 +58,7 @@ export function ScoutDashboardScreen({
   embeddedInTabShell = false,
 }: ScoutDashboardScreenProps) {
   const { t } = useAppTranslation(['scout', 'common', 'errors']);
+  const { role, user } = useAuth();
   const { colors } = useTheme();
   const { isTablet } = useCompactLayout();
   const { data, isLoading, error, refresh } = useScoutDashboard();
@@ -169,6 +172,7 @@ export function ScoutDashboardScreen({
       ) : null}
 
       <WatchlistEventsCard scoutId={recruitment.workspace?.scoutId ?? null} />
+      {role === 'coach' ? <CoachRosterCard coachId={user?.uid ?? null} /> : null}
 
       <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} />
 

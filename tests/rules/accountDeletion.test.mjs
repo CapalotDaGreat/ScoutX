@@ -27,6 +27,7 @@ const uidKeyed = [
   'publicPassports',
   'passportSummaries',
   'playerWatchers',
+  'coachRosters',
 ];
 
 const ownedByField = [
@@ -57,6 +58,9 @@ const ownedByField = [
   ['evidenceRequests', 'playerId'],
   ['watchlistEvents', 'scoutId'],
   ['watchlistEvents', 'playerId'],
+  ['careerSnapshots', 'playerId'],
+  ['coachObservations', 'coachId'],
+  ['coachObservations', 'playerId'],
 ];
 
 const storageFiles = (uid) => [

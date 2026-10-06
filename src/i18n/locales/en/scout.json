@@ -261,5 +261,17 @@
       "insufficient": "Insufficient"
     },
     "lastEvidence": "Last evidence {{date}}"
+  },
+  "coach": {
+    "rosterTitle": "Coach roster",
+    "rosterHint": "Players you actually work with. Observations are labelled coach-provided.",
+    "rosterEmpty": "No players on this roster yet.",
+    "addPlayer": "Add player",
+    "playerIdPlaceholder": "Player ID",
+    "observationPlaceholder": "Observation from a real session",
+    "addObservation": "Save observation",
+    "observationEmpty": "No observations recorded for this player.",
+    "saveFailed": "Could not save this roster change.",
+    "loadFailed": "Could not load the roster."
   }
 }

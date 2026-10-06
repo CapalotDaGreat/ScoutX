@@ -26,5 +26,15 @@
   "sharing": "Sharing…",
   "bestMatchRating": "Best match rating {{rating}} vs {{opponent}}",
   "shareSeasonCard": "Share season card",
-  "sharePdfRecap": "Share PDF recap"
+  "sharePdfRecap": "Share PDF recap",
+  "storyTitle": "Mijn voetbalverhaal",
+  "storyEmpty": "Nog niet genoeg vastgelegde momenten voor een verhaal.",
+  "storyLabel": "Gegenereerd uit vastgelegde momenten — geen AI-verzinsel",
+  "yearInReview": "Jaaroverzicht",
+  "yearEmpty": "Geen vastgelegde evidence voor dit jaar.",
+  "momentsCount_one": "{{count}} vastgelegd moment",
+  "momentsCount_other": "{{count}} vastgelegde momenten",
+  "coachNotesTitle": "Trainerobservaties",
+  "coachNotesLabel": "Alleen notities van de trainer — ScoutX verzint geen feedback.",
+  "coachNotesEmpty": "Nog geen trainerobservaties voor jou vastgelegd."
 }

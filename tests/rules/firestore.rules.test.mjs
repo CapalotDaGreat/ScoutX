@@ -454,6 +454,55 @@ describe('media library and reels', () => {
   });
 });
 
+describe('career snapshots and coach observations', () => {
+  test('year-in-review snapshots are immutable after create', async () => {
+    await allowed(
+      setDocument(PLAYER, `careerSnapshots/${PLAYER}-2026`, {
+        playerId: PLAYER,
+        year: 2026,
+        narrative: { text: 'Year 2026: 1 logged match.', label: 'generated_from_records' },
+      }),
+      'owner creates snapshot',
+    );
+    await denied(
+      setDocument(PLAYER, `careerSnapshots/${PLAYER}-2026`, {
+        playerId: PLAYER,
+        year: 2026,
+        narrative: { text: 'invented', label: 'generated_from_records' },
+      }),
+      'mutate snapshot',
+    );
+  });
+
+  test('only a coach claim can write observations with coach_provided provenance', async () => {
+    await denied(
+      setDocument(PLAYER, 'coachObservations/o1', {
+        coachId: PLAYER, playerId: PLAYER, body: 'note', provenance: 'coach_provided',
+      }),
+      'player poses as coach',
+    );
+    await allowed(
+      setDocument(COACH, 'coachObservations/o1', {
+        coachId: COACH, playerId: PLAYER, body: 'Hold the line', provenance: 'coach_provided',
+      }),
+      'coach writes observation',
+    );
+    await denied(getDocument(OUTSIDER, 'coachObservations/o1'), 'outsider reads observation');
+  });
+
+  test('coach roster writes require a coach claim and stay owner-only', async () => {
+    await denied(
+      setDocument(SCOUT, `coachRosters/${SCOUT}`, { coachId: SCOUT, players: [] }),
+      'scout writes roster',
+    );
+    await allowed(
+      setDocument(COACH, `coachRosters/${COACH}`, { coachId: COACH, players: [] }),
+      'coach writes roster',
+    );
+    await denied(getDocument(PLAYER, `coachRosters/${COACH}`), 'player reads roster');
+  });
+});
+
 describe('scout intelligence collections', () => {
   test('watchlist events and evidence requests are not client-created', async () => {
     await denied(

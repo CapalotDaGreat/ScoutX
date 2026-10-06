@@ -261,5 +261,17 @@
       "insufficient": "Unzureichend"
     },
     "lastEvidence": "Letzte Evidenz {{date}}"
+  },
+  "coach": {
+    "rosterTitle": "Trainerkader",
+    "rosterHint": "Spieler, mit denen du wirklich arbeitest. Beobachtungen sind als trainerbereitgestellt gekennzeichnet.",
+    "rosterEmpty": "Noch keine Spieler in diesem Kader.",
+    "addPlayer": "Spieler hinzufuegen",
+    "playerIdPlaceholder": "Spieler-ID",
+    "observationPlaceholder": "Beobachtung aus einer echten Einheit",
+    "addObservation": "Beobachtung speichern",
+    "observationEmpty": "Keine Beobachtungen fuer diesen Spieler erfasst.",
+    "saveFailed": "Kaderaenderung konnte nicht gespeichert werden.",
+    "loadFailed": "Kader konnte nicht geladen werden."
   }
 }

@@ -91,6 +91,7 @@ export const resolveVerificationRequest = onCall(
             entityType: 'player',
             level: data.status === 'approved' ? 'verified' : 'basic',
             verifiedAt: data.status === 'approved' ? now : null,
+            'dimensions.identity': data.status === 'approved' ? 'verified' : 'basic',
             updatedAt: now,
           },
           { merge: true },

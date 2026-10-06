@@ -261,5 +261,17 @@
       "insufficient": "Insufficient"
     },
     "lastEvidence": "Ultima evidencia {{date}}"
+  },
+  "coach": {
+    "rosterTitle": "Plantilla del entrenador",
+    "rosterHint": "Jugadores con los que realmente trabajas. Las observaciones se marcan como del entrenador.",
+    "rosterEmpty": "Aun no hay jugadores en esta plantilla.",
+    "addPlayer": "Anadir jugador",
+    "playerIdPlaceholder": "ID del jugador",
+    "observationPlaceholder": "Observacion de una sesion real",
+    "addObservation": "Guardar observacion",
+    "observationEmpty": "No hay observaciones registradas para este jugador.",
+    "saveFailed": "No se pudo guardar el cambio de plantilla.",
+    "loadFailed": "No se pudo cargar la plantilla."
   }
 }

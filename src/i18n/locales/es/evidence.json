@@ -49,5 +49,13 @@
   "noRating": "Aún sin valoración",
   "noRatingHint": "Las valoraciones aparecen solo cuando se registran partidos con nota de partido.",
   "unknownAge": "Edad no indicada",
-  "confidenceUnknown": "Confianza no indicada"
+  "confidenceUnknown": "Confianza no indicada",
+  "freshness": {
+    "unknown": "Actualidad desconocida",
+    "today": "Actualizado hoy",
+    "daysAgo_one": "Actualizado hace {{count}} dia",
+    "daysAgo_other": "Actualizado hace {{count}} dias",
+    "sample_one": "basado en {{count}} muestra registrada",
+    "sample_other": "basado en {{count}} muestras registradas"
+  }
 }

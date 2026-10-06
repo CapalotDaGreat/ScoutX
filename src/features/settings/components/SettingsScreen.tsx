@@ -39,7 +39,7 @@ function formatRole(
     return t('guest', { ns: 'common' });
   }
   if (role === 'coach') {
-    return t('scout', { ns: 'common' });
+    return t('coach', { ns: 'common' });
   }
   if (role === 'player') {
     return t('player', { ns: 'common' });

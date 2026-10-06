@@ -31,6 +31,7 @@ export function RoleSelectionScreen({ onContinue, onBack, successMessage }: Role
 
         <RoleOption role="player" selected={role === 'player'} onPress={() => setRole('player')} />
         <RoleOption role="scout" selected={role === 'scout'} onPress={() => setRole('scout')} />
+        <RoleOption role="coach" selected={role === 'coach'} onPress={() => setRole('coach')} />
 
         <FormActions>
           <Button variant="accent" disabled={!role} onPress={() => role && onContinue(role)}>

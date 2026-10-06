@@ -19,6 +19,7 @@ const UID_KEYED_COLLECTIONS = [
   'publicPassports',
   'passportSummaries',
   'playerWatchers',
+  'coachRosters',
 ] as const;
 
 /** Collections queried by an owner/participant field. */
@@ -50,6 +51,9 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['evidenceRequests', 'playerId'],
   ['watchlistEvents', 'scoutId'],
   ['watchlistEvents', 'playerId'],
+  ['careerSnapshots', 'playerId'],
+  ['coachObservations', 'coachId'],
+  ['coachObservations', 'playerId'],
 ];
 
 const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];

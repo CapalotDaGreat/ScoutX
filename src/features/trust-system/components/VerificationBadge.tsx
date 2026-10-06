@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { BadgeCheck, Building2, ShieldCheck, UserCheck } from 'lucide-react-native';
+import { BadgeCheck, Building2, ClipboardList, ShieldCheck, UserCheck } from 'lucide-react-native';
 import { Badge, type BadgeSize, type BadgeVariant } from '@/components/primitives/Badge';
 import { TRUST_ENTITY_LABELS } from '@/features/trust-system/constants';
 import { type TrustEntityType } from '@/features/trust-system/types';
@@ -9,12 +9,14 @@ const entityVariants: Record<TrustEntityType, BadgeVariant> = {
   player: 'info',
   scout: 'accent',
   club: 'prestige',
+  coach: 'success',
 };
 
 const entityIcons = {
   player: UserCheck,
   scout: ShieldCheck,
   club: Building2,
+  coach: ClipboardList,
 } as const;
 
 export type VerificationBadgeProps = {

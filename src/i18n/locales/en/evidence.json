@@ -49,5 +49,13 @@
   "noRating": "No rating yet",
   "noRatingHint": "Ratings only appear once matches with a match rating are logged.",
   "unknownAge": "Age not provided",
-  "confidenceUnknown": "Confidence not reported"
+  "confidenceUnknown": "Confidence not reported",
+  "freshness": {
+    "unknown": "Freshness unknown",
+    "today": "Updated today",
+    "daysAgo_one": "Updated {{count}} day ago",
+    "daysAgo_other": "Updated {{count}} days ago",
+    "sample_one": "based on {{count}} recorded sample",
+    "sample_other": "based on {{count}} recorded samples"
+  }
 }

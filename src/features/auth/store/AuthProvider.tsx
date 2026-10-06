@@ -54,7 +54,7 @@ type AuthContextValue = {
   signUp: (payload: SignUpPayload) => Promise<void>;
   signInAsGuest: () => Promise<void>;
   forgotPassword: (payload: ForgotPasswordPayload) => Promise<void>;
-  selectRole: (role: 'player' | 'scout') => void;
+  selectRole: (role: 'player' | 'scout' | 'coach') => void;
   beginUpgrade: (intent: AccountUpgradeIntent) => void;
   clearUpgrade: () => void;
   signOut: () => Promise<void>;
@@ -141,7 +141,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const isGuest = isGuestRole(user.role, user.isAnonymous);
     const pendingRoleSelection = Boolean(
-      !isGuest && (user.role === undefined || (user.role !== 'player' && user.role !== 'scout')),
+      !isGuest &&
+        (user.role === undefined ||
+          (user.role !== 'player' &&
+            user.role !== 'scout' &&
+            user.role !== 'coach' &&
+            user.role !== 'club')),
     );
 
     setState((current) => ({
@@ -431,7 +436,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, []);
 
-  const selectRole = useCallback((role: 'player' | 'scout') => {
+  const selectRole = useCallback((role: 'player' | 'scout' | 'coach') => {
     const userId = state.user?.uid;
     if (userId) {
       // The confirmRole function writes the users doc and mirrors the role into a custom

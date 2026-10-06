@@ -519,6 +519,37 @@ service cloud.firestore {
       allow delete: if isSignedIn() && request.auth.uid == resource.data.ownerId;
     }
 
+    match /careerSnapshots/{snapshotId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.playerId;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId
+        && request.resource.data.narrative.label == 'generated_from_records';
+      allow update, delete: if false;
+    }
+
+    match /coachRosters/{coachId} {
+      allow read: if isOwner(coachId);
+      allow create, update: if isOwner(coachId)
+        && tokenRole() == 'coach'
+        && request.resource.data.coachId == coachId;
+      allow delete: if isOwner(coachId) && tokenRole() == 'coach';
+    }
+
+    match /coachObservations/{observationId} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == resource.data.coachId || request.auth.uid == resource.data.playerId);
+      allow create: if isSignedIn()
+        && tokenRole() == 'coach'
+        && request.auth.uid == request.resource.data.coachId
+        && request.resource.data.provenance == 'coach_provided';
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.coachId
+        && request.resource.data.coachId == resource.data.coachId
+        && request.resource.data.playerId == resource.data.playerId
+        && request.resource.data.provenance == 'coach_provided';
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.coachId;
+    }
+
     match /reelExports/{exportId} {
       allow read: if isSignedIn() && request.auth.uid == resource.data.ownerId;
       allow write: if false;

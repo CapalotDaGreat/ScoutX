@@ -1,4 +1,5 @@
 import { VerificationRepository } from '@/features/verification-system/repositories/VerificationRepository';
+import { isDiscoverableVerifiedLevel } from '@/features/verification-system/services/discoverableVerified';
 import {
   type EntityVerificationState,
   type VerificationBadgeLevel,
@@ -42,12 +43,8 @@ export function isPlayerVerified(state: EntityVerificationState): boolean {
 
 export function isDiscoverableVerified(
   verificationState: EntityVerificationState,
-  portfolioPublic: boolean,
-  coachRecommendations: number,
+  _portfolioPublic: boolean,
+  _coachRecommendations: number,
 ): boolean {
-  return (
-    verificationState.level === 'verified' ||
-    (portfolioPublic && coachRecommendations > 0) ||
-    verificationState.level === 'basic'
-  );
+  return isDiscoverableVerifiedLevel(verificationState.level);
 }

@@ -44,6 +44,7 @@ export function parseTrustProfile(value: unknown, playerId: string): TrustProfil
       clubId: typeof clubRecord?.clubId === 'string' ? clubRecord.clubId : null,
       clubName: typeof clubRecord?.clubName === 'string' ? clubRecord.clubName : null,
     },
+    coach: parseVerification(record.coach),
     updatedAt: parseIsoDate(record.updatedAt, now),
   };
 }
@@ -54,6 +55,7 @@ export function serializeTrustProfile(profile: TrustProfile): Record<string, unk
     player: profile.player,
     scout: profile.scout,
     club: profile.club,
+    coach: profile.coach ?? { verified: false, verifiedAt: null },
     updatedAt: profile.updatedAt,
   };
 }
@@ -155,6 +157,7 @@ export function createDefaultTrustProfile(playerId: string): TrustProfile {
     player: { verified: false, verifiedAt: null },
     scout: { verified: false, verifiedAt: null },
     club: { verified: false, verifiedAt: null, clubId: null, clubName: null },
+    coach: { verified: false, verifiedAt: null },
     updatedAt: now,
   };
 }
@@ -230,7 +233,7 @@ export function groupRecommendationsByType(recommendations: TrustRecommendation[
 }
 
 export function getVerificationLabel(
-  entity: keyof Pick<TrustProfile, 'player' | 'scout' | 'club'>,
+  entity: keyof Pick<TrustProfile, 'player' | 'scout' | 'club' | 'coach'>,
   profile: TrustProfile,
 ): string {
   if (entity === 'club' && profile.club.clubName) {

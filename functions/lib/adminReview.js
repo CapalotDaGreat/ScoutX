@@ -65,6 +65,7 @@ exports.resolveVerificationRequest = (0, https_1.onCall)((0, callableOptions_1.c
             entityType: 'player',
             level: data.status === 'approved' ? 'verified' : 'basic',
             verifiedAt: data.status === 'approved' ? now : null,
+            'dimensions.identity': data.status === 'approved' ? 'verified' : 'basic',
             updatedAt: now,
         }, { merge: true });
     }

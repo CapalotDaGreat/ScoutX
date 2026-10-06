@@ -261,5 +261,17 @@
       "insufficient": "Insufficient"
     },
     "lastEvidence": "Ultima evidenza {{date}}"
+  },
+  "coach": {
+    "rosterTitle": "Rosa dell allenatore",
+    "rosterHint": "Giocatori con cui lavori davvero. Le osservazioni sono etichettate come fornite dall allenatore.",
+    "rosterEmpty": "Nessun giocatore in questa rosa.",
+    "addPlayer": "Aggiungi giocatore",
+    "playerIdPlaceholder": "ID giocatore",
+    "observationPlaceholder": "Osservazione da una sessione reale",
+    "addObservation": "Salva osservazione",
+    "observationEmpty": "Nessuna osservazione registrata per questo giocatore.",
+    "saveFailed": "Impossibile salvare la modifica alla rosa.",
+    "loadFailed": "Impossibile caricare la rosa."
   }
 }

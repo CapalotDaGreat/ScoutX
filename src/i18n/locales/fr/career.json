@@ -26,5 +26,15 @@
   "sharing": "Sharing…",
   "bestMatchRating": "Best match rating {{rating}} vs {{opponent}}",
   "shareSeasonCard": "Share season card",
-  "sharePdfRecap": "Share PDF recap"
+  "sharePdfRecap": "Share PDF recap",
+  "storyTitle": "Mon histoire football",
+  "storyEmpty": "Pas assez de moments enregistres pour raconter une histoire.",
+  "storyLabel": "Genere a partir de moments enregistres — pas une invention IA",
+  "yearInReview": "Bilan de l annee",
+  "yearEmpty": "Aucune preuve enregistree pour cette annee.",
+  "momentsCount_one": "{{count}} moment enregistre",
+  "momentsCount_other": "{{count}} moments enregistres",
+  "coachNotesTitle": "Observations de l entraineur",
+  "coachNotesLabel": "Uniquement des notes fournies par l entraineur — ScoutX n invente pas de feedback.",
+  "coachNotesEmpty": "Aucune observation d entraineur enregistree pour toi."
 }

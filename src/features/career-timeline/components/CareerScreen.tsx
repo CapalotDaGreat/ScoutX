@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
@@ -17,6 +17,12 @@ import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWork
 import { WeeklyFootballReportCard } from '@/features/weekly-report/components/WeeklyFootballReportCard';
 import { useWeeklyReportNotifier } from '@/features/weekly-report/hooks/useWeeklyReportNotifier';
 import { usePortfolioAnalytics } from '@/features/portfolio-analytics/hooks/usePortfolioAnalytics';
+import { CareerStorySection } from '@/features/career-story/components/CareerStorySection';
+import { buildCareerMoments } from '@/features/career-story/services/careerMoments';
+import { persistCareerSnapshot } from '@/features/career-story/services/persistCareerSnapshot';
+import { buildFootballStory, buildYearInReviewSnapshot } from '@/features/career-story/services/yearInReview';
+import { PlayerCoachObservationsCard } from '@/features/coach-mode/components/PlayerCoachObservationsCard';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type CareerScreenProps = {
   embeddedInTabShell?: boolean;
@@ -31,6 +37,7 @@ export function CareerScreen({
   onEditJourneyPress,
   onCareerReplayPress,
 }: CareerScreenProps) {
+  const { t } = useAppTranslation(['career', 'common']);
   const { profile, isLoading, trustState } = usePlayerWorkspace();
   const { analytics } = usePortfolioAnalytics(profile?.id);
   const { earned, recentlyEarned } = usePlayerMilestones(profile, trustState.recommendations);
@@ -39,6 +46,40 @@ export function CareerScreen({
     () => buildUnifiedCareerTimeline(profile?.footballJourney),
     [profile?.footballJourney],
   );
+  const storyBundle = useMemo(() => {
+    const moments = buildCareerMoments({
+      matches: (profile?.statisticsMatches ?? []).map((match) => ({
+        id: match.id,
+        date: match.date,
+        opponent: match.opponent,
+        result: match.result,
+        goals: match.goals,
+        assists: match.assists,
+      })),
+      journey: profile?.footballJourney?.entries.map((entry) => ({
+        id: entry.id,
+        title: entry.title,
+        date: entry.date,
+        subtitle: entry.subtitle,
+      })),
+    });
+    const year = new Date().getFullYear();
+    const yearMatches = (profile?.statisticsMatches ?? []).filter(
+      (match) => new Date(match.date).getFullYear() === year,
+    );
+    const goals = yearMatches.length === 0 ? null : yearMatches.reduce((sum, match) => sum + match.goals, 0);
+    const assists = yearMatches.length === 0 ? null : yearMatches.reduce((sum, match) => sum + match.assists, 0);
+    return {
+      snapshot: buildYearInReviewSnapshot(profile?.id ?? 'player', year, moments, { goals, assists }),
+      story: buildFootballStory(profile?.id ?? 'player', moments),
+    };
+  }, [profile]);
+  useEffect(() => {
+    if (!profile?.id) {
+      return;
+    }
+    void persistCareerSnapshot(storyBundle.snapshot);
+  }, [profile?.id, storyBundle.snapshot]);
   const [showFullTimeline, setShowFullTimeline] = useState(false);
 
   const screenProps = {
@@ -48,7 +89,7 @@ export function CareerScreen({
 
   if (isLoading) {
     return (
-      <Screen title="Career" subtitle="Your football story" safeArea {...screenProps}>
+      <Screen title={t('career:title')} subtitle={t('career:loadingSubtitle')} safeArea {...screenProps}>
         <SkeletonLoader variant="card" count={3} />
       </Screen>
     );
@@ -56,10 +97,10 @@ export function CareerScreen({
 
   if (!profile) {
     return (
-      <Screen title="Career" subtitle="Your football story" safeArea {...screenProps}>
+      <Screen title={t('career:title')} subtitle={t('career:loadingSubtitle')} safeArea {...screenProps}>
         <EmptyState
-          title="No identity yet"
-          description="Complete your football identity to start building your career timeline."
+          title={t('career:noIdentityTitle')}
+          description={t('career:noIdentityDescription')}
         />
       </Screen>
     );
@@ -69,8 +110,8 @@ export function CareerScreen({
 
   return (
     <Screen
-      title="Career"
-      subtitle="Your journey, milestones, and weekly growth"
+      title={t('career:title')}
+      subtitle={t('career:subtitle')}
       safeArea
       contentClassName="gap-6"
       {...screenProps}
@@ -81,11 +122,13 @@ export function CareerScreen({
           recommendations={trustState.recommendations}
         />
         <CareerReplayCard profile={profile} onOpenPress={onCareerReplayPress} />
+        <CareerStorySection story={storyBundle.story} snapshot={storyBundle.snapshot} />
+        <PlayerCoachObservationsCard playerId={profile.id} />
         <MilestonesSection earned={earned} recentlyEarned={recentlyEarned} previewCount={4} />
 
         <CollapsibleSection
-          title="Coaching & insights"
-          subtitle="AI coach and performance signals"
+          title={t('career:coachingInsights')}
+          subtitle={t('career:coachingInsightsSubtitle')}
           persistKey="career-coaching"
         >
           <View className="gap-4">
@@ -97,22 +140,22 @@ export function CareerScreen({
         <Card variant="outlined" padding="md" className="gap-4">
           <View>
             <Text variant="overline" color="secondary">
-              Football timeline
+              {t('career:footballTimeline')}
             </Text>
             <Text weight="semibold" className="text-lg">
-              Your career story
+              {t('career:careerStory')}
             </Text>
             <Text variant="caption" color="secondary" className="mt-1">
               {timeline.length === 0
-                ? 'Start logging moments to build your story'
-                : `${timeline.length} moments · newest first`}
+                ? t('career:noEntries')
+                : t('career:momentsCount', { count: timeline.length })}
             </Text>
           </View>
 
           {timeline.length === 0 ? (
             <EmptyState
-              title="Your timeline is empty"
-              description="Log matches, add journey entries, and enable your portfolio to build your story automatically."
+              title={t('career:timelineEmptyTitle')}
+              description={t('career:timelineEmptyDescription')}
             />
           ) : (
             <>
@@ -128,7 +171,7 @@ export function CareerScreen({
                   onPress={() => setShowFullTimeline((current) => !current)}
                   className="self-start"
                 >
-                  {showFullTimeline ? 'Show less' : `See more · ${timeline.length - 5}`}
+                  {showFullTimeline ? t('common:seeLess') : t('common:seeMore')}
                 </Button>
               ) : null}
             </>

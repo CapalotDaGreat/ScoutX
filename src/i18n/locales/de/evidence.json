@@ -49,5 +49,13 @@
   "noRating": "Noch keine Bewertung",
   "noRatingHint": "Bewertungen erscheinen erst, wenn Spiele mit Spielbewertung erfasst wurden.",
   "unknownAge": "Alter nicht angegeben",
-  "confidenceUnknown": "Sicherheit nicht angegeben"
+  "confidenceUnknown": "Sicherheit nicht angegeben",
+  "freshness": {
+    "unknown": "Aktualitaet unbekannt",
+    "today": "Heute aktualisiert",
+    "daysAgo_one": "Vor {{count}} Tag aktualisiert",
+    "daysAgo_other": "Vor {{count}} Tagen aktualisiert",
+    "sample_one": "basiert auf {{count}} erfassten Stichprobe",
+    "sample_other": "basiert auf {{count}} erfassten Stichproben"
+  }
 }

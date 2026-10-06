@@ -49,5 +49,13 @@
   "noRating": "Nog geen beoordeling",
   "noRatingHint": "Beoordelingen verschijnen pas zodra wedstrijden met een wedstrijdcijfer zijn gelogd.",
   "unknownAge": "Leeftijd niet opgegeven",
-  "confidenceUnknown": "Zekerheid niet opgegeven"
+  "confidenceUnknown": "Zekerheid niet opgegeven",
+  "freshness": {
+    "unknown": "Actualiteit onbekend",
+    "today": "Vandaag bijgewerkt",
+    "daysAgo_one": "{{count}} dag geleden bijgewerkt",
+    "daysAgo_other": "{{count}} dagen geleden bijgewerkt",
+    "sample_one": "gebaseerd op {{count}} vastgelegde steekproef",
+    "sample_other": "gebaseerd op {{count}} vastgelegde steekproeven"
+  }
 }

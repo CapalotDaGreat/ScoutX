@@ -49,5 +49,13 @@
   "noRating": "Pas encore de note",
   "noRatingHint": "Les notes n'apparaissent qu'une fois des matchs avec note de match enregistrés.",
   "unknownAge": "Âge non renseigné",
-  "confidenceUnknown": "Confiance non indiquée"
+  "confidenceUnknown": "Confiance non indiquée",
+  "freshness": {
+    "unknown": "Fraicheur inconnue",
+    "today": "Mis a jour aujourd hui",
+    "daysAgo_one": "Mis a jour il y a {{count}} jour",
+    "daysAgo_other": "Mis a jour il y a {{count}} jours",
+    "sample_one": "base sur {{count}} echantillon enregistre",
+    "sample_other": "base sur {{count}} echantillons enregistres"
+  }
 }

@@ -9,6 +9,7 @@ import { ClubTenureStrip } from '@/features/trust-system/components/ClubTenureSt
 import { RecommendationCard } from '@/features/trust-system/components/RecommendationCard';
 import { ScoutEndorsementModal } from '@/features/trust-system/components/ScoutEndorsementModal';
 import { VerificationBadgeStrip } from '@/features/trust-system/components/VerificationBadgeStrip';
+import { FreshnessLabel } from '@/components/evidence/FreshnessLabel';
 import {
   usePlayerTrust,
   type UsePlayerTrustResult,
@@ -112,6 +113,7 @@ function TrustProfileSectionContent({
     trustProfile.player.verified ||
     trustProfile.scout.verified ||
     trustProfile.club.verified ||
+    Boolean(trustProfile.coach?.verified) ||
     clubTenures.length > 0 ||
     recommendations.length > 0;
 
@@ -149,6 +151,7 @@ function TrustProfileSectionContent({
             </View>
 
             <VerificationBadgeStrip profile={trustProfile} />
+            <FreshnessLabel updatedAt={trustProfile.updatedAt} sampleSize={recommendations.length} />
             <ClubTenureStrip tenures={clubTenures} />
 
             {recommendations.length === 0 ? (

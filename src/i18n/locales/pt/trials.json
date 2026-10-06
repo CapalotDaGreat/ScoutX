@@ -16,5 +16,8 @@
   "accepted": "Accepted",
   "declined": "Declined",
   "invitePlayer": "Invite to trial",
-  "createInvitation": "Create invitation"
+  "createInvitation": "Create invitation",
+  "replayTitle": "Replay do trial",
+  "replayEmpty": "Ainda nao ha historico de trial registado.",
+  "replayLabel": "Replay do historico de convite armazenado — nada inventado."
 }
