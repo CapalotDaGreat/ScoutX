@@ -22,7 +22,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tests",
     "test:unit": "node --test \"tests/unit/*.test.ts\"",
-    "test:rules": "npm run build --prefix functions && firebase emulators:exec --only firestore,storage --project demo-scoutx \"node --test --test-concurrency=1 tests/rules/firestore.rules.test.mjs tests/rules/storage.rules.test.mjs tests/rules/accountDeletion.test.mjs\"",
+    "test:rules": "npm run build --prefix functions && firebase emulators:exec --only firestore,storage --project demo-scoutx \"node --test --test-concurrency=1 tests/rules/firestore.rules.test.mjs tests/rules/storage.rules.test.mjs tests/rules/accountDeletion.test.mjs tests/rules/aiCallables.test.mjs\"",
     "test:e2e": "node scripts/run-e2e.mjs",
     "test:e2e:web": "node scripts/run-e2e.mjs --project=web-desktop --project=web-mobile",
     "test:e2e:install": "playwright install chromium",
