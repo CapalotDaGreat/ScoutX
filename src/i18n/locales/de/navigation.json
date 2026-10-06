@@ -19,6 +19,8 @@
                      "gps":  "GPS",
                      "trials":  "Trials",
                      "highlights":  "Highlights",
+                     "library": "Bibliothek",
+                     "reels": "Reels",
                      "reports":  "Berichte",
         "development": "Entwicklung"
     },

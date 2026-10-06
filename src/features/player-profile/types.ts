@@ -64,4 +64,5 @@ export type PlayerProfile = {
   username?: string;
   hiddenEndorsementIds?: string[];
   earnedMilestones?: EarnedMilestone[];
+  featuredMediaIds?: string[];
 };

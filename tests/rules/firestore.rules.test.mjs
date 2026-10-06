@@ -421,3 +421,40 @@ describe('ownership of shared documents', () => {
     await denied(getDocument(PLAYER, `pushThrottle/${PLAYER}`), 'push throttle state');
   });
 });
+
+describe('media library and reels', () => {
+  test('media items are owner-only and must keep storage paths', async () => {
+    const item = {
+      id: 'm1', ownerId: PLAYER, type: 'highlight', storagePath: 'profiles/p/videos/m1/video.mp4',
+      visibility: 'private', uploadState: 'ready', processingState: 'none', favorite: false,
+      tags: [], goalIds: [], title: 'Clip', durationSec: 12, thumbnailPath: null,
+      sourceMatchId: null, sourceJobId: null, createdAt: '2026-10-01', updatedAt: '2026-10-01',
+    };
+    await allowed(setDocument(PLAYER, `players/${PLAYER}/media/m1`, item), 'owner writes media');
+    await denied(getDocument(SCOUT, `players/${PLAYER}/media/m1`), 'scout reads media');
+    await denied(setDocument(OUTSIDER, `players/${PLAYER}/media/m2`, { ...item, id: 'm2' }), 'outsider writes');
+  });
+
+  test('reels are owner-managed; grants cannot be self-addressed; exports are server-only', async () => {
+    const reel = {
+      id: 'r1', ownerId: PLAYER, preset: 'scout', mode: 'scout', segments: [], title: 'Reel',
+      coverMediaId: null, aspectRatio: '9:16', privacy: 'private', status: 'draft',
+      aiSuggestions: [], quality: { notes: [] }, version: 1, createdAt: '2026-10-01', updatedAt: '2026-10-01',
+    };
+    await allowed(setDocument(PLAYER, 'reels/r1', reel), 'owner creates reel');
+    await denied(setDocument(OUTSIDER, 'reels/r1', { ...reel, ownerId: OUTSIDER }), 'takeover reel');
+    await allowed(
+      setDocument(PLAYER, 'mediaGrants/g1', {
+        ownerId: PLAYER, granteeId: SCOUT, mediaId: 'm1', expiresAt: '2026-12-01T00:00:00.000Z',
+      }),
+      'share with scout',
+    );
+    await denied(
+      setDocument(PLAYER, 'mediaGrants/g2', {
+        ownerId: PLAYER, granteeId: PLAYER, mediaId: 'm1', expiresAt: '2026-12-01T00:00:00.000Z',
+      }),
+      'self grant',
+    );
+    await denied(setDocument(PLAYER, 'reelExports/e1', { ownerId: PLAYER, reelId: 'r1', status: 'unavailable' }), 'client export');
+  });
+});

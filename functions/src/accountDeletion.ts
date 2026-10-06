@@ -37,6 +37,10 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['verificationStates', 'entityId'],
   ['portfolioSlugs', 'playerId'],
   ['clubProfiles', 'ownerId'],
+  ['reels', 'ownerId'],
+  ['mediaGrants', 'ownerId'],
+  ['mediaGrants', 'granteeId'],
+  ['reelExports', 'ownerId'],
 ];
 
 const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
@@ -89,6 +93,26 @@ export async function deleteAllUserData(uid: string): Promise<{ failures: string
       logger.error('Account deletion: query delete failed', {
         collection,
         field,
+        message: error instanceof Error ? error.message : 'unknown',
+      });
+    }
+  }
+
+  const playerSubs = [
+    'matches',
+    'evidenceItems',
+    'developmentGoals',
+    'trainingSessions',
+    'identitySnapshots',
+    'media',
+  ];
+  for (const sub of playerSubs) {
+    try {
+      await deleteQueryInBatches(db.collection('players').doc(uid).collection(sub));
+    } catch (error) {
+      failures.push(`players.${sub}`);
+      logger.error('Account deletion: player subcollection failed', {
+        sub,
         message: error instanceof Error ? error.message : 'unknown',
       });
     }

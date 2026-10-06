@@ -189,6 +189,17 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    match /players/{userId}/media/{mediaId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == mediaId
+        && request.resource.data.type in ['matchFootage', 'clip', 'highlight', 'reel']
+        && request.resource.data.storagePath is string
+        && request.resource.data.visibility in ['private', 'passport', 'grant'];
+      allow delete: if isOwner(userId);
+    }
+
     // Trust scores are server-maintained; players must not be able to inflate their own.
     match /trustProfiles/{playerId} {
       allow read: if isSignedIn() || publicPortfolioEnabled(playerId);
@@ -430,6 +441,35 @@ service cloud.firestore {
 
     match /analysisQuotas/{userId} {
       allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    match /reels/{reelId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.ownerId;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.ownerId
+        && request.resource.data.status in ['draft', 'review'];
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.ownerId
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.status in ['draft', 'review', 'approved'];
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.ownerId;
+    }
+
+    match /mediaGrants/{grantId} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == resource.data.ownerId || request.auth.uid == resource.data.granteeId);
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.ownerId
+        && request.resource.data.granteeId is string
+        && request.resource.data.granteeId != request.auth.uid
+        && request.resource.data.expiresAt is string;
+      allow update: if false;
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.ownerId;
+    }
+
+    match /reelExports/{exportId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.ownerId;
       allow write: if false;
     }
 

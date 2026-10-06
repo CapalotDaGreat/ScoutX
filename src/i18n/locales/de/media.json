@@ -1,0 +1,42 @@
+{
+  "library": {
+    "title": "Mediathek",
+    "empty": "Noch keine Medien. Hochgeladene Clips und Spielvideos erscheinen hier, sobald sie als Pfad gespeichert sind.",
+    "loadFailed": "Mediathek konnte nicht geladen werden.",
+    "addToPassport": "Zum Football Passport hinzufügen",
+    "makePrivate": "Privat machen"
+  },
+  "share": {
+    "scoutId": "Scout-Benutzer-ID",
+    "placeholder": "ScoutX-Benutzer-ID des Scouts einfügen",
+    "action": "Mit Scout teilen",
+    "sent": "Freigabe gespeichert",
+    "failed": "Konnte nicht geteilt werden."
+  },
+  "reel": {
+    "listTitle": "Reels",
+    "new": "Neues Reel-Entwurf",
+    "empty": "Noch keine Reel-Manifeste.",
+    "untitled": "Unbenanntes Reel",
+    "edit": "Bearbeiten",
+    "clips": "Clips",
+    "editorTitle": "Reel-Editor",
+    "missing": "Dieses Reel ist nicht verfügbar.",
+    "title": "Titel",
+    "duration": "{{seconds}}s sequenziert",
+    "overlaps": "{{count}} überlappende Schnitte",
+    "clip": "Clip {{index}}",
+    "up": "Nach oben",
+    "down": "Nach unten",
+    "trim": "1s kürzen",
+    "remove": "Entfernen",
+    "cover": "Als Cover",
+    "accept": "Vorschlag annehmen",
+    "reject": "Vorschlag ablehnen",
+    "sendReview": "Zur Prüfung",
+    "approve": "Freigeben",
+    "export": "Exportieren",
+    "saveFailed": "Reel konnte nicht gespeichert werden",
+    "loadFailed": "Reels konnten nicht geladen werden."
+  }
+}

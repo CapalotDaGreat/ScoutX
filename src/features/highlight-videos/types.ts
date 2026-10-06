@@ -81,7 +81,6 @@ export type CompressedVideoResult = {
   uri: string;
   fileSizeBytes: number;
   durationSec: number;
-  compressionApplied: boolean;
 };
 
 export const emptyHighlightVideoLibrary = (): HighlightVideoLibrary => ({

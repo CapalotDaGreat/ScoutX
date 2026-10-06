@@ -1,0 +1,42 @@
+{
+  "library": {
+    "title": "Médiathèque",
+    "empty": "Pas encore de médias. Les clips et films de match apparaissent ici une fois stockés par chemin.",
+    "loadFailed": "Impossible de charger la médiathèque.",
+    "addToPassport": "Ajouter au Football Passport",
+    "makePrivate": "Rendre privé"
+  },
+  "share": {
+    "scoutId": "ID utilisateur du recruteur",
+    "placeholder": "Collez l’ID ScoutX du recruteur",
+    "action": "Partager avec un recruteur",
+    "sent": "Autorisation enregistrée",
+    "failed": "Impossible de partager."
+  },
+  "reel": {
+    "listTitle": "Reels",
+    "new": "Nouveau brouillon de reel",
+    "empty": "Pas encore de manifests de reel.",
+    "untitled": "Reel sans titre",
+    "edit": "Modifier",
+    "clips": "clips",
+    "editorTitle": "Éditeur de reel",
+    "missing": "Ce reel n’est pas disponible.",
+    "title": "Titre",
+    "duration": "{{seconds}}s séquencées",
+    "overlaps": "{{count}} coupes qui se chevauchent",
+    "clip": "Clip {{index}}",
+    "up": "Monter",
+    "down": "Descendre",
+    "trim": "Couper 1s",
+    "remove": "Retirer",
+    "cover": "Utiliser en couverture",
+    "accept": "Accepter la suggestion",
+    "reject": "Refuser la suggestion",
+    "sendReview": "Envoyer en revue",
+    "approve": "Approuver",
+    "export": "Exporter",
+    "saveFailed": "Impossible d’enregistrer le reel",
+    "loadFailed": "Impossible de charger les reels."
+  }
+}

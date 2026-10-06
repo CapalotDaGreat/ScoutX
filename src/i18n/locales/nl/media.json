@@ -1,0 +1,42 @@
+{
+  "library": {
+    "title": "Mediabibliotheek",
+    "empty": "Nog geen media. Clips en wedstrijdfilm verschijnen hier zodra ze via pad zijn opgeslagen.",
+    "loadFailed": "Bibliotheek kon niet worden geladen.",
+    "addToPassport": "Toevoegen aan Football Passport",
+    "makePrivate": "Privé maken"
+  },
+  "share": {
+    "scoutId": "Scout-gebruikers-ID",
+    "placeholder": "Plak het ScoutX-ID van de scout",
+    "action": "Delen met scout",
+    "sent": "Toegang opgeslagen",
+    "failed": "Kon niet delen."
+  },
+  "reel": {
+    "listTitle": "Reels",
+    "new": "Nieuw reel-concept",
+    "empty": "Nog geen reel-manifesten.",
+    "untitled": "Naamloos reel",
+    "edit": "Bewerken",
+    "clips": "clips",
+    "editorTitle": "Reel-editor",
+    "missing": "Dit reel is niet beschikbaar.",
+    "title": "Titel",
+    "duration": "{{seconds}}s in volgorde",
+    "overlaps": "{{count}} overlappende cuts",
+    "clip": "Clip {{index}}",
+    "up": "Omhoog",
+    "down": "Omlaag",
+    "trim": "1s inkorten",
+    "remove": "Verwijderen",
+    "cover": "Als cover",
+    "accept": "Suggestie accepteren",
+    "reject": "Suggestie afwijzen",
+    "sendReview": "Naar review",
+    "approve": "Goedkeuren",
+    "export": "Exporteren",
+    "saveFailed": "Reel kon niet worden opgeslagen",
+    "loadFailed": "Reels konden niet worden geladen."
+  }
+}

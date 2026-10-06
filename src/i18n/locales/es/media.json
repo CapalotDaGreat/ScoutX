@@ -1,0 +1,42 @@
+{
+  "library": {
+    "title": "Biblioteca de medios",
+    "empty": "Aún no hay medios. Los clips y el vídeo del partido aparecen aquí cuando se guardan por ruta.",
+    "loadFailed": "No se pudo cargar la biblioteca.",
+    "addToPassport": "Añadir al Football Passport",
+    "makePrivate": "Hacer privado"
+  },
+  "share": {
+    "scoutId": "ID de usuario del ojeador",
+    "placeholder": "Pega el ID de ScoutX del ojeador",
+    "action": "Compartir con ojeador",
+    "sent": "Permiso guardado",
+    "failed": "No se pudo compartir."
+  },
+  "reel": {
+    "listTitle": "Reels",
+    "new": "Nuevo borrador de reel",
+    "empty": "Aún no hay manifiestos de reel.",
+    "untitled": "Reel sin título",
+    "edit": "Editar",
+    "clips": "clips",
+    "editorTitle": "Editor de reel",
+    "missing": "Este reel no está disponible.",
+    "title": "Título",
+    "duration": "{{seconds}}s en secuencia",
+    "overlaps": "{{count}} recortes superpuestos",
+    "clip": "Clip {{index}}",
+    "up": "Subir",
+    "down": "Bajar",
+    "trim": "Recortar 1s",
+    "remove": "Quitar",
+    "cover": "Usar de portada",
+    "accept": "Aceptar sugerencia",
+    "reject": "Rechazar sugerencia",
+    "sendReview": "Enviar a revisión",
+    "approve": "Aprobar",
+    "export": "Exportar",
+    "saveFailed": "No se pudo guardar el reel",
+    "loadFailed": "No se pudieron cargar los reels."
+  }
+}

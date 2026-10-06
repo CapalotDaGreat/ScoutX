@@ -13,6 +13,8 @@ import {
 } from '@/features/player-statistics/models/MatchLogModel';
 import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import { syncDiscoverablePlayer } from '@/features/scout-discovery/services/discoverablePlayerSyncService';
+import { MediaRepository } from '@/features/media-library/repositories/MediaRepository';
+import { parseHighlightVideoLibrary } from '@/features/highlight-videos/models/HighlightVideoModel';
 import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
 import { serializeFootballJourney } from '@/features/football-journey/models/JourneyModel';
 import {
@@ -44,6 +46,7 @@ export class PlayerProfileRepository {
 
       if (docSnap.exists()) {
         void this.migrateLegacyMatches(userId);
+        void this.migrateLegacyMedia(userId);
         return ProfileModel.fromFirestore(userId, docSnap.data());
       }
       return null;
@@ -212,6 +215,25 @@ export class PlayerProfileRepository {
     } catch (error) {
       if (__DEV__) {
         console.warn('Match log migration deferred:', error);
+      }
+    }
+  }
+
+  private async migrateLegacyMedia(userId: string): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db || getFirebaseAuth()?.currentUser?.uid !== userId) {
+      return;
+    }
+    try {
+      const snapshot = await getDoc(doc(db, 'profiles', userId));
+      if (!snapshot.exists()) {
+        return;
+      }
+      const library = parseHighlightVideoLibrary(snapshot.data().highlightVideos);
+      await MediaRepository.getInstance().ensureMigrated(userId, library.videos);
+    } catch (error) {
+      if (__DEV__) {
+        console.warn('Media library migration deferred:', error);
       }
     }
   }

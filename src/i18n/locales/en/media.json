@@ -1,0 +1,42 @@
+{
+  "library": {
+    "title": "Media library",
+    "empty": "No media items yet. Uploaded clips and match film appear here after they are stored by path.",
+    "loadFailed": "Could not load your media library.",
+    "addToPassport": "Add to Football Passport",
+    "makePrivate": "Make private"
+  },
+  "share": {
+    "scoutId": "Scout user ID",
+    "placeholder": "Paste the scout’s ScoutX user ID",
+    "action": "Share with scout",
+    "sent": "Share grant saved",
+    "failed": "Could not share this item."
+  },
+  "reel": {
+    "listTitle": "Reels",
+    "new": "New reel draft",
+    "empty": "No reel manifests yet.",
+    "untitled": "Untitled reel",
+    "edit": "Edit",
+    "clips": "clips",
+    "editorTitle": "Reel editor",
+    "missing": "This reel is not available.",
+    "title": "Title",
+    "duration": "{{seconds}}s sequenced",
+    "overlaps": "{{count}} overlapping trims",
+    "clip": "Clip {{index}}",
+    "up": "Move up",
+    "down": "Move down",
+    "trim": "Trim 1s",
+    "remove": "Remove",
+    "cover": "Use as cover",
+    "accept": "Accept suggestion",
+    "reject": "Reject suggestion",
+    "sendReview": "Send to review",
+    "approve": "Approve",
+    "export": "Export",
+    "saveFailed": "Could not save reel",
+    "loadFailed": "Could not load reels."
+  }
+}

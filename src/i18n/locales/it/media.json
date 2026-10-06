@@ -1,0 +1,42 @@
+{
+  "library": {
+    "title": "Libreria media",
+    "empty": "Nessun media ancora. Clip e film di partita compaiono qui quando sono salvati per percorso.",
+    "loadFailed": "Impossibile caricare la libreria.",
+    "addToPassport": "Aggiungi al Football Passport",
+    "makePrivate": "Rendi privato"
+  },
+  "share": {
+    "scoutId": "ID utente dello scout",
+    "placeholder": "Incolla l’ID ScoutX dello scout",
+    "action": "Condividi con scout",
+    "sent": "Concessione salvata",
+    "failed": "Impossibile condividere."
+  },
+  "reel": {
+    "listTitle": "Reel",
+    "new": "Nuova bozza reel",
+    "empty": "Nessun manifesto reel ancora.",
+    "untitled": "Reel senza titolo",
+    "edit": "Modifica",
+    "clips": "clip",
+    "editorTitle": "Editor reel",
+    "missing": "Questo reel non è disponibile.",
+    "title": "Titolo",
+    "duration": "{{seconds}}s in sequenza",
+    "overlaps": "{{count}} tagli sovrapposti",
+    "clip": "Clip {{index}}",
+    "up": "Su",
+    "down": "Giù",
+    "trim": "Taglia 1s",
+    "remove": "Rimuovi",
+    "cover": "Usa come copertina",
+    "accept": "Accetta suggerimento",
+    "reject": "Rifiuta suggerimento",
+    "sendReview": "Invia in revisione",
+    "approve": "Approva",
+    "export": "Esporta",
+    "saveFailed": "Impossibile salvare il reel",
+    "loadFailed": "Impossibile caricare i reel."
+  }
+}

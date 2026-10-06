@@ -15,6 +15,8 @@ import {
 } from '@/features/highlight-videos/services/highlightVideoStorageService';
 import { type HighlightVideo } from '@/features/highlight-videos/types';
 import { toUserMessage } from '@/utils/userFacingError';
+import { MediaRepository } from '@/features/media-library/repositories/MediaRepository';
+import { featuredMediaIdsFromHighlights, highlightVideoToMediaItem } from '@/features/media-library/services/mediaMigration';
 
 export type UploadHighlightVideoInput = {
   userId: string;
@@ -54,7 +56,12 @@ export class HighlightVideoRepository {
     const profileRepository = PlayerProfileRepository.getInstance();
     await profileRepository.updateProfile(userId, {
       highlightVideos: library,
+      featuredMediaIds: featuredMediaIdsFromHighlights(library.videos),
     });
+  }
+
+  private async syncMediaItem(userId: string, video: HighlightVideo): Promise<void> {
+    await MediaRepository.getInstance().upsertMedia(userId, highlightVideoToMediaItem(video, userId));
   }
 
   public async uploadHighlightVideo(input: UploadHighlightVideoInput): Promise<HighlightVideo> {
@@ -127,6 +134,7 @@ export class HighlightVideoRepository {
       };
 
       await this.saveLibrary(input.userId, nextLibrary);
+      await this.syncMediaItem(input.userId, readyVideo);
       return readyVideo;
     } catch (error) {
       const message = toUserMessage(error, 'Upload failed.');
@@ -238,6 +246,10 @@ export class HighlightVideoRepository {
     }
 
     await this.saveLibrary(userId, nextLibrary);
+    const saved = nextLibrary.videos.find((item) => item.id === video.id);
+    if (saved) {
+      await this.syncMediaItem(userId, saved);
+    }
     return nextLibrary;
   }
 

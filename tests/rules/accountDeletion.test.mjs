@@ -44,6 +44,10 @@ const ownedByField = [
   ['verificationStates', 'entityId'],
   ['portfolioSlugs', 'playerId'],
   ['clubProfiles', 'ownerId'],
+  ['reels', 'ownerId'],
+  ['mediaGrants', 'ownerId'],
+  ['mediaGrants', 'granteeId'],
+  ['reelExports', 'ownerId'],
 ];
 
 const storageFiles = (uid) => [

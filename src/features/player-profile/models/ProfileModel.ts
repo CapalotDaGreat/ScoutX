@@ -121,6 +121,7 @@ export class ProfileModel {
       privacy: defaultPrivacySettings(),
       username: undefined,
       hiddenEndorsementIds: [],
+      featuredMediaIds: [],
     };
   }
 
@@ -212,6 +213,9 @@ export class ProfileModel {
         ? data.hiddenEndorsementIds.filter((item): item is string => typeof item === 'string')
         : [],
       earnedMilestones: parseEarnedMilestones(data.earnedMilestones),
+      featuredMediaIds: Array.isArray(data.featuredMediaIds)
+        ? data.featuredMediaIds.filter((item): item is string => typeof item === 'string')
+        : [],
     };
   }
 
@@ -280,6 +284,9 @@ export class ProfileModel {
         id: item.id,
         earnedAt: item.earnedAt,
       }));
+    }
+    if (profile.featuredMediaIds !== undefined) {
+      data.featuredMediaIds = profile.featuredMediaIds;
     }
 
     return data;
