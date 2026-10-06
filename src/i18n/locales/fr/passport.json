@@ -35,5 +35,28 @@
   },
   "scoutPreview": {
     "note": "This is the public projection. Private profile fields are not shown."
+  },
+  "gaps": {
+    "title": "Affirmations à prouver",
+    "subtitle": "Ce que tu dis de ton jeu, comparé à ce que montre ton dossier.",
+    "fix": "Pour l'étayer : {{actions}}",
+    "claim": {
+      "position": "Poste : {{value}}",
+      "playing_style": "Style de jeu : {{value}}",
+      "weak_foot": "Mauvais pied : {{value}}",
+      "skill_moves": "Gestes techniques : {{value}}"
+    },
+    "support": {
+      "none": "Aucun match enregistré ne le confirme encore ({{need}} nécessaires).",
+      "limited": "Confirmé par {{have}} des {{need}} matchs enregistrés.",
+      "self_reported_only": "Déclaratif uniquement. Les matchs ne peuvent pas le confirmer ; un coach ou une vidéo, oui."
+    },
+    "action": {
+      "add_match": "enregistrer un match à ce poste",
+      "add_clip": "ajouter un clip",
+      "ask_coach": "demander à un coach",
+      "edit_claim": "modifier l'affirmation",
+      "record_metric": "enregistrer la statistique correspondante"
+    }
   }
 }

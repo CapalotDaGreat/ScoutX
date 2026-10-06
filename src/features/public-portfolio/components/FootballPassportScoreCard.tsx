@@ -7,10 +7,13 @@ import { PushTokenRepository } from '@/features/notifications/repositories/PushT
 import {
   DiscoverabilityHealthCard,
   EvidenceCoverageGrid,
+  EvidenceGapsCard,
   PassportCoachCard,
   ProofStack,
   ReadinessList,
 } from '@/features/passport/components/PassportEvidence';
+import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
+import { findEvidenceGaps } from '@/features/intelligence/services/evidenceGaps';
 import { buildPassportSummary } from '@/features/passport/services/passportSummaryService';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type TrustRecommendation } from '@/features/trust-system/types';
@@ -30,12 +33,17 @@ export function FootballPassportScoreCard({
 }: FootballPassportScoreCardProps) {
   const { t } = useAppTranslation(['passport']);
   const [pushRegistered, setPushRegistered] = useState(false);
+  const [gpsSessionCount, setGpsSessionCount] = useState(0);
 
   useEffect(() => {
     void PushTokenRepository.getInstance()
       .hasRegisteredToken(playerId)
       .then(setPushRegistered)
       .catch(() => setPushRegistered(false));
+    void GpsSessionRepository.getInstance()
+      .fetchSessions(playerId)
+      .then((sessions) => setGpsSessionCount(sessions.length))
+      .catch(() => setGpsSessionCount(0));
   }, [playerId]);
 
   const summary = useMemo(
@@ -44,15 +52,27 @@ export function FootballPassportScoreCard({
         profile,
         recommendations,
         pushRegistered,
+        gpsSessionCount,
         legalPagesReady: hasPrivacyPolicyUrl() && hasTermsOfServiceUrl(),
       }),
-    [profile, pushRegistered, recommendations],
+    [gpsSessionCount, profile, pushRegistered, recommendations],
+  );
+
+  const gaps = useMemo(
+    () =>
+      findEvidenceGaps({
+        identity: profile.identity,
+        matches: profile.statisticsMatches ?? [],
+        coachEndorsementCount: recommendations.filter((item) => item.authorRole === 'coach').length,
+      }),
+    [profile.identity, profile.statisticsMatches, recommendations],
   );
 
   return (
     <Card variant="prestige" padding="md" className="gap-4">
       <DiscoverabilityHealthCard summary={summary} />
       <PassportCoachCard summary={summary} />
+      <EvidenceGapsCard gaps={gaps} />
 
       <CollapsibleSection title={t('passport:proof.title')} defaultOpen persistKey="passport-proof">
         <ProofStack items={summary.proof} />

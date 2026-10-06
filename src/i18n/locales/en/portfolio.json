@@ -279,6 +279,97 @@
       "enable_passport": "Publish your Football Passport",
       "invite_coach": "Invite a coach endorsement",
       "enable_discoverable": "Opt in to scout discovery"
+    },
+    "changes": {
+      "title": "Since your last visit",
+      "dismiss": "Got it",
+      "new_matches_one": "{{count}} new match logged",
+      "new_matches_other": "{{count}} new matches logged",
+      "new_analysis": "A match analysis finished",
+      "goal_achieved": "You reached a development goal",
+      "goal_improving": "A development goal is now improving",
+      "new_video_one": "{{count}} new video added",
+      "new_video_other": "{{count}} new videos added",
+      "new_trial": "New trial invitation",
+      "trial_status": "Trial update: {{status}}",
+      "role_change": "Primary position changed from {{from}} to {{to}}",
+      "verification_up": "Your verification level went up",
+      "verification_down": "Your verification level changed",
+      "coverage_up": "{{dimension}} evidence is now {{state}}",
+      "coverage_down": "{{dimension}} evidence dropped to {{state}}",
+      "new_endorsement_one": "{{count}} new reference received",
+      "new_endorsement_other": "{{count}} new references received"
+    },
+    "coverageState": {
+      "insufficient": "insufficient",
+      "limited": "limited",
+      "moderate": "moderate",
+      "strong": "strong"
+    },
+    "trialStatus": {
+      "pending": "awaiting your reply",
+      "accepted": "accepted",
+      "declined": "declined",
+      "rescheduled": "rescheduled",
+      "cancelled": "cancelled",
+      "completed": "completed"
+    },
+    "goalFocus": {
+      "title": "Current goal",
+      "next": "Next: {{step}}"
+    },
+    "goalStep": {
+      "prove_achievement": "Add a clip that shows it, so the achievement is backed by proof.",
+      "revisit_goal": "The review date passed. Adjust the target or set a new timeframe.",
+      "baseline_missing": "No earlier {{metric}} to compare with, so progress cannot be shown yet.",
+      "record_metric_one": "{{metric}} was not recorded in your last match. Record it next time.",
+      "record_metric_other": "{{metric}} was not recorded in your last {{count}} matches. Record it next time.",
+      "log_match_to_measure": "Log a match with {{metric}} recorded to start measuring.",
+      "play_more_matches": "{{have}} of {{need}} matches recorded. A few more before progress is judged.",
+      "log_training": "No linked training for {{days}} days. Log a session for this goal.",
+      "log_training_first": "Link a training session to this goal.",
+      "shift_focus_one": "No movement over {{count}} match. Try a different drill or focus.",
+      "shift_focus_other": "No movement over {{count}} matches. Try a different drill or focus.",
+      "ask_coach_one": "No movement over {{count}} match. Ask your coach what to change.",
+      "ask_coach_other": "No movement over {{count}} matches. Ask your coach what to change.",
+      "keep_going": "On track. Keep logging matches and training.",
+      "reflect": "Add a progress note on how it is going."
+    },
+    "evidence": {
+      "title": "Next best evidence",
+      "strongest": "Your strongest evidence today: {{dimension}}",
+      "first_match": {
+        "title": "Log your first match",
+        "reason": "Every other part of your record builds on logged matches."
+      },
+      "recent_match": {
+        "title": "Log a recent match",
+        "reason": "Your latest match is {{days}} days old. Scouts look for current form."
+      },
+      "match_video": {
+        "title": "Add match video",
+        "reason": "You have stats but no footage. Video lets others see what the numbers mean."
+      },
+      "match_analysis": {
+        "title": "Analyse a match video",
+        "reason": "No completed analysis yet. It is the main source of tactical evidence."
+      },
+      "record_passing": {
+        "title": "Record pass accuracy",
+        "reason": "Recorded in {{have}} of the {{need}} matches needed to describe your passing."
+      },
+      "record_defending": {
+        "title": "Record tackles",
+        "reason": "Recorded in {{have}} of the {{need}} matches needed to describe your defending."
+      },
+      "coach_reference": {
+        "title": "Ask a coach for a reference",
+        "reason": "Independent confirmation is the strongest trust signal on a Passport."
+      },
+      "gps_session": {
+        "title": "Record a GPS session",
+        "reason": "GPS sessions are the only source of physical evidence."
+      }
     }
   },
   "passportHero": {

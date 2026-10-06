@@ -279,6 +279,97 @@
       "enable_passport": "Publica tu Football Passport",
       "invite_coach": "Invita a un entrenador a recomendarte",
       "enable_discoverable": "Hazte visible para los ojeadores"
+    },
+    "changes": {
+      "title": "Desde tu última visita",
+      "dismiss": "Entendido",
+      "new_matches_one": "{{count}} partido nuevo registrado",
+      "new_matches_other": "{{count}} partidos nuevos registrados",
+      "new_analysis": "Un análisis de partido ha terminado",
+      "goal_achieved": "Has alcanzado un objetivo de desarrollo",
+      "goal_improving": "Un objetivo de desarrollo está mejorando",
+      "new_video_one": "{{count}} vídeo nuevo añadido",
+      "new_video_other": "{{count}} vídeos nuevos añadidos",
+      "new_trial": "Nueva invitación a prueba",
+      "trial_status": "Actualización de prueba: {{status}}",
+      "role_change": "Posición principal cambiada de {{from}} a {{to}}",
+      "verification_up": "Tu nivel de verificación ha subido",
+      "verification_down": "Tu nivel de verificación ha cambiado",
+      "coverage_up": "La evidencia {{dimension}} ahora es {{state}}",
+      "coverage_down": "La evidencia {{dimension}} bajó a {{state}}",
+      "new_endorsement_one": "{{count}} referencia nueva recibida",
+      "new_endorsement_other": "{{count}} referencias nuevas recibidas"
+    },
+    "coverageState": {
+      "insufficient": "insuficiente",
+      "limited": "limitada",
+      "moderate": "moderada",
+      "strong": "sólida"
+    },
+    "trialStatus": {
+      "pending": "esperando tu respuesta",
+      "accepted": "aceptada",
+      "declined": "rechazada",
+      "rescheduled": "reprogramada",
+      "cancelled": "cancelada",
+      "completed": "completada"
+    },
+    "goalFocus": {
+      "title": "Objetivo actual",
+      "next": "Siguiente: {{step}}"
+    },
+    "goalStep": {
+      "prove_achievement": "Añade un clip que lo muestre para que el logro tenga prueba.",
+      "revisit_goal": "La fecha de revisión ha pasado. Ajusta el objetivo o fija un nuevo plazo.",
+      "baseline_missing": "No hay un valor anterior de {{metric}} para comparar, así que aún no se puede mostrar progreso.",
+      "record_metric_one": "{{metric}} no se registró en tu último partido. Regístralo la próxima vez.",
+      "record_metric_other": "{{metric}} no se registró en tus últimos {{count}} partidos. Regístralo la próxima vez.",
+      "log_match_to_measure": "Registra un partido con {{metric}} para empezar a medir.",
+      "play_more_matches": "{{have}} de {{need}} partidos registrados. Unos cuantos más antes de valorar el progreso.",
+      "log_training": "Sin entrenamiento vinculado desde hace {{days}} días. Registra una sesión para este objetivo.",
+      "log_training_first": "Vincula una sesión de entrenamiento a este objetivo.",
+      "shift_focus_one": "Sin cambios en {{count}} partido. Prueba otro ejercicio u otro enfoque.",
+      "shift_focus_other": "Sin cambios en {{count}} partidos. Prueba otro ejercicio u otro enfoque.",
+      "ask_coach_one": "Sin cambios en {{count}} partido. Pregunta a tu entrenador qué cambiar.",
+      "ask_coach_other": "Sin cambios en {{count}} partidos. Pregunta a tu entrenador qué cambiar.",
+      "keep_going": "Vas bien. Sigue registrando partidos y entrenamientos.",
+      "reflect": "Añade una nota sobre cómo va."
+    },
+    "evidence": {
+      "title": "Mejor evidencia siguiente",
+      "strongest": "Tu evidencia más sólida hoy: {{dimension}}",
+      "first_match": {
+        "title": "Registra tu primer partido",
+        "reason": "Todo lo demás de tu perfil se basa en partidos registrados."
+      },
+      "recent_match": {
+        "title": "Registra un partido reciente",
+        "reason": "Tu último partido fue hace {{days}} días. Los ojeadores buscan la forma actual."
+      },
+      "match_video": {
+        "title": "Añadir vídeo de partido",
+        "reason": "Tienes estadísticas pero no vídeo. El vídeo muestra qué significan los números."
+      },
+      "match_analysis": {
+        "title": "Analizar un vídeo de partido",
+        "reason": "Aún no hay análisis completado. Es la principal fuente de evidencia táctica."
+      },
+      "record_passing": {
+        "title": "Registrar precisión de pase",
+        "reason": "Registrada en {{have}} de los {{need}} partidos necesarios para describir tu pase."
+      },
+      "record_defending": {
+        "title": "Registrar entradas",
+        "reason": "Registradas en {{have}} de los {{need}} partidos necesarios para describir tu defensa."
+      },
+      "coach_reference": {
+        "title": "Pide una referencia a un entrenador",
+        "reason": "La confirmación independiente es la señal de confianza más fuerte de un Passport."
+      },
+      "gps_session": {
+        "title": "Registrar una sesión GPS",
+        "reason": "Las sesiones GPS son la única fuente de evidencia física."
+      }
     }
   },
   "passportHero": {

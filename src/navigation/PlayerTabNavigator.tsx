@@ -269,6 +269,8 @@ function PlayerTabsContainer() {
                   profile={profile}
                   trials={trials}
                   onboardingSteps={onboardingReport?.steps ?? EMPTY_ONBOARDING_STEPS}
+                  recommendations={trustState.recommendations}
+                  trustProfile={trustState.trustProfile}
                   onAction={handleTodayAction}
                 />
               }

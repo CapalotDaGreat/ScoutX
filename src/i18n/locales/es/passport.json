@@ -35,5 +35,28 @@
   },
   "scoutPreview": {
     "note": "This is the public projection. Private profile fields are not shown."
+  },
+  "gaps": {
+    "title": "Afirmaciones que necesitan prueba",
+    "subtitle": "Lo que dices de tu juego, comparado con lo que muestra tu historial.",
+    "fix": "Cómo respaldarlo: {{actions}}",
+    "claim": {
+      "position": "Posición: {{value}}",
+      "playing_style": "Estilo de juego: {{value}}",
+      "weak_foot": "Pie débil: {{value}}",
+      "skill_moves": "Regates: {{value}}"
+    },
+    "support": {
+      "none": "Ningún partido registrado lo respalda aún (se necesitan {{need}}).",
+      "limited": "Respaldado por {{have}} de {{need}} partidos registrados.",
+      "self_reported_only": "Solo autodeclarado. Los partidos no pueden confirmarlo; un entrenador o un vídeo sí."
+    },
+    "action": {
+      "add_match": "registrar un partido en esta posición",
+      "add_clip": "añadir un clip",
+      "ask_coach": "pedírselo a un entrenador",
+      "edit_claim": "editar la afirmación",
+      "record_metric": "registrar la estadística correspondiente"
+    }
   }
 }

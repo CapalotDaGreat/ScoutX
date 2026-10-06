@@ -32,6 +32,8 @@ import {
   type TrainingSession,
   type TrainingSessionDraft,
 } from '@/features/development/types';
+import { goalNextStep } from '@/features/intelligence/services/goalNextStep';
+import { type GoalNextStep } from '@/features/intelligence/types';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
 import { workflowEvents } from '@/features/today/services/workflowStores';
@@ -40,10 +42,14 @@ export type UseDevelopmentOptions = {
   userId: string | null;
   profile: PlayerProfile | null;
   matches: readonly PlayerMatchStatistics[];
+  /** Lets a stalled goal suggest asking the coach instead of changing practice alone. */
+  hasCoachConnection?: boolean;
 };
 
 export type UseDevelopmentResult = {
   goals: GoalProgressSummary[];
+  /** Single next action per goal id, derived from matches and training. */
+  nextSteps: Record<string, GoalNextStep>;
   trainingSessions: TrainingSession[];
   identitySnapshots: IdentitySnapshot[];
   beforeVsNow: BeforeVsNowComparison[];
@@ -70,7 +76,12 @@ function todayIso(now: Date): string {
   return now.toISOString().slice(0, 10);
 }
 
-export function useDevelopment({ userId, profile, matches }: UseDevelopmentOptions): UseDevelopmentResult {
+export function useDevelopment({
+  userId,
+  profile,
+  matches,
+  hasCoachConnection = false,
+}: UseDevelopmentOptions): UseDevelopmentResult {
   const queryClient = useQueryClient();
   const repository = DevelopmentRepository.getInstance();
   const enabled = Boolean(userId) && isFirebaseConfiguredForProject();
@@ -106,6 +117,20 @@ export function useDevelopment({ userId, profile, matches }: UseDevelopmentOptio
     const now = new Date();
     return sortGoalSummaries(rawGoals.map((goal) => summarizeGoal(goal, matches, now)));
   }, [matches, rawGoals]);
+
+  const nextSteps = useMemo(() => {
+    const now = new Date();
+    const steps: Record<string, GoalNextStep> = {};
+    for (const summary of goals) {
+      steps[summary.goal.id] = goalNextStep(summary, {
+        matches,
+        trainingSessions,
+        hasCoachConnection,
+        now,
+      });
+    }
+    return steps;
+  }, [goals, hasCoachConnection, matches, trainingSessions]);
 
   const beforeVsNow = useMemo(() => buildBeforeVsNow(matches), [matches]);
   const howIPlay = useMemo(() => (profile ? buildHowIPlay(profile, matches) : null), [matches, profile]);
@@ -284,6 +309,7 @@ export function useDevelopment({ userId, profile, matches }: UseDevelopmentOptio
 
   return {
     goals,
+    nextSteps,
     trainingSessions,
     identitySnapshots,
     beforeVsNow,

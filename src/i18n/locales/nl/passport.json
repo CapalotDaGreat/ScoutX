@@ -35,5 +35,28 @@
   },
   "scoutPreview": {
     "note": "This is the public projection. Private profile fields are not shown."
+  },
+  "gaps": {
+    "title": "Claims die bewijs nodig hebben",
+    "subtitle": "Wat je over je spel zegt, vergeleken met wat je profiel laat zien.",
+    "fix": "Zo onderbouw je het: {{actions}}",
+    "claim": {
+      "position": "Positie: {{value}}",
+      "playing_style": "Speelstijl: {{value}}",
+      "weak_foot": "Zwakke voet: {{value}}",
+      "skill_moves": "Skill moves: {{value}}"
+    },
+    "support": {
+      "none": "Nog geen vastgelegde wedstrijd onderbouwt dit ({{need}} nodig).",
+      "limited": "Onderbouwd door {{have}} van {{need}} vastgelegde wedstrijden.",
+      "self_reported_only": "Alleen zelf opgegeven. Wedstrijden kunnen dit niet bevestigen; een coach of video wel."
+    },
+    "action": {
+      "add_match": "een wedstrijd in deze rol vastleggen",
+      "add_clip": "een clip toevoegen",
+      "ask_coach": "een coach vragen",
+      "edit_claim": "de claim aanpassen",
+      "record_metric": "de bijbehorende statistiek vastleggen"
+    }
   }
 }

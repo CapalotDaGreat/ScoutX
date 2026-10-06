@@ -6,7 +6,14 @@ import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
+import { type ChangeItem, type NextBestEvidence } from '@/features/intelligence/types';
 import { type OnboardingStepId } from '@/features/player-onboarding/types';
+import {
+  GoalFocusCard,
+  NextEvidenceCard,
+  SinceLastVisitCard,
+} from '@/features/today/components/TodayIntelligence';
+import { type TodayGoalFocus } from '@/features/today/hooks/useTodayPlan';
 import {
   type ContinueItem,
   type NextBestAction,
@@ -24,6 +31,10 @@ export type TodaySectionProps = {
   plan: TodayPlan;
   latestAnalysis: TodayAnalysisJob | null;
   upcomingTrial: TodayTrial | null;
+  changes?: ChangeItem[];
+  goalFocus?: TodayGoalFocus | null;
+  evidence?: NextBestEvidence | null;
+  onChangesSeen?: () => void;
   analysesUnavailable: boolean;
   isLoading: boolean;
   onAction: TodayActionHandler;
@@ -453,6 +464,10 @@ export function TodaySection({
   plan,
   latestAnalysis,
   upcomingTrial,
+  changes = [],
+  goalFocus = null,
+  evidence = null,
+  onChangesSeen,
   analysesUnavailable,
   isLoading,
   onAction,
@@ -484,6 +499,10 @@ export function TodaySection({
         </Text>
       ) : null}
 
+      {changes.length > 0 && onChangesSeen ? (
+        <SinceLastVisitCard changes={changes} onAction={onAction} onDismiss={onChangesSeen} />
+      ) : null}
+
       {plan.secondary.length > 0 ? (
         <View className="gap-2">
           <Text variant="label" weight="semibold" className="px-1">
@@ -508,7 +527,14 @@ export function TodaySection({
             <UpcomingTrialCard trial={upcomingTrial} onAction={onAction} />
           </View>
         ) : null}
+        {goalFocus ? (
+          <View className="min-w-[46%] flex-1">
+            <GoalFocusCard focus={goalFocus} onAction={onAction} />
+          </View>
+        ) : null}
       </View>
+
+      {evidence ? <NextEvidenceCard evidence={evidence} onAction={onAction} /> : null}
     </View>
   );
 }

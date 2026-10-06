@@ -35,5 +35,28 @@
   },
   "scoutPreview": {
     "note": "This is the public projection. Private profile fields are not shown."
+  },
+  "gaps": {
+    "title": "Claims that need proof",
+    "subtitle": "What you say about your game, compared with what your record shows.",
+    "fix": "How to back it up: {{actions}}",
+    "claim": {
+      "position": "Position: {{value}}",
+      "playing_style": "Playing style: {{value}}",
+      "weak_foot": "Weak foot: {{value}}",
+      "skill_moves": "Skill moves: {{value}}"
+    },
+    "support": {
+      "none": "No logged match supports this yet ({{need}} needed).",
+      "limited": "Supported by {{have}} of {{need}} logged matches.",
+      "self_reported_only": "Self-reported only. Matches cannot confirm this; a coach or video can."
+    },
+    "action": {
+      "add_match": "log a match in this role",
+      "add_clip": "add a clip",
+      "ask_coach": "ask a coach",
+      "edit_claim": "edit the claim",
+      "record_metric": "record the matching stat"
+    }
   }
 }

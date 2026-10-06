@@ -4,6 +4,7 @@ import { Text } from '@/components/primitives/Text';
 import { EvidenceStateBadge } from '@/components/evidence/EvidenceStateBadge';
 import { ProvenanceBadge } from '@/components/evidence/ProvenanceBadge';
 import type { CoverageState } from '@/features/development/types';
+import type { EvidenceGap, EvidenceGapAction } from '@/features/intelligence/types';
 import type { EvidenceCoverage, PassportSummary, ProofItem, ReadinessItem } from '@/features/passport/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
@@ -128,6 +129,78 @@ export function PassportCoachCard({ summary }: { summary: PassportSummary }) {
           <Text weight="semibold">{tip.title}</Text>
           <Text variant="caption" color="secondary">
             {tip.reason}
+          </Text>
+        </View>
+      ))}
+    </Card>
+  );
+}
+
+function gapClaimLabel(t: Translate, gap: EvidenceGap): string {
+  switch (gap.claimKind) {
+    case 'position':
+      return t('passport:gaps.claim.position', { value: gap.claimValue });
+    case 'playing_style':
+      return t('passport:gaps.claim.playing_style', { value: gap.claimValue });
+    case 'weak_foot':
+      return t('passport:gaps.claim.weak_foot', { value: gap.claimValue });
+    case 'skill_moves':
+      return t('passport:gaps.claim.skill_moves', { value: gap.claimValue });
+  }
+}
+
+function gapSupportLabel(t: Translate, gap: EvidenceGap): string {
+  switch (gap.support) {
+    case 'none':
+      return t('passport:gaps.support.none', { need: gap.required });
+    case 'limited':
+      return t('passport:gaps.support.limited', { have: gap.sampleSize, need: gap.required });
+    case 'self_reported_only':
+      return t('passport:gaps.support.self_reported_only');
+  }
+}
+
+function gapActionLabel(t: Translate, action: EvidenceGapAction): string {
+  switch (action) {
+    case 'add_match':
+      return t('passport:gaps.action.add_match');
+    case 'add_clip':
+      return t('passport:gaps.action.add_clip');
+    case 'ask_coach':
+      return t('passport:gaps.action.ask_coach');
+    case 'edit_claim':
+      return t('passport:gaps.action.edit_claim');
+    case 'record_metric':
+      return t('passport:gaps.action.record_metric');
+  }
+}
+
+/** Self-reported claims that recorded evidence does not back up yet, with how to fix each. */
+export function EvidenceGapsCard({ gaps }: { gaps: EvidenceGap[] }) {
+  const { t } = useAppTranslation(['passport']);
+  if (gaps.length === 0) {
+    return null;
+  }
+  return (
+    <Card variant="default" padding="sm" className="gap-3">
+      <View className="gap-0.5">
+        <Text variant="overline" color="secondary" accessibilityRole="header">
+          {t('passport:gaps.title')}
+        </Text>
+        <Text variant="caption" color="tertiary">
+          {t('passport:gaps.subtitle')}
+        </Text>
+      </View>
+      {gaps.map((gap) => (
+        <View key={gap.id} className="gap-0.5">
+          <Text weight="semibold">{gapClaimLabel(t, gap)}</Text>
+          <Text variant="caption" color="secondary">
+            {gapSupportLabel(t, gap)}
+          </Text>
+          <Text variant="caption" color="tertiary">
+            {t('passport:gaps.fix', {
+              actions: gap.actions.map((action) => gapActionLabel(t, action)).join(' · '),
+            })}
           </Text>
         </View>
       ))}

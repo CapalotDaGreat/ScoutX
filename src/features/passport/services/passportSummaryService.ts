@@ -27,14 +27,19 @@ function newestDate(dates: string[]): string | null {
   return valid[valid.length - 1] ?? null;
 }
 
-function buildCoverage(matches: readonly PlayerMatchStatistics[], videoCount: number): EvidenceCoverage[] {
+function buildCoverage(
+  matches: readonly PlayerMatchStatistics[],
+  videoCount: number,
+  gpsSessionCount: number,
+): EvidenceCoverage[] {
   const withMinutes = matches.filter((match) => match.minutes > 0);
   const withPass = matches.filter((match) => typeof match.passAccuracy === 'number');
   const lastMatch = newestDate(matches.map((match) => match.date));
+  // Physical evidence only comes from GPS sessions; minutes played say nothing about it.
   const dimensions: Array<{ id: CoverageDimensionId; sample: number; provenance: EvidenceCoverage['provenance'] }> = [
     { id: 'technical', sample: withMinutes.length, provenance: 'match_derived' },
     { id: 'tactical', sample: withPass.length, provenance: 'match_derived' },
-    { id: 'physical', sample: withMinutes.length, provenance: 'match_derived' },
+    { id: 'physical', sample: gpsSessionCount, provenance: 'gps_derived' },
     { id: 'consistency', sample: matches.length, provenance: 'match_derived' },
     { id: 'video', sample: videoCount, provenance: 'self_reported' },
   ];
@@ -42,8 +47,8 @@ function buildCoverage(matches: readonly PlayerMatchStatistics[], videoCount: nu
     id: item.id,
     state: coverageState(item.sample),
     sampleSize: item.sample,
-    requiredForStrong: item.id === 'video' ? 3 : STRONG,
-    lastAt: item.id === 'video' ? null : lastMatch,
+    requiredForStrong: item.id === 'video' || item.id === 'physical' ? 3 : STRONG,
+    lastAt: item.id === 'video' || item.id === 'physical' ? null : lastMatch,
     provenance: item.provenance,
   }));
 }
@@ -232,6 +237,8 @@ export type PassportSummaryInput = {
   recommendations?: TrustRecommendation[];
   pushRegistered?: boolean;
   legalPagesReady?: boolean;
+  /** Recorded GPS sessions; the only source of physical evidence. */
+  gpsSessionCount?: number;
   now?: Date;
 };
 
@@ -243,7 +250,7 @@ export function buildPassportSummary(input: PassportSummaryInput): PassportSumma
   const matches = input.profile.statisticsMatches ?? [];
   const videoCount = input.profile.highlightVideos?.videos.length ?? 0;
   const endorsements = input.recommendations ?? [];
-  const coverage = buildCoverage(matches, videoCount);
+  const coverage = buildCoverage(matches, videoCount, input.gpsSessionCount ?? 0);
   const readiness = buildReadiness(input.profile, matches, videoCount, endorsements.length, {
     pushRegistered: Boolean(input.pushRegistered),
     legalPagesReady: Boolean(input.legalPagesReady),

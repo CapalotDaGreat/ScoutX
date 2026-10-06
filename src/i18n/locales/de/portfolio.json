@@ -279,6 +279,97 @@
       "enable_passport": "Veröffentliche deinen Football Passport",
       "invite_coach": "Lade einen Trainer zur Empfehlung ein",
       "enable_discoverable": "Für Scouts sichtbar werden"
+    },
+    "changes": {
+      "title": "Seit deinem letzten Besuch",
+      "dismiss": "Verstanden",
+      "new_matches_one": "{{count}} neues Spiel erfasst",
+      "new_matches_other": "{{count}} neue Spiele erfasst",
+      "new_analysis": "Eine Spielanalyse ist fertig",
+      "goal_achieved": "Du hast ein Entwicklungsziel erreicht",
+      "goal_improving": "Ein Entwicklungsziel verbessert sich",
+      "new_video_one": "{{count}} neues Video hinzugefügt",
+      "new_video_other": "{{count}} neue Videos hinzugefügt",
+      "new_trial": "Neue Probetraining-Einladung",
+      "trial_status": "Probetraining-Update: {{status}}",
+      "role_change": "Hauptposition geändert von {{from}} zu {{to}}",
+      "verification_up": "Deine Verifizierungsstufe ist gestiegen",
+      "verification_down": "Deine Verifizierungsstufe hat sich geändert",
+      "coverage_up": "{{dimension}}-Nachweise sind jetzt {{state}}",
+      "coverage_down": "{{dimension}}-Nachweise sind auf {{state}} gesunken",
+      "new_endorsement_one": "{{count}} neue Referenz erhalten",
+      "new_endorsement_other": "{{count}} neue Referenzen erhalten"
+    },
+    "coverageState": {
+      "insufficient": "unzureichend",
+      "limited": "begrenzt",
+      "moderate": "mittel",
+      "strong": "stark"
+    },
+    "trialStatus": {
+      "pending": "wartet auf deine Antwort",
+      "accepted": "angenommen",
+      "declined": "abgelehnt",
+      "rescheduled": "verschoben",
+      "cancelled": "abgesagt",
+      "completed": "abgeschlossen"
+    },
+    "goalFocus": {
+      "title": "Aktuelles Ziel",
+      "next": "Nächster Schritt: {{step}}"
+    },
+    "goalStep": {
+      "prove_achievement": "Füge einen Clip hinzu, der es zeigt – so ist der Erfolg belegt.",
+      "revisit_goal": "Das Prüfdatum ist vorbei. Passe das Ziel an oder setze einen neuen Zeitraum.",
+      "baseline_missing": "Kein früherer Wert für {{metric}} zum Vergleich – Fortschritt kann noch nicht gezeigt werden.",
+      "record_metric_one": "{{metric}} wurde in deinem letzten Spiel nicht erfasst. Erfasse es beim nächsten Mal.",
+      "record_metric_other": "{{metric}} wurde in deinen letzten {{count}} Spielen nicht erfasst. Erfasse es beim nächsten Mal.",
+      "log_match_to_measure": "Erfasse ein Spiel mit {{metric}}, um mit der Messung zu beginnen.",
+      "play_more_matches": "{{have}} von {{need}} Spielen erfasst. Noch ein paar, bevor Fortschritt bewertet wird.",
+      "log_training": "Seit {{days}} Tagen kein verknüpftes Training. Erfasse eine Einheit für dieses Ziel.",
+      "log_training_first": "Verknüpfe eine Trainingseinheit mit diesem Ziel.",
+      "shift_focus_one": "Keine Bewegung über {{count}} Spiel. Probiere eine andere Übung oder einen anderen Fokus.",
+      "shift_focus_other": "Keine Bewegung über {{count}} Spiele. Probiere eine andere Übung oder einen anderen Fokus.",
+      "ask_coach_one": "Keine Bewegung über {{count}} Spiel. Frag deinen Trainer, was du ändern sollst.",
+      "ask_coach_other": "Keine Bewegung über {{count}} Spiele. Frag deinen Trainer, was du ändern sollst.",
+      "keep_going": "Auf Kurs. Erfasse weiter Spiele und Training.",
+      "reflect": "Füge eine Fortschrittsnotiz hinzu."
+    },
+    "evidence": {
+      "title": "Bester nächster Nachweis",
+      "strongest": "Dein stärkster Nachweis aktuell: {{dimension}}",
+      "first_match": {
+        "title": "Erfasse dein erstes Spiel",
+        "reason": "Alle anderen Teile deines Profils bauen auf erfassten Spielen auf."
+      },
+      "recent_match": {
+        "title": "Erfasse ein aktuelles Spiel",
+        "reason": "Dein letztes Spiel ist {{days}} Tage her. Scouts achten auf aktuelle Form."
+      },
+      "match_video": {
+        "title": "Spielvideo hinzufügen",
+        "reason": "Du hast Statistiken, aber kein Video. Video zeigt, was die Zahlen bedeuten."
+      },
+      "match_analysis": {
+        "title": "Ein Spielvideo analysieren",
+        "reason": "Noch keine abgeschlossene Analyse. Sie ist die wichtigste Quelle taktischer Nachweise."
+      },
+      "record_passing": {
+        "title": "Passquote erfassen",
+        "reason": "In {{have}} von {{need}} benötigten Spielen erfasst, um dein Passspiel zu beschreiben."
+      },
+      "record_defending": {
+        "title": "Tacklings erfassen",
+        "reason": "In {{have}} von {{need}} benötigten Spielen erfasst, um deine Defensive zu beschreiben."
+      },
+      "coach_reference": {
+        "title": "Bitte einen Trainer um eine Referenz",
+        "reason": "Unabhängige Bestätigung ist das stärkste Vertrauenssignal in einem Passport."
+      },
+      "gps_session": {
+        "title": "GPS-Einheit aufzeichnen",
+        "reason": "GPS-Einheiten sind die einzige Quelle physischer Nachweise."
+      }
     }
   },
   "passportHero": {

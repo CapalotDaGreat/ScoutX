@@ -279,6 +279,97 @@
       "enable_passport": "Publiceer je Football Passport",
       "invite_coach": "Vraag een trainer om een aanbeveling",
       "enable_discoverable": "Word zichtbaar voor scouts"
+    },
+    "changes": {
+      "title": "Sinds je laatste bezoek",
+      "dismiss": "Begrepen",
+      "new_matches_one": "{{count}} nieuwe wedstrijd vastgelegd",
+      "new_matches_other": "{{count}} nieuwe wedstrijden vastgelegd",
+      "new_analysis": "Een wedstrijdanalyse is klaar",
+      "goal_achieved": "Je hebt een ontwikkeldoel bereikt",
+      "goal_improving": "Een ontwikkeldoel verbetert",
+      "new_video_one": "{{count}} nieuwe video toegevoegd",
+      "new_video_other": "{{count}} nieuwe video's toegevoegd",
+      "new_trial": "Nieuwe uitnodiging voor een proeftraining",
+      "trial_status": "Proeftraining-update: {{status}}",
+      "role_change": "Hoofdpositie gewijzigd van {{from}} naar {{to}}",
+      "verification_up": "Je verificatieniveau is gestegen",
+      "verification_down": "Je verificatieniveau is gewijzigd",
+      "coverage_up": "{{dimension}}-bewijs is nu {{state}}",
+      "coverage_down": "{{dimension}}-bewijs is gedaald naar {{state}}",
+      "new_endorsement_one": "{{count}} nieuwe referentie ontvangen",
+      "new_endorsement_other": "{{count}} nieuwe referenties ontvangen"
+    },
+    "coverageState": {
+      "insufficient": "onvoldoende",
+      "limited": "beperkt",
+      "moderate": "redelijk",
+      "strong": "sterk"
+    },
+    "trialStatus": {
+      "pending": "wacht op je antwoord",
+      "accepted": "geaccepteerd",
+      "declined": "afgewezen",
+      "rescheduled": "verzet",
+      "cancelled": "geannuleerd",
+      "completed": "afgerond"
+    },
+    "goalFocus": {
+      "title": "Huidig doel",
+      "next": "Volgende stap: {{step}}"
+    },
+    "goalStep": {
+      "prove_achievement": "Voeg een clip toe die het laat zien, zodat het resultaat bewezen is.",
+      "revisit_goal": "De evaluatiedatum is voorbij. Pas het doel aan of kies een nieuwe termijn.",
+      "baseline_missing": "Geen eerdere {{metric}} om mee te vergelijken, dus voortgang kan nog niet getoond worden.",
+      "record_metric_one": "{{metric}} is in je laatste wedstrijd niet vastgelegd. Leg het de volgende keer vast.",
+      "record_metric_other": "{{metric}} is in je laatste {{count}} wedstrijden niet vastgelegd. Leg het de volgende keer vast.",
+      "log_match_to_measure": "Leg een wedstrijd vast met {{metric}} om te beginnen met meten.",
+      "play_more_matches": "{{have}} van {{need}} wedstrijden vastgelegd. Nog een paar voordat voortgang beoordeeld wordt.",
+      "log_training": "Al {{days}} dagen geen gekoppelde training. Leg een sessie vast voor dit doel.",
+      "log_training_first": "Koppel een trainingssessie aan dit doel.",
+      "shift_focus_one": "Geen beweging in {{count}} wedstrijd. Probeer een andere oefening of focus.",
+      "shift_focus_other": "Geen beweging in {{count}} wedstrijden. Probeer een andere oefening of focus.",
+      "ask_coach_one": "Geen beweging in {{count}} wedstrijd. Vraag je coach wat je kunt veranderen.",
+      "ask_coach_other": "Geen beweging in {{count}} wedstrijden. Vraag je coach wat je kunt veranderen.",
+      "keep_going": "Op koers. Blijf wedstrijden en trainingen vastleggen.",
+      "reflect": "Voeg een voortgangsnotitie toe."
+    },
+    "evidence": {
+      "title": "Beste volgende bewijs",
+      "strongest": "Je sterkste bewijs nu: {{dimension}}",
+      "first_match": {
+        "title": "Leg je eerste wedstrijd vast",
+        "reason": "Al het andere in je profiel bouwt voort op vastgelegde wedstrijden."
+      },
+      "recent_match": {
+        "title": "Leg een recente wedstrijd vast",
+        "reason": "Je laatste wedstrijd is {{days}} dagen oud. Scouts letten op actuele vorm."
+      },
+      "match_video": {
+        "title": "Wedstrijdvideo toevoegen",
+        "reason": "Je hebt statistieken maar geen beelden. Video laat zien wat de cijfers betekenen."
+      },
+      "match_analysis": {
+        "title": "Een wedstrijdvideo analyseren",
+        "reason": "Nog geen afgeronde analyse. Dat is de belangrijkste bron van tactisch bewijs."
+      },
+      "record_passing": {
+        "title": "Passnauwkeurigheid vastleggen",
+        "reason": "Vastgelegd in {{have}} van de {{need}} wedstrijden die nodig zijn om je passing te beschrijven."
+      },
+      "record_defending": {
+        "title": "Tackles vastleggen",
+        "reason": "Vastgelegd in {{have}} van de {{need}} wedstrijden die nodig zijn om je verdedigen te beschrijven."
+      },
+      "coach_reference": {
+        "title": "Vraag een coach om een referentie",
+        "reason": "Onafhankelijke bevestiging is het sterkste vertrouwenssignaal op een Passport."
+      },
+      "gps_session": {
+        "title": "Een GPS-sessie opnemen",
+        "reason": "GPS-sessies zijn de enige bron van fysiek bewijs."
+      }
     }
   },
   "passportHero": {

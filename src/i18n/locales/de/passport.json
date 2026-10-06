@@ -35,5 +35,28 @@
   },
   "scoutPreview": {
     "note": "This is the public projection. Private profile fields are not shown."
+  },
+  "gaps": {
+    "title": "Angaben, die Nachweise brauchen",
+    "subtitle": "Was du über dein Spiel sagst, verglichen mit dem, was dein Profil zeigt.",
+    "fix": "So belegst du es: {{actions}}",
+    "claim": {
+      "position": "Position: {{value}}",
+      "playing_style": "Spielstil: {{value}}",
+      "weak_foot": "Schwacher Fuß: {{value}}",
+      "skill_moves": "Tricks: {{value}}"
+    },
+    "support": {
+      "none": "Noch kein erfasstes Spiel belegt das ({{need}} benötigt).",
+      "limited": "Belegt durch {{have}} von {{need}} erfassten Spielen.",
+      "self_reported_only": "Nur Selbstangabe. Spiele können das nicht bestätigen – ein Trainer oder Video schon."
+    },
+    "action": {
+      "add_match": "ein Spiel in dieser Rolle erfassen",
+      "add_clip": "einen Clip hinzufügen",
+      "ask_coach": "einen Trainer fragen",
+      "edit_claim": "die Angabe bearbeiten",
+      "record_metric": "den passenden Wert erfassen"
+    }
   }
 }

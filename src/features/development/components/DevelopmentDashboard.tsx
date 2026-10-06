@@ -26,6 +26,8 @@ import {
   type TrainingSessionType,
 } from '@/features/development/types';
 import { BEFORE_VS_NOW_MIN_SAMPLE } from '@/features/development/services/beforeVsNowService';
+import { type GoalNextStep } from '@/features/intelligence/types';
+import { useGoalStepCopy } from '@/features/today/components/TodayIntelligence';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
 
@@ -146,14 +148,17 @@ function trainingTypeLabel(t: Translate, type: TrainingSessionType): string {
 
 function GoalCard({
   summary,
+  nextStep,
   onMarkAchieved,
   saving,
 }: {
   summary: GoalProgressSummary;
+  nextStep: GoalNextStep | null;
   onMarkAchieved: (goalId: string) => void;
   saving: boolean;
 }) {
-  const { t } = useAppTranslation(['development']);
+  const { t } = useAppTranslation(['development', 'portfolio']);
+  const goalStepCopy = useGoalStepCopy();
   const { goal, status, current, percent, daysLeft } = summary;
   return (
     <Card variant="default" padding="sm" className="gap-2">
@@ -199,6 +204,11 @@ function GoalCard({
           {daysLeft < 0
             ? t('development:goal.overdue', { days: Math.abs(daysLeft) })
             : t('development:goal.daysLeft', { days: daysLeft })}
+        </Text>
+      ) : null}
+      {nextStep ? (
+        <Text variant="caption" weight="medium">
+          {t('portfolio:today.goalFocus.next', { step: goalStepCopy(nextStep) })}
         </Text>
       ) : null}
       {status !== 'achieved' ? (
@@ -395,6 +405,7 @@ export function DevelopmentDashboard({
 
   const {
     goals,
+    nextSteps,
     trainingSessions,
     identitySnapshots,
     beforeVsNow,
@@ -484,6 +495,7 @@ export function DevelopmentDashboard({
               <GoalCard
                 key={summary.goal.id}
                 summary={summary}
+                nextStep={nextSteps[summary.goal.id] ?? null}
                 saving={isSaving}
                 onMarkAchieved={(goalId) => {
                   void setGoalStatus(goalId, 'achieved').catch(handleError);

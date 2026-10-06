@@ -35,5 +35,28 @@
   },
   "scoutPreview": {
     "note": "This is the public projection. Private profile fields are not shown."
+  },
+  "gaps": {
+    "title": "Afirmações que precisam de prova",
+    "subtitle": "O que dizes do teu jogo, comparado com o que o teu registo mostra.",
+    "fix": "Como comprovar: {{actions}}",
+    "claim": {
+      "position": "Posição: {{value}}",
+      "playing_style": "Estilo de jogo: {{value}}",
+      "weak_foot": "Pé fraco: {{value}}",
+      "skill_moves": "Fintas: {{value}}"
+    },
+    "support": {
+      "none": "Nenhum jogo registado o comprova ainda (são precisos {{need}}).",
+      "limited": "Comprovado por {{have}} de {{need}} jogos registados.",
+      "self_reported_only": "Apenas autodeclarado. Os jogos não o podem confirmar; um treinador ou vídeo pode."
+    },
+    "action": {
+      "add_match": "registar um jogo nesta posição",
+      "add_clip": "adicionar um clip",
+      "ask_coach": "pedir a um treinador",
+      "edit_claim": "editar a afirmação",
+      "record_metric": "registar a estatística correspondente"
+    }
   }
 }

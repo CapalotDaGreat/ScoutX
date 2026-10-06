@@ -35,5 +35,28 @@
   },
   "scoutPreview": {
     "note": "This is the public projection. Private profile fields are not shown."
+  },
+  "gaps": {
+    "title": "Affermazioni da dimostrare",
+    "subtitle": "Quello che dici del tuo gioco, confrontato con ciò che mostra il tuo profilo.",
+    "fix": "Come supportarlo: {{actions}}",
+    "claim": {
+      "position": "Ruolo: {{value}}",
+      "playing_style": "Stile di gioco: {{value}}",
+      "weak_foot": "Piede debole: {{value}}",
+      "skill_moves": "Abilità tecniche: {{value}}"
+    },
+    "support": {
+      "none": "Nessuna partita registrata lo conferma ancora (ne servono {{need}}).",
+      "limited": "Confermato da {{have}} di {{need}} partite registrate.",
+      "self_reported_only": "Solo autodichiarato. Le partite non possono confermarlo; un allenatore o un video sì."
+    },
+    "action": {
+      "add_match": "registrare una partita in questo ruolo",
+      "add_clip": "aggiungere una clip",
+      "ask_coach": "chiedere a un allenatore",
+      "edit_claim": "modificare l'affermazione",
+      "record_metric": "registrare la statistica corrispondente"
+    }
   }
 }

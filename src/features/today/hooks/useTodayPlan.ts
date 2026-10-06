@@ -2,7 +2,29 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { isFirebaseConfiguredForProject } from '@/config/firebase';
 import { DevelopmentRepository } from '@/features/development/repositories/DevelopmentRepository';
+import { sortGoalSummaries, summarizeGoal } from '@/features/development/services/developmentEngine';
+import {
+  type CoverageState,
+  type DevelopmentGoal,
+  type GoalProgressSummary,
+  type TrainingSession,
+} from '@/features/development/types';
+import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
+import { detectChanges } from '@/features/intelligence/services/changeDetection';
+import { goalNextStep } from '@/features/intelligence/services/goalNextStep';
+import { nextBestEvidence } from '@/features/intelligence/services/nextBestEvidence';
+import { buildSnapshot } from '@/features/intelligence/services/snapshotBuilder';
+import { loadSeenSnapshot, saveSeenSnapshot } from '@/features/intelligence/services/snapshotStore';
+import {
+  type ChangeItem,
+  type CoverageDimension,
+  type FootballStateSnapshot,
+  type GoalNextStep,
+  type NextBestEvidence,
+} from '@/features/intelligence/types';
 import { canRetryMatchAnalysis } from '@/features/match-analysis/hooks/useMatchAnalysis';
+import { buildPassportSummary } from '@/features/passport/services/passportSummaryService';
+import { type TrustProfile, type TrustRecommendation } from '@/features/trust-system/types';
 import { listRecentMatchAnalysisJobs } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
 import { type MatchAnalysisJob } from '@/features/match-analysis/types';
 import { type OnboardingStep } from '@/features/player-onboarding/types';
@@ -28,16 +50,30 @@ export type UseTodayPlanOptions = {
   profile: PlayerProfile | null;
   trials: TrialInvitation[];
   onboardingSteps: OnboardingStep[];
+  recommendations?: TrustRecommendation[];
+  trustProfile?: TrustProfile | null;
+};
+
+export type TodayGoalFocus = {
+  summary: GoalProgressSummary;
+  nextStep: GoalNextStep;
 };
 
 export type UseTodayPlanResult = {
   plan: TodayPlan;
   latestAnalysis: TodayAnalysisJob | null;
   upcomingTrial: TodayTrial | null;
+  /** Meaningful changes since this device last showed Today; empty on a first visit. */
+  changes: ChangeItem[];
+  /** The open goal that most needs attention, with its single next step. */
+  goalFocus: TodayGoalFocus | null;
+  evidence: NextBestEvidence | null;
   /** True when analyses could not be loaded; analysis suggestions are withheld. */
   analysesUnavailable: boolean;
   isLoading: boolean;
   refresh: () => void;
+  /** Marks the current changes as seen so they are not repeated next visit. */
+  markChangesSeen: () => void;
 };
 
 type LocalState = {
@@ -47,6 +83,10 @@ type LocalState = {
   matchDraft: TodayInput['matchDraft'];
   goals: TodayGoal[];
   trainingSessions: TodayTraining[];
+  rawGoals: DevelopmentGoal[];
+  rawTraining: TrainingSession[];
+  gpsSessionCount: number;
+  seenSnapshot: FootballStateSnapshot | null;
 };
 
 const INITIAL_LOCAL_STATE: LocalState = {
@@ -56,7 +96,19 @@ const INITIAL_LOCAL_STATE: LocalState = {
   matchDraft: null,
   goals: [],
   trainingSessions: [],
+  rawGoals: [],
+  rawTraining: [],
+  gpsSessionCount: 0,
+  seenSnapshot: null,
 };
+
+const SELF_SCOPE = 'self';
+
+function verificationLevel(trust: TrustProfile | null | undefined): string | null {
+  if (!trust) return null;
+  if (!trust.player.verified) return 'none';
+  return trust.club.verified || trust.coach?.verified ? 'verified' : 'basic';
+}
 
 function toTodayAnalysis(job: MatchAnalysisJob): TodayAnalysisJob {
   return {
@@ -70,6 +122,8 @@ function toTodayAnalysis(job: MatchAnalysisJob): TodayAnalysisJob {
     retryable: canRetryMatchAnalysis(job),
   };
 }
+
+const EMPTY_RECOMMENDATIONS: TrustRecommendation[] = [];
 
 async function loadAnalyses(userId: string): Promise<TodayAnalysisJob[] | null> {
   if (!isFirebaseConfiguredForProject()) {
@@ -88,6 +142,8 @@ export function useTodayPlan({
   profile,
   trials,
   onboardingSteps,
+  recommendations = EMPTY_RECOMMENDATIONS,
+  trustProfile = null,
 }: UseTodayPlanOptions): UseTodayPlanResult {
   const [local, setLocal] = useState<LocalState>(INITIAL_LOCAL_STATE);
   const [isLoading, setIsLoading] = useState(true);
@@ -115,21 +171,30 @@ export function useTodayPlan({
     }
     let cancelled = false;
     void (async () => {
-      const [analyses, reviewedAnalysisIds, draft, goals, trainingSessions] = await Promise.all([
-        loadAnalyses(userId),
-        loadReviewedAnalysisIds(userId),
-        matchLogDraftStore.load(userId).catch(() => null),
-        DevelopmentRepository.getInstance()
-          .listGoals(userId)
-          .catch(() => []),
-        DevelopmentRepository.getInstance()
-          .listTrainingSessions(userId)
-          .catch(() => []),
-      ]);
+      const [analyses, reviewedAnalysisIds, draft, goals, trainingSessions, gpsSessions, seenSnapshot] =
+        await Promise.all([
+          loadAnalyses(userId),
+          loadReviewedAnalysisIds(userId),
+          matchLogDraftStore.load(userId).catch(() => null),
+          DevelopmentRepository.getInstance()
+            .listGoals(userId)
+            .catch(() => []),
+          DevelopmentRepository.getInstance()
+            .listTrainingSessions(userId)
+            .catch(() => []),
+          GpsSessionRepository.getInstance()
+            .fetchSessions(userId)
+            .catch(() => []),
+          loadSeenSnapshot(userId, SELF_SCOPE),
+        ]);
       if (cancelled) {
         return;
       }
       setLocal({
+        rawGoals: goals,
+        rawTraining: trainingSessions,
+        gpsSessionCount: gpsSessions.length,
+        seenSnapshot,
         analyses: analyses ?? [],
         analysesLoaded: analyses !== null,
         reviewedAnalysisIds,
@@ -225,12 +290,148 @@ export function useTodayPlan({
     );
   }, [input.now, input.trials]);
 
+  const coverageItems = useMemo(() => {
+    if (!profile) return [];
+    return buildPassportSummary({
+      profile,
+      recommendations,
+      gpsSessionCount: local.gpsSessionCount,
+      now: input.now,
+    }).coverage.map((item) => ({ id: item.id, state: item.state }));
+  }, [input.now, local.gpsSessionCount, profile, recommendations]);
+
+  const coverage = useMemo(() => {
+    const map: Partial<Record<CoverageDimension, CoverageState>> = {};
+    for (const item of coverageItems) map[item.id] = item.state;
+    return map;
+  }, [coverageItems]);
+
+  const completedAnalysisIds = useMemo(
+    () => local.analyses.filter((job) => job.status === 'complete').map((job) => job.id),
+    [local.analyses],
+  );
+
+  const goalSummaries = useMemo(
+    () => sortGoalSummaries(local.rawGoals.map((goal) => summarizeGoal(goal, matches ?? [], input.now))),
+    [input.now, local.rawGoals, matches],
+  );
+
+  const currentSnapshot = useMemo<FootballStateSnapshot | null>(() => {
+    if (!profile || isLoading) return null;
+    return buildSnapshot({
+      now: input.now,
+      matchIds: (matches ?? []).map((match) => match.id),
+      // Without a successful load, keep what was seen so analyses don't reappear as "new".
+      completedAnalysisIds: local.analysesLoaded
+        ? completedAnalysisIds
+        : (local.seenSnapshot?.completedAnalysisIds ?? []),
+      goals: goalSummaries.map((summary) => ({ id: summary.goal.id, status: summary.status })),
+      videoIds: (videos ?? []).map((video) => video.id),
+      trials: trials.map((trial) => ({ id: trial.id, status: trial.status })),
+      primaryPosition: profile.identity.preferredPositions[0] ?? profile.position ?? null,
+      verificationLevel: verificationLevel(trustProfile),
+      coverage: coverageItems,
+      endorsementIds: recommendations.map((recommendation) => recommendation.id),
+    });
+  }, [
+    completedAnalysisIds,
+    coverageItems,
+    goalSummaries,
+    input.now,
+    isLoading,
+    local.analysesLoaded,
+    local.seenSnapshot,
+    matches,
+    profile,
+    recommendations,
+    trials,
+    trustProfile,
+    videos,
+  ]);
+
+  const changes = useMemo(
+    () => (currentSnapshot ? detectChanges(local.seenSnapshot, currentSnapshot) : []),
+    [currentSnapshot, local.seenSnapshot],
+  );
+
+  // A first visit has nothing to compare against: record the baseline straight away.
+  useEffect(() => {
+    if (userId && currentSnapshot && !local.seenSnapshot) {
+      void saveSeenSnapshot(userId, SELF_SCOPE, currentSnapshot);
+    }
+  }, [currentSnapshot, local.seenSnapshot, userId]);
+
+  const latestSnapshotRef = useRef<FootballStateSnapshot | null>(null);
+  latestSnapshotRef.current = currentSnapshot;
+
+  const markChangesSeen = useCallback(() => {
+    const snapshot = latestSnapshotRef.current;
+    if (!userId || !snapshot) return;
+    void saveSeenSnapshot(userId, SELF_SCOPE, snapshot);
+    setLocal((previous) => ({ ...previous, seenSnapshot: snapshot }));
+  }, [userId]);
+
+  // Leaving Today counts as having seen what was shown.
+  useFocusEffect(
+    useCallback(
+      () => () => {
+        const snapshot = latestSnapshotRef.current;
+        if (userId && snapshot) {
+          void saveSeenSnapshot(userId, SELF_SCOPE, snapshot);
+        }
+      },
+      [userId],
+    ),
+  );
+
+  const goalFocus = useMemo<TodayGoalFocus | null>(() => {
+    const summary = goalSummaries.find((item) => item.status !== 'achieved') ?? null;
+    if (!summary) return null;
+    return {
+      summary,
+      nextStep: goalNextStep(summary, {
+        matches: matches ?? [],
+        trainingSessions: local.rawTraining,
+        hasCoachConnection: recommendations.some((item) => item.authorRole === 'coach'),
+        now: input.now,
+      }),
+    };
+  }, [goalSummaries, input.now, local.rawTraining, matches, recommendations]);
+
+  const evidence = useMemo(() => {
+    if (!profile || isLoading) return null;
+    return nextBestEvidence({
+      matches: matches ?? [],
+      coverage,
+      completedAnalysisCount: local.analysesLoaded ? completedAnalysisIds.length : 1,
+      videoCount: videos?.length ?? 0,
+      coachEndorsementCount: recommendations.filter((item) => item.authorRole === 'coach').length,
+      gpsSessionCount: local.gpsSessionCount,
+      now: input.now,
+    });
+  }, [
+    completedAnalysisIds.length,
+    coverage,
+    input.now,
+    isLoading,
+    local.analysesLoaded,
+    local.gpsSessionCount,
+    matches,
+    profile,
+    recommendations,
+    videos,
+  ]);
+
   return {
     plan,
     latestAnalysis,
     upcomingTrial,
+    changes,
+    goalFocus,
+    evidence,
     analysesUnavailable: !isLoading && !local.analysesLoaded && Boolean(userId),
     isLoading,
     refresh,
+    markChangesSeen,
   };
 }
