@@ -42,5 +42,36 @@
     "removeTitle": "Remove endorsement",
     "removeMessage": "This endorsement will be permanently removed.",
     "footerNote": "Coach recommendations are submitted by verified club staff. Scouts can publish endorsements visible on the player trust profile."
+  },
+  "report": {
+    "button": "Report",
+    "profileButton": "Report profile",
+    "title": "Report content",
+    "promptUser": "Tell us why you are reporting this profile.",
+    "promptPost": "Tell us why you are reporting this content.",
+    "details": "Additional details (optional)",
+    "submit": "Submit report",
+    "signInTitle": "Sign in required",
+    "signInBody": "You need to be signed in to report content.",
+    "submittedTitle": "Report submitted",
+    "submittedBody": "Thank you. Our team will review this report.",
+    "failedTitle": "Unable to submit",
+    "failedBody": "Please try again in a moment.",
+    "reasons": {
+      "spam": "Spam or misleading",
+      "harassment": "Harassment or abuse",
+      "inappropriate": "Inappropriate content",
+      "impersonation": "Impersonation",
+      "other": "Other"
+    }
+  },
+  "block": {
+    "blockTitle": "Block player?",
+    "blockBody": "{{name}} will be hidden from your discovery lists and can no longer send you requests. You can unblock them later.",
+    "unblockTitle": "Unblock player?",
+    "unblockBody": "Allow {{name}} to appear in your discovery again.",
+    "block": "Block",
+    "unblock": "Unblock",
+    "cancel": "Cancel"
   }
 }

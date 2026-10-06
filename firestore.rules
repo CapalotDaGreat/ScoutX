@@ -305,9 +305,19 @@ service cloud.firestore {
     match /contentReports/{reportId} {
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.reporterId
+        && request.resource.data.keys().hasOnly([
+          'reporterId', 'targetType', 'targetId', 'targetOwnerId', 'reason', 'details', 'createdAt'
+        ])
         && request.resource.data.targetType in ['post', 'user']
         && request.resource.data.targetId is string
         && request.resource.data.targetId.size() > 0
+        // targetOwnerId lets account deletion find reports about a user's posts.
+        && request.resource.data.targetOwnerId is string
+        && request.resource.data.targetOwnerId.size() > 0
+        && (request.resource.data.targetType != 'user'
+          || request.resource.data.targetOwnerId == request.resource.data.targetId)
+        && (!('details' in request.resource.data)
+          || (request.resource.data.details is string && request.resource.data.details.size() <= 1000))
         && validReportReason(request.resource.data.reason)
         && request.resource.data.createdAt is string;
       allow read, update, delete: if false;
@@ -414,6 +424,19 @@ service cloud.firestore {
 
     match /pushTokens/{userId} {
       allow read, write: if isOwner(userId);
+    }
+
+    // Read by the push trigger (Admin SDK) to enforce opt-outs server-side.
+    match /notificationPreferences/{userId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.keys().hasOnly(['pushEnabled', 'categories', 'updatedAt'])
+        && request.resource.data.pushEnabled is bool
+        && request.resource.data.categories is map
+        && request.resource.data.categories.keys().hasOnly([
+          'match', 'analysis', 'development', 'scouting', 'trial', 'career', 'passport', 'system'
+        ])
+        && request.resource.data.updatedAt is string;
     }
 
     match /careerReplays/{replayId} {

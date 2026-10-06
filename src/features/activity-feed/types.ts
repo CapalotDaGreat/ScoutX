@@ -16,7 +16,8 @@ export type ActivityType =
   | 'recommendation_received'
   | 'portfolio_viewed'
   | 'milestone_earned'
-  | 'weekly_report_ready';
+  | 'weekly_report_ready'
+  | 'evidence_requested';
 
 export type ActivityActorRole = 'player' | 'scout' | 'system';
 
@@ -27,7 +28,8 @@ export type ActivityReferenceEntity =
   | 'report'
   | 'video'
   | 'recommendation'
-  | 'recruitment';
+  | 'recruitment'
+  | 'evidence_request';
 
 export type ActivityReference = {
   entityType: ActivityReferenceEntity;

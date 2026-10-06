@@ -3,6 +3,13 @@ import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions';
+import {
+  ACTIVITY_CATEGORY,
+  MAX_PUSHES_PER_HOUR,
+  decidePush,
+  parseStoredPreferences,
+  type PushDecision,
+} from './notificationPolicy';
 
 export { generateAiInsight } from './aiCoach';
 export { analyzeMatchFootage } from './matchAnalysis';
@@ -99,23 +106,36 @@ const PUSH_COOLDOWN_MS: Record<string, number> = {
 
 const PUSH_THROTTLE_COLLECTION = 'pushThrottle';
 
-/** Atomically claims a push slot; returns false when the recipient was notified too recently. */
-async function claimPushSlot(recipientId: string, type: string): Promise<boolean> {
-  const cooldown = PUSH_COOLDOWN_MS[type] ?? 0;
-  if (cooldown <= 0) {
-    return true;
-  }
+/**
+ * Atomically applies the recipient's stored preferences, the per-type cooldown and the hourly
+ * cap, then claims a push slot. Returns the reason when the push must not be sent.
+ */
+async function claimPushSlot(recipientId: string, type: string): Promise<PushDecision> {
   const db = getFirestore();
-  const ref = db.collection(PUSH_THROTTLE_COLLECTION).doc(recipientId);
+  const throttleRef = db.collection(PUSH_THROTTLE_COLLECTION).doc(recipientId);
+  const preferencesRef = db.collection('notificationPreferences').doc(recipientId);
   return db.runTransaction(async (transaction) => {
-    const snapshot = await transaction.get(ref);
-    const lastSent = (snapshot.data()?.[type] as number | undefined) ?? 0;
+    const [throttle, preferencesSnapshot] = await Promise.all([
+      transaction.get(throttleRef),
+      transaction.get(preferencesRef),
+    ]);
     const now = Date.now();
-    if (now - lastSent < cooldown) {
-      return false;
+    const data = throttle.data() ?? {};
+    const recent = Array.isArray(data.recent)
+      ? data.recent.filter((value: unknown): value is number => typeof value === 'number')
+      : [];
+    const decision = decidePush(type, parseStoredPreferences(preferencesSnapshot.data()), recent, now);
+    if (!decision.send) {
+      return decision;
     }
-    transaction.set(ref, { [type]: now }, { merge: true });
-    return true;
+    const cooldown = PUSH_COOLDOWN_MS[type] ?? 0;
+    const lastSent = typeof data[type] === 'number' ? (data[type] as number) : 0;
+    if (cooldown > 0 && now - lastSent < cooldown) {
+      return { send: false, reason: 'cooldown' } satisfies PushDecision;
+    }
+    const keep = recent.filter((time) => now - time < HOUR_MS).slice(-MAX_PUSHES_PER_HOUR);
+    transaction.set(throttleRef, { [type]: now, recent: [...keep, now] }, { merge: true });
+    return decision;
   });
 }
 
@@ -149,7 +169,7 @@ export const onActivityCreatedPush = onDocumentCreated(
       return;
     }
 
-    if (!activity.type || !(activity.type in PUSH_COOLDOWN_MS)) {
+    if (!activity.type || !(activity.type in ACTIVITY_CATEGORY)) {
       return;
     }
 
@@ -169,8 +189,13 @@ export const onActivityCreatedPush = onDocumentCreated(
       return;
     }
 
-    if (!(await claimPushSlot(activity.recipientId, activity.type))) {
-      logger.info('Push throttled', { recipientId: activity.recipientId, type: activity.type });
+    const decision = await claimPushSlot(activity.recipientId, activity.type);
+    if (!decision.send) {
+      logger.info('Push suppressed', {
+        recipientId: activity.recipientId,
+        type: activity.type,
+        reason: decision.reason,
+      });
       return;
     }
 

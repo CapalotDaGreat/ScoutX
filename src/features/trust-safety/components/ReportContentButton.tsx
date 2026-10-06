@@ -7,22 +7,25 @@ import { Text } from '@/components/primitives/Text';
 import { Input } from '@/components/primitives/Input';
 import { REPORT_REASONS, type ReportReason } from '@/features/trust-safety/constants';
 import { ContentReportRepository } from '@/features/trust-safety/repositories/ContentReportRepository';
-import { type ContentReportTargetType } from '@/features/trust-safety/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
-export type ReportContentButtonProps = {
-  targetType: ContentReportTargetType;
-  targetId: string;
+export type ReportContentButtonProps = (
+  | { targetType: 'user'; targetId: string; targetOwnerId?: undefined }
+  | { targetType: 'post'; targetId: string; targetOwnerId: string }
+) & {
   label?: string;
 };
 
 export function ReportContentButton({
   targetType,
   targetId,
-  label = 'Report',
+  targetOwnerId,
+  label,
 }: ReportContentButtonProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('trust');
   const { user } = useAuth();
   const [visible, setVisible] = useState(false);
   const [reason, setReason] = useState<ReportReason>('spam');
@@ -31,7 +34,7 @@ export function ReportContentButton({
 
   const handleSubmit = useCallback(async () => {
     if (!user?.id) {
-      Alert.alert('Sign in required', 'You need to be signed in to report content.');
+      Alert.alert(t('report.signInTitle'), t('report.signInBody'));
       return;
     }
 
@@ -40,18 +43,19 @@ export function ReportContentButton({
       await ContentReportRepository.getInstance().submitReport(user.id, {
         targetType,
         targetId,
+        targetOwnerId: targetOwnerId ?? targetId,
         reason,
         details: details.trim() || undefined,
       });
       setVisible(false);
       setDetails('');
-      Alert.alert('Report submitted', 'Thank you. Our team will review this content.');
+      Alert.alert(t('report.submittedTitle'), t('report.submittedBody'));
     } catch {
-      Alert.alert('Unable to submit', 'Please try again in a moment.');
+      Alert.alert(t('report.failedTitle'), t('report.failedBody'));
     } finally {
       setSubmitting(false);
     }
-  }, [details, reason, targetId, targetType, user?.id]);
+  }, [details, reason, t, targetId, targetOwnerId, targetType, user?.id]);
 
   return (
     <>
@@ -61,16 +65,16 @@ export function ReportContentButton({
         leftIcon={<Flag size={14} color={colors.textSecondary} />}
         onPress={() => setVisible(true)}
       >
-        {label}
+        {label ?? t('report.button')}
       </Button>
 
-      <Modal visible={visible} onClose={() => setVisible(false)} title="Report content" size="md">
+      <Modal visible={visible} onClose={() => setVisible(false)} title={t('report.title')} size="md">
         <View className="gap-4">
           <Text variant="body-sm" color="secondary">
-            Tell us why you are reporting this {targetType}.
+            {targetType === 'user' ? t('report.promptUser') : t('report.promptPost')}
           </Text>
 
-          <View className="gap-2">
+          <View className="gap-2" accessibilityRole="radiogroup">
             {REPORT_REASONS.map((option) => (
               <Button
                 key={option.value}
@@ -78,14 +82,16 @@ export function ReportContentButton({
                 size="sm"
                 onPress={() => setReason(option.value)}
                 className="justify-start"
+                accessibilityRole="radio"
+                accessibilityState={{ selected: reason === option.value }}
               >
-                {option.label}
+                {t(`report.reasons.${option.value}`)}
               </Button>
             ))}
           </View>
 
           <Input
-            label="Additional details (optional)"
+            label={t('report.details')}
             value={details}
             onChangeText={setDetails}
             multiline
@@ -93,7 +99,7 @@ export function ReportContentButton({
           />
 
           <Button variant="destructive" loading={submitting} onPress={() => void handleSubmit()}>
-            Submit report
+            {t('report.submit')}
           </Button>
         </View>
       </Modal>

@@ -7,6 +7,8 @@ export type ContentReport = {
   reporterId: string;
   targetType: ContentReportTargetType;
   targetId: string;
+  /** The user who owns the reported content; equals targetId for user reports. */
+  targetOwnerId: string;
   reason: ReportReason;
   details?: string;
   createdAt: string;
@@ -15,6 +17,7 @@ export type ContentReport = {
 export type ContentReportDraft = {
   targetType: ContentReportTargetType;
   targetId: string;
+  targetOwnerId: string;
   reason: ReportReason;
   details?: string;
 };

@@ -15,6 +15,7 @@ const UID_KEYED_COLLECTIONS = [
   'portfolioAnalytics',
   'recruitmentWorkspaces',
   'pushThrottle',
+  'notificationPreferences',
   'analysisQuotas',
   'publicPassports',
   'passportSummaries',
@@ -56,6 +57,7 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['coachObservations', 'playerId'],
   ['contentReports', 'reporterId'],
   ['contentReports', 'targetId'],
+  ['contentReports', 'targetOwnerId'],
   ['blockedUsers', 'blockedUserId'],
 ];
 

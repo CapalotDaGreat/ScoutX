@@ -6,6 +6,7 @@ const app_1 = require("firebase-admin/app");
 const firestore_1 = require("firebase-admin/firestore");
 const firestore_2 = require("firebase-functions/v2/firestore");
 const firebase_functions_1 = require("firebase-functions");
+const notificationPolicy_1 = require("./notificationPolicy");
 var aiCoach_1 = require("./aiCoach");
 Object.defineProperty(exports, "generateAiInsight", { enumerable: true, get: function () { return aiCoach_1.generateAiInsight; } });
 var matchAnalysis_1 = require("./matchAnalysis");
@@ -94,23 +95,36 @@ const PUSH_COOLDOWN_MS = {
     trial_invitation: 2 * 60 * 1000,
 };
 const PUSH_THROTTLE_COLLECTION = 'pushThrottle';
-/** Atomically claims a push slot; returns false when the recipient was notified too recently. */
+/**
+ * Atomically applies the recipient's stored preferences, the per-type cooldown and the hourly
+ * cap, then claims a push slot. Returns the reason when the push must not be sent.
+ */
 async function claimPushSlot(recipientId, type) {
-    const cooldown = PUSH_COOLDOWN_MS[type] ?? 0;
-    if (cooldown <= 0) {
-        return true;
-    }
     const db = (0, firestore_1.getFirestore)();
-    const ref = db.collection(PUSH_THROTTLE_COLLECTION).doc(recipientId);
+    const throttleRef = db.collection(PUSH_THROTTLE_COLLECTION).doc(recipientId);
+    const preferencesRef = db.collection('notificationPreferences').doc(recipientId);
     return db.runTransaction(async (transaction) => {
-        const snapshot = await transaction.get(ref);
-        const lastSent = snapshot.data()?.[type] ?? 0;
+        const [throttle, preferencesSnapshot] = await Promise.all([
+            transaction.get(throttleRef),
+            transaction.get(preferencesRef),
+        ]);
         const now = Date.now();
-        if (now - lastSent < cooldown) {
-            return false;
+        const data = throttle.data() ?? {};
+        const recent = Array.isArray(data.recent)
+            ? data.recent.filter((value) => typeof value === 'number')
+            : [];
+        const decision = (0, notificationPolicy_1.decidePush)(type, (0, notificationPolicy_1.parseStoredPreferences)(preferencesSnapshot.data()), recent, now);
+        if (!decision.send) {
+            return decision;
         }
-        transaction.set(ref, { [type]: now }, { merge: true });
-        return true;
+        const cooldown = PUSH_COOLDOWN_MS[type] ?? 0;
+        const lastSent = typeof data[type] === 'number' ? data[type] : 0;
+        if (cooldown > 0 && now - lastSent < cooldown) {
+            return { send: false, reason: 'cooldown' };
+        }
+        const keep = recent.filter((time) => now - time < HOUR_MS).slice(-notificationPolicy_1.MAX_PUSHES_PER_HOUR);
+        transaction.set(throttleRef, { [type]: now, recent: [...keep, now] }, { merge: true });
+        return decision;
     });
 }
 async function sendExpoPush(token, title, body) {
@@ -138,7 +152,7 @@ exports.onActivityCreatedPush = (0, firestore_2.onDocumentCreated)('activities/{
     if (!activity?.recipientId || !activity.title || !activity.body) {
         return;
     }
-    if (!activity.type || !(activity.type in PUSH_COOLDOWN_MS)) {
+    if (!activity.type || !(activity.type in notificationPolicy_1.ACTIVITY_CATEGORY)) {
         return;
     }
     if (activity.type === 'portfolio_viewed' && activity.actorId === activity.recipientId) {
@@ -154,8 +168,13 @@ exports.onActivityCreatedPush = (0, firestore_2.onDocumentCreated)('activities/{
         });
         return;
     }
-    if (!(await claimPushSlot(activity.recipientId, activity.type))) {
-        firebase_functions_1.logger.info('Push throttled', { recipientId: activity.recipientId, type: activity.type });
+    const decision = await claimPushSlot(activity.recipientId, activity.type);
+    if (!decision.send) {
+        firebase_functions_1.logger.info('Push suppressed', {
+            recipientId: activity.recipientId,
+            type: activity.type,
+            reason: decision.reason,
+        });
         return;
     }
     const tokenSnapshot = await (0, firestore_1.getFirestore)()

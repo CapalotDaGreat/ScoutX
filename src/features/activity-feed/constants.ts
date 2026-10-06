@@ -17,6 +17,7 @@ export const ACTIVITY_TYPE_LABELS: Record<ActivityType, string> = {
   portfolio_viewed: 'Portfolio Viewed',
   milestone_earned: 'Milestone Earned',
   weekly_report_ready: 'Weekly Football Report',
+  evidence_requested: 'Evidence Requested',
 };
 
 export const ACTIVITY_CATEGORY_LABELS: Record<ActivityCategory, string> = {

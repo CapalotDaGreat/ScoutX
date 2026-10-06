@@ -23,6 +23,7 @@ const uidKeyed = [
   'portfolioAnalytics',
   'recruitmentWorkspaces',
   'pushThrottle',
+  'notificationPreferences',
   'analysisQuotas',
   'publicPassports',
   'passportSummaries',
@@ -63,6 +64,7 @@ const ownedByField = [
   ['coachObservations', 'playerId'],
   ['contentReports', 'reporterId'],
   ['contentReports', 'targetId'],
+  ['contentReports', 'targetOwnerId'],
   ['blockedUsers', 'blockedUserId'],
 ];
 

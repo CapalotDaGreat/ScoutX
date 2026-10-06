@@ -33,6 +33,7 @@ function parseReference(value: unknown): ActivityReference | undefined {
     'video',
     'recommendation',
     'recruitment',
+    'evidence_request',
   ];
 
   if (!entityTypes.includes(record.entityType as ActivityReferenceEntity)) {
@@ -56,6 +57,7 @@ const activityTypes: ActivityType[] = [
   'portfolio_viewed',
   'milestone_earned',
   'weekly_report_ready',
+  'evidence_requested',
 ];
 
 const activityCategories: ActivityCategory[] = [

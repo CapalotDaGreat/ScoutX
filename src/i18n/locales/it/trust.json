@@ -42,5 +42,36 @@
     "removeTitle": "Rimuovi endorsement",
     "removeMessage": "Questo endorsement verrà rimosso in modo permanente.",
     "footerNote": "Le raccomandazioni dell’allenatore arrivano dallo staff verificato. Gli scout possono pubblicare endorsement sul profilo di fiducia."
+  },
+  "report": {
+    "button": "Segnala",
+    "profileButton": "Segnala profilo",
+    "title": "Segnala contenuto",
+    "promptUser": "Dicci perché segnali questo profilo.",
+    "promptPost": "Dicci perché segnali questo contenuto.",
+    "details": "Dettagli aggiuntivi (facoltativo)",
+    "submit": "Invia segnalazione",
+    "signInTitle": "Accesso richiesto",
+    "signInBody": "Devi accedere per segnalare contenuti.",
+    "submittedTitle": "Segnalazione inviata",
+    "submittedBody": "Grazie. Il nostro team esaminerà la segnalazione.",
+    "failedTitle": "Invio non riuscito",
+    "failedBody": "Riprova tra un momento.",
+    "reasons": {
+      "spam": "Spam o ingannevole",
+      "harassment": "Molestie o abusi",
+      "inappropriate": "Contenuto inappropriato",
+      "impersonation": "Furto d'identità",
+      "other": "Altro"
+    }
+  },
+  "block": {
+    "blockTitle": "Bloccare il giocatore?",
+    "blockBody": "{{name}} sarà nascosto dai tuoi elenchi e non potrà più inviarti richieste. Puoi sbloccarlo in seguito.",
+    "unblockTitle": "Sbloccare il giocatore?",
+    "unblockBody": "Consenti a {{name}} di riapparire nelle tue ricerche.",
+    "block": "Blocca",
+    "unblock": "Sblocca",
+    "cancel": "Annulla"
   }
 }

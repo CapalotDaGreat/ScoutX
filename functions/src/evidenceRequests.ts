@@ -33,9 +33,21 @@ export const requestEvidence = onCall(createCallableOptions(), async (request) =
   if (!listing.exists) {
     throw new HttpsError('not-found', 'This player is not discoverable.');
   }
+  const db = getFirestore();
+  const blocked = await db
+    .collection('blockedUsers')
+    .where('blockerId', '==', playerId)
+    .where('blockedUserId', '==', uid)
+    .limit(1)
+    .get();
+  if (!blocked.empty) {
+    // Do not reveal the block; the request is simply not delivered.
+    return { id: null, status: 'pending' };
+  }
   const now = new Date().toISOString();
-  const ref = getFirestore().collection('evidenceRequests').doc();
-  await ref.set({
+  const ref = db.collection('evidenceRequests').doc();
+  const batch = db.batch();
+  batch.set(ref, {
     scoutId: uid,
     playerId,
     kinds,
@@ -44,5 +56,21 @@ export const requestEvidence = onCall(createCallableOptions(), async (request) =
     createdAt: now,
     updatedAt: now,
   });
+  // Server-authored, fixed copy: the scout's free-text message never reaches the lock screen.
+  batch.set(db.collection('activities').doc(`evidence-request-${ref.id}`), {
+    recipientId: playerId,
+    recipientRole: 'player',
+    type: 'evidence_requested',
+    category: 'scouting',
+    title: 'Evidence requested',
+    body: 'A scout asked for more evidence. Open your requests in ScoutX to respond.',
+    actorId: 'system',
+    actorName: 'ScoutX',
+    actorRole: 'system',
+    reference: { entityType: 'evidence_request', entityId: ref.id, label: 'Evidence request' },
+    read: false,
+    createdAt: now,
+  });
+  await batch.commit();
   return { id: ref.id, status: 'pending' };
 });

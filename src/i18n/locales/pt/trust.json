@@ -42,5 +42,36 @@
     "removeTitle": "Remover endosso",
     "removeMessage": "Este endosso será removido permanentemente.",
     "footerNote": "Recomendações de treinador vêm de staff de clube verificado. Scouts podem publicar endossos no perfil de confiança."
+  },
+  "report": {
+    "button": "Denunciar",
+    "profileButton": "Denunciar perfil",
+    "title": "Denunciar conteúdo",
+    "promptUser": "Diga-nos porque está a denunciar este perfil.",
+    "promptPost": "Diga-nos porque está a denunciar este conteúdo.",
+    "details": "Detalhes adicionais (opcional)",
+    "submit": "Enviar denúncia",
+    "signInTitle": "Sessão necessária",
+    "signInBody": "Precisa de iniciar sessão para denunciar conteúdo.",
+    "submittedTitle": "Denúncia enviada",
+    "submittedBody": "Obrigado. A nossa equipa irá analisar esta denúncia.",
+    "failedTitle": "Não foi possível enviar",
+    "failedBody": "Tente novamente daqui a pouco.",
+    "reasons": {
+      "spam": "Spam ou enganoso",
+      "harassment": "Assédio ou abuso",
+      "inappropriate": "Conteúdo impróprio",
+      "impersonation": "Falsificação de identidade",
+      "other": "Outro"
+    }
+  },
+  "block": {
+    "blockTitle": "Bloquear jogador?",
+    "blockBody": "{{name}} ficará oculto das suas listas e deixará de lhe poder enviar pedidos. Pode desbloquear mais tarde.",
+    "unblockTitle": "Desbloquear jogador?",
+    "unblockBody": "Permitir que {{name}} volte a aparecer nas suas pesquisas.",
+    "block": "Bloquear",
+    "unblock": "Desbloquear",
+    "cancel": "Cancelar"
   }
 }

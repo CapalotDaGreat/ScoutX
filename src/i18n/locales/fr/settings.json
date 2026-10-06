@@ -3,7 +3,7 @@
   "subtitle": "Account, appearance, notifications, and more",
   "account": "Compte",
   "notifications": "Notifications",
-  "notificationsDescription": "Push alerts for portfolio views, endorsements, trials, and weekly reports.",
+  "notificationsDescription": "Choisissez les alertes reçues sur cet appareil. Vos choix sont appliqués par les serveurs ScoutX et le nombre d'alertes est limité.",
   "pushNotifications": "Notifications push",
   "pushChecking": "Checking status…",
   "pushRegistered": "Registered on this device",
@@ -40,9 +40,13 @@
   "aboutDescription": "Football Passport for players and scouts.",
   "contactSupport": "Contact support",
   "category": {
-    "trials": "Trial invitations",
-    "watchlist": "Watchlist changes",
-    "analysis": "Match analysis",
-    "recommendations": "Recommendations"
+    "analysis": "Analyse de match",
+    "match": "Matchs",
+    "development": "Progression et rapports hebdomadaires",
+    "scouting": "Demandes et intérêt des scouts",
+    "trial": "Invitations à des essais",
+    "career": "Étapes de carrière",
+    "passport": "Vues du Passport et recommandations",
+    "system": "Compte et sécurité"
   }
 }

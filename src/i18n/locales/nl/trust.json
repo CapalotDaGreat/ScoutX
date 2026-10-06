@@ -42,5 +42,36 @@
     "removeTitle": "Aanbeveling verwijderen",
     "removeMessage": "Deze aanbeveling wordt definitief verwijderd.",
     "footerNote": "Traineraanbevelingen komen van geverifieerde clubstaf. Scouts kunnen aanbevelingen op het vertrouwensprofiel publiceren."
+  },
+  "report": {
+    "button": "Melden",
+    "profileButton": "Profiel melden",
+    "title": "Inhoud melden",
+    "promptUser": "Vertel ons waarom je dit profiel meldt.",
+    "promptPost": "Vertel ons waarom je deze inhoud meldt.",
+    "details": "Extra details (optioneel)",
+    "submit": "Melding versturen",
+    "signInTitle": "Inloggen vereist",
+    "signInBody": "Je moet ingelogd zijn om inhoud te melden.",
+    "submittedTitle": "Melding verstuurd",
+    "submittedBody": "Bedankt. Ons team bekijkt deze melding.",
+    "failedTitle": "Versturen mislukt",
+    "failedBody": "Probeer het zo opnieuw.",
+    "reasons": {
+      "spam": "Spam of misleidend",
+      "harassment": "Intimidatie of misbruik",
+      "inappropriate": "Ongepaste inhoud",
+      "impersonation": "Imitatie",
+      "other": "Anders"
+    }
+  },
+  "block": {
+    "blockTitle": "Speler blokkeren?",
+    "blockBody": "{{name}} wordt verborgen in je lijsten en kan je geen verzoeken meer sturen. Je kunt de blokkering later opheffen.",
+    "unblockTitle": "Blokkering opheffen?",
+    "unblockBody": "{{name}} weer laten verschijnen in je zoekresultaten.",
+    "block": "Blokkeren",
+    "unblock": "Deblokkeren",
+    "cancel": "Annuleren"
   }
 }

@@ -25,6 +25,7 @@ export class ContentReportRepository {
       reporterId,
       targetType: draft.targetType,
       targetId: draft.targetId,
+      targetOwnerId: draft.targetOwnerId,
       reason: draft.reason,
       details: draft.details,
       createdAt: new Date().toISOString(),
@@ -32,7 +33,15 @@ export class ContentReportRepository {
 
     const db = getFirestoreDb();
     if (db) {
-      await setDoc(doc(db, CONTENT_REPORTS_COLLECTION, report.id), report);
+      await setDoc(doc(db, CONTENT_REPORTS_COLLECTION, report.id), {
+        reporterId: report.reporterId,
+        targetType: report.targetType,
+        targetId: report.targetId,
+        targetOwnerId: report.targetOwnerId,
+        reason: report.reason,
+        ...(report.details ? { details: report.details } : {}),
+        createdAt: report.createdAt,
+      });
     }
 
     return report;

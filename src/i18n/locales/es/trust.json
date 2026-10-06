@@ -42,5 +42,36 @@
     "removeTitle": "Quitar aval",
     "removeMessage": "Este aval se eliminará de forma permanente.",
     "footerNote": "Las recomendaciones de entrenador las envía personal verificado del club. Los scouts pueden publicar avales en el perfil de confianza."
+  },
+  "report": {
+    "button": "Denunciar",
+    "profileButton": "Denunciar perfil",
+    "title": "Denunciar contenido",
+    "promptUser": "Cuéntanos por qué denuncias este perfil.",
+    "promptPost": "Cuéntanos por qué denuncias este contenido.",
+    "details": "Detalles adicionales (opcional)",
+    "submit": "Enviar denuncia",
+    "signInTitle": "Inicio de sesión necesario",
+    "signInBody": "Debes iniciar sesión para denunciar contenido.",
+    "submittedTitle": "Denuncia enviada",
+    "submittedBody": "Gracias. Nuestro equipo revisará esta denuncia.",
+    "failedTitle": "No se pudo enviar",
+    "failedBody": "Inténtalo de nuevo en un momento.",
+    "reasons": {
+      "spam": "Spam o engañoso",
+      "harassment": "Acoso o abuso",
+      "inappropriate": "Contenido inapropiado",
+      "impersonation": "Suplantación de identidad",
+      "other": "Otro"
+    }
+  },
+  "block": {
+    "blockTitle": "¿Bloquear jugador?",
+    "blockBody": "{{name}} quedará oculto en tus listas y no podrá enviarte solicitudes. Puedes desbloquearlo más tarde.",
+    "unblockTitle": "¿Desbloquear jugador?",
+    "unblockBody": "Permitir que {{name}} vuelva a aparecer en tus búsquedas.",
+    "block": "Bloquear",
+    "unblock": "Desbloquear",
+    "cancel": "Cancelar"
   }
 }

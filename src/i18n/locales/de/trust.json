@@ -42,5 +42,36 @@
     "removeTitle": "Empfehlung entfernen",
     "removeMessage": "Diese Empfehlung wird dauerhaft entfernt.",
     "footerNote": "Trainerempfehlungen kommen von verifiziertem Vereinsstab. Scouts können Endorsements im Vertrauensprofil veröffentlichen."
+  },
+  "report": {
+    "button": "Melden",
+    "profileButton": "Profil melden",
+    "title": "Inhalt melden",
+    "promptUser": "Sag uns, warum du dieses Profil meldest.",
+    "promptPost": "Sag uns, warum du diesen Inhalt meldest.",
+    "details": "Weitere Details (optional)",
+    "submit": "Meldung senden",
+    "signInTitle": "Anmeldung erforderlich",
+    "signInBody": "Du musst angemeldet sein, um Inhalte zu melden.",
+    "submittedTitle": "Meldung gesendet",
+    "submittedBody": "Danke. Unser Team prüft diese Meldung.",
+    "failedTitle": "Senden fehlgeschlagen",
+    "failedBody": "Bitte versuche es gleich noch einmal.",
+    "reasons": {
+      "spam": "Spam oder irreführend",
+      "harassment": "Belästigung oder Missbrauch",
+      "inappropriate": "Unangemessener Inhalt",
+      "impersonation": "Identitätsmissbrauch",
+      "other": "Sonstiges"
+    }
+  },
+  "block": {
+    "blockTitle": "Spieler blockieren?",
+    "blockBody": "{{name}} wird in deinen Listen ausgeblendet und kann dir keine Anfragen mehr senden. Du kannst die Blockierung später aufheben.",
+    "unblockTitle": "Blockierung aufheben?",
+    "unblockBody": "{{name}} wieder in deiner Suche anzeigen.",
+    "block": "Blockieren",
+    "unblock": "Freigeben",
+    "cancel": "Abbrechen"
   }
 }

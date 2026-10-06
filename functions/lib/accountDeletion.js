@@ -16,6 +16,7 @@ const UID_KEYED_COLLECTIONS = [
     'portfolioAnalytics',
     'recruitmentWorkspaces',
     'pushThrottle',
+    'notificationPreferences',
     'analysisQuotas',
     'publicPassports',
     'passportSummaries',
@@ -56,6 +57,7 @@ const OWNED_QUERIES = [
     ['coachObservations', 'playerId'],
     ['contentReports', 'reporterId'],
     ['contentReports', 'targetId'],
+    ['contentReports', 'targetOwnerId'],
     ['blockedUsers', 'blockedUserId'],
 ];
 const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];

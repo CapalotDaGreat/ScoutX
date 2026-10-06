@@ -42,5 +42,36 @@
     "removeTitle": "Retirer l’avis",
     "removeMessage": "Cet avis sera définitivement retiré.",
     "footerNote": "Les recommandations d’entraîneur viennent du staff club vérifié. Les scouts peuvent publier un avis sur le profil de confiance."
+  },
+  "report": {
+    "button": "Signaler",
+    "profileButton": "Signaler le profil",
+    "title": "Signaler un contenu",
+    "promptUser": "Dites-nous pourquoi vous signalez ce profil.",
+    "promptPost": "Dites-nous pourquoi vous signalez ce contenu.",
+    "details": "Détails supplémentaires (facultatif)",
+    "submit": "Envoyer le signalement",
+    "signInTitle": "Connexion requise",
+    "signInBody": "Vous devez être connecté pour signaler un contenu.",
+    "submittedTitle": "Signalement envoyé",
+    "submittedBody": "Merci. Notre équipe examinera ce signalement.",
+    "failedTitle": "Envoi impossible",
+    "failedBody": "Veuillez réessayer dans un instant.",
+    "reasons": {
+      "spam": "Spam ou trompeur",
+      "harassment": "Harcèlement ou abus",
+      "inappropriate": "Contenu inapproprié",
+      "impersonation": "Usurpation d'identité",
+      "other": "Autre"
+    }
+  },
+  "block": {
+    "blockTitle": "Bloquer ce joueur ?",
+    "blockBody": "{{name}} sera masqué de vos listes et ne pourra plus vous envoyer de demandes. Vous pourrez le débloquer plus tard.",
+    "unblockTitle": "Débloquer ce joueur ?",
+    "unblockBody": "Autoriser {{name}} à réapparaître dans vos recherches.",
+    "block": "Bloquer",
+    "unblock": "Débloquer",
+    "cancel": "Annuler"
   }
 }

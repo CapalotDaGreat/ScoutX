@@ -4,6 +4,7 @@ import { Button } from '@/components/primitives/Button';
 import { ReportContentButton } from '@/features/trust-safety/components/ReportContentButton';
 import { useBlockedUsers } from '@/features/trust-safety/hooks/useBlockedUsers';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
 export type TrustSafetyActionsProps = {
@@ -22,6 +23,7 @@ export function TrustSafetyActions({
   hideWhenSelf = true,
 }: TrustSafetyActionsProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation(['trust', 'common']);
   const { user } = useAuth();
   const blockerId = user?.id ?? null;
   const { isUserBlocked, blockUser, unblockUser } = useBlockedUsers(blockerId);
@@ -34,10 +36,10 @@ export function TrustSafetyActions({
 
   const handleBlockToggle = () => {
     if (blocked) {
-      Alert.alert('Unblock player?', `Allow ${targetUserName} to appear in your discovery again.`, [
-        { text: 'Cancel', style: 'cancel' },
+      Alert.alert(t('trust:block.unblockTitle'), t('trust:block.unblockBody', { name: targetUserName }), [
+        { text: t('trust:block.cancel'), style: 'cancel' },
         {
-          text: 'Unblock',
+          text: t('trust:block.unblock'),
           onPress: () => {
             void unblockUser(targetUserId);
           },
@@ -47,12 +49,12 @@ export function TrustSafetyActions({
     }
 
     Alert.alert(
-      'Block player?',
-      `${targetUserName} will be hidden from your discovery lists. You can unblock them later.`,
+      t('trust:block.blockTitle'),
+      t('trust:block.blockBody', { name: targetUserName }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('trust:block.cancel'), style: 'cancel' },
         {
-          text: 'Block',
+          text: t('trust:block.block'),
           style: 'destructive',
           onPress: () => {
             void blockUser(targetUserId, targetUserName);
@@ -64,7 +66,11 @@ export function TrustSafetyActions({
 
   return (
     <View className="flex-row flex-wrap items-center gap-2">
-      <ReportContentButton targetType="user" targetId={targetUserId} label="Report profile" />
+      <ReportContentButton
+        targetType="user"
+        targetId={targetUserId}
+        label={t('trust:report.profileButton')}
+      />
       <Button
         variant="ghost"
         size="sm"
@@ -77,7 +83,7 @@ export function TrustSafetyActions({
         }
         onPress={handleBlockToggle}
       >
-        {blocked ? 'Unblock' : 'Block'}
+        {blocked ? t('trust:block.unblock') : t('trust:block.block')}
       </Button>
     </View>
   );

@@ -8,7 +8,7 @@
   "appearanceLight": "Light",
   "appearanceDark": "Dark",
   "notifications": "Notifications",
-  "notificationsDescription": "Push alerts for portfolio views, endorsements, trials, and weekly reports.",
+  "notificationsDescription": "Choose which alerts reach this device. Your choices are enforced by ScoutX servers, and alerts are rate-limited.",
   "pushNotifications": "Push notifications",
   "pushChecking": "Checking status…",
   "pushRegistered": "Registered on this device",
@@ -40,9 +40,13 @@
   "changePasswordSuccess": "Your password has been updated.",
   "changePasswordFailed": "Unable to change password. Check your current password and try again.",
   "category": {
-    "trials": "Trial invitations",
-    "watchlist": "Watchlist changes",
     "analysis": "Match analysis",
-    "recommendations": "Recommendations"
+    "match": "Matches",
+    "development": "Development and weekly reports",
+    "scouting": "Scout requests and interest",
+    "trial": "Trial invitations",
+    "career": "Career milestones",
+    "passport": "Passport views and recommendations",
+    "system": "Account and security"
   }
 }

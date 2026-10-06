@@ -571,6 +571,7 @@ describe('content reports', () => {
         reporterId: PLAYER,
         targetType: 'user',
         targetId: OTHER_PLAYER,
+        targetOwnerId: OTHER_PLAYER,
         reason: 'spam',
         createdAt: '2026-10-06T00:00:00.000Z',
       }),
@@ -584,10 +585,80 @@ describe('content reports', () => {
         reporterId: PLAYER,
         targetType: 'user',
         targetId: PLAYER,
+        targetOwnerId: PLAYER,
         reason: 'spam',
         createdAt: '2026-10-06T00:00:00.000Z',
       }),
       'cannot file as someone else',
+    );
+  });
+
+  test('every report names the owner of the reported content', async () => {
+    const base = {
+      reporterId: PLAYER,
+      reason: 'spam',
+      createdAt: '2026-10-06T00:00:00.000Z',
+    };
+    await allowed(
+      setDocument(PLAYER, 'contentReports/cr3', {
+        ...base,
+        targetType: 'post',
+        targetId: 'post-123',
+        targetOwnerId: OTHER_PLAYER,
+      }),
+      'post report with owner',
+    );
+    await denied(
+      setDocument(PLAYER, 'contentReports/cr4', { ...base, targetType: 'post', targetId: 'post-123' }),
+      'post report without owner',
+    );
+    await denied(
+      setDocument(PLAYER, 'contentReports/cr5', {
+        ...base,
+        targetType: 'user',
+        targetId: OTHER_PLAYER,
+        targetOwnerId: SCOUT,
+      }),
+      'user report owner must equal target',
+    );
+    await denied(
+      setDocument(PLAYER, 'contentReports/cr6', {
+        ...base,
+        targetType: 'user',
+        targetId: OTHER_PLAYER,
+        targetOwnerId: OTHER_PLAYER,
+        extra: 'field',
+      }),
+      'unknown fields rejected',
+    );
+  });
+});
+
+describe('notification preferences', () => {
+  const valid = {
+    pushEnabled: true,
+    categories: { trial: true, passport: false },
+    updatedAt: '2026-10-06T00:00:00.000Z',
+  };
+
+  test('only the owner can read and write their preferences', async () => {
+    await allowed(setDocument(PLAYER, 'notificationPreferences/' + PLAYER, valid), 'owner writes');
+    await allowed(getDocument(PLAYER, 'notificationPreferences/' + PLAYER), 'owner reads');
+    await denied(getDocument(SCOUT, 'notificationPreferences/' + PLAYER), 'other user reads');
+    await denied(setDocument(SCOUT, 'notificationPreferences/' + PLAYER, valid), 'other user writes');
+  });
+
+  test('the shape is validated', async () => {
+    await denied(
+      setDocument(PLAYER, 'notificationPreferences/' + PLAYER, {
+        ...valid,
+        categories: { marketing: true },
+      }),
+      'unknown category',
+    );
+    await denied(
+      setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, pushEnabled: 'yes' }),
+      'non-boolean flag',
     );
   });
 });
