@@ -15,12 +15,14 @@ import {
   RATING_OPTIONS,
   TRANSFER_STATUS_OPTIONS,
 } from '@/features/player-profile/constants/footballIdentityOptions';
+import { useIdentityLabels } from '@/features/player-profile/hooks/useIdentityLabels';
 import { type FootballIdentity } from '@/features/player-profile/types/footballIdentity';
 import {
   formatCommaSeparatedList,
   parseCommaSeparatedList,
   parseOptionalNumber,
 } from '@/features/player-profile/utils/identityFormUtils';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type FootballIdentityFieldsProps = {
   identity: FootballIdentity;
@@ -31,16 +33,23 @@ export type FootballIdentityFieldsProps = {
 };
 
 export function FootballIdentityFields({ identity, onChange }: FootballIdentityFieldsProps) {
+  const { t } = useAppTranslation('portfolio');
+  const labels = useIdentityLabels();
+  const ratingOptions = RATING_OPTIONS.map((rating) => ({
+    label: `${rating}/5`,
+    value: String(rating),
+  }));
+
   return (
     <View className="gap-5">
       <Text variant="label" color="secondary">
-        Career
+        {t('identity.sections.career')}
       </Text>
       <Input
-        label="Current Club"
+        label={t('identity.fields.currentClub')}
         value={identity.currentClub}
         onChangeText={(value) => onChange('currentClub', value)}
-        placeholder="Northstar FC"
+        placeholder={t('identity.fields.clubPlaceholder')}
       />
       <ClubHistoryEditor
         entries={identity.clubHistory}
@@ -52,110 +61,127 @@ export function FootballIdentityFields({ identity, onChange }: FootballIdentityF
       />
 
       <Text variant="label" color="secondary">
-        Playing Profile
+        {t('identity.sections.playingProfile')}
       </Text>
       <Input
-        label="Preferred Positions"
+        label={t('identity.fields.preferredPositions')}
         value={formatCommaSeparatedList(identity.preferredPositions)}
         onChangeText={(value) => onChange('preferredPositions', parseCommaSeparatedList(value))}
-        placeholder="Attacking Midfielder, Left Winger"
-        hint="Separate multiple positions with commas"
+        placeholder={t('identity.fields.positionsPlaceholder')}
+        hint={t('identity.fields.positionsHint')}
       />
       <Input
-        label="Secondary Positions"
+        label={t('identity.fields.secondaryPositions')}
         value={formatCommaSeparatedList(identity.secondaryPositions)}
         onChangeText={(value) => onChange('secondaryPositions', parseCommaSeparatedList(value))}
-        placeholder="Central Midfielder"
+        placeholder={t('identity.fields.listPlaceholder')}
       />
       <Dropdown
-        label="Preferred Formation"
+        label={t('identity.fields.preferredFormation')}
         value={identity.preferredFormation || undefined}
         onChange={(value) => onChange('preferredFormation', value)}
         options={FORMATION_OPTIONS.map((formation) => ({
           label: formation,
           value: formation,
         }))}
-        placeholder="Select formation"
+        placeholder={labels.notStated}
       />
       <Dropdown
-        label="Preferred Playing Style"
+        label={t('identity.fields.playingStyle')}
         value={identity.preferredPlayingStyle || undefined}
         onChange={(value) => onChange('preferredPlayingStyle', value)}
         options={PLAYING_STYLE_OPTIONS.map((style) => ({
-          label: style,
+          label: labels.style(style),
           value: style,
         }))}
-        placeholder="Select style"
+        placeholder={labels.notStated}
       />
       <Dropdown
-        label="Strong Foot"
-        value={identity.strongFoot}
+        label={t('identity.fields.strongFoot')}
+        value={identity.strongFoot ?? undefined}
         onChange={(value) => onChange('strongFoot', value)}
-        options={FOOT_OPTIONS}
+        options={FOOT_OPTIONS.map((option) => ({
+          label: labels.foot(option.value),
+          value: option.value,
+        }))}
+        placeholder={labels.notStated}
       />
       <View className="flex-row gap-3">
         <Dropdown
-          label="Weak Foot Rating"
-          value={String(identity.weakFootRating)}
+          label={t('identity.fields.weakFoot')}
+          value={identity.weakFootRating === null ? undefined : String(identity.weakFootRating)}
           onChange={(value) => onChange('weakFootRating', Number(value))}
-          options={RATING_OPTIONS.map((rating) => ({
-            label: `${rating}/5`,
-            value: String(rating),
-          }))}
+          options={ratingOptions}
+          placeholder={labels.notStated}
           className="flex-1"
         />
         <Dropdown
-          label="Skill Moves Rating"
-          value={String(identity.skillMovesRating)}
+          label={t('identity.fields.skillMoves')}
+          value={
+            identity.skillMovesRating === null ? undefined : String(identity.skillMovesRating)
+          }
           onChange={(value) => onChange('skillMovesRating', Number(value))}
-          options={RATING_OPTIONS.map((rating) => ({
-            label: `${rating}/5`,
-            value: String(rating),
-          }))}
+          options={ratingOptions}
+          placeholder={labels.notStated}
           className="flex-1"
         />
       </View>
+      <Text variant="caption" color="tertiary">
+        {t('identity.fields.selfRatingHint')}
+      </Text>
 
       <Text variant="label" color="secondary">
-        Professional Status
+        {t('identity.sections.professionalStatus')}
       </Text>
       <Dropdown
-        label="Contract Status"
-        value={identity.contractStatus}
+        label={t('identity.fields.contractStatus')}
+        value={identity.contractStatus ?? undefined}
         onChange={(value) => onChange('contractStatus', value)}
-        options={CONTRACT_STATUS_OPTIONS}
+        options={CONTRACT_STATUS_OPTIONS.map((option) => ({
+          label: labels.contract(option.value),
+          value: option.value,
+        }))}
+        placeholder={labels.notStated}
       />
       <Dropdown
-        label="Availability"
-        value={identity.availability}
+        label={t('identity.fields.availability')}
+        value={identity.availability ?? undefined}
         onChange={(value) => onChange('availability', value)}
-        options={AVAILABILITY_OPTIONS}
+        options={AVAILABILITY_OPTIONS.map((option) => ({
+          label: labels.availability(option.value),
+          value: option.value,
+        }))}
+        placeholder={labels.notStated}
       />
       <Dropdown
-        label="Transfer Status"
-        value={identity.transferStatus}
+        label={t('identity.fields.transferStatus')}
+        value={identity.transferStatus ?? undefined}
         onChange={(value) => onChange('transferStatus', value)}
-        options={TRANSFER_STATUS_OPTIONS}
+        options={TRANSFER_STATUS_OPTIONS.map((option) => ({
+          label: labels.transfer(option.value),
+          value: option.value,
+        }))}
+        placeholder={labels.notStated}
       />
       <Input
-        label="Preferred Countries"
+        label={t('identity.fields.preferredCountries')}
         value={formatCommaSeparatedList(identity.preferredCountries)}
         onChangeText={(value) => onChange('preferredCountries', parseCommaSeparatedList(value))}
-        placeholder="England, Netherlands"
+        placeholder={t('identity.fields.listPlaceholder')}
       />
       <Input
-        label="Preferred Leagues"
+        label={t('identity.fields.preferredLeagues')}
         value={formatCommaSeparatedList(identity.preferredLeagues)}
         onChangeText={(value) => onChange('preferredLeagues', parseCommaSeparatedList(value))}
-        placeholder="Premier League, Eredivisie"
+        placeholder={t('identity.fields.listPlaceholder')}
       />
 
       <Text variant="label" color="secondary">
-        Personal
+        {t('identity.sections.personal')}
       </Text>
       <View className="flex-row gap-3">
         <Input
-          label="Jersey Number"
+          label={t('identity.fields.jerseyNumber')}
           value={identity.jerseyNumber?.toString() ?? ''}
           onChangeText={(value) => onChange('jerseyNumber', parseOptionalNumber(value))}
           keyboardType="number-pad"
@@ -165,32 +191,40 @@ export function FootballIdentityFields({ identity, onChange }: FootballIdentityF
           <Button
             variant={identity.hasCaptainExperience ? 'accent' : 'secondary'}
             onPress={() => onChange('hasCaptainExperience', !identity.hasCaptainExperience)}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: identity.hasCaptainExperience }}
           >
-            Captain: {identity.hasCaptainExperience ? 'Yes' : 'No'}
+            {`${t('identity.fields.captain')}: ${
+              identity.hasCaptainExperience ? t('identity.yes') : t('identity.no')
+            }`}
           </Button>
         </View>
       </View>
       <Dropdown
-        label="Academic Status"
-        value={identity.academicStatus}
+        label={t('identity.fields.academicStatus')}
+        value={identity.academicStatus ?? undefined}
         onChange={(value) => onChange('academicStatus', value)}
-        options={ACADEMIC_STATUS_OPTIONS}
+        options={ACADEMIC_STATUS_OPTIONS.map((option) => ({
+          label: labels.academic(option.value),
+          value: option.value,
+        }))}
+        placeholder={labels.notStated}
       />
       <Input
-        label="Languages Spoken"
+        label={t('identity.fields.languages')}
         value={formatCommaSeparatedList(identity.languagesSpoken)}
         onChangeText={(value) => onChange('languagesSpoken', parseCommaSeparatedList(value))}
-        placeholder="English, Spanish"
+        placeholder={t('identity.fields.listPlaceholder')}
       />
 
       <Text variant="label" color="secondary">
-        Story
+        {t('identity.sections.story')}
       </Text>
       <Input
-        label="Biography Headline"
+        label={t('identity.fields.biographyHeadline')}
         value={identity.biographyHeadline}
         onChangeText={(value) => onChange('biographyHeadline', value)}
-        placeholder="Creative midfielder with elite vision"
+        placeholder={t('identity.fields.biographyPlaceholder')}
       />
     </View>
   );

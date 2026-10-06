@@ -14,7 +14,11 @@ export class TacklesMetric extends BaseStatisticMetric {
   };
 
   getMatchValue(match: PlayerMatchStatistics): number {
-    return match.tackles;
+    return match.tackles ?? 0;
+  }
+
+  override hasMatchValue(match: PlayerMatchStatistics): boolean {
+    return match.tackles !== null;
   }
 }
 

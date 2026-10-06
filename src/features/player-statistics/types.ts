@@ -35,8 +35,9 @@ export type PlayerMatchStatistics = {
   assists: number;
   cleanSheet: boolean;
   passAccuracy: number | null;
-  shots: number;
-  tackles: number;
+  /** null = not recorded for this match (never assume 0). */
+  shots: number | null;
+  tackles: number | null;
   yellowCards: number;
   redCards: number;
   matchRating: number | null;

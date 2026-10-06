@@ -12,6 +12,7 @@ import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 import { CheckCircle2 } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerDiscoveryCardProps = {
   player: DiscoverablePlayer;
@@ -31,11 +32,11 @@ const availabilityVariant = {
   on_loan: 'warning' as const,
 };
 
-const availabilityLabel = {
-  available: 'Available',
-  unavailable: 'Unavailable',
-  on_loan: 'On Loan',
-};
+const availabilityLabelKey = {
+  available: 'available',
+  unavailable: 'unavailable',
+  on_loan: 'onLoan',
+} as const;
 
 export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
   player,
@@ -49,6 +50,7 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
   onToggleCompare,
 }: PlayerDiscoveryCardProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation(['scout', 'trust']);
 
   const handlePress = () => {
     void triggerHaptic('light');
@@ -77,12 +79,16 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
           <Image source={{ uri: player.coverImageUrl }} className="h-full w-full" resizeMode="cover" />
           <View className="absolute inset-0 bg-black/30" />
           <View className="absolute left-3 top-3 flex-row gap-2">
-            {player.verified ? <Badge label="Verified" variant="prestige" size="sm" /> : null}
-            <Badge
-              label={availabilityLabel[player.availability]}
-              variant={availabilityVariant[player.availability]}
-              size="sm"
-            />
+            {player.verified ? (
+              <Badge label={t('trust:verified')} variant="prestige" size="sm" />
+            ) : null}
+            {player.availability ? (
+              <Badge
+                label={t(`scout:filters.${availabilityLabelKey[player.availability]}`)}
+                variant={availabilityVariant[player.availability]}
+                size="sm"
+              />
+            ) : null}
           </View>
           {onToggleSave || onToggleCompare ? (
             <View className="absolute right-3 top-3">

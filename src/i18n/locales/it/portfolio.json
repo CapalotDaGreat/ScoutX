@@ -305,5 +305,98 @@
     "permissionTitle": "Permesso negato",
     "uploadFailed": "Impossibile caricare l’immagine.",
     "pickFailed": "Si è verificato un errore durante la scelta dell’immagine."
+  },
+  "identity": {
+    "notStated": "Non indicato",
+    "select": "Seleziona",
+    "yes": "Sì",
+    "no": "No",
+    "sections": {
+      "career": "Carriera",
+      "playingProfile": "Profilo di gioco",
+      "professionalStatus": "Stato professionale",
+      "personal": "Personale",
+      "story": "Storia"
+    },
+    "sectionTitles": {
+      "playing": {
+        "title": "Identità di gioco",
+        "subtitle": "Ruoli, stile e profilo tecnico"
+      },
+      "professional": {
+        "title": "Stato professionale",
+        "subtitle": "Contratto, disponibilità e intenzioni di trasferimento"
+      },
+      "personal": {
+        "title": "Personale e studi",
+        "subtitle": "Lingue, studi e leadership"
+      }
+    },
+    "fields": {
+      "currentClub": "Club attuale",
+      "clubPlaceholder": "es. FC Esempio",
+      "preferredPositions": "Ruoli preferiti",
+      "positionsPlaceholder": "es. Centrocampista centrale",
+      "positionsHint": "Separa più ruoli con virgole",
+      "secondaryPositions": "Ruoli secondari",
+      "preferredFormation": "Modulo preferito",
+      "playingStyle": "Stile di gioco",
+      "strongFoot": "Piede forte",
+      "weakFoot": "Piede debole",
+      "skillMoves": "Dribbling",
+      "contractStatus": "Stato del contratto",
+      "availability": "Disponibilità",
+      "transferStatus": "Stato di trasferimento",
+      "preferredCountries": "Paesi preferiti",
+      "preferredLeagues": "Campionati preferiti",
+      "listPlaceholder": "Separa con virgole",
+      "jerseyNumber": "Numero di maglia",
+      "captain": "Esperienza da capitano",
+      "academicStatus": "Stato scolastico",
+      "languages": "Lingue parlate",
+      "biographyHeadline": "Titolo biografico",
+      "biographyPlaceholder": "Una riga oggettiva su di te come giocatore",
+      "selfRatingHint": "La tua valutazione, mostrata come autodichiarata"
+    },
+    "options": {
+      "foot": {
+        "right": "Destro",
+        "left": "Sinistro",
+        "both": "Entrambi"
+      },
+      "contract": {
+        "under_contract": "Sotto contratto",
+        "expiring": "Contratto in scadenza",
+        "free_agent": "Svincolato",
+        "youth_contract": "Contratto giovanile"
+      },
+      "availability": {
+        "available": "Disponibile",
+        "unavailable": "Non disponibile",
+        "on_loan": "In prestito",
+        "injured": "Infortunato"
+      },
+      "transfer": {
+        "not_for_sale": "Non aperto a partire",
+        "open_to_offers": "Aperto a offerte",
+        "listed": "In lista trasferimenti",
+        "loan_listed": "In lista prestiti"
+      },
+      "academic": {
+        "in_school": "A scuola",
+        "graduated": "Diplomato",
+        "university": "Università",
+        "not_applicable": "Non applicabile"
+      },
+      "style": {
+        "Possession-based": "Possesso palla",
+        "Direct": "Diretto",
+        "Counter-attacking": "Contropiede",
+        "High press": "Pressing alto",
+        "Wide play": "Gioco sulle fasce",
+        "Technical": "Tecnico",
+        "Physical": "Fisico"
+      }
+    }
   }
 }

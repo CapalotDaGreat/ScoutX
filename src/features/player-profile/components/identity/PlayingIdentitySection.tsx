@@ -3,39 +3,62 @@ import { IdentityFieldCard } from '@/features/player-profile/components/identity
 import { IdentityRatingField } from '@/features/player-profile/components/identity/IdentityRatingField';
 import { IdentityTagList } from '@/features/player-profile/components/identity/IdentityTagList';
 import { ProfileSection } from '@/features/player-profile/components/identity/ProfileSection';
-import { formatFootLabel } from '@/features/player-profile/models/FootballIdentityModel';
+import { useIdentityLabels } from '@/features/player-profile/hooks/useIdentityLabels';
 import { type FootballIdentity } from '@/features/player-profile/types/footballIdentity';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayingIdentitySectionProps = {
   identity: FootballIdentity;
 };
 
 export function PlayingIdentitySection({ identity }: PlayingIdentitySectionProps) {
+  const { t } = useAppTranslation('portfolio');
+  const labels = useIdentityLabels();
+
   return (
-    <ProfileSection title="Playing Identity" subtitle="Positions, style and technical profile">
-      <IdentityTagList label="Preferred Positions" values={identity.preferredPositions} />
-      <IdentityTagList label="Secondary Positions" values={identity.secondaryPositions} />
+    <ProfileSection
+      title={t('identity.sectionTitles.playing.title')}
+      subtitle={t('identity.sectionTitles.playing.subtitle')}
+    >
+      <IdentityTagList
+        label={t('identity.fields.preferredPositions')}
+        values={identity.preferredPositions}
+        emptyLabel={labels.notStated}
+      />
+      <IdentityTagList
+        label={t('identity.fields.secondaryPositions')}
+        values={identity.secondaryPositions}
+        emptyLabel={labels.notStated}
+      />
       <View className="flex-row flex-wrap gap-3">
         <IdentityFieldCard
-          label="Preferred Formation"
-          value={identity.preferredFormation || '—'}
+          label={t('identity.fields.preferredFormation')}
+          value={identity.preferredFormation || labels.notStated}
         />
         <IdentityFieldCard
-          label="Playing Style"
-          value={identity.preferredPlayingStyle || '—'}
+          label={t('identity.fields.playingStyle')}
+          value={labels.style(identity.preferredPlayingStyle)}
         />
       </View>
       <View className="flex-row flex-wrap gap-3">
         <IdentityFieldCard
-          label="Strong Foot"
-          value={formatFootLabel(identity.strongFoot)}
+          label={t('identity.fields.strongFoot')}
+          value={labels.foot(identity.strongFoot)}
           className="min-w-[30%]"
         />
         <View className="min-w-[30%] flex-1">
-          <IdentityRatingField label="Weak Foot" value={identity.weakFootRating} />
+          <IdentityRatingField
+            label={t('identity.fields.weakFoot')}
+            value={identity.weakFootRating}
+            emptyLabel={labels.notStated}
+          />
         </View>
         <View className="min-w-[30%] flex-1">
-          <IdentityRatingField label="Skill Moves" value={identity.skillMovesRating} />
+          <IdentityRatingField
+            label={t('identity.fields.skillMoves')}
+            value={identity.skillMovesRating}
+            emptyLabel={labels.notStated}
+          />
         </View>
       </View>
     </ProfileSection>

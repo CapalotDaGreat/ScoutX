@@ -54,41 +54,84 @@ export type FootballIdentity = {
   preferredPositions: string[];
   secondaryPositions: string[];
   preferredFormation: string;
-  strongFoot: PreferredFoot;
-  weakFootRating: number;
-  skillMovesRating: number;
+  /** null = the player has not stated it; never infer a foot. */
+  strongFoot: PreferredFoot | null;
+  weakFootRating: number | null;
+  skillMovesRating: number | null;
   hasCaptainExperience: boolean;
   jerseyNumber: number | null;
   languagesSpoken: string[];
-  academicStatus: AcademicStatus;
-  contractStatus: ContractStatus;
-  availability: PlayerAvailabilityStatus;
+  academicStatus: AcademicStatus | null;
+  contractStatus: ContractStatus | null;
+  availability: PlayerAvailabilityStatus | null;
   preferredCountries: string[];
   preferredLeagues: string[];
   preferredPlayingStyle: string;
-  transferStatus: TransferStatus;
+  transferStatus: TransferStatus | null;
   biographyHeadline: string;
 };
 
 export const defaultFootballIdentity: FootballIdentity = {
-  currentClub: 'Free Agent',
+  currentClub: '',
   clubHistory: [],
   careerTimeline: [],
   preferredPositions: [],
   secondaryPositions: [],
   preferredFormation: '',
-  strongFoot: 'right',
-  weakFootRating: 3,
-  skillMovesRating: 3,
+  strongFoot: null,
+  weakFootRating: null,
+  skillMovesRating: null,
   hasCaptainExperience: false,
   jerseyNumber: null,
   languagesSpoken: [],
-  academicStatus: 'not_applicable',
-  contractStatus: 'free_agent',
-  availability: 'available',
+  academicStatus: null,
+  contractStatus: null,
+  availability: null,
   preferredCountries: [],
   preferredLeagues: [],
   preferredPlayingStyle: '',
-  transferStatus: 'open_to_offers',
+  transferStatus: null,
   biographyHeadline: '',
 };
+
+/**
+ * Identity records created before Phase J were written with a fixed seed. When a stored
+ * record still carries that exact combination, the values were never stated by the player.
+ */
+export function isLegacySeededIdentity(record: Record<string, unknown>): boolean {
+  return (
+    record.strongFoot === 'right' &&
+    record.weakFootRating === 3 &&
+    record.skillMovesRating === 3 &&
+    record.availability === 'available' &&
+    record.transferStatus === 'open_to_offers' &&
+    record.contractStatus === 'free_agent' &&
+    record.academicStatus === 'not_applicable'
+  );
+}
+
+/** Returns a copy with the legacy seed removed, or the input unchanged. */
+export function stripLegacyIdentitySeed(record: Record<string, unknown>): Record<string, unknown> {
+  if (!isLegacySeededIdentity(record)) {
+    return record;
+  }
+  return {
+    ...record,
+    strongFoot: null,
+    weakFootRating: null,
+    skillMovesRating: null,
+    availability: null,
+    transferStatus: null,
+    contractStatus: null,
+    academicStatus: null,
+    currentClub: record.currentClub === 'Free Agent' ? '' : record.currentClub,
+  };
+}
+
+/** Fields a player must explicitly provide; null/empty means "not stated". */
+export function isIdentityFieldStated(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  return true;
+}

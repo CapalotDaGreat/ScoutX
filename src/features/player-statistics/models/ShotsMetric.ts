@@ -14,7 +14,11 @@ export class ShotsMetric extends BaseStatisticMetric {
   };
 
   getMatchValue(match: PlayerMatchStatistics): number {
-    return match.shots;
+    return match.shots ?? 0;
+  }
+
+  override hasMatchValue(match: PlayerMatchStatistics): boolean {
+    return match.shots !== null;
   }
 }
 

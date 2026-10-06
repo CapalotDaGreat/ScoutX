@@ -67,6 +67,35 @@ function coverageFromSummary(summary: Record<string, unknown> | null): Record<st
   return empty;
 }
 
+/**
+ * Pre-Phase-J identities were written with a fixed seed (right foot, 3/3 stars, available,
+ * open to offers, free agent). That exact combination was never stated by the player.
+ */
+export function stripLegacyIdentitySeed(identity: Record<string, unknown>): Record<string, unknown> {
+  const seeded =
+    identity.strongFoot === 'right' &&
+    identity.weakFootRating === 3 &&
+    identity.skillMovesRating === 3 &&
+    identity.availability === 'available' &&
+    identity.transferStatus === 'open_to_offers' &&
+    identity.contractStatus === 'free_agent' &&
+    identity.academicStatus === 'not_applicable';
+  if (!seeded) {
+    return identity;
+  }
+  return {
+    ...identity,
+    strongFoot: null,
+    weakFootRating: null,
+    skillMovesRating: null,
+    availability: null,
+    transferStatus: null,
+    contractStatus: null,
+    academicStatus: null,
+    currentClub: identity.currentClub === 'Free Agent' ? '' : identity.currentClub,
+  };
+}
+
 export function buildDiscoverableProjection(input: {
   playerId: string;
   profile: ProfileDoc;
@@ -79,7 +108,7 @@ export function buildDiscoverableProjection(input: {
     return null;
   }
 
-  const identity = input.profile.identity ?? {};
+  const identity = stripLegacyIdentitySeed(input.profile.identity ?? {});
   const positions = [
     mapPosition(input.profile.position),
     ...(Array.isArray(identity.preferredPositions)
@@ -113,25 +142,24 @@ export function buildDiscoverableProjection(input: {
     id: input.playerId,
     fullName: typeof input.profile.fullName === 'string' ? input.profile.fullName : '',
     age: null,
-    nationality: typeof input.profile.nationality === 'string' ? input.profile.nationality : 'Unknown',
+    nationality: typeof input.profile.nationality === 'string' ? input.profile.nationality : '',
     club:
-      typeof input.profile.club === 'string' && input.profile.club
+      typeof input.profile.club === 'string' && input.profile.club && input.profile.club !== 'Free Agent'
         ? input.profile.club
-        : typeof identity.currentClub === 'string' && identity.currentClub
+        : typeof identity.currentClub === 'string'
           ? identity.currentClub
-          : 'Free Agent',
-    league:
-      typeof identity.preferredLeagues === 'object' &&
-      Array.isArray(identity.preferredLeagues) &&
-      typeof identity.preferredLeagues[0] === 'string'
-        ? identity.preferredLeagues[0]
-        : 'Amateur',
+          : '',
+    // A preferred league is an aspiration, not the league the player plays in.
+    league: '',
     position: uniquePositions,
     primaryPosition: uniquePositions[0] ?? null,
     secondaryPositions: uniquePositions.slice(1),
     roleDescriptors: [],
     styleTags: style ? [style] : [],
-    preferredFoot: identity.strongFoot === 'left' || identity.strongFoot === 'both' ? identity.strongFoot : 'right',
+    preferredFoot:
+      identity.strongFoot === 'left' || identity.strongFoot === 'right' || identity.strongFoot === 'both'
+        ? identity.strongFoot
+        : null,
     heightCm: parseHeightCm(input.profile.height),
     weightKg: parseHeightCm(input.profile.weight),
     avatarUrl: typeof input.profile.avatarUrl === 'string' ? input.profile.avatarUrl : '',
@@ -142,9 +170,13 @@ export function buildDiscoverableProjection(input: {
     potentialRating: null,
     potentialRatingSource: null,
     availability:
-      identity.availability === 'unavailable' || identity.availability === 'on_loan'
+      identity.availability === 'available' ||
+      identity.availability === 'unavailable' ||
+      identity.availability === 'on_loan'
         ? identity.availability
-        : 'available',
+        : identity.availability === 'injured'
+          ? 'unavailable'
+          : null,
     verified: input.verified,
     verificationLevel: input.verificationLevel,
     weakFoot: typeof identity.weakFootRating === 'number' ? identity.weakFootRating : null,

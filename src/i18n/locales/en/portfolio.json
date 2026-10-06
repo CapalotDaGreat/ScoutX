@@ -305,5 +305,98 @@
     "permissionTitle": "Permission Denied",
     "uploadFailed": "Failed to upload image.",
     "pickFailed": "An error occurred while picking image."
+  },
+  "identity": {
+    "notStated": "Not stated",
+    "select": "Select",
+    "yes": "Yes",
+    "no": "No",
+    "sections": {
+      "career": "Career",
+      "playingProfile": "Playing profile",
+      "professionalStatus": "Professional status",
+      "personal": "Personal",
+      "story": "Story"
+    },
+    "sectionTitles": {
+      "playing": {
+        "title": "Playing identity",
+        "subtitle": "Positions, style and technical profile"
+      },
+      "professional": {
+        "title": "Professional status",
+        "subtitle": "Contract, availability and transfer intent"
+      },
+      "personal": {
+        "title": "Personal & academic",
+        "subtitle": "Languages, education and leadership"
+      }
+    },
+    "fields": {
+      "currentClub": "Current club",
+      "clubPlaceholder": "e.g. FC Example",
+      "preferredPositions": "Preferred positions",
+      "positionsPlaceholder": "e.g. Central Midfielder",
+      "positionsHint": "Separate multiple positions with commas",
+      "secondaryPositions": "Secondary positions",
+      "preferredFormation": "Preferred formation",
+      "playingStyle": "Playing style",
+      "strongFoot": "Strong foot",
+      "weakFoot": "Weak foot",
+      "skillMoves": "Skill moves",
+      "contractStatus": "Contract status",
+      "availability": "Availability",
+      "transferStatus": "Transfer status",
+      "preferredCountries": "Preferred countries",
+      "preferredLeagues": "Preferred leagues",
+      "listPlaceholder": "Separate with commas",
+      "jerseyNumber": "Jersey number",
+      "captain": "Captain experience",
+      "academicStatus": "Academic status",
+      "languages": "Languages spoken",
+      "biographyHeadline": "Biography headline",
+      "biographyPlaceholder": "One factual line about you as a player",
+      "selfRatingHint": "Your own rating, shown as self-reported"
+    },
+    "options": {
+      "foot": {
+        "right": "Right",
+        "left": "Left",
+        "both": "Both"
+      },
+      "contract": {
+        "under_contract": "Under contract",
+        "expiring": "Contract expiring",
+        "free_agent": "Free agent",
+        "youth_contract": "Youth contract"
+      },
+      "availability": {
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "on_loan": "On loan",
+        "injured": "Injured"
+      },
+      "transfer": {
+        "not_for_sale": "Not open to moves",
+        "open_to_offers": "Open to offers",
+        "listed": "Listed",
+        "loan_listed": "Loan listed"
+      },
+      "academic": {
+        "in_school": "In school",
+        "graduated": "Graduated",
+        "university": "University",
+        "not_applicable": "Not applicable"
+      },
+      "style": {
+        "Possession-based": "Possession-based",
+        "Direct": "Direct",
+        "Counter-attacking": "Counter-attacking",
+        "High press": "High press",
+        "Wide play": "Wide play",
+        "Technical": "Technical",
+        "Physical": "Physical"
+      }
+    }
   }
 }

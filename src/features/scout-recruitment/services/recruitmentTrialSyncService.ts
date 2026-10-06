@@ -33,8 +33,9 @@ export async function syncRecruitmentStageFromTrial(
       {
         playerId: invitation.playerId,
         playerName: invitation.playerName,
-        playerClub: invitation.club,
-        playerPosition: 'Unknown',
+        // invitation.club is the host club of the trial, not the player's club.
+        playerClub: '',
+        playerPosition: '',
         playerAvatarUrl: '',
         playerOverallRating: null,
       },

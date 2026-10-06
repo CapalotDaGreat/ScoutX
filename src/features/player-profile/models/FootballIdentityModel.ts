@@ -9,6 +9,7 @@ import {
   type PreferredFoot,
   type TransferStatus,
   defaultFootballIdentity,
+  stripLegacyIdentitySeed,
 } from '@/features/player-profile/types/footballIdentity';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -80,7 +81,10 @@ function parseCareerTimeline(value: unknown): CareerTimelineEntry[] {
   return entries;
 }
 
-function parsePreferredFoot(value: unknown, fallback: PreferredFoot): PreferredFoot {
+function parsePreferredFoot(
+  value: unknown,
+  fallback: PreferredFoot | null,
+): PreferredFoot | null {
   if (value === 'left' || value === 'right' || value === 'both') {
     return value;
   }
@@ -97,14 +101,18 @@ function parsePreferredFoot(value: unknown, fallback: PreferredFoot): PreferredF
   return fallback;
 }
 
-function clampRating(value: unknown, fallback: number): number {
+function clampRating(value: unknown, fallback: number | null): number | null {
   if (typeof value !== 'number' || Number.isNaN(value)) {
     return fallback;
   }
   return Math.min(5, Math.max(1, Math.round(value)));
 }
 
-function parseEnumValue<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
+function parseEnumValue<T extends string>(
+  value: unknown,
+  allowed: readonly T[],
+  fallback: T | null,
+): T | null {
   return allowed.includes(value as T) ? (value as T) : fallback;
 }
 
@@ -159,10 +167,11 @@ export function parseFootballIdentity(
   legacy: LegacyProfileFields = {},
 ): FootballIdentity {
   const defaults = createDefaultFootballIdentity(legacy);
-  const record = asRecord(data);
-  if (!record) {
+  const rawRecord = asRecord(data);
+  if (!rawRecord) {
     return defaults;
   }
+  const record = stripLegacyIdentitySeed(rawRecord);
 
   const preferredPositions = parseStringArray(record.preferredPositions);
   const secondaryPositions = parseStringArray(record.secondaryPositions);
@@ -254,13 +263,8 @@ export function syncLegacyProfileFields(
   preferredFoot: string;
   biographyHeadline: string;
 } {
-  const primaryPosition = identity.preferredPositions[0] ?? 'Player';
-  const footLabel =
-    identity.strongFoot === 'both'
-      ? 'Both'
-      : identity.strongFoot === 'left'
-        ? 'Left'
-        : 'Right';
+  const primaryPosition = identity.preferredPositions[0] ?? '';
+  const footLabel = identity.strongFoot ? formatFootLabel(identity.strongFoot) : '';
 
   return {
     club: identity.currentClub,
@@ -270,7 +274,10 @@ export function syncLegacyProfileFields(
   };
 }
 
-export function formatFootLabel(foot: PreferredFoot): string {
+export function formatFootLabel(foot: PreferredFoot | null): string {
+  if (foot === null) {
+    return '';
+  }
   if (foot === 'both') {
     return 'Both';
   }

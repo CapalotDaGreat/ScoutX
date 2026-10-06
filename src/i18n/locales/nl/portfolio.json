@@ -305,5 +305,98 @@
     "permissionTitle": "Toestemming geweigerd",
     "uploadFailed": "Afbeelding kon niet worden geüpload.",
     "pickFailed": "Er ging iets mis bij het kiezen van de afbeelding."
+  },
+  "identity": {
+    "notStated": "Niet opgegeven",
+    "select": "Kiezen",
+    "yes": "Ja",
+    "no": "Nee",
+    "sections": {
+      "career": "Carrière",
+      "playingProfile": "Spelprofiel",
+      "professionalStatus": "Contractstatus",
+      "personal": "Persoonlijk",
+      "story": "Verhaal"
+    },
+    "sectionTitles": {
+      "playing": {
+        "title": "Spelersidentiteit",
+        "subtitle": "Posities, stijl en technisch profiel"
+      },
+      "professional": {
+        "title": "Contractstatus",
+        "subtitle": "Contract, beschikbaarheid en transferintentie"
+      },
+      "personal": {
+        "title": "Persoonlijk & opleiding",
+        "subtitle": "Talen, opleiding en leiderschap"
+      }
+    },
+    "fields": {
+      "currentClub": "Huidige club",
+      "clubPlaceholder": "bijv. FC Voorbeeld",
+      "preferredPositions": "Voorkeursposities",
+      "positionsPlaceholder": "bijv. Centrale middenvelder",
+      "positionsHint": "Scheid meerdere posities met komma's",
+      "secondaryPositions": "Secundaire posities",
+      "preferredFormation": "Voorkeursformatie",
+      "playingStyle": "Speelstijl",
+      "strongFoot": "Sterke voet",
+      "weakFoot": "Zwakke voet",
+      "skillMoves": "Trucs",
+      "contractStatus": "Contractstatus",
+      "availability": "Beschikbaarheid",
+      "transferStatus": "Transferstatus",
+      "preferredCountries": "Voorkeurslanden",
+      "preferredLeagues": "Voorkeurscompetities",
+      "listPlaceholder": "Scheiden met komma's",
+      "jerseyNumber": "Rugnummer",
+      "captain": "Aanvoerderservaring",
+      "academicStatus": "Opleidingsstatus",
+      "languages": "Gesproken talen",
+      "biographyHeadline": "Biografiekop",
+      "biographyPlaceholder": "Eén feitelijke regel over jou als speler",
+      "selfRatingHint": "Je eigen inschatting, getoond als zelf opgegeven"
+    },
+    "options": {
+      "foot": {
+        "right": "Rechts",
+        "left": "Links",
+        "both": "Tweebenig"
+      },
+      "contract": {
+        "under_contract": "Onder contract",
+        "expiring": "Contract loopt af",
+        "free_agent": "Transfervrij",
+        "youth_contract": "Jeugdcontract"
+      },
+      "availability": {
+        "available": "Beschikbaar",
+        "unavailable": "Niet beschikbaar",
+        "on_loan": "Verhuurd",
+        "injured": "Geblesseerd"
+      },
+      "transfer": {
+        "not_for_sale": "Niet open voor transfer",
+        "open_to_offers": "Open voor aanbiedingen",
+        "listed": "Op transferlijst",
+        "loan_listed": "Op huurlijst"
+      },
+      "academic": {
+        "in_school": "Op school",
+        "graduated": "Afgestudeerd",
+        "university": "Universiteit",
+        "not_applicable": "Niet van toepassing"
+      },
+      "style": {
+        "Possession-based": "Balbezit",
+        "Direct": "Direct",
+        "Counter-attacking": "Counter",
+        "High press": "Hoge druk",
+        "Wide play": "Vleugelspel",
+        "Technical": "Technisch",
+        "Physical": "Fysiek"
+      }
+    }
   }
 }

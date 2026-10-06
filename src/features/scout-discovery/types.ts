@@ -76,7 +76,8 @@ export type DiscoverablePlayer = {
   secondaryPositions: PlayerPosition[];
   roleDescriptors: RoleDescriptor[];
   styleTags: string[];
-  preferredFoot: PreferredFoot;
+  /** Null when the player has not stated it. */
+  preferredFoot: PreferredFoot | null;
   heightCm: number | null;
   weightKg: number | null;
   avatarUrl: string;
@@ -91,7 +92,8 @@ export type DiscoverablePlayer = {
   /** Always null on the server projection; never derived from overall. */
   potentialRating: number | null;
   potentialRatingSource: DiscoveryRatingSource | null;
-  availability: PlayerAvailability;
+  /** Null when the player has not stated it. */
+  availability: PlayerAvailability | null;
   verified: boolean;
   verificationLevel: 'none' | 'basic' | 'verified';
   /** Self-reported 1–5 stars; null when never set. */

@@ -72,12 +72,16 @@ export function MatchHistory({
             </Text>
             {!compact ? (
               <>
-                <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-                  {item.stats.shots} shots
-                </Text>
-                <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-                  {item.stats.tackles} tackles
-                </Text>
+                {item.stats.shots !== null ? (
+                  <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
+                    {item.stats.shots} shots
+                  </Text>
+                ) : null}
+                {item.stats.tackles !== null ? (
+                  <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
+                    {item.stats.tackles} tackles
+                  </Text>
+                ) : null}
                 <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
                   {item.stats.yellowCards} YC
                 </Text>

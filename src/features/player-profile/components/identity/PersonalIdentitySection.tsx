@@ -2,35 +2,43 @@ import { View } from 'react-native';
 import { IdentityTagList } from '@/features/player-profile/components/identity/IdentityTagList';
 import { IdentityFieldCard } from '@/features/player-profile/components/identity/IdentityFieldCard';
 import { ProfileSection } from '@/features/player-profile/components/identity/ProfileSection';
-import {
-  ACADEMIC_STATUS_OPTIONS,
-  getOptionLabel,
-} from '@/features/player-profile/constants/footballIdentityOptions';
+import { useIdentityLabels } from '@/features/player-profile/hooks/useIdentityLabels';
 import { type FootballIdentity } from '@/features/player-profile/types/footballIdentity';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PersonalIdentitySectionProps = {
   identity: FootballIdentity;
 };
 
 export function PersonalIdentitySection({ identity }: PersonalIdentitySectionProps) {
+  const { t } = useAppTranslation('portfolio');
+  const labels = useIdentityLabels();
+
   return (
-    <ProfileSection title="Personal & Academic" subtitle="Languages, education and leadership">
+    <ProfileSection
+      title={t('identity.sectionTitles.personal.title')}
+      subtitle={t('identity.sectionTitles.personal.subtitle')}
+    >
       <View className="flex-row flex-wrap gap-3">
         <IdentityFieldCard
-          label="Jersey Number"
-          value={identity.jerseyNumber != null ? String(identity.jerseyNumber) : '—'}
+          label={t('identity.fields.jerseyNumber')}
+          value={identity.jerseyNumber != null ? String(identity.jerseyNumber) : labels.notStated}
         />
         <IdentityFieldCard
-          label="Captain Experience"
-          value={identity.hasCaptainExperience ? 'Yes' : 'No'}
+          label={t('identity.fields.captain')}
+          value={identity.hasCaptainExperience ? t('identity.yes') : t('identity.no')}
         />
       </View>
       <IdentityFieldCard
-        label="Academic Status"
-        value={getOptionLabel(ACADEMIC_STATUS_OPTIONS, identity.academicStatus)}
+        label={t('identity.fields.academicStatus')}
+        value={labels.academic(identity.academicStatus)}
         className="min-w-full"
       />
-      <IdentityTagList label="Languages Spoken" values={identity.languagesSpoken} />
+      <IdentityTagList
+        label={t('identity.fields.languages')}
+        values={identity.languagesSpoken}
+        emptyLabel={labels.notStated}
+      />
     </ProfileSection>
   );
 }

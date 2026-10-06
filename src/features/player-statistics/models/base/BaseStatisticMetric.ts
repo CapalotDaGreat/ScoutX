@@ -21,15 +21,23 @@ export abstract class BaseStatisticMetric {
   }
 
   getTotal(matches: PlayerMatchStatistics[]): number {
-    return matches.reduce((sum, match) => sum + this.getMatchValue(match), 0);
+    return matches
+      .filter((match) => this.hasMatchValue(match))
+      .reduce((sum, match) => sum + this.getMatchValue(match), 0);
   }
 
+  /** Averages only over matches where the metric was recorded. */
   getAverage(matches: PlayerMatchStatistics[]): number {
-    if (matches.length === 0) {
+    const recorded = matches.filter((match) => this.hasMatchValue(match));
+    if (recorded.length === 0) {
       return 0;
     }
 
-    return this.getTotal(matches) / matches.length;
+    return this.getTotal(recorded) / recorded.length;
+  }
+
+  getRecordedCount(matches: PlayerMatchStatistics[]): number {
+    return matches.filter((match) => this.hasMatchValue(match)).length;
   }
 
   formatValue(value: number): string {

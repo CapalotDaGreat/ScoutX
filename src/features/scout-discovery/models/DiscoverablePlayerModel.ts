@@ -98,11 +98,10 @@ function resolvePositions(profile: PlayerProfile): PlayerPosition[] {
   return [...new Set(mapped)];
 }
 
-function mapAvailability(value: string): PlayerAvailability {
-  if (value === 'unavailable' || value === 'on_loan' || value === 'injured') {
-    return value === 'injured' ? 'unavailable' : (value as PlayerAvailability);
-  }
-  return 'available';
+function mapAvailability(value: string | null): PlayerAvailability | null {
+  if (value === 'injured') return 'unavailable';
+  if (value === 'available' || value === 'unavailable' || value === 'on_loan') return value;
+  return null;
 }
 
 export const EMPTY_EVIDENCE_COVERAGE: DiscoveryCoverage = {
@@ -190,16 +189,15 @@ export function buildDiscoverablePlayerFromProfile(profile: PlayerProfile): Disc
   const hasVideos = (profile.highlightVideos?.videos.length ?? 0) > 0;
   const league =
     profile.identity.clubHistory[0]?.league ??
-    profile.identity.preferredLeagues[0] ??
-    'Amateur';
+    '';
 
   const player: DiscoverablePlayer = {
     id: profile.id,
     fullName: profile.fullName,
     // The profile has no birth date field; age stays unknown instead of being guessed.
     age: null,
-    nationality: profile.nationality || 'Unknown',
-    club: profile.club || profile.identity.currentClub || 'Free Agent',
+    nationality: profile.nationality,
+    club: profile.club || profile.identity.currentClub,
     league,
     position: positions,
     primaryPosition: positions[0] ?? null,
@@ -208,7 +206,7 @@ export function buildDiscoverablePlayerFromProfile(profile: PlayerProfile): Disc
     styleTags: profile.identity.preferredPlayingStyle
       ? [profile.identity.preferredPlayingStyle]
       : [],
-    preferredFoot: profile.identity.strongFoot as PreferredFoot,
+    preferredFoot: profile.identity.strongFoot,
     heightCm: parseHeightCm(profile.height),
     weightKg: parseWeightKg(profile.weight),
     avatarUrl: profile.avatarUrl,
@@ -305,9 +303,9 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
     id: record.id,
     fullName: record.fullName,
     age: nullableNumber(record.age),
-    nationality: typeof record.nationality === 'string' ? record.nationality : 'Unknown',
-    club: typeof record.club === 'string' ? record.club : 'Free Agent',
-    league: typeof record.league === 'string' ? record.league : 'Amateur',
+    nationality: typeof record.nationality === 'string' ? record.nationality : '',
+    club: typeof record.club === 'string' && record.club !== 'Free Agent' ? record.club : '',
+    league: typeof record.league === 'string' && record.league !== 'Amateur' ? record.league : '',
     position,
     primaryPosition:
       record.primaryPosition === 'GK' ||
@@ -337,7 +335,7 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
     preferredFoot:
       record.preferredFoot === 'left' || record.preferredFoot === 'right' || record.preferredFoot === 'both'
         ? record.preferredFoot
-        : 'right',
+        : null,
     heightCm: nullableNumber(record.heightCm),
     weightKg: nullableNumber(record.weightKg),
     avatarUrl: typeof record.avatarUrl === 'string' ? record.avatarUrl : '',
@@ -358,7 +356,7 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
       record.availability === 'unavailable' ||
       record.availability === 'on_loan'
         ? record.availability
-        : 'available',
+        : null,
     verified: record.verified === true,
     verificationLevel:
       record.verificationLevel === 'verified' || record.verificationLevel === 'basic'

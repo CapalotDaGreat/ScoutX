@@ -305,5 +305,98 @@
     "permissionTitle": "Permiso denegado",
     "uploadFailed": "No se pudo subir la imagen.",
     "pickFailed": "Ocurrió un error al elegir la imagen."
+  },
+  "identity": {
+    "notStated": "Sin indicar",
+    "select": "Seleccionar",
+    "yes": "Sí",
+    "no": "No",
+    "sections": {
+      "career": "Carrera",
+      "playingProfile": "Perfil de juego",
+      "professionalStatus": "Situación profesional",
+      "personal": "Personal",
+      "story": "Historia"
+    },
+    "sectionTitles": {
+      "playing": {
+        "title": "Identidad de juego",
+        "subtitle": "Posiciones, estilo y perfil técnico"
+      },
+      "professional": {
+        "title": "Situación profesional",
+        "subtitle": "Contrato, disponibilidad e intención de traspaso"
+      },
+      "personal": {
+        "title": "Personal y estudios",
+        "subtitle": "Idiomas, estudios y liderazgo"
+      }
+    },
+    "fields": {
+      "currentClub": "Club actual",
+      "clubPlaceholder": "p. ej. FC Ejemplo",
+      "preferredPositions": "Posiciones preferidas",
+      "positionsPlaceholder": "p. ej. Mediocentro",
+      "positionsHint": "Separa varias posiciones con comas",
+      "secondaryPositions": "Posiciones secundarias",
+      "preferredFormation": "Formación preferida",
+      "playingStyle": "Estilo de juego",
+      "strongFoot": "Pie dominante",
+      "weakFoot": "Pie débil",
+      "skillMoves": "Regates",
+      "contractStatus": "Estado del contrato",
+      "availability": "Disponibilidad",
+      "transferStatus": "Estado de traspaso",
+      "preferredCountries": "Países preferidos",
+      "preferredLeagues": "Ligas preferidas",
+      "listPlaceholder": "Separar con comas",
+      "jerseyNumber": "Dorsal",
+      "captain": "Experiencia como capitán",
+      "academicStatus": "Situación académica",
+      "languages": "Idiomas",
+      "biographyHeadline": "Titular biográfico",
+      "biographyPlaceholder": "Una línea objetiva sobre ti como jugador",
+      "selfRatingHint": "Tu propia valoración, mostrada como autodeclarada"
+    },
+    "options": {
+      "foot": {
+        "right": "Derecho",
+        "left": "Izquierdo",
+        "both": "Ambos"
+      },
+      "contract": {
+        "under_contract": "Con contrato",
+        "expiring": "Contrato por vencer",
+        "free_agent": "Agente libre",
+        "youth_contract": "Contrato juvenil"
+      },
+      "availability": {
+        "available": "Disponible",
+        "unavailable": "No disponible",
+        "on_loan": "Cedido",
+        "injured": "Lesionado"
+      },
+      "transfer": {
+        "not_for_sale": "No abierto a salir",
+        "open_to_offers": "Abierto a ofertas",
+        "listed": "Transferible",
+        "loan_listed": "Cedible"
+      },
+      "academic": {
+        "in_school": "En el colegio",
+        "graduated": "Graduado",
+        "university": "Universidad",
+        "not_applicable": "No aplica"
+      },
+      "style": {
+        "Possession-based": "Posesión",
+        "Direct": "Directo",
+        "Counter-attacking": "Contraataque",
+        "High press": "Presión alta",
+        "Wide play": "Juego por bandas",
+        "Technical": "Técnico",
+        "Physical": "Físico"
+      }
+    }
   }
 }

@@ -5,11 +5,7 @@ import { Badge } from '@/components/primitives/Badge';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
-import {
-  AVAILABILITY_OPTIONS,
-  TRANSFER_STATUS_OPTIONS,
-  getOptionLabel,
-} from '@/features/player-profile/constants/footballIdentityOptions';
+import { useIdentityLabels } from '@/features/player-profile/hooks/useIdentityLabels';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { VerificationBadgeStrip } from '@/features/trust-system';
 import { type TrustProfile } from '@/features/trust-system/types';
@@ -23,8 +19,15 @@ export type ProfileHeroProps = {
 
 export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroProps) {
   const { t } = useAppTranslation('portfolio');
+  const labels = useIdentityLabels();
   const { identity } = profile;
   const primaryPosition = identity.preferredPositions[0] ?? profile.position;
+  const bodyLine = [profile.height, profile.weight].filter(Boolean).join(' · ');
+  const metaParts = [
+    profile.nationality,
+    bodyLine,
+    identity.hasCaptainExperience ? t('captain') : '',
+  ].filter(Boolean);
   const coverUri = profile.coverImageUrl.trim();
   const avatarUri = profile.avatarUrl.trim();
 
@@ -66,23 +69,31 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
             {identity.jerseyNumber ? (
               <Badge label={`#${identity.jerseyNumber}`} variant="prestige" size="sm" />
             ) : null}
-            <Badge label={primaryPosition} variant="prestige" />
+            {primaryPosition ? <Badge label={primaryPosition} variant="prestige" /> : null}
           </View>
         </View>
 
-        <View className="mt-2 flex-row flex-wrap gap-2">
-          <Badge label={identity.currentClub} variant="default" />
-          <Badge
-            label={getOptionLabel(AVAILABILITY_OPTIONS, identity.availability)}
-            variant={identity.availability === 'available' ? 'success' : 'warning'}
-            size="sm"
-          />
-          <Badge
-            label={getOptionLabel(TRANSFER_STATUS_OPTIONS, identity.transferStatus)}
-            variant="outline"
-            size="sm"
-          />
-        </View>
+        {identity.currentClub || identity.availability || identity.transferStatus ? (
+          <View className="mt-2 flex-row flex-wrap gap-2">
+            {identity.currentClub ? (
+              <Badge label={identity.currentClub} variant="default" />
+            ) : null}
+            {identity.availability ? (
+              <Badge
+                label={labels.availability(identity.availability)}
+                variant={identity.availability === 'available' ? 'success' : 'warning'}
+                size="sm"
+              />
+            ) : null}
+            {identity.transferStatus ? (
+              <Badge
+                label={labels.transfer(identity.transferStatus)}
+                variant="outline"
+                size="sm"
+              />
+            ) : null}
+          </View>
+        ) : null}
 
         {trustProfile ? (
           <View className="mt-2">
@@ -90,27 +101,11 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
           </View>
         ) : null}
 
-        <View className="mt-3 flex-row flex-wrap gap-3">
-          <Text variant="body-sm" color="secondary">
-            {profile.nationality}
+        {metaParts.length > 0 ? (
+          <Text variant="body-sm" color="secondary" className="mt-3">
+            {metaParts.join('  •  ')}
           </Text>
-          <Text variant="body-sm" color="secondary">
-            •
-          </Text>
-          <Text variant="body-sm" color="secondary">
-            {profile.height} · {profile.weight}
-          </Text>
-          {identity.hasCaptainExperience ? (
-            <>
-              <Text variant="body-sm" color="secondary">
-                •
-              </Text>
-              <Text variant="body-sm" color="secondary">
-                {t('captain')}
-              </Text>
-            </>
-          ) : null}
-        </View>
+        ) : null}
       </View>
     </Animated.View>
   );

@@ -72,8 +72,8 @@ export function parsePlayerMatchStatistics(value: unknown): PlayerMatchStatistic
       assists: typeof match.assists === 'number' ? match.assists : 0,
       cleanSheet: typeof match.cleanSheet === 'boolean' ? match.cleanSheet : false,
       passAccuracy: typeof match.passAccuracy === 'number' ? match.passAccuracy : null,
-      shots: typeof match.shots === 'number' ? match.shots : 0,
-      tackles: typeof match.tackles === 'number' ? match.tackles : 0,
+      shots: typeof match.shots === 'number' ? match.shots : null,
+      tackles: typeof match.tackles === 'number' ? match.tackles : null,
       yellowCards: typeof match.yellowCards === 'number' ? match.yellowCards : 0,
       redCards: typeof match.redCards === 'number' ? match.redCards : 0,
       matchRating: typeof match.matchRating === 'number' ? match.matchRating : null,
@@ -87,9 +87,7 @@ export function parsePlayerMatchStatistics(value: unknown): PlayerMatchStatistic
 export class ProfileModel {
   public static getDefaultProfile(userId: string, email: string): PlayerProfile {
     const fullName = email.split('@')[0] || 'New Player';
-    const identity = createDefaultFootballIdentity({
-      club: 'Free Agent',
-    });
+    const identity = createDefaultFootballIdentity();
 
     return {
       id: userId,

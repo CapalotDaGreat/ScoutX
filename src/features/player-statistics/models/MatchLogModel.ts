@@ -111,8 +111,8 @@ export const defaultMatchLogFormState: MatchLogFormState = {
   assists: '0',
   cleanSheet: false,
   passAccuracy: '',
-  shots: '0',
-  tackles: '0',
+  shots: '',
+  tackles: '',
   yellowCards: '0',
   redCards: '0',
   matchRating: '',
@@ -232,6 +232,18 @@ function parseOptionalInRange(
   return validateRange(parsed, field, min, max);
 }
 
+function parseOptionalWholeInRange(
+  value: string,
+  field: MatchLogNumericField,
+  min: number,
+  max: number,
+): MatchLogValidationResult | number | null {
+  if (!value.trim()) {
+    return null;
+  }
+  return parseWholeInRange(value, field, min, max);
+}
+
 function isFailure(
   value: MatchLogValidationResult | number | null,
 ): value is Extract<MatchLogValidationResult, { valid: false }> {
@@ -274,9 +286,9 @@ export function validateMatchLogForm(
   if (isFailure(goals)) return goals;
   const assists = parseWholeInRange(state.assists, 'assists', 0, 30);
   if (isFailure(assists)) return assists;
-  const shots = parseWholeInRange(state.shots, 'shots', 0, 60);
+  const shots = parseOptionalWholeInRange(state.shots, 'shots', 0, 60);
   if (isFailure(shots)) return shots;
-  const tackles = parseWholeInRange(state.tackles, 'tackles', 0, 60);
+  const tackles = parseOptionalWholeInRange(state.tackles, 'tackles', 0, 60);
   if (isFailure(tackles)) return tackles;
   const yellowCards = parseWholeInRange(state.yellowCards, 'yellowCards', 0, 2);
   if (isFailure(yellowCards)) return yellowCards;
@@ -302,8 +314,8 @@ export function validateMatchLogForm(
       assists: assists as number,
       cleanSheet: state.cleanSheet,
       passAccuracy: passAccuracy as number | null,
-      shots: shots as number,
-      tackles: tackles as number,
+      shots: shots as number | null,
+      tackles: tackles as number | null,
       yellowCards: yellowCards as number,
       redCards: redCards as number,
       matchRating: matchRating as number | null,

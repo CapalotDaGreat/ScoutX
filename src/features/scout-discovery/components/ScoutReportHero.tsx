@@ -84,11 +84,15 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
         {player.position.map((pos) => (
           <Badge key={pos} label={pos} variant="outline" size="sm" />
         ))}
-        <Badge
-          label={player.availability.replace('_', ' ')}
-          variant={player.availability === 'available' ? 'success' : 'warning'}
-          size="sm"
-        />
+        {player.availability ? (
+          <Badge
+            label={t(
+              `scout:filters.${player.availability === 'on_loan' ? 'onLoan' : player.availability}`,
+            )}
+            variant={player.availability === 'available' ? 'success' : 'warning'}
+            size="sm"
+          />
+        ) : null}
       </View>
 
       <PlayerFormStrip form={player.form} size="md" />

@@ -313,12 +313,13 @@ function perMatch(matches: readonly PlayerMatchStatistics[], pick: (m: PlayerMat
 export function buildPlayerDna(matches: readonly PlayerMatchStatistics[]): PlayerDnaTrait[] {
   const played = matches.filter((m) => m.minutes > 0);
   const withPassAccuracy = matches.filter((m) => typeof m.passAccuracy === 'number');
+  const withTackles = played.filter((m) => m.tackles !== null);
   return [
     {
       id: 'goal_threat',
       sampleSize: played.length,
       state: coverageFromSample(played.length),
-      value: perMatch(played, (m) => m.goals + m.shots * 0.25),
+      value: perMatch(played, (m) => m.goals),
       unit: 'per_match',
       provenance: 'match_derived',
     },
@@ -340,9 +341,9 @@ export function buildPlayerDna(matches: readonly PlayerMatchStatistics[]): Playe
     },
     {
       id: 'defensive_presence',
-      sampleSize: played.length,
-      state: coverageFromSample(played.length),
-      value: perMatch(played, (m) => m.tackles),
+      sampleSize: withTackles.length,
+      state: coverageFromSample(withTackles.length),
+      value: perMatch(withTackles, (m) => m.tackles ?? 0),
       unit: 'per_match',
       provenance: 'match_derived',
     },

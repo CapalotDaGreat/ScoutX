@@ -305,5 +305,98 @@
     "permissionTitle": "Berechtigung verweigert",
     "uploadFailed": "Bild konnte nicht hochgeladen werden.",
     "pickFailed": "Beim Auswählen des Bildes ist ein Fehler aufgetreten."
+  },
+  "identity": {
+    "notStated": "Nicht angegeben",
+    "select": "Auswählen",
+    "yes": "Ja",
+    "no": "Nein",
+    "sections": {
+      "career": "Karriere",
+      "playingProfile": "Spielprofil",
+      "professionalStatus": "Vertragsstatus",
+      "personal": "Persönlich",
+      "story": "Geschichte"
+    },
+    "sectionTitles": {
+      "playing": {
+        "title": "Spieleridentität",
+        "subtitle": "Positionen, Stil und technisches Profil"
+      },
+      "professional": {
+        "title": "Vertragsstatus",
+        "subtitle": "Vertrag, Verfügbarkeit und Wechselbereitschaft"
+      },
+      "personal": {
+        "title": "Persönlich & Ausbildung",
+        "subtitle": "Sprachen, Ausbildung und Führung"
+      }
+    },
+    "fields": {
+      "currentClub": "Aktueller Verein",
+      "clubPlaceholder": "z. B. FC Beispiel",
+      "preferredPositions": "Bevorzugte Positionen",
+      "positionsPlaceholder": "z. B. Zentraler Mittelfeldspieler",
+      "positionsHint": "Mehrere Positionen mit Kommas trennen",
+      "secondaryPositions": "Nebenpositionen",
+      "preferredFormation": "Bevorzugte Formation",
+      "playingStyle": "Spielstil",
+      "strongFoot": "Starker Fuss",
+      "weakFoot": "Schwacher Fuss",
+      "skillMoves": "Tricks",
+      "contractStatus": "Vertragsstatus",
+      "availability": "Verfügbarkeit",
+      "transferStatus": "Wechselstatus",
+      "preferredCountries": "Bevorzugte Länder",
+      "preferredLeagues": "Bevorzugte Ligen",
+      "listPlaceholder": "Mit Kommas trennen",
+      "jerseyNumber": "Rückennummer",
+      "captain": "Kapitänserfahrung",
+      "academicStatus": "Ausbildungsstatus",
+      "languages": "Sprachen",
+      "biographyHeadline": "Kurzbiografie",
+      "biographyPlaceholder": "Eine sachliche Zeile über dich als Spieler",
+      "selfRatingHint": "Deine eigene Einschätzung, als Selbstangabe angezeigt"
+    },
+    "options": {
+      "foot": {
+        "right": "Rechts",
+        "left": "Links",
+        "both": "Beidfüssig"
+      },
+      "contract": {
+        "under_contract": "Unter Vertrag",
+        "expiring": "Vertrag läuft aus",
+        "free_agent": "Vereinslos",
+        "youth_contract": "Jugendvertrag"
+      },
+      "availability": {
+        "available": "Verfügbar",
+        "unavailable": "Nicht verfügbar",
+        "on_loan": "Ausgeliehen",
+        "injured": "Verletzt"
+      },
+      "transfer": {
+        "not_for_sale": "Kein Wechsel gewünscht",
+        "open_to_offers": "Offen für Angebote",
+        "listed": "Transferliste",
+        "loan_listed": "Leihliste"
+      },
+      "academic": {
+        "in_school": "In der Schule",
+        "graduated": "Abgeschlossen",
+        "university": "Universität",
+        "not_applicable": "Nicht zutreffend"
+      },
+      "style": {
+        "Possession-based": "Ballbesitz",
+        "Direct": "Direkt",
+        "Counter-attacking": "Konter",
+        "High press": "Hohes Pressing",
+        "Wide play": "Flügelspiel",
+        "Technical": "Technisch",
+        "Physical": "Physisch"
+      }
+    }
   }
 }

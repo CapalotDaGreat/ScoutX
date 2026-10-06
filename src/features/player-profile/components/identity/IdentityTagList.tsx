@@ -8,7 +8,7 @@ export type IdentityTagListProps = {
   emptyLabel?: string;
 };
 
-export function IdentityTagList({ label, values, emptyLabel = 'Not set' }: IdentityTagListProps) {
+export function IdentityTagList({ label, values, emptyLabel = '—' }: IdentityTagListProps) {
   return (
     <View className="gap-2">
       <Text variant="caption" color="secondary" className="uppercase tracking-wider">

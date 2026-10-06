@@ -33,8 +33,8 @@ export function statisticsContextFromMatches(
       goals: acc.goals + match.goals,
       assists: acc.assists + match.assists,
       minutes: acc.minutes + match.minutes,
-      shots: acc.shots + match.shots,
-      tackles: acc.tackles + match.tackles,
+      shots: acc.shots + (match.shots ?? 0),
+      tackles: acc.tackles + (match.tackles ?? 0),
     }),
     { goals: 0, assists: 0, minutes: 0, shots: 0, tackles: 0 },
   );
@@ -45,6 +45,16 @@ export function statisticsContextFromMatches(
     assists: Number((totals.assists / matchCount).toFixed(2)),
     minutes: Number((totals.minutes / matchCount).toFixed(0)),
   };
+  const shotsRecorded = matches.filter((match) => match.shots !== null).length;
+  const tacklesRecorded = matches.filter((match) => match.tackles !== null).length;
+  if (shotsRecorded > 0) {
+    averages.shots = Number((totals.shots / shotsRecorded).toFixed(2));
+    averages.shotsSampleSize = shotsRecorded;
+  }
+  if (tacklesRecorded > 0) {
+    averages.tackles = Number((totals.tackles / tacklesRecorded).toFixed(2));
+    averages.tacklesSampleSize = tacklesRecorded;
+  }
   const passAccuracy = averageOfRecorded(matches, 'passAccuracy');
   if (passAccuracy !== null) {
     averages.passAccuracy = Number(passAccuracy.toFixed(1));
