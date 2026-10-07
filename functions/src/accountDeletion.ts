@@ -23,7 +23,12 @@ const UID_KEYED_COLLECTIONS = [
   'coachRosters',
   'userSafety',
   'guardianContacts',
+  'entitlements',
+  'usageLedger',
 ] as const;
+
+/** Subcollections under UID-keyed documents (a parent delete leaves these behind). */
+const UID_SUBCOLLECTIONS = (uid: string) => [`usageLedger/${uid}/periods`];
 
 /** Collections queried by an owner/participant field. */
 const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]> = [
@@ -68,6 +73,7 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['mediaUploads', 'ownerId'],
   ['mediaUploadSessions', 'ownerId'],
   ['uploadSessionLimits', 'ownerId'],
+  ['revenueCatEvents', 'uid'],
 ];
 
 const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`, `quarantine/${uid}/`];
@@ -150,6 +156,18 @@ export async function deleteAllUserData(uid: string): Promise<{ failures: string
       logger.error('Account deletion: query delete failed', {
         collection,
         field,
+        message: error instanceof Error ? error.message : 'unknown',
+      });
+    }
+  }
+
+  for (const path of UID_SUBCOLLECTIONS(uid)) {
+    try {
+      await deleteQueryInBatches(db.collection(path));
+    } catch (error) {
+      failures.push(path.split('/')[0] + '.sub');
+      logger.error('Account deletion: subcollection failed', {
+        path: path.split('/')[0],
         message: error instanceof Error ? error.message : 'unknown',
       });
     }

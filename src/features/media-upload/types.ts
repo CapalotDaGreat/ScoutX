@@ -1,3 +1,4 @@
+import type { QuotaErrorInfo } from '@/features/premium/types';
 import { type UploadContentType } from './services/chunkPlan';
 
 /** Mirrors functions/src/uploads/model.ts. */
@@ -70,6 +71,8 @@ export type UploadErrorCode =
   | 'too_long'
   | 'unsupported_type'
   | 'limit_reached'
+  | 'quota_exceeded'
+  | 'plan_limit'
   | 'consent_required'
   | 'not_allowed'
   | 'file_missing'
@@ -85,6 +88,8 @@ export type UploadViewState = {
   etaSeconds: number | null;
   error: UploadErrorCode | null;
   rejectionReason: UploadRejectionReason | null;
+  /** Set when the server refused the upload because a plan allowance or cap was reached. */
+  quota: QuotaErrorInfo | null;
 };
 
 /** Mirrors RejectionReason in functions/src/uploads/probe.ts. */
@@ -121,6 +126,7 @@ export const IDLE_UPLOAD: UploadViewState = {
   etaSeconds: null,
   error: null,
   rejectionReason: null,
+  quota: null,
 };
 
 export function parseUploadState(value: unknown): UploadState | null {
@@ -165,6 +171,8 @@ export function parsePendingUploads(raw: string | null): PendingUpload[] {
 
 const SERVER_REASONS: Record<string, UploadErrorCode> = {
   limit_reached: 'limit_reached',
+  quota_exceeded: 'quota_exceeded',
+  plan_limit: 'plan_limit',
   consent_required: 'consent_required',
   not_allowed: 'not_allowed',
   too_large: 'too_large',

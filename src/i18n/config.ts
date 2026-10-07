@@ -37,6 +37,7 @@ export const NAMESPACES = [
   'media',
   'safety',
   'legal',
+  'premium',
 ] as const;
 
 export type AppNamespace = (typeof NAMESPACES)[number];

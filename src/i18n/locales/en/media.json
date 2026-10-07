@@ -175,14 +175,16 @@
       "offline": "Connection lost. Try again when you are back online; finished parts are kept.",
       "session_expired": "This upload expired. Start it again to upload a fresh copy.",
       "too_large": "Videos can be up to 4 GB.",
-      "too_long": "Videos can be up to 150 minutes long.",
+      "too_long": "This video is longer than your plan allows.",
       "unsupported_type": "Only MP4 and MOV videos can be uploaded.",
       "limit_reached": "You have reached the upload limit for now. Finish or cancel other uploads, or try again tomorrow.",
       "consent_required": "Please accept the upload acknowledgement first.",
       "not_allowed": "Uploading is not available for this account right now.",
       "file_missing": "The selected video is no longer on this device. Pick it again.",
       "rejected": "The video could not be accepted. Check that it is a playable MP4 or MOV file.",
-      "unknown": "The upload could not be completed. Please try again."
+      "unknown": "The upload could not be completed. Please try again.",
+      "quota_exceeded": "You have used all full-match analyses for this period.",
+      "plan_limit": "This video is over your plan's size or length limit."
     },
     "rejection": {
       "not_video": "This file is not a video. Pick an MP4 or MOV recording.",
@@ -191,7 +193,7 @@
       "no_video_stream": "This file has no video picture.",
       "too_many_streams": "This file has too many tracks. Export it again as a single video.",
       "too_short": "This video is too short to analyze.",
-      "too_long": "Videos can be up to 150 minutes long.",
+      "too_long": "This video is longer than your plan allows.",
       "resolution": "The video resolution is outside the supported range.",
       "frame_rate": "The video frame rate is outside the supported range.",
       "bitrate": "The video bitrate is too high. Export it again at a lower quality.",

@@ -175,14 +175,16 @@
       "offline": "Verbinding verbroken. Probeer opnieuw zodra je online bent; voltooide delen blijven bewaard.",
       "session_expired": "Deze upload is verlopen. Start hem opnieuw.",
       "too_large": "Video's mogen maximaal 4 GB zijn.",
-      "too_long": "Video's mogen maximaal 150 minuten duren.",
+      "too_long": "Deze video is langer dan je abonnement toestaat.",
       "unsupported_type": "Alleen MP4- en MOV-video's kunnen worden geüpload.",
       "limit_reached": "Je hebt de uploadlimiet voorlopig bereikt. Rond andere uploads af of annuleer ze, of probeer het morgen opnieuw.",
       "consent_required": "Accepteer eerst de uploadvoorwaarden.",
       "not_allowed": "Uploaden is momenteel niet beschikbaar voor dit account.",
       "file_missing": "De geselecteerde video staat niet meer op dit apparaat. Selecteer hem opnieuw.",
       "rejected": "De video kon niet worden geaccepteerd. Controleer of het een afspeelbaar MP4- of MOV-bestand is.",
-      "unknown": "De upload kon niet worden voltooid. Probeer het opnieuw."
+      "unknown": "De upload kon niet worden voltooid. Probeer het opnieuw.",
+      "quota_exceeded": "Je hebt alle volledige wedstrijdanalyses voor deze periode gebruikt.",
+      "plan_limit": "Deze video gaat over de grootte- of lengtelimiet van je abonnement."
     },
     "rejection": {
       "not_video": "Dit bestand is geen video. Kies een MP4- of MOV-opname.",
@@ -191,7 +193,7 @@
       "no_video_stream": "Dit bestand bevat geen videobeeld.",
       "too_many_streams": "Dit bestand heeft te veel sporen. Exporteer het opnieuw als één video.",
       "too_short": "Deze video is te kort om te analyseren.",
-      "too_long": "Video's mogen maximaal 150 minuten duren.",
+      "too_long": "Deze video is langer dan je abonnement toestaat.",
       "resolution": "De videoresolutie valt buiten het ondersteunde bereik.",
       "frame_rate": "De framesnelheid valt buiten het ondersteunde bereik.",
       "bitrate": "De bitrate is te hoog. Exporteer de video opnieuw met een lagere kwaliteit.",

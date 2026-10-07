@@ -1,0 +1,61 @@
+{
+  "title": "Plan & usage",
+  "subtitle": "What your plan includes and how much you have used this period.",
+  "openPlan": "Plan & usage",
+  "currentPlan": "Current plan",
+  "plans": {
+    "free": "Free",
+    "premium": "Premium"
+  },
+  "status": {
+    "free": "Free plan",
+    "premium": "Premium is active",
+    "trial": "Premium trial is active",
+    "grace": "There is a billing problem with your subscription. Premium stays active for a short grace period while the App Store retries.",
+    "expired": "Your Premium subscription has ended. You are on the free plan.",
+    "unknown": "We could not confirm your subscription, so the free plan applies for now."
+  },
+  "usageTitle": "This period",
+  "features": {
+    "frame_analysis": "Clip analyses",
+    "full_match_analysis": "Full-match analyses",
+    "reel_export": "Highlight reel exports"
+  },
+  "remaining": "{{remaining}} of {{limit}} remaining",
+  "resetsOn": "Your allowance resets on {{date}}.",
+  "periodNotStarted": "Your {{days}}-day period starts with your first analysis or export.",
+  "videoLimits": "Full-match videos up to {{minutes}} minutes · {{jobs}} analysis at a time",
+  "alwaysFreeTitle": "Always free",
+  "alwaysFreeBody": "These never require a subscription, on any plan:",
+  "alwaysFree": {
+    "safety_and_reporting": "Safety tools, blocking and reporting",
+    "account_deletion": "Deleting your account and your data",
+    "privacy_controls": "Privacy controls and data export",
+    "guardian_controls": "Parent and guardian controls",
+    "match_logging": "Logging matches and stats",
+    "basic_development": "Goals, training and basic development tracking"
+  },
+  "subscriptionTitle": "Subscription",
+  "buy": "{{title}} · {{price}}",
+  "noOfferings": "No subscription options are available right now.",
+  "renewalDisclosure": "Payment is charged to your Apple ID. The subscription renews automatically unless it is cancelled at least 24 hours before the end of the current period. You can manage or cancel it in your App Store account settings.",
+  "restore": "Restore purchases",
+  "manage": "Manage subscription",
+  "subscriptionTerms": "Subscription terms",
+  "minorNote": "If you are under 18, ask a parent or guardian before buying anything.",
+  "purchasesUnavailable": "Subscriptions are only available in the ScoutX iOS app.",
+  "purchaseFailed": "The purchase could not be completed. Please try again.",
+  "purchasePendingTitle": "Thanks!",
+  "purchasePendingBody": "Your plan updates as soon as the App Store confirms the purchase. This can take a moment.",
+  "restoreDoneTitle": "Purchases restored",
+  "loadFailed": "Your plan could not be loaded. Please try again.",
+  "limit": {
+    "title": "You have used all {{feature}} for this period",
+    "body": "You have used {{used}} of {{limit}}.",
+    "planTitle": "This video is over your plan's limit",
+    "planBody": "Try a shorter or smaller video, or trim it before uploading.",
+    "stillFree": "You can still:",
+    "freeActions": "Log the match and your stats, add notes and goals, and keep your clips in your library.",
+    "seePlan": "See plan & usage"
+  }
+}

@@ -8,8 +8,11 @@ const callableOptions_1 = require("./callableOptions");
 const frameAnalysis_1 = require("./analysis/frameAnalysis");
 const pipeline_1 = require("./analysis/pipeline");
 const stateMachine_1 = require("./analysis/stateMachine");
+const quotaService_1 = require("./entitlements/quotaService");
 const sessions_1 = require("./uploads/sessions");
 const openRouterApiKey = (0, params_1.defineSecret)('OPENROUTER_API_KEY');
+/** Cancelling before extraction or analysis started refunds the full-match allowance. */
+const PRE_ANALYSIS_STATES = ['created', 'uploading', 'validating', 'queued'];
 function requireJobId(data) {
     const jobId = data?.jobId;
     if (!jobId || typeof jobId !== 'string')
@@ -51,7 +54,12 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
     const apiKey = openRouterApiKey.value();
     if (!apiKey)
         throw new https_1.HttpsError('failed-precondition', 'OpenRouter API key is not configured.');
-    return (0, frameAnalysis_1.runFrameAnalysis)({
+    // Full-match jobs were charged at upload; clip-only jobs count as one frame analysis, charged
+    // only once a report exists so failed runs never use up the allowance.
+    const metered = !job.videoStoragePath;
+    if (metered)
+        await (0, quotaService_1.assertQuotaAvailable)(db, uid, 'frame_analysis', jobId);
+    const result = await (0, frameAnalysis_1.runFrameAnalysis)({
         db,
         uid,
         jobId,
@@ -59,6 +67,9 @@ exports.analyzeMatchFootage = (0, https_1.onCall)((0, callableOptions_1.createCa
         idempotencyKey,
         apiKey,
     });
+    if (metered)
+        await (0, quotaService_1.consumeQuota)(db, uid, 'frame_analysis', jobId).catch(() => undefined);
+    return result;
 });
 /** Owner-only cancel: stops uploads and workers; finished results are never altered. */
 exports.cancelMatchAnalysis = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
@@ -68,7 +79,7 @@ exports.cancelMatchAnalysis = (0, https_1.onCall)((0, callableOptions_1.createCa
     const jobId = requireJobId(request.data);
     const db = (0, firestore_1.getFirestore)();
     const jobRef = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId);
-    const status = await db.runTransaction(async (tx) => {
+    const outcome = await db.runTransaction(async (tx) => {
         const snap = await tx.get(jobRef);
         if (!snap.exists)
             throw new https_1.HttpsError('not-found', 'Match analysis job not found.');
@@ -77,7 +88,7 @@ exports.cancelMatchAnalysis = (0, https_1.onCall)((0, callableOptions_1.createCa
             throw new https_1.HttpsError('permission-denied', 'You can only cancel your own analysis.');
         const state = (0, frameAnalysis_1.pipelineStateOf)(job);
         if (stateMachine_1.TERMINAL_PIPELINE_STATES.includes(state))
-            return String(job.status);
+            return { status: String(job.status), refundable: false };
         tx.update(jobRef, {
             cancelRequested: true,
             status: 'cancelled',
@@ -85,10 +96,12 @@ exports.cancelMatchAnalysis = (0, https_1.onCall)((0, callableOptions_1.createCa
             cancelledAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         });
-        return 'cancelled';
+        return { status: 'cancelled', refundable: PRE_ANALYSIS_STATES.includes(state) };
     });
-    if (status === 'cancelled')
+    if (outcome.status === 'cancelled')
         await (0, sessions_1.discardUploadsForJob)(db, uid, jobId);
-    return { jobId, status };
+    if (outcome.refundable)
+        await (0, quotaService_1.releaseQuota)(db, uid, 'full_match_analysis', jobId);
+    return { jobId, status: outcome.status };
 });
 //# sourceMappingURL=matchAnalysis.js.map

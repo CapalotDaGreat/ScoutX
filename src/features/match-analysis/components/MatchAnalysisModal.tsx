@@ -10,6 +10,7 @@ import {
   canRetryMatchAnalysis,
   useMatchAnalysis,
 } from '@/features/match-analysis/hooks/useMatchAnalysis';
+import { LimitReachedCard } from '@/features/premium/components/LimitReachedCard';
 import { toUserMessage } from '@/utils/userFacingError';
 import { waitForModalDismiss } from '@/features/highlight-videos/services/videoLibraryPermission';
 import {
@@ -318,6 +319,7 @@ export function MatchAnalysisModal({
     isBusy,
     phaseLabel,
     error,
+    quotaError,
     pickVideo,
     startAnalysis,
     retryAnalysis,
@@ -513,6 +515,7 @@ export function MatchAnalysisModal({
             {error}
           </Text>
         ) : null}
+        {quotaError ? <LimitReachedCard info={quotaError} /> : null}
 
         <UploadProgressCard
           state={upload.state}

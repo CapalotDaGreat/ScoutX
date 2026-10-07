@@ -175,14 +175,16 @@
       "offline": "Se perdió la conexión. Reintenta cuando vuelvas a estar en línea; las partes subidas se conservan.",
       "session_expired": "Esta subida caducó. Iníciala de nuevo.",
       "too_large": "Los vídeos pueden ocupar hasta 4 GB.",
-      "too_long": "Los vídeos pueden durar hasta 150 minutos.",
+      "too_long": "Este vídeo es más largo de lo que permite tu plan.",
       "unsupported_type": "Solo se pueden subir vídeos MP4 y MOV.",
       "limit_reached": "Has alcanzado el límite de subidas por ahora. Termina o cancela otras subidas, o inténtalo mañana.",
       "consent_required": "Acepta primero las condiciones de subida.",
       "not_allowed": "La subida no está disponible para esta cuenta en este momento.",
       "file_missing": "El vídeo seleccionado ya no está en este dispositivo. Selecciónalo de nuevo.",
       "rejected": "No se pudo aceptar el vídeo. Comprueba que sea un archivo MP4 o MOV reproducible.",
-      "unknown": "No se pudo completar la subida. Inténtalo de nuevo."
+      "unknown": "No se pudo completar la subida. Inténtalo de nuevo.",
+      "quota_exceeded": "Has usado todos tus análisis de partido completo de este periodo.",
+      "plan_limit": "Este vídeo supera el límite de tamaño o duración de tu plan."
     },
     "rejection": {
       "not_video": "Este archivo no es un vídeo. Elige una grabación MP4 o MOV.",
@@ -191,7 +193,7 @@
       "no_video_stream": "Este archivo no contiene imagen de vídeo.",
       "too_many_streams": "Este archivo tiene demasiadas pistas. Expórtalo de nuevo como un solo vídeo.",
       "too_short": "Este vídeo es demasiado corto para analizarlo.",
-      "too_long": "Los vídeos pueden durar hasta 150 minutos.",
+      "too_long": "Este vídeo es más largo de lo que permite tu plan.",
       "resolution": "La resolución del vídeo está fuera del rango admitido.",
       "frame_rate": "La velocidad de fotogramas está fuera del rango admitido.",
       "bitrate": "La tasa de bits es demasiado alta. Exporta el vídeo con menor calidad.",

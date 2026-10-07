@@ -9,6 +9,7 @@ import {
   progressFraction,
 } from '@/features/media-upload/services/chunkPlan';
 import { type UploadViewState } from '@/features/media-upload/types';
+import { LimitReachedCard } from '@/features/premium/components/LimitReachedCard';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type UploadProgressCardProps = {
@@ -16,9 +17,11 @@ export type UploadProgressCardProps = {
   onPause: () => void;
   onResume: () => void;
   onCancel: () => void;
+  /** Opens Settings > Plan & usage when an allowance was reached. */
+  onOpenPlan?: () => void;
 };
 
-export function UploadProgressCard({ state, onPause, onResume, onCancel }: UploadProgressCardProps) {
+export function UploadProgressCard({ state, onPause, onResume, onCancel, onOpenPlan }: UploadProgressCardProps) {
   const { t } = useAppTranslation('media');
   if (state.phase === 'idle') return null;
 
@@ -62,7 +65,8 @@ export function UploadProgressCard({ state, onPause, onResume, onCancel }: Uploa
           {t('upload.processingNote')}
         </Text>
       ) : null}
-      {state.phase === 'failed' && state.error ? (
+      {state.phase === 'failed' && state.quota ? <LimitReachedCard info={state.quota} onOpenPlan={onOpenPlan} /> : null}
+      {state.phase === 'failed' && state.error && !state.quota ? (
         <Text variant="caption" color="error" testID="upload-progress-error">
           {state.rejectionReason ? t(`upload.rejection.${state.rejectionReason}`) : t(`upload.error.${state.error}`)}
         </Text>
@@ -73,7 +77,7 @@ export function UploadProgressCard({ state, onPause, onResume, onCancel }: Uploa
             {t('upload.pause')}
           </Button>
         ) : null}
-        {state.phase === 'paused' || (state.phase === 'failed' && state.error !== 'rejected') ? (
+        {state.phase === 'paused' || (state.phase === 'failed' && state.error !== 'rejected' && !state.quota) ? (
           <Button size="sm" variant="accent" onPress={onResume} testID="upload-resume">
             {state.phase === 'paused' ? t('upload.resume') : t('upload.retry')}
           </Button>

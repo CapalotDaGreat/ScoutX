@@ -175,14 +175,16 @@
       "offline": "Ligação perdida. Tenta novamente quando estiveres online; as partes enviadas são mantidas.",
       "session_expired": "Este envio expirou. Inicia-o novamente.",
       "too_large": "Os vídeos podem ter até 4 GB.",
-      "too_long": "Os vídeos podem ter até 150 minutos.",
+      "too_long": "Este vídeo é mais longo do que o teu plano permite.",
       "unsupported_type": "Só é possível enviar vídeos MP4 e MOV.",
       "limit_reached": "Atingiste o limite de envios por agora. Conclui ou cancela outros envios, ou tenta amanhã.",
       "consent_required": "Aceita primeiro as condições de envio.",
       "not_allowed": "O envio não está disponível para esta conta neste momento.",
       "file_missing": "O vídeo selecionado já não está neste dispositivo. Seleciona-o novamente.",
       "rejected": "Não foi possível aceitar o vídeo. Verifica se é um ficheiro MP4 ou MOV reproduzível.",
-      "unknown": "Não foi possível concluir o envio. Tenta novamente."
+      "unknown": "Não foi possível concluir o envio. Tenta novamente.",
+      "quota_exceeded": "Já usaste todas as análises de jogo completo deste período.",
+      "plan_limit": "Este vídeo excede o limite de tamanho ou duração do teu plano."
     },
     "rejection": {
       "not_video": "Este ficheiro não é um vídeo. Escolhe uma gravação MP4 ou MOV.",
@@ -191,7 +193,7 @@
       "no_video_stream": "Este ficheiro não tem imagem de vídeo.",
       "too_many_streams": "Este ficheiro tem demasiadas faixas. Exporta-o novamente como um único vídeo.",
       "too_short": "Este vídeo é demasiado curto para ser analisado.",
-      "too_long": "Os vídeos podem ter até 150 minutos.",
+      "too_long": "Este vídeo é mais longo do que o teu plano permite.",
       "resolution": "A resolução do vídeo está fora do intervalo suportado.",
       "frame_rate": "A taxa de fotogramas está fora do intervalo suportado.",
       "bitrate": "A taxa de bits é demasiado alta. Exporta o vídeo com menor qualidade.",

@@ -679,6 +679,25 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Written only by the RevenueCat webhook; the app may display it but never decides access.
+    match /entitlements/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    match /usageLedger/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+      match /periods/{periodKey} {
+        allow read: if isOwner(userId);
+        allow write: if false;
+      }
+    }
+
+    match /revenueCatEvents/{eventId} {
+      allow read, write: if false;
+    }
+
     match /reels/{reelId} {
       allow read: if isSignedIn() && request.auth.uid == resource.data.ownerId;
       allow create: if isSignedIn()

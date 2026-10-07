@@ -10,6 +10,7 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { readableSourceFor } from '../uploads/mediaSource';
+import { planFor } from '../entitlements/quotaService';
 import {
   failJob,
   MATCH_COLLECTION,
@@ -34,8 +35,7 @@ import { getTaskDispatcher, parseAnalysisTask, type AnalysisTask, type TaskDispa
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
 
-/** One full-match pipeline per user at a time; others wait in the queue. */
-export const ACTIVE_JOBS_PER_USER = 1;
+/** Jobs beyond the plan's concurrent-job cap wait in the queue and are re-delivered later. */
 export const CONCURRENCY_RETRY_DELAY_SEC = 120;
 export const TASK_MAX_ATTEMPTS = 3;
 const EXTRACT_TIMEOUT_MS = 8 * 60 * 1000;
@@ -179,12 +179,13 @@ async function claimSegment(db: Firestore, task: Extract<AnalysisTask, { kind: '
     const state = pipelineStateOf(job);
     let stages = parseStages(job.pipelineStages);
     if (state === 'queued') {
+      const plan = await planFor(db, job.playerId, tx);
       const active = await tx.get(
         db.collection(MATCH_COLLECTION)
           .where('playerId', '==', job.playerId)
           .where('pipelineState', 'in', ['extracting', 'analyzing']),
       );
-      if (active.docs.filter((doc) => doc.id !== task.jobId).length >= ACTIVE_JOBS_PER_USER) return { kind: 'deferred' };
+      if (active.docs.filter((doc) => doc.id !== task.jobId).length >= plan.maxConcurrentJobs) return { kind: 'deferred' };
       stages = updateStage(stages, 'frame-extraction', 'active', now);
     } else if (state !== 'extracting') {
       return { kind: 'skip' };

@@ -41,6 +41,7 @@ import {
   confirmIdentity as buildIdentityConfirmation,
   pendingIdentityConfirmation,
 } from '@/features/match-analysis/services/identityConfirmation';
+import { quotaErrorFrom, type QuotaErrorInfo } from '@/features/premium/types';
 import { toUserMessage } from '@/utils/userFacingError';
 
 const ANALYSIS_FAILED_MESSAGE =
@@ -77,6 +78,7 @@ export function useMatchAnalysis(playerId: string | null) {
   const [isBusy, setIsBusy] = useState(false);
   const [phaseLabel, setPhaseLabel] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [quotaError, setQuotaError] = useState<QuotaErrorInfo | null>(null);
   const upload = useChunkedUpload(playerId);
   const { start: startUpload, resume: resumeTransfer, reset: resetUpload } = upload;
   const uploadJobRef = useRef<MatchAnalysisJob | null>(null);
@@ -126,8 +128,9 @@ export function useMatchAnalysis(playerId: string | null) {
       try {
         await requestMatchFootageAnalysis(job.id, job.idempotencyKey);
       } catch (callableError) {
-        const message = toUserMessage(callableError, ANALYSIS_FAILED_MESSAGE);
-        setError(message);
+        const quota = quotaErrorFrom(callableError);
+        setQuotaError(quota);
+        setError(quota ? null : toUserMessage(callableError, ANALYSIS_FAILED_MESSAGE));
       }
       const latest = (await getMatchAnalysisJob(job.id).catch(() => null)) ?? job;
       setActiveJob(latest);
@@ -177,6 +180,11 @@ export function useMatchAnalysis(playerId: string | null) {
     async (job: MatchAnalysisJob, attempt: UploadAttempt): Promise<MatchAnalysisJob> => {
       if (attempt.status === 'complete') return continueAfterUpload(job, attempt.uploadId);
       if (attempt.status === 'cancelled') {
+        await cancelAnalysis(job);
+        return { ...job, status: 'cancelled' };
+      }
+      if (attempt.status === 'failed' && attempt.quota) {
+        // Refused before any bytes were sent; the upload card explains the limit.
         await cancelAnalysis(job);
         return { ...job, status: 'cancelled' };
       }
@@ -373,6 +381,7 @@ export function useMatchAnalysis(playerId: string | null) {
   const resetActive = useCallback(() => {
     setActiveJob(null);
     setError(null);
+    setQuotaError(null);
     setPhaseLabel(null);
   }, []);
 
@@ -382,6 +391,7 @@ export function useMatchAnalysis(playerId: string | null) {
     isBusy,
     phaseLabel,
     error,
+    quotaError,
     pickVideo,
     startAnalysis,
     retryAnalysis,

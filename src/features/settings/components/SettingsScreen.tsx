@@ -29,6 +29,7 @@ export type SettingsScreenProps = {
   onBack: () => void;
   onSignOut: () => void;
   onOpenPrivacyCenter?: () => void;
+  onOpenPlan?: () => void;
   /** Player portfolio & discovery privacy. When provided, editable toggles are shown here. */
   privacySettings?: PrivacySettings | null;
   onPrivacyChange?: (next: PrivacySettings) => void | Promise<void>;
@@ -63,11 +64,12 @@ export function SettingsScreen({
   onBack,
   onSignOut,
   onOpenPrivacyCenter,
+  onOpenPlan,
   privacySettings = null,
   onPrivacyChange,
   privacyDisabled = false,
 }: SettingsScreenProps) {
-  const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors', 'legal']);
+  const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors', 'legal', 'premium']);
   const { user, role, beginUpgrade } = useAuth();
   const {
     pushEnabled,
@@ -246,6 +248,11 @@ export function SettingsScreen({
           {onOpenPrivacyCenter && !user?.isAnonymous ? (
             <Button variant="secondary" onPress={onOpenPrivacyCenter} testID="settings-open-privacy-center">
               {t('legal:centerTitle')}
+            </Button>
+          ) : null}
+          {onOpenPlan && !user?.isAnonymous ? (
+            <Button variant="secondary" onPress={onOpenPlan} testID="settings-open-plan">
+              {t('premium:openPlan')}
             </Button>
           ) : null}
         </Card>

@@ -1,0 +1,61 @@
+{
+  "title": "Plan y uso",
+  "subtitle": "Qué incluye tu plan y cuánto has usado en este periodo.",
+  "openPlan": "Plan y uso",
+  "currentPlan": "Plan actual",
+  "plans": {
+    "free": "Gratis",
+    "premium": "Premium"
+  },
+  "status": {
+    "free": "Plan gratuito",
+    "premium": "Premium está activo",
+    "trial": "La prueba de Premium está activa",
+    "grace": "Hay un problema de pago con tu suscripción. Premium sigue activo durante un breve periodo de gracia mientras el App Store lo vuelve a intentar.",
+    "expired": "Tu suscripción Premium ha terminado. Estás en el plan gratuito.",
+    "unknown": "No pudimos confirmar tu suscripción, así que por ahora se aplica el plan gratuito."
+  },
+  "usageTitle": "Este periodo",
+  "features": {
+    "frame_analysis": "Análisis de clips",
+    "full_match_analysis": "Análisis de partidos completos",
+    "reel_export": "Exportaciones de resúmenes"
+  },
+  "remaining": "Quedan {{remaining}} de {{limit}}",
+  "resetsOn": "Tu cupo se restablece el {{date}}.",
+  "periodNotStarted": "Tu periodo de {{days}} días empieza con tu primer análisis o exportación.",
+  "videoLimits": "Vídeos de partido completo de hasta {{minutes}} minutos · {{jobs}} análisis a la vez",
+  "alwaysFreeTitle": "Siempre gratis",
+  "alwaysFreeBody": "Esto nunca requiere suscripción, en ningún plan:",
+  "alwaysFree": {
+    "safety_and_reporting": "Herramientas de seguridad, bloqueo y denuncias",
+    "account_deletion": "Eliminar tu cuenta y tus datos",
+    "privacy_controls": "Controles de privacidad y exportación de datos",
+    "guardian_controls": "Controles para padres y tutores",
+    "match_logging": "Registrar partidos y estadísticas",
+    "basic_development": "Objetivos, entrenamiento y seguimiento básico del desarrollo"
+  },
+  "subscriptionTitle": "Suscripción",
+  "buy": "{{title}} · {{price}}",
+  "noOfferings": "No hay opciones de suscripción disponibles en este momento.",
+  "renewalDisclosure": "El pago se carga a tu ID de Apple. La suscripción se renueva automáticamente salvo que se cancele al menos 24 horas antes del final del periodo actual. Puedes gestionarla o cancelarla en los ajustes de tu cuenta del App Store.",
+  "restore": "Restaurar compras",
+  "manage": "Gestionar suscripción",
+  "subscriptionTerms": "Condiciones de la suscripción",
+  "minorNote": "Si tienes menos de 18 años, pregunta a tu madre, padre o tutor antes de comprar algo.",
+  "purchasesUnavailable": "Las suscripciones solo están disponibles en la app de ScoutX para iOS.",
+  "purchaseFailed": "No se pudo completar la compra. Inténtalo de nuevo.",
+  "purchasePendingTitle": "¡Gracias!",
+  "purchasePendingBody": "Tu plan se actualizará en cuanto el App Store confirme la compra. Puede tardar un momento.",
+  "restoreDoneTitle": "Compras restauradas",
+  "loadFailed": "No se pudo cargar tu plan. Inténtalo de nuevo.",
+  "limit": {
+    "title": "Has usado todos tus {{feature}} de este periodo",
+    "body": "Has usado {{used}} de {{limit}}.",
+    "planTitle": "Este vídeo supera el límite de tu plan",
+    "planBody": "Prueba con un vídeo más corto o más ligero, o recórtalo antes de subirlo.",
+    "stillFree": "Todavía puedes:",
+    "freeActions": "Registrar el partido y tus estadísticas, añadir notas y objetivos, y guardar tus clips en tu biblioteca.",
+    "seePlan": "Ver plan y uso"
+  }
+}

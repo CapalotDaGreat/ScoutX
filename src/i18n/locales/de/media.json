@@ -175,14 +175,16 @@
       "offline": "Verbindung verloren. Versuche es erneut, sobald du online bist; fertige Teile bleiben erhalten.",
       "session_expired": "Dieser Upload ist abgelaufen. Starte ihn erneut.",
       "too_large": "Videos dürfen bis zu 4 GB groß sein.",
-      "too_long": "Videos dürfen bis zu 150 Minuten lang sein.",
+      "too_long": "Dieses Video ist länger, als dein Plan erlaubt.",
       "unsupported_type": "Es können nur MP4- und MOV-Videos hochgeladen werden.",
       "limit_reached": "Du hast das Upload-Limit vorerst erreicht. Schließe andere Uploads ab oder versuche es morgen erneut.",
       "consent_required": "Bitte bestätige zuerst die Upload-Hinweise.",
       "not_allowed": "Hochladen ist für dieses Konto derzeit nicht verfügbar.",
       "file_missing": "Das ausgewählte Video ist nicht mehr auf diesem Gerät. Wähle es erneut aus.",
       "rejected": "Das Video konnte nicht angenommen werden. Prüfe, ob es eine abspielbare MP4- oder MOV-Datei ist.",
-      "unknown": "Der Upload konnte nicht abgeschlossen werden. Bitte versuche es erneut."
+      "unknown": "Der Upload konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+      "quota_exceeded": "Du hast alle Komplettspiel-Analysen für diesen Zeitraum genutzt.",
+      "plan_limit": "Dieses Video überschreitet die Größen- oder Längengrenze deines Plans."
     },
     "rejection": {
       "not_video": "Diese Datei ist kein Video. Wähle eine MP4- oder MOV-Aufnahme.",
@@ -191,7 +193,7 @@
       "no_video_stream": "Diese Datei enthält kein Videobild.",
       "too_many_streams": "Diese Datei hat zu viele Spuren. Exportiere sie erneut als einzelnes Video.",
       "too_short": "Dieses Video ist zu kurz für eine Analyse.",
-      "too_long": "Videos dürfen bis zu 150 Minuten lang sein.",
+      "too_long": "Dieses Video ist länger, als dein Plan erlaubt.",
       "resolution": "Die Videoauflösung liegt außerhalb des unterstützten Bereichs.",
       "frame_rate": "Die Bildrate liegt außerhalb des unterstützten Bereichs.",
       "bitrate": "Die Bitrate ist zu hoch. Exportiere das Video mit niedrigerer Qualität.",

@@ -1,0 +1,61 @@
+{
+  "title": "Offre et utilisation",
+  "subtitle": "Ce que comprend ton offre et ce que tu as utilisé sur cette période.",
+  "openPlan": "Offre et utilisation",
+  "currentPlan": "Offre actuelle",
+  "plans": {
+    "free": "Gratuite",
+    "premium": "Premium"
+  },
+  "status": {
+    "free": "Offre gratuite",
+    "premium": "Premium est actif",
+    "trial": "L'essai Premium est actif",
+    "grace": "Il y a un problème de paiement avec ton abonnement. Premium reste actif pendant une courte période de grâce pendant que l'App Store réessaie.",
+    "expired": "Ton abonnement Premium est terminé. Tu utilises l'offre gratuite.",
+    "unknown": "Nous n'avons pas pu confirmer ton abonnement, l'offre gratuite s'applique donc pour l'instant."
+  },
+  "usageTitle": "Cette période",
+  "features": {
+    "frame_analysis": "Analyses de clips",
+    "full_match_analysis": "Analyses de matchs complets",
+    "reel_export": "Exports de résumés vidéo"
+  },
+  "remaining": "{{remaining}} sur {{limit}} restant(s)",
+  "resetsOn": "Ton quota est réinitialisé le {{date}}.",
+  "periodNotStarted": "Ta période de {{days}} jours commence avec ta première analyse ou ton premier export.",
+  "videoLimits": "Vidéos de match complet jusqu'à {{minutes}} minutes · {{jobs}} analyse à la fois",
+  "alwaysFreeTitle": "Toujours gratuit",
+  "alwaysFreeBody": "Ces fonctions ne nécessitent jamais d'abonnement, quelle que soit l'offre :",
+  "alwaysFree": {
+    "safety_and_reporting": "Outils de sécurité, blocage et signalement",
+    "account_deletion": "Suppression de ton compte et de tes données",
+    "privacy_controls": "Paramètres de confidentialité et export de données",
+    "guardian_controls": "Contrôles pour parents et tuteurs",
+    "match_logging": "Enregistrement des matchs et des statistiques",
+    "basic_development": "Objectifs, entraînement et suivi de progression de base"
+  },
+  "subscriptionTitle": "Abonnement",
+  "buy": "{{title}} · {{price}}",
+  "noOfferings": "Aucune option d'abonnement n'est disponible pour le moment.",
+  "renewalDisclosure": "Le paiement est débité de ton identifiant Apple. L'abonnement se renouvelle automatiquement sauf s'il est annulé au moins 24 heures avant la fin de la période en cours. Tu peux le gérer ou l'annuler dans les réglages de ton compte App Store.",
+  "restore": "Restaurer les achats",
+  "manage": "Gérer l'abonnement",
+  "subscriptionTerms": "Conditions d'abonnement",
+  "minorNote": "Si tu as moins de 18 ans, demande à un parent ou tuteur avant tout achat.",
+  "purchasesUnavailable": "Les abonnements sont disponibles uniquement dans l'app iOS ScoutX.",
+  "purchaseFailed": "L'achat n'a pas pu aboutir. Réessaie.",
+  "purchasePendingTitle": "Merci !",
+  "purchasePendingBody": "Ton offre est mise à jour dès que l'App Store confirme l'achat. Cela peut prendre un instant.",
+  "restoreDoneTitle": "Achats restaurés",
+  "loadFailed": "Ton offre n'a pas pu être chargée. Réessaie.",
+  "limit": {
+    "title": "Tu as utilisé toutes tes {{feature}} pour cette période",
+    "body": "Tu as utilisé {{used}} sur {{limit}}.",
+    "planTitle": "Cette vidéo dépasse la limite de ton offre",
+    "planBody": "Essaie une vidéo plus courte ou plus légère, ou coupe-la avant l'envoi.",
+    "stillFree": "Tu peux toujours :",
+    "freeActions": "Enregistrer le match et tes statistiques, ajouter des notes et des objectifs, et garder tes clips dans ta médiathèque.",
+    "seePlan": "Voir l'offre et l'utilisation"
+  }
+}

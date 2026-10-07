@@ -11,10 +11,12 @@ import {
   type UploadRequest,
   type UploadViewState,
 } from '@/features/media-upload/types';
+import { quotaErrorFrom, type QuotaErrorInfo } from '@/features/premium/types';
 
 export type UploadAttempt =
   | { status: 'complete'; uploadId: string }
-  | { status: 'paused' | 'cancelled' | 'failed' };
+  | { status: 'paused' | 'cancelled' }
+  | { status: 'failed'; quota: QuotaErrorInfo | null };
 
 export type ChunkedUploadApi = {
   state: UploadViewState;
@@ -50,7 +52,7 @@ export function useChunkedUpload(uid: string | null): ChunkedUploadApi {
 
   const start = useCallback(
     async (request: UploadRequest): Promise<UploadAttempt> => {
-      if (!uid) return { status: 'failed' };
+      if (!uid) return { status: 'failed', quota: null };
       lastRequest.current = request;
       update({ ...IDLE_UPLOAD, phase: 'preparing' });
       try {
@@ -73,8 +75,15 @@ export function useChunkedUpload(uid: string | null): ChunkedUploadApi {
         return { status: 'complete', uploadId: result.uploadId };
       } catch (error) {
         control.current = null;
-        update({ phase: 'failed', error: uploadErrorCodeFor(error), bytesPerSecond: null, etaSeconds: null });
-        return { status: 'failed' };
+        const quota = quotaErrorFrom(error);
+        update({
+          phase: 'failed',
+          error: uploadErrorCodeFor(error),
+          quota,
+          bytesPerSecond: null,
+          etaSeconds: null,
+        });
+        return { status: 'failed', quota };
       }
     },
     [uid, update],
@@ -96,7 +105,7 @@ export function useChunkedUpload(uid: string | null): ChunkedUploadApi {
 
   const resume = useCallback(
     (): Promise<UploadAttempt> =>
-      lastRequest.current ? start(lastRequest.current) : Promise.resolve({ status: 'failed' }),
+      lastRequest.current ? start(lastRequest.current) : Promise.resolve({ status: 'failed', quota: null }),
     [start],
   );
 

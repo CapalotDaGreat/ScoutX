@@ -8,6 +8,7 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { startMatchPipeline } from '../analysis/pipeline';
+import { planFor, releaseQuota } from '../entitlements/quotaService';
 import { readableSourceFor, type MediaSource } from './mediaSource';
 import { getMediaScanner } from './mediaScanner';
 import { matchFootagePath, parseQuarantinePath, type UploadState } from './model';
@@ -58,6 +59,7 @@ async function reject(db: Firestore, uploadId: string, data: UploadDoc, reason: 
   await getStorage().bucket().file(data.storagePath).delete({ ignoreNotFound: true });
   const now = new Date().toISOString();
   await db.collection('mediaUploads').doc(uploadId).update({ state: 'rejected', rejectionReason: reason, rejectedAt: now, updatedAt: now });
+  await releaseQuota(db, data.ownerId, 'full_match_analysis', data.jobId).catch(() => false);
   const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
   const job = await jobRef.get();
   if (job.exists && job.get('playerId') === data.ownerId && job.get('videoUploadId') == null) {
@@ -139,6 +141,8 @@ export async function processQuarantinedObject(db: Firestore, path: string, size
   }
   const evaluation = evaluateProbe(output ? parseProbeJson(output) : null, data.sizeBytes);
   if (!evaluation.ok) return reject(db, parsed.uploadId, data, evaluation.reason);
+  const plan = await planFor(db, data.ownerId);
+  if (evaluation.summary.durationSec > plan.maxVideoDurationSec) return reject(db, parsed.uploadId, data, 'too_long');
 
   const scan = await getMediaScanner().scan(path);
   if (scan.status === 'flagged') return reject(db, parsed.uploadId, data, 'scanner_flagged');

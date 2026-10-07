@@ -58,3 +58,5 @@ export {
 } from './notificationProducers';
 
 initializeApp();
+export { getUsageSummary } from './entitlements/quotaService';
+export { revenueCatWebhook } from './entitlements/revenueCat';

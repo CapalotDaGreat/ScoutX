@@ -34,6 +34,7 @@ let expireAbandonedUploads;
 let processQuarantinedObject;
 let setMediaScanner;
 let noopMediaScanner;
+let cancelMatchAnalysis;
 let fixtures;
 let videoPolicyVersion;
 const enqueued = [];
@@ -90,6 +91,7 @@ async function clearUploads() {
     const docs = await db.collection(name).get();
     await Promise.all(docs.docs.map((doc) => doc.ref.delete()));
   }
+  await db.recursiveDelete(db.collection('usageLedger'));
 }
 
 before(async () => {
@@ -97,6 +99,7 @@ before(async () => {
   db = getFirestore();
   ({ createUploadSession, cancelUploadSession, expireAbandonedUploads } = require('./lib/uploads/sessions.js'));
   ({ processQuarantinedObject } = require('./lib/uploads/quarantine.js'));
+  ({ cancelMatchAnalysis } = require('./lib/matchAnalysis.js'));
   ({ setMediaScanner, noopMediaScanner } = require('./lib/uploads/mediaScanner.js'));
   require('./lib/analysis/taskDispatcher.js').setTaskDispatcher({
     enqueue: async (task) => {
@@ -106,6 +109,8 @@ before(async () => {
   fixtures = mediaFixtures();
   videoPolicyVersion = require('./lib/legal/legalVersions.generated.js').LEGAL_VERSIONS['video-recording-policy'];
   await seedUploader(UID);
+  // Premium allows several full-match uploads per period, so the active-upload cap is what these tests hit.
+  await db.doc(`entitlements/${UID}`).set({ status: 'premium', expiresAt: null });
 });
 
 beforeEach(clearUploads);
@@ -160,6 +165,35 @@ describe('createUploadSession', () => {
     await createUploadSession.run(call(UID, request('job_l1', randomBytes(4096))));
     await createUploadSession.run(call(UID, request('job_l2', randomBytes(4096))));
     await expectCode(createUploadSession.run(call(UID, request('job_l3', randomBytes(4096)))), 'resource-exhausted');
+  });
+  test('free plan: one full-match analysis per period, refunded for rejected or cancelled videos', async () => {
+    const FREE = 'upload-free';
+    await seedUploader(FREE);
+    for (const jobId of ['job_q1', 'job_q2', 'job_q3']) await seedJob(jobId, FREE);
+    const usedNow = async () => {
+      const periods = await db.collection('usageLedger').doc(FREE).collection('periods').get();
+      return periods.docs.reduce((sum, doc) => sum + (doc.get('counts.full_match_analysis') ?? 0), 0);
+    };
+
+    const first = await createUploadSession.run(call(FREE, request('job_q1', randomBytes(4096))));
+    assert.equal(await usedNow(), 1);
+    await assert.rejects(createUploadSession.run(call(FREE, request('job_q2', randomBytes(4096)))), (error) => {
+      assert.equal(error.code, 'resource-exhausted');
+      assert.equal(error.details?.reason, 'quota_exceeded');
+      assert.equal(error.details?.feature, 'full_match_analysis');
+      return true;
+    });
+
+    const path = `quarantine/${FREE}/${first.uploadId}/source`;
+    await getStorage().bucket().file(path).save(randomBytes(4096));
+    assert.equal(await processQuarantinedObject(db, path, 4096), 'rejected');
+    assert.equal(await usedNow(), 0, 'a rejected video does not use the allowance');
+
+    await createUploadSession.run(call(FREE, request('job_q2', randomBytes(4096))));
+    assert.equal(await usedNow(), 1);
+    await cancelMatchAnalysis.run(call(FREE, { jobId: 'job_q2' }));
+    assert.equal(await usedNow(), 0, 'cancelling before analysis gives the allowance back');
+    await createUploadSession.run(call(FREE, request('job_q3', randomBytes(4096))));
   });
 });
 

@@ -175,14 +175,16 @@
       "offline": "Connessione persa. Riprova quando sei di nuovo online; le parti caricate vengono conservate.",
       "session_expired": "Questo caricamento è scaduto. Avvialo di nuovo.",
       "too_large": "I video possono pesare fino a 4 GB.",
-      "too_long": "I video possono durare fino a 150 minuti.",
+      "too_long": "Questo video è più lungo di quanto consente il tuo piano.",
       "unsupported_type": "Si possono caricare solo video MP4 e MOV.",
       "limit_reached": "Hai raggiunto il limite di caricamenti per ora. Completa o annulla altri caricamenti, oppure riprova domani.",
       "consent_required": "Accetta prima le condizioni di caricamento.",
       "not_allowed": "Il caricamento non è disponibile per questo account al momento.",
       "file_missing": "Il video selezionato non è più su questo dispositivo. Selezionalo di nuovo.",
       "rejected": "Il video non è stato accettato. Verifica che sia un file MP4 o MOV riproducibile.",
-      "unknown": "Non è stato possibile completare il caricamento. Riprova."
+      "unknown": "Non è stato possibile completare il caricamento. Riprova.",
+      "quota_exceeded": "Hai usato tutte le analisi di partite intere di questo periodo.",
+      "plan_limit": "Questo video supera il limite di dimensione o durata del tuo piano."
     },
     "rejection": {
       "not_video": "Questo file non è un video. Scegli una registrazione MP4 o MOV.",
@@ -191,7 +193,7 @@
       "no_video_stream": "Questo file non contiene immagini video.",
       "too_many_streams": "Questo file ha troppe tracce. Esportalo di nuovo come un unico video.",
       "too_short": "Questo video è troppo corto per l’analisi.",
-      "too_long": "I video possono durare fino a 150 minuti.",
+      "too_long": "Questo video è più lungo di quanto consente il tuo piano.",
       "resolution": "La risoluzione del video è fuori dall’intervallo supportato.",
       "frame_rate": "La frequenza dei fotogrammi è fuori dall’intervallo supportato.",
       "bitrate": "Il bitrate è troppo alto. Esporta il video con una qualità inferiore.",

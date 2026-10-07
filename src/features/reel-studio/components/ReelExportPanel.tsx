@@ -8,6 +8,8 @@ import { requestReelExport } from '@/features/media-library/services/mediaAccess
 import { ReelRepository } from '@/features/reel-studio/repositories/ReelRepository';
 import { shareRenderedReel } from '@/features/reel-studio/services/reelExportService';
 import type { ReelExportErrorCode, ReelExportJob, ReelManifest } from '@/features/reel-studio/types';
+import { LimitReachedCard } from '@/features/premium/components/LimitReachedCard';
+import { quotaErrorFrom, type QuotaErrorInfo } from '@/features/premium/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
 
@@ -17,6 +19,7 @@ export function ReelExportPanel({ reel, dirty }: { reel: ReelManifest; dirty: bo
   const [job, setJob] = useState<ReelExportJob | null>(null);
   const [precheck, setPrecheck] = useState<{ code: ReelExportErrorCode; segment: number | null } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [quota, setQuota] = useState<QuotaErrorInfo | null>(null);
 
   useEffect(
     () => ReelRepository.getInstance().subscribeToLatestExport(reel.ownerId, reel.id, setJob),
@@ -29,13 +32,16 @@ export function ReelExportPanel({ reel, dirty }: { reel: ReelManifest; dirty: bo
   const render = async () => {
     setBusy(true);
     setPrecheck(null);
+    setQuota(null);
     try {
       const result = await requestReelExport(reel.id);
       if (result.status === 'failed' && result.errorCode) {
         setPrecheck({ code: result.errorCode, segment: result.segmentIndex });
       }
     } catch (error) {
-      Alert.alert(t('media:export.failedTitle'), toUserMessage(error, t('media:export.requestFailed')));
+      const limit = quotaErrorFrom(error);
+      if (limit) setQuota(limit);
+      else Alert.alert(t('media:export.failedTitle'), toUserMessage(error, t('media:export.requestFailed')));
     } finally {
       setBusy(false);
     }
@@ -65,6 +71,7 @@ export function ReelExportPanel({ reel, dirty }: { reel: ReelManifest; dirty: bo
       <Text variant="caption" color="secondary">
         {t('media:export.hint')}
       </Text>
+      {quota ? <LimitReachedCard info={quota} /> : null}
       {precheck ? (
         <Text variant="body-sm" color="error">
           {errorText(precheck.code, precheck.segment)}

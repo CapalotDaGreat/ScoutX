@@ -1,0 +1,61 @@
+{
+  "title": "Plan & Nutzung",
+  "subtitle": "Was dein Plan enthält und wie viel du in diesem Zeitraum genutzt hast.",
+  "openPlan": "Plan & Nutzung",
+  "currentPlan": "Aktueller Plan",
+  "plans": {
+    "free": "Kostenlos",
+    "premium": "Premium"
+  },
+  "status": {
+    "free": "Kostenloser Plan",
+    "premium": "Premium ist aktiv",
+    "trial": "Premium-Testphase ist aktiv",
+    "grace": "Bei deinem Abo gibt es ein Zahlungsproblem. Premium bleibt für eine kurze Kulanzfrist aktiv, während der App Store es erneut versucht.",
+    "expired": "Dein Premium-Abo ist abgelaufen. Du nutzt den kostenlosen Plan.",
+    "unknown": "Wir konnten dein Abo nicht bestätigen, daher gilt vorerst der kostenlose Plan."
+  },
+  "usageTitle": "Dieser Zeitraum",
+  "features": {
+    "frame_analysis": "Clip-Analysen",
+    "full_match_analysis": "Komplettspiel-Analysen",
+    "reel_export": "Highlight-Reel-Exporte"
+  },
+  "remaining": "{{remaining}} von {{limit}} übrig",
+  "resetsOn": "Dein Kontingent wird am {{date}} zurückgesetzt.",
+  "periodNotStarted": "Dein {{days}}-Tage-Zeitraum beginnt mit deiner ersten Analyse oder deinem ersten Export.",
+  "videoLimits": "Komplettspiel-Videos bis {{minutes}} Minuten · {{jobs}} Analyse gleichzeitig",
+  "alwaysFreeTitle": "Immer kostenlos",
+  "alwaysFreeBody": "Dafür brauchst du in keinem Plan ein Abo:",
+  "alwaysFree": {
+    "safety_and_reporting": "Sicherheitsfunktionen, Blockieren und Melden",
+    "account_deletion": "Löschen deines Kontos und deiner Daten",
+    "privacy_controls": "Datenschutzeinstellungen und Datenexport",
+    "guardian_controls": "Einstellungen für Eltern und Erziehungsberechtigte",
+    "match_logging": "Spiele und Statistiken erfassen",
+    "basic_development": "Ziele, Training und grundlegende Entwicklungsverfolgung"
+  },
+  "subscriptionTitle": "Abo",
+  "buy": "{{title}} · {{price}}",
+  "noOfferings": "Derzeit sind keine Abo-Optionen verfügbar.",
+  "renewalDisclosure": "Die Zahlung wird deiner Apple-ID belastet. Das Abo verlängert sich automatisch, sofern es nicht mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt wird. Du kannst es in deinen App-Store-Kontoeinstellungen verwalten oder kündigen.",
+  "restore": "Käufe wiederherstellen",
+  "manage": "Abo verwalten",
+  "subscriptionTerms": "Abo-Bedingungen",
+  "minorNote": "Wenn du unter 18 bist, frage vor einem Kauf deine Eltern oder Erziehungsberechtigten.",
+  "purchasesUnavailable": "Abos sind nur in der ScoutX-iOS-App verfügbar.",
+  "purchaseFailed": "Der Kauf konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+  "purchasePendingTitle": "Danke!",
+  "purchasePendingBody": "Dein Plan wird aktualisiert, sobald der App Store den Kauf bestätigt. Das kann einen Moment dauern.",
+  "restoreDoneTitle": "Käufe wiederhergestellt",
+  "loadFailed": "Dein Plan konnte nicht geladen werden. Bitte versuche es erneut.",
+  "limit": {
+    "title": "Du hast alle {{feature}} für diesen Zeitraum genutzt",
+    "body": "Du hast {{used}} von {{limit}} genutzt.",
+    "planTitle": "Dieses Video überschreitet das Limit deines Plans",
+    "planBody": "Versuche ein kürzeres oder kleineres Video oder kürze es vor dem Hochladen.",
+    "stillFree": "Du kannst weiterhin:",
+    "freeActions": "Das Spiel und deine Statistiken erfassen, Notizen und Ziele hinzufügen und deine Clips in deiner Mediathek behalten.",
+    "seePlan": "Plan & Nutzung ansehen"
+  }
+}

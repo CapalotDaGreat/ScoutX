@@ -11,6 +11,7 @@ const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("../callableOptions");
 const consent_1 = require("../legal/consent");
 const userSafety_1 = require("../safety/userSafety");
+const quotaService_1 = require("../entitlements/quotaService");
 const model_1 = require("./model");
 const REQUEST_ERRORS = {
     purpose: 'Unsupported upload type.',
@@ -66,6 +67,18 @@ exports.createUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCa
     if (!job.exists || job.get('playerId') !== uid) {
         throw new https_1.HttpsError('failed-precondition', REQUEST_ERRORS.job);
     }
+    const plan = await (0, quotaService_1.planFor)(db, uid);
+    if (input.sizeBytes > plan.maxVideoBytes || input.declaredDurationSec > plan.maxVideoDurationSec) {
+        throw new https_1.HttpsError('failed-precondition', 'This video is longer or larger than your plan allows.', {
+            reason: 'plan_limit',
+            plan: plan.id,
+            maxVideoBytes: plan.maxVideoBytes,
+            maxVideoDurationSec: plan.maxVideoDurationSec,
+        });
+    }
+    // Charged before the upload so nobody uploads gigabytes only to hit a limit; refunded if the
+    // video is rejected or the job is cancelled before analysis starts.
+    await (0, quotaService_1.consumeQuota)(db, uid, 'full_match_analysis', input.jobId);
     const duplicates = await db
         .collection('mediaUploads')
         .where('ownerId', '==', uid)
@@ -88,7 +101,7 @@ exports.createUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCa
         .where('state', 'in', [...model_1.ACTIVE_UPLOAD_STATES])
         .limit(model_1.UPLOAD_LIMITS.maxActivePerUser + 1)
         .get();
-    if (active.size >= model_1.UPLOAD_LIMITS.maxActivePerUser) {
+    if (active.docs.filter((doc) => doc.get('jobId') !== input.jobId).length >= model_1.UPLOAD_LIMITS.maxActivePerUser) {
         throw new https_1.HttpsError('resource-exhausted', 'Finish or cancel your current uploads before starting another.', {
             reason: 'limit_reached',
         });
@@ -147,6 +160,7 @@ async function discardUpload(db, uploadId, data, state) {
     const now = new Date().toISOString();
     await db.collection('mediaUploads').doc(uploadId).update({ state, updatedAt: now });
     if (state === 'expired') {
+        await (0, quotaService_1.releaseQuota)(db, data.ownerId, 'full_match_analysis', data.jobId).catch(() => false);
         const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
         const job = await jobRef.get();
         if (job.exists && job.get('playerId') === data.ownerId && job.get('status') === 'uploading') {

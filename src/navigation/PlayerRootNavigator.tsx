@@ -12,6 +12,7 @@ import { CareerReplayScreen } from '@/features/career-replay/components/CareerRe
 import { AnalysisReportScreen } from '@/features/match-analysis/components/AnalysisReportScreen';
 import { SettingsScreen } from '@/features/settings';
 import { PrivacyCenterScreen } from '@/features/legal/screens/PrivacyCenterScreen';
+import { PlanUsageScreen } from '@/features/premium/screens/PlanUsageScreen';
 import { PortfolioPrivacySettings } from '@/features/public-portfolio';
 import { PlayerWorkspaceProvider, usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { defaultPrivacySettings, type PrivacySettings } from '@/features/player-profile/types/privacySettings';
@@ -129,6 +130,7 @@ function SettingsRoute({
       onBack={() => navigation.goBack()}
       onSignOut={() => void signOut()}
       onOpenPrivacyCenter={() => navigation.navigate('PrivacyCenter')}
+      onOpenPlan={() => navigation.navigate('PlanUsage')}
       privacySettings={profile?.privacy ?? defaultPrivacySettings()}
       onPrivacyChange={handlePrivacyChange}
       privacyDisabled={isSaving || !profile}
@@ -154,6 +156,10 @@ function PrivacyCenterRoute({
       }
     />
   );
+}
+
+function PlanUsageRoute({ navigation }: NativeStackScreenProps<PlayerStackParamList, 'PlanUsage'>) {
+  return <PlanUsageScreen onBack={() => navigation.goBack()} />;
 }
 
 function GlobalSearchRoute({
@@ -313,6 +319,7 @@ function PlayerStackContent() {
         <Stack.Screen name="CareerReplay" component={CareerReplayRoute} />
         <Stack.Screen name="Settings" component={SettingsRoute} />
         <Stack.Screen name="PrivacyCenter" component={PrivacyCenterRoute} />
+        <Stack.Screen name="PlanUsage" component={PlanUsageRoute} />
         <Stack.Screen name="GlobalSearch" component={GlobalSearchRoute} />
         <Stack.Screen name="Trials" component={TrialsRoute} />
         <Stack.Screen name="RequestCenter" component={RequestCenterRoute} />

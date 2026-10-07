@@ -6,6 +6,7 @@ import { logger } from 'firebase-functions';
 import { createCallableOptions, resolveCallableCors } from '../callableOptions';
 import { hasCurrentConsent } from '../legal/consent';
 import { loadSafetyPolicy } from '../safety/userSafety';
+import { consumeQuota, planFor, releaseQuota } from '../entitlements/quotaService';
 import {
   ACTIVE_UPLOAD_STATES,
   REUSABLE_UPLOAD_STATES,
@@ -84,6 +85,19 @@ export const createUploadSession = onCall(createCallableOptions({ timeoutSeconds
     throw new HttpsError('failed-precondition', REQUEST_ERRORS.job);
   }
 
+  const plan = await planFor(db, uid);
+  if (input.sizeBytes > plan.maxVideoBytes || input.declaredDurationSec > plan.maxVideoDurationSec) {
+    throw new HttpsError('failed-precondition', 'This video is longer or larger than your plan allows.', {
+      reason: 'plan_limit',
+      plan: plan.id,
+      maxVideoBytes: plan.maxVideoBytes,
+      maxVideoDurationSec: plan.maxVideoDurationSec,
+    });
+  }
+  // Charged before the upload so nobody uploads gigabytes only to hit a limit; refunded if the
+  // video is rejected or the job is cancelled before analysis starts.
+  await consumeQuota(db, uid, 'full_match_analysis', input.jobId);
+
   const duplicates = await db
     .collection('mediaUploads')
     .where('ownerId', '==', uid)
@@ -110,7 +124,7 @@ export const createUploadSession = onCall(createCallableOptions({ timeoutSeconds
     .where('state', 'in', [...ACTIVE_UPLOAD_STATES])
     .limit(UPLOAD_LIMITS.maxActivePerUser + 1)
     .get();
-  if (active.size >= UPLOAD_LIMITS.maxActivePerUser) {
+  if (active.docs.filter((doc) => doc.get('jobId') !== input.jobId).length >= UPLOAD_LIMITS.maxActivePerUser) {
     throw new HttpsError('resource-exhausted', 'Finish or cancel your current uploads before starting another.', {
       reason: 'limit_reached',
     });
@@ -174,6 +188,7 @@ async function discardUpload(db: Firestore, uploadId: string, data: UploadDoc, s
   const now = new Date().toISOString();
   await db.collection('mediaUploads').doc(uploadId).update({ state, updatedAt: now });
   if (state === 'expired') {
+    await releaseQuota(db, data.ownerId, 'full_match_analysis', data.jobId).catch(() => false);
     const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
     const job = await jobRef.get();
     if (job.exists && job.get('playerId') === data.ownerId && job.get('status') === 'uploading') {

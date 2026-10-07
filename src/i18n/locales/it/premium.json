@@ -1,0 +1,61 @@
+{
+  "title": "Piano e utilizzo",
+  "subtitle": "Cosa include il tuo piano e quanto hai usato in questo periodo.",
+  "openPlan": "Piano e utilizzo",
+  "currentPlan": "Piano attuale",
+  "plans": {
+    "free": "Gratuito",
+    "premium": "Premium"
+  },
+  "status": {
+    "free": "Piano gratuito",
+    "premium": "Premium è attivo",
+    "trial": "La prova di Premium è attiva",
+    "grace": "C'è un problema di pagamento con il tuo abbonamento. Premium resta attivo per un breve periodo di tolleranza mentre l'App Store riprova.",
+    "expired": "Il tuo abbonamento Premium è terminato. Stai usando il piano gratuito.",
+    "unknown": "Non siamo riusciti a confermare il tuo abbonamento, quindi per ora vale il piano gratuito."
+  },
+  "usageTitle": "Questo periodo",
+  "features": {
+    "frame_analysis": "Analisi di clip",
+    "full_match_analysis": "Analisi di partite intere",
+    "reel_export": "Esportazioni di highlight"
+  },
+  "remaining": "{{remaining}} su {{limit}} rimanenti",
+  "resetsOn": "La tua quota si azzera il {{date}}.",
+  "periodNotStarted": "Il tuo periodo di {{days}} giorni inizia con la prima analisi o esportazione.",
+  "videoLimits": "Video di partite intere fino a {{minutes}} minuti · {{jobs}} analisi alla volta",
+  "alwaysFreeTitle": "Sempre gratis",
+  "alwaysFreeBody": "Queste funzioni non richiedono mai un abbonamento, con qualsiasi piano:",
+  "alwaysFree": {
+    "safety_and_reporting": "Strumenti di sicurezza, blocco e segnalazione",
+    "account_deletion": "Eliminazione del tuo account e dei tuoi dati",
+    "privacy_controls": "Controlli della privacy ed esportazione dei dati",
+    "guardian_controls": "Controlli per genitori e tutori",
+    "match_logging": "Registrazione di partite e statistiche",
+    "basic_development": "Obiettivi, allenamento e monitoraggio di base dei progressi"
+  },
+  "subscriptionTitle": "Abbonamento",
+  "buy": "{{title}} · {{price}}",
+  "noOfferings": "Al momento non sono disponibili opzioni di abbonamento.",
+  "renewalDisclosure": "Il pagamento viene addebitato sul tuo ID Apple. L'abbonamento si rinnova automaticamente a meno che non venga annullato almeno 24 ore prima della fine del periodo in corso. Puoi gestirlo o annullarlo nelle impostazioni del tuo account App Store.",
+  "restore": "Ripristina acquisti",
+  "manage": "Gestisci abbonamento",
+  "subscriptionTerms": "Condizioni dell'abbonamento",
+  "minorNote": "Se hai meno di 18 anni, chiedi a un genitore o tutore prima di acquistare qualcosa.",
+  "purchasesUnavailable": "Gli abbonamenti sono disponibili solo nell'app ScoutX per iOS.",
+  "purchaseFailed": "Non è stato possibile completare l'acquisto. Riprova.",
+  "purchasePendingTitle": "Grazie!",
+  "purchasePendingBody": "Il tuo piano si aggiorna non appena l'App Store conferma l'acquisto. Potrebbe volerci un momento.",
+  "restoreDoneTitle": "Acquisti ripristinati",
+  "loadFailed": "Non è stato possibile caricare il tuo piano. Riprova.",
+  "limit": {
+    "title": "Hai usato tutte le {{feature}} di questo periodo",
+    "body": "Hai usato {{used}} su {{limit}}.",
+    "planTitle": "Questo video supera il limite del tuo piano",
+    "planBody": "Prova con un video più breve o più leggero, oppure taglialo prima di caricarlo.",
+    "stillFree": "Puoi ancora:",
+    "freeActions": "Registrare la partita e le tue statistiche, aggiungere note e obiettivi e conservare le tue clip nella libreria.",
+    "seePlan": "Vedi piano e utilizzo"
+  }
+}

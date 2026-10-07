@@ -33,6 +33,7 @@ export type PlayerStackParamList = {
   CareerReplay: undefined;
   Settings: undefined;
   PrivacyCenter: undefined;
+  PlanUsage: undefined;
   /** Player trial invitations inbox (stack, not a tab). */
   Trials: { trialId?: string } | undefined;
   RequestCenter: { requestId?: string } | undefined;

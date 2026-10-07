@@ -1,0 +1,61 @@
+{
+  "title": "Abonnement & gebruik",
+  "subtitle": "Wat je abonnement bevat en hoeveel je deze periode hebt gebruikt.",
+  "openPlan": "Abonnement & gebruik",
+  "currentPlan": "Huidig abonnement",
+  "plans": {
+    "free": "Gratis",
+    "premium": "Premium"
+  },
+  "status": {
+    "free": "Gratis abonnement",
+    "premium": "Premium is actief",
+    "trial": "Premium-proefperiode is actief",
+    "grace": "Er is een betalingsprobleem met je abonnement. Premium blijft een korte respijtperiode actief terwijl de App Store het opnieuw probeert.",
+    "expired": "Je Premium-abonnement is beëindigd. Je gebruikt het gratis abonnement.",
+    "unknown": "We konden je abonnement niet bevestigen, dus voorlopig geldt het gratis abonnement."
+  },
+  "usageTitle": "Deze periode",
+  "features": {
+    "frame_analysis": "Clipanalyses",
+    "full_match_analysis": "Volledige wedstrijdanalyses",
+    "reel_export": "Highlight-exports"
+  },
+  "remaining": "{{remaining}} van {{limit}} over",
+  "resetsOn": "Je tegoed wordt op {{date}} opnieuw ingesteld.",
+  "periodNotStarted": "Je periode van {{days}} dagen begint bij je eerste analyse of export.",
+  "videoLimits": "Volledige wedstrijdvideo's tot {{minutes}} minuten · {{jobs}} analyse tegelijk",
+  "alwaysFreeTitle": "Altijd gratis",
+  "alwaysFreeBody": "Hiervoor is nooit een abonnement nodig, bij geen enkel abonnement:",
+  "alwaysFree": {
+    "safety_and_reporting": "Veiligheidsfuncties, blokkeren en melden",
+    "account_deletion": "Je account en je gegevens verwijderen",
+    "privacy_controls": "Privacy-instellingen en gegevensexport",
+    "guardian_controls": "Instellingen voor ouders en voogden",
+    "match_logging": "Wedstrijden en statistieken vastleggen",
+    "basic_development": "Doelen, training en basisvoortgang bijhouden"
+  },
+  "subscriptionTitle": "Abonnement",
+  "buy": "{{title}} · {{price}}",
+  "noOfferings": "Er zijn op dit moment geen abonnementsopties beschikbaar.",
+  "renewalDisclosure": "De betaling wordt via je Apple ID in rekening gebracht. Het abonnement wordt automatisch verlengd, tenzij het ten minste 24 uur voor het einde van de huidige periode wordt opgezegd. Je kunt het beheren of opzeggen in de instellingen van je App Store-account.",
+  "restore": "Aankopen herstellen",
+  "manage": "Abonnement beheren",
+  "subscriptionTerms": "Abonnementsvoorwaarden",
+  "minorNote": "Ben je jonger dan 18? Vraag dan eerst een ouder of voogd voordat je iets koopt.",
+  "purchasesUnavailable": "Abonnementen zijn alleen beschikbaar in de ScoutX-app voor iOS.",
+  "purchaseFailed": "De aankoop kon niet worden voltooid. Probeer het opnieuw.",
+  "purchasePendingTitle": "Bedankt!",
+  "purchasePendingBody": "Je abonnement wordt bijgewerkt zodra de App Store de aankoop bevestigt. Dit kan even duren.",
+  "restoreDoneTitle": "Aankopen hersteld",
+  "loadFailed": "Je abonnement kon niet worden geladen. Probeer het opnieuw.",
+  "limit": {
+    "title": "Je hebt al je {{feature}} voor deze periode gebruikt",
+    "body": "Je hebt {{used}} van {{limit}} gebruikt.",
+    "planTitle": "Deze video gaat over de limiet van je abonnement",
+    "planBody": "Probeer een kortere of kleinere video, of knip hem in voordat je uploadt.",
+    "stillFree": "Je kunt nog steeds:",
+    "freeActions": "De wedstrijd en je statistieken vastleggen, notities en doelen toevoegen en je clips in je bibliotheek bewaren.",
+    "seePlan": "Abonnement & gebruik bekijken"
+  }
+}

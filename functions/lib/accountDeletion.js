@@ -24,7 +24,11 @@ const UID_KEYED_COLLECTIONS = [
     'coachRosters',
     'userSafety',
     'guardianContacts',
+    'entitlements',
+    'usageLedger',
 ];
+/** Subcollections under UID-keyed documents (a parent delete leaves these behind). */
+const UID_SUBCOLLECTIONS = (uid) => [`usageLedger/${uid}/periods`];
 /** Collections queried by an owner/participant field. */
 const OWNED_QUERIES = [
     ['gpsSessions', 'playerId'],
@@ -68,6 +72,7 @@ const OWNED_QUERIES = [
     ['mediaUploads', 'ownerId'],
     ['mediaUploadSessions', 'ownerId'],
     ['uploadSessionLimits', 'ownerId'],
+    ['revenueCatEvents', 'uid'],
 ];
 const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`, `quarantine/${uid}/`];
 async function deleteQueryInBatches(query) {
@@ -141,6 +146,18 @@ async function deleteAllUserData(uid) {
             firebase_functions_1.logger.error('Account deletion: query delete failed', {
                 collection,
                 field,
+                message: error instanceof Error ? error.message : 'unknown',
+            });
+        }
+    }
+    for (const path of UID_SUBCOLLECTIONS(uid)) {
+        try {
+            await deleteQueryInBatches(db.collection(path));
+        }
+        catch (error) {
+            failures.push(path.split('/')[0] + '.sub');
+            firebase_functions_1.logger.error('Account deletion: subcollection failed', {
+                path: path.split('/')[0],
                 message: error instanceof Error ? error.message : 'unknown',
             });
         }

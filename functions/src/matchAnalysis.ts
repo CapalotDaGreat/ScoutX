@@ -10,10 +10,14 @@ import {
   type MatchJobDoc,
 } from './analysis/frameAnalysis';
 import { startMatchPipeline } from './analysis/pipeline';
-import { TERMINAL_PIPELINE_STATES } from './analysis/stateMachine';
+import { TERMINAL_PIPELINE_STATES, type PipelineState } from './analysis/stateMachine';
+import { assertQuotaAvailable, consumeQuota, releaseQuota } from './entitlements/quotaService';
 import { discardUploadsForJob } from './uploads/sessions';
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
+
+/** Cancelling before extraction or analysis started refunds the full-match allowance. */
+const PRE_ANALYSIS_STATES: readonly PipelineState[] = ['created', 'uploading', 'validating', 'queued'];
 
 function requireJobId(data: unknown): string {
   const jobId = (data as { jobId?: unknown } | null)?.jobId;
@@ -56,7 +60,11 @@ export const analyzeMatchFootage = onCall(
 
     const apiKey = openRouterApiKey.value();
     if (!apiKey) throw new HttpsError('failed-precondition', 'OpenRouter API key is not configured.');
-    return runFrameAnalysis({
+    // Full-match jobs were charged at upload; clip-only jobs count as one frame analysis, charged
+    // only once a report exists so failed runs never use up the allowance.
+    const metered = !job.videoStoragePath;
+    if (metered) await assertQuotaAvailable(db, uid, 'frame_analysis', jobId);
+    const result = await runFrameAnalysis({
       db,
       uid,
       jobId,
@@ -64,6 +72,8 @@ export const analyzeMatchFootage = onCall(
       idempotencyKey,
       apiKey,
     });
+    if (metered) await consumeQuota(db, uid, 'frame_analysis', jobId).catch(() => undefined);
+    return result;
   },
 );
 
@@ -75,13 +85,13 @@ export const cancelMatchAnalysis = onCall(createCallableOptions(), async (reques
   const db = getFirestore();
   const jobRef = db.collection(MATCH_COLLECTION).doc(jobId);
 
-  const status = await db.runTransaction(async (tx) => {
+  const outcome = await db.runTransaction(async (tx) => {
     const snap = await tx.get(jobRef);
     if (!snap.exists) throw new HttpsError('not-found', 'Match analysis job not found.');
     const job = snap.data() as MatchJobDoc;
     if (job.playerId !== uid) throw new HttpsError('permission-denied', 'You can only cancel your own analysis.');
     const state = pipelineStateOf(job);
-    if (TERMINAL_PIPELINE_STATES.includes(state)) return String(job.status);
+    if (TERMINAL_PIPELINE_STATES.includes(state)) return { status: String(job.status), refundable: false };
     tx.update(jobRef, {
       cancelRequested: true,
       status: 'cancelled',
@@ -89,8 +99,9 @@ export const cancelMatchAnalysis = onCall(createCallableOptions(), async (reques
       cancelledAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
-    return 'cancelled';
+    return { status: 'cancelled', refundable: PRE_ANALYSIS_STATES.includes(state) };
   });
-  if (status === 'cancelled') await discardUploadsForJob(db, uid, jobId);
-  return { jobId, status };
+  if (outcome.status === 'cancelled') await discardUploadsForJob(db, uid, jobId);
+  if (outcome.refundable) await releaseQuota(db, uid, 'full_match_analysis', jobId);
+  return { jobId, status: outcome.status };
 });

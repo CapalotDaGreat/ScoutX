@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.analyzeMatchFrames = exports.extractMatchSegment = exports.ffmpegFrameExtractor = exports.TASK_MAX_ATTEMPTS = exports.CONCURRENCY_RETRY_DELAY_SEC = exports.ACTIVE_JOBS_PER_USER = void 0;
+exports.analyzeMatchFrames = exports.extractMatchSegment = exports.ffmpegFrameExtractor = exports.TASK_MAX_ATTEMPTS = exports.CONCURRENCY_RETRY_DELAY_SEC = void 0;
 exports.setFrameExtractor = setFrameExtractor;
 exports.startMatchPipeline = startMatchPipeline;
 exports.processExtractTask = processExtractTask;
@@ -20,14 +20,14 @@ const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const mediaSource_1 = require("../uploads/mediaSource");
+const quotaService_1 = require("../entitlements/quotaService");
 const frameAnalysis_1 = require("./frameAnalysis");
 const segments_1 = require("./segments");
 const stages_1 = require("./stages");
 const stateMachine_1 = require("./stateMachine");
 const taskDispatcher_1 = require("./taskDispatcher");
 const openRouterApiKey = (0, params_1.defineSecret)('OPENROUTER_API_KEY');
-/** One full-match pipeline per user at a time; others wait in the queue. */
-exports.ACTIVE_JOBS_PER_USER = 1;
+/** Jobs beyond the plan's concurrent-job cap wait in the queue and are re-delivered later. */
 exports.CONCURRENCY_RETRY_DELAY_SEC = 120;
 exports.TASK_MAX_ATTEMPTS = 3;
 const EXTRACT_TIMEOUT_MS = 8 * 60 * 1000;
@@ -160,10 +160,11 @@ async function claimSegment(db, task) {
         const state = (0, frameAnalysis_1.pipelineStateOf)(job);
         let stages = (0, stages_1.parseStages)(job.pipelineStages);
         if (state === 'queued') {
+            const plan = await (0, quotaService_1.planFor)(db, job.playerId, tx);
             const active = await tx.get(db.collection(frameAnalysis_1.MATCH_COLLECTION)
                 .where('playerId', '==', job.playerId)
                 .where('pipelineState', 'in', ['extracting', 'analyzing']));
-            if (active.docs.filter((doc) => doc.id !== task.jobId).length >= exports.ACTIVE_JOBS_PER_USER)
+            if (active.docs.filter((doc) => doc.id !== task.jobId).length >= plan.maxConcurrentJobs)
                 return { kind: 'deferred' };
             stages = (0, stages_1.updateStage)(stages, 'frame-extraction', 'active', now);
         }

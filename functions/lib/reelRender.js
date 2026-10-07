@@ -14,6 +14,7 @@ const storage_1 = require("firebase-admin/storage");
 const firestore_2 = require("firebase-functions/v2/firestore");
 const https_1 = require("firebase-functions/v2/https");
 const callableOptions_1 = require("./callableOptions");
+const quotaService_1 = require("./entitlements/quotaService");
 const reelRenderPlan_1 = require("./reelRenderPlan");
 const MAX_EXPORTS_PER_HOUR = 6;
 const ACTIVE = new Set(['queued', 'rendering', 'ready']);
@@ -116,11 +117,14 @@ exports.exportReel = (0, https_1.onCall)((0, callableOptions_1.createCallableOpt
     const recent = existing.docs.filter((doc) => String(doc.get('createdAt') ?? '') > hourAgo).length;
     if (recent >= MAX_EXPORTS_PER_HOUR)
         throw new https_1.HttpsError('resource-exhausted', 'Too many exports. Try again later.');
+    const quotaRef = `${reelId}:v${version}`;
+    await (0, quotaService_1.consumeQuota)(db, uid, 'reel_export', quotaRef);
     const now = new Date().toISOString();
     const ref = db.collection('reelExports').doc();
     await ref.set({
         id: ref.id,
         ownerId: uid,
+        quotaRef,
         reelId,
         reelVersion: version,
         aspectRatio,
@@ -216,6 +220,9 @@ exports.onReelExportQueued = (0, firestore_2.onDocumentCreated)({ document: 'ree
         const code = error instanceof RenderError ? error.code : 'render_failed';
         const now = new Date().toISOString();
         await ref.update({ status: 'failed', errorCode: code, failedAt: now, updatedAt: now });
+        const quotaRef = String(event.data.get('quotaRef') ?? '');
+        if (quotaRef)
+            await (0, quotaService_1.releaseQuota)(db, ownerId, 'reel_export', quotaRef).catch(() => false);
     }
     finally {
         if (workDir)
