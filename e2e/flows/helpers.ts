@@ -52,6 +52,15 @@ export async function passAgeGateAsAdult(page: Page) {
   await expect(gate).toBeHidden({ timeout: 30_000 });
 }
 
+/** New accounts accept the required legal documents once, after the age gate. */
+export async function acceptLegalGate(page: Page) {
+  const gate = page.getByTestId('legal-gate');
+  await expect(gate).toBeVisible({ timeout: 30_000 });
+  await gate.getByTestId('legal-gate-agree').click();
+  await gate.getByRole('button', { name: 'Agree and continue' }).click();
+  await expect(gate).toBeHidden({ timeout: 30_000 });
+}
+
 export async function openRegister(page: Page) {
   await openGuestAccountActions(page);
   await page.getByRole('button', { name: 'Create your account' }).click();

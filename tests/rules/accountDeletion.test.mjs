@@ -116,6 +116,8 @@ before(async () => {
     }
     await db.collection('recruitmentWorkspaces').doc(uid).collection('entries').doc('p1').set({ playerId: 'p1' });
     await db.collection('playerWatchers').doc(uid).collection('scouts').doc('s1').set({ scoutId: 's1' });
+    await db.collection('consentRecords').doc(uid).set({ uid });
+    await db.collection('consentRecords').doc(uid).collection('items').doc('c1').set({ type: 'privacy_policy' });
   }
 
   // Cross-user references: another scout's workspace and watcher docs, and a third-party coach roster.
@@ -176,6 +178,9 @@ describe('deleteAllUserData', () => {
         `players/${KEPT}/${sub} kept`,
       );
     }
+    assert.equal((await db.collection('consentRecords').doc(DELETED).get()).exists, false, 'consent summary');
+    assert.equal((await db.collection('consentRecords').doc(DELETED).collection('items').get()).size, 0, 'consent items');
+    assert.equal((await db.collection('consentRecords').doc(KEPT).collection('items').get()).size, 1, 'kept consent items');
   });
 
   test('removes references held in other users\' documents', async () => {

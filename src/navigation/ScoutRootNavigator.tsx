@@ -16,6 +16,7 @@ import { ScoutTabNavigator } from '@/navigation/ScoutTabNavigator';
 import { ActivityInboxScreen } from '@/features/activity-feed';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
 import { SettingsScreen } from '@/features/settings';
+import { PrivacyCenterScreen } from '@/features/legal/screens/PrivacyCenterScreen';
 import { GlobalSearchScreen } from '@/features/global-search/components/GlobalSearchScreen';
 import { buildScoutSearchRecords } from '@/features/global-search/services/buildSearchRecords';
 import { useRecruitment } from '@/features/scout-recruitment';
@@ -114,8 +115,15 @@ function SettingsRoute({
     <SettingsScreen
       onBack={() => navigation.goBack()}
       onSignOut={() => void signOut()}
+      onOpenPrivacyCenter={() => navigation.navigate('PrivacyCenter')}
     />
   );
+}
+
+function PrivacyCenterRoute({
+  navigation,
+}: NativeStackScreenProps<ScoutStackParamList, 'PrivacyCenter'>) {
+  return <PrivacyCenterScreen onBack={() => navigation.goBack()} />;
 }
 
 export function ScoutRootNavigator() {
@@ -133,6 +141,7 @@ export function ScoutRootNavigator() {
             <Stack.Screen name="ActivityInbox" component={ActivityInboxRoute} />
             <Stack.Screen name="PublicPortfolio" component={PublicPortfolioRoute} />
             <Stack.Screen name="Settings" component={SettingsRoute} />
+            <Stack.Screen name="PrivacyCenter" component={PrivacyCenterRoute} />
             <Stack.Screen name="GlobalSearch" component={GlobalSearchRoute} />
           </Stack.Navigator>
         </ScoutFlowProvider>

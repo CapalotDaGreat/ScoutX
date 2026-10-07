@@ -18,7 +18,7 @@ import { LinkAppleAccountSection } from '@/features/settings/components/LinkAppl
 import { LinkGoogleAccountSection } from '@/features/settings/components/LinkGoogleAccountSection';
 import { isAppleSignInSupportedPlatform } from '@/features/auth/services/appleAuthService';
 import { isGoogleSignInSupportedPlatform } from '@/features/auth/services/googleAuthService';
-import { getPrivacyPolicyUrl } from '@/config/legal';
+import { LEGAL_CONFIG } from '@/config/legalConfig';
 import { PortfolioPrivacySettings } from '@/features/public-portfolio';
 import { type PrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -28,6 +28,7 @@ import { toUserMessage } from '@/utils/userFacingError';
 export type SettingsScreenProps = {
   onBack: () => void;
   onSignOut: () => void;
+  onOpenPrivacyCenter?: () => void;
   /** Player portfolio & discovery privacy. When provided, editable toggles are shown here. */
   privacySettings?: PrivacySettings | null;
   onPrivacyChange?: (next: PrivacySettings) => void | Promise<void>;
@@ -61,11 +62,12 @@ function getAppVersion(): string {
 export function SettingsScreen({
   onBack,
   onSignOut,
+  onOpenPrivacyCenter,
   privacySettings = null,
   onPrivacyChange,
   privacyDisabled = false,
 }: SettingsScreenProps) {
-  const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors']);
+  const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors', 'legal']);
   const { user, role, beginUpgrade } = useAuth();
   const {
     pushEnabled,
@@ -78,7 +80,6 @@ export function SettingsScreen({
   } = useNotificationPreferences(user?.uid);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
-  const privacyUrl = getPrivacyPolicyUrl();
   const appVersion = getAppVersion();
 
   const handleDeleteAccount = () => {
@@ -108,8 +109,9 @@ export function SettingsScreen({
     ]);
   };
 
+  const supportEmail = LEGAL_CONFIG.contacts.supportEmail;
   const handleSupport = () => {
-    void Linking.openURL('mailto:support@scoutx.app?subject=ScoutX%20Support');
+    if (supportEmail) void Linking.openURL(`mailto:${supportEmail}?subject=ScoutX%20Support`);
   };
 
   return (
@@ -241,12 +243,9 @@ export function SettingsScreen({
               {t('settings:privacyDataDescription')}
             </Text>
           )}
-          {privacyUrl ? (
-            <Button
-              variant="secondary"
-              onPress={() => void Linking.openURL(privacyUrl)}
-            >
-              {t('settings:viewPrivacyPolicy')}
+          {onOpenPrivacyCenter && !user?.isAnonymous ? (
+            <Button variant="secondary" onPress={onOpenPrivacyCenter} testID="settings-open-privacy-center">
+              {t('legal:centerTitle')}
             </Button>
           ) : null}
         </Card>
@@ -262,9 +261,11 @@ export function SettingsScreen({
           <Text variant="body-sm" color="secondary">
             {t('settings:aboutDescription')}
           </Text>
-          <Button variant="secondary" onPress={handleSupport}>
-            {t('settings:contactSupport')}
-          </Button>
+          {supportEmail ? (
+            <Button variant="secondary" onPress={handleSupport}>
+              {t('settings:contactSupport')}
+            </Button>
+          ) : null}
         </Card>
 
         <Card variant="elevated" padding="md" className="gap-2">

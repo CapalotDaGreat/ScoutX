@@ -473,6 +473,17 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Consent proof is written only by recordConsent so versions and timestamps stay trustworthy.
+    match /consentRecords/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+
+      match /items/{itemId} {
+        allow read: if isOwner(userId);
+        allow write: if false;
+      }
+    }
+
     // Guardian consent proof, guardian contact details and queued email (Trigger Email
     // extension) are server-only.
     match /youthConsents/{consentId} {

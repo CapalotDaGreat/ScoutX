@@ -1,0 +1,59 @@
+{
+  "translationStatus": "LEGAL_TRANSLATION_REVIEW_REQUIRED",
+  "centerTitle": "Centro de privacidade",
+  "centerSubtitle": "Os teus documentos, escolhas e controlos num só lugar.",
+  "documentsTitle": "Documentos legais",
+  "translationNotice": "Os documentos legais são apresentados em inglês, que é a versão vinculativa.",
+  "reviewBanner": "Rascunho: este documento ainda está em revisão jurídica.",
+  "version": "Versão {{version}}",
+  "effectiveDate": "Em vigor desde {{date}}",
+  "effectivePending": "Data de entrada em vigor pendente de revisão jurídica",
+  "summaryTitle": "Em resumo",
+  "readFull": "Ler o documento completo",
+  "consents": {
+    "title": "Os teus consentimentos",
+    "requiredTitle": "Necessários para usar o ScoutX",
+    "requiredBody": "Só podem ser retirados eliminando a tua conta.",
+    "accepted": "Versão {{version}} · {{date}}",
+    "notAccepted": "Não aceite",
+    "optionalTitle": "Opcional",
+    "optionalBody": "O ScoutX funciona sem eles. Podes alterá-los a qualquer momento.",
+    "failed": "Não foi possível guardar a tua escolha. Tenta novamente.",
+    "ai": {
+      "label": "Análise por IA dos meus vídeos",
+      "description": "Fotogramas dos vídeos que escolheres são analisados por fornecedores de IA que não os podem guardar nem usar para treino.",
+      "guardianLocked": "O teu encarregado de educação não autorizou a análise por IA."
+    },
+    "media": {
+      "label": "Confirmação para carregar vídeos",
+      "confirmed": "Confirmado a {{date}}",
+      "notYet": "Pedida antes do primeiro carregamento"
+    }
+  },
+  "gate": {
+    "title": "Antes de começar",
+    "body": "Lê os resumos curtos abaixo. Os documentos completos estão sempre disponíveis no Centro de privacidade.",
+    "reacceptTitle": "Os nossos termos mudaram",
+    "reacceptBody": "Fizemos alterações importantes. Revê-as e aceita-as para continuar a usar o ScoutX.",
+    "agree": "Li e aceito os Termos de Serviço, a Política de Privacidade e as Regras da Comunidade.",
+    "optionalLater": "As escolhas opcionais, como a análise por IA, são pedidas em separado e podem ser alteradas no Centro de privacidade.",
+    "continue": "Aceitar e continuar"
+  },
+  "visibility": {
+    "title": "Quem te pode ver"
+  },
+  "movement": {
+    "title": "Sessões de movimento",
+    "body": "Enquanto gravas uma sessão, a posição do telemóvel é usada para medir a distância e desenhar um mapa de calor do campo. É convertida no teu dispositivo e nunca é guardada nem enviada. Só a distância, as velocidades e o mapa de calor são guardados."
+  },
+  "blocked": {
+    "title": "Utilizadores bloqueados",
+    "empty": "Não bloqueaste ninguém.",
+    "unblock": "Desbloquear"
+  },
+  "report": {
+    "title": "Comunicar um problema",
+    "body": "Usa «Denunciar» em qualquer perfil, vídeo, Passaporte, pedido ou treino de captação. As denúncias sobre jogadores jovens são analisadas primeiro.",
+    "policy": "Como as denúncias são tratadas"
+  }
+}

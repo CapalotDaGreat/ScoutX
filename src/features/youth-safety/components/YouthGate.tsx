@@ -243,6 +243,12 @@ function Under13Notice({ onClose }: { onClose: () => void }) {
   );
 }
 
+/** True while YouthGate covers the app, so later gates can wait their turn. */
+export function useYouthGateActive(): boolean {
+  const { gated, record, policy } = useUserSafety();
+  return gated && (record === undefined || policy.needsAgeBand || policy.awaitingGuardian);
+}
+
 /**
  * Blocks the signed-in app until an age band is recorded and, for 13-17, until a guardian
  * approves. Under-13 accounts are deleted server-side and the user sees a notice.

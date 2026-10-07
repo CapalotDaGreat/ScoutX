@@ -1,6 +1,14 @@
 import path from 'node:path';
 import { expect, test } from '@playwright/test';
-import { accounts, openRegister, passAgeGateAsAdult, requireEmulators, signIn, trackPageErrors } from './helpers';
+import {
+  acceptLegalGate,
+  accounts,
+  openRegister,
+  passAgeGateAsAdult,
+  requireEmulators,
+  signIn,
+  trackPageErrors,
+} from './helpers';
 
 requireEmulators();
 test.setTimeout(180_000);
@@ -18,6 +26,7 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
     await page.getByRole('button', { name: 'Create account' }).click();
 
     await passAgeGateAsAdult(page);
+    await acceptLegalGate(page);
     await expect(page.getByRole('heading', { name: 'Choose your role' })).toBeVisible({ timeout: 30_000 });
     await page.getByRole('button', { name: /^Player / }).click();
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -87,5 +96,15 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
     await (await chooser).setFiles(path.join(__dirname, '..', 'fixtures', 'clip.mp4'));
 
     await expect(sheet.getByText('No highlight videos yet.', { exact: false })).toBeHidden({ timeout: 90_000 });
+  });
+
+  test('the seeded player opens the Privacy Center and reads a bundled document', async ({ page }) => {
+    await signIn(page, accounts.seededPlayer.email);
+    await page.goto('/player/settings');
+    await page.getByTestId('settings-open-privacy-center').click();
+    await expect(page.getByTestId('privacy-center-consents')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId('privacy-center-consents').getByText('Version 1.0.0', { exact: false }).first()).toBeVisible();
+    await page.getByTestId('privacy-center-documents').getByText('Youth Safety Policy').click();
+    await expect(page.getByTestId('legal-document-youth-safety-policy')).toBeVisible();
   });
 });

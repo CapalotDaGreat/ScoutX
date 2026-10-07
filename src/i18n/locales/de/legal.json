@@ -1,0 +1,59 @@
+{
+  "translationStatus": "LEGAL_TRANSLATION_REVIEW_REQUIRED",
+  "centerTitle": "Datenschutzzentrum",
+  "centerSubtitle": "Deine Dokumente, Einwilligungen und Einstellungen an einem Ort.",
+  "documentsTitle": "Rechtliche Dokumente",
+  "translationNotice": "Rechtliche Dokumente werden auf Englisch angezeigt; die englische Fassung ist massgebend.",
+  "reviewBanner": "Entwurf: Dieses Dokument wird noch rechtlich geprüft.",
+  "version": "Version {{version}}",
+  "effectiveDate": "Gültig ab {{date}}",
+  "effectivePending": "Gültigkeitsdatum nach rechtlicher Prüfung",
+  "summaryTitle": "Kurz gesagt",
+  "readFull": "Ganzes Dokument lesen",
+  "consents": {
+    "title": "Deine Einwilligungen",
+    "requiredTitle": "Für die Nutzung von ScoutX erforderlich",
+    "requiredBody": "Diese kannst du nur widerrufen, indem du dein Konto löschst.",
+    "accepted": "Version {{version}} · {{date}}",
+    "notAccepted": "Nicht akzeptiert",
+    "optionalTitle": "Freiwillig",
+    "optionalBody": "ScoutX funktioniert auch ohne diese. Du kannst sie jederzeit ändern.",
+    "failed": "Deine Auswahl konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "ai": {
+      "label": "KI-Analyse meiner Videos",
+      "description": "Bilder aus Videos, die du auswählst, werden von KI-Anbietern analysiert, die sie weder speichern noch zum Training nutzen dürfen.",
+      "guardianLocked": "Deine Eltern oder dein Vormund haben die KI-Analyse nicht erlaubt."
+    },
+    "media": {
+      "label": "Bestätigung für Video-Uploads",
+      "confirmed": "Bestätigt am {{date}}",
+      "notYet": "Wird vor deinem ersten Upload abgefragt"
+    }
+  },
+  "gate": {
+    "title": "Bevor du loslegst",
+    "body": "Bitte lies die kurzen Zusammenfassungen unten. Die vollständigen Dokumente findest du jederzeit im Datenschutzzentrum.",
+    "reacceptTitle": "Unsere Bedingungen haben sich geändert",
+    "reacceptBody": "Wir haben wichtige Änderungen vorgenommen. Bitte prüfe und akzeptiere sie, um ScoutX weiter zu nutzen.",
+    "agree": "Ich habe die Nutzungsbedingungen, die Datenschutzerklärung und die Community-Richtlinien gelesen und stimme ihnen zu.",
+    "optionalLater": "Freiwillige Einwilligungen, etwa für die KI-Analyse, werden separat abgefragt und können im Datenschutzzentrum geändert werden.",
+    "continue": "Zustimmen und weiter"
+  },
+  "visibility": {
+    "title": "Wer dich sehen kann"
+  },
+  "movement": {
+    "title": "Bewegungsaufzeichnungen",
+    "body": "Während du eine Session aufzeichnest, wird die Position deines Handys genutzt, um Distanz zu messen und eine Heatmap des Spielfelds zu erstellen. Sie wird auf deinem Gerät umgerechnet und nie gespeichert oder hochgeladen. Gespeichert werden nur Distanz, Geschwindigkeiten und Heatmap."
+  },
+  "blocked": {
+    "title": "Blockierte Nutzer",
+    "empty": "Du hast niemanden blockiert.",
+    "unblock": "Blockierung aufheben"
+  },
+  "report": {
+    "title": "Problem melden",
+    "body": "Nutze «Melden» bei Profilen, Videos, Pässen, Anfragen oder Probetrainings. Meldungen zu jungen Spielern werden zuerst geprüft.",
+    "policy": "So werden Meldungen bearbeitet"
+  }
+}

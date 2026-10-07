@@ -11,6 +11,8 @@ import { PublicPortfolioStackScreen } from '@/features/public-portfolio/componen
 import { CareerReplayScreen } from '@/features/career-replay/components/CareerReplayScreen';
 import { AnalysisReportScreen } from '@/features/match-analysis/components/AnalysisReportScreen';
 import { SettingsScreen } from '@/features/settings';
+import { PrivacyCenterScreen } from '@/features/legal/screens/PrivacyCenterScreen';
+import { PortfolioPrivacySettings } from '@/features/public-portfolio';
 import { PlayerWorkspaceProvider, usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { defaultPrivacySettings, type PrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
@@ -91,13 +93,10 @@ function RequestCenterRoute({
   );
 }
 
-function SettingsRoute({
-  navigation,
-}: NativeStackScreenProps<PlayerStackParamList, 'Settings'>) {
-  const { signOut } = useAuth();
-  const { profile, isSaving, saveProfile } = usePlayerWorkspace();
+function usePassportPrivacyChange() {
+  const { profile, saveProfile } = usePlayerWorkspace();
 
-  const handlePrivacyChange = async (privacy: PrivacySettings) => {
+  return async (privacy: PrivacySettings) => {
     if (!profile) {
       await saveProfile({ privacy });
       return;
@@ -116,14 +115,43 @@ function SettingsRoute({
       ...(nextJourney !== profile.footballJourney ? { footballJourney: nextJourney } : {}),
     });
   };
+}
+
+function SettingsRoute({
+  navigation,
+}: NativeStackScreenProps<PlayerStackParamList, 'Settings'>) {
+  const { signOut } = useAuth();
+  const { profile, isSaving } = usePlayerWorkspace();
+  const handlePrivacyChange = usePassportPrivacyChange();
 
   return (
     <SettingsScreen
       onBack={() => navigation.goBack()}
       onSignOut={() => void signOut()}
+      onOpenPrivacyCenter={() => navigation.navigate('PrivacyCenter')}
       privacySettings={profile?.privacy ?? defaultPrivacySettings()}
       onPrivacyChange={handlePrivacyChange}
       privacyDisabled={isSaving || !profile}
+    />
+  );
+}
+
+function PrivacyCenterRoute({
+  navigation,
+}: NativeStackScreenProps<PlayerStackParamList, 'PrivacyCenter'>) {
+  const { profile, isSaving } = usePlayerWorkspace();
+  const handlePrivacyChange = usePassportPrivacyChange();
+
+  return (
+    <PrivacyCenterScreen
+      onBack={() => navigation.goBack()}
+      visibilitySection={
+        <PortfolioPrivacySettings
+          settings={profile?.privacy ?? defaultPrivacySettings()}
+          onChange={(next) => void handlePrivacyChange(next)}
+          disabled={isSaving || !profile}
+        />
+      }
     />
   );
 }
@@ -284,6 +312,7 @@ function PlayerStackContent() {
         <Stack.Screen name="PublicPortfolio" component={PublicPortfolioRoute} />
         <Stack.Screen name="CareerReplay" component={CareerReplayRoute} />
         <Stack.Screen name="Settings" component={SettingsRoute} />
+        <Stack.Screen name="PrivacyCenter" component={PrivacyCenterRoute} />
         <Stack.Screen name="GlobalSearch" component={GlobalSearchRoute} />
         <Stack.Screen name="Trials" component={TrialsRoute} />
         <Stack.Screen name="RequestCenter" component={RequestCenterRoute} />

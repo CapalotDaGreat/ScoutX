@@ -4,6 +4,8 @@
     "strict": true,
     "module": "esnext",
     "types": ["node"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "paths": {
       "@/*": ["./src/*"]
     }

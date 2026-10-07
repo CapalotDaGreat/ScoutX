@@ -32,6 +32,7 @@ export type PlayerStackParamList = {
   PublicPortfolio: { playerId?: string; slug?: string; previewMode?: boolean };
   CareerReplay: undefined;
   Settings: undefined;
+  PrivacyCenter: undefined;
   /** Player trial invitations inbox (stack, not a tab). */
   Trials: { trialId?: string } | undefined;
   RequestCenter: { requestId?: string } | undefined;
@@ -58,6 +59,7 @@ export type ScoutStackParamList = {
   ActivityInbox: undefined;
   PublicPortfolio: { playerId?: string; slug?: string };
   Settings: undefined;
+  PrivacyCenter: undefined;
   GlobalSearch: undefined;
 };
 

@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { ExpoConfig } from 'expo/config';
 import appJson from './app.json';
+import { missingRequiredLegalContacts } from './src/config/legalConfig.ts';
 
 const baseConfig = appJson.expo as ExpoConfig;
 const projectRoot = __dirname;
@@ -17,6 +18,17 @@ if (
     'EXPO_PUBLIC_OPENROUTER_API_KEY must not be set for production builds; AI runs through Cloud Functions.',
   );
 }
+// Legal documents render LEGAL_CONTACT_REQUIRED for missing contacts; production must not ship that.
+if (process.env.EAS_BUILD_PROFILE === 'production' && process.env.ALLOW_LEGAL_PLACEHOLDERS !== '1') {
+  const missingContacts = missingRequiredLegalContacts();
+  if (missingContacts.length > 0) {
+    throw new Error(
+      `Production build blocked: LEGAL_CONFIG is missing ${missingContacts.join(', ')} in src/config/legalConfig.ts. ` +
+        'Set ALLOW_LEGAL_PLACEHOLDERS=1 only for internal test builds.',
+    );
+  }
+}
+
 const appLinkHost = process.env.EXPO_PUBLIC_APP_LINK_HOST?.trim() || 'scoutx.app';
 const googleServicesJson =
   process.env.GOOGLE_SERVICES_JSON?.trim() || './google-services.json';

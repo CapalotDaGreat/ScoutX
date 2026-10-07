@@ -1,0 +1,59 @@
+{
+  "translationStatus": "LEGAL_TRANSLATION_REVIEW_REQUIRED",
+  "centerTitle": "Privacycentrum",
+  "centerSubtitle": "Je documenten, keuzes en instellingen op één plek.",
+  "documentsTitle": "Juridische documenten",
+  "translationNotice": "Juridische documenten worden in het Engels getoond; de Engelse versie is bindend.",
+  "reviewBanner": "Concept: dit document wordt nog juridisch beoordeeld.",
+  "version": "Versie {{version}}",
+  "effectiveDate": "Geldig vanaf {{date}}",
+  "effectivePending": "Ingangsdatum volgt na juridische beoordeling",
+  "summaryTitle": "In het kort",
+  "readFull": "Lees het volledige document",
+  "consents": {
+    "title": "Je toestemmingen",
+    "requiredTitle": "Vereist om ScoutX te gebruiken",
+    "requiredBody": "Deze kun je alleen intrekken door je account te verwijderen.",
+    "accepted": "Versie {{version}} · {{date}}",
+    "notAccepted": "Niet geaccepteerd",
+    "optionalTitle": "Optioneel",
+    "optionalBody": "ScoutX werkt ook zonder. Je kunt ze altijd wijzigen.",
+    "failed": "Je keuze kon niet worden opgeslagen. Probeer het opnieuw.",
+    "ai": {
+      "label": "AI-analyse van mijn video's",
+      "description": "Beelden uit video's die je kiest worden geanalyseerd door AI-aanbieders die ze niet mogen bewaren of gebruiken voor training.",
+      "guardianLocked": "Je ouder of voogd heeft AI-analyse niet toegestaan."
+    },
+    "media": {
+      "label": "Bevestiging voor video-uploads",
+      "confirmed": "Bevestigd op {{date}}",
+      "notYet": "Wordt gevraagd vóór je eerste upload"
+    }
+  },
+  "gate": {
+    "title": "Voordat je begint",
+    "body": "Lees de korte samenvattingen hieronder. De volledige documenten staan altijd in het Privacycentrum.",
+    "reacceptTitle": "Onze voorwaarden zijn gewijzigd",
+    "reacceptBody": "We hebben belangrijke wijzigingen doorgevoerd. Bekijk en accepteer ze om ScoutX te blijven gebruiken.",
+    "agree": "Ik heb de Gebruiksvoorwaarden, het Privacybeleid en de Communityrichtlijnen gelezen en ga ermee akkoord.",
+    "optionalLater": "Optionele keuzes, zoals AI-analyse, worden apart gevraagd en kun je wijzigen in het Privacycentrum.",
+    "continue": "Akkoord en doorgaan"
+  },
+  "visibility": {
+    "title": "Wie je kan zien"
+  },
+  "movement": {
+    "title": "Bewegingssessies",
+    "body": "Terwijl je een sessie opneemt, wordt de positie van je telefoon gebruikt om afstand te meten en een heatmap van het veld te tekenen. Die wordt op je toestel omgerekend en nooit opgeslagen of geüpload. Alleen afstand, snelheden en heatmap worden bewaard."
+  },
+  "blocked": {
+    "title": "Geblokkeerde gebruikers",
+    "empty": "Je hebt niemand geblokkeerd.",
+    "unblock": "Deblokkeren"
+  },
+  "report": {
+    "title": "Een probleem melden",
+    "body": "Gebruik 'Melden' bij een profiel, video, Paspoort, verzoek of proeftraining. Meldingen over jonge spelers worden eerst behandeld.",
+    "policy": "Hoe meldingen worden behandeld"
+  }
+}

@@ -1,46 +1,31 @@
-import { Linking, View } from 'react-native';
+import { useState } from 'react';
+import { View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
-import { getPrivacyPolicyUrl, getTermsOfServiceUrl } from '@/config/legal';
+import { LegalDocumentModal } from '@/features/legal/components/LegalDocumentModal';
+import { type LegalDocumentId } from '@/features/legal/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type LegalFooterLinksProps = {
   className?: string;
 };
 
+/** Opens the bundled documents in-app, so they are readable before sign-up and offline. */
 export function LegalFooterLinks({ className }: LegalFooterLinksProps) {
   const { t } = useAppTranslation('common');
-  const privacyUrl = getPrivacyPolicyUrl();
-  const termsUrl = getTermsOfServiceUrl();
-
-  if (!privacyUrl && !termsUrl) {
-    return null;
-  }
+  const [open, setOpen] = useState<LegalDocumentId | null>(null);
 
   return (
     <View className={`flex-row flex-wrap items-center justify-center gap-x-2 gap-y-1 ${className ?? ''}`}>
-      {privacyUrl ? (
-        <Text
-          variant="caption"
-          color="secondary"
-          onPress={() => void Linking.openURL(privacyUrl)}
-        >
-          {t('privacyPolicy')}
-        </Text>
-      ) : null}
-      {privacyUrl && termsUrl ? (
-        <Text variant="caption" color="secondary">
-          ·
-        </Text>
-      ) : null}
-      {termsUrl ? (
-        <Text
-          variant="caption"
-          color="secondary"
-          onPress={() => void Linking.openURL(termsUrl)}
-        >
-          {t('termsOfService')}
-        </Text>
-      ) : null}
+      <Text variant="caption" color="secondary" accessibilityRole="link" onPress={() => setOpen('privacy-policy')}>
+        {t('privacyPolicy')}
+      </Text>
+      <Text variant="caption" color="secondary">
+        ·
+      </Text>
+      <Text variant="caption" color="secondary" accessibilityRole="link" onPress={() => setOpen('terms-of-service')}>
+        {t('termsOfService')}
+      </Text>
+      <LegalDocumentModal documentId={open} onClose={() => setOpen(null)} />
     </View>
   );
 }

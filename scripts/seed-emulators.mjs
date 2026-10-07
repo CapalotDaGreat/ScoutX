@@ -27,6 +27,7 @@ const require = createRequire(new URL('../functions/package.json', import.meta.u
 const { initializeApp, getApps } = require('firebase-admin/app');
 const { getAuth } = require('firebase-admin/auth');
 const { getFirestore } = require('firebase-admin/firestore');
+const { LEGAL_VERSIONS } = require('../functions/lib/legal/legalVersions.generated.js');
 
 if (!getApps().length) {
   initializeApp({ projectId: PROJECT_ID });
@@ -67,6 +68,16 @@ async function createAccount({ email, name, role }) {
     guardianStatus: 'not_required',
     scopes: [],
     consentExpiresAt: null,
+    updatedAt: now,
+  });
+  const accepted = (documentId) => ({ status: 'granted', documentId, version: LEGAL_VERSIONS[documentId], locale: 'en', at: now });
+  await db.collection('consentRecords').doc(user.uid).set({
+    uid: user.uid,
+    consents: {
+      terms_of_service: accepted('terms-of-service'),
+      privacy_policy: accepted('privacy-policy'),
+      community_guidelines: accepted('community-guidelines'),
+    },
     updatedAt: now,
   });
   return user.uid;

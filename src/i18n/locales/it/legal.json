@@ -1,0 +1,59 @@
+{
+  "translationStatus": "LEGAL_TRANSLATION_REVIEW_REQUIRED",
+  "centerTitle": "Centro privacy",
+  "centerSubtitle": "I tuoi documenti, le tue scelte e i tuoi controlli in un unico posto.",
+  "documentsTitle": "Documenti legali",
+  "translationNotice": "I documenti legali sono mostrati in inglese, che è la versione vincolante.",
+  "reviewBanner": "Bozza: questo documento è ancora in revisione legale.",
+  "version": "Versione {{version}}",
+  "effectiveDate": "In vigore dal {{date}}",
+  "effectivePending": "Data di entrata in vigore in attesa di revisione legale",
+  "summaryTitle": "In breve",
+  "readFull": "Leggi il documento completo",
+  "consents": {
+    "title": "I tuoi consensi",
+    "requiredTitle": "Necessari per usare ScoutX",
+    "requiredBody": "Si possono revocare solo eliminando l'account.",
+    "accepted": "Versione {{version}} · {{date}}",
+    "notAccepted": "Non accettato",
+    "optionalTitle": "Facoltativi",
+    "optionalBody": "ScoutX funziona anche senza. Puoi modificarli in qualsiasi momento.",
+    "failed": "Non è stato possibile salvare la tua scelta. Riprova.",
+    "ai": {
+      "label": "Analisi IA dei miei video",
+      "description": "I fotogrammi dei video che scegli vengono analizzati da fornitori di IA che non possono conservarli né usarli per l'addestramento.",
+      "guardianLocked": "Il tuo genitore o tutore non ha autorizzato l'analisi IA."
+    },
+    "media": {
+      "label": "Conferma per il caricamento video",
+      "confirmed": "Confermato il {{date}}",
+      "notYet": "Richiesta prima del primo caricamento"
+    }
+  },
+  "gate": {
+    "title": "Prima di iniziare",
+    "body": "Leggi i brevi riassunti qui sotto. I documenti completi sono sempre disponibili nel Centro privacy.",
+    "reacceptTitle": "I nostri termini sono cambiati",
+    "reacceptBody": "Abbiamo apportato modifiche importanti. Leggile e accettale per continuare a usare ScoutX.",
+    "agree": "Ho letto e accetto i Termini di servizio, l'Informativa sulla privacy e le Linee guida della community.",
+    "optionalLater": "Le scelte facoltative, come l'analisi IA, vengono chieste separatamente e si possono modificare nel Centro privacy.",
+    "continue": "Accetta e continua"
+  },
+  "visibility": {
+    "title": "Chi può vederti"
+  },
+  "movement": {
+    "title": "Sessioni di movimento",
+    "body": "Mentre registri una sessione, la posizione del telefono serve a misurare la distanza e a disegnare una mappa di calore del campo. Viene convertita sul dispositivo e non viene mai salvata né caricata. Vengono salvati solo distanza, velocità e mappa di calore."
+  },
+  "blocked": {
+    "title": "Utenti bloccati",
+    "empty": "Non hai bloccato nessuno.",
+    "unblock": "Sblocca"
+  },
+  "report": {
+    "title": "Segnala un problema",
+    "body": "Usa «Segnala» su profili, video, Passaporti, richieste o provini. Le segnalazioni sui giovani giocatori vengono esaminate per prime.",
+    "policy": "Come vengono gestite le segnalazioni"
+  }
+}

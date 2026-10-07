@@ -28,6 +28,7 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { AgentationDevProbe } from '@/dev/AgentationDevProbe';
 import { UserSafetyProvider } from '@/features/youth-safety/context/UserSafetyProvider';
 import { YouthGate } from '@/features/youth-safety/components/YouthGate';
+import { LegalGate } from '@/features/legal/components/LegalGate';
 import { queryClient } from '@/data/queryClient';
 
 enableScreens();
@@ -60,6 +61,7 @@ function AppContent() {
                 <View className="flex-1">
                   <RootNavigator />
                   <YouthGate />
+                  <LegalGate />
                 </View>
               </AiInsightsProvider>
             </ActivityProvider>

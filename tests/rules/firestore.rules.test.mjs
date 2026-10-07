@@ -385,6 +385,21 @@ describe('youth safety', () => {
   });
 });
 
+describe('consent records', () => {
+  test('owners read their consent proof; nobody writes it from the client', async () => {
+    await seed(`consentRecords/${PLAYER}`, { uid: PLAYER, consents: {} });
+    await seed(`consentRecords/${PLAYER}/items/i1`, { type: 'privacy_policy', version: '1.0.0' });
+    await allowed(getDocument(PLAYER, `consentRecords/${PLAYER}`), 'owner reads summary');
+    await allowed(getDocument(PLAYER, `consentRecords/${PLAYER}/items/i1`), 'owner reads item');
+    await denied(getDocument(OUTSIDER, `consentRecords/${PLAYER}`), 'outsider reads summary');
+    await denied(
+      setDocument(PLAYER, `consentRecords/${PLAYER}`, { uid: PLAYER, consents: { privacy_policy: { status: 'granted', version: '9.0.0' } } }),
+      'owner forges summary',
+    );
+    await denied(setDocument(PLAYER, `consentRecords/${PLAYER}/items/i2`, { type: 'privacy_policy' }), 'owner forges item');
+  });
+});
+
 describe('match analysis jobs', () => {
   const job = (overrides) => ({ playerId: PLAYER, status: 'uploading', frames: [], ...overrides });
 

@@ -21,6 +21,7 @@ export {
   onTrialInvitationCreatedGuardian,
 } from './safety/youthConsent';
 export { onUserSafetyWrittenReproject } from './safety/projectionSync';
+export { recordConsent } from './legal/consent';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
 export {

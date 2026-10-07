@@ -193,6 +193,16 @@ export async function deleteAllUserData(uid: string): Promise<{ failures: string
   }
 
   try {
+    await deleteQueryInBatches(db.collection('consentRecords').doc(uid).collection('items'));
+    await db.collection('consentRecords').doc(uid).delete();
+  } catch (error) {
+    failures.push('consentRecords');
+    logger.error('Account deletion: consent records failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    });
+  }
+
+  try {
     await deleteQueryInBatches(db.collection('playerWatchers').doc(uid).collection('scouts'));
   } catch (error) {
     failures.push('playerWatchers.scouts');

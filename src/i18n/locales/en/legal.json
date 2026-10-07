@@ -1,0 +1,59 @@
+{
+  "translationStatus": "canonical",
+  "centerTitle": "Privacy Center",
+  "centerSubtitle": "Your documents, choices and controls in one place.",
+  "documentsTitle": "Legal documents",
+  "translationNotice": "Legal documents are shown in English, which is the authoritative version.",
+  "reviewBanner": "Draft: this document is still under legal review.",
+  "version": "Version {{version}}",
+  "effectiveDate": "Effective {{date}}",
+  "effectivePending": "Effective date pending legal review",
+  "summaryTitle": "In short",
+  "readFull": "Read the full document",
+  "consents": {
+    "title": "Your consents",
+    "requiredTitle": "Required to use ScoutX",
+    "requiredBody": "These can only be withdrawn by deleting your account.",
+    "accepted": "Version {{version}} · {{date}}",
+    "notAccepted": "Not accepted",
+    "optionalTitle": "Optional",
+    "optionalBody": "ScoutX works without these. You can change them at any time.",
+    "failed": "Your choice could not be saved. Please try again.",
+    "ai": {
+      "label": "AI analysis of my videos",
+      "description": "Frames from videos you choose are analysed by AI providers that may not keep or train on them.",
+      "guardianLocked": "Your parent or guardian has not allowed AI analysis."
+    },
+    "media": {
+      "label": "Video upload confirmation",
+      "confirmed": "Confirmed {{date}}",
+      "notYet": "Asked before your first upload"
+    }
+  },
+  "gate": {
+    "title": "Before you start",
+    "body": "Please read the short summaries below. The full documents are always available in the Privacy Center.",
+    "reacceptTitle": "Our terms have changed",
+    "reacceptBody": "We made important changes. Please review and accept them to keep using ScoutX.",
+    "agree": "I have read and agree to the Terms of Service, the Privacy Policy and the Community Guidelines.",
+    "optionalLater": "Optional choices, such as AI analysis, are asked separately and can be changed in the Privacy Center.",
+    "continue": "Agree and continue"
+  },
+  "visibility": {
+    "title": "Who can see you"
+  },
+  "movement": {
+    "title": "Movement sessions",
+    "body": "While you record a session, your phone's position is used to measure distance and draw a pitch heatmap. It is converted on your device and never stored or uploaded. Only the distance, speeds and heatmap are saved."
+  },
+  "blocked": {
+    "title": "Blocked users",
+    "empty": "You have not blocked anyone.",
+    "unblock": "Unblock"
+  },
+  "report": {
+    "title": "Report a problem",
+    "body": "Use Report on any profile, video, Passport, request or trial. Reports about young players are reviewed first.",
+    "policy": "How reports are handled"
+  }
+}
