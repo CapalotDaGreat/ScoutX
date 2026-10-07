@@ -9,6 +9,7 @@ import {
   uploadBlobWithProgress,
   type StorageUploadProgressCallback,
 } from '@/firebase/storageUpload';
+import { UPLOAD_LIMITS } from '@/firebase/uploadPolicy';
 
 export type StorageUploadCallbacks = {
   onProgress?: StorageUploadProgressCallback;
@@ -34,6 +35,7 @@ export async function uploadVideoBlob(
     blob,
     'video/mp4',
     callbacks?.onProgress,
+    { maxBytes: UPLOAD_LIMITS.highlightVideo },
   );
 
   return {
@@ -63,6 +65,7 @@ export async function uploadThumbnailBlob(
     blob,
     'image/jpeg',
     callbacks?.onProgress,
+    { maxBytes: UPLOAD_LIMITS.highlightThumbnail },
   );
 
   return {

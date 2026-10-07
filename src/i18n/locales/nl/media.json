@@ -1,7 +1,7 @@
 {
   "library": {
     "title": "Mediabibliotheek",
-    "empty": "Nog geen media. Clips en wedstrijdfilm verschijnen hier zodra ze via pad zijn opgeslagen.",
+    "empty": "Je bibliotheek is nog leeg. Upload een clip uit Foto's en hij verschijnt hier, klaar voor reels en je Passport.",
     "loadFailed": "Bibliotheek kon niet worden geladen.",
     "addToPassport": "Toevoegen aan Football Passport",
     "makePrivate": "Privé maken"
@@ -16,7 +16,7 @@
   "reel": {
     "listTitle": "Reels",
     "new": "Nieuw reel-concept",
-    "empty": "Nog geen reel-manifesten.",
+    "empty": "Nog geen reels. Begin hierboven met een sjabloon en je beste clips worden voor je klaargezet.",
     "untitled": "Naamloos reel",
     "edit": "Bewerken",
     "clips": "clips",

@@ -103,7 +103,18 @@
       "notANumber": "{{field}} muss eine Zahl sein.",
       "notWhole": "{{field}} muss eine ganze Zahl sein.",
       "outOfRange": "{{field}} muss zwischen {{min}} und {{max}} liegen."
-    }
+    },
+    "repeatLast": "Wie letztes Spiel (gegen {{opponent}})",
+    "repeatHint": "Übernimmt nur Gegner, Wettbewerb und Position. Statistiken werden nie übernommen.",
+    "nextTitle": "Spiel gespeichert",
+    "nextBody": "Gut gemacht, das Spiel gegen {{opponent}} ist erfasst. Wie geht es weiter?",
+    "next": {
+      "analyze": "Spielvideo analysieren",
+      "uploadVideo": "Highlight hochladen",
+      "addGoal": "Entwicklungsziel hinzufügen",
+      "later": "Später ansehen"
+    },
+    "draftKept": "Deine Eingaben sind auf diesem Gerät gespeichert. Öffne «Spiel erfassen» erneut, sobald du wieder online bist."
   },
   "emptyDescriptionVideo": "Trage ein Spiel ein oder lade eine vollständige Veo-Aufnahme für KI-Statistiken und Coaching-Feedback hoch.",
   "uploadAnalyze": "Spielvideo hochladen / analysieren",

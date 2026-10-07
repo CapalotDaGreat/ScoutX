@@ -103,7 +103,18 @@
       "notANumber": "{{field}} moet een getal zijn.",
       "notWhole": "{{field}} moet een heel getal zijn.",
       "outOfRange": "{{field}} moet tussen {{min}} en {{max}} liggen."
-    }
+    },
+    "repeatLast": "Zelfde als vorige wedstrijd (tegen {{opponent}})",
+    "repeatHint": "Neemt alleen tegenstander, competitie en positie over. Statistieken worden nooit overgenomen.",
+    "nextTitle": "Wedstrijd opgeslagen",
+    "nextBody": "Goed bezig, de wedstrijd tegen {{opponent}} is vastgelegd. Wat nu?",
+    "next": {
+      "analyze": "Wedstrijdvideo analyseren",
+      "uploadVideo": "Highlight uploaden",
+      "addGoal": "Ontwikkelingsdoel toevoegen",
+      "later": "Later bekijken"
+    },
+    "draftKept": "Je invoer is op dit apparaat bewaard. Open de wedstrijdregistratie opnieuw zodra je weer online bent om af te ronden."
   },
   "emptyDescriptionVideo": "Log een wedstrijd of upload een volledige Veo-opname voor AI-stats en coachingfeedback.",
   "uploadAnalyze": "Wedstrijdvideo uploaden / analyseren",

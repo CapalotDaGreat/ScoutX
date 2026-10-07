@@ -1,7 +1,7 @@
 {
   "library": {
     "title": "Mediathek",
-    "empty": "Noch keine Medien. Hochgeladene Clips und Spielvideos erscheinen hier, sobald sie als Pfad gespeichert sind.",
+    "empty": "Deine Mediathek ist noch leer. Lade einen Clip aus Fotos hoch, dann erscheint er hier, bereit für Reels und deinen Passport.",
     "loadFailed": "Mediathek konnte nicht geladen werden.",
     "addToPassport": "Zum Football Passport hinzufügen",
     "makePrivate": "Privat machen"
@@ -16,7 +16,7 @@
   "reel": {
     "listTitle": "Reels",
     "new": "Neues Reel-Entwurf",
-    "empty": "Noch keine Reel-Manifeste.",
+    "empty": "Noch keine Reels. Starte oben mit einer Vorlage, dann werden deine besten Clips für dich angeordnet.",
     "untitled": "Unbenanntes Reel",
     "edit": "Bearbeiten",
     "clips": "Clips",

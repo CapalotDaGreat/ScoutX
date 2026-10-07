@@ -1,7 +1,7 @@
 {
   "library": {
     "title": "Libreria media",
-    "empty": "Nessun media ancora. Clip e film di partita compaiono qui quando sono salvati per percorso.",
+    "empty": "La tua libreria è ancora vuota. Carica una clip da Foto e comparirà qui, pronta per i reel e il tuo Passport.",
     "loadFailed": "Impossibile caricare la libreria.",
     "addToPassport": "Aggiungi al Football Passport",
     "makePrivate": "Rendi privato"
@@ -16,7 +16,7 @@
   "reel": {
     "listTitle": "Reel",
     "new": "Nuova bozza reel",
-    "empty": "Nessun manifesto reel ancora.",
+    "empty": "Ancora nessun reel. Parti da un modello qui sopra e le tue clip migliori verranno ordinate per te.",
     "untitled": "Reel senza titolo",
     "edit": "Modifica",
     "clips": "clip",

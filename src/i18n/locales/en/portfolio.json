@@ -506,5 +506,12 @@
         "five": "5★ – elite, unpredictable skill moves"
       }
     }
+  },
+  "onboarding": {
+    "overline": "Getting started",
+    "title": "Build your Football Passport in {{count}} steps",
+    "encourageStart": "Every scout profile starts with one logged match. Start there.",
+    "progress": "{{done}} of {{total}} done. Keep going.",
+    "hide": "Hide for now"
   }
 }

@@ -14,6 +14,7 @@ const CODE_MESSAGES: Record<string, string> = {
   'storage/quota-exceeded': 'Storage is full right now. Please try again later.',
   'storage/retry-limit-exceeded': 'The upload kept failing. Check your connection and try again.',
   'storage/canceled': 'The upload was cancelled.',
+  upload_too_large: 'This file is too large to upload. Trim or compress it and try again.',
   'not-found': "We couldn't find that item. It may have been removed.",
   'storage/object-not-found': "We couldn't find that file. It may have been removed.",
   'already-exists': 'This already exists.',

@@ -103,7 +103,18 @@
       "notANumber": "{{field}} must be a number.",
       "notWhole": "{{field}} must be a whole number.",
       "outOfRange": "{{field}} must be between {{min}} and {{max}}."
-    }
+    },
+    "repeatLast": "Same as last match (vs {{opponent}})",
+    "repeatHint": "Copies opponent, competition and position only. Statistics are never copied.",
+    "nextTitle": "Match saved",
+    "nextBody": "Nice work logging the match against {{opponent}}. What next?",
+    "next": {
+      "analyze": "Analyze the match video",
+      "uploadVideo": "Upload a highlight",
+      "addGoal": "Add a development goal",
+      "later": "Review later"
+    },
+    "draftKept": "Your entries are saved on this device. Open Log match again when you're back online to finish."
   },
   "emptyDescriptionVideo": "Log a match or upload a full Veo recording for AI stats and coaching feedback.",
   "uploadAnalyze": "Upload / analyze match video",

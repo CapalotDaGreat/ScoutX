@@ -506,5 +506,12 @@
         "five": "5★ – fintas de elite, imprevisíveis"
       }
     }
+  },
+  "onboarding": {
+    "overline": "Primeiros passos",
+    "title": "Cria o teu Football Passport em {{count}} passos",
+    "encourageStart": "Todos os perfis começam com um jogo registado. Começa por aí.",
+    "progress": "{{done}} de {{total}} concluídos. Continua.",
+    "hide": "Ocultar por agora"
   }
 }

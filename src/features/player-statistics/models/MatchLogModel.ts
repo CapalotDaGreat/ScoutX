@@ -142,6 +142,24 @@ export function buildQuickMatchDefaults(
   };
 }
 
+/**
+ * One-tap repeat copies the context of the latest logged match (opponent, competition,
+ * position) into the form. Statistics are never copied: they belong to one match only.
+ */
+export function repeatLastMatchContext(
+  previousMatches: PlayerMatchStatistics[],
+  form: MatchLogFormState,
+): MatchLogFormState | null {
+  const [latest] = sortByDateDesc(previousMatches);
+  if (!latest) return null;
+  return {
+    ...form,
+    opponent: latest.opponent.trim() || form.opponent,
+    competition: latest.competition && latest.competition !== 'Match' ? latest.competition : form.competition,
+    position: latest.position || form.position,
+  };
+}
+
 /** Distinct recent competitions, newest first, for one-tap selection. */
 export function recentCompetitions(previousMatches: PlayerMatchStatistics[], limit = 3): string[] {
   const result: string[] = [];

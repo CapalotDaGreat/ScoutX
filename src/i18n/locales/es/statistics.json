@@ -103,7 +103,18 @@
       "notANumber": "{{field}} debe ser un número.",
       "notWhole": "{{field}} debe ser un número entero.",
       "outOfRange": "{{field}} debe estar entre {{min}} y {{max}}."
-    }
+    },
+    "repeatLast": "Igual que el último partido (contra {{opponent}})",
+    "repeatHint": "Copia solo rival, competición y posición. Las estadísticas nunca se copian.",
+    "nextTitle": "Partido guardado",
+    "nextBody": "Buen trabajo, el partido contra {{opponent}} está registrado. ¿Y ahora?",
+    "next": {
+      "analyze": "Analizar el vídeo del partido",
+      "uploadVideo": "Subir un highlight",
+      "addGoal": "Añadir un objetivo de desarrollo",
+      "later": "Revisar más tarde"
+    },
+    "draftKept": "Tus datos están guardados en este dispositivo. Vuelve a abrir el registro del partido cuando tengas conexión para terminar."
   },
   "emptyDescriptionVideo": "Registra un partido o sube una grabación completa de Veo para estadísticas IA y feedback de coaching.",
   "uploadAnalyze": "Subir / analizar vídeo del partido",

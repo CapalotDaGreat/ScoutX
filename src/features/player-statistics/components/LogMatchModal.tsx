@@ -12,6 +12,7 @@ import {
   hasMeaningfulMatchInput,
   parseMatchResult,
   recentCompetitions,
+  repeatLastMatchContext,
   shiftIsoDate,
   todayIsoDate,
   validateMatchLogForm,
@@ -35,7 +36,11 @@ export type LogMatchModalProps = {
   profilePosition?: string;
   /** Drafts are stored per user; without a user nothing is persisted. */
   userId?: string | null;
+  /** When set, a saved match offers follow-ups instead of closing straight away. */
+  onNextStep?: (step: MatchNextStep, payload: MatchLogPayload) => void;
 };
+
+export type MatchNextStep = 'analyze' | 'uploadVideo' | 'addGoal';
 
 type Translate = ReturnType<typeof useAppTranslation>['t'];
 
@@ -118,6 +123,7 @@ export function LogMatchModal({
   previousMatches = [],
   profilePosition = '',
   userId = null,
+  onNextStep,
 }: LogMatchModalProps) {
   const { t, i18n } = useAppTranslation(['statistics', 'common']);
   const { showSnackbar } = useSnackbar();
@@ -132,6 +138,7 @@ export function LogMatchModal({
   const [restoredAt, setRestoredAt] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [savedPayload, setSavedPayload] = useState<MatchLogPayload | null>(null);
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const formRef = useRef(form);
   formRef.current = form;
@@ -164,6 +171,7 @@ export function LogMatchModal({
     setSavedAt(null);
     setRestoredAt(null);
     setShowMoreStats(false);
+    setSavedPayload(null);
     void (async () => {
       const draft = userId ? await matchLogDraftStore.load(userId).catch(() => null) : null;
       if (cancelled) {
@@ -236,6 +244,11 @@ export function LogMatchModal({
   };
 
   const handleClose = () => {
+    if (savedPayload) {
+      setSavedPayload(null);
+      onClose();
+      return;
+    }
     if (autosaveTimer.current) {
       clearTimeout(autosaveTimer.current);
       autosaveTimer.current = null;
@@ -287,16 +300,63 @@ export function LogMatchModal({
       setReady(false);
       workflowEvents.emit();
       showSnackbar({ message: t('statistics:quickMatch.saved', { opponent: validation.payload.opponent }) });
-      onClose();
+      if (onNextStep) {
+        setSavedPayload(validation.payload);
+      } else {
+        onClose();
+      }
     } catch (err) {
+      if (autosaveTimer.current) {
+        clearTimeout(autosaveTimer.current);
+        autosaveTimer.current = null;
+      }
+      await persistDraft(form);
       Alert.alert(
         t('statistics:quickMatch.saveFailedTitle'),
-        toUserMessage(err, t('statistics:quickMatch.saveFailed')),
+        `${toUserMessage(err, t('statistics:quickMatch.saveFailed'))}\n\n${t('statistics:quickMatch.draftKept')}`,
       );
     } finally {
       setSubmitting(false);
     }
   };
+
+  const chooseNext = (step: MatchNextStep) => {
+    if (!savedPayload) return;
+    const payload = savedPayload;
+    setSavedPayload(null);
+    onClose();
+    onNextStep?.(step, payload);
+  };
+
+  const lastMatch = previousMatches.length > 0 ? [...previousMatches].sort((a, b) => b.date.localeCompare(a.date))[0] : null;
+
+  if (savedPayload) {
+    return (
+      <Modal
+        visible={visible}
+        onClose={handleClose}
+        title={t('statistics:quickMatch.nextTitle')}
+        footer={
+          <Button variant="secondary" onPress={handleClose}>
+            {t('statistics:quickMatch.next.later')}
+          </Button>
+        }
+      >
+        <View className="gap-3 p-4" testID="match-next-steps">
+          <Text color="secondary">{t('statistics:quickMatch.nextBody', { opponent: savedPayload.opponent })}</Text>
+          <Button variant="accent" onPress={() => chooseNext('analyze')}>
+            {t('statistics:quickMatch.next.analyze')}
+          </Button>
+          <Button variant="secondary" onPress={() => chooseNext('uploadVideo')}>
+            {t('statistics:quickMatch.next.uploadVideo')}
+          </Button>
+          <Button variant="secondary" onPress={() => chooseNext('addGoal')}>
+            {t('statistics:quickMatch.next.addGoal')}
+          </Button>
+        </View>
+      </Modal>
+    );
+  }
 
   const footer = (
     <View className="gap-2">
@@ -351,6 +411,20 @@ export function LogMatchModal({
               {t('statistics:quickMatch.intro')}
             </Text>
           )}
+
+          {lastMatch ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              accessibilityHint={t('statistics:quickMatch.repeatHint')}
+              onPress={() => {
+                const next = repeatLastMatchContext(previousMatches, form);
+                if (next) setForm(next);
+              }}
+            >
+              {t('statistics:quickMatch.repeatLast', { opponent: lastMatch.opponent })}
+            </Button>
+          ) : null}
 
           <Input
             label={t('statistics:quickMatch.opponent')}

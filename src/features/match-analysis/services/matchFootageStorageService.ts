@@ -2,6 +2,7 @@ import { ref } from 'firebase/storage';
 import { getFirebaseStorage } from '@/config/firebase';
 import { MATCH_ANALYSIS_STORAGE_PATHS } from '@/features/match-analysis/constants';
 import { uriToBlob, uploadBlobWithProgress } from '@/firebase/storageUpload';
+import { UPLOAD_LIMITS } from '@/firebase/uploadPolicy';
 
 export async function uploadMatchVideo(
   userId: string,
@@ -22,6 +23,7 @@ export async function uploadMatchVideo(
     blob,
     'video/mp4',
     onProgress ? (progress) => onProgress(progress) : undefined,
+    { maxBytes: UPLOAD_LIMITS.matchFootage },
   );
 
   return { downloadUrl, storagePath, fileSizeBytes: blob.size };
@@ -41,7 +43,9 @@ export async function uploadMatchFrame(
   const blob = await uriToBlob(localUri);
   const storagePath = MATCH_ANALYSIS_STORAGE_PATHS.frame(userId, jobId, index);
   const storageRef = ref(storage, storagePath);
-  const downloadUrl = await uploadBlobWithProgress(storageRef, blob, 'image/jpeg');
+  const downloadUrl = await uploadBlobWithProgress(storageRef, blob, 'image/jpeg', undefined, {
+    maxBytes: UPLOAD_LIMITS.matchFrame,
+  });
 
   return { downloadUrl, storagePath };
 }

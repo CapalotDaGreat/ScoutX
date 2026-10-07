@@ -506,5 +506,12 @@
         "five": "5★ – filigranas de élite, imprevisibles"
       }
     }
+  },
+  "onboarding": {
+    "overline": "Primeros pasos",
+    "title": "Crea tu Football Passport en {{count}} pasos",
+    "encourageStart": "Todo perfil empieza con un partido registrado. Empieza por ahí.",
+    "progress": "{{done}} de {{total}} hechos. Sigue así.",
+    "hide": "Ocultar por ahora"
   }
 }

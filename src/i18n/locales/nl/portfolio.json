@@ -506,5 +506,12 @@
         "five": "5★ – topniveau skills, onvoorspelbaar"
       }
     }
+  },
+  "onboarding": {
+    "overline": "Aan de slag",
+    "title": "Bouw je Football Passport in {{count}} stappen",
+    "encourageStart": "Elk profiel begint met één vastgelegde wedstrijd. Begin daar.",
+    "progress": "{{done}} van {{total}} klaar. Ga zo door.",
+    "hide": "Voor nu verbergen"
   }
 }

@@ -1,7 +1,7 @@
 {
   "library": {
     "title": "Media library",
-    "empty": "No media items yet. Uploaded clips and match film appear here after they are stored by path.",
+    "empty": "Your library is empty for now. Upload a clip from Photos and it will show up here, ready for reels and your Passport.",
     "loadFailed": "Could not load your media library.",
     "addToPassport": "Add to Football Passport",
     "makePrivate": "Make private"
@@ -16,7 +16,7 @@
   "reel": {
     "listTitle": "Reels",
     "new": "New reel draft",
-    "empty": "No reel manifests yet.",
+    "empty": "No reels yet. Start from a template above and your best clips are lined up for you.",
     "untitled": "Untitled reel",
     "edit": "Edit",
     "clips": "clips",

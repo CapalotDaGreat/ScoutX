@@ -506,5 +506,12 @@
         "five": "5★ – gestes d'élite, imprévisibles"
       }
     }
+  },
+  "onboarding": {
+    "overline": "Premiers pas",
+    "title": "Construis ton Football Passport en {{count}} étapes",
+    "encourageStart": "Chaque profil commence par un match enregistré. Commence par là.",
+    "progress": "{{done}} sur {{total}} terminées. Continue.",
+    "hide": "Masquer pour l'instant"
   }
 }

@@ -103,7 +103,18 @@
       "notANumber": "{{field}} doit être un nombre.",
       "notWhole": "{{field}} doit être un nombre entier.",
       "outOfRange": "{{field}} doit être compris entre {{min}} et {{max}}."
-    }
+    },
+    "repeatLast": "Comme le dernier match (contre {{opponent}})",
+    "repeatHint": "Copie uniquement l'adversaire, la compétition et le poste. Les statistiques ne sont jamais copiées.",
+    "nextTitle": "Match enregistré",
+    "nextBody": "Bravo, le match contre {{opponent}} est enregistré. Et maintenant ?",
+    "next": {
+      "analyze": "Analyser la vidéo du match",
+      "uploadVideo": "Importer un highlight",
+      "addGoal": "Ajouter un objectif de progression",
+      "later": "Voir plus tard"
+    },
+    "draftKept": "Tes saisies sont enregistrées sur cet appareil. Rouvre l'enregistrement du match une fois reconnecté pour terminer."
   },
   "emptyDescriptionVideo": "Enregistre un match ou importe une vidéo Veo complète pour des stats IA et un retour coaching.",
   "uploadAnalyze": "Importer / analyser la vidéo du match",

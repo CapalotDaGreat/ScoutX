@@ -506,5 +506,12 @@
         "five": "5★ – Weltklasse-Tricks, unberechenbar"
       }
     }
+  },
+  "onboarding": {
+    "overline": "Erste Schritte",
+    "title": "Baue deinen Football Passport in {{count}} Schritten",
+    "encourageStart": "Jedes Scout-Profil beginnt mit einem erfassten Spiel. Fang dort an.",
+    "progress": "{{done}} von {{total}} erledigt. Weiter so.",
+    "hide": "Vorerst ausblenden"
   }
 }

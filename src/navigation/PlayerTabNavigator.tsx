@@ -378,6 +378,17 @@ function PlayerTabsContainer() {
         previousMatches={profile?.statisticsMatches ?? EMPTY_MATCHES}
         profilePosition={profile?.position ?? ''}
         userId={user?.id ?? null}
+        onNextStep={(step, payload) => {
+          if (step === 'analyze') {
+            setMatchAnalysisJobId(null);
+            setMatchAnalysisPrefill({ opponent: payload.opponent, competition: payload.competition, date: payload.date });
+            setIsMatchAnalysisVisible(true);
+          } else if (step === 'uploadVideo') {
+            setIsVideosModalVisible(true);
+          } else {
+            tabNavigationRef.current?.navigate('Performance', { segment: 'development' });
+          }
+        }}
       />
 
       <ActivityInboxModal

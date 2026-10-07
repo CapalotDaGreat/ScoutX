@@ -459,8 +459,9 @@ function UpcomingTrialCard({ trial, onAction }: { trial: TodayTrial; onAction: T
 }
 
 /**
- * Top of the player Home: the single most useful next step with its reason, up to two
- * alternatives, unfinished workflows, and compact snapshots. Nothing here is invented —
+ * Top of the player Home, in a fixed order: what changed, the next best action with its reason
+ * and alternatives, goal focus, next best evidence, unfinished workflows, trial and latest
+ * analysis. Recent matches and Passport readiness follow on the Home screen below. Nothing here is invented —
  * when there is nothing to do the section says so.
  */
 export function TodaySection({
@@ -487,6 +488,10 @@ export function TodaySection({
 
   return (
     <View className="gap-4">
+      {changes.length > 0 && onChangesSeen ? (
+        <SinceLastVisitCard changes={changes} onAction={onAction} onDismiss={onChangesSeen} />
+      ) : null}
+
       {plan.primary ? (
         <PrimaryActionCard action={plan.primary} onAction={onAction} />
       ) : (
@@ -502,10 +507,6 @@ export function TodaySection({
         </Text>
       ) : null}
 
-      {changes.length > 0 && onChangesSeen ? (
-        <SinceLastVisitCard changes={changes} onAction={onAction} onDismiss={onChangesSeen} />
-      ) : null}
-
       {plan.secondary.length > 0 ? (
         <View className="gap-2">
           <Text variant="label" weight="semibold" className="px-1">
@@ -517,27 +518,24 @@ export function TodaySection({
         </View>
       ) : null}
 
+      {goalFocus ? <GoalFocusCard focus={goalFocus} onAction={onAction} /> : null}
+
+      {evidence ? <NextEvidenceCard evidence={evidence} onAction={onAction} /> : null}
+
       {plan.continueItems.length > 0 ? (
         <ContinueList items={plan.continueItems} onAction={onAction} />
       ) : null}
 
       <View className="flex-row flex-wrap gap-3">
-        <View className="min-w-[46%] flex-1">
-          <LatestAnalysisCard job={latestAnalysis} unavailable={analysesUnavailable} onAction={onAction} />
-        </View>
         {upcomingTrial ? (
           <View className="min-w-[46%] flex-1">
             <UpcomingTrialCard trial={upcomingTrial} onAction={onAction} />
           </View>
         ) : null}
-        {goalFocus ? (
-          <View className="min-w-[46%] flex-1">
-            <GoalFocusCard focus={goalFocus} onAction={onAction} />
-          </View>
-        ) : null}
+        <View className="min-w-[46%] flex-1">
+          <LatestAnalysisCard job={latestAnalysis} unavailable={analysesUnavailable} onAction={onAction} />
+        </View>
       </View>
-
-      {evidence ? <NextEvidenceCard evidence={evidence} onAction={onAction} /> : null}
     </View>
   );
 }

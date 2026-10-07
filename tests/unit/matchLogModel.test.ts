@@ -8,6 +8,7 @@ import {
   parseMatchLogFormState,
   parseMatchResult,
   recentCompetitions,
+  repeatLastMatchContext,
   validateMatchLogForm,
 } from '../../src/features/player-statistics/models/MatchLogModel.ts';
 import type { PlayerMatchStatistics } from '../../src/features/player-statistics/types.ts';
@@ -43,6 +44,29 @@ const essentials = {
   competition: 'League',
   minutes: '90',
 };
+
+describe('one-tap repeat', () => {
+  test('copies opponent, competition and position but never statistics', () => {
+    const form = { ...defaultMatchLogFormState, date: '2026-10-06', minutes: '', goals: '0' };
+    const repeated = repeatLastMatchContext(
+      [
+        match({ id: 'old', date: '2026-08-01', opponent: 'Old FC' }),
+        match({ id: 'new', date: '2026-09-20', opponent: 'Rivals FC', competition: 'Cup', position: 'LW', goals: 3, matchRating: 9 }),
+      ],
+      form,
+    );
+    assert.ok(repeated);
+    assert.equal(repeated.opponent, 'Rivals FC');
+    assert.equal(repeated.competition, 'Cup');
+    assert.equal(repeated.position, 'LW');
+    assert.equal(repeated.date, '2026-10-06');
+    assert.equal(repeated.goals, '0');
+    assert.equal(repeated.minutes, '');
+    assert.equal(repeated.matchRating, '');
+    assert.equal(repeated.passAccuracy, '');
+    assert.equal(repeatLastMatchContext([], form), null);
+  });
+});
 
 describe('Quick Match defaults', () => {
   test('a first-time player gets no invented performance values', () => {

@@ -1,7 +1,7 @@
 {
   "library": {
     "title": "Médiathèque",
-    "empty": "Pas encore de médias. Les clips et films de match apparaissent ici une fois stockés par chemin.",
+    "empty": "Ta médiathèque est vide pour l'instant. Importe un clip depuis Photos et il apparaîtra ici, prêt pour tes reels et ton Passport.",
     "loadFailed": "Impossible de charger la médiathèque.",
     "addToPassport": "Ajouter au Football Passport",
     "makePrivate": "Rendre privé"
@@ -16,7 +16,7 @@
   "reel": {
     "listTitle": "Reels",
     "new": "Nouveau brouillon de reel",
-    "empty": "Pas encore de manifests de reel.",
+    "empty": "Pas encore de reel. Pars d'un modèle ci-dessus et tes meilleurs clips seront ordonnés pour toi.",
     "untitled": "Reel sans titre",
     "edit": "Modifier",
     "clips": "clips",

@@ -1,7 +1,7 @@
 {
   "library": {
     "title": "Biblioteca de media",
-    "empty": "Ainda sem media. Clipes e filme de jogo aparecem aqui quando guardados por caminho.",
+    "empty": "A tua biblioteca está vazia por agora. Carrega um clip a partir de Fotos e ele aparece aqui, pronto para reels e para o teu Passport.",
     "loadFailed": "Não foi possível carregar a biblioteca.",
     "addToPassport": "Adicionar ao Football Passport",
     "makePrivate": "Tornar privado"
@@ -16,7 +16,7 @@
   "reel": {
     "listTitle": "Reels",
     "new": "Novo rascunho de reel",
-    "empty": "Ainda sem manifests de reel.",
+    "empty": "Ainda não há reels. Começa com um modelo acima e os teus melhores clips ficam organizados para ti.",
     "untitled": "Reel sem título",
     "edit": "Editar",
     "clips": "clipes",

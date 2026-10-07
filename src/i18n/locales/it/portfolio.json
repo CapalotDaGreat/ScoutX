@@ -506,5 +506,12 @@
         "five": "5★ – skill d'élite, imprevedibili"
       }
     }
+  },
+  "onboarding": {
+    "overline": "Per iniziare",
+    "title": "Crea il tuo Football Passport in {{count}} passaggi",
+    "encourageStart": "Ogni profilo parte da una partita registrata. Inizia da lì.",
+    "progress": "{{done}} di {{total}} completati. Continua così.",
+    "hide": "Nascondi per ora"
   }
 }
