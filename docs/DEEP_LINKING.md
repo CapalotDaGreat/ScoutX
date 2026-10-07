@@ -1,4 +1,4 @@
-# ScoutX Deep Linking (Expo SDK 54)
+# ScoutX Deep Linking (Expo SDK 57)
 
 ScoutX uses **Expo Linking** (`expo-linking` ~8) with **React Navigation** linking for custom schemes, universal links (iOS), and App Links (Android).
 
@@ -37,6 +37,23 @@ Continue → PlayerApp / ScoutApp / Login
 ```
 
 Business logic lives in `authActionLinkService.ts` and `deepLinking.ts`. Screens stay thin.
+
+## App routes (`src/navigation/deepLinkResolver.ts`)
+
+| Path | Auth | Opens |
+|------|------|-------|
+| `player/<id>`, `evidence/<id>` | Sign-in | Player / evidence |
+| `match/<id>`, `request/<id>`, `reel/<id>` | Sign-in, player only | Match report, request, reel |
+| `trial/<id>` | Sign-in, per role | Trial |
+| `report/<ownerId>/<mediaId>` | Sign-in | Report form for that media (`ReportLinkScreen`) |
+| `guardian/<token>` or `guardian?t=<token>` | None | `GuardianLinkScreen`, which opens the guardian page in the browser |
+
+- Ids are validated before navigation; malformed links open `LinkUnavailable`.
+- `report` carries the owner id because the server checks the claimed owner of the media.
+- `/guardian` is deliberately **not** in the AASA file: a guardian opens the link on their own
+  device, usually without the app, and the decision is made only on the Hosting page
+  (`public/guardian/`). If the app does receive such a link it hands it to the browser and never
+  records a decision itself.
 
 ## Production setup
 
