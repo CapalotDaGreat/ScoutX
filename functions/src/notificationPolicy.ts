@@ -15,9 +15,12 @@ export const NOTIFICATION_CATEGORIES = [
 
 export type NotificationCategory = (typeof NOTIFICATION_CATEGORIES)[number];
 
+export type LockScreenPreview = 'details' | 'generic';
+
 export type StoredNotificationPreferences = {
   pushEnabled: boolean;
   categories: Record<NotificationCategory, boolean>;
+  lockScreenPreview: LockScreenPreview;
 };
 
 /** Activity types that can produce a push, and the user-facing category each belongs to. */
@@ -141,7 +144,7 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 export function defaultStoredPreferences(): StoredNotificationPreferences {
   const categories = {} as Record<NotificationCategory, boolean>;
   for (const key of NOTIFICATION_CATEGORIES) categories[key] = true;
-  return { pushEnabled: true, categories };
+  return { pushEnabled: true, categories, lockScreenPreview: 'details' };
 }
 
 export function parseStoredPreferences(value: unknown): StoredNotificationPreferences {
@@ -149,6 +152,7 @@ export function parseStoredPreferences(value: unknown): StoredNotificationPrefer
   const record = asRecord(value);
   if (!record) return result;
   result.pushEnabled = record.pushEnabled !== false;
+  result.lockScreenPreview = record.lockScreenPreview === 'generic' ? 'generic' : 'details';
   const categories = asRecord(record.categories) ?? {};
   for (const [key, enabled] of Object.entries(categories)) {
     if (typeof enabled !== 'boolean') continue;
@@ -180,4 +184,18 @@ export function decidePush(
   const lastHour = recentSendTimes.filter((time) => now - time < 60 * 60 * 1000);
   if (lastHour.length >= MAX_PUSHES_PER_HOUR) return { send: false, reason: 'hourly_cap' };
   return { send: true, category };
+}
+
+export const GENERIC_PUSH_COPY = {
+  title: 'ScoutX',
+  body: 'You have a new update. Open ScoutX to see it.',
+} as const;
+
+/** Minors always get generic lock-screen copy; adults choose. */
+export function lockScreenCopy(
+  copy: { title: string; body: string },
+  preview: LockScreenPreview,
+  isMinor: boolean,
+): { title: string; body: string } {
+  return isMinor || preview === 'generic' ? { ...GENERIC_PUSH_COPY } : copy;
 }

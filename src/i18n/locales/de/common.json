@@ -187,5 +187,17 @@
     "avatar": "Profilbild",
     "avatarOf": "Profilbild von {{name}}"
   },
-  "searchPlaceholder": "Suchen"
+  "searchPlaceholder": "Suchen",
+  "guardianLink": {
+    "title": "Zustimmung der Erziehungsperson",
+    "heading": "Dieser Link ist für eine Erziehungsperson",
+    "body": "Die Zustimmung erfolgt auf der ScoutX-Website, nicht im Konto der Spielerin oder des Spielers. Wenn du die Erziehungsperson bist, öffne die Seite und prüfe die Anfrage dort.",
+    "open": "Seite für Erziehungspersonen öffnen"
+  },
+  "reportLink": {
+    "title": "Video melden",
+    "body": "Sag uns, was mit diesem Video nicht stimmt. Wenn du darauf zu sehen bist, wähle „Ich bin in diesem Video zu sehen“. Unser Team prüft jede Meldung.",
+    "action": "Dieses Video melden",
+    "done": "Danke – deine Meldung wurde gesendet. Wir prüfen sie und können das Video währenddessen einschränken."
+  }
 }

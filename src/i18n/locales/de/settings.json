@@ -49,5 +49,10 @@
     "passport": "Passport-Aufrufe und Empfehlungen",
     "system": "Konto und Sicherheit"
   },
-  "guestAccountHint": "Du bist als Gast unterwegs. Erstelle ein Konto oder melde dich an, um deinen Football Passport aufzubauen und zu teilen."
+  "guestAccountHint": "Du bist als Gast unterwegs. Erstelle ein Konto oder melde dich an, um deinen Football Passport aufzubauen und zu teilen.",
+  "lockScreen": {
+    "title": "Details auf dem Sperrbildschirm zeigen",
+    "hint": "Wenn aus, steht in Mitteilungen nur „Du hast ein neues Update“, bis du ScoutX öffnest.",
+    "youth": "Bei Konten unter 18 zeigen Mitteilungen auf dem Sperrbildschirm nie Details."
+  }
 }

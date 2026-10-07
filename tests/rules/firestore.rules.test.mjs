@@ -955,5 +955,13 @@ describe('notification preferences', () => {
       setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, pushEnabled: 'yes' }),
       'non-boolean flag',
     );
+    await allowed(
+      setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, lockScreenPreview: 'generic' }),
+      'lock-screen preview choice',
+    );
+    await denied(
+      setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, lockScreenPreview: 'everything' }),
+      'unknown lock-screen preview value',
+    );
   });
 });

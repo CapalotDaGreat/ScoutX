@@ -391,5 +391,13 @@
       "warning": "Der Scout kann das Video in ScoutX ansehen, bis die Freigabe abläuft oder du es privat machst.",
       "confirm": "Mit diesem Scout teilen"
     }
+  },
+  "recovery": {
+    "title": "Unvollständige Uploads",
+    "body": "Diese Uploads wurden beim Schließen von ScoutX unterbrochen. Fortsetzen macht dort weiter, wo sie aufgehört haben.",
+    "meta": "{{mb}} MB · gestartet am {{date}}",
+    "offline": "Status offline unbekannt",
+    "resume": "Fortsetzen",
+    "discard": "Verwerfen"
   }
 }

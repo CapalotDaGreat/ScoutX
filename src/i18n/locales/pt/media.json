@@ -391,5 +391,13 @@
       "warning": "O olheiro pode ver o vídeo na ScoutX até a partilha expirar ou até o tornares privado.",
       "confirm": "Partilhar com este olheiro"
     }
+  },
+  "recovery": {
+    "title": "Carregamentos por terminar",
+    "body": "Estes carregamentos pararam quando a ScoutX fechou. Retomar continua de onde pararam.",
+    "meta": "{{mb}} MB · iniciado a {{date}}",
+    "offline": "estado desconhecido offline",
+    "resume": "Retomar",
+    "discard": "Descartar"
   }
 }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MAX_PUSHES_PER_HOUR = exports.ACTIVITY_CATEGORY = exports.NOTIFICATION_CATEGORIES = void 0;
+exports.GENERIC_PUSH_COPY = exports.MAX_PUSHES_PER_HOUR = exports.ACTIVITY_CATEGORY = exports.NOTIFICATION_CATEGORIES = void 0;
 exports.pushPathFor = pushPathFor;
 exports.solidCoverageCount = solidCoverageCount;
 exports.isMeaningfulPassportImprovement = isMeaningfulPassportImprovement;
@@ -9,6 +9,7 @@ exports.trialUpdateRecipient = trialUpdateRecipient;
 exports.defaultStoredPreferences = defaultStoredPreferences;
 exports.parseStoredPreferences = parseStoredPreferences;
 exports.decidePush = decidePush;
+exports.lockScreenCopy = lockScreenCopy;
 /**
  * Server-side push policy. Kept dependency-free so the unit suite can import it directly.
  * The category list must stay in sync with the client `NOTIFICATION_CATEGORIES`.
@@ -127,7 +128,7 @@ function defaultStoredPreferences() {
     const categories = {};
     for (const key of exports.NOTIFICATION_CATEGORIES)
         categories[key] = true;
-    return { pushEnabled: true, categories };
+    return { pushEnabled: true, categories, lockScreenPreview: 'details' };
 }
 function parseStoredPreferences(value) {
     const result = defaultStoredPreferences();
@@ -135,6 +136,7 @@ function parseStoredPreferences(value) {
     if (!record)
         return result;
     result.pushEnabled = record.pushEnabled !== false;
+    result.lockScreenPreview = record.lockScreenPreview === 'generic' ? 'generic' : 'details';
     const categories = asRecord(record.categories) ?? {};
     for (const [key, enabled] of Object.entries(categories)) {
         if (typeof enabled !== 'boolean')
@@ -159,5 +161,13 @@ function decidePush(activityType, preferences, recentSendTimes, now) {
     if (lastHour.length >= exports.MAX_PUSHES_PER_HOUR)
         return { send: false, reason: 'hourly_cap' };
     return { send: true, category };
+}
+exports.GENERIC_PUSH_COPY = {
+    title: 'ScoutX',
+    body: 'You have a new update. Open ScoutX to see it.',
+};
+/** Minors always get generic lock-screen copy; adults choose. */
+function lockScreenCopy(copy, preview, isMinor) {
+    return isMinor || preview === 'generic' ? { ...exports.GENERIC_PUSH_COPY } : copy;
 }
 //# sourceMappingURL=notificationPolicy.js.map

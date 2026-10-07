@@ -23,6 +23,10 @@ export type ReportContentButtonProps = (
 ) & {
   label?: string;
   testID?: string;
+  /** Opens the report form immediately, e.g. when arriving from a report link. */
+  initiallyOpen?: boolean;
+  /** Called after a report was submitted. */
+  onSubmitted?: () => void;
 };
 
 type PromptKey = 'report.promptUser' | 'report.promptPost' | 'report.promptVideo' | 'report.promptContact';
@@ -49,12 +53,14 @@ export function ReportContentButton({
   targetOwnerId,
   label,
   testID,
+  initiallyOpen = false,
+  onSubmitted,
 }: ReportContentButtonProps) {
   const { colors } = useTheme();
   const { t } = useAppTranslation('trust');
   const { user } = useAuth();
   const reasons = reportReasonsFor(targetType);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(initiallyOpen);
   const [reason, setReason] = useState<ReportReason>(reasons[0] ?? 'other');
   const [details, setDetails] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -77,12 +83,13 @@ export function ReportContentButton({
       setVisible(false);
       setDetails('');
       Alert.alert(t('report.submittedTitle'), t('report.submittedBody'));
+      onSubmitted?.();
     } catch {
       Alert.alert(t('report.failedTitle'), t('report.failedBody'));
     } finally {
       setSubmitting(false);
     }
-  }, [details, reason, t, targetId, targetOwnerId, targetType, user?.id]);
+  }, [details, onSubmitted, reason, t, targetId, targetOwnerId, targetType, user?.id]);
 
   return (
     <>

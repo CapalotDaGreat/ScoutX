@@ -49,5 +49,10 @@
     "passport": "Vues du Passport et recommandations",
     "system": "Compte et sécurité"
   },
-  "guestAccountHint": "Vous naviguez en tant qu'invité. Créez un compte ou connectez-vous pour construire et partager votre Football Passport."
+  "guestAccountHint": "Vous naviguez en tant qu'invité. Créez un compte ou connectez-vous pour construire et partager votre Football Passport.",
+  "lockScreen": {
+    "title": "Afficher les détails sur l'écran verrouillé",
+    "hint": "Désactivé, les notifications indiquent seulement « Tu as une nouvelle mise à jour » jusqu'à l'ouverture de ScoutX.",
+    "youth": "Pour les comptes de moins de 18 ans, les notifications n'affichent jamais de détails sur l'écran verrouillé."
+  }
 }

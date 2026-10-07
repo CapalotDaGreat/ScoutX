@@ -5,8 +5,10 @@ import {
   ACTIVITY_CATEGORY,
   MAX_PUSHES_PER_HOUR,
   decidePush,
+  lockScreenCopy,
   parseStoredPreferences,
   pushPathFor,
+  type LockScreenPreview,
   type PushDecision,
 } from './notificationPolicy';
 
@@ -92,11 +94,15 @@ const PUSH_THROTTLE_COLLECTION = 'pushThrottle';
  * Atomically applies the recipient's stored preferences, the per-type cooldown and the hourly
  * cap, then claims a push slot. Returns the reason when the push must not be sent.
  */
-async function claimPushSlot(recipientId: string, type: string): Promise<PushDecision> {
+async function claimPushSlot(
+  recipientId: string,
+  type: string,
+): Promise<{ decision: PushDecision; preview: LockScreenPreview }> {
   const db = getFirestore();
   const throttleRef = db.collection(PUSH_THROTTLE_COLLECTION).doc(recipientId);
   const preferencesRef = db.collection('notificationPreferences').doc(recipientId);
-  return db.runTransaction(async (transaction) => {
+  let preview: LockScreenPreview = 'details';
+  const decision = await db.runTransaction(async (transaction) => {
     const [throttle, preferencesSnapshot] = await Promise.all([
       transaction.get(throttleRef),
       transaction.get(preferencesRef),
@@ -106,7 +112,9 @@ async function claimPushSlot(recipientId: string, type: string): Promise<PushDec
     const recent = Array.isArray(data.recent)
       ? data.recent.filter((value: unknown): value is number => typeof value === 'number')
       : [];
-    const decision = decidePush(type, parseStoredPreferences(preferencesSnapshot.data()), recent, now);
+    const preferences = parseStoredPreferences(preferencesSnapshot.data());
+    preview = preferences.lockScreenPreview;
+    const decision = decidePush(type, preferences, recent, now);
     if (!decision.send) {
       return decision;
     }
@@ -119,6 +127,7 @@ async function claimPushSlot(recipientId: string, type: string): Promise<PushDec
     transaction.set(throttleRef, { [type]: now, recent: [...keep, now] }, { merge: true });
     return decision;
   });
+  return { decision, preview };
 }
 
 async function sendExpoPush(
@@ -174,7 +183,7 @@ export async function deliverActivityPush(
     return { sent: false, reason: 'unverified_trial' };
   }
 
-  const decision = await claimPushSlot(activity.recipientId, activity.type);
+  const { decision, preview } = await claimPushSlot(activity.recipientId, activity.type);
   if (!decision.send) {
     logger.info('Push suppressed', {
       recipientId: activity.recipientId,
@@ -193,7 +202,9 @@ export async function deliverActivityPush(
 
   const path = pushPathFor(activity.type, activity.reference, activity.recipientRole);
   try {
-    await sendExpoPush(tokenData.token, copy.title, copy.body, {
+    const safety = await getFirestore().collection('userSafety').doc(activity.recipientId).get();
+    const shown = lockScreenCopy(copy, preview, safety.get('ageBand') !== '18plus');
+    await sendExpoPush(tokenData.token, shown.title, shown.body, {
       path,
       activityId,
       type: activity.type,

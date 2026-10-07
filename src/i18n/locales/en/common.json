@@ -187,5 +187,17 @@
     "avatar": "Profile picture",
     "avatarOf": "{{name}} profile picture"
   },
-  "searchPlaceholder": "Search"
+  "searchPlaceholder": "Search",
+  "guardianLink": {
+    "title": "Guardian approval",
+    "heading": "This link is for a parent or guardian",
+    "body": "Guardian approval happens on the ScoutX website, not inside a player's account. If you are the parent or guardian, open the page and review the request there.",
+    "open": "Open guardian page"
+  },
+  "reportLink": {
+    "title": "Report a video",
+    "body": "Tell us what is wrong with this video. If it shows you, choose \"I appear in this video\". Our team reviews every report.",
+    "action": "Report this video",
+    "done": "Thanks — your report was sent. We'll review it and may restrict the video while we do."
+  }
 }

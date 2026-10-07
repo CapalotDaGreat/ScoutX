@@ -8,6 +8,7 @@ import { RequestAttentionCard } from '@/features/request-center/components/Reque
 import { EditJourneyModal } from '@/features/football-journey';
 import { HighlightVideosManagerModal } from '@/features/highlight-videos';
 import { HighlightReelStudioModal } from '@/features/highlight-reel-studio';
+import { InterruptedUploadsCard } from '@/features/media-upload/components/InterruptedUploadsCard';
 import { MatchAnalysisModal } from '@/features/match-analysis';
 import { PlayerProfileScreen, EditProfileModal } from '@/features/player-profile';
 import { usePlayerOnboarding } from '@/features/player-onboarding';
@@ -267,6 +268,7 @@ function PlayerTabsContainer() {
               embeddedInTabShell
               todaySlot={
                 <View className="gap-4">
+                <InterruptedUploadsCard uid={user?.id ?? null} onOpenPlan={() => stackNavigation.navigate('PlanUsage')} />
                 <RequestAttentionCard
                   onViewAll={() => stackNavigation.navigate('RequestCenter')}
                   onOpenTrial={(trialId) => stackNavigation.navigate('Trials', { trialId })}

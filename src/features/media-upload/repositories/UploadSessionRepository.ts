@@ -1,4 +1,4 @@
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { createCallableFunction } from '@/firebase/callableFunctions';
 import {
@@ -70,6 +70,18 @@ export const UploadSessionRepository = {
       );
       if (settled) unsubscribe();
     });
+  },
+
+  /** One read of the server record: 'missing' when it no longer exists, null when unreachable. */
+  async fetch(uploadId: string): Promise<ServerUploadRecord | 'missing' | null> {
+    const db = getFirestoreDb();
+    if (!db) return null;
+    try {
+      const snapshot = await getDoc(doc(db, 'mediaUploads', uploadId));
+      return snapshot.exists() ? (parseServerUploadRecord(uploadId, snapshot.data()) ?? 'missing') : 'missing';
+    } catch {
+      return null;
+    }
   },
 
   /** Server-owned processing state: quarantined, validated, ready or rejected. */

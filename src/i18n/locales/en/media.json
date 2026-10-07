@@ -391,5 +391,13 @@
       "warning": "The scout can watch the video in ScoutX until the share expires or you make it private.",
       "confirm": "Share with this scout"
     }
+  },
+  "recovery": {
+    "title": "Unfinished uploads",
+    "body": "These uploads stopped when ScoutX closed. Resume continues from where it stopped.",
+    "meta": "{{mb}} MB · started {{date}}",
+    "offline": "status unknown while offline",
+    "resume": "Resume",
+    "discard": "Discard"
   }
 }

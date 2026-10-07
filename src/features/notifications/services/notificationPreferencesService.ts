@@ -11,6 +11,7 @@ export {
   NOTIFICATION_CATEGORIES,
   defaultNotificationPreferences,
   parseNotificationPreferences,
+  type LockScreenPreview,
   type NotificationCategory,
   type NotificationPreferences,
 } from '@/features/notifications/services/notificationPreferencesParser';
@@ -53,6 +54,7 @@ export async function saveNotificationPreferences(
   await setDoc(doc(db, COLLECTION, userId), {
     pushEnabled: preferences.pushEnabled,
     categories: preferences.categories,
+    lockScreenPreview: preferences.lockScreenPreview,
     updatedAt: new Date().toISOString(),
   });
 }

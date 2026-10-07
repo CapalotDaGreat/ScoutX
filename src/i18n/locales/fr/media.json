@@ -391,5 +391,13 @@
       "warning": "Le scout peut regarder la vidéo dans ScoutX jusqu'à l'expiration du partage ou jusqu'à ce que tu la rendes privée.",
       "confirm": "Partager avec ce scout"
     }
+  },
+  "recovery": {
+    "title": "Imports inachevés",
+    "body": "Ces imports se sont arrêtés à la fermeture de ScoutX. Reprendre continue là où ils se sont arrêtés.",
+    "meta": "{{mb}} Mo · commencé le {{date}}",
+    "offline": "état inconnu hors ligne",
+    "resume": "Reprendre",
+    "discard": "Abandonner"
   }
 }

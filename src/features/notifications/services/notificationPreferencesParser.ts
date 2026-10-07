@@ -12,9 +12,13 @@ export const NOTIFICATION_CATEGORIES = [
 
 export type NotificationCategory = (typeof NOTIFICATION_CATEGORIES)[number];
 
+/** 'generic' hides who and what from the lock screen. Minors always get generic copy server-side. */
+export type LockScreenPreview = 'details' | 'generic';
+
 export type NotificationPreferences = {
   pushEnabled: boolean;
   categories: Record<NotificationCategory, boolean>;
+  lockScreenPreview: LockScreenPreview;
 };
 
 const LEGACY_CATEGORY_KEYS: Record<string, NotificationCategory> = {
@@ -26,7 +30,7 @@ const LEGACY_CATEGORY_KEYS: Record<string, NotificationCategory> = {
 export function defaultNotificationPreferences(): NotificationPreferences {
   const categories = {} as Record<NotificationCategory, boolean>;
   for (const key of NOTIFICATION_CATEGORIES) categories[key] = true;
-  return { pushEnabled: true, categories };
+  return { pushEnabled: true, categories, lockScreenPreview: 'details' };
 }
 
 function isCategory(key: string): key is NotificationCategory {
@@ -36,8 +40,9 @@ function isCategory(key: string): key is NotificationCategory {
 export function parseNotificationPreferences(value: unknown): NotificationPreferences {
   const result = defaultNotificationPreferences();
   if (!value || typeof value !== 'object') return result;
-  const record = value as { pushEnabled?: unknown; categories?: unknown };
+  const record = value as { pushEnabled?: unknown; categories?: unknown; lockScreenPreview?: unknown };
   result.pushEnabled = record.pushEnabled !== false;
+  result.lockScreenPreview = record.lockScreenPreview === 'generic' ? 'generic' : 'details';
   if (record.categories && typeof record.categories === 'object') {
     for (const [key, enabled] of Object.entries(record.categories as Record<string, unknown>)) {
       if (typeof enabled !== 'boolean') continue;

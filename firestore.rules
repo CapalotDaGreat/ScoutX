@@ -581,8 +581,9 @@ service cloud.firestore {
     match /notificationPreferences/{userId} {
       allow read, delete: if isOwner(userId);
       allow create, update: if isOwner(userId)
-        && request.resource.data.keys().hasOnly(['pushEnabled', 'categories', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(['pushEnabled', 'categories', 'lockScreenPreview', 'updatedAt'])
         && request.resource.data.pushEnabled is bool
+        && request.resource.data.get('lockScreenPreview', 'details') in ['details', 'generic']
         && request.resource.data.categories is map
         && request.resource.data.categories.keys().hasOnly([
           'match', 'analysis', 'development', 'scouting', 'trial', 'career', 'passport', 'system'

@@ -187,5 +187,17 @@
     "avatar": "Foto del profilo",
     "avatarOf": "Foto del profilo di {{name}}"
   },
-  "searchPlaceholder": "Cerca"
+  "searchPlaceholder": "Cerca",
+  "guardianLink": {
+    "title": "Approvazione del genitore o tutore",
+    "heading": "Questo link è per un genitore o tutore",
+    "body": "L'approvazione avviene sul sito di ScoutX, non nell'account del giocatore. Se sei il genitore o tutore, apri la pagina e valuta lì la richiesta.",
+    "open": "Apri la pagina per genitori"
+  },
+  "reportLink": {
+    "title": "Segnala un video",
+    "body": "Dicci cosa non va in questo video. Se ci sei tu, scegli «Compaio in questo video». Il nostro team esamina ogni segnalazione.",
+    "action": "Segnala questo video",
+    "done": "Grazie, la tua segnalazione è stata inviata. La esamineremo e nel frattempo potremmo limitare il video."
+  }
 }

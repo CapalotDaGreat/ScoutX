@@ -391,5 +391,13 @@
       "warning": "De scout kan de video in ScoutX bekijken tot het delen verloopt of jij hem privé maakt.",
       "confirm": "Delen met deze scout"
     }
+  },
+  "recovery": {
+    "title": "Onvoltooide uploads",
+    "body": "Deze uploads stopten toen ScoutX werd gesloten. Hervatten gaat verder waar ze stopten.",
+    "meta": "{{mb}} MB · gestart op {{date}}",
+    "offline": "status onbekend zonder verbinding",
+    "resume": "Hervatten",
+    "discard": "Verwijderen"
   }
 }

@@ -49,5 +49,10 @@
     "passport": "Visite al Passport e raccomandazioni",
     "system": "Account e sicurezza"
   },
-  "guestAccountHint": "Stai navigando come ospite. Crea un account o accedi per costruire e condividere il tuo Football Passport."
+  "guestAccountHint": "Stai navigando come ospite. Crea un account o accedi per costruire e condividere il tuo Football Passport.",
+  "lockScreen": {
+    "title": "Mostra dettagli nella schermata di blocco",
+    "hint": "Se disattivato, le notifiche dicono solo «Hai un nuovo aggiornamento» finché non apri ScoutX.",
+    "youth": "Per gli account sotto i 18 anni, le notifiche non mostrano mai dettagli nella schermata di blocco."
+  }
 }

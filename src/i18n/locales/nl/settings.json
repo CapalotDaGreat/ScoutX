@@ -49,5 +49,10 @@
     "passport": "Passport-weergaven en aanbevelingen",
     "system": "Account en beveiliging"
   },
-  "guestAccountHint": "Je bent als gast aan het rondkijken. Maak een account aan of log in om je Football Passport op te bouwen en te delen."
+  "guestAccountHint": "Je bent als gast aan het rondkijken. Maak een account aan of log in om je Football Passport op te bouwen en te delen.",
+  "lockScreen": {
+    "title": "Details tonen op vergrendelscherm",
+    "hint": "Als dit uit staat, zeggen meldingen alleen \"Je hebt een nieuwe update\" tot je ScoutX opent.",
+    "youth": "Bij accounts onder de 18 tonen meldingen nooit details op het vergrendelscherm."
+  }
 }

@@ -12,7 +12,8 @@
           "/trial/*",
           "/request/*",
           "/reel/*",
-          "/evidence/*"
+          "/evidence/*",
+          "/report/*"
         ],
         "components": [
           { "/": "/auth/*" },
@@ -21,7 +22,8 @@
           { "/": "/trial/*" },
           { "/": "/request/*" },
           { "/": "/reel/*" },
-          { "/": "/evidence/*" }
+          { "/": "/evidence/*" },
+          { "/": "/report/*" }
         ]
       }
     ]

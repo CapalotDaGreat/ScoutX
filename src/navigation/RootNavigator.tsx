@@ -16,6 +16,8 @@ import { type RootStackParamList } from '@/navigation/types';
 import { resolveDeepLinkPath, resolutionToPath, type DeepLinkRole } from '@/navigation/deepLinkResolver';
 import { consumeResumePath, setDeepLinkSession } from '@/navigation/deepLinkSession';
 import { LinkUnavailableScreen } from '@/navigation/screens/LinkUnavailableScreen';
+import { GuardianLinkScreen } from '@/navigation/screens/GuardianLinkScreen';
+import { ReportLinkScreen } from '@/navigation/screens/ReportLinkScreen';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -54,6 +56,9 @@ function isGuestPublicBrowseState(
   const nestedRoute = nested?.routes?.[nested.index ?? 0];
   return nestedRoute?.name === 'PublicPortfolio' || nestedRoute?.name === 'PlayerDetail';
 }
+
+/** Link screens that sit outside the role apps and must survive the first auth sync. */
+const STANDALONE_LINK_ROUTES: ReadonlySet<string> = new Set(['LinkUnavailable', 'GuardianLink', 'ReportLink']);
 
 export function RootNavigator() {
   const navigationTheme = useNavigationTheme();
@@ -120,7 +125,8 @@ export function RootNavigator() {
     lastSyncedRootRef.current = syncKey;
     // A cold start from a link already resolved into the right app: keep the linked screen.
     const rootState = navigation.getRootState();
-    if (isFirstSync && !needsRole && rootState?.routes[rootState.index ?? 0]?.name === rootRoute) {
+    const linkedRoute = rootState?.routes[rootState.index ?? 0]?.name;
+    if (isFirstSync && !needsRole && (linkedRoute === rootRoute || (linkedRoute && STANDALONE_LINK_ROUTES.has(linkedRoute)))) {
       return;
     }
     if (needsRole) {
@@ -163,6 +169,8 @@ export function RootNavigator() {
           <RootStack.Screen name="ScoutApp" component={ScoutRootNavigator} />
           <RootStack.Screen name="GuestApp" component={GuestRootNavigator} />
           <RootStack.Screen name="LinkUnavailable" component={LinkUnavailableScreen} />
+          <RootStack.Screen name="GuardianLink" component={GuardianLinkScreen} />
+          <RootStack.Screen name="ReportLink" component={ReportLinkScreen} />
         </RootStack.Navigator>
 
         {showBootstrapOverlay ? (

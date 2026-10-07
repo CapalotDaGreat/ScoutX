@@ -26,7 +26,13 @@ function captureAndNormalize(url: string): string {
     return normalizeIncomingDeepLink(url);
   }
 
-  const resolution = resolveDeepLinkPath(extractLinkPath(url, prefixes), getDeepLinkSession());
+  let linkPath = extractLinkPath(url, prefixes);
+  if (linkPath === 'guardian') {
+    // The hosted guardian page uses `guardian/?t=<token>`; normalise to `guardian/<token>`.
+    const token = /[?&]t=([^&#]+)/.exec(url)?.[1];
+    if (token) linkPath = `guardian/${decodeURIComponent(token)}`;
+  }
+  const resolution = resolveDeepLinkPath(linkPath, getDeepLinkSession());
   if (resolution.kind === 'passthrough') {
     return url;
   }
@@ -180,6 +186,8 @@ export const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       LinkUnavailable: 'link/unavailable',
+      GuardianLink: 'link/guardian/:token',
+      ReportLink: 'link/report/:ownerId/:mediaId',
     },
   },
 };

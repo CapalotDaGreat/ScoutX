@@ -391,5 +391,13 @@
       "warning": "Lo scout può guardare il video in ScoutX finché la condivisione scade o lo rendi privato.",
       "confirm": "Condividi con questo scout"
     }
+  },
+  "recovery": {
+    "title": "Caricamenti non completati",
+    "body": "Questi caricamenti si sono interrotti alla chiusura di ScoutX. Riprendi continua da dove si erano fermati.",
+    "meta": "{{mb}} MB · iniziato il {{date}}",
+    "offline": "stato sconosciuto offline",
+    "resume": "Riprendi",
+    "discard": "Elimina"
   }
 }

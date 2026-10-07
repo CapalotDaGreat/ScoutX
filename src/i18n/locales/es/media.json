@@ -391,5 +391,13 @@
       "warning": "El ojeador puede ver el vídeo en ScoutX hasta que caduque o lo hagas privado.",
       "confirm": "Compartir con este ojeador"
     }
+  },
+  "recovery": {
+    "title": "Subidas sin terminar",
+    "body": "Estas subidas se detuvieron al cerrarse ScoutX. Reanudar continúa desde donde se quedaron.",
+    "meta": "{{mb}} MB · iniciada el {{date}}",
+    "offline": "estado desconocido sin conexión",
+    "resume": "Reanudar",
+    "discard": "Descartar"
   }
 }

@@ -49,5 +49,10 @@
     "passport": "Visitas al Passport y recomendaciones",
     "system": "Cuenta y seguridad"
   },
-  "guestAccountHint": "Estás navegando como invitado. Crea una cuenta o inicia sesión para crear y compartir tu Football Passport."
+  "guestAccountHint": "Estás navegando como invitado. Crea una cuenta o inicia sesión para crear y compartir tu Football Passport.",
+  "lockScreen": {
+    "title": "Mostrar detalles en la pantalla de bloqueo",
+    "hint": "Si está desactivado, las notificaciones solo dicen «Tienes una novedad» hasta que abras ScoutX.",
+    "youth": "En cuentas de menores de 18 años, las notificaciones nunca muestran detalles en la pantalla de bloqueo."
+  }
 }

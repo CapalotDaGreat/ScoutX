@@ -187,5 +187,17 @@
     "avatar": "Foto de perfil",
     "avatarOf": "Foto de perfil de {{name}}"
   },
-  "searchPlaceholder": "Pesquisar"
+  "searchPlaceholder": "Pesquisar",
+  "guardianLink": {
+    "title": "Aprovação do encarregado de educação",
+    "heading": "Este link é para um encarregado de educação",
+    "body": "A aprovação é feita no site da ScoutX, não dentro da conta do jogador. Se és o encarregado de educação, abre a página e analisa o pedido lá.",
+    "open": "Abrir página do encarregado"
+  },
+  "reportLink": {
+    "title": "Denunciar um vídeo",
+    "body": "Diz-nos o que está errado com este vídeo. Se apareces nele, escolhe «Apareço neste vídeo». A nossa equipa analisa todas as denúncias.",
+    "action": "Denunciar este vídeo",
+    "done": "Obrigado, a tua denúncia foi enviada. Vamos analisá-la e podemos restringir o vídeo entretanto."
+  }
 }

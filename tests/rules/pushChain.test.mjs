@@ -72,6 +72,7 @@ describe('push chain (mock Expo endpoint)', () => {
     const player = uid('player');
     const jobId = uid('job');
     await db.collection('pushTokens').doc(player).set({ token: 'ExponentPushToken[test]', userId: player });
+    await db.collection('userSafety').doc(player).set({ ageBand: '18plus', guardianStatus: 'not_required', scopes: [] });
 
     const event = changeEvent({ jobId }, { status: 'processing', playerId: player }, { status: 'complete', playerId: player });
     await producers.onMatchAnalysisJobFinishedNotify.run(event);
@@ -205,5 +206,51 @@ describe('push chain (mock Expo endpoint)', () => {
     const doc = await activity(`evidence-fulfilled-${requestId}`);
     assert.equal(doc.recipientId, scout);
     assert.equal(doc.reference.entityId, 'p1');
+  });
+});
+
+describe('lock-screen privacy', () => {
+  function systemActivity(player) {
+    return {
+      recipientId: player,
+      recipientRole: 'player',
+      actorId: 'system',
+      type: 'analysis_completed',
+      title: 'Match analysis ready',
+      body: 'Your analysis vs FC Example is ready.',
+      reference: { entityType: 'match_analysis', entityId: 'j1' },
+    };
+  }
+
+  test('minors always get generic copy, even if they asked for details', async () => {
+    const player = uid('teen');
+    await db.collection('pushTokens').doc(player).set({ token: 'ExponentPushToken[teen]' });
+    await db.collection('userSafety').doc(player).set({ ageBand: '13-17', guardianStatus: 'approved', scopes: [] });
+    await db.collection('notificationPreferences').doc(player).set({ pushEnabled: true, categories: {}, lockScreenPreview: 'details' });
+    assert.equal((await deliverActivityPush('t1', systemActivity(player))).sent, true);
+    assert.equal(received[0].title, 'ScoutX');
+    assert.equal(received[0].body, 'You have a new update. Open ScoutX to see it.');
+    assert.equal(received[0].data.path, 'match/j1', 'routing still works after unlock');
+  });
+
+  test('accounts without an age band fail closed to generic copy', async () => {
+    const player = uid('unknown');
+    await db.collection('pushTokens').doc(player).set({ token: 'ExponentPushToken[unknown]' });
+    await deliverActivityPush('u1', systemActivity(player));
+    assert.equal(received[0].title, 'ScoutX');
+  });
+
+  test('adults can switch to generic copy and back', async () => {
+    const player = uid('adult');
+    await db.collection('pushTokens').doc(player).set({ token: 'ExponentPushToken[adult]' });
+    await db.collection('userSafety').doc(player).set({ ageBand: '18plus', guardianStatus: 'not_required', scopes: [] });
+    await db.collection('notificationPreferences').doc(player).set({ pushEnabled: true, categories: {}, lockScreenPreview: 'generic' });
+    await deliverActivityPush('a1', systemActivity(player));
+    assert.equal(received[0].title, 'ScoutX');
+
+    await db.collection('notificationPreferences').doc(player).set({ pushEnabled: true, categories: {}, lockScreenPreview: 'details' });
+    await db.collection('pushThrottle').doc(player).delete();
+    await deliverActivityPush('a2', systemActivity(player));
+    assert.equal(received[1].title, 'Match analysis ready');
   });
 });

@@ -49,5 +49,10 @@
     "passport": "Passport views and recommendations",
     "system": "Account and security"
   },
-  "guestAccountHint": "You're browsing as a guest. Create an account or sign in to build and share your Football Passport."
+  "guestAccountHint": "You're browsing as a guest. Create an account or sign in to build and share your Football Passport.",
+  "lockScreen": {
+    "title": "Show details on lock screen",
+    "hint": "When off, notifications only say \"You have a new update\" until you open ScoutX.",
+    "youth": "For accounts under 18, notifications never show details on the lock screen."
+  }
 }

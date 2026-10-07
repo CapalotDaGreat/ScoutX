@@ -79,6 +79,8 @@ export type RootStackParamList = {
   ScoutApp: NavigatorScreenParams<ScoutStackParamList>;
   GuestApp: NavigatorScreenParams<GuestStackParamList>;
   LinkUnavailable: { reason?: string } | undefined;
+  GuardianLink: { token: string };
+  ReportLink: { ownerId: string; mediaId: string };
 };
 
 declare global {

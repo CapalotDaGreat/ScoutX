@@ -7,6 +7,7 @@ import { Text } from '@/components/primitives/Text';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { Card } from '@/components/primitives/Card';
 import { SafetySettingsSection } from '@/features/youth-safety/components/SafetySettingsSection';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { deleteCurrentAccount } from '@/features/auth/services/accountService';
 import { DeletionProgressCard } from '@/features/data-rights/components/DeletionProgressCard';
 import { useAuth } from '@/features/auth/store/AuthProvider';
@@ -80,7 +81,10 @@ export function SettingsScreen({
     isUpdating,
     setPushPreference,
     setCategoryPreference,
+    lockScreenPreview,
+    setLockScreenPreference,
   } = useNotificationPreferences(user?.uid);
+  const { policy: safetyPolicy } = useUserSafety();
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const appVersion = getAppVersion();
@@ -227,6 +231,22 @@ export function SettingsScreen({
                 </View>
               ))
             : null}
+          {pushEnabled && hasToken ? (
+            <View className="flex-row items-center justify-between gap-3" testID="lock-screen-preview">
+              <View className="flex-1">
+                <Text weight="semibold">{t('settings:lockScreen.title')}</Text>
+                <Text variant="caption" color="secondary">
+                  {safetyPolicy.genericLockScreenOnly ? t('settings:lockScreen.youth') : t('settings:lockScreen.hint')}
+                </Text>
+              </View>
+              <Switch
+                value={!safetyPolicy.genericLockScreenOnly && lockScreenPreview === 'details'}
+                disabled={safetyPolicy.genericLockScreenOnly || isUpdating || !user?.uid}
+                onValueChange={(value) => void setLockScreenPreference(value ? 'details' : 'generic')}
+                accessibilityLabel={t('settings:lockScreen.title')}
+              />
+            </View>
+          ) : null}
         </Card>
 
         <Card variant="elevated" padding="md" className="gap-3">

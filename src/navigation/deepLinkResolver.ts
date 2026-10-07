@@ -30,6 +30,13 @@ export function isValidLinkId(value: string | undefined): value is string {
   return typeof value === 'string' && ID_PATTERN.test(value);
 }
 
+/** Signed guardian tokens: base64url body and HMAC joined by one dot. */
+const GUARDIAN_TOKEN_PATTERN = /^[A-Za-z0-9_-]{16,2048}\.[A-Za-z0-9_-]{16,128}$/;
+
+export function isGuardianToken(value: string | undefined): value is string {
+  return typeof value === 'string' && GUARDIAN_TOKEN_PATTERN.test(value);
+}
+
 /** Push payload paths are server-built; still refuse anything that is not a plain app path. */
 export function isValidPushPath(value: string): boolean {
   return /^[a-z][a-z0-9/_-]{0,200}$/i.test(value) && !value.includes('//');
@@ -123,6 +130,18 @@ export function resolveDeepLinkPath(rawPath: string, session: DeepLinkSession): 
           ? { kind: 'route', path: `match/${first}` }
           : { kind: 'unavailable', reason: 'wrong_role' },
       );
+    }
+    case 'guardian': {
+      // Guardian review never happens inside the child's session; the screen hands off to the
+      // hosted page, so no sign-in or role is required.
+      if (segments.length !== 2 || !isGuardianToken(first)) return { kind: 'unavailable', reason: 'invalid' };
+      return { kind: 'route', path: `link/guardian/${first}` };
+    }
+    case 'report': {
+      if (segments.length !== 3 || !isValidLinkId(first) || !isValidLinkId(second)) {
+        return { kind: 'unavailable', reason: 'invalid' };
+      }
+      return gated(path, session, () => ({ kind: 'route', path: `link/report/${first}/${second}` }));
     }
     default:
       return { kind: 'passthrough', path };

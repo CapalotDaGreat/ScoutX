@@ -187,5 +187,17 @@
     "avatar": "Profielfoto",
     "avatarOf": "Profielfoto van {{name}}"
   },
-  "searchPlaceholder": "Zoeken"
+  "searchPlaceholder": "Zoeken",
+  "guardianLink": {
+    "title": "Toestemming ouder of voogd",
+    "heading": "Deze link is voor een ouder of voogd",
+    "body": "Toestemming geven gebeurt op de ScoutX-website, niet in het account van de speler. Ben jij de ouder of voogd, open dan de pagina en bekijk het verzoek daar.",
+    "open": "Pagina voor ouders openen"
+  },
+  "reportLink": {
+    "title": "Video melden",
+    "body": "Vertel ons wat er mis is met deze video. Sta je er zelf in, kies dan \"Ik sta in deze video\". Ons team bekijkt elke melding.",
+    "action": "Deze video melden",
+    "done": "Bedankt, je melding is verstuurd. We bekijken hem en kunnen de video in de tussentijd beperken."
+  }
 }

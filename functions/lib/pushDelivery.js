@@ -66,7 +66,8 @@ async function claimPushSlot(recipientId, type) {
     const db = (0, firestore_1.getFirestore)();
     const throttleRef = db.collection(PUSH_THROTTLE_COLLECTION).doc(recipientId);
     const preferencesRef = db.collection('notificationPreferences').doc(recipientId);
-    return db.runTransaction(async (transaction) => {
+    let preview = 'details';
+    const decision = await db.runTransaction(async (transaction) => {
         const [throttle, preferencesSnapshot] = await Promise.all([
             transaction.get(throttleRef),
             transaction.get(preferencesRef),
@@ -76,7 +77,9 @@ async function claimPushSlot(recipientId, type) {
         const recent = Array.isArray(data.recent)
             ? data.recent.filter((value) => typeof value === 'number')
             : [];
-        const decision = (0, notificationPolicy_1.decidePush)(type, (0, notificationPolicy_1.parseStoredPreferences)(preferencesSnapshot.data()), recent, now);
+        const preferences = (0, notificationPolicy_1.parseStoredPreferences)(preferencesSnapshot.data());
+        preview = preferences.lockScreenPreview;
+        const decision = (0, notificationPolicy_1.decidePush)(type, preferences, recent, now);
         if (!decision.send) {
             return decision;
         }
@@ -89,6 +92,7 @@ async function claimPushSlot(recipientId, type) {
         transaction.set(throttleRef, { [type]: now, recent: [...keep, now] }, { merge: true });
         return decision;
     });
+    return { decision, preview };
 }
 async function sendExpoPush(token, title, body, data) {
     const response = await fetch(process.env.EXPO_PUSH_URL || DEFAULT_EXPO_PUSH_URL, {
@@ -132,7 +136,7 @@ async function deliverActivityPush(activityId, activity) {
         });
         return { sent: false, reason: 'unverified_trial' };
     }
-    const decision = await claimPushSlot(activity.recipientId, activity.type);
+    const { decision, preview } = await claimPushSlot(activity.recipientId, activity.type);
     if (!decision.send) {
         firebase_functions_1.logger.info('Push suppressed', {
             recipientId: activity.recipientId,
@@ -149,7 +153,9 @@ async function deliverActivityPush(activityId, activity) {
     }
     const path = (0, notificationPolicy_1.pushPathFor)(activity.type, activity.reference, activity.recipientRole);
     try {
-        await sendExpoPush(tokenData.token, copy.title, copy.body, {
+        const safety = await (0, firestore_1.getFirestore)().collection('userSafety').doc(activity.recipientId).get();
+        const shown = (0, notificationPolicy_1.lockScreenCopy)(copy, preview, safety.get('ageBand') !== '18plus');
+        await sendExpoPush(tokenData.token, shown.title, shown.body, {
             path,
             activityId,
             type: activity.type,
