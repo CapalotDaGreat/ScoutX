@@ -67,7 +67,28 @@ service cloud.firestore {
     }
 
     function validReportReason(reason) {
-      return reason in ['spam', 'harassment', 'inappropriate', 'impersonation', 'other'];
+      return reason in [
+        'spam', 'harassment', 'inappropriate', 'impersonation', 'inappropriate_contact', 'copyright',
+        'privacy', 'appears_in_video', 'minor_in_video', 'exploitation', 'safety_concern', 'other'
+      ];
+    }
+
+    // Owners choose private, a specific-scout grant or the Passport. Anything beyond private
+    // needs confirmed rights, no moderation hold and, for minors, the public_media scope.
+    function mediaVisibilityAllowed(userId, data) {
+      return data.visibility in ['private', 'grant', 'passport']
+        && (data.visibility == 'private' || (
+          data.get('rightsState', 'unconfirmed') == 'user_confirmed'
+          && data.get('moderationState', 'none') == 'none'
+          && (data.visibility == 'grant' || !isMinor(userId) || hasGuardianScope(userId, 'public_media'))
+        ));
+    }
+
+    function validMediaBase(userId, mediaId) {
+      return request.resource.data.ownerId == userId
+        && request.resource.data.id == mediaId
+        && request.resource.data.type in ['matchFootage', 'clip', 'highlight', 'reel']
+        && request.resource.data.storagePath is string;
     }
 
     function validVerificationLevel(level) {
@@ -202,14 +223,28 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    // rightsState beyond unconfirmed/user_confirmed and every moderationState are server-owned.
     match /players/{userId}/media/{mediaId} {
       allow read: if isOwner(userId);
-      allow create, update: if isOwner(userId)
-        && request.resource.data.ownerId == userId
-        && request.resource.data.id == mediaId
-        && request.resource.data.type in ['matchFootage', 'clip', 'highlight', 'reel']
-        && request.resource.data.storagePath is string
-        && request.resource.data.visibility in ['private', 'passport', 'grant'];
+      allow create: if isOwner(userId)
+        && validMediaBase(userId, mediaId)
+        && !request.resource.data.keys().hasAny(['visibilityBeforeHold', 'rightsBeforeHold'])
+        && request.resource.data.get('moderationState', 'none') == 'none'
+        && request.resource.data.get('rightsState', 'unconfirmed') in ['unconfirmed', 'user_confirmed']
+        && mediaVisibilityAllowed(userId, request.resource.data);
+      allow update: if isOwner(userId)
+        && validMediaBase(userId, mediaId)
+        && request.resource.data.get('moderationState', 'none') == resource.data.get('moderationState', 'none')
+        && request.resource.data.get('visibilityBeforeHold', null) == resource.data.get('visibilityBeforeHold', null)
+        && request.resource.data.get('rightsBeforeHold', null) == resource.data.get('rightsBeforeHold', null)
+        && (
+          request.resource.data.get('rightsState', 'unconfirmed') == resource.data.get('rightsState', 'unconfirmed')
+          || (
+            resource.data.get('rightsState', 'unconfirmed') in ['unconfirmed', 'user_confirmed']
+            && request.resource.data.get('rightsState', 'unconfirmed') in ['unconfirmed', 'user_confirmed']
+          )
+        )
+        && mediaVisibilityAllowed(userId, request.resource.data);
       allow delete: if isOwner(userId);
     }
 
@@ -326,14 +361,17 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly([
           'reporterId', 'targetType', 'targetId', 'targetOwnerId', 'reason', 'details', 'createdAt'
         ])
-        && request.resource.data.targetType in ['post', 'user']
+        && request.resource.data.targetType in [
+          'user', 'post', 'media', 'reel', 'passport', 'scout', 'evidenceRequest', 'trial', 'scoutingReport'
+        ]
         && request.resource.data.targetId is string
         && request.resource.data.targetId.size() > 0
         // targetOwnerId lets account deletion find reports about a user's posts.
         && request.resource.data.targetOwnerId is string
         && request.resource.data.targetOwnerId.size() > 0
-        && (request.resource.data.targetType != 'user'
+        && (!(request.resource.data.targetType in ['user', 'passport', 'scout'])
           || request.resource.data.targetOwnerId == request.resource.data.targetId)
+        && request.resource.data.targetOwnerId != request.auth.uid
         && (!('details' in request.resource.data)
           || (request.resource.data.details is string && request.resource.data.details.size() <= 1000))
         && validReportReason(request.resource.data.reason)
@@ -469,6 +507,37 @@ service cloud.firestore {
 
     // Age band, guardian status and scopes. Readable by the user; written only by callables.
     match /userSafety/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Moderation workflow and staff audit trail are server-only; staff use callables.
+    match /moderationCases/{caseId} {
+      allow read, write: if false;
+    }
+    match /moderationActions/{actionId} {
+      allow read, write: if false;
+    }
+    match /moderationHolds/{holdId} {
+      allow read, write: if false;
+    }
+    match /appeals/{caseId} {
+      allow read, write: if false;
+    }
+    match /accountRestrictions/{userId} {
+      allow read, write: if false;
+    }
+    match /adminAuditLog/{entryId} {
+      allow read, write: if false;
+    }
+    match /publicReportLimits/{limitId} {
+      allow read, write: if false;
+    }
+    match /publicReporterContacts/{reportId} {
+      allow read, write: if false;
+    }
+    // The affected user sees decisions about their content and can appeal through a callable.
+    match /moderationNotices/{userId}/items/{caseId} {
       allow read: if isOwner(userId);
       allow write: if false;
     }

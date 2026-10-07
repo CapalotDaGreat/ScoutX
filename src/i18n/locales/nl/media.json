@@ -4,7 +4,8 @@
     "empty": "Je bibliotheek is nog leeg. Upload een clip uit Foto's en hij verschijnt hier, klaar voor reels en je Passport.",
     "loadFailed": "Bibliotheek kon niet worden geladen.",
     "addToPassport": "Toevoegen aan Football Passport",
-    "makePrivate": "Privé maken"
+    "makePrivate": "Privé maken",
+    "visibilityFailed": "De zichtbaarheid van deze video kon niet worden gewijzigd."
   },
   "share": {
     "scoutId": "Scout-gebruikers-ID",
@@ -281,5 +282,55 @@
   "a11y": {
     "openVideo": "Video openen",
     "openPhoto": "Foto openen"
+  },
+  "moderation": {
+    "restricted": "Beperkt",
+    "removed": "Verwijderd",
+    "explainer": "Deze video is gemeld en blijft privé tijdens de beoordeling of na een beslissing. Zie Instellingen → Privacycentrum voor details en bezwaar."
+  },
+  "rights": {
+    "confirmed": "Rechten bevestigd"
+  },
+  "acknowledgement": {
+    "title": "Voor je eerste upload",
+    "readPolicy": "Lees het video- en opnamebeleid",
+    "accept": "Begrepen – doorgaan",
+    "adult": {
+      "intro": "Bevestig elk punt. ScoutX bewaart een registratie van deze bevestiging.",
+      "recordedOrPermission": "Ik heb de beelden zelf gemaakt of heb toestemming van wie ze maakte, en filmen was toegestaan op de locatie.",
+      "peopleKnow": "Duidelijk herkenbare personen weten van de beelden, anders houd ik ze privé.",
+      "otherMinors": "Kinderen in mijn video's deel ik alleen met toestemming van hun ouders of voogden.",
+      "noPrivatePlaces": "Mijn video's tonen geen kleedkamers, privéplekken of persoonsgegevens zoals adressen.",
+      "privateByDefault": "Uploads blijven privé tot ik ze deel, en iedereen in een video kan om verwijdering vragen."
+    },
+    "youth": {
+      "intro": "Lees elk punt goed. Twijfel je? Vraag het je ouder, voogd of trainer voordat je uploadt.",
+      "recordedOrPermission": "Ik heb dit zelf gefilmd, of degene die het filmde zei dat ik het mag gebruiken.",
+      "peopleKnow": "Ik deel geen video's van anderen als zij het niet goed vinden.",
+      "otherMinors": "Ik deel geen video's van andere kinderen zonder toestemming van hun ouders.",
+      "noPrivatePlaces": "Ik upload nooit video's uit kleedkamers of die laten zien waar iemand woont.",
+      "privateByDefault": "Mijn uploads blijven privé. Alleen ik beslis wat ik deel, en alleen als mijn voogd het toestaat."
+    }
+  },
+  "publish": {
+    "audienceLabel": "Wie het kan zien",
+    "held": "Deze video wordt gemodereerd en kan nu niet worden gedeeld.",
+    "guardianRequired": "Je ouder of voogd heeft gedeelde video's nog niet toegestaan. Je kunt video's privé houden en met één scout delen.",
+    "unavailable": "Delen op je Passport is nu niet beschikbaar voor dit account.",
+    "confirmRights": "Ik heb het recht om deze video te delen.",
+    "confirmPeople": "Iedereen die duidelijk herkenbaar is, gaat akkoord, of ik heb toestemming van de voogden van kinderen.",
+    "confirmPeopleYouth": "Iedereen in de video vindt delen goed, en er is geen ander kind zonder toestemming te zien.",
+    "passport": {
+      "title": "Toevoegen aan je Football Passport",
+      "audience": "Iedereen met je Passport-link, ook mensen zonder ScoutX-account.",
+      "warning": "Na het delen kunnen anderen de video bekijken of opnemen. Je kunt hem op elk moment weer privé maken.",
+      "confirm": "Toevoegen aan Passport"
+    },
+    "grant": {
+      "title": "Delen met één scout",
+      "audience": "Alleen de gekozen scout, gedurende 7 dagen.",
+      "warning": "De scout kan de video in ScoutX bekijken tot het delen verloopt of jij hem privé maakt.",
+      "confirm": "Delen met deze scout"
+    }
   }
 }

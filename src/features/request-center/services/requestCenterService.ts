@@ -74,6 +74,7 @@ export function mapEvidenceRequest(request: StoredEvidenceRequest, now: Date): P
     expiresAt,
     nextAction: status === 'pending' ? 'fulfill' : 'none',
     context: '',
+    scoutId: request.scoutId,
   };
 }
 

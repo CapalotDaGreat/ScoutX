@@ -91,6 +91,16 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
 
     await page.getByRole('button', { name: 'Upload from Photos' }).click();
     const sheet = page.getByRole('dialog');
+
+    const acknowledgement = sheet.getByTestId('upload-acknowledgement');
+    await expect(acknowledgement).toBeVisible({ timeout: 30_000 });
+    await expect(sheet.getByTestId('upload-acknowledgement-accept')).toBeDisabled();
+    for (const item of ['recordedOrPermission', 'peopleKnow', 'otherMinors', 'noPrivatePlaces', 'privateByDefault']) {
+      await sheet.getByTestId(`upload-acknowledgement-${item}`).click();
+    }
+    await sheet.getByTestId('upload-acknowledgement-accept').click();
+    await expect(acknowledgement).toBeHidden({ timeout: 30_000 });
+
     const chooser = page.waitForEvent('filechooser', { timeout: 20_000 });
     await sheet.getByRole('button', { name: 'Upload from Photos' }).click();
     await (await chooser).setFiles(path.join(__dirname, '..', 'fixtures', 'clip.mp4'));

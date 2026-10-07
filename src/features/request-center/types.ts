@@ -30,6 +30,8 @@ export type PlayerRequest = {
   nextAction: PlayerRequestNextAction;
   /** Short context: club for trials, requester for verification. */
   context: string;
+  /** Requesting scout for evidence requests, so the player can report the request. */
+  scoutId?: string;
 };
 
 export type StoredEvidenceRequest = {

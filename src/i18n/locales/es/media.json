@@ -4,7 +4,8 @@
     "empty": "Tu biblioteca está vacía por ahora. Sube un clip desde Fotos y aparecerá aquí, listo para reels y tu Passport.",
     "loadFailed": "No se pudo cargar la biblioteca.",
     "addToPassport": "Añadir al Football Passport",
-    "makePrivate": "Hacer privado"
+    "makePrivate": "Hacer privado",
+    "visibilityFailed": "No se pudo cambiar la visibilidad de este vídeo."
   },
   "share": {
     "scoutId": "ID de usuario del ojeador",
@@ -281,5 +282,55 @@
   "a11y": {
     "openVideo": "Abrir vídeo",
     "openPhoto": "Abrir foto"
+  },
+  "moderation": {
+    "restricted": "Restringido",
+    "removed": "Eliminado",
+    "explainer": "Este vídeo fue denunciado y es privado durante la revisión o tras una decisión. Consulta Ajustes → Centro de privacidad para ver detalles y cómo apelar."
+  },
+  "rights": {
+    "confirmed": "Derechos confirmados"
+  },
+  "acknowledgement": {
+    "title": "Antes de tu primera subida",
+    "readPolicy": "Leer la política de vídeo y grabación",
+    "accept": "Entendido – continuar",
+    "adult": {
+      "intro": "Confirma cada punto. ScoutX guarda un registro de esta confirmación.",
+      "recordedOrPermission": "Grabé el vídeo yo o tengo permiso de quien lo grabó, y se permitía grabar en el lugar.",
+      "peopleKnow": "Las personas claramente identificables lo saben, o mantendré el vídeo privado.",
+      "otherMinors": "Solo comparto menores en mis vídeos con permiso de sus padres o tutores.",
+      "noPrivatePlaces": "Mis vídeos no muestran vestuarios, lugares privados ni datos personales como direcciones.",
+      "privateByDefault": "Las subidas son privadas hasta que decida compartirlas, y cualquiera que aparezca puede pedir su retirada."
+    },
+    "youth": {
+      "intro": "Lee cada punto con atención. Si tienes dudas, pregunta a tu padre, madre, tutor o entrenador antes de subir.",
+      "recordedOrPermission": "Lo grabé yo, o quien lo grabó me dijo que puedo usarlo.",
+      "peopleKnow": "No compartiré vídeos de otras personas si no están de acuerdo.",
+      "otherMinors": "No compartiré vídeos de otros menores sin permiso de sus padres.",
+      "noPrivatePlaces": "Nunca subiré vídeos de vestuarios ni que muestren dónde vive alguien.",
+      "privateByDefault": "Mis subidas son privadas. Solo yo decido qué compartir, y solo si mi tutor lo permite."
+    }
+  },
+  "publish": {
+    "audienceLabel": "Quién podrá verlo",
+    "held": "Este vídeo está en moderación y no se puede compartir ahora.",
+    "guardianRequired": "Tu padre, madre o tutor aún no ha permitido vídeos compartidos. Puedes mantener los vídeos privados y compartirlos con un ojeador.",
+    "unavailable": "Compartir en el Passport no está disponible para esta cuenta ahora mismo.",
+    "confirmRights": "Tengo derecho a compartir este vídeo.",
+    "confirmPeople": "Todas las personas claramente identificables están de acuerdo, o tengo el consentimiento de los tutores de los menores.",
+    "confirmPeopleYouth": "Todos los que aparecen están de acuerdo en compartirlo, y no aparece ningún otro menor sin permiso.",
+    "passport": {
+      "title": "Añadir a tu Football Passport",
+      "audience": "Cualquiera con el enlace de tu Passport, incluso sin cuenta de ScoutX.",
+      "warning": "Una vez compartido, otros pueden ver o grabar el vídeo. Puedes volver a hacerlo privado en cualquier momento.",
+      "confirm": "Añadir al Passport"
+    },
+    "grant": {
+      "title": "Compartir con un ojeador",
+      "audience": "Solo el ojeador seleccionado, durante 7 días.",
+      "warning": "El ojeador puede ver el vídeo en ScoutX hasta que caduque o lo hagas privado.",
+      "confirm": "Compartir con este ojeador"
+    }
   }
 }

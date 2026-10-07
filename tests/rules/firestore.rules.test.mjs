@@ -538,6 +538,51 @@ describe('media library and reels', () => {
     await denied(setDocument(OUTSIDER, `players/${PLAYER}/media/m2`, { ...item, id: 'm2' }), 'outsider writes');
   });
 
+  test('media leaves private only with confirmed rights, no hold, and guardian scope for minors', async () => {
+    const item = (patch) => ({
+      id: 'v1', ownerId: PLAYER, type: 'highlight', storagePath: 'profiles/p/videos/v1/video.mp4',
+      visibility: 'private', rightsState: 'unconfirmed', uploadState: 'ready', processingState: 'none',
+      favorite: false, tags: [], goalIds: [], title: 'Clip', durationSec: 12, thumbnailPath: null,
+      sourceMatchId: null, sourceJobId: null, createdAt: '2026-10-01', updatedAt: '2026-10-01', ...patch,
+    });
+    const path = `players/${PLAYER}/media/v1`;
+    await denied(setDocument(PLAYER, path, item({ visibility: 'passport' })), 'public without confirmation');
+    await denied(setDocument(PLAYER, path, item({ visibility: 'unlisted' })), 'unsupported visibility');
+    await denied(setDocument(PLAYER, path, item({ rightsState: 'restricted' })), 'client sets moderation rights');
+    await denied(setDocument(PLAYER, path, item({ moderationState: 'restricted' })), 'client sets moderation');
+    await allowed(setDocument(PLAYER, path, item({})), 'private upload');
+    await allowed(
+      setDocument(PLAYER, path, item({ visibility: 'passport', rightsState: 'user_confirmed' })),
+      'confirmed adult publishes',
+    );
+
+    await seed(path, item({ visibility: 'private', rightsState: 'restricted', moderationState: 'restricted', visibilityBeforeHold: 'passport' }));
+    await denied(
+      setDocument(PLAYER, path, item({ visibility: 'passport', rightsState: 'user_confirmed', moderationState: 'none', visibilityBeforeHold: 'passport' })),
+      'owner lifts a hold',
+    );
+    await denied(
+      setDocument(PLAYER, path, item({ moderationState: 'restricted', rightsState: 'restricted' })),
+      'owner clears hold snapshot',
+    );
+
+    await seed(`userSafety/${PLAYER}`, { ageBand: '13-17', guardianStatus: 'approved', scopes: [], consentExpiresAt: null });
+    await seed(path, item({}));
+    await denied(
+      setDocument(PLAYER, path, item({ visibility: 'passport', rightsState: 'user_confirmed' })),
+      'minor without public_media scope',
+    );
+    await allowed(
+      setDocument(PLAYER, path, item({ visibility: 'grant', rightsState: 'user_confirmed' })),
+      'minor shares with one scout',
+    );
+    await seed(`userSafety/${PLAYER}`, { ageBand: '13-17', guardianStatus: 'approved', scopes: ['public_media'], consentExpiresAt: null });
+    await allowed(
+      setDocument(PLAYER, path, item({ visibility: 'passport', rightsState: 'user_confirmed' })),
+      'minor with guardian scope',
+    );
+  });
+
   test('reels are owner-managed; grants cannot be self-addressed; exports are server-only', async () => {
     const reel = {
       id: 'r1', ownerId: PLAYER, preset: 'scout', mode: 'scout', segments: [], title: 'Reel',
@@ -764,6 +809,81 @@ describe('content reports', () => {
         extra: 'field',
       }),
       'unknown fields rejected',
+    );
+  });
+
+  test('expanded targets and reasons; no self-reports; server owns cases', async () => {
+    const base = { reporterId: PLAYER, createdAt: '2026-10-06T00:00:00.000Z' };
+    await allowed(
+      setDocument(PLAYER, 'contentReports/cr7', {
+        ...base, targetType: 'media', targetId: 'm1', targetOwnerId: OTHER_PLAYER, reason: 'appears_in_video',
+      }),
+      'I appear in this video',
+    );
+    await allowed(
+      setDocument(PLAYER, 'contentReports/cr8', {
+        ...base, targetType: 'trial', targetId: 't1', targetOwnerId: SCOUT, reason: 'inappropriate_contact',
+      }),
+      'report a trial invitation',
+    );
+    await allowed(
+      setDocument(PLAYER, 'contentReports/cr9', {
+        ...base, targetType: 'passport', targetId: OTHER_PLAYER, targetOwnerId: OTHER_PLAYER, reason: 'minor_in_video',
+      }),
+      'passport report targets the owner',
+    );
+    await denied(
+      setDocument(PLAYER, 'contentReports/cr10', {
+        ...base, targetType: 'passport', targetId: OTHER_PLAYER, targetOwnerId: SCOUT, reason: 'privacy',
+      }),
+      'passport owner mismatch',
+    );
+    await denied(
+      setDocument(PLAYER, 'contentReports/cr11', {
+        ...base, targetType: 'media', targetId: 'm1', targetOwnerId: OTHER_PLAYER, reason: 'made_up',
+      }),
+      'unknown reason',
+    );
+    await denied(
+      setDocument(PLAYER, 'contentReports/cr12', {
+        ...base, targetType: 'media', targetId: 'm1', targetOwnerId: PLAYER, reason: 'spam',
+      }),
+      'self report',
+    );
+    await denied(
+      setDocument(PLAYER, 'contentReports/cr13', {
+        ...base, targetType: 'media', targetId: 'm1', targetOwnerId: OTHER_PLAYER, reason: 'spam', caseId: 'c1',
+      }),
+      'client sets caseId',
+    );
+  });
+});
+
+describe('moderation workflow', () => {
+  test('cases, actions, holds, appeals, restrictions and audit log are server-only', async () => {
+    for (const path of [
+      'moderationCases/c1',
+      'moderationActions/a1',
+      'moderationHolds/media_m1',
+      'appeals/c1',
+      `accountRestrictions/${PLAYER}`,
+      'adminAuditLog/l1',
+      'publicReportLimits/k1',
+      'publicReporterContacts/r1',
+    ]) {
+      await seed(path, { ownerId: PLAYER, targetOwnerId: PLAYER });
+      await denied(getDocument(PLAYER, path), `read ${path}`);
+      await denied(setDocument(PLAYER, path, { ownerId: PLAYER }), `write ${path}`);
+    }
+  });
+
+  test('users read only their own moderation notices', async () => {
+    await seed(`moderationNotices/${PLAYER}/items/c1`, { caseId: 'c1', action: 'remove', at: '2026-10-07' });
+    await allowed(getDocument(PLAYER, `moderationNotices/${PLAYER}/items/c1`), 'owner reads notice');
+    await denied(getDocument(OTHER_PLAYER, `moderationNotices/${PLAYER}/items/c1`), 'other reads notice');
+    await denied(
+      setDocument(PLAYER, `moderationNotices/${PLAYER}/items/c1`, { caseId: 'c1', action: 'dismiss', at: 'x' }),
+      'owner rewrites notice',
     );
   });
 });

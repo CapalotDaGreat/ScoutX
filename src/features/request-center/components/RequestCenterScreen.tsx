@@ -11,6 +11,7 @@ import { Text } from '@/components/primitives/Text';
 import { FulfillRequestSheet } from '@/features/request-center/components/FulfillRequestSheet';
 import { usePlayerRequests } from '@/features/request-center/hooks/usePlayerRequests';
 import type { PlayerRequest } from '@/features/request-center/types';
+import { ReportContentButton } from '@/features/trust-safety/components/ReportContentButton';
 import type { EvidenceRequestKind } from '@/features/scout-intelligence/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
@@ -35,7 +36,7 @@ export function RequestCard({
   onDecline?: (request: PlayerRequest) => void;
   onOpenTrial?: (trialId: string) => void;
 }) {
-  const { t } = useAppTranslation(['common', 'scout']);
+  const { t } = useAppTranslation(['common', 'scout', 'trust']);
   return (
     <Card variant="outlined" padding="md" className="gap-2">
       <View className="flex-row items-start justify-between gap-3">
@@ -84,6 +85,14 @@ export function RequestCard({
         <Button size="sm" variant="secondary" onPress={() => onOpenTrial(request.entityId)}>
           {request.nextAction === 'respond' ? t('common:requestCenter.respond') : t('common:requestCenter.view')}
         </Button>
+      ) : null}
+      {request.source === 'scout_evidence' && request.scoutId ? (
+        <ReportContentButton
+          targetType="evidenceRequest"
+          targetId={request.entityId}
+          targetOwnerId={request.scoutId}
+          label={t('trust:report.requestButton')}
+        />
       ) : null}
     </Card>
   );

@@ -33,7 +33,8 @@ describe('media migration', () => {
     const item = highlightVideoToMediaItem(video(), 'u1');
     assert.equal(item.storagePath, 'profiles/u1/videos/v1/video.mp4');
     assert.equal('videoUrl' in item, false);
-    assert.equal(item.visibility, 'passport');
+    assert.equal(item.visibility, 'private');
+    assert.equal(item.rightsState, 'unconfirmed');
   });
 
   test('featured ids only include ready featured clips', () => {

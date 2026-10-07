@@ -25,7 +25,7 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { mapMatchesToHomeQuickStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import { ActivityBellButton, ActivityFeedSection, useActivities } from '@/features/activity-feed';
 import { AdminReviewCard } from '@/features/admin-review/components/AdminReviewCard';
-import { isAdminUser } from '@/config/admin';
+import { useStaffRole } from '@/features/admin-review/hooks/useStaffRole';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import {
   FootballPassportScoreCard,
@@ -96,6 +96,7 @@ export function PlayerProfileScreen({
 }: PlayerProfileScreenProps) {
   const { t } = useAppTranslation(['portfolio', 'common', 'settings']);
   const { user } = useAuth();
+  const staffRole = useStaffRole();
   const { trustProfile, recommendations, ...trustStateRest } = trustState;
   const { unreadCount } = useActivities();
 
@@ -232,7 +233,7 @@ export function PlayerProfileScreen({
           </View>
         </CollapsibleSection>
 
-        {isAdminUser(user?.uid) ? <AdminReviewCard /> : null}
+        {staffRole ? <AdminReviewCard staffRole={staffRole} /> : null}
 
         <CollapsibleSection
           title={t('portfolio:publicPassport')}

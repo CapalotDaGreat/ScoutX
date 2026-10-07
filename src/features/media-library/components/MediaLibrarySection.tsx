@@ -16,6 +16,10 @@ import {
 } from '@/features/media-library/services/mediaFilters';
 import { enrichFromHighlights } from '@/features/media-library/services/mediaMigration';
 import { shareMediaWithScout } from '@/features/media-library/services/shareWithScout';
+import {
+  PublishMediaConfirmModal,
+  type PublishTarget,
+} from '@/features/media-library/components/PublishMediaConfirmModal';
 import { type MediaItem, type MediaVisibility } from '@/features/media-library/types';
 import { type HighlightVideo } from '@/features/highlight-videos/types';
 import { RequestCenterRepository } from '@/features/request-center/repositories/RequestCenterRepository';
@@ -44,6 +48,12 @@ export function MediaLibrarySection({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [filter, setFilter] = useState<MediaFilter>(EMPTY_MEDIA_FILTER);
   const [evidenceIds, setEvidenceIds] = useState<ReadonlySet<string>>(new Set());
+  const [publishing, setPublishing] = useState<MediaItem | null>(null);
+  const [publishTarget, setPublishTarget] = useState<PublishTarget>('passport');
+  const openPublish = (item: MediaItem, target: PublishTarget) => {
+    setPublishTarget(target);
+    setPublishing(item);
+  };
 
   const reload = useCallback(async () => {
     if (!userId) {
@@ -81,7 +91,7 @@ export function MediaLibrarySection({
   const visible = useMemo(() => filterMedia(items, filter, evidenceIds), [evidenceIds, filter, items]);
   const filtered = JSON.stringify(filter) !== JSON.stringify(EMPTY_MEDIA_FILTER);
 
-  const setVisibility = async (item: MediaItem, visibility: MediaVisibility) => {
+  const setVisibility = async (item: MediaItem, visibility: MediaVisibility, confirmRights = false) => {
     if (!userId) {
       return;
     }
@@ -90,9 +100,12 @@ export function MediaLibrarySection({
       await MediaRepository.getInstance().upsertMedia(userId, {
         ...item,
         visibility,
+        rightsState: confirmRights ? 'user_confirmed' : item.rightsState,
         updatedAt: new Date().toISOString(),
       });
       await reload();
+    } catch (err) {
+      setError(toUserMessage(err, t('library.visibilityFailed')));
     } finally {
       setBusyId(null);
     }
@@ -104,14 +117,20 @@ export function MediaLibrarySection({
     }
     setBusyId(item.id);
     try {
+      await setVisibility(item, 'grant', true);
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
       await shareMediaWithScout({ ownerId: userId, granteeId: granteeId.trim(), mediaId: item.id, expiresAt });
-      await setVisibility(item, 'grant');
     } catch (err) {
       setError(toUserMessage(err, t('share.failed')));
     } finally {
       setBusyId(null);
     }
+  };
+
+  const confirmPublish = (item: MediaItem) => {
+    const target = publishTarget;
+    setPublishing(null);
+    void (target === 'passport' ? setVisibility(item, 'passport', true) : share(item));
   };
 
   if (!userId) {
@@ -176,6 +195,11 @@ export function MediaLibrarySection({
             <Text weight="semibold">{item.title}</Text>
             <View className="flex-row flex-wrap gap-2">
               <Badge label={t(`visibility.${item.visibility}`)} />
+              {item.moderationState !== 'none' ? (
+                <Badge label={t(`moderation.${item.moderationState}`)} variant="error" />
+              ) : item.rightsState === 'user_confirmed' ? (
+                <Badge label={t('rights.confirmed')} variant="success" />
+              ) : null}
               {evidenceIds.has(item.id) ? <Badge label={t('filter.sentAsEvidence')} variant="info" /> : null}
             </View>
             <Text variant="caption" color="secondary">
@@ -188,26 +212,53 @@ export function MediaLibrarySection({
                 .filter(Boolean)
                 .join(' · ')}
             </Text>
-            <View className="flex-row flex-wrap gap-2">
-              <Button size="sm" variant="secondary" loading={busyId === item.id} onPress={() => void setVisibility(item, 'passport')}>
-                {t('library.addToPassport')}
-              </Button>
-              <Button size="sm" variant="ghost" onPress={() => void setVisibility(item, 'private')}>
-                {t('library.makePrivate')}
-              </Button>
-            </View>
-            <Input
-              label={t('share.scoutId')}
-              value={granteeId}
-              onChangeText={setGranteeId}
-              placeholder={t('share.placeholder')}
-            />
-            <Button size="sm" variant="secondary" disabled={!granteeId.trim()} loading={busyId === item.id} onPress={() => void share(item)}>
-              {t('share.action')}
-            </Button>
+            {item.moderationState !== 'none' ? (
+              <Text variant="caption" color="secondary">
+                {t('moderation.explainer')}
+              </Text>
+            ) : (
+              <>
+                <View className="flex-row flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={item.visibility === 'passport'}
+                    loading={busyId === item.id}
+                    onPress={() => openPublish(item, 'passport')}
+                  >
+                    {t('library.addToPassport')}
+                  </Button>
+                  <Button size="sm" variant="ghost" disabled={item.visibility === 'private'} onPress={() => void setVisibility(item, 'private')}>
+                    {t('library.makePrivate')}
+                  </Button>
+                </View>
+                <Input
+                  label={t('share.scoutId')}
+                  value={granteeId}
+                  onChangeText={setGranteeId}
+                  placeholder={t('share.placeholder')}
+                />
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={!granteeId.trim()}
+                  loading={busyId === item.id}
+                  onPress={() => openPublish(item, 'grant')}
+                >
+                  {t('share.action')}
+                </Button>
+              </>
+            )}
           </Card>
         ))
       )}
+      <PublishMediaConfirmModal
+        item={publishing}
+        target={publishTarget}
+        busy={publishing !== null && busyId === publishing.id}
+        onConfirm={confirmPublish}
+        onClose={() => setPublishing(null)}
+      />
     </View>
   );
 }

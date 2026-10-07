@@ -10,7 +10,28 @@ import {
 import { getFirestoreDb, isFirebaseConfiguredForProject } from '@/config/firebase';
 import { highlightVideoToMediaItem } from '@/features/media-library/services/mediaMigration';
 import { type HighlightVideo } from '@/features/highlight-videos/types';
-import { type MediaItem } from '@/features/media-library/types';
+import {
+  parseModerationState,
+  parseRightsState,
+  parseVisibility,
+  type MediaItem,
+} from '@/features/media-library/types';
+
+function parseMediaItem(data: Record<string, unknown>): MediaItem {
+  const item = data as MediaItem;
+  return {
+    ...item,
+    visibility: parseVisibility(data.visibility),
+    rightsState: parseRightsState(data.rightsState),
+    moderationState: parseModerationState(data.moderationState),
+  };
+}
+
+/** moderationState and the hold snapshots are server-owned; rules reject owner changes to them. */
+function ownerWritableFields(item: MediaItem): Omit<MediaItem, 'moderationState'> {
+  const { moderationState: _serverOwned, ...rest } = item;
+  return rest;
+}
 
 export class MediaRepository {
   private static instance: MediaRepository | null = null;
@@ -33,7 +54,7 @@ export class MediaRepository {
     }
     const snapshot = await getDocs(query(collection(db, 'players', userId, 'media'), limit(200)));
     return snapshot.docs
-      .map((item) => item.data() as MediaItem)
+      .map((item) => parseMediaItem(item.data()))
       .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   }
 
@@ -45,7 +66,7 @@ export class MediaRepository {
     if (!db) {
       throw new Error('Firestore is not initialized.');
     }
-    await setDoc(doc(db, 'players', userId, 'media', item.id), item);
+    await setDoc(doc(db, 'players', userId, 'media', item.id), ownerWritableFields(item), { merge: true });
   }
 
   public async ensureMigrated(userId: string, legacyVideos: readonly HighlightVideo[]): Promise<number> {

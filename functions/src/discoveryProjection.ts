@@ -3,6 +3,7 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { isAccountHeld } from './moderation/holds';
 import { applyYouthDisplay } from './publicPassport';
 import { loadSafetyPolicy } from './safety/userSafety';
 
@@ -256,7 +257,7 @@ export async function projectDiscoverablePlayer(playerId: string): Promise<void>
     loadSafetyPolicy(playerId, db),
   ]);
   const ref = db.collection('discoverablePlayers').doc(playerId);
-  if (!profileSnap.exists || !policy.canBeDiscovered) {
+  if (!profileSnap.exists || !policy.canBeDiscovered || (await isAccountHeld(playerId, db))) {
     await ref.delete().catch(() => undefined);
     return;
   }

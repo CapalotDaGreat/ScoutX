@@ -24,6 +24,10 @@ import { buildAnalysisPreview } from '@/features/match-analysis/services/analysi
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type MatchLogPayload } from '@/features/player-statistics/types';
 import { type PickedVideoAsset } from '@/features/highlight-videos/types';
+import {
+  UploadAcknowledgementPanel,
+  useMediaUploadAcknowledged,
+} from '@/features/media-library/components/UploadAcknowledgementPanel';
 import { markAnalysisReviewed, workflowEvents } from '@/features/today/services/workflowStores';
 
 export type MatchAnalysisModalProps = {
@@ -323,6 +327,7 @@ export function MatchAnalysisModal({
   const [notes, setNotes] = useState('');
   const [applying, setApplying] = useState(false);
   const [isPicking, setIsPicking] = useState(false);
+  const uploadAcknowledged = useMediaUploadAcknowledged();
 
   const showReport = activeJob?.status === 'complete' && activeJob.report;
   const retryable = !isBusy && canRetryMatchAnalysis(activeJob);
@@ -516,9 +521,13 @@ export function MatchAnalysisModal({
           />
         ) : (
           <View className="gap-3">
-            <Button variant="secondary" onPress={() => void handlePick()} disabled={isBusy || isPicking}>
-              {picked ? t('modal.change') : t('modal.pick')}
-            </Button>
+            {uploadAcknowledged === false ? (
+              <UploadAcknowledgementPanel />
+            ) : (
+              <Button variant="secondary" onPress={() => void handlePick()} disabled={isBusy || isPicking}>
+                {picked ? t('modal.change') : t('modal.pick')}
+              </Button>
+            )}
             {preview ? <AnalysisPreviewCard preview={preview} /> : null}
             {durationLabel ? (
               <Text variant="caption" color="secondary">

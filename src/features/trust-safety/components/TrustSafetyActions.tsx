@@ -12,6 +12,8 @@ export type TrustSafetyActionsProps = {
   targetUserName: string;
   /** Hide actions when viewing your own profile. */
   hideWhenSelf?: boolean;
+  /** Adds the video/Passport report (including "I appear in this video") on Passport views. */
+  includePassportReport?: boolean;
 };
 
 /**
@@ -21,6 +23,7 @@ export function TrustSafetyActions({
   targetUserId,
   targetUserName,
   hideWhenSelf = true,
+  includePassportReport = false,
 }: TrustSafetyActionsProps) {
   const { colors } = useTheme();
   const { t } = useAppTranslation(['trust', 'common']);
@@ -71,6 +74,14 @@ export function TrustSafetyActions({
         targetId={targetUserId}
         label={t('trust:report.profileButton')}
       />
+      {includePassportReport ? (
+        <ReportContentButton
+          targetType="passport"
+          targetId={targetUserId}
+          label={t('trust:report.passportButton')}
+          testID="report-passport-video"
+        />
+      ) : null}
       <Button
         variant="ghost"
         size="sm"

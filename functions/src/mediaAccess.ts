@@ -2,6 +2,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { createCallableOptions } from './callableOptions';
+import { isTargetHeld } from './moderation/holds';
 
 const PLAYBACK_MS = 15 * 60 * 1000;
 
@@ -52,15 +53,27 @@ async function grantedStoragePath(
         .collection('media')
         .doc(mediaId)
         .get();
-      const path = (media.data() as { storagePath?: string } | undefined)?.storagePath;
-      if (path === storagePath && ownedStoragePath(grant.ownerId, storagePath)) {
+      const data = media.data() as
+        | { storagePath?: string; moderationState?: string; rightsState?: string }
+        | undefined;
+      if (
+        data?.storagePath === storagePath &&
+        data.rightsState === 'user_confirmed' &&
+        (data.moderationState ?? 'none') === 'none' &&
+        ownedStoragePath(grant.ownerId, storagePath) &&
+        !(await isTargetHeld('media', mediaId))
+      ) {
         return true;
       }
     }
     if (reelId && grant.reelId === reelId) {
       const reel = await getFirestore().collection('reels').doc(reelId).get();
       const data = reel.data() as { ownerId?: string; coverMediaId?: string } | undefined;
-      if (data?.ownerId === grant.ownerId && ownedStoragePath(grant.ownerId, storagePath)) {
+      if (
+        data?.ownerId === grant.ownerId &&
+        ownedStoragePath(grant.ownerId, storagePath) &&
+        !(await isTargetHeld('reel', reelId))
+      ) {
         return true;
       }
     }

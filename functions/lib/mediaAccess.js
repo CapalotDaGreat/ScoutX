@@ -5,6 +5,7 @@ const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const callableOptions_1 = require("./callableOptions");
+const holds_1 = require("./moderation/holds");
 const PLAYBACK_MS = 15 * 60 * 1000;
 function asRecord(value) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -37,15 +38,21 @@ async function grantedStoragePath(uid, storagePath, mediaId, reelId) {
                 .collection('media')
                 .doc(mediaId)
                 .get();
-            const path = media.data()?.storagePath;
-            if (path === storagePath && ownedStoragePath(grant.ownerId, storagePath)) {
+            const data = media.data();
+            if (data?.storagePath === storagePath &&
+                data.rightsState === 'user_confirmed' &&
+                (data.moderationState ?? 'none') === 'none' &&
+                ownedStoragePath(grant.ownerId, storagePath) &&
+                !(await (0, holds_1.isTargetHeld)('media', mediaId))) {
                 return true;
             }
         }
         if (reelId && grant.reelId === reelId) {
             const reel = await (0, firestore_1.getFirestore)().collection('reels').doc(reelId).get();
             const data = reel.data();
-            if (data?.ownerId === grant.ownerId && ownedStoragePath(grant.ownerId, storagePath)) {
+            if (data?.ownerId === grant.ownerId &&
+                ownedStoragePath(grant.ownerId, storagePath) &&
+                !(await (0, holds_1.isTargetHeld)('reel', reelId))) {
                 return true;
             }
         }

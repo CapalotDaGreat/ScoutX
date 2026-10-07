@@ -14,6 +14,7 @@ import {
 } from '@/features/trial-invitations/services/trialCalendarService';
 import { PLAYER_RESPONDABLE_STATUSES } from '@/features/trial-invitations/constants';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
+import { ReportContentButton } from '@/features/trust-safety/components/ReportContentButton';
 import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
@@ -35,7 +36,7 @@ export function TrialInvitationResponseModal({
   onAccept,
   onDecline,
 }: TrialInvitationResponseModalProps) {
-  const { t, i18n } = useAppTranslation(['trials', 'common', 'safety']);
+  const { t, i18n } = useAppTranslation(['trials', 'common', 'safety', 'trust']);
   const { policy } = useUserSafety();
   const [note, setNote] = useState('');
 
@@ -164,6 +165,13 @@ export function TrialInvitationResponseModal({
           </Text>
           <TrialHistoryTimeline history={invitation.history} />
           <TrialReplayCard invitation={invitation} />
+          <ReportContentButton
+            targetType="trial"
+            targetId={invitation.id}
+            targetOwnerId={invitation.scoutId}
+            label={t('trust:report.trialButton')}
+            testID="report-trial"
+          />
         </View>
       </ScrollView>
     </Modal>

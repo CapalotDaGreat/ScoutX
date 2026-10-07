@@ -14,6 +14,10 @@ import { useHighlightVideos } from '@/features/highlight-videos/hooks/useHighlig
 import { sortHighlightVideos } from '@/features/highlight-videos/models/HighlightVideoModel';
 import { waitForModalDismiss } from '@/features/highlight-videos/services/videoLibraryPermission';
 import { type HighlightVideo } from '@/features/highlight-videos/types';
+import {
+  UploadAcknowledgementPanel,
+  useMediaUploadAcknowledged,
+} from '@/features/media-library/components/UploadAcknowledgementPanel';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { useTheme } from '@/theme';
 import { toUserMessage } from '@/utils/userFacingError';
@@ -56,6 +60,7 @@ export function HighlightVideosManagerModal({
 
   const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
   const { showSnackbar } = useSnackbar();
+  const uploadAcknowledged = useMediaUploadAcknowledged();
   const { t } = useAppTranslation(['common', 'media']);
 
   const sortedVideos = useMemo(
@@ -221,14 +226,18 @@ export function HighlightVideosManagerModal({
               </Button>
             ) : null}
 
-            <Button
-              variant="accent"
-              onPress={() => void handleStartUpload()}
-              loading={isUploading || flowPhase === 'picking'}
-              leftIcon={<Upload size={18} color={colors.surface} />}
-            >
-              {t('media:videos.uploadFromPhotos')}
-            </Button>
+            {uploadAcknowledged === false ? (
+              <UploadAcknowledgementPanel />
+            ) : (
+              <Button
+                variant="accent"
+                onPress={() => void handleStartUpload()}
+                loading={isUploading || flowPhase === 'picking'}
+                leftIcon={<Upload size={18} color={colors.surface} />}
+              >
+                {t('media:videos.uploadFromPhotos')}
+              </Button>
+            )}
 
             <HighlightVideoUploadProgress progress={uploadProgress} />
 

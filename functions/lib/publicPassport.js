@@ -3,12 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = void 0;
 exports.buildPublicPassport = buildPublicPassport;
 exports.applyYouthDisplay = applyYouthDisplay;
+exports.filterPublicVideos = filterPublicVideos;
 exports.projectPassport = projectPassport;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const holds_1 = require("./moderation/holds");
 const userSafety_1 = require("./safety/userSafety");
 const PUBLIC_IDENTITY_KEYS = [
     'currentClub',
@@ -123,21 +125,45 @@ function applyYouthDisplay(passport, policy) {
     const displayName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : (parts[0] ?? '');
     return { ...passport, fullName: displayName, ageGroupLabel: policy.ageGroupLabel };
 }
+/**
+ * Only media the owner explicitly put on the Passport after confirming their rights, with no
+ * moderation hold, is public. Minors additionally need the guardian's public_media scope.
+ */
+async function filterPublicVideos(db, playerId, library, policy) {
+    if (!library || typeof library !== 'object')
+        return undefined;
+    const record = library;
+    const videos = Array.isArray(record.videos) ? record.videos : [];
+    let allowed = new Set();
+    if (policy.canPublishMedia) {
+        const snapshot = await db.collection('players').doc(playerId).collection('media').where('visibility', '==', 'passport').get();
+        allowed = new Set(snapshot.docs
+            .filter((doc) => doc.get('rightsState') === 'user_confirmed' && (doc.get('moderationState') ?? 'none') === 'none')
+            .map((doc) => doc.id));
+    }
+    const visible = videos.filter((video) => Boolean(video) && typeof video === 'object' && allowed.has(String(video.id)));
+    return {
+        ...record,
+        videos: visible,
+        featuredVideoId: typeof record.featuredVideoId === 'string' && allowed.has(record.featuredVideoId) ? record.featuredVideoId : null,
+    };
+}
 async function projectPassport(playerId, profile) {
     const db = (0, firestore_2.getFirestore)();
     const ref = db.collection('publicPassports').doc(playerId);
     const summaryRef = db.collection('passportSummaries').doc(playerId);
-    const policy = await (0, userSafety_1.loadSafetyPolicy)(playerId, db);
-    const built = profile && policy.canUsePublicPassport ? buildPublicPassport(playerId, profile) : null;
+    const [policy, held] = await Promise.all([(0, userSafety_1.loadSafetyPolicy)(playerId, db), (0, holds_1.isAccountHeld)(playerId, db)]);
+    const built = profile && policy.canUsePublicPassport && !held ? buildPublicPassport(playerId, profile) : null;
     const passport = built ? applyYouthDisplay(built, policy) : null;
     if (!passport) {
         await Promise.all([ref.delete().catch(() => undefined), summaryRef.delete().catch(() => undefined)]);
         return;
     }
+    if (passport.highlightVideos !== undefined) {
+        passport.highlightVideos = await filterPublicVideos(db, playerId, passport.highlightVideos, policy);
+    }
     const matches = Array.isArray(profile?.statisticsMatches) ? profile.statisticsMatches : [];
-    const videos = profile && typeof profile.highlightVideos === 'object' && profile.highlightVideos !== null
-        ? profile.highlightVideos.videos
-        : [];
+    const videos = passport.highlightVideos?.videos;
     const videoCount = Array.isArray(videos) ? videos.length : 0;
     await Promise.all([
         ref.set(passport),

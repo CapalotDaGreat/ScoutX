@@ -579,7 +579,11 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Every upload starts as private. You can choose a wider audience (team, scouts, your Passport or unlisted link). Before media becomes visible beyond you, ScoutX shows a warning and a preview of who will be able to see it. Players aged 13 to 17 can publish media only if their guardian has allowed it."
+            "text": "Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, ScoutX shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it."
+          },
+          {
+            "type": "paragraph",
+            "text": "The first time you upload, ScoutX asks you to acknowledge this policy. ScoutX records that acknowledgement with the policy version."
           }
         ]
       },
@@ -809,9 +813,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "Triage: reports involving minors, sexual content or threats are reviewed first.",
               "Restriction: if needed, the content is temporarily hidden from public view while it is reviewed.",
-              "Review and decision: trained ScoutX staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.",
-              "Notification: the reporter and the affected user are told the outcome, without revealing the reporter.",
-              "Appeal: the affected user can appeal once. A different staff member reviews the appeal."
+              "Review and decision: ScoutX staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.",
+              "Notification: the reporter and the affected user are told the outcome, without revealing the reporter. People who reported without an account and left an email receive one update by email, after which the address is deleted.",
+              "Appeal: the affected user can appeal once from the Privacy Center. A different staff member reviews the appeal."
             ]
           },
           {
@@ -825,7 +829,16 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "If someone is in immediate danger, contact local emergency services first. ScoutX reports content that suggests child abuse to the authorities."
+            "text": "If someone is in immediate danger, contact local emergency services first. Content that suggests child abuse is given the highest review priority. The process for referring such content to the competent authorities is LEGAL_REVIEW_REQUIRED."
+          }
+        ]
+      },
+      {
+        "heading": "Reporting without an account",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "People who appear in a video, or their parents or guardians, can use the public report form on the ScoutX website without signing in."
           }
         ]
       },

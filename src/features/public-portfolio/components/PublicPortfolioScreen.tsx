@@ -173,7 +173,7 @@ export function PublicPortfolioScreen({
               </Button>
             ) : null}
             {!previewMode ? (
-              <TrustSafetyActions targetUserId={playerId} targetUserName={profile.fullName} />
+              <TrustSafetyActions targetUserId={playerId} targetUserName={profile.fullName} includePassportReport />
             ) : null}
           </View>
         </View>

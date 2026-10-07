@@ -37,6 +37,7 @@ const ownedByField = [
   ['gpsSessions', 'playerId'],
   ['youthConsents', 'uid'],
   ['mail', 'scoutxUid'],
+  ['appeals', 'ownerId'],
   ['matchAnalysisJobs', 'playerId'],
   ['careerReplays', 'playerId'],
   ['activities', 'recipientId'],
@@ -116,6 +117,7 @@ before(async () => {
     }
     await db.collection('recruitmentWorkspaces').doc(uid).collection('entries').doc('p1').set({ playerId: 'p1' });
     await db.collection('playerWatchers').doc(uid).collection('scouts').doc('s1').set({ scoutId: 's1' });
+    await db.collection('moderationNotices').doc(uid).collection('items').doc('case-1').set({ caseId: 'case-1' });
     await db.collection('consentRecords').doc(uid).set({ uid });
     await db.collection('consentRecords').doc(uid).collection('items').doc('c1').set({ type: 'privacy_policy' });
   }
@@ -178,6 +180,8 @@ describe('deleteAllUserData', () => {
         `players/${KEPT}/${sub} kept`,
       );
     }
+    assert.equal((await db.collection('moderationNotices').doc(DELETED).collection('items').get()).size, 0, 'notices');
+    assert.equal((await db.collection('moderationNotices').doc(KEPT).collection('items').get()).size, 1, 'kept notices');
     assert.equal((await db.collection('consentRecords').doc(DELETED).get()).exists, false, 'consent summary');
     assert.equal((await db.collection('consentRecords').doc(DELETED).collection('items').get()).size, 0, 'consent items');
     assert.equal((await db.collection('consentRecords').doc(KEPT).collection('items').get()).size, 1, 'kept consent items');

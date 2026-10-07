@@ -63,8 +63,21 @@
       "harassment": "Harassment or abuse",
       "inappropriate": "Inappropriate content",
       "impersonation": "Impersonation",
-      "other": "Other"
-    }
+      "other": "Other",
+      "inappropriate_contact": "Inappropriate contact",
+      "copyright": "Uses my video or work without permission",
+      "privacy": "Shares private information",
+      "appears_in_video": "I appear in this video",
+      "minor_in_video": "A child appears without permission",
+      "exploitation": "Exploitation or grooming",
+      "safety_concern": "Safety concern"
+    },
+    "promptVideo": "Tell us what is wrong with this Passport or one of its videos.",
+    "promptContact": "Tell us what is wrong with this request.",
+    "videoRestrictedNote": "Reports about people or children in videos are reviewed first. The video may be hidden while we review it.",
+    "passportButton": "Report a video",
+    "trialButton": "Report this invitation",
+    "requestButton": "Report this request"
   },
   "block": {
     "blockTitle": "Block player?",
@@ -134,7 +147,7 @@
   "admin": {
     "overline": "Admin review",
     "title": "Moderation queue",
-    "counts": "{{verifications}} verification requests · {{reports}} content reports",
+    "counts": "{{verifications}} verification requests · {{reports}} open cases",
     "loading": "Loading queue…",
     "empty": "No pending items.",
     "loadFailed": "The queue couldn't be loaded.",
@@ -142,6 +155,54 @@
     "reject": "Reject",
     "reportLine": "Report · {{target}} · {{reason}}",
     "markReviewed": "Mark reviewed",
-    "refresh": "Refresh queue"
+    "refresh": "Refresh queue",
+    "reason": "Reason (required, recorded in the audit log)",
+    "reportCount_one": "{{count}} report",
+    "reportCount_other": "{{count}} reports",
+    "actionFailed": "The action couldn't be completed.",
+    "priority": {
+      "urgent": "Urgent",
+      "high": "High",
+      "normal": "Normal"
+    },
+    "state": {
+      "triage": "Triage",
+      "restricted": "Restricted",
+      "review": "In review",
+      "notified": "Decided",
+      "appealed": "Appealed",
+      "closed": "Closed"
+    },
+    "appeal": {
+      "upheld": "Keep decision",
+      "overturned": "Reverse decision"
+    }
+  },
+  "notices": {
+    "title": "Decisions about your content",
+    "empty": "No moderation decisions about your account or content.",
+    "reason": "Reported for: {{reason}}",
+    "appealLabel": "Explain why this decision should change",
+    "appealSubmit": "Send appeal",
+    "appealFailed": "Your appeal couldn't be sent. Please try again.",
+    "actions": {
+      "dismiss": "No action",
+      "restrict": "Restricted",
+      "hide": "Hidden",
+      "remove": "Removed",
+      "warn": "Warning",
+      "suspend": "Account suspended",
+      "disable": "Account disabled",
+      "escalate": "Escalated",
+      "restored": "Restored",
+      "appeal_upheld": "Appeal not successful",
+      "appeal_overturned": "Appeal successful"
+    },
+    "appeal": {
+      "start": "Appeal this decision",
+      "pending": "Appeal under review",
+      "upheld": "Decision kept",
+      "overturned": "Decision reversed"
+    }
   }
 }

@@ -64,6 +64,7 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['blockedUsers', 'blockedUserId'],
   ['youthConsents', 'uid'],
   ['mail', 'scoutxUid'],
+  ['appeals', 'ownerId'],
 ];
 
 const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
@@ -188,6 +189,15 @@ export async function deleteAllUserData(uid: string): Promise<{ failures: string
   } catch (error) {
     failures.push('entries.playerId');
     logger.error('Account deletion: watched recruitment entries failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    });
+  }
+
+  try {
+    await deleteQueryInBatches(db.collection('moderationNotices').doc(uid).collection('items'));
+  } catch (error) {
+    failures.push('moderationNotices');
+    logger.error('Account deletion: moderation notices failed', {
       message: error instanceof Error ? error.message : 'unknown',
     });
   }

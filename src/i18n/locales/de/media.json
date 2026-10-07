@@ -4,7 +4,8 @@
     "empty": "Deine Mediathek ist noch leer. Lade einen Clip aus Fotos hoch, dann erscheint er hier, bereit für Reels und deinen Passport.",
     "loadFailed": "Mediathek konnte nicht geladen werden.",
     "addToPassport": "Zum Football Passport hinzufügen",
-    "makePrivate": "Privat machen"
+    "makePrivate": "Privat machen",
+    "visibilityFailed": "Die Sichtbarkeit dieses Videos konnte nicht geändert werden."
   },
   "share": {
     "scoutId": "Scout-Benutzer-ID",
@@ -281,5 +282,55 @@
   "a11y": {
     "openVideo": "Video öffnen",
     "openPhoto": "Foto öffnen"
+  },
+  "moderation": {
+    "restricted": "Eingeschränkt",
+    "removed": "Entfernt",
+    "explainer": "Dieses Video wurde gemeldet und ist während der Prüfung oder nach einer Entscheidung privat. Details und Einspruch unter Einstellungen → Datenschutzcenter."
+  },
+  "rights": {
+    "confirmed": "Rechte bestätigt"
+  },
+  "acknowledgement": {
+    "title": "Vor deinem ersten Upload",
+    "readPolicy": "Video- und Aufnahmerichtlinie lesen",
+    "accept": "Verstanden – weiter",
+    "adult": {
+      "intro": "Bitte bestätige jeden Punkt. ScoutX speichert diese Bestätigung.",
+      "recordedOrPermission": "Ich habe die Aufnahme selbst gemacht oder habe die Erlaubnis der Person, die sie gemacht hat, und Aufnahmen waren vor Ort erlaubt.",
+      "peopleKnow": "Klar erkennbare Personen wissen von der Aufnahme, sonst halte ich sie privat.",
+      "otherMinors": "Kinder in meinen Videos teile ich nur mit Erlaubnis ihrer Eltern oder Erziehungsberechtigten.",
+      "noPrivatePlaces": "Meine Videos zeigen keine Umkleiden, privaten Orte oder persönlichen Daten wie Adressen.",
+      "privateByDefault": "Uploads bleiben privat, bis ich sie teile, und jede Person in einem Video kann die Entfernung verlangen."
+    },
+    "youth": {
+      "intro": "Lies jeden Punkt genau. Wenn du unsicher bist, frag vor dem Upload deine Eltern, Erziehungsberechtigten oder deinen Trainer.",
+      "recordedOrPermission": "Ich habe das selbst gefilmt, oder die Person, die es gefilmt hat, hat es mir erlaubt.",
+      "peopleKnow": "Ich teile keine Videos von anderen, wenn sie nicht einverstanden sind.",
+      "otherMinors": "Ich teile keine Videos mit anderen Kindern ohne Erlaubnis ihrer Eltern.",
+      "noPrivatePlaces": "Ich lade nie Videos aus Umkleiden hoch oder Videos, die zeigen, wo jemand wohnt.",
+      "privateByDefault": "Meine Uploads bleiben privat. Nur ich entscheide, was ich teile – und nur, wenn meine Erziehungsberechtigten es erlauben."
+    }
+  },
+  "publish": {
+    "audienceLabel": "Wer es sehen kann",
+    "held": "Dieses Video wird moderiert und kann gerade nicht geteilt werden.",
+    "guardianRequired": "Deine Eltern oder Erziehungsberechtigten haben geteilte Videos noch nicht erlaubt. Du kannst Videos privat halten und mit einem Scout teilen.",
+    "unavailable": "Teilen im Passport ist für dieses Konto gerade nicht verfügbar.",
+    "confirmRights": "Ich habe das Recht, dieses Video zu teilen.",
+    "confirmPeople": "Alle klar erkennbaren Personen sind einverstanden, bei Kindern liegt die Zustimmung der Erziehungsberechtigten vor.",
+    "confirmPeopleYouth": "Alle im Video sind mit dem Teilen einverstanden, und kein anderes Kind ist ohne Erlaubnis zu sehen.",
+    "passport": {
+      "title": "Zum Football Passport hinzufügen",
+      "audience": "Alle mit deinem Passport-Link, auch Personen ohne ScoutX-Konto.",
+      "warning": "Nach dem Teilen können andere das Video ansehen oder aufnehmen. Du kannst es jederzeit wieder privat machen.",
+      "confirm": "Zum Passport hinzufügen"
+    },
+    "grant": {
+      "title": "Mit einem Scout teilen",
+      "audience": "Nur der ausgewählte Scout, für 7 Tage.",
+      "warning": "Der Scout kann das Video in ScoutX ansehen, bis die Freigabe abläuft oder du es privat machst.",
+      "confirm": "Mit diesem Scout teilen"
+    }
   }
 }

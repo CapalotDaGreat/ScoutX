@@ -13,6 +13,7 @@ import { ConsentRepository } from '@/features/legal/repositories/ConsentReposito
 import { REQUIRED_CONSENTS, type LegalDocumentId } from '@/features/legal/types';
 import { useBlockedUsers } from '@/features/trust-safety/hooks/useBlockedUsers';
 import { SafetySettingsSection } from '@/features/youth-safety/components/SafetySettingsSection';
+import { ModerationNoticesSection } from '@/features/trust-safety/components/ModerationNoticesSection';
 import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -177,6 +178,7 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
           <Button variant="secondary" onPress={() => setReading('reporting-takedown-policy')}>
             {t('legal:report.policy')}
           </Button>
+          <ModerationNoticesSection />
         </Section>
 
         <Section title={t('legal:documentsTitle')} testID="privacy-center-documents">

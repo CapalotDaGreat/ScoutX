@@ -64,6 +64,7 @@ const OWNED_QUERIES = [
     ['blockedUsers', 'blockedUserId'],
     ['youthConsents', 'uid'],
     ['mail', 'scoutxUid'],
+    ['appeals', 'ownerId'],
 ];
 const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
 async function deleteQueryInBatches(query) {
@@ -177,6 +178,15 @@ async function deleteAllUserData(uid) {
     catch (error) {
         failures.push('entries.playerId');
         firebase_functions_1.logger.error('Account deletion: watched recruitment entries failed', {
+            message: error instanceof Error ? error.message : 'unknown',
+        });
+    }
+    try {
+        await deleteQueryInBatches(db.collection('moderationNotices').doc(uid).collection('items'));
+    }
+    catch (error) {
+        failures.push('moderationNotices');
+        firebase_functions_1.logger.error('Account deletion: moderation notices failed', {
             message: error instanceof Error ? error.message : 'unknown',
         });
     }

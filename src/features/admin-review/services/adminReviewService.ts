@@ -11,51 +11,73 @@ export type AdminVerificationRequest = {
   createdAt: string;
 };
 
-export type AdminContentReport = {
+export type ModerationCasePriority = 'urgent' | 'high' | 'normal';
+
+export type ModerationCase = {
   id: string;
-  reporterId: string;
   targetType: string;
   targetId: string;
-  reason: string;
-  details: string;
+  targetOwnerId: string | null;
+  reasons: string[];
+  reportIds: string[];
+  priority: ModerationCasePriority;
+  state: string;
+  decision: string | null;
+  decidedBy: string | null;
   createdAt: string;
-  reviewed?: boolean;
 };
 
-export type AdminReviewQueue = {
-  verificationRequests: AdminVerificationRequest[];
-  contentReports: AdminContentReport[];
-};
+export type StaffAction = 'dismiss' | 'restrict' | 'hide' | 'remove' | 'warn' | 'suspend' | 'disable' | 'escalate';
 
-export async function fetchAdminReviewQueue(): Promise<AdminReviewQueue> {
+export async function fetchVerificationQueue(): Promise<AdminVerificationRequest[]> {
   const callable = createCallableFunction<Record<string, never>>('listAdminReviewQueue');
   if (!callable) {
-    return { verificationRequests: [], contentReports: [] };
+    return [];
   }
-
   const result = await callable({});
-  return result.data as AdminReviewQueue;
+  const data = result.data as { verificationRequests?: AdminVerificationRequest[] };
+  return data.verificationRequests ?? [];
+}
+
+export async function fetchModerationQueue(): Promise<ModerationCase[]> {
+  const callable = createCallableFunction<Record<string, never>>('listModerationQueue');
+  if (!callable) {
+    return [];
+  }
+  const result = await callable({});
+  const data = result.data as { cases?: ModerationCase[] };
+  return data.cases ?? [];
+}
+
+function requireCallable<T>(name: string) {
+  const callable = createCallableFunction<T>(name);
+  if (!callable) {
+    throw new Error('Moderation functions are not configured.');
+  }
+  return callable;
 }
 
 export async function resolveVerificationRequest(input: {
   requestId: string;
   status: 'approved' | 'rejected';
-  reviewerNote?: string;
+  reviewerNote: string;
 }): Promise<void> {
-  const callable = createCallableFunction<typeof input>('resolveVerificationRequest');
-  if (!callable) {
-    throw new Error('Admin review functions are not configured.');
-  }
-  await callable(input);
+  await requireCallable<typeof input>('resolveVerificationRequest')(input);
 }
 
-export async function archiveContentReport(input: {
-  reportId: string;
-  reviewerNote?: string;
+export async function applyModerationAction(input: {
+  caseId: string;
+  action: StaffAction;
+  reason: string;
+  durationDays?: number;
 }): Promise<void> {
-  const callable = createCallableFunction<typeof input>('archiveContentReport');
-  if (!callable) {
-    throw new Error('Admin review functions are not configured.');
-  }
-  await callable(input);
+  await requireCallable<typeof input>('applyModerationAction')(input);
+}
+
+export async function resolveAppeal(input: {
+  caseId: string;
+  outcome: 'upheld' | 'overturned';
+  reason: string;
+}): Promise<void> {
+  await requireCallable<typeof input>('resolveAppeal')(input);
 }

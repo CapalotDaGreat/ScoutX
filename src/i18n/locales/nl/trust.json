@@ -63,8 +63,21 @@
       "harassment": "Intimidatie of misbruik",
       "inappropriate": "Ongepaste inhoud",
       "impersonation": "Imitatie",
-      "other": "Anders"
-    }
+      "other": "Anders",
+      "inappropriate_contact": "Ongepast contact",
+      "copyright": "Gebruikt mijn video of werk zonder toestemming",
+      "privacy": "Deelt privégegevens",
+      "appears_in_video": "Ik ben in deze video te zien",
+      "minor_in_video": "Er is een kind te zien zonder toestemming",
+      "exploitation": "Uitbuiting of grooming",
+      "safety_concern": "Zorgen over veiligheid"
+    },
+    "promptVideo": "Vertel ons wat er mis is met dit Passport of een van de video's.",
+    "promptContact": "Vertel ons wat er mis is met dit verzoek.",
+    "videoRestrictedNote": "Meldingen over personen of kinderen in video's worden als eerste beoordeeld. De video kan tijdens de beoordeling verborgen worden.",
+    "passportButton": "Video melden",
+    "trialButton": "Deze uitnodiging melden",
+    "requestButton": "Dit verzoek melden"
   },
   "block": {
     "blockTitle": "Speler blokkeren?",
@@ -134,7 +147,7 @@
   "admin": {
     "overline": "Beheer",
     "title": "Moderatiewachtrij",
-    "counts": "{{verifications}} verificatieaanvragen · {{reports}} meldingen",
+    "counts": "{{verifications}} verificatieverzoeken · {{reports}} open zaken",
     "loading": "Wachtrij laden…",
     "empty": "Geen openstaande items.",
     "loadFailed": "De wachtrij kon niet worden geladen.",
@@ -142,6 +155,54 @@
     "reject": "Afwijzen",
     "reportLine": "Melding · {{target}} · {{reason}}",
     "markReviewed": "Markeren als beoordeeld",
-    "refresh": "Vernieuwen"
+    "refresh": "Vernieuwen",
+    "reason": "Reden (verplicht, vastgelegd in het auditlog)",
+    "reportCount_one": "{{count}} melding",
+    "reportCount_other": "{{count}} meldingen",
+    "actionFailed": "De actie kon niet worden uitgevoerd.",
+    "priority": {
+      "urgent": "Dringend",
+      "high": "Hoog",
+      "normal": "Normaal"
+    },
+    "state": {
+      "triage": "Triage",
+      "restricted": "Beperkt",
+      "review": "In beoordeling",
+      "notified": "Besloten",
+      "appealed": "Bezwaar",
+      "closed": "Gesloten"
+    },
+    "appeal": {
+      "upheld": "Beslissing handhaven",
+      "overturned": "Beslissing terugdraaien"
+    }
+  },
+  "notices": {
+    "title": "Beslissingen over je content",
+    "empty": "Geen moderatiebeslissingen over je account of content.",
+    "reason": "Gemeld voor: {{reason}}",
+    "appealLabel": "Leg uit waarom deze beslissing moet veranderen",
+    "appealSubmit": "Bezwaar versturen",
+    "appealFailed": "Je bezwaar kon niet worden verstuurd. Probeer het opnieuw.",
+    "actions": {
+      "dismiss": "Geen maatregel",
+      "restrict": "Beperkt",
+      "hide": "Verborgen",
+      "remove": "Verwijderd",
+      "warn": "Waarschuwing",
+      "suspend": "Account opgeschort",
+      "disable": "Account uitgeschakeld",
+      "escalate": "Doorgezet",
+      "restored": "Hersteld",
+      "appeal_upheld": "Bezwaar afgewezen",
+      "appeal_overturned": "Bezwaar toegekend"
+    },
+    "appeal": {
+      "start": "Bezwaar maken",
+      "pending": "Bezwaar in behandeling",
+      "upheld": "Beslissing blijft",
+      "overturned": "Beslissing teruggedraaid"
+    }
   }
 }

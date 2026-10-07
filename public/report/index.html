@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>ScoutX — Report a video or profile</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0b0f0c;
+        --fg: #fafafa;
+        --muted: #a3a3a3;
+        --accent: #a3e635;
+        --accent-fg: #0b0f0c;
+        --card: #141a16;
+        --border: #243028;
+        --danger: #f87171;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f5f5f5;
+          --fg: #0a0a0a;
+          --muted: #525252;
+          --accent: #4d7c0f;
+          --accent-fg: #ffffff;
+          --card: #ffffff;
+          --border: #e5e5e5;
+          --danger: #b91c1c;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      main {
+        width: min(560px, 100%);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px 24px;
+      }
+      h1 { margin: 0 0 8px; font-size: 1.35rem; }
+      p, li, legend { color: var(--muted); line-height: 1.5; font-size: 0.95rem; }
+      label { display: block; margin-top: 16px; font-weight: 600; }
+      input[type='text'], input[type='email'], textarea, select {
+        width: 100%;
+        margin-top: 6px;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--fg);
+        font: inherit;
+      }
+      textarea { min-height: 110px; resize: vertical; }
+      fieldset { border: 0; padding: 0; margin: 16px 0 0; }
+      fieldset label { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; margin-top: 10px; }
+      .honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+      button {
+        appearance: none;
+        border: 0;
+        border-radius: 12px;
+        min-height: 48px;
+        width: 100%;
+        margin-top: 20px;
+        padding: 12px 16px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--accent);
+        color: var(--accent-fg);
+      }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .error { color: var(--danger); }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <form id="report">
+        <h1>Report a ScoutX video or profile</h1>
+        <p>
+          Use this form if you appear in a video on a ScoutX Football Passport, if a child appears without
+          permission, or if a profile shares your private information or your work. You do not need an account.
+        </p>
+        <p>
+          Reports about a child in a video are reviewed first. Our team may restrict the video while we review it.
+          In an emergency, contact your local police.
+        </p>
+
+        <label for="passport">Passport link or username</label>
+        <input type="text" id="passport" name="passport" autocomplete="off" required maxlength="200"
+          placeholder="https://…/player/username" />
+
+        <fieldset>
+          <legend>What is the problem?</legend>
+          <label><input type="radio" name="reason" value="appears_in_video" checked /> I appear in a video and did not agree</label>
+          <label><input type="radio" name="reason" value="minor_in_video" /> A child appears without their parent's permission</label>
+          <label><input type="radio" name="reason" value="privacy" /> It shares private information</label>
+          <label><input type="radio" name="reason" value="copyright" /> It uses my video or work without permission</label>
+          <label><input type="radio" name="reason" value="safety_concern" /> I am worried about someone's safety</label>
+        </fieldset>
+
+        <label for="relationship">You are</label>
+        <select id="relationship" name="relationship">
+          <option value="self">The person in the video</option>
+          <option value="guardian">A parent or guardian of the person in the video</option>
+          <option value="other">Someone else</option>
+        </select>
+
+        <label for="details">Describe what we should look at (which video, roughly when it appears)</label>
+        <textarea id="details" name="details" required minlength="10" maxlength="1000"></textarea>
+
+        <label for="contactEmail">Email for updates (optional)</label>
+        <input type="email" id="contactEmail" name="contactEmail" autocomplete="email" maxlength="200" />
+        <p>We only use this email to tell you what happened with your report.</p>
+
+        <div class="honeypot" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <p id="form-error" class="error" hidden></p>
+        <button type="submit" id="submit">Send report</button>
+      </form>
+
+      <div id="done" hidden>
+        <h1>Thank you — we received your report</h1>
+        <p>
+          Our team reviews reports about children and people in videos first. If you left an email, we will
+          contact you about the outcome. You can send another report if something else needs attention.
+        </p>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        var form = document.getElementById('report');
+        var formError = document.getElementById('form-error');
+        var submit = document.getElementById('submit');
+
+        function value(id) {
+          return document.getElementById(id).value.trim();
+        }
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          formError.hidden = true;
+          var reason = form.querySelector('input[name="reason"]:checked');
+          var payload = {
+            passport: value('passport'),
+            reason: reason ? reason.value : '',
+            relationship: document.getElementById('relationship').value,
+            details: value('details'),
+            contactEmail: value('contactEmail'),
+            website: document.getElementById('website').value
+          };
+          if (payload.details.length < 10) {
+            formError.textContent = 'Please describe the problem in at least 10 characters.';
+            formError.hidden = false;
+            return;
+          }
+          submit.disabled = true;
+          fetch('/api/report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: payload })
+          })
+            .then(function (response) {
+              return response.json().then(function (body) {
+                if (!response.ok || body.error) {
+                  throw new Error((body.error && body.error.message) || 'Something went wrong. Please try again.');
+                }
+                form.hidden = true;
+                document.getElementById('done').hidden = false;
+              });
+            })
+            .catch(function (error) {
+              submit.disabled = false;
+              formError.textContent = error.message;
+              formError.hidden = false;
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

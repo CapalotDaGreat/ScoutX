@@ -1,6 +1,6 @@
-import { type ReportReason } from '@/features/trust-safety/constants';
+import { type ReportReason, type ReportTargetType } from '@/features/trust-safety/constants';
 
-export type ContentReportTargetType = 'post' | 'user';
+export type ContentReportTargetType = ReportTargetType;
 
 export type ContentReport = {
   id: string;

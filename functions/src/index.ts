@@ -5,11 +5,7 @@ export { generateAiInsight } from './aiCoach';
 export { analyzeMatchFootage } from './matchAnalysis';
 export { generateHighlightReelPlan } from './highlightReelStudio';
 export { scheduleWeeklyFootballReports } from './weeklyReportScheduler';
-export {
-  archiveContentReport,
-  listAdminReviewQueue,
-  resolveVerificationRequest,
-} from './adminReview';
+export { listAdminReviewQueue, resolveVerificationRequest } from './adminReview';
 export { recordPortfolioView } from './portfolioAnalytics';
 export { purgeLegacyGpsLocation } from './gpsPrivacy';
 export {
@@ -22,6 +18,16 @@ export {
 } from './safety/youthConsent';
 export { onUserSafetyWrittenReproject } from './safety/projectionSync';
 export { recordConsent } from './legal/consent';
+export { setStaffRole } from './moderation/staff';
+export { onContentReportCreated, submitPublicReport } from './moderation/reports';
+export {
+  listModerationQueue,
+  applyModerationAction,
+  submitAppeal,
+  resolveAppeal,
+  releaseExpiredSuspensions,
+} from './moderation/actions';
+export { onMediaWrittenReproject } from './moderation/reproject';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
 export {

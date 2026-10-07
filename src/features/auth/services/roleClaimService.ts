@@ -44,3 +44,16 @@ export async function readRoleClaim(): Promise<string | null> {
   const role = tokenResult.claims.role;
   return typeof role === 'string' ? role : null;
 }
+
+export type StaffRole = 'moderator' | 'admin';
+
+/** Display hint only; every staff callable re-checks the claim server-side. */
+export async function readStaffRoleClaim(): Promise<StaffRole | null> {
+  const user = getFirebaseAuth()?.currentUser;
+  if (!user) {
+    return null;
+  }
+  const tokenResult = await user.getIdTokenResult();
+  const role = tokenResult.claims.staffRole;
+  return role === 'moderator' || role === 'admin' ? role : null;
+}

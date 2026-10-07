@@ -63,8 +63,21 @@
       "harassment": "Belästigung oder Missbrauch",
       "inappropriate": "Unangemessener Inhalt",
       "impersonation": "Identitätsmissbrauch",
-      "other": "Sonstiges"
-    }
+      "other": "Sonstiges",
+      "inappropriate_contact": "Unangemessene Kontaktaufnahme",
+      "copyright": "Nutzt mein Video oder Werk ohne Erlaubnis",
+      "privacy": "Teilt private Informationen",
+      "appears_in_video": "Ich bin in diesem Video zu sehen",
+      "minor_in_video": "Ein Kind ist ohne Erlaubnis zu sehen",
+      "exploitation": "Ausbeutung oder Grooming",
+      "safety_concern": "Sicherheitsbedenken"
+    },
+    "promptVideo": "Sag uns, was mit diesem Passport oder einem seiner Videos nicht stimmt.",
+    "promptContact": "Sag uns, was mit dieser Anfrage nicht stimmt.",
+    "videoRestrictedNote": "Meldungen zu Personen oder Kindern in Videos werden zuerst geprüft. Das Video kann während der Prüfung ausgeblendet werden.",
+    "passportButton": "Video melden",
+    "trialButton": "Diese Einladung melden",
+    "requestButton": "Diese Anfrage melden"
   },
   "block": {
     "blockTitle": "Spieler blockieren?",
@@ -134,7 +147,7 @@
   "admin": {
     "overline": "Admin-Prüfung",
     "title": "Moderationswarteschlange",
-    "counts": "{{verifications}} Verifizierungsanfragen · {{reports}} Inhaltsmeldungen",
+    "counts": "{{verifications}} Verifizierungsanfragen · {{reports}} offene Fälle",
     "loading": "Warteschlange wird geladen…",
     "empty": "Keine offenen Einträge.",
     "loadFailed": "Die Warteschlange konnte nicht geladen werden.",
@@ -142,6 +155,54 @@
     "reject": "Ablehnen",
     "reportLine": "Meldung · {{target}} · {{reason}}",
     "markReviewed": "Als geprüft markieren",
-    "refresh": "Aktualisieren"
+    "refresh": "Aktualisieren",
+    "reason": "Begründung (Pflicht, wird im Audit-Log gespeichert)",
+    "reportCount_one": "{{count}} Meldung",
+    "reportCount_other": "{{count}} Meldungen",
+    "actionFailed": "Die Aktion konnte nicht ausgeführt werden.",
+    "priority": {
+      "urgent": "Dringend",
+      "high": "Hoch",
+      "normal": "Normal"
+    },
+    "state": {
+      "triage": "Triage",
+      "restricted": "Eingeschränkt",
+      "review": "In Prüfung",
+      "notified": "Entschieden",
+      "appealed": "Einspruch",
+      "closed": "Geschlossen"
+    },
+    "appeal": {
+      "upheld": "Entscheidung beibehalten",
+      "overturned": "Entscheidung aufheben"
+    }
+  },
+  "notices": {
+    "title": "Entscheidungen zu deinen Inhalten",
+    "empty": "Keine Moderationsentscheidungen zu deinem Konto oder deinen Inhalten.",
+    "reason": "Gemeldet wegen: {{reason}}",
+    "appealLabel": "Erkläre, warum diese Entscheidung geändert werden sollte",
+    "appealSubmit": "Einspruch senden",
+    "appealFailed": "Dein Einspruch konnte nicht gesendet werden. Bitte versuch es erneut.",
+    "actions": {
+      "dismiss": "Keine Massnahme",
+      "restrict": "Eingeschränkt",
+      "hide": "Ausgeblendet",
+      "remove": "Entfernt",
+      "warn": "Verwarnung",
+      "suspend": "Konto gesperrt",
+      "disable": "Konto deaktiviert",
+      "escalate": "Weitergeleitet",
+      "restored": "Wiederhergestellt",
+      "appeal_upheld": "Einspruch abgelehnt",
+      "appeal_overturned": "Einspruch erfolgreich"
+    },
+    "appeal": {
+      "start": "Einspruch einlegen",
+      "pending": "Einspruch wird geprüft",
+      "upheld": "Entscheidung bleibt",
+      "overturned": "Entscheidung aufgehoben"
+    }
   }
 }

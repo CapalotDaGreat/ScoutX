@@ -21,15 +21,19 @@ Users, videos, reels, Passports, scouts, evidence requests, trials and scouting 
 
 1. Triage: reports involving minors, sexual content or threats are reviewed first.
 2. Restriction: if needed, the content is temporarily hidden from public view while it is reviewed.
-3. Review and decision: trained ScoutX staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.
-4. Notification: the reporter and the affected user are told the outcome, without revealing the reporter.
-5. Appeal: the affected user can appeal once. A different staff member reviews the appeal.
+3. Review and decision: ScoutX staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.
+4. Notification: the reporter and the affected user are told the outcome, without revealing the reporter. People who reported without an account and left an email receive one update by email, after which the address is deleted.
+5. Appeal: the affected user can appeal once from the Privacy Center. A different staff member reviews the appeal.
 
 Every staff action is recorded with a reason in an audit log.
 
 ## Urgent danger
 
-If someone is in immediate danger, contact local emergency services first. ScoutX reports content that suggests child abuse to the authorities.
+If someone is in immediate danger, contact local emergency services first. Content that suggests child abuse is given the highest review priority. The process for referring such content to the competent authorities is LEGAL_REVIEW_REQUIRED.
+
+## Reporting without an account
+
+People who appear in a video, or their parents or guardians, can use the public report form on the ScoutX website without signing in.
 
 ## Contact
 

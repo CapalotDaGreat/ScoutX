@@ -9,6 +9,7 @@ const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const holds_1 = require("./moderation/holds");
 const publicPassport_1 = require("./publicPassport");
 const userSafety_1 = require("./safety/userSafety");
 const POSITIONS = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST', 'CF'];
@@ -219,7 +220,7 @@ async function projectDiscoverablePlayer(playerId) {
         (0, userSafety_1.loadSafetyPolicy)(playerId, db),
     ]);
     const ref = db.collection('discoverablePlayers').doc(playerId);
-    if (!profileSnap.exists || !policy.canBeDiscovered) {
+    if (!profileSnap.exists || !policy.canBeDiscovered || (await (0, holds_1.isAccountHeld)(playerId, db))) {
         await ref.delete().catch(() => undefined);
         return;
     }

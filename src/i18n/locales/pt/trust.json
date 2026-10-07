@@ -63,8 +63,21 @@
       "harassment": "Assédio ou abuso",
       "inappropriate": "Conteúdo impróprio",
       "impersonation": "Falsificação de identidade",
-      "other": "Outro"
-    }
+      "other": "Outro",
+      "inappropriate_contact": "Contacto inapropriado",
+      "copyright": "Usa o meu vídeo ou trabalho sem autorização",
+      "privacy": "Partilha informações privadas",
+      "appears_in_video": "Apareço neste vídeo",
+      "minor_in_video": "Aparece uma criança sem autorização",
+      "exploitation": "Exploração ou aliciamento",
+      "safety_concern": "Preocupação de segurança"
+    },
+    "promptVideo": "Conta-nos o que está errado com este Passport ou um dos seus vídeos.",
+    "promptContact": "Conta-nos o que está errado com este pedido.",
+    "videoRestrictedNote": "Denúncias sobre pessoas ou crianças em vídeos são analisadas primeiro. O vídeo pode ficar oculto durante a análise.",
+    "passportButton": "Denunciar um vídeo",
+    "trialButton": "Denunciar este convite",
+    "requestButton": "Denunciar este pedido"
   },
   "block": {
     "blockTitle": "Bloquear jogador?",
@@ -134,7 +147,7 @@
   "admin": {
     "overline": "Revisão de administração",
     "title": "Fila de moderação",
-    "counts": "{{verifications}} pedidos de verificação · {{reports}} denúncias",
+    "counts": "{{verifications}} pedidos de verificação · {{reports}} casos abertos",
     "loading": "A carregar fila…",
     "empty": "Sem itens pendentes.",
     "loadFailed": "Não foi possível carregar a fila.",
@@ -142,6 +155,54 @@
     "reject": "Rejeitar",
     "reportLine": "Denúncia · {{target}} · {{reason}}",
     "markReviewed": "Marcar como revisto",
-    "refresh": "Atualizar"
+    "refresh": "Atualizar",
+    "reason": "Motivo (obrigatório, registado no log de auditoria)",
+    "reportCount_one": "{{count}} denúncia",
+    "reportCount_other": "{{count}} denúncias",
+    "actionFailed": "Não foi possível concluir a ação.",
+    "priority": {
+      "urgent": "Urgente",
+      "high": "Alta",
+      "normal": "Normal"
+    },
+    "state": {
+      "triage": "Triagem",
+      "restricted": "Restringido",
+      "review": "Em análise",
+      "notified": "Decidido",
+      "appealed": "Em recurso",
+      "closed": "Fechado"
+    },
+    "appeal": {
+      "upheld": "Manter decisão",
+      "overturned": "Reverter decisão"
+    }
+  },
+  "notices": {
+    "title": "Decisões sobre o teu conteúdo",
+    "empty": "Não há decisões de moderação sobre a tua conta ou o teu conteúdo.",
+    "reason": "Denunciado por: {{reason}}",
+    "appealLabel": "Explica porque esta decisão deve mudar",
+    "appealSubmit": "Enviar recurso",
+    "appealFailed": "Não foi possível enviar o recurso. Tenta novamente.",
+    "actions": {
+      "dismiss": "Sem medidas",
+      "restrict": "Restringido",
+      "hide": "Oculto",
+      "remove": "Removido",
+      "warn": "Aviso",
+      "suspend": "Conta suspensa",
+      "disable": "Conta desativada",
+      "escalate": "Escalado",
+      "restored": "Reposto",
+      "appeal_upheld": "Recurso indeferido",
+      "appeal_overturned": "Recurso aceite"
+    },
+    "appeal": {
+      "start": "Recorrer desta decisão",
+      "pending": "Recurso em análise",
+      "upheld": "Decisão mantida",
+      "overturned": "Decisão revertida"
+    }
   }
 }

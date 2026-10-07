@@ -62,7 +62,8 @@ Firebase Authentication stores passwords using Google's managed infrastructure. 
 
 Administrators may:
 
-- review verification requests and content reports (server-enforced via `ADMIN_USER_IDS`)
+- review verification requests, moderation cases and appeals (server-enforced via the `staffRole` custom claim: `moderator` or `admin`)
+- grant or revoke staff roles with the `setStaffRole` callable, which only accounts in the `ADMIN_USER_IDS` secret may call (recent sign-in required; every change is written to `adminAuditLog`)
 - disable accounts through Firebase Console / Admin SDK
 - trigger standard Firebase password-reset emails for support workflows
 
@@ -158,7 +159,7 @@ All Cloud Functions must:
 3. **Never** accept, log, or persist plaintext passwords.
 4. **Never** return credential material in responses.
 
-Admin authorization uses the `ADMIN_USER_IDS` secret — not client-exposed environment variables.
+Staff authorization uses the `staffRole` custom claim, which only `ADMIN_USER_IDS` operators can grant — never client-exposed environment variables. Destructive moderation actions (remove, suspend, disable) require a sign-in within the last 15 minutes, and appeals must be reviewed by a different staff member than the one who decided.
 
 ## Development-only mock authentication
 

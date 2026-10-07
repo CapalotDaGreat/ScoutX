@@ -23,6 +23,8 @@ function media(overrides: Partial<MediaItem> & { id: string }): MediaItem {
     sourceMatchId: null,
     sourceJobId: null,
     visibility: 'private',
+    rightsState: 'unconfirmed',
+    moderationState: 'none',
     uploadState: 'ready',
     processingState: 'none',
     favorite: false,

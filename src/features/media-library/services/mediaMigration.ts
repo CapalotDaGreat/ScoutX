@@ -14,7 +14,10 @@ function uploadState(status: HighlightVideo['uploadStatus']): MediaItem['uploadS
   return 'pending';
 }
 
-/** Maps a legacy profile highlight into the media subcollection. Token URLs are dropped. */
+/**
+ * Maps a legacy profile highlight into the media subcollection. Token URLs are dropped and the
+ * item starts private: publishing needs the owner's rights confirmation first.
+ */
 export function highlightVideoToMediaItem(video: HighlightVideo, ownerId: string): MediaItem {
   return {
     id: video.id,
@@ -25,7 +28,9 @@ export function highlightVideoToMediaItem(video: HighlightVideo, ownerId: string
     durationSec: Number.isFinite(video.durationSec) ? video.durationSec : 0,
     sourceMatchId: null,
     sourceJobId: null,
-    visibility: video.featured ? 'passport' : 'private',
+    visibility: 'private',
+    rightsState: 'unconfirmed',
+    moderationState: 'none',
     uploadState: uploadState(video.uploadStatus),
     processingState: 'none',
     favorite: Boolean(video.featured),

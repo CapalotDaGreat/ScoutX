@@ -20,7 +20,9 @@ Before uploading, make sure that you recorded the footage yourself or have permi
 
 ## Visibility
 
-Every upload starts as private. You can choose a wider audience (team, scouts, your Passport or unlisted link). Before media becomes visible beyond you, ScoutX shows a warning and a preview of who will be able to see it. Players aged 13 to 17 can publish media only if their guardian has allowed it.
+Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, ScoutX shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it.
+
+The first time you upload, ScoutX asks you to acknowledge this policy. ScoutX records that acknowledgement with the policy version.
 
 ## Processing
 
