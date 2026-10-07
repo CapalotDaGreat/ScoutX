@@ -294,6 +294,20 @@ export type MatchFrameSample = {
   downloadUrl: string;
 };
 
+/** Mirrors ProbeSummary in functions/src/uploads/probe.ts. */
+export type VideoProbeSummary = {
+  container: 'mp4' | 'mov';
+  videoCodec: string;
+  audioCodec: string | null;
+  width: number;
+  height: number;
+  fps: number;
+  durationSec: number;
+  bitRate: number | null;
+  sizeBytes: number;
+  streamCount: number;
+};
+
 export type MatchAnalysisJob = {
   id: string;
   playerId: string;
@@ -302,7 +316,11 @@ export type MatchAnalysisJob = {
   match: MatchContextInput;
   durationSec: number;
   fileSizeBytes?: number;
+  /** Server-set after ffprobe validation and promotion out of quarantine. */
   videoStoragePath?: string;
+  videoUploadId?: string;
+  videoProbe?: VideoProbeSummary;
+  measuredDurationSec?: number;
   videoDownloadUrl?: string;
   frames: MatchFrameSample[];
   identityCandidates?: IdentityCandidate[];
@@ -338,6 +356,7 @@ export type MatchVideoSync = {
 
 export type CreateMatchAnalysisInput = {
   localVideoUri: string;
+  fileName?: string;
   durationSec: number;
   fileSizeBytes?: number;
   targeting: PlayerTargeting;

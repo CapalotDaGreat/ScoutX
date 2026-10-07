@@ -29,6 +29,7 @@ import {
   useMediaUploadAcknowledged,
 } from '@/features/media-library/components/UploadAcknowledgementPanel';
 import { markAnalysisReviewed, workflowEvents } from '@/features/today/services/workflowStores';
+import { UploadProgressCard } from '@/features/media-upload';
 
 export type MatchAnalysisModalProps = {
   visible: boolean;
@@ -312,6 +313,9 @@ export function MatchAnalysisModal({
     confirmPlayerIdentity,
     resetActive,
     setActiveJob,
+    upload,
+    resumeUpload,
+    cancelUpload,
   } = useMatchAnalysis(playerId);
   const { t } = useAppTranslation(['matchAnalysis', 'common']);
   const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
@@ -424,6 +428,7 @@ export function MatchAnalysisModal({
     try {
       await startAnalysis({
         localVideoUri: picked.uri,
+        fileName: picked.fileName,
         durationSec: picked.durationSec,
         fileSizeBytes: picked.fileSizeBytes,
         targeting: {
@@ -491,6 +496,13 @@ export function MatchAnalysisModal({
             {error}
           </Text>
         ) : null}
+
+        <UploadProgressCard
+          state={upload.state}
+          onPause={upload.pause}
+          onResume={() => void resumeUpload().catch(() => undefined)}
+          onCancel={() => void cancelUpload()}
+        />
 
         {retryable && activeJob ? (
           <Card>

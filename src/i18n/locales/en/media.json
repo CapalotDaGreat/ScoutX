@@ -183,6 +183,22 @@
       "file_missing": "The selected video is no longer on this device. Pick it again.",
       "rejected": "The video could not be accepted. Check that it is a playable MP4 or MOV file.",
       "unknown": "The upload could not be completed. Please try again."
+    },
+    "rejection": {
+      "not_video": "This file is not a video. Pick an MP4 or MOV recording.",
+      "unsupported_container": "Only MP4 and MOV videos are supported.",
+      "unsupported_codec": "This video uses a format ScoutX cannot read. Use H.264 or HEVC (the iPhone default).",
+      "no_video_stream": "This file has no video picture.",
+      "too_many_streams": "This file has too many tracks. Export it again as a single video.",
+      "too_short": "This video is too short to analyze.",
+      "too_long": "Videos can be up to 150 minutes long.",
+      "resolution": "The video resolution is outside the supported range.",
+      "frame_rate": "The video frame rate is outside the supported range.",
+      "bitrate": "The video bitrate is too high. Export it again at a lower quality.",
+      "size_mismatch": "The upload did not arrive complete. Please upload it again.",
+      "probe_failed": "The video could not be read. It may be damaged; try exporting it again.",
+      "scanner_flagged": "This file was blocked by an automated check.",
+      "job_missing": "The analysis for this video no longer exists."
     }
   },
   "export": {

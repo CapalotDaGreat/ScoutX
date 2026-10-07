@@ -1,6 +1,6 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { deleteObject, isAllowed, downloadObject, isDenied, uploadObject } from './emulator.mjs';
+import { adminUploadObject, deleteObject, isAllowed, downloadObject, isDenied, uploadObject } from './emulator.mjs';
 
 const OWNER = 'storage-owner';
 const OTHER = 'storage-other';
@@ -60,9 +60,11 @@ describe('highlight media', () => {
 describe('match footage', () => {
   const base = `profiles/${OWNER}/matchFootage/job-1`;
 
-  test('frames and full videos are owner-only with type and size limits', async () => {
+  test('frames are owner-only; full videos are written only by server promotion', async () => {
     await allowed(uploadObject(OWNER, `${base}/frames/frame_001.jpg`, 'image/jpeg'), 'frame');
-    await allowed(uploadObject(OWNER, `${base}/video.mp4`, 'video/mp4'), 'full match');
+    await denied(uploadObject(OWNER, `${base}/video.mp4`, 'video/mp4'), 'client writes unvalidated full match');
+    await allowed(adminUploadObject(`${base}/video.mp4`, 'video/mp4'), 'server promotion seeds video');
+    await allowed(downloadObject(OWNER, `${base}/video.mp4`), 'owner reads promoted video');
     await denied(uploadObject(OWNER, `${base}/frames/frame_002.jpg`, 'image/jpeg', 2 * MB + 1), 'oversized frame');
     await denied(uploadObject(OWNER, `${base}/frames/notes.txt`, 'text/plain'), 'unexpected frame file');
     await denied(uploadObject(OTHER, `${base}/frames/frame_003.jpg`, 'image/jpeg'), 'foreign frame');

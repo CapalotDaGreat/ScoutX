@@ -110,6 +110,15 @@ export async function uploadObject(uid, path, contentType, sizeBytes = 16) {
   return response.status;
 }
 
+/** Seeds an object as the server would (admin bypass), for paths clients may not write. */
+export async function adminUploadObject(path, contentType, sizeBytes = 16) {
+  const response = await fetch(
+    `http://${STORAGE_HOST}/v0/b/${BUCKET}/o?name=${encodeURIComponent(path)}`,
+    { method: 'POST', headers: { Authorization: 'Bearer owner', 'Content-Type': contentType }, body: Buffer.alloc(sizeBytes, 1) },
+  );
+  return response.status;
+}
+
 export async function downloadObject(uid, path) {
   const response = await fetch(
     `http://${STORAGE_HOST}/v0/b/${BUCKET}/o/${encodeURIComponent(path)}?alt=media`,

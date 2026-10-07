@@ -48,6 +48,30 @@ export const UploadSessionRepository = {
     await fn({ uploadId });
   },
 
+  /** Resolves when server validation finishes, or null if it does not within `timeoutMs`. */
+  waitForOutcome(uploadId: string, timeoutMs: number): Promise<ServerUploadRecord | null> {
+    return new Promise((resolve) => {
+      let settled = false;
+      let unsubscribe: () => void = () => undefined;
+      const finish = (record: ServerUploadRecord | null) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        unsubscribe();
+        resolve(record);
+      };
+      const timer = setTimeout(() => finish(null), timeoutMs);
+      unsubscribe = this.subscribe(
+        uploadId,
+        (record) => {
+          if (record && ['ready', 'rejected', 'expired', 'cancelled'].includes(record.state)) finish(record);
+        },
+        () => finish(null),
+      );
+      if (settled) unsubscribe();
+    });
+  },
+
   /** Server-owned processing state: quarantined, validated, ready or rejected. */
   subscribe(
     uploadId: string,

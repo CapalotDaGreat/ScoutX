@@ -50,7 +50,7 @@ export type ServerUploadRecord = {
   uploadId: string;
   state: UploadState;
   jobId: string | null;
-  rejectionReason: string | null;
+  rejectionReason: UploadRejectionReason | null;
 };
 
 export type UploadPhase =
@@ -84,7 +84,33 @@ export type UploadViewState = {
   bytesPerSecond: number | null;
   etaSeconds: number | null;
   error: UploadErrorCode | null;
+  rejectionReason: UploadRejectionReason | null;
 };
+
+/** Mirrors RejectionReason in functions/src/uploads/probe.ts. */
+export const UPLOAD_REJECTION_REASONS = [
+  'not_video',
+  'unsupported_container',
+  'unsupported_codec',
+  'no_video_stream',
+  'too_many_streams',
+  'too_short',
+  'too_long',
+  'resolution',
+  'frame_rate',
+  'bitrate',
+  'size_mismatch',
+  'probe_failed',
+  'scanner_flagged',
+  'job_missing',
+] as const;
+export type UploadRejectionReason = (typeof UPLOAD_REJECTION_REASONS)[number];
+
+export function parseRejectionReason(value: unknown): UploadRejectionReason | null {
+  return typeof value === 'string' && (UPLOAD_REJECTION_REASONS as readonly string[]).includes(value)
+    ? (value as UploadRejectionReason)
+    : null;
+}
 
 export const IDLE_UPLOAD: UploadViewState = {
   phase: 'idle',
@@ -94,6 +120,7 @@ export const IDLE_UPLOAD: UploadViewState = {
   bytesPerSecond: null,
   etaSeconds: null,
   error: null,
+  rejectionReason: null,
 };
 
 export function parseUploadState(value: unknown): UploadState | null {
@@ -111,7 +138,7 @@ export function parseServerUploadRecord(uploadId: string, data: unknown): Server
     uploadId,
     state,
     jobId: typeof record.jobId === 'string' ? record.jobId : null,
-    rejectionReason: typeof record.rejectionReason === 'string' ? record.rejectionReason : null,
+    rejectionReason: parseRejectionReason(record.rejectionReason),
   };
 }
 

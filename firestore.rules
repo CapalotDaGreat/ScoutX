@@ -604,12 +604,18 @@ service cloud.firestore {
 
     // Analysis reports are written only by the analyzeMatchFootage function so clients
     // cannot present fabricated AI results as real.
+    // Set only by server promotion after ffprobe validation.
+    function serverVideoKeys() {
+      return ['videoStoragePath', 'videoUploadId', 'videoProbe', 'measuredDurationSec', 'videoValidatedAt'];
+    }
+
     match /matchAnalysisJobs/{jobId} {
       allow read: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.playerId
         && !request.resource.data.keys().hasAny(['report', 'completedAt', 'lease', 'events'])
+        && !request.resource.data.keys().hasAny(serverVideoKeys())
         && request.resource.data.status in ['uploading', 'queued'];
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.playerId
@@ -617,6 +623,7 @@ service cloud.firestore {
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny([
           'report', 'completedAt', 'lease', 'attempts', 'events',
         ])
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(serverVideoKeys())
         && (
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status'])
           || request.resource.data.status in ['uploading', 'queued', 'processing', 'failed']

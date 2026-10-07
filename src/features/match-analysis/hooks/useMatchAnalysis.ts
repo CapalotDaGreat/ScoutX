@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { isFirebaseConfiguredForProject } from '@/config/firebase';
 import { shouldUseMockAuth } from '@/config/authSecurity';
 import { useMockData } from '@/config/appMode';
 import { sampleMatchFrames } from '@/features/match-analysis/services/matchFrameSamplingService';
+import { uploadMatchFrame } from '@/features/match-analysis/services/matchFootageStorageService';
 import {
-  uploadMatchFrame,
-  uploadMatchVideo,
-} from '@/features/match-analysis/services/matchFootageStorageService';
+  UploadSessionRepository,
+  contentTypeForFileName,
+  useChunkedUpload,
+  type UploadAttempt,
+} from '@/features/media-upload';
 import { pickMatchFootageVideo } from '@/features/match-analysis/services/matchVideoPickerService';
 import { requestMatchFootageAnalysis } from '@/features/match-analysis/services/matchAnalysisCallable';
 import { buildMockMatchAnalysisReport } from '@/features/match-analysis/services/mockMatchAnalysisService';
@@ -37,6 +40,12 @@ const ANALYSIS_FAILED_MESSAGE =
 const ANALYSIS_UNAVAILABLE_MESSAGE =
   'Match analysis is unavailable right now. Please try again later.';
 const RESULT_WAIT_MS = 90_000;
+const VALIDATION_WAIT_MS = 10 * 60_000;
+const VIDEO_REJECTED_MESSAGE =
+  'This video could not be accepted. Check that it is a playable MP4 or MOV match recording and try again.';
+const VALIDATION_TIMEOUT_MESSAGE =
+  'Your video arrived but checking it is taking longer than expected. Please check back shortly.';
+const UPLOAD_CANCELLED_MESSAGE = 'Upload cancelled.';
 
 function createJobId(): string {
   return `match_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
@@ -78,6 +87,9 @@ export function useMatchAnalysis(playerId: string | null) {
   const [isBusy, setIsBusy] = useState(false);
   const [phaseLabel, setPhaseLabel] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const upload = useChunkedUpload(playerId);
+  const { start: startUpload, resume: resumeTransfer, reset: resetUpload } = upload;
+  const uploadJobRef = useRef<MatchAnalysisJob | null>(null);
 
   const refreshRecent = useCallback(async () => {
     if (!playerId || !isFirebaseConfiguredForProject()) {
@@ -169,6 +181,88 @@ export function useMatchAnalysis(playerId: string | null) {
     },
     [refreshRecent],
   );
+
+  /** Waits for server ffprobe validation and promotion, then starts the analysis. */
+  const continueAfterUpload = useCallback(
+    async (job: MatchAnalysisJob, uploadId: string): Promise<MatchAnalysisJob> => {
+      setPhaseLabel('Checking your video…');
+      setActiveJob({ ...job, phaseLabel: 'Checking video format and length', uploadProgress: 90 });
+      const outcome = await UploadSessionRepository.waitForOutcome(uploadId, VALIDATION_WAIT_MS);
+      if (!outcome || outcome.state !== 'ready') {
+        throw new Error(outcome?.state === 'rejected' ? VIDEO_REJECTED_MESSAGE : VALIDATION_TIMEOUT_MESSAGE);
+      }
+      const server = await getMatchAnalysisJob(job.id).catch(() => null);
+      const queued: MatchAnalysisJob = {
+        ...job,
+        videoStoragePath: server?.videoStoragePath,
+        videoProbe: server?.videoProbe,
+        measuredDurationSec: server?.measuredDurationSec,
+        fileSizeBytes: server?.fileSizeBytes ?? job.fileSizeBytes,
+        status: 'queued',
+        phaseLabel: 'Queued for sampled-frame review',
+        uploadProgress: 95,
+        updatedAt: new Date().toISOString(),
+      };
+      await updateMatchAnalysisJob(job.id, {
+        status: 'queued',
+        phaseLabel: queued.phaseLabel,
+        uploadProgress: 95,
+      });
+      uploadJobRef.current = null;
+      resetUpload();
+      setActiveJob(queued);
+      return runServerAnalysis(queued);
+    },
+    [resetUpload, runServerAnalysis],
+  );
+
+  const afterUploadAttempt = useCallback(
+    async (job: MatchAnalysisJob, attempt: UploadAttempt): Promise<MatchAnalysisJob> => {
+      if (attempt.status === 'complete') return continueAfterUpload(job, attempt.uploadId);
+      if (attempt.status === 'cancelled') {
+        const cancelled: MatchAnalysisJob = { ...job, status: 'failed', error: UPLOAD_CANCELLED_MESSAGE };
+        await updateMatchAnalysisJob(job.id, { status: 'failed', error: UPLOAD_CANCELLED_MESSAGE }).catch(() => undefined);
+        uploadJobRef.current = null;
+        setActiveJob(cancelled);
+        return cancelled;
+      }
+      // Paused or interrupted: the job stays in `uploading` and can resume from the committed offset.
+      const waiting: MatchAnalysisJob = {
+        ...job,
+        phaseLabel: attempt.status === 'paused' ? 'Upload paused' : 'Upload interrupted',
+      };
+      setActiveJob(waiting);
+      return waiting;
+    },
+    [continueAfterUpload],
+  );
+
+  const resumeUpload = useCallback(async (): Promise<MatchAnalysisJob | null> => {
+    const job = uploadJobRef.current;
+    if (!job) return null;
+    setIsBusy(true);
+    setError(null);
+    try {
+      setPhaseLabel('Uploading full match video…');
+      return await afterUploadAttempt(job, await resumeTransfer());
+    } catch (err) {
+      const message = toUserMessage(err, 'Match analysis failed. Please try again.');
+      setError(message);
+      setActiveJob((current) => (current ? { ...current, status: 'failed', error: message } : current));
+      await updateMatchAnalysisJob(job.id, { status: 'failed', error: message }).catch(() => undefined);
+      throw new Error(message);
+    } finally {
+      setIsBusy(false);
+      setPhaseLabel(null);
+    }
+  }, [afterUploadAttempt, resumeTransfer]);
+
+  const cancelUpload = useCallback(async () => {
+    const job = uploadJobRef.current;
+    const idle = upload.state.phase === 'paused' || upload.state.phase === 'failed';
+    upload.cancel();
+    if (idle && job) await afterUploadAttempt(job, { status: 'cancelled' });
+  }, [afterUploadAttempt, upload]);
 
   const startAnalysis = useCallback(
     async (input: CreateMatchAnalysisInput) => {
@@ -277,34 +371,32 @@ export function useMatchAnalysis(playerId: string | null) {
           );
         }
 
-        setPhaseLabel('Uploading full match video…');
-        const video = await uploadMatchVideo(playerId, jobId, input.localVideoUri, (progress) => {
-          setActiveJob((current) =>
-            current
-              ? {
-                  ...current,
-                  uploadProgress: 55 + Math.round(progress * 0.35),
-                }
-              : current,
-          );
-        });
-
         job = {
           ...job,
-          status: 'queued',
-          phaseLabel: 'Queued for sampled-frame review',
           frames: uploadedFrames,
           identityCandidates: candidatesFromFrames(uploadedFrames),
-          videoStoragePath: video.storagePath,
-          videoDownloadUrl: video.downloadUrl,
-          fileSizeBytes: video.fileSizeBytes,
-          uploadProgress: 95,
-          updatedAt: new Date().toISOString(),
+          phaseLabel: 'Uploading full match video',
+          uploadProgress: 55,
         };
-        await updateMatchAnalysisJob(jobId, job);
+        await updateMatchAnalysisJob(jobId, {
+          frames: job.frames,
+          identityCandidates: job.identityCandidates,
+          phaseLabel: job.phaseLabel,
+          uploadProgress: 55,
+        });
         setActiveJob(job);
+        uploadJobRef.current = job;
 
-        return await runServerAnalysis(job);
+        setPhaseLabel('Uploading full match video…');
+        const attempt = await startUpload({
+          purpose: 'match_footage',
+          jobId,
+          fileUri: input.localVideoUri,
+          fileName: input.fileName ?? 'match.mp4',
+          contentType: contentTypeForFileName(input.fileName ?? input.localVideoUri),
+          declaredDurationSec: input.durationSec,
+        });
+        return await afterUploadAttempt(job, attempt);
       } catch (err) {
         const message = toUserMessage(err, 'Match analysis failed. Please try again.');
         setError(message);
@@ -324,7 +416,7 @@ export function useMatchAnalysis(playerId: string | null) {
         setPhaseLabel(null);
       }
     },
-    [playerId, runServerAnalysis],
+    [playerId, afterUploadAttempt, startUpload],
   );
 
   const retryAnalysis = useCallback(
@@ -385,6 +477,9 @@ export function useMatchAnalysis(playerId: string | null) {
     resetActive,
     refreshRecent,
     setActiveJob,
+    upload,
+    resumeUpload,
+    cancelUpload,
   };
 }
 

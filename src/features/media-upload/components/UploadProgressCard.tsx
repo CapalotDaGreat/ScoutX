@@ -64,7 +64,7 @@ export function UploadProgressCard({ state, onPause, onResume, onCancel }: Uploa
       ) : null}
       {state.phase === 'failed' && state.error ? (
         <Text variant="caption" color="error" testID="upload-progress-error">
-          {t(`upload.error.${state.error}`)}
+          {state.rejectionReason ? t(`upload.rejection.${state.rejectionReason}`) : t(`upload.error.${state.error}`)}
         </Text>
       ) : null}
       <View className="flex-row flex-wrap gap-2">
@@ -73,7 +73,7 @@ export function UploadProgressCard({ state, onPause, onResume, onCancel }: Uploa
             {t('upload.pause')}
           </Button>
         ) : null}
-        {state.phase === 'paused' || state.phase === 'failed' ? (
+        {state.phase === 'paused' || (state.phase === 'failed' && state.error !== 'rejected') ? (
           <Button size="sm" variant="accent" onPress={onResume} testID="upload-resume">
             {state.phase === 'paused' ? t('upload.resume') : t('upload.retry')}
           </Button>

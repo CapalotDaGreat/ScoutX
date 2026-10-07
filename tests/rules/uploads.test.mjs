@@ -3,7 +3,9 @@
 import { before, beforeEach, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash, randomBytes } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { mediaFixtures } from './support/mediaFixtures.mjs';
 import {
   BUCKET,
   PROJECT_ID,
@@ -29,7 +31,10 @@ let db;
 let createUploadSession;
 let cancelUploadSession;
 let expireAbandonedUploads;
-let recordQuarantinedObject;
+let processQuarantinedObject;
+let setMediaScanner;
+let noopMediaScanner;
+let fixtures;
 let videoPolicyVersion;
 
 function call(uid, data) {
@@ -90,7 +95,9 @@ before(async () => {
   if (!getApps().length) initializeApp({ projectId: PROJECT_ID, storageBucket: BUCKET });
   db = getFirestore();
   ({ createUploadSession, cancelUploadSession, expireAbandonedUploads } = require('./lib/uploads/sessions.js'));
-  ({ recordQuarantinedObject } = require('./lib/uploads/quarantine.js'));
+  ({ processQuarantinedObject } = require('./lib/uploads/quarantine.js'));
+  ({ setMediaScanner, noopMediaScanner } = require('./lib/uploads/mediaScanner.js'));
+  fixtures = mediaFixtures();
   videoPolicyVersion = require('./lib/legal/legalVersions.generated.js').LEGAL_VERSIONS['video-recording-policy'];
   await seedUploader(UID);
 });
@@ -153,10 +160,12 @@ describe('createUploadSession', () => {
 describe('chunked transfer', () => {
   // The Storage emulator finalizes on the first PUT and does not implement Content-Range chunking,
   // so multi-chunk resume is covered against a protocol fake in tests/unit/chunkedUpload.test.ts.
-  test('bytes sent to the session land in quarantine and the upload becomes quarantined', async () => {
+  test('a real video sent through the session is validated and promoted to private match storage', async () => {
     await seedJob('job_land');
-    const bytes = randomBytes(CHUNK + 1234);
-    const session = await createUploadSession.run(call(UID, request('job_land', bytes)));
+    const bytes = readFileSync(fixtures.mov);
+    const session = await createUploadSession.run(
+      call(UID, request('job_land', bytes, { contentType: 'video/quicktime', fileName: 'match.mov', declaredDurationSec: 30 })),
+    );
 
     const uploader = new ResumableSessionUploader({
       sessionUri: session.sessionUri,
@@ -167,21 +176,94 @@ describe('chunked transfer', () => {
 
     const path = `quarantine/${UID}/${session.uploadId}/source`;
     const [stored] = await getStorage().bucket().file(path).download();
-    assert.equal(stored.length, bytes.length);
     assert.ok(stored.equals(bytes), 'stored object matches the source byte for byte');
 
-    assert.equal(await recordQuarantinedObject(db, path, stored.length), 'quarantined');
+    assert.equal(await processQuarantinedObject(db, path, stored.length), 'ready');
     const upload = (await db.doc(`mediaUploads/${session.uploadId}`).get()).data();
-    assert.equal(upload.state, 'quarantined');
+    assert.equal(upload.state, 'ready');
+    assert.equal(upload.probe.container, 'mov');
+    assert.equal(upload.scan.status, 'not_scanned', 'no malware scan is claimed');
     assert.equal((await db.doc(`mediaUploadSessions/${session.uploadId}`).get()).exists, false);
+
+    const job = (await db.doc('matchAnalysisJobs/job_land').get()).data();
+    assert.equal(job.videoStoragePath, `profiles/${UID}/matchFootage/job_land/video.mp4`);
+    assert.equal(job.videoProbe.durationSec, 30);
+    assert.equal((await getStorage().bucket().file(path).exists())[0], false, 'quarantine copy removed');
+    assert.equal((await getStorage().bucket().file(job.videoStoragePath).exists())[0], true);
   });
 
   test('objects in quarantine without an open upload are deleted', async () => {
     const path = `quarantine/${UID}/orphan_upload/source`;
     await getStorage().bucket().file(path).save(Buffer.alloc(2048, 7));
-    assert.equal(await recordQuarantinedObject(db, path, 2048), null);
+    assert.equal(await processQuarantinedObject(db, path, 2048), null);
     const [exists] = await getStorage().bucket().file(path).exists();
     assert.equal(exists, false);
+  });
+});
+
+describe('ffprobe validation', () => {
+  async function validate(name, file, { sizeOverride } = {}) {
+    const uploadId = `val_${name}`;
+    const jobId = `job_val_${name}`;
+    const bytes = readFileSync(file);
+    const path = `quarantine/${UID}/${uploadId}/source`;
+    await seedJob(jobId);
+    await getStorage().bucket().file(path).save(bytes, { contentType: 'video/mp4' });
+    await db.doc(`mediaUploads/${uploadId}`).set({
+      ownerId: UID,
+      state: 'uploading',
+      jobId,
+      sizeBytes: sizeOverride ?? bytes.length,
+      storagePath: path,
+      createdAt: new Date().toISOString(),
+    });
+    const state = await processQuarantinedObject(db, path, bytes.length);
+    const upload = (await db.doc(`mediaUploads/${uploadId}`).get()).data();
+    return { state, upload, path, jobId };
+  }
+
+  for (const [name, minutes] of [['valid10', 10], ['valid45', 45], ['valid90', 90], ['valid120', 120]]) {
+    test(`accepts a ${minutes}-minute match`, async () => {
+      const { state, upload, jobId } = await validate(name, fixtures[name]);
+      assert.equal(state, 'ready', upload.rejectionReason);
+      assert.equal(Math.round(upload.probe.durationSec / 60), minutes);
+      assert.equal(upload.probe.videoCodec, 'h264');
+      assert.equal((await db.doc(`matchAnalysisJobs/${jobId}`).get()).get('measuredDurationSec'), upload.probe.durationSec);
+    });
+  }
+
+  const rejections = [
+    ['tooLong', 'too_long'],
+    ['unsupportedCodec', 'unsupported_codec'],
+    ['tinyResolution', 'resolution'],
+    ['corrupted', 'probe_failed'],
+    ['notVideo', 'not_video'],
+  ];
+  for (const [name, reason] of rejections) {
+    test(`rejects ${name} as ${reason} and deletes the quarantined bytes`, async () => {
+      const { state, upload, path, jobId } = await validate(name, fixtures[name]);
+      assert.equal(state, 'rejected');
+      assert.equal(upload.rejectionReason, reason);
+      assert.equal((await getStorage().bucket().file(path).exists())[0], false);
+      assert.equal((await db.doc(`matchAnalysisJobs/${jobId}`).get()).get('videoStoragePath'), undefined);
+    });
+  }
+
+  test('rejects an object whose size differs from the declared size', async () => {
+    const { state, upload } = await validate('sizeMismatch', fixtures.mov, { sizeOverride: 1 });
+    assert.equal(state, 'rejected');
+    assert.equal(upload.rejectionReason, 'size_mismatch');
+  });
+
+  test('a flagged scan result rejects the upload through the scanner seam', async () => {
+    setMediaScanner({ engine: 'test', scan: async () => ({ status: 'flagged', engine: 'test', checkedAt: '' }) });
+    try {
+      const { state, upload } = await validate('flagged', fixtures.mov);
+      assert.equal(state, 'rejected');
+      assert.equal(upload.rejectionReason, 'scanner_flagged');
+    } finally {
+      setMediaScanner(noopMediaScanner);
+    }
   });
 });
 
@@ -215,6 +297,18 @@ describe('rules', () => {
     assert.ok(isDenied(await setDocument(UID, 'mediaUploads/rules_u1', { ownerId: UID, state: 'ready' })));
     assert.ok(isDenied(await getDocument(UID, 'mediaUploadSessions/rules_u1')));
     assert.ok(isDenied(await getDocument(UID, `uploadSessionLimits/${UID}_2026-01-01`)));
+  });
+
+  test('clients cannot forge validated video fields on their analysis jobs', async () => {
+    const base = { id: 'rules_job', playerId: UID, status: 'uploading' };
+    assert.ok(isDenied(await setDocument(UID, 'matchAnalysisJobs/rules_job_forged', {
+      ...base,
+      id: 'rules_job_forged',
+      videoStoragePath: `profiles/${UID}/matchFootage/rules_job_forged/video.mp4`,
+    })));
+    assert.ok(isAllowed(await setDocument(UID, 'matchAnalysisJobs/rules_job', base)));
+    assert.ok(isDenied(await setDocument(UID, 'matchAnalysisJobs/rules_job', { ...base, measuredDurationSec: 10 })));
+    assert.ok(isAllowed(await setDocument(UID, 'matchAnalysisJobs/rules_job', { ...base, phaseLabel: 'Upload paused' })));
   });
 
   test('clients can neither write nor read quarantine objects, even their own', async () => {

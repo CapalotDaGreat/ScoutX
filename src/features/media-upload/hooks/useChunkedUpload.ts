@@ -12,12 +12,16 @@ import {
   type UploadViewState,
 } from '@/features/media-upload/types';
 
+export type UploadAttempt =
+  | { status: 'complete'; uploadId: string }
+  | { status: 'paused' | 'cancelled' | 'failed' };
+
 export type ChunkedUploadApi = {
   state: UploadViewState;
-  /** Resolves with the upload id once all bytes are committed, or null if paused, cancelled or failed. */
-  start: (request: UploadRequest) => Promise<string | null>;
+  /** Resolves once all bytes are committed, or with why the transfer stopped. */
+  start: (request: UploadRequest) => Promise<UploadAttempt>;
   pause: () => void;
-  resume: () => Promise<string | null>;
+  resume: () => Promise<UploadAttempt>;
   cancel: () => void;
   reset: () => void;
 };
@@ -45,8 +49,8 @@ export function useChunkedUpload(uid: string | null): ChunkedUploadApi {
   }, []);
 
   const start = useCallback(
-    async (request: UploadRequest): Promise<string | null> => {
-      if (!uid) return null;
+    async (request: UploadRequest): Promise<UploadAttempt> => {
+      if (!uid) return { status: 'failed' };
       lastRequest.current = request;
       update({ ...IDLE_UPLOAD, phase: 'preparing' });
       try {
@@ -59,18 +63,18 @@ export function useChunkedUpload(uid: string | null): ChunkedUploadApi {
         control.current = null;
         if (result.outcome === 'paused') {
           update({ phase: 'paused', uploadId: result.uploadId, bytesPerSecond: null, etaSeconds: null });
-          return null;
+          return { status: 'paused' };
         }
         if (result.outcome === 'cancelled') {
           update({ ...IDLE_UPLOAD, phase: 'cancelled' });
-          return null;
+          return { status: 'cancelled' };
         }
         update({ phase: 'processing', uploadId: result.uploadId, bytesPerSecond: null, etaSeconds: null });
-        return result.uploadId;
+        return { status: 'complete', uploadId: result.uploadId };
       } catch (error) {
         control.current = null;
         update({ phase: 'failed', error: uploadErrorCodeFor(error), bytesPerSecond: null, etaSeconds: null });
-        return null;
+        return { status: 'failed' };
       }
     },
     [uid, update],
@@ -82,28 +86,32 @@ export function useChunkedUpload(uid: string | null): ChunkedUploadApi {
       state.uploadId,
       (record) => {
         if (record?.state === 'ready') update({ phase: 'ready' });
-        if (record?.state === 'rejected' || record?.state === 'expired') update({ phase: 'failed', error: 'rejected' });
+        if (record?.state === 'rejected' || record?.state === 'expired') {
+          update({ phase: 'failed', error: 'rejected', rejectionReason: record.rejectionReason });
+        }
       },
       () => undefined,
     );
   }, [state.phase, state.uploadId, update]);
 
   const resume = useCallback(
-    () => (lastRequest.current ? start(lastRequest.current) : Promise.resolve(null)),
+    (): Promise<UploadAttempt> =>
+      lastRequest.current ? start(lastRequest.current) : Promise.resolve({ status: 'failed' }),
     [start],
   );
 
-  return {
-    state,
-    start,
-    pause: () => control.current?.pause(),
-    resume,
-    cancel: () => {
-      if (control.current) control.current.cancel();
-      else if (uid && state.uploadId && state.phase === 'paused') {
-        void discardPendingUpload(uid, state.uploadId).finally(() => update({ ...IDLE_UPLOAD, phase: 'cancelled' }));
-      }
-    },
-    reset: () => update(IDLE_UPLOAD),
-  };
+  const pause = useCallback(() => control.current?.pause(), []);
+  const reset = useCallback(() => update(IDLE_UPLOAD), [update]);
+  const cancel = useCallback(() => {
+    if (control.current) control.current.cancel();
+    else if (uid && state.uploadId && (state.phase === 'paused' || state.phase === 'failed')) {
+      void discardPendingUpload(uid, state.uploadId)
+        .catch(() => undefined)
+        .finally(() => update({ ...IDLE_UPLOAD, phase: 'cancelled' }));
+    } else {
+      update({ ...IDLE_UPLOAD, phase: 'cancelled' });
+    }
+  }, [uid, state.uploadId, state.phase, update]);
+
+  return { state, start, pause, resume, cancel, reset };
 }

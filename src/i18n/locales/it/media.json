@@ -183,6 +183,22 @@
       "file_missing": "Il video selezionato non è più su questo dispositivo. Selezionalo di nuovo.",
       "rejected": "Il video non è stato accettato. Verifica che sia un file MP4 o MOV riproducibile.",
       "unknown": "Non è stato possibile completare il caricamento. Riprova."
+    },
+    "rejection": {
+      "not_video": "Questo file non è un video. Scegli una registrazione MP4 o MOV.",
+      "unsupported_container": "Sono supportati solo video MP4 e MOV.",
+      "unsupported_codec": "Questo video usa un formato che ScoutX non può leggere. Usa H.264 o HEVC (il formato predefinito dell’iPhone).",
+      "no_video_stream": "Questo file non contiene immagini video.",
+      "too_many_streams": "Questo file ha troppe tracce. Esportalo di nuovo come un unico video.",
+      "too_short": "Questo video è troppo corto per l’analisi.",
+      "too_long": "I video possono durare fino a 150 minuti.",
+      "resolution": "La risoluzione del video è fuori dall’intervallo supportato.",
+      "frame_rate": "La frequenza dei fotogrammi è fuori dall’intervallo supportato.",
+      "bitrate": "Il bitrate è troppo alto. Esporta il video con una qualità inferiore.",
+      "size_mismatch": "Il caricamento non è arrivato completo. Caricalo di nuovo.",
+      "probe_failed": "Impossibile leggere il video. Potrebbe essere danneggiato; prova a esportarlo di nuovo.",
+      "scanner_flagged": "Questo file è stato bloccato da un controllo automatico.",
+      "job_missing": "L’analisi di questo video non esiste più."
     }
   },
   "export": {

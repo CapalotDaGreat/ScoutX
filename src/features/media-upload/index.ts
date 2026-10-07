@@ -1,5 +1,5 @@
 export { UploadProgressCard } from './components/UploadProgressCard';
-export { useChunkedUpload, type ChunkedUploadApi } from './hooks/useChunkedUpload';
+export { useChunkedUpload, type ChunkedUploadApi, type UploadAttempt } from './hooks/useChunkedUpload';
 export { PendingUploadStore } from './repositories/PendingUploadStore';
 export { UploadSessionRepository } from './repositories/UploadSessionRepository';
 export { contentTypeForFileName, CHUNKED_UPLOAD } from './services/chunkPlan';

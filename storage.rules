@@ -20,11 +20,10 @@ service firebase.storage {
       allow delete: if isOwner(userId);
     }
 
+    // Full match videos are written only by server promotion after ffprobe validation.
     match /profiles/{userId}/matchFootage/{jobId}/video.mp4 {
       allow read: if isOwner(userId);
-      allow create, update: if isOwner(userId)
-        && request.resource.contentType.matches('video/.*')
-        && request.resource.size < 4 * 1024 * 1024 * 1024;
+      allow create, update: if false;
       allow delete: if isOwner(userId);
     }
 

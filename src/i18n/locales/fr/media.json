@@ -183,6 +183,22 @@
       "file_missing": "La vidéo sélectionnée n’est plus sur cet appareil. Sélectionne-la à nouveau.",
       "rejected": "La vidéo n’a pas pu être acceptée. Vérifie qu’il s’agit d’un fichier MP4 ou MOV lisible.",
       "unknown": "L’envoi n’a pas pu être terminé. Réessaie."
+    },
+    "rejection": {
+      "not_video": "Ce fichier n’est pas une vidéo. Choisis un enregistrement MP4 ou MOV.",
+      "unsupported_container": "Seules les vidéos MP4 et MOV sont prises en charge.",
+      "unsupported_codec": "Cette vidéo utilise un format que ScoutX ne peut pas lire. Utilise H.264 ou HEVC (format par défaut de l’iPhone).",
+      "no_video_stream": "Ce fichier ne contient pas d’image vidéo.",
+      "too_many_streams": "Ce fichier contient trop de pistes. Exporte-le à nouveau en une seule vidéo.",
+      "too_short": "Cette vidéo est trop courte pour être analysée.",
+      "too_long": "Les vidéos peuvent durer jusqu’à 150 minutes.",
+      "resolution": "La résolution de la vidéo est hors de la plage prise en charge.",
+      "frame_rate": "La fréquence d’images est hors de la plage prise en charge.",
+      "bitrate": "Le débit de la vidéo est trop élevé. Exporte-la avec une qualité inférieure.",
+      "size_mismatch": "L’envoi n’est pas arrivé complet. Envoie-la à nouveau.",
+      "probe_failed": "La vidéo n’a pas pu être lue. Elle est peut-être endommagée ; essaie de l’exporter à nouveau.",
+      "scanner_flagged": "Ce fichier a été bloqué par une vérification automatique.",
+      "job_missing": "L’analyse de cette vidéo n’existe plus."
     }
   },
   "export": {
