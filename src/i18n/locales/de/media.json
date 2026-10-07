@@ -277,5 +277,9 @@
         "description": "Momente, die Lernpunkte und deine Arbeitsbereiche zeigen."
       }
     }
+  },
+  "a11y": {
+    "openVideo": "Video öffnen",
+    "openPhoto": "Foto öffnen"
   }
 }

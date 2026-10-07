@@ -396,7 +396,8 @@
     "permissionDenied": "É preciso acesso à galeria para escolher uma imagem.",
     "permissionTitle": "Permissão recusada",
     "uploadFailed": "Não foi possível carregar a imagem.",
-    "pickFailed": "Ocorreu um erro ao escolher a imagem."
+    "pickFailed": "Ocorreu um erro ao escolher a imagem.",
+    "changeAvatar": "Alterar foto de perfil"
   },
   "identity": {
     "notStated": "Não informado",

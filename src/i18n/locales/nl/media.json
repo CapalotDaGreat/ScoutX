@@ -277,5 +277,9 @@
         "description": "Momenten die leerpunten en je werkpunten laten zien."
       }
     }
+  },
+  "a11y": {
+    "openVideo": "Video openen",
+    "openPhoto": "Foto openen"
   }
 }

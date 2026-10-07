@@ -396,7 +396,8 @@
     "permissionDenied": "Für die Bildauswahl ist der Galeriezugriff erforderlich.",
     "permissionTitle": "Berechtigung verweigert",
     "uploadFailed": "Bild konnte nicht hochgeladen werden.",
-    "pickFailed": "Beim Auswählen des Bildes ist ein Fehler aufgetreten."
+    "pickFailed": "Beim Auswählen des Bildes ist ein Fehler aufgetreten.",
+    "changeAvatar": "Profilfoto ändern"
   },
   "identity": {
     "notStated": "Nicht angegeben",

@@ -277,5 +277,9 @@
         "description": "Momenti che mostrano cosa stai imparando e su cosa stai lavorando."
       }
     }
+  },
+  "a11y": {
+    "openVideo": "Apri video",
+    "openPhoto": "Apri foto"
   }
 }

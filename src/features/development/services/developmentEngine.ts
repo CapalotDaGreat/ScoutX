@@ -391,7 +391,21 @@ export function buildHowIPlay(
     },
     matchDerived: buildPlayerDna(matches),
     sampleSize: matches.length,
+    latestMatchAt: latestRecordedDate(matches),
   };
+}
+
+function latestRecordedDate(matches: readonly PlayerMatchStatistics[]): string | null {
+  let latest: string | null = null;
+  let latestMs = -Infinity;
+  for (const match of matches) {
+    const ms = Date.parse(match.date);
+    if (Number.isFinite(ms) && ms > latestMs) {
+      latestMs = ms;
+      latest = match.date;
+    }
+  }
+  return latest;
 }
 
 export function snapshotFromProfile(

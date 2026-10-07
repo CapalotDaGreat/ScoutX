@@ -41,6 +41,8 @@ export const lightColors = {
   verification: '#C49A2C',
   achievement: '#C49A2C',
   disabled: '#B8B0A4',
+  /** Icons and text drawn over photos or video thumbnails behind a dark scrim. */
+  onMedia: '#FFFFFF',
 } as const;
 
 export const darkColors = {
@@ -82,6 +84,7 @@ export const darkColors = {
   verification: '#D4AF37',
   achievement: '#D4AF37',
   disabled: '#6B655C',
+  onMedia: '#FFFFFF',
 } as const;
 
 export type ThemeColors = {

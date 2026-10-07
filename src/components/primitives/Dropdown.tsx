@@ -95,7 +95,11 @@ export function Dropdown<T extends string = string>({
 
             if (renderOption) {
               return (
-                <Pressable onPress={() => handleSelect(item)}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: isSelected }}
+                  onPress={() => handleSelect(item)}
+                >
                   {renderOption(item, isSelected)}
                 </Pressable>
               );

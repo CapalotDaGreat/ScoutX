@@ -155,10 +155,12 @@ export function EditProfileModal({
           ) : (
             <Pressable
               onPress={() => void handleImagePick('cover')}
+              accessibilityRole="button"
+              accessibilityLabel={t('editModal.changeCover')}
               className="absolute inset-0 items-center justify-center bg-black/30 active:bg-black/45"
             >
               <View className="flex-row items-center gap-2 rounded-full bg-black/60 px-4 py-2">
-                <Camera size={16} color="white" />
+                <Camera size={16} color={colors.onMedia} />
                 <Text className="font-sans-medium text-xs text-white">{t('editModal.changeCover')}</Text>
               </View>
             </Pressable>
@@ -179,9 +181,11 @@ export function EditProfileModal({
             ) : (
               <Pressable
                 onPress={() => void handleImagePick('avatar')}
+                accessibilityRole="button"
+                accessibilityLabel={t('editModal.changeAvatar')}
                 className="absolute inset-0 items-center justify-center bg-black/20 active:bg-black/35"
               >
-                <Camera size={20} color="white" />
+                <Camera size={20} color={colors.onMedia} />
               </Pressable>
             )}
           </View>

@@ -40,6 +40,8 @@ export function JourneyTimelineFilters({
           <Pressable
             key={filter.value}
             onPress={() => onFilterChange(filter.value)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: isActive }}
             className={cn(
               'rounded-full border px-3 py-1.5',
               isActive

@@ -396,7 +396,8 @@
     "permissionDenied": "Permission to access gallery is required to pick an image.",
     "permissionTitle": "Permission Denied",
     "uploadFailed": "Failed to upload image.",
-    "pickFailed": "An error occurred while picking image."
+    "pickFailed": "An error occurred while picking image.",
+    "changeAvatar": "Change profile photo"
   },
   "identity": {
     "notStated": "Not stated",

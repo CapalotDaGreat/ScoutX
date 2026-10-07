@@ -277,5 +277,9 @@
         "description": "Momentos que mostram aprendizagens e aspetos que estás a trabalhar."
       }
     }
+  },
+  "a11y": {
+    "openVideo": "Abrir vídeo",
+    "openPhoto": "Abrir foto"
   }
 }

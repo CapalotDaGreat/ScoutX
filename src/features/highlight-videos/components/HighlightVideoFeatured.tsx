@@ -21,6 +21,8 @@ export function HighlightVideoFeatured({ video, onPress }: HighlightVideoFeature
     <Animated.View entering={FadeInDown.duration(400)}>
       <Pressable
         onPress={() => onPress?.(video)}
+        accessibilityRole="button"
+        accessibilityLabel={video.title || t('a11y.openVideo')}
         className="overflow-hidden rounded-2xl border border-accent/30/50 active:opacity-95"
       >
         <View className="relative">
@@ -32,7 +34,7 @@ export function HighlightVideoFeatured({ video, onPress }: HighlightVideoFeature
           <View className="absolute inset-0 bg-black/35" />
           <View className="absolute bottom-0 left-0 right-0 h-1/2 bg-black/70" />
           <View className="absolute inset-0 items-center justify-center">
-            <PlayCircle size={56} color="white" />
+            <PlayCircle size={56} color={colors.onMedia} />
           </View>
           <View className="absolute left-3 top-3 flex-row items-center gap-2">
             <Badge label={t('videos.featured')} variant="warning" size="sm" />

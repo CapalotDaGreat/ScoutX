@@ -4,7 +4,7 @@ import { buildCareerMoments } from '../../src/features/career-story/services/car
 import { buildFootballStory, buildYearInReviewSnapshot } from '../../src/features/career-story/services/yearInReview.ts';
 import { buildTrialReplay } from '../../src/features/career-story/services/trialReplay.ts';
 import { addPlayerToRoster, createCoachObservation, emptyCoachRoster } from '../../src/features/coach-mode/services/coachRoster.ts';
-import { formatFreshness } from '../../src/components/evidence/freshness.ts';
+import { formatFreshness, latestDate } from '../../src/components/evidence/freshness.ts';
 import { isDiscoverableVerifiedLevel } from '../../src/features/verification-system/services/discoverableVerified.ts';
 
 describe('career moments and year in review', () => {
@@ -55,6 +55,12 @@ describe('freshness', () => {
     });
     assert.equal(freshness.daysAgo, 5);
     assert.equal(freshness.sampleSize, 5);
+  });
+
+  test('latest date ignores missing and invalid dates instead of inventing one', () => {
+    assert.equal(latestDate([]), null);
+    assert.equal(latestDate([null, undefined, 'not a date']), null);
+    assert.equal(latestDate(['2026-09-01', null, '2026-10-02', '2026-01-05']), '2026-10-02');
   });
 });
 

@@ -89,7 +89,12 @@ export function ScoutingReportCard({ report, index = 0, onPress }: ScoutingRepor
 
   return (
     <Animated.View entering={FadeInUp.delay(Math.min(index, 6) * 40).duration(320)}>
-      <Pressable onPress={() => onPress(report)} className="active:opacity-90">
+      <Pressable
+        onPress={() => onPress(report)}
+        accessibilityRole="button"
+        accessibilityLabel={t('reports.openReportFor', { name: report.playerName })}
+        className="active:opacity-90"
+      >
         {content}
       </Pressable>
     </Animated.View>

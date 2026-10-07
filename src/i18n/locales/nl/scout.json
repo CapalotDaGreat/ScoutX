@@ -311,7 +311,8 @@
     "sectionEmpty": "Nog geen rapporten. Maak de eerste gestructureerde beoordeling voor {{playerName}}.",
     "cardOverline": "Scoutingrapport",
     "byScout": "door {{name}}",
-    "strengths": "Sterke punten"
+    "strengths": "Sterke punten",
+    "openReportFor": "Scoutingrapport over {{name}} openen"
   },
   "intelligence": {
     "whyTitle": "Waarom deze speler",

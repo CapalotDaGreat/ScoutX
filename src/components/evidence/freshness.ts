@@ -4,6 +4,21 @@ export type FreshnessInput = {
   nowMs?: number;
 };
 
+/** Newest valid ISO date in the list, or null when none parse. */
+export function latestDate(dates: readonly (string | null | undefined)[]): string | null {
+  let latest: string | null = null;
+  let latestMs = -Infinity;
+  for (const date of dates) {
+    if (!date) continue;
+    const ms = Date.parse(date);
+    if (Number.isFinite(ms) && ms > latestMs) {
+      latestMs = ms;
+      latest = date;
+    }
+  }
+  return latest;
+}
+
 export function formatFreshness(input: FreshnessInput): {
   daysAgo: number | null;
   sampleSize: number | null;

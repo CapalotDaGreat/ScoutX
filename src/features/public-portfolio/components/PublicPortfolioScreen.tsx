@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
+import { FreshnessLabel } from '@/components/evidence/FreshnessLabel';
+import { latestDate } from '@/components/evidence/freshness';
 import { PreviewList } from '@/components/layout/PreviewList';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
@@ -212,6 +214,10 @@ export function PublicPortfolioScreen({
             index={sectionIndex++}
           >
             <View className="gap-5">
+              <FreshnessLabel
+                updatedAt={latestDate((profile.statisticsMatches ?? []).map((match) => match.date))}
+                sampleSize={profile.statisticsMatches ? profile.statisticsMatches.length : null}
+              />
               <ProfileStatsGrid stats={profile.stats} compact />
               <CollapsibleSection
                 title={t('portfolio:publicUi.fullPerformance')}

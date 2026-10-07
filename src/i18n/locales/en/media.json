@@ -277,5 +277,9 @@
         "description": "Moments that show learning points and areas you're working on."
       }
     }
+  },
+  "a11y": {
+    "openVideo": "Open video",
+    "openPhoto": "Open photo"
   }
 }

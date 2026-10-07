@@ -311,7 +311,8 @@
     "sectionEmpty": "Pas encore de rapports. Crée la première évaluation structurée pour {{playerName}}.",
     "cardOverline": "Rapport de scouting",
     "byScout": "par {{name}}",
-    "strengths": "Points forts"
+    "strengths": "Points forts",
+    "openReportFor": "Ouvrir le rapport de scouting sur {{name}}"
   },
   "intelligence": {
     "whyTitle": "Pourquoi ce joueur",

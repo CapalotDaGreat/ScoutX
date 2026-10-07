@@ -311,7 +311,8 @@
     "sectionEmpty": "Ainda sem relatórios. Cria a primeira avaliação estruturada para {{playerName}}.",
     "cardOverline": "Relatório de scouting",
     "byScout": "por {{name}}",
-    "strengths": "Pontos fortes"
+    "strengths": "Pontos fortes",
+    "openReportFor": "Abrir relatório de scouting de {{name}}"
   },
   "intelligence": {
     "whyTitle": "Por que este jogador",

@@ -51,7 +51,7 @@ export function HighlightVideoCard({
 
         {video.uploadStatus === 'ready' ? (
           <View className="absolute inset-0 items-center justify-center">
-            <PlayCircle size={variant === 'compact' ? 36 : 44} color="white" />
+            <PlayCircle size={variant === 'compact' ? 36 : 44} color={colors.onMedia} />
           </View>
         ) : null}
 
@@ -111,7 +111,12 @@ export function HighlightVideoCard({
   if (onPress) {
     return (
       <Animated.View entering={FadeInUp.delay(Math.min(index, 8) * 40).duration(320)} className={className}>
-        <Pressable onPress={() => onPress(video)} className="active:opacity-90">
+        <Pressable
+          onPress={() => onPress(video)}
+          accessibilityRole="button"
+          accessibilityLabel={video.title || t('a11y.openVideo')}
+          className="active:opacity-90"
+        >
           {content}
         </Pressable>
       </Animated.View>

@@ -67,6 +67,7 @@ export function ReportRatingField({
         <View className="mt-2 flex-row items-center justify-between">
           <Pressable
             onPress={decrement}
+            hitSlop={6}
             className="h-9 w-9 items-center justify-center rounded-md bg-surface"
             accessibilityRole="button"
             accessibilityLabel={t('scout:reports.decreaseRating', { label })}
@@ -81,6 +82,7 @@ export function ReportRatingField({
           </Text>
           <Pressable
             onPress={increment}
+            hitSlop={6}
             className="h-9 w-9 items-center justify-center rounded-md bg-surface"
             accessibilityRole="button"
             accessibilityLabel={t('scout:reports.increaseRating', { label })}

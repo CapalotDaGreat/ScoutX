@@ -3,6 +3,7 @@ import { PlayCircle } from 'lucide-react-native';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { type JourneyMedia } from '@/features/football-journey/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type JourneyEntryMediaProps = {
   media: JourneyMedia[];
@@ -10,6 +11,7 @@ export type JourneyEntryMediaProps = {
 
 export function JourneyEntryMedia({ media }: JourneyEntryMediaProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('media');
 
   if (media.length === 0) {
     return null;
@@ -33,6 +35,10 @@ export function JourneyEntryMedia({ media }: JourneyEntryMediaProps) {
           <Pressable
             key={`${item.url}-${index}`}
             onPress={() => openMedia(item)}
+            accessibilityRole="button"
+            accessibilityLabel={
+              item.caption || t(item.type === 'video' ? 'a11y.openVideo' : 'a11y.openPhoto')
+            }
             className="overflow-hidden rounded-lg active:opacity-90"
           >
             <Image

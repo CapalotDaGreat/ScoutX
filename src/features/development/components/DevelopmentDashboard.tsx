@@ -29,6 +29,7 @@ import { BEFORE_VS_NOW_MIN_SAMPLE } from '@/features/development/services/before
 import { type GoalNextStep } from '@/features/intelligence/types';
 import { useGoalStepCopy } from '@/features/today/components/TodayIntelligence';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { FreshnessLabel } from '@/components/evidence/FreshnessLabel';
 import { toUserMessage } from '@/utils/userFacingError';
 
 export type DevelopmentDashboardProps = {
@@ -324,7 +325,7 @@ function DnaRow({ trait }: { trait: PlayerDnaTrait }) {
 
 function HowIPlayCard({ howIPlay }: { howIPlay: HowIPlay }) {
   const { t } = useAppTranslation(['development']);
-  const { selfReported, matchDerived, sampleSize } = howIPlay;
+  const { selfReported, matchDerived, sampleSize, latestMatchAt } = howIPlay;
   const positions = selfReported.positions.join(' · ');
   return (
     <View className="gap-3">
@@ -347,6 +348,7 @@ function HowIPlayCard({ howIPlay }: { howIPlay: HowIPlay }) {
       <Text variant="caption" color="tertiary">
         {t('development:howIPlay.matchDerivedHint', { count: sampleSize })}
       </Text>
+      <FreshnessLabel updatedAt={latestMatchAt} sampleSize={sampleSize} />
       {matchDerived.map((trait) => (
         <DnaRow key={trait.id} trait={trait} />
       ))}

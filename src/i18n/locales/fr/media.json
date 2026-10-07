@@ -277,5 +277,9 @@
         "description": "Des moments qui montrent ce que tu apprends et ce que tu travailles."
       }
     }
+  },
+  "a11y": {
+    "openVideo": "Ouvrir la vidéo",
+    "openPhoto": "Ouvrir la photo"
   }
 }

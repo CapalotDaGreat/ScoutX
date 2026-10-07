@@ -396,7 +396,8 @@
     "permissionDenied": "Toegang tot de galerij is nodig om een afbeelding te kiezen.",
     "permissionTitle": "Toestemming geweigerd",
     "uploadFailed": "Afbeelding kon niet worden geüpload.",
-    "pickFailed": "Er ging iets mis bij het kiezen van de afbeelding."
+    "pickFailed": "Er ging iets mis bij het kiezen van de afbeelding.",
+    "changeAvatar": "Profielfoto wijzigen"
   },
   "identity": {
     "notStated": "Niet opgegeven",

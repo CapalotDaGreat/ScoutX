@@ -72,6 +72,7 @@ export function SearchScopeDropdown({ value, onChange }: SearchScopeDropdownProp
           <View className="mt-28 px-4">
             <Pressable
               onPress={(event) => event.stopPropagation()}
+              accessible={false}
               className="overflow-hidden rounded-2xl border border-border bg-surface"
             >
               <View className="border-b border-divider px-4 py-3">

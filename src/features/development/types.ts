@@ -222,6 +222,8 @@ export type HowIPlay = {
   };
   matchDerived: PlayerDnaTrait[];
   sampleSize: number;
+  /** Date of the newest recorded match behind the DNA; null when none has a valid date. */
+  latestMatchAt: string | null;
 };
 
 export type GoalProgressSummary = {

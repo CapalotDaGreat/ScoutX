@@ -41,6 +41,8 @@ export function HighlightVideoCategoryFilter({
           <Pressable
             key={filter.value}
             onPress={() => onCategoryChange(filter.value)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: isActive }}
             className={cn(
               'rounded-full border px-3 py-1.5',
               isActive

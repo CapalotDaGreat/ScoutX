@@ -21,6 +21,7 @@ import { ClubProfileChip, ClubProfileRepository } from '@/features/club-profiles
 import { VerificationBadge } from '@/features/verification-system';
 import { type ClubProfile } from '@/features/club-profiles/types';
 import { ScoutReportHero } from '@/features/scout-discovery/components/ScoutReportHero';
+import { FreshnessLabel } from '@/components/evidence/FreshnessLabel';
 import { usePlayerDetail } from '@/features/scout-discovery/hooks/usePlayerDetail';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { useScoutPlayerSave } from '@/features/scout-recruitment/hooks/useScoutPlayerSave';
@@ -265,6 +266,7 @@ export function PlayerDetailScreen({
       >
         <View className="px-4">
           <ScoutReportHero player={player} />
+          <FreshnessLabel updatedAt={player.lastEvidenceAt} sampleSize={player.matchCount} />
           {!guestMode && brief ? (
             <View className="mt-3 gap-3">
               {shortlistIntel ? <ShortlistIntelligenceCard intelligence={shortlistIntel} /> : null}
