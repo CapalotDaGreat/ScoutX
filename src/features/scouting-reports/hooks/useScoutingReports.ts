@@ -31,7 +31,7 @@ export function useScoutAllReports() {
         setIsLoading(false);
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Unable to sync right now.'));
         setReports([]);
         setIsLoading(false);
       },
@@ -74,7 +74,7 @@ export function useScoutingReports(playerId: string, playerName: string) {
         setIsLoading(false);
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Unable to sync right now.'));
         setReports(useMockData() ? getMockReportsForPlayer(playerId, scoutId) : []);
         setIsLoading(false);
       },

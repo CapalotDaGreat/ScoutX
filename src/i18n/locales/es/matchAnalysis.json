@@ -32,7 +32,7 @@
     "coverageBand": "Cobertura: {{band}}",
     "stats": "Estadísticas estimadas",
     "statsUnknown": "Las estadísticas contables siguen desconocidas hasta que existan eventos validados.",
-    "stages": "Pipeline",
+    "stages": "Proceso",
     "emptyTimeline": "No hay observaciones con marca de tiempo.",
     "cvUnavailable": "Esta vista necesita seguimiento por visión, que no está desplegado.",
     "noVideo": "No hay vídeo para buscar.",

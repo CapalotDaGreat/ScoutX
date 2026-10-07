@@ -1,40 +1,40 @@
 {
   "coverage": {
-    "technical": "Technical",
-    "tactical": "Tactical",
-    "physical": "Physical",
-    "consistency": "Consistency",
+    "technical": "Technisch",
+    "tactical": "Tactisch",
+    "physical": "Fysiek",
+    "consistency": "Constantheid",
     "video": "Video",
-    "sample": "{{have}} recorded · {{need}} for a strong sample"
+    "sample": "{{have}} vastgelegd · {{need}} nodig voor een sterke steekproef"
   },
   "proof": {
-    "empty": "No proof on file yet. Logged matches, videos and coach notes appear here.",
-    "dateUnknown": "Date unknown",
-    "title": "Proof stack"
+    "empty": "Nog geen bewijs. Gelogde wedstrijden, video's en trainersnotities verschijnen hier.",
+    "dateUnknown": "Datum onbekend",
+    "title": "Bewijsoverzicht"
   },
   "coach": {
     "title": "Passport Coach",
-    "caughtUp": "No evidence gaps to flag right now."
+    "caughtUp": "Er zijn nu geen ontbrekende bewijzen om te melden."
   },
   "discoverability": {
-    "title": "Discoverability",
-    "visible": "Visible to scouts who search",
-    "hidden": "Not visible in scout search",
-    "counts": "{{matches}} matches · {{videos}} videos",
+    "title": "Vindbaarheid",
+    "visible": "Zichtbaar voor zoekende scouts",
+    "hidden": "Niet zichtbaar in scoutzoekopdrachten",
+    "counts": "{{matches}} wedstrijden · {{videos}} video's",
     "blockers": {
-      "public_passport_off": "Public Football Passport is off",
-      "discovery_opt_in_off": "Scout discovery opt-in is off",
-      "no_matches": "No match evidence to show yet"
+      "public_passport_off": "Openbare Football Passport staat uit",
+      "discovery_opt_in_off": "Vindbaarheid voor scouts staat uit",
+      "no_matches": "Nog geen wedstrijdbewijs om te tonen"
     }
   },
   "readiness": {
-    "evidenceTitle": "Football evidence",
-    "sharingTitle": "Sharing",
-    "appOpsTitle": "App operations (not football evidence)",
-    "appOpsHint": "These items affect the product, not your playing record."
+    "evidenceTitle": "Voetbalbewijs",
+    "sharingTitle": "Delen",
+    "appOpsTitle": "App-instellingen (geen voetbalbewijs)",
+    "appOpsHint": "Deze punten gaan over de app, niet over je spelersprestaties."
   },
   "scoutPreview": {
-    "note": "This is the public projection. Private profile fields are not shown."
+    "note": "Dit is de openbare weergave. Privé-profielvelden worden niet getoond."
   },
   "gaps": {
     "title": "Claims die bewijs nodig hebben",

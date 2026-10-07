@@ -7,6 +7,7 @@ import {
   sortActivities,
 } from '@/features/activity-feed/models/ActivityModel';
 import { type ActivityItem } from '@/features/activity-feed/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type UseActivityFeedOptions = {
   recipientId: string | null;
@@ -43,7 +44,7 @@ export function useActivityFeed({
         setIsLoading(false);
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Unable to sync right now.'));
         setIsLoading(false);
       },
     );

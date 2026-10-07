@@ -1,40 +1,40 @@
 {
   "coverage": {
-    "technical": "Technical",
-    "tactical": "Tactical",
-    "physical": "Physical",
-    "consistency": "Consistency",
-    "video": "Video",
-    "sample": "{{have}} recorded · {{need}} for a strong sample"
+    "technical": "Técnica",
+    "tactical": "Táctica",
+    "physical": "Físico",
+    "consistency": "Regularidad",
+    "video": "Vídeo",
+    "sample": "{{have}} registrados · {{need}} para una muestra sólida"
   },
   "proof": {
-    "empty": "No proof on file yet. Logged matches, videos and coach notes appear here.",
-    "dateUnknown": "Date unknown",
-    "title": "Proof stack"
+    "empty": "Aún no hay pruebas. Aquí aparecerán partidos registrados, vídeos y notas de entrenadores.",
+    "dateUnknown": "Fecha desconocida",
+    "title": "Pruebas acumuladas"
   },
   "coach": {
     "title": "Passport Coach",
-    "caughtUp": "No evidence gaps to flag right now."
+    "caughtUp": "Ahora mismo no hay carencias de pruebas que señalar."
   },
   "discoverability": {
-    "title": "Discoverability",
-    "visible": "Visible to scouts who search",
-    "hidden": "Not visible in scout search",
-    "counts": "{{matches}} matches · {{videos}} videos",
+    "title": "Visibilidad",
+    "visible": "Visible para ojeadores que buscan",
+    "hidden": "No visible en la búsqueda de ojeadores",
+    "counts": "{{matches}} partidos · {{videos}} vídeos",
     "blockers": {
-      "public_passport_off": "Public Football Passport is off",
-      "discovery_opt_in_off": "Scout discovery opt-in is off",
-      "no_matches": "No match evidence to show yet"
+      "public_passport_off": "El Football Passport público está desactivado",
+      "discovery_opt_in_off": "No has activado la visibilidad para ojeadores",
+      "no_matches": "Aún no hay partidos que mostrar"
     }
   },
   "readiness": {
-    "evidenceTitle": "Football evidence",
-    "sharingTitle": "Sharing",
-    "appOpsTitle": "App operations (not football evidence)",
-    "appOpsHint": "These items affect the product, not your playing record."
+    "evidenceTitle": "Pruebas futbolísticas",
+    "sharingTitle": "Compartir",
+    "appOpsTitle": "Funcionamiento de la app (no son pruebas futbolísticas)",
+    "appOpsHint": "Estos elementos afectan a la app, no a tu historial como jugador."
   },
   "scoutPreview": {
-    "note": "This is the public projection. Private profile fields are not shown."
+    "note": "Esta es la vista pública. Los campos privados del perfil no se muestran."
   },
   "gaps": {
     "title": "Afirmaciones que necesitan prueba",

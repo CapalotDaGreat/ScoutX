@@ -70,7 +70,7 @@
     "recent": "Recente analyses",
     "another": "Nog een wedstrijd analyseren",
     "close": "Sluiten",
-    "uploadProgress": "Upload {{percent}}%"
+    "uploadProgress": "Uploaden {{percent}}%"
   },
   "technique": {
     "title": "Techniek-sterren",

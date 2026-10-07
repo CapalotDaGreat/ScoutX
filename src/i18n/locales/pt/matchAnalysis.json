@@ -32,7 +32,7 @@
     "coverageBand": "Cobertura: {{band}}",
     "stats": "Estatísticas estimadas",
     "statsUnknown": "Estatísticas contáveis ficam desconhecidas até existirem eventos validados.",
-    "stages": "Pipeline",
+    "stages": "Etapas",
     "emptyTimeline": "Não há observações com tempo guardadas.",
     "cvUnavailable": "Esta vista precisa de tracking por visão, que não está implantado.",
     "noVideo": "Não há vídeo para saltar.",
@@ -43,7 +43,7 @@
     "timeline": "Linha do tempo",
     "technical": "Técnico",
     "tactical": "Tático",
-    "coaching": "Coaching",
+    "coaching": "Treino",
     "video": "Vídeo",
     "ask": "Perguntar"
   },

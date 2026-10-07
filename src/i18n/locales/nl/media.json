@@ -75,7 +75,7 @@
     "save": "Wijzigingen opslaan",
     "statusLabel": {
       "draft": "Concept",
-      "review": "In review",
+      "review": "In beoordeling",
       "approved": "Goedgekeurd"
     },
     "clipCount_one": "{{count}} clip",

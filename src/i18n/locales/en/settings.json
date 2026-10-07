@@ -48,5 +48,6 @@
     "career": "Career milestones",
     "passport": "Passport views and recommendations",
     "system": "Account and security"
-  }
+  },
+  "guestAccountHint": "You're browsing as a guest. Create an account or sign in to build and share your Football Passport."
 }

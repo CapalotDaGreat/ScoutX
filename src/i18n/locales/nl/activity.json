@@ -1,9 +1,9 @@
 {
-  "title": "Activity",
-  "subtitle": "Recent updates on your Football Passport",
-  "inbox": "Activity inbox",
-  "noActivity": "No activity yet",
-  "noActivityDescription": "Portfolio views, endorsements, and trial updates will appear here.",
-  "unread": "{{count}} unread",
-  "markAllRead": "Mark all as read"
+  "title": "Activiteit",
+  "subtitle": "Recente updates over je Football Passport",
+  "inbox": "Activiteiteninbox",
+  "noActivity": "Nog geen activiteit",
+  "noActivityDescription": "Portfolioweergaven, aanbevelingen en updates over proeftrainingen verschijnen hier.",
+  "unread": "{{count}} ongelezen",
+  "markAllRead": "Alles als gelezen markeren"
 }

@@ -1,40 +1,40 @@
 {
   "coverage": {
-    "technical": "Technical",
-    "tactical": "Tactical",
-    "physical": "Physical",
-    "consistency": "Consistency",
+    "technical": "Technik",
+    "tactical": "Taktik",
+    "physical": "Physis",
+    "consistency": "Konstanz",
     "video": "Video",
-    "sample": "{{have}} recorded · {{need}} for a strong sample"
+    "sample": "{{have}} erfasst · {{need}} für eine aussagekräftige Basis"
   },
   "proof": {
-    "empty": "No proof on file yet. Logged matches, videos and coach notes appear here.",
-    "dateUnknown": "Date unknown",
-    "title": "Proof stack"
+    "empty": "Noch keine Nachweise. Erfasste Spiele, Videos und Trainernotizen erscheinen hier.",
+    "dateUnknown": "Datum unbekannt",
+    "title": "Nachweise"
   },
   "coach": {
     "title": "Passport Coach",
-    "caughtUp": "No evidence gaps to flag right now."
+    "caughtUp": "Gerade keine Lücken bei den Nachweisen."
   },
   "discoverability": {
-    "title": "Discoverability",
-    "visible": "Visible to scouts who search",
-    "hidden": "Not visible in scout search",
-    "counts": "{{matches}} matches · {{videos}} videos",
+    "title": "Auffindbarkeit",
+    "visible": "Für suchende Scouts sichtbar",
+    "hidden": "In der Scout-Suche nicht sichtbar",
+    "counts": "{{matches}} Spiele · {{videos}} Videos",
     "blockers": {
-      "public_passport_off": "Public Football Passport is off",
-      "discovery_opt_in_off": "Scout discovery opt-in is off",
-      "no_matches": "No match evidence to show yet"
+      "public_passport_off": "Öffentlicher Football Passport ist aus",
+      "discovery_opt_in_off": "Auffindbarkeit für Scouts ist aus",
+      "no_matches": "Noch keine Spielnachweise vorhanden"
     }
   },
   "readiness": {
-    "evidenceTitle": "Football evidence",
-    "sharingTitle": "Sharing",
-    "appOpsTitle": "App operations (not football evidence)",
-    "appOpsHint": "These items affect the product, not your playing record."
+    "evidenceTitle": "Fußball-Nachweise",
+    "sharingTitle": "Teilen",
+    "appOpsTitle": "App-Betrieb (keine Fußball-Nachweise)",
+    "appOpsHint": "Diese Punkte betreffen die App, nicht deine sportliche Bilanz."
   },
   "scoutPreview": {
-    "note": "This is the public projection. Private profile fields are not shown."
+    "note": "Das ist die öffentliche Ansicht. Private Profilfelder werden nicht angezeigt."
   },
   "gaps": {
     "title": "Angaben, die Nachweise brauchen",

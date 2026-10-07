@@ -1,11 +1,11 @@
 {
-  "pushEnabled": "Push notifications enabled",
-  "pushDisabled": "Push notifications disabled",
-  "portfolioView": "Someone viewed your Football Passport",
-  "endorsement": "New coach endorsement",
-  "trialInvitation": "New trial invitation",
-  "weeklyReport": "Your weekly career report is ready",
-  "activityFeed": "Activity feed",
+  "pushEnabled": "Notifiche push attivate",
+  "pushDisabled": "Notifiche push disattivate",
+  "portfolioView": "Qualcuno ha visto il tuo Football Passport",
+  "endorsement": "Nuova referenza di un allenatore",
+  "trialInvitation": "Nuovo invito a un provino",
+  "weeklyReport": "Il tuo report settimanale di carriera è pronto",
+  "activityFeed": "Feed attività",
   "activity": {
     "title": "Attività",
     "subtitle": "Aggiornamenti, provini e momenti di carriera",

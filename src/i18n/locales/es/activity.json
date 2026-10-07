@@ -1,9 +1,9 @@
 {
-  "title": "Activity",
-  "subtitle": "Recent updates on your Football Passport",
-  "inbox": "Activity inbox",
-  "noActivity": "No activity yet",
-  "noActivityDescription": "Portfolio views, endorsements, and trial updates will appear here.",
-  "unread": "{{count}} unread",
-  "markAllRead": "Mark all as read"
+  "title": "Actividad",
+  "subtitle": "Novedades recientes de tu Football Passport",
+  "inbox": "Bandeja de actividad",
+  "noActivity": "Aún no hay actividad",
+  "noActivityDescription": "Aquí aparecerán las visitas a tu portfolio, las recomendaciones y las novedades de pruebas.",
+  "unread": "{{count}} sin leer",
+  "markAllRead": "Marcar todo como leído"
 }

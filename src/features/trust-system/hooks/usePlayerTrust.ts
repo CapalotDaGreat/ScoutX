@@ -77,7 +77,7 @@ export function usePlayerTrust(playerId: string, options: UsePlayerTrustOptions 
         markReady();
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Unable to sync right now.'));
         profileReady = true;
         markReady();
       },
@@ -91,7 +91,7 @@ export function usePlayerTrust(playerId: string, options: UsePlayerTrustOptions 
         markReady();
       },
       (err) => {
-        setError(err.message);
+        setError(toUserMessage(err, 'Unable to sync right now.'));
         recommendationsReady = true;
         markReady();
       },

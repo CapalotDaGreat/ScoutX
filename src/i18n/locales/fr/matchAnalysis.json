@@ -32,7 +32,7 @@
     "coverageBand": "Couverture : {{band}}",
     "stats": "Stats estimées",
     "statsUnknown": "Les stats dénombrables restent inconnues tant qu’il n’y a pas d’événements validés.",
-    "stages": "Pipeline",
+    "stages": "Étapes",
     "emptyTimeline": "Aucune observation horodatée n’a été enregistrée.",
     "cvUnavailable": "Cette vue nécessite un suivi par vision, qui n’est pas déployé.",
     "noVideo": "Aucune vidéo à parcourir.",

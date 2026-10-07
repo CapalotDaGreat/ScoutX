@@ -183,7 +183,9 @@
     "loadingSection": "Loading section",
     "expandSection": "Expands this section",
     "collapseSection": "Collapses this section",
-    "clearSearch": "Clear search"
+    "clearSearch": "Clear search",
+    "avatar": "Profile picture",
+    "avatarOf": "{{name}} profile picture"
   },
   "searchPlaceholder": "Search"
 }

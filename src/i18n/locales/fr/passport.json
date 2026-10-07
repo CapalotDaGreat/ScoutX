@@ -1,40 +1,40 @@
 {
   "coverage": {
-    "technical": "Technical",
-    "tactical": "Tactical",
-    "physical": "Physical",
-    "consistency": "Consistency",
-    "video": "Video",
-    "sample": "{{have}} recorded · {{need}} for a strong sample"
+    "technical": "Technique",
+    "tactical": "Tactique",
+    "physical": "Physique",
+    "consistency": "Régularité",
+    "video": "Vidéo",
+    "sample": "{{have}} enregistrés · {{need}} pour un échantillon solide"
   },
   "proof": {
-    "empty": "No proof on file yet. Logged matches, videos and coach notes appear here.",
-    "dateUnknown": "Date unknown",
-    "title": "Proof stack"
+    "empty": "Aucune preuve pour l'instant. Les matchs enregistrés, vidéos et notes d'entraîneur apparaissent ici.",
+    "dateUnknown": "Date inconnue",
+    "title": "Pile de preuves"
   },
   "coach": {
-    "title": "Passport Coach",
-    "caughtUp": "No evidence gaps to flag right now."
+    "title": "Coach Passport",
+    "caughtUp": "Aucune lacune de preuve à signaler pour l'instant."
   },
   "discoverability": {
-    "title": "Discoverability",
-    "visible": "Visible to scouts who search",
-    "hidden": "Not visible in scout search",
-    "counts": "{{matches}} matches · {{videos}} videos",
+    "title": "Visibilité",
+    "visible": "Visible par les recruteurs qui cherchent",
+    "hidden": "Non visible dans la recherche des recruteurs",
+    "counts": "{{matches}} matchs · {{videos}} vidéos",
     "blockers": {
-      "public_passport_off": "Public Football Passport is off",
-      "discovery_opt_in_off": "Scout discovery opt-in is off",
-      "no_matches": "No match evidence to show yet"
+      "public_passport_off": "Le Football Passport public est désactivé",
+      "discovery_opt_in_off": "La visibilité auprès des recruteurs est désactivée",
+      "no_matches": "Aucune preuve de match à afficher pour l'instant"
     }
   },
   "readiness": {
-    "evidenceTitle": "Football evidence",
-    "sharingTitle": "Sharing",
-    "appOpsTitle": "App operations (not football evidence)",
-    "appOpsHint": "These items affect the product, not your playing record."
+    "evidenceTitle": "Preuves football",
+    "sharingTitle": "Partage",
+    "appOpsTitle": "Fonctionnement de l'appli (hors preuves football)",
+    "appOpsHint": "Ces éléments concernent le produit, pas ton historique de jeu."
   },
   "scoutPreview": {
-    "note": "This is the public projection. Private profile fields are not shown."
+    "note": "Ceci est la vue publique. Les champs privés du profil ne sont pas affichés."
   },
   "gaps": {
     "title": "Affirmations à prouver",

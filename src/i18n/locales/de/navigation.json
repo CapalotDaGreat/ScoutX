@@ -2,9 +2,9 @@
   "tabs": {
     "portfolio": "Portfolio",
     "career": "Karriere",
-    "statistics": "Stats",
+    "statistics": "Statistik",
     "gps": "GPS",
-    "trials": "Trials",
+    "trials": "Probetrainings",
     "home": "Start",
     "performance": "Wachstum",
     "track": "AktivitÃ¤t",
@@ -14,10 +14,10 @@
     "media": "Medien"
   },
   "segments": {
-    "stats": "Stats",
+    "stats": "Statistik",
     "career": "Karriere",
     "gps": "GPS",
-    "trials": "Trials",
+    "trials": "Probetrainings",
     "highlights": "Highlights",
     "library": "Bibliothek",
     "reels": "Reels",

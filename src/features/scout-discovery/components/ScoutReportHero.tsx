@@ -30,6 +30,7 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
           <View className="mt-2 flex-row items-end gap-3">
             <Avatar
               source={{ uri: player.avatarUrl }}
+              name={player.fullName}
               size="xl"
               className="border-4 border-white/20"
             />

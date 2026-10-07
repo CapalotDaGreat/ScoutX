@@ -1,6 +1,7 @@
 import { Image, View, type ImageSourcePropType } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { cn } from '@/utils/cn';
 
 const sizeStyles = {
@@ -68,8 +69,9 @@ export function Avatar({
   testID,
 }: AvatarProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('common');
   const initials = getInitials(name);
-  const label = name ? `${name} avatar` : 'User avatar';
+  const label = name ? t('a11y.avatarOf', { name }) : t('a11y.avatar');
   const hasImage = isUsableImageSource(source);
 
   return (
