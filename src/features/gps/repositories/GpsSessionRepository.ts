@@ -11,6 +11,7 @@ import {
   clearActiveSession,
   loadLocalSessions,
   saveLocalSessions,
+  deserializePointsFromStorage,
   serializePointsForStorage,
 } from '@/features/gps/services/gpsSessionStorage';
 import { type GpsPoint, type GpsSession } from '@/features/gps/types';
@@ -207,5 +208,19 @@ export class GpsSessionRepository {
     await clearActiveSession();
 
     return completedSession;
+  }
+
+  /** Stored points for a completed session, or an empty list when none were uploaded. */
+  public async loadSessionPoints(session: GpsSession): Promise<GpsPoint[]> {
+    const storage = getFirebaseStorage();
+    if (!storage || !session.pointsStorageKey) {
+      return [];
+    }
+    const url = await getDownloadURL(ref(storage, session.pointsStorageKey));
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`GPS points unavailable (${response.status}).`);
+    }
+    return deserializePointsFromStorage(await response.text());
   }
 }

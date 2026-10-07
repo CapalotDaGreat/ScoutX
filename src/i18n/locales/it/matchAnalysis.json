@@ -19,7 +19,11 @@
     "question": "La tua domanda",
     "placeholder": "es. C’è stato un tiro?",
     "submit": "Chiedi",
-    "insufficient": "Non c’è ancora evidenza sufficiente"
+    "insufficient": "Non c’è ancora evidenza sufficiente",
+    "eventLine": "Evento registrato: {{type}}",
+    "citedFrom_one": "Basato su {{count}} fonte",
+    "citedFrom_other": "Basato su {{count}} fonti",
+    "noTimestamp": "Nessun tempo video"
   },
   "report": {
     "title": "Analisi partita",
@@ -94,5 +98,73 @@
       "footage_lower": "Il video ha mostrato {{footage}}★, ti sei dato {{self}}★",
       "footage_higher": "Il video ha mostrato {{footage}}★, sopra le tue {{self}}★"
     }
+  },
+  "stat": {
+    "minutes": "Minuti",
+    "goals": "Gol",
+    "assists": "Assist",
+    "shots": "Tiri",
+    "passPct": "% passaggi",
+    "tackles": "Contrasti",
+    "rating": "Valutazione"
+  },
+  "quality": {
+    "title": "Qualità dell'analisi",
+    "overall": "Complessivo: {{band}}",
+    "notMeasured": "Non misurato",
+    "coverage": "Visibile {{visiblePct}}% · probabilmente fuori campo {{likelyOffCameraPct}}% · sconosciuto {{unknownPct}}%",
+    "canTellTitle": "Cosa può dirti questa analisi",
+    "canTellEmpty": "Non è stato possibile confermare nulla da questo video.",
+    "uncertainTitle": "Cosa resta incerto",
+    "dimension": {
+      "videoQuality": "Qualità video",
+      "playerIdentity": "Identità del giocatore",
+      "cameraCoverage": "Copertura della telecamera",
+      "trackingStability": "Stabilità del tracciamento",
+      "eventConfidence": "Affidabilità degli eventi"
+    },
+    "canTell": {
+      "accepted_events": "Eventi accettati: {{count}}",
+      "identity_confirmed": "Hai confermato che il giocatore tracciato sei tu",
+      "visible_share": "Eri visibile in circa il {{pct}}% delle riprese",
+      "counted_stats": "Statistiche contate dagli eventi: {{count}}"
+    },
+    "uncertain": {
+      "off_camera": "Circa il {{pct}}% della partita era probabilmente fuori campo",
+      "rejected_events": "Eventi che hai rifiutato: {{count}}",
+      "identity_unconfirmed": "Il giocatore tracciato non è stato confermato come te",
+      "cv_unavailable": "Statistiche che richiedono la visione artificiale (non disponibile): {{count}}",
+      "weak_dimension": "Bassa affidabilità in {{dimension}}",
+      "uncounted_stats": "Statistiche non registrate: {{count}}"
+    }
+  },
+  "coaching": {
+    "title": "Piano di allenamento",
+    "notProvided": "Non indicato",
+    "whatHappened": "Cosa è successo",
+    "whyItMatters": "Perché è importante",
+    "linkedGoal": "Collegato al tuo obiettivo «{{title}}»",
+    "whatToImprove": "Cosa migliorare",
+    "howToTrain": "Come allenarlo",
+    "howToMeasure": "Come misurarlo",
+    "watch": "Guarda a {{time}}",
+    "createGoal": "Crea obiettivo",
+    "goalCreated": "Obiettivo creato",
+    "kind": {
+      "observation": "Osservato",
+      "inference": "Dedotto",
+      "unknown": "Incerto"
+    }
+  },
+  "sync": {
+    "title": "Sincronizza con il GPS",
+    "noSessions": "Nessuna sessione GPS completata da sincronizzare.",
+    "instructions": "Scegli la sessione GPS di questa partita, riproduci il video fino al momento in cui hai iniziato a registrare e segnalo.",
+    "markNow": "Segna il tempo video attuale come inizio GPS",
+    "synced": "Inizio GPS impostato a {{time}} ({{label}})",
+    "pointsUnavailable": "Impossibile caricare i punti GPS di questa sessione.",
+    "noSprints": "Nessuno sprint rilevato in questa sessione.",
+    "sprint": "Sprint · picco {{kmh}} km/h",
+    "outsideVideo": "Fuori dal video"
   }
 }

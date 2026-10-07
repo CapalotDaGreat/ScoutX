@@ -1,7 +1,7 @@
 export { GpsTrackingScreen, type GpsTrackingScreenProps } from './components/GpsTrackingScreen';
 export { GpsLiveMetrics, type GpsLiveMetricsProps } from './components/GpsLiveMetrics';
 export { GpsHeatmap, type GpsHeatmapProps } from './components/GpsHeatmap';
-export { GpsMovementZones, type GpsMovementZonesProps } from './components/GpsMovementZones';
+export { GpsIntelligenceCard } from './components/GpsIntelligenceCard';
 export { GpsSessionCard, type GpsSessionCardProps } from './components/GpsSessionCard';
 export { GpsSessionHistory, type GpsSessionHistoryProps } from './components/GpsSessionHistory';
 export { GpsRecordingControls, type GpsRecordingControlsProps } from './components/GpsRecordingControls';

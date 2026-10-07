@@ -8,6 +8,23 @@ import { ChoiceChip } from '@/components/primitives/ChoiceChip';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { AskThisMatchCard } from '@/features/match-analysis/components/AskThisMatchCard';
+import {
+  GpsVideoSyncCard,
+  QualityReportCard,
+  StructuredCoachingCard,
+} from '@/features/match-analysis/components/AnalysisIntelligenceCards';
+import {
+  buildQualityReport,
+  buildStructuredCoaching,
+  parseVideoSync,
+  type StructuredCoaching,
+  type VideoSync,
+} from '@/features/match-analysis/services/analysisIntelligence';
+import { DevelopmentRepository } from '@/features/development/repositories/DevelopmentRepository';
+import { createDevelopmentGoal } from '@/features/development/models/DevelopmentModels';
+import type { DevelopmentGoal } from '@/features/development/types';
+import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
+import type { GpsSession } from '@/features/gps/types';
 import { IdentityConfirmationCard } from '@/features/match-analysis/components/IdentityConfirmationCard';
 import { TechniqueAssessmentCard } from '@/features/match-analysis/components/TechniqueAssessmentCard';
 import { parseTechniqueAssessment } from '@/features/match-analysis/services/techniqueAssessment';
@@ -23,25 +40,20 @@ export type AnalysisReportScreenProps = {
   onBack: () => void;
 };
 
-function formatUnknown(value: number | boolean | null | undefined): string {
-  if (value === null || value === undefined) {
-    return '—';
-  }
-  if (typeof value === 'boolean') {
-    return value ? 'Yes' : 'No';
-  }
-  return String(value);
+function formatUnknown(value: number | null | undefined): string {
+  return value === null || value === undefined ? '—' : String(value);
 }
 
 function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
+  const { t } = useAppTranslation('matchAnalysis');
   const rows: Array<[string, string]> = [
-    ['Minutes', formatUnknown(stats.minutesPlayed)],
-    ['Goals', formatUnknown(stats.goals)],
-    ['Assists', formatUnknown(stats.assists)],
-    ['Shots', formatUnknown(stats.shots)],
-    ['Pass %', formatUnknown(stats.passCompletionPct)],
-    ['Tackles', formatUnknown(stats.tackles)],
-    ['Rating', formatUnknown(stats.matchRating)],
+    [t('stat.minutes'), formatUnknown(stats.minutesPlayed)],
+    [t('stat.goals'), formatUnknown(stats.goals)],
+    [t('stat.assists'), formatUnknown(stats.assists)],
+    [t('stat.shots'), formatUnknown(stats.shots)],
+    [t('stat.passPct'), formatUnknown(stats.passCompletionPct)],
+    [t('stat.tackles'), formatUnknown(stats.tackles)],
+    [t('stat.rating'), formatUnknown(stats.matchRating)],
   ];
   return (
     <View className="flex-row flex-wrap gap-2">
@@ -62,6 +74,29 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
   const [tab, setTab] = useState<ReportTab>('overview');
   const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
   const [identityBusy, setIdentityBusy] = useState(false);
+  const [goals, setGoals] = useState<DevelopmentGoal[]>([]);
+  const [gpsSessions, setGpsSessions] = useState<GpsSession[]>([]);
+  const playerId = job?.playerId ?? null;
+
+  useEffect(() => {
+    if (!playerId) return undefined;
+    let cancelled = false;
+    void DevelopmentRepository.getInstance()
+      .listGoals(playerId)
+      .then((next) => {
+        if (!cancelled) setGoals(next);
+      })
+      .catch(() => undefined);
+    void GpsSessionRepository.getInstance()
+      .fetchSessions(playerId)
+      .then((next) => {
+        if (!cancelled) setGpsSessions(next.filter((session) => session.status === 'completed'));
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [playerId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,6 +135,49 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
   const seekTo = (timestampSec: number) => {
     setTab('video');
     player.currentTime = timestampSec;
+  };
+
+  const quality = useMemo(
+    () => (job?.report ? buildQualityReport(job.report, { identityConfirmation: job.identityConfirmation, events: job.events }) : null),
+    [job],
+  );
+  const coaching = useMemo(
+    () =>
+      job?.report
+        ? buildStructuredCoaching(job.report.coachingMoments ?? [], job.events ?? job.report.events ?? [], goals)
+        : [],
+    [goals, job],
+  );
+  const videoSync = parseVideoSync(job?.videoSync);
+
+  const handleSaveSync = async (sync: VideoSync) => {
+    if (!job) return;
+    await updateMatchAnalysisJob(job.id, { videoSync: sync });
+    setJob({ ...job, videoSync: sync });
+  };
+
+  const handleCreateGoal = async (item: StructuredCoaching) => {
+    if (!job) return;
+    const repository = DevelopmentRepository.getInstance();
+    const goal = createDevelopmentGoal(
+      job.playerId,
+      repository.newId('goal'),
+      {
+        title: item.whatToImprove.slice(0, 120),
+        category: 'technical',
+        metricKey: 'none',
+        targetValue: null,
+        targetLabel: '',
+        timeframeEnd: null,
+        practiceSuggestions: item.howToTrain ? [item.howToTrain] : [],
+        evidenceIds: [`${job.id}:${item.id}`],
+        origin: 'coaching_moment',
+      },
+      null,
+      new Date(),
+    );
+    await repository.saveGoal(goal);
+    setGoals((current) => [goal, ...current]);
   };
 
   const handleConfirmIdentity = async () => {
@@ -166,6 +244,7 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
                 </Text>
                 <Text variant="body-sm" color="secondary">{report.methodology}</Text>
               </Card>
+              {quality ? <QualityReportCard quality={quality} /> : null}
               <Card padding="lg" className="gap-3">
                 <Heading level={3}>{t('report.stats')}</Heading>
                 <StatGrid stats={report.estimatedStats} />
@@ -227,14 +306,15 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
           ) : null}
 
           {tab === 'coaching' ? (
-            <Card padding="lg" className="gap-2">
-              <Heading level={3}>{t('tabs.coaching')}</Heading>
+            <View className="gap-3">
+              <StructuredCoachingCard items={coaching} onSeek={seekTo} onCreateGoal={handleCreateGoal} />
               {report.coachingNotes.trim() ? (
-                <Text variant="body-sm">{report.coachingNotes}</Text>
-              ) : (
-                <Text variant="body-sm" color="secondary">{t('ask.insufficient')}</Text>
-              )}
-            </Card>
+                <Card padding="lg" className="gap-2">
+                  <Heading level={3}>{t('tabs.coaching')}</Heading>
+                  <Text variant="body-sm">{report.coachingNotes}</Text>
+                </Card>
+              ) : null}
+            </View>
           ) : null}
 
           {tab === 'video' ? (
@@ -250,7 +330,18 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
             </Card>
           ) : null}
 
-          {tab === 'ask' ? <AskThisMatchCard job={job} /> : null}
+          {tab === 'video' && videoUri ? (
+            <GpsVideoSyncCard
+              sessions={gpsSessions}
+              sync={videoSync}
+              videoDurationSec={job.durationSec}
+              getCurrentTime={() => player.currentTime}
+              onSaveSync={handleSaveSync}
+              onSeek={seekTo}
+            />
+          ) : null}
+
+          {tab === 'ask' ? <AskThisMatchCard job={job} onSeek={seekTo} /> : null}
 
           {(job.identityCandidates ?? []).length > 0 ? (
             <IdentityConfirmationCard

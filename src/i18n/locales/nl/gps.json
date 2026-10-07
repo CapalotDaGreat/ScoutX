@@ -23,5 +23,29 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Movement zones",
   "permissionRequired": "Location permission required",
-  "permissionDescription": "ScoutX needs location access to record GPS sessions."
+  "permissionDescription": "ScoutX needs location access to record GPS sessions.",
+  "movementDetail": "Bewegingsdetails",
+  "movementDetailSubtitle": "Beweging en heatmap van deze sessie",
+  "latestAnalysisSubtitle": "Beweging en heatmap van je laatste sessie",
+  "avgSpeedValue": "Gem. {{value}}",
+  "maxSpeedValue": "Max. {{value}}",
+  "intel": {
+    "title": "Bewegingsanalyse",
+    "noPoints": "De GPS-punten van deze sessie zijn niet beschikbaar, dus de beweging kon niet worden geanalyseerd.",
+    "insufficient": "Te weinig gegevens om beweging te analyseren. Minimaal {{minutes}} min en {{points}} punten nodig; deze sessie heeft {{haveMinutes}} min en {{havePoints}} punten.",
+    "lowAccuracy": "De GPS-nauwkeurigheid was te laag (mediaan {{meters}} m, limiet {{limit}} m), dus gebied en positie worden niet getoond.",
+    "spread": "Bestreken gebied: ongeveer {{width}} m breed × {{depth}} m langs je hoofdrichting",
+    "central": "Tijd in je centrale gebied: {{pct}}%",
+    "directionUnknown": "De speelrichting is onbekend, dus er worden geen aanvals- of verdedigingszones getoond.",
+    "intensity": "Tijd per intensiteit",
+    "band": {
+      "walk": "Wandelen",
+      "jog": "Joggen",
+      "run": "Rennen",
+      "sprint": "Sprinten"
+    },
+    "sprints_one": "{{count}} sprint",
+    "sprints_other": "{{count}} sprints",
+    "accuracyUnknown": "De GPS-nauwkeurigheid is voor deze sessie niet vastgelegd, dus de gebiedswaarden zijn bij benadering."
+  }
 }

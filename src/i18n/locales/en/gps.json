@@ -23,5 +23,29 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Movement zones",
   "permissionRequired": "Location permission required",
-  "permissionDescription": "ScoutX needs location access to record GPS sessions."
+  "permissionDescription": "ScoutX needs location access to record GPS sessions.",
+  "movementDetail": "Movement detail",
+  "movementDetailSubtitle": "Movement and heatmap for this session",
+  "latestAnalysisSubtitle": "Movement and heatmap from your latest session",
+  "avgSpeedValue": "Avg {{value}}",
+  "maxSpeedValue": "Max {{value}}",
+  "intel": {
+    "title": "Movement intelligence",
+    "noPoints": "The GPS points for this session are not available, so movement could not be analysed.",
+    "insufficient": "Not enough data to analyse movement. Needs at least {{minutes}} min and {{points}} points; this session has {{haveMinutes}} min and {{havePoints}} points.",
+    "lowAccuracy": "GPS accuracy was too low (median {{meters}} m, limit {{limit}} m), so area and position are not shown.",
+    "spread": "Area covered: about {{width}} m across × {{depth}} m along your main direction",
+    "central": "Time in your central area: {{pct}}%",
+    "directionUnknown": "Pitch direction is unknown, so no attacking or defensive zones are shown.",
+    "intensity": "Time by intensity",
+    "band": {
+      "walk": "Walking",
+      "jog": "Jogging",
+      "run": "Running",
+      "sprint": "Sprinting"
+    },
+    "sprints_one": "{{count}} sprint",
+    "sprints_other": "{{count}} sprints",
+    "accuracyUnknown": "GPS accuracy was not recorded for this session, so treat area figures as approximate."
+  }
 }

@@ -23,5 +23,29 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Movement zones",
   "permissionRequired": "Location permission required",
-  "permissionDescription": "ScoutX needs location access to record GPS sessions."
+  "permissionDescription": "ScoutX needs location access to record GPS sessions.",
+  "movementDetail": "Detalle de movimiento",
+  "movementDetailSubtitle": "Movimiento y mapa de calor de esta sesión",
+  "latestAnalysisSubtitle": "Movimiento y mapa de calor de tu última sesión",
+  "avgSpeedValue": "Media {{value}}",
+  "maxSpeedValue": "Máx. {{value}}",
+  "intel": {
+    "title": "Análisis de movimiento",
+    "noPoints": "Los puntos GPS de esta sesión no están disponibles, así que no se pudo analizar el movimiento.",
+    "insufficient": "No hay datos suficientes para analizar el movimiento. Se necesitan al menos {{minutes}} min y {{points}} puntos; esta sesión tiene {{haveMinutes}} min y {{havePoints}} puntos.",
+    "lowAccuracy": "La precisión del GPS fue demasiado baja (mediana {{meters}} m, límite {{limit}} m), por lo que no se muestran la zona ni la posición.",
+    "spread": "Zona cubierta: unos {{width}} m de ancho × {{depth}} m a lo largo de tu dirección principal",
+    "central": "Tiempo en tu zona central: {{pct}} %",
+    "directionUnknown": "Se desconoce la dirección de juego, así que no se muestran zonas de ataque ni de defensa.",
+    "intensity": "Tiempo por intensidad",
+    "band": {
+      "walk": "Caminar",
+      "jog": "Trotar",
+      "run": "Correr",
+      "sprint": "Esprintar"
+    },
+    "sprints_one": "{{count}} sprint",
+    "sprints_other": "{{count}} sprints",
+    "accuracyUnknown": "No se registró la precisión del GPS en esta sesión, así que las cifras de zona son aproximadas."
+  }
 }

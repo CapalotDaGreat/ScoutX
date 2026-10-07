@@ -19,7 +19,11 @@
     "question": "Jouw vraag",
     "placeholder": "bijv. Was er een schot?",
     "submit": "Vragen",
-    "insufficient": "Nog niet genoeg bewijs"
+    "insufficient": "Nog niet genoeg bewijs",
+    "eventLine": "Vastgelegde gebeurtenis: {{type}}",
+    "citedFrom_one": "Gebaseerd op {{count}} bron",
+    "citedFrom_other": "Gebaseerd op {{count}} bronnen",
+    "noTimestamp": "Geen videotijd"
   },
   "report": {
     "title": "Wedstrijdanalyse",
@@ -94,5 +98,73 @@
       "footage_lower": "Beelden toonden {{footage}}★, jij gaf jezelf {{self}}★",
       "footage_higher": "Beelden toonden {{footage}}★, hoger dan je {{self}}★"
     }
+  },
+  "stat": {
+    "minutes": "Minuten",
+    "goals": "Doelpunten",
+    "assists": "Assists",
+    "shots": "Schoten",
+    "passPct": "Pass-%",
+    "tackles": "Tackles",
+    "rating": "Beoordeling"
+  },
+  "quality": {
+    "title": "Analysekwaliteit",
+    "overall": "Algemeen: {{band}}",
+    "notMeasured": "Niet gemeten",
+    "coverage": "Zichtbaar {{visiblePct}}% · waarschijnlijk buiten beeld {{likelyOffCameraPct}}% · onbekend {{unknownPct}}%",
+    "canTellTitle": "Wat deze analyse je kan vertellen",
+    "canTellEmpty": "Uit deze video kon niets worden bevestigd.",
+    "uncertainTitle": "Wat onzeker blijft",
+    "dimension": {
+      "videoQuality": "Videokwaliteit",
+      "playerIdentity": "Spelersidentiteit",
+      "cameraCoverage": "Camerabereik",
+      "trackingStability": "Trackingstabiliteit",
+      "eventConfidence": "Betrouwbaarheid van gebeurtenissen"
+    },
+    "canTell": {
+      "accepted_events": "Geaccepteerde gebeurtenissen: {{count}}",
+      "identity_confirmed": "Je hebt bevestigd dat de gevolgde speler jij bent",
+      "visible_share": "Je was zichtbaar in ongeveer {{pct}}% van de beelden",
+      "counted_stats": "Statistieken geteld uit gebeurtenissen: {{count}}"
+    },
+    "uncertain": {
+      "off_camera": "Ongeveer {{pct}}% van de wedstrijd was waarschijnlijk buiten beeld",
+      "rejected_events": "Gebeurtenissen die je hebt afgewezen: {{count}}",
+      "identity_unconfirmed": "De gevolgde speler is niet als jou bevestigd",
+      "cv_unavailable": "Statistieken waarvoor computervisie nodig is (niet beschikbaar): {{count}}",
+      "weak_dimension": "Lage betrouwbaarheid bij {{dimension}}",
+      "uncounted_stats": "Niet vastgelegde statistieken: {{count}}"
+    }
+  },
+  "coaching": {
+    "title": "Trainingsplan",
+    "notProvided": "Niet opgegeven",
+    "whatHappened": "Wat er gebeurde",
+    "whyItMatters": "Waarom het ertoe doet",
+    "linkedGoal": "Gekoppeld aan je doel ‘{{title}}’",
+    "whatToImprove": "Wat te verbeteren",
+    "howToTrain": "Hoe je het traint",
+    "howToMeasure": "Hoe je het meet",
+    "watch": "Bekijk op {{time}}",
+    "createGoal": "Doel maken",
+    "goalCreated": "Doel gemaakt",
+    "kind": {
+      "observation": "Waargenomen",
+      "inference": "Afgeleid",
+      "unknown": "Onduidelijk"
+    }
+  },
+  "sync": {
+    "title": "Synchroniseren met GPS",
+    "noSessions": "Geen afgeronde GPS-sessie om mee te synchroniseren.",
+    "instructions": "Kies de GPS-sessie van deze wedstrijd, speel de video af tot het moment waarop je begon met opnemen en markeer het.",
+    "markNow": "Huidige videotijd markeren als GPS-start",
+    "synced": "GPS-start ingesteld op {{time}} ({{label}})",
+    "pointsUnavailable": "De GPS-punten van deze sessie konden niet worden geladen.",
+    "noSprints": "Er zijn geen sprints gedetecteerd in deze sessie.",
+    "sprint": "Sprint · piek {{kmh}} km/u",
+    "outsideVideo": "Buiten de video"
   }
 }

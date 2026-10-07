@@ -16,6 +16,11 @@ export type AskThisMatchInput = {
 export type AskThisMatchCitation = {
   evidenceId: string;
   label: string;
+  kind?: 'event' | 'observation' | 'coaching';
+  /** Video second of the cited evidence, when stored. */
+  timestampSec?: number | null;
+  /** Stored observation or coaching text; events carry their type in `label`. */
+  detail?: string;
 };
 
 export type AskThisMatchResult = {
@@ -58,7 +63,7 @@ export function answerAskThisMatch(input: AskThisMatchInput): AskThisMatchResult
     const blob = `${event.type} ${event.tacticalPhase ?? ''} ${event.fieldZone ?? ''}`;
     if (questionTokens.length === 0 || overlaps(questionTokens, blob)) {
       lines.push(`Recorded ${event.type} at ${event.videoTimestampSec}s.`);
-      citations.push({ evidenceId: event.eventId, label: event.type });
+      citations.push({ evidenceId: event.eventId, label: event.type, kind: 'event', timestampSec: event.videoTimestampSec });
     }
   }
 
@@ -69,6 +74,9 @@ export function answerAskThisMatch(input: AskThisMatchInput): AskThisMatchResult
       citations.push({
         evidenceId: item.id ?? item.label,
         label: item.label,
+        kind: 'observation',
+        timestampSec: item.timestampSec ?? null,
+        detail: item.detail || item.label,
       });
     }
   }
@@ -77,7 +85,13 @@ export function answerAskThisMatch(input: AskThisMatchInput): AskThisMatchResult
     const blob = `${moment.context} ${moment.coachingPoint}`;
     if (questionTokens.length === 0 || overlaps(questionTokens, blob)) {
       lines.push(moment.coachingPoint);
-      citations.push({ evidenceId: moment.id, label: moment.coachingPoint.slice(0, 80) });
+      citations.push({
+        evidenceId: moment.id,
+        label: moment.coachingPoint.slice(0, 80),
+        kind: 'coaching',
+        timestampSec: moment.timestampSec,
+        detail: moment.coachingPoint,
+      });
     }
   }
 

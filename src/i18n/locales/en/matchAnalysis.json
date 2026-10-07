@@ -19,7 +19,11 @@
     "question": "Your question",
     "placeholder": "e.g. Did you see a shot?",
     "submit": "Ask",
-    "insufficient": "Not enough evidence yet"
+    "insufficient": "Not enough evidence yet",
+    "eventLine": "Recorded event: {{type}}",
+    "citedFrom_one": "Based on {{count}} source",
+    "citedFrom_other": "Based on {{count}} sources",
+    "noTimestamp": "No video time"
   },
   "report": {
     "title": "Match analysis",
@@ -94,5 +98,73 @@
       "footage_lower": "Footage showed {{footage}}★, you rated yourself {{self}}★",
       "footage_higher": "Footage showed {{footage}}★, above your {{self}}★"
     }
+  },
+  "stat": {
+    "minutes": "Minutes",
+    "goals": "Goals",
+    "assists": "Assists",
+    "shots": "Shots",
+    "passPct": "Pass %",
+    "tackles": "Tackles",
+    "rating": "Rating"
+  },
+  "quality": {
+    "title": "Analysis quality",
+    "overall": "Overall: {{band}}",
+    "notMeasured": "Not measured",
+    "coverage": "Visible {{visiblePct}}% · likely off camera {{likelyOffCameraPct}}% · unknown {{unknownPct}}%",
+    "canTellTitle": "What this analysis can tell you",
+    "canTellEmpty": "Nothing could be confirmed from this video.",
+    "uncertainTitle": "What remains uncertain",
+    "dimension": {
+      "videoQuality": "Video quality",
+      "playerIdentity": "Player identity",
+      "cameraCoverage": "Camera coverage",
+      "trackingStability": "Tracking stability",
+      "eventConfidence": "Event confidence"
+    },
+    "canTell": {
+      "accepted_events": "Accepted events: {{count}}",
+      "identity_confirmed": "You confirmed the tracked player is you",
+      "visible_share": "You were visible for about {{pct}}% of the footage",
+      "counted_stats": "Statistics counted from events: {{count}}"
+    },
+    "uncertain": {
+      "off_camera": "About {{pct}}% of the match was likely off camera",
+      "rejected_events": "Events you rejected: {{count}}",
+      "identity_unconfirmed": "The tracked player has not been confirmed as you",
+      "cv_unavailable": "Statistics that need computer vision (not available): {{count}}",
+      "weak_dimension": "Low confidence in {{dimension}}",
+      "uncounted_stats": "Statistics not recorded: {{count}}"
+    }
+  },
+  "coaching": {
+    "title": "Coaching plan",
+    "notProvided": "Not provided",
+    "whatHappened": "What happened",
+    "whyItMatters": "Why it matters",
+    "linkedGoal": "Linked to your goal \"{{title}}\"",
+    "whatToImprove": "What to improve",
+    "howToTrain": "How to train it",
+    "howToMeasure": "How to measure it",
+    "watch": "Watch at {{time}}",
+    "createGoal": "Create goal",
+    "goalCreated": "Goal created",
+    "kind": {
+      "observation": "Observed",
+      "inference": "Inferred",
+      "unknown": "Unclear"
+    }
+  },
+  "sync": {
+    "title": "Sync with GPS",
+    "noSessions": "No completed GPS session to sync with.",
+    "instructions": "Choose the GPS session from this match, play the video to the moment you started recording, then mark it.",
+    "markNow": "Mark current video time as GPS start",
+    "synced": "GPS start set at {{time}} ({{label}})",
+    "pointsUnavailable": "GPS points for this session could not be loaded.",
+    "noSprints": "No sprints were detected in this session.",
+    "sprint": "Sprint · peak {{kmh}} km/h",
+    "outsideVideo": "Outside the video"
   }
 }

@@ -1,4 +1,5 @@
 import { createCallableFunction } from '@/firebase/callableFunctions';
+import type { AskThisMatchCitation } from '@/features/match-analysis/services/askThisMatchService';
 
 export type AnalyzeMatchFootageRequest = {
   jobId: string;
@@ -32,7 +33,7 @@ export type AskThisMatchRequest = {
 export type AskThisMatchResponse = {
   state: 'answered' | 'insufficient';
   answer: string;
-  citations: Array<{ evidenceId: string; label: string }>;
+  citations: AskThisMatchCitation[];
 };
 
 export async function requestAskThisMatch(

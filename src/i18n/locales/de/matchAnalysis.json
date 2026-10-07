@@ -19,7 +19,11 @@
     "question": "Deine Frage",
     "placeholder": "z. B. Gab es einen Torschuss?",
     "submit": "Fragen",
-    "insufficient": "Noch nicht genug Evidenz"
+    "insufficient": "Noch nicht genug Evidenz",
+    "eventLine": "Erfasstes Ereignis: {{type}}",
+    "citedFrom_one": "Basierend auf {{count}} Quelle",
+    "citedFrom_other": "Basierend auf {{count}} Quellen",
+    "noTimestamp": "Keine Videozeit"
   },
   "report": {
     "title": "Spielanalyse",
@@ -94,5 +98,73 @@
       "footage_lower": "Video zeigte {{footage}}★, du hast dich mit {{self}}★ bewertet",
       "footage_higher": "Video zeigte {{footage}}★, mehr als deine {{self}}★"
     }
+  },
+  "stat": {
+    "minutes": "Minuten",
+    "goals": "Tore",
+    "assists": "Vorlagen",
+    "shots": "Schüsse",
+    "passPct": "Pass-%",
+    "tackles": "Zweikämpfe",
+    "rating": "Bewertung"
+  },
+  "quality": {
+    "title": "Analysequalität",
+    "overall": "Gesamt: {{band}}",
+    "notMeasured": "Nicht gemessen",
+    "coverage": "Sichtbar {{visiblePct}} % · vermutlich außerhalb des Bildes {{likelyOffCameraPct}} % · unbekannt {{unknownPct}} %",
+    "canTellTitle": "Was diese Analyse aussagen kann",
+    "canTellEmpty": "Aus diesem Video konnte nichts bestätigt werden.",
+    "uncertainTitle": "Was unsicher bleibt",
+    "dimension": {
+      "videoQuality": "Videoqualität",
+      "playerIdentity": "Spieleridentität",
+      "cameraCoverage": "Kameraabdeckung",
+      "trackingStability": "Tracking-Stabilität",
+      "eventConfidence": "Ereignis-Zuverlässigkeit"
+    },
+    "canTell": {
+      "accepted_events": "Bestätigte Ereignisse: {{count}}",
+      "identity_confirmed": "Du hast bestätigt, dass der verfolgte Spieler du bist",
+      "visible_share": "Du warst in etwa {{pct}} % des Materials sichtbar",
+      "counted_stats": "Aus Ereignissen gezählte Statistiken: {{count}}"
+    },
+    "uncertain": {
+      "off_camera": "Etwa {{pct}} % des Spiels lagen vermutlich außerhalb des Bildes",
+      "rejected_events": "Von dir abgelehnte Ereignisse: {{count}}",
+      "identity_unconfirmed": "Der verfolgte Spieler wurde nicht als du bestätigt",
+      "cv_unavailable": "Statistiken, die Computer Vision benötigen (nicht verfügbar): {{count}}",
+      "weak_dimension": "Geringe Zuverlässigkeit bei {{dimension}}",
+      "uncounted_stats": "Nicht erfasste Statistiken: {{count}}"
+    }
+  },
+  "coaching": {
+    "title": "Trainingsplan",
+    "notProvided": "Nicht angegeben",
+    "whatHappened": "Was passiert ist",
+    "whyItMatters": "Warum es wichtig ist",
+    "linkedGoal": "Verknüpft mit deinem Ziel „{{title}}“",
+    "whatToImprove": "Was du verbessern kannst",
+    "howToTrain": "Wie du es trainierst",
+    "howToMeasure": "Wie du es misst",
+    "watch": "Ansehen bei {{time}}",
+    "createGoal": "Ziel erstellen",
+    "goalCreated": "Ziel erstellt",
+    "kind": {
+      "observation": "Beobachtet",
+      "inference": "Abgeleitet",
+      "unknown": "Unklar"
+    }
+  },
+  "sync": {
+    "title": "Mit GPS synchronisieren",
+    "noSessions": "Keine abgeschlossene GPS-Sitzung zum Synchronisieren.",
+    "instructions": "Wähle die GPS-Sitzung dieses Spiels, spiele das Video bis zum Aufnahmestart ab und markiere diesen Moment.",
+    "markNow": "Aktuelle Videozeit als GPS-Start markieren",
+    "synced": "GPS-Start bei {{time}} gesetzt ({{label}})",
+    "pointsUnavailable": "Die GPS-Punkte dieser Sitzung konnten nicht geladen werden.",
+    "noSprints": "In dieser Sitzung wurden keine Sprints erkannt.",
+    "sprint": "Sprint · Spitze {{kmh}} km/h",
+    "outsideVideo": "Außerhalb des Videos"
   }
 }

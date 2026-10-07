@@ -8,13 +8,14 @@ import {
   formatSpeed,
 } from '@/features/gps/services/gpsSessionCalculator';
 import { type GpsSession } from '@/features/gps/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type GpsSessionCardProps = {
   session: GpsSession;
 };
 
-function formatSessionDate(isoDate: string): string {
-  return new Intl.DateTimeFormat('en', {
+function formatSessionDate(isoDate: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -23,16 +24,17 @@ function formatSessionDate(isoDate: string): string {
 }
 
 export function GpsSessionCard({ session }: GpsSessionCardProps) {
+  const { t, i18n } = useAppTranslation(['gps']);
   return (
     <Card variant="outlined" padding="md" className="gap-3">
       <View className="flex-row items-start justify-between gap-3">
         <View className="flex-1">
           <Text weight="semibold">{session.matchLabel}</Text>
           <Text variant="caption" color="secondary" className="mt-1">
-            {formatSessionDate(session.startedAt)}
+            {formatSessionDate(session.startedAt, i18n.language)}
           </Text>
         </View>
-        <Badge label={`${session.metrics.sprintCount} sprints`} variant="accent" size="sm" />
+        <Badge label={t('gps:intel.sprints', { count: session.metrics.sprintCount })} variant="accent" size="sm" />
       </View>
 
       <View className="flex-row flex-wrap gap-2">
@@ -40,10 +42,10 @@ export function GpsSessionCard({ session }: GpsSessionCardProps) {
           {formatDistance(session.metrics.distanceM)}
         </Text>
         <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
-          Avg {formatSpeed(session.metrics.avgSpeedKmh)}
+          {t('gps:avgSpeedValue', { value: formatSpeed(session.metrics.avgSpeedKmh) })}
         </Text>
         <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
-          Max {formatSpeed(session.metrics.maxSpeedKmh)}
+          {t('gps:maxSpeedValue', { value: formatSpeed(session.metrics.maxSpeedKmh) })}
         </Text>
         <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
           {formatDuration(session.metrics.durationSec)}

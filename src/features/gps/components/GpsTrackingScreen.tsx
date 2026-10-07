@@ -7,7 +7,7 @@ import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
 import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
 import { GpsLiveMetrics } from '@/features/gps/components/GpsLiveMetrics';
-import { GpsMovementZones } from '@/features/gps/components/GpsMovementZones';
+import { GpsIntelligenceCard } from '@/features/gps/components/GpsIntelligenceCard';
 import { GpsRecordingControls } from '@/features/gps/components/GpsRecordingControls';
 import { GpsSessionHistory } from '@/features/gps/components/GpsSessionHistory';
 import { useGpsSessions } from '@/features/gps/hooks/useGpsSessions';
@@ -60,8 +60,7 @@ export function GpsTrackingScreen({
     }
   };
 
-  const previewHeatmap = completedSession?.heatmap ?? sessions[0]?.heatmap;
-  const previewZones = completedSession?.zones ?? sessions[0]?.zones ?? [];
+  const latestSession = sessions[0] ?? null;
   const historySessions = showFullHistory ? sessions : sessions.slice(0, 3);
 
   return (
@@ -104,25 +103,25 @@ export function GpsTrackingScreen({
           </Text>
           <GpsLiveMetrics metrics={completedSession.metrics} />
           <CollapsibleSection
-            title="Movement detail"
-            subtitle="Zones and heatmap for this session"
+            title={t('gps:movementDetail')}
+            subtitle={t('gps:movementDetailSubtitle')}
             defaultOpen
             persistKey="gps-completed-detail"
           >
-            <GpsMovementZones zones={completedSession.zones} />
+            <GpsIntelligenceCard session={completedSession} />
             <GpsHeatmap heatmap={completedSession.heatmap} />
           </CollapsibleSection>
         </Section>
       ) : null}
 
-      {!completedSession && previewZones.length > 0 ? (
+      {!completedSession && latestSession ? (
         <CollapsibleSection
           title={t('gps:latestAnalysis')}
-          subtitle="Zones and heatmap from your latest session"
+          subtitle={t('gps:latestAnalysisSubtitle')}
           persistKey="gps-latest-analysis"
         >
-          <GpsMovementZones zones={previewZones} />
-          {previewHeatmap ? <GpsHeatmap heatmap={previewHeatmap} /> : null}
+          <GpsIntelligenceCard session={latestSession} />
+          <GpsHeatmap heatmap={latestSession.heatmap} />
         </CollapsibleSection>
       ) : null}
 
@@ -140,7 +139,7 @@ export function GpsTrackingScreen({
                 className="self-start"
               >
                 {showFullHistory
-                  ? 'Show less'
+                  ? t('common:seeLess')
                   : `${t('common:seeMore')} · ${sessions.length - 3}`}
               </Button>
             ) : null}

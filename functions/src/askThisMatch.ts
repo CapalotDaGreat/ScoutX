@@ -3,6 +3,14 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { createCallableOptions } from './callableOptions';
 import { NOT_ENOUGH_EVIDENCE } from './analysis/askThisMatch';
 
+type Citation = {
+  evidenceId: string;
+  label: string;
+  kind: 'event' | 'observation' | 'coaching';
+  timestampSec: number | null;
+  detail?: string;
+};
+
 type JobDoc = {
   playerId?: string;
   events?: unknown;
@@ -70,12 +78,12 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
     return {
       state: 'insufficient' as const,
       answer: NOT_ENOUGH_EVIDENCE,
-      citations: [] as Array<{ evidenceId: string; label: string }>,
+      citations: [] as Citation[],
     };
   }
 
   const q = question.toLowerCase();
-  const citations: Array<{ evidenceId: string; label: string }> = [];
+  const citations: Citation[] = [];
   const lines: string[] = [];
 
   for (const item of acceptedEvents) {
@@ -88,7 +96,12 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
     const blob = `${type} ${typeof row.tacticalPhase === 'string' ? row.tacticalPhase : ''}`.toLowerCase();
     if (q.split(/\s+/).some((token) => token.length >= 3 && blob.includes(token))) {
       lines.push(`Recorded ${type}.`);
-      citations.push({ evidenceId: eventId, label: type });
+      citations.push({
+        evidenceId: eventId,
+        label: type,
+        kind: 'event',
+        timestampSec: typeof row.videoTimestampSec === 'number' ? row.videoTimestampSec : null,
+      });
     }
   }
 
@@ -105,6 +118,29 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
       citations.push({
         evidenceId: typeof row.id === 'string' ? row.id : label,
         label,
+        kind: 'observation',
+        timestampSec: typeof row.timestampSec === 'number' ? row.timestampSec : null,
+        detail: detail || label,
+      });
+    }
+  }
+
+  for (const item of moments) {
+    const row = asRecord(item);
+    if (!row) {
+      continue;
+    }
+    const point = typeof row.coachingPoint === 'string' ? row.coachingPoint : '';
+    const context = typeof row.context === 'string' ? row.context : '';
+    const blob = `${context} ${point}`.toLowerCase();
+    if (point && q.split(/\s+/).some((token) => token.length >= 3 && blob.includes(token))) {
+      lines.push(point);
+      citations.push({
+        evidenceId: typeof row.id === 'string' ? row.id : point.slice(0, 40),
+        label: point.slice(0, 80),
+        kind: 'coaching',
+        timestampSec: typeof row.timestampSec === 'number' ? row.timestampSec : null,
+        detail: point,
       });
     }
   }

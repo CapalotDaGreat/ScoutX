@@ -321,9 +321,19 @@ export type MatchAnalysisJob = {
   availability?: PlayerAvailabilityWindow[];
   error?: string;
   report?: MatchAnalysisReport;
+  /** Player-marked alignment between this footage and a GPS session. */
+  videoSync?: MatchVideoSync;
   createdAt: string;
   updatedAt: string;
   completedAt?: string;
+};
+
+export type MatchVideoSync = {
+  gpsSessionId: string;
+  /** GPS time (epoch ms) that the marked video moment corresponds to. */
+  gpsAnchorMs: number;
+  videoAnchorSec: number;
+  setAt: string;
 };
 
 export type CreateMatchAnalysisInput = {
