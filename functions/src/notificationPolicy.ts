@@ -75,9 +75,39 @@ export function solidCoverageCount(coverage: unknown): number {
   }).length;
 }
 
-/** A Passport change is only worth a push when a coverage dimension became solid. */
-export function isMeaningfulPassportImprovement(before: unknown, after: unknown): boolean {
-  return solidCoverageCount(after) > solidCoverageCount(before);
+const MATCH_MILESTONES = [1, 3, 5, 10, 20, 40];
+const VIDEO_MILESTONES = [1, 3, 5, 10];
+
+function asCount(value: unknown): number {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+}
+
+function crossedMilestone(before: number, after: number, milestones: readonly number[]): boolean {
+  return milestones.some((milestone) => before < milestone && after >= milestone);
+}
+
+type SummaryLike = { coverage?: unknown; matchCount?: unknown; videoCount?: unknown } | null | undefined;
+
+/**
+ * A Passport change is only worth a push when a coverage dimension became solid, or the
+ * recorded match/video count crossed a milestone. Single edits never push.
+ */
+export function isMeaningfulPassportImprovement(before: SummaryLike, after: SummaryLike): boolean {
+  if (solidCoverageCount(after?.coverage) > solidCoverageCount(before?.coverage)) return true;
+  return (
+    crossedMilestone(asCount(before?.matchCount), asCount(after?.matchCount), MATCH_MILESTONES) ||
+    crossedMilestone(asCount(before?.videoCount), asCount(after?.videoCount), VIDEO_MILESTONES)
+  );
+}
+
+export type WatchlistChange = 'match' | 'video';
+
+/** What a watched player added, from the public summary counts. */
+export function summaryChanges(before: SummaryLike, after: SummaryLike): WatchlistChange[] {
+  const changes: WatchlistChange[] = [];
+  if (asCount(after?.matchCount) > asCount(before?.matchCount)) changes.push('match');
+  if (asCount(after?.videoCount) > asCount(before?.videoCount)) changes.push('video');
+  return changes;
 }
 
 export type TrialParty = 'player' | 'scout';

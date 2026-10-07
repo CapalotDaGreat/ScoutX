@@ -2,6 +2,7 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { notifyWatchlistChange } from './notificationProducers';
+import { summaryChanges } from './notificationPolicy';
 
 const PIPELINE = [
   'discovered',
@@ -79,7 +80,8 @@ export const onPassportSummaryWrittenNotifyWatchers = onDocumentWritten(
     const lastEvidenceAt = typeof after.lastEvidenceAt === 'string' ? after.lastEvidenceAt : null;
     const before = event.data?.before.exists ? event.data.before.data() : null;
     const previous = typeof before?.lastEvidenceAt === 'string' ? before.lastEvidenceAt : null;
-    if (!lastEvidenceAt || lastEvidenceAt === previous) {
+    const changes = summaryChanges(before, after);
+    if (changes.length === 0 && (!lastEvidenceAt || lastEvidenceAt === previous)) {
       return;
     }
     const db = getFirestore();
@@ -95,6 +97,7 @@ export const onPassportSummaryWrittenNotifyWatchers = onDocumentWritten(
         scoutId: watcher.id,
         playerId,
         type: 'new_evidence',
+        changes,
         fromStage: null,
         toStage: null,
         lastEvidenceAt,

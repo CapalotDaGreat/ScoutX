@@ -5,6 +5,7 @@ const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const notificationProducers_1 = require("./notificationProducers");
+const notificationPolicy_1 = require("./notificationPolicy");
 const PIPELINE = [
     'discovered',
     'shortlisted',
@@ -70,7 +71,8 @@ exports.onPassportSummaryWrittenNotifyWatchers = (0, firestore_1.onDocumentWritt
     const lastEvidenceAt = typeof after.lastEvidenceAt === 'string' ? after.lastEvidenceAt : null;
     const before = event.data?.before.exists ? event.data.before.data() : null;
     const previous = typeof before?.lastEvidenceAt === 'string' ? before.lastEvidenceAt : null;
-    if (!lastEvidenceAt || lastEvidenceAt === previous) {
+    const changes = (0, notificationPolicy_1.summaryChanges)(before, after);
+    if (changes.length === 0 && (!lastEvidenceAt || lastEvidenceAt === previous)) {
         return;
     }
     const db = (0, firestore_2.getFirestore)();
@@ -86,6 +88,7 @@ exports.onPassportSummaryWrittenNotifyWatchers = (0, firestore_1.onDocumentWritt
             scoutId: watcher.id,
             playerId,
             type: 'new_evidence',
+            changes,
             fromStage: null,
             toStage: null,
             lastEvidenceAt,

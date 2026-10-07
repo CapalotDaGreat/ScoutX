@@ -4,6 +4,7 @@ exports.MAX_PUSHES_PER_HOUR = exports.ACTIVITY_CATEGORY = exports.NOTIFICATION_C
 exports.pushPathFor = pushPathFor;
 exports.solidCoverageCount = solidCoverageCount;
 exports.isMeaningfulPassportImprovement = isMeaningfulPassportImprovement;
+exports.summaryChanges = summaryChanges;
 exports.trialUpdateRecipient = trialUpdateRecipient;
 exports.defaultStoredPreferences = defaultStoredPreferences;
 exports.parseStoredPreferences = parseStoredPreferences;
@@ -71,9 +72,32 @@ function solidCoverageCount(coverage) {
         return row?.state === 'moderate' || row?.state === 'strong';
     }).length;
 }
-/** A Passport change is only worth a push when a coverage dimension became solid. */
+const MATCH_MILESTONES = [1, 3, 5, 10, 20, 40];
+const VIDEO_MILESTONES = [1, 3, 5, 10];
+function asCount(value) {
+    return typeof value === 'number' && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+}
+function crossedMilestone(before, after, milestones) {
+    return milestones.some((milestone) => before < milestone && after >= milestone);
+}
+/**
+ * A Passport change is only worth a push when a coverage dimension became solid, or the
+ * recorded match/video count crossed a milestone. Single edits never push.
+ */
 function isMeaningfulPassportImprovement(before, after) {
-    return solidCoverageCount(after) > solidCoverageCount(before);
+    if (solidCoverageCount(after?.coverage) > solidCoverageCount(before?.coverage))
+        return true;
+    return (crossedMilestone(asCount(before?.matchCount), asCount(after?.matchCount), MATCH_MILESTONES) ||
+        crossedMilestone(asCount(before?.videoCount), asCount(after?.videoCount), VIDEO_MILESTONES));
+}
+/** What a watched player added, from the public summary counts. */
+function summaryChanges(before, after) {
+    const changes = [];
+    if (asCount(after?.matchCount) > asCount(before?.matchCount))
+        changes.push('match');
+    if (asCount(after?.videoCount) > asCount(before?.videoCount))
+        changes.push('video');
+    return changes;
 }
 /** Who should hear about a trial status change: the side that did not make it. */
 function trialUpdateRecipient(fromStatus, toStatus) {

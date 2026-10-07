@@ -28,7 +28,26 @@
     "emptyTitle": "No discoverable players yet",
     "emptyDescription": "Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network.",
     "emptyAction": "Open Discover",
-    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters."
+    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters.",
+    "attention": {
+      "title": "Requer atenção",
+      "empty": "De momento não há decisões pendentes.",
+      "fulfilled_request": "Pedido de provas respondido",
+      "upcoming_trial": "Treino em breve: {{name}}",
+      "watchlist_change": "Novas provas de um jogador seguido",
+      "brief_match": "{{name}} encaixa no teu perfil «{{brief}}»"
+    },
+    "firstSession": {
+      "title": "Primeiros passos",
+      "subtitle": "Cinco passos até ao teu primeiro treino de captação.",
+      "steps": {
+        "save_brief": "Guarda o teu perfil como filtro",
+        "view_player": "Abre um perfil de jogador",
+        "shortlist_player": "Adiciona um jogador ao pipeline",
+        "request_evidence": "Pede provas a um jogador",
+        "invite_trial": "Convida um jogador para um treino"
+      }
+    }
   },
   "discover": {
     "title": "Descobrir jogadores",
@@ -91,7 +110,19 @@
     "skillMovesShort": "FT",
     "anyStars": "Qualquer avaliação",
     "atLeastStars_one": "{{count}}★ ou melhor",
-    "atLeastStars_other": "{{count}}★ ou melhor"
+    "atLeastStars_other": "{{count}}★ ou melhor",
+    "brief": {
+      "title": "Requisitos do perfil",
+      "roles": "Funções",
+      "rolesPlaceholder": "ex. Recuperador, extremo invertido",
+      "minEvidence": "Provas mínimas",
+      "freshness": "Provas com menos de",
+      "any": "Qualquer",
+      "moderate": "Moderada",
+      "strong": "Forte",
+      "days_one": "{{count}} dia",
+      "days_other": "{{count}} dias"
+    }
   },
   "pipeline": {
     "title": "Recruitment Pipeline",
@@ -321,7 +352,56 @@
     "watchNewCount_one": "{{count}} novo",
     "watchNewCount_other": "{{count}} novos",
     "watchlistError": "Não foi possível carregar as alterações da watchlist.",
-    "watchUnknownPlayer": "Jogador acompanhado"
+    "watchUnknownPlayer": "Jogador acompanhado",
+    "whyNotTitle": "Porque podes esperar",
+    "whyNotEmpty": "Com as provas disponíveis, nada trava este jogador.",
+    "whyNot": {
+      "insufficient_evidence": "Nenhuma área tem ainda provas moderadas ou fortes.",
+      "outdated_evidence": "As provas mais recentes têm {{days}} dias.",
+      "no_evidence_date": "Ainda sem provas de jogos com data.",
+      "role_mismatch": "A posição ou função não corresponde ao teu perfil.",
+      "brief_misses_one": "Mais {{count}} critério não cumprido.",
+      "brief_misses_other": "Mais {{count}} critérios não cumpridos.",
+      "missing_video": "Sem vídeo de melhores momentos.",
+      "not_verified": "Não verificado.",
+      "small_sample_one": "Apenas {{count}} jogo registado.",
+      "small_sample_other": "Apenas {{count}} jogos registados."
+    },
+    "shortlist": {
+      "title": "Resumo da lista",
+      "strongest": "Provas mais sólidas: {{dimension}} ({{state}})",
+      "noStrongest": "Ainda sem área sólida",
+      "uncertaintyCoverage": "Maior incerteza: provas insuficientes em {{dimension}}",
+      "uncertaintyBrief_one": "Maior incerteza: {{count}} critério desconhecido",
+      "uncertaintyBrief_other": "Maior incerteza: {{count}} critérios desconhecidos",
+      "changes_one": "{{count}} alteração desde a tua última revisão",
+      "changes_other": "{{count}} alterações desde a tua última revisão",
+      "noChanges": "Sem alterações desde a tua última revisão",
+      "fit": "Encaixe: {{met}} de {{total}}",
+      "next": "Próximo passo: {{action}}",
+      "actions": {
+        "request_evidence": "pedir provas",
+        "review_new_evidence": "rever novas provas",
+        "contact": "fazer contacto",
+        "invite_trial": "convidar para treino",
+        "prepare_trial": "preparar o treino",
+        "evaluate": "escrever uma avaliação",
+        "follow_up": "dar seguimento"
+      }
+    },
+    "watchFilter": {
+      "all": "Tudo",
+      "match": "Novo jogo",
+      "video": "Novo vídeo",
+      "pipeline": "Pipeline",
+      "trial": "Treino",
+      "removed": "Removido"
+    },
+    "watchChanges": {
+      "match": "novo jogo",
+      "video": "novo vídeo"
+    },
+    "watchFilterEmpty": "Sem eventos para este filtro."
   },
   "coach": {
     "rosterTitle": "Plantel do treinador",
@@ -358,7 +438,16 @@
       "recently_active": "Ativo recentemente",
       "video": "Vídeo de destaques",
       "verified": "Verificado",
-      "sprint_speed": "Velocidade de sprint (km/h, GPS)"
+      "sprint_speed": "Velocidade de sprint (km/h, GPS)",
+      "role": "Função",
+      "evidence_coverage": "Cobertura de provas",
+      "evidence_freshness": "Idade das provas"
+    },
+    "noRecords": "Ainda sem dados",
+    "confidence": {
+      "verified": "verificado",
+      "record": "dos registos",
+      "self_reported": "autodeclarado"
     }
   }
 }

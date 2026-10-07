@@ -26,14 +26,16 @@ function valueLabel(t: Translate, criterion: BriefCriterion, value: string): str
 
 function criterionLine(t: Translate, criterion: BriefCriterion): string {
   const label = t(`scout:brief.criteria.${criterion.id}`);
+  const source = t(`scout:brief.confidence.${criterion.confidence}`);
   if (criterion.result === 'unknown' || !criterion.wanted) {
-    return label;
+    return `${label} (${source})`;
   }
-  return t('scout:brief.wantedVsActual', {
+  const line = t('scout:brief.wantedVsActual', {
     label,
     wanted: valueLabel(t, criterion, criterion.wanted),
     actual: valueLabel(t, criterion, criterion.actual) || '—',
   });
+  return `${line} (${source})`;
 }
 
 /** How a player fits the scout's own saved brief, including why not and what is unknown. */
@@ -41,6 +43,8 @@ export function BriefMatchCard({ match }: BriefMatchCardProps) {
   const { t } = useAppTranslation(['scout']);
   const misses = match.criteria.filter((item) => item.result === 'not_met');
   const unknowns = match.criteria.filter((item) => item.result === 'unknown');
+  const notStated = unknowns.filter((item) => item.missing === 'not_stated');
+  const noRecords = unknowns.filter((item) => item.missing === 'no_records');
 
   return (
     <Card variant="outlined" padding="md" className="gap-2">
@@ -67,9 +71,16 @@ export function BriefMatchCard({ match }: BriefMatchCardProps) {
           <Text variant="caption" weight="semibold">
             {t('scout:brief.unknown')}
           </Text>
-          <Text variant="body-sm" color="secondary">
-            {unknowns.map((item) => t(`scout:brief.criteria.${item.id}`)).join(' · ')}
-          </Text>
+          {notStated.length > 0 ? (
+            <Text variant="body-sm" color="secondary">
+              {notStated.map((item) => t(`scout:brief.criteria.${item.id}`)).join(' · ')}
+            </Text>
+          ) : null}
+          {noRecords.length > 0 ? (
+            <Text variant="body-sm" color="secondary">
+              {t('scout:brief.noRecords')}: {noRecords.map((item) => t(`scout:brief.criteria.${item.id}`)).join(' · ')}
+            </Text>
+          ) : null}
           <Text variant="caption" color="tertiary">
             {t('scout:brief.unknownHint')}
           </Text>

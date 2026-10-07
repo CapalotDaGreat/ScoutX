@@ -106,7 +106,7 @@ async function notifyWatchlistChange(db, scoutId, playerId) {
 exports.onPassportSummaryWrittenNotifyOwner = (0, firestore_2.onDocumentWritten)('passportSummaries/{playerId}', async (event) => {
     const after = event.data?.after.exists ? event.data.after.data() : null;
     const before = event.data?.before.exists ? event.data.before.data() : null;
-    if (!after || !(0, notificationPolicy_1.isMeaningfulPassportImprovement)(before?.coverage, after.coverage)) {
+    if (!after || !(0, notificationPolicy_1.isMeaningfulPassportImprovement)(before, after)) {
         return;
     }
     const playerId = event.params.playerId;

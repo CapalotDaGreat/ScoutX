@@ -1,6 +1,7 @@
 import { DEFAULT_FILTER_PRESETS, SCOUT_WORKSPACE_STORAGE_KEY } from '@/features/scout-discovery/constants';
 import { MAX_COMPARISON_PLAYERS } from '@/features/player-comparison/constants';
 import {
+  defaultDiscoveryFilters,
   type DiscoverySearchScope,
   type FilterPreset,
   type RecentSearchEntry,
@@ -83,7 +84,9 @@ function normalizeFilterPresets(value: unknown): FilterPreset[] {
     );
   });
 
-  return presets.length > 0 ? presets : DEFAULT_FILTER_PRESETS;
+  return presets.length > 0
+    ? presets.map((preset) => ({ ...preset, filters: { ...defaultDiscoveryFilters, ...preset.filters } }))
+    : DEFAULT_FILTER_PRESETS;
 }
 
 function isLegacyWorkspaceSnapshot(value: unknown): value is ScoutWorkspaceSnapshot & {

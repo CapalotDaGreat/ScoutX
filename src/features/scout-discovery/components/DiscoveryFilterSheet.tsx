@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { BottomSheet } from '@/components/feedback/BottomSheet';
 import { Button } from '@/components/primitives/Button';
@@ -61,6 +61,8 @@ function ChipSelect<T extends string>({
   );
 }
 
+const FRESHNESS_OPTIONS = [30, 90, 180] as const;
+
 export function DiscoveryFilterSheet({
   visible,
   filters,
@@ -70,6 +72,11 @@ export function DiscoveryFilterSheet({
   onApply,
 }: DiscoveryFilterSheetProps) {
   const { t } = useAppTranslation(['scout', 'common']);
+  const [rolesText, setRolesText] = useState(filters.roles.join(', '));
+
+  useEffect(() => {
+    setRolesText(filters.roles.join(', '));
+  }, [filters.roles]);
 
   const togglePosition = useCallback(
     (value: PlayerPosition) => {
@@ -400,6 +407,68 @@ export function DiscoveryFilterSheet({
             >
               {t('scout:filters.verifiedOnly')}
             </Button>
+
+            <View className="gap-3">
+              <Text variant="label" accessibilityRole="header">
+                {t('scout:filters.brief.title')}
+              </Text>
+              <Input
+                label={t('scout:filters.brief.roles')}
+                placeholder={t('scout:filters.brief.rolesPlaceholder')}
+                value={rolesText}
+                onChangeText={setRolesText}
+                onEndEditing={() =>
+                  onChange(
+                    'roles',
+                    rolesText
+                      .split(',')
+                      .map((role) => role.trim())
+                      .filter(Boolean),
+                  )
+                }
+              />
+              <View className="gap-2">
+                <Text variant="label">{t('scout:filters.brief.minEvidence')}</Text>
+                <View className="flex-row gap-2">
+                  {([null, 'moderate', 'strong'] as const).map((level) => (
+                    <Button
+                      key={level ?? 'any'}
+                      variant={filters.minEvidenceCoverage === level ? 'accent' : 'secondary'}
+                      size="sm"
+                      className="flex-1"
+                      accessibilityState={{ selected: filters.minEvidenceCoverage === level }}
+                      onPress={() => onChange('minEvidenceCoverage', level)}
+                    >
+                      {t(`scout:filters.brief.${level ?? 'any'}`)}
+                    </Button>
+                  ))}
+                </View>
+              </View>
+              <View className="gap-2">
+                <Text variant="label">{t('scout:filters.brief.freshness')}</Text>
+                <View className="flex-row flex-wrap gap-2">
+                  <Button
+                    variant={filters.evidenceMaxAgeDays === null ? 'accent' : 'secondary'}
+                    size="sm"
+                    accessibilityState={{ selected: filters.evidenceMaxAgeDays === null }}
+                    onPress={() => onChange('evidenceMaxAgeDays', null)}
+                  >
+                    {t('scout:filters.brief.any')}
+                  </Button>
+                  {FRESHNESS_OPTIONS.map((days) => (
+                    <Button
+                      key={days}
+                      variant={filters.evidenceMaxAgeDays === days ? 'accent' : 'secondary'}
+                      size="sm"
+                      accessibilityState={{ selected: filters.evidenceMaxAgeDays === days }}
+                      onPress={() => onChange('evidenceMaxAgeDays', days)}
+                    >
+                      {t('scout:filters.brief.days', { count: days })}
+                    </Button>
+                  ))}
+                </View>
+              </View>
+            </View>
 
             <View className="flex-row gap-3 pt-2">
               <Button variant="secondary" className="flex-1" onPress={onReset}>

@@ -61,6 +61,17 @@ export class RequestCenterRepository {
     );
   }
 
+  public async listScoutEvidenceRequests(scoutId: string): Promise<StoredEvidenceRequest[]> {
+    const db = isFirebaseConfiguredForProject() ? getFirestoreDb() : null;
+    if (!db) {
+      return [];
+    }
+    const snapshot = await getDocs(
+      query(collection(db, 'evidenceRequests'), where('scoutId', '==', scoutId), limit(100)),
+    );
+    return snapshot.docs.map((item) => parseStoredRequest(item.id, item.data()));
+  }
+
   public async listVerificationRequests(playerId: string): Promise<VerificationLike[]> {
     const db = isFirebaseConfiguredForProject() ? getFirestoreDb() : null;
     if (!db) {

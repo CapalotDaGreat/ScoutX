@@ -28,7 +28,26 @@
     "emptyTitle": "No discoverable players yet",
     "emptyDescription": "Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network.",
     "emptyAction": "Open Discover",
-    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters."
+    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters.",
+    "attention": {
+      "title": "À traiter",
+      "empty": "Aucune décision à prendre pour le moment.",
+      "fulfilled_request": "Demande de preuves satisfaite",
+      "upcoming_trial": "Essai à venir : {{name}}",
+      "watchlist_change": "Nouvelles preuves chez un joueur suivi",
+      "brief_match": "{{name}} correspond à ton profil « {{brief}} »"
+    },
+    "firstSession": {
+      "title": "Pour commencer",
+      "subtitle": "Cinq étapes jusqu'à ton premier essai.",
+      "steps": {
+        "save_brief": "Enregistre ton profil comme filtre",
+        "view_player": "Ouvre un profil de joueur",
+        "shortlist_player": "Ajoute un joueur à ton pipeline",
+        "request_evidence": "Demande des preuves à un joueur",
+        "invite_trial": "Invite un joueur à un essai"
+      }
+    }
   },
   "discover": {
     "title": "Découvrir des joueurs",
@@ -91,7 +110,19 @@
     "skillMovesShort": "GT",
     "anyStars": "Toutes les notes",
     "atLeastStars_one": "{{count}}★ ou plus",
-    "atLeastStars_other": "{{count}}★ ou plus"
+    "atLeastStars_other": "{{count}}★ ou plus",
+    "brief": {
+      "title": "Exigences du profil",
+      "roles": "Rôles",
+      "rolesPlaceholder": "ex. Récupérateur, ailier inversé",
+      "minEvidence": "Preuves minimales",
+      "freshness": "Preuves de moins de",
+      "any": "Peu importe",
+      "moderate": "Modérée",
+      "strong": "Forte",
+      "days_one": "{{count}} jour",
+      "days_other": "{{count}} jours"
+    }
   },
   "pipeline": {
     "title": "Recruitment Pipeline",
@@ -321,7 +352,56 @@
     "watchNewCount_one": "{{count}} nouveau",
     "watchNewCount_other": "{{count}} nouveaux",
     "watchlistError": "Impossible de charger les changements de la watchlist.",
-    "watchUnknownPlayer": "Joueur suivi"
+    "watchUnknownPlayer": "Joueur suivi",
+    "whyNotTitle": "Pourquoi attendre",
+    "whyNotEmpty": "Rien ne freine ce joueur au vu des preuves disponibles.",
+    "whyNot": {
+      "insufficient_evidence": "Aucun domaine n'a encore des preuves modérées ou fortes.",
+      "outdated_evidence": "Les preuves les plus récentes datent de {{days}} jours.",
+      "no_evidence_date": "Pas encore de preuves de match datées.",
+      "role_mismatch": "Le poste ou le rôle ne correspond pas à ton profil.",
+      "brief_misses_one": "{{count}} autre critère n'est pas rempli.",
+      "brief_misses_other": "{{count}} autres critères ne sont pas remplis.",
+      "missing_video": "Aucune vidéo de temps forts.",
+      "not_verified": "Non vérifié.",
+      "small_sample_one": "Seulement {{count}} match enregistré.",
+      "small_sample_other": "Seulement {{count}} matchs enregistrés."
+    },
+    "shortlist": {
+      "title": "Synthèse de la shortlist",
+      "strongest": "Preuves les plus solides : {{dimension}} ({{state}})",
+      "noStrongest": "Aucun domaine solide pour l'instant",
+      "uncertaintyCoverage": "Plus grande incertitude : preuves insuffisantes en {{dimension}}",
+      "uncertaintyBrief_one": "Plus grande incertitude : {{count}} critère inconnu",
+      "uncertaintyBrief_other": "Plus grande incertitude : {{count}} critères inconnus",
+      "changes_one": "{{count}} changement depuis ta dernière revue",
+      "changes_other": "{{count}} changements depuis ta dernière revue",
+      "noChanges": "Aucun changement depuis ta dernière revue",
+      "fit": "Adéquation : {{met}} sur {{total}}",
+      "next": "Prochaine étape : {{action}}",
+      "actions": {
+        "request_evidence": "demander des preuves",
+        "review_new_evidence": "examiner les nouvelles preuves",
+        "contact": "prendre contact",
+        "invite_trial": "inviter à un essai",
+        "prepare_trial": "préparer l'essai",
+        "evaluate": "rédiger une évaluation",
+        "follow_up": "relancer"
+      }
+    },
+    "watchFilter": {
+      "all": "Tout",
+      "match": "Nouveau match",
+      "video": "Nouvelle vidéo",
+      "pipeline": "Pipeline",
+      "trial": "Essai",
+      "removed": "Retiré"
+    },
+    "watchChanges": {
+      "match": "nouveau match",
+      "video": "nouvelle vidéo"
+    },
+    "watchFilterEmpty": "Aucun événement pour ce filtre."
   },
   "coach": {
     "rosterTitle": "Effectif de l entraineur",
@@ -358,7 +438,16 @@
       "recently_active": "Actif récemment",
       "video": "Vidéo de highlights",
       "verified": "Vérifié",
-      "sprint_speed": "Vitesse de sprint (km/h, GPS)"
+      "sprint_speed": "Vitesse de sprint (km/h, GPS)",
+      "role": "Rôle",
+      "evidence_coverage": "Couverture des preuves",
+      "evidence_freshness": "Âge des preuves"
+    },
+    "noRecords": "Pas encore de données",
+    "confidence": {
+      "verified": "vérifié",
+      "record": "issu des données",
+      "self_reported": "déclaratif"
     }
   }
 }

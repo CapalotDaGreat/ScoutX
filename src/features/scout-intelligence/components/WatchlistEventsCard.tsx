@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
-import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import { Pressable, ScrollView, View } from 'react-native';
 import { Badge } from '@/components/primitives/Badge';
+import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
-import { getFirestoreDb } from '@/config/firebase';
 import { loadSeenAt, saveSeenAt } from '@/features/intelligence/services/snapshotStore';
-import type { WatchlistEvent } from '@/features/scout-intelligence/types';
+import { useWatchlistEvents } from '@/features/scout-intelligence/hooks/useWatchlistEvents';
+import {
+  filterWatchlistEvents,
+  type WatchlistFilter,
+} from '@/features/scout-intelligence/services/scoutDecisionSupport';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type WatchlistEventsCardProps = {
@@ -17,6 +20,8 @@ export type WatchlistEventsCardProps = {
 };
 
 const SEEN_SCOPE = 'watchlist';
+const VISIBLE = 8;
+const FILTERS: readonly WatchlistFilter[] = ['all', 'match', 'video', 'pipeline', 'trial', 'removed'];
 
 /**
  * Recent watchlist events, with everything that happened since the scout last opened this
@@ -24,68 +29,30 @@ const SEEN_SCOPE = 'watchlist';
  */
 export function WatchlistEventsCard({ scoutId, playerNames = {}, onPlayerPress }: WatchlistEventsCardProps) {
   const { t, i18n } = useAppTranslation(['scout']);
-  const [events, setEvents] = useState<WatchlistEvent[]>([]);
+  const { events, failed } = useWatchlistEvents(scoutId);
   const [seenAt, setSeenAt] = useState<string | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [filter, setFilter] = useState<WatchlistFilter>('all');
 
   useEffect(() => {
-    if (!scoutId) {
-      setEvents([]);
-      return;
-    }
-    const db = getFirestoreDb();
-    if (!db) {
-      setEvents([]);
-      return;
-    }
+    if (!scoutId || events.length === 0) return;
     let cancelled = false;
-    void Promise.all([
-      loadSeenAt(scoutId, SEEN_SCOPE),
-      getDocs(
-        query(
-          collection(db, 'watchlistEvents'),
-          where('scoutId', '==', scoutId),
-          orderBy('createdAt', 'desc'),
-          limit(8),
-        ),
-      ),
-    ])
-      .then(([previousSeenAt, snapshot]) => {
-        if (cancelled) return;
-        const next = snapshot.docs.map((docSnap) => {
-          const data = docSnap.data();
-          return {
-            id: docSnap.id,
-            scoutId: String(data.scoutId ?? scoutId),
-            playerId: String(data.playerId ?? ''),
-            type: data.type === 'stage_changed' || data.type === 'new_evidence' || data.type === 'removed' ? data.type : 'added',
-            fromStage: typeof data.fromStage === 'string' ? data.fromStage : null,
-            toStage: typeof data.toStage === 'string' ? data.toStage : null,
-            lastEvidenceAt: typeof data.lastEvidenceAt === 'string' ? data.lastEvidenceAt : null,
-            createdAt: typeof data.createdAt === 'string' ? data.createdAt : '',
-          } as WatchlistEvent;
-        });
-        setSeenAt(previousSeenAt);
-        setEvents(next);
-        setFailed(false);
-        if (next[0]?.createdAt) {
-          void saveSeenAt(scoutId, SEEN_SCOPE, next[0].createdAt);
-        }
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setEvents([]);
-        setFailed(true);
-      });
+    void loadSeenAt(scoutId, SEEN_SCOPE).then((previous) => {
+      if (cancelled) return;
+      setSeenAt(previous);
+      if (events[0]?.createdAt) {
+        void saveSeenAt(scoutId, SEEN_SCOPE, events[0].createdAt);
+      }
+    });
     return () => {
       cancelled = true;
     };
-  }, [scoutId]);
+  }, [events, scoutId]);
 
   const newCount = useMemo(
     () => (seenAt === null ? 0 : events.filter((event) => event.createdAt > seenAt).length),
     [events, seenAt],
   );
+  const visible = useMemo(() => filterWatchlistEvents(events, filter).slice(0, VISIBLE), [events, filter]);
 
   const formatDate = (iso: string): string =>
     Number.isNaN(Date.parse(iso))
@@ -102,6 +69,21 @@ export function WatchlistEventsCard({ scoutId, playerNames = {}, onPlayerPress }
           <Badge label={t('scout:intelligence.watchNewCount', { count: newCount })} variant="accent" size="sm" />
         ) : null}
       </View>
+      {events.length > 0 ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+          {FILTERS.map((item) => (
+            <Button
+              key={item}
+              size="sm"
+              variant={filter === item ? 'primary' : 'secondary'}
+              accessibilityState={{ selected: filter === item }}
+              onPress={() => setFilter(item)}
+            >
+              {t(`scout:intelligence.watchFilter.${item}`)}
+            </Button>
+          ))}
+        </ScrollView>
+      ) : null}
       {failed ? (
         <Text variant="body-sm" color="warning">
           {t('scout:intelligence.watchlistError')}
@@ -110,11 +92,19 @@ export function WatchlistEventsCard({ scoutId, playerNames = {}, onPlayerPress }
         <Text variant="body-sm" color="secondary">
           {t('scout:intelligence.watchlistEmpty')}
         </Text>
+      ) : visible.length === 0 ? (
+        <Text variant="body-sm" color="secondary">
+          {t('scout:intelligence.watchFilterEmpty')}
+        </Text>
       ) : (
-        events.map((event) => {
+        visible.map((event) => {
           const isNew = seenAt !== null && event.createdAt > seenAt;
           const name = playerNames[event.playerId] || t('scout:intelligence.watchUnknownPlayer');
-          const label = `${t(`scout:intelligence.watch.${event.type}`)} · ${name}`;
+          const detail =
+            event.changes.length > 0
+              ? ` (${event.changes.map((change) => t(`scout:intelligence.watchChanges.${change}`)).join(', ')})`
+              : '';
+          const label = `${t(`scout:intelligence.watch.${event.type}`)}${detail} · ${name}`;
           const date = formatDate(event.createdAt);
           const content = (
             <View className="flex-row items-center gap-2">

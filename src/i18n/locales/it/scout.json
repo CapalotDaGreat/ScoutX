@@ -28,7 +28,26 @@
     "emptyTitle": "No discoverable players yet",
     "emptyDescription": "Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network.",
     "emptyAction": "Open Discover",
-    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters."
+    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters.",
+    "attention": {
+      "title": "Richiede attenzione",
+      "empty": "Al momento non serve nessuna decisione.",
+      "fulfilled_request": "Richiesta di prove evasa",
+      "upcoming_trial": "Provino in arrivo: {{name}}",
+      "watchlist_change": "Nuove prove per un giocatore seguito",
+      "brief_match": "{{name}} corrisponde al tuo profilo «{{brief}}»"
+    },
+    "firstSession": {
+      "title": "Per iniziare",
+      "subtitle": "Cinque passi fino al primo provino.",
+      "steps": {
+        "save_brief": "Salva il tuo profilo come filtro",
+        "view_player": "Apri il profilo di un giocatore",
+        "shortlist_player": "Aggiungi un giocatore alla pipeline",
+        "request_evidence": "Chiedi prove a un giocatore",
+        "invite_trial": "Invita un giocatore a un provino"
+      }
+    }
   },
   "discover": {
     "title": "Scopri giocatori",
@@ -91,7 +110,19 @@
     "skillMovesShort": "MA",
     "anyStars": "Qualsiasi valutazione",
     "atLeastStars_one": "{{count}}★ o più",
-    "atLeastStars_other": "{{count}}★ o più"
+    "atLeastStars_other": "{{count}}★ o più",
+    "brief": {
+      "title": "Requisiti del profilo",
+      "roles": "Ruoli",
+      "rolesPlaceholder": "es. Incontrista, ala a piede invertito",
+      "minEvidence": "Prove minime",
+      "freshness": "Prove più recenti di",
+      "any": "Qualsiasi",
+      "moderate": "Moderata",
+      "strong": "Forte",
+      "days_one": "{{count}} giorno",
+      "days_other": "{{count}} giorni"
+    }
   },
   "pipeline": {
     "title": "Recruitment Pipeline",
@@ -321,7 +352,56 @@
     "watchNewCount_one": "{{count}} nuovo",
     "watchNewCount_other": "{{count}} nuovi",
     "watchlistError": "Impossibile caricare le modifiche alla watchlist.",
-    "watchUnknownPlayer": "Giocatore seguito"
+    "watchUnknownPlayer": "Giocatore seguito",
+    "whyNotTitle": "Perché potresti aspettare",
+    "whyNotEmpty": "Con le prove disponibili nulla frena questo giocatore.",
+    "whyNot": {
+      "insufficient_evidence": "Nessuna area ha ancora prove moderate o forti.",
+      "outdated_evidence": "Le prove più recenti risalgono a {{days}} giorni fa.",
+      "no_evidence_date": "Ancora nessuna prova di partita datata.",
+      "role_mismatch": "Posizione o ruolo non corrispondono al tuo profilo.",
+      "brief_misses_one": "{{count}} altro criterio non è soddisfatto.",
+      "brief_misses_other": "{{count}} altri criteri non sono soddisfatti.",
+      "missing_video": "Nessun video di highlight.",
+      "not_verified": "Non verificato.",
+      "small_sample_one": "Solo {{count}} partita registrata.",
+      "small_sample_other": "Solo {{count}} partite registrate."
+    },
+    "shortlist": {
+      "title": "Sintesi della shortlist",
+      "strongest": "Prove più solide: {{dimension}} ({{state}})",
+      "noStrongest": "Ancora nessuna area solida",
+      "uncertaintyCoverage": "Maggiore incertezza: prove insufficienti in {{dimension}}",
+      "uncertaintyBrief_one": "Maggiore incertezza: {{count}} criterio sconosciuto",
+      "uncertaintyBrief_other": "Maggiore incertezza: {{count}} criteri sconosciuti",
+      "changes_one": "{{count}} modifica dall'ultima revisione",
+      "changes_other": "{{count}} modifiche dall'ultima revisione",
+      "noChanges": "Nessuna modifica dall'ultima revisione",
+      "fit": "Corrispondenza: {{met}} su {{total}}",
+      "next": "Prossimo passo: {{action}}",
+      "actions": {
+        "request_evidence": "chiedere prove",
+        "review_new_evidence": "esaminare le nuove prove",
+        "contact": "prendere contatto",
+        "invite_trial": "invitare a un provino",
+        "prepare_trial": "preparare il provino",
+        "evaluate": "scrivere una valutazione",
+        "follow_up": "ricontattare"
+      }
+    },
+    "watchFilter": {
+      "all": "Tutti",
+      "match": "Nuova partita",
+      "video": "Nuovo video",
+      "pipeline": "Pipeline",
+      "trial": "Provino",
+      "removed": "Rimosso"
+    },
+    "watchChanges": {
+      "match": "nuova partita",
+      "video": "nuovo video"
+    },
+    "watchFilterEmpty": "Nessun evento per questo filtro."
   },
   "coach": {
     "rosterTitle": "Rosa dell allenatore",
@@ -358,7 +438,16 @@
       "recently_active": "Attivo di recente",
       "video": "Video highlights",
       "verified": "Verificato",
-      "sprint_speed": "Velocità di sprint (km/h, GPS)"
+      "sprint_speed": "Velocità di sprint (km/h, GPS)",
+      "role": "Ruolo",
+      "evidence_coverage": "Copertura delle prove",
+      "evidence_freshness": "Età delle prove"
+    },
+    "noRecords": "Ancora nessun dato",
+    "confidence": {
+      "verified": "verificato",
+      "record": "dai dati",
+      "self_reported": "autodichiarato"
     }
   }
 }

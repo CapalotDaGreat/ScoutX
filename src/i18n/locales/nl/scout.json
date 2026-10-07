@@ -28,7 +28,26 @@
     "emptyTitle": "No discoverable players yet",
     "emptyDescription": "Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network.",
     "emptyAction": "Open Discover",
-    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters."
+    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters.",
+    "attention": {
+      "title": "Vraagt aandacht",
+      "empty": "Er hoeft nu niets beslist te worden.",
+      "fulfilled_request": "Bewijsverzoek beantwoord",
+      "upcoming_trial": "Komende proeftraining: {{name}}",
+      "watchlist_change": "Nieuw bewijs bij een gevolgde speler",
+      "brief_match": "{{name}} past bij je profiel ‘{{brief}}’"
+    },
+    "firstSession": {
+      "title": "Aan de slag",
+      "subtitle": "Vijf stappen naar je eerste proeftraining.",
+      "steps": {
+        "save_brief": "Bewaar je profiel als filter",
+        "view_player": "Open een spelersprofiel",
+        "shortlist_player": "Zet een speler in je pipeline",
+        "request_evidence": "Vraag een speler om bewijs",
+        "invite_trial": "Nodig een speler uit voor een proeftraining"
+      }
+    }
   },
   "discover": {
     "title": "Spelers ontdekken",
@@ -91,7 +110,19 @@
     "skillMovesShort": "SK",
     "anyStars": "Elke beoordeling",
     "atLeastStars_one": "{{count}}★ of beter",
-    "atLeastStars_other": "{{count}}★ of beter"
+    "atLeastStars_other": "{{count}}★ of beter",
+    "brief": {
+      "title": "Profieleisen",
+      "roles": "Rollen",
+      "rolesPlaceholder": "bijv. Balafpakker, inverted winger",
+      "minEvidence": "Minimaal bewijs",
+      "freshness": "Bewijs nieuwer dan",
+      "any": "Maakt niet uit",
+      "moderate": "Gemiddeld",
+      "strong": "Sterk",
+      "days_one": "{{count}} dag",
+      "days_other": "{{count}} dagen"
+    }
   },
   "pipeline": {
     "title": "Recruitment Pipeline",
@@ -321,7 +352,56 @@
     "watchNewCount_one": "{{count}} nieuw",
     "watchNewCount_other": "{{count}} nieuw",
     "watchlistError": "Watchlist-wijzigingen konden niet worden geladen.",
-    "watchUnknownPlayer": "Gevolgde speler"
+    "watchUnknownPlayer": "Gevolgde speler",
+    "whyNotTitle": "Waarom je zou kunnen wachten",
+    "whyNotEmpty": "Op basis van het beschikbare bewijs houdt niets deze speler tegen.",
+    "whyNot": {
+      "insufficient_evidence": "Nog geen enkel gebied met gemiddeld of sterk bewijs.",
+      "outdated_evidence": "Het nieuwste bewijs is {{days}} dagen oud.",
+      "no_evidence_date": "Nog geen gedateerd wedstrijdbewijs.",
+      "role_mismatch": "Positie of rol past niet bij je profiel.",
+      "brief_misses_one": "{{count}} ander criterium is niet gehaald.",
+      "brief_misses_other": "{{count}} andere criteria zijn niet gehaald.",
+      "missing_video": "Geen highlightvideo.",
+      "not_verified": "Niet geverifieerd.",
+      "small_sample_one": "Slechts {{count}} vastgelegde wedstrijd.",
+      "small_sample_other": "Slechts {{count}} vastgelegde wedstrijden."
+    },
+    "shortlist": {
+      "title": "Shortlist-overzicht",
+      "strongest": "Sterkste bewijs: {{dimension}} ({{state}})",
+      "noStrongest": "Nog geen sterk gebied",
+      "uncertaintyCoverage": "Grootste onzekerheid: te weinig bewijs voor {{dimension}}",
+      "uncertaintyBrief_one": "Grootste onzekerheid: {{count}} criterium onbekend",
+      "uncertaintyBrief_other": "Grootste onzekerheid: {{count}} criteria onbekend",
+      "changes_one": "{{count}} wijziging sinds je laatste beoordeling",
+      "changes_other": "{{count}} wijzigingen sinds je laatste beoordeling",
+      "noChanges": "Geen wijzigingen sinds je laatste beoordeling",
+      "fit": "Profielmatch: {{met}} van {{total}}",
+      "next": "Volgende stap: {{action}}",
+      "actions": {
+        "request_evidence": "bewijs opvragen",
+        "review_new_evidence": "nieuw bewijs bekijken",
+        "contact": "contact opnemen",
+        "invite_trial": "uitnodigen voor proeftraining",
+        "prepare_trial": "proeftraining voorbereiden",
+        "evaluate": "evaluatie schrijven",
+        "follow_up": "opvolgen"
+      }
+    },
+    "watchFilter": {
+      "all": "Alles",
+      "match": "Nieuwe wedstrijd",
+      "video": "Nieuwe video",
+      "pipeline": "Pipeline",
+      "trial": "Proeftraining",
+      "removed": "Verwijderd"
+    },
+    "watchChanges": {
+      "match": "nieuwe wedstrijd",
+      "video": "nieuwe video"
+    },
+    "watchFilterEmpty": "Geen gebeurtenissen voor dit filter."
   },
   "coach": {
     "rosterTitle": "Trainersselectie",
@@ -358,7 +438,16 @@
       "recently_active": "Recent actief",
       "video": "Highlightvideo",
       "verified": "Geverifieerd",
-      "sprint_speed": "Sprintsnelheid (km/u, GPS)"
+      "sprint_speed": "Sprintsnelheid (km/u, GPS)",
+      "role": "Rol",
+      "evidence_coverage": "Bewijsdekking",
+      "evidence_freshness": "Leeftijd van bewijs"
+    },
+    "noRecords": "Nog geen gegevens",
+    "confidence": {
+      "verified": "geverifieerd",
+      "record": "uit gegevens",
+      "self_reported": "zelf opgegeven"
     }
   }
 }

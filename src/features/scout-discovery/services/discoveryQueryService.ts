@@ -6,6 +6,11 @@ import {
   type DiscoverySortOption,
 } from '@/features/scout-discovery/types';
 import { rankPlayersBySearchRelevance } from '@/features/scout-discovery/services/smartDiscoveryService';
+import {
+  matchesRole,
+  meetsEvidenceCoverage,
+  meetsEvidenceFreshness,
+} from '@/features/scout-intelligence/services/briefMatch';
 
 function matchesScopedField(value: string, query: string): boolean {
   return value.toLowerCase().includes(query);
@@ -97,6 +102,9 @@ function matchesFilters(player: DiscoverablePlayer, filters: DiscoveryFilters): 
   if (filters.recentlyActive && !player.recentlyActive) return false;
   if (filters.hasHighlightVideos && !player.hasHighlightVideos) return false;
   if (filters.verifiedOnly && !player.verified) return false;
+  if (filters.roles.length > 0 && !matchesRole(player, filters.roles)) return false;
+  if (!meetsEvidenceCoverage(player.evidenceCoverage, filters.minEvidenceCoverage)) return false;
+  if (!meetsEvidenceFreshness(player.lastEvidenceAt, filters.evidenceMaxAgeDays)) return false;
 
   return true;
 }
@@ -185,5 +193,8 @@ export function countActiveFilters(filters: DiscoveryFilters): number {
   if (filters.recentlyActive) count += 1;
   if (filters.hasHighlightVideos) count += 1;
   if (filters.verifiedOnly) count += 1;
+  if (filters.roles.length > 0) count += 1;
+  if (filters.minEvidenceCoverage !== null) count += 1;
+  if (filters.evidenceMaxAgeDays !== null) count += 1;
   return count;
 }

@@ -29,6 +29,13 @@ import { formatRating } from '@/features/scout-discovery/models/DiscoverablePlay
 import { ScoutBriefCard } from '@/features/scout-intelligence/components/ScoutBriefCard';
 import { WhyThisPlayerCard } from '@/features/scout-intelligence/components/WhyThisPlayerCard';
 import { BriefMatchCard } from '@/features/scout-intelligence/components/BriefMatchCard';
+import { ShortlistIntelligenceCard, WhyNotCard } from '@/features/scout-intelligence/components/ScoutDecisionCards';
+import { useWatchlistEvents } from '@/features/scout-intelligence/hooks/useWatchlistEvents';
+import {
+  buildShortlistIntelligence,
+  explainWhyNotThisPlayer,
+} from '@/features/scout-intelligence/services/scoutDecisionSupport';
+import { useAuth } from '@/features/auth/store/AuthProvider';
 import { bestBriefMatch } from '@/features/scout-intelligence/services/briefMatch';
 import { SimilarPlayersCard } from '@/features/scout-intelligence/components/SimilarPlayersCard';
 import { EvidenceRequestComposer } from '@/features/scout-intelligence/components/EvidenceRequestComposer';
@@ -133,6 +140,23 @@ export function PlayerDetailScreen({
     player !== null &&
     Object.values(player.ratings).some((value) => value !== null);
   const saved = playerSave.isSaved(playerId);
+  const { user } = useAuth();
+  const { events: watchEvents } = useWatchlistEvents(!guestMode && saved ? user?.id ?? null : null);
+  const whyNot = useMemo(() => (player ? explainWhyNotThisPlayer(player, briefMatch) : []), [briefMatch, player]);
+  const entry = saved ? playerSave.getEntry(playerId) : null;
+  const shortlistIntel = useMemo(
+    () =>
+      player && entry
+        ? buildShortlistIntelligence({
+            player,
+            stage: entry.stage,
+            lastReviewedAt: entry.updatedAt,
+            brief: briefMatch,
+            events: watchEvents,
+          })
+        : null,
+    [briefMatch, entry, player, watchEvents],
+  );
   const inComparison = isInComparison(playerId);
 
   if (isLoading) {
@@ -243,7 +267,9 @@ export function PlayerDetailScreen({
           <ScoutReportHero player={player} />
           {!guestMode && brief ? (
             <View className="mt-3 gap-3">
+              {shortlistIntel ? <ShortlistIntelligenceCard intelligence={shortlistIntel} /> : null}
               <WhyThisPlayerCard reasons={whyReasons} />
+              <WhyNotCard reasons={whyNot} />
               {briefMatch ? <BriefMatchCard match={briefMatch} /> : null}
               <ScoutBriefCard brief={brief} />
               <SimilarPlayersCard

@@ -187,6 +187,12 @@ export type DiscoveryFilters = {
   recentlyActive: boolean;
   hasHighlightVideos: boolean;
   verifiedOnly: boolean;
+  /** Brief 2.0: wanted roles, matched against stated role descriptors and style tags. */
+  roles: string[];
+  /** Brief 2.0: minimum evidence coverage across technical, tactical and physical. */
+  minEvidenceCoverage: 'moderate' | 'strong' | null;
+  /** Brief 2.0: newest evidence must be at most this many days old. */
+  evidenceMaxAgeDays: number | null;
 };
 
 export type DiscoveryQuery = {
@@ -270,4 +276,7 @@ export const defaultDiscoveryFilters: DiscoveryFilters = {
   recentlyActive: false,
   hasHighlightVideos: false,
   verifiedOnly: false,
+  roles: [],
+  minEvidenceCoverage: null,
+  evidenceMaxAgeDays: null,
 };

@@ -143,7 +143,7 @@ export const onPassportSummaryWrittenNotifyOwner = onDocumentWritten(
   async (event) => {
     const after = event.data?.after.exists ? event.data.after.data() : null;
     const before = event.data?.before.exists ? event.data.before.data() : null;
-    if (!after || !isMeaningfulPassportImprovement(before?.coverage, after.coverage)) {
+    if (!after || !isMeaningfulPassportImprovement(before, after)) {
       return;
     }
     const playerId = event.params.playerId;

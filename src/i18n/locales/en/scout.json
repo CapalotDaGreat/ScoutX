@@ -28,7 +28,26 @@
     "emptyTitle": "No discoverable players yet",
     "emptyDescription": "Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network.",
     "emptyAction": "Open Discover",
-    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters."
+    "presetTip": "Tip: use presets in Discover to save your preferred scouting filters.",
+    "attention": {
+      "title": "Requires attention",
+      "empty": "Nothing needs a decision right now.",
+      "fulfilled_request": "Evidence request answered",
+      "upcoming_trial": "Upcoming trial: {{name}}",
+      "watchlist_change": "New evidence on a watched player",
+      "brief_match": "{{name}} fits your brief “{{brief}}”"
+    },
+    "firstSession": {
+      "title": "Get started",
+      "subtitle": "Five steps to your first trial.",
+      "steps": {
+        "save_brief": "Save your brief as a filter preset",
+        "view_player": "Open a player profile",
+        "shortlist_player": "Save a player to your pipeline",
+        "request_evidence": "Request evidence from a player",
+        "invite_trial": "Invite a player to a trial"
+      }
+    }
   },
   "discover": {
     "title": "Discover Players",
@@ -113,7 +132,19 @@
     "skillMovesShort": "SM",
     "anyStars": "Any rating",
     "atLeastStars_one": "{{count}}★ or better",
-    "atLeastStars_other": "{{count}}★ or better"
+    "atLeastStars_other": "{{count}}★ or better",
+    "brief": {
+      "title": "Brief requirements",
+      "roles": "Roles",
+      "rolesPlaceholder": "e.g. Ball-winner, Inverted winger",
+      "minEvidence": "Minimum evidence",
+      "freshness": "Evidence newer than",
+      "any": "Any",
+      "moderate": "Moderate",
+      "strong": "Strong",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
+    }
   },
   "pipeline": {
     "title": "Recruitment Pipeline",
@@ -321,7 +352,56 @@
     "watchNewCount_one": "{{count}} new",
     "watchNewCount_other": "{{count}} new",
     "watchlistError": "Watchlist changes could not be loaded.",
-    "watchUnknownPlayer": "Tracked player"
+    "watchUnknownPlayer": "Tracked player",
+    "whyNotTitle": "Why you might wait",
+    "whyNotEmpty": "Nothing holds this player back on the evidence available.",
+    "whyNot": {
+      "insufficient_evidence": "No evidence area is moderate or strong yet.",
+      "outdated_evidence": "Newest evidence is {{days}} days old.",
+      "no_evidence_date": "No dated match evidence yet.",
+      "role_mismatch": "Position or role does not match your brief.",
+      "brief_misses_one": "{{count}} other brief criterion is not met.",
+      "brief_misses_other": "{{count}} other brief criteria are not met.",
+      "missing_video": "No highlight video.",
+      "not_verified": "Not verified.",
+      "small_sample_one": "Only {{count}} logged match.",
+      "small_sample_other": "Only {{count}} logged matches."
+    },
+    "shortlist": {
+      "title": "Shortlist intelligence",
+      "strongest": "Strongest evidence: {{dimension}} ({{state}})",
+      "noStrongest": "No strong evidence area yet",
+      "uncertaintyCoverage": "Biggest uncertainty: {{dimension}} has insufficient evidence",
+      "uncertaintyBrief_one": "Biggest uncertainty: {{count}} brief criterion unknown",
+      "uncertaintyBrief_other": "Biggest uncertainty: {{count}} brief criteria unknown",
+      "changes_one": "{{count}} change since your last review",
+      "changes_other": "{{count}} changes since your last review",
+      "noChanges": "No changes since your last review",
+      "fit": "Brief fit: {{met}} of {{total}}",
+      "next": "Next: {{action}}",
+      "actions": {
+        "request_evidence": "request evidence",
+        "review_new_evidence": "review new evidence",
+        "contact": "make contact",
+        "invite_trial": "invite to a trial",
+        "prepare_trial": "prepare the trial",
+        "evaluate": "write an evaluation",
+        "follow_up": "follow up"
+      }
+    },
+    "watchFilter": {
+      "all": "All",
+      "match": "New match",
+      "video": "New video",
+      "pipeline": "Pipeline",
+      "trial": "Trial",
+      "removed": "Removed"
+    },
+    "watchChanges": {
+      "match": "new match",
+      "video": "new video"
+    },
+    "watchFilterEmpty": "No events for this filter."
   },
   "coach": {
     "rosterTitle": "Coach roster",
@@ -358,7 +438,16 @@
       "recently_active": "Recently active",
       "video": "Highlight video",
       "verified": "Verified",
-      "sprint_speed": "Sprint speed (km/h, GPS)"
+      "sprint_speed": "Sprint speed (km/h, GPS)",
+      "role": "Role",
+      "evidence_coverage": "Evidence coverage",
+      "evidence_freshness": "Evidence age"
+    },
+    "noRecords": "No records yet",
+    "confidence": {
+      "verified": "verified",
+      "record": "from records",
+      "self_reported": "self-reported"
     }
   }
 }

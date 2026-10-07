@@ -94,6 +94,8 @@ export type WatchlistEvent = {
   scoutId: string;
   playerId: string;
   type: WatchlistEventType;
+  /** For new_evidence: what the player added, from public summary counts. */
+  changes: Array<'match' | 'video'>;
   fromStage: PipelineStage | null;
   toStage: PipelineStage | null;
   lastEvidenceAt: string | null;

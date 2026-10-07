@@ -10,6 +10,7 @@ import {
 import {
   isMeaningfulPassportImprovement,
   pushPathFor,
+  summaryChanges,
   trialUpdateRecipient,
 } from '../../functions/src/notificationPolicy.ts';
 
@@ -98,12 +99,26 @@ describe('push routing and producer policy', () => {
   });
 
   test('passport improvement needs a newly solid coverage dimension', () => {
-    const limited = [{ id: 'technical', state: 'limited' }];
-    const moderate = [{ id: 'technical', state: 'moderate' }];
-    const strong = [{ id: 'technical', state: 'strong' }];
+    const limited = { coverage: [{ id: 'technical', state: 'limited' }] };
+    const moderate = { coverage: [{ id: 'technical', state: 'moderate' }] };
+    const strong = { coverage: [{ id: 'technical', state: 'strong' }] };
     assert.equal(isMeaningfulPassportImprovement(limited, moderate), true);
     assert.equal(isMeaningfulPassportImprovement(moderate, strong), false);
     assert.equal(isMeaningfulPassportImprovement(undefined, limited), false);
     assert.equal(isMeaningfulPassportImprovement(moderate, limited), false);
+  });
+
+  test('passport improvement fires on match or video milestones, not every edit', () => {
+    assert.equal(isMeaningfulPassportImprovement({ matchCount: 0 }, { matchCount: 1 }), true);
+    assert.equal(isMeaningfulPassportImprovement({ matchCount: 3 }, { matchCount: 4 }), false);
+    assert.equal(isMeaningfulPassportImprovement({ matchCount: 4 }, { matchCount: 5 }), true);
+    assert.equal(isMeaningfulPassportImprovement({ videoCount: 2 }, { videoCount: 3 }), true);
+    assert.equal(isMeaningfulPassportImprovement({ matchCount: 5 }, { matchCount: 4 }), false);
+  });
+
+  test('watchlist changes report what a player added', () => {
+    assert.deepEqual(summaryChanges({ matchCount: 2, videoCount: 1 }, { matchCount: 3, videoCount: 2 }), ['match', 'video']);
+    assert.deepEqual(summaryChanges({ matchCount: 2 }, { matchCount: 2 }), []);
+    assert.deepEqual(summaryChanges(null, { videoCount: 1 }), ['video']);
   });
 });

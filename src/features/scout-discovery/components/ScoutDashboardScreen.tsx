@@ -23,6 +23,8 @@ import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 import { WatchlistEventsCard } from '@/features/scout-intelligence/components/WatchlistEventsCard';
+import { ScoutAttentionCard, ScoutFirstSessionCard } from '@/features/scout-intelligence/components/ScoutHomeCards';
+import { useScoutHome } from '@/features/scout-intelligence/hooks/useScoutHome';
 import { CoachRosterCard } from '@/features/coach-mode/components/CoachRosterCard';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 
@@ -114,6 +116,18 @@ export function ScoutDashboardScreen({
     [resolvedPlayers, workspace],
   );
 
+  const homeCandidates = useMemo(
+    () => [...(data?.matchingPreferences ?? []), ...(data?.featured ?? [])],
+    [data?.featured, data?.matchingPreferences],
+  );
+  const scoutHome = useScoutHome({
+    scoutId: recruitment.workspace?.scoutId ?? null,
+    presets: workspace.filterPresets,
+    candidates: homeCandidates,
+    viewedCount: workspace.recentlyViewedIds.length,
+    shortlistCount: pipelineCount,
+  });
+
   const hasDiscoverablePlayers =
     (data?.matchingPreferences.length ?? 0) > 0 ||
     (data?.featured.length ?? 0) > 0;
@@ -184,6 +198,9 @@ export function ScoutDashboardScreen({
           {t('scout:dashboard.pipelineWithCount', { count: pipelineCount })}
         </Button>
       </View>
+
+      <ScoutAttentionCard items={scoutHome.attention} onPlayerPress={onPlayerIdPress} />
+      <ScoutFirstSessionCard steps={scoutHome.firstSession} />
 
       {onOpenComparisonPress ? (
         <ComparisonQueueCard onOpenComparison={onOpenComparisonPress} />
