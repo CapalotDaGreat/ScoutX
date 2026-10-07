@@ -2,7 +2,9 @@ import { useCallback, useMemo, useRef, useState, type ComponentType } from 'reac
 import { createBottomTabNavigator, type BottomTabBarProps, type BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { View } from 'react-native';
 import { Activity, Clapperboard, Compass, Home } from 'lucide-react-native';
+import { RequestAttentionCard } from '@/features/request-center/components/RequestAttentionCard';
 import { EditJourneyModal } from '@/features/football-journey';
 import { HighlightVideosManagerModal } from '@/features/highlight-videos';
 import { HighlightReelStudioModal } from '@/features/highlight-reel-studio';
@@ -264,6 +266,11 @@ function PlayerTabsContainer() {
               onSearchPress={() => stackNavigation.navigate('GlobalSearch')}
               embeddedInTabShell
               todaySlot={
+                <View className="gap-4">
+                <RequestAttentionCard
+                  onViewAll={() => stackNavigation.navigate('RequestCenter')}
+                  onOpenTrial={(trialId) => stackNavigation.navigate('Trials', { trialId })}
+                />
                 <PlayerTodayContainer
                   userId={user?.id ?? null}
                   profile={profile}
@@ -273,6 +280,7 @@ function PlayerTabsContainer() {
                   trustProfile={trustState.trustProfile}
                   onAction={handleTodayAction}
                 />
+                </View>
               }
             />
           );

@@ -91,5 +91,53 @@
       "title": "Lien expiré",
       "body": "Ce lien a expiré. Demande-en un nouveau à l'expéditeur."
     }
+  },
+  "requestCenter": {
+    "title": "Demandes",
+    "subtitle": "Tout ce que les recruteurs, clubs et vérificateurs t'ont demandé.",
+    "activeTitle": "Ouvertes",
+    "closedTitle": "Clôturées",
+    "emptyTitle": "Aucune demande",
+    "emptyBody": "Quand un recruteur demande des preuves ou t'invite à un essai, cela apparaît ici.",
+    "attentionTitle_one": "{{count}} demande t'attend",
+    "attentionTitle_other": "{{count}} demandes t'attendent",
+    "attentionBody": "Répondre vite garde les recruteurs intéressés.",
+    "fulfill": "Envoyer des preuves",
+    "decline": "Refuser",
+    "respond": "Répondre",
+    "view": "Voir",
+    "fulfillTitle": "Envoyer des preuves",
+    "asked": "Demandé : {{kinds}}",
+    "noCandidates": "Tu n'as encore rien qui corresponde. Importe un clip ou enregistre un match d'abord.",
+    "notePlaceholder": "Note facultative pour le recruteur",
+    "send_one": "Envoyer {{count}} élément",
+    "send_other": "Envoyer {{count}} éléments",
+    "fulfillFailed": "Impossible d'envoyer tes preuves.",
+    "declineFailed": "Impossible de refuser la demande.",
+    "expires": "Ouverte jusqu'au {{date}}",
+    "responded_one": "Tu as envoyé {{count}} élément",
+    "responded_other": "Tu as envoyé {{count}} éléments",
+    "untitledClip": "Clip sans titre",
+    "analysisLabel": "Analyse de match",
+    "gpsLabel": "Séance GPS",
+    "kinds": {
+      "match": "Match",
+      "media": "Clip",
+      "analysis": "Analyse",
+      "gps": "GPS"
+    },
+    "sources": {
+      "scout_evidence": "Demande de preuves",
+      "trial_invitation": "Invitation à un essai",
+      "verification": "Vérification"
+    },
+    "status": {
+      "pending": "En attente",
+      "accepted": "Acceptée",
+      "in_progress": "En cours",
+      "completed": "Terminée",
+      "declined": "Refusée",
+      "expired": "Expirée"
+    }
   }
 }

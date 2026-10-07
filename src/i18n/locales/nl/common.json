@@ -91,5 +91,53 @@
       "title": "Link verlopen",
       "body": "Deze link is verlopen. Vraag de afzender om een nieuwe."
     }
+  },
+  "requestCenter": {
+    "title": "Verzoeken",
+    "subtitle": "Alles wat scouts, clubs en beoordelaars je hebben gevraagd.",
+    "activeTitle": "Open",
+    "closedTitle": "Gesloten",
+    "emptyTitle": "Nog geen verzoeken",
+    "emptyBody": "Als een scout om bewijs vraagt of je uitnodigt voor een proeftraining, zie je het hier.",
+    "attentionTitle_one": "{{count}} verzoek wacht op je",
+    "attentionTitle_other": "{{count}} verzoeken wachten op je",
+    "attentionBody": "Snel reageren houdt scouts geïnteresseerd.",
+    "fulfill": "Bewijs sturen",
+    "decline": "Weigeren",
+    "respond": "Reageren",
+    "view": "Bekijken",
+    "fulfillTitle": "Bewijs sturen",
+    "asked": "Gevraagd: {{kinds}}",
+    "noCandidates": "Je hebt nog niets dat past. Upload eerst een clip of leg een wedstrijd vast.",
+    "notePlaceholder": "Optionele notitie voor de scout",
+    "send_one": "{{count}} item sturen",
+    "send_other": "{{count}} items sturen",
+    "fulfillFailed": "Je bewijs kon niet worden verstuurd.",
+    "declineFailed": "Het verzoek kon niet worden geweigerd.",
+    "expires": "Open tot {{date}}",
+    "responded_one": "Je stuurde {{count}} item",
+    "responded_other": "Je stuurde {{count}} items",
+    "untitledClip": "Clip zonder titel",
+    "analysisLabel": "Wedstrijdanalyse",
+    "gpsLabel": "GPS-sessie",
+    "kinds": {
+      "match": "Wedstrijd",
+      "media": "Clip",
+      "analysis": "Analyse",
+      "gps": "GPS"
+    },
+    "sources": {
+      "scout_evidence": "Bewijsverzoek",
+      "trial_invitation": "Uitnodiging proeftraining",
+      "verification": "Verificatie"
+    },
+    "status": {
+      "pending": "In afwachting",
+      "accepted": "Geaccepteerd",
+      "in_progress": "Bezig",
+      "completed": "Voltooid",
+      "declined": "Geweigerd",
+      "expired": "Verlopen"
+    }
   }
 }

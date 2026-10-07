@@ -19,6 +19,7 @@ import { usePlayerTrialInvitations } from '@/features/trial-invitations/hooks/us
 import { GlobalSearchScreen } from '@/features/global-search/components/GlobalSearchScreen';
 import { buildPlayerSearchRecords } from '@/features/global-search/services/buildSearchRecords';
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
+import { RequestCenterScreen } from '@/features/request-center/components/RequestCenterScreen';
 import { PlayerTabNavigator } from '@/navigation/PlayerTabNavigator';
 import { type PlayerStackParamList } from '@/navigation/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
@@ -75,6 +76,19 @@ function TrialsRoute({
   route,
 }: NativeStackScreenProps<PlayerStackParamList, 'Trials'>) {
   return <PlayerTrialsScreen onBack={() => navigation.goBack()} focusTrialId={route.params?.trialId} />;
+}
+
+function RequestCenterRoute({
+  navigation,
+  route,
+}: NativeStackScreenProps<PlayerStackParamList, 'RequestCenter'>) {
+  return (
+    <RequestCenterScreen
+      onBack={() => navigation.goBack()}
+      onOpenTrial={(trialId) => navigation.navigate('Trials', { trialId })}
+      focusRequestId={route.params?.requestId}
+    />
+  );
 }
 
 function SettingsRoute({
@@ -267,6 +281,7 @@ function PlayerStackContent() {
         <Stack.Screen name="Settings" component={SettingsRoute} />
         <Stack.Screen name="GlobalSearch" component={GlobalSearchRoute} />
         <Stack.Screen name="Trials" component={TrialsRoute} />
+        <Stack.Screen name="RequestCenter" component={RequestCenterRoute} />
         <Stack.Screen name="PlayerDetail" component={PlayerDetailRoute} />
         <Stack.Screen name="AnalysisReport" component={AnalysisReportRoute} />
         <Stack.Screen name="PlayerRegister" component={PlayerRegisterRoute} />

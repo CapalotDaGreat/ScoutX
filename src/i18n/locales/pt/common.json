@@ -91,5 +91,53 @@
       "title": "Link expirado",
       "body": "Este link expirou. Pede um novo ao remetente."
     }
+  },
+  "requestCenter": {
+    "title": "Pedidos",
+    "subtitle": "Tudo o que olheiros, clubes e revisores te pediram.",
+    "activeTitle": "Abertos",
+    "closedTitle": "Fechados",
+    "emptyTitle": "Ainda sem pedidos",
+    "emptyBody": "Quando um olheiro pedir provas ou te convidar para um treino de captação, aparece aqui.",
+    "attentionTitle_one": "{{count}} pedido espera por ti",
+    "attentionTitle_other": "{{count}} pedidos esperam por ti",
+    "attentionBody": "Responder depressa mantém os olheiros interessados.",
+    "fulfill": "Enviar provas",
+    "decline": "Recusar",
+    "respond": "Responder",
+    "view": "Ver",
+    "fulfillTitle": "Enviar provas",
+    "asked": "Pedido: {{kinds}}",
+    "noCandidates": "Ainda não tens nada que corresponda. Carrega um clip ou regista um jogo primeiro.",
+    "notePlaceholder": "Nota opcional para o olheiro",
+    "send_one": "Enviar {{count}} item",
+    "send_other": "Enviar {{count}} itens",
+    "fulfillFailed": "Não foi possível enviar as tuas provas.",
+    "declineFailed": "Não foi possível recusar o pedido.",
+    "expires": "Aberto até {{date}}",
+    "responded_one": "Enviaste {{count}} item",
+    "responded_other": "Enviaste {{count}} itens",
+    "untitledClip": "Clip sem título",
+    "analysisLabel": "Análise do jogo",
+    "gpsLabel": "Sessão GPS",
+    "kinds": {
+      "match": "Jogo",
+      "media": "Clip",
+      "analysis": "Análise",
+      "gps": "GPS"
+    },
+    "sources": {
+      "scout_evidence": "Pedido de provas",
+      "trial_invitation": "Convite para treino",
+      "verification": "Verificação"
+    },
+    "status": {
+      "pending": "Pendente",
+      "accepted": "Aceite",
+      "in_progress": "Em curso",
+      "completed": "Concluído",
+      "declined": "Recusado",
+      "expired": "Expirado"
+    }
   }
 }

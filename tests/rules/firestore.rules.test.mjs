@@ -520,21 +520,39 @@ describe('scout intelligence collections', () => {
     await denied(getDocument(PLAYER, 'watchlistEvents/w1'), 'player reads scout event');
   });
 
-  test('a player may fulfil an evidence request but cannot rewrite the scout or kinds', async () => {
+  test('a player may decline a pending evidence request; fulfilment is server-only', async () => {
     await seed('evidenceRequests/e1', {
       scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'pending', updatedAt: 't0',
     });
-    await allowed(
+    await denied(
       setDocument(PLAYER, 'evidenceRequests/e1', {
         scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'fulfilled', updatedAt: 't1',
       }),
-      'player fulfils',
+      'client marks fulfilled without attachments',
     );
     await denied(
       setDocument(PLAYER, 'evidenceRequests/e1', {
-        scoutId: PLAYER, playerId: PLAYER, kinds: ['gps'], status: 'fulfilled', updatedAt: 't2',
+        scoutId: PLAYER, playerId: PLAYER, kinds: ['gps'], status: 'declined', updatedAt: 't2',
       }),
       'player rewrites scout',
+    );
+    await denied(
+      setDocument(SCOUT, 'evidenceRequests/e1', {
+        scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'declined', updatedAt: 't2',
+      }),
+      'scout declines on behalf of player',
+    );
+    await allowed(
+      setDocument(PLAYER, 'evidenceRequests/e1', {
+        scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'declined', updatedAt: 't3',
+      }),
+      'player declines',
+    );
+    await denied(
+      setDocument(PLAYER, 'evidenceRequests/e1', {
+        scoutId: SCOUT, playerId: PLAYER, kinds: ['highlight'], status: 'declined', updatedAt: 't4',
+      }),
+      'closed request cannot change again',
     );
   });
 

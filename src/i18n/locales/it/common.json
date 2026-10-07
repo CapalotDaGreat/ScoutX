@@ -91,5 +91,53 @@
       "title": "Link scaduto",
       "body": "Questo link è scaduto. Chiedine uno nuovo al mittente."
     }
+  },
+  "requestCenter": {
+    "title": "Richieste",
+    "subtitle": "Tutto ciò che osservatori, club e revisori ti hanno chiesto.",
+    "activeTitle": "Aperte",
+    "closedTitle": "Chiuse",
+    "emptyTitle": "Ancora nessuna richiesta",
+    "emptyBody": "Quando un osservatore chiede prove o ti invita a un provino, appare qui.",
+    "attentionTitle_one": "{{count}} richiesta ti aspetta",
+    "attentionTitle_other": "{{count}} richieste ti aspettano",
+    "attentionBody": "Rispondere in fretta mantiene vivo l'interesse degli osservatori.",
+    "fulfill": "Invia prove",
+    "decline": "Rifiuta",
+    "respond": "Rispondi",
+    "view": "Vedi",
+    "fulfillTitle": "Invia prove",
+    "asked": "Richiesto: {{kinds}}",
+    "noCandidates": "Non hai ancora nulla di adatto. Carica prima un clip o registra una partita.",
+    "notePlaceholder": "Nota facoltativa per l'osservatore",
+    "send_one": "Invia {{count}} elemento",
+    "send_other": "Invia {{count}} elementi",
+    "fulfillFailed": "Impossibile inviare le prove.",
+    "declineFailed": "Impossibile rifiutare la richiesta.",
+    "expires": "Aperta fino al {{date}}",
+    "responded_one": "Hai inviato {{count}} elemento",
+    "responded_other": "Hai inviato {{count}} elementi",
+    "untitledClip": "Clip senza titolo",
+    "analysisLabel": "Analisi partita",
+    "gpsLabel": "Sessione GPS",
+    "kinds": {
+      "match": "Partita",
+      "media": "Clip",
+      "analysis": "Analisi",
+      "gps": "GPS"
+    },
+    "sources": {
+      "scout_evidence": "Richiesta di prove",
+      "trial_invitation": "Invito a provino",
+      "verification": "Verifica"
+    },
+    "status": {
+      "pending": "In attesa",
+      "accepted": "Accettata",
+      "in_progress": "In corso",
+      "completed": "Completata",
+      "declined": "Rifiutata",
+      "expired": "Scaduta"
+    }
   }
 }

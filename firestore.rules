@@ -386,8 +386,9 @@ service cloud.firestore {
       allow create: if false;
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.playerId
+        && resource.data.status == 'pending'
         && onlyChanges(['status', 'updatedAt'])
-        && request.resource.data.status in ['fulfilled', 'declined'];
+        && request.resource.data.status == 'declined';
       allow delete: if isSignedIn()
         && (request.auth.uid == resource.data.scoutId || request.auth.uid == resource.data.playerId);
     }

@@ -91,5 +91,53 @@
       "title": "Link expired",
       "body": "This link has expired. Ask the sender for a new one."
     }
+  },
+  "requestCenter": {
+    "title": "Requests",
+    "subtitle": "Everything scouts, clubs and reviewers have asked of you.",
+    "activeTitle": "Open",
+    "closedTitle": "Closed",
+    "emptyTitle": "No requests yet",
+    "emptyBody": "When a scout asks for evidence or invites you to a trial, it appears here.",
+    "attentionTitle_one": "{{count}} request needs you",
+    "attentionTitle_other": "{{count}} requests need you",
+    "attentionBody": "Answering quickly keeps scouts interested.",
+    "fulfill": "Send evidence",
+    "decline": "Decline",
+    "respond": "Respond",
+    "view": "View",
+    "fulfillTitle": "Send evidence",
+    "asked": "Asked for: {{kinds}}",
+    "noCandidates": "You have nothing that matches this request yet. Upload a clip or log a match first.",
+    "notePlaceholder": "Optional note for the scout",
+    "send_one": "Send {{count}} item",
+    "send_other": "Send {{count}} items",
+    "fulfillFailed": "Could not send your evidence.",
+    "declineFailed": "Could not decline the request.",
+    "expires": "Open until {{date}}",
+    "responded_one": "You sent {{count}} item",
+    "responded_other": "You sent {{count}} items",
+    "untitledClip": "Untitled clip",
+    "analysisLabel": "Match analysis",
+    "gpsLabel": "GPS session",
+    "kinds": {
+      "match": "Match",
+      "media": "Clip",
+      "analysis": "Analysis",
+      "gps": "GPS"
+    },
+    "sources": {
+      "scout_evidence": "Evidence request",
+      "trial_invitation": "Trial invitation",
+      "verification": "Verification"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "declined": "Declined",
+      "expired": "Expired"
+    }
   }
 }

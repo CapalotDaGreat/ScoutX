@@ -91,5 +91,53 @@
       "title": "Link abgelaufen",
       "body": "Dieser Link ist abgelaufen. Bitte den Absender um einen neuen."
     }
+  },
+  "requestCenter": {
+    "title": "Anfragen",
+    "subtitle": "Alles, worum Scouts, Vereine und Prüfer dich gebeten haben.",
+    "activeTitle": "Offen",
+    "closedTitle": "Abgeschlossen",
+    "emptyTitle": "Noch keine Anfragen",
+    "emptyBody": "Wenn ein Scout Nachweise anfordert oder dich zu einem Probetraining einlädt, erscheint es hier.",
+    "attentionTitle_one": "{{count}} Anfrage wartet auf dich",
+    "attentionTitle_other": "{{count}} Anfragen warten auf dich",
+    "attentionBody": "Schnelle Antworten halten Scouts interessiert.",
+    "fulfill": "Nachweis senden",
+    "decline": "Ablehnen",
+    "respond": "Antworten",
+    "view": "Ansehen",
+    "fulfillTitle": "Nachweis senden",
+    "asked": "Angefragt: {{kinds}}",
+    "noCandidates": "Du hast noch nichts Passendes. Lade zuerst einen Clip hoch oder erfasse ein Spiel.",
+    "notePlaceholder": "Optionale Notiz für den Scout",
+    "send_one": "{{count}} Eintrag senden",
+    "send_other": "{{count}} Einträge senden",
+    "fulfillFailed": "Nachweis konnte nicht gesendet werden.",
+    "declineFailed": "Anfrage konnte nicht abgelehnt werden.",
+    "expires": "Offen bis {{date}}",
+    "responded_one": "Du hast {{count}} Eintrag gesendet",
+    "responded_other": "Du hast {{count}} Einträge gesendet",
+    "untitledClip": "Clip ohne Titel",
+    "analysisLabel": "Spielanalyse",
+    "gpsLabel": "GPS-Einheit",
+    "kinds": {
+      "match": "Spiel",
+      "media": "Clip",
+      "analysis": "Analyse",
+      "gps": "GPS"
+    },
+    "sources": {
+      "scout_evidence": "Nachweisanfrage",
+      "trial_invitation": "Probetraining",
+      "verification": "Verifizierung"
+    },
+    "status": {
+      "pending": "Ausstehend",
+      "accepted": "Angenommen",
+      "in_progress": "In Bearbeitung",
+      "completed": "Erledigt",
+      "declined": "Abgelehnt",
+      "expired": "Abgelaufen"
+    }
   }
 }

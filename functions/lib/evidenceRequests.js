@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requestEvidence = void 0;
+exports.fulfillEvidenceRequest = exports.ATTACHMENT_KINDS = exports.requestEvidence = void 0;
+exports.parseAttachments = parseAttachments;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const callableOptions_1 = require("./callableOptions");
+const notificationProducers_1 = require("./notificationProducers");
 const KINDS = ['match_footage', 'highlight', 'gps', 'statistics', 'coach_note'];
 function isRecruiterRole(role) {
     return role === 'scout' || role === 'coach' || role === 'club' || role === 'admin';
@@ -71,5 +73,105 @@ exports.requestEvidence = (0, https_1.onCall)((0, callableOptions_1.createCallab
     });
     await batch.commit();
     return { id: ref.id, status: 'pending' };
+});
+exports.ATTACHMENT_KINDS = ['match', 'media', 'analysis', 'gps'];
+const MAX_ATTACHMENTS = 10;
+const ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
+function parseAttachments(value) {
+    if (!Array.isArray(value) || value.length === 0 || value.length > MAX_ATTACHMENTS) {
+        return null;
+    }
+    const out = [];
+    const seen = new Set();
+    for (const item of value) {
+        const row = item && typeof item === 'object' ? item : null;
+        const kind = row?.kind;
+        const id = row?.id;
+        if (typeof kind !== 'string' ||
+            !exports.ATTACHMENT_KINDS.includes(kind) ||
+            typeof id !== 'string' ||
+            !ID_PATTERN.test(id)) {
+            return null;
+        }
+        const key = `${kind}:${id}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            out.push({ kind: kind, id });
+        }
+    }
+    return out;
+}
+async function ownsAttachment(uid, attachment) {
+    const db = (0, firestore_1.getFirestore)();
+    switch (attachment.kind) {
+        case 'match': {
+            const sub = await db.collection('players').doc(uid).collection('matches').doc(attachment.id).get();
+            if (sub.exists)
+                return true;
+            const profile = await db.collection('profiles').doc(uid).get();
+            const matches = profile.get('statisticsMatches');
+            return (Array.isArray(matches) &&
+                matches.some((match) => {
+                    const row = match && typeof match === 'object' ? match : null;
+                    return row?.id === attachment.id;
+                }));
+        }
+        case 'media': {
+            const media = await db.collection('players').doc(uid).collection('media').doc(attachment.id).get();
+            return media.exists && media.get('uploadState') !== 'failed';
+        }
+        case 'analysis': {
+            const job = await db.collection('matchAnalysisJobs').doc(attachment.id).get();
+            return job.exists && job.get('playerId') === uid && job.get('status') === 'complete';
+        }
+        case 'gps': {
+            const session = await db.collection('gpsSessions').doc(attachment.id).get();
+            return session.exists && session.get('playerId') === uid;
+        }
+    }
+}
+/**
+ * Player answers a scout's evidence request with items they own. Ownership of every attachment
+ * is checked server-side; the scout is notified with fixed copy.
+ */
+exports.fulfillEvidenceRequest = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
+    const uid = request.auth?.uid;
+    if (!uid) {
+        throw new https_1.HttpsError('unauthenticated', 'Sign in required.');
+    }
+    const requestId = typeof request.data?.requestId === 'string' ? request.data.requestId : '';
+    if (!ID_PATTERN.test(requestId)) {
+        throw new https_1.HttpsError('invalid-argument', 'A request id is required.');
+    }
+    const attachments = parseAttachments(request.data?.attachments);
+    if (!attachments) {
+        throw new https_1.HttpsError('invalid-argument', `Attach between 1 and ${MAX_ATTACHMENTS} items.`);
+    }
+    const note = typeof request.data?.note === 'string' ? request.data.note.slice(0, 500) : '';
+    const db = (0, firestore_1.getFirestore)();
+    const ref = db.collection('evidenceRequests').doc(requestId);
+    const snapshot = await ref.get();
+    if (!snapshot.exists || snapshot.get('playerId') !== uid) {
+        throw new https_1.HttpsError('not-found', 'Request not found.');
+    }
+    if (snapshot.get('status') !== 'pending') {
+        throw new https_1.HttpsError('failed-precondition', 'This request is no longer open.');
+    }
+    for (const attachment of attachments) {
+        if (!(await ownsAttachment(uid, attachment))) {
+            throw new https_1.HttpsError('permission-denied', 'You can only attach your own items.');
+        }
+    }
+    const now = new Date().toISOString();
+    await ref.update({
+        status: 'fulfilled',
+        response: { attachments, note, fulfilledAt: now },
+        updatedAt: now,
+    });
+    const scoutId = snapshot.get('scoutId');
+    if (typeof scoutId === 'string') {
+        await (0, notificationProducers_1.notifyEvidenceFulfilled)(db, scoutId, uid, requestId);
+    }
+    return { id: requestId, status: 'fulfilled' };
 });
 //# sourceMappingURL=evidenceRequests.js.map

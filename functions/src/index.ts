@@ -20,7 +20,7 @@ export {
   searchDiscoverablePlayers,
 } from './discoveryProjection';
 export { onRecruitmentEntryWritten, onPassportSummaryWrittenNotifyWatchers } from './watchlist';
-export { requestEvidence } from './evidenceRequests';
+export { fulfillEvidenceRequest, requestEvidence } from './evidenceRequests';
 export { onVerificationWrittenSyncTrust } from './trustSync';
 export { askThisMatch } from './askThisMatch';
 export { getMediaPlaybackUrl, exportReel } from './mediaAccess';
