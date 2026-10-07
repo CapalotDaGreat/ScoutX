@@ -229,13 +229,15 @@ export function DiscoverabilityHealthCard({ summary }: { summary: PassportSummar
       </Text>
       {discoverability.blockers.map((blocker) => (
         <Text key={blocker} variant="caption" color="warning">
-          {blocker === 'public_passport_off'
-            ? t('passport:discoverability.blockers.public_passport_off')
-            : blocker === 'discovery_opt_in_off'
-              ? t('passport:discoverability.blockers.discovery_opt_in_off')
-              : t('passport:discoverability.blockers.no_matches')}
+          {t(`passport:discoverability.blockers.${blocker}`)}
         </Text>
       ))}
+      <Text variant="caption" color="tertiary">
+        {t('passport:discoverability.basis')}
+      </Text>
+      <Text variant="caption" color="tertiary">
+        {t('passport:discoverability.noGuarantee')}
+      </Text>
     </Card>
   );
 }

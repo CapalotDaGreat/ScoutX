@@ -234,6 +234,14 @@ describe('chunked transfer', () => {
     assert.ok(enqueued.some((task) => task.jobId === 'job_land' && task.kind === 'extract_segment'));
     assert.equal((await getStorage().bucket().file(path).exists())[0], false, 'quarantine copy removed');
     assert.equal((await getStorage().bucket().file(job.videoStoragePath).exists())[0], true);
+
+    const footage = (await db.doc(`players/${UID}/media/footage_job_land`).get()).data();
+    assert.equal(footage.type, 'matchFootage');
+    assert.equal(footage.storagePath, job.videoStoragePath);
+    assert.equal(footage.sourceJobId, 'job_land');
+    assert.equal(footage.visibility, 'private', 'validated footage enters the library privately');
+    assert.equal(footage.rightsState, 'unconfirmed');
+    assert.equal(footage.durationSec, 30);
   });
 
   test('objects in quarantine without an open upload are deleted', async () => {

@@ -602,5 +602,12 @@
     "noViews": "Noch keine Aufrufe",
     "loading": "Aufrufe werden geladen…",
     "unavailable": "Die Aufrufe konnten gerade nicht geladen werden."
+  },
+  "youthPlayer": "Nachwuchsspieler",
+  "strangerView": {
+    "title": "Was Fremde sehen",
+    "body": "Genau diese Version zeigt ScoutX Personen, die du nicht freigegeben hast. Sie wird auf unserem Server aus deinen Privatsphäre-Einstellungen und Sicherheitsregeln erstellt und kann daher mehr ausblenden als deine Einstellungen allein.",
+    "hiddenTitle": "Für Fremde nicht sichtbar",
+    "hiddenBody": "Personen, die du nicht freigegeben hast, sehen deinen Passport derzeit nicht. Aktiviere den öffentlichen Passport in deinen Privatsphäre-Einstellungen. Wenn du unter 18 bist, muss auch deine Erziehungsperson zustimmen. Änderungen können einen Moment dauern."
   }
 }

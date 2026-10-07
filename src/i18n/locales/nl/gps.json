@@ -70,5 +70,10 @@
     "empty": "De heatmap verschijnt zodra er GPS-punten zijn vastgelegd.",
     "a11y_one": "Bewegingsheatmap met {{count}} actief gebied",
     "a11y_other": "Bewegingsheatmap met {{count}} actieve gebieden"
+  },
+  "units": {
+    "label": "Eenheden",
+    "km": "Kilometer",
+    "mi": "Mijl"
   }
 }

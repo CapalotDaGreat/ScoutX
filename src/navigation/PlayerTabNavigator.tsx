@@ -368,6 +368,10 @@ function PlayerTabsContainer() {
         visible={isHighlightReelStudioVisible}
         playerId={user?.id ?? null}
         onClose={() => setIsHighlightReelStudioVisible(false)}
+        onReelCreated={(reelId) => {
+          setIsHighlightReelStudioVisible(false);
+          tabNavigationRef.current?.navigate('Media', { reelId });
+        }}
       />
 
       <LogMatchModal

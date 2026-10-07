@@ -10,6 +10,8 @@ export type PublicPortfolioData = {
   recommendations: TrustRecommendation[];
   gpsHighlights: GpsSession[];
   isPublic: boolean;
+  /** Server-set for minors; replaces any age detail on the public Passport. */
+  ageGroupLabel?: 'youth' | null;
 };
 
 export type PublicPortfolioSectionKey =

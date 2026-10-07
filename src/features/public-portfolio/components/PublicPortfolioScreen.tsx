@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
 import { Badge } from '@/components/primitives/Badge';
+import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 import { FootballJourneySection } from '@/features/football-journey';
@@ -125,11 +126,11 @@ export function PublicPortfolioScreen({
         error={error}
       >
         <EmptyState
-          title={previewMode ? t('portfolio:unavailableTitle') : t('portfolio:privatePortfolioTitle')}
+          title={previewMode ? t('portfolio:strangerView.hiddenTitle') : t('portfolio:privatePortfolioTitle')}
           description={
             error ??
             (previewMode
-              ? t('portfolio:previewUnavailableDescription')
+              ? t('portfolio:strangerView.hiddenBody')
               : t('portfolio:privatePortfolioDescription'))
           }
           actionLabel={onBack ? t('portfolio:goBack') : t('common:retry')}
@@ -180,6 +181,12 @@ export function PublicPortfolioScreen({
       }
     >
       <ScrollView contentContainerClassName="gap-6 pb-10" showsVerticalScrollIndicator={false}>
+        {previewMode ? (
+          <Card variant="outlined" padding="md" className="gap-1" testID="stranger-view-note">
+            <Text weight="semibold">{t('portfolio:strangerView.title')}</Text>
+            <Text variant="caption" color="secondary">{t('portfolio:strangerView.body')}</Text>
+          </Card>
+        ) : null}
         {endorseMode && !canEndorse ? (
           <CoachEndorsementPrompt
             playerName={profile.fullName}

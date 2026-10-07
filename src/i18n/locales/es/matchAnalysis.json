@@ -36,7 +36,10 @@
     "emptyTimeline": "No hay observaciones con marca de tiempo.",
     "cvUnavailable": "Esta vista necesita seguimiento por visión, que no está desplegado.",
     "noVideo": "No hay vídeo para buscar.",
-    "open": "Abrir informe completo"
+    "open": "Abrir informe completo",
+    "reelTitle": "Reel de jugadas",
+    "reelHint": "Convierte los momentos de este informe en un borrador de reel privado que puedes revisar y editar.",
+    "reelAction": "Crear un reel de jugadas"
   },
   "tabs": {
     "overview": "Resumen",

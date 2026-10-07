@@ -24,8 +24,13 @@
     "blockers": {
       "public_passport_off": "El Football Passport público está desactivado",
       "discovery_opt_in_off": "No has activado la visibilidad para ojeadores",
-      "no_matches": "Aún no hay partidos que mostrar"
-    }
+      "no_matches": "Aún no hay partidos que mostrar",
+      "guardian_approval_needed": "Tu madre, padre o tutor aún no ha permitido un perfil público ni la visibilidad para ojeadores",
+      "no_video": "Aún no hay pruebas en vídeo",
+      "stale_evidence": "Tu prueba de partido más reciente tiene más de 4 meses"
+    },
+    "basis": "Se basa solo en tus ajustes y pruebas registradas, nunca en visitas, me gusta o seguidores.",
+    "noGuarantee": "ScoutX no puede prometer que los ojeadores te encuentren o te contacten."
   },
   "readiness": {
     "evidenceTitle": "Pruebas futbolísticas",

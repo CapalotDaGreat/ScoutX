@@ -70,5 +70,10 @@
     "empty": "O mapa de calor aparece quando forem registados pontos GPS.",
     "a11y_one": "Mapa de calor com {{count}} zona ativa",
     "a11y_other": "Mapa de calor com {{count}} zonas ativas"
+  },
+  "units": {
+    "label": "Unidades",
+    "km": "Quilómetros",
+    "mi": "Milhas"
   }
 }

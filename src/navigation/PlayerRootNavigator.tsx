@@ -8,6 +8,7 @@ import { LoginScreen } from '@/features/auth/screens/LoginScreen';
 import { ForgotPasswordScreen } from '@/features/auth/screens/ForgotPasswordScreen';
 import { RegisterScreen } from '@/features/auth/screens/RegisterScreen';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
+import { useStrangerView } from '@/features/public-portfolio/hooks/useStrangerView';
 import { CareerReplayScreen } from '@/features/career-replay/components/CareerReplayScreen';
 import { AnalysisReportScreen } from '@/features/match-analysis/components/AnalysisReportScreen';
 import { SettingsScreen } from '@/features/settings';
@@ -37,7 +38,8 @@ function PublicPortfolioRoute({
   navigation,
   route,
 }: NativeStackScreenProps<PlayerStackParamList, 'PublicPortfolio'>) {
-  const { portfolioPreview, isLoading } = usePlayerWorkspace();
+  const previewMode = route.params.previewMode === true;
+  const strangerView = useStrangerView(route.params.playerId ?? null, previewMode);
   const { beginUpgrade, isGuest } = useAuth();
 
   return (
@@ -45,8 +47,8 @@ function PublicPortfolioRoute({
       playerId={route.params.playerId}
       slug={route.params.slug}
       previewMode={route.params.previewMode}
-      previewData={route.params.previewMode ? portfolioPreview ?? undefined : undefined}
-      previewLoading={route.params.previewMode ? isLoading : false}
+      previewData={previewMode ? strangerView.data ?? undefined : undefined}
+      previewLoading={previewMode ? strangerView.isLoading : false}
       onBack={() => navigation.goBack()}
       onSignInForEndorsement={
         isGuest
@@ -200,7 +202,13 @@ function AnalysisReportRoute({
   navigation,
   route,
 }: NativeStackScreenProps<PlayerStackParamList, 'AnalysisReport'>) {
-  return <AnalysisReportScreen jobId={route.params.jobId} onBack={() => navigation.goBack()} />;
+  return (
+    <AnalysisReportScreen
+      jobId={route.params.jobId}
+      onBack={() => navigation.goBack()}
+      onOpenReel={(reelId) => navigation.navigate('PlayerTabs', { screen: 'Media', params: { reelId } })}
+    />
+  );
 }
 
 function PlayerDetailRoute({

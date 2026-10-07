@@ -1,4 +1,4 @@
-﻿import './authSecurityPolicy';
+import './authSecurityPolicy';
 import { initializeApp } from 'firebase-admin/app';
 
 export { generateAiInsight } from './aiCoach';
@@ -44,7 +44,7 @@ export { fulfillEvidenceRequest, requestEvidence } from './evidenceRequests';
 export { onVerificationWrittenSyncTrust } from './trustSync';
 export { askThisMatch } from './askThisMatch';
 export { getMediaPlaybackUrl } from './mediaAccess';
-export { exportReel, onReelExportQueued } from './reelRender';
+export { exportReel, onReelExportQueued, saveReelToLibrary } from './reelRender';
 export { deleteAuthenticatedAccount, persistAppleAuthorizationCode } from './appleAuth';
 
 export { onActivityCreatedPush } from './pushDelivery';

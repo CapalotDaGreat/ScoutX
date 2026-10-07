@@ -30,10 +30,19 @@ export type ProofItem = {
   provenance: DataProvenance;
 };
 
+export type DiscoverabilityBlocker =
+  | 'public_passport_off'
+  | 'discovery_opt_in_off'
+  | 'guardian_approval_needed'
+  | 'no_matches'
+  | 'no_video'
+  | 'stale_evidence';
+
+/** Evidence and settings only; views, followers and other popularity signals are never inputs. */
 export type DiscoverabilityHealth = {
   discoverable: boolean;
   publicPassport: boolean;
-  blockers: string[];
+  blockers: DiscoverabilityBlocker[];
   lastEvidenceAt: string | null;
   matchCount: number;
   videoCount: number;

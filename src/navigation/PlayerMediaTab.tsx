@@ -45,6 +45,7 @@ export function PlayerMediaTab({
     if (focusReelId) setSegment('reels');
   }, [focusReelId]);
   const [showReelStudio, setShowReelStudio] = useState(false);
+  const [createdReelId, setCreatedReelId] = useState<string | null>(null);
 
   const segments = useMemo(
     () => [
@@ -116,7 +117,7 @@ export function PlayerMediaTab({
           </Button>
           <ReelListSection
             userId={user?.id ?? null}
-            focusReelId={focusReelId}
+            focusReelId={createdReelId ?? focusReelId}
             positionGroup={positionGroup}
             onViewEvidence={onViewEvidence}
           />
@@ -124,6 +125,10 @@ export function PlayerMediaTab({
             visible={showReelStudio}
             playerId={user?.id ?? null}
             onClose={() => setShowReelStudio(false)}
+            onReelCreated={(reelId) => {
+              setShowReelStudio(false);
+              setCreatedReelId(reelId);
+            }}
           />
         </Screen>
       ) : null}

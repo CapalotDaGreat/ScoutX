@@ -231,7 +231,10 @@
       "unsupported_codec": "Une vidéo source utilise un format qui n'a pas pu être décodé.",
       "timeout": "Le rendu a pris trop de temps. Essaie un reel plus court.",
       "render_failed": "Le rendu a échoué. Réessaie."
-    }
+    },
+    "saveToLibrary": "Enregistrer dans la médiathèque",
+    "savedToLibrary": "Enregistré dans ta médiathèque privée. Confirme les droits pour l'ajouter à ton Passport.",
+    "saveToLibraryFailed": "Impossible d'enregistrer le reel dans ta médiathèque."
   },
   "videos": {
     "title": "Vidéos highlights",
@@ -328,7 +331,12 @@
         "title": "Moments de progression",
         "description": "Des moments qui montrent ce que tu apprends et ce que tu travailles."
       }
-    }
+    },
+    "buildReel": "Créer ce reel",
+    "buildHint": "Crée un brouillon privé à partir de ces moments de ta vidéo de match. Vérifie que chaque clip te montre avant de partager.",
+    "needsFootage": "Ces moments proviennent d'images analysées. Importe la vidéo complète du match pour les monter en reel.",
+    "suggestionReason": "Moment suggéré par l'IA — confirme qu'il te montre",
+    "buildFailed": "Impossible de créer le brouillon du reel."
   },
   "a11y": {
     "openVideo": "Ouvrir la vidéo",

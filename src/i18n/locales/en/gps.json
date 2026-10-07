@@ -70,5 +70,10 @@
     "empty": "The heatmap appears once GPS points are recorded.",
     "a11y_one": "Movement heatmap with {{count}} active area",
     "a11y_other": "Movement heatmap with {{count}} active areas"
+  },
+  "units": {
+    "label": "Units",
+    "km": "Kilometres",
+    "mi": "Miles"
   }
 }

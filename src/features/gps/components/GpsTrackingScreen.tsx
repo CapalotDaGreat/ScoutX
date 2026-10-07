@@ -1,15 +1,18 @@
 import { useState } from 'react';
+import { View } from 'react-native';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { Screen } from '@/components/layout/Screen';
 import { Section } from '@/components/layout/Section';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
+import { ChoiceChip } from '@/components/primitives/ChoiceChip';
 import { Text } from '@/components/primitives/Text';
 import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
 import { GpsLiveMetrics } from '@/features/gps/components/GpsLiveMetrics';
 import { GpsIntelligenceCard } from '@/features/gps/components/GpsIntelligenceCard';
 import { GpsRecordingControls } from '@/features/gps/components/GpsRecordingControls';
 import { GpsSessionHistory } from '@/features/gps/components/GpsSessionHistory';
+import { setDistanceUnit, useDistanceUnit } from '@/features/gps/hooks/useDistanceUnit';
 import { useGpsSessions } from '@/features/gps/hooks/useGpsSessions';
 import { useGpsTracking } from '@/features/gps/hooks/useGpsTracking';
 import { type GpsSession } from '@/features/gps/types';
@@ -61,6 +64,7 @@ export function GpsTrackingScreen({
   };
 
   const latestSession = sessions[0] ?? null;
+  const unit = useDistanceUnit();
   const historySessions = showFullHistory ? sessions : sessions.slice(0, 3);
 
   return (
@@ -91,6 +95,11 @@ export function GpsTrackingScreen({
         />
 
         {status !== 'idle' ? <GpsLiveMetrics metrics={liveMetrics} /> : null}
+        <View className="flex-row items-center gap-2">
+          <Text variant="caption" color="secondary">{t('gps:units.label')}</Text>
+          <ChoiceChip label={t('gps:units.km')} selected={unit === 'km'} onPress={() => void setDistanceUnit('km')} />
+          <ChoiceChip label={t('gps:units.mi')} selected={unit === 'mi'} onPress={() => void setDistanceUnit('mi')} />
+        </View>
       </Section>
 
       {completedSession ? (

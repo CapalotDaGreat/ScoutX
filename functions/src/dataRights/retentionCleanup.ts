@@ -2,6 +2,7 @@ import { getFirestore, type Firestore, type Query, type QueryDocumentSnapshot } 
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { footageMediaId } from '../uploads/model';
 import { LEGAL_RETENTION_COLLECTION } from './legalRetention';
 import { RETENTION, olderThan } from './retention';
 
@@ -59,6 +60,7 @@ export async function runRetentionCleanup(db: Firestore, now: Date = new Date())
     db.collection('matchAnalysisJobs').where('status', 'in', ['cancelled', 'expired', 'failed']).where('updatedAt', '<=', olderThan(now, RETENTION.abandonedJobDays)),
     async (doc) => {
       await deletePrefix(`profiles/${String(doc.get('playerId'))}/matchFootage/${doc.id}/`);
+      await db.collection('players').doc(String(doc.get('playerId'))).collection('media').doc(footageMediaId(doc.id)).delete();
       await doc.ref.delete();
     },
   );

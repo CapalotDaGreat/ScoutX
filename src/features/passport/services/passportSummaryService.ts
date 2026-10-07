@@ -4,6 +4,7 @@ import type { PlayerProfile } from '@/features/player-profile/types';
 import type { TrustRecommendation } from '@/features/trust-system/types';
 import type {
   CoverageDimensionId,
+  DiscoverabilityBlocker,
   DiscoverabilityHealth,
   EvidenceCoverage,
   PassportCoachTip,
@@ -186,22 +187,34 @@ function buildProof(
   return items;
 }
 
+export const STALE_EVIDENCE_DAYS = 120;
+
 function buildDiscoverability(
   profile: PlayerProfile,
   matches: readonly PlayerMatchStatistics[],
   videoCount: number,
+  safety: PassportSafetyInput | undefined,
+  now: Date,
 ): DiscoverabilityHealth {
-  const publicPassport = Boolean(profile.privacy?.publicPortfolioEnabled);
-  const discoverable = Boolean(profile.privacy?.discoverableByScouts);
-  const blockers: string[] = [];
-  if (!publicPassport) blockers.push('public_passport_off');
-  if (!discoverable) blockers.push('discovery_opt_in_off');
+  const passportAllowed = safety ? safety.canUsePublicPassport : true;
+  const discoveryAllowed = safety ? safety.canBeDiscovered : true;
+  const publicPassport = Boolean(profile.privacy?.publicPortfolioEnabled) && passportAllowed;
+  const discoverable = Boolean(profile.privacy?.discoverableByScouts) && discoveryAllowed;
+  const lastEvidenceAt = newestDate(matches.map((match) => match.date));
+  const blockers: DiscoverabilityBlocker[] = [];
+  if (safety?.isMinor && (!passportAllowed || !discoveryAllowed)) blockers.push('guardian_approval_needed');
+  if (!profile.privacy?.publicPortfolioEnabled) blockers.push('public_passport_off');
+  if (!profile.privacy?.discoverableByScouts) blockers.push('discovery_opt_in_off');
   if (matches.length === 0) blockers.push('no_matches');
+  if (videoCount === 0) blockers.push('no_video');
+  if (lastEvidenceAt && now.getTime() - Date.parse(lastEvidenceAt) > STALE_EVIDENCE_DAYS * 86_400_000) {
+    blockers.push('stale_evidence');
+  }
   return {
     discoverable,
     publicPassport,
     blockers,
-    lastEvidenceAt: newestDate(matches.map((match) => match.date)),
+    lastEvidenceAt,
     matchCount: matches.length,
     videoCount,
   };
@@ -239,7 +252,15 @@ export type PassportSummaryInput = {
   legalPagesReady?: boolean;
   /** Recorded GPS sessions; the only source of physical evidence. */
   gpsSessionCount?: number;
+  /** The owner's safety policy; minors without guardian scopes stay hidden whatever their settings. */
+  safety?: PassportSafetyInput;
   now?: Date;
+};
+
+export type PassportSafetyInput = {
+  isMinor: boolean;
+  canUsePublicPassport: boolean;
+  canBeDiscovered: boolean;
 };
 
 /**
@@ -261,7 +282,7 @@ export function buildPassportSummary(input: PassportSummaryInput): PassportSumma
     coverage,
     readiness,
     proof: buildProof(matches, input.profile, endorsements),
-    discoverability: buildDiscoverability(input.profile, matches, videoCount),
+    discoverability: buildDiscoverability(input.profile, matches, videoCount, input.safety, input.now ?? new Date()),
     coachTips: buildCoachTips(coverage, readiness),
     lastEvidenceAt: newestDate(matches.map((match) => match.date)),
     matchCount: matches.length,

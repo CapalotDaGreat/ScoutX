@@ -70,5 +70,10 @@
     "empty": "Die Heatmap erscheint, sobald GPS-Punkte erfasst sind.",
     "a11y_one": "Bewegungs-Heatmap mit {{count}} aktiven Bereich",
     "a11y_other": "Bewegungs-Heatmap mit {{count}} aktiven Bereichen"
+  },
+  "units": {
+    "label": "Einheiten",
+    "km": "Kilometer",
+    "mi": "Meilen"
   }
 }

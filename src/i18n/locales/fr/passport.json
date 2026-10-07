@@ -24,8 +24,13 @@
     "blockers": {
       "public_passport_off": "Le Football Passport public est désactivé",
       "discovery_opt_in_off": "La visibilité auprès des recruteurs est désactivée",
-      "no_matches": "Aucune preuve de match à afficher pour l'instant"
-    }
+      "no_matches": "Aucune preuve de match à afficher pour l'instant",
+      "guardian_approval_needed": "Ton parent ou tuteur n'a pas encore autorisé un profil public ou la visibilité auprès des recruteurs",
+      "no_video": "Aucune preuve vidéo pour l'instant",
+      "stale_evidence": "Ta dernière preuve de match date de plus de 4 mois"
+    },
+    "basis": "Basé uniquement sur tes paramètres et tes preuves enregistrées — jamais sur les vues, likes ou abonnés.",
+    "noGuarantee": "ScoutX ne peut pas promettre que des recruteurs te trouveront ou te contacteront."
   },
   "readiness": {
     "evidenceTitle": "Preuves football",

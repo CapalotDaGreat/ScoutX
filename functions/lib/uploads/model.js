@@ -7,6 +7,7 @@ exports.parseUploadRequest = parseUploadRequest;
 exports.quarantinePath = quarantinePath;
 exports.parseQuarantinePath = parseQuarantinePath;
 exports.matchFootagePath = matchFootagePath;
+exports.footageMediaId = footageMediaId;
 exports.isAbandoned = isAbandoned;
 exports.dayKey = dayKey;
 exports.MiB = 1024 * 1024;
@@ -88,6 +89,9 @@ function parseQuarantinePath(path) {
 }
 function matchFootagePath(uid, jobId) {
     return `profiles/${uid}/matchFootage/${jobId}/video.mp4`;
+}
+function footageMediaId(jobId) {
+    return `footage_${jobId}`;
 }
 function isAbandoned(createdAtIso, now, days = exports.UPLOAD_LIMITS.abandonAfterDays) {
     const created = Date.parse(createdAtIso);

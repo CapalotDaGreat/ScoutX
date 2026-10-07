@@ -24,8 +24,13 @@
     "blockers": {
       "public_passport_off": "Öffentlicher Football Passport ist aus",
       "discovery_opt_in_off": "Auffindbarkeit für Scouts ist aus",
-      "no_matches": "Noch keine Spielnachweise vorhanden"
-    }
+      "no_matches": "Noch keine Spielnachweise vorhanden",
+      "guardian_approval_needed": "Deine Erziehungsperson hat ein öffentliches Profil oder die Sichtbarkeit für Scouts noch nicht erlaubt",
+      "no_video": "Noch keine Video-Belege",
+      "stale_evidence": "Dein neuester Spielbeleg ist älter als 4 Monate"
+    },
+    "basis": "Basiert nur auf deinen Einstellungen und erfassten Belegen – nie auf Aufrufen, Likes oder Followern.",
+    "noGuarantee": "ScoutX kann nicht versprechen, dass Scouts dich finden oder kontaktieren."
   },
   "readiness": {
     "evidenceTitle": "Fußball-Nachweise",

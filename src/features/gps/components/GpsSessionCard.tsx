@@ -8,6 +8,7 @@ import {
   formatSpeed,
 } from '@/features/gps/services/gpsSessionCalculator';
 import { type GpsSession } from '@/features/gps/types';
+import { useDistanceUnit } from '@/features/gps/hooks/useDistanceUnit';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type GpsSessionCardProps = {
@@ -25,6 +26,7 @@ function formatSessionDate(isoDate: string, locale: string): string {
 
 export function GpsSessionCard({ session }: GpsSessionCardProps) {
   const { t, i18n } = useAppTranslation(['gps']);
+  const unit = useDistanceUnit();
   return (
     <Card variant="outlined" padding="md" className="gap-3">
       <View className="flex-row items-start justify-between gap-3">
@@ -39,13 +41,13 @@ export function GpsSessionCard({ session }: GpsSessionCardProps) {
 
       <View className="flex-row flex-wrap gap-2">
         <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
-          {formatDistance(session.metrics.distanceM)}
+          {formatDistance(session.metrics.distanceM, unit)}
         </Text>
         <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
-          {t('gps:avgSpeedValue', { value: formatSpeed(session.metrics.avgSpeedKmh) })}
+          {t('gps:avgSpeedValue', { value: formatSpeed(session.metrics.avgSpeedKmh, unit) })}
         </Text>
         <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
-          {t('gps:maxSpeedValue', { value: formatSpeed(session.metrics.maxSpeedKmh) })}
+          {t('gps:maxSpeedValue', { value: formatSpeed(session.metrics.maxSpeedKmh, unit) })}
         </Text>
         <Text variant="caption" className="rounded bg-background-secondary px-2 py-1">
           {formatDuration(session.metrics.durationSec)}

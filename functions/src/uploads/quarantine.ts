@@ -11,7 +11,7 @@ import { startMatchPipeline } from '../analysis/pipeline';
 import { planFor, releaseQuota } from '../entitlements/quotaService';
 import { readableSourceFor, type MediaSource } from './mediaSource';
 import { getMediaScanner } from './mediaScanner';
-import { matchFootagePath, parseQuarantinePath, type UploadState } from './model';
+import { footageMediaId, matchFootagePath, parseQuarantinePath, type UploadState } from './model';
 import {
   evaluateProbe,
   hasVideoMagicBytes,
@@ -75,6 +75,39 @@ async function reject(db: Firestore, uploadId: string, data: UploadDoc, reason: 
   return 'rejected';
 }
 
+/** Validated footage becomes a private library item so highlights and reels can reference it. */
+async function fileFootageInLibrary(
+  db: Firestore,
+  data: UploadDoc,
+  storagePath: string,
+  durationSec: number,
+  now: string,
+): Promise<void> {
+  const ref = db.collection('players').doc(data.ownerId).collection('media').doc(footageMediaId(data.jobId));
+  if ((await ref.get()).exists) return;
+  await ref.set({
+    id: ref.id,
+    ownerId: data.ownerId,
+    type: 'matchFootage',
+    storagePath,
+    thumbnailPath: null,
+    durationSec,
+    sourceMatchId: null,
+    sourceJobId: data.jobId,
+    visibility: 'private',
+    rightsState: 'unconfirmed',
+    moderationState: 'none',
+    uploadState: 'ready',
+    processingState: 'none',
+    favorite: false,
+    tags: [],
+    goalIds: [],
+    title: 'Match footage',
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
 async function promote(db: Firestore, uploadId: string, data: UploadDoc, summary: ProbeSummary): Promise<UploadState> {
   const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
   const job = await jobRef.get();
@@ -105,6 +138,7 @@ async function promote(db: Firestore, uploadId: string, data: UploadDoc, summary
     readyAt: now,
     updatedAt: now,
   });
+  await fileFootageInLibrary(db, data, destination, summary.durationSec, now);
   await startMatchPipeline(db, data.jobId);
   return 'ready';
 }

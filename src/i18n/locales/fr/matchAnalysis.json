@@ -36,7 +36,10 @@
     "emptyTimeline": "Aucune observation horodatée n’a été enregistrée.",
     "cvUnavailable": "Cette vue nécessite un suivi par vision, qui n’est pas déployé.",
     "noVideo": "Aucune vidéo à parcourir.",
-    "open": "Ouvrir le rapport complet"
+    "open": "Ouvrir le rapport complet",
+    "reelTitle": "Reel de temps forts",
+    "reelHint": "Transforme les moments de ce rapport en un brouillon de reel privé que tu peux vérifier et modifier.",
+    "reelAction": "Créer un reel de temps forts"
   },
   "tabs": {
     "overview": "Aperçu",

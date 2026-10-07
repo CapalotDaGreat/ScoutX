@@ -24,8 +24,13 @@
     "blockers": {
       "public_passport_off": "O Football Passport público está desativado",
       "discovery_opt_in_off": "A visibilidade para olheiros está desativada",
-      "no_matches": "Ainda sem provas de jogos para mostrar"
-    }
+      "no_matches": "Ainda sem provas de jogos para mostrar",
+      "guardian_approval_needed": "O teu encarregado de educação ainda não permitiu um perfil público nem a visibilidade para olheiros",
+      "no_video": "Ainda sem provas em vídeo",
+      "stale_evidence": "A tua prova de jogo mais recente tem mais de 4 meses"
+    },
+    "basis": "Baseado apenas nas tuas definições e provas registadas — nunca em visualizações, gostos ou seguidores.",
+    "noGuarantee": "A ScoutX não pode prometer que os olheiros te encontrem ou contactem."
   },
   "readiness": {
     "evidenceTitle": "Provas futebolísticas",

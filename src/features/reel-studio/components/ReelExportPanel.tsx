@@ -4,7 +4,7 @@ import { Badge } from '@/components/primitives/Badge';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
-import { requestReelExport } from '@/features/media-library/services/mediaAccessCallable';
+import { requestReelExport, saveReelToLibrary } from '@/features/media-library/services/mediaAccessCallable';
 import { ReelRepository } from '@/features/reel-studio/repositories/ReelRepository';
 import { shareRenderedReel } from '@/features/reel-studio/services/reelExportService';
 import type { ReelExportErrorCode, ReelExportJob, ReelManifest } from '@/features/reel-studio/types';
@@ -20,6 +20,7 @@ export function ReelExportPanel({ reel, dirty }: { reel: ReelManifest; dirty: bo
   const [precheck, setPrecheck] = useState<{ code: ReelExportErrorCode; segment: number | null } | null>(null);
   const [busy, setBusy] = useState(false);
   const [quota, setQuota] = useState<QuotaErrorInfo | null>(null);
+  const [savedExportId, setSavedExportId] = useState<string | null>(null);
 
   useEffect(
     () => ReelRepository.getInstance().subscribeToLatestExport(reel.ownerId, reel.id, setJob),
@@ -54,6 +55,19 @@ export function ReelExportPanel({ reel, dirty }: { reel: ReelManifest; dirty: bo
       await shareRenderedReel(job);
     } catch (error) {
       Alert.alert(t('media:export.failedTitle'), toUserMessage(error, t('media:export.shareFailed')));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const saveToLibrary = async () => {
+    if (!job) return;
+    setBusy(true);
+    try {
+      await saveReelToLibrary(job.id);
+      setSavedExportId(job.id);
+    } catch (error) {
+      Alert.alert(t('media:export.failedTitle'), toUserMessage(error, t('media:export.saveToLibraryFailed')));
     } finally {
       setBusy(false);
     }
@@ -110,7 +124,17 @@ export function ReelExportPanel({ reel, dirty }: { reel: ReelManifest; dirty: bo
             {t('media:export.share')}
           </Button>
         ) : null}
+        {job?.status === 'ready' && job.storagePath && savedExportId !== job.id ? (
+          <Button size="sm" variant="secondary" loading={busy} onPress={() => void saveToLibrary()} testID="reel-save-library">
+            {t('media:export.saveToLibrary')}
+          </Button>
+        ) : null}
       </View>
+      {job?.status === 'ready' && savedExportId === job.id ? (
+        <Text variant="caption" color="secondary">
+          {t('media:export.savedToLibrary')}
+        </Text>
+      ) : null}
     </Card>
   );
 }

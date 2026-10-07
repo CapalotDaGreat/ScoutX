@@ -231,7 +231,10 @@
       "unsupported_codec": "Ein Quellvideo hat ein Format, das nicht dekodiert werden konnte.",
       "timeout": "Das Rendern hat zu lange gedauert. Versuche ein kürzeres Reel.",
       "render_failed": "Das Rendern ist fehlgeschlagen. Versuche es erneut."
-    }
+    },
+    "saveToLibrary": "In Mediathek speichern",
+    "savedToLibrary": "In deiner privaten Mediathek gespeichert. Bestätige dort die Rechte, um es zu deinem Passport hinzuzufügen.",
+    "saveToLibraryFailed": "Das Reel konnte nicht in deiner Mediathek gespeichert werden."
   },
   "videos": {
     "title": "Highlight-Videos",
@@ -328,7 +331,12 @@
         "title": "Entwicklungsmomente",
         "description": "Momente, die Lernpunkte und deine Arbeitsbereiche zeigen."
       }
-    }
+    },
+    "buildReel": "Dieses Reel erstellen",
+    "buildHint": "Erstellt aus diesen Momenten deines Spielvideos einen privaten Entwurf. Prüfe vor dem Teilen, dass jeder Clip dich zeigt.",
+    "needsFootage": "Diese Momente stammen aus analysierten Einzelbildern. Lade das ganze Spielvideo hoch, um daraus ein Reel zu schneiden.",
+    "suggestionReason": "KI-Vorschlag – bestätige, dass du zu sehen bist",
+    "buildFailed": "Der Reel-Entwurf konnte nicht erstellt werden."
   },
   "a11y": {
     "openVideo": "Video öffnen",

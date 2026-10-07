@@ -231,7 +231,10 @@
       "unsupported_codec": "Un vídeo de origen usa un formato que no se pudo decodificar.",
       "timeout": "El renderizado tardó demasiado. Prueba con un reel más corto.",
       "render_failed": "El renderizado falló. Inténtalo de nuevo."
-    }
+    },
+    "saveToLibrary": "Guardar en la biblioteca",
+    "savedToLibrary": "Guardado en tu biblioteca privada. Confirma allí los derechos para añadirlo a tu Passport.",
+    "saveToLibraryFailed": "No se pudo guardar el reel en tu biblioteca."
   },
   "videos": {
     "title": "Vídeos destacados",
@@ -328,7 +331,12 @@
         "title": "Momentos de desarrollo",
         "description": "Momentos que muestran aprendizajes y aspectos que estás trabajando."
       }
-    }
+    },
+    "buildReel": "Crear este reel",
+    "buildHint": "Crea un borrador privado con estos momentos de tu vídeo del partido. Comprueba que cada clip te muestra antes de compartirlo.",
+    "needsFootage": "Estos momentos proceden de fotogramas analizados. Sube el vídeo completo del partido para montarlos en un reel.",
+    "suggestionReason": "Momento sugerido por la IA: confirma que apareces tú",
+    "buildFailed": "No se pudo crear el borrador del reel."
   },
   "a11y": {
     "openVideo": "Abrir vídeo",

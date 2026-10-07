@@ -602,5 +602,12 @@
     "noViews": "Nog geen weergaven",
     "loading": "Weergaven laden…",
     "unavailable": "Weergaven konden nu niet worden geladen."
+  },
+  "youthPlayer": "Jeugdspeler",
+  "strangerView": {
+    "title": "Wat onbekenden zien",
+    "body": "Dit is precies de versie die ScoutX toont aan mensen die je niet hebt goedgekeurd. Hij wordt op onze server gemaakt op basis van je privacy-instellingen en veiligheidsregels, en kan dus meer verbergen dan je instellingen alleen.",
+    "hiddenTitle": "Niet zichtbaar voor onbekenden",
+    "hiddenBody": "Mensen die je niet hebt goedgekeurd kunnen je Passport nu niet zien. Zet het openbare Passport aan in je privacy-instellingen. Ben je jonger dan 18, dan moet je ouder of voogd het ook toestaan. Wijzigingen kunnen even duren."
   }
 }

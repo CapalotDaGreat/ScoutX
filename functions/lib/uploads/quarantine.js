@@ -63,6 +63,33 @@ async function reject(db, uploadId, data, reason) {
     firebase_functions_1.logger.info('Upload rejected', { uploadId, reason });
     return 'rejected';
 }
+/** Validated footage becomes a private library item so highlights and reels can reference it. */
+async function fileFootageInLibrary(db, data, storagePath, durationSec, now) {
+    const ref = db.collection('players').doc(data.ownerId).collection('media').doc((0, model_1.footageMediaId)(data.jobId));
+    if ((await ref.get()).exists)
+        return;
+    await ref.set({
+        id: ref.id,
+        ownerId: data.ownerId,
+        type: 'matchFootage',
+        storagePath,
+        thumbnailPath: null,
+        durationSec,
+        sourceMatchId: null,
+        sourceJobId: data.jobId,
+        visibility: 'private',
+        rightsState: 'unconfirmed',
+        moderationState: 'none',
+        uploadState: 'ready',
+        processingState: 'none',
+        favorite: false,
+        tags: [],
+        goalIds: [],
+        title: 'Match footage',
+        createdAt: now,
+        updatedAt: now,
+    });
+}
 async function promote(db, uploadId, data, summary) {
     const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
     const job = await jobRef.get();
@@ -92,6 +119,7 @@ async function promote(db, uploadId, data, summary) {
         readyAt: now,
         updatedAt: now,
     });
+    await fileFootageInLibrary(db, data, destination, summary.durationSec, now);
     await (0, pipeline_1.startMatchPipeline)(db, data.jobId);
     return 'ready';
 }

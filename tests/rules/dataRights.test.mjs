@@ -155,6 +155,7 @@ describe('retention cleanup', () => {
     await db.collection('mediaUploads').doc('old-ready').set({ ownerId: USER, state: 'ready', updatedAt: old(400) });
     await bucket.file(`profiles/${USER}/matchFootage/old-cancelled/frames/frame_0.jpg`).save(Buffer.from('x'));
     await db.collection('matchAnalysisJobs').doc('old-cancelled').set({ playerId: USER, status: 'cancelled', updatedAt: old(31) });
+    await db.doc(`players/${USER}/media/footage_old-cancelled`).set({ type: 'matchFootage', sourceJobId: 'old-cancelled' });
     await db.collection('matchAnalysisJobs').doc('old-complete').set({ playerId: USER, status: 'complete', updatedAt: old(400) });
     await db.collection('revenueCatEvents').doc('old-receipt').set({ type: 'RENEWAL', processedAt: old(91) });
     await db.collection('revenueCatEvents').doc('new-receipt').set({ type: 'RENEWAL', processedAt: old(1) });
@@ -171,6 +172,7 @@ describe('retention cleanup', () => {
     assert.equal(await exists('mediaUploads/new-rejected'), true);
     assert.equal(await exists('mediaUploads/old-ready'), true);
     assert.equal(await exists('matchAnalysisJobs/old-cancelled'), false);
+    assert.equal(await exists(`players/${USER}/media/footage_old-cancelled`), false, 'the library item goes with the footage');
     assert.equal((await bucket.file(`profiles/${USER}/matchFootage/old-cancelled/frames/frame_0.jpg`).exists())[0], false);
     assert.equal(await exists('matchAnalysisJobs/old-complete'), true, 'completed reports are kept');
     assert.equal(await exists('revenueCatEvents/old-receipt'), false);

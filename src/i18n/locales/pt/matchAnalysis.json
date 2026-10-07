@@ -36,7 +36,10 @@
     "emptyTimeline": "Não há observações com tempo guardadas.",
     "cvUnavailable": "Esta vista precisa de tracking por visão, que não está implantado.",
     "noVideo": "Não há vídeo para saltar.",
-    "open": "Abrir relatório completo"
+    "open": "Abrir relatório completo",
+    "reelTitle": "Reel de destaques",
+    "reelHint": "Transforma os momentos deste relatório num rascunho de reel privado que podes rever e editar.",
+    "reelAction": "Criar um reel de destaques"
   },
   "tabs": {
     "overview": "Resumo",

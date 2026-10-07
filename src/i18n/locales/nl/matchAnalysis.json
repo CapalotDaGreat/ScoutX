@@ -36,7 +36,10 @@
     "emptyTimeline": "Geen observaties met tijdstempel opgeslagen.",
     "cvUnavailable": "Deze weergave heeft computer-vision-tracking nodig, die niet is uitgerold.",
     "noVideo": "Geen video om naartoe te springen.",
-    "open": "Volledig rapport openen"
+    "open": "Volledig rapport openen",
+    "reelTitle": "Highlightreel",
+    "reelHint": "Maak van de momenten uit dit rapport een privé reelconcept dat je kunt controleren en bewerken.",
+    "reelAction": "Highlightreel maken"
   },
   "tabs": {
     "overview": "Overzicht",

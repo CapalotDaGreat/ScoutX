@@ -237,7 +237,27 @@ export function shouldAcceptPoint(
   );
 }
 
-export function formatDistance(meters: number): string {
+export type DistanceUnit = 'km' | 'mi';
+
+export const METERS_PER_MILE = 1609.344;
+const YARDS_PER_METER = 1.0936133;
+
+export function isDistanceUnit(value: unknown): value is DistanceUnit {
+  return value === 'km' || value === 'mi';
+}
+
+/** Device measurement system from expo-localization: 'us' and 'uk' read distances in miles. */
+export function defaultDistanceUnit(measurementSystem: string | null | undefined): DistanceUnit {
+  return measurementSystem === 'us' || measurementSystem === 'uk' ? 'mi' : 'km';
+}
+
+export function formatDistance(meters: number, unit: DistanceUnit = 'km'): string {
+  if (unit === 'mi') {
+    if (meters >= METERS_PER_MILE / 10) {
+      return `${(meters / METERS_PER_MILE).toFixed(2)} mi`;
+    }
+    return `${Math.round(meters * YARDS_PER_METER)} yd`;
+  }
   if (meters >= 1000) {
     return `${(meters / 1000).toFixed(2)} km`;
   }
@@ -251,6 +271,9 @@ export function formatDuration(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 }
 
-export function formatSpeed(kmh: number): string {
+export function formatSpeed(kmh: number, unit: DistanceUnit = 'km'): string {
+  if (unit === 'mi') {
+    return `${((kmh * 1000) / METERS_PER_MILE).toFixed(1)} mph`;
+  }
   return `${kmh.toFixed(1)} km/h`;
 }

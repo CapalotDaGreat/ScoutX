@@ -5,6 +5,7 @@ import type {
   HighlightReelPlan,
   HighlightReelPreset,
 } from '@/features/highlight-reel-studio/types';
+import type { ReelSegment } from '@/features/reel-studio/types';
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -124,4 +125,45 @@ export function buildHighlightReelPlan(
     qualityScore: Math.min(100, Math.round(avgConfidence * 100)),
     coverage: selected.length > 0 ? 'ai_suggested' : 'none',
   };
+}
+
+/** Library item the server creates for validated full-match footage. */
+export function footageMediaIdFor(jobId: string): string {
+  return `footage_${jobId}`;
+}
+
+export const CANDIDATE_LEAD_SEC = 4;
+export const CANDIDATE_TAIL_SEC = 6;
+
+/**
+ * Cuts each candidate moment out of the analysed footage, in match order. Windows that would
+ * overlap the previous one are merged so the reel never repeats footage.
+ */
+export function segmentsFromCandidates(
+  candidates: readonly HighlightCandidate[],
+  footageMediaId: string,
+  footageDurationSec: number | null,
+): ReelSegment[] {
+  const end = footageDurationSec && footageDurationSec > 0 ? footageDurationSec : Number.POSITIVE_INFINITY;
+  const ordered = [...candidates]
+    .filter((candidate) => isValidTimestamp(candidate.timestampSec) && candidate.timestampSec < end)
+    .sort((a, b) => a.timestampSec - b.timestampSec);
+  const segments: ReelSegment[] = [];
+  for (const candidate of ordered) {
+    const inSec = Math.max(0, candidate.timestampSec - CANDIDATE_LEAD_SEC);
+    const outSec = Math.min(end, candidate.timestampSec + CANDIDATE_TAIL_SEC);
+    const previous = segments[segments.length - 1];
+    if (previous && inSec <= previous.outSec) {
+      previous.outSec = outSec;
+      continue;
+    }
+    segments.push({
+      mediaId: footageMediaId,
+      inSec,
+      outSec,
+      caption: candidate.title || undefined,
+      evidenceId: candidate.id,
+    });
+  }
+  return segments;
 }

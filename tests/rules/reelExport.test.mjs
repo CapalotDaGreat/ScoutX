@@ -19,6 +19,7 @@ let db;
 let bucket;
 let exportReel;
 let onReelExportQueued;
+let saveReelToLibrary;
 let counter = 0;
 
 function uid(prefix) {
@@ -68,7 +69,7 @@ before(() => {
   if (!getApps().length) initializeApp({ projectId: PROJECT_ID, storageBucket: BUCKET });
   db = getFirestore();
   bucket = getStorage().bucket(BUCKET);
-  ({ exportReel, onReelExportQueued } = require('./lib/reelRender.js'));
+  ({ exportReel, onReelExportQueued, saveReelToLibrary } = require('./lib/reelRender.js'));
 });
 
 describe('exportReel validation', () => {
@@ -150,5 +151,66 @@ describe('render pipeline', () => {
     const goneDone = await runTrigger(gone.exportId);
     assert.equal(goneDone.status, 'failed');
     assert.equal(goneDone.errorCode, 'missing_source');
+  });
+});
+
+describe('saveReelToLibrary', () => {
+  function save(authUid, exportId) {
+    return saveReelToLibrary.run({ data: { exportId }, auth: authUid ? { uid: authUid, token: {} } : undefined, rawRequest: {}, acceptsStreaming: false });
+  }
+
+  async function seedReadyExport(owner, reelId, status = 'ready') {
+    const id = uid('export');
+    await db.collection('reelExports').doc(id).set({
+      id, ownerId: owner, reelId, reelVersion: 1, status,
+      storagePath: status === 'ready' ? `profiles/${owner}/reelExports/${id}/reel.mp4` : null,
+      coverPath: status === 'ready' ? `profiles/${owner}/reelExports/${id}/cover.jpg` : null,
+      durationSec: 6,
+    });
+    return id;
+  }
+
+  test('files a ready export as a private reel and is idempotent', async () => {
+    const owner = uid('player');
+    await seedMedia(owner, 'm1', Buffer.from('x'));
+    await db.collection('players').doc(owner).collection('media').doc('m1').update({ rightsState: 'user_confirmed' });
+    const reelId = await seedReel(owner, [{ mediaId: 'm1', inSec: 0, outSec: 2 }], { title: 'Best of' });
+    const exportId = await seedReadyExport(owner, reelId);
+
+    const first = await save(owner, exportId);
+    assert.deepEqual(first, { mediaId: `reel_${exportId}`, created: true });
+    const item = (await db.collection('players').doc(owner).collection('media').doc(first.mediaId).get()).data();
+    assert.equal(item.type, 'reel');
+    assert.equal(item.visibility, 'private');
+    assert.equal(item.rightsState, 'user_confirmed', 'all sources confirmed, so the reel is too');
+    assert.equal(item.moderationState, 'none');
+    assert.equal(item.storagePath, `profiles/${owner}/reelExports/${exportId}/reel.mp4`);
+    assert.equal(item.title, 'Best of');
+    assert.deepEqual(await save(owner, exportId), { mediaId: `reel_${exportId}`, created: false });
+  });
+
+  test('keeps rights unconfirmed unless every source was confirmed', async () => {
+    const owner = uid('player');
+    await seedMedia(owner, 'm1', Buffer.from('x'));
+    await seedMedia(owner, 'm2', Buffer.from('x'));
+    await db.collection('players').doc(owner).collection('media').doc('m1').update({ rightsState: 'user_confirmed' });
+    const reelId = await seedReel(owner, [{ mediaId: 'm1', inSec: 0, outSec: 2 }, { mediaId: 'm2', inSec: 0, outSec: 2 }]);
+    const { mediaId } = await save(owner, await seedReadyExport(owner, reelId));
+    const item = (await db.collection('players').doc(owner).collection('media').doc(mediaId).get()).data();
+    assert.equal(item.rightsState, 'unconfirmed');
+  });
+
+  test('refuses foreign, unfinished and moderated exports', async () => {
+    const owner = uid('player');
+    await seedMedia(owner, 'm1', Buffer.from('x'));
+    const reelId = await seedReel(owner, [{ mediaId: 'm1', inSec: 0, outSec: 2 }]);
+    const ready = await seedReadyExport(owner, reelId);
+    await assert.rejects(save(null, ready), (error) => error.code === 'unauthenticated');
+    await assert.rejects(save(uid('other'), ready), (error) => error.code === 'not-found');
+    await assert.rejects(save(owner, await seedReadyExport(owner, reelId, 'rendering')), (error) => error.details?.reason === 'export_not_ready');
+
+    await db.collection('players').doc(owner).collection('media').doc('m1').update({ moderationState: 'restricted' });
+    await assert.rejects(save(owner, ready), (error) => error.details?.reason === 'source_moderated');
+    assert.equal((await db.collection('players').doc(owner).collection('media').doc(`reel_${ready}`).get()).exists, false);
   });
 });

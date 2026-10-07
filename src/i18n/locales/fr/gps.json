@@ -70,5 +70,10 @@
     "empty": "La carte de chaleur apparaît une fois les points GPS enregistrés.",
     "a11y_one": "Carte de chaleur avec {{count}} zone active",
     "a11y_other": "Carte de chaleur avec {{count}} zones actives"
+  },
+  "units": {
+    "label": "Unités",
+    "km": "Kilomètres",
+    "mi": "Miles"
   }
 }

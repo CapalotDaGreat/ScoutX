@@ -231,7 +231,10 @@
       "unsupported_codec": "Un video di origine usa un formato che non è stato possibile decodificare.",
       "timeout": "Il rendering ha richiesto troppo tempo. Prova un reel più corto.",
       "render_failed": "Rendering non riuscito. Riprova."
-    }
+    },
+    "saveToLibrary": "Salva nella libreria",
+    "savedToLibrary": "Salvato nella tua libreria privata. Conferma lì i diritti per aggiungerlo al tuo Passport.",
+    "saveToLibraryFailed": "Impossibile salvare il reel nella libreria."
   },
   "videos": {
     "title": "Video highlight",
@@ -328,7 +331,12 @@
         "title": "Momenti di crescita",
         "description": "Momenti che mostrano cosa stai imparando e su cosa stai lavorando."
       }
-    }
+    },
+    "buildReel": "Crea questo reel",
+    "buildHint": "Crea una bozza privata con questi momenti del video della partita. Controlla che ogni clip mostri te prima di condividerla.",
+    "needsFootage": "Questi momenti provengono da fotogrammi analizzati. Carica il video completo della partita per montarli in un reel.",
+    "suggestionReason": "Momento suggerito dall'IA: conferma che ci sei tu",
+    "buildFailed": "Impossibile creare la bozza del reel."
   },
   "a11y": {
     "openVideo": "Apri video",

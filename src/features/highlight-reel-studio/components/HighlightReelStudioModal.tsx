@@ -8,9 +8,14 @@ import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useMatchAnalysis } from '@/features/match-analysis/hooks/useMatchAnalysis';
+import { ReelRepository } from '@/features/reel-studio/repositories/ReelRepository';
+import type { ReelManifest } from '@/features/reel-studio/types';
+import { toUserMessage } from '@/utils/userFacingError';
 import {
   buildHighlightCandidatesFromReport,
   buildHighlightReelPlan,
+  footageMediaIdFor,
+  segmentsFromCandidates,
 } from '@/features/highlight-reel-studio/services/reelCandidateService';
 import {
   type HighlightReelPreset,
@@ -78,14 +83,20 @@ export type HighlightReelStudioModalProps = {
   visible: boolean;
   playerId: string | null;
   onClose: () => void;
+  /** Analysis job to build from; defaults to the latest complete one. */
+  jobId?: string | null;
+  /** Called with the new reel's id once a draft was saved. */
+  onReelCreated?: (reelId: string) => void;
 };
 
-export function HighlightReelStudioModal({ visible, playerId, onClose }: HighlightReelStudioModalProps) {
+export function HighlightReelStudioModal({ visible, playerId, onClose, jobId, onReelCreated }: HighlightReelStudioModalProps) {
   const { recentJobs } = useMatchAnalysis(playerId);
   const [preset, setPreset] = useState<HighlightReelPreset>('best-of');
   const [targetSeconds, setTargetSeconds] = useState(45);
 
-  const latestCompleteJob = recentJobs.find((job) => job.status === 'complete' && job.report);
+  const latestCompleteJob = recentJobs.find(
+    (job) => job.status === 'complete' && job.report && (!jobId || job.id === jobId),
+  );
   const latestReport = latestCompleteJob?.report;
 
   const { showSnackbar } = useSnackbar();
@@ -122,6 +133,50 @@ export function HighlightReelStudioModal({ visible, playerId, onClose }: Highlig
     }
     return buildHighlightReelPlan(candidates, preset, targetSeconds);
   }, [candidates, preset, targetSeconds]);
+
+  const [building, setBuilding] = useState(false);
+  const hasFootage = Boolean(latestCompleteJob?.videoStoragePath);
+
+  const buildReel = async () => {
+    if (!playerId || !latestCompleteJob || !reelPlan) return;
+    const segments = segmentsFromCandidates(
+      reelPlan.candidates,
+      footageMediaIdFor(latestCompleteJob.id),
+      latestCompleteJob.measuredDurationSec ?? null,
+    );
+    if (segments.length === 0) return;
+    setBuilding(true);
+    try {
+      const now = new Date().toISOString();
+      const draft: ReelManifest = {
+        id: `reel_${Date.now()}`,
+        ownerId: playerId,
+        preset: `highlights-${reelPlan.preset}`,
+        mode: reelPlan.preset === 'social' ? 'social' : 'scout',
+        segments,
+        title: t(`media:studio.preset.${reelPlan.preset}.title`),
+        coverMediaId: segments[0].mediaId,
+        aspectRatio: reelPlan.preset === 'social' ? '9:16' : '16:9',
+        privacy: 'private',
+        status: 'draft',
+        aiSuggestions: segments.map((_, segmentIndex) => ({
+          segmentIndex,
+          reason: t('media:studio.suggestionReason'),
+          decision: 'pending' as const,
+        })),
+        quality: { notes: [] },
+        version: 0,
+        createdAt: now,
+        updatedAt: now,
+      };
+      const saved = await ReelRepository.getInstance().saveReel(draft);
+      onReelCreated?.(saved.id);
+    } catch (error) {
+      showSnackbar({ message: toUserMessage(error, t('media:studio.buildFailed')) });
+    } finally {
+      setBuilding(false);
+    }
+  };
 
   return (
     <Modal visible={visible} onClose={onClose} title={t('media:studio.title')} size="fullscreen">
@@ -180,6 +235,23 @@ export function HighlightReelStudioModal({ visible, playerId, onClose }: Highlig
                   />
                 ))}
               </View>
+            </Card>
+
+            <Card variant="outlined" padding="lg" className="gap-2">
+              {hasFootage ? (
+                <>
+                  <Text variant="body-sm" color="secondary">
+                    {t('media:studio.buildHint')}
+                  </Text>
+                  <Button variant="accent" loading={building} onPress={() => void buildReel()} testID="studio-build-reel">
+                    {t('media:studio.buildReel')}
+                  </Button>
+                </>
+              ) : (
+                <Text variant="body-sm" color="secondary">
+                  {t('media:studio.needsFootage')}
+                </Text>
+              )}
             </Card>
           </>
         ) : latestReport && removedIds.length > 0 ? (

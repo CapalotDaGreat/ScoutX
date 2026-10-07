@@ -66,6 +66,9 @@ export function FootballPassportHero({ data, username, verification }: FootballP
                 <Badge key={position} variant="default" label={position} />
               ))}
               {profile.nationality ? <Badge variant="info" label={profile.nationality} /> : null}
+              {data.ageGroupLabel === 'youth' ? (
+                <Badge variant="default" label={t('portfolio:youthPlayer')} />
+              ) : null}
             </View>
           </View>
         </View>

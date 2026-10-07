@@ -8,6 +8,7 @@ import { ChoiceChip } from '@/components/primitives/ChoiceChip';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { AskThisMatchCard } from '@/features/match-analysis/components/AskThisMatchCard';
+import { HighlightReelStudioModal } from '@/features/highlight-reel-studio/components/HighlightReelStudioModal';
 import {
   GpsVideoSyncCard,
   QualityReportCard,
@@ -39,6 +40,8 @@ type ReportTab = 'overview' | 'timeline' | 'technical' | 'tactical' | 'coaching'
 export type AnalysisReportScreenProps = {
   jobId: string;
   onBack: () => void;
+  /** Opens a reel built from this report's highlight moments. */
+  onOpenReel?: (reelId: string) => void;
 };
 
 function formatUnknown(value: number | null | undefined): string {
@@ -68,8 +71,9 @@ function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
   );
 }
 
-export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProps) {
+export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisReportScreenProps) {
   const { t } = useAppTranslation('matchAnalysis');
+  const [studioVisible, setStudioVisible] = useState(false);
   const [job, setJob] = useState<MatchAnalysisJob | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<ReportTab>('overview');
@@ -244,6 +248,15 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
                 <Text variant="body-sm" color="secondary">{report.methodology}</Text>
               </Card>
               {quality ? <QualityReportCard quality={quality} /> : null}
+              {onOpenReel && ((report.moments?.length ?? 0) > 0 || (report.evidence?.length ?? 0) > 0) ? (
+                <Card padding="lg" className="gap-2">
+                  <Heading level={3}>{t('report.reelTitle')}</Heading>
+                  <Text variant="body-sm" color="secondary">{t('report.reelHint')}</Text>
+                  <Button variant="secondary" onPress={() => setStudioVisible(true)} testID="report-build-reel">
+                    {t('report.reelAction')}
+                  </Button>
+                </Card>
+              ) : null}
               <Card padding="lg" className="gap-3">
                 <Heading level={3}>{t('report.stats')}</Heading>
                 <StatGrid stats={report.estimatedStats} />
@@ -359,6 +372,18 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
             />
           ) : null}
         </View>
+      ) : null}
+      {onOpenReel && job ? (
+        <HighlightReelStudioModal
+          visible={studioVisible}
+          playerId={job.playerId}
+          jobId={job.id}
+          onClose={() => setStudioVisible(false)}
+          onReelCreated={(reelId) => {
+            setStudioVisible(false);
+            onOpenReel(reelId);
+          }}
+        />
       ) : null}
     </Screen>
   );

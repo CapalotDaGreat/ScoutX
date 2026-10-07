@@ -18,6 +18,7 @@ import { buildPassportSummary } from '@/features/passport/services/passportSumma
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 import { hasPrivacyPolicyUrl, hasTermsOfServiceUrl } from '@/config/legal';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type FootballPassportScoreCardProps = {
@@ -34,6 +35,8 @@ export function FootballPassportScoreCard({
   const { t } = useAppTranslation(['passport']);
   const [pushRegistered, setPushRegistered] = useState(false);
   const [gpsSessionCount, setGpsSessionCount] = useState(0);
+  const { policy } = useUserSafety();
+  const { isMinor, canUsePublicPassport, canBeDiscovered } = policy;
 
   useEffect(() => {
     void PushTokenRepository.getInstance()
@@ -54,8 +57,9 @@ export function FootballPassportScoreCard({
         pushRegistered,
         gpsSessionCount,
         legalPagesReady: hasPrivacyPolicyUrl() && hasTermsOfServiceUrl(),
+        safety: { isMinor, canUsePublicPassport, canBeDiscovered },
       }),
-    [gpsSessionCount, profile, pushRegistered, recommendations],
+    [canBeDiscovered, canUsePublicPassport, gpsSessionCount, isMinor, profile, pushRegistered, recommendations],
   );
 
   const gaps = useMemo(

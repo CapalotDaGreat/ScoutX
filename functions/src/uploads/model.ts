@@ -111,6 +111,10 @@ export function matchFootagePath(uid: string, jobId: string): string {
   return `profiles/${uid}/matchFootage/${jobId}/video.mp4`;
 }
 
+export function footageMediaId(jobId: string): string {
+  return `footage_${jobId}`;
+}
+
 export function isAbandoned(createdAtIso: string, now: Date, days: number = UPLOAD_LIMITS.abandonAfterDays): boolean {
   const created = Date.parse(createdAtIso);
   return Number.isFinite(created) && now.getTime() - created > days * 86_400_000;

@@ -602,5 +602,12 @@
     "noViews": "Ainda sem visitas",
     "loading": "A carregar visitas…",
     "unavailable": "Não foi possível carregar as visitas agora."
+  },
+  "youthPlayer": "Jogador jovem",
+  "strangerView": {
+    "title": "O que os desconhecidos veem",
+    "body": "Esta é exatamente a versão que a ScoutX mostra a quem não aprovaste. É criada no nosso servidor a partir das tuas definições de privacidade e das regras de segurança, por isso pode esconder mais do que as tuas definições sozinhas.",
+    "hiddenTitle": "Não visível para desconhecidos",
+    "hiddenBody": "Quem não aprovaste não consegue ver o teu Passport neste momento. Ativa o Passport público nas definições de privacidade. Se tens menos de 18 anos, o teu encarregado de educação também tem de o permitir. As alterações podem demorar um momento."
   }
 }

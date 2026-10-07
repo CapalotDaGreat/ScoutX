@@ -36,7 +36,10 @@
     "emptyTimeline": "No timestamped observations were stored.",
     "cvUnavailable": "This view needs computer-vision tracking, which is not deployed.",
     "noVideo": "No video is available to seek.",
-    "open": "Open full report"
+    "open": "Open full report",
+    "reelTitle": "Highlight reel",
+    "reelHint": "Turn the moments from this report into a private reel draft you can review and edit.",
+    "reelAction": "Build a highlight reel"
   },
   "tabs": {
     "overview": "Overview",

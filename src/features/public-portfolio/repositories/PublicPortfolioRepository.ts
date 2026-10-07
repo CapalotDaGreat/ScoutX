@@ -26,33 +26,43 @@ export class PublicPortfolioRepository {
    * their own profile so the preview reflects unsaved privacy changes immediately.
    */
   public async fetchPublicPortfolio(playerId: string): Promise<PublicPortfolioData | null> {
-    const trustRepository = TrustRepository.getInstance();
-
-    const profile = await this.loadVisibleProfile(playerId);
-    if (!profile) {
+    const isOwner = getFirebaseAuth()?.currentUser?.uid === playerId;
+    if (!isOwner) {
+      return this.fetchStrangerView(playerId);
+    }
+    let profile: PlayerProfile | null;
+    try {
+      profile = await PlayerProfileRepository.getInstance().fetchProfile(playerId);
+    } catch {
       return null;
     }
-
-    if (!profile.privacy?.publicPortfolioEnabled) {
+    if (!profile?.privacy?.publicPortfolioEnabled) {
       return null;
     }
-
-    const recommendations = await this.loadRecommendations(trustRepository, playerId);
-    // GPS movement is owner-only and never part of the public passport, so the owner's
-    // preview matches what visitors see.
+    const recommendations = await this.loadRecommendations(TrustRepository.getInstance(), playerId);
+    // GPS movement is owner-only and never part of the public passport.
     return buildPublicPortfolioData(profile, recommendations, []);
   }
 
-  private async loadVisibleProfile(playerId: string): Promise<PlayerProfile | null> {
-    const isOwner = getFirebaseAuth()?.currentUser?.uid === playerId;
-    if (isOwner) {
-      try {
-        return await PlayerProfileRepository.getInstance().fetchProfile(playerId);
-      } catch {
-        return null;
-      }
+  /**
+   * What a stranger sees: the server-built `publicPassports` projection, never the owner's
+   * private profile. Null means strangers see nothing.
+   */
+  public async fetchStrangerView(playerId: string): Promise<PublicPortfolioData | null> {
+    const projection = await this.loadProjection(playerId);
+    if (!projection?.profile.privacy?.publicPortfolioEnabled) {
+      return null;
     }
+    const recommendations = await this.loadRecommendations(TrustRepository.getInstance(), playerId);
+    return {
+      ...buildPublicPortfolioData(projection.profile, recommendations, []),
+      ageGroupLabel: projection.ageGroupLabel,
+    };
+  }
 
+  private async loadProjection(
+    playerId: string,
+  ): Promise<{ profile: PlayerProfile; ageGroupLabel: 'youth' | null } | null> {
     const db = getFirestoreDb();
     if (!db) {
       return null;
@@ -66,12 +76,14 @@ export class PublicPortfolioRepository {
       if (data.isPublic !== true) {
         return null;
       }
-      return ProfileModel.fromFirestore(playerId, data);
+      return {
+        profile: ProfileModel.fromFirestore(playerId, data),
+        ageGroupLabel: data.ageGroupLabel === 'youth' ? 'youth' : null,
+      };
     } catch {
       return null;
     }
   }
-
   private loadRecommendations(
     trustRepository: TrustRepository,
     playerId: string,

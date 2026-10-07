@@ -231,7 +231,10 @@
       "unsupported_codec": "Een bronvideo gebruikt een formaat dat niet gedecodeerd kon worden.",
       "timeout": "Renderen duurde te lang. Probeer een kortere reel.",
       "render_failed": "Renderen mislukt. Probeer het opnieuw."
-    }
+    },
+    "saveToLibrary": "Opslaan in bibliotheek",
+    "savedToLibrary": "Opgeslagen in je privébibliotheek. Bevestig daar de rechten om het aan je Passport toe te voegen.",
+    "saveToLibraryFailed": "De reel kon niet in je bibliotheek worden opgeslagen."
   },
   "videos": {
     "title": "Highlightvideo's",
@@ -328,7 +331,12 @@
         "title": "Ontwikkelingsmomenten",
         "description": "Momenten die leerpunten en je werkpunten laten zien."
       }
-    }
+    },
+    "buildReel": "Deze reel maken",
+    "buildHint": "Maakt een privéconcept van deze momenten uit je wedstrijdvideo. Controleer voor het delen of elke clip jou laat zien.",
+    "needsFootage": "Deze momenten komen uit geanalyseerde beelden. Upload de volledige wedstrijdvideo om er een reel van te maken.",
+    "suggestionReason": "Door AI voorgesteld moment — bevestig dat jij het bent",
+    "buildFailed": "Het reelconcept kon niet worden gemaakt."
   },
   "a11y": {
     "openVideo": "Video openen",

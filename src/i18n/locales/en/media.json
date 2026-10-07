@@ -231,7 +231,10 @@
       "unsupported_codec": "A source video uses a format that could not be decoded.",
       "timeout": "Rendering took too long. Try a shorter reel.",
       "render_failed": "Rendering failed. Try again."
-    }
+    },
+    "saveToLibrary": "Save to library",
+    "savedToLibrary": "Saved to your private library. Confirm the rights there to add it to your Passport.",
+    "saveToLibraryFailed": "Could not save the reel to your library."
   },
   "videos": {
     "title": "Highlight Videos",
@@ -328,7 +331,12 @@
         "title": "Development moments",
         "description": "Moments that show learning points and areas you're working on."
       }
-    }
+    },
+    "buildReel": "Build this reel",
+    "buildHint": "Creates a private draft from these moments in your match footage. Check each clip shows you before sharing.",
+    "needsFootage": "These moments come from analysed frames. Upload the full match video to cut them into a reel.",
+    "suggestionReason": "AI-suggested moment — confirm it shows you",
+    "buildFailed": "Could not create the reel draft."
   },
   "a11y": {
     "openVideo": "Open video",

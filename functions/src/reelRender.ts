@@ -158,6 +158,75 @@ export const exportReel = onCall(createCallableOptions(), async (request) => {
   return { exportId: ref.id, status: 'queued' as const, errorCode: null, segmentIndex: null };
 });
 
+/**
+ * Files a ready reel export into the owner's private media library so it can follow the normal
+ * library flow (rights confirmation, then Passport). Rights are confirmed only when every source
+ * clip was already confirmed; a moderated source blocks the save.
+ */
+export const saveReelToLibrary = onCall(createCallableOptions(), async (request) => {
+  const uid = request.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Authentication is required.');
+  const exportId = typeof request.data?.exportId === 'string' ? request.data.exportId : '';
+  if (!/^[A-Za-z0-9_-]{1,128}$/.test(exportId)) throw new HttpsError('invalid-argument', 'exportId is required.');
+
+  const db = getFirestore();
+  const exportSnap = await db.collection('reelExports').doc(exportId).get();
+  if (!exportSnap.exists || exportSnap.get('ownerId') !== uid) throw new HttpsError('not-found', 'Export not found.');
+  const storagePath = exportSnap.get('storagePath');
+  if (
+    exportSnap.get('status') !== 'ready' ||
+    typeof storagePath !== 'string' ||
+    !storagePath.startsWith(`profiles/${uid}/reelExports/${exportId}/`)
+  ) {
+    throw new HttpsError('failed-precondition', 'The reel is not ready yet.', { reason: 'export_not_ready' });
+  }
+
+  const reelId = String(exportSnap.get('reelId') ?? '');
+  const reelSnap = await db.collection('reels').doc(reelId).get();
+  const reel = reelSnap.data() as (ReelDoc & { title?: unknown }) | undefined;
+  if (!reel || reel.ownerId !== uid) throw new HttpsError('not-found', 'Reel not found.');
+
+  const sourceIds = [...new Set(readSegments(reel.segments).map((segment) => segment.mediaId))];
+  const sources = await Promise.all(
+    sourceIds.map((id) => db.collection('players').doc(uid).collection('media').doc(id).get()),
+  );
+  if (sources.some((snap) => snap.exists && (snap.get('moderationState') ?? 'none') !== 'none')) {
+    throw new HttpsError('failed-precondition', 'A clip in this reel is under review.', { reason: 'source_moderated' });
+  }
+  const allConfirmed =
+    sources.length > 0 && sources.every((snap) => snap.exists && snap.get('rightsState') === 'user_confirmed');
+
+  const mediaRef = db.collection('players').doc(uid).collection('media').doc(`reel_${exportId}`);
+  const existing = await mediaRef.get();
+  if (existing.exists) return { mediaId: mediaRef.id, created: false };
+
+  const now = new Date().toISOString();
+  const coverPath = exportSnap.get('coverPath');
+  await mediaRef.set({
+    id: mediaRef.id,
+    ownerId: uid,
+    type: 'reel',
+    storagePath,
+    thumbnailPath: typeof coverPath === 'string' ? coverPath : null,
+    durationSec: Number(exportSnap.get('durationSec') ?? 0),
+    sourceMatchId: null,
+    sourceJobId: null,
+    sourceReelId: reelId,
+    visibility: 'private',
+    rightsState: allConfirmed ? 'user_confirmed' : 'unconfirmed',
+    moderationState: 'none',
+    uploadState: 'ready',
+    processingState: 'ready',
+    favorite: false,
+    tags: [],
+    goalIds: [],
+    title: typeof reel.title === 'string' && reel.title.trim() ? reel.title.trim().slice(0, 120) : 'Highlight reel',
+    createdAt: now,
+    updatedAt: now,
+  });
+  return { mediaId: mediaRef.id, created: true };
+});
+
 export const onReelExportQueued = onDocumentCreated(
   { document: 'reelExports/{exportId}', memory: '2GiB', timeoutSeconds: 540 },
   async (event) => {

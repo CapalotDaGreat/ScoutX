@@ -24,8 +24,13 @@
     "blockers": {
       "public_passport_off": "Public Football Passport is off",
       "discovery_opt_in_off": "Scout discovery opt-in is off",
-      "no_matches": "No match evidence to show yet"
-    }
+      "no_matches": "No match evidence to show yet",
+      "guardian_approval_needed": "Your parent or guardian hasn't allowed a public profile or scout visibility yet",
+      "no_video": "No video evidence yet",
+      "stale_evidence": "Your latest match evidence is more than 4 months old"
+    },
+    "basis": "Based only on your settings and recorded evidence — never on views, likes or followers.",
+    "noGuarantee": "ScoutX can't promise that scouts will find or contact you."
   },
   "readiness": {
     "evidenceTitle": "Football evidence",

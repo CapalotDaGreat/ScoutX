@@ -36,7 +36,10 @@
     "emptyTimeline": "Nessuna osservazione con orario salvata.",
     "cvUnavailable": "Questa vista richiede il tracking visivo, non ancora disponibile.",
     "noVideo": "Nessun video da scorrere.",
-    "open": "Apri report completo"
+    "open": "Apri report completo",
+    "reelTitle": "Reel degli highlight",
+    "reelHint": "Trasforma i momenti di questo report in una bozza di reel privata da controllare e modificare.",
+    "reelAction": "Crea un reel degli highlight"
   },
   "tabs": {
     "overview": "Panoramica",

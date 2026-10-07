@@ -6,6 +6,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const scheduler_1 = require("firebase-functions/v2/scheduler");
+const model_1 = require("../uploads/model");
 const legalRetention_1 = require("./legalRetention");
 const retention_1 = require("./retention");
 const BATCH = 300;
@@ -37,6 +38,7 @@ async function runRetentionCleanup(db, now = new Date()) {
     });
     const abandonedJobs = await each(db.collection('matchAnalysisJobs').where('status', 'in', ['cancelled', 'expired', 'failed']).where('updatedAt', '<=', (0, retention_1.olderThan)(now, retention_1.RETENTION.abandonedJobDays)), async (doc) => {
         await deletePrefix(`profiles/${String(doc.get('playerId'))}/matchFootage/${doc.id}/`);
+        await db.collection('players').doc(String(doc.get('playerId'))).collection('media').doc((0, model_1.footageMediaId)(doc.id)).delete();
         await doc.ref.delete();
     });
     const webhookReceipts = await each(db.collection('revenueCatEvents').where('processedAt', '<=', (0, retention_1.olderThan)(now, retention_1.RETENTION.webhookReceiptDays)), async (doc) => {
