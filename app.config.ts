@@ -188,7 +188,7 @@ if (configFileExists(googleServicesJson)) {
 export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
   ...baseConfig,
   ...config,
-  owner: 'boddibossis-team',
+  owner: 'boddibossi',
   plugins,
   ios: iosConfig,
   android: androidConfig,
@@ -202,7 +202,6 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
       ...(typeof baseConfig.extra?.eas === 'object' && baseConfig.extra.eas !== null
         ? (baseConfig.extra.eas as Record<string, unknown>)
         : {}),
-      projectId: '303c79c7-d494-48c3-becb-f64b2a0c9e65',
     },
   },
 });
