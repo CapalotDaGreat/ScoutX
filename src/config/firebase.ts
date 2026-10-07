@@ -8,9 +8,10 @@ import {
   getReactNativePersistence,
   type Auth,
 } from 'firebase/auth';
-import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, type Firestore } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { initializeFirebaseAppCheck } from '@/config/firebaseAppCheck';
+import { connectCoreEmulators, shouldUseFirebaseEmulators } from '@/config/firebaseEmulators';
 
 // Expo only inlines static process.env.EXPO_PUBLIC_* references (not env[key]).
 const firebaseConfig: FirebaseOptions = {
@@ -49,17 +50,31 @@ function createAuth(firebaseApp: FirebaseApp): Auth {
   }
 }
 
+// Optional model fields are often `undefined`; without this Firestore rejects the whole write.
+function createFirestore(firebaseApp: FirebaseApp): Firestore {
+  try {
+    return initializeFirestore(firebaseApp, { ignoreUndefinedProperties: true });
+  } catch {
+    return getFirestore(firebaseApp);
+  }
+}
+
 async function bootstrapFirebase(): Promise<void> {
   if (!isFirebaseConfigured || isInitialized) {
     return;
   }
 
   app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-  await initializeFirebaseAppCheck(app);
+  if (!shouldUseFirebaseEmulators()) {
+    await initializeFirebaseAppCheck(app);
+  }
 
   auth = createAuth(app);
-  db = getFirestore(app);
+  db = createFirestore(app);
   storage = getStorage(app);
+  if (shouldUseFirebaseEmulators()) {
+    connectCoreEmulators(auth, db, storage);
+  }
   isInitialized = true;
 }
 

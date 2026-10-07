@@ -28,7 +28,7 @@ export function mapMatchesToProfileStats(
 
     return {
       label: summary?.label ?? key,
-      value: summary?.formattedValue ?? '0',
+      value: summary && summary.recordedCount > 0 ? summary.formattedValue : '—',
       metric: key,
       trend: {
         value: summary?.trend.value ?? 'No change',

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, type NavigationProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AccountUpgradePrompt } from '@/features/auth/components/AccountUpgradePrompt';
@@ -16,7 +16,7 @@ import { type DiscoverablePlayer, type DiscoverySearchScope } from '@/features/s
 import { RecruitmentProvider } from '@/features/scout-recruitment';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { PublicPortfolioStackScreen } from '@/features/public-portfolio/components/PublicPortfolioStackScreen';
-import { type GuestStackParamList } from '@/navigation/types';
+import { type GuestStackParamList, type RootStackParamList } from '@/navigation/types';
 
 const Stack = createNativeStackNavigator<GuestStackParamList>();
 
@@ -165,17 +165,20 @@ function GuestForgotPasswordRoute({
   );
 }
 
+// Rendered beside the stack, so it holds the root navigator and must address the nested screen.
 function GuestUpgradeListener() {
-  const navigation = useNavigation<NativeStackScreenProps<GuestStackParamList>['navigation']>();
-  const { upgradeIntent } = useAuth();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { upgradeIntent, clearUpgrade } = useAuth();
 
   useEffect(() => {
-    if (upgradeIntent === 'register') {
-      navigation.navigate('GuestRegister');
-    } else if (upgradeIntent === 'login') {
-      navigation.navigate('GuestLogin');
+    if (!upgradeIntent) {
+      return;
     }
-  }, [navigation, upgradeIntent]);
+    navigation.navigate('GuestApp', {
+      screen: upgradeIntent === 'register' ? 'GuestRegister' : 'GuestLogin',
+    });
+    clearUpgrade();
+  }, [clearUpgrade, navigation, upgradeIntent]);
 
   return null;
 }

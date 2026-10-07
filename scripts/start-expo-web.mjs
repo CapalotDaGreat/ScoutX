@@ -16,7 +16,7 @@ const port = process.env.PLAYWRIGHT_WEB_PORT ?? '8090';
 
 const child = spawn(
   'npx',
-  ['expo', 'start', '--web', '--port', port],
+  ['expo', 'start', '--web', '--port', port, ...(process.env.EXPO_E2E_CLEAR === '1' ? ['--clear'] : [])],
   {
     stdio: 'inherit',
     shell: true,

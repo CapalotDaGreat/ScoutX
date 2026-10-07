@@ -366,8 +366,8 @@ export function PlayerDetailScreen({
         <RevealSection step={5} className="px-4">
           <Section title={t('scout:playerDetail.seasonOutput')}>
             <View className="flex-row flex-wrap gap-3">
-              <StatCard label={t('statistics:metrics.goals')} value={player.goals} className="min-w-[45%] flex-1" />
-              <StatCard label={t('statistics:metrics.assists')} value={player.assists} className="min-w-[45%] flex-1" />
+              <StatCard label={t('statistics:metrics.goals')} value={player.metrics.goals.value ?? '—'} className="min-w-[45%] flex-1" />
+              <StatCard label={t('statistics:metrics.assists')} value={player.metrics.assists.value ?? '—'} className="min-w-[45%] flex-1" />
               <StatCard label={t('statistics:metrics.matches')} value={player.matchCount} className="min-w-[45%] flex-1" />
               <StatCard label={t('scout:playerDetail.profileViews')} value={player.viewCount} className="min-w-[45%] flex-1" />
             </View>

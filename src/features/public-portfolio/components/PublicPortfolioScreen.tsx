@@ -257,7 +257,7 @@ export function PublicPortfolioScreen({
           </PortfolioSection>
         ) : null}
 
-        {isPortfolioSectionVisible(privacy, 'performanceCharts') ? (
+        {isPortfolioSectionVisible(privacy, 'performanceCharts') && profile.performanceSummary.length > 0 ? (
           <PortfolioSection
             title={t('portfolio:sections.performanceCharts.title')}
             subtitle={t('portfolio:sections.performanceCharts.subtitle')}

@@ -22,6 +22,7 @@ import { PortfolioPrivacySettings } from '@/features/public-portfolio';
 import { type PrivacySettings } from '@/features/player-profile/types/privacySettings';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type AuthRole } from '@/features/auth/types';
+import { toUserMessage } from '@/utils/userFacingError';
 
 export type SettingsScreenProps = {
   onBack: () => void;
@@ -64,7 +65,7 @@ export function SettingsScreen({
   privacyDisabled = false,
 }: SettingsScreenProps) {
   const { t } = useAppTranslation(['settings', 'common', 'auth', 'errors']);
-  const { user, role } = useAuth();
+  const { user, role, beginUpgrade } = useAuth();
   const {
     pushEnabled,
     categories,
@@ -95,7 +96,7 @@ export function SettingsScreen({
           void deleteCurrentAccount(user.uid)
             .catch((error) => {
               setDeleteError(
-                error instanceof Error ? error.message : t('errors:deleteAccount'),
+                toUserMessage(error, t('errors:deleteAccount')),
               );
             })
             .finally(() => {
@@ -140,6 +141,19 @@ export function SettingsScreen({
           <Text variant="caption" color="secondary">
             {t('common:roleLabel')} · {formatRole(role, t)}
           </Text>
+          {user?.isAnonymous ? (
+            <View className="gap-2 pt-2">
+              <Text variant="body-sm" color="secondary">
+                {t('settings:guestAccountHint')}
+              </Text>
+              <Button onPress={() => beginUpgrade('register')} fullWidth>
+                {t('auth:welcome.createAccount')}
+              </Button>
+              <Button variant="secondary" onPress={() => beginUpgrade('login')} fullWidth>
+                {t('auth:welcome.signIn')}
+              </Button>
+            </View>
+          ) : null}
         </Card>
 
         <Card variant="elevated" padding="md" className="gap-3">

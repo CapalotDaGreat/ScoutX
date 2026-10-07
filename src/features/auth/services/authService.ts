@@ -51,6 +51,31 @@ import {
 import { UserModel } from '@/features/player-profile/models/UserModel';
 import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
 
+const ROLE_CLAIM_TIMEOUT_MS = 1_500;
+const ROLE_DOC_TIMEOUT_MS = 2_000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
+  return new Promise<T | null>((resolve, reject) => {
+    const timer = setTimeout(() => resolve(null), ms);
+    promise.then(
+      (value) => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      (error: unknown) => {
+        clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
+
+function parseRoleClaim(value: unknown): AuthUser['role'] {
+  return value === 'player' || value === 'scout' || value === 'coach' || value === 'club'
+    ? value
+    : undefined;
+}
+
 function mapFirebaseUser(user: User, role?: AuthUser['role']): AuthUser {
   const displayName =
     user.displayName ?? user.email?.split('@')[0] ?? (user.isAnonymous ? 'Guest' : 'ScoutX User');
@@ -122,24 +147,52 @@ export function initializeAuthListener(callback: (user: AuthUser | null) => void
     return () => undefined;
   }
 
+  let latestUid: string | null = null;
+
   return onAuthStateChanged(auth, (user) => {
+    latestUid = user?.uid ?? null;
     if (!user) {
       callback(null);
       return;
     }
 
-    // Unblock the UI immediately — Firestore resolution must not stall session start.
-    callback(mapFirebaseUser(user));
+    const emitIfCurrent = (next: AuthUser) => {
+      if (latestUid === user.uid) {
+        callback(next);
+      }
+    };
 
-    void resolveAuthUserFromFirestore(user)
-      .then((resolved) => {
-        callback(resolved);
-      })
-      .catch((error) => {
-        if (__DEV__) {
-          console.error('Error resolving auth user.');
-          if (error instanceof Error) {
-            console.error(error.message);
+    if (user.isAnonymous) {
+      emitIfCurrent(mapFirebaseUser(user));
+    }
+
+    // A signed-in user emitted without a role reads as "needs role selection" and resets
+    // navigation, so resolve the role from the cached token claim before the first emit.
+    void withTimeout(user.getIdTokenResult(), ROLE_CLAIM_TIMEOUT_MS)
+      .then((token) => parseRoleClaim(token?.claims.role))
+      .catch(() => undefined)
+      .then(async (claimRole) => {
+        if (!user.isAnonymous && claimRole) {
+          emitIfCurrent(mapFirebaseUser(user, claimRole));
+        }
+        try {
+          const pending = resolveAuthUserFromFirestore(user);
+          const resolved = await withTimeout(pending, ROLE_DOC_TIMEOUT_MS);
+          if (resolved) {
+            emitIfCurrent(resolved);
+          } else {
+            emitIfCurrent(mapFirebaseUser(user, claimRole));
+            void pending.then(emitIfCurrent).catch(() => undefined);
+          }
+        } catch (error) {
+          if (!user.isAnonymous && !claimRole) {
+            emitIfCurrent(mapFirebaseUser(user));
+          }
+          if (__DEV__) {
+            console.error('Error resolving auth user.');
+            if (error instanceof Error) {
+              console.error(error.message);
+            }
           }
         }
       });

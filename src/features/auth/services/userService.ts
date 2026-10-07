@@ -99,7 +99,7 @@ export async function upgradeUserDocument(
   return updateUserDocument(uid, {
     name: fields.name,
     email: fields.email,
-    role: fields.role,
+    ...(fields.role ? { role: fields.role } : {}),
     isAnonymous: false,
   });
 }

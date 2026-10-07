@@ -95,6 +95,7 @@ function createSummaryItem(
     trend: calculateTrend(matches, key),
     averageLabel: metric.getAverageLabel(),
     displaySubtitle: metric.getDisplaySubtitle(average),
+    recordedCount: metric.getRecordedCount(matches),
   };
 }
 

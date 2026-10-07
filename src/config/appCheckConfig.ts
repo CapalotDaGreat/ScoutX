@@ -37,7 +37,8 @@ function trimEnv(value: string | undefined): string | undefined {
 }
 
 export function isAppCheckEnabled(): boolean {
-  return trimEnv(process.env.EXPO_PUBLIC_APP_CHECK_ENABLED) !== 'false';
+  const flag = trimEnv(process.env.EXPO_PUBLIC_APP_CHECK_ENABLED);
+  return flag !== 'false' && flag !== '0';
 }
 
 export function getAppCheckRuntimeConfig(): AppCheckRuntimeConfig {

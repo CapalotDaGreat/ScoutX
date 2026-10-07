@@ -6,6 +6,7 @@ import { createCallableOptions } from './callableOptions';
 
 type Privacy = {
   discoverableByScouts?: boolean;
+  showStatistics?: boolean;
 };
 
 type ProfileDoc = Record<string, unknown> & {
@@ -26,6 +27,29 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 function flag(privacy: Privacy | undefined, key: keyof Privacy, fallback: boolean): boolean {
   const value = privacy?.[key];
   return typeof value === 'boolean' ? value : fallback;
+}
+
+type LoggedStat = { total: number; sampleSize: number };
+
+/** Totals only count matches that actually recorded the stat; missing values are not zeros. */
+function sumLoggedStat(matches: unknown[], key: 'goals' | 'assists'): LoggedStat {
+  let total = 0;
+  let sampleSize = 0;
+  for (const item of matches) {
+    const value = asRecord(item)?.[key];
+    if (typeof value === 'number' && Number.isFinite(value) && value >= 0) {
+      total += value;
+      sampleSize += 1;
+    }
+  }
+  return { total, sampleSize };
+}
+
+function loggedStatMetric(stat: LoggedStat, visible: boolean) {
+  if (!visible || stat.sampleSize === 0) {
+    return { value: null, sampleSize: 0, provenance: null };
+  }
+  return { value: stat.total, sampleSize: stat.sampleSize, provenance: 'self_reported' as const };
 }
 
 function parseHeightCm(height: unknown): number | null {
@@ -135,6 +159,9 @@ export function buildDiscoverableProjection(input: {
           .at(-1) ?? null;
   const matchCount =
     typeof input.summary?.matchCount === 'number' ? input.summary.matchCount : matches.length;
+  const statsVisible = flag(input.profile.privacy, 'showStatistics', true);
+  const goals = sumLoggedStat(matches, 'goals');
+  const assists = sumLoggedStat(matches, 'assists');
   const style =
     typeof identity.preferredPlayingStyle === 'string' ? identity.preferredPlayingStyle : '';
 
@@ -190,16 +217,16 @@ export function buildDiscoverableProjection(input: {
     updatedAt: input.nowIso,
     lastEvidenceAt,
     lastAnalyzedAt: null,
-    goals: 0,
-    assists: 0,
+    goals: statsVisible ? goals.total : 0,
+    assists: statsVisible ? assists.total : 0,
     sprintSpeedKmh: null,
     ratings: { passing: null, shooting: null, defending: null, physical: null },
     form: [],
     radarStats: [],
     evidenceCoverage: coverageFromSummary(input.summary),
     metrics: {
-      goals: { value: null, sampleSize: matchCount, provenance: matchCount > 0 ? 'match_derived' : null },
-      assists: { value: null, sampleSize: matchCount, provenance: matchCount > 0 ? 'match_derived' : null },
+      goals: loggedStatMetric(goals, statsVisible),
+      assists: loggedStatMetric(assists, statsVisible),
       matchCount: { value: matchCount, sampleSize: matchCount, provenance: matchCount > 0 ? 'match_derived' : null },
       videoCount: {
         value: videoCount,

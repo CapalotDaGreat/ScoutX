@@ -187,14 +187,7 @@ export class ProfileModel {
         stats.length > 0
           ? stats
           : mapMatchesToProfileStats(statisticsMatches),
-      performanceSummary:
-        performanceSummary.length > 0
-          ? performanceSummary
-          : [
-              { label: 'Key Passes', value: 0, max: 10, hint: 'Vision level' },
-              { label: 'Shots on Target', value: 0, max: 10, hint: 'Finishing level' },
-              { label: 'Pressing Intensity', value: 0, max: 10, hint: 'Defensive level' },
-            ],
+      performanceSummary,
       statisticsMatches,
       identity,
       footballJourney: parseFootballJourney(data.footballJourney),

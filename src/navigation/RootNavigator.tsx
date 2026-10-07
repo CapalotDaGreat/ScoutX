@@ -57,9 +57,11 @@ function isGuestPublicBrowseState(
 
 export function RootNavigator() {
   const navigationTheme = useNavigationTheme();
-  const { status, pendingRoleSelection, isGuest, role, isBootstrappingSession } = useAuth();
+  const { status, pendingRoleSelection, isGuest, role, isBootstrappingSession, user } = useAuth();
+  const sessionUid = user?.uid ?? null;
   const navigationRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
-  const lastSyncedRootRef = useRef<keyof RootStackParamList | null>(null);
+  // Keyed by root route and account, so switching accounts within the same app also resets.
+  const lastSyncedRootRef = useRef<string | null>(null);
 
   const rootRoute = useMemo(
     () => resolveRootRouteName(status, pendingRoleSelection, isGuest, role),
@@ -73,7 +75,7 @@ export function RootNavigator() {
   setDeepLinkSession({ authenticated: linkAuthenticated, role: linkRole });
 
   useEffect(() => {
-    if (showBootstrapOverlay) {
+    if (showBootstrapOverlay || status === 'loading') {
       return;
     }
 
@@ -101,18 +103,35 @@ export function RootNavigator() {
       return;
     }
 
-    // Allow unauthenticated deep links into GuestApp public passport / player detail
-    // without immediately resetting back to Auth.
-    if (status !== 'authenticated' && isGuestPublicBrowseState(navigation.getRootState())) {
+    // Allow visitors (signed out, or in the automatic anonymous guest session) to stay on a
+    // public passport / player detail deep link instead of being reset to Auth or Home.
+    if ((status !== 'authenticated' || isGuest) && isGuestPublicBrowseState(navigation.getRootState())) {
       lastSyncedRootRef.current = 'GuestApp';
       return;
     }
 
-    if (lastSyncedRootRef.current === rootRoute) {
+    const needsRole = status === 'authenticated' && pendingRoleSelection;
+    const syncKey = needsRole ? 'RoleSelection' : `${rootRoute}:${sessionUid ?? ''}`;
+    if (lastSyncedRootRef.current === syncKey) {
       return;
     }
 
-    lastSyncedRootRef.current = rootRoute;
+    const isFirstSync = lastSyncedRootRef.current === null;
+    lastSyncedRootRef.current = syncKey;
+    // A cold start from a link already resolved into the right app: keep the linked screen.
+    const rootState = navigation.getRootState();
+    if (isFirstSync && !needsRole && rootState?.routes[rootState.index ?? 0]?.name === rootRoute) {
+      return;
+    }
+    if (needsRole) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Auth', params: { screen: 'RoleSelection' } }],
+        }),
+      );
+      return;
+    }
     const resumePath = linkAuthenticated ? consumeResumePath() : null;
     const resumeState = resumePath
       ? getStateFromPath(
@@ -130,7 +149,7 @@ export function RootNavigator() {
         routes: [{ name: rootRoute }],
       }),
     );
-  }, [showBootstrapOverlay, status, rootRoute, pendingRoleSelection, isGuest, role, linkAuthenticated, linkRole]);
+  }, [showBootstrapOverlay, status, rootRoute, pendingRoleSelection, isGuest, role, linkAuthenticated, linkRole, sessionUid]);
 
   return (
     <NavigationContainer ref={navigationRef} linking={linking} theme={navigationTheme}>

@@ -1,0 +1,20 @@
+{
+  "projectId": "demo-scoutx",
+  "password": "E2e-Passw0rd!",
+  "seededPlayer": {
+    "email": "seeded-player@e2e.scoutx.test",
+    "name": "Lena Seeded",
+    "username": "lena-seeded",
+    "club": "FC E2E Testers",
+    "privateBiographyMarker": "PRIVATE-MARKER-DO-NOT-LEAK",
+    "phone": "+41 79 000 00 00"
+  },
+  "scout": {
+    "email": "scout@e2e.scoutx.test",
+    "name": "Sam Scout"
+  },
+  "newPlayer": {
+    "emailPrefix": "new-player",
+    "name": "Noah Newcomer"
+  }
+}

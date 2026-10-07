@@ -39,7 +39,7 @@ export default defineConfig({
         timeout: 180_000,
         env: {
           EXPO_PUBLIC_APP_CHECK_ENABLED: '0',
-          PLAYWRIGHT_WEB_PORT: '8090',
+          PLAYWRIGHT_WEB_PORT: process.env.PLAYWRIGHT_WEB_PORT ?? '8090',
         },
       },
 });

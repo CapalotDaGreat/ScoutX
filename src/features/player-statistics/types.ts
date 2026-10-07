@@ -65,6 +65,8 @@ export type StatisticSummaryItem = {
   averageLabel: string;
   displaySubtitle: string;
   trend: StatisticTrend;
+  /** Matches that recorded this metric; 0 means it was never tracked, not a zero value. */
+  recordedCount: number;
 };
 
 export type RadarChartPoint = {

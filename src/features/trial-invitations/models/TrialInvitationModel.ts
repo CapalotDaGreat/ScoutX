@@ -1,10 +1,10 @@
-import {
-  type TrialHistoryAction,
-  type TrialHistoryEntry,
-  type TrialInvitation,
-  type TrialInvitationDraft,
-  type TrialNotification,
-  type TrialStatus,
+import type {
+  TrialHistoryAction,
+  TrialHistoryEntry,
+  TrialInvitation,
+  TrialInvitationDraft,
+  TrialNotification,
+  TrialStatus,
 } from '@/features/trial-invitations/types';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -147,8 +147,13 @@ export function parseTrialInvitation(value: unknown, id: string): TrialInvitatio
   };
 }
 
+// Firestore rejects `undefined` field values, so optional fields are omitted instead.
+function withoutUndefined(record: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(record).filter(([, value]) => value !== undefined));
+}
+
 export function serializeTrialInvitation(invitation: TrialInvitation): Record<string, unknown> {
-  return {
+  return withoutUndefined({
     scoutId: invitation.scoutId,
     scoutName: invitation.scoutName,
     playerId: invitation.playerId,
@@ -159,14 +164,14 @@ export function serializeTrialInvitation(invitation: TrialInvitation): Record<st
     scheduledDate: invitation.scheduledDate,
     notes: invitation.notes,
     status: invitation.status,
-    history: invitation.history,
+    history: invitation.history.map((entry) => withoutUndefined({ ...entry })),
     prep: invitation.prep,
     evaluation: invitation.evaluation,
     messageThreadId: invitation.messageThreadId,
     calendarEventId: invitation.calendarEventId,
     createdAt: invitation.createdAt,
     updatedAt: invitation.updatedAt,
-  };
+  });
 }
 
 export function parseTrialNotification(value: unknown, id: string): TrialNotification | null {
@@ -195,7 +200,7 @@ export function parseTrialNotification(value: unknown, id: string): TrialNotific
 }
 
 export function serializeTrialNotification(notification: TrialNotification): Record<string, unknown> {
-  return {
+  return withoutUndefined({
     recipientId: notification.recipientId,
     recipientRole: notification.recipientRole,
     type: notification.type,
@@ -205,7 +210,7 @@ export function serializeTrialNotification(notification: TrialNotification): Rec
     messageThreadId: notification.messageThreadId,
     read: notification.read,
     createdAt: notification.createdAt,
-  };
+  });
 }
 
 export function createTrialInvitationId(): string {

@@ -4,6 +4,7 @@ import {
   getFirebaseApp,
   isFirebaseConfiguredForProject,
 } from '@/config/firebase';
+import { connectFunctionsEmulatorIfEnabled } from '@/config/firebaseEmulators';
 
 let functionsClient: Functions | null = null;
 
@@ -21,6 +22,7 @@ export async function getFirebaseFunctionsClient(): Promise<Functions | null> {
 
   if (!functionsClient) {
     functionsClient = getFunctions(app);
+    connectFunctionsEmulatorIfEnabled(functionsClient);
   }
 
   return functionsClient;

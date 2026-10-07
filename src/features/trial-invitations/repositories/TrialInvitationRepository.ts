@@ -289,16 +289,13 @@ export class TrialInvitationRepository {
   private async persistInvitation(invitation: TrialInvitation): Promise<void> {
     const db = getFirestoreDb();
     if (db) {
-      try {
-        await setDoc(
-          doc(db, TRIAL_INVITATION_COLLECTION, invitation.id),
-          serializeTrialInvitation(invitation),
-        );
-        await syncRecruitmentStageFromTrial(invitation).catch(() => undefined);
-        return;
-      } catch {
-        // Fall through to local storage.
-      }
+      // A local-only copy would never reach the other party, so write failures surface to the caller.
+      await setDoc(
+        doc(db, TRIAL_INVITATION_COLLECTION, invitation.id),
+        serializeTrialInvitation(invitation),
+      );
+      await syncRecruitmentStageFromTrial(invitation).catch(() => undefined);
+      return;
     }
     await saveLocalTrialInvitation(invitation);
     await syncRecruitmentStageFromTrial(invitation).catch(() => undefined);

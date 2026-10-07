@@ -23,3 +23,6 @@ playwright-report/
 # Firebase native config (download from Firebase Console — never commit)
 google-services.json
 GoogleService-Info.plist
+
+# E2E emulator seed output
+e2e/.seed-state.json

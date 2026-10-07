@@ -54,6 +54,11 @@ export function PlayerStatisticsSection({ matches, onLogMatchPress }: PlayerStat
     );
   }
 
+  const recordedTotals = overview.totals.filter((item) => item.recordedCount > 0);
+  const recordedKeys = new Set(recordedTotals.map((item) => item.key));
+  const recordedRadar = overview.radar.filter((point) => recordedKeys.has(point.key));
+  const recordedGraphs = overview.progressGraphs.filter((graph) => graph.points.length > 0);
+
   return (
     <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(250).duration(500)}>
       <Section
@@ -69,9 +74,9 @@ export function PlayerStatisticsSection({ matches, onLogMatchPress }: PlayerStat
         gap="lg"
       >
         <View className="gap-4">
-          <StatisticsCards items={overview.totals} />
-          <RadarChart points={overview.radar} />
-          <ProgressGraphs graphs={overview.progressGraphs} />
+          <StatisticsCards items={recordedTotals} />
+          {recordedRadar.length >= 3 ? <RadarChart points={recordedRadar} /> : null}
+          {recordedGraphs.length > 0 ? <ProgressGraphs graphs={recordedGraphs} /> : null}
           <MatchHistory items={overview.matchHistory} maxItems={6} />
           <Text variant="caption" color="secondary">
             {t('summary.trendNote')}

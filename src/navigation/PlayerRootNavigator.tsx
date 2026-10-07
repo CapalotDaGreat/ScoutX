@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, type NavigationProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AccountUpgradePrompt } from '@/features/auth/components/AccountUpgradePrompt';
@@ -21,7 +21,7 @@ import { useFootballMemory } from '@/features/football-memory/hooks/useFootballM
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
 import { RequestCenterScreen } from '@/features/request-center/components/RequestCenterScreen';
 import { PlayerTabNavigator } from '@/navigation/PlayerTabNavigator';
-import { type PlayerStackParamList } from '@/navigation/types';
+import { type PlayerStackParamList, type RootStackParamList } from '@/navigation/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 
 const Stack = createNativeStackNavigator<PlayerStackParamList>();
@@ -246,17 +246,20 @@ function PlayerForgotPasswordRoute({
   );
 }
 
+// Rendered beside the stack, so it holds the root navigator and must address the nested screen.
 function PlayerUpgradeListener() {
-  const navigation = useNavigation<NativeStackScreenProps<PlayerStackParamList>['navigation']>();
-  const { upgradeIntent } = useAuth();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { upgradeIntent, clearUpgrade } = useAuth();
 
   useEffect(() => {
-    if (upgradeIntent === 'register') {
-      navigation.navigate('PlayerRegister');
-    } else if (upgradeIntent === 'login') {
-      navigation.navigate('PlayerLogin');
+    if (!upgradeIntent) {
+      return;
     }
-  }, [navigation, upgradeIntent]);
+    navigation.navigate('PlayerApp', {
+      screen: upgradeIntent === 'register' ? 'PlayerRegister' : 'PlayerLogin',
+    });
+    clearUpgrade();
+  }, [clearUpgrade, navigation, upgradeIntent]);
 
   return null;
 }

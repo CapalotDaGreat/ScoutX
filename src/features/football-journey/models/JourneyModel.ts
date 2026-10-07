@@ -1,12 +1,12 @@
-import {
-  type CareerTimelineEntry,
-  type CareerTimelineEntryType,
+import type {
+  CareerTimelineEntry,
+  CareerTimelineEntryType,
 } from '@/features/player-profile/types/footballIdentity';
-import {
-  type FootballJourney,
-  type JourneyEntry,
-  type JourneyEntryType,
-  type JourneyMedia,
+import type {
+  FootballJourney,
+  JourneyEntry,
+  JourneyEntryType,
+  JourneyMedia,
 } from '@/features/football-journey/types';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -129,21 +129,26 @@ export function parseFootballJourney(value: unknown): FootballJourney {
 
 export function serializeFootballJourney(journey: FootballJourney): Record<string, unknown> {
   return {
-    entries: journey.entries.map((entry) => ({
-      id: entry.id,
-      type: entry.type,
-      title: entry.title,
-      subtitle: entry.subtitle,
-      organization: entry.organization,
-      description: entry.description,
-      date: entry.date,
-      endDate: entry.endDate,
-      media: entry.media,
-      metadata: entry.metadata,
-      source: entry.source,
-      createdAt: entry.createdAt,
-      updatedAt: entry.updatedAt,
-    })),
+    // Firestore rejects undefined values, so unset optional fields are omitted.
+    entries: journey.entries.map((entry) =>
+      Object.fromEntries(
+        Object.entries({
+          id: entry.id,
+          type: entry.type,
+          title: entry.title,
+          subtitle: entry.subtitle,
+          organization: entry.organization,
+          description: entry.description,
+          date: entry.date,
+          endDate: entry.endDate,
+          media: entry.media,
+          metadata: entry.metadata,
+          source: entry.source,
+          createdAt: entry.createdAt,
+          updatedAt: entry.updatedAt,
+        }).filter(([, value]) => value !== undefined),
+      ),
+    ),
     updatedAt: journey.updatedAt,
   };
 }
