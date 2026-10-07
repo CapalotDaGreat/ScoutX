@@ -139,5 +139,40 @@
       "declined": "Refusée",
       "expired": "Expirée"
     }
+  },
+  "memory": {
+    "title": "Mémoire football",
+    "subtitle": "Recherche et interroge tes propres données.",
+    "placeholder": "Pose une question sur tes matchs, clips, essais…",
+    "examplesTitle": "Essaie par exemple",
+    "examples": {
+      "bestDefensive": "Meilleur match défensif",
+      "goalsSeason": "Combien de buts 2025/26",
+      "latestAnalysis": "Dernière analyse"
+    },
+    "emptyIndex": "Enregistre un match ou importe un clip pour construire ta mémoire.",
+    "insufficient": "Je n'ai pas encore assez d'éléments pour répondre de façon fiable.",
+    "groundedNote": "Uniquement à partir de tes données enregistrées. Touche un élément pour l'ouvrir.",
+    "answer": {
+      "bestDefensive_one": "Le plus de tacles enregistrés : {{count}} contre {{opponent}} le {{date}} (sur {{sample}} matchs avec tacles saisis).",
+      "bestDefensive_other": "Le plus de tacles enregistrés : {{count}} contre {{opponent}} le {{date}} (sur {{sample}} matchs avec tacles saisis).",
+      "bestAttacking": "{{goals}} buts et {{assists}} passes décisives contre {{opponent}} le {{date}}.",
+      "countGoals_one": "{{count}} but sur {{matches}} matchs enregistrés.",
+      "countGoals_other": "{{count}} buts sur {{matches}} matchs enregistrés.",
+      "countAssists_one": "{{count}} passe décisive sur {{matches}} matchs enregistrés.",
+      "countAssists_other": "{{count}} passes décisives sur {{matches}} matchs enregistrés.",
+      "records_one": "{{count}} élément correspondant.",
+      "records_other": "{{count}} éléments correspondants.",
+      "latest": "Le plus récent : {{title}} ({{date}})."
+    },
+    "matchLine": "{{goals}} B · {{assists}} PD · {{minutes}}′",
+    "kind": {
+      "match": "Match",
+      "clip": "Clip",
+      "reel": "Reel",
+      "analysis": "Analyse",
+      "trial": "Essai",
+      "journey": "Carrière"
+    }
   }
 }

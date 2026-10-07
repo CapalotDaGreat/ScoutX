@@ -16,8 +16,8 @@ import { defaultPrivacySettings, type PrivacySettings } from '@/features/player-
 import { appendSystemJourneyEvents } from '@/features/career-timeline/services/careerTimelineService';
 import { PlayerTrialsScreen } from '@/features/trial-invitations';
 import { usePlayerTrialInvitations } from '@/features/trial-invitations/hooks/useTrialInvitations';
-import { GlobalSearchScreen } from '@/features/global-search/components/GlobalSearchScreen';
-import { buildPlayerSearchRecords } from '@/features/global-search/services/buildSearchRecords';
+import { FootballMemoryScreen } from '@/features/football-memory/components/FootballMemoryScreen';
+import { useFootballMemory } from '@/features/football-memory/hooks/useFootballMemory';
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
 import { RequestCenterScreen } from '@/features/request-center/components/RequestCenterScreen';
 import { PlayerTabNavigator } from '@/navigation/PlayerTabNavigator';
@@ -131,29 +131,31 @@ function SettingsRoute({
 function GlobalSearchRoute({
   navigation,
 }: NativeStackScreenProps<PlayerStackParamList, 'GlobalSearch'>) {
-  const { profile } = usePlayerWorkspace();
-  const { trials } = usePlayerTrialInvitations();
-  const records = useMemo(
-    () =>
-      buildPlayerSearchRecords({
-        matches: profile?.statisticsMatches ?? [],
-        journey: profile?.footballJourney?.entries ?? [],
-        trials,
-      }),
-    [profile, trials],
-  );
+  const { index } = useFootballMemory();
 
   return (
-    <GlobalSearchScreen
-      records={records}
+    <FootballMemoryScreen
+      index={index}
       onBack={() => navigation.goBack()}
-      onOpenHit={(hit) => {
-        if (hit.route === 'trials') {
-          navigation.navigate('Trials');
-          return;
-        }
-        if (hit.route === 'career' || hit.route === 'match') {
-          navigation.navigate('PlayerTabs', { screen: 'Performance', params: { segment: 'career' } });
+      onOpenLink={(link) => {
+        switch (link.route) {
+          case 'trial':
+            navigation.navigate('Trials', { trialId: link.entityId });
+            return;
+          case 'analysis':
+            navigation.navigate('AnalysisReport', { jobId: link.entityId });
+            return;
+          case 'reel':
+            navigation.navigate('PlayerTabs', { screen: 'Media', params: { reelId: link.entityId } });
+            return;
+          case 'media':
+            navigation.navigate('PlayerTabs', { screen: 'Media', params: undefined });
+            return;
+          case 'stats':
+            navigation.navigate('PlayerTabs', { screen: 'Performance', params: { segment: 'stats' } });
+            return;
+          case 'career':
+            navigation.navigate('PlayerTabs', { screen: 'Performance', params: { segment: 'career' } });
         }
       }}
     />

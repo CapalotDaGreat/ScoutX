@@ -139,5 +139,40 @@
       "declined": "Abgelehnt",
       "expired": "Abgelaufen"
     }
+  },
+  "memory": {
+    "title": "Fussball-Gedächtnis",
+    "subtitle": "Durchsuche und frage deine eigenen Daten.",
+    "placeholder": "Frag nach Spielen, Clips, Probetrainings…",
+    "examplesTitle": "Probier zum Beispiel",
+    "examples": {
+      "bestDefensive": "Bestes defensives Spiel",
+      "goalsSeason": "Wie viele Tore 2025/26",
+      "latestAnalysis": "Letzte Analyse"
+    },
+    "emptyIndex": "Erfasse ein Spiel oder lade einen Clip hoch, um dein Gedächtnis aufzubauen.",
+    "insufficient": "Dafür habe ich noch nicht genug Belege, um verlässlich zu antworten.",
+    "groundedNote": "Nur auf Basis deiner erfassten Daten. Tippe auf einen Eintrag, um ihn zu öffnen.",
+    "answer": {
+      "bestDefensive_one": "Meiste erfasste Tacklings: {{count}} gegen {{opponent}} am {{date}} (von {{sample}} Spielen mit erfassten Tacklings).",
+      "bestDefensive_other": "Meiste erfasste Tacklings: {{count}} gegen {{opponent}} am {{date}} (von {{sample}} Spielen mit erfassten Tacklings).",
+      "bestAttacking": "{{goals}} Tore und {{assists}} Vorlagen gegen {{opponent}} am {{date}}.",
+      "countGoals_one": "{{count}} Tor in {{matches}} erfassten Spielen.",
+      "countGoals_other": "{{count}} Tore in {{matches}} erfassten Spielen.",
+      "countAssists_one": "{{count}} Vorlage in {{matches}} erfassten Spielen.",
+      "countAssists_other": "{{count}} Vorlagen in {{matches}} erfassten Spielen.",
+      "records_one": "{{count}} passender Eintrag.",
+      "records_other": "{{count}} passende Einträge.",
+      "latest": "Neuester Eintrag: {{title}} ({{date}})."
+    },
+    "matchLine": "{{goals}} T · {{assists}} V · {{minutes}}′",
+    "kind": {
+      "match": "Spiel",
+      "clip": "Clip",
+      "reel": "Reel",
+      "analysis": "Analyse",
+      "trial": "Probetraining",
+      "journey": "Karriere"
+    }
   }
 }

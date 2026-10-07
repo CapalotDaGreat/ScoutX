@@ -139,5 +139,40 @@
       "declined": "Recusado",
       "expired": "Expirado"
     }
+  },
+  "memory": {
+    "title": "Memória de futebol",
+    "subtitle": "Pesquisa e pergunta sobre os teus próprios registos.",
+    "placeholder": "Pergunta pelos teus jogos, clips, testes…",
+    "examplesTitle": "Experimenta perguntar",
+    "examples": {
+      "bestDefensive": "Melhor jogo defensivo",
+      "goalsSeason": "Quantos golos 2025/26",
+      "latestAnalysis": "Última análise"
+    },
+    "emptyIndex": "Regista um jogo ou carrega um clip para criar a tua memória.",
+    "insufficient": "Ainda não tenho provas suficientes para responder com fiabilidade.",
+    "groundedNote": "Baseado apenas nos teus dados registados. Toca num registo para o abrir.",
+    "answer": {
+      "bestDefensive_one": "Mais desarmes registados: {{count}} contra {{opponent}} em {{date}} (de {{sample}} jogos com desarmes registados).",
+      "bestDefensive_other": "Mais desarmes registados: {{count}} contra {{opponent}} em {{date}} (de {{sample}} jogos com desarmes registados).",
+      "bestAttacking": "{{goals}} golos e {{assists}} assistências contra {{opponent}} em {{date}}.",
+      "countGoals_one": "{{count}} golo em {{matches}} jogos registados.",
+      "countGoals_other": "{{count}} golos em {{matches}} jogos registados.",
+      "countAssists_one": "{{count}} assistência em {{matches}} jogos registados.",
+      "countAssists_other": "{{count}} assistências em {{matches}} jogos registados.",
+      "records_one": "{{count}} registo correspondente.",
+      "records_other": "{{count}} registos correspondentes.",
+      "latest": "Mais recente: {{title}} ({{date}})."
+    },
+    "matchLine": "{{goals}} G · {{assists}} A · {{minutes}}′",
+    "kind": {
+      "match": "Jogo",
+      "clip": "Clip",
+      "reel": "Reel",
+      "analysis": "Análise",
+      "trial": "Teste",
+      "journey": "Carreira"
+    }
   }
 }

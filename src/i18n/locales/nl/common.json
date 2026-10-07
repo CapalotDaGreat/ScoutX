@@ -139,5 +139,40 @@
       "declined": "Geweigerd",
       "expired": "Verlopen"
     }
+  },
+  "memory": {
+    "title": "Voetbalgeheugen",
+    "subtitle": "Zoek en stel vragen over je eigen gegevens.",
+    "placeholder": "Vraag naar je wedstrijden, clips, proeftrainingen…",
+    "examplesTitle": "Probeer bijvoorbeeld",
+    "examples": {
+      "bestDefensive": "Beste verdedigende wedstrijd",
+      "goalsSeason": "Hoeveel doelpunten 2025/26",
+      "latestAnalysis": "Laatste analyse"
+    },
+    "emptyIndex": "Leg een wedstrijd vast of upload een clip om je geheugen op te bouwen.",
+    "insufficient": "Ik heb nog niet genoeg bewijs om dat betrouwbaar te beantwoorden.",
+    "groundedNote": "Alleen gebaseerd op je vastgelegde gegevens. Tik op een item om het te openen.",
+    "answer": {
+      "bestDefensive_one": "Meeste geregistreerde tackles: {{count}} tegen {{opponent}} op {{date}} (van {{sample}} wedstrijden met tackles).",
+      "bestDefensive_other": "Meeste geregistreerde tackles: {{count}} tegen {{opponent}} op {{date}} (van {{sample}} wedstrijden met tackles).",
+      "bestAttacking": "{{goals}} doelpunten en {{assists}} assists tegen {{opponent}} op {{date}}.",
+      "countGoals_one": "{{count}} doelpunt in {{matches}} vastgelegde wedstrijden.",
+      "countGoals_other": "{{count}} doelpunten in {{matches}} vastgelegde wedstrijden.",
+      "countAssists_one": "{{count}} assist in {{matches}} vastgelegde wedstrijden.",
+      "countAssists_other": "{{count}} assists in {{matches}} vastgelegde wedstrijden.",
+      "records_one": "{{count}} passend item.",
+      "records_other": "{{count}} passende items.",
+      "latest": "Meest recent: {{title}} ({{date}})."
+    },
+    "matchLine": "{{goals}} D · {{assists}} A · {{minutes}}′",
+    "kind": {
+      "match": "Wedstrijd",
+      "clip": "Clip",
+      "reel": "Reel",
+      "analysis": "Analyse",
+      "trial": "Proeftraining",
+      "journey": "Loopbaan"
+    }
   }
 }

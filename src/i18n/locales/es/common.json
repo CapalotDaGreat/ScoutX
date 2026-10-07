@@ -139,5 +139,40 @@
       "declined": "Rechazada",
       "expired": "Caducada"
     }
+  },
+  "memory": {
+    "title": "Memoria futbolística",
+    "subtitle": "Busca y pregunta sobre tus propios registros.",
+    "placeholder": "Pregunta por tus partidos, clips, pruebas…",
+    "examplesTitle": "Prueba a preguntar",
+    "examples": {
+      "bestDefensive": "Mejor partido defensivo",
+      "goalsSeason": "Cuántos goles 2025/26",
+      "latestAnalysis": "Último análisis"
+    },
+    "emptyIndex": "Registra un partido o sube un clip para crear tu memoria.",
+    "insufficient": "Todavía no tengo suficientes pruebas para responder con fiabilidad.",
+    "groundedNote": "Basado solo en tus datos registrados. Toca un registro para abrirlo.",
+    "answer": {
+      "bestDefensive_one": "Más entradas registradas: {{count}} contra {{opponent}} el {{date}} (de {{sample}} partidos con entradas registradas).",
+      "bestDefensive_other": "Más entradas registradas: {{count}} contra {{opponent}} el {{date}} (de {{sample}} partidos con entradas registradas).",
+      "bestAttacking": "{{goals}} goles y {{assists}} asistencias contra {{opponent}} el {{date}}.",
+      "countGoals_one": "{{count}} gol en {{matches}} partidos registrados.",
+      "countGoals_other": "{{count}} goles en {{matches}} partidos registrados.",
+      "countAssists_one": "{{count}} asistencia en {{matches}} partidos registrados.",
+      "countAssists_other": "{{count}} asistencias en {{matches}} partidos registrados.",
+      "records_one": "{{count}} registro coincidente.",
+      "records_other": "{{count}} registros coincidentes.",
+      "latest": "Más reciente: {{title}} ({{date}})."
+    },
+    "matchLine": "{{goals}} G · {{assists}} A · {{minutes}}′",
+    "kind": {
+      "match": "Partido",
+      "clip": "Clip",
+      "reel": "Reel",
+      "analysis": "Análisis",
+      "trial": "Prueba",
+      "journey": "Carrera"
+    }
   }
 }

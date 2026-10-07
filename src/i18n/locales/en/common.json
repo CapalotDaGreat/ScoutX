@@ -139,5 +139,40 @@
       "declined": "Declined",
       "expired": "Expired"
     }
+  },
+  "memory": {
+    "title": "Football Memory",
+    "subtitle": "Search and ask about your own records.",
+    "placeholder": "Ask about your matches, clips, trials…",
+    "examplesTitle": "Try asking",
+    "examples": {
+      "bestDefensive": "Best defensive game",
+      "goalsSeason": "How many goals 2025/26",
+      "latestAnalysis": "Latest analysis"
+    },
+    "emptyIndex": "Log a match or upload a clip to build your memory.",
+    "insufficient": "I don't have enough evidence to answer that reliably yet.",
+    "groundedNote": "Based only on your recorded data. Tap a record to open it.",
+    "answer": {
+      "bestDefensive_one": "Most tackles recorded: {{count}} vs {{opponent}} on {{date}} (out of {{sample}} matches with tackles logged).",
+      "bestDefensive_other": "Most tackles recorded: {{count}} vs {{opponent}} on {{date}} (out of {{sample}} matches with tackles logged).",
+      "bestAttacking": "{{goals}} goals and {{assists}} assists vs {{opponent}} on {{date}}.",
+      "countGoals_one": "{{count}} goal across {{matches}} recorded matches.",
+      "countGoals_other": "{{count}} goals across {{matches}} recorded matches.",
+      "countAssists_one": "{{count}} assist across {{matches}} recorded matches.",
+      "countAssists_other": "{{count}} assists across {{matches}} recorded matches.",
+      "records_one": "{{count}} matching record.",
+      "records_other": "{{count}} matching records.",
+      "latest": "Most recent: {{title}} ({{date}})."
+    },
+    "matchLine": "{{goals}} G · {{assists}} A · {{minutes}}′",
+    "kind": {
+      "match": "Match",
+      "clip": "Clip",
+      "reel": "Reel",
+      "analysis": "Analysis",
+      "trial": "Trial",
+      "journey": "Career"
+    }
   }
 }
