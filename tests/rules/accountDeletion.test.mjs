@@ -38,6 +38,9 @@ const ownedByField = [
   ['youthConsents', 'uid'],
   ['mail', 'scoutxUid'],
   ['appeals', 'ownerId'],
+  ['mediaUploads', 'ownerId'],
+  ['mediaUploadSessions', 'ownerId'],
+  ['uploadSessionLimits', 'ownerId'],
   ['matchAnalysisJobs', 'playerId'],
   ['careerReplays', 'playerId'],
   ['activities', 'recipientId'],
@@ -80,6 +83,7 @@ const storageFiles = (uid) => [
   `profiles/${uid}/matchFootage/j1/frames/frame_001.jpg`,
   `profiles/${uid}/reelExports/e1/reel.mp4`,
   `gpsSessions/${uid}/s1/points.json`,
+  `quarantine/${uid}/up1/source`,
 ];
 
 let db;

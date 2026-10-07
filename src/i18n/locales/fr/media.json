@@ -150,7 +150,40 @@
     "pending": "En attente d'envoi",
     "uploading": "Envoi en cours",
     "ready": "Prêt",
-    "failed": "Échec de l'envoi"
+    "failed": "Échec de l'envoi",
+    "phase": {
+      "idle": "Prêt à envoyer",
+      "preparing": "Préparation de l’envoi…",
+      "uploading": "Envoi de la vidéo du match",
+      "paused": "Envoi en pause",
+      "processing": "Vérification de la vidéo",
+      "ready": "Vidéo prête",
+      "failed": "Envoi interrompu",
+      "cancelled": "Envoi annulé"
+    },
+    "progressLabel": "Envoi terminé à {{percent}} pour cent",
+    "bytes": "{{sent}} sur {{total}} ({{percent}} %)",
+    "speed": "{{rate}}",
+    "eta": "environ {{eta}} restantes",
+    "foregroundNote": "Garde ScoutX ouvert pendant l’envoi. Si l’app se ferme, l’envoi reprendra là où il s’est arrêté.",
+    "processingNote": "Toutes les données sont arrivées. ScoutX vérifie le format et la durée avant l’analyse.",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "retry": "Réessayer",
+    "cancel": "Annuler l’envoi",
+    "error": {
+      "offline": "Connexion perdue. Réessaie une fois en ligne ; les parties envoyées sont conservées.",
+      "session_expired": "Cet envoi a expiré. Recommence-le.",
+      "too_large": "Les vidéos peuvent faire jusqu’à 4 Go.",
+      "too_long": "Les vidéos peuvent durer jusqu’à 150 minutes.",
+      "unsupported_type": "Seules les vidéos MP4 et MOV peuvent être envoyées.",
+      "limit_reached": "Tu as atteint la limite d’envoi pour le moment. Termine ou annule d’autres envois, ou réessaie demain.",
+      "consent_required": "Accepte d’abord les conditions d’envoi.",
+      "not_allowed": "L’envoi n’est pas disponible pour ce compte pour le moment.",
+      "file_missing": "La vidéo sélectionnée n’est plus sur cet appareil. Sélectionne-la à nouveau.",
+      "rejected": "La vidéo n’a pas pu être acceptée. Vérifie qu’il s’agit d’un fichier MP4 ou MOV lisible.",
+      "unknown": "L’envoi n’a pas pu être terminé. Réessaie."
+    }
   },
   "export": {
     "title": "Vidéo rendue",

@@ -53,6 +53,11 @@ service firebase.storage {
       allow delete: if isOwner(userId);
     }
 
+    // Large uploads go to server-authorized GCS resumable sessions; clients never touch quarantine.
+    match /quarantine/{allPaths=**} {
+      allow read, write: if false;
+    }
+
     // GPS movement is processed on device and never uploaded. Legacy point files from older
     // builds may only be deleted by their owner (the server purge uses the Admin SDK).
     match /gpsSessions/{userId}/{sessionId}/{fileName} {

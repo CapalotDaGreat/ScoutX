@@ -150,7 +150,40 @@
     "pending": "Waiting to upload",
     "uploading": "Uploading",
     "ready": "Ready",
-    "failed": "Upload failed"
+    "failed": "Upload failed",
+    "phase": {
+      "idle": "Ready to upload",
+      "preparing": "Preparing upload…",
+      "uploading": "Uploading match video",
+      "paused": "Upload paused",
+      "processing": "Checking your video",
+      "ready": "Video ready",
+      "failed": "Upload stopped",
+      "cancelled": "Upload cancelled"
+    },
+    "progressLabel": "Upload {{percent}} percent complete",
+    "bytes": "{{sent}} of {{total}} ({{percent}}%)",
+    "speed": "{{rate}}",
+    "eta": "about {{eta}} left",
+    "foregroundNote": "Keep ScoutX open while uploading. If the app closes, the upload continues from where it stopped next time.",
+    "processingNote": "All bytes arrived. ScoutX is checking the file format and length before analysis.",
+    "pause": "Pause",
+    "resume": "Resume",
+    "retry": "Try again",
+    "cancel": "Cancel upload",
+    "error": {
+      "offline": "Connection lost. Try again when you are back online; finished parts are kept.",
+      "session_expired": "This upload expired. Start it again to upload a fresh copy.",
+      "too_large": "Videos can be up to 4 GB.",
+      "too_long": "Videos can be up to 150 minutes long.",
+      "unsupported_type": "Only MP4 and MOV videos can be uploaded.",
+      "limit_reached": "You have reached the upload limit for now. Finish or cancel other uploads, or try again tomorrow.",
+      "consent_required": "Please accept the upload acknowledgement first.",
+      "not_allowed": "Uploading is not available for this account right now.",
+      "file_missing": "The selected video is no longer on this device. Pick it again.",
+      "rejected": "The video could not be accepted. Check that it is a playable MP4 or MOV file.",
+      "unknown": "The upload could not be completed. Please try again."
+    }
   },
   "export": {
     "title": "Rendered video",

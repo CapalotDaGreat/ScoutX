@@ -150,7 +150,40 @@
     "pending": "Esperando subida",
     "uploading": "Subiendo",
     "ready": "Listo",
-    "failed": "Error de subida"
+    "failed": "Error de subida",
+    "phase": {
+      "idle": "Listo para subir",
+      "preparing": "Preparando la subida…",
+      "uploading": "Subiendo vídeo del partido",
+      "paused": "Subida en pausa",
+      "processing": "Comprobando tu vídeo",
+      "ready": "Vídeo listo",
+      "failed": "Subida detenida",
+      "cancelled": "Subida cancelada"
+    },
+    "progressLabel": "Subida completada al {{percent}} por ciento",
+    "bytes": "{{sent}} de {{total}} ({{percent}} %)",
+    "speed": "{{rate}}",
+    "eta": "quedan unos {{eta}}",
+    "foregroundNote": "Mantén ScoutX abierto durante la subida. Si la app se cierra, la subida continuará donde se detuvo.",
+    "processingNote": "Han llegado todos los datos. ScoutX está comprobando el formato y la duración antes del análisis.",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "retry": "Reintentar",
+    "cancel": "Cancelar subida",
+    "error": {
+      "offline": "Se perdió la conexión. Reintenta cuando vuelvas a estar en línea; las partes subidas se conservan.",
+      "session_expired": "Esta subida caducó. Iníciala de nuevo.",
+      "too_large": "Los vídeos pueden ocupar hasta 4 GB.",
+      "too_long": "Los vídeos pueden durar hasta 150 minutos.",
+      "unsupported_type": "Solo se pueden subir vídeos MP4 y MOV.",
+      "limit_reached": "Has alcanzado el límite de subidas por ahora. Termina o cancela otras subidas, o inténtalo mañana.",
+      "consent_required": "Acepta primero las condiciones de subida.",
+      "not_allowed": "La subida no está disponible para esta cuenta en este momento.",
+      "file_missing": "El vídeo seleccionado ya no está en este dispositivo. Selecciónalo de nuevo.",
+      "rejected": "No se pudo aceptar el vídeo. Comprueba que sea un archivo MP4 o MOV reproducible.",
+      "unknown": "No se pudo completar la subida. Inténtalo de nuevo."
+    }
   },
   "export": {
     "title": "Vídeo renderizado",

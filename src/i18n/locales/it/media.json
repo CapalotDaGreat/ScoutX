@@ -150,7 +150,40 @@
     "pending": "In attesa di caricamento",
     "uploading": "Caricamento",
     "ready": "Pronto",
-    "failed": "Caricamento non riuscito"
+    "failed": "Caricamento non riuscito",
+    "phase": {
+      "idle": "Pronto per il caricamento",
+      "preparing": "Preparazione caricamento…",
+      "uploading": "Caricamento video della partita",
+      "paused": "Caricamento in pausa",
+      "processing": "Verifica del video",
+      "ready": "Video pronto",
+      "failed": "Caricamento interrotto",
+      "cancelled": "Caricamento annullato"
+    },
+    "progressLabel": "Caricamento completato al {{percent}} percento",
+    "bytes": "{{sent}} di {{total}} ({{percent}}%)",
+    "speed": "{{rate}}",
+    "eta": "circa {{eta}} rimanenti",
+    "foregroundNote": "Tieni ScoutX aperta durante il caricamento. Se l’app si chiude, il caricamento riprende da dove si era fermato.",
+    "processingNote": "Tutti i dati sono arrivati. ScoutX sta verificando formato e durata prima dell’analisi.",
+    "pause": "Pausa",
+    "resume": "Riprendi",
+    "retry": "Riprova",
+    "cancel": "Annulla caricamento",
+    "error": {
+      "offline": "Connessione persa. Riprova quando sei di nuovo online; le parti caricate vengono conservate.",
+      "session_expired": "Questo caricamento è scaduto. Avvialo di nuovo.",
+      "too_large": "I video possono pesare fino a 4 GB.",
+      "too_long": "I video possono durare fino a 150 minuti.",
+      "unsupported_type": "Si possono caricare solo video MP4 e MOV.",
+      "limit_reached": "Hai raggiunto il limite di caricamenti per ora. Completa o annulla altri caricamenti, oppure riprova domani.",
+      "consent_required": "Accetta prima le condizioni di caricamento.",
+      "not_allowed": "Il caricamento non è disponibile per questo account al momento.",
+      "file_missing": "Il video selezionato non è più su questo dispositivo. Selezionalo di nuovo.",
+      "rejected": "Il video non è stato accettato. Verifica che sia un file MP4 o MOV riproducibile.",
+      "unknown": "Non è stato possibile completare il caricamento. Riprova."
+    }
   },
   "export": {
     "title": "Video renderizzato",

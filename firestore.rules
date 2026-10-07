@@ -511,6 +511,18 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Upload state is server-written; the session URI is a bearer credential and never readable.
+    match /mediaUploads/{uploadId} {
+      allow read: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow write: if false;
+    }
+    match /mediaUploadSessions/{uploadId} {
+      allow read, write: if false;
+    }
+    match /uploadSessionLimits/{limitId} {
+      allow read, write: if false;
+    }
+
     // Moderation workflow and staff audit trail are server-only; staff use callables.
     match /moderationCases/{caseId} {
       allow read, write: if false;

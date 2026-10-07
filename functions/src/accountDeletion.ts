@@ -65,9 +65,12 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['youthConsents', 'uid'],
   ['mail', 'scoutxUid'],
   ['appeals', 'ownerId'],
+  ['mediaUploads', 'ownerId'],
+  ['mediaUploadSessions', 'ownerId'],
+  ['uploadSessionLimits', 'ownerId'],
 ];
 
-const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
+const STORAGE_PREFIXES = (uid: string) => [`profiles/${uid}/`, `gpsSessions/${uid}/`, `quarantine/${uid}/`];
 
 async function deleteQueryInBatches(query: Query): Promise<number> {
   const db = getFirestore();

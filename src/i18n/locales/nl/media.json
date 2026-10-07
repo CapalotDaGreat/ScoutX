@@ -150,7 +150,40 @@
     "pending": "Wacht op upload",
     "uploading": "Uploaden",
     "ready": "Klaar",
-    "failed": "Upload mislukt"
+    "failed": "Upload mislukt",
+    "phase": {
+      "idle": "Klaar om te uploaden",
+      "preparing": "Upload voorbereiden…",
+      "uploading": "Wedstrijdvideo uploaden",
+      "paused": "Upload gepauzeerd",
+      "processing": "Je video wordt gecontroleerd",
+      "ready": "Video klaar",
+      "failed": "Upload gestopt",
+      "cancelled": "Upload geannuleerd"
+    },
+    "progressLabel": "Upload voor {{percent}} procent voltooid",
+    "bytes": "{{sent}} van {{total}} ({{percent}}%)",
+    "speed": "{{rate}}",
+    "eta": "nog ongeveer {{eta}}",
+    "foregroundNote": "Houd ScoutX open tijdens het uploaden. Als de app sluit, gaat de upload de volgende keer verder waar hij stopte.",
+    "processingNote": "Alle gegevens zijn aangekomen. ScoutX controleert formaat en lengte vóór de analyse.",
+    "pause": "Pauzeren",
+    "resume": "Hervatten",
+    "retry": "Opnieuw proberen",
+    "cancel": "Upload annuleren",
+    "error": {
+      "offline": "Verbinding verbroken. Probeer opnieuw zodra je online bent; voltooide delen blijven bewaard.",
+      "session_expired": "Deze upload is verlopen. Start hem opnieuw.",
+      "too_large": "Video's mogen maximaal 4 GB zijn.",
+      "too_long": "Video's mogen maximaal 150 minuten duren.",
+      "unsupported_type": "Alleen MP4- en MOV-video's kunnen worden geüpload.",
+      "limit_reached": "Je hebt de uploadlimiet voorlopig bereikt. Rond andere uploads af of annuleer ze, of probeer het morgen opnieuw.",
+      "consent_required": "Accepteer eerst de uploadvoorwaarden.",
+      "not_allowed": "Uploaden is momenteel niet beschikbaar voor dit account.",
+      "file_missing": "De geselecteerde video staat niet meer op dit apparaat. Selecteer hem opnieuw.",
+      "rejected": "De video kon niet worden geaccepteerd. Controleer of het een afspeelbaar MP4- of MOV-bestand is.",
+      "unknown": "De upload kon niet worden voltooid. Probeer het opnieuw."
+    }
   },
   "export": {
     "title": "Gerenderde video",

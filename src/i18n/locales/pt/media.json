@@ -150,7 +150,40 @@
     "pending": "A aguardar carregamento",
     "uploading": "A carregar",
     "ready": "Pronto",
-    "failed": "Falha no carregamento"
+    "failed": "Falha no carregamento",
+    "phase": {
+      "idle": "Pronto para enviar",
+      "preparing": "A preparar o envio…",
+      "uploading": "A enviar vídeo do jogo",
+      "paused": "Envio em pausa",
+      "processing": "A verificar o teu vídeo",
+      "ready": "Vídeo pronto",
+      "failed": "Envio interrompido",
+      "cancelled": "Envio cancelado"
+    },
+    "progressLabel": "Envio {{percent}} por cento concluído",
+    "bytes": "{{sent}} de {{total}} ({{percent}}%)",
+    "speed": "{{rate}}",
+    "eta": "faltam cerca de {{eta}}",
+    "foregroundNote": "Mantém o ScoutX aberto durante o envio. Se a app fechar, o envio continua de onde parou.",
+    "processingNote": "Todos os dados chegaram. O ScoutX está a verificar o formato e a duração antes da análise.",
+    "pause": "Pausar",
+    "resume": "Retomar",
+    "retry": "Tentar novamente",
+    "cancel": "Cancelar envio",
+    "error": {
+      "offline": "Ligação perdida. Tenta novamente quando estiveres online; as partes enviadas são mantidas.",
+      "session_expired": "Este envio expirou. Inicia-o novamente.",
+      "too_large": "Os vídeos podem ter até 4 GB.",
+      "too_long": "Os vídeos podem ter até 150 minutos.",
+      "unsupported_type": "Só é possível enviar vídeos MP4 e MOV.",
+      "limit_reached": "Atingiste o limite de envios por agora. Conclui ou cancela outros envios, ou tenta amanhã.",
+      "consent_required": "Aceita primeiro as condições de envio.",
+      "not_allowed": "O envio não está disponível para esta conta neste momento.",
+      "file_missing": "O vídeo selecionado já não está neste dispositivo. Seleciona-o novamente.",
+      "rejected": "Não foi possível aceitar o vídeo. Verifica se é um ficheiro MP4 ou MOV reproduzível.",
+      "unknown": "Não foi possível concluir o envio. Tenta novamente."
+    }
   },
   "export": {
     "title": "Vídeo renderizado",

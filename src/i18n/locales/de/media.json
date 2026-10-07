@@ -150,7 +150,40 @@
     "pending": "Wartet auf Upload",
     "uploading": "Wird hochgeladen",
     "ready": "Bereit",
-    "failed": "Upload fehlgeschlagen"
+    "failed": "Upload fehlgeschlagen",
+    "phase": {
+      "idle": "Bereit zum Hochladen",
+      "preparing": "Upload wird vorbereitet…",
+      "uploading": "Spielvideo wird hochgeladen",
+      "paused": "Upload pausiert",
+      "processing": "Video wird geprüft",
+      "ready": "Video bereit",
+      "failed": "Upload angehalten",
+      "cancelled": "Upload abgebrochen"
+    },
+    "progressLabel": "Upload zu {{percent}} Prozent abgeschlossen",
+    "bytes": "{{sent}} von {{total}} ({{percent}} %)",
+    "speed": "{{rate}}",
+    "eta": "noch etwa {{eta}}",
+    "foregroundNote": "Lass ScoutX während des Uploads geöffnet. Wird die App geschlossen, geht der Upload beim nächsten Mal an derselben Stelle weiter.",
+    "processingNote": "Alle Daten sind angekommen. ScoutX prüft Format und Länge vor der Analyse.",
+    "pause": "Pausieren",
+    "resume": "Fortsetzen",
+    "retry": "Erneut versuchen",
+    "cancel": "Upload abbrechen",
+    "error": {
+      "offline": "Verbindung verloren. Versuche es erneut, sobald du online bist; fertige Teile bleiben erhalten.",
+      "session_expired": "Dieser Upload ist abgelaufen. Starte ihn erneut.",
+      "too_large": "Videos dürfen bis zu 4 GB groß sein.",
+      "too_long": "Videos dürfen bis zu 150 Minuten lang sein.",
+      "unsupported_type": "Es können nur MP4- und MOV-Videos hochgeladen werden.",
+      "limit_reached": "Du hast das Upload-Limit vorerst erreicht. Schließe andere Uploads ab oder versuche es morgen erneut.",
+      "consent_required": "Bitte bestätige zuerst die Upload-Hinweise.",
+      "not_allowed": "Hochladen ist für dieses Konto derzeit nicht verfügbar.",
+      "file_missing": "Das ausgewählte Video ist nicht mehr auf diesem Gerät. Wähle es erneut aus.",
+      "rejected": "Das Video konnte nicht angenommen werden. Prüfe, ob es eine abspielbare MP4- oder MOV-Datei ist.",
+      "unknown": "Der Upload konnte nicht abgeschlossen werden. Bitte versuche es erneut."
+    }
   },
   "export": {
     "title": "Gerendertes Video",

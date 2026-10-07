@@ -65,8 +65,11 @@ const OWNED_QUERIES = [
     ['youthConsents', 'uid'],
     ['mail', 'scoutxUid'],
     ['appeals', 'ownerId'],
+    ['mediaUploads', 'ownerId'],
+    ['mediaUploadSessions', 'ownerId'],
+    ['uploadSessionLimits', 'ownerId'],
 ];
-const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
+const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`, `quarantine/${uid}/`];
 async function deleteQueryInBatches(query) {
     const db = (0, firestore_1.getFirestore)();
     let deleted = 0;

@@ -28,6 +28,8 @@ export {
   releaseExpiredSuspensions,
 } from './moderation/actions';
 export { onMediaWrittenReproject } from './moderation/reproject';
+export { createUploadSession, cancelUploadSession, cleanupAbandonedUploads } from './uploads/sessions';
+export { onQuarantineObjectFinalized } from './uploads/quarantine';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
 export {
