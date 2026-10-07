@@ -68,5 +68,28 @@
     "option_one": "{{count}} ster",
     "option_other": "{{count}} sterren",
     "clearHint": "Tik opnieuw om te wissen"
+  },
+  "deepLink": {
+    "goHome": "Naar start",
+    "wrong_role": {
+      "title": "Niet beschikbaar voor dit account",
+      "body": "Deze link is bedoeld voor een ander soort account. Log in met het juiste account om hem te openen."
+    },
+    "invalid": {
+      "title": "Link niet herkend",
+      "body": "Deze link is onvolledig of ongeldig. Vraag de afzender om een nieuwe."
+    },
+    "not_found": {
+      "title": "Niet meer beschikbaar",
+      "body": "Dit item is verwijderd of je hebt er geen toegang meer toe."
+    },
+    "private": {
+      "title": "Dit item is privé",
+      "body": "De eigenaar heeft dit niet met je gedeeld."
+    },
+    "expired": {
+      "title": "Link verlopen",
+      "body": "Deze link is verlopen. Vraag de afzender om een nieuwe."
+    }
   }
 }

@@ -72,8 +72,9 @@ function CareerReplayRoute({
 
 function TrialsRoute({
   navigation,
+  route,
 }: NativeStackScreenProps<PlayerStackParamList, 'Trials'>) {
-  return <PlayerTrialsScreen onBack={() => navigation.goBack()} />;
+  return <PlayerTrialsScreen onBack={() => navigation.goBack()} focusTrialId={route.params?.trialId} />;
 }
 
 function SettingsRoute({

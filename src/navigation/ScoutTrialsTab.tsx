@@ -11,9 +11,10 @@ type TrialsSegment = 'trials' | 'reports';
 export type ScoutTrialsTabProps = {
   onPlayerPress: (playerId: string) => void;
   onSettingsPress?: () => void;
+  focusTrialId?: string;
 };
 
-export function ScoutTrialsTab({ onPlayerPress, onSettingsPress }: ScoutTrialsTabProps) {
+export function ScoutTrialsTab({ onPlayerPress, onSettingsPress, focusTrialId }: ScoutTrialsTabProps) {
   const { t } = useAppTranslation('navigation');
   const insets = useSafeAreaInsets();
   const [segment, setSegment] = useState<TrialsSegment>('trials');
@@ -38,6 +39,7 @@ export function ScoutTrialsTab({ onPlayerPress, onSettingsPress }: ScoutTrialsTa
         <ScoutTrialsInboxScreen
           onPlayerPress={onPlayerPress}
           onSettingsPress={onSettingsPress}
+          focusTrialId={focusTrialId}
           nestedUnderSegment
         />
       ) : (

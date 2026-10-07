@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react';
 import { createBottomTabNavigator, type BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ClipboardList, Compass, Home, Kanban } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -140,11 +140,13 @@ function ScoutPipelineRoute() {
 function ScoutTrialsRoute() {
   const navigation = useScoutTabNavigation();
   const flow = useScoutFlow();
+  const route = useRoute<RouteProp<ScoutTabParamList, 'Trials'>>();
 
   return (
     <ScoutTrialsTab
       onPlayerPress={(playerId) => flow.openPlayerDetail(playerId)}
       onSettingsPress={() => navigation.navigate('Settings')}
+      focusTrialId={route.params?.trialId}
     />
   );
 }

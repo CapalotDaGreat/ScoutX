@@ -68,5 +68,28 @@
     "option_one": "{{count}} stella",
     "option_other": "{{count}} stelle",
     "clearHint": "Tocca di nuovo per cancellare"
+  },
+  "deepLink": {
+    "goHome": "Vai alla home",
+    "wrong_role": {
+      "title": "Non disponibile per questo account",
+      "body": "Questo link è pensato per un altro tipo di account. Accedi con l'account giusto per aprirlo."
+    },
+    "invalid": {
+      "title": "Link non riconosciuto",
+      "body": "Questo link è incompleto o non valido. Chiedine uno nuovo al mittente."
+    },
+    "not_found": {
+      "title": "Non più disponibile",
+      "body": "Questo elemento è stato rimosso o non hai più accesso."
+    },
+    "private": {
+      "title": "Questo elemento è privato",
+      "body": "Il proprietario non lo ha condiviso con te."
+    },
+    "expired": {
+      "title": "Link scaduto",
+      "body": "Questo link è scaduto. Chiedine uno nuovo al mittente."
+    }
   }
 }

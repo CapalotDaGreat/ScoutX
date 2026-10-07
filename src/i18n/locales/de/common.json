@@ -68,5 +68,28 @@
     "option_one": "{{count}} Stern",
     "option_other": "{{count}} Sterne",
     "clearHint": "Erneut tippen zum Entfernen"
+  },
+  "deepLink": {
+    "goHome": "Zur Startseite",
+    "wrong_role": {
+      "title": "Für dieses Konto nicht verfügbar",
+      "body": "Dieser Link ist für eine andere Kontoart gedacht. Melde dich mit dem passenden Konto an."
+    },
+    "invalid": {
+      "title": "Link nicht erkannt",
+      "body": "Dieser Link ist unvollständig oder fehlerhaft. Bitte den Absender um einen neuen."
+    },
+    "not_found": {
+      "title": "Nicht mehr verfügbar",
+      "body": "Dieser Eintrag wurde entfernt oder du hast keinen Zugriff mehr."
+    },
+    "private": {
+      "title": "Dieser Eintrag ist privat",
+      "body": "Der Besitzer hat ihn nicht mit dir geteilt."
+    },
+    "expired": {
+      "title": "Link abgelaufen",
+      "body": "Dieser Link ist abgelaufen. Bitte den Absender um einen neuen."
+    }
   }
 }

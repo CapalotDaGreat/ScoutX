@@ -288,8 +288,9 @@ function PlayerTabsContainer() {
           )}
         </Tab.Screen>
         <Tab.Screen name="Media">
-          {() => (
+          {({ route }) => (
             <PlayerMediaTab
+              focusReelId={route.params?.reelId}
               onManageVideosPress={() => setIsVideosModalVisible(true)}
               onAnalyzeMatchVideoPress={openMatchAnalysis}
               onOpenHighlightReelStudio={() => setIsHighlightReelStudioVisible(true)}

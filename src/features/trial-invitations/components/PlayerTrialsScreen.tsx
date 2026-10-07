@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
+import { Card } from '@/components/primitives/Card';
+import { Text } from '@/components/primitives/Text';
 import { NotificationCard } from '@/components/primitives/NotificationCard';
 import { TrialInvitationCard } from '@/features/trial-invitations/components/TrialInvitationCard';
 import { TrialInvitationResponseModal } from '@/features/trial-invitations/components/TrialInvitationResponseModal';
@@ -20,17 +22,35 @@ export type PlayerTrialsScreenProps = {
   embeddedInTabShell?: boolean;
   nestedUnderSegment?: boolean;
   onBack?: () => void;
+  /** Trial opened from a deep link or push tap. */
+  focusTrialId?: string;
 };
 
 export function PlayerTrialsScreen({
   embeddedInTabShell = false,
   nestedUnderSegment = false,
   onBack,
+  focusTrialId,
 }: PlayerTrialsScreenProps) {
   const { t } = useAppTranslation(['trials', 'common']);
   const { trials, isLoading, isSaving, acceptTrial, declineTrial } = usePlayerTrialInvitations();
   const { notifications, markRead } = useTrialNotifications();
   const [activeTrial, setActiveTrial] = useState<TrialInvitation | null>(null);
+  const [focusMissing, setFocusMissing] = useState(false);
+  const handledFocusRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!focusTrialId || isLoading || handledFocusRef.current === focusTrialId) {
+      return;
+    }
+    handledFocusRef.current = focusTrialId;
+    const trial = trials.find((item) => item.id === focusTrialId);
+    if (trial) {
+      setActiveTrial(trial);
+    } else {
+      setFocusMissing(true);
+    }
+  }, [focusTrialId, isLoading, trials]);
 
   const screenProps = {
     ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
@@ -61,6 +81,14 @@ export function PlayerTrialsScreen({
       }
     >
       <View className="gap-6">
+        {focusMissing ? (
+          <Card variant="outlined" padding="md" className="gap-1">
+            <Text weight="semibold">{t('common:deepLink.not_found.title')}</Text>
+            <Text variant="body-sm" color="secondary">
+              {t('common:deepLink.not_found.body')}
+            </Text>
+          </Card>
+        ) : null}
         {notifications.length > 0 ? (
           <Section title={t('notificationsTitle')} subtitle={t('notificationsSubtitle')}>
             <View className="gap-2">

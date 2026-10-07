@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
@@ -10,11 +10,20 @@ import { type ReelManifest } from '@/features/reel-studio/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
 
-export function ReelListSection({ userId }: { userId: string | null }) {
-  const { t } = useAppTranslation('media');
+export function ReelListSection({
+  userId,
+  focusReelId,
+}: {
+  userId: string | null;
+  /** Reel opened from a deep link; missing or foreign reels show a not-found notice. */
+  focusReelId?: string;
+}) {
+  const { t } = useAppTranslation(['media', 'common']);
   const [reels, setReels] = useState<ReelManifest[]>([]);
   const [editing, setEditing] = useState<ReelManifest | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [focusMissing, setFocusMissing] = useState(false);
+  const handledFocusRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!userId) {
@@ -23,9 +32,20 @@ export function ReelListSection({ userId }: { userId: string | null }) {
     }
     void ReelRepository.getInstance()
       .listReels(userId)
-      .then(setReels)
+      .then((loaded) => {
+        setReels(loaded);
+        if (focusReelId && handledFocusRef.current !== focusReelId) {
+          handledFocusRef.current = focusReelId;
+          const target = loaded.find((reel) => reel.id === focusReelId);
+          if (target) {
+            setEditing(target);
+          } else {
+            setFocusMissing(true);
+          }
+        }
+      })
       .catch((err: unknown) => setError(toUserMessage(err, t('reel.loadFailed'))));
-  }, [t, userId]);
+  }, [focusReelId, t, userId]);
 
   const createDraft = async () => {
     if (!userId) {
@@ -58,6 +78,12 @@ export function ReelListSection({ userId }: { userId: string | null }) {
     <View className="gap-3">
       <Heading level={3}>{t('reel.listTitle')}</Heading>
       {error ? <Text color="error" variant="body-sm">{error}</Text> : null}
+      {focusMissing ? (
+        <Card variant="outlined" padding="md" className="gap-1">
+          <Text weight="semibold">{t('common:deepLink.not_found.title')}</Text>
+          <Text variant="body-sm" color="secondary">{t('common:deepLink.not_found.body')}</Text>
+        </Card>
+      ) : null}
       <Button variant="prestige" onPress={() => void createDraft()}>{t('reel.new')}</Button>
       {reels.length === 0 ? (
         <Text variant="body-sm" color="secondary">{t('reel.empty')}</Text>

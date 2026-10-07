@@ -4,6 +4,7 @@ exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritt
 const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
+const notificationProducers_1 = require("./notificationProducers");
 const PIPELINE = [
     'discovered',
     'shortlisted',
@@ -92,5 +93,6 @@ exports.onPassportSummaryWrittenNotifyWatchers = (0, firestore_1.onDocumentWritt
         });
     }
     await batch.commit();
+    await Promise.allSettled(watchers.docs.map((watcher) => (0, notificationProducers_1.notifyWatchlistChange)(db, watcher.id, playerId)));
 });
 //# sourceMappingURL=watchlist.js.map

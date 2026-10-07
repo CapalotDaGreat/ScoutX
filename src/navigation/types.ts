@@ -23,7 +23,7 @@ export type AuthStackParamList = {
 export type PlayerTabParamList = {
   Home: undefined;
   Performance: { segment?: 'development' | 'stats' | 'career' } | undefined;
-  Media: undefined;
+  Media: { reelId?: string } | undefined;
   Discover: undefined;
 };
 
@@ -33,8 +33,9 @@ export type PlayerStackParamList = {
   CareerReplay: undefined;
   Settings: undefined;
   /** Player trial invitations inbox (stack, not a tab). */
-  Trials: undefined;
-  PlayerDetail: { playerId: string };
+  Trials: { trialId?: string } | undefined;
+  RequestCenter: { requestId?: string } | undefined;
+  PlayerDetail: { playerId: string; evidenceId?: string };
   AnalysisReport: { jobId: string };
   GlobalSearch: undefined;
   PlayerLogin: undefined;
@@ -47,12 +48,12 @@ export type ScoutTabParamList = {
   Dashboard: undefined;
   Discover: undefined;
   Pipeline: undefined;
-  Trials: undefined;
+  Trials: { trialId?: string } | undefined;
 };
 
 export type ScoutStackParamList = {
   ScoutTabs: NavigatorScreenParams<ScoutTabParamList>;
-  PlayerDetail: { playerId: string };
+  PlayerDetail: { playerId: string; evidenceId?: string };
   PlayerComparison: undefined;
   ActivityInbox: undefined;
   PublicPortfolio: { playerId?: string; slug?: string };
@@ -74,6 +75,7 @@ export type RootStackParamList = {
   PlayerApp: NavigatorScreenParams<PlayerStackParamList>;
   ScoutApp: NavigatorScreenParams<ScoutStackParamList>;
   GuestApp: NavigatorScreenParams<GuestStackParamList>;
+  LinkUnavailable: { reason?: string } | undefined;
 };
 
 declare global {

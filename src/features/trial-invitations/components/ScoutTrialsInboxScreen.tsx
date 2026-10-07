@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -13,15 +14,33 @@ export type ScoutTrialsInboxScreenProps = {
   onPlayerPress: (playerId: string) => void;
   onSettingsPress?: () => void;
   nestedUnderSegment?: boolean;
+  /** Trial opened from a deep link or push tap. */
+  focusTrialId?: string;
 };
 
 export function ScoutTrialsInboxScreen({
   onPlayerPress,
   onSettingsPress,
   nestedUnderSegment = false,
+  focusTrialId,
 }: ScoutTrialsInboxScreenProps) {
   const { t } = useAppTranslation(['navigation', 'common', 'trials']);
   const { trials, isLoading, error } = useScoutAllTrialInvitations();
+  const [focusMissing, setFocusMissing] = useState(false);
+  const handledFocusRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!focusTrialId || isLoading || handledFocusRef.current === focusTrialId) {
+      return;
+    }
+    handledFocusRef.current = focusTrialId;
+    const trial = trials.find((item) => item.id === focusTrialId);
+    if (trial) {
+      onPlayerPress(trial.playerId);
+    } else {
+      setFocusMissing(true);
+    }
+  }, [focusTrialId, isLoading, onPlayerPress, trials]);
 
   const screenProps = nestedUnderSegment
     ? { safeAreaEdges: ['left', 'right'] as Array<'left' | 'right'>, embeddedInTabShell: true as const }
@@ -48,6 +67,14 @@ export function ScoutTrialsInboxScreen({
       }
       error={error}
     >
+      {focusMissing ? (
+        <Card variant="outlined" padding="md" className="mb-3 gap-1">
+          <Text weight="semibold">{t('common:deepLink.not_found.title')}</Text>
+          <Text variant="body-sm" color="secondary">
+            {t('common:deepLink.not_found.body')}
+          </Text>
+        </Card>
+      ) : null}
       {trials.length === 0 ? (
         <EmptyState
           title={t('trials:scoutInboxEmptyTitle')}

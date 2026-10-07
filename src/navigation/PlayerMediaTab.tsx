@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TabSegmentControl } from '@/components/navigation/TabSegmentControl';
@@ -20,18 +20,23 @@ export type PlayerMediaTabProps = {
   onManageVideosPress: () => void;
   onAnalyzeMatchVideoPress?: () => void;
   onOpenHighlightReelStudio?: () => void;
+  focusReelId?: string;
 };
 
 export function PlayerMediaTab({
   onManageVideosPress,
   onAnalyzeMatchVideoPress,
   onOpenHighlightReelStudio,
+  focusReelId,
 }: PlayerMediaTabProps) {
   const { t } = useAppTranslation('navigation');
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const { profile } = usePlayerWorkspace();
-  const [segment, setSegment] = useState<MediaSegment>('library');
+  const [segment, setSegment] = useState<MediaSegment>(focusReelId ? 'reels' : 'library');
+  useEffect(() => {
+    if (focusReelId) setSegment('reels');
+  }, [focusReelId]);
   const [showReelStudio, setShowReelStudio] = useState(false);
 
   const segments = useMemo(
@@ -102,7 +107,7 @@ export function PlayerMediaTab({
           >
             Open Highlight Reel Studio
           </Button>
-          <ReelListSection userId={user?.id ?? null} />
+          <ReelListSection userId={user?.id ?? null} focusReelId={focusReelId} />
           <HighlightReelStudioModal
             visible={showReelStudio}
             playerId={user?.id ?? null}

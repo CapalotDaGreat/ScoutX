@@ -1,6 +1,7 @@
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
+import { notifyWatchlistChange } from './notificationProducers';
 
 const PIPELINE = [
   'discovered',
@@ -101,5 +102,8 @@ export const onPassportSummaryWrittenNotifyWatchers = onDocumentWritten(
       });
     }
     await batch.commit();
+    await Promise.allSettled(
+      watchers.docs.map((watcher) => notifyWatchlistChange(db, watcher.id, playerId)),
+    );
   },
 );

@@ -28,9 +28,69 @@ export const ACTIVITY_CATEGORY: Record<string, NotificationCategory> = {
   milestone_earned: 'career',
   weekly_report_ready: 'development',
   analysis_completed: 'analysis',
+  analysis_failed: 'analysis',
   evidence_requested: 'scouting',
+  evidence_fulfilled: 'scouting',
   watchlist_change: 'scouting',
+  trial_update: 'trial',
+  passport_improved: 'passport',
+  development_reminder: 'development',
 };
+
+/** Deep-link path (no scheme) opened when a push is tapped. Unknown types open Home. */
+export function pushPathFor(
+  type: string,
+  reference: { entityType?: string; entityId?: string } | null | undefined,
+  recipientRole: string | undefined,
+): string {
+  const id = typeof reference?.entityId === 'string' ? reference.entityId : '';
+  const scout = recipientRole === 'scout' || recipientRole === 'coach';
+  switch (type) {
+    case 'analysis_completed':
+    case 'analysis_failed':
+      return id ? `match/${id}` : 'player/home';
+    case 'trial_invitation':
+    case 'trial_update':
+      return id ? `trial/${id}` : scout ? 'scout/trials' : 'player/trials';
+    case 'evidence_requested':
+      return id ? `request/${id}` : 'player/requests';
+    case 'evidence_fulfilled':
+      return id ? `scout/player/${id}` : 'scout';
+    case 'watchlist_change':
+      return 'scout';
+    case 'weekly_report_ready':
+    case 'development_reminder':
+      return 'player/performance';
+    default:
+      return scout ? 'scout' : 'player/home';
+  }
+}
+
+/** Number of evidence-coverage dimensions at moderate or strong. */
+export function solidCoverageCount(coverage: unknown): number {
+  if (!Array.isArray(coverage)) return 0;
+  return coverage.filter((item) => {
+    const row = item && typeof item === 'object' ? (item as Record<string, unknown>) : null;
+    return row?.state === 'moderate' || row?.state === 'strong';
+  }).length;
+}
+
+/** A Passport change is only worth a push when a coverage dimension became solid. */
+export function isMeaningfulPassportImprovement(before: unknown, after: unknown): boolean {
+  return solidCoverageCount(after) > solidCoverageCount(before);
+}
+
+export type TrialParty = 'player' | 'scout';
+
+/** Who should hear about a trial status change: the side that did not make it. */
+export function trialUpdateRecipient(fromStatus: unknown, toStatus: unknown): TrialParty | null {
+  if (fromStatus === toStatus || typeof toStatus !== 'string') return null;
+  if (toStatus === 'accepted' || toStatus === 'declined') return 'scout';
+  if (toStatus === 'rescheduled' || toStatus === 'cancelled' || toStatus === 'completed') {
+    return 'player';
+  }
+  return null;
+}
 
 /** Pre-Phase-AE category keys, mapped to their replacements. */
 const LEGACY_CATEGORY_KEYS: Record<string, NotificationCategory> = {

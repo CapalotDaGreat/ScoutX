@@ -1,19 +1,48 @@
 import * as Linking from 'expo-linking';
+import { Platform } from 'react-native';
 import type { LinkingOptions } from '@react-navigation/native';
 import {
+  getAppScheme,
   getDeepLinkPrefixes,
   normalizeIncomingDeepLink,
   parseAuthActionLink,
 } from '@/config/deepLinking';
 import { stashPendingAuthAction } from '@/features/auth/services/pendingAuthDeepLinkService';
+import {
+  extractLinkPath,
+  isValidPushPath,
+  resolveDeepLinkPath,
+  resolutionToPath,
+} from '@/navigation/deepLinkResolver';
+import { getDeepLinkSession, stashResumePath } from '@/navigation/deepLinkSession';
 import type { RootStackParamList } from '@/navigation/types';
+
+const prefixes = getDeepLinkPrefixes();
 
 function captureAndNormalize(url: string): string {
   const authAction = parseAuthActionLink(url);
   if (authAction) {
     stashPendingAuthAction(authAction);
+    return normalizeIncomingDeepLink(url);
   }
-  return normalizeIncomingDeepLink(url);
+
+  const resolution = resolveDeepLinkPath(extractLinkPath(url, prefixes), getDeepLinkSession());
+  if (resolution.kind === 'passthrough') {
+    return url;
+  }
+  if (resolution.kind === 'requires_auth') {
+    stashResumePath(resolution.resumePath);
+  }
+  return `${getAppScheme()}://${resolutionToPath(resolution)}`;
+}
+
+type NotificationResponseLike = {
+  notification: { request: { content: { data?: Record<string, unknown> | null } } };
+};
+
+function pushResponseUrl(response: NotificationResponseLike | null | undefined): string | null {
+  const path = response?.notification.request.content.data?.path;
+  return typeof path === 'string' && isValidPushPath(path) ? `${getAppScheme()}://${path}` : null;
 }
 
 /**
@@ -24,24 +53,51 @@ function captureAndNormalize(url: string): string {
  *
  * Firebase auth action links (`auth/action`, `__/auth/action`) open AuthAction
  * and return users to ScoutX after email verification or password reset.
+ *
+ * Push taps carry `data.path` and go through the same gate as URLs.
  */
 export const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: getDeepLinkPrefixes(),
+  prefixes,
   async getInitialURL() {
     const url = await Linking.getInitialURL();
-    if (!url) {
+    if (url) {
+      return captureAndNormalize(url);
+    }
+    if (Platform.OS === 'web') {
       return null;
     }
-
-    return captureAndNormalize(url);
+    try {
+      const Notifications = await import('expo-notifications');
+      const pushUrl = pushResponseUrl(await Notifications.getLastNotificationResponseAsync());
+      return pushUrl ? captureAndNormalize(pushUrl) : null;
+    } catch {
+      return null;
+    }
   },
   subscribe(listener) {
     const subscription = Linking.addEventListener('url', ({ url }) => {
       listener(captureAndNormalize(url));
     });
 
+    let removePush: (() => void) | undefined;
+    let cancelled = false;
+    if (Platform.OS !== 'web') {
+      void import('expo-notifications')
+        .then((Notifications) => {
+          if (cancelled) return;
+          const pushSub = Notifications.addNotificationResponseReceivedListener((response) => {
+            const pushUrl = pushResponseUrl(response);
+            if (pushUrl) listener(captureAndNormalize(pushUrl));
+          });
+          removePush = () => pushSub.remove();
+        })
+        .catch(() => undefined);
+    }
+
     return () => {
+      cancelled = true;
       subscription.remove();
+      removePush?.();
     };
   },
   config: {
@@ -83,6 +139,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
           PlayerDetail: 'player/detail/:playerId',
           Settings: 'player/settings',
           Trials: 'player/trials',
+          RequestCenter: 'player/requests',
           AnalysisReport: 'match/:jobId',
           GlobalSearch: 'player/search',
           PlayerRegister: 'player/register',
@@ -122,6 +179,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
           GuestForgotPassword: 'guest/forgot-password',
         },
       },
+      LinkUnavailable: 'link/unavailable',
     },
   },
 };

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { NavigationContainer, CommonActions } from '@react-navigation/native';
+import { NavigationContainer, CommonActions, getStateFromPath } from '@react-navigation/native';
 import type { NavigationContainerRef } from '@react-navigation/native';
 import { SessionLoadingScreen } from '@/features/auth/screens/SessionLoadingScreen';
 import { useAuth } from '@/features/auth/store/AuthProvider';
@@ -13,6 +13,9 @@ import { useNavigationTheme } from '@/navigation/navigationTheme';
 import { PlayerRootNavigator } from '@/navigation/PlayerRootNavigator';
 import { ScoutRootNavigator } from '@/navigation/ScoutRootNavigator';
 import { type RootStackParamList } from '@/navigation/types';
+import { resolveDeepLinkPath, resolutionToPath, type DeepLinkRole } from '@/navigation/deepLinkResolver';
+import { consumeResumePath, setDeepLinkSession } from '@/navigation/deepLinkSession';
+import { LinkUnavailableScreen } from '@/navigation/screens/LinkUnavailableScreen';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -65,6 +68,10 @@ export function RootNavigator() {
 
   const showBootstrapOverlay = isBootstrappingSession;
 
+  const linkRole: DeepLinkRole = isGuest ? 'guest' : role === 'scout' || role === 'coach' || role === 'player' ? role : null;
+  const linkAuthenticated = status === 'authenticated' && !pendingRoleSelection && !isBootstrappingSession;
+  setDeepLinkSession({ authenticated: linkAuthenticated, role: linkRole });
+
   useEffect(() => {
     if (showBootstrapOverlay) {
       return;
@@ -106,13 +113,24 @@ export function RootNavigator() {
     }
 
     lastSyncedRootRef.current = rootRoute;
+    const resumePath = linkAuthenticated ? consumeResumePath() : null;
+    const resumeState = resumePath
+      ? getStateFromPath(
+          resolutionToPath(resolveDeepLinkPath(resumePath, { authenticated: true, role: linkRole })),
+          linking.config,
+        )
+      : undefined;
+    if (resumeState) {
+      navigation.resetRoot(resumeState as Parameters<typeof navigation.resetRoot>[0]);
+      return;
+    }
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{ name: rootRoute }],
       }),
     );
-  }, [showBootstrapOverlay, status, rootRoute, pendingRoleSelection, isGuest, role]);
+  }, [showBootstrapOverlay, status, rootRoute, pendingRoleSelection, isGuest, role, linkAuthenticated, linkRole]);
 
   return (
     <NavigationContainer ref={navigationRef} linking={linking} theme={navigationTheme}>
@@ -125,6 +143,7 @@ export function RootNavigator() {
           <RootStack.Screen name="PlayerApp" component={PlayerRootNavigator} />
           <RootStack.Screen name="ScoutApp" component={ScoutRootNavigator} />
           <RootStack.Screen name="GuestApp" component={GuestRootNavigator} />
+          <RootStack.Screen name="LinkUnavailable" component={LinkUnavailableScreen} />
         </RootStack.Navigator>
 
         {showBootstrapOverlay ? (
