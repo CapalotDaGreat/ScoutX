@@ -7,6 +7,16 @@ const baseConfig = appJson.expo as ExpoConfig;
 const projectRoot = __dirname;
 
 const isExpoGoDev = process.env.EXPO_PUBLIC_EXPO_GO === '1';
+
+// EXPO_PUBLIC_* values are inlined into the JS bundle, so a client AI key would ship to every user.
+if (
+  process.env.EAS_BUILD_PROFILE === 'production' &&
+  process.env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim()
+) {
+  throw new Error(
+    'EXPO_PUBLIC_OPENROUTER_API_KEY must not be set for production builds; AI runs through Cloud Functions.',
+  );
+}
 const appLinkHost = process.env.EXPO_PUBLIC_APP_LINK_HOST?.trim() || 'scoutx.app';
 const googleServicesJson =
   process.env.GOOGLE_SERVICES_JSON?.trim() || './google-services.json';

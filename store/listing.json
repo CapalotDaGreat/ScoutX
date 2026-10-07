@@ -2,7 +2,7 @@
   "ios": {
     "name": "ScoutX",
     "subtitle": "Your Football Passport",
-    "description": "ScoutX is the player-first football identity platform. Build your verified Football Passport with stats, highlight videos, GPS match data, coach endorsements, and shareable portfolio links — so scouts can discover the real you.",
+    "description": "ScoutX is the player-first football identity platform. Build your Football Passport from your match logs, highlight videos, GPS sessions, development goals and coach endorsements, with every item showing where it came from — so scouts see evidence, not hype.",
     "keywords": [
       "football",
       "soccer",
@@ -21,8 +21,8 @@
   },
   "android": {
     "title": "ScoutX — Football Passport",
-    "shortDescription": "Build your verified football identity and get discovered by scouts.",
-    "fullDescription": "ScoutX helps players build a verified Football Passport — one shareable career hub for stats, videos, GPS, endorsements, and trials. Claim your scoutx.app link, track portfolio analytics, earn milestones, and get discovered by scouts worldwide.",
+    "shortDescription": "Build your football identity from real evidence and get discovered by scouts.",
+    "fullDescription": "ScoutX helps players build a Football Passport — one shareable career hub for match logs, videos, GPS sessions, endorsements and trials, with every item labelled by its source. Claim your scoutx.app link, see who viewed your Passport, earn career milestones, and respond to scout requests and trial invitations.",
     "category": "SPORTS",
     "privacyPolicyUrl": "https://scoutx.app/privacy"
   }

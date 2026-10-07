@@ -1,5 +1,5 @@
 import { getAiConfig } from '@/config/ai';
-import { isProductionApp } from '@/config/appMode';
+import { isProductionApp, useMockData } from '@/config/appMode';
 import { CloudFunctionAiProvider } from '@/features/ai-insights/providers/cloudFunctionAiProvider';
 import { MockAiProvider } from '@/features/ai-insights/providers/mockAiProvider';
 import { OpenRouterAiProvider } from '@/features/ai-insights/providers/openRouterProvider';
@@ -27,5 +27,5 @@ export function createAiProvider(): AiProvider {
     }
   }
 
-  return new MockAiProvider();
+  return useMockData() ? new MockAiProvider() : new UnavailableAiProvider();
 }

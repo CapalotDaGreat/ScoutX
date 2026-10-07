@@ -4,7 +4,15 @@ const EMAIL_PATTERN = /.+@.+\..+/;
 
 export type AuthFieldErrors<T extends string> = Partial<Record<T, string>>;
 
-type TranslateFn = (key: any, options?: any) => string;
+type AuthValidationKey =
+  | 'validation:emailRequired'
+  | 'validation:emailInvalid'
+  | 'validation:passwordRequired'
+  | 'validation:passwordMinLength'
+  | 'validation:confirmPasswordRequired'
+  | 'validation:passwordMismatch';
+
+type TranslateFn = (key: AuthValidationKey, options?: { count: number }) => string;
 
 export function validateEmailField(
   email: string,
