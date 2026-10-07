@@ -253,6 +253,8 @@ function analysisStatusBadge(
     case 'complete':
       return { label: t('portfolio:today.latestAnalysis.complete'), variant: 'success' };
     case 'failed':
+    case 'cancelled':
+    case 'expired':
       return { label: t('portfolio:today.latestAnalysis.failed'), variant: 'error' };
     case 'queued':
     case 'processing':

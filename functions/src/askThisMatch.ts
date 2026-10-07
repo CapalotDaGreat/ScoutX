@@ -2,6 +2,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
 import { createCallableOptions } from './callableOptions';
 import { NOT_ENOUGH_EVIDENCE } from './analysis/askThisMatch';
+import { cleanModelText, timestampWithin } from './ai/outputValidator';
 
 type Citation = {
   evidenceId: string;
@@ -13,6 +14,8 @@ type Citation = {
 
 type JobDoc = {
   playerId?: string;
+  durationSec?: number;
+  measuredDurationSec?: number;
   events?: unknown;
   report?: {
     evidence?: unknown;
@@ -55,6 +58,7 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
     throw new HttpsError('permission-denied', 'You can only ask about your own analysis.');
   }
 
+  const durationSec = job.measuredDurationSec ?? job.durationSec ?? 0;
   const events = Array.isArray(job.events) ? job.events : [];
   const evidence = Array.isArray(job.report?.evidence) ? job.report.evidence : [];
   const coachingMoments = Array.isArray(job.report?.coachingMoments)
@@ -100,7 +104,7 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
         evidenceId: eventId,
         label: type,
         kind: 'event',
-        timestampSec: typeof row.videoTimestampSec === 'number' ? row.videoTimestampSec : null,
+        timestampSec: timestampWithin(row.videoTimestampSec, durationSec),
       });
     }
   }
@@ -110,8 +114,8 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
     if (!row) {
       continue;
     }
-    const label = typeof row.label === 'string' ? row.label : 'Observation';
-    const detail = typeof row.detail === 'string' ? row.detail : '';
+    const label = cleanModelText(row.label, 80) || 'Observation';
+    const detail = cleanModelText(row.detail, 400);
     const blob = `${label} ${detail}`.toLowerCase();
     if (q.split(/\s+/).some((token) => token.length >= 3 && blob.includes(token))) {
       lines.push(detail || label);
@@ -119,7 +123,7 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
         evidenceId: typeof row.id === 'string' ? row.id : label,
         label,
         kind: 'observation',
-        timestampSec: typeof row.timestampSec === 'number' ? row.timestampSec : null,
+        timestampSec: timestampWithin(row.timestampSec, durationSec),
         detail: detail || label,
       });
     }
@@ -130,8 +134,8 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
     if (!row) {
       continue;
     }
-    const point = typeof row.coachingPoint === 'string' ? row.coachingPoint : '';
-    const context = typeof row.context === 'string' ? row.context : '';
+    const point = cleanModelText(row.coachingPoint, 400);
+    const context = cleanModelText(row.context, 400);
     const blob = `${context} ${point}`.toLowerCase();
     if (point && q.split(/\s+/).some((token) => token.length >= 3 && blob.includes(token))) {
       lines.push(point);
@@ -139,7 +143,7 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
         evidenceId: typeof row.id === 'string' ? row.id : point.slice(0, 40),
         label: point.slice(0, 80),
         kind: 'coaching',
-        timestampSec: typeof row.timestampSec === 'number' ? row.timestampSec : null,
+        timestampSec: timestampWithin(row.timestampSec, durationSec),
         detail: point,
       });
     }

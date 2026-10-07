@@ -1,6 +1,7 @@
 import { getFirestore } from 'firebase-admin/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { createCallableOptions } from './callableOptions';
+import { cleanModelText } from './ai/outputValidator';
 
 export type HighlightReelGenerationRequest = {
   jobId?: string;
@@ -71,7 +72,7 @@ export const generateHighlightReelPlan = onCall(createCallableOptions(), async (
           )
           .map((moment, index) => ({
             id: `moment-${index}`,
-            title: moment.label ?? 'Match moment',
+            title: cleanModelText(moment.label, 80) || 'Match moment',
             eventType: moment.label?.toLowerCase().includes('goal') ? 'Goal' : 'Match action',
             confidence: reportConfidence,
             timestampSec: moment.timestampSec,

@@ -29,6 +29,7 @@ import { IdentityConfirmationCard } from '@/features/match-analysis/components/I
 import { TechniqueAssessmentCard } from '@/features/match-analysis/components/TechniqueAssessmentCard';
 import { parseTechniqueAssessment } from '@/features/match-analysis/services/techniqueAssessment';
 import { getMatchAnalysisJob, updateMatchAnalysisJob } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
+import { useJobFrames } from '@/features/match-analysis/hooks/useJobFrames';
 import { confirmIdentity, rejectIdentity } from '@/features/match-analysis/services/identityConfirmation';
 import { hasApplyableEstimatedStats, type MatchAnalysisJob, type MatchEstimatedStats } from '@/features/match-analysis/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -204,9 +205,7 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
     setSelectedFrameIds([]);
   };
 
-  const frameUrls = Object.fromEntries(
-    (job?.frames ?? []).map((frame) => [frame.id, frame.downloadUrl]),
-  );
+  const { candidates, frameUrls } = useJobFrames(job);
   const frameTimestamps = Object.fromEntries(
     (job?.frames ?? []).map((frame) => [frame.id, frame.timestampSec]),
   );
@@ -343,9 +342,9 @@ export function AnalysisReportScreen({ jobId, onBack }: AnalysisReportScreenProp
 
           {tab === 'ask' ? <AskThisMatchCard job={job} onSeek={seekTo} /> : null}
 
-          {(job.identityCandidates ?? []).length > 0 ? (
+          {candidates.length > 0 ? (
             <IdentityConfirmationCard
-              candidates={job.identityCandidates ?? []}
+              candidates={candidates}
               confirmation={job.identityConfirmation}
               selectedFrameIds={selectedFrameIds}
               onToggleFrame={(frameId) => {

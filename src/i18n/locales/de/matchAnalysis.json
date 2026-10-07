@@ -191,7 +191,9 @@
     "failed": "Fehlgeschlagen",
     "analyzing": "Wird analysiert…",
     "uploadInterrupted": "Upload unterbrochen",
-    "draft": "Entwurf"
+    "draft": "Entwurf",
+    "cancelled": "Abgebrochen",
+    "expired": "Upload abgelaufen"
   },
   "modalReport": {
     "excluded": "aus der Leistung ausgeschlossen",
@@ -253,5 +255,36 @@
     "resultPlaceholder": "z. B. S 2-1",
     "notes": "Hinweise für die Analyse (optional)",
     "notesPlaceholder": "z. B. ab Minute 60 im rechten Mittelfeld gespielt"
+  },
+  "errors": {
+    "frames_insufficient": "Es konnten nicht genug klare Bilder des Spiels gelesen werden. Versuche eine ruhigere oder hellere Aufnahme.",
+    "model_unavailable": "Der Analysedienst ist gerade nicht verfügbar. Dein Video ist gespeichert – versuche es später erneut.",
+    "model_output_invalid": "Die Analyse konnte nicht abgeschlossen werden. Dein Video ist gespeichert – versuche es erneut.",
+    "ai_consent_required": "Die KI-Analyse ist ausgeschaltet. Aktiviere sie im Datenschutz-Center, um Videos zu analysieren.",
+    "extraction_failed": "Aus diesem Video konnten keine Schlüsselbilder extrahiert werden.",
+    "queue_unavailable": "Die Analyse konnte nicht eingereiht werden. Versuche es in ein paar Minuten erneut.",
+    "video_rejected": "Dieses Video hat die Format- und Längenprüfung nicht bestanden."
+  },
+  "pipeline": {
+    "title": "Analyse läuft",
+    "stageBased": "Der Fortschritt wird nach Schritten angezeigt. Du kannst diesen Bildschirm schließen; die Analyse läuft auf unseren Servern weiter.",
+    "queued": "In der Warteschlange. Pro Spieler wird jeweils ein ganzes Spiel analysiert.",
+    "cancel": "Analyse abbrechen",
+    "deviceFallback": "Mit Bildern von diesem Telefon analysieren"
+  },
+  "stages": {
+    "video-ingestion": "Video wird geprüft",
+    "frame-extraction": "Schlüsselbilder werden extrahiert",
+    "match-segmentation": "Spielabschnitte finden",
+    "player-identification": "Ausgewählte Bilder prüfen",
+    "identity-confirmation": "Bestätige, dass du das bist",
+    "player-tracking": "Durchgehendes Spieler-Tracking",
+    "event-detection": "Ereigniserkennung",
+    "tactical-context": "Taktische Phase und Spielfeldkarte",
+    "role-analysis": "Rollenausführung",
+    "cross-event-reasoning": "Ereignisse verknüpfen",
+    "coaching-synthesis": "Coaching-Feedback erstellen",
+    "validation": "Belege prüfen",
+    "final-report": "Bericht fertigstellen"
   }
 }

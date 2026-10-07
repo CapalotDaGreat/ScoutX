@@ -30,6 +30,7 @@ import {
 } from '@/features/media-library/components/UploadAcknowledgementPanel';
 import { markAnalysisReviewed, workflowEvents } from '@/features/today/services/workflowStores';
 import { UploadProgressCard } from '@/features/media-upload';
+import { useJobFrames } from '@/features/match-analysis/hooks/useJobFrames';
 
 export type MatchAnalysisModalProps = {
   visible: boolean;
@@ -65,9 +66,19 @@ function jobStatusLabel(t: Translate, job: MatchAnalysisJob): string {
       return t('matchAnalysis:jobStatus.analyzing');
     case 'uploading':
       return t('matchAnalysis:jobStatus.uploadInterrupted');
+    case 'cancelled':
+      return t('matchAnalysis:jobStatus.cancelled');
+    case 'expired':
+      return t('matchAnalysis:jobStatus.expired');
     default:
       return t('matchAnalysis:jobStatus.draft');
   }
+}
+
+/** Translated message for a server reason code, falling back to the stored text. */
+export function jobErrorMessage(t: Translate, job: MatchAnalysisJob): string | null {
+  if (job.errorCode) return t(`matchAnalysis:errors.${job.errorCode}`);
+  return job.error ?? null;
 }
 
 function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
@@ -112,13 +123,13 @@ function toStageStatus(value: string): StageStatus {
   return (STAGE_STATUSES as readonly string[]).includes(value) ? (value as StageStatus) : 'pending';
 }
 
-function PipelineStageList({ stages }: { stages: Array<{ label: string; status: string; note?: string }> }) {
+function PipelineStageList({ stages }: { stages: Array<{ id?: string; label: string; status: string; note?: string }> }) {
   const { t } = useAppTranslation('matchAnalysis');
   return (
     <View className="gap-2">
       {stages.map((stage) => (
-        <View key={stage.label} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
-          <Text weight="semibold">{stage.label}</Text>
+        <View key={stage.id ?? stage.label} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
+          <Text weight="semibold">{stage.id ? t(`stages.${stage.id}`, { defaultValue: stage.label }) : stage.label}</Text>
           <Text variant="caption" color="secondary">
             {t(`stageStatus.${toStageStatus(stage.status)}`)}
           </Text>
@@ -310,6 +321,10 @@ export function MatchAnalysisModal({
     pickVideo,
     startAnalysis,
     retryAnalysis,
+    cancelAnalysis,
+    analyzeWithDeviceFrames,
+    canAnalyzeOnDevice,
+    isInProgress,
     confirmPlayerIdentity,
     resetActive,
     setActiveJob,
@@ -317,6 +332,8 @@ export function MatchAnalysisModal({
     resumeUpload,
     cancelUpload,
   } = useMatchAnalysis(playerId);
+  const { candidates, frameUrls } = useJobFrames(activeJob);
+  const serverProcessing = isInProgress && activeJob?.status !== 'uploading';
   const { t } = useAppTranslation(['matchAnalysis', 'common']);
   const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
 
@@ -511,13 +528,38 @@ export function MatchAnalysisModal({
                 {t('matchAnalysis:modalForm.jobTitle', { date: activeJob.match.date, opponent: activeJob.match.opponent })}
               </Heading>
               <Text variant="body-sm" color="error">
-                {activeJob.error ?? error ?? t('matchAnalysis:modalForm.failedFallback')}
+                {jobErrorMessage(t, activeJob) ?? error ?? t('matchAnalysis:modalForm.failedFallback')}
               </Text>
               <Text variant="caption" color="secondary">
                 {t('matchAnalysis:modalForm.retryNote')}
               </Text>
               <Button variant="accent" onPress={() => void handleRetry()}>
                 {t('modal.retry')}
+              </Button>
+              {canAnalyzeOnDevice ? (
+                <Button variant="secondary" onPress={() => void analyzeWithDeviceFrames(activeJob).catch(() => undefined)}>
+                  {t('matchAnalysis:pipeline.deviceFallback')}
+                </Button>
+              ) : null}
+            </View>
+          </Card>
+        ) : null}
+
+        {serverProcessing && activeJob ? (
+          <Card>
+            <View className="gap-3">
+              <Heading level={3}>{t('matchAnalysis:pipeline.title')}</Heading>
+              <Text variant="caption" color="secondary">
+                {t('matchAnalysis:pipeline.stageBased')}
+              </Text>
+              {activeJob.status === 'queued' ? (
+                <Text variant="body-sm" color="secondary">
+                  {t('matchAnalysis:pipeline.queued')}
+                </Text>
+              ) : null}
+              <PipelineStageList stages={activeJob.pipelineStages ?? []} />
+              <Button variant="ghost" onPress={() => void cancelAnalysis(activeJob)}>
+                {t('matchAnalysis:pipeline.cancel')}
               </Button>
             </View>
           </Card>
@@ -600,11 +642,6 @@ export function MatchAnalysisModal({
               {phaseLabel ?? t('modal.analyze')}
             </Button>
 
-            {isBusy && activeJob?.uploadProgress != null ? (
-              <Text variant="caption" color="secondary">
-                {t('matchAnalysis:modal.uploadProgress', { percent: Math.round(activeJob.uploadProgress) })}
-              </Text>
-            ) : null}
           </View>
         )}
 
@@ -637,9 +674,9 @@ export function MatchAnalysisModal({
           </Button>
         ) : null}
 
-        {activeJob && (activeJob.identityCandidates ?? []).length > 0 ? (
+        {activeJob && candidates.length > 0 ? (
           <IdentityConfirmationCard
-            candidates={activeJob.identityCandidates ?? []}
+            candidates={candidates}
             confirmation={activeJob.identityConfirmation}
             selectedFrameIds={selectedFrameIds}
             onToggleFrame={(frameId) => {
@@ -649,7 +686,7 @@ export function MatchAnalysisModal({
             }}
             onConfirm={() => void confirmPlayerIdentity(activeJob, selectedFrameIds)}
             onReject={() => void confirmPlayerIdentity(activeJob, [])}
-            frameUrls={Object.fromEntries(activeJob.frames.map((frame) => [frame.id, frame.downloadUrl]))}
+            frameUrls={frameUrls}
           />
         ) : null}
 

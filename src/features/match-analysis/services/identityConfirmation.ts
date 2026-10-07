@@ -8,8 +8,16 @@ export function pendingIdentityConfirmation(): IdentityConfirmation {
   return { state: 'pending', frameIds: [], confirmedAt: null };
 }
 
+const MAX_CANDIDATES = 8;
+
+/** Up to eight frames spread evenly over the match, so identity is checked across the whole video. */
 export function candidatesFromFrames(frames: MatchFrameSample[]): IdentityCandidate[] {
-  return frames.slice(0, 8).map((frame) => ({
+  const sorted = [...frames].sort((a, b) => a.timestampSec - b.timestampSec);
+  const picked =
+    sorted.length <= MAX_CANDIDATES
+      ? sorted
+      : Array.from({ length: MAX_CANDIDATES }, (_, i) => sorted[Math.round((i * (sorted.length - 1)) / (MAX_CANDIDATES - 1))]);
+  return picked.map((frame) => ({
     frameId: frame.id,
     timestampSec: frame.timestampSec,
     note: `Sampled frame at ${frame.timestampSec}s`,

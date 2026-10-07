@@ -14,27 +14,12 @@ const storage_1 = require("firebase-functions/v2/storage");
 const firestore_1 = require("firebase-admin/firestore");
 const storage_2 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
+const pipeline_1 = require("../analysis/pipeline");
+const mediaSource_1 = require("./mediaSource");
 const mediaScanner_1 = require("./mediaScanner");
 const model_1 = require("./model");
 const probe_1 = require("./probe");
 const PROBE_TIMEOUT_MS = 180_000;
-/** Short-lived read URL for ffprobe; the emulator accepts the admin bearer token instead of signing. */
-async function probeSourceFor(path) {
-    const bucket = (0, storage_2.getStorage)().bucket();
-    const emulator = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
-    if (emulator) {
-        return {
-            url: `http://${emulator}/v0/b/${bucket.name}/o/${encodeURIComponent(path)}?alt=media`,
-            headers: 'Authorization: Bearer owner\r\n',
-        };
-    }
-    const [url] = await bucket.file(path).getSignedUrl({
-        version: 'v4',
-        action: 'read',
-        expires: Date.now() + 15 * 60 * 1000,
-    });
-    return { url, headers: null };
-}
 /** Runs ffprobe with an argument array (no shell) and network-only protocols. */
 async function runFfprobe(source, cwd) {
     const binary = ffprobe_static_1.default.path;
@@ -62,6 +47,17 @@ async function reject(db, uploadId, data, reason) {
     await (0, storage_2.getStorage)().bucket().file(data.storagePath).delete({ ignoreNotFound: true });
     const now = new Date().toISOString();
     await db.collection('mediaUploads').doc(uploadId).update({ state: 'rejected', rejectionReason: reason, rejectedAt: now, updatedAt: now });
+    const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
+    const job = await jobRef.get();
+    if (job.exists && job.get('playerId') === data.ownerId && job.get('videoUploadId') == null) {
+        await jobRef.update({
+            status: 'failed',
+            pipelineState: 'failed',
+            errorCode: 'video_rejected',
+            error: null,
+            updatedAt: now,
+        });
+    }
     firebase_functions_1.logger.info('Upload rejected', { uploadId, reason });
     return 'rejected';
 }
@@ -86,6 +82,7 @@ async function promote(db, uploadId, data, summary) {
         measuredDurationSec: summary.durationSec,
         videoValidatedAt: now,
         updatedAt: now,
+        ...(job.get('cancelRequested') === true ? {} : { pipelineState: 'validating' }),
     });
     await db.collection('mediaUploads').doc(uploadId).update({
         state: 'ready',
@@ -93,6 +90,7 @@ async function promote(db, uploadId, data, summary) {
         readyAt: now,
         updatedAt: now,
     });
+    await (0, pipeline_1.startMatchPipeline)(db, data.jobId);
     return 'ready';
 }
 /**
@@ -122,7 +120,7 @@ async function processQuarantinedObject(db, path, sizeBytes) {
     const workDir = await (0, promises_1.mkdtemp)((0, node_path_1.join)((0, node_os_1.tmpdir)(), 'scoutx-probe-'));
     let output;
     try {
-        output = await runFfprobe(await probeSourceFor(path), workDir);
+        output = await runFfprobe(await (0, mediaSource_1.readableSourceFor)(path), workDir);
     }
     finally {
         await (0, promises_1.rm)(workDir, { recursive: true, force: true });

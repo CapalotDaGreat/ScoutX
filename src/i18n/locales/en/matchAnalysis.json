@@ -191,7 +191,9 @@
     "failed": "Failed",
     "analyzing": "Analyzing…",
     "uploadInterrupted": "Upload interrupted",
-    "draft": "Draft"
+    "draft": "Draft",
+    "cancelled": "Cancelled",
+    "expired": "Upload expired"
   },
   "modalReport": {
     "excluded": "excluded from performance",
@@ -253,5 +255,36 @@
     "resultPlaceholder": "e.g. W 2-1",
     "notes": "Notes for the analysis (optional)",
     "notesPlaceholder": "e.g. I played right midfield after minute 60"
+  },
+  "errors": {
+    "frames_insufficient": "Not enough clear frames of the match could be read. Try a steadier or brighter recording.",
+    "model_unavailable": "The analysis service is unavailable right now. Your video is saved — try again later.",
+    "model_output_invalid": "The analysis could not be completed. Your video is saved — try again.",
+    "ai_consent_required": "AI analysis is turned off. Turn it on in the Privacy Center to analyze footage.",
+    "extraction_failed": "Key frames could not be extracted from this video.",
+    "queue_unavailable": "Analysis could not be queued. Try again in a few minutes.",
+    "video_rejected": "This video did not pass the format and length checks."
+  },
+  "pipeline": {
+    "title": "Analysis in progress",
+    "stageBased": "Progress is shown by stage. You can close this screen; the analysis continues on our servers.",
+    "queued": "Waiting in the queue. One full match is analyzed per player at a time.",
+    "cancel": "Cancel analysis",
+    "deviceFallback": "Analyze using frames from this phone"
+  },
+  "stages": {
+    "video-ingestion": "Validating video",
+    "frame-extraction": "Extracting key frames",
+    "match-segmentation": "Finding match segments",
+    "player-identification": "Reviewing sampled frames",
+    "identity-confirmation": "Confirm this is you",
+    "player-tracking": "Continuous player tracking",
+    "event-detection": "Event detection",
+    "tactical-context": "Tactical phase and pitch mapping",
+    "role-analysis": "Role execution",
+    "cross-event-reasoning": "Connecting events",
+    "coaching-synthesis": "Building coaching feedback",
+    "validation": "Validating evidence",
+    "final-report": "Finalizing report"
   }
 }

@@ -191,7 +191,9 @@
     "failed": "Mislukt",
     "analyzing": "Bezig met analyseren…",
     "uploadInterrupted": "Upload onderbroken",
-    "draft": "Concept"
+    "draft": "Concept",
+    "cancelled": "Geannuleerd",
+    "expired": "Upload verlopen"
   },
   "modalReport": {
     "excluded": "uitgesloten van prestatie",
@@ -253,5 +255,36 @@
     "resultPlaceholder": "bijv. W 2-1",
     "notes": "Notities voor de analyse (optioneel)",
     "notesPlaceholder": "bijv. Na de 60e minuut speelde ik rechtsmidden"
+  },
+  "errors": {
+    "frames_insufficient": "Er konden niet genoeg duidelijke beelden van de wedstrijd worden gelezen. Probeer een stabielere of lichtere opname.",
+    "model_unavailable": "De analysedienst is nu niet beschikbaar. Je video is opgeslagen – probeer het later opnieuw.",
+    "model_output_invalid": "De analyse kon niet worden afgerond. Je video is opgeslagen – probeer het opnieuw.",
+    "ai_consent_required": "AI-analyse staat uit. Zet het aan in het Privacycentrum om beelden te analyseren.",
+    "extraction_failed": "Er konden geen sleutelbeelden uit deze video worden gehaald.",
+    "queue_unavailable": "De analyse kon niet in de wachtrij worden gezet. Probeer het over een paar minuten opnieuw.",
+    "video_rejected": "Deze video heeft de controles op formaat en lengte niet doorstaan."
+  },
+  "pipeline": {
+    "title": "Analyse bezig",
+    "stageBased": "De voortgang wordt per stap getoond. Je kunt dit scherm sluiten; de analyse gaat door op onze servers.",
+    "queued": "In de wachtrij. Er wordt per speler één volledige wedstrijd tegelijk geanalyseerd.",
+    "cancel": "Analyse annuleren",
+    "deviceFallback": "Analyseren met beelden van deze telefoon"
+  },
+  "stages": {
+    "video-ingestion": "Video controleren",
+    "frame-extraction": "Sleutelbeelden extraheren",
+    "match-segmentation": "Wedstrijdfases vinden",
+    "player-identification": "Steekproefbeelden bekijken",
+    "identity-confirmation": "Bevestig dat jij dit bent",
+    "player-tracking": "Doorlopende spelertracking",
+    "event-detection": "Actieherkenning",
+    "tactical-context": "Tactische fase en veldkaart",
+    "role-analysis": "Uitvoering van de rol",
+    "cross-event-reasoning": "Acties verbinden",
+    "coaching-synthesis": "Coachingfeedback opstellen",
+    "validation": "Bewijs controleren",
+    "final-report": "Rapport afronden"
   }
 }

@@ -1,4 +1,4 @@
-import { ref } from 'firebase/storage';
+import { getDownloadURL, ref } from 'firebase/storage';
 import { getFirebaseStorage } from '@/config/firebase';
 import { MATCH_ANALYSIS_STORAGE_PATHS } from '@/features/match-analysis/constants';
 import { uriToBlob, uploadBlobWithProgress } from '@/firebase/storageUpload';
@@ -23,4 +23,17 @@ export async function uploadMatchFrame(
   });
 
   return { downloadUrl, storagePath };
+}
+
+/** Owner-readable URL for a server-extracted frame (storage rules allow only the owner). */
+export async function resolveFrameUrl(storagePath: string): Promise<string | null> {
+  const storage = getFirebaseStorage();
+  if (!storage || !storagePath.startsWith('profiles/')) {
+    return null;
+  }
+  try {
+    return await getDownloadURL(ref(storage, storagePath));
+  } catch {
+    return null;
+  }
 }

@@ -179,8 +179,6 @@ export type AiInsightContext = {
 
 export type AiCompletionRequest = {
   insightType: AiInsightType;
-  systemPrompt: string;
-  userPrompt: string;
   contextJson: string;
 };
 

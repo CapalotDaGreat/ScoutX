@@ -410,17 +410,48 @@ describe('match analysis jobs', () => {
     await denied(setDocument(OUTSIDER, 'matchAnalysisJobs/j4', job({})), 'for another player');
   });
 
-  test('clients can move a job through upload/failure states but never write results', async () => {
-    await seed('matchAnalysisJobs/j5', job({ status: 'processing' }));
-    await allowed(setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ status: 'failed', error: 'x' })), 'failed');
-    await allowed(setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ status: 'processing' })), 'retry');
-    await denied(setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ status: 'complete' })), 'complete');
+  test('clients create only uploading jobs with allowlisted fields', async () => {
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/j2q', job({ status: 'queued' })), 'queued status');
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/j2p', job({ pipelineState: 'completed' })), 'pipeline state');
     await denied(
-      setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ status: 'processing', report: { headline: 'fake' } })),
-      'inject report',
+      setDocument(PLAYER, 'matchAnalysisJobs/j2s', job({ pipelineStages: [{ id: 'player-tracking', status: 'complete' }] })),
+      'forged stages',
     );
-    await denied(setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ playerId: OTHER_PLAYER })), 'reassign');
+    await denied(
+      setDocument(PLAYER, 'matchAnalysisJobs/j2f', job({ frames: [{ id: 'frame_0', storagePath: 'x' }] })),
+      'frames at create',
+    );
+  });
+
+  test('status, pipeline state and results are server-owned after creation', async () => {
+    await seed('matchAnalysisJobs/j5', job({ status: 'processing', pipelineState: 'extracting' }));
+    for (const [label, patch] of [
+      ['failed', { status: 'failed', error: 'x' }],
+      ['complete', { status: 'complete' }],
+      ['cancel by write', { status: 'cancelled' }],
+      ['pipeline state', { pipelineState: 'completed' }],
+      ['inject report', { report: { headline: 'fake' } }],
+      ['error code', { errorCode: 'extraction_failed' }],
+      ['reassign', { playerId: OTHER_PLAYER }],
+      ['segments', { extractionSegments: [] }],
+    ]) {
+      await denied(setDocument(PLAYER, 'matchAnalysisJobs/j5', job({ status: 'processing', pipelineState: 'extracting', ...patch })), label);
+    }
     await denied(getDocument(OUTSIDER, 'matchAnalysisJobs/j5'), 'outsider read');
+  });
+
+  test('device frames are accepted only for the short-clip fallback after extraction failed', async () => {
+    const frames = [{ id: 'frame_0', index: 0, timestampSec: 0, storagePath: `profiles/${PLAYER}/matchFootage/j7/frames/frame_0.jpg`, downloadUrl: '' }];
+    await seed('matchAnalysisJobs/j7', job({ status: 'processing', pipelineState: 'extracting' }));
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/j7', job({ status: 'processing', pipelineState: 'extracting', frames })), 'while extracting');
+    const failed = { status: 'failed', pipelineState: 'failed', errorCode: 'extraction_failed' };
+    await seed('matchAnalysisJobs/j8', job(failed));
+    await allowed(setDocument(PLAYER, 'matchAnalysisJobs/j8', job({ ...failed, frames })), 'fallback frames');
+    await seed('matchAnalysisJobs/j9', job({ status: 'failed', pipelineState: 'failed', errorCode: 'model_unavailable' }));
+    await denied(
+      setDocument(PLAYER, 'matchAnalysisJobs/j9', job({ status: 'failed', pipelineState: 'failed', errorCode: 'model_unavailable', frames })),
+      'other failure',
+    );
   });
 
   test('clients may confirm identity but cannot write events, lease, or quota', async () => {
@@ -429,8 +460,18 @@ describe('match analysis jobs', () => {
       setDocument(PLAYER, 'matchAnalysisJobs/j6', job({
         status: 'processing',
         identityConfirmation: { state: 'confirmed', frameIds: ['frame_0'], confirmedAt: '2026-10-06T00:00:00.000Z' },
+        updatedAt: '2026-10-06T00:00:00.000Z',
       })),
       'identity confirmation',
+    );
+    await allowed(
+      setDocument(PLAYER, 'matchAnalysisJobs/j6', job({
+        status: 'processing',
+        identityConfirmation: { state: 'confirmed', frameIds: ['frame_0'], confirmedAt: '2026-10-06T00:00:00.000Z' },
+        updatedAt: '2026-10-06T00:00:00.000Z',
+        videoSync: { gpsSessionId: 'g1', gpsAnchorMs: 1, videoAnchorSec: 0, setAt: '2026-10-06T00:00:00.000Z' },
+      })),
+      'video sync',
     );
     await denied(
       setDocument(PLAYER, 'matchAnalysisJobs/j6', job({ status: 'processing', events: [{ eventId: 'fake' }] })),

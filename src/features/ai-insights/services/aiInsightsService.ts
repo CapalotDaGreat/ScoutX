@@ -1,6 +1,5 @@
 import { createAiProvider } from '@/features/ai-insights/providers/createAiProvider';
 import { type AiProvider } from '@/features/ai-insights/providers/types';
-import { buildCompletionPrompts } from '@/features/ai-insights/services/aiPromptService';
 import { serializeInsightContext } from '@/features/ai-insights/services/aiContextService';
 import {
   type AiCompletionRequest,
@@ -39,12 +38,8 @@ export class AiInsightsService {
     context: AiInsightContext,
   ): Promise<AiInsightMap[T]> {
     const contextJson = serializeInsightContext(context);
-    const { systemPrompt, userPrompt } = buildCompletionPrompts(insightType, contextJson);
-
     const request: AiCompletionRequest = {
       insightType,
-      systemPrompt,
-      userPrompt,
       contextJson,
     };
 

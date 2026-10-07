@@ -3,6 +3,7 @@
  * A star rating is only kept when the player confirmed their identity and the model cited
  * enough known frames. Everything else stays unknown instead of guessed.
  */
+import { cleanModelText } from '../ai/outputValidator';
 
 export const TECHNIQUE_DIMENSIONS = [
   'weakFoot',
@@ -53,7 +54,7 @@ function toStars(value: unknown): number | null {
 }
 
 function text(value: unknown, max = 400): string {
-  return typeof value === 'string' ? value.trim().slice(0, max) : '';
+  return cleanModelText(value, max);
 }
 
 export function parseSelfReportedStars(identity: unknown): SelfReportedStars {

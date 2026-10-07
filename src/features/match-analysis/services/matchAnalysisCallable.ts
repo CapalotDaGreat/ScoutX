@@ -8,9 +8,18 @@ export type AnalyzeMatchFootageRequest = {
 
 export type AnalyzeMatchFootageResponse = {
   jobId: string;
-  status: 'complete' | 'failed' | 'processing';
-  error?: string;
+  /** `queued` when the server restarted key-frame extraction instead of analysing directly. */
+  status: 'complete' | 'queued';
 };
+
+export async function requestCancelMatchAnalysis(jobId: string): Promise<{ jobId: string; status: string }> {
+  const callable = createCallableFunction<{ jobId: string }>('cancelMatchAnalysis');
+  if (!callable) {
+    throw new Error('Cloud Functions unavailable.');
+  }
+  const result = await callable({ jobId });
+  return result.data as { jobId: string; status: string };
+}
 
 export async function requestMatchFootageAnalysis(
   jobId: string,

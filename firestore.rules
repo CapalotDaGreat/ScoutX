@@ -605,28 +605,31 @@ service cloud.firestore {
     // Analysis reports are written only by the analyzeMatchFootage function so clients
     // cannot present fabricated AI results as real.
     // Set only by server promotion after ffprobe validation.
-    function serverVideoKeys() {
-      return ['videoStoragePath', 'videoUploadId', 'videoProbe', 'measuredDurationSec', 'videoValidatedAt'];
-    }
-
     match /matchAnalysisJobs/{jobId} {
       allow read: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
+      // Status, pipeline state, stages, segments, results and lease are server-owned; the
+      // app creates an uploading job and cancels through cancelMatchAnalysis.
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.playerId
-        && !request.resource.data.keys().hasAny(['report', 'completedAt', 'lease', 'events'])
-        && !request.resource.data.keys().hasAny(serverVideoKeys())
-        && request.resource.data.status in ['uploading', 'queued'];
+        && request.resource.data.keys().hasOnly([
+          'id', 'playerId', 'status', 'targeting', 'match', 'durationSec', 'fileSizeBytes',
+          'frames', 'identityConfirmation', 'identityCandidates', 'idempotencyKey',
+          'createdAt', 'updatedAt',
+        ])
+        && request.resource.data.status == 'uploading'
+        && request.resource.data.get('frames', []).size() == 0;
+      // Device frames are only accepted for the short-clip fallback after server extraction failed.
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.playerId
-        && request.resource.data.playerId == resource.data.playerId
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny([
-          'report', 'completedAt', 'lease', 'attempts', 'events',
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'identityConfirmation', 'identityCandidates', 'frames', 'videoSync', 'updatedAt',
         ])
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(serverVideoKeys())
         && (
-          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status'])
-          || request.resource.data.status in ['uploading', 'queued', 'processing', 'failed']
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['frames'])
+          || (resource.data.get('errorCode', null) == 'extraction_failed'
+            && resource.data.status == 'failed'
+            && request.resource.data.frames.size() <= 24)
         );
       allow delete: if isSignedIn()
         && request.auth.uid == resource.data.playerId;

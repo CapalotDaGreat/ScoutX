@@ -2,7 +2,8 @@
 import { initializeApp } from 'firebase-admin/app';
 
 export { generateAiInsight } from './aiCoach';
-export { analyzeMatchFootage } from './matchAnalysis';
+export { analyzeMatchFootage, cancelMatchAnalysis } from './matchAnalysis';
+export { extractMatchSegment, analyzeMatchFrames } from './analysis/pipeline';
 export { generateHighlightReelPlan } from './highlightReelStudio';
 export { scheduleWeeklyFootballReports } from './weeklyReportScheduler';
 export { listAdminReviewQueue, resolveVerificationRequest } from './adminReview';

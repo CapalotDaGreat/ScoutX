@@ -191,7 +191,9 @@
     "failed": "Échec",
     "analyzing": "Analyse en cours…",
     "uploadInterrupted": "Import interrompu",
-    "draft": "Brouillon"
+    "draft": "Brouillon",
+    "cancelled": "Annulée",
+    "expired": "Envoi expiré"
   },
   "modalReport": {
     "excluded": "exclu de la performance",
@@ -253,5 +255,36 @@
     "resultPlaceholder": "ex. V 2-1",
     "notes": "Notes pour l'analyse (facultatif)",
     "notesPlaceholder": "ex. J'ai joué milieu droit après la 60e minute"
+  },
+  "errors": {
+    "frames_insufficient": "Pas assez d'images nettes du match n'ont pu être lues. Essaie un enregistrement plus stable ou plus lumineux.",
+    "model_unavailable": "Le service d'analyse est indisponible pour le moment. Ta vidéo est enregistrée – réessaie plus tard.",
+    "model_output_invalid": "L'analyse n'a pas pu être terminée. Ta vidéo est enregistrée – réessaie.",
+    "ai_consent_required": "L'analyse IA est désactivée. Active-la dans le Centre de confidentialité pour analyser des vidéos.",
+    "extraction_failed": "Impossible d'extraire des images clés de cette vidéo.",
+    "queue_unavailable": "L'analyse n'a pas pu être mise en file d'attente. Réessaie dans quelques minutes.",
+    "video_rejected": "Cette vidéo n'a pas passé les contrôles de format et de durée."
+  },
+  "pipeline": {
+    "title": "Analyse en cours",
+    "stageBased": "La progression est affichée par étape. Tu peux fermer cet écran ; l'analyse continue sur nos serveurs.",
+    "queued": "En file d'attente. Un seul match complet est analysé à la fois par joueur.",
+    "cancel": "Annuler l'analyse",
+    "deviceFallback": "Analyser avec des images de ce téléphone"
+  },
+  "stages": {
+    "video-ingestion": "Validation de la vidéo",
+    "frame-extraction": "Extraction des images clés",
+    "match-segmentation": "Repérage des phases du match",
+    "player-identification": "Examen des images échantillonnées",
+    "identity-confirmation": "Confirme que c'est toi",
+    "player-tracking": "Suivi continu du joueur",
+    "event-detection": "Détection des actions",
+    "tactical-context": "Phase tactique et carte du terrain",
+    "role-analysis": "Exécution du rôle",
+    "cross-event-reasoning": "Liens entre les actions",
+    "coaching-synthesis": "Création des conseils",
+    "validation": "Vérification des preuves",
+    "final-report": "Finalisation du rapport"
   }
 }

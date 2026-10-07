@@ -7,6 +7,8 @@ import { onObjectFinalized } from 'firebase-functions/v2/storage';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
+import { startMatchPipeline } from '../analysis/pipeline';
+import { readableSourceFor, type MediaSource } from './mediaSource';
 import { getMediaScanner } from './mediaScanner';
 import { matchFootagePath, parseQuarantinePath, type UploadState } from './model';
 import {
@@ -25,30 +27,10 @@ type UploadDoc = {
   storagePath: string;
 };
 
-type ProbeSource = { url: string; headers: string | null };
-
 const PROBE_TIMEOUT_MS = 180_000;
 
-/** Short-lived read URL for ffprobe; the emulator accepts the admin bearer token instead of signing. */
-async function probeSourceFor(path: string): Promise<ProbeSource> {
-  const bucket = getStorage().bucket();
-  const emulator = process.env.FIREBASE_STORAGE_EMULATOR_HOST;
-  if (emulator) {
-    return {
-      url: `http://${emulator}/v0/b/${bucket.name}/o/${encodeURIComponent(path)}?alt=media`,
-      headers: 'Authorization: Bearer owner\r\n',
-    };
-  }
-  const [url] = await bucket.file(path).getSignedUrl({
-    version: 'v4',
-    action: 'read',
-    expires: Date.now() + 15 * 60 * 1000,
-  });
-  return { url, headers: null };
-}
-
 /** Runs ffprobe with an argument array (no shell) and network-only protocols. */
-async function runFfprobe(source: ProbeSource, cwd: string): Promise<string | null> {
+async function runFfprobe(source: MediaSource, cwd: string): Promise<string | null> {
   const binary = ffprobeStatic.path;
   const args = [
     '-v', 'error',
@@ -76,6 +58,17 @@ async function reject(db: Firestore, uploadId: string, data: UploadDoc, reason: 
   await getStorage().bucket().file(data.storagePath).delete({ ignoreNotFound: true });
   const now = new Date().toISOString();
   await db.collection('mediaUploads').doc(uploadId).update({ state: 'rejected', rejectionReason: reason, rejectedAt: now, updatedAt: now });
+  const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
+  const job = await jobRef.get();
+  if (job.exists && job.get('playerId') === data.ownerId && job.get('videoUploadId') == null) {
+    await jobRef.update({
+      status: 'failed',
+      pipelineState: 'failed',
+      errorCode: 'video_rejected',
+      error: null,
+      updatedAt: now,
+    });
+  }
   logger.info('Upload rejected', { uploadId, reason });
   return 'rejected';
 }
@@ -102,6 +95,7 @@ async function promote(db: Firestore, uploadId: string, data: UploadDoc, summary
     measuredDurationSec: summary.durationSec,
     videoValidatedAt: now,
     updatedAt: now,
+    ...(job.get('cancelRequested') === true ? {} : { pipelineState: 'validating' }),
   });
   await db.collection('mediaUploads').doc(uploadId).update({
     state: 'ready',
@@ -109,6 +103,7 @@ async function promote(db: Firestore, uploadId: string, data: UploadDoc, summary
     readyAt: now,
     updatedAt: now,
   });
+  await startMatchPipeline(db, data.jobId);
   return 'ready';
 }
 
@@ -138,7 +133,7 @@ export async function processQuarantinedObject(db: Firestore, path: string, size
   const workDir = await mkdtemp(join(tmpdir(), 'scoutx-probe-'));
   let output: string | null;
   try {
-    output = await runFfprobe(await probeSourceFor(path), workDir);
+    output = await runFfprobe(await readableSourceFor(path), workDir);
   } finally {
     await rm(workDir, { recursive: true, force: true });
   }

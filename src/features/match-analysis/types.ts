@@ -6,10 +6,48 @@ export type MatchAnalysisJobStatus =
   | 'queued'
   | 'processing'
   | 'complete'
-  | 'failed';
+  | 'failed'
+  | 'cancelled'
+  | 'expired';
+
+/** Server-only fine-grained state; the app renders the coarse status. */
+export type MatchAnalysisPipelineState =
+  | 'created'
+  | 'uploading'
+  | 'validating'
+  | 'queued'
+  | 'extracting'
+  | 'analyzing'
+  | 'completed'
+  | 'failed'
+  | 'cancelled'
+  | 'expired';
+
+/** Reason codes written by the server on failure; mapped to translated messages. */
+export const MATCH_ANALYSIS_ERROR_CODES = [
+  'frames_insufficient',
+  'model_unavailable',
+  'model_output_invalid',
+  'ai_consent_required',
+  'extraction_failed',
+  'queue_unavailable',
+  'video_rejected',
+] as const;
+export type MatchAnalysisErrorCode = (typeof MATCH_ANALYSIS_ERROR_CODES)[number];
+
+export type ExtractionSegment = {
+  index: number;
+  startSec: number;
+  endSec: number;
+  state: 'pending' | 'running' | 'complete' | 'failed';
+  frameCount: number;
+  attempts: number;
+  error: string | null;
+};
 
 export type MatchAnalysisPipelineStageId =
   | 'video-ingestion'
+  | 'frame-extraction'
   | 'match-segmentation'
   | 'player-identification'
   | 'identity-confirmation'
@@ -291,7 +329,9 @@ export type MatchFrameSample = {
   index: number;
   timestampSec: number;
   storagePath: string;
+  /** Empty for server-extracted frames; resolved on demand from storagePath. */
   downloadUrl: string;
+  source?: 'server' | 'device';
 };
 
 /** Mirrors ProbeSummary in functions/src/uploads/probe.ts. */
@@ -312,6 +352,10 @@ export type MatchAnalysisJob = {
   id: string;
   playerId: string;
   status: MatchAnalysisJobStatus;
+  pipelineState?: MatchAnalysisPipelineState;
+  pipelineGeneration?: number;
+  extractionSegments?: ExtractionSegment[];
+  errorCode?: MatchAnalysisErrorCode | null;
   targeting: PlayerTargeting;
   match: MatchContextInput;
   durationSec: number;
@@ -400,7 +444,8 @@ const CV_UNAVAILABLE_NOTE =
 
 export function buildDefaultPipelineStages(): MatchAnalysisPipelineStage[] {
   return [
-    { id: 'video-ingestion', label: 'Preparing video', status: 'complete' },
+    { id: 'video-ingestion', label: 'Validating video', status: 'pending' },
+    { id: 'frame-extraction', label: 'Extracting key frames', status: 'pending' },
     {
       id: 'match-segmentation',
       label: 'Finding match segments',

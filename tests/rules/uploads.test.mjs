@@ -36,6 +36,7 @@ let setMediaScanner;
 let noopMediaScanner;
 let fixtures;
 let videoPolicyVersion;
+const enqueued = [];
 
 function call(uid, data) {
   return { data, auth: { uid, token: {} }, rawRequest: { headers: {} }, acceptsStreaming: false };
@@ -97,6 +98,11 @@ before(async () => {
   ({ createUploadSession, cancelUploadSession, expireAbandonedUploads } = require('./lib/uploads/sessions.js'));
   ({ processQuarantinedObject } = require('./lib/uploads/quarantine.js'));
   ({ setMediaScanner, noopMediaScanner } = require('./lib/uploads/mediaScanner.js'));
+  require('./lib/analysis/taskDispatcher.js').setTaskDispatcher({
+    enqueue: async (task) => {
+      enqueued.push(task);
+    },
+  });
   fixtures = mediaFixtures();
   videoPolicyVersion = require('./lib/legal/legalVersions.generated.js').LEGAL_VERSIONS['video-recording-policy'];
   await seedUploader(UID);
@@ -188,6 +194,10 @@ describe('chunked transfer', () => {
     const job = (await db.doc('matchAnalysisJobs/job_land').get()).data();
     assert.equal(job.videoStoragePath, `profiles/${UID}/matchFootage/job_land/video.mp4`);
     assert.equal(job.videoProbe.durationSec, 30);
+    assert.equal(job.status, 'queued', 'promotion queues the analysis pipeline');
+    assert.equal(job.pipelineState, 'queued');
+    assert.equal(job.extractionSegments.length, 1);
+    assert.ok(enqueued.some((task) => task.jobId === 'job_land' && task.kind === 'extract_segment'));
     assert.equal((await getStorage().bucket().file(path).exists())[0], false, 'quarantine copy removed');
     assert.equal((await getStorage().bucket().file(job.videoStoragePath).exists())[0], true);
   });
@@ -245,7 +255,10 @@ describe('ffprobe validation', () => {
       assert.equal(state, 'rejected');
       assert.equal(upload.rejectionReason, reason);
       assert.equal((await getStorage().bucket().file(path).exists())[0], false);
-      assert.equal((await db.doc(`matchAnalysisJobs/${jobId}`).get()).get('videoStoragePath'), undefined);
+      const job = (await db.doc(`matchAnalysisJobs/${jobId}`).get()).data();
+      assert.equal(job.videoStoragePath, undefined);
+      assert.equal(job.status, 'failed');
+      assert.equal(job.errorCode, 'video_rejected');
     });
   }
 
@@ -283,6 +296,7 @@ describe('cancel and cleanup', () => {
     await db.doc(`mediaUploads/${session.uploadId}`).update({ createdAt: '2020-01-01T00:00:00.000Z' });
     await expireAbandonedUploads(db, new Date());
     assert.equal((await db.doc(`mediaUploads/${session.uploadId}`).get()).get('state'), 'expired');
+    assert.equal((await db.doc('matchAnalysisJobs/job_old').get()).get('status'), 'expired');
   });
 });
 
@@ -308,7 +322,11 @@ describe('rules', () => {
     })));
     assert.ok(isAllowed(await setDocument(UID, 'matchAnalysisJobs/rules_job', base)));
     assert.ok(isDenied(await setDocument(UID, 'matchAnalysisJobs/rules_job', { ...base, measuredDurationSec: 10 })));
-    assert.ok(isAllowed(await setDocument(UID, 'matchAnalysisJobs/rules_job', { ...base, phaseLabel: 'Upload paused' })));
+    assert.ok(isDenied(await setDocument(UID, 'matchAnalysisJobs/rules_job', { ...base, status: 'queued' })));
+    assert.ok(isAllowed(await setDocument(UID, 'matchAnalysisJobs/rules_job', {
+      ...base,
+      identityConfirmation: { state: 'pending', frameIds: [], confirmedAt: null },
+    })));
   });
 
   test('clients can neither write nor read quarantine objects, even their own', async () => {

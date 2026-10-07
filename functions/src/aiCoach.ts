@@ -2,6 +2,11 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { defineSecret } from 'firebase-functions/params';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { callChat } from './ai/openRouter';
+import { cleanModelPayload, extractJsonObject } from './ai/outputValidator';
+import { buildPrompt } from './ai/promptBuilder';
+import { resolveModel } from './ai/providerConfig';
+import { assertAiConsent } from './ai/consentGate';
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
 
@@ -24,17 +29,6 @@ type InsightType = (typeof INSIGHT_TYPES)[number];
 type GenerateAiInsightRequest = {
   insightType?: unknown;
   contextJson?: unknown;
-};
-
-type OpenRouterChatResponse = {
-  choices?: Array<{
-    message?: {
-      content?: string;
-    };
-  }>;
-  error?: {
-    message?: string;
-  };
 };
 
 const MAX_CONTEXT_BYTES = 32 * 1024;
@@ -79,8 +73,6 @@ const INSIGHT_SCHEMA: Record<InsightType, string> = {
   "confidence": "low" | "medium" | "high",
   "title": "string",
   "summary": "string",
-  "currentRating": number | null,
-  "potentialRating": number | null,
   "growthAreas": ["string"],
   "trajectory": "rising" | "stable" | "plateauing" | null,
   "scoutNotes": "string"
@@ -128,37 +120,23 @@ function isInsightType(value: unknown): value is InsightType {
   return typeof value === 'string' && (INSIGHT_TYPES as readonly string[]).includes(value);
 }
 
-export function buildSystemPrompt(insightType: InsightType): string {
-  return [
-    'You are ScoutX AI, a professional football performance analyst.',
-    'Respond ONLY with a single JSON object. No markdown fences, no commentary.',
-    `Insight type: ${insightType}`,
-    `Purpose: ${INSIGHT_PURPOSE[insightType]}`,
-    'Hard rules:',
-    '- Use only the data in the provided context. Do not invent events, statistics, timestamps, ratings or achievements.',
-    '- If a value is not supported by the data, return null for numbers and omit list items rather than guessing.',
-    '- When data is sparse, set confidence to "low" and say so in the summary.',
-    'Required JSON schema:',
-    INSIGHT_SCHEMA[insightType],
-  ].join('\n\n');
-}
+export const INSIGHT_SYSTEM_RULES = [
+  'You are ScoutX AI, a football development analyst.',
+  'Hard rules:',
+  '- Use only the data in USER_METADATA. Do not invent events, statistics, timestamps, ratings or achievements.',
+  '- Never give a numeric player rating, potential score or ranking.',
+  '- If a value is not supported by the data, return null for numbers and omit list items rather than guessing.',
+  '- When data is sparse, set confidence to "low" and say so in the summary.',
+  '- Never include links or contact details.',
+];
 
-export function buildUserPrompt(insightType: InsightType, contextJson: string): string {
-  return [
-    `Generate a ${insightType.replace(/_/g, ' ')} for the player using this structured context:`,
-    contextJson,
-  ].join('\n\n');
-}
-
-function extractJsonFromModelText(text: string): Record<string, unknown> {
-  const trimmed = text.trim();
-  const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  const candidate = fenced?.[1]?.trim() ?? trimmed;
-  const parsed = JSON.parse(candidate) as unknown;
-  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-    throw new Error('AI response was not a JSON object.');
-  }
-  return parsed as Record<string, unknown>;
+export function buildInsightPrompt(insightType: InsightType, context: unknown) {
+  return buildPrompt({
+    system: INSIGHT_SYSTEM_RULES,
+    trusted: [`Insight type: ${insightType}`, `Purpose: ${INSIGHT_PURPOSE[insightType]}`],
+    userMetadata: context,
+    output: ['Return exactly this JSON schema:', INSIGHT_SCHEMA[insightType]],
+  });
 }
 
 /**
@@ -184,7 +162,17 @@ export function validateInsightPayload(
   return null;
 }
 
-function validateContextJson(value: unknown): string {
+/** Strips links, instruction echoes and any numeric rating fields from a model payload. */
+export function sanitizeInsightPayload(payload: Record<string, unknown>): Record<string, unknown> {
+  const cleaned = cleanModelPayload(payload) as Record<string, unknown>;
+  delete cleaned.currentRating;
+  delete cleaned.potentialRating;
+  delete cleaned.rating;
+  if (!['low', 'medium', 'high'].includes(String(cleaned.confidence))) cleaned.confidence = 'low';
+  return cleaned;
+}
+
+function parseContext(value: unknown): { context: Record<string, unknown>; playerId: string } {
   if (typeof value !== 'string' || value.length === 0) {
     throw new HttpsError('invalid-argument', 'contextJson is required.');
   }
@@ -204,7 +192,7 @@ function validateContextJson(value: unknown): string {
   if (!player || typeof player.playerId !== 'string') {
     throw new HttpsError('invalid-argument', 'contextJson.player.playerId is required.');
   }
-  return JSON.stringify(parsed);
+  return { context: parsed as Record<string, unknown>, playerId: player.playerId };
 }
 
 export const generateAiInsight = onCall(
@@ -223,59 +211,44 @@ export const generateAiInsight = onCall(
       throw new HttpsError('invalid-argument', 'Unknown insight type.');
     }
     const insightType = data.insightType;
-    const contextJson = validateContextJson(data.contextJson);
+    const { context, playerId: contextPlayerId } = parseContext(data.contextJson);
 
     // Players may only reason over their own data; recruiter roles may analyse others.
-    const contextPlayerId = (JSON.parse(contextJson) as { player: { playerId: string } }).player.playerId;
     const role = typeof request.auth?.token.role === 'string' ? request.auth.token.role : null;
     const isRecruiter = role === 'scout' || role === 'coach' || role === 'club' || role === 'admin';
     if (contextPlayerId !== uid && !isRecruiter) {
       throw new HttpsError('permission-denied', 'You can only generate insights for your own profile.');
     }
+    await assertAiConsent([uid, contextPlayerId]);
 
     const apiKey = openRouterApiKey.value();
     if (!apiKey) {
       throw new HttpsError('failed-precondition', 'OpenRouter API key is not configured.');
     }
 
-    const model = process.env.OPENROUTER_MODEL?.trim() || 'google/gemma-2-9b-it:free';
-    const baseUrl = process.env.OPENROUTER_BASE_URL?.trim() || 'https://openrouter.ai/api/v1';
-
-    const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://scoutx.app',
-        'X-Title': 'ScoutX',
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: 'system', content: buildSystemPrompt(insightType) },
-          { role: 'user', content: buildUserPrompt(insightType, contextJson) },
-        ],
-        response_format: { type: 'json_object' },
-        temperature: 0.2,
-      }),
+    const model = resolveModel('text');
+    const prompt = buildInsightPrompt(insightType, context);
+    const result = await callChat({
+      apiKey,
+      model,
+      title: 'ScoutX',
+      messages: [
+        { role: 'system', content: prompt.system },
+        { role: 'user', content: prompt.user },
+      ],
     });
-
-    const payload = (await response.json()) as OpenRouterChatResponse;
-    if (!response.ok) {
-      logger.error('OpenRouter request failed', { status: response.status, payload });
-      throw new HttpsError('unavailable', 'The AI coach is temporarily unavailable. Please try again.');
-    }
-
-    const content = payload.choices?.[0]?.message?.content;
-    if (!content) {
+    if (!result.ok) {
+      if (result.kind === 'upstream') {
+        throw new HttpsError('unavailable', 'The AI coach is temporarily unavailable. Please try again.');
+      }
       throw new HttpsError('internal', 'The AI coach returned an empty response.');
     }
 
     let parsed: Record<string, unknown>;
     try {
-      parsed = extractJsonFromModelText(content);
-    } catch (error) {
-      logger.error('Failed to parse AI JSON response', { error, content });
+      parsed = sanitizeInsightPayload(extractJsonObject(result.content));
+    } catch {
+      logger.warn('AI insight response was not a JSON object', { insightType });
       throw new HttpsError('internal', 'The AI coach response could not be read.');
     }
 

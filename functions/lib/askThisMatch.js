@@ -5,6 +5,7 @@ const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const callableOptions_1 = require("./callableOptions");
 const askThisMatch_1 = require("./analysis/askThisMatch");
+const outputValidator_1 = require("./ai/outputValidator");
 function asRecord(value) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
         return null;
@@ -36,6 +37,7 @@ exports.askThisMatch = (0, https_1.onCall)((0, callableOptions_1.createCallableO
     if (job.playerId !== request.auth.uid) {
         throw new https_1.HttpsError('permission-denied', 'You can only ask about your own analysis.');
     }
+    const durationSec = job.measuredDurationSec ?? job.durationSec ?? 0;
     const events = Array.isArray(job.events) ? job.events : [];
     const evidence = Array.isArray(job.report?.evidence) ? job.report.evidence : [];
     const coachingMoments = Array.isArray(job.report?.coachingMoments)
@@ -77,7 +79,7 @@ exports.askThisMatch = (0, https_1.onCall)((0, callableOptions_1.createCallableO
                 evidenceId: eventId,
                 label: type,
                 kind: 'event',
-                timestampSec: typeof row.videoTimestampSec === 'number' ? row.videoTimestampSec : null,
+                timestampSec: (0, outputValidator_1.timestampWithin)(row.videoTimestampSec, durationSec),
             });
         }
     }
@@ -86,8 +88,8 @@ exports.askThisMatch = (0, https_1.onCall)((0, callableOptions_1.createCallableO
         if (!row) {
             continue;
         }
-        const label = typeof row.label === 'string' ? row.label : 'Observation';
-        const detail = typeof row.detail === 'string' ? row.detail : '';
+        const label = (0, outputValidator_1.cleanModelText)(row.label, 80) || 'Observation';
+        const detail = (0, outputValidator_1.cleanModelText)(row.detail, 400);
         const blob = `${label} ${detail}`.toLowerCase();
         if (q.split(/\s+/).some((token) => token.length >= 3 && blob.includes(token))) {
             lines.push(detail || label);
@@ -95,7 +97,7 @@ exports.askThisMatch = (0, https_1.onCall)((0, callableOptions_1.createCallableO
                 evidenceId: typeof row.id === 'string' ? row.id : label,
                 label,
                 kind: 'observation',
-                timestampSec: typeof row.timestampSec === 'number' ? row.timestampSec : null,
+                timestampSec: (0, outputValidator_1.timestampWithin)(row.timestampSec, durationSec),
                 detail: detail || label,
             });
         }
@@ -105,8 +107,8 @@ exports.askThisMatch = (0, https_1.onCall)((0, callableOptions_1.createCallableO
         if (!row) {
             continue;
         }
-        const point = typeof row.coachingPoint === 'string' ? row.coachingPoint : '';
-        const context = typeof row.context === 'string' ? row.context : '';
+        const point = (0, outputValidator_1.cleanModelText)(row.coachingPoint, 400);
+        const context = (0, outputValidator_1.cleanModelText)(row.context, 400);
         const blob = `${context} ${point}`.toLowerCase();
         if (point && q.split(/\s+/).some((token) => token.length >= 3 && blob.includes(token))) {
             lines.push(point);
@@ -114,7 +116,7 @@ exports.askThisMatch = (0, https_1.onCall)((0, callableOptions_1.createCallableO
                 evidenceId: typeof row.id === 'string' ? row.id : point.slice(0, 40),
                 label: point.slice(0, 80),
                 kind: 'coaching',
-                timestampSec: typeof row.timestampSec === 'number' ? row.timestampSec : null,
+                timestampSec: (0, outputValidator_1.timestampWithin)(row.timestampSec, durationSec),
                 detail: point,
             });
         }

@@ -4,6 +4,7 @@ exports.generateHighlightReelPlan = void 0;
 const firestore_1 = require("firebase-admin/firestore");
 const https_1 = require("firebase-functions/v2/https");
 const callableOptions_1 = require("./callableOptions");
+const outputValidator_1 = require("./ai/outputValidator");
 exports.generateHighlightReelPlan = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
     const auth = request.auth;
     if (!auth) {
@@ -37,7 +38,7 @@ exports.generateHighlightReelPlan = (0, https_1.onCall)((0, callableOptions_1.cr
             .filter((moment) => typeof moment.timestampSec === 'number' && Number.isFinite(moment.timestampSec))
             .map((moment, index) => ({
             id: `moment-${index}`,
-            title: moment.label ?? 'Match moment',
+            title: (0, outputValidator_1.cleanModelText)(moment.label, 80) || 'Match moment',
             eventType: moment.label?.toLowerCase().includes('goal') ? 'Goal' : 'Match action',
             confidence: reportConfidence,
             timestampSec: moment.timestampSec,

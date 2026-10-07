@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.normalizeObservations = normalizeObservations;
+const outputValidator_1 = require("../ai/outputValidator");
 /**
  * Observations must cite a known frame id. Anything else is dropped, not guessed.
  */
@@ -25,11 +26,15 @@ function normalizeObservations(raw, knownFrameIds, durationSec) {
             continue;
         }
         const kind = row.kind === 'inference' || row.kind === 'unknown' ? row.kind : 'observation';
+        const detail = (0, outputValidator_1.cleanModelText)(row.detail, 400);
+        if (!detail && typeof row.detail === 'string' && row.detail.trim()) {
+            continue;
+        }
         out.push({
             frameId,
             timestampSec,
-            label: typeof row.label === 'string' ? row.label : 'Observation',
-            detail: typeof row.detail === 'string' ? row.detail : '',
+            label: (0, outputValidator_1.cleanModelText)(row.label, 80) || 'Observation',
+            detail,
             kind,
         });
     }

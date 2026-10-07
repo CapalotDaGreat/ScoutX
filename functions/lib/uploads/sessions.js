@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cleanupAbandonedUploads = exports.cancelUploadSession = exports.createUploadSession = void 0;
+exports.discardUploadsForJob = discardUploadsForJob;
 exports.expireAbandonedUploads = expireAbandonedUploads;
 const https_1 = require("firebase-functions/v2/https");
 const scheduler_1 = require("firebase-functions/v2/scheduler");
@@ -143,7 +144,28 @@ async function discardUpload(db, uploadId, data, state) {
     }
     await (0, storage_1.getStorage)().bucket().file(data.storagePath).delete({ ignoreNotFound: true });
     await db.collection('mediaUploadSessions').doc(uploadId).delete();
-    await db.collection('mediaUploads').doc(uploadId).update({ state, updatedAt: new Date().toISOString() });
+    const now = new Date().toISOString();
+    await db.collection('mediaUploads').doc(uploadId).update({ state, updatedAt: now });
+    if (state === 'expired') {
+        const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
+        const job = await jobRef.get();
+        if (job.exists && job.get('playerId') === data.ownerId && job.get('status') === 'uploading') {
+            await jobRef.update({ status: 'expired', pipelineState: 'expired', updatedAt: now });
+        }
+    }
+}
+/** Stops every unfinished upload attached to a job (used when the job is cancelled). */
+async function discardUploadsForJob(db, uid, jobId) {
+    const snapshot = await db.collection('mediaUploads').where('ownerId', '==', uid).where('jobId', '==', jobId).get();
+    let discarded = 0;
+    for (const doc of snapshot.docs) {
+        const data = doc.data();
+        if (!model_1.ACTIVE_UPLOAD_STATES.includes(data.state))
+            continue;
+        await discardUpload(db, doc.id, data, 'cancelled');
+        discarded += 1;
+    }
+    return discarded;
 }
 exports.cancelUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
     const uid = request.auth?.uid;

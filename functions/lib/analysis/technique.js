@@ -1,13 +1,14 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MIN_TECHNIQUE_FRAMES = exports.TECHNIQUE_DIMENSIONS = void 0;
+exports.parseSelfReportedStars = parseSelfReportedStars;
+exports.normalizeTechniqueAssessment = normalizeTechniqueAssessment;
 /**
  * Technique star assessment (EA FC style, 1–5) derived from sampled still frames.
  * A star rating is only kept when the player confirmed their identity and the model cited
  * enough known frames. Everything else stays unknown instead of guessed.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MIN_TECHNIQUE_FRAMES = exports.TECHNIQUE_DIMENSIONS = void 0;
-exports.parseSelfReportedStars = parseSelfReportedStars;
-exports.normalizeTechniqueAssessment = normalizeTechniqueAssessment;
+const outputValidator_1 = require("../ai/outputValidator");
 exports.TECHNIQUE_DIMENSIONS = [
     'weakFoot',
     'skillMoves',
@@ -25,7 +26,7 @@ function toStars(value) {
     return rounded >= 1 && rounded <= 5 ? rounded : null;
 }
 function text(value, max = 400) {
-    return typeof value === 'string' ? value.trim().slice(0, max) : '';
+    return (0, outputValidator_1.cleanModelText)(value, max);
 }
 function parseSelfReportedStars(identity) {
     const record = identity && typeof identity === 'object' && !Array.isArray(identity)

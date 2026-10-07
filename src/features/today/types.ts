@@ -61,7 +61,7 @@ export type TodayMatch = {
 
 export type TodayAnalysisJob = {
   id: string;
-  status: 'draft' | 'uploading' | 'queued' | 'processing' | 'complete' | 'failed';
+  status: 'draft' | 'uploading' | 'queued' | 'processing' | 'complete' | 'failed' | 'cancelled' | 'expired';
   createdAt: string;
   completedAt?: string;
   opponent: string;

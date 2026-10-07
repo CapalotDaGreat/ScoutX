@@ -6,7 +6,6 @@ export { AiInsightsProvider, useAiInsights } from './context/AiInsightsProvider'
 export { useAiInsight } from './hooks/useAiInsight';
 
 export { AiInsightsService } from './services/aiInsightsService';
-export { buildCompletionPrompts, buildSystemPrompt, buildUserPrompt } from './services/aiPromptService';
 export {
   buildCareerInsightContext,
   buildGpsInsightContext,
@@ -23,7 +22,6 @@ export { AiCareerCoachCard } from './components/AiCareerCoachCard';
 export { createAiProvider } from './providers/createAiProvider';
 export { CloudFunctionAiProvider } from './providers/cloudFunctionAiProvider';
 export { MockAiProvider } from './providers/mockAiProvider';
-export { OpenRouterAiProvider } from './providers/openRouterProvider';
 export type { AiProvider } from './providers/types';
 
 export { AI_INSIGHT_DESCRIPTIONS } from './constants';

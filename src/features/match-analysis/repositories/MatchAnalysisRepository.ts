@@ -25,33 +25,49 @@ function jobsCollection() {
   return collection(db, MATCH_ANALYSIS_COLLECTION);
 }
 
+/** Fields the app may set when creating a job; status, stages, frames from extraction and results are server-owned. */
+const CREATE_KEYS = [
+  'id',
+  'playerId',
+  'status',
+  'targeting',
+  'match',
+  'durationSec',
+  'fileSizeBytes',
+  'frames',
+  'identityConfirmation',
+  'identityCandidates',
+  'idempotencyKey',
+  'createdAt',
+  'updatedAt',
+] as const satisfies ReadonlyArray<keyof MatchAnalysisJob>;
+
+/** Fields the app may change later: identity confirmation, GPS sync and short-clip device frames. */
+export type MatchAnalysisJobClientPatch = Partial<
+  Pick<MatchAnalysisJob, 'identityConfirmation' | 'identityCandidates' | 'frames' | 'videoSync'>
+>;
+
 export async function createMatchAnalysisJob(job: MatchAnalysisJob): Promise<void> {
   if (!isFirebaseConfiguredForProject()) {
     return;
   }
   const payload = Object.fromEntries(
-    Object.entries(job).filter(([, value]) => value !== undefined),
+    CREATE_KEYS.map((key) => [key, job[key]]).filter(([, value]) => value !== undefined),
   );
   await setDoc(doc(jobsCollection(), job.id), payload);
 }
 
-export async function updateMatchAnalysisJob(
-  jobId: string,
-  patch: Partial<MatchAnalysisJob>,
-): Promise<void> {
+export async function updateMatchAnalysisJob(jobId: string, patch: MatchAnalysisJobClientPatch): Promise<void> {
   if (!isFirebaseConfiguredForProject()) {
     return;
   }
-  const ref = doc(jobsCollection(), jobId);
-  const existing = await getDoc(ref);
-  const base = (existing.data() ?? {}) as Record<string, unknown>;
-  const payload: Record<string, unknown> = { ...base };
+  const payload: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(patch)) {
     // Firestore rejects undefined values; an explicit undefined in the patch clears the field.
     payload[key] = value === undefined ? deleteField() : value;
   }
   payload.updatedAt = new Date().toISOString();
-  await setDoc(ref, payload, { merge: true });
+  await setDoc(doc(jobsCollection(), jobId), payload, { merge: true });
 }
 
 export async function getMatchAnalysisJob(jobId: string): Promise<MatchAnalysisJob | null> {

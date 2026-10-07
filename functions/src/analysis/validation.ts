@@ -1,3 +1,5 @@
+import { cleanModelText } from '../ai/outputValidator';
+
 export type ValidationStatus = 'accepted' | 'rejected' | 'needs_identity';
 
 export type RawObservation = {
@@ -47,11 +49,15 @@ export function normalizeObservations(
     }
     const kind =
       row.kind === 'inference' || row.kind === 'unknown' ? row.kind : 'observation';
+    const detail = cleanModelText(row.detail, 400);
+    if (!detail && typeof row.detail === 'string' && row.detail.trim()) {
+      continue;
+    }
     out.push({
       frameId,
       timestampSec,
-      label: typeof row.label === 'string' ? row.label : 'Observation',
-      detail: typeof row.detail === 'string' ? row.detail : '',
+      label: cleanModelText(row.label, 80) || 'Observation',
+      detail,
       kind,
     });
   }
