@@ -207,14 +207,6 @@ export class TrialInvitationRepository {
     const invitation = buildTrialInvitation(scoutId, scoutName, playerId, playerName, draft);
     await this.persistInvitation(invitation);
     await this.persistNotifications(buildInvitationCreatedNotifications(invitation));
-    ActivityRecorder.getInstance().recordTrialInvitation({
-      playerId,
-      playerName,
-      scoutId,
-      scoutName,
-      trialId: invitation.id,
-      club: invitation.club,
-    });
     return invitation;
   }
 

@@ -11,6 +11,7 @@ export {
   resolveVerificationRequest,
 } from './adminReview';
 export { recordPortfolioView } from './portfolioAnalytics';
+export { purgeLegacyGpsLocation } from './gpsPrivacy';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
 export {
@@ -31,7 +32,9 @@ export { onActivityCreatedPush } from './pushDelivery';
 export {
   onMatchAnalysisJobFinishedNotify,
   onPassportSummaryWrittenNotifyOwner,
+  onTrialInvitationCreatedNotify,
   onTrialInvitationUpdatedNotify,
+  onTrustRecommendationCreatedNotify,
   sendDevelopmentReminders,
 } from './notificationProducers';
 

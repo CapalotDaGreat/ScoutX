@@ -26,12 +26,7 @@ export const mockGpsSessions: GpsSession[] = [
     heatmap: {
       rows: 14,
       cols: 20,
-      bounds: {
-        minLat: 47.376,
-        maxLat: 47.378,
-        minLng: 8.537,
-        maxLng: 8.541,
-      },
+      extent: { lengthM: 82, widthM: 41 },
       cells: [
         { row: 4, col: 6, intensity: 0.4 },
         { row: 5, col: 7, intensity: 0.8 },
@@ -40,7 +35,7 @@ export const mockGpsSessions: GpsSession[] = [
         { row: 8, col: 10, intensity: 0.5 },
       ],
     },
-    pointsStorageKey: null,
+    intelligence: null,
   },
 ];
 

@@ -23,7 +23,7 @@ export const defaultPrivacySettings = (): PrivacySettings => ({
   showVideos: true,
   showAchievements: true,
   showRecommendations: true,
-  showGpsHighlights: true,
+  showGpsHighlights: false,
   showPerformanceCharts: true,
   allowSocialPostsInFeed: true,
 });

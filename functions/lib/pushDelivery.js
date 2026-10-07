@@ -43,7 +43,7 @@ async function isGenuineTrialInvitation(activity) {
     }
     const trial = await (0, firestore_1.getFirestore)().collection('trialInvitations').doc(trialId).get();
     const data = trial.data();
-    return data?.scoutId === activity.actorId && data?.playerId === activity.recipientId;
+    return activity.actorId === 'system' && data?.playerId === activity.recipientId;
 }
 const HOUR_MS = 60 * 60 * 1000;
 /** Minimum gap between pushes of the same type to one recipient, to prevent notification spam. */

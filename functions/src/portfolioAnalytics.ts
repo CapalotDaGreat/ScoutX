@@ -1,6 +1,7 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
 import { createCallableOptions } from './callableOptions';
+import { notifyPassportViewed } from './notificationProducers';
 
 type PortfolioAnalyticsDoc = {
   totalViews: number;
@@ -46,11 +47,13 @@ export const recordPortfolioView = onCall(createCallableOptions(), async (reques
     return { success: true, skipped: true };
   }
 
-  const isScoutView = data.isScoutView === true;
+  const role = request.auth.token.role;
+  const isScoutView = typeof role === 'string' && ['scout', 'coach', 'club'].includes(role);
   const db = getFirestore();
   const ref = db.collection('portfolioAnalytics').doc(playerId);
   const weekStart = currentWeekStart();
-  const now = new Date().toISOString();
+  // Day precision only, so a player cannot match a view to an individual visitor's timing.
+  const now = new Date().toISOString().slice(0, 10);
 
   await db.runTransaction(async (transaction) => {
     const snapshot = await transaction.get(ref);
@@ -80,5 +83,6 @@ export const recordPortfolioView = onCall(createCallableOptions(), async (reques
     });
   });
 
+  await notifyPassportViewed(db, playerId);
   return { success: true };
 });

@@ -151,19 +151,9 @@ export class ScoutingReportRepository {
     }
 
     const scoutName = report.scoutName ?? 'Scout';
-    const recorder = ActivityRecorder.getInstance();
-    recorder.recordScoutingReport({
+    ActivityRecorder.getInstance().recordOwnScoutingReport({
       recipientId: scoutId,
       recipientRole: 'scout',
-      scoutId,
-      scoutName,
-      playerId,
-      playerName,
-      reportId: report.id,
-    });
-    recorder.recordScoutingReport({
-      recipientId: playerId,
-      recipientRole: 'player',
       scoutId,
       scoutName,
       playerId,

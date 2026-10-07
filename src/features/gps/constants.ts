@@ -21,6 +21,7 @@ export const MOVEMENT_ZONE_LABELS: Record<string, string> = {
 
 export const GPS_STORAGE_KEYS = {
   activeSession: '@scoutx/gps/active-session',
-  activePoints: '@scoutx/gps/active-points',
+  legacyActivePoints: '@scoutx/gps/active-points',
   localSessions: '@scoutx/gps/sessions',
+  legacyPurged: '@scoutx/gps/legacy-location-purged',
 } as const;

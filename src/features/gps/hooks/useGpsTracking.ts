@@ -13,6 +13,7 @@ import {
   saveActiveSession,
 } from '@/features/gps/services/gpsSessionStorage';
 import {
+  endGpsSession,
   getGpsPermissionStatus,
   requestGpsPermissions,
   startGpsTracking,
@@ -74,6 +75,14 @@ export function useGpsTracking({ playerId }: UseGpsTrackingOptions) {
     pointsRef.current = nextPoints;
     setPoints(nextPoints);
   }, []);
+
+  const beginTracking = useCallback(async (activeSession: GpsSession) => {
+    const lastPoint = pointsRef.current[pointsRef.current.length - 1];
+    await startGpsTracking(handleLocationUpdate, {
+      sessionStartMs: Date.parse(activeSession.startedAt),
+      nextSegment: lastPoint ? lastPoint.segment + 1 : 0,
+    });
+  }, [handleLocationUpdate]);
 
   const clearAutosaveTimer = useCallback(() => {
     if (autosaveTimerRef.current) {
@@ -156,10 +165,11 @@ export function useGpsTracking({ playerId }: UseGpsTrackingOptions) {
     setPausedDurationMs(0);
     setStatus('recording');
 
-    await startGpsTracking(handleLocationUpdate);
+    await endGpsSession();
+    await beginTracking(nextSession);
     startAutosaveTimer();
     await saveActiveSession(nextSession, []);
-  }, [handleLocationUpdate, matchLabel, playerId, startAutosaveTimer]);
+  }, [beginTracking, matchLabel, playerId, startAutosaveTimer]);
 
   const pauseRecording = useCallback(async () => {
     if (status !== 'recording') {
@@ -194,21 +204,22 @@ export function useGpsTracking({ playerId }: UseGpsTrackingOptions) {
       pausedAtRef.current = null;
     }
 
-    setStatus('recording');
-
-    if (sessionRef.current) {
-      const resumedSession = {
-        ...sessionRef.current,
-        status: 'recording' as const,
-        pausedDurationMs: pausedDurationMsRef.current,
-      };
-      sessionRef.current = resumedSession;
-      setSession(resumedSession);
+    if (!sessionRef.current) {
+      return;
     }
 
-    await startGpsTracking(handleLocationUpdate);
+    setStatus('recording');
+    const resumedSession = {
+      ...sessionRef.current,
+      status: 'recording' as const,
+      pausedDurationMs: pausedDurationMsRef.current,
+    };
+    sessionRef.current = resumedSession;
+    setSession(resumedSession);
+
+    await beginTracking(resumedSession);
     startAutosaveTimer();
-  }, [handleLocationUpdate, startAutosaveTimer, status]);
+  }, [beginTracking, startAutosaveTimer, status]);
 
   const stopRecording = useCallback(async (): Promise<GpsSession | null> => {
     if (!sessionRef.current || status === 'idle') {
@@ -221,7 +232,7 @@ export function useGpsTracking({ playerId }: UseGpsTrackingOptions) {
       pausedAtRef.current = null;
     }
 
-    await stopGpsTracking();
+    await endGpsSession();
     clearAutosaveTimer();
     setIsSaving(true);
     setError(null);
@@ -255,7 +266,7 @@ export function useGpsTracking({ playerId }: UseGpsTrackingOptions) {
   }, [clearAutosaveTimer, matchLabel, status]);
 
   const discardRecording = useCallback(async () => {
-    await stopGpsTracking();
+    await endGpsSession();
     clearAutosaveTimer();
     sessionRef.current = null;
     pointsRef.current = [];

@@ -148,15 +148,37 @@ describe('profiles and GPS privacy', () => {
     );
   });
 
-  test('GPS sessions are owner-only unless the passport is public with GPS highlights on', async () => {
+  test('GPS sessions are owner-only, even on a public passport with the legacy GPS flag on', async () => {
     await allowed(getDocument('private-player', 'gpsSessions/private-gps'), 'owner');
+    await allowed(getDocument(PLAYER, 'gpsSessions/public-gps'), 'owner on public passport');
     await denied(getDocument(SCOUT, 'gpsSessions/private-gps'), 'scout on private passport');
-    await allowed(getDocument(SCOUT, 'gpsSessions/public-gps'), 'public passport with GPS on');
-    await denied(getDocument(SCOUT, 'gpsSessions/hidden-gps'), 'public passport with GPS hidden');
+    await denied(getDocument(SCOUT, 'gpsSessions/public-gps'), 'scout on public passport with GPS flag');
+    await denied(getDocument(null, 'gpsSessions/public-gps'), 'signed-out visitor');
   });
 
   test('GPS sessions cannot be written for another player', async () => {
     await denied(setDocument(OUTSIDER, 'gpsSessions/forged', { playerId: PLAYER }), 'forged session');
+  });
+
+  test('GPS sessions cannot carry coordinates or uploaded point tracks', async () => {
+    const summary = {
+      playerId: PLAYER,
+      metrics: { distanceM: 5200 },
+      heatmap: { rows: 14, cols: 20, cells: [], extent: { lengthM: 80, widthM: 40 } },
+    };
+    await allowed(setDocument(PLAYER, 'gpsSessions/s-ok', summary), 'location-free summary');
+    await denied(
+      setDocument(PLAYER, 'gpsSessions/s-key', { ...summary, pointsStorageKey: `gpsSessions/${PLAYER}/s/points.json` }),
+      'points file pointer',
+    );
+    await denied(
+      setDocument(PLAYER, 'gpsSessions/s-bounds', {
+        ...summary,
+        heatmap: { ...summary.heatmap, bounds: { minLat: 47.3, maxLat: 47.4, minLng: 8.5, maxLng: 8.6 } },
+      }),
+      'coordinate bounds',
+    );
+    await denied(setDocument(PLAYER, 'gpsSessions/s-lat', { ...summary, latitude: 47.3 }), 'raw latitude');
   });
 });
 
@@ -216,13 +238,21 @@ describe('activities', () => {
     ...overrides,
   });
 
-  test('actors cannot impersonate others or send system activities to others', async () => {
-    await allowed(setDocument(SCOUT, 'activities/a1', activity({})), 'genuine actor');
+  test('clients can only write to their own feed; cross-user activity is server-only', async () => {
+    await denied(setDocument(SCOUT, 'activities/a1', activity({})), 'genuine actor to another user');
+    await denied(
+      setDocument(SCOUT, 'activities/a1b', activity({ type: 'trial_invitation', title: 'Pay to get a trial', body: 'http://evil' })),
+      'free text to another user',
+    );
     await denied(setDocument(OUTSIDER, 'activities/a2', activity({})), 'spoofed actor');
     await denied(setDocument(OUTSIDER, 'activities/a3', activity({ actorId: 'system' })), 'system to someone else');
     await allowed(
       setDocument(PLAYER, 'activities/a4', activity({ actorId: 'system', type: 'milestone_earned' })),
       'system to self',
+    );
+    await allowed(
+      setDocument(SCOUT, 'activities/a6', activity({ recipientId: SCOUT, actorId: SCOUT, type: 'player_saved' })),
+      'own activity in own feed',
     );
   });
 
@@ -284,9 +314,17 @@ describe('trials', () => {
 
   test('trial notifications can only be created by trial participants', async () => {
     await seed('trialInvitations/t7', invitation({}));
-    const notification = { recipientId: PLAYER, trialInvitationId: 't7', read: false, title: 'Trial' };
+    const notification = { recipientId: PLAYER, trialInvitationId: 't7', read: false, title: 'Trial', body: 'b' };
     await allowed(setDocument(SCOUT, 'trialNotifications/n1', notification), 'participant');
     await denied(setDocument(OUTSIDER, 'trialNotifications/n2', notification), 'outsider');
+    await denied(
+      setDocument(SCOUT, 'trialNotifications/n3', { ...notification, recipientId: OTHER_PLAYER }),
+      'participant notifying a non-participant',
+    );
+    await denied(
+      setDocument(SCOUT, 'trialNotifications/n4', { ...notification, body: 'x'.repeat(501) }),
+      'oversized body',
+    );
     await allowed(setDocument(PLAYER, 'trialNotifications/n1', { ...notification, read: true }), 'mark read');
     await denied(setDocument(PLAYER, 'trialNotifications/n1', { ...notification, title: 'edited' }), 'edit');
   });

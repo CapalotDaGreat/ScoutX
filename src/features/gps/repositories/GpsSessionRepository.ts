@@ -1,7 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, getDocs, collection, setDoc, query, orderBy, limit, where } from 'firebase/firestore';
-import { ref, uploadString, getDownloadURL } from 'firebase/storage';
-import { getFirestoreDb, getFirebaseStorage } from '@/config/firebase';
+import { getFirestoreDb } from '@/config/firebase';
+import { GPS_STORAGE_KEYS } from '@/features/gps/constants';
 import { finalizeGpsSession } from '@/features/gps/models/GpsSessionModel';
+import { buildGpsIntelligence } from '@/features/gps/services/gpsIntelligence';
 import {
   calculateMovementZones,
   calculateSessionMetrics,
@@ -10,11 +12,17 @@ import {
 import {
   clearActiveSession,
   loadLocalSessions,
+  purgeLegacyLocalLocation,
   saveLocalSessions,
-  deserializePointsFromStorage,
-  serializePointsForStorage,
 } from '@/features/gps/services/gpsSessionStorage';
-import { type GpsPoint, type GpsSession } from '@/features/gps/types';
+import type {
+  GpsIntelligence,
+  GpsPoint,
+  GpsSession,
+  GpsSprint,
+  SpeedBand,
+} from '@/features/gps/types';
+import { createCallableFunction } from '@/firebase/callableFunctions';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -22,7 +30,48 @@ function asRecord(value: unknown): Record<string, unknown> | null {
     : null;
 }
 
-function parseGpsSession(value: unknown): GpsSession | null {
+function numberOr<T>(value: unknown, fallback: T): number | T {
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
+}
+
+function parseIntelligence(value: unknown): GpsIntelligence | null {
+  const record = asRecord(value);
+  if (!record || (record.status !== 'ok' && record.status !== 'insufficient' && record.status !== 'low_accuracy')) {
+    return null;
+  }
+  const sample = asRecord(record.sample);
+  const bands = asRecord(record.bands);
+  const sprints = Array.isArray(record.sprints)
+    ? record.sprints
+        .map((item): GpsSprint | null => {
+          const sprint = asRecord(item);
+          if (!sprint || typeof sprint.startSec !== 'number' || typeof sprint.endSec !== 'number') {
+            return null;
+          }
+          return { startSec: sprint.startSec, endSec: sprint.endSec, peakKmh: numberOr(sprint.peakKmh, 0) };
+        })
+        .filter((sprint): sprint is GpsSprint => sprint !== null)
+    : [];
+  const bandKeys: SpeedBand[] = ['walk', 'jog', 'run', 'sprint'];
+  return {
+    status: record.status,
+    sample: {
+      points: numberOr(sample?.points, 0),
+      durationSec: numberOr(sample?.durationSec, 0),
+      medianAccuracyM: numberOr(sample?.medianAccuracyM, null),
+    },
+    widthM: numberOr(record.widthM, null),
+    depthM: numberOr(record.depthM, null),
+    centralSharePct: numberOr(record.centralSharePct, null),
+    bands: bands
+      ? (Object.fromEntries(bandKeys.map((key) => [key, numberOr(bands[key], 0)])) as Record<SpeedBand, number>)
+      : null,
+    sprints,
+  };
+}
+
+/** Reads only the location-free summary fields; legacy coordinate bounds are dropped. */
+export function parseGpsSession(value: unknown): GpsSession | null {
   const record = asRecord(value);
   if (!record || typeof record.id !== 'string') {
     return null;
@@ -30,7 +79,7 @@ function parseGpsSession(value: unknown): GpsSession | null {
 
   const metrics = asRecord(record.metrics);
   const heatmap = asRecord(record.heatmap);
-  const heatmapBounds = asRecord(heatmap?.bounds);
+  const extent = asRecord(heatmap?.extent);
 
   return {
     id: record.id,
@@ -45,17 +94,15 @@ function parseGpsSession(value: unknown): GpsSession | null {
         : 'completed',
     startedAt: typeof record.startedAt === 'string' ? record.startedAt : new Date().toISOString(),
     endedAt: typeof record.endedAt === 'string' ? record.endedAt : null,
-    pausedDurationMs:
-      typeof record.pausedDurationMs === 'number' ? record.pausedDurationMs : 0,
+    pausedDurationMs: numberOr(record.pausedDurationMs, 0),
     metrics: {
-      distanceM: typeof metrics?.distanceM === 'number' ? metrics.distanceM : 0,
-      avgSpeedKmh: typeof metrics?.avgSpeedKmh === 'number' ? metrics.avgSpeedKmh : 0,
-      maxSpeedKmh: typeof metrics?.maxSpeedKmh === 'number' ? metrics.maxSpeedKmh : 0,
-      sprintCount: typeof metrics?.sprintCount === 'number' ? metrics.sprintCount : 0,
-      durationSec: typeof metrics?.durationSec === 'number' ? metrics.durationSec : 0,
-      activeDurationSec:
-        typeof metrics?.activeDurationSec === 'number' ? metrics.activeDurationSec : 0,
-      pointCount: typeof metrics?.pointCount === 'number' ? metrics.pointCount : 0,
+      distanceM: numberOr(metrics?.distanceM, 0),
+      avgSpeedKmh: numberOr(metrics?.avgSpeedKmh, 0),
+      maxSpeedKmh: numberOr(metrics?.maxSpeedKmh, 0),
+      sprintCount: numberOr(metrics?.sprintCount, 0),
+      durationSec: numberOr(metrics?.durationSec, 0),
+      activeDurationSec: numberOr(metrics?.activeDurationSec, 0),
+      pointCount: numberOr(metrics?.pointCount, 0),
     },
     zones: Array.isArray(record.zones)
       ? record.zones
@@ -73,17 +120,15 @@ function parseGpsSession(value: unknown): GpsSession | null {
                   ? zoneRecord.zone
                   : 'middle',
               label: typeof zoneRecord.label === 'string' ? zoneRecord.label : 'Zone',
-              percentage:
-                typeof zoneRecord.percentage === 'number' ? zoneRecord.percentage : 0,
-              durationSec:
-                typeof zoneRecord.durationSec === 'number' ? zoneRecord.durationSec : 0,
+              percentage: numberOr(zoneRecord.percentage, 0),
+              durationSec: numberOr(zoneRecord.durationSec, 0),
             };
           })
           .filter((zone): zone is GpsSession['zones'][number] => zone !== null)
       : [],
     heatmap: {
-      rows: typeof heatmap?.rows === 'number' ? heatmap.rows : 0,
-      cols: typeof heatmap?.cols === 'number' ? heatmap.cols : 0,
+      rows: numberOr(heatmap?.rows, 0),
+      cols: numberOr(heatmap?.cols, 0),
       cells: Array.isArray(heatmap?.cells)
         ? heatmap.cells
             .map((cell) => {
@@ -93,28 +138,22 @@ function parseGpsSession(value: unknown): GpsSession | null {
               }
 
               return {
-                row: typeof cellRecord.row === 'number' ? cellRecord.row : 0,
-                col: typeof cellRecord.col === 'number' ? cellRecord.col : 0,
-                intensity:
-                  typeof cellRecord.intensity === 'number' ? cellRecord.intensity : 0,
+                row: numberOr(cellRecord.row, 0),
+                col: numberOr(cellRecord.col, 0),
+                intensity: numberOr(cellRecord.intensity, 0),
               };
             })
             .filter((cell): cell is GpsSession['heatmap']['cells'][number] => cell !== null)
         : [],
-      bounds: {
-        minLat: typeof heatmapBounds?.minLat === 'number' ? heatmapBounds.minLat : 0,
-        maxLat: typeof heatmapBounds?.maxLat === 'number' ? heatmapBounds.maxLat : 0,
-        minLng: typeof heatmapBounds?.minLng === 'number' ? heatmapBounds.minLng : 0,
-        maxLng: typeof heatmapBounds?.maxLng === 'number' ? heatmapBounds.maxLng : 0,
-      },
+      extent: { lengthM: numberOr(extent?.lengthM, 0), widthM: numberOr(extent?.widthM, 0) },
     },
-    pointsStorageKey:
-      typeof record.pointsStorageKey === 'string' ? record.pointsStorageKey : null,
+    intelligence: parseIntelligence(record.intelligence),
   };
 }
 
 export class GpsSessionRepository {
   private static instance: GpsSessionRepository | null = null;
+  private readonly purgeLegacyCallable = createCallableFunction<Record<string, never>>('purgeLegacyGpsLocation');
 
   private constructor() {}
 
@@ -125,11 +164,35 @@ export class GpsSessionRepository {
     return this.instance;
   }
 
+  private async readLocalSessions(): Promise<GpsSession[]> {
+    return (await loadLocalSessions())
+      .map(parseGpsSession)
+      .filter((session): session is GpsSession => session !== null);
+  }
+
+  /**
+   * One-time cleanup per user of location data written by builds before on-device
+   * processing: legacy points.json files and coordinate fields on session documents.
+   */
+  public async purgeLegacyLocation(playerId: string): Promise<void> {
+    const flagKey = `${GPS_STORAGE_KEYS.legacyPurged}/${playerId}`;
+    if ((await AsyncStorage.getItem(flagKey)) === 'done') {
+      return;
+    }
+    await purgeLegacyLocalLocation();
+    await saveLocalSessions(await this.readLocalSessions());
+    if (this.purgeLegacyCallable) {
+      await this.purgeLegacyCallable({});
+    }
+    await AsyncStorage.setItem(flagKey, 'done');
+  }
+
   public async fetchSessions(playerId: string): Promise<GpsSession[]> {
+    void this.purgeLegacyLocation(playerId).catch(() => undefined);
     const db = getFirestoreDb();
 
     if (!db) {
-      const localSessions = await loadLocalSessions();
+      const localSessions = await this.readLocalSessions();
       return localSessions.filter((session) => session.playerId === playerId);
     }
 
@@ -147,47 +210,25 @@ export class GpsSessionRepository {
         .map((document) => parseGpsSession({ id: document.id, ...document.data() }))
         .filter((session): session is GpsSession => session !== null);
     } catch {
-      const localSessions = await loadLocalSessions();
+      const localSessions = await this.readLocalSessions();
       return localSessions.filter((session) => session.playerId === playerId);
     }
   }
 
+  /** Summarises on device; only the summary is saved. The point track is discarded. */
   public async completeSession(
     session: GpsSession,
     points: GpsPoint[],
   ): Promise<GpsSession> {
-    const metrics = calculateSessionMetrics(points, session.pausedDurationMs);
-    const zones = calculateMovementZones(points);
-    const heatmap = generateHeatmapGrid(points);
-    const pointsPayload = serializePointsForStorage(points);
-    const pointsStorageKey = `gpsSessions/${session.playerId}/${session.id}/points.json`;
-
-    let completedSession = finalizeGpsSession(
+    const completedSession = finalizeGpsSession(
       session,
-      metrics,
-      zones,
-      heatmap,
-      pointsStorageKey,
+      calculateSessionMetrics(points, session.pausedDurationMs),
+      calculateMovementZones(points),
+      generateHeatmapGrid(points),
+      buildGpsIntelligence(points),
     );
 
-    const storage = getFirebaseStorage();
     const db = getFirestoreDb();
-
-    if (storage) {
-      try {
-        const storageRef = ref(storage, pointsStorageKey);
-        await uploadString(storageRef, pointsPayload, 'raw', {
-          contentType: 'application/json',
-        });
-        await getDownloadURL(storageRef);
-      } catch {
-        completedSession = {
-          ...completedSession,
-          pointsStorageKey: null,
-        };
-      }
-    }
-
     if (db) {
       try {
         await setDoc(doc(db, 'gpsSessions', session.id), {
@@ -199,7 +240,7 @@ export class GpsSessionRepository {
       }
     }
 
-    const localSessions = await loadLocalSessions();
+    const localSessions = await this.readLocalSessions();
     const nextSessions = [
       completedSession,
       ...localSessions.filter((item) => item.id !== completedSession.id),
@@ -208,19 +249,5 @@ export class GpsSessionRepository {
     await clearActiveSession();
 
     return completedSession;
-  }
-
-  /** Stored points for a completed session, or an empty list when none were uploaded. */
-  public async loadSessionPoints(session: GpsSession): Promise<GpsPoint[]> {
-    const storage = getFirebaseStorage();
-    if (!storage || !session.pointsStorageKey) {
-      return [];
-    }
-    const url = await getDownloadURL(ref(storage, session.pointsStorageKey));
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`GPS points unavailable (${response.status}).`);
-    }
-    return deserializePointsFromStorage(await response.text());
   }
 }

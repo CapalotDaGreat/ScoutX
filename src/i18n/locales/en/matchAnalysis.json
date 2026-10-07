@@ -167,7 +167,7 @@
     "instructions": "Choose the GPS session from this match, play the video to the moment you started recording, then mark it.",
     "markNow": "Mark current video time as GPS start",
     "synced": "GPS start set at {{time}} ({{label}})",
-    "pointsUnavailable": "GPS points for this session could not be loaded.",
+    "pointsUnavailable": "Sprint detail is only available for sessions recorded with the current version of ScoutX.",
     "noSprints": "No sprints were detected in this session.",
     "sprint": "Sprint · peak {{kmh}} km/h",
     "outsideVideo": "Outside the video"

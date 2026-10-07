@@ -1,5 +1,6 @@
 import { GPS_TRACKING_CONFIG } from '@/features/gps/constants';
 import {
+  type GpsIntelligence,
   type GpsSession,
   type GpsSessionMetrics,
   type GpsSessionStatus,
@@ -12,12 +13,7 @@ export function createEmptyHeatmap(): HeatmapGrid {
     rows: GPS_TRACKING_CONFIG.heatmapRows,
     cols: GPS_TRACKING_CONFIG.heatmapCols,
     cells: [],
-    bounds: {
-      minLat: 0,
-      maxLat: 0,
-      minLng: 0,
-      maxLng: 0,
-    },
+    extent: { lengthM: 0, widthM: 0 },
   };
 }
 
@@ -54,7 +50,7 @@ export function createGpsSession(params: {
     metrics: createEmptyMetrics(),
     zones: [],
     heatmap: createEmptyHeatmap(),
-    pointsStorageKey: null,
+    intelligence: null,
   };
 }
 
@@ -63,7 +59,7 @@ export function finalizeGpsSession(
   metrics: GpsSessionMetrics,
   zones: MovementZone[],
   heatmap: HeatmapGrid,
-  pointsStorageKey: string | null,
+  intelligence: GpsIntelligence,
 ): GpsSession {
   return {
     ...session,
@@ -72,6 +68,6 @@ export function finalizeGpsSession(
     metrics,
     zones,
     heatmap,
-    pointsStorageKey,
+    intelligence,
   };
 }

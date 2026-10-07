@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendDevelopmentReminders = exports.onTrialInvitationUpdatedNotify = exports.onPassportSummaryWrittenNotifyOwner = exports.onMatchAnalysisJobFinishedNotify = exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.onReelExportQueued = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.onVerificationWrittenSyncTrust = exports.requestEvidence = exports.fulfillEvidenceRequest = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
+exports.sendDevelopmentReminders = exports.onTrustRecommendationCreatedNotify = exports.onTrialInvitationUpdatedNotify = exports.onTrialInvitationCreatedNotify = exports.onPassportSummaryWrittenNotifyOwner = exports.onMatchAnalysisJobFinishedNotify = exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.onReelExportQueued = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.onVerificationWrittenSyncTrust = exports.requestEvidence = exports.fulfillEvidenceRequest = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.purgeLegacyGpsLocation = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
 require("./authSecurityPolicy");
 const app_1 = require("firebase-admin/app");
 var aiCoach_1 = require("./aiCoach");
@@ -17,6 +17,8 @@ Object.defineProperty(exports, "listAdminReviewQueue", { enumerable: true, get: 
 Object.defineProperty(exports, "resolveVerificationRequest", { enumerable: true, get: function () { return adminReview_1.resolveVerificationRequest; } });
 var portfolioAnalytics_1 = require("./portfolioAnalytics");
 Object.defineProperty(exports, "recordPortfolioView", { enumerable: true, get: function () { return portfolioAnalytics_1.recordPortfolioView; } });
+var gpsPrivacy_1 = require("./gpsPrivacy");
+Object.defineProperty(exports, "purgeLegacyGpsLocation", { enumerable: true, get: function () { return gpsPrivacy_1.purgeLegacyGpsLocation; } });
 var roleClaims_1 = require("./roleClaims");
 Object.defineProperty(exports, "confirmRole", { enumerable: true, get: function () { return roleClaims_1.confirmRole; } });
 var publicPassport_1 = require("./publicPassport");
@@ -50,7 +52,9 @@ Object.defineProperty(exports, "onActivityCreatedPush", { enumerable: true, get:
 var notificationProducers_1 = require("./notificationProducers");
 Object.defineProperty(exports, "onMatchAnalysisJobFinishedNotify", { enumerable: true, get: function () { return notificationProducers_1.onMatchAnalysisJobFinishedNotify; } });
 Object.defineProperty(exports, "onPassportSummaryWrittenNotifyOwner", { enumerable: true, get: function () { return notificationProducers_1.onPassportSummaryWrittenNotifyOwner; } });
+Object.defineProperty(exports, "onTrialInvitationCreatedNotify", { enumerable: true, get: function () { return notificationProducers_1.onTrialInvitationCreatedNotify; } });
 Object.defineProperty(exports, "onTrialInvitationUpdatedNotify", { enumerable: true, get: function () { return notificationProducers_1.onTrialInvitationUpdatedNotify; } });
+Object.defineProperty(exports, "onTrustRecommendationCreatedNotify", { enumerable: true, get: function () { return notificationProducers_1.onTrustRecommendationCreatedNotify; } });
 Object.defineProperty(exports, "sendDevelopmentReminders", { enumerable: true, get: function () { return notificationProducers_1.sendDevelopmentReminders; } });
 (0, app_1.initializeApp)();
 //# sourceMappingURL=index.js.map

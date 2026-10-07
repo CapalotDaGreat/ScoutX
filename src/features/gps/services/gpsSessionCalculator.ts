@@ -1,32 +1,51 @@
 import { GPS_TRACKING_CONFIG, MOVEMENT_ZONE_LABELS } from '@/features/gps/constants';
 import { createEmptyHeatmap, createEmptyMetrics } from '@/features/gps/models/GpsSessionModel';
-import {
-  type GpsPoint,
-  type GpsSessionMetrics,
-  type HeatmapCell,
-  type HeatmapGrid,
-  type MovementZone,
-  type MovementZoneKey,
+import type {
+  GpsPoint,
+  GpsSessionMetrics,
+  HeatmapCell,
+  HeatmapGrid,
+  MovementZone,
+  MovementZoneKey,
 } from '@/features/gps/types';
 
 export { createEmptyMetrics } from '@/features/gps/models/GpsSessionModel';
 
-const EARTH_RADIUS_M = 6_371_000;
+export function localDistanceM(a: GpsPoint, b: GpsPoint): number {
+  return Math.hypot(b.x - a.x, b.y - a.y);
+}
 
-export function haversineDistanceM(
-  lat1: number,
-  lng1: number,
-  lat2: number,
-  lng2: number,
-): number {
-  const toRad = (value: number) => (value * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLng = toRad(lng2 - lng1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+/** Distance between consecutive points; frames from different segments are not comparable. */
+function stepDistanceM(previous: GpsPoint, current: GpsPoint): number {
+  return previous.segment === current.segment ? localDistanceM(previous, current) : 0;
+}
 
-  return EARTH_RADIUS_M * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+/**
+ * Rotates points onto the player's main movement axis, which on a pitch is close to its
+ * length. GPS alone cannot know which end is which, so direction is arbitrary.
+ */
+export function alignToMainAxis(points: readonly GpsPoint[]): { along: number; across: number }[] {
+  if (points.length === 0) return [];
+  const cx = points.reduce((sum, point) => sum + point.x, 0) / points.length;
+  const cy = points.reduce((sum, point) => sum + point.y, 0) / points.length;
+  let sxx = 0;
+  let syy = 0;
+  let sxy = 0;
+  for (const point of points) {
+    const dx = point.x - cx;
+    const dy = point.y - cy;
+    sxx += dx * dx;
+    syy += dy * dy;
+    sxy += dx * dy;
+  }
+  const angle = 0.5 * Math.atan2(2 * sxy, sxx - syy);
+  const ux = Math.cos(angle);
+  const uy = Math.sin(angle);
+  return points.map((point) => {
+    const dx = point.x - cx;
+    const dy = point.y - cy;
+    return { along: dx * ux + dy * uy, across: -dx * uy + dy * ux };
+  });
 }
 
 function metersPerSecondToKmh(speedMs: number): number {
@@ -45,12 +64,12 @@ function calculateSprintCount(points: GpsPoint[]): number {
     const isSprinting = point.speed >= GPS_TRACKING_CONFIG.sprintSpeedMs;
 
     if (isSprinting && sprintStart === null) {
-      sprintStart = point.timestamp;
+      sprintStart = point.elapsedMs;
       continue;
     }
 
     if (!isSprinting && sprintStart !== null) {
-      const durationSec = (point.timestamp - sprintStart) / 1000;
+      const durationSec = (point.elapsedMs - sprintStart) / 1000;
       if (durationSec >= GPS_TRACKING_CONFIG.sprintMinDurationSec) {
         sprintCount += 1;
       }
@@ -60,7 +79,7 @@ function calculateSprintCount(points: GpsPoint[]): number {
 
   if (sprintStart !== null && points.length > 0) {
     const lastPoint = points[points.length - 1];
-    const durationSec = (lastPoint.timestamp - sprintStart) / 1000;
+    const durationSec = (lastPoint.elapsedMs - sprintStart) / 1000;
     if (durationSec >= GPS_TRACKING_CONFIG.sprintMinDurationSec) {
       sprintCount += 1;
     }
@@ -78,24 +97,15 @@ export function calculateSessionMetrics(
   }
 
   let distanceM = 0;
-  let maxSpeedMs = 0;
+  let maxSpeedMs = points[0].speed;
 
   for (let index = 1; index < points.length; index += 1) {
-    const previous = points[index - 1];
-    const current = points[index];
-    distanceM += haversineDistanceM(
-      previous.latitude,
-      previous.longitude,
-      current.latitude,
-      current.longitude,
-    );
-    maxSpeedMs = Math.max(maxSpeedMs, current.speed);
+    distanceM += stepDistanceM(points[index - 1], points[index]);
+    maxSpeedMs = Math.max(maxSpeedMs, points[index].speed);
   }
 
-  maxSpeedMs = Math.max(maxSpeedMs, points[0].speed);
-
-  const startedAt = points[0].timestamp;
-  const endedAt = points[points.length - 1].timestamp;
+  const startedAt = points[0].elapsedMs;
+  const endedAt = points[points.length - 1].elapsedMs;
   const durationSec = Math.max((endedAt - startedAt - pausedDurationMs) / 1000, 0);
   const activeDurationSec = durationSec;
   const avgSpeedMs = activeDurationSec > 0 ? distanceM / activeDurationSec : 0;
@@ -111,12 +121,12 @@ export function calculateSessionMetrics(
   };
 }
 
-function getZoneKey(normalizedLng: number): MovementZoneKey {
-  if (normalizedLng < 0.33) {
+function getZoneKey(normalized: number): MovementZoneKey {
+  if (normalized < 0.33) {
     return 'defensive';
   }
 
-  if (normalizedLng < 0.66) {
+  if (normalized < 0.66) {
     return 'middle';
   }
 
@@ -133,9 +143,9 @@ export function calculateMovementZones(points: GpsPoint[]): MovementZone[] {
     }));
   }
 
-  const minLng = Math.min(...points.map((point) => point.longitude));
-  const maxLng = Math.max(...points.map((point) => point.longitude));
-  const lngRange = Math.max(maxLng - minLng, 0.00001);
+  const along = alignToMainAxis(points).map((point) => point.along);
+  const minAlong = Math.min(...along);
+  const range = Math.max(Math.max(...along) - minAlong, 0.5);
 
   const zoneDurations: Record<MovementZoneKey, number> = {
     defensive: 0,
@@ -144,11 +154,8 @@ export function calculateMovementZones(points: GpsPoint[]): MovementZone[] {
   };
 
   for (let index = 1; index < points.length; index += 1) {
-    const previous = points[index - 1];
-    const current = points[index];
-    const normalizedLng = (previous.longitude - minLng) / lngRange;
-    const zone = getZoneKey(normalizedLng);
-    const segmentDurationSec = Math.max((current.timestamp - previous.timestamp) / 1000, 0);
+    const zone = getZoneKey((along[index - 1] - minAlong) / range);
+    const segmentDurationSec = Math.max((points[index].elapsedMs - points[index - 1].elapsedMs) / 1000, 0);
     zoneDurations[zone] += segmentDurationSec;
   }
 
@@ -175,27 +182,26 @@ export function generateHeatmapGrid(points: GpsPoint[]): HeatmapGrid {
     return heatmap;
   }
 
-  const minLat = Math.min(...points.map((point) => point.latitude));
-  const maxLat = Math.max(...points.map((point) => point.latitude));
-  const minLng = Math.min(...points.map((point) => point.longitude));
-  const maxLng = Math.max(...points.map((point) => point.longitude));
-
-  const latRange = Math.max(maxLat - minLat, 0.00005);
-  const lngRange = Math.max(maxLng - minLng, 0.00005);
+  const aligned = alignToMainAxis(points);
+  const minAlong = Math.min(...aligned.map((point) => point.along));
+  const maxAlong = Math.max(...aligned.map((point) => point.along));
+  const minAcross = Math.min(...aligned.map((point) => point.across));
+  const maxAcross = Math.max(...aligned.map((point) => point.across));
+  const lengthRange = Math.max(maxAlong - minAlong, 5);
+  const widthRange = Math.max(maxAcross - minAcross, 5);
 
   const counts = Array.from({ length: heatmap.rows * heatmap.cols }, () => 0);
 
-  for (const point of points) {
+  for (const point of aligned) {
     const row = Math.min(
       heatmap.rows - 1,
-      Math.floor(((point.latitude - minLat) / latRange) * heatmap.rows),
+      Math.floor(((point.across - minAcross) / widthRange) * heatmap.rows),
     );
     const col = Math.min(
       heatmap.cols - 1,
-      Math.floor(((point.longitude - minLng) / lngRange) * heatmap.cols),
+      Math.floor(((point.along - minAlong) / lengthRange) * heatmap.cols),
     );
-    const index = row * heatmap.cols + col;
-    counts[index] += 1;
+    counts[row * heatmap.cols + col] += 1;
   }
 
   const maxCount = Math.max(...counts, 1);
@@ -211,7 +217,7 @@ export function generateHeatmapGrid(points: GpsPoint[]): HeatmapGrid {
     rows: heatmap.rows,
     cols: heatmap.cols,
     cells,
-    bounds: { minLat, maxLat, minLng, maxLng },
+    extent: { lengthM: Math.round(maxAlong - minAlong), widthM: Math.round(maxAcross - minAcross) },
   };
 }
 
@@ -219,20 +225,14 @@ export function shouldAcceptPoint(
   lastPoint: GpsPoint | null,
   nextPoint: GpsPoint,
 ): boolean {
-  if (!lastPoint) {
+  if (!lastPoint || lastPoint.segment !== nextPoint.segment) {
     return true;
   }
 
-  const distanceM = haversineDistanceM(
-    lastPoint.latitude,
-    lastPoint.longitude,
-    nextPoint.latitude,
-    nextPoint.longitude,
-  );
-  const elapsedMs = nextPoint.timestamp - lastPoint.timestamp;
+  const elapsedMs = nextPoint.elapsedMs - lastPoint.elapsedMs;
 
   return (
-    distanceM >= GPS_TRACKING_CONFIG.minPointDistanceM ||
+    localDistanceM(lastPoint, nextPoint) >= GPS_TRACKING_CONFIG.minPointDistanceM ||
     elapsedMs >= GPS_TRACKING_CONFIG.maxPointIntervalMs
   );
 }

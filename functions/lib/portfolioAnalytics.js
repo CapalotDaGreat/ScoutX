@@ -4,6 +4,7 @@ exports.recordPortfolioView = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const callableOptions_1 = require("./callableOptions");
+const notificationProducers_1 = require("./notificationProducers");
 function currentWeekStart() {
     const now = new Date();
     const day = now.getDay();
@@ -34,11 +35,13 @@ exports.recordPortfolioView = (0, https_1.onCall)((0, callableOptions_1.createCa
     if (request.auth.uid === playerId) {
         return { success: true, skipped: true };
     }
-    const isScoutView = data.isScoutView === true;
+    const role = request.auth.token.role;
+    const isScoutView = typeof role === 'string' && ['scout', 'coach', 'club'].includes(role);
     const db = (0, firestore_1.getFirestore)();
     const ref = db.collection('portfolioAnalytics').doc(playerId);
     const weekStart = currentWeekStart();
-    const now = new Date().toISOString();
+    // Day precision only, so a player cannot match a view to an individual visitor's timing.
+    const now = new Date().toISOString().slice(0, 10);
     await db.runTransaction(async (transaction) => {
         const snapshot = await transaction.get(ref);
         const existing = snapshot.exists
@@ -64,6 +67,7 @@ exports.recordPortfolioView = (0, https_1.onCall)((0, callableOptions_1.createCa
             lastViewedAt: now,
         });
     });
+    await (0, notificationProducers_1.notifyPassportViewed)(db, playerId);
     return { success: true };
 });
 //# sourceMappingURL=portfolioAnalytics.js.map

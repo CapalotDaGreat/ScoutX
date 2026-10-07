@@ -15,7 +15,7 @@ export {
   formatDistance,
   formatDuration,
   formatSpeed,
-  haversineDistanceM,
+  localDistanceM,
   shouldAcceptPoint,
 } from './services/gpsSessionCalculator';
 export {

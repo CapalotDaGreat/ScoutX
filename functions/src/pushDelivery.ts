@@ -69,7 +69,7 @@ async function isGenuineTrialInvitation(activity: ActivityDoc): Promise<boolean>
   }
   const trial = await getFirestore().collection('trialInvitations').doc(trialId).get();
   const data = trial.data() as { scoutId?: string; playerId?: string } | undefined;
-  return data?.scoutId === activity.actorId && data?.playerId === activity.recipientId;
+  return activity.actorId === 'system' && data?.playerId === activity.recipientId;
 }
 
 const HOUR_MS = 60 * 60 * 1000;

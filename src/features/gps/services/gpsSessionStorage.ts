@@ -3,18 +3,16 @@ import { GPS_STORAGE_KEYS } from '@/features/gps/constants';
 import {
   compactGpsPoints,
   expandGpsPoints,
+  isCompactGpsPoint,
 } from '@/features/gps/models/GpsPointModel';
-import {
-  type CompactGpsPoint,
-  type GpsPoint,
-  type GpsSession,
-} from '@/features/gps/types';
+import { type GpsPoint, type GpsSession } from '@/features/gps/types';
 
 type ActiveSessionPayload = {
   session: GpsSession;
-  points: CompactGpsPoint[];
+  points: unknown[];
 };
 
+/** Crash recovery for an in-progress session. Points are session-local metres only. */
 export async function saveActiveSession(
   session: GpsSession,
   points: GpsPoint[],
@@ -37,9 +35,15 @@ export async function loadActiveSession(): Promise<{
   }
 
   const payload = JSON.parse(raw) as ActiveSessionPayload;
+  const points = Array.isArray(payload.points) ? payload.points : [];
+  // Sessions saved by older builds held latitude/longitude; drop them rather than resume.
+  if (!points.every(isCompactGpsPoint)) {
+    await clearActiveSession();
+    return null;
+  }
   return {
     session: payload.session,
-    points: expandGpsPoints(payload.points),
+    points: expandGpsPoints(points),
   };
 }
 
@@ -51,21 +55,17 @@ export async function saveLocalSessions(sessions: GpsSession[]): Promise<void> {
   await AsyncStorage.setItem(GPS_STORAGE_KEYS.localSessions, JSON.stringify(sessions));
 }
 
-export async function loadLocalSessions(): Promise<GpsSession[]> {
+export async function loadLocalSessions(): Promise<unknown[]> {
   const raw = await AsyncStorage.getItem(GPS_STORAGE_KEYS.localSessions);
   if (!raw) {
     return [];
   }
 
-  const sessions = JSON.parse(raw) as GpsSession[];
+  const sessions = JSON.parse(raw) as unknown;
   return Array.isArray(sessions) ? sessions : [];
 }
 
-export function serializePointsForStorage(points: GpsPoint[]): string {
-  return JSON.stringify(compactGpsPoints(points));
-}
-
-export function deserializePointsFromStorage(raw: string): GpsPoint[] {
-  const compactPoints = JSON.parse(raw) as CompactGpsPoint[];
-  return expandGpsPoints(compactPoints);
+/** Removes keys left by builds that stored raw location on the device. */
+export async function purgeLegacyLocalLocation(): Promise<void> {
+  await AsyncStorage.removeItem(GPS_STORAGE_KEYS.legacyActivePoints);
 }

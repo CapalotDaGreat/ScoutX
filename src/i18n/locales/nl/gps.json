@@ -23,7 +23,7 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Bewegingszones",
   "permissionRequired": "Locatietoestemming vereist",
-  "permissionDescription": "ScoutX heeft toegang tot je locatie nodig om GPS-sessies op te nemen.",
+  "permissionDescription": "ScoutX gebruikt je positie alleen tijdens het opnemen, en alleen op deze telefoon, om afstand en een veld-heatmap te berekenen. Je locatie wordt nooit geüpload of gedeeld.",
   "movementDetail": "Bewegingsdetails",
   "movementDetailSubtitle": "Beweging en heatmap van deze sessie",
   "latestAnalysisSubtitle": "Beweging en heatmap van je laatste sessie",
@@ -31,7 +31,7 @@
   "maxSpeedValue": "Max. {{value}}",
   "intel": {
     "title": "Bewegingsanalyse",
-    "noPoints": "De GPS-punten van deze sessie zijn niet beschikbaar, dus de beweging kon niet worden geanalyseerd.",
+    "noPoints": "Bewegingsdetails zijn alleen beschikbaar voor sessies die met de huidige versie van ScoutX zijn opgenomen.",
     "insufficient": "Te weinig gegevens om beweging te analyseren. Minimaal {{minutes}} min en {{points}} punten nodig; deze sessie heeft {{haveMinutes}} min en {{havePoints}} punten.",
     "lowAccuracy": "De GPS-nauwkeurigheid was te laag (mediaan {{meters}} m, limiet {{limit}} m), dus gebied en positie worden niet getoond.",
     "spread": "Bestreken gebied: ongeveer {{width}} m breed × {{depth}} m langs je hoofdrichting",

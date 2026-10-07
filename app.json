@@ -56,12 +56,6 @@
             "NSPrivacyCollectedDataTypePurposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"]
           },
           {
-            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypePreciseLocation",
-            "NSPrivacyCollectedDataTypeLinked": true,
-            "NSPrivacyCollectedDataTypeTracking": false,
-            "NSPrivacyCollectedDataTypePurposes": ["NSPrivacyCollectedDataTypePurposeAppFunctionality"]
-          },
-          {
             "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypePhotosorVideos",
             "NSPrivacyCollectedDataTypeLinked": true,
             "NSPrivacyCollectedDataTypeTracking": false,
@@ -125,8 +119,11 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "ScoutX uses your location to record match movement, distance, and heatmaps.",
-          "locationAlwaysAndWhenInUsePermission": "ScoutX uses your location to record match movement during sessions."
+          "locationWhenInUsePermission": "While you record a session, ScoutX uses your position on the phone to calculate distance and a pitch heatmap. Your location is never uploaded, stored, or shared.",
+          "locationAlwaysAndWhenInUsePermission": false,
+          "locationAlwaysPermission": false,
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false
         }
       ],
       [

@@ -1,16 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
-import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
 import {
-  buildGpsIntelligence,
   GPS_MAX_MEDIAN_ACCURACY_M,
   GPS_MIN_DURATION_SEC,
   GPS_MIN_POINTS,
-  type SpeedBand,
 } from '@/features/gps/services/gpsIntelligence';
-import type { GpsPoint, GpsSession } from '@/features/gps/types';
+import type { GpsSession, SpeedBand } from '@/features/gps/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 const BANDS: readonly SpeedBand[] = ['walk', 'jog', 'run', 'sprint'];
@@ -18,38 +14,18 @@ const BANDS: readonly SpeedBand[] = ['walk', 'jog', 'run', 'sprint'];
 /** Movement intelligence for one session, gated on sample size and GPS accuracy. */
 export function GpsIntelligenceCard({ session }: { session: GpsSession }) {
   const { t } = useAppTranslation(['gps']);
-  const [points, setPoints] = useState<GpsPoint[] | null>(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setPoints(null);
-    setFailed(false);
-    void GpsSessionRepository.getInstance()
-      .loadSessionPoints(session)
-      .then((next) => {
-        if (!cancelled) setPoints(next);
-      })
-      .catch(() => {
-        if (!cancelled) setFailed(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [session]);
-
-  const intel = useMemo(() => (points && points.length > 0 ? buildGpsIntelligence(points) : null), [points]);
+  const intel = session.intelligence;
 
   return (
     <Card variant="outlined" padding="md" className="gap-2" testID="gps-intelligence">
       <Text variant="body" className="font-sans-semibold" accessibilityRole="header">
         {t('gps:intel.title')}
       </Text>
-      {failed || (points !== null && points.length === 0) ? (
+      {!intel ? (
         <Text variant="body-sm" color="secondary">
           {t('gps:intel.noPoints')}
         </Text>
-      ) : !intel ? null : intel.status === 'insufficient' ? (
+      ) : intel.status === 'insufficient' ? (
         <Text variant="body-sm" color="secondary">
           {t('gps:intel.insufficient', {
             minutes: Math.round(GPS_MIN_DURATION_SEC / 60),

@@ -1,5 +1,5 @@
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
-import { onDocumentUpdated, onDocumentWritten } from 'firebase-functions/v2/firestore';
+import { onDocumentCreated, onDocumentUpdated, onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions';
 import {
@@ -158,6 +158,59 @@ export const onPassportSummaryWrittenNotifyOwner = onDocumentWritten(
     });
   },
 );
+
+/** Cross-user activities are server-authored only, with fixed copy and no sender identity. */
+export const onTrialInvitationCreatedNotify = onDocumentCreated(
+  'trialInvitations/{trialId}',
+  async (event) => {
+    const trial = event.data?.data();
+    if (!trial || typeof trial.playerId !== 'string') {
+      return;
+    }
+    const trialId = event.params.trialId;
+    await writeSystemActivity(getFirestore(), `trial-invitation-${trialId}`, {
+      recipientId: trial.playerId,
+      recipientRole: 'player',
+      type: 'trial_invitation',
+      category: 'trial',
+      title: 'Trial invitation',
+      body: 'You have a new trial invitation. Open ScoutX to respond.',
+      reference: { entityType: 'trial', entityId: trialId, label: 'Trial' },
+    });
+  },
+);
+
+export const onTrustRecommendationCreatedNotify = onDocumentCreated(
+  'trustRecommendations/{recommendationId}',
+  async (event) => {
+    const recommendation = event.data?.data();
+    if (!recommendation || typeof recommendation.playerId !== 'string') {
+      return;
+    }
+    const recommendationId = event.params.recommendationId;
+    await writeSystemActivity(getFirestore(), `recommendation-${recommendationId}`, {
+      recipientId: recommendation.playerId,
+      recipientRole: 'player',
+      type: 'recommendation_received',
+      category: 'passport',
+      title: 'New recommendation',
+      body: 'You received a new recommendation on your Football Passport.',
+      reference: { entityType: 'player', entityId: recommendation.playerId, label: 'Football Passport' },
+    });
+  },
+);
+
+export async function notifyPassportViewed(db: Firestore, playerId: string): Promise<void> {
+  await writeSystemActivity(db, `passport-viewed-${playerId}-${dayKey()}`, {
+    recipientId: playerId,
+    recipientRole: 'player',
+    type: 'portfolio_viewed',
+    category: 'passport',
+    title: 'Football Passport viewed',
+    body: 'Your Football Passport was viewed today.',
+    reference: { entityType: 'player', entityId: playerId, label: 'Football Passport' },
+  });
+}
 
 const TRIAL_COPY: Record<string, { title: string; body: string }> = {
   accepted: { title: 'Trial accepted', body: 'A player accepted your trial invitation.' },

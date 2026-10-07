@@ -167,7 +167,7 @@
     "instructions": "Escolhe a sessão GPS deste jogo, reproduz o vídeo até ao momento em que começaste a gravar e marca-o.",
     "markNow": "Marcar o tempo atual do vídeo como início do GPS",
     "synced": "Início do GPS definido aos {{time}} ({{label}})",
-    "pointsUnavailable": "Não foi possível carregar os pontos GPS desta sessão.",
+    "pointsUnavailable": "O detalhe dos sprints só está disponível para sessões gravadas com a versão atual do ScoutX.",
     "noSprints": "Não foram detetados sprints nesta sessão.",
     "sprint": "Sprint · pico {{kmh}} km/h",
     "outsideVideo": "Fora do vídeo"

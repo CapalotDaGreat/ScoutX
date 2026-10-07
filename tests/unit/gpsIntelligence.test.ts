@@ -1,39 +1,80 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { buildGpsIntelligence, detectSprints } from '../../src/features/gps/services/gpsIntelligence.ts';
+import { toLocalPoint } from '../../src/features/gps/models/GpsPointModel.ts';
+import {
+  calculateSessionMetrics,
+  generateHeatmapGrid,
+} from '../../src/features/gps/services/gpsSessionCalculator.ts';
 import type { GpsPoint } from '../../src/features/gps/types.ts';
 
-const M_PER_DEG_LAT = 111_195;
-
-/** Player moving back and forth along a north-south line of `depth` metres. */
-function track(count: number, stepMs: number, depth: number, accuracy = 5, speed = 3): GpsPoint[] {
+/** Player moving back and forth along a line of `depth` metres, rotated by `angle` radians. */
+function track(count: number, stepMs: number, depth: number, accuracy = 5, speed = 3, angle = 0.7): GpsPoint[] {
   return Array.from({ length: count }, (_, index) => {
     const phase = (index % 20) / 19;
     const along = (index % 40 < 20 ? phase : 1 - phase) * depth;
     const across = (index % 3) * 2;
     return {
-      latitude: 47 + along / M_PER_DEG_LAT,
-      longitude: 8 + across / (M_PER_DEG_LAT * Math.cos((47 * Math.PI) / 180)),
-      timestamp: 1_000_000 + index * stepMs,
+      x: along * Math.cos(angle) - across * Math.sin(angle),
+      y: along * Math.sin(angle) + across * Math.cos(angle),
+      elapsedMs: index * stepMs,
       speed,
       accuracy,
+      segment: 0,
     };
   });
 }
 
+describe('toLocalPoint', () => {
+  it('keeps only session-local metres and elapsed time', () => {
+    const origin = { latitude: 47.3769, longitude: 8.5417 };
+    const point = toLocalPoint(
+      origin,
+      { latitude: 47.3769 + 100 / 111_195, longitude: 8.5417, elapsedMs: 12_345, speed: 4, accuracy: 6 },
+      0,
+    );
+    assert.deepEqual(Object.keys(point).sort(), ['accuracy', 'elapsedMs', 'segment', 'speed', 'x', 'y']);
+    assert.ok(Math.abs(point.y - 100) < 0.5, `y ${point.y}`);
+    assert.ok(Math.abs(point.x) < 0.5, `x ${point.x}`);
+    assert.equal(point.elapsedMs, 12_345);
+    const serialized = JSON.stringify(point);
+    assert.ok(!serialized.includes('47.37') && !serialized.includes('8.54'));
+  });
+});
+
+describe('session metrics', () => {
+  it('measures distance in local metres and skips jumps between frames', () => {
+    const points: GpsPoint[] = [
+      { x: 0, y: 0, elapsedMs: 0, speed: 3, accuracy: 5, segment: 0 },
+      { x: 30, y: 40, elapsedMs: 10_000, speed: 3, accuracy: 5, segment: 0 },
+      { x: 900, y: 900, elapsedMs: 20_000, speed: 3, accuracy: 5, segment: 1 },
+      { x: 906, y: 908, elapsedMs: 30_000, speed: 3, accuracy: 5, segment: 1 },
+    ];
+    assert.equal(calculateSessionMetrics(points, 0).distanceM, 60);
+  });
+
+  it('describes the heatmap by its extent in metres, not by coordinates', () => {
+    const heatmap = generateHeatmapGrid(track(150, 5000, 60));
+    assert.ok(heatmap.cells.length > 0);
+    assert.ok(heatmap.extent.lengthM >= 55 && heatmap.extent.lengthM <= 62, `length ${heatmap.extent.lengthM}`);
+    assert.ok(!('bounds' in heatmap));
+  });
+});
+
 describe('detectSprints', () => {
   it('needs at least one second above sprint speed', () => {
     const points: GpsPoint[] = [0, 500, 1000, 1500, 2000, 2500].map((offset, index) => ({
-      latitude: 0,
-      longitude: 0,
-      timestamp: offset,
+      x: 0,
+      y: 0,
+      elapsedMs: 60_000 + offset,
       speed: index >= 1 && index <= 3 ? 7.5 : 3,
       accuracy: 5,
+      segment: 0,
     }));
     const sprints = detectSprints(points);
     assert.equal(sprints.length, 1);
-    assert.equal(sprints[0].startMs, 500);
-    assert.equal(sprints[0].endMs, 2000);
+    assert.equal(sprints[0].startSec, 61);
+    assert.equal(sprints[0].endSec, 62);
     assert.equal(sprints[0].peakKmh, 27);
     assert.equal(detectSprints(points.slice(0, 3)).length, 0);
   });

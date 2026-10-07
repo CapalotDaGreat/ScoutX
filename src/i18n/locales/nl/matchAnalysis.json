@@ -167,7 +167,7 @@
     "instructions": "Kies de GPS-sessie van deze wedstrijd, speel de video af tot het moment waarop je begon met opnemen en markeer het.",
     "markNow": "Huidige videotijd markeren als GPS-start",
     "synced": "GPS-start ingesteld op {{time}} ({{label}})",
-    "pointsUnavailable": "De GPS-punten van deze sessie konden niet worden geladen.",
+    "pointsUnavailable": "Sprintdetails zijn alleen beschikbaar voor sessies die met de huidige versie van ScoutX zijn opgenomen.",
     "noSprints": "Er zijn geen sprints gedetecteerd in deze sessie.",
     "sprint": "Sprint · piek {{kmh}} km/u",
     "outsideVideo": "Buiten de video"

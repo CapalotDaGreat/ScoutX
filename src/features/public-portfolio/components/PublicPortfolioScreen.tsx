@@ -98,15 +98,7 @@ export function PublicPortfolioScreen({
     const isScoutView = isScoutLikeRole(role);
     void PortfolioAnalyticsRepository.getInstance().recordPortfolioView(playerId, isScoutView);
     void PlayerDiscoveryRepository.getInstance().recordProfileView(playerId);
-    ActivityRecorder.getInstance().recordPortfolioViewed({
-      playerId,
-      playerName: data.profile.fullName,
-      viewerId: user.id,
-      viewerName: user.name ?? t('portfolio:defaultVisitorName'),
-      viewerRole: role === 'coach' ? 'coach' : role === 'scout' ? 'scout' : 'player',
-      isScoutView,
-    });
-  }, [data?.profile.fullName, playerId, previewMode, role, t, user?.id, user?.name]);
+  }, [data?.profile.fullName, playerId, previewMode, role, user?.id]);
 
   useEffect(() => {
     if (endorseMode && canEndorse && data) {

@@ -53,13 +53,10 @@ service firebase.storage {
       allow delete: if isOwner(userId);
     }
 
-    // GPS tracks are location data: owner-only, JSON, bounded size.
+    // GPS movement is processed on device and never uploaded. Legacy point files from older
+    // builds may only be deleted by their owner (the server purge uses the Admin SDK).
     match /gpsSessions/{userId}/{sessionId}/{fileName} {
-      allow read: if isOwner(userId);
-      allow create, update: if isOwner(userId)
-        && fileName == 'points.json'
-        && request.resource.contentType == 'application/json'
-        && request.resource.size < 5 * 1024 * 1024;
+      allow read, create, update: if false;
       allow delete: if isOwner(userId);
     }
 

@@ -36,11 +36,10 @@ describe('avatar and cover images', () => {
 describe('GPS tracks', () => {
   const track = `gpsSessions/${OWNER}/session-1/points.json`;
 
-  test('GPS tracks are owner-only JSON', async () => {
-    await allowed(uploadObject(OWNER, track, 'application/json'), 'owner upload');
-    await allowed(downloadObject(OWNER, track), 'owner read');
+  test('location tracks can never be uploaded or read, even by their owner', async () => {
+    await denied(uploadObject(OWNER, track, 'application/json'), 'owner upload');
+    await denied(downloadObject(OWNER, track), 'owner read');
     await denied(downloadObject(OTHER, track), 'other read');
-    await denied(uploadObject(OWNER, `gpsSessions/${OWNER}/session-2/points.json`, 'text/plain'), 'non-json');
     await denied(uploadObject(OTHER, `gpsSessions/${OWNER}/session-3/points.json`, 'application/json'), 'foreign');
   });
 });

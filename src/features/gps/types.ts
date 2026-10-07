@@ -1,15 +1,22 @@
 export type GpsSessionStatus = 'idle' | 'recording' | 'paused' | 'completed';
 
+/**
+ * A movement sample in a session-local frame. x/y are metres from the first fix of the
+ * segment and elapsedMs counts from session start. Latitude, longitude and wall-clock fix
+ * times never leave gpsTrackingService, so nothing stored or uploaded can locate the player.
+ */
 export type GpsPoint = {
-  latitude: number;
-  longitude: number;
-  timestamp: number;
+  x: number;
+  y: number;
+  elapsedMs: number;
   speed: number;
   accuracy: number;
+  /** Increments when the local frame restarts (e.g. app relaunch mid-session). */
+  segment: number;
 };
 
-/** Compact serialized point: [lat, lng, timestamp, speed] */
-export type CompactGpsPoint = [number, number, number, number];
+/** Compact serialized point: [x, y, elapsedMs, speed, accuracy, segment] */
+export type CompactGpsPoint = [number, number, number, number, number, number];
 
 export type MovementZoneKey = 'defensive' | 'middle' | 'attacking';
 
@@ -30,12 +37,8 @@ export type HeatmapGrid = {
   rows: number;
   cols: number;
   cells: HeatmapCell[];
-  bounds: {
-    minLat: number;
-    maxLat: number;
-    minLng: number;
-    maxLng: number;
-  };
+  /** Size of the movement area in metres, aligned to the player's main movement axis. */
+  extent: { lengthM: number; widthM: number };
 };
 
 export type GpsSessionMetrics = {
@@ -46,6 +49,23 @@ export type GpsSessionMetrics = {
   durationSec: number;
   activeDurationSec: number;
   pointCount: number;
+};
+
+export type SpeedBand = 'walk' | 'jog' | 'run' | 'sprint';
+
+/** Sprint window in seconds since session start. */
+export type GpsSprint = { startSec: number; endSec: number; peakKmh: number };
+
+export type GpsIntelligence = {
+  status: 'ok' | 'insufficient' | 'low_accuracy';
+  sample: { points: number; durationSec: number; medianAccuracyM: number | null };
+  /** Spread of the movement area across and along its main axis (5th–95th percentile). */
+  widthM: number | null;
+  depthM: number | null;
+  /** Time in the central third of the movement axis vs either end. Pitch direction is unknown. */
+  centralSharePct: number | null;
+  bands: Record<SpeedBand, number> | null;
+  sprints: GpsSprint[];
 };
 
 export type GpsSession = {
@@ -59,7 +79,8 @@ export type GpsSession = {
   metrics: GpsSessionMetrics;
   zones: MovementZone[];
   heatmap: HeatmapGrid;
-  pointsStorageKey: string | null;
+  /** Computed on device at session end; null for sessions saved before it existed. */
+  intelligence: GpsIntelligence | null;
 };
 
 export type GpsTrackingState = {

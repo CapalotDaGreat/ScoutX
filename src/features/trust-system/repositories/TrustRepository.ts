@@ -134,20 +134,6 @@ export class TrustRepository {
       existing,
     );
 
-    const recordActivity = () => {
-      if (existing) {
-        return;
-      }
-      ActivityRecorder.getInstance().recordRecommendationReceived({
-        playerId,
-        playerName,
-        authorId,
-        authorName,
-        recommendationId: recommendation.id,
-        headline: recommendation.headline,
-      });
-    };
-
     const db = getFirestoreDb();
 
     if (db) {
@@ -156,17 +142,14 @@ export class TrustRepository {
           doc(db, TRUST_RECOMMENDATIONS_COLLECTION, recommendation.id),
           serializeTrustRecommendation(recommendation),
         );
-        recordActivity();
         return recommendation;
       } catch {
         await saveLocalTrustRecommendation(recommendation);
-        recordActivity();
         return recommendation;
       }
     }
 
     await saveLocalTrustRecommendation(recommendation);
-    recordActivity();
     return recommendation;
   }
 

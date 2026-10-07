@@ -4,7 +4,6 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
 import { PlayerProfileRepository } from '@/features/player-profile/repositories/PlayerProfileRepository';
 import { TrustRepository } from '@/features/trust-system/repositories/TrustRepository';
-import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
 import { buildPublicPortfolioData } from '@/features/public-portfolio/models/PortfolioModel';
 import { type PublicPortfolioData } from '@/features/public-portfolio/types';
 import { type TrustRecommendation } from '@/features/trust-system/types';
@@ -28,7 +27,6 @@ export class PublicPortfolioRepository {
    */
   public async fetchPublicPortfolio(playerId: string): Promise<PublicPortfolioData | null> {
     const trustRepository = TrustRepository.getInstance();
-    const gpsRepository = GpsSessionRepository.getInstance();
 
     const profile = await this.loadVisibleProfile(playerId);
     if (!profile) {
@@ -40,10 +38,9 @@ export class PublicPortfolioRepository {
     }
 
     const recommendations = await this.loadRecommendations(trustRepository, playerId);
-    const gpsSessions = await gpsRepository.fetchSessions(playerId);
-    const gpsHighlights = gpsSessions.slice(0, 3);
-
-    return buildPublicPortfolioData(profile, recommendations, gpsHighlights);
+    // GPS movement is owner-only and never part of the public passport, so the owner's
+    // preview matches what visitors see.
+    return buildPublicPortfolioData(profile, recommendations, []);
   }
 
   private async loadVisibleProfile(playerId: string): Promise<PlayerProfile | null> {

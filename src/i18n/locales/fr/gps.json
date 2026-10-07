@@ -23,7 +23,7 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Zones de déplacement",
   "permissionRequired": "Autorisation de localisation requise",
-  "permissionDescription": "ScoutX a besoin d'accéder à ta position pour enregistrer les sessions GPS.",
+  "permissionDescription": "ScoutX utilise ta position uniquement pendant l'enregistrement, et uniquement sur ce téléphone, pour calculer la distance et une heatmap du terrain. Ta localisation n'est jamais envoyée ni partagée.",
   "movementDetail": "Détail des déplacements",
   "movementDetailSubtitle": "Déplacements et carte de chaleur de cette session",
   "latestAnalysisSubtitle": "Déplacements et carte de chaleur de ta dernière session",
@@ -31,7 +31,7 @@
   "maxSpeedValue": "Max {{value}}",
   "intel": {
     "title": "Analyse des déplacements",
-    "noPoints": "Les points GPS de cette session ne sont pas disponibles, les déplacements n'ont donc pas pu être analysés.",
+    "noPoints": "Le détail des mouvements n'est disponible que pour les sessions enregistrées avec la version actuelle de ScoutX.",
     "insufficient": "Pas assez de données pour analyser les déplacements. Il faut au moins {{minutes}} min et {{points}} points ; cette session compte {{haveMinutes}} min et {{havePoints}} points.",
     "lowAccuracy": "La précision GPS était trop faible (médiane {{meters}} m, limite {{limit}} m), la zone et la position ne sont donc pas affichées.",
     "spread": "Zone couverte : environ {{width}} m en largeur × {{depth}} m dans ta direction principale",

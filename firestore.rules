@@ -15,12 +15,6 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.publicPortfolioEnabled == true;
     }
 
-    // GPS data is location-derived; only expose it on a public passport that opted in.
-    function publicGpsVisible(userId) {
-      return publicPortfolioEnabled(userId)
-        && get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.get('showGpsHighlights', true) == true;
-    }
-
     function isServerVerifiedPlayer(userId) {
       return exists(/databases/$(database)/documents/verificationStates/$('player-' + userId))
         && get(/databases/$(database)/documents/verificationStates/$('player-' + userId)).data.level == 'verified';
@@ -258,11 +252,13 @@ service cloud.firestore {
       }
     }
 
-    // Actors cannot impersonate others; 'system' activities may only target yourself.
+    // Clients may only record activity in their own feed. Anything addressed to another user
+    // (trial invitations, recommendations, views) is written by Cloud Functions with fixed copy,
+    // so no user can send free text to another user's feed or lock screen.
     match /activities/{activityId} {
       allow read: if isSignedIn() && request.auth.uid == resource.data.recipientId;
       allow create: if isSignedIn()
-        && request.resource.data.recipientId is string
+        && request.resource.data.recipientId == request.auth.uid
         && request.resource.data.title is string
         && request.resource.data.title.size() <= 200
         && request.resource.data.body is string
@@ -279,12 +275,23 @@ service cloud.firestore {
       allow delete: if isSignedIn() && request.auth.uid == resource.data.recipientId;
     }
 
+    // Movement summaries are owner-only and must not carry coordinates, point tracks or
+    // pointers to uploaded tracks.
+    function gpsSessionLocationFree(data) {
+      return !data.keys().hasAny(['pointsStorageKey', 'points', 'latitude', 'longitude', 'location'])
+        && (!('heatmap' in data) || !(data.heatmap is map) || !data.heatmap.keys().hasAny(['bounds']));
+    }
+
     match /gpsSessions/{sessionId} {
-      allow read: if isOwner(resource.data.playerId)
-        || publicGpsVisible(resource.data.playerId);
+      allow read: if isOwner(resource.data.playerId);
       allow create: if isSignedIn()
-        && request.auth.uid == request.resource.data.playerId;
-      allow update, delete: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId
+        && gpsSessionLocationFree(request.resource.data);
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId
+        && request.resource.data.playerId == resource.data.playerId
+        && gpsSessionLocationFree(request.resource.data);
+      allow delete: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
     }
 
@@ -355,7 +362,17 @@ service cloud.firestore {
       allow read: if isSignedIn()
         && request.auth.uid == resource.data.recipientId;
       allow create: if isSignedIn()
-        && isTrialParty(request.resource.data.trialInvitationId);
+        && isTrialParty(request.resource.data.trialInvitationId)
+        && request.resource.data.recipientId is string
+        && (
+          get(/databases/$(database)/documents/trialInvitations/$(request.resource.data.trialInvitationId)).data.scoutId == request.resource.data.recipientId
+          || get(/databases/$(database)/documents/trialInvitations/$(request.resource.data.trialInvitationId)).data.playerId == request.resource.data.recipientId
+        )
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.body is string
+        && request.resource.data.body.size() <= 500
+        && request.resource.data.read == false;
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.recipientId
         && onlyChanges(['read']);

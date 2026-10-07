@@ -1,12 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
-import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
-import { detectSprints } from '@/features/gps/services/gpsIntelligence';
-import type { GpsPoint, GpsSession } from '@/features/gps/types';
+import type { GpsSession } from '@/features/gps/types';
 import {
   videoSecondForGps,
   type QualityReport,
@@ -176,35 +174,10 @@ export function GpsVideoSyncCard({
 }) {
   const { t, i18n } = useAppTranslation('matchAnalysis');
   const [selectedId, setSelectedId] = useState<string | null>(sync?.gpsSessionId ?? null);
-  const [points, setPoints] = useState<GpsPoint[] | null>(null);
-  const [failed, setFailed] = useState(false);
   const [saving, setSaving] = useState(false);
   const session = sessions.find((item) => item.id === (sync?.gpsSessionId ?? selectedId)) ?? null;
-
-  useEffect(() => {
-    if (!sync || !session) {
-      setPoints(null);
-      return undefined;
-    }
-    let cancelled = false;
-    setFailed(false);
-    void GpsSessionRepository.getInstance()
-      .loadSessionPoints(session)
-      .then((next) => {
-        if (!cancelled) setPoints(next);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setPoints([]);
-          setFailed(true);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [session, sync]);
-
-  const sprints = useMemo(() => (points ? detectSprints(points) : []), [points]);
+  const sprints = session?.intelligence?.sprints ?? [];
+  const sessionStartMs = session ? Date.parse(session.startedAt) : Number.NaN;
 
   const formatStart = (iso: string) =>
     Number.isNaN(Date.parse(iso))
@@ -261,19 +234,19 @@ export function GpsVideoSyncCard({
           <Text variant="body-sm" color="secondary">
             {t('sync.synced', { time: formatClock(sync.videoAnchorSec), label: session?.matchLabel ?? '—' })}
           </Text>
-          {failed ? (
+          {!session?.intelligence ? (
             <Text variant="body-sm" color="warning">
               {t('sync.pointsUnavailable')}
             </Text>
-          ) : points === null ? null : sprints.length === 0 ? (
+          ) : sprints.length === 0 ? (
             <Text variant="body-sm" color="secondary">
               {t('sync.noSprints')}
             </Text>
           ) : (
             sprints.slice(0, 12).map((sprint) => {
-              const second = videoSecondForGps(sprint.startMs, sync, videoDurationSec);
+              const second = videoSecondForGps(sessionStartMs + sprint.startSec * 1000, sync, videoDurationSec);
               return (
-                <View key={sprint.startMs} className="flex-row items-center justify-between gap-2">
+                <View key={sprint.startSec} className="flex-row items-center justify-between gap-2">
                   <Text variant="body-sm">{t('sync.sprint', { kmh: sprint.peakKmh })}</Text>
                   {second === null ? (
                     <Text variant="caption" color="secondary">

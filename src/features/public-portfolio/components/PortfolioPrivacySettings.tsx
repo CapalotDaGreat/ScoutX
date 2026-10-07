@@ -107,13 +107,6 @@ export function PortfolioPrivacySettings({
         disabled={disabled || !settings.publicPortfolioEnabled}
       />
       <ToggleRow
-        label={t('privacy.gpsHighlights')}
-        description={t('privacy.gpsHighlightsDescription')}
-        value={settings.showGpsHighlights}
-        onValueChange={(value) => update({ showGpsHighlights: value })}
-        disabled={disabled || !settings.publicPortfolioEnabled}
-      />
-      <ToggleRow
         label={t('privacy.performanceCharts')}
         description={t('privacy.performanceChartsDescription')}
         value={settings.showPerformanceCharts}

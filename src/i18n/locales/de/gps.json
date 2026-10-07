@@ -23,7 +23,7 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Bewegungszonen",
   "permissionRequired": "Standortzugriff erforderlich",
-  "permissionDescription": "ScoutX braucht Zugriff auf deinen Standort, um GPS-Sessions aufzuzeichnen.",
+  "permissionDescription": "ScoutX nutzt deine Position nur während der Aufzeichnung und nur auf diesem Handy, um Distanz und eine Spielfeld-Heatmap zu berechnen. Dein Standort wird nie hochgeladen oder geteilt.",
   "movementDetail": "Bewegungsdetails",
   "movementDetailSubtitle": "Bewegung und Heatmap dieser Sitzung",
   "latestAnalysisSubtitle": "Bewegung und Heatmap deiner letzten Sitzung",
@@ -31,7 +31,7 @@
   "maxSpeedValue": "Max. {{value}}",
   "intel": {
     "title": "Bewegungsanalyse",
-    "noPoints": "Die GPS-Punkte dieser Sitzung sind nicht verfügbar, daher konnte die Bewegung nicht analysiert werden.",
+    "noPoints": "Bewegungsdetails gibt es nur für Sessions, die mit der aktuellen ScoutX-Version aufgezeichnet wurden.",
     "insufficient": "Zu wenig Daten für eine Bewegungsanalyse. Benötigt mindestens {{minutes}} Min. und {{points}} Punkte; diese Sitzung hat {{haveMinutes}} Min. und {{havePoints}} Punkte.",
     "lowAccuracy": "Die GPS-Genauigkeit war zu gering (Median {{meters}} m, Grenze {{limit}} m), daher werden Fläche und Position nicht angezeigt.",
     "spread": "Abgedeckte Fläche: ca. {{width}} m quer × {{depth}} m entlang deiner Hauptrichtung",

@@ -2,10 +2,7 @@ import { ActivityRepository } from '@/features/activity-feed/repositories/Activi
 import {
   buildPlayerSavedActivity,
   buildProfileUpdatedActivity,
-  buildRecommendationReceivedActivity,
-  buildPortfolioViewedActivity,
   buildScoutingReportActivity,
-  buildTrialInvitationActivity,
   buildVideoUploadedActivity,
   buildMilestoneEarnedActivity,
   buildWeeklyReportReadyActivity,
@@ -33,11 +30,11 @@ export class ActivityRecorder {
     this.record(buildProfileUpdatedActivity(playerId, playerName));
   }
 
-  public recordTrialInvitation(input: Parameters<typeof buildTrialInvitationActivity>[0]): void {
-    this.record(buildTrialInvitationActivity(input));
-  }
-
-  public recordScoutingReport(input: Parameters<typeof buildScoutingReportActivity>[0]): void {
+  /** Scouting reports are private to the scout; the player is never notified. */
+  public recordOwnScoutingReport(input: Parameters<typeof buildScoutingReportActivity>[0]): void {
+    if (input.recipientId !== input.scoutId) {
+      return;
+    }
     this.record(buildScoutingReportActivity(input));
   }
 
@@ -47,16 +44,6 @@ export class ActivityRecorder {
 
   public recordPlayerSaved(input: Parameters<typeof buildPlayerSavedActivity>[0]): void {
     this.record(buildPlayerSavedActivity(input));
-  }
-
-  public recordRecommendationReceived(
-    input: Parameters<typeof buildRecommendationReceivedActivity>[0],
-  ): void {
-    this.record(buildRecommendationReceivedActivity(input));
-  }
-
-  public recordPortfolioViewed(input: Parameters<typeof buildPortfolioViewedActivity>[0]): void {
-    this.record(buildPortfolioViewedActivity(input));
   }
 
   public recordMilestoneEarned(input: Parameters<typeof buildMilestoneEarnedActivity>[0]): void {
