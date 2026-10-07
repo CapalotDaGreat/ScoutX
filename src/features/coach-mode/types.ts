@@ -7,6 +7,8 @@ export type CoachRosterPlayer = {
 export type CoachRoster = {
   coachId: string;
   players: CoachRosterPlayer[];
+  /** Mirrors players[].playerId so account deletion can find rosters naming a player. */
+  playerIds: string[];
   updatedAt: string;
 };
 

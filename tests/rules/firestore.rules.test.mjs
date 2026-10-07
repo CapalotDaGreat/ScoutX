@@ -500,6 +500,14 @@ describe('career snapshots and coach observations', () => {
       'coach writes roster',
     );
     await denied(getDocument(PLAYER, `coachRosters/${COACH}`), 'player reads roster');
+    await allowed(
+      setDocument(COACH, `coachRosters/${COACH}`, { coachId: COACH, players: [], playerIds: [] }),
+      'coach writes roster with player index',
+    );
+    await denied(
+      setDocument(COACH, `coachRosters/${COACH}`, { coachId: COACH, players: [], playerIds: 'p1' }),
+      'player index must be a list',
+    );
   });
 });
 

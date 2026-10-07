@@ -555,7 +555,8 @@ service cloud.firestore {
       allow read: if isOwner(coachId);
       allow create, update: if isOwner(coachId)
         && tokenRole() == 'coach'
-        && request.resource.data.coachId == coachId;
+        && request.resource.data.coachId == coachId
+        && (!('playerIds' in request.resource.data) || request.resource.data.playerIds is list);
       allow delete: if isOwner(coachId) && tokenRole() == 'coach';
     }
 

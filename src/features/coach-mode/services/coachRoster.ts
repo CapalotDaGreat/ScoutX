@@ -1,7 +1,7 @@
 import type { CoachObservation, CoachRoster, CoachRosterPlayer } from '@/features/coach-mode/types';
 
 export function emptyCoachRoster(coachId: string, nowIso = new Date().toISOString()): CoachRoster {
-  return { coachId, players: [], updatedAt: nowIso };
+  return { coachId, players: [], playerIds: [], updatedAt: nowIso };
 }
 
 export function addPlayerToRoster(
@@ -13,7 +13,13 @@ export function addPlayerToRoster(
     return roster;
   }
   const player: CoachRosterPlayer = { playerId, addedAt: nowIso, notes: '' };
-  return { coachId: roster.coachId, players: [...roster.players, player], updatedAt: nowIso };
+  const players = [...roster.players, player];
+  return {
+    coachId: roster.coachId,
+    players,
+    playerIds: players.map((item) => item.playerId),
+    updatedAt: nowIso,
+  };
 }
 
 export function createCoachObservation(

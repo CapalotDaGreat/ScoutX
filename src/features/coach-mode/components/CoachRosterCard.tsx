@@ -36,6 +36,7 @@ function parseRoster(coachId: string, data: Record<string, unknown> | undefined)
   return {
     coachId,
     players,
+    playerIds: players.map((item) => item.playerId),
     updatedAt: typeof data?.updatedAt === 'string' ? data.updatedAt : new Date().toISOString(),
   };
 }

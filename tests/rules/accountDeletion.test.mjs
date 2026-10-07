@@ -46,6 +46,7 @@ const ownedByField = [
   ['trustRecommendations', 'authorId'],
   ['blockedUsers', 'blockerId'],
   ['verificationRequests', 'requesterId'],
+  ['verificationRequests', 'entityId'],
   ['verificationStates', 'entityId'],
   ['portfolioSlugs', 'playerId'],
   ['clubProfiles', 'ownerId'],
@@ -72,6 +73,7 @@ const storageFiles = (uid) => [
   `profiles/${uid}/avatar_1.jpg`,
   `profiles/${uid}/videos/v1/video.mp4`,
   `profiles/${uid}/matchFootage/j1/frames/frame_001.jpg`,
+  `profiles/${uid}/reelExports/e1/reel.mp4`,
   `gpsSessions/${uid}/s1/points.json`,
 ];
 
@@ -111,6 +113,20 @@ before(async () => {
     await db.collection('recruitmentWorkspaces').doc(uid).collection('entries').doc('p1').set({ playerId: 'p1' });
     await db.collection('playerWatchers').doc(uid).collection('scouts').doc('s1').set({ scoutId: 's1' });
   }
+
+  // Cross-user references: another scout's workspace and watcher docs, and a third-party coach roster.
+  for (const uid of [DELETED, KEPT]) {
+    await db.collection('recruitmentWorkspaces').doc('other-scout').collection('entries').doc(uid).set({ playerId: uid });
+    await db.collection('playerWatchers').doc('other-player').collection('scouts').doc(uid).set({ scoutId: uid });
+  }
+  await db.collection('coachRosters').doc('other-coach').set({
+    coachId: 'other-coach',
+    players: [
+      { playerId: DELETED, addedAt: '2026-10-01T00:00:00.000Z', notes: 'private note' },
+      { playerId: KEPT, addedAt: '2026-10-01T00:00:00.000Z', notes: '' },
+    ],
+    playerIds: [DELETED, KEPT],
+  });
 });
 
 describe('deleteAllUserData', () => {
@@ -156,5 +172,22 @@ describe('deleteAllUserData', () => {
         `players/${KEPT}/${sub} kept`,
       );
     }
+  });
+
+  test('removes references held in other users\' documents', async () => {
+    const entries = db.collection('recruitmentWorkspaces').doc('other-scout').collection('entries');
+    assert.equal((await entries.doc(DELETED).get()).exists, false, 'other scout entry about deleted player');
+    assert.equal((await entries.doc(KEPT).get()).exists, true, 'other scout entry about kept player');
+
+    const watchers = db.collection('playerWatchers').doc('other-player').collection('scouts');
+    assert.equal((await watchers.doc(DELETED).get()).exists, false, 'deleted scout watcher doc');
+    assert.equal((await watchers.doc(KEPT).get()).exists, true, 'kept scout watcher doc');
+
+    const roster = (await db.collection('coachRosters').doc('other-coach').get()).data();
+    assert.deepEqual(roster?.playerIds, [KEPT]);
+    assert.deepEqual(
+      roster?.players.map((item) => item.playerId),
+      [KEPT],
+    );
   });
 });

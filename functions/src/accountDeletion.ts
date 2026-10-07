@@ -1,4 +1,4 @@
-import { getFirestore, type Query } from 'firebase-admin/firestore';
+import { FieldValue, getFirestore, type Query } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 
@@ -39,6 +39,7 @@ const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]>
   ['trustRecommendations', 'authorId'],
   ['blockedUsers', 'blockerId'],
   ['verificationRequests', 'requesterId'],
+  ['verificationRequests', 'entityId'],
   ['verificationStates', 'entityId'],
   ['portfolioSlugs', 'playerId'],
   ['clubProfiles', 'ownerId'],
@@ -77,6 +78,36 @@ async function deleteQueryInBatches(query: Query): Promise<number> {
     deleted += snapshot.size;
     if (snapshot.size < BATCH_SIZE) {
       return deleted;
+    }
+  }
+}
+
+/** Other coaches' rosters embed the player (with private notes); remove that entry. */
+async function scrubCoachRosters(uid: string): Promise<void> {
+  const db = getFirestore();
+  for (;;) {
+    const snapshot = await db
+      .collection('coachRosters')
+      .where('playerIds', 'array-contains', uid)
+      .limit(BATCH_SIZE)
+      .get();
+    if (snapshot.empty) {
+      return;
+    }
+    const batch = db.batch();
+    snapshot.docs.forEach((document) => {
+      const players: unknown = document.get('players');
+      const remaining = Array.isArray(players)
+        ? players.filter(
+            (item: unknown) =>
+              !(item && typeof item === 'object' && (item as { playerId?: unknown }).playerId === uid),
+          )
+        : [];
+      batch.update(document.ref, { players: remaining, playerIds: FieldValue.arrayRemove(uid) });
+    });
+    await batch.commit();
+    if (snapshot.size < BATCH_SIZE) {
+      return;
     }
   }
 }
@@ -171,6 +202,15 @@ export async function deleteAllUserData(uid: string): Promise<{ failures: string
   } catch (error) {
     failures.push('playerWatchers.scoutId');
     logger.error('Account deletion: scout watcher docs failed', {
+      message: error instanceof Error ? error.message : 'unknown',
+    });
+  }
+
+  try {
+    await scrubCoachRosters(uid);
+  } catch (error) {
+    failures.push('coachRosters.playerIds');
+    logger.error('Account deletion: coach roster scrub failed', {
       message: error instanceof Error ? error.message : 'unknown',
     });
   }
