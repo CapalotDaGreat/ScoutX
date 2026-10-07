@@ -4,8 +4,6 @@ import { getStorage } from 'firebase-admin/storage';
 import { createCallableOptions } from './callableOptions';
 
 const PLAYBACK_MS = 15 * 60 * 1000;
-const EXPORT_UNAVAILABLE =
-  'Rendered reel export is not available. ScoutX plays virtual manifests in-app instead of encoding a new video file.';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -101,25 +99,3 @@ export const getMediaPlaybackUrl = onCall(createCallableOptions(), async (reques
   }
 });
 
-export const exportReel = onCall(createCallableOptions(), async (request) => {
-  if (!request.auth?.uid) {
-    throw new HttpsError('unauthenticated', 'Authentication is required.');
-  }
-  const data = asRecord(request.data);
-  const reelId = typeof data?.reelId === 'string' ? data.reelId : '';
-  if (!reelId) {
-    throw new HttpsError('invalid-argument', 'reelId is required.');
-  }
-  const snap = await getFirestore().collection('reels').doc(reelId).get();
-  if (!snap.exists) {
-    throw new HttpsError('not-found', 'Reel not found.');
-  }
-  const reel = snap.data() as { ownerId?: string };
-  if (reel.ownerId !== request.auth.uid) {
-    throw new HttpsError('permission-denied', 'You can only export your own reels.');
-  }
-  return {
-    status: 'unavailable' as const,
-    reason: EXPORT_UNAVAILABLE,
-  };
-});

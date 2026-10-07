@@ -73,6 +73,13 @@ describe('match footage', () => {
   });
 });
 
+describe('rendered reels', () => {
+  test('clients cannot write rendered reel files, even their own', async () => {
+    await denied(uploadObject(OWNER, `profiles/${OWNER}/reelExports/e1/reel.mp4`, 'video/mp4'), 'owner forges render');
+    await denied(uploadObject(OTHER, `profiles/${OWNER}/reelExports/e1/cover.jpg`, 'image/jpeg'), 'outsider writes');
+  });
+});
+
 describe('everything else', () => {
   test('unknown paths are denied', async () => {
     await denied(uploadObject(OWNER, 'public/anything.jpg', 'image/jpeg'), 'unknown path');

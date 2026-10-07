@@ -151,7 +151,7 @@ describe('goalNextStep', () => {
   test('suggests changing focus, or asking the coach, when a full window shows no movement', () => {
     const matches = ['a', 'b', 'c'].map((id, index) => match({ id, date: `2026-09-2${index}`, tackles: 2 }));
     const stalled = summarizeGoal(
-      goal({ baseline: { value: 2, sampleSize: 3, measuredAt: '2026-09-01' } }),
+      goal({ baseline: { value: 2, sampleSize: 3, measuredAt: '2026-09-01', evidenceIds: [] } }),
       matches,
       NOW,
     );

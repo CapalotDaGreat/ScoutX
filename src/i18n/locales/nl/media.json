@@ -37,7 +37,61 @@
     "approve": "Goedkeuren",
     "export": "Exporteren",
     "saveFailed": "Reel kon niet worden opgeslagen",
-    "loadFailed": "Reels konden niet worden geladen."
+    "loadFailed": "Reels konden niet worden geladen.",
+    "quality": {
+      "missing_title": "Voeg een titel toe vóór de review.",
+      "no_segments": "Deze reel heeft nog geen clips.",
+      "no_cover": "Kies een cover uit een van de clips.",
+      "invalid_trim": "Clip {{clip}} heeft een lege knip.",
+      "missing_media": "Clip {{clip}} is niet aan een medium gekoppeld.",
+      "pending_suggestions": "Accepteer of weiger de suggesties vóór goedkeuring.",
+      "too_long": "Reels mogen maximaal 90 seconden duren."
+    },
+    "proof": {
+      "match": "tegen {{label}}",
+      "view": "Bewijs bekijken",
+      "state": {
+        "source_missing": "Bronclip niet gevonden",
+        "unlinked": "Niet gekoppeld aan een geanalyseerde wedstrijd",
+        "match_linked": "Uit een geanalyseerde wedstrijd, geen gebeurtenis gekoppeld",
+        "event_accepted": "Gekoppelde gebeurtenis: {{type}} (geaccepteerd)",
+        "event_rejected": "Gekoppelde gebeurtenis: {{type}} (door jou afgewezen)",
+        "event_needs_identity": "Gekoppelde gebeurtenis: {{type}} (identiteit niet bevestigd)",
+        "event_missing": "Gekoppelde gebeurtenis staat niet meer in de analyse"
+      }
+    },
+    "captionLabel": "Bijschrift: {{caption}}",
+    "upA11y": "Clip {{index}} omhoog",
+    "downA11y": "Clip {{index}} omlaag",
+    "isCover": "Cover ✓",
+    "pickTitle": "Clip uit je bibliotheek toevoegen",
+    "pickEmpty": "Er zijn nog geen geüploade clips klaar.",
+    "addClip": "Clip toevoegen",
+    "decision": {
+      "accepted": "Geaccepteerd",
+      "rejected": "Geweigerd",
+      "pending": "Wacht op jouw beslissing"
+    },
+    "save": "Wijzigingen opslaan",
+    "statusLabel": {
+      "draft": "Concept",
+      "review": "In review",
+      "approved": "Goedgekeurd"
+    },
+    "clipCount_one": "{{count}} clip",
+    "clipCount_other": "{{count}} clips",
+    "template": {
+      "hint": "Of begin met een sjabloon op basis van je clips met categorie:",
+      "name": {
+        "scout": "Scoutreel",
+        "social": "Social reel",
+        "position": "Positiereel"
+      },
+      "untagged_one": "{{count}} clip heeft geen categorie en is weggelaten.",
+      "untagged_other": "{{count}} clips hebben geen categorie en zijn weggelaten.",
+      "position_unknown": "Voeg je voorkeurspositie toe aan je profiel om het positiesjabloon te gebruiken.",
+      "no_tagged_clips": "Nog geen klare clips met categorie. Geef je uploads een categorie om sjablonen te gebruiken."
+    }
   },
   "editor": {
     "addTitle": "Highlightvideo toevoegen",
@@ -61,5 +115,69 @@
     "setFeatured": "Als uitgelicht zetten",
     "titleRequired": "Titel is verplicht.",
     "analysisReserved": "AI-analysemetadata is gereserveerd voor een latere release en wordt dan automatisch toegevoegd."
+  },
+  "filter": {
+    "passport": "Op Passport",
+    "goalLinked": "Gekoppeld aan een doel",
+    "sentAsEvidence": "Als bewijs verstuurd",
+    "showing": "{{shown}} van {{total}}",
+    "clear": "Filters wissen",
+    "noMatches": "Geen media komen overeen met deze filters."
+  },
+  "category": {
+    "goals": "Doelpunten",
+    "assists": "Assists",
+    "skills": "Techniek",
+    "defending": "Verdedigen",
+    "goalkeeping": "Keepen",
+    "passing": "Passen",
+    "headers": "Kopballen"
+  },
+  "visibility": {
+    "private": "Privé",
+    "passport": "Op Passport",
+    "grant": "Gedeeld met scout"
+  },
+  "type": {
+    "matchFootage": "Wedstrijdbeelden",
+    "clip": "Clip",
+    "highlight": "Highlight",
+    "reel": "Reel"
+  },
+  "upload": {
+    "pending": "Wacht op upload",
+    "uploading": "Uploaden",
+    "ready": "Klaar",
+    "failed": "Upload mislukt"
+  },
+  "export": {
+    "title": "Gerenderde video",
+    "hint": "Rendert deze reel tot één videobestand dat je kunt delen. Tot 90 seconden.",
+    "failedTitle": "Exportprobleem",
+    "requestFailed": "Het renderen kon niet worden gestart.",
+    "shareFailed": "De gerenderde video kon niet worden gedeeld.",
+    "inProgress": "Bezig met renderen… je kunt de editor sluiten, dit gaat op de achtergrond door.",
+    "readyDetail": "{{seconds}} s · {{mb}} MB",
+    "captionsTrack": "bijschriften als ondertitelspoor inbegrepen",
+    "saveFirst": "Sla je wijzigingen op voordat je rendert.",
+    "outdated": "De reel is sinds deze render gewijzigd. Render opnieuw om de wijzigingen op te nemen.",
+    "retry": "Opnieuw proberen",
+    "render": "Video renderen",
+    "share": "Video delen",
+    "status": {
+      "queued": "In wachtrij",
+      "rendering": "Bezig met renderen",
+      "ready": "Klaar",
+      "failed": "Mislukt"
+    },
+    "error": {
+      "no_segments": "Voeg eerst minstens één clip toe.",
+      "too_long": "De reel is langer dan 90 seconden of heeft te veel clips.",
+      "missing_source": "Een bronclip ontbreekt of is niet volledig geüpload.",
+      "invalid_clip": "Clip {{clip}} heeft een knip buiten de bronvideo.",
+      "unsupported_codec": "Een bronvideo gebruikt een formaat dat niet gedecodeerd kon worden.",
+      "timeout": "Renderen duurde te lang. Probeer een kortere reel.",
+      "render_failed": "Renderen mislukt. Probeer het opnieuw."
+    }
   }
 }

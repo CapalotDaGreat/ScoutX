@@ -166,5 +166,18 @@
     "noSprints": "In dieser Sitzung wurden keine Sprints erkannt.",
     "sprint": "Sprint · Spitze {{kmh}} km/h",
     "outsideVideo": "Außerhalb des Videos"
+  },
+  "eventType": {
+    "shot": "Schuss",
+    "goal": "Tor",
+    "assist": "Vorlage",
+    "pass": "Pass",
+    "key_pass": "Schlüsselpass",
+    "tackle": "Tackling",
+    "duel": "Zweikampf",
+    "foul": "Foul",
+    "card": "Karte",
+    "save": "Parade",
+    "other": "Andere Aktion"
   }
 }

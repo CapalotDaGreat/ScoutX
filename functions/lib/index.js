@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendDevelopmentReminders = exports.onTrialInvitationUpdatedNotify = exports.onPassportSummaryWrittenNotifyOwner = exports.onMatchAnalysisJobFinishedNotify = exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.onVerificationWrittenSyncTrust = exports.requestEvidence = exports.fulfillEvidenceRequest = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
+exports.sendDevelopmentReminders = exports.onTrialInvitationUpdatedNotify = exports.onPassportSummaryWrittenNotifyOwner = exports.onMatchAnalysisJobFinishedNotify = exports.onActivityCreatedPush = exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.onReelExportQueued = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.onVerificationWrittenSyncTrust = exports.requestEvidence = exports.fulfillEvidenceRequest = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.archiveContentReport = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
 require("./authSecurityPolicy");
 const app_1 = require("firebase-admin/app");
 var aiCoach_1 = require("./aiCoach");
@@ -39,7 +39,9 @@ var askThisMatch_1 = require("./askThisMatch");
 Object.defineProperty(exports, "askThisMatch", { enumerable: true, get: function () { return askThisMatch_1.askThisMatch; } });
 var mediaAccess_1 = require("./mediaAccess");
 Object.defineProperty(exports, "getMediaPlaybackUrl", { enumerable: true, get: function () { return mediaAccess_1.getMediaPlaybackUrl; } });
-Object.defineProperty(exports, "exportReel", { enumerable: true, get: function () { return mediaAccess_1.exportReel; } });
+var reelRender_1 = require("./reelRender");
+Object.defineProperty(exports, "exportReel", { enumerable: true, get: function () { return reelRender_1.exportReel; } });
+Object.defineProperty(exports, "onReelExportQueued", { enumerable: true, get: function () { return reelRender_1.onReelExportQueued; } });
 var appleAuth_1 = require("./appleAuth");
 Object.defineProperty(exports, "deleteAuthenticatedAccount", { enumerable: true, get: function () { return appleAuth_1.deleteAuthenticatedAccount; } });
 Object.defineProperty(exports, "persistAppleAuthorizationCode", { enumerable: true, get: function () { return appleAuth_1.persistAppleAuthorizationCode; } });

@@ -17,9 +17,19 @@ export type ReelAiSuggestion = {
   decision: SuggestionDecision;
 };
 
+export type ReelQualityCode =
+  | 'missing_title'
+  | 'no_segments'
+  | 'no_cover'
+  | 'invalid_trim'
+  | 'missing_media'
+  | 'pending_suggestions'
+  | 'too_long';
+
 export type ReelQualityNote = {
-  code: string;
+  code: ReelQualityCode;
   message: string;
+  segmentIndex?: number;
 };
 
 export type ReelManifest = {
@@ -40,11 +50,28 @@ export type ReelManifest = {
   updatedAt: string;
 };
 
+export type ReelExportStatus = 'queued' | 'rendering' | 'ready' | 'failed';
+
+export type ReelExportErrorCode =
+  | 'no_segments'
+  | 'too_long'
+  | 'missing_source'
+  | 'invalid_clip'
+  | 'unsupported_codec'
+  | 'timeout'
+  | 'render_failed';
+
 export type ReelExportJob = {
   id: string;
   ownerId: string;
   reelId: string;
-  status: 'unavailable';
-  reason: string;
+  reelVersion: number;
+  status: ReelExportStatus;
+  errorCode: ReelExportErrorCode | null;
+  storagePath: string | null;
+  durationSec: number | null;
+  sizeBytes: number | null;
+  hasCaptions: boolean;
   createdAt: string;
+  updatedAt: string;
 };

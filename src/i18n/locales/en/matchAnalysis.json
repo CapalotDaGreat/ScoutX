@@ -166,5 +166,18 @@
     "noSprints": "No sprints were detected in this session.",
     "sprint": "Sprint · peak {{kmh}} km/h",
     "outsideVideo": "Outside the video"
+  },
+  "eventType": {
+    "shot": "Shot",
+    "goal": "Goal",
+    "assist": "Assist",
+    "pass": "Pass",
+    "key_pass": "Key pass",
+    "tackle": "Tackle",
+    "duel": "Duel",
+    "foul": "Foul",
+    "card": "Card",
+    "save": "Save",
+    "other": "Other action"
   }
 }

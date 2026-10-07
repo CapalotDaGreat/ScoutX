@@ -16,6 +16,10 @@ const GROUP_BY_POSITION: Record<PlayerPosition, PositionGroup> = {
   CF: 'forward',
 };
 
+export function isPlayerPosition(value: string): value is PlayerPosition {
+  return Object.prototype.hasOwnProperty.call(GROUP_BY_POSITION, value);
+}
+
 export function positionGroupFor(positions: PlayerPosition[]): PositionGroup | null {
   if (positions.length === 0) {
     return null;

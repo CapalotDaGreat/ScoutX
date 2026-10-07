@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportReel = exports.getMediaPlaybackUrl = void 0;
+exports.getMediaPlaybackUrl = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const callableOptions_1 = require("./callableOptions");
 const PLAYBACK_MS = 15 * 60 * 1000;
-const EXPORT_UNAVAILABLE = 'Rendered reel export is not available. ScoutX plays virtual manifests in-app instead of encoding a new video file.';
 function asRecord(value) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
         return null;
@@ -80,27 +79,5 @@ exports.getMediaPlaybackUrl = (0, https_1.onCall)((0, callableOptions_1.createCa
     catch {
         throw new https_1.HttpsError('internal', 'Could not create a playback URL.');
     }
-});
-exports.exportReel = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
-    if (!request.auth?.uid) {
-        throw new https_1.HttpsError('unauthenticated', 'Authentication is required.');
-    }
-    const data = asRecord(request.data);
-    const reelId = typeof data?.reelId === 'string' ? data.reelId : '';
-    if (!reelId) {
-        throw new https_1.HttpsError('invalid-argument', 'reelId is required.');
-    }
-    const snap = await (0, firestore_1.getFirestore)().collection('reels').doc(reelId).get();
-    if (!snap.exists) {
-        throw new https_1.HttpsError('not-found', 'Reel not found.');
-    }
-    const reel = snap.data();
-    if (reel.ownerId !== request.auth.uid) {
-        throw new https_1.HttpsError('permission-denied', 'You can only export your own reels.');
-    }
-    return {
-        status: 'unavailable',
-        reason: EXPORT_UNAVAILABLE,
-    };
 });
 //# sourceMappingURL=mediaAccess.js.map

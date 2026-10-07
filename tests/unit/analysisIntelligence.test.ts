@@ -30,6 +30,7 @@ const NULL_STATS: MatchEstimatedStats = {
   yellowCards: null,
   redCards: null,
   matchRating: null,
+  cleanSheet: null,
 };
 
 function event(id: string, type: MatchAnalysisEvent['type'], status: MatchAnalysisEvent['validationStatus']): MatchAnalysisEvent {
@@ -53,12 +54,12 @@ function report(overrides: Partial<MatchAnalysisReport> = {}): MatchAnalysisRepo
     coachingNotes: '',
     estimatedStats: NULL_STATS,
     moments: [],
-    coverage: { visiblePct: 60, likelyOffCameraPct: 30, unknownPct: 10, confidenceLabel: 'Limited' },
+    coverage: { visiblePct: 60, likelyOffCameraPct: 30, unknownPct: 10, confidenceLabel: 'Limited', note: '' },
     evidence: [],
     pipelineStages: [
-      { id: 'tracking', label: 'Tracking', status: 'unavailable' },
-      { id: 'ingest', label: 'Ingest', status: 'complete' },
-    ] as MatchAnalysisReport['pipelineStages'],
+      { id: 'player-tracking', label: 'Tracking', status: 'unavailable' },
+      { id: 'video-ingestion', label: 'Ingest', status: 'complete' },
+    ],
     segments: [],
     availability: [],
     confidence: null,

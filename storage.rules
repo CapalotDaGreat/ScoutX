@@ -37,6 +37,12 @@ service firebase.storage {
       allow delete: if isOwner(userId);
     }
 
+    // Rendered reels are written by the render function only.
+    match /profiles/{userId}/reelExports/{exportId}/{fileName} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
     // Avatar and cover photos. Public display uses tokenized download URLs.
     match /profiles/{userId}/{fileName} {
       allow read: if isOwner(userId);

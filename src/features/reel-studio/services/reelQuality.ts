@@ -1,5 +1,7 @@
 import type { ReelManifest, ReelQualityNote, ReelSegment } from '@/features/reel-studio/types';
 
+export const REEL_MAX_SEC = 90;
+
 export function buildReelQualityNotes(reel: Pick<ReelManifest, 'segments' | 'coverMediaId' | 'title' | 'aiSuggestions'>): ReelQualityNote[] {
   const notes: ReelQualityNote[] = [];
   if (!reel.title.trim()) {
@@ -13,11 +15,15 @@ export function buildReelQualityNotes(reel: Pick<ReelManifest, 'segments' | 'cov
   }
   for (const [index, segment] of reel.segments.entries()) {
     if (segment.outSec <= segment.inSec) {
-      notes.push({ code: 'invalid_trim', message: `Clip ${index + 1} has an empty trim window.` });
+      notes.push({ code: 'invalid_trim', message: `Clip ${index + 1} has an empty trim window.`, segmentIndex: index });
     }
     if (!segment.mediaId) {
-      notes.push({ code: 'missing_media', message: `Clip ${index + 1} is not bound to a media item.` });
+      notes.push({ code: 'missing_media', message: `Clip ${index + 1} is not bound to a media item.`, segmentIndex: index });
     }
+  }
+  const totalSec = reel.segments.reduce((sum, segment) => sum + Math.max(0, segment.outSec - segment.inSec), 0);
+  if (totalSec > REEL_MAX_SEC) {
+    notes.push({ code: 'too_long', message: `Reels can be at most ${REEL_MAX_SEC} seconds.` });
   }
   const pending = reel.aiSuggestions.filter((item) => item.decision === 'pending');
   if (pending.length > 0) {

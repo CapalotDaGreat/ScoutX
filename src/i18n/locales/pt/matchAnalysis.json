@@ -166,5 +166,18 @@
     "noSprints": "Não foram detetados sprints nesta sessão.",
     "sprint": "Sprint · pico {{kmh}} km/h",
     "outsideVideo": "Fora do vídeo"
+  },
+  "eventType": {
+    "shot": "Remate",
+    "goal": "Golo",
+    "assist": "Assistência",
+    "pass": "Passe",
+    "key_pass": "Passe decisivo",
+    "tackle": "Desarme",
+    "duel": "Duelo",
+    "foul": "Falta",
+    "card": "Cartão",
+    "save": "Defesa",
+    "other": "Outra ação"
   }
 }

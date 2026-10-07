@@ -450,7 +450,7 @@ describe('media library and reels', () => {
       }),
       'self grant',
     );
-    await denied(setDocument(PLAYER, 'reelExports/e1', { ownerId: PLAYER, reelId: 'r1', status: 'unavailable' }), 'client export');
+    await denied(setDocument(PLAYER, 'reelExports/e1', { ownerId: PLAYER, reelId: 'r1', status: 'ready' }), 'client forges export');
   });
 });
 

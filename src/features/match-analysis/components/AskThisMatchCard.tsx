@@ -11,8 +11,12 @@ import {
   type AskThisMatchCitation,
 } from '@/features/match-analysis/services/askThisMatchService';
 import { requestAskThisMatch } from '@/features/match-analysis/services/matchAnalysisCallable';
-import { type MatchAnalysisJob } from '@/features/match-analysis/types';
+import { type MatchAnalysisJob, type MatchEventType } from '@/features/match-analysis/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+
+const EVENT_TYPES: readonly MatchEventType[] = [
+  'shot', 'goal', 'assist', 'pass', 'key_pass', 'tackle', 'duel', 'foul', 'card', 'save', 'other',
+];
 
 /**
  * Answers come from stored events, observations and coaching moments only, and each line
@@ -49,8 +53,11 @@ export function AskThisMatchCard({ job, onSeek }: { job: MatchAnalysisJob; onSee
     }
   };
 
-  const lineFor = (citation: AskThisMatchCitation): string =>
-    citation.kind === 'event' ? t('ask.eventLine', { type: citation.label }) : citation.detail || citation.label;
+  const lineFor = (citation: AskThisMatchCitation): string => {
+    if (citation.kind !== 'event') return citation.detail || citation.label;
+    const type = EVENT_TYPES.find((value) => value === citation.label);
+    return t('ask.eventLine', { type: type ? t(`eventType.${type}`) : citation.label });
+  };
 
   return (
     <Card padding="lg" className="gap-3">

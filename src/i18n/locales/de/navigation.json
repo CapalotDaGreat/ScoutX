@@ -1,37 +1,42 @@
-﻿{
-    "tabs":  {
-                 "portfolio":  "Portfolio",
-                 "career":  "Karriere",
-                 "statistics":  "Stats",
-                 "gps":  "GPS",
-                 "trials":  "Trials",
-                 "home":  "Start",
-                 "performance":  "Wachstum",
-                 "track":  "AktivitÃ¤t",
-                 "search":  "Suche",
-                 "discover":  "Entdecken",
-                 "pipeline":  "Pipeline",
-                 "media":  "Medien"
-             },
-    "segments":  {
-                     "stats":  "Stats",
-                     "career":  "Karriere",
-                     "gps":  "GPS",
-                     "trials":  "Trials",
-                     "highlights":  "Highlights",
-                     "library": "Bibliothek",
-                     "reels": "Reels",
-                     "reports":  "Berichte",
-        "development": "Entwicklung"
-    },
-    "screens":  {
-                    "settings":  "Einstellungen",
-                    "settingsSubtitle":  "Konto, Benachrichtigungen und Sprache",
-                    "activityInbox":  "AktivitÃ¤t",
-                    "playerComparison":  "Spieler vergleichen",
-                    "careerReplay":  "Karriere-Replay",
-                    "publicPortfolio":  "Football Passport",
-                    "highlights":  "Highlight-Videos",
-                    "highlightsSubtitle":  "Scout-Clips und Match-Reels"
-                }
+{
+  "tabs": {
+    "portfolio": "Portfolio",
+    "career": "Karriere",
+    "statistics": "Stats",
+    "gps": "GPS",
+    "trials": "Trials",
+    "home": "Start",
+    "performance": "Wachstum",
+    "track": "AktivitÃ¤t",
+    "search": "Suche",
+    "discover": "Entdecken",
+    "pipeline": "Pipeline",
+    "media": "Medien"
+  },
+  "segments": {
+    "stats": "Stats",
+    "career": "Karriere",
+    "gps": "GPS",
+    "trials": "Trials",
+    "highlights": "Highlights",
+    "library": "Bibliothek",
+    "reels": "Reels",
+    "reports": "Berichte",
+    "development": "Entwicklung"
+  },
+  "screens": {
+    "settings": "Einstellungen",
+    "settingsSubtitle": "Konto, Benachrichtigungen und Sprache",
+    "activityInbox": "AktivitÃ¤t",
+    "playerComparison": "Spieler vergleichen",
+    "careerReplay": "Karriere-Replay",
+    "publicPortfolio": "Football Passport",
+    "highlights": "Highlight-Videos",
+    "highlightsSubtitle": "Scout-Clips und Match-Reels"
+  },
+  "media": {
+    "uploadFromPhotos": "Aus Fotos hochladen",
+    "analyzeFromPhotos": "Spielvideo aus Fotos analysieren",
+    "openReelStudio": "Highlight-Reel-Studio öffnen"
+  }
 }

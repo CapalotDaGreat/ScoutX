@@ -37,7 +37,61 @@
     "approve": "Approve",
     "export": "Export",
     "saveFailed": "Could not save reel",
-    "loadFailed": "Could not load reels."
+    "loadFailed": "Could not load reels.",
+    "quality": {
+      "missing_title": "Add a title before review.",
+      "no_segments": "This reel has no clips yet.",
+      "no_cover": "Pick a cover from one of the clips.",
+      "invalid_trim": "Clip {{clip}} has an empty trim window.",
+      "missing_media": "Clip {{clip}} is not linked to a media item.",
+      "pending_suggestions": "Accept or reject the suggestions before approval.",
+      "too_long": "Reels can be at most 90 seconds."
+    },
+    "proof": {
+      "match": "vs {{label}}",
+      "view": "View evidence",
+      "state": {
+        "source_missing": "Source clip not found",
+        "unlinked": "Not linked to an analysed match",
+        "match_linked": "From an analysed match, no event linked",
+        "event_accepted": "Linked event: {{type}} (accepted)",
+        "event_rejected": "Linked event: {{type}} (you rejected it)",
+        "event_needs_identity": "Linked event: {{type}} (identity not confirmed)",
+        "event_missing": "Linked event no longer in the analysis"
+      }
+    },
+    "captionLabel": "Caption: {{caption}}",
+    "upA11y": "Move clip {{index}} up",
+    "downA11y": "Move clip {{index}} down",
+    "isCover": "Cover ✓",
+    "pickTitle": "Add a clip from your library",
+    "pickEmpty": "No uploaded clips are ready yet.",
+    "addClip": "Add clip",
+    "decision": {
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "pending": "Waiting for your decision"
+    },
+    "save": "Save changes",
+    "statusLabel": {
+      "draft": "Draft",
+      "review": "In review",
+      "approved": "Approved"
+    },
+    "clipCount_one": "{{count}} clip",
+    "clipCount_other": "{{count}} clips",
+    "template": {
+      "hint": "Or start from a template built from your tagged clips:",
+      "name": {
+        "scout": "Scout reel",
+        "social": "Social reel",
+        "position": "Position reel"
+      },
+      "untagged_one": "{{count}} clip has no category, so it was left out.",
+      "untagged_other": "{{count}} clips have no category, so they were left out.",
+      "position_unknown": "Add your preferred position to your profile to use the position template.",
+      "no_tagged_clips": "No ready clips with a category yet. Add a category to your uploads to use templates."
+    }
   },
   "editor": {
     "addTitle": "Add Highlight Video",
@@ -61,5 +115,69 @@
     "setFeatured": "Set as Featured",
     "titleRequired": "Title is required.",
     "analysisReserved": "AI analysis metadata is reserved for a future release and will attach automatically once enabled."
+  },
+  "filter": {
+    "passport": "On Passport",
+    "goalLinked": "Linked to a goal",
+    "sentAsEvidence": "Sent as evidence",
+    "showing": "Showing {{shown}} of {{total}}",
+    "clear": "Clear filters",
+    "noMatches": "No media matches these filters."
+  },
+  "category": {
+    "goals": "Goals",
+    "assists": "Assists",
+    "skills": "Skills",
+    "defending": "Defending",
+    "goalkeeping": "Goalkeeping",
+    "passing": "Passing",
+    "headers": "Headers"
+  },
+  "visibility": {
+    "private": "Private",
+    "passport": "On Passport",
+    "grant": "Shared with scout"
+  },
+  "type": {
+    "matchFootage": "Match footage",
+    "clip": "Clip",
+    "highlight": "Highlight",
+    "reel": "Reel"
+  },
+  "upload": {
+    "pending": "Waiting to upload",
+    "uploading": "Uploading",
+    "ready": "Ready",
+    "failed": "Upload failed"
+  },
+  "export": {
+    "title": "Rendered video",
+    "hint": "Renders this reel into a single video file you can share. Up to 90 seconds.",
+    "failedTitle": "Export problem",
+    "requestFailed": "Could not start the render.",
+    "shareFailed": "Could not share the rendered video.",
+    "inProgress": "Rendering… you can close the editor, this continues in the background.",
+    "readyDetail": "{{seconds}}s · {{mb}} MB",
+    "captionsTrack": "captions included as a subtitle track",
+    "saveFirst": "Save your changes before rendering.",
+    "outdated": "The reel changed since this render. Render again to include the changes.",
+    "retry": "Try again",
+    "render": "Render video",
+    "share": "Share video",
+    "status": {
+      "queued": "Queued",
+      "rendering": "Rendering",
+      "ready": "Ready",
+      "failed": "Failed"
+    },
+    "error": {
+      "no_segments": "Add at least one clip first.",
+      "too_long": "The reel is longer than 90 seconds or has too many clips.",
+      "missing_source": "A source clip is missing or not fully uploaded.",
+      "invalid_clip": "Clip {{clip}} has a trim outside the source video.",
+      "unsupported_codec": "A source video uses a format that could not be decoded.",
+      "timeout": "Rendering took too long. Try a shorter reel.",
+      "render_failed": "Rendering failed. Try again."
+    }
   }
 }

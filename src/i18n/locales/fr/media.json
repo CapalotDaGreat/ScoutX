@@ -37,7 +37,61 @@
     "approve": "Approuver",
     "export": "Exporter",
     "saveFailed": "Impossible d’enregistrer le reel",
-    "loadFailed": "Impossible de charger les reels."
+    "loadFailed": "Impossible de charger les reels.",
+    "quality": {
+      "missing_title": "Ajoute un titre avant la relecture.",
+      "no_segments": "Ce reel n'a pas encore de clips.",
+      "no_cover": "Choisis une couverture parmi les clips.",
+      "invalid_trim": "Le clip {{clip}} a une découpe vide.",
+      "missing_media": "Le clip {{clip}} n'est lié à aucun média.",
+      "pending_suggestions": "Accepte ou refuse les suggestions avant l'approbation.",
+      "too_long": "Un reel peut durer au maximum 90 secondes."
+    },
+    "proof": {
+      "match": "contre {{label}}",
+      "view": "Voir la preuve",
+      "state": {
+        "source_missing": "Clip source introuvable",
+        "unlinked": "Non lié à un match analysé",
+        "match_linked": "Issu d'un match analysé, aucun événement lié",
+        "event_accepted": "Événement lié : {{type}} (accepté)",
+        "event_rejected": "Événement lié : {{type}} (rejeté par toi)",
+        "event_needs_identity": "Événement lié : {{type}} (identité non confirmée)",
+        "event_missing": "L'événement lié n'est plus dans l'analyse"
+      }
+    },
+    "captionLabel": "Légende : {{caption}}",
+    "upA11y": "Monter le clip {{index}}",
+    "downA11y": "Descendre le clip {{index}}",
+    "isCover": "Couverture ✓",
+    "pickTitle": "Ajouter un clip de ta médiathèque",
+    "pickEmpty": "Aucun clip importé n'est encore prêt.",
+    "addClip": "Ajouter un clip",
+    "decision": {
+      "accepted": "Acceptée",
+      "rejected": "Refusée",
+      "pending": "En attente de ta décision"
+    },
+    "save": "Enregistrer",
+    "statusLabel": {
+      "draft": "Brouillon",
+      "review": "En relecture",
+      "approved": "Approuvé"
+    },
+    "clipCount_one": "{{count}} clip",
+    "clipCount_other": "{{count}} clips",
+    "template": {
+      "hint": "Ou pars d'un modèle construit à partir de tes clips catégorisés :",
+      "name": {
+        "scout": "Reel recruteur",
+        "social": "Reel réseaux sociaux",
+        "position": "Reel par poste"
+      },
+      "untagged_one": "{{count}} clip n'a pas de catégorie, il a donc été écarté.",
+      "untagged_other": "{{count}} clips n'ont pas de catégorie, ils ont donc été écartés.",
+      "position_unknown": "Ajoute ton poste préféré à ton profil pour utiliser le modèle par poste.",
+      "no_tagged_clips": "Aucun clip prêt avec une catégorie. Ajoute une catégorie à tes vidéos pour utiliser les modèles."
+    }
   },
   "editor": {
     "addTitle": "Ajouter une vidéo highlight",
@@ -61,5 +115,69 @@
     "setFeatured": "Mettre en avant",
     "titleRequired": "Le titre est requis.",
     "analysisReserved": "Les métadonnées d’analyse IA sont réservées à une version future et s’ajouteront automatiquement."
+  },
+  "filter": {
+    "passport": "Sur le Passport",
+    "goalLinked": "Lié à un objectif",
+    "sentAsEvidence": "Envoyé comme preuve",
+    "showing": "{{shown}} sur {{total}}",
+    "clear": "Effacer les filtres",
+    "noMatches": "Aucun média ne correspond à ces filtres."
+  },
+  "category": {
+    "goals": "Buts",
+    "assists": "Passes décisives",
+    "skills": "Gestes techniques",
+    "defending": "Défense",
+    "goalkeeping": "Gardien",
+    "passing": "Passes",
+    "headers": "Jeu de tête"
+  },
+  "visibility": {
+    "private": "Privé",
+    "passport": "Sur le Passport",
+    "grant": "Partagé avec un recruteur"
+  },
+  "type": {
+    "matchFootage": "Vidéo de match",
+    "clip": "Clip",
+    "highlight": "Highlight",
+    "reel": "Reel"
+  },
+  "upload": {
+    "pending": "En attente d'envoi",
+    "uploading": "Envoi en cours",
+    "ready": "Prêt",
+    "failed": "Échec de l'envoi"
+  },
+  "export": {
+    "title": "Vidéo rendue",
+    "hint": "Assemble ce reel en un seul fichier vidéo à partager. Jusqu'à 90 secondes.",
+    "failedTitle": "Problème d'export",
+    "requestFailed": "Impossible de lancer le rendu.",
+    "shareFailed": "Impossible de partager la vidéo rendue.",
+    "inProgress": "Rendu en cours… tu peux fermer l'éditeur, cela continue en arrière-plan.",
+    "readyDetail": "{{seconds}} s · {{mb}} Mo",
+    "captionsTrack": "légendes incluses en piste de sous-titres",
+    "saveFirst": "Enregistre tes modifications avant le rendu.",
+    "outdated": "Le reel a changé depuis ce rendu. Relance le rendu pour inclure les modifications.",
+    "retry": "Réessayer",
+    "render": "Rendre la vidéo",
+    "share": "Partager la vidéo",
+    "status": {
+      "queued": "En file d'attente",
+      "rendering": "Rendu en cours",
+      "ready": "Prête",
+      "failed": "Échec"
+    },
+    "error": {
+      "no_segments": "Ajoute d'abord au moins un clip.",
+      "too_long": "Le reel dépasse 90 secondes ou contient trop de clips.",
+      "missing_source": "Un clip source est manquant ou pas entièrement importé.",
+      "invalid_clip": "Le clip {{clip}} a une découpe hors de la vidéo source.",
+      "unsupported_codec": "Une vidéo source utilise un format qui n'a pas pu être décodé.",
+      "timeout": "Le rendu a pris trop de temps. Essaie un reel plus court.",
+      "render_failed": "Le rendu a échoué. Réessaie."
+    }
   }
 }

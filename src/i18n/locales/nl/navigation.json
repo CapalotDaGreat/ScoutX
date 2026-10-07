@@ -1,37 +1,42 @@
-﻿{
-    "tabs":  {
-                 "portfolio":  "Portfolio",
-                 "career":  "CarriÃ¨re",
-                 "statistics":  "Stats",
-                 "gps":  "GPS",
-                 "trials":  "Trials",
-                 "home":  "Home",
-                 "performance":  "Groei",
-                 "track":  "Activiteit",
-                 "search":  "Zoeken",
-                 "discover":  "Discover",
-                 "pipeline":  "Pipeline",
-                 "media":  "Media"
-             },
-    "segments":  {
-                     "stats":  "Stats",
-                     "career":  "CarriÃ¨re",
-                     "gps":  "GPS",
-                     "trials":  "Trials",
-                     "highlights":  "Highlights",
-                     "library": "Bibliotheek",
-                     "reels": "Reels",
-                     "reports":  "Rapporten",
-        "development": "Ontwikkeling"
-    },
-    "screens":  {
-                    "settings":  "Instellingen",
-                    "settingsSubtitle":  "Account, notifications, and language",
-                    "activityInbox":  "Activity",
-                    "playerComparison":  "Player comparison",
-                    "careerReplay":  "Career replay",
-                    "publicPortfolio":  "Football Passport",
-                    "highlights":  "Highlightvideo\u0027s",
-                    "highlightsSubtitle":  "Scoutclips en wedstrijden"
-                }
+{
+  "tabs": {
+    "portfolio": "Portfolio",
+    "career": "CarriÃ¨re",
+    "statistics": "Stats",
+    "gps": "GPS",
+    "trials": "Trials",
+    "home": "Home",
+    "performance": "Groei",
+    "track": "Activiteit",
+    "search": "Zoeken",
+    "discover": "Discover",
+    "pipeline": "Pipeline",
+    "media": "Media"
+  },
+  "segments": {
+    "stats": "Stats",
+    "career": "CarriÃ¨re",
+    "gps": "GPS",
+    "trials": "Trials",
+    "highlights": "Highlights",
+    "library": "Bibliotheek",
+    "reels": "Reels",
+    "reports": "Rapporten",
+    "development": "Ontwikkeling"
+  },
+  "screens": {
+    "settings": "Instellingen",
+    "settingsSubtitle": "Account, notifications, and language",
+    "activityInbox": "Activity",
+    "playerComparison": "Player comparison",
+    "careerReplay": "Career replay",
+    "publicPortfolio": "Football Passport",
+    "highlights": "Highlightvideo's",
+    "highlightsSubtitle": "Scoutclips en wedstrijden"
+  },
+  "media": {
+    "uploadFromPhotos": "Uploaden vanuit Foto's",
+    "analyzeFromPhotos": "Wedstrijdvideo uit Foto's analyseren",
+    "openReelStudio": "Highlight-reelstudio openen"
+  }
 }

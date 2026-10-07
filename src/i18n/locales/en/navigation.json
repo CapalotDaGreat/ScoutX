@@ -33,5 +33,10 @@
     "publicPortfolio": "Football Passport",
     "highlights": "Highlight Videos",
     "highlightsSubtitle": "Scout clips and match reels"
+  },
+  "media": {
+    "uploadFromPhotos": "Upload from Photos",
+    "analyzeFromPhotos": "Analyze match video from Photos",
+    "openReelStudio": "Open Highlight Reel Studio"
   }
 }

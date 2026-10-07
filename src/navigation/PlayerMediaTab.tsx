@@ -12,6 +12,7 @@ import { Button } from '@/components/primitives/Button';
 import { Screen } from '@/components/layout/Screen';
 import { Text } from '@/components/primitives/Text';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { isPlayerPosition, positionGroupFor } from '@/features/scout-intelligence/services/positionComparison';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 type MediaSegment = 'library' | 'reels' | 'gps';
@@ -20,6 +21,7 @@ export type PlayerMediaTabProps = {
   onManageVideosPress: () => void;
   onAnalyzeMatchVideoPress?: () => void;
   onOpenHighlightReelStudio?: () => void;
+  onViewEvidence?: (jobId: string) => void;
   focusReelId?: string;
 };
 
@@ -27,12 +29,17 @@ export function PlayerMediaTab({
   onManageVideosPress,
   onAnalyzeMatchVideoPress,
   onOpenHighlightReelStudio,
+  onViewEvidence,
   focusReelId,
 }: PlayerMediaTabProps) {
   const { t } = useAppTranslation('navigation');
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const { profile } = usePlayerWorkspace();
+  const positionGroup = useMemo(
+    () => positionGroupFor((profile?.identity?.preferredPositions ?? []).filter(isPlayerPosition)),
+    [profile?.identity?.preferredPositions],
+  );
   const [segment, setSegment] = useState<MediaSegment>(focusReelId ? 'reels' : 'library');
   useEffect(() => {
     if (focusReelId) setSegment('reels');
@@ -67,11 +74,11 @@ export function PlayerMediaTab({
         >
           <View className="gap-3">
             <Button variant="prestige" onPress={onManageVideosPress}>
-              Upload from Photos
+              {t('media.uploadFromPhotos')}
             </Button>
             {onAnalyzeMatchVideoPress ? (
               <Button variant="secondary" onPress={onAnalyzeMatchVideoPress}>
-                Analyze match video from Photos
+                {t('media.analyzeFromPhotos')}
               </Button>
             ) : null}
           </View>
@@ -105,9 +112,14 @@ export function PlayerMediaTab({
               setShowReelStudio(true);
             }}
           >
-            Open Highlight Reel Studio
+            {t('media.openReelStudio')}
           </Button>
-          <ReelListSection userId={user?.id ?? null} focusReelId={focusReelId} />
+          <ReelListSection
+            userId={user?.id ?? null}
+            focusReelId={focusReelId}
+            positionGroup={positionGroup}
+            onViewEvidence={onViewEvidence}
+          />
           <HighlightReelStudioModal
             visible={showReelStudio}
             playerId={user?.id ?? null}

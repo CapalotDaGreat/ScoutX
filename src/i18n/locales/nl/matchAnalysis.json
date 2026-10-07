@@ -166,5 +166,18 @@
     "noSprints": "Er zijn geen sprints gedetecteerd in deze sessie.",
     "sprint": "Sprint · piek {{kmh}} km/u",
     "outsideVideo": "Buiten de video"
+  },
+  "eventType": {
+    "shot": "Schot",
+    "goal": "Doelpunt",
+    "assist": "Assist",
+    "pass": "Pass",
+    "key_pass": "Sleutelpass",
+    "tackle": "Tackle",
+    "duel": "Duel",
+    "foul": "Overtreding",
+    "card": "Kaart",
+    "save": "Redding",
+    "other": "Andere actie"
   }
 }

@@ -1,4 +1,5 @@
 import { createCallableFunction } from '@/firebase/callableFunctions';
+import type { ReelExportErrorCode, ReelExportStatus } from '@/features/reel-studio/types';
 
 export type MediaPlaybackResponse = {
   url: string;
@@ -19,8 +20,10 @@ export async function getMediaPlaybackUrl(input: {
 }
 
 export type ReelExportResponse = {
-  status: 'unavailable';
-  reason: string;
+  exportId: string | null;
+  status: ReelExportStatus;
+  errorCode: ReelExportErrorCode | null;
+  segmentIndex: number | null;
 };
 
 export async function requestReelExport(reelId: string): Promise<ReelExportResponse> {

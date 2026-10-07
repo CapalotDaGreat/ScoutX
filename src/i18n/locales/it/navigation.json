@@ -1,37 +1,42 @@
-﻿{
-    "tabs":  {
-                 "portfolio":  "Portfolio",
-                 "career":  "Carriera",
-                 "statistics":  "Stats",
-                 "gps":  "GPS",
-                 "trials":  "Trials",
-                 "home":  "Home",
-                 "performance":  "Crescita",
-                 "track":  "AttivitÃ ",
-                 "search":  "Cerca",
-                 "discover":  "Discover",
-                 "pipeline":  "Pipeline",
-                 "media":  "Media"
-             },
-    "segments":  {
-                     "stats":  "Stats",
-                     "career":  "Carriera",
-                     "gps":  "GPS",
-                     "trials":  "Trials",
-                     "highlights":  "Highlights",
-                     "library": "Libreria",
-                     "reels": "Reel",
-                     "reports":  "Report",
-        "development": "Sviluppo"
-    },
-    "screens":  {
-                    "settings":  "Impostazioni",
-                    "settingsSubtitle":  "Account, notifications, and language",
-                    "activityInbox":  "Activity",
-                    "playerComparison":  "Player comparison",
-                    "careerReplay":  "Career replay",
-                    "publicPortfolio":  "Football Passport",
-                    "highlights":  "Video highlight",
-                    "highlightsSubtitle":  "Clip per scout e partite"
-                }
+{
+  "tabs": {
+    "portfolio": "Portfolio",
+    "career": "Carriera",
+    "statistics": "Stats",
+    "gps": "GPS",
+    "trials": "Trials",
+    "home": "Home",
+    "performance": "Crescita",
+    "track": "AttivitÃ ",
+    "search": "Cerca",
+    "discover": "Discover",
+    "pipeline": "Pipeline",
+    "media": "Media"
+  },
+  "segments": {
+    "stats": "Stats",
+    "career": "Carriera",
+    "gps": "GPS",
+    "trials": "Trials",
+    "highlights": "Highlights",
+    "library": "Libreria",
+    "reels": "Reel",
+    "reports": "Report",
+    "development": "Sviluppo"
+  },
+  "screens": {
+    "settings": "Impostazioni",
+    "settingsSubtitle": "Account, notifications, and language",
+    "activityInbox": "Activity",
+    "playerComparison": "Player comparison",
+    "careerReplay": "Career replay",
+    "publicPortfolio": "Football Passport",
+    "highlights": "Video highlight",
+    "highlightsSubtitle": "Clip per scout e partite"
+  },
+  "media": {
+    "uploadFromPhotos": "Carica da Foto",
+    "analyzeFromPhotos": "Analizza video della partita da Foto",
+    "openReelStudio": "Apri lo studio highlights"
+  }
 }

@@ -166,5 +166,18 @@
     "noSprints": "Nessuno sprint rilevato in questa sessione.",
     "sprint": "Sprint · picco {{kmh}} km/h",
     "outsideVideo": "Fuori dal video"
+  },
+  "eventType": {
+    "shot": "Tiro",
+    "goal": "Gol",
+    "assist": "Assist",
+    "pass": "Passaggio",
+    "key_pass": "Passaggio chiave",
+    "tackle": "Contrasto",
+    "duel": "Duello",
+    "foul": "Fallo",
+    "card": "Cartellino",
+    "save": "Parata",
+    "other": "Altra azione"
   }
 }

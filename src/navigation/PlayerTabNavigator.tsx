@@ -302,6 +302,7 @@ function PlayerTabsContainer() {
               onManageVideosPress={() => setIsVideosModalVisible(true)}
               onAnalyzeMatchVideoPress={openMatchAnalysis}
               onOpenHighlightReelStudio={() => setIsHighlightReelStudioVisible(true)}
+              onViewEvidence={(jobId) => stackNavigation.navigate('AnalysisReport', { jobId })}
             />
           )}
         </Tab.Screen>

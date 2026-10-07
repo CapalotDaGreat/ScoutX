@@ -23,7 +23,8 @@ export { onRecruitmentEntryWritten, onPassportSummaryWrittenNotifyWatchers } fro
 export { fulfillEvidenceRequest, requestEvidence } from './evidenceRequests';
 export { onVerificationWrittenSyncTrust } from './trustSync';
 export { askThisMatch } from './askThisMatch';
-export { getMediaPlaybackUrl, exportReel } from './mediaAccess';
+export { getMediaPlaybackUrl } from './mediaAccess';
+export { exportReel, onReelExportQueued } from './reelRender';
 export { deleteAuthenticatedAccount, persistAppleAuthorizationCode } from './appleAuth';
 
 export { onActivityCreatedPush } from './pushDelivery';

@@ -37,7 +37,61 @@
     "approve": "Aprovar",
     "export": "Exportar",
     "saveFailed": "Não foi possível guardar o reel",
-    "loadFailed": "Não foi possível carregar os reels."
+    "loadFailed": "Não foi possível carregar os reels.",
+    "quality": {
+      "missing_title": "Adiciona um título antes da revisão.",
+      "no_segments": "Este reel ainda não tem clips.",
+      "no_cover": "Escolhe uma capa a partir de um dos clips.",
+      "invalid_trim": "O clip {{clip}} tem um corte vazio.",
+      "missing_media": "O clip {{clip}} não está ligado a nenhum conteúdo.",
+      "pending_suggestions": "Aceita ou rejeita as sugestões antes de aprovar.",
+      "too_long": "Os reels podem ter no máximo 90 segundos."
+    },
+    "proof": {
+      "match": "contra {{label}}",
+      "view": "Ver prova",
+      "state": {
+        "source_missing": "Clip de origem não encontrado",
+        "unlinked": "Não ligado a um jogo analisado",
+        "match_linked": "De um jogo analisado, sem evento ligado",
+        "event_accepted": "Evento ligado: {{type}} (aceite)",
+        "event_rejected": "Evento ligado: {{type}} (rejeitado por ti)",
+        "event_needs_identity": "Evento ligado: {{type}} (identidade não confirmada)",
+        "event_missing": "O evento ligado já não está na análise"
+      }
+    },
+    "captionLabel": "Legenda: {{caption}}",
+    "upA11y": "Subir o clip {{index}}",
+    "downA11y": "Descer o clip {{index}}",
+    "isCover": "Capa ✓",
+    "pickTitle": "Adicionar um clip da tua biblioteca",
+    "pickEmpty": "Ainda não há clips carregados prontos.",
+    "addClip": "Adicionar clip",
+    "decision": {
+      "accepted": "Aceite",
+      "rejected": "Rejeitada",
+      "pending": "A aguardar a tua decisão"
+    },
+    "save": "Guardar alterações",
+    "statusLabel": {
+      "draft": "Rascunho",
+      "review": "Em revisão",
+      "approved": "Aprovado"
+    },
+    "clipCount_one": "{{count}} clip",
+    "clipCount_other": "{{count}} clips",
+    "template": {
+      "hint": "Ou começa com um modelo criado a partir dos teus clips com categoria:",
+      "name": {
+        "scout": "Reel para olheiros",
+        "social": "Reel para redes sociais",
+        "position": "Reel por posição"
+      },
+      "untagged_one": "{{count}} clip não tem categoria, por isso ficou de fora.",
+      "untagged_other": "{{count}} clips não têm categoria, por isso ficaram de fora.",
+      "position_unknown": "Adiciona a tua posição preferida ao perfil para usar o modelo por posição.",
+      "no_tagged_clips": "Ainda não há clips prontos com categoria. Adiciona uma categoria aos teus vídeos para usar modelos."
+    }
   },
   "editor": {
     "addTitle": "Adicionar vídeo destaque",
@@ -61,5 +115,69 @@
     "setFeatured": "Definir como destaque",
     "titleRequired": "O título é obrigatório.",
     "analysisReserved": "Os metadados de análise IA ficam para uma versão futura e serão anexados automaticamente."
+  },
+  "filter": {
+    "passport": "No Passport",
+    "goalLinked": "Ligado a um objetivo",
+    "sentAsEvidence": "Enviado como prova",
+    "showing": "{{shown}} de {{total}}",
+    "clear": "Limpar filtros",
+    "noMatches": "Nenhum conteúdo corresponde a estes filtros."
+  },
+  "category": {
+    "goals": "Golos",
+    "assists": "Assistências",
+    "skills": "Técnica",
+    "defending": "Defesa",
+    "goalkeeping": "Guarda-redes",
+    "passing": "Passe",
+    "headers": "Cabeceamentos"
+  },
+  "visibility": {
+    "private": "Privado",
+    "passport": "No Passport",
+    "grant": "Partilhado com olheiro"
+  },
+  "type": {
+    "matchFootage": "Vídeo do jogo",
+    "clip": "Clip",
+    "highlight": "Highlight",
+    "reel": "Reel"
+  },
+  "upload": {
+    "pending": "A aguardar carregamento",
+    "uploading": "A carregar",
+    "ready": "Pronto",
+    "failed": "Falha no carregamento"
+  },
+  "export": {
+    "title": "Vídeo renderizado",
+    "hint": "Junta este reel num único ficheiro de vídeo para partilhar. Até 90 segundos.",
+    "failedTitle": "Problema na exportação",
+    "requestFailed": "Não foi possível iniciar a renderização.",
+    "shareFailed": "Não foi possível partilhar o vídeo renderizado.",
+    "inProgress": "A renderizar… podes fechar o editor, continua em segundo plano.",
+    "readyDetail": "{{seconds}} s · {{mb}} MB",
+    "captionsTrack": "legendas incluídas como faixa",
+    "saveFirst": "Guarda as alterações antes de renderizar.",
+    "outdated": "O reel mudou desde esta renderização. Renderiza novamente para incluir as alterações.",
+    "retry": "Tentar novamente",
+    "render": "Renderizar vídeo",
+    "share": "Partilhar vídeo",
+    "status": {
+      "queued": "Em fila",
+      "rendering": "A renderizar",
+      "ready": "Pronto",
+      "failed": "Falhou"
+    },
+    "error": {
+      "no_segments": "Adiciona primeiro pelo menos um clip.",
+      "too_long": "O reel tem mais de 90 segundos ou demasiados clips.",
+      "missing_source": "Falta um clip de origem ou não foi totalmente carregado.",
+      "invalid_clip": "O clip {{clip}} tem um corte fora do vídeo de origem.",
+      "unsupported_codec": "Um vídeo de origem usa um formato que não foi possível descodificar.",
+      "timeout": "A renderização demorou demasiado. Experimenta um reel mais curto.",
+      "render_failed": "A renderização falhou. Tenta novamente."
+    }
   }
 }

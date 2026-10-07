@@ -32,9 +32,30 @@ export function highlightVideoToMediaItem(video: HighlightVideo, ownerId: string
     tags: Array.isArray(video.tags) ? video.tags.filter((tag) => typeof tag === 'string') : [],
     goalIds: [],
     title: video.title.trim() || 'Untitled clip',
+    category: video.category ?? null,
+    matchLabel: video.opponent?.trim() || video.match?.trim() || null,
+    recordedAt: video.date || null,
     createdAt: video.createdAt,
     updatedAt: video.updatedAt,
   };
+}
+
+/**
+ * Media migrated before category, match and date were copied lacks them; fill them from the
+ * same legacy record (matched by id) without overwriting anything already stored.
+ */
+export function enrichFromHighlights(items: readonly MediaItem[], videos: readonly HighlightVideo[]): MediaItem[] {
+  const byId = new Map(videos.map((video) => [video.id, video]));
+  return items.map((item) => {
+    const video = byId.get(item.id);
+    if (!video) return item;
+    return {
+      ...item,
+      category: item.category ?? video.category ?? null,
+      matchLabel: item.matchLabel ?? (video.opponent?.trim() || video.match?.trim() || null),
+      recordedAt: item.recordedAt ?? (video.date || null),
+    };
+  });
 }
 
 export function featuredMediaIdsFromHighlights(videos: HighlightVideo[]): string[] {

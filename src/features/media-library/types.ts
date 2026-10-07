@@ -1,3 +1,5 @@
+import type { VideoCategory } from '@/features/highlight-videos/types';
+
 export type MediaItemType = 'matchFootage' | 'clip' | 'highlight' | 'reel';
 
 export type MediaVisibility = 'private' | 'passport' | 'grant';
@@ -22,6 +24,12 @@ export type MediaItem = {
   tags: string[];
   goalIds: string[];
   title: string;
+  /** Football category from the original upload; absent when it was never set. */
+  category?: VideoCategory | null;
+  /** Opponent or match name as entered at upload. */
+  matchLabel?: string | null;
+  /** When the footage was recorded, as entered at upload. */
+  recordedAt?: string | null;
   createdAt: string;
   updatedAt: string;
 };
