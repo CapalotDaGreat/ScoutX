@@ -45,5 +45,52 @@
   "cancelFailed": "Não foi possível cancelar o trial.",
   "reschedule": "Reagendar",
   "responseNote": "Nota de resposta (opcional)",
-  "responseNotePlaceholder": "Confirmação de disponibilidade ou perguntas para o scout…"
+  "responseNotePlaceholder": "Confirmação de disponibilidade ou perguntas para o scout…",
+  "status": {
+    "pending": "Pendente",
+    "accepted": "Aceite",
+    "declined": "Recusado",
+    "rescheduled": "Reagendado",
+    "cancelled": "Cancelado",
+    "completed": "Concluído"
+  },
+  "card": {
+    "overline": "Convite para testes",
+    "playerScout": "{{player}} · Scout {{scout}}",
+    "coach": "Treinador {{coach}}"
+  },
+  "response": {
+    "declineTitle": "Recusar testes",
+    "declineBody": "Tens a certeza de que queres recusar este convite?",
+    "declineFailed": "Não foi possível recusar os testes. Tenta novamente.",
+    "acceptFailed": "Não foi possível aceitar os testes. Tenta novamente.",
+    "coachScout": "Treinador {{coach}} · Scout {{scout}}",
+    "calendarTitle": "Calendário",
+    "calendarFailed": "Não foi possível abrir o calendário.",
+    "calendar": {
+      "google": "Adicionar ao Google Calendar",
+      "native": "Adicionar ao calendário"
+    },
+    "history": "Histórico"
+  },
+  "editor": {
+    "validationTitle": "Verifica os dados",
+    "requiredFields": "Clube, treinador e local são obrigatórios.",
+    "invalidDate": "Introduz uma data e hora válidas, por ex. 2026-07-12T14:00.",
+    "saveFailed": "Não foi possível guardar os testes. Tenta novamente.",
+    "rescheduleTitle": "Reagendar testes",
+    "inviteTitle": "Convidar para testes",
+    "send": "Enviar convite",
+    "intro": "Convite para testes de {{name}}",
+    "club": "Clube",
+    "clubPlaceholder": "Nome do clube ou academia",
+    "coach": "Treinador",
+    "coachPlaceholder": "Nome do treinador",
+    "location": "Local",
+    "locationPlaceholder": "Centro de treinos, campo",
+    "date": "Data e hora",
+    "dateHint": "Formato: AAAA-MM-DDTHH:MM, por ex. 2026-07-12T14:00",
+    "notes": "Notas",
+    "notesPlaceholder": "Indicações de chegada, equipamento, formato da sessão…"
+  }
 }

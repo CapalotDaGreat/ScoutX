@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { VerificationBadge } from '@/features/trust-system/components/VerificationBadge';
-import { getVerificationLabel } from '@/features/trust-system/models/TrustModel';
 import { type TrustEntityType, type TrustProfile } from '@/features/trust-system/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type VerificationBadgeStripProps = {
   profile: TrustProfile;
@@ -9,6 +9,7 @@ export type VerificationBadgeStripProps = {
 };
 
 export function VerificationBadgeStrip({ profile, compact = false }: VerificationBadgeStripProps) {
+  const { t } = useAppTranslation('trust');
   const badges: Array<{ entity: TrustEntityType; label?: string }> = [];
 
   if (profile.player.verified) {
@@ -20,7 +21,9 @@ export function VerificationBadgeStrip({ profile, compact = false }: Verificatio
   if (profile.club.verified) {
     badges.push({
       entity: 'club',
-      label: getVerificationLabel('club', profile),
+      label: profile.club.clubName
+        ? t('entityWithClub', { club: profile.club.clubName })
+        : t('entity.club'),
     });
   }
   if (profile.coach?.verified) {

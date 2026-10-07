@@ -26,12 +26,26 @@ export type {
 
 export { defaultFootballIdentity };
 
+export type PlayerProfileStatMetric =
+  | 'goals'
+  | 'assists'
+  | 'minutes'
+  | 'matches'
+  | 'cleanSheets'
+  | 'passAccuracy'
+  | 'shots'
+  | 'tackles'
+  | 'avgRating';
+
 export type PlayerProfileStat = {
   label: string;
   value: string;
+  /** Set for computed stats so the label can be localised; legacy stored stats omit it. */
+  metric?: PlayerProfileStatMetric;
   trend: {
     value: string;
     direction: 'up' | 'down' | 'neutral';
+    change?: { baseline: boolean; delta: number; formattedDelta: string };
   };
 };
 

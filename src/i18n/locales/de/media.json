@@ -122,7 +122,8 @@
     "sentAsEvidence": "Als Nachweis gesendet",
     "showing": "{{shown}} von {{total}}",
     "clear": "Filter zurücksetzen",
-    "noMatches": "Keine Medien passen zu diesen Filtern."
+    "noMatches": "Keine Medien passen zu diesen Filtern.",
+    "all": "Alle"
   },
   "category": {
     "goals": "Tore",
@@ -178,6 +179,103 @@
       "unsupported_codec": "Ein Quellvideo hat ein Format, das nicht dekodiert werden konnte.",
       "timeout": "Das Rendern hat zu lange gedauert. Versuche ein kürzeres Reel.",
       "render_failed": "Das Rendern ist fehlgeschlagen. Versuche es erneut."
+    }
+  },
+  "videos": {
+    "title": "Highlight-Videos",
+    "subtitle": "Spielszenen für Scouts sortiert: Tore, Technik, Defensive und mehr",
+    "count_one": "{{count}} Highlight in deinem Reel",
+    "count_other": "{{count}} Highlights in deinem Reel",
+    "manage": "Verwalten",
+    "clipHint": "Kurze Clips für Scouts (bis 3 Min.). Komplette Spielaufnahmen gehören unter Wachstum → Spielvideo analysieren.",
+    "empty": "Lade einen geschnittenen Clip aus deinem Veo-Export oder deiner Handyaufnahme hoch, um Scouts deine besten Momente zu zeigen.",
+    "uploadClip": "Highlight-Clip hochladen",
+    "analyzeFull": "Ganzes Spiel analysieren",
+    "uploading": "Wird hochgeladen…",
+    "uploadFailed": "Upload fehlgeschlagen",
+    "untitled": "Highlight ohne Titel",
+    "featured": "Hervorgehoben",
+    "spotlight": "ScoutX Spotlight",
+    "versus": "gegen {{opponent}}",
+    "uploadErrorTitle": "Upload-Problem",
+    "pickFailed": "Das Video konnte nicht geöffnet werden. Bitte wähle einen anderen Clip.",
+    "saveErrorTitle": "Speichern fehlgeschlagen",
+    "saveFailed": "Die Videodetails konnten nicht gespeichert werden. Bitte versuche es erneut.",
+    "retryFailed": "Der Upload konnte nicht neu gestartet werden. Bitte versuche es erneut.",
+    "managerIntro": "Wähle einen kurzen Clip aus Fotos (bis 3 Minuten). Exportiere einen geschnittenen Moment aus deiner Veo-App oder wähle eine Aufnahme auf deinem Handy.",
+    "fullMatchTitle": "Komplette Spielaufnahme?",
+    "fullMatchBody": "Lade das ganze Spiel unter Wachstum → Spielvideo analysieren hoch, um Statistiken und Coaching-Feedback zu erhalten (bis 150 Minuten).",
+    "analyzeFullMatch": "Komplettes Spielvideo analysieren",
+    "buildReel": "Highlight-Reel aus Spielnachweisen erstellen",
+    "uploadFromPhotos": "Aus Fotos hochladen",
+    "managerEmpty": "Noch keine Highlight-Videos. Lade deinen ersten Clip hoch, um dein Reel zu starten.",
+    "feature": "Hervorheben",
+    "moveUp": "{{title}} nach oben verschieben",
+    "moveDown": "{{title}} nach unten verschieben"
+  },
+  "studio": {
+    "title": "Highlight-Reel-Studio",
+    "intro": "Erzähle deine Fußballgeschichte mit analysierten Spielmomenten. Vorgeschlagen werden nur Momente mit Zeitstempel und beobachteten Nachweisen – nichts wird erfunden.",
+    "styleTitle": "Reel-Stil",
+    "targetLength": "Ziellänge: {{seconds}} s",
+    "toggleLength": "Zwischen 45 s und 90 s wechseln",
+    "momentsTitle": "KI-vorgeschlagene Momente",
+    "planMeta": "Durchschnittliche KI-Sicherheit {{pct}} % · {{coverage}}",
+    "empty": "Noch keine abgeschlossene Spielanalyse. Analysiere zuerst ein Spiel, um Highlight-Vorschläge aus echtem Material zu erhalten.",
+    "untitled": "Moment ohne Titel",
+    "descriptionFallback": "Von der Spielanalyse erkannter Moment.",
+    "reason": "Aus deiner Spielanalyse vorgeschlagen. Prüfe den Clip, bevor du ihn verwendest.",
+    "candidateMeta": "{{kind}} · {{status}} · {{pct}} % KI-Sicherheit",
+    "needsReview": "Bitte prüfen",
+    "aiSuggested": "KI-Vorschlag",
+    "evidence": {
+      "line": "Nachweise: {{items}}",
+      "confidence": "KI-Sicherheit {{pct}} % (nicht verifiziert)",
+      "jersey": "Ziel-Trikot #{{jersey}}",
+      "coverage": "Abdeckung: {{band}}",
+      "coverageUnknown": "unbekannt"
+    },
+    "coverage": {
+      "ai_suggested": "KI-vorgeschlagene Momente – prüfe jeden Clip vor dem Teilen",
+      "none": "Keine verlässlichen Momente verfügbar"
+    },
+    "eventKind": {
+      "progressivePass": "Raumgewinnender Pass",
+      "progressiveCarry": "Raumgewinnender Dribbling-Lauf",
+      "goal": "Tor",
+      "recovery": "Ballgewinn",
+      "save": "Parade",
+      "defensiveAction": "Defensivaktion",
+      "dribble": "Dribbling",
+      "shot": "Schuss",
+      "matchAction": "Spielaktion"
+    },
+    "preset": {
+      "best-of": {
+        "label": "Best of",
+        "title": "Das Beste aus dem Spiel",
+        "description": "Deine stärksten KI-vorgeschlagenen Momente als kompakte Spielergeschichte."
+      },
+      "scout": {
+        "label": "Scout-Reel",
+        "title": "Spielbericht für Scouts",
+        "description": "Nachweisbasierte Clips, die deinen taktischen und technischen Einfluss zeigen."
+      },
+      "social": {
+        "label": "Social-Reel",
+        "title": "Kurzes Social-Reel",
+        "description": "Schnelle, klare Momente zum Teilen in Kurzform."
+      },
+      "tactical": {
+        "label": "Taktik",
+        "title": "Taktik-Reel",
+        "description": "Momente mit Fokus auf Pressing, Bewegung, Passwege und deine Rolle."
+      },
+      "development": {
+        "label": "Entwicklung",
+        "title": "Entwicklungsmomente",
+        "description": "Momente, die Lernpunkte und deine Arbeitsbereiche zeigen."
+      }
     }
   }
 }

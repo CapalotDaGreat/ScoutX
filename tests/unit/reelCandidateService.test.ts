@@ -72,7 +72,17 @@ describe('buildHighlightCandidatesFromReport', () => {
     const [candidate] = buildHighlightCandidatesFromReport(
       report({ moments: [{ label: 'Pass', detail: 'd', timestampSec: 5 }] } as Partial<MatchAnalysisReport>),
     );
-    assert.ok(candidate.evidence.every((line) => !line.toLowerCase().includes('jersey')));
+    assert.equal(candidate.targetJersey, null);
+  });
+
+  test('missing coverage stays unknown instead of defaulting to a band', () => {
+    const [candidate] = buildHighlightCandidatesFromReport(
+      report({
+        coverage: undefined,
+        moments: [{ label: 'Pass', detail: 'd', timestampSec: 5 }],
+      } as unknown as Partial<MatchAnalysisReport>),
+    );
+    assert.equal(candidate.coverageBand, null);
   });
 });
 
@@ -90,6 +100,6 @@ describe('buildHighlightReelPlan', () => {
     );
     const plan = buildHighlightReelPlan(candidates, 'best-of', 60);
     assert.ok(plan.qualityScore <= 100);
-    assert.equal(buildHighlightReelPlan([], 'scout').coverage, 'No reliable moments available');
+    assert.equal(buildHighlightReelPlan([], 'scout').coverage, 'none');
   });
 });

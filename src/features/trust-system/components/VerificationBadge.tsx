@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 import { BadgeCheck, Building2, ClipboardList, ShieldCheck, UserCheck } from 'lucide-react-native';
 import { Badge, type BadgeSize, type BadgeVariant } from '@/components/primitives/Badge';
-import { TRUST_ENTITY_LABELS } from '@/features/trust-system/constants';
 import { type TrustEntityType } from '@/features/trust-system/types';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 const entityVariants: Record<TrustEntityType, BadgeVariant> = {
   player: 'info',
@@ -33,8 +33,9 @@ export function VerificationBadge({
   showIcon = true,
 }: VerificationBadgeProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('trust');
   const Icon = entityIcons[entity];
-  const resolvedLabel = label ?? TRUST_ENTITY_LABELS[entity];
+  const resolvedLabel = label ?? t(`entity.${entity}`);
 
   return (
     <View className="flex-row items-center gap-1">

@@ -213,7 +213,19 @@
     "noGpsData": "Questo giocatore non ha condiviso sessioni GPS.",
     "ageUnknown": "Età non indicata",
     "positionUnknown": "Ruolo non impostato",
-    "ratingSource": "Fonte della valutazione"
+    "ratingSource": "Fonte della valutazione",
+    "sections": {
+      "trustTitle": "Affidabilità e raccomandazioni",
+      "trustSubtitle": "Verifica e raccomandazioni degli allenatori",
+      "reportsTitle": "Report di scouting",
+      "reportsSubtitle": "Le tue note e valutazioni su questo giocatore",
+      "bioSubtitle": "Biografia e riferimento",
+      "attributesSubtitle": "Radar e valutazioni tecniche",
+      "clubCount_one": "{{count}} club",
+      "clubCount_other": "{{count}} club",
+      "footageSubtitle": "Video highlight disponibili",
+      "honoursSubtitle": "Risultati in carriera"
+    }
   },
   "search": {
     "scopeLabel": "Cerca in",
@@ -235,7 +247,12 @@
     "filterNamePlaceholder": "es. Ali U21 nelle vicinanze",
     "includeSearchLabel": "Includi ricerca attuale",
     "includeSearchHint": "Ripristina anche testo e ambito di ricerca",
-    "deleteFilter": "Elimina {{name}}"
+    "deleteFilter": "Elimina {{name}}",
+    "presets": {
+      "preset-u21-potential": "U21 ad alto potenziale",
+      "preset-verified-wingers": "Ali verificate",
+      "preset-available-now": "Disponibili ora"
+    }
   },
   "reports": {
     "notRatedTapToSet": "Non valutato · tocca per impostare",
@@ -291,7 +308,10 @@
     "createReport": "Crea report",
     "count_one": "{{count}} report in archivio",
     "count_other": "{{count}} report in archivio",
-    "sectionEmpty": "Nessun report ancora. Crea la prima valutazione strutturata per {{playerName}}."
+    "sectionEmpty": "Nessun report ancora. Crea la prima valutazione strutturata per {{playerName}}.",
+    "cardOverline": "Report di scouting",
+    "byScout": "di {{name}}",
+    "strengths": "Punti di forza"
   },
   "intelligence": {
     "whyTitle": "Perche questo giocatore",
@@ -449,5 +469,123 @@
       "record": "dai dati",
       "self_reported": "autodichiarato"
     }
+  },
+  "sort": {
+    "relevance": "Migliore corrispondenza",
+    "overall": "Valutazione complessiva",
+    "potential": "Potenziale",
+    "age": "Età",
+    "name": "Nome",
+    "distance": "Distanza",
+    "recently_updated": "Aggiornati di recente",
+    "most_viewed": "Più visti",
+    "sprint_speed": "Velocità di sprint",
+    "weak_foot": "Piede debole ★",
+    "skill_moves": "Abilità tecniche ★",
+    "goals": "Più gol",
+    "assists": "Più assist",
+    "newest": "Nuovi giocatori"
+  },
+  "position": {
+    "GK": "Portiere",
+    "CB": "Difensore centrale",
+    "LB": "Terzino sinistro",
+    "RB": "Terzino destro",
+    "CDM": "Mediano",
+    "CM": "Centrocampista centrale",
+    "CAM": "Trequartista",
+    "LW": "Ala sinistra",
+    "RW": "Ala destra",
+    "ST": "Attaccante",
+    "CF": "Centravanti"
+  },
+  "chips": {
+    "active": "Filtri attivi",
+    "clearAll": "Cancella tutto",
+    "remove": "Rimuovi filtro: {{label}}",
+    "ageRange": "Età {{min}}–{{max}}",
+    "foot": "Piede: {{foot}}",
+    "overall": "COMP {{value}}+",
+    "potential": "POT {{value}}+",
+    "verified": "Verificato",
+    "recentlyActive": "Attivo di recente",
+    "hasVideos": "Con video",
+    "sprint": "Sprint {{value}}+ km/h"
+  },
+  "continueCard": {
+    "a11y": "Continua lo scouting di {{name}}",
+    "overline": "Continua lo scouting",
+    "title": "Riprendi da dove avevi lasciato",
+    "stage": "Pipeline · {{stage}}",
+    "openReport": "Apri report di scouting",
+    "openPipeline": "Apri pipeline"
+  },
+  "header": {
+    "overline": "Area scout",
+    "greeting": {
+      "morning": "Buongiorno, {{name}}",
+      "afternoon": "Buon pomeriggio, {{name}}",
+      "evening": "Buonasera, {{name}}"
+    },
+    "matching_one": "{{count}} giocatore corrisponde oggi alle tue preferenze.",
+    "matching_other": "{{count}} giocatori corrispondono oggi alle tue preferenze.",
+    "statMatching": "Corrispondenze",
+    "statPipeline": "Pipeline",
+    "statRecent": "Recenti"
+  },
+  "clubProfile": "Profilo del club",
+  "a11y": {
+    "recentForm": "Forma recente: {{results}}",
+    "form": {
+      "W": "vittoria",
+      "D": "pareggio",
+      "L": "sconfitta"
+    },
+    "openReport": "Apri report di scouting",
+    "radar": "Grafico radar degli attributi del giocatore",
+    "removeCompare": "Rimuovi dal confronto",
+    "addCompare": "Aggiungi al confronto",
+    "compareFull": "Il confronto è pieno",
+    "unsave": "Rimuovi dai salvati",
+    "save": "Salva giocatore"
+  },
+  "stage": {
+    "discovered": "Scoperto",
+    "shortlisted": "In shortlist",
+    "contacted": "Contattato",
+    "invited": "Invitato",
+    "trial": "Provino",
+    "evaluated": "Valutato",
+    "follow_up": "Da ricontattare"
+  },
+  "pipelineUi": {
+    "emptyStage": "Nessun giocatore in questa fase.",
+    "stageTitle": "Fase di reclutamento",
+    "folder": "Cartella",
+    "folders": "Cartelle",
+    "shortlists": "Shortlist",
+    "remove": "Rimuovi dalla pipeline",
+    "sectionTitle": "Pipeline di reclutamento",
+    "sectionSubtitle": "Segui questo giocatore lungo il tuo processo di scouting",
+    "inPipeline": "Nella tua pipeline",
+    "manageHint": "Gestisci cartelle, shortlist e fasi in un unico posto.",
+    "manage": "Gestisci reclutamento",
+    "move": "Sposta {{name}}",
+    "shortlistCount_one": "{{count}} shortlist",
+    "shortlistCount_other": "{{count}} shortlist",
+    "createFolder": "Crea cartella",
+    "createShortlist": "Crea shortlist",
+    "new": "Nuova",
+    "allPlayers": "Tutti i giocatori",
+    "allShortlists": "Tutte le shortlist",
+    "folderName": "Nome della cartella",
+    "folderPlaceholder": "es. Obiettivi accademia",
+    "color": "Colore",
+    "colorOption": "Colore {{index}}",
+    "noFolder": "Nessuna cartella",
+    "shortlistName": "Nome della shortlist",
+    "shortlistPlaceholder": "es. Mercato estivo",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Contesto facoltativo per il tuo team"
   }
 }

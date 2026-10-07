@@ -8,6 +8,7 @@ import { formatRating, joinKnown } from '@/features/scout-discovery/models/Disco
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { ArrowRight } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ContinueScoutingCardProps = {
   player: DiscoverablePlayer;
@@ -23,11 +24,12 @@ export function ContinueScoutingCard({
   onOpenPipelinePress,
 }: ContinueScoutingCardProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Continue scouting ${player.fullName}`}
+      accessibilityLabel={t('continueCard.a11y', { name: player.fullName })}
       onPress={() => onPress(player)}
     >
       <Card variant="elevated" padding="lg" className="overflow-hidden bg-surface-cool">
@@ -35,14 +37,14 @@ export function ContinueScoutingCard({
         <View className="gap-4">
           <View>
             <Text variant="overline" color="secondary" className="uppercase">
-              Continue Scouting
+              {t('continueCard.overline')}
             </Text>
             <Heading level={3} className="mt-1">
-              Pick up where you left off
+              {t('continueCard.title')}
             </Heading>
             {pipelineStageLabel ? (
               <Text variant="body-sm" color="secondary" className="mt-1">
-                Pipeline · {pipelineStageLabel}
+                {t('continueCard.stage', { stage: pipelineStageLabel })}
               </Text>
             ) : null}
           </View>
@@ -68,11 +70,11 @@ export function ContinueScoutingCard({
               rightIcon={<ArrowRight size={18} color={colors.accentForeground} />}
               onPress={() => onPress(player)}
             >
-              Open Scouting Report
+              {t('continueCard.openReport')}
             </Button>
             {onOpenPipelinePress ? (
               <Button variant="secondary" onPress={onOpenPipelinePress}>
-                Open pipeline
+                {t('continueCard.openPipeline')}
               </Button>
             ) : null}
           </View>

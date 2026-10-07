@@ -513,5 +513,93 @@
     "encourageStart": "Jedes Scout-Profil beginnt mit einem erfassten Spiel. Fang dort an.",
     "progress": "{{done}} von {{total}} erledigt. Weiter so.",
     "hide": "Vorerst ausblenden"
+  },
+  "profileUi": {
+    "physicalTitle": "Körperprofil",
+    "physicalSubtitle": "Athletische Grunddaten",
+    "currentClubTitle": "Aktueller Verein",
+    "currentClubSubtitle": "Wo du gerade spielst",
+    "clubHistoryTitle": "Vereinshistorie",
+    "clubHistorySubtitle": "Frühere Vereine und Ausbildungsweg",
+    "clubHistoryEmpty": "Noch keine Vereinshistorie hinzugefügt.",
+    "storyTitle": "Deine Geschichte",
+    "storySubtitle": "Wie du dich Vereinen und Scouts präsentierst",
+    "biographyEmpty": "Erzähl Scouts von deinem Weg, deinen Stärken und Zielen.",
+    "years_one": "{{count}} Jahr",
+    "years_other": "{{count}} Jahre",
+    "apps_one": "{{count}} Einsatz",
+    "apps_other": "{{count}} Einsätze",
+    "period": "Zeitraum",
+    "periodPlaceholder": "2022–heute",
+    "clubEditor": {
+      "club": "Verein",
+      "league": "Liga",
+      "add": "Verein hinzufügen"
+    },
+    "timelineEditor": {
+      "typeLabel": "Art",
+      "type": {
+        "club": "Verein",
+        "achievement": "Erfolg",
+        "transfer": "Wechsel",
+        "education": "Ausbildung"
+      },
+      "title": "Titel",
+      "organization": "Organisation",
+      "description": "Beschreibung",
+      "add": "Eintrag hinzufügen"
+    },
+    "fullNamePlaceholder": "Dein vollständiger Name",
+    "nationalityPlaceholder": "z. B. Schweizer",
+    "trustTitle": "Vertrauen & Empfehlungen",
+    "trustSubtitle": "Verifizierung und Trainerempfehlungen"
+  },
+  "publicUi": {
+    "fullPerformance": "Gesamte Leistung",
+    "fullPerformanceSubtitle": "Detaillierte Spielanalysen und Diagramme",
+    "timeline": "Karriereverlauf",
+    "moments_one": "{{count}} Moment",
+    "moments_other": "{{count}} Momente",
+    "fullTimeline": "Gesamter Verlauf",
+    "moreMoments_one": "{{count}} weiterer Moment",
+    "moreMoments_other": "{{count}} weitere Momente",
+    "charts": "Leistungsdiagramme",
+    "chartsSubtitle": "Saisontrends",
+    "videos": "Highlight-Videos",
+    "videosSubtitle": "Spielaufnahmen",
+    "gps": "GPS-Highlights",
+    "sessions_one": "{{count}} Einheit",
+    "sessions_other": "{{count}} Einheiten",
+    "moreSessions": "Weitere Einheiten",
+    "additional_one": "{{count}} weitere",
+    "additional_other": "{{count}} weitere",
+    "loadingProfile": "Profil wird geladen",
+    "notFound": "Nicht gefunden",
+    "notFoundTitle": "Passport nicht gefunden",
+    "resolveError": {
+      "missing": "Dieser Link enthält keinen Spieler-Benutzernamen.",
+      "app_route": "Dieser Link führt zu einer App-Seite, nicht zu einem Spieler.",
+      "not_found": "Dieser Football Passport existiert nicht oder ist privat.",
+      "failed": "Der Football Passport konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut."
+    },
+    "scanQr": "Scannen, um den Football Passport zu öffnen",
+    "invite": {
+      "overline": "Einladung zur Trainerempfehlung",
+      "title": "{{name}} empfehlen",
+      "guestBody": "Melde dich mit einem Scout-Konto an, um eine Trainerempfehlung auf diesem Football Passport zu veröffentlichen.",
+      "playerBody": "Spielerkonten können keine Trainerempfehlungen veröffentlichen. Melde dich mit einem Scout-Konto an.",
+      "signIn": "Anmelden",
+      "register": "Scout-Konto erstellen"
+    }
+  },
+  "reach": {
+    "overline": "Passport-Reichweite",
+    "title": "Wer deinen Football Passport ansieht",
+    "views": "{{total}} Aufrufe gesamt · {{week}} diese Woche",
+    "scoutViews": "{{total}} Scout-Aufrufe · {{week}} diese Woche",
+    "lastViewed": "Zuletzt angesehen am {{date}}",
+    "noViews": "Noch keine Aufrufe",
+    "loading": "Aufrufe werden geladen…",
+    "unavailable": "Die Aufrufe konnten gerade nicht geladen werden."
   }
 }

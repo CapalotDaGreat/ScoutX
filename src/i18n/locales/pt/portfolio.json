@@ -513,5 +513,93 @@
     "encourageStart": "Todos os perfis começam com um jogo registado. Começa por aí.",
     "progress": "{{done}} de {{total}} concluídos. Continua.",
     "hide": "Ocultar por agora"
+  },
+  "profileUi": {
+    "physicalTitle": "Perfil físico",
+    "physicalSubtitle": "Atributos atléticos principais",
+    "currentClubTitle": "Clube atual",
+    "currentClubSubtitle": "Onde jogas agora",
+    "clubHistoryTitle": "Histórico de clubes",
+    "clubHistorySubtitle": "Clubes anteriores e percurso de formação",
+    "clubHistoryEmpty": "Ainda não adicionaste histórico de clubes.",
+    "storyTitle": "A tua história",
+    "storySubtitle": "Como te apresentas a clubes e olheiros",
+    "biographyEmpty": "Conta aos olheiros o teu percurso, pontos fortes e ambições.",
+    "years_one": "{{count}} ano",
+    "years_other": "{{count}} anos",
+    "apps_one": "{{count}} jogo",
+    "apps_other": "{{count}} jogos",
+    "period": "Período",
+    "periodPlaceholder": "2022–atualidade",
+    "clubEditor": {
+      "club": "Clube",
+      "league": "Liga",
+      "add": "Adicionar clube"
+    },
+    "timelineEditor": {
+      "typeLabel": "Tipo",
+      "type": {
+        "club": "Clube",
+        "achievement": "Conquista",
+        "transfer": "Transferência",
+        "education": "Formação"
+      },
+      "title": "Título",
+      "organization": "Organização",
+      "description": "Descrição",
+      "add": "Adicionar entrada"
+    },
+    "fullNamePlaceholder": "O teu nome completo",
+    "nationalityPlaceholder": "ex. suíça",
+    "trustTitle": "Confiança e recomendações",
+    "trustSubtitle": "Verificação e recomendações de treinadores"
+  },
+  "publicUi": {
+    "fullPerformance": "Desempenho completo",
+    "fullPerformanceSubtitle": "Análises detalhadas de jogos e gráficos",
+    "timeline": "Percurso",
+    "moments_one": "{{count}} momento",
+    "moments_other": "{{count}} momentos",
+    "fullTimeline": "Percurso completo",
+    "moreMoments_one": "mais {{count}} momento",
+    "moreMoments_other": "mais {{count}} momentos",
+    "charts": "Gráficos de desempenho",
+    "chartsSubtitle": "Tendências da época",
+    "videos": "Vídeos de destaques",
+    "videosSubtitle": "Imagens de jogos",
+    "gps": "Destaques GPS",
+    "sessions_one": "{{count}} sessão",
+    "sessions_other": "{{count}} sessões",
+    "moreSessions": "Mais sessões",
+    "additional_one": "mais {{count}}",
+    "additional_other": "mais {{count}}",
+    "loadingProfile": "A carregar perfil",
+    "notFound": "Não encontrado",
+    "notFoundTitle": "Passport não encontrado",
+    "resolveError": {
+      "missing": "Este link não inclui um nome de utilizador.",
+      "app_route": "Este link aponta para uma página da app, não para um jogador.",
+      "not_found": "Este Football Passport não existe ou é privado.",
+      "failed": "Não foi possível carregar este Football Passport. Verifica a ligação e tenta novamente."
+    },
+    "scanQr": "Lê para abrir o Football Passport",
+    "invite": {
+      "overline": "Convite para recomendação",
+      "title": "Recomendar {{name}}",
+      "guestBody": "Inicia sessão com uma conta de olheiro para publicar uma recomendação neste Football Passport.",
+      "playerBody": "As contas de jogador não podem publicar recomendações. Inicia sessão com uma conta de olheiro para continuar.",
+      "signIn": "Iniciar sessão",
+      "register": "Criar conta de olheiro"
+    }
+  },
+  "reach": {
+    "overline": "Alcance do Passport",
+    "title": "Quem vê o teu Football Passport",
+    "views": "{{total}} visitas no total · {{week}} esta semana",
+    "scoutViews": "{{total}} visitas de olheiros · {{week}} esta semana",
+    "lastViewed": "Última visita a {{date}}",
+    "noViews": "Ainda sem visitas",
+    "loading": "A carregar visitas…",
+    "unavailable": "Não foi possível carregar as visitas agora."
   }
 }

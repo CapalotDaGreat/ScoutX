@@ -1,8 +1,6 @@
 import { Badge } from '@/components/primitives/Badge';
-import {
-  RECRUITMENT_STAGE_COLORS,
-  RECRUITMENT_STAGE_LABELS,
-} from '@/features/scout-recruitment/constants';
+import { RECRUITMENT_STAGE_COLORS } from '@/features/scout-recruitment/constants';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type RecruitmentStage } from '@/features/scout-recruitment/types';
 
 export type RecruitmentStageBadgeProps = {
@@ -10,9 +8,10 @@ export type RecruitmentStageBadgeProps = {
 };
 
 export function RecruitmentStageBadge({ stage }: RecruitmentStageBadgeProps) {
+  const { t } = useAppTranslation('scout');
   return (
     <Badge
-      label={RECRUITMENT_STAGE_LABELS[stage]}
+      label={t(`stage.${stage}`)}
       variant="outline"
       size="sm"
       className="border-0"

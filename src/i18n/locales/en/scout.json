@@ -89,7 +89,12 @@
     "filterNamePlaceholder": "e.g. U21 wingers nearby",
     "includeSearchLabel": "Include current search",
     "includeSearchHint": "Also restore the text query and search scope",
-    "deleteFilter": "Delete {{name}}"
+    "deleteFilter": "Delete {{name}}",
+    "presets": {
+      "preset-u21-potential": "U21 high potential",
+      "preset-verified-wingers": "Verified wingers",
+      "preset-available-now": "Available now"
+    }
   },
   "filters": {
     "minAge": "Min Age",
@@ -235,7 +240,19 @@
     "noGpsData": "No GPS sessions shared by this player.",
     "ageUnknown": "Age not provided",
     "positionUnknown": "Position not set",
-    "ratingSource": "Rating source"
+    "ratingSource": "Rating source",
+    "sections": {
+      "trustTitle": "Trust & endorsements",
+      "trustSubtitle": "Verification and coach recommendations",
+      "reportsTitle": "Scouting reports",
+      "reportsSubtitle": "Your notes and ratings for this player",
+      "bioSubtitle": "Biography and reference",
+      "attributesSubtitle": "Radar and technical ratings",
+      "clubCount_one": "{{count}} club",
+      "clubCount_other": "{{count}} clubs",
+      "footageSubtitle": "Highlight videos on file",
+      "honoursSubtitle": "Career achievements"
+    }
   },
   "reports": {
     "notRatedTapToSet": "Not rated · tap to set",
@@ -291,7 +308,10 @@
     "createReport": "Create Report",
     "count_one": "{{count}} report on file",
     "count_other": "{{count}} reports on file",
-    "sectionEmpty": "No scouting reports yet. Create your first structured evaluation for {{playerName}}."
+    "sectionEmpty": "No scouting reports yet. Create your first structured evaluation for {{playerName}}.",
+    "cardOverline": "Scouting report",
+    "byScout": "by {{name}}",
+    "strengths": "Strengths"
   },
   "intelligence": {
     "whyTitle": "Why this player",
@@ -449,5 +469,123 @@
       "record": "from records",
       "self_reported": "self-reported"
     }
+  },
+  "sort": {
+    "relevance": "Best match",
+    "overall": "Overall rating",
+    "potential": "Potential",
+    "age": "Age",
+    "name": "Name",
+    "distance": "Distance",
+    "recently_updated": "Recently updated",
+    "most_viewed": "Most viewed",
+    "sprint_speed": "Sprint speed",
+    "weak_foot": "Weak foot ★",
+    "skill_moves": "Skill moves ★",
+    "goals": "Most goals",
+    "assists": "Most assists",
+    "newest": "Newest players"
+  },
+  "position": {
+    "GK": "Goalkeeper",
+    "CB": "Centre back",
+    "LB": "Left back",
+    "RB": "Right back",
+    "CDM": "Defensive mid",
+    "CM": "Central mid",
+    "CAM": "Attacking mid",
+    "LW": "Left wing",
+    "RW": "Right wing",
+    "ST": "Striker",
+    "CF": "Centre forward"
+  },
+  "chips": {
+    "active": "Active filters",
+    "clearAll": "Clear all",
+    "remove": "Remove filter: {{label}}",
+    "ageRange": "Age {{min}}–{{max}}",
+    "foot": "{{foot}} foot",
+    "overall": "OVR {{value}}+",
+    "potential": "POT {{value}}+",
+    "verified": "Verified",
+    "recentlyActive": "Recently active",
+    "hasVideos": "Has videos",
+    "sprint": "Sprint {{value}}+ km/h"
+  },
+  "continueCard": {
+    "a11y": "Continue scouting {{name}}",
+    "overline": "Continue scouting",
+    "title": "Pick up where you left off",
+    "stage": "Pipeline · {{stage}}",
+    "openReport": "Open scouting report",
+    "openPipeline": "Open pipeline"
+  },
+  "header": {
+    "overline": "Scout workspace",
+    "greeting": {
+      "morning": "Good morning, {{name}}",
+      "afternoon": "Good afternoon, {{name}}",
+      "evening": "Good evening, {{name}}"
+    },
+    "matching_one": "{{count}} player matches your preferences today.",
+    "matching_other": "{{count}} players match your preferences today.",
+    "statMatching": "Matching",
+    "statPipeline": "Pipeline",
+    "statRecent": "Recent"
+  },
+  "clubProfile": "Club profile",
+  "a11y": {
+    "recentForm": "Recent form: {{results}}",
+    "form": {
+      "W": "win",
+      "D": "draw",
+      "L": "loss"
+    },
+    "openReport": "Open scouting report",
+    "radar": "Player attribute radar chart",
+    "removeCompare": "Remove from comparison",
+    "addCompare": "Add to comparison",
+    "compareFull": "Comparison is full",
+    "unsave": "Remove from saved",
+    "save": "Save player"
+  },
+  "stage": {
+    "discovered": "Discovered",
+    "shortlisted": "Shortlisted",
+    "contacted": "Contacted",
+    "invited": "Invited",
+    "trial": "Trial",
+    "evaluated": "Evaluated",
+    "follow_up": "Follow-up"
+  },
+  "pipelineUi": {
+    "emptyStage": "No players in this stage.",
+    "stageTitle": "Recruitment stage",
+    "folder": "Folder",
+    "folders": "Folders",
+    "shortlists": "Shortlists",
+    "remove": "Remove from pipeline",
+    "sectionTitle": "Recruitment pipeline",
+    "sectionSubtitle": "Track this player through your scouting workflow",
+    "inPipeline": "In your pipeline",
+    "manageHint": "Manage folders, shortlists and stage progress in one place.",
+    "manage": "Manage recruitment",
+    "move": "Move {{name}}",
+    "shortlistCount_one": "{{count}} shortlist",
+    "shortlistCount_other": "{{count}} shortlists",
+    "createFolder": "Create folder",
+    "createShortlist": "Create shortlist",
+    "new": "New",
+    "allPlayers": "All players",
+    "allShortlists": "All shortlists",
+    "folderName": "Folder name",
+    "folderPlaceholder": "e.g. Academy targets",
+    "color": "Colour",
+    "colorOption": "Colour {{index}}",
+    "noFolder": "No folder",
+    "shortlistName": "Shortlist name",
+    "shortlistPlaceholder": "e.g. Summer window",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional context for your team"
   }
 }

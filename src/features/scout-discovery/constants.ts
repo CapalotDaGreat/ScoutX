@@ -17,36 +17,24 @@ export const SEARCH_SCOPE_OPTIONS: DiscoverySearchScope[] = [
   'league',
 ];
 
-export const SORT_OPTIONS: { value: DiscoverySortOption; label: string }[] = [
-  { value: 'relevance', label: 'Best Match' },
-  { value: 'overall', label: 'Overall Rating' },
-  { value: 'potential', label: 'Potential' },
-  { value: 'age', label: 'Age' },
-  { value: 'name', label: 'Name' },
-  { value: 'distance', label: 'Distance' },
-  { value: 'recently_updated', label: 'Recently Updated' },
-  { value: 'most_viewed', label: 'Most Viewed' },
-  { value: 'sprint_speed', label: 'Sprint Speed' },
-  { value: 'weak_foot', label: 'Weak Foot ★' },
-  { value: 'skill_moves', label: 'Skill Moves ★' },
-  { value: 'goals', label: 'Most Goals' },
-  { value: 'assists', label: 'Most Assists' },
-  { value: 'newest', label: 'Newest Players' },
+export const SORT_OPTIONS: DiscoverySortOption[] = [
+  'relevance',
+  'overall',
+  'potential',
+  'age',
+  'name',
+  'distance',
+  'recently_updated',
+  'most_viewed',
+  'sprint_speed',
+  'weak_foot',
+  'skill_moves',
+  'goals',
+  'assists',
+  'newest',
 ];
 
-export const POSITION_OPTIONS: { value: PlayerPosition; label: string }[] = [
-  { value: 'GK', label: 'Goalkeeper' },
-  { value: 'CB', label: 'Centre Back' },
-  { value: 'LB', label: 'Left Back' },
-  { value: 'RB', label: 'Right Back' },
-  { value: 'CDM', label: 'Defensive Mid' },
-  { value: 'CM', label: 'Central Mid' },
-  { value: 'CAM', label: 'Attacking Mid' },
-  { value: 'LW', label: 'Left Wing' },
-  { value: 'RW', label: 'Right Wing' },
-  { value: 'ST', label: 'Striker' },
-  { value: 'CF', label: 'Centre Forward' },
-];
+export const POSITION_OPTIONS: PlayerPosition[] = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST', 'CF'];
 
 export const NATIONALITY_OPTIONS = [
   'Brazil',

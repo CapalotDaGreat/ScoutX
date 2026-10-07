@@ -1,8 +1,9 @@
 import { ScrollView, Pressable } from 'react-native';
 import { Text } from '@/components/primitives/Text';
-import { JOURNEY_FILTER_ALL, JOURNEY_TYPE_META, type JourneyFilterOption } from '@/features/football-journey/constants';
+import { JOURNEY_FILTER_ALL, type JourneyFilterOption } from '@/features/football-journey/constants';
 import { type JourneyEntryType } from '@/features/football-journey/types';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type JourneyTimelineFiltersProps = {
   activeFilter: JourneyFilterOption;
@@ -15,13 +16,14 @@ export function JourneyTimelineFilters({
   onFilterChange,
   availableTypes,
 }: JourneyTimelineFiltersProps) {
+  const { t } = useAppTranslation('career');
   const filters: Array<{ value: JourneyFilterOption; label: string }> = [
-    { value: JOURNEY_FILTER_ALL, label: 'All' },
+    { value: JOURNEY_FILTER_ALL, label: t('journeyType.all') },
     ...availableTypes
       .filter((type): type is JourneyEntryType => type !== JOURNEY_FILTER_ALL)
       .map((type) => ({
         value: type,
-        label: JOURNEY_TYPE_META[type].label,
+        label: t(`journeyType.${type}`),
       })),
   ];
 

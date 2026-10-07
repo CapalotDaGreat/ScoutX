@@ -6,6 +6,35 @@ import { type MilestoneDefinition } from '@/features/career-milestones/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useState } from 'react';
 
+const MILESTONE_IDS = [
+  'first_match',
+  'ten_matches',
+  'first_highlight',
+  'passport_live',
+  'username_claimed',
+  'discoverable',
+  'first_endorsement',
+  'first_scout_view',
+  'portfolio_strong',
+] as const;
+
+type MilestoneId = (typeof MILESTONE_IDS)[number];
+
+function isMilestoneId(value: string): value is MilestoneId {
+  return (MILESTONE_IDS as readonly string[]).includes(value);
+}
+
+function useMilestoneCopy() {
+  const { t } = useAppTranslation('career');
+  return (milestone: MilestoneDefinition) =>
+    isMilestoneId(milestone.id)
+      ? {
+          title: t(`milestone.${milestone.id}.title`),
+          description: t(`milestone.${milestone.id}.description`),
+        }
+      : { title: milestone.title, description: milestone.description };
+}
+
 export type MilestonesSectionProps = {
   earned: MilestoneDefinition[];
   recentlyEarned?: MilestoneDefinition[];
@@ -13,6 +42,7 @@ export type MilestonesSectionProps = {
 };
 
 function MilestoneBadge({ milestone, prestige }: { milestone: MilestoneDefinition; prestige?: boolean }) {
+  const copy = useMilestoneCopy()(milestone);
   return (
     <View
       className={`min-w-[46%] flex-1 rounded-xl border p-3 ${
@@ -21,12 +51,14 @@ function MilestoneBadge({ milestone, prestige }: { milestone: MilestoneDefinitio
           : 'border-border bg-background-secondary'
       }`}
     >
-      <Text className="text-xl">{milestone.icon}</Text>
+      <Text className="text-xl" accessibilityElementsHidden importantForAccessibility="no">
+        {milestone.icon}
+      </Text>
       <Text weight="medium" className="mt-1 text-sm">
-        {milestone.title}
+        {copy.title}
       </Text>
       <Text variant="caption" color="secondary">
-        {milestone.description}
+        {copy.description}
       </Text>
     </View>
   );
@@ -37,7 +69,8 @@ export function MilestonesSection({
   recentlyEarned = [],
   previewCount = 4,
 }: MilestonesSectionProps) {
-  const { t } = useAppTranslation('common');
+  const { t } = useAppTranslation(['career', 'common']);
+  const milestoneCopy = useMilestoneCopy();
   const [expanded, setExpanded] = useState(false);
   const recentIds = new Set(recentlyEarned.map((item) => item.id));
   const visible = expanded ? earned : earned.slice(0, previewCount);
@@ -47,22 +80,22 @@ export function MilestonesSection({
     <Card variant="outlined" padding="md" className="gap-4">
       <View>
         <Text variant="overline" color="secondary">
-          Professional milestones
+          {t('career:milestoneUi.overline')}
         </Text>
-        <Text weight="semibold">Career achievements unlocked</Text>
+        <Text weight="semibold">{t('career:milestoneUi.title')}</Text>
         <Text variant="caption" color="secondary">
-          {earned.length} milestone{earned.length === 1 ? '' : 's'} earned
+          {t('career:milestoneUi.earned', { count: earned.length })}
         </Text>
       </View>
 
       {recentlyEarned.length > 0 ? (
         <View className="rounded-xl border border-gold/40 bg-gold-muted p-3">
           <Text weight="semibold" color="prestige">
-            New milestone{recentlyEarned.length === 1 ? '' : 's'} unlocked
+            {t('career:milestoneUi.new', { count: recentlyEarned.length })}
           </Text>
           {recentlyEarned.map((milestone) => (
             <Text key={milestone.id} variant="body-sm" color="prestige">
-              {milestone.icon} {milestone.title}
+              {milestone.icon} {milestoneCopy(milestone).title}
             </Text>
           ))}
         </View>
@@ -70,8 +103,7 @@ export function MilestonesSection({
 
       {earned.length === 0 ? (
         <Text variant="body-sm" color="secondary">
-          Log matches, publish your Football Passport, and collect coach endorsements to unlock
-          milestones automatically.
+          {t('career:milestoneUi.empty')}
         </Text>
       ) : (
         <>
@@ -92,7 +124,7 @@ export function MilestonesSection({
               onPress={() => setExpanded((current) => !current)}
               className="self-start"
             >
-              {expanded ? 'Show less' : `${t('seeMore')} · ${remaining}`}
+              {expanded ? t('common:showLess') : t('career:milestoneUi.seeMore', { count: remaining })}
             </Button>
           ) : null}
         </>

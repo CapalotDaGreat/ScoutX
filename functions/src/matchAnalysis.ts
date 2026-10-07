@@ -478,7 +478,7 @@ export const analyzeMatchFootage = onCall(
       `Target jersey number: #${job.targeting.jerseyNumber}`,
       `Kit colors: primary ${job.targeting.kitPrimaryColor}, secondary ${job.targeting.kitSecondaryColor}`,
       `Team side hint: ${job.targeting.teamSide ?? 'unknown'}`,
-      `Match: vs ${job.match.opponent} (${job.match.competition}) on ${job.match.date}`,
+      `Match: vs ${job.match.opponent}${job.match.competition ? ` (${job.match.competition})` : ''} on ${job.match.date}`,
       `Video duration seconds: ${job.durationSec}`,
       job.targeting.notes ? `Player notes: ${job.targeting.notes}` : '',
       '',

@@ -1,10 +1,8 @@
 import { ScrollView, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { RecruitmentPipelineCard } from '@/features/scout-recruitment/components/RecruitmentPipelineCard';
-import {
-  RECRUITMENT_STAGE_COLORS,
-  RECRUITMENT_STAGE_LABELS,
-} from '@/features/scout-recruitment/constants';
+import { RECRUITMENT_STAGE_COLORS } from '@/features/scout-recruitment/constants';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type RecruitmentEntry, type RecruitmentStage } from '@/features/scout-recruitment/types';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
 
@@ -21,6 +19,7 @@ export function RecruitmentStageColumn({
   onCardPress,
   onMovePress,
 }: RecruitmentStageColumnProps) {
+  const { t } = useAppTranslation('scout');
   const color = RECRUITMENT_STAGE_COLORS[stage];
   const { pipelineColumnWidth } = useCompactLayout();
 
@@ -34,7 +33,7 @@ export function RecruitmentStageColumn({
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-2">
             <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
-            <Text weight="semibold">{RECRUITMENT_STAGE_LABELS[stage]}</Text>
+            <Text weight="semibold">{t(`stage.${stage}`)}</Text>
           </View>
           <View
             className="min-w-[24px] rounded-full px-2 py-0.5"
@@ -55,7 +54,7 @@ export function RecruitmentStageColumn({
         {entries.length === 0 ? (
           <View className="items-center px-3 py-8">
             <Text variant="caption" color="secondary" className="text-center">
-              Drop players here in a future release. Use move actions for now.
+              {t('pipelineUi.emptyStage')}
             </Text>
           </View>
         ) : (

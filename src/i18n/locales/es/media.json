@@ -122,7 +122,8 @@
     "sentAsEvidence": "Enviado como prueba",
     "showing": "{{shown}} de {{total}}",
     "clear": "Borrar filtros",
-    "noMatches": "Ningún archivo coincide con estos filtros."
+    "noMatches": "Ningún archivo coincide con estos filtros.",
+    "all": "Todos"
   },
   "category": {
     "goals": "Goles",
@@ -178,6 +179,103 @@
       "unsupported_codec": "Un vídeo de origen usa un formato que no se pudo decodificar.",
       "timeout": "El renderizado tardó demasiado. Prueba con un reel más corto.",
       "render_failed": "El renderizado falló. Inténtalo de nuevo."
+    }
+  },
+  "videos": {
+    "title": "Vídeos destacados",
+    "subtitle": "Clips de partido organizados para scouts: goles, técnica, defensa y más",
+    "count_one": "{{count}} jugada en tu reel",
+    "count_other": "{{count}} jugadas en tu reel",
+    "manage": "Gestionar",
+    "clipHint": "Clips cortos para scouts (hasta 3 min). Los partidos completos van en Progreso → Analizar vídeo del partido.",
+    "empty": "Sube un clip recortado de tu exportación de Veo o de tu móvil para mostrar tus mejores momentos a los scouts.",
+    "uploadClip": "Subir clip destacado",
+    "analyzeFull": "Analizar un partido completo",
+    "uploading": "Subiendo…",
+    "uploadFailed": "Error al subir",
+    "untitled": "Jugada sin título",
+    "featured": "Destacado",
+    "spotlight": "ScoutX Spotlight",
+    "versus": "contra {{opponent}}",
+    "uploadErrorTitle": "Problema al subir",
+    "pickFailed": "No se pudo abrir el vídeo. Prueba con otro clip.",
+    "saveErrorTitle": "No se pudo guardar",
+    "saveFailed": "No se pudieron guardar los datos del vídeo. Inténtalo de nuevo.",
+    "retryFailed": "No se pudo reiniciar la subida. Inténtalo de nuevo.",
+    "managerIntro": "Elige un clip corto de Fotos (hasta 3 minutos). Exporta un momento recortado desde tu app Veo o elige una grabación guardada en tu móvil.",
+    "fullMatchTitle": "¿Tienes un partido completo grabado?",
+    "fullMatchBody": "Sube el partido entero en Progreso → Analizar vídeo del partido para obtener estadísticas y feedback de coaching (hasta 150 minutos).",
+    "analyzeFullMatch": "Analizar vídeo del partido completo",
+    "buildReel": "Crear un reel con evidencias del partido",
+    "uploadFromPhotos": "Subir desde Fotos",
+    "managerEmpty": "Aún no hay vídeos destacados. Sube tu primer clip para empezar tu reel.",
+    "feature": "Destacar",
+    "moveUp": "Subir {{title}}",
+    "moveDown": "Bajar {{title}}"
+  },
+  "studio": {
+    "title": "Estudio de reels",
+    "intro": "Cuenta tu historia futbolística con momentos de partido analizados. Solo se sugieren momentos con marca de tiempo y evidencia observada; no se inventa nada.",
+    "styleTitle": "Estilo del reel",
+    "targetLength": "Duración objetivo: {{seconds}} s",
+    "toggleLength": "Cambiar entre 45 s y 90 s",
+    "momentsTitle": "Momentos sugeridos por la IA",
+    "planMeta": "Confianza media de la IA {{pct}} % · {{coverage}}",
+    "empty": "Aún no hay ningún análisis de partido completado. Analiza primero un partido para obtener sugerencias a partir de imágenes reales.",
+    "untitled": "Momento sin título",
+    "descriptionFallback": "Momento identificado por el análisis del partido.",
+    "reason": "Sugerido a partir de tu análisis del partido. Revisa el clip antes de usarlo.",
+    "candidateMeta": "{{kind}} · {{status}} · {{pct}} % de confianza de la IA",
+    "needsReview": "Necesita tu revisión",
+    "aiSuggested": "Sugerido por la IA",
+    "evidence": {
+      "line": "Evidencias: {{items}}",
+      "confidence": "Confianza de la IA {{pct}} % (no verificado)",
+      "jersey": "Dorsal objetivo #{{jersey}}",
+      "coverage": "Cobertura: {{band}}",
+      "coverageUnknown": "desconocida"
+    },
+    "coverage": {
+      "ai_suggested": "Momentos sugeridos por la IA: revisa cada clip antes de compartir",
+      "none": "No hay momentos fiables disponibles"
+    },
+    "eventKind": {
+      "progressivePass": "Pase progresivo",
+      "progressiveCarry": "Conducción progresiva",
+      "goal": "Gol",
+      "recovery": "Recuperación",
+      "save": "Parada",
+      "defensiveAction": "Acción defensiva",
+      "dribble": "Regate",
+      "shot": "Tiro",
+      "matchAction": "Acción de juego"
+    },
+    "preset": {
+      "best-of": {
+        "label": "Lo mejor",
+        "title": "Lo mejor del partido",
+        "description": "Tus mejores momentos sugeridos por la IA en una historia compacta."
+      },
+      "scout": {
+        "label": "Reel para ojeadores",
+        "title": "Revisión del partido para ojeadores",
+        "description": "Clips basados en evidencias que muestran tu impacto táctico y técnico."
+      },
+      "social": {
+        "label": "Reel social",
+        "title": "Reel corto para redes",
+        "description": "Momentos rápidos y claros para compartir en formato corto."
+      },
+      "tactical": {
+        "label": "Táctico",
+        "title": "Reel táctico",
+        "description": "Momentos centrados en presión, movimiento, líneas de pase y tu rol."
+      },
+      "development": {
+        "label": "Desarrollo",
+        "title": "Momentos de desarrollo",
+        "description": "Momentos que muestran aprendizajes y aspectos que estás trabajando."
+      }
     }
   }
 }

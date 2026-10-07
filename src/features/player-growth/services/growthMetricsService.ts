@@ -2,8 +2,10 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { calculatePlayerStatistics } from '@/features/player-statistics/services/statisticsCalculator';
 
 export type GrowthMetric = {
-  current: number;
-  delta: string;
+  /** Null when nothing was recorded for this metric in the last 7 days. */
+  current: number | null;
+  /** Null when the previous week has no comparable data. */
+  delta: string | null;
   direction: 'up' | 'down' | 'neutral';
 };
 
@@ -26,9 +28,9 @@ function splitMatchesByPeriod(matches: NonNullable<PlayerProfile['statisticsMatc
   return { recent, previous };
 }
 
-function formatDelta(current: number, previous: number): string {
-  if (previous === 0) {
-    return current > 0 ? '+100%' : '—';
+function formatDelta(current: number | null, previous: number | null): string | null {
+  if (current === null || previous === null || previous === 0) {
+    return null;
   }
   const delta = Math.round(((current - previous) / previous) * 100);
   if (delta === 0) {
@@ -37,7 +39,10 @@ function formatDelta(current: number, previous: number): string {
   return delta > 0 ? `+${delta}%` : `${delta}%`;
 }
 
-function directionFromDelta(delta: string): GrowthMetric['direction'] {
+function directionFromDelta(delta: string | null): GrowthMetric['direction'] {
+  if (delta === null) {
+    return 'neutral';
+  }
   if (delta.startsWith('+')) {
     return 'up';
   }
@@ -47,17 +52,25 @@ function directionFromDelta(delta: string): GrowthMetric['direction'] {
   return 'neutral';
 }
 
+type GrowthKey = 'goals' | 'assists' | 'passAccuracy' | 'tackles';
+
+function hasRecorded(matches: NonNullable<PlayerProfile['statisticsMatches']>, key: GrowthKey): boolean {
+  if (key === 'passAccuracy') return matches.some((match) => match.passAccuracy !== null);
+  if (key === 'tackles') return matches.some((match) => match.tackles !== null);
+  return matches.length > 0;
+}
+
 export function buildWeeklyGrowthMetrics(profile: PlayerProfile): WeeklyGrowthMetrics {
   const matches = profile.statisticsMatches ?? [];
   const { recent, previous } = splitMatchesByPeriod(matches);
   const recentStats = calculatePlayerStatistics(recent);
   const previousStats = calculatePlayerStatistics(previous);
 
-  const metric = (key: string): GrowthMetric => {
-    const current = recentStats.totals.find((item) => item.key === key)?.value ?? 0;
-    const prior = previousStats.totals.find((item) => item.key === key)?.value ?? 0;
-    const currentValue = typeof current === 'number' ? current : 0;
-    const priorValue = typeof prior === 'number' ? prior : 0;
+  const metric = (key: GrowthKey): GrowthMetric => {
+    const current = recentStats.totals.find((item) => item.key === key)?.value;
+    const prior = previousStats.totals.find((item) => item.key === key)?.value;
+    const currentValue = hasRecorded(recent, key) && typeof current === 'number' ? current : null;
+    const priorValue = hasRecorded(previous, key) && typeof prior === 'number' ? prior : null;
     const delta = formatDelta(currentValue, priorValue);
     return {
       current: currentValue,

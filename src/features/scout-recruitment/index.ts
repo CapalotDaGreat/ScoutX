@@ -11,7 +11,6 @@ export { syncRecruitmentStageFromTrial } from './services/recruitmentTrialSyncSe
 
 export {
   RECRUITMENT_STAGES,
-  RECRUITMENT_STAGE_LABELS,
   RECRUITMENT_STAGE_COLORS,
 } from './constants';
 

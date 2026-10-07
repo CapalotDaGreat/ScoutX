@@ -39,45 +39,46 @@ export type MatchAnalysisModalProps = {
   prefillMatch?: { opponent: string; competition: string; date: string } | null;
 };
 
-function formatUnknown(value: number | boolean | null | undefined): string {
-  if (value === null || value === undefined) {
-    return '—';
-  }
-  if (typeof value === 'boolean') {
-    return value ? 'Yes' : 'No';
-  }
-  return String(value);
+type Translate = ReturnType<typeof useAppTranslation>['t'];
+
+function formatUnknown(value: number | null | undefined): string {
+  return value === null || value === undefined ? '—' : String(value);
 }
 
-function jobStatusLabel(job: MatchAnalysisJob): string {
+function formatClock(totalSec: number): string {
+  return `${Math.floor(totalSec / 60)}:${String(totalSec % 60).padStart(2, '0')}`;
+}
+
+function jobStatusLabel(t: Translate, job: MatchAnalysisJob): string {
   switch (job.status) {
     case 'complete':
-      return 'Ready';
+      return t('matchAnalysis:jobStatus.ready');
     case 'failed':
-      return canRetryMatchAnalysis(job) ? 'Failed · tap to retry' : 'Failed';
+      return canRetryMatchAnalysis(job) ? t('matchAnalysis:jobStatus.failedRetry') : t('matchAnalysis:jobStatus.failed');
     case 'processing':
     case 'queued':
-      return 'Analyzing…';
+      return t('matchAnalysis:jobStatus.analyzing');
     case 'uploading':
-      return 'Upload interrupted';
+      return t('matchAnalysis:jobStatus.uploadInterrupted');
     default:
-      return 'Draft';
+      return t('matchAnalysis:jobStatus.draft');
   }
 }
 
 function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
+  const { t } = useAppTranslation('matchAnalysis');
   const rows: Array<[string, string]> = [
-    ['Minutes', formatUnknown(stats.minutesPlayed)],
-    ['Goals', formatUnknown(stats.goals)],
-    ['Assists', formatUnknown(stats.assists)],
-    ['Shots', `${formatUnknown(stats.shotsOnTarget)}/${formatUnknown(stats.shots)} OT`],
-    ['Pass %', formatUnknown(stats.passCompletionPct)],
-    ['Passes', `${formatUnknown(stats.passesCompleted)}/${formatUnknown(stats.passesAttempted)}`],
-    ['Key passes', formatUnknown(stats.keyPasses)],
-    ['Tackles', formatUnknown(stats.tackles)],
-    ['Duels', `${formatUnknown(stats.duelsWon)}W / ${formatUnknown(stats.duelsLost)}L`],
-    ['Cards', `${formatUnknown(stats.yellowCards)}Y / ${formatUnknown(stats.redCards)}R`],
-    ['Rating', formatUnknown(stats.matchRating)],
+    [t('stat.minutes'), formatUnknown(stats.minutesPlayed)],
+    [t('stat.goals'), formatUnknown(stats.goals)],
+    [t('stat.assists'), formatUnknown(stats.assists)],
+    [t('stat.shotsOnTarget'), `${formatUnknown(stats.shotsOnTarget)}/${formatUnknown(stats.shots)}`],
+    [t('stat.passPct'), formatUnknown(stats.passCompletionPct)],
+    [t('stat.passes'), `${formatUnknown(stats.passesCompleted)}/${formatUnknown(stats.passesAttempted)}`],
+    [t('stat.keyPasses'), formatUnknown(stats.keyPasses)],
+    [t('stat.tackles'), formatUnknown(stats.tackles)],
+    [t('stat.duelsWonLost'), `${formatUnknown(stats.duelsWon)} / ${formatUnknown(stats.duelsLost)}`],
+    [t('stat.cardsYellowRed'), `${formatUnknown(stats.yellowCards)} / ${formatUnknown(stats.redCards)}`],
+    [t('stat.rating'), formatUnknown(stats.matchRating)],
   ];
 
   return (
@@ -99,22 +100,22 @@ function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
   );
 }
 
+const STAGE_STATUSES = ['pending', 'active', 'complete', 'failed', 'unavailable'] as const;
+type StageStatus = (typeof STAGE_STATUSES)[number];
+
+function toStageStatus(value: string): StageStatus {
+  return (STAGE_STATUSES as readonly string[]).includes(value) ? (value as StageStatus) : 'pending';
+}
+
 function PipelineStageList({ stages }: { stages: Array<{ label: string; status: string; note?: string }> }) {
+  const { t } = useAppTranslation('matchAnalysis');
   return (
     <View className="gap-2">
       {stages.map((stage) => (
         <View key={stage.label} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
           <Text weight="semibold">{stage.label}</Text>
           <Text variant="caption" color="secondary">
-            {stage.status === 'complete'
-              ? 'Complete'
-              : stage.status === 'active'
-                ? 'Active'
-                : stage.status === 'failed'
-                  ? 'Failed'
-                  : stage.status === 'unavailable'
-                    ? 'Unavailable'
-                    : 'Pending'}
+            {t(`stageStatus.${toStageStatus(stage.status)}`)}
           </Text>
           {stage.note ? (
             <Text variant="body-sm" color="secondary">
@@ -128,15 +129,15 @@ function PipelineStageList({ stages }: { stages: Array<{ label: string; status: 
 }
 
 function SegmentList({ segments }: { segments: Array<{ label: string; startSec: number; endSec: number; excludedFromPerformance: boolean }> }) {
+  const { t } = useAppTranslation('matchAnalysis');
   return (
     <View className="gap-2">
       {segments.map((segment) => (
         <View key={`${segment.label}-${segment.startSec}`} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
           <Text weight="semibold">{segment.label}</Text>
           <Text variant="caption" color="secondary">
-            {Math.floor(segment.startSec / 60)}:{String(segment.startSec % 60).padStart(2, '0')}–
-            {Math.floor(segment.endSec / 60)}:{String(segment.endSec % 60).padStart(2, '0')}
-            {segment.excludedFromPerformance ? ' · excluded from performance' : ''}
+            {formatClock(segment.startSec)}–{formatClock(segment.endSec)}
+            {segment.excludedFromPerformance ? ` · ${t('modalReport.excluded')}` : ''}
           </Text>
         </View>
       ))}
@@ -157,6 +158,7 @@ function ReportView({
   onOpenHighlightReelStudio?: () => void;
   onOpenReport?: () => void;
 }) {
+  const { t } = useAppTranslation('matchAnalysis');
   const report = job.report;
   if (!report) {
     return null;
@@ -167,8 +169,7 @@ function ReportView({
       <Card variant="elevated" padding="lg" className="gap-2">
         <Heading level={3}>{report.headline}</Heading>
         <Text variant="caption" color="secondary">
-          Analysis quality: {report.coverage?.confidenceLabel ?? 'Insufficient'} · jersey #
-          {job.targeting.jerseyNumber}
+          {t('modalReport.quality', { band: t(`band.${report.coverage?.confidenceLabel ?? 'Insufficient'}`), jersey: job.targeting.jerseyNumber })}
         </Text>
         <Text variant="body-sm" color="secondary" className="mt-1">
           {report.methodology}
@@ -176,54 +177,54 @@ function ReportView({
       </Card>
 
       <Card variant="default" padding="lg" className="gap-3">
-        <Heading level={3}>Analysis coverage</Heading>
+        <Heading level={3}>{t('modalReport.coverageTitle')}</Heading>
         <View className="gap-1">
-          <Text variant="body-sm">Visible: {report.coverage?.visiblePct ?? 0}%</Text>
-          <Text variant="body-sm">Likely active but off camera: {report.coverage?.likelyOffCameraPct ?? 0}%</Text>
-          <Text variant="body-sm">Unknown: {report.coverage?.unknownPct ?? 100}%</Text>
+          <Text variant="body-sm">{t('modalReport.visible', { pct: report.coverage?.visiblePct ?? 0 })}</Text>
+          <Text variant="body-sm">{t('modalReport.offCamera', { pct: report.coverage?.likelyOffCameraPct ?? 0 })}</Text>
+          <Text variant="body-sm">{t('modalReport.unknown', { pct: report.coverage?.unknownPct ?? 100 })}</Text>
           <Text variant="body-sm" color="secondary">
-            {report.coverage?.note ?? 'No reliable player coverage estimate was recorded.'}
+            {report.coverage?.note ?? t('modalReport.noCoverage')}
           </Text>
         </View>
       </Card>
 
       <Card variant="default" padding="lg" className="gap-3">
-        <Heading level={3}>Analysis pipeline</Heading>
+        <Heading level={3}>{t('modalReport.pipelineTitle')}</Heading>
         <PipelineStageList stages={report.pipelineStages ?? []} />
       </Card>
 
       <Card variant="default" padding="lg" className="gap-3">
-        <Heading level={3}>Match segments</Heading>
+        <Heading level={3}>{t('modalReport.segmentsTitle')}</Heading>
         <SegmentList segments={report.segments ?? []} />
       </Card>
 
       <Card variant="default" padding="lg" className="gap-3">
-        <Heading level={3}>Estimated match stats</Heading>
+        <Heading level={3}>{t('modalReport.statsTitle')}</Heading>
         <StatGrid stats={report.estimatedStats} />
         {onOpenReport ? (
           <Button variant="secondary" onPress={onOpenReport}>
-            Open full report
+            {t('modalReport.openFull')}
           </Button>
         ) : null}
         {onApply && hasApplyableEstimatedStats(report.estimatedStats) && job.identityConfirmation?.state === 'confirmed' ? (
           <Button variant="accent" loading={applying} onPress={onApply}>
-            Apply stats to my match log
+            {t('modalReport.apply')}
           </Button>
         ) : null}
         {onApply && (!hasApplyableEstimatedStats(report.estimatedStats) || job.identityConfirmation?.state !== 'confirmed') ? (
           <Text variant="caption" color="secondary">
-            Countable stats stay unknown until identity is confirmed and validated events exist. Log the match yourself instead.
+            {t('modalReport.applyBlocked')}
           </Text>
         ) : null}
         {onOpenHighlightReelStudio ? (
           <Button variant="secondary" onPress={onOpenHighlightReelStudio}>
-            Build highlight reel from this analysis
+            {t('modalReport.buildReel')}
           </Button>
         ) : null}
       </Card>
 
       <Card variant="default" padding="lg" className="gap-2">
-        <Heading level={3}>Strengths</Heading>
+        <Heading level={3}>{t('modalReport.strengths')}</Heading>
         {report.strengths.map((item) => (
           <Text key={item} variant="body-sm">
             • {item}
@@ -232,7 +233,7 @@ function ReportView({
       </Card>
 
       <Card variant="default" padding="lg" className="gap-2">
-        <Heading level={3}>Areas to improve</Heading>
+        <Heading level={3}>{t('modalReport.improvements')}</Heading>
         {report.improvements.map((item) => (
           <Text key={item} variant="body-sm">
             • {item}
@@ -242,24 +243,24 @@ function ReportView({
 
       {report.coachingNotes.trim() ? (
         <Card variant="default" padding="lg" className="gap-2">
-          <Heading level={3}>Coach notes</Heading>
+          <Heading level={3}>{t('modalReport.coachNotes')}</Heading>
           <Text variant="body-sm">{report.coachingNotes}</Text>
         </Card>
       ) : null}
 
       {report.evidence?.length ? (
         <Card variant="default" padding="lg" className="gap-2">
-          <Heading level={3}>Evidence-first review</Heading>
+          <Heading level={3}>{t('modalReport.evidenceTitle')}</Heading>
           {report.evidence.map((item, index) => (
             <View key={`${item.label}-${index}`} className="gap-1 border-b border-border pb-2 last:border-0 last:pb-0">
               <Text weight="semibold">
-                {item.kind === 'unknown' ? 'Unknown' : item.kind === 'inference' ? 'Inference' : 'Observation'} · {item.label}
+                {t(`modalReport.evidenceKind.${item.kind === 'unknown' || item.kind === 'inference' ? item.kind : 'observation'}`)} · {item.label}
               </Text>
               <Text variant="body-sm" color="secondary">
                 {item.detail}
               </Text>
               <Text variant="caption" color="secondary">
-                Confidence {Math.round(item.confidence * 100)}%{item.timestampSec != null ? ` · ${Math.floor(item.timestampSec / 60)}:${String(item.timestampSec % 60).padStart(2, '0')}` : ''}
+                {t('modalReport.confidence', { pct: Math.round(item.confidence * 100) })}{item.timestampSec != null ? ` · ${formatClock(item.timestampSec)}` : ''}
               </Text>
             </View>
           ))}
@@ -268,12 +269,11 @@ function ReportView({
 
       {report.moments.length > 0 ? (
         <Card variant="default" padding="lg" className="gap-2">
-          <Heading level={3}>Key moments</Heading>
+          <Heading level={3}>{t('modalReport.moments')}</Heading>
           {report.moments.map((moment) => (
             <View key={`${moment.timestampSec}-${moment.label}`} className="gap-1">
               <Text weight="semibold">
-                {Math.floor(moment.timestampSec / 60)}:
-                {String(moment.timestampSec % 60).padStart(2, '0')} · {moment.label}
+                {formatClock(moment.timestampSec)} · {moment.label}
               </Text>
               <Text variant="body-sm" color="secondary">
                 {moment.detail}
@@ -309,13 +309,13 @@ export function MatchAnalysisModal({
     resetActive,
     setActiveJob,
   } = useMatchAnalysis(playerId);
-  const { t } = useAppTranslation('matchAnalysis');
+  const { t } = useAppTranslation(['matchAnalysis', 'common']);
   const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
 
   const [picked, setPicked] = useState<PickedVideoAsset | null>(null);
   const [jerseyNumber, setJerseyNumber] = useState('');
-  const [kitPrimaryColor, setKitPrimaryColor] = useState('white');
-  const [kitSecondaryColor, setKitSecondaryColor] = useState('black');
+  const [kitPrimaryColor, setKitPrimaryColor] = useState('');
+  const [kitSecondaryColor, setKitSecondaryColor] = useState('');
   const [opponent, setOpponent] = useState('');
   const [competition, setCompetition] = useState('');
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
@@ -374,9 +374,8 @@ export function MatchAnalysisModal({
     if (!picked) {
       return null;
     }
-    const mins = Math.round(picked.durationSec / 60);
-    return `${mins} min film selected`;
-  }, [picked]);
+    return t('matchAnalysis:modalForm.filmSelected', { minutes: Math.round(picked.durationSec / 60) });
+  }, [picked, t]);
 
   const preview = useMemo(
     () => (picked ? buildAnalysisPreview({ durationSec: picked.durationSec, fileSizeBytes: picked.fileSizeBytes }) : null),
@@ -393,7 +392,7 @@ export function MatchAnalysisModal({
         resetActive();
       }
     } catch (err) {
-      Alert.alert('Video', toUserMessage(err, 'Could not pick video.'));
+      Alert.alert(t('matchAnalysis:modalForm.videoTitle'), toUserMessage(err, t('matchAnalysis:modalForm.pickFailed')));
     } finally {
       setIsPicking(false);
     }
@@ -401,19 +400,19 @@ export function MatchAnalysisModal({
 
   const handleAnalyze = async () => {
     if (!picked) {
-      Alert.alert('Video', 'Pick a match video first.');
+      Alert.alert(t('matchAnalysis:modalForm.videoTitle'), t('matchAnalysis:modalForm.pickFirst'));
       return;
     }
     if (!jerseyNumber.trim()) {
-      Alert.alert('Jersey', 'Enter your jersey number so the AI can find you.');
+      Alert.alert(t('matchAnalysis:modalForm.jerseyTitle'), t('matchAnalysis:modalForm.jerseyRequired'));
       return;
     }
     if (!opponent.trim()) {
-      Alert.alert('Match', 'Enter the opponent.');
+      Alert.alert(t('matchAnalysis:modalForm.matchTitle'), t('matchAnalysis:modalForm.opponentRequired'));
       return;
     }
     if (preview && !preview.canProceed) {
-      Alert.alert('Video', preview.blockers[0] ?? 'This video cannot be analysed.');
+      Alert.alert(t('matchAnalysis:modalForm.videoTitle'), preview.blockers[0] ?? t('matchAnalysis:modalForm.cannotAnalyze'));
       return;
     }
 
@@ -430,7 +429,7 @@ export function MatchAnalysisModal({
         },
         match: {
           opponent: opponent.trim(),
-          competition: competition.trim() || 'Friendly',
+          competition: competition.trim(),
           date,
           result: result.trim() || undefined,
         },
@@ -463,13 +462,13 @@ export function MatchAnalysisModal({
         `AI match analysis. ${activeJob.report.coachingNotes}`.trim(),
       );
       if (!payload) {
-        Alert.alert('Not enough evidence yet', 'Countable stats were not estimated from this footage.');
+        Alert.alert(t('matchAnalysis:modalForm.noEvidenceTitle'), t('matchAnalysis:modalForm.noEvidenceBody'));
         return;
       }
       await onApplyStats(payload);
-      Alert.alert('Saved', 'Estimated stats were added to your match log.');
+      Alert.alert(t('matchAnalysis:modalForm.savedTitle'), t('matchAnalysis:modalForm.savedBody'));
     } catch (err) {
-      Alert.alert('Save failed', toUserMessage(err, 'Could not save match log.'));
+      Alert.alert(t('matchAnalysis:modalForm.saveFailedTitle'), toUserMessage(err, t('matchAnalysis:modalForm.saveFailed')));
     } finally {
       setApplying(false);
     }
@@ -492,13 +491,13 @@ export function MatchAnalysisModal({
           <Card>
             <View className="gap-3">
               <Heading level={3}>
-                {activeJob.match.date} vs {activeJob.match.opponent}
+                {t('matchAnalysis:modalForm.jobTitle', { date: activeJob.match.date, opponent: activeJob.match.opponent })}
               </Heading>
               <Text variant="body-sm" color="error">
-                {activeJob.error ?? error ?? "The AI couldn't finish this analysis."}
+                {activeJob.error ?? error ?? t('matchAnalysis:modalForm.failedFallback')}
               </Text>
               <Text variant="caption" color="secondary">
-                Your footage is already uploaded, so retrying won't upload it again.
+                {t('matchAnalysis:modalForm.retryNote')}
               </Text>
               <Button variant="accent" onPress={() => void handleRetry()}>
                 {t('modal.retry')}
@@ -531,7 +530,7 @@ export function MatchAnalysisModal({
             ) : null}
 
             <Input
-              label="Your jersey number"
+              label={t('matchAnalysis:modalForm.jersey')}
               value={jerseyNumber}
               onChangeText={setJerseyNumber}
               keyboardType="number-pad"
@@ -540,40 +539,40 @@ export function MatchAnalysisModal({
             <View className="flex-row gap-3">
               <View className="flex-1">
                 <Input
-                  label="Kit primary color"
+                  label={t('matchAnalysis:modalForm.kitPrimary')}
                   value={kitPrimaryColor}
                   onChangeText={setKitPrimaryColor}
-                  placeholder="white"
+                  placeholder={t('matchAnalysis:modalForm.kitPrimaryPlaceholder')}
                 />
               </View>
               <View className="flex-1">
                 <Input
-                  label="Kit secondary"
+                  label={t('matchAnalysis:modalForm.kitSecondary')}
                   value={kitSecondaryColor}
                   onChangeText={setKitSecondaryColor}
-                  placeholder="black"
+                  placeholder={t('matchAnalysis:modalForm.kitSecondaryPlaceholder')}
                 />
               </View>
             </View>
-            <Input label="Opponent" value={opponent} onChangeText={setOpponent} placeholder="FC Example" />
+            <Input label={t('matchAnalysis:modalForm.opponent')} value={opponent} onChangeText={setOpponent} placeholder={t('matchAnalysis:modalForm.opponentPlaceholder')} />
             <Input
-              label="Competition"
+              label={t('matchAnalysis:modalForm.competition')}
               value={competition}
               onChangeText={setCompetition}
-              placeholder="League / Cup"
+              placeholder={t('matchAnalysis:modalForm.competitionPlaceholder')}
             />
-            <Input label="Match date (YYYY-MM-DD)" value={date} onChangeText={setDate} />
+            <Input label={t('matchAnalysis:modalForm.date')} value={date} onChangeText={setDate} />
             <Input
-              label="Result (optional)"
+              label={t('matchAnalysis:modalForm.result')}
               value={result}
               onChangeText={setResult}
-              placeholder="W 2-1"
+              placeholder={t('matchAnalysis:modalForm.resultPlaceholder')}
             />
             <Input
-              label="Notes for the AI (optional)"
+              label={t('matchAnalysis:modalForm.notes')}
               value={notes}
               onChangeText={setNotes}
-              placeholder="e.g. I played right mid after minute 60"
+              placeholder={t('matchAnalysis:modalForm.notesPlaceholder')}
             />
 
             <Button variant="accent" loading={isBusy} onPress={() => void handleAnalyze()} disabled={Boolean(preview && !preview.canProceed)}>
@@ -599,7 +598,7 @@ export function MatchAnalysisModal({
                   setActiveJob(job);
                 }}
               >
-                {`${job.match.date} vs ${job.match.opponent} · ${jobStatusLabel(job)}`}
+                {`${t('matchAnalysis:modalForm.jobTitle', { date: job.match.date, opponent: job.match.opponent })} · ${jobStatusLabel(t, job)}`}
               </Button>
             ))}
           </View>

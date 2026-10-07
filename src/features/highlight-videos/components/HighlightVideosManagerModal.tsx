@@ -88,7 +88,7 @@ export function HighlightVideosManagerModal({
       setFlowPhase('editing');
     } catch (error) {
       setFlowPhase('list');
-      Alert.alert('Upload Error', toUserMessage(error, 'Could not pick video.'));
+      Alert.alert(t('media:videos.uploadErrorTitle'), toUserMessage(error, t('media:videos.pickFailed')));
     }
   };
 
@@ -102,7 +102,7 @@ export function HighlightVideosManagerModal({
       setPreparedUpload(null);
       setFlowPhase('list');
     } catch (error) {
-      Alert.alert('Upload Error', toUserMessage(error, 'Upload failed.'));
+      Alert.alert(t('media:videos.uploadErrorTitle'), toUserMessage(error, t('media:videos.uploadFailed')));
     }
   };
 
@@ -126,7 +126,7 @@ export function HighlightVideosManagerModal({
       setEditingVideo(null);
       setFlowPhase('list');
     } catch (error) {
-      Alert.alert('Save Error', toUserMessage(error, 'Could not save video.'));
+      Alert.alert(t('media:videos.saveErrorTitle'), toUserMessage(error, t('media:videos.saveFailed')));
     }
   };
 
@@ -172,13 +172,13 @@ export function HighlightVideosManagerModal({
       setFlowPhase('list');
     } catch (error) {
       setFlowPhase('list');
-      Alert.alert('Upload Error', toUserMessage(error, 'Could not retry upload.'));
+      Alert.alert(t('media:videos.uploadErrorTitle'), toUserMessage(error, t('media:videos.retryFailed')));
     }
   };
 
   const footer = (
     <Button variant="secondary" onPress={onClose}>
-      Done
+      {t('common:done')}
     </Button>
   );
 
@@ -187,7 +187,7 @@ export function HighlightVideosManagerModal({
       <Modal
         visible={visible && flowPhase === 'list'}
         onClose={onClose}
-        title="Highlight Videos"
+        title={t('media:videos.title')}
         size="sheet"
         footer={footer}
       >
@@ -198,28 +198,26 @@ export function HighlightVideosManagerModal({
         >
           <View className="gap-4">
             <Text variant="body-sm" color="secondary">
-              Choose a short clip from Photos / Gallery (up to 3 minutes). Export a trimmed moment
-              from your Veo app, or pick a recording already saved on your phone.
+              {t('media:videos.managerIntro')}
             </Text>
 
             {onAnalyzeMatchVideoPress ? (
               <View className="gap-2 rounded-xl border border-border bg-background-secondary/60 px-4 py-3">
                 <Text variant="body-sm" weight="semibold">
-                  Full Veo match recording?
+                  {t('media:videos.fullMatchTitle')}
                 </Text>
                 <Text variant="caption" color="secondary">
-                  Upload the entire match under Growth → Analyze match video for AI stats and coaching
-                  feedback (up to 150 minutes).
+                  {t('media:videos.fullMatchBody')}
                 </Text>
                 <Button variant="secondary" size="sm" onPress={onAnalyzeMatchVideoPress}>
-                  Analyze full match video
+                  {t('media:videos.analyzeFullMatch')}
                 </Button>
               </View>
             ) : null}
 
             {onOpenHighlightReelStudio ? (
               <Button variant="secondary" onPress={onOpenHighlightReelStudio}>
-                Build highlight reel from match evidence
+                {t('media:videos.buildReel')}
               </Button>
             ) : null}
 
@@ -229,14 +227,14 @@ export function HighlightVideosManagerModal({
               loading={isUploading || flowPhase === 'picking'}
               leftIcon={<Upload size={18} color={colors.surface} />}
             >
-              Upload from Photos
+              {t('media:videos.uploadFromPhotos')}
             </Button>
 
             <HighlightVideoUploadProgress progress={uploadProgress} />
 
             {sortedVideos.length === 0 ? (
               <Text variant="body-sm" color="secondary">
-                No highlight videos yet. Upload your first clip to build your reel.
+                {t('media:videos.managerEmpty')}
               </Text>
             ) : (
               sortedVideos.map((video, index) => (
@@ -252,14 +250,14 @@ export function HighlightVideosManagerModal({
                         setFlowPhase('editing');
                       }}
                     >
-                      Edit
+                      {t('common:edit')}
                     </Button>
                     <Button
                       variant="secondary"
                       size="sm"
                       onPress={() => void setFeatured(video.id)}
                     >
-                      Feature
+                      {t('media:videos.feature')}
                     </Button>
                     {video.uploadStatus === 'failed' ? (
                       <Button
@@ -267,13 +265,13 @@ export function HighlightVideosManagerModal({
                         size="sm"
                         onPress={() => void handleRetryUpload(video.id)}
                       >
-                        Retry
+                        {t('common:retry')}
                       </Button>
                     ) : null}
-                    <Button variant="secondary" size="sm" onPress={() => void moveVideo(video.id, 'up')}>
+                    <Button variant="secondary" size="sm" accessibilityLabel={t('media:videos.moveUp', { title: video.title })} onPress={() => void moveVideo(video.id, 'up')}>
                       <ChevronUp size={16} color={colors.textPrimary} />
                     </Button>
-                    <Button variant="secondary" size="sm" onPress={() => void moveVideo(video.id, 'down')}>
+                    <Button variant="secondary" size="sm" accessibilityLabel={t('media:videos.moveDown', { title: video.title })} onPress={() => void moveVideo(video.id, 'down')}>
                       <ChevronDown size={16} color={colors.textPrimary} />
                     </Button>
                     <Button

@@ -5,7 +5,7 @@ import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { VerificationBadge } from '@/features/verification-system/components/VerificationBadge';
 import { usePlayerVerification } from '@/features/verification-system/hooks/usePlayerVerification';
-import { resolveVerificationBadgeLabel } from '@/features/verification-system/services/verificationService';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerVerificationCardProps = {
   playerId: string;
@@ -16,13 +16,13 @@ export function PlayerVerificationCard({ playerId, playerName }: PlayerVerificat
   const { state, isLoading, isSubmitting, error, canRequest, requestVerification } =
     usePlayerVerification(playerId);
   const [requested, setRequested] = useState(false);
+  const { t, i18n } = useAppTranslation('trust');
 
   useEffect(() => {
     setRequested(false);
   }, [playerId]);
 
   const badgeLevel = state?.level ?? 'none';
-  const badgeLabel = resolveVerificationBadgeLabel(badgeLevel);
 
   const handleRequest = useCallback(async () => {
     await requestVerification(
@@ -36,11 +36,11 @@ export function PlayerVerificationCard({ playerId, playerName }: PlayerVerificat
       <View className="flex-row items-start justify-between gap-3">
         <View className="flex-1">
           <Text variant="overline" color="secondary">
-            Verification
+            {t('verificationCard.overline')}
           </Text>
-          <Text weight="semibold">Football Passport verification</Text>
+          <Text weight="semibold">{t('verificationCard.title')}</Text>
           <Text variant="body-sm" color="secondary">
-            Verified players rank higher in scout discovery and build trust faster.
+            {t('verificationCard.body')}
           </Text>
         </View>
         {badgeLevel !== 'none' ? <VerificationBadge level={badgeLevel} /> : null}
@@ -48,22 +48,23 @@ export function PlayerVerificationCard({ playerId, playerName }: PlayerVerificat
 
       {isLoading ? (
         <Text variant="body-sm" color="secondary">
-          Checking verification status…
+          {t('verificationCard.checking')}
         </Text>
       ) : null}
 
       {!isLoading && badgeLevel === 'verified' ? (
         <Text variant="body-sm" color="accent">
-          Your Football Passport is verified
-          {state?.verifiedAt ? ` · ${state.verifiedAt.slice(0, 10)}` : ''}.
+          {state?.verifiedAt
+            ? t('verificationCard.verifiedOn', {
+                date: new Date(state.verifiedAt).toLocaleDateString(i18n.language),
+              })
+            : t('verificationCard.verified')}
         </Text>
       ) : null}
 
       {!isLoading && badgeLevel === 'basic' ? (
         <Text variant="body-sm" color="secondary">
-          {requested || badgeLabel
-            ? 'Your verification request is under review. We will notify you when it is approved.'
-            : 'Verification is pending review.'}
+          {t(requested ? 'verificationCard.requested' : 'verificationCard.pending')}
         </Text>
       ) : null}
 
@@ -75,7 +76,7 @@ export function PlayerVerificationCard({ playerId, playerName }: PlayerVerificat
 
       {canRequest ? (
         <Button variant="secondary" loading={isSubmitting} onPress={() => void handleRequest()}>
-          Request verification
+          {t('verificationCard.request')}
         </Button>
       ) : null}
     </Card>

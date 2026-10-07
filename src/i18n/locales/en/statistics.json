@@ -19,7 +19,9 @@
     "shots": "Shots",
     "passAccuracy": "Pass accuracy",
     "tackles": "Tackles",
-    "distance": "Distance"
+    "distance": "Distance",
+    "cleanSheets": "Clean sheets",
+    "avgRating": "Avg rating"
   },
   "modal": {
     "title": "Log match",
@@ -125,5 +127,110 @@
   "aiCoaching": "AI coaching",
   "aiCoachingSubtitle": "Performance summary and improvement ideas",
   "performanceTrends": "Performance trends",
-  "performanceTrendsSubtitle": "Progress graphs over recent matches"
+  "performanceTrendsSubtitle": "Progress graphs over recent matches",
+  "aiInsight": {
+    "focus": "Focus: {{items}}",
+    "weeklyFocus": "Weekly focus: {{focus}}",
+    "drills": "Recommended drills",
+    "current": "Current {{value}}",
+    "potential": "Potential {{value}}",
+    "trajectory": "Trajectory {{value}}",
+    "growthAreas": "Growth areas: {{items}}",
+    "nextSteps": "Next steps: {{items}}",
+    "strengths": "Strengths: {{items}}",
+    "improve": "Improve: {{items}}",
+    "poweredBy": "Powered by {{provider}}",
+    "previewProvider": "Development preview — mock AI provider",
+    "confidence": {
+      "low": "Low confidence",
+      "medium": "Medium confidence",
+      "high": "High confidence"
+    },
+    "priority": {
+      "low": "Low priority",
+      "medium": "Medium priority",
+      "high": "High priority"
+    },
+    "type": {
+      "performance_summary": {
+        "title": "Performance summary",
+        "description": "AI overview of your recent match output and trends."
+      },
+      "improvement_suggestions": {
+        "title": "Improvement suggestions",
+        "description": "Areas to work on, based on the data you've tracked."
+      },
+      "training_recommendations": {
+        "title": "Training recommendations",
+        "description": "Drills and a weekly focus suggested from your data."
+      },
+      "potential_analysis": {
+        "title": "Potential analysis",
+        "description": "How your development is trending, based on your records."
+      },
+      "career_progression_summary": {
+        "title": "Career progression",
+        "description": "A summary of the milestones in your football journey."
+      },
+      "video_summary": {
+        "title": "Video summary",
+        "description": "Moments and coaching takeaways from your match footage."
+      },
+      "gps_summary": {
+        "title": "GPS summary",
+        "description": "Movement and positional insights from your GPS sessions."
+      }
+    }
+  },
+  "summary": {
+    "average": {
+      "season": "Season average {{value}}",
+      "played": "Matches played {{value}}",
+      "perMatch": "Avg per match {{value}}"
+    },
+    "trend": {
+      "baseline": "New baseline",
+      "noChange": "No change",
+      "recent": "{{value}} recent"
+    },
+    "allMetrics": "All metrics",
+    "moreMetrics_one": "{{count}} more total",
+    "moreMetrics_other": "{{count}} more totals",
+    "sectionSubtitle": "Performance data",
+    "unavailable": "Statistics unavailable",
+    "matchesAnalysed_one": "{{count}} match with totals, averages and trends",
+    "matchesAnalysed_other": "{{count}} matches with totals, averages and trends",
+    "trendNote": "Trends compare your recent match averages with the earlier ones."
+  },
+  "charts": {
+    "radarTitle": "Radar chart",
+    "radarSubtitle": "Your profile across all tracked metrics, scaled to each metric's range.",
+    "radarA11y": "Radar chart: {{summary}}",
+    "progressTitle": "Progress graphs",
+    "progressSubtitle": "Match-by-match movement.",
+    "progressA11y": "{{metric}} by match: {{values}}. {{trend}}",
+    "summaryTitle": "Performance summary"
+  },
+  "history": {
+    "subtitle": "Your latest matches and what you recorded.",
+    "contributions_one": "{{count}} goal contribution",
+    "contributions_other": "{{count}} goal contributions",
+    "passing": "{{pct}}% passing",
+    "cleanSheet": "clean sheet",
+    "conceded": "conceded",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "goals_one": "{{count}} goal",
+    "goals_other": "{{count}} goals",
+    "assists_one": "{{count}} assist",
+    "assists_other": "{{count}} assists",
+    "shots_one": "{{count}} shot",
+    "shots_other": "{{count}} shots",
+    "tackles_one": "{{count}} tackle",
+    "tackles_other": "{{count}} tackles",
+    "yellow_one": "{{count}} yellow",
+    "yellow_other": "{{count}} yellows",
+    "red_one": "{{count}} red",
+    "red_other": "{{count}} reds"
+  }
 }

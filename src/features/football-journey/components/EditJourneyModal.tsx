@@ -12,6 +12,7 @@ import {
 import { type JourneyEntry } from '@/features/football-journey/types';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { toUserMessage } from '@/utils/userFacingError';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type EditJourneyModalProps = {
   visible: boolean;
@@ -21,6 +22,7 @@ export type EditJourneyModalProps = {
 };
 
 export function EditJourneyModal({ visible, profile, onClose, onSave }: EditJourneyModalProps) {
+  const { t } = useAppTranslation(['career', 'common']);
   const [entries, setEntries] = useState<JourneyEntry[]>([]);
   const [saving, setSaving] = useState(false);
 
@@ -33,7 +35,7 @@ export function EditJourneyModal({ visible, profile, onClose, onSave }: EditJour
   const handleSave = async () => {
     const invalid = entries.find((entry) => !entry.title.trim() || !entry.date.trim());
     if (invalid) {
-      Alert.alert('Validation Error', 'Each entry needs a title and date.');
+      Alert.alert(t('career:journeyUi.validationTitle'), t('career:journeyUi.validationBody'));
       return;
     }
 
@@ -47,7 +49,7 @@ export function EditJourneyModal({ visible, profile, onClose, onSave }: EditJour
       });
       onClose();
     } catch (err) {
-      Alert.alert('Error', toUserMessage(err, 'Failed to save journey.'));
+      Alert.alert(t('career:journeyUi.saveFailedTitle'), toUserMessage(err, t('career:journeyUi.saveFailed')));
     } finally {
       setSaving(false);
     }
@@ -60,23 +62,23 @@ export function EditJourneyModal({ visible, profile, onClose, onSave }: EditJour
   const footer = (
     <View className="flex-row gap-3">
       <Button variant="secondary" className="flex-1" onPress={onClose} disabled={saving}>
-        Cancel
+        {t('common:cancel')}
       </Button>
       <Button variant="accent" className="flex-1" onPress={() => void handleSave()} loading={saving}>
-        Save Journey
+        {t('career:journeyUi.save')}
       </Button>
     </View>
   );
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Edit Football Journey" size="sheet" footer={footer}>
+    <Modal visible={visible} onClose={onClose} title={t('career:journeyUi.editTitle')} size="sheet" footer={footer}>
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         keyboardShouldPersistTaps="handled"
       >
         <Text variant="body-sm" color="secondary" className="mb-4">
-          Build your career story with academies, transfers, achievements, injuries, highlights, and more.
+          {t('career:journeyUi.editIntro')}
         </Text>
 
         <View className="gap-4">
@@ -95,7 +97,7 @@ export function EditJourneyModal({ visible, profile, onClose, onSave }: EditJour
           className="mt-4"
           onPress={() => setEntries((current) => [createEmptyJourneyEntry(), ...current])}
         >
-          Add Journey Entry
+          {t('career:journeyUi.addEntry')}
         </Button>
       </ScrollView>
     </Modal>

@@ -62,8 +62,8 @@ export async function openTrialInCalendar(invitation: TrialInvitation): Promise<
   await Linking.openURL(url);
 }
 
-export function getCalendarActionLabel(): string {
-  return Platform.OS === 'web' ? 'Add to Google Calendar' : 'Add to Calendar';
+export function calendarActionKind(): 'google' | 'native' {
+  return Platform.OS === 'web' ? 'google' : 'native';
 }
 
 export function getTrialCalendarSummary(invitation: TrialInvitation): string {

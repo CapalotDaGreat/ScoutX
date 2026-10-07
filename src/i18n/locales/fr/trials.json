@@ -45,5 +45,52 @@
   "cancelFailed": "Impossible d’annuler l’essai.",
   "reschedule": "Reporter",
   "responseNote": "Note de réponse (optionnel)",
-  "responseNotePlaceholder": "Confirmation de disponibilité ou questions pour le scout…"
+  "responseNotePlaceholder": "Confirmation de disponibilité ou questions pour le scout…",
+  "status": {
+    "pending": "En attente",
+    "accepted": "Acceptée",
+    "declined": "Refusée",
+    "rescheduled": "Reprogrammée",
+    "cancelled": "Annulée",
+    "completed": "Terminée"
+  },
+  "card": {
+    "overline": "Invitation à un essai",
+    "playerScout": "{{player}} · Scout {{scout}}",
+    "coach": "Entraîneur {{coach}}"
+  },
+  "response": {
+    "declineTitle": "Refuser l'essai",
+    "declineBody": "Veux-tu vraiment refuser cette invitation ?",
+    "declineFailed": "L'essai n'a pas pu être refusé. Réessaie.",
+    "acceptFailed": "L'essai n'a pas pu être accepté. Réessaie.",
+    "coachScout": "Entraîneur {{coach}} · Scout {{scout}}",
+    "calendarTitle": "Calendrier",
+    "calendarFailed": "Le calendrier n'a pas pu être ouvert.",
+    "calendar": {
+      "google": "Ajouter à Google Agenda",
+      "native": "Ajouter au calendrier"
+    },
+    "history": "Historique"
+  },
+  "editor": {
+    "validationTitle": "Vérifie les informations",
+    "requiredFields": "Le club, l'entraîneur et le lieu sont obligatoires.",
+    "invalidDate": "Saisis une date et une heure valides, par ex. 2026-07-12T14:00.",
+    "saveFailed": "L'essai n'a pas pu être enregistré. Réessaie.",
+    "rescheduleTitle": "Reprogrammer l'essai",
+    "inviteTitle": "Inviter à un essai",
+    "send": "Envoyer l'invitation",
+    "intro": "Invitation à un essai pour {{name}}",
+    "club": "Club",
+    "clubPlaceholder": "Nom du club ou de l'académie",
+    "coach": "Entraîneur",
+    "coachPlaceholder": "Nom de l'entraîneur",
+    "location": "Lieu",
+    "locationPlaceholder": "Centre d'entraînement, terrain",
+    "date": "Date et heure",
+    "dateHint": "Format : AAAA-MM-JJTHH:MM, par ex. 2026-07-12T14:00",
+    "notes": "Notes",
+    "notesPlaceholder": "Accès, équipement, déroulé de la séance…"
+  }
 }

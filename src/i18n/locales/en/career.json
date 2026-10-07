@@ -112,5 +112,176 @@
     "first_reel": "First reel: {{subject}}",
     "club_change": "Joined {{subject}}",
     "position_change": "Played {{subject}} (previously {{previous}})"
+  },
+  "weekly": {
+    "overline": "Weekly Football Report",
+    "emptyTitle": "Your weekly summary",
+    "emptyBody": "Log your first match or publish your Football Passport to unlock a personal weekly report.",
+    "scores": "Passport score {{passport}}/100 · Scout-visible {{scout}}/100",
+    "highlight": {
+      "matches_one": "Logged {{count}} match this week.",
+      "matches_other": "Logged {{count}} matches this week.",
+      "goals_one": "Scored {{count}} goal.",
+      "goals_other": "Scored {{count}} goals.",
+      "scoutViews_one": "{{count}} scout view on your Football Passport.",
+      "scoutViews_other": "{{count}} scout views on your Football Passport.",
+      "milestones_one": "{{count}} professional milestone earned.",
+      "milestones_other": "{{count}} professional milestones earned."
+    },
+    "stat": {
+      "goals": "Goals",
+      "assists": "Assists",
+      "passAccuracy": "Pass accuracy",
+      "portfolioViews": "Passport views",
+      "scoutViews_one": "{{count}} scout",
+      "scoutViews_other": "{{count}} scouts"
+    },
+    "focusTitle": "Focus this week",
+    "suggestion": {
+      "avatar": "Add a professional headshot.",
+      "bio": "Write a short biography scouts can trust.",
+      "position": "Set your preferred positions.",
+      "club": "Add your current club or academy.",
+      "matches": "Log at least one match.",
+      "videos": "Upload a highlight clip.",
+      "journey": "Add a journey or milestone entry.",
+      "username": "Claim your custom Passport link.",
+      "public": "Turn on your shareable Football Passport.",
+      "discoverable": "Opt in to scout discovery.",
+      "coach": "Invite a coach to endorse you.",
+      "video": "Upload at least one highlight clip.",
+      "match": "Log a match from the last 45 days.",
+      "logMore": "Log more matches to strengthen your weekly performance story.",
+      "share": "Share your Football Passport link to grow scout visibility this week."
+    },
+    "summaryReady": "Your weekly football report is ready.",
+    "summary": "{{lead}} Next step: {{next}}"
+  },
+  "journeyType": {
+    "all": "All",
+    "academy": "Academy",
+    "club_transfer": "Club transfer",
+    "achievement": "Achievement",
+    "league_title": "League title",
+    "cup_win": "Cup win",
+    "international_callup": "International call-up",
+    "injury": "Injury",
+    "recovery": "Recovery",
+    "trial": "Trial",
+    "professional_contract": "Professional contract",
+    "highlight_video": "Highlight video",
+    "coach_recommendation": "Coach recommendation",
+    "gps_session": "GPS session",
+    "statistics_milestone": "Statistics milestone"
+  },
+  "journeyUi": {
+    "title": "Football Journey",
+    "subtitle": "Your career story: academies, transfers, milestones and the moments scouts remember",
+    "count_one": "{{count}} milestone on your timeline",
+    "count_other": "{{count}} milestones on your timeline",
+    "manage": "Manage",
+    "empty": "Your football journey will appear here as you add career milestones.",
+    "noFilterMatch": "No entries match this filter.",
+    "editTitle": "Edit Football Journey",
+    "editIntro": "Build your career story with academies, transfers, achievements, injuries, highlights and more.",
+    "addEntry": "Add journey entry",
+    "save": "Save journey",
+    "validationTitle": "Check your entries",
+    "validationBody": "Each entry needs a title and a date.",
+    "saveFailedTitle": "Couldn't save",
+    "saveFailed": "Your journey couldn't be saved. Please try again."
+  },
+  "insights": {
+    "overline": "Performance insights",
+    "title": "Your development this week",
+    "subtitle": "Matches, Passport reach and GPS load in one view",
+    "snapshotTitle": "Your performance summary",
+    "item": {
+      "weeklyMatches": {
+        "label": "Matches (7 days)",
+        "hint": "Matches you logged in the last 7 days."
+      },
+      "goalContribution": {
+        "label": "Goal contributions",
+        "hint": "Goals plus assists in the last 7 days."
+      },
+      "passAccuracy": {
+        "label": "Pass accuracy",
+        "hint": "From matches where you recorded passing."
+      },
+      "portfolioStrength": {
+        "label": "Passport strength",
+        "hint": "Complete Passport items to raise it."
+      },
+      "scoutViews": {
+        "label": "Scout views (week)",
+        "hint": "Scouts who opened your Football Passport this week."
+      },
+      "gpsDistance": {
+        "label": "GPS distance",
+        "hint": "Total distance across your latest GPS sessions."
+      }
+    }
+  },
+  "replayCard": {
+    "overline": "Career Replay",
+    "title": "{{season}} recap",
+    "matches_one": "{{count}} match logged this season.",
+    "matches_other": "{{count}} matches logged this season.",
+    "contributions": "Contributions: {{goals}} goals and {{assists}} assists.",
+    "views_one": "Your Football Passport was viewed {{count}} time.",
+    "views_other": "Your Football Passport was viewed {{count}} times.",
+    "milestones_one": "{{count}} milestone unlocked.",
+    "milestones_other": "{{count}} milestones unlocked.",
+    "empty": "Log matches this season to build your recap.",
+    "open": "Open replay"
+  },
+  "milestoneUi": {
+    "overline": "Milestones",
+    "title": "Achievements unlocked",
+    "earned_one": "{{count}} milestone earned",
+    "earned_other": "{{count}} milestones earned",
+    "new_one": "New milestone unlocked",
+    "new_other": "New milestones unlocked",
+    "empty": "Log matches, publish your Football Passport and collect coach endorsements to unlock milestones.",
+    "seeMore": "See {{count}} more"
+  },
+  "milestone": {
+    "first_match": {
+      "title": "First match logged",
+      "description": "You started tracking real match performance."
+    },
+    "ten_matches": {
+      "title": "10 matches logged",
+      "description": "A consistent match history is building."
+    },
+    "first_highlight": {
+      "title": "First highlight video",
+      "description": "Scouts can now see your best moments."
+    },
+    "passport_live": {
+      "title": "Football Passport live",
+      "description": "Your public Passport can be shared."
+    },
+    "username_claimed": {
+      "title": "Custom link claimed",
+      "description": "Your scoutx.app link is ready to share."
+    },
+    "discoverable": {
+      "title": "Scout discovery on",
+      "description": "You opted in to appear in scout search."
+    },
+    "first_endorsement": {
+      "title": "First coach endorsement",
+      "description": "A trusted voice was added to your Football Passport."
+    },
+    "first_scout_view": {
+      "title": "First scout view",
+      "description": "A scout opened your Football Passport."
+    },
+    "portfolio_strong": {
+      "title": "Passport strength 80+",
+      "description": "Your Football Passport is nearly complete."
+    }
   }
 }

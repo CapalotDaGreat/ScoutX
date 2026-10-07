@@ -4,10 +4,16 @@ import { Avatar } from '@/components/primitives/Avatar';
 import { Badge } from '@/components/primitives/Badge';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
-import { getRecommendationTypeLabel } from '@/features/trust-system/models/TrustModel';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 import { CalendarDays, Quote } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { ENDORSEMENT_CATEGORIES, type EndorsementCategory } from '@/features/public-portfolio/constants';
+
+function isEndorsementCategory(value: string): value is EndorsementCategory {
+  return (ENDORSEMENT_CATEGORIES as readonly string[]).includes(value);
+}
 
 export type RecommendationCardProps = {
   recommendation: TrustRecommendation;
@@ -16,13 +22,16 @@ export type RecommendationCardProps = {
 
 export function RecommendationCard({ recommendation, index = 0 }: RecommendationCardProps) {
   const { colors } = useTheme();
-  const dateLabel = new Date(recommendation.updatedAt).toLocaleDateString(undefined, {
+  const { t, i18n } = useAppTranslation('trust');
+  const reduceMotion = useReducedMotion();
+  const categoryLabel = (value: string) => (isEndorsementCategory(value) ? t(`category.${value}`) : value);
+  const dateLabel = new Date(recommendation.updatedAt).toLocaleDateString(i18n.language, {
     month: 'short',
     year: 'numeric',
   });
 
   return (
-    <Animated.View entering={FadeInUp.delay(index * 50).duration(350)}>
+    <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(index * 50).duration(350)}>
       <Card variant="outlined" padding="md" className="gap-3">
         <View className="flex-row items-start gap-3">
           <Avatar
@@ -40,22 +49,22 @@ export function RecommendationCard({ recommendation, index = 0 }: Recommendation
             </Text>
           </View>
           {recommendation.featured ? (
-            <Badge label="Featured" variant="accent" size="sm" />
+            <Badge label={t('featured')} variant="accent" size="sm" />
           ) : null}
         </View>
 
         <View className="flex-row flex-wrap items-center gap-2">
           <Badge
-            label={getRecommendationTypeLabel(recommendation.type)}
+            label={t(`recommendationType.${recommendation.type}`)}
             variant={recommendation.type === 'coach_recommendation' ? 'info' : 'accent'}
             size="sm"
           />
           {recommendation.category ? (
-            <Badge label={recommendation.category} variant="outline" size="sm" />
+            <Badge label={categoryLabel(recommendation.category)} variant="outline" size="sm" />
           ) : null}
           {recommendation.yearsKnown ? (
             <Badge
-              label={`${recommendation.yearsKnown} yr${recommendation.yearsKnown === 1 ? '' : 's'} known`}
+              label={t('yearsKnownBadge', { count: recommendation.yearsKnown })}
               variant="outline"
               size="sm"
             />
@@ -82,7 +91,7 @@ export function RecommendationCard({ recommendation, index = 0 }: Recommendation
         {recommendation.skills.length > 0 ? (
           <View className="flex-row flex-wrap gap-1.5">
             {recommendation.skills.map((skill) => (
-              <Badge key={skill} label={skill} variant="default" size="sm" />
+              <Badge key={skill} label={categoryLabel(skill)} variant="default" size="sm" />
             ))}
           </View>
         ) : null}

@@ -46,7 +46,7 @@ export {
 
 export {
   JOURNEY_TYPE_META,
-  JOURNEY_TYPE_OPTIONS,
+  JOURNEY_TYPES,
   JOURNEY_FILTER_ALL,
   type JourneyTypeMeta,
   type JourneyFilterOption,

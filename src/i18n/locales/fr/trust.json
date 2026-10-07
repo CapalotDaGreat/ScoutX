@@ -41,7 +41,8 @@
     "missingMessage": "Le contexte de la relation et le texte de l’avis sont requis.",
     "removeTitle": "Retirer l’avis",
     "removeMessage": "Cet avis sera définitivement retiré.",
-    "footerNote": "Les recommandations d’entraîneur viennent du staff club vérifié. Les scouts peuvent publier un avis sur le profil de confiance."
+    "footerNote": "Les recommandations d’entraîneur viennent du staff club vérifié. Les scouts peuvent publier un avis sur le profil de confiance.",
+    "skillsPlaceholder": "Passes vers l'avant\nRésistance au pressing"
   },
   "report": {
     "button": "Signaler",
@@ -73,5 +74,73 @@
     "block": "Bloquer",
     "unblock": "Débloquer",
     "cancel": "Annuler"
+  },
+  "featured": "À la une",
+  "entityWithClub": "Club vérifié · {{club}}",
+  "entity": {
+    "player": "Joueur vérifié",
+    "scout": "Recruteur vérifié",
+    "club": "Club vérifié",
+    "coach": "Entraîneur vérifié"
+  },
+  "recommendationType": {
+    "coach_recommendation": "Recommandation d'entraîneur",
+    "scout_endorsement": "Recommandation de recruteur"
+  },
+  "recommendationSection": {
+    "coach_recommendation": "Recommandations d'entraîneurs",
+    "scout_endorsement": "Recommandations de recruteurs"
+  },
+  "yearsKnownBadge_one": "Connu depuis {{count}} an",
+  "yearsKnownBadge_other": "Connu depuis {{count}} ans",
+  "tenure": {
+    "title": "Années au club",
+    "years_one": "{{count}} an",
+    "years_other": "{{count}} ans"
+  },
+  "category": {
+    "Technical": "Technique",
+    "Tactical": "Tactique",
+    "Physical": "Physique",
+    "Mental": "Mental",
+    "Leadership": "Leadership",
+    "Professionalism": "Professionnalisme"
+  },
+  "coachEndorsement": {
+    "title": "Recommandation d'entraîneur",
+    "intro": "Rédige une recommandation pour {{playerName}}. Les joueurs ne peuvent pas modifier ton texte.",
+    "role": "Ton rôle",
+    "rolePlaceholder": "ex. entraîneur principal U17",
+    "organization": "Club / académie",
+    "yearsKnown": "Années de collaboration",
+    "headlinePlaceholder": "ex. Professionnalisme remarquable",
+    "body": "Recommandation",
+    "bodyPlaceholder": "Décris ce que tu as vu chez ce joueur…",
+    "missingMessage": "Le club, le contexte de la relation et le texte de la recommandation sont obligatoires.",
+    "publish": "Publier la recommandation"
+  },
+  "verificationCard": {
+    "overline": "Vérification",
+    "title": "Vérification du Football Passport",
+    "body": "La vérification apparaît sur ton Football Passport et les recruteurs peuvent filtrer les joueurs vérifiés.",
+    "checking": "Vérification du statut…",
+    "verified": "Ton Football Passport est vérifié.",
+    "verifiedOn": "Ton Football Passport a été vérifié le {{date}}.",
+    "requested": "Ta demande est en cours d'examen. Nous te préviendrons dès qu'une décision sera prise.",
+    "pending": "La vérification est en attente.",
+    "request": "Demander la vérification"
+  },
+  "admin": {
+    "overline": "Modération",
+    "title": "File de modération",
+    "counts": "{{verifications}} demandes de vérification · {{reports}} signalements",
+    "loading": "Chargement…",
+    "empty": "Aucun élément en attente.",
+    "loadFailed": "Impossible de charger la file.",
+    "approve": "Approuver",
+    "reject": "Refuser",
+    "reportLine": "Signalement · {{target}} · {{reason}}",
+    "markReviewed": "Marquer comme traité",
+    "refresh": "Actualiser"
   }
 }

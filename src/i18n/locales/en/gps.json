@@ -47,5 +47,28 @@
     "sprints_one": "{{count}} sprint",
     "sprints_other": "{{count}} sprints",
     "accuracyUnknown": "GPS accuracy was not recorded for this session, so treat area figures as approximate."
+  },
+  "controls": {
+    "title": "Match recording",
+    "status": {
+      "idle": "Ready",
+      "recording": "Recording",
+      "paused": "Paused",
+      "completed": "Completed"
+    },
+    "label": "Session label",
+    "labelPlaceholder": "League match, training, trial…",
+    "points_one": "{{count}} GPS point captured · battery-friendly sampling every 5 s / 5 m",
+    "points_other": "{{count}} GPS points captured · battery-friendly sampling every 5 s / 5 m",
+    "finish": "Finish",
+    "discard": "Discard",
+    "historySubtitle": "Your previously recorded GPS sessions."
+  },
+  "heatmap": {
+    "title": "Movement heatmap",
+    "subtitle": "Where you spent the most time. Stronger colour means more time.",
+    "empty": "The heatmap appears once GPS points are recorded.",
+    "a11y_one": "Movement heatmap with {{count}} active area",
+    "a11y_other": "Movement heatmap with {{count}} active areas"
   }
 }

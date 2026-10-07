@@ -213,7 +213,19 @@
     "noGpsData": "Deze speler heeft geen GPS-sessies gedeeld.",
     "ageUnknown": "Leeftijd niet opgegeven",
     "positionUnknown": "Positie niet ingesteld",
-    "ratingSource": "Bron van beoordeling"
+    "ratingSource": "Bron van beoordeling",
+    "sections": {
+      "trustTitle": "Vertrouwen & aanbevelingen",
+      "trustSubtitle": "Verificatie en aanbevelingen van trainers",
+      "reportsTitle": "Scoutingrapporten",
+      "reportsSubtitle": "Je notities en beoordelingen van deze speler",
+      "bioSubtitle": "Biografie en referentie",
+      "attributesSubtitle": "Radar en technische beoordelingen",
+      "clubCount_one": "{{count}} club",
+      "clubCount_other": "{{count}} clubs",
+      "footageSubtitle": "Beschikbare highlightvideo's",
+      "honoursSubtitle": "Prestaties in de loopbaan"
+    }
   },
   "search": {
     "scopeLabel": "Zoeken in",
@@ -235,7 +247,12 @@
     "filterNamePlaceholder": "bijv. U21 vleugels in de buurt",
     "includeSearchLabel": "Huidige zoekopdracht meenemen",
     "includeSearchHint": "Herstelt ook de zoektekst en het bereik",
-    "deleteFilter": "{{name}} verwijderen"
+    "deleteFilter": "{{name}} verwijderen",
+    "presets": {
+      "preset-u21-potential": "O21 met veel potentieel",
+      "preset-verified-wingers": "Geverifieerde vleugelspelers",
+      "preset-available-now": "Nu beschikbaar"
+    }
   },
   "reports": {
     "notRatedTapToSet": "Niet beoordeeld · tik om in te stellen",
@@ -291,7 +308,10 @@
     "createReport": "Rapport maken",
     "count_one": "{{count}} rapport opgeslagen",
     "count_other": "{{count}} rapporten opgeslagen",
-    "sectionEmpty": "Nog geen rapporten. Maak de eerste gestructureerde beoordeling voor {{playerName}}."
+    "sectionEmpty": "Nog geen rapporten. Maak de eerste gestructureerde beoordeling voor {{playerName}}.",
+    "cardOverline": "Scoutingrapport",
+    "byScout": "door {{name}}",
+    "strengths": "Sterke punten"
   },
   "intelligence": {
     "whyTitle": "Waarom deze speler",
@@ -449,5 +469,123 @@
       "record": "uit gegevens",
       "self_reported": "zelf opgegeven"
     }
+  },
+  "sort": {
+    "relevance": "Beste match",
+    "overall": "Totaalscore",
+    "potential": "Potentieel",
+    "age": "Leeftijd",
+    "name": "Naam",
+    "distance": "Afstand",
+    "recently_updated": "Recent bijgewerkt",
+    "most_viewed": "Meest bekeken",
+    "sprint_speed": "Sprintsnelheid",
+    "weak_foot": "Zwakke voet ★",
+    "skill_moves": "Techniek ★",
+    "goals": "Meeste doelpunten",
+    "assists": "Meeste assists",
+    "newest": "Nieuwste spelers"
+  },
+  "position": {
+    "GK": "Keeper",
+    "CB": "Centrale verdediger",
+    "LB": "Linksback",
+    "RB": "Rechtsback",
+    "CDM": "Verdedigende middenvelder",
+    "CM": "Centrale middenvelder",
+    "CAM": "Aanvallende middenvelder",
+    "LW": "Linksbuiten",
+    "RW": "Rechtsbuiten",
+    "ST": "Spits",
+    "CF": "Centrumspits"
+  },
+  "chips": {
+    "active": "Actieve filters",
+    "clearAll": "Alles wissen",
+    "remove": "Filter verwijderen: {{label}}",
+    "ageRange": "Leeftijd {{min}}–{{max}}",
+    "foot": "Voet: {{foot}}",
+    "overall": "TOT {{value}}+",
+    "potential": "POT {{value}}+",
+    "verified": "Geverifieerd",
+    "recentlyActive": "Recent actief",
+    "hasVideos": "Met video's",
+    "sprint": "Sprint {{value}}+ km/u"
+  },
+  "continueCard": {
+    "a11y": "Verder scouten: {{name}}",
+    "overline": "Verder scouten",
+    "title": "Ga verder waar je gebleven was",
+    "stage": "Pipeline · {{stage}}",
+    "openReport": "Scoutingrapport openen",
+    "openPipeline": "Pipeline openen"
+  },
+  "header": {
+    "overline": "Scoutwerkruimte",
+    "greeting": {
+      "morning": "Goedemorgen, {{name}}",
+      "afternoon": "Goedemiddag, {{name}}",
+      "evening": "Goedenavond, {{name}}"
+    },
+    "matching_one": "{{count}} speler past vandaag bij je voorkeuren.",
+    "matching_other": "{{count}} spelers passen vandaag bij je voorkeuren.",
+    "statMatching": "Passend",
+    "statPipeline": "Pipeline",
+    "statRecent": "Recent"
+  },
+  "clubProfile": "Clubprofiel",
+  "a11y": {
+    "recentForm": "Recente vorm: {{results}}",
+    "form": {
+      "W": "winst",
+      "D": "gelijkspel",
+      "L": "verlies"
+    },
+    "openReport": "Scoutingrapport openen",
+    "radar": "Radargrafiek van spelerskenmerken",
+    "removeCompare": "Uit vergelijking halen",
+    "addCompare": "Aan vergelijking toevoegen",
+    "compareFull": "Vergelijking is vol",
+    "unsave": "Uit opgeslagen halen",
+    "save": "Speler opslaan"
+  },
+  "stage": {
+    "discovered": "Ontdekt",
+    "shortlisted": "Op shortlist",
+    "contacted": "Benaderd",
+    "invited": "Uitgenodigd",
+    "trial": "Proeftraining",
+    "evaluated": "Beoordeeld",
+    "follow_up": "Opvolgen"
+  },
+  "pipelineUi": {
+    "emptyStage": "Geen spelers in deze fase.",
+    "stageTitle": "Wervingsfase",
+    "folder": "Map",
+    "folders": "Mappen",
+    "shortlists": "Shortlists",
+    "remove": "Uit pipeline halen",
+    "sectionTitle": "Wervingspipeline",
+    "sectionSubtitle": "Volg deze speler door je scoutingproces",
+    "inPipeline": "In je pipeline",
+    "manageHint": "Beheer mappen, shortlists en fases op één plek.",
+    "manage": "Werving beheren",
+    "move": "{{name}} verplaatsen",
+    "shortlistCount_one": "{{count}} shortlist",
+    "shortlistCount_other": "{{count}} shortlists",
+    "createFolder": "Map maken",
+    "createShortlist": "Shortlist maken",
+    "new": "Nieuw",
+    "allPlayers": "Alle spelers",
+    "allShortlists": "Alle shortlists",
+    "folderName": "Mapnaam",
+    "folderPlaceholder": "bijv. Academiedoelen",
+    "color": "Kleur",
+    "colorOption": "Kleur {{index}}",
+    "noFolder": "Geen map",
+    "shortlistName": "Naam shortlist",
+    "shortlistPlaceholder": "bijv. Zomertransferperiode",
+    "description": "Beschrijving",
+    "descriptionPlaceholder": "Optionele context voor je team"
   }
 }

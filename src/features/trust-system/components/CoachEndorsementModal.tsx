@@ -6,6 +6,7 @@ import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { ENDORSEMENT_CATEGORIES } from '@/features/public-portfolio/constants';
 import { type TrustRecommendation, type TrustRecommendationDraft } from '@/features/trust-system/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type CoachEndorsementModalProps = {
   visible: boolean;
@@ -26,7 +27,7 @@ function createCoachDraft(category: string): TrustRecommendationDraft {
     skills: [category],
     yearsKnown: null,
     featured: true,
-    authorTitle: 'Head Coach',
+    authorTitle: '',
     authorOrganization: '',
   };
 }
@@ -39,11 +40,12 @@ export function CoachEndorsementModal({
   onClose,
   onSave,
 }: CoachEndorsementModalProps) {
+  const { t } = useAppTranslation(['trust', 'common']);
   const [category, setCategory] = useState<string>(ENDORSEMENT_CATEGORIES[0]);
   const [relationship, setRelationship] = useState('');
   const [headline, setHeadline] = useState('');
   const [body, setBody] = useState('');
-  const [authorTitle, setAuthorTitle] = useState('Head Coach');
+  const [authorTitle, setAuthorTitle] = useState('');
   const [authorOrganization, setAuthorOrganization] = useState('');
   const [yearsKnown, setYearsKnown] = useState('');
 
@@ -75,7 +77,7 @@ export function CoachEndorsementModal({
 
   const handleSave = async () => {
     if (!relationship.trim() || !body.trim() || !authorOrganization.trim()) {
-      Alert.alert('Missing fields', 'Club, relationship context, and recommendation text are required.');
+      Alert.alert(t('endorsement.missingTitle'), t('coachEndorsement.missingMessage'));
       return;
     }
 
@@ -83,7 +85,7 @@ export function CoachEndorsementModal({
       type: 'coach_recommendation',
       category,
       relationship: relationship.trim(),
-      headline: headline.trim() || `${category} endorsement`,
+      headline: headline.trim(),
       body: body.trim(),
       skills: [category],
       yearsKnown: yearsKnown ? Number(yearsKnown) : null,
@@ -95,10 +97,10 @@ export function CoachEndorsementModal({
   };
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Coach endorsement" size="lg">
+    <Modal visible={visible} onClose={onClose} title={t('coachEndorsement.title')} size="lg">
       <ScrollView contentContainerClassName="gap-4 pb-4">
         <Text variant="body-sm" color="secondary">
-          Write a verified-style recommendation for {playerName}. Players cannot edit your words.
+          {t('coachEndorsement.intro', { playerName })}
         </Text>
 
         <View className="flex-row flex-wrap gap-2">
@@ -107,43 +109,58 @@ export function CoachEndorsementModal({
               key={item}
               variant={category === item ? 'accent' : 'secondary'}
               size="sm"
+              accessibilityState={{ selected: category === item }}
               onPress={() => setCategory(item)}
             >
-              {item}
+              {t(`category.${item}`)}
             </Button>
           ))}
         </View>
 
-        <Input label="Your role" value={authorTitle} onChangeText={setAuthorTitle} />
-        <Input label="Club / academy" value={authorOrganization} onChangeText={setAuthorOrganization} />
         <Input
-          label="Relationship context"
+          label={t('coachEndorsement.role')}
+          value={authorTitle}
+          onChangeText={setAuthorTitle}
+          placeholder={t('coachEndorsement.rolePlaceholder')}
+        />
+        <Input
+          label={t('coachEndorsement.organization')}
+          value={authorOrganization}
+          onChangeText={setAuthorOrganization}
+        />
+        <Input
+          label={t('endorsement.relationship')}
           value={relationship}
           onChangeText={setRelationship}
           placeholder="U17 head coach, 2024–2026"
         />
         <Input
-          label="Years worked together"
+          label={t('coachEndorsement.yearsKnown')}
           value={yearsKnown}
           onChangeText={setYearsKnown}
           keyboardType="number-pad"
         />
-        <Input label="Headline" value={headline} onChangeText={setHeadline} placeholder="Standout professionalism" />
         <Input
-          label="Recommendation"
+          label={t('endorsement.headline')}
+          value={headline}
+          onChangeText={setHeadline}
+          placeholder={t('coachEndorsement.headlinePlaceholder')}
+        />
+        <Input
+          label={t('coachEndorsement.body')}
           value={body}
           onChangeText={setBody}
           multiline
           numberOfLines={6}
-          placeholder="Alex consistently demonstrates exceptional tactical awareness..."
+          placeholder={t('coachEndorsement.bodyPlaceholder')}
         />
 
         <View className="flex-row gap-2">
           <Button variant="secondary" className="flex-1" onPress={onClose}>
-            Cancel
+            {t('common:cancel')}
           </Button>
           <Button variant="accent" className="flex-1" loading={saving} onPress={() => void handleSave()}>
-            Publish endorsement
+            {t('coachEndorsement.publish')}
           </Button>
         </View>
       </ScrollView>

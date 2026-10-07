@@ -12,6 +12,7 @@ import {
 } from '@/features/football-journey/services/journeyTimelineService';
 import { type JourneyEntry } from '@/features/football-journey/types';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type JourneyEntryCardProps = {
   entry: JourneyEntry;
@@ -21,6 +22,7 @@ export type JourneyEntryCardProps = {
 
 export function JourneyEntryCard({ entry, index, isLast = false }: JourneyEntryCardProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('career');
   const meta = JOURNEY_TYPE_META[entry.type];
   const Icon = meta.icon;
   const accent = getJourneyEntryAccent(entry.type);
@@ -46,7 +48,7 @@ export function JourneyEntryCard({ entry, index, isLast = false }: JourneyEntryC
 
       <Card variant="outlined" padding="md" className="mb-2 flex-1">
         <View className="flex-row flex-wrap items-center gap-2">
-          <Badge label={meta.label} variant={accent} size="sm" />
+          <Badge label={t(`journeyType.${entry.type}`)} variant={accent} size="sm" />
           <Text variant="caption" color="secondary">
             {formatJourneyDate(entry.date, entry.endDate)}
           </Text>

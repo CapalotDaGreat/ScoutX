@@ -9,8 +9,10 @@ import {
   resolveVerificationRequest,
   type AdminReviewQueue,
 } from '@/features/admin-review/services/adminReviewService';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export function AdminReviewCard() {
+  const { t } = useAppTranslation(['trust', 'common']);
   const [queue, setQueue] = useState<AdminReviewQueue>({
     verificationRequests: [],
     contentReports: [],
@@ -25,11 +27,11 @@ export function AdminReviewCard() {
       const next = await fetchAdminReviewQueue();
       setQueue(next);
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'Failed to load admin queue.');
+      setError(loadError instanceof Error ? loadError.message : t('trust:admin.loadFailed'));
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     void reload();
@@ -44,13 +46,14 @@ export function AdminReviewCard() {
     <Card variant="outlined" padding="md" className="gap-3">
       <View>
         <Text variant="overline" color="secondary">
-          Admin review
+          {t('trust:admin.overline')}
         </Text>
-        <Text weight="semibold">Moderation queue</Text>
+        <Text weight="semibold">{t('trust:admin.title')}</Text>
         <Text variant="caption" color="secondary">
-          {pendingVerifications.length} verification request
-          {pendingVerifications.length === 1 ? '' : 's'} · {openReports.length} content report
-          {openReports.length === 1 ? '' : 's'}
+          {t('trust:admin.counts', {
+            verifications: pendingVerifications.length,
+            reports: openReports.length,
+          })}
         </Text>
       </View>
 
@@ -62,13 +65,13 @@ export function AdminReviewCard() {
 
       {isLoading ? (
         <Text variant="body-sm" color="secondary">
-          Loading queue…
+          {t('trust:admin.loading')}
         </Text>
       ) : null}
 
       {!isLoading && pendingVerifications.length === 0 && openReports.length === 0 ? (
         <Text variant="body-sm" color="secondary">
-          No pending admin items.
+          {t('trust:admin.empty')}
         </Text>
       ) : null}
 
@@ -88,7 +91,7 @@ export function AdminReviewCard() {
                 )
               }
             >
-              Approve
+              {t('trust:admin.approve')}
             </Button>
             <Button
               variant="secondary"
@@ -99,7 +102,7 @@ export function AdminReviewCard() {
                 )
               }
             >
-              Reject
+              {t('trust:admin.reject')}
             </Button>
           </View>
         </View>
@@ -108,7 +111,7 @@ export function AdminReviewCard() {
       {openReports.slice(0, 3).map((item) => (
         <View key={item.id} className="gap-2 rounded-xl border border-border p-3">
           <Text weight="semibold">
-            Report · {item.targetType} · {item.reason}
+            {t('trust:admin.reportLine', { target: item.targetType, reason: item.reason })}
           </Text>
           <Text variant="body-sm" color="secondary">
             {item.details}
@@ -117,18 +120,18 @@ export function AdminReviewCard() {
             variant="secondary"
             size="sm"
             onPress={() =>
-              void archiveContentReport({ reportId: item.id, reviewerNote: 'Reviewed by admin' }).then(
+              void archiveContentReport({ reportId: item.id, reviewerNote: 'reviewed' }).then(
                 () => reload(),
               )
             }
           >
-            Mark reviewed
+            {t('trust:admin.markReviewed')}
           </Button>
         </View>
       ))}
 
       <Button variant="ghost" size="sm" onPress={() => void reload()}>
-        Refresh queue
+        {t('trust:admin.refresh')}
       </Button>
     </Card>
   );

@@ -5,7 +5,6 @@ import { Text } from '@/components/primitives/Text';
 import { RecruitmentStageBadge } from '@/features/scout-recruitment/components/RecruitmentStageBadge';
 import {
   RECRUITMENT_STAGE_COLORS,
-  RECRUITMENT_STAGE_LABELS,
   RECRUITMENT_STAGES,
 } from '@/features/scout-recruitment/constants';
 import { useRecruitment } from '@/features/scout-recruitment/context/RecruitmentProvider';
@@ -16,6 +15,7 @@ import {
 import { cn } from '@/utils/cn';
 import { Check } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RecruitmentEntryActionsModalProps = {
   visible: boolean;
@@ -29,6 +29,7 @@ export function RecruitmentEntryActionsModal({
   onClose,
 }: RecruitmentEntryActionsModalProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
   const {
     workspace,
     movePlayerStage,
@@ -75,7 +76,7 @@ export function RecruitmentEntryActionsModal({
       <View className="gap-5">
         <View className="gap-2">
           <Text variant="overline" color="secondary">
-            Recruitment Stage
+            {t('pipelineUi.stageTitle')}
           </Text>
           <RecruitmentStageBadge stage={entry.stage} />
           <View className="gap-2">
@@ -101,7 +102,7 @@ export function RecruitmentEntryActionsModal({
                   <View className="flex-row items-center gap-2">
                     <View className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
                     <Text variant="body-sm" className="font-sans-semibold">
-                      {RECRUITMENT_STAGE_LABELS[stage]}
+                      {t(`stage.${stage}`)}
                     </Text>
                   </View>
                   {isCurrent ? <Check size={16} color={colors.accent} /> : null}
@@ -113,7 +114,7 @@ export function RecruitmentEntryActionsModal({
 
         <View className="gap-2">
           <Text variant="overline" color="secondary">
-            Folder
+            {t('pipelineUi.folder')}
           </Text>
           <View className="flex-row flex-wrap gap-2">
             {folders.map((folder) => {
@@ -122,6 +123,7 @@ export function RecruitmentEntryActionsModal({
                 <Pressable
                   key={folder.id}
                   accessibilityRole="button"
+                  accessibilityState={{ selected: isActive }}
                   disabled={isSaving}
                   onPress={() => {
                     void handleAssignFolder(folder.id);
@@ -146,7 +148,7 @@ export function RecruitmentEntryActionsModal({
         {shortlists.length > 0 ? (
           <View className="gap-2">
             <Text variant="overline" color="secondary">
-              Shortlists
+              {t('pipelineUi.shortlists')}
             </Text>
             {shortlists.map((shortlist) => {
               const isMember = entry.shortlistIds.includes(shortlist.id);
@@ -184,7 +186,7 @@ export function RecruitmentEntryActionsModal({
         ) : null}
 
         <Button variant="ghost" onPress={handleRemove} disabled={isSaving}>
-          Remove from pipeline
+          {t('pipelineUi.remove')}
         </Button>
       </View>
     </Modal>

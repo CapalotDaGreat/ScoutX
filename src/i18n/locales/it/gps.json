@@ -47,5 +47,28 @@
     "sprints_one": "{{count}} sprint",
     "sprints_other": "{{count}} sprint",
     "accuracyUnknown": "La precisione GPS non è stata registrata per questa sessione, quindi i valori dell'area sono approssimativi."
+  },
+  "controls": {
+    "title": "Registrazione partita",
+    "status": {
+      "idle": "Pronto",
+      "recording": "In registrazione",
+      "paused": "In pausa",
+      "completed": "Completata"
+    },
+    "label": "Nome della sessione",
+    "labelPlaceholder": "Partita di campionato, allenamento, provino…",
+    "points_one": "{{count}} punto GPS registrato · campionamento a basso consumo ogni 5 s / 5 m",
+    "points_other": "{{count}} punti GPS registrati · campionamento a basso consumo ogni 5 s / 5 m",
+    "finish": "Termina",
+    "discard": "Scarta",
+    "historySubtitle": "Le tue sessioni GPS registrate in precedenza."
+  },
+  "heatmap": {
+    "title": "Mappa di calore",
+    "subtitle": "Dove hai trascorso più tempo. Colore più intenso significa più tempo.",
+    "empty": "La mappa di calore compare quando vengono registrati punti GPS.",
+    "a11y_one": "Mappa di calore con {{count}} zona attiva",
+    "a11y_other": "Mappa di calore con {{count}} zone attive"
   }
 }

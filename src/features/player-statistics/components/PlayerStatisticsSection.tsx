@@ -11,6 +11,8 @@ import { RadarChart } from '@/features/player-statistics/components/RadarChart';
 import { StatisticsCards } from '@/features/player-statistics/components/StatisticsCards';
 import { usePlayerStatistics } from '@/features/player-statistics/hooks/usePlayerStatistics';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type PlayerStatisticsSectionProps = {
   matches?: PlayerMatchStatistics[];
@@ -19,10 +21,12 @@ export type PlayerStatisticsSectionProps = {
 
 export function PlayerStatisticsSection({ matches, onLogMatchPress }: PlayerStatisticsSectionProps) {
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
+  const { t } = useAppTranslation('statistics');
+  const reduceMotion = useReducedMotion();
 
   if (isLoading) {
     return (
-      <Section title="Statistics" subtitle="Calculating player performance trends">
+      <Section title={t('title')} subtitle={t('loadingSubtitle')}>
         <SkeletonCard />
         <SkeletonCard />
       </Section>
@@ -31,19 +35,19 @@ export function PlayerStatisticsSection({ matches, onLogMatchPress }: PlayerStat
 
   if (error) {
     return (
-      <Section title="Statistics" subtitle="Performance data">
-        <EmptyState title="Statistics unavailable" description={error} />
+      <Section title={t('title')} subtitle={t('summary.sectionSubtitle')}>
+        <EmptyState title={t('summary.unavailable')} description={error} />
       </Section>
     );
   }
 
   if (overview.matchCount === 0) {
     return (
-      <Section title="Statistics" subtitle="Performance data">
+      <Section title={t('title')} subtitle={t('summary.sectionSubtitle')}>
         <EmptyState
-          title="No match data yet"
-          description="Statistics will appear after match records are available."
-          actionLabel="Log Match"
+          title={t('emptyTitle')}
+          description={t('emptyDescription')}
+          actionLabel={onLogMatchPress ? t('logMatch') : undefined}
           onAction={onLogMatchPress}
         />
       </Section>
@@ -51,14 +55,14 @@ export function PlayerStatisticsSection({ matches, onLogMatchPress }: PlayerStat
   }
 
   return (
-    <Animated.View entering={FadeInUp.delay(250).duration(500)}>
+    <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(250).duration(500)}>
       <Section
-        title="Statistics"
-        subtitle={`${overview.matchCount} matches analyzed with totals, averages and trends`}
+        title={t('title')}
+        subtitle={t('summary.matchesAnalysed', { count: overview.matchCount })}
         action={
           onLogMatchPress ? (
             <Button variant="secondary" size="sm" onPress={onLogMatchPress}>
-              Log Match
+              {t('logMatch')}
             </Button>
           ) : undefined
         }
@@ -70,7 +74,7 @@ export function PlayerStatisticsSection({ matches, onLogMatchPress }: PlayerStat
           <ProgressGraphs graphs={overview.progressGraphs} />
           <MatchHistory items={overview.matchHistory} maxItems={6} />
           <Text variant="caption" color="secondary">
-            Trends compare recent match averages against the previous sample.
+            {t('summary.trendNote')}
           </Text>
         </View>
       </Section>

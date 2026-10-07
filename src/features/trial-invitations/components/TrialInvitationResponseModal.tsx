@@ -9,7 +9,7 @@ import { TrialReplayCard } from '@/features/career-story/components/TrialReplayC
 import { TrialStatusBadge } from '@/features/trial-invitations/components/TrialStatusBadge';
 import { formatTrialDate } from '@/features/trial-invitations/models/TrialInvitationModel';
 import {
-  getCalendarActionLabel,
+  calendarActionKind,
   openTrialInCalendar,
 } from '@/features/trial-invitations/services/trialCalendarService';
 import { PLAYER_RESPONDABLE_STATUSES } from '@/features/trial-invitations/constants';
@@ -34,7 +34,7 @@ export function TrialInvitationResponseModal({
   onAccept,
   onDecline,
 }: TrialInvitationResponseModalProps) {
-  const { t } = useAppTranslation(['trials']);
+  const { t, i18n } = useAppTranslation(['trials', 'common']);
   const [note, setNote] = useState('');
 
   if (!invitation) {
@@ -50,18 +50,18 @@ export function TrialInvitationResponseModal({
           variant="secondary"
           className="flex-1"
           onPress={() => {
-            Alert.alert('Decline Trial', 'Are you sure you want to decline this invitation?', [
-              { text: 'Cancel', style: 'cancel' },
+            Alert.alert(t('trials:response.declineTitle'), t('trials:response.declineBody'), [
+              { text: t('common:cancel'), style: 'cancel' },
               {
-                text: 'Decline',
+                text: t('trials:decline'),
                 style: 'destructive',
                 onPress: () => {
                   void onDecline(invitation, note)
                     .then(onClose)
                     .catch((error: unknown) => {
                       Alert.alert(
-                        'Error',
-                        toUserMessage(error, 'Could not decline trial.'),
+                        t('common:errorTitle'),
+                        toUserMessage(error, t('trials:response.declineFailed')),
                       );
                     });
                 },
@@ -70,7 +70,7 @@ export function TrialInvitationResponseModal({
           }}
           disabled={saving}
         >
-          Decline
+          {t('trials:decline')}
         </Button>
         <Button
           variant="accent"
@@ -80,25 +80,25 @@ export function TrialInvitationResponseModal({
               .then(onClose)
               .catch((error: unknown) => {
                 Alert.alert(
-                  'Error',
-                  toUserMessage(error, 'Could not accept trial.'),
+                  t('common:errorTitle'),
+                  toUserMessage(error, t('trials:response.acceptFailed')),
                 );
               });
           }}
           loading={saving}
         >
-          Accept
+          {t('trials:accept')}
         </Button>
       </View>
     </View>
   ) : (
     <Button variant="secondary" onPress={onClose}>
-      Close
+      {t('common:close')}
     </Button>
   );
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Trial Invitation" size="sheet" footer={footer}>
+    <Modal visible={visible} onClose={onClose} title={t('trials:card.overline')} size="sheet" footer={footer}>
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ padding: 16, paddingBottom: 32 }}
@@ -110,10 +110,10 @@ export function TrialInvitationResponseModal({
             <TrialStatusBadge status={invitation.status} />
           </View>
           <Text variant="body-sm" color="secondary">
-            {formatTrialDate(invitation.scheduledDate)} · {invitation.location}
+            {formatTrialDate(invitation.scheduledDate, i18n.language)} · {invitation.location}
           </Text>
           <Text variant="body-sm" color="secondary">
-            Coach {invitation.coach} · Scout {invitation.scoutName}
+            {t('trials:response.coachScout', { coach: invitation.coach, scout: invitation.scoutName })}
           </Text>
           {invitation.notes ? (
             <Text variant="body-sm" color="secondary">
@@ -138,17 +138,17 @@ export function TrialInvitationResponseModal({
             onPress={() => {
               void openTrialInCalendar(invitation).catch((error: unknown) => {
                 Alert.alert(
-                  'Calendar',
-                  toUserMessage(error, 'Could not open calendar.'),
+                  t('trials:response.calendarTitle'),
+                  toUserMessage(error, t('trials:response.calendarFailed')),
                 );
               });
             }}
           >
-            {getCalendarActionLabel()}
+            {t(`trials:response.calendar.${calendarActionKind()}`)}
           </Button>
 
           <Text variant="label" color="secondary">
-            History
+            {t('trials:response.history')}
           </Text>
           <TrialHistoryTimeline history={invitation.history} />
           <TrialReplayCard invitation={invitation} />

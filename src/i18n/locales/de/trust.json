@@ -41,7 +41,8 @@
     "missingMessage": "Beziehungskontext und Empfehlungstext sind erforderlich.",
     "removeTitle": "Empfehlung entfernen",
     "removeMessage": "Diese Empfehlung wird dauerhaft entfernt.",
-    "footerNote": "Trainerempfehlungen kommen von verifiziertem Vereinsstab. Scouts können Endorsements im Vertrauensprofil veröffentlichen."
+    "footerNote": "Trainerempfehlungen kommen von verifiziertem Vereinsstab. Scouts können Endorsements im Vertrauensprofil veröffentlichen.",
+    "skillsPlaceholder": "Raumgewinnende Pässe\nPressingresistenz"
   },
   "report": {
     "button": "Melden",
@@ -73,5 +74,73 @@
     "block": "Blockieren",
     "unblock": "Freigeben",
     "cancel": "Abbrechen"
+  },
+  "featured": "Hervorgehoben",
+  "entityWithClub": "Verifizierter Verein · {{club}}",
+  "entity": {
+    "player": "Verifizierter Spieler",
+    "scout": "Verifizierter Scout",
+    "club": "Verifizierter Verein",
+    "coach": "Verifizierter Trainer"
+  },
+  "recommendationType": {
+    "coach_recommendation": "Trainerempfehlung",
+    "scout_endorsement": "Scout-Empfehlung"
+  },
+  "recommendationSection": {
+    "coach_recommendation": "Trainerempfehlungen",
+    "scout_endorsement": "Scout-Empfehlungen"
+  },
+  "yearsKnownBadge_one": "Seit {{count}} Jahr bekannt",
+  "yearsKnownBadge_other": "Seit {{count}} Jahren bekannt",
+  "tenure": {
+    "title": "Jahre im Verein",
+    "years_one": "{{count}} Jahr",
+    "years_other": "{{count}} Jahre"
+  },
+  "category": {
+    "Technical": "Technik",
+    "Tactical": "Taktik",
+    "Physical": "Athletik",
+    "Mental": "Mentalität",
+    "Leadership": "Führung",
+    "Professionalism": "Professionalität"
+  },
+  "coachEndorsement": {
+    "title": "Trainerempfehlung",
+    "intro": "Schreibe eine Empfehlung für {{playerName}}. Spieler können deinen Text nicht bearbeiten.",
+    "role": "Deine Rolle",
+    "rolePlaceholder": "z. B. Cheftrainer U17",
+    "organization": "Verein / Akademie",
+    "yearsKnown": "Jahre der Zusammenarbeit",
+    "headlinePlaceholder": "z. B. Herausragende Professionalität",
+    "body": "Empfehlung",
+    "bodyPlaceholder": "Beschreibe, was du von diesem Spieler gesehen hast…",
+    "missingMessage": "Verein, Beziehung und Empfehlungstext sind erforderlich.",
+    "publish": "Empfehlung veröffentlichen"
+  },
+  "verificationCard": {
+    "overline": "Verifizierung",
+    "title": "Football-Passport-Verifizierung",
+    "body": "Die Verifizierung erscheint auf deinem Football Passport, und Scouts können nach verifizierten Spielern filtern.",
+    "checking": "Verifizierungsstatus wird geprüft…",
+    "verified": "Dein Football Passport ist verifiziert.",
+    "verifiedOn": "Dein Football Passport wurde am {{date}} verifiziert.",
+    "requested": "Deine Anfrage wird geprüft. Wir benachrichtigen dich, sobald entschieden ist.",
+    "pending": "Die Verifizierung wird geprüft.",
+    "request": "Verifizierung anfragen"
+  },
+  "admin": {
+    "overline": "Admin-Prüfung",
+    "title": "Moderationswarteschlange",
+    "counts": "{{verifications}} Verifizierungsanfragen · {{reports}} Inhaltsmeldungen",
+    "loading": "Warteschlange wird geladen…",
+    "empty": "Keine offenen Einträge.",
+    "loadFailed": "Die Warteschlange konnte nicht geladen werden.",
+    "approve": "Genehmigen",
+    "reject": "Ablehnen",
+    "reportLine": "Meldung · {{target}} · {{reason}}",
+    "markReviewed": "Als geprüft markieren",
+    "refresh": "Aktualisieren"
   }
 }

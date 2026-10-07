@@ -8,6 +8,7 @@ import { TrialStatusBadge } from '@/features/trial-invitations/components/TrialS
 import { formatTrialDate } from '@/features/trial-invitations/models/TrialInvitationModel';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type TrialInvitationCardProps = {
   invitation: TrialInvitation;
@@ -23,6 +24,7 @@ export function TrialInvitationCard({
   footer,
 }: TrialInvitationCardProps) {
   const { colors } = useTheme();
+  const { t, i18n } = useAppTranslation('trials');
 
   return (
     <Animated.View entering={FadeInUp.delay(Math.min(index, 6) * 40).duration(320)}>
@@ -36,11 +38,11 @@ export function TrialInvitationCard({
         <View className="flex-row items-start justify-between gap-2">
           <View className="flex-1 gap-1">
             <Text variant="overline" color="accent">
-              Trial Invitation
+              {t('card.overline')}
             </Text>
             <Text weight="semibold">{invitation.club}</Text>
             <Text variant="body-sm" color="secondary">
-              {invitation.playerName} · Scout {invitation.scoutName}
+              {t('card.playerScout', { player: invitation.playerName, scout: invitation.scoutName })}
             </Text>
           </View>
           <TrialStatusBadge status={invitation.status} />
@@ -49,7 +51,7 @@ export function TrialInvitationCard({
         <View className="gap-2">
           <View className="flex-row items-center gap-2">
             <CalendarDays size={14} color={colors.textSecondary} />
-            <Text variant="body-sm">{formatTrialDate(invitation.scheduledDate)}</Text>
+            <Text variant="body-sm">{formatTrialDate(invitation.scheduledDate, i18n.language)}</Text>
           </View>
           <View className="flex-row items-center gap-2">
             <MapPin size={14} color={colors.textSecondary} />
@@ -60,7 +62,7 @@ export function TrialInvitationCard({
           <View className="flex-row items-center gap-2">
             <UserRound size={14} color={colors.textSecondary} />
             <Text variant="body-sm" color="secondary">
-              Coach {invitation.coach}
+              {t('card.coach', { coach: invitation.coach })}
             </Text>
           </View>
         </View>

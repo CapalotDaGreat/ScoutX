@@ -1,6 +1,4 @@
 import {
-  TRUST_ENTITY_LABELS,
-  TRUST_RECOMMENDATION_LABELS,
 } from '@/features/trust-system/constants';
 import {
   type ClubTenure,
@@ -230,18 +228,4 @@ export function groupRecommendationsByType(recommendations: TrustRecommendation[
     coach: recommendations.filter((item) => item.type === 'coach_recommendation'),
     scout: recommendations.filter((item) => item.type === 'scout_endorsement'),
   };
-}
-
-export function getVerificationLabel(
-  entity: keyof Pick<TrustProfile, 'player' | 'scout' | 'club' | 'coach'>,
-  profile: TrustProfile,
-): string {
-  if (entity === 'club' && profile.club.clubName) {
-    return `${TRUST_ENTITY_LABELS.club} · ${profile.club.clubName}`;
-  }
-  return TRUST_ENTITY_LABELS[entity];
-}
-
-export function getRecommendationTypeLabel(type: TrustRecommendation['type']): string {
-  return TRUST_RECOMMENDATION_LABELS[type];
 }

@@ -6,6 +6,7 @@ import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { type HeatmapGrid } from '@/features/gps/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type GpsHeatmapProps = {
   heatmap: HeatmapGrid;
@@ -15,17 +16,13 @@ export type GpsHeatmapProps = {
 const chartWidth = 320;
 const chartHeight = 210;
 
-function interpolateColor(intensity: number, accent: string): string {
-  const alpha = Math.max(0.15, Math.min(intensity, 1));
-  if (accent === '#16A34A') {
-    return `rgba(22, 163, 74, ${alpha})`;
-  }
-
-  return `rgba(34, 197, 94, ${alpha})`;
+function cellOpacity(intensity: number): number {
+  return Math.max(0.15, Math.min(intensity, 1));
 }
 
-export function GpsHeatmap({ heatmap, title = 'Movement Heatmap' }: GpsHeatmapProps) {
+export function GpsHeatmap({ heatmap, title }: GpsHeatmapProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('gps');
 
   const cellSize = useMemo(() => {
     const width = chartWidth / Math.max(heatmap.cols, 1);
@@ -36,22 +33,24 @@ export function GpsHeatmap({ heatmap, title = 'Movement Heatmap' }: GpsHeatmapPr
   return (
     <Card variant="default" padding="lg" className="gap-4">
       <View>
-        <Heading level={3}>{title}</Heading>
+        <Heading level={3}>{title ?? t('heatmap.title')}</Heading>
         <Text variant="body-sm" color="secondary" className="mt-1">
-          Pre-computed grid ready for map overlays and future visualization.
+          {t('heatmap.subtitle')}
         </Text>
       </View>
 
       <View className="items-center rounded-lg bg-background-secondary p-3">
         {heatmap.cells.length === 0 ? (
           <Text variant="body-sm" color="secondary" className="py-10">
-            Heatmap will appear after GPS points are recorded.
+            {t('heatmap.empty')}
           </Text>
         ) : (
           <Svg
             width={chartWidth}
             height={chartHeight}
-            accessibilityLabel="GPS movement heatmap"
+            accessible
+            accessibilityRole="image"
+            accessibilityLabel={t('heatmap.a11y', { count: heatmap.cells.length })}
           >
             {heatmap.cells.map((cell) => (
               <Rect
@@ -61,7 +60,8 @@ export function GpsHeatmap({ heatmap, title = 'Movement Heatmap' }: GpsHeatmapPr
                 width={cellSize.width - 1}
                 height={cellSize.height - 1}
                 rx={2}
-                fill={interpolateColor(cell.intensity, colors.accent)}
+                fill={colors.accent}
+                fillOpacity={cellOpacity(cell.intensity)}
               />
             ))}
           </Svg>

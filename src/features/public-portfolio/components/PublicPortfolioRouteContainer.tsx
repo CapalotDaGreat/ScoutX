@@ -4,6 +4,7 @@ import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { PublicPortfolioScreen } from '@/features/public-portfolio/components/PublicPortfolioScreen';
 import { useResolvedPlayerId } from '@/features/public-portfolio/hooks/useResolvedPlayerId';
 import { type PublicPortfolioData } from '@/features/public-portfolio/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PublicPortfolioRouteContainerProps = {
   playerId?: string;
@@ -28,11 +29,12 @@ export function PublicPortfolioRouteContainer({
   onRegisterForEndorsement,
   onBack,
 }: PublicPortfolioRouteContainerProps) {
+  const { t } = useAppTranslation('portfolio');
   const { resolvedPlayerId, isResolving, resolveError } = useResolvedPlayerId(playerId, slug);
 
   if (isResolving) {
     return (
-      <Screen title="Football Passport" subtitle="Loading profile" safeArea>
+      <Screen title={t('footballPassport')} subtitle={t('publicUi.loadingProfile')} safeArea>
         <SkeletonLoader variant="profile" />
       </Screen>
     );
@@ -40,11 +42,11 @@ export function PublicPortfolioRouteContainer({
 
   if (!resolvedPlayerId) {
     return (
-      <Screen title="Football Passport" subtitle="Not found" safeArea>
+      <Screen title={t('footballPassport')} subtitle={t('publicUi.notFound')} safeArea>
         <EmptyState
-          title="Passport not found"
-          description={resolveError ?? 'This Football Passport does not exist or is private.'}
-          actionLabel={onBack ? 'Go back' : undefined}
+          title={t('publicUi.notFoundTitle')}
+          description={t(`publicUi.resolveError.${resolveError ?? 'not_found'}`)}
+          actionLabel={onBack ? t('goBack') : undefined}
           onAction={onBack}
         />
       </Screen>

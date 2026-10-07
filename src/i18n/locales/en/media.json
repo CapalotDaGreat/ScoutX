@@ -122,7 +122,8 @@
     "sentAsEvidence": "Sent as evidence",
     "showing": "Showing {{shown}} of {{total}}",
     "clear": "Clear filters",
-    "noMatches": "No media matches these filters."
+    "noMatches": "No media matches these filters.",
+    "all": "All"
   },
   "category": {
     "goals": "Goals",
@@ -178,6 +179,103 @@
       "unsupported_codec": "A source video uses a format that could not be decoded.",
       "timeout": "Rendering took too long. Try a shorter reel.",
       "render_failed": "Rendering failed. Try again."
+    }
+  },
+  "videos": {
+    "title": "Highlight Videos",
+    "subtitle": "Match clips organised for scouts: goals, skills, defending and more",
+    "count_one": "{{count}} highlight in your reel",
+    "count_other": "{{count}} highlights in your reel",
+    "manage": "Manage",
+    "clipHint": "Short clips for scouts (up to 3 min). Full match recordings belong under Growth → Analyze match video.",
+    "empty": "Upload a trimmed clip from your Veo export or phone recording to show your best moments to scouts.",
+    "uploadClip": "Upload highlight clip",
+    "analyzeFull": "Analyze a full match",
+    "uploading": "Uploading…",
+    "uploadFailed": "Upload failed",
+    "untitled": "Untitled highlight",
+    "featured": "Featured",
+    "spotlight": "ScoutX Spotlight",
+    "versus": "vs {{opponent}}",
+    "uploadErrorTitle": "Upload problem",
+    "pickFailed": "The video couldn't be opened. Please try another clip.",
+    "saveErrorTitle": "Couldn't save",
+    "saveFailed": "The video details couldn't be saved. Please try again.",
+    "retryFailed": "The upload couldn't be restarted. Please try again.",
+    "managerIntro": "Choose a short clip from Photos (up to 3 minutes). Export a trimmed moment from your Veo app, or pick a recording already saved on your phone.",
+    "fullMatchTitle": "Got a full match recording?",
+    "fullMatchBody": "Upload the whole match under Growth → Analyze match video for stats and coaching feedback (up to 150 minutes).",
+    "analyzeFullMatch": "Analyze full match video",
+    "buildReel": "Build a highlight reel from match evidence",
+    "uploadFromPhotos": "Upload from Photos",
+    "managerEmpty": "No highlight videos yet. Upload your first clip to start your reel.",
+    "feature": "Feature",
+    "moveUp": "Move {{title}} up",
+    "moveDown": "Move {{title}} down"
+  },
+  "studio": {
+    "title": "Highlight Reel Studio",
+    "intro": "Build a football story from analysed match moments. Only moments with a timestamp and observed evidence are suggested, and nothing is invented.",
+    "styleTitle": "Reel style",
+    "targetLength": "Target length: {{seconds}}s",
+    "toggleLength": "Switch between 45s and 90s",
+    "momentsTitle": "AI-suggested moments",
+    "planMeta": "Average AI confidence {{pct}}% · {{coverage}}",
+    "empty": "No completed match analysis yet. Analyse a match first to get highlight suggestions from real footage.",
+    "untitled": "Untitled moment",
+    "descriptionFallback": "Moment identified by the match analysis.",
+    "reason": "Suggested from your match analysis. Review the clip before using it.",
+    "candidateMeta": "{{kind}} · {{status}} · {{pct}}% AI confidence",
+    "needsReview": "Needs your review",
+    "aiSuggested": "AI-suggested",
+    "evidence": {
+      "line": "Evidence: {{items}}",
+      "confidence": "AI confidence {{pct}}% (not verified)",
+      "jersey": "Target jersey #{{jersey}}",
+      "coverage": "Coverage: {{band}}",
+      "coverageUnknown": "unknown"
+    },
+    "coverage": {
+      "ai_suggested": "AI-suggested moments — review each clip before sharing",
+      "none": "No reliable moments available"
+    },
+    "eventKind": {
+      "progressivePass": "Progressive pass",
+      "progressiveCarry": "Progressive carry",
+      "goal": "Goal",
+      "recovery": "Recovery",
+      "save": "Save",
+      "defensiveAction": "Defensive action",
+      "dribble": "Dribble",
+      "shot": "Shot",
+      "matchAction": "Match action"
+    },
+    "preset": {
+      "best-of": {
+        "label": "Best of",
+        "title": "Best of the match",
+        "description": "Your strongest AI-suggested moments in a compact player story."
+      },
+      "scout": {
+        "label": "Scout reel",
+        "title": "Match review for scouts",
+        "description": "Evidence-first clips that show your tactical and technical impact."
+      },
+      "social": {
+        "label": "Social reel",
+        "title": "Short social reel",
+        "description": "Fast, clear moments for short-form sharing."
+      },
+      "tactical": {
+        "label": "Tactical",
+        "title": "Tactical contribution reel",
+        "description": "Moments focused on pressing, movement, passing lanes and your role."
+      },
+      "development": {
+        "label": "Development",
+        "title": "Development moments",
+        "description": "Moments that show learning points and areas you're working on."
+      }
     }
   }
 }

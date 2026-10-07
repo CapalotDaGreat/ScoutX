@@ -9,6 +9,7 @@ import { type JourneyFilterOption } from '@/features/football-journey/constants'
 import { groupJourneyByYear } from '@/features/football-journey/models/JourneyModel';
 import { filterJourneyEntries } from '@/features/football-journey/services/journeyTimelineService';
 import { type JourneyEntry, type JourneyEntryType } from '@/features/football-journey/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type FootballJourneyTimelineProps = {
   entries: JourneyEntry[];
@@ -19,8 +20,9 @@ export type FootballJourneyTimelineProps = {
 export function FootballJourneyTimeline({
   entries,
   showFilters = true,
-  emptyMessage = 'Your football journey will appear here as you add career milestones.',
+  emptyMessage,
 }: FootballJourneyTimelineProps) {
+  const { t } = useAppTranslation('career');
   const [activeFilter, setActiveFilter] = useState<JourneyFilterOption>(JOURNEY_FILTER_ALL);
 
   const availableTypes = useMemo(() => {
@@ -42,7 +44,7 @@ export function FootballJourneyTimeline({
     return (
       <View className="rounded-xl border border-dashed border-border bg-background-secondary/50 px-4 py-8/50">
         <Text variant="body-sm" color="secondary" className="text-center">
-          {emptyMessage}
+          {emptyMessage ?? t('journeyUi.empty')}
         </Text>
       </View>
     );
@@ -60,7 +62,7 @@ export function FootballJourneyTimeline({
 
       {filteredEntries.length === 0 ? (
         <Text variant="body-sm" color="secondary">
-          No entries match this filter.
+          {t('journeyUi.noFilterMatch')}
         </Text>
       ) : (
         yearGroups.map((group, groupIndex) => (

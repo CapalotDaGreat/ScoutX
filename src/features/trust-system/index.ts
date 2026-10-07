@@ -12,15 +12,11 @@ export {
   buildClubTenures,
   computeYearsFromPeriod,
   createDefaultTrustProfile,
-  getVerificationLabel,
   groupRecommendationsByType,
   sortRecommendations,
 } from '@/features/trust-system/models/TrustModel';
 
 export {
-  TRUST_ENTITY_LABELS,
-  TRUST_RECOMMENDATION_LABELS,
-  TRUST_RECOMMENDATION_SECTION_LABELS,
 } from '@/features/trust-system/constants';
 
 export type {

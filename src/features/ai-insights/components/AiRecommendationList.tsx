@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Badge } from '@/components/primitives/Badge';
 import { Text } from '@/components/primitives/Text';
 import { type AiRecommendation } from '@/features/ai-insights/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type AiRecommendationListProps = {
   items: AiRecommendation[];
@@ -15,6 +16,7 @@ const priorityVariant = {
 };
 
 export function AiRecommendationList({ items, title }: AiRecommendationListProps) {
+  const { t } = useAppTranslation(['statistics']);
   if (items.length === 0) {
     return null;
   }
@@ -36,7 +38,11 @@ export function AiRecommendationList({ items, title }: AiRecommendationListProps
               {item.title}
             </Text>
             {item.priority ? (
-              <Badge label={item.priority} variant={priorityVariant[item.priority]} size="sm" />
+              <Badge
+                label={t(`statistics:aiInsight.priority.${item.priority}`)}
+                variant={priorityVariant[item.priority]}
+                size="sm"
+              />
             ) : null}
           </View>
           <Text variant="caption" color="secondary">

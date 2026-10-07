@@ -7,6 +7,7 @@ import { type PortfolioAnalytics } from '@/features/portfolio-analytics/reposito
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 import { startOfWeekMondayKey } from '@/utils/dateWeek';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 const STORAGE_PREFIX = '@scoutx/weekly-report-notified/';
 
@@ -15,6 +16,7 @@ export function useWeeklyReportNotifier(
   analytics: PortfolioAnalytics,
   recommendations: TrustRecommendation[],
 ): void {
+  const { t } = useAppTranslation('career');
   const notifiedRef = useRef(false);
 
   useEffect(() => {
@@ -43,10 +45,14 @@ export function useWeeklyReportNotifier(
         return;
       }
 
+      const lead = report.highlights[0]
+        ? t(`weekly.highlight.${report.highlights[0].kind}`, { count: report.highlights[0].count })
+        : t('weekly.summaryReady');
+      const next = report.suggestions[0] ? t(`weekly.suggestion.${report.suggestions[0]}`) : '';
       ActivityRecorder.getInstance().recordWeeklyReportReady({
         playerId: profile.id,
         playerName: profile.fullName,
-        summary: report.summary,
+        summary: next ? t('weekly.summary', { lead, next }) : lead,
       });
 
       if (!cancelled) {
@@ -60,5 +66,5 @@ export function useWeeklyReportNotifier(
     return () => {
       cancelled = true;
     };
-  }, [analytics, profile, recommendations]);
+  }, [analytics, profile, recommendations, t]);
 }

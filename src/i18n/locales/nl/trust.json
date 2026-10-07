@@ -41,7 +41,8 @@
     "missingMessage": "Relatiecontext en aanbevelingstekst zijn verplicht.",
     "removeTitle": "Aanbeveling verwijderen",
     "removeMessage": "Deze aanbeveling wordt definitief verwijderd.",
-    "footerNote": "Traineraanbevelingen komen van geverifieerde clubstaf. Scouts kunnen aanbevelingen op het vertrouwensprofiel publiceren."
+    "footerNote": "Traineraanbevelingen komen van geverifieerde clubstaf. Scouts kunnen aanbevelingen op het vertrouwensprofiel publiceren.",
+    "skillsPlaceholder": "Vooruitgaande passes\nPersbestendigheid"
   },
   "report": {
     "button": "Melden",
@@ -73,5 +74,73 @@
     "block": "Blokkeren",
     "unblock": "Deblokkeren",
     "cancel": "Annuleren"
+  },
+  "featured": "Uitgelicht",
+  "entityWithClub": "Geverifieerde club · {{club}}",
+  "entity": {
+    "player": "Geverifieerde speler",
+    "scout": "Geverifieerde scout",
+    "club": "Geverifieerde club",
+    "coach": "Geverifieerde trainer"
+  },
+  "recommendationType": {
+    "coach_recommendation": "Aanbeveling van trainer",
+    "scout_endorsement": "Aanbeveling van scout"
+  },
+  "recommendationSection": {
+    "coach_recommendation": "Aanbevelingen van trainers",
+    "scout_endorsement": "Aanbevelingen van scouts"
+  },
+  "yearsKnownBadge_one": "{{count}} jaar bekend",
+  "yearsKnownBadge_other": "{{count}} jaar bekend",
+  "tenure": {
+    "title": "Jaren bij club",
+    "years_one": "{{count}} jaar",
+    "years_other": "{{count}} jaar"
+  },
+  "category": {
+    "Technical": "Techniek",
+    "Tactical": "Tactiek",
+    "Physical": "Fysiek",
+    "Mental": "Mentaal",
+    "Leadership": "Leiderschap",
+    "Professionalism": "Professionaliteit"
+  },
+  "coachEndorsement": {
+    "title": "Aanbeveling van trainer",
+    "intro": "Schrijf een aanbeveling voor {{playerName}}. Spelers kunnen je tekst niet aanpassen.",
+    "role": "Je rol",
+    "rolePlaceholder": "bijv. hoofdtrainer O17",
+    "organization": "Club / academie",
+    "yearsKnown": "Jaren samengewerkt",
+    "headlinePlaceholder": "bijv. Uitzonderlijk professioneel",
+    "body": "Aanbeveling",
+    "bodyPlaceholder": "Beschrijf wat je van deze speler hebt gezien…",
+    "missingMessage": "Club, relatie en aanbevelingstekst zijn verplicht.",
+    "publish": "Aanbeveling plaatsen"
+  },
+  "verificationCard": {
+    "overline": "Verificatie",
+    "title": "Verificatie van je Football Passport",
+    "body": "Verificatie is zichtbaar op je Football Passport en scouts kunnen filteren op geverifieerde spelers.",
+    "checking": "Verificatiestatus controleren…",
+    "verified": "Je Football Passport is geverifieerd.",
+    "verifiedOn": "Je Football Passport is geverifieerd op {{date}}.",
+    "requested": "Je aanvraag wordt beoordeeld. We laten het je weten zodra er een besluit is.",
+    "pending": "Verificatie wacht op beoordeling.",
+    "request": "Verificatie aanvragen"
+  },
+  "admin": {
+    "overline": "Beheer",
+    "title": "Moderatiewachtrij",
+    "counts": "{{verifications}} verificatieaanvragen · {{reports}} meldingen",
+    "loading": "Wachtrij laden…",
+    "empty": "Geen openstaande items.",
+    "loadFailed": "De wachtrij kon niet worden geladen.",
+    "approve": "Goedkeuren",
+    "reject": "Afwijzen",
+    "reportLine": "Melding · {{target}} · {{reason}}",
+    "markReviewed": "Markeren als beoordeeld",
+    "refresh": "Vernieuwen"
   }
 }

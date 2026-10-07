@@ -112,5 +112,176 @@
     "first_reel": "Primeiro reel: {{subject}}",
     "club_change": "Mudança para {{subject}}",
     "position_change": "Jogou como {{subject}} (antes {{previous}})"
+  },
+  "weekly": {
+    "overline": "Relatório semanal de futebol",
+    "emptyTitle": "O teu resumo semanal",
+    "emptyBody": "Regista o teu primeiro jogo ou publica o teu Football Passport para desbloquear um relatório semanal pessoal.",
+    "scores": "Pontuação do Passport {{passport}}/100 · Visível para scouts {{scout}}/100",
+    "highlight": {
+      "matches_one": "{{count}} jogo registado esta semana.",
+      "matches_other": "{{count}} jogos registados esta semana.",
+      "goals_one": "{{count}} golo marcado.",
+      "goals_other": "{{count}} golos marcados.",
+      "scoutViews_one": "{{count}} visualização de scout no teu Football Passport.",
+      "scoutViews_other": "{{count}} visualizações de scouts no teu Football Passport.",
+      "milestones_one": "{{count}} marco profissional alcançado.",
+      "milestones_other": "{{count}} marcos profissionais alcançados."
+    },
+    "stat": {
+      "goals": "Golos",
+      "assists": "Assistências",
+      "passAccuracy": "Precisão de passe",
+      "portfolioViews": "Visualizações do Passport",
+      "scoutViews_one": "{{count}} scout",
+      "scoutViews_other": "{{count}} scouts"
+    },
+    "focusTitle": "Foco da semana",
+    "suggestion": {
+      "avatar": "Adiciona uma foto de perfil profissional.",
+      "bio": "Escreve uma biografia curta em que os scouts possam confiar.",
+      "position": "Define as tuas posições preferidas.",
+      "club": "Adiciona o teu clube ou academia atual.",
+      "matches": "Regista pelo menos um jogo.",
+      "videos": "Carrega um clip de destaque.",
+      "journey": "Adiciona uma etapa ou marco do teu percurso.",
+      "username": "Reserva o teu link personalizado do Passport.",
+      "public": "Ativa o teu Football Passport partilhável.",
+      "discoverable": "Aceita aparecer na pesquisa de scouts.",
+      "coach": "Convida um treinador a recomendar-te.",
+      "video": "Carrega pelo menos um clip de destaque.",
+      "match": "Regista um jogo dos últimos 45 dias.",
+      "logMore": "Regista mais jogos para reforçar a tua história de desempenho.",
+      "share": "Partilha o link do teu Passport para ganhar visibilidade junto dos scouts esta semana."
+    },
+    "summaryReady": "O teu relatório semanal de futebol está pronto.",
+    "summary": "{{lead}} Próximo passo: {{next}}"
+  },
+  "journeyType": {
+    "all": "Todos",
+    "academy": "Academia",
+    "club_transfer": "Transferência",
+    "achievement": "Conquista",
+    "league_title": "Título de campeão",
+    "cup_win": "Taça ganha",
+    "international_callup": "Convocatória internacional",
+    "injury": "Lesão",
+    "recovery": "Recuperação",
+    "trial": "Período de testes",
+    "professional_contract": "Contrato profissional",
+    "highlight_video": "Vídeo de destaque",
+    "coach_recommendation": "Recomendação de treinador",
+    "gps_session": "Sessão GPS",
+    "statistics_milestone": "Marco estatístico"
+  },
+  "journeyUi": {
+    "title": "Football Journey",
+    "subtitle": "A história da tua carreira: academias, transferências, marcos e momentos que os scouts recordam",
+    "count_one": "{{count}} marco na tua cronologia",
+    "count_other": "{{count}} marcos na tua cronologia",
+    "manage": "Gerir",
+    "empty": "O teu percurso aparece aqui quando adicionares marcos da carreira.",
+    "noFilterMatch": "Nenhuma entrada corresponde a este filtro.",
+    "editTitle": "Editar Football Journey",
+    "editIntro": "Constrói a tua história com academias, transferências, conquistas, lesões, destaques e mais.",
+    "addEntry": "Adicionar etapa",
+    "save": "Guardar percurso",
+    "validationTitle": "Verifica as tuas entradas",
+    "validationBody": "Cada entrada precisa de um título e de uma data.",
+    "saveFailedTitle": "Não foi possível guardar",
+    "saveFailed": "Não foi possível guardar o teu percurso. Tenta novamente."
+  },
+  "insights": {
+    "overline": "Análise de desempenho",
+    "title": "A tua evolução esta semana",
+    "subtitle": "Jogos, alcance do Passport e carga GPS numa só vista",
+    "snapshotTitle": "O teu resumo de desempenho",
+    "item": {
+      "weeklyMatches": {
+        "label": "Jogos (7 dias)",
+        "hint": "Jogos que registaste nos últimos 7 dias."
+      },
+      "goalContribution": {
+        "label": "Participações em golo",
+        "hint": "Golos mais assistências dos últimos 7 dias."
+      },
+      "passAccuracy": {
+        "label": "Precisão de passe",
+        "hint": "Dos jogos em que registaste passes."
+      },
+      "portfolioStrength": {
+        "label": "Força do Passport",
+        "hint": "Completa itens do Passport para a aumentar."
+      },
+      "scoutViews": {
+        "label": "Visitas de olheiros (semana)",
+        "hint": "Olheiros que abriram o teu Football Passport esta semana."
+      },
+      "gpsDistance": {
+        "label": "Distância GPS",
+        "hint": "Distância total das tuas últimas sessões GPS."
+      }
+    }
+  },
+  "replayCard": {
+    "overline": "Resumo da carreira",
+    "title": "Resumo {{season}}",
+    "matches_one": "{{count}} jogo registado esta época.",
+    "matches_other": "{{count}} jogos registados esta época.",
+    "contributions": "Contributos: {{goals}} golos e {{assists}} assistências.",
+    "views_one": "O teu Football Passport foi visto {{count}} vez.",
+    "views_other": "O teu Football Passport foi visto {{count}} vezes.",
+    "milestones_one": "{{count}} marco desbloqueado.",
+    "milestones_other": "{{count}} marcos desbloqueados.",
+    "empty": "Regista jogos esta época para criar o teu resumo.",
+    "open": "Abrir resumo"
+  },
+  "milestoneUi": {
+    "overline": "Marcos",
+    "title": "Conquistas desbloqueadas",
+    "earned_one": "{{count}} marco alcançado",
+    "earned_other": "{{count}} marcos alcançados",
+    "new_one": "Novo marco desbloqueado",
+    "new_other": "Novos marcos desbloqueados",
+    "empty": "Regista jogos, publica o teu Football Passport e reúne recomendações para desbloquear marcos.",
+    "seeMore": "Ver mais {{count}}"
+  },
+  "milestone": {
+    "first_match": {
+      "title": "Primeiro jogo registado",
+      "description": "Começaste a registar o teu desempenho real."
+    },
+    "ten_matches": {
+      "title": "10 jogos registados",
+      "description": "Está a formar-se um histórico consistente."
+    },
+    "first_highlight": {
+      "title": "Primeiro vídeo de destaques",
+      "description": "Os olheiros já podem ver os teus melhores momentos."
+    },
+    "passport_live": {
+      "title": "Football Passport publicado",
+      "description": "O teu Passport público pode ser partilhado."
+    },
+    "username_claimed": {
+      "title": "Link personalizado",
+      "description": "O teu link scoutx.app está pronto a partilhar."
+    },
+    "discoverable": {
+      "title": "Visível para olheiros",
+      "description": "Apareces na pesquisa de olheiros."
+    },
+    "first_endorsement": {
+      "title": "Primeira recomendação",
+      "description": "Uma voz de confiança no teu Football Passport."
+    },
+    "first_scout_view": {
+      "title": "Primeira visita de olheiro",
+      "description": "Um olheiro abriu o teu Football Passport."
+    },
+    "portfolio_strong": {
+      "title": "Passport 80+",
+      "description": "O teu Football Passport está quase completo."
+    }
   }
 }

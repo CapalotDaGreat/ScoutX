@@ -5,7 +5,7 @@ import { Button } from '@/components/primitives/Button';
 import { Dropdown } from '@/components/primitives/Dropdown';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
-import { VIDEO_CATEGORY_OPTIONS } from '@/features/highlight-videos/constants';
+import { VIDEO_CATEGORIES } from '@/features/highlight-videos/constants';
 import { type HighlightVideo, type VideoCategory } from '@/features/highlight-videos/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
@@ -123,7 +123,7 @@ export function HighlightVideoEditorModal({
             label={t('editor.category')}
             value={draft.category}
             onChange={(value) => setDraft((current) => ({ ...current, category: value as VideoCategory }))}
-            options={VIDEO_CATEGORY_OPTIONS}
+            options={VIDEO_CATEGORIES.map((category) => ({ value: category, label: t(`media:category.${category}`) }))}
           />
           <Input
             label={t('editor.tags')}

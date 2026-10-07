@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import Svg, { Polygon } from 'react-native-svg';
 import { useTheme } from '@/theme';
 import { type RadarStat } from '@/features/scout-discovery/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type MiniRadarChartProps = {
   stats: RadarStat[];
@@ -10,6 +11,7 @@ export type MiniRadarChartProps = {
 
 export function MiniRadarChart({ stats, size = 72 }: MiniRadarChartProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
   const center = size / 2;
   const radius = size * 0.34;
 
@@ -30,7 +32,7 @@ export function MiniRadarChart({ stats, size = 72 }: MiniRadarChartProps) {
     <Svg
       width={size}
       height={size}
-      accessibilityLabel="Player attribute radar chart"
+      accessibilityLabel={t('scout:a11y.radar')}
     >
       <Polygon
         points={points}

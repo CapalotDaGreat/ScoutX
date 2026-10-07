@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { type FootballIdentity } from '@/features/player-profile/types/footballIdentity';
 import { ProfileSection } from '@/features/player-profile/components/identity/ProfileSection';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type BiographyIdentitySectionProps = {
   identity: FootballIdentity;
@@ -9,11 +10,9 @@ export type BiographyIdentitySectionProps = {
 };
 
 export function BiographyIdentitySection({ identity, biography }: BiographyIdentitySectionProps) {
+  const { t } = useAppTranslation('portfolio');
   return (
-    <ProfileSection
-      title="Professional Story"
-      subtitle="How you present yourself to clubs and scouts"
-    >
+    <ProfileSection title={t('profileUi.storyTitle')} subtitle={t('profileUi.storySubtitle')}>
       {identity.biographyHeadline ? (
         <Text variant="body-lg" className="font-sans-semibold">
           {identity.biographyHeadline}
@@ -21,10 +20,10 @@ export function BiographyIdentitySection({ identity, biography }: BiographyIdent
       ) : null}
       <View className="gap-2">
         <Text variant="caption" color="secondary" className="uppercase tracking-wider">
-          Biography
+          {t('editModal.biography')}
         </Text>
         <Text variant="body" color="secondary">
-          {biography || 'Tell scouts about your journey, strengths, and ambitions.'}
+          {biography || t('profileUi.biographyEmpty')}
         </Text>
       </View>
     </ProfileSection>

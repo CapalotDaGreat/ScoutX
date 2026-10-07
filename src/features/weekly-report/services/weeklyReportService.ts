@@ -4,76 +4,80 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { buildFootballPassportScoreReport } from '@/features/public-portfolio/services/footballPassportScoreService';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 
+export type WeeklyHighlightKind = 'matches' | 'goals' | 'scoutViews' | 'milestones';
+
+export type WeeklyHighlight = { kind: WeeklyHighlightKind; count: number };
+
+export const WEEKLY_SUGGESTION_IDS = [
+  'avatar',
+  'bio',
+  'position',
+  'club',
+  'matches',
+  'videos',
+  'journey',
+  'username',
+  'public',
+  'discoverable',
+  'coach',
+  'video',
+  'match',
+  'logMore',
+  'share',
+] as const;
+
+export type WeeklySuggestionId = (typeof WEEKLY_SUGGESTION_IDS)[number];
+
 export type WeeklyFootballReport = {
-  weekLabel: string;
+  weekStart: Date;
+  weekEnd: Date;
   growth: WeeklyGrowthMetrics;
   portfolioViewsThisWeek: number;
   scoutViewsThisWeek: number;
   passportScore: number;
   scoutVisibleScore: number;
-  highlights: string[];
-  suggestions: string[];
-  summary: string;
+  highlights: WeeklyHighlight[];
+  suggestions: WeeklySuggestionId[];
 };
 
-function currentWeekLabel(): string {
-  const now = new Date();
-  const start = new Date(now);
-  start.setDate(now.getDate() - 6);
-  const formatter = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' });
-  return `${formatter.format(start)} – ${formatter.format(now)}`;
+function isWeeklySuggestionId(value: string): value is WeeklySuggestionId {
+  return (WEEKLY_SUGGESTION_IDS as readonly string[]).includes(value);
 }
 
 function buildHighlights(
   profile: PlayerProfile,
   growth: WeeklyGrowthMetrics,
   analytics: PortfolioAnalytics,
-): string[] {
-  const highlights: string[] = [];
-
-  if (growth.matchCount > 0) {
-    highlights.push(
-      `Logged ${growth.matchCount} match${growth.matchCount === 1 ? '' : 'es'} this week.`,
-    );
-  }
-  if (growth.goals.current > 0) {
-    highlights.push(`Scored ${growth.goals.current} goal${growth.goals.current === 1 ? '' : 's'}.`);
+): WeeklyHighlight[] {
+  const highlights: WeeklyHighlight[] = [];
+  if (growth.matchCount > 0) highlights.push({ kind: 'matches', count: growth.matchCount });
+  if (growth.goals.current !== null && growth.goals.current > 0) {
+    highlights.push({ kind: 'goals', count: growth.goals.current });
   }
   if (analytics.scoutViewsThisWeek > 0) {
-    highlights.push(
-      `${analytics.scoutViewsThisWeek} scout view${analytics.scoutViewsThisWeek === 1 ? '' : 's'} on your Football Passport.`,
-    );
+    highlights.push({ kind: 'scoutViews', count: analytics.scoutViewsThisWeek });
   }
-  if ((profile.earnedMilestones?.length ?? 0) > 0) {
-    highlights.push(`${profile.earnedMilestones?.length ?? 0} professional milestones earned.`);
-  }
-
+  const milestones = profile.earnedMilestones?.length ?? 0;
+  if (milestones > 0) highlights.push({ kind: 'milestones', count: milestones });
   return highlights.slice(0, 4);
 }
 
-function buildSuggestions(profile: PlayerProfile, recommendations: TrustRecommendation[]): string[] {
+/** Player-facing next steps only; the store-readiness section is an operator checklist. */
+function buildSuggestions(
+  profile: PlayerProfile,
+  recommendations: TrustRecommendation[],
+): WeeklySuggestionId[] {
   const report = buildFootballPassportScoreReport(profile, recommendations);
   const incomplete = report.sections
+    .filter((section) => section.id !== 'launchReady')
     .flatMap((section) => section.items)
     .filter((item) => !item.complete)
-    .slice(0, 3)
-    .map((item) => item.hint);
-
-  if (incomplete.length > 0) {
-    return incomplete;
-  }
-
-  if ((profile.statisticsMatches?.length ?? 0) < 3) {
-    return ['Log more matches to strengthen your weekly performance story.'];
-  }
-
-  return ['Share your Football Passport link to grow scout visibility this week.'];
-}
-
-function buildSummary(highlights: string[], suggestions: string[]): string {
-  const lead = highlights[0] ?? 'Your weekly football report is ready.';
-  const action = suggestions[0] ?? 'Keep building your portfolio.';
-  return `${lead} Next step: ${action}`;
+    .map((item) => item.id)
+    .filter(isWeeklySuggestionId);
+  const unique = [...new Set(incomplete)].slice(0, 3);
+  if (unique.length > 0) return unique;
+  if ((profile.statisticsMatches?.length ?? 0) < 3) return ['logMore'];
+  return ['share'];
 }
 
 export function buildWeeklyFootballReport(
@@ -81,21 +85,22 @@ export function buildWeeklyFootballReport(
   growth: WeeklyGrowthMetrics,
   analytics: PortfolioAnalytics,
   recommendations: TrustRecommendation[] = [],
+  now: Date = new Date(),
 ): WeeklyFootballReport {
   const passportReport = buildFootballPassportScoreReport(profile, recommendations);
   const scoutSection = passportReport.sections.find((section) => section.id === 'scoutVisible');
-  const highlights = buildHighlights(profile, growth, analytics);
-  const suggestions = buildSuggestions(profile, recommendations);
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - 6);
 
   return {
-    weekLabel: currentWeekLabel(),
+    weekStart,
+    weekEnd: now,
     growth,
     portfolioViewsThisWeek: analytics.viewsThisWeek,
     scoutViewsThisWeek: analytics.scoutViewsThisWeek,
     passportScore: passportReport.overallScore,
     scoutVisibleScore: scoutSection?.score ?? 0,
-    highlights,
-    suggestions,
-    summary: buildSummary(highlights, suggestions),
+    highlights: buildHighlights(profile, growth, analytics),
+    suggestions: buildSuggestions(profile, recommendations),
   };
 }

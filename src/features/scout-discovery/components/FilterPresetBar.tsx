@@ -6,6 +6,13 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 
+const BUILT_IN_PRESETS = ['preset-u21-potential', 'preset-verified-wingers', 'preset-available-now'] as const;
+type BuiltInPresetId = (typeof BUILT_IN_PRESETS)[number];
+
+function isBuiltInPreset(id: string): id is BuiltInPresetId {
+  return (BUILT_IN_PRESETS as readonly string[]).includes(id);
+}
+
 export type FilterPresetBarProps = {
   presets: FilterPreset[];
   activePresetId?: string | null;
@@ -47,6 +54,7 @@ export function FilterPresetBar({
           {presets.map((preset) => {
             const isActive = activePresetId === preset.id;
             const isCustom = preset.id.startsWith('preset-custom-');
+            const name = isBuiltInPreset(preset.id) ? t(`scout:search.presets.${preset.id}`) : preset.name;
             return (
               <View
                 key={preset.id}
@@ -59,6 +67,7 @@ export function FilterPresetBar({
               >
                 <Pressable
                   accessibilityRole="button"
+                  accessibilityState={{ selected: isActive }}
                   onPress={() => onApplyPreset(preset)}
                   hitSlop={4}
                 >
@@ -67,13 +76,13 @@ export function FilterPresetBar({
                     color={isActive ? 'onGold' : 'primary'}
                     weight={isActive ? 'semibold' : 'regular'}
                   >
-                    {preset.name}
+                    {name}
                   </Text>
                 </Pressable>
                 {isCustom && onRemovePreset ? (
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel={t('scout:search.deleteFilter', { name: preset.name })}
+                    accessibilityLabel={t('scout:search.deleteFilter', { name })}
                     hitSlop={8}
                     onPress={() => onRemovePreset(preset.id)}
                     className="ml-0.5 h-5 w-5 items-center justify-center rounded-full bg-black/10"

@@ -7,6 +7,7 @@ import { FootballJourneyTimeline } from '@/features/football-journey/components/
 import { JourneyTimelineSkeleton } from '@/features/football-journey/components/JourneyTimelineSkeleton';
 import { ProfileSection } from '@/features/player-profile/components/identity/ProfileSection';
 import { type JourneyEntry } from '@/features/football-journey/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type FootballJourneySectionProps = {
   entries: JourneyEntry[];
@@ -22,18 +23,19 @@ export function FootballJourneySection({
   onEditPress,
 }: FootballJourneySectionProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('career');
 
   const action =
     editable && onEditPress ? (
       <Button variant="secondary" size="sm" onPress={onEditPress}>
-        Manage
+        {t('journeyUi.manage')}
       </Button>
     ) : undefined;
 
   return (
     <ProfileSection
-      title="Football Journey"
-      subtitle="The story of your career — academies, transfers, milestones, and moments scouts remember"
+      title={t('journeyUi.title')}
+      subtitle={t('journeyUi.subtitle')}
       action={action}
       variant="outlined"
       className="border-accent/20"
@@ -41,7 +43,7 @@ export function FootballJourneySection({
       <View className="mb-2 flex-row items-center gap-2 rounded-lg bg-accent-muted/50 px-3 py-2">
         <Route size={16} color={colors.accent} />
         <Text variant="caption" color="accent" className="flex-1">
-          {entries.length} milestone{entries.length === 1 ? '' : 's'} on your timeline
+          {t('journeyUi.count', { count: entries.length })}
         </Text>
       </View>
 

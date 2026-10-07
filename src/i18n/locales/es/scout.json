@@ -213,7 +213,19 @@
     "noGpsData": "Este jugador no ha compartido sesiones GPS.",
     "ageUnknown": "Edad no indicada",
     "positionUnknown": "Posición no definida",
-    "ratingSource": "Fuente de la valoración"
+    "ratingSource": "Fuente de la valoración",
+    "sections": {
+      "trustTitle": "Confianza y recomendaciones",
+      "trustSubtitle": "Verificación y recomendaciones de entrenadores",
+      "reportsTitle": "Informes de scouting",
+      "reportsSubtitle": "Tus notas y valoraciones de este jugador",
+      "bioSubtitle": "Biografía y referencia",
+      "attributesSubtitle": "Radar y valoraciones técnicas",
+      "clubCount_one": "{{count}} club",
+      "clubCount_other": "{{count}} clubes",
+      "footageSubtitle": "Vídeos destacados disponibles",
+      "honoursSubtitle": "Logros de carrera"
+    }
   },
   "search": {
     "scopeLabel": "Buscar en",
@@ -235,7 +247,12 @@
     "filterNamePlaceholder": "p. ej. Extremos U21 cerca",
     "includeSearchLabel": "Incluir búsqueda actual",
     "includeSearchHint": "También restaura el texto y el alcance de búsqueda",
-    "deleteFilter": "Eliminar {{name}}"
+    "deleteFilter": "Eliminar {{name}}",
+    "presets": {
+      "preset-u21-potential": "Sub-21 con alto potencial",
+      "preset-verified-wingers": "Extremos verificados",
+      "preset-available-now": "Disponibles ya"
+    }
   },
   "reports": {
     "notRatedTapToSet": "Sin valorar · toca para definir",
@@ -291,7 +308,10 @@
     "createReport": "Crear informe",
     "count_one": "{{count}} informe archivado",
     "count_other": "{{count}} informes archivados",
-    "sectionEmpty": "Aún no hay informes. Crea la primera evaluación estructurada de {{playerName}}."
+    "sectionEmpty": "Aún no hay informes. Crea la primera evaluación estructurada de {{playerName}}.",
+    "cardOverline": "Informe de scouting",
+    "byScout": "por {{name}}",
+    "strengths": "Puntos fuertes"
   },
   "intelligence": {
     "whyTitle": "Por que este jugador",
@@ -449,5 +469,123 @@
       "record": "de los registros",
       "self_reported": "autodeclarado"
     }
+  },
+  "sort": {
+    "relevance": "Mejor coincidencia",
+    "overall": "Valoración global",
+    "potential": "Potencial",
+    "age": "Edad",
+    "name": "Nombre",
+    "distance": "Distancia",
+    "recently_updated": "Actualizados recientemente",
+    "most_viewed": "Más vistos",
+    "sprint_speed": "Velocidad de sprint",
+    "weak_foot": "Pierna mala ★",
+    "skill_moves": "Regates ★",
+    "goals": "Más goles",
+    "assists": "Más asistencias",
+    "newest": "Jugadores nuevos"
+  },
+  "position": {
+    "GK": "Portero",
+    "CB": "Central",
+    "LB": "Lateral izquierdo",
+    "RB": "Lateral derecho",
+    "CDM": "Mediocentro defensivo",
+    "CM": "Mediocentro",
+    "CAM": "Mediapunta",
+    "LW": "Extremo izquierdo",
+    "RW": "Extremo derecho",
+    "ST": "Delantero",
+    "CF": "Delantero centro"
+  },
+  "chips": {
+    "active": "Filtros activos",
+    "clearAll": "Borrar todo",
+    "remove": "Quitar filtro: {{label}}",
+    "ageRange": "Edad {{min}}–{{max}}",
+    "foot": "Pie: {{foot}}",
+    "overall": "MED {{value}}+",
+    "potential": "POT {{value}}+",
+    "verified": "Verificado",
+    "recentlyActive": "Activo recientemente",
+    "hasVideos": "Con vídeos",
+    "sprint": "Sprint {{value}}+ km/h"
+  },
+  "continueCard": {
+    "a11y": "Seguir analizando a {{name}}",
+    "overline": "Seguir con el scouting",
+    "title": "Retoma donde lo dejaste",
+    "stage": "Pipeline · {{stage}}",
+    "openReport": "Abrir informe de scouting",
+    "openPipeline": "Abrir pipeline"
+  },
+  "header": {
+    "overline": "Espacio del scout",
+    "greeting": {
+      "morning": "Buenos días, {{name}}",
+      "afternoon": "Buenas tardes, {{name}}",
+      "evening": "Buenas noches, {{name}}"
+    },
+    "matching_one": "{{count}} jugador encaja hoy con tus preferencias.",
+    "matching_other": "{{count}} jugadores encajan hoy con tus preferencias.",
+    "statMatching": "Coincidencias",
+    "statPipeline": "Pipeline",
+    "statRecent": "Recientes"
+  },
+  "clubProfile": "Perfil del club",
+  "a11y": {
+    "recentForm": "Forma reciente: {{results}}",
+    "form": {
+      "W": "victoria",
+      "D": "empate",
+      "L": "derrota"
+    },
+    "openReport": "Abrir informe de scouting",
+    "radar": "Gráfico radar de atributos del jugador",
+    "removeCompare": "Quitar de la comparación",
+    "addCompare": "Añadir a la comparación",
+    "compareFull": "La comparación está completa",
+    "unsave": "Quitar de guardados",
+    "save": "Guardar jugador"
+  },
+  "stage": {
+    "discovered": "Descubierto",
+    "shortlisted": "Preseleccionado",
+    "contacted": "Contactado",
+    "invited": "Invitado",
+    "trial": "Prueba",
+    "evaluated": "Evaluado",
+    "follow_up": "Seguimiento"
+  },
+  "pipelineUi": {
+    "emptyStage": "No hay jugadores en esta fase.",
+    "stageTitle": "Fase de reclutamiento",
+    "folder": "Carpeta",
+    "folders": "Carpetas",
+    "shortlists": "Listas cortas",
+    "remove": "Quitar del pipeline",
+    "sectionTitle": "Pipeline de reclutamiento",
+    "sectionSubtitle": "Sigue a este jugador a lo largo de tu proceso de scouting",
+    "inPipeline": "En tu pipeline",
+    "manageHint": "Gestiona carpetas, listas cortas y fases en un solo lugar.",
+    "manage": "Gestionar reclutamiento",
+    "move": "Mover a {{name}}",
+    "shortlistCount_one": "{{count}} lista corta",
+    "shortlistCount_other": "{{count}} listas cortas",
+    "createFolder": "Crear carpeta",
+    "createShortlist": "Crear lista corta",
+    "new": "Nuevo",
+    "allPlayers": "Todos los jugadores",
+    "allShortlists": "Todas las listas",
+    "folderName": "Nombre de la carpeta",
+    "folderPlaceholder": "p. ej. Objetivos de cantera",
+    "color": "Color",
+    "colorOption": "Color {{index}}",
+    "noFolder": "Sin carpeta",
+    "shortlistName": "Nombre de la lista",
+    "shortlistPlaceholder": "p. ej. Mercado de verano",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Contexto opcional para tu equipo"
   }
 }

@@ -1,4 +1,3 @@
-import { POSITION_OPTIONS } from '@/features/scout-discovery/constants';
 import {
   type DiscoveryFilters,
   type FilterChip,
@@ -9,16 +8,20 @@ export function buildFilterChips(filters: DiscoveryFilters): FilterChip[] {
   const chips: FilterChip[] = [];
 
   if (filters.ageMin !== null || filters.ageMax !== null) {
-    const min = filters.ageMin ?? '…';
-    const max = filters.ageMax ?? '…';
-    chips.push({ id: 'age-range', label: `Age ${min}–${max}`, filterKey: 'ageMin' });
+    chips.push({
+      id: 'age-range',
+      kind: 'ageRange',
+      value: filters.ageMin ?? undefined,
+      max: filters.ageMax,
+      filterKey: 'ageMin',
+    });
   }
 
   for (const position of filters.positions) {
-    const label = POSITION_OPTIONS.find((option) => option.value === position)?.label ?? position;
     chips.push({
       id: `position-${position}`,
-      label,
+      kind: 'position',
+      value: position,
       filterKey: 'positions',
       filterValue: position,
     });
@@ -27,7 +30,8 @@ export function buildFilterChips(filters: DiscoveryFilters): FilterChip[] {
   for (const nationality of filters.nationalities) {
     chips.push({
       id: `nationality-${nationality}`,
-      label: nationality,
+      kind: 'raw',
+      value: nationality,
       filterKey: 'nationalities',
       filterValue: nationality,
     });
@@ -36,55 +40,59 @@ export function buildFilterChips(filters: DiscoveryFilters): FilterChip[] {
   if (filters.preferredFoot) {
     chips.push({
       id: 'preferred-foot',
-      label: `${filters.preferredFoot} foot`,
+      kind: 'foot',
+      value: filters.preferredFoot,
       filterKey: 'preferredFoot',
     });
   }
 
   if (filters.overallMin !== null) {
-    chips.push({ id: 'overall-min', label: `OVR ${filters.overallMin}+`, filterKey: 'overallMin' });
+    chips.push({ id: 'overall-min', kind: 'overall', value: filters.overallMin, filterKey: 'overallMin' });
   }
 
   if (filters.potentialMin !== null) {
     chips.push({
       id: 'potential-min',
-      label: `POT ${filters.potentialMin}+`,
+      kind: 'potential',
+      value: filters.potentialMin,
       filterKey: 'potentialMin',
     });
   }
 
   for (const club of filters.clubs) {
-    chips.push({ id: `club-${club}`, label: club, filterKey: 'clubs', filterValue: club });
+    chips.push({ id: `club-${club}`, kind: 'raw', value: club, filterKey: 'clubs', filterValue: club });
   }
 
   for (const league of filters.leagues) {
-    chips.push({ id: `league-${league}`, label: league, filterKey: 'leagues', filterValue: league });
+    chips.push({ id: `league-${league}`, kind: 'raw', value: league, filterKey: 'leagues', filterValue: league });
   }
 
   if (filters.availability) {
     chips.push({
       id: 'availability',
-      label: filters.availability.replace('_', ' '),
+      kind: 'availability',
+      value: filters.availability,
       filterKey: 'availability',
     });
   }
 
   if (filters.verifiedOnly) {
-    chips.push({ id: 'verified-only', label: 'Verified', filterKey: 'verifiedOnly' });
+    chips.push({ id: 'verified-only', kind: 'verified', filterKey: 'verifiedOnly' });
   }
 
   if (filters.recentlyActive) {
-    chips.push({ id: 'recently-active', label: 'Recently active', filterKey: 'recentlyActive' });
+    chips.push({ id: 'recently-active', kind: 'recentlyActive', filterKey: 'recentlyActive' });
   }
 
   if (filters.hasHighlightVideos) {
-    chips.push({ id: 'has-videos', label: 'Has videos', filterKey: 'hasHighlightVideos' });
+    chips.push({ id: 'has-videos', kind: 'hasVideos', filterKey: 'hasHighlightVideos' });
   }
 
   if (filters.sprintSpeedMin !== null) {
     chips.push({
       id: 'sprint-min',
-      label: `Sprint ${filters.sprintSpeedMin}+ km/h`,
+      kind: 'sprint',
+      value: filters.sprintSpeedMin,
       filterKey: 'sprintSpeedMin',
     });
   }

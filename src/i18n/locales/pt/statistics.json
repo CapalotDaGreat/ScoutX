@@ -19,7 +19,9 @@
     "shots": "Shots",
     "passAccuracy": "Pass accuracy",
     "tackles": "Tackles",
-    "distance": "Distance"
+    "distance": "Distance",
+    "cleanSheets": "Jogos sem sofrer",
+    "avgRating": "Nota média"
   },
   "modal": {
     "title": "Log match",
@@ -125,5 +127,110 @@
   "aiCoaching": "Coaching IA",
   "aiCoachingSubtitle": "Resumo de desempenho e ideias de melhoria",
   "performanceTrends": "Tendências de desempenho",
-  "performanceTrendsSubtitle": "Gráficos de progresso nos jogos recentes"
+  "performanceTrendsSubtitle": "Gráficos de progresso nos jogos recentes",
+  "aiInsight": {
+    "focus": "Foco: {{items}}",
+    "weeklyFocus": "Foco da semana: {{focus}}",
+    "drills": "Exercícios recomendados",
+    "current": "Atual {{value}}",
+    "potential": "Potencial {{value}}",
+    "trajectory": "Tendência {{value}}",
+    "growthAreas": "Áreas de crescimento: {{items}}",
+    "nextSteps": "Próximos passos: {{items}}",
+    "strengths": "Pontos fortes: {{items}}",
+    "improve": "Melhorar: {{items}}",
+    "poweredBy": "Com tecnologia de {{provider}}",
+    "previewProvider": "Pré-visualização de desenvolvimento — fornecedor de IA simulado",
+    "confidence": {
+      "low": "Confiança baixa",
+      "medium": "Confiança média",
+      "high": "Confiança alta"
+    },
+    "priority": {
+      "low": "Prioridade baixa",
+      "medium": "Prioridade média",
+      "high": "Prioridade alta"
+    },
+    "type": {
+      "performance_summary": {
+        "title": "Resumo de desempenho",
+        "description": "Visão geral com IA dos teus jogos recentes e tendências."
+      },
+      "improvement_suggestions": {
+        "title": "Sugestões de melhoria",
+        "description": "Aspetos a trabalhar com base nos dados que registaste."
+      },
+      "training_recommendations": {
+        "title": "Recomendações de treino",
+        "description": "Exercícios e um foco semanal sugeridos a partir dos teus dados."
+      },
+      "potential_analysis": {
+        "title": "Análise de potencial",
+        "description": "Como está a evoluir o teu desenvolvimento segundo os teus registos."
+      },
+      "career_progression_summary": {
+        "title": "Progressão de carreira",
+        "description": "Um resumo dos marcos do teu percurso no futebol."
+      },
+      "video_summary": {
+        "title": "Resumo de vídeo",
+        "description": "Momentos e lições do vídeo do teu jogo."
+      },
+      "gps_summary": {
+        "title": "Resumo GPS",
+        "description": "Informação de movimento e posição das tuas sessões GPS."
+      }
+    }
+  },
+  "summary": {
+    "average": {
+      "season": "Média da época {{value}}",
+      "played": "Jogos disputados {{value}}",
+      "perMatch": "Média por jogo {{value}}"
+    },
+    "trend": {
+      "baseline": "Nova referência",
+      "noChange": "Sem alterações",
+      "recent": "{{value}} recente"
+    },
+    "allMetrics": "Todas as estatísticas",
+    "moreMetrics_one": "mais {{count}} total",
+    "moreMetrics_other": "mais {{count}} totais",
+    "sectionSubtitle": "Dados de desempenho",
+    "unavailable": "Estatísticas indisponíveis",
+    "matchesAnalysed_one": "{{count}} jogo com totais, médias e tendências",
+    "matchesAnalysed_other": "{{count}} jogos com totais, médias e tendências",
+    "trendNote": "As tendências comparam as tuas médias recentes com as anteriores."
+  },
+  "charts": {
+    "radarTitle": "Gráfico radar",
+    "radarSubtitle": "O teu perfil em todas as estatísticas registadas, à escala de cada uma.",
+    "radarA11y": "Gráfico radar: {{summary}}",
+    "progressTitle": "Gráficos de progresso",
+    "progressSubtitle": "Evolução jogo a jogo.",
+    "progressA11y": "{{metric}} por jogo: {{values}}. {{trend}}",
+    "summaryTitle": "Resumo de desempenho"
+  },
+  "history": {
+    "subtitle": "Os teus últimos jogos e o que registaste.",
+    "contributions_one": "{{count}} participação em golo",
+    "contributions_other": "{{count}} participações em golo",
+    "passing": "{{pct}}% de passes",
+    "cleanSheet": "sem sofrer golos",
+    "conceded": "sofreu golos",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "goals_one": "{{count}} golo",
+    "goals_other": "{{count}} golos",
+    "assists_one": "{{count}} assistência",
+    "assists_other": "{{count}} assistências",
+    "shots_one": "{{count}} remate",
+    "shots_other": "{{count}} remates",
+    "tackles_one": "{{count}} desarme",
+    "tackles_other": "{{count}} desarmes",
+    "yellow_one": "{{count}} amarelo",
+    "yellow_other": "{{count}} amarelos",
+    "red_one": "{{count}} vermelho",
+    "red_other": "{{count}} vermelhos"
+  }
 }

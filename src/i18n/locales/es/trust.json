@@ -41,7 +41,8 @@
     "missingMessage": "El contexto de la relación y el texto del aval son obligatorios.",
     "removeTitle": "Quitar aval",
     "removeMessage": "Este aval se eliminará de forma permanente.",
-    "footerNote": "Las recomendaciones de entrenador las envía personal verificado del club. Los scouts pueden publicar avales en el perfil de confianza."
+    "footerNote": "Las recomendaciones de entrenador las envía personal verificado del club. Los scouts pueden publicar avales en el perfil de confianza.",
+    "skillsPlaceholder": "Pase progresivo\nResistencia a la presión"
   },
   "report": {
     "button": "Denunciar",
@@ -73,5 +74,73 @@
     "block": "Bloquear",
     "unblock": "Desbloquear",
     "cancel": "Cancelar"
+  },
+  "featured": "Destacado",
+  "entityWithClub": "Club verificado · {{club}}",
+  "entity": {
+    "player": "Jugador verificado",
+    "scout": "Ojeador verificado",
+    "club": "Club verificado",
+    "coach": "Entrenador verificado"
+  },
+  "recommendationType": {
+    "coach_recommendation": "Recomendación de entrenador",
+    "scout_endorsement": "Aval de ojeador"
+  },
+  "recommendationSection": {
+    "coach_recommendation": "Recomendaciones de entrenadores",
+    "scout_endorsement": "Avales de ojeadores"
+  },
+  "yearsKnownBadge_one": "Lo conoce desde hace {{count}} año",
+  "yearsKnownBadge_other": "Lo conoce desde hace {{count}} años",
+  "tenure": {
+    "title": "Años en el club",
+    "years_one": "{{count}} año",
+    "years_other": "{{count}} años"
+  },
+  "category": {
+    "Technical": "Técnica",
+    "Tactical": "Táctica",
+    "Physical": "Físico",
+    "Mental": "Mentalidad",
+    "Leadership": "Liderazgo",
+    "Professionalism": "Profesionalidad"
+  },
+  "coachEndorsement": {
+    "title": "Recomendación de entrenador",
+    "intro": "Escribe una recomendación para {{playerName}}. Los jugadores no pueden editar tu texto.",
+    "role": "Tu función",
+    "rolePlaceholder": "p. ej. primer entrenador sub-17",
+    "organization": "Club / academia",
+    "yearsKnown": "Años trabajando juntos",
+    "headlinePlaceholder": "p. ej. Profesionalidad sobresaliente",
+    "body": "Recomendación",
+    "bodyPlaceholder": "Describe lo que has visto de este jugador…",
+    "missingMessage": "El club, el contexto de la relación y el texto de la recomendación son obligatorios.",
+    "publish": "Publicar recomendación"
+  },
+  "verificationCard": {
+    "overline": "Verificación",
+    "title": "Verificación del Football Passport",
+    "body": "La verificación aparece en tu Football Passport y los ojeadores pueden filtrar jugadores verificados.",
+    "checking": "Comprobando el estado…",
+    "verified": "Tu Football Passport está verificado.",
+    "verifiedOn": "Tu Football Passport se verificó el {{date}}.",
+    "requested": "Tu solicitud está en revisión. Te avisaremos cuando haya una decisión.",
+    "pending": "La verificación está pendiente de revisión.",
+    "request": "Solicitar verificación"
+  },
+  "admin": {
+    "overline": "Revisión de administración",
+    "title": "Cola de moderación",
+    "counts": "{{verifications}} solicitudes de verificación · {{reports}} denuncias",
+    "loading": "Cargando cola…",
+    "empty": "No hay elementos pendientes.",
+    "loadFailed": "No se pudo cargar la cola.",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "reportLine": "Denuncia · {{target}} · {{reason}}",
+    "markReviewed": "Marcar como revisado",
+    "refresh": "Actualizar"
   }
 }

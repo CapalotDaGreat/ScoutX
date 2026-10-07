@@ -4,6 +4,7 @@ import { type RecruitmentShortlist } from '@/features/scout-recruitment/types';
 import { cn } from '@/utils/cn';
 import { ListPlus } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RecruitmentShortlistBarProps = {
   shortlists: RecruitmentShortlist[];
@@ -19,22 +20,24 @@ export function RecruitmentShortlistBar({
   onCreateShortlist,
 }: RecruitmentShortlistBarProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
 
   return (
     <View className="gap-2">
       <View className="flex-row items-center justify-between px-4">
         <Text variant="overline" color="secondary">
-          Shortlists
+          {t('pipelineUi.shortlists')}
         </Text>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Create shortlist"
+          accessibilityLabel={t('pipelineUi.createShortlist')}
+          hitSlop={8}
           onPress={onCreateShortlist}
           className="flex-row items-center gap-1 rounded-full border border-border px-2.5 py-1"
         >
           <ListPlus size={14} color={colors.accent} />
           <Text variant="caption" className="font-sans-semibold text-accent">
-            New
+            {t('pipelineUi.new')}
           </Text>
         </Pressable>
       </View>
@@ -46,6 +49,7 @@ export function RecruitmentShortlistBar({
       >
         <Pressable
           accessibilityRole="button"
+          accessibilityState={{ selected: activeShortlistId === null }}
           onPress={() => onSelectShortlist(null)}
           className={cn(
             'rounded-full border px-3 py-2',
@@ -63,7 +67,7 @@ export function RecruitmentShortlistBar({
                 : 'text-foreground-secondary',
             )}
           >
-            All Shortlists
+            {t('pipelineUi.allShortlists')}
           </Text>
         </Pressable>
 
@@ -73,6 +77,7 @@ export function RecruitmentShortlistBar({
             <Pressable
               key={shortlist.id}
               accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
               onPress={() => onSelectShortlist(shortlist.id)}
               className={cn(
                 'rounded-full border px-3 py-2',

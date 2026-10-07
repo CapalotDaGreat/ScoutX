@@ -4,6 +4,9 @@ import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { StatCard } from '@/components/primitives/StatCard';
 import { Text } from '@/components/primitives/Text';
 import { type StatisticSummaryItem } from '@/features/player-statistics/types';
+import { useStatisticLabels } from '@/features/player-statistics/hooks/useStatisticLabels';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type StatisticsCardsProps = {
   items: StatisticSummaryItem[];
@@ -14,18 +17,19 @@ export type StatisticsCardsProps = {
 const DEFAULT_PRIMARY_KEYS = ['matches', 'goals', 'assists', 'minutes'];
 
 function MetricGrid({ items }: { items: StatisticSummaryItem[] }) {
+  const labels = useStatisticLabels();
   return (
     <View className="flex-row flex-wrap gap-3">
       {items.map((item) => (
         <View key={item.key} className="min-w-[45%] flex-1">
           <StatCard
-            label={item.label}
+            label={labels.metric(item.key)}
             value={item.formattedValue}
-            trend={item.trend}
+            trend={{ direction: item.trend.direction, value: labels.trend(item.trend) }}
             variant="elevated"
           />
           <Text variant="caption" color="secondary" className="mt-1 px-1">
-            {item.displaySubtitle}
+            {labels.average(item.key, item.formattedAverage)}
           </Text>
         </View>
       ))}
@@ -39,14 +43,16 @@ export function StatisticsCards({ items, primaryKeys = DEFAULT_PRIMARY_KEYS }: S
   const resolvedPrimary = primary.length > 0 ? primary : items.slice(0, 4);
   const primaryIds = new Set(resolvedPrimary.map((item) => item.key));
   const secondary = items.filter((item) => !primaryIds.has(item.key));
+  const { t } = useAppTranslation('statistics');
+  const reduceMotion = useReducedMotion();
 
   return (
-    <Animated.View entering={FadeInUp.duration(450)} className="gap-5">
+    <Animated.View entering={reduceMotion ? undefined : FadeInUp.duration(450)} className="gap-5">
       <MetricGrid items={resolvedPrimary} />
       {secondary.length > 0 ? (
         <CollapsibleSection
-          title="All metrics"
-          subtitle={`${secondary.length} additional performance totals`}
+          title={t('summary.allMetrics')}
+          subtitle={t('summary.moreMetrics', { count: secondary.length })}
           persistKey="stats-all-metrics"
         >
           <MetricGrid items={secondary} />

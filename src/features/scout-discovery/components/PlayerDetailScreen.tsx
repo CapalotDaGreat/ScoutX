@@ -83,7 +83,7 @@ export function PlayerDetailScreen({
   onOpenComparisonPress,
   onOpenPlayer,
 }: PlayerDetailScreenProps) {
-  const { t } = useAppTranslation(['scout', 'statistics', 'common', 'errors']);
+  const { t, i18n } = useAppTranslation(['scout', 'statistics', 'common', 'errors']);
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
   const { players: playerPool } = useDiscoverablePlayerPool();
@@ -317,8 +317,8 @@ export function PlayerDetailScreen({
 
         <RevealSection step={2} className="px-4">
           <CollapsibleSection
-            title="Trust & endorsements"
-            subtitle="Verification and coach recommendations"
+            title={t('scout:playerDetail.sections.trustTitle')}
+            subtitle={t('scout:playerDetail.sections.trustSubtitle')}
             persistKey={`detail-trust-${player.id}`}
           >
             <TrustProfileSection
@@ -334,8 +334,8 @@ export function PlayerDetailScreen({
         {!guestMode ? (
           <RevealSection step={3} className="px-4">
             <CollapsibleSection
-              title="Scouting reports"
-              subtitle="Your notes and ratings for this player"
+              title={t('scout:playerDetail.sections.reportsTitle')}
+              subtitle={t('scout:playerDetail.sections.reportsSubtitle')}
               persistKey={`detail-reports-${player.id}`}
             >
               <ScoutingReportsSection playerId={player.id} playerName={player.fullName} />
@@ -346,7 +346,7 @@ export function PlayerDetailScreen({
         <RevealSection step={4} className="px-4">
           <CollapsibleSection
             title={t('scout:playerDetail.playerOverview')}
-            subtitle="Biography and reference"
+            subtitle={t('scout:playerDetail.sections.bioSubtitle')}
             persistKey={`detail-bio-${player.id}`}
           >
             <Card variant="outlined" padding="md" className="gap-2">
@@ -354,7 +354,7 @@ export function PlayerDetailScreen({
               <Text variant="caption" color="secondary">
                 {t('scout:playerDetail.refUpdated', {
                   id: player.id.toUpperCase(),
-                  date: new Date(player.updatedAt).toLocaleDateString(),
+                  date: new Date(player.updatedAt).toLocaleDateString(i18n.language),
                 })}
               </Text>
             </Card>
@@ -375,7 +375,7 @@ export function PlayerDetailScreen({
         <RevealSection step={6} className="px-4">
           <CollapsibleSection
             title={t('scout:playerDetail.attributeProfile')}
-            subtitle="Radar and technical ratings"
+            subtitle={t('scout:playerDetail.sections.attributesSubtitle')}
             persistKey={`detail-attributes-${player.id}`}
           >
             <View className="gap-5">
@@ -424,7 +424,7 @@ export function PlayerDetailScreen({
         <RevealSection step={7} className="px-4">
           <CollapsibleSection
             title={t('scout:playerDetail.clubHistory')}
-            subtitle={`${player.clubHistory.length} clubs`}
+            subtitle={t('scout:playerDetail.sections.clubCount', { count: player.clubHistory.length })}
             persistKey={`detail-clubs-${player.id}`}
           >
             <PreviewList
@@ -460,7 +460,7 @@ export function PlayerDetailScreen({
           <RevealSection step={9} className="px-4">
             <CollapsibleSection
               title={t('scout:playerDetail.matchFootage')}
-              subtitle="Highlight videos on file"
+              subtitle={t('scout:playerDetail.sections.footageSubtitle')}
               persistKey={`detail-footage-${player.id}`}
             >
               <Card variant="default" padding="lg" className="gap-3">
@@ -486,7 +486,7 @@ export function PlayerDetailScreen({
         <RevealSection step={10} className="px-4">
           <CollapsibleSection
             title={t('scout:playerDetail.honours')}
-            subtitle="Career achievements"
+            subtitle={t('scout:playerDetail.sections.honoursSubtitle')}
             persistKey={`detail-honours-${player.id}`}
           >
             {player.achievements.length > 0 ? (

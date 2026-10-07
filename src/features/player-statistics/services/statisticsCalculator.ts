@@ -55,6 +55,8 @@ function calculateTrend(matches: PlayerMatchStatistics[], key: StatisticMetricKe
       value: 'New baseline',
       direction: 'neutral',
       delta: 0,
+      baseline: true,
+      formattedDelta: formatStatisticValue(key, 0),
     };
   }
 
@@ -70,6 +72,8 @@ function calculateTrend(matches: PlayerMatchStatistics[], key: StatisticMetricKe
     value: createTrendLabel(key, delta),
     direction: getTrendDirection(delta),
     delta,
+    baseline: false,
+    formattedDelta: formatStatisticValue(key, Math.abs(delta)),
   };
 }
 

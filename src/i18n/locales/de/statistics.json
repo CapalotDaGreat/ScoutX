@@ -19,7 +19,9 @@
     "shots": "Shots",
     "passAccuracy": "Pass accuracy",
     "tackles": "Tackles",
-    "distance": "Distance"
+    "distance": "Distance",
+    "cleanSheets": "Zu-null-Spiele",
+    "avgRating": "Ø-Bewertung"
   },
   "modal": {
     "title": "Log match",
@@ -125,5 +127,110 @@
   "aiCoaching": "KI-Coaching",
   "aiCoachingSubtitle": "Leistungsüberblick und Verbesserungsvorschläge",
   "performanceTrends": "Leistungstrends",
-  "performanceTrendsSubtitle": "Verlaufsgrafiken der letzten Spiele"
+  "performanceTrendsSubtitle": "Verlaufsgrafiken der letzten Spiele",
+  "aiInsight": {
+    "focus": "Fokus: {{items}}",
+    "weeklyFocus": "Wochenfokus: {{focus}}",
+    "drills": "Empfohlene Übungen",
+    "current": "Aktuell {{value}}",
+    "potential": "Potenzial {{value}}",
+    "trajectory": "Tendenz {{value}}",
+    "growthAreas": "Entwicklungsbereiche: {{items}}",
+    "nextSteps": "Nächste Schritte: {{items}}",
+    "strengths": "Stärken: {{items}}",
+    "improve": "Verbessern: {{items}}",
+    "poweredBy": "Bereitgestellt von {{provider}}",
+    "previewProvider": "Entwicklungsvorschau — Test-KI-Anbieter",
+    "confidence": {
+      "low": "Geringe Sicherheit",
+      "medium": "Mittlere Sicherheit",
+      "high": "Hohe Sicherheit"
+    },
+    "priority": {
+      "low": "Niedrige Priorität",
+      "medium": "Mittlere Priorität",
+      "high": "Hohe Priorität"
+    },
+    "type": {
+      "performance_summary": {
+        "title": "Leistungsüberblick",
+        "description": "KI-Überblick über deine letzten Spiele und Trends."
+      },
+      "improvement_suggestions": {
+        "title": "Verbesserungsvorschläge",
+        "description": "Bereiche zum Arbeiten, basierend auf deinen erfassten Daten."
+      },
+      "training_recommendations": {
+        "title": "Trainingsempfehlungen",
+        "description": "Übungen und ein Wochenfokus, abgeleitet aus deinen Daten."
+      },
+      "potential_analysis": {
+        "title": "Potenzialanalyse",
+        "description": "Wie sich deine Entwicklung laut deinen Daten entwickelt."
+      },
+      "career_progression_summary": {
+        "title": "Karriereverlauf",
+        "description": "Eine Zusammenfassung der Meilensteine deiner Fußballreise."
+      },
+      "video_summary": {
+        "title": "Videozusammenfassung",
+        "description": "Momente und Coaching-Erkenntnisse aus deinem Spielvideo."
+      },
+      "gps_summary": {
+        "title": "GPS-Zusammenfassung",
+        "description": "Bewegungs- und Positionserkenntnisse aus deinen GPS-Einheiten."
+      }
+    }
+  },
+  "summary": {
+    "average": {
+      "season": "Saisonschnitt {{value}}",
+      "played": "Gespielte Spiele {{value}}",
+      "perMatch": "Ø pro Spiel {{value}}"
+    },
+    "trend": {
+      "baseline": "Neuer Ausgangswert",
+      "noChange": "Keine Veränderung",
+      "recent": "{{value}} zuletzt"
+    },
+    "allMetrics": "Alle Werte",
+    "moreMetrics_one": "{{count}} weiterer Wert",
+    "moreMetrics_other": "{{count}} weitere Werte",
+    "sectionSubtitle": "Leistungsdaten",
+    "unavailable": "Statistiken nicht verfügbar",
+    "matchesAnalysed_one": "{{count}} Spiel mit Summen, Schnitten und Trends",
+    "matchesAnalysed_other": "{{count}} Spiele mit Summen, Schnitten und Trends",
+    "trendNote": "Trends vergleichen deine letzten Spieldurchschnitte mit den früheren."
+  },
+  "charts": {
+    "radarTitle": "Radardiagramm",
+    "radarSubtitle": "Dein Profil über alle erfassten Werte, skaliert auf den jeweiligen Bereich.",
+    "radarA11y": "Radardiagramm: {{summary}}",
+    "progressTitle": "Verlaufsdiagramme",
+    "progressSubtitle": "Entwicklung von Spiel zu Spiel.",
+    "progressA11y": "{{metric}} pro Spiel: {{values}}. {{trend}}",
+    "summaryTitle": "Leistungsüberblick"
+  },
+  "history": {
+    "subtitle": "Deine letzten Spiele und was du erfasst hast.",
+    "contributions_one": "{{count}} Torbeteiligung",
+    "contributions_other": "{{count}} Torbeteiligungen",
+    "passing": "{{pct}} % Passquote",
+    "cleanSheet": "zu null",
+    "conceded": "Gegentor kassiert",
+    "minutes_one": "{{count}} Min.",
+    "minutes_other": "{{count}} Min.",
+    "goals_one": "{{count}} Tor",
+    "goals_other": "{{count}} Tore",
+    "assists_one": "{{count}} Vorlage",
+    "assists_other": "{{count}} Vorlagen",
+    "shots_one": "{{count}} Schuss",
+    "shots_other": "{{count}} Schüsse",
+    "tackles_one": "{{count}} Tackling",
+    "tackles_other": "{{count}} Tacklings",
+    "yellow_one": "{{count}} Gelb",
+    "yellow_other": "{{count}} Gelb",
+    "red_one": "{{count}} Rot",
+    "red_other": "{{count}} Rot"
+  }
 }

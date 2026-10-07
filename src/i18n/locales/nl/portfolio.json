@@ -513,5 +513,93 @@
     "encourageStart": "Elk profiel begint met één vastgelegde wedstrijd. Begin daar.",
     "progress": "{{done}} van {{total}} klaar. Ga zo door.",
     "hide": "Voor nu verbergen"
+  },
+  "profileUi": {
+    "physicalTitle": "Fysiek profiel",
+    "physicalSubtitle": "Atletische basiskenmerken",
+    "currentClubTitle": "Huidige club",
+    "currentClubSubtitle": "Waar je nu speelt",
+    "clubHistoryTitle": "Clubgeschiedenis",
+    "clubHistorySubtitle": "Vorige clubs en ontwikkelingstraject",
+    "clubHistoryEmpty": "Nog geen clubgeschiedenis toegevoegd.",
+    "storyTitle": "Jouw verhaal",
+    "storySubtitle": "Hoe je jezelf presenteert aan clubs en scouts",
+    "biographyEmpty": "Vertel scouts over je reis, sterke punten en ambities.",
+    "years_one": "{{count}} jaar",
+    "years_other": "{{count}} jaar",
+    "apps_one": "{{count}} wedstrijd",
+    "apps_other": "{{count}} wedstrijden",
+    "period": "Periode",
+    "periodPlaceholder": "2022–heden",
+    "clubEditor": {
+      "club": "Club",
+      "league": "Competitie",
+      "add": "Club toevoegen"
+    },
+    "timelineEditor": {
+      "typeLabel": "Type",
+      "type": {
+        "club": "Club",
+        "achievement": "Prestatie",
+        "transfer": "Transfer",
+        "education": "Opleiding"
+      },
+      "title": "Titel",
+      "organization": "Organisatie",
+      "description": "Beschrijving",
+      "add": "Item toevoegen"
+    },
+    "fullNamePlaceholder": "Je volledige naam",
+    "nationalityPlaceholder": "bijv. Zwitsers",
+    "trustTitle": "Vertrouwen & aanbevelingen",
+    "trustSubtitle": "Verificatie en aanbevelingen van trainers"
+  },
+  "publicUi": {
+    "fullPerformance": "Volledige prestaties",
+    "fullPerformanceSubtitle": "Gedetailleerde wedstrijdanalyses en grafieken",
+    "timeline": "Loopbaan",
+    "moments_one": "{{count}} moment",
+    "moments_other": "{{count}} momenten",
+    "fullTimeline": "Volledige loopbaan",
+    "moreMoments_one": "nog {{count}} moment",
+    "moreMoments_other": "nog {{count}} momenten",
+    "charts": "Prestatiegrafieken",
+    "chartsSubtitle": "Seizoenstrends",
+    "videos": "Highlightvideo's",
+    "videosSubtitle": "Wedstrijdbeelden",
+    "gps": "GPS-hoogtepunten",
+    "sessions_one": "{{count}} sessie",
+    "sessions_other": "{{count}} sessies",
+    "moreSessions": "Meer sessies",
+    "additional_one": "nog {{count}}",
+    "additional_other": "nog {{count}}",
+    "loadingProfile": "Profiel laden",
+    "notFound": "Niet gevonden",
+    "notFoundTitle": "Passport niet gevonden",
+    "resolveError": {
+      "missing": "Deze link bevat geen gebruikersnaam.",
+      "app_route": "Deze link verwijst naar een app-pagina, niet naar een speler.",
+      "not_found": "Deze Football Passport bestaat niet of is privé.",
+      "failed": "Deze Football Passport kon niet worden geladen. Controleer je verbinding en probeer het opnieuw."
+    },
+    "scanQr": "Scan om de Football Passport te openen",
+    "invite": {
+      "overline": "Uitnodiging voor aanbeveling",
+      "title": "{{name}} aanbevelen",
+      "guestBody": "Log in met een scoutaccount om een aanbeveling op deze Football Passport te plaatsen.",
+      "playerBody": "Spelersaccounts kunnen geen aanbevelingen plaatsen. Log in met een scoutaccount om door te gaan.",
+      "signIn": "Inloggen",
+      "register": "Scoutaccount aanmaken"
+    }
+  },
+  "reach": {
+    "overline": "Passport-bereik",
+    "title": "Wie je Football Passport bekijkt",
+    "views": "{{total}} weergaven in totaal · {{week}} deze week",
+    "scoutViews": "{{total}} scoutweergaven · {{week}} deze week",
+    "lastViewed": "Laatst bekeken op {{date}}",
+    "noViews": "Nog geen weergaven",
+    "loading": "Weergaven laden…",
+    "unavailable": "Weergaven konden nu niet worden geladen."
   }
 }

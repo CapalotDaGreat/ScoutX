@@ -27,7 +27,7 @@ function createEmptyDraft(): TrustRecommendationDraft {
     skills: [],
     yearsKnown: null,
     featured: false,
-    authorTitle: 'Talent Scout',
+    authorTitle: '',
     authorOrganization: 'ScoutX Network',
   };
 }
@@ -46,8 +46,8 @@ export function ScoutEndorsementModal({
   const [headline, setHeadline] = useState('');
   const [body, setBody] = useState('');
   const [skillsText, setSkillsText] = useState('');
-  const [authorTitle, setAuthorTitle] = useState('Talent Scout');
-  const [authorOrganization, setAuthorOrganization] = useState('ScoutX Network');
+  const [authorTitle, setAuthorTitle] = useState('');
+  const [authorOrganization, setAuthorOrganization] = useState('');
   const [yearsKnown, setYearsKnown] = useState('');
 
   useEffect(() => {
@@ -165,7 +165,7 @@ export function ScoutEndorsementModal({
             label={t('endorsement.skills')}
             value={skillsText}
             onChangeText={setSkillsText}
-            placeholder={'Progressive passing\nPress resistance'}
+            placeholder={t('endorsement.skillsPlaceholder')}
             multiline
             numberOfLines={4}
             textAlignVertical="top"

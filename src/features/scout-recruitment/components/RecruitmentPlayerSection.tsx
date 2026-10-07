@@ -10,6 +10,7 @@ import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { useState } from 'react';
 import { useTheme } from '@/theme';
 import { Kanban } from 'lucide-react-native';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RecruitmentPlayerSectionProps = {
   player: DiscoverablePlayer;
@@ -17,6 +18,7 @@ export type RecruitmentPlayerSectionProps = {
 
 export function RecruitmentPlayerSection({ player }: RecruitmentPlayerSectionProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
   const { getEntry, isPlayerTracked } = useRecruitment();
   const [actionsVisible, setActionsVisible] = useState(false);
 
@@ -31,18 +33,18 @@ export function RecruitmentPlayerSection({ player }: RecruitmentPlayerSectionPro
 
   return (
     <>
-      <Section title="Recruitment Pipeline" subtitle="Track this player through your scouting workflow">
+      <Section title={t('pipelineUi.sectionTitle')} subtitle={t('pipelineUi.sectionSubtitle')}>
         <Card variant="outlined" padding="md" className="gap-3">
           <View className="flex-row items-center gap-2">
             <Kanban size={18} color={colors.accent} />
-            <Text weight="semibold">In your pipeline</Text>
+            <Text weight="semibold">{t('pipelineUi.inPipeline')}</Text>
           </View>
           <RecruitmentStageBadge stage={entry.stage} />
           <Text variant="body-sm" color="secondary">
-            Manage folder placement, shortlists, and stage progression from one place.
+            {t('pipelineUi.manageHint')}
           </Text>
           <Button variant="secondary" size="sm" onPress={() => setActionsVisible(true)}>
-            Manage recruitment
+            {t('pipelineUi.manage')}
           </Button>
         </Card>
       </Section>

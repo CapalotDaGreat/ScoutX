@@ -4,28 +4,28 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { type PortfolioAnalytics } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
 import { getPortfolioOverallScore } from '@/features/public-portfolio/services/footballPassportScoreService';
 
+export type PerformanceInsightId =
+  | 'weeklyMatches'
+  | 'goalContribution'
+  | 'passAccuracy'
+  | 'portfolioStrength'
+  | 'scoutViews'
+  | 'gpsDistance';
+
 export type PerformanceInsight = {
-  id: string;
-  label: string;
-  value: string;
+  id: PerformanceInsightId;
+  /** Null when there is nothing recorded to show. */
+  value: number | null;
+  /** Week-over-week change; null when there is no previous week to compare. */
+  delta: string | null;
   trend: 'up' | 'down' | 'neutral';
-  hint: string;
 };
 
 export type PerformanceInsightsReport = {
   insights: PerformanceInsight[];
+  /** Player-entered performance summary items. */
   radarSnapshot: Array<{ label: string; value: number; max: number }>;
 };
-
-function trendFromDelta(delta: string): PerformanceInsight['trend'] {
-  if (delta.startsWith('+')) {
-    return 'up';
-  }
-  if (delta.startsWith('-')) {
-    return 'down';
-  }
-  return 'neutral';
-}
 
 export function buildPerformanceInsightsReport(input: {
   profile: PlayerProfile;
@@ -35,51 +35,29 @@ export function buildPerformanceInsightsReport(input: {
 }): PerformanceInsightsReport {
   const { profile, growth, analytics, gpsSessions } = input;
   const passportScore = getPortfolioOverallScore(profile);
-  const matchCount = profile.statisticsMatches?.length ?? 0;
   const gpsDistance = gpsSessions.reduce((sum, session) => sum + session.metrics.distanceM, 0);
 
+  const contribution =
+    growth.goals.current === null || growth.assists.current === null
+      ? null
+      : growth.goals.current + growth.assists.current;
+
   const insights: PerformanceInsight[] = [
+    { id: 'weeklyMatches', value: growth.matchCount, delta: null, trend: 'neutral' },
+    { id: 'goalContribution', value: contribution, delta: growth.goals.delta, trend: growth.goals.direction },
     {
-      id: 'weekly-matches',
-      label: 'Weekly matches',
-      value: String(growth.matchCount),
-      trend: growth.matchCount > 0 ? 'up' : 'neutral',
-      hint: 'Consistency helps scouts trust your development curve.',
+      id: 'passAccuracy',
+      value: growth.passAccuracy.current,
+      delta: growth.passAccuracy.delta,
+      trend: growth.passAccuracy.direction,
     },
+    { id: 'portfolioStrength', value: passportScore, delta: null, trend: 'neutral' },
+    { id: 'scoutViews', value: analytics.scoutViewsThisWeek, delta: null, trend: 'neutral' },
     {
-      id: 'goal-contribution',
-      label: 'Goal contribution',
-      value: String(growth.goals.current + growth.assists.current),
-      trend: trendFromDelta(growth.goals.delta),
-      hint: 'Goals plus assists from the last 7 days.',
-    },
-    {
-      id: 'pass-accuracy',
-      label: 'Pass accuracy',
-      value: `${growth.passAccuracy.current}%`,
-      trend: trendFromDelta(growth.passAccuracy.delta),
-      hint: 'Weekly passing efficiency trend.',
-    },
-    {
-      id: 'portfolio-strength',
-      label: 'Portfolio strength',
-      value: `${passportScore}/100`,
-      trend: passportScore >= 70 ? 'up' : 'neutral',
-      hint: 'Complete passport items to improve scout conversion.',
-    },
-    {
-      id: 'scout-visibility',
-      label: 'Scout views (week)',
-      value: String(analytics.scoutViewsThisWeek),
-      trend: analytics.scoutViewsThisWeek > 0 ? 'up' : 'neutral',
-      hint: 'Scouts who opened your Football Passport this week.',
-    },
-    {
-      id: 'gps-load',
-      label: 'GPS distance (recent)',
-      value: gpsDistance > 0 ? `${Math.round(gpsDistance / 1000)} km` : '—',
-      trend: gpsDistance > 0 ? 'up' : 'neutral',
-      hint: 'Total distance from your latest GPS sessions.',
+      id: 'gpsDistance',
+      value: gpsSessions.length > 0 ? Math.round(gpsDistance / 100) / 10 : null,
+      delta: null,
+      trend: 'neutral',
     },
   ];
 
@@ -88,16 +66,6 @@ export function buildPerformanceInsightsReport(input: {
     value: item.value,
     max: item.max,
   }));
-
-  if (matchCount === 0 && radarSnapshot.length === 0) {
-    return {
-      insights,
-      radarSnapshot: [
-        { label: 'Matches logged', value: 0, max: 10 },
-        { label: 'Passport score', value: passportScore / 10, max: 10 },
-      ],
-    };
-  }
 
   return { insights, radarSnapshot };
 }

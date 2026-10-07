@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { type FormResult } from '@/features/scout-discovery/types';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerFormStripProps = {
   form: FormResult[];
@@ -15,10 +16,14 @@ const sizeStyles = {
 } as const;
 
 export function PlayerFormStrip({ form, size = 'sm', className }: PlayerFormStripProps) {
+  const { t } = useAppTranslation('scout');
   return (
     <View
       className={cn('flex-row gap-1', className)}
-      accessibilityLabel="Recent form"
+      accessible
+      accessibilityLabel={t('scout:a11y.recentForm', {
+        results: form.slice(0, 5).map((result) => t(`scout:a11y.form.${result}`)).join(', '),
+      })}
     >
       {form.slice(0, 5).map((result, index) => (
         <View

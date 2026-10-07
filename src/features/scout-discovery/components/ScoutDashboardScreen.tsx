@@ -18,7 +18,7 @@ import { useScoutDashboard } from '@/features/scout-discovery/hooks/useScoutDash
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
-import { useRecruitment, RECRUITMENT_STAGE_LABELS } from '@/features/scout-recruitment';
+import { useRecruitment } from '@/features/scout-recruitment';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -108,8 +108,8 @@ export function ScoutDashboardScreen({
       return null;
     }
     const entry = recruitment.getEntry(continuePlayer.id);
-    return entry ? RECRUITMENT_STAGE_LABELS[entry.stage] : null;
-  }, [continuePlayer, recruitment]);
+    return entry ? t(`scout:stage.${entry.stage}`) : null;
+  }, [continuePlayer, recruitment, t]);
 
   const recentlyViewedPlayers = useMemo(
     () => workspace.resolvePlayers(workspace.recentlyViewedIds, resolvedPlayers),

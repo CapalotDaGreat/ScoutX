@@ -11,25 +11,21 @@ import {
 import { type VideoCategory } from '@/features/highlight-videos/types';
 
 export type VideoCategoryMeta = {
-  label: string;
   icon: LucideIcon;
   accentClass: string;
 };
 
 export const VIDEO_CATEGORY_META: Record<VideoCategory, VideoCategoryMeta> = {
-  goals: { label: 'Goals', icon: Goal, accentClass: 'bg-warning-muted' },
-  assists: { label: 'Assists', icon: Target, accentClass: 'bg-accent-muted' },
-  skills: { label: 'Skills', icon: Sparkles, accentClass: 'bg-info-muted' },
-  defending: { label: 'Defending', icon: Shield, accentClass: 'bg-success-muted' },
-  goalkeeping: { label: 'Goalkeeping', icon: Hand, accentClass: 'bg-info-muted' },
-  passing: { label: 'Passing', icon: Wind, accentClass: 'bg-accent-muted' },
-  headers: { label: 'Headers', icon: Crosshair, accentClass: 'bg-warning-muted' },
+  goals: { icon: Goal, accentClass: 'bg-warning-muted' },
+  assists: { icon: Target, accentClass: 'bg-accent-muted' },
+  skills: { icon: Sparkles, accentClass: 'bg-info-muted' },
+  defending: { icon: Shield, accentClass: 'bg-success-muted' },
+  goalkeeping: { icon: Hand, accentClass: 'bg-info-muted' },
+  passing: { icon: Wind, accentClass: 'bg-accent-muted' },
+  headers: { icon: Crosshair, accentClass: 'bg-warning-muted' },
 };
 
-export const VIDEO_CATEGORY_OPTIONS = Object.entries(VIDEO_CATEGORY_META).map(([value, meta]) => ({
-  value: value as VideoCategory,
-  label: meta.label,
-}));
+export const VIDEO_CATEGORIES = Object.keys(VIDEO_CATEGORY_META) as VideoCategory[];
 
 export const VIDEO_FILTER_ALL = 'all' as const;
 

@@ -45,5 +45,52 @@
   "cancelFailed": "Trial konnte nicht storniert werden.",
   "reschedule": "Verschieben",
   "responseNote": "Antwortnotiz (optional)",
-  "responseNotePlaceholder": "Verfügbarkeit oder Fragen an den Scout…"
+  "responseNotePlaceholder": "Verfügbarkeit oder Fragen an den Scout…",
+  "status": {
+    "pending": "Ausstehend",
+    "accepted": "Angenommen",
+    "declined": "Abgelehnt",
+    "rescheduled": "Verschoben",
+    "cancelled": "Abgesagt",
+    "completed": "Abgeschlossen"
+  },
+  "card": {
+    "overline": "Einladung zum Probetraining",
+    "playerScout": "{{player}} · Scout {{scout}}",
+    "coach": "Trainer {{coach}}"
+  },
+  "response": {
+    "declineTitle": "Probetraining ablehnen",
+    "declineBody": "Möchtest du diese Einladung wirklich ablehnen?",
+    "declineFailed": "Das Probetraining konnte nicht abgelehnt werden. Bitte versuche es erneut.",
+    "acceptFailed": "Das Probetraining konnte nicht angenommen werden. Bitte versuche es erneut.",
+    "coachScout": "Trainer {{coach}} · Scout {{scout}}",
+    "calendarTitle": "Kalender",
+    "calendarFailed": "Der Kalender konnte nicht geöffnet werden.",
+    "calendar": {
+      "google": "Zu Google Kalender hinzufügen",
+      "native": "Zum Kalender hinzufügen"
+    },
+    "history": "Verlauf"
+  },
+  "editor": {
+    "validationTitle": "Angaben prüfen",
+    "requiredFields": "Verein, Trainer und Ort sind Pflichtfelder.",
+    "invalidDate": "Gib ein gültiges Datum mit Uhrzeit ein, z. B. 2026-07-12T14:00.",
+    "saveFailed": "Das Probetraining konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "rescheduleTitle": "Probetraining verschieben",
+    "inviteTitle": "Zum Probetraining einladen",
+    "send": "Einladung senden",
+    "intro": "Einladung zum Probetraining für {{name}}",
+    "club": "Verein",
+    "clubPlaceholder": "Name des Vereins oder der Akademie",
+    "coach": "Trainer",
+    "coachPlaceholder": "Name des Trainers",
+    "location": "Ort",
+    "locationPlaceholder": "Trainingsgelände, Platz",
+    "date": "Datum und Uhrzeit",
+    "dateHint": "Format: JJJJ-MM-TTTHH:MM, z. B. 2026-07-12T14:00",
+    "notes": "Notizen",
+    "notesPlaceholder": "Anfahrt, Ausrüstung, Ablauf…"
+  }
 }

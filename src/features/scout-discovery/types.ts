@@ -236,9 +236,25 @@ export type ScoutWorkspaceSnapshot = {
   comparisonPlayerIds: string[];
 };
 
+export type FilterChipKind =
+  | 'ageRange'
+  | 'position'
+  | 'raw'
+  | 'foot'
+  | 'overall'
+  | 'potential'
+  | 'availability'
+  | 'verified'
+  | 'recentlyActive'
+  | 'hasVideos'
+  | 'sprint';
+
 export type FilterChip = {
   id: string;
-  label: string;
+  kind: FilterChipKind;
+  /** Display value: a data string (club, league), an enum ID, or a numeric threshold. */
+  value?: string | number;
+  max?: number | null;
   filterKey?: keyof DiscoveryFilters;
   filterValue?: string | PlayerPosition;
 };

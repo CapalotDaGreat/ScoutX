@@ -8,6 +8,7 @@ import { buildWeeklyGrowthMetrics } from '@/features/player-growth/services/grow
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 import { buildWeeklyFootballReport } from '@/features/weekly-report/services/weeklyReportService';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type WeeklyFootballReportCardProps = {
   profile: PlayerProfile;
@@ -18,12 +19,17 @@ export function WeeklyFootballReportCard({
   profile,
   recommendations = [],
 }: WeeklyFootballReportCardProps) {
+  const { t, i18n } = useAppTranslation('career');
   const { analytics } = usePortfolioAnalytics(profile.id);
   const growth = useMemo(() => buildWeeklyGrowthMetrics(profile), [profile]);
   const report = useMemo(
     () => buildWeeklyFootballReport(profile, growth, analytics, recommendations),
     [analytics, growth, profile, recommendations],
   );
+  const weekLabel = useMemo(() => {
+    const formatter = new Intl.DateTimeFormat(i18n.language, { month: 'short', day: 'numeric' });
+    return `${formatter.format(report.weekStart)} – ${formatter.format(report.weekEnd)}`;
+  }, [i18n.language, report.weekEnd, report.weekStart]);
 
   const hasActivity =
     report.growth.matchCount > 0 ||
@@ -34,12 +40,11 @@ export function WeeklyFootballReportCard({
     return (
       <Card variant="outlined" padding="md" className="gap-2">
         <Text variant="overline" color="secondary">
-          Weekly Football Report
+          {t('weekly.overline')}
         </Text>
-        <Text weight="semibold">Your intelligent weekly summary</Text>
+        <Text weight="semibold">{t('weekly.emptyTitle')}</Text>
         <Text variant="body-sm" color="secondary">
-          Log your first match or publish your Football Passport to unlock a personalized weekly
-          report.
+          {t('weekly.emptyBody')}
         </Text>
       </Card>
     );
@@ -49,19 +54,19 @@ export function WeeklyFootballReportCard({
     <Card variant="default" padding="md" className="gap-3">
       <View>
         <Text variant="overline" color="secondary">
-          Weekly Football Report
+          {t('weekly.overline')}
         </Text>
-        <Text weight="semibold">{report.weekLabel}</Text>
+        <Text weight="semibold">{weekLabel}</Text>
         <Text variant="caption" color="secondary">
-          Passport score {report.passportScore}/100 · Scout-visible {report.scoutVisibleScore}/100
+          {t('weekly.scores', { passport: report.passportScore, scout: report.scoutVisibleScore })}
         </Text>
       </View>
 
       {report.highlights.length > 0 ? (
         <View className="gap-1">
           {report.highlights.map((line) => (
-            <Text key={line} variant="body-sm">
-              • {line}
+            <Text key={line.kind} variant="body-sm">
+              • {t(`weekly.highlight.${line.kind}`, { count: line.count })}
             </Text>
           ))}
         </View>
@@ -69,31 +74,40 @@ export function WeeklyFootballReportCard({
 
       <View className="flex-row flex-wrap gap-3">
         <StatCard
-          label="Goals"
-          value={report.growth.goals.current}
-          trend={{ value: report.growth.goals.delta, direction: report.growth.goals.direction }}
+          label={t('weekly.stat.goals')}
+          value={report.growth.goals.current ?? '—'}
+          trend={
+            report.growth.goals.delta
+              ? { value: report.growth.goals.delta, direction: report.growth.goals.direction }
+              : undefined
+          }
           className="min-w-[45%] flex-1"
         />
         <StatCard
-          label="Assists"
-          value={report.growth.assists.current}
-          trend={{ value: report.growth.assists.delta, direction: report.growth.assists.direction }}
+          label={t('weekly.stat.assists')}
+          value={report.growth.assists.current ?? '—'}
+          trend={
+            report.growth.assists.delta
+              ? { value: report.growth.assists.delta, direction: report.growth.assists.direction }
+              : undefined
+          }
           className="min-w-[45%] flex-1"
         />
         <StatCard
-          label="Pass accuracy"
-          value={`${report.growth.passAccuracy.current}%`}
-          trend={{
-            value: report.growth.passAccuracy.delta,
-            direction: report.growth.passAccuracy.direction,
-          }}
+          label={t('weekly.stat.passAccuracy')}
+          value={report.growth.passAccuracy.current === null ? '—' : `${report.growth.passAccuracy.current}%`}
+          trend={
+            report.growth.passAccuracy.delta
+              ? { value: report.growth.passAccuracy.delta, direction: report.growth.passAccuracy.direction }
+              : undefined
+          }
           className="min-w-[45%] flex-1"
         />
         <StatCard
-          label="Portfolio views"
+          label={t('weekly.stat.portfolioViews')}
           value={report.portfolioViewsThisWeek}
           trend={{
-            value: `${report.scoutViewsThisWeek} scout`,
+            value: t('weekly.stat.scoutViews', { count: report.scoutViewsThisWeek }),
             direction: report.scoutViewsThisWeek > 0 ? 'up' : 'neutral',
           }}
           className="min-w-[45%] flex-1"
@@ -103,11 +117,11 @@ export function WeeklyFootballReportCard({
       {report.suggestions.length > 0 ? (
         <View className="rounded-xl bg-background-secondary p-3">
           <Text weight="semibold" className="text-sm">
-            Focus this week
+            {t('weekly.focusTitle')}
           </Text>
-          {report.suggestions.map((item) => (
-            <Text key={item} variant="body-sm" color="secondary">
-              • {item}
+          {report.suggestions.map((id) => (
+            <Text key={id} variant="body-sm" color="secondary">
+              • {t(`weekly.suggestion.${id}`)}
             </Text>
           ))}
         </View>

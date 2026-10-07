@@ -112,5 +112,176 @@
     "first_reel": "Erstes Reel: {{subject}}",
     "club_change": "Wechsel zu {{subject}}",
     "position_change": "Als {{subject}} gespielt (vorher {{previous}})"
+  },
+  "weekly": {
+    "overline": "Wöchentlicher Fußballbericht",
+    "emptyTitle": "Deine Wochenübersicht",
+    "emptyBody": "Erfasse dein erstes Spiel oder veröffentliche deinen Football Passport, um einen persönlichen Wochenbericht freizuschalten.",
+    "scores": "Passport-Score {{passport}}/100 · Für Scouts sichtbar {{scout}}/100",
+    "highlight": {
+      "matches_one": "Diese Woche {{count}} Spiel erfasst.",
+      "matches_other": "Diese Woche {{count}} Spiele erfasst.",
+      "goals_one": "{{count}} Tor erzielt.",
+      "goals_other": "{{count}} Tore erzielt.",
+      "scoutViews_one": "{{count}} Scout-Aufruf deines Football Passport.",
+      "scoutViews_other": "{{count}} Scout-Aufrufe deines Football Passport.",
+      "milestones_one": "{{count}} Meilenstein erreicht.",
+      "milestones_other": "{{count}} Meilensteine erreicht."
+    },
+    "stat": {
+      "goals": "Tore",
+      "assists": "Vorlagen",
+      "passAccuracy": "Passquote",
+      "portfolioViews": "Passport-Aufrufe",
+      "scoutViews_one": "{{count}} Scout",
+      "scoutViews_other": "{{count}} Scouts"
+    },
+    "focusTitle": "Fokus diese Woche",
+    "suggestion": {
+      "avatar": "Füge ein professionelles Porträtfoto hinzu.",
+      "bio": "Schreibe eine kurze Biografie, der Scouts vertrauen können.",
+      "position": "Lege deine bevorzugten Positionen fest.",
+      "club": "Füge deinen aktuellen Verein oder deine Akademie hinzu.",
+      "matches": "Erfasse mindestens ein Spiel.",
+      "videos": "Lade einen Highlight-Clip hoch.",
+      "journey": "Füge einen Karriereschritt oder Meilenstein hinzu.",
+      "username": "Sichere dir deinen eigenen Passport-Link.",
+      "public": "Aktiviere deinen teilbaren Football Passport.",
+      "discoverable": "Lass dich in der Scout-Suche finden.",
+      "coach": "Lade einen Trainer ein, dich zu empfehlen.",
+      "video": "Lade mindestens einen Highlight-Clip hoch.",
+      "match": "Erfasse ein Spiel aus den letzten 45 Tagen.",
+      "logMore": "Erfasse weitere Spiele, um deine Leistungsentwicklung zu zeigen.",
+      "share": "Teile deinen Passport-Link, um diese Woche sichtbarer für Scouts zu werden."
+    },
+    "summaryReady": "Dein Wochenbericht ist bereit.",
+    "summary": "{{lead}} Nächster Schritt: {{next}}"
+  },
+  "journeyType": {
+    "all": "Alle",
+    "academy": "Akademie",
+    "club_transfer": "Vereinswechsel",
+    "achievement": "Erfolg",
+    "league_title": "Meistertitel",
+    "cup_win": "Pokalsieg",
+    "international_callup": "Länderspiel-Nominierung",
+    "injury": "Verletzung",
+    "recovery": "Comeback",
+    "trial": "Probetraining",
+    "professional_contract": "Profivertrag",
+    "highlight_video": "Highlight-Video",
+    "coach_recommendation": "Trainerempfehlung",
+    "gps_session": "GPS-Einheit",
+    "statistics_milestone": "Statistik-Meilenstein"
+  },
+  "journeyUi": {
+    "title": "Football Journey",
+    "subtitle": "Deine Karrieregeschichte: Akademien, Wechsel, Meilensteine und Momente, an die sich Scouts erinnern",
+    "count_one": "{{count}} Meilenstein auf deiner Zeitleiste",
+    "count_other": "{{count}} Meilensteine auf deiner Zeitleiste",
+    "manage": "Verwalten",
+    "empty": "Deine Football Journey erscheint hier, sobald du Karriere-Meilensteine hinzufügst.",
+    "noFilterMatch": "Keine Einträge für diesen Filter.",
+    "editTitle": "Football Journey bearbeiten",
+    "editIntro": "Erzähle deine Karriere mit Akademien, Wechseln, Erfolgen, Verletzungen, Highlights und mehr.",
+    "addEntry": "Eintrag hinzufügen",
+    "save": "Journey speichern",
+    "validationTitle": "Einträge prüfen",
+    "validationBody": "Jeder Eintrag braucht einen Titel und ein Datum.",
+    "saveFailedTitle": "Speichern fehlgeschlagen",
+    "saveFailed": "Deine Journey konnte nicht gespeichert werden. Bitte versuche es erneut."
+  },
+  "insights": {
+    "overline": "Leistungseinblicke",
+    "title": "Deine Entwicklung diese Woche",
+    "subtitle": "Spiele, Passport-Reichweite und GPS-Belastung auf einen Blick",
+    "snapshotTitle": "Dein Leistungsüberblick",
+    "item": {
+      "weeklyMatches": {
+        "label": "Spiele (7 Tage)",
+        "hint": "In den letzten 7 Tagen erfasste Spiele."
+      },
+      "goalContribution": {
+        "label": "Torbeteiligungen",
+        "hint": "Tore plus Vorlagen der letzten 7 Tage."
+      },
+      "passAccuracy": {
+        "label": "Passquote",
+        "hint": "Aus Spielen, in denen du Pässe erfasst hast."
+      },
+      "portfolioStrength": {
+        "label": "Passport-Stärke",
+        "hint": "Vervollständige Passport-Punkte, um sie zu erhöhen."
+      },
+      "scoutViews": {
+        "label": "Scout-Aufrufe (Woche)",
+        "hint": "Scouts, die deinen Football Passport diese Woche geöffnet haben."
+      },
+      "gpsDistance": {
+        "label": "GPS-Distanz",
+        "hint": "Gesamtdistanz deiner letzten GPS-Einheiten."
+      }
+    }
+  },
+  "replayCard": {
+    "overline": "Karriere-Rückblick",
+    "title": "Rückblick {{season}}",
+    "matches_one": "{{count}} Spiel in dieser Saison erfasst.",
+    "matches_other": "{{count}} Spiele in dieser Saison erfasst.",
+    "contributions": "Beteiligungen: {{goals}} Tore und {{assists}} Vorlagen.",
+    "views_one": "Dein Football Passport wurde {{count}}-mal aufgerufen.",
+    "views_other": "Dein Football Passport wurde {{count}}-mal aufgerufen.",
+    "milestones_one": "{{count}} Meilenstein freigeschaltet.",
+    "milestones_other": "{{count}} Meilensteine freigeschaltet.",
+    "empty": "Erfasse Spiele in dieser Saison, um deinen Rückblick aufzubauen.",
+    "open": "Rückblick öffnen"
+  },
+  "milestoneUi": {
+    "overline": "Meilensteine",
+    "title": "Freigeschaltete Erfolge",
+    "earned_one": "{{count}} Meilenstein erreicht",
+    "earned_other": "{{count}} Meilensteine erreicht",
+    "new_one": "Neuer Meilenstein freigeschaltet",
+    "new_other": "Neue Meilensteine freigeschaltet",
+    "empty": "Erfasse Spiele, veröffentliche deinen Football Passport und sammle Trainerempfehlungen, um Meilensteine freizuschalten.",
+    "seeMore": "{{count}} weitere anzeigen"
+  },
+  "milestone": {
+    "first_match": {
+      "title": "Erstes Spiel erfasst",
+      "description": "Du hast begonnen, echte Spielleistungen zu erfassen."
+    },
+    "ten_matches": {
+      "title": "10 Spiele erfasst",
+      "description": "Eine beständige Spielhistorie entsteht."
+    },
+    "first_highlight": {
+      "title": "Erstes Highlight-Video",
+      "description": "Scouts können jetzt deine besten Momente sehen."
+    },
+    "passport_live": {
+      "title": "Football Passport online",
+      "description": "Dein öffentlicher Passport kann geteilt werden."
+    },
+    "username_claimed": {
+      "title": "Eigener Link gesichert",
+      "description": "Dein scoutx.app-Link ist bereit zum Teilen."
+    },
+    "discoverable": {
+      "title": "Scout-Suche aktiviert",
+      "description": "Du erscheinst in der Scout-Suche."
+    },
+    "first_endorsement": {
+      "title": "Erste Trainerempfehlung",
+      "description": "Eine vertrauenswürdige Stimme auf deinem Football Passport."
+    },
+    "first_scout_view": {
+      "title": "Erster Scout-Aufruf",
+      "description": "Ein Scout hat deinen Football Passport geöffnet."
+    },
+    "portfolio_strong": {
+      "title": "Passport-Stärke 80+",
+      "description": "Dein Football Passport ist fast vollständig."
+    }
   }
 }

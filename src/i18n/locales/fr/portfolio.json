@@ -513,5 +513,93 @@
     "encourageStart": "Chaque profil commence par un match enregistré. Commence par là.",
     "progress": "{{done}} sur {{total}} terminées. Continue.",
     "hide": "Masquer pour l'instant"
+  },
+  "profileUi": {
+    "physicalTitle": "Profil physique",
+    "physicalSubtitle": "Caractéristiques athlétiques",
+    "currentClubTitle": "Club actuel",
+    "currentClubSubtitle": "Où tu joues en ce moment",
+    "clubHistoryTitle": "Historique des clubs",
+    "clubHistorySubtitle": "Clubs précédents et parcours de formation",
+    "clubHistoryEmpty": "Aucun historique de club pour l'instant.",
+    "storyTitle": "Ton histoire",
+    "storySubtitle": "Comment tu te présentes aux clubs et aux recruteurs",
+    "biographyEmpty": "Parle aux recruteurs de ton parcours, de tes qualités et de tes ambitions.",
+    "years_one": "{{count}} an",
+    "years_other": "{{count}} ans",
+    "apps_one": "{{count}} match",
+    "apps_other": "{{count}} matchs",
+    "period": "Période",
+    "periodPlaceholder": "2022–aujourd'hui",
+    "clubEditor": {
+      "club": "Club",
+      "league": "Championnat",
+      "add": "Ajouter un club"
+    },
+    "timelineEditor": {
+      "typeLabel": "Type",
+      "type": {
+        "club": "Club",
+        "achievement": "Réussite",
+        "transfer": "Transfert",
+        "education": "Études"
+      },
+      "title": "Titre",
+      "organization": "Organisation",
+      "description": "Description",
+      "add": "Ajouter une étape"
+    },
+    "fullNamePlaceholder": "Ton nom complet",
+    "nationalityPlaceholder": "ex. Suisse",
+    "trustTitle": "Confiance et recommandations",
+    "trustSubtitle": "Vérification et recommandations d'entraîneurs"
+  },
+  "publicUi": {
+    "fullPerformance": "Performance complète",
+    "fullPerformanceSubtitle": "Analyses de match détaillées et graphiques",
+    "timeline": "Parcours",
+    "moments_one": "{{count}} moment",
+    "moments_other": "{{count}} moments",
+    "fullTimeline": "Parcours complet",
+    "moreMoments_one": "{{count}} moment de plus",
+    "moreMoments_other": "{{count}} moments de plus",
+    "charts": "Graphiques de performance",
+    "chartsSubtitle": "Tendances de la saison",
+    "videos": "Vidéos",
+    "videosSubtitle": "Images de match",
+    "gps": "Temps forts GPS",
+    "sessions_one": "{{count}} séance",
+    "sessions_other": "{{count}} séances",
+    "moreSessions": "Autres séances",
+    "additional_one": "{{count}} de plus",
+    "additional_other": "{{count}} de plus",
+    "loadingProfile": "Chargement du profil",
+    "notFound": "Introuvable",
+    "notFoundTitle": "Passport introuvable",
+    "resolveError": {
+      "missing": "Ce lien ne contient pas de nom d'utilisateur.",
+      "app_route": "Ce lien mène à une page de l'app, pas à un joueur.",
+      "not_found": "Ce Football Passport n'existe pas ou est privé.",
+      "failed": "Impossible de charger ce Football Passport. Vérifie ta connexion et réessaie."
+    },
+    "scanQr": "Scanne pour ouvrir le Football Passport",
+    "invite": {
+      "overline": "Invitation à recommander",
+      "title": "Recommander {{name}}",
+      "guestBody": "Connecte-toi avec un compte recruteur pour publier une recommandation sur ce Football Passport.",
+      "playerBody": "Les comptes joueurs ne peuvent pas publier de recommandations. Connecte-toi avec un compte recruteur pour continuer.",
+      "signIn": "Se connecter",
+      "register": "Créer un compte recruteur"
+    }
+  },
+  "reach": {
+    "overline": "Audience du Passport",
+    "title": "Qui consulte ton Football Passport",
+    "views": "{{total}} vues au total · {{week}} cette semaine",
+    "scoutViews": "{{total}} vues de recruteurs · {{week}} cette semaine",
+    "lastViewed": "Dernière vue le {{date}}",
+    "noViews": "Aucune vue pour l'instant",
+    "loading": "Chargement des vues…",
+    "unavailable": "Les vues n'ont pas pu être chargées pour le moment."
   }
 }

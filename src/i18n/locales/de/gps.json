@@ -47,5 +47,28 @@
     "sprints_one": "{{count}} Sprint",
     "sprints_other": "{{count}} Sprints",
     "accuracyUnknown": "Die GPS-Genauigkeit wurde für diese Sitzung nicht gespeichert, die Flächenwerte sind daher nur ungefähr."
+  },
+  "controls": {
+    "title": "Spielaufzeichnung",
+    "status": {
+      "idle": "Bereit",
+      "recording": "Aufnahme läuft",
+      "paused": "Pausiert",
+      "completed": "Abgeschlossen"
+    },
+    "label": "Name der Einheit",
+    "labelPlaceholder": "Ligaspiel, Training, Probetraining…",
+    "points_one": "{{count}} GPS-Punkt erfasst · akkuschonende Messung alle 5 s / 5 m",
+    "points_other": "{{count}} GPS-Punkte erfasst · akkuschonende Messung alle 5 s / 5 m",
+    "finish": "Beenden",
+    "discard": "Verwerfen",
+    "historySubtitle": "Deine bisher aufgezeichneten GPS-Einheiten."
+  },
+  "heatmap": {
+    "title": "Bewegungs-Heatmap",
+    "subtitle": "Wo du dich am längsten aufgehalten hast. Kräftigere Farbe bedeutet mehr Zeit.",
+    "empty": "Die Heatmap erscheint, sobald GPS-Punkte erfasst sind.",
+    "a11y_one": "Bewegungs-Heatmap mit {{count}} aktiven Bereich",
+    "a11y_other": "Bewegungs-Heatmap mit {{count}} aktiven Bereichen"
   }
 }

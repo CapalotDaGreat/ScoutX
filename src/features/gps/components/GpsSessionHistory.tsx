@@ -5,25 +5,27 @@ import { Text } from '@/components/primitives/Text';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { GpsSessionCard } from '@/features/gps/components/GpsSessionCard';
 import { type GpsSession } from '@/features/gps/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type GpsSessionHistoryProps = {
   sessions: GpsSession[];
 };
 
 export function GpsSessionHistory({ sessions }: GpsSessionHistoryProps) {
+  const { t } = useAppTranslation('gps');
   return (
     <Card variant="default" padding="lg" className="gap-4">
       <View>
-        <Heading level={3}>Session History</Heading>
+        <Heading level={3}>{t('sessionHistory')}</Heading>
         <Text variant="body-sm" color="secondary" className="mt-1">
-          Previously recorded GPS match sessions.
+          {t('controls.historySubtitle')}
         </Text>
       </View>
 
       {sessions.length === 0 ? (
         <EmptyState
-          title="No sessions yet"
-          description="Record a match to build your GPS movement history."
+          title={t('noSessions')}
+          description={t('noSessionsDescription')}
         />
       ) : (
         <View className="gap-3">

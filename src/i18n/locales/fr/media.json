@@ -122,7 +122,8 @@
     "sentAsEvidence": "Envoyé comme preuve",
     "showing": "{{shown}} sur {{total}}",
     "clear": "Effacer les filtres",
-    "noMatches": "Aucun média ne correspond à ces filtres."
+    "noMatches": "Aucun média ne correspond à ces filtres.",
+    "all": "Tous"
   },
   "category": {
     "goals": "Buts",
@@ -178,6 +179,103 @@
       "unsupported_codec": "Une vidéo source utilise un format qui n'a pas pu être décodé.",
       "timeout": "Le rendu a pris trop de temps. Essaie un reel plus court.",
       "render_failed": "Le rendu a échoué. Réessaie."
+    }
+  },
+  "videos": {
+    "title": "Vidéos highlights",
+    "subtitle": "Clips de match classés pour les scouts : buts, technique, défense et plus",
+    "count_one": "{{count}} highlight dans ton reel",
+    "count_other": "{{count}} highlights dans ton reel",
+    "manage": "Gérer",
+    "clipHint": "Clips courts pour les scouts (3 min max). Les matchs complets se trouvent dans Progrès → Analyser une vidéo de match.",
+    "empty": "Importe un clip découpé depuis ton export Veo ou ton téléphone pour montrer tes meilleurs moments aux scouts.",
+    "uploadClip": "Importer un clip highlight",
+    "analyzeFull": "Analyser un match complet",
+    "uploading": "Import en cours…",
+    "uploadFailed": "Échec de l'import",
+    "untitled": "Highlight sans titre",
+    "featured": "À la une",
+    "spotlight": "ScoutX Spotlight",
+    "versus": "contre {{opponent}}",
+    "uploadErrorTitle": "Problème d'import",
+    "pickFailed": "La vidéo n'a pas pu être ouverte. Essaie un autre clip.",
+    "saveErrorTitle": "Échec de l'enregistrement",
+    "saveFailed": "Les détails de la vidéo n'ont pas pu être enregistrés. Réessaie.",
+    "retryFailed": "L'import n'a pas pu être relancé. Réessaie.",
+    "managerIntro": "Choisis un clip court dans Photos (3 minutes max). Exporte un moment découpé depuis ton app Veo ou choisis un enregistrement déjà sur ton téléphone.",
+    "fullMatchTitle": "Un match complet enregistré ?",
+    "fullMatchBody": "Importe le match entier dans Progrès → Analyser une vidéo de match pour obtenir des stats et un retour coaching (150 minutes max).",
+    "analyzeFullMatch": "Analyser la vidéo du match complet",
+    "buildReel": "Créer un reel à partir des preuves de match",
+    "uploadFromPhotos": "Importer depuis Photos",
+    "managerEmpty": "Pas encore de vidéo highlight. Importe ton premier clip pour lancer ton reel.",
+    "feature": "Mettre à la une",
+    "moveUp": "Monter {{title}}",
+    "moveDown": "Descendre {{title}}"
+  },
+  "studio": {
+    "title": "Studio de reels",
+    "intro": "Raconte ton histoire de footballeur avec des moments de match analysés. Seuls les moments horodatés avec des preuves observées sont proposés, rien n'est inventé.",
+    "styleTitle": "Style du reel",
+    "targetLength": "Durée cible : {{seconds}} s",
+    "toggleLength": "Basculer entre 45 s et 90 s",
+    "momentsTitle": "Moments suggérés par l'IA",
+    "planMeta": "Confiance IA moyenne {{pct}} % · {{coverage}}",
+    "empty": "Aucune analyse de match terminée pour l'instant. Analyse d'abord un match pour obtenir des suggestions issues de vraies images.",
+    "untitled": "Moment sans titre",
+    "descriptionFallback": "Moment repéré par l'analyse du match.",
+    "reason": "Suggéré par ton analyse de match. Vérifie le clip avant de l'utiliser.",
+    "candidateMeta": "{{kind}} · {{status}} · confiance IA {{pct}} %",
+    "needsReview": "À vérifier",
+    "aiSuggested": "Suggéré par l'IA",
+    "evidence": {
+      "line": "Preuves : {{items}}",
+      "confidence": "Confiance IA {{pct}} % (non vérifiée)",
+      "jersey": "Maillot ciblé n° {{jersey}}",
+      "coverage": "Couverture : {{band}}",
+      "coverageUnknown": "inconnue"
+    },
+    "coverage": {
+      "ai_suggested": "Moments suggérés par l'IA — vérifie chaque clip avant de partager",
+      "none": "Aucun moment fiable disponible"
+    },
+    "eventKind": {
+      "progressivePass": "Passe vers l'avant",
+      "progressiveCarry": "Conduite de balle vers l'avant",
+      "goal": "But",
+      "recovery": "Récupération",
+      "save": "Arrêt",
+      "defensiveAction": "Action défensive",
+      "dribble": "Dribble",
+      "shot": "Tir",
+      "matchAction": "Action de jeu"
+    },
+    "preset": {
+      "best-of": {
+        "label": "Best of",
+        "title": "Le meilleur du match",
+        "description": "Tes meilleurs moments suggérés par l'IA dans une histoire courte."
+      },
+      "scout": {
+        "label": "Reel recruteur",
+        "title": "Revue de match pour recruteurs",
+        "description": "Des clips fondés sur les preuves qui montrent ton impact tactique et technique."
+      },
+      "social": {
+        "label": "Reel social",
+        "title": "Reel court pour les réseaux",
+        "description": "Des moments rapides et clairs pour un partage court."
+      },
+      "tactical": {
+        "label": "Tactique",
+        "title": "Reel tactique",
+        "description": "Des moments centrés sur le pressing, le placement, les lignes de passe et ton rôle."
+      },
+      "development": {
+        "label": "Progression",
+        "title": "Moments de progression",
+        "description": "Des moments qui montrent ce que tu apprends et ce que tu travailles."
+      }
     }
   }
 }

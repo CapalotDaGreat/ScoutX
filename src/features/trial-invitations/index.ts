@@ -43,7 +43,7 @@ export {
 export {
   buildGoogleCalendarUrl,
   openTrialInCalendar,
-  getCalendarActionLabel,
+  calendarActionKind,
 } from '@/features/trial-invitations/services/trialCalendarService';
 
 export {

@@ -4,10 +4,10 @@ import { Text } from '@/components/primitives/Text';
 import { RecruitmentPipelineCard } from '@/features/scout-recruitment/components/RecruitmentPipelineCard';
 import {
   RECRUITMENT_STAGE_COLORS,
-  RECRUITMENT_STAGE_LABELS,
   RECRUITMENT_STAGES,
 } from '@/features/scout-recruitment/constants';
 import { type RecruitmentEntry, type RecruitmentStage } from '@/features/scout-recruitment/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RecruitmentPipelineListViewProps = {
   entriesByStage: Record<RecruitmentStage, RecruitmentEntry[]>;
@@ -20,6 +20,7 @@ export function RecruitmentPipelineListView({
   onCardPress,
   onMovePress,
 }: RecruitmentPipelineListViewProps) {
+  const { t } = useAppTranslation('scout');
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -33,14 +34,14 @@ export function RecruitmentPipelineListView({
           <View key={stage} className="mb-5">
             <View className="mb-2 flex-row items-center gap-2">
               <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
-              <Text weight="semibold">{RECRUITMENT_STAGE_LABELS[stage]}</Text>
+              <Text weight="semibold">{t(`stage.${stage}`)}</Text>
               <Text variant="caption" color="secondary">
                 ({entries.length})
               </Text>
             </View>
             {entries.length === 0 ? (
               <Text variant="body-sm" color="secondary" className="px-1 py-2">
-                No players in this stage.
+                {t('pipelineUi.emptyStage')}
               </Text>
             ) : (
               <View className="gap-2">

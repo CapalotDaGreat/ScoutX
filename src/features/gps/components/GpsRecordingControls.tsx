@@ -6,6 +6,7 @@ import { Text } from '@/components/primitives/Text';
 import { Badge } from '@/components/primitives/Badge';
 import { useTheme } from '@/theme';
 import { type GpsSessionStatus } from '@/features/gps/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type GpsRecordingControlsProps = {
   status: GpsSessionStatus;
@@ -18,13 +19,6 @@ export type GpsRecordingControlsProps = {
   onResume: () => void;
   onStop: () => void;
   onDiscard: () => void;
-};
-
-const statusLabels: Record<GpsSessionStatus, string> = {
-  idle: 'Ready',
-  recording: 'Recording',
-  paused: 'Paused',
-  completed: 'Completed',
 };
 
 const statusVariants: Record<GpsSessionStatus, 'default' | 'accent' | 'warning' | 'success'> = {
@@ -47,6 +41,7 @@ export function GpsRecordingControls({
   onDiscard,
 }: GpsRecordingControlsProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation(['gps', 'common']);
   const isActive = status === 'recording' || status === 'paused';
 
   return (
@@ -54,26 +49,26 @@ export function GpsRecordingControls({
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-2">
           <MapPin size={18} color={colors.accent} strokeWidth={2} />
-          <Text weight="semibold">Match Recording</Text>
+          <Text weight="semibold">{t('gps:controls.title')}</Text>
         </View>
-        <Badge label={statusLabels[status]} variant={statusVariants[status]} />
+        <Badge label={t(`gps:controls.status.${status}`)} variant={statusVariants[status]} />
       </View>
 
       <Input
-        label="Session Label"
+        label={t('gps:controls.label')}
         value={matchLabel}
         onChangeText={onMatchLabelChange}
-        placeholder="League Match, Training, Trial..."
+        placeholder={t('gps:controls.labelPlaceholder')}
         editable={!isActive && !isSaving}
       />
 
       <Text variant="caption" color="secondary">
-        {pointCount} GPS points captured · battery-optimized sampling every 5s / 5m
+        {t('gps:controls.points', { count: pointCount })}
       </Text>
 
       {status === 'idle' ? (
         <Button variant="accent" onPress={onStart}>
-          Start Recording
+          {t('gps:startRecording')}
         </Button>
       ) : null}
 
@@ -85,7 +80,7 @@ export function GpsRecordingControls({
             leftIcon={<Pause size={18} color={colors.textPrimary} strokeWidth={2} />}
             onPress={onPause}
           >
-            Pause
+            {t('gps:pauseRecording')}
           </Button>
           <Button
             variant="primary"
@@ -94,7 +89,7 @@ export function GpsRecordingControls({
             loading={isSaving}
             onPress={onStop}
           >
-            Finish
+            {t('gps:controls.finish')}
           </Button>
         </View>
       ) : null}
@@ -106,14 +101,14 @@ export function GpsRecordingControls({
             leftIcon={<Play size={18} color={colors.accentForeground} strokeWidth={2} />}
             onPress={onResume}
           >
-            Resume Recording
+            {t('gps:resumeRecording')}
           </Button>
           <View className="flex-row gap-3">
             <Button variant="secondary" className="flex-1" onPress={onDiscard}>
-              Discard
+              {t('gps:controls.discard')}
             </Button>
             <Button variant="primary" className="flex-1" loading={isSaving} onPress={onStop}>
-              Finish
+              {t('gps:controls.finish')}
             </Button>
           </View>
         </View>

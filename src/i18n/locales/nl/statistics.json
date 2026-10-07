@@ -19,7 +19,9 @@
     "shots": "Shots",
     "passAccuracy": "Pass accuracy",
     "tackles": "Tackles",
-    "distance": "Distance"
+    "distance": "Distance",
+    "cleanSheets": "De nul gehouden",
+    "avgRating": "Gem. cijfer"
   },
   "modal": {
     "title": "Log match",
@@ -125,5 +127,110 @@
   "aiCoaching": "AI-coaching",
   "aiCoachingSubtitle": "Prestatiesamenvatting en verbeterideeën",
   "performanceTrends": "Prestatietrends",
-  "performanceTrendsSubtitle": "Voortgangsgrafieken over recente wedstrijden"
+  "performanceTrendsSubtitle": "Voortgangsgrafieken over recente wedstrijden",
+  "aiInsight": {
+    "focus": "Focus: {{items}}",
+    "weeklyFocus": "Weekfocus: {{focus}}",
+    "drills": "Aanbevolen oefeningen",
+    "current": "Huidig {{value}}",
+    "potential": "Potentieel {{value}}",
+    "trajectory": "Trend {{value}}",
+    "growthAreas": "Groeigebieden: {{items}}",
+    "nextSteps": "Volgende stappen: {{items}}",
+    "strengths": "Sterke punten: {{items}}",
+    "improve": "Verbeteren: {{items}}",
+    "poweredBy": "Mogelijk gemaakt door {{provider}}",
+    "previewProvider": "Ontwikkelvoorbeeld — test-AI-provider",
+    "confidence": {
+      "low": "Lage zekerheid",
+      "medium": "Gemiddelde zekerheid",
+      "high": "Hoge zekerheid"
+    },
+    "priority": {
+      "low": "Lage prioriteit",
+      "medium": "Gemiddelde prioriteit",
+      "high": "Hoge prioriteit"
+    },
+    "type": {
+      "performance_summary": {
+        "title": "Prestatieoverzicht",
+        "description": "AI-overzicht van je recente wedstrijden en trends."
+      },
+      "improvement_suggestions": {
+        "title": "Verbetersuggesties",
+        "description": "Punten om aan te werken, op basis van je vastgelegde gegevens."
+      },
+      "training_recommendations": {
+        "title": "Trainingsadviezen",
+        "description": "Oefeningen en een weekfocus op basis van je gegevens."
+      },
+      "potential_analysis": {
+        "title": "Potentieelanalyse",
+        "description": "Hoe je ontwikkeling verloopt volgens je gegevens."
+      },
+      "career_progression_summary": {
+        "title": "Loopbaanverloop",
+        "description": "Een samenvatting van de mijlpalen in je voetbalreis."
+      },
+      "video_summary": {
+        "title": "Videosamenvatting",
+        "description": "Momenten en coachpunten uit je wedstrijdbeelden."
+      },
+      "gps_summary": {
+        "title": "GPS-samenvatting",
+        "description": "Inzichten in beweging en positie uit je GPS-sessies."
+      }
+    }
+  },
+  "summary": {
+    "average": {
+      "season": "Seizoensgemiddelde {{value}}",
+      "played": "Gespeelde wedstrijden {{value}}",
+      "perMatch": "Gem. per wedstrijd {{value}}"
+    },
+    "trend": {
+      "baseline": "Nieuw startpunt",
+      "noChange": "Geen verandering",
+      "recent": "{{value}} recent"
+    },
+    "allMetrics": "Alle statistieken",
+    "moreMetrics_one": "nog {{count}} totaal",
+    "moreMetrics_other": "nog {{count}} totalen",
+    "sectionSubtitle": "Prestatiegegevens",
+    "unavailable": "Statistieken niet beschikbaar",
+    "matchesAnalysed_one": "{{count}} wedstrijd met totalen, gemiddelden en trends",
+    "matchesAnalysed_other": "{{count}} wedstrijden met totalen, gemiddelden en trends",
+    "trendNote": "Trends vergelijken je recente gemiddelden met de eerdere."
+  },
+  "charts": {
+    "radarTitle": "Radardiagram",
+    "radarSubtitle": "Je profiel over alle bijgehouden statistieken, geschaald per statistiek.",
+    "radarA11y": "Radardiagram: {{summary}}",
+    "progressTitle": "Voortgangsgrafieken",
+    "progressSubtitle": "Verloop per wedstrijd.",
+    "progressA11y": "{{metric}} per wedstrijd: {{values}}. {{trend}}",
+    "summaryTitle": "Prestatieoverzicht"
+  },
+  "history": {
+    "subtitle": "Je laatste wedstrijden en wat je hebt vastgelegd.",
+    "contributions_one": "{{count}} doelpuntbijdrage",
+    "contributions_other": "{{count}} doelpuntbijdragen",
+    "passing": "{{pct}}% passes",
+    "cleanSheet": "de nul gehouden",
+    "conceded": "tegendoelpunt",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "goals_one": "{{count}} doelpunt",
+    "goals_other": "{{count}} doelpunten",
+    "assists_one": "{{count}} assist",
+    "assists_other": "{{count}} assists",
+    "shots_one": "{{count}} schot",
+    "shots_other": "{{count}} schoten",
+    "tackles_one": "{{count}} tackle",
+    "tackles_other": "{{count}} tackles",
+    "yellow_one": "{{count}} geel",
+    "yellow_other": "{{count}} geel",
+    "red_one": "{{count}} rood",
+    "red_other": "{{count}} rood"
+  }
 }

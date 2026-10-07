@@ -9,6 +9,7 @@ import { buildCareerReplayData } from '@/features/career-replay/services/careerR
 import { shareCareerReplayPdf } from '@/features/career-replay/services/careerReplayShareService';
 import { usePortfolioAnalytics } from '@/features/portfolio-analytics/hooks/usePortfolioAnalytics';
 import { type PlayerProfile } from '@/features/player-profile/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type CareerReplayCardProps = {
   profile: PlayerProfile;
@@ -16,6 +17,7 @@ export type CareerReplayCardProps = {
 };
 
 export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps) {
+  const { t } = useAppTranslation(['career', 'statistics', 'common']);
   const { analytics } = usePortfolioAnalytics(profile.id);
   const replay = useMemo(
     () => buildCareerReplayData(profile, analytics),
@@ -35,18 +37,35 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
       <Card variant="outlined" padding="md" className="gap-4">
         <View className="gap-1">
           <Text variant="overline" color="secondary">
-            Career Replay
+            {t('career:replayCard.overline')}
           </Text>
-          <Text weight="semibold">{replay.seasonLabel} recap</Text>
+          <Text weight="semibold">{t('career:replayCard.title', { season: replay.seasonLabel })}</Text>
           <Text variant="body-sm" color="secondary" numberOfLines={3}>
-            {replay.narrative}
+            {hasSeasonActivity
+              ? [
+                  replay.matchCount > 0
+                    ? t('career:replayCard.matches', { count: replay.matchCount })
+                    : null,
+                  replay.matchCount > 0
+                    ? t('career:replayCard.contributions', { goals: replay.totalGoals, assists: replay.totalAssists })
+                    : null,
+                  replay.portfolioViews > 0
+                    ? t('career:replayCard.views', { count: replay.portfolioViews })
+                    : null,
+                  replay.milestonesEarned > 0
+                    ? t('career:replayCard.milestones', { count: replay.milestonesEarned })
+                    : null,
+                ]
+                  .filter((part): part is string => part !== null)
+                  .join(' ')
+              : t('career:replayCard.empty')}
           </Text>
         </View>
 
         {hasSeasonActivity ? (
           <View className="flex-row gap-3">
-            <StatCard label="Matches" value={replay.matchCount} className="flex-1" />
-            <StatCard label="Goals" value={replay.totalGoals} className="flex-1" />
+            <StatCard label={t('statistics:metrics.matches')} value={replay.matchCount} className="flex-1" />
+            <StatCard label={t('statistics:metrics.goals')} value={replay.totalGoals} className="flex-1" />
           </View>
         ) : null}
 
@@ -59,7 +78,7 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
         <View className="flex-row gap-2">
           {onOpenPress ? (
             <Button variant="accent" onPress={onOpenPress} className="flex-1">
-              Open replay
+              {t('career:replayCard.open')}
             </Button>
           ) : null}
           <Button
@@ -69,7 +88,7 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
             className="flex-1"
             disabled={!hasSeasonActivity}
           >
-            Share
+            {t('common:share')}
           </Button>
           <Button
             variant="ghost"

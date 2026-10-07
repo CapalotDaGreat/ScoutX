@@ -139,7 +139,7 @@ export function DiscoveryFilterSheet({
 
             <ChipSelect
               label={t('scout:filters.position')}
-              options={POSITION_OPTIONS}
+              options={POSITION_OPTIONS.map((value) => ({ value, label: t(`scout:position.${value}`) }))}
               selected={filters.positions}
               onToggle={togglePosition}
             />

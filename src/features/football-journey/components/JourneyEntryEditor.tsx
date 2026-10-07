@@ -3,7 +3,7 @@ import { Button } from '@/components/primitives/Button';
 import { Dropdown } from '@/components/primitives/Dropdown';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
-import { JOURNEY_TYPE_OPTIONS } from '@/features/football-journey/constants';
+import { JOURNEY_TYPES } from '@/features/football-journey/constants';
 import { type JourneyEntry, type JourneyEntryType } from '@/features/football-journey/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
@@ -52,7 +52,7 @@ export function JourneyEntryEditor({ entry, onChange, onRemove }: JourneyEntryEd
         label={t('journeyEditor.entryType')}
         value={entry.type}
         onChange={(value) => update({ type: value as JourneyEntryType })}
-        options={JOURNEY_TYPE_OPTIONS}
+        options={JOURNEY_TYPES.map((type) => ({ value: type, label: t(`journeyType.${type}`) }))}
       />
       <Input
         label={t('journeyEditor.title')}

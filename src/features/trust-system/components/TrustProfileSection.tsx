@@ -15,7 +15,6 @@ import {
   type UsePlayerTrustResult,
 } from '@/features/trust-system/hooks/usePlayerTrust';
 import { groupRecommendationsByType } from '@/features/trust-system/models/TrustModel';
-import { TRUST_RECOMMENDATION_SECTION_LABELS } from '@/features/trust-system/constants';
 import { type ClubHistoryEntry } from '@/features/player-profile/types/footballIdentity';
 import { type TrustRecommendation } from '@/features/trust-system/types';
 import { useAuth } from '@/features/auth/store/AuthProvider';
@@ -169,11 +168,11 @@ function TrustProfileSectionContent({
             ) : (
               <View className="gap-5">
                 <RecommendationGroup
-                  title={TRUST_RECOMMENDATION_SECTION_LABELS.coach_recommendation}
+                  title={t('recommendationSection.coach_recommendation')}
                   recommendations={grouped.coach}
                 />
                 <RecommendationGroup
-                  title={TRUST_RECOMMENDATION_SECTION_LABELS.scout_endorsement}
+                  title={t('recommendationSection.scout_endorsement')}
                   recommendations={grouped.scout}
                 />
               </View>

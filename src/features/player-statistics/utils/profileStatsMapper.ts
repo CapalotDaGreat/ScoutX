@@ -3,7 +3,12 @@ import { calculatePlayerStatistics } from '@/features/player-statistics/services
 import {
   type PlayerMatchStatistics,
   type StatisticMetricKey,
+  type StatisticTrend,
 } from '@/features/player-statistics/types';
+
+function toChange(trend: StatisticTrend) {
+  return { baseline: trend.baseline, delta: trend.delta, formattedDelta: trend.formattedDelta };
+}
 import { averageOfRecorded } from '@/features/player-statistics/utils/recordedStats';
 
 const profileHighlightKeys: StatisticMetricKey[] = [
@@ -24,9 +29,11 @@ export function mapMatchesToProfileStats(
     return {
       label: summary?.label ?? key,
       value: summary?.formattedValue ?? '0',
+      metric: key,
       trend: {
         value: summary?.trend.value ?? 'No change',
         direction: summary?.trend.direction ?? 'neutral',
+        ...(summary ? { change: toChange(summary.trend) } : {}),
       },
     };
   });
@@ -44,21 +51,29 @@ export function mapMatchesToHomeQuickStats(
   return [
     {
       label: 'Matches',
+      metric: 'matches',
       value: String(overview.matchCount),
       trend: { value: '', direction: 'neutral' },
     },
     {
       label: 'Goals',
+      metric: 'goals',
       value: goals?.formattedValue ?? '0',
-      trend: goals?.trend ?? { value: '', direction: 'neutral' },
+      trend: goals
+        ? { value: goals.trend.value, direction: goals.trend.direction, change: toChange(goals.trend) }
+        : { value: '', direction: 'neutral' },
     },
     {
       label: 'Assists',
+      metric: 'assists',
       value: assists?.formattedValue ?? '0',
-      trend: assists?.trend ?? { value: '', direction: 'neutral' },
+      trend: assists
+        ? { value: assists.trend.value, direction: assists.trend.direction, change: toChange(assists.trend) }
+        : { value: '', direction: 'neutral' },
     },
     {
       label: 'Avg Rating',
+      metric: 'avgRating',
       value: avgRating > 0 ? avgRating.toFixed(1) : '—',
       trend: { value: '', direction: 'neutral' },
     },

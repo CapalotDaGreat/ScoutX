@@ -3,6 +3,8 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { StatCard } from '@/components/primitives/StatCard';
 import { Text } from '@/components/primitives/Text';
 import { type PlayerProfileStat } from '@/features/player-profile/types';
+import { useStatisticLabels } from '@/features/player-statistics/hooks/useStatisticLabels';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type ProfileStatsGridProps = {
   stats: PlayerProfileStat[];
@@ -11,10 +13,12 @@ export type ProfileStatsGridProps = {
 };
 
 export function ProfileStatsGrid({ stats, compact = false }: ProfileStatsGridProps) {
+  const labels = useStatisticLabels();
+  const reduceMotion = useReducedMotion();
   if (compact) {
     return (
       <Animated.View
-        entering={FadeInUp.delay(80).duration(400)}
+        entering={reduceMotion ? undefined : FadeInUp.delay(80).duration(400)}
         className="flex-row gap-2 rounded-xl border border-border bg-surface p-3"
       >
         {stats.map((stat) => (
@@ -23,7 +27,7 @@ export function ProfileStatsGrid({ stats, compact = false }: ProfileStatsGridPro
               {stat.value}
             </Text>
             <Text variant="caption" color="secondary" className="text-center" numberOfLines={1}>
-              {stat.label}
+              {labels.profileStat(stat).label}
             </Text>
           </View>
         ))}
@@ -32,12 +36,18 @@ export function ProfileStatsGrid({ stats, compact = false }: ProfileStatsGridPro
   }
 
   return (
-    <Animated.View entering={FadeInUp.delay(100).duration(500)} className="flex-row flex-wrap gap-3">
-      {stats.map((stat) => (
-        <View key={stat.label} className="min-w-[45%] flex-1">
-          <StatCard label={stat.label} value={stat.value} trend={stat.trend} variant="elevated" />
-        </View>
-      ))}
+    <Animated.View
+      entering={reduceMotion ? undefined : FadeInUp.delay(100).duration(500)}
+      className="flex-row flex-wrap gap-3"
+    >
+      {stats.map((stat) => {
+        const display = labels.profileStat(stat);
+        return (
+          <View key={stat.label} className="min-w-[45%] flex-1">
+            <StatCard label={display.label} value={stat.value} trend={display.trend} variant="elevated" />
+          </View>
+        );
+      })}
     </Animated.View>
   );
 }

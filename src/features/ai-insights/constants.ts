@@ -1,15 +1,5 @@
 import { type AiInsightType } from '@/features/ai-insights/types';
 
-export const AI_INSIGHT_LABELS: Record<AiInsightType, string> = {
-  performance_summary: 'Performance Summary',
-  improvement_suggestions: 'Improvement Suggestions',
-  training_recommendations: 'Training Recommendations',
-  potential_analysis: 'Potential Analysis',
-  career_progression_summary: 'Career Progression',
-  video_summary: 'Video Summary',
-  gps_summary: 'GPS Summary',
-};
-
 export const AI_INSIGHT_DESCRIPTIONS: Record<AiInsightType, string> = {
   performance_summary: 'AI-generated overview of recent match output and trends.',
   improvement_suggestions: 'Targeted areas to elevate your game based on tracked data.',

@@ -246,8 +246,8 @@ export function sortTrialNotifications(notifications: TrialNotification[]): Tria
   );
 }
 
-export function formatTrialDate(date: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+export function formatTrialDate(date: string, locale?: string): string {
+  return new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',

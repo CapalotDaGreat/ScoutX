@@ -5,6 +5,7 @@ import { Button } from '@/components/primitives/Button';
 import { Input } from '@/components/primitives/Input';
 import { Dropdown } from '@/components/primitives/Dropdown';
 import { type RecruitmentFolder, type RecruitmentShortlistDraft } from '@/features/scout-recruitment/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type CreateRecruitmentShortlistModalProps = {
   visible: boolean;
@@ -19,6 +20,7 @@ export function CreateRecruitmentShortlistModal({
   onClose,
   onCreate,
 }: CreateRecruitmentShortlistModalProps) {
+  const { t } = useAppTranslation('scout');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [folderId, setFolderId] = useState<string | null>(null);
@@ -26,10 +28,10 @@ export function CreateRecruitmentShortlistModal({
 
   const folderOptions = useMemo(
     () => [
-      { label: 'No folder', value: '' },
+      { label: t('pipelineUi.noFolder'), value: '' },
       ...folders.map((folder) => ({ label: folder.name, value: folder.id })),
     ],
-    [folders],
+    [folders, t],
   );
 
   const handleCreate = async () => {
@@ -53,28 +55,28 @@ export function CreateRecruitmentShortlistModal({
   };
 
   return (
-    <Modal visible={visible} onClose={onClose} title="Create Shortlist" size="md">
+    <Modal visible={visible} onClose={onClose} title={t('pipelineUi.createShortlist')} size="md">
       <View className="gap-4">
         <Input
-          label="Shortlist name"
+          label={t('pipelineUi.shortlistName')}
           value={name}
           onChangeText={setName}
-          placeholder="e.g. Summer Window"
+          placeholder={t('pipelineUi.shortlistPlaceholder')}
         />
         <Input
-          label="Description"
+          label={t('pipelineUi.description')}
           value={description}
           onChangeText={setDescription}
-          placeholder="Optional context for your team"
+          placeholder={t('pipelineUi.descriptionPlaceholder')}
         />
         <Dropdown
-          label="Folder"
+          label={t('pipelineUi.folder')}
           value={folderId ?? ''}
           options={folderOptions}
           onChange={(value) => setFolderId(value || null)}
         />
         <Button variant="accent" onPress={handleCreate} loading={isSubmitting} disabled={!name.trim()}>
-          Create Shortlist
+          {t('pipelineUi.createShortlist')}
         </Button>
       </View>
     </Modal>

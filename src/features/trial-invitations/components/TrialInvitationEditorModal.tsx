@@ -10,6 +10,7 @@ import {
   createEmptyTrialDraft,
 } from '@/features/trial-invitations/types';
 import { toUserMessage } from '@/utils/userFacingError';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type TrialInvitationEditorModalProps = {
   visible: boolean;
@@ -30,6 +31,7 @@ export function TrialInvitationEditorModal({
   onClose,
   onSubmit,
 }: TrialInvitationEditorModalProps) {
+  const { t } = useAppTranslation(['trials', 'common']);
   const [draft, setDraft] = useState<TrialInvitationDraft>(createEmptyTrialDraft());
 
   useEffect(() => {
@@ -51,7 +53,11 @@ export function TrialInvitationEditorModal({
 
   const handleSubmit = async () => {
     if (!draft.club.trim() || !draft.coach.trim() || !draft.location.trim()) {
-      Alert.alert('Validation', 'Club, coach, and location are required.');
+      Alert.alert(t('trials:editor.validationTitle'), t('trials:editor.requiredFields'));
+      return;
+    }
+    if (Number.isNaN(Date.parse(draft.scheduledDate))) {
+      Alert.alert(t('trials:editor.validationTitle'), t('trials:editor.invalidDate'));
       return;
     }
 
@@ -59,19 +65,19 @@ export function TrialInvitationEditorModal({
       await onSubmit(draft);
       onClose();
     } catch (error) {
-      Alert.alert('Error', toUserMessage(error, 'Could not save trial.'));
+      Alert.alert(t('common:errorTitle'), toUserMessage(error, t('trials:editor.saveFailed')));
     }
   };
 
-  const title = mode === 'reschedule' ? 'Reschedule Trial' : 'Invite to Trial';
+  const title = mode === 'reschedule' ? t('trials:editor.rescheduleTitle') : t('trials:editor.inviteTitle');
 
   const footer = (
     <View className="flex-row gap-3">
       <Button variant="secondary" className="flex-1" onPress={onClose} disabled={saving}>
-        Cancel
+        {t('common:cancel')}
       </Button>
       <Button variant="accent" className="flex-1" onPress={() => void handleSubmit()} loading={saving}>
-        {mode === 'reschedule' ? 'Reschedule' : 'Send Invitation'}
+        {mode === 'reschedule' ? t('trials:reschedule') : t('trials:editor.send')}
       </Button>
     </View>
   );
@@ -85,37 +91,38 @@ export function TrialInvitationEditorModal({
       >
         <View className="gap-4">
           <Text variant="body-sm" color="secondary">
-            Professional trial invitation for {playerName}
+            {t('trials:editor.intro', { name: playerName })}
           </Text>
           <Input
-            label="Club"
+            label={t('trials:editor.club')}
             value={draft.club}
             onChangeText={(value) => setDraft((current) => ({ ...current, club: value }))}
-            placeholder="Northstar FC"
+            placeholder={t('trials:editor.clubPlaceholder')}
           />
           <Input
-            label="Coach"
+            label={t('trials:editor.coach')}
             value={draft.coach}
             onChangeText={(value) => setDraft((current) => ({ ...current, coach: value }))}
-            placeholder="Carlos Mendez"
+            placeholder={t('trials:editor.coachPlaceholder')}
           />
           <Input
-            label="Location"
+            label={t('trials:editor.location')}
             value={draft.location}
             onChangeText={(value) => setDraft((current) => ({ ...current, location: value }))}
-            placeholder="Training Ground, Field 2"
+            placeholder={t('trials:editor.locationPlaceholder')}
           />
           <Input
-            label="Date (ISO)"
+            label={t('trials:editor.date')}
+            hint={t('trials:editor.dateHint')}
             value={draft.scheduledDate}
             onChangeText={(value) => setDraft((current) => ({ ...current, scheduledDate: value }))}
             placeholder="2025-07-12T14:00:00.000Z"
           />
           <Input
-            label="Notes"
+            label={t('trials:editor.notes')}
             value={draft.notes}
             onChangeText={(value) => setDraft((current) => ({ ...current, notes: value }))}
-            placeholder="Arrival instructions, kit requirements, session format..."
+            placeholder={t('trials:editor.notesPlaceholder')}
             multiline
             numberOfLines={4}
             inputClassName="min-h-[90px] text-top"

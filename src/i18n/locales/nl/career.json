@@ -112,5 +112,176 @@
     "first_reel": "Eerste reel: {{subject}}",
     "club_change": "Overstap naar {{subject}}",
     "position_change": "Speelde als {{subject}} (eerder {{previous}})"
+  },
+  "weekly": {
+    "overline": "Wekelijks voetbalrapport",
+    "emptyTitle": "Je weekoverzicht",
+    "emptyBody": "Leg je eerste wedstrijd vast of publiceer je Football Passport om een persoonlijk weekrapport te ontgrendelen.",
+    "scores": "Passport-score {{passport}}/100 · Zichtbaar voor scouts {{scout}}/100",
+    "highlight": {
+      "matches_one": "Deze week {{count}} wedstrijd vastgelegd.",
+      "matches_other": "Deze week {{count}} wedstrijden vastgelegd.",
+      "goals_one": "{{count}} doelpunt gescoord.",
+      "goals_other": "{{count}} doelpunten gescoord.",
+      "scoutViews_one": "{{count}} scoutweergave van je Football Passport.",
+      "scoutViews_other": "{{count}} scoutweergaven van je Football Passport.",
+      "milestones_one": "{{count}} professionele mijlpaal behaald.",
+      "milestones_other": "{{count}} professionele mijlpalen behaald."
+    },
+    "stat": {
+      "goals": "Doelpunten",
+      "assists": "Assists",
+      "passAccuracy": "Passnauwkeurigheid",
+      "portfolioViews": "Passport-weergaven",
+      "scoutViews_one": "{{count}} scout",
+      "scoutViews_other": "{{count}} scouts"
+    },
+    "focusTitle": "Focus deze week",
+    "suggestion": {
+      "avatar": "Voeg een professionele profielfoto toe.",
+      "bio": "Schrijf een korte biografie die scouts kunnen vertrouwen.",
+      "position": "Stel je voorkeursposities in.",
+      "club": "Voeg je huidige club of academie toe.",
+      "matches": "Leg minstens één wedstrijd vast.",
+      "videos": "Upload een highlightclip.",
+      "journey": "Voeg een loopbaanstap of mijlpaal toe.",
+      "username": "Claim je eigen Passport-link.",
+      "public": "Zet je deelbare Football Passport aan.",
+      "discoverable": "Word vindbaar in de zoekfunctie voor scouts.",
+      "coach": "Nodig een trainer uit om je aan te bevelen.",
+      "video": "Upload minstens één highlightclip.",
+      "match": "Leg een wedstrijd van de afgelopen 45 dagen vast.",
+      "logMore": "Leg meer wedstrijden vast om je prestatieverhaal te versterken.",
+      "share": "Deel je Passport-link om deze week zichtbaarder te worden voor scouts."
+    },
+    "summaryReady": "Je wekelijkse voetbalrapport staat klaar.",
+    "summary": "{{lead}} Volgende stap: {{next}}"
+  },
+  "journeyType": {
+    "all": "Alle",
+    "academy": "Academie",
+    "club_transfer": "Transfer",
+    "achievement": "Prestatie",
+    "league_title": "Landstitel",
+    "cup_win": "Bekerwinst",
+    "international_callup": "Interlandselectie",
+    "injury": "Blessure",
+    "recovery": "Herstel",
+    "trial": "Proeftraining",
+    "professional_contract": "Profcontract",
+    "highlight_video": "Highlightvideo",
+    "coach_recommendation": "Aanbeveling van trainer",
+    "gps_session": "GPS-sessie",
+    "statistics_milestone": "Statistische mijlpaal"
+  },
+  "journeyUi": {
+    "title": "Football Journey",
+    "subtitle": "Je loopbaanverhaal: academies, transfers, mijlpalen en momenten die scouts onthouden",
+    "count_one": "{{count}} mijlpaal op je tijdlijn",
+    "count_other": "{{count}} mijlpalen op je tijdlijn",
+    "manage": "Beheren",
+    "empty": "Je voetbalreis verschijnt hier zodra je loopbaanmijlpalen toevoegt.",
+    "noFilterMatch": "Geen items voor dit filter.",
+    "editTitle": "Football Journey bewerken",
+    "editIntro": "Bouw je verhaal met academies, transfers, prestaties, blessures, highlights en meer.",
+    "addEntry": "Stap toevoegen",
+    "save": "Journey opslaan",
+    "validationTitle": "Controleer je items",
+    "validationBody": "Elk item heeft een titel en een datum nodig.",
+    "saveFailedTitle": "Opslaan mislukt",
+    "saveFailed": "Je journey kon niet worden opgeslagen. Probeer het opnieuw."
+  },
+  "insights": {
+    "overline": "Prestatie-inzichten",
+    "title": "Je ontwikkeling deze week",
+    "subtitle": "Wedstrijden, Passport-bereik en GPS-belasting in één overzicht",
+    "snapshotTitle": "Je prestatieoverzicht",
+    "item": {
+      "weeklyMatches": {
+        "label": "Wedstrijden (7 dagen)",
+        "hint": "Wedstrijden die je de afgelopen 7 dagen hebt vastgelegd."
+      },
+      "goalContribution": {
+        "label": "Doelpuntbijdragen",
+        "hint": "Doelpunten plus assists van de afgelopen 7 dagen."
+      },
+      "passAccuracy": {
+        "label": "Passnauwkeurigheid",
+        "hint": "Uit wedstrijden waarin je passes hebt vastgelegd."
+      },
+      "portfolioStrength": {
+        "label": "Passport-sterkte",
+        "hint": "Vul Passport-onderdelen aan om die te verhogen."
+      },
+      "scoutViews": {
+        "label": "Scoutweergaven (week)",
+        "hint": "Scouts die je Football Passport deze week openden."
+      },
+      "gpsDistance": {
+        "label": "GPS-afstand",
+        "hint": "Totale afstand van je laatste GPS-sessies."
+      }
+    }
+  },
+  "replayCard": {
+    "overline": "Loopbaanoverzicht",
+    "title": "Terugblik {{season}}",
+    "matches_one": "{{count}} wedstrijd vastgelegd dit seizoen.",
+    "matches_other": "{{count}} wedstrijden vastgelegd dit seizoen.",
+    "contributions": "Bijdragen: {{goals}} doelpunten en {{assists}} assists.",
+    "views_one": "Je Football Passport is {{count}} keer bekeken.",
+    "views_other": "Je Football Passport is {{count}} keer bekeken.",
+    "milestones_one": "{{count}} mijlpaal behaald.",
+    "milestones_other": "{{count}} mijlpalen behaald.",
+    "empty": "Leg dit seizoen wedstrijden vast om je terugblik op te bouwen.",
+    "open": "Terugblik openen"
+  },
+  "milestoneUi": {
+    "overline": "Mijlpalen",
+    "title": "Behaalde prestaties",
+    "earned_one": "{{count}} mijlpaal behaald",
+    "earned_other": "{{count}} mijlpalen behaald",
+    "new_one": "Nieuwe mijlpaal behaald",
+    "new_other": "Nieuwe mijlpalen behaald",
+    "empty": "Leg wedstrijden vast, publiceer je Football Passport en verzamel aanbevelingen om mijlpalen te behalen.",
+    "seeMore": "Nog {{count}} tonen"
+  },
+  "milestone": {
+    "first_match": {
+      "title": "Eerste wedstrijd vastgelegd",
+      "description": "Je bent begonnen met het bijhouden van echte prestaties."
+    },
+    "ten_matches": {
+      "title": "10 wedstrijden vastgelegd",
+      "description": "Er ontstaat een consistente wedstrijdgeschiedenis."
+    },
+    "first_highlight": {
+      "title": "Eerste highlightvideo",
+      "description": "Scouts kunnen nu je beste momenten zien."
+    },
+    "passport_live": {
+      "title": "Football Passport live",
+      "description": "Je openbare Passport kan worden gedeeld."
+    },
+    "username_claimed": {
+      "title": "Eigen link geclaimd",
+      "description": "Je scoutx.app-link is klaar om te delen."
+    },
+    "discoverable": {
+      "title": "Zichtbaar voor scouts",
+      "description": "Je verschijnt in de zoekresultaten van scouts."
+    },
+    "first_endorsement": {
+      "title": "Eerste aanbeveling",
+      "description": "Een betrouwbare stem op je Football Passport."
+    },
+    "first_scout_view": {
+      "title": "Eerste scoutweergave",
+      "description": "Een scout heeft je Football Passport geopend."
+    },
+    "portfolio_strong": {
+      "title": "Passport-sterkte 80+",
+      "description": "Je Football Passport is bijna compleet."
+    }
   }
 }

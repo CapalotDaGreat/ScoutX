@@ -6,6 +6,8 @@ import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { type RadarChartPoint } from '@/features/player-statistics/types';
+import { useStatisticLabels } from '@/features/player-statistics/hooks/useStatisticLabels';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import {
   getRadarCoordinate,
   RADAR_GRID_LEVELS,
@@ -23,6 +25,11 @@ const labelRadius = 112;
 
 export function RadarChart({ points }: RadarChartProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('statistics');
+  const labels = useStatisticLabels();
+  const summary = points
+    .map((point) => `${labels.metric(point.key)} ${Math.round(point.normalizedValue * 100)}%`)
+    .join(', ');
 
   const chart = useMemo(() => {
     const total = Math.max(points.length, 1);
@@ -49,14 +56,20 @@ export function RadarChart({ points }: RadarChartProps) {
   return (
     <Card variant="default" padding="lg" className="gap-4">
       <View>
-        <Heading level={3}>Radar Chart</Heading>
+        <Heading level={3}>{t('charts.radarTitle')}</Heading>
         <Text variant="body-sm" color="secondary" className="mt-1">
-          Normalized profile across all tracked metrics.
+          {t('charts.radarSubtitle')}
         </Text>
       </View>
 
       <View className="items-center">
-        <Svg width={chartSize} height={chartSize} accessibilityLabel="Player statistics radar chart">
+        <Svg
+          width={chartSize}
+          height={chartSize}
+          accessible
+          accessibilityRole="image"
+          accessibilityLabel={t('charts.radarA11y', { summary })}
+        >
           {chart.grids.map((grid, index) => (
             <Polygon
               key={grid}
@@ -86,7 +99,7 @@ export function RadarChart({ points }: RadarChartProps) {
                 textAnchor="middle"
                 alignmentBaseline="middle"
               >
-                {point.label}
+                {labels.metric(point.key)}
               </SvgText>
             </G>
           ))}

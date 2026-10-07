@@ -45,5 +45,52 @@
   "cancelFailed": "Impossibile annullare il trial.",
   "reschedule": "Riprogramma",
   "responseNote": "Nota di risposta (opzionale)",
-  "responseNotePlaceholder": "Conferma di disponibilità o domande per lo scout…"
+  "responseNotePlaceholder": "Conferma di disponibilità o domande per lo scout…",
+  "status": {
+    "pending": "In attesa",
+    "accepted": "Accettato",
+    "declined": "Rifiutato",
+    "rescheduled": "Riprogrammato",
+    "cancelled": "Annullato",
+    "completed": "Completato"
+  },
+  "card": {
+    "overline": "Invito a un provino",
+    "playerScout": "{{player}} · Scout {{scout}}",
+    "coach": "Allenatore {{coach}}"
+  },
+  "response": {
+    "declineTitle": "Rifiuta provino",
+    "declineBody": "Vuoi davvero rifiutare questo invito?",
+    "declineFailed": "Impossibile rifiutare il provino. Riprova.",
+    "acceptFailed": "Impossibile accettare il provino. Riprova.",
+    "coachScout": "Allenatore {{coach}} · Scout {{scout}}",
+    "calendarTitle": "Calendario",
+    "calendarFailed": "Impossibile aprire il calendario.",
+    "calendar": {
+      "google": "Aggiungi a Google Calendar",
+      "native": "Aggiungi al calendario"
+    },
+    "history": "Cronologia"
+  },
+  "editor": {
+    "validationTitle": "Controlla i dati",
+    "requiredFields": "Club, allenatore e luogo sono obbligatori.",
+    "invalidDate": "Inserisci data e ora valide, ad es. 2026-07-12T14:00.",
+    "saveFailed": "Impossibile salvare il provino. Riprova.",
+    "rescheduleTitle": "Riprogramma provino",
+    "inviteTitle": "Invita a un provino",
+    "send": "Invia invito",
+    "intro": "Invito a un provino per {{name}}",
+    "club": "Club",
+    "clubPlaceholder": "Nome del club o dell'accademia",
+    "coach": "Allenatore",
+    "coachPlaceholder": "Nome dell'allenatore",
+    "location": "Luogo",
+    "locationPlaceholder": "Centro sportivo, campo",
+    "date": "Data e ora",
+    "dateHint": "Formato: AAAA-MM-GGTHH:MM, ad es. 2026-07-12T14:00",
+    "notes": "Note",
+    "notesPlaceholder": "Indicazioni di arrivo, abbigliamento, formato della sessione…"
+  }
 }

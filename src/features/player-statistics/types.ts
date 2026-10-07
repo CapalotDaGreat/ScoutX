@@ -50,6 +50,9 @@ export type StatisticTrend = {
   value: string;
   direction: StatisticTrendDirection;
   delta: number;
+  /** True when there are too few matches to compare against. */
+  baseline: boolean;
+  formattedDelta: string;
 };
 
 export type StatisticSummaryItem = {

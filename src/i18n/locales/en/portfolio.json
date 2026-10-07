@@ -513,5 +513,93 @@
     "encourageStart": "Every scout profile starts with one logged match. Start there.",
     "progress": "{{done}} of {{total}} done. Keep going.",
     "hide": "Hide for now"
+  },
+  "profileUi": {
+    "physicalTitle": "Physical profile",
+    "physicalSubtitle": "Core athletic attributes",
+    "currentClubTitle": "Current club",
+    "currentClubSubtitle": "Where you play right now",
+    "clubHistoryTitle": "Club history",
+    "clubHistorySubtitle": "Previous clubs and development pathway",
+    "clubHistoryEmpty": "No club history added yet.",
+    "storyTitle": "Professional story",
+    "storySubtitle": "How you present yourself to clubs and scouts",
+    "biographyEmpty": "Tell scouts about your journey, strengths and ambitions.",
+    "years_one": "{{count}} yr",
+    "years_other": "{{count}} yrs",
+    "apps_one": "{{count}} app",
+    "apps_other": "{{count}} apps",
+    "period": "Period",
+    "periodPlaceholder": "2022–present",
+    "clubEditor": {
+      "club": "Club",
+      "league": "League",
+      "add": "Add club"
+    },
+    "timelineEditor": {
+      "typeLabel": "Type",
+      "type": {
+        "club": "Club",
+        "achievement": "Achievement",
+        "transfer": "Transfer",
+        "education": "Education"
+      },
+      "title": "Title",
+      "organization": "Organisation",
+      "description": "Description",
+      "add": "Add timeline entry"
+    },
+    "fullNamePlaceholder": "Your full name",
+    "nationalityPlaceholder": "e.g. Swiss",
+    "trustTitle": "Trust & endorsements",
+    "trustSubtitle": "Verification and coach recommendations"
+  },
+  "publicUi": {
+    "fullPerformance": "Full performance",
+    "fullPerformanceSubtitle": "Detailed match analytics and charts",
+    "timeline": "Career timeline",
+    "moments_one": "{{count}} moment",
+    "moments_other": "{{count}} moments",
+    "fullTimeline": "Full timeline",
+    "moreMoments_one": "{{count}} more moment",
+    "moreMoments_other": "{{count}} more moments",
+    "charts": "Performance charts",
+    "chartsSubtitle": "Season trends",
+    "videos": "Highlight videos",
+    "videosSubtitle": "Match footage",
+    "gps": "GPS highlights",
+    "sessions_one": "{{count}} session",
+    "sessions_other": "{{count}} sessions",
+    "moreSessions": "More sessions",
+    "additional_one": "{{count}} more",
+    "additional_other": "{{count}} more",
+    "loadingProfile": "Loading profile",
+    "notFound": "Not found",
+    "notFoundTitle": "Passport not found",
+    "resolveError": {
+      "missing": "This link doesn't include a player username.",
+      "app_route": "This link points to an app page, not a player username.",
+      "not_found": "This Football Passport doesn't exist or is private.",
+      "failed": "We couldn't load this Football Passport. Check your connection and try again."
+    },
+    "scanQr": "Scan to open the Football Passport",
+    "invite": {
+      "overline": "Coach endorsement invite",
+      "title": "Endorse {{name}}",
+      "guestBody": "Sign in with a scout account to publish a coach recommendation on this Football Passport.",
+      "playerBody": "Player accounts can't publish coach endorsements. Sign in with a scout account to continue.",
+      "signIn": "Sign in",
+      "register": "Create scout account"
+    }
+  },
+  "reach": {
+    "overline": "Passport reach",
+    "title": "Who is viewing your Football Passport",
+    "views": "{{total}} total views · {{week}} this week",
+    "scoutViews": "{{total}} scout views · {{week}} this week",
+    "lastViewed": "Last viewed {{date}}",
+    "noViews": "No views yet",
+    "loading": "Loading views…",
+    "unavailable": "View counts couldn't be loaded right now."
   }
 }

@@ -3,6 +3,7 @@ import { cn } from '@/utils/cn';
 import { Bookmark, FileText, GitCompare } from 'lucide-react-native';
 import { useTheme } from '@/theme';
 import { triggerHaptic } from '@/utils/haptics';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerQuickActionsProps = {
   isFavourite?: boolean;
@@ -24,6 +25,7 @@ export function PlayerQuickActions({
   className,
 }: PlayerQuickActionsProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
 
   const handleFavourite = () => {
     if (!onToggleFavourite) {
@@ -48,11 +50,13 @@ export function PlayerQuickActions({
           accessibilityRole="button"
           accessibilityLabel={
             isInComparison
-              ? 'Remove from comparison'
+              ? t('scout:a11y.removeCompare')
               : canAddToComparison
-                ? 'Add to comparison'
-                : 'Comparison full'
+                ? t('scout:a11y.addCompare')
+                : t('scout:a11y.compareFull')
           }
+          accessibilityState={{ selected: isInComparison, disabled: !isInComparison && !canAddToComparison }}
+          hitSlop={4}
           onPress={handleCompare}
           disabled={!isInComparison && !canAddToComparison}
           className={cn(
@@ -72,7 +76,9 @@ export function PlayerQuickActions({
       {onToggleFavourite ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={isFavourite ? 'Remove from saved' : 'Save player'}
+          accessibilityLabel={isFavourite ? t('scout:a11y.unsave') : t('scout:a11y.save')}
+          accessibilityState={{ selected: Boolean(isFavourite) }}
+          hitSlop={4}
           onPress={handleFavourite}
           className={cn(
             'h-9 w-9 items-center justify-center rounded-full border',
@@ -91,7 +97,8 @@ export function PlayerQuickActions({
       {onOpenReport ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Open scouting report"
+          accessibilityLabel={t('scout:a11y.openReport')}
+          hitSlop={4}
           onPress={onOpenReport}
           className="h-9 w-9 items-center justify-center rounded-full border border-border bg-surface"
         >

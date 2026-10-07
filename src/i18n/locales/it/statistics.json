@@ -19,7 +19,9 @@
     "shots": "Shots",
     "passAccuracy": "Pass accuracy",
     "tackles": "Tackles",
-    "distance": "Distance"
+    "distance": "Distance",
+    "cleanSheets": "Porta inviolata",
+    "avgRating": "Voto medio"
   },
   "modal": {
     "title": "Log match",
@@ -125,5 +127,110 @@
   "aiCoaching": "Coaching IA",
   "aiCoachingSubtitle": "Sintesi della prestazione e idee di miglioramento",
   "performanceTrends": "Andamento prestazioni",
-  "performanceTrendsSubtitle": "Grafici di progresso sulle partite recenti"
+  "performanceTrendsSubtitle": "Grafici di progresso sulle partite recenti",
+  "aiInsight": {
+    "focus": "Focus: {{items}}",
+    "weeklyFocus": "Focus della settimana: {{focus}}",
+    "drills": "Esercizi consigliati",
+    "current": "Attuale {{value}}",
+    "potential": "Potenziale {{value}}",
+    "trajectory": "Tendenza {{value}}",
+    "growthAreas": "Aree di crescita: {{items}}",
+    "nextSteps": "Prossimi passi: {{items}}",
+    "strengths": "Punti di forza: {{items}}",
+    "improve": "Da migliorare: {{items}}",
+    "poweredBy": "Basato su {{provider}}",
+    "previewProvider": "Anteprima di sviluppo — provider IA simulato",
+    "confidence": {
+      "low": "Affidabilità bassa",
+      "medium": "Affidabilità media",
+      "high": "Affidabilità alta"
+    },
+    "priority": {
+      "low": "Priorità bassa",
+      "medium": "Priorità media",
+      "high": "Priorità alta"
+    },
+    "type": {
+      "performance_summary": {
+        "title": "Riepilogo prestazioni",
+        "description": "Panoramica IA delle tue ultime partite e tendenze."
+      },
+      "improvement_suggestions": {
+        "title": "Suggerimenti di miglioramento",
+        "description": "Aspetti su cui lavorare in base ai dati registrati."
+      },
+      "training_recommendations": {
+        "title": "Consigli di allenamento",
+        "description": "Esercizi e un focus settimanale suggeriti dai tuoi dati."
+      },
+      "potential_analysis": {
+        "title": "Analisi del potenziale",
+        "description": "Come sta andando il tuo sviluppo secondo i tuoi dati."
+      },
+      "career_progression_summary": {
+        "title": "Percorso di carriera",
+        "description": "Un riepilogo delle tappe del tuo percorso calcistico."
+      },
+      "video_summary": {
+        "title": "Riepilogo video",
+        "description": "Momenti e spunti tecnici dal video della partita."
+      },
+      "gps_summary": {
+        "title": "Riepilogo GPS",
+        "description": "Informazioni su movimento e posizione dalle sessioni GPS."
+      }
+    }
+  },
+  "summary": {
+    "average": {
+      "season": "Media stagionale {{value}}",
+      "played": "Partite giocate {{value}}",
+      "perMatch": "Media a partita {{value}}"
+    },
+    "trend": {
+      "baseline": "Nuovo riferimento",
+      "noChange": "Nessuna variazione",
+      "recent": "{{value}} di recente"
+    },
+    "allMetrics": "Tutte le statistiche",
+    "moreMetrics_one": "{{count}} altro totale",
+    "moreMetrics_other": "altri {{count}} totali",
+    "sectionSubtitle": "Dati di prestazione",
+    "unavailable": "Statistiche non disponibili",
+    "matchesAnalysed_one": "{{count}} partita con totali, medie e tendenze",
+    "matchesAnalysed_other": "{{count}} partite con totali, medie e tendenze",
+    "trendNote": "Le tendenze confrontano le tue medie recenti con quelle precedenti."
+  },
+  "charts": {
+    "radarTitle": "Grafico radar",
+    "radarSubtitle": "Il tuo profilo su tutte le statistiche registrate, in scala per ciascuna.",
+    "radarA11y": "Grafico radar: {{summary}}",
+    "progressTitle": "Grafici di progresso",
+    "progressSubtitle": "Andamento partita per partita.",
+    "progressA11y": "{{metric}} per partita: {{values}}. {{trend}}",
+    "summaryTitle": "Riepilogo prestazioni"
+  },
+  "history": {
+    "subtitle": "Le tue ultime partite e ciò che hai registrato.",
+    "contributions_one": "{{count}} partecipazione al gol",
+    "contributions_other": "{{count}} partecipazioni al gol",
+    "passing": "{{pct}}% passaggi",
+    "cleanSheet": "porta inviolata",
+    "conceded": "gol subiti",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "goals_one": "{{count}} gol",
+    "goals_other": "{{count}} gol",
+    "assists_one": "{{count}} assist",
+    "assists_other": "{{count}} assist",
+    "shots_one": "{{count}} tiro",
+    "shots_other": "{{count}} tiri",
+    "tackles_one": "{{count}} contrasto",
+    "tackles_other": "{{count}} contrasti",
+    "yellow_one": "{{count}} giallo",
+    "yellow_other": "{{count}} gialli",
+    "red_one": "{{count}} rosso",
+    "red_other": "{{count}} rossi"
+  }
 }

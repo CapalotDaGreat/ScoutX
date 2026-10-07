@@ -47,5 +47,28 @@
     "sprints_one": "{{count}} sprint",
     "sprints_other": "{{count}} sprints",
     "accuracyUnknown": "A precisão do GPS não foi registada nesta sessão, por isso os valores de área são aproximados."
+  },
+  "controls": {
+    "title": "Gravação do jogo",
+    "status": {
+      "idle": "Pronto",
+      "recording": "A gravar",
+      "paused": "Em pausa",
+      "completed": "Concluído"
+    },
+    "label": "Nome da sessão",
+    "labelPlaceholder": "Jogo da liga, treino, captação…",
+    "points_one": "{{count}} ponto GPS registado · amostragem económica a cada 5 s / 5 m",
+    "points_other": "{{count}} pontos GPS registados · amostragem económica a cada 5 s / 5 m",
+    "finish": "Terminar",
+    "discard": "Descartar",
+    "historySubtitle": "As tuas sessões GPS gravadas anteriormente."
+  },
+  "heatmap": {
+    "title": "Mapa de calor",
+    "subtitle": "Onde passaste mais tempo. Cor mais forte significa mais tempo.",
+    "empty": "O mapa de calor aparece quando forem registados pontos GPS.",
+    "a11y_one": "Mapa de calor com {{count}} zona ativa",
+    "a11y_other": "Mapa de calor com {{count}} zonas ativas"
   }
 }

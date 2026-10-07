@@ -194,8 +194,8 @@ export function EditProfileModal({
           <Text variant="label" color="secondary">
             {t('editModal.basics')}
           </Text>
-          <Input label={t('editModal.fullName')} value={fullName} onChangeText={setFullName} placeholder="Mateo Alvarez" />
-          <Input label={t('editModal.nationality')} value={nationality} onChangeText={setNationality} placeholder="Chilean" />
+          <Input label={t('editModal.fullName')} value={fullName} onChangeText={setFullName} placeholder={t('profileUi.fullNamePlaceholder')} />
+          <Input label={t('editModal.nationality')} value={nationality} onChangeText={setNationality} placeholder={t('profileUi.nationalityPlaceholder')} />
           <View className="flex-row gap-4">
             <Input
               label={t('editModal.height')}

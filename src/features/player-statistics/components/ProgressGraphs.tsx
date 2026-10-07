@@ -7,6 +7,8 @@ import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { type ProgressGraph } from '@/features/player-statistics/types';
+import { useStatisticLabels } from '@/features/player-statistics/hooks/useStatisticLabels';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ProgressGraphsProps = {
   graphs: ProgressGraph[];
@@ -42,6 +44,8 @@ function getPolylinePoints(graph: ProgressGraph): string {
 
 export function ProgressGraphs({ graphs }: ProgressGraphsProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('statistics');
+  const labels = useStatisticLabels();
   const graphPoints = useMemo(
     () => graphs.map((graph) => ({ key: graph.key, points: getPolylinePoints(graph) })),
     [graphs],
@@ -50,9 +54,9 @@ export function ProgressGraphs({ graphs }: ProgressGraphsProps) {
   return (
     <Card variant="default" padding="lg" className="gap-4">
       <View>
-        <Heading level={3}>Progress Graphs</Heading>
+        <Heading level={3}>{t('charts.progressTitle')}</Heading>
         <Text variant="body-sm" color="secondary" className="mt-1">
-          Recent match-by-match movement.
+          {t('charts.progressSubtitle')}
         </Text>
       </View>
 
@@ -60,6 +64,8 @@ export function ProgressGraphs({ graphs }: ProgressGraphsProps) {
         {graphs.map((graph) => {
           const currentGraphPoints = graphPoints.find((item) => item.key === graph.key);
           const lastPoint = graph.points[graph.points.length - 1];
+          const metricLabel = labels.metric(graph.key);
+          const trendLabel = labels.trend(graph.trend);
 
           return (
             <View
@@ -69,19 +75,29 @@ export function ProgressGraphs({ graphs }: ProgressGraphsProps) {
               <View className="mb-2 flex-row items-start justify-between gap-2">
                 <View className="flex-1">
                   <Text variant="caption" color="secondary" className="uppercase">
-                    {graph.label}
+                    {metricLabel}
                   </Text>
-                  <Text weight="bold">{lastPoint?.formattedValue ?? '0'}</Text>
+                  <Text weight="bold">{lastPoint?.formattedValue ?? '—'}</Text>
                 </View>
                 <Text
                   variant="caption"
                   className={cn('text-right', trendColors[graph.trend.direction])}
                 >
-                  {graph.trend.value}
+                  {trendLabel}
                 </Text>
               </View>
 
-              <Svg width={graphWidth} height={graphHeight} accessibilityLabel={`${graph.label} trend`}>
+              <Svg
+                width={graphWidth}
+                height={graphHeight}
+                accessible
+                accessibilityRole="image"
+                accessibilityLabel={t('charts.progressA11y', {
+                  metric: metricLabel,
+                  values: graph.points.map((point) => point.formattedValue).join(', '),
+                  trend: trendLabel,
+                })}
+              >
                 <Line
                   x1={graphPadding}
                   y1={graphHeight - graphPadding}

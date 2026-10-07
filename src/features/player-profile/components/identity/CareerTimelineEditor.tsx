@@ -7,18 +7,14 @@ import {
   type CareerTimelineEntry,
   type CareerTimelineEntryType,
 } from '@/features/player-profile/types/footballIdentity';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type CareerTimelineEditorProps = {
   entries: CareerTimelineEntry[];
   onChange: (entries: CareerTimelineEntry[]) => void;
 };
 
-const timelineTypes: { label: string; value: CareerTimelineEntryType }[] = [
-  { label: 'Club', value: 'club' },
-  { label: 'Achievement', value: 'achievement' },
-  { label: 'Transfer', value: 'transfer' },
-  { label: 'Education', value: 'education' },
-];
+const TIMELINE_TYPES: CareerTimelineEntryType[] = ['club', 'achievement', 'transfer', 'education'];
 
 function createEntry(): CareerTimelineEntry {
   return {
@@ -32,6 +28,11 @@ function createEntry(): CareerTimelineEntry {
 }
 
 export function CareerTimelineEditor({ entries, onChange }: CareerTimelineEditorProps) {
+  const { t } = useAppTranslation(['portfolio', 'common']);
+  const timelineTypes = TIMELINE_TYPES.map((value) => ({
+    value,
+    label: t(`portfolio:profileUi.timelineEditor.type.${value}`),
+  }));
   const updateEntry = (index: number, patch: Partial<CareerTimelineEntry>) => {
     onChange(entries.map((entry, entryIndex) => (entryIndex === index ? { ...entry, ...patch } : entry)));
   };
@@ -39,45 +40,45 @@ export function CareerTimelineEditor({ entries, onChange }: CareerTimelineEditor
   return (
     <View className="gap-3">
       <Text variant="label" color="secondary">
-        Career Timeline
+        {t('portfolio:sections.careerTimeline.title')}
       </Text>
       {entries.map((entry, index) => (
         <View key={entry.id} className="gap-2 rounded-xl border border-border p-3">
           <Dropdown
-            label="Type"
+            label={t('portfolio:profileUi.timelineEditor.typeLabel')}
             value={entry.type}
             onChange={(value) => updateEntry(index, { type: value })}
             options={timelineTypes}
           />
           <Input
-            label="Title"
+            label={t('portfolio:profileUi.timelineEditor.title')}
             value={entry.title}
             onChangeText={(value) => updateEntry(index, { title: value })}
           />
           <Input
-            label="Organization"
+            label={t('portfolio:profileUi.timelineEditor.organization')}
             value={entry.organization}
             onChangeText={(value) => updateEntry(index, { organization: value })}
           />
           <Input
-            label="Period"
+            label={t('portfolio:profileUi.period')}
             value={entry.period}
             onChangeText={(value) => updateEntry(index, { period: value })}
           />
           <Input
-            label="Description"
+            label={t('portfolio:profileUi.timelineEditor.description')}
             value={entry.description ?? ''}
             onChangeText={(value) => updateEntry(index, { description: value })}
             multiline
             numberOfLines={2}
           />
           <Button variant="secondary" size="sm" onPress={() => onChange(entries.filter((_, i) => i !== index))}>
-            Remove
+            {t('common:remove')}
           </Button>
         </View>
       ))}
       <Button variant="secondary" size="sm" onPress={() => onChange([...entries, createEntry()])}>
-        Add Timeline Entry
+        {t('portfolio:profileUi.timelineEditor.add')}
       </Button>
     </View>
   );

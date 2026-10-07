@@ -6,16 +6,6 @@ export const RECRUITMENT_STORAGE_KEY = '@scoutx/recruitment-workspaces';
 
 export const RECRUITMENT_STAGES: RecruitmentStage[] = [...PIPELINE_STAGES];
 
-export const RECRUITMENT_STAGE_LABELS: Record<RecruitmentStage, string> = {
-  discovered: 'Discovered',
-  shortlisted: 'Shortlisted',
-  contacted: 'Contacted',
-  invited: 'Invited',
-  trial: 'Trial',
-  evaluated: 'Evaluated',
-  follow_up: 'Follow-up',
-};
-
 export const RECRUITMENT_STAGE_COLORS: Record<RecruitmentStage, string> = {
   discovered: '#64748B',
   shortlisted: '#2563EB',

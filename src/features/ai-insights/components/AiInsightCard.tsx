@@ -27,7 +27,7 @@ export function AiInsightCard({
   children,
 }: AiInsightCardProps) {
   const { colors } = useTheme();
-  const { t } = useAppTranslation(['evidence']);
+  const { t } = useAppTranslation(['evidence', 'statistics']);
 
   return (
     <Card variant="outlined" padding="md" className="gap-3">
@@ -42,7 +42,11 @@ export function AiInsightCard({
           </View>
         </View>
         {insight.confidence ? (
-          <Badge label={insight.confidence} variant={confidenceVariant[insight.confidence]} size="sm" />
+          <Badge
+            label={t(`statistics:aiInsight.confidence.${insight.confidence}`)}
+            variant={confidenceVariant[insight.confidence]}
+            size="sm"
+          />
         ) : (
           <Badge label={t('evidence:confidenceUnknown')} variant="default" size="sm" />
         )}
@@ -51,7 +55,7 @@ export function AiInsightCard({
       {children}
 
       <Text variant="caption" color="secondary">
-        {isLive ? `Powered by ${providerLabel ?? 'AI'}` : 'Development preview — mock AI provider'}
+        {isLive ? t('statistics:aiInsight.poweredBy', { provider: providerLabel ?? 'AI' }) : t('statistics:aiInsight.previewProvider')}
       </Text>
     </Card>
   );

@@ -5,8 +5,8 @@ import { Text } from '@/components/primitives/Text';
 import { Section } from '@/components/layout/Section';
 import { AiInsightCard } from '@/features/ai-insights/components/AiInsightCard';
 import { AiRecommendationList } from '@/features/ai-insights/components/AiRecommendationList';
-import { AI_INSIGHT_DESCRIPTIONS, AI_INSIGHT_LABELS } from '@/features/ai-insights/constants';
 import { useAiInsight } from '@/features/ai-insights/hooks/useAiInsight';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import {
   type AiInsight,
   type AiInsightContext,
@@ -20,7 +20,9 @@ export type AiInsightPanelProps = {
   autoGenerate?: boolean;
 };
 
-function renderInsightBody(insight: AiInsight) {
+type Translate = ReturnType<typeof useAppTranslation>['t'];
+
+function renderInsightBody(insight: AiInsight, t: Translate) {
   switch (insight.type) {
     case 'performance_summary':
       return (
@@ -51,7 +53,7 @@ function renderInsightBody(insight: AiInsight) {
         <>
           {insight.focusAreas.length > 0 ? (
             <Text variant="caption" color="secondary">
-              Focus: {insight.focusAreas.join(' · ')}
+              {t('statistics:aiInsight.focus', { items: insight.focusAreas.join(' · ') })}
             </Text>
           ) : null}
           <AiRecommendationList items={insight.suggestions} />
@@ -63,10 +65,10 @@ function renderInsightBody(insight: AiInsight) {
         <>
           {insight.weeklyFocus ? (
             <Text variant="body-sm" className="font-sans-semibold">
-              Weekly focus: {insight.weeklyFocus}
+              {t('statistics:aiInsight.weeklyFocus', { focus: insight.weeklyFocus })}
             </Text>
           ) : null}
-          <AiRecommendationList items={insight.drills} title="Recommended drills" />
+          <AiRecommendationList items={insight.drills} title={t('statistics:aiInsight.drills')} />
         </>
       );
 
@@ -78,9 +80,15 @@ function renderInsightBody(insight: AiInsight) {
           insight.trajectory !== null ? (
             <Text variant="body-sm">
               {[
-                insight.currentRating !== null ? `Current ${insight.currentRating}` : null,
-                insight.potentialRating !== null ? `Potential ${insight.potentialRating}` : null,
-                insight.trajectory !== null ? `Trajectory ${insight.trajectory}` : null,
+                insight.currentRating !== null
+                  ? t('statistics:aiInsight.current', { value: insight.currentRating })
+                  : null,
+                insight.potentialRating !== null
+                  ? t('statistics:aiInsight.potential', { value: insight.potentialRating })
+                  : null,
+                insight.trajectory !== null
+                  ? t('statistics:aiInsight.trajectory', { value: insight.trajectory })
+                  : null,
               ]
                 .filter((part): part is string => part !== null)
                 .join(' · ')}
@@ -89,7 +97,7 @@ function renderInsightBody(insight: AiInsight) {
           <Text variant="body-sm">{insight.scoutNotes}</Text>
           {insight.growthAreas.length > 0 ? (
             <Text variant="caption" color="secondary">
-              Growth areas: {insight.growthAreas.join(', ')}
+              {t('statistics:aiInsight.growthAreas', { items: insight.growthAreas.join(', ') })}
             </Text>
           ) : null}
         </>
@@ -110,7 +118,7 @@ function renderInsightBody(insight: AiInsight) {
           ))}
           {insight.nextSteps.length > 0 ? (
             <Text variant="caption" color="secondary">
-              Next steps: {insight.nextSteps.join(' · ')}
+              {t('statistics:aiInsight.nextSteps', { items: insight.nextSteps.join(' · ') })}
             </Text>
           ) : null}
         </>
@@ -125,10 +133,10 @@ function renderInsightBody(insight: AiInsight) {
             </Text>
           ))}
           <Text variant="caption" color="secondary">
-            Strengths: {insight.strengthsShown.join(', ')}
+            {t('statistics:aiInsight.strengths', { items: insight.strengthsShown.join(', ') })}
           </Text>
           <Text variant="caption" color="secondary">
-            Improve: {insight.areasToImprove.join(', ')}
+            {t('statistics:aiInsight.improve', { items: insight.areasToImprove.join(', ') })}
           </Text>
         </>
       );
@@ -159,6 +167,7 @@ export function AiInsightPanel({
   enabled = true,
   autoGenerate = true,
 }: AiInsightPanelProps) {
+  const { t } = useAppTranslation(['statistics', 'common']);
   const { insight, isLoading, error, isLive, providerLabel, regenerate } = useAiInsight(
     insightType,
     context,
@@ -171,11 +180,11 @@ export function AiInsightPanel({
 
   return (
     <Section
-      title={AI_INSIGHT_LABELS[insightType]}
-      subtitle={AI_INSIGHT_DESCRIPTIONS[insightType]}
+      title={t(`statistics:aiInsight.type.${insightType}.title`)}
+      subtitle={t(`statistics:aiInsight.type.${insightType}.description`)}
       action={
         <Button variant="ghost" size="sm" onPress={regenerate} disabled={isLoading}>
-          Refresh
+          {t('common:refresh')}
         </Button>
       }
     >
@@ -187,14 +196,14 @@ export function AiInsightPanel({
             {error}
           </Text>
           <Button variant="secondary" size="sm" onPress={regenerate}>
-            Try again
+            {t('common:retry')}
           </Button>
         </View>
       ) : null}
 
       {insight ? (
         <AiInsightCard insight={insight} isLive={isLive} providerLabel={providerLabel}>
-          {renderInsightBody(insight)}
+          {renderInsightBody(insight, t)}
         </AiInsightCard>
       ) : null}
     </Section>

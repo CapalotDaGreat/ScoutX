@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
-import { PortfolioAnalyticsRepository } from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
+import {
+  PortfolioAnalyticsRepository,
+  type PortfolioAnalytics,
+} from '@/features/portfolio-analytics/repositories/PortfolioAnalyticsRepository';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PortfolioAnalyticsCardProps = {
   playerId: string;
@@ -9,43 +13,58 @@ export type PortfolioAnalyticsCardProps = {
 
 /** Reach metrics only — passport score lives on FootballPassportScoreCard. */
 export function PortfolioAnalyticsCard({ playerId }: PortfolioAnalyticsCardProps) {
-  const [stats, setStats] = useState({
-    totalViews: 0,
-    viewsThisWeek: 0,
-    scoutViews: 0,
-    scoutViewsThisWeek: 0,
-    lastViewedAt: null as string | null,
-  });
+  const { t, i18n } = useAppTranslation('portfolio');
+  const [stats, setStats] = useState<PortfolioAnalytics | null>(null);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
+    let active = true;
+    setFailed(false);
     void PortfolioAnalyticsRepository.getInstance()
       .fetchAnalytics(playerId)
-      .then(setStats)
-      .catch(() => undefined);
+      .then((next) => {
+        if (active) setStats(next);
+      })
+      .catch(() => {
+        if (active) setFailed(true);
+      });
+    return () => {
+      active = false;
+    };
   }, [playerId]);
 
-  const lastViewedLabel = stats.lastViewedAt
-    ? new Date(stats.lastViewedAt).toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
+  const lastViewedLabel = stats?.lastViewedAt
+    ? t('reach.lastViewed', {
+        date: new Date(stats.lastViewedAt).toLocaleDateString(i18n.language, {
+          month: 'short',
+          day: 'numeric',
+        }),
       })
-    : 'No views yet';
+    : t('reach.noViews');
 
   return (
     <Card variant="default" padding="md" className="gap-2">
       <Text variant="overline" color="secondary">
-        Portfolio reach
+        {t('reach.overline')}
       </Text>
-      <Text weight="semibold">Who is viewing your Football Passport</Text>
+      <Text weight="semibold">{t('reach.title')}</Text>
       <Text variant="body-sm" color="secondary">
-        {stats.totalViews} total views · {stats.viewsThisWeek} this week
+        {stats
+          ? t('reach.views', { total: stats.totalViews, week: stats.viewsThisWeek })
+          : failed
+            ? t('reach.unavailable')
+            : t('reach.loading')}
       </Text>
-      <Text variant="body-sm" color="secondary">
-        {stats.scoutViews} scout views · {stats.scoutViewsThisWeek} scout views this week
-      </Text>
-      <Text variant="caption" color="secondary">
-        Last viewed {lastViewedLabel}
-      </Text>
+      {stats ? (
+        <>
+          <Text variant="body-sm" color="secondary">
+            {t('reach.scoutViews', { total: stats.scoutViews, week: stats.scoutViewsThisWeek })}
+          </Text>
+          <Text variant="caption" color="secondary">
+            {lastViewedLabel}
+          </Text>
+        </>
+      ) : null}
     </Card>
   );
 }

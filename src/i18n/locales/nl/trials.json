@@ -45,5 +45,52 @@
   "cancelFailed": "Trial kon niet worden geannuleerd.",
   "reschedule": "Verzetten",
   "responseNote": "Antwoordnotitie (optioneel)",
-  "responseNotePlaceholder": "Beschikbaarheid of vragen voor de scout…"
+  "responseNotePlaceholder": "Beschikbaarheid of vragen voor de scout…",
+  "status": {
+    "pending": "In afwachting",
+    "accepted": "Geaccepteerd",
+    "declined": "Afgewezen",
+    "rescheduled": "Verzet",
+    "cancelled": "Geannuleerd",
+    "completed": "Afgerond"
+  },
+  "card": {
+    "overline": "Uitnodiging proeftraining",
+    "playerScout": "{{player}} · Scout {{scout}}",
+    "coach": "Trainer {{coach}}"
+  },
+  "response": {
+    "declineTitle": "Proeftraining afwijzen",
+    "declineBody": "Weet je zeker dat je deze uitnodiging wilt afwijzen?",
+    "declineFailed": "De proeftraining kon niet worden afgewezen. Probeer het opnieuw.",
+    "acceptFailed": "De proeftraining kon niet worden geaccepteerd. Probeer het opnieuw.",
+    "coachScout": "Trainer {{coach}} · Scout {{scout}}",
+    "calendarTitle": "Agenda",
+    "calendarFailed": "De agenda kon niet worden geopend.",
+    "calendar": {
+      "google": "Toevoegen aan Google Agenda",
+      "native": "Toevoegen aan agenda"
+    },
+    "history": "Geschiedenis"
+  },
+  "editor": {
+    "validationTitle": "Controleer de gegevens",
+    "requiredFields": "Club, trainer en locatie zijn verplicht.",
+    "invalidDate": "Vul een geldige datum en tijd in, bijv. 2026-07-12T14:00.",
+    "saveFailed": "De proeftraining kon niet worden opgeslagen. Probeer het opnieuw.",
+    "rescheduleTitle": "Proeftraining verzetten",
+    "inviteTitle": "Uitnodigen voor proeftraining",
+    "send": "Uitnodiging versturen",
+    "intro": "Uitnodiging voor een proeftraining voor {{name}}",
+    "club": "Club",
+    "clubPlaceholder": "Naam van club of academie",
+    "coach": "Trainer",
+    "coachPlaceholder": "Naam van de trainer",
+    "location": "Locatie",
+    "locationPlaceholder": "Trainingscomplex, veld",
+    "date": "Datum en tijd",
+    "dateHint": "Formaat: JJJJ-MM-DDTUU:MM, bijv. 2026-07-12T14:00",
+    "notes": "Notities",
+    "notesPlaceholder": "Aanrijroute, kleding, opzet van de sessie…"
+  }
 }

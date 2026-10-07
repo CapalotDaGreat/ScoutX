@@ -45,5 +45,52 @@
   "cancelFailed": "No se pudo cancelar la prueba.",
   "reschedule": "Reprogramar",
   "responseNote": "Nota de respuesta (opcional)",
-  "responseNotePlaceholder": "Confirmación de disponibilidad o preguntas para el scout…"
+  "responseNotePlaceholder": "Confirmación de disponibilidad o preguntas para el scout…",
+  "status": {
+    "pending": "Pendiente",
+    "accepted": "Aceptada",
+    "declined": "Rechazada",
+    "rescheduled": "Reprogramada",
+    "cancelled": "Cancelada",
+    "completed": "Completada"
+  },
+  "card": {
+    "overline": "Invitación a prueba",
+    "playerScout": "{{player}} · Scout {{scout}}",
+    "coach": "Entrenador {{coach}}"
+  },
+  "response": {
+    "declineTitle": "Rechazar prueba",
+    "declineBody": "¿Seguro que quieres rechazar esta invitación?",
+    "declineFailed": "No se pudo rechazar la prueba. Inténtalo de nuevo.",
+    "acceptFailed": "No se pudo aceptar la prueba. Inténtalo de nuevo.",
+    "coachScout": "Entrenador {{coach}} · Scout {{scout}}",
+    "calendarTitle": "Calendario",
+    "calendarFailed": "No se pudo abrir el calendario.",
+    "calendar": {
+      "google": "Añadir a Google Calendar",
+      "native": "Añadir al calendario"
+    },
+    "history": "Historial"
+  },
+  "editor": {
+    "validationTitle": "Revisa los datos",
+    "requiredFields": "Club, entrenador y lugar son obligatorios.",
+    "invalidDate": "Introduce una fecha y hora válidas, p. ej. 2026-07-12T14:00.",
+    "saveFailed": "No se pudo guardar la prueba. Inténtalo de nuevo.",
+    "rescheduleTitle": "Reprogramar prueba",
+    "inviteTitle": "Invitar a una prueba",
+    "send": "Enviar invitación",
+    "intro": "Invitación a prueba para {{name}}",
+    "club": "Club",
+    "clubPlaceholder": "Nombre del club o academia",
+    "coach": "Entrenador",
+    "coachPlaceholder": "Nombre del entrenador",
+    "location": "Lugar",
+    "locationPlaceholder": "Campo de entrenamiento, pista",
+    "date": "Fecha y hora",
+    "dateHint": "Formato: AAAA-MM-DDTHH:MM, p. ej. 2026-07-12T14:00",
+    "notes": "Notas",
+    "notesPlaceholder": "Indicaciones de llegada, equipación, formato de la sesión…"
+  }
 }

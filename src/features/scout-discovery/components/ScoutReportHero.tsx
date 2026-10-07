@@ -25,7 +25,7 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
         <View className="absolute inset-0 bg-black/35" />
         <View className="absolute bottom-0 left-0 right-0 p-4">
           <Text variant="overline" className="text-white/80">
-            Scouting Report
+            {t('scout:reports.cardOverline')}
           </Text>
           <View className="mt-2 flex-row items-end gap-3">
             <Avatar

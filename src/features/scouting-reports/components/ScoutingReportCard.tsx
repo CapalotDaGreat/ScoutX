@@ -7,6 +7,7 @@ import { ScoutingReportRatingsGrid } from '@/features/scouting-reports/component
 import { type ScoutingReport } from '@/features/scouting-reports/types';
 import { CalendarDays, ChevronRight } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ScoutingReportCardProps = {
   report: ScoutingReport;
@@ -16,7 +17,8 @@ export type ScoutingReportCardProps = {
 
 export function ScoutingReportCard({ report, index = 0, onPress }: ScoutingReportCardProps) {
   const { colors } = useTheme();
-  const updatedLabel = new Date(report.updatedAt).toLocaleDateString(undefined, {
+  const { t, i18n } = useAppTranslation('scout');
+  const updatedLabel = new Date(report.updatedAt).toLocaleDateString(i18n.language, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -27,12 +29,12 @@ export function ScoutingReportCard({ report, index = 0, onPress }: ScoutingRepor
       <View className="flex-row items-start justify-between gap-2">
         <View className="flex-1 gap-1">
           <Text variant="overline" color="accent">
-            Scouting Report
+            {t('reports.cardOverline')}
           </Text>
           <Text weight="semibold">{report.playerName}</Text>
           {report.scoutName ? (
             <Text variant="caption" color="secondary">
-              by {report.scoutName}
+              {t('reports.byScout', { name: report.scoutName })}
             </Text>
           ) : null}
         </View>
@@ -44,7 +46,7 @@ export function ScoutingReportCard({ report, index = 0, onPress }: ScoutingRepor
       {report.strengths.length > 0 ? (
         <View className="gap-1">
           <Text variant="caption" color="secondary">
-            Strengths
+            {t('reports.strengths')}
           </Text>
           <View className="flex-row flex-wrap gap-1.5">
             {report.strengths.slice(0, 3).map((strength) => (

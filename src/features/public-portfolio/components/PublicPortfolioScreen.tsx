@@ -214,8 +214,8 @@ export function PublicPortfolioScreen({
             <View className="gap-5">
               <ProfileStatsGrid stats={profile.stats} compact />
               <CollapsibleSection
-                title="Full performance"
-                subtitle="Detailed match analytics and charts"
+                title={t('portfolio:publicUi.fullPerformance')}
+                subtitle={t('portfolio:publicUi.fullPerformanceSubtitle')}
                 persistKey={`public-stats-${playerId}`}
               >
                 <ProfileStatsGrid stats={profile.stats} />
@@ -232,16 +232,16 @@ export function PublicPortfolioScreen({
             index={sectionIndex++}
           >
             <CollapsibleSection
-              title="Career timeline"
-              subtitle={`${profile.footballJourney.entries.length} moments`}
+              title={t('portfolio:publicUi.timeline')}
+              subtitle={t('portfolio:publicUi.moments', { count: profile.footballJourney.entries.length })}
               defaultOpen
               persistKey={`public-timeline-${playerId}`}
             >
               <FootballJourneySection entries={profile.footballJourney.entries.slice(0, 5)} />
               {profile.footballJourney.entries.length > 5 ? (
                 <CollapsibleSection
-                  title="Full timeline"
-                  subtitle={`${profile.footballJourney.entries.length - 5} more moments`}
+                  title={t('portfolio:publicUi.fullTimeline')}
+                  subtitle={t('portfolio:publicUi.moreMoments', { count: profile.footballJourney.entries.length - 5 })}
                   persistKey={`public-timeline-full-${playerId}`}
                 >
                   <FootballJourneySection entries={profile.footballJourney.entries} />
@@ -258,8 +258,8 @@ export function PublicPortfolioScreen({
             index={sectionIndex++}
           >
             <CollapsibleSection
-              title="Performance charts"
-              subtitle="Season trends"
+              title={t('portfolio:publicUi.charts')}
+              subtitle={t('portfolio:publicUi.chartsSubtitle')}
               persistKey={`public-charts-${playerId}`}
             >
               <PerformanceSummary items={profile.performanceSummary} />
@@ -274,8 +274,8 @@ export function PublicPortfolioScreen({
             index={sectionIndex++}
           >
             <CollapsibleSection
-              title="Highlight videos"
-              subtitle="Match footage"
+              title={t('portfolio:publicUi.videos')}
+              subtitle={t('portfolio:publicUi.videosSubtitle')}
               defaultOpen
               persistKey={`public-videos-${playerId}`}
             >
@@ -333,8 +333,8 @@ export function PublicPortfolioScreen({
             index={sectionIndex++}
           >
             <CollapsibleSection
-              title="GPS highlights"
-              subtitle={`${gpsHighlights.length} sessions`}
+              title={t('portfolio:publicUi.gps')}
+              subtitle={t('portfolio:publicUi.sessions', { count: gpsHighlights.length })}
               defaultOpen
               persistKey={`public-gps-${playerId}`}
             >
@@ -347,8 +347,8 @@ export function PublicPortfolioScreen({
                 ))}
                 {gpsHighlights.length > 1 ? (
                   <CollapsibleSection
-                    title="More sessions"
-                    subtitle={`${gpsHighlights.length - 1} additional`}
+                    title={t('portfolio:publicUi.moreSessions')}
+                    subtitle={t('portfolio:publicUi.additional', { count: gpsHighlights.length - 1 })}
                     persistKey={`public-gps-more-${playerId}`}
                   >
                     <View className="gap-4">

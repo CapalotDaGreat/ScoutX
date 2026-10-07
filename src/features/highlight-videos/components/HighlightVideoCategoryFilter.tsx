@@ -1,12 +1,12 @@
 import { ScrollView, Pressable } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import {
-  VIDEO_CATEGORY_META,
   VIDEO_FILTER_ALL,
   type VideoCategoryFilter,
 } from '@/features/highlight-videos/constants';
 import { type VideoCategory } from '@/features/highlight-videos/types';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type HighlightVideoCategoryFilterProps = {
   activeCategory: VideoCategoryFilter;
@@ -19,11 +19,12 @@ export function HighlightVideoCategoryFilter({
   availableCategories,
   onCategoryChange,
 }: HighlightVideoCategoryFilterProps) {
+  const { t } = useAppTranslation('media');
   const filters: Array<{ value: VideoCategoryFilter; label: string }> = [
-    { value: VIDEO_FILTER_ALL, label: 'All' },
+    { value: VIDEO_FILTER_ALL, label: t('filter.all') },
     ...availableCategories.map((category) => ({
       value: category,
-      label: VIDEO_CATEGORY_META[category].label,
+      label: t(`category.${category}`),
     })),
   ];
 

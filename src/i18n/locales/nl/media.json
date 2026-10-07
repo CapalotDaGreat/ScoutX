@@ -122,7 +122,8 @@
     "sentAsEvidence": "Als bewijs verstuurd",
     "showing": "{{shown}} van {{total}}",
     "clear": "Filters wissen",
-    "noMatches": "Geen media komen overeen met deze filters."
+    "noMatches": "Geen media komen overeen met deze filters.",
+    "all": "Alle"
   },
   "category": {
     "goals": "Doelpunten",
@@ -178,6 +179,103 @@
       "unsupported_codec": "Een bronvideo gebruikt een formaat dat niet gedecodeerd kon worden.",
       "timeout": "Renderen duurde te lang. Probeer een kortere reel.",
       "render_failed": "Renderen mislukt. Probeer het opnieuw."
+    }
+  },
+  "videos": {
+    "title": "Highlightvideo's",
+    "subtitle": "Wedstrijdclips geordend voor scouts: doelpunten, techniek, verdedigen en meer",
+    "count_one": "{{count}} highlight in je reel",
+    "count_other": "{{count}} highlights in je reel",
+    "manage": "Beheren",
+    "clipHint": "Korte clips voor scouts (max. 3 min). Volledige wedstrijden horen onder Groei → Wedstrijdvideo analyseren.",
+    "empty": "Upload een ingekorte clip uit je Veo-export of telefoonopname om scouts je beste momenten te laten zien.",
+    "uploadClip": "Highlightclip uploaden",
+    "analyzeFull": "Volledige wedstrijd analyseren",
+    "uploading": "Uploaden…",
+    "uploadFailed": "Upload mislukt",
+    "untitled": "Highlight zonder titel",
+    "featured": "Uitgelicht",
+    "spotlight": "ScoutX Spotlight",
+    "versus": "tegen {{opponent}}",
+    "uploadErrorTitle": "Uploadprobleem",
+    "pickFailed": "De video kon niet worden geopend. Probeer een andere clip.",
+    "saveErrorTitle": "Opslaan mislukt",
+    "saveFailed": "De videogegevens konden niet worden opgeslagen. Probeer het opnieuw.",
+    "retryFailed": "De upload kon niet opnieuw worden gestart. Probeer het opnieuw.",
+    "managerIntro": "Kies een korte clip uit Foto's (max. 3 minuten). Exporteer een ingekort moment uit je Veo-app of kies een opname die al op je telefoon staat.",
+    "fullMatchTitle": "Een volledige wedstrijd opgenomen?",
+    "fullMatchBody": "Upload de hele wedstrijd onder Groei → Wedstrijdvideo analyseren voor statistieken en coachingfeedback (max. 150 minuten).",
+    "analyzeFullMatch": "Volledige wedstrijdvideo analyseren",
+    "buildReel": "Highlightreel maken van wedstrijdbewijs",
+    "uploadFromPhotos": "Uploaden uit Foto's",
+    "managerEmpty": "Nog geen highlightvideo's. Upload je eerste clip om je reel te starten.",
+    "feature": "Uitlichten",
+    "moveUp": "{{title}} omhoog",
+    "moveDown": "{{title}} omlaag"
+  },
+  "studio": {
+    "title": "Highlightreel-studio",
+    "intro": "Vertel je voetbalverhaal met geanalyseerde wedstrijdmomenten. Alleen momenten met een tijdstempel en waargenomen bewijs worden voorgesteld; er wordt niets verzonnen.",
+    "styleTitle": "Reelstijl",
+    "targetLength": "Doellengte: {{seconds}} s",
+    "toggleLength": "Wisselen tussen 45 s en 90 s",
+    "momentsTitle": "Door AI voorgestelde momenten",
+    "planMeta": "Gemiddelde AI-zekerheid {{pct}}% · {{coverage}}",
+    "empty": "Nog geen afgeronde wedstrijdanalyse. Analyseer eerst een wedstrijd om suggesties uit echte beelden te krijgen.",
+    "untitled": "Moment zonder titel",
+    "descriptionFallback": "Moment herkend door de wedstrijdanalyse.",
+    "reason": "Voorgesteld op basis van je wedstrijdanalyse. Bekijk de clip voordat je hem gebruikt.",
+    "candidateMeta": "{{kind}} · {{status}} · {{pct}}% AI-zekerheid",
+    "needsReview": "Controleer dit",
+    "aiSuggested": "AI-suggestie",
+    "evidence": {
+      "line": "Bewijs: {{items}}",
+      "confidence": "AI-zekerheid {{pct}}% (niet geverifieerd)",
+      "jersey": "Doelrugnummer {{jersey}}",
+      "coverage": "Dekking: {{band}}",
+      "coverageUnknown": "onbekend"
+    },
+    "coverage": {
+      "ai_suggested": "Door AI voorgestelde momenten — controleer elke clip voordat je deelt",
+      "none": "Geen betrouwbare momenten beschikbaar"
+    },
+    "eventKind": {
+      "progressivePass": "Vooruitgaande pass",
+      "progressiveCarry": "Vooruitgaande dribbel",
+      "goal": "Doelpunt",
+      "recovery": "Balverovering",
+      "save": "Redding",
+      "defensiveAction": "Verdedigende actie",
+      "dribble": "Dribbel",
+      "shot": "Schot",
+      "matchAction": "Spelactie"
+    },
+    "preset": {
+      "best-of": {
+        "label": "Het beste",
+        "title": "Het beste uit de wedstrijd",
+        "description": "Je sterkste door AI voorgestelde momenten in een compact verhaal."
+      },
+      "scout": {
+        "label": "Scoutreel",
+        "title": "Wedstrijdoverzicht voor scouts",
+        "description": "Clips op basis van bewijs die je tactische en technische impact laten zien."
+      },
+      "social": {
+        "label": "Socialreel",
+        "title": "Korte socialreel",
+        "description": "Snelle, duidelijke momenten om kort te delen."
+      },
+      "tactical": {
+        "label": "Tactisch",
+        "title": "Tactische reel",
+        "description": "Momenten rond druk zetten, beweging, passlijnen en je rol."
+      },
+      "development": {
+        "label": "Ontwikkeling",
+        "title": "Ontwikkelingsmomenten",
+        "description": "Momenten die leerpunten en je werkpunten laten zien."
+      }
     }
   }
 }

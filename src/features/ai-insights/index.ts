@@ -26,7 +26,7 @@ export { MockAiProvider } from './providers/mockAiProvider';
 export { OpenRouterAiProvider } from './providers/openRouterProvider';
 export type { AiProvider } from './providers/types';
 
-export { AI_INSIGHT_LABELS, AI_INSIGHT_DESCRIPTIONS } from './constants';
+export { AI_INSIGHT_DESCRIPTIONS } from './constants';
 
 export type {
   AiInsight,

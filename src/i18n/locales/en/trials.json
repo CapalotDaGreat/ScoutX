@@ -45,5 +45,52 @@
   "cancelFailed": "Could not cancel trial.",
   "reschedule": "Reschedule",
   "responseNote": "Response note (optional)",
-  "responseNotePlaceholder": "Availability confirmation or questions for the scout..."
+  "responseNotePlaceholder": "Availability confirmation or questions for the scout...",
+  "status": {
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "rescheduled": "Rescheduled",
+    "cancelled": "Cancelled",
+    "completed": "Completed"
+  },
+  "card": {
+    "overline": "Trial invitation",
+    "playerScout": "{{player}} · Scout {{scout}}",
+    "coach": "Coach {{coach}}"
+  },
+  "response": {
+    "declineTitle": "Decline trial",
+    "declineBody": "Are you sure you want to decline this invitation?",
+    "declineFailed": "The trial couldn't be declined. Please try again.",
+    "acceptFailed": "The trial couldn't be accepted. Please try again.",
+    "coachScout": "Coach {{coach}} · Scout {{scout}}",
+    "calendarTitle": "Calendar",
+    "calendarFailed": "The calendar couldn't be opened.",
+    "calendar": {
+      "google": "Add to Google Calendar",
+      "native": "Add to calendar"
+    },
+    "history": "History"
+  },
+  "editor": {
+    "validationTitle": "Check the details",
+    "requiredFields": "Club, coach and location are required.",
+    "invalidDate": "Enter a valid date and time, for example 2026-07-12T14:00.",
+    "saveFailed": "The trial couldn't be saved. Please try again.",
+    "rescheduleTitle": "Reschedule trial",
+    "inviteTitle": "Invite to trial",
+    "send": "Send invitation",
+    "intro": "Trial invitation for {{name}}",
+    "club": "Club",
+    "clubPlaceholder": "Club or academy name",
+    "coach": "Coach",
+    "coachPlaceholder": "Coach's name",
+    "location": "Location",
+    "locationPlaceholder": "Training ground, pitch",
+    "date": "Date and time",
+    "dateHint": "Format: YYYY-MM-DDTHH:MM, e.g. 2026-07-12T14:00",
+    "notes": "Notes",
+    "notesPlaceholder": "Arrival instructions, kit, session format…"
+  }
 }

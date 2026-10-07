@@ -47,5 +47,28 @@
     "sprints_one": "{{count}} sprint",
     "sprints_other": "{{count}} sprints",
     "accuracyUnknown": "De GPS-nauwkeurigheid is voor deze sessie niet vastgelegd, dus de gebiedswaarden zijn bij benadering."
+  },
+  "controls": {
+    "title": "Wedstrijdopname",
+    "status": {
+      "idle": "Klaar",
+      "recording": "Bezig met opnemen",
+      "paused": "Gepauzeerd",
+      "completed": "Voltooid"
+    },
+    "label": "Naam van de sessie",
+    "labelPlaceholder": "Competitiewedstrijd, training, proeftraining…",
+    "points_one": "{{count}} GPS-punt vastgelegd · batterijvriendelijke meting elke 5 s / 5 m",
+    "points_other": "{{count}} GPS-punten vastgelegd · batterijvriendelijke meting elke 5 s / 5 m",
+    "finish": "Afronden",
+    "discard": "Verwijderen",
+    "historySubtitle": "Je eerder opgenomen GPS-sessies."
+  },
+  "heatmap": {
+    "title": "Bewegingsheatmap",
+    "subtitle": "Waar je de meeste tijd doorbracht. Sterkere kleur betekent meer tijd.",
+    "empty": "De heatmap verschijnt zodra er GPS-punten zijn vastgelegd.",
+    "a11y_one": "Bewegingsheatmap met {{count}} actief gebied",
+    "a11y_other": "Bewegingsheatmap met {{count}} actieve gebieden"
   }
 }

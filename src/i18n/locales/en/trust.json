@@ -41,7 +41,8 @@
     "missingMessage": "Relationship context and endorsement body are required.",
     "removeTitle": "Remove endorsement",
     "removeMessage": "This endorsement will be permanently removed.",
-    "footerNote": "Coach recommendations are submitted by verified club staff. Scouts can publish endorsements visible on the player trust profile."
+    "footerNote": "Coach recommendations are submitted by verified club staff. Scouts can publish endorsements visible on the player trust profile.",
+    "skillsPlaceholder": "Progressive passing\nPress resistance"
   },
   "report": {
     "button": "Report",
@@ -73,5 +74,73 @@
     "block": "Block",
     "unblock": "Unblock",
     "cancel": "Cancel"
+  },
+  "featured": "Featured",
+  "entityWithClub": "Verified club · {{club}}",
+  "entity": {
+    "player": "Verified player",
+    "scout": "Verified scout",
+    "club": "Verified club",
+    "coach": "Verified coach"
+  },
+  "recommendationType": {
+    "coach_recommendation": "Coach recommendation",
+    "scout_endorsement": "Scout endorsement"
+  },
+  "recommendationSection": {
+    "coach_recommendation": "Coach recommendations",
+    "scout_endorsement": "Scout endorsements"
+  },
+  "yearsKnownBadge_one": "Known {{count}} yr",
+  "yearsKnownBadge_other": "Known {{count}} yrs",
+  "tenure": {
+    "title": "Years at club",
+    "years_one": "{{count}} yr",
+    "years_other": "{{count}} yrs"
+  },
+  "category": {
+    "Technical": "Technical",
+    "Tactical": "Tactical",
+    "Physical": "Physical",
+    "Mental": "Mental",
+    "Leadership": "Leadership",
+    "Professionalism": "Professionalism"
+  },
+  "coachEndorsement": {
+    "title": "Coach endorsement",
+    "intro": "Write a recommendation for {{playerName}}. Players can't edit your words.",
+    "role": "Your role",
+    "rolePlaceholder": "e.g. U17 head coach",
+    "organization": "Club / academy",
+    "yearsKnown": "Years worked together",
+    "headlinePlaceholder": "e.g. Standout professionalism",
+    "body": "Recommendation",
+    "bodyPlaceholder": "Describe what you've seen from this player…",
+    "missingMessage": "Club, relationship context and recommendation text are required.",
+    "publish": "Publish endorsement"
+  },
+  "verificationCard": {
+    "overline": "Verification",
+    "title": "Football Passport verification",
+    "body": "Verification shows on your Football Passport, and scouts can filter for verified players.",
+    "checking": "Checking verification status…",
+    "verified": "Your Football Passport is verified.",
+    "verifiedOn": "Your Football Passport was verified on {{date}}.",
+    "requested": "Your verification request is under review. We'll notify you when it's decided.",
+    "pending": "Verification is pending review.",
+    "request": "Request verification"
+  },
+  "admin": {
+    "overline": "Admin review",
+    "title": "Moderation queue",
+    "counts": "{{verifications}} verification requests · {{reports}} content reports",
+    "loading": "Loading queue…",
+    "empty": "No pending items.",
+    "loadFailed": "The queue couldn't be loaded.",
+    "approve": "Approve",
+    "reject": "Reject",
+    "reportLine": "Report · {{target}} · {{reason}}",
+    "markReviewed": "Mark reviewed",
+    "refresh": "Refresh queue"
   }
 }

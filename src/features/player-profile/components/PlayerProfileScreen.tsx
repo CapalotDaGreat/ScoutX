@@ -284,8 +284,8 @@ export function PlayerProfileScreen({
         </CollapsibleSection>
 
         <CollapsibleSection
-          title="Trust & endorsements"
-          subtitle="Verification and coach recommendations"
+          title={t('portfolio:profileUi.trustTitle')}
+          subtitle={t('portfolio:profileUi.trustSubtitle')}
           persistKey="home-trust"
         >
           <TrustProfileSection

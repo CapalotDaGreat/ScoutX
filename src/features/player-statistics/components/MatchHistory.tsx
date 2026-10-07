@@ -15,8 +15,8 @@ export type MatchHistoryProps = {
   compact?: boolean;
 };
 
-function formatMatchDate(date: string): string {
-  return new Intl.DateTimeFormat('en', {
+function formatMatchDate(date: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     month: 'short',
     day: 'numeric',
   }).format(new Date(date));
@@ -28,7 +28,15 @@ export function MatchHistory({
   onViewAllPress,
   compact = false,
 }: MatchHistoryProps) {
-  const { t } = useAppTranslation('common');
+  const { t, i18n } = useAppTranslation(['common', 'statistics']);
+  const summaryFor = (item: MatchHistoryItem) =>
+    [
+      t('statistics:history.contributions', { count: item.stats.goals + item.stats.assists }),
+      item.stats.passAccuracy !== null ? t('statistics:history.passing', { pct: item.stats.passAccuracy }) : null,
+      t(item.stats.cleanSheet ? 'statistics:history.cleanSheet' : 'statistics:history.conceded'),
+    ]
+      .filter((part): part is string => part !== null)
+      .join(', ');
   const visibleItems = maxItems ? items.slice(0, maxItems) : items;
   const hasMore = Boolean(maxItems && items.length > maxItems);
 
@@ -43,7 +51,7 @@ export function MatchHistory({
             <View className="min-w-0 flex-1">
               <Text weight="semibold">{item.opponent}</Text>
               <Text variant="caption" color="secondary" className="mt-1">
-                {item.competition} - {formatMatchDate(item.date)}
+                {[item.competition, formatMatchDate(item.date, i18n.language)].filter(Boolean).join(' · ')}
               </Text>
             </View>
             <Text weight="bold" color={item.result.startsWith('W') ? 'success' : 'secondary'}>
@@ -53,7 +61,7 @@ export function MatchHistory({
 
           <View className="mt-3 flex-row items-center justify-between gap-3">
             <Text variant="body-sm" color="secondary" className="min-w-0 flex-1">
-              {item.summary}
+              {summaryFor(item)}
             </Text>
             <Text weight="semibold" color="accent">
               {formatRating(item.stats.matchRating)}
@@ -62,31 +70,31 @@ export function MatchHistory({
 
           <View className="mt-3 flex-row flex-wrap gap-2">
             <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-              {item.stats.minutes} min
+              {t('statistics:history.minutes', { count: item.stats.minutes })}
             </Text>
             <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-              {item.stats.goals}G
+              {t('statistics:history.goals', { count: item.stats.goals })}
             </Text>
             <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-              {item.stats.assists}A
+              {t('statistics:history.assists', { count: item.stats.assists })}
             </Text>
             {!compact ? (
               <>
                 {item.stats.shots !== null ? (
                   <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-                    {item.stats.shots} shots
+                    {t('statistics:history.shots', { count: item.stats.shots })}
                   </Text>
                 ) : null}
                 {item.stats.tackles !== null ? (
                   <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-                    {item.stats.tackles} tackles
+                    {t('statistics:history.tackles', { count: item.stats.tackles })}
                   </Text>
                 ) : null}
                 <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-                  {item.stats.yellowCards} YC
+                  {t('statistics:history.yellow', { count: item.stats.yellowCards })}
                 </Text>
                 <Text variant="caption" className="rounded-lg bg-surface px-2 py-1">
-                  {item.stats.redCards} RC
+                  {t('statistics:history.red', { count: item.stats.redCards })}
                 </Text>
               </>
             ) : null}
@@ -116,14 +124,14 @@ export function MatchHistory({
     <Card variant="default" padding="lg" className="gap-4">
       <View className="flex-row items-start justify-between gap-3">
         <View className="min-w-0 flex-1">
-          <Heading level={3}>Match History</Heading>
+          <Heading level={3}>{t('statistics:matchHistory')}</Heading>
           <Text variant="body-sm" color="secondary" className="mt-1">
-            Latest performances with calculated match output.
+            {t('statistics:history.subtitle')}
           </Text>
         </View>
         {hasMore && onViewAllPress ? (
           <Button variant="ghost" size="sm" onPress={onViewAllPress}>
-            {t('viewAll')}
+            {t('common:viewAll')}
           </Button>
         ) : null}
       </View>

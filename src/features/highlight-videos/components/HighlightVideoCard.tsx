@@ -8,6 +8,7 @@ import { VIDEO_CATEGORY_META } from '@/features/highlight-videos/constants';
 import { formatVideoDuration } from '@/features/highlight-videos/models/HighlightVideoModel';
 import { type HighlightVideo } from '@/features/highlight-videos/types';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type HighlightVideoCardProps = {
   video: HighlightVideo;
@@ -25,6 +26,7 @@ export function HighlightVideoCard({
   className,
 }: HighlightVideoCardProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('media');
   const categoryMeta = VIDEO_CATEGORY_META[video.category];
   const CategoryIcon = categoryMeta.icon;
   const isFailed = video.uploadStatus === 'failed';
@@ -54,7 +56,7 @@ export function HighlightVideoCard({
         ) : null}
 
         <View className="absolute left-2 top-2">
-          <Badge label={categoryMeta.label} variant="accent" size="sm" />
+          <Badge label={t(`category.${video.category}`)} variant="accent" size="sm" />
         </View>
 
         {video.featured ? (
@@ -74,7 +76,7 @@ export function HighlightVideoCard({
         {isUploading ? (
           <View className="absolute inset-0 items-center justify-center bg-black/50">
             <Text variant="caption" className="font-sans-semibold text-white">
-              Uploading…
+              {t('videos.uploading')}
             </Text>
           </View>
         ) : null}
@@ -82,7 +84,7 @@ export function HighlightVideoCard({
         {isFailed ? (
           <View className="absolute inset-0 items-center justify-center bg-error/80 px-3">
             <Text variant="caption" className="text-center font-sans-semibold text-white">
-              Upload failed
+              {t('videos.uploadFailed')}
             </Text>
           </View>
         ) : null}
@@ -90,7 +92,7 @@ export function HighlightVideoCard({
 
       <View className="gap-1 px-0.5 pt-2">
         <Text weight="semibold" numberOfLines={1}>
-          {video.title || 'Untitled highlight'}
+          {video.title || t('videos.untitled')}
         </Text>
         {video.opponent || video.competition ? (
           <Text variant="body-sm" color="secondary" numberOfLines={1}>
