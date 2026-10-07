@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.persistAppleAuthorizationCode = exports.deleteAuthenticatedAccount = exports.onReelExportQueued = exports.exportReel = exports.getMediaPlaybackUrl = exports.askThisMatch = exports.onVerificationWrittenSyncTrust = exports.requestEvidence = exports.fulfillEvidenceRequest = exports.onPassportSummaryWrittenNotifyWatchers = exports.onRecruitmentEntryWritten = exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = exports.confirmRole = exports.onQuarantineObjectFinalized = exports.cleanupAbandonedUploads = exports.cancelUploadSession = exports.createUploadSession = exports.onMediaWrittenReproject = exports.releaseExpiredSuspensions = exports.resolveAppeal = exports.submitAppeal = exports.applyModerationAction = exports.listModerationQueue = exports.submitPublicReport = exports.onContentReportCreated = exports.setStaffRole = exports.recordConsent = exports.onUserSafetyWrittenReproject = exports.onTrialInvitationCreatedGuardian = exports.revokeGuardianConsent = exports.respondGuardianConsent = exports.getGuardianConsentRequest = exports.requestGuardianConsent = exports.setAgeBand = exports.purgeLegacyGpsLocation = exports.recordPortfolioView = exports.resolveVerificationRequest = exports.listAdminReviewQueue = exports.scheduleWeeklyFootballReports = exports.generateHighlightReelPlan = exports.analyzeMatchFrames = exports.extractMatchSegment = exports.cancelMatchAnalysis = exports.analyzeMatchFootage = exports.generateAiInsight = void 0;
-exports.revenueCatWebhook = exports.getUsageSummary = exports.sendDevelopmentReminders = exports.onTrustRecommendationCreatedNotify = exports.onTrialInvitationUpdatedNotify = exports.onTrialInvitationCreatedNotify = exports.onPassportSummaryWrittenNotifyOwner = exports.onMatchAnalysisJobFinishedNotify = exports.onActivityCreatedPush = void 0;
+exports.retentionCleanup = exports.updatePrivacyRequest = exports.submitPrivacyRequest = exports.buildDataExport = exports.requestDataExport = exports.revenueCatWebhook = exports.getUsageSummary = exports.sendDevelopmentReminders = exports.onTrustRecommendationCreatedNotify = exports.onTrialInvitationUpdatedNotify = exports.onTrialInvitationCreatedNotify = exports.onPassportSummaryWrittenNotifyOwner = exports.onMatchAnalysisJobFinishedNotify = exports.onActivityCreatedPush = void 0;
 require("./authSecurityPolicy");
 const app_1 = require("firebase-admin/app");
 var aiCoach_1 = require("./aiCoach");
@@ -95,4 +95,12 @@ var quotaService_1 = require("./entitlements/quotaService");
 Object.defineProperty(exports, "getUsageSummary", { enumerable: true, get: function () { return quotaService_1.getUsageSummary; } });
 var revenueCat_1 = require("./entitlements/revenueCat");
 Object.defineProperty(exports, "revenueCatWebhook", { enumerable: true, get: function () { return revenueCat_1.revenueCatWebhook; } });
+var dataExport_1 = require("./dataRights/dataExport");
+Object.defineProperty(exports, "requestDataExport", { enumerable: true, get: function () { return dataExport_1.requestDataExport; } });
+Object.defineProperty(exports, "buildDataExport", { enumerable: true, get: function () { return dataExport_1.buildDataExport; } });
+var privacyRequests_1 = require("./dataRights/privacyRequests");
+Object.defineProperty(exports, "submitPrivacyRequest", { enumerable: true, get: function () { return privacyRequests_1.submitPrivacyRequest; } });
+Object.defineProperty(exports, "updatePrivacyRequest", { enumerable: true, get: function () { return privacyRequests_1.updatePrivacyRequest; } });
+var retentionCleanup_1 = require("./dataRights/retentionCleanup");
+Object.defineProperty(exports, "retentionCleanup", { enumerable: true, get: function () { return retentionCleanup_1.retentionCleanup; } });
 //# sourceMappingURL=index.js.map

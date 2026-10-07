@@ -4,7 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
-import { deleteAllUserData } from './accountDeletion';
+import { runAccountDeletion, type DeletionDeps } from './dataRights/deletion';
 import {
   exchangeAppleAuthorizationCode,
   type AppleAuthSecrets,
@@ -140,35 +140,39 @@ export const persistAppleAuthorizationCode = onCall(
   },
 );
 
+/** Account deletion with every step the app shows: revoke, cancel, delete, verify, complete. */
+export const accountDeletionDeps: DeletionDeps = {
+  revokeProviderTokens: revokeStoredAppleTokens,
+  revokeSessions: async (uid) => {
+    await getAuth().revokeRefreshTokens(uid).catch((error: unknown) => {
+      if ((error as { code?: string }).code !== 'auth/user-not-found') throw error;
+    });
+  },
+  deleteAuthUser: async (uid) => {
+    await getAuth().deleteUser(uid).catch((error: unknown) => {
+      if ((error as { code?: string }).code !== 'auth/user-not-found') throw error;
+    });
+  },
+};
+
 /**
  * Deletes the authenticated user's account after revoking Apple tokens when applicable.
+ * Resumable: calling again continues an interrupted deletion.
  */
 export const deleteAuthenticatedAccount = onCall(
   createCallableOptions({
     secrets: [appleTeamIdSecret, appleKeyIdSecret, applePrivateKeySecret],
+    timeoutSeconds: 540,
   }),
   async (request) => {
     const uid = requireAuthUid(request.auth?.uid);
-
-    await revokeStoredAppleTokens(uid);
-    const { failures } = await deleteAllUserData(uid);
-    if (failures.length > 0) {
-      logger.warn('Account deletion completed with partial data cleanup failures', {
-        uid,
-        failures,
+    const outcome = await runAccountDeletion(getFirestore(), uid, accountDeletionDeps);
+    if (outcome.status === 'failed') {
+      throw new HttpsError('aborted', 'Account deletion did not finish. Please try again.', {
+        reason: 'deletion_incomplete',
+        step: outcome.step,
       });
     }
-
-    try {
-      await getAuth().deleteUser(uid);
-    } catch (error) {
-      logger.error('Failed to delete Firebase Auth user', {
-        uid,
-        message: error instanceof Error ? error.message : 'unknown',
-      });
-      throw new HttpsError('internal', 'Unable to delete authentication account.');
-    }
-
     return { deleted: true as const };
   },
 );

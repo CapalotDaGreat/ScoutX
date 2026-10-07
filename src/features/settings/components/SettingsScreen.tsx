@@ -8,6 +8,7 @@ import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { Card } from '@/components/primitives/Card';
 import { SafetySettingsSection } from '@/features/youth-safety/components/SafetySettingsSection';
 import { deleteCurrentAccount } from '@/features/auth/services/accountService';
+import { DeletionProgressCard } from '@/features/data-rights/components/DeletionProgressCard';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useNotificationPreferences } from '@/features/notifications/hooks/useNotificationPreferences';
 import { NOTIFICATION_CATEGORIES } from '@/features/notifications/services/notificationPreferencesService';
@@ -290,6 +291,7 @@ export function SettingsScreen({
             <Text variant="body-sm" color="secondary">
               {t('settings:deleteAccountDescription')}
             </Text>
+            {isDeleting && user?.uid ? <DeletionProgressCard uid={user.uid} /> : null}
             {deleteError ? (
               <Text variant="body-sm" color="error">
                 {deleteError}

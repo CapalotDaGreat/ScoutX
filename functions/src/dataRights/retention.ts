@@ -1,0 +1,38 @@
+/**
+ * Central retention periods (days). Every scheduled cleanup and every legal-retention record
+ * reads from here, and docs/privacy/retention-matrix.md mirrors it.
+ *
+ * The legal-hold periods are proposals pending legal review (LEGAL_REVIEW_REQUIRED); the
+ * operational periods are product decisions.
+ */
+export const RETENTION = {
+  /** Data export archives and their download links. */
+  exportDays: 7,
+  /** Rejected, expired or cancelled upload records (bytes are deleted immediately on rejection). */
+  failedUploadDays: 7,
+  /** Cancelled, expired or failed analysis jobs, with their frames and video. */
+  abandonedJobDays: 30,
+  /** RevenueCat webhook receipts, kept only to make deliveries idempotent. */
+  webhookReceiptDays: 90,
+  /** Closed privacy requests (proof that a request was answered). LEGAL_REVIEW_REQUIRED */
+  privacyRequestDays: 3 * 365,
+  /** Consent proof after account deletion. LEGAL_REVIEW_REQUIRED */
+  consentProofDays: 3 * 365,
+  /** Moderation decisions about a deleted account. LEGAL_REVIEW_REQUIRED */
+  moderationDecisionDays: 2 * 365,
+  /** Proof that an account deletion was carried out. LEGAL_REVIEW_REQUIRED */
+  deletionReceiptDays: 3 * 365,
+} as const;
+
+/** Statutory reply window for access/deletion requests (GDPR Art. 12(3): one month; FADP: 30 days). */
+export const PRIVACY_REQUEST_DEADLINE_DAYS = 30;
+
+export const DAY_MS = 24 * 60 * 60 * 1000;
+
+export function addDays(from: Date, days: number): string {
+  return new Date(from.getTime() + days * DAY_MS).toISOString();
+}
+
+export function olderThan(now: Date, days: number): string {
+  return new Date(now.getTime() - days * DAY_MS).toISOString();
+}

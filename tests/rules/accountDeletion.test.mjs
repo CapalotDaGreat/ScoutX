@@ -31,6 +31,9 @@ const uidKeyed = [
   'coachRosters',
   'userSafety',
   'guardianContacts',
+  'entitlements',
+  'usageLedger',
+  'accountRestrictions',
 ];
 
 const ownedByField = [
@@ -75,6 +78,9 @@ const ownedByField = [
   ['contentReports', 'targetId'],
   ['contentReports', 'targetOwnerId'],
   ['blockedUsers', 'blockedUserId'],
+  ['revenueCatEvents', 'uid'],
+  ['dataExports', 'uid'],
+  ['privacyRequests', 'uid'],
 ];
 
 const storageFiles = (uid) => [
@@ -84,6 +90,7 @@ const storageFiles = (uid) => [
   `profiles/${uid}/reelExports/e1/reel.mp4`,
   `gpsSessions/${uid}/s1/points.json`,
   `quarantine/${uid}/up1/source`,
+  `exports/${uid}/ex1/scoutx-data-export.json`,
 ];
 
 let db;
@@ -124,6 +131,7 @@ before(async () => {
     await db.collection('moderationNotices').doc(uid).collection('items').doc('case-1').set({ caseId: 'case-1' });
     await db.collection('consentRecords').doc(uid).set({ uid });
     await db.collection('consentRecords').doc(uid).collection('items').doc('c1').set({ type: 'privacy_policy' });
+    await db.collection('usageLedger').doc(uid).collection('periods').doc('p0').set({ counts: { reel_export: 1 } });
   }
 
   // Cross-user references: another scout's workspace and watcher docs, and a third-party coach roster.
@@ -189,6 +197,8 @@ describe('deleteAllUserData', () => {
     assert.equal((await db.collection('consentRecords').doc(DELETED).get()).exists, false, 'consent summary');
     assert.equal((await db.collection('consentRecords').doc(DELETED).collection('items').get()).size, 0, 'consent items');
     assert.equal((await db.collection('consentRecords').doc(KEPT).collection('items').get()).size, 1, 'kept consent items');
+    assert.equal((await db.collection('usageLedger').doc(DELETED).collection('periods').get()).size, 0, 'usage periods');
+    assert.equal((await db.collection('usageLedger').doc(KEPT).collection('periods').get()).size, 1, 'kept usage periods');
   });
 
   test('removes references held in other users\' documents', async () => {
@@ -206,5 +216,93 @@ describe('deleteAllUserData', () => {
       roster?.players.map((item) => item.playerId),
       [KEPT],
     );
+  });
+});
+
+describe('runAccountDeletion state machine', () => {
+  const USER = 'machine-user';
+
+  async function seedMachineUser() {
+    await db.collection('users').doc(USER).set({ name: 'Machine User', email: 'machine@example.test' });
+    await db.collection('discoverablePlayers').doc(USER).set({ name: 'Machine User' });
+    await db.collection('consentRecords').doc(USER).set({
+      uid: USER,
+      consents: { privacy_policy: { status: 'granted', version: '1.0.0', at: '2026-10-01T00:00:00.000Z' } },
+    });
+    await db.collection('userSafety').doc(USER).set({ ageBand: '18plus', guardianStatus: 'not_required' });
+    await db.collection('moderationCases').doc('machine-case').set({
+      targetType: 'media', targetId: 'm1', targetOwnerId: USER, reasons: ['spam'], decision: 'remove', decidedAt: '2026-10-02T00:00:00.000Z', open: false,
+    });
+    await db.collection('privacyRequests').doc('machine-request').set({ uid: USER, type: 'access', status: 'completed', createdAt: '2026-10-01T00:00:00.000Z', closedAt: '2026-10-03T00:00:00.000Z' });
+    await db.collection('matchAnalysisJobs').doc('machine-job').set({ playerId: USER, status: 'queued', pipelineState: 'queued' });
+    await bucket.file(`profiles/${USER}/videos/v1/video.mp4`).save(Buffer.from('x'));
+  }
+
+  test('resumes after a failed step, keeps only minimised legal records and removes the progress doc', async () => {
+    const { runAccountDeletion } = require('./lib/dataRights/deletion.js');
+    const { subjectHash } = require('./lib/dataRights/legalRetention.js');
+    await seedMachineUser();
+    const calls = [];
+    let authDeleteFails = true;
+    const deps = {
+      revokeProviderTokens: async (uid) => calls.push(['provider', uid]),
+      revokeSessions: async (uid) => calls.push(['sessions', uid]),
+      deleteAuthUser: async (uid) => {
+        calls.push(['auth', uid]);
+        if (authDeleteFails) throw new Error('auth backend down');
+      },
+    };
+
+    const first = await runAccountDeletion(db, USER, deps);
+    assert.equal(first.status, 'failed');
+    assert.equal(first.step, 'completed');
+    const progress = (await db.collection('deletionRequests').doc(USER).get()).data();
+    assert.equal(progress.step, 'verified');
+    assert.equal(progress.status, 'failed');
+    assert.equal((await db.collection('users').doc(USER).get()).exists, false, 'data already gone before the auth step');
+    assert.equal((await db.collection('discoverablePlayers').doc(USER).get()).exists, false);
+    assert.equal((await bucket.file(`profiles/${USER}/videos/v1/video.mp4`).exists())[0], false);
+
+    authDeleteFails = false;
+    const second = await runAccountDeletion(db, USER, deps);
+    assert.equal(second.status, 'completed');
+    assert.deepEqual(calls.filter(([kind]) => kind === 'sessions').length, 1, 'finished steps are not repeated');
+    assert.equal((await db.collection('deletionRequests').doc(USER).get()).exists, false);
+
+    const hash = subjectHash(USER);
+    const retained = await db.collection('legalRetention').where('subjectHash', '==', hash).get();
+    const kinds = retained.docs.map((doc) => doc.get('kind')).sort();
+    assert.deepEqual(kinds, ['consent_proof', 'deletion_receipt', 'moderation_decision', 'privacy_request']);
+    for (const doc of retained.docs) {
+      const text = JSON.stringify(doc.data());
+      assert.equal(text.includes(USER), false, `${doc.get('kind')} does not contain the uid`);
+      assert.equal(text.includes('machine@example.test'), false, 'no email');
+      assert.ok(doc.get('deleteAfter'), 'has a retention end date');
+    }
+    const consent = retained.docs.find((doc) => doc.get('kind') === 'consent_proof').data();
+    assert.equal(consent.consents.privacy_policy.version, '1.0.0');
+    const moderationCase = (await db.collection('moderationCases').doc('machine-case').get()).data();
+    assert.equal(moderationCase.targetOwnerId, null);
+    assert.equal(moderationCase.targetOwnerHash, hash);
+  });
+
+  test('cancels active analysis work before deleting', async () => {
+    const { runAccountDeletion } = require('./lib/dataRights/deletion.js');
+    const uid = 'machine-user-2';
+    await db.collection('matchAnalysisJobs').doc('machine-job-2').set({ playerId: uid, status: 'processing', pipelineState: 'extracting' });
+    let seenCancelled = false;
+    const deps = {
+      revokeProviderTokens: async () => undefined,
+      revokeSessions: async () => undefined,
+      deleteAuthUser: async () => undefined,
+    };
+    const unsubscribe = db.collection('matchAnalysisJobs').doc('machine-job-2').onSnapshot((snap) => {
+      if (snap.get('cancelRequested') === true) seenCancelled = true;
+    });
+    const outcome = await runAccountDeletion(db, uid, deps);
+    unsubscribe();
+    assert.equal(outcome.status, 'completed');
+    assert.equal(seenCancelled, true);
+    assert.equal((await db.collection('matchAnalysisJobs').doc('machine-job-2').get()).exists, false);
   });
 });

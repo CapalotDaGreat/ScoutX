@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onTrialInvitationCreatedGuardian = exports.revokeGuardianConsent = exports.respondGuardianConsent = exports.getGuardianConsentRequest = exports.requestGuardianConsent = exports.setAgeBand = void 0;
 exports.notifyGuardianOfScoutContact = notifyGuardianOfScoutContact;
-const auth_1 = require("firebase-admin/auth");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const params_1 = require("firebase-functions/params");
 const firestore_2 = require("firebase-functions/v2/firestore");
 const https_1 = require("firebase-functions/v2/https");
-const accountDeletion_1 = require("../accountDeletion");
+const appleAuth_1 = require("../appleAuth");
+const deletion_1 = require("../dataRights/deletion");
 const callableOptions_1 = require("../callableOptions");
 const policy_1 = require("./policy");
 const guardianToken_1 = require("./guardianToken");
@@ -54,10 +54,10 @@ exports.setAgeBand = (0, https_1.onCall)((0, callableOptions_1.createCallableOpt
         throw new https_1.HttpsError('failed-precondition', 'Your age group can only be changed by ScoutX support.');
     }
     if (ageBand === 'under13') {
-        const { failures } = await (0, accountDeletion_1.deleteAllUserData)(uid);
-        if (failures.length > 0)
-            firebase_functions_1.logger.warn('Under-13 account cleanup partial', { uid, failures });
-        await (0, auth_1.getAuth)().deleteUser(uid);
+        const outcome = await (0, deletion_1.runAccountDeletion)(db, uid, appleAuth_1.accountDeletionDeps);
+        if (outcome.status === 'failed') {
+            throw new https_1.HttpsError('aborted', 'Account deletion did not finish. Please try again.', { reason: 'deletion_incomplete' });
+        }
         return { ageBand, deleted: true };
     }
     const now = new Date().toISOString();

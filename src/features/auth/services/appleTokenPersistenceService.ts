@@ -45,7 +45,11 @@ export async function deleteAuthenticatedAccountViaCloud(): Promise<boolean> {
   try {
     await callable({});
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    // Only an unreachable function may fall back to the local path. A started server deletion
+    // must be resumed on the server, otherwise the sign-in would be removed with data left behind.
+    const code = error && typeof error === 'object' && 'code' in error ? String((error as { code: unknown }).code) : '';
+    if (code.endsWith('not-found') || code.endsWith('unavailable')) return false;
+    throw error;
   }
 }

@@ -55,5 +55,66 @@
     "title": "Problem melden",
     "body": "Nutze «Melden» bei Profilen, Videos, Pässen, Anfragen oder Probetrainings. Meldungen zu jungen Spielern werden zuerst geprüft.",
     "policy": "So werden Meldungen bearbeitet"
+  },
+  "dataRights": {
+    "title": "Deine Daten",
+    "export": {
+      "title": "Deine Daten herunterladen",
+      "body": "Erhalte eine Kopie der personenbezogenen Daten, die ScoutX über dich speichert, als JSON-Datei: Profil, Passport, Spiele, Analysen, Coaching, Bewegungseinheiten (nur Spielfeld, kein Standort), Mediendetails mit Download-Links, Scouting-Daten und Einwilligungsnachweise.",
+      "request": "Download vorbereiten",
+      "working": "Dein Download wird vorbereitet. Diese Seite aktualisiert sich, sobald er bereit ist.",
+      "ready": "Dein Download ist bis {{date}} verfügbar.",
+      "download": "Herunterladen",
+      "failed": "Dein Download konnte nicht vorbereitet werden. Bitte versuche es erneut.",
+      "signInAgain": "Melde dich aus Sicherheitsgründen bitte ab und wieder an und fordere deinen Download dann innerhalb von 10 Minuten an.",
+      "signOut": "Abmelden"
+    },
+    "requests": {
+      "title": "Datenschutzanfragen",
+      "body": "Bitte ScoutX, deine Datenschutzrechte umzusetzen. Wir antworten innerhalb von 30 Tagen.",
+      "types": {
+        "access": "Auskunft",
+        "correction": "Berichtigung",
+        "deletion": "Löschung",
+        "portability": "Datenübertragbarkeit",
+        "objection": "Widerspruch",
+        "withdrawal": "Einwilligung widerrufen"
+      },
+      "hints": {
+        "access": "Du kannst deine Daten oben auch sofort herunterladen.",
+        "correction": "Sag uns, was falsch ist. Die meisten Angaben kannst du selbst in deinem Profil ändern.",
+        "deletion": "Du kannst dein Konto jederzeit selbst in den Einstellungen löschen.",
+        "portability": "Der Download oben ist in einem maschinenlesbaren Format, das du mitnehmen kannst.",
+        "objection": "Sag uns, welcher Verarbeitung du widersprichst und warum.",
+        "withdrawal": "Optionale Einwilligungen kannst du oben direkt im Bereich Einwilligungen ausschalten."
+      },
+      "detailsPlaceholder": "Details (bei den meisten Anfragen optional)",
+      "submit": "Anfrage senden",
+      "sentTitle": "Anfrage gesendet",
+      "sentBody": "Wir antworten bis {{date}}.",
+      "failed": "Deine Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.",
+      "dueBy": "Antwort fällig bis {{date}}",
+      "status": {
+        "received": "Eingegangen",
+        "in_progress": "In Bearbeitung",
+        "completed": "Erledigt",
+        "rejected": "Abgelehnt"
+      }
+    },
+    "deletion": {
+      "steps": {
+        "requested": "Löschung angefordert",
+        "access_revoked": "Du wirst überall abgemeldet",
+        "jobs_cancelled": "Uploads und Analysen werden gestoppt",
+        "primary_deleted": "Profil und Einträge werden gelöscht",
+        "media_deleted": "Videos und Dateien werden gelöscht",
+        "derived_deleted": "Du wirst aus Listen anderer entfernt",
+        "verified": "Es wird geprüft, ob alles gelöscht ist",
+        "completed": "Konto gelöscht"
+      },
+      "progressLabel": "Kontolöschung zu {{percent}} % abgeschlossen",
+      "keepOpen": "Lass ScoutX geöffnet, bis der Vorgang abgeschlossen ist.",
+      "retry": "Löschung pausiert. Tippe erneut auf Konto löschen, um dort weiterzumachen, wo sie stehen geblieben ist."
+    }
   }
 }

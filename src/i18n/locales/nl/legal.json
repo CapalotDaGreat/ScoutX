@@ -55,5 +55,66 @@
     "title": "Een probleem melden",
     "body": "Gebruik 'Melden' bij een profiel, video, Paspoort, verzoek of proeftraining. Meldingen over jonge spelers worden eerst behandeld.",
     "policy": "Hoe meldingen worden behandeld"
+  },
+  "dataRights": {
+    "title": "Je gegevens",
+    "export": {
+      "title": "Je gegevens downloaden",
+      "body": "Ontvang een kopie van de persoonsgegevens die ScoutX over je bewaart als JSON-bestand: profiel, Passport, wedstrijden, analyses, coaching, bewegingssessies (alleen het veld, geen locatie), mediagegevens met downloadlinks, scoutinggegevens en toestemmingsregistraties.",
+      "request": "Mijn download voorbereiden",
+      "working": "Je download wordt voorbereid. Deze pagina wordt bijgewerkt zodra hij klaar is.",
+      "ready": "Je download is beschikbaar tot {{date}}.",
+      "download": "Downloaden",
+      "failed": "Je download kon niet worden voorbereid. Probeer het opnieuw.",
+      "signInAgain": "Log voor je veiligheid uit en opnieuw in, en vraag je download daarna binnen 10 minuten aan.",
+      "signOut": "Uitloggen"
+    },
+    "requests": {
+      "title": "Privacyverzoeken",
+      "body": "Vraag ScoutX om je rechten op je gegevens uit te voeren. We reageren binnen 30 dagen.",
+      "types": {
+        "access": "Inzage",
+        "correction": "Correctie",
+        "deletion": "Verwijdering",
+        "portability": "Overdraagbaarheid",
+        "objection": "Bezwaar",
+        "withdrawal": "Toestemming intrekken"
+      },
+      "hints": {
+        "access": "Je kunt je gegevens hierboven ook meteen downloaden.",
+        "correction": "Vertel ons wat er niet klopt. De meeste gegevens kun je zelf in je profiel aanpassen.",
+        "deletion": "Je kunt je account op elk moment zelf verwijderen via Instellingen.",
+        "portability": "De download hierboven is in een machineleesbaar formaat dat je kunt meenemen.",
+        "objection": "Vertel ons tegen welke verwerking je bezwaar maakt en waarom.",
+        "withdrawal": "Optionele toestemmingen kun je hierboven direct uitzetten bij toestemmingen."
+      },
+      "detailsPlaceholder": "Details (bij de meeste verzoeken optioneel)",
+      "submit": "Verzoek versturen",
+      "sentTitle": "Verzoek verstuurd",
+      "sentBody": "We reageren uiterlijk op {{date}}.",
+      "failed": "Je verzoek kon niet worden verstuurd. Probeer het opnieuw.",
+      "dueBy": "Reactie uiterlijk {{date}}",
+      "status": {
+        "received": "Ontvangen",
+        "in_progress": "In behandeling",
+        "completed": "Afgehandeld",
+        "rejected": "Afgewezen"
+      }
+    },
+    "deletion": {
+      "steps": {
+        "requested": "Verwijdering aangevraagd",
+        "access_revoked": "Je wordt overal uitgelogd",
+        "jobs_cancelled": "Uploads en analyses worden gestopt",
+        "primary_deleted": "Je profiel en gegevens worden verwijderd",
+        "media_deleted": "Je video's en bestanden worden verwijderd",
+        "derived_deleted": "Je wordt uit lijsten van anderen verwijderd",
+        "verified": "Er wordt gecontroleerd of alles weg is",
+        "completed": "Account verwijderd"
+      },
+      "progressLabel": "Accountverwijdering {{percent}}% voltooid",
+      "keepOpen": "Houd ScoutX open totdat dit klaar is.",
+      "retry": "Verwijdering gepauzeerd. Tik opnieuw op Account verwijderen om verder te gaan waar het stopte."
+    }
   }
 }

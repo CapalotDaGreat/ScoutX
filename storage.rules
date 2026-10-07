@@ -52,6 +52,12 @@ service firebase.storage {
       allow delete: if isOwner(userId);
     }
 
+    // Personal data export archives, built by Cloud Functions and deleted after 7 days.
+    match /exports/{userId}/{exportId}/{fileName} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
     // Large uploads go to server-authorized GCS resumable sessions; clients never touch quarantine.
     match /quarantine/{allPaths=**} {
       allow read, write: if false;

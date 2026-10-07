@@ -60,3 +60,6 @@ export {
 initializeApp();
 export { getUsageSummary } from './entitlements/quotaService';
 export { revenueCatWebhook } from './entitlements/revenueCat';
+export { requestDataExport, buildDataExport } from './dataRights/dataExport';
+export { submitPrivacyRequest, updatePrivacyRequest } from './dataRights/privacyRequests';
+export { retentionCleanup } from './dataRights/retentionCleanup';

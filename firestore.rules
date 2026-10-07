@@ -698,6 +698,27 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Deletion progress, data exports and privacy requests are written only by Cloud Functions.
+    match /deletionRequests/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    match /dataExports/{exportId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
+    match /privacyRequests/{requestId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Minimised records kept after deletion (hashed subject only); never readable by clients.
+    match /legalRetention/{recordId} {
+      allow read, write: if false;
+    }
+
     match /reels/{reelId} {
       allow read: if isSignedIn() && request.auth.uid == resource.data.ownerId;
       allow create: if isSignedIn()

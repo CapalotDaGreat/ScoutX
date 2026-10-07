@@ -5,6 +5,8 @@ import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { DataExportSection } from '@/features/data-rights/components/DataExportSection';
+import { PrivacyRequestsSection } from '@/features/data-rights/components/PrivacyRequestsSection';
 import { LegalDocumentModal } from '@/features/legal/components/LegalDocumentModal';
 import { LEGAL_DOCUMENTS } from '@/features/legal/content.generated';
 import { isConsentGranted } from '@/features/legal/consentModel';
@@ -147,6 +149,13 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
         </Section>
 
         <SafetySettingsSection />
+
+        {user && !isGuest ? (
+          <Section title={t('legal:dataRights.title')} testID="privacy-center-data">
+            <DataExportSection />
+            <PrivacyRequestsSection />
+          </Section>
+        ) : null}
 
         {dataSection}
 

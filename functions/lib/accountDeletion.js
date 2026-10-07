@@ -1,14 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.STORAGE_PREFIXES = exports.OWNED_QUERIES = exports.UID_KEYED_COLLECTIONS = void 0;
+exports.deletePrimaryData = deletePrimaryData;
+exports.deleteDerivedData = deleteDerivedData;
+exports.deleteMediaData = deleteMediaData;
+exports.verifyUserDataDeleted = verifyUserDataDeleted;
 exports.deleteAllUserData = deleteAllUserData;
 const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const BATCH_SIZE = 400;
 /** Documents whose ID is the user's UID. */
-const UID_KEYED_COLLECTIONS = [
+exports.UID_KEYED_COLLECTIONS = [
     'users',
     'profiles',
+    'players',
     'pushTokens',
     'discoverablePlayers',
     'authProviderTokens',
@@ -26,11 +32,25 @@ const UID_KEYED_COLLECTIONS = [
     'guardianContacts',
     'entitlements',
     'usageLedger',
+    'accountRestrictions',
 ];
 /** Subcollections under UID-keyed documents (a parent delete leaves these behind). */
-const UID_SUBCOLLECTIONS = (uid) => [`usageLedger/${uid}/periods`];
+const UID_SUBCOLLECTIONS = (uid) => [
+    `usageLedger/${uid}/periods`,
+    `players/${uid}/matches`,
+    `players/${uid}/evidenceItems`,
+    `players/${uid}/developmentGoals`,
+    `players/${uid}/trainingSessions`,
+    `players/${uid}/identitySnapshots`,
+    `players/${uid}/media`,
+    `players/${uid}/trialReflections`,
+    `recruitmentWorkspaces/${uid}/entries`,
+    `moderationNotices/${uid}/items`,
+    `consentRecords/${uid}/items`,
+    `playerWatchers/${uid}/scouts`,
+];
 /** Collections queried by an owner/participant field. */
-const OWNED_QUERIES = [
+exports.OWNED_QUERIES = [
     ['gpsSessions', 'playerId'],
     ['matchAnalysisJobs', 'playerId'],
     ['careerReplays', 'playerId'],
@@ -73,8 +93,16 @@ const OWNED_QUERIES = [
     ['mediaUploadSessions', 'ownerId'],
     ['uploadSessionLimits', 'ownerId'],
     ['revenueCatEvents', 'uid'],
+    ['dataExports', 'uid'],
+    ['privacyRequests', 'uid'],
 ];
-const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`, `quarantine/${uid}/`];
+const STORAGE_PREFIXES = (uid) => [
+    `profiles/${uid}/`,
+    `gpsSessions/${uid}/`,
+    `quarantine/${uid}/`,
+    `exports/${uid}/`,
+];
+exports.STORAGE_PREFIXES = STORAGE_PREFIXES;
 async function deleteQueryInBatches(query) {
     const db = (0, firestore_1.getFirestore)();
     let deleted = 0;
@@ -118,148 +146,88 @@ async function scrubCoachRosters(uid) {
         }
     }
 }
+/** Runs one cleanup step; a failure is recorded (by label only, never data) and the rest continue. */
+async function attempt(failures, label, run) {
+    try {
+        await run();
+    }
+    catch (error) {
+        failures.push(label);
+        firebase_functions_1.logger.error('Account deletion step failed', {
+            label,
+            message: error instanceof Error ? error.message : 'unknown',
+        });
+    }
+}
+/** The user's own documents: profile, matches, analyses, uploads, consents, entitlements. */
+async function deletePrimaryData(uid) {
+    const db = (0, firestore_1.getFirestore)();
+    const failures = [];
+    for (const path of UID_SUBCOLLECTIONS(uid)) {
+        await attempt(failures, `${path.split('/')[0]}.${path.split('/')[2]}`, () => deleteQueryInBatches(db.collection(path)));
+    }
+    await Promise.all(exports.UID_KEYED_COLLECTIONS.map((collection) => attempt(failures, collection, () => db.collection(collection).doc(uid).delete())));
+    await attempt(failures, 'consentRecords', () => db.collection('consentRecords').doc(uid).delete());
+    for (const [collection, field] of exports.OWNED_QUERIES) {
+        await attempt(failures, `${collection}.${field}`, () => deleteQueryInBatches(db.collection(collection).where(field, '==', uid)));
+    }
+    return { failures };
+}
+/** References to the user held in other people's documents. */
+async function deleteDerivedData(uid) {
+    const db = (0, firestore_1.getFirestore)();
+    const failures = [];
+    await attempt(failures, 'entries.playerId', () => deleteQueryInBatches(db.collectionGroup('entries').where('playerId', '==', uid)));
+    await attempt(failures, 'playerWatchers.scoutId', () => deleteQueryInBatches(db.collectionGroup('scouts').where('scoutId', '==', uid)));
+    await attempt(failures, 'coachRosters.playerIds', () => scrubCoachRosters(uid));
+    return { failures };
+}
+/** Every Storage object under the user's prefixes (videos, frames, exports, quarantine). */
+async function deleteMediaData(uid) {
+    const failures = [];
+    const bucket = (0, storage_1.getStorage)().bucket();
+    for (const prefix of (0, exports.STORAGE_PREFIXES)(uid)) {
+        await attempt(failures, `storage:${prefix.split('/')[0]}`, () => bucket.deleteFiles({ prefix, force: true }));
+    }
+    return { failures };
+}
+/** Confirms nothing personal is left; returns the labels of anything still present. */
+async function verifyUserDataDeleted(uid) {
+    const db = (0, firestore_1.getFirestore)();
+    const remaining = [];
+    const keyed = await Promise.all(exports.UID_KEYED_COLLECTIONS.map((collection) => db.collection(collection).doc(uid).get()));
+    keyed.forEach((snap, index) => {
+        if (snap.exists)
+            remaining.push(exports.UID_KEYED_COLLECTIONS[index]);
+    });
+    if ((await db.collection('consentRecords').doc(uid).get()).exists)
+        remaining.push('consentRecords');
+    for (const [collection, field] of exports.OWNED_QUERIES) {
+        const snap = await db.collection(collection).where(field, '==', uid).limit(1).get();
+        if (!snap.empty)
+            remaining.push(`${collection}.${field}`);
+    }
+    for (const path of UID_SUBCOLLECTIONS(uid)) {
+        const snap = await db.collection(path).limit(1).get();
+        if (!snap.empty)
+            remaining.push(`${path.split('/')[0]}.${path.split('/')[2]}`);
+    }
+    const bucket = (0, storage_1.getStorage)().bucket();
+    for (const prefix of (0, exports.STORAGE_PREFIXES)(uid)) {
+        const [files] = await bucket.getFiles({ prefix, maxResults: 1 });
+        if (files.length > 0)
+            remaining.push(`storage:${prefix.split('/')[0]}`);
+    }
+    return remaining;
+}
 /**
  * Removes all personal data owned by or addressed to the user. Failures are logged per
  * collection so one missing index or path doesn't leave the rest of the data behind.
  */
 async function deleteAllUserData(uid) {
-    const db = (0, firestore_1.getFirestore)();
-    const failures = [];
-    await Promise.all(UID_KEYED_COLLECTIONS.map(async (collection) => {
-        try {
-            await db.collection(collection).doc(uid).delete();
-        }
-        catch (error) {
-            failures.push(collection);
-            firebase_functions_1.logger.error('Account deletion: doc delete failed', {
-                collection,
-                message: error instanceof Error ? error.message : 'unknown',
-            });
-        }
-    }));
-    for (const [collection, field] of OWNED_QUERIES) {
-        try {
-            await deleteQueryInBatches(db.collection(collection).where(field, '==', uid));
-        }
-        catch (error) {
-            failures.push(`${collection}.${field}`);
-            firebase_functions_1.logger.error('Account deletion: query delete failed', {
-                collection,
-                field,
-                message: error instanceof Error ? error.message : 'unknown',
-            });
-        }
-    }
-    for (const path of UID_SUBCOLLECTIONS(uid)) {
-        try {
-            await deleteQueryInBatches(db.collection(path));
-        }
-        catch (error) {
-            failures.push(path.split('/')[0] + '.sub');
-            firebase_functions_1.logger.error('Account deletion: subcollection failed', {
-                path: path.split('/')[0],
-                message: error instanceof Error ? error.message : 'unknown',
-            });
-        }
-    }
-    const playerSubs = [
-        'matches',
-        'evidenceItems',
-        'developmentGoals',
-        'trainingSessions',
-        'identitySnapshots',
-        'media',
-        'trialReflections',
-    ];
-    for (const sub of playerSubs) {
-        try {
-            await deleteQueryInBatches(db.collection('players').doc(uid).collection(sub));
-        }
-        catch (error) {
-            failures.push(`players.${sub}`);
-            firebase_functions_1.logger.error('Account deletion: player subcollection failed', {
-                sub,
-                message: error instanceof Error ? error.message : 'unknown',
-            });
-        }
-    }
-    try {
-        await deleteQueryInBatches(db.collection('recruitmentWorkspaces').doc(uid).collection('entries'));
-    }
-    catch (error) {
-        failures.push('recruitmentWorkspaces.entries');
-        firebase_functions_1.logger.error('Account deletion: recruitment entries failed', {
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-    }
-    try {
-        await deleteQueryInBatches(db.collectionGroup('entries').where('playerId', '==', uid));
-    }
-    catch (error) {
-        failures.push('entries.playerId');
-        firebase_functions_1.logger.error('Account deletion: watched recruitment entries failed', {
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-    }
-    try {
-        await deleteQueryInBatches(db.collection('moderationNotices').doc(uid).collection('items'));
-    }
-    catch (error) {
-        failures.push('moderationNotices');
-        firebase_functions_1.logger.error('Account deletion: moderation notices failed', {
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-    }
-    try {
-        await deleteQueryInBatches(db.collection('consentRecords').doc(uid).collection('items'));
-        await db.collection('consentRecords').doc(uid).delete();
-    }
-    catch (error) {
-        failures.push('consentRecords');
-        firebase_functions_1.logger.error('Account deletion: consent records failed', {
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-    }
-    try {
-        await deleteQueryInBatches(db.collection('playerWatchers').doc(uid).collection('scouts'));
-    }
-    catch (error) {
-        failures.push('playerWatchers.scouts');
-        firebase_functions_1.logger.error('Account deletion: player watchers failed', {
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-    }
-    try {
-        await deleteQueryInBatches(db.collectionGroup('scouts').where('scoutId', '==', uid));
-    }
-    catch (error) {
-        failures.push('playerWatchers.scoutId');
-        firebase_functions_1.logger.error('Account deletion: scout watcher docs failed', {
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-    }
-    try {
-        await scrubCoachRosters(uid);
-    }
-    catch (error) {
-        failures.push('coachRosters.playerIds');
-        firebase_functions_1.logger.error('Account deletion: coach roster scrub failed', {
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-    }
-    const bucket = (0, storage_1.getStorage)().bucket();
-    for (const prefix of STORAGE_PREFIXES(uid)) {
-        try {
-            await bucket.deleteFiles({ prefix, force: true });
-        }
-        catch (error) {
-            failures.push(`storage:${prefix.split('/')[0]}`);
-            firebase_functions_1.logger.error('Account deletion: storage delete failed', {
-                prefix: prefix.split('/')[0],
-                message: error instanceof Error ? error.message : 'unknown',
-            });
-        }
-    }
-    return { failures };
+    const primary = await deletePrimaryData(uid);
+    const derived = await deleteDerivedData(uid);
+    const media = await deleteMediaData(uid);
+    return { failures: [...primary.failures, ...derived.failures, ...media.failures] };
 }
 //# sourceMappingURL=accountDeletion.js.map

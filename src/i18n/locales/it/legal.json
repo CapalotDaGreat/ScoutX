@@ -55,5 +55,66 @@
     "title": "Segnala un problema",
     "body": "Usa «Segnala» su profili, video, Passaporti, richieste o provini. Le segnalazioni sui giovani giocatori vengono esaminate per prime.",
     "policy": "Come vengono gestite le segnalazioni"
+  },
+  "dataRights": {
+    "title": "I tuoi dati",
+    "export": {
+      "title": "Scarica i tuoi dati",
+      "body": "Ottieni una copia dei dati personali che ScoutX conserva su di te in un file JSON: profilo, Passport, partite, analisi, coaching, sessioni di movimento (solo campo, nessuna posizione), dettagli dei media con link di download, dati di scouting e registri dei consensi.",
+      "request": "Prepara il mio download",
+      "working": "Il tuo download è in preparazione. Questa pagina si aggiorna quando è pronto.",
+      "ready": "Il tuo download è disponibile fino al {{date}}.",
+      "download": "Scarica",
+      "failed": "Non è stato possibile preparare il download. Riprova.",
+      "signInAgain": "Per sicurezza, esci e accedi di nuovo, poi richiedi il download entro 10 minuti.",
+      "signOut": "Esci"
+    },
+    "requests": {
+      "title": "Richieste sulla privacy",
+      "body": "Chiedi a ScoutX di applicare i tuoi diritti sui dati. Rispondiamo entro 30 giorni.",
+      "types": {
+        "access": "Accesso",
+        "correction": "Rettifica",
+        "deletion": "Cancellazione",
+        "portability": "Portabilità",
+        "objection": "Opposizione",
+        "withdrawal": "Revoca del consenso"
+      },
+      "hints": {
+        "access": "Puoi anche scaricare subito i tuoi dati qui sopra.",
+        "correction": "Dicci cosa non è corretto. Puoi modificare la maggior parte dei dati da solo nel tuo profilo.",
+        "deletion": "Puoi eliminare il tuo account in qualsiasi momento dalle Impostazioni.",
+        "portability": "Il download qui sopra è in un formato leggibile da macchina che puoi portare altrove.",
+        "objection": "Dicci a quale trattamento ti opponi e perché.",
+        "withdrawal": "I consensi facoltativi si disattivano direttamente nella sezione consensi qui sopra."
+      },
+      "detailsPlaceholder": "Dettagli (facoltativi per la maggior parte delle richieste)",
+      "submit": "Invia richiesta",
+      "sentTitle": "Richiesta inviata",
+      "sentBody": "Risponderemo entro il {{date}}.",
+      "failed": "Non è stato possibile inviare la richiesta. Riprova.",
+      "dueBy": "Risposta prevista entro il {{date}}",
+      "status": {
+        "received": "Ricevuta",
+        "in_progress": "In lavorazione",
+        "completed": "Completata",
+        "rejected": "Respinta"
+      }
+    },
+    "deletion": {
+      "steps": {
+        "requested": "Eliminazione richiesta",
+        "access_revoked": "Disconnessione da tutti i dispositivi",
+        "jobs_cancelled": "Interruzione di caricamenti e analisi",
+        "primary_deleted": "Eliminazione del profilo e dei dati",
+        "media_deleted": "Eliminazione di video e file",
+        "derived_deleted": "Rimozione dagli elenchi di altre persone",
+        "verified": "Verifica che tutto sia stato eliminato",
+        "completed": "Account eliminato"
+      },
+      "progressLabel": "Eliminazione dell'account al {{percent}}%",
+      "keepOpen": "Tieni ScoutX aperta finché non termina.",
+      "retry": "Eliminazione in pausa. Tocca di nuovo Elimina account per riprendere da dove si è fermata."
+    }
   }
 }

@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAuthenticatedAccount = exports.persistAppleAuthorizationCode = void 0;
+exports.deleteAuthenticatedAccount = exports.accountDeletionDeps = exports.persistAppleAuthorizationCode = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const params_1 = require("firebase-functions/params");
 const auth_1 = require("firebase-admin/auth");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
-const accountDeletion_1 = require("./accountDeletion");
+const deletion_1 = require("./dataRights/deletion");
 const appleTokenService_1 = require("./appleTokenService");
 const appleTeamIdSecret = (0, params_1.defineSecret)('APPLE_TEAM_ID');
 const appleKeyIdSecret = (0, params_1.defineSecret)('APPLE_KEY_ID');
@@ -105,30 +105,37 @@ exports.persistAppleAuthorizationCode = (0, https_1.onCall)((0, callableOptions_
     }, { merge: true });
     return { stored: true };
 });
+/** Account deletion with every step the app shows: revoke, cancel, delete, verify, complete. */
+exports.accountDeletionDeps = {
+    revokeProviderTokens: revokeStoredAppleTokens,
+    revokeSessions: async (uid) => {
+        await (0, auth_1.getAuth)().revokeRefreshTokens(uid).catch((error) => {
+            if (error.code !== 'auth/user-not-found')
+                throw error;
+        });
+    },
+    deleteAuthUser: async (uid) => {
+        await (0, auth_1.getAuth)().deleteUser(uid).catch((error) => {
+            if (error.code !== 'auth/user-not-found')
+                throw error;
+        });
+    },
+};
 /**
  * Deletes the authenticated user's account after revoking Apple tokens when applicable.
+ * Resumable: calling again continues an interrupted deletion.
  */
 exports.deleteAuthenticatedAccount = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)({
     secrets: [appleTeamIdSecret, appleKeyIdSecret, applePrivateKeySecret],
+    timeoutSeconds: 540,
 }), async (request) => {
     const uid = requireAuthUid(request.auth?.uid);
-    await revokeStoredAppleTokens(uid);
-    const { failures } = await (0, accountDeletion_1.deleteAllUserData)(uid);
-    if (failures.length > 0) {
-        firebase_functions_1.logger.warn('Account deletion completed with partial data cleanup failures', {
-            uid,
-            failures,
+    const outcome = await (0, deletion_1.runAccountDeletion)((0, firestore_1.getFirestore)(), uid, exports.accountDeletionDeps);
+    if (outcome.status === 'failed') {
+        throw new https_1.HttpsError('aborted', 'Account deletion did not finish. Please try again.', {
+            reason: 'deletion_incomplete',
+            step: outcome.step,
         });
-    }
-    try {
-        await (0, auth_1.getAuth)().deleteUser(uid);
-    }
-    catch (error) {
-        firebase_functions_1.logger.error('Failed to delete Firebase Auth user', {
-            uid,
-            message: error instanceof Error ? error.message : 'unknown',
-        });
-        throw new https_1.HttpsError('internal', 'Unable to delete authentication account.');
     }
     return { deleted: true };
 });

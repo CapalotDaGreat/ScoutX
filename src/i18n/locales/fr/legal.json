@@ -55,5 +55,66 @@
     "title": "Signaler un problème",
     "body": "Utilise « Signaler » sur un profil, une vidéo, un Passeport, une demande ou un essai. Les signalements concernant de jeunes joueurs sont traités en priorité.",
     "policy": "Comment les signalements sont traités"
+  },
+  "dataRights": {
+    "title": "Tes données",
+    "export": {
+      "title": "Télécharger tes données",
+      "body": "Obtiens une copie des données personnelles que ScoutX conserve sur toi, au format JSON : profil, Passport, matchs, analyses, coaching, séances de mouvement (terrain uniquement, sans localisation), détails des médias avec liens de téléchargement, données de scouting et preuves de consentement.",
+      "request": "Préparer mon téléchargement",
+      "working": "Ton téléchargement est en préparation. Cette page se met à jour dès qu'il est prêt.",
+      "ready": "Ton téléchargement est disponible jusqu'au {{date}}.",
+      "download": "Télécharger",
+      "failed": "Ton téléchargement n'a pas pu être préparé. Réessaie.",
+      "signInAgain": "Pour ta sécurité, déconnecte-toi puis reconnecte-toi, et demande ton téléchargement dans les 10 minutes.",
+      "signOut": "Se déconnecter"
+    },
+    "requests": {
+      "title": "Demandes relatives à la vie privée",
+      "body": "Demande à ScoutX d'appliquer tes droits sur tes données. Nous répondons sous 30 jours.",
+      "types": {
+        "access": "Accès",
+        "correction": "Rectification",
+        "deletion": "Effacement",
+        "portability": "Portabilité",
+        "objection": "Opposition",
+        "withdrawal": "Retirer un consentement"
+      },
+      "hints": {
+        "access": "Tu peux aussi télécharger tes données tout de suite ci-dessus.",
+        "correction": "Dis-nous ce qui est incorrect. Tu peux modifier la plupart des informations toi-même dans ton profil.",
+        "deletion": "Tu peux supprimer ton compte toi-même à tout moment dans les réglages.",
+        "portability": "Le téléchargement ci-dessus est dans un format lisible par machine que tu peux emporter ailleurs.",
+        "objection": "Dis-nous à quel traitement tu t'opposes et pourquoi.",
+        "withdrawal": "Les consentements facultatifs se désactivent directement dans la section consentements ci-dessus."
+      },
+      "detailsPlaceholder": "Détails (facultatifs pour la plupart des demandes)",
+      "submit": "Envoyer la demande",
+      "sentTitle": "Demande envoyée",
+      "sentBody": "Nous répondrons d'ici le {{date}}.",
+      "failed": "Ta demande n'a pas pu être envoyée. Réessaie.",
+      "dueBy": "Réponse attendue d'ici le {{date}}",
+      "status": {
+        "received": "Reçue",
+        "in_progress": "En cours",
+        "completed": "Traitée",
+        "rejected": "Refusée"
+      }
+    },
+    "deletion": {
+      "steps": {
+        "requested": "Suppression demandée",
+        "access_revoked": "Déconnexion de tous tes appareils",
+        "jobs_cancelled": "Arrêt des envois et des analyses",
+        "primary_deleted": "Suppression de ton profil et de tes données",
+        "media_deleted": "Suppression de tes vidéos et fichiers",
+        "derived_deleted": "Retrait des listes d'autres personnes",
+        "verified": "Vérification que tout a disparu",
+        "completed": "Compte supprimé"
+      },
+      "progressLabel": "Suppression du compte : {{percent}} %",
+      "keepOpen": "Garde ScoutX ouvert jusqu'à la fin.",
+      "retry": "Suppression en pause. Appuie à nouveau sur Supprimer le compte pour reprendre là où elle s'est arrêtée."
+    }
   }
 }

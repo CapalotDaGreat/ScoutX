@@ -55,5 +55,66 @@
     "title": "Comunicar um problema",
     "body": "Usa «Denunciar» em qualquer perfil, vídeo, Passaporte, pedido ou treino de captação. As denúncias sobre jogadores jovens são analisadas primeiro.",
     "policy": "Como as denúncias são tratadas"
+  },
+  "dataRights": {
+    "title": "Os teus dados",
+    "export": {
+      "title": "Transferir os teus dados",
+      "body": "Obtém uma cópia dos dados pessoais que a ScoutX guarda sobre ti num ficheiro JSON: perfil, Passport, jogos, análises, coaching, sessões de movimento (só o campo, sem localização), detalhes de multimédia com links de transferência, dados de scouting e registos de consentimento.",
+      "request": "Preparar a minha transferência",
+      "working": "A tua transferência está a ser preparada. Esta página atualiza quando estiver pronta.",
+      "ready": "A tua transferência está disponível até {{date}}.",
+      "download": "Transferir",
+      "failed": "Não foi possível preparar a transferência. Tenta novamente.",
+      "signInAgain": "Por segurança, termina a sessão e volta a iniciá-la, e pede a transferência nos 10 minutos seguintes.",
+      "signOut": "Terminar sessão"
+    },
+    "requests": {
+      "title": "Pedidos de privacidade",
+      "body": "Pede à ScoutX para aplicar os teus direitos sobre os teus dados. Respondemos no prazo de 30 dias.",
+      "types": {
+        "access": "Acesso",
+        "correction": "Retificação",
+        "deletion": "Apagamento",
+        "portability": "Portabilidade",
+        "objection": "Oposição",
+        "withdrawal": "Retirar consentimento"
+      },
+      "hints": {
+        "access": "Também podes transferir os teus dados já acima.",
+        "correction": "Diz-nos o que está errado. Podes editar a maioria dos dados tu mesmo no teu perfil.",
+        "deletion": "Podes eliminar a tua conta a qualquer momento nas Definições.",
+        "portability": "A transferência acima está num formato legível por máquina que podes levar para outro serviço.",
+        "objection": "Diz-nos a que tratamento te opões e porquê.",
+        "withdrawal": "Os consentimentos opcionais podem ser desligados diretamente na secção de consentimentos acima."
+      },
+      "detailsPlaceholder": "Detalhes (opcionais na maioria dos pedidos)",
+      "submit": "Enviar pedido",
+      "sentTitle": "Pedido enviado",
+      "sentBody": "Responderemos até {{date}}.",
+      "failed": "Não foi possível enviar o pedido. Tenta novamente.",
+      "dueBy": "Resposta prevista até {{date}}",
+      "status": {
+        "received": "Recebido",
+        "in_progress": "Em curso",
+        "completed": "Concluído",
+        "rejected": "Recusado"
+      }
+    },
+    "deletion": {
+      "steps": {
+        "requested": "Eliminação pedida",
+        "access_revoked": "A terminar a tua sessão em todo o lado",
+        "jobs_cancelled": "A parar carregamentos e análises",
+        "primary_deleted": "A eliminar o teu perfil e registos",
+        "media_deleted": "A eliminar os teus vídeos e ficheiros",
+        "derived_deleted": "A remover-te das listas de outras pessoas",
+        "verified": "A verificar que tudo foi eliminado",
+        "completed": "Conta eliminada"
+      },
+      "progressLabel": "Eliminação da conta: {{percent}}%",
+      "keepOpen": "Mantém a ScoutX aberta até terminar.",
+      "retry": "Eliminação em pausa. Toca novamente em Eliminar conta para continuar onde parou."
+    }
   }
 }

@@ -1,10 +1,10 @@
-import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { defineSecret } from 'firebase-functions/params';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
-import { deleteAllUserData } from '../accountDeletion';
+import { accountDeletionDeps } from '../appleAuth';
+import { runAccountDeletion } from '../dataRights/deletion';
 import { createCallableOptions } from '../callableOptions';
 import {
   canChangeAgeBand,
@@ -72,9 +72,10 @@ export const setAgeBand = onCall(createCallableOptions(), async (request) => {
   }
 
   if (ageBand === 'under13') {
-    const { failures } = await deleteAllUserData(uid);
-    if (failures.length > 0) logger.warn('Under-13 account cleanup partial', { uid, failures });
-    await getAuth().deleteUser(uid);
+    const outcome = await runAccountDeletion(db, uid, accountDeletionDeps);
+    if (outcome.status === 'failed') {
+      throw new HttpsError('aborted', 'Account deletion did not finish. Please try again.', { reason: 'deletion_incomplete' });
+    }
     return { ageBand, deleted: true };
   }
 

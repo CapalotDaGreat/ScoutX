@@ -55,5 +55,66 @@
     "title": "Report a problem",
     "body": "Use Report on any profile, video, Passport, request or trial. Reports about young players are reviewed first.",
     "policy": "How reports are handled"
+  },
+  "dataRights": {
+    "title": "Your data",
+    "export": {
+      "title": "Download your data",
+      "body": "Get a copy of the personal data ScoutX holds about you as a JSON file: profile, Passport, matches, analyses, coaching, movement sessions (pitch only, no location), media details with download links, scouting data and consent records.",
+      "request": "Prepare my download",
+      "working": "Your download is being prepared. This page updates when it is ready.",
+      "ready": "Your download is ready until {{date}}.",
+      "download": "Download",
+      "failed": "Your download could not be prepared. Please try again.",
+      "signInAgain": "For your security, please sign out and sign in again, then request your download within 10 minutes.",
+      "signOut": "Sign out"
+    },
+    "requests": {
+      "title": "Privacy requests",
+      "body": "Ask ScoutX to act on your data rights. We reply within 30 days.",
+      "types": {
+        "access": "Access",
+        "correction": "Correction",
+        "deletion": "Deletion",
+        "portability": "Portability",
+        "objection": "Objection",
+        "withdrawal": "Withdraw consent"
+      },
+      "hints": {
+        "access": "You can also download your data right away above.",
+        "correction": "Tell us what is wrong. You can edit most details yourself in your profile.",
+        "deletion": "You can delete your account yourself at any time in Settings.",
+        "portability": "The download above is in a machine-readable format you can take elsewhere.",
+        "objection": "Tell us which processing you object to and why.",
+        "withdrawal": "Optional consents can be switched off directly in the consents section above."
+      },
+      "detailsPlaceholder": "Details (optional for most requests)",
+      "submit": "Send request",
+      "sentTitle": "Request sent",
+      "sentBody": "We will reply by {{date}}.",
+      "failed": "Your request could not be sent. Please try again.",
+      "dueBy": "Reply due by {{date}}",
+      "status": {
+        "received": "Received",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "rejected": "Declined"
+      }
+    },
+    "deletion": {
+      "steps": {
+        "requested": "Deletion requested",
+        "access_revoked": "Signing you out everywhere",
+        "jobs_cancelled": "Stopping uploads and analyses",
+        "primary_deleted": "Deleting your profile and records",
+        "media_deleted": "Deleting your videos and files",
+        "derived_deleted": "Removing you from other people's lists",
+        "verified": "Checking that everything is gone",
+        "completed": "Account deleted"
+      },
+      "progressLabel": "Account deletion {{percent}}% done",
+      "keepOpen": "Keep ScoutX open until this finishes.",
+      "retry": "Deletion paused. Tap Delete account again to continue where it stopped."
+    }
   }
 }
