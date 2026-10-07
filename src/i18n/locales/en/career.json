@@ -59,5 +59,58 @@
     "addImage": "Add Image",
     "addVideo": "Add Video",
     "removeEntry": "Remove Entry"
+  },
+  "review": {
+    "title": "Year in review · {{season}}",
+    "matches": "Matches",
+    "minutes": "Minutes",
+    "goals": "Goals",
+    "assists": "Assists",
+    "positions": "Positions: {{list}}",
+    "clubs": "Clubs: {{list}}",
+    "activity": "{{trials}} trials · {{reels}} reels · {{clips}} clips",
+    "goalsAchieved_one": "{{count}} development goal achieved",
+    "goalsAchieved_other": "{{count}} development goals achieved",
+    "positionChange": "Position change: {{from}} → {{to}}",
+    "clubChange": "Club: {{to}}",
+    "strongest": "Strongest recorded match: {{goals}} G + {{assists}} A vs {{opponent}} ({{date}})",
+    "noStrongest": "No goal contributions recorded this season.",
+    "improvement": "Biggest improvement vs {{season}}: {{metric}} +{{delta}}",
+    "noImprovement_one": "Improvement is shown once both seasons have at least {{count}} recorded match.",
+    "noImprovement_other": "Improvement is shown once both seasons have at least {{count}} recorded matches.",
+    "next": {
+      "goal": "Next challenge: {{title}}",
+      "log_matches_one": "Next challenge: log at least {{count}} match this season.",
+      "log_matches_other": "Next challenge: log at least {{count}} matches this season.",
+      "upload_clip": "Next challenge: add a clip from this season.",
+      "set_goal": "Next challenge: set a development goal."
+    },
+    "metric": {
+      "goalsPerMatch": "Goals per match",
+      "assistsPerMatch": "Assists per match",
+      "minutesPerMatch": "Minutes per match"
+    },
+    "compareTitle": "{{current}} vs {{previous}}",
+    "compareInsufficient_one": "Needs at least {{count}} recorded match in both seasons to compare.",
+    "compareInsufficient_other": "Needs at least {{count}} recorded matches in both seasons to compare.",
+    "deltaLabel": "Change: {{delta}}",
+    "noSeasons": "Log a match to start your season replay.",
+    "matchesTitle": "Matches",
+    "matchesCount_one": "{{count}} recorded match",
+    "matchesCount_other": "{{count}} recorded matches",
+    "matchLine": "{{goals}} G · {{assists}} A · {{minutes}}′"
+  },
+  "firsts": {
+    "title": "Career moments",
+    "empty": "Your moments appear here as you log matches, trials and goals.",
+    "first_match": "First recorded match vs {{subject}}",
+    "first_goal": "First goal vs {{subject}}",
+    "first_assist": "First assist vs {{subject}}",
+    "first_trial": "First trial at {{subject}}",
+    "verified_achievement": "Verified: {{subject}}",
+    "goal_achieved": "Goal achieved: {{subject}}",
+    "first_reel": "First reel: {{subject}}",
+    "club_change": "Joined {{subject}}",
+    "position_change": "Played {{subject}} (previously {{previous}})"
   }
 }

@@ -59,5 +59,58 @@
     "addImage": "Adicionar imagem",
     "addVideo": "Adicionar vídeo",
     "removeEntry": "Remover entrada"
+  },
+  "review": {
+    "title": "Resumo do ano · {{season}}",
+    "matches": "Jogos",
+    "minutes": "Minutos",
+    "goals": "Golos",
+    "assists": "Assistências",
+    "positions": "Posições: {{list}}",
+    "clubs": "Clubes: {{list}}",
+    "activity": "{{trials}} testes · {{reels}} reels · {{clips}} clips",
+    "goalsAchieved_one": "{{count}} objetivo de desenvolvimento alcançado",
+    "goalsAchieved_other": "{{count}} objetivos de desenvolvimento alcançados",
+    "positionChange": "Mudança de posição: {{from}} → {{to}}",
+    "clubChange": "Clube: {{to}}",
+    "strongest": "Melhor jogo registado: {{goals}} G + {{assists}} A contra {{opponent}} ({{date}})",
+    "noStrongest": "Nenhuma participação em golo registada nesta época.",
+    "improvement": "Maior melhoria face a {{season}}: {{metric}} +{{delta}}",
+    "noImprovement_one": "A melhoria aparece quando ambas as épocas têm pelo menos {{count}} jogo registado.",
+    "noImprovement_other": "A melhoria aparece quando ambas as épocas têm pelo menos {{count}} jogos registados.",
+    "next": {
+      "goal": "Próximo desafio: {{title}}",
+      "log_matches_one": "Próximo desafio: regista pelo menos {{count}} jogo nesta época.",
+      "log_matches_other": "Próximo desafio: regista pelo menos {{count}} jogos nesta época.",
+      "upload_clip": "Próximo desafio: adiciona um clip desta época.",
+      "set_goal": "Próximo desafio: define um objetivo de desenvolvimento."
+    },
+    "metric": {
+      "goalsPerMatch": "Golos por jogo",
+      "assistsPerMatch": "Assistências por jogo",
+      "minutesPerMatch": "Minutos por jogo"
+    },
+    "compareTitle": "{{current}} vs {{previous}}",
+    "compareInsufficient_one": "É preciso pelo menos {{count}} jogo registado em ambas as épocas para comparar.",
+    "compareInsufficient_other": "São precisos pelo menos {{count}} jogos registados em ambas as épocas para comparar.",
+    "deltaLabel": "Variação: {{delta}}",
+    "noSeasons": "Regista um jogo para começar o resumo da época.",
+    "matchesTitle": "Jogos",
+    "matchesCount_one": "{{count}} jogo registado",
+    "matchesCount_other": "{{count}} jogos registados",
+    "matchLine": "{{goals}} G · {{assists}} A · {{minutes}}′"
+  },
+  "firsts": {
+    "title": "Momentos de carreira",
+    "empty": "Os teus momentos aparecem aqui à medida que registas jogos, testes e objetivos.",
+    "first_match": "Primeiro jogo registado contra {{subject}}",
+    "first_goal": "Primeiro golo contra {{subject}}",
+    "first_assist": "Primeira assistência contra {{subject}}",
+    "first_trial": "Primeiro teste no {{subject}}",
+    "verified_achievement": "Verificado: {{subject}}",
+    "goal_achieved": "Objetivo alcançado: {{subject}}",
+    "first_reel": "Primeiro reel: {{subject}}",
+    "club_change": "Mudança para {{subject}}",
+    "position_change": "Jogou como {{subject}} (antes {{previous}})"
   }
 }

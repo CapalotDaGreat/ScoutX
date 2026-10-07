@@ -59,5 +59,58 @@
     "addImage": "Aggiungi immagine",
     "addVideo": "Aggiungi video",
     "removeEntry": "Rimuovi voce"
+  },
+  "review": {
+    "title": "Anno in sintesi · {{season}}",
+    "matches": "Partite",
+    "minutes": "Minuti",
+    "goals": "Gol",
+    "assists": "Assist",
+    "positions": "Ruoli: {{list}}",
+    "clubs": "Club: {{list}}",
+    "activity": "{{trials}} provini · {{reels}} reel · {{clips}} clip",
+    "goalsAchieved_one": "{{count}} obiettivo di sviluppo raggiunto",
+    "goalsAchieved_other": "{{count}} obiettivi di sviluppo raggiunti",
+    "positionChange": "Cambio di ruolo: {{from}} → {{to}}",
+    "clubChange": "Club: {{to}}",
+    "strongest": "Miglior partita registrata: {{goals}} G + {{assists}} A contro {{opponent}} ({{date}})",
+    "noStrongest": "Nessun contributo a gol registrato in questa stagione.",
+    "improvement": "Miglioramento maggiore rispetto a {{season}}: {{metric}} +{{delta}}",
+    "noImprovement_one": "Il miglioramento appare quando entrambe le stagioni hanno almeno {{count}} partita registrata.",
+    "noImprovement_other": "Il miglioramento appare quando entrambe le stagioni hanno almeno {{count}} partite registrate.",
+    "next": {
+      "goal": "Prossima sfida: {{title}}",
+      "log_matches_one": "Prossima sfida: registra almeno {{count}} partita in questa stagione.",
+      "log_matches_other": "Prossima sfida: registra almeno {{count}} partite in questa stagione.",
+      "upload_clip": "Prossima sfida: aggiungi una clip di questa stagione.",
+      "set_goal": "Prossima sfida: imposta un obiettivo di sviluppo."
+    },
+    "metric": {
+      "goalsPerMatch": "Gol per partita",
+      "assistsPerMatch": "Assist per partita",
+      "minutesPerMatch": "Minuti per partita"
+    },
+    "compareTitle": "{{current}} vs {{previous}}",
+    "compareInsufficient_one": "Serve almeno {{count}} partita registrata in entrambe le stagioni per confrontare.",
+    "compareInsufficient_other": "Servono almeno {{count}} partite registrate in entrambe le stagioni per confrontare.",
+    "deltaLabel": "Variazione: {{delta}}",
+    "noSeasons": "Registra una partita per iniziare il riepilogo della stagione.",
+    "matchesTitle": "Partite",
+    "matchesCount_one": "{{count}} partita registrata",
+    "matchesCount_other": "{{count}} partite registrate",
+    "matchLine": "{{goals}} G · {{assists}} A · {{minutes}}′"
+  },
+  "firsts": {
+    "title": "Momenti di carriera",
+    "empty": "I tuoi momenti appariranno qui man mano che registri partite, provini e obiettivi.",
+    "first_match": "Prima partita registrata contro {{subject}}",
+    "first_goal": "Primo gol contro {{subject}}",
+    "first_assist": "Primo assist contro {{subject}}",
+    "first_trial": "Primo provino con {{subject}}",
+    "verified_achievement": "Verificato: {{subject}}",
+    "goal_achieved": "Obiettivo raggiunto: {{subject}}",
+    "first_reel": "Primo reel: {{subject}}",
+    "club_change": "Passaggio a {{subject}}",
+    "position_change": "Giocato da {{subject}} (prima {{previous}})"
   }
 }

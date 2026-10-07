@@ -59,5 +59,58 @@
     "addImage": "Bild hinzufügen",
     "addVideo": "Video hinzufügen",
     "removeEntry": "Eintrag entfernen"
+  },
+  "review": {
+    "title": "Jahresrückblick · {{season}}",
+    "matches": "Spiele",
+    "minutes": "Minuten",
+    "goals": "Tore",
+    "assists": "Vorlagen",
+    "positions": "Positionen: {{list}}",
+    "clubs": "Vereine: {{list}}",
+    "activity": "{{trials}} Probetrainings · {{reels}} Reels · {{clips}} Clips",
+    "goalsAchieved_one": "{{count}} Entwicklungsziel erreicht",
+    "goalsAchieved_other": "{{count}} Entwicklungsziele erreicht",
+    "positionChange": "Positionswechsel: {{from}} → {{to}}",
+    "clubChange": "Verein: {{to}}",
+    "strongest": "Stärkstes erfasstes Spiel: {{goals}} T + {{assists}} V gegen {{opponent}} ({{date}})",
+    "noStrongest": "In dieser Saison wurden keine Torbeteiligungen erfasst.",
+    "improvement": "Grösste Verbesserung gegenüber {{season}}: {{metric}} +{{delta}}",
+    "noImprovement_one": "Verbesserungen werden angezeigt, sobald beide Saisons mindestens {{count}} erfasstes Spiel haben.",
+    "noImprovement_other": "Verbesserungen werden angezeigt, sobald beide Saisons mindestens {{count}} erfasste Spiele haben.",
+    "next": {
+      "goal": "Nächste Herausforderung: {{title}}",
+      "log_matches_one": "Nächste Herausforderung: Erfasse diese Saison mindestens {{count}} Spiel.",
+      "log_matches_other": "Nächste Herausforderung: Erfasse diese Saison mindestens {{count}} Spiele.",
+      "upload_clip": "Nächste Herausforderung: Füge einen Clip aus dieser Saison hinzu.",
+      "set_goal": "Nächste Herausforderung: Setze dir ein Entwicklungsziel."
+    },
+    "metric": {
+      "goalsPerMatch": "Tore pro Spiel",
+      "assistsPerMatch": "Vorlagen pro Spiel",
+      "minutesPerMatch": "Minuten pro Spiel"
+    },
+    "compareTitle": "{{current}} vs. {{previous}}",
+    "compareInsufficient_one": "Für einen Vergleich braucht es in beiden Saisons mindestens {{count}} erfasstes Spiel.",
+    "compareInsufficient_other": "Für einen Vergleich braucht es in beiden Saisons mindestens {{count}} erfasste Spiele.",
+    "deltaLabel": "Veränderung: {{delta}}",
+    "noSeasons": "Erfasse ein Spiel, um deinen Saisonrückblick zu starten.",
+    "matchesTitle": "Spiele",
+    "matchesCount_one": "{{count}} erfasstes Spiel",
+    "matchesCount_other": "{{count}} erfasste Spiele",
+    "matchLine": "{{goals}} T · {{assists}} V · {{minutes}}′"
+  },
+  "firsts": {
+    "title": "Karrieremomente",
+    "empty": "Deine Momente erscheinen hier, sobald du Spiele, Probetrainings und Ziele erfasst.",
+    "first_match": "Erstes erfasstes Spiel gegen {{subject}}",
+    "first_goal": "Erstes Tor gegen {{subject}}",
+    "first_assist": "Erste Vorlage gegen {{subject}}",
+    "first_trial": "Erstes Probetraining bei {{subject}}",
+    "verified_achievement": "Verifiziert: {{subject}}",
+    "goal_achieved": "Ziel erreicht: {{subject}}",
+    "first_reel": "Erstes Reel: {{subject}}",
+    "club_change": "Wechsel zu {{subject}}",
+    "position_change": "Als {{subject}} gespielt (vorher {{previous}})"
   }
 }

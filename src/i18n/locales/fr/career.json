@@ -59,5 +59,58 @@
     "addImage": "Ajouter une image",
     "addVideo": "Ajouter une vidéo",
     "removeEntry": "Retirer l’entrée"
+  },
+  "review": {
+    "title": "Bilan de l'année · {{season}}",
+    "matches": "Matchs",
+    "minutes": "Minutes",
+    "goals": "Buts",
+    "assists": "Passes D.",
+    "positions": "Postes : {{list}}",
+    "clubs": "Clubs : {{list}}",
+    "activity": "{{trials}} essais · {{reels}} reels · {{clips}} clips",
+    "goalsAchieved_one": "{{count}} objectif de progression atteint",
+    "goalsAchieved_other": "{{count}} objectifs de progression atteints",
+    "positionChange": "Changement de poste : {{from}} → {{to}}",
+    "clubChange": "Club : {{to}}",
+    "strongest": "Meilleur match enregistré : {{goals}} B + {{assists}} PD contre {{opponent}} ({{date}})",
+    "noStrongest": "Aucune contribution offensive enregistrée cette saison.",
+    "improvement": "Plus grande progression par rapport à {{season}} : {{metric}} +{{delta}}",
+    "noImprovement_one": "La progression s'affiche dès que les deux saisons comptent au moins {{count}} match enregistré.",
+    "noImprovement_other": "La progression s'affiche dès que les deux saisons comptent au moins {{count}} matchs enregistrés.",
+    "next": {
+      "goal": "Prochain défi : {{title}}",
+      "log_matches_one": "Prochain défi : enregistre au moins {{count}} match cette saison.",
+      "log_matches_other": "Prochain défi : enregistre au moins {{count}} matchs cette saison.",
+      "upload_clip": "Prochain défi : ajoute un clip de cette saison.",
+      "set_goal": "Prochain défi : fixe-toi un objectif de progression."
+    },
+    "metric": {
+      "goalsPerMatch": "Buts par match",
+      "assistsPerMatch": "Passes décisives par match",
+      "minutesPerMatch": "Minutes par match"
+    },
+    "compareTitle": "{{current}} vs {{previous}}",
+    "compareInsufficient_one": "Il faut au moins {{count}} match enregistré dans les deux saisons pour comparer.",
+    "compareInsufficient_other": "Il faut au moins {{count}} matchs enregistrés dans les deux saisons pour comparer.",
+    "deltaLabel": "Évolution : {{delta}}",
+    "noSeasons": "Enregistre un match pour lancer ton récap de saison.",
+    "matchesTitle": "Matchs",
+    "matchesCount_one": "{{count}} match enregistré",
+    "matchesCount_other": "{{count}} matchs enregistrés",
+    "matchLine": "{{goals}} B · {{assists}} PD · {{minutes}}′"
+  },
+  "firsts": {
+    "title": "Moments de carrière",
+    "empty": "Tes moments apparaîtront ici dès que tu enregistres matchs, essais et objectifs.",
+    "first_match": "Premier match enregistré contre {{subject}}",
+    "first_goal": "Premier but contre {{subject}}",
+    "first_assist": "Première passe décisive contre {{subject}}",
+    "first_trial": "Premier essai à {{subject}}",
+    "verified_achievement": "Vérifié : {{subject}}",
+    "goal_achieved": "Objectif atteint : {{subject}}",
+    "first_reel": "Premier reel : {{subject}}",
+    "club_change": "Arrivée à {{subject}}",
+    "position_change": "Joué {{subject}} (auparavant {{previous}})"
   }
 }

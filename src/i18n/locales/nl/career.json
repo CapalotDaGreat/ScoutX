@@ -59,5 +59,58 @@
     "addImage": "Afbeelding toevoegen",
     "addVideo": "Video toevoegen",
     "removeEntry": "Item verwijderen"
+  },
+  "review": {
+    "title": "Jaaroverzicht · {{season}}",
+    "matches": "Wedstrijden",
+    "minutes": "Minuten",
+    "goals": "Doelpunten",
+    "assists": "Assists",
+    "positions": "Posities: {{list}}",
+    "clubs": "Clubs: {{list}}",
+    "activity": "{{trials}} proeftrainingen · {{reels}} reels · {{clips}} clips",
+    "goalsAchieved_one": "{{count}} ontwikkeldoel behaald",
+    "goalsAchieved_other": "{{count}} ontwikkeldoelen behaald",
+    "positionChange": "Positiewissel: {{from}} → {{to}}",
+    "clubChange": "Club: {{to}}",
+    "strongest": "Sterkste vastgelegde wedstrijd: {{goals}} D + {{assists}} A tegen {{opponent}} ({{date}})",
+    "noStrongest": "Dit seizoen zijn geen doelpuntbijdragen vastgelegd.",
+    "improvement": "Grootste verbetering t.o.v. {{season}}: {{metric}} +{{delta}}",
+    "noImprovement_one": "Verbetering wordt getoond zodra beide seizoenen minstens {{count}} vastgelegde wedstrijd hebben.",
+    "noImprovement_other": "Verbetering wordt getoond zodra beide seizoenen minstens {{count}} vastgelegde wedstrijden hebben.",
+    "next": {
+      "goal": "Volgende uitdaging: {{title}}",
+      "log_matches_one": "Volgende uitdaging: leg dit seizoen minstens {{count}} wedstrijd vast.",
+      "log_matches_other": "Volgende uitdaging: leg dit seizoen minstens {{count}} wedstrijden vast.",
+      "upload_clip": "Volgende uitdaging: voeg een clip van dit seizoen toe.",
+      "set_goal": "Volgende uitdaging: stel een ontwikkeldoel in."
+    },
+    "metric": {
+      "goalsPerMatch": "Doelpunten per wedstrijd",
+      "assistsPerMatch": "Assists per wedstrijd",
+      "minutesPerMatch": "Minuten per wedstrijd"
+    },
+    "compareTitle": "{{current}} vs {{previous}}",
+    "compareInsufficient_one": "Er is minstens {{count}} vastgelegde wedstrijd in beide seizoenen nodig om te vergelijken.",
+    "compareInsufficient_other": "Er zijn minstens {{count}} vastgelegde wedstrijden in beide seizoenen nodig om te vergelijken.",
+    "deltaLabel": "Verandering: {{delta}}",
+    "noSeasons": "Leg een wedstrijd vast om je seizoensoverzicht te starten.",
+    "matchesTitle": "Wedstrijden",
+    "matchesCount_one": "{{count}} vastgelegde wedstrijd",
+    "matchesCount_other": "{{count}} vastgelegde wedstrijden",
+    "matchLine": "{{goals}} D · {{assists}} A · {{minutes}}′"
+  },
+  "firsts": {
+    "title": "Loopbaanmomenten",
+    "empty": "Je momenten verschijnen hier zodra je wedstrijden, proeftrainingen en doelen vastlegt.",
+    "first_match": "Eerste vastgelegde wedstrijd tegen {{subject}}",
+    "first_goal": "Eerste doelpunt tegen {{subject}}",
+    "first_assist": "Eerste assist tegen {{subject}}",
+    "first_trial": "Eerste proeftraining bij {{subject}}",
+    "verified_achievement": "Geverifieerd: {{subject}}",
+    "goal_achieved": "Doel behaald: {{subject}}",
+    "first_reel": "Eerste reel: {{subject}}",
+    "club_change": "Overstap naar {{subject}}",
+    "position_change": "Speelde als {{subject}} (eerder {{previous}})"
   }
 }

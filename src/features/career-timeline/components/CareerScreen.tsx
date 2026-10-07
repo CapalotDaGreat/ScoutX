@@ -17,7 +17,9 @@ import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWork
 import { WeeklyFootballReportCard } from '@/features/weekly-report/components/WeeklyFootballReportCard';
 import { useWeeklyReportNotifier } from '@/features/weekly-report/hooks/useWeeklyReportNotifier';
 import { usePortfolioAnalytics } from '@/features/portfolio-analytics/hooks/usePortfolioAnalytics';
-import { CareerStorySection } from '@/features/career-story/components/CareerStorySection';
+import { CareerFirstsCard, YearInReviewCard } from '@/features/career-story/components/CareerSeasonCards';
+import { useCareerRecords } from '@/features/career-story/hooks/useCareerRecords';
+import { buildCareerFirsts, buildSeasonSummaries, buildYearInReview } from '@/features/career-story/services/careerSeasons';
 import { buildCareerMoments } from '@/features/career-story/services/careerMoments';
 import { persistCareerSnapshot } from '@/features/career-story/services/persistCareerSnapshot';
 import { buildFootballStory, buildYearInReviewSnapshot } from '@/features/career-story/services/yearInReview';
@@ -81,6 +83,12 @@ export function CareerScreen({
     void persistCareerSnapshot(storyBundle.snapshot);
   }, [profile?.id, storyBundle.snapshot]);
   const [showFullTimeline, setShowFullTimeline] = useState(false);
+  const { records } = useCareerRecords();
+  const latestReview = useMemo(() => {
+    const seasons = buildSeasonSummaries(records);
+    return seasons[0] ? buildYearInReview(seasons, seasons[0].season, records) : null;
+  }, [records]);
+  const careerFirsts = useMemo(() => buildCareerFirsts(records), [records]);
 
   const screenProps = {
     ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
@@ -122,7 +130,8 @@ export function CareerScreen({
           recommendations={trustState.recommendations}
         />
         <CareerReplayCard profile={profile} onOpenPress={onCareerReplayPress} />
-        <CareerStorySection story={storyBundle.story} snapshot={storyBundle.snapshot} />
+        {latestReview ? <YearInReviewCard review={latestReview} /> : null}
+        <CareerFirstsCard firsts={careerFirsts} limit={6} />
         <PlayerCoachObservationsCard playerId={profile.id} />
         <MilestonesSection earned={earned} recentlyEarned={recentlyEarned} previewCount={4} />
 

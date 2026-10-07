@@ -26,6 +26,8 @@ export type VerificationLike = {
   status: string;
   evidence: string;
   createdAt: string;
+  /** When the request was last reviewed or changed. */
+  updatedAt?: string;
 };
 
 function addDays(iso: string, days: number): string | null {

@@ -87,6 +87,7 @@ export class RequestCenterRepository {
         status: asString(data.status),
         evidence: asString(data.evidence),
         createdAt: asString(data.createdAt),
+        updatedAt: asString(data.updatedAt),
       };
     });
   }
