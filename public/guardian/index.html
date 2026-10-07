@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>ScoutX — Parent or guardian approval</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0b0f0c;
+        --fg: #fafafa;
+        --muted: #a3a3a3;
+        --accent: #a3e635;
+        --accent-fg: #0b0f0c;
+        --card: #141a16;
+        --border: #243028;
+        --danger: #f87171;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f5f5f5;
+          --fg: #0a0a0a;
+          --muted: #525252;
+          --accent: #4d7c0f;
+          --accent-fg: #ffffff;
+          --card: #ffffff;
+          --border: #e5e5e5;
+          --danger: #b91c1c;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      main {
+        width: min(560px, 100%);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px 24px;
+      }
+      h1 { margin: 0 0 8px; font-size: 1.35rem; }
+      h2 { margin: 24px 0 8px; font-size: 1.05rem; }
+      p, li { color: var(--muted); line-height: 1.5; font-size: 0.95rem; }
+      label.scope {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 10px;
+        padding: 12px 0;
+        border-top: 1px solid var(--border);
+        cursor: pointer;
+      }
+      label.scope strong { display: block; color: var(--fg); }
+      input[type='checkbox'] { width: 20px; height: 20px; margin-top: 2px; }
+      .actions { display: grid; gap: 10px; margin-top: 20px; }
+      button {
+        appearance: none;
+        border: 0;
+        border-radius: 12px;
+        min-height: 48px;
+        padding: 12px 16px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button.primary { background: var(--accent); color: var(--accent-fg); }
+      button.secondary { background: transparent; color: var(--fg); border: 1px solid var(--border); }
+      button.danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+      button:disabled { opacity: 0.5; cursor: not-allowed; }
+      .error { color: var(--danger); }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div id="loading"><p>Loading…</p></div>
+      <div id="error" hidden>
+        <h1>This link can't be used</h1>
+        <p id="error-message" class="error"></p>
+        <p>Links work once and expire after 7 days. Ask your child to send a new request from the ScoutX app.</p>
+      </div>
+
+      <form id="consent" hidden>
+        <h1 id="consent-title"></h1>
+        <p>
+          ScoutX is a football development app. Players log matches, upload videos and build a profile.
+          Because your child is under 18, their account stays limited until you decide below.
+        </p>
+        <ul>
+          <li>ScoutX never sells data and never uses your child's data to train AI models.</li>
+          <li>Movement sessions measure distance and a pitch heatmap on the phone. Location is never uploaded or stored.</li>
+          <li>Scouts can only contact your child through ScoutX, and you are emailed when they do.</li>
+          <li>Any trial invitation also needs your separate approval.</li>
+        </ul>
+        <h2>Choose what to allow</h2>
+        <p>Nothing is allowed unless you tick it. You can change this later from the link in your confirmation email.</p>
+        <div id="scopes"></div>
+        <label class="scope">
+          <input type="checkbox" id="confirm-guardian" />
+          <span><strong>I am this player's parent or legal guardian.</strong></span>
+        </label>
+        <p id="form-error" class="error" hidden></p>
+        <div class="actions">
+          <button type="submit" class="primary" id="approve">Save and approve the account</button>
+          <button type="button" class="secondary" id="decline">Don't approve</button>
+          <button type="button" class="danger" id="revoke" hidden>Withdraw consent completely</button>
+        </div>
+      </form>
+
+      <div id="trial" hidden>
+        <h1 id="trial-title"></h1>
+        <p id="trial-details"></p>
+        <p>
+          ScoutX does not verify clubs or scouts beyond the checks shown in the app.
+          A genuine trial never requires payment. If in doubt, contact the club directly.
+        </p>
+        <p id="trial-error" class="error" hidden></p>
+        <div class="actions">
+          <button type="button" class="primary" id="trial-approve">Allow my child to accept</button>
+          <button type="button" class="secondary" id="trial-decline">Decline the trial</button>
+        </div>
+      </div>
+
+      <div id="done" hidden>
+        <h1>Saved</h1>
+        <p id="done-message"></p>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        var SCOPE_COPY = {
+          public_passport: ['Public profile', 'Their Football Passport can be viewed by anyone with the link. Shown with first name, last initial and age group only.'],
+          discovery: ['Visible to scouts', 'Registered scouts and coaches can find them in ScoutX search.'],
+          scout_contact: ['Scout requests', 'Scouts can send requests and trial invitations through ScoutX. You are emailed each time.'],
+          public_media: ['Shared videos', 'They can make their own videos visible on their profile.'],
+          public_movement: ['Movement on profile', 'Distance and pitch heatmap summaries can appear on their public profile.'],
+          ai_analysis: ['AI video analysis', 'Their match videos can be analysed by an AI model. The provider may not keep or train on the data.']
+        };
+        var token = new URLSearchParams(window.location.search).get('t') || '';
+        // Remove the token from the address bar and history once read.
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+        var state = null;
+
+        function show(id) {
+          ['loading', 'error', 'consent', 'trial', 'done'].forEach(function (key) {
+            document.getElementById(key).hidden = key !== id;
+          });
+        }
+
+        function call(path, data) {
+          return fetch(path, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: data })
+          }).then(function (response) {
+            return response.json().then(function (body) {
+              if (!response.ok || body.error) {
+                throw new Error((body.error && body.error.message) || 'Something went wrong. Please try again.');
+              }
+              return body.result;
+            });
+          });
+        }
+
+        function fail(message) {
+          document.getElementById('error-message').textContent = message;
+          show('error');
+        }
+
+        function done(message) {
+          document.getElementById('done-message').textContent = message;
+          show('done');
+        }
+
+        function renderConsent(result) {
+          var name = result.playerFirstName;
+          document.getElementById('consent-title').textContent =
+            result.purpose === 'revoke' ? 'Manage consent for ' + name : name + ' asked for your approval';
+          var container = document.getElementById('scopes');
+          container.textContent = '';
+          result.scopes.forEach(function (scope) {
+            var copy = SCOPE_COPY[scope] || [scope, ''];
+            var label = document.createElement('label');
+            label.className = 'scope';
+            var input = document.createElement('input');
+            input.type = 'checkbox';
+            input.value = scope;
+            input.checked = (result.grantedScopes || []).indexOf(scope) !== -1;
+            var text = document.createElement('span');
+            var strong = document.createElement('strong');
+            strong.textContent = copy[0];
+            text.appendChild(strong);
+            text.appendChild(document.createTextNode(copy[1]));
+            label.appendChild(input);
+            label.appendChild(text);
+            container.appendChild(label);
+          });
+          document.getElementById('decline').hidden = result.purpose !== 'consent';
+          document.getElementById('revoke').hidden = result.purpose !== 'revoke';
+          document.getElementById('approve').textContent =
+            result.purpose === 'revoke' ? 'Save changes' : 'Save and approve the account';
+          show('consent');
+        }
+
+        function renderTrial(result) {
+          var trial = result.trial || {};
+          document.getElementById('trial-title').textContent = result.playerFirstName + ' was invited to a trial';
+          var parts = [];
+          if (trial.club) parts.push('Club: ' + trial.club);
+          if (trial.date) parts.push('Date: ' + new Date(trial.date).toLocaleString());
+          if (trial.location) parts.push('Location: ' + trial.location);
+          if (trial.scoutName) parts.push('Invited by: ' + trial.scoutName);
+          document.getElementById('trial-details').textContent = parts.join(' · ');
+          show('trial');
+        }
+
+        function selectedScopes() {
+          return Array.prototype.slice
+            .call(document.querySelectorAll('#scopes input:checked'))
+            .map(function (input) { return input.value; });
+        }
+
+        function respond(payload, button) {
+          button.disabled = true;
+          return call('/api/guardian/respond', Object.assign({ token: token }, payload))
+            .catch(function (error) {
+              button.disabled = false;
+              throw error;
+            });
+        }
+
+        document.getElementById('consent').addEventListener('submit', function (event) {
+          event.preventDefault();
+          var formError = document.getElementById('form-error');
+          formError.hidden = true;
+          if (!document.getElementById('confirm-guardian').checked) {
+            formError.textContent = 'Please confirm that you are the parent or legal guardian.';
+            formError.hidden = false;
+            return;
+          }
+          respond({ decision: 'approve', scopes: selectedScopes(), confirmGuardian: true }, document.getElementById('approve'))
+            .then(function () { done('Your choices are saved. We sent you a confirmation email with a link to change or withdraw them at any time.'); })
+            .catch(function (error) { formError.textContent = error.message; formError.hidden = false; });
+        });
+
+        document.getElementById('decline').addEventListener('click', function (event) {
+          respond({ decision: 'decline' }, event.currentTarget)
+            .then(function () { done('The account stays limited. Your child can send a new request if you change your mind.'); })
+            .catch(function (error) { fail(error.message); });
+        });
+
+        document.getElementById('revoke').addEventListener('click', function (event) {
+          respond({ decision: 'revoke' }, event.currentTarget)
+            .then(function () { done('Consent withdrawn. Youth features are switched off and the profile is no longer public.'); })
+            .catch(function (error) { fail(error.message); });
+        });
+
+        document.getElementById('trial-approve').addEventListener('click', function (event) {
+          respond({ decision: 'approve' }, event.currentTarget)
+            .then(function () { done('Your child can now accept or decline the trial in ScoutX.'); })
+            .catch(function (error) { fail(error.message); });
+        });
+
+        document.getElementById('trial-decline').addEventListener('click', function (event) {
+          respond({ decision: 'decline' }, event.currentTarget)
+            .then(function () { done('The trial invitation was declined.'); })
+            .catch(function (error) { fail(error.message); });
+        });
+
+        if (!token) {
+          fail('This page needs the link from the ScoutX email.');
+          return;
+        }
+        call('/api/guardian/get', { token: token })
+          .then(function (result) {
+            state = result;
+            if (result.purpose === 'trial') renderTrial(result);
+            else renderConsent(result);
+          })
+          .catch(function (error) { fail(error.message); });
+      })();
+    </script>
+  </body>
+</html>

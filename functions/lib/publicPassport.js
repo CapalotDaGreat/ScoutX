@@ -2,11 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshPublicPassport = exports.onProfileWrittenProjectPassport = void 0;
 exports.buildPublicPassport = buildPublicPassport;
+exports.applyYouthDisplay = applyYouthDisplay;
+exports.projectPassport = projectPassport;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const userSafety_1 = require("./safety/userSafety");
 const PUBLIC_IDENTITY_KEYS = [
     'currentClub',
     'clubHistory',
@@ -112,11 +115,21 @@ function buildPublicPassport(playerId, profile) {
     }
     return passport;
 }
+/** Minors are shown by first name, last initial and an age group only. */
+function applyYouthDisplay(passport, policy) {
+    if (!policy.isMinor)
+        return passport;
+    const parts = String(passport.fullName ?? '').trim().split(/\s+/).filter(Boolean);
+    const displayName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : (parts[0] ?? '');
+    return { ...passport, fullName: displayName, ageGroupLabel: policy.ageGroupLabel };
+}
 async function projectPassport(playerId, profile) {
     const db = (0, firestore_2.getFirestore)();
     const ref = db.collection('publicPassports').doc(playerId);
     const summaryRef = db.collection('passportSummaries').doc(playerId);
-    const passport = profile ? buildPublicPassport(playerId, profile) : null;
+    const policy = await (0, userSafety_1.loadSafetyPolicy)(playerId, db);
+    const built = profile && policy.canUsePublicPassport ? buildPublicPassport(playerId, profile) : null;
+    const passport = built ? applyYouthDisplay(built, policy) : null;
     if (!passport) {
         await Promise.all([ref.delete().catch(() => undefined), summaryRef.delete().catch(() => undefined)]);
         return;

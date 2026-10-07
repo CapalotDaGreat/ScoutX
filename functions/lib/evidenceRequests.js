@@ -6,6 +6,8 @@ const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const callableOptions_1 = require("./callableOptions");
 const notificationProducers_1 = require("./notificationProducers");
+const userSafety_1 = require("./safety/userSafety");
+const youthConsent_1 = require("./safety/youthConsent");
 const KINDS = ['match_footage', 'highlight', 'gps', 'statistics', 'coach_note'];
 function isRecruiterRole(role) {
     return role === 'scout' || role === 'coach' || role === 'club' || role === 'admin';
@@ -34,6 +36,10 @@ exports.requestEvidence = (0, https_1.onCall)((0, callableOptions_1.createCallab
         throw new https_1.HttpsError('not-found', 'This player is not discoverable.');
     }
     const db = (0, firestore_1.getFirestore)();
+    const policy = await (0, userSafety_1.loadSafetyPolicy)(playerId, db);
+    if (!policy.canReceiveScoutContact) {
+        throw new https_1.HttpsError('failed-precondition', 'This player cannot receive scout requests.');
+    }
     const blocked = await db
         .collection('blockedUsers')
         .where('blockerId', '==', playerId)
@@ -72,6 +78,9 @@ exports.requestEvidence = (0, https_1.onCall)((0, callableOptions_1.createCallab
         createdAt: now,
     });
     await batch.commit();
+    if (policy.isMinor) {
+        await (0, youthConsent_1.notifyGuardianOfScoutContact)(db, playerId);
+    }
     return { id: ref.id, status: 'pending' };
 });
 exports.ATTACHMENT_KINDS = ['match', 'media', 'analysis', 'gps'];

@@ -6,6 +6,7 @@ import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { Card } from '@/components/primitives/Card';
+import { SafetySettingsSection } from '@/features/youth-safety/components/SafetySettingsSection';
 import { deleteCurrentAccount } from '@/features/auth/services/accountService';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useNotificationPreferences } from '@/features/notifications/hooks/useNotificationPreferences';
@@ -169,6 +170,8 @@ export function SettingsScreen({
           </Text>
           <LanguageSettingsSection />
         </Card>
+
+        <SafetySettingsSection />
 
         {!user?.isAnonymous ? (
           <Card variant="elevated" padding="md" className="gap-3">

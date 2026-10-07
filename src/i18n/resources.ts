@@ -20,6 +20,7 @@ import enDevelopment from '@/i18n/locales/en/development.json';
 import enPassport from '@/i18n/locales/en/passport.json';
 import enMatchAnalysis from '@/i18n/locales/en/matchAnalysis.json';
 import enMedia from '@/i18n/locales/en/media.json';
+import enSafety from '@/i18n/locales/en/safety.json';
 
 import deCommon from '@/i18n/locales/de/common.json';
 import deNavigation from '@/i18n/locales/de/navigation.json';
@@ -41,6 +42,7 @@ import deDevelopment from '@/i18n/locales/de/development.json';
 import dePassport from '@/i18n/locales/de/passport.json';
 import deMatchAnalysis from '@/i18n/locales/de/matchAnalysis.json';
 import deMedia from '@/i18n/locales/de/media.json';
+import deSafety from '@/i18n/locales/de/safety.json';
 
 import frCommon from '@/i18n/locales/fr/common.json';
 import frNavigation from '@/i18n/locales/fr/navigation.json';
@@ -62,6 +64,7 @@ import frDevelopment from '@/i18n/locales/fr/development.json';
 import frPassport from '@/i18n/locales/fr/passport.json';
 import frMatchAnalysis from '@/i18n/locales/fr/matchAnalysis.json';
 import frMedia from '@/i18n/locales/fr/media.json';
+import frSafety from '@/i18n/locales/fr/safety.json';
 
 import itCommon from '@/i18n/locales/it/common.json';
 import itNavigation from '@/i18n/locales/it/navigation.json';
@@ -83,6 +86,7 @@ import itDevelopment from '@/i18n/locales/it/development.json';
 import itPassport from '@/i18n/locales/it/passport.json';
 import itMatchAnalysis from '@/i18n/locales/it/matchAnalysis.json';
 import itMedia from '@/i18n/locales/it/media.json';
+import itSafety from '@/i18n/locales/it/safety.json';
 
 import esCommon from '@/i18n/locales/es/common.json';
 import esNavigation from '@/i18n/locales/es/navigation.json';
@@ -104,6 +108,7 @@ import esDevelopment from '@/i18n/locales/es/development.json';
 import esPassport from '@/i18n/locales/es/passport.json';
 import esMatchAnalysis from '@/i18n/locales/es/matchAnalysis.json';
 import esMedia from '@/i18n/locales/es/media.json';
+import esSafety from '@/i18n/locales/es/safety.json';
 
 import ptCommon from '@/i18n/locales/pt/common.json';
 import ptNavigation from '@/i18n/locales/pt/navigation.json';
@@ -125,6 +130,7 @@ import ptDevelopment from '@/i18n/locales/pt/development.json';
 import ptPassport from '@/i18n/locales/pt/passport.json';
 import ptMatchAnalysis from '@/i18n/locales/pt/matchAnalysis.json';
 import ptMedia from '@/i18n/locales/pt/media.json';
+import ptSafety from '@/i18n/locales/pt/safety.json';
 
 import nlCommon from '@/i18n/locales/nl/common.json';
 import nlNavigation from '@/i18n/locales/nl/navigation.json';
@@ -146,6 +152,7 @@ import nlDevelopment from '@/i18n/locales/nl/development.json';
 import nlPassport from '@/i18n/locales/nl/passport.json';
 import nlMatchAnalysis from '@/i18n/locales/nl/matchAnalysis.json';
 import nlMedia from '@/i18n/locales/nl/media.json';
+import nlSafety from '@/i18n/locales/nl/safety.json';
 
 function bundleLocale(
   common: typeof enCommon,
@@ -168,6 +175,7 @@ function bundleLocale(
   passport: typeof enPassport,
   matchAnalysis: typeof enMatchAnalysis,
   media: typeof enMedia,
+  safety: typeof enSafety,
 ) {
   return {
     common,
@@ -190,6 +198,7 @@ function bundleLocale(
     passport,
     matchAnalysis,
     media,
+    safety,
   };
 }
 
@@ -215,6 +224,7 @@ export const resources = {
     enPassport,
     enMatchAnalysis,
     enMedia,
+    enSafety,
   ),
   de: bundleLocale(
     deCommon,
@@ -237,6 +247,7 @@ export const resources = {
     dePassport,
     deMatchAnalysis,
     deMedia,
+    deSafety,
   ),
   fr: bundleLocale(
     frCommon,
@@ -259,6 +270,7 @@ export const resources = {
     frPassport,
     frMatchAnalysis,
     frMedia,
+    frSafety,
   ),
   it: bundleLocale(
     itCommon,
@@ -281,6 +293,7 @@ export const resources = {
     itPassport,
     itMatchAnalysis,
     itMedia,
+    itSafety,
   ),
   es: bundleLocale(
     esCommon,
@@ -303,6 +316,7 @@ export const resources = {
     esPassport,
     esMatchAnalysis,
     esMedia,
+    esSafety,
   ),
   pt: bundleLocale(
     ptCommon,
@@ -325,6 +339,7 @@ export const resources = {
     ptPassport,
     ptMatchAnalysis,
     ptMedia,
+    ptSafety,
   ),
   nl: bundleLocale(
     nlCommon,
@@ -347,6 +362,7 @@ export const resources = {
     nlPassport,
     nlMatchAnalysis,
     nlMedia,
+    nlSafety,
   ),
 } as const satisfies Record<SupportedLanguageCode, Record<string, object>>;
 

@@ -29,10 +29,14 @@ const uidKeyed = [
   'passportSummaries',
   'playerWatchers',
   'coachRosters',
+  'userSafety',
+  'guardianContacts',
 ];
 
 const ownedByField = [
   ['gpsSessions', 'playerId'],
+  ['youthConsents', 'uid'],
+  ['mail', 'scoutxUid'],
   ['matchAnalysisJobs', 'playerId'],
   ['careerReplays', 'playerId'],
   ['activities', 'recipientId'],

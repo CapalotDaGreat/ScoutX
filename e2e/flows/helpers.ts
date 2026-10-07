@@ -43,6 +43,15 @@ export async function signIn(page: Page, email: string, password = accounts.pass
   await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeHidden({ timeout: 30_000 });
 }
 
+/** New accounts must pick an age band before anything else; tests register adults. */
+export async function passAgeGateAsAdult(page: Page) {
+  const gate = page.getByTestId('youth-gate-age');
+  await expect(gate).toBeVisible({ timeout: 30_000 });
+  await gate.getByRole('radio', { name: '18 or older' }).click();
+  await gate.getByRole('button', { name: 'Continue' }).click();
+  await expect(gate).toBeHidden({ timeout: 30_000 });
+}
+
 export async function openRegister(page: Page) {
   await openGuestAccountActions(page);
   await page.getByRole('button', { name: 'Create your account' }).click();

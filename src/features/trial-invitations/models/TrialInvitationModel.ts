@@ -142,6 +142,12 @@ export function parseTrialInvitation(value: unknown, id: string): TrialInvitatio
       typeof record.messageThreadId === 'string' ? record.messageThreadId : undefined,
     calendarEventId:
       typeof record.calendarEventId === 'string' ? record.calendarEventId : undefined,
+    guardianApproval:
+      record.guardianApproval === 'pending' ||
+      record.guardianApproval === 'approved' ||
+      record.guardianApproval === 'declined'
+        ? record.guardianApproval
+        : undefined,
     createdAt: typeof record.createdAt === 'string' ? record.createdAt : now,
     updatedAt: typeof record.updatedAt === 'string' ? record.updatedAt : now,
   };

@@ -14,6 +14,7 @@ import {
 } from '@/features/trial-invitations/services/trialCalendarService';
 import { PLAYER_RESPONDABLE_STATUSES } from '@/features/trial-invitations/constants';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
 
@@ -34,7 +35,8 @@ export function TrialInvitationResponseModal({
   onAccept,
   onDecline,
 }: TrialInvitationResponseModalProps) {
-  const { t, i18n } = useAppTranslation(['trials', 'common']);
+  const { t, i18n } = useAppTranslation(['trials', 'common', 'safety']);
+  const { policy } = useUserSafety();
   const [note, setNote] = useState('');
 
   if (!invitation) {
@@ -42,6 +44,7 @@ export function TrialInvitationResponseModal({
   }
 
   const canRespond = PLAYER_RESPONDABLE_STATUSES.includes(invitation.status);
+  const awaitingGuardian = policy.trialsNeedGuardianApproval && invitation.guardianApproval !== 'approved';
 
   const footer = canRespond ? (
     <View className="gap-3">
@@ -72,24 +75,33 @@ export function TrialInvitationResponseModal({
         >
           {t('trials:decline')}
         </Button>
-        <Button
-          variant="accent"
-          className="flex-1"
-          onPress={() => {
-            void onAccept(invitation, note)
-              .then(onClose)
-              .catch((error: unknown) => {
-                Alert.alert(
-                  t('common:errorTitle'),
-                  toUserMessage(error, t('trials:response.acceptFailed')),
-                );
-              });
-          }}
-          loading={saving}
-        >
-          {t('trials:accept')}
-        </Button>
+        {awaitingGuardian ? null : (
+          <Button
+            variant="accent"
+            className="flex-1"
+            onPress={() => {
+              void onAccept(invitation, note)
+                .then(onClose)
+                .catch((error: unknown) => {
+                  Alert.alert(
+                    t('common:errorTitle'),
+                    toUserMessage(error, t('trials:response.acceptFailed')),
+                  );
+                });
+            }}
+            loading={saving}
+          >
+            {t('trials:accept')}
+          </Button>
+        )}
       </View>
+      {awaitingGuardian ? (
+        <Text variant="body-sm" color="secondary" testID="trial-awaiting-guardian">
+          {invitation.guardianApproval === 'declined'
+            ? t('safety:trial.guardianDeclined')
+            : t('safety:trial.awaitingGuardian')}
+        </Text>
+      ) : null}
     </View>
   ) : (
     <Button variant="secondary" onPress={onClose}>

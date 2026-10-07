@@ -2,6 +2,8 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore } from 'firebase-admin/firestore';
 import { createCallableOptions } from './callableOptions';
 import { notifyEvidenceFulfilled } from './notificationProducers';
+import { loadSafetyPolicy } from './safety/userSafety';
+import { notifyGuardianOfScoutContact } from './safety/youthConsent';
 
 const KINDS = ['match_footage', 'highlight', 'gps', 'statistics', 'coach_note'] as const;
 
@@ -35,6 +37,10 @@ export const requestEvidence = onCall(createCallableOptions(), async (request) =
     throw new HttpsError('not-found', 'This player is not discoverable.');
   }
   const db = getFirestore();
+  const policy = await loadSafetyPolicy(playerId, db);
+  if (!policy.canReceiveScoutContact) {
+    throw new HttpsError('failed-precondition', 'This player cannot receive scout requests.');
+  }
   const blocked = await db
     .collection('blockedUsers')
     .where('blockerId', '==', playerId)
@@ -73,6 +79,9 @@ export const requestEvidence = onCall(createCallableOptions(), async (request) =
     createdAt: now,
   });
   await batch.commit();
+  if (policy.isMinor) {
+    await notifyGuardianOfScoutContact(db, playerId);
+  }
   return { id: ref.id, status: 'pending' };
 });
 

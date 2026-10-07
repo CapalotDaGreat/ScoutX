@@ -12,6 +12,15 @@ export {
 } from './adminReview';
 export { recordPortfolioView } from './portfolioAnalytics';
 export { purgeLegacyGpsLocation } from './gpsPrivacy';
+export {
+  setAgeBand,
+  requestGuardianConsent,
+  getGuardianConsentRequest,
+  respondGuardianConsent,
+  revokeGuardianConsent,
+  onTrialInvitationCreatedGuardian,
+} from './safety/youthConsent';
+export { onUserSafetyWrittenReproject } from './safety/projectionSync';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';
 export {

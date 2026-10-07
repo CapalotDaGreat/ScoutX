@@ -282,9 +282,11 @@ export class TrialInvitationRepository {
     const db = getFirestoreDb();
     if (db) {
       // A local-only copy would never reach the other party, so write failures surface to the caller.
+      // Merge keeps server-owned guardian co-approval fields intact.
       await setDoc(
         doc(db, TRIAL_INVITATION_COLLECTION, invitation.id),
         serializeTrialInvitation(invitation),
+        { merge: true },
       );
       await syncRecruitmentStageFromTrial(invitation).catch(() => undefined);
       return;

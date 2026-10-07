@@ -22,6 +22,8 @@ const UID_KEYED_COLLECTIONS = [
     'passportSummaries',
     'playerWatchers',
     'coachRosters',
+    'userSafety',
+    'guardianContacts',
 ];
 /** Collections queried by an owner/participant field. */
 const OWNED_QUERIES = [
@@ -60,6 +62,8 @@ const OWNED_QUERIES = [
     ['contentReports', 'targetId'],
     ['contentReports', 'targetOwnerId'],
     ['blockedUsers', 'blockedUserId'],
+    ['youthConsents', 'uid'],
+    ['mail', 'scoutxUid'],
 ];
 const STORAGE_PREFIXES = (uid) => [`profiles/${uid}/`, `gpsSessions/${uid}/`];
 async function deleteQueryInBatches(query) {

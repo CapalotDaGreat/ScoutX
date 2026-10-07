@@ -3,6 +3,7 @@ import { Switch } from 'react-native';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { type PrivacySettings } from '@/features/player-profile/types/privacySettings';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
@@ -47,29 +48,37 @@ export function PortfolioPrivacySettings({
   onChange,
   disabled = false,
 }: PortfolioPrivacySettingsProps) {
-  const { t } = useAppTranslation('portfolio');
+  const { t } = useAppTranslation(['portfolio', 'safety']);
+  const { policy } = useUserSafety();
   const update = (patch: Partial<PrivacySettings>) => onChange({ ...settings, ...patch });
+  // A minor's guardian decides these; the server projection enforces the same policy.
+  const publicLocked = !policy.canUsePublicPassport;
+  const discoveryLocked = !policy.canBeDiscovered;
 
   return (
     <Card variant="outlined" padding="md" className="gap-1">
-      <Text weight="semibold">{t('privacy.title')}</Text>
+      <Text weight="semibold">{t('portfolio:privacy.title')}</Text>
       <Text variant="body-sm" color="secondary" className="mb-2">
-        {t('privacy.description')}
+        {t('portfolio:privacy.description')}
       </Text>
 
       <ToggleRow
-        label={t('privacy.publicPortfolio')}
-        description={t('privacy.publicPortfolioDescription')}
-        value={settings.publicPortfolioEnabled}
+        label={t('portfolio:privacy.publicPortfolio')}
+        description={
+          publicLocked && policy.isMinor ? t('safety:settings.guardianDecides') : t('portfolio:privacy.publicPortfolioDescription')
+        }
+        value={settings.publicPortfolioEnabled && !publicLocked}
         onValueChange={(value) => update({ publicPortfolioEnabled: value })}
-        disabled={disabled}
+        disabled={disabled || publicLocked}
       />
       <ToggleRow
-        label={t('privacy.discoverable')}
-        description={t('privacy.discoverableDescription')}
-        value={settings.discoverableByScouts}
+        label={t('portfolio:privacy.discoverable')}
+        description={
+          discoveryLocked && policy.isMinor ? t('safety:settings.guardianDecides') : t('portfolio:privacy.discoverableDescription')
+        }
+        value={settings.discoverableByScouts && !discoveryLocked}
         onValueChange={(value) => update({ discoverableByScouts: value })}
-        disabled={disabled}
+        disabled={disabled || discoveryLocked}
       />
       <ToggleRow
         label={t('privacy.careerTimeline')}

@@ -53,6 +53,8 @@ export type TrialInvitation = {
   };
   messageThreadId?: string;
   calendarEventId?: string;
+  /** Server-written for minors: the player can accept only once a guardian approves. */
+  guardianApproval?: 'pending' | 'approved' | 'declined';
   createdAt: string;
   updatedAt: string;
 };

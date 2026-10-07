@@ -15,6 +15,17 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.publicPortfolioEnabled == true;
     }
 
+    // Age band and guardian scopes are server-written (setAgeBand / guardian consent callables).
+    function isMinor(userId) {
+      return exists(/databases/$(database)/documents/userSafety/$(userId))
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.ageBand == '13-17';
+    }
+
+    function hasGuardianScope(userId, scope) {
+      return get(/databases/$(database)/documents/userSafety/$(userId)).data.guardianStatus == 'approved'
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.scopes.hasAny([scope]);
+    }
+
     function isServerVerifiedPlayer(userId) {
       return exists(/databases/$(database)/documents/verificationStates/$('player-' + userId))
         && get(/databases/$(database)/documents/verificationStates/$('player-' + userId)).data.level == 'verified';
@@ -335,23 +346,35 @@ service cloud.firestore {
         request.auth.uid == resource.data.playerId
         || request.auth.uid == resource.data.scoutId
       );
+      // Minors can only be invited when their guardian allowed scout contact; guardian
+      // co-approval fields are server-written only.
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.scoutId
         && request.resource.data.playerId is string
         && request.resource.data.playerId != request.auth.uid
         && request.resource.data.status == 'pending'
-        && hasRecruiterRole();
-      // Scouts manage invitation details; players may only accept or decline.
+        && hasRecruiterRole()
+        && !request.resource.data.keys().hasAny(['guardianApproval', 'guardianTokenHash', 'guardianDecidedAt'])
+        && (!isMinor(request.resource.data.playerId)
+          || hasGuardianScope(request.resource.data.playerId, 'scout_contact'));
+      // Scouts manage invitation details but never accept on the player's behalf; players may
+      // only accept or decline, and a minor can accept only after guardian co-approval.
       allow update: if isSignedIn() && (
         (
           request.auth.uid == resource.data.scoutId
           && request.resource.data.scoutId == resource.data.scoutId
           && request.resource.data.playerId == resource.data.playerId
+          && (request.resource.data.status != 'accepted' || resource.data.status == 'accepted')
+          && request.resource.data.get('guardianApproval', null) == resource.data.get('guardianApproval', null)
+          && request.resource.data.get('guardianTokenHash', null) == resource.data.get('guardianTokenHash', null)
         )
         || (
           request.auth.uid == resource.data.playerId
           && onlyChanges(['status', 'history', 'updatedAt'])
           && request.resource.data.status in ['accepted', 'declined']
+          && (request.resource.data.status != 'accepted'
+            || !isMinor(request.auth.uid)
+            || resource.data.get('guardianApproval', '') == 'approved')
         )
       );
       allow delete: if isSignedIn()
@@ -442,6 +465,24 @@ service cloud.firestore {
 
     match /pushTokens/{userId} {
       allow read, write: if isOwner(userId);
+    }
+
+    // Age band, guardian status and scopes. Readable by the user; written only by callables.
+    match /userSafety/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Guardian consent proof, guardian contact details and queued email (Trigger Email
+    // extension) are server-only.
+    match /youthConsents/{consentId} {
+      allow read, write: if false;
+    }
+    match /guardianContacts/{userId} {
+      allow read, write: if false;
+    }
+    match /mail/{mailId} {
+      allow read, write: if false;
     }
 
     // Read by the push trigger (Admin SDK) to enforce opt-outs server-side.

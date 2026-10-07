@@ -3,6 +3,8 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import type { SafetyPolicy } from './safety/policy';
+import { loadSafetyPolicy } from './safety/userSafety';
 
 /**
  * Public Football Passport projection.
@@ -148,11 +150,21 @@ export function buildPublicPassport(
   return passport;
 }
 
-async function projectPassport(playerId: string, profile: ProfileDoc | undefined): Promise<void> {
+/** Minors are shown by first name, last initial and an age group only. */
+export function applyYouthDisplay(passport: Record<string, unknown>, policy: SafetyPolicy): Record<string, unknown> {
+  if (!policy.isMinor) return passport;
+  const parts = String(passport.fullName ?? '').trim().split(/\s+/).filter(Boolean);
+  const displayName = parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0]}.` : (parts[0] ?? '');
+  return { ...passport, fullName: displayName, ageGroupLabel: policy.ageGroupLabel };
+}
+
+export async function projectPassport(playerId: string, profile: ProfileDoc | undefined): Promise<void> {
   const db = getFirestore();
   const ref = db.collection('publicPassports').doc(playerId);
   const summaryRef = db.collection('passportSummaries').doc(playerId);
-  const passport = profile ? buildPublicPassport(playerId, profile) : null;
+  const policy = await loadSafetyPolicy(playerId, db);
+  const built = profile && policy.canUsePublicPassport ? buildPublicPassport(playerId, profile) : null;
+  const passport = built ? applyYouthDisplay(built, policy) : null;
   if (!passport) {
     await Promise.all([ref.delete().catch(() => undefined), summaryRef.delete().catch(() => undefined)]);
     return;

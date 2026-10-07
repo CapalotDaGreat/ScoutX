@@ -61,6 +61,14 @@ async function createAccount({ email, name, role }) {
     createdAt: now,
     updatedAt: now,
   });
+  // Seeded test accounts are adults so flows start past the age gate.
+  await db.collection('userSafety').doc(user.uid).set({
+    ageBand: '18plus',
+    guardianStatus: 'not_required',
+    scopes: [],
+    consentExpiresAt: null,
+    updatedAt: now,
+  });
   return user.uid;
 }
 

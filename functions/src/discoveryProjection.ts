@@ -3,6 +3,8 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { applyYouthDisplay } from './publicPassport';
+import { loadSafetyPolicy } from './safety/userSafety';
 
 type Privacy = {
   discoverableByScouts?: boolean;
@@ -245,15 +247,16 @@ export function buildDiscoverableProjection(input: {
   };
 }
 
-async function projectDiscoverablePlayer(playerId: string): Promise<void> {
+export async function projectDiscoverablePlayer(playerId: string): Promise<void> {
   const db = getFirestore();
-  const [profileSnap, summarySnap, verificationSnap] = await Promise.all([
+  const [profileSnap, summarySnap, verificationSnap, policy] = await Promise.all([
     db.collection('profiles').doc(playerId).get(),
     db.collection('passportSummaries').doc(playerId).get(),
     db.collection('verificationStates').doc(`player-${playerId}`).get(),
+    loadSafetyPolicy(playerId, db),
   ]);
   const ref = db.collection('discoverablePlayers').doc(playerId);
-  if (!profileSnap.exists) {
+  if (!profileSnap.exists || !policy.canBeDiscovered) {
     await ref.delete().catch(() => undefined);
     return;
   }
@@ -278,7 +281,19 @@ async function projectDiscoverablePlayer(playerId: string): Promise<void> {
   }
   const existing = await ref.get();
   const viewCount = existing.exists ? (existing.data()?.viewCount ?? 0) : 0;
-  await ref.set({ ...projection, viewCount });
+  const display = applyYouthDisplay(projection, policy);
+  await ref.set({
+    ...display,
+    searchKeywords: policy.isMinor
+      ? [
+          String(display.fullName ?? '').toLowerCase(),
+          ...((projection.searchKeywords as string[] | undefined) ?? []).filter(
+            (keyword) => keyword !== String(profile.fullName ?? '').toLowerCase(),
+          ),
+        ].filter(Boolean)
+      : projection.searchKeywords,
+    viewCount,
+  });
 }
 
 export const onProfileWrittenProjectDiscovery = onDocumentWritten(

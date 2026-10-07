@@ -312,6 +312,40 @@ describe('trials', () => {
     await denied(getDocument(OUTSIDER, 'trialInvitations/t6'), 'outsider read');
   });
 
+  test('minor trials need the scout_contact scope and guardian co-approval', async () => {
+    const minor = (patch) => ({
+      ageBand: '13-17', guardianStatus: 'approved', scopes: [], consentExpiresAt: null, ...patch,
+    });
+    await seed(`userSafety/${PLAYER}`, minor({}));
+    await denied(setDocument(SCOUT, 'trialInvitations/m1', invitation({})), 'no scout_contact scope');
+    await seed(`userSafety/${PLAYER}`, minor({ scopes: ['scout_contact'] }));
+    await allowed(setDocument(SCOUT, 'trialInvitations/m2', invitation({})), 'scope granted');
+    await denied(
+      setDocument(SCOUT, 'trialInvitations/m3', invitation({ guardianApproval: 'approved' })),
+      'scout pre-approves',
+    );
+
+    await seed('trialInvitations/m4', invitation({ guardianApproval: 'pending', guardianTokenHash: 'h' }));
+    await denied(
+      setDocument(PLAYER, 'trialInvitations/m4', invitation({ status: 'accepted', guardianApproval: 'pending', guardianTokenHash: 'h', history: ['accepted'], updatedAt: 't1' })),
+      'minor accepts before guardian',
+    );
+    await denied(
+      setDocument(SCOUT, 'trialInvitations/m4', invitation({ guardianApproval: 'approved', guardianTokenHash: 'h' })),
+      'scout flips guardian approval',
+    );
+    await denied(
+      setDocument(SCOUT, 'trialInvitations/m4', invitation({ status: 'accepted', guardianApproval: 'pending', guardianTokenHash: 'h' })),
+      'scout accepts for player',
+    );
+
+    await seed('trialInvitations/m5', invitation({ guardianApproval: 'approved', guardianTokenHash: 'h' }));
+    await allowed(
+      setDocument(PLAYER, 'trialInvitations/m5', invitation({ status: 'accepted', guardianApproval: 'approved', guardianTokenHash: 'h', history: ['accepted'], updatedAt: 't1' })),
+      'minor accepts after guardian',
+    );
+  });
+
   test('trial notifications can only be created by trial participants', async () => {
     await seed('trialInvitations/t7', invitation({}));
     const notification = { recipientId: PLAYER, trialInvitationId: 't7', read: false, title: 'Trial', body: 'b' };
@@ -327,6 +361,27 @@ describe('trials', () => {
     );
     await allowed(setDocument(PLAYER, 'trialNotifications/n1', { ...notification, read: true }), 'mark read');
     await denied(setDocument(PLAYER, 'trialNotifications/n1', { ...notification, title: 'edited' }), 'edit');
+  });
+});
+
+describe('youth safety', () => {
+  test('safety state is owner-readable and server-written only', async () => {
+    await seed(`userSafety/${PLAYER}`, { ageBand: '18plus', guardianStatus: 'not_required', scopes: [] });
+    await allowed(getDocument(PLAYER, `userSafety/${PLAYER}`), 'owner read');
+    await denied(getDocument(OUTSIDER, `userSafety/${PLAYER}`), 'outsider read');
+    await denied(
+      setDocument(PLAYER, `userSafety/${PLAYER}`, { ageBand: '18plus', guardianStatus: 'approved', scopes: ['discovery'] }),
+      'owner self-approves',
+    );
+  });
+
+  test('consent records, guardian contacts and mail are server-only', async () => {
+    await seed('youthConsents/c1', { uid: PLAYER, status: 'pending' });
+    await seed(`guardianContacts/${PLAYER}`, { email: 'parent@example.com' });
+    await denied(getDocument(PLAYER, 'youthConsents/c1'), 'read consent');
+    await denied(setDocument(PLAYER, 'youthConsents/c2', { uid: PLAYER, status: 'approved' }), 'forge consent');
+    await denied(getDocument(PLAYER, `guardianContacts/${PLAYER}`), 'read guardian email');
+    await denied(setDocument(PLAYER, 'mail/m1', { to: 'x@example.com', message: { subject: 's' } }), 'send mail');
   });
 });
 

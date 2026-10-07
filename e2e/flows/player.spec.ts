@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { expect, test } from '@playwright/test';
-import { accounts, openRegister, requireEmulators, signIn, trackPageErrors } from './helpers';
+import { accounts, openRegister, passAgeGateAsAdult, requireEmulators, signIn, trackPageErrors } from './helpers';
 
 requireEmulators();
 test.setTimeout(180_000);
@@ -17,6 +17,7 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
     await page.getByLabel('Confirm password').fill(accounts.password);
     await page.getByRole('button', { name: 'Create account' }).click();
 
+    await passAgeGateAsAdult(page);
     await expect(page.getByRole('heading', { name: 'Choose your role' })).toBeVisible({ timeout: 30_000 });
     await page.getByRole('button', { name: /^Player / }).click();
     await page.getByRole('button', { name: 'Continue' }).click();

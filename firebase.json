@@ -39,6 +39,18 @@
     ],
     "headers": [
       {
+        "source": "/guardian/**",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-store" },
+          { "key": "Referrer-Policy", "value": "no-referrer" },
+          { "key": "X-Frame-Options", "value": "DENY" },
+          {
+            "key": "Content-Security-Policy",
+            "value": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; form-action 'none'; frame-ancestors 'none'; base-uri 'none'"
+          }
+        ]
+      },
+      {
         "source": "/.well-known/apple-app-site-association",
         "headers": [
           {
@@ -67,6 +79,14 @@
       }
     ],
     "rewrites": [
+      {
+        "source": "/api/guardian/get",
+        "function": { "functionId": "getGuardianConsentRequest", "region": "us-central1" }
+      },
+      {
+        "source": "/api/guardian/respond",
+        "function": { "functionId": "respondGuardianConsent", "region": "us-central1" }
+      },
       {
         "source": "/auth/action",
         "destination": "/auth/action.html"

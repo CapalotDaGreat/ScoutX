@@ -1,0 +1,64 @@
+{
+  "errors": {
+    "generic": "Algo salió mal. Inténtalo de nuevo."
+  },
+  "age": {
+    "title": "¿Cuántos años tienes?",
+    "body": "ScoutX ajusta lo que es público y quién puede contactarte según tu grupo de edad.",
+    "under13": "Menos de 13",
+    "teen": "De 13 a 17",
+    "adult": "18 o más",
+    "under13Notice": "ScoutX solo está disponible a partir de los 13 años. Si continúas, esta cuenta y su contenido se eliminarán.",
+    "under13Continue": "Continuar y eliminar esta cuenta",
+    "teenConfirm": "Tengo entre 13 y 17 años. Entiendo que mi madre, padre o tutor debe aprobar mi cuenta antes de usar ScoutX.",
+    "continue": "Continuar",
+    "noBirthDate": "Solo guardamos tu grupo de edad, nunca tu fecha de nacimiento."
+  },
+  "guardian": {
+    "requestTitle": "Pide permiso a tu madre, padre o tutor",
+    "requestBody": "Enviaremos un enlace por correo a tu madre, padre o tutor. Elige lo que ScoutX puede hacer con tu cuenta. Hasta entonces, tu cuenta sigue privada y limitada.",
+    "declinedBody": "Tu madre, padre o tutor no aprobó la cuenta. Puedes volver a pedirlo si cambia de opinión.",
+    "revokedBody": "Se retiró el consentimiento, así que las funciones juveniles están en pausa. Puedes volver a pedirlo.",
+    "expiredBody": "El consentimiento se renueva cada año. Pide a tu madre, padre o tutor que lo confirme de nuevo.",
+    "firstNameLabel": "Tu nombre (aparece en el correo)",
+    "emailLabel": "Correo de tu madre, padre o tutor",
+    "emailPrivacy": "Solo usamos esta dirección para correos de consentimiento y seguridad sobre tu cuenta.",
+    "send": "Enviar correo de aprobación",
+    "signOut": "Cerrar sesión",
+    "waitingTitle": "Esperando a tu madre, padre o tutor",
+    "waitingBody": "Escribimos a {{email}}. Cuando apruebe, ScoutX se desbloqueará automáticamente.",
+    "whatHappens": "Tu tutor decide por separado sobre un perfil público, ser visible para ojeadores, solicitudes de ojeadores, vídeos compartidos y análisis con IA. Cualquier invitación a una prueba también necesita su aprobación.",
+    "resend": "Reenviar o usar otro correo",
+    "deleteAccount": "Eliminar mi cuenta"
+  },
+  "under13": {
+    "title": "ScoutX es para mayores de 13 años",
+    "body": "Tu cuenta se eliminó y no se guardó nada. Te esperamos cuando cumplas 13.",
+    "close": "Cerrar"
+  },
+  "settings": {
+    "title": "Edad y tutor",
+    "ageAdult": "Grupo de edad: 18 o más",
+    "ageTeen": "Grupo de edad: de 13 a 17",
+    "guardianApproved": "Aprobado por tu madre, padre o tutor ({{email}})",
+    "scopesTitle": "Tu tutor permitió",
+    "noScopes": "Solo uso privado",
+    "revoke": "Retirar el consentimiento del tutor",
+    "revokeHint": "Las funciones juveniles se pausan hasta una nueva aprobación.",
+    "changeAge": "Para corregir tu grupo de edad, contacta con el soporte de ScoutX.",
+    "scope": {
+      "public_passport": "Perfil público",
+      "discovery": "Visible para ojeadores",
+      "scout_contact": "Solicitudes de ojeadores y pruebas",
+      "public_media": "Vídeos compartidos",
+      "public_movement": "Movimiento en el perfil",
+      "ai_analysis": "Análisis de vídeo con IA"
+    },
+    "guardianDecides": "Lo decide tu madre, padre o tutor. Puede cambiar su elección desde el correo de confirmación."
+  },
+  "trial": {
+    "awaitingGuardian": "Esperando que tu madre, padre o tutor apruebe esta prueba.",
+    "guardianDeclined": "Tu madre, padre o tutor rechazó esta prueba."
+  },
+  "youthLabel": "Jugador juvenil"
+}

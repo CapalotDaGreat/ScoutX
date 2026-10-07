@@ -26,6 +26,8 @@ import { ActivityProvider } from '@/features/activity-feed';
 import { createExpoPushNotificationPort } from '@/features/notifications/services/expoPushNotificationPort';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { AgentationDevProbe } from '@/dev/AgentationDevProbe';
+import { UserSafetyProvider } from '@/features/youth-safety/context/UserSafetyProvider';
+import { YouthGate } from '@/features/youth-safety/components/YouthGate';
 import { queryClient } from '@/data/queryClient';
 
 enableScreens();
@@ -52,11 +54,16 @@ function AppContent() {
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <QueryClientProvider client={queryClient}>
         <SnackbarProvider>
-          <ActivityProvider pushPort={pushNotificationPort}>
-            <AiInsightsProvider>
-              <RootNavigator />
-            </AiInsightsProvider>
-          </ActivityProvider>
+          <UserSafetyProvider>
+            <ActivityProvider pushPort={pushNotificationPort}>
+              <AiInsightsProvider>
+                <View className="flex-1">
+                  <RootNavigator />
+                  <YouthGate />
+                </View>
+              </AiInsightsProvider>
+            </ActivityProvider>
+          </UserSafetyProvider>
         </SnackbarProvider>
       </QueryClientProvider>
     </>

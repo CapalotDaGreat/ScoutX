@@ -1,0 +1,64 @@
+{
+  "errors": {
+    "generic": "Algo correu mal. Tenta novamente."
+  },
+  "age": {
+    "title": "Que idade tens?",
+    "body": "O ScoutX ajusta o que é público e quem te pode contactar consoante a tua faixa etária.",
+    "under13": "Menos de 13",
+    "teen": "Dos 13 aos 17",
+    "adult": "18 ou mais",
+    "under13Notice": "O ScoutX só está disponível a partir dos 13 anos. Se continuares, esta conta e o seu conteúdo serão eliminados.",
+    "under13Continue": "Continuar e eliminar esta conta",
+    "teenConfirm": "Tenho entre 13 e 17 anos. Compreendo que o meu encarregado de educação tem de aprovar a minha conta antes de eu usar o ScoutX.",
+    "continue": "Continuar",
+    "noBirthDate": "Guardamos apenas a tua faixa etária, nunca a tua data de nascimento."
+  },
+  "guardian": {
+    "requestTitle": "Pede ao teu encarregado de educação",
+    "requestBody": "Vamos enviar um link por e-mail ao teu encarregado de educação. Ele escolhe o que o ScoutX pode fazer com a tua conta. Até lá, a tua conta fica privada e limitada.",
+    "declinedBody": "O teu encarregado de educação não aprovou a conta. Podes pedir de novo se ele mudar de ideias.",
+    "revokedBody": "O consentimento foi retirado, por isso as funcionalidades juvenis estão em pausa. Podes pedir de novo.",
+    "expiredBody": "O consentimento é renovado todos os anos. Pede ao teu encarregado de educação que confirme novamente.",
+    "firstNameLabel": "O teu primeiro nome (aparece no e-mail)",
+    "emailLabel": "E-mail do encarregado de educação",
+    "emailPrivacy": "Usamos este endereço apenas para e-mails de consentimento e segurança sobre a tua conta.",
+    "send": "Enviar e-mail de aprovação",
+    "signOut": "Terminar sessão",
+    "waitingTitle": "À espera do teu encarregado de educação",
+    "waitingBody": "Enviámos um e-mail para {{email}}. Após a aprovação, o ScoutX desbloqueia automaticamente.",
+    "whatHappens": "O teu encarregado de educação decide separadamente sobre um perfil público, a visibilidade para olheiros, pedidos de olheiros, vídeos partilhados e análise por IA. Qualquer convite para um treino de captação também precisa da sua aprovação.",
+    "resend": "Reenviar ou usar outro e-mail",
+    "deleteAccount": "Eliminar a minha conta"
+  },
+  "under13": {
+    "title": "O ScoutX é para maiores de 13 anos",
+    "body": "A tua conta foi eliminada e nada foi guardado. Serás bem-vindo quando fizeres 13 anos.",
+    "close": "Fechar"
+  },
+  "settings": {
+    "title": "Idade e encarregado de educação",
+    "ageAdult": "Faixa etária: 18 ou mais",
+    "ageTeen": "Faixa etária: dos 13 aos 17",
+    "guardianApproved": "Aprovado pelo teu encarregado de educação ({{email}})",
+    "scopesTitle": "O teu encarregado de educação permitiu",
+    "noScopes": "Apenas uso privado",
+    "revoke": "Retirar o consentimento",
+    "revokeHint": "As funcionalidades juvenis ficam em pausa até nova aprovação.",
+    "changeAge": "Para corrigir a tua faixa etária, contacta o suporte do ScoutX.",
+    "scope": {
+      "public_passport": "Perfil público",
+      "discovery": "Visível para olheiros",
+      "scout_contact": "Pedidos de olheiros e treinos de captação",
+      "public_media": "Vídeos partilhados",
+      "public_movement": "Movimento no perfil",
+      "ai_analysis": "Análise de vídeo por IA"
+    },
+    "guardianDecides": "Quem decide é o teu encarregado de educação. Pode alterar as escolhas a partir do e-mail de confirmação."
+  },
+  "trial": {
+    "awaitingGuardian": "À espera de que o teu encarregado de educação aprove este treino de captação.",
+    "guardianDeclined": "O teu encarregado de educação recusou este treino de captação."
+  },
+  "youthLabel": "Jogador jovem"
+}

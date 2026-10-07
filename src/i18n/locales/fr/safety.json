@@ -1,0 +1,64 @@
+{
+  "errors": {
+    "generic": "Une erreur s'est produite. Réessaie."
+  },
+  "age": {
+    "title": "Quel âge as-tu ?",
+    "body": "ScoutX adapte ce qui est public et qui peut te contacter selon ta tranche d'âge.",
+    "under13": "Moins de 13 ans",
+    "teen": "13 à 17 ans",
+    "adult": "18 ans ou plus",
+    "under13Notice": "ScoutX est disponible à partir de 13 ans. Si tu continues, ce compte et son contenu seront supprimés.",
+    "under13Continue": "Continuer et supprimer ce compte",
+    "teenConfirm": "J'ai entre 13 et 17 ans. Je comprends qu'un parent ou tuteur doit approuver mon compte avant que je puisse utiliser ScoutX.",
+    "continue": "Continuer",
+    "noBirthDate": "Nous enregistrons seulement ta tranche d'âge, jamais ta date de naissance."
+  },
+  "guardian": {
+    "requestTitle": "Demander à un parent ou tuteur",
+    "requestBody": "Nous enverrons un lien par e-mail à ton parent ou tuteur. Il choisit ce que ScoutX peut faire avec ton compte. D'ici là, ton compte reste privé et limité.",
+    "declinedBody": "Ton parent ou tuteur n'a pas approuvé le compte. Tu peux redemander s'il change d'avis.",
+    "revokedBody": "Le consentement a été retiré, les fonctions jeunes sont donc en pause. Tu peux redemander.",
+    "expiredBody": "Le consentement se renouvelle chaque année. Demande à ton parent ou tuteur de confirmer à nouveau.",
+    "firstNameLabel": "Ton prénom (affiché dans l'e-mail)",
+    "emailLabel": "E-mail du parent ou tuteur",
+    "emailPrivacy": "Nous utilisons cette adresse uniquement pour les e-mails de consentement et de sécurité liés à ton compte.",
+    "send": "Envoyer l'e-mail d'approbation",
+    "signOut": "Se déconnecter",
+    "waitingTitle": "En attente de ton parent ou tuteur",
+    "waitingBody": "Nous avons écrit à {{email}}. Dès son approbation, ScoutX se débloque automatiquement.",
+    "whatHappens": "Ton tuteur décide séparément pour un profil public, la visibilité auprès des scouts, les demandes de scouts, les vidéos partagées et l'analyse IA. Toute invitation à un essai demande aussi son accord.",
+    "resend": "Renvoyer ou utiliser un autre e-mail",
+    "deleteAccount": "Supprimer mon compte"
+  },
+  "under13": {
+    "title": "ScoutX est réservé aux 13 ans et plus",
+    "body": "Ton compte a été supprimé et rien n'a été conservé. Tu seras le bienvenu à 13 ans.",
+    "close": "Fermer"
+  },
+  "settings": {
+    "title": "Âge et tuteur",
+    "ageAdult": "Tranche d'âge : 18 ans ou plus",
+    "ageTeen": "Tranche d'âge : 13 à 17 ans",
+    "guardianApproved": "Approuvé par ton parent ou tuteur ({{email}})",
+    "scopesTitle": "Ton tuteur a autorisé",
+    "noScopes": "Usage privé uniquement",
+    "revoke": "Retirer le consentement du tuteur",
+    "revokeHint": "Les fonctions jeunes sont en pause jusqu'à une nouvelle approbation.",
+    "changeAge": "Pour corriger ta tranche d'âge, contacte le support ScoutX.",
+    "scope": {
+      "public_passport": "Profil public",
+      "discovery": "Visible par les scouts",
+      "scout_contact": "Demandes de scouts et essais",
+      "public_media": "Vidéos partagées",
+      "public_movement": "Déplacements sur le profil",
+      "ai_analysis": "Analyse vidéo par IA"
+    },
+    "guardianDecides": "C'est ton parent ou tuteur qui décide. Il peut modifier ses choix depuis son e-mail de confirmation."
+  },
+  "trial": {
+    "awaitingGuardian": "En attente de l'accord de ton parent ou tuteur pour cet essai.",
+    "guardianDeclined": "Ton parent ou tuteur a refusé cet essai."
+  },
+  "youthLabel": "Jeune joueur"
+}

@@ -3,11 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.searchDiscoverablePlayers = exports.recordDiscoverableView = exports.onPassportSummaryWrittenProjectDiscovery = exports.onProfileWrittenProjectDiscovery = void 0;
 exports.stripLegacyIdentitySeed = stripLegacyIdentitySeed;
 exports.buildDiscoverableProjection = buildDiscoverableProjection;
+exports.projectDiscoverablePlayer = projectDiscoverablePlayer;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const publicPassport_1 = require("./publicPassport");
+const userSafety_1 = require("./safety/userSafety");
 const POSITIONS = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST', 'CF'];
 function asRecord(value) {
     return value && typeof value === 'object' && !Array.isArray(value)
@@ -209,13 +212,14 @@ function buildDiscoverableProjection(input) {
 }
 async function projectDiscoverablePlayer(playerId) {
     const db = (0, firestore_2.getFirestore)();
-    const [profileSnap, summarySnap, verificationSnap] = await Promise.all([
+    const [profileSnap, summarySnap, verificationSnap, policy] = await Promise.all([
         db.collection('profiles').doc(playerId).get(),
         db.collection('passportSummaries').doc(playerId).get(),
         db.collection('verificationStates').doc(`player-${playerId}`).get(),
+        (0, userSafety_1.loadSafetyPolicy)(playerId, db),
     ]);
     const ref = db.collection('discoverablePlayers').doc(playerId);
-    if (!profileSnap.exists) {
+    if (!profileSnap.exists || !policy.canBeDiscovered) {
         await ref.delete().catch(() => undefined);
         return;
     }
@@ -239,7 +243,17 @@ async function projectDiscoverablePlayer(playerId) {
     }
     const existing = await ref.get();
     const viewCount = existing.exists ? (existing.data()?.viewCount ?? 0) : 0;
-    await ref.set({ ...projection, viewCount });
+    const display = (0, publicPassport_1.applyYouthDisplay)(projection, policy);
+    await ref.set({
+        ...display,
+        searchKeywords: policy.isMinor
+            ? [
+                String(display.fullName ?? '').toLowerCase(),
+                ...(projection.searchKeywords ?? []).filter((keyword) => keyword !== String(profile.fullName ?? '').toLowerCase()),
+            ].filter(Boolean)
+            : projection.searchKeywords,
+        viewCount,
+    });
 }
 exports.onProfileWrittenProjectDiscovery = (0, firestore_1.onDocumentWritten)('profiles/{playerId}', async (event) => {
     try {
