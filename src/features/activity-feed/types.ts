@@ -63,7 +63,6 @@ export type ActivityDraft = Omit<ActivityItem, 'id' | 'createdAt' | 'read'> & {
 
 export type ActivityGroup = {
   key: ActivityCategory;
-  label: string;
   items: ActivityItem[];
 };
 

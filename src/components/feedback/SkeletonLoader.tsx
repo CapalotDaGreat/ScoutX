@@ -10,6 +10,7 @@ import Animated, {
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type SkeletonProps = ViewProps & {
   width?: number | `${number}%`;
@@ -75,11 +76,12 @@ export function Skeleton({
   ...props
 }: SkeletonProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('common');
 
   return (
     <View
       accessibilityRole="progressbar"
-      accessibilityLabel="Loading content"
+      accessibilityLabel={t('a11y.loadingContent')}
       className={cn('overflow-hidden', radiusStyles[radius], className)}
       style={[{ width, height, backgroundColor: colors.skeletonBase }, style]}
       {...props}
@@ -204,8 +206,13 @@ export function SkeletonLoader({
 }
 
 export function SectionSkeleton({ className }: { className?: string }) {
+  const { t } = useAppTranslation('common');
   return (
-    <View className={cn('gap-3', className)} accessibilityRole="progressbar" accessibilityLabel="Loading section">
+    <View
+      className={cn('gap-3', className)}
+      accessibilityRole="progressbar"
+      accessibilityLabel={t('a11y.loadingSection')}
+    >
       <Skeleton height={12} width="40%" radius="sm" />
       <SkeletonCard />
       <SkeletonText lines={2} />

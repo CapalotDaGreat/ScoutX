@@ -18,6 +18,7 @@ import { SnackbarHost } from '@/components/feedback/Snackbar';
 import { Heading } from '@/components/primitives/Heading';
 import { useTheme, useThemeCssVars } from '@/theme';
 import { motion } from '@/theme/tokens/motion';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -56,6 +57,7 @@ export function Modal({
   className,
 }: ModalProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('common');
   const reducedMotion = useReducedMotion();
   const themeCssVars = useThemeCssVars();
   const insets = useSafeAreaInsets();
@@ -112,7 +114,7 @@ export function Modal({
           >
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Close modal"
+              accessibilityLabel={t('a11y.closeDialog')}
               className="flex-1"
               onPress={closeOnBackdropPress ? handleClose : undefined}
             />
@@ -170,7 +172,7 @@ export function Modal({
                   {showCloseButton ? (
                     <Pressable
                       accessibilityRole="button"
-                      accessibilityLabel="Close"
+                      accessibilityLabel={t('close')}
                       hitSlop={10}
                       onPress={handleClose}
                       className="h-11 w-11 items-center justify-center rounded-full bg-background-secondary"

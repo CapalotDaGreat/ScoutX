@@ -5,6 +5,7 @@ import { SearchBar } from '@/components/primitives/SearchBar';
 import { Text } from '@/components/primitives/Text';
 import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ComparisonPlayerPickerModalProps = {
   visible: boolean;
@@ -23,6 +24,7 @@ export function ComparisonPlayerPickerModal({
   onClose,
   onSelect,
 }: ComparisonPlayerPickerModalProps) {
+  const { t } = useAppTranslation('scout');
   const [search, setSearch] = useState('');
 
   const availablePlayers = useMemo(() => {
@@ -44,19 +46,20 @@ export function ComparisonPlayerPickerModal({
           value={search}
           onChangeText={setSearch}
           onClear={() => setSearch('')}
-          placeholder="Search players..."
+          placeholder={t('comparisonUi.searchPlayers')}
         />
 
         <ScrollView style={{ maxHeight: 360 }} showsVerticalScrollIndicator={false}>
           {availablePlayers.length === 0 ? (
             <Text variant="body-sm" color="secondary" className="py-6 text-center">
-              No players available to add.
+              {t('comparisonUi.noPlayersToAdd')}
             </Text>
           ) : (
             availablePlayers.map((item) => (
               <Pressable
                 key={item.id}
                 accessibilityRole="button"
+                accessibilityLabel={t('comparisonUi.addNamed', { name: item.fullName })}
                 onPress={() => {
                   onSelect(item);
                   setSearch('');
@@ -69,7 +72,9 @@ export function ComparisonPlayerPickerModal({
                   <Text variant="caption" color="secondary">
                     {joinKnown([
                       item.club,
-                      item.overallRating !== null ? `OVR ${formatRating(item.overallRating)}` : null,
+                      item.overallRating !== null
+                        ? t('comparisonUi.overallShort', { value: formatRating(item.overallRating) })
+                        : null,
                     ])}
                   </Text>
                 </View>

@@ -5,6 +5,8 @@ import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants';
 import { type ComparisonTrendPoint } from '@/features/player-comparison/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useTheme } from '@/theme';
 
 export type ComparisonTrendChartProps = {
   trends: ComparisonTrendPoint[];
@@ -15,31 +17,25 @@ export type ComparisonTrendChartProps = {
 const chartWidth = 320;
 const chartHeight = 140;
 const padding = { top: 12, right: 12, bottom: 28, left: 12 };
+/** Form points: win 3, draw 1, loss 0. A shared scale keeps players comparable. */
+const MAX_FORM_POINTS = 3;
 
 function buildSeries(
   trends: ComparisonTrendPoint[],
   playerId: string,
 ): Array<{ x: number; y: number; label: string }> {
-  const values = trends
-    .map((point) => point.values[playerId])
-    .filter((value): value is number => value !== undefined);
-
-  if (values.length === 0) {
-    return [];
-  }
-
-  const max = Math.max(...values, 1);
-  const min = Math.min(...values, 0);
-  const range = Math.max(max - min, 0.01);
   const innerWidth = chartWidth - padding.left - padding.right;
   const innerHeight = chartHeight - padding.top - padding.bottom;
   const divisor = Math.max(trends.length - 1, 1);
 
-  return trends.map((point, index) => {
-    const value = point.values[playerId] ?? min;
+  return trends.flatMap((point, index) => {
+    const value = point.values[playerId];
+    if (value === undefined) {
+      return [];
+    }
     const x = padding.left + (innerWidth * index) / divisor;
-    const y = padding.top + innerHeight - ((value - min) / range) * innerHeight;
-    return { x, y, label: point.label };
+    const y = padding.top + innerHeight - (value / MAX_FORM_POINTS) * innerHeight;
+    return [{ x, y, label: point.label }];
   });
 }
 
@@ -48,6 +44,8 @@ export const ComparisonTrendChart = memo(function ComparisonTrendChart({
   playerIds,
   playerNames,
 }: ComparisonTrendChartProps) {
+  const { t } = useAppTranslation('scout');
+  const { colors } = useTheme();
   const series = useMemo(
     () =>
       playerIds.map((playerId, index) => ({
@@ -63,6 +61,17 @@ export const ComparisonTrendChart = memo(function ComparisonTrendChart({
   }
 
   const labelStep = Math.max(Math.ceil(trends.length / 4), 1);
+  const summary = series
+    .map((item) => {
+      const name = playerNames[item.playerId] ?? t('comparisonUi.playerFallback');
+      const values = trends
+        .map((point) => point.values[item.playerId])
+        .filter((value): value is number => value !== undefined);
+      return values.length > 0
+        ? t('comparisonUi.trendPlayerA11y', { name, values: values.join(', ') })
+        : t('comparisonUi.trendPlayerEmptyA11y', { name });
+    })
+    .join('. ');
 
   return (
     <Card variant="default" padding="lg" className="gap-4">
@@ -71,20 +80,29 @@ export const ComparisonTrendChart = memo(function ComparisonTrendChart({
           <View key={item.playerId} className="flex-row items-center gap-2">
             <View className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: item.color }} />
             <Text variant="caption" className="font-sans-semibold">
-              {playerNames[item.playerId] ?? 'Player'}
+              {playerNames[item.playerId] ?? t('comparisonUi.playerFallback')}
             </Text>
           </View>
         ))}
       </View>
 
-      <View className="items-center">
-        <Svg width={chartWidth} height={chartHeight} accessibilityLabel="Performance trend comparison">
+      <Text variant="caption" color="secondary">
+        {t('comparisonUi.trendScale')}
+      </Text>
+
+      <View
+        className="items-center"
+        accessible
+        accessibilityRole="image"
+        accessibilityLabel={`${t('comparisonUi.trendA11y')}. ${summary}`}
+      >
+        <Svg width={chartWidth} height={chartHeight}>
           <Line
             x1={padding.left}
             y1={chartHeight - padding.bottom}
             x2={chartWidth - padding.right}
             y2={chartHeight - padding.bottom}
-            stroke="#D4D4D8"
+            stroke={colors.border}
             strokeWidth={1}
           />
 
@@ -117,11 +135,11 @@ export const ComparisonTrendChart = memo(function ComparisonTrendChart({
         </Svg>
       </View>
 
-      <View className="flex-row flex-wrap justify-between gap-2 px-1">
+      <View className="flex-row flex-wrap justify-between gap-2 px-1" importantForAccessibility="no-hide-descendants">
         {trends.map((point, index) =>
           index % labelStep === 0 || index === trends.length - 1 ? (
             <Text key={point.label} variant="caption" color="secondary" className="text-center">
-              {point.label}
+              {t('comparisonUi.matchShort', { n: point.label })}
             </Text>
           ) : null,
         )}

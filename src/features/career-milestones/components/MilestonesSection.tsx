@@ -124,7 +124,7 @@ export function MilestonesSection({
               onPress={() => setExpanded((current) => !current)}
               className="self-start"
             >
-              {expanded ? t('common:showLess') : t('career:milestoneUi.seeMore', { count: remaining })}
+              {expanded ? t('common:seeLess') : t('career:milestoneUi.seeMore', { count: remaining })}
             </Button>
           ) : null}
         </>

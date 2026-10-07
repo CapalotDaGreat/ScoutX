@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react-native';
 import { Input, type InputProps } from '@/components/primitives/Input';
 import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type SearchBarProps = Omit<InputProps, 'leftIcon' | 'rightIcon'> & {
   onClear?: () => void;
@@ -15,7 +16,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
     value,
     onClear,
     showClearButton = true,
-    placeholder = 'Search',
+    placeholder,
     containerClassName,
     inputClassName,
     ...props
@@ -23,13 +24,14 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
   ref,
 ) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('common');
   const hasValue = Boolean(value && String(value).length > 0);
 
   return (
     <Input
       ref={ref}
       value={value}
-      placeholder={placeholder}
+      placeholder={placeholder ?? t('searchPlaceholder')}
       returnKeyType="search"
       autoCapitalize="none"
       autoCorrect={false}
@@ -43,7 +45,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
         showClearButton && hasValue ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Clear search"
+            accessibilityLabel={t('a11y.clearSearch')}
             hitSlop={8}
             onPress={onClear}
             className="h-6 w-6 items-center justify-center rounded-full bg-background-secondary"

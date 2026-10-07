@@ -1,8 +1,4 @@
 import {
-  ACTIVITY_CATEGORY_LABELS,
-  ACTIVITY_TYPE_LABELS,
-} from '@/features/activity-feed/constants';
-import {
   type ActivityCategory,
   type ActivityDraft,
   type ActivityGroup,
@@ -237,7 +233,6 @@ export function groupActivitiesByCategory(activities: ActivityItem[]): ActivityG
 
   return Array.from(grouped.entries()).map(([key, items]) => ({
     key,
-    label: ACTIVITY_CATEGORY_LABELS[key],
     items,
   }));
 }
@@ -259,6 +254,3 @@ export function buildActivityTimeline(activities: ActivityItem[]): ActivityTimel
   }));
 }
 
-export function getActivityTypeLabel(type: ActivityType): string {
-  return ACTIVITY_TYPE_LABELS[type];
-}

@@ -1,48 +1,27 @@
-import {
-  type ComparisonCareerSummary,
-  type ComparisonGpsSummary,
-  type ComparisonPlayerProfile,
-  type ComparisonTrendPoint,
-  type ComparisonVideoSummary,
+import type {
+  ComparisonCareerSummary,
+  ComparisonGpsSummary,
+  ComparisonPlayerProfile,
+  ComparisonTrendPoint,
+  ComparisonVideoSummary,
 } from '@/features/player-comparison/types';
-import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import type { DiscoverablePlayer } from '@/features/scout-discovery/types';
 
 function formPoints(result: 'W' | 'D' | 'L'): number {
   return result === 'W' ? 3 : result === 'D' ? 1 : 0;
 }
 
 /**
- * Trend points derived only from recorded data: recent form results, per-match goal and
- * assist averages, and the rolling form average. Nothing here is seeded or guessed.
+ * Recent form points (win 3, draw 1, loss 0) from recorded results only. Other stats are
+ * different units and belong in the metric tables, not on the same line.
  */
 function buildPerformanceTrend(player: DiscoverablePlayer): ComparisonTrendPoint[] {
-  const formValues = player.form.map((result, index) => ({
-    label: `M${index + 1}`,
-    values: { [player.id]: formPoints(result) },
-  }));
-
-  const rolling = player.form.map((_result, index) => {
-    const slice = player.form.slice(0, index + 1);
-    const total = slice.reduce((sum, item) => sum + formPoints(item), 0);
-    const avg = total / slice.length;
-    return { label: `Form ${index + 1}`, values: { [player.id]: Number(avg.toFixed(2)) } };
-  });
-
-  const perMatch: ComparisonTrendPoint[] =
-    player.matchCount > 0
-      ? [
-          {
-            label: 'Goals/match',
-            values: { [player.id]: Number((player.goals / player.matchCount).toFixed(2)) },
-          },
-          {
-            label: 'Assists/match',
-            values: { [player.id]: Number((player.assists / player.matchCount).toFixed(2)) },
-          },
-        ]
-      : [];
-
-  return [...formValues.slice(-5), ...perMatch, ...rolling.slice(-3)];
+  return player.form
+    .map((result, index) => ({
+      label: String(index + 1),
+      values: { [player.id]: formPoints(result) },
+    }))
+    .slice(-5);
 }
 
 /**

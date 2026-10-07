@@ -117,7 +117,8 @@
     "body": "Aanbeveling",
     "bodyPlaceholder": "Beschrijf wat je van deze speler hebt gezien…",
     "missingMessage": "Club, relatie en aanbevelingstekst zijn verplicht.",
-    "publish": "Aanbeveling plaatsen"
+    "publish": "Aanbeveling plaatsen",
+    "relationshipPlaceholder": "bijv. Trainer in de O17, 2024–2026"
   },
   "verificationCard": {
     "overline": "Verificatie",

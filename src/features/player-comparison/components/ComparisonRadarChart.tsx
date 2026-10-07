@@ -11,6 +11,7 @@ import {
   toRadarPointString,
 } from '@/features/player-statistics/utils/radarGeometry';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ComparisonRadarChartProps = {
   profiles: ComparisonPlayerProfile[];
@@ -25,6 +26,7 @@ export const ComparisonRadarChart = memo(function ComparisonRadarChart({
   profiles,
 }: ComparisonRadarChartProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
 
   const chart = useMemo(() => {
     const axisLabels = profiles[0]?.radarStats.map((stat) => stat.label) ?? [];
@@ -78,7 +80,7 @@ export const ComparisonRadarChart = memo(function ComparisonRadarChart({
         <Svg
           width={chartSize}
           height={chartSize}
-          accessibilityLabel="Multi-player attribute radar comparison"
+          accessibilityLabel={t('comparisonUi.radarA11y')}
         >
           {chart.grids.map((grid) => (
             <Polygon

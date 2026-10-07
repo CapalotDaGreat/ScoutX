@@ -7,6 +7,7 @@ import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { cn } from '@/utils/cn';
 import { ArrowLeftRight, Plus, X } from 'lucide-react-native';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ComparisonPlayerSlotProps = {
   player?: DiscoverablePlayer;
@@ -24,19 +25,20 @@ export function ComparisonPlayerSlot({
   onReplace,
 }: ComparisonPlayerSlotProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('scout');
   const accentColor = COMPARISON_PLAYER_COLORS[slotIndex];
 
   if (!player) {
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Add player to comparison"
+        accessibilityLabel={t('comparison.addPlayerToComparison')}
         onPress={onAdd}
         className="min-h-[108px] flex-1 items-center justify-center rounded-xl border border-dashed border-border bg-surface"
       >
         <Plus size={20} color={colors.textSecondary} />
         <Text variant="caption" color="secondary" className="mt-1 font-sans-semibold">
-          Add player
+          {t('comparison.addPlayer')}
         </Text>
       </Pressable>
     );
@@ -51,7 +53,11 @@ export function ComparisonPlayerSlot({
     >
       <View className="absolute left-0 top-0 h-1 w-full" style={{ backgroundColor: accentColor }} />
       <View className="flex-row items-start gap-2 p-2.5">
-        <Image source={{ uri: player.avatarUrl }} className="h-10 w-10 rounded-full" />
+        <Image
+          source={{ uri: player.avatarUrl }}
+          className="h-10 w-10 rounded-full"
+          accessibilityIgnoresInvertColors
+        />
         <View className="flex-1">
           <Text variant="caption" numberOfLines={1} className="font-sans-bold">
             {player.fullName}
@@ -59,7 +65,9 @@ export function ComparisonPlayerSlot({
           <Text variant="caption" color="secondary" numberOfLines={1}>
             {joinKnown([
               player.position.length > 0 ? player.position.join('/') : null,
-              player.overallRating !== null ? `OVR ${formatRating(player.overallRating)}` : null,
+              player.overallRating !== null
+                ? t('comparisonUi.overallShort', { value: formatRating(player.overallRating) })
+                : null,
             ])}
           </Text>
           <Text variant="caption" color="secondary" numberOfLines={1}>
@@ -70,8 +78,9 @@ export function ComparisonPlayerSlot({
           {onReplace ? (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={`Replace ${player.fullName}`}
+              accessibilityLabel={t('comparisonUi.replaceNamed', { name: player.fullName })}
               onPress={onReplace}
+              hitSlop={8}
               className="h-7 w-7 items-center justify-center rounded-full bg-background-secondary"
             >
               <ArrowLeftRight size={13} color={colors.textSecondary} />
@@ -80,8 +89,9 @@ export function ComparisonPlayerSlot({
           {onRemove ? (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={`Remove ${player.fullName}`}
+              accessibilityLabel={t('comparisonUi.removeNamed', { name: player.fullName })}
               onPress={onRemove}
+              hitSlop={8}
               className="h-7 w-7 items-center justify-center rounded-full bg-background-secondary"
             >
               <X size={13} color={colors.textSecondary} />

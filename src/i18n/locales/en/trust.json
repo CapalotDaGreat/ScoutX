@@ -117,7 +117,8 @@
     "body": "Recommendation",
     "bodyPlaceholder": "Describe what you've seen from this player…",
     "missingMessage": "Club, relationship context and recommendation text are required.",
-    "publish": "Publish endorsement"
+    "publish": "Publish endorsement",
+    "relationshipPlaceholder": "e.g. Coached them in the U17 squad, 2024–2026"
   },
   "verificationCard": {
     "overline": "Verification",

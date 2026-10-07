@@ -3,12 +3,14 @@ import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants';
 import { type ComparisonPlayerProfile } from '@/features/player-comparison/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ComparisonCareerSectionProps = {
   profiles: ComparisonPlayerProfile[];
 };
 
 export function ComparisonCareerSection({ profiles }: ComparisonCareerSectionProps) {
+  const { t } = useAppTranslation('scout');
   if (profiles.length === 0) {
     return null;
   }
@@ -25,14 +27,14 @@ export function ComparisonCareerSection({ profiles }: ComparisonCareerSectionPro
             <Text weight="semibold">{profile.player.fullName}</Text>
             {profile.career.journeyMilestones !== null ? (
               <Text variant="caption" color="secondary">
-                · {profile.career.journeyMilestones} milestones
+                {t('comparisonUi.milestonesCount', { count: profile.career.journeyMilestones })}
               </Text>
             ) : null}
           </View>
 
           <View className="gap-2">
             <Text variant="caption" color="secondary" className="uppercase">
-              Club progression
+              {t('comparisonUi.clubProgression')}
             </Text>
             {profile.career.clubs.map((club, clubIndex) => (
               <View key={`${profile.player.id}-${club}`} className="flex-row items-center gap-2">

@@ -27,7 +27,6 @@ export {
 export {
   MAX_COMPARISON_PLAYERS,
   COMPARISON_PLAYER_COLORS,
-  COMPARISON_SECTION_LABELS,
 } from './constants';
 
 export type {

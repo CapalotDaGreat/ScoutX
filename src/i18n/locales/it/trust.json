@@ -117,7 +117,8 @@
     "body": "Raccomandazione",
     "bodyPlaceholder": "Descrivi cosa hai visto di questo giocatore…",
     "missingMessage": "Club, contesto della relazione e testo della raccomandazione sono obbligatori.",
-    "publish": "Pubblica raccomandazione"
+    "publish": "Pubblica raccomandazione",
+    "relationshipPlaceholder": "es. Allenatore nell'U17, 2024–2026"
   },
   "verificationCard": {
     "overline": "Verifica",

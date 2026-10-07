@@ -175,5 +175,15 @@
       "journey": "Carrera"
     }
   },
-  "showLess": "Mostrar menos"
+  "preparingSession": "Preparando tu sesión de ScoutX",
+  "a11y": {
+    "closeDialog": "Cerrar diálogo",
+    "closeSheet": "Cerrar panel",
+    "loadingContent": "Cargando contenido",
+    "loadingSection": "Cargando sección",
+    "expandSection": "Despliega esta sección",
+    "collapseSection": "Contrae esta sección",
+    "clearSearch": "Borrar búsqueda"
+  },
+  "searchPlaceholder": "Buscar"
 }

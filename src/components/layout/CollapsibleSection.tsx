@@ -5,6 +5,7 @@ import { Text } from '@/components/primitives/Text';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 import { useTheme } from '@/theme';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 /** In-memory expand state for the current app session (not persisted to disk). */
 const sessionExpandState = new Map<string, boolean>();
@@ -34,6 +35,7 @@ export function CollapsibleSection({
   className,
 }: CollapsibleSectionProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('common');
   const initialOpen =
     persistKey != null && sessionExpandState.has(persistKey)
       ? Boolean(sessionExpandState.get(persistKey))
@@ -81,7 +83,7 @@ export function CollapsibleSection({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={accessibilityLabel}
-            accessibilityHint="Double tap to expand or collapse this section"
+            accessibilityHint={t(open ? 'a11y.collapseSection' : 'a11y.expandSection')}
             accessibilityState={{ expanded: open }}
             onPress={toggle}
             className="flex-row items-center justify-between gap-3 px-5 py-5"

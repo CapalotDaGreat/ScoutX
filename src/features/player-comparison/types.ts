@@ -1,6 +1,7 @@
 import { type DiscoverablePlayer, type RadarStat } from '@/features/scout-discovery/types';
 
 export type ComparisonTrendPoint = {
+  /** 1-based index of the recent match, oldest first. */
   label: string;
   values: Record<string, number>;
 };
@@ -45,9 +46,25 @@ export type ComparisonMetricValue = {
   numeric?: number;
 };
 
+export type ComparisonMetricKey =
+  | 'goals'
+  | 'assists'
+  | 'matches'
+  | 'height'
+  | 'weight'
+  | 'sprint'
+  | 'weakFoot'
+  | 'skillMoves'
+  | 'passing'
+  | 'shooting'
+  | 'defending'
+  | 'physical'
+  | 'distance'
+  | 'topSpeed'
+  | 'sessions';
+
 export type ComparisonMetricRow = {
-  key: string;
-  label: string;
+  key: ComparisonMetricKey;
   values: ComparisonMetricValue[];
   higherIsBetter: boolean;
 };

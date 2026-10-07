@@ -9,6 +9,7 @@ import {
   sharedPositionGroup,
   statisticKeysForGroup,
 } from '../../src/features/scout-intelligence/services/positionComparison.ts';
+import { buildComparisonProfile } from '../../src/features/player-comparison/services/comparisonProfileService.ts';
 import { bestBriefMatch, evaluateBrief } from '../../src/features/scout-intelligence/services/briefMatch.ts';
 import {
   defaultDiscoveryFilters,
@@ -214,5 +215,22 @@ describe('brief match', () => {
     assert.equal(best?.presetId, 'strikers');
     assert.equal(best?.met, 2);
     assert.equal(best?.notMet, 0);
+  });
+});
+
+describe('comparison trend', () => {
+  test('plots only recorded form points, never mixing other units', () => {
+    const profile = buildComparisonProfile(
+      player({ id: 'p1', fullName: 'A', form: ['W', 'L', 'D'], matchCount: 3, goals: 2, assists: 1 }),
+    );
+    assert.deepEqual(profile.performanceTrend, [
+      { label: '1', values: { p1: 3 } },
+      { label: '2', values: { p1: 0 } },
+      { label: '3', values: { p1: 1 } },
+    ]);
+  });
+
+  test('no recorded results means no trend points', () => {
+    assert.deepEqual(buildComparisonProfile(player({ id: 'p2', fullName: 'B' })).performanceTrend, []);
   });
 });

@@ -1,8 +1,20 @@
 import { ScrollView, Pressable } from 'react-native';
 import { Text } from '@/components/primitives/Text';
-import { COMPARISON_SECTION_LABELS } from '@/features/player-comparison/constants';
 import { type ComparisonSectionKey } from '@/features/player-comparison/types';
 import { cn } from '@/utils/cn';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+
+const ALL_SECTIONS: ComparisonSectionKey[] = [
+  'radar',
+  'statistics',
+  'trends',
+  'physical',
+  'technical',
+  'gps',
+  'career',
+  'videos',
+  'achievements',
+];
 
 export type ComparisonSectionNavProps = {
   activeSection: ComparisonSectionKey;
@@ -17,9 +29,10 @@ export function ComparisonSectionNav({
   layout = 'horizontal',
   sections: sectionKeys,
 }: ComparisonSectionNavProps) {
+  const { t } = useAppTranslation('scout');
   const isVertical = layout === 'vertical';
-  const sections = (sectionKeys ?? (Object.keys(COMPARISON_SECTION_LABELS) as ComparisonSectionKey[])).map(
-    (key) => [key, COMPARISON_SECTION_LABELS[key]] as const,
+  const sections = (sectionKeys ?? ALL_SECTIONS).map(
+    (key) => [key, t(`comparison.sections.${key}`)] as const,
   );
 
   return (

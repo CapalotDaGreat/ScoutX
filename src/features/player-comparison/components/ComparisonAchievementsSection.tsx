@@ -3,12 +3,14 @@ import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants';
 import { type ComparisonPlayerProfile } from '@/features/player-comparison/types';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type ComparisonAchievementsSectionProps = {
   profiles: ComparisonPlayerProfile[];
 };
 
 export function ComparisonAchievementsSection({ profiles }: ComparisonAchievementsSectionProps) {
+  const { t } = useAppTranslation('scout');
   if (profiles.length === 0) {
     return null;
   }
@@ -28,19 +30,19 @@ export function ComparisonAchievementsSection({ profiles }: ComparisonAchievemen
               <Text weight="semibold">{profile.player.fullName}</Text>
             </View>
             <Text variant="caption" color="secondary">
-              {profile.career.achievements.length} honours
+              {t('comparisonUi.honoursCount', { count: profile.career.achievements.length })}
             </Text>
           </View>
 
           {profile.career.achievements.length > 0 ? (
             profile.career.achievements.map((achievement) => (
               <Text key={achievement} variant="body-sm">
-                • {achievement}
+                {`• ${achievement}`}
               </Text>
             ))
           ) : (
             <Text variant="body-sm" color="secondary">
-              No honours recorded.
+              {t('comparisonUi.noHonours')}
             </Text>
           )}
         </Card>
@@ -48,7 +50,7 @@ export function ComparisonAchievementsSection({ profiles }: ComparisonAchievemen
 
       {maxAchievements > 0 ? (
         <Text variant="caption" color="secondary">
-          Side-by-side honours help scouts spot pedigree gaps quickly.
+          {t('comparisonUi.honoursHint')}
         </Text>
       ) : null}
     </View>

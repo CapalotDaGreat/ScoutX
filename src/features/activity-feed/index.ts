@@ -16,10 +16,6 @@ export {
   type PushNotificationPayload,
 } from '@/features/activity-feed/services/pushNotificationPort';
 export { mapPushPayloadToActivityDraft } from '@/features/activity-feed/services/pushActivityAdapter';
-export {
-  ACTIVITY_CATEGORY_LABELS,
-  ACTIVITY_TYPE_LABELS,
-} from '@/features/activity-feed/constants';
 export type {
   ActivityCategory,
   ActivityDraft,

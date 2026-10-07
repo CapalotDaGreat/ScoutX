@@ -175,5 +175,15 @@
       "journey": "Loopbaan"
     }
   },
-  "showLess": "Minder tonen"
+  "preparingSession": "Je ScoutX-sessie wordt voorbereid",
+  "a11y": {
+    "closeDialog": "Dialoog sluiten",
+    "closeSheet": "Paneel sluiten",
+    "loadingContent": "Inhoud laden",
+    "loadingSection": "Sectie laden",
+    "expandSection": "Klapt deze sectie uit",
+    "collapseSection": "Klapt deze sectie in",
+    "clearSearch": "Zoekopdracht wissen"
+  },
+  "searchPlaceholder": "Zoeken"
 }

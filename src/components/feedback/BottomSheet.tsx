@@ -16,6 +16,7 @@ import { useTheme, useThemeCssVars } from '@/theme';
 import { motion } from '@/theme/tokens/motion';
 import { cn } from '@/utils/cn';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type BottomSheetRef = undefined;
 
@@ -39,6 +40,7 @@ export function BottomSheet({
   ...props
 }: BottomSheetProps) {
   const { colors } = useTheme();
+  const { t } = useAppTranslation('common');
   const reducedMotion = useReducedMotion();
   const themeCssVars = useThemeCssVars();
   const translateY = useRef(new Animated.Value(1)).current;
@@ -84,7 +86,7 @@ export function BottomSheet({
       <View style={themeCssVars} className="flex-1 justify-end">
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Close sheet"
+          accessibilityLabel={t('a11y.closeSheet')}
           className="absolute inset-0"
           onPress={handleClose}
           style={{ backgroundColor: colors.surfaceOverlay }}

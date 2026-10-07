@@ -1,4 +1,5 @@
 import {
+  type ComparisonMetricKey,
   type ComparisonMetricRow,
   type ComparisonMetricValue,
   type ComparisonPlayerProfile,
@@ -6,12 +7,11 @@ import {
 import { starGlyphs } from '@/utils/starRating';
 
 function metric(
-  key: string,
-  label: string,
+  key: ComparisonMetricKey,
   values: ComparisonMetricValue[],
   higherIsBetter = true,
 ): ComparisonMetricRow {
-  return { key, label, values, higherIsBetter };
+  return { key, values, higherIsBetter };
 }
 
 const UNKNOWN = '—';
@@ -33,29 +33,26 @@ function cell(
 
 export function buildStatisticsRows(profiles: ComparisonPlayerProfile[]): ComparisonMetricRow[] {
   return [
-    metric('goals', 'Goals', profiles.map((p) => cell(p.player.id, p.player.goals))),
-    metric('assists', 'Assists', profiles.map((p) => cell(p.player.id, p.player.assists))),
-    metric('matches', 'Matches', profiles.map((p) => cell(p.player.id, p.player.matchCount))),
+    metric('goals', profiles.map((p) => cell(p.player.id, p.player.goals))),
+    metric('assists', profiles.map((p) => cell(p.player.id, p.player.assists))),
+    metric('matches', profiles.map((p) => cell(p.player.id, p.player.matchCount))),
   ];
 }
 
 export function buildPhysicalRows(profiles: ComparisonPlayerProfile[]): ComparisonMetricRow[] {
   return [
-    metric('height', 'Height (cm)', profiles.map((p) => cell(p.player.id, p.player.heightCm))),
-    metric('weight', 'Weight (kg)', profiles.map((p) => cell(p.player.id, p.player.weightKg))),
+    metric('height', profiles.map((p) => cell(p.player.id, p.player.heightCm))),
+    metric('weight', profiles.map((p) => cell(p.player.id, p.player.weightKg))),
     metric(
       'sprint',
-      'Sprint Speed (km/h)',
       profiles.map((p) => cell(p.player.id, p.player.sprintSpeedKmh)),
     ),
     metric(
       'weakFoot',
-      'Weak Foot',
       profiles.map((p) => cell(p.player.id, p.player.weakFoot, starGlyphs)),
     ),
     metric(
       'skillMoves',
-      'Skill Moves',
       profiles.map((p) => cell(p.player.id, p.player.skillMoves, starGlyphs)),
     ),
   ];
@@ -63,20 +60,17 @@ export function buildPhysicalRows(profiles: ComparisonPlayerProfile[]): Comparis
 
 export function buildTechnicalRows(profiles: ComparisonPlayerProfile[]): ComparisonMetricRow[] {
   return [
-    metric('passing', 'Passing', profiles.map((p) => cell(p.player.id, p.player.ratings.passing))),
+    metric('passing', profiles.map((p) => cell(p.player.id, p.player.ratings.passing))),
     metric(
       'shooting',
-      'Shooting',
       profiles.map((p) => cell(p.player.id, p.player.ratings.shooting)),
     ),
     metric(
       'defending',
-      'Defending',
       profiles.map((p) => cell(p.player.id, p.player.ratings.defending)),
     ),
     metric(
       'physical',
-      'Physical',
       profiles.map((p) => cell(p.player.id, p.player.ratings.physical)),
     ),
   ];
@@ -86,17 +80,14 @@ export function buildGpsRows(profiles: ComparisonPlayerProfile[]): ComparisonMet
   return [
     metric(
       'distance',
-      'Avg Distance (km)',
       profiles.map((p) => cell(p.player.id, p.gps?.distanceKm)),
     ),
     metric(
       'topSpeed',
-      'Top Speed (km/h)',
       profiles.map((p) => cell(p.player.id, p.gps?.topSpeedKmh)),
     ),
     metric(
       'sessions',
-      'GPS Sessions',
       profiles.map((p) => cell(p.player.id, p.gps?.sessionsCount)),
     ),
   ];

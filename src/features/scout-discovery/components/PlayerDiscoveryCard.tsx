@@ -145,7 +145,7 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
               </Text>
             </View>
             {player.potentialRating !== null ? (
-              <RatingPill label="POT" value={formatRating(player.potentialRating)} emphasis="primary" />
+              <RatingPill label={t('comparisonUi.potentialLabel')} value={formatRating(player.potentialRating)} emphasis="primary" />
             ) : null}
           </View>
 

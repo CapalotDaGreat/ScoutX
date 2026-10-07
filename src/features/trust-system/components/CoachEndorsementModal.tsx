@@ -132,7 +132,7 @@ export function CoachEndorsementModal({
           label={t('endorsement.relationship')}
           value={relationship}
           onChangeText={setRelationship}
-          placeholder="U17 head coach, 2024–2026"
+          placeholder={t('coachEndorsement.relationshipPlaceholder')}
         />
         <Input
           label={t('coachEndorsement.yearsKnown')}
