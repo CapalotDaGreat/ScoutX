@@ -5,9 +5,9 @@ common App Review guideline. Work top to bottom; later steps depend on earlier o
 
 Status on 2026-10-08: `scoutx-230b0` is on Blaze. APIs enabled; Firestore `(default)` and the
 Storage bucket created in `europe-west6` (Zurich); all functions run in `europe-west6`. Secrets set:
-`GUARDIAN_LINK_SECRET`, `REVENUECAT_WEBHOOK_SECRET`, `OPENROUTER_API_KEY`, `APPLE_TEAM_ID`.
-`APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` and `ADMIN_USER_IDS` exist but are blank (treated as not
-configured) until real values are provided. Still open in section 1: steps 4, 5, 7, 9, 10.
+`GUARDIAN_LINK_SECRET`, `REVENUECAT_WEBHOOK_SECRET`, `OPENROUTER_API_KEY`, `APPLE_TEAM_ID`,
+`APPLE_KEY_ID` and `APPLE_PRIVATE_KEY` (Sign in with Apple key `H92VR9XJ8R`). `ADMIN_USER_IDS`
+exists but is blank (treated as not configured) until real staff uids are provided. Still open in section 1: steps 4, 5, 7, 9, 10.
 
 ## 1. Backend (Guideline 2.1(a): "error message after tapping Enter")
 
