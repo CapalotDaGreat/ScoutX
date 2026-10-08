@@ -111,10 +111,30 @@ class EasyOcrJerseyReader:
         return best
 
 
+def _package_version(name: str) -> str:
+    from importlib.metadata import PackageNotFoundError, version  # noqa: PLC0415
+
+    try:
+        return version(name)
+    except PackageNotFoundError:
+        return "missing"
+
+
+def model_versions() -> dict[str, str]:
+    """What an approval record pins: weights id plus the library versions that run them."""
+    return {
+        "detector": f"{DETECTOR_MODEL}@transformers-{_package_version('transformers')}",
+        "tracker": f"bytetrack@supervision-{_package_version('supervision')}",
+        "jerseyReader": f"easyocr-{_package_version('easyocr')}",
+        "decoder": f"pyav-{_package_version('av')}",
+    }
+
+
 def default_components(fps: float = 2.0) -> Components:
     return Components(
         source=PyAvFrameSource(),
         detector=RtDetrDetector(),
         tracker_factory=lambda: ByteTrackTracker(fps),
         jersey_reader=EasyOcrJerseyReader(),
+        models=model_versions(),
     )

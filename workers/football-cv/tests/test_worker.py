@@ -96,6 +96,26 @@ def test_jersey_reads_confirm_identity_team_colour_alone_does_not():
     assert nobody.state == "UNKNOWN"
 
 
+def test_two_people_with_the_target_number_at_once_are_ambiguous_not_confirmed():
+    both = associate([track("a", range(0, 6), "8", 0.9, 0.9), track("b", range(3, 9), "8", 0.9, 0.9)], "8")
+    assert both.state == "CANDIDATE"
+    assert both.ambiguous is True
+    assert both.target_tracks == []
+    assert availability_windows(both, 0, 60, 0.5, wide_camera=True)[0]["state"] == "UNKNOWN"
+    # The same player re-acquired under a new track id (re-entry) is not two people.
+    reentry = associate([track("a", range(0, 5), "8", 0.9, 0.9), track("b", range(30, 35), "8", 0.9, 0.9)], "8")
+    assert reentry.state == "CONFIRMED_VISIBLE"
+
+
+def test_same_number_in_the_wrong_kit_is_not_the_target():
+    opponent_and_target = [track("own", range(0, 6), "8", 0.9, 0.9), track("opp", range(0, 6), "8", 0.9, 0.1)]
+    with_kit = associate(opponent_and_target, "8", kit_known=True)
+    assert with_kit.state == "CONFIRMED_VISIBLE"
+    assert [t.track_id for t in with_kit.target_tracks] == ["own"]
+    # Without a usable kit description the two cannot be told apart.
+    assert associate(opponent_and_target, "8", kit_known=False).state == "CANDIDATE"
+
+
 def test_unconfirmed_identity_yields_only_unknown_time():
     windows = availability_windows(associate([], "8"), 0, 60, 0.5, wide_camera=True)
     assert windows == [{"startSec": 0, "endSec": 60, "state": "UNKNOWN", "confidence": 0.0}]
@@ -176,6 +196,19 @@ def test_pipeline_confirms_target_and_reports_no_events():
     assert result.coverage.framesDecoded == 20
     assert result.coverage.targetVisibleSec <= result.coverage.analysedSec
     assert any(window.state == "CONFIRMED_VISIBLE" for window in result.availability)
+
+
+def test_evaluation_trace_is_local_only_and_models_are_reported():
+    parts = components()
+    parts.models = {"detector": "fake@1"}
+    trace: list[dict] = []
+    result = analyse_segment(SegmentRequest.model_validate(request_body()), parts, trace)
+    assert len(trace) == 20
+    assert trace[0]["box"] == [600, 80, 630, 160]
+    assert result.models == {"detector": "fake@1"}
+    payload = result.model_dump()
+    assert "trace" not in payload
+    assert "box" not in str(payload)
 
 
 def test_pipeline_wrong_jersey_stays_candidate():

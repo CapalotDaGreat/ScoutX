@@ -119,6 +119,7 @@ class Event(BaseModel):
 class SegmentResult(BaseModel):
     contractVersion: Literal[2] = CONTRACT_VERSION
     workerVersion: str
+    models: dict[str, str] = Field(default_factory=dict)
     segmentIndex: int
     stages: Stages
     cameraView: CameraView
@@ -137,4 +138,6 @@ class SegmentResult(BaseModel):
                 raise ValueError("availability windows overlap")
         if self.stages.events != "complete" and self.events:
             raise ValueError("events reported without a complete event stage")
+        if len(self.models) > 8 or any(len(k) > 40 or len(v) > 120 for k, v in self.models.items()):
+            raise ValueError("model identifiers out of bounds")
         return self

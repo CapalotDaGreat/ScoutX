@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanupAbandonedUploads = exports.cancelUploadSession = exports.createUploadSession = void 0;
+exports.cleanupAbandonedUploads = exports.cancelUploadSession = exports.declareUploadChecksum = exports.createUploadSession = void 0;
 exports.discardUploadsForJob = discardUploadsForJob;
 exports.expireAbandonedUploads = expireAbandonedUploads;
 const https_1 = require("firebase-functions/v2/https");
@@ -15,6 +15,7 @@ const consent_1 = require("../legal/consent");
 const userSafety_1 = require("../safety/userSafety");
 const quotaService_1 = require("../entitlements/quotaService");
 const model_1 = require("./model");
+const redact_1 = require("../logging/redact");
 const REQUEST_ERRORS = {
     purpose: 'Unsupported upload type.',
     job: 'This upload is not linked to a valid analysis.',
@@ -149,6 +150,7 @@ exports.createUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCa
         sizeBytes: input.sizeBytes,
         declaredDurationSec: input.declaredDurationSec,
         fingerprint: input.fingerprint,
+        integrityMode: input.integrity,
         state: 'uploading',
         storagePath,
         createdAt,
@@ -189,6 +191,30 @@ async function discardUploadsForJob(db, uid, jobId) {
     }
     return discarded;
 }
+/**
+ * Records the CRC32C the client computed from the file on its disk, just before it sends the
+ * final chunk. Quarantine compares it with the CRC32C Cloud Storage computed for the stored
+ * object; only equality counts as verified.
+ */
+exports.declareUploadChecksum = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
+    const uid = request.auth?.uid;
+    if (!uid)
+        throw new https_1.HttpsError('unauthenticated', 'Sign in required.');
+    const body = (request.data ?? {});
+    const uploadId = typeof body.uploadId === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(body.uploadId) ? body.uploadId : '';
+    if (!(0, model_1.isCrc32cBase64)(body.crc32c))
+        throw new https_1.HttpsError('invalid-argument', 'Invalid checksum.');
+    const db = (0, firestore_1.getFirestore)();
+    const ref = uploadId ? db.collection('mediaUploads').doc(uploadId) : null;
+    const snap = ref ? await ref.get() : null;
+    if (!ref || !snap?.exists || snap.get('ownerId') !== uid)
+        throw new https_1.HttpsError('not-found', 'Upload not found.');
+    if (snap.get('state') !== 'uploading') {
+        throw new https_1.HttpsError('failed-precondition', 'This upload is no longer open.', { reason: 'session_closed' });
+    }
+    await ref.update({ declaredCrc32c: body.crc32c, checksumDeclaredAt: new Date().toISOString() });
+    return { uploadId, declared: true };
+});
 exports.cancelUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
     const uid = request.auth?.uid;
     if (!uid)
@@ -219,7 +245,7 @@ async function expireAbandonedUploads(db, now = new Date()) {
             expired += 1;
         }
         catch (error) {
-            firebase_functions_1.logger.warn('Upload cleanup failed', { uploadId: doc.id, message: error instanceof Error ? error.message : 'unknown' });
+            firebase_functions_1.logger.warn('Upload cleanup failed', { uploadId: doc.id, ...(0, redact_1.logSafeError)(error) });
         }
     }
     return expired;

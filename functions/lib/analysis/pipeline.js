@@ -26,6 +26,7 @@ const segments_1 = require("./segments");
 const stages_1 = require("./stages");
 const stateMachine_1 = require("./stateMachine");
 const taskDispatcher_1 = require("./taskDispatcher");
+const redact_1 = require("../logging/redact");
 const openRouterApiKey = (0, params_1.defineSecret)('OPENROUTER_API_KEY');
 /** Jobs beyond the plan's concurrent-job cap wait in the queue and are re-delivered later. */
 exports.CONCURRENCY_RETRY_DELAY_SEC = 120;
@@ -137,7 +138,7 @@ async function startMatchPipeline(db, jobId, dispatcher = (0, taskDispatcher_1.g
         return 'queued';
     }
     catch (error) {
-        firebase_functions_1.logger.error('Could not enqueue analysis tasks', { jobId, message: error instanceof Error ? error.message : 'unknown' });
+        firebase_functions_1.logger.error('Could not enqueue analysis tasks', { jobId, ...(0, redact_1.logSafeError)(error) });
         await (0, frameAnalysis_1.failJob)(db, jobId, 'queue_unavailable');
         return 'failed';
     }

@@ -4,6 +4,7 @@ export { PendingUploadStore } from './repositories/PendingUploadStore';
 export { UploadSessionRepository } from './repositories/UploadSessionRepository';
 export { contentTypeForFileName, CHUNKED_UPLOAD } from './services/chunkPlan';
 export { discardPendingUpload, runChunkedUpload } from './services/chunkedUploadService';
+export { persistForUpload, releaseUploadCopy } from './services/uploadCopies';
 export {
   IDLE_UPLOAD,
   type PendingUpload,

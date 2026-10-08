@@ -8,6 +8,7 @@ import { createCallableOptions } from '../callableOptions';
 import { FOOTBALL_SOURCES_COLLECTION } from '../footballSources/core';
 import { taskQueueName } from '../region';
 import { DAY_MS, RETENTION, addDays } from './retention';
+import { logSafeError } from '../logging/redact';
 
 export const EXPORT_COLLECTION = 'dataExports';
 /** Sign-in must be this recent to export (the archive contains everything about the account). */
@@ -134,6 +135,14 @@ export async function buildExportArchive(db: Firestore, uid: string, linkExpires
   ]);
 
   const media = [...playerMedia, ...analyses, ...reelExports];
+  const analysisFeedback = (
+    await Promise.all(
+      analyses
+        .map((analysis) => analysis.id)
+        .filter((id): id is string => typeof id === 'string')
+        .map((id) => many(db.collection('matchAnalysisJobs').doc(id).collection('corrections'))),
+    )
+  ).flat();
   return {
     format: 'scoutx-data-export',
     formatVersion: 1,
@@ -154,6 +163,7 @@ export async function buildExportArchive(db: Firestore, uid: string, linkExpires
       externalFootballSources: footballSources,
       development: { goals, training, evidence, identitySnapshots: identity, trialReflections: reflections },
       analyses,
+      analysisFeedback,
       coaching: { aboutYou: observationsAbout, writtenByYou: observationsBy },
       movementSessions: movement,
       media: { items: playerMedia, reels, reelExports, downloadLinks: await mediaLinks(uid, storagePathsIn(media), linkExpiresAt) },
@@ -200,7 +210,7 @@ export async function processDataExport(db: Firestore, exportId: string, now: Da
     });
     return 'ready';
   } catch (error) {
-    logger.error('Data export failed', { exportId, message: error instanceof Error ? error.message : 'unknown' });
+    logger.error('Data export failed', { exportId, ...logSafeError(error) });
     await ref.update({ status: 'failed', updatedAt: new Date().toISOString() });
     return 'failed';
   }
@@ -228,7 +238,7 @@ export const requestDataExport = onCall(createCallableOptions(), async (request)
   try {
     await exportQueue.enqueue(ref.id);
   } catch (error) {
-    logger.error('Could not queue data export', { message: error instanceof Error ? error.message : 'unknown' });
+    logger.error('Could not queue data export', { ...logSafeError(error) });
     await ref.update({ status: 'failed', updatedAt: new Date().toISOString() });
     throw new HttpsError('unavailable', 'Your export could not be started. Please try again later.', { reason: 'queue_unavailable' });
   }

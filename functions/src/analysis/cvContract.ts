@@ -57,6 +57,7 @@ export type CvEvent = {
 export type CvSegmentResult = {
   contractVersion: typeof CV_CONTRACT_VERSION;
   workerVersion: string;
+  models: Record<string, string>;
   segmentIndex: number;
   stages: { tracking: (typeof CV_STAGE_STATES)[number]; identity: (typeof CV_STAGE_STATES)[number]; events: (typeof CV_STAGE_STATES)[number]; pitch: (typeof CV_STAGE_STATES)[number] };
   cameraView: (typeof CV_CAMERA_VIEWS)[number];
@@ -125,6 +126,10 @@ export function parseCvSegmentResult(
   if (value.segmentIndex !== expected.segmentIndex) return null;
   const workerVersion = typeof value.workerVersion === 'string' ? value.workerVersion.slice(0, 40) : '';
   if (!workerVersion) return null;
+  const models: Record<string, string> = {};
+  for (const [key, model] of Object.entries(isObject(value.models) ? value.models : {}).slice(0, 8)) {
+    if (typeof model === 'string' && key.length <= 40) models[key] = model.slice(0, 120);
+  }
   const { startSec, endSec } = expected;
 
   const rawStages = isObject(value.stages) ? value.stages : {};
@@ -197,6 +202,7 @@ export function parseCvSegmentResult(
   return {
     contractVersion: CV_CONTRACT_VERSION,
     workerVersion,
+    models,
     segmentIndex: expected.segmentIndex,
     stages,
     cameraView: member(value.cameraView, CV_CAMERA_VIEWS) ?? 'unclear',

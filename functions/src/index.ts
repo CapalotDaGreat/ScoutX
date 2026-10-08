@@ -7,6 +7,7 @@ export { analyzeMatchFootage, cancelMatchAnalysis } from './matchAnalysis';
 export { extractMatchSegment, analyzeMatchFrames } from './analysis/pipeline';
 export { recordVideoProcessingConsent, revokeVideoProcessingConsent } from './analysis/videoConsent';
 export { confirmAnalysisIdentity } from './analysis/identityCallable';
+export { submitAnalysisCorrection } from './analysis/corrections';
 export { reviewMatchSegment, synthesizeMatchReport } from './analysis/segmentPipeline';
 export { onMatchJobMediaLifecycle, onMatchJobDeleted, mediaLifecycleSweep } from './analysis/mediaLifecycle';
 export { generateHighlightReelPlan } from './highlightReelStudio';
@@ -41,7 +42,12 @@ export {
   removeExternalFootballSource,
   onFootballSourceWrittenReproject,
 } from './footballSources/callables';
-export { createUploadSession, cancelUploadSession, cleanupAbandonedUploads } from './uploads/sessions';
+export {
+  createUploadSession,
+  declareUploadChecksum,
+  cancelUploadSession,
+  cleanupAbandonedUploads,
+} from './uploads/sessions';
 export { onQuarantineObjectFinalized } from './uploads/quarantine';
 export { confirmRole } from './roleClaims';
 export { onProfileWrittenProjectPassport, refreshPublicPassport } from './publicPassport';

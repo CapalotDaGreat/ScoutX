@@ -48,9 +48,9 @@ export function UploadProgressCard({ state, onPause, onResume, onCancel, onOpenP
           </Text>
         </>
       ) : null}
-      {state.phase === 'uploading' && (rate || eta) ? (
-        <Text variant="caption" color="secondary">
-          {[rate ? t('upload.speed', { rate }) : null, eta ? t('upload.eta', { eta }) : null]
+      {state.phase === 'uploading' ? (
+        <Text variant="caption" color="secondary" testID="upload-progress-rate">
+          {[rate ? t('upload.speed', { rate }) : null, eta ? t('upload.eta', { eta }) : t('upload.estimating')]
             .filter(Boolean)
             .join(' · ')}
         </Text>

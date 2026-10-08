@@ -16,7 +16,14 @@ import {
 } from '../../functions/src/analysis/mediaLifecycle.ts';
 import { parseConsentRequest, providersFor } from '../../functions/src/analysis/videoConsent.ts';
 import { buildCvRequest, parseCvSegmentResult, reportWindowsFromCv } from '../../functions/src/analysis/cvContract.ts';
-import { cvEventsValidated, cvWorkerStatus, cvWorkerUrl } from '../../functions/src/analysis/cvConfig.ts';
+import {
+  cvEventsValidated,
+  cvWorkerStatus,
+  cvWorkerUrl,
+  isApprovedWorkerOutput,
+  setEmulatorCvApproval,
+} from '../../functions/src/analysis/cvConfig.ts';
+import { APPROVED_CV_WORKER } from '../../functions/src/analysis/cvApproval.generated.ts';
 import { buildClipPrompt, normalizeClipReport } from '../../functions/src/analysis/clipAnalysis.ts';
 import {
   buildSegmentPrompt,
@@ -192,15 +199,31 @@ describe('CV worker gating and contract v2', () => {
     events: [{ type: 'pass', startSec: 650, endSec: 651, confidence: 0.9, frameTimesSec: [650] }],
   };
 
-  test('the worker stays unavailable until both switches are set', () => {
+  test('the worker stays unavailable until both switches are set and an evaluation approval is compiled in', () => {
+    assert.equal(APPROVED_CV_WORKER, null, 'no real-footage evaluation has been approved');
     assert.equal(cvWorkerStatus({}), 'not_configured');
     assert.equal(cvWorkerStatus({ CV_WORKER_URL: 'http://worker.example' }), 'not_configured', 'plain http is refused when deployed');
     assert.equal(cvWorkerStatus({ CV_WORKER_URL: 'https://worker.example' }), 'not_approved');
-    assert.equal(cvWorkerStatus({ CV_WORKER_URL: 'https://worker.example', CV_WORKER_APPROVED: 'true' }), 'available');
+    const flags = { CV_WORKER_URL: 'https://worker.example', CV_WORKER_APPROVED: 'true', CV_EVENTS_VALIDATED: 'true' };
+    assert.equal(cvWorkerStatus(flags), 'not_evaluated', 'setting the flags is not enough');
     assert.equal(cvWorkerUrl({ CV_WORKER_URL: 'https://worker.example/' }), 'https://worker.example');
-    assert.equal(cvEventsValidated({ CV_WORKER_URL: 'https://w.example', CV_WORKER_APPROVED: 'true' }), false);
+    assert.equal(cvEventsValidated(flags), false);
+    assert.equal(getCvSegmentClient(flags), null);
     assert.equal(getCvSegmentClient({}), null);
-    assert.equal(getCvSegmentClient({ CV_WORKER_URL: 'https://worker.example' }), null);
+
+    setEmulatorCvApproval({ workerVersion: 'w/1', models: { detector: 'd@1' }, eventsApproved: false, reportSha256: 'x' });
+    try {
+      assert.equal(cvWorkerStatus(flags), 'not_evaluated', 'the test seam is ignored outside the emulators');
+      const emulated = { ...flags, FIRESTORE_EMULATOR_HOST: '127.0.0.1:8080' };
+      assert.equal(cvWorkerStatus(emulated), 'available');
+      assert.equal(cvEventsValidated(emulated), false, 'events need their own approval');
+      assert.equal(isApprovedWorkerOutput({ workerVersion: 'w/1', models: { detector: 'd@1' } }, emulated), true);
+      assert.equal(isApprovedWorkerOutput({ workerVersion: 'w/2', models: { detector: 'd@1' } }, emulated), false);
+      assert.equal(isApprovedWorkerOutput({ workerVersion: 'w/1', models: { detector: 'd@2' } }, emulated), false);
+      assert.equal(isApprovedWorkerOutput({ workerVersion: 'w/1', models: {} }, emulated), false);
+    } finally {
+      setEmulatorCvApproval(null);
+    }
   });
 
   test('requests carry privacy flags and only the target description', () => {
@@ -382,11 +405,18 @@ describe('report sections, versions and identity', () => {
   });
 
   test('statistics need validated tracker events, not just a configured worker', () => {
-    const env = { CV_WORKER_URL: 'https://w.example', CV_WORKER_APPROVED: 'true' };
-    const configured = buildSections({ ...inputs, validatedEventCount: 3 }, env);
-    assert.equal(configured.find((section) => section.id === 'statistics')?.availability, 'NOT_AVAILABLE');
-    const validated = buildSections({ ...inputs, validatedEventCount: 3 }, { ...env, CV_EVENTS_VALIDATED: 'true' });
-    assert.equal(validated.find((section) => section.id === 'statistics')?.availability, 'LIMITED');
+    const env = { CV_WORKER_URL: 'https://w.example', CV_WORKER_APPROVED: 'true', FIRESTORE_EMULATOR_HOST: '127.0.0.1:8080' };
+    const flagsOnly = buildSections({ ...inputs, validatedEventCount: 3 }, { ...env, CV_EVENTS_VALIDATED: 'true' });
+    assert.equal(flagsOnly.find((section) => section.id === 'statistics')?.availability, 'NOT_AVAILABLE', 'no approval record');
+    setEmulatorCvApproval({ workerVersion: 'w/1', models: { detector: 'd@1' }, eventsApproved: true, reportSha256: 'x' });
+    try {
+      const configured = buildSections({ ...inputs, validatedEventCount: 3 }, env);
+      assert.equal(configured.find((section) => section.id === 'statistics')?.availability, 'NOT_AVAILABLE');
+      const validated = buildSections({ ...inputs, validatedEventCount: 3 }, { ...env, CV_EVENTS_VALIDATED: 'true' });
+      assert.equal(validated.find((section) => section.id === 'statistics')?.availability, 'LIMITED');
+    } finally {
+      setEmulatorCvApproval(null);
+    }
   });
 
   test('every re-analysis gets the next version number', () => {

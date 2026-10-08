@@ -17,6 +17,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { GENERATED_PATH, generatedModule, verifyCvApproval } from './lib/cvApproval.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = new Set(process.argv.slice(2));
@@ -419,28 +420,46 @@ check('Footage lifecycle: source deleted unless kept, uncited media removed', ()
   return problems.length === 0 ? [PASS, 'cleanup on completion/cancel, retry window on failure, hourly sweep, purge on delete'] : [FAIL, problems.join('; ')];
 });
 
+const cvApproval = verifyCvApproval(root);
+
+check('No facial recognition or biometric identity matching', () => {
+  const banned = /\b(face[-_]?recognition|face[-_]?api|deepface|insightface|facenet|dlib|arcface|mediapipe|expo-face-detector|face-detector|vision-camera-face|ml-kit[^"]*face|@react-native-ml-kit\/face)/i;
+  const manifests = ['package.json', 'functions/package.json', 'workers/football-cv/requirements.txt', 'workers/football-cv/requirements-dev.txt'];
+  const hits = manifests.filter((path) => existsSync(join(root, path)) && banned.test(read(path)));
+  const contract = read('workers/football-cv/app/contract.py');
+  if (!/faceRecognition: Literal\[False\]/.test(contract)) hits.push('worker contract accepts faceRecognition');
+  if (!/faceRecognition: false/.test(read('functions/src/analysis/cvContract.ts'))) hits.push('functions request does not pin faceRecognition: false');
+  return hits.length === 0
+    ? [PASS, 'identity uses jersey number, kit colour and the player\'s own confirmation only']
+    : [FAIL, hits.join('; ')];
+});
+
 check('Computer-vision worker stays off until approved', () => {
   const config = read('functions/src/analysis/cvConfig.ts');
-  if (!/CV_WORKER_APPROVED/.test(config) || !/CV_EVENTS_VALIDATED/.test(config)) return [FAIL, 'CV gating flags missing from cvConfig.ts'];
+  if (!/APPROVED_CV_WORKER/.test(config) || !/isApprovedWorkerOutput/.test(read('functions/src/analysis/cvWorker.ts'))) {
+    return [FAIL, 'runtime approval check missing from cvConfig.ts / cvWorker.ts'];
+  }
+  const generated = read(GENERATED_PATH).replace(/\r\n/g, '\n');
+  if (generated !== generatedModule(cvApproval.runtime)) {
+    return [FAIL, `${GENERATED_PATH} does not match the verified approval record (hand-edited or stale)`];
+  }
   const env = functionsEnv();
   const url = /^CV_WORKER_URL=\S+/m.test(env);
   const approved = /^CV_WORKER_APPROVED=true$/m.test(env);
   const events = /^CV_EVENTS_VALIDATED=true$/m.test(env);
+  if (cvApproval.state === 'invalid') return [FAIL, `approval record rejected: ${cvApproval.problems.slice(0, 4).join('; ')}`];
   if (!url && !approved && !events) return [PASS, 'worker not configured: every CV stage reports unavailable'];
-  const report = existsSync(join(root, 'docs/video/accuracy-report.md')) ? read('docs/video/accuracy-report.md') : '';
-  const evaluated = /^Evaluation status: PASSED$/m.test(report);
-  if ((approved || events) && !evaluated) {
-    return [FAIL, 'CV_WORKER_APPROVED / CV_EVENTS_VALIDATED set without a passed real-footage evaluation in docs/video/accuracy-report.md'];
+  if (cvApproval.state !== 'approved') {
+    return [FAIL, 'CV_WORKER_* flags set without a verified approval record; the runtime ignores them, remove them'];
   }
-  return url && approved ? [PASS, 'worker configured and evaluation recorded as passed'] : [EXTERNAL, 'CV_WORKER_URL / CV_WORKER_APPROVED partially configured'];
+  if (events && !cvApproval.runtime.eventsApproved) return [FAIL, 'CV_EVENTS_VALIDATED set but the approval does not cover events'];
+  return url && approved ? [PASS, `worker ${cvApproval.runtime.workerVersion} approved and pinned`] : [EXTERNAL, 'CV_WORKER_URL / CV_WORKER_APPROVED partially configured'];
 });
 
 check('Video intelligence validated on real footage', () => {
-  const path = 'docs/video/accuracy-report.md';
-  if (!existsSync(join(root, path))) return [FAIL, `${path} missing`];
-  return /^Evaluation status: PASSED$/m.test(read(path))
-    ? [PASS, 'real-footage evaluation passed']
-    : [NOT_VALIDATED, 'PRODUCTION LIMITED: still-frame review only; no real-footage evaluation recorded'];
+  if (cvApproval.state === 'approved') return [PASS, `real-footage evaluation verified (report ${cvApproval.runtime.reportSha256.slice(0, 12)})`];
+  if (cvApproval.state === 'invalid') return [FAIL, cvApproval.problems.slice(0, 4).join('; ')];
+  return [NOT_VALIDATED, 'PRODUCTION LIMITED: still-frame review only; no verified real-footage evaluation (docs/video/evaluation/approval.json absent)'];
 });
 
 check('Firestore and Storage rules suite', () => {

@@ -10,6 +10,7 @@ import {
 } from '../accountDeletion';
 import { discardUploadsForJob } from '../uploads/sessions';
 import { retainLegalRecords, writeDeletionReceipt } from './legalRetention';
+import { logSafeError } from '../logging/redact';
 
 /**
  * Account deletion as a resumable state machine in `deletionRequests/{uid}`. Each step is
@@ -135,7 +136,7 @@ export async function runAccountDeletion(db: Firestore, uid: string, deps: Delet
     } catch (error) {
       logger.error('Account deletion step failed', {
         step: next,
-        message: error instanceof Error ? error.message : 'unknown',
+        ...logSafeError(error),
       });
       await ref.set({ status: 'failed', failedStep: next, updatedAt: new Date().toISOString() }, { merge: true });
       return { status: 'failed', step: next, remaining: [] };

@@ -94,7 +94,13 @@ provider review) and real footage that the tester has the right to use.
 | Keep match video on: video appears in media library after completion | NOT VALIDATED | PASS (automated, emulator) |
 | Evidence clips requested: ≤ 6 short silent clips play in the report | NOT VALIDATED | cutter interface PASS (automated, stubbed ffmpeg) |
 | Withdraw consent mid-analysis stops processing and removes temporary media | NOT VALIDATED | PASS (automated, emulator) |
-| Computer-vision worker evaluated on annotated real footage (`workers/football-cv/eval`) | NOT VALIDATED | worker NOT DEPLOYED |
+| Computer-vision worker evaluated on annotated real footage (`workers/football-cv/eval`) | NOT VALIDATED | worker NOT DEPLOYED; approval record absent (`docs/video/accuracy-report.md`) |
+| Upload resumes after kill from the last committed chunk; changed file refused | NOT VALIDATED | logic PASS (automated, fake resumable endpoint) |
+| Server rejects a corrupted upload (CRC32C mismatch) | NOT VALIDATED | PASS (automated, emulator) |
+| Preflight facts match the file; warnings never block | NOT VALIDATED | PASS (automated, unit) |
+| Corrections: feedback stored, report unchanged, other accounts cannot read it | NOT VALIDATED | PASS (automated, emulator) |
+| Trends locked below 3 comparable analyses | NOT VALIDATED | PASS (automated, unit) |
+| Legacy media dry run on production | NOT VALIDATED | tool PASS (automated, emulator); needs operator credentials |
 
 Server code never reads a whole video into memory: frames are size-capped (`MAX_FRAME_BYTES`), reel
 rendering streams to `/tmp`, quarantine reads the first 16 bytes. This is a code review result, not a

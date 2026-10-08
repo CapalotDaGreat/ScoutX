@@ -46,6 +46,8 @@ export type UploadSessionRequest = {
   sizeBytes: number;
   declaredDurationSec: number;
   fingerprint: string;
+  /** 'crc32c': the client will declare the whole-file CRC32C, so quarantine requires a match. */
+  integrity: 'crc32c' | 'none';
 };
 
 export type UploadRequestError =
@@ -93,8 +95,49 @@ export function parseUploadRequest(
       sizeBytes: size,
       declaredDurationSec: Math.round(duration),
       fingerprint: data.fingerprint,
+      integrity: data.integrity === 'crc32c' ? 'crc32c' : 'none',
     },
   };
+}
+
+const CRC32C_BASE64 = /^[A-Za-z0-9+/]{6}==$/;
+
+export function isCrc32cBase64(value: unknown): value is string {
+  return typeof value === 'string' && CRC32C_BASE64.test(value);
+}
+
+/**
+ * GCS reports `crc32c` as base64 of the big-endian value; the Storage emulator may report the
+ * decimal form. Returns the canonical base64 form, or null when absent or unreadable.
+ */
+export function normalizeCrc32c(value: unknown): string | null {
+  if (isCrc32cBase64(value)) return value;
+  if (typeof value === 'string' && /^\d{1,10}$/.test(value)) {
+    const number = Number(value);
+    if (number > 0xffffffff) return null;
+    const bytes = Buffer.alloc(4);
+    bytes.writeUInt32BE(number);
+    return bytes.toString('base64');
+  }
+  return null;
+}
+
+export type IntegrityVerdict = 'verified' | 'mismatch' | 'missing_declaration' | 'not_requested' | 'no_server_hash';
+
+/**
+ * The client-declared value is never proof by itself: it only counts when it equals the CRC32C
+ * Cloud Storage computed over the bytes it actually stored.
+ */
+export function integrityVerdict(
+  mode: unknown,
+  declared: unknown,
+  stored: unknown,
+): IntegrityVerdict {
+  if (mode !== 'crc32c') return 'not_requested';
+  if (!isCrc32cBase64(declared)) return 'missing_declaration';
+  const server = normalizeCrc32c(stored);
+  if (!server) return 'no_server_hash';
+  return server === declared ? 'verified' : 'mismatch';
 }
 
 export function quarantinePath(uid: string, uploadId: string): string {

@@ -185,7 +185,8 @@
       "unknown": "Não foi possível concluir o envio. Tenta novamente.",
       "quota_exceeded": "Já usaste todas as análises de jogo completo deste período.",
       "plan_limit": "Este vídeo excede o limite de tamanho ou duração do teu plano.",
-      "analysis_unavailable": "A análise de vídeo ainda não está disponível, por isso nada foi carregado. Podes continuar a registar jogos e acompanhar a tua evolução."
+      "analysis_unavailable": "A análise de vídeo ainda não está disponível, por isso nada foi carregado. Podes continuar a registar jogos e acompanhar a tua evolução.",
+      "file_changed": "Este vídeo mudou desde o início do envio. Escolhe-o novamente para enviar de novo."
     },
     "rejection": {
       "not_video": "Este ficheiro não é um vídeo. Escolhe uma gravação MP4 ou MOV.",
@@ -201,8 +202,12 @@
       "size_mismatch": "O envio não chegou completo. Envia-o novamente.",
       "probe_failed": "Não foi possível ler o vídeo. Pode estar danificado; tenta exportá-lo novamente.",
       "scanner_flagged": "Este ficheiro foi bloqueado por uma verificação automática.",
-      "job_missing": "A análise deste vídeo já não existe."
-    }
+      "job_missing": "A análise deste vídeo já não existe.",
+      "integrity_mismatch": "O ficheiro enviado não correspondia ao vídeo do teu telemóvel e foi eliminado. Envia-o novamente.",
+      "integrity_missing": "Não foi possível verificar se o envio estava completo, por isso foi eliminado. Envia-o novamente.",
+      "consent_withdrawn": "Retiraste o consentimento, por isso este vídeo foi eliminado e não foi analisado."
+    },
+    "estimating": "A estimar o tempo restante…"
   },
   "export": {
     "title": "Vídeo renderizado",

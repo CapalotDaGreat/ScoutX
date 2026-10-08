@@ -23,5 +23,25 @@ pending clean-ups, stuck uploads), `onMatchJobDeleted` (purge prefix and subcoll
 writes `mediaLifecycle { source, citedFramesKept, deletedObjectCount, evidenceClips, cleanedAt }`
 which the report shows to the player.
 
-Known gap: jobs completed before this shipped have no `mediaCleanupState` and keep their media
-until a one-off backfill is run.
+Cleanup deletes only object names the app writes (`video.mp4`, `frames/frame_N.jpg`,
+`clips/clip_N.mp4`) inside the job's own folder. Anything else is left in place and counted as
+`unrecognised` in the log for manual review.
+
+## Legacy media (jobs from before the lifecycle)
+
+Settled jobs without `mediaCleanupState` are never visited by the sweep. `scripts/legacy-media.mjs`
+handles them:
+
+1. **Dry run (default, read-only):** `node scripts/legacy-media.mjs --project <id> --bucket <bucket>`.
+   Writes a per-object report to `.local/legacy-media/` (gitignored; it contains private object
+   names) and prints counts only.
+2. **Review** the report. Proposed deletions are uncited frames only. Source videos are
+   `review_source_no_decision` unless the owner decides otherwise (`--include-sources`); footage filed
+   in the player's media library and footage the player chose to keep are never proposed.
+   Unknown objects are always `review_unrecognised`.
+3. **Apply** the reviewed report: `--apply <report.json>`. Each object is deleted by exact name with
+   a generation precondition; anything changed since the dry run, or any job that is no longer
+   legacy, is skipped. Never by prefix.
+
+Status: emulator-tested. The production dry run has NOT been run (no operator credentials were
+available); no legacy object has been deleted.

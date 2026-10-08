@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.STORAGE_PREFIXES = exports.OWNED_QUERIES = exports.UID_KEYED_COLLECTIONS = void 0;
+exports.ANALYSIS_JOB_SUBCOLLECTIONS = exports.STORAGE_PREFIXES = exports.OWNED_QUERIES = exports.UID_KEYED_COLLECTIONS = void 0;
 exports.deletePrimaryData = deletePrimaryData;
 exports.deleteDerivedData = deleteDerivedData;
 exports.deleteMediaData = deleteMediaData;
@@ -9,6 +9,7 @@ exports.deleteAllUserData = deleteAllUserData;
 const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
+const redact_1 = require("./logging/redact");
 const BATCH_SIZE = 400;
 /** Documents whose ID is the user's UID. */
 exports.UID_KEYED_COLLECTIONS = [
@@ -123,6 +124,21 @@ async function deleteQueryInBatches(query) {
         }
     }
 }
+exports.ANALYSIS_JOB_SUBCOLLECTIONS = ['segmentReviews', 'cvSegments', 'reports', 'corrections'];
+async function deleteAnalysisJobsRecursively(uid) {
+    const db = (0, firestore_1.getFirestore)();
+    let deleted = 0;
+    for (;;) {
+        const snapshot = await db.collection('matchAnalysisJobs').where('playerId', '==', uid).limit(BATCH_SIZE).get();
+        if (snapshot.empty)
+            return deleted;
+        for (const document of snapshot.docs)
+            await db.recursiveDelete(document.ref);
+        deleted += snapshot.size;
+        if (snapshot.size < BATCH_SIZE)
+            return deleted;
+    }
+}
 /** Other coaches' rosters embed the player (with private notes); remove that entry. */
 async function scrubCoachRosters(uid) {
     const db = (0, firestore_1.getFirestore)();
@@ -158,7 +174,7 @@ async function attempt(failures, label, run) {
         failures.push(label);
         firebase_functions_1.logger.error('Account deletion step failed', {
             label,
-            message: error instanceof Error ? error.message : 'unknown',
+            ...(0, redact_1.logSafeError)(error),
         });
     }
 }
@@ -171,6 +187,9 @@ async function deletePrimaryData(uid) {
     }
     await Promise.all(exports.UID_KEYED_COLLECTIONS.map((collection) => attempt(failures, collection, () => db.collection(collection).doc(uid).delete())));
     await attempt(failures, 'consentRecords', () => db.collection('consentRecords').doc(uid).delete());
+    // Analyses carry subcollections (segment reviews, report versions, feedback) that a plain
+    // document delete would orphan.
+    await attempt(failures, 'matchAnalysisJobs.subcollections', () => deleteAnalysisJobsRecursively(uid));
     for (const [collection, field] of exports.OWNED_QUERIES) {
         await attempt(failures, `${collection}.${field}`, () => deleteQueryInBatches(db.collection(collection).where(field, '==', uid)));
     }

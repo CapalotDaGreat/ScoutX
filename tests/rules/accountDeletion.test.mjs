@@ -97,6 +97,7 @@ const storageFiles = (uid) => [
 let db;
 let bucket;
 let deleteAllUserData;
+const ANALYSIS_SUBCOLLECTIONS = ['segmentReviews', 'cvSegments', 'reports', 'corrections'];
 
 before(async () => {
   if (!getApps().length) {
@@ -134,6 +135,8 @@ before(async () => {
     await db.collection('consentRecords').doc(uid).set({ uid });
     await db.collection('consentRecords').doc(uid).collection('items').doc('c1').set({ type: 'privacy_policy' });
     await db.collection('usageLedger').doc(uid).collection('periods').doc('p0').set({ counts: { reel_export: 1 } });
+    const job = db.collection('matchAnalysisJobs').doc(`matchAnalysisJobs-playerId-${uid}`);
+    for (const sub of ANALYSIS_SUBCOLLECTIONS) await job.collection(sub).doc('d1').set({ owner: uid });
   }
 
   // Cross-user references: another scout's workspace and watcher docs, and a third-party coach roster.
@@ -202,6 +205,12 @@ describe('deleteAllUserData', () => {
     assert.equal((await db.collection('consentRecords').doc(KEPT).collection('items').get()).size, 1, 'kept consent items');
     assert.equal((await db.collection('usageLedger').doc(DELETED).collection('periods').get()).size, 0, 'usage periods');
     assert.equal((await db.collection('usageLedger').doc(KEPT).collection('periods').get()).size, 1, 'kept usage periods');
+    for (const sub of ANALYSIS_SUBCOLLECTIONS) {
+      const deletedJob = db.collection('matchAnalysisJobs').doc(`matchAnalysisJobs-playerId-${DELETED}`);
+      const keptJob = db.collection('matchAnalysisJobs').doc(`matchAnalysisJobs-playerId-${KEPT}`);
+      assert.equal((await deletedJob.collection(sub).get()).size, 0, `analysis ${sub} not orphaned`);
+      assert.equal((await keptJob.collection(sub).get()).size, 1, `other user's analysis ${sub} kept`);
+    }
   });
 
   test('removes references held in other users\' documents', async () => {

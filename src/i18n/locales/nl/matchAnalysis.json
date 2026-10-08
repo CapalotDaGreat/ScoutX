@@ -3,7 +3,33 @@
     "title": "Analysevoorvertoning",
     "quality": "Beeldkwaliteit",
     "frames": "{{count}} frames worden gesampled",
-    "cvUnavailable": "Continue tracking en eventdetectie zijn niet beschikbaar. Onbekend blijft onbekend."
+    "cvUnavailable": "Continue tracking en eventdetectie zijn niet beschikbaar. Onbekend blijft onbekend.",
+    "fact": {
+      "resolution": "{{width}}×{{height}}",
+      "frameRate": "{{fps}} fps",
+      "bitrate": "{{mbps}} Mbit/s",
+      "bitrateAverage": "≈{{mbps}} Mbit/s (bestandsgemiddelde)"
+    },
+    "measuredTitle": "Gemeten uit het bestand",
+    "reading": "Videogegevens worden gelezen…",
+    "noMetadata": "Deze telefoon gaf geen resolutie of framerate door voor dit bestand.",
+    "mayAffectTitle": "Kan de analyse beïnvloeden",
+    "warning": {
+      "low_resolution": "Lager dan 720p: rugnummers ver van de camera zijn mogelijk onleesbaar, dus je identiteit kan onbevestigd blijven.",
+      "low_frame_rate": "Minder dan 24 beelden per seconde: snelle acties kunnen tussen twee beelden vallen.",
+      "low_bitrate": "Sterke compressie voor deze resolutie: details zoals nummers kunnen vervagen.",
+      "portrait": "De video lijkt staand (zoals opgeslagen): meestal is minder van het veld zichtbaar.",
+      "track_unsupported": "Deze telefoon meldt het videoformaat als niet ondersteund; de servercontrole bepaalt of het leesbaar is.",
+      "metadata_unavailable": "De resolutie kon op de telefoon niet worden gelezen, dus de kwaliteitstips zijn onvolledig.",
+      "large_file": "Groot bestand: uploaden via mobiele data kan lang duren."
+    },
+    "blocker": {
+      "too_short": "Deze video heeft geen afspeelbare lengte.",
+      "too_long": "Deze video is langer dan de limiet van 150 minuten.",
+      "too_large": "Dit bestand is groter dan de uploadlimiet van 4 GB."
+    },
+    "notChecked": "Niet gecontroleerd op de telefoon: scherpte, licht, camerahoek en of je zichtbaar bent.",
+    "advisory": "Dit zijn alleen tips. PitchProof weigert nooit een video vanwege een kwaliteitsscore."
   },
   "identity": {
     "title": "Bevestig dat jij het bent",
@@ -427,5 +453,41 @@
       "no_duration": "De video kon niet worden gelezen. Controleer of hij afspeelt in de app Bestanden.",
       "low_disk": "Je telefoon is bijna vol. Maak wat ruimte vrij en probeer het opnieuw."
     }
+  },
+  "correction": {
+    "confirm": "Klopt",
+    "didNotHappen": "Is niet gebeurd",
+    "notMe": "Niet ik",
+    "wrong": "Niet juist",
+    "isMe": "Dit ben ik",
+    "undo": "Ongedaan maken",
+    "state": {
+      "confirm": "Je hebt dit bevestigd.",
+      "dispute": "Je hebt dit betwist.",
+      "dismiss_false_event": "Je gaf aan dat dit niet is gebeurd.",
+      "is_me": "Je bevestigde dat dit beeld jou toont.",
+      "not_me": "Je gaf aan dat dit beeld jou niet toont.",
+      "withdraw": "Feedback ingetrokken."
+    },
+    "footnote": "Je feedback wordt naast de analyse opgeslagen. De oorspronkelijke analyse en statistieken veranderen niet, en PitchProof gebruikt je video’s en feedback niet om AI te trainen.",
+    "identityHint": "Als een van deze beelden jou niet toont, geef dat aan. Coaching bij dat beeld moet je dan met voorzichtigheid bekijken."
+  },
+  "trends": {
+    "title": "Over je analyses heen",
+    "locked": "Trends verschijnen na {{required}} voltooide analyses van hetzelfde soort met bevestigde identiteit. Je hebt er {{completed}}.",
+    "kind": {
+      "clip": "Vergeleken over {{count}} korte-clipanalyses.",
+      "match": "Vergeleken over {{count}} wedstrijdanalyses."
+    },
+    "row": "{{metric}}: {{values}}",
+    "measured": "beoordeeld in {{measured}} van {{total}}",
+    "source": {
+      "ai_derived": "Door AI afgeleid uit steekproefbeelden",
+      "player_entered": "Door jou ingevoerd",
+      "coach": "Van je trainer",
+      "verified": "Geverifieerd"
+    },
+    "unknown": "Te weinig beoordelingen om te vergelijken: {{metrics}}. Een ontbrekende beoordeling betekent onbekend, niet nul.",
+    "caveat": "Enkele analyses beschrijven alleen die video’s; het is geen statistisch betrouwbare trend. Ander beeldmateriaal, camerahoeken en tegenstanders veranderen wat zichtbaar is."
   }
 }

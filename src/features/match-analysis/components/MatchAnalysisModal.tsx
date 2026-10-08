@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, Platform, ScrollView, View } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
@@ -20,8 +20,10 @@ import {
   type MatchEstimatedStats,
 } from '@/features/match-analysis/types';
 import { AnalysisPreviewCard } from '@/features/match-analysis/components/AnalysisPreviewCard';
+import { AnalysisTrendsCard } from '@/features/match-analysis/components/AnalysisTrendsCard';
 import { IdentityConfirmationCard } from '@/features/match-analysis/components/IdentityConfirmationCard';
 import { buildAnalysisPreview } from '@/features/match-analysis/services/analysisPreviewService';
+import { readFootageTrackInfo, type FootageTrackInfo } from '@/features/match-analysis/services/footageProbeService';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type MatchLogPayload } from '@/features/player-statistics/types';
 import { type PickedVideoAsset } from '@/features/highlight-videos/types';
@@ -35,6 +37,8 @@ import { useJobFrames } from '@/features/match-analysis/hooks/useJobFrames';
 import { ChoiceChip } from '@/components/primitives/ChoiceChip';
 import { FilePickError } from '@/features/match-analysis/services/matchVideoFilePickerService';
 import { VideoConsentSheet } from '@/features/match-analysis/components/VideoConsentSheet';
+import { CorrectionControls, CorrectionFootnote } from '@/features/match-analysis/components/CorrectionControls';
+import { useAnalysisCorrections } from '@/features/match-analysis/hooks/useAnalysisCorrections';
 import { VideoIntelligenceSections } from '@/features/match-analysis/components/VideoIntelligenceSections';
 import {
   ANALYSIS_INTENTS,
@@ -191,6 +195,7 @@ function ReportView({
   onOpenReport?: () => void;
 }) {
   const { t } = useAppTranslation('matchAnalysis');
+  const corrections = useAnalysisCorrections(job);
   const report = job.report;
   if (!report) {
     return null;
@@ -296,8 +301,10 @@ function ReportView({
               <Text variant="caption" color="secondary">
                 {t('modalReport.confidence', { pct: Math.round(item.confidence * 100) })}{item.timestampSec != null ? ` · ${formatClock(item.timestampSec)}` : ''}
               </Text>
+              {item.id && item.kind === 'observation' ? <CorrectionControls api={corrections} kind="observation" targetId={item.id} /> : null}
             </View>
           ))}
+          <CorrectionFootnote api={corrections} />
         </Card>
       ) : null}
 
@@ -354,6 +361,7 @@ export function MatchAnalysisModal({
     cancelUpload,
   } = useMatchAnalysis(playerId);
   const { candidates, frameUrls } = useJobFrames(activeJob);
+  const identityCorrections = useAnalysisCorrections(activeJob);
   const serverProcessing = isInProgress && activeJob?.status !== 'uploading';
   const { t } = useAppTranslation(['matchAnalysis', 'common']);
   const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
@@ -430,9 +438,35 @@ export function MatchAnalysisModal({
     return t('matchAnalysis:modalForm.filmSelected', { minutes: Math.round(picked.durationSec / 60) });
   }, [picked, t]);
 
+  const [trackInfo, setTrackInfo] = useState<{ uri: string; info: FootageTrackInfo | null } | null>(null);
+  useEffect(() => {
+    if (!picked || Platform.OS === 'web') return;
+    let active = true;
+    void readFootageTrackInfo(picked.uri)
+      .catch(() => null)
+      .then((info) => {
+        if (active) setTrackInfo({ uri: picked.uri, info });
+      });
+    return () => {
+      active = false;
+    };
+  }, [picked]);
+  const pickedTrack = picked && trackInfo?.uri === picked.uri ? trackInfo.info : null;
+  const readingTrack = Boolean(picked && Platform.OS !== 'web' && trackInfo?.uri !== picked.uri);
+
   const preview = useMemo(
-    () => (picked ? buildAnalysisPreview({ durationSec: picked.durationSec, fileSizeBytes: picked.fileSizeBytes }) : null),
-    [picked],
+    () => (picked
+      ? buildAnalysisPreview({
+        durationSec: picked.durationSec,
+        fileSizeBytes: picked.fileSizeBytes,
+        width: pickedTrack?.width,
+        height: pickedTrack?.height,
+        frameRate: pickedTrack?.frameRate,
+        trackBitrate: pickedTrack?.trackBitrate,
+        trackSupported: pickedTrack?.trackSupported,
+      })
+      : null),
+    [picked, pickedTrack],
   );
 
   const analysisMode = picked ? selectAnalysisMode(picked.durationSec, intent) : null;
@@ -491,7 +525,10 @@ export function MatchAnalysisModal({
       return;
     }
     if (preview && !preview.canProceed) {
-      Alert.alert(t('matchAnalysis:modalForm.videoTitle'), preview.blockers[0] ?? t('matchAnalysis:modalForm.cannotAnalyze'));
+      Alert.alert(
+        t('matchAnalysis:modalForm.videoTitle'),
+        preview.blockers[0] ? t(`matchAnalysis:preview.blocker.${preview.blockers[0]}`) : t('matchAnalysis:modalForm.cannotAnalyze'),
+      );
       return;
     }
     if (!analysisMode) {
@@ -676,7 +713,7 @@ export function MatchAnalysisModal({
                 </Button>
               </View>
             )}
-            {preview ? <AnalysisPreviewCard preview={preview} /> : null}
+            {preview ? <AnalysisPreviewCard preview={preview} loading={readingTrack} /> : null}
             {durationLabel ? (
               <Text variant="caption" color="secondary">
                 {durationLabel}
@@ -800,6 +837,7 @@ export function MatchAnalysisModal({
                 {`${t('matchAnalysis:modalForm.jobTitle', { date: job.match.date, opponent: job.match.opponent })} · ${jobStatusLabel(t, job)}`}
               </Button>
             ))}
+            <AnalysisTrendsCard jobs={recentJobs} />
           </View>
         ) : null}
 
@@ -828,6 +866,7 @@ export function MatchAnalysisModal({
             onConfirm={() => void confirmPlayerIdentity(activeJob, selectedFrameIds)}
             onReject={() => void confirmPlayerIdentity(activeJob, [])}
             frameUrls={frameUrls}
+            corrections={identityCorrections}
           />
         ) : null}
 

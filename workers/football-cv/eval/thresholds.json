@@ -1,14 +1,33 @@
 {
   "status": "proposed",
-  "note": "PROPOSED values for the product owner to decide. Not approved. Passing them does not enable anything by itself: CV_WORKER_APPROVED and CV_EVENTS_VALIDATED stay operator decisions.",
-  "minimumVideos": 20,
+  "note": "PROPOSED values for the product owner to decide; rationale in docs/video/acceptance-thresholds.md. Passing them enables nothing by itself: the worker runs only with an approval record that the release gate verifies and that is compiled into Cloud Functions.",
+  "minimumVideos": 30,
+  "minimumAnnotators": 2,
   "metrics": {
+    "identityAccuracy": { "min": 0.95 },
+    "switchesPer10Min": { "max": 0.5 },
+    "meanCorrectRunSec": { "min": 20 },
     "visiblePrecision": { "min": 0.9 },
     "visibleRecall": { "min": 0.6 },
     "likelyOffCameraPrecision": { "min": 0.9 },
     "falseConfirmRate": { "max": 0.05 },
+    "coverage": { "min": 0.95 },
+    "reliability": { "min": 0.98 }
+  },
+  "eventMetrics": {
     "eventPrecision": { "min": 0.85 },
     "eventRecall": { "min": 0.6 },
     "meanTimestampErrorSec": { "max": 1.5 }
-  }
+  },
+  "requiredSlices": {
+    "occlusion": 5,
+    "camera_movement": 5,
+    "low_light": 5,
+    "similar_kits": 5,
+    "identical_numbers": 3,
+    "substitution": 3,
+    "off_camera_periods": 5,
+    "re_entry": 5
+  },
+  "sliceMetrics": ["identityAccuracy", "falseConfirmRate", "switchesPer10Min"]
 }

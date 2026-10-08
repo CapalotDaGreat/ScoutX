@@ -5,6 +5,8 @@ import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { type IdentityCandidate, type IdentityConfirmation } from '@/features/match-analysis/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { CorrectionControls, CorrectionFootnote } from '@/features/match-analysis/components/CorrectionControls';
+import { type AnalysisCorrectionsApi } from '@/features/match-analysis/hooks/useAnalysisCorrections';
 
 export type IdentityConfirmationCardProps = {
   candidates: IdentityCandidate[];
@@ -15,6 +17,8 @@ export type IdentityConfirmationCardProps = {
   onReject: () => void;
   frameUrls?: Record<string, string>;
   busy?: boolean;
+  /** After confirmation the player can still flag a frame as "not me"; this never switches players. */
+  corrections?: AnalysisCorrectionsApi;
 };
 
 export function IdentityConfirmationCard({
@@ -26,6 +30,7 @@ export function IdentityConfirmationCard({
   onReject,
   frameUrls,
   busy,
+  corrections,
 }: IdentityConfirmationCardProps) {
   const { t } = useAppTranslation('matchAnalysis');
   const state = confirmation?.state ?? 'pending';
@@ -66,6 +71,23 @@ export function IdentityConfirmationCard({
           );
         })}
       </View>
+      {state === 'confirmed' && corrections?.enabled ? (
+        <View className="gap-2" testID="identity-corrections">
+          <Text variant="caption" color="secondary">
+            {t('correction.identityHint')}
+          </Text>
+          {(confirmation?.frameIds ?? []).map((frameId) => {
+            const candidate = candidates.find((item) => item.frameId === frameId);
+            return (
+              <View key={frameId} className="gap-1">
+                <Text variant="caption">{candidate ? `${Math.round(candidate.timestampSec)}s` : frameId}</Text>
+                <CorrectionControls api={corrections} kind="identity_frame" targetId={frameId} />
+              </View>
+            );
+          })}
+          <CorrectionFootnote api={corrections} />
+        </View>
+      ) : null}
       {state !== 'confirmed' ? (
         <View className="flex-row gap-2">
           <Button variant="accent" loading={busy} onPress={onConfirm} className="flex-1">

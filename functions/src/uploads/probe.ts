@@ -30,7 +30,10 @@ export type RejectionReason =
   | 'size_mismatch'
   | 'probe_failed'
   | 'scanner_flagged'
-  | 'job_missing';
+  | 'job_missing'
+  | 'integrity_mismatch'
+  | 'integrity_missing'
+  | 'consent_withdrawn';
 
 export type ProbeSummary = {
   container: 'mp4' | 'mov';

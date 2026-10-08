@@ -106,10 +106,45 @@ describe('ask this match', () => {
 });
 
 describe('analysis preview', () => {
-  test('blocks videos that are too short instead of guessing quality', () => {
-    const preview = buildAnalysisPreview({ durationSec: 10 });
-    assert.equal(preview.canProceed, false);
-    assert.equal(preview.quality, 'Insufficient');
+  test('blocks only what the server would also refuse; short clips are a supported mode', () => {
+    assert.equal(buildAnalysisPreview({ durationSec: 0 }).canProceed, false);
+    assert.deepEqual(buildAnalysisPreview({ durationSec: 0 }).blockers, ['too_short']);
+    assert.deepEqual(buildAnalysisPreview({ durationSec: 151 * 60 }).blockers, ['too_long']);
+    assert.deepEqual(buildAnalysisPreview({ durationSec: 600, fileSizeBytes: 5 * 1024 ** 3 }).blockers, ['too_large']);
+    assert.equal(buildAnalysisPreview({ durationSec: 10 }).canProceed, true);
+  });
+
+  test('poor quality only warns, never blocks', () => {
+    const preview = buildAnalysisPreview({
+      durationSec: 90 * 60,
+      // ≈ 78 kbit/s over 90 minutes: ≈ 0.02 bits per pixel per frame at 640×360 / 15 fps.
+      fileSizeBytes: 50 * 1024 * 1024,
+      width: 640,
+      height: 360,
+      frameRate: 15,
+      trackSupported: false,
+    });
+    assert.equal(preview.canProceed, true);
+    assert.deepEqual(preview.blockers, []);
+    assert.deepEqual(
+      [...preview.warnings].sort(),
+      ['low_bitrate', 'low_frame_rate', 'low_resolution', 'track_unsupported'].sort(),
+    );
+    assert.equal(preview.facts.bitrateSource, 'file_average');
+  });
+
+  test('missing metadata is reported as unknown, and pixel-level checks are listed as not done', () => {
+    const preview = buildAnalysisPreview({ durationSec: 600 });
+    assert.deepEqual(preview.warnings, ['metadata_unavailable']);
+    assert.equal(preview.facts.width, null);
+    assert.equal(preview.facts.bitrate, null);
+    assert.deepEqual(preview.notChecked, ['sharpness', 'lighting', 'camera_angle', 'player_visibility']);
+    assert.ok(!('quality' in preview), 'no overall quality score is derived from metadata');
+  });
+
+  test('a portrait recording and a good 1080p track', () => {
+    assert.ok(buildAnalysisPreview({ durationSec: 600, width: 1080, height: 1920, frameRate: 30, trackBitrate: 12_000_000 }).warnings.includes('portrait'));
+    assert.deepEqual(buildAnalysisPreview({ durationSec: 600, width: 1920, height: 1080, frameRate: 30, trackBitrate: 12_000_000 }).warnings, []);
   });
 });
 

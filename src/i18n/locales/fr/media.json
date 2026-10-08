@@ -185,7 +185,8 @@
       "unknown": "L’envoi n’a pas pu être terminé. Réessaie.",
       "quota_exceeded": "Tu as utilisé toutes tes analyses de match complet pour cette période.",
       "plan_limit": "Cette vidéo dépasse la limite de taille ou de durée de ton offre.",
-      "analysis_unavailable": "L'analyse vidéo n'est pas encore disponible, rien n'a donc été envoyé. Tu peux toujours enregistrer tes matchs et suivre ta progression."
+      "analysis_unavailable": "L'analyse vidéo n'est pas encore disponible, rien n'a donc été envoyé. Tu peux toujours enregistrer tes matchs et suivre ta progression.",
+      "file_changed": "Cette vidéo a changé depuis le début de l’envoi. Sélectionne-la à nouveau pour recommencer."
     },
     "rejection": {
       "not_video": "Ce fichier n’est pas une vidéo. Choisis un enregistrement MP4 ou MOV.",
@@ -201,8 +202,12 @@
       "size_mismatch": "L’envoi n’est pas arrivé complet. Envoie-la à nouveau.",
       "probe_failed": "La vidéo n’a pas pu être lue. Elle est peut-être endommagée ; essaie de l’exporter à nouveau.",
       "scanner_flagged": "Ce fichier a été bloqué par une vérification automatique.",
-      "job_missing": "L’analyse de cette vidéo n’existe plus."
-    }
+      "job_missing": "L’analyse de cette vidéo n’existe plus.",
+      "integrity_mismatch": "Le fichier envoyé ne correspondait pas à la vidéo de ton téléphone, il a donc été supprimé. Envoie-la à nouveau.",
+      "integrity_missing": "L’intégrité de l’envoi n’a pas pu être vérifiée, il a donc été supprimé. Envoie-la à nouveau.",
+      "consent_withdrawn": "Tu as retiré ton consentement : cette vidéo a été supprimée et n’a pas été analysée."
+    },
+    "estimating": "Estimation du temps restant…"
   },
   "export": {
     "title": "Vidéo rendue",

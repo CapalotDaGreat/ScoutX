@@ -8,6 +8,7 @@ import { useChunkedUpload } from '@/features/media-upload/hooks/useChunkedUpload
 import { PendingUploadStore } from '@/features/media-upload/repositories/PendingUploadStore';
 import { UploadSessionRepository } from '@/features/media-upload/repositories/UploadSessionRepository';
 import { discardPendingUpload } from '@/features/media-upload/services/chunkedUploadService';
+import { releaseUploadCopy, sweepUploadCopies } from '@/features/media-upload/services/uploadCopies';
 import {
   classifyPendingUpload,
   requestFromPending,
@@ -40,12 +41,12 @@ export function InterruptedUploadsCard({ uid, onOpenPlan }: { uid: string | null
         state: classifyPendingUpload(item, await UploadSessionRepository.fetch(item.uploadId)),
       })),
     );
-    await Promise.all(
-      classified
-        .filter((entry) => entry.state === 'finished' || entry.state === 'closed')
-        .map((entry) => PendingUploadStore.remove(uid, entry.upload.uploadId)),
-    );
-    setEntries(classified.filter((entry) => entry.state === 'resumable' || entry.state === 'unknown'));
+    const stale = classified.filter((entry) => entry.state === 'finished' || entry.state === 'closed');
+    await Promise.all(stale.map((entry) => PendingUploadStore.remove(uid, entry.upload.uploadId)));
+    await Promise.all(stale.filter((entry) => entry.state === 'closed').map((entry) => releaseUploadCopy(entry.upload.fileUri)));
+    const kept = classified.filter((entry) => entry.state === 'resumable' || entry.state === 'unknown');
+    sweepUploadCopies(kept.map((entry) => entry.upload.fileUri));
+    setEntries(kept);
   }, [uid]);
 
   useEffect(() => {

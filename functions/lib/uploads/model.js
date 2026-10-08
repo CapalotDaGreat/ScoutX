@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.REUSABLE_UPLOAD_STATES = exports.ACTIVE_UPLOAD_STATES = exports.UPLOAD_STATES = exports.UPLOAD_PURPOSES = exports.UPLOAD_CONTENT_TYPES = exports.UPLOAD_LIMITS = exports.GiB = exports.MiB = void 0;
 exports.sanitizeFileName = sanitizeFileName;
 exports.parseUploadRequest = parseUploadRequest;
+exports.isCrc32cBase64 = isCrc32cBase64;
+exports.normalizeCrc32c = normalizeCrc32c;
+exports.integrityVerdict = integrityVerdict;
 exports.quarantinePath = quarantinePath;
 exports.parseQuarantinePath = parseQuarantinePath;
 exports.matchFootagePath = matchFootagePath;
@@ -76,8 +79,44 @@ function parseUploadRequest(data) {
             sizeBytes: size,
             declaredDurationSec: Math.round(duration),
             fingerprint: data.fingerprint,
+            integrity: data.integrity === 'crc32c' ? 'crc32c' : 'none',
         },
     };
+}
+const CRC32C_BASE64 = /^[A-Za-z0-9+/]{6}==$/;
+function isCrc32cBase64(value) {
+    return typeof value === 'string' && CRC32C_BASE64.test(value);
+}
+/**
+ * GCS reports `crc32c` as base64 of the big-endian value; the Storage emulator may report the
+ * decimal form. Returns the canonical base64 form, or null when absent or unreadable.
+ */
+function normalizeCrc32c(value) {
+    if (isCrc32cBase64(value))
+        return value;
+    if (typeof value === 'string' && /^\d{1,10}$/.test(value)) {
+        const number = Number(value);
+        if (number > 0xffffffff)
+            return null;
+        const bytes = Buffer.alloc(4);
+        bytes.writeUInt32BE(number);
+        return bytes.toString('base64');
+    }
+    return null;
+}
+/**
+ * The client-declared value is never proof by itself: it only counts when it equals the CRC32C
+ * Cloud Storage computed over the bytes it actually stored.
+ */
+function integrityVerdict(mode, declared, stored) {
+    if (mode !== 'crc32c')
+        return 'not_requested';
+    if (!isCrc32cBase64(declared))
+        return 'missing_declaration';
+    const server = normalizeCrc32c(stored);
+    if (!server)
+        return 'no_server_hash';
+    return server === declared ? 'verified' : 'mismatch';
 }
 function quarantinePath(uid, uploadId) {
     return `quarantine/${uid}/${uploadId}/source`;

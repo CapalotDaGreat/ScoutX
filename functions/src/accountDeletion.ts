@@ -1,6 +1,7 @@
 import { FieldValue, getFirestore, type Query } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
+import { logSafeError } from './logging/redact';
 
 const BATCH_SIZE = 400;
 
@@ -121,6 +122,20 @@ async function deleteQueryInBatches(query: Query): Promise<number> {
   }
 }
 
+export const ANALYSIS_JOB_SUBCOLLECTIONS = ['segmentReviews', 'cvSegments', 'reports', 'corrections'] as const;
+
+async function deleteAnalysisJobsRecursively(uid: string): Promise<number> {
+  const db = getFirestore();
+  let deleted = 0;
+  for (;;) {
+    const snapshot = await db.collection('matchAnalysisJobs').where('playerId', '==', uid).limit(BATCH_SIZE).get();
+    if (snapshot.empty) return deleted;
+    for (const document of snapshot.docs) await db.recursiveDelete(document.ref);
+    deleted += snapshot.size;
+    if (snapshot.size < BATCH_SIZE) return deleted;
+  }
+}
+
 /** Other coaches' rosters embed the player (with private notes); remove that entry. */
 async function scrubCoachRosters(uid: string): Promise<void> {
   const db = getFirestore();
@@ -159,7 +174,7 @@ async function attempt(failures: string[], label: string, run: () => Promise<unk
     failures.push(label);
     logger.error('Account deletion step failed', {
       label,
-      message: error instanceof Error ? error.message : 'unknown',
+      ...logSafeError(error),
     });
   }
 }
@@ -175,6 +190,9 @@ export async function deletePrimaryData(uid: string): Promise<{ failures: string
     UID_KEYED_COLLECTIONS.map((collection) => attempt(failures, collection, () => db.collection(collection).doc(uid).delete())),
   );
   await attempt(failures, 'consentRecords', () => db.collection('consentRecords').doc(uid).delete());
+  // Analyses carry subcollections (segment reviews, report versions, feedback) that a plain
+  // document delete would orphan.
+  await attempt(failures, 'matchAnalysisJobs.subcollections', () => deleteAnalysisJobsRecursively(uid));
   for (const [collection, field] of OWNED_QUERIES) {
     await attempt(failures, `${collection}.${field}`, () => deleteQueryInBatches(db.collection(collection).where(field, '==', uid)));
   }

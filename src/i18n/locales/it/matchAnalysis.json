@@ -3,7 +3,33 @@
     "title": "Anteprima analisi",
     "quality": "Qualità del filmato",
     "frames": "Verranno campionati {{count}} fotogrammi",
-    "cvUnavailable": "Il tracking continuo e il rilevamento eventi non sono disponibili. Lo sconosciuto resta sconosciuto."
+    "cvUnavailable": "Il tracking continuo e il rilevamento eventi non sono disponibili. Lo sconosciuto resta sconosciuto.",
+    "fact": {
+      "resolution": "{{width}}×{{height}}",
+      "frameRate": "{{fps}} fps",
+      "bitrate": "{{mbps}} Mbit/s",
+      "bitrateAverage": "≈{{mbps}} Mbit/s (media del file)"
+    },
+    "measuredTitle": "Misurato dal file",
+    "reading": "Lettura dei dettagli del video…",
+    "noMetadata": "Questo telefono non ha indicato risoluzione o frequenza dei fotogrammi per questo file.",
+    "mayAffectTitle": "Può influire sull’analisi",
+    "warning": {
+      "low_resolution": "Sotto i 720p: i numeri di maglia lontani dalla telecamera potrebbero essere illeggibili, quindi l’identità potrebbe restare non confermata.",
+      "low_frame_rate": "Meno di 24 fotogrammi al secondo: le azioni rapide possono cadere tra due fotogrammi.",
+      "low_bitrate": "Compressione forte per questa risoluzione: dettagli come i numeri possono risultare sfocati.",
+      "portrait": "Il video sembra verticale (come salvato): di solito si vede meno campo.",
+      "track_unsupported": "Questo telefono segnala il formato video come non supportato; il controllo del server decide se è leggibile.",
+      "metadata_unavailable": "Non è stato possibile leggere la risoluzione sul telefono, quindi le indicazioni sulla qualità sono incomplete.",
+      "large_file": "File di grandi dimensioni: il caricamento con dati mobili può richiedere molto tempo."
+    },
+    "blocker": {
+      "too_short": "Questo video non ha una durata riproducibile.",
+      "too_long": "Questo video supera il limite di 150 minuti.",
+      "too_large": "Questo file supera il limite di caricamento di 4 GB."
+    },
+    "notChecked": "Non verificato sul telefono: nitidezza, luce, angolo della telecamera e se sei visibile.",
+    "advisory": "Sono solo indicazioni. PitchProof non rifiuta mai un video per un punteggio di qualità."
   },
   "identity": {
     "title": "Conferma che sei tu",
@@ -427,5 +453,41 @@
       "no_duration": "Impossibile leggere il video. Verifica che si riproduca nell’app File.",
       "low_disk": "Il telefono è quasi pieno. Libera spazio e riprova."
     }
+  },
+  "correction": {
+    "confirm": "È corretto",
+    "didNotHappen": "Non è successo",
+    "notMe": "Non sono io",
+    "wrong": "Non preciso",
+    "isMe": "Sono io",
+    "undo": "Annulla",
+    "state": {
+      "confirm": "Hai confermato.",
+      "dispute": "Hai contestato.",
+      "dismiss_false_event": "Hai indicato che non è successo.",
+      "is_me": "Hai confermato che questa immagine ti mostra.",
+      "not_me": "Hai indicato che questa immagine non ti mostra.",
+      "withdraw": "Feedback ritirato."
+    },
+    "footnote": "Il tuo feedback viene salvato accanto all’analisi. L’analisi originale e le statistiche non cambiano, e PitchProof non usa i tuoi video né il tuo feedback per addestrare l’IA.",
+    "identityHint": "Se una di queste immagini non ti mostra, indicalo. Il coaching legato a quell’immagine va poi preso con cautela."
+  },
+  "trends": {
+    "title": "Attraverso le tue analisi",
+    "locked": "Le tendenze compaiono dopo {{required}} analisi completate dello stesso tipo con identità confermata. Ne hai {{completed}}.",
+    "kind": {
+      "clip": "Confrontato su {{count}} analisi di clip brevi.",
+      "match": "Confrontato su {{count}} analisi di partite."
+    },
+    "row": "{{metric}}: {{values}}",
+    "measured": "valutato in {{measured}} su {{total}}",
+    "source": {
+      "ai_derived": "Derivato dall’IA da fotogrammi campionati",
+      "player_entered": "Inserito da te",
+      "coach": "Dal tuo allenatore",
+      "verified": "Verificato"
+    },
+    "unknown": "Valutazioni insufficienti per un confronto: {{metrics}}. Una valutazione mancante significa sconosciuto, non zero.",
+    "caveat": "Poche analisi descrivono solo quei video; non sono una tendenza statisticamente affidabile. Riprese, angolazioni e avversari diversi cambiano ciò che si vede."
   }
 }

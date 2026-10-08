@@ -15,11 +15,13 @@ import {
   UPLOAD_LIMITS,
   dayKey,
   isAbandoned,
+  isCrc32cBase64,
   parseUploadRequest,
   quarantinePath,
   type UploadRequestError,
   type UploadState,
 } from './model';
+import { logSafeError } from '../logging/redact';
 
 const REQUEST_ERRORS: Record<UploadRequestError, string> = {
   purpose: 'Unsupported upload type.',
@@ -176,6 +178,7 @@ export const createUploadSession = onCall(createCallableOptions({ timeoutSeconds
     sizeBytes: input.sizeBytes,
     declaredDurationSec: input.declaredDurationSec,
     fingerprint: input.fingerprint,
+    integrityMode: input.integrity,
     state: 'uploading',
     storagePath,
     createdAt,
@@ -219,6 +222,28 @@ export async function discardUploadsForJob(db: Firestore, uid: string, jobId: st
   return discarded;
 }
 
+/**
+ * Records the CRC32C the client computed from the file on its disk, just before it sends the
+ * final chunk. Quarantine compares it with the CRC32C Cloud Storage computed for the stored
+ * object; only equality counts as verified.
+ */
+export const declareUploadChecksum = onCall(createCallableOptions(), async (request) => {
+  const uid = request.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Sign in required.');
+  const body = (request.data ?? {}) as { uploadId?: unknown; crc32c?: unknown };
+  const uploadId = typeof body.uploadId === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(body.uploadId) ? body.uploadId : '';
+  if (!isCrc32cBase64(body.crc32c)) throw new HttpsError('invalid-argument', 'Invalid checksum.');
+  const db = getFirestore();
+  const ref = uploadId ? db.collection('mediaUploads').doc(uploadId) : null;
+  const snap = ref ? await ref.get() : null;
+  if (!ref || !snap?.exists || snap.get('ownerId') !== uid) throw new HttpsError('not-found', 'Upload not found.');
+  if (snap.get('state') !== 'uploading') {
+    throw new HttpsError('failed-precondition', 'This upload is no longer open.', { reason: 'session_closed' });
+  }
+  await ref.update({ declaredCrc32c: body.crc32c, checksumDeclaredAt: new Date().toISOString() });
+  return { uploadId, declared: true };
+});
+
 export const cancelUploadSession = onCall(createCallableOptions(), async (request) => {
   const uid = request.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign in required.');
@@ -245,7 +270,7 @@ export async function expireAbandonedUploads(db: Firestore, now: Date = new Date
       await discardUpload(db, doc.id, data, 'expired');
       expired += 1;
     } catch (error) {
-      logger.warn('Upload cleanup failed', { uploadId: doc.id, message: error instanceof Error ? error.message : 'unknown' });
+      logger.warn('Upload cleanup failed', { uploadId: doc.id, ...logSafeError(error) });
     }
   }
   return expired;

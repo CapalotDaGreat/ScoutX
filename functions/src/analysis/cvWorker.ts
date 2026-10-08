@@ -1,5 +1,5 @@
 import { unavailableCvOutputs, type CvWorkerInput, type CvWorkerOutput } from './workerContract';
-import { cvWorkerStatus, cvWorkerUrl } from './cvConfig';
+import { cvWorkerStatus, cvWorkerUrl, isApprovedWorkerOutput } from './cvConfig';
 import { parseCvSegmentResult, type CvSegmentRequest, type CvSegmentResult } from './cvContract';
 
 /**
@@ -82,10 +82,19 @@ export function setCvSegmentClient(client: CvSegmentClient | null): void {
   segmentClientOverride = client;
 }
 
-/** The configured worker, or null while CV_WORKER_URL / CV_WORKER_APPROVED are not set. */
+/**
+ * The configured worker, or null until CV_WORKER_URL / CV_WORKER_APPROVED are set and a
+ * verified evaluation approval is compiled in. Output from any other build is discarded.
+ */
 export function getCvSegmentClient(env: NodeJS.ProcessEnv = process.env): CvSegmentClient | null {
   if (cvWorkerStatus(env) !== 'available') return null;
-  if (segmentClientOverride) return segmentClientOverride;
   const url = cvWorkerUrl(env);
-  return url ? createHttpCvClient(url, env) : null;
+  const client = segmentClientOverride ?? (url ? createHttpCvClient(url, env) : null);
+  if (!client) return null;
+  return {
+    async analyzeSegment(request) {
+      const result = await client.analyzeSegment(request);
+      return result && isApprovedWorkerOutput(result, env) ? result : null;
+    },
+  };
 }

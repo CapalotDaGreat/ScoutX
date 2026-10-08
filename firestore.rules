@@ -679,10 +679,11 @@ service cloud.firestore {
       allow delete: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
 
-      // Segment reviews, tracker results and archived report versions are server-written.
+      // Segment reviews, tracker results, archived report versions and the player's feedback
+      // records are server-written (feedback only through submitAnalysisCorrection).
       match /{sub}/{docId} {
         allow read: if isSignedIn()
-          && sub in ['segmentReviews', 'cvSegments', 'reports']
+          && sub in ['segmentReviews', 'cvSegments', 'reports', 'corrections']
           && get(/databases/$(database)/documents/matchAnalysisJobs/$(jobId)).data.playerId == request.auth.uid;
         allow write: if false;
       }

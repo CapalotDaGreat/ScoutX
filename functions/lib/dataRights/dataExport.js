@@ -15,6 +15,7 @@ const callableOptions_1 = require("../callableOptions");
 const core_1 = require("../footballSources/core");
 const region_1 = require("../region");
 const retention_1 = require("./retention");
+const redact_1 = require("../logging/redact");
 exports.EXPORT_COLLECTION = 'dataExports';
 /** Sign-in must be this recent to export (the archive contains everything about the account). */
 exports.EXPORT_RECENT_AUTH_SEC = 10 * 60;
@@ -121,6 +122,10 @@ async function buildExportArchive(db, uid, linkExpiresAt, now = new Date()) {
         many(player.collection(core_1.FOOTBALL_SOURCES_COLLECTION)),
     ]);
     const media = [...playerMedia, ...analyses, ...reelExports];
+    const analysisFeedback = (await Promise.all(analyses
+        .map((analysis) => analysis.id)
+        .filter((id) => typeof id === 'string')
+        .map((id) => many(db.collection('matchAnalysisJobs').doc(id).collection('corrections'))))).flat();
     return {
         format: 'scoutx-data-export',
         formatVersion: 1,
@@ -141,6 +146,7 @@ async function buildExportArchive(db, uid, linkExpiresAt, now = new Date()) {
             externalFootballSources: footballSources,
             development: { goals, training, evidence, identitySnapshots: identity, trialReflections: reflections },
             analyses,
+            analysisFeedback,
             coaching: { aboutYou: observationsAbout, writtenByYou: observationsBy },
             movementSessions: movement,
             media: { items: playerMedia, reels, reelExports, downloadLinks: await mediaLinks(uid, storagePathsIn(media), linkExpiresAt) },
@@ -189,7 +195,7 @@ async function processDataExport(db, exportId, now = new Date()) {
         return 'ready';
     }
     catch (error) {
-        firebase_functions_1.logger.error('Data export failed', { exportId, message: error instanceof Error ? error.message : 'unknown' });
+        firebase_functions_1.logger.error('Data export failed', { exportId, ...(0, redact_1.logSafeError)(error) });
         await ref.update({ status: 'failed', updatedAt: new Date().toISOString() });
         return 'failed';
     }
@@ -218,7 +224,7 @@ exports.requestDataExport = (0, https_1.onCall)((0, callableOptions_1.createCall
         await exportQueue.enqueue(ref.id);
     }
     catch (error) {
-        firebase_functions_1.logger.error('Could not queue data export', { message: error instanceof Error ? error.message : 'unknown' });
+        firebase_functions_1.logger.error('Could not queue data export', { ...(0, redact_1.logSafeError)(error) });
         await ref.update({ status: 'failed', updatedAt: new Date().toISOString() });
         throw new https_1.HttpsError('unavailable', 'Your export could not be started. Please try again later.', { reason: 'queue_unavailable' });
     }

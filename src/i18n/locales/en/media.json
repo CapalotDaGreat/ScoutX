@@ -185,7 +185,8 @@
       "unknown": "The upload could not be completed. Please try again.",
       "quota_exceeded": "You have used all full-match analyses for this period.",
       "plan_limit": "This video is over your plan's size or length limit.",
-      "analysis_unavailable": "Video analysis isn't available yet, so nothing was uploaded. You can still log matches and track your development."
+      "analysis_unavailable": "Video analysis isn't available yet, so nothing was uploaded. You can still log matches and track your development.",
+      "file_changed": "This video changed since the upload started. Pick it again to start a fresh upload."
     },
     "rejection": {
       "not_video": "This file is not a video. Pick an MP4 or MOV recording.",
@@ -201,8 +202,12 @@
       "size_mismatch": "The upload did not arrive complete. Please upload it again.",
       "probe_failed": "The video could not be read. It may be damaged; try exporting it again.",
       "scanner_flagged": "This file was blocked by an automated check.",
-      "job_missing": "The analysis for this video no longer exists."
-    }
+      "job_missing": "The analysis for this video no longer exists.",
+      "integrity_mismatch": "The uploaded file did not match the video on your phone, so it was deleted. Please upload it again.",
+      "integrity_missing": "The upload could not be checked for completeness, so it was deleted. Please upload it again.",
+      "consent_withdrawn": "You withdrew consent, so this video was deleted and not analysed."
+    },
+    "estimating": "Estimating time left…"
   },
   "export": {
     "title": "Rendered video",

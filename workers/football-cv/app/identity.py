@@ -25,6 +25,8 @@ class TrackObservation:
     jersey_read: str | None
     jersey_confidence: float
     team_match: float
+    # Pixel box, kept only for the local evaluation trace; never part of the HTTP response.
+    box: tuple[float, float, float, float] | None = None
 
 
 @dataclass
@@ -63,12 +65,32 @@ class Association:
     state: str  # CONFIRMED_VISIBLE | CANDIDATE | UNKNOWN
     target_tracks: list[Track]
     candidates: list[Track]
+    # Two people carried the target number at the same moment, so neither is confirmed.
+    ambiguous: bool = False
 
 
-def associate(tracks: list[Track], jersey_number: str) -> Association:
-    """Tracks whose jersey was read as the target number often enough become the target."""
+def _co_visible(tracks: list[Track]) -> bool:
+    seen: set[float] = set()
+    for track in tracks:
+        times = {o.time_sec for o in track.observations}
+        if seen & times:
+            return True
+        seen |= times
+    return False
+
+
+def associate(tracks: list[Track], jersey_number: str, kit_known: bool = False) -> Association:
+    """Tracks whose jersey was read as the target number often enough become the target.
+
+    With a known kit, a number match in the wrong colours is someone else (e.g. the opponent
+    wearing the same number). If two remaining number matches are on screen at the same time
+    the worker cannot tell them apart and reports CANDIDATE instead of picking one."""
     tracks = [t for t in tracks if t.observations]
     confirmed = [t for t in tracks if jersey_number and t.jersey_votes(jersey_number) >= JERSEY_CONFIRM_READS]
+    if kit_known:
+        confirmed = [t for t in confirmed if t.mean_team_match() >= TEAM_CANDIDATE_MATCH]
+    if confirmed and _co_visible(confirmed):
+        return Association("CANDIDATE", [], confirmed[:5], ambiguous=True)
     if confirmed:
         return Association("CONFIRMED_VISIBLE", confirmed, confirmed)
     candidates = sorted(
@@ -124,6 +146,17 @@ def availability_windows(
     if cursor < end_sec:
         windows.append({"startSec": cursor, "endSec": end_sec, "state": "UNKNOWN", "confidence": 0.0})
     return windows
+
+
+def target_trace(association: Association) -> list[dict]:
+    """Where the worker believed the target was, per sample. Evaluation only."""
+    points = [
+        {"timeSec": o.time_sec, "box": list(o.box)}
+        for t in association.target_tracks
+        for o in t.observations
+        if o.box is not None
+    ]
+    return sorted(points, key=lambda p: p["timeSec"])
 
 
 def visible_seconds(windows: list[dict]) -> float:

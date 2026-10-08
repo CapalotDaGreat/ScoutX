@@ -9,6 +9,8 @@ import {
   type ReportSection,
 } from '@/features/match-analysis/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { CorrectionControls, CorrectionFootnote } from '@/features/match-analysis/components/CorrectionControls';
+import { useAnalysisCorrections, type AnalysisCorrectionsApi } from '@/features/match-analysis/hooks/useAnalysisCorrections';
 
 function clock(totalSec: number): string {
   const whole = Math.max(0, Math.round(totalSec));
@@ -169,7 +171,7 @@ export function OpportunitiesCard({ job }: { job: MatchAnalysisJob }) {
   );
 }
 
-export function PossibleEventsCard({ job }: { job: MatchAnalysisJob }) {
+export function PossibleEventsCard({ job, corrections }: { job: MatchAnalysisJob; corrections?: AnalysisCorrectionsApi }) {
   const { t } = useAppTranslation('matchAnalysis');
   const events = job.report?.possibleEvents ?? [];
   if (events.length === 0) return null;
@@ -190,8 +192,10 @@ export function PossibleEventsCard({ job }: { job: MatchAnalysisJob }) {
               {event.note}
             </Text>
           ) : null}
+          {corrections ? <CorrectionControls api={corrections} kind="possible_event" targetId={event.id} /> : null}
         </View>
       ))}
+      {corrections ? <CorrectionFootnote api={corrections} /> : null}
     </Card>
   );
 }
@@ -228,12 +232,13 @@ export function MediaLifecycleNotice({ job }: { job: MatchAnalysisJob }) {
 }
 
 export function VideoIntelligenceSections({ job }: { job: MatchAnalysisJob }) {
+  const corrections = useAnalysisCorrections(job);
   return (
     <View className="gap-4">
       <ReportSectionsCard sections={job.report?.sections ?? []} />
       <ClipReviewCard job={job} />
       <OpportunitiesCard job={job} />
-      <PossibleEventsCard job={job} />
+      <PossibleEventsCard job={job} corrections={corrections} />
       <MediaLifecycleNotice job={job} />
     </View>
   );

@@ -3,7 +3,33 @@
     "title": "Analysevorschau",
     "quality": "Bildqualität",
     "frames": "{{count}} Bilder werden gesampelt",
-    "cvUnavailable": "Kontinuierliches Tracking und Ereigniserkennung sind nicht verfügbar. Unbekannt bleibt unbekannt."
+    "cvUnavailable": "Kontinuierliches Tracking und Ereigniserkennung sind nicht verfügbar. Unbekannt bleibt unbekannt.",
+    "fact": {
+      "resolution": "{{width}}×{{height}}",
+      "frameRate": "{{fps}} fps",
+      "bitrate": "{{mbps}} Mbit/s",
+      "bitrateAverage": "≈{{mbps}} Mbit/s (Dateidurchschnitt)"
+    },
+    "measuredTitle": "Aus der Datei gemessen",
+    "reading": "Videodetails werden gelesen…",
+    "noMetadata": "Dieses Telefon hat für diese Datei keine Auflösung oder Bildrate gemeldet.",
+    "mayAffectTitle": "Kann die Analyse beeinflussen",
+    "warning": {
+      "low_resolution": "Unter 720p: Rückennummern weit weg von der Kamera sind eventuell nicht lesbar, deshalb bleibt die Identität womöglich unbestätigt.",
+      "low_frame_rate": "Unter 24 Bildern pro Sekunde: schnelle Aktionen können zwischen zwei Bilder fallen.",
+      "low_bitrate": "Starke Kompression für diese Auflösung: feine Details wie Nummern können verschmieren.",
+      "portrait": "Das Video wirkt hochformatig (wie gespeichert): meist ist weniger vom Spielfeld sichtbar.",
+      "track_unsupported": "Dieses Telefon meldet das Videoformat als nicht unterstützt; die Serverprüfung entscheidet, ob es lesbar ist.",
+      "metadata_unavailable": "Die Auflösung konnte auf dem Telefon nicht gelesen werden, die Qualitätshinweise sind daher unvollständig.",
+      "large_file": "Grosse Datei: der Upload kann über mobile Daten lange dauern."
+    },
+    "blocker": {
+      "too_short": "Dieses Video hat keine abspielbare Länge.",
+      "too_long": "Dieses Video ist länger als die Grenze von 150 Minuten.",
+      "too_large": "Diese Datei ist grösser als die Upload-Grenze von 4 GB."
+    },
+    "notChecked": "Auf dem Telefon nicht geprüft: Schärfe, Licht, Kamerawinkel und ob du sichtbar bist.",
+    "advisory": "Das sind nur Hinweise. PitchProof lehnt nie ein Video wegen eines Qualitätswerts ab."
   },
   "identity": {
     "title": "Bestätige, dass du es bist",
@@ -427,5 +453,41 @@
       "no_duration": "Das Video konnte nicht gelesen werden. Prüfe, ob es in der Dateien-App abgespielt wird.",
       "low_disk": "Dein Handy ist fast voll. Gib etwas Speicher frei und versuche es erneut."
     }
+  },
+  "correction": {
+    "confirm": "Stimmt",
+    "didNotHappen": "Ist nicht passiert",
+    "notMe": "Nicht ich",
+    "wrong": "Nicht zutreffend",
+    "isMe": "Das bin ich",
+    "undo": "Rückgängig",
+    "state": {
+      "confirm": "Du hast das bestätigt.",
+      "dispute": "Du hast das angezweifelt.",
+      "dismiss_false_event": "Du hast angegeben, dass das nicht passiert ist.",
+      "is_me": "Du hast bestätigt, dass dieses Bild dich zeigt.",
+      "not_me": "Du hast angegeben, dass dieses Bild nicht dich zeigt.",
+      "withdraw": "Rückmeldung zurückgezogen."
+    },
+    "footnote": "Deine Rückmeldung wird neben der Analyse gespeichert. Die ursprüngliche Analyse und allfällige Statistiken werden dadurch nicht verändert, und PitchProof nutzt weder deine Videos noch deine Rückmeldungen zum Trainieren von KI.",
+    "identityHint": "Wenn eines dieser Bilder nicht dich zeigt, gib es an. Coaching zu diesem Bild solltest du dann mit Vorsicht betrachten."
+  },
+  "trends": {
+    "title": "Über deine Analysen hinweg",
+    "locked": "Verläufe erscheinen nach {{required}} abgeschlossenen Analysen derselben Art mit bestätigter Identität. Du hast {{completed}}.",
+    "kind": {
+      "clip": "Verglichen über {{count}} Kurzclip-Analysen.",
+      "match": "Verglichen über {{count}} Spielanalysen."
+    },
+    "row": "{{metric}}: {{values}}",
+    "measured": "bewertet in {{measured}} von {{total}}",
+    "source": {
+      "ai_derived": "KI-abgeleitet aus Einzelbildern",
+      "player_entered": "Von dir eingegeben",
+      "coach": "Von deinem Trainer",
+      "verified": "Verifiziert"
+    },
+    "unknown": "Zu wenige Bewertungen für einen Vergleich: {{metrics}}. Eine fehlende Bewertung bedeutet unbekannt, nicht null.",
+    "caveat": "Wenige Analysen beschreiben nur diese Videos; sie sind kein statistisch verlässlicher Trend. Anderes Material, andere Kamerawinkel und Gegner verändern, was sichtbar ist."
   }
 }

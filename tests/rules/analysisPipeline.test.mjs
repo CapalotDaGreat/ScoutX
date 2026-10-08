@@ -3,10 +3,11 @@
 // letters, cancellation and the vision step with OpenRouter replaced by a local mock.
 import { after, before, beforeEach, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { BUCKET, PROJECT_ID } from './emulator.mjs';
+import { BUCKET, PROJECT_ID, deleteDocument, getDocument, isAllowed, isDenied, setDocument } from './emulator.mjs';
 import { mediaFixtures } from './support/mediaFixtures.mjs';
 
 const require = createRequire(new URL('../../functions/package.json', import.meta.url));
@@ -32,6 +33,8 @@ let segmentPipeline;
 let lifecycle;
 let identity;
 let cvWorker;
+let cvConfig;
+const APPROVED_MODELS = { detector: 'rtdetr@test', tracker: 'bytetrack@test' };
 let cancelMatchAnalysis;
 let analyzeMatchFootage;
 let videoBytes;
@@ -148,6 +151,7 @@ before(async () => {
   lifecycle = require('./lib/analysis/mediaLifecycle.js');
   identity = require('./lib/analysis/identityCallable.js');
   cvWorker = require('./lib/analysis/cvWorker.js');
+  cvConfig = require('./lib/analysis/cvConfig.js');
   ({ VIDEO_CONSENT_VERSION } = require('./lib/analysis/videoConsent.js'));
   ({ cancelMatchAnalysis, analyzeMatchFootage } = require('./lib/matchAnalysis.js'));
   videoBytes = readFileSync(mediaFixtures().valid10);
@@ -166,6 +170,7 @@ beforeEach(async () => {
   await db.collection('analysisQuotas').doc(OWNER).delete();
   delete process.env.CV_WORKER_URL;
   delete process.env.CV_WORKER_APPROVED;
+  cvConfig.setEmulatorCvApproval(null);
   delete process.env.CV_EVENTS_VALIDATED;
   cvWorker.setCvSegmentClient(null);
 });
@@ -494,9 +499,48 @@ describe('segment review, synthesis and identity', () => {
     assert.equal((await job('pipe-cv-off')).report.versions.cvWorkerVersion, null);
   });
 
+  test('flags plus a worker build other than the evaluated one yield no CV output', async () => {
+    process.env.CV_WORKER_URL = 'http://127.0.0.1:9';
+    process.env.CV_WORKER_APPROVED = 'true';
+    process.env.CV_EVENTS_VALIDATED = 'true';
+    let calls = 0;
+    cvWorker.setCvSegmentClient({
+      analyzeSegment: async (request) => {
+        calls += 1;
+        return {
+          contractVersion: 2, workerVersion: 'football-cv/unreviewed', models: APPROVED_MODELS, segmentIndex: request.segmentIndex,
+          stages: { tracking: 'complete', identity: 'complete', events: 'complete', pitch: 'unavailable' }, cameraView: 'wide',
+          identity: { state: 'CONFIRMED_VISIBLE', candidates: [] },
+          availability: [{ startSec: request.startSec, endSec: request.startSec + 120, state: 'CONFIRMED_VISIBLE', confidence: 0.8 }],
+          coverage: { analysedSec: 600, targetVisibleSec: 120, framesDecoded: 1200 }, events: [],
+        };
+      },
+    });
+    await seedValidatedJob('pipe-cv-flags', { durationSec: 1200, measuredDurationSec: 1200 });
+    await pipeline.startMatchPipeline(db, 'pipe-cv-flags', dispatcher);
+    modelReply(review('frame_0'));
+    modelReply(review('frame_100'));
+    modelReply(JSON.stringify({ headline: 'ok' }));
+    await drain({ extractor: stubExtractor(2) });
+    assert.equal(calls, 0, 'without an approval record the worker is not even called');
+
+    cvConfig.setEmulatorCvApproval({ workerVersion: 'football-cv/test', models: APPROVED_MODELS, eventsApproved: false, reportSha256: 'x' });
+    await seedValidatedJob('pipe-cv-other', { durationSec: 1200, measuredDurationSec: 1200 });
+    await pipeline.startMatchPipeline(db, 'pipe-cv-other', dispatcher);
+    modelReply(review('frame_0'));
+    modelReply(review('frame_100'));
+    modelReply(JSON.stringify({ headline: 'ok' }));
+    await drain({ extractor: stubExtractor(2) });
+    assert.equal(calls, 2);
+    const report = (await job('pipe-cv-other')).report;
+    assert.equal(report.versions.cvWorkerVersion, null, 'output from an unevaluated build is discarded');
+    assert.equal(report.possibleEvents.filter((event) => event.source === 'cv_worker').length, 0);
+  });
+
   test('an approved worker feeds tracking windows; its events stay suggestions until validated', async () => {
     process.env.CV_WORKER_URL = 'http://127.0.0.1:9';
     process.env.CV_WORKER_APPROVED = 'true';
+    cvConfig.setEmulatorCvApproval({ workerVersion: 'football-cv/test', models: APPROVED_MODELS, eventsApproved: false, reportSha256: 'x' });
     const requests = [];
     cvWorker.setCvSegmentClient({
       analyzeSegment: async (request) => {
@@ -504,6 +548,7 @@ describe('segment review, synthesis and identity', () => {
         return {
           contractVersion: 2,
           workerVersion: 'football-cv/test',
+          models: APPROVED_MODELS,
           segmentIndex: request.segmentIndex,
           stages: { tracking: 'complete', identity: 'complete', events: 'complete', pitch: 'unavailable' },
           cameraView: 'wide',
@@ -582,5 +627,181 @@ describe('short clips analysed from device frames', () => {
 
     await lifecycle.onJobStatusChanged(db, jobId, { status: 'uploading' }, state);
     assert.deepEqual(await listJobObjects(jobId), ['frames/frame_3.jpg', 'frames/frame_4.jpg']);
+  });
+});
+
+describe('consent withdrawal mid-pipeline', () => {
+  test('queued stages stop, nothing reaches the model or the worker, and media is removed', async () => {
+    process.env.CV_WORKER_URL = 'http://127.0.0.1:9';
+    process.env.CV_WORKER_APPROVED = 'true';
+    cvConfig.setEmulatorCvApproval({ workerVersion: 'football-cv/test', models: APPROVED_MODELS, eventsApproved: false, reportSha256: 'x' });
+    let workerCalls = 0;
+    cvWorker.setCvSegmentClient({ analyzeSegment: async () => { workerCalls += 1; return null; } });
+    await seedValidatedJob('pipe-withdraw', { durationSec: 1200, measuredDurationSec: 1200 });
+    await pipeline.startMatchPipeline(db, 'pipe-withdraw', dispatcher);
+    // First segment's frames are extracted, then the player withdraws.
+    const first = queue.shift();
+    await pipeline.processExtractTask(db, first.task, { finalAttempt: false, dispatcher, extractor: stubExtractor(2) });
+    const { revokeVideoProcessingConsent } = require('./lib/analysis/videoConsent.js');
+    await revokeVideoProcessingConsent.run(call(OWNER, { jobId: 'pipe-withdraw' }));
+    modelReply(JSON.stringify({ headline: 'must not be requested' }));
+    await drain({ extractor: stubExtractor(2) }).catch(() => undefined);
+
+    const state = await job('pipe-withdraw');
+    assert.equal(state.status, 'cancelled');
+    assert.equal(received.length, 0, 'no frame was sent for review after withdrawal');
+    assert.equal(workerCalls, 0);
+    assert.equal(state.report ?? null, null);
+    await lifecycle.applyMediaLifecycle(db, 'pipe-withdraw');
+    assert.deepEqual(await listJobObjects('pipe-withdraw'), []);
+  });
+});
+
+describe('legacy media', () => {
+  async function seedLegacy(jobId, extra = {}) {
+    const prefix = `profiles/${OWNER}/matchFootage/${jobId}/`;
+    for (const name of ['video.mp4', 'frames/frame_0.jpg', 'frames/frame_1.jpg', 'notes.txt']) {
+      await bucket.file(`${prefix}${name}`).save(Buffer.from(name), { contentType: name.endsWith('.txt') ? 'text/plain' : 'image/jpeg' });
+    }
+    await db.collection('matchAnalysisJobs').doc(jobId).set({
+      id: jobId,
+      playerId: OWNER,
+      status: 'complete',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+      videoStoragePath: `${prefix}video.mp4`,
+      frames: [0, 1].map((index) => ({ id: `frame_${index}`, index, timestampSec: index, storagePath: `${prefix}frames/frame_${index}.jpg`, downloadUrl: '' })),
+      report: { evidence: [{ id: 'obs_1', kind: 'observation', frameIds: ['frame_1'] }] },
+      ...extra,
+    });
+  }
+
+  function runScript(args) {
+    const result = spawnSync(process.execPath, ['scripts/legacy-media.mjs', '--project', PROJECT_ID, '--bucket', BUCKET, ...args], {
+      encoding: 'utf8',
+      env: process.env,
+    });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stdout;
+  }
+
+  test('lifecycle cleanup leaves objects it does not recognise', async () => {
+    await seedLegacy('legacy-life', { mediaCleanupState: 'pending', mediaCleanupDueAt: '2026-01-01T00:00:00.000Z' });
+    await lifecycle.applyMediaLifecycle(db, 'legacy-life');
+    assert.deepEqual(await listJobObjects('legacy-life'), ['frames/frame_1.jpg', 'notes.txt']);
+  });
+
+  test('dry run changes nothing; apply deletes only the reviewed uncited frames by generation', async () => {
+    await seedLegacy('legacy-a');
+    await seedLegacy('legacy-done', { mediaCleanupState: 'done' });
+    const dry = runScript([]);
+    assert.doesNotMatch(dry, /profiles\//, 'the console never shows private object paths');
+    const reportPath = /report written to (\S+)/.exec(dry)[1];
+    assert.deepEqual(await listJobObjects('legacy-a'), ['frames/frame_0.jpg', 'frames/frame_1.jpg', 'notes.txt', 'video.mp4']);
+    const report = JSON.parse(readFileSync(reportPath, 'utf8'));
+    const plan = report.plans.find((p) => p.jobId === 'legacy-a');
+    assert.ok(plan);
+    assert.equal(report.plans.some((p) => p.jobId === 'legacy-done'), false);
+    assert.deepEqual(
+      Object.fromEntries(plan.entries.map((e) => [e.name.split('/legacy-a/')[1], e.action])),
+      { 'frames/frame_0.jpg': 'delete_uncited_frame', 'frames/frame_1.jpg': 'keep_cited_frame', 'notes.txt': 'review_unrecognised', 'video.mp4': 'review_source_no_decision' },
+    );
+
+    // An object replaced after the review (new generation) is skipped, not deleted.
+    await seedLegacy('legacy-b');
+    const second = /report written to (\S+)/.exec(runScript([]))[1];
+    await bucket.file(`profiles/${OWNER}/matchFootage/legacy-b/frames/frame_0.jpg`).save(Buffer.from('changed'), { contentType: 'image/jpeg' });
+    runScript(['--apply', second]);
+    assert.deepEqual(await listJobObjects('legacy-a'), ['frames/frame_1.jpg', 'notes.txt', 'video.mp4']);
+    assert.deepEqual(await listJobObjects('legacy-b'), ['frames/frame_0.jpg', 'frames/frame_1.jpg', 'notes.txt', 'video.mp4']);
+    const after = await job('legacy-a');
+    assert.equal(after.mediaCleanupState, 'done');
+    assert.deepEqual(after.frames.map((frame) => frame.id), ['frame_1']);
+    assert.equal(after.videoStoragePath, `profiles/${OWNER}/matchFootage/legacy-a/video.mp4`);
+  });
+});
+
+describe('analysis corrections', () => {
+  const OTHER = 'pipeline-other';
+  const report = {
+    headline: 'h',
+    possibleEvents: [{ id: 'pe_1', type: 'shot', frameIds: ['frame_0'], timestampSec: 12, note: '', status: 'needs_review' }],
+    events: [{ eventId: 'ev_1', type: 'pass', validationStatus: 'accepted' }],
+    evidence: [{ id: 'obs_1', kind: 'observation', label: 'First touch', detail: 'd', confidence: 0.5 }],
+    estimatedStats: { passes: 1 },
+    versions: { analysisVersion: 2 },
+  };
+  let submitAnalysisCorrection;
+
+  async function seedComplete(jobId, overrides = {}) {
+    await seedConsent(jobId);
+    await db.collection('matchAnalysisJobs').doc(jobId).set({
+      id: jobId,
+      playerId: OWNER,
+      status: 'complete',
+      frames: [{ id: 'frame_0', index: 0, timestampSec: 0, storagePath: 'x', downloadUrl: '' }],
+      identityConfirmation: { state: 'confirmed', frameIds: ['frame_0'], confirmedAt: '2026-10-01T00:00:00.000Z' },
+      report,
+      ...overrides,
+    });
+  }
+
+  before(() => {
+    ({ submitAnalysisCorrection } = require('./lib/analysis/corrections.js'));
+  });
+
+  test('stores append-only, attributed feedback and never edits the analysis or its stats', async () => {
+    await seedComplete('corr-1');
+    const first = await submitAnalysisCorrection.run(call(OWNER, {
+      jobId: 'corr-1', targetKind: 'event', targetId: 'ev_1', action: 'dismiss_false_event', reason: 'did_not_happen',
+    }));
+    assert.equal(first.deduplicated, false);
+    const again = await submitAnalysisCorrection.run(call(OWNER, {
+      jobId: 'corr-1', targetKind: 'event', targetId: 'ev_1', action: 'dismiss_false_event', reason: 'did_not_happen',
+    }));
+    assert.equal(again.deduplicated, true, 'a repeated tap does not create a second record');
+    await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-1', targetKind: 'event', targetId: 'ev_1', action: 'withdraw' }));
+    await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-1', targetKind: 'identity_frame', targetId: 'frame_0', action: 'not_me', reason: 'not_me' }));
+    await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-1', targetKind: 'observation', targetId: 'obs_1', action: 'confirm' }));
+
+    const records = (await db.collection('matchAnalysisJobs').doc('corr-1').collection('corrections').orderBy('createdAt').get()).docs.map((d) => d.data());
+    assert.equal(records.length, 4);
+    for (const record of records) {
+      assert.equal(record.actorId, OWNER);
+      assert.equal(record.usedForTraining, false);
+      assert.equal(record.reportVersion, 2);
+      assert.match(record.createdAt, /^\d{4}-\d{2}-\d{2}T/);
+    }
+    const stored = await job('corr-1');
+    assert.deepEqual(stored.report, report, 'the original analysis is untouched');
+    assert.deepEqual(stored.identityConfirmation.frameIds, ['frame_0'], 'no silent identity switch');
+  });
+
+  test('rejects other users, unknown targets, unfinished analyses and withdrawn consent', async () => {
+    await seedComplete('corr-2');
+    const valid = { jobId: 'corr-2', targetKind: 'possible_event', targetId: 'pe_1', action: 'confirm' };
+    await expectCode(submitAnalysisCorrection.run(call(OTHER, valid)), 'not-found');
+    await expectCode(submitAnalysisCorrection.run({ ...call(OWNER, valid), auth: undefined }), 'unauthenticated');
+    await expectCode(submitAnalysisCorrection.run(call(OWNER, { ...valid, targetId: 'pe_404' })), 'invalid-argument');
+    await expectCode(submitAnalysisCorrection.run(call(OWNER, { ...valid, action: 'not_me' })), 'invalid-argument');
+
+    await seedComplete('corr-3', { status: 'processing' });
+    await expectCode(submitAnalysisCorrection.run(call(OWNER, { ...valid, jobId: 'corr-3' })), 'failed-precondition');
+
+    await seedComplete('corr-4');
+    await db.collection('videoProcessingConsents').doc('corr-4').update({ revokedAt: new Date().toISOString() });
+    await expectCode(submitAnalysisCorrection.run(call(OWNER, { ...valid, jobId: 'corr-4' })), 'failed-precondition');
+    assert.equal((await db.collection('matchAnalysisJobs').doc('corr-2').collection('corrections').get()).size, 0);
+  });
+
+  test('owners can read their feedback; nobody can write it directly', async () => {
+    await seedComplete('corr-5');
+    await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-5', targetKind: 'possible_event', targetId: 'pe_1', action: 'confirm' }));
+    const [doc] = (await db.collection('matchAnalysisJobs').doc('corr-5').collection('corrections').get()).docs;
+    const path = `matchAnalysisJobs/corr-5/corrections/${doc.id}`;
+    assert.ok(isAllowed(await getDocument(OWNER, path)));
+    assert.ok(isDenied(await getDocument(OTHER, path)));
+    assert.ok(isDenied(await setDocument(OWNER, path, { targetKind: 'event', action: 'confirm' })));
+    assert.ok(isDenied(await setDocument(OWNER, 'matchAnalysisJobs/corr-5/corrections/forged', { actorId: OWNER })));
+    assert.ok(isDenied(await deleteDocument(OWNER, path)));
   });
 });

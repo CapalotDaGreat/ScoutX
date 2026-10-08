@@ -18,6 +18,8 @@ type CreateUploadSessionRequest = {
   sizeBytes: number;
   declaredDurationSec: number;
   fingerprint: string;
+  /** This client declares the whole-file CRC32C before the final chunk; the server then requires it. */
+  integrity: 'crc32c';
 };
 
 function parseSession(data: unknown): UploadSession {
@@ -40,6 +42,13 @@ export const UploadSessionRepository = {
     const fn = createCallableFunction<CreateUploadSessionRequest>('createUploadSession');
     if (!fn) throw new Error('Uploading needs a connection to the PitchProof server.');
     return parseSession((await fn(request)).data);
+  },
+
+  /** Records the client-computed CRC32C; the server compares it with the CRC32C GCS computes. */
+  async declareChecksum(uploadId: string, crc32c: string): Promise<void> {
+    const fn = createCallableFunction<{ uploadId: string; crc32c: string }>('declareUploadChecksum');
+    if (!fn) throw new Error('Uploading needs a connection to the PitchProof server.');
+    await fn({ uploadId, crc32c });
   },
 
   async cancel(uploadId: string): Promise<void> {

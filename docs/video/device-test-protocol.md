@@ -21,3 +21,22 @@ use. Record results in `docs/release/validation-matrix.md` (date, build, device,
 9. **Failure** — force a failure (airplane mode during analysis is not enough; use an unsupported
    file): job failed, video removed after 24 h.
 10. **Languages** — repeat step 1 in de, fr, es, it, pt, nl: no truncation, no English leftovers.
+11. **Resume after kill** — start a 45 min upload, force-quit the app at ~40 %, reopen: the
+    interrupted-upload card offers resume; it continues from the last committed chunk (not 0 %).
+    Replace the file in Files with another one of the same name: resume refuses with "file changed".
+12. **Network loss** — airplane mode at ~60 % for 2 min, then off: upload continues; ETA shows
+    "estimating" until the rate is stable again.
+13. **Low storage** — fill the device to < 1 GB free, pick a 3 GB file: a clear message, no partial
+    copy left in `Documents/pending-uploads`.
+14. **iCloud cloud-only** — a file not downloaded to the phone: preparing state while it downloads;
+    with no network, a clear error instead of a hang.
+15. **Integrity** — (needs a debug build) corrupt one chunk in transit: the server rejects the upload
+    with the integrity message; nothing is analysed.
+16. **Preflight** — a 4K 60 fps clip, a 480p clip and a portrait clip: measured facts match the
+    file; low-resolution and portrait show warnings but the Analyse button stays enabled. Compare
+    width/height/fps with the Photos "info" panel (iOS track metadata may ignore rotation).
+17. **Corrections** — on a completed report, tap "Didn't happen" on a possible event, "Not me" on an
+    identity frame, then undo: labels update, report numbers do not change; another account cannot
+    see the feedback.
+18. **Trends** — with 2 completed analyses: the locked message; after the 3rd: rows with "–" for
+    unrated dimensions and the not-statistically-reliable caveat.

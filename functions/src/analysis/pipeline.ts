@@ -32,6 +32,7 @@ import {
 import { initialStages, parseStages, updateStage } from './stages';
 import { canTransitionPipeline } from './stateMachine';
 import { getTaskDispatcher, parseAnalysisTask, type AnalysisTask, type TaskDispatcher } from './taskDispatcher';
+import { logSafeError } from '../logging/redact';
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
 
@@ -153,7 +154,7 @@ export async function startMatchPipeline(
     }
     return 'queued';
   } catch (error) {
-    logger.error('Could not enqueue analysis tasks', { jobId, message: error instanceof Error ? error.message : 'unknown' });
+    logger.error('Could not enqueue analysis tasks', { jobId, ...logSafeError(error) });
     await failJob(db, jobId, 'queue_unavailable');
     return 'failed';
   }

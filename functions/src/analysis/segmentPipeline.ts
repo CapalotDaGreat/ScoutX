@@ -42,6 +42,7 @@ import { parseStages, setCvStageResult, updateStage } from './stages';
 import { normalizeTechniqueAssessment, parseSelfReportedStars } from './technique';
 import { getTaskDispatcher, parseAnalysisTask, type AnalysisTask, type TaskDispatcher } from './taskDispatcher';
 import { assertVideoConsent } from './videoConsent';
+import { logSafeError } from '../logging/redact';
 
 const openRouterApiKey = defineSecret('OPENROUTER_API_KEY');
 const TASK_MAX_ATTEMPTS = 3;
@@ -121,7 +122,7 @@ export async function processReviewTask(
   try {
     await runCvForSegment(db, task.jobId, job, task.segmentIndex);
   } catch (error) {
-    logger.warn('CV worker segment failed', { jobId: task.jobId, message: error instanceof Error ? error.message : 'unknown' });
+    logger.warn('CV worker segment failed', { jobId: task.jobId, ...logSafeError(error) });
   }
 
   const frames = segmentFrames(job, task.segmentIndex);
@@ -255,7 +256,7 @@ export async function processSynthesisTask(
   try {
     job = await acquireJobLease(db, pre.playerId, task.jobId, `task:${task.jobId}:${task.generation}:synth`, undefined);
   } catch (error) {
-    logger.warn('Synthesis lease refused', { jobId: task.jobId, message: error instanceof Error ? error.message : 'unknown' });
+    logger.warn('Synthesis lease refused', { jobId: task.jobId, ...logSafeError(error) });
     return 'failed';
   }
   const stages = parseStages(job.pipelineStages);

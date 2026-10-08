@@ -185,7 +185,8 @@
       "unknown": "De upload kon niet worden voltooid. Probeer het opnieuw.",
       "quota_exceeded": "Je hebt alle volledige wedstrijdanalyses voor deze periode gebruikt.",
       "plan_limit": "Deze video gaat over de grootte- of lengtelimiet van je abonnement.",
-      "analysis_unavailable": "Videoanalyse is nog niet beschikbaar, dus er is niets geüpload. Je kunt nog steeds wedstrijden vastleggen en je ontwikkeling volgen."
+      "analysis_unavailable": "Videoanalyse is nog niet beschikbaar, dus er is niets geüpload. Je kunt nog steeds wedstrijden vastleggen en je ontwikkeling volgen.",
+      "file_changed": "Deze video is veranderd sinds de upload begon. Kies hem opnieuw om opnieuw te uploaden."
     },
     "rejection": {
       "not_video": "Dit bestand is geen video. Kies een MP4- of MOV-opname.",
@@ -201,8 +202,12 @@
       "size_mismatch": "De upload is niet volledig aangekomen. Upload hem opnieuw.",
       "probe_failed": "De video kon niet worden gelezen. Mogelijk is hij beschadigd; probeer hem opnieuw te exporteren.",
       "scanner_flagged": "Dit bestand is geblokkeerd door een automatische controle.",
-      "job_missing": "De analyse voor deze video bestaat niet meer."
-    }
+      "job_missing": "De analyse voor deze video bestaat niet meer.",
+      "integrity_mismatch": "Het geüploade bestand kwam niet overeen met de video op je telefoon en is verwijderd. Upload hem opnieuw.",
+      "integrity_missing": "Er kon niet worden gecontroleerd of de upload volledig was, dus hij is verwijderd. Upload hem opnieuw.",
+      "consent_withdrawn": "Je hebt je toestemming ingetrokken, dus deze video is verwijderd en niet geanalyseerd."
+    },
+    "estimating": "Resterende tijd wordt geschat…"
   },
   "export": {
     "title": "Gerenderde video",

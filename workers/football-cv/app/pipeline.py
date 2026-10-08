@@ -13,10 +13,18 @@ from typing import Iterable, Iterator, Protocol
 import numpy as np
 
 from .contract import SegmentRequest, SegmentResult
-from .identity import Track, TrackObservation, associate, availability_windows, candidate_payload, visible_seconds
-from .teams import team_match
+from .identity import (
+    Track,
+    TrackObservation,
+    associate,
+    availability_windows,
+    candidate_payload,
+    target_trace,
+    visible_seconds,
+)
+from .teams import kit_rgb, team_match
 
-WORKER_VERSION = "football-cv/0.1.0"
+WORKER_VERSION = "football-cv/0.2.0"
 
 
 @dataclass
@@ -50,6 +58,8 @@ class Components:
     detector: Detector
     tracker_factory: "TrackerFactory"
     jersey_reader: JerseyReader
+    # Exact model identifiers; an approval covers one worker version with one model set.
+    models: dict[str, str] | None = None
 
 
 class TrackerFactory(Protocol):
@@ -77,7 +87,8 @@ def _crop(frame: np.ndarray, box: Box, top: float, bottom: float) -> np.ndarray:
     return frame[y1:y2, x1:x2]
 
 
-def analyse_segment(request: SegmentRequest, components: Components) -> SegmentResult:
+def analyse_segment(request: SegmentRequest, components: Components, trace: list[dict] | None = None) -> SegmentResult:
+    """`trace` (evaluation only) receives the target's per-sample boxes; the service never passes it."""
     tracker = components.tracker_factory()
     tracks: dict[str, Track] = {}
     heights: list[float] = []
@@ -103,21 +114,26 @@ def analyse_segment(request: SegmentRequest, components: Components) -> SegmentR
                         jersey_read=jersey,
                         jersey_confidence=jersey_confidence,
                         team_match=team_match(torso, request.target.kitPrimaryColor, request.target.kitSecondaryColor),
+                        box=(box.x1, box.y1, box.x2, box.y2) if trace is not None else None,
                     )
                 )
     except Exception:  # noqa: BLE001 - a broken stream must yield an honest failure, not a crash
         tracking_state = "failed"
 
     view = camera_view(heights) if decoded else "unclear"
+    kit_known = kit_rgb(request.target.kitPrimaryColor) is not None or kit_rgb(request.target.kitSecondaryColor) is not None
     if tracking_state == "failed" or decoded == 0:
         association = associate([], request.target.jerseyNumber)
         tracking_state = "failed"
     else:
-        association = associate(list(tracks.values()), request.target.jerseyNumber)
+        association = associate(list(tracks.values()), request.target.jerseyNumber, kit_known)
+    if trace is not None:
+        trace.extend(target_trace(association))
     windows = availability_windows(association, request.startSec, request.endSec, step, wide_camera=view == "wide")
     analysed = min(request.endSec - request.startSec, decoded * step)
     result = SegmentResult(
         workerVersion=WORKER_VERSION,
+        models=components.models or {},
         segmentIndex=request.segmentIndex,
         stages={
             "tracking": tracking_state,

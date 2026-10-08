@@ -3,7 +3,33 @@
     "title": "Pré-visualização da análise",
     "quality": "Qualidade do vídeo",
     "frames": "{{count}} fotogramas serão amostrados",
-    "cvUnavailable": "O tracking contínuo e a deteção de eventos não estão disponíveis. O desconhecido permanece desconhecido."
+    "cvUnavailable": "O tracking contínuo e a deteção de eventos não estão disponíveis. O desconhecido permanece desconhecido.",
+    "fact": {
+      "resolution": "{{width}}×{{height}}",
+      "frameRate": "{{fps}} fps",
+      "bitrate": "{{mbps}} Mbit/s",
+      "bitrateAverage": "≈{{mbps}} Mbit/s (média do ficheiro)"
+    },
+    "measuredTitle": "Medido a partir do ficheiro",
+    "reading": "A ler os detalhes do vídeo…",
+    "noMetadata": "Este telemóvel não indicou a resolução nem a taxa de fotogramas deste ficheiro.",
+    "mayAffectTitle": "Pode afetar a análise",
+    "warning": {
+      "low_resolution": "Abaixo de 720p: os números longe da câmara podem ficar ilegíveis, por isso a identidade pode ficar por confirmar.",
+      "low_frame_rate": "Menos de 24 fotogramas por segundo: ações rápidas podem ficar entre dois fotogramas.",
+      "low_bitrate": "Compressão forte para esta resolução: detalhes como os números podem ficar desfocados.",
+      "portrait": "O vídeo parece vertical (tal como guardado): normalmente vê-se menos do campo.",
+      "track_unsupported": "Este telemóvel indica que o formato de vídeo não é suportado; a verificação do servidor decide se pode ser lido.",
+      "metadata_unavailable": "Não foi possível ler a resolução no telemóvel, por isso as indicações de qualidade estão incompletas.",
+      "large_file": "Ficheiro grande: o envio pode demorar muito com dados móveis."
+    },
+    "blocker": {
+      "too_short": "Este vídeo não tem uma duração reproduzível.",
+      "too_long": "Este vídeo ultrapassa o limite de 150 minutos.",
+      "too_large": "Este ficheiro ultrapassa o limite de envio de 4 GB."
+    },
+    "notChecked": "Não verificado no telemóvel: nitidez, iluminação, ângulo da câmara e se estás visível.",
+    "advisory": "São apenas indicações. A PitchProof nunca recusa um vídeo por causa de uma pontuação de qualidade."
   },
   "identity": {
     "title": "Confirma que és tu",
@@ -427,5 +453,41 @@
       "no_duration": "Não foi possível ler o vídeo. Verifica se é reproduzido na app Ficheiros.",
       "low_disk": "O teu telemóvel está quase cheio. Liberta espaço e tenta de novo."
     }
+  },
+  "correction": {
+    "confirm": "Está certo",
+    "didNotHappen": "Não aconteceu",
+    "notMe": "Não sou eu",
+    "wrong": "Não é exato",
+    "isMe": "Sou eu",
+    "undo": "Anular",
+    "state": {
+      "confirm": "Confirmaste isto.",
+      "dispute": "Contestaste isto.",
+      "dismiss_false_event": "Indicaste que isto não aconteceu.",
+      "is_me": "Confirmaste que esta imagem te mostra.",
+      "not_me": "Indicaste que esta imagem não és tu.",
+      "withdraw": "Feedback retirado."
+    },
+    "footnote": "O teu feedback é guardado junto da análise. A análise original e as estatísticas não mudam, e a PitchProof não usa os teus vídeos nem o teu feedback para treinar IA.",
+    "identityHint": "Se uma destas imagens não fores tu, indica-o. O coaching ligado a essa imagem deve então ser visto com cautela."
+  },
+  "trends": {
+    "title": "Ao longo das tuas análises",
+    "locked": "As tendências aparecem após {{required}} análises concluídas do mesmo tipo com identidade confirmada. Tens {{completed}}.",
+    "kind": {
+      "clip": "Comparado em {{count}} análises de clipes curtos.",
+      "match": "Comparado em {{count}} análises de jogos."
+    },
+    "row": "{{metric}}: {{values}}",
+    "measured": "avaliado em {{measured}} de {{total}}",
+    "source": {
+      "ai_derived": "Derivado por IA de imagens amostradas",
+      "player_entered": "Introduzido por ti",
+      "coach": "Do teu treinador",
+      "verified": "Verificado"
+    },
+    "unknown": "Avaliações insuficientes para comparar: {{metrics}}. Uma avaliação em falta significa desconhecido, não zero.",
+    "caveat": "Poucas análises descrevem apenas esses vídeos; não são uma tendência estatisticamente fiável. Outras gravações, ângulos de câmara e adversários mudam o que é visível."
   }
 }

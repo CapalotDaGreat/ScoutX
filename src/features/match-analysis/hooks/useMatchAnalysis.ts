@@ -8,6 +8,8 @@ import { uploadMatchFrame } from '@/features/match-analysis/services/matchFootag
 import {
   UploadSessionRepository,
   contentTypeForFileName,
+  persistForUpload,
+  releaseUploadCopy,
   useChunkedUpload,
   type UploadAttempt,
 } from '@/features/media-upload';
@@ -340,10 +342,12 @@ export function useMatchAnalysis(playerId: string | null) {
 
         uploadJobRef.current = consented;
         setPhaseLabel('Uploading full match video…');
+        const fileUri = await persistForUpload(input.localVideoUri, jobId);
+        setLocalVideo({ jobId, uri: fileUri });
         const attempt = await startUpload({
           purpose: 'match_footage',
           jobId,
-          fileUri: input.localVideoUri,
+          fileUri,
           fileName: input.fileName ?? 'match.mp4',
           contentType: contentTypeForFileName(input.fileName ?? input.localVideoUri),
           declaredDurationSec: input.durationSec,
@@ -371,11 +375,15 @@ export function useMatchAnalysis(playerId: string | null) {
         return;
       }
       uploadJobRef.current = null;
+      if (localVideo?.jobId === job.id) {
+        await releaseUploadCopy(localVideo.uri);
+        setLocalVideo(null);
+      }
       const latest = (await getMatchAnalysisJob(job.id).catch(() => null)) ?? { ...job, status: 'cancelled' as const };
       setActiveJob(latest);
       await refreshRecent();
     },
-    [refreshRecent],
+    [localVideo, refreshRecent],
   );
 
   const retryAnalysis = useCallback(

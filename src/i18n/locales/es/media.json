@@ -185,7 +185,8 @@
       "unknown": "No se pudo completar la subida. Inténtalo de nuevo.",
       "quota_exceeded": "Has usado todos tus análisis de partido completo de este periodo.",
       "plan_limit": "Este vídeo supera el límite de tamaño o duración de tu plan.",
-      "analysis_unavailable": "El análisis de vídeo aún no está disponible, así que no se subió nada. Puedes seguir registrando partidos y siguiendo tu desarrollo."
+      "analysis_unavailable": "El análisis de vídeo aún no está disponible, así que no se subió nada. Puedes seguir registrando partidos y siguiendo tu desarrollo.",
+      "file_changed": "Este vídeo ha cambiado desde que empezó la subida. Vuelve a elegirlo para subirlo de nuevo."
     },
     "rejection": {
       "not_video": "Este archivo no es un vídeo. Elige una grabación MP4 o MOV.",
@@ -201,8 +202,12 @@
       "size_mismatch": "La subida no llegó completa. Súbelo de nuevo.",
       "probe_failed": "No se pudo leer el vídeo. Puede estar dañado; intenta exportarlo de nuevo.",
       "scanner_flagged": "Este archivo fue bloqueado por una comprobación automática.",
-      "job_missing": "El análisis de este vídeo ya no existe."
-    }
+      "job_missing": "El análisis de este vídeo ya no existe.",
+      "integrity_mismatch": "El archivo subido no coincidía con el vídeo de tu teléfono, así que se eliminó. Vuelve a subirlo.",
+      "integrity_missing": "No se pudo comprobar que la subida estuviera completa, así que se eliminó. Vuelve a subirlo.",
+      "consent_withdrawn": "Retiraste tu consentimiento, así que este vídeo se eliminó y no se analizó."
+    },
+    "estimating": "Calculando el tiempo restante…"
   },
   "export": {
     "title": "Vídeo renderizado",

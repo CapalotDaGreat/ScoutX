@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PitchProof evaluation dataset manifest",
+  "description": "Lists every evaluation video. The footage itself stays outside the repository; the SHA-256 lets an independent reviewer confirm they re-ran the same files. Committing the manifest is fine: it contains no names, faces or footage.",
+  "type": "object",
+  "required": ["datasetId", "createdAt", "videos"],
+  "additionalProperties": false,
+  "properties": {
+    "datasetId": { "type": "string", "pattern": "^[A-Za-z0-9_.-]{1,80}$" },
+    "createdAt": { "type": "string", "format": "date" },
+    "notes": { "type": "string", "maxLength": 2000 },
+    "videos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["videoId", "fileName", "footageSha256", "durationSec", "consent"],
+        "additionalProperties": false,
+        "properties": {
+          "videoId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,80}$" },
+          "fileName": { "type": "string", "maxLength": 200 },
+          "footageSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "durationSec": { "type": "number", "exclusiveMinimum": 0 },
+          "consent": { "const": "documented", "description": "Written permission of the filmed player (and guardian for minors) is on file outside the repository." },
+          "source": { "enum": ["own_recording", "club_recording", "licensed"] }
+        }
+      }
+    }
+  }
+}

@@ -19,6 +19,7 @@ const mode_1 = require("../analysis/mode");
 const quotaService_1 = require("../entitlements/quotaService");
 const mediaSource_1 = require("./mediaSource");
 const mediaScanner_1 = require("./mediaScanner");
+const videoConsent_1 = require("../analysis/videoConsent");
 const model_1 = require("./model");
 const probe_1 = require("./probe");
 const PROBE_TIMEOUT_MS = 180_000;
@@ -91,11 +92,41 @@ async function fileFootageInLibrary(db, data, storagePath, durationSec, now) {
         updatedAt: now,
     });
 }
+/**
+ * Consent can be withdrawn while validation runs. Checked before and after the copy so a
+ * withdrawn job never gets promoted footage or a pipeline start.
+ */
+async function processingWithdrawn(db, uploadId, data) {
+    const [consent, job, upload] = await Promise.all([
+        db.collection(videoConsent_1.VIDEO_CONSENT_COLLECTION).doc(data.jobId).get(),
+        db.collection('matchAnalysisJobs').doc(data.jobId).get(),
+        db.collection('mediaUploads').doc(uploadId).get(),
+    ]);
+    return !consent.exists
+        || consent.get('uid') !== data.ownerId
+        || consent.get('revokedAt') != null
+        || job.get('cancelRequested') === true
+        || job.get('status') === 'cancelled'
+        || upload.get('state') === 'cancelled';
+}
+async function discardWithdrawn(db, uploadId, data, extraPath) {
+    const bucket = (0, storage_2.getStorage)().bucket();
+    await bucket.file(data.storagePath).delete({ ignoreNotFound: true });
+    if (extraPath)
+        await bucket.file(extraPath).delete({ ignoreNotFound: true });
+    const now = new Date().toISOString();
+    await db.collection('mediaUploads').doc(uploadId).update({ state: 'cancelled', rejectionReason: 'consent_withdrawn', updatedAt: now });
+    await (0, quotaService_1.releaseQuota)(db, data.ownerId, 'full_match_analysis', data.jobId).catch(() => false);
+    firebase_functions_1.logger.info('Upload discarded after consent withdrawal', { uploadId });
+    return 'cancelled';
+}
 async function promote(db, uploadId, data, summary) {
     const jobRef = db.collection('matchAnalysisJobs').doc(data.jobId);
     const job = await jobRef.get();
     if (!job.exists || job.get('playerId') !== data.ownerId)
         return reject(db, uploadId, data, 'job_missing');
+    if (await processingWithdrawn(db, uploadId, data))
+        return discardWithdrawn(db, uploadId, data);
     const bucket = (0, storage_2.getStorage)().bucket();
     const destination = (0, model_1.matchFootagePath)(data.ownerId, data.jobId);
     await bucket.file(data.storagePath).copy(bucket.file(destination), {
@@ -103,6 +134,8 @@ async function promote(db, uploadId, data, summary) {
         metadata: { ownerId: data.ownerId, uploadId },
     });
     await bucket.file(data.storagePath).delete({ ignoreNotFound: true });
+    if (await processingWithdrawn(db, uploadId, data))
+        return discardWithdrawn(db, uploadId, data, destination);
     const now = new Date().toISOString();
     const measuredMode = (0, mode_1.selectAnalysisMode)(summary.durationSec, (0, mode_1.parseIntent)(job.get('analysisIntent')));
     await jobRef.update({
@@ -151,6 +184,14 @@ async function processQuarantinedObject(db, path, sizeBytes) {
     }
     if (sizeBytes !== data.sizeBytes)
         return reject(db, parsed.uploadId, data, 'size_mismatch');
+    const [objectMetadata] = await (0, storage_2.getStorage)().bucket().file(path).getMetadata();
+    const integrity = (0, model_1.integrityVerdict)(data.integrityMode, data.declaredCrc32c, objectMetadata.crc32c);
+    if (integrity === 'mismatch')
+        return reject(db, parsed.uploadId, data, 'integrity_mismatch');
+    if (integrity === 'missing_declaration' || integrity === 'no_server_hash') {
+        return reject(db, parsed.uploadId, data, 'integrity_missing');
+    }
+    await ref.update({ integrity });
     if (!(0, probe_1.hasVideoMagicBytes)(await readHead(path)))
         return reject(db, parsed.uploadId, data, 'not_video');
     const workDir = await (0, promises_1.mkdtemp)((0, node_path_1.join)((0, node_os_1.tmpdir)(), 'scoutx-probe-'));
@@ -182,8 +223,11 @@ exports.onQuarantineObjectFinalized = (0, storage_1.onObjectFinalized)({ memory:
         await processQuarantinedObject(db, path, Number(event.data.size ?? 0));
     }
     catch (error) {
-        firebase_functions_1.logger.error('Upload validation failed', { path, message: error instanceof Error ? error.message : 'unknown' });
         const parsed = (0, model_1.parseQuarantinePath)(path);
+        firebase_functions_1.logger.error('Upload validation failed', {
+            uploadId: parsed?.uploadId ?? null,
+            errorName: error instanceof Error ? error.name : 'unknown',
+        });
         const data = parsed ? (await db.collection('mediaUploads').doc(parsed.uploadId).get()).data() : undefined;
         if (parsed && data && data.state !== 'ready' && data.state !== 'rejected') {
             await reject(db, parsed.uploadId, data, 'probe_failed');

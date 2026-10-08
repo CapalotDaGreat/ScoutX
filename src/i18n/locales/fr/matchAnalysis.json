@@ -3,7 +3,33 @@
     "title": "Aperçu de l’analyse",
     "quality": "Qualité de la vidéo",
     "frames": "{{count}} images seront échantillonnées",
-    "cvUnavailable": "Le suivi continu et la détection d’événements ne sont pas disponibles. L’inconnu reste inconnu."
+    "cvUnavailable": "Le suivi continu et la détection d’événements ne sont pas disponibles. L’inconnu reste inconnu.",
+    "fact": {
+      "resolution": "{{width}}×{{height}}",
+      "frameRate": "{{fps}} i/s",
+      "bitrate": "{{mbps}} Mbit/s",
+      "bitrateAverage": "≈{{mbps}} Mbit/s (moyenne du fichier)"
+    },
+    "measuredTitle": "Mesuré à partir du fichier",
+    "reading": "Lecture des détails de la vidéo…",
+    "noMetadata": "Ce téléphone n’a indiqué ni la résolution ni la fréquence d’images de ce fichier.",
+    "mayAffectTitle": "Peut influencer l’analyse",
+    "warning": {
+      "low_resolution": "Moins de 720p : les numéros éloignés de la caméra peuvent être illisibles, l’identité peut donc rester non confirmée.",
+      "low_frame_rate": "Moins de 24 images par seconde : des actions rapides peuvent tomber entre deux images.",
+      "low_bitrate": "Forte compression pour cette résolution : les petits détails comme les numéros peuvent être flous.",
+      "portrait": "La vidéo semble en portrait (tel qu’enregistrée) : on voit généralement moins le terrain.",
+      "track_unsupported": "Ce téléphone indique que le format vidéo n’est pas pris en charge ; la vérification du serveur décide s’il est lisible.",
+      "metadata_unavailable": "La résolution n’a pas pu être lue sur le téléphone, les indications de qualité sont donc incomplètes.",
+      "large_file": "Fichier volumineux : l’envoi peut être long en données mobiles."
+    },
+    "blocker": {
+      "too_short": "Cette vidéo n’a pas de durée lisible.",
+      "too_long": "Cette vidéo dépasse la limite de 150 minutes.",
+      "too_large": "Ce fichier dépasse la limite d’envoi de 4 Go."
+    },
+    "notChecked": "Non vérifié sur le téléphone : netteté, lumière, angle de caméra et ta visibilité.",
+    "advisory": "Ce ne sont que des indications. PitchProof ne refuse jamais une vidéo à cause d’un score de qualité."
   },
   "identity": {
     "title": "Confirme que c’est toi",
@@ -427,5 +453,41 @@
       "no_duration": "La vidéo n’a pas pu être lue. Vérifie qu’elle se lit dans l’app Fichiers.",
       "low_disk": "Ton téléphone est presque plein. Libère de l’espace et réessaie."
     }
+  },
+  "correction": {
+    "confirm": "C’est juste",
+    "didNotHappen": "Ce n’est pas arrivé",
+    "notMe": "Ce n’est pas moi",
+    "wrong": "Pas exact",
+    "isMe": "C’est moi",
+    "undo": "Annuler",
+    "state": {
+      "confirm": "Tu as confirmé ceci.",
+      "dispute": "Tu as contesté ceci.",
+      "dismiss_false_event": "Tu as indiqué que ce n’est pas arrivé.",
+      "is_me": "Tu as confirmé que cette image te montre.",
+      "not_me": "Tu as indiqué que cette image ne te montre pas.",
+      "withdraw": "Retour retiré."
+    },
+    "footnote": "Ton retour est enregistré à côté de l’analyse. L’analyse d’origine et les statistiques ne sont pas modifiées, et PitchProof n’utilise ni tes vidéos ni tes retours pour entraîner une IA.",
+    "identityHint": "Si l’une de ces images ne te montre pas, indique-le. Le coaching lié à cette image doit alors être pris avec prudence."
+  },
+  "trends": {
+    "title": "Sur l’ensemble de tes analyses",
+    "locked": "Les tendances apparaissent après {{required}} analyses terminées du même type avec identité confirmée. Tu en as {{completed}}.",
+    "kind": {
+      "clip": "Comparé sur {{count}} analyses de clips courts.",
+      "match": "Comparé sur {{count}} analyses de match."
+    },
+    "row": "{{metric}} : {{values}}",
+    "measured": "noté dans {{measured}} sur {{total}}",
+    "source": {
+      "ai_derived": "Déduit par l’IA à partir d’images échantillonnées",
+      "player_entered": "Saisi par toi",
+      "coach": "De ton entraîneur",
+      "verified": "Vérifié"
+    },
+    "unknown": "Pas assez de notes pour comparer : {{metrics}}. Une note manquante signifie inconnu, pas zéro.",
+    "caveat": "Quelques analyses ne décrivent que ces vidéos ; ce n’est pas une tendance statistiquement fiable. D’autres images, angles de caméra et adversaires changent ce qui est visible."
   }
 }

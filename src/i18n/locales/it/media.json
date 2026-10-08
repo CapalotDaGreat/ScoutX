@@ -185,7 +185,8 @@
       "unknown": "Non è stato possibile completare il caricamento. Riprova.",
       "quota_exceeded": "Hai usato tutte le analisi di partite intere di questo periodo.",
       "plan_limit": "Questo video supera il limite di dimensione o durata del tuo piano.",
-      "analysis_unavailable": "L'analisi video non è ancora disponibile, quindi non è stato caricato nulla. Puoi comunque registrare le partite e seguire i tuoi progressi."
+      "analysis_unavailable": "L'analisi video non è ancora disponibile, quindi non è stato caricato nulla. Puoi comunque registrare le partite e seguire i tuoi progressi.",
+      "file_changed": "Questo video è cambiato dall’inizio del caricamento. Selezionalo di nuovo per ricaricarlo."
     },
     "rejection": {
       "not_video": "Questo file non è un video. Scegli una registrazione MP4 o MOV.",
@@ -201,8 +202,12 @@
       "size_mismatch": "Il caricamento non è arrivato completo. Caricalo di nuovo.",
       "probe_failed": "Impossibile leggere il video. Potrebbe essere danneggiato; prova a esportarlo di nuovo.",
       "scanner_flagged": "Questo file è stato bloccato da un controllo automatico.",
-      "job_missing": "L’analisi di questo video non esiste più."
-    }
+      "job_missing": "L’analisi di questo video non esiste più.",
+      "integrity_mismatch": "Il file caricato non corrispondeva al video sul telefono ed è stato eliminato. Caricalo di nuovo.",
+      "integrity_missing": "Non è stato possibile verificare che il caricamento fosse completo, quindi è stato eliminato. Caricalo di nuovo.",
+      "consent_withdrawn": "Hai revocato il consenso: il video è stato eliminato e non è stato analizzato."
+    },
+    "estimating": "Stima del tempo rimanente…"
   },
   "export": {
     "title": "Video renderizzato",

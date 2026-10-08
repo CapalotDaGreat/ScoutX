@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.mediaLifecycleSweep = exports.onMatchJobDeleted = exports.onMatchJobMediaLifecycle = exports.ffmpegClipCutter = exports.LIFECYCLE = void 0;
 exports.isTerminalStatus = isTerminalStatus;
 exports.jobMediaPrefix = jobMediaPrefix;
+exports.isKnownJobObject = isKnownJobObject;
 exports.citedFrameIds = citedFrameIds;
 exports.planEvidenceClips = planEvidenceClips;
 exports.planMediaLifecycle = planMediaLifecycle;
@@ -27,6 +28,7 @@ const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const mediaSource_1 = require("../uploads/mediaSource");
 const model_1 = require("../uploads/model");
+const redact_1 = require("../logging/redact");
 /**
  * Media lifecycle for match analysis. Source videos and extracted frames are temporary:
  *  - the source video is deleted after analysis unless the player chose "Keep match video";
@@ -50,6 +52,11 @@ function isTerminalStatus(status) {
 }
 function jobMediaPrefix(uid, jobId) {
     return `profiles/${uid}/matchFootage/${jobId}/`;
+}
+/** The only object names the app writes under a job; anything else is never deleted by cleanup. */
+const JOB_OBJECT = /^(video\.mp4|frames\/frame_\d+\.jpg|clips\/clip_\d+\.mp4)$/;
+function isKnownJobObject(prefix, name) {
+    return name.startsWith(prefix) && JOB_OBJECT.test(name.slice(prefix.length));
 }
 function frameIdOf(frame) {
     if (typeof frame.id === 'string' && frame.id)
@@ -219,7 +226,7 @@ async function applyMediaLifecycle(db, jobId) {
                 clipRecords.push({ ...clip, storagePath: destination });
             }
             catch (error) {
-                firebase_functions_1.logger.warn('Evidence clip could not be cut', { jobId, clip: clip.index, message: error instanceof Error ? error.message : 'unknown' });
+                firebase_functions_1.logger.warn('Evidence clip could not be cut', { jobId, clip: clip.index, ...(0, redact_1.logSafeError)(error) });
             }
         }
     }
@@ -234,12 +241,19 @@ async function applyMediaLifecycle(db, jobId) {
     ]);
     const [files] = await bucket.getFiles({ prefix });
     let deleted = 0;
+    let unrecognised = 0;
     for (const file of files) {
         if (keepPaths.has(file.name))
             continue;
+        if (!isKnownJobObject(prefix, file.name)) {
+            unrecognised += 1;
+            continue;
+        }
         await file.delete({ ignoreNotFound: true });
         deleted += 1;
     }
+    if (unrecognised > 0)
+        firebase_functions_1.logger.warn('Unrecognised objects left for review', { jobId, unrecognised });
     if (plan.deleteSource) {
         await db.collection('players').doc(job.playerId).collection('media').doc((0, model_1.footageMediaId)(jobId)).delete();
     }
@@ -319,7 +333,7 @@ async function sweepMediaLifecycle(db, now = new Date()) {
                     cleaned += 1;
             }
             catch (error) {
-                firebase_functions_1.logger.error('Media cleanup failed', { jobId: doc.id, message: error instanceof Error ? error.message : 'unknown' });
+                firebase_functions_1.logger.error('Media cleanup failed', { jobId: doc.id, ...(0, redact_1.logSafeError)(error) });
             }
         }
     }
@@ -342,7 +356,7 @@ exports.onMatchJobMediaLifecycle = (0, firestore_1.onDocumentUpdated)({ document
     catch (error) {
         firebase_functions_1.logger.error('Media lifecycle failed; the sweep will retry', {
             jobId: event.params.jobId,
-            message: error instanceof Error ? error.message : 'unknown',
+            ...(0, redact_1.logSafeError)(error),
         });
     }
 });

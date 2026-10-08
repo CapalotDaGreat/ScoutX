@@ -25,6 +25,7 @@ const stages_1 = require("./stages");
 const technique_1 = require("./technique");
 const taskDispatcher_1 = require("./taskDispatcher");
 const videoConsent_1 = require("./videoConsent");
+const redact_1 = require("../logging/redact");
 const openRouterApiKey = (0, params_1.defineSecret)('OPENROUTER_API_KEY');
 const TASK_MAX_ATTEMPTS = 3;
 /** Evidence kept in a report is bounded; each item keeps exactly one owner-private frame. */
@@ -95,7 +96,7 @@ async function processReviewTask(db, task, options) {
         await runCvForSegment(db, task.jobId, job, task.segmentIndex);
     }
     catch (error) {
-        firebase_functions_1.logger.warn('CV worker segment failed', { jobId: task.jobId, message: error instanceof Error ? error.message : 'unknown' });
+        firebase_functions_1.logger.warn('CV worker segment failed', { jobId: task.jobId, ...(0, redact_1.logSafeError)(error) });
     }
     const frames = segmentFrames(job, task.segmentIndex);
     const images = [];
@@ -226,7 +227,7 @@ async function processSynthesisTask(db, task, options) {
         job = await (0, frameAnalysis_1.acquireJobLease)(db, pre.playerId, task.jobId, `task:${task.jobId}:${task.generation}:synth`, undefined);
     }
     catch (error) {
-        firebase_functions_1.logger.warn('Synthesis lease refused', { jobId: task.jobId, message: error instanceof Error ? error.message : 'unknown' });
+        firebase_functions_1.logger.warn('Synthesis lease refused', { jobId: task.jobId, ...(0, redact_1.logSafeError)(error) });
         return 'failed';
     }
     const stages = (0, stages_1.parseStages)(job.pipelineStages);

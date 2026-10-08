@@ -66,7 +66,7 @@ test.describe('Welcome screen', () => {
 test.describe('Public Football Passport', () => {
   test('an unknown slug does not invent a player profile', async ({ page }) => {
     await page.goto('/player/not-a-real-scoutx-slug', { waitUntil: 'domcontentloaded' });
-    await expect(page.getByText('Home').first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText('Passport not found').first()).toBeVisible({ timeout: 30_000 });
     await expect(page.getByText('not-a-real-scoutx-slug')).toHaveCount(0);
   });
 });

@@ -17,6 +17,7 @@ import {
   uploadObject,
 } from './emulator.mjs';
 import { ResumableSessionUploader } from '../../src/features/media-upload/services/resumableSessionUploader.ts';
+import { crc32cToBase64, crc32cUpdate } from '../../src/features/media-upload/services/crc32c.ts';
 
 const require = createRequire(new URL('../../functions/package.json', import.meta.url));
 const { initializeApp, getApps } = require('firebase-admin/app');
@@ -30,6 +31,7 @@ const CHUNK = 256 * 1024;
 let db;
 let createUploadSession;
 let cancelUploadSession;
+let declareUploadChecksum;
 let expireAbandonedUploads;
 let processQuarantinedObject;
 let setMediaScanner;
@@ -113,7 +115,7 @@ async function clearUploads() {
 before(async () => {
   if (!getApps().length) initializeApp({ projectId: PROJECT_ID, storageBucket: BUCKET });
   db = getFirestore();
-  ({ createUploadSession, cancelUploadSession, expireAbandonedUploads } = require('./lib/uploads/sessions.js'));
+  ({ createUploadSession, cancelUploadSession, declareUploadChecksum, expireAbandonedUploads } = require('./lib/uploads/sessions.js'));
   ({ processQuarantinedObject } = require('./lib/uploads/quarantine.js'));
   ({ cancelMatchAnalysis } = require('./lib/matchAnalysis.js'));
   ({ setMediaScanner, noopMediaScanner } = require('./lib/uploads/mediaScanner.js'));
@@ -283,6 +285,86 @@ describe('chunked transfer', () => {
     const job = (await db.doc('matchAnalysisJobs/job_temp').get()).data();
     assert.equal(job.analysisMode, 'SHORT_CLIP', 'the mode follows the measured duration');
     assert.equal((await db.doc(`players/${UID}/media/footage_job_temp`).get()).exists, false);
+  });
+
+  async function sendWithChecksum(jobId, bytes, declare) {
+    const session = await createUploadSession.run(
+      call(UID, request(jobId, bytes, { contentType: 'video/quicktime', fileName: 'match.mov', declaredDurationSec: 30, integrity: 'crc32c' })),
+    );
+    const uploader = new ResumableSessionUploader({
+      sessionUri: session.sessionUri,
+      source: bufferSource(bytes),
+      chunkBytes: bytes.length,
+      integrity: { declareFinal: declare(session.uploadId) },
+    });
+    assert.equal(await uploader.run(0), 'complete');
+    return { session, path: `quarantine/${UID}/${session.uploadId}/source` };
+  }
+
+  test('a client CRC32C counts only when it equals the CRC32C Storage computed for the stored bytes', async () => {
+    await seedJob('job_crc_ok');
+    const bytes = readFileSync(fixtures.mov);
+    const { session, path } = await sendWithChecksum('job_crc_ok', bytes, (uploadId) => async (crc32c) => {
+      assert.equal(crc32c, crc32cToBase64(crc32cUpdate(0, bytes)));
+      await declareUploadChecksum.run(call(UID, { uploadId, crc32c }));
+    });
+    const [metadata] = await getStorage().bucket().file(path).getMetadata();
+    assert.ok(metadata.crc32c, 'the Storage emulator reports a server-side CRC32C');
+    assert.equal(await processQuarantinedObject(db, path, bytes.length), 'ready');
+    const upload = (await db.doc(`mediaUploads/${session.uploadId}`).get()).data();
+    assert.equal(upload.integrity, 'verified');
+    assert.equal(upload.integrityMode, 'crc32c');
+  });
+
+  test('a mismatching or missing declaration rejects the upload and deletes the bytes', async () => {
+    await seedJob('job_crc_bad');
+    const bytes = readFileSync(fixtures.mov);
+    const wrong = crc32cToBase64((crc32cUpdate(0, bytes) ^ 1) >>> 0);
+    const bad = await sendWithChecksum('job_crc_bad', bytes, (uploadId) => async () => {
+      await declareUploadChecksum.run(call(UID, { uploadId, crc32c: wrong }));
+    });
+    assert.equal(await processQuarantinedObject(db, bad.path, bytes.length), 'rejected');
+    assert.equal((await db.doc(`mediaUploads/${bad.session.uploadId}`).get()).get('rejectionReason'), 'integrity_mismatch');
+    assert.equal((await getStorage().bucket().file(bad.path).exists())[0], false);
+    assert.equal((await db.doc('matchAnalysisJobs/job_crc_bad').get()).get('videoStoragePath'), undefined);
+
+    await seedJob('job_crc_none');
+    const none = await sendWithChecksum('job_crc_none', bytes, () => async () => undefined);
+    assert.equal(await processQuarantinedObject(db, none.path, bytes.length), 'rejected');
+    assert.equal((await db.doc(`mediaUploads/${none.session.uploadId}`).get()).get('rejectionReason'), 'integrity_missing');
+  });
+
+  test('only the owner can declare a checksum, and only while the upload is open', async () => {
+    await seedJob('job_crc_owner');
+    const session = await createUploadSession.run(call(UID, request('job_crc_owner', randomBytes(4096), { integrity: 'crc32c' })));
+    const crc32c = crc32cToBase64(123);
+    await expectCode(declareUploadChecksum.run(call(OTHER, { uploadId: session.uploadId, crc32c })), 'not-found');
+    await expectCode(declareUploadChecksum.run(call(UID, { uploadId: session.uploadId, crc32c: 'nope' })), 'invalid-argument');
+    await expectCode(declareUploadChecksum.run({ ...call(UID, { uploadId: session.uploadId, crc32c }), auth: undefined }), 'unauthenticated');
+    await cancelUploadSession.run(call(UID, { uploadId: session.uploadId }));
+    await expectCode(declareUploadChecksum.run(call(UID, { uploadId: session.uploadId, crc32c })), 'failed-precondition');
+  });
+
+  test('withdrawing consent while the video is being validated stops promotion and the pipeline', async () => {
+    await seedJob('job_withdraw');
+    const bytes = readFileSync(fixtures.mov);
+    const session = await createUploadSession.run(
+      call(UID, request('job_withdraw', bytes, { contentType: 'video/quicktime', fileName: 'match.mov', declaredDurationSec: 30 })),
+    );
+    const uploader = new ResumableSessionUploader({ sessionUri: session.sessionUri, source: bufferSource(bytes), chunkBytes: bytes.length });
+    assert.equal(await uploader.run(0), 'complete');
+    // Withdrawal recorded between finalization and promotion (the upload doc is still open).
+    await db.doc('videoProcessingConsents/job_withdraw').update({ revokedAt: new Date().toISOString() });
+    const before = enqueued.length;
+    const path = `quarantine/${UID}/${session.uploadId}/source`;
+    assert.equal(await processQuarantinedObject(db, path, bytes.length), 'cancelled');
+    const upload = (await db.doc(`mediaUploads/${session.uploadId}`).get()).data();
+    assert.equal(upload.state, 'cancelled');
+    assert.equal(upload.rejectionReason, 'consent_withdrawn');
+    assert.equal((await getStorage().bucket().file(path).exists())[0], false);
+    assert.equal((await getStorage().bucket().file(`profiles/${UID}/matchFootage/job_withdraw/video.mp4`).exists())[0], false);
+    assert.equal((await db.doc('matchAnalysisJobs/job_withdraw').get()).get('videoStoragePath'), undefined);
+    assert.equal(enqueued.slice(before).some((task) => task.jobId === 'job_withdraw'), false, 'no analysis task was queued');
   });
 
   test('objects in quarantine without an open upload are deleted', async () => {

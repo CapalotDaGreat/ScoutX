@@ -10,6 +10,7 @@ import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { readableSourceFor } from '../uploads/mediaSource';
 import { footageMediaId } from '../uploads/model';
+import { logSafeError } from '../logging/redact';
 
 /**
  * Media lifecycle for match analysis. Source videos and extracted frames are temporary:
@@ -64,6 +65,13 @@ export function isTerminalStatus(status: unknown): boolean {
 
 export function jobMediaPrefix(uid: string, jobId: string): string {
   return `profiles/${uid}/matchFootage/${jobId}/`;
+}
+
+/** The only object names the app writes under a job; anything else is never deleted by cleanup. */
+const JOB_OBJECT = /^(video\.mp4|frames\/frame_\d+\.jpg|clips\/clip_\d+\.mp4)$/;
+
+export function isKnownJobObject(prefix: string, name: string): boolean {
+  return name.startsWith(prefix) && JOB_OBJECT.test(name.slice(prefix.length));
 }
 
 function frameIdOf(frame: FrameRef): string | null {
@@ -236,7 +244,7 @@ export async function applyMediaLifecycle(db: Firestore, jobId: string): Promise
         }
         clipRecords.push({ ...clip, storagePath: destination });
       } catch (error) {
-        logger.warn('Evidence clip could not be cut', { jobId, clip: clip.index, message: error instanceof Error ? error.message : 'unknown' });
+        logger.warn('Evidence clip could not be cut', { jobId, clip: clip.index, ...logSafeError(error) });
       }
     }
   }
@@ -253,11 +261,17 @@ export async function applyMediaLifecycle(db: Firestore, jobId: string): Promise
 
   const [files] = await bucket.getFiles({ prefix });
   let deleted = 0;
+  let unrecognised = 0;
   for (const file of files) {
     if (keepPaths.has(file.name)) continue;
+    if (!isKnownJobObject(prefix, file.name)) {
+      unrecognised += 1;
+      continue;
+    }
     await file.delete({ ignoreNotFound: true });
     deleted += 1;
   }
+  if (unrecognised > 0) logger.warn('Unrecognised objects left for review', { jobId, unrecognised });
   if (plan.deleteSource) {
     await db.collection('players').doc(job.playerId).collection('media').doc(footageMediaId(jobId)).delete();
   }
@@ -342,7 +356,7 @@ export async function sweepMediaLifecycle(db: Firestore, now: Date = new Date())
       try {
         if (await applyMediaLifecycle(db, doc.id)) cleaned += 1;
       } catch (error) {
-        logger.error('Media cleanup failed', { jobId: doc.id, message: error instanceof Error ? error.message : 'unknown' });
+        logger.error('Media cleanup failed', { jobId: doc.id, ...logSafeError(error) });
       }
     }
   }
@@ -367,7 +381,7 @@ export const onMatchJobMediaLifecycle = onDocumentUpdated(
     } catch (error) {
       logger.error('Media lifecycle failed; the sweep will retry', {
         jobId: event.params.jobId,
-        message: error instanceof Error ? error.message : 'unknown',
+        ...logSafeError(error),
       });
     }
   },

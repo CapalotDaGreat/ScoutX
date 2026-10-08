@@ -32,6 +32,7 @@ const stateMachine_1 = require("./stateMachine");
 const validation_1 = require("./validation");
 const technique_1 = require("./technique");
 const workerContract_1 = require("./workerContract");
+const redact_1 = require("../logging/redact");
 exports.MATCH_COLLECTION = 'matchAnalysisJobs';
 const QUOTA_COLLECTION = 'analysisQuotas';
 const MAX_FRAME_BYTES = 1.8 * 1024 * 1024;
@@ -161,7 +162,7 @@ async function readOwnedFrameAsDataUrl(uid, jobId, storagePath) {
         return `data:image/jpeg;base64,${buffer.toString('base64')}`;
     }
     catch (error) {
-        firebase_functions_1.logger.warn('Failed to read frame', { jobId, message: error instanceof Error ? error.message : 'unknown' });
+        firebase_functions_1.logger.warn('Failed to read frame', { jobId, ...(0, redact_1.logSafeError)(error) });
         return null;
     }
 }
@@ -389,7 +390,7 @@ async function runFrameAnalysis(params) {
     catch (error) {
         firebase_functions_1.logger.warn('Could not read profile identity for technique context', {
             jobId,
-            message: error instanceof Error ? error.message : 'unknown',
+            ...(0, redact_1.logSafeError)(error),
         });
     }
     const model = (0, providerConfig_1.resolveModel)('vision');

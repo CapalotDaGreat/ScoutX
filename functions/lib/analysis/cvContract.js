@@ -67,6 +67,11 @@ function parseCvSegmentResult(value, expected) {
     const workerVersion = typeof value.workerVersion === 'string' ? value.workerVersion.slice(0, 40) : '';
     if (!workerVersion)
         return null;
+    const models = {};
+    for (const [key, model] of Object.entries(isObject(value.models) ? value.models : {}).slice(0, 8)) {
+        if (typeof model === 'string' && key.length <= 40)
+            models[key] = model.slice(0, 120);
+    }
     const { startSec, endSec } = expected;
     const rawStages = isObject(value.stages) ? value.stages : {};
     const stages = {
@@ -144,6 +149,7 @@ function parseCvSegmentResult(value, expected) {
     return {
         contractVersion: exports.CV_CONTRACT_VERSION,
         workerVersion,
+        models,
         segmentIndex: expected.segmentIndex,
         stages,
         cameraView: member(value.cameraView, exports.CV_CAMERA_VIEWS) ?? 'unclear',

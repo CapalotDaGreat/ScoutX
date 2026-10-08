@@ -3,6 +3,11 @@ import type { PendingUpload, ServerUploadRecord, UploadRequest } from '@/feature
 /** GCS resumable sessions stay valid for a week; older device records cannot be resumed. */
 export const RESUMABLE_SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 
+export function isPastResumeWindow(createdAt: string, now: number = Date.now()): boolean {
+  const age = now - Date.parse(createdAt);
+  return Number.isFinite(age) && age > RESUMABLE_SESSION_MAX_AGE_MS;
+}
+
 export type RecoveryState =
   /** Bytes still missing and the session is open: offer Resume / Discard. */
   | 'resumable'

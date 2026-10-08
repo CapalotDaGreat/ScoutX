@@ -2,11 +2,12 @@ import {
   bytesPerSecond,
   chunkLength,
   contentRangeHeader,
-  etaSeconds,
   nextOffsetFromRange,
   offsetQueryHeader,
+  stableEtaSeconds,
   type SpeedSample,
 } from './chunkPlan';
+import { crc32cToBase64, crc32cUpdate } from './crc32c';
 
 /** Random-access byte source; implementations read only the requested slice into memory. */
 export type ChunkSource = {
@@ -23,6 +24,20 @@ export type UploadProgress = {
 };
 
 export type SessionUploadOutcome = 'complete' | 'paused' | 'cancelled';
+
+/** CRC32C of the first `offset` bytes of the source (bytes GCS has confirmed as committed). */
+export type CommittedChecksum = { offset: number; crc32c: number };
+
+export type UploadIntegrityOptions = {
+  /** Restored from the resume record so a resumed upload re-reads only bytes not yet folded in. */
+  initial?: CommittedChecksum | null;
+  onCommitted?: (state: CommittedChecksum) => Promise<void> | void;
+  /**
+   * Called with the whole-file CRC32C (GCS base64 form) before the final chunk is sent, so the
+   * server can compare it with the CRC32C that Cloud Storage computes for the stored object.
+   */
+  declareFinal: (crc32cBase64: string) => Promise<void>;
+};
 
 type FetchLike = (
   url: string,
@@ -53,6 +68,7 @@ export type ResumableSessionUploaderOptions = {
   source: ChunkSource;
   chunkBytes: number;
   onProgress?: (progress: UploadProgress) => void;
+  integrity?: UploadIntegrityOptions;
   fetchImpl?: FetchLike;
   maxConsecutiveFailures?: number;
   sleep?: (ms: number) => Promise<void>;
@@ -105,24 +121,60 @@ export class ResumableSessionUploader {
     const { source, chunkBytes } = this.options;
     const total = source.size;
     let offset = knownOffset ?? (await this.withRetries(() => this.queryOffset()));
+    if (offset < total) await this.foldCommitted(offset);
     this.emit(offset, total);
 
     while (offset < total) {
       if (this.cancelRequested) return 'cancelled';
       if (this.pauseRequested) return 'paused';
-      const startOffset = offset;
-      offset = await this.withRetries(
-        () => this.putChunk(startOffset, total, chunkBytes),
-        () => this.queryOffset(),
-      );
+      offset = await this.putWithRetries(offset, total, chunkBytes);
+      if (offset < total) await this.foldCommitted(offset);
       this.emit(offset, total);
     }
     return 'complete';
   }
 
+  private committed: CommittedChecksum = { offset: 0, crc32c: 0 };
+  private checksumRestored = false;
+  private lastChunk: { offset: number; bytes: Uint8Array } | null = null;
+
+  /** Advances the running CRC32C to `target`, reusing the chunk just sent or reading from disk. */
+  private async foldCommitted(target: number): Promise<void> {
+    const integrity = this.options.integrity;
+    if (!integrity) return;
+    if (!this.checksumRestored) {
+      this.checksumRestored = true;
+      const initial = integrity.initial;
+      if (initial && initial.offset <= target) this.committed = { ...initial };
+    }
+    if (this.committed.offset > target) this.committed = { offset: 0, crc32c: 0 };
+    if (this.committed.offset === target) return;
+
+    let { offset, crc32c } = this.committed;
+    const chunk = this.lastChunk;
+    if (chunk && chunk.offset === offset && offset + chunk.bytes.length >= target) {
+      crc32c = crc32cUpdate(crc32c, chunk.bytes.subarray(0, target - offset));
+      offset = target;
+    }
+    while (offset < target) {
+      const length = Math.min(this.options.chunkBytes, target - offset);
+      crc32c = crc32cUpdate(crc32c, new Uint8Array(await this.options.source.read(offset, length)));
+      offset += length;
+    }
+    this.committed = { offset, crc32c };
+    await integrity.onCommitted?.(this.committed);
+  }
+
   private async putChunk(offset: number, total: number, chunkBytes: number): Promise<number> {
     const length = chunkLength(offset, total, chunkBytes);
     const body = await this.options.source.read(offset, length);
+    const bytes = new Uint8Array(body);
+    this.lastChunk = { offset, bytes };
+    const integrity = this.options.integrity;
+    if (integrity && offset + length === total) {
+      await this.foldCommitted(offset);
+      await integrity.declareFinal(crc32cToBase64(crc32cUpdate(this.committed.crc32c, bytes)));
+    }
     const response = await this.fetchImpl(this.options.sessionUri, {
       method: 'PUT',
       headers: { 'Content-Range': contentRangeHeader(offset, length, total) },
@@ -134,21 +186,46 @@ export class ResumableSessionUploader {
     throw new UploadHttpError(response.status);
   }
 
-  /** Retries transient failures with backoff; `resync` recovers the committed offset after a failed PUT. */
-  private async withRetries(attempt: () => Promise<number>, resync?: () => Promise<number>): Promise<number> {
+  private isTransient(error: unknown): boolean {
+    return !(error instanceof UploadSessionExpiredError)
+      && (!(error instanceof UploadHttpError) || isRetryableStatus(error.status));
+  }
+
+  private backoffMs(failures: number): number {
+    return Math.min(30_000, 500 * 2 ** (failures - 1));
+  }
+
+  /**
+   * Sends one chunk; after a transient failure re-queries the committed offset. Failures only
+   * reset when the server confirms progress, so a persistent error cannot loop forever.
+   */
+  private async putWithRetries(startOffset: number, total: number, chunkBytes: number): Promise<number> {
     const maxFailures = this.options.maxConsecutiveFailures ?? 6;
     let failures = 0;
-    let next = attempt;
     for (;;) {
       try {
-        return await next();
+        return await this.putChunk(startOffset, total, chunkBytes);
       } catch (error) {
-        const transient = !(error instanceof UploadSessionExpiredError)
-          && (!(error instanceof UploadHttpError) || isRetryableStatus(error.status));
         failures += 1;
-        if (!transient || failures >= maxFailures || this.cancelRequested) throw error;
-        await this.sleep(Math.min(30_000, 500 * 2 ** (failures - 1)));
-        if (resync) next = resync;
+        if (!this.isTransient(error) || failures >= maxFailures || this.cancelRequested) throw error;
+        await this.sleep(this.backoffMs(failures));
+        const committed = await this.withRetries(() => this.queryOffset());
+        if (committed !== startOffset) return committed;
+      }
+    }
+  }
+
+  /** Retries transient failures with backoff. */
+  private async withRetries(attempt: () => Promise<number>): Promise<number> {
+    const maxFailures = this.options.maxConsecutiveFailures ?? 6;
+    let failures = 0;
+    for (;;) {
+      try {
+        return await attempt();
+      } catch (error) {
+        failures += 1;
+        if (!this.isTransient(error) || failures >= maxFailures || this.cancelRequested) throw error;
+        await this.sleep(this.backoffMs(failures));
       }
     }
   }
@@ -156,12 +233,11 @@ export class ResumableSessionUploader {
   private emit(sentBytes: number, totalBytes: number): void {
     const atMs = this.now();
     this.samples = [...this.samples.filter((sample) => atMs - sample.atMs <= 15_000), { atMs, sentBytes }];
-    const rate = bytesPerSecond(this.samples, atMs);
     this.options.onProgress?.({
       sentBytes,
       totalBytes,
-      bytesPerSecond: rate,
-      etaSeconds: etaSeconds(totalBytes - sentBytes, rate),
+      bytesPerSecond: bytesPerSecond(this.samples, atMs),
+      etaSeconds: stableEtaSeconds(this.samples, atMs, totalBytes - sentBytes),
     });
   }
 }

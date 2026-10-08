@@ -185,7 +185,8 @@
       "unknown": "Der Upload konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
       "quota_exceeded": "Du hast alle Komplettspiel-Analysen für diesen Zeitraum genutzt.",
       "plan_limit": "Dieses Video überschreitet die Größen- oder Längengrenze deines Plans.",
-      "analysis_unavailable": "Die Videoanalyse ist noch nicht verfügbar, daher wurde nichts hochgeladen. Du kannst weiterhin Spiele erfassen und deine Entwicklung verfolgen."
+      "analysis_unavailable": "Die Videoanalyse ist noch nicht verfügbar, daher wurde nichts hochgeladen. Du kannst weiterhin Spiele erfassen und deine Entwicklung verfolgen.",
+      "file_changed": "Dieses Video hat sich seit dem Start des Uploads verändert. Wähle es erneut aus, um neu hochzuladen."
     },
     "rejection": {
       "not_video": "Diese Datei ist kein Video. Wähle eine MP4- oder MOV-Aufnahme.",
@@ -201,8 +202,12 @@
       "size_mismatch": "Der Upload ist nicht vollständig angekommen. Bitte lade erneut hoch.",
       "probe_failed": "Das Video konnte nicht gelesen werden. Es ist eventuell beschädigt; exportiere es erneut.",
       "scanner_flagged": "Diese Datei wurde von einer automatischen Prüfung blockiert.",
-      "job_missing": "Die Analyse zu diesem Video existiert nicht mehr."
-    }
+      "job_missing": "Die Analyse zu diesem Video existiert nicht mehr.",
+      "integrity_mismatch": "Die hochgeladene Datei stimmte nicht mit dem Video auf deinem Telefon überein und wurde gelöscht. Bitte lade es erneut hoch.",
+      "integrity_missing": "Der Upload konnte nicht auf Vollständigkeit geprüft werden und wurde gelöscht. Bitte lade ihn erneut hoch.",
+      "consent_withdrawn": "Du hast deine Einwilligung widerrufen. Das Video wurde gelöscht und nicht analysiert."
+    },
+    "estimating": "Restzeit wird geschätzt…"
   },
   "export": {
     "title": "Gerendertes Video",

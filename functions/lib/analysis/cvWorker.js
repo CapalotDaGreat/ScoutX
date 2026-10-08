@@ -68,13 +68,22 @@ let segmentClientOverride = null;
 function setCvSegmentClient(client) {
     segmentClientOverride = client;
 }
-/** The configured worker, or null while CV_WORKER_URL / CV_WORKER_APPROVED are not set. */
+/**
+ * The configured worker, or null until CV_WORKER_URL / CV_WORKER_APPROVED are set and a
+ * verified evaluation approval is compiled in. Output from any other build is discarded.
+ */
 function getCvSegmentClient(env = process.env) {
     if ((0, cvConfig_1.cvWorkerStatus)(env) !== 'available')
         return null;
-    if (segmentClientOverride)
-        return segmentClientOverride;
     const url = (0, cvConfig_1.cvWorkerUrl)(env);
-    return url ? createHttpCvClient(url, env) : null;
+    const client = segmentClientOverride ?? (url ? createHttpCvClient(url, env) : null);
+    if (!client)
+        return null;
+    return {
+        async analyzeSegment(request) {
+            const result = await client.analyzeSegment(request);
+            return result && (0, cvConfig_1.isApprovedWorkerOutput)(result, env) ? result : null;
+        },
+    };
 }
 //# sourceMappingURL=cvWorker.js.map

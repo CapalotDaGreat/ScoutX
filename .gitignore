@@ -29,3 +29,6 @@ GoogleService-Info.plist
 
 # E2E emulator seed output
 e2e/.seed-state.json
+
+# Operator reports with private object names (scripts/legacy-media.mjs)
+.local/

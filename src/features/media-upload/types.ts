@@ -45,6 +45,10 @@ export type PendingUpload = {
   purpose: UploadPurpose;
   chunkBytes: number;
   createdAt: string;
+  /** Size + head/tail SHA-256; re-checked on resume so a changed file never continues an old session. */
+  fingerprint?: string;
+  /** Running CRC32C of the bytes GCS confirmed, so resume does not re-read the whole prefix. */
+  committedChecksum?: { offset: number; crc32c: number };
 };
 
 export type ServerUploadRecord = {
@@ -76,6 +80,7 @@ export type UploadErrorCode =
   | 'consent_required'
   | 'not_allowed'
   | 'file_missing'
+  | 'file_changed'
   | 'rejected'
   | 'analysis_unavailable'
   | 'unknown';
@@ -109,6 +114,9 @@ export const UPLOAD_REJECTION_REASONS = [
   'probe_failed',
   'scanner_flagged',
   'job_missing',
+  'integrity_mismatch',
+  'integrity_missing',
+  'consent_withdrawn',
 ] as const;
 export type UploadRejectionReason = (typeof UPLOAD_REJECTION_REASONS)[number];
 
@@ -154,17 +162,23 @@ export function parsePendingUploads(raw: string | null): PendingUpload[] {
   try {
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((entry): entry is PendingUpload => {
-      if (!entry || typeof entry !== 'object') return false;
-      const item = entry as Record<string, unknown>;
-      return typeof item.uploadId === 'string'
-        && typeof item.sessionUri === 'string'
-        && item.sessionUri.startsWith('https://')
-        && typeof item.fileUri === 'string'
-        && typeof item.sizeBytes === 'number'
-        && typeof item.jobId === 'string'
-        && typeof item.chunkBytes === 'number';
-    });
+    return parsed
+      .filter((entry): entry is PendingUpload => {
+        if (!entry || typeof entry !== 'object') return false;
+        const item = entry as Record<string, unknown>;
+        return typeof item.uploadId === 'string'
+          && typeof item.sessionUri === 'string'
+          && item.sessionUri.startsWith('https://')
+          && typeof item.fileUri === 'string'
+          && typeof item.sizeBytes === 'number'
+          && typeof item.jobId === 'string'
+          && typeof item.chunkBytes === 'number';
+      })
+      .map((entry) => ({
+        ...entry,
+        fingerprint: typeof entry.fingerprint === 'string' ? entry.fingerprint : undefined,
+        committedChecksum: parseCommittedChecksum(entry.committedChecksum),
+      }));
   } catch {
     return [];
   }
@@ -190,12 +204,29 @@ export class UploadFileMissingError extends Error {
   }
 }
 
+export class UploadFileChangedError extends Error {
+  constructor() {
+    super('The selected video changed since the upload started.');
+    this.name = 'UploadFileChangedError';
+  }
+}
+
+function parseCommittedChecksum(value: unknown): PendingUpload['committedChecksum'] {
+  if (!value || typeof value !== 'object') return undefined;
+  const { offset, crc32c } = value as Record<string, unknown>;
+  return typeof offset === 'number' && Number.isSafeInteger(offset) && offset >= 0
+    && typeof crc32c === 'number' && Number.isInteger(crc32c) && crc32c >= 0 && crc32c <= 0xffffffff
+    ? { offset, crc32c }
+    : undefined;
+}
+
 /** Maps callable/HTTP failures to user-facing reasons using server `details.reason` codes. */
 export function uploadErrorCodeFor(error: unknown): UploadErrorCode {
   if (!error || typeof error !== 'object') return 'unknown';
   const name = error instanceof Error ? error.name : '';
   if (name === 'UploadSessionExpiredError') return 'session_expired';
   if (name === 'UploadFileMissingError') return 'file_missing';
+  if (name === 'UploadFileChangedError') return 'file_changed';
   const details = name === 'UploadValidationError' ? error : 'details' in error ? error.details : null;
   const reason = details && typeof details === 'object' && 'reason' in details ? String(details.reason) : '';
   if (reason in SERVER_REASONS) return SERVER_REASONS[reason];

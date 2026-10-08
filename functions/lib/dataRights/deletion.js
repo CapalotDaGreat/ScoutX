@@ -11,6 +11,7 @@ const recentAuth_1 = require("../security/recentAuth");
 const accountDeletion_1 = require("../accountDeletion");
 const sessions_1 = require("../uploads/sessions");
 const legalRetention_1 = require("./legalRetention");
+const redact_1 = require("../logging/redact");
 /**
  * Account deletion as a resumable state machine in `deletionRequests/{uid}`. Each step is
  * idempotent, so a retry (or a second tap on "Delete account") continues where the last
@@ -112,7 +113,7 @@ async function runAccountDeletion(db, uid, deps) {
         catch (error) {
             firebase_functions_1.logger.error('Account deletion step failed', {
                 step: next,
-                message: error instanceof Error ? error.message : 'unknown',
+                ...(0, redact_1.logSafeError)(error),
             });
             await ref.set({ status: 'failed', failedStep: next, updatedAt: new Date().toISOString() }, { merge: true });
             return { status: 'failed', step: next, remaining: [] };

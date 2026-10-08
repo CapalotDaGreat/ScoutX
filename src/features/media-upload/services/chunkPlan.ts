@@ -54,6 +54,28 @@ export function etaSeconds(remainingBytes: number, rate: number | null): number 
   return Math.ceil(Math.max(0, remainingBytes) / rate);
 }
 
+/**
+ * ETA shown only once throughput has been observed for a while and is not swinging wildly;
+ * otherwise null so the UI says "estimating" instead of a number that jumps around.
+ */
+export function stableEtaSeconds(
+  samples: SpeedSample[],
+  nowMs: number,
+  remainingBytes: number,
+  { windowMs = 15_000, minObservedMs = 5_000, maxSwing = 0.5 } = {},
+): number | null {
+  const recent = samples.filter((sample) => nowMs - sample.atMs <= windowMs);
+  if (recent.length < 3) return null;
+  if (recent[recent.length - 1].atMs - recent[0].atMs < minObservedMs) return null;
+  const overall = bytesPerSecond(recent, nowMs, windowMs);
+  const middle = Math.floor(recent.length / 2);
+  const early = bytesPerSecond(recent.slice(0, middle + 1), nowMs, windowMs);
+  const late = bytesPerSecond(recent.slice(middle), nowMs, windowMs);
+  if (!overall || !early || !late) return null;
+  if (Math.abs(early - late) / overall > maxSwing) return null;
+  return etaSeconds(remainingBytes, overall);
+}
+
 export function formatBytes(bytes: number): string {
   if (bytes >= GIB) return `${(bytes / GIB).toFixed(2)} GB`;
   if (bytes >= MIB) return `${(bytes / MIB).toFixed(bytes >= 100 * MIB ? 0 : 1)} MB`;

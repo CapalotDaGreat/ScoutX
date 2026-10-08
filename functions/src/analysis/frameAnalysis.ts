@@ -38,6 +38,7 @@ import {
   dailyQuotaCount,
   isDailyQuotaReached,
 } from './workerContract';
+import { logSafeError } from '../logging/redact';
 
 export const MATCH_COLLECTION = 'matchAnalysisJobs';
 const QUOTA_COLLECTION = 'analysisQuotas';
@@ -259,7 +260,7 @@ export async function readOwnedFrameAsDataUrl(uid: string, jobId: string, storag
     const [buffer] = await file.download();
     return `data:image/jpeg;base64,${buffer.toString('base64')}`;
   } catch (error) {
-    logger.warn('Failed to read frame', { jobId, message: error instanceof Error ? error.message : 'unknown' });
+    logger.warn('Failed to read frame', { jobId, ...logSafeError(error) });
     return null;
   }
 }
@@ -539,7 +540,7 @@ export async function runFrameAnalysis(params: {
   } catch (error) {
     logger.warn('Could not read profile identity for technique context', {
       jobId,
-      message: error instanceof Error ? error.message : 'unknown',
+      ...logSafeError(error),
     });
   }
 

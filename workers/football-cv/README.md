@@ -35,12 +35,16 @@ py -3.12 -m venv .venv
 
 1. Collect footage with written permission from the players (and guardians for minors).
    Keep footage and annotations **outside this repository** (`eval/data/` is gitignored).
-2. Annotate each video following `eval/annotation.schema.json`.
-3. Run the deployed worker over each video and save the segment results to
-   `eval/data/predictions/<videoId>.json`.
-4. `python -m eval.evaluate --annotations eval/data/annotations --predictions eval/data/predictions --out eval/report.json`
+   List every file in a manifest (`eval/manifest.schema.json`) with its SHA-256.
+2. Annotate each video following `eval/annotation.schema.json`, including target keyframes and
+   difficulty tags (two or more annotators).
+3. With the exact image that will be deployed:
+   `python -m eval.predict --manifest data/manifest.json --footage data/footage --annotations data/annotations --out data/predictions`
+   (records worker and model versions plus a local identity trace that the service never returns).
+4. `python -m eval.evaluate --manifest data/manifest.json --annotations data/annotations --predictions data/predictions --out report.json`
 5. Compare with `eval/thresholds.json`. Those values are a **proposal awaiting a product-owner
    decision** (see `docs/video/acceptance-thresholds.md`).
+6. Approval is a verified record, not a flag: see `docs/video/accuracy-report.md`.
 
 ## Deployment (not done — every value below is CONFIG_REQUIRED)
 
@@ -68,4 +72,6 @@ Then, in the Functions environment:
 | `CV_EVENTS_VALIDATED` | `true` only after an event stage exists and passed evaluation | unset → events never counted |
 
 With any of the first two unset, every CV stage reports `unavailable` and the app falls back to
-the frame review, which is labelled as such in the report.
+the frame review, which is labelled as such in the report. The flags alone are not enough: Cloud
+Functions also needs a verified approval compiled in (`functions/src/analysis/cvApproval.generated.ts`,
+currently `null`), and discards any response whose `workerVersion` or `models` differ from it.
