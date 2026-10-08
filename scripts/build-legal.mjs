@@ -129,6 +129,7 @@ export function renderServerVersions(root = ROOT) {
 
 // Public website pages (Firebase Hosting, `public/`). The App Store privacy policy, terms and
 // support URLs point here, so the web text is generated from the same source as the app.
+// The landing page public/welcome/index.html is hand-written and not generated.
 const SITE_NAME = 'PitchProof';
 const SITE_PAGES = { 'privacy-policy': 'privacy', 'terms-of-service': 'terms', 'subscription-terms': 'subscription-terms' };
 
@@ -213,16 +214,6 @@ function renderSupportPage(legal) {
   );
 }
 
-function renderHomePage() {
-  return pageShell(
-    'Football Passport',
-    `<h1>${SITE_NAME}</h1>
-<p>Your football identity, built from real evidence. Log matches, upload highlights, track movement sessions and collect coach endorsements in one Football Passport, with every item showing where it came from.</p>
-<p>For players aged 13 and over. Players aged 13 to 17 need a guardian's approval for youth features. ${SITE_NAME} does not guarantee trials, contracts or selection.</p>
-<p><a href="/support/">Support</a> · <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a></p>`,
-  );
-}
-
 function renderLegalIndex(documents) {
   const items = documents.map((doc) => `<li><a href="/legal/${doc.id}/">${escapeHtml(doc.title)}</a></li>`).join('');
   return pageShell('Policies', `<h1>Policies</h1><ul>${items}</ul>`);
@@ -233,7 +224,6 @@ export async function renderSite(root = ROOT) {
   const resolve = (text) => legal.resolveLegalTokens(text);
   const documents = loadLegalDocuments(root);
   const files = [
-    { label: 'public/welcome/index.html', content: renderHomePage() },
     { label: 'public/support/index.html', content: renderSupportPage(legal) },
     { label: 'public/legal/index.html', content: renderLegalIndex(documents) },
   ];
