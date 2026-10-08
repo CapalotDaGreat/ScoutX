@@ -4,7 +4,10 @@ import { describe, it } from 'node:test';
 import { LEGAL_DOCUMENT_ORDER, renderLegalModule, renderServerVersions } from '../../scripts/build-legal.mjs';
 import {
   LEGAL_CONFIG,
+  CONTACT_PLACEHOLDER_PATTERN,
   LEGAL_CONTACT_REQUIRED,
+  PRIVACY_CONTACT_REQUIRED,
+  SECURITY_CONTACT_REQUIRED,
   missingRequiredLegalContacts,
   resolveLegalTokens,
 } from '../../src/config/legalConfig.ts';
@@ -54,9 +57,13 @@ describe('bundled legal documents', () => {
 });
 
 describe('legal config', () => {
-  it('renders missing contacts as LEGAL_CONTACT_REQUIRED and keeps the real entity', () => {
-    const text = resolveLegalTokens('{{entityName}}, {{entityAddress}} - {{privacyEmail}}');
-    assert.equal(text, `CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland - ${LEGAL_CONTACT_REQUIRED}`);
+  it('renders each missing contact with its own placeholder and keeps the real entity', () => {
+    const text = resolveLegalTokens('{{entityName}}, {{entityAddress}} - {{privacyEmail}} / {{securityEmail}} / {{supportEmail}}');
+    assert.equal(
+      text,
+      `CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland - ${PRIVACY_CONTACT_REQUIRED} / ${SECURITY_CONTACT_REQUIRED} / ${LEGAL_CONTACT_REQUIRED}`,
+    );
+    assert.match(text, CONTACT_PLACEHOLDER_PATTERN);
   });
 
   it('reports the contacts a production build is missing', () => {

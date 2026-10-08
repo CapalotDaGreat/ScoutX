@@ -26,10 +26,16 @@ This is a self-assessment, not an audit.
 | Deep link validation and auth gate | PASS | `deepLinkResolver.test.ts`, `notifyLinksRecovery.test.ts` |
 | Account deletion completeness | PASS | `accountDeletion.test.mjs` |
 | Recent sign-in for export | PASS | `dataRights.test.mjs` |
-| Recent sign-in for deletion (server side) | PARTIAL / SECURITY REVIEW REQUIRED | Firebase client re-auth only |
+| Recent sign-in for deletion (server side) | PASS | `deletionAuth.test.mjs`, `deletionAuth.test.ts` (5 min; anonymous and resume policy await owner acceptance, SEC-10/11) |
+| Guardian link single use under concurrency | PASS | `guardianFlow.test.mjs` |
+| Guardian re-approval when a minor's trial changes | PASS | `guardianFlow.test.mjs` |
+| Scout notifications to minors need scout_contact | PASS | `firestore.rules.test.mjs` |
+| AI footage blocked until provider review | PASS (code) / EXTERNAL CONFIGURATION REQUIRED | `aiPrivacyGate.test.ts`; `AI_FOOTAGE_PROCESSING_APPROVED` |
+| OpenRouter timeout and typed failures | PASS | `aiPrivacyGate.test.ts` |
 | Secrets outside the repo | PASS | `defineSecret` only; `GoogleService-Info.plist` not committed |
 | Crash report scrubbing | PASS (code review) | `src/config/sentry.ts`, `scrubSensitiveData` |
-| Backups / restore drill | EXTERNAL CONFIGURATION REQUIRED | `disaster-recovery.md` |
+| Backups / restore drill | EXTERNAL CONFIGURATION REQUIRED | `backups.md` (BACKUP_CONFIGURATION_REQUIRED), `disaster-recovery.md` |
 | Dependency advisories | PARTIAL | `dependency-audit.md` |
 | Age assurance beyond self-declaration | NOT AVAILABLE | accepted risk T1, LEGAL REVIEW REQUIRED |
 | Independent penetration test | SECURITY REVIEW REQUIRED | not performed |
+| Phase 14 adversarial self-review | PASS for code findings; owner acceptance pending | `security-findings.md` |

@@ -362,6 +362,20 @@ describe('trials', () => {
     await allowed(setDocument(PLAYER, 'trialNotifications/n1', { ...notification, read: true }), 'mark read');
     await denied(setDocument(PLAYER, 'trialNotifications/n1', { ...notification, title: 'edited' }), 'edit');
   });
+
+  test('scouts cannot message a minor through trial notifications after scout contact is withdrawn', async () => {
+    await seed('trialInvitations/t8', invitation({}));
+    const notification = { recipientId: PLAYER, trialInvitationId: 't8', read: false, title: 'Trial', body: 'b' };
+    await seed(`userSafety/${PLAYER}`, { ageBand: '13-17', guardianStatus: 'approved', scopes: ['scout_contact'], consentExpiresAt: null });
+    await allowed(setDocument(SCOUT, 'trialNotifications/w1', notification), 'scope granted');
+    await seed(`userSafety/${PLAYER}`, { ageBand: '13-17', guardianStatus: 'revoked', scopes: [], consentExpiresAt: null });
+    await denied(setDocument(SCOUT, 'trialNotifications/w2', notification), 'scope withdrawn');
+    await allowed(
+      setDocument(PLAYER, 'trialNotifications/w3', { ...notification, recipientId: SCOUT }),
+      'minor can still notify the scout (e.g. decline)',
+    );
+    await seed(`userSafety/${PLAYER}`, { ageBand: '18plus', guardianStatus: 'not_required', scopes: [], consentExpiresAt: null });
+  });
 });
 
 describe('youth safety', () => {

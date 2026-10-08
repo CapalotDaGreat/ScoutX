@@ -266,7 +266,8 @@
     "ai_consent_required": "AI-analyse staat uit. Zet het aan in het Privacycentrum om beelden te analyseren.",
     "extraction_failed": "Er konden geen sleutelbeelden uit deze video worden gehaald.",
     "queue_unavailable": "De analyse kon niet in de wachtrij worden gezet. Probeer het over een paar minuten opnieuw.",
-    "video_rejected": "Deze video heeft de controles op formaat en lengte niet doorstaan."
+    "video_rejected": "Deze video heeft de controles op formaat en lengte niet doorstaan.",
+    "ai_privacy_configuration_required": "Videoanalyse is nog niet beschikbaar. Je kunt nog steeds wedstrijden vastleggen en je ontwikkeling volgen."
   },
   "pipeline": {
     "title": "Analyse bezig",

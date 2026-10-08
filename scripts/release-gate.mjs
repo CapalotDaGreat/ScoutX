@@ -1,9 +1,17 @@
 #!/usr/bin/env node
 // Release gate: static checks that a production iOS release must pass, plus the rules suite.
 //
-//   node scripts/release-gate.mjs                  full gate, exits 1 on FAIL or missing external config
+// Every check reports one of:
+//   PASS
+//   CODE BLOCKER                      something in this repository is wrong; always fails the gate
+//   EXTERNAL CONFIGURATION REQUIRED   a console, secret, domain or account step outside the repo
+//   LEGAL REVIEW REQUIRED             a decision for counsel / the owner (contacts, retention, wording)
+//   NOT VALIDATED                     needs a real device, real email or a human reviewer
+//   SKIPPED
+//
+//   node scripts/release-gate.mjs                  public-release gate: anything but PASS/SKIPPED fails
+//   node scripts/release-gate.mjs --allow-external internal / TestFlight gate: only CODE BLOCKERs fail
 //   node scripts/release-gate.mjs --skip-tests     skip the emulator rules suite
-//   node scripts/release-gate.mjs --allow-external report missing external configuration without failing
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -16,8 +24,11 @@ const skipTests = args.has('--skip-tests');
 const allowExternal = args.has('--allow-external');
 
 const PASS = 'PASS';
-const FAIL = 'FAIL';
+const FAIL = 'CODE BLOCKER';
 const EXTERNAL = 'EXTERNAL CONFIGURATION REQUIRED';
+const LEGAL = 'LEGAL REVIEW REQUIRED';
+const NOT_VALIDATED = 'NOT VALIDATED';
+const SKIPPED = 'SKIPPED';
 
 const read = (path) => readFileSync(join(root, path), 'utf8');
 const readJson = (path) => JSON.parse(read(path));
@@ -118,17 +129,92 @@ check('Website pages for App Store URLs', () => {
   const listing = readJson('store/listing.json').ios ?? {};
   const pages = { privacyPolicyUrl: 'public/privacy/index.html', supportUrl: 'public/support/index.html' };
   const problems = [];
-  const placeholders = [];
+  const contacts = [];
+  const review = [];
   for (const [field, page] of Object.entries(pages)) {
     const url = listing[field] ?? '';
     if (!url.startsWith(`https://${host}/`)) problems.push(`${field} ${url || '(missing)'} is not on ${host}`);
     if (!existsSync(join(root, page))) problems.push(`${page} missing (run node scripts/build-legal.mjs)`);
-    else if (/LEGAL_(CONTACT|REVIEW)_REQUIRED/.test(read(page))) placeholders.push(page);
+    else {
+      if (/(LEGAL|PRIVACY|SECURITY)_CONTACT_REQUIRED/.test(read(page))) contacts.push(page);
+      if (/LEGAL_REVIEW_REQUIRED/.test(read(page))) review.push(page);
+    }
   }
   if (problems.length) return [FAIL, problems.join('; ')];
-  return placeholders.length === 0
-    ? [PASS, `privacy and support pages on ${host}`]
-    : [EXTERNAL, `placeholders (contacts or effective date) in ${placeholders.join(', ')}`];
+  if (contacts.length) return [EXTERNAL, `contact placeholders in ${contacts.join(', ')}`];
+  if (review.length) return [LEGAL, `effective date / review placeholders in ${review.join(', ')}`];
+  return [PASS, `privacy and support pages on ${host}`];
+});
+
+check('Legal documents approved by counsel', () => {
+  const pending = trackedFiles().filter(
+    (file) => file.startsWith('legal/documents/') && TEXT_FILE.test(file) && /LEGAL_REVIEW_REQUIRED/.test(read(file)),
+  );
+  return pending.length === 0 ? [PASS, 'no LEGAL_REVIEW_REQUIRED markers'] : [LEGAL, `${pending.length} document(s) marked LEGAL_REVIEW_REQUIRED`];
+});
+
+check('Retention periods approved', () => {
+  const open = (read('docs/privacy/retention-matrix.md').match(/LEGAL REVIEW REQUIRED/g) ?? []).length;
+  return open === 0 ? [PASS, 'retention matrix approved'] : [LEGAL, `${open} retention period(s) awaiting legal review`];
+});
+
+// Account deletion: server-only, recent sign-in enforced on the server, no client fallback.
+check('Account deletion is server-enforced', () => {
+  const problems = [];
+  const server = read('functions/src/appleAuth.ts');
+  if (!/assertDeletionAuthorized\(db, uid, request\.auth\?\.token\)/.test(server)) {
+    problems.push('deleteAuthenticatedAccount does not check recent sign-in');
+  }
+  if (!/assertDeletionAuthorized/.test(read('functions/src/safety/youthConsent.ts'))) {
+    problems.push('setAgeBand under-13 deletion does not check recent sign-in');
+  }
+  const client = read('src/features/auth/services/accountService.ts');
+  if (/\bdeleteUser\b|deleteDoc\(/.test(client)) problems.push('client still deletes the account or data locally');
+  return problems.length === 0 ? [PASS, 'recent sign-in checked server-side, no local fallback'] : [FAIL, problems.join('; ')];
+});
+
+/** Deployed functions read `functions/.env` and `functions/.env.<project>` (kept out of git). */
+function functionsEnv() {
+  const project = readJson('.firebaserc').projects?.default;
+  return ['functions/.env', `functions/.env.${project}`]
+    .filter((file) => existsSync(join(root, file)))
+    .map((file) => read(file))
+    .join('\n');
+}
+
+check('AI footage processing approved', () => {
+  if (!/AI_FOOTAGE_PROCESSING_APPROVED/.test(read('functions/src/ai/providerConfig.ts'))) {
+    return [FAIL, 'footage privacy gate missing from functions/src/ai/providerConfig.ts'];
+  }
+  return /^AI_FOOTAGE_PROCESSING_APPROVED=true$/m.test(functionsEnv())
+    ? [PASS, 'operator approved the AI provider for footage']
+    : [EXTERNAL, 'AI_PRIVACY_CONFIGURATION_REQUIRED: footage analysis stays off until AI_FOOTAGE_PROCESSING_APPROVED=true'];
+});
+
+check('Backups configured', () => {
+  const doc = read('docs/security/backups.md');
+  return /BACKUP_CONFIGURATION_REQUIRED/.test(doc)
+    ? [EXTERNAL, 'BACKUP_CONFIGURATION_REQUIRED (Firestore PITR / scheduled exports, Storage)']
+    : [PASS, 'backup configuration recorded'];
+});
+
+check('Security findings resolved or accepted', () => {
+  const rows = read('docs/security/security-findings.md')
+    .split('\n')
+    .filter((line) => /^\|\s*SEC-\d+/.test(line))
+    .map((line) => line.split('|').map((cell) => cell.trim()));
+  const open = (severity) => rows.filter((cells) => cells[2] === severity && /^OPEN/.test(cells[3]));
+  const blocking = [...open('Critical'), ...open('High')].map((cells) => cells[1]);
+  if (blocking.length) return [FAIL, `open Critical/High findings: ${blocking.join(', ')}`];
+  const pending = rows.filter((cells) => /OWNER ACCEPTANCE REQUIRED/.test(cells[3])).map((cells) => cells[1]);
+  return pending.length === 0 ? [PASS, `${rows.length} findings tracked`] : [NOT_VALIDATED, `owner acceptance pending: ${pending.join(', ')}`];
+});
+
+check('Real-device and end-to-end validation', () => {
+  const pending = read('docs/release/validation-matrix.md')
+    .split('\n')
+    .filter((line) => /^\|/.test(line) && /\|\s*NOT VALIDATED\s*\|/.test(line)).length;
+  return pending === 0 ? [PASS, 'validation matrix complete'] : [NOT_VALIDATED, `${pending} item(s) in docs/release/validation-matrix.md`];
 });
 
 check('Privacy manifest: no tracking, no location', () => {
@@ -228,7 +314,7 @@ check('Universal links file', () => {
 });
 
 check('Firestore and Storage rules suite', () => {
-  if (skipTests) return ['SKIPPED', '--skip-tests'];
+  if (skipTests) return [SKIPPED, '--skip-tests'];
   const result = spawnSync(npm, ['run', 'test:rules'], { cwd: root, encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 256 * 1024 * 1024 });
   const output = `${result.stdout}\n${result.stderr}`;
   const pass = /# pass (\d+)/.exec(output)?.[1];
@@ -249,6 +335,9 @@ for (const { name, fn } of checks) {
 const width = Math.max(...rows.map((row) => row.name.length));
 for (const row of rows) console.log(`${row.state.padEnd(32)} ${row.name.padEnd(width)}  ${row.detail}`);
 
-const failed = rows.filter((row) => row.state === FAIL || (row.state === EXTERNAL && !allowExternal));
-console.log(failed.length === 0 ? '\nRelease gate: PASS' : `\nRelease gate: BLOCKED (${failed.length} item${failed.length === 1 ? '' : 's'})`);
+const counts = Object.fromEntries([PASS, FAIL, EXTERNAL, LEGAL, NOT_VALIDATED, SKIPPED].map((state) => [state, rows.filter((row) => row.state === state).length]));
+console.log(`\n${Object.entries(counts).map(([state, count]) => `${state}: ${count}`).join(' | ')}`);
+const failed = rows.filter((row) => row.state === FAIL || (!allowExternal && row.state !== PASS && row.state !== SKIPPED));
+const mode = allowExternal ? 'internal / TestFlight' : 'public release';
+console.log(failed.length === 0 ? `Release gate (${mode}): PASS` : `Release gate (${mode}): BLOCKED (${failed.length} item${failed.length === 1 ? '' : 's'})`);
 process.exit(failed.length === 0 ? 0 : 1);

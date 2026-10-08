@@ -9,6 +9,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("../callableOptions");
+const providerConfig_1 = require("../ai/providerConfig");
 const consent_1 = require("../legal/consent");
 const userSafety_1 = require("../safety/userSafety");
 const quotaService_1 = require("../entitlements/quotaService");
@@ -66,6 +67,11 @@ exports.createUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCa
     const job = await db.collection('matchAnalysisJobs').doc(input.jobId).get();
     if (!job.exists || job.get('playerId') !== uid) {
         throw new https_1.HttpsError('failed-precondition', REQUEST_ERRORS.job);
+    }
+    if (!(0, providerConfig_1.isFootageProcessingApproved)()) {
+        throw new https_1.HttpsError('failed-precondition', 'Video analysis is not available yet.', {
+            reason: 'ai_privacy_configuration_required',
+        });
     }
     const plan = await (0, quotaService_1.planFor)(db, uid);
     if (input.sizeBytes > plan.maxVideoBytes || input.declaredDurationSec > plan.maxVideoDurationSec) {

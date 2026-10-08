@@ -1,10 +1,10 @@
 import { FieldValue, getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { defineSecret } from 'firebase-functions/params';
-import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onDocumentCreated, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { accountDeletionDeps } from '../appleAuth';
-import { runAccountDeletion } from '../dataRights/deletion';
+import { assertDeletionAuthorized, runAccountDeletion } from '../dataRights/deletion';
 import { createCallableOptions } from '../callableOptions';
 import {
   canChangeAgeBand,
@@ -33,11 +33,35 @@ const CONSENT_VALIDITY_MS = 365 * 24 * 60 * 60 * 1000;
 const MAX_REQUESTS_PER_DAY = 3;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** HMAC key for guardian links; anything shorter than 32 characters is treated as not configured. */
+const MIN_LINK_SECRET_LENGTH = 32;
+
 function linkSecret(): string {
   const value = guardianLinkSecret.value();
-  if (value) return value;
+  if (value && value.length >= MIN_LINK_SECRET_LENGTH) return value;
   if (process.env.FUNCTIONS_EMULATOR === 'true') return 'scoutx-emulator-only-guardian-secret';
+  if (value) logger.error('GUARDIAN_LINK_SECRET is too short; guardian links are disabled');
   throw new HttpsError('failed-precondition', 'Guardian links are not configured.');
+}
+
+/**
+ * Applies `update` only if `field` still holds this link's hash, inside a transaction, so two
+ * simultaneous uses of one link cannot both succeed.
+ */
+async function updateIfLinkUnused(
+  db: Firestore,
+  ref: FirebaseFirestore.DocumentReference,
+  field: string,
+  tokenHash: string,
+  update: Record<string, unknown>,
+): Promise<void> {
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    if (!snap.exists || snap.get(field) !== tokenHash) {
+      throw new HttpsError('permission-denied', 'This link has already been used or is no longer valid.');
+    }
+    tx.update(ref, update);
+  });
 }
 
 function requireUid(uid: string | undefined): string {
@@ -72,9 +96,12 @@ export const setAgeBand = onCall(createCallableOptions(), async (request) => {
   }
 
   if (ageBand === 'under13') {
+    // Choosing an age band for the first time is part of sign-up. Tightening an existing band to
+    // under-13 deletes an established account, so it needs the same recent sign-in as deletion.
+    if (existing?.ageBand) await assertDeletionAuthorized(db, uid, request.auth?.token);
     const outcome = await runAccountDeletion(db, uid, accountDeletionDeps);
     if (outcome.status === 'failed') {
-      throw new HttpsError('aborted', 'Account deletion did not finish. Please try again.', { reason: 'deletion_incomplete' });
+      throw new HttpsError('aborted', "We couldn't complete account deletion. Please try again.", { reason: 'deletion_incomplete' });
     }
     return { ageBand, deleted: true };
   }
@@ -175,8 +202,8 @@ export const requestGuardianConsent = onCall(
 );
 
 type ResolvedToken =
-  | { kind: 'consent' | 'revoke'; payload: GuardianTokenPayload; consent: FirebaseFirestore.DocumentSnapshot }
-  | { kind: 'trial'; payload: GuardianTokenPayload; trial: FirebaseFirestore.DocumentSnapshot };
+  | { kind: 'consent' | 'revoke'; payload: GuardianTokenPayload; tokenHash: string; consent: FirebaseFirestore.DocumentSnapshot }
+  | { kind: 'trial'; payload: GuardianTokenPayload; tokenHash: string; trial: FirebaseFirestore.DocumentSnapshot };
 
 async function resolveToken(db: Firestore, token: unknown): Promise<ResolvedToken> {
   const payload = verifyGuardianToken(linkSecret(), token, ['consent', 'revoke', 'trial']);
@@ -189,14 +216,14 @@ async function resolveToken(db: Firestore, token: unknown): Promise<ResolvedToke
     if (!trial.exists || trial.get('guardianTokenHash') !== tokenHash) {
       throw new HttpsError('permission-denied', 'This link has already been used or is no longer valid.');
     }
-    return { kind: 'trial', payload, trial };
+    return { kind: 'trial', payload, tokenHash, trial };
   }
   const consent = await db.collection('youthConsents').doc(payload.ref).get();
   const field = payload.purpose === 'consent' ? 'tokenHash' : 'revokeTokenHash';
   if (!consent.exists || consent.get(field) !== tokenHash) {
     throw new HttpsError('permission-denied', 'This link has already been used or is no longer valid.');
   }
-  return { kind: payload.purpose, payload, consent };
+  return { kind: payload.purpose, payload, tokenHash, consent };
 }
 
 /** Hosting page calls this without an account; the signed token is the only credential. */
@@ -267,7 +294,7 @@ export const respondGuardianConsent = onCall(publicGuardianOptions, async (reque
       });
       update.updatedAt = now;
     }
-    await resolved.trial.ref.update(update);
+    await updateIfLinkUnused(db, resolved.trial.ref, 'guardianTokenHash', resolved.tokenHash, update);
     return { ok: true, guardianApproval: update.guardianApproval };
   }
 
@@ -277,7 +304,7 @@ export const respondGuardianConsent = onCall(publicGuardianOptions, async (reque
 
   if (decision === 'revoke') {
     if (resolved.kind !== 'revoke') throw new HttpsError('invalid-argument', 'Use the link from your confirmation email.');
-    await resolved.consent.ref.update({
+    await updateIfLinkUnused(db, resolved.consent.ref, 'revokeTokenHash', resolved.tokenHash, {
       status: 'revoked',
       scopes: [],
       revokedAt: now,
@@ -291,7 +318,7 @@ export const respondGuardianConsent = onCall(publicGuardianOptions, async (reque
 
   if (decision === 'decline') {
     if (resolved.kind !== 'consent') throw new HttpsError('invalid-argument', 'Use revoke to withdraw consent.');
-    await resolved.consent.ref.update({
+    await updateIfLinkUnused(db, resolved.consent.ref, 'tokenHash', resolved.tokenHash, {
       status: 'declined',
       tokenHash: null,
       updatedAt: now,
@@ -312,7 +339,8 @@ export const respondGuardianConsent = onCall(publicGuardianOptions, async (reque
     purpose: 'revoke',
     exp: Date.now() + GUARDIAN_REVOKE_TTL_MS,
   });
-  await resolved.consent.ref.update({
+  const linkField = resolved.kind === 'consent' ? 'tokenHash' : 'revokeTokenHash';
+  await updateIfLinkUnused(db, resolved.consent.ref, linkField, resolved.tokenHash, {
     status: 'approved',
     scopes,
     tokenHash: null,
@@ -379,27 +407,69 @@ export const onTrialInvitationCreatedGuardian = onDocumentCreated(
     if (!trial || typeof trial.playerId !== 'string') return;
     const db = getFirestore();
     const state = await loadSafetyState(trial.playerId, db);
-    if (state?.ageBand !== '13-17') return;
-    const token = createGuardianToken(linkSecret(), {
-      ref: event.params.trialId,
-      purpose: 'trial',
-      exp: Date.now() + GUARDIAN_LINK_TTL_MS,
-    });
-    await event.data?.ref.update({ guardianApproval: 'pending', guardianTokenHash: hashToken(token) });
-    const contact = (await db.collection('guardianContacts').doc(trial.playerId).get()).data() ?? {};
-    if (typeof contact.email !== 'string') {
-      logger.warn('Minor trial without guardian contact', { trialId: event.params.trialId });
-      return;
-    }
-    await queueMail(db, {
-      to: contact.email,
-      uid: trial.playerId,
-      purpose: 'guardian_trial',
-      ...guardianEmail('trial', {
-        firstName: typeof contact.firstName === 'string' ? contact.firstName : 'your child',
-        club: typeof trial.club === 'string' ? trial.club.slice(0, 80) : undefined,
-        link: guardianLink(token),
+    if (state?.ageBand !== '13-17' || !event.data) return;
+    await requestTrialGuardianApproval(db, event.data.ref, trial, {});
+  },
+);
+
+/** What a guardian approved; changing any of these needs a new approval. */
+export const GUARDIAN_APPROVED_TRIAL_FIELDS = ['club', 'coach', 'location', 'scheduledDate', 'scoutId'] as const;
+
+export function trialDetailsChanged(before: Record<string, unknown>, after: Record<string, unknown>): boolean {
+  return GUARDIAN_APPROVED_TRIAL_FIELDS.some((field) => before[field] !== after[field]);
+}
+
+async function requestTrialGuardianApproval(
+  db: Firestore,
+  ref: FirebaseFirestore.DocumentReference,
+  trial: FirebaseFirestore.DocumentData,
+  extra: Record<string, unknown>,
+): Promise<void> {
+  const token = createGuardianToken(linkSecret(), { ref: ref.id, purpose: 'trial', exp: Date.now() + GUARDIAN_LINK_TTL_MS });
+  await ref.update({ guardianApproval: 'pending', guardianTokenHash: hashToken(token), guardianDecidedAt: null, ...extra });
+  const contact = (await db.collection('guardianContacts').doc(String(trial.playerId)).get()).data() ?? {};
+  if (typeof contact.email !== 'string') {
+    logger.warn('Minor trial without guardian contact', { trialId: ref.id });
+    return;
+  }
+  await queueMail(db, {
+    to: contact.email,
+    uid: String(trial.playerId),
+    purpose: 'guardian_trial',
+    ...guardianEmail('trial', {
+      firstName: typeof contact.firstName === 'string' ? contact.firstName : 'your child',
+      club: typeof trial.club === 'string' ? trial.club.slice(0, 80) : undefined,
+      link: guardianLink(token),
+    }),
+  });
+}
+
+/**
+ * A guardian approves a specific trial (club, coach, place, date, scout). If the scout changes
+ * any of that afterwards, the approval no longer applies: it goes back to pending, an accepted
+ * trial returns to pending, and the guardian gets a new link.
+ */
+export const onTrialInvitationUpdatedGuardian = onDocumentUpdated(
+  { document: 'trialInvitations/{trialId}', secrets: [guardianLinkSecret] },
+  async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+    if (!before || !after || !event.data) return;
+    if (before.guardianApproval == null || !trialDetailsChanged(before, after)) return;
+    if (after.status === 'declined' || after.status === 'cancelled') return;
+    const now = new Date().toISOString();
+    await requestTrialGuardianApproval(getFirestore(), event.data.after.ref, after, {
+      ...(after.status === 'accepted' ? { status: 'pending' } : {}),
+      history: FieldValue.arrayUnion({
+        id: `guardian-reapproval-${now}`,
+        action: 'note_added',
+        actorId: 'system',
+        actorName: 'PitchProof',
+        actorRole: 'system',
+        timestamp: now,
+        note: 'Trial details changed; waiting for parent or guardian approval again',
       }),
+      updatedAt: now,
     });
   },
 );

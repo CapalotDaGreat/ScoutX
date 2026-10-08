@@ -3,8 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DELETION_COLLECTION = exports.DELETION_STEPS = void 0;
 exports.isDeletionStep = isDeletionStep;
 exports.nextDeletionStep = nextDeletionStep;
+exports.assertDeletionAuthorized = assertDeletionAuthorized;
 exports.runAccountDeletion = runAccountDeletion;
 const firebase_functions_1 = require("firebase-functions");
+const https_1 = require("firebase-functions/v2/https");
+const recentAuth_1 = require("../security/recentAuth");
 const accountDeletion_1 = require("../accountDeletion");
 const sessions_1 = require("../uploads/sessions");
 const legalRetention_1 = require("./legalRetention");
@@ -30,6 +33,19 @@ function isDeletionStep(value) {
 function nextDeletionStep(step) {
     const index = exports.DELETION_STEPS.indexOf(step);
     return index >= 0 && index < exports.DELETION_STEPS.length - 1 ? exports.DELETION_STEPS[index + 1] : null;
+}
+/** Throws `failed-precondition` / `recent_login_required` unless the caller may delete `uid` now. */
+async function assertDeletionAuthorized(db, uid, token) {
+    const pending = await db.collection(exports.DELETION_COLLECTION).doc(uid).get();
+    const decision = (0, recentAuth_1.decideDeletionAuth)({
+        authTime: token?.auth_time,
+        signInProvider: token?.firebase?.sign_in_provider,
+        pendingRequestedAt: pending.exists ? pending.get('requestedAt') : undefined,
+        nowMs: Date.now(),
+    });
+    if (!decision.allowed) {
+        throw new https_1.HttpsError('failed-precondition', recentAuth_1.RECENT_LOGIN_MESSAGE, { reason: recentAuth_1.RECENT_LOGIN_REQUIRED });
+    }
 }
 const ACTIVE_JOB_STATUSES = ['draft', 'uploading', 'queued', 'processing'];
 async function hideAndRevoke(db, uid, deps) {

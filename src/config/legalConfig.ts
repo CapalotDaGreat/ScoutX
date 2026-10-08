@@ -1,7 +1,11 @@
 // Pure data (no React Native imports): app.config.ts reads it for the production release gate.
 
 export const LEGAL_CONTACT_REQUIRED = 'LEGAL_CONTACT_REQUIRED';
+export const PRIVACY_CONTACT_REQUIRED = 'PRIVACY_CONTACT_REQUIRED';
+export const SECURITY_CONTACT_REQUIRED = 'SECURITY_CONTACT_REQUIRED';
 export const LEGAL_REVIEW_REQUIRED = 'LEGAL_REVIEW_REQUIRED';
+/** Matches any unfilled contact placeholder in rendered text. */
+export const CONTACT_PLACEHOLDER_PATTERN = /\b(LEGAL|PRIVACY|SECURITY)_CONTACT_REQUIRED\b/;
 
 export type LegalConfig = {
   entity: {
@@ -63,8 +67,8 @@ export function missingRequiredLegalContacts(config: LegalConfig = LEGAL_CONFIG)
   return REQUIRED_LEGAL_CONTACTS.filter((key) => !config.contacts[key]);
 }
 
-export function displayLegalValue(value: string | null): string {
-  return value && value.trim() ? value : LEGAL_CONTACT_REQUIRED;
+export function displayLegalValue(value: string | null, placeholder: string = LEGAL_CONTACT_REQUIRED): string {
+  return value && value.trim() ? value : placeholder;
 }
 
 export function entityAddress(config: LegalConfig = LEGAL_CONFIG): string {
@@ -77,8 +81,8 @@ export function resolveLegalTokens(text: string, config: LegalConfig = LEGAL_CON
   const tokens: Record<string, string> = {
     entityName: config.entity.name,
     entityAddress: entityAddress(config),
-    privacyEmail: displayLegalValue(config.contacts.privacyEmail),
-    securityEmail: displayLegalValue(config.contacts.securityEmail),
+    privacyEmail: displayLegalValue(config.contacts.privacyEmail, PRIVACY_CONTACT_REQUIRED),
+    securityEmail: displayLegalValue(config.contacts.securityEmail, SECURITY_CONTACT_REQUIRED),
     legalEmail: displayLegalValue(config.contacts.legalEmail),
     supportEmail: displayLegalValue(config.contacts.supportEmail),
     dpo: config.dpo ?? 'No data protection officer has been appointed.',

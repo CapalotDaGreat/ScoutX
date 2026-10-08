@@ -184,7 +184,8 @@
       "rejected": "Das Video konnte nicht angenommen werden. Prüfe, ob es eine abspielbare MP4- oder MOV-Datei ist.",
       "unknown": "Der Upload konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
       "quota_exceeded": "Du hast alle Komplettspiel-Analysen für diesen Zeitraum genutzt.",
-      "plan_limit": "Dieses Video überschreitet die Größen- oder Längengrenze deines Plans."
+      "plan_limit": "Dieses Video überschreitet die Größen- oder Längengrenze deines Plans.",
+      "analysis_unavailable": "Die Videoanalyse ist noch nicht verfügbar, daher wurde nichts hochgeladen. Du kannst weiterhin Spiele erfassen und deine Entwicklung verfolgen."
     },
     "rejection": {
       "not_video": "Diese Datei ist kein Video. Wähle eine MP4- oder MOV-Aufnahme.",

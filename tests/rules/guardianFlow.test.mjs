@@ -135,6 +135,22 @@ describe('guardian consent flow (mail captured from the mail collection)', () =>
     assert.equal((await safety(player)).guardianStatus, 'pending');
   });
 
+  test('one link used twice at the same time only succeeds once', async () => {
+    const player = await teen();
+    await call(guardian.requestGuardianConsent, player, { guardianEmail: 'race@example.com' });
+    const token = tokenFrom(await mailFor(player, 'guardian_consent'));
+    const results = await Promise.allSettled([
+      call(guardian.respondGuardianConsent, null, { token, decision: 'approve', confirmGuardian: true, scopes: ['discovery'] }),
+      call(guardian.respondGuardianConsent, null, { token, decision: 'decline' }),
+    ]);
+    const fulfilled = results.filter((result) => result.status === 'fulfilled');
+    assert.equal(fulfilled.length, 1, 'exactly one decision is recorded');
+    const rejected = results.find((result) => result.status === 'rejected');
+    assert.equal(rejected.reason.code, 'permission-denied');
+    const winner = fulfilled[0].value.status;
+    assert.equal((await safety(player)).guardianStatus, winner);
+  });
+
   test('players cannot use their own email, adults need no guardian, bands only get stricter', async () => {
     const player = await teen();
     await expectCode(
@@ -184,5 +200,36 @@ describe('guardian consent flow (mail captured from the mail collection)', () =>
     const declined = (await ref.get()).data();
     assert.equal(declined.status, 'declined');
     assert.equal(declined.guardianTokenHash, null, 'the link works once');
+  });
+
+  test('changing an approved minor trial sends it back to the guardian', async () => {
+    const player = await teen();
+    await call(guardian.requestGuardianConsent, player, { guardianEmail: 'moveparent@example.com', playerFirstName: 'Mia' });
+    const trialId = uid('trial');
+    const ref = db.collection('trialInvitations').doc(trialId);
+    await ref.set({ playerId: player, scoutId: uid('scout'), status: 'pending', club: 'FC Example', location: 'Field 1', scheduledDate: '2026-11-01', history: [] });
+    await guardian.onTrialInvitationCreatedGuardian.run({ params: { trialId }, data: await ref.get() });
+    const firstToken = tokenFrom(await mailFor(player, 'guardian_trial'));
+    await call(guardian.respondGuardianConsent, null, { token: firstToken, decision: 'approve' });
+    await ref.update({ status: 'accepted' });
+    assert.equal((await ref.get()).get('guardianApproval'), 'approved');
+
+    const before = await ref.get();
+    await ref.update({ location: 'Somewhere else', scheduledDate: '2026-11-02' });
+    const after = await ref.get();
+    await guardian.onTrialInvitationUpdatedGuardian.run({ params: { trialId }, data: { before, after } });
+
+    const moved = (await ref.get()).data();
+    assert.equal(moved.guardianApproval, 'pending', 'old approval no longer applies');
+    assert.equal(moved.status, 'pending', 'accepted trial needs acceptance again');
+    assert.notEqual(moved.guardianTokenHash, null);
+    const secondToken = tokenFrom(await mailFor(player, 'guardian_trial'));
+    assert.notEqual(secondToken, firstToken, 'guardian gets a fresh link');
+    await expectCode(call(guardian.getGuardianConsentRequest, null, { token: firstToken }), 'permission-denied');
+
+    const unchanged = await ref.get();
+    await ref.update({ notes: 'Bring boots' });
+    await guardian.onTrialInvitationUpdatedGuardian.run({ params: { trialId }, data: { before: unchanged, after: await ref.get() } });
+    assert.equal((await ref.get()).get('guardianTokenHash'), moved.guardianTokenHash, 'notes alone do not re-trigger');
   });
 });

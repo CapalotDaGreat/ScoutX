@@ -1,74 +1,26 @@
-import { deleteUser } from 'firebase/auth';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  query,
-  where,
-  type Firestore,
-} from 'firebase/firestore';
-import { getFirebaseAuth, getFirestoreDb } from '@/config/firebase';
-import { mapAccountDeletionError } from '@/features/auth/services/authErrorMapping';
+import { getFirebaseAuth } from '@/config/firebase';
 import { deleteAuthenticatedAccountViaCloud } from '@/features/auth/services/appleTokenPersistenceService';
 import { AuthError } from '@/features/auth/types';
 import { signOutFromFirebase } from '@/features/auth/services/authService';
+import { classifyDeletionError, type AccountDeletionFailure } from '@/features/auth/services/reauthModel';
 
-const UID_KEYED_COLLECTIONS = [
-  'users',
-  'profiles',
-  'pushTokens',
-  'discoverablePlayers',
-  'recruitmentWorkspaces',
-] as const;
+/** Raised by `deleteCurrentAccount`; `kind` decides whether the UI asks for a fresh sign-in. */
+export class AccountDeletionError extends Error {
+  readonly kind: AccountDeletionFailure;
 
-/** Collections the security rules let the owner delete, keyed by the owner field. */
-const OWNED_QUERIES: ReadonlyArray<readonly [collectionName: string, field: string]> = [
-  ['gpsSessions', 'playerId'],
-  ['matchAnalysisJobs', 'playerId'],
-  ['careerReplays', 'playerId'],
-  ['activities', 'recipientId'],
-  ['trialNotifications', 'recipientId'],
-  ['trialInvitations', 'scoutId'],
-  ['scoutingReports', 'scoutId'],
-  ['trustRecommendations', 'authorId'],
-  ['blockedUsers', 'blockerId'],
-  ['portfolioSlugs', 'playerId'],
-];
-
-async function deleteOwnedQuery(
-  db: Firestore,
-  collectionName: string,
-  field: string,
-  userId: string,
-): Promise<void> {
-  const snapshot = await getDocs(query(collection(db, collectionName), where(field, '==', userId)));
-  await Promise.allSettled(snapshot.docs.map((document) => deleteDoc(document.ref)));
-}
-
-/**
- * Best-effort fallback when the deletion Cloud Function is unreachable. Server-side
- * deletion remains the complete path (it also removes Storage files and shared records).
- */
-async function deleteOwnedDocumentsLocally(userId: string): Promise<void> {
-  const db = getFirestoreDb();
-  if (!db) {
-    return;
+  constructor(kind: AccountDeletionFailure) {
+    super(kind === 'recent_login_required' ? 'Recent sign-in required.' : 'Account deletion failed.');
+    this.kind = kind;
+    this.name = 'AccountDeletionError';
   }
-
-  await Promise.allSettled(
-    OWNED_QUERIES.map(([collectionName, field]) =>
-      deleteOwnedQuery(db, collectionName, field, userId),
-    ),
-  );
-  await Promise.allSettled(
-    UID_KEYED_COLLECTIONS.map((collectionName) => deleteDoc(doc(db, collectionName, userId))),
-  );
 }
 
 /**
- * Deletes the current account.
- * Prefer Cloud Function path so Apple tokens are revoked (App Store Guideline 5.1.1(v)).
+ * Deletes the current account on the server: hide, revoke Apple tokens and sessions, delete
+ * Firestore and Storage data, verify, then remove the sign-in. There is deliberately no local
+ * fallback: server-only records (guardian contacts, consent proof, mail, quarantine) are
+ * unreachable from the client, so deleting the sign-in locally would orphan them. The device is
+ * only signed out after the server confirms deletion.
  */
 export async function deleteCurrentAccount(userId: string): Promise<void> {
   const auth = getFirebaseAuth();
@@ -77,23 +29,17 @@ export async function deleteCurrentAccount(userId: string): Promise<void> {
     throw new AuthError('You must be signed in to delete your account.', 'invalid-credentials');
   }
 
-  const deletedViaCloud = await deleteAuthenticatedAccountViaCloud();
-  if (deletedViaCloud) {
-    try {
-      await signOutFromFirebase();
-    } catch {
-      // Auth user may already be deleted by the Cloud Function.
-    }
-    return;
+  let deleted = false;
+  try {
+    deleted = await deleteAuthenticatedAccountViaCloud();
+  } catch (error) {
+    throw new AccountDeletionError(classifyDeletionError(error));
   }
-
-  await deleteOwnedDocumentsLocally(userId);
+  if (!deleted) throw new AccountDeletionError('failed');
 
   try {
-    await deleteUser(auth.currentUser);
-  } catch (error) {
-    throw mapAccountDeletionError(error);
+    await signOutFromFirebase();
+  } catch {
+    // The Auth user is already gone on the server; the local session ends with it.
   }
-
-  await signOutFromFirebase();
 }

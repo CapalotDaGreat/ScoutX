@@ -6,7 +6,8 @@ import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
-import { deleteCurrentAccount } from '@/features/auth/services/accountService';
+import { DeleteAccountReauthModal, deletionErrorKey } from '@/features/auth/components/DeleteAccountReauthModal';
+import { useAccountDeletion } from '@/features/auth/hooks/useAccountDeletion';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import type { AgeBand } from '@/features/youth-safety/policy';
@@ -113,6 +114,7 @@ function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
 
 function GuardianStep({ resend }: { resend: boolean }) {
   const { t } = useAppTranslation('safety');
+  const { t: tAuth } = useAppTranslation('auth');
   const { user, signOut } = useAuth();
   const { record } = useUserSafety();
   const [email, setEmail] = useState('');
@@ -120,7 +122,7 @@ function GuardianStep({ resend }: { resend: boolean }) {
   const [editing, setEditing] = useState(!resend);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
+  const deletion = useAccountDeletion(user?.uid);
 
   const status = record?.guardianStatus;
 
@@ -134,17 +136,6 @@ function GuardianStep({ resend }: { resend: boolean }) {
       setError(toUserMessage(err, t('errors.generic')));
     } finally {
       setBusy(false);
-    }
-  };
-
-  const deleteAccount = async () => {
-    if (!user?.uid) return;
-    setDeleting(true);
-    try {
-      await deleteCurrentAccount(user.uid);
-    } catch (err) {
-      setError(toUserMessage(err, t('errors.generic')));
-      setDeleting(false);
     }
   };
 
@@ -164,7 +155,7 @@ function GuardianStep({ resend }: { resend: boolean }) {
         <Button variant="ghost" onPress={() => void signOut()}>
           {t('guardian.signOut')}
         </Button>
-        <Button variant="ghost" loading={deleting} onPress={() => void deleteAccount()}>
+        <Button variant="ghost" loading={deletion.busy} onPress={() => void deletion.run()}>
           {t('guardian.deleteAccount')}
         </Button>
         {error ? (
@@ -172,6 +163,19 @@ function GuardianStep({ resend }: { resend: boolean }) {
             {error}
           </Text>
         ) : null}
+        {deletion.error && deletion.phase === 'idle' ? (
+          <Text variant="body-sm" color="error" testID="youth-gate-delete-error">
+            {tAuth(deletionErrorKey(deletion.error))}
+          </Text>
+        ) : null}
+        <DeleteAccountReauthModal
+          visible={deletion.phase === 'reauth' || deletion.phase === 'reauthenticating'}
+          methods={deletion.methods}
+          busy={deletion.phase === 'reauthenticating'}
+          error={deletion.error}
+          onConfirm={(method, password) => void deletion.confirmReauth(method, password)}
+          onCancel={deletion.cancelReauth}
+        />
       </Shell>
     );
   }

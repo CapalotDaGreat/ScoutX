@@ -4,6 +4,7 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { createCallableOptions, resolveCallableCors } from '../callableOptions';
+import { isFootageProcessingApproved } from '../ai/providerConfig';
 import { hasCurrentConsent } from '../legal/consent';
 import { loadSafetyPolicy } from '../safety/userSafety';
 import { consumeQuota, planFor, releaseQuota } from '../entitlements/quotaService';
@@ -83,6 +84,12 @@ export const createUploadSession = onCall(createCallableOptions({ timeoutSeconds
   const job = await db.collection('matchAnalysisJobs').doc(input.jobId).get();
   if (!job.exists || job.get('playerId') !== uid) {
     throw new HttpsError('failed-precondition', REQUEST_ERRORS.job);
+  }
+
+  if (!isFootageProcessingApproved()) {
+    throw new HttpsError('failed-precondition', 'Video analysis is not available yet.', {
+      reason: 'ai_privacy_configuration_required',
+    });
   }
 
   const plan = await planFor(db, uid);

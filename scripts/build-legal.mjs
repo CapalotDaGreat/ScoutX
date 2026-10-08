@@ -194,7 +194,7 @@ ${sections}
 
 function renderSupportPage(legal) {
   const email = legal.displayLegalValue(legal.LEGAL_CONFIG.contacts.supportEmail);
-  const privacy = legal.displayLegalValue(legal.LEGAL_CONFIG.contacts.privacyEmail);
+  const privacy = legal.displayLegalValue(legal.LEGAL_CONFIG.contacts.privacyEmail, legal.PRIVACY_CONTACT_REQUIRED);
   return pageShell(
     'Support',
     `<h1>Support</h1>

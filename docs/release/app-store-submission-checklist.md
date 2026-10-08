@@ -24,7 +24,7 @@ registration, which is exactly the TradeAcademy 2.1(a) rejection.
    ```powershell
    npx firebase-tools functions:secrets:set OPENROUTER_API_KEY
    npx firebase-tools functions:secrets:set REVENUECAT_WEBHOOK_SECRET
-   npx firebase-tools functions:secrets:set GUARDIAN_LINK_SECRET   # long random string
+   npx firebase-tools functions:secrets:set GUARDIAN_LINK_SECRET   # random, at least 32 characters (shorter disables guardian links)
    npx firebase-tools functions:secrets:set ADMIN_USER_IDS         # comma-separated staff uids
    npx firebase-tools functions:secrets:set APPLE_TEAM_ID          # 833CYAZ8XT
    npx firebase-tools functions:secrets:set APPLE_KEY_ID           # Sign in with Apple key id
@@ -32,6 +32,12 @@ registration, which is exactly the TradeAcademy 2.1(a) rejection.
    ```
 
    Functions env (`functions/.env.scoutx-230b0`, not committed): `GUARDIAN_LINK_BASE_URL=https://pitchproof.online`.
+   Add `AI_FOOTAGE_PROCESSING_APPROVED=true` **only** after the AI provider privacy review
+   (AI_PRIVACY_CONFIGURATION_REQUIRED); until then video analysis uploads are refused with a
+   translated "not available yet" message and the rest of the app works normally.
+
+   Internal TestFlight builds while legal contacts are still missing need
+   `ALLOW_LEGAL_PLACEHOLDERS=1` in the EAS build environment; App Store builds must not set it.
 7. Extensions → install **Trigger Email from Firestore** on collection `mail` with an SMTP account.
    Guardian approval and moderation emails depend on it.
 8. Deploy:

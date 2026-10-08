@@ -33,6 +33,7 @@ const ERROR_TEXT = {
     extraction_failed: 'Key frames could not be extracted from this video.',
     queue_unavailable: 'Analysis could not be queued. Try again later.',
     video_rejected: 'The video did not pass validation.',
+    ai_privacy_configuration_required: 'Video analysis is not available yet.',
 };
 async function failJob(db, jobId, code, stages, activeStage) {
     const now = new Date().toISOString();
@@ -279,6 +280,12 @@ async function runFrameAnalysis(params) {
         throw new https_1.HttpsError('permission-denied', 'You can only analyze your own footage.');
     if (existing.get('status') === 'complete')
         throw new https_1.HttpsError('already-exists', 'This analysis is already complete.');
+    if (!(0, providerConfig_1.isFootageProcessingApproved)()) {
+        await failJob(db, jobId, 'ai_privacy_configuration_required');
+        throw new https_1.HttpsError('failed-precondition', ERROR_TEXT.ai_privacy_configuration_required, {
+            reason: 'ai_privacy_configuration_required',
+        });
+    }
     try {
         await (0, consentGate_1.assertAiConsent)([uid], db);
     }

@@ -1,5 +1,7 @@
 import type { Firestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
+import { HttpsError } from 'firebase-functions/v2/https';
+import { decideDeletionAuth, RECENT_LOGIN_MESSAGE, RECENT_LOGIN_REQUIRED } from '../security/recentAuth';
 import {
   deleteDerivedData,
   deleteMediaData,
@@ -45,6 +47,22 @@ export function isDeletionStep(value: unknown): value is DeletionStep {
 export function nextDeletionStep(step: DeletionStep): DeletionStep | null {
   const index = DELETION_STEPS.indexOf(step);
   return index >= 0 && index < DELETION_STEPS.length - 1 ? DELETION_STEPS[index + 1] : null;
+}
+
+type DeletionAuthToken = { auth_time?: unknown; firebase?: { sign_in_provider?: unknown } } | undefined;
+
+/** Throws `failed-precondition` / `recent_login_required` unless the caller may delete `uid` now. */
+export async function assertDeletionAuthorized(db: Firestore, uid: string, token: DeletionAuthToken): Promise<void> {
+  const pending = await db.collection(DELETION_COLLECTION).doc(uid).get();
+  const decision = decideDeletionAuth({
+    authTime: token?.auth_time,
+    signInProvider: token?.firebase?.sign_in_provider,
+    pendingRequestedAt: pending.exists ? pending.get('requestedAt') : undefined,
+    nowMs: Date.now(),
+  });
+  if (!decision.allowed) {
+    throw new HttpsError('failed-precondition', RECENT_LOGIN_MESSAGE, { reason: RECENT_LOGIN_REQUIRED });
+  }
 }
 
 const ACTIVE_JOB_STATUSES = ['draft', 'uploading', 'queued', 'processing'];

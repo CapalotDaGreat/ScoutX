@@ -16,6 +16,7 @@ export {
   respondGuardianConsent,
   revokeGuardianConsent,
   onTrialInvitationCreatedGuardian,
+  onTrialInvitationUpdatedGuardian,
 } from './safety/youthConsent';
 export { onUserSafetyWrittenReproject } from './safety/projectionSync';
 export { recordConsent } from './legal/consent';

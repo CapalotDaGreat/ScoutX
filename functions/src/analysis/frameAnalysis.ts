@@ -5,7 +5,7 @@ import { logger } from 'firebase-functions';
 import { assertAiConsent } from '../ai/consentGate';
 import { callChat } from '../ai/openRouter';
 import { buildPrompt } from '../ai/promptBuilder';
-import { resolveModel } from '../ai/providerConfig';
+import { isFootageProcessingApproved, resolveModel } from '../ai/providerConfig';
 import { cleanModelText, cleanTextList, extractJsonObject } from '../ai/outputValidator';
 import { computeCoverage } from './coverage';
 import { pickFramesForModel, type SegmentRecord } from './segments';
@@ -75,7 +75,8 @@ export type AnalysisErrorCode =
   | 'ai_consent_required'
   | 'extraction_failed'
   | 'queue_unavailable'
-  | 'video_rejected';
+  | 'video_rejected'
+  | 'ai_privacy_configuration_required';
 
 const ERROR_TEXT: Record<AnalysisErrorCode, string> = {
   frames_insufficient: 'Not enough readable frames to analyze.',
@@ -85,6 +86,7 @@ const ERROR_TEXT: Record<AnalysisErrorCode, string> = {
   extraction_failed: 'Key frames could not be extracted from this video.',
   queue_unavailable: 'Analysis could not be queued. Try again later.',
   video_rejected: 'The video did not pass validation.',
+  ai_privacy_configuration_required: 'Video analysis is not available yet.',
 };
 
 export async function failJob(
@@ -389,6 +391,12 @@ export async function runFrameAnalysis(params: {
   if (!existing.exists) throw new HttpsError('not-found', 'Match analysis job not found.');
   if (existing.get('playerId') !== uid) throw new HttpsError('permission-denied', 'You can only analyze your own footage.');
   if (existing.get('status') === 'complete') throw new HttpsError('already-exists', 'This analysis is already complete.');
+  if (!isFootageProcessingApproved()) {
+    await failJob(db, jobId, 'ai_privacy_configuration_required');
+    throw new HttpsError('failed-precondition', ERROR_TEXT.ai_privacy_configuration_required, {
+      reason: 'ai_privacy_configuration_required',
+    });
+  }
   try {
     await assertAiConsent([uid], db);
   } catch (error) {

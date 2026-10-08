@@ -59,7 +59,9 @@ export const analyzeMatchFootage = onCall(
     }
 
     const apiKey = openRouterApiKey.value();
-    if (!apiKey) throw new HttpsError('failed-precondition', 'OpenRouter API key is not configured.');
+    if (!apiKey) {
+      throw new HttpsError('failed-precondition', 'Video analysis is not available yet.', { reason: 'model_unavailable' });
+    }
     // Full-match jobs were charged at upload; clip-only jobs count as one frame analysis, charged
     // only once a report exists so failed runs never use up the allowance.
     const metered = !job.videoStoragePath;

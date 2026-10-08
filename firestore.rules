@@ -433,7 +433,11 @@ service cloud.firestore {
         && request.resource.data.title.size() <= 120
         && request.resource.data.body is string
         && request.resource.data.body.size() <= 500
-        && request.resource.data.read == false;
+        && request.resource.data.read == false
+        // Free text to a minor stops as soon as the guardian withdraws scout contact.
+        && (request.resource.data.recipientId == request.auth.uid
+          || !isMinor(request.resource.data.recipientId)
+          || hasGuardianScope(request.resource.data.recipientId, 'scout_contact'));
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.recipientId
         && onlyChanges(['read']);

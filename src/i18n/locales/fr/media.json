@@ -184,7 +184,8 @@
       "rejected": "La vidéo n’a pas pu être acceptée. Vérifie qu’il s’agit d’un fichier MP4 ou MOV lisible.",
       "unknown": "L’envoi n’a pas pu être terminé. Réessaie.",
       "quota_exceeded": "Tu as utilisé toutes tes analyses de match complet pour cette période.",
-      "plan_limit": "Cette vidéo dépasse la limite de taille ou de durée de ton offre."
+      "plan_limit": "Cette vidéo dépasse la limite de taille ou de durée de ton offre.",
+      "analysis_unavailable": "L'analyse vidéo n'est pas encore disponible, rien n'a donc été envoyé. Tu peux toujours enregistrer tes matchs et suivre ta progression."
     },
     "rejection": {
       "not_video": "Ce fichier n’est pas une vidéo. Choisis un enregistrement MP4 ou MOV.",

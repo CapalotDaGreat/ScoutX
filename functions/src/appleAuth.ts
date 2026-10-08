@@ -4,7 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
-import { runAccountDeletion, type DeletionDeps } from './dataRights/deletion';
+import { assertDeletionAuthorized, runAccountDeletion, type DeletionDeps } from './dataRights/deletion';
 import {
   exchangeAppleAuthorizationCode,
   type AppleAuthSecrets,
@@ -166,9 +166,11 @@ export const deleteAuthenticatedAccount = onCall(
   }),
   async (request) => {
     const uid = requireAuthUid(request.auth?.uid);
-    const outcome = await runAccountDeletion(getFirestore(), uid, accountDeletionDeps);
+    const db = getFirestore();
+    await assertDeletionAuthorized(db, uid, request.auth?.token);
+    const outcome = await runAccountDeletion(db, uid, accountDeletionDeps);
     if (outcome.status === 'failed') {
-      throw new HttpsError('aborted', 'Account deletion did not finish. Please try again.', {
+      throw new HttpsError('aborted', "We couldn't complete account deletion. Please try again.", {
         reason: 'deletion_incomplete',
         step: outcome.step,
       });

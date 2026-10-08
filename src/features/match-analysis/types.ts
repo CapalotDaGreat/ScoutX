@@ -32,6 +32,7 @@ export const MATCH_ANALYSIS_ERROR_CODES = [
   'extraction_failed',
   'queue_unavailable',
   'video_rejected',
+  'ai_privacy_configuration_required',
 ] as const;
 export type MatchAnalysisErrorCode = (typeof MATCH_ANALYSIS_ERROR_CODES)[number];
 

@@ -184,7 +184,8 @@
       "rejected": "The video could not be accepted. Check that it is a playable MP4 or MOV file.",
       "unknown": "The upload could not be completed. Please try again.",
       "quota_exceeded": "You have used all full-match analyses for this period.",
-      "plan_limit": "This video is over your plan's size or length limit."
+      "plan_limit": "This video is over your plan's size or length limit.",
+      "analysis_unavailable": "Video analysis isn't available yet, so nothing was uploaded. You can still log matches and track your development."
     },
     "rejection": {
       "not_video": "This file is not a video. Pick an MP4 or MOV recording.",

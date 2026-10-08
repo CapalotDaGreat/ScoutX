@@ -28,7 +28,13 @@ entitlements, staff powers, account deletion and export, notification channel.
 | T14 | Repudiation: staff abuse | Moderation | Append-only `adminAuditLog`, no client access | `moderation.test.mjs` | Low |
 | T15 | Spam: forged activities / pushes to other users | Notification channel | Server-written activities; delivery refuses client-forged copy | `pushChain.test.mjs` | Low |
 | T16 | Elevation: deep link opens protected screen without sign-in | App screens | Resolver auth gate and id validation | `deepLinkResolver.test.ts`, `notifyLinksRecovery.test.ts` | Low |
-| T17 | Account takeover then deletion | Account | Firebase Auth; export requires a sign-in within 10 minutes | `dataRights.test.mjs` | Medium: deletion has no server-side recent sign-in check |
+| T17 | Account takeover then deletion | Account | Server requires a sign-in within 5 minutes for `deleteAuthenticatedAccount` and for tightening an existing age band to under-13 (`security/recentAuth.ts`); a deletion started with a fresh sign-in may resume for 24 h; anonymous guests exempt (no credential). Export requires 10 minutes | `deletionAuth.test.mjs`, `deletionAuth.test.ts`, `dataRights.test.mjs` | Low |
 | T18 | Grooming through scout contact | Minors | No DMs; guardian scope for contact; guardian notified; trial co-approval; priority reports | `requestCenter.test.mjs` | Medium; see incident response |
 | T19 | Webhook forgery | Entitlements | Shared secret check, idempotent receipts | `entitlements.test.mjs` | Low |
 | T20 | Supply chain | App and functions | Lockfiles, `npm audit` review | `dependency-audit.md` | Medium |
+| T21 | Race: one guardian link used twice at once (approve + decline) | Guardian consent | Link hash compared and cleared inside a Firestore transaction | `guardianFlow.test.mjs` "used twice at the same time" | Low |
+| T22 | Weak guardian link secret | Guardian consent | Secrets under 32 characters are refused (links disabled, error logged) | code review | Low |
+| T23 | Footage of minors sent to an unreviewed AI provider | Media, minors | Footage analysis and analysis uploads refused until `AI_FOOTAGE_PROCESSING_APPROVED=true` | `aiPrivacyGate.test.ts` | Low in code; provider review EXTERNAL |
+| T24 | API key exfiltration via a misconfigured base URL | AI credentials | Deployed functions accept only `https://` overrides of `OPENROUTER_BASE_URL` | `aiPrivacyGate.test.ts` | Low |
+
+Minor-safety and privacy threat models: `threat-model-minor-safety.md`, `threat-model-privacy.md`.

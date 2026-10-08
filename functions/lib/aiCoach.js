@@ -203,7 +203,9 @@ exports.generateAiInsight = (0, https_1.onCall)((0, callableOptions_1.createCall
     await (0, consentGate_1.assertAiConsent)([uid, contextPlayerId]);
     const apiKey = openRouterApiKey.value();
     if (!apiKey) {
-        throw new https_1.HttpsError('failed-precondition', 'OpenRouter API key is not configured.');
+        throw new https_1.HttpsError('failed-precondition', 'AI coaching is not available right now. Please try again later.', {
+            reason: 'model_unavailable',
+        });
     }
     const model = (0, providerConfig_1.resolveModel)('text');
     const prompt = buildInsightPrompt(insightType, context);

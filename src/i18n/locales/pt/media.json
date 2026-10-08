@@ -184,7 +184,8 @@
       "rejected": "Não foi possível aceitar o vídeo. Verifica se é um ficheiro MP4 ou MOV reproduzível.",
       "unknown": "Não foi possível concluir o envio. Tenta novamente.",
       "quota_exceeded": "Já usaste todas as análises de jogo completo deste período.",
-      "plan_limit": "Este vídeo excede o limite de tamanho ou duração do teu plano."
+      "plan_limit": "Este vídeo excede o limite de tamanho ou duração do teu plano.",
+      "analysis_unavailable": "A análise de vídeo ainda não está disponível, por isso nada foi carregado. Podes continuar a registar jogos e acompanhar a tua evolução."
     },
     "rejection": {
       "not_video": "Este ficheiro não é um vídeo. Escolhe uma gravação MP4 ou MOV.",

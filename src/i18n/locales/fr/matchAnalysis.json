@@ -266,7 +266,8 @@
     "ai_consent_required": "L'analyse IA est désactivée. Active-la dans le Centre de confidentialité pour analyser des vidéos.",
     "extraction_failed": "Impossible d'extraire des images clés de cette vidéo.",
     "queue_unavailable": "L'analyse n'a pas pu être mise en file d'attente. Réessaie dans quelques minutes.",
-    "video_rejected": "Cette vidéo n'a pas passé les contrôles de format et de durée."
+    "video_rejected": "Cette vidéo n'a pas passé les contrôles de format et de durée.",
+    "ai_privacy_configuration_required": "L'analyse vidéo n'est pas encore disponible. Tu peux toujours enregistrer tes matchs et suivre ta progression."
   },
   "pipeline": {
     "title": "Analyse en cours",

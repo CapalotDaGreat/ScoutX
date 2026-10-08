@@ -130,9 +130,11 @@ exports.deleteAuthenticatedAccount = (0, https_1.onCall)((0, callableOptions_1.c
     timeoutSeconds: 540,
 }), async (request) => {
     const uid = requireAuthUid(request.auth?.uid);
-    const outcome = await (0, deletion_1.runAccountDeletion)((0, firestore_1.getFirestore)(), uid, exports.accountDeletionDeps);
+    const db = (0, firestore_1.getFirestore)();
+    await (0, deletion_1.assertDeletionAuthorized)(db, uid, request.auth?.token);
+    const outcome = await (0, deletion_1.runAccountDeletion)(db, uid, exports.accountDeletionDeps);
     if (outcome.status === 'failed') {
-        throw new https_1.HttpsError('aborted', 'Account deletion did not finish. Please try again.', {
+        throw new https_1.HttpsError('aborted', "We couldn't complete account deletion. Please try again.", {
             reason: 'deletion_incomplete',
             step: outcome.step,
         });

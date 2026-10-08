@@ -25,8 +25,7 @@ const ENV_KEYS: Record<ModelPurpose, readonly string[]> = {
 
 /** Extra allowlisted ids for local emulator tests only; ignored in deployed functions. */
 function testAllowlist(): string[] {
-  const isEmulated = process.env.FUNCTIONS_EMULATOR === 'true' || Boolean(process.env.FIRESTORE_EMULATOR_HOST);
-  return isEmulated ? (process.env.OPENROUTER_TEST_MODELS ?? '').split(',').map((id) => id.trim()).filter(Boolean) : [];
+  return isEmulated(process.env) ? (process.env.OPENROUTER_TEST_MODELS ?? '').split(',').map((id) => id.trim()).filter(Boolean) : [];
 }
 
 export function resolveModel(purpose: ModelPurpose, env: NodeJS.ProcessEnv = process.env): string {
@@ -38,8 +37,26 @@ export function resolveModel(purpose: ModelPurpose, env: NodeJS.ProcessEnv = pro
   return DEFAULT_MODEL[purpose];
 }
 
+const DEFAULT_BASE_URL = 'https://openrouter.ai/api/v1';
+
+function isEmulated(env: NodeJS.ProcessEnv): boolean {
+  return env.FUNCTIONS_EMULATOR === 'true' || Boolean(env.FIRESTORE_EMULATOR_HOST);
+}
+
+/** The API key travels to this URL, so deployed functions only accept HTTPS overrides. */
 export function resolveBaseUrl(env: NodeJS.ProcessEnv = process.env): string {
-  return env.OPENROUTER_BASE_URL?.trim() || 'https://openrouter.ai/api/v1';
+  const override = env.OPENROUTER_BASE_URL?.trim();
+  if (!override) return DEFAULT_BASE_URL;
+  return override.startsWith('https://') || isEmulated(env) ? override : DEFAULT_BASE_URL;
+}
+
+/**
+ * Match footage (frames of players, often minors) is only sent to the AI provider after the
+ * operator has completed the provider privacy review and set `AI_FOOTAGE_PROCESSING_APPROVED=true`.
+ * Until then deployed functions refuse footage analysis (AI_PRIVACY_CONFIGURATION_REQUIRED).
+ */
+export function isFootageProcessingApproved(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.AI_FOOTAGE_PROCESSING_APPROVED?.trim() === 'true' || isEmulated(env);
 }
 
 export type ChatMessage =

@@ -223,7 +223,9 @@ export const generateAiInsight = onCall(
 
     const apiKey = openRouterApiKey.value();
     if (!apiKey) {
-      throw new HttpsError('failed-precondition', 'OpenRouter API key is not configured.');
+      throw new HttpsError('failed-precondition', 'AI coaching is not available right now. Please try again later.', {
+        reason: 'model_unavailable',
+      });
     }
 
     const model = resolveModel('text');

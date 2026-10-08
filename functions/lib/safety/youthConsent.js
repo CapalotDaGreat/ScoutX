@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onTrialInvitationCreatedGuardian = exports.revokeGuardianConsent = exports.respondGuardianConsent = exports.getGuardianConsentRequest = exports.requestGuardianConsent = exports.setAgeBand = void 0;
+exports.onTrialInvitationUpdatedGuardian = exports.GUARDIAN_APPROVED_TRIAL_FIELDS = exports.onTrialInvitationCreatedGuardian = exports.revokeGuardianConsent = exports.respondGuardianConsent = exports.getGuardianConsentRequest = exports.requestGuardianConsent = exports.setAgeBand = void 0;
+exports.trialDetailsChanged = trialDetailsChanged;
 exports.notifyGuardianOfScoutContact = notifyGuardianOfScoutContact;
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
@@ -17,13 +18,30 @@ const guardianLinkSecret = (0, params_1.defineSecret)('GUARDIAN_LINK_SECRET');
 const CONSENT_VALIDITY_MS = 365 * 24 * 60 * 60 * 1000;
 const MAX_REQUESTS_PER_DAY = 3;
 const DAY_MS = 24 * 60 * 60 * 1000;
+/** HMAC key for guardian links; anything shorter than 32 characters is treated as not configured. */
+const MIN_LINK_SECRET_LENGTH = 32;
 function linkSecret() {
     const value = guardianLinkSecret.value();
-    if (value)
+    if (value && value.length >= MIN_LINK_SECRET_LENGTH)
         return value;
     if (process.env.FUNCTIONS_EMULATOR === 'true')
         return 'scoutx-emulator-only-guardian-secret';
+    if (value)
+        firebase_functions_1.logger.error('GUARDIAN_LINK_SECRET is too short; guardian links are disabled');
     throw new https_1.HttpsError('failed-precondition', 'Guardian links are not configured.');
+}
+/**
+ * Applies `update` only if `field` still holds this link's hash, inside a transaction, so two
+ * simultaneous uses of one link cannot both succeed.
+ */
+async function updateIfLinkUnused(db, ref, field, tokenHash, update) {
+    await db.runTransaction(async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists || snap.get(field) !== tokenHash) {
+            throw new https_1.HttpsError('permission-denied', 'This link has already been used or is no longer valid.');
+        }
+        tx.update(ref, update);
+    });
 }
 function requireUid(uid) {
     if (!uid)
@@ -54,9 +72,13 @@ exports.setAgeBand = (0, https_1.onCall)((0, callableOptions_1.createCallableOpt
         throw new https_1.HttpsError('failed-precondition', 'Your age group can only be changed by PitchProof support.');
     }
     if (ageBand === 'under13') {
+        // Choosing an age band for the first time is part of sign-up. Tightening an existing band to
+        // under-13 deletes an established account, so it needs the same recent sign-in as deletion.
+        if (existing?.ageBand)
+            await (0, deletion_1.assertDeletionAuthorized)(db, uid, request.auth?.token);
         const outcome = await (0, deletion_1.runAccountDeletion)(db, uid, appleAuth_1.accountDeletionDeps);
         if (outcome.status === 'failed') {
-            throw new https_1.HttpsError('aborted', 'Account deletion did not finish. Please try again.', { reason: 'deletion_incomplete' });
+            throw new https_1.HttpsError('aborted', "We couldn't complete account deletion. Please try again.", { reason: 'deletion_incomplete' });
         }
         return { ageBand, deleted: true };
     }
@@ -154,14 +176,14 @@ async function resolveToken(db, token) {
         if (!trial.exists || trial.get('guardianTokenHash') !== tokenHash) {
             throw new https_1.HttpsError('permission-denied', 'This link has already been used or is no longer valid.');
         }
-        return { kind: 'trial', payload, trial };
+        return { kind: 'trial', payload, tokenHash, trial };
     }
     const consent = await db.collection('youthConsents').doc(payload.ref).get();
     const field = payload.purpose === 'consent' ? 'tokenHash' : 'revokeTokenHash';
     if (!consent.exists || consent.get(field) !== tokenHash) {
         throw new https_1.HttpsError('permission-denied', 'This link has already been used or is no longer valid.');
     }
-    return { kind: payload.purpose, payload, consent };
+    return { kind: payload.purpose, payload, tokenHash, consent };
 }
 /** Hosting page calls this without an account; the signed token is the only credential. */
 const publicGuardianOptions = (0, callableOptions_1.createCallableOptions)({ secrets: [guardianLinkSecret], enforceAppCheck: false });
@@ -223,7 +245,7 @@ exports.respondGuardianConsent = (0, https_1.onCall)(publicGuardianOptions, asyn
             });
             update.updatedAt = now;
         }
-        await resolved.trial.ref.update(update);
+        await updateIfLinkUnused(db, resolved.trial.ref, 'guardianTokenHash', resolved.tokenHash, update);
         return { ok: true, guardianApproval: update.guardianApproval };
     }
     const consent = resolved.consent.data() ?? {};
@@ -232,7 +254,7 @@ exports.respondGuardianConsent = (0, https_1.onCall)(publicGuardianOptions, asyn
     if (decision === 'revoke') {
         if (resolved.kind !== 'revoke')
             throw new https_1.HttpsError('invalid-argument', 'Use the link from your confirmation email.');
-        await resolved.consent.ref.update({
+        await updateIfLinkUnused(db, resolved.consent.ref, 'revokeTokenHash', resolved.tokenHash, {
             status: 'revoked',
             scopes: [],
             revokedAt: now,
@@ -246,7 +268,7 @@ exports.respondGuardianConsent = (0, https_1.onCall)(publicGuardianOptions, asyn
     if (decision === 'decline') {
         if (resolved.kind !== 'consent')
             throw new https_1.HttpsError('invalid-argument', 'Use revoke to withdraw consent.');
-        await resolved.consent.ref.update({
+        await updateIfLinkUnused(db, resolved.consent.ref, 'tokenHash', resolved.tokenHash, {
             status: 'declined',
             tokenHash: null,
             updatedAt: now,
@@ -267,7 +289,8 @@ exports.respondGuardianConsent = (0, https_1.onCall)(publicGuardianOptions, asyn
         purpose: 'revoke',
         exp: Date.now() + guardianToken_1.GUARDIAN_REVOKE_TTL_MS,
     });
-    await resolved.consent.ref.update({
+    const linkField = resolved.kind === 'consent' ? 'tokenHash' : 'revokeTokenHash';
+    await updateIfLinkUnused(db, resolved.consent.ref, linkField, resolved.tokenHash, {
         status: 'approved',
         scopes,
         tokenHash: null,
@@ -328,28 +351,61 @@ exports.onTrialInvitationCreatedGuardian = (0, firestore_2.onDocumentCreated)({ 
         return;
     const db = (0, firestore_1.getFirestore)();
     const state = await (0, userSafety_1.loadSafetyState)(trial.playerId, db);
-    if (state?.ageBand !== '13-17')
+    if (state?.ageBand !== '13-17' || !event.data)
         return;
-    const token = (0, guardianToken_1.createGuardianToken)(linkSecret(), {
-        ref: event.params.trialId,
-        purpose: 'trial',
-        exp: Date.now() + guardianToken_1.GUARDIAN_LINK_TTL_MS,
-    });
-    await event.data?.ref.update({ guardianApproval: 'pending', guardianTokenHash: (0, guardianToken_1.hashToken)(token) });
-    const contact = (await db.collection('guardianContacts').doc(trial.playerId).get()).data() ?? {};
+    await requestTrialGuardianApproval(db, event.data.ref, trial, {});
+});
+/** What a guardian approved; changing any of these needs a new approval. */
+exports.GUARDIAN_APPROVED_TRIAL_FIELDS = ['club', 'coach', 'location', 'scheduledDate', 'scoutId'];
+function trialDetailsChanged(before, after) {
+    return exports.GUARDIAN_APPROVED_TRIAL_FIELDS.some((field) => before[field] !== after[field]);
+}
+async function requestTrialGuardianApproval(db, ref, trial, extra) {
+    const token = (0, guardianToken_1.createGuardianToken)(linkSecret(), { ref: ref.id, purpose: 'trial', exp: Date.now() + guardianToken_1.GUARDIAN_LINK_TTL_MS });
+    await ref.update({ guardianApproval: 'pending', guardianTokenHash: (0, guardianToken_1.hashToken)(token), guardianDecidedAt: null, ...extra });
+    const contact = (await db.collection('guardianContacts').doc(String(trial.playerId)).get()).data() ?? {};
     if (typeof contact.email !== 'string') {
-        firebase_functions_1.logger.warn('Minor trial without guardian contact', { trialId: event.params.trialId });
+        firebase_functions_1.logger.warn('Minor trial without guardian contact', { trialId: ref.id });
         return;
     }
     await (0, userSafety_1.queueMail)(db, {
         to: contact.email,
-        uid: trial.playerId,
+        uid: String(trial.playerId),
         purpose: 'guardian_trial',
         ...(0, userSafety_1.guardianEmail)('trial', {
             firstName: typeof contact.firstName === 'string' ? contact.firstName : 'your child',
             club: typeof trial.club === 'string' ? trial.club.slice(0, 80) : undefined,
             link: guardianLink(token),
         }),
+    });
+}
+/**
+ * A guardian approves a specific trial (club, coach, place, date, scout). If the scout changes
+ * any of that afterwards, the approval no longer applies: it goes back to pending, an accepted
+ * trial returns to pending, and the guardian gets a new link.
+ */
+exports.onTrialInvitationUpdatedGuardian = (0, firestore_2.onDocumentUpdated)({ document: 'trialInvitations/{trialId}', secrets: [guardianLinkSecret] }, async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+    if (!before || !after || !event.data)
+        return;
+    if (before.guardianApproval == null || !trialDetailsChanged(before, after))
+        return;
+    if (after.status === 'declined' || after.status === 'cancelled')
+        return;
+    const now = new Date().toISOString();
+    await requestTrialGuardianApproval((0, firestore_1.getFirestore)(), event.data.after.ref, after, {
+        ...(after.status === 'accepted' ? { status: 'pending' } : {}),
+        history: firestore_1.FieldValue.arrayUnion({
+            id: `guardian-reapproval-${now}`,
+            action: 'note_added',
+            actorId: 'system',
+            actorName: 'PitchProof',
+            actorRole: 'system',
+            timestamp: now,
+            note: 'Trial details changed; waiting for parent or guardian approval again',
+        }),
+        updatedAt: now,
     });
 });
 /** Informs the guardian of a minor when a scout contacts them through PitchProof. */

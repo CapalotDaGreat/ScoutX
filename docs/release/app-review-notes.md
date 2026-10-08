@@ -2,6 +2,11 @@
 
 Fill in every `<…>` before pasting. Keep the credentials current for every submission.
 
+Before submitting: these notes describe uploading a video and AI analysis. That only works once
+`AI_FOOTAGE_PROCESSING_APPROVED=true` is set after the AI provider privacy review. If it is not set,
+remove the upload / AI analysis sentences below (and from the screen recording), or the reviewer will
+see "Video analysis isn't available yet" for a feature the notes promise.
+
 ---
 
 **1. Screen recording**

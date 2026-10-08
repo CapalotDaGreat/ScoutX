@@ -266,7 +266,8 @@
     "ai_consent_required": "Die KI-Analyse ist ausgeschaltet. Aktiviere sie im Datenschutz-Center, um Videos zu analysieren.",
     "extraction_failed": "Aus diesem Video konnten keine Schlüsselbilder extrahiert werden.",
     "queue_unavailable": "Die Analyse konnte nicht eingereiht werden. Versuche es in ein paar Minuten erneut.",
-    "video_rejected": "Dieses Video hat die Format- und Längenprüfung nicht bestanden."
+    "video_rejected": "Dieses Video hat die Format- und Längenprüfung nicht bestanden.",
+    "ai_privacy_configuration_required": "Die Videoanalyse ist noch nicht verfügbar. Du kannst weiterhin Spiele erfassen und deine Entwicklung verfolgen."
   },
   "pipeline": {
     "title": "Analyse läuft",

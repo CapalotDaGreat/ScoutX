@@ -8,7 +8,8 @@ import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { Card } from '@/components/primitives/Card';
 import { SafetySettingsSection } from '@/features/youth-safety/components/SafetySettingsSection';
 import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
-import { deleteCurrentAccount } from '@/features/auth/services/accountService';
+import { DeleteAccountReauthModal, deletionErrorKey } from '@/features/auth/components/DeleteAccountReauthModal';
+import { useAccountDeletion } from '@/features/auth/hooks/useAccountDeletion';
 import { DeletionProgressCard } from '@/features/data-rights/components/DeletionProgressCard';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useNotificationPreferences } from '@/features/notifications/hooks/useNotificationPreferences';
@@ -85,8 +86,7 @@ export function SettingsScreen({
     setLockScreenPreference,
   } = useNotificationPreferences(user?.uid);
   const { policy: safetyPolicy } = useUserSafety();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const deletion = useAccountDeletion(user && !user.isAnonymous ? user.uid : null);
   const appVersion = getAppVersion();
 
   const handleDeleteAccount = () => {
@@ -99,19 +99,7 @@ export function SettingsScreen({
       {
         text: t('delete', { ns: 'common' }),
         style: 'destructive',
-        onPress: () => {
-          setIsDeleting(true);
-          setDeleteError(null);
-          void deleteCurrentAccount(user.uid)
-            .catch((error) => {
-              setDeleteError(
-                toUserMessage(error, t('errors:deleteAccount')),
-              );
-            })
-            .finally(() => {
-              setIsDeleting(false);
-            });
-        },
+        onPress: () => void deletion.run(),
       },
     ]);
   };
@@ -311,15 +299,28 @@ export function SettingsScreen({
             <Text variant="body-sm" color="secondary">
               {t('settings:deleteAccountDescription')}
             </Text>
-            {isDeleting && user?.uid ? <DeletionProgressCard uid={user.uid} /> : null}
-            {deleteError ? (
-              <Text variant="body-sm" color="error">
-                {deleteError}
-              </Text>
+            {deletion.phase === 'deleting' && user?.uid ? <DeletionProgressCard uid={user.uid} /> : null}
+            {deletion.error && deletion.phase === 'idle' ? (
+              <View className="gap-2" testID="delete-account-error">
+                <Text variant="body-sm" color="error">
+                  {t(`auth:${deletionErrorKey(deletion.error)}`)}
+                </Text>
+                <Button variant="secondary" onPress={() => void deletion.run()}>
+                  {t('auth:deletion.retry')}
+                </Button>
+              </View>
             ) : null}
-            <Button variant="ghost" loading={isDeleting} onPress={handleDeleteAccount}>
+            <Button variant="ghost" loading={deletion.busy} onPress={handleDeleteAccount}>
               {t('settings:deleteAccount')}
             </Button>
+            <DeleteAccountReauthModal
+              visible={deletion.phase === 'reauth' || deletion.phase === 'reauthenticating'}
+              methods={deletion.methods}
+              busy={deletion.phase === 'reauthenticating'}
+              error={deletion.error}
+              onConfirm={(method, password) => void deletion.confirmReauth(method, password)}
+              onCancel={deletion.cancelReauth}
+            />
           </Card>
         ) : null}
       </View>

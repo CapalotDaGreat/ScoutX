@@ -266,7 +266,8 @@
     "ai_consent_required": "A análise por IA está desligada. Ativa-a no Centro de Privacidade para analisar vídeos.",
     "extraction_failed": "Não foi possível extrair imagens-chave deste vídeo.",
     "queue_unavailable": "Não foi possível colocar a análise na fila. Tenta novamente dentro de alguns minutos.",
-    "video_rejected": "Este vídeo não passou nas verificações de formato e duração."
+    "video_rejected": "Este vídeo não passou nas verificações de formato e duração.",
+    "ai_privacy_configuration_required": "A análise de vídeo ainda não está disponível. Podes continuar a registar jogos e acompanhar a tua evolução."
   },
   "pipeline": {
     "title": "Análise em curso",

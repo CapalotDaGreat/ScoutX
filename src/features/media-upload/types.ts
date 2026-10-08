@@ -77,6 +77,7 @@ export type UploadErrorCode =
   | 'not_allowed'
   | 'file_missing'
   | 'rejected'
+  | 'analysis_unavailable'
   | 'unknown';
 
 export type UploadViewState = {
@@ -179,6 +180,7 @@ const SERVER_REASONS: Record<string, UploadErrorCode> = {
   too_small: 'unsupported_type',
   duration: 'too_long',
   content_type: 'unsupported_type',
+  ai_privacy_configuration_required: 'analysis_unavailable',
 };
 
 export class UploadFileMissingError extends Error {

@@ -184,7 +184,8 @@
       "rejected": "De video kon niet worden geaccepteerd. Controleer of het een afspeelbaar MP4- of MOV-bestand is.",
       "unknown": "De upload kon niet worden voltooid. Probeer het opnieuw.",
       "quota_exceeded": "Je hebt alle volledige wedstrijdanalyses voor deze periode gebruikt.",
-      "plan_limit": "Deze video gaat over de grootte- of lengtelimiet van je abonnement."
+      "plan_limit": "Deze video gaat over de grootte- of lengtelimiet van je abonnement.",
+      "analysis_unavailable": "Videoanalyse is nog niet beschikbaar, dus er is niets geüpload. Je kunt nog steeds wedstrijden vastleggen en je ontwikkeling volgen."
     },
     "rejection": {
       "not_video": "Dit bestand is geen video. Kies een MP4- of MOV-opname.",

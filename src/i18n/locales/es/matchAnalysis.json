@@ -266,7 +266,8 @@
     "ai_consent_required": "El análisis con IA está desactivado. Actívalo en el Centro de privacidad para analizar vídeos.",
     "extraction_failed": "No se pudieron extraer fotogramas clave de este vídeo.",
     "queue_unavailable": "No se pudo poner el análisis en cola. Inténtalo de nuevo en unos minutos.",
-    "video_rejected": "Este vídeo no superó las comprobaciones de formato y duración."
+    "video_rejected": "Este vídeo no superó las comprobaciones de formato y duración.",
+    "ai_privacy_configuration_required": "El análisis de vídeo aún no está disponible. Puedes seguir registrando partidos y siguiendo tu desarrollo."
   },
   "pipeline": {
     "title": "Análisis en curso",
