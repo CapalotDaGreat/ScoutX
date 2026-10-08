@@ -6,7 +6,7 @@ launch. Where this repo cannot know a value, it says so instead of guessing.
 
 | Processor | Service | Data | Location | Transfer safeguard | Contract status |
 | --- | --- | --- | --- | --- | --- |
-| Google (Firebase, Google Cloud) | Auth, Firestore, Storage, Cloud Functions, Cloud Tasks, Hosting, App Check | All of D1–D17, D19–D21 | Region set at project creation; EXTERNAL CONFIGURATION REQUIRED to confirm (Functions default `us-central1`) | Google Cloud DPA with SCCs; Swiss-US DPF certification to verify | Accept Cloud DPA in console |
+| Google (Firebase, Google Cloud) | Auth, Firestore, Storage, Cloud Functions, Cloud Tasks, Hosting, App Check | All of D1–D17, D19–D21 | Firestore, Storage, Cloud Functions and Cloud Tasks in `europe-west6` (Zurich), set 2026-10-08. Firebase Auth, Hosting CDN and App Check are global services | Google Cloud DPA with SCCs; Swiss-US DPF certification to verify | Accept Cloud DPA in console |
 | OpenRouter | AI request routing | Extracted frames, prompt text, match context the user asked to analyse | United States | Contract to confirm. Every request sends `provider: { data_collection: 'deny', zdr: true }` (`functions/src/ai/providerConfig.ts`) | ZDR availability for the chosen vision model NOT VALIDATED |
 | Model providers routed by OpenRouter | Inference | Same as OpenRouter | Varies per provider | Only providers that honour `data_collection: deny` and ZDR are eligible | Depends on OpenRouter routing |
 | Sentry (Functional Software Inc.) | Crash and performance diagnostics | Scrubbed crash reports, device model, OS, app version | US or EU, depending on the organisation's data region | Sentry DPA | EXTERNAL CONFIGURATION REQUIRED |

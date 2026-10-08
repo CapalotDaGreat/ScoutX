@@ -62,7 +62,7 @@ Legal entity (fixed): CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switz
 
 - [ ] Entitlement `pitchproven`; products `PitchProven_Monthly`, `PitchProven_Yearly` in the current offering
 - [ ] Paywall on the offering, Customer Center enabled
-- [ ] Webhook to `https://us-central1-scoutx-230b0.cloudfunctions.net/revenueCatWebhook` with the `REVENUECAT_WEBHOOK_SECRET` authorization header
+- [ ] Webhook to `https://europe-west6-scoutx-230b0.cloudfunctions.net/revenueCatWebhook` with the `REVENUECAT_WEBHOOK_SECRET` authorization header
 - [ ] Production `appl_` key as `EXPO_PUBLIC_REVENUECAT_IOS_KEY` in EAS production env
 - [ ] Decide whether sandbox events may grant premium in production (owner decision)
 

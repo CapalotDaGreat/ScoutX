@@ -97,15 +97,15 @@
     "rewrites": [
       {
         "source": "/api/guardian/get",
-        "function": { "functionId": "getGuardianConsentRequest", "region": "us-central1" }
+        "function": { "functionId": "getGuardianConsentRequest", "region": "europe-west6" }
       },
       {
         "source": "/api/guardian/respond",
-        "function": { "functionId": "respondGuardianConsent", "region": "us-central1" }
+        "function": { "functionId": "respondGuardianConsent", "region": "europe-west6" }
       },
       {
         "source": "/api/report",
-        "function": { "functionId": "submitPublicReport", "region": "us-central1" }
+        "function": { "functionId": "submitPublicReport", "region": "europe-west6" }
       },
       {
         "source": "/auth/action",

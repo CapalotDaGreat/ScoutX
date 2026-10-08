@@ -81,7 +81,7 @@ export async function registerAccount(page: Page, name: string, prefix: string):
 
 // Emulator REST access for assertions. "Bearer owner" bypasses rules and only works on the emulator.
 const FIRESTORE = `http://127.0.0.1:8080/v1/projects/${accounts.projectId}/databases/(default)/documents`;
-const FUNCTIONS = `http://127.0.0.1:5001/${accounts.projectId}/us-central1`;
+const FUNCTIONS = `http://127.0.0.1:5001/${accounts.projectId}/europe-west6`;
 
 type FirestoreValue = {
   stringValue?: string;

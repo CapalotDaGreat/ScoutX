@@ -3,9 +3,11 @@
 Every item here maps to a rejection seen on an earlier app (TradeAcademy, Sept–Oct 2026) or to a
 common App Review guideline. Work top to bottom; later steps depend on earlier ones.
 
-Status on 2026-10-08: the production Firebase project `scoutx-230b0` has **no Firestore database
-and no Cloud Functions** (both APIs disabled). Any build submitted before section 1 is done fails at
-registration, which is exactly the TradeAcademy 2.1(a) rejection.
+Status on 2026-10-08: `scoutx-230b0` is on Blaze. APIs enabled; Firestore `(default)` and the
+Storage bucket created in `europe-west6` (Zurich); all functions run in `europe-west6`. Secrets set:
+`GUARDIAN_LINK_SECRET`, `REVENUECAT_WEBHOOK_SECRET`, `OPENROUTER_API_KEY`, `APPLE_TEAM_ID`.
+`APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` and `ADMIN_USER_IDS` exist but are blank (treated as not
+configured) until real values are provided. Still open in section 1: steps 4, 5, 7, 9, 10.
 
 ## 1. Backend (Guideline 2.1(a): "error message after tapping Enter")
 
@@ -49,7 +51,7 @@ registration, which is exactly the TradeAcademy 2.1(a) rejection.
 9. Hosting → Add custom domain `pitchproof.online` and `www.pitchproof.online`; add the DNS records
    at the registrar and wait for the certificate. Then check that
    `https://pitchproof.online/privacy/`, `/support/` and `/.well-known/apple-app-site-association` load.
-10. RevenueCat → Integrations → Webhooks: `https://us-central1-scoutx-230b0.cloudfunctions.net/revenueCatWebhook`,
+10. RevenueCat → Integrations → Webhooks: `https://europe-west6-scoutx-230b0.cloudfunctions.net/revenueCatWebhook`,
     authorization header = the `REVENUECAT_WEBHOOK_SECRET` value.
 
 ## 2. App configuration

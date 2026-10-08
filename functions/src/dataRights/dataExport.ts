@@ -5,6 +5,7 @@ import { logger } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { createCallableOptions } from '../callableOptions';
+import { taskQueueName } from '../region';
 import { DAY_MS, RETENTION, addDays } from './retention';
 
 export const EXPORT_COLLECTION = 'dataExports';
@@ -21,7 +22,7 @@ export interface ExportQueue {
 
 const cloudTasksExportQueue: ExportQueue = {
   async enqueue(exportId) {
-    await getFunctions().taskQueue('buildDataExport').enqueue({ exportId }, { dispatchDeadlineSeconds: 1800 });
+    await getFunctions().taskQueue(taskQueueName('buildDataExport')).enqueue({ exportId }, { dispatchDeadlineSeconds: 1800 });
   },
 };
 

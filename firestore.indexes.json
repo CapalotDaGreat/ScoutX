@@ -5,16 +5,6 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "updatedAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "discoverablePlayers",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
           "fieldPath": "lastEvidenceAt",
           "order": "DESCENDING"
         },
@@ -252,26 +242,6 @@
         },
         {
           "fieldPath": "active",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "entries",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        {
-          "fieldPath": "playerId",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "scouts",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        {
-          "fieldPath": "scoutId",
           "order": "ASCENDING"
         }
       ]

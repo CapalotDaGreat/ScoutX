@@ -6,6 +6,9 @@ import {
 } from '@/config/firebase';
 import { connectFunctionsEmulatorIfEnabled } from '@/config/firebaseEmulators';
 
+/** Must match FUNCTIONS_REGION in functions/src/region.ts. */
+export const FUNCTIONS_REGION = 'europe-west6';
+
 let functionsClient: Functions | null = null;
 
 export async function getFirebaseFunctionsClient(): Promise<Functions | null> {
@@ -21,7 +24,7 @@ export async function getFirebaseFunctionsClient(): Promise<Functions | null> {
   }
 
   if (!functionsClient) {
-    functionsClient = getFunctions(app);
+    functionsClient = getFunctions(app, FUNCTIONS_REGION);
     connectFunctionsEmulatorIfEnabled(functionsClient);
   }
 

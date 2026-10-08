@@ -1,4 +1,5 @@
 import { getFunctions } from 'firebase-admin/functions';
+import { taskQueueName } from '../region';
 
 export type AnalysisTask =
   | { kind: 'extract_segment'; jobId: string; generation: number; segmentIndex: number }
@@ -17,7 +18,7 @@ export interface TaskDispatcher {
 export const cloudTasksDispatcher: TaskDispatcher = {
   async enqueue(task, options) {
     await getFunctions()
-      .taskQueue(TASK_FUNCTIONS[task.kind])
+      .taskQueue(taskQueueName(TASK_FUNCTIONS[task.kind]))
       .enqueue(task, {
         dispatchDeadlineSeconds: 1800,
         ...(options?.delaySeconds ? { scheduleDelaySeconds: options.delaySeconds } : {}),

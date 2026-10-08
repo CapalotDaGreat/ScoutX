@@ -5,6 +5,7 @@ exports.getTaskDispatcher = getTaskDispatcher;
 exports.setTaskDispatcher = setTaskDispatcher;
 exports.parseAnalysisTask = parseAnalysisTask;
 const functions_1 = require("firebase-admin/functions");
+const region_1 = require("../region");
 exports.TASK_FUNCTIONS = {
     extract_segment: 'extractMatchSegment',
     analyze_frames: 'analyzeMatchFrames',
@@ -13,7 +14,7 @@ exports.TASK_FUNCTIONS = {
 exports.cloudTasksDispatcher = {
     async enqueue(task, options) {
         await (0, functions_1.getFunctions)()
-            .taskQueue(exports.TASK_FUNCTIONS[task.kind])
+            .taskQueue((0, region_1.taskQueueName)(exports.TASK_FUNCTIONS[task.kind]))
             .enqueue(task, {
             dispatchDeadlineSeconds: 1800,
             ...(options?.delaySeconds ? { scheduleDelaySeconds: options.delaySeconds } : {}),

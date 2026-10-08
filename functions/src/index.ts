@@ -1,3 +1,4 @@
+import './region';
 import './authSecurityPolicy';
 import { initializeApp } from 'firebase-admin/app';
 

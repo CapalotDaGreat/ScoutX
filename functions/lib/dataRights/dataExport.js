@@ -12,6 +12,7 @@ const firebase_functions_1 = require("firebase-functions");
 const https_1 = require("firebase-functions/v2/https");
 const tasks_1 = require("firebase-functions/v2/tasks");
 const callableOptions_1 = require("../callableOptions");
+const region_1 = require("../region");
 const retention_1 = require("./retention");
 exports.EXPORT_COLLECTION = 'dataExports';
 /** Sign-in must be this recent to export (the archive contains everything about the account). */
@@ -20,7 +21,7 @@ exports.EXPORT_COOLDOWN_MS = retention_1.DAY_MS;
 const MAX_DOCS_PER_SECTION = 2000;
 const cloudTasksExportQueue = {
     async enqueue(exportId) {
-        await (0, functions_1.getFunctions)().taskQueue('buildDataExport').enqueue({ exportId }, { dispatchDeadlineSeconds: 1800 });
+        await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('buildDataExport')).enqueue({ exportId }, { dispatchDeadlineSeconds: 1800 });
     },
 };
 let exportQueue = cloudTasksExportQueue;

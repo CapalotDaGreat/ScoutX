@@ -20,6 +20,8 @@ playwright-report/
 .env
 .env.local
 .secret.local
+functions/.env.*
+.firebase/
 
 # Firebase native config (download from Firebase Console — never commit)
 google-services.json
