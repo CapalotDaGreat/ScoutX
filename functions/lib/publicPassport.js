@@ -10,6 +10,7 @@ const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const service_1 = require("./footballSources/service");
 const holds_1 = require("./moderation/holds");
 const userSafety_1 = require("./safety/userSafety");
 const PUBLIC_IDENTITY_KEYS = [
@@ -161,6 +162,10 @@ async function projectPassport(playerId, profile) {
     }
     if (passport.highlightVideos !== undefined) {
         passport.highlightVideos = await filterPublicVideos(db, playerId, passport.highlightVideos, policy);
+    }
+    const footballSources = await (0, service_1.loadVisibleSources)(db, playerId, ['passport']);
+    if (footballSources.length > 0) {
+        passport.footballSources = footballSources;
     }
     const matches = Array.isArray(profile?.statisticsMatches) ? profile.statisticsMatches : [];
     const videos = passport.highlightVideos?.videos;

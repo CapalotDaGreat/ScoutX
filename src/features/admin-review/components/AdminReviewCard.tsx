@@ -127,6 +127,11 @@ export function AdminReviewCard({ staffRole }: { staffRole: StaffRole }) {
             <Text variant="caption" color="secondary">
               {t('trust:admin.reportCount', { count: item.reportIds.length })}
             </Text>
+            {item.targetContext ? (
+              <Text variant="caption" color="secondary" selectable>
+                {t('trust:admin.reportedLink', { provider: item.targetContext.providerId, url: item.targetContext.url })}
+              </Text>
+            ) : null}
             {reasonInput(item.id)}
             {item.state === 'appealed' ? (
               <View className="flex-row flex-wrap gap-2">

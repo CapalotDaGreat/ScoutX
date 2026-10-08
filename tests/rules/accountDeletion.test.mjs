@@ -34,6 +34,7 @@ const uidKeyed = [
   'entitlements',
   'usageLedger',
   'accountRestrictions',
+  'scoutFootballSources',
 ];
 
 const ownedByField = [
@@ -123,6 +124,7 @@ before(async () => {
       'identitySnapshots',
       'media',
       'trialReflections',
+      'footballSources',
     ]) {
       await db.collection('players').doc(uid).collection(sub).doc('item-1').set({ owner: uid });
     }
@@ -180,6 +182,7 @@ describe('deleteAllUserData', () => {
       'identitySnapshots',
       'media',
       'trialReflections',
+      'footballSources',
     ]) {
       assert.equal(
         (await db.collection('players').doc(DELETED).collection(sub).get()).size,

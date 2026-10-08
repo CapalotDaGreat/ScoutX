@@ -29,6 +29,7 @@ export const REPORT_TARGET_TYPES = [
   'evidenceRequest',
   'trial',
   'scoutingReport',
+  'external_football_source',
 ] as const;
 
 export type ReportTargetType = (typeof REPORT_TARGET_TYPES)[number];
@@ -73,6 +74,7 @@ const REASONS_BY_TARGET: Record<ReportTargetType, readonly ReportReason[]> = {
   evidenceRequest: CONTACT_REASONS,
   trial: CONTACT_REASONS,
   scoutingReport: CONTACT_REASONS,
+  external_football_source: ['impersonation', 'privacy', 'spam', 'inappropriate', 'safety_concern', 'other'],
 };
 
 export function reportReasonsFor(targetType: ReportTargetType): readonly ReportReason[] {

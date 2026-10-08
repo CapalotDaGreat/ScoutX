@@ -77,7 +77,9 @@
     "videoRestrictedNote": "Meldungen zu Personen oder Kindern in Videos werden zuerst geprüft. Das Video kann während der Prüfung ausgeblendet werden.",
     "passportButton": "Video melden",
     "trialButton": "Diese Einladung melden",
-    "requestButton": "Diese Anfrage melden"
+    "requestButton": "Diese Anfrage melden",
+    "promptSource": "Sag uns, was mit diesem Link nicht stimmt, zum Beispiel wenn er eine andere Person betrifft.",
+    "sourceButton": "Link melden"
   },
   "block": {
     "blockTitle": "Spieler blockieren?",
@@ -176,7 +178,8 @@
     "appeal": {
       "upheld": "Entscheidung beibehalten",
       "overturned": "Entscheidung aufheben"
-    }
+    },
+    "reportedLink": "Gemeldeter Link ({{provider}}): {{url}}"
   },
   "notices": {
     "title": "Entscheidungen zu deinen Inhalten",

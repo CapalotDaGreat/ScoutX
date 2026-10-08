@@ -63,5 +63,85 @@
       "edit_claim": "modificare l'affermazione",
       "record_metric": "registrare la statistica corrispondente"
     }
+  },
+  "footballSources": {
+    "title": "Fonti calcistiche esterne",
+    "sectionSubtitle": "Link alla tua lega, alla tua squadra o al tuo profilo giocatore",
+    "subtitle": "Aggiungi link a pagine che ti riguardano su siti di calcio supportati, ad esempio la classifica della tua lega, la pagina della tua squadra o il tuo profilo giocatore.",
+    "add": "Aggiungi fonte",
+    "empty": "Ancora nessuna fonte. Aggiungi un link alla tua lega, alla tua squadra o al tuo profilo giocatore.",
+    "disclaimer": "Link aggiunto dal giocatore. PitchProof non verifica in modo indipendente le informazioni su questo sito.",
+    "selfReported": "Aggiunto dal giocatore",
+    "open": "Apri link",
+    "openFailedTitle": "Impossibile aprire questo link",
+    "openFailedBody": "Questo sito non è più supportato, quindi il link non può essere aperto dall'app.",
+    "remove": "Rimuovi",
+    "cancel": "Annulla",
+    "removeConfirmTitle": "Rimuovere questa fonte?",
+    "removeConfirmBody": "Il link viene rimosso dal tuo profilo, dal tuo Football Passport e dalla vista degli osservatori.",
+    "visibility": {
+      "label": "Chi può vedere questo link",
+      "private": "Solo io",
+      "passport": "Football Passport",
+      "scouts": "Osservatori"
+    },
+    "visibilityHint": {
+      "private": "Solo tu puoi vedere questo link.",
+      "passport": "Mostrato sul tuo Football Passport pubblico finché è pubblicato, e agli osservatori.",
+      "scouts": "Mostrato agli osservatori finché sei visibile nella ricerca. Non sul tuo Passport pubblico."
+    },
+    "status": {
+      "active": "Attivo",
+      "reported": "In revisione. Nascosto agli altri finché la moderazione non decide.",
+      "hidden": "Nascosto dalla moderazione. Solo tu puoi vederlo.",
+      "removed": "Rimosso dalla moderazione. Puoi eliminarlo."
+    },
+    "types": {
+      "league": "Lega",
+      "team": "Squadra",
+      "player": "Giocatore",
+      "match": "Partita",
+      "competition": "Competizione",
+      "other": "Altro"
+    },
+    "typePrompt": "Cosa mostra questo link?",
+    "addTitle": "Aggiungi fonte calcistica",
+    "urlLabel": "Link (https://)",
+    "urlErrors": {
+      "empty": "Incolla prima un link.",
+      "not_https": "Si possono aggiungere solo link sicuri che iniziano con https://.",
+      "invalid": "Non sembra un link valido. Controllalo e riprova."
+    },
+    "linkOnlyNote": "PitchProof salva solo il link. Non apre, non legge e non copia nulla dal sito.",
+    "continue": "Continua",
+    "unsupportedTitle": "Questo sito non è attualmente supportato",
+    "unsupportedBody": "Si possono aggiungere solo link a siti di calcio supportati. Controlla l'indirizzo o usa una pagina di uno di questi siti.",
+    "supportedList": "Supportati: {{list}}",
+    "back": "Indietro",
+    "foundTitle": "Fonte calcistica trovata",
+    "privateByDefault": "Le nuove fonti sono private. Poi scegli se il tuo Passport o gli osservatori possono vederle.",
+    "confirmAdd": "Aggiungi fonte",
+    "errors": {
+      "duplicate": "Questa fonte è già stata aggiunta.",
+      "limit_reached": "Hai raggiunto il numero massimo di fonti. Rimuovine una per aggiungerne un'altra.",
+      "guardian_scope_required": "Un genitore o tutore deve consentirlo prima che il link possa essere condiviso.",
+      "under_review": "Questo link è in revisione e al momento non può essere condiviso.",
+      "provider_disabled": "Questo sito non è più supportato.",
+      "unsupported_provider": "Questo sito non è attualmente supportato.",
+      "invalid_match": "Partita non trovata.",
+      "unknown": "Qualcosa è andato storto. Riprova."
+    },
+    "matches": {
+      "link": "Collega a partita",
+      "title": "Collega a una partita",
+      "body": "Scegli le partite a cui appartiene questa fonte. I dati della partita restano esattamente come li hai registrati.",
+      "none": "Registra prima una partita, poi potrai collegarle questa fonte.",
+      "confirm": "Salva",
+      "chip": "Fonte: {{provider}}",
+      "linkedCount_one": "Collegata a {{count}} partita",
+      "linkedCount_other": "Collegata a {{count}} partite"
+    },
+    "publicTitle": "Fonti calcistiche",
+    "publicSubtitle": "Link aggiunti dal giocatore a siti di calcio esterni"
   }
 }

@@ -3,6 +3,8 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { SCOUT_FOOTBALL_SOURCES_COLLECTION } from './footballSources/core';
+import { loadVisibleSources } from './footballSources/service';
 import { isAccountHeld } from './moderation/holds';
 import { applyYouthDisplay } from './publicPassport';
 import { loadSafetyPolicy } from './safety/userSafety';
@@ -244,7 +246,7 @@ export function buildDiscoverableProjection(input: {
       typeof input.profile.fullName === 'string' ? input.profile.fullName.toLowerCase() : '',
       ...uniquePositions.map((item) => item.toLowerCase()),
     ].filter(Boolean),
-    username: typeof input.profile.username === 'string' ? input.profile.username : undefined,
+    ...(typeof input.profile.username === 'string' ? { username: input.profile.username } : {}),
   };
 }
 
@@ -257,8 +259,11 @@ export async function projectDiscoverablePlayer(playerId: string): Promise<void>
     loadSafetyPolicy(playerId, db),
   ]);
   const ref = db.collection('discoverablePlayers').doc(playerId);
+  const scoutSourcesRef = db.collection(SCOUT_FOOTBALL_SOURCES_COLLECTION).doc(playerId);
+  const unlist = () =>
+    Promise.all([ref.delete().catch(() => undefined), scoutSourcesRef.delete().catch(() => undefined)]);
   if (!profileSnap.exists || !policy.canBeDiscovered || (await isAccountHeld(playerId, db))) {
-    await ref.delete().catch(() => undefined);
+    await unlist();
     return;
   }
   const profile = profileSnap.data() as ProfileDoc;
@@ -277,9 +282,14 @@ export async function projectDiscoverablePlayer(playerId: string): Promise<void>
     nowIso: new Date().toISOString(),
   });
   if (!projection) {
-    await ref.delete().catch(() => undefined);
+    await unlist();
     return;
   }
+  // Scouts see links the player shared with scouts or on the Passport, only while listed.
+  const scoutSources = await loadVisibleSources(db, playerId, ['passport', 'scouts']);
+  await (scoutSources.length > 0
+    ? scoutSourcesRef.set({ playerId, sources: scoutSources, projectedAt: new Date().toISOString() })
+    : scoutSourcesRef.delete().catch(() => undefined));
   const existing = await ref.get();
   const viewCount = existing.exists ? (existing.data()?.viewCount ?? 0) : 0;
   const display = applyYouthDisplay(projection, policy);

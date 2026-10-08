@@ -31,6 +31,12 @@ export {
   releaseExpiredSuspensions,
 } from './moderation/actions';
 export { onMediaWrittenReproject } from './moderation/reproject';
+export {
+  addExternalFootballSource,
+  updateExternalFootballSource,
+  removeExternalFootballSource,
+  onFootballSourceWrittenReproject,
+} from './footballSources/callables';
 export { createUploadSession, cancelUploadSession, cleanupAbandonedUploads } from './uploads/sessions';
 export { onQuarantineObjectFinalized } from './uploads/quarantine';
 export { confirmRole } from './roleClaims';

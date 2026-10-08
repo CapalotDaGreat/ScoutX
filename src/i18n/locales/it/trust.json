@@ -77,7 +77,9 @@
     "videoRestrictedNote": "Le segnalazioni su persone o minori nei video vengono esaminate per prime. Il video può essere nascosto durante l'esame.",
     "passportButton": "Segnala un video",
     "trialButton": "Segnala questo invito",
-    "requestButton": "Segnala questa richiesta"
+    "requestButton": "Segnala questa richiesta",
+    "promptSource": "Dicci cosa non va in questo link, ad esempio se riguarda un'altra persona.",
+    "sourceButton": "Segnala link"
   },
   "block": {
     "blockTitle": "Bloccare il giocatore?",
@@ -176,7 +178,8 @@
     "appeal": {
       "upheld": "Conferma decisione",
       "overturned": "Annulla decisione"
-    }
+    },
+    "reportedLink": "Link segnalato ({{provider}}): {{url}}"
   },
   "notices": {
     "title": "Decisioni sui tuoi contenuti",

@@ -11,6 +11,8 @@ import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWork
 import { StatisticsScreen } from '@/features/player-statistics';
 import { buildPerformanceContext } from '@/features/ai-insights';
 import { useAuth } from '@/features/auth/store/AuthProvider';
+import { MatchSourceChips } from '@/features/football-sources';
+import { useOwnFootballSources } from '@/features/football-sources/hooks/useOwnFootballSources';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation/types';
 
@@ -42,6 +44,7 @@ export function PlayerPerformanceTab({
     }
   }, [route.params?.segment]);
 
+  const { sources: footballSources } = useOwnFootballSources(user?.id);
   const matches = profile?.statisticsMatches ?? [];
   const development = useDevelopment({
     userId: user?.id ?? null,
@@ -99,6 +102,7 @@ export function PlayerPerformanceTab({
           refreshing={isLoading}
           embeddedInTabShell
           nestedUnderSegment
+          renderMatchFooter={(matchId) => <MatchSourceChips sources={footballSources} matchId={matchId} />}
         />
       ) : (
         <CareerScreen

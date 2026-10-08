@@ -18,8 +18,8 @@ the user retries; it never deletes the sign-in locally while server-only records
 
 | Scope | Items |
 | --- | --- |
-| UID-keyed documents | `users`, `players`, `pushTokens`, `discoverablePlayers`, `authProviderTokens`, `trustProfiles`, `portfolioAnalytics`, `recruitmentWorkspaces`, `pushThrottle`, `notificationPreferences`, `analysisQuotas`, `publicPassports`, `passportSummaries`, `playerWatchers`, `coachRosters`, `userSafety`, `guardianContacts`, `entitlements`, `usageLedger`, `accountRestrictions` |
-| Subcollections | `usageLedger/{uid}/periods`, `players/{uid}/` (matches, evidenceItems, developmentGoals, trainingSessions, identitySnapshots, media, trialReflections), `recruitmentWorkspaces/{uid}/entries`, `moderationNotices/{uid}/items`, `consentRecords/{uid}/items`, `playerWatchers/{uid}/scouts` |
+| UID-keyed documents | `users`, `players`, `pushTokens`, `discoverablePlayers`, `scoutFootballSources`, `authProviderTokens`, `trustProfiles`, `portfolioAnalytics`, `recruitmentWorkspaces`, `pushThrottle`, `notificationPreferences`, `analysisQuotas`, `publicPassports`, `passportSummaries`, `playerWatchers`, `coachRosters`, `userSafety`, `guardianContacts`, `entitlements`, `usageLedger`, `accountRestrictions` |
+| Subcollections | `usageLedger/{uid}/periods`, `players/{uid}/` (matches, evidenceItems, developmentGoals, trainingSessions, identitySnapshots, media, trialReflections, footballSources), `recruitmentWorkspaces/{uid}/entries`, `moderationNotices/{uid}/items`, `consentRecords/{uid}/items`, `playerWatchers/{uid}/scouts` |
 | Owned or addressed documents | `gpsSessions`, `matchAnalysisJobs`, `careerReplays`, `activities` (as recipient and actor), `trialNotifications`, `trialInvitations` (player and scout), `scoutingReports` (scout and player), `trustRecommendations`, `blockedUsers` (both sides), `verificationRequests`, `verificationStates`, `portfolioSlugs`, `clubProfiles`, `reels`, `mediaGrants` (owner and grantee), `reelExports`, `scoutBriefs`, `evidenceRequests`, `watchlistEvents`, `careerSnapshots`, `coachObservations`, `contentReports` (reporter, target, target owner), `youthConsents`, `mail`, `appeals`, `mediaUploads`, `mediaUploadSessions`, `uploadSessionLimits`, `revenueCatEvents`, `dataExports`, `privacyRequests` |
 | Storage prefixes | `profiles/{uid}/`, `gpsSessions/{uid}/`, `quarantine/{uid}/`, `exports/{uid}/` |
 | Auth | Firebase Auth user, after data steps finish |
@@ -32,7 +32,8 @@ the user retries; it never deletes the sign-in locally while server-only records
 | Moderation decisions | Defend decisions and prevent ban evasion | 2 years, LEGAL REVIEW REQUIRED |
 | Deletion receipt | Show the request was carried out | 3 years, LEGAL REVIEW REQUIRED |
 
-These records use hashed identifiers.
+These records use hashed identifiers. Open moderation cases about the account lose the owner id
+and the reported external football link (`targetContext`).
 
 ## Not deleted by PitchProof
 
@@ -42,3 +43,4 @@ These records use hashed identifiers.
 | Sentry events | No user id is attached; they expire under the Sentry project retention |
 | Backups | No custom backup exists. Firestore point-in-time recovery, if enabled, keeps data up to 7 days; see `docs/security/disaster-recovery.md` |
 | Copies other users made outside PitchProof (screenshots, downloads of public media) | Outside PitchProof's control |
+| Pages on external football websites the player linked to | PitchProof only stored the link; the page belongs to that website |

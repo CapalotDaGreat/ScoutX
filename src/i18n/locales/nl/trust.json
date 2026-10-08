@@ -77,7 +77,9 @@
     "videoRestrictedNote": "Meldingen over personen of kinderen in video's worden als eerste beoordeeld. De video kan tijdens de beoordeling verborgen worden.",
     "passportButton": "Video melden",
     "trialButton": "Deze uitnodiging melden",
-    "requestButton": "Dit verzoek melden"
+    "requestButton": "Dit verzoek melden",
+    "promptSource": "Vertel ons wat er mis is met deze link, bijvoorbeeld als hij over iemand anders gaat.",
+    "sourceButton": "Link melden"
   },
   "block": {
     "blockTitle": "Speler blokkeren?",
@@ -176,7 +178,8 @@
     "appeal": {
       "upheld": "Beslissing handhaven",
       "overturned": "Beslissing terugdraaien"
-    }
+    },
+    "reportedLink": "Gemelde link ({{provider}}): {{url}}"
   },
   "notices": {
     "title": "Beslissingen over je content",

@@ -9,6 +9,8 @@ const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const core_1 = require("./footballSources/core");
+const service_1 = require("./footballSources/service");
 const holds_1 = require("./moderation/holds");
 const publicPassport_1 = require("./publicPassport");
 const userSafety_1 = require("./safety/userSafety");
@@ -208,7 +210,7 @@ function buildDiscoverableProjection(input) {
             typeof input.profile.fullName === 'string' ? input.profile.fullName.toLowerCase() : '',
             ...uniquePositions.map((item) => item.toLowerCase()),
         ].filter(Boolean),
-        username: typeof input.profile.username === 'string' ? input.profile.username : undefined,
+        ...(typeof input.profile.username === 'string' ? { username: input.profile.username } : {}),
     };
 }
 async function projectDiscoverablePlayer(playerId) {
@@ -220,8 +222,10 @@ async function projectDiscoverablePlayer(playerId) {
         (0, userSafety_1.loadSafetyPolicy)(playerId, db),
     ]);
     const ref = db.collection('discoverablePlayers').doc(playerId);
+    const scoutSourcesRef = db.collection(core_1.SCOUT_FOOTBALL_SOURCES_COLLECTION).doc(playerId);
+    const unlist = () => Promise.all([ref.delete().catch(() => undefined), scoutSourcesRef.delete().catch(() => undefined)]);
     if (!profileSnap.exists || !policy.canBeDiscovered || (await (0, holds_1.isAccountHeld)(playerId, db))) {
-        await ref.delete().catch(() => undefined);
+        await unlist();
         return;
     }
     const profile = profileSnap.data();
@@ -239,9 +243,14 @@ async function projectDiscoverablePlayer(playerId) {
         nowIso: new Date().toISOString(),
     });
     if (!projection) {
-        await ref.delete().catch(() => undefined);
+        await unlist();
         return;
     }
+    // Scouts see links the player shared with scouts or on the Passport, only while listed.
+    const scoutSources = await (0, service_1.loadVisibleSources)(db, playerId, ['passport', 'scouts']);
+    await (scoutSources.length > 0
+        ? scoutSourcesRef.set({ playerId, sources: scoutSources, projectedAt: new Date().toISOString() })
+        : scoutSourcesRef.delete().catch(() => undefined));
     const existing = await ref.get();
     const viewCount = existing.exists ? (existing.data()?.viewCount ?? 0) : 0;
     const display = (0, publicPassport_1.applyYouthDisplay)(projection, policy);

@@ -25,6 +25,7 @@ import { type PlayerProfile } from '@/features/player-profile/types';
 import { mapMatchesToHomeQuickStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import { ActivityBellButton, ActivityFeedSection, useActivities } from '@/features/activity-feed';
 import { AdminReviewCard } from '@/features/admin-review/components/AdminReviewCard';
+import { FootballSourcesSection } from '@/features/football-sources';
 import { useStaffRole } from '@/features/admin-review/hooks/useStaffRole';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import {
@@ -94,7 +95,7 @@ export function PlayerProfileScreen({
   embeddedInTabShell = false,
   todaySlot,
 }: PlayerProfileScreenProps) {
-  const { t } = useAppTranslation(['portfolio', 'common', 'settings']);
+  const { t } = useAppTranslation(['portfolio', 'common', 'settings', 'passport']);
   const { user } = useAuth();
   const staffRole = useStaffRole();
   const { trustProfile, recommendations, ...trustStateRest } = trustState;
@@ -282,6 +283,14 @@ export function PlayerProfileScreen({
               ) : null}
             </View>
           </View>
+        </CollapsibleSection>
+
+        <CollapsibleSection
+          title={t('passport:footballSources.title')}
+          subtitle={t('passport:footballSources.sectionSubtitle')}
+          persistKey="home-football-sources"
+        >
+          <FootballSourcesSection playerId={profile.id} matches={profile.statisticsMatches ?? []} />
         </CollapsibleSection>
 
         <CollapsibleSection

@@ -7,6 +7,8 @@ import { TrustRepository } from '@/features/trust-system/repositories/TrustRepos
 import { buildPublicPortfolioData } from '@/features/public-portfolio/models/PortfolioModel';
 import { type PublicPortfolioData } from '@/features/public-portfolio/types';
 import { type TrustRecommendation } from '@/features/trust-system/types';
+import { type PublicFootballSource } from '@/features/football-sources/core';
+import { toPublicSources } from '@/features/football-sources/repositories/FootballSourceRepository';
 
 export class PublicPortfolioRepository {
   private static instance: PublicPortfolioRepository | null = null;
@@ -39,9 +41,13 @@ export class PublicPortfolioRepository {
     if (!profile?.privacy?.publicPortfolioEnabled) {
       return null;
     }
-    const recommendations = await this.loadRecommendations(TrustRepository.getInstance(), playerId);
-    // GPS movement is owner-only and never part of the public passport.
-    return buildPublicPortfolioData(profile, recommendations, []);
+    const [recommendations, projection] = await Promise.all([
+      this.loadRecommendations(TrustRepository.getInstance(), playerId),
+      this.loadProjection(playerId),
+    ]);
+    // GPS movement is owner-only and never part of the public passport. Links come from the
+    // projection so the preview shows only what the server actually published.
+    return { ...buildPublicPortfolioData(profile, recommendations, []), footballSources: projection?.footballSources ?? [] };
   }
 
   /**
@@ -57,12 +63,13 @@ export class PublicPortfolioRepository {
     return {
       ...buildPublicPortfolioData(projection.profile, recommendations, []),
       ageGroupLabel: projection.ageGroupLabel,
+      footballSources: projection.footballSources,
     };
   }
 
   private async loadProjection(
     playerId: string,
-  ): Promise<{ profile: PlayerProfile; ageGroupLabel: 'youth' | null } | null> {
+  ): Promise<{ profile: PlayerProfile; ageGroupLabel: 'youth' | null; footballSources: PublicFootballSource[] } | null> {
     const db = getFirestoreDb();
     if (!db) {
       return null;
@@ -79,6 +86,7 @@ export class PublicPortfolioRepository {
       return {
         profile: ProfileModel.fromFirestore(playerId, data),
         ageGroupLabel: data.ageGroupLabel === 'youth' ? 'youth' : null,
+        footballSources: toPublicSources(data.footballSources),
       };
     } catch {
       return null;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { BarChart3, Clapperboard } from 'lucide-react-native';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
@@ -27,6 +27,7 @@ export type StatisticsScreenProps = {
   refreshing?: boolean;
   embeddedInTabShell?: boolean;
   nestedUnderSegment?: boolean;
+  renderMatchFooter?: (matchId: string) => ReactNode;
 };
 
 export function StatisticsScreen({
@@ -38,6 +39,7 @@ export function StatisticsScreen({
   refreshing = false,
   embeddedInTabShell = false,
   nestedUnderSegment = false,
+  renderMatchFooter,
 }: StatisticsScreenProps) {
   const { t } = useAppTranslation(['statistics']);
   const { colors } = useTheme();
@@ -162,6 +164,7 @@ export function StatisticsScreen({
               ? () => setShowFullHistory(true)
               : undefined
           }
+          renderItemFooter={renderMatchFooter ? (item) => renderMatchFooter(item.id) : undefined}
         />
       </Screen>
 

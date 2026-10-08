@@ -63,5 +63,85 @@
       "edit_claim": "modifier l'affirmation",
       "record_metric": "enregistrer la statistique correspondante"
     }
+  },
+  "footballSources": {
+    "title": "Sources football externes",
+    "sectionSubtitle": "Liens vers ta ligue, ton équipe ou ton profil de joueur",
+    "subtitle": "Ajoute des liens vers des pages qui te concernent sur des sites de football pris en charge, par exemple le classement de ta ligue, la page de ton équipe ou ton profil de joueur.",
+    "add": "Ajouter une source",
+    "empty": "Aucune source pour l'instant. Ajoute un lien vers ta ligue, ton équipe ou ton profil de joueur.",
+    "disclaimer": "Lien ajouté par le joueur. PitchProof ne vérifie pas de manière indépendante les informations de ce site.",
+    "selfReported": "Ajouté par le joueur",
+    "open": "Ouvrir le lien",
+    "openFailedTitle": "Impossible d'ouvrir ce lien",
+    "openFailedBody": "Ce site n'est plus pris en charge, le lien ne peut donc pas être ouvert depuis l'app.",
+    "remove": "Supprimer",
+    "cancel": "Annuler",
+    "removeConfirmTitle": "Supprimer cette source ?",
+    "removeConfirmBody": "Le lien est retiré de ton profil, de ton Football Passport et de la vue des recruteurs.",
+    "visibility": {
+      "label": "Qui peut voir ce lien",
+      "private": "Moi uniquement",
+      "passport": "Football Passport",
+      "scouts": "Recruteurs"
+    },
+    "visibilityHint": {
+      "private": "Toi seul peux voir ce lien.",
+      "passport": "Affiché sur ton Football Passport public tant qu'il est publié, ainsi qu'aux recruteurs.",
+      "scouts": "Affiché aux recruteurs tant que tu es visible dans la recherche. Pas sur ton Passport public."
+    },
+    "status": {
+      "active": "Actif",
+      "reported": "En cours d'examen. Masqué pour les autres jusqu'à la décision de la modération.",
+      "hidden": "Masqué par la modération. Toi seul peux le voir.",
+      "removed": "Retiré par la modération. Tu peux le supprimer."
+    },
+    "types": {
+      "league": "Ligue",
+      "team": "Équipe",
+      "player": "Joueur",
+      "match": "Match",
+      "competition": "Compétition",
+      "other": "Autre"
+    },
+    "typePrompt": "Que montre ce lien ?",
+    "addTitle": "Ajouter une source football",
+    "urlLabel": "Lien (https://)",
+    "urlErrors": {
+      "empty": "Colle d'abord un lien.",
+      "not_https": "Seuls les liens sécurisés commençant par https:// peuvent être ajoutés.",
+      "invalid": "Ce lien ne semble pas valide. Vérifie-le et réessaie."
+    },
+    "linkOnlyNote": "PitchProof enregistre uniquement le lien. Il n'ouvre, ne lit et ne copie rien sur le site.",
+    "continue": "Continuer",
+    "unsupportedTitle": "Ce site n'est pas pris en charge actuellement",
+    "unsupportedBody": "Seuls les liens vers des sites de football pris en charge peuvent être ajoutés. Vérifie l'adresse ou utilise une page de l'un de ces sites.",
+    "supportedList": "Pris en charge : {{list}}",
+    "back": "Retour",
+    "foundTitle": "Source football trouvée",
+    "privateByDefault": "Les nouvelles sources sont privées. Tu choisis ensuite si ton Passport ou les recruteurs peuvent les voir.",
+    "confirmAdd": "Ajouter la source",
+    "errors": {
+      "duplicate": "Cette source a déjà été ajoutée.",
+      "limit_reached": "Tu as atteint le nombre maximal de sources. Supprimes-en une pour en ajouter une autre.",
+      "guardian_scope_required": "Ton parent ou représentant légal doit l'autoriser avant que le lien puisse être partagé.",
+      "under_review": "Ce lien est en cours d'examen et ne peut pas être partagé pour le moment.",
+      "provider_disabled": "Ce site n'est plus pris en charge.",
+      "unsupported_provider": "Ce site n'est pas pris en charge actuellement.",
+      "invalid_match": "Ce match est introuvable.",
+      "unknown": "Une erreur s'est produite. Réessaie."
+    },
+    "matches": {
+      "link": "Lier à un match",
+      "title": "Lier à un match",
+      "body": "Choisis les matchs auxquels cette source se rapporte. Tes données de match restent exactement telles que tu les as saisies.",
+      "none": "Enregistre d'abord un match, puis tu pourras y lier cette source.",
+      "confirm": "Enregistrer",
+      "chip": "Source : {{provider}}",
+      "linkedCount_one": "Lié à {{count}} match",
+      "linkedCount_other": "Lié à {{count}} matchs"
+    },
+    "publicTitle": "Sources football",
+    "publicSubtitle": "Liens ajoutés par le joueur vers des sites de football externes"
   }
 }

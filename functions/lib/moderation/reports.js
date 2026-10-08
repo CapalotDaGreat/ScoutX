@@ -10,6 +10,7 @@ const firestore_1 = require("firebase-functions/v2/firestore");
 const firestore_2 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("../callableOptions");
+const core_1 = require("../footballSources/core");
 const guardianToken_1 = require("../safety/guardianToken");
 const userSafety_1 = require("../safety/userSafety");
 const holds_1 = require("./holds");
@@ -47,6 +48,12 @@ async function resolveTargetOwner(db, targetType, targetId, claimedOwnerId) {
             const scout = report.get('scoutId');
             return typeof scout === 'string' ? scout : null;
         }
+        case 'external_football_source': {
+            if (!claimedOwnerId)
+                return null;
+            const source = await db.collection('players').doc(claimedOwnerId).collection(core_1.FOOTBALL_SOURCES_COLLECTION).doc(targetId).get();
+            return source.exists ? claimedOwnerId : null;
+        }
         case 'post':
             return claimedOwnerId || null;
         default:
@@ -67,6 +74,14 @@ async function triageReport(db, reportId, report) {
     const priority = (0, model_1.priorityFor)(reason, ownerIsMinor);
     const key = (0, model_1.holdKey)(targetType, targetId);
     const now = new Date();
+    // Moderators review the stored link itself; the page behind it is never fetched for them.
+    let targetContext = null;
+    if (targetType === 'external_football_source' && ownerId) {
+        const sourceRef = db.collection('players').doc(ownerId).collection(core_1.FOOTBALL_SOURCES_COLLECTION).doc(targetId);
+        const source = await sourceRef.get();
+        targetContext = { providerId: String(source.get('providerId') ?? ''), url: String(source.get('url') ?? '') };
+        await sourceRef.update({ reportCount: firestore_2.FieldValue.increment(1) });
+    }
     const existing = await db.collection('moderationCases').where('targetKey', '==', key).where('open', '==', true).limit(1).get();
     let caseId;
     let casePriority = priority;
@@ -92,6 +107,7 @@ async function triageReport(db, reportId, report) {
             targetOwnerId: ownerId,
             ownerVerified: ownerId !== null,
             ownerIsMinor,
+            ...(targetContext ? { targetContext } : {}),
             reasons: [reason],
             reportIds: [reportId],
             reportCount: 1,

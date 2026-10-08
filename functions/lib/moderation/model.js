@@ -29,6 +29,7 @@ exports.REPORT_TARGET_TYPES = [
     'evidenceRequest',
     'trial',
     'scoutingReport',
+    'external_football_source',
 ];
 exports.REPORT_REASONS = [
     'spam',
@@ -82,8 +83,13 @@ function comparePriority(a, b) {
 }
 /** Hours until a first review is due, by priority. */
 exports.REVIEW_SLA_HOURS = { urgent: 4, high: 24, normal: 72 };
-/** People in a video (or their guardians) get it hidden from public view while it is reviewed. */
+/**
+ * People in a video (or their guardians) get it hidden from public view while it is reviewed.
+ * A reported external link stops being shown until a moderator decides.
+ */
 function shouldAutoRestrict(targetType, reason) {
+    if (targetType === 'external_football_source')
+        return true;
     return ((targetType === 'media' || targetType === 'reel') &&
         (reason === 'minor_in_video' || reason === 'appears_in_video' || reason === 'privacy'));
 }

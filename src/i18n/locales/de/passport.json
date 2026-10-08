@@ -63,5 +63,85 @@
       "edit_claim": "die Angabe bearbeiten",
       "record_metric": "den passenden Wert erfassen"
     }
+  },
+  "footballSources": {
+    "title": "Externe Fussballquellen",
+    "sectionSubtitle": "Links zu deiner Liga, deinem Team oder Spielerprofil",
+    "subtitle": "Füge Links zu Seiten über dich auf unterstützten Fussball-Websites hinzu, zum Beispiel deine Ligatabelle, deine Teamseite oder dein Spielerprofil.",
+    "add": "Quelle hinzufügen",
+    "empty": "Noch keine Quellen. Füge einen Link zu deiner Liga, deinem Team oder deinem Spielerprofil hinzu.",
+    "disclaimer": "Vom Spieler hinzugefügter Link. PitchProof überprüft die Informationen auf dieser Website nicht unabhängig.",
+    "selfReported": "Vom Spieler hinzugefügt",
+    "open": "Link öffnen",
+    "openFailedTitle": "Link kann nicht geöffnet werden",
+    "openFailedBody": "Diese Website wird nicht mehr unterstützt, deshalb kann der Link nicht aus der App geöffnet werden.",
+    "remove": "Entfernen",
+    "cancel": "Abbrechen",
+    "removeConfirmTitle": "Diese Quelle entfernen?",
+    "removeConfirmBody": "Der Link wird aus deinem Profil, deinem Football Passport und der Ansicht für Scouts entfernt.",
+    "visibility": {
+      "label": "Wer diesen Link sehen kann",
+      "private": "Nur ich",
+      "passport": "Football Passport",
+      "scouts": "Scouts"
+    },
+    "visibilityHint": {
+      "private": "Nur du siehst diesen Link.",
+      "passport": "Wird auf deinem öffentlichen Football Passport angezeigt, solange er veröffentlicht ist, und Scouts.",
+      "scouts": "Wird Scouts angezeigt, solange du auffindbar bist. Nicht auf deinem öffentlichen Passport."
+    },
+    "status": {
+      "active": "Aktiv",
+      "reported": "Wird geprüft. Für andere ausgeblendet, bis die Moderation entschieden hat.",
+      "hidden": "Von der Moderation ausgeblendet. Nur du siehst ihn.",
+      "removed": "Von der Moderation entfernt. Du kannst ihn löschen."
+    },
+    "types": {
+      "league": "Liga",
+      "team": "Team",
+      "player": "Spieler",
+      "match": "Spiel",
+      "competition": "Wettbewerb",
+      "other": "Anderes"
+    },
+    "typePrompt": "Was zeigt dieser Link?",
+    "addTitle": "Fussballquelle hinzufügen",
+    "urlLabel": "Link (https://)",
+    "urlErrors": {
+      "empty": "Füge zuerst einen Link ein.",
+      "not_https": "Es können nur sichere Links mit https:// hinzugefügt werden.",
+      "invalid": "Das sieht nicht nach einem gültigen Link aus. Prüfe ihn und versuche es erneut."
+    },
+    "linkOnlyNote": "PitchProof speichert nur den Link. Die Website wird weder geöffnet noch gelesen oder kopiert.",
+    "continue": "Weiter",
+    "unsupportedTitle": "Diese Website wird derzeit nicht unterstützt",
+    "unsupportedBody": "Es können nur Links zu unterstützten Fussball-Websites hinzugefügt werden. Prüfe die Adresse oder verwende eine Seite auf einer dieser Websites.",
+    "supportedList": "Unterstützt: {{list}}",
+    "back": "Zurück",
+    "foundTitle": "Fussballquelle gefunden",
+    "privateByDefault": "Neue Quellen sind privat. Danach wählst du, ob dein Passport oder Scouts sie sehen dürfen.",
+    "confirmAdd": "Quelle hinzufügen",
+    "errors": {
+      "duplicate": "Diese Quelle wurde bereits hinzugefügt.",
+      "limit_reached": "Du hast die maximale Anzahl Quellen erreicht. Entferne eine, um eine neue hinzuzufügen.",
+      "guardian_scope_required": "Deine Eltern oder deine erziehungsberechtigte Person müssen das erlauben, bevor der Link geteilt werden kann.",
+      "under_review": "Dieser Link wird geprüft und kann im Moment nicht geteilt werden.",
+      "provider_disabled": "Diese Website wird nicht mehr unterstützt.",
+      "unsupported_provider": "Diese Website wird derzeit nicht unterstützt.",
+      "invalid_match": "Dieses Spiel wurde nicht gefunden.",
+      "unknown": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+    },
+    "matches": {
+      "link": "Mit Spiel verknüpfen",
+      "title": "Mit einem Spiel verknüpfen",
+      "body": "Wähle die Spiele, zu denen diese Quelle gehört. Deine Spieldaten bleiben genau so, wie du sie erfasst hast.",
+      "none": "Erfasse zuerst ein Spiel, dann kannst du diese Quelle damit verknüpfen.",
+      "confirm": "Speichern",
+      "chip": "Quelle: {{provider}}",
+      "linkedCount_one": "Mit {{count}} Spiel verknüpft",
+      "linkedCount_other": "Mit {{count}} Spielen verknüpft"
+    },
+    "publicTitle": "Fussballquellen",
+    "publicSubtitle": "Links, die der Spieler zu externen Fussball-Websites hinzugefügt hat"
   }
 }

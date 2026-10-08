@@ -248,6 +248,20 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
 
+    // External football source links. Every write goes through the add/update/remove
+    // callables, which re-validate https, host and provider against the allowlist and own
+    // status, provenance and reportCount. Clients cannot pick a host, provider or status.
+    match /players/{userId}/footballSources/{sourceId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Links shared with scouts, projected only while the player is discoverable.
+    match /scoutFootballSources/{playerId} {
+      allow read: if isOwner(playerId) || hasRecruiterRole();
+      allow write: if false;
+    }
+
     // Trust scores are server-maintained; players must not be able to inflate their own.
     match /trustProfiles/{playerId} {
       allow read: if isSignedIn() || publicPortfolioEnabled(playerId);
@@ -362,7 +376,8 @@ service cloud.firestore {
           'reporterId', 'targetType', 'targetId', 'targetOwnerId', 'reason', 'details', 'createdAt'
         ])
         && request.resource.data.targetType in [
-          'user', 'post', 'media', 'reel', 'passport', 'scout', 'evidenceRequest', 'trial', 'scoutingReport'
+          'user', 'post', 'media', 'reel', 'passport', 'scout', 'evidenceRequest', 'trial', 'scoutingReport',
+          'external_football_source'
         ]
         && request.resource.data.targetId is string
         && request.resource.data.targetId.size() > 0

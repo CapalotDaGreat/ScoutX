@@ -9,6 +9,7 @@ const node_crypto_1 = require("node:crypto");
 const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
+const core_1 = require("../footballSources/core");
 const model_1 = require("./model");
 /** Holds on any of these keys take the whole public profile offline. */
 function accountHoldKeys(uid) {
@@ -62,7 +63,18 @@ async function applyHold(input, db = (0, firestore_1.getFirestore)()) {
     if (input.targetType === 'reel') {
         await db.collection('reels').doc(input.targetId).set({ moderationState: input.state, updatedAt: now }, { merge: true });
     }
+    if (input.targetType === 'external_football_source') {
+        const ref = db.collection('players').doc(input.ownerId).collection(core_1.FOOTBALL_SOURCES_COLLECTION).doc(input.targetId);
+        if ((await ref.get()).exists) {
+            await ref.update({ status: SOURCE_STATUS_FOR_HOLD[input.state], updatedAt: now });
+        }
+    }
 }
+const SOURCE_STATUS_FOR_HOLD = {
+    restricted: 'reported',
+    hidden: 'hidden',
+    removed: 'removed',
+};
 /** Lifts a hold after a dismissal or a successful appeal. */
 async function clearHold(targetType, targetId, ownerId, db = (0, firestore_1.getFirestore)()) {
     const ref = db.collection('moderationHolds').doc((0, model_1.holdKey)(targetType, targetId));
@@ -85,6 +97,12 @@ async function clearHold(targetType, targetId, ownerId, db = (0, firestore_1.get
     }
     if (targetType === 'reel') {
         await db.collection('reels').doc(targetId).set({ moderationState: 'none' }, { merge: true });
+    }
+    if (targetType === 'external_football_source' && ownerId) {
+        const ref = db.collection('players').doc(ownerId).collection(core_1.FOOTBALL_SOURCES_COLLECTION).doc(targetId);
+        if ((await ref.get()).exists) {
+            await ref.update({ status: 'active', updatedAt: new Date().toISOString() });
+        }
     }
     return existed;
 }

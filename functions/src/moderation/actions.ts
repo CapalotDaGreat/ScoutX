@@ -168,7 +168,10 @@ async function removeTarget(db: Firestore, data: CaseDoc, caseId: string): Promi
     await db.collection(collection).doc(data.targetId).delete();
     return;
   }
-  if (data.targetOwnerId && (data.targetType === 'media' || data.targetType === 'reel')) {
+  if (
+    data.targetOwnerId &&
+    (data.targetType === 'media' || data.targetType === 'reel' || data.targetType === 'external_football_source')
+  ) {
     await applyHold({ targetType: data.targetType, targetId: data.targetId, ownerId: data.targetOwnerId, state: 'removed', caseId }, db);
   }
 }

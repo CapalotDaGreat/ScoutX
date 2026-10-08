@@ -63,5 +63,85 @@
       "edit_claim": "edit the claim",
       "record_metric": "record the matching stat"
     }
+  },
+  "footballSources": {
+    "title": "External football sources",
+    "sectionSubtitle": "Links to your league, team or player pages",
+    "subtitle": "Add links to pages about you on supported football websites, such as your league table, team page or player profile.",
+    "add": "Add source",
+    "empty": "No sources yet. Add a link to your league, team or player page.",
+    "disclaimer": "Link added by the player. PitchProof does not independently verify the information on this website.",
+    "selfReported": "Added by player",
+    "open": "Open link",
+    "openFailedTitle": "Can't open this link",
+    "openFailedBody": "This website is no longer supported, so the link can't be opened from the app.",
+    "remove": "Remove",
+    "cancel": "Cancel",
+    "removeConfirmTitle": "Remove this source?",
+    "removeConfirmBody": "The link is removed from your profile, your Football Passport and scout views.",
+    "visibility": {
+      "label": "Who can see this link",
+      "private": "Only me",
+      "passport": "Football Passport",
+      "scouts": "Scouts"
+    },
+    "visibilityHint": {
+      "private": "Only you can see this link.",
+      "passport": "Shown on your public Football Passport while it is published, and to scouts.",
+      "scouts": "Shown to scouts while you are discoverable. Not on your public Passport."
+    },
+    "status": {
+      "active": "Active",
+      "reported": "Under review. Hidden from others until a moderator has looked at it.",
+      "hidden": "Hidden by moderation. Only you can see it.",
+      "removed": "Removed by moderation. You can delete it."
+    },
+    "types": {
+      "league": "League",
+      "team": "Team",
+      "player": "Player",
+      "match": "Match",
+      "competition": "Competition",
+      "other": "Other"
+    },
+    "typePrompt": "What does this link show?",
+    "addTitle": "Add football source",
+    "urlLabel": "Link (https://)",
+    "urlErrors": {
+      "empty": "Paste a link first.",
+      "not_https": "Only secure links starting with https:// can be added.",
+      "invalid": "This doesn't look like a valid link. Check it and try again."
+    },
+    "linkOnlyNote": "PitchProof only saves the link. It does not open, read or copy anything from the website.",
+    "continue": "Continue",
+    "unsupportedTitle": "This website isn't currently supported",
+    "unsupportedBody": "Only links to supported football websites can be added. Check the address or use a page on one of these sites.",
+    "supportedList": "Supported: {{list}}",
+    "back": "Back",
+    "foundTitle": "Football source found",
+    "privateByDefault": "New sources are private. You choose afterwards whether your Passport or scouts can see them.",
+    "confirmAdd": "Add source",
+    "errors": {
+      "duplicate": "This source has already been added.",
+      "limit_reached": "You've reached the maximum number of sources. Remove one to add another.",
+      "guardian_scope_required": "Your parent or guardian needs to allow this before the link can be shared.",
+      "under_review": "This link is under review and can't be shared right now.",
+      "provider_disabled": "This website is no longer supported.",
+      "unsupported_provider": "This website isn't currently supported.",
+      "invalid_match": "That match couldn't be found.",
+      "unknown": "Something went wrong. Please try again."
+    },
+    "matches": {
+      "link": "Link to match",
+      "title": "Link to a match",
+      "body": "Choose the matches this source belongs to. Your match data stays exactly as you logged it.",
+      "none": "Log a match first, then you can link this source to it.",
+      "confirm": "Save",
+      "chip": "Source: {{provider}}",
+      "linkedCount_one": "Linked to {{count}} match",
+      "linkedCount_other": "Linked to {{count}} matches"
+    },
+    "publicTitle": "Football sources",
+    "publicSubtitle": "Links the player added to external football websites"
   }
 }

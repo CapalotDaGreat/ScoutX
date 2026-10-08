@@ -77,7 +77,9 @@
     "videoRestrictedNote": "Reports about people or children in videos are reviewed first. The video may be hidden while we review it.",
     "passportButton": "Report a video",
     "trialButton": "Report this invitation",
-    "requestButton": "Report this request"
+    "requestButton": "Report this request",
+    "promptSource": "Tell us what is wrong with this link, for example if it is about someone else.",
+    "sourceButton": "Report link"
   },
   "block": {
     "blockTitle": "Block player?",
@@ -176,7 +178,8 @@
     "appeal": {
       "upheld": "Keep decision",
       "overturned": "Reverse decision"
-    }
+    },
+    "reportedLink": "Reported link ({{provider}}): {{url}}"
   },
   "notices": {
     "title": "Decisions about your content",

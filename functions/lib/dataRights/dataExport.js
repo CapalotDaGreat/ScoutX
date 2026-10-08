@@ -12,6 +12,7 @@ const firebase_functions_1 = require("firebase-functions");
 const https_1 = require("firebase-functions/v2/https");
 const tasks_1 = require("firebase-functions/v2/tasks");
 const callableOptions_1 = require("../callableOptions");
+const core_1 = require("../footballSources/core");
 const region_1 = require("../region");
 const retention_1 = require("./retention");
 exports.EXPORT_COLLECTION = 'dataExports';
@@ -80,7 +81,7 @@ function storagePathsIn(items) {
 }
 async function buildExportArchive(db, uid, linkExpiresAt, now = new Date()) {
     const player = db.collection('players').doc(uid);
-    const [user, profile, safety, consent, consentItems, passport, summary, slugs, matches, goals, training, evidence, identity, reflections, playerMedia, analyses, observationsAbout, observationsBy, movement, reels, reelExports, reportsBy, briefsBy, watchlistBy, requestsBy, trialsSent, trialsReceived, requestsReceived, workspace, workspaceEntries, activities, entitlement, usagePeriods, privacyRequests, reportsFiled, appeals,] = await Promise.all([
+    const [user, profile, safety, consent, consentItems, passport, summary, slugs, matches, goals, training, evidence, identity, reflections, playerMedia, analyses, observationsAbout, observationsBy, movement, reels, reelExports, reportsBy, briefsBy, watchlistBy, requestsBy, trialsSent, trialsReceived, requestsReceived, workspace, workspaceEntries, activities, entitlement, usagePeriods, privacyRequests, reportsFiled, appeals, footballSources,] = await Promise.all([
         db.collection('users').doc(uid).get(),
         db.collection('profiles').doc(uid).get(),
         db.collection('userSafety').doc(uid).get(),
@@ -117,6 +118,7 @@ async function buildExportArchive(db, uid, linkExpiresAt, now = new Date()) {
         many(db.collection('privacyRequests').where('uid', '==', uid)),
         many(db.collection('contentReports').where('reporterId', '==', uid)),
         many(db.collection('appeals').where('ownerId', '==', uid)),
+        many(player.collection(core_1.FOOTBALL_SOURCES_COLLECTION)),
     ]);
     const media = [...playerMedia, ...analyses, ...reelExports];
     return {
@@ -136,6 +138,7 @@ async function buildExportArchive(db, uid, linkExpiresAt, now = new Date()) {
             consents: { summary: docJson(consent), history: consentItems },
             passport: { public: docJson(passport), summary: docJson(summary), slugs },
             matches,
+            externalFootballSources: footballSources,
             development: { goals, training, evidence, identitySnapshots: identity, trialReflections: reflections },
             analyses,
             coaching: { aboutYou: observationsAbout, writtenByYou: observationsBy },

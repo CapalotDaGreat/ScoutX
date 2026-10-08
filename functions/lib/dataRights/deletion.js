@@ -50,7 +50,7 @@ async function assertDeletionAuthorized(db, uid, token) {
 const ACTIVE_JOB_STATUSES = ['draft', 'uploading', 'queued', 'processing'];
 async function hideAndRevoke(db, uid, deps) {
     // Stop being discoverable and reachable first, before the slower deletes.
-    await Promise.all(['discoverablePlayers', 'publicPassports', 'pushTokens'].map((collection) => db.collection(collection).doc(uid).delete()));
+    await Promise.all(['discoverablePlayers', 'publicPassports', 'scoutFootballSources', 'pushTokens'].map((collection) => db.collection(collection).doc(uid).delete()));
     await deps.revokeProviderTokens(uid);
     await deps.revokeSessions(uid);
 }

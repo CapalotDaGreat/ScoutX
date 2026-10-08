@@ -25,6 +25,8 @@ export type ModerationCase = {
   decision: string | null;
   decidedBy: string | null;
   createdAt: string;
+  /** For reported external links: the stored link, never the page behind it. */
+  targetContext?: { providerId: string; url: string } | null;
 };
 
 export type StaffAction = 'dismiss' | 'restrict' | 'hide' | 'remove' | 'warn' | 'suspend' | 'disable' | 'escalate';

@@ -71,7 +71,7 @@ async function retainLegalRecords(db, uid, now = new Date()) {
             deleteAfter: (0, retention_1.addDays)(now, retention_1.RETENTION.moderationDecisionDays),
         });
         // The open case keeps working for moderators but no longer names the account.
-        batch.update(doc.ref, { targetOwnerId: null, targetOwnerHash: hash, ownerDeletedAt: now.toISOString() });
+        batch.update(doc.ref, { targetOwnerId: null, targetOwnerHash: hash, targetContext: null, ownerDeletedAt: now.toISOString() });
     }
     for (const doc of requests.docs) {
         batch.set(col.doc(`${hash}_request_${doc.id}`), {

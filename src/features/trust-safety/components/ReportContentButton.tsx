@@ -29,7 +29,12 @@ export type ReportContentButtonProps = (
   onSubmitted?: () => void;
 };
 
-type PromptKey = 'report.promptUser' | 'report.promptPost' | 'report.promptVideo' | 'report.promptContact';
+type PromptKey =
+  | 'report.promptUser'
+  | 'report.promptPost'
+  | 'report.promptVideo'
+  | 'report.promptContact'
+  | 'report.promptSource';
 
 function promptKey(targetType: ReportTargetType): PromptKey {
   switch (targetType) {
@@ -42,6 +47,8 @@ function promptKey(targetType: ReportTargetType): PromptKey {
     case 'reel':
     case 'passport':
       return 'report.promptVideo';
+    case 'external_football_source':
+      return 'report.promptSource';
     default:
       return 'report.promptContact';
   }

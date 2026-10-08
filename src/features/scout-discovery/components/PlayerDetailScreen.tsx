@@ -45,6 +45,7 @@ import { explainWhyThisPlayer } from '@/features/scout-intelligence/services/why
 import { rankSimilarPlayers } from '@/features/scout-intelligence/services/similarPlayers';
 import { useDiscoverablePlayerPool } from '@/features/scout-discovery/hooks/useDiscoverablePlayerPool';
 import { TrustSafetyActions } from '@/features/trust-safety/components/TrustSafetyActions';
+import { ScoutFootballSourcesSection } from '@/features/football-sources';
 import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Mail, Video } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -332,6 +333,12 @@ export function PlayerDetailScreen({
             />
           </CollapsibleSection>
         </RevealSection>
+
+        {!guestMode ? (
+          <RevealSection step={2} className="px-4">
+            <ScoutFootballSourcesSection playerId={player.id} />
+          </RevealSection>
+        ) : null}
 
         {!guestMode ? (
           <RevealSection step={3} className="px-4">

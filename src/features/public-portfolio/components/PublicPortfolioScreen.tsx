@@ -13,6 +13,7 @@ import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 import { FootballJourneySection } from '@/features/football-journey';
+import { PublicFootballSourcesList } from '@/features/football-sources';
 import { HighlightVideosSection } from '@/features/highlight-videos';
 import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
 import { PerformanceSummary } from '@/features/player-profile/components/PerformanceSummary';
@@ -286,6 +287,20 @@ export function PublicPortfolioScreen({
             >
               <HighlightVideosSection library={profile.highlightVideos} />
             </CollapsibleSection>
+          </PortfolioSection>
+        ) : null}
+
+        {data.footballSources && data.footballSources.length > 0 ? (
+          <PortfolioSection
+            title={t('passport:footballSources.publicTitle')}
+            subtitle={t('passport:footballSources.publicSubtitle')}
+            index={sectionIndex++}
+          >
+            <PublicFootballSourcesList
+              sources={data.footballSources}
+              ownerId={playerId}
+              canReport={!previewMode && Boolean(user?.id) && user?.id !== playerId}
+            />
           </PortfolioSection>
         ) : null}
 

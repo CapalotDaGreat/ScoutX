@@ -16,11 +16,11 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | --- | --- |
 | `npm run typecheck` (app + tests) | PASS |
 | `npm run lint` | PASS |
-| `npm run test:unit` | PASS, 376 tests |
-| `npm run test:rules` (Firestore, Storage, callables, push, deletion, deletion recent-auth, uploads with ffprobe fixtures, analysis, entitlements, data rights, guardian flow) | PASS, 182 tests |
+| `npm run test:unit` | PASS, 386 tests |
+| `npm run test:rules` (Firestore, Storage, callables, push, deletion, deletion recent-auth, uploads with ffprobe fixtures, analysis, entitlements, data rights, guardian flow, football sources) | PASS, 197 tests |
 | i18n parity across en, de, fr, es, it, nl, pt | PASS |
 | `npm run legal:check` | PASS |
-| `npm run test:e2e:emulators` (Auth, Firestore, Storage, Functions, Cloud Tasks emulators) | PASS, 17 tests |
+| `npm run test:e2e:emulators` (Auth, Firestore, Storage, Functions, Cloud Tasks emulators) | PASS, 22 tests |
 | `node scripts/release-gate.mjs --allow-external` (internal / TestFlight) | PASS, 0 CODE BLOCKERs |
 | `node scripts/release-gate.mjs` (public release) | BLOCKED: 4 EXTERNAL CONFIGURATION REQUIRED, 2 LEGAL REVIEW REQUIRED, 2 NOT VALIDATED |
 
@@ -49,6 +49,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | Deletion state machine, legal retention, no partial client fallback | COMPLETED; periods LEGAL REVIEW REQUIRED | `accountDeletion.test.mjs`, E2E teen deletion |
 | Data export archive, privacy requests, retention cleanup | COMPLETED (emulator); production schedule and signed URLs NOT VALIDATED | `dataRights.test.mjs`, E2E Privacy Center |
 | Movement sessions without location, km/miles | COMPLETED; on-device GPS NOT VALIDATED | `gpsIntelligence.test.ts` |
+| External football source links (link only: allowlisted HTTPS hosts, private by default, Passport/scout sharing under guardian rules, reporting, export, deletion; no fetching, scraping or import) | COMPLETED; provider list LEGAL REVIEW REQUIRED | `footballSources.test.ts`, `footballSources.test.mjs`, E2E football sources, release gate link-only check, `docs/compliance/external-football-sources.md` |
 | Passport privacy preview, Discoverability Health, video-to-Passport chain | COMPLETED | `productLinks.test.ts`, `reelExport.test.mjs` |
 | Guardian and report deep links, AASA | COMPLETED (resolver); universal links on device NOT VALIDATED | `notifyLinksRecovery.test.ts`, release gate AASA check |
 | Privacy and security documentation, consistency and label matrices | COMPLETED; LEGAL REVIEW REQUIRED | `docs/privacy/`, `docs/security/`, `docs/compliance/` |

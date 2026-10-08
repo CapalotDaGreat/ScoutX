@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { View } from 'react-native';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
@@ -13,6 +14,7 @@ export type MatchHistoryProps = {
   onViewAllPress?: () => void;
   /** Lighter chrome when embedded under a parent section heading. */
   compact?: boolean;
+  renderItemFooter?: (item: MatchHistoryItem) => ReactNode;
 };
 
 function formatMatchDate(date: string, locale: string): string {
@@ -27,6 +29,7 @@ export function MatchHistory({
   maxItems,
   onViewAllPress,
   compact = false,
+  renderItemFooter,
 }: MatchHistoryProps) {
   const { t, i18n } = useAppTranslation(['common', 'statistics']);
   const summaryFor = (item: MatchHistoryItem) =>
@@ -105,6 +108,7 @@ export function MatchHistory({
               {item.notes}
             </Text>
           ) : null}
+          {renderItemFooter?.(item)}
         </View>
       ))}
 

@@ -63,5 +63,85 @@
       "edit_claim": "de claim aanpassen",
       "record_metric": "de bijbehorende statistiek vastleggen"
     }
+  },
+  "footballSources": {
+    "title": "Externe voetbalbronnen",
+    "sectionSubtitle": "Links naar je competitie, team of spelersprofiel",
+    "subtitle": "Voeg links toe naar pagina's over jou op ondersteunde voetbalwebsites, zoals de stand van je competitie, je teampagina of je spelersprofiel.",
+    "add": "Bron toevoegen",
+    "empty": "Nog geen bronnen. Voeg een link toe naar je competitie, team of spelersprofiel.",
+    "disclaimer": "Link toegevoegd door de speler. PitchProof controleert de informatie op deze website niet onafhankelijk.",
+    "selfReported": "Toegevoegd door speler",
+    "open": "Link openen",
+    "openFailedTitle": "Deze link kan niet worden geopend",
+    "openFailedBody": "Deze website wordt niet meer ondersteund, daarom kan de link niet vanuit de app worden geopend.",
+    "remove": "Verwijderen",
+    "cancel": "Annuleren",
+    "removeConfirmTitle": "Deze bron verwijderen?",
+    "removeConfirmBody": "De link wordt verwijderd uit je profiel, je Football Passport en de weergave voor scouts.",
+    "visibility": {
+      "label": "Wie deze link kan zien",
+      "private": "Alleen ik",
+      "passport": "Football Passport",
+      "scouts": "Scouts"
+    },
+    "visibilityHint": {
+      "private": "Alleen jij kunt deze link zien.",
+      "passport": "Getoond op je openbare Football Passport zolang die gepubliceerd is, en aan scouts.",
+      "scouts": "Getoond aan scouts zolang je vindbaar bent. Niet op je openbare Passport."
+    },
+    "status": {
+      "active": "Actief",
+      "reported": "Wordt beoordeeld. Verborgen voor anderen tot de moderatie heeft beslist.",
+      "hidden": "Verborgen door moderatie. Alleen jij kunt hem zien.",
+      "removed": "Verwijderd door moderatie. Je kunt hem wissen."
+    },
+    "types": {
+      "league": "Competitie",
+      "team": "Team",
+      "player": "Speler",
+      "match": "Wedstrijd",
+      "competition": "Toernooi",
+      "other": "Overig"
+    },
+    "typePrompt": "Wat laat deze link zien?",
+    "addTitle": "Voetbalbron toevoegen",
+    "urlLabel": "Link (https://)",
+    "urlErrors": {
+      "empty": "Plak eerst een link.",
+      "not_https": "Alleen beveiligde links die met https:// beginnen kunnen worden toegevoegd.",
+      "invalid": "Dit lijkt geen geldige link. Controleer hem en probeer het opnieuw."
+    },
+    "linkOnlyNote": "PitchProof bewaart alleen de link. Er wordt niets van de website geopend, gelezen of gekopieerd.",
+    "continue": "Doorgaan",
+    "unsupportedTitle": "Deze website wordt momenteel niet ondersteund",
+    "unsupportedBody": "Alleen links naar ondersteunde voetbalwebsites kunnen worden toegevoegd. Controleer het adres of gebruik een pagina op een van deze websites.",
+    "supportedList": "Ondersteund: {{list}}",
+    "back": "Terug",
+    "foundTitle": "Voetbalbron gevonden",
+    "privateByDefault": "Nieuwe bronnen zijn privé. Daarna kies je of je Passport of scouts ze mogen zien.",
+    "confirmAdd": "Bron toevoegen",
+    "errors": {
+      "duplicate": "Deze bron is al toegevoegd.",
+      "limit_reached": "Je hebt het maximale aantal bronnen bereikt. Verwijder er een om een nieuwe toe te voegen.",
+      "guardian_scope_required": "Je ouder of voogd moet dit toestaan voordat de link gedeeld kan worden.",
+      "under_review": "Deze link wordt beoordeeld en kan nu niet worden gedeeld.",
+      "provider_disabled": "Deze website wordt niet meer ondersteund.",
+      "unsupported_provider": "Deze website wordt momenteel niet ondersteund.",
+      "invalid_match": "Die wedstrijd is niet gevonden.",
+      "unknown": "Er ging iets mis. Probeer het opnieuw."
+    },
+    "matches": {
+      "link": "Koppelen aan wedstrijd",
+      "title": "Koppelen aan een wedstrijd",
+      "body": "Kies de wedstrijden waar deze bron bij hoort. Je wedstrijdgegevens blijven precies zoals je ze hebt ingevoerd.",
+      "none": "Leg eerst een wedstrijd vast, daarna kun je deze bron eraan koppelen.",
+      "confirm": "Opslaan",
+      "chip": "Bron: {{provider}}",
+      "linkedCount_one": "Gekoppeld aan {{count}} wedstrijd",
+      "linkedCount_other": "Gekoppeld aan {{count}} wedstrijden"
+    },
+    "publicTitle": "Voetbalbronnen",
+    "publicSubtitle": "Links die de speler heeft toegevoegd naar externe voetbalwebsites"
   }
 }

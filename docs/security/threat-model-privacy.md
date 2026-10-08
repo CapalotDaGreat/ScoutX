@@ -19,6 +19,8 @@ attacks only.
 | P11 | Export link leakage | Data export download | Owner-only, recent sign-in, expiring link | `dataRights.test.mjs` | Signed URL in production NOT VALIDATED |
 | P12 | Non-transparency | Legal documents | 14 versioned documents in the app, consent records | `legalContent.test.ts` | Text and translations LEGAL REVIEW REQUIRED |
 | P13 | Lock-screen disclosure | Push notifications | Generic text for minors; adults choose | `pushChain.test.mjs` | Device NOT VALIDATED |
+| P14 | Re-identification or exposure through external football links (a club or league page names a minor, a query string carries an id) | Passport, scout view | Links private by default; Passport and scout copies only by choice and, for minors, with the guardian `public_passport` / `discovery` scope; copies drop links when consent ends; URLs never logged (`footballSourceLogContext`) | `footballSources.test.mjs`, `footballSources.test.ts` | Medium: the external page itself is outside PitchProof's control |
+| P15 | Third-party requests revealing users to football websites | Device, server | Nothing is requested from the site until the viewer taps Open, which hands the link to the system browser; no previews or favicons | release gate `External football sources are link-only` | Low |
 
 Owner decisions this model does not make: legal basis per purpose, retention periods, transfer
 safeguards for processors outside Switzerland/EU, whether backups are kept and for how long.

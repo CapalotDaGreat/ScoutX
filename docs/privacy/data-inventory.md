@@ -32,6 +32,7 @@ Nothing in this register has been reviewed by counsel yet.
 | D19 | Security signals | App Check attestation tokens | Firebase App Check | Device | Server |
 | D20 | Legal retention | minimised records with hashed identifiers after deletion | `legalRetention` | Server | Server only |
 | D21 | Admin audit | staff actions | `adminAuditLog` (append-only) | Server | Staff |
+| D22 | External football source links | link to an allowlisted football website, provider, source type, visibility, moderation status, linked match ids, report count. **No content from the linked page** | `players/{uid}/footballSources`; projections `publicPassports/{uid}.footballSources`, `scoutFootballSources/{uid}`; on a report, provider and link in `moderationCases.targetContext` | User (pasted link) | Owner; Passport viewers or scouts only by the player's choice and guardian scope; staff on report |
 
 Not collected: date of birth, precise or coarse location, contacts, advertising identifiers,
 analytics events, cross-app tracking. Raw GPS fixes exist only in memory during a recording
@@ -49,6 +50,7 @@ anything is stored.
 | Media library | D7, D8 | Store and validate uploads | Contract | Public media needs `public_media` scope |
 | AI analysis | D7, D9 | Analysis the user requests | Consent (`ai_analysis` scope for minors); contract for adults | Guardian scope |
 | Movement sessions | D10 | Distance and pitch heatmap | Contract | Available to all ages (no location) |
+| External football source links | D22 | Let players point to their league, team or player pages | Contract; showing a link to others by the player's choice | Sharing needs `public_passport` or `discovery` scope |
 | Scouting | D11 | Scout tools, contact through PitchProof | Contract (scout); consent (player discovery/contact) | `discovery`, `scout_contact`; trials need guardian co-approval |
 | Notifications | D12 | Inform users | Contract; push requires OS permission | Generic lock-screen copy always |
 | Moderation | D14, D21 | Safety and abuse handling | Legitimate interest; legal obligation | Priority handling of minor reports |

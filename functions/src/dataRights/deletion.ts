@@ -70,7 +70,7 @@ const ACTIVE_JOB_STATUSES = ['draft', 'uploading', 'queued', 'processing'];
 async function hideAndRevoke(db: Firestore, uid: string, deps: DeletionDeps): Promise<void> {
   // Stop being discoverable and reachable first, before the slower deletes.
   await Promise.all(
-    ['discoverablePlayers', 'publicPassports', 'pushTokens'].map((collection) =>
+    ['discoverablePlayers', 'publicPassports', 'scoutFootballSources', 'pushTokens'].map((collection) =>
       db.collection(collection).doc(uid).delete(),
     ),
   );

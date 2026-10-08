@@ -57,6 +57,11 @@ before(async () => {
   });
   await db.collection('consentRecords').doc(USER).set({ consents: { ai_analysis: { status: 'granted', version: '1.0.0' } } });
   await db.collection('players').doc(OTHER).collection('matches').doc('m1').set({ opponent: 'Not mine' });
+  await db.collection('players').doc(USER).collection('footballSources').doc('fs1').set({
+    id: 'fs1', ownerId: USER, providerId: 'fvrz', url: 'https://www.fvrz.ch/team/5', sourceType: 'team',
+    provenance: 'self_reported_with_link', visibility: 'private', status: 'active', matchIds: [],
+  });
+  await db.collection('players').doc(OTHER).collection('footballSources').doc('fs2').set({ ownerId: OTHER, url: 'https://www.fupa.net/x' });
 });
 
 describe('data export', () => {
@@ -87,6 +92,8 @@ describe('data export', () => {
     assert.equal(archive.sections.matches.length, 1);
     assert.equal(archive.sections.matches[0].opponent, 'FC Test');
     assert.equal(archive.sections.consents.summary.consents.ai_analysis.version, '1.0.0');
+    assert.deepEqual(archive.sections.externalFootballSources.map((source) => source.url), ['https://www.fvrz.ch/team/5']);
+    assert.equal(archive.sections.externalFootballSources[0].provenance, 'self_reported_with_link');
     const movement = archive.sections.movementSessions[0];
     assert.equal(movement.distanceMeters, 8200);
     assert.ok(movement.heatmap);

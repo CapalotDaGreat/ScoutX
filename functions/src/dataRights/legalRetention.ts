@@ -75,7 +75,7 @@ export async function retainLegalRecords(db: Firestore, uid: string, now: Date =
       deleteAfter: addDays(now, RETENTION.moderationDecisionDays),
     });
     // The open case keeps working for moderators but no longer names the account.
-    batch.update(doc.ref, { targetOwnerId: null, targetOwnerHash: hash, ownerDeletedAt: now.toISOString() });
+    batch.update(doc.ref, { targetOwnerId: null, targetOwnerHash: hash, targetContext: null, ownerDeletedAt: now.toISOString() });
   }
 
   for (const doc of requests.docs) {

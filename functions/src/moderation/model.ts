@@ -10,6 +10,7 @@ export const REPORT_TARGET_TYPES = [
   'evidenceRequest',
   'trial',
   'scoutingReport',
+  'external_football_source',
 ] as const;
 export type ReportTargetType = (typeof REPORT_TARGET_TYPES)[number];
 
@@ -83,8 +84,12 @@ export function comparePriority(a: CasePriority, b: CasePriority): number {
 /** Hours until a first review is due, by priority. */
 export const REVIEW_SLA_HOURS: Record<CasePriority, number> = { urgent: 4, high: 24, normal: 72 };
 
-/** People in a video (or their guardians) get it hidden from public view while it is reviewed. */
+/**
+ * People in a video (or their guardians) get it hidden from public view while it is reviewed.
+ * A reported external link stops being shown until a moderator decides.
+ */
 export function shouldAutoRestrict(targetType: ReportTargetType, reason: ReportReason): boolean {
+  if (targetType === 'external_football_source') return true;
   return (
     (targetType === 'media' || targetType === 'reel') &&
     (reason === 'minor_in_video' || reason === 'appears_in_video' || reason === 'privacy')

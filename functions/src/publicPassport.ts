@@ -3,6 +3,7 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { loadVisibleSources } from './footballSources/service';
 import { isAccountHeld } from './moderation/holds';
 import type { SafetyPolicy } from './safety/policy';
 import { loadSafetyPolicy } from './safety/userSafety';
@@ -206,6 +207,10 @@ export async function projectPassport(playerId: string, profile: ProfileDoc | un
   }
   if (passport.highlightVideos !== undefined) {
     passport.highlightVideos = await filterPublicVideos(db, playerId, passport.highlightVideos, policy);
+  }
+  const footballSources = await loadVisibleSources(db, playerId, ['passport']);
+  if (footballSources.length > 0) {
+    passport.footballSources = footballSources;
   }
   const matches = Array.isArray(profile?.statisticsMatches) ? profile.statisticsMatches : [];
   const videos = (passport.highlightVideos as { videos?: unknown } | undefined)?.videos;

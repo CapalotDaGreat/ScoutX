@@ -313,6 +313,68 @@ check('Universal links file', () => {
   return problems.length === 0 ? [PASS, 'Team ID set, /report mapped, /guardian web-only'] : [FAIL, problems.join('; ')];
 });
 
+const SCRAPING_PACKAGES = [
+  'cheerio', 'puppeteer', 'puppeteer-core', 'jsdom', 'node-html-parser', 'htmlparser2', 'parse5', 'crawlee',
+  'x-ray', 'osmosis', 'open-graph-scraper', 'metascraper', 'link-preview-js', 'react-native-link-preview',
+  'react-native-webview', 'got-scraping', 'unfurl.js',
+];
+const NETWORK_CALL = /\bfetch\s*\(|XMLHttpRequest|\baxios\b|\bhttps?\.(get|request)\s*\(|\bWebView\b|<iframe|\bonSchedule\b|\btaskQueue\s*\(|\bopenBrowserAsync\b/;
+
+check('External football sources are link-only', async () => {
+  const problems = [];
+  const clientCore = read('src/features/football-sources/core.ts');
+  if (clientCore.replace(/\r\n/g, '\n') !== read('functions/src/footballSources/core.ts').replace(/\r\n/g, '\n')) {
+    problems.push('client and server provider registries differ');
+  }
+  const core = await import(pathToFileURL(join(root, 'src/features/football-sources/core.ts')).href);
+  const ids = core.FOOTBALL_SOURCE_PROVIDERS.map((provider) => provider.id);
+  const hosts = core.FOOTBALL_SOURCE_PROVIDERS.flatMap((provider) => provider.allowedHosts);
+  if (new Set(ids).size !== ids.length) problems.push('duplicate provider id');
+  if (new Set(hosts).size !== hosts.length) problems.push('duplicate provider host');
+  for (const provider of core.FOOTBALL_SOURCE_PROVIDERS) {
+    if (provider.mode !== 'link_only' || provider.linkOnly !== true) problems.push(`${provider.id} is not link-only`);
+    if (provider.legalReviewStatus === 'approved_for_api' || provider.legalReviewStatus === 'approved_for_import') {
+      problems.push(`${provider.id} claims API/import approval`);
+    }
+    for (const host of provider.allowedHosts) {
+      const parsed = core.parseFootballSourceUrl(`https://${host}/`);
+      if (!/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(host) || !parsed.ok || parsed.provider.id !== provider.id) {
+        problems.push(`${provider.id} host ${host} is not a plain https hostname`);
+      }
+    }
+  }
+  for (const [url, expected] of [
+    ['http://www.fvrz.ch/', 'not_https'],
+    ['javascript:alert(1)', 'not_https'],
+    ['https://fvrz.ch.attacker.com/', 'unsupported_provider'],
+    ['https://evilfvrz.ch/', 'unsupported_provider'],
+    ['https://example.com/', 'unsupported_provider'],
+  ]) {
+    const parsed = core.parseFootballSourceUrl(url);
+    if (parsed.ok || parsed.error !== expected) problems.push(`${url} is not rejected as ${expected}`);
+  }
+  if (core.FOOTBALL_SOURCE_PROVENANCE !== 'self_reported_with_link') problems.push('provenance is not self_reported_with_link');
+  const sourceType = /export type ExternalFootballSource = \{([\s\S]*?)\n\};/.exec(clientCore)?.[1] ?? '';
+  if (!sourceType || /\b(verified|official)\??:/.test(sourceType)) problems.push('source type has a verified/official field or is missing');
+  const rulesBlock = /match \/players\/\{userId\}\/footballSources\/\{sourceId\} \{([\s\S]*?)\}/.exec(read('firestore.rules'))?.[1] ?? '';
+  if (!/allow write: if false;/.test(rulesBlock)) problems.push('clients can write footballSources');
+  const featureFiles = trackedFiles().filter(
+    (file) => /\.(ts|tsx)$/.test(file) && (file.startsWith('src/features/football-sources/') || file.startsWith('functions/src/footballSources/')),
+  );
+  if (featureFiles.length === 0) problems.push('feature files not tracked');
+  for (const file of featureFiles) {
+    if (NETWORK_CALL.test(read(file))) problems.push(`${file} makes a network call, schedule, task or embed`);
+  }
+  const deps = { ...readJson('package.json').dependencies, ...readJson('functions/package.json').dependencies };
+  const scrapers = SCRAPING_PACKAGES.filter((name) => name in deps);
+  if (scrapers.length) problems.push(`scraping/preview packages installed: ${scrapers.join(', ')}`);
+  const doc = existsSync(join(root, 'docs/compliance/external-football-sources.md')) ? read('docs/compliance/external-football-sources.md') : '';
+  if (!/not\s+legal\s+advice/i.test(doc) || !/not\s+legal\s+approval/i.test(doc)) problems.push('compliance note missing or does not disclaim legal approval');
+  return problems.length === 0
+    ? [PASS, `${ids.length} link-only providers, https only, no fetch code, docs present`]
+    : [FAIL, problems.join('; ')];
+});
+
 check('Firestore and Storage rules suite', () => {
   if (skipTests) return [SKIPPED, '--skip-tests'];
   const result = spawnSync(npm, ['run', 'test:rules'], { cwd: root, encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 256 * 1024 * 1024 });

@@ -33,6 +33,7 @@ exports.UID_KEYED_COLLECTIONS = [
     'entitlements',
     'usageLedger',
     'accountRestrictions',
+    'scoutFootballSources',
 ];
 /** Subcollections under UID-keyed documents (a parent delete leaves these behind). */
 const UID_SUBCOLLECTIONS = (uid) => [
@@ -44,6 +45,7 @@ const UID_SUBCOLLECTIONS = (uid) => [
     `players/${uid}/identitySnapshots`,
     `players/${uid}/media`,
     `players/${uid}/trialReflections`,
+    `players/${uid}/footballSources`,
     `recruitmentWorkspaces/${uid}/entries`,
     `moderationNotices/${uid}/items`,
     `consentRecords/${uid}/items`,

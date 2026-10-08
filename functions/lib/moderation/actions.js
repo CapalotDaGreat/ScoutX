@@ -117,7 +117,8 @@ async function removeTarget(db, data, caseId) {
         await db.collection(collection).doc(data.targetId).delete();
         return;
     }
-    if (data.targetOwnerId && (data.targetType === 'media' || data.targetType === 'reel')) {
+    if (data.targetOwnerId &&
+        (data.targetType === 'media' || data.targetType === 'reel' || data.targetType === 'external_football_source')) {
         await (0, holds_1.applyHold)({ targetType: data.targetType, targetId: data.targetId, ownerId: data.targetOwnerId, state: 'removed', caseId }, db);
     }
 }

@@ -4,6 +4,7 @@ import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { FieldValue, getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from '../callableOptions';
+import { FOOTBALL_SOURCES_COLLECTION } from '../footballSources/core';
 import { isPlausibleEmail } from '../safety/guardianToken';
 import { loadSafetyPolicy } from '../safety/userSafety';
 import { applyHold } from './holds';
@@ -58,6 +59,11 @@ export async function resolveTargetOwner(
       const scout = report.get('scoutId');
       return typeof scout === 'string' ? scout : null;
     }
+    case 'external_football_source': {
+      if (!claimedOwnerId) return null;
+      const source = await db.collection('players').doc(claimedOwnerId).collection(FOOTBALL_SOURCES_COLLECTION).doc(targetId).get();
+      return source.exists ? claimedOwnerId : null;
+    }
     case 'post':
       return claimedOwnerId || null;
     default:
@@ -87,6 +93,14 @@ export async function triageReport(db: Firestore, reportId: string, report: Repo
   const priority = priorityFor(reason, ownerIsMinor);
   const key = holdKey(targetType, targetId);
   const now = new Date();
+  // Moderators review the stored link itself; the page behind it is never fetched for them.
+  let targetContext: { providerId: string; url: string } | null = null;
+  if (targetType === 'external_football_source' && ownerId) {
+    const sourceRef = db.collection('players').doc(ownerId).collection(FOOTBALL_SOURCES_COLLECTION).doc(targetId);
+    const source = await sourceRef.get();
+    targetContext = { providerId: String(source.get('providerId') ?? ''), url: String(source.get('url') ?? '') };
+    await sourceRef.update({ reportCount: FieldValue.increment(1) });
+  }
 
   const existing = await db.collection('moderationCases').where('targetKey', '==', key).where('open', '==', true).limit(1).get();
   let caseId: string;
@@ -112,6 +126,7 @@ export async function triageReport(db: Firestore, reportId: string, report: Repo
       targetOwnerId: ownerId,
       ownerVerified: ownerId !== null,
       ownerIsMinor,
+      ...(targetContext ? { targetContext } : {}),
       reasons: [reason],
       reportIds: [reportId],
       reportCount: 1,

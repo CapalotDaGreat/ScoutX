@@ -77,7 +77,9 @@
     "videoRestrictedNote": "Denúncias sobre pessoas ou crianças em vídeos são analisadas primeiro. O vídeo pode ficar oculto durante a análise.",
     "passportButton": "Denunciar um vídeo",
     "trialButton": "Denunciar este convite",
-    "requestButton": "Denunciar este pedido"
+    "requestButton": "Denunciar este pedido",
+    "promptSource": "Diz-nos o que está errado com este link, por exemplo se é sobre outra pessoa.",
+    "sourceButton": "Denunciar link"
   },
   "block": {
     "blockTitle": "Bloquear jogador?",
@@ -176,7 +178,8 @@
     "appeal": {
       "upheld": "Manter decisão",
       "overturned": "Reverter decisão"
-    }
+    },
+    "reportedLink": "Link denunciado ({{provider}}): {{url}}"
   },
   "notices": {
     "title": "Decisões sobre o teu conteúdo",

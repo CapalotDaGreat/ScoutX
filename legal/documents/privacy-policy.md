@@ -25,6 +25,7 @@ This policy applies to the PitchProof iOS app, the PitchProof website at pitchpr
 - Account data: name, email address, sign-in provider (email, Apple or Google), your role (player, scout or coach) and an age band (under 13, 13 to 17, 18 or older). We never ask for or store your date of birth.
 - Profile data you enter: club, positions, strong foot, nationality, biography, career history and achievements.
 - Football data you enter: match logs, statistics, development goals, notes and coach observations.
+- Links you add to supported football websites: the link, which website it belongs to, the type of page, the matches you link it to and who you share it with. Links are private until you share them. We do not open, read or copy anything from those websites, and a link does not make any information verified.
 - Media you upload: videos, photos and the metadata needed to process them (duration, resolution, file size, codec).
 - Analysis results: AI-generated observations, coaching suggestions and highlight plans created from your media.
 - Movement sessions: distance, speed, sprints, zones and a heatmap expressed in metres relative to the pitch. See "Movement sessions" below.

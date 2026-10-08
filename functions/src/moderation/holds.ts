@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
+import { FOOTBALL_SOURCES_COLLECTION } from '../footballSources/core';
 import { holdKey, type HoldState, type ReportTargetType } from './model';
 
 /** Holds on any of these keys take the whole public profile offline. */
@@ -71,7 +72,19 @@ export async function applyHold(input: HoldInput, db: Firestore = getFirestore()
   if (input.targetType === 'reel') {
     await db.collection('reels').doc(input.targetId).set({ moderationState: input.state, updatedAt: now }, { merge: true });
   }
+  if (input.targetType === 'external_football_source') {
+    const ref = db.collection('players').doc(input.ownerId).collection(FOOTBALL_SOURCES_COLLECTION).doc(input.targetId);
+    if ((await ref.get()).exists) {
+      await ref.update({ status: SOURCE_STATUS_FOR_HOLD[input.state], updatedAt: now });
+    }
+  }
 }
+
+const SOURCE_STATUS_FOR_HOLD: Record<HoldState, 'reported' | 'hidden' | 'removed'> = {
+  restricted: 'reported',
+  hidden: 'hidden',
+  removed: 'removed',
+};
 
 /** Lifts a hold after a dismissal or a successful appeal. */
 export async function clearHold(
@@ -101,6 +114,12 @@ export async function clearHold(
   }
   if (targetType === 'reel') {
     await db.collection('reels').doc(targetId).set({ moderationState: 'none' }, { merge: true });
+  }
+  if (targetType === 'external_football_source' && ownerId) {
+    const ref = db.collection('players').doc(ownerId).collection(FOOTBALL_SOURCES_COLLECTION).doc(targetId);
+    if ((await ref.get()).exists) {
+      await ref.update({ status: 'active', updatedAt: new Date().toISOString() });
+    }
   }
   return existed;
 }

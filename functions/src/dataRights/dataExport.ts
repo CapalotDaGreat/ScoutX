@@ -5,6 +5,7 @@ import { logger } from 'firebase-functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { createCallableOptions } from '../callableOptions';
+import { FOOTBALL_SOURCES_COLLECTION } from '../footballSources/core';
 import { taskQueueName } from '../region';
 import { DAY_MS, RETENTION, addDays } from './retention';
 
@@ -91,6 +92,7 @@ export async function buildExportArchive(db: Firestore, uid: string, linkExpires
     analyses, observationsAbout, observationsBy, movement, reels, reelExports,
     reportsBy, briefsBy, watchlistBy, requestsBy, trialsSent, trialsReceived, requestsReceived,
     workspace, workspaceEntries, activities, entitlement, usagePeriods, privacyRequests, reportsFiled, appeals,
+    footballSources,
   ] = await Promise.all([
     db.collection('users').doc(uid).get(),
     db.collection('profiles').doc(uid).get(),
@@ -128,6 +130,7 @@ export async function buildExportArchive(db: Firestore, uid: string, linkExpires
     many(db.collection('privacyRequests').where('uid', '==', uid)),
     many(db.collection('contentReports').where('reporterId', '==', uid)),
     many(db.collection('appeals').where('ownerId', '==', uid)),
+    many(player.collection(FOOTBALL_SOURCES_COLLECTION)),
   ]);
 
   const media = [...playerMedia, ...analyses, ...reelExports];
@@ -148,6 +151,7 @@ export async function buildExportArchive(db: Firestore, uid: string, linkExpires
       consents: { summary: docJson(consent), history: consentItems },
       passport: { public: docJson(passport), summary: docJson(summary), slugs },
       matches,
+      externalFootballSources: footballSources,
       development: { goals, training, evidence, identitySnapshots: identity, trialReflections: reflections },
       analyses,
       coaching: { aboutYou: observationsAbout, writtenByYou: observationsBy },
