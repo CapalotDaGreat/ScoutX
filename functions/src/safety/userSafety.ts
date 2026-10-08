@@ -78,35 +78,35 @@ export function guardianEmail(kind: 'consent' | 'confirmation' | 'trial' | 'cont
   const paragraphs: string[] = [];
   let subject = '';
   if (kind === 'consent') {
-    subject = `${name} asked you to approve their ScoutX account`;
+    subject = `${name} asked you to approve their PitchProof account`;
     paragraphs.push(
-      `${name} wants to use ScoutX, a football development app, and named you as their parent or guardian.`,
+      `${name} wants to use PitchProof, a football development app, and named you as their parent or guardian.`,
       'Because they are under 18, their account stays limited until you review it. You decide separately whether their profile can be public, whether scouts can find or contact them, whether videos can be shared, and whether AI analysis may be used. Nothing is allowed until you choose it, and you can change or withdraw your decision at any time.',
       `Review and decide: ${input.link ?? ''}`,
       'This link works once and expires in 7 days. If you do not know this person, ignore this email and nothing will happen.',
     );
   } else if (kind === 'confirmation') {
-    subject = `Your decision for ${name}'s ScoutX account`;
+    subject = `Your decision for ${name}'s PitchProof account`;
     paragraphs.push(
-      `Your decision for ${name}'s ScoutX account has been saved.`,
+      `Your decision for ${name}'s PitchProof account has been saved.`,
       `Keep this email. You can review, change or withdraw your consent at any time here: ${input.link ?? ''}`,
     );
   } else if (kind === 'trial') {
     subject = `${name} was invited to a football trial`;
     paragraphs.push(
-      `${name} received a trial invitation through ScoutX${input.club ? ` from ${input.club}` : ''}.`,
+      `${name} received a trial invitation through PitchProof${input.club ? ` from ${input.club}` : ''}.`,
       'They can only accept it after you approve. Review the details and decide here:',
       input.link ?? '',
-      'This link works once and expires in 7 days. ScoutX does not verify clubs or scouts beyond the checks shown in the app. Never pay for a trial.',
+      'This link works once and expires in 7 days. PitchProof does not verify clubs or scouts beyond the checks shown in the app. Never pay for a trial.',
     );
   } else {
-    subject = `A scout contacted ${name} on ScoutX`;
+    subject = `A scout contacted ${name} on PitchProof`;
     paragraphs.push(
-      `A scout sent ${name} a request through ScoutX. You are receiving this because you approved scout contact for their account.`,
-      'Messages stay inside ScoutX. If anything seems wrong, you can withdraw scout contact using the link in your consent confirmation email.',
+      `A scout sent ${name} a request through PitchProof. You are receiving this because you approved scout contact for their account.`,
+      'Messages stay inside PitchProof. If anything seems wrong, you can withdraw scout contact using the link in your consent confirmation email.',
     );
   }
-  paragraphs.push('ScoutX is provided by CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland.');
+  paragraphs.push('PitchProof is provided by CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland.');
   return {
     subject,
     text: paragraphs.join('\n\n'),

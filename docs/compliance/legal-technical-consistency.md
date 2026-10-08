@@ -15,7 +15,7 @@ configuration), **NOT VALIDATED**, **LEGAL REVIEW REQUIRED**.
 | C4 | Guardian chooses each permission separately and can withdraw (guardian notice) | `YOUTH_SCOPES`, revoke link (400-day token) | `safetyPolicy.test.ts` | PASS |
 | C5 | Minors shown with first name + last initial, "youth" label, no exact age (privacy policy) | `applyYouthDisplay` in `publicPassport.ts` | `tests/unit/releaseCoverage.test.ts` | PASS |
 | C6 | Trials for 13–17 need guardian co-approval (terms) | `firestore.rules` `trialInvitations` | rules "minor trials need ... guardian co-approval" | PASS |
-| C7 | Scouts contact minors only through ScoutX requests; guardian notified (youth policy) | `evidenceRequests.ts` `notifyGuardianOfScoutContact`; no messaging feature | `requestCenter.test.mjs` | PASS |
+| C7 | Scouts contact minors only through PitchProof requests; guardian notified (youth policy) | `evidenceRequests.ts` `notifyGuardianOfScoutContact`; no messaging feature | `requestCenter.test.mjs` | PASS |
 | C8 | Minors' notifications show no details on the lock screen (youth policy) | `lockScreenCopy`, `pushDelivery.ts` | `pushChain.test.mjs` "lock-screen privacy" | PASS |
 | C9 | We do not train AI on your data; data collection denied, ZDR required (AI policy, privacy policy) | `PROVIDER_PRIVACY` on every OpenRouter request | `aiCallables.test.mjs`, `analysisPipeline.test.mjs` | PARTIAL: provider-side ZDR NOT VALIDATED; LEGAL REVIEW REQUIRED |
 | C10 | Movement sessions store no location; available to all ages (privacy policy) | `gpsTrackingService.ts` (in-memory origin, relative metres), `canRecordMovement`, background location off in `app.json` | `gpsIntelligence.test.ts`, `safetyPolicy.test.ts` | PASS (code); on-device NOT VALIDATED |
@@ -31,7 +31,7 @@ configuration), **NOT VALIDATED**, **LEGAL REVIEW REQUIRED**.
 | C20 | Encrypted backups may exist (retention policy) | No backups configured | n/a | LEGAL REVIEW REQUIRED: align wording with `docs/security/disaster-recovery.md` |
 | C21 | No advertising, analytics or cross-app tracking SDKs (privacy policy) | `package.json`; `NSPrivacyTracking: false` | release gate dependency check | PASS |
 | C22 | Crash reports scrubbed (privacy policy) | `sentry.ts` `sendDefaultPii: false`, `scrubUnknownData` | code review only | PARTIAL |
-| C23 | ScoutX guarantees no trials or contracts (terms); no "get discovered" promise (store listing) | Copy in app and `store/listing.json` | release gate store check | PASS |
+| C23 | PitchProof guarantees no trials or contracts (terms); no "get discovered" promise (store listing) | Copy in app and `store/listing.json` | release gate store check | PASS |
 | C24 | Every Passport item shows its source; self-reported data is not "verified" (store listing) | Evidence source labels | `dataTruth.test.ts`, `evidenceGraph.test.ts` | PASS |
 | C25 | Computer vision tracking is not available (AI policy, app) | `cvWorker.ts` NOT_AVAILABLE | `matchAnalysisHonesty.test.ts` | PASS |
 | C26 | Contacts for privacy, security, legal | `LEGAL_CONFIG.contacts` (all null, shown as `LEGAL_CONTACT_REQUIRED`) | `legalContent.test.ts`, release gate | EXTERNAL CONFIGURATION REQUIRED; production build blocked until set |

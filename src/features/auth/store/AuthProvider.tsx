@@ -318,7 +318,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         upgradeIntent: null,
         isSubmitting: false,
         error: null,
-        successMessage: 'Welcome to ScoutX guest mode.',
+        successMessage: 'Welcome to PitchProof guest mode.',
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to continue as guest.';
@@ -412,7 +412,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         upgradeIntent: null,
         isSubmitting: false,
         error: null,
-        successMessage: 'Welcome to ScoutX. Choose your role to continue.',
+        successMessage: 'Welcome to PitchProof. Choose your role to continue.',
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unable to register.';
@@ -466,7 +466,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       pendingRoleSelection: false,
       upgradeIntent: null,
       user: current.user ? { ...current.user, role, isAnonymous: false } : current.user,
-      successMessage: `You’re ready to explore ScoutX as a ${role}.`,
+      successMessage: `You’re ready to explore PitchProof as a ${role}.`,
     }));
   }, [state.user?.uid]);
 

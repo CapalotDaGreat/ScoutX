@@ -12,7 +12,7 @@ test.describe('Welcome screen', () => {
   test('renders primary auth actions', async ({ page }) => {
     await waitForAppReady(page);
 
-    await expect(page.getByText('ScoutX', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('PitchProof', { exact: true }).first()).toBeVisible();
     await expect(page.getByRole('button', { name: 'Create your account' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'I already have an account' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Continue as Guest' })).toBeVisible();

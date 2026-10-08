@@ -35,7 +35,7 @@
   "momentsCount_one": "{{count}} momento registrado",
   "momentsCount_other": "{{count}} momentos registrados",
   "coachNotesTitle": "Observaciones del entrenador",
-  "coachNotesLabel": "Solo notas del entrenador — ScoutX no inventa comentarios.",
+  "coachNotesLabel": "Solo notas del entrenador — PitchProof no inventa comentarios.",
   "coachNotesEmpty": "Aun no hay observaciones de entrenador registradas.",
   "journeyEditor": {
     "entryType": "Tipo de entrada",

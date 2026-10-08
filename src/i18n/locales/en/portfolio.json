@@ -2,7 +2,7 @@
   "title": "Portfolio",
   "homeTitle": "Home",
   "homeSubtitle": "Your game. Your progress.",
-  "subtitle": "Your Football Passport on ScoutX",
+  "subtitle": "Your Football Passport on PitchProof",
   "loadingSubtitle": "Preparing your profile…",
   "errorSubtitle": "We couldn't load your portfolio",
   "emptySubtitle": "No portfolio data available",
@@ -29,7 +29,7 @@
   "recentMatches": "Recent Matches",
   "footballPassport": "Football Passport",
   "passportPreview": "Passport preview",
-  "passportSubtitle": "ScoutX shareable football résumé",
+  "passportSubtitle": "PitchProof shareable football résumé",
   "loadingPassportSubtitle": "Loading shareable résumé",
   "passportUnavailable": "Unavailable",
   "privatePortfolioTitle": "Portfolio is private",
@@ -77,9 +77,9 @@
     "shareLink": "Share link",
     "shareSocialCard": "Share social card",
     "linkCopied": "Link copied",
-    "shareTitle": "{{playerName}} — ScoutX Portfolio",
-    "shareMessage": "View {{playerName}}'s football portfolio on ScoutX: {{url}}",
-    "tagline": "Football Passport on ScoutX"
+    "shareTitle": "{{playerName}} — PitchProof Portfolio",
+    "shareMessage": "View {{playerName}}'s football portfolio on PitchProof: {{url}}",
+    "tagline": "Football Passport on PitchProof"
   },
   "privacy": {
     "title": "Portfolio & discovery privacy",
@@ -127,7 +127,7 @@
     "copyInviteLink": "Copy invite link",
     "linkCopied": "Link copied",
     "shareTitle": "Coach endorsement for {{playerName}}",
-    "shareMessage": "Hi coach, could you endorse my Football Passport on ScoutX? {{url}}"
+    "shareMessage": "Hi coach, could you endorse my Football Passport on PitchProof? {{url}}"
   },
   "score": {
     "title": "Football Passport Score",
@@ -606,7 +606,7 @@
   "youthPlayer": "Youth player",
   "strangerView": {
     "title": "What strangers see",
-    "body": "This is the exact version ScoutX shows people you haven't approved. It's built on our server from your privacy settings and safety rules, so it can hide more than your settings alone.",
+    "body": "This is the exact version PitchProof shows people you haven't approved. It's built on our server from your privacy settings and safety rules, so it can hide more than your settings alone.",
     "hiddenTitle": "Not visible to strangers",
     "hiddenBody": "People you haven't approved can't see your Passport right now. Turn on the public Passport in your privacy settings. If you're under 18, your parent or guardian also needs to allow it. Changes can take a moment to appear."
   }

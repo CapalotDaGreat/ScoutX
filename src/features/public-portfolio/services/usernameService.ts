@@ -15,6 +15,7 @@ const RESERVED_USERNAMES = new Set([
   'register',
   'scout',
   'scoutx',
+  'pitchproof',
   'www',
 ]);
 

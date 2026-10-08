@@ -186,7 +186,7 @@ export async function clearGoogleSignInSession(): Promise<void> {
     await ensureGoogleSignInConfigured(module);
     await module.GoogleSignin.signOut();
   } catch {
-    // Ignore — Firebase Auth is the source of truth for ScoutX sessions.
+    // Ignore — Firebase Auth is the source of truth for PitchProof sessions.
   }
 }
 

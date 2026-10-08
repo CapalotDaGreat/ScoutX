@@ -1,6 +1,6 @@
 # Firebase App Check
 
-ScoutX uses **Firebase App Check** to protect Firestore, Cloud Storage, Cloud Functions, and Firebase Authentication from abuse.
+PitchProof uses **Firebase App Check** to protect Firestore, Cloud Storage, Cloud Functions, and Firebase Authentication from abuse.
 
 ## Architecture
 

@@ -6,7 +6,7 @@ const AUTH_LISTENER_TIMEOUT_MS = 4_000;
 
 /**
  * Subscribes to Firebase/mock auth. Always clears loading within a timeout so a
- * hung Auth listener cannot freeze the app on "Preparing your ScoutX session".
+ * hung Auth listener cannot freeze the app on "Preparing your PitchProof session".
  */
 export function useAuthSession() {
   const [user, setUser] = useState<AuthUser | null>(null);

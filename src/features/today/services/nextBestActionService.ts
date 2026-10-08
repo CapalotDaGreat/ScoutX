@@ -285,7 +285,7 @@ export function buildTodayPlan(input: TodayInput): TodayPlan {
     }
   }
 
-  // ScoutX has no fixture list, so a match-prep session is the only honest signal that a
+  // PitchProof has no fixture list, so a match-prep session is the only honest signal that a
   // match was played. Ask for the result once, until a match dated on/after the prep exists.
   const recentPrep = newestFirst(
     trainingSessions.filter((session) => session.type === 'match_prep'),

@@ -20,13 +20,13 @@ Before uploading, make sure that you recorded the footage yourself or have permi
 
 ## Visibility
 
-Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, ScoutX shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it.
+Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, PitchProof shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it.
 
-The first time you upload, ScoutX asks you to acknowledge this policy. ScoutX records that acknowledgement with the policy version.
+The first time you upload, PitchProof asks you to acknowledge this policy. PitchProof records that acknowledgement with the policy version.
 
 ## Processing
 
-Uploaded files first go to a protected quarantine area. Our servers check the file type, container, codecs, duration, resolution and size before the file is moved to your private storage. Files that fail these checks are rejected and deleted. These checks are not a malware or virus scan, and ScoutX does not claim to perform one.
+Uploaded files first go to a protected quarantine area. Our servers check the file type, container, codecs, duration, resolution and size before the file is moved to your private storage. Files that fail these checks are rejected and deleted. These checks are not a malware or virus scan, and PitchProof does not claim to perform one.
 
 ## Analysis
 
@@ -34,7 +34,7 @@ If you request AI analysis, frames are extracted from your video on our servers 
 
 ## People who appear in videos
 
-If you appear in a video on ScoutX, or a minor in your care does, you can report it with the reason "I appear in this video" or "A minor appears in this video", including without a ScoutX account. While a report is under review the video may be hidden from public view.
+If you appear in a video on PitchProof, or a minor in your care does, you can report it with the reason "I appear in this video" or "A minor appears in this video", including without a PitchProof account. While a report is under review the video may be hidden from public view.
 
 ## Removal
 

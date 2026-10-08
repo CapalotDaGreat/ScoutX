@@ -1,24 +1,24 @@
-# ScoutX Deep Linking (Expo SDK 57)
+# PitchProof Deep Linking (Expo SDK 57)
 
-ScoutX uses **Expo Linking** (`expo-linking` ~8) with **React Navigation** linking for custom schemes, universal links (iOS), and App Links (Android).
+PitchProof uses **Expo Linking** (`expo-linking` ~8) with **React Navigation** linking for custom schemes, universal links (iOS), and App Links (Android).
 
 ## URL schemes
 
 | Type | Example |
 |------|---------|
-| Custom scheme | `scoutx://auth/action?mode=verifyEmail&oobCode=...` |
+| Custom scheme | `pitchproof://auth/action?mode=verifyEmail&oobCode=...` |
 | Universal / App link | `https://<EXPO_PUBLIC_APP_LINK_HOST>/auth/action?mode=verifyEmail&oobCode=...` |
 | Firebase hosted handler | `https://<project>.firebaseapp.com/__/auth/action?...&continueUrl=...` |
 
-Incoming Firebase auth URLs (including `__/auth/action` and nested `link=` params) are normalized to `scoutx://auth/action` before navigation.
+Incoming Firebase auth URLs (including `__/auth/action` and nested `link=` params) are normalized to `pitchproof://auth/action` before navigation.
 
 ## Email verification flow
 
 1. App sends verification / reset mail with `ActionCodeSettings` (`handleCodeInApp: true`).
 2. `url` / continue URL is `https://<host>/auth/action`.
-3. Hosted bridge (`public/auth/action.html`) opens `scoutx://auth/action?...` with `mode` + `oobCode`.
+3. Hosted bridge (`public/auth/action.html`) opens `pitchproof://auth/action?...` with `mode` + `oobCode`.
 4. `expo-linking` delivers the URL → `AuthActionScreen` → `applyActionCode` / password reset.
-5. **Continue to ScoutX** returns to the authenticated Player/Scout shell when signed in, otherwise Login.
+5. **Continue to PitchProof** returns to the authenticated Player/Scout shell when signed in, otherwise Login.
 
 ## Architecture
 
@@ -67,7 +67,7 @@ EXPO_PUBLIC_FIREBASE_PROJECT_ID=<your-project-id>
 EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=<your-project-id>.firebaseapp.com
 ```
 
-If `EXPO_PUBLIC_APP_LINK_HOST` is omitted, ScoutX defaults to `<projectId>.web.app` when the project id is present.
+If `EXPO_PUBLIC_APP_LINK_HOST` is omitted, PitchProof defaults to `<projectId>.web.app` when the project id is present.
 
 > Do not point continue URLs at a domain you do not control. Universal Links will fail.
 
@@ -79,7 +79,7 @@ firebase deploy --only hosting
 
 This publishes:
 
-- `/auth/action` → bridge that opens ScoutX
+- `/auth/action` → bridge that opens PitchProof
 - `/.well-known/apple-app-site-association`
 - `/.well-known/assetlinks.json`
 
@@ -88,7 +88,7 @@ This publishes:
 1. Authentication → Settings → **Authorized domains**: add your app-link host.
 2. Authentication → Templates → **Customize action URL** (optional but recommended):  
    `https://<host>/auth/action`  
-   so emails land on the ScoutX bridge with `mode` + `oobCode`.
+   so emails land on the PitchProof bridge with `mode` + `oobCode`.
 
 ### 4. iOS Universal Links
 
@@ -115,7 +115,7 @@ Set `EXPO_PUBLIC_APP_LINK_HOST` in EAS env for each profile so native entitlemen
 
 | Capability | Expo Go | Development / EAS build |
 |------------|---------|-------------------------|
-| `scoutx://` custom scheme | Limited / unreliable | Supported |
+| `pitchproof://` custom scheme | Limited / unreliable | Supported |
 | Universal Links / App Links | Not supported | Supported after hosting + rebuild |
 | Email verification end-to-end | Incomplete | Supported |
 
@@ -126,10 +126,10 @@ Use `npm run start:dev-client` with an installed development build to validate a
 With a development build:
 
 ```text
-npx uri-scheme open "scoutx://auth/action?mode=verifyEmail&oobCode=TEST" --ios
+npx uri-scheme open "pitchproof://auth/action?mode=verifyEmail&oobCode=TEST" --ios
 ```
 
-Invalid codes should surface a safe error on `AuthActionScreen`; valid codes from a real email should verify and offer **Continue to ScoutX**.
+Invalid codes should surface a safe error on `AuthActionScreen`; valid codes from a real email should verify and offer **Continue to PitchProof**.
 
 ## Key files
 
@@ -140,6 +140,6 @@ Invalid codes should surface a safe error on `AuthActionScreen`; valid codes fro
 | `src/navigation/RootNavigator.tsx` | Always-mounted container + pending deep-link apply |
 | `src/features/auth/screens/AuthActionScreen.tsx` | Verification UX + return to app |
 | `src/features/auth/services/authActionLinkService.ts` | Firebase `applyActionCode` / reset |
-| `public/auth/action.html` | Web bridge → `scoutx://` |
+| `public/auth/action.html` | Web bridge → `pitchproof://` |
 | `public/.well-known/*` | AASA + assetlinks |
 | `firebase.json` | Hosting for bridge + well-known |

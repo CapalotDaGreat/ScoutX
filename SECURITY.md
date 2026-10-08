@@ -1,10 +1,10 @@
-# ScoutX Security
+# PitchProof Security
 
-This document describes how ScoutX handles authentication and credentials. It is the reference for contributors working on auth, admin tools, Cloud Functions, or data storage.
+This document describes how PitchProof handles authentication and credentials. It is the reference for contributors working on auth, admin tools, Cloud Functions, or data storage.
 
 ## Authentication architecture
 
-ScoutX uses **Firebase Authentication** as the sole credential authority.
+PitchProof uses **Firebase Authentication** as the sole credential authority.
 
 | Concern | Owner |
 |--------|--------|
@@ -36,7 +36,7 @@ The mobile app never implements custom password hashing, password storage, or pa
 
 Passwords are handled **exclusively by Firebase Authentication**.
 
-ScoutX must **never**:
+PitchProof must **never**:
 
 - store passwords in Firestore
 - store passwords in Firebase Storage
@@ -54,7 +54,7 @@ Firebase Authentication stores passwords using Google's managed infrastructure. 
 
 - hashed with industry-standard algorithms
 - never returned by Firebase Admin SDK list/get user APIs
-- never available to project owners, developers, database admins, or ScoutX moderators
+- never available to project owners, developers, database admins, or PitchProof moderators
 
 **This is intentional and correct.** No privileged user should ever be able to read a user's password.
 
@@ -83,7 +83,7 @@ Firebase Auth provides:
 - email verification and password reset flows
 - optional MFA, App Check, and Identity Platform upgrades
 
-ScoutX relies on Firebase for credential security and adds app-level controls:
+PitchProof relies on Firebase for credential security and adds app-level controls:
 
 - production builds **fail closed** if Firebase is not configured (no mock auth fallback)
 - anti-enumeration messaging on password reset
@@ -93,7 +93,7 @@ ScoutX relies on Firebase for credential security and adds app-level controls:
 
 ## Encrypted device storage (`SecureStorageService`)
 
-Firebase Authentication persists sessions (ID tokens and refresh tokens) via its own Persistence API (`getReactNativePersistence(AsyncStorage)` on native). ScoutX **does not** duplicate Firebase session material in SecureStore.
+Firebase Authentication persists sessions (ID tokens and refresh tokens) via its own Persistence API (`getReactNativePersistence(AsyncStorage)` on native). PitchProof **does not** duplicate Firebase session material in SecureStore.
 
 `SecureStorageService` (`src/services/secureStorage/`) is the only app path for encrypted device secrets. Full architecture: [docs/SECURE_STORAGE.md](docs/SECURE_STORAGE.md).
 
@@ -128,7 +128,7 @@ Keys are allowlisted. Values are size-limited and scanned for forbidden credenti
 
 ## Firebase App Check
 
-ScoutX initializes **Firebase App Check before any Firebase service** (Auth, Firestore, Storage, Functions). See [docs/APP_CHECK.md](../docs/APP_CHECK.md) for setup.
+PitchProof initializes **Firebase App Check before any Firebase service** (Auth, Firestore, Storage, Functions). See [docs/APP_CHECK.md](../docs/APP_CHECK.md) for setup.
 
 | Platform | Production attestation |
 |----------|---------------------|
@@ -198,7 +198,7 @@ Mock auth rules:
 - Configure `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` with the Firebase **Web client ID** (`client_type: 3`).
 - iOS: set `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` (URL scheme is auto-derived when `EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME` is omitted).
 - Android requires SHA-1 fingerprints in Firebase/Google Cloud Console for debug and release builds.
-- ID tokens are exchanged with Firebase only; passwords are never handled by ScoutX.
+- ID tokens are exchanged with Firebase only; passwords are never handled by PitchProof.
 - Shares the same `signInOrLinkOAuthCredential` linking path as Apple.
 - Full setup: [docs/GOOGLE_SIGN_IN.md](docs/GOOGLE_SIGN_IN.md).
 

@@ -1,7 +1,7 @@
 import { CV_UNAVAILABLE_REASON, isCvWorkerStage } from './workerContract';
 
 /**
- * Stage records shown in the app. Progress is stage-based only (`progress: null`): ScoutX
+ * Stage records shown in the app. Progress is stage-based only (`progress: null`): PitchProof
  * does not invent percentages for work it cannot measure.
  */
 export type StageStatus = 'pending' | 'active' | 'complete' | 'failed' | 'unavailable';

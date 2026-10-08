@@ -136,9 +136,9 @@ export async function buildExportArchive(db: Firestore, uid: string, linkExpires
     generatedAt: now.toISOString(),
     accountId: uid,
     notes: [
-      'This archive contains the personal data ScoutX holds about your account in machine-readable JSON.',
-      'Movement sessions are positions on the pitch relative to the pitch only; ScoutX does not record where you are.',
-      `Media links stop working on ${linkExpiresAt}. Where a link is null, open the file in the ScoutX app.`,
+      'This archive contains the personal data PitchProof holds about your account in machine-readable JSON.',
+      'Movement sessions are positions on the pitch relative to the pitch only; PitchProof does not record where you are.',
+      `Media links stop working on ${linkExpiresAt}. Where a link is null, open the file in the PitchProof app.`,
       'Scouts\u2019 private notes about you are their own records and are not included; requests and invitations sent to you are.',
     ],
     sections: {

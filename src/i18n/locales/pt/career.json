@@ -35,7 +35,7 @@
   "momentsCount_one": "{{count}} momento registado",
   "momentsCount_other": "{{count}} momentos registados",
   "coachNotesTitle": "Observacoes do treinador",
-  "coachNotesLabel": "Apenas notas do treinador — o ScoutX nao inventa feedback.",
+  "coachNotesLabel": "Apenas notas do treinador — o PitchProof nao inventa feedback.",
   "coachNotesEmpty": "Ainda nao ha observacoes de treinador registadas para ti.",
   "journeyEditor": {
     "entryType": "Tipo de entrada",

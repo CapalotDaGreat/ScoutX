@@ -43,7 +43,7 @@ export function photosExportErrorMessage(error: unknown): string {
   if (isPhotosExportError(error)) {
     return (
       'Photos still could not export this video. If it is stored in iCloud, make sure this ' +
-      'device is online so ScoutX can download it, then try again. You can also open the clip ' +
+      'device is online so PitchProof can download it, then try again. You can also open the clip ' +
       'in the Photos app once to download it, or pick a shorter export.'
     );
   }

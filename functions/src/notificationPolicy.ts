@@ -187,8 +187,8 @@ export function decidePush(
 }
 
 export const GENERIC_PUSH_COPY = {
-  title: 'ScoutX',
-  body: 'You have a new update. Open ScoutX to see it.',
+  title: 'PitchProof',
+  body: 'You have a new update. Open PitchProof to see it.',
 } as const;
 
 /** Minors always get generic lock-screen copy; adults choose. */

@@ -1,5 +1,5 @@
 {
-  "appName": "ScoutX",
+  "appName": "PitchProof",
   "loading": "Chargement",
   "loadingFonts": "Chargement des polices",
   "initializingServices": "Sécurisation de ta connexion",
@@ -36,7 +36,7 @@
   "privacyPolicy": "Politique de confidentialité",
   "termsOfService": "Conditions d'utilisation",
   "roleLabel": "Rôle",
-  "scoutXUser": "Utilisateur ScoutX",
+  "appUser": "Utilisateur PitchProof",
   "notAvailable": "Non disponible",
   "comingSoon": "Bientôt disponible",
   "viewAll": "Tout voir",
@@ -60,7 +60,7 @@
   "searchOwnedHint": "Cherche matchs, entrees de parcours et essais sur cet appareil",
   "searchOwnedPlaceholder": "Chercher tes enregistrements",
   "searchEmpty": "Aucun enregistrement correspondant",
-  "searchEmptyHint": "ScoutX ne cherche que ce que tu as deja enregistre.",
+  "searchEmptyHint": "PitchProof ne cherche que ce que tu as deja enregistre.",
   "offlineDrafts": "Hors ligne — les brouillons restent sur cet appareil jusqu a la reconnexion",
   "stars": {
     "value": "{{value}} sur {{max}} étoiles",
@@ -175,7 +175,7 @@
       "journey": "Carrière"
     }
   },
-  "preparingSession": "Préparation de ta session ScoutX",
+  "preparingSession": "Préparation de ta session PitchProof",
   "a11y": {
     "closeDialog": "Fermer la boîte de dialogue",
     "closeSheet": "Fermer le panneau",
@@ -191,7 +191,7 @@
   "guardianLink": {
     "title": "Accord du parent ou tuteur",
     "heading": "Ce lien est destiné à un parent ou tuteur",
-    "body": "L'accord se donne sur le site ScoutX, pas dans le compte du joueur. Si tu es le parent ou tuteur, ouvre la page et examine la demande.",
+    "body": "L'accord se donne sur le site PitchProof, pas dans le compte du joueur. Si tu es le parent ou tuteur, ouvre la page et examine la demande.",
     "open": "Ouvrir la page parent/tuteur"
   },
   "reportLink": {

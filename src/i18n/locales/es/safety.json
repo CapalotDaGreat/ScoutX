@@ -4,19 +4,19 @@
   },
   "age": {
     "title": "¿Cuántos años tienes?",
-    "body": "ScoutX ajusta lo que es público y quién puede contactarte según tu grupo de edad.",
+    "body": "PitchProof ajusta lo que es público y quién puede contactarte según tu grupo de edad.",
     "under13": "Menos de 13",
     "teen": "De 13 a 17",
     "adult": "18 o más",
-    "under13Notice": "ScoutX solo está disponible a partir de los 13 años. Si continúas, esta cuenta y su contenido se eliminarán.",
+    "under13Notice": "PitchProof solo está disponible a partir de los 13 años. Si continúas, esta cuenta y su contenido se eliminarán.",
     "under13Continue": "Continuar y eliminar esta cuenta",
-    "teenConfirm": "Tengo entre 13 y 17 años. Entiendo que mi madre, padre o tutor debe aprobar mi cuenta antes de usar ScoutX.",
+    "teenConfirm": "Tengo entre 13 y 17 años. Entiendo que mi madre, padre o tutor debe aprobar mi cuenta antes de usar PitchProof.",
     "continue": "Continuar",
     "noBirthDate": "Solo guardamos tu grupo de edad, nunca tu fecha de nacimiento."
   },
   "guardian": {
     "requestTitle": "Pide permiso a tu madre, padre o tutor",
-    "requestBody": "Enviaremos un enlace por correo a tu madre, padre o tutor. Elige lo que ScoutX puede hacer con tu cuenta. Hasta entonces, tu cuenta sigue privada y limitada.",
+    "requestBody": "Enviaremos un enlace por correo a tu madre, padre o tutor. Elige lo que PitchProof puede hacer con tu cuenta. Hasta entonces, tu cuenta sigue privada y limitada.",
     "declinedBody": "Tu madre, padre o tutor no aprobó la cuenta. Puedes volver a pedirlo si cambia de opinión.",
     "revokedBody": "Se retiró el consentimiento, así que las funciones juveniles están en pausa. Puedes volver a pedirlo.",
     "expiredBody": "El consentimiento se renueva cada año. Pide a tu madre, padre o tutor que lo confirme de nuevo.",
@@ -26,13 +26,13 @@
     "send": "Enviar correo de aprobación",
     "signOut": "Cerrar sesión",
     "waitingTitle": "Esperando a tu madre, padre o tutor",
-    "waitingBody": "Escribimos a {{email}}. Cuando apruebe, ScoutX se desbloqueará automáticamente.",
+    "waitingBody": "Escribimos a {{email}}. Cuando apruebe, PitchProof se desbloqueará automáticamente.",
     "whatHappens": "Tu tutor decide por separado sobre un perfil público, ser visible para ojeadores, solicitudes de ojeadores, vídeos compartidos y análisis con IA. Cualquier invitación a una prueba también necesita su aprobación.",
     "resend": "Reenviar o usar otro correo",
     "deleteAccount": "Eliminar mi cuenta"
   },
   "under13": {
-    "title": "ScoutX es para mayores de 13 años",
+    "title": "PitchProof es para mayores de 13 años",
     "body": "Tu cuenta se eliminó y no se guardó nada. Te esperamos cuando cumplas 13.",
     "close": "Cerrar"
   },
@@ -45,7 +45,7 @@
     "noScopes": "Solo uso privado",
     "revoke": "Retirar el consentimiento del tutor",
     "revokeHint": "Las funciones juveniles se pausan hasta una nueva aprobación.",
-    "changeAge": "Para corregir tu grupo de edad, contacta con el soporte de ScoutX.",
+    "changeAge": "Para corregir tu grupo de edad, contacta con el soporte de PitchProof.",
     "scope": {
       "public_passport": "Perfil público",
       "discovery": "Visible para ojeadores",

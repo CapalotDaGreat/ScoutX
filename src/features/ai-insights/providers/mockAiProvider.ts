@@ -162,7 +162,7 @@ function buildMockInsight<T extends AiInsightType>(
 export class MockAiProvider implements AiProvider {
   readonly metadata = {
     id: 'mock',
-    label: 'ScoutX Mock AI',
+    label: 'PitchProof Mock AI',
     isLive: false,
   };
 

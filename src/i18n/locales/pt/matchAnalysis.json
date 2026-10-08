@@ -65,7 +65,7 @@
   },
   "modal": {
     "title": "Analisar vídeo do jogo",
-    "intro": "O ScoutX amostra fotogramas, pede confirmação de identidade e só relata o que esses fotogramas sustentam. Tracking e estatísticas ficam desconhecidos sem um worker de visão.",
+    "intro": "O PitchProof amostra fotogramas, pede confirmação de identidade e só relata o que esses fotogramas sustentam. Tracking e estatísticas ficam desconhecidos sem um worker de visão.",
     "pick": "Escolher de Fotos / Galeria",
     "change": "Mudar vídeo",
     "analyze": "Carregar e analisar",
@@ -170,7 +170,7 @@
     "instructions": "Escolhe a sessão GPS deste jogo, reproduz o vídeo até ao momento em que começaste a gravar e marca-o.",
     "markNow": "Marcar o tempo atual do vídeo como início do GPS",
     "synced": "Início do GPS definido aos {{time}} ({{label}})",
-    "pointsUnavailable": "O detalhe dos sprints só está disponível para sessões gravadas com a versão atual do ScoutX.",
+    "pointsUnavailable": "O detalhe dos sprints só está disponível para sessões gravadas com a versão atual do PitchProof.",
     "noSprints": "Não foram detetados sprints nesta sessão.",
     "sprint": "Sprint · pico {{kmh}} km/h",
     "outsideVideo": "Fora do vídeo"

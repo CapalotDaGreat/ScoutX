@@ -1,4 +1,4 @@
-# ScoutX Completion Status
+# PitchProof Completion Status
 
 Updated 2026-10-07 at the end of the Gap Closure Program. Initial release target: iOS only.
 
@@ -27,7 +27,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | Security blockers (client AI key, rules hardening, CORS, App Check wiring) | COMPLETED | release gate, rules suites, `callableCors.test.ts` |
 | Age gate (13+), age band only, under-13 blocked and deleted | COMPLETED | `safetyPolicy.test.ts`, rules "youth safety", E2E |
 | Guardian approval by signed email link, separate scopes, revoke | COMPLETED | `guardianFlow.test.mjs`, E2E guardian approval |
-| Scout contact with minors only through ScoutX, guardian notified, trial co-approval | COMPLETED | `requestCenter.test.mjs`, rules trial tests |
+| Scout contact with minors only through PitchProof, guardian notified, trial co-approval | COMPLETED | `requestCenter.test.mjs`, rules trial tests |
 | Minor display (first name + initial, youth label) | COMPLETED | `releaseCoverage.test.ts` |
 | Lock-screen privacy (minors always generic, adults choose) | COMPLETED | `pushChain.test.mjs`, `notifyLinksRecovery.test.ts` |
 | Privacy Center, consent records, 14 versioned legal documents in the app | COMPLETED; text LEGAL REVIEW REQUIRED | `legalContent.test.ts`, E2E Privacy Center |

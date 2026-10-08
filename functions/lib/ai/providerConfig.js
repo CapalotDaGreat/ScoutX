@@ -10,7 +10,7 @@ exports.buildChatBody = buildChatBody;
  * endpoint is available for a model, the request fails instead of falling back.
  */
 exports.PROVIDER_PRIVACY = { data_collection: 'deny', zdr: true };
-/** Models vetted for ScoutX use. Env overrides outside this list are ignored. */
+/** Models vetted for PitchProof use. Env overrides outside this list are ignored. */
 exports.MODEL_ALLOWLIST = {
     text: ['google/gemini-2.5-flash', 'google/gemini-2.0-flash-001'],
     vision: ['google/gemini-2.5-flash', 'google/gemini-2.0-flash-001'],

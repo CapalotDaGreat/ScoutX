@@ -26,7 +26,7 @@
     "browse": "Navegar",
     "viewMore": "Ver mais",
     "emptyTitle": "Ainda sem jogadores visíveis",
-    "emptyDescription": "Os jogadores registados aparecem aqui quando ativam a visibilidade para olheiros. Partilha o ScoutX com academias e jogadores da tua rede.",
+    "emptyDescription": "Os jogadores registados aparecem aqui quando ativam a visibilidade para olheiros. Partilha o PitchProof com academias e jogadores da tua rede.",
     "emptyAction": "Abrir Descobrir",
     "presetTip": "Dica: usa predefinições em Descobrir para guardares os teus filtros de observação preferidos.",
     "attention": {
@@ -63,7 +63,7 @@
     "noSearchResults": "Nenhum jogador corresponde à tua pesquisa",
     "noSearchResultsDescription": "Try a different keyword, remove filter chips, or apply a saved preset.",
     "noPlayersAvailable": "Nenhum jogador disponível",
-    "noPlayersDescription": "Os jogadores aparecem aqui quando ativam a visibilidade para olheiros. Convida atletas da tua rede a criarem a sua identidade ScoutX.",
+    "noPlayersDescription": "Os jogadores aparecem aqui quando ativam a visibilidade para olheiros. Convida atletas da tua rede a criarem a sua identidade PitchProof.",
     "clearFilters": "Limpar filtros",
     "compare": "Comparar",
     "addToPipeline": "Adicionar ao pipeline",
@@ -339,12 +339,12 @@
       "insufficient_evidence": "Ainda sem provas suficientes"
     },
     "requestTitle": "Pedir evidencia",
-    "requestHint": "Pede ao jogador material ja registado. O ScoutX nao inventa filme nem estatisticas.",
+    "requestHint": "Pede ao jogador material ja registado. O PitchProof nao inventa filme nem estatisticas.",
     "requestPlaceholder": "Nota opcional para o jogador",
     "requestAction": "Enviar pedido",
     "requestSent": "Pedido enviado.",
     "requestFailed": "Nao foi possivel enviar este pedido de evidencia.",
-    "requestUnavailable": "Pedidos de evidencia precisam do backend ScoutX.",
+    "requestUnavailable": "Pedidos de evidencia precisam do backend PitchProof.",
     "kinds": {
       "match_footage": "Imagens de jogos",
       "highlight": "Destaques",

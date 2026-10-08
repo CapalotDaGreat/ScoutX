@@ -44,8 +44,8 @@ export function showVideoLibraryPermissionAlert(): void {
   Alert.alert(
     'Photo library access needed',
     Platform.OS === 'ios'
-      ? 'ScoutX needs access to Photos so you can upload highlight clips and match recordings from your library.'
-      : 'ScoutX needs access to your Gallery / Photos so you can upload highlight clips and match recordings.',
+      ? 'PitchProof needs access to Photos so you can upload highlight clips and match recordings from your library.'
+      : 'PitchProof needs access to your Gallery / Photos so you can upload highlight clips and match recordings.',
     [
       { text: 'Not now', style: 'cancel' },
       {

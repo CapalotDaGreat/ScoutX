@@ -11,7 +11,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
-      "We collect what you put into ScoutX (profile, matches, goals, videos) and the minimum technical data needed to run it.",
+      "We collect what you put into PitchProof (profile, matches, goals, videos) and the minimum technical data needed to run it.",
       "Your Passport and scout discovery are off until you switch them on. For players aged 13 to 17, a parent or guardian decides.",
       "Movement sessions record distance and a pitch heatmap. Your location is never stored or uploaded.",
       "AI providers process your footage only to produce your analysis. They are not allowed to train on it or keep it.",
@@ -23,11 +23,11 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "ScoutX is operated by {{entityName}}, {{entityAddress}} (\"we\"). Privacy contact: {{privacyEmail}}. Data protection officer: {{dpo}}. EU representative: {{euRepresentative}}."
+            "text": "PitchProof is operated by {{entityName}}, {{entityAddress}} (\"we\"). Privacy contact: {{privacyEmail}}. Data protection officer: {{dpo}}. EU representative: {{euRepresentative}}."
           },
           {
             "type": "paragraph",
-            "text": "This policy applies to the ScoutX iOS app, the ScoutX website at pitchproof.online and the guardian approval pages."
+            "text": "This policy applies to the PitchProof iOS app, the PitchProof website at pitchproof.online and the guardian approval pages."
           }
         ]
       },
@@ -71,9 +71,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "type": "list",
             "ordered": false,
             "items": [
-              "To provide ScoutX as you request it (contract): your account, profile, Passport, match logs, media library, analysis and scouting tools.",
+              "To provide PitchProof as you request it (contract): your account, profile, Passport, match logs, media library, analysis and scouting tools.",
               "With your consent, or your guardian's consent for players aged 13 to 17: a public Passport, discovery by scouts, scout contact, public media and AI analysis. You can withdraw consent at any time.",
-              "For our legitimate interests: keeping ScoutX secure, preventing abuse, fixing crashes and moderating reported content.",
+              "For our legitimate interests: keeping PitchProof secure, preventing abuse, fixing crashes and moderating reported content.",
               "To meet legal obligations: keeping proof of consent and moderation decisions for as long as the law requires."
             ]
           }
@@ -92,7 +92,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Apple and Expo, to deliver push notifications.",
               "RevenueCat and Apple, if you buy a subscription.",
               "An email delivery provider, to send guardian approval emails.",
-              "Other ScoutX users, only as far as your visibility settings allow."
+              "Other PitchProof users, only as far as your visibility settings allow."
             ]
           },
           {
@@ -106,7 +106,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "ScoutX is for people aged {{minimumAge}} and older. Players aged 13 to 17 need verified approval from a parent or guardian before youth features become active. The guardian chooses each permission separately and can withdraw it at any time. Minors are shown publicly with first name and last initial only, labelled as a youth player, and never with an exact age. See the Youth Safety Policy and the Guardian Consent Notice."
+            "text": "PitchProof is for people aged {{minimumAge}} and older. Players aged 13 to 17 need verified approval from a parent or guardian before youth features become active. The guardian chooses each permission separately and can withdraw it at any time. Minors are shown publicly with first name and last initial only, labelled as a youth player, and never with an exact age. See the Youth Safety Policy and the Guardian Consent Notice."
           }
         ]
       },
@@ -157,10 +157,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
-      "ScoutX helps players document their football development and lets scouts and coaches discover and contact players safely.",
+      "PitchProof helps players document their football development and lets scouts and coaches discover and contact players safely.",
       "You must be at least 13. Players aged 13 to 17 need a parent or guardian's approval.",
       "You keep ownership of what you upload. You must have the right to upload it.",
-      "ScoutX does not guarantee trials, contracts or selection by any club.",
+      "PitchProof does not guarantee trials, contracts or selection by any club.",
       "We may remove content or suspend accounts that break these terms or the Community Guidelines."
     ],
     "sections": [
@@ -196,7 +196,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "You keep all rights to the content you upload. You give us a non-exclusive, worldwide, royalty-free licence to store, process, analyse and display that content only as needed to run ScoutX for you and to show it to the audiences you choose. This licence ends when you delete the content or your account, except for copies we must keep by law."
+            "text": "You keep all rights to the content you upload. You give us a non-exclusive, worldwide, royalty-free licence to store, process, analyse and display that content only as needed to run PitchProof for you and to show it to the audiences you choose. This licence ends when you delete the content or your account, except for copies we must keep by law."
           },
           {
             "type": "paragraph",
@@ -209,7 +209,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Follow the Community Guidelines. Do not harass anyone, contact minors outside ScoutX's controlled request system, upload content you do not have rights to, misrepresent your identity or club, scrape the service or attempt to bypass security or usage limits."
+            "text": "Follow the Community Guidelines. Do not harass anyone, contact minors outside PitchProof's controlled request system, upload content you do not have rights to, misrepresent your identity or club, scrape the service or attempt to bypass security or usage limits."
           }
         ]
       },
@@ -218,7 +218,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "ScoutX does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. ScoutX does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval."
+            "text": "PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval."
           }
         ]
       },
@@ -254,7 +254,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "ScoutX is provided \"as is\". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law. LEGAL_REVIEW_REQUIRED: liability limits under Swiss and consumer law."
+            "text": "PitchProof is provided \"as is\". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law. LEGAL_REVIEW_REQUIRED: liability limits under Swiss and consumer law."
           }
         ]
       },
@@ -288,7 +288,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "requiresAcceptance": true,
     "summary": [
       "Be respectful. No harassment, hate, threats or sexual content.",
-      "Contact with players under 18 happens only through ScoutX requests, which their guardian can see.",
+      "Contact with players under 18 happens only through PitchProof requests, which their guardian can see.",
       "Upload only footage you have the right to share.",
       "Never ask for money for a trial, a contract or a recommendation.",
       "Report anything that worries you. Reports are confidential."
@@ -299,7 +299,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Treat players, parents, coaches and scouts with respect. Harassment, bullying, hate speech, threats, discrimination and sexual content are not allowed anywhere on ScoutX."
+            "text": "Treat players, parents, coaches and scouts with respect. Harassment, bullying, hate speech, threats, discrimination and sexual content are not allowed anywhere on PitchProof."
           }
         ]
       },
@@ -310,9 +310,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "type": "list",
             "ordered": false,
             "items": [
-              "Adults must not seek private contact with players under 18 outside ScoutX's request system.",
+              "Adults must not seek private contact with players under 18 outside PitchProof's request system.",
               "Do not ask a minor for personal contact details, social media accounts, photos or meetings.",
-              "Trials for players under 18 need guardian co-approval through ScoutX.",
+              "Trials for players under 18 need guardian co-approval through PitchProof.",
               "Any sexualised content involving minors is reported to the authorities."
             ]
           }
@@ -350,7 +350,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Use \"Report\" on any profile, video, Passport, request or trial. People who appear in a video can report it even without an account. Reports are reviewed by ScoutX staff and the reporter's identity is not shared with the reported user."
+            "text": "Use \"Report\" on any profile, video, Passport, request or trial. People who appear in a video can report it even without an account. Reports are reviewed by PitchProof staff and the reporter's identity is not shared with the reported user."
           }
         ]
       },
@@ -374,10 +374,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
-      "ScoutX is for ages 13 and up. Accounts for children under 13 are not allowed and are deleted.",
+      "PitchProof is for ages 13 and up. Accounts for children under 13 are not allowed and are deleted.",
       "Players aged 13 to 17 need a parent or guardian's approval before youth features start.",
       "Guardians choose each permission separately and can withdraw it at any time.",
-      "Scouts can contact minors only through ScoutX requests, and the guardian is notified.",
+      "Scouts can contact minors only through PitchProof requests, and the guardian is notified.",
       "Trials for minors need guardian co-approval."
     ],
     "sections": [
@@ -403,7 +403,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "public Passport;",
               "discovery by scouts;",
-              "contact from scouts through ScoutX requests;",
+              "contact from scouts through PitchProof requests;",
               "public media;",
               "public display of movement data;",
               "AI analysis."
@@ -438,7 +438,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Scouts can contact a minor only through ScoutX's request system, never by private message, and the guardian receives an email when a scout makes a request. A minor can accept a trial only after the guardian approves it through a separate secure link."
+            "text": "Scouts can contact a minor only through PitchProof's request system, never by private message, and the guardian receives an email when a scout makes a request. A minor can accept a trial only after the guardian approves it through a separate secure link."
           }
         ]
       },
@@ -471,7 +471,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
-      "A player aged 13 to 17 asked you to approve their ScoutX account.",
+      "A player aged 13 to 17 asked you to approve their PitchProof account.",
       "You decide each permission separately. Nothing is allowed by default.",
       "You can withdraw permissions at any time using the link in your confirmation email.",
       "We store your email address only to contact you about this player's account."
@@ -482,7 +482,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "A player in your care chose the age band \"13 to 17\" in ScoutX and entered your email address. ScoutX is operated by {{entityName}}, {{entityAddress}}."
+            "text": "A player in your care chose the age band \"13 to 17\" in PitchProof and entered your email address. PitchProof is operated by {{entityName}}, {{entityAddress}}."
           }
         ]
       },
@@ -499,7 +499,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "a public football Passport;",
               "being found by scouts;",
-              "contact from scouts through ScoutX requests (you are emailed about each request);",
+              "contact from scouts through PitchProof requests (you are emailed about each request);",
               "making videos public;",
               "showing movement data (distance and pitch heatmap) publicly;",
               "AI analysis of their own videos."
@@ -579,11 +579,11 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, ScoutX shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it."
+            "text": "Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, PitchProof shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it."
           },
           {
             "type": "paragraph",
-            "text": "The first time you upload, ScoutX asks you to acknowledge this policy. ScoutX records that acknowledgement with the policy version."
+            "text": "The first time you upload, PitchProof asks you to acknowledge this policy. PitchProof records that acknowledgement with the policy version."
           }
         ]
       },
@@ -592,7 +592,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Uploaded files first go to a protected quarantine area. Our servers check the file type, container, codecs, duration, resolution and size before the file is moved to your private storage. Files that fail these checks are rejected and deleted. These checks are not a malware or virus scan, and ScoutX does not claim to perform one."
+            "text": "Uploaded files first go to a protected quarantine area. Our servers check the file type, container, codecs, duration, resolution and size before the file is moved to your private storage. Files that fail these checks are rejected and deleted. These checks are not a malware or virus scan, and PitchProof does not claim to perform one."
           }
         ]
       },
@@ -610,7 +610,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "If you appear in a video on ScoutX, or a minor in your care does, you can report it with the reason \"I appear in this video\" or \"A minor appears in this video\", including without a ScoutX account. While a report is under review the video may be hidden from public view."
+            "text": "If you appear in a video on PitchProof, or a minor in your care does, you can report it with the reason \"I appear in this video\" or \"A minor appears in this video\", including without a PitchProof account. While a report is under review the video may be hidden from public view."
           }
         ]
       },
@@ -642,11 +642,11 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     ],
     "sections": [
       {
-        "heading": "What AI does in ScoutX",
+        "heading": "What AI does in PitchProof",
         "blocks": [
           {
             "type": "paragraph",
-            "text": "When you request it, ScoutX uses AI models to describe sampled frames from your footage, summarise your logged data, answer questions about a match and suggest highlight plans. AI runs on our servers. The app never holds AI provider credentials."
+            "text": "When you request it, PitchProof uses AI models to describe sampled frames from your footage, summarise your logged data, answer questions about a match and suggest highlight plans. AI runs on our servers. The app never holds AI provider credentials."
           }
         ]
       },
@@ -677,7 +677,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "Analysis is based on sampled frames, not on tracking every moment of a match.",
               "Computer-vision tracking of players, automatic event detection and pitch maps are not available yet and are shown as \"Not available yet\".",
-              "ScoutX does not give player ratings or predict careers.",
+              "PitchProof does not give player ratings or predict careers.",
               "Each result shows what it was based on and how much of the match it covered."
             ]
           }
@@ -712,7 +712,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
-      "You own what you upload. We only use it to run ScoutX for you.",
+      "You own what you upload. We only use it to run PitchProof for you.",
       "Do not upload content that belongs to someone else without permission.",
       "Rights holders can send us a takedown notice. We act on valid notices.",
       "Repeat infringers may lose their account."
@@ -723,7 +723,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "You keep ownership of your content. ScoutX's own software, design, name and logo belong to {{entityName}}."
+            "text": "You keep ownership of your content. PitchProof's own software, design, name and logo belong to {{entityName}}."
           }
         ]
       },
@@ -741,7 +741,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "If you believe content on ScoutX infringes your rights, send a notice to {{legalEmail}} with:"
+            "text": "If you believe content on PitchProof infringes your rights, send a notice to {{legalEmail}} with:"
           },
           {
             "type": "list",
@@ -749,7 +749,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "your name and contact details;",
               "the work you believe is infringed;",
-              "where the content is on ScoutX (a link or the player's Passport name);",
+              "where the content is on PitchProof (a link or the player's Passport name);",
               "a statement that you believe in good faith that the use is not authorised;",
               "a statement that the information is accurate and that you are the rights holder or authorised to act for them."
             ]
@@ -789,7 +789,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
-      "Anything on ScoutX can be reported, and people in videos can report without an account.",
+      "Anything on PitchProof can be reported, and people in videos can report without an account.",
       "Reports about minors are reviewed first.",
       "Reported content may be hidden while it is reviewed.",
       "You are told the outcome and can appeal decisions about your own content."
@@ -813,7 +813,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "Triage: reports involving minors, sexual content or threats are reviewed first.",
               "Restriction: if needed, the content is temporarily hidden from public view while it is reviewed.",
-              "Review and decision: ScoutX staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.",
+              "Review and decision: PitchProof staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.",
               "Notification: the reporter and the affected user are told the outcome, without revealing the reporter. People who reported without an account and left an email receive one update by email, after which the address is deleted.",
               "Appeal: the affected user can appeal once from the Privacy Center. A different staff member reviews the appeal."
             ]
@@ -838,7 +838,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "People who appear in a video, or their parents or guardians, can use the public report form on the ScoutX website without signing in."
+            "text": "People who appear in a video, or their parents or guardians, can use the public report form on the PitchProof website without signing in."
           }
         ]
       },
@@ -1007,7 +1007,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     ],
     "sections": [
       {
-        "heading": "How we protect ScoutX",
+        "heading": "How we protect PitchProof",
         "blocks": [
           {
             "type": "list",
@@ -1071,7 +1071,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
-      "ScoutX has no advertising, no analytics SDK and no cross-app tracking.",
+      "PitchProof has no advertising, no analytics SDK and no cross-app tracking.",
       "We only store what is technically necessary, such as keeping you signed in."
     ],
     "sections": [

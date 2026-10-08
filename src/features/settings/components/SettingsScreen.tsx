@@ -118,7 +118,7 @@ export function SettingsScreen({
 
   const supportEmail = LEGAL_CONFIG.contacts.supportEmail;
   const handleSupport = () => {
-    if (supportEmail) void Linking.openURL(`mailto:${supportEmail}?subject=ScoutX%20Support`);
+    if (supportEmail) void Linking.openURL(`mailto:${supportEmail}?subject=PitchProof%20Support`);
   };
 
   return (
@@ -142,7 +142,7 @@ export function SettingsScreen({
           <Text variant="overline" color="secondary">
             {t('settings:account')}
           </Text>
-          <Text weight="semibold">{user?.name ?? t('common:scoutXUser')}</Text>
+          <Text weight="semibold">{user?.name ?? t('common:appUser')}</Text>
           {user?.email ? (
             <Text variant="body-sm" color="secondary">
               {user.email}

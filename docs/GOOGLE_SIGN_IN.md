@@ -24,7 +24,7 @@
 2. `GoogleSignin.configure({ webClientId, iosClientId? })` — **webClientId must be the Firebase Web client ID** (`client_type: 3`).
 3. Android: `hasPlayServices()` then `signIn()`.
 4. `GoogleAuthProvider.credential(idToken)` → `signInOrLinkOAuthCredential`.
-5. On ScoutX sign-out, `clearGoogleSignInSession()` clears the native Google session so the next login can choose another account.
+5. On PitchProof sign-out, `clearGoogleSignInSession()` clears the native Google session so the next login can choose another account.
 
 ## Required configuration
 

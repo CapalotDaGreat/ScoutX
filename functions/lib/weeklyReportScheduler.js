@@ -50,7 +50,7 @@ exports.scheduleWeeklyFootballReports = (0, scheduler_1.onSchedule)({
             title: 'Weekly Football Report ready',
             body: `Your weekly football summary for ${weekKey} is ready on the Career tab.`,
             actorId: 'system',
-            actorName: 'ScoutX',
+            actorName: 'PitchProof',
             actorRole: 'system',
             reference: { entityType: 'player', entityId: playerId, label: playerName },
             read: false,

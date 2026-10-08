@@ -1,8 +1,8 @@
 {
   "ios": {
-    "name": "ScoutX",
+    "name": "PitchProof",
     "subtitle": "Your Football Passport",
-    "description": "ScoutX is the player-first football identity platform for players aged 13 and over. Build your Football Passport from your match logs, highlight videos, movement sessions, development goals and coach endorsements, with every item showing where it came from, so scouts see evidence, not hype.\n\nPlayers aged 13 to 17 need a parent or guardian to approve youth features, and every public or scout-facing feature is a separate permission. ScoutX does not track your location: movement sessions measure distance and a pitch heatmap on your phone and store no location. ScoutX does not guarantee trials, contracts or selection.",
+    "description": "PitchProof is the player-first football identity platform for players aged 13 and over. Build your Football Passport from your match logs, highlight videos, movement sessions, development goals and coach endorsements, with every item showing where it came from, so scouts see evidence, not hype.\n\nPlayers aged 13 to 17 need a parent or guardian to approve youth features, and every public or scout-facing feature is a separate permission. PitchProof does not track your location: movement sessions measure distance and a pitch heatmap on your phone and store no location. PitchProof does not guarantee trials, contracts or selection.",
     "keywords": [
       "football",
       "soccer",
@@ -33,9 +33,9 @@
     }
   },
   "android": {
-    "title": "ScoutX - Football Passport",
+    "title": "PitchProof - Football Passport",
     "shortDescription": "Build your football identity from real evidence.",
-    "fullDescription": "ScoutX helps players aged 13 and over build a Football Passport: one shareable career hub for match logs, videos, movement sessions, endorsements and trials, with every item labelled by its source. Players aged 13 to 17 need guardian approval for youth features. ScoutX does not guarantee trials, contracts or selection.",
+    "fullDescription": "PitchProof helps players aged 13 and over build a Football Passport: one shareable career hub for match logs, videos, movement sessions, endorsements and trials, with every item labelled by its source. Players aged 13 to 17 need guardian approval for youth features. PitchProof does not guarantee trials, contracts or selection.",
     "category": "SPORTS",
     "privacyPolicyUrl": "https://pitchproof.online/privacy"
   }

@@ -212,7 +212,7 @@ export function buildDiscoverablePlayerFromProfile(profile: PlayerProfile): Disc
     avatarUrl: profile.avatarUrl,
     coverImageUrl: profile.coverImageUrl,
     biography: profile.biography || profile.identity.biographyHeadline,
-    // Mixed 0–100 grades are not a ScoutX product signal. Leave unknown.
+    // Mixed 0–100 grades are not a PitchProof product signal. Leave unknown.
     overallRating: null,
     overallRatingSource: null,
     potentialRating: null,

@@ -7,7 +7,7 @@ status: draft-legal-review-required
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
-- You own what you upload. We only use it to run ScoutX for you.
+- You own what you upload. We only use it to run PitchProof for you.
 - Do not upload content that belongs to someone else without permission.
 - Rights holders can send us a takedown notice. We act on valid notices.
 - Repeat infringers may lose their account.
@@ -15,7 +15,7 @@ summary:
 
 ## Ownership
 
-You keep ownership of your content. ScoutX's own software, design, name and logo belong to {{entityName}}.
+You keep ownership of your content. PitchProof's own software, design, name and logo belong to {{entityName}}.
 
 ## Third-party content
 
@@ -23,11 +23,11 @@ Do not upload broadcasts, club footage, music or other material unless you own i
 
 ## Takedown notices
 
-If you believe content on ScoutX infringes your rights, send a notice to {{legalEmail}} with:
+If you believe content on PitchProof infringes your rights, send a notice to {{legalEmail}} with:
 
 - your name and contact details;
 - the work you believe is infringed;
-- where the content is on ScoutX (a link or the player's Passport name);
+- where the content is on PitchProof (a link or the player's Passport name);
 - a statement that you believe in good faith that the use is not authorised;
 - a statement that the information is accurate and that you are the rights holder or authorised to act for them.
 

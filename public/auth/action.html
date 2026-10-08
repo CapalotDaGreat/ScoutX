@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ScoutX — Continue</title>
+    <title>PitchProof — Continue</title>
     <meta
       name="description"
-      content="Return to ScoutX to finish email verification or password reset."
+      content="Return to PitchProof to finish email verification or password reset."
     />
     <style>
       :root {
@@ -80,19 +80,19 @@
   </head>
   <body>
     <main class="card">
-      <h1>Continue in ScoutX</h1>
+      <h1>Continue in PitchProof</h1>
       <p id="message">
-        Opening ScoutX to finish your email confirmation. If nothing happens, tap the button below.
+        Opening PitchProof to finish your email confirmation. If nothing happens, tap the button below.
       </p>
       <p class="status" id="status" aria-live="polite"></p>
       <div class="actions">
-        <a class="button primary" id="openApp" href="scoutx://auth/action">Open ScoutX</a>
+        <a class="button primary" id="openApp" href="pitchproof://auth/action">Open PitchProof</a>
         <button class="button secondary" id="copyLink" type="button">Copy app link</button>
       </div>
     </main>
     <script>
       (function () {
-        var APP_SCHEME = 'scoutx';
+        var APP_SCHEME = 'pitchproof';
         var params = new URLSearchParams(window.location.search);
         var mode = params.get('mode');
         var oobCode = params.get('oobCode');
@@ -132,7 +132,7 @@
 
         if (!mode || !oobCode) {
           messageEl.textContent =
-            'Open ScoutX to continue. If you already confirmed your email in the browser, return to the app and sign in.';
+            'Open PitchProof to continue. If you already confirmed your email in the browser, return to the app and sign in.';
           openAppEl.href = APP_SCHEME + '://login';
           statusEl.textContent = 'No verification code was found in this link.';
           return;
@@ -144,14 +144,14 @@
         var appUrl = buildAppUrl(query);
 
         openAppEl.href = appUrl;
-        statusEl.textContent = 'Preparing secure return to ScoutX…';
+        statusEl.textContent = 'Preparing secure return to PitchProof…';
 
         var opened = false;
         function openApp() {
           if (opened) return;
           opened = true;
           window.location.href = appUrl;
-          statusEl.textContent = 'If ScoutX did not open, tap “Open ScoutX”.';
+          statusEl.textContent = 'If PitchProof did not open, tap “Open PitchProof”.';
         }
 
         // Universal Links / App Links open the app when associated; custom scheme is fallback.

@@ -119,7 +119,7 @@ if (!localhost && !tunnel && lanIp) {
     console.log(`  exp://${lanIp}:${port}`);
     console.log('  Do NOT use 127.0.0.1 on a physical phone.');
   } else {
-    console.log('  Development build — open your ScoutX dev client:');
+    console.log('  Development build — open your PitchProof dev client:');
     console.log(`  Metro: http://${lanIp}:${port}`);
   }
   console.log('══════════════════════════════════════════════════');

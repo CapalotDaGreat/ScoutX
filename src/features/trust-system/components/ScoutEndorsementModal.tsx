@@ -28,7 +28,7 @@ function createEmptyDraft(): TrustRecommendationDraft {
     yearsKnown: null,
     featured: false,
     authorTitle: '',
-    authorOrganization: 'ScoutX Network',
+    authorOrganization: 'PitchProof Network',
   };
 }
 

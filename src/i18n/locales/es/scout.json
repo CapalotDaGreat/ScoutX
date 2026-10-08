@@ -26,7 +26,7 @@
     "browse": "Navegar",
     "viewMore": "Ver más",
     "emptyTitle": "Aún no hay jugadores visibles",
-    "emptyDescription": "Los jugadores registrados aparecen aquí cuando activan su visibilidad para ojeadores. Comparte ScoutX con academias y jugadores de tu red.",
+    "emptyDescription": "Los jugadores registrados aparecen aquí cuando activan su visibilidad para ojeadores. Comparte PitchProof con academias y jugadores de tu red.",
     "emptyAction": "Abrir Descubrir",
     "presetTip": "Consejo: usa los ajustes guardados en Descubrir para guardar tus filtros de scouting favoritos.",
     "attention": {
@@ -63,7 +63,7 @@
     "noSearchResults": "Ningún jugador coincide con tu búsqueda",
     "noSearchResultsDescription": "Try a different keyword, remove filter chips, or apply a saved preset.",
     "noPlayersAvailable": "No hay jugadores disponibles",
-    "noPlayersDescription": "Los jugadores aparecen aquí cuando activan su visibilidad para ojeadores. Invita a deportistas de tu red a crear su identidad en ScoutX.",
+    "noPlayersDescription": "Los jugadores aparecen aquí cuando activan su visibilidad para ojeadores. Invita a deportistas de tu red a crear su identidad en PitchProof.",
     "clearFilters": "Borrar filtros",
     "compare": "Comparar",
     "addToPipeline": "Añadir al pipeline",
@@ -339,12 +339,12 @@
       "insufficient_evidence": "Aún no hay pruebas suficientes"
     },
     "requestTitle": "Pedir evidencia",
-    "requestHint": "Pide al jugador material ya registrado. ScoutX no inventa video ni estadisticas.",
+    "requestHint": "Pide al jugador material ya registrado. PitchProof no inventa video ni estadisticas.",
     "requestPlaceholder": "Nota opcional para el jugador",
     "requestAction": "Enviar solicitud",
     "requestSent": "Solicitud enviada.",
     "requestFailed": "No se pudo enviar esta solicitud de evidencia.",
-    "requestUnavailable": "Las solicitudes de evidencia requieren el backend de ScoutX.",
+    "requestUnavailable": "Las solicitudes de evidencia requieren el backend de PitchProof.",
     "kinds": {
       "match_footage": "Vídeo de partido",
       "highlight": "Jugadas destacadas",

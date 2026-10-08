@@ -44,7 +44,7 @@ export async function exportFootballCvPdf(data: PublicPortfolioData): Promise<vo
         </style>
       </head>
       <body>
-        <div class="badge">ScoutX Football CV</div>
+        <div class="badge">PitchProof Football CV</div>
         <h1>${escapeHtml(profile.fullName)}</h1>
         <div class="meta">${escapeHtml(profile.position)} · ${escapeHtml(profile.club)} · ${escapeHtml(profile.nationality)}</div>
         <p>${profile.biography.trim() ? escapeHtml(profile.biography) : ''}</p>

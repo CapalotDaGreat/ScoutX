@@ -1,4 +1,4 @@
-# SDK 57 Migration — ScoutX 2.0 Phase 0
+# SDK 57 Migration — PitchProof 2.0 Phase 0
 
 ## Target
 

@@ -14,7 +14,7 @@ const DEFAULT_EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send';
 const PUSH_COPY = {
     portfolio_viewed: {
         title: 'Football Passport viewed',
-        body: 'Someone viewed your Football Passport. Open ScoutX to see details.',
+        body: 'Someone viewed your Football Passport. Open PitchProof to see details.',
     },
     recommendation_received: {
         title: 'New recommendation',
@@ -22,7 +22,7 @@ const PUSH_COPY = {
     },
     trial_invitation: {
         title: 'Trial invitation',
-        body: 'You have a new trial invitation. Open ScoutX to respond.',
+        body: 'You have a new trial invitation. Open PitchProof to respond.',
     },
 };
 /** Self-addressed system activities may use their own copy (the author is the recipient). */

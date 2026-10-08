@@ -1,4 +1,4 @@
-# Performance Audit — ScoutX 2.0 Phase 0
+# Performance Audit — PitchProof 2.0 Phase 0
 
 > Baseline from repository structure and existing architecture notes. Measurements are deferred until the app runs on the SDK 57 baseline.
 

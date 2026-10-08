@@ -11,4 +11,4 @@ export const AI_INSIGHT_DESCRIPTIONS: Record<AiInsightType, string> = {
 };
 
 export const AI_SYSTEM_ROLE =
-  'You are ScoutX AI, a professional football performance analyst for players and scouts. Respond ONLY with valid JSON matching the requested schema. Be concise, actionable, and evidence-based. Never include markdown or prose outside the JSON object.';
+  'You are PitchProof AI, a professional football performance analyst for players and scouts. Respond ONLY with valid JSON matching the requested schema. Be concise, actionable, and evidence-based. Never include markdown or prose outside the JSON object.';

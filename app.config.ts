@@ -162,7 +162,7 @@ if (!hasSecureStorePlugin) {
     {
       configureAndroidBackup: true,
       faceIDPermission:
-        'Allow ScoutX to use Face ID when reading protected authentication data.',
+        'Allow PitchProof to use Face ID when reading protected authentication data.',
     },
   ]);
 }

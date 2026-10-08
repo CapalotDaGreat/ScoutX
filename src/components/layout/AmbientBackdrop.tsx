@@ -10,7 +10,7 @@ export type AmbientBackdropProps = {
 };
 
 /**
- * Cinematic atmosphere for ScoutX identity platform.
+ * Cinematic atmosphere for PitchProof identity platform.
  * Light mode leans champagne-gold + soft emerald; dark keeps a subtler gold wash.
  */
 export function AmbientBackdrop({ mood = 'warm' }: AmbientBackdropProps) {

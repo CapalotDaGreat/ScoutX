@@ -48,7 +48,7 @@ export function unavailablePath(reason: DeepLinkUnavailableReason): string {
   return `${LINK_UNAVAILABLE_PATH}?reason=${reason}`;
 }
 
-/** Strips scheme/host/query and leading slashes: `scoutx://trial/abc?x=1` -> `trial/abc`. */
+/** Strips scheme/host/query and leading slashes: `pitchproof://trial/abc?x=1` -> `trial/abc`. */
 export function extractLinkPath(url: string, prefixes: readonly string[]): string {
   let rest = url;
   for (const prefix of [...prefixes].sort((a, b) => b.length - a.length)) {

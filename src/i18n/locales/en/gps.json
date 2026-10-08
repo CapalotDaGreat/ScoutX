@@ -23,7 +23,7 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Movement zones",
   "permissionRequired": "Location permission required",
-  "permissionDescription": "ScoutX uses your position only while you record, and only on this phone, to calculate distance and a pitch heatmap. Your location is never uploaded or shared.",
+  "permissionDescription": "PitchProof uses your position only while you record, and only on this phone, to calculate distance and a pitch heatmap. Your location is never uploaded or shared.",
   "movementDetail": "Movement detail",
   "movementDetailSubtitle": "Movement and heatmap for this session",
   "latestAnalysisSubtitle": "Movement and heatmap from your latest session",
@@ -31,7 +31,7 @@
   "maxSpeedValue": "Max {{value}}",
   "intel": {
     "title": "Movement intelligence",
-    "noPoints": "Movement detail is only available for sessions recorded with the current version of ScoutX.",
+    "noPoints": "Movement detail is only available for sessions recorded with the current version of PitchProof.",
     "insufficient": "Not enough data to analyse movement. Needs at least {{minutes}} min and {{points}} points; this session has {{haveMinutes}} min and {{havePoints}} points.",
     "lowAccuracy": "GPS accuracy was too low (median {{meters}} m, limit {{limit}} m), so area and position are not shown.",
     "spread": "Area covered: about {{width}} m across × {{depth}} m along your main direction",

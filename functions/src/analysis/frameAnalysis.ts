@@ -304,7 +304,7 @@ async function acquireJobLease(
 }
 
 const SYSTEM_RULES = [
-  'You are ScoutX Match Analyst.',
+  'You are PitchProof Match Analyst.',
   'You ONLY describe what is visible in the provided still frames.',
   'Never fabricate player actions, identity, position, movement, match events, or countable stats.',
   'Do not count passes, shots, tackles, or minutes.',
@@ -435,7 +435,7 @@ export async function runFrameAnalysis(params: {
   const result = await callChat({
     apiKey: params.apiKey,
     model,
-    title: 'ScoutX Match Analysis',
+    title: 'PitchProof Match Analysis',
     messages: [
       { role: 'system', content: prompt.system },
       { role: 'user', content: [{ type: 'text', text: prompt.user }, ...imageContents] },

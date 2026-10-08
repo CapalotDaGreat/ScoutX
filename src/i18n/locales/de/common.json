@@ -1,5 +1,5 @@
 {
-  "appName": "ScoutX",
+  "appName": "PitchProof",
   "loading": "Laden",
   "loadingFonts": "Schriften werden geladen",
   "initializingServices": "Verbindung wird gesichert",
@@ -36,7 +36,7 @@
   "privacyPolicy": "Datenschutzerklärung",
   "termsOfService": "Nutzungsbedingungen",
   "roleLabel": "Rolle",
-  "scoutXUser": "ScoutX-Nutzer",
+  "appUser": "PitchProof-Nutzer",
   "notAvailable": "Nicht verfügbar",
   "comingSoon": "Demnächst",
   "viewAll": "Alle anzeigen",
@@ -60,7 +60,7 @@
   "searchOwnedHint": "Durchsuche Spiele, Journey-Eintraege und Trials auf diesem Geraet",
   "searchOwnedPlaceholder": "Deine Eintraege durchsuchen",
   "searchEmpty": "Keine passenden Eintraege",
-  "searchEmptyHint": "ScoutX durchsucht nur, was du bereits erfasst hast.",
+  "searchEmptyHint": "PitchProof durchsucht nur, was du bereits erfasst hast.",
   "offlineDrafts": "Offline — Entwuerfe bleiben auf diesem Geraet, bis du wieder online bist",
   "stars": {
     "value": "{{value}} von {{max}} Sternen",
@@ -175,7 +175,7 @@
       "journey": "Karriere"
     }
   },
-  "preparingSession": "Deine ScoutX-Sitzung wird vorbereitet",
+  "preparingSession": "Deine PitchProof-Sitzung wird vorbereitet",
   "a11y": {
     "closeDialog": "Dialog schließen",
     "closeSheet": "Blatt schließen",
@@ -191,7 +191,7 @@
   "guardianLink": {
     "title": "Zustimmung der Erziehungsperson",
     "heading": "Dieser Link ist für eine Erziehungsperson",
-    "body": "Die Zustimmung erfolgt auf der ScoutX-Website, nicht im Konto der Spielerin oder des Spielers. Wenn du die Erziehungsperson bist, öffne die Seite und prüfe die Anfrage dort.",
+    "body": "Die Zustimmung erfolgt auf der PitchProof-Website, nicht im Konto der Spielerin oder des Spielers. Wenn du die Erziehungsperson bist, öffne die Seite und prüfe die Anfrage dort.",
     "open": "Seite für Erziehungspersonen öffnen"
   },
   "reportLink": {

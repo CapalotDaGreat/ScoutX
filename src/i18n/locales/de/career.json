@@ -35,7 +35,7 @@
   "momentsCount_one": "{{count}} erfasster Moment",
   "momentsCount_other": "{{count}} erfasste Momente",
   "coachNotesTitle": "Trainerbeobachtungen",
-  "coachNotesLabel": "Nur vom Trainer bereitgestellte Notizen — ScoutX erfindet kein Feedback.",
+  "coachNotesLabel": "Nur vom Trainer bereitgestellte Notizen — PitchProof erfindet kein Feedback.",
   "coachNotesEmpty": "Noch keine Trainerbeobachtungen fuer dich erfasst.",
   "journeyEditor": {
     "entryType": "Eintragstyp",

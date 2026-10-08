@@ -1,5 +1,5 @@
 {
-  "appName": "ScoutX",
+  "appName": "PitchProof",
   "loading": "Caricamento",
   "loadingFonts": "Caricamento font",
   "initializingServices": "Protezione della connessione",
@@ -36,7 +36,7 @@
   "privacyPolicy": "Informativa sulla privacy",
   "termsOfService": "Termini di servizio",
   "roleLabel": "Ruolo",
-  "scoutXUser": "Utente ScoutX",
+  "appUser": "Utente PitchProof",
   "notAvailable": "Non disponibile",
   "comingSoon": "In arrivo",
   "viewAll": "Vedi tutto",
@@ -60,7 +60,7 @@
   "searchOwnedHint": "Cerca partite, voci del percorso e trial su questo dispositivo",
   "searchOwnedPlaceholder": "Cerca i tuoi record",
   "searchEmpty": "Nessun record corrispondente",
-  "searchEmptyHint": "ScoutX cerca solo cio che hai gia registrato.",
+  "searchEmptyHint": "PitchProof cerca solo cio che hai gia registrato.",
   "offlineDrafts": "Offline — le bozze restano su questo dispositivo fino alla riconnessione",
   "stars": {
     "value": "{{value}} su {{max}} stelle",
@@ -175,7 +175,7 @@
       "journey": "Carriera"
     }
   },
-  "preparingSession": "Preparazione della tua sessione ScoutX",
+  "preparingSession": "Preparazione della tua sessione PitchProof",
   "a11y": {
     "closeDialog": "Chiudi finestra",
     "closeSheet": "Chiudi pannello",
@@ -191,7 +191,7 @@
   "guardianLink": {
     "title": "Approvazione del genitore o tutore",
     "heading": "Questo link è per un genitore o tutore",
-    "body": "L'approvazione avviene sul sito di ScoutX, non nell'account del giocatore. Se sei il genitore o tutore, apri la pagina e valuta lì la richiesta.",
+    "body": "L'approvazione avviene sul sito di PitchProof, non nell'account del giocatore. Se sei il genitore o tutore, apri la pagina e valuta lì la richiesta.",
     "open": "Apri la pagina per genitori"
   },
   "reportLink": {

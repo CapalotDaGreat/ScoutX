@@ -1,4 +1,4 @@
-# Dependency Audit — ScoutX 2.0 Phase 0
+# Dependency Audit — PitchProof 2.0 Phase 0
 
 > Baseline captured from `package.json`, `functions/package.json`, and Expo configuration. Versions are not changed in Phase 0.
 

@@ -109,5 +109,6 @@ mode on iPad), on the latest iOS, signed out.
 3. App Privacy labels match `docs/compliance/app-store-privacy-labels.md`; age rating questionnaire
    matches `store/listing.json` (13+, user-generated content, no open chat).
 4. Export compliance: `ITSAppUsesNonExemptEncryption` is already `false`.
-5. Name: `scoutx.app` belongs to an unrelated product called ScoutX. Consider listing the app as
-   PitchProof to avoid confusion and trademark issues (Guideline 5.2).
+5. Name: the app is PitchProof everywhere. In App Store Connect, set the app name to PitchProof
+   (App Information → Name) and check that no screenshot or description still says ScoutX. The bundle
+   ID `com.scoutx.app`, the Expo slug `scoutx` and the Firebase project `scoutx-230b0` stay; users never see them.

@@ -1,4 +1,4 @@
-# Rebuild Roadmap — ScoutX 2.0 Phase 0
+# Rebuild Roadmap — PitchProof 2.0 Phase 0
 
 ## Delivery principle
 

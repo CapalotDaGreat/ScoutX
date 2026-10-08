@@ -12,12 +12,12 @@
   "readFull": "Leer el documento completo",
   "consents": {
     "title": "Tus consentimientos",
-    "requiredTitle": "Necesarios para usar ScoutX",
+    "requiredTitle": "Necesarios para usar PitchProof",
     "requiredBody": "Solo se pueden retirar eliminando tu cuenta.",
     "accepted": "Versión {{version}} · {{date}}",
     "notAccepted": "No aceptado",
     "optionalTitle": "Opcional",
-    "optionalBody": "ScoutX funciona sin ellos. Puedes cambiarlos cuando quieras.",
+    "optionalBody": "PitchProof funciona sin ellos. Puedes cambiarlos cuando quieras.",
     "failed": "No se pudo guardar tu elección. Inténtalo de nuevo.",
     "ai": {
       "label": "Análisis con IA de mis vídeos",
@@ -34,7 +34,7 @@
     "title": "Antes de empezar",
     "body": "Lee los breves resúmenes de abajo. Los documentos completos siempre están disponibles en el Centro de privacidad.",
     "reacceptTitle": "Nuestras condiciones han cambiado",
-    "reacceptBody": "Hemos hecho cambios importantes. Revísalos y acéptalos para seguir usando ScoutX.",
+    "reacceptBody": "Hemos hecho cambios importantes. Revísalos y acéptalos para seguir usando PitchProof.",
     "agree": "He leído y acepto las Condiciones del servicio, la Política de privacidad y las Normas de la comunidad.",
     "optionalLater": "Las opciones voluntarias, como el análisis con IA, se piden por separado y se pueden cambiar en el Centro de privacidad.",
     "continue": "Aceptar y continuar"
@@ -60,7 +60,7 @@
     "title": "Tus datos",
     "export": {
       "title": "Descargar tus datos",
-      "body": "Obtén una copia de los datos personales que ScoutX guarda sobre ti en un archivo JSON: perfil, Passport, partidos, análisis, coaching, sesiones de movimiento (solo el campo, sin ubicación), detalles de medios con enlaces de descarga, datos de scouting y registros de consentimiento.",
+      "body": "Obtén una copia de los datos personales que PitchProof guarda sobre ti en un archivo JSON: perfil, Passport, partidos, análisis, coaching, sesiones de movimiento (solo el campo, sin ubicación), detalles de medios con enlaces de descarga, datos de scouting y registros de consentimiento.",
       "request": "Preparar mi descarga",
       "working": "Tu descarga se está preparando. Esta página se actualiza cuando esté lista.",
       "ready": "Tu descarga está disponible hasta el {{date}}.",
@@ -71,7 +71,7 @@
     },
     "requests": {
       "title": "Solicitudes de privacidad",
-      "body": "Pide a ScoutX que aplique tus derechos sobre tus datos. Respondemos en un plazo de 30 días.",
+      "body": "Pide a PitchProof que aplique tus derechos sobre tus datos. Respondemos en un plazo de 30 días.",
       "types": {
         "access": "Acceso",
         "correction": "Rectificación",
@@ -113,7 +113,7 @@
         "completed": "Cuenta eliminada"
       },
       "progressLabel": "Eliminación de la cuenta: {{percent}} %",
-      "keepOpen": "Mantén ScoutX abierto hasta que termine.",
+      "keepOpen": "Mantén PitchProof abierto hasta que termine.",
       "retry": "Eliminación en pausa. Toca de nuevo Eliminar cuenta para continuar donde se detuvo."
     }
   }

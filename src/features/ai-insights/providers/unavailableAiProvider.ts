@@ -5,7 +5,7 @@ import { type AiInsightMap, type AiInsightType } from '@/features/ai-insights/ty
 export class UnavailableAiProvider implements AiProvider {
   readonly metadata = {
     id: 'unavailable',
-    label: 'ScoutX AI Coach',
+    label: 'PitchProof AI Coach',
     isLive: false,
   };
 

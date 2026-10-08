@@ -94,7 +94,7 @@ const mockRecommendations: TrustRecommendation[] = [
     authorName: 'Alex Morgan',
     authorRole: 'scout',
     authorTitle: 'Senior Talent Scout',
-    authorOrganization: 'ScoutX Network',
+    authorOrganization: 'PitchProof Network',
     authorAvatarUrl:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
     type: 'scout_endorsement',
@@ -136,7 +136,7 @@ const mockRecommendations: TrustRecommendation[] = [
     authorName: 'Alex Morgan',
     authorRole: 'scout',
     authorTitle: 'Senior Talent Scout',
-    authorOrganization: 'ScoutX Network',
+    authorOrganization: 'PitchProof Network',
     authorAvatarUrl:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
     type: 'scout_endorsement',

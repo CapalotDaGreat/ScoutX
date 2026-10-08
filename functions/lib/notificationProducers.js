@@ -30,7 +30,7 @@ async function writeSystemActivity(db, activityId, input) {
         await db.collection('activities').doc(activityId).create({
             ...input,
             actorId: 'system',
-            actorName: 'ScoutX',
+            actorName: 'PitchProof',
             actorRole: 'system',
             read: false,
             createdAt: new Date().toISOString(),
@@ -134,7 +134,7 @@ exports.onTrialInvitationCreatedNotify = (0, firestore_2.onDocumentCreated)('tri
         type: 'trial_invitation',
         category: 'trial',
         title: 'Trial invitation',
-        body: 'You have a new trial invitation. Open ScoutX to respond.',
+        body: 'You have a new trial invitation. Open PitchProof to respond.',
         reference: { entityType: 'trial', entityId: trialId, label: 'Trial' },
     });
 });

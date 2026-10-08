@@ -4,19 +4,19 @@
   },
   "age": {
     "title": "Hoe oud ben je?",
-    "body": "ScoutX past aan je leeftijdsgroep aan wat openbaar is en wie contact met je mag opnemen.",
+    "body": "PitchProof past aan je leeftijdsgroep aan wat openbaar is en wie contact met je mag opnemen.",
     "under13": "Jonger dan 13",
     "teen": "13 tot 17",
     "adult": "18 of ouder",
-    "under13Notice": "ScoutX is pas beschikbaar vanaf 13 jaar. Als je doorgaat, worden dit account en alles erin verwijderd.",
+    "under13Notice": "PitchProof is pas beschikbaar vanaf 13 jaar. Als je doorgaat, worden dit account en alles erin verwijderd.",
     "under13Continue": "Doorgaan en dit account verwijderen",
-    "teenConfirm": "Ik ben tussen 13 en 17. Ik begrijp dat een ouder of voogd mijn account moet goedkeuren voordat ik ScoutX kan gebruiken.",
+    "teenConfirm": "Ik ben tussen 13 en 17. Ik begrijp dat een ouder of voogd mijn account moet goedkeuren voordat ik PitchProof kan gebruiken.",
     "continue": "Doorgaan",
     "noBirthDate": "We bewaren alleen je leeftijdsgroep, nooit je geboortedatum."
   },
   "guardian": {
     "requestTitle": "Vraag een ouder of voogd",
-    "requestBody": "We mailen je ouder of voogd een link. Die kiest wat ScoutX met je account mag doen. Tot dan blijft je account privé en beperkt.",
+    "requestBody": "We mailen je ouder of voogd een link. Die kiest wat PitchProof met je account mag doen. Tot dan blijft je account privé en beperkt.",
     "declinedBody": "Je ouder of voogd heeft het account niet goedgekeurd. Je kunt het opnieuw vragen als die van gedachten verandert.",
     "revokedBody": "De toestemming is ingetrokken, dus jeugdfuncties staan op pauze. Je kunt het opnieuw vragen.",
     "expiredBody": "Toestemming wordt elk jaar vernieuwd. Vraag je ouder of voogd om opnieuw te bevestigen.",
@@ -26,13 +26,13 @@
     "send": "Goedkeuringsmail versturen",
     "signOut": "Uitloggen",
     "waitingTitle": "Wachten op je ouder of voogd",
-    "waitingBody": "We hebben {{email}} gemaild. Na goedkeuring wordt ScoutX automatisch ontgrendeld.",
+    "waitingBody": "We hebben {{email}} gemaild. Na goedkeuring wordt PitchProof automatisch ontgrendeld.",
     "whatHappens": "Je voogd beslist apart over een openbaar profiel, zichtbaarheid voor scouts, scoutverzoeken, gedeelde video's en AI-analyse. Elke uitnodiging voor een proeftraining heeft ook hun goedkeuring nodig.",
     "resend": "Opnieuw sturen of ander e-mailadres gebruiken",
     "deleteAccount": "Mijn account verwijderen"
   },
   "under13": {
-    "title": "ScoutX is voor 13 jaar en ouder",
+    "title": "PitchProof is voor 13 jaar en ouder",
     "body": "Je account is verwijderd en er is niets bewaard. Je bent welkom zodra je 13 bent.",
     "close": "Sluiten"
   },
@@ -45,7 +45,7 @@
     "noScopes": "Alleen privégebruik",
     "revoke": "Toestemming van voogd intrekken",
     "revokeHint": "Jeugdfuncties pauzeren tot je voogd opnieuw goedkeurt.",
-    "changeAge": "Neem contact op met ScoutX-support om je leeftijdsgroep te corrigeren.",
+    "changeAge": "Neem contact op met PitchProof-support om je leeftijdsgroep te corrigeren.",
     "scope": {
       "public_passport": "Openbaar profiel",
       "discovery": "Zichtbaar voor scouts",

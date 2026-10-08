@@ -51,7 +51,7 @@ exports.setAgeBand = (0, https_1.onCall)((0, callableOptions_1.createCallableOpt
     const db = (0, firestore_1.getFirestore)();
     const existing = await (0, userSafety_1.loadSafetyState)(uid, db);
     if (!(0, policy_1.canChangeAgeBand)(existing?.ageBand ?? null, ageBand)) {
-        throw new https_1.HttpsError('failed-precondition', 'Your age group can only be changed by ScoutX support.');
+        throw new https_1.HttpsError('failed-precondition', 'Your age group can only be changed by PitchProof support.');
     }
     if (ageBand === 'under13') {
         const outcome = await (0, deletion_1.runAccountDeletion)(db, uid, appleAuth_1.accountDeletionDeps);
@@ -352,7 +352,7 @@ exports.onTrialInvitationCreatedGuardian = (0, firestore_2.onDocumentCreated)({ 
         }),
     });
 });
-/** Informs the guardian of a minor when a scout contacts them through ScoutX. */
+/** Informs the guardian of a minor when a scout contacts them through PitchProof. */
 async function notifyGuardianOfScoutContact(db, playerId) {
     const contact = (await db.collection('guardianContacts').doc(playerId).get()).data() ?? {};
     if (typeof contact.email !== 'string')

@@ -48,7 +48,7 @@ firebase functions:secrets:set APPLE_PRIVATE_KEY
 # firebase functions:secrets:set APPLE_CLIENT_ID
 ```
 
-Optionally set `APPLE_CLIENT_ID` in the Functions runtime environment if the Services ID differs from the bundle id. For native iOS ScoutX builds, leave the default `com.scoutx.app`.
+Optionally set `APPLE_CLIENT_ID` in the Functions runtime environment if the Services ID differs from the bundle id. For native iOS PitchProof builds, leave the default `com.scoutx.app`.
 
 5. Deploy:
 

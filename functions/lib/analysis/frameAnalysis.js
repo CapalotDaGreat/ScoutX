@@ -205,7 +205,7 @@ async function acquireJobLease(db, uid, jobId, requestId, idempotencyKey) {
     });
 }
 const SYSTEM_RULES = [
-    'You are ScoutX Match Analyst.',
+    'You are PitchProof Match Analyst.',
     'You ONLY describe what is visible in the provided still frames.',
     'Never fabricate player actions, identity, position, movement, match events, or countable stats.',
     'Do not count passes, shots, tackles, or minutes.',
@@ -320,7 +320,7 @@ async function runFrameAnalysis(params) {
     const result = await (0, openRouter_1.callChat)({
         apiKey: params.apiKey,
         model,
-        title: 'ScoutX Match Analysis',
+        title: 'PitchProof Match Analysis',
         messages: [
             { role: 'system', content: prompt.system },
             { role: 'user', content: [{ type: 'text', text: prompt.user }, ...imageContents] },

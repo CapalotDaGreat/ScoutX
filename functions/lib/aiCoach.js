@@ -112,7 +112,7 @@ function isInsightType(value) {
     return typeof value === 'string' && INSIGHT_TYPES.includes(value);
 }
 exports.INSIGHT_SYSTEM_RULES = [
-    'You are ScoutX AI, a football development analyst.',
+    'You are PitchProof AI, a football development analyst.',
     'Hard rules:',
     '- Use only the data in USER_METADATA. Do not invent events, statistics, timestamps, ratings or achievements.',
     '- Never give a numeric player rating, potential score or ranking.',
@@ -210,7 +210,7 @@ exports.generateAiInsight = (0, https_1.onCall)((0, callableOptions_1.createCall
     const result = await (0, openRouter_1.callChat)({
         apiKey,
         model,
-        title: 'ScoutX',
+        title: 'PitchProof',
         messages: [
             { role: 'system', content: prompt.system },
             { role: 'user', content: prompt.user },

@@ -12,12 +12,12 @@
   "readFull": "Lees het volledige document",
   "consents": {
     "title": "Je toestemmingen",
-    "requiredTitle": "Vereist om ScoutX te gebruiken",
+    "requiredTitle": "Vereist om PitchProof te gebruiken",
     "requiredBody": "Deze kun je alleen intrekken door je account te verwijderen.",
     "accepted": "Versie {{version}} · {{date}}",
     "notAccepted": "Niet geaccepteerd",
     "optionalTitle": "Optioneel",
-    "optionalBody": "ScoutX werkt ook zonder. Je kunt ze altijd wijzigen.",
+    "optionalBody": "PitchProof werkt ook zonder. Je kunt ze altijd wijzigen.",
     "failed": "Je keuze kon niet worden opgeslagen. Probeer het opnieuw.",
     "ai": {
       "label": "AI-analyse van mijn video's",
@@ -34,7 +34,7 @@
     "title": "Voordat je begint",
     "body": "Lees de korte samenvattingen hieronder. De volledige documenten staan altijd in het Privacycentrum.",
     "reacceptTitle": "Onze voorwaarden zijn gewijzigd",
-    "reacceptBody": "We hebben belangrijke wijzigingen doorgevoerd. Bekijk en accepteer ze om ScoutX te blijven gebruiken.",
+    "reacceptBody": "We hebben belangrijke wijzigingen doorgevoerd. Bekijk en accepteer ze om PitchProof te blijven gebruiken.",
     "agree": "Ik heb de Gebruiksvoorwaarden, het Privacybeleid en de Communityrichtlijnen gelezen en ga ermee akkoord.",
     "optionalLater": "Optionele keuzes, zoals AI-analyse, worden apart gevraagd en kun je wijzigen in het Privacycentrum.",
     "continue": "Akkoord en doorgaan"
@@ -60,7 +60,7 @@
     "title": "Je gegevens",
     "export": {
       "title": "Je gegevens downloaden",
-      "body": "Ontvang een kopie van de persoonsgegevens die ScoutX over je bewaart als JSON-bestand: profiel, Passport, wedstrijden, analyses, coaching, bewegingssessies (alleen het veld, geen locatie), mediagegevens met downloadlinks, scoutinggegevens en toestemmingsregistraties.",
+      "body": "Ontvang een kopie van de persoonsgegevens die PitchProof over je bewaart als JSON-bestand: profiel, Passport, wedstrijden, analyses, coaching, bewegingssessies (alleen het veld, geen locatie), mediagegevens met downloadlinks, scoutinggegevens en toestemmingsregistraties.",
       "request": "Mijn download voorbereiden",
       "working": "Je download wordt voorbereid. Deze pagina wordt bijgewerkt zodra hij klaar is.",
       "ready": "Je download is beschikbaar tot {{date}}.",
@@ -71,7 +71,7 @@
     },
     "requests": {
       "title": "Privacyverzoeken",
-      "body": "Vraag ScoutX om je rechten op je gegevens uit te voeren. We reageren binnen 30 dagen.",
+      "body": "Vraag PitchProof om je rechten op je gegevens uit te voeren. We reageren binnen 30 dagen.",
       "types": {
         "access": "Inzage",
         "correction": "Correctie",
@@ -113,7 +113,7 @@
         "completed": "Account verwijderd"
       },
       "progressLabel": "Accountverwijdering {{percent}}% voltooid",
-      "keepOpen": "Houd ScoutX open totdat dit klaar is.",
+      "keepOpen": "Houd PitchProof open totdat dit klaar is.",
       "retry": "Verwijdering gepauzeerd. Tik opnieuw op Account verwijderen om verder te gaan waar het stopte."
     }
   }

@@ -22,7 +22,7 @@ export function CareerReplayShareCardView({ data }: CareerReplayShareCardViewPro
         <View className="gap-2">
           <View className="self-start rounded-full bg-[#3A3018] px-3 py-1">
             <Text variant="caption" className="text-[#D9A441]">
-              ScoutX Career Replay
+              PitchProof Career Replay
             </Text>
           </View>
           <Text weight="semibold" className="text-3xl text-[#F7F6F3]">

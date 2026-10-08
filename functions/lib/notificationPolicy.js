@@ -163,8 +163,8 @@ function decidePush(activityType, preferences, recentSendTimes, now) {
     return { send: true, category };
 }
 exports.GENERIC_PUSH_COPY = {
-    title: 'ScoutX',
-    body: 'You have a new update. Open ScoutX to see it.',
+    title: 'PitchProof',
+    body: 'You have a new update. Open PitchProof to see it.',
 };
 /** Minors always get generic lock-screen copy; adults choose. */
 function lockScreenCopy(copy, preview, isMinor) {

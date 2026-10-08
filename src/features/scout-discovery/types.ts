@@ -85,7 +85,7 @@ export type DiscoverablePlayer = {
   biography: string;
   /**
    * Legacy field kept for old documents and mock data. Server projections write null.
-   * UI must not treat this as a ScoutX grade.
+   * UI must not treat this as a PitchProof grade.
    */
   overallRating: number | null;
   overallRatingSource: DiscoveryRatingSource | null;

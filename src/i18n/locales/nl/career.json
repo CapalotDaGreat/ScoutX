@@ -35,7 +35,7 @@
   "momentsCount_one": "{{count}} vastgelegd moment",
   "momentsCount_other": "{{count}} vastgelegde momenten",
   "coachNotesTitle": "Trainerobservaties",
-  "coachNotesLabel": "Alleen notities van de trainer — ScoutX verzint geen feedback.",
+  "coachNotesLabel": "Alleen notities van de trainer — PitchProof verzint geen feedback.",
   "coachNotesEmpty": "Nog geen trainerobservaties voor jou vastgelegd.",
   "journeyEditor": {
     "entryType": "Type item",

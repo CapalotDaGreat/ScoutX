@@ -8,7 +8,7 @@ canonicalLanguage: en
 requiresAcceptance: true
 summary:
 - Be respectful. No harassment, hate, threats or sexual content.
-- Contact with players under 18 happens only through ScoutX requests, which their guardian can see.
+- Contact with players under 18 happens only through PitchProof requests, which their guardian can see.
 - Upload only footage you have the right to share.
 - Never ask for money for a trial, a contract or a recommendation.
 - Report anything that worries you. Reports are confidential.
@@ -16,13 +16,13 @@ summary:
 
 ## Respect
 
-Treat players, parents, coaches and scouts with respect. Harassment, bullying, hate speech, threats, discrimination and sexual content are not allowed anywhere on ScoutX.
+Treat players, parents, coaches and scouts with respect. Harassment, bullying, hate speech, threats, discrimination and sexual content are not allowed anywhere on PitchProof.
 
 ## Protecting young players
 
-- Adults must not seek private contact with players under 18 outside ScoutX's request system.
+- Adults must not seek private contact with players under 18 outside PitchProof's request system.
 - Do not ask a minor for personal contact details, social media accounts, photos or meetings.
-- Trials for players under 18 need guardian co-approval through ScoutX.
+- Trials for players under 18 need guardian co-approval through PitchProof.
 - Any sexualised content involving minors is reported to the authorities.
 
 ## Honest profiles
@@ -39,7 +39,7 @@ Never ask for or offer money, gifts or favours in exchange for trials, contracts
 
 ## Reporting
 
-Use "Report" on any profile, video, Passport, request or trial. People who appear in a video can report it even without an account. Reports are reviewed by ScoutX staff and the reporter's identity is not shared with the reported user.
+Use "Report" on any profile, video, Passport, request or trial. People who appear in a video can report it even without an account. Reports are reviewed by PitchProof staff and the reporter's identity is not shared with the reported user.
 
 ## Enforcement
 

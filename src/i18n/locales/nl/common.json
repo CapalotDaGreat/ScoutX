@@ -1,5 +1,5 @@
 {
-  "appName": "ScoutX",
+  "appName": "PitchProof",
   "loading": "Laden",
   "loadingFonts": "Lettertypen laden",
   "initializingServices": "Je verbinding beveiligen",
@@ -36,7 +36,7 @@
   "privacyPolicy": "Privacybeleid",
   "termsOfService": "Servicevoorwaarden",
   "roleLabel": "Rol",
-  "scoutXUser": "ScoutX-gebruiker",
+  "appUser": "PitchProof-gebruiker",
   "notAvailable": "Niet beschikbaar",
   "comingSoon": "Binnenkort",
   "viewAll": "Alles bekijken",
@@ -60,7 +60,7 @@
   "searchOwnedHint": "Zoek wedstrijden, journey-items en trials op dit apparaat",
   "searchOwnedPlaceholder": "Zoek je records",
   "searchEmpty": "Geen overeenkomende records",
-  "searchEmptyHint": "ScoutX zoekt alleen wat je al hebt vastgelegd.",
+  "searchEmptyHint": "PitchProof zoekt alleen wat je al hebt vastgelegd.",
   "offlineDrafts": "Offline — concepten blijven op dit apparaat tot je weer online bent",
   "stars": {
     "value": "{{value}} van {{max}} sterren",
@@ -175,7 +175,7 @@
       "journey": "Loopbaan"
     }
   },
-  "preparingSession": "Je ScoutX-sessie wordt voorbereid",
+  "preparingSession": "Je PitchProof-sessie wordt voorbereid",
   "a11y": {
     "closeDialog": "Dialoog sluiten",
     "closeSheet": "Paneel sluiten",
@@ -191,7 +191,7 @@
   "guardianLink": {
     "title": "Toestemming ouder of voogd",
     "heading": "Deze link is voor een ouder of voogd",
-    "body": "Toestemming geven gebeurt op de ScoutX-website, niet in het account van de speler. Ben jij de ouder of voogd, open dan de pagina en bekijk het verzoek daar.",
+    "body": "Toestemming geven gebeurt op de PitchProof-website, niet in het account van de speler. Ben jij de ouder of voogd, open dan de pagina en bekijk het verzoek daar.",
     "open": "Pagina voor ouders openen"
   },
   "reportLink": {

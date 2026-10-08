@@ -49,7 +49,7 @@ anything is stored.
 | Media library | D7, D8 | Store and validate uploads | Contract | Public media needs `public_media` scope |
 | AI analysis | D7, D9 | Analysis the user requests | Consent (`ai_analysis` scope for minors); contract for adults | Guardian scope |
 | Movement sessions | D10 | Distance and pitch heatmap | Contract | Available to all ages (no location) |
-| Scouting | D11 | Scout tools, contact through ScoutX | Contract (scout); consent (player discovery/contact) | `discovery`, `scout_contact`; trials need guardian co-approval |
+| Scouting | D11 | Scout tools, contact through PitchProof | Contract (scout); consent (player discovery/contact) | `discovery`, `scout_contact`; trials need guardian co-approval |
 | Notifications | D12 | Inform users | Contract; push requires OS permission | Generic lock-screen copy always |
 | Moderation | D14, D21 | Safety and abuse handling | Legitimate interest; legal obligation | Priority handling of minor reports |
 | Subscriptions | D15 | Premium entitlements | Contract | No promotions shown to minors |

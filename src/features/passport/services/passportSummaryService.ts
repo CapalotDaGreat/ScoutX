@@ -122,7 +122,7 @@ function buildReadiness(
       group: 'app_ops',
       status: appOps.pushRegistered ? 'ready' : 'missing',
       reason: appOps.pushRegistered
-        ? 'This device can receive ScoutX notifications'
+        ? 'This device can receive PitchProof notifications'
         : 'Notifications are an app setting, not part of football evidence',
     },
     {

@@ -75,7 +75,7 @@ export function mapPushPayloadToActivityDraft(
     title: payload.title,
     body: payload.body,
     actorId: data.actorId ?? 'system',
-    actorName: data.actorName ?? 'ScoutX',
+    actorName: data.actorName ?? 'PitchProof',
     actorRole,
     reference:
       data.entityId && isReferenceEntity(data.entityType)

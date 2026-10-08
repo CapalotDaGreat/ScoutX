@@ -34,11 +34,11 @@ the user retries; it never deletes the sign-in locally while server-only records
 
 These records use hashed identifiers.
 
-## Not deleted by ScoutX
+## Not deleted by PitchProof
 
 | Item | Reason |
 | --- | --- |
 | Apple purchase history | Held by Apple. RevenueCat customer records must be deleted through the RevenueCat API or dashboard; EXTERNAL CONFIGURATION REQUIRED (no automated call yet) |
 | Sentry events | No user id is attached; they expire under the Sentry project retention |
 | Backups | No custom backup exists. Firestore point-in-time recovery, if enabled, keeps data up to 7 days; see `docs/security/disaster-recovery.md` |
-| Copies other users made outside ScoutX (screenshots, downloads of public media) | Outside ScoutX's control |
+| Copies other users made outside PitchProof (screenshots, downloads of public media) | Outside PitchProof's control |

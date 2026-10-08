@@ -78,7 +78,7 @@ function parseRoleClaim(value: unknown): AuthUser['role'] {
 
 function mapFirebaseUser(user: User, role?: AuthUser['role']): AuthUser {
   const displayName =
-    user.displayName ?? user.email?.split('@')[0] ?? (user.isAnonymous ? 'Guest' : 'ScoutX User');
+    user.displayName ?? user.email?.split('@')[0] ?? (user.isAnonymous ? 'Guest' : 'PitchProof User');
 
   return createAuthUser({
     uid: user.uid,

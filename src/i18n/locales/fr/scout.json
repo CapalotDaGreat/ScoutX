@@ -26,7 +26,7 @@
     "browse": "Parcourir",
     "viewMore": "Voir plus",
     "emptyTitle": "Aucun joueur visible pour l'instant",
-    "emptyDescription": "Les vrais joueurs inscrits apparaissent ici dès qu'ils acceptent d'être visibles par les recruteurs. Partage ScoutX avec les centres de formation et joueurs de ton réseau.",
+    "emptyDescription": "Les vrais joueurs inscrits apparaissent ici dès qu'ils acceptent d'être visibles par les recruteurs. Partage PitchProof avec les centres de formation et joueurs de ton réseau.",
     "emptyAction": "Ouvrir Découvrir",
     "presetTip": "Astuce : utilise les préréglages dans Découvrir pour enregistrer tes filtres préférés.",
     "attention": {
@@ -63,7 +63,7 @@
     "noSearchResults": "Aucun joueur ne correspond à ta recherche",
     "noSearchResultsDescription": "Try a different keyword, remove filter chips, or apply a saved preset.",
     "noPlayersAvailable": "Aucun joueur disponible",
-    "noPlayersDescription": "Les joueurs apparaissent ici quand ils acceptent d'être visibles par les recruteurs. Invite les athlètes de ton réseau à créer leur identité ScoutX.",
+    "noPlayersDescription": "Les joueurs apparaissent ici quand ils acceptent d'être visibles par les recruteurs. Invite les athlètes de ton réseau à créer leur identité PitchProof.",
     "clearFilters": "Effacer les filtres",
     "compare": "Comparer",
     "addToPipeline": "Ajouter au pipeline",
@@ -339,12 +339,12 @@
       "insufficient_evidence": "Pas encore assez de preuves"
     },
     "requestTitle": "Demander des preuves",
-    "requestHint": "Demande au joueur du materiel deja enregistre. ScoutX n invente ni film ni stats.",
+    "requestHint": "Demande au joueur du materiel deja enregistre. PitchProof n invente ni film ni stats.",
     "requestPlaceholder": "Note optionnelle pour le joueur",
     "requestAction": "Envoyer la demande",
     "requestSent": "Demande envoyee.",
     "requestFailed": "Impossible d envoyer cette demande de preuves.",
-    "requestUnavailable": "Les demandes de preuves necessitent le backend ScoutX.",
+    "requestUnavailable": "Les demandes de preuves necessitent le backend PitchProof.",
     "kinds": {
       "match_footage": "Images de match",
       "highlight": "Temps forts",

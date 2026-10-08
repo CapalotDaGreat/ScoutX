@@ -9,7 +9,7 @@
   },
   "share": {
     "scoutId": "Scout-Benutzer-ID",
-    "placeholder": "ScoutX-Benutzer-ID des Scouts einfügen",
+    "placeholder": "PitchProof-Benutzer-ID des Scouts einfügen",
     "action": "Mit Scout teilen",
     "sent": "Freigabe gespeichert",
     "failed": "Konnte nicht geteilt werden."
@@ -165,8 +165,8 @@
     "bytes": "{{sent}} von {{total}} ({{percent}} %)",
     "speed": "{{rate}}",
     "eta": "noch etwa {{eta}}",
-    "foregroundNote": "Lass ScoutX während des Uploads geöffnet. Wird die App geschlossen, geht der Upload beim nächsten Mal an derselben Stelle weiter.",
-    "processingNote": "Alle Daten sind angekommen. ScoutX prüft Format und Länge vor der Analyse.",
+    "foregroundNote": "Lass PitchProof während des Uploads geöffnet. Wird die App geschlossen, geht der Upload beim nächsten Mal an derselben Stelle weiter.",
+    "processingNote": "Alle Daten sind angekommen. PitchProof prüft Format und Länge vor der Analyse.",
     "pause": "Pausieren",
     "resume": "Fortsetzen",
     "retry": "Erneut versuchen",
@@ -189,7 +189,7 @@
     "rejection": {
       "not_video": "Diese Datei ist kein Video. Wähle eine MP4- oder MOV-Aufnahme.",
       "unsupported_container": "Nur MP4- und MOV-Videos werden unterstützt.",
-      "unsupported_codec": "Dieses Video nutzt ein Format, das ScoutX nicht lesen kann. Verwende H.264 oder HEVC (iPhone-Standard).",
+      "unsupported_codec": "Dieses Video nutzt ein Format, das PitchProof nicht lesen kann. Verwende H.264 oder HEVC (iPhone-Standard).",
       "no_video_stream": "Diese Datei enthält kein Videobild.",
       "too_many_streams": "Diese Datei hat zu viele Spuren. Exportiere sie erneut als einzelnes Video.",
       "too_short": "Dieses Video ist zu kurz für eine Analyse.",
@@ -250,7 +250,7 @@
     "uploadFailed": "Upload fehlgeschlagen",
     "untitled": "Highlight ohne Titel",
     "featured": "Hervorgehoben",
-    "spotlight": "ScoutX Spotlight",
+    "spotlight": "PitchProof Spotlight",
     "versus": "gegen {{opponent}}",
     "uploadErrorTitle": "Upload-Problem",
     "pickFailed": "Das Video konnte nicht geöffnet werden. Bitte wähle einen anderen Clip.",
@@ -355,7 +355,7 @@
     "readPolicy": "Video- und Aufnahmerichtlinie lesen",
     "accept": "Verstanden – weiter",
     "adult": {
-      "intro": "Bitte bestätige jeden Punkt. ScoutX speichert diese Bestätigung.",
+      "intro": "Bitte bestätige jeden Punkt. PitchProof speichert diese Bestätigung.",
       "recordedOrPermission": "Ich habe die Aufnahme selbst gemacht oder habe die Erlaubnis der Person, die sie gemacht hat, und Aufnahmen waren vor Ort erlaubt.",
       "peopleKnow": "Klar erkennbare Personen wissen von der Aufnahme, sonst halte ich sie privat.",
       "otherMinors": "Kinder in meinen Videos teile ich nur mit Erlaubnis ihrer Eltern oder Erziehungsberechtigten.",
@@ -381,20 +381,20 @@
     "confirmPeopleYouth": "Alle im Video sind mit dem Teilen einverstanden, und kein anderes Kind ist ohne Erlaubnis zu sehen.",
     "passport": {
       "title": "Zum Football Passport hinzufügen",
-      "audience": "Alle mit deinem Passport-Link, auch Personen ohne ScoutX-Konto.",
+      "audience": "Alle mit deinem Passport-Link, auch Personen ohne PitchProof-Konto.",
       "warning": "Nach dem Teilen können andere das Video ansehen oder aufnehmen. Du kannst es jederzeit wieder privat machen.",
       "confirm": "Zum Passport hinzufügen"
     },
     "grant": {
       "title": "Mit einem Scout teilen",
       "audience": "Nur der ausgewählte Scout, für 7 Tage.",
-      "warning": "Der Scout kann das Video in ScoutX ansehen, bis die Freigabe abläuft oder du es privat machst.",
+      "warning": "Der Scout kann das Video in PitchProof ansehen, bis die Freigabe abläuft oder du es privat machst.",
       "confirm": "Mit diesem Scout teilen"
     }
   },
   "recovery": {
     "title": "Unvollständige Uploads",
-    "body": "Diese Uploads wurden beim Schließen von ScoutX unterbrochen. Fortsetzen macht dort weiter, wo sie aufgehört haben.",
+    "body": "Diese Uploads wurden beim Schließen von PitchProof unterbrochen. Fortsetzen macht dort weiter, wo sie aufgehört haben.",
     "meta": "{{mb}} MB · gestartet am {{date}}",
     "offline": "Status offline unbekannt",
     "resume": "Fortsetzen",

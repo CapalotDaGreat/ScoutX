@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>ScoutX — Parent or guardian approval</title>
+    <title>PitchProof — Parent or guardian approval</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -86,19 +86,19 @@
       <div id="error" hidden>
         <h1>This link can't be used</h1>
         <p id="error-message" class="error"></p>
-        <p>Links work once and expire after 7 days. Ask your child to send a new request from the ScoutX app.</p>
+        <p>Links work once and expire after 7 days. Ask your child to send a new request from the PitchProof app.</p>
       </div>
 
       <form id="consent" hidden>
         <h1 id="consent-title"></h1>
         <p>
-          ScoutX is a football development app. Players log matches, upload videos and build a profile.
+          PitchProof is a football development app. Players log matches, upload videos and build a profile.
           Because your child is under 18, their account stays limited until you decide below.
         </p>
         <ul>
-          <li>ScoutX never sells data and never uses your child's data to train AI models.</li>
+          <li>PitchProof never sells data and never uses your child's data to train AI models.</li>
           <li>Movement sessions measure distance and a pitch heatmap on the phone. Location is never uploaded or stored.</li>
-          <li>Scouts can only contact your child through ScoutX, and you are emailed when they do.</li>
+          <li>Scouts can only contact your child through PitchProof, and you are emailed when they do.</li>
           <li>Any trial invitation also needs your separate approval.</li>
         </ul>
         <h2>Choose what to allow</h2>
@@ -120,7 +120,7 @@
         <h1 id="trial-title"></h1>
         <p id="trial-details"></p>
         <p>
-          ScoutX does not verify clubs or scouts beyond the checks shown in the app.
+          PitchProof does not verify clubs or scouts beyond the checks shown in the app.
           A genuine trial never requires payment. If in doubt, contact the club directly.
         </p>
         <p id="trial-error" class="error" hidden></p>
@@ -140,8 +140,8 @@
       (function () {
         var SCOPE_COPY = {
           public_passport: ['Public profile', 'Their Football Passport can be viewed by anyone with the link. Shown with first name, last initial and age group only.'],
-          discovery: ['Visible to scouts', 'Registered scouts and coaches can find them in ScoutX search.'],
-          scout_contact: ['Scout requests', 'Scouts can send requests and trial invitations through ScoutX. You are emailed each time.'],
+          discovery: ['Visible to scouts', 'Registered scouts and coaches can find them in PitchProof search.'],
+          scout_contact: ['Scout requests', 'Scouts can send requests and trial invitations through PitchProof. You are emailed each time.'],
           public_media: ['Shared videos', 'They can make their own videos visible on their profile.'],
           public_movement: ['Movement on profile', 'Distance and pitch heatmap summaries can appear on their public profile.'],
           ai_analysis: ['AI video analysis', 'Their match videos can be analysed by an AI model. The provider may not keep or train on the data.']
@@ -269,7 +269,7 @@
 
         document.getElementById('trial-approve').addEventListener('click', function (event) {
           respond({ decision: 'approve' }, event.currentTarget)
-            .then(function () { done('Your child can now accept or decline the trial in ScoutX.'); })
+            .then(function () { done('Your child can now accept or decline the trial in PitchProof.'); })
             .catch(function (error) { fail(error.message); });
         });
 
@@ -280,7 +280,7 @@
         });
 
         if (!token) {
-          fail('This page needs the link from the ScoutX email.');
+          fail('This page needs the link from the PitchProof email.');
           return;
         }
         call('/api/guardian/get', { token: token })

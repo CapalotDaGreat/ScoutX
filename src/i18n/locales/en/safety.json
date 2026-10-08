@@ -4,19 +4,19 @@
   },
   "age": {
     "title": "How old are you?",
-    "body": "ScoutX adjusts what is public and who can contact you based on your age group.",
+    "body": "PitchProof adjusts what is public and who can contact you based on your age group.",
     "under13": "Under 13",
     "teen": "13 to 17",
     "adult": "18 or older",
-    "under13Notice": "ScoutX is only available from age 13. If you continue, this account and anything in it will be deleted.",
+    "under13Notice": "PitchProof is only available from age 13. If you continue, this account and anything in it will be deleted.",
     "under13Continue": "Continue and delete this account",
-    "teenConfirm": "I am between 13 and 17. I understand my parent or guardian has to approve my account before I can use ScoutX.",
+    "teenConfirm": "I am between 13 and 17. I understand my parent or guardian has to approve my account before I can use PitchProof.",
     "continue": "Continue",
     "noBirthDate": "We only store your age group, never your date of birth."
   },
   "guardian": {
     "requestTitle": "Ask a parent or guardian",
-    "requestBody": "We will email your parent or guardian a link. They choose what ScoutX may do with your account. Until then, your account stays private and limited.",
+    "requestBody": "We will email your parent or guardian a link. They choose what PitchProof may do with your account. Until then, your account stays private and limited.",
     "declinedBody": "Your parent or guardian did not approve the account. You can ask again if they change their mind.",
     "revokedBody": "Guardian consent was withdrawn, so youth features are paused. You can ask your parent or guardian again.",
     "expiredBody": "Guardian consent is renewed every year. Ask your parent or guardian to confirm again.",
@@ -26,13 +26,13 @@
     "send": "Send approval email",
     "signOut": "Sign out",
     "waitingTitle": "Waiting for your parent or guardian",
-    "waitingBody": "We emailed {{email}}. Once they approve, ScoutX unlocks automatically.",
+    "waitingBody": "We emailed {{email}}. Once they approve, PitchProof unlocks automatically.",
     "whatHappens": "Your guardian decides separately about a public profile, being found by scouts, scout requests, shared videos and AI analysis. Any trial invitation also needs their approval.",
     "resend": "Send again or use another email",
     "deleteAccount": "Delete my account"
   },
   "under13": {
-    "title": "ScoutX is for ages 13 and up",
+    "title": "PitchProof is for ages 13 and up",
     "body": "Your account has been deleted and nothing was kept. You are welcome back when you turn 13.",
     "close": "Close"
   },
@@ -45,7 +45,7 @@
     "noScopes": "Private use only",
     "revoke": "Withdraw guardian consent",
     "revokeHint": "Youth features pause until your guardian approves again.",
-    "changeAge": "To correct your age group, contact ScoutX support.",
+    "changeAge": "To correct your age group, contact PitchProof support.",
     "scope": {
       "public_passport": "Public profile",
       "discovery": "Visible to scouts",

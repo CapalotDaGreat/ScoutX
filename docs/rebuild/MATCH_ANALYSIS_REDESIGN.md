@@ -2,7 +2,7 @@
 
 ## CURRENT ARCHITECTURE
 
-The current ScoutX implementation already contains a basic player-match-analysis flow:
+The current PitchProof implementation already contains a basic player-match-analysis flow:
 
 - The mobile app exposes a match-analysis modal via [src/features/match-analysis/components/MatchAnalysisModal.tsx](../../src/features/match-analysis/components/MatchAnalysisModal.tsx).
 - The hook in [src/features/match-analysis/hooks/useMatchAnalysis.ts](../../src/features/match-analysis/hooks/useMatchAnalysis.ts) samples video frames, uploads frames and the full video, starts a job, and subscribes to Firestore status changes.

@@ -5,7 +5,7 @@ can count as a DPIA under Art. 22 FADP / Art. 35 GDPR. Risk ratings are engineer
 
 ## Why a DPIA is needed
 
-ScoutX processes data of minors (13–17), video showing identifiable people, AI analysis of that
+PitchProof processes data of minors (13–17), video showing identifiable people, AI analysis of that
 video, movement data, and enables contact between adult scouts and young players. Each one alone
 points to a high-risk assessment; together they make it mandatory.
 
@@ -21,7 +21,7 @@ marketing site on Cloudflare.
 | Under-13 users sign up | Medium / high | Age band asked before any data entry; `under13` is blocked; only the band is stored | `tests/unit/safetyPolicy.test.ts`, rules "youth safety" tests | Medium (self-declared age) |
 | Minor appears publicly without guardian approval | Medium / high | Public Passport, discovery, public media, public movement each need a separate guardian scope; enforced in rules and server projection | `firestore.rules`, `functions/src/safety/projectionSync.ts`, `tests/rules/firestore.rules.test.mjs` | Low |
 | Forged guardian approval | Low / high | HMAC-signed link (`GUARDIAN_LINK_SECRET`), 7-day expiry, sent to the guardian email by the server, decision only on the web page | `functions/src/safety/guardianToken.ts`, unit tests | Medium: the guardian email is player-supplied |
-| Adult scout contacts a minor directly | Medium / high | No direct messaging. Scouts reach players only through ScoutX requests; requests to minors need `scout_contact` and notify the guardian (`notifyGuardianOfScoutContact`); trial acceptance by a minor needs guardian co-approval (`firestore.rules` `trialInvitations`) | `tests/rules/requestCenter.test.mjs`, rules "youth safety" | Low |
+| Adult scout contacts a minor directly | Medium / high | No direct messaging. Scouts reach players only through PitchProof requests; requests to minors need `scout_contact` and notify the guardian (`notifyGuardianOfScoutContact`); trial acceptance by a minor needs guardian co-approval (`firestore.rules` `trialInvitations`) | `tests/rules/requestCenter.test.mjs`, rules "youth safety" | Low |
 | Lock-screen exposure | Medium / medium | Minors always get generic push text; accounts without an age band fail closed | `tests/rules/pushChain.test.mjs` "lock-screen privacy" | Low |
 | Age details exposed | Low / medium | Public views show only a "Youth" label | `ageGroupLabel` in projections | Low |
 | Upselling to minors | Medium / low | Promotions hidden for minors; nothing safety-related is paywalled | `canSeePromotions`, `NEVER_PAYWALLED` | Low |
@@ -30,7 +30,7 @@ marketing site on Cloudflare.
 
 | Risk | Measures | Residual |
 | --- | --- | --- |
-| Bystanders or other players filmed without consent | Upload acknowledgement and rights confirmation; media private by default; "I appear in this video" report reason; takedown flow | Medium: ScoutX cannot verify consent of everyone in a match video |
+| Bystanders or other players filmed without consent | Upload acknowledgement and rights confirmation; media private by default; "I appear in this video" report reason; takedown flow | Medium: PitchProof cannot verify consent of everyone in a match video |
 | Malicious files | Quarantine bucket path, server-side ffprobe validation, type/size/duration limits, no user access to quarantine. **No malware scanning is performed or claimed** | Medium |
 | Leaked private media | Storage rules owner-only, time-limited signed URLs for grants and exports | Low |
 
@@ -41,7 +41,7 @@ marketing site on Cloudflare.
 | Provider retains or trains on data | `data_collection: 'deny'` and `zdr: true` on every request; key only in Cloud Functions secrets | Medium until ZDR availability is confirmed for the chosen model (NOT VALIDATED) |
 | Wrong or overstated conclusions about a player | Coverage and confidence attached to results; computer-vision stages shown as NOT AVAILABLE; output validator rejects unsupported claims | Medium |
 | Prompt injection via user text | Prompt builder separates instructions from user content; validator with injection fixtures | Low–medium |
-| Automated decisions about players | ScoutX does not make recruitment decisions; scouts see evidence and its source | Low |
+| Automated decisions about players | PitchProof does not make recruitment decisions; scouts see evidence and its source | Low |
 
 ## 4. Movement ("GPS") sessions
 

@@ -9,9 +9,9 @@ export function buildPublicPortfolioUrl(playerId: string, username?: string | nu
 
 export function buildPublicPortfolioDeepLink(playerId: string, username?: string | null): string {
   if (username && username.length >= 3) {
-    return `scoutx://player/${username}`;
+    return `pitchproof://player/${username}`;
   }
-  return `scoutx://portfolio/${playerId}`;
+  return `pitchproof://portfolio/${playerId}`;
 }
 
 export function buildCoachEndorsementInviteUrl(playerId: string, username?: string | null): string {

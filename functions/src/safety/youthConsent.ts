@@ -68,7 +68,7 @@ export const setAgeBand = onCall(createCallableOptions(), async (request) => {
   const db = getFirestore();
   const existing = await loadSafetyState(uid, db);
   if (!canChangeAgeBand(existing?.ageBand ?? null, ageBand)) {
-    throw new HttpsError('failed-precondition', 'Your age group can only be changed by ScoutX support.');
+    throw new HttpsError('failed-precondition', 'Your age group can only be changed by PitchProof support.');
   }
 
   if (ageBand === 'under13') {
@@ -404,7 +404,7 @@ export const onTrialInvitationCreatedGuardian = onDocumentCreated(
   },
 );
 
-/** Informs the guardian of a minor when a scout contacts them through ScoutX. */
+/** Informs the guardian of a minor when a scout contacts them through PitchProof. */
 export async function notifyGuardianOfScoutContact(db: Firestore, playerId: string): Promise<void> {
   const contact = (await db.collection('guardianContacts').doc(playerId).get()).data() ?? {};
   if (typeof contact.email !== 'string') return;

@@ -41,7 +41,7 @@ export function createAuthUser(fields: {
   email?: string;
   role?: AuthRole;
 }): AuthUser {
-  const displayName = fields.displayName ?? fields.name ?? 'ScoutX User';
+  const displayName = fields.displayName ?? fields.name ?? 'PitchProof User';
   return {
     uid: fields.uid,
     id: fields.uid,

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ScoutX",
+    "name": "PitchProof",
     "slug": "scoutx",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,8 +11,8 @@
       "bundleIdentifier": "com.scoutx.app",
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "ScoutX needs access to Photos so you can upload highlight clips and match recordings from your library.",
-        "NSPhotoLibraryAddUsageDescription": "ScoutX may save processed video thumbnails to your library when needed.",
+        "NSPhotoLibraryUsageDescription": "PitchProof needs access to Photos so you can upload highlight clips and match recordings from your library.",
+        "NSPhotoLibraryAddUsageDescription": "PitchProof may save processed video thumbnails to your library when needed.",
         "ITSAppUsesNonExemptEncryption": false
       },
       "privacyManifests": {
@@ -134,9 +134,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "ScoutX needs access to Photos so you can upload highlight clips and match recordings from your library.",
-          "cameraPermission": "ScoutX needs camera access so you can record highlight clips.",
-          "microphonePermission": "ScoutX needs microphone access when recording video clips."
+          "photosPermission": "PitchProof needs access to Photos so you can upload highlight clips and match recordings from your library.",
+          "cameraPermission": "PitchProof needs camera access so you can record highlight clips.",
+          "microphonePermission": "PitchProof needs microphone access when recording video clips."
         }
       ],
       [
@@ -149,7 +149,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "While you record a session, ScoutX uses your position on the phone to calculate distance and a pitch heatmap. Your location is never uploaded, stored, or shared.",
+          "locationWhenInUsePermission": "While you record a session, PitchProof uses your position on the phone to calculate distance and a pitch heatmap. Your location is never uploaded, stored, or shared.",
           "locationAlwaysAndWhenInUsePermission": false,
           "locationAlwaysPermission": false,
           "isIosBackgroundLocationEnabled": false,
@@ -164,7 +164,7 @@
         }
       ]
     ],
-    "scheme": "scoutx",
+    "scheme": "pitchproof",
     "extra": {
       "privacyPolicyUrl": "https://pitchproof.online/privacy",
       "termsOfServiceUrl": "https://pitchproof.online/terms",

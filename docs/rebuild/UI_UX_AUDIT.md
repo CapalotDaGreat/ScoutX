@@ -1,4 +1,4 @@
-# UI/UX Audit — ScoutX 2.0 Phase 0
+# UI/UX Audit — PitchProof 2.0 Phase 0
 
 > Evidence-based baseline from the live repository. No UI code changed during Phase 0.
 

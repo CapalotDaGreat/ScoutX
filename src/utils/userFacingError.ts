@@ -8,7 +8,7 @@ const CODE_MESSAGES: Record<string, string> = {
   'storage/unauthorized': "You don't have access to upload this file. Try signing in again.",
   unauthenticated: 'Your session expired. Please sign in again.',
   'storage/unauthenticated': 'Your session expired. Please sign in again.',
-  unavailable: "ScoutX can't reach the server right now. Check your connection and try again.",
+  unavailable: "PitchProof can't reach the server right now. Check your connection and try again.",
   'deadline-exceeded': 'This is taking longer than expected. Please try again.',
   'resource-exhausted': 'Too many requests right now. Please wait a moment and try again.',
   'storage/quota-exceeded': 'Storage is full right now. Please try again later.',

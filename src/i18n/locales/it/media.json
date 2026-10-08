@@ -9,7 +9,7 @@
   },
   "share": {
     "scoutId": "ID utente dello scout",
-    "placeholder": "Incolla l’ID ScoutX dello scout",
+    "placeholder": "Incolla l’ID PitchProof dello scout",
     "action": "Condividi con scout",
     "sent": "Concessione salvata",
     "failed": "Impossibile condividere."
@@ -165,8 +165,8 @@
     "bytes": "{{sent}} di {{total}} ({{percent}}%)",
     "speed": "{{rate}}",
     "eta": "circa {{eta}} rimanenti",
-    "foregroundNote": "Tieni ScoutX aperta durante il caricamento. Se l’app si chiude, il caricamento riprende da dove si era fermato.",
-    "processingNote": "Tutti i dati sono arrivati. ScoutX sta verificando formato e durata prima dell’analisi.",
+    "foregroundNote": "Tieni PitchProof aperta durante il caricamento. Se l’app si chiude, il caricamento riprende da dove si era fermato.",
+    "processingNote": "Tutti i dati sono arrivati. PitchProof sta verificando formato e durata prima dell’analisi.",
     "pause": "Pausa",
     "resume": "Riprendi",
     "retry": "Riprova",
@@ -189,7 +189,7 @@
     "rejection": {
       "not_video": "Questo file non è un video. Scegli una registrazione MP4 o MOV.",
       "unsupported_container": "Sono supportati solo video MP4 e MOV.",
-      "unsupported_codec": "Questo video usa un formato che ScoutX non può leggere. Usa H.264 o HEVC (il formato predefinito dell’iPhone).",
+      "unsupported_codec": "Questo video usa un formato che PitchProof non può leggere. Usa H.264 o HEVC (il formato predefinito dell’iPhone).",
       "no_video_stream": "Questo file non contiene immagini video.",
       "too_many_streams": "Questo file ha troppe tracce. Esportalo di nuovo come un unico video.",
       "too_short": "Questo video è troppo corto per l’analisi.",
@@ -250,7 +250,7 @@
     "uploadFailed": "Caricamento non riuscito",
     "untitled": "Highlight senza titolo",
     "featured": "In evidenza",
-    "spotlight": "ScoutX Spotlight",
+    "spotlight": "PitchProof Spotlight",
     "versus": "contro {{opponent}}",
     "uploadErrorTitle": "Problema di caricamento",
     "pickFailed": "Impossibile aprire il video. Prova un'altra clip.",
@@ -355,7 +355,7 @@
     "readPolicy": "Leggi la policy su video e registrazioni",
     "accept": "Ho capito – continua",
     "adult": {
-      "intro": "Conferma ogni punto. ScoutX conserva una registrazione di questa conferma.",
+      "intro": "Conferma ogni punto. PitchProof conserva una registrazione di questa conferma.",
       "recordedOrPermission": "Ho girato io il video o ho il permesso di chi l'ha girato, e riprendere era consentito sul posto.",
       "peopleKnow": "Le persone chiaramente riconoscibili ne sono al corrente, altrimenti lo terrò privato.",
       "otherMinors": "Condivido minori nei miei video solo con il permesso dei genitori o tutori.",
@@ -381,20 +381,20 @@
     "confirmPeopleYouth": "Tutti nel video sono d'accordo a condividerlo, e nessun altro ragazzo compare senza permesso.",
     "passport": {
       "title": "Aggiungi al tuo Football Passport",
-      "audience": "Chiunque abbia il link del tuo Passport, anche senza account ScoutX.",
+      "audience": "Chiunque abbia il link del tuo Passport, anche senza account PitchProof.",
       "warning": "Una volta condiviso, altri possono vedere o registrare il video. Puoi renderlo di nuovo privato in qualsiasi momento.",
       "confirm": "Aggiungi al Passport"
     },
     "grant": {
       "title": "Condividi con uno scout",
       "audience": "Solo lo scout selezionato, per 7 giorni.",
-      "warning": "Lo scout può guardare il video in ScoutX finché la condivisione scade o lo rendi privato.",
+      "warning": "Lo scout può guardare il video in PitchProof finché la condivisione scade o lo rendi privato.",
       "confirm": "Condividi con questo scout"
     }
   },
   "recovery": {
     "title": "Caricamenti non completati",
-    "body": "Questi caricamenti si sono interrotti alla chiusura di ScoutX. Riprendi continua da dove si erano fermati.",
+    "body": "Questi caricamenti si sono interrotti alla chiusura di PitchProof. Riprendi continua da dove si erano fermati.",
     "meta": "{{mb}} MB · iniziato il {{date}}",
     "offline": "stato sconosciuto offline",
     "resume": "Riprendi",

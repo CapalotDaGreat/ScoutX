@@ -59,7 +59,7 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
             {data.portfolioUrl.replace('https://', '')}
           </Text>
           <Text variant="caption" className="text-[#8B939E]">
-            pitchproof.online · ScoutX Football Passport
+            pitchproof.online · PitchProof Football Passport
           </Text>
         </View>
       </View>

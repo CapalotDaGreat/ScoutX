@@ -26,7 +26,7 @@
     "browse": "Durchsuchen",
     "viewMore": "Mehr anzeigen",
     "emptyTitle": "Noch keine auffindbaren Spieler",
-    "emptyDescription": "Echte registrierte Spieler erscheinen hier, sobald sie der Scout-Suche zustimmen. Teile ScoutX mit Akademien und Spielern in deinem Netzwerk.",
+    "emptyDescription": "Echte registrierte Spieler erscheinen hier, sobald sie der Scout-Suche zustimmen. Teile PitchProof mit Akademien und Spielern in deinem Netzwerk.",
     "emptyAction": "Entdecken öffnen",
     "presetTip": "Tipp: Speichere deine bevorzugten Scouting-Filter als Presets unter Entdecken.",
     "attention": {
@@ -63,7 +63,7 @@
     "noSearchResults": "Keine Spieler passen zu deiner Suche",
     "noSearchResultsDescription": "Try a different keyword, remove filter chips, or apply a saved preset.",
     "noPlayersAvailable": "Keine Spieler verfügbar",
-    "noPlayersDescription": "Spieler erscheinen hier, wenn sie der Scout-Suche zustimmen. Lade Sportler aus deinem Netzwerk ein, ihre ScoutX-Identität aufzubauen.",
+    "noPlayersDescription": "Spieler erscheinen hier, wenn sie der Scout-Suche zustimmen. Lade Sportler aus deinem Netzwerk ein, ihre PitchProof-Identität aufzubauen.",
     "clearFilters": "Filter löschen",
     "compare": "Vergleichen",
     "addToPipeline": "Zur Pipeline hinzufügen",
@@ -339,12 +339,12 @@
       "insufficient_evidence": "Noch nicht genug Evidenz"
     },
     "requestTitle": "Evidenz anfragen",
-    "requestHint": "Fragt den Spieler nach vorhandenem Material. ScoutX erfindet keine fehlenden Filme oder Statistiken.",
+    "requestHint": "Fragt den Spieler nach vorhandenem Material. PitchProof erfindet keine fehlenden Filme oder Statistiken.",
     "requestPlaceholder": "Optionale Notiz an den Spieler",
     "requestAction": "Anfrage senden",
     "requestSent": "Anfrage gesendet.",
     "requestFailed": "Diese Evidenzanfrage konnte nicht gesendet werden.",
-    "requestUnavailable": "Evidenzanfragen brauchen ein verbundenes ScoutX-Backend.",
+    "requestUnavailable": "Evidenzanfragen brauchen ein verbundenes PitchProof-Backend.",
     "kinds": {
       "match_footage": "Matchfilm",
       "highlight": "Highlights",

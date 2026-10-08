@@ -45,7 +45,7 @@ async function provisionOAuthUserRecords(user: User, context: OAuthLinkContext):
     return;
   }
 
-  const displayName = context.displayName?.trim() || user.displayName || 'ScoutX User';
+  const displayName = context.displayName?.trim() || user.displayName || 'PitchProof User';
   const email = context.email?.trim() || user.email || '';
 
   if (context.displayName && !user.displayName) {

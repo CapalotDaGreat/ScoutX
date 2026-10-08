@@ -9,7 +9,7 @@
   },
   "share": {
     "scoutId": "Scout user ID",
-    "placeholder": "Paste the scout’s ScoutX user ID",
+    "placeholder": "Paste the scout’s PitchProof user ID",
     "action": "Share with scout",
     "sent": "Share grant saved",
     "failed": "Could not share this item."
@@ -165,8 +165,8 @@
     "bytes": "{{sent}} of {{total}} ({{percent}}%)",
     "speed": "{{rate}}",
     "eta": "about {{eta}} left",
-    "foregroundNote": "Keep ScoutX open while uploading. If the app closes, the upload continues from where it stopped next time.",
-    "processingNote": "All bytes arrived. ScoutX is checking the file format and length before analysis.",
+    "foregroundNote": "Keep PitchProof open while uploading. If the app closes, the upload continues from where it stopped next time.",
+    "processingNote": "All bytes arrived. PitchProof is checking the file format and length before analysis.",
     "pause": "Pause",
     "resume": "Resume",
     "retry": "Try again",
@@ -189,7 +189,7 @@
     "rejection": {
       "not_video": "This file is not a video. Pick an MP4 or MOV recording.",
       "unsupported_container": "Only MP4 and MOV videos are supported.",
-      "unsupported_codec": "This video uses a format ScoutX cannot read. Use H.264 or HEVC (the iPhone default).",
+      "unsupported_codec": "This video uses a format PitchProof cannot read. Use H.264 or HEVC (the iPhone default).",
       "no_video_stream": "This file has no video picture.",
       "too_many_streams": "This file has too many tracks. Export it again as a single video.",
       "too_short": "This video is too short to analyze.",
@@ -250,7 +250,7 @@
     "uploadFailed": "Upload failed",
     "untitled": "Untitled highlight",
     "featured": "Featured",
-    "spotlight": "ScoutX Spotlight",
+    "spotlight": "PitchProof Spotlight",
     "versus": "vs {{opponent}}",
     "uploadErrorTitle": "Upload problem",
     "pickFailed": "The video couldn't be opened. Please try another clip.",
@@ -355,7 +355,7 @@
     "readPolicy": "Read the Video and Recording Policy",
     "accept": "I understand — continue",
     "adult": {
-      "intro": "Please confirm each point. ScoutX keeps a record of this acknowledgement.",
+      "intro": "Please confirm each point. PitchProof keeps a record of this acknowledgement.",
       "recordedOrPermission": "I recorded the footage myself or have permission from whoever did, and recording was allowed at the venue.",
       "peopleKnow": "People who can be clearly identified know about the footage, or I will keep it private.",
       "otherMinors": "Children in my videos are only shared with their parents' or guardians' permission.",
@@ -381,20 +381,20 @@
     "confirmPeopleYouth": "Everyone in it is OK with it being shared, and no other child appears without permission.",
     "passport": {
       "title": "Add to your Football Passport",
-      "audience": "Anyone with your Passport link, including people without a ScoutX account.",
+      "audience": "Anyone with your Passport link, including people without a PitchProof account.",
       "warning": "Once shared, others may view or record the video. You can make it private again at any time.",
       "confirm": "Add to Passport"
     },
     "grant": {
       "title": "Share with one scout",
       "audience": "Only the scout you selected, for 7 days.",
-      "warning": "The scout can watch the video in ScoutX until the share expires or you make it private.",
+      "warning": "The scout can watch the video in PitchProof until the share expires or you make it private.",
       "confirm": "Share with this scout"
     }
   },
   "recovery": {
     "title": "Unfinished uploads",
-    "body": "These uploads stopped when ScoutX closed. Resume continues from where it stopped.",
+    "body": "These uploads stopped when PitchProof closed. Resume continues from where it stopped.",
     "meta": "{{mb}} MB · started {{date}}",
     "offline": "status unknown while offline",
     "resume": "Resume",

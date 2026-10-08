@@ -1,4 +1,4 @@
-# Security Audit — ScoutX 2.0 Phase 0
+# Security Audit — PitchProof 2.0 Phase 0
 
 > Static review of Firebase rules, app configuration, AI configuration, and documented architecture. This is not a penetration test.
 

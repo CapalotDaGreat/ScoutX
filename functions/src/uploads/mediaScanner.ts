@@ -1,5 +1,5 @@
 /**
- * Seam for a future malware/content scanner. ScoutX does not currently scan uploads for
+ * Seam for a future malware/content scanner. PitchProof does not currently scan uploads for
  * malware; the noop scanner records `not_scanned` so no surface can claim otherwise.
  */
 export type ScanResult = {

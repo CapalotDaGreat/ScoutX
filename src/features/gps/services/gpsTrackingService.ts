@@ -20,7 +20,7 @@ let activeSubscription: Location.LocationSubscription | null = null;
 let origin: GeoOrigin | null = null;
 let segment = 0;
 
-/** Foreground "While Using" permission only. ScoutX never requests background location. */
+/** Foreground "While Using" permission only. PitchProof never requests background location. */
 export async function requestGpsPermissions(): Promise<GpsPermissionStatus> {
   const foreground = await Location.requestForegroundPermissionsAsync();
 

@@ -58,7 +58,7 @@ function pushResponseUrl(response: NotificationResponseLike | null | undefined):
  * Authenticated guests build in PlayerApp; public slug links still resolve via GuestApp.
  *
  * Firebase auth action links (`auth/action`, `__/auth/action`) open AuthAction
- * and return users to ScoutX after email verification or password reset.
+ * and return users to PitchProof after email verification or password reset.
  *
  * Push taps carry `data.path` and go through the same gate as URLs.
  */

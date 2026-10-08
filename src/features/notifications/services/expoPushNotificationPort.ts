@@ -20,7 +20,7 @@ function toPayload(raw: {
   }
 
   return {
-    title: content?.title?.trim() || 'ScoutX',
+    title: content?.title?.trim() || 'PitchProof',
     body: content?.body?.trim() || '',
     data: stringData,
   };

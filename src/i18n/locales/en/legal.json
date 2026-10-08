@@ -12,12 +12,12 @@
   "readFull": "Read the full document",
   "consents": {
     "title": "Your consents",
-    "requiredTitle": "Required to use ScoutX",
+    "requiredTitle": "Required to use PitchProof",
     "requiredBody": "These can only be withdrawn by deleting your account.",
     "accepted": "Version {{version}} · {{date}}",
     "notAccepted": "Not accepted",
     "optionalTitle": "Optional",
-    "optionalBody": "ScoutX works without these. You can change them at any time.",
+    "optionalBody": "PitchProof works without these. You can change them at any time.",
     "failed": "Your choice could not be saved. Please try again.",
     "ai": {
       "label": "AI analysis of my videos",
@@ -34,7 +34,7 @@
     "title": "Before you start",
     "body": "Please read the short summaries below. The full documents are always available in the Privacy Center.",
     "reacceptTitle": "Our terms have changed",
-    "reacceptBody": "We made important changes. Please review and accept them to keep using ScoutX.",
+    "reacceptBody": "We made important changes. Please review and accept them to keep using PitchProof.",
     "agree": "I have read and agree to the Terms of Service, the Privacy Policy and the Community Guidelines.",
     "optionalLater": "Optional choices, such as AI analysis, are asked separately and can be changed in the Privacy Center.",
     "continue": "Agree and continue"
@@ -60,7 +60,7 @@
     "title": "Your data",
     "export": {
       "title": "Download your data",
-      "body": "Get a copy of the personal data ScoutX holds about you as a JSON file: profile, Passport, matches, analyses, coaching, movement sessions (pitch only, no location), media details with download links, scouting data and consent records.",
+      "body": "Get a copy of the personal data PitchProof holds about you as a JSON file: profile, Passport, matches, analyses, coaching, movement sessions (pitch only, no location), media details with download links, scouting data and consent records.",
       "request": "Prepare my download",
       "working": "Your download is being prepared. This page updates when it is ready.",
       "ready": "Your download is ready until {{date}}.",
@@ -71,7 +71,7 @@
     },
     "requests": {
       "title": "Privacy requests",
-      "body": "Ask ScoutX to act on your data rights. We reply within 30 days.",
+      "body": "Ask PitchProof to act on your data rights. We reply within 30 days.",
       "types": {
         "access": "Access",
         "correction": "Correction",
@@ -113,7 +113,7 @@
         "completed": "Account deleted"
       },
       "progressLabel": "Account deletion {{percent}}% done",
-      "keepOpen": "Keep ScoutX open until this finishes.",
+      "keepOpen": "Keep PitchProof open until this finishes.",
       "retry": "Deletion paused. Tap Delete account again to continue where it stopped."
     }
   }

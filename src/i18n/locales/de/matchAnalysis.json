@@ -65,7 +65,7 @@
   },
   "modal": {
     "title": "Spielvideo analysieren",
-    "intro": "ScoutX sampelt Standbilder, lässt dich die Identität bestätigen und berichtet nur, was diese Bilder stützen. Tracking und Spielstatistiken bleiben ohne Computer-Vision-Worker unbekannt.",
+    "intro": "PitchProof sampelt Standbilder, lässt dich die Identität bestätigen und berichtet nur, was diese Bilder stützen. Tracking und Spielstatistiken bleiben ohne Computer-Vision-Worker unbekannt.",
     "pick": "Aus Fotos / Galerie wählen",
     "change": "Video aus Fotos ändern",
     "analyze": "Hochladen und analysieren",
@@ -170,7 +170,7 @@
     "instructions": "Wähle die GPS-Sitzung dieses Spiels, spiele das Video bis zum Aufnahmestart ab und markiere diesen Moment.",
     "markNow": "Aktuelle Videozeit als GPS-Start markieren",
     "synced": "GPS-Start bei {{time}} gesetzt ({{label}})",
-    "pointsUnavailable": "Sprintdetails gibt es nur für Sessions, die mit der aktuellen ScoutX-Version aufgezeichnet wurden.",
+    "pointsUnavailable": "Sprintdetails gibt es nur für Sessions, die mit der aktuellen PitchProof-Version aufgezeichnet wurden.",
     "noSprints": "In dieser Sitzung wurden keine Sprints erkannt.",
     "sprint": "Sprint · Spitze {{kmh}} km/h",
     "outsideVideo": "Außerhalb des Videos"

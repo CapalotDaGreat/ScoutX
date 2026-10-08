@@ -2,7 +2,7 @@
   "title": "Portfolio",
   "homeTitle": "Home",
   "homeSubtitle": "Jouw spel. Jouw voortgang.",
-  "subtitle": "Je Football Passport op ScoutX",
+  "subtitle": "Je Football Passport op PitchProof",
   "loadingSubtitle": "Profiel voorbereidenâ€¦",
   "errorSubtitle": "We konden je portfolio niet laden",
   "emptySubtitle": "Geen portfoliogegevens beschikbaar",
@@ -29,7 +29,7 @@
   "recentMatches": "Recente wedstrijden",
   "footballPassport": "Football Passport",
   "passportPreview": "Passport-voorbeeld",
-  "passportSubtitle": "ScoutX shareable football rÃƒÂ©sumÃƒÂ©",
+  "passportSubtitle": "PitchProof shareable football rÃƒÂ©sumÃƒÂ©",
   "loadingPassportSubtitle": "Loading shareable rÃƒÂ©sumÃƒÂ©",
   "passportUnavailable": "Niet beschikbaar",
   "privatePortfolioTitle": "Portfolio is privé",
@@ -77,9 +77,9 @@
     "shareLink": "Link delen",
     "shareSocialCard": "Social card delen",
     "linkCopied": "Link gekopieerd",
-    "shareTitle": "{{playerName}} Ã¢â‚¬â€ ScoutX Portfolio",
-    "shareMessage": "Bekijk het voetbalportfolio van {{playerName}} op ScoutX: {{url}}",
-    "tagline": "Football Passport op ScoutX"
+    "shareTitle": "{{playerName}} Ã¢â‚¬â€ PitchProof Portfolio",
+    "shareMessage": "Bekijk het voetbalportfolio van {{playerName}} op PitchProof: {{url}}",
+    "tagline": "Football Passport op PitchProof"
   },
   "privacy": {
     "title": "Privacy van portfolio & vindbaarheid",
@@ -127,7 +127,7 @@
     "copyInviteLink": "Uitnodigingslink kopiëren",
     "linkCopied": "Link gekopieerd",
     "shareTitle": "Aanbeveling van trainer voor {{playerName}}",
-    "shareMessage": "Hoi trainer, wil je mijn Football Passport op ScoutX aanbevelen? {{url}}"
+    "shareMessage": "Hoi trainer, wil je mijn Football Passport op PitchProof aanbevelen? {{url}}"
   },
   "score": {
     "title": "Football Passport-score",
@@ -606,7 +606,7 @@
   "youthPlayer": "Jeugdspeler",
   "strangerView": {
     "title": "Wat onbekenden zien",
-    "body": "Dit is precies de versie die ScoutX toont aan mensen die je niet hebt goedgekeurd. Hij wordt op onze server gemaakt op basis van je privacy-instellingen en veiligheidsregels, en kan dus meer verbergen dan je instellingen alleen.",
+    "body": "Dit is precies de versie die PitchProof toont aan mensen die je niet hebt goedgekeurd. Hij wordt op onze server gemaakt op basis van je privacy-instellingen en veiligheidsregels, en kan dus meer verbergen dan je instellingen alleen.",
     "hiddenTitle": "Niet zichtbaar voor onbekenden",
     "hiddenBody": "Mensen die je niet hebt goedgekeurd kunnen je Passport nu niet zien. Zet het openbare Passport aan in je privacy-instellingen. Ben je jonger dan 18, dan moet je ouder of voogd het ook toestaan. Wijzigingen kunnen even duren."
   }

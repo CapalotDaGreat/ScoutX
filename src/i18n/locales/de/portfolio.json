@@ -2,7 +2,7 @@
   "title": "Portfolio",
   "homeTitle": "Start",
   "homeSubtitle": "Dein Spiel. Dein Fortschritt.",
-  "subtitle": "Dein Football Passport auf ScoutX",
+  "subtitle": "Dein Football Passport auf PitchProof",
   "loadingSubtitle": "Profil wird vorbereitetâ€¦",
   "errorSubtitle": "Dein Portfolio konnte nicht geladen werden",
   "emptySubtitle": "Keine Portfolio-Daten verfÃ¼gbar",
@@ -29,7 +29,7 @@
   "recentMatches": "Letzte Spiele",
   "footballPassport": "Football Passport",
   "passportPreview": "Passport-Vorschau",
-  "passportSubtitle": "ScoutX shareable football rÃ©sumÃ©",
+  "passportSubtitle": "PitchProof shareable football rÃ©sumÃ©",
   "loadingPassportSubtitle": "Loading shareable rÃ©sumÃ©",
   "passportUnavailable": "Nicht verfügbar",
   "privatePortfolioTitle": "Portfolio ist privat",
@@ -77,9 +77,9 @@
     "shareLink": "Link teilen",
     "shareSocialCard": "Social Card teilen",
     "linkCopied": "Link kopiert",
-    "shareTitle": "{{playerName}} â€” ScoutX Portfolio",
-    "shareMessage": "Sieh dir das Fußball-Portfolio von {{playerName}} auf ScoutX an: {{url}}",
-    "tagline": "Football Passport auf ScoutX"
+    "shareTitle": "{{playerName}} â€” PitchProof Portfolio",
+    "shareMessage": "Sieh dir das Fußball-Portfolio von {{playerName}} auf PitchProof an: {{url}}",
+    "tagline": "Football Passport auf PitchProof"
   },
   "privacy": {
     "title": "Portfolio- & Auffindbarkeits-Privatsphäre",
@@ -127,7 +127,7 @@
     "copyInviteLink": "Einladungslink kopieren",
     "linkCopied": "Link kopiert",
     "shareTitle": "Trainer-Empfehlung für {{playerName}}",
-    "shareMessage": "Hallo Trainer, könntest du meinen Football Passport auf ScoutX empfehlen? {{url}}"
+    "shareMessage": "Hallo Trainer, könntest du meinen Football Passport auf PitchProof empfehlen? {{url}}"
   },
   "score": {
     "title": "Football Passport Score",
@@ -606,7 +606,7 @@
   "youthPlayer": "Nachwuchsspieler",
   "strangerView": {
     "title": "Was Fremde sehen",
-    "body": "Genau diese Version zeigt ScoutX Personen, die du nicht freigegeben hast. Sie wird auf unserem Server aus deinen Privatsphäre-Einstellungen und Sicherheitsregeln erstellt und kann daher mehr ausblenden als deine Einstellungen allein.",
+    "body": "Genau diese Version zeigt PitchProof Personen, die du nicht freigegeben hast. Sie wird auf unserem Server aus deinen Privatsphäre-Einstellungen und Sicherheitsregeln erstellt und kann daher mehr ausblenden als deine Einstellungen allein.",
     "hiddenTitle": "Für Fremde nicht sichtbar",
     "hiddenBody": "Personen, die du nicht freigegeben hast, sehen deinen Passport derzeit nicht. Aktiviere den öffentlichen Passport in deinen Privatsphäre-Einstellungen. Wenn du unter 18 bist, muss auch deine Erziehungsperson zustimmen. Änderungen können einen Moment dauern."
   }

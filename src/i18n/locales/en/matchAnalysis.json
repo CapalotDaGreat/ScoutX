@@ -65,7 +65,7 @@
   },
   "modal": {
     "title": "Analyze match video",
-    "intro": "ScoutX samples still frames across your film, asks you to confirm identity, and reports only what those frames support. Tracking and match stats stay unknown without a computer-vision worker.",
+    "intro": "PitchProof samples still frames across your film, asks you to confirm identity, and reports only what those frames support. Tracking and match stats stay unknown without a computer-vision worker.",
     "pick": "Choose from Photos / Gallery",
     "change": "Change video from Photos",
     "analyze": "Upload & analyze",
@@ -170,7 +170,7 @@
     "instructions": "Choose the GPS session from this match, play the video to the moment you started recording, then mark it.",
     "markNow": "Mark current video time as GPS start",
     "synced": "GPS start set at {{time}} ({{label}})",
-    "pointsUnavailable": "Sprint detail is only available for sessions recorded with the current version of ScoutX.",
+    "pointsUnavailable": "Sprint detail is only available for sessions recorded with the current version of PitchProof.",
     "noSprints": "No sprints were detected in this session.",
     "sprint": "Sprint · peak {{kmh}} km/h",
     "outsideVideo": "Outside the video"

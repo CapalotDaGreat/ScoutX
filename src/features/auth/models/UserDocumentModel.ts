@@ -25,7 +25,7 @@ export function buildDefaultUserDocument(input: CreateUserDocumentInput): Firest
 
   return {
     uid: input.uid,
-    name: input.name ?? (isAnonymous ? 'Guest' : 'ScoutX User'),
+    name: input.name ?? (isAnonymous ? 'Guest' : 'PitchProof User'),
     email: input.email ?? '',
     role: input.role ?? (isAnonymous ? 'guest' : 'player'),
     isAnonymous,
@@ -40,7 +40,7 @@ export function parseUserDocument(uid: string, data: Record<string, unknown>): F
 
   return {
     uid,
-    name: parseString(data.name, 'ScoutX User'),
+    name: parseString(data.name, 'PitchProof User'),
     email: parseString(data.email),
     role: role ?? (data.isAnonymous === true ? 'guest' : 'player'),
     isAnonymous: data.isAnonymous === true,

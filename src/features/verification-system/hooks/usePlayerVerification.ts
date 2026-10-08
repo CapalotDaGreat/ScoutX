@@ -16,7 +16,7 @@ export type UsePlayerVerificationResult = {
 };
 
 const DEFAULT_EVIDENCE =
-  'Player requested Football Passport verification via ScoutX.';
+  'Player requested Football Passport verification via PitchProof.';
 
 export function usePlayerVerification(playerId: string | undefined): UsePlayerVerificationResult {
   const [state, setState] = useState<EntityVerificationState | null>(null);

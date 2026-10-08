@@ -28,11 +28,11 @@ const DOC_TARGETS = {
 };
 const NOTICE_COPY = {
     title: 'Update about your account',
-    body: 'ScoutX reviewed a report. Open Settings, then Privacy Center, for details and your options.',
+    body: 'PitchProof reviewed a report. Open Settings, then Privacy Center, for details and your options.',
 };
 const REPORTER_COPY = {
     title: 'Your report was reviewed',
-    body: 'Thank you. ScoutX reviewed your report and took the action it considered appropriate.',
+    body: 'Thank you. PitchProof reviewed your report and took the action it considered appropriate.',
 };
 async function notifyOwner(db, caseId, data, action) {
     if (!data.targetOwnerId)
@@ -61,8 +61,8 @@ async function notifyOwner(db, caseId, data, action) {
     });
 }
 const PUBLIC_REPORTER_MAIL = {
-    subject: 'Update on your ScoutX report',
-    text: 'Thank you for your report to ScoutX. Our team has reviewed it and taken the action it considered appropriate. ' +
+    subject: 'Update on your PitchProof report',
+    text: 'Thank you for your report to PitchProof. Our team has reviewed it and taken the action it considered appropriate. ' +
         'For privacy reasons we cannot share details about another person\'s account. ' +
         'If you still see a problem, you can send a new report from the same page.',
 };

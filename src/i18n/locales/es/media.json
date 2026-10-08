@@ -9,7 +9,7 @@
   },
   "share": {
     "scoutId": "ID de usuario del ojeador",
-    "placeholder": "Pega el ID de ScoutX del ojeador",
+    "placeholder": "Pega el ID de PitchProof del ojeador",
     "action": "Compartir con ojeador",
     "sent": "Permiso guardado",
     "failed": "No se pudo compartir."
@@ -165,8 +165,8 @@
     "bytes": "{{sent}} de {{total}} ({{percent}} %)",
     "speed": "{{rate}}",
     "eta": "quedan unos {{eta}}",
-    "foregroundNote": "Mantén ScoutX abierto durante la subida. Si la app se cierra, la subida continuará donde se detuvo.",
-    "processingNote": "Han llegado todos los datos. ScoutX está comprobando el formato y la duración antes del análisis.",
+    "foregroundNote": "Mantén PitchProof abierto durante la subida. Si la app se cierra, la subida continuará donde se detuvo.",
+    "processingNote": "Han llegado todos los datos. PitchProof está comprobando el formato y la duración antes del análisis.",
     "pause": "Pausar",
     "resume": "Reanudar",
     "retry": "Reintentar",
@@ -189,7 +189,7 @@
     "rejection": {
       "not_video": "Este archivo no es un vídeo. Elige una grabación MP4 o MOV.",
       "unsupported_container": "Solo se admiten vídeos MP4 y MOV.",
-      "unsupported_codec": "Este vídeo usa un formato que ScoutX no puede leer. Usa H.264 o HEVC (el formato del iPhone).",
+      "unsupported_codec": "Este vídeo usa un formato que PitchProof no puede leer. Usa H.264 o HEVC (el formato del iPhone).",
       "no_video_stream": "Este archivo no contiene imagen de vídeo.",
       "too_many_streams": "Este archivo tiene demasiadas pistas. Expórtalo de nuevo como un solo vídeo.",
       "too_short": "Este vídeo es demasiado corto para analizarlo.",
@@ -250,7 +250,7 @@
     "uploadFailed": "Error al subir",
     "untitled": "Jugada sin título",
     "featured": "Destacado",
-    "spotlight": "ScoutX Spotlight",
+    "spotlight": "PitchProof Spotlight",
     "versus": "contra {{opponent}}",
     "uploadErrorTitle": "Problema al subir",
     "pickFailed": "No se pudo abrir el vídeo. Prueba con otro clip.",
@@ -355,7 +355,7 @@
     "readPolicy": "Leer la política de vídeo y grabación",
     "accept": "Entendido – continuar",
     "adult": {
-      "intro": "Confirma cada punto. ScoutX guarda un registro de esta confirmación.",
+      "intro": "Confirma cada punto. PitchProof guarda un registro de esta confirmación.",
       "recordedOrPermission": "Grabé el vídeo yo o tengo permiso de quien lo grabó, y se permitía grabar en el lugar.",
       "peopleKnow": "Las personas claramente identificables lo saben, o mantendré el vídeo privado.",
       "otherMinors": "Solo comparto menores en mis vídeos con permiso de sus padres o tutores.",
@@ -381,20 +381,20 @@
     "confirmPeopleYouth": "Todos los que aparecen están de acuerdo en compartirlo, y no aparece ningún otro menor sin permiso.",
     "passport": {
       "title": "Añadir a tu Football Passport",
-      "audience": "Cualquiera con el enlace de tu Passport, incluso sin cuenta de ScoutX.",
+      "audience": "Cualquiera con el enlace de tu Passport, incluso sin cuenta de PitchProof.",
       "warning": "Una vez compartido, otros pueden ver o grabar el vídeo. Puedes volver a hacerlo privado en cualquier momento.",
       "confirm": "Añadir al Passport"
     },
     "grant": {
       "title": "Compartir con un ojeador",
       "audience": "Solo el ojeador seleccionado, durante 7 días.",
-      "warning": "El ojeador puede ver el vídeo en ScoutX hasta que caduque o lo hagas privado.",
+      "warning": "El ojeador puede ver el vídeo en PitchProof hasta que caduque o lo hagas privado.",
       "confirm": "Compartir con este ojeador"
     }
   },
   "recovery": {
     "title": "Subidas sin terminar",
-    "body": "Estas subidas se detuvieron al cerrarse ScoutX. Reanudar continúa desde donde se quedaron.",
+    "body": "Estas subidas se detuvieron al cerrarse PitchProof. Reanudar continúa desde donde se quedaron.",
     "meta": "{{mb}} MB · iniciada el {{date}}",
     "offline": "estado desconocido sin conexión",
     "resume": "Reanudar",

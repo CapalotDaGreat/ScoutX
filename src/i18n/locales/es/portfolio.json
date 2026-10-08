@@ -2,7 +2,7 @@
   "title": "Portfolio",
   "homeTitle": "Inicio",
   "homeSubtitle": "Tu juego. Tu progreso.",
-  "subtitle": "Tu Football Passport en ScoutX",
+  "subtitle": "Tu Football Passport en PitchProof",
   "loadingSubtitle": "Preparando tu perfilâ€¦",
   "errorSubtitle": "No hemos podido cargar tu portfolio",
   "emptySubtitle": "No hay datos de portfolio",
@@ -29,7 +29,7 @@
   "recentMatches": "Partidos recientes",
   "footballPassport": "Football Passport",
   "passportPreview": "Vista previa del pasaporte",
-  "passportSubtitle": "ScoutX shareable football rÃƒÂ©sumÃƒÂ©",
+  "passportSubtitle": "PitchProof shareable football rÃƒÂ©sumÃƒÂ©",
   "loadingPassportSubtitle": "Loading shareable rÃƒÂ©sumÃƒÂ©",
   "passportUnavailable": "No disponible",
   "privatePortfolioTitle": "El portfolio es privado",
@@ -77,9 +77,9 @@
     "shareLink": "Compartir enlace",
     "shareSocialCard": "Compartir tarjeta social",
     "linkCopied": "Enlace copiado",
-    "shareTitle": "{{playerName}} Ã¢â‚¬â€ ScoutX Portfolio",
-    "shareMessage": "Mira el portfolio futbolístico de {{playerName}} en ScoutX: {{url}}",
-    "tagline": "Football Passport en ScoutX"
+    "shareTitle": "{{playerName}} Ã¢â‚¬â€ PitchProof Portfolio",
+    "shareMessage": "Mira el portfolio futbolístico de {{playerName}} en PitchProof: {{url}}",
+    "tagline": "Football Passport en PitchProof"
   },
   "privacy": {
     "title": "Privacidad del portfolio y visibilidad",
@@ -127,7 +127,7 @@
     "copyInviteLink": "Copiar enlace de invitación",
     "linkCopied": "Enlace copiado",
     "shareTitle": "Recomendación de entrenador para {{playerName}}",
-    "shareMessage": "Hola, míster: ¿podrías recomendar mi Football Passport en ScoutX? {{url}}"
+    "shareMessage": "Hola, míster: ¿podrías recomendar mi Football Passport en PitchProof? {{url}}"
   },
   "score": {
     "title": "Puntuación del Football Passport",
@@ -606,7 +606,7 @@
   "youthPlayer": "Jugador juvenil",
   "strangerView": {
     "title": "Lo que ven los desconocidos",
-    "body": "Esta es exactamente la versión que ScoutX muestra a quien no has aprobado. Se genera en nuestro servidor a partir de tus ajustes de privacidad y las reglas de seguridad, así que puede ocultar más que tus ajustes por sí solos.",
+    "body": "Esta es exactamente la versión que PitchProof muestra a quien no has aprobado. Se genera en nuestro servidor a partir de tus ajustes de privacidad y las reglas de seguridad, así que puede ocultar más que tus ajustes por sí solos.",
     "hiddenTitle": "No visible para desconocidos",
     "hiddenBody": "Las personas que no has aprobado no pueden ver tu Passport ahora mismo. Activa el Passport público en tus ajustes de privacidad. Si tienes menos de 18 años, tu madre, padre o tutor también debe permitirlo. Los cambios pueden tardar un momento."
   }

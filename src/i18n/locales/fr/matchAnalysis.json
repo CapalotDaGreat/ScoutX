@@ -65,7 +65,7 @@
   },
   "modal": {
     "title": "Analyser la vidéo du match",
-    "intro": "ScoutX échantillonne des images, demande une confirmation d’identité et ne rapporte que ce que ces images soutiennent. Suivi et stats restent inconnus sans worker de vision.",
+    "intro": "PitchProof échantillonne des images, demande une confirmation d’identité et ne rapporte que ce que ces images soutiennent. Suivi et stats restent inconnus sans worker de vision.",
     "pick": "Choisir dans Photos / Galerie",
     "change": "Changer la vidéo",
     "analyze": "Téléverser et analyser",
@@ -170,7 +170,7 @@
     "instructions": "Choisis la session GPS de ce match, lis la vidéo jusqu'au moment où tu as lancé l'enregistrement, puis marque-le.",
     "markNow": "Marquer le temps vidéo actuel comme début GPS",
     "synced": "Début GPS fixé à {{time}} ({{label}})",
-    "pointsUnavailable": "Le détail des sprints n'est disponible que pour les sessions enregistrées avec la version actuelle de ScoutX.",
+    "pointsUnavailable": "Le détail des sprints n'est disponible que pour les sessions enregistrées avec la version actuelle de PitchProof.",
     "noSprints": "Aucun sprint détecté dans cette session.",
     "sprint": "Sprint · pointe {{kmh}} km/h",
     "outsideVideo": "Hors de la vidéo"

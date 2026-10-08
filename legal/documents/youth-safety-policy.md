@@ -7,10 +7,10 @@ status: draft-legal-review-required
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
-- ScoutX is for ages 13 and up. Accounts for children under 13 are not allowed and are deleted.
+- PitchProof is for ages 13 and up. Accounts for children under 13 are not allowed and are deleted.
 - Players aged 13 to 17 need a parent or guardian's approval before youth features start.
 - Guardians choose each permission separately and can withdraw it at any time.
-- Scouts can contact minors only through ScoutX requests, and the guardian is notified.
+- Scouts can contact minors only through PitchProof requests, and the guardian is notified.
 - Trials for minors need guardian co-approval.
 ---
 
@@ -24,7 +24,7 @@ Players aged 13 to 17 enter a parent's or guardian's email address. The guardian
 
 - public Passport;
 - discovery by scouts;
-- contact from scouts through ScoutX requests;
+- contact from scouts through PitchProof requests;
 - public media;
 - public display of movement data;
 - AI analysis.
@@ -41,7 +41,7 @@ Minors appear publicly with first name and last initial only, labelled "Youth pl
 
 ## Scouts and trials
 
-Scouts can contact a minor only through ScoutX's request system, never by private message, and the guardian receives an email when a scout makes a request. A minor can accept a trial only after the guardian approves it through a separate secure link.
+Scouts can contact a minor only through PitchProof's request system, never by private message, and the guardian receives an email when a scout makes a request. A minor can accept a trial only after the guardian approves it through a separate secure link.
 
 ## Promotions
 

@@ -228,8 +228,8 @@ describe('lock-screen privacy', () => {
     await db.collection('userSafety').doc(player).set({ ageBand: '13-17', guardianStatus: 'approved', scopes: [] });
     await db.collection('notificationPreferences').doc(player).set({ pushEnabled: true, categories: {}, lockScreenPreview: 'details' });
     assert.equal((await deliverActivityPush('t1', systemActivity(player))).sent, true);
-    assert.equal(received[0].title, 'ScoutX');
-    assert.equal(received[0].body, 'You have a new update. Open ScoutX to see it.');
+    assert.equal(received[0].title, 'PitchProof');
+    assert.equal(received[0].body, 'You have a new update. Open PitchProof to see it.');
     assert.equal(received[0].data.path, 'match/j1', 'routing still works after unlock');
   });
 
@@ -237,7 +237,7 @@ describe('lock-screen privacy', () => {
     const player = uid('unknown');
     await db.collection('pushTokens').doc(player).set({ token: 'ExponentPushToken[unknown]' });
     await deliverActivityPush('u1', systemActivity(player));
-    assert.equal(received[0].title, 'ScoutX');
+    assert.equal(received[0].title, 'PitchProof');
   });
 
   test('adults can switch to generic copy and back', async () => {
@@ -246,7 +246,7 @@ describe('lock-screen privacy', () => {
     await db.collection('userSafety').doc(player).set({ ageBand: '18plus', guardianStatus: 'not_required', scopes: [] });
     await db.collection('notificationPreferences').doc(player).set({ pushEnabled: true, categories: {}, lockScreenPreview: 'generic' });
     await deliverActivityPush('a1', systemActivity(player));
-    assert.equal(received[0].title, 'ScoutX');
+    assert.equal(received[0].title, 'PitchProof');
 
     await db.collection('notificationPreferences').doc(player).set({ pushEnabled: true, categories: {}, lockScreenPreview: 'details' });
     await db.collection('pushThrottle').doc(player).delete();

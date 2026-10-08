@@ -12,12 +12,12 @@
   "readFull": "Ler o documento completo",
   "consents": {
     "title": "Os teus consentimentos",
-    "requiredTitle": "Necessários para usar o ScoutX",
+    "requiredTitle": "Necessários para usar o PitchProof",
     "requiredBody": "Só podem ser retirados eliminando a tua conta.",
     "accepted": "Versão {{version}} · {{date}}",
     "notAccepted": "Não aceite",
     "optionalTitle": "Opcional",
-    "optionalBody": "O ScoutX funciona sem eles. Podes alterá-los a qualquer momento.",
+    "optionalBody": "O PitchProof funciona sem eles. Podes alterá-los a qualquer momento.",
     "failed": "Não foi possível guardar a tua escolha. Tenta novamente.",
     "ai": {
       "label": "Análise por IA dos meus vídeos",
@@ -34,7 +34,7 @@
     "title": "Antes de começar",
     "body": "Lê os resumos curtos abaixo. Os documentos completos estão sempre disponíveis no Centro de privacidade.",
     "reacceptTitle": "Os nossos termos mudaram",
-    "reacceptBody": "Fizemos alterações importantes. Revê-as e aceita-as para continuar a usar o ScoutX.",
+    "reacceptBody": "Fizemos alterações importantes. Revê-as e aceita-as para continuar a usar o PitchProof.",
     "agree": "Li e aceito os Termos de Serviço, a Política de Privacidade e as Regras da Comunidade.",
     "optionalLater": "As escolhas opcionais, como a análise por IA, são pedidas em separado e podem ser alteradas no Centro de privacidade.",
     "continue": "Aceitar e continuar"
@@ -60,7 +60,7 @@
     "title": "Os teus dados",
     "export": {
       "title": "Transferir os teus dados",
-      "body": "Obtém uma cópia dos dados pessoais que a ScoutX guarda sobre ti num ficheiro JSON: perfil, Passport, jogos, análises, coaching, sessões de movimento (só o campo, sem localização), detalhes de multimédia com links de transferência, dados de scouting e registos de consentimento.",
+      "body": "Obtém uma cópia dos dados pessoais que a PitchProof guarda sobre ti num ficheiro JSON: perfil, Passport, jogos, análises, coaching, sessões de movimento (só o campo, sem localização), detalhes de multimédia com links de transferência, dados de scouting e registos de consentimento.",
       "request": "Preparar a minha transferência",
       "working": "A tua transferência está a ser preparada. Esta página atualiza quando estiver pronta.",
       "ready": "A tua transferência está disponível até {{date}}.",
@@ -71,7 +71,7 @@
     },
     "requests": {
       "title": "Pedidos de privacidade",
-      "body": "Pede à ScoutX para aplicar os teus direitos sobre os teus dados. Respondemos no prazo de 30 dias.",
+      "body": "Pede à PitchProof para aplicar os teus direitos sobre os teus dados. Respondemos no prazo de 30 dias.",
       "types": {
         "access": "Acesso",
         "correction": "Retificação",
@@ -113,7 +113,7 @@
         "completed": "Conta eliminada"
       },
       "progressLabel": "Eliminação da conta: {{percent}}%",
-      "keepOpen": "Mantém a ScoutX aberta até terminar.",
+      "keepOpen": "Mantém a PitchProof aberta até terminar.",
       "retry": "Eliminação em pausa. Toca novamente em Eliminar conta para continuar onde parou."
     }
   }

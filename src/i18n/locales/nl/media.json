@@ -9,7 +9,7 @@
   },
   "share": {
     "scoutId": "Scout-gebruikers-ID",
-    "placeholder": "Plak het ScoutX-ID van de scout",
+    "placeholder": "Plak het PitchProof-ID van de scout",
     "action": "Delen met scout",
     "sent": "Toegang opgeslagen",
     "failed": "Kon niet delen."
@@ -165,8 +165,8 @@
     "bytes": "{{sent}} van {{total}} ({{percent}}%)",
     "speed": "{{rate}}",
     "eta": "nog ongeveer {{eta}}",
-    "foregroundNote": "Houd ScoutX open tijdens het uploaden. Als de app sluit, gaat de upload de volgende keer verder waar hij stopte.",
-    "processingNote": "Alle gegevens zijn aangekomen. ScoutX controleert formaat en lengte vóór de analyse.",
+    "foregroundNote": "Houd PitchProof open tijdens het uploaden. Als de app sluit, gaat de upload de volgende keer verder waar hij stopte.",
+    "processingNote": "Alle gegevens zijn aangekomen. PitchProof controleert formaat en lengte vóór de analyse.",
     "pause": "Pauzeren",
     "resume": "Hervatten",
     "retry": "Opnieuw proberen",
@@ -189,7 +189,7 @@
     "rejection": {
       "not_video": "Dit bestand is geen video. Kies een MP4- of MOV-opname.",
       "unsupported_container": "Alleen MP4- en MOV-video's worden ondersteund.",
-      "unsupported_codec": "Deze video gebruikt een formaat dat ScoutX niet kan lezen. Gebruik H.264 of HEVC (de iPhone-standaard).",
+      "unsupported_codec": "Deze video gebruikt een formaat dat PitchProof niet kan lezen. Gebruik H.264 of HEVC (de iPhone-standaard).",
       "no_video_stream": "Dit bestand bevat geen videobeeld.",
       "too_many_streams": "Dit bestand heeft te veel sporen. Exporteer het opnieuw als één video.",
       "too_short": "Deze video is te kort om te analyseren.",
@@ -250,7 +250,7 @@
     "uploadFailed": "Upload mislukt",
     "untitled": "Highlight zonder titel",
     "featured": "Uitgelicht",
-    "spotlight": "ScoutX Spotlight",
+    "spotlight": "PitchProof Spotlight",
     "versus": "tegen {{opponent}}",
     "uploadErrorTitle": "Uploadprobleem",
     "pickFailed": "De video kon niet worden geopend. Probeer een andere clip.",
@@ -355,7 +355,7 @@
     "readPolicy": "Lees het video- en opnamebeleid",
     "accept": "Begrepen – doorgaan",
     "adult": {
-      "intro": "Bevestig elk punt. ScoutX bewaart een registratie van deze bevestiging.",
+      "intro": "Bevestig elk punt. PitchProof bewaart een registratie van deze bevestiging.",
       "recordedOrPermission": "Ik heb de beelden zelf gemaakt of heb toestemming van wie ze maakte, en filmen was toegestaan op de locatie.",
       "peopleKnow": "Duidelijk herkenbare personen weten van de beelden, anders houd ik ze privé.",
       "otherMinors": "Kinderen in mijn video's deel ik alleen met toestemming van hun ouders of voogden.",
@@ -381,20 +381,20 @@
     "confirmPeopleYouth": "Iedereen in de video vindt delen goed, en er is geen ander kind zonder toestemming te zien.",
     "passport": {
       "title": "Toevoegen aan je Football Passport",
-      "audience": "Iedereen met je Passport-link, ook mensen zonder ScoutX-account.",
+      "audience": "Iedereen met je Passport-link, ook mensen zonder PitchProof-account.",
       "warning": "Na het delen kunnen anderen de video bekijken of opnemen. Je kunt hem op elk moment weer privé maken.",
       "confirm": "Toevoegen aan Passport"
     },
     "grant": {
       "title": "Delen met één scout",
       "audience": "Alleen de gekozen scout, gedurende 7 dagen.",
-      "warning": "De scout kan de video in ScoutX bekijken tot het delen verloopt of jij hem privé maakt.",
+      "warning": "De scout kan de video in PitchProof bekijken tot het delen verloopt of jij hem privé maakt.",
       "confirm": "Delen met deze scout"
     }
   },
   "recovery": {
     "title": "Onvoltooide uploads",
-    "body": "Deze uploads stopten toen ScoutX werd gesloten. Hervatten gaat verder waar ze stopten.",
+    "body": "Deze uploads stopten toen PitchProof werd gesloten. Hervatten gaat verder waar ze stopten.",
     "meta": "{{mb}} MB · gestart op {{date}}",
     "offline": "status onbekend zonder verbinding",
     "resume": "Hervatten",

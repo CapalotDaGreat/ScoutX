@@ -36,7 +36,7 @@ export function parseUserSafety(data: Record<string, unknown> | undefined): User
 
 function callable<T>(name: string) {
   const fn = createCallableFunction<T>(name);
-  if (!fn) throw new Error('ScoutX needs a connection to the server for this step.');
+  if (!fn) throw new Error('PitchProof needs a connection to the server for this step.');
   return fn;
 }
 

@@ -34,7 +34,7 @@ export const ConsentRepository = {
 
   async record(items: ConsentDecision[], locale: string, source: ConsentSource): Promise<void> {
     const fn = createCallableFunction<RecordConsentRequest>('recordConsent');
-    if (!fn) throw new Error('ScoutX needs a connection to the server to save this choice.');
+    if (!fn) throw new Error('PitchProof needs a connection to the server to save this choice.');
     await fn({ items, locale, source });
   },
 };

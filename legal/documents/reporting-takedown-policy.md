@@ -7,7 +7,7 @@ status: draft-legal-review-required
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
-- Anything on ScoutX can be reported, and people in videos can report without an account.
+- Anything on PitchProof can be reported, and people in videos can report without an account.
 - Reports about minors are reviewed first.
 - Reported content may be hidden while it is reviewed.
 - You are told the outcome and can appeal decisions about your own content.
@@ -21,7 +21,7 @@ Users, videos, reels, Passports, scouts, evidence requests, trials and scouting 
 
 1. Triage: reports involving minors, sexual content or threats are reviewed first.
 2. Restriction: if needed, the content is temporarily hidden from public view while it is reviewed.
-3. Review and decision: ScoutX staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.
+3. Review and decision: PitchProof staff decide whether to dismiss, restrict, remove, warn, suspend, disable or escalate.
 4. Notification: the reporter and the affected user are told the outcome, without revealing the reporter. People who reported without an account and left an email receive one update by email, after which the address is deleted.
 5. Appeal: the affected user can appeal once from the Privacy Center. A different staff member reviews the appeal.
 
@@ -33,7 +33,7 @@ If someone is in immediate danger, contact local emergency services first. Conte
 
 ## Reporting without an account
 
-People who appear in a video, or their parents or guardians, can use the public report form on the ScoutX website without signing in.
+People who appear in a video, or their parents or guardians, can use the public report form on the PitchProof website without signing in.
 
 ## Contact
 

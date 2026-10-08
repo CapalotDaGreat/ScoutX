@@ -7,7 +7,7 @@ export const PROVIDER_PRIVACY = { data_collection: 'deny', zdr: true } as const;
 
 export type ModelPurpose = 'text' | 'vision';
 
-/** Models vetted for ScoutX use. Env overrides outside this list are ignored. */
+/** Models vetted for PitchProof use. Env overrides outside this list are ignored. */
 export const MODEL_ALLOWLIST: Record<ModelPurpose, readonly string[]> = {
   text: ['google/gemini-2.5-flash', 'google/gemini-2.0-flash-001'],
   vision: ['google/gemini-2.5-flash', 'google/gemini-2.0-flash-001'],

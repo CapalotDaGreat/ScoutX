@@ -26,7 +26,7 @@
     "browse": "Browse",
     "viewMore": "View more",
     "emptyTitle": "No discoverable players yet",
-    "emptyDescription": "Real registered players appear here once they opt in to scout discovery. Share ScoutX with academies and players in your network.",
+    "emptyDescription": "Real registered players appear here once they opt in to scout discovery. Share PitchProof with academies and players in your network.",
     "emptyAction": "Open Discover",
     "presetTip": "Tip: use presets in Discover to save your preferred scouting filters.",
     "attention": {
@@ -63,7 +63,7 @@
     "noSearchResults": "No players match your search",
     "noSearchResultsDescription": "Try a different keyword, remove filter chips, or apply a saved filter.",
     "noPlayersAvailable": "No players available",
-    "noPlayersDescription": "Players appear here when they opt in to scout discovery. Invite athletes in your network to build their ScoutX identity.",
+    "noPlayersDescription": "Players appear here when they opt in to scout discovery. Invite athletes in your network to build their PitchProof identity.",
     "clearFilters": "Clear Filters",
     "compare": "Compare",
     "addToPipeline": "Add to pipeline",
@@ -339,12 +339,12 @@
       "insufficient_evidence": "Not enough evidence yet"
     },
     "requestTitle": "Request evidence",
-    "requestHint": "Asks the player for recorded material. ScoutX will not invent missing film or stats.",
+    "requestHint": "Asks the player for recorded material. PitchProof will not invent missing film or stats.",
     "requestPlaceholder": "Optional note for the player",
     "requestAction": "Send request",
     "requestSent": "Request sent.",
     "requestFailed": "Could not send this evidence request.",
-    "requestUnavailable": "Evidence requests need a connected ScoutX backend.",
+    "requestUnavailable": "Evidence requests need a connected PitchProof backend.",
     "kinds": {
       "match_footage": "Match footage",
       "highlight": "Highlights",

@@ -26,7 +26,7 @@ export function PlayerVerificationCard({ playerId, playerName }: PlayerVerificat
 
   const handleRequest = useCallback(async () => {
     await requestVerification(
-      `${playerName} requested Football Passport verification via ScoutX.`,
+      `${playerName} requested Football Passport verification via PitchProof.`,
     );
     setRequested(true);
   }, [playerName, requestVerification]);

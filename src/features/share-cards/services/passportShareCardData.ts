@@ -31,6 +31,6 @@ export function buildPassportShareCardData(
     matches: matches.length,
     endorsements: recommendations.length,
     portfolioUrl: buildPublicPortfolioUrl(profile.id, username ?? profile.username),
-    tagline: profile.biography.trim().slice(0, 120) || 'Football Passport on ScoutX',
+    tagline: profile.biography.trim().slice(0, 120) || 'Football Passport on PitchProof',
   };
 }

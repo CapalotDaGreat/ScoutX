@@ -1,7 +1,7 @@
 /**
  * Contract for a future GPU / computer-vision worker.
  *
- * ScoutX currently samples still frames and reasons over them with a vision LLM.
+ * PitchProof currently samples still frames and reasons over them with a vision LLM.
  * Team detection, pitch mapping, continuous tracking and event detection are not
  * implemented. Those stages must be written as `unavailable`, never `complete`.
  */
@@ -39,7 +39,7 @@ export type CvWorkerOutput = {
 };
 
 export const CV_UNAVAILABLE_REASON =
-  'Computer-vision worker is not deployed. ScoutX will not invent tracking, pitch maps, or event counts.';
+  'Computer-vision worker is not deployed. PitchProof will not invent tracking, pitch maps, or event counts.';
 
 export function dailyQuotaCount(
   storedDay: string | undefined,

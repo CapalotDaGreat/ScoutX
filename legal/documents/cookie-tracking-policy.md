@@ -7,7 +7,7 @@ status: draft-legal-review-required
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
-- ScoutX has no advertising, no analytics SDK and no cross-app tracking.
+- PitchProof has no advertising, no analytics SDK and no cross-app tracking.
 - We only store what is technically necessary, such as keeping you signed in.
 ---
 

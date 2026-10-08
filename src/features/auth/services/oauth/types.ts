@@ -1,6 +1,6 @@
 import type { AuthCredential } from 'firebase/auth';
 
-/** Firebase OAuth provider IDs supported by ScoutX account linking. */
+/** Firebase OAuth provider IDs supported by PitchProof account linking. */
 export type SupportedOAuthProviderId = 'apple.com' | 'google.com';
 
 export type OAuthCredentialBundle = {

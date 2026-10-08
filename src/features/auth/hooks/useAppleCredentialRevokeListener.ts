@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 
 /**
- * When the user revokes ScoutX in iOS Settings → Apple ID → Sign in with Apple,
+ * When the user revokes PitchProof in iOS Settings → Apple ID → Sign in with Apple,
  * sign them out of Firebase so local session state stays consistent.
  */
 export function useAppleCredentialRevokeListener(onRevoked: () => void): void {

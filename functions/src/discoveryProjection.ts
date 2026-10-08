@@ -372,7 +372,7 @@ export const searchDiscoverablePlayers = onCall(createCallableOptions(), async (
     throw new HttpsError('unauthenticated', 'Sign in required.');
   }
   if (!isRecruiter(request) && request.auth.token.role !== 'player') {
-    throw new HttpsError('permission-denied', 'A signed-in ScoutX role is required.');
+    throw new HttpsError('permission-denied', 'A signed-in PitchProof role is required.');
   }
   const filters = asRecord(request.data?.filters) as SearchFilters | null;
   const search = typeof request.data?.search === 'string' ? request.data.search.trim().toLowerCase() : '';

@@ -50,7 +50,7 @@ export async function registerForPushNotifications(userId: string): Promise<bool
 
   if (Platform.OS === 'android') {
     await Notifications.setNotificationChannelAsync('default', {
-      name: 'ScoutX',
+      name: 'PitchProof',
       importance: Notifications.AndroidImportance.DEFAULT,
     });
   }

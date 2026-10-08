@@ -1,4 +1,4 @@
-# Architecture Audit — ScoutX 2.0 Phase 0
+# Architecture Audit — PitchProof 2.0 Phase 0
 
 > Generated from the live repository (Expo SDK 54 / RN 0.81).  
 > Status: **read-only audit — no application code changed in Phase 0.**
@@ -7,7 +7,7 @@
 
 ## 1. Executive summary
 
-ScoutX is a **feature-first Expo + React Native + Firebase** app with three authenticated shells (Player, Scout/Coach, Guest/Auth). The architecture is **stronger than a typical student portfolio**, with clear domain folders, defensive Firestore parsing, and role-based navigation.
+PitchProof is a **feature-first Expo + React Native + Firebase** app with three authenticated shells (Player, Scout/Coach, Guest/Auth). The architecture is **stronger than a typical student portfolio**, with clear domain folders, defensive Firestore parsing, and role-based navigation.
 
 It is **not** yet structured like a commercial V2 product:
 
@@ -196,7 +196,7 @@ Existing docs: Apple/Google Sign-In, App Check, Deep Linking, Secure Storage.
 
 Missing (create during rebuild): architecture/, features/, firebase/, testing/, deployment/, rebuild/ (this folder).
 
-README is essentially empty (`# ScoutX`).
+README is essentially empty (`# PitchProof`).
 
 ---
 

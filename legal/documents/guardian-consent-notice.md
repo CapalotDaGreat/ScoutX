@@ -7,7 +7,7 @@ status: draft-legal-review-required
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
-- A player aged 13 to 17 asked you to approve their ScoutX account.
+- A player aged 13 to 17 asked you to approve their PitchProof account.
 - You decide each permission separately. Nothing is allowed by default.
 - You can withdraw permissions at any time using the link in your confirmation email.
 - We store your email address only to contact you about this player's account.
@@ -15,7 +15,7 @@ summary:
 
 ## Why you received this
 
-A player in your care chose the age band "13 to 17" in ScoutX and entered your email address. ScoutX is operated by {{entityName}}, {{entityAddress}}.
+A player in your care chose the age band "13 to 17" in PitchProof and entered your email address. PitchProof is operated by {{entityName}}, {{entityAddress}}.
 
 ## What you are asked to decide
 
@@ -23,7 +23,7 @@ Please confirm that you are the player's parent or legal guardian, and choose wh
 
 - a public football Passport;
 - being found by scouts;
-- contact from scouts through ScoutX requests (you are emailed about each request);
+- contact from scouts through PitchProof requests (you are emailed about each request);
 - making videos public;
 - showing movement data (distance and pitch heatmap) publicly;
 - AI analysis of their own videos.

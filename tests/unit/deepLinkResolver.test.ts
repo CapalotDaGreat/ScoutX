@@ -59,8 +59,8 @@ describe('deep link resolver', () => {
   });
 
   test('paths are extracted from scheme and universal-link URLs', () => {
-    const prefixes = ['scoutx://', 'https://pitchproof.online'];
-    assert.equal(extractLinkPath('scoutx://trial/abc?x=1', prefixes), 'trial/abc');
+    const prefixes = ['pitchproof://', 'https://pitchproof.online'];
+    assert.equal(extractLinkPath('pitchproof://trial/abc?x=1', prefixes), 'trial/abc');
     assert.equal(extractLinkPath('https://pitchproof.online/request/r9/', prefixes), 'request/r9');
     assert.equal(extractLinkPath('exp://192.168.1.2:8081/--/trial/z', ['exp://192.168.1.2:8081/--/']), 'trial/z');
   });

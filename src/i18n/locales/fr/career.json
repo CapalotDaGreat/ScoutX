@@ -35,7 +35,7 @@
   "momentsCount_one": "{{count}} moment enregistre",
   "momentsCount_other": "{{count}} moments enregistres",
   "coachNotesTitle": "Observations de l entraineur",
-  "coachNotesLabel": "Uniquement des notes fournies par l entraineur — ScoutX n invente pas de feedback.",
+  "coachNotesLabel": "Uniquement des notes fournies par l entraineur — PitchProof n invente pas de feedback.",
   "coachNotesEmpty": "Aucune observation d entraineur enregistree pour toi.",
   "journeyEditor": {
     "entryType": "Type d’entrée",

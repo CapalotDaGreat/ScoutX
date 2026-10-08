@@ -11,7 +11,7 @@ export async function resolveAuthUserFromFirebaseUser(user: User): Promise<AuthU
     return createAuthUser({
       uid: user.uid,
       isAnonymous: user.isAnonymous,
-      displayName: user.displayName ?? 'ScoutX User',
+      displayName: user.displayName ?? 'PitchProof User',
       email: user.email ?? undefined,
       role: user.isAnonymous ? 'guest' : undefined,
     });
@@ -36,7 +36,7 @@ export async function resolveAuthUserFromFirebaseUser(user: User): Promise<AuthU
   return createAuthUser({
     uid: user.uid,
     isAnonymous: user.isAnonymous,
-    displayName: user.displayName ?? 'ScoutX User',
+    displayName: user.displayName ?? 'PitchProof User',
     email: user.email ?? undefined,
     role: user.isAnonymous ? 'guest' : undefined,
   });

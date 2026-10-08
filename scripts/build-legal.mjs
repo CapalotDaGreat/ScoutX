@@ -198,7 +198,7 @@ function renderSupportPage(legal) {
   return pageShell(
     'Support',
     `<h1>Support</h1>
-<p>${SITE_NAME} (ScoutX in the App Store) helps football players aged 13 and over build a Football Passport from match logs, videos, movement sessions, goals and coach endorsements.</p>
+<p>${SITE_NAME} helps football players aged 13 and over build a Football Passport from match logs, videos, movement sessions, goals and coach endorsements.</p>
 <h2>Contact</h2>
 <p>Email <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>. For privacy requests, email <a href="mailto:${escapeHtml(privacy)}">${escapeHtml(privacy)}</a>.</p>
 <h2>Delete your account</h2>

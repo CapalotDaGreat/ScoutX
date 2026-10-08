@@ -26,7 +26,7 @@
     "browse": "Sfoglia",
     "viewMore": "Mostra altro",
     "emptyTitle": "Ancora nessun giocatore visibile",
-    "emptyDescription": "I giocatori registrati compaiono qui quando scelgono di essere visibili agli scout. Condividi ScoutX con accademie e giocatori della tua rete.",
+    "emptyDescription": "I giocatori registrati compaiono qui quando scelgono di essere visibili agli scout. Condividi PitchProof con accademie e giocatori della tua rete.",
     "emptyAction": "Apri Scopri",
     "presetTip": "Suggerimento: usa i preset in Scopri per salvare i tuoi filtri di scouting preferiti.",
     "attention": {
@@ -63,7 +63,7 @@
     "noSearchResults": "Nessun giocatore corrisponde alla ricerca",
     "noSearchResultsDescription": "Try a different keyword, remove filter chips, or apply a saved preset.",
     "noPlayersAvailable": "Nessun giocatore disponibile",
-    "noPlayersDescription": "I giocatori compaiono qui quando scelgono di essere visibili agli scout. Invita gli atleti della tua rete a creare la loro identità ScoutX.",
+    "noPlayersDescription": "I giocatori compaiono qui quando scelgono di essere visibili agli scout. Invita gli atleti della tua rete a creare la loro identità PitchProof.",
     "clearFilters": "Cancella filtri",
     "compare": "Confronta",
     "addToPipeline": "Aggiungi alla pipeline",
@@ -339,12 +339,12 @@
       "insufficient_evidence": "Prove ancora insufficienti"
     },
     "requestTitle": "Richiedi evidenze",
-    "requestHint": "Chiede al giocatore materiale gia registrato. ScoutX non inventa film o statistiche.",
+    "requestHint": "Chiede al giocatore materiale gia registrato. PitchProof non inventa film o statistiche.",
     "requestPlaceholder": "Nota opzionale per il giocatore",
     "requestAction": "Invia richiesta",
     "requestSent": "Richiesta inviata.",
     "requestFailed": "Impossibile inviare questa richiesta di evidenze.",
-    "requestUnavailable": "Le richieste di evidenze richiedono il backend ScoutX.",
+    "requestUnavailable": "Le richieste di evidenze richiedono il backend PitchProof.",
     "kinds": {
       "match_footage": "Filmato partita",
       "highlight": "Highlight",

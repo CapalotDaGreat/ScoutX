@@ -9,7 +9,7 @@
   },
   "share": {
     "scoutId": "ID de utilizador do scout",
-    "placeholder": "Cola o ID ScoutX do scout",
+    "placeholder": "Cola o ID PitchProof do scout",
     "action": "Partilhar com scout",
     "sent": "Autorização guardada",
     "failed": "Não foi possível partilhar."
@@ -165,8 +165,8 @@
     "bytes": "{{sent}} de {{total}} ({{percent}}%)",
     "speed": "{{rate}}",
     "eta": "faltam cerca de {{eta}}",
-    "foregroundNote": "Mantém o ScoutX aberto durante o envio. Se a app fechar, o envio continua de onde parou.",
-    "processingNote": "Todos os dados chegaram. O ScoutX está a verificar o formato e a duração antes da análise.",
+    "foregroundNote": "Mantém o PitchProof aberto durante o envio. Se a app fechar, o envio continua de onde parou.",
+    "processingNote": "Todos os dados chegaram. O PitchProof está a verificar o formato e a duração antes da análise.",
     "pause": "Pausar",
     "resume": "Retomar",
     "retry": "Tentar novamente",
@@ -189,7 +189,7 @@
     "rejection": {
       "not_video": "Este ficheiro não é um vídeo. Escolhe uma gravação MP4 ou MOV.",
       "unsupported_container": "Só são suportados vídeos MP4 e MOV.",
-      "unsupported_codec": "Este vídeo usa um formato que o ScoutX não consegue ler. Usa H.264 ou HEVC (o formato do iPhone).",
+      "unsupported_codec": "Este vídeo usa um formato que o PitchProof não consegue ler. Usa H.264 ou HEVC (o formato do iPhone).",
       "no_video_stream": "Este ficheiro não tem imagem de vídeo.",
       "too_many_streams": "Este ficheiro tem demasiadas faixas. Exporta-o novamente como um único vídeo.",
       "too_short": "Este vídeo é demasiado curto para ser analisado.",
@@ -250,7 +250,7 @@
     "uploadFailed": "Falha no carregamento",
     "untitled": "Destaque sem título",
     "featured": "Em destaque",
-    "spotlight": "ScoutX Spotlight",
+    "spotlight": "PitchProof Spotlight",
     "versus": "contra {{opponent}}",
     "uploadErrorTitle": "Problema no carregamento",
     "pickFailed": "Não foi possível abrir o vídeo. Experimenta outro clip.",
@@ -355,7 +355,7 @@
     "readPolicy": "Ler a política de vídeo e gravação",
     "accept": "Compreendi – continuar",
     "adult": {
-      "intro": "Confirma cada ponto. A ScoutX guarda um registo desta confirmação.",
+      "intro": "Confirma cada ponto. A PitchProof guarda um registo desta confirmação.",
       "recordedOrPermission": "Gravei o vídeo eu próprio ou tenho autorização de quem o gravou, e era permitido gravar no local.",
       "peopleKnow": "As pessoas claramente identificáveis sabem do vídeo, ou mantenho-o privado.",
       "otherMinors": "Só partilho crianças nos meus vídeos com autorização dos pais ou tutores.",
@@ -381,20 +381,20 @@
     "confirmPeopleYouth": "Todos no vídeo concordam com a partilha, e nenhuma outra criança aparece sem autorização.",
     "passport": {
       "title": "Adicionar ao teu Football Passport",
-      "audience": "Qualquer pessoa com o link do teu Passport, mesmo sem conta ScoutX.",
+      "audience": "Qualquer pessoa com o link do teu Passport, mesmo sem conta PitchProof.",
       "warning": "Depois de partilhado, outros podem ver ou gravar o vídeo. Podes torná-lo privado novamente a qualquer momento.",
       "confirm": "Adicionar ao Passport"
     },
     "grant": {
       "title": "Partilhar com um olheiro",
       "audience": "Apenas o olheiro selecionado, durante 7 dias.",
-      "warning": "O olheiro pode ver o vídeo na ScoutX até a partilha expirar ou até o tornares privado.",
+      "warning": "O olheiro pode ver o vídeo na PitchProof até a partilha expirar ou até o tornares privado.",
       "confirm": "Partilhar com este olheiro"
     }
   },
   "recovery": {
     "title": "Carregamentos por terminar",
-    "body": "Estes carregamentos pararam quando a ScoutX fechou. Retomar continua de onde pararam.",
+    "body": "Estes carregamentos pararam quando a PitchProof fechou. Retomar continua de onde pararam.",
     "meta": "{{mb}} MB · iniciado a {{date}}",
     "offline": "estado desconhecido offline",
     "resume": "Retomar",

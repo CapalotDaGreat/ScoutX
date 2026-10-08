@@ -7,7 +7,7 @@ status: draft-legal-review-required
 canonicalLanguage: en
 requiresAcceptance: true
 summary:
-- We collect what you put into ScoutX (profile, matches, goals, videos) and the minimum technical data needed to run it.
+- We collect what you put into PitchProof (profile, matches, goals, videos) and the minimum technical data needed to run it.
 - Your Passport and scout discovery are off until you switch them on. For players aged 13 to 17, a parent or guardian decides.
 - Movement sessions record distance and a pitch heatmap. Your location is never stored or uploaded.
 - AI providers process your footage only to produce your analysis. They are not allowed to train on it or keep it.
@@ -16,9 +16,9 @@ summary:
 
 ## Who is responsible
 
-ScoutX is operated by {{entityName}}, {{entityAddress}} ("we"). Privacy contact: {{privacyEmail}}. Data protection officer: {{dpo}}. EU representative: {{euRepresentative}}.
+PitchProof is operated by {{entityName}}, {{entityAddress}} ("we"). Privacy contact: {{privacyEmail}}. Data protection officer: {{dpo}}. EU representative: {{euRepresentative}}.
 
-This policy applies to the ScoutX iOS app, the ScoutX website at pitchproof.online and the guardian approval pages.
+This policy applies to the PitchProof iOS app, the PitchProof website at pitchproof.online and the guardian approval pages.
 
 ## What we collect
 
@@ -40,9 +40,9 @@ While you actively record a session, with the app open and "While Using" locatio
 
 ## Why we use your data (legal bases)
 
-- To provide ScoutX as you request it (contract): your account, profile, Passport, match logs, media library, analysis and scouting tools.
+- To provide PitchProof as you request it (contract): your account, profile, Passport, match logs, media library, analysis and scouting tools.
 - With your consent, or your guardian's consent for players aged 13 to 17: a public Passport, discovery by scouts, scout contact, public media and AI analysis. You can withdraw consent at any time.
-- For our legitimate interests: keeping ScoutX secure, preventing abuse, fixing crashes and moderating reported content.
+- For our legitimate interests: keeping PitchProof secure, preventing abuse, fixing crashes and moderating reported content.
 - To meet legal obligations: keeping proof of consent and moderation decisions for as long as the law requires.
 
 ## Who receives your data
@@ -53,13 +53,13 @@ While you actively record a session, with the app open and "While Using" locatio
 - Apple and Expo, to deliver push notifications.
 - RevenueCat and Apple, if you buy a subscription.
 - An email delivery provider, to send guardian approval emails.
-- Other ScoutX users, only as far as your visibility settings allow.
+- Other PitchProof users, only as far as your visibility settings allow.
 
 A detailed list of processors, their locations and safeguards for transfers outside Switzerland is maintained in our processor register. LEGAL_REVIEW_REQUIRED: transfer mechanisms per processor.
 
 ## Youth players
 
-ScoutX is for people aged {{minimumAge}} and older. Players aged 13 to 17 need verified approval from a parent or guardian before youth features become active. The guardian chooses each permission separately and can withdraw it at any time. Minors are shown publicly with first name and last initial only, labelled as a youth player, and never with an exact age. See the Youth Safety Policy and the Guardian Consent Notice.
+PitchProof is for people aged {{minimumAge}} and older. Players aged 13 to 17 need verified approval from a parent or guardian before youth features become active. The guardian chooses each permission separately and can withdraw it at any time. Minors are shown publicly with first name and last initial only, labelled as a youth player, and never with an exact age. See the Youth Safety Policy and the Guardian Consent Notice.
 
 ## How long we keep data
 

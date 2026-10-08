@@ -29,7 +29,7 @@ re-run this audit before each release. SECURITY REVIEW REQUIRED for the runtime 
 
 Action: plan the major upgrade as its own change with the full rules and emulator suite; not done
 in this program. The flagged `uuid` issue ("missing buffer bounds check when buf is provided")
-needs a caller passing a buffer; ScoutX code does not call `uuid` directly.
+needs a caller passing a buffer; PitchProof code does not call `uuid` directly.
 
 ## Policy
 

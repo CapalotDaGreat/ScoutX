@@ -1,4 +1,4 @@
-# Feature Audit — ScoutX 2.0 Phase 0
+# Feature Audit — PitchProof 2.0 Phase 0
 
 Classification key:
 

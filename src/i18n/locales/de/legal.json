@@ -12,12 +12,12 @@
   "readFull": "Ganzes Dokument lesen",
   "consents": {
     "title": "Deine Einwilligungen",
-    "requiredTitle": "Für die Nutzung von ScoutX erforderlich",
+    "requiredTitle": "Für die Nutzung von PitchProof erforderlich",
     "requiredBody": "Diese kannst du nur widerrufen, indem du dein Konto löschst.",
     "accepted": "Version {{version}} · {{date}}",
     "notAccepted": "Nicht akzeptiert",
     "optionalTitle": "Freiwillig",
-    "optionalBody": "ScoutX funktioniert auch ohne diese. Du kannst sie jederzeit ändern.",
+    "optionalBody": "PitchProof funktioniert auch ohne diese. Du kannst sie jederzeit ändern.",
     "failed": "Deine Auswahl konnte nicht gespeichert werden. Bitte versuche es erneut.",
     "ai": {
       "label": "KI-Analyse meiner Videos",
@@ -34,7 +34,7 @@
     "title": "Bevor du loslegst",
     "body": "Bitte lies die kurzen Zusammenfassungen unten. Die vollständigen Dokumente findest du jederzeit im Datenschutzzentrum.",
     "reacceptTitle": "Unsere Bedingungen haben sich geändert",
-    "reacceptBody": "Wir haben wichtige Änderungen vorgenommen. Bitte prüfe und akzeptiere sie, um ScoutX weiter zu nutzen.",
+    "reacceptBody": "Wir haben wichtige Änderungen vorgenommen. Bitte prüfe und akzeptiere sie, um PitchProof weiter zu nutzen.",
     "agree": "Ich habe die Nutzungsbedingungen, die Datenschutzerklärung und die Community-Richtlinien gelesen und stimme ihnen zu.",
     "optionalLater": "Freiwillige Einwilligungen, etwa für die KI-Analyse, werden separat abgefragt und können im Datenschutzzentrum geändert werden.",
     "continue": "Zustimmen und weiter"
@@ -60,7 +60,7 @@
     "title": "Deine Daten",
     "export": {
       "title": "Deine Daten herunterladen",
-      "body": "Erhalte eine Kopie der personenbezogenen Daten, die ScoutX über dich speichert, als JSON-Datei: Profil, Passport, Spiele, Analysen, Coaching, Bewegungseinheiten (nur Spielfeld, kein Standort), Mediendetails mit Download-Links, Scouting-Daten und Einwilligungsnachweise.",
+      "body": "Erhalte eine Kopie der personenbezogenen Daten, die PitchProof über dich speichert, als JSON-Datei: Profil, Passport, Spiele, Analysen, Coaching, Bewegungseinheiten (nur Spielfeld, kein Standort), Mediendetails mit Download-Links, Scouting-Daten und Einwilligungsnachweise.",
       "request": "Download vorbereiten",
       "working": "Dein Download wird vorbereitet. Diese Seite aktualisiert sich, sobald er bereit ist.",
       "ready": "Dein Download ist bis {{date}} verfügbar.",
@@ -71,7 +71,7 @@
     },
     "requests": {
       "title": "Datenschutzanfragen",
-      "body": "Bitte ScoutX, deine Datenschutzrechte umzusetzen. Wir antworten innerhalb von 30 Tagen.",
+      "body": "Bitte PitchProof, deine Datenschutzrechte umzusetzen. Wir antworten innerhalb von 30 Tagen.",
       "types": {
         "access": "Auskunft",
         "correction": "Berichtigung",
@@ -113,7 +113,7 @@
         "completed": "Konto gelöscht"
       },
       "progressLabel": "Kontolöschung zu {{percent}} % abgeschlossen",
-      "keepOpen": "Lass ScoutX geöffnet, bis der Vorgang abgeschlossen ist.",
+      "keepOpen": "Lass PitchProof geöffnet, bis der Vorgang abgeschlossen ist.",
       "retry": "Löschung pausiert. Tippe erneut auf Konto löschen, um dort weiterzumachen, wo sie stehen geblieben ist."
     }
   }

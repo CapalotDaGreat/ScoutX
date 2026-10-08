@@ -12,7 +12,7 @@ summary:
 - If you find a vulnerability, tell us privately. We will not take legal action against good-faith research.
 ---
 
-## How we protect ScoutX
+## How we protect PitchProof
 
 - Database and storage access rules deny by default and allow each user only their own data, plus what others have explicitly shared.
 - Roles (player, scout, coach, staff) are set on our servers, not by the app.

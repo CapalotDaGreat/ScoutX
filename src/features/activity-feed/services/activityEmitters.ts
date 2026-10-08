@@ -178,7 +178,7 @@ export function buildMilestoneEarnedActivity(input: {
     title: 'Milestone unlocked',
     body: `${input.milestoneTitle}: ${input.milestoneDescription}`,
     actorId: 'system',
-    actorName: 'ScoutX',
+    actorName: 'PitchProof',
     actorRole: 'system',
     reference: { entityType: 'player', entityId: input.playerId, label: input.milestoneTitle },
   };
@@ -197,7 +197,7 @@ export function buildWeeklyReportReadyActivity(input: {
     title: 'Weekly Football Report ready',
     body: input.summary,
     actorId: 'system',
-    actorName: 'ScoutX',
+    actorName: 'PitchProof',
     actorRole: 'system',
     reference: { entityType: 'player', entityId: input.playerId, label: input.playerName },
   };

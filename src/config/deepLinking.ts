@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 
 // Expo only inlines static process.env.EXPO_PUBLIC_* references (not env[key]).
 const DEFAULT_APP_LINK_HOST = 'pitchproof.online';
-const APP_SCHEME = 'scoutx';
+const APP_SCHEME = 'pitchproof';
 
 export type FirebaseAuthActionMode =
   | 'verifyEmail'
@@ -54,7 +54,7 @@ export function getFirebaseAuthDomain(): string | null {
 
 /**
  * Continue / custom email-action URL. Host this path (Firebase Hosting bridge)
- * so verification and reset links return into ScoutX with mode + oobCode.
+ * so verification and reset links return into PitchProof with mode + oobCode.
  */
 export function getAuthActionContinueUrl(): string {
   return `https://${getAppLinkHost()}/auth/action`;
@@ -210,7 +210,7 @@ export function parseAuthActionLink(url: string): ParsedAuthActionLink | null {
   }
 
   if (fromExpo && (!parsed.path || parsed.path === '' || parsed.hostname)) {
-    // scoutx://auth/action?... can expose path differently across platforms.
+    // pitchproof://auth/action?... can expose path differently across platforms.
     if (url.includes('auth/action') || url.includes('__/auth/action')) {
       return fromExpo;
     }

@@ -39,7 +39,7 @@ export function buildIcsContent(invitation: TrialInvitation): string {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//ScoutX//Trial Invitation//EN',
+    'PRODID:-//PitchProof//Trial Invitation//EN',
     'BEGIN:VEVENT',
     `UID:${uid}`,
     `DTSTAMP:${stamp}`,

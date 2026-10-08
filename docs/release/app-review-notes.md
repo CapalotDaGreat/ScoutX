@@ -10,7 +10,7 @@ registration, login, the main player flow, uploading a video, reporting and bloc
 subscription paywall, and account deletion.
 
 **2. Purpose and audience**
-PitchProof (bundle ScoutX) is a football (soccer) development app for players aged 13 and over,
+PitchProof is a football (soccer) development app for players aged 13 and over,
 their guardians, coaches and scouts. Players build a "Football Passport" from their own match logs,
 highlight videos, movement sessions (distance and pitch heatmap measured on the phone; no location is
 stored or uploaded), development goals and coach endorsements. Every item shows its source, so

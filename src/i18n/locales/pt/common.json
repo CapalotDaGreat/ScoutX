@@ -1,5 +1,5 @@
 {
-  "appName": "ScoutX",
+  "appName": "PitchProof",
   "loading": "A carregar",
   "loadingFonts": "A carregar tipos de letra",
   "initializingServices": "A proteger a tua ligação",
@@ -36,7 +36,7 @@
   "privacyPolicy": "Política de Privacidade",
   "termsOfService": "Termos de Serviço",
   "roleLabel": "Perfil",
-  "scoutXUser": "Utilizador ScoutX",
+  "appUser": "Utilizador PitchProof",
   "notAvailable": "Não disponível",
   "comingSoon": "Em breve",
   "viewAll": "Ver tudo",
@@ -60,7 +60,7 @@
   "searchOwnedHint": "Pesquisa jogos, entradas de percurso e trials neste dispositivo",
   "searchOwnedPlaceholder": "Pesquisar os teus registos",
   "searchEmpty": "Sem registos correspondentes",
-  "searchEmptyHint": "O ScoutX so pesquisa o que ja registaste.",
+  "searchEmptyHint": "O PitchProof so pesquisa o que ja registaste.",
   "offlineDrafts": "Offline — os rascunhos ficam neste dispositivo ate voltares a ligar",
   "stars": {
     "value": "{{value}} de {{max}} estrelas",
@@ -175,7 +175,7 @@
       "journey": "Carreira"
     }
   },
-  "preparingSession": "A preparar a tua sessão ScoutX",
+  "preparingSession": "A preparar a tua sessão PitchProof",
   "a11y": {
     "closeDialog": "Fechar diálogo",
     "closeSheet": "Fechar painel",
@@ -191,7 +191,7 @@
   "guardianLink": {
     "title": "Aprovação do encarregado de educação",
     "heading": "Este link é para um encarregado de educação",
-    "body": "A aprovação é feita no site da ScoutX, não dentro da conta do jogador. Se és o encarregado de educação, abre a página e analisa o pedido lá.",
+    "body": "A aprovação é feita no site da PitchProof, não dentro da conta do jogador. Se és o encarregado de educação, abre a página e analisa o pedido lá.",
     "open": "Abrir página do encarregado"
   },
   "reportLink": {

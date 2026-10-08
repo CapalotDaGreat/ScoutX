@@ -9,7 +9,7 @@
   },
   "share": {
     "scoutId": "ID utilisateur du recruteur",
-    "placeholder": "Collez l’ID ScoutX du recruteur",
+    "placeholder": "Collez l’ID PitchProof du recruteur",
     "action": "Partager avec un recruteur",
     "sent": "Autorisation enregistrée",
     "failed": "Impossible de partager."
@@ -165,8 +165,8 @@
     "bytes": "{{sent}} sur {{total}} ({{percent}} %)",
     "speed": "{{rate}}",
     "eta": "environ {{eta}} restantes",
-    "foregroundNote": "Garde ScoutX ouvert pendant l’envoi. Si l’app se ferme, l’envoi reprendra là où il s’est arrêté.",
-    "processingNote": "Toutes les données sont arrivées. ScoutX vérifie le format et la durée avant l’analyse.",
+    "foregroundNote": "Garde PitchProof ouvert pendant l’envoi. Si l’app se ferme, l’envoi reprendra là où il s’est arrêté.",
+    "processingNote": "Toutes les données sont arrivées. PitchProof vérifie le format et la durée avant l’analyse.",
     "pause": "Pause",
     "resume": "Reprendre",
     "retry": "Réessayer",
@@ -189,7 +189,7 @@
     "rejection": {
       "not_video": "Ce fichier n’est pas une vidéo. Choisis un enregistrement MP4 ou MOV.",
       "unsupported_container": "Seules les vidéos MP4 et MOV sont prises en charge.",
-      "unsupported_codec": "Cette vidéo utilise un format que ScoutX ne peut pas lire. Utilise H.264 ou HEVC (format par défaut de l’iPhone).",
+      "unsupported_codec": "Cette vidéo utilise un format que PitchProof ne peut pas lire. Utilise H.264 ou HEVC (format par défaut de l’iPhone).",
       "no_video_stream": "Ce fichier ne contient pas d’image vidéo.",
       "too_many_streams": "Ce fichier contient trop de pistes. Exporte-le à nouveau en une seule vidéo.",
       "too_short": "Cette vidéo est trop courte pour être analysée.",
@@ -250,7 +250,7 @@
     "uploadFailed": "Échec de l'import",
     "untitled": "Highlight sans titre",
     "featured": "À la une",
-    "spotlight": "ScoutX Spotlight",
+    "spotlight": "PitchProof Spotlight",
     "versus": "contre {{opponent}}",
     "uploadErrorTitle": "Problème d'import",
     "pickFailed": "La vidéo n'a pas pu être ouverte. Essaie un autre clip.",
@@ -355,7 +355,7 @@
     "readPolicy": "Lire la politique vidéo et enregistrement",
     "accept": "J'ai compris – continuer",
     "adult": {
-      "intro": "Confirme chaque point. ScoutX conserve une trace de cette confirmation.",
+      "intro": "Confirme chaque point. PitchProof conserve une trace de cette confirmation.",
       "recordedOrPermission": "J'ai filmé moi-même ou j'ai l'autorisation de la personne qui a filmé, et filmer était autorisé sur place.",
       "peopleKnow": "Les personnes clairement identifiables sont au courant, sinon je garde la vidéo privée.",
       "otherMinors": "Je ne partage les enfants visibles dans mes vidéos qu'avec l'accord de leurs parents ou tuteurs.",
@@ -381,20 +381,20 @@
     "confirmPeopleYouth": "Tout le monde dans la vidéo est d'accord pour qu'elle soit partagée, et aucun autre enfant n'apparaît sans autorisation.",
     "passport": {
       "title": "Ajouter à ton Football Passport",
-      "audience": "Toute personne ayant le lien de ton Passport, même sans compte ScoutX.",
+      "audience": "Toute personne ayant le lien de ton Passport, même sans compte PitchProof.",
       "warning": "Une fois partagée, d'autres peuvent voir ou enregistrer la vidéo. Tu peux la rendre privée à tout moment.",
       "confirm": "Ajouter au Passport"
     },
     "grant": {
       "title": "Partager avec un scout",
       "audience": "Uniquement le scout choisi, pendant 7 jours.",
-      "warning": "Le scout peut regarder la vidéo dans ScoutX jusqu'à l'expiration du partage ou jusqu'à ce que tu la rendes privée.",
+      "warning": "Le scout peut regarder la vidéo dans PitchProof jusqu'à l'expiration du partage ou jusqu'à ce que tu la rendes privée.",
       "confirm": "Partager avec ce scout"
     }
   },
   "recovery": {
     "title": "Imports inachevés",
-    "body": "Ces imports se sont arrêtés à la fermeture de ScoutX. Reprendre continue là où ils se sont arrêtés.",
+    "body": "Ces imports se sont arrêtés à la fermeture de PitchProof. Reprendre continue là où ils se sont arrêtés.",
     "meta": "{{mb}} Mo · commencé le {{date}}",
     "offline": "état inconnu hors ligne",
     "resume": "Reprendre",

@@ -14,9 +14,9 @@ summary:
 - Players aged 13 to 17 can use AI analysis only if their guardian allows it.
 ---
 
-## What AI does in ScoutX
+## What AI does in PitchProof
 
-When you request it, ScoutX uses AI models to describe sampled frames from your footage, summarise your logged data, answer questions about a match and suggest highlight plans. AI runs on our servers. The app never holds AI provider credentials.
+When you request it, PitchProof uses AI models to describe sampled frames from your footage, summarise your logged data, answer questions about a match and suggest highlight plans. AI runs on our servers. The app never holds AI provider credentials.
 
 ## What is sent
 
@@ -30,7 +30,7 @@ We do not train AI models on your data. We send requests through OpenRouter with
 
 - Analysis is based on sampled frames, not on tracking every moment of a match.
 - Computer-vision tracking of players, automatic event detection and pitch maps are not available yet and are shown as "Not available yet".
-- ScoutX does not give player ratings or predict careers.
+- PitchProof does not give player ratings or predict careers.
 - Each result shows what it was based on and how much of the match it covered.
 
 ## Safeguards

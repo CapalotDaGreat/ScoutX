@@ -42,7 +42,7 @@ export async function writeSystemActivity(
     await db.collection('activities').doc(activityId).create({
       ...input,
       actorId: 'system',
-      actorName: 'ScoutX',
+      actorName: 'PitchProof',
       actorRole: 'system',
       read: false,
       createdAt: new Date().toISOString(),
@@ -174,7 +174,7 @@ export const onTrialInvitationCreatedNotify = onDocumentCreated(
       type: 'trial_invitation',
       category: 'trial',
       title: 'Trial invitation',
-      body: 'You have a new trial invitation. Open ScoutX to respond.',
+      body: 'You have a new trial invitation. Open PitchProof to respond.',
       reference: { entityType: 'trial', entityId: trialId, label: 'Trial' },
     });
   },

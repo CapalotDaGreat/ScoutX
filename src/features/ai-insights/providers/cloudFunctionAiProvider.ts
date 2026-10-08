@@ -13,7 +13,7 @@ type GenerateAiInsightResponse = {
 export class CloudFunctionAiProvider implements AiProvider {
   readonly metadata = {
     id: 'cloud-function',
-    label: 'ScoutX AI Coach',
+    label: 'PitchProof AI Coach',
     isLive: true,
   };
 

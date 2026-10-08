@@ -38,7 +38,7 @@ function parseSession(data: unknown): UploadSession {
 export const UploadSessionRepository = {
   async create(request: CreateUploadSessionRequest): Promise<UploadSession> {
     const fn = createCallableFunction<CreateUploadSessionRequest>('createUploadSession');
-    if (!fn) throw new Error('Uploading needs a connection to the ScoutX server.');
+    if (!fn) throw new Error('Uploading needs a connection to the PitchProof server.');
     return parseSession((await fn(request)).data);
   },
 

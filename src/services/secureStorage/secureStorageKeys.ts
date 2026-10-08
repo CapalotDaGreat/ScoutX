@@ -4,7 +4,7 @@ import { SecureStorageError } from '@/services/secureStorage/types';
  * Allowlisted keys for encrypted device storage.
  *
  * Firebase Auth owns session persistence (ID tokens / refresh tokens).
- * ScoutX must never duplicate Firebase credentials here.
+ * PitchProof must never duplicate Firebase credentials here.
  * Add keys only for application secrets that require encrypted device storage.
  */
 export const SECURE_STORAGE_KEYS = {

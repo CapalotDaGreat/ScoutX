@@ -1,5 +1,5 @@
 {
-  "appName": "ScoutX",
+  "appName": "PitchProof",
   "loading": "Loading",
   "loadingFonts": "Loading fonts",
   "initializingServices": "Securing your connection",
@@ -36,7 +36,7 @@
   "privacyPolicy": "Privacy Policy",
   "termsOfService": "Terms of Service",
   "roleLabel": "Role",
-  "scoutXUser": "ScoutX user",
+  "appUser": "PitchProof user",
   "notAvailable": "Not available",
   "comingSoon": "Coming soon",
   "viewAll": "View all",
@@ -60,7 +60,7 @@
   "searchOwnedHint": "Search matches, journey entries, and trials stored on this device",
   "searchOwnedPlaceholder": "Search your records",
   "searchEmpty": "No matching records",
-  "searchEmptyHint": "ScoutX only searches what you have already logged.",
+  "searchEmptyHint": "PitchProof only searches what you have already logged.",
   "offlineDrafts": "Offline — drafts stay on this device until you reconnect",
   "stars": {
     "value": "{{value}} of {{max}} stars",
@@ -175,7 +175,7 @@
       "journey": "Career"
     }
   },
-  "preparingSession": "Preparing your ScoutX session",
+  "preparingSession": "Preparing your PitchProof session",
   "a11y": {
     "closeDialog": "Close dialog",
     "closeSheet": "Close sheet",
@@ -191,7 +191,7 @@
   "guardianLink": {
     "title": "Guardian approval",
     "heading": "This link is for a parent or guardian",
-    "body": "Guardian approval happens on the ScoutX website, not inside a player's account. If you are the parent or guardian, open the page and review the request there.",
+    "body": "Guardian approval happens on the PitchProof website, not inside a player's account. If you are the parent or guardian, open the page and review the request there.",
     "open": "Open guardian page"
   },
   "reportLink": {

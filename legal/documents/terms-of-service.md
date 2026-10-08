@@ -7,10 +7,10 @@ status: draft-legal-review-required
 canonicalLanguage: en
 requiresAcceptance: true
 summary:
-- ScoutX helps players document their football development and lets scouts and coaches discover and contact players safely.
+- PitchProof helps players document their football development and lets scouts and coaches discover and contact players safely.
 - You must be at least 13. Players aged 13 to 17 need a parent or guardian's approval.
 - You keep ownership of what you upload. You must have the right to upload it.
-- ScoutX does not guarantee trials, contracts or selection by any club.
+- PitchProof does not guarantee trials, contracts or selection by any club.
 - We may remove content or suspend accounts that break these terms or the Community Guidelines.
 ---
 
@@ -28,17 +28,17 @@ Keep your sign-in details secure and give accurate information. You are responsi
 
 ## Your content
 
-You keep all rights to the content you upload. You give us a non-exclusive, worldwide, royalty-free licence to store, process, analyse and display that content only as needed to run ScoutX for you and to show it to the audiences you choose. This licence ends when you delete the content or your account, except for copies we must keep by law.
+You keep all rights to the content you upload. You give us a non-exclusive, worldwide, royalty-free licence to store, process, analyse and display that content only as needed to run PitchProof for you and to show it to the audiences you choose. This licence ends when you delete the content or your account, except for copies we must keep by law.
 
 You confirm that you have the rights and permissions needed for everything you upload, including consent from people who can be identified in your videos. See the Video and Recording Policy.
 
 ## Acceptable use
 
-Follow the Community Guidelines. Do not harass anyone, contact minors outside ScoutX's controlled request system, upload content you do not have rights to, misrepresent your identity or club, scrape the service or attempt to bypass security or usage limits.
+Follow the Community Guidelines. Do not harass anyone, contact minors outside PitchProof's controlled request system, upload content you do not have rights to, misrepresent your identity or club, scrape the service or attempt to bypass security or usage limits.
 
 ## Scouting and trials
 
-ScoutX does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. ScoutX does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval.
+PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval.
 
 ## AI analysis
 
@@ -54,7 +54,7 @@ We may restrict, remove or hide content and suspend or disable accounts that bre
 
 ## Liability
 
-ScoutX is provided "as is". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law. LEGAL_REVIEW_REQUIRED: liability limits under Swiss and consumer law.
+PitchProof is provided "as is". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law. LEGAL_REVIEW_REQUIRED: liability limits under Swiss and consumer law.
 
 ## Governing law
 

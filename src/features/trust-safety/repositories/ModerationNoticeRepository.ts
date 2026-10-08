@@ -25,7 +25,7 @@ export const ModerationNoticeRepository = {
 
   async appeal(caseId: string, text: string): Promise<void> {
     const fn = createCallableFunction<{ caseId: string; text: string }>('submitAppeal');
-    if (!fn) throw new Error('ScoutX needs a connection to the server to send an appeal.');
+    if (!fn) throw new Error('PitchProof needs a connection to the server to send an appeal.');
     await fn({ caseId, text });
   },
 };
