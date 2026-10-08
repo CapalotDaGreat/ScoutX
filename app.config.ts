@@ -169,10 +169,7 @@ if (!hasSecureStorePlugin) {
 
 const iosConfig: NonNullable<ExpoConfig['ios']> = {
   ...baseConfig.ios,
-  associatedDomains: [
-    `applinks:${appLinkHost}`,
-    `applinks:www.${appLinkHost}`,
-  ],
+  associatedDomains: [`applinks:${appLinkHost}`],
 };
 
 if (configFileExists(googleServicesPlist)) {

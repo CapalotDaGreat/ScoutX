@@ -87,8 +87,8 @@ Legal entity (fixed): CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switz
 
 The domain is `pitchproof.online` (not `scoutx.app`).
 
-- [ ] DNS for `pitchproof.online` pointing to Firebase Hosting; TLS certificate issued
-- [ ] `/.well-known/apple-app-site-association` served with `application/json` (Team ID `833CYAZ8XT` already in the file)
+- [x] DNS for `pitchproof.online` pointing to Firebase Hosting; TLS certificate issued (2026-10-08)
+- [x] `/.well-known/apple-app-site-association` served with `application/json` (Team ID `833CYAZ8XT` already in the file)
 - [ ] Associated domains entitlement in the production build
 
 ## CLOUD TASKS
