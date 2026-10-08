@@ -103,7 +103,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#151617"
+        "backgroundColor": "#121110"
       },
       "package": "com.scoutx.app",
       "permissions": [
@@ -127,7 +127,7 @@
         {
           "image": "./assets/splash-icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#151617"
+          "backgroundColor": "#121110"
         }
       ],
       "expo-video",

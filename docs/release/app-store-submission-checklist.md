@@ -48,10 +48,10 @@ registration, which is exactly the TradeAcademy 2.1(a) rejection.
 
 ## 2. App configuration
 
-1. **Icon and splash (2.3.8, rejected twice on TradeAcademy).** `assets/icon.png`, `assets/splash-icon.png`
-   and `assets/adaptive-icon.png` are 1×1 placeholders. Replace them with final artwork: icon 1024×1024
-   PNG without transparency; the App Store icon and the home-screen icon must be the same design.
-   The release gate fails until this is done.
+1. **Icon and splash (2.3.8, rejected twice on TradeAcademy).** Done: the PitchProof shield with the
+   gold check badge, rendered by `scripts/generate-icons.ps1` into `assets/` (1024×1024 opaque icon,
+   transparent splash mark and Android foreground on `#121110`). The App Store icon is taken from the
+   build, so it matches the home-screen icon. The release gate fails if a placeholder returns.
 2. **Legal contacts.** Set `privacyEmail`, `securityEmail`, `legalEmail`, `supportEmail` in
    `src/config/legalConfig.ts` (mailboxes that actually receive mail, for example `support@pitchproof.online`).
    Finish legal review, set `effectiveDate` and `status` in `legal/documents/*.md`, then
