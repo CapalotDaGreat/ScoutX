@@ -63,10 +63,9 @@ steps 4, 5, 7, 10.
    gold check badge, rendered by `scripts/generate-icons.ps1` into `assets/` (1024×1024 opaque icon,
    transparent splash mark and Android foreground on `#121110`). The App Store icon is taken from the
    build, so it matches the home-screen icon. The release gate fails if a placeholder returns.
-2. **Legal contacts.** Set `privacyEmail`, `securityEmail`, `legalEmail`, `supportEmail` in
-   `src/config/legalConfig.ts` (mailboxes that actually receive mail, for example `support@pitchproof.online`).
-   Finish legal review, set `effectiveDate` and `status` in `legal/documents/*.md`, then
-   `node scripts/build-legal.mjs`. Production builds are blocked until contacts are set.
+2. **Legal contacts.** Done: all four contacts are `support@pitchproof.online` in
+   `src/config/legalConfig.ts`. Before submission, send a test mail to confirm Cloudflare Email
+   Routing delivers it. Legal documents are `final` with effective date 2026-10-08.
 3. **EAS production environment** (`npx eas-cli env:create --environment production`):
    - `EXPO_PUBLIC_REVENUECAT_IOS_KEY` = RevenueCat App Store key (`appl_…`). Missing today: the
      paywall would say purchases are unavailable (3.1.1).

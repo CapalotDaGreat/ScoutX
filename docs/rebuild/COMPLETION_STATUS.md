@@ -22,7 +22,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | `npm run legal:check` | PASS |
 | `npm run test:e2e:emulators` (Auth, Firestore, Storage, Functions, Cloud Tasks emulators) | PASS, 22 tests |
 | `node scripts/release-gate.mjs --allow-external` (internal / TestFlight) | PASS, 0 CODE BLOCKERs |
-| `node scripts/release-gate.mjs` (public release) | BLOCKED: 4 EXTERNAL CONFIGURATION REQUIRED, 2 LEGAL REVIEW REQUIRED, 2 NOT VALIDATED |
+| `node scripts/release-gate.mjs` (public release) | BLOCKED: 2 EXTERNAL CONFIGURATION REQUIRED (AI footage approval, backups), 0 LEGAL REVIEW REQUIRED, 2 NOT VALIDATED |
 
 ## Program matrix
 
@@ -34,7 +34,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | Scout contact with minors only through PitchProof, guardian notified, trial co-approval | COMPLETED | `requestCenter.test.mjs`, rules trial tests |
 | Minor display (first name + initial, youth label) | COMPLETED | `releaseCoverage.test.ts` |
 | Lock-screen privacy (minors always generic, adults choose) | COMPLETED | `pushChain.test.mjs`, `notifyLinksRecovery.test.ts` |
-| Privacy Center, consent records, 14 versioned legal documents in the app | COMPLETED; text LEGAL REVIEW REQUIRED | `legalContent.test.ts`, E2E Privacy Center |
+| Privacy Center, consent records, 14 versioned legal documents in the app | COMPLETED; reviewed, effective 2026-10-08 | `legalContent.test.ts`, E2E Privacy Center |
 | Legal translations | LEGAL REVIEW REQUIRED | English canonical; UI flagged `LEGAL_TRANSLATION_REVIEW_REQUIRED` |
 | Media rights, visibility, moderation cases/actions/appeals, staff claims, audit log | COMPLETED | `moderation.test.mjs`, rules media tests |
 | Reporting incl. "I appear in this video" | COMPLETED | E2E scout report, `moderation.test.mjs` |
@@ -46,7 +46,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | AI privacy (`data_collection: deny`, `zdr: true`, server-only key, output validation) | COMPLETED; provider ZDR NOT VALIDATED | `aiCallables.test.mjs`, injection fixtures |
 | Premium via RevenueCat, server-owned entitlement, quotas, never-paywalled list | COMPLETED (simulated webhook); purchases NOT VALIDATED | `entitlements.test.mjs`, `premium.test.ts`, E2E plan screen |
 | RevenueCat SDK 10.12 client: `pitchproven` entitlement, Paywall, Customer Center, restore, error handling | COMPLETED (code); paywall and Customer Center on device NOT VALIDATED | `purchases.test.ts`; needs a development build |
-| Deletion state machine, legal retention, no partial client fallback | COMPLETED; periods LEGAL REVIEW REQUIRED | `accountDeletion.test.mjs`, E2E teen deletion |
+| Deletion state machine, legal retention, no partial client fallback | COMPLETED; periods approved 2026-10-08 | `accountDeletion.test.mjs`, E2E teen deletion |
 | Data export archive, privacy requests, retention cleanup | COMPLETED (emulator); production schedule and signed URLs NOT VALIDATED | `dataRights.test.mjs`, E2E Privacy Center |
 | Movement sessions without location, km/miles | COMPLETED; on-device GPS NOT VALIDATED | `gpsIntelligence.test.ts` |
 | External football source links (link only: allowlisted HTTPS hosts, private by default, Passport/scout sharing under guardian rules, reporting, export, deletion; no fetching, scraping or import) | COMPLETED; provider list LEGAL REVIEW REQUIRED | `footballSources.test.ts`, `footballSources.test.mjs`, E2E football sources, release gate link-only check, `docs/compliance/external-football-sources.md` |
@@ -71,7 +71,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 Full list by area: `docs/release/release-configuration-checklist.md`.
 
 0. AI provider privacy review, then `AI_FOOTAGE_PROCESSING_APPROVED=true` (video analysis is refused until then).
-1. Legal contacts (privacy, security, support) in `src/config/legalConfig.ts`; shown as PRIVACY_CONTACT_REQUIRED / SECURITY_CONTACT_REQUIRED / LEGAL_CONTACT_REQUIRED; production builds are blocked until set (`ALLOW_LEGAL_PLACEHOLDERS=1` only for internal builds).
+1. Done: legal contacts are `support@pitchproof.online`; Cloudflare Email Routing to the owner's mailbox must be confirmed with a test mail.
 2. SMTP provider for the Trigger Email extension.
 3. Secrets: `GUARDIAN_LINK_SECRET` (32+ characters), `OPENROUTER_API_KEY`, `REVENUECAT_WEBHOOK_SECRET`, `ADMIN_USER_IDS`, Apple Sign in keys. Env: `GUARDIAN_LINK_BASE_URL`, `CALLABLE_ALLOWED_ORIGINS` if a browser origin needs callables.
 4. RevenueCat project (PitchProof): entitlement `pitchproven`, App Store products `PitchProven_Monthly` and `PitchProven_Yearly` (subscription group PitchProven) in the current offering, a Paywall on that offering, Customer Center, webhook, and the production `appl_` key as `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (production builds refuse `test_` keys). RevenueCat sandbox events currently grant premium like production events; decide whether to ignore them in production.

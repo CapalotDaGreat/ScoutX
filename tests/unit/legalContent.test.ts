@@ -36,7 +36,9 @@ describe('bundled legal documents', () => {
     );
     for (const doc of LEGAL_DOCUMENTS) {
       assert.equal(doc.canonicalLanguage, 'en', doc.id);
-      assert.equal(doc.effectiveDate, 'LEGAL_REVIEW_REQUIRED', `${doc.id} must not claim an effective date before review`);
+      assert.match(doc.effectiveDate, /^\d{4}-\d{2}-\d{2}$/, `${doc.id} needs a reviewed effective date`);
+      assert.equal(doc.status, 'final', doc.id);
+      assert.doesNotMatch(JSON.stringify(doc), /LEGAL_REVIEW_REQUIRED/, `${doc.id} still has an open review note`);
       assert.ok(doc.summary.length > 0 && doc.sections.length > 0, doc.id);
     }
   });
@@ -57,8 +59,13 @@ describe('bundled legal documents', () => {
 });
 
 describe('legal config', () => {
+  const noContacts: LegalConfig = {
+    ...LEGAL_CONFIG,
+    contacts: { privacyEmail: null, securityEmail: null, legalEmail: null, supportEmail: null },
+  };
+
   it('renders each missing contact with its own placeholder and keeps the real entity', () => {
-    const text = resolveLegalTokens('{{entityName}}, {{entityAddress}} - {{privacyEmail}} / {{securityEmail}} / {{supportEmail}}');
+    const text = resolveLegalTokens('{{entityName}}, {{entityAddress}} - {{privacyEmail}} / {{securityEmail}} / {{supportEmail}}', noContacts);
     assert.equal(
       text,
       `CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland - ${PRIVACY_CONTACT_REQUIRED} / ${SECURITY_CONTACT_REQUIRED} / ${LEGAL_CONTACT_REQUIRED}`,
@@ -66,13 +73,16 @@ describe('legal config', () => {
     assert.match(text, CONTACT_PLACEHOLDER_PATTERN);
   });
 
+  it('publishes the configured contacts and jurisdiction', () => {
+    const text = resolveLegalTokens('{{privacyEmail}} {{securityEmail}} {{legalEmail}} {{supportEmail}} {{jurisdiction}}');
+    assert.doesNotMatch(text, CONTACT_PLACEHOLDER_PATTERN);
+    assert.doesNotMatch(text, /LEGAL_REVIEW_REQUIRED/);
+    assert.match(text, /support@pitchproof\.online/);
+  });
+
   it('reports the contacts a production build is missing', () => {
-    assert.deepEqual(missingRequiredLegalContacts(), ['privacyEmail', 'securityEmail', 'supportEmail']);
-    const complete: LegalConfig = {
-      ...LEGAL_CONFIG,
-      contacts: { privacyEmail: 'p@x.test', securityEmail: 's@x.test', legalEmail: null, supportEmail: 'h@x.test' },
-    };
-    assert.deepEqual(missingRequiredLegalContacts(complete), []);
+    assert.deepEqual(missingRequiredLegalContacts(noContacts), ['privacyEmail', 'securityEmail', 'supportEmail']);
+    assert.deepEqual(missingRequiredLegalContacts(), []);
   });
 
   it('wires the release gate into app.config.ts', () => {

@@ -2,8 +2,8 @@
 id: ai-use-policy
 title: AI Use Policy
 version: 1.0.0
-effectiveDate: LEGAL_REVIEW_REQUIRED
-status: draft-legal-review-required
+effectiveDate: 2026-10-08
+status: final
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
@@ -24,7 +24,7 @@ Only the data needed for the request: selected frames from your video, and the m
 
 ## No training, no retention
 
-We do not train AI models on your data. We send requests through OpenRouter with data collection denied and zero data retention required, so requests are routed only to providers that commit not to store your data or use it for training. LEGAL_REVIEW_REQUIRED: confirm provider commitments for each enabled model.
+We do not train AI models on your data. We send requests through OpenRouter with data collection denied and zero data retention required, so requests are routed only to providers that commit not to store your data or use it for training.
 
 ## Limits and honesty
 

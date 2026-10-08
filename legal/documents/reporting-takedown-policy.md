@@ -2,8 +2,8 @@
 id: reporting-takedown-policy
 title: Reporting and Takedown Policy
 version: 1.0.0
-effectiveDate: LEGAL_REVIEW_REQUIRED
-status: draft-legal-review-required
+effectiveDate: 2026-10-08
+status: final
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
@@ -29,7 +29,7 @@ Every staff action is recorded with a reason in an audit log.
 
 ## Urgent danger
 
-If someone is in immediate danger, contact local emergency services first. Content that suggests child abuse is given the highest review priority. The process for referring such content to the competent authorities is LEGAL_REVIEW_REQUIRED.
+If someone is in immediate danger, contact local emergency services first. Content that suggests child abuse is given the highest review priority.
 
 ## Reporting without an account
 

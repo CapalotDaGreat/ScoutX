@@ -191,11 +191,13 @@ const hasPlaceholder = (text) => new RegExp(PLACEHOLDER.source).test(text);
 
 /** Escapes text and shows unfilled config placeholders as readable badges, recording each one. */
 function richText(text, found) {
-  return escapeHtml(text).replace(PLACEHOLDER, (token) => {
-    found.add(token);
-    const label = token === 'LEGAL_REVIEW_REQUIRED' ? 'pending legal review' : 'to be published';
-    return `<span class="pending" title="${token}">${label}</span>`;
-  });
+  return escapeHtml(text)
+    .replace(PLACEHOLDER, (token) => {
+      found.add(token);
+      const label = token === 'LEGAL_REVIEW_REQUIRED' ? 'pending legal review' : 'to be published';
+      return `<span class="pending" title="${token}">${label}</span>`;
+    })
+    .replace(/\b[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[a-z]{2,}\b/gi, (email) => `<a href="mailto:${email}">${email}</a>`);
 }
 
 function slugify(text) {

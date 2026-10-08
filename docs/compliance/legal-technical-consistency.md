@@ -34,7 +34,7 @@ configuration), **NOT VALIDATED**, **LEGAL REVIEW REQUIRED**.
 | C23 | PitchProof guarantees no trials or contracts (terms); no "get discovered" promise (store listing) | Copy in app and `store/listing.json` | release gate store check | PASS |
 | C24 | Every Passport item shows its source; self-reported data is not "verified" (store listing) | Evidence source labels | `dataTruth.test.ts`, `evidenceGraph.test.ts` | PASS |
 | C25 | Computer vision tracking is not available (AI policy, app) | `cvWorker.ts` NOT_AVAILABLE | `matchAnalysisHonesty.test.ts` | PASS |
-| C26 | Contacts for privacy, security, legal | `LEGAL_CONFIG.contacts` (all null, shown as `LEGAL_CONTACT_REQUIRED`) | `legalContent.test.ts`, release gate | EXTERNAL CONFIGURATION REQUIRED; production build blocked until set |
+| C26 | Contacts for privacy, security, legal | `LEGAL_CONFIG.contacts` (all `support@pitchproof.online`) | `legalContent.test.ts`, release gate | CONSISTENT; mail routing via Cloudflare to be confirmed with a test mail |
 | C27 | Translations of legal documents | English canonical; UI translations flagged `LEGAL_TRANSLATION_REVIEW_REQUIRED` | `legalContent.test.ts` | LEGAL REVIEW REQUIRED |
 | C29 | Anyone can report a video they appear in (reporting policy) | `TrustSafetyActions` with the Passport report on the public Passport and the scout player view | E2E "a scout reports a Passport video" | PASS |
 | C28 | Universal links for reports; guardian approval only on the web | AASA maps `/report/*`, not `/guardian`; `GuardianLinkScreen` opens the browser | `notifyLinksRecovery.test.ts` | PASS (resolver); on-device NOT VALIDATED |

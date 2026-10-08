@@ -2,8 +2,8 @@
 id: copyright-policy
 title: Copyright and Intellectual Property Policy
 version: 1.0.0
-effectiveDate: LEGAL_REVIEW_REQUIRED
-status: draft-legal-review-required
+effectiveDate: 2026-10-08
+status: final
 canonicalLanguage: en
 requiresAcceptance: false
 summary:

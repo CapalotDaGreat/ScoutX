@@ -2,8 +2,8 @@
 id: privacy-policy
 title: Privacy Policy
 version: 1.0.0
-effectiveDate: LEGAL_REVIEW_REQUIRED
-status: draft-legal-review-required
+effectiveDate: 2026-10-08
+status: final
 canonicalLanguage: en
 requiresAcceptance: true
 summary:
@@ -56,7 +56,7 @@ While you actively record a session, with the app open and "While Using" locatio
 - An email delivery provider, to send guardian approval emails.
 - Other PitchProof users, only as far as your visibility settings allow.
 
-A detailed list of processors, their locations and safeguards for transfers outside Switzerland is maintained in our processor register. LEGAL_REVIEW_REQUIRED: transfer mechanisms per processor.
+A detailed list of processors, their locations and safeguards for transfers outside Switzerland is maintained in our processor register.
 
 ## Youth players
 

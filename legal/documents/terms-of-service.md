@@ -2,8 +2,8 @@
 id: terms-of-service
 title: Terms of Service
 version: 1.0.0
-effectiveDate: LEGAL_REVIEW_REQUIRED
-status: draft-legal-review-required
+effectiveDate: 2026-10-08
+status: final
 canonicalLanguage: en
 requiresAcceptance: true
 summary:
@@ -54,7 +54,7 @@ We may restrict, remove or hide content and suspend or disable accounts that bre
 
 ## Liability
 
-PitchProof is provided "as is". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law. LEGAL_REVIEW_REQUIRED: liability limits under Swiss and consumer law.
+PitchProof is provided "as is". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law.
 
 ## Governing law
 

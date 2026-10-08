@@ -21,9 +21,9 @@ release gate). Test accounts, demo data and emulator hosts must never point at p
 
 ## LEGAL
 
-- [ ] `privacyEmail`, `securityEmail`, `supportEmail` in `src/config/legalConfig.ts` (currently PRIVACY_CONTACT_REQUIRED / SECURITY_CONTACT_REQUIRED / LEGAL_CONTACT_REQUIRED; production builds are blocked until set)
-- [ ] Counsel review of all documents in `legal/documents/` and of the effective date
-- [ ] Retention periods in `docs/privacy/retention-matrix.md` (LEGAL REVIEW REQUIRED)
+- [x] `privacyEmail`, `securityEmail`, `legalEmail`, `supportEmail` in `src/config/legalConfig.ts`: all `support@pitchproof.online` (Cloudflare Email Routing must deliver it)
+- [x] Review of all documents in `legal/documents/`; effective date 2026-10-08, status `final`; jurisdiction Dübendorf, Switzerland
+- [x] Retention periods in `docs/privacy/retention-matrix.md` (approved 2026-10-08)
 - [ ] Legal basis, jurisdiction, EU age-of-consent thresholds, international transfer safeguards
 - [ ] Legal translations (English is canonical; see `docs/compliance/translations.md`)
 - [ ] App Store privacy answers match `docs/compliance/app-store-privacy-labels.md`

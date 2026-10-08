@@ -1,6 +1,6 @@
 # Incident Response Plan
 
-Owner: CML Electronics. Security contact: `SECURITY_CONTACT_REQUIRED` (to be filled in
+Owner: CML Electronics. Security contact: support@pitchproof.online (set in
 `src/config/legalConfig.ts`). Incident lead and deputy: not yet named, EXTERNAL CONFIGURATION REQUIRED.
 
 ## Severity
@@ -55,9 +55,9 @@ which must be re-sent), review logs for use of the old secret.
 
 | Role | Contact |
 | --- | --- |
-| Security contact | SECURITY_CONTACT_REQUIRED |
-| Privacy contact | PRIVACY_CONTACT_REQUIRED |
-| Legal contact | LEGAL_CONTACT_REQUIRED |
+| Security contact | support@pitchproof.online |
+| Privacy contact | support@pitchproof.online |
+| Legal contact | support@pitchproof.online |
 | Incident lead | EXTERNAL CONFIGURATION REQUIRED |
 | Legal counsel | EXTERNAL CONFIGURATION REQUIRED |
 | FDPIC | Breach reporting portal on the FDPIC website |

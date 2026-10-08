@@ -2,8 +2,8 @@
 id: data-retention-policy
 title: Data Retention Policy
 version: 1.0.0
-effectiveDate: LEGAL_REVIEW_REQUIRED
-status: draft-legal-review-required
+effectiveDate: 2026-10-08
+status: final
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
@@ -26,12 +26,12 @@ Profile, match logs, goals, media, analysis results, movement summaries and scou
 
 ## Records kept after deletion
 
-Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media. LEGAL_REVIEW_REQUIRED: retention period for each record type.
+Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media.
 
 ## Crash diagnostics
 
-Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings. LEGAL_REVIEW_REQUIRED: confirm configured period.
+Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings.
 
 ## Backups
 
-Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire. LEGAL_REVIEW_REQUIRED: backup retention period.
+Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire.

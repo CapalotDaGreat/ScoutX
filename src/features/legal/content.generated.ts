@@ -6,8 +6,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "privacy-policy",
     "title": "Privacy Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
@@ -98,7 +98,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             "type": "paragraph",
-            "text": "A detailed list of processors, their locations and safeguards for transfers outside Switzerland is maintained in our processor register. LEGAL_REVIEW_REQUIRED: transfer mechanisms per processor."
+            "text": "A detailed list of processors, their locations and safeguards for transfers outside Switzerland is maintained in our processor register."
           }
         ]
       },
@@ -153,8 +153,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "terms-of-service",
     "title": "Terms of Service",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
@@ -255,7 +255,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "PitchProof is provided \"as is\". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law. LEGAL_REVIEW_REQUIRED: liability limits under Swiss and consumer law."
+            "text": "PitchProof is provided \"as is\". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law."
           }
         ]
       },
@@ -283,8 +283,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "community-guidelines",
     "title": "Community Guidelines",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
@@ -370,8 +370,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "youth-safety-policy",
     "title": "Youth Safety Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -467,8 +467,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "guardian-consent-notice",
     "title": "Guardian Consent Notice",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -554,8 +554,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "video-recording-policy",
     "title": "Video and Recording Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -630,8 +630,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "ai-use-policy",
     "title": "AI Use Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -665,7 +665,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "We do not train AI models on your data. We send requests through OpenRouter with data collection denied and zero data retention required, so requests are routed only to providers that commit not to store your data or use it for training. LEGAL_REVIEW_REQUIRED: confirm provider commitments for each enabled model."
+            "text": "We do not train AI models on your data. We send requests through OpenRouter with data collection denied and zero data retention required, so requests are routed only to providers that commit not to store your data or use it for training."
           }
         ]
       },
@@ -708,8 +708,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "copyright-policy",
     "title": "Copyright and Intellectual Property Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -785,8 +785,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "reporting-takedown-policy",
     "title": "Reporting and Takedown Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -830,7 +830,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "If someone is in immediate danger, contact local emergency services first. Content that suggests child abuse is given the highest review priority. The process for referring such content to the competent authorities is LEGAL_REVIEW_REQUIRED."
+            "text": "If someone is in immediate danger, contact local emergency services first. Content that suggests child abuse is given the highest review priority."
           }
         ]
       },
@@ -858,8 +858,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "data-subject-rights",
     "title": "Your Data Protection Rights",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -929,8 +929,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "data-retention-policy",
     "title": "Data Retention Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -969,7 +969,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media. LEGAL_REVIEW_REQUIRED: retention period for each record type."
+            "text": "Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media."
           }
         ]
       },
@@ -978,7 +978,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings. LEGAL_REVIEW_REQUIRED: confirm configured period."
+            "text": "Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings."
           }
         ]
       },
@@ -987,7 +987,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire. LEGAL_REVIEW_REQUIRED: backup retention period."
+            "text": "Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire."
           }
         ]
       }
@@ -997,8 +997,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "security-disclosure-policy",
     "title": "Security and Responsible Disclosure Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -1067,8 +1067,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "cookie-tracking-policy",
     "title": "Cookie and Tracking Policy",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -1118,8 +1118,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "id": "subscription-terms",
     "title": "Subscription Terms",
     "version": "1.0.0",
-    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
-    "status": "draft-legal-review-required",
+    "effectiveDate": "2026-10-08",
+    "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
