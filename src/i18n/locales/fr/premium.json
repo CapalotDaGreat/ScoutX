@@ -57,5 +57,23 @@
     "stillFree": "Tu peux toujours :",
     "freeActions": "Enregistrer le match et tes statistiques, ajouter des notes et des objectifs, et garder tes clips dans ta médiathèque.",
     "seePlan": "Voir l'offre et l'utilisation"
+  },
+  "seePlans": "Voir les offres",
+  "confirming": "L’App Store a confirmé ton abonnement. Ton offre sera mise à jour ici dès que notre serveur l’aura confirmé.",
+  "billingIssue": "Il y a un problème avec ton moyen de paiement. Mets-le à jour dans ton compte App Store pour conserver ton offre.",
+  "renewsOn": "Renouvellement le {{date}}",
+  "endsOn": "Se termine le {{date}}",
+  "terms": {
+    "monthly": "Mensuel",
+    "yearly": "Annuel"
+  },
+  "restoreNothingTitle": "Rien à restaurer",
+  "restoreNothingBody": "Aucun abonnement actif trouvé pour cet identifiant Apple.",
+  "errors": {
+    "alreadyOwned": "Tu as déjà cet abonnement. Essaie « Restaurer les achats ».",
+    "network": "Pas de connexion. Vérifie ta connexion internet et réessaie.",
+    "store": "L’App Store a rencontré un problème. Réessaie plus tard.",
+    "notAllowed": "Les achats ne sont pas autorisés sur cet appareil. Vérifie Temps d’écran ou le Partage familial.",
+    "productUnavailable": "Cette offre n’est pas disponible pour le moment."
   }
 }

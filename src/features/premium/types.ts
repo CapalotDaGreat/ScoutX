@@ -28,6 +28,7 @@ export type QuotaErrorInfo =
 
 export type PremiumPackage = {
   id: string;
+  term: 'monthly' | 'yearly' | null;
   title: string;
   priceString: string;
   periodLabel: string | null;

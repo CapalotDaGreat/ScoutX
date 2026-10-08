@@ -18,6 +18,15 @@ if (
     'EXPO_PUBLIC_OPENROUTER_API_KEY must not be set for production builds; AI runs through Cloud Functions.',
   );
 }
+// RevenueCat Test Store keys complete purchases without the App Store; they must never reach users.
+if (
+  process.env.EAS_BUILD_PROFILE === 'production' &&
+  process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY?.trim().startsWith('test_')
+) {
+  throw new Error(
+    'EXPO_PUBLIC_REVENUECAT_IOS_KEY is a RevenueCat Test Store key; production builds need the App Store (appl_) key.',
+  );
+}
 // Legal documents render LEGAL_CONTACT_REQUIRED for missing contacts; production must not ship that.
 if (process.env.EAS_BUILD_PROFILE === 'production' && process.env.ALLOW_LEGAL_PLACEHOLDERS !== '1') {
   const missingContacts = missingRequiredLegalContacts();

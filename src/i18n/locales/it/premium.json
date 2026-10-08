@@ -57,5 +57,23 @@
     "stillFree": "Puoi ancora:",
     "freeActions": "Registrare la partita e le tue statistiche, aggiungere note e obiettivi e conservare le tue clip nella libreria.",
     "seePlan": "Vedi piano e utilizzo"
+  },
+  "seePlans": "Vedi i piani",
+  "confirming": "L’App Store ha confermato il tuo abbonamento. Il piano si aggiornerà qui appena il nostro server lo conferma.",
+  "billingIssue": "C’è un problema con il tuo metodo di pagamento. Aggiornalo nel tuo account App Store per mantenere il piano.",
+  "renewsOn": "Si rinnova il {{date}}",
+  "endsOn": "Termina il {{date}}",
+  "terms": {
+    "monthly": "Mensile",
+    "yearly": "Annuale"
+  },
+  "restoreNothingTitle": "Niente da ripristinare",
+  "restoreNothingBody": "Non abbiamo trovato abbonamenti attivi per questo ID Apple.",
+  "errors": {
+    "alreadyOwned": "Hai già questo abbonamento. Prova «Ripristina acquisti».",
+    "network": "Nessuna connessione. Controlla internet e riprova.",
+    "store": "Si è verificato un problema con l’App Store. Riprova più tardi.",
+    "notAllowed": "Gli acquisti non sono consentiti su questo dispositivo. Controlla Tempo di utilizzo o In famiglia.",
+    "productUnavailable": "Questo piano non è disponibile al momento."
   }
 }

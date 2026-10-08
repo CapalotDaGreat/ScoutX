@@ -29,6 +29,7 @@ import { AgentationDevProbe } from '@/dev/AgentationDevProbe';
 import { UserSafetyProvider } from '@/features/youth-safety/context/UserSafetyProvider';
 import { YouthGate } from '@/features/youth-safety/components/YouthGate';
 import { LegalGate } from '@/features/legal/components/LegalGate';
+import { PurchasesIdentitySync } from '@/features/premium/components/PurchasesIdentitySync';
 import { queryClient } from '@/data/queryClient';
 
 enableScreens();
@@ -62,6 +63,7 @@ function AppContent() {
                   <RootNavigator />
                   <YouthGate />
                   <LegalGate />
+                  <PurchasesIdentitySync />
                 </View>
               </AiInsightsProvider>
             </ActivityProvider>

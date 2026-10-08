@@ -57,5 +57,23 @@
     "stillFree": "You can still:",
     "freeActions": "Log the match and your stats, add notes and goals, and keep your clips in your library.",
     "seePlan": "See plan & usage"
+  },
+  "seePlans": "See plans",
+  "confirming": "The App Store confirmed your subscription. Your plan updates here once our server confirms it.",
+  "billingIssue": "There is a problem with your payment method. Update it in your App Store account to keep your plan.",
+  "renewsOn": "Renews on {{date}}",
+  "endsOn": "Ends on {{date}}",
+  "terms": {
+    "monthly": "Monthly",
+    "yearly": "Yearly"
+  },
+  "restoreNothingTitle": "Nothing to restore",
+  "restoreNothingBody": "We could not find an active subscription for this Apple ID.",
+  "errors": {
+    "alreadyOwned": "You already have this subscription. Try Restore purchases.",
+    "network": "No connection. Check your internet and try again.",
+    "store": "The App Store had a problem. Please try again later.",
+    "notAllowed": "Purchases are not allowed on this device. Check Screen Time or Family Sharing settings.",
+    "productUnavailable": "This plan is not available right now."
   }
 }

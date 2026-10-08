@@ -8,7 +8,7 @@ import type { EntitlementStatus } from './plans';
 const webhookSecret = defineSecret('REVENUECAT_WEBHOOK_SECRET');
 
 /** RevenueCat entitlement identifier that unlocks the premium plan. */
-export const PREMIUM_ENTITLEMENT_ID = process.env.REVENUECAT_ENTITLEMENT_ID?.trim() || 'premium';
+export const PREMIUM_ENTITLEMENT_ID = process.env.REVENUECAT_ENTITLEMENT_ID?.trim() || 'pitchproven';
 
 export type RevenueCatEvent = {
   id: string;

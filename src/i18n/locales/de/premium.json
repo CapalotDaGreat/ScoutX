@@ -57,5 +57,23 @@
     "stillFree": "Du kannst weiterhin:",
     "freeActions": "Das Spiel und deine Statistiken erfassen, Notizen und Ziele hinzufügen und deine Clips in deiner Mediathek behalten.",
     "seePlan": "Plan & Nutzung ansehen"
+  },
+  "seePlans": "Pläne ansehen",
+  "confirming": "Der App Store hat dein Abo bestätigt. Dein Plan wird hier aktualisiert, sobald unser Server es bestätigt.",
+  "billingIssue": "Es gibt ein Problem mit deiner Zahlungsmethode. Aktualisiere sie in deinem App-Store-Konto, um deinen Plan zu behalten.",
+  "renewsOn": "Verlängert sich am {{date}}",
+  "endsOn": "Endet am {{date}}",
+  "terms": {
+    "monthly": "Monatlich",
+    "yearly": "Jährlich"
+  },
+  "restoreNothingTitle": "Nichts wiederherzustellen",
+  "restoreNothingBody": "Für diese Apple-ID wurde kein aktives Abo gefunden.",
+  "errors": {
+    "alreadyOwned": "Du hast dieses Abo bereits. Versuche „Käufe wiederherstellen“.",
+    "network": "Keine Verbindung. Prüfe dein Internet und versuche es erneut.",
+    "store": "Im App Store ist ein Problem aufgetreten. Bitte versuche es später erneut.",
+    "notAllowed": "Käufe sind auf diesem Gerät nicht erlaubt. Prüfe Bildschirmzeit oder Familienfreigabe.",
+    "productUnavailable": "Dieser Plan ist derzeit nicht verfügbar."
   }
 }

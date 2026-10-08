@@ -57,5 +57,23 @@
     "stillFree": "Je kunt nog steeds:",
     "freeActions": "De wedstrijd en je statistieken vastleggen, notities en doelen toevoegen en je clips in je bibliotheek bewaren.",
     "seePlan": "Abonnement & gebruik bekijken"
+  },
+  "seePlans": "Bekijk abonnementen",
+  "confirming": "De App Store heeft je abonnement bevestigd. Je plan wordt hier bijgewerkt zodra onze server het bevestigt.",
+  "billingIssue": "Er is een probleem met je betaalmethode. Werk deze bij in je App Store-account om je plan te behouden.",
+  "renewsOn": "Wordt verlengd op {{date}}",
+  "endsOn": "Eindigt op {{date}}",
+  "terms": {
+    "monthly": "Maandelijks",
+    "yearly": "Jaarlijks"
+  },
+  "restoreNothingTitle": "Niets te herstellen",
+  "restoreNothingBody": "We hebben geen actief abonnement gevonden voor deze Apple ID.",
+  "errors": {
+    "alreadyOwned": "Je hebt dit abonnement al. Probeer ‘Aankopen herstellen’.",
+    "network": "Geen verbinding. Controleer je internet en probeer het opnieuw.",
+    "store": "Er was een probleem met de App Store. Probeer het later opnieuw.",
+    "notAllowed": "Aankopen zijn niet toegestaan op dit apparaat. Controleer Schermtijd of Delen met gezin.",
+    "productUnavailable": "Dit abonnement is nu niet beschikbaar."
   }
 }

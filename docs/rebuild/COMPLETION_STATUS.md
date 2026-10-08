@@ -41,6 +41,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | Computer vision (tracking, event detection) | NOT AVAILABLE | needs a GPU worker |
 | AI privacy (`data_collection: deny`, `zdr: true`, server-only key, output validation) | COMPLETED; provider ZDR NOT VALIDATED | `aiCallables.test.mjs`, injection fixtures |
 | Premium via RevenueCat, server-owned entitlement, quotas, never-paywalled list | COMPLETED (simulated webhook); purchases NOT VALIDATED | `entitlements.test.mjs`, `premium.test.ts`, E2E plan screen |
+| RevenueCat SDK 10.12 client: `pitchproven` entitlement, Paywall, Customer Center, restore, error handling | COMPLETED (code); paywall and Customer Center on device NOT VALIDATED | `purchases.test.ts`; needs a development build |
 | Deletion state machine, legal retention, no partial client fallback | COMPLETED; periods LEGAL REVIEW REQUIRED | `accountDeletion.test.mjs`, E2E teen deletion |
 | Data export archive, privacy requests, retention cleanup | COMPLETED (emulator); production schedule and signed URLs NOT VALIDATED | `dataRights.test.mjs`, E2E Privacy Center |
 | Movement sessions without location, km/miles | COMPLETED; on-device GPS NOT VALIDATED | `gpsIntelligence.test.ts` |
@@ -58,7 +59,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 1. Legal contacts (privacy, security, support) in `src/config/legalConfig.ts`; production builds are blocked until set.
 2. SMTP provider for the Trigger Email extension.
 3. Secrets: `GUARDIAN_LINK_SECRET`, `OPENROUTER_API_KEY`, `REVENUECAT_WEBHOOK_SECRET`, `ADMIN_USER_IDS`, Apple Sign in keys. Env: `GUARDIAN_LINK_BASE_URL`, `CALLABLE_ALLOWED_ORIGINS` if a browser origin needs callables.
-4. RevenueCat project, App Store subscription products, webhook, `EXPO_PUBLIC_REVENUECAT_IOS_KEY`. RevenueCat sandbox events currently grant premium like production events; decide whether to ignore them in production.
+4. RevenueCat project (PitchProof): entitlement `pitchproven`, App Store products `monthly` and `yearly` in the current offering, a Paywall on that offering, Customer Center, webhook, and the production `appl_` key as `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (production builds refuse `test_` keys). RevenueCat sandbox events currently grant premium like production events; decide whether to ignore them in production.
 5. OpenRouter: confirm zero-data-retention providers exist for the chosen vision model.
 6. Deploy Cloud Tasks queues (`extractMatchSegment`, `analyzeMatchFrames`, `buildDataExport`), the `signBlob` permission for signed URLs, Firestore indexes, functions, rules.
 7. App Attest registration and App Check enforcement.

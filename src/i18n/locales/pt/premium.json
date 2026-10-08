@@ -57,5 +57,23 @@
     "stillFree": "Ainda podes:",
     "freeActions": "Registar o jogo e as tuas estatísticas, adicionar notas e objetivos e guardar os teus clips na biblioteca.",
     "seePlan": "Ver plano e utilização"
+  },
+  "seePlans": "Ver planos",
+  "confirming": "A App Store confirmou a tua subscrição. O teu plano será atualizado aqui assim que o nosso servidor o confirmar.",
+  "billingIssue": "Há um problema com o teu método de pagamento. Atualiza-o na tua conta da App Store para manter o plano.",
+  "renewsOn": "Renova a {{date}}",
+  "endsOn": "Termina a {{date}}",
+  "terms": {
+    "monthly": "Mensal",
+    "yearly": "Anual"
+  },
+  "restoreNothingTitle": "Nada para restaurar",
+  "restoreNothingBody": "Não encontrámos nenhuma subscrição ativa para este ID Apple.",
+  "errors": {
+    "alreadyOwned": "Já tens esta subscrição. Experimenta «Restaurar compras».",
+    "network": "Sem ligação. Verifica a internet e tenta novamente.",
+    "store": "A App Store teve um problema. Tenta novamente mais tarde.",
+    "notAllowed": "As compras não são permitidas neste dispositivo. Verifica Tempo de ecrã ou Partilha com a família.",
+    "productUnavailable": "Este plano não está disponível de momento."
   }
 }

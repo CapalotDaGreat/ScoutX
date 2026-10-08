@@ -8,10 +8,15 @@ import { useAuth } from '@/features/auth/store/AuthProvider';
 import { LegalDocumentModal } from '@/features/legal/components/LegalDocumentModal';
 import type { LegalDocumentId } from '@/features/legal/types';
 import { usePremium } from '@/features/premium/hooks/usePremium';
+import { useStoreEntitlement } from '@/features/premium/hooks/useStoreEntitlement';
+import type { PurchaseErrorKind } from '@/features/premium/services/purchaseModel';
 import {
+  PurchaseError,
   isPurchasingAvailable,
   loadPackages,
   manageSubscriptionsUrl,
+  presentCustomerCenter,
+  presentPaywall,
   purchasePackage,
   restorePurchases,
 } from '@/features/premium/services/purchasesService';
@@ -32,60 +37,110 @@ function Section({ title, children, testID }: { title: string; children: ReactNo
   );
 }
 
+const ERROR_KEYS = {
+  cancelled: 'premium:purchaseFailed',
+  pending: 'premium:purchasePendingBody',
+  already_owned: 'premium:errors.alreadyOwned',
+  network: 'premium:errors.network',
+  store: 'premium:errors.store',
+  not_allowed: 'premium:errors.notAllowed',
+  product_unavailable: 'premium:errors.productUnavailable',
+  configuration: 'premium:purchasesUnavailable',
+  unknown: 'premium:purchaseFailed',
+} as const satisfies Record<PurchaseErrorKind, string>;
+
 export function PlanUsageScreen({ onBack }: { onBack: () => void }) {
   const { t, i18n } = useAppTranslation(['premium', 'common']);
   const { colors } = useTheme();
   const { user } = useAuth();
   const { policy } = useUserSafety();
   const { summary, loading, error, refresh } = usePremium();
+  const { entitlement: store, refresh: refreshStore } = useStoreEntitlement();
   const [packages, setPackages] = useState<PremiumPackage[]>([]);
+  const [showPackageList, setShowPackageList] = useState(false);
   const [busy, setBusy] = useState(false);
   const [reading, setReading] = useState<LegalDocumentId | null>(null);
   const uid = user?.uid ?? null;
   const canPurchase = isPurchasingAvailable() && uid !== null;
   const isPremium = summary?.plan === 'premium';
+  // The store can confirm a purchase before the webhook updates the server plan.
+  const confirming = store.active && !isPremium;
+  const hasSubscription = isPremium || store.active;
 
   useEffect(() => {
-    if (!canPurchase || !uid || isPremium) return;
+    if (!canPurchase || !uid || hasSubscription || !showPackageList) return;
     loadPackages(uid)
       .then(setPackages)
       .catch(() => setPackages([]));
-  }, [canPurchase, uid, isPremium]);
+  }, [canPurchase, uid, hasSubscription, showPackageList]);
 
   const run = (action: () => Promise<void>) => {
     setBusy(true);
     void action()
-      .catch((caught: unknown) => Alert.alert(t('common:errorTitle'), toUserMessage(caught, t('premium:purchaseFailed'))))
+      .catch((caught: unknown) => {
+        const key = caught instanceof PurchaseError ? ERROR_KEYS[caught.kind] : 'premium:purchaseFailed';
+        Alert.alert(t('common:errorTitle'), toUserMessage(caught instanceof PurchaseError ? null : caught, t(key)));
+      })
       .finally(() => setBusy(false));
   };
+
+  const afterStoreChange = async (titleKey: 'premium:purchasePendingTitle' | 'premium:restoreDoneTitle') => {
+    Alert.alert(t(titleKey), t('premium:purchasePendingBody'));
+    await Promise.all([refresh(), refreshStore()]);
+  };
+
+  const onSeePlans = () =>
+    run(async () => {
+      if (!uid) return;
+      const outcome = await presentPaywall(uid);
+      if (outcome === 'purchased') await afterStoreChange('premium:purchasePendingTitle');
+      else if (outcome === 'restored') await afterStoreChange('premium:restoreDoneTitle');
+      else if (outcome === 'not_presented') await refreshStore();
+      else if (outcome === 'unavailable') setShowPackageList(true);
+      else if (outcome === 'error') Alert.alert(t('common:errorTitle'), t('premium:purchaseFailed'));
+    });
 
   const onBuy = (packageId: string) =>
     run(async () => {
       if (!uid) return;
       const outcome = await purchasePackage(uid, packageId);
-      if (outcome === 'purchased') {
-        Alert.alert(t('premium:purchasePendingTitle'), t('premium:purchasePendingBody'));
-        await refresh();
-      }
+      if (outcome !== 'cancelled') await afterStoreChange('premium:purchasePendingTitle');
     });
 
   const onRestore = () =>
     run(async () => {
       if (!uid) return;
-      await restorePurchases(uid);
-      Alert.alert(t('premium:restoreDoneTitle'), t('premium:purchasePendingBody'));
-      await refresh();
+      const restored = await restorePurchases(uid);
+      if (restored.active) await afterStoreChange('premium:restoreDoneTitle');
+      else Alert.alert(t('premium:restoreNothingTitle'), t('premium:restoreNothingBody'));
     });
 
   const onManage = () =>
     run(async () => {
       if (!uid) return;
+      if ((await presentCustomerCenter(uid)) === 'presented') {
+        await Promise.all([refresh(), refreshStore()]);
+        return;
+      }
       await Linking.openURL(await manageSubscriptionsUrl(uid));
     });
 
   const resetLabel = summary?.resetAt
     ? t('premium:resetsOn', { date: new Date(summary.resetAt).toLocaleDateString(i18n.language) })
     : t('premium:periodNotStarted', { days: summary?.periodDays ?? 30 });
+
+  const storeDetail = store.active
+    ? [
+        store.term ? t(`premium:terms.${store.term}`) : null,
+        store.expiresAt
+          ? t(store.willRenew ? 'premium:renewsOn' : 'premium:endsOn', {
+              date: new Date(store.expiresAt).toLocaleDateString(i18n.language),
+            })
+          : null,
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : '';
 
   return (
     <Screen
@@ -116,6 +171,21 @@ export function PlanUsageScreen({ onBack }: { onBack: () => void }) {
               <Text variant="caption" color="secondary">
                 {t(`premium:status.${summary.status}`)}
               </Text>
+              {storeDetail ? (
+                <Text variant="caption" color="secondary" testID="plan-store-detail">
+                  {storeDetail}
+                </Text>
+              ) : null}
+              {confirming ? (
+                <Text variant="caption" color="secondary" testID="plan-confirming">
+                  {t('premium:confirming')}
+                </Text>
+              ) : null}
+              {store.hasBillingIssue ? (
+                <Text variant="caption" color="warning" testID="plan-billing-issue">
+                  {t('premium:billingIssue')}
+                </Text>
+              ) : null}
             </Section>
 
             <Section title={t('premium:usageTitle')} testID="plan-usage">
@@ -156,19 +226,30 @@ export function PlanUsageScreen({ onBack }: { onBack: () => void }) {
 
             {canPurchase ? (
               <Section title={t('premium:subscriptionTitle')} testID="plan-subscription">
-                {!isPremium && policy.isMinor ? (
+                {!hasSubscription && policy.isMinor ? (
                   <Text variant="caption" color="secondary">
                     {t('premium:minorNote')}
                   </Text>
                 ) : null}
-                {!isPremium
+                {!hasSubscription ? (
+                  <Button onPress={onSeePlans} disabled={busy} testID="plan-see-plans">
+                    {t('premium:seePlans')}
+                  </Button>
+                ) : null}
+                {!hasSubscription && showPackageList
                   ? packages.map((pkg) => (
-                      <Button key={pkg.id} onPress={() => onBuy(pkg.id)} disabled={busy} testID={`plan-buy-${pkg.id}`}>
+                      <Button
+                        key={pkg.id}
+                        variant="secondary"
+                        onPress={() => onBuy(pkg.id)}
+                        disabled={busy}
+                        testID={`plan-buy-${pkg.id}`}
+                      >
                         {t('premium:buy', { title: pkg.title, price: pkg.priceString })}
                       </Button>
                     ))
                   : null}
-                {!isPremium && packages.length === 0 ? (
+                {!hasSubscription && showPackageList && packages.length === 0 ? (
                   <Text variant="caption" color="secondary">
                     {t('premium:noOfferings')}
                   </Text>
@@ -176,12 +257,14 @@ export function PlanUsageScreen({ onBack }: { onBack: () => void }) {
                 <Text variant="caption" color="secondary">
                   {t('premium:renewalDisclosure')}
                 </Text>
-                <Button variant="secondary" onPress={onRestore} disabled={busy}>
+                <Button variant="secondary" onPress={onRestore} disabled={busy} testID="plan-restore">
                   {t('premium:restore')}
                 </Button>
-                <Button variant="secondary" onPress={onManage} disabled={busy}>
-                  {t('premium:manage')}
-                </Button>
+                {hasSubscription ? (
+                  <Button variant="secondary" onPress={onManage} disabled={busy} testID="plan-manage">
+                    {t('premium:manage')}
+                  </Button>
+                ) : null}
                 <Button variant="ghost" onPress={() => setReading('subscription-terms')}>
                   {t('premium:subscriptionTerms')}
                 </Button>

@@ -13,7 +13,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const webhookSecret = (0, params_1.defineSecret)('REVENUECAT_WEBHOOK_SECRET');
 /** RevenueCat entitlement identifier that unlocks the premium plan. */
-exports.PREMIUM_ENTITLEMENT_ID = process.env.REVENUECAT_ENTITLEMENT_ID?.trim() || 'premium';
+exports.PREMIUM_ENTITLEMENT_ID = process.env.REVENUECAT_ENTITLEMENT_ID?.trim() || 'pitchproven';
 const ACTIVATING = new Set([
     'INITIAL_PURCHASE',
     'RENEWAL',

@@ -142,9 +142,21 @@ check('No secrets committed', () => {
   }
   const privateKeys = scanTracked(/-----BEGIN (RSA |EC |ENCRYPTED )?PRIVATE KEY-----(\\n|\s)*[A-Za-z0-9+/=]{40,}|"private_key_id"\s*:/);
   if (privateKeys.length) problems.push(`private key material in ${privateKeys.join(', ')}`);
-  const webhook = scanTracked(/(REVENUECAT_WEBHOOK_SECRET|GUARDIAN_LINK_SECRET)\s*=\s*\S{8,}/);
+  const webhook = scanTracked(/(^|\n)[ \t]*(export[ \t]+)?(REVENUECAT_WEBHOOK_SECRET|GUARDIAN_LINK_SECRET)[ \t]*=[ \t]*\S{8,}/);
   if (webhook.length) problems.push(`secret value in ${webhook.join(', ')}`);
   return problems.length === 0 ? [PASS, 'no key files or secret values tracked'] : [FAIL, problems.join('; ')];
+});
+
+check('RevenueCat production key is not a Test Store key', () => {
+  const problems = [];
+  const prodKey = readJson('eas.json').build?.production?.env?.EXPO_PUBLIC_REVENUECAT_IOS_KEY ?? '';
+  if (prodKey.startsWith('test_')) problems.push('eas.json production uses a test_ key');
+  const tracked = scanTracked(/EXPO_PUBLIC_REVENUECAT_IOS_KEY[ \t]*[=:][ \t]*["']?test_/);
+  if (tracked.length) problems.push(`Test Store key in ${tracked.join(', ')}`);
+  if (!/RevenueCat Test Store key; production builds need/.test(read('app.config.ts'))) {
+    problems.push('production build guard in app.config.ts is missing');
+  }
+  return problems.length === 0 ? [PASS, 'test_ keys are refused for production builds'] : [FAIL, problems.join('; ')];
 });
 
 check('Callable CORS closed by default', () => {
