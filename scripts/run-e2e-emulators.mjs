@@ -7,6 +7,7 @@
  *   npm run test:e2e:emulators -- guest   # filter by spec name
  */
 import { spawn } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 
 const accounts = JSON.parse(fs.readFileSync(new URL('../e2e/fixtures/accounts.json', import.meta.url), 'utf8'));
@@ -42,6 +43,25 @@ const inner = [
   `npx playwright test ${targets} --project=web-desktop`,
 ].join(' && ');
 
+// The Functions emulator reads secrets from functions/.secret.local and otherwise asks the real
+// Secret Manager. Write a random throwaway value for this run only; it is gitignored and removed.
+const secretFile = new URL('../functions/.secret.local', import.meta.url);
+const createdSecretFile = !fs.existsSync(secretFile);
+if (createdSecretFile) {
+  const throwaway = () => `e2e-${randomBytes(24).toString('hex')}`;
+  const secrets = {
+    GUARDIAN_LINK_SECRET: throwaway(),
+    // Apple revocation only runs for accounts with a stored Apple token; E2E accounts have none.
+    APPLE_TEAM_ID: 'e2e-unused',
+    APPLE_KEY_ID: 'e2e-unused',
+    APPLE_PRIVATE_KEY: 'e2e-unused',
+  };
+  fs.writeFileSync(secretFile, Object.entries(secrets).map(([key, value]) => `${key}=${value}`).join('\n') + '\n');
+}
+const removeSecretFile = () => {
+  if (createdSecretFile && fs.existsSync(secretFile)) fs.rmSync(secretFile);
+};
+
 const child = spawn(
   'npx',
   [
@@ -56,4 +76,7 @@ const child = spawn(
   { stdio: 'inherit', shell: true, env },
 );
 
-child.on('exit', (code) => process.exit(code ?? 1));
+child.on('exit', (code) => {
+  removeSecretFile();
+  process.exit(code ?? 1);
+});

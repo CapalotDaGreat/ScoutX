@@ -297,7 +297,7 @@ export function PlayerDetailScreen({
             </Button>
           ) : null}
           <View className="mt-3">
-            <TrustSafetyActions targetUserId={player.id} targetUserName={player.fullName} />
+            <TrustSafetyActions targetUserId={player.id} targetUserName={player.fullName} includePassportReport />
           </View>
         </View>
 

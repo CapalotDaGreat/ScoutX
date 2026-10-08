@@ -19,6 +19,7 @@ playwright-report/
 # Environment variables (contains secrets - never commit)
 .env
 .env.local
+.secret.local
 
 # Firebase native config (download from Firebase Console — never commit)
 google-services.json

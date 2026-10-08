@@ -3,10 +3,27 @@
     "apps": [],
     "details": [
       {
-        "appID": "TEAMID.com.scoutx.app",
+        "appID": "833CYAZ8XT.com.scoutx.app",
+        "appIDs": ["833CYAZ8XT.com.scoutx.app"],
         "paths": [
           "/auth/*",
-          "/player/*"
+          "/player/*",
+          "/match/*",
+          "/trial/*",
+          "/request/*",
+          "/reel/*",
+          "/evidence/*",
+          "/report/*"
+        ],
+        "components": [
+          { "/": "/auth/*" },
+          { "/": "/player/*" },
+          { "/": "/match/*" },
+          { "/": "/trial/*" },
+          { "/": "/request/*" },
+          { "/": "/reel/*" },
+          { "/": "/evidence/*" },
+          { "/": "/report/*" }
         ]
       }
     ]

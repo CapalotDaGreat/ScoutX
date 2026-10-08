@@ -65,3 +65,106 @@ export async function openRegister(page: Page) {
   await openGuestAccountActions(page);
   await page.getByRole('button', { name: 'Create your account' }).click();
 }
+
+/** Registers a fresh email/password account and stops at the age gate. Returns the email. */
+export async function registerAccount(page: Page, name: string, prefix: string): Promise<string> {
+  const email = `${prefix}-${Date.now()}@e2e.scoutx.test`;
+  await openRegister(page);
+  await page.getByLabel('Full name').fill(name);
+  await page.getByLabel('Email', { exact: true }).fill(email);
+  await page.getByLabel('Password', { exact: true }).fill(accounts.password);
+  await page.getByLabel('Confirm password').fill(accounts.password);
+  await page.getByRole('button', { name: 'Create account' }).click();
+  await expect(page.getByTestId('youth-gate-age')).toBeVisible({ timeout: 30_000 });
+  return email;
+}
+
+// Emulator REST access for assertions. "Bearer owner" bypasses rules and only works on the emulator.
+const FIRESTORE = `http://127.0.0.1:8080/v1/projects/${accounts.projectId}/databases/(default)/documents`;
+const FUNCTIONS = `http://127.0.0.1:5001/${accounts.projectId}/us-central1`;
+
+type FirestoreValue = {
+  stringValue?: string;
+  integerValue?: string;
+  doubleValue?: number;
+  booleanValue?: boolean;
+  nullValue?: null;
+  timestampValue?: string;
+  arrayValue?: { values?: FirestoreValue[] };
+  mapValue?: { fields?: Record<string, FirestoreValue> };
+};
+
+function decode(value: FirestoreValue): unknown {
+  if (value.stringValue !== undefined) return value.stringValue;
+  if (value.integerValue !== undefined) return Number(value.integerValue);
+  if (value.doubleValue !== undefined) return value.doubleValue;
+  if (value.booleanValue !== undefined) return value.booleanValue;
+  if (value.timestampValue !== undefined) return value.timestampValue;
+  if (value.arrayValue) return (value.arrayValue.values ?? []).map(decode);
+  if (value.mapValue) return decodeFields(value.mapValue.fields ?? {});
+  return null;
+}
+
+function decodeFields(fields: Record<string, FirestoreValue>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(fields).map(([key, value]) => [key, decode(value)]));
+}
+
+export type EmulatorDoc = { id: string; data: Record<string, unknown> };
+
+export async function queryCollection(
+  collection: string,
+  field: string,
+  value: string,
+  op: 'EQUAL' | 'ARRAY_CONTAINS' = 'EQUAL',
+): Promise<EmulatorDoc[]> {
+  const response = await fetch(`${FIRESTORE}:runQuery`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer owner', 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      structuredQuery: {
+        from: [{ collectionId: collection }],
+        where: { fieldFilter: { field: { fieldPath: field }, op, value: { stringValue: value } } },
+      },
+    }),
+  });
+  const rows = (await response.json()) as Array<{ document?: { name: string; fields?: Record<string, FirestoreValue> } }>;
+  return rows
+    .filter((row) => row.document)
+    .map((row) => ({ id: row.document!.name.split('/').pop()!, data: decodeFields(row.document!.fields ?? {}) }));
+}
+
+export async function documentExists(path: string): Promise<boolean> {
+  const response = await fetch(`${FIRESTORE}/${path}`, { headers: { Authorization: 'Bearer owner' } });
+  return response.status === 200;
+}
+
+/** Calls a callable like the guardian web page does (no app account). */
+export async function callFunction<T>(name: string, data: unknown): Promise<T> {
+  const response = await fetch(`${FUNCTIONS}/${name}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data }),
+  });
+  const body = (await response.json()) as { result?: T; error?: { message: string } };
+  if (!response.ok || body.error) throw new Error(`${name} failed: ${body.error?.message ?? response.status}`);
+  return body.result as T;
+}
+
+/** Waits for the guardian email queued for this address and returns the token in its link. */
+export async function guardianTokenFor(guardianEmail: string, purpose = 'guardian_consent'): Promise<{ token: string; uid: string }> {
+  let found: EmulatorDoc | undefined;
+  await expect
+    .poll(
+      async () => {
+        const docs = await queryCollection('mail', 'to', guardianEmail, 'ARRAY_CONTAINS');
+        found = docs.find((doc) => doc.data.purpose === purpose);
+        return Boolean(found);
+      },
+      { timeout: 30_000 },
+    )
+    .toBe(true);
+  const text = String((found!.data.message as { text?: unknown }).text ?? '');
+  const match = /\/guardian\/\?t=([A-Za-z0-9._%-]+)/.exec(text);
+  if (!match) throw new Error('guardian mail has no link');
+  return { token: decodeURIComponent(match[1]), uid: String(found!.data.scoutxUid) };
+}

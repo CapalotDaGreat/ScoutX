@@ -8,7 +8,11 @@ A failed step is retried from where it stopped. The app shows the progress. Unli
 recent sign-in on the server; SECURITY REVIEW REQUIRED.
 
 Evidence: `tests/rules/accountDeletion.test.mjs` seeds every collection below, runs the deletion and
-asserts nothing is left (`verifyAccountDeleted`).
+asserts nothing is left (`verifyUserDataDeleted`). The E2E flow deletes a waiting 13–17 account and
+checks that its guardian mail, consent and contact records are gone.
+
+The app always deletes through the server. If the server cannot be reached it shows an error and
+the user retries; it never deletes the sign-in locally while server-only records remain.
 
 ## Deleted
 

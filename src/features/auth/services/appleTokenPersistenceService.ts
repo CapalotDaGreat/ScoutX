@@ -42,14 +42,9 @@ export async function deleteAuthenticatedAccountViaCloud(): Promise<boolean> {
     return false;
   }
 
-  try {
-    await callable({});
-    return true;
-  } catch (error) {
-    // Only an unreachable function may fall back to the local path. A started server deletion
-    // must be resumed on the server, otherwise the sign-in would be removed with data left behind.
-    const code = error && typeof error === 'object' && 'code' in error ? String((error as { code: unknown }).code) : '';
-    if (code.endsWith('not-found') || code.endsWith('unavailable')) return false;
-    throw error;
-  }
+  // No local fallback once a backend exists: server-only records (guardian contacts, consent
+  // proof, mail, quarantine) are unreachable from the client, so deleting the sign-in locally
+  // would leave data behind with no way to resume. Errors surface so the user can retry.
+  await callable({});
+  return true;
 }
