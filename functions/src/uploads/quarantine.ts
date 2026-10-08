@@ -8,6 +8,7 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { startMatchPipeline } from '../analysis/pipeline';
+import { parseIntent, selectAnalysisMode } from '../analysis/mode';
 import { planFor, releaseQuota } from '../entitlements/quotaService';
 import { readableSourceFor, type MediaSource } from './mediaSource';
 import { getMediaScanner } from './mediaScanner';
@@ -75,7 +76,7 @@ async function reject(db: Firestore, uploadId: string, data: UploadDoc, reason: 
   return 'rejected';
 }
 
-/** Validated footage becomes a private library item so highlights and reels can reference it. */
+/** Kept footage becomes a private library item so highlights and reels can reference it. */
 async function fileFootageInLibrary(
   db: Firestore,
   data: UploadDoc,
@@ -122,12 +123,14 @@ async function promote(db: Firestore, uploadId: string, data: UploadDoc, summary
   await bucket.file(data.storagePath).delete({ ignoreNotFound: true });
 
   const now = new Date().toISOString();
+  const measuredMode = selectAnalysisMode(summary.durationSec, parseIntent(job.get('analysisIntent')));
   await jobRef.update({
     videoStoragePath: destination,
     videoUploadId: uploadId,
     videoProbe: summary,
     fileSizeBytes: summary.sizeBytes,
     measuredDurationSec: summary.durationSec,
+    ...(measuredMode ? { analysisMode: measuredMode } : {}),
     videoValidatedAt: now,
     updatedAt: now,
     ...(job.get('cancelRequested') === true ? {} : { pipelineState: 'validating' }),
@@ -138,7 +141,9 @@ async function promote(db: Firestore, uploadId: string, data: UploadDoc, summary
     readyAt: now,
     updatedAt: now,
   });
-  await fileFootageInLibrary(db, data, destination, summary.durationSec, now);
+  // Footage only becomes a library item when the player chose "Keep match video"; otherwise
+  // the source is temporary and the media lifecycle deletes it after analysis.
+  if (job.get('retainSource') === true) await fileFootageInLibrary(db, data, destination, summary.durationSec, now);
   await startMatchPipeline(db, data.jobId);
   return 'ready';
 }

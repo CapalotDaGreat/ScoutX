@@ -196,14 +196,14 @@ async function settleSegment(db, task, outcome) {
     return db.runTransaction(async (tx) => {
         const snap = await tx.get(jobRef);
         if (!snap.exists)
-            return false;
+            return { kind: 'none' };
         const job = snap.data();
         if (job.pipelineGeneration !== task.generation || (0, frameAnalysis_1.pipelineStateOf)(job) !== 'extracting')
-            return false;
+            return { kind: 'none' };
         const segments = [...(job.extractionSegments ?? [])];
         const segment = segments[task.segmentIndex];
         if (!segment)
-            return false;
+            return { kind: 'none' };
         const now = new Date().toISOString();
         let frames = Array.isArray(job.frames) ? job.frames : [];
         if (outcome.state === 'complete') {
@@ -216,13 +216,20 @@ async function settleSegment(db, task, outcome) {
             segments[task.segmentIndex] = { ...segment, state: outcome.state, error: outcome.error };
         }
         const update = { extractionSegments: segments, frames, updatedAt: now };
-        let queueAnalysis = false;
+        let next = { kind: 'none' };
         if ((0, segments_1.segmentsSettled)(segments)) {
             const stages = (0, stages_1.parseStages)(job.pipelineStages);
             if (frames.length >= frameAnalysis_1.MIN_ANALYSIS_FRAMES) {
                 update.pipelineState = 'analyzing';
                 update.pipelineStages = (0, stages_1.updateStage)(stages, 'frame-extraction', 'complete', now);
-                queueAnalysis = true;
+                const withFrames = segments.filter((item) => item.state === 'complete' && item.frameCount > 0).map((item) => item.index);
+                if (withFrames.length >= 2) {
+                    update.segmentReview = { total: withFrames.length, reviewed: [], failed: [] };
+                    next = { kind: 'review', segmentIndexes: withFrames };
+                }
+                else {
+                    next = { kind: 'analyze' };
+                }
             }
             else {
                 update.status = 'failed';
@@ -233,8 +240,27 @@ async function settleSegment(db, task, outcome) {
             }
         }
         tx.update(jobRef, update);
-        return queueAnalysis;
+        return next;
     });
+}
+async function enqueueNext(dispatcher, task, next) {
+    if (next.kind === 'analyze') {
+        await dispatcher.enqueue({ kind: 'analyze_frames', jobId: task.jobId, generation: task.generation });
+    }
+    else if (next.kind === 'review') {
+        for (const segmentIndex of next.segmentIndexes) {
+            await dispatcher.enqueue({ kind: 'review_segment', jobId: task.jobId, generation: task.generation, segmentIndex });
+        }
+    }
+}
+/** Frames extracted while the job was cancelled or already cleaned up must not linger. */
+async function discardIfAbandoned(db, jobId, frames) {
+    const snap = await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get();
+    const abandoned = !snap.exists || snap.get('cancelRequested') === true || snap.get('mediaCleanupState') === 'done';
+    if (!abandoned)
+        return;
+    const bucket = (0, storage_1.getStorage)().bucket();
+    await Promise.all(frames.map((frame) => bucket.file(frame.storagePath).delete({ ignoreNotFound: true })));
 }
 async function processExtractTask(db, task, options) {
     const dispatcher = options.dispatcher ?? (0, taskDispatcher_1.getTaskDispatcher)();
@@ -245,7 +271,7 @@ async function processExtractTask(db, task, options) {
         await dispatcher.enqueue(task, { delaySeconds: exports.CONCURRENCY_RETRY_DELAY_SEC });
         return 'deferred';
     }
-    let queueAnalysis;
+    let next;
     try {
         const frames = await (options.extractor ?? activeExtractor).extract({
             uid: claim.job.playerId,
@@ -253,7 +279,8 @@ async function processExtractTask(db, task, options) {
             videoPath: claim.job.videoStoragePath ?? '',
             segment: claim.segment,
         });
-        queueAnalysis = await settleSegment(db, task, { state: 'complete', frames });
+        next = await settleSegment(db, task, { state: 'complete', frames });
+        await discardIfAbandoned(db, task.jobId, frames);
     }
     catch (error) {
         const message = error instanceof Error ? error.message : 'unknown';
@@ -263,11 +290,9 @@ async function processExtractTask(db, task, options) {
             throw error;
         }
         // Dead letter: the segment is marked failed and the job continues with the frames it has.
-        queueAnalysis = await settleSegment(db, task, { state: 'failed', error: 'extraction_failed' });
+        next = await settleSegment(db, task, { state: 'failed', error: 'extraction_failed' });
     }
-    if (queueAnalysis) {
-        await dispatcher.enqueue({ kind: 'analyze_frames', jobId: task.jobId, generation: task.generation });
-    }
+    await enqueueNext(dispatcher, task, next);
     return 'done';
 }
 async function processAnalyzeTask(db, task, options) {

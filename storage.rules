@@ -36,6 +36,13 @@ service firebase.storage {
       allow delete: if isOwner(userId);
     }
 
+    // Optional short evidence clips, cut by the server only when the player asked for them.
+    match /profiles/{userId}/matchFootage/{jobId}/clips/{fileName} {
+      allow read: if isOwner(userId);
+      allow create, update: if false;
+      allow delete: if isOwner(userId);
+    }
+
     // Rendered reels are written by the render function only.
     match /profiles/{userId}/reelExports/{exportId}/{fileName} {
       allow read: if isOwner(userId);

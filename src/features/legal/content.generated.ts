@@ -660,7 +660,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "video-recording-policy",
     "title": "Video and Recording Policy",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -709,7 +709,35 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "If you request AI analysis, frames are extracted from your video on our servers and sent to an AI provider under the conditions in the AI Use Policy. Computer-vision tracking of individual players is not available at this time and is marked as such in your report."
+            "text": "Before any analysis, PitchProof asks for your consent for that video and records it with the policy version. You can withdraw it while the analysis runs; processing then stops and temporary files are deleted."
+          },
+          {
+            "type": "list",
+            "ordered": false,
+            "items": [
+              "Short clips (up to 60 seconds): still frames are taken on your phone and only those frames are uploaded. The video itself stays on your phone.",
+              "Longer videos: the video is uploaded, still frames are extracted on our servers and reviewed part by part."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "Frames are sent to an AI provider under the conditions in the AI Use Policy. PitchProof does not use facial recognition. You confirm which frames show you; coaching about \"you\" is only shown after you confirm. Computer-vision tracking of individual players is not available at this time and is marked as such in your report."
+          }
+        ]
+      },
+      {
+        "heading": "What is kept after an analysis",
+        "blocks": [
+          {
+            "type": "list",
+            "ordered": false,
+            "items": [
+              "The original video is deleted after the analysis unless you choose \"Keep match video\". If you keep it, it is filed privately in your media library.",
+              "Frames and other intermediate files that the report does not cite are deleted.",
+              "Only the frames the report cites as evidence are kept, privately, until you delete the analysis or your account.",
+              "Short evidence clips (up to 6 silent clips of about 8 seconds around cited moments) are made only if you ask for them.",
+              "If an analysis fails, the video is kept for 24 hours so you can retry, or for 7 days if you chose that option, and then deleted."
+            ]
           }
         ]
       },
@@ -736,7 +764,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "ai-use-policy",
     "title": "AI Use Policy",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -785,6 +813,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "Analysis is based on sampled frames, not on tracking every moment of a match.",
               "Computer-vision tracking of players, automatic event detection and pitch maps are not available yet and are shown as \"Not available yet\".",
+              "Actions suggested from still frames are labelled \"Needs review\" and are never counted as statistics.",
+              "Coaching about you is only shown after you confirm which frames show you. PitchProof does not use facial recognition.",
               "PitchProof does not give player ratings or predict careers.",
               "Each result shows what it was based on and how much of the match it covered."
             ]
@@ -1035,7 +1065,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "data-retention-policy",
     "title": "Data Retention Policy",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -1065,7 +1095,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "Uploads that are abandoned or fail validation: deleted within 7 days.",
               "Data export archives: download link valid for 7 days, then the archive is deleted.",
-              "Frames extracted for analysis: deleted after the analysis completes or fails, within the period set in our retention configuration.",
+              "Match videos uploaded for analysis: deleted when the analysis completes or is cancelled, unless you chose \"Keep match video\". After a failed analysis: deleted after 24 hours, or after 7 days if you chose to keep it for a retry.",
+              "Frames extracted for analysis: frames the report does not cite are deleted when the analysis ends. Cited evidence frames stay with the analysis until you delete it.",
+              "Optional evidence clips: only made when you ask for them, and kept with the analysis until you delete it.",
+              "Analysis uploads that never finish: marked expired after 7 days and their files deleted.",
               "Guardian approval and confirmation links: expire after 7 days. Withdrawal links stay valid for about 13 months.",
               "Cancelled or expired analysis jobs: cleaned up automatically."
             ]

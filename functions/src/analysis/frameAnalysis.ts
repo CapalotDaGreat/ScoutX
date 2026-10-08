@@ -8,6 +8,19 @@ import { buildPrompt } from '../ai/promptBuilder';
 import { isFootageProcessingApproved, resolveModel } from '../ai/providerConfig';
 import { cleanModelText, cleanTextList, extractJsonObject } from '../ai/outputValidator';
 import { computeCoverage } from './coverage';
+import { buildClipPrompt, normalizeClipReport } from './clipAnalysis';
+import {
+  MODE_LIMITS,
+  SHORT_CLIP_SAMPLING,
+  isAnalysisMode,
+  isClipContext,
+  parseIntent,
+  processingModeFor,
+  selectAnalysisMode,
+  type AnalysisMode,
+} from './mode';
+import { buildSections, buildVersions } from './reportSections';
+import { assertVideoConsent } from './videoConsent';
 import { pickFramesForModel, type SegmentRecord } from './segments';
 import { parseStages, updateStage, type StageRecord } from './stages';
 import { canAcquireLease, canTransitionJob, parsePipelineState, type JobStatus } from './stateMachine';
@@ -50,8 +63,15 @@ export type MatchJobDoc = {
     kitPrimaryColor: string;
     kitSecondaryColor: string;
     teamSide?: string;
+    teamName?: string;
+    position?: string;
     notes?: string;
   };
+  analysisMode?: string;
+  analysisIntent?: string;
+  processingMode?: string;
+  clipContext?: string;
+  report?: Record<string, unknown> | null;
   match: { opponent: string; competition: string; date: string; result?: string };
   durationSec: number;
   measuredDurationSec?: number;
@@ -76,7 +96,8 @@ export type AnalysisErrorCode =
   | 'extraction_failed'
   | 'queue_unavailable'
   | 'video_rejected'
-  | 'ai_privacy_configuration_required';
+  | 'ai_privacy_configuration_required'
+  | 'video_consent_required';
 
 const ERROR_TEXT: Record<AnalysisErrorCode, string> = {
   frames_insufficient: 'Not enough readable frames to analyze.',
@@ -87,6 +108,7 @@ const ERROR_TEXT: Record<AnalysisErrorCode, string> = {
   queue_unavailable: 'Analysis could not be queued. Try again later.',
   video_rejected: 'The video did not pass validation.',
   ai_privacy_configuration_required: 'Video analysis is not available yet.',
+  video_consent_required: 'Confirm how your video is processed before analysis starts.',
 };
 
 export async function failJob(
@@ -111,7 +133,7 @@ export async function failJob(
   );
 }
 
-function emptyStats(): Record<string, number | boolean | null> {
+export function emptyStats(): Record<string, number | boolean | null> {
   return {
     minutesPlayed: null,
     goals: null,
@@ -222,7 +244,7 @@ export function normalizeReport(params: {
   };
 }
 
-async function readOwnedFrameAsDataUrl(uid: string, jobId: string, storagePath: unknown): Promise<string | null> {
+export async function readOwnedFrameAsDataUrl(uid: string, jobId: string, storagePath: unknown): Promise<string | null> {
   const prefix = `profiles/${uid}/matchFootage/${jobId}/frames/`;
   if (typeof storagePath !== 'string' || !storagePath.startsWith(prefix) || storagePath.includes('..')) {
     return null;
@@ -242,7 +264,7 @@ async function readOwnedFrameAsDataUrl(uid: string, jobId: string, storagePath: 
   }
 }
 
-async function acquireJobLease(
+export async function acquireJobLease(
   db: Firestore,
   uid: string,
   jobId: string,
@@ -267,7 +289,9 @@ async function acquireJobLease(
     }
 
     const status = (job.status as JobStatus) || 'queued';
-    if (!canTransitionJob(status, 'processing') && status !== 'processing') {
+    // Consented device-frame clips never upload a video, so they go straight from uploading.
+    const deviceClip = status === 'uploading' && job.processingMode === 'device_frames';
+    if (!deviceClip && !canTransitionJob(status, 'processing') && status !== 'processing') {
       throw new HttpsError('failed-precondition', `Job cannot move from ${status} to processing.`);
     }
     if (!canAcquireLease(job.lease ?? undefined, requestId, nowMs)) {
@@ -305,6 +329,81 @@ async function acquireJobLease(
   });
 }
 
+export const TARGET_POSITIONS = ['goalkeeper', 'defender', 'midfielder', 'forward', 'unknown'] as const;
+
+/** The target specification exactly as the player typed it; it reaches the model only as data. */
+export function targetingMetadata(job: Pick<MatchJobDoc, 'targeting'>): Record<string, unknown> {
+  const targeting = job.targeting ?? ({} as MatchJobDoc['targeting']);
+  return {
+    jerseyNumber: targeting.jerseyNumber ?? '',
+    kitPrimaryColor: targeting.kitPrimaryColor ?? '',
+    kitSecondaryColor: targeting.kitSecondaryColor ?? '',
+    teamSide: targeting.teamSide ?? 'unknown',
+    teamName: targeting.teamName ?? '',
+    position: (TARGET_POSITIONS as readonly string[]).includes(String(targeting.position)) ? targeting.position : 'unknown',
+    notes: targeting.notes ?? '',
+  };
+}
+
+export function isGoalkeeperJob(job: Pick<MatchJobDoc, 'targeting'>): boolean {
+  return job.targeting?.position === 'goalkeeper';
+}
+
+/**
+ * Coaching the model wrote about "the nominated player" before the player confirmed which
+ * person they are. It is stored apart from the report and only released by
+ * confirmAnalysisIdentity; a rejection discards it.
+ */
+export type PendingCoaching = {
+  strengths: string[];
+  improvements: string[];
+  coachingNotes: string;
+  techniqueAssessment: Record<string, unknown> | null;
+  opportunities: unknown[];
+  decisionMoments: unknown[];
+  clipCoaching: Record<string, unknown> | null;
+};
+
+/** Writes the finished report unless the job was cancelled meanwhile. */
+export async function finishJob(
+  db: Firestore,
+  jobId: string,
+  params: { report: Record<string, unknown>; stages: StageRecord[]; pendingCoaching: PendingCoaching | null; now: string },
+): Promise<void> {
+  const jobRef = db.collection(MATCH_COLLECTION).doc(jobId);
+  const cancelled = await db.runTransaction(async (tx) => {
+    const latest = await tx.get(jobRef);
+    if (latest.get('cancelRequested') === true) {
+      tx.set(jobRef, { lease: null, updatedAt: params.now }, { merge: true });
+      return true;
+    }
+    const previous = latest.get('report') as Record<string, unknown> | undefined;
+    const previousVersion = (previous?.versions as { analysisVersion?: unknown } | undefined)?.analysisVersion;
+    if (previous && typeof previousVersion === 'number') {
+      tx.set(jobRef.collection('reports').doc(String(previousVersion)), { report: previous, archivedAt: params.now });
+    }
+    tx.set(
+      jobRef,
+      {
+        status: 'complete',
+        pipelineState: 'completed',
+        report: params.report,
+        pendingCoaching: params.pendingCoaching,
+        events: [],
+        completedAt: params.report.generatedAt,
+        updatedAt: params.now,
+        error: null,
+        errorCode: null,
+        lease: null,
+        pipelineStages: params.stages,
+      },
+      { merge: true },
+    );
+    return false;
+  });
+  if (cancelled) throw new HttpsError('aborted', 'Analysis was cancelled.');
+}
+
 const SYSTEM_RULES = [
   'You are PitchProof Match Analyst.',
   'You ONLY describe what is visible in the provided still frames.',
@@ -335,13 +434,7 @@ export function buildFramePrompt(params: {
         : 'The strong foot is unknown; only rate weakFoot if the frames show both feet being used.',
     ],
     userMetadata: {
-      targeting: {
-        jerseyNumber: job.targeting.jerseyNumber,
-        kitPrimaryColor: job.targeting.kitPrimaryColor,
-        kitSecondaryColor: job.targeting.kitSecondaryColor,
-        teamSide: job.targeting.teamSide ?? 'unknown',
-        notes: job.targeting.notes ?? '',
-      },
+      targeting: targetingMetadata(job),
       match: { opponent: job.match.opponent, competition: job.match.competition, date: job.match.date },
     },
     output: [
@@ -403,17 +496,29 @@ export async function runFrameAnalysis(params: {
     await failJob(db, jobId, 'ai_consent_required');
     throw error;
   }
+  try {
+    await assertVideoConsent(db, uid, jobId);
+  } catch (error) {
+    await failJob(db, jobId, 'video_consent_required');
+    throw error;
+  }
 
   const job = await acquireJobLease(db, uid, jobId, requestId, params.idempotencyKey);
   const stages = parseStages(job.pipelineStages);
   const durationSec = job.measuredDurationSec ?? job.durationSec ?? 0;
+  // Jobs created before modes existed have no server-set mode; they keep the frame review.
+  const explicitMode = isAnalysisMode(job.analysisMode) ? job.analysisMode : null;
+  const mode: AnalysisMode = explicitMode
+    ?? (selectAnalysisMode(Math.max(durationSec, MODE_LIMITS.shortClipMaxSec + 1), parseIntent(job.analysisIntent)) ?? 'MATCH_CLIP');
+  const clipMode = explicitMode !== null && processingModeFor(explicitMode, durationSec) === 'device_frames';
 
   const validFrames = (Array.isArray(job.frames) ? job.frames : []).filter(
     (frame) => typeof frame?.timestampSec === 'number' && Number.isFinite(frame.timestampSec),
   );
   const imageContents: Array<{ type: 'image_url'; image_url: { url: string } }> = [];
   const frameSamples: Array<{ id: string; timestampSec: number }> = [];
-  for (const frame of pickFramesForModel(validFrames)) {
+  const picked = pickFramesForModel(validFrames, clipMode ? SHORT_CLIP_SAMPLING.maxFrames : undefined);
+  for (const frame of picked) {
     const dataUrl = await readOwnedFrameAsDataUrl(uid, jobId, frame.storagePath);
     if (dataUrl) {
       imageContents.push({ type: 'image_url', image_url: { url: dataUrl } });
@@ -439,11 +544,18 @@ export async function runFrameAnalysis(params: {
   }
 
   const model = resolveModel('vision');
-  const prompt = buildFramePrompt({ job, frames: frameSamples, identityConfirmed, selfReported });
+  const prompt = clipMode
+    ? buildClipPrompt({
+      frames: frameSamples,
+      targeting: targetingMetadata(job),
+      clipContext: isClipContext(job.clipContext) ? job.clipContext : 'auto',
+      identityConfirmed,
+    })
+    : buildFramePrompt({ job, frames: frameSamples, identityConfirmed, selfReported });
   const result = await callChat({
     apiKey: params.apiKey,
     model,
-    title: 'PitchProof Match Analysis',
+    title: clipMode ? 'PitchProof Clip Analysis' : 'PitchProof Match Analysis',
     messages: [
       { role: 'system', content: prompt.system },
       { role: 'user', content: [{ type: 'text', text: prompt.user }, ...imageContents] },
@@ -469,6 +581,24 @@ export async function runFrameAnalysis(params: {
   for (const id of ['coaching-synthesis', 'validation', 'final-report']) {
     finalStages = updateStage(finalStages, id, 'complete', now);
   }
+  const versions = buildVersions({ previous: job.report, mode, visionModel: model });
+
+  if (clipMode) {
+    const built = buildClipJobReport({
+      raw,
+      frames: frameSamples,
+      job,
+      mode,
+      durationSec,
+      identityConfirmed,
+      stages: finalStages,
+      modelId: model,
+      versions,
+    });
+    await finishJob(db, jobId, { report: built.report, stages: finalStages, pendingCoaching: built.pendingCoaching, now });
+    return { jobId, status: 'complete' };
+  }
+
   const report = normalizeReport({
     raw,
     modelId: model,
@@ -480,32 +610,155 @@ export async function runFrameAnalysis(params: {
     probe: job.videoProbe ?? null,
     stages: finalStages,
   });
-  const cancelled = await db.runTransaction(async (tx) => {
-    const latest = await tx.get(jobRef);
-    if (latest.get('cancelRequested') === true) {
-      tx.set(jobRef, { lease: null, updatedAt: now }, { merge: true });
-      return true;
-    }
-    tx.set(
-      jobRef,
-      {
-        status: 'complete',
-        pipelineState: 'completed',
-        report,
-        events: [],
-        completedAt: report.generatedAt,
-        updatedAt: now,
-        error: null,
-        errorCode: null,
-        lease: null,
-        pipelineStages: finalStages,
-      },
-      { merge: true },
-    );
-    return false;
+  const technique = report.techniqueAssessment as { ratedCount?: number } | undefined;
+  const evidence = report.evidence as Array<{ kind: string }>;
+  report.analysisMode = mode;
+  report.versions = versions;
+  report.sections = buildSections({
+    identityConfirmed,
+    targetSeenFrames: evidence.filter((item) => item.kind === 'observation').length,
+    ratedTechniqueCount: technique?.ratedCount ?? 0,
+    decisionMoments: 0,
+    isGoalkeeper: isGoalkeeperJob(job),
+    goalkeeperNotes: 0,
+    validatedEventCount: 0,
   });
-  if (cancelled) throw new HttpsError('aborted', 'Analysis was cancelled.');
+  const pendingCoaching = identityConfirmed
+    ? null
+    : pendingFrameCoaching(raw, new Set(frameSamples.map((frame) => frame.id)), selfReported, evidence.length > 0);
+  await finishJob(db, jobId, { report, stages: finalStages, pendingCoaching, now });
   return { jobId, status: 'complete' };
+}
+
+function pendingFrameCoaching(
+  raw: Record<string, unknown>,
+  knownFrameIds: Set<string>,
+  selfReported: SelfReportedStars,
+  hasEvidence: boolean,
+): PendingCoaching | null {
+  if (!hasEvidence) return null;
+  const pending: PendingCoaching = {
+    strengths: cleanTextList(raw.strengths),
+    improvements: cleanTextList(raw.improvements),
+    coachingNotes: cleanModelText(raw.coachingNotes, 1200),
+    techniqueAssessment: normalizeTechniqueAssessment(raw.techniqueAssessment, knownFrameIds, true, selfReported) as unknown as Record<string, unknown>,
+    opportunities: [],
+    decisionMoments: [],
+    clipCoaching: null,
+  };
+  return pending;
+}
+
+/** Short-clip report: the clip section plus the shared evidence, coverage and section fields. */
+export function buildClipJobReport(params: {
+  raw: Record<string, unknown>;
+  frames: Array<{ id: string; timestampSec: number }>;
+  job: MatchJobDoc;
+  mode: AnalysisMode;
+  durationSec: number;
+  identityConfirmed: boolean;
+  stages: StageRecord[];
+  modelId: string;
+  versions: ReturnType<typeof buildVersions>;
+}): { report: Record<string, unknown>; pendingCoaching: PendingCoaching | null } {
+  const isGoalkeeper = isGoalkeeperJob(params.job) || params.job.clipContext === 'save';
+  const clip = normalizeClipReport({ raw: params.raw, frames: params.frames, identityConfirmed: true, isGoalkeeper });
+  const coaching = {
+    decision: clip.decision,
+    whatWorked: clip.whatWorked,
+    improve: clip.improve,
+    drill: clip.drill,
+    goalkeeper: clip.goalkeeper,
+  };
+  const hasCoaching = Boolean(clip.decision || clip.drill || clip.goalkeeper || clip.whatWorked.length || clip.improve.length);
+  const visibleClip = params.identityConfirmed
+    ? { ...clip, identityBasis: 'confirmed' as const }
+    : { ...clip, identityBasis: 'nominated_description' as const, decision: null, whatWorked: [], improve: [], drill: null, goalkeeper: null };
+
+  const evidence = [
+    ...clip.observable.map((item, index) => ({
+      id: `obs_${index + 1}`,
+      kind: 'observation',
+      label: 'Observed',
+      detail: item.text,
+      confidence: clip.confidence === 'medium' ? 0.5 : 0.3,
+      timestampSec: item.timestampSec,
+      source: 'device-frame-sequence',
+      frameIds: item.frameIds,
+    })),
+    ...clip.technicalExecution.map((item, index) => ({
+      id: `tech_${index + 1}`,
+      kind: 'observation',
+      label: item.aspect,
+      detail: item.text,
+      confidence: item.confidence === 'medium' ? 0.5 : 0.3,
+      timestampSec: item.timestampSec,
+      source: 'device-frame-sequence',
+      frameIds: item.frameIds,
+    })),
+  ];
+  const cited = evidence.flatMap((item) => item.frameIds);
+  const coverage = computeCoverage({
+    durationSec: params.durationSec,
+    segments: [],
+    sampledFrames: params.frames,
+    citedFrameIds: cited,
+    identityConfirmed: params.identityConfirmed,
+    probe: params.job.videoProbe ?? null,
+  });
+  const report: Record<string, unknown> = {
+    headline: clip.whatHappened?.text.slice(0, 140) || 'Not enough evidence in this clip',
+    strengths: params.identityConfirmed ? clip.whatWorked.map((item) => item.text) : [],
+    improvements: params.identityConfirmed ? clip.improve.map((item) => item.text) : [],
+    coachingNotes: '',
+    estimatedStats: emptyStats(),
+    coverage: {
+      visiblePct: 0,
+      likelyOffCameraPct: 0,
+      unknownPct: 100,
+      confidenceLabel: coverage.sampledCoverage.confidenceLabel,
+      note: 'Coverage is based only on the frames sampled from this clip.',
+    },
+    sampledCoverage: coverage.sampledCoverage,
+    evidence,
+    events: [],
+    coachingMoments: [],
+    moments: evidence.slice(0, 8).map((item) => ({ timestampSec: item.timestampSec, label: item.label, detail: item.detail })),
+    pipelineStages: params.stages,
+    segments: [],
+    availability: coverage.availability,
+    confidenceDimensions: coverage.confidenceDimensions,
+    clip: visibleClip,
+    analysisMode: params.mode,
+    versions: params.versions,
+    sections: buildSections({
+      identityConfirmed: params.identityConfirmed,
+      targetSeenFrames: clip.targetVisible === 'yes' ? cited.length : 0,
+      ratedTechniqueCount: 0,
+      decisionMoments: params.identityConfirmed && clip.decision ? 1 : 0,
+      isGoalkeeper,
+      goalkeeperNotes: params.identityConfirmed && clip.goalkeeper ? 1 : 0,
+      validatedEventCount: 0,
+    }),
+    confidence: null,
+    methodology: params.job.processingMode === 'device_frames'
+      ? 'Frames were sampled from your clip on your phone; the video itself was not uploaded. A vision model described only what those frames show, and every point cites them.'
+      : 'Key frames were extracted from your uploaded clip. A vision model described only what those frames show, and every point cites them.',
+    modelId: params.modelId,
+    generatedAt: new Date().toISOString(),
+  };
+  const pendingCoaching: PendingCoaching | null = !params.identityConfirmed && hasCoaching
+    ? {
+      strengths: clip.whatWorked.map((item) => item.text),
+      improvements: clip.improve.map((item) => item.text),
+      coachingNotes: '',
+      techniqueAssessment: null,
+      opportunities: [],
+      decisionMoments: [],
+      clipCoaching: coaching,
+    }
+    : null;
+  return { report, pendingCoaching };
 }
 
 export function pipelineStateOf(job: Pick<MatchJobDoc, 'pipelineState' | 'status'>) {

@@ -31,7 +31,8 @@ import { TechniqueAssessmentCard } from '@/features/match-analysis/components/Te
 import { parseTechniqueAssessment } from '@/features/match-analysis/services/techniqueAssessment';
 import { getMatchAnalysisJob, updateMatchAnalysisJob } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
 import { useJobFrames } from '@/features/match-analysis/hooks/useJobFrames';
-import { confirmIdentity, rejectIdentity } from '@/features/match-analysis/services/identityConfirmation';
+import { requestConfirmAnalysisIdentity } from '@/features/match-analysis/services/matchAnalysisCallable';
+import { VideoIntelligenceSections } from '@/features/match-analysis/components/VideoIntelligenceSections';
 import { hasApplyableEstimatedStats, type MatchAnalysisJob, type MatchEstimatedStats } from '@/features/match-analysis/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
@@ -191,9 +192,9 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
     }
     setIdentityBusy(true);
     try {
-      const identityConfirmation = confirmIdentity(selectedFrameIds, new Date().toISOString());
-      await updateMatchAnalysisJob(job.id, { identityConfirmation });
-      setJob({ ...job, identityConfirmation });
+      // The server releases coaching that was held back until identity was confirmed.
+      await requestConfirmAnalysisIdentity({ jobId: job.id, decision: 'confirmed', frameIds: selectedFrameIds.slice(0, 6) });
+      setJob((await getMatchAnalysisJob(job.id)) ?? job);
     } finally {
       setIdentityBusy(false);
     }
@@ -203,10 +204,14 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
     if (!job) {
       return;
     }
-    const identityConfirmation = rejectIdentity();
-    await updateMatchAnalysisJob(job.id, { identityConfirmation });
-    setJob({ ...job, identityConfirmation });
-    setSelectedFrameIds([]);
+    setIdentityBusy(true);
+    try {
+      await requestConfirmAnalysisIdentity({ jobId: job.id, decision: 'rejected', frameIds: [] });
+      setJob((await getMatchAnalysisJob(job.id)) ?? job);
+      setSelectedFrameIds([]);
+    } finally {
+      setIdentityBusy(false);
+    }
   };
 
   const { candidates, frameUrls } = useJobFrames(job);
@@ -247,6 +252,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
                 </Text>
                 <Text variant="body-sm" color="secondary">{report.methodology}</Text>
               </Card>
+              <VideoIntelligenceSections job={job} />
               {quality ? <QualityReportCard quality={quality} /> : null}
               {onOpenReel && ((report.moments?.length ?? 0) > 0 || (report.evidence?.length ?? 0) > 0) ? (
                 <Card padding="lg" className="gap-2">

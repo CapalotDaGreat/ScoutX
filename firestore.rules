@@ -653,11 +653,14 @@ service cloud.firestore {
         && request.resource.data.keys().hasOnly([
           'id', 'playerId', 'status', 'targeting', 'match', 'durationSec', 'fileSizeBytes',
           'frames', 'identityConfirmation', 'identityCandidates', 'idempotencyKey',
-          'createdAt', 'updatedAt',
+          'analysisIntent', 'clipContext', 'createdAt', 'updatedAt',
         ])
         && request.resource.data.status == 'uploading'
+        && request.resource.data.get('analysisIntent', 'match') in ['match', 'training']
+        && request.resource.data.get('clipContext', 'auto') in ['auto', 'shot', 'save', 'pass', 'dribble', 'tackle', 'defensive', 'other']
         && request.resource.data.get('frames', []).size() == 0;
-      // Device frames are only accepted for the short-clip fallback after server extraction failed.
+      // Device frames are accepted for consented short clips (the video stays on the phone) and
+      // for the fallback after server extraction failed. Mode and consent are server-set.
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.playerId
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
@@ -668,9 +671,27 @@ service cloud.firestore {
           || (resource.data.get('errorCode', null) == 'extraction_failed'
             && resource.data.status == 'failed'
             && request.resource.data.frames.size() <= 24)
+          || (resource.data.get('processingMode', null) == 'device_frames'
+            && resource.data.get('consentVersion', null) is string
+            && resource.data.status == 'uploading'
+            && request.resource.data.frames.size() <= 32)
         );
       allow delete: if isSignedIn()
         && request.auth.uid == resource.data.playerId;
+
+      // Segment reviews, tracker results and archived report versions are server-written.
+      match /{sub}/{docId} {
+        allow read: if isSignedIn()
+          && sub in ['segmentReviews', 'cvSegments', 'reports']
+          && get(/databases/$(database)/documents/matchAnalysisJobs/$(jobId)).data.playerId == request.auth.uid;
+        allow write: if false;
+      }
+    }
+
+    // Per-job video processing consent: written only by recordVideoProcessingConsent.
+    match /videoProcessingConsents/{jobId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.uid;
+      allow write: if false;
     }
 
     match /verificationRequests/{requestId} {

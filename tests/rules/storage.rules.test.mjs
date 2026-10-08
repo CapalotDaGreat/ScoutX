@@ -72,6 +72,14 @@ describe('match footage', () => {
     await denied(deleteObject(OTHER, `${base}/video.mp4`), 'other delete');
     await allowed(deleteObject(OWNER, `${base}/video.mp4`), 'owner delete');
   });
+
+  test('evidence clips are cut by the server only and readable by their owner only', async () => {
+    await denied(uploadObject(OWNER, `${base}/clips/clip_0.mp4`, 'video/mp4'), 'owner forges clip');
+    await allowed(adminUploadObject(`${base}/clips/clip_0.mp4`, 'video/mp4'), 'server cuts clip');
+    await allowed(downloadObject(OWNER, `${base}/clips/clip_0.mp4`), 'owner plays clip');
+    await denied(downloadObject(OTHER, `${base}/clips/clip_0.mp4`), 'other plays clip');
+    await allowed(deleteObject(OWNER, `${base}/clips/clip_0.mp4`), 'owner deletes clip');
+  });
 });
 
 describe('rendered reels', () => {

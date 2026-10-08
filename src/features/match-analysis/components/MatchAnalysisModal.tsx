@@ -32,6 +32,21 @@ import {
 import { markAnalysisReviewed, workflowEvents } from '@/features/today/services/workflowStores';
 import { UploadProgressCard } from '@/features/media-upload';
 import { useJobFrames } from '@/features/match-analysis/hooks/useJobFrames';
+import { ChoiceChip } from '@/components/primitives/ChoiceChip';
+import { FilePickError } from '@/features/match-analysis/services/matchVideoFilePickerService';
+import { VideoConsentSheet } from '@/features/match-analysis/components/VideoConsentSheet';
+import { VideoIntelligenceSections } from '@/features/match-analysis/components/VideoIntelligenceSections';
+import {
+  ANALYSIS_INTENTS,
+  CLIP_CONTEXTS,
+  MODE_LIMITS,
+  processingModeFor,
+  selectAnalysisMode,
+  shortClipSampleTimes,
+  type AnalysisIntent,
+  type ClipContext,
+} from '@/features/match-analysis/services/analysisMode';
+import { TARGET_POSITIONS, type TargetPosition, type VideoConsentChoices } from '@/features/match-analysis/types';
 
 export type MatchAnalysisModalProps = {
   visible: boolean;
@@ -193,6 +208,8 @@ function ReportView({
         </Text>
       </Card>
 
+      <VideoIntelligenceSections job={job} />
+
       <Card variant="default" padding="lg" className="gap-3">
         <Heading level={3}>{t('modalReport.coverageTitle')}</Heading>
         <View className="gap-1">
@@ -321,6 +338,7 @@ export function MatchAnalysisModal({
     error,
     quotaError,
     pickVideo,
+    pickVideoFile,
     startAnalysis,
     retryAnalysis,
     cancelAnalysis,
@@ -328,6 +346,7 @@ export function MatchAnalysisModal({
     canAnalyzeOnDevice,
     isInProgress,
     confirmPlayerIdentity,
+    revokeConsent,
     resetActive,
     setActiveJob,
     upload,
@@ -348,6 +367,12 @@ export function MatchAnalysisModal({
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [result, setResult] = useState('');
   const [notes, setNotes] = useState('');
+  const [teamName, setTeamName] = useState('');
+  const [position, setPosition] = useState<TargetPosition>('unknown');
+  const [intent, setIntent] = useState<AnalysisIntent>('match');
+  const [clipContext, setClipContext] = useState<ClipContext>('auto');
+  const [consentOpen, setConsentOpen] = useState(false);
+  const [preparingFile, setPreparingFile] = useState(false);
   const [applying, setApplying] = useState(false);
   const [isPicking, setIsPicking] = useState(false);
   const uploadAcknowledged = useMediaUploadAcknowledged();
@@ -410,6 +435,11 @@ export function MatchAnalysisModal({
     [picked],
   );
 
+  const analysisMode = picked ? selectAnalysisMode(picked.durationSec, intent) : null;
+  const processingMode = analysisMode && picked ? processingModeFor(analysisMode, picked.durationSec) : null;
+  const deviceFrameCount = picked && processingMode === 'device_frames' ? shortClipSampleTimes(picked.durationSec).length : 0;
+  const segmentReview = activeJob?.segmentReview;
+
   const handlePick = async () => {
     try {
       setIsPicking(true);
@@ -422,6 +452,27 @@ export function MatchAnalysisModal({
     } catch (err) {
       Alert.alert(t('matchAnalysis:modalForm.videoTitle'), toUserMessage(err, t('matchAnalysis:modalForm.pickFailed')));
     } finally {
+      setIsPicking(false);
+    }
+  };
+
+  const handlePickFile = async () => {
+    try {
+      setPreparingFile(true);
+      setIsPicking(true);
+      await waitForModalDismiss();
+      const video = await pickVideoFile();
+      if (video) {
+        setPicked(video);
+        resetActive();
+      }
+    } catch (err) {
+      const message = err instanceof FilePickError
+        ? t(`matchAnalysis:video.files.${err.code}`, { minutes: MODE_LIMITS.maxDurationSec / 60 })
+        : toUserMessage(err, t('matchAnalysis:modalForm.pickFailed'));
+      Alert.alert(t('matchAnalysis:modalForm.videoTitle'), message);
+    } finally {
+      setPreparingFile(false);
       setIsPicking(false);
     }
   };
@@ -443,9 +494,23 @@ export function MatchAnalysisModal({
       Alert.alert(t('matchAnalysis:modalForm.videoTitle'), preview.blockers[0] ?? t('matchAnalysis:modalForm.cannotAnalyze'));
       return;
     }
+    if (!analysisMode) {
+      Alert.alert(t('matchAnalysis:modalForm.videoTitle'), t('matchAnalysis:video.mode.tooLong', { minutes: MODE_LIMITS.maxDurationSec / 60 }));
+      return;
+    }
+    setConsentOpen(true);
+  };
 
+  const handleConsent = async (consent: VideoConsentChoices) => {
+    if (!picked) {
+      return;
+    }
+    setConsentOpen(false);
     try {
       await startAnalysis({
+        analysisIntent: intent,
+        clipContext: processingMode === 'device_frames' ? clipContext : 'auto',
+        consent,
         localVideoUri: picked.uri,
         fileName: picked.fileName,
         durationSec: picked.durationSec,
@@ -454,6 +519,8 @@ export function MatchAnalysisModal({
           jerseyNumber: jerseyNumber.trim(),
           kitPrimaryColor: kitPrimaryColor.trim() || 'unknown',
           kitSecondaryColor: kitSecondaryColor.trim() || 'unknown',
+          teamName: teamName.trim() || undefined,
+          position,
           notes: notes.trim() || undefined,
         },
         match: {
@@ -560,10 +627,23 @@ export function MatchAnalysisModal({
                   {t('matchAnalysis:pipeline.queued')}
                 </Text>
               ) : null}
+              {segmentReview && segmentReview.total > 0 ? (
+                <Text variant="body-sm" weight="semibold">
+                  {t('matchAnalysis:video.segments', {
+                    done: segmentReview.reviewed.length + segmentReview.failed.length,
+                    total: segmentReview.total,
+                  })}
+                </Text>
+              ) : null}
               <PipelineStageList stages={activeJob.pipelineStages ?? []} />
               <Button variant="ghost" onPress={() => void cancelAnalysis(activeJob)}>
                 {t('matchAnalysis:pipeline.cancel')}
               </Button>
+              {activeJob.consentVersion ? (
+                <Button variant="ghost" onPress={() => void revokeConsent(activeJob)}>
+                  {t('matchAnalysis:video.consent.withdraw')}
+                </Button>
+              ) : null}
             </View>
           </Card>
         ) : null}
@@ -581,9 +661,20 @@ export function MatchAnalysisModal({
             {uploadAcknowledged === false ? (
               <UploadAcknowledgementPanel />
             ) : (
-              <Button variant="secondary" onPress={() => void handlePick()} disabled={isBusy || isPicking}>
-                {picked ? t('modal.change') : t('modal.pick')}
-              </Button>
+              <View className="gap-2">
+                <Button variant="secondary" onPress={() => void handlePick()} disabled={isBusy || isPicking || preparingFile}>
+                  {picked ? t('modal.change') : t('modal.pick')}
+                </Button>
+                <Button
+                  variant="secondary"
+                  loading={preparingFile}
+                  onPress={() => void handlePickFile()}
+                  disabled={isBusy || isPicking}
+                  testID="pick-from-files"
+                >
+                  {preparingFile ? t('matchAnalysis:video.files.preparing') : t('matchAnalysis:video.files.pick')}
+                </Button>
+              </View>
             )}
             {preview ? <AnalysisPreviewCard preview={preview} /> : null}
             {durationLabel ? (
@@ -595,6 +686,43 @@ export function MatchAnalysisModal({
               </Text>
             ) : null}
 
+            <View className="gap-2">
+              <Text weight="semibold">{t('matchAnalysis:video.intent.title')}</Text>
+              <View className="flex-row flex-wrap gap-2">
+                {ANALYSIS_INTENTS.map((item) => (
+                  <ChoiceChip key={item} label={t(`matchAnalysis:video.intent.${item}`)} selected={intent === item} onPress={() => setIntent(item)} />
+                ))}
+              </View>
+              {analysisMode ? (
+                <Text variant="caption" color="secondary" testID="analysis-mode">
+                  {t(`matchAnalysis:video.mode.${analysisMode}`)}
+                </Text>
+              ) : null}
+            </View>
+            {processingMode === 'device_frames' ? (
+              <View className="gap-2">
+                <Text weight="semibold">{t('matchAnalysis:video.clipContext.title')}</Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {CLIP_CONTEXTS.map((item) => (
+                    <ChoiceChip key={item} label={t(`matchAnalysis:video.clipContext.${item}`)} selected={clipContext === item} onPress={() => setClipContext(item)} />
+                  ))}
+                </View>
+              </View>
+            ) : null}
+            <View className="gap-2">
+              <Text weight="semibold">{t('matchAnalysis:video.position.title')}</Text>
+              <View className="flex-row flex-wrap gap-2">
+                {TARGET_POSITIONS.map((item) => (
+                  <ChoiceChip key={item} label={t(`matchAnalysis:video.position.${item}`)} selected={position === item} onPress={() => setPosition(item)} />
+                ))}
+              </View>
+            </View>
+            <Input
+              label={t('matchAnalysis:video.teamName')}
+              value={teamName}
+              onChangeText={setTeamName}
+              placeholder={t('matchAnalysis:video.teamNamePlaceholder')}
+            />
             <Input
               label={t('matchAnalysis:modalForm.jersey')}
               value={jerseyNumber}
@@ -641,9 +769,19 @@ export function MatchAnalysisModal({
               placeholder={t('matchAnalysis:modalForm.notesPlaceholder')}
             />
 
-            <Button variant="accent" loading={isBusy} onPress={() => void handleAnalyze()} disabled={Boolean(preview && !preview.canProceed)}>
-              {phaseLabel ?? t('modal.analyze')}
-            </Button>
+            {consentOpen && processingMode ? (
+              <VideoConsentSheet
+                processingMode={processingMode}
+                frameCount={deviceFrameCount}
+                busy={isBusy}
+                onAgree={(consent) => void handleConsent(consent)}
+                onCancel={() => setConsentOpen(false)}
+              />
+            ) : (
+              <Button variant="accent" loading={isBusy} onPress={() => void handleAnalyze()} disabled={Boolean(preview && !preview.canProceed)}>
+                {phaseLabel ?? t('modal.analyze')}
+              </Button>
+            )}
 
           </View>
         )}

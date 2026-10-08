@@ -345,6 +345,20 @@
       ]
     },
     {
+      "collectionGroup": "matchAnalysisJobs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "mediaCleanupState",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "mediaCleanupDueAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "privacyRequests",
       "queryScope": "COLLECTION",
       "fields": [

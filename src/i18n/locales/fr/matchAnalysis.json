@@ -186,7 +186,8 @@
     "foul": "Faute",
     "card": "Carton",
     "save": "Arrêt",
-    "other": "Autre action"
+    "other": "Autre action",
+    "dribble": "Dribble"
   },
   "jobStatus": {
     "ready": "Prêt",
@@ -267,7 +268,8 @@
     "extraction_failed": "Impossible d'extraire des images clés de cette vidéo.",
     "queue_unavailable": "L'analyse n'a pas pu être mise en file d'attente. Réessaie dans quelques minutes.",
     "video_rejected": "Cette vidéo n'a pas passé les contrôles de format et de durée.",
-    "ai_privacy_configuration_required": "L'analyse vidéo n'est pas encore disponible. Tu peux toujours enregistrer tes matchs et suivre ta progression."
+    "ai_privacy_configuration_required": "L'analyse vidéo n'est pas encore disponible. Tu peux toujours enregistrer tes matchs et suivre ta progression.",
+    "video_consent_required": "Le consentement pour cette vidéo manque ou a été retiré. Relance l’analyse pour donner ton consentement."
   },
   "pipeline": {
     "title": "Analyse en cours",
@@ -290,5 +292,140 @@
     "coaching-synthesis": "Création des conseils",
     "validation": "Vérification des preuves",
     "final-report": "Finalisation du rapport"
+  },
+  "video": {
+    "intent": {
+      "title": "Que montre cette vidéo ?",
+      "match": "Match",
+      "training": "Entraînement"
+    },
+    "mode": {
+      "SHORT_CLIP": "Clip court (jusqu’à 60 s). Les images fixes sont extraites sur ce téléphone ; la vidéo elle-même n’est pas envoyée.",
+      "MATCH_CLIP": "Extrait de match (jusqu’à 20 min). La vidéo est envoyée et examinée partie par partie.",
+      "FULL_MATCH": "Match complet. La vidéo est envoyée et examinée partie par partie.",
+      "TRAINING_CLIP": "Clip d’entraînement. Évalué comme entraînement, pas comme performance en match.",
+      "tooLong": "Les vidéos peuvent durer jusqu’à {{minutes}} minutes."
+    },
+    "clipContext": {
+      "title": "Que se passe-t-il dans le clip ? (facultatif)",
+      "auto": "Laisser PitchProof décider",
+      "shot": "Tir",
+      "save": "Arrêt",
+      "pass": "Passe",
+      "dribble": "Dribble",
+      "tackle": "Tacle",
+      "defensive": "Défense",
+      "other": "Autre chose"
+    },
+    "position": {
+      "title": "Ton poste dans cette vidéo",
+      "goalkeeper": "Gardien",
+      "defender": "Défenseur",
+      "midfielder": "Milieu",
+      "forward": "Attaquant",
+      "unknown": "Pas sûr"
+    },
+    "teamName": "Nom de ton équipe (facultatif)",
+    "teamNamePlaceholder": "ex. FC Exemple U15",
+    "consent": {
+      "title": "Avant d’analyser ta vidéo",
+      "deviceSummary": "Seules {{count}} images fixes de ce clip sont envoyées. La vidéo reste sur ton téléphone.",
+      "cloudSummary": "Ta vidéo est envoyée vers le stockage cloud de PitchProof pour en extraire des images fixes.",
+      "ack": {
+        "processing": "Je veux que PitchProof analyse cette vidéo. L’analyse peut se tromper et ne décrit que ce que montrent les images.",
+        "rights": "J’ai le droit d’utiliser ces images. Seul moi suis suivi ; personne n’est identifié par son visage.",
+        "retention": "Sauf choix contraire ci-dessous, la vidéo originale est supprimée après l’analyse. Seules les images citées par le rapport sont conservées, en privé, jusqu’à ce que je supprime l’analyse.",
+        "provider": "Les images fixes sont envoyées à un fournisseur de modèles d’IA configuré sans conservation des données."
+      },
+      "optionsTitle": "Facultatif",
+      "keepVideo": "Garder la vidéo du match",
+      "keepVideoHint": "Enregistre la vidéo originale en privé dans ta médiathèque pour revoir des moments. Désactivé par défaut.",
+      "evidenceClips": "Enregistrer de courts clips de preuve",
+      "evidenceClipsHint": "Coupe jusqu’à 6 courts clips muets (environ 8 s) autour des moments cités. Désactivé par défaut.",
+      "keepForRetry": "Garder la vidéo 7 jours si l’analyse échoue",
+      "keepForRetryHint": "Permet de réessayer sans renvoyer la vidéo. Sinon, la vidéo d’une analyse échouée est supprimée après 24 heures.",
+      "required": "Coche chaque point pour continuer.",
+      "agree": "Accepter et démarrer",
+      "cancel": "Pas maintenant",
+      "withdraw": "Retirer le consentement et arrêter"
+    },
+    "segments": "Parties examinées : {{done}}/{{total}}",
+    "sectionsTitle": "Ce que couvre ce rapport",
+    "availability": {
+      "AVAILABLE": "Disponible",
+      "LIMITED": "Limité",
+      "INSUFFICIENT_EVIDENCE": "Preuves insuffisantes",
+      "NOT_AVAILABLE": "Non disponible"
+    },
+    "section": {
+      "identity": "Identité",
+      "coverage": "Couverture",
+      "technique": "Technique",
+      "decisions": "Décisions",
+      "off_ball": "Jeu sans ballon",
+      "tactical": "Tactique",
+      "events": "Actions",
+      "statistics": "Statistiques",
+      "physical": "Physique",
+      "goalkeeper": "Jeu de gardien"
+    },
+    "reason": {
+      "identity_confirmed": "Tu as confirmé quel joueur tu es.",
+      "identity_unconfirmed": "Confirme quelles images te montrent.",
+      "target_not_seen": "Tu n’étais pas clairement visible sur les images examinées.",
+      "sampled_frames_only": "Basé sur des images fixes, pas sur une vidéo continue.",
+      "not_enough_frames": "Trop peu d’images le montraient.",
+      "needs_tracking": "Nécessite un suivi continu du joueur.",
+      "cv_worker_not_configured": "Nécessite le service de suivi, qui n’est pas activé.",
+      "cv_events_not_validated": "Les actions du suivi ne sont pas encore validées.",
+      "no_validated_events": "Aucune action validée.",
+      "use_gps": "Utilise une session GPS pour la distance et la vitesse.",
+      "not_goalkeeper": "Uniquement pour les gardiens."
+    },
+    "possibleEventsTitle": "Actions possibles",
+    "possibleEventsHint": "Suggérées à partir d’images fixes. Elles ne comptent pas dans les statistiques.",
+    "needsReview": "À vérifier",
+    "validated": "Validée",
+    "opportunitiesTitle": "Priorités de travail",
+    "drill": "Exercice : {{drill}}",
+    "decisionsTitle": "Moments de décision",
+    "decisionChosen": "Ton choix : {{chosen}}",
+    "decisionAlternative": "Alternative : {{alternative}}",
+    "clip": {
+      "title": "Analyse du clip",
+      "confidence": "Confiance : {{level}}",
+      "low": "faible",
+      "medium": "moyenne",
+      "frames_one": "{{count}} image",
+      "frames_other": "{{count}} images",
+      "whatHappened": "Ce qui s’est passé",
+      "observable": "Ce que montrent les images",
+      "notObservable": "Ce que les images ne peuvent pas montrer",
+      "notVisible": "Tu n’étais pas clairement visible dans ce clip, donc aucun conseil n’a été donné.",
+      "technique": "Technique",
+      "decision": "Décision",
+      "worked": "Ce qui a fonctionné",
+      "improve": "À améliorer",
+      "drill": "Exercice",
+      "goalkeeper": "Jeu de gardien"
+    },
+    "lifecycle": {
+      "deleted": "La vidéo originale a été supprimée. {{count}} images citées sont conservées en privé.",
+      "retained": "La vidéo originale est conservée dans ta médiathèque. {{count}} images citées sont conservées en privé.",
+      "absent": "Aucune vidéo n’a été envoyée. {{count}} images citées sont conservées en privé.",
+      "clips_one": "{{count}} clip de preuve enregistré.",
+      "clips_other": "{{count}} clips de preuve enregistrés.",
+      "pending": "Les médias temporaires seront supprimés automatiquement."
+    },
+    "version": "Analyse v{{version}} · pipeline {{pipeline}}",
+    "files": {
+      "pick": "Choisir dans Fichiers / iCloud",
+      "preparing": "Préparation du fichier… (les fichiers iCloud sont d’abord téléchargés)",
+      "unsupported": "Choisis une vidéo MP4 ou MOV.",
+      "too_long": "Les vidéos peuvent durer jusqu’à {{minutes}} minutes.",
+      "too_large": "Ce fichier est trop volumineux. Choisis un export plus court ou de qualité inférieure.",
+      "no_duration": "La vidéo n’a pas pu être lue. Vérifie qu’elle se lit dans l’app Fichiers.",
+      "low_disk": "Ton téléphone est presque plein. Libère de l’espace et réessaie."
+    }
   }
 }

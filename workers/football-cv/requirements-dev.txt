@@ -1,0 +1,6 @@
+# Enough to run the contract, identity, pipeline-with-fakes and evaluation tests without a GPU.
+fastapi>=0.115,<1
+httpx>=0.27,<1
+pydantic>=2.7,<3
+numpy>=1.26,<3
+pytest>=8,<9

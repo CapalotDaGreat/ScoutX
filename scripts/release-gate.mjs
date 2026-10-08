@@ -382,6 +382,67 @@ check('External football sources are link-only', async () => {
     : [FAIL, problems.join('; ')];
 });
 
+check('Video analysis mode shared by app and server', () => {
+  return read('src/features/match-analysis/services/analysisMode.ts') === read('functions/src/analysis/mode.ts')
+    ? [PASS, 'analysisMode.ts and functions/src/analysis/mode.ts are identical']
+    : [FAIL, 'mode rules differ between app and server; copy src/features/match-analysis/services/analysisMode.ts'];
+});
+
+check('Video consent enforced server-side', () => {
+  const problems = [];
+  for (const file of ['functions/src/uploads/sessions.ts', 'functions/src/analysis/frameAnalysis.ts', 'functions/src/analysis/segmentPipeline.ts']) {
+    if (!/assertVideoConsent\(/.test(read(file))) problems.push(`${file} does not check video consent`);
+  }
+  if (!/match \/videoProcessingConsents\/\{jobId\} \{[^}]*allow write: if false;/.test(read('firestore.rules'))) {
+    problems.push('clients can write videoProcessingConsents');
+  }
+  const consent = read('functions/src/analysis/videoConsent.ts');
+  if (!/retainSource: input\.retainSource === true/.test(consent) || !/evidenceClips: input\.evidenceClips === true/.test(consent)) {
+    problems.push('keep-video / evidence-clip options are not opt-in');
+  }
+  return problems.length === 0 ? [PASS, 'upload, analysis and segment review require an unrevoked per-job consent'] : [FAIL, problems.join('; ')];
+});
+
+check('Footage lifecycle: source deleted unless kept, uncited media removed', () => {
+  const problems = [];
+  const index = read('functions/src/index.ts');
+  for (const name of ['onMatchJobMediaLifecycle', 'onMatchJobDeleted', 'mediaLifecycleSweep']) {
+    if (!new RegExp(`\\b${name}\\b`).test(index)) problems.push(`${name} not exported`);
+  }
+  const lifecycle = read('functions/src/analysis/mediaLifecycle.ts');
+  if (!/deleteSource: job\.retainSource !== true/.test(lifecycle)) problems.push('source deletion is not the default');
+  if (!/if \(!job\.evidenceClipsRequested/.test(lifecycle)) problems.push('evidence clips are not opt-in');
+  if (!/job\.get\('retainSource'\) === true/.test(read('functions/src/uploads/quarantine.ts'))) problems.push('temporary footage is filed in the media library');
+  if (!/matchFootage\/\{jobId\}\/clips\/\{fileName\} \{[^}]*allow create, update: if false;/.test(read('storage.rules'))) {
+    problems.push('clients can write evidence clips');
+  }
+  return problems.length === 0 ? [PASS, 'cleanup on completion/cancel, retry window on failure, hourly sweep, purge on delete'] : [FAIL, problems.join('; ')];
+});
+
+check('Computer-vision worker stays off until approved', () => {
+  const config = read('functions/src/analysis/cvConfig.ts');
+  if (!/CV_WORKER_APPROVED/.test(config) || !/CV_EVENTS_VALIDATED/.test(config)) return [FAIL, 'CV gating flags missing from cvConfig.ts'];
+  const env = functionsEnv();
+  const url = /^CV_WORKER_URL=\S+/m.test(env);
+  const approved = /^CV_WORKER_APPROVED=true$/m.test(env);
+  const events = /^CV_EVENTS_VALIDATED=true$/m.test(env);
+  if (!url && !approved && !events) return [PASS, 'worker not configured: every CV stage reports unavailable'];
+  const report = existsSync(join(root, 'docs/video/accuracy-report.md')) ? read('docs/video/accuracy-report.md') : '';
+  const evaluated = /^Evaluation status: PASSED$/m.test(report);
+  if ((approved || events) && !evaluated) {
+    return [FAIL, 'CV_WORKER_APPROVED / CV_EVENTS_VALIDATED set without a passed real-footage evaluation in docs/video/accuracy-report.md'];
+  }
+  return url && approved ? [PASS, 'worker configured and evaluation recorded as passed'] : [EXTERNAL, 'CV_WORKER_URL / CV_WORKER_APPROVED partially configured'];
+});
+
+check('Video intelligence validated on real footage', () => {
+  const path = 'docs/video/accuracy-report.md';
+  if (!existsSync(join(root, path))) return [FAIL, `${path} missing`];
+  return /^Evaluation status: PASSED$/m.test(read(path))
+    ? [PASS, 'real-footage evaluation passed']
+    : [NOT_VALIDATED, 'PRODUCTION LIMITED: still-frame review only; no real-footage evaluation recorded'];
+});
+
 check('Firestore and Storage rules suite', () => {
   if (skipTests) return [SKIPPED, '--skip-tests'];
   const result = spawnSync(npm, ['run', 'test:rules'], { cwd: root, encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 256 * 1024 * 1024 });

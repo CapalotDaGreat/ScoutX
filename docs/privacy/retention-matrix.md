@@ -1,7 +1,9 @@
 # Retention Matrix
 
-Source of truth: `functions/src/dataRights/retention.ts` (`RETENTION`). This file mirrors it; change
-both together. Cleanup runs in `retentionCleanup` (daily 03:30 Europe/Zurich) and
+Source of truth: `functions/src/dataRights/retention.ts` (`RETENTION`) and, for match footage,
+`functions/src/analysis/mediaLifecycle.ts` (`LIFECYCLE`). This file mirrors them; change both together.
+Jobs completed before the footage lifecycle shipped keep their media until a one-off backfill runs
+(Firestore cannot query for the missing `mediaCleanupState` field). Cleanup runs in `retentionCleanup` (daily 03:30 Europe/Zurich) and
 `cleanupAbandonedUploads` (every 24 hours).
 
 | Data | Period | Trigger | Enforced by | Status |
@@ -11,6 +13,13 @@ both together. Cleanup runs in `retentionCleanup` (daily 03:30 Europe/Zurich) an
 | Rejected upload bytes | Immediately | ffprobe rejection | `functions/src/uploads/quarantine.ts` | Product decision |
 | Never-finished upload sessions | 7 days (`UPLOAD_LIMITS.abandonAfterDays`) | Session created | `cleanupAbandonedUploads` | Product decision |
 | Cancelled / failed / expired analysis jobs, with frames, video and the filed footage item | 30 days (`abandonedJobDays`) | Terminal job state | `retentionCleanup` | Product decision |
+| Uploaded match video (source) when "Keep match video" is off | Deleted when the job completes or is cancelled | Terminal job state | `onMatchJobMediaLifecycle` (`functions/src/analysis/mediaLifecycle.ts`), retried by hourly `mediaLifecycleSweep` | Product decision (not lawyer-reviewed) |
+| Uploaded match video after a failed analysis | 24 h (`LIFECYCLE.failedRetryHours`), or 7 days with "keep for retry" (`keepForRetryDays`) | Job failed | `mediaLifecycleSweep` | Product decision (not lawyer-reviewed) |
+| Uncited frames and intermediates (frames, segment files) | Deleted when the job ends | Terminal job state | `applyMediaLifecycle` | Product decision (not lawyer-reviewed) |
+| Cited evidence frames (max. cited by report, held-back coaching, up to 6 identity frames) | Until the user deletes the analysis or the account | User action | `onMatchJobDeleted`, `deleteAuthenticatedAccount` | Product decision (not lawyer-reviewed) |
+| Optional evidence clips (opt-in, max. 6 × ~8 s, no audio) | Until the user deletes the analysis or the account | User action | `onMatchJobDeleted`, `deleteAuthenticatedAccount` | Product decision (not lawyer-reviewed) |
+| Analysis uploads never finished | Marked expired after 7 days (`abandonedUploadDays`), media deleted | Job created | `mediaLifecycleSweep` | Product decision (not lawyer-reviewed) |
+| Video processing consent records (`videoProcessingConsents`) | Until the account is deleted | Consent given | `deleteAuthenticatedAccount` (`OWNED_QUERIES`) | Product decision (not lawyer-reviewed) |
 | RevenueCat webhook receipts | 90 days (`webhookReceiptDays`) | Receipt stored | `retentionCleanup` | Product decision |
 | Closed privacy requests | 3 years (`privacyRequestDays`) | Request closed | `retentionCleanup` | Approved (legal review, 2026-10-08) |
 | Consent proof after deletion | 3 years (`consentProofDays`) | Account deleted | `legalRetention` record `expiresAt` | Approved (legal review, 2026-10-08) |

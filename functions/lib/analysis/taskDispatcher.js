@@ -9,6 +9,8 @@ const region_1 = require("../region");
 exports.TASK_FUNCTIONS = {
     extract_segment: 'extractMatchSegment',
     analyze_frames: 'analyzeMatchFrames',
+    review_segment: 'reviewMatchSegment',
+    synthesize_report: 'synthesizeMatchReport',
 };
 /** Cloud Tasks queues backing the task functions. */
 exports.cloudTasksDispatcher = {
@@ -36,8 +38,16 @@ function parseAnalysisTask(value) {
         return null;
     if (data.kind === 'analyze_frames')
         return { kind: 'analyze_frames', jobId: data.jobId, generation: data.generation };
-    if (data.kind === 'extract_segment' && typeof data.segmentIndex === 'number' && data.segmentIndex >= 0) {
-        return { kind: 'extract_segment', jobId: data.jobId, generation: data.generation, segmentIndex: data.segmentIndex };
+    if (data.kind === 'synthesize_report')
+        return { kind: 'synthesize_report', jobId: data.jobId, generation: data.generation };
+    const segmentIndex = data.segmentIndex;
+    if (typeof segmentIndex !== 'number' || !Number.isInteger(segmentIndex) || segmentIndex < 0 || segmentIndex > 50)
+        return null;
+    if (data.kind === 'extract_segment') {
+        return { kind: 'extract_segment', jobId: data.jobId, generation: data.generation, segmentIndex };
+    }
+    if (data.kind === 'review_segment') {
+        return { kind: 'review_segment', jobId: data.jobId, generation: data.generation, segmentIndex };
     }
     return null;
 }

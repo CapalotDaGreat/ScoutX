@@ -227,6 +227,14 @@ async function seedJob(jobId, { frames = 3, playerId = OWNER, identity = 'pendin
     attempts: 0,
     identityConfirmation: { state: identity },
   });
+  await db.collection('videoProcessingConsents').doc(jobId).set({
+    uid: playerId,
+    jobId,
+    purpose: 'match_analysis',
+    processingMode: 'cloud_video',
+    policyVersion: require('./lib/analysis/videoConsent.js').VIDEO_CONSENT_VERSION,
+    revokedAt: null,
+  });
 }
 
 function analysisRequest(uid, jobId) {
@@ -234,6 +242,15 @@ function analysisRequest(uid, jobId) {
 }
 
 describe('analyzeMatchFootage (mocked OpenRouter vision)', () => {
+  test('refuses to analyse after the video consent was revoked', async () => {
+    await seedJob('job-revoked');
+    await db.collection('videoProcessingConsents').doc('job-revoked').update({ revokedAt: new Date().toISOString() });
+    await expectCode(analyzeMatchFootage.run(analysisRequest(OWNER, 'job-revoked')), 'failed-precondition');
+    const job = (await db.collection('matchAnalysisJobs').doc('job-revoked').get()).data();
+    assert.equal(job.errorCode, 'video_consent_required');
+    assert.equal(received.length, 0);
+  });
+
   test('completes with frame-bound evidence only and never fills match stats', async () => {
     await seedJob('job-ok');
     modelReply(
@@ -262,9 +279,13 @@ describe('analyzeMatchFootage (mocked OpenRouter vision)', () => {
       ['frame_1'],
     );
     assert.ok(Object.values(job.report.estimatedStats).every((value) => value === null));
-    // Identity is not confirmed, so player-specific coaching is withheld.
+    // Identity is not confirmed, so player-specific coaching is withheld from the report and
+    // held server-side until the player confirms which person they are.
     assert.deepEqual(job.report.strengths, []);
     assert.equal(job.report.coachingNotes, '');
+    assert.deepEqual(job.pendingCoaching.strengths, ['Good body shape']);
+    assert.equal(job.report.versions.analysisVersion, 1);
+    assert.ok(job.report.sections.some((section) => section.id === 'off_ball' && section.availability === 'NOT_AVAILABLE'));
     assert.equal(job.report.techniqueAssessment.ratedCount, 0);
     assert.ok(
       job.report.techniqueAssessment.ratings.every(

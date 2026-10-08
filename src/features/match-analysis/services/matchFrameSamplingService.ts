@@ -52,3 +52,23 @@ export async function sampleMatchFrames(
 
   return frames;
 }
+
+/** Frames at exact times (short clips). Failed timestamps are skipped, never filled in. */
+export async function sampleFramesAt(videoUri: string, timesSec: number[], minimum = 6): Promise<SampledFrame[]> {
+  const frames: SampledFrame[] = [];
+  for (const [index, timestampSec] of timesSec.entries()) {
+    try {
+      const thumb = await VideoThumbnails.getThumbnailAsync(videoUri, {
+        time: Math.round(timestampSec * 1000),
+        quality: MATCH_ANALYSIS_LIMITS.frameThumbnailQuality,
+      });
+      frames.push({ id: `frame_${index}`, index, timestampSec, uri: thumb.uri });
+    } catch {
+      // Common for the last frame on some devices.
+    }
+  }
+  if (frames.length < minimum) {
+    throw new Error('Could not extract enough frames from this clip. Try another file.');
+  }
+  return frames;
+}

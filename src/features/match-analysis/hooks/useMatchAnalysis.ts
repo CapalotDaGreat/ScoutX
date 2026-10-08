@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { isFirebaseConfiguredForProject } from '@/config/firebase';
 import { shouldUseMockAuth } from '@/config/authSecurity';
 import { useMockData } from '@/config/appMode';
-import { sampleMatchFrames } from '@/features/match-analysis/services/matchFrameSamplingService';
+import { sampleFramesAt, sampleMatchFrames } from '@/features/match-analysis/services/matchFrameSamplingService';
+import { shortClipSampleTimes } from '@/features/match-analysis/services/analysisMode';
 import { uploadMatchFrame } from '@/features/match-analysis/services/matchFootageStorageService';
 import {
   UploadSessionRepository,
@@ -11,9 +12,13 @@ import {
   type UploadAttempt,
 } from '@/features/media-upload';
 import { pickMatchFootageVideo } from '@/features/match-analysis/services/matchVideoPickerService';
+import { pickMatchFootageFile } from '@/features/match-analysis/services/matchVideoFilePickerService';
 import {
   requestCancelMatchAnalysis,
+  requestConfirmAnalysisIdentity,
   requestMatchFootageAnalysis,
+  requestRecordVideoConsent,
+  requestRevokeVideoConsent,
 } from '@/features/match-analysis/services/matchAnalysisCallable';
 import { buildMockMatchAnalysisReport } from '@/features/match-analysis/services/mockMatchAnalysisService';
 import { buildConservativePipelineStages } from '@/features/match-analysis/services/matchAnalysisPipelineService';
@@ -119,6 +124,11 @@ export function useMatchAnalysis(playerId: string | null) {
   const pickVideo = useCallback(async () => {
     setError(null);
     return pickMatchFootageVideo();
+  }, []);
+
+  const pickVideoFile = useCallback(async () => {
+    setError(null);
+    return pickMatchFootageFile();
   }, []);
 
   /** Asks the server to analyse (or re-extract) a job; progress then arrives through the subscription. */
@@ -277,6 +287,8 @@ export function useMatchAnalysis(playerId: string | null) {
         identityConfirmation: pendingIdentityConfirmation(),
         identityCandidates: [],
         idempotencyKey: jobId,
+        analysisIntent: input.analysisIntent,
+        clipContext: input.clipContext,
         createdAt: now,
         updatedAt: now,
       };
@@ -288,9 +300,45 @@ export function useMatchAnalysis(playerId: string | null) {
         }
 
         await createMatchAnalysisJob(job);
-        uploadJobRef.current = job;
         setLocalVideo({ jobId, uri: input.localVideoUri });
 
+        setPhaseLabel('Recording your consent…');
+        const consent = await requestRecordVideoConsent(jobId, input.consent).catch(async (consentError: unknown) => {
+          await requestCancelMatchAnalysis(jobId).catch(() => undefined);
+          throw consentError;
+        });
+        const consented: MatchAnalysisJob = {
+          ...job,
+          analysisMode: consent.analysisMode,
+          processingMode: consent.processingMode,
+          retainSource: consent.processingMode === 'cloud_video' && input.consent.retainSource,
+          keepForRetry: consent.processingMode === 'cloud_video' && input.consent.keepForRetry,
+          evidenceClipsRequested: consent.processingMode === 'cloud_video' && input.consent.evidenceClips,
+        };
+        setActiveJob(consented);
+
+        if (consent.processingMode === 'device_frames') {
+          // Short clip: only still frames leave the phone; the video itself is never uploaded.
+          setPhaseLabel('Sampling frames on this phone…');
+          const sampled = await sampleFramesAt(input.localVideoUri, shortClipSampleTimes(input.durationSec));
+          const frames: MatchFrameSample[] = [];
+          for (const frame of sampled) {
+            const uploaded = await uploadMatchFrame(playerId, jobId, frame.index, frame.uri);
+            frames.push({
+              id: `frame_${frame.index}`,
+              index: frame.index,
+              timestampSec: frame.timestampSec,
+              storagePath: uploaded.storagePath,
+              downloadUrl: uploaded.downloadUrl,
+              source: 'device',
+            });
+          }
+          const identityCandidates = candidatesFromFrames(frames);
+          await updateMatchAnalysisJob(jobId, { frames, identityCandidates });
+          return await requestServerAnalysis({ ...consented, frames, identityCandidates });
+        }
+
+        uploadJobRef.current = consented;
         setPhaseLabel('Uploading full match video…');
         const attempt = await startUpload({
           purpose: 'match_footage',
@@ -300,7 +348,7 @@ export function useMatchAnalysis(playerId: string | null) {
           contentType: contentTypeForFileName(input.fileName ?? input.localVideoUri),
           declaredDurationSec: input.durationSec,
         });
-        return await afterUploadAttempt(job, attempt);
+        return await afterUploadAttempt(consented, attempt);
       } catch (err) {
         const message = toUserMessage(err, 'Match analysis failed. Please try again.');
         setError(message);
@@ -310,7 +358,24 @@ export function useMatchAnalysis(playerId: string | null) {
         setPhaseLabel(null);
       }
     },
-    [playerId, afterUploadAttempt, runDemoAnalysis, startUpload],
+    [playerId, afterUploadAttempt, requestServerAnalysis, runDemoAnalysis, startUpload],
+  );
+
+  /** Withdraws consent: the server stops processing and removes temporary media. */
+  const revokeConsent = useCallback(
+    async (job: MatchAnalysisJob) => {
+      try {
+        await requestRevokeVideoConsent(job.id);
+      } catch (revokeError) {
+        setError(toUserMessage(revokeError, ANALYSIS_UNAVAILABLE_MESSAGE));
+        return;
+      }
+      uploadJobRef.current = null;
+      const latest = (await getMatchAnalysisJob(job.id).catch(() => null)) ?? { ...job, status: 'cancelled' as const };
+      setActiveJob(latest);
+      await refreshRecent();
+    },
+    [refreshRecent],
   );
 
   const retryAnalysis = useCallback(
@@ -369,10 +434,29 @@ export function useMatchAnalysis(playerId: string | null) {
     [localVideo, playerId, requestServerAnalysis],
   );
 
+  /**
+   * The server records the decision so it can release (or discard) coaching held back until
+   * identity is known. Demo jobs stay local.
+   */
   const confirmPlayerIdentity = useCallback(async (job: MatchAnalysisJob, frameIds: string[]) => {
-    const identityConfirmation = buildIdentityConfirmation(frameIds, new Date().toISOString());
-    await updateMatchAnalysisJob(job.id, { identityConfirmation });
-    const next = { ...job, identityConfirmation, updatedAt: new Date().toISOString() };
+    const now = new Date().toISOString();
+    if (isDemoAnalysisMode() || !isFirebaseConfiguredForProject()) {
+      const identityConfirmation = buildIdentityConfirmation(frameIds, now);
+      const next = { ...job, identityConfirmation, updatedAt: now };
+      setActiveJob(next);
+      return next;
+    }
+    try {
+      await requestConfirmAnalysisIdentity({
+        jobId: job.id,
+        decision: frameIds.length > 0 ? 'confirmed' : 'rejected',
+        frameIds: frameIds.slice(0, 6),
+      });
+    } catch (identityError) {
+      setError(toUserMessage(identityError, ANALYSIS_UNAVAILABLE_MESSAGE));
+      return job;
+    }
+    const next = (await getMatchAnalysisJob(job.id).catch(() => null)) ?? job;
     setActiveJob(next);
     setRecentJobs((prev) => prev.map((item) => (item.id === next.id ? next : item)));
     return next;
@@ -393,6 +477,7 @@ export function useMatchAnalysis(playerId: string | null) {
     error,
     quotaError,
     pickVideo,
+    pickVideoFile,
     startAnalysis,
     retryAnalysis,
     cancelAnalysis,
@@ -400,6 +485,7 @@ export function useMatchAnalysis(playerId: string | null) {
     canAnalyzeOnDevice: Boolean(activeJob && localVideo?.jobId === activeJob.id && canUseDeviceFrameFallback(activeJob)),
     isInProgress: isJobInProgress(activeJob),
     confirmPlayerIdentity,
+    revokeConsent,
     resetActive,
     refreshRecent,
     setActiveJob,

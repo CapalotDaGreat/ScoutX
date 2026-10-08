@@ -1,7 +1,7 @@
 ---
 id: ai-use-policy
 title: AI Use Policy
-version: 1.1.0
+version: 1.2.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
@@ -30,6 +30,8 @@ We do not train AI models on your data. We send requests through OpenRouter with
 
 - Analysis is based on sampled frames, not on tracking every moment of a match.
 - Computer-vision tracking of players, automatic event detection and pitch maps are not available yet and are shown as "Not available yet".
+- Actions suggested from still frames are labelled "Needs review" and are never counted as statistics.
+- Coaching about you is only shown after you confirm which frames show you. PitchProof does not use facial recognition.
 - PitchProof does not give player ratings or predict careers.
 - Each result shows what it was based on and how much of the match it covered.
 

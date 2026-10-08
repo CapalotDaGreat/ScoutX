@@ -1,4 +1,10 @@
 import type { MatchLogPayload } from '@/features/player-statistics/types';
+import type {
+  AnalysisIntent,
+  AnalysisMode,
+  ClipContext,
+  ProcessingMode,
+} from '@/features/match-analysis/services/analysisMode';
 
 export type MatchAnalysisJobStatus =
   | 'draft'
@@ -33,6 +39,7 @@ export const MATCH_ANALYSIS_ERROR_CODES = [
   'queue_unavailable',
   'video_rejected',
   'ai_privacy_configuration_required',
+  'video_consent_required',
 ] as const;
 export type MatchAnalysisErrorCode = (typeof MATCH_ANALYSIS_ERROR_CODES)[number];
 
@@ -117,8 +124,13 @@ export type PlayerTargeting = {
   kitPrimaryColor: string;
   kitSecondaryColor: string;
   teamSide?: 'home' | 'away' | 'unknown';
+  teamName?: string;
+  position?: TargetPosition;
   notes?: string;
 };
+
+export const TARGET_POSITIONS = ['goalkeeper', 'defender', 'midfielder', 'forward', 'unknown'] as const;
+export type TargetPosition = (typeof TARGET_POSITIONS)[number];
 
 export type MatchContextInput = {
   opponent: string;
@@ -323,6 +335,133 @@ export type MatchAnalysisReport = {
   methodology: string;
   modelId: string;
   generatedAt: string;
+  analysisMode?: AnalysisMode;
+  sections?: ReportSection[];
+  versions?: ReportVersions;
+  /** Still-frame suggestions; `needs_review` ones are never counted. */
+  possibleEvents?: PossibleEvent[];
+  /** Only present when a validated tracker produced events; null otherwise. */
+  eventCounts?: Partial<Record<PossibleEventType, { count: number; provenance: 'cv_worker' }>> | null;
+  opportunities?: Opportunity[];
+  decisionMoments?: DecisionMoment[];
+  clip?: ClipReport;
+};
+
+export const REPORT_SECTION_IDS = [
+  'identity',
+  'coverage',
+  'technique',
+  'decisions',
+  'off_ball',
+  'tactical',
+  'events',
+  'statistics',
+  'physical',
+  'goalkeeper',
+] as const;
+export type ReportSectionId = (typeof REPORT_SECTION_IDS)[number];
+
+export type SectionAvailability = 'AVAILABLE' | 'LIMITED' | 'INSUFFICIENT_EVIDENCE' | 'NOT_AVAILABLE';
+
+export const SECTION_REASONS = [
+  'identity_confirmed',
+  'identity_unconfirmed',
+  'target_not_seen',
+  'sampled_frames_only',
+  'not_enough_frames',
+  'needs_tracking',
+  'cv_worker_not_configured',
+  'cv_events_not_validated',
+  'no_validated_events',
+  'use_gps',
+  'not_goalkeeper',
+] as const;
+export type SectionReason = (typeof SECTION_REASONS)[number];
+
+export type ReportSection = { id: ReportSectionId; availability: SectionAvailability; reason: SectionReason };
+
+export type ReportVersions = {
+  analysisVersion: number;
+  pipelineVersion: string;
+  analysisMode: AnalysisMode;
+  visionModel: string;
+  reasoningModel: string | null;
+  cvWorkerVersion: string | null;
+};
+
+export const POSSIBLE_EVENT_TYPES = ['shot', 'pass', 'dribble', 'tackle', 'save', 'duel', 'other'] as const;
+export type PossibleEventType = (typeof POSSIBLE_EVENT_TYPES)[number];
+
+export type PossibleEvent = {
+  id: string;
+  type: PossibleEventType;
+  frameIds: string[];
+  timestampSec: number;
+  note: string;
+  status: 'needs_review' | 'validated';
+  source?: 'segment_review' | 'cv_worker';
+};
+
+export type Opportunity = { title: string; why: string; drill: string; observationIds: string[] };
+
+export type DecisionMoment = {
+  situation: string;
+  chosen: string;
+  alternative: string;
+  observationIds: string[];
+  timestampSec: number;
+};
+
+export type ClipClaim = { text: string; frameIds: string[]; timestampSec: number };
+
+export type ClipReport = {
+  actionType: string;
+  targetVisible: 'yes' | 'no' | 'unclear';
+  identityBasis: 'confirmed' | 'nominated_description';
+  whatHappened: ClipClaim | null;
+  observable: ClipClaim[];
+  notObservable: string[];
+  technicalExecution: Array<ClipClaim & { aspect: string; confidence: 'low' | 'medium' }>;
+  decision: {
+    situation: string;
+    optionsVisible: string[];
+    chosen: string;
+    outcome: string;
+    alternative: string;
+    learningPoint: string;
+    frameIds: string[];
+    timestampSec: number;
+  } | null;
+  whatWorked: ClipClaim[];
+  improve: ClipClaim[];
+  drill: { objective: string; drill: string; repetitions: string; successCriteria: string; nextMatchFocus: string } | null;
+  goalkeeper: { positioning: string; setPosition: string; handling: string; distribution: string; frameIds: string[] } | null;
+  confidence: 'low' | 'medium';
+  frameCount: number;
+};
+
+export type EvidenceClip = {
+  index: number;
+  startSec: number;
+  durationSec: number;
+  timestampSec: number;
+  frameIds: string[];
+  storagePath: string;
+};
+
+export type MediaLifecycleSummary = {
+  source: 'deleted' | 'retained' | 'absent';
+  citedFramesKept: number;
+  deletedObjectCount: number;
+  evidenceClips: number;
+  cleanedAt: string;
+};
+
+/** Options the player chose on the consent sheet. Everything defaults to off. */
+export type VideoConsentChoices = {
+  retainSource: boolean;
+  keepForRetry: boolean;
+  evidenceClips: boolean;
 };
 
 export type MatchFrameSample = {
@@ -386,6 +525,19 @@ export type MatchAnalysisJob = {
   report?: MatchAnalysisReport;
   /** Player-marked alignment between this footage and a GPS session. */
   videoSync?: MatchVideoSync;
+  analysisIntent?: AnalysisIntent;
+  clipContext?: ClipContext;
+  /** Server-set from the consent and the measured duration. */
+  analysisMode?: AnalysisMode;
+  processingMode?: ProcessingMode;
+  consentVersion?: string;
+  retainSource?: boolean;
+  keepForRetry?: boolean;
+  evidenceClipsRequested?: boolean;
+  evidenceClips?: EvidenceClip[];
+  mediaCleanupState?: 'retry_window' | 'pending' | 'done';
+  mediaLifecycle?: MediaLifecycleSummary;
+  segmentReview?: { total: number; reviewed: number[]; failed: number[] };
   createdAt: string;
   updatedAt: string;
   completedAt?: string;
@@ -406,6 +558,9 @@ export type CreateMatchAnalysisInput = {
   fileSizeBytes?: number;
   targeting: PlayerTargeting;
   match: MatchContextInput;
+  analysisIntent: AnalysisIntent;
+  clipContext: ClipContext;
+  consent: VideoConsentChoices;
 };
 
 export function emptyEstimatedStats(): MatchEstimatedStats {

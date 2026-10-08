@@ -186,7 +186,8 @@
     "foul": "Overtreding",
     "card": "Kaart",
     "save": "Redding",
-    "other": "Andere actie"
+    "other": "Andere actie",
+    "dribble": "Dribbel"
   },
   "jobStatus": {
     "ready": "Klaar",
@@ -267,7 +268,8 @@
     "extraction_failed": "Er konden geen sleutelbeelden uit deze video worden gehaald.",
     "queue_unavailable": "De analyse kon niet in de wachtrij worden gezet. Probeer het over een paar minuten opnieuw.",
     "video_rejected": "Deze video heeft de controles op formaat en lengte niet doorstaan.",
-    "ai_privacy_configuration_required": "Videoanalyse is nog niet beschikbaar. Je kunt nog steeds wedstrijden vastleggen en je ontwikkeling volgen."
+    "ai_privacy_configuration_required": "Videoanalyse is nog niet beschikbaar. Je kunt nog steeds wedstrijden vastleggen en je ontwikkeling volgen.",
+    "video_consent_required": "Toestemming voor deze video ontbreekt of is ingetrokken. Start de analyse opnieuw om toestemming te geven."
   },
   "pipeline": {
     "title": "Analyse bezig",
@@ -290,5 +292,140 @@
     "coaching-synthesis": "Coachingfeedback opstellen",
     "validation": "Bewijs controleren",
     "final-report": "Rapport afronden"
+  },
+  "video": {
+    "intent": {
+      "title": "Wat laat deze video zien?",
+      "match": "Wedstrijd",
+      "training": "Training"
+    },
+    "mode": {
+      "SHORT_CLIP": "Korte clip (tot 60 s). Stilstaande beelden worden op deze telefoon gemaakt; de video zelf wordt niet geüpload.",
+      "MATCH_CLIP": "Wedstrijdfragment (tot 20 min). De video wordt geüpload en per deel bekeken.",
+      "FULL_MATCH": "Hele wedstrijd. De video wordt geüpload en per deel bekeken.",
+      "TRAINING_CLIP": "Trainingsclip. Beoordeeld als training, niet als wedstrijdprestatie.",
+      "tooLong": "Video’s mogen tot {{minutes}} minuten lang zijn."
+    },
+    "clipContext": {
+      "title": "Wat gebeurt er in de clip? (optioneel)",
+      "auto": "Laat PitchProof kiezen",
+      "shot": "Schot",
+      "save": "Redding",
+      "pass": "Pass",
+      "dribble": "Dribbel",
+      "tackle": "Tackle",
+      "defensive": "Verdedigen",
+      "other": "Iets anders"
+    },
+    "position": {
+      "title": "Jouw positie in deze video",
+      "goalkeeper": "Keeper",
+      "defender": "Verdediger",
+      "midfielder": "Middenvelder",
+      "forward": "Aanvaller",
+      "unknown": "Weet ik niet"
+    },
+    "teamName": "Naam van je team (optioneel)",
+    "teamNamePlaceholder": "bijv. FC Voorbeeld O15",
+    "consent": {
+      "title": "Voordat we je video analyseren",
+      "deviceSummary": "Alleen {{count}} stilstaande beelden uit deze clip worden geüpload. De video blijft op je telefoon.",
+      "cloudSummary": "Je video wordt naar de cloudopslag van PitchProof geüpload zodat er stilstaande beelden uit kunnen worden gehaald.",
+      "ack": {
+        "processing": "Ik wil dat PitchProof deze video analyseert. De analyse kan fout zijn en beschrijft alleen wat de beelden laten zien.",
+        "rights": "Ik mag deze beelden gebruiken. Alleen ik word gevolgd; niemand wordt aan het gezicht herkend.",
+        "retention": "Tenzij ik hieronder iets anders kies, wordt de originele video na de analyse verwijderd. Alleen de beelden die het rapport aanhaalt blijven privé bewaard tot ik de analyse verwijder.",
+        "provider": "Stilstaande beelden worden naar een AI-modelaanbieder gestuurd die is ingesteld op nul gegevensbewaring."
+      },
+      "optionsTitle": "Optioneel",
+      "keepVideo": "Wedstrijdvideo bewaren",
+      "keepVideoHint": "Bewaart de originele video privé in je mediabibliotheek zodat je momenten kunt terugkijken. Standaard uit.",
+      "evidenceClips": "Korte bewijsclips bewaren",
+      "evidenceClipsHint": "Knipt tot 6 korte clips zonder geluid (ongeveer 8 s) rond aangehaalde momenten. Standaard uit.",
+      "keepForRetry": "Video 7 dagen bewaren als de analyse mislukt",
+      "keepForRetryHint": "Zo kun je het opnieuw proberen zonder opnieuw te uploaden. Anders wordt de video van een mislukte analyse na 24 uur verwijderd.",
+      "required": "Vink alle punten aan om verder te gaan.",
+      "agree": "Akkoord en starten",
+      "cancel": "Niet nu",
+      "withdraw": "Toestemming intrekken en stoppen"
+    },
+    "segments": "Delen bekeken: {{done}}/{{total}}",
+    "sectionsTitle": "Wat dit rapport dekt",
+    "availability": {
+      "AVAILABLE": "Beschikbaar",
+      "LIMITED": "Beperkt",
+      "INSUFFICIENT_EVIDENCE": "Te weinig bewijs",
+      "NOT_AVAILABLE": "Niet beschikbaar"
+    },
+    "section": {
+      "identity": "Identiteit",
+      "coverage": "Dekking",
+      "technique": "Techniek",
+      "decisions": "Beslissingen",
+      "off_ball": "Spel zonder bal",
+      "tactical": "Tactiek",
+      "events": "Acties",
+      "statistics": "Statistieken",
+      "physical": "Fysiek",
+      "goalkeeper": "Keepersspel"
+    },
+    "reason": {
+      "identity_confirmed": "Je hebt bevestigd welke speler jij bent.",
+      "identity_unconfirmed": "Bevestig welke beelden jou tonen.",
+      "target_not_seen": "Je was niet duidelijk te zien op de bekeken beelden.",
+      "sampled_frames_only": "Gebaseerd op stilstaande beelden, niet op doorlopende video.",
+      "not_enough_frames": "Te weinig beelden lieten dit zien.",
+      "needs_tracking": "Vereist doorlopende spelertracking.",
+      "cv_worker_not_configured": "Vereist de trackingdienst, die niet is ingeschakeld.",
+      "cv_events_not_validated": "Trackingacties zijn nog niet gevalideerd.",
+      "no_validated_events": "Geen gevalideerde acties.",
+      "use_gps": "Gebruik een gps-sessie voor afstand en snelheid.",
+      "not_goalkeeper": "Alleen voor keepers."
+    },
+    "possibleEventsTitle": "Mogelijke acties",
+    "possibleEventsHint": "Voorgesteld op basis van stilstaande beelden. Ze tellen niet mee als statistiek.",
+    "needsReview": "Te controleren",
+    "validated": "Gevalideerd",
+    "opportunitiesTitle": "Belangrijkste werkpunten",
+    "drill": "Oefening: {{drill}}",
+    "decisionsTitle": "Beslismomenten",
+    "decisionChosen": "Jouw keuze: {{chosen}}",
+    "decisionAlternative": "Alternatief: {{alternative}}",
+    "clip": {
+      "title": "Clipanalyse",
+      "confidence": "Betrouwbaarheid: {{level}}",
+      "low": "laag",
+      "medium": "gemiddeld",
+      "frames_one": "{{count}} beeld",
+      "frames_other": "{{count}} beelden",
+      "whatHappened": "Wat er gebeurde",
+      "observable": "Wat de beelden laten zien",
+      "notObservable": "Wat de beelden niet kunnen laten zien",
+      "notVisible": "Je was niet duidelijk te zien in deze clip, dus er is geen coaching gegeven.",
+      "technique": "Techniek",
+      "decision": "Beslissing",
+      "worked": "Wat goed ging",
+      "improve": "Wat beter kan",
+      "drill": "Oefening",
+      "goalkeeper": "Keepersspel"
+    },
+    "lifecycle": {
+      "deleted": "De originele video is verwijderd. {{count}} aangehaalde beelden blijven privé bewaard.",
+      "retained": "De originele video blijft in je mediabibliotheek. {{count}} aangehaalde beelden blijven privé bewaard.",
+      "absent": "Er is geen video geüpload. {{count}} aangehaalde beelden blijven privé bewaard.",
+      "clips_one": "{{count}} bewijsclip bewaard.",
+      "clips_other": "{{count}} bewijsclips bewaard.",
+      "pending": "Tijdelijke media worden automatisch verwijderd."
+    },
+    "version": "Analyse v{{version}} · pipeline {{pipeline}}",
+    "files": {
+      "pick": "Kiezen uit Bestanden / iCloud",
+      "preparing": "Bestand voorbereiden… (iCloud-bestanden worden eerst gedownload)",
+      "unsupported": "Kies een MP4- of MOV-video.",
+      "too_long": "Video’s mogen tot {{minutes}} minuten lang zijn.",
+      "too_large": "Dit bestand is te groot. Kies een kortere export of lagere kwaliteit.",
+      "no_duration": "De video kon niet worden gelezen. Controleer of hij afspeelt in de app Bestanden.",
+      "low_disk": "Je telefoon is bijna vol. Maak wat ruimte vrij en probeer het opnieuw."
+    }
   }
 }

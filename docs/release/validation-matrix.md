@@ -81,6 +81,21 @@ provider review) and real footage that the tester has the right to use.
 | Network drop at 60 %, resume | NOT VALIDATED | resumes from last chunk |
 | Cancel during extraction | NOT VALIDATED | quota refunded before analysis starts |
 
+## Video intelligence (see `docs/video/device-test-protocol.md`)
+
+| Case | State | Expectation |
+| --- | --- | --- |
+| Consent sheet: nothing uploads until all four points are ticked; options default off | NOT VALIDATED | server enforcement PASS (automated) |
+| 20 s short clip: only frames upload, video never leaves the phone, clip review shown | NOT VALIDATED | flow PASS (automated, emulator) |
+| Files / iCloud picker with an iCloud-only 45 min MOV | NOT VALIDATED | preparing state, then upload |
+| Segment progress "X/Y" visible during a 45 min analysis | NOT VALIDATED | server PASS (automated, emulator) |
+| "Is this you?" confirm releases held-back coaching; reject discards it | NOT VALIDATED | PASS (automated, emulator) |
+| After completion: source deleted (keep off), only cited frames remain in Storage | NOT VALIDATED | PASS (automated, emulator) |
+| Keep match video on: video appears in media library after completion | NOT VALIDATED | PASS (automated, emulator) |
+| Evidence clips requested: ≤ 6 short silent clips play in the report | NOT VALIDATED | cutter interface PASS (automated, stubbed ffmpeg) |
+| Withdraw consent mid-analysis stops processing and removes temporary media | NOT VALIDATED | PASS (automated, emulator) |
+| Computer-vision worker evaluated on annotated real footage (`workers/football-cv/eval`) | NOT VALIDATED | worker NOT DEPLOYED |
+
 Server code never reads a whole video into memory: frames are size-capped (`MAX_FRAME_BYTES`), reel
 rendering streams to `/tmp`, quarantine reads the first 16 bytes. This is a code review result, not a
 load test.

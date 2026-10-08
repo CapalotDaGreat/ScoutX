@@ -51,6 +51,7 @@ const UID_SUBCOLLECTIONS = (uid: string) => [
 export const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: string]> = [
   ['gpsSessions', 'playerId'],
   ['matchAnalysisJobs', 'playerId'],
+  ['videoProcessingConsents', 'uid'],
   ['careerReplays', 'playerId'],
   ['activities', 'recipientId'],
   ['activities', 'actorId'],

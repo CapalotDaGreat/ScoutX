@@ -1,0 +1,10 @@
+# Runtime (GPU image). Pin exact versions before any deployment and re-check licences.
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+pydantic>=2.7,<3
+numpy>=1.26,<3
+av>=12,<15
+torch>=2.3,<3
+transformers>=4.44,<5
+supervision>=0.22,<1
+easyocr>=1.7,<2

@@ -15,6 +15,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const storage_2 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const pipeline_1 = require("../analysis/pipeline");
+const mode_1 = require("../analysis/mode");
 const quotaService_1 = require("../entitlements/quotaService");
 const mediaSource_1 = require("./mediaSource");
 const mediaScanner_1 = require("./mediaScanner");
@@ -63,7 +64,7 @@ async function reject(db, uploadId, data, reason) {
     firebase_functions_1.logger.info('Upload rejected', { uploadId, reason });
     return 'rejected';
 }
-/** Validated footage becomes a private library item so highlights and reels can reference it. */
+/** Kept footage becomes a private library item so highlights and reels can reference it. */
 async function fileFootageInLibrary(db, data, storagePath, durationSec, now) {
     const ref = db.collection('players').doc(data.ownerId).collection('media').doc((0, model_1.footageMediaId)(data.jobId));
     if ((await ref.get()).exists)
@@ -103,12 +104,14 @@ async function promote(db, uploadId, data, summary) {
     });
     await bucket.file(data.storagePath).delete({ ignoreNotFound: true });
     const now = new Date().toISOString();
+    const measuredMode = (0, mode_1.selectAnalysisMode)(summary.durationSec, (0, mode_1.parseIntent)(job.get('analysisIntent')));
     await jobRef.update({
         videoStoragePath: destination,
         videoUploadId: uploadId,
         videoProbe: summary,
         fileSizeBytes: summary.sizeBytes,
         measuredDurationSec: summary.durationSec,
+        ...(measuredMode ? { analysisMode: measuredMode } : {}),
         videoValidatedAt: now,
         updatedAt: now,
         ...(job.get('cancelRequested') === true ? {} : { pipelineState: 'validating' }),
@@ -119,7 +122,10 @@ async function promote(db, uploadId, data, summary) {
         readyAt: now,
         updatedAt: now,
     });
-    await fileFootageInLibrary(db, data, destination, summary.durationSec, now);
+    // Footage only becomes a library item when the player chose "Keep match video"; otherwise
+    // the source is temporary and the media lifecycle deletes it after analysis.
+    if (job.get('retainSource') === true)
+        await fileFootageInLibrary(db, data, destination, summary.durationSec, now);
     await (0, pipeline_1.startMatchPipeline)(db, data.jobId);
     return 'ready';
 }

@@ -186,7 +186,8 @@
     "foul": "Foul",
     "card": "Card",
     "save": "Save",
-    "other": "Other action"
+    "other": "Other action",
+    "dribble": "Dribble"
   },
   "jobStatus": {
     "ready": "Ready",
@@ -267,7 +268,8 @@
     "extraction_failed": "Key frames could not be extracted from this video.",
     "queue_unavailable": "Analysis could not be queued. Try again in a few minutes.",
     "video_rejected": "This video did not pass the format and length checks.",
-    "ai_privacy_configuration_required": "Video analysis isn't available yet. You can still log matches and track your development."
+    "ai_privacy_configuration_required": "Video analysis isn't available yet. You can still log matches and track your development.",
+    "video_consent_required": "Consent for this video is missing or was withdrawn. Start the analysis again to give consent."
   },
   "pipeline": {
     "title": "Analysis in progress",
@@ -290,5 +292,140 @@
     "coaching-synthesis": "Building coaching feedback",
     "validation": "Validating evidence",
     "final-report": "Finalizing report"
+  },
+  "video": {
+    "intent": {
+      "title": "What is this video?",
+      "match": "Match",
+      "training": "Training"
+    },
+    "mode": {
+      "SHORT_CLIP": "Short clip (up to 60 s). Still frames are taken on this phone; the video itself is not uploaded.",
+      "MATCH_CLIP": "Match clip (up to 20 min). The video is uploaded and reviewed segment by segment.",
+      "FULL_MATCH": "Full match. The video is uploaded and reviewed segment by segment.",
+      "TRAINING_CLIP": "Training clip. Reviewed as training, not as match performance.",
+      "tooLong": "Videos can be up to {{minutes}} minutes long."
+    },
+    "clipContext": {
+      "title": "What happens in the clip? (optional)",
+      "auto": "Let PitchProof decide",
+      "shot": "Shot",
+      "save": "Save",
+      "pass": "Pass",
+      "dribble": "Dribble",
+      "tackle": "Tackle",
+      "defensive": "Defending",
+      "other": "Something else"
+    },
+    "position": {
+      "title": "Your position in this video",
+      "goalkeeper": "Goalkeeper",
+      "defender": "Defender",
+      "midfielder": "Midfielder",
+      "forward": "Forward",
+      "unknown": "Not sure"
+    },
+    "teamName": "Your team name (optional)",
+    "teamNamePlaceholder": "e.g. FC Example U15",
+    "consent": {
+      "title": "Before we analyse your video",
+      "deviceSummary": "Only {{count}} still frames from this clip are uploaded. The video stays on your phone.",
+      "cloudSummary": "Your video is uploaded to PitchProof cloud storage so still frames can be taken from it.",
+      "ack": {
+        "processing": "I want PitchProof to analyse this video. The analysis can be wrong and only reports what the frames show.",
+        "rights": "I am allowed to use this footage. Only I am followed in it; nobody is identified by their face.",
+        "retention": "Unless I choose otherwise below, the original video is deleted after the analysis. Only the frames the report cites are kept, privately, until I delete the analysis.",
+        "provider": "Still frames are sent to an AI model provider set up for zero data retention."
+      },
+      "optionsTitle": "Optional",
+      "keepVideo": "Keep match video",
+      "keepVideoHint": "Saves the original video privately in your media library so you can rewatch moments. Off by default.",
+      "evidenceClips": "Save short evidence clips",
+      "evidenceClipsHint": "Cuts up to 6 short silent clips (about 8 s) around cited moments. Off by default.",
+      "keepForRetry": "Keep the video for 7 days if the analysis fails",
+      "keepForRetryHint": "Lets you retry without uploading again. Otherwise the video of a failed analysis is deleted after 24 hours.",
+      "required": "Tick every point to continue.",
+      "agree": "Agree and start",
+      "cancel": "Not now",
+      "withdraw": "Withdraw consent and stop"
+    },
+    "segments": "Parts reviewed: {{done}}/{{total}}",
+    "sectionsTitle": "What this report covers",
+    "availability": {
+      "AVAILABLE": "Available",
+      "LIMITED": "Limited",
+      "INSUFFICIENT_EVIDENCE": "Not enough evidence",
+      "NOT_AVAILABLE": "Not available"
+    },
+    "section": {
+      "identity": "Identity",
+      "coverage": "Coverage",
+      "technique": "Technique",
+      "decisions": "Decisions",
+      "off_ball": "Off-ball play",
+      "tactical": "Tactics",
+      "events": "Events",
+      "statistics": "Statistics",
+      "physical": "Physical",
+      "goalkeeper": "Goalkeeping"
+    },
+    "reason": {
+      "identity_confirmed": "You confirmed which player you are.",
+      "identity_unconfirmed": "Confirm which frames show you.",
+      "target_not_seen": "You were not clearly seen in the reviewed frames.",
+      "sampled_frames_only": "Based on still frames, not continuous video.",
+      "not_enough_frames": "Not enough frames showed this.",
+      "needs_tracking": "Needs continuous player tracking.",
+      "cv_worker_not_configured": "Needs the tracking service, which is not enabled.",
+      "cv_events_not_validated": "Tracker events are not validated yet.",
+      "no_validated_events": "No validated events.",
+      "use_gps": "Use a GPS session for distance and speed.",
+      "not_goalkeeper": "Only for goalkeepers."
+    },
+    "possibleEventsTitle": "Possible actions",
+    "possibleEventsHint": "Suggested from still frames. They are not counted as statistics.",
+    "needsReview": "Needs review",
+    "validated": "Validated",
+    "opportunitiesTitle": "Top things to work on",
+    "drill": "Drill: {{drill}}",
+    "decisionsTitle": "Decision moments",
+    "decisionChosen": "You chose: {{chosen}}",
+    "decisionAlternative": "Alternative: {{alternative}}",
+    "clip": {
+      "title": "Clip review",
+      "confidence": "Confidence: {{level}}",
+      "low": "low",
+      "medium": "medium",
+      "frames_one": "{{count}} frame",
+      "frames_other": "{{count}} frames",
+      "whatHappened": "What happened",
+      "observable": "What the frames show",
+      "notObservable": "What the frames cannot show",
+      "notVisible": "You were not clearly visible in this clip, so no coaching was given.",
+      "technique": "Technique",
+      "decision": "Decision",
+      "worked": "What worked",
+      "improve": "What to improve",
+      "drill": "Practice",
+      "goalkeeper": "Goalkeeping"
+    },
+    "lifecycle": {
+      "deleted": "The original video was deleted. {{count}} cited frames are kept privately.",
+      "retained": "The original video is kept in your media library. {{count}} cited frames are kept privately.",
+      "absent": "No video was uploaded. {{count}} cited frames are kept privately.",
+      "clips_one": "{{count}} evidence clip saved.",
+      "clips_other": "{{count}} evidence clips saved.",
+      "pending": "Temporary media will be removed automatically."
+    },
+    "version": "Analysis v{{version}} · pipeline {{pipeline}}",
+    "files": {
+      "pick": "Choose from Files / iCloud",
+      "preparing": "Preparing file… (iCloud files download first)",
+      "unsupported": "Choose an MP4 or MOV video.",
+      "too_long": "Videos can be up to {{minutes}} minutes long.",
+      "too_large": "This file is too large to upload. Choose a shorter or lower-quality export.",
+      "no_duration": "The video could not be read. Check that it plays in the Files app.",
+      "low_disk": "Your phone is almost full. Free up some space and try again."
+    }
   }
 }

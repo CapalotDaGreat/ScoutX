@@ -10,6 +10,7 @@ const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("../callableOptions");
 const providerConfig_1 = require("../ai/providerConfig");
+const videoConsent_1 = require("../analysis/videoConsent");
 const consent_1 = require("../legal/consent");
 const userSafety_1 = require("../safety/userSafety");
 const quotaService_1 = require("../entitlements/quotaService");
@@ -73,6 +74,7 @@ exports.createUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCa
             reason: 'ai_privacy_configuration_required',
         });
     }
+    await (0, videoConsent_1.assertVideoConsent)(db, uid, input.jobId, 'cloud_video');
     const plan = await (0, quotaService_1.planFor)(db, uid);
     if (input.sizeBytes > plan.maxVideoBytes || input.declaredDurationSec > plan.maxVideoDurationSec) {
         throw new https_1.HttpsError('failed-precondition', 'This video is longer or larger than your plan allows.', {

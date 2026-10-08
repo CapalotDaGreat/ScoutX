@@ -186,7 +186,8 @@
     "foul": "Foul",
     "card": "Karte",
     "save": "Parade",
-    "other": "Andere Aktion"
+    "other": "Andere Aktion",
+    "dribble": "Dribbling"
   },
   "jobStatus": {
     "ready": "Fertig",
@@ -267,7 +268,8 @@
     "extraction_failed": "Aus diesem Video konnten keine Schlüsselbilder extrahiert werden.",
     "queue_unavailable": "Die Analyse konnte nicht eingereiht werden. Versuche es in ein paar Minuten erneut.",
     "video_rejected": "Dieses Video hat die Format- und Längenprüfung nicht bestanden.",
-    "ai_privacy_configuration_required": "Die Videoanalyse ist noch nicht verfügbar. Du kannst weiterhin Spiele erfassen und deine Entwicklung verfolgen."
+    "ai_privacy_configuration_required": "Die Videoanalyse ist noch nicht verfügbar. Du kannst weiterhin Spiele erfassen und deine Entwicklung verfolgen.",
+    "video_consent_required": "Die Einwilligung für dieses Video fehlt oder wurde widerrufen. Starte die Analyse erneut, um einzuwilligen."
   },
   "pipeline": {
     "title": "Analyse läuft",
@@ -290,5 +292,140 @@
     "coaching-synthesis": "Coaching-Feedback erstellen",
     "validation": "Belege prüfen",
     "final-report": "Bericht fertigstellen"
+  },
+  "video": {
+    "intent": {
+      "title": "Was zeigt dieses Video?",
+      "match": "Spiel",
+      "training": "Training"
+    },
+    "mode": {
+      "SHORT_CLIP": "Kurzer Clip (bis 60 s). Standbilder werden auf diesem Handy erstellt; das Video selbst wird nicht hochgeladen.",
+      "MATCH_CLIP": "Spielausschnitt (bis 20 Min.). Das Video wird hochgeladen und Abschnitt für Abschnitt geprüft.",
+      "FULL_MATCH": "Ganzes Spiel. Das Video wird hochgeladen und Abschnitt für Abschnitt geprüft.",
+      "TRAINING_CLIP": "Trainingsclip. Wird als Training bewertet, nicht als Spielleistung.",
+      "tooLong": "Videos dürfen bis zu {{minutes}} Minuten lang sein."
+    },
+    "clipContext": {
+      "title": "Was passiert im Clip? (optional)",
+      "auto": "PitchProof entscheiden lassen",
+      "shot": "Schuss",
+      "save": "Parade",
+      "pass": "Pass",
+      "dribble": "Dribbling",
+      "tackle": "Tackling",
+      "defensive": "Verteidigen",
+      "other": "Etwas anderes"
+    },
+    "position": {
+      "title": "Deine Position in diesem Video",
+      "goalkeeper": "Torhüter",
+      "defender": "Verteidiger",
+      "midfielder": "Mittelfeld",
+      "forward": "Sturm",
+      "unknown": "Nicht sicher"
+    },
+    "teamName": "Name deines Teams (optional)",
+    "teamNamePlaceholder": "z. B. FC Beispiel U15",
+    "consent": {
+      "title": "Bevor wir dein Video analysieren",
+      "deviceSummary": "Nur {{count}} Standbilder aus diesem Clip werden hochgeladen. Das Video bleibt auf deinem Handy.",
+      "cloudSummary": "Dein Video wird in den PitchProof-Cloudspeicher hochgeladen, damit Standbilder daraus erstellt werden können.",
+      "ack": {
+        "processing": "Ich möchte, dass PitchProof dieses Video analysiert. Die Analyse kann falsch sein und berichtet nur, was die Bilder zeigen.",
+        "rights": "Ich darf dieses Material verwenden. Nur ich werde darin verfolgt; niemand wird über das Gesicht erkannt.",
+        "retention": "Wenn ich unten nichts anderes wähle, wird das Originalvideo nach der Analyse gelöscht. Nur die Bilder, auf die sich der Bericht stützt, bleiben privat gespeichert, bis ich die Analyse lösche.",
+        "provider": "Standbilder werden an einen KI-Modellanbieter gesendet, der auf Null-Datenspeicherung eingestellt ist."
+      },
+      "optionsTitle": "Optional",
+      "keepVideo": "Spielvideo behalten",
+      "keepVideoHint": "Speichert das Originalvideo privat in deiner Mediathek, damit du Szenen erneut ansehen kannst. Standardmässig aus.",
+      "evidenceClips": "Kurze Beweisclips speichern",
+      "evidenceClipsHint": "Schneidet bis zu 6 kurze, stumme Clips (etwa 8 s) rund um zitierte Momente. Standardmässig aus.",
+      "keepForRetry": "Video 7 Tage behalten, falls die Analyse fehlschlägt",
+      "keepForRetryHint": "So kannst du es erneut versuchen, ohne neu hochzuladen. Sonst wird das Video einer fehlgeschlagenen Analyse nach 24 Stunden gelöscht.",
+      "required": "Bestätige alle Punkte, um fortzufahren.",
+      "agree": "Zustimmen und starten",
+      "cancel": "Nicht jetzt",
+      "withdraw": "Einwilligung widerrufen und stoppen"
+    },
+    "segments": "Geprüfte Abschnitte: {{done}}/{{total}}",
+    "sectionsTitle": "Was dieser Bericht abdeckt",
+    "availability": {
+      "AVAILABLE": "Verfügbar",
+      "LIMITED": "Eingeschränkt",
+      "INSUFFICIENT_EVIDENCE": "Zu wenig Belege",
+      "NOT_AVAILABLE": "Nicht verfügbar"
+    },
+    "section": {
+      "identity": "Identität",
+      "coverage": "Abdeckung",
+      "technique": "Technik",
+      "decisions": "Entscheidungen",
+      "off_ball": "Spiel ohne Ball",
+      "tactical": "Taktik",
+      "events": "Aktionen",
+      "statistics": "Statistiken",
+      "physical": "Physis",
+      "goalkeeper": "Torhüterspiel"
+    },
+    "reason": {
+      "identity_confirmed": "Du hast bestätigt, welcher Spieler du bist.",
+      "identity_unconfirmed": "Bestätige, welche Bilder dich zeigen.",
+      "target_not_seen": "Du warst auf den geprüften Bildern nicht klar zu sehen.",
+      "sampled_frames_only": "Basiert auf Standbildern, nicht auf durchgehendem Video.",
+      "not_enough_frames": "Zu wenige Bilder zeigten das.",
+      "needs_tracking": "Braucht durchgehendes Spieler-Tracking.",
+      "cv_worker_not_configured": "Braucht den Tracking-Dienst, der nicht aktiviert ist.",
+      "cv_events_not_validated": "Tracker-Aktionen sind noch nicht validiert.",
+      "no_validated_events": "Keine validierten Aktionen.",
+      "use_gps": "Nutze eine GPS-Session für Distanz und Tempo.",
+      "not_goalkeeper": "Nur für Torhüter."
+    },
+    "possibleEventsTitle": "Mögliche Aktionen",
+    "possibleEventsHint": "Aus Standbildern vorgeschlagen. Sie werden nicht als Statistik gezählt.",
+    "needsReview": "Zu prüfen",
+    "validated": "Validiert",
+    "opportunitiesTitle": "Die wichtigsten Baustellen",
+    "drill": "Übung: {{drill}}",
+    "decisionsTitle": "Entscheidungsmomente",
+    "decisionChosen": "Deine Wahl: {{chosen}}",
+    "decisionAlternative": "Alternative: {{alternative}}",
+    "clip": {
+      "title": "Clip-Auswertung",
+      "confidence": "Sicherheit: {{level}}",
+      "low": "tief",
+      "medium": "mittel",
+      "frames_one": "{{count}} Bild",
+      "frames_other": "{{count}} Bilder",
+      "whatHappened": "Was passiert ist",
+      "observable": "Was die Bilder zeigen",
+      "notObservable": "Was die Bilder nicht zeigen können",
+      "notVisible": "Du warst in diesem Clip nicht klar zu sehen, deshalb gibt es kein Coaching.",
+      "technique": "Technik",
+      "decision": "Entscheidung",
+      "worked": "Was gut lief",
+      "improve": "Was du verbessern kannst",
+      "drill": "Übung",
+      "goalkeeper": "Torhüterspiel"
+    },
+    "lifecycle": {
+      "deleted": "Das Originalvideo wurde gelöscht. {{count}} zitierte Bilder bleiben privat gespeichert.",
+      "retained": "Das Originalvideo bleibt in deiner Mediathek. {{count}} zitierte Bilder bleiben privat gespeichert.",
+      "absent": "Es wurde kein Video hochgeladen. {{count}} zitierte Bilder bleiben privat gespeichert.",
+      "clips_one": "{{count}} Beweisclip gespeichert.",
+      "clips_other": "{{count}} Beweisclips gespeichert.",
+      "pending": "Temporäre Medien werden automatisch entfernt."
+    },
+    "version": "Analyse v{{version}} · Pipeline {{pipeline}}",
+    "files": {
+      "pick": "Aus Dateien / iCloud wählen",
+      "preparing": "Datei wird vorbereitet… (iCloud-Dateien werden zuerst geladen)",
+      "unsupported": "Wähle ein MP4- oder MOV-Video.",
+      "too_long": "Videos dürfen bis zu {{minutes}} Minuten lang sein.",
+      "too_large": "Diese Datei ist zu gross zum Hochladen. Wähle einen kürzeren Export oder eine tiefere Qualität.",
+      "no_duration": "Das Video konnte nicht gelesen werden. Prüfe, ob es in der Dateien-App abgespielt wird.",
+      "low_disk": "Dein Handy ist fast voll. Gib etwas Speicher frei und versuche es erneut."
+    }
   }
 }

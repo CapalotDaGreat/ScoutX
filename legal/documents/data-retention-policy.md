@@ -1,7 +1,7 @@
 ---
 id: data-retention-policy
 title: Data Retention Policy
-version: 1.1.0
+version: 1.2.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
@@ -21,7 +21,10 @@ Profile, match logs, goals, media, analysis results, movement summaries and scou
 
 - Uploads that are abandoned or fail validation: deleted within 7 days.
 - Data export archives: download link valid for 7 days, then the archive is deleted.
-- Frames extracted for analysis: deleted after the analysis completes or fails, within the period set in our retention configuration.
+- Match videos uploaded for analysis: deleted when the analysis completes or is cancelled, unless you chose "Keep match video". After a failed analysis: deleted after 24 hours, or after 7 days if you chose to keep it for a retry.
+- Frames extracted for analysis: frames the report does not cite are deleted when the analysis ends. Cited evidence frames stay with the analysis until you delete it.
+- Optional evidence clips: only made when you ask for them, and kept with the analysis until you delete it.
+- Analysis uploads that never finish: marked expired after 7 days and their files deleted.
 - Guardian approval and confirmation links: expire after 7 days. Withdrawal links stay valid for about 13 months.
 - Cancelled or expired analysis jobs: cleaned up automatically.
 

@@ -38,6 +38,8 @@ const CREATE_KEYS = [
   'identityConfirmation',
   'identityCandidates',
   'idempotencyKey',
+  'analysisIntent',
+  'clipContext',
   'createdAt',
   'updatedAt',
 ] as const satisfies ReadonlyArray<keyof MatchAnalysisJob>;

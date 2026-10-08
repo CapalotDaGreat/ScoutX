@@ -55,6 +55,7 @@ const UID_SUBCOLLECTIONS = (uid) => [
 exports.OWNED_QUERIES = [
     ['gpsSessions', 'playerId'],
     ['matchAnalysisJobs', 'playerId'],
+    ['videoProcessingConsents', 'uid'],
     ['careerReplays', 'playerId'],
     ['activities', 'recipientId'],
     ['activities', 'actorId'],

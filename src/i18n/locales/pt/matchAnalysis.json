@@ -186,7 +186,8 @@
     "foul": "Falta",
     "card": "Cartão",
     "save": "Defesa",
-    "other": "Outra ação"
+    "other": "Outra ação",
+    "dribble": "Drible"
   },
   "jobStatus": {
     "ready": "Pronto",
@@ -267,7 +268,8 @@
     "extraction_failed": "Não foi possível extrair imagens-chave deste vídeo.",
     "queue_unavailable": "Não foi possível colocar a análise na fila. Tenta novamente dentro de alguns minutos.",
     "video_rejected": "Este vídeo não passou nas verificações de formato e duração.",
-    "ai_privacy_configuration_required": "A análise de vídeo ainda não está disponível. Podes continuar a registar jogos e acompanhar a tua evolução."
+    "ai_privacy_configuration_required": "A análise de vídeo ainda não está disponível. Podes continuar a registar jogos e acompanhar a tua evolução.",
+    "video_consent_required": "O consentimento para este vídeo falta ou foi retirado. Inicia a análise de novo para dar o consentimento."
   },
   "pipeline": {
     "title": "Análise em curso",
@@ -290,5 +292,140 @@
     "coaching-synthesis": "A criar conselhos",
     "validation": "A validar evidências",
     "final-report": "A finalizar o relatório"
+  },
+  "video": {
+    "intent": {
+      "title": "O que mostra este vídeo?",
+      "match": "Jogo",
+      "training": "Treino"
+    },
+    "mode": {
+      "SHORT_CLIP": "Clipe curto (até 60 s). Os fotogramas são extraídos neste telemóvel; o vídeo não é enviado.",
+      "MATCH_CLIP": "Excerto de jogo (até 20 min). O vídeo é enviado e analisado por partes.",
+      "FULL_MATCH": "Jogo completo. O vídeo é enviado e analisado por partes.",
+      "TRAINING_CLIP": "Clipe de treino. Avaliado como treino, não como desempenho em jogo.",
+      "tooLong": "Os vídeos podem ter até {{minutes}} minutos."
+    },
+    "clipContext": {
+      "title": "O que acontece no clipe? (opcional)",
+      "auto": "Deixar o PitchProof decidir",
+      "shot": "Remate",
+      "save": "Defesa do guarda-redes",
+      "pass": "Passe",
+      "dribble": "Drible",
+      "tackle": "Desarme",
+      "defensive": "Defender",
+      "other": "Outra coisa"
+    },
+    "position": {
+      "title": "A tua posição neste vídeo",
+      "goalkeeper": "Guarda-redes",
+      "defender": "Defesa",
+      "midfielder": "Médio",
+      "forward": "Avançado",
+      "unknown": "Não sei"
+    },
+    "teamName": "Nome da tua equipa (opcional)",
+    "teamNamePlaceholder": "ex. FC Exemplo Sub-15",
+    "consent": {
+      "title": "Antes de analisarmos o teu vídeo",
+      "deviceSummary": "Apenas {{count}} fotogramas deste clipe são enviados. O vídeo fica no teu telemóvel.",
+      "cloudSummary": "O teu vídeo é enviado para o armazenamento na nuvem do PitchProof para extrair fotogramas.",
+      "ack": {
+        "processing": "Quero que o PitchProof analise este vídeo. A análise pode estar errada e só descreve o que os fotogramas mostram.",
+        "rights": "Posso usar estas imagens. Só eu sou seguido; ninguém é identificado pela cara.",
+        "retention": "Salvo escolha diferente abaixo, o vídeo original é apagado após a análise. Só os fotogramas citados no relatório ficam guardados, em privado, até eu apagar a análise.",
+        "provider": "Os fotogramas são enviados a um fornecedor de modelos de IA configurado sem retenção de dados."
+      },
+      "optionsTitle": "Opcional",
+      "keepVideo": "Guardar o vídeo do jogo",
+      "keepVideoHint": "Guarda o vídeo original em privado na tua biblioteca para rever momentos. Desligado por defeito.",
+      "evidenceClips": "Guardar clipes curtos de prova",
+      "evidenceClipsHint": "Corta até 6 clipes curtos sem som (cerca de 8 s) à volta dos momentos citados. Desligado por defeito.",
+      "keepForRetry": "Guardar o vídeo 7 dias se a análise falhar",
+      "keepForRetryHint": "Permite tentar de novo sem voltar a enviar. Caso contrário, o vídeo de uma análise falhada é apagado após 24 horas.",
+      "required": "Marca todos os pontos para continuar.",
+      "agree": "Aceitar e começar",
+      "cancel": "Agora não",
+      "withdraw": "Retirar o consentimento e parar"
+    },
+    "segments": "Partes analisadas: {{done}}/{{total}}",
+    "sectionsTitle": "O que este relatório cobre",
+    "availability": {
+      "AVAILABLE": "Disponível",
+      "LIMITED": "Limitado",
+      "INSUFFICIENT_EVIDENCE": "Provas insuficientes",
+      "NOT_AVAILABLE": "Indisponível"
+    },
+    "section": {
+      "identity": "Identidade",
+      "coverage": "Cobertura",
+      "technique": "Técnica",
+      "decisions": "Decisões",
+      "off_ball": "Jogo sem bola",
+      "tactical": "Tática",
+      "events": "Ações",
+      "statistics": "Estatísticas",
+      "physical": "Físico",
+      "goalkeeper": "Jogo de guarda-redes"
+    },
+    "reason": {
+      "identity_confirmed": "Confirmaste que jogador és.",
+      "identity_unconfirmed": "Confirma que fotogramas te mostram.",
+      "target_not_seen": "Não estavas claramente visível nos fotogramas analisados.",
+      "sampled_frames_only": "Baseado em fotogramas, não em vídeo contínuo.",
+      "not_enough_frames": "Poucos fotogramas mostravam isto.",
+      "needs_tracking": "Requer seguimento contínuo do jogador.",
+      "cv_worker_not_configured": "Requer o serviço de seguimento, que não está ativo.",
+      "cv_events_not_validated": "As ações do seguimento ainda não estão validadas.",
+      "no_validated_events": "Sem ações validadas.",
+      "use_gps": "Usa uma sessão GPS para distância e velocidade.",
+      "not_goalkeeper": "Só para guarda-redes."
+    },
+    "possibleEventsTitle": "Ações possíveis",
+    "possibleEventsHint": "Sugeridas a partir de fotogramas. Não contam como estatísticas.",
+    "needsReview": "Por rever",
+    "validated": "Validada",
+    "opportunitiesTitle": "Prioridades de treino",
+    "drill": "Exercício: {{drill}}",
+    "decisionsTitle": "Momentos de decisão",
+    "decisionChosen": "Escolheste: {{chosen}}",
+    "decisionAlternative": "Alternativa: {{alternative}}",
+    "clip": {
+      "title": "Análise do clipe",
+      "confidence": "Confiança: {{level}}",
+      "low": "baixa",
+      "medium": "média",
+      "frames_one": "{{count}} fotograma",
+      "frames_other": "{{count}} fotogramas",
+      "whatHappened": "O que aconteceu",
+      "observable": "O que os fotogramas mostram",
+      "notObservable": "O que os fotogramas não conseguem mostrar",
+      "notVisible": "Não estavas claramente visível neste clipe, por isso não há conselhos.",
+      "technique": "Técnica",
+      "decision": "Decisão",
+      "worked": "O que correu bem",
+      "improve": "O que melhorar",
+      "drill": "Prática",
+      "goalkeeper": "Jogo de guarda-redes"
+    },
+    "lifecycle": {
+      "deleted": "O vídeo original foi apagado. {{count}} fotogramas citados ficam guardados em privado.",
+      "retained": "O vídeo original fica na tua biblioteca. {{count}} fotogramas citados ficam guardados em privado.",
+      "absent": "Nenhum vídeo foi enviado. {{count}} fotogramas citados ficam guardados em privado.",
+      "clips_one": "{{count}} clipe de prova guardado.",
+      "clips_other": "{{count}} clipes de prova guardados.",
+      "pending": "Os ficheiros temporários serão removidos automaticamente."
+    },
+    "version": "Análise v{{version}} · pipeline {{pipeline}}",
+    "files": {
+      "pick": "Escolher de Ficheiros / iCloud",
+      "preparing": "A preparar o ficheiro… (os ficheiros do iCloud são transferidos primeiro)",
+      "unsupported": "Escolhe um vídeo MP4 ou MOV.",
+      "too_long": "Os vídeos podem ter até {{minutes}} minutos.",
+      "too_large": "Este ficheiro é demasiado grande. Escolhe uma exportação mais curta ou de menor qualidade.",
+      "no_duration": "Não foi possível ler o vídeo. Verifica se é reproduzido na app Ficheiros.",
+      "low_disk": "O teu telemóvel está quase cheio. Liberta espaço e tenta de novo."
+    }
   }
 }

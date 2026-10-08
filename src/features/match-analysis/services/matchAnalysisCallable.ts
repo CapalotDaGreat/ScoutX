@@ -1,5 +1,7 @@
 import { createCallableFunction } from '@/firebase/callableFunctions';
 import type { AskThisMatchCitation } from '@/features/match-analysis/services/askThisMatchService';
+import type { AnalysisMode, ProcessingMode } from '@/features/match-analysis/services/analysisMode';
+import type { VideoConsentChoices } from '@/features/match-analysis/types';
 
 export type AnalyzeMatchFootageRequest = {
   jobId: string;
@@ -32,6 +34,64 @@ export async function requestMatchFootageAnalysis(
 
   const result = await callable({ jobId, idempotencyKey });
   return result.data as AnalyzeMatchFootageResponse;
+}
+
+export type RecordVideoConsentRequest = {
+  jobId: string;
+  acknowledgements: { processing: true; rights: true; retention: true; provider: true };
+  retainSource: boolean;
+  keepForRetry: boolean;
+  evidenceClips: boolean;
+};
+
+export type RecordVideoConsentResponse = {
+  jobId: string;
+  analysisMode: AnalysisMode;
+  processingMode: ProcessingMode;
+  providers: string[];
+};
+
+/** Only called after the player ticked every acknowledgement on the consent sheet. */
+export async function requestRecordVideoConsent(
+  jobId: string,
+  choices: VideoConsentChoices,
+): Promise<RecordVideoConsentResponse> {
+  const callable = createCallableFunction<RecordVideoConsentRequest>('recordVideoProcessingConsent');
+  if (!callable) {
+    throw new Error('Cloud Functions unavailable.');
+  }
+  const result = await callable({
+    jobId,
+    acknowledgements: { processing: true, rights: true, retention: true, provider: true },
+    retainSource: choices.retainSource,
+    keepForRetry: choices.keepForRetry,
+    evidenceClips: choices.evidenceClips,
+  });
+  return result.data as RecordVideoConsentResponse;
+}
+
+export async function requestRevokeVideoConsent(jobId: string): Promise<{ jobId: string; revokedAt: string }> {
+  const callable = createCallableFunction<{ jobId: string }>('revokeVideoProcessingConsent');
+  if (!callable) {
+    throw new Error('Cloud Functions unavailable.');
+  }
+  const result = await callable({ jobId });
+  return result.data as { jobId: string; revokedAt: string };
+}
+
+export type ConfirmIdentityRequest = {
+  jobId: string;
+  decision: 'confirmed' | 'rejected';
+  frameIds: string[];
+};
+
+export async function requestConfirmAnalysisIdentity(request: ConfirmIdentityRequest): Promise<{ state: string; released: boolean }> {
+  const callable = createCallableFunction<ConfirmIdentityRequest>('confirmAnalysisIdentity');
+  if (!callable) {
+    throw new Error('Cloud Functions unavailable.');
+  }
+  const result = await callable(request);
+  return result.data as { state: string; released: boolean };
 }
 
 export type AskThisMatchRequest = {

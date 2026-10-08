@@ -58,8 +58,24 @@ async function seedUploader(uid, { consent = true } = {}) {
   });
 }
 
-async function seedJob(jobId, playerId = UID) {
-  await db.doc(`matchAnalysisJobs/${jobId}`).set({ id: jobId, playerId, status: 'uploading' });
+async function seedJob(jobId, playerId = UID, { videoConsent = true, retainSource = false } = {}) {
+  await db.doc(`matchAnalysisJobs/${jobId}`).set({ id: jobId, playerId, status: 'uploading', retainSource });
+  if (videoConsent) {
+    await db.doc(`videoProcessingConsents/${jobId}`).set({
+      uid: playerId,
+      jobId,
+      purpose: 'match_analysis',
+      analysisMode: 'MATCH_CLIP',
+      processingMode: 'cloud_video',
+      providers: ['pitchproof_cloud', 'openrouter_zdr'],
+      policyVersion: require('./lib/analysis/videoConsent.js').VIDEO_CONSENT_VERSION,
+      retainSource,
+      keepForRetry: false,
+      evidenceClips: false,
+      consentedAt: new Date().toISOString(),
+      revokedAt: null,
+    });
+  }
 }
 
 function request(jobId, bytes, overrides = {}) {
@@ -124,6 +140,17 @@ describe('createUploadSession', () => {
 
     await seedJob('job_foreign', OTHER);
     await expectCode(createUploadSession.run(call(UID, request('job_foreign', bytes))), 'failed-precondition');
+
+    await seedJob('job_no_video_consent', UID, { videoConsent: false });
+    await assert.rejects(createUploadSession.run(call(UID, request('job_no_video_consent', bytes))), (error) => {
+      assert.equal(error.code, 'failed-precondition');
+      assert.equal(error.details?.reason, 'video_consent_required');
+      return true;
+    });
+    const revoked = 'job_revoked_consent';
+    await seedJob(revoked);
+    await db.doc(`videoProcessingConsents/${revoked}`).update({ revokedAt: new Date().toISOString() });
+    await expectCode(createUploadSession.run(call(UID, request(revoked, bytes))), 'failed-precondition');
 
     await seedJob('job_bad');
     await expectCode(
@@ -201,7 +228,7 @@ describe('chunked transfer', () => {
   // The Storage emulator finalizes on the first PUT and does not implement Content-Range chunking,
   // so multi-chunk resume is covered against a protocol fake in tests/unit/chunkedUpload.test.ts.
   test('a real video sent through the session is validated and promoted to private match storage', async () => {
-    await seedJob('job_land');
+    await seedJob('job_land', UID, { retainSource: true });
     const bytes = readFileSync(fixtures.mov);
     const session = await createUploadSession.run(
       call(UID, request('job_land', bytes, { contentType: 'video/quicktime', fileName: 'match.mov', declaredDurationSec: 30 })),
@@ -239,9 +266,23 @@ describe('chunked transfer', () => {
     assert.equal(footage.type, 'matchFootage');
     assert.equal(footage.storagePath, job.videoStoragePath);
     assert.equal(footage.sourceJobId, 'job_land');
-    assert.equal(footage.visibility, 'private', 'validated footage enters the library privately');
+    assert.equal(footage.visibility, 'private', 'kept footage enters the library privately');
     assert.equal(footage.rightsState, 'unconfirmed');
     assert.equal(footage.durationSec, 30);
+  });
+
+  test('without "Keep match video" the footage is temporary and never enters the library', async () => {
+    await seedJob('job_temp');
+    const bytes = readFileSync(fixtures.mov);
+    const session = await createUploadSession.run(
+      call(UID, request('job_temp', bytes, { contentType: 'video/quicktime', fileName: 'match.mov', declaredDurationSec: 30 })),
+    );
+    const uploader = new ResumableSessionUploader({ sessionUri: session.sessionUri, source: bufferSource(bytes), chunkBytes: bytes.length });
+    assert.equal(await uploader.run(0), 'complete');
+    assert.equal(await processQuarantinedObject(db, `quarantine/${UID}/${session.uploadId}/source`, bytes.length), 'ready');
+    const job = (await db.doc('matchAnalysisJobs/job_temp').get()).data();
+    assert.equal(job.analysisMode, 'SHORT_CLIP', 'the mode follows the measured duration');
+    assert.equal((await db.doc(`players/${UID}/media/footage_job_temp`).get()).exists, false);
   });
 
   test('objects in quarantine without an open upload are deleted', async () => {

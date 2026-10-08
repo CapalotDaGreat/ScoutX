@@ -5,6 +5,7 @@ import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { createCallableOptions, resolveCallableCors } from '../callableOptions';
 import { isFootageProcessingApproved } from '../ai/providerConfig';
+import { assertVideoConsent } from '../analysis/videoConsent';
 import { hasCurrentConsent } from '../legal/consent';
 import { loadSafetyPolicy } from '../safety/userSafety';
 import { consumeQuota, planFor, releaseQuota } from '../entitlements/quotaService';
@@ -91,6 +92,7 @@ export const createUploadSession = onCall(createCallableOptions({ timeoutSeconds
       reason: 'ai_privacy_configuration_required',
     });
   }
+  await assertVideoConsent(db, uid, input.jobId, 'cloud_video');
 
   const plan = await planFor(db, uid);
   if (input.sizeBytes > plan.maxVideoBytes || input.declaredDurationSec > plan.maxVideoDurationSec) {

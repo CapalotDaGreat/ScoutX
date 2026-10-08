@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PitchProof real-footage annotation",
+  "description": "Made by a person watching the video with the player's permission. Store annotations and footage outside the repository; never commit real footage.",
+  "type": "object",
+  "required": ["videoId", "durationSec", "targetJersey", "visibleIntervals", "events"],
+  "additionalProperties": false,
+  "properties": {
+    "videoId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,80}$" },
+    "durationSec": { "type": "number", "exclusiveMinimum": 0 },
+    "targetJersey": { "type": "string", "pattern": "^[0-9]{1,3}$" },
+    "conditions": {
+      "type": "object",
+      "description": "Recording conditions, used to slice results.",
+      "properties": {
+        "camera": { "enum": ["tripod_wide", "handheld", "drone", "broadcast", "phone_sideline"] },
+        "light": { "enum": ["day", "floodlight", "dusk", "indoor"] },
+        "pitch": { "enum": ["grass", "artificial", "indoor", "other"] },
+        "level": { "enum": ["youth", "amateur", "semi_pro", "pro"] }
+      },
+      "additionalProperties": false
+    },
+    "visibleIntervals": {
+      "description": "Seconds where the target player is visible on camera.",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "type": "number" }, { "type": "number" }], "minItems": 2, "maxItems": 2 }
+    },
+    "onPitchIntervals": {
+      "description": "Seconds where the target was on the pitch (visible or not). Defaults to the whole video.",
+      "type": "array",
+      "items": { "type": "array", "prefixItems": [{ "type": "number" }, { "type": "number" }], "minItems": 2, "maxItems": 2 }
+    },
+    "events": {
+      "description": "Actions by the target player only.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "timeSec"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "enum": ["shot", "pass", "dribble", "tackle", "save", "duel", "other"] },
+          "timeSec": { "type": "number", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

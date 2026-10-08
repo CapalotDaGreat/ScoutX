@@ -545,6 +545,50 @@ describe('match analysis jobs', () => {
     );
   });
 
+  test('consented short clips accept device frames while uploading; mode and consent are server-owned', async () => {
+    const frames = Array.from({ length: 32 }, (_, i) => ({ id: `frame_${i}`, index: i, timestampSec: i, storagePath: `profiles/${PLAYER}/matchFootage/c1/frames/frame_${i}.jpg`, downloadUrl: '' }));
+    await seed('matchAnalysisJobs/c1', job({ processingMode: 'device_frames', consentVersion: '2026-10-video-v1' }));
+    await allowed(setDocument(PLAYER, 'matchAnalysisJobs/c1', job({ processingMode: 'device_frames', consentVersion: '2026-10-video-v1', frames })), '32 device frames');
+    await denied(
+      setDocument(PLAYER, 'matchAnalysisJobs/c1', job({ processingMode: 'device_frames', consentVersion: '2026-10-video-v1', frames: [...frames, frames[0]] })),
+      'more than 32 frames',
+    );
+    await seed('matchAnalysisJobs/c2', job({ processingMode: 'device_frames' }));
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/c2', job({ processingMode: 'device_frames', frames })), 'without consent');
+    await seed('matchAnalysisJobs/c3', job({ processingMode: 'cloud_video', consentVersion: '2026-10-video-v1' }));
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/c3', job({ processingMode: 'cloud_video', consentVersion: '2026-10-video-v1', frames })), 'cloud job');
+
+    await allowed(setDocument(PLAYER, 'matchAnalysisJobs/c4', job({ analysisIntent: 'training', clipContext: 'save' })), 'intent and clip context');
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/c5', job({ clipContext: 'penalty_scored' })), 'unknown clip context');
+    for (const [label, patch] of [
+      ['processing mode', { processingMode: 'device_frames' }],
+      ['analysis mode', { analysisMode: 'SHORT_CLIP' }],
+      ['keep video', { retainSource: true }],
+      ['consent', { consentVersion: '2026-10-video-v1' }],
+      ['pending coaching', { pendingCoaching: { strengths: ['fake'] } }],
+      ['cleanup state', { mediaCleanupState: 'done' }],
+    ]) {
+      await denied(setDocument(PLAYER, `matchAnalysisJobs/c6_${label.replace(/ /g, '_')}`, job(patch)), `create with ${label}`);
+    }
+    await seed('matchAnalysisJobs/c7', job({ status: 'complete', retainSource: false }));
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/c7', job({ status: 'complete', retainSource: true })), 'flip keep video later');
+  });
+
+  test('video consents and analysis subcollections are owner-read, server-written', async () => {
+    await seed('videoProcessingConsents/c1', { uid: PLAYER, jobId: 'c1', revokedAt: null });
+    await allowed(getDocument(PLAYER, 'videoProcessingConsents/c1'), 'owner reads consent');
+    await denied(getDocument(OUTSIDER, 'videoProcessingConsents/c1'), 'outsider reads consent');
+    await denied(setDocument(PLAYER, 'videoProcessingConsents/c9', { uid: PLAYER, jobId: 'c9', revokedAt: null }), 'forge consent');
+    await seed('matchAnalysisJobs/s1', job({ status: 'complete' }));
+    await seed('matchAnalysisJobs/s1/segmentReviews/0', { observations: [] });
+    await seed('matchAnalysisJobs/s1/reports/1', { report: {} });
+    await allowed(getDocument(PLAYER, 'matchAnalysisJobs/s1/segmentReviews/0'), 'owner reads review');
+    await allowed(getDocument(PLAYER, 'matchAnalysisJobs/s1/reports/1'), 'owner reads archived version');
+    await denied(getDocument(OUTSIDER, 'matchAnalysisJobs/s1/segmentReviews/0'), 'outsider reads review');
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/s1/segmentReviews/1', { observations: [{ detail: 'fake' }] }), 'forge review');
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/s1/reports/2', { report: {} }), 'forge version');
+  });
+
   test('clients may confirm identity but cannot write events, lease, or quota', async () => {
     await seed('matchAnalysisJobs/j6', job({ status: 'processing' }));
     await allowed(

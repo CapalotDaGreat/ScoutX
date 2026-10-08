@@ -1,0 +1,14 @@
+{
+  "status": "proposed",
+  "note": "PROPOSED values for the product owner to decide. Not approved. Passing them does not enable anything by itself: CV_WORKER_APPROVED and CV_EVENTS_VALIDATED stay operator decisions.",
+  "minimumVideos": 20,
+  "metrics": {
+    "visiblePrecision": { "min": 0.9 },
+    "visibleRecall": { "min": 0.6 },
+    "likelyOffCameraPrecision": { "min": 0.9 },
+    "falseConfirmRate": { "max": 0.05 },
+    "eventPrecision": { "min": 0.85 },
+    "eventRecall": { "min": 0.6 },
+    "meanTimestampErrorSec": { "max": 1.5 }
+  }
+}

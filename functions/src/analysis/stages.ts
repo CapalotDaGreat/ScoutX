@@ -64,6 +64,24 @@ export function parseStages(value: unknown): StageRecord[] {
   });
 }
 
+/**
+ * Records the outcome of a CV stage. Only called with results that came back from the
+ * configured worker; without one these stages stay `unavailable`.
+ */
+export function setCvStageResult(
+  stages: StageRecord[],
+  id: string,
+  status: 'complete' | 'failed' | 'unavailable',
+  now: string,
+  note: string,
+): StageRecord[] {
+  return stages.map((stage) =>
+    stage.id === id && isCvWorkerStage(id)
+      ? { ...stage, status, note, ...(status === 'unavailable' ? {} : { completedAt: now }), progress: null }
+      : stage,
+  );
+}
+
 export function updateStage(
   stages: StageRecord[],
   id: string,

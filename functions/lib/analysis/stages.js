@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialStages = initialStages;
 exports.parseStages = parseStages;
+exports.setCvStageResult = setCvStageResult;
 exports.updateStage = updateStage;
 const workerContract_1 = require("./workerContract");
 const STAGE_LABELS = [
@@ -47,6 +48,15 @@ function parseStages(value) {
             return stage;
         return { ...stage, ...stored, label: stage.label, progress: null };
     });
+}
+/**
+ * Records the outcome of a CV stage. Only called with results that came back from the
+ * configured worker; without one these stages stay `unavailable`.
+ */
+function setCvStageResult(stages, id, status, now, note) {
+    return stages.map((stage) => stage.id === id && (0, workerContract_1.isCvWorkerStage)(id)
+        ? { ...stage, status, note, ...(status === 'unavailable' ? {} : { completedAt: now }), progress: null }
+        : stage);
 }
 function updateStage(stages, id, status, now, extra = {}) {
     return stages.map((stage) => {

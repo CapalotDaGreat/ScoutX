@@ -33,13 +33,16 @@ marketing site on Cloudflare.
 | Bystanders or other players filmed without consent | Upload acknowledgement and rights confirmation; media private by default; "I appear in this video" report reason; takedown flow | Medium: PitchProof cannot verify consent of everyone in a match video |
 | Malicious files | Quarantine bucket path, server-side ffprobe validation, type/size/duration limits, no user access to quarantine. **No malware scanning is performed or claimed** | Medium |
 | Leaked private media | Storage rules owner-only, time-limited signed URLs for grants and exports | Low |
+| Analysis footage kept longer than needed | Per-video consent; source deleted at job end unless "Keep match video"; uncited frames and intermediates deleted; only cited frames (identity frames capped at 6) kept; evidence clips opt-in only; failed jobs 24 h / 7 days; hourly sweep; purge on delete | Low |
+| Short clips uploaded when frames would do | Clips up to 60 s are sampled on the phone; only frames upload (`processingMode: device_frames`) | Low |
+| Bystanders identified by the analysis | No facial recognition; target found by jersey number and kit colour; CV worker contract forbids retaining non-target identities and rejects requests that ask for it | Low–medium |
 
 ## 3. AI analysis
 
 | Risk | Measures | Residual |
 | --- | --- | --- |
 | Provider retains or trains on data | `data_collection: 'deny'` and `zdr: true` on every request; key only in Cloud Functions secrets | Medium until ZDR availability is confirmed for the chosen model (NOT VALIDATED) |
-| Wrong or overstated conclusions about a player | Coverage and confidence attached to results; computer-vision stages shown as NOT AVAILABLE; output validator rejects unsupported claims | Medium |
+| Wrong or overstated conclusions about a player | Coverage and confidence attached to results; per-section availability (AVAILABLE / LIMITED / INSUFFICIENT_EVIDENCE / NOT_AVAILABLE); every claim must cite existing frames; still-frame events are "needs review" and never counted; coaching held back until the player confirms identity; computer-vision stages NOT AVAILABLE until an evaluated worker is approved | Medium |
 | Prompt injection via user text | Prompt builder separates instructions from user content; validator with injection fixtures | Low–medium |
 | Automated decisions about players | PitchProof does not make recruitment decisions; scouts see evidence and its source | Low |
 
