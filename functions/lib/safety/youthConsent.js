@@ -11,6 +11,7 @@ const https_1 = require("firebase-functions/v2/https");
 const appleAuth_1 = require("../appleAuth");
 const deletion_1 = require("../dataRights/deletion");
 const callableOptions_1 = require("../callableOptions");
+const childAccounts_1 = require("./childAccounts");
 const policy_1 = require("./policy");
 const guardianToken_1 = require("./guardianToken");
 const userSafety_1 = require("./userSafety");
@@ -56,9 +57,11 @@ function sanitizeFirstName(value) {
     const cleaned = name.replace(/[^\p{L}\p{M}'-]/gu, '').slice(0, 40);
     return cleaned || 'A young player';
 }
+const NON_PLAYER_ROLES = ['scout', 'coach', 'club', 'admin'];
 /**
  * Records the caller's age band. Bands can only become stricter; loosening goes through
- * support. Under-13 accounts are not allowed, so the account is deleted immediately.
+ * support. Under-13 accounts become private and stay locked until a parent consents; without
+ * consent they are deleted after CHILD_CONSENT_WAIT_DAYS.
  */
 exports.setAgeBand = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
     const uid = requireUid(request.auth?.uid);
@@ -71,21 +74,23 @@ exports.setAgeBand = (0, https_1.onCall)((0, callableOptions_1.createCallableOpt
     if (!(0, policy_1.canChangeAgeBand)(existing?.ageBand ?? null, ageBand)) {
         throw new https_1.HttpsError('failed-precondition', 'Your age group can only be changed by PitchProof support.');
     }
+    if (existing?.ageBand === ageBand) {
+        return { ageBand };
+    }
     if (ageBand === 'under13') {
-        // Choosing an age band for the first time is part of sign-up. Tightening an existing band to
-        // under-13 deletes an established account, so it needs the same recent sign-in as deletion.
+        const role = (await db.collection('users').doc(uid).get()).get('role');
+        if (typeof role === 'string' && NON_PLAYER_ROLES.includes(role)) {
+            throw new https_1.HttpsError('failed-precondition', 'Accounts for children under 13 can only use the player role.', {
+                reason: 'child_player_only',
+            });
+        }
+        // Choosing a band for the first time is part of sign-up. Moving an established account to
+        // under-13 locks it and leads to deletion without parental consent, so it needs the same
+        // recent sign-in as deleting the account.
         if (existing?.ageBand)
             await (0, deletion_1.assertDeletionAuthorized)(db, uid, request.auth?.token);
-        const outcome = await (0, deletion_1.runAccountDeletion)(db, uid, appleAuth_1.accountDeletionDeps);
-        if (outcome.status === 'failed') {
-            throw new https_1.HttpsError('aborted', "We couldn't complete account deletion. Please try again.", { reason: 'deletion_incomplete' });
-        }
-        return { ageBand, deleted: true };
     }
-    const now = new Date().toISOString();
-    if (existing?.ageBand === ageBand) {
-        return { ageBand, deleted: false };
-    }
+    const now = new Date();
     await db.collection('userSafety').doc(uid).set({
         ageBand,
         guardianStatus: ageBand === '18plus' ? 'not_required' : 'required',
@@ -94,10 +99,11 @@ exports.setAgeBand = (0, https_1.onCall)((0, callableOptions_1.createCallableOpt
         consentExpiresAt: null,
         consentVersion: null,
         guardianEmailMasked: null,
-        ageBandSetAt: now,
-        updatedAt: now,
+        childDeleteAfter: ageBand === 'under13' ? (0, childAccounts_1.childConsentDeadline)(now) : null,
+        ageBandSetAt: now.toISOString(),
+        updatedAt: now.toISOString(),
     });
-    return { ageBand, deleted: false };
+    return { ageBand };
 });
 exports.requestGuardianConsent = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)({ secrets: [guardianLinkSecret] }), async (request) => {
     const uid = requireUid(request.auth?.uid);
@@ -112,9 +118,10 @@ exports.requestGuardianConsent = (0, https_1.onCall)((0, callableOptions_1.creat
     }
     const db = (0, firestore_1.getFirestore)();
     const state = await (0, userSafety_1.loadSafetyState)(uid, db);
-    if (state?.ageBand !== '13-17') {
-        throw new https_1.HttpsError('failed-precondition', 'Guardian approval is only needed for players aged 13 to 17.');
+    if (state?.ageBand !== '13-17' && state?.ageBand !== 'under13') {
+        throw new https_1.HttpsError('failed-precondition', 'Guardian approval is only needed for players under 18.');
     }
+    const child = state.ageBand === 'under13';
     const secret = linkSecret();
     const contactRef = db.collection('guardianContacts').doc(uid);
     const contact = (await contactRef.get()).data() ?? {};
@@ -131,19 +138,22 @@ exports.requestGuardianConsent = (0, https_1.onCall)((0, callableOptions_1.creat
     });
     const firstName = sanitizeFirstName(data.playerFirstName);
     const now = new Date().toISOString();
-    const pending = await db.collection('youthConsents').where('uid', '==', uid).where('status', '==', 'pending').get();
+    const pending = await db.collection('youthConsents').where('uid', '==', uid).where('status', 'in', ['pending', 'confirming']).get();
     const batch = db.batch();
     for (const doc of pending.docs) {
-        batch.update(doc.ref, { status: 'superseded', tokenHash: null, updatedAt: now });
+        batch.update(doc.ref, { status: 'superseded', tokenHash: null, confirmTokenHash: null, updatedAt: now });
     }
     batch.set(consentRef, {
         uid,
+        ageBand: state.ageBand,
         guardianEmailHash: (0, guardianToken_1.hashGuardianEmail)(secret, email),
         status: 'pending',
-        version: policy_1.GUARDIAN_CONSENT_VERSION,
-        requestedScopes: policy_1.YOUTH_SCOPES,
+        version: child ? policy_1.CHILD_CONSENT_VERSION : policy_1.GUARDIAN_CONSENT_VERSION,
+        method: child ? 'email_plus_signed_form' : 'email',
+        requestedScopes: (0, policy_1.grantableScopes)(state.ageBand),
         scopes: [],
         tokenHash: (0, guardianToken_1.hashToken)(token),
+        confirmTokenHash: null,
         revokeTokenHash: null,
         linkExpiresAt: new Date(Date.now() + guardianToken_1.GUARDIAN_LINK_TTL_MS).toISOString(),
         grantedAt: null,
@@ -162,11 +172,21 @@ exports.requestGuardianConsent = (0, https_1.onCall)((0, callableOptions_1.creat
     });
     batch.set(db.collection('userSafety').doc(uid), { guardianStatus: 'pending', consentId: consentRef.id, guardianEmailMasked: (0, guardianToken_1.maskEmail)(email), updatedAt: now }, { merge: true });
     await batch.commit();
-    await (0, userSafety_1.queueMail)(db, { to: email, uid, purpose: 'guardian_consent', ...(0, userSafety_1.guardianEmail)('consent', { firstName, link: guardianLink(token) }) });
+    await (0, userSafety_1.queueMail)(db, {
+        to: email,
+        uid,
+        purpose: 'guardian_consent',
+        ...(0, userSafety_1.guardianEmail)(child ? 'child_consent' : 'consent', { firstName, link: guardianLink(token) }),
+    });
     return { status: 'pending', guardianEmailMasked: (0, guardianToken_1.maskEmail)(email) };
 });
+const LINK_FIELDS = {
+    consent: 'tokenHash',
+    confirm: 'confirmTokenHash',
+    revoke: 'revokeTokenHash',
+};
 async function resolveToken(db, token) {
-    const payload = (0, guardianToken_1.verifyGuardianToken)(linkSecret(), token, ['consent', 'revoke', 'trial']);
+    const payload = (0, guardianToken_1.verifyGuardianToken)(linkSecret(), token, ['consent', 'confirm', 'revoke', 'trial']);
     if (!payload || typeof token !== 'string') {
         throw new https_1.HttpsError('permission-denied', 'This link is invalid or has expired.');
     }
@@ -179,11 +199,22 @@ async function resolveToken(db, token) {
         return { kind: 'trial', payload, tokenHash, trial };
     }
     const consent = await db.collection('youthConsents').doc(payload.ref).get();
-    const field = payload.purpose === 'consent' ? 'tokenHash' : 'revokeTokenHash';
-    if (!consent.exists || consent.get(field) !== tokenHash) {
+    if (!consent.exists || consent.get(LINK_FIELDS[payload.purpose]) !== tokenHash) {
         throw new https_1.HttpsError('permission-denied', 'This link has already been used or is no longer valid.');
     }
     return { kind: payload.purpose, payload, tokenHash, consent };
+}
+function isChildConsent(consent) {
+    return consent.ageBand === 'under13';
+}
+/** A typed full name as the parent's signature: two to 100 characters, letters and name punctuation. */
+function sanitizeSignature(value) {
+    if (typeof value !== 'string')
+        return null;
+    const cleaned = value.trim().replace(/\s+/g, ' ');
+    if (cleaned.length < 2 || cleaned.length > 100 || !/^[\p{L}\p{M}' .-]+$/u.test(cleaned))
+        return null;
+    return cleaned;
 }
 /** Hosting page calls this without an account; the signed token is the only credential. */
 const publicGuardianOptions = (0, callableOptions_1.createCallableOptions)({ secrets: [guardianLinkSecret], enforceAppCheck: false });
@@ -207,16 +238,40 @@ exports.getGuardianConsentRequest = (0, https_1.onCall)(publicGuardianOptions, a
     }
     const consent = resolved.consent.data() ?? {};
     const contact = (await db.collection('guardianContacts').doc(String(consent.uid)).get()).data() ?? {};
+    const child = isChildConsent(consent);
     return {
         purpose: resolved.kind,
+        child,
         playerFirstName: typeof contact.firstName === 'string' ? contact.firstName : 'Your child',
         status: consent.status,
         version: consent.version,
-        scopes: policy_1.YOUTH_SCOPES,
+        scopes: (0, policy_1.grantableScopes)(child ? 'under13' : '13-17'),
         grantedScopes: Array.isArray(consent.scopes) ? consent.scopes : [],
+        pendingScopes: Array.isArray(consent.pendingScopes) ? consent.pendingScopes : [],
     };
 });
-exports.respondGuardianConsent = (0, https_1.onCall)(publicGuardianOptions, async (request) => {
+async function mailGuardian(db, uid, purpose, kind, link) {
+    const contact = (await db.collection('guardianContacts').doc(uid).get()).data() ?? {};
+    if (typeof contact.email !== 'string')
+        return;
+    await (0, userSafety_1.queueMail)(db, {
+        to: contact.email,
+        uid,
+        purpose,
+        ...(0, userSafety_1.guardianEmail)(kind, { firstName: typeof contact.firstName === 'string' ? contact.firstName : 'your child', link }),
+    });
+}
+/**
+ * A parent declined or withdrew consent for a child: the guardian gets a closing email and the
+ * account is deleted. If deletion stops part-way, `childDeleteAfter` makes the daily cleanup
+ * finish it.
+ */
+async function closeChildAccount(db, uid, status, now) {
+    await db.collection('userSafety').doc(uid).set({ guardianStatus: status, scopes: [], consentExpiresAt: null, childDeleteAfter: now, updatedAt: now }, { merge: true });
+    await mailGuardian(db, uid, 'guardian_child_closed', 'child_closed');
+    await (0, childAccounts_1.deleteChildAccount)(db, uid, `parent_${status}`);
+}
+exports.respondGuardianConsent = (0, https_1.onCall)({ ...publicGuardianOptions, secrets: [guardianLinkSecret, ...appleAuth_1.accountDeletionSecrets], timeoutSeconds: 300 }, async (request) => {
     const db = (0, firestore_1.getFirestore)();
     const data = (request.data ?? {});
     const resolved = await resolveToken(db, data.token);
@@ -250,11 +305,13 @@ exports.respondGuardianConsent = (0, https_1.onCall)(publicGuardianOptions, asyn
     }
     const consent = resolved.consent.data() ?? {};
     const uid = String(consent.uid);
+    const child = isChildConsent(consent);
     const safetyRef = db.collection('userSafety').doc(uid);
+    const linkField = LINK_FIELDS[resolved.kind];
     if (decision === 'revoke') {
         if (resolved.kind !== 'revoke')
             throw new https_1.HttpsError('invalid-argument', 'Use the link from your confirmation email.');
-        await updateIfLinkUnused(db, resolved.consent.ref, 'revokeTokenHash', resolved.tokenHash, {
+        await updateIfLinkUnused(db, resolved.consent.ref, linkField, resolved.tokenHash, {
             status: 'revoked',
             scopes: [],
             revokedAt: now,
@@ -262,85 +319,146 @@ exports.respondGuardianConsent = (0, https_1.onCall)(publicGuardianOptions, asyn
             updatedAt: now,
             audit: firestore_1.FieldValue.arrayUnion({ event: 'revoked_by_guardian', at: now }),
         });
+        if (child) {
+            await closeChildAccount(db, uid, 'revoked', now);
+            return { ok: true, status: 'revoked', accountDeleted: true };
+        }
         await safetyRef.set({ guardianStatus: 'revoked', scopes: [], consentExpiresAt: null, updatedAt: now }, { merge: true });
         return { ok: true, status: 'revoked' };
     }
     if (decision === 'decline') {
-        if (resolved.kind !== 'consent')
+        if (resolved.kind === 'revoke')
             throw new https_1.HttpsError('invalid-argument', 'Use revoke to withdraw consent.');
-        await updateIfLinkUnused(db, resolved.consent.ref, 'tokenHash', resolved.tokenHash, {
+        await updateIfLinkUnused(db, resolved.consent.ref, linkField, resolved.tokenHash, {
             status: 'declined',
             tokenHash: null,
+            confirmTokenHash: null,
+            pendingScopes: [],
             updatedAt: now,
-            audit: firestore_1.FieldValue.arrayUnion({ event: 'declined', at: now }),
+            audit: firestore_1.FieldValue.arrayUnion({ event: resolved.kind === 'confirm' ? 'confirmation_declined' : 'declined', at: now }),
         });
+        if (child) {
+            await closeChildAccount(db, uid, 'declined', now);
+            return { ok: true, status: 'declined', accountDeleted: true };
+        }
         await safetyRef.set({ guardianStatus: 'declined', scopes: [], updatedAt: now }, { merge: true });
         return { ok: true, status: 'declined' };
     }
+    const allowed = (0, policy_1.grantableScopes)(child ? 'under13' : '13-17');
+    const secret = linkSecret();
+    // Under 13, step two: the parent confirms from the second email and consent takes effect.
+    if (decision === 'confirm') {
+        if (resolved.kind !== 'confirm')
+            throw new https_1.HttpsError('invalid-argument', 'Use the link from the confirmation email.');
+        const scopes = (Array.isArray(consent.pendingScopes) ? consent.pendingScopes : []).filter((scope) => (0, policy_1.isYouthScope)(scope) && allowed.includes(scope));
+        return activateConsent(db, resolved, uid, scopes, consent, now, secret, 'confirmed');
+    }
     if (decision !== 'approve')
         throw new https_1.HttpsError('invalid-argument', 'Unknown decision.');
+    if (resolved.kind === 'confirm')
+        throw new https_1.HttpsError('invalid-argument', 'Choose confirm or decline.');
     if (data.confirmGuardian !== true) {
         throw new https_1.HttpsError('invalid-argument', 'Confirm that you are the parent or legal guardian.');
     }
-    const scopes = Array.isArray(data.scopes) ? [...new Set(data.scopes.filter(policy_1.isYouthScope))] : [];
+    const scopes = Array.isArray(data.scopes)
+        ? [...new Set(data.scopes.filter((scope) => (0, policy_1.isYouthScope)(scope) && allowed.includes(scope)))]
+        : [];
+    // Under 13, step one: signed form, then a second email before anything takes effect.
+    if (child && resolved.kind === 'consent') {
+        const signature = sanitizeSignature(data.signature);
+        if (!signature)
+            throw new https_1.HttpsError('invalid-argument', 'Type your full name to sign.');
+        if (data.acknowledged !== true) {
+            throw new https_1.HttpsError('invalid-argument', 'Confirm that you have read the notice to parents.');
+        }
+        const confirmToken = (0, guardianToken_1.createGuardianToken)(secret, {
+            ref: resolved.consent.id,
+            purpose: 'confirm',
+            exp: Date.now() + guardianToken_1.GUARDIAN_LINK_TTL_MS,
+        });
+        await updateIfLinkUnused(db, resolved.consent.ref, linkField, resolved.tokenHash, {
+            status: 'confirming',
+            pendingScopes: scopes,
+            tokenHash: null,
+            confirmTokenHash: (0, guardianToken_1.hashToken)(confirmToken),
+            signature: { name: signature, at: now, guardianDeclaredAdult: true, noticeAcknowledged: true },
+            updatedAt: now,
+            audit: firestore_1.FieldValue.arrayUnion({ event: 'signed', at: now, scopes }),
+        });
+        await safetyRef.set({ guardianStatus: 'confirming', updatedAt: now }, { merge: true });
+        await mailGuardian(db, uid, 'guardian_child_confirm', 'child_confirm', guardianLink(confirmToken));
+        return { ok: true, status: 'confirming' };
+    }
+    return activateConsent(db, resolved, uid, scopes, consent, now, secret, resolved.kind === 'consent' ? 'approved' : 'scopes_updated');
+});
+async function activateConsent(db, resolved, uid, scopes, consent, now, secret, event) {
+    const child = isChildConsent(consent);
     const expiresAt = new Date(Date.now() + CONSENT_VALIDITY_MS).toISOString();
-    const revokeToken = (0, guardianToken_1.createGuardianToken)(linkSecret(), {
+    const revokeToken = (0, guardianToken_1.createGuardianToken)(secret, {
         ref: resolved.consent.id,
         purpose: 'revoke',
         exp: Date.now() + guardianToken_1.GUARDIAN_REVOKE_TTL_MS,
     });
-    const linkField = resolved.kind === 'consent' ? 'tokenHash' : 'revokeTokenHash';
-    await updateIfLinkUnused(db, resolved.consent.ref, linkField, resolved.tokenHash, {
+    await updateIfLinkUnused(db, resolved.consent.ref, LINK_FIELDS[resolved.kind], resolved.tokenHash, {
         status: 'approved',
         scopes,
+        pendingScopes: [],
         tokenHash: null,
+        confirmTokenHash: null,
         revokeTokenHash: (0, guardianToken_1.hashToken)(revokeToken),
         grantedAt: consent.grantedAt ?? now,
         expiresAt,
         updatedAt: now,
-        audit: firestore_1.FieldValue.arrayUnion({ event: resolved.kind === 'consent' ? 'approved' : 'scopes_updated', at: now, scopes }),
+        audit: firestore_1.FieldValue.arrayUnion({ event, at: now, scopes }),
     });
-    await safetyRef.set({
+    await db.collection('userSafety').doc(uid).set({
         guardianStatus: 'approved',
         scopes,
         consentId: resolved.consent.id,
         consentVersion: consent.version ?? policy_1.GUARDIAN_CONSENT_VERSION,
         consentExpiresAt: expiresAt,
+        childDeleteAfter: child ? (0, childAccounts_1.childDeleteAfterApproval)(expiresAt) : null,
         updatedAt: now,
     }, { merge: true });
-    const contact = (await db.collection('guardianContacts').doc(uid).get()).data() ?? {};
-    if (typeof contact.email === 'string') {
-        await (0, userSafety_1.queueMail)(db, {
-            to: contact.email,
-            uid,
-            purpose: 'guardian_confirmation',
-            ...(0, userSafety_1.guardianEmail)('confirmation', {
-                firstName: typeof contact.firstName === 'string' ? contact.firstName : 'your child',
-                link: guardianLink(revokeToken),
-            }),
-        });
-    }
+    await mailGuardian(db, uid, 'guardian_confirmation', child ? 'child_confirmation' : 'confirmation', guardianLink(revokeToken));
     return { ok: true, status: 'approved', scopes };
-});
-/** The player can withdraw guardian consent themselves; youth features stop immediately. */
+}
+/**
+ * The player can withdraw guardian consent themselves; youth features stop immediately. A
+ * child's account then waits for a new parental consent and is deleted without one.
+ */
 exports.revokeGuardianConsent = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
     const uid = requireUid(request.auth?.uid);
     const db = (0, firestore_1.getFirestore)();
-    const now = new Date().toISOString();
-    const consents = await db.collection('youthConsents').where('uid', '==', uid).where('status', 'in', ['approved', 'pending']).get();
+    const now = new Date();
+    const nowIso = now.toISOString();
+    const state = await (0, userSafety_1.loadSafetyState)(uid, db);
+    const consents = await db
+        .collection('youthConsents')
+        .where('uid', '==', uid)
+        .where('status', 'in', ['approved', 'pending', 'confirming'])
+        .get();
     const batch = db.batch();
     for (const doc of consents.docs) {
         batch.update(doc.ref, {
             status: 'revoked',
             scopes: [],
+            pendingScopes: [],
             tokenHash: null,
+            confirmTokenHash: null,
             revokeTokenHash: null,
-            revokedAt: now,
-            updatedAt: now,
-            audit: firestore_1.FieldValue.arrayUnion({ event: 'revoked_by_player', at: now }),
+            revokedAt: nowIso,
+            updatedAt: nowIso,
+            audit: firestore_1.FieldValue.arrayUnion({ event: 'revoked_by_player', at: nowIso }),
         });
     }
-    batch.set(db.collection('userSafety').doc(uid), { guardianStatus: 'revoked', scopes: [], consentExpiresAt: null, updatedAt: now }, { merge: true });
+    batch.set(db.collection('userSafety').doc(uid), {
+        guardianStatus: 'revoked',
+        scopes: [],
+        consentExpiresAt: null,
+        ...(state?.ageBand === 'under13' ? { childDeleteAfter: (0, childAccounts_1.childConsentDeadline)(now) } : {}),
+        updatedAt: nowIso,
+    }, { merge: true });
     await batch.commit();
     return { status: 'revoked' };
 });

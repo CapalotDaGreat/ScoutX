@@ -3,6 +3,7 @@ import { Switch } from 'react-native';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { type PrivacySettings } from '@/features/player-profile/types/privacySettings';
+import { PrivateModeCard } from '@/features/youth-safety/components/PrivateModeCard';
 import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -54,6 +55,8 @@ export function PortfolioPrivacySettings({
   // A minor's guardian decides these; the server projection enforces the same policy.
   const publicLocked = !policy.canUsePublicPassport;
   const discoveryLocked = !policy.canBeDiscovered;
+
+  if (policy.privateOnly) return <PrivateModeCard />;
 
   return (
     <Card variant="outlined" padding="md" className="gap-1">

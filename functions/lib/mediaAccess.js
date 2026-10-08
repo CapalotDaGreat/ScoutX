@@ -6,6 +6,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const callableOptions_1 = require("./callableOptions");
 const holds_1 = require("./moderation/holds");
+const userSafety_1 = require("./safety/userSafety");
 const PLAYBACK_MS = 15 * 60 * 1000;
 function asRecord(value) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -28,7 +29,7 @@ async function grantedStoragePath(uid, storagePath, mediaId, reelId) {
         if (typeof grant.expiresAt === 'string' && grant.expiresAt < now) {
             continue;
         }
-        if (!grant.ownerId) {
+        if (!grant.ownerId || (await (0, userSafety_1.loadSafetyPolicy)(grant.ownerId)).privateOnly) {
             continue;
         }
         if (mediaId && grant.mediaId === mediaId) {

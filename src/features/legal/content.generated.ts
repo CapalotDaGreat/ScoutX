@@ -5,7 +5,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "privacy-policy",
     "title": "Privacy Policy",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -13,6 +13,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "summary": [
       "We collect what you put into PitchProof (profile, matches, goals, videos) and the minimum technical data needed to run it.",
       "Your Passport and scout discovery are off until you switch them on. For players aged 13 to 17, a parent or guardian decides.",
+      "Accounts for children under 13 are always private and need a parent's verified permission. Nobody else can see, find or contact them.",
       "Movement sessions record distance and a pitch heatmap. Your location is never stored or uploaded.",
       "AI providers process your footage only to produce your analysis. They are not allowed to train on it or keep it.",
       "You can download your data or delete your account at any time from the Privacy Center."
@@ -46,7 +47,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Analysis results: AI-generated observations, coaching suggestions and highlight plans created from your media.",
               "Movement sessions: distance, speed, sprints, zones and a heatmap expressed in metres relative to the pitch. See \"Movement sessions\" below.",
               "Scouting data: if you are a scout or coach, the players you save, your reports and your trial invitations. If you are a player, reports and invitations that scouts address to you.",
-              "Guardian data (players aged 13 to 17): your parent's or guardian's email address and their consent decisions.",
+              "Guardian data (players under 18): your parent's or guardian's email address and their consent decisions. For children under 13, also the name the parent typed to sign the consent form.",
               "Device and technical data: push notification token, app version, crash diagnostics and security signals (Firebase App Check)."
             ]
           },
@@ -74,6 +75,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "To provide PitchProof as you request it (contract): your account, profile, Passport, match logs, media library, analysis and scouting tools.",
               "With your consent, or your guardian's consent for players aged 13 to 17: a public Passport, discovery by scouts, scout contact, public media and AI analysis. You can withdraw consent at any time.",
+              "For children under 13: with the verified consent of a parent or legal guardian, for the whole private account and, separately, for AI analysis. Before that consent, only to ask for it.",
               "For our legitimate interests: keeping PitchProof secure, preventing abuse, fixing crashes and moderating reported content.",
               "To meet legal obligations: keeping proof of consent and moderation decisions for as long as the law requires."
             ]
@@ -93,7 +95,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Apple and Expo, to deliver push notifications.",
               "RevenueCat and Apple, if you buy a subscription.",
               "An email delivery provider, to send guardian approval emails.",
-              "Other PitchProof users, only as far as your visibility settings allow."
+              "Other PitchProof users, only as far as your visibility settings allow. Nothing about a child under 13 is ever shown to other users."
             ]
           },
           {
@@ -107,7 +109,28 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "PitchProof is for people aged {{minimumAge}} and older. Players aged 13 to 17 need verified approval from a parent or guardian before youth features become active. The guardian chooses each permission separately and can withdraw it at any time. Minors are shown publicly with first name and last initial only, labelled as a youth player, and never with an exact age. See the Youth Safety Policy and the Guardian Consent Notice."
+            "text": "Everyone under 18 needs a parent's or guardian's approval before PitchProof becomes active. Players aged 13 to 17: the guardian chooses each permission separately and can withdraw it at any time. Where public features are allowed, minors are shown with first name and last initial only, labelled as a youth player, and never with an exact age. See the Youth Safety Policy and the Guardian Consent Notice."
+          }
+        ]
+      },
+      {
+        "heading": "Children under {{privateModeUntilAge}}",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Accounts for children under {{privateModeUntilAge}} are private. Nobody else can see the child's profile, find it or contact the child, and the child cannot share videos, receive trial invitations or use any role other than player. There is no advertising and no data is sold."
+          },
+          {
+            "type": "paragraph",
+            "text": "Before a child under {{privateModeUntilAge}} can use PitchProof, we ask a parent or legal guardian for verifiable consent. Until then we hold only the parent's email address, the child's first name and the account's sign-in details, and we use them only to ask. The parent receives a notice describing what we collect and why, signs a consent form by typing their full name, and confirms it from a second email. If consent is not given within 14 days, we delete the account and this information. Consent lasts up to 12 months and must then be renewed."
+          },
+          {
+            "type": "paragraph",
+            "text": "Once consent is given, we collect only what the child enters or uploads and the technical data listed above, and we use it only to provide the private account. AI analysis is used only if the parent separately allows it. We do not disclose a child's information to third parties for their own purposes; the service providers listed above process it on our instructions."
+          },
+          {
+            "type": "paragraph",
+            "text": "A parent can at any time review the information we hold about their child, get a copy, have it corrected or deleted, and refuse further collection or use by withdrawing consent, using the link in their confirmation email or by writing to {{privacyEmail}}. Withdrawing consent deletes the account. We may ask for information to confirm that a request comes from the parent."
           }
         ]
       },
@@ -152,14 +175,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "terms-of-service",
     "title": "Terms of Service",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
       "PitchProof helps players document their football development and lets scouts and coaches discover and contact players safely.",
-      "You must be at least 13. Players aged 13 to 17 need a parent or guardian's approval.",
+      "Players under 18 need a parent or guardian's approval. Accounts for children under 13 are private and need a parent's verified consent.",
       "You keep ownership of what you upload. You must have the right to upload it.",
       "PitchProof does not guarantee trials, contracts or selection by any club.",
       "We may remove content or suspend accounts that break these terms or the Community Guidelines."
@@ -170,7 +193,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "These terms are an agreement between you and {{entityName}}, {{entityAddress}}. By creating an account you accept these terms, the Privacy Policy and the Community Guidelines."
+            "text": "These terms are an agreement between you and {{entityName}}, {{entityAddress}}. By creating an account you accept these terms, the Privacy Policy and the Community Guidelines. If you are under 18, your parent or guardian also agrees to them on your behalf when they approve your account."
           }
         ]
       },
@@ -179,7 +202,15 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "You must be at least {{minimumAge}} years old. If you are under {{guardianConsentUntilAge}}, a parent or guardian must approve your account before youth features become active. Scouts and coaches must be 18 or older and must act on behalf of a genuine club, academy or organisation."
+            "text": "Players of any age may use PitchProof. If you are under {{guardianConsentUntilAge}}, a parent or guardian must approve your account before you can use it."
+          },
+          {
+            "type": "paragraph",
+            "text": "If you are under {{privateModeUntilAge}}, your account is private: nobody else can see your profile, find you or contact you, you cannot share videos or receive trial invitations, and you can only use the player role. A parent or legal guardian must give verifiable consent as described in the Youth Safety Policy. Without that consent the account is deleted after 14 days, and if the parent withdraws consent the account is deleted."
+          },
+          {
+            "type": "paragraph",
+            "text": "Scouts and coaches must be 18 or older and must act on behalf of a genuine club, academy or organisation. Give your real age group; we may restrict or close accounts where we believe it is wrong."
           }
         ]
       },
@@ -219,7 +250,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval."
+            "text": "PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval. Children under 13 cannot be contacted or invited by scouts."
           }
         ]
       },
@@ -282,14 +313,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "community-guidelines",
     "title": "Community Guidelines",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
       "Be respectful. No harassment, hate, threats or sexual content.",
-      "Contact with players under 18 happens only through PitchProof requests, which their guardian can see.",
+      "Contact with players aged 13 to 17 happens only through PitchProof requests, which their guardian can see. Children under 13 cannot be contacted at all.",
       "Upload only footage you have the right to share.",
       "Never ask for money for a trial, a contract or a recommendation.",
       "Report anything that worries you. Reports are confidential."
@@ -313,7 +344,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "Adults must not seek private contact with players under 18 outside PitchProof's request system.",
               "Do not ask a minor for personal contact details, social media accounts, photos or meetings.",
-              "Trials for players under 18 need guardian co-approval through PitchProof.",
+              "Trials for players aged 13 to 17 need guardian co-approval through PitchProof. Children under 13 have private accounts and cannot be invited, endorsed or contacted.",
               "Any sexualised content involving minors is reported to the authorities."
             ]
           }
@@ -369,17 +400,17 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "youth-safety-policy",
     "title": "Youth Safety Policy",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
-      "PitchProof is for ages 13 and up. Accounts for children under 13 are not allowed and are deleted.",
-      "Players aged 13 to 17 need a parent or guardian's approval before youth features start.",
-      "Guardians choose each permission separately and can withdraw it at any time.",
-      "Scouts can contact minors only through PitchProof requests, and the guardian is notified.",
-      "Trials for minors need guardian co-approval."
+      "Players of any age can use PitchProof. Everyone under 18 needs a parent or guardian's permission first.",
+      "Under 13, accounts are private: nobody else can see, find or contact the child. There is no public profile, scout contact, trial, endorsement or sharing.",
+      "Parents of children under 13 give permission with a signed form and a second confirmation email. Without permission the account is deleted after 14 days.",
+      "Players aged 13 to 17 can use public features only where their guardian allowed each one. Scouts contact them only through PitchProof requests, and trials need guardian co-approval.",
+      "There is no advertising, and minors do not see subscription promotions outside Settings."
     ],
     "sections": [
       {
@@ -387,12 +418,58 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "When you create an account you choose an age band: under 13, 13 to 17, or 18 or older. We do not ask for your date of birth. If you choose under 13, no account is kept: everything is deleted immediately. You can move to a stricter age band yourself; moving to an older band needs support."
+            "text": "When you create an account you choose an age band: under 13, 13 to 17, or 18 or older. We do not ask for your date of birth. You can move to a stricter age band yourself; moving to an older band needs support."
           }
         ]
       },
       {
-        "heading": "Guardian approval",
+        "heading": "Children under 13: private mode",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Accounts for children under 13 always run in private mode:"
+          },
+          {
+            "type": "list",
+            "ordered": false,
+            "items": [
+              "Nobody else can see the child's profile, matches, videos or movement data. There is no public Passport and no username link.",
+              "The child cannot be found in scout search and cannot receive scout requests, trial invitations, endorsements, coach observations or messages from anyone.",
+              "The child cannot share videos, not even with a single person.",
+              "The child can only use the player role. Scout and coach roles are not available.",
+              "The child can log matches and training, set development goals, keep videos in a private library, record movement sessions (no location is stored) and, if the parent allows it, get AI analysis of their own clips."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "These limits are enforced on our servers and in our database access rules, not only in the app. A parent cannot switch them off, because the permissions that would make an account public do not exist for children under 13."
+          }
+        ]
+      },
+      {
+        "heading": "Parental permission for children under 13",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Before a child under 13 can use PitchProof, a parent or legal guardian must give permission:"
+          },
+          {
+            "type": "list",
+            "ordered": true,
+            "items": [
+              "The child enters a parent's email address and their own first name. Until permission is given, we use these and the account's sign-in details only to ask for it.",
+              "The parent receives a notice that explains what we collect, how we use it and their rights, and a secure link to a consent form. The parent confirms they are the child's parent or legal guardian and 18 or older, confirms they have read the notice, chooses whether to allow AI analysis, and signs by typing their full name.",
+              "We then send a second email to the same address. Permission takes effect only when the parent confirms it from that email."
+            ]
+          },
+          {
+            "type": "paragraph",
+            "text": "If permission is not given within 14 days of choosing the under-13 age band, or the parent declines, the account and its data are deleted. Permission lasts up to 12 months and then has to be renewed; if it is not renewed within 30 days of expiry, the account is deleted. A parent can withdraw permission at any time from the link in the confirmation email or by writing to {{supportEmail}}; withdrawal deletes the account."
+          }
+        ]
+      },
+      {
+        "heading": "Guardian approval for players aged 13 to 17",
         "blocks": [
           {
             "type": "paragraph",
@@ -421,7 +498,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Until the guardian approves, the player sees a waiting screen where they can resend the request, sign out or delete the account. After approval, private features such as logging matches and goals and recording movement sessions work regardless of which permissions were granted, because they stay private and movement sessions store no location. For anything the guardian has not allowed, the player's Passport stays private, they cannot be found in scout search and scouts cannot send them requests or trials."
+            "text": "Until a parent or guardian approves, the player sees a waiting screen where they can resend the request, sign out or delete the account. After approval, private features such as logging matches and goals and recording movement sessions work regardless of which permissions were granted, because they stay private and movement sessions store no location. For players aged 13 to 17, anything the guardian has not allowed stays off: the Passport stays private, they cannot be found in scout search and scouts cannot send them requests or trials."
           }
         ]
       },
@@ -430,7 +507,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Minors appear publicly with first name and last initial only, labelled \"Youth player\". Exact age, school, contact details and location are never shown. Lock-screen notifications for minors use generic text."
+            "text": "Players aged 13 to 17 appear publicly only where their guardian allowed it, with first name and last initial only, labelled \"Youth player\". Exact age, school, contact details and location are never shown. Children under 13 never appear publicly. Lock-screen notifications for all minors use generic text."
           }
         ]
       },
@@ -439,16 +516,16 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Scouts can contact a minor only through PitchProof's request system, never by private message, and the guardian receives an email when a scout makes a request. A minor can accept a trial only after the guardian approves it through a separate secure link."
+            "text": "Scouts can contact a player aged 13 to 17 only through PitchProof's request system, never by private message, and the guardian receives an email when a scout makes a request. A minor can accept a trial only after the guardian approves it through a separate secure link. Scouts cannot contact children under 13 at all."
           }
         ]
       },
       {
-        "heading": "Promotions",
+        "heading": "Advertising and promotions",
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Minors do not see subscription promotions outside Settings."
+            "text": "PitchProof shows no advertising. Minors do not see subscription promotions outside Settings, and the paywall is never shown to them automatically. Any purchase goes through Apple, where parents can use Ask to Buy and Screen Time."
           }
         ]
       },
@@ -466,16 +543,17 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "guardian-consent-notice",
     "title": "Guardian Consent Notice",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
-      "A player aged 13 to 17 asked you to approve their PitchProof account.",
-      "You decide each permission separately. Nothing is allowed by default.",
-      "You can withdraw permissions at any time using the link in your confirmation email.",
-      "We store your email address only to contact you about this player's account."
+      "A child or teenager in your care asked for your permission to use PitchProof.",
+      "For children under 13 the account is always private. You sign a consent form and confirm it from a second email.",
+      "For players aged 13 to 17 you decide each permission separately. Nothing is allowed by default.",
+      "You can withdraw permission at any time using the link in your confirmation email.",
+      "We use your email address only to contact you about this account."
     ],
     "sections": [
       {
@@ -483,12 +561,41 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "A player in your care chose the age band \"13 to 17\" in PitchProof and entered your email address. PitchProof is operated by {{entityName}}, {{entityAddress}}."
+            "text": "A player in your care chose an age band in PitchProof and entered your email address. PitchProof is operated by {{entityName}}, {{entityAddress}}. Contact: {{supportEmail}}."
           }
         ]
       },
       {
-        "heading": "What you are asked to decide",
+        "heading": "Notice to parents of children under 13",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "If your child chose \"Under 13\", their account is a private account and stays locked until you give permission."
+          },
+          {
+            "type": "paragraph",
+            "text": "What we have collected so far: your email address, your child's first name and the sign-in details of the account (an email address or an Apple or Google sign-in). We collected them only to ask for your permission. If you do not give permission within 14 days, we delete them together with the account."
+          },
+          {
+            "type": "paragraph",
+            "text": "What we will collect with your permission: the name and profile details your child enters, their age band (never a date of birth), matches, training sessions and goals they log, videos they upload, movement summaries measured on the phone (location is never stored), push notification tokens, and security and usage records needed to keep the service safe."
+          },
+          {
+            "type": "paragraph",
+            "text": "How we use it: only to provide the app to your child. Nobody else can see your child's profile, find it or contact your child. There is no public Passport, no scout contact, no trials, no endorsements, no sharing of videos and no advertising. Hosting, storage and email delivery are handled by service providers acting on our instructions, listed in the Privacy Policy. If you allow AI analysis, clips your child uploads are sent to an AI provider to produce feedback; the provider may not keep or train on them. We do not disclose your child's information to third parties for their own purposes, and we never sell it."
+          },
+          {
+            "type": "paragraph",
+            "text": "How to give permission: open the link in the email, confirm that you are the child's parent or legal guardian and 18 or older, confirm that you have read this notice, choose whether to allow AI analysis and type your full name to sign. We then send a second email to the same address. Permission takes effect only when you confirm it from that email."
+          },
+          {
+            "type": "paragraph",
+            "text": "Your rights: you can review the information we hold about your child, get a copy, have it corrected or deleted, and refuse any further collection or use, at any time. Use the link in your confirmation email or write to {{supportEmail}}. Withdrawing permission deletes the account. Permission lasts up to 12 months and has to be renewed."
+          }
+        ]
+      },
+      {
+        "heading": "What you decide for players aged 13 to 17",
         "blocks": [
           {
             "type": "paragraph",
@@ -517,7 +624,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "If a scout invites the player to a trial, you receive a separate email and the player can accept only after you approve."
+            "text": "If a scout invites a player aged 13 to 17 to a trial, you receive a separate email and the player can accept only after you approve. Children under 13 cannot receive trial invitations."
           }
         ]
       },
@@ -526,7 +633,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "We store your email address, your decisions, the time of each decision and the consent version. The link we send you is single-use and expires after 7 days. We use your email address only for messages about this player's account. You can ask us to delete it, which also withdraws your consent."
+            "text": "We store your email address, your decisions, the time of each decision, the consent version and, for children under 13, the name you typed as your signature. Links we send you are single-use and expire after 7 days. We use your email address only for messages about this player's account. You can ask us to delete it, which also withdraws your consent."
           }
         ]
       },
@@ -535,7 +642,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Use the withdrawal link in your confirmation email at any time. Withdrawal takes effect immediately: the player's public Passport, discovery and scout contact stop."
+            "text": "Use the withdrawal link in your confirmation email at any time. Withdrawal takes effect immediately. For players aged 13 to 17, the public Passport, discovery and scout contact stop. For children under 13, the account and its data are deleted."
           }
         ]
       },
@@ -553,7 +660,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "video-recording-policy",
     "title": "Video and Recording Policy",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -580,7 +687,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, PitchProof shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it."
+            "text": "Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, PitchProof shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it. Media of children under 13 always stays private and cannot be shared."
           },
           {
             "type": "paragraph",
@@ -629,7 +736,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "ai-use-policy",
     "title": "AI Use Policy",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -639,7 +746,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
       "Your data is never used to train AI models, by us or by our providers.",
       "Requests are routed only to providers that do not collect or retain the data.",
       "AI output can be wrong. It is guidance, not a rating or a professional assessment.",
-      "Players aged 13 to 17 can use AI analysis only if their guardian allows it."
+      "Players under 18 can use AI analysis only if their parent or guardian allows it."
     ],
     "sections": [
       {
@@ -857,7 +964,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "data-subject-rights",
     "title": "Your Data Protection Rights",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -865,7 +972,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
     "summary": [
       "You can see, correct, download and delete your data.",
       "Most requests can be done directly in the Privacy Center.",
-      "Guardians of players aged 13 to 17 can withdraw consent at any time from their email link."
+      "Parents and guardians of players under 18 can withdraw consent at any time from their email link. For children under 13 this deletes the account."
     ],
     "sections": [
       {
@@ -910,7 +1017,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "A parent or guardian of a player aged 13 to 17 can withdraw any permission at any time and can ask us about the player's data. We may ask for information to confirm the request."
+            "text": "A parent or guardian of a player aged 13 to 17 can withdraw any permission at any time and can ask us about the player's data."
           }
         ]
       },
@@ -928,13 +1035,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "data-retention-policy",
     "title": "Data Retention Policy",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
       "Most data stays while your account exists and is deleted when you delete your account.",
+      "Accounts of children under 13 without a parent's permission are deleted automatically.",
       "Temporary files (failed uploads, data exports, extracted frames) are deleted automatically.",
       "Proof of consent and moderation decisions may be kept in minimised form where the law requires it."
     ],
@@ -958,8 +1066,23 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Uploads that are abandoned or fail validation: deleted within 7 days.",
               "Data export archives: download link valid for 7 days, then the archive is deleted.",
               "Frames extracted for analysis: deleted after the analysis completes or fails, within the period set in our retention configuration.",
-              "Guardian approval links: expire after 7 days. Withdrawal links stay valid for about 13 months.",
+              "Guardian approval and confirmation links: expire after 7 days. Withdrawal links stay valid for about 13 months.",
               "Cancelled or expired analysis jobs: cleaned up automatically."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Accounts of children under 13",
+        "blocks": [
+          {
+            "type": "list",
+            "ordered": false,
+            "items": [
+              "No parent's permission within 14 days of choosing the under-13 age band: the account and its data are deleted.",
+              "The parent declines or withdraws permission: the account and its data are deleted straight away.",
+              "Permission expires (after 12 months) and is not renewed within 30 days: the account and its data are deleted.",
+              "The child withdraws the request themselves: the account is deleted after 14 days unless a parent gives permission again."
             ]
           }
         ]
@@ -1117,7 +1240,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "subscription-terms",
     "title": "Subscription Terms",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "effectiveDate": "2026-10-08",
     "status": "final",
     "canonicalLanguage": "en",
@@ -1187,7 +1310,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Players under 18 do not see subscription promotions outside Settings. Purchases by minors are subject to Apple's family and parental controls."
+            "text": "Players under 18 do not see subscription promotions outside Settings, and the paywall is never shown to them automatically. Children under 13 can use every private feature without a subscription. Purchases by minors go through Apple and are subject to Apple's family and parental controls, such as Ask to Buy."
           }
         ]
       }

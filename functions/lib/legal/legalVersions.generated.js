@@ -3,19 +3,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LEGAL_VERSIONS = void 0;
 exports.LEGAL_VERSIONS = {
-    "privacy-policy": "1.0.0",
-    "terms-of-service": "1.0.0",
-    "community-guidelines": "1.0.0",
-    "youth-safety-policy": "1.0.0",
-    "guardian-consent-notice": "1.0.0",
-    "video-recording-policy": "1.0.0",
-    "ai-use-policy": "1.0.0",
+    "privacy-policy": "1.1.0",
+    "terms-of-service": "1.1.0",
+    "community-guidelines": "1.1.0",
+    "youth-safety-policy": "1.1.0",
+    "guardian-consent-notice": "1.1.0",
+    "video-recording-policy": "1.1.0",
+    "ai-use-policy": "1.1.0",
     "copyright-policy": "1.0.0",
     "reporting-takedown-policy": "1.0.0",
-    "data-subject-rights": "1.0.0",
-    "data-retention-policy": "1.0.0",
+    "data-subject-rights": "1.1.0",
+    "data-retention-policy": "1.1.0",
     "security-disclosure-policy": "1.0.0",
     "cookie-tracking-policy": "1.0.0",
-    "subscription-terms": "1.0.0"
+    "subscription-terms": "1.1.0"
 };
 //# sourceMappingURL=legalVersions.generated.js.map

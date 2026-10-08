@@ -1,14 +1,14 @@
 ---
 id: community-guidelines
 title: Community Guidelines
-version: 1.0.0
+version: 1.1.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
 requiresAcceptance: true
 summary:
 - Be respectful. No harassment, hate, threats or sexual content.
-- Contact with players under 18 happens only through PitchProof requests, which their guardian can see.
+- Contact with players aged 13 to 17 happens only through PitchProof requests, which their guardian can see. Children under 13 cannot be contacted at all.
 - Upload only footage you have the right to share.
 - Never ask for money for a trial, a contract or a recommendation.
 - Report anything that worries you. Reports are confidential.
@@ -22,7 +22,7 @@ Treat players, parents, coaches and scouts with respect. Harassment, bullying, h
 
 - Adults must not seek private contact with players under 18 outside PitchProof's request system.
 - Do not ask a minor for personal contact details, social media accounts, photos or meetings.
-- Trials for players under 18 need guardian co-approval through PitchProof.
+- Trials for players aged 13 to 17 need guardian co-approval through PitchProof. Children under 13 have private accounts and cannot be invited, endorsed or contacted.
 - Any sexualised content involving minors is reported to the authorities.
 
 ## Honest profiles

@@ -3,6 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
+import { loadSafetyPolicy } from './safety/userSafety';
 
 /**
  * Roles a user may claim for themselves. `club` and `admin` are never self-assignable;
@@ -53,6 +54,11 @@ export const confirmRole = onCall(createCallableOptions(), async (request) => {
   }
 
   const db = getFirestore();
+  if (requested !== 'player' && !(await loadSafetyPolicy(uid, db)).canChooseNonPlayerRole) {
+    throw new HttpsError('failed-precondition', 'Accounts for children under 13 can only use the player role.', {
+      reason: 'child_player_only',
+    });
+  }
   const userRef = db.collection('users').doc(uid);
   const now = new Date().toISOString();
 

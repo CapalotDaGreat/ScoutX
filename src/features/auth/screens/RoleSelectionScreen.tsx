@@ -6,6 +6,7 @@ import { Text } from '@/components/primitives/Text';
 import { AuthCard } from '@/features/auth/components/AuthCard';
 import { RoleOption, type SelectableAuthRole } from '@/features/auth/components/RoleOption';
 import { useAuthRoleSelection } from '@/features/auth/hooks/useAuthForm';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type RoleSelectionScreenProps = {
@@ -17,6 +18,7 @@ export type RoleSelectionScreenProps = {
 export function RoleSelectionScreen({ onContinue, onBack, successMessage }: RoleSelectionScreenProps) {
   const { t } = useAppTranslation(['auth', 'common']);
   const { role, setRole } = useAuthRoleSelection();
+  const playerOnly = !useUserSafety().policy.canChooseNonPlayerRole;
 
   return (
     <Screen title={t('roleSelection.title')} subtitle={t('roleSelection.subtitle')}>
@@ -30,8 +32,12 @@ export function RoleSelectionScreen({ onContinue, onBack, successMessage }: Role
         ) : null}
 
         <RoleOption role="player" selected={role === 'player'} onPress={() => setRole('player')} />
-        <RoleOption role="scout" selected={role === 'scout'} onPress={() => setRole('scout')} />
-        <RoleOption role="coach" selected={role === 'coach'} onPress={() => setRole('coach')} />
+        {playerOnly ? null : (
+          <>
+            <RoleOption role="scout" selected={role === 'scout'} onPress={() => setRole('scout')} />
+            <RoleOption role="coach" selected={role === 'coach'} onPress={() => setRole('coach')} />
+          </>
+        )}
 
         <FormActions>
           <Button variant="accent" disabled={!role} onPress={() => role && onContinue(role)}>

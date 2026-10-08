@@ -6,6 +6,7 @@ const auth_1 = require("firebase-admin/auth");
 const firestore_1 = require("firebase-admin/firestore");
 const firebase_functions_1 = require("firebase-functions");
 const callableOptions_1 = require("./callableOptions");
+const userSafety_1 = require("./safety/userSafety");
 const SELF_SERVICE_ROLES = ['player', 'scout', 'coach'];
 /** Roles that require a real (non-anonymous) sign-in before they can be claimed. */
 const NON_ANONYMOUS_ROLES = ['scout', 'coach'];
@@ -35,6 +36,11 @@ exports.confirmRole = (0, https_1.onCall)((0, callableOptions_1.createCallableOp
         throw new https_1.HttpsError('failed-precondition', 'Create an account before choosing the scout or coach role.');
     }
     const db = (0, firestore_1.getFirestore)();
+    if (requested !== 'player' && !(await (0, userSafety_1.loadSafetyPolicy)(uid, db)).canChooseNonPlayerRole) {
+        throw new https_1.HttpsError('failed-precondition', 'Accounts for children under 13 can only use the player role.', {
+            reason: 'child_player_only',
+        });
+    }
     const userRef = db.collection('users').doc(uid);
     const now = new Date().toISOString();
     await db.runTransaction(async (transaction) => {

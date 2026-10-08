@@ -1,7 +1,7 @@
 ---
 id: subscription-terms
 title: Subscription Terms
-version: 1.0.0
+version: 1.1.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
@@ -38,4 +38,4 @@ We may change Premium features or prices with notice. Usage limits apply per 30-
 
 ## Minors
 
-Players under 18 do not see subscription promotions outside Settings. Purchases by minors are subject to Apple's family and parental controls.
+Players under 18 do not see subscription promotions outside Settings, and the paywall is never shown to them automatically. Children under 13 can use every private feature without a subscription. Purchases by minors go through Apple and are subject to Apple's family and parental controls, such as Ask to Buy.

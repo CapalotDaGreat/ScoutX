@@ -4,9 +4,11 @@ exports.assertAiConsent = assertAiConsent;
 const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const consent_1 = require("../legal/consent");
+const userSafety_1 = require("../safety/userSafety");
 /**
  * AI processing needs a current `ai_analysis` consent from the requester and, when someone
- * else's data is analysed, from that person too. Withdrawn consent stops new AI runs.
+ * else's data is analysed, from that person too. Withdrawn consent stops new AI runs. For
+ * minors the parent or guardian must also have allowed AI analysis.
  */
 async function assertAiConsent(uids, db = (0, firestore_1.getFirestore)()) {
     const [requester, ...subjects] = [...new Set(uids)];
@@ -15,8 +17,13 @@ async function assertAiConsent(uids, db = (0, firestore_1.getFirestore)()) {
             reason: 'ai_consent_required',
         });
     }
+    if (requester && !(await (0, userSafety_1.loadSafetyPolicy)(requester, db)).canUseAiAnalysis) {
+        throw new https_1.HttpsError('failed-precondition', 'Your parent or guardian has not allowed AI analysis.', {
+            reason: 'guardian_scope_required',
+        });
+    }
     for (const subject of subjects) {
-        if (!(await (0, consent_1.hasCurrentConsent)(subject, 'ai_analysis', db))) {
+        if (!(await (0, consent_1.hasCurrentConsent)(subject, 'ai_analysis', db)) || !(await (0, userSafety_1.loadSafetyPolicy)(subject, db)).canUseAiAnalysis) {
             throw new https_1.HttpsError('failed-precondition', 'This player has not enabled AI analysis.', {
                 reason: 'subject_ai_consent_missing',
             });

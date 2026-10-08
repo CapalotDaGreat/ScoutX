@@ -8,11 +8,12 @@
     "under13": "Moins de 13 ans",
     "teen": "13 à 17 ans",
     "adult": "18 ans ou plus",
-    "under13Notice": "PitchProof est disponible à partir de 13 ans. Si tu continues, ce compte et son contenu seront supprimés.",
-    "under13Continue": "Continuer et supprimer ce compte",
     "teenConfirm": "J'ai entre 13 et 17 ans. Je comprends qu'un parent ou tuteur doit approuver mon compte avant que je puisse utiliser PitchProof.",
     "continue": "Continuer",
-    "noBirthDate": "Nous enregistrons seulement ta tranche d'âge, jamais ta date de naissance."
+    "noBirthDate": "Nous enregistrons seulement ta tranche d'âge, jamais ta date de naissance.",
+    "childTitle": "Compte privé pour les joueurs de moins de 13 ans",
+    "childNotice": "Avant 13 ans, tu peux enregistrer tes matchs et entraînements, fixer des objectifs, garder des vidéos et recevoir un retour de l'IA si ton parent l'autorise. Ton compte est privé : personne d'autre ne peut voir ton profil, te trouver ou te contacter. Un parent ou tuteur doit donner son autorisation avant que tu puisses commencer.",
+    "childConfirm": "J'ai moins de 13 ans. Je comprends qu'un parent ou tuteur doit donner son autorisation avant que je puisse utiliser PitchProof."
   },
   "guardian": {
     "requestTitle": "Demander à un parent ou tuteur",
@@ -29,12 +30,15 @@
     "waitingBody": "Nous avons écrit à {{email}}. Dès son approbation, PitchProof se débloque automatiquement.",
     "whatHappens": "Ton tuteur décide séparément pour un profil public, la visibilité auprès des scouts, les demandes de scouts, les vidéos partagées et l'analyse IA. Toute invitation à un essai demande aussi son accord.",
     "resend": "Renvoyer ou utiliser un autre e-mail",
-    "deleteAccount": "Supprimer mon compte"
-  },
-  "under13": {
-    "title": "PitchProof est réservé aux 13 ans et plus",
-    "body": "Ton compte a été supprimé et rien n'a été conservé. Tu seras le bienvenu à 13 ans.",
-    "close": "Fermer"
+    "deleteAccount": "Supprimer mon compte",
+    "childRequestTitle": "Demande l'autorisation à un parent",
+    "childRequestBody": "Saisis l'e-mail de ton parent ou tuteur. Nous lui envoyons une explication de PitchProof et un formulaire à signer. Ton compte reste bloqué jusqu'à sa confirmation.",
+    "childEmailLabel": "E-mail du parent ou tuteur",
+    "childWaitingTitle": "En attente de ton parent",
+    "childWaitingBody": "Nous avons écrit à {{email}}. Demande à ton parent de lire l'e-mail et de signer le formulaire.",
+    "childConfirmingBody": "Ton parent a signé le formulaire. Il doit maintenant cliquer sur le lien de confirmation dans un deuxième e-mail envoyé à {{email}}.",
+    "childWhatHappens": "Ton compte est privé. Personne d'autre ne peut le voir, le trouver ou te contacter. Ton parent décide aussi si l'analyse par IA peut être utilisée.",
+    "childDeadline": "Sans autorisation, ce compte et ses données seront supprimés le {{date}}."
   },
   "settings": {
     "title": "Âge et tuteur",
@@ -54,11 +58,18 @@
       "public_movement": "Déplacements sur le profil",
       "ai_analysis": "Analyse vidéo par IA"
     },
-    "guardianDecides": "C'est ton parent ou tuteur qui décide. Il peut modifier ses choix depuis son e-mail de confirmation."
+    "guardianDecides": "C'est ton parent ou tuteur qui décide. Il peut modifier ses choix depuis son e-mail de confirmation.",
+    "ageChild": "Tranche d'âge : moins de 13 ans (compte privé)",
+    "privateMode": "Ton compte est privé. Personne d'autre ne peut voir ton profil, te trouver ou te contacter.",
+    "revokeHintChild": "Ton compte est bloqué jusqu'à ce que ton parent donne à nouveau son autorisation. Sans nouvelle autorisation, il est supprimé après 14 jours."
   },
   "trial": {
     "awaitingGuardian": "En attente de l'accord de ton parent ou tuteur pour cet essai.",
     "guardianDeclined": "Ton parent ou tuteur a refusé cet essai."
   },
-  "youthLabel": "Jeune joueur"
+  "youthLabel": "Jeune joueur",
+  "privateMode": {
+    "title": "Compte privé",
+    "body": "Toi seul vois ton profil, tes matchs et tes vidéos. Il n'y a pas de Passport public, pas d'affichage dans la recherche et aucun contact de scouts ou d'autres utilisateurs."
+  }
 }

@@ -8,11 +8,12 @@
     "under13": "Menos de 13",
     "teen": "De 13 a 17",
     "adult": "18 o más",
-    "under13Notice": "PitchProof solo está disponible a partir de los 13 años. Si continúas, esta cuenta y su contenido se eliminarán.",
-    "under13Continue": "Continuar y eliminar esta cuenta",
     "teenConfirm": "Tengo entre 13 y 17 años. Entiendo que mi madre, padre o tutor debe aprobar mi cuenta antes de usar PitchProof.",
     "continue": "Continuar",
-    "noBirthDate": "Solo guardamos tu grupo de edad, nunca tu fecha de nacimiento."
+    "noBirthDate": "Solo guardamos tu grupo de edad, nunca tu fecha de nacimiento.",
+    "childTitle": "Cuenta privada para jugadores menores de 13 años",
+    "childNotice": "Con menos de 13 años puedes registrar partidos y entrenamientos, fijar objetivos, guardar vídeos y recibir comentarios de la IA si tu madre, padre o tutor lo permite. Tu cuenta es privada: nadie más puede ver tu perfil, encontrarte ni contactarte. Un padre, madre o tutor tiene que dar permiso antes de que puedas empezar.",
+    "childConfirm": "Tengo menos de 13 años. Entiendo que un padre, madre o tutor tiene que dar permiso antes de que pueda usar PitchProof."
   },
   "guardian": {
     "requestTitle": "Pide permiso a tu madre, padre o tutor",
@@ -29,12 +30,15 @@
     "waitingBody": "Escribimos a {{email}}. Cuando apruebe, PitchProof se desbloqueará automáticamente.",
     "whatHappens": "Tu tutor decide por separado sobre un perfil público, ser visible para ojeadores, solicitudes de ojeadores, vídeos compartidos y análisis con IA. Cualquier invitación a una prueba también necesita su aprobación.",
     "resend": "Reenviar o usar otro correo",
-    "deleteAccount": "Eliminar mi cuenta"
-  },
-  "under13": {
-    "title": "PitchProof es para mayores de 13 años",
-    "body": "Tu cuenta se eliminó y no se guardó nada. Te esperamos cuando cumplas 13.",
-    "close": "Cerrar"
+    "deleteAccount": "Eliminar mi cuenta",
+    "childRequestTitle": "Pide permiso a tu madre, padre o tutor",
+    "childRequestBody": "Escribe el correo de tu madre, padre o tutor. Le enviamos una explicación de PitchProof y un formulario para firmar. Tu cuenta sigue bloqueada hasta que lo confirme.",
+    "childEmailLabel": "Correo de tu madre, padre o tutor",
+    "childWaitingTitle": "Esperando a tu madre, padre o tutor",
+    "childWaitingBody": "Hemos escrito a {{email}}. Pídele que lea el correo y firme el formulario.",
+    "childConfirmingBody": "Ya han firmado el formulario. Ahora tienen que pulsar el enlace de confirmación de un segundo correo enviado a {{email}}.",
+    "childWhatHappens": "Tu cuenta es privada. Nadie más puede verla, encontrarla ni contactarte. Tu madre, padre o tutor también decide si se puede usar el análisis con IA.",
+    "childDeadline": "Sin permiso, esta cuenta y sus datos se eliminarán el {{date}}."
   },
   "settings": {
     "title": "Edad y tutor",
@@ -54,11 +58,18 @@
       "public_movement": "Movimiento en el perfil",
       "ai_analysis": "Análisis de vídeo con IA"
     },
-    "guardianDecides": "Lo decide tu madre, padre o tutor. Puede cambiar su elección desde el correo de confirmación."
+    "guardianDecides": "Lo decide tu madre, padre o tutor. Puede cambiar su elección desde el correo de confirmación.",
+    "ageChild": "Grupo de edad: menos de 13 (cuenta privada)",
+    "privateMode": "Tu cuenta es privada. Nadie más puede ver tu perfil, encontrarte ni contactarte.",
+    "revokeHintChild": "Tu cuenta se bloquea hasta que tu madre, padre o tutor vuelva a dar permiso. Sin un nuevo permiso, se elimina a los 14 días."
   },
   "trial": {
     "awaitingGuardian": "Esperando que tu madre, padre o tutor apruebe esta prueba.",
     "guardianDeclined": "Tu madre, padre o tutor rechazó esta prueba."
   },
-  "youthLabel": "Jugador juvenil"
+  "youthLabel": "Jugador juvenil",
+  "privateMode": {
+    "title": "Cuenta privada",
+    "body": "Solo tú ves tu perfil, tus partidos y tus vídeos. No hay Passport público, no apareces en búsquedas y ni ojeadores ni otros usuarios pueden contactarte."
+  }
 }

@@ -77,6 +77,18 @@
       button.danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
       button:disabled { opacity: 0.5; cursor: not-allowed; }
       .error { color: var(--danger); }
+      a { color: var(--accent); }
+      input.text {
+        width: 100%;
+        min-height: 44px;
+        margin: 8px 0 4px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--fg);
+        font: inherit;
+      }
       [hidden] { display: none !important; }
     </style>
   </head>
@@ -91,23 +103,62 @@
 
       <form id="consent" hidden>
         <h1 id="consent-title"></h1>
-        <p>
-          PitchProof is a football development app. Players log matches, upload videos and build a profile.
-          Because your child is under 18, their account stays limited until you decide below.
-        </p>
-        <ul>
-          <li>PitchProof never sells data and never uses your child's data to train AI models.</li>
-          <li>Movement sessions measure distance and a pitch heatmap on the phone. Location is never uploaded or stored.</li>
-          <li>Scouts can only contact your child through PitchProof, and you are emailed when they do.</li>
-          <li>Any trial invitation also needs your separate approval.</li>
-        </ul>
+        <div id="teen-intro">
+          <p>
+            PitchProof is a football development app. Players log matches, upload videos and build a profile.
+            Because your child is under 18, their account stays limited until you decide below.
+          </p>
+          <ul>
+            <li>PitchProof never sells data and never uses your child's data to train AI models.</li>
+            <li>Movement sessions measure distance and a pitch heatmap on the phone. Location is never uploaded or stored.</li>
+            <li>Scouts can only contact your child through PitchProof, and you are emailed when they do.</li>
+            <li>Any trial invitation also needs your separate approval.</li>
+          </ul>
+        </div>
+        <div id="child-intro" hidden>
+          <p>
+            PitchProof is a football development app provided by CML Electronics, Höglerstrasse 55, 8600 Dübendorf,
+            Switzerland (support@pitchproof.online). Because your child is under 13, we need your verifiable permission
+            before they can use it. Please read this notice before you decide.
+          </p>
+          <h2>A private account</h2>
+          <ul>
+            <li>Nobody else can see your child's profile, find it in search or contact them. There is no public Passport, no scout contact, no trial invitations, no endorsements and no sharing of videos.</li>
+            <li>There is no advertising, no promotional messages and nothing is sold. Any purchase goes through Apple, where Ask to Buy and Screen Time let you control it.</li>
+            <li>Your child can only use the player role.</li>
+          </ul>
+          <h2>What we collect and why</h2>
+          <ul>
+            <li>So far: your email address, your child's first name and the sign-in details of the account, only to ask for your permission. Without permission within 14 days of sign-up, all of it is deleted.</li>
+            <li>With your permission: the name and profile details your child enters, their age group (never a date of birth), matches, training, goals, videos they upload, movement summaries measured on the phone (no location), push notification tokens and security logs.</li>
+            <li>We use this only to run the app for your child. Hosting, storage and email delivery are handled by service providers acting on our instructions, listed in the Privacy Policy. AI analysis is only used if you tick it below.</li>
+            <li>We never use your child's data to train AI models and never disclose it to third parties for their own purposes.</li>
+          </ul>
+          <h2>Your rights</h2>
+          <p>
+            You can review what we hold, get a copy, have it corrected or deleted, and withdraw your permission at any time
+            using the link in your confirmation email or by writing to support@pitchproof.online. Withdrawing permission
+            deletes the account. Consent is renewed every 12 months. Full details:
+            <a href="/legal/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a> ·
+            <a href="/legal/guardian-consent-notice/" target="_blank" rel="noopener">Notice to parents</a>.
+          </p>
+        </div>
         <h2>Choose what to allow</h2>
-        <p>Nothing is allowed unless you tick it. You can change this later from the link in your confirmation email.</p>
+        <p id="scopes-hint">Nothing is allowed unless you tick it. You can change this later from the link in your confirmation email.</p>
         <div id="scopes"></div>
         <label class="scope">
           <input type="checkbox" id="confirm-guardian" />
-          <span><strong>I am this player's parent or legal guardian.</strong></span>
+          <span><strong id="confirm-guardian-label">I am this player's parent or legal guardian.</strong></span>
         </label>
+        <div id="child-sign" hidden>
+          <label class="scope">
+            <input type="checkbox" id="acknowledge" />
+            <span><strong>I have read this notice and give permission for my child to use PitchProof in private mode.</strong></span>
+          </label>
+          <label for="signature"><strong>Type your full name to sign</strong></label>
+          <input type="text" id="signature" autocomplete="name" maxlength="100" class="text" />
+          <p>After you sign we send a second email to this address. Permission only takes effect when you confirm it there.</p>
+        </div>
         <p id="form-error" class="error" hidden></p>
         <div class="actions">
           <button type="submit" class="primary" id="approve">Save and approve the account</button>
@@ -115,6 +166,20 @@
           <button type="button" class="danger" id="revoke" hidden>Withdraw consent completely</button>
         </div>
       </form>
+
+      <div id="confirm" hidden>
+        <h1 id="confirm-title"></h1>
+        <p>
+          You signed the parental consent form for this private PitchProof account. Please confirm it was you.
+          The account is activated in private mode as soon as you confirm.
+        </p>
+        <p id="confirm-scopes"></p>
+        <p id="confirm-error" class="error" hidden></p>
+        <div class="actions">
+          <button type="button" class="primary" id="confirm-yes">Yes, I confirm</button>
+          <button type="button" class="secondary" id="confirm-no">I did not sign this</button>
+        </div>
+      </div>
 
       <div id="trial" hidden>
         <h1 id="trial-title"></h1>
@@ -153,8 +218,12 @@
         }
         var state = null;
 
+        var CHILD_SCOPE_COPY = {
+          ai_analysis: ['AI video analysis', 'Clips your child uploads can be analysed by an AI service to give football feedback. The provider may not keep or train on the data. You can switch this off later.']
+        };
+
         function show(id) {
-          ['loading', 'error', 'consent', 'trial', 'done'].forEach(function (key) {
+          ['loading', 'error', 'consent', 'confirm', 'trial', 'done'].forEach(function (key) {
             document.getElementById(key).hidden = key !== id;
           });
         }
@@ -184,14 +253,42 @@
           show('done');
         }
 
+        function renderConfirm(result) {
+          document.getElementById('confirm-title').textContent = 'Confirm permission for ' + result.playerFirstName;
+          var allowed = (result.pendingScopes || []).indexOf('ai_analysis') !== -1;
+          document.getElementById('confirm-scopes').textContent = allowed
+            ? 'You allowed AI video analysis.'
+            : 'You did not allow AI video analysis.';
+          show('confirm');
+        }
+
         function renderConsent(result) {
           var name = result.playerFirstName;
+          var child = result.child === true;
+          var signing = child && result.purpose === 'consent';
           document.getElementById('consent-title').textContent =
-            result.purpose === 'revoke' ? 'Manage consent for ' + name : name + ' asked for your approval';
+            result.purpose === 'revoke'
+              ? 'Manage consent for ' + name
+              : child
+                ? name + ' needs your permission to use PitchProof'
+                : name + ' asked for your approval';
+          document.getElementById('teen-intro').hidden = child;
+          document.getElementById('child-intro').hidden = !child;
+          document.getElementById('child-sign').hidden = !signing;
+          document.getElementById('confirm-guardian-label').textContent = child
+            ? "I am this child's parent or legal guardian and I am 18 or older."
+            : "I am this player's parent or legal guardian.";
+          document.getElementById('scopes-hint').textContent = child
+            ? 'Optional. The account is private either way. You can change this later from your confirmation email.'
+            : 'Nothing is allowed unless you tick it. You can change this later from the link in your confirmation email.';
+          document.getElementById('revoke').textContent = child
+            ? 'Withdraw consent and delete the account'
+            : 'Withdraw consent completely';
+          var copies = child ? CHILD_SCOPE_COPY : SCOPE_COPY;
           var container = document.getElementById('scopes');
           container.textContent = '';
           result.scopes.forEach(function (scope) {
-            var copy = SCOPE_COPY[scope] || [scope, ''];
+            var copy = copies[scope] || SCOPE_COPY[scope] || [scope, ''];
             var label = document.createElement('label');
             label.className = 'scope';
             var input = document.createElement('input');
@@ -210,7 +307,7 @@
           document.getElementById('decline').hidden = result.purpose !== 'consent';
           document.getElementById('revoke').hidden = result.purpose !== 'revoke';
           document.getElementById('approve').textContent =
-            result.purpose === 'revoke' ? 'Save changes' : 'Save and approve the account';
+            result.purpose === 'revoke' ? 'Save changes' : signing ? 'Sign and continue' : 'Save and approve the account';
           show('consent');
         }
 
@@ -250,20 +347,69 @@
             formError.hidden = false;
             return;
           }
-          respond({ decision: 'approve', scopes: selectedScopes(), confirmGuardian: true }, document.getElementById('approve'))
-            .then(function () { done('Your choices are saved. We sent you a confirmation email with a link to change or withdraw them at any time.'); })
+          var child = state && state.child === true;
+          var signing = child && state.purpose === 'consent';
+          var payload = { decision: 'approve', scopes: selectedScopes(), confirmGuardian: true };
+          if (signing) {
+            var signature = document.getElementById('signature').value.trim();
+            if (!document.getElementById('acknowledge').checked) {
+              formError.textContent = 'Please confirm that you have read the notice.';
+              formError.hidden = false;
+              return;
+            }
+            if (signature.length < 2) {
+              formError.textContent = 'Please type your full name to sign.';
+              formError.hidden = false;
+              return;
+            }
+            payload.signature = signature;
+            payload.acknowledged = true;
+          }
+          respond(payload, document.getElementById('approve'))
+            .then(function () {
+              done(signing
+                ? 'Thank you. We sent a second email to this address. Click the confirmation link in it to activate the account.'
+                : 'Your choices are saved. We sent you a confirmation email with a link to change or withdraw them at any time.');
+            })
             .catch(function (error) { formError.textContent = error.message; formError.hidden = false; });
         });
 
         document.getElementById('decline').addEventListener('click', function (event) {
+          var child = state && state.child === true;
           respond({ decision: 'decline' }, event.currentTarget)
-            .then(function () { done('The account stays limited. Your child can send a new request if you change your mind.'); })
+            .then(function () {
+              done(child
+                ? 'You did not give permission. The account and its data are being deleted.'
+                : 'The account stays limited. Your child can send a new request if you change your mind.');
+            })
             .catch(function (error) { fail(error.message); });
         });
 
         document.getElementById('revoke').addEventListener('click', function (event) {
+          var child = state && state.child === true;
+          if (child && !window.confirm('Withdraw consent? The account and its data will be deleted.')) return;
           respond({ decision: 'revoke' }, event.currentTarget)
-            .then(function () { done('Consent withdrawn. Youth features are switched off and the profile is no longer public.'); })
+            .then(function () {
+              done(child
+                ? 'Consent withdrawn. The account and its data are being deleted.'
+                : 'Consent withdrawn. Youth features are switched off and the profile is no longer public.');
+            })
+            .catch(function (error) { fail(error.message); });
+        });
+
+        document.getElementById('confirm-yes').addEventListener('click', function (event) {
+          respond({ decision: 'confirm' }, event.currentTarget)
+            .then(function () { done('Thank you. The account is now active in private mode. We sent you an email with a link to manage or withdraw your consent.'); })
+            .catch(function (error) {
+              var message = document.getElementById('confirm-error');
+              message.textContent = error.message;
+              message.hidden = false;
+            });
+        });
+
+        document.getElementById('confirm-no').addEventListener('click', function (event) {
+          respond({ decision: 'decline' }, event.currentTarget)
+            .then(function () { done('Thank you for telling us. The permission was not given and the account is being deleted.'); })
             .catch(function (error) { fail(error.message); });
         });
 
@@ -287,6 +433,7 @@
           .then(function (result) {
             state = result;
             if (result.purpose === 'trial') renderTrial(result);
+            else if (result.purpose === 'confirm') renderConfirm(result);
             else renderConsent(result);
           })
           .catch(function (error) { fail(error.message); });

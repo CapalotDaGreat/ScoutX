@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { canChangeAgeBand, getUserSafetyPolicy } from '../../src/features/youth-safety/policy.ts';
+import { canChangeAgeBand, getUserSafetyPolicy, grantableScopes } from '../../src/features/youth-safety/policy.ts';
 import type { SafetyState } from '../../src/features/youth-safety/policy.ts';
 import { getUserSafetyPolicy as serverPolicy } from '../../functions/src/safety/policy.ts';
 import {
@@ -32,10 +32,51 @@ describe('youth safety policy', () => {
     assert.equal(policy.canUsePublicPassport, false);
   });
 
-  it('blocks under-13 accounts', () => {
-    const policy = getUserSafetyPolicy(state({ ageBand: 'under13' }), NOW);
-    assert.equal(policy.blocked, true);
-    assert.equal(policy.canRecordMovement, false);
+  it('locks under-13 accounts until a parent consents', () => {
+    for (const guardianStatus of ['required', 'pending', 'confirming', 'declined', 'revoked'] as const) {
+      const policy = getUserSafetyPolicy(state({ ageBand: 'under13', guardianStatus, scopes: ['ai_analysis'] }), NOW);
+      assert.equal(policy.isMinor, true);
+      assert.equal(policy.privateOnly, true);
+      assert.equal(policy.awaitingGuardian, true, guardianStatus);
+      assert.equal(policy.youthFunctionalityActive, false, guardianStatus);
+      assert.equal(policy.canUseAiAnalysis, false, guardianStatus);
+    }
+  });
+
+  it('keeps an approved under-13 account private whatever scopes are stored', () => {
+    const policy = getUserSafetyPolicy(
+      state({
+        ageBand: 'under13',
+        guardianStatus: 'approved',
+        scopes: ['public_passport', 'discovery', 'scout_contact', 'public_media', 'public_movement', 'ai_analysis'],
+        consentExpiresAt: '2027-10-07T00:00:00.000Z',
+      }),
+      NOW,
+    );
+    assert.equal(policy.awaitingGuardian, false);
+    assert.equal(policy.youthFunctionalityActive, true);
+    assert.equal(policy.canUseAiAnalysis, true);
+    assert.equal(policy.canUsePublicPassport, false);
+    assert.equal(policy.canBeDiscovered, false);
+    assert.equal(policy.canReceiveScoutContact, false);
+    assert.equal(policy.canReceiveTrials, false);
+    assert.equal(policy.canPublishMedia, false);
+    assert.equal(policy.canShowMovementPublicly, false);
+    assert.equal(policy.canSeePromotions, false);
+    assert.equal(policy.canChooseNonPlayerRole, false);
+    assert.equal(policy.genericLockScreenOnly, true);
+    assert.equal(policy.canRecordMovement, true);
+  });
+
+  it('only lets a parent grant AI analysis for under-13s', () => {
+    assert.deepEqual([...grantableScopes('under13')], ['ai_analysis']);
+    assert.equal(grantableScopes('13-17').length, 6);
+    const withoutAi = getUserSafetyPolicy(
+      state({ ageBand: 'under13', guardianStatus: 'approved', scopes: [], consentExpiresAt: '2027-10-07T00:00:00.000Z' }),
+      NOW,
+    );
+    assert.equal(withoutAi.youthFunctionalityActive, true);
+    assert.equal(withoutAi.canUseAiAnalysis, false);
   });
 
   it('gives adults full independent access', () => {
@@ -84,6 +125,7 @@ describe('youth safety policy', () => {
     const samples: Array<SafetyState | null> = [
       null,
       state({ ageBand: 'under13' }),
+      state({ ageBand: 'under13', guardianStatus: 'approved', scopes: ['discovery', 'ai_analysis'], consentExpiresAt: '2027-01-01T00:00:00.000Z' }),
       state({ ageBand: '18plus', guardianStatus: 'not_required' }),
       state({ guardianStatus: 'approved', scopes: ['scout_contact', 'ai_analysis'], consentExpiresAt: '2027-01-01T00:00:00.000Z' }),
       state({ guardianStatus: 'revoked', scopes: ['discovery'] }),
@@ -97,6 +139,8 @@ describe('youth safety policy', () => {
     assert.equal(canChangeAgeBand(null, '18plus'), true);
     assert.equal(canChangeAgeBand('18plus', '13-17'), true);
     assert.equal(canChangeAgeBand('13-17', '18plus'), false);
+    assert.equal(canChangeAgeBand('under13', '13-17'), false);
+    assert.equal(canChangeAgeBand('18plus', 'under13'), true);
   });
 });
 

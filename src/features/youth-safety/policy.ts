@@ -9,6 +9,8 @@ export type GuardianStatus =
   | 'not_required'
   | 'required'
   | 'pending'
+  /** Under-13: the parent signed the consent form and still has to confirm it from a second email. */
+  | 'confirming'
   | 'approved'
   | 'declined'
   | 'revoked'
@@ -32,7 +34,14 @@ export const YOUTH_SCOPES: readonly YouthScope[] = [
   'ai_analysis',
 ];
 
+/**
+ * Under-13 accounts are private: a parent can only allow AI analysis. Profiles, discovery,
+ * scout contact, public media and public movement stay off whatever is stored in `scopes`.
+ */
+export const CHILD_SCOPES: readonly YouthScope[] = ['ai_analysis'];
+
 export const GUARDIAN_CONSENT_VERSION = '2026-10-v1';
+export const CHILD_CONSENT_VERSION = '2026-10-child-v1';
 
 export type SafetyState = {
   ageBand: AgeBand | null;
@@ -44,8 +53,10 @@ export type SafetyState = {
 export type SafetyPolicy = {
   ageBand: AgeBand | null;
   needsAgeBand: boolean;
-  blocked: boolean;
+  /** Under 13 (or 13-17): every youth protection applies. */
   isMinor: boolean;
+  /** Under 13: private mode. Nobody else can see, find or contact the account. */
+  privateOnly: boolean;
   awaitingGuardian: boolean;
   youthFunctionalityActive: boolean;
   canUsePublicPassport: boolean;
@@ -58,6 +69,8 @@ export type SafetyPolicy = {
   canUseAiAnalysis: boolean;
   /** Movement sessions store no location, so every account may record them. */
   canRecordMovement: boolean;
+  /** Scout, coach and club roles are for adults and teens; children can only be players. */
+  canChooseNonPlayerRole: boolean;
   canSeePromotions: boolean;
   genericLockScreenOnly: boolean;
   /** Public label replacing any age detail for minors. */
@@ -72,6 +85,11 @@ export function isYouthScope(value: unknown): value is YouthScope {
   return typeof value === 'string' && (YOUTH_SCOPES as readonly string[]).includes(value);
 }
 
+/** The scopes a guardian may grant for this age band. */
+export function grantableScopes(ageBand: AgeBand | null): readonly YouthScope[] {
+  return ageBand === 'under13' ? CHILD_SCOPES : YOUTH_SCOPES;
+}
+
 /** Adults may move to a stricter band; loosening needs support. */
 export function canChangeAgeBand(from: AgeBand | null, to: AgeBand): boolean {
   if (from === null || from === to) return true;
@@ -81,20 +99,23 @@ export function canChangeAgeBand(from: AgeBand | null, to: AgeBand): boolean {
 
 export function getUserSafetyPolicy(state: SafetyState | null, now: Date = new Date()): SafetyPolicy {
   const ageBand = state?.ageBand ?? null;
-  const isMinor = ageBand === '13-17';
+  const privateOnly = ageBand === 'under13';
+  const isMinor = privateOnly || ageBand === '13-17';
   const expired =
     state?.consentExpiresAt !== null &&
     state?.consentExpiresAt !== undefined &&
     Date.parse(state.consentExpiresAt) <= now.getTime();
   const approved = isMinor && state?.guardianStatus === 'approved' && !expired;
-  const has = (scope: YouthScope) => !isMinor || (approved && (state?.scopes ?? []).includes(scope));
+  const allowed = grantableScopes(ageBand);
+  const has = (scope: YouthScope) =>
+    !isMinor || (approved && allowed.includes(scope) && (state?.scopes ?? []).includes(scope));
   const active = ageBand === '18plus' || approved;
 
   return {
     ageBand,
     needsAgeBand: ageBand === null,
-    blocked: ageBand === 'under13',
     isMinor,
+    privateOnly,
     awaitingGuardian: isMinor && !approved,
     youthFunctionalityActive: active,
     canUsePublicPassport: active && has('public_passport'),
@@ -105,7 +126,8 @@ export function getUserSafetyPolicy(state: SafetyState | null, now: Date = new D
     canPublishMedia: active && has('public_media'),
     canShowMovementPublicly: active && has('public_movement'),
     canUseAiAnalysis: active && has('ai_analysis'),
-    canRecordMovement: ageBand !== 'under13',
+    canRecordMovement: true,
+    canChooseNonPlayerRole: !privateOnly,
     canSeePromotions: ageBand === '18plus',
     genericLockScreenOnly: isMinor,
     ageGroupLabel: isMinor ? 'youth' : null,

@@ -38,6 +38,8 @@ import { type PlayerOnboardingReport } from '@/features/player-onboarding/types'
 import { PlayerVerificationCard } from '@/features/verification-system/components/PlayerVerificationCard';
 import { TrustProfileSection, type UsePlayerTrustResult } from '@/features/trust-system';
 import { HomeTrialsQuickAction } from '@/features/trial-invitations/components/HomeTrialsQuickAction';
+import { PrivateModeCard } from '@/features/youth-safety/components/PrivateModeCard';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export type PlayerProfileScreenProps = {
@@ -98,6 +100,8 @@ export function PlayerProfileScreen({
   const { t } = useAppTranslation(['portfolio', 'common', 'settings', 'passport']);
   const { user } = useAuth();
   const staffRole = useStaffRole();
+  // Under-13 private mode: no Passport, sharing, endorsements, verification or trials.
+  const privateMode = useUserSafety().policy.privateOnly;
   const { trustProfile, recommendations, ...trustStateRest } = trustState;
   const { unreadCount } = useActivities();
 
@@ -199,13 +203,17 @@ export function PlayerProfileScreen({
           onViewAllMatchesPress={onViewPerformancePress}
         />
 
-        <FootballPassportScoreCard
-          playerId={profile.id}
-          profile={profile}
-          recommendations={recommendations}
-        />
+        {privateMode ? (
+          <PrivateModeCard />
+        ) : (
+          <FootballPassportScoreCard
+            playerId={profile.id}
+            profile={profile}
+            recommendations={recommendations}
+          />
+        )}
 
-        {onboardingReport && onOnboardingStepPress && onDismissOnboarding ? (
+        {!privateMode && onboardingReport && onOnboardingStepPress && onDismissOnboarding ? (
           <PlayerOnboardingCard
             steps={onboardingReport.steps}
             completedCount={onboardingReport.completedCount}
@@ -219,23 +227,26 @@ export function PlayerProfileScreen({
 
         {onActivityPress ? <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} /> : null}
 
-        {onTrialsPress ? (
+        {!privateMode && onTrialsPress ? (
           <HomeTrialsQuickAction pendingCount={pendingTrialsCount} onPress={onTrialsPress} />
         ) : null}
 
-        <CollapsibleSection
-          title={t('portfolio:passportInsights')}
-          subtitle={t('portfolio:passportInsightsSubtitle')}
-          persistKey="home-passport-insights"
-        >
-          <View className="gap-4">
-            <PortfolioAnalyticsCard playerId={profile.id} />
-            <PlayerVerificationCard playerId={profile.id} playerName={profile.fullName} />
-          </View>
-        </CollapsibleSection>
+        {privateMode ? null : (
+          <CollapsibleSection
+            title={t('portfolio:passportInsights')}
+            subtitle={t('portfolio:passportInsightsSubtitle')}
+            persistKey="home-passport-insights"
+          >
+            <View className="gap-4">
+              <PortfolioAnalyticsCard playerId={profile.id} />
+              <PlayerVerificationCard playerId={profile.id} playerName={profile.fullName} />
+            </View>
+          </CollapsibleSection>
+        )}
 
         {staffRole ? <AdminReviewCard staffRole={staffRole} /> : null}
 
+        {privateMode ? null : (
         <CollapsibleSection
           title={t('portfolio:publicPassport')}
           subtitle={t('portfolio:publicPassportSubtitle')}
@@ -284,6 +295,7 @@ export function PlayerProfileScreen({
             </View>
           </View>
         </CollapsibleSection>
+        )}
 
         <CollapsibleSection
           title={t('passport:footballSources.title')}
@@ -293,20 +305,22 @@ export function PlayerProfileScreen({
           <FootballSourcesSection playerId={profile.id} matches={profile.statisticsMatches ?? []} />
         </CollapsibleSection>
 
-        <CollapsibleSection
-          title={t('portfolio:profileUi.trustTitle')}
-          subtitle={t('portfolio:profileUi.trustSubtitle')}
-          persistKey="home-trust"
-        >
-          <TrustProfileSection
-            playerId={profile.id}
-            playerName={profile.fullName}
-            currentClub={profile.identity.currentClub}
-            clubHistory={profile.identity.clubHistory}
-            trustState={{ trustProfile, recommendations, ...trustStateRest }}
-            onInviteCoachPress={onInviteCoachPress}
-          />
-        </CollapsibleSection>
+        {privateMode ? null : (
+          <CollapsibleSection
+            title={t('portfolio:profileUi.trustTitle')}
+            subtitle={t('portfolio:profileUi.trustSubtitle')}
+            persistKey="home-trust"
+          >
+            <TrustProfileSection
+              playerId={profile.id}
+              playerName={profile.fullName}
+              currentClub={profile.identity.currentClub}
+              clubHistory={profile.identity.clubHistory}
+              trustState={{ trustProfile, recommendations, ...trustStateRest }}
+              onInviteCoachPress={onInviteCoachPress}
+            />
+          </CollapsibleSection>
+        )}
 
         <CollapsibleSection
           title={t('portfolio:playerProfile')}

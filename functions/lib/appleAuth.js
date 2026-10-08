@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAuthenticatedAccount = exports.accountDeletionDeps = exports.persistAppleAuthorizationCode = void 0;
+exports.deleteAuthenticatedAccount = exports.accountDeletionDeps = exports.persistAppleAuthorizationCode = exports.accountDeletionSecrets = void 0;
 const https_1 = require("firebase-functions/v2/https");
 const params_1 = require("firebase-functions/params");
 const auth_1 = require("firebase-admin/auth");
@@ -12,6 +12,8 @@ const appleTokenService_1 = require("./appleTokenService");
 const appleTeamIdSecret = (0, params_1.defineSecret)('APPLE_TEAM_ID');
 const appleKeyIdSecret = (0, params_1.defineSecret)('APPLE_KEY_ID');
 const applePrivateKeySecret = (0, params_1.defineSecret)('APPLE_PRIVATE_KEY');
+/** Functions that may delete an account declare these so Sign in with Apple tokens get revoked. */
+exports.accountDeletionSecrets = [appleTeamIdSecret, appleKeyIdSecret, applePrivateKeySecret];
 const AUTH_PROVIDER_TOKENS_COLLECTION = 'authProviderTokens';
 function requireAuthUid(uid) {
     if (!uid) {

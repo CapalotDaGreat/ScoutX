@@ -8,11 +8,12 @@
     "under13": "Under 13",
     "teen": "13 to 17",
     "adult": "18 or older",
-    "under13Notice": "PitchProof is only available from age 13. If you continue, this account and anything in it will be deleted.",
-    "under13Continue": "Continue and delete this account",
     "teenConfirm": "I am between 13 and 17. I understand my parent or guardian has to approve my account before I can use PitchProof.",
     "continue": "Continue",
-    "noBirthDate": "We only store your age group, never your date of birth."
+    "noBirthDate": "We only store your age group, never your date of birth.",
+    "childTitle": "Private account for players under 13",
+    "childNotice": "Under 13 you can log matches and training, set goals, keep videos and get AI feedback if your parent allows it. Your account is private: nobody else can see your profile, find you or contact you. A parent or guardian has to give permission before you can start.",
+    "childConfirm": "I am under 13. I understand a parent or guardian has to give permission before I can use PitchProof."
   },
   "guardian": {
     "requestTitle": "Ask a parent or guardian",
@@ -29,12 +30,15 @@
     "waitingBody": "We emailed {{email}}. Once they approve, PitchProof unlocks automatically.",
     "whatHappens": "Your guardian decides separately about a public profile, being found by scouts, scout requests, shared videos and AI analysis. Any trial invitation also needs their approval.",
     "resend": "Send again or use another email",
-    "deleteAccount": "Delete my account"
-  },
-  "under13": {
-    "title": "PitchProof is for ages 13 and up",
-    "body": "Your account has been deleted and nothing was kept. You are welcome back when you turn 13.",
-    "close": "Close"
+    "deleteAccount": "Delete my account",
+    "childRequestTitle": "Ask a parent for permission",
+    "childRequestBody": "Enter your parent's or guardian's email. We send them a notice that explains PitchProof and a form to sign. Your account stays locked until they confirm.",
+    "childEmailLabel": "Parent or guardian email",
+    "childWaitingTitle": "Waiting for your parent",
+    "childWaitingBody": "We emailed {{email}}. Ask your parent to read the email and sign the form.",
+    "childConfirmingBody": "Your parent signed the form. They now have to click the confirmation link in a second email sent to {{email}}.",
+    "childWhatHappens": "Your account is private. Nobody else can see it, find it or contact you. Your parent also decides whether AI analysis may be used.",
+    "childDeadline": "Without permission this account and its data will be deleted on {{date}}."
   },
   "settings": {
     "title": "Age and guardian",
@@ -54,11 +58,18 @@
       "public_movement": "Movement on profile",
       "ai_analysis": "AI video analysis"
     },
-    "guardianDecides": "Your parent or guardian decides this. Ask them to update their choices from their confirmation email."
+    "guardianDecides": "Your parent or guardian decides this. Ask them to update their choices from their confirmation email.",
+    "ageChild": "Age group: under 13 (private account)",
+    "privateMode": "Your account is private. Nobody else can see your profile, find you or contact you.",
+    "revokeHintChild": "Your account locks until your parent gives permission again. Without new permission it is deleted after 14 days."
   },
   "trial": {
     "awaitingGuardian": "Waiting for your parent or guardian to approve this trial.",
     "guardianDeclined": "Your parent or guardian declined this trial."
   },
-  "youthLabel": "Youth player"
+  "youthLabel": "Youth player",
+  "privateMode": {
+    "title": "Private account",
+    "body": "Only you can see your profile, matches and videos. There is no public Passport, no search listing and no contact from scouts or other users."
+  }
 }

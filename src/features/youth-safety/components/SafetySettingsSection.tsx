@@ -4,7 +4,7 @@ import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
-import { YOUTH_SCOPES } from '@/features/youth-safety/policy';
+import { grantableScopes } from '@/features/youth-safety/policy';
 import { UserSafetyRepository } from '@/features/youth-safety/repositories/UserSafetyRepository';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { toUserMessage } from '@/utils/userFacingError';
@@ -17,10 +17,16 @@ export function SafetySettingsSection() {
 
   if (!gated || !record) return null;
 
-  const granted = YOUTH_SCOPES.filter((scope) => record.scopes.includes(scope));
+  const granted = grantableScopes(record.ageBand).filter((scope) => record.scopes.includes(scope));
+  const revokeHint = policy.privateOnly ? t('safety:settings.revokeHintChild') : t('safety:settings.revokeHint');
+  const ageLabel = policy.privateOnly
+    ? t('safety:settings.ageChild')
+    : policy.isMinor
+      ? t('safety:settings.ageTeen')
+      : t('safety:settings.ageAdult');
 
   const revoke = () => {
-    Alert.alert(t('safety:settings.revoke'), t('safety:settings.revokeHint'), [
+    Alert.alert(t('safety:settings.revoke'), revokeHint, [
       { text: t('common:cancel'), style: 'cancel' },
       {
         text: t('safety:settings.revoke'),
@@ -40,7 +46,12 @@ export function SafetySettingsSection() {
       <Text variant="overline" color="secondary">
         {t('safety:settings.title')}
       </Text>
-      <Text weight="semibold">{policy.isMinor ? t('safety:settings.ageTeen') : t('safety:settings.ageAdult')}</Text>
+      <Text weight="semibold">{ageLabel}</Text>
+      {policy.privateOnly ? (
+        <Text variant="body-sm" color="secondary" testID="settings-private-mode">
+          {t('safety:settings.privateMode')}
+        </Text>
+      ) : null}
       {policy.isMinor && record.guardianStatus === 'approved' ? (
         <View className="gap-2">
           <Text variant="body-sm" color="secondary">
@@ -58,7 +69,7 @@ export function SafetySettingsSection() {
             {t('safety:settings.revoke')}
           </Button>
           <Text variant="caption" color="tertiary">
-            {t('safety:settings.revokeHint')}
+            {revokeHint}
           </Text>
         </View>
       ) : null}

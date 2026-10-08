@@ -1,7 +1,7 @@
 ---
 id: video-recording-policy
 title: Video and Recording Policy
-version: 1.0.0
+version: 1.1.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
@@ -20,7 +20,7 @@ Before uploading, make sure that you recorded the footage yourself or have permi
 
 ## Visibility
 
-Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, PitchProof shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it.
+Every upload starts as private. You can add a video to your Passport, or share it with one specific scout for a limited time. Team-only and unlisted-link sharing are not available. Before media becomes visible beyond you, PitchProof shows a warning and a preview of who will be able to see it, and asks you to confirm that you have the right to share it. Players aged 13 to 17 can add media to their Passport only if their guardian has allowed it. Media of children under 13 always stays private and cannot be shared.
 
 The first time you upload, PitchProof asks you to acknowledge this policy. PitchProof records that acknowledgement with the policy version.
 

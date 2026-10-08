@@ -2,7 +2,10 @@ import { getFirestore, type Firestore, type Query, type QueryDocumentSnapshot } 
 import { getStorage } from 'firebase-admin/storage';
 import { logger } from 'firebase-functions';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { accountDeletionDeps, accountDeletionSecrets } from '../appleAuth';
+import { deleteUnconsentedChildAccounts } from '../safety/childAccounts';
 import { footageMediaId } from '../uploads/model';
+import type { DeletionDeps } from './deletion';
 import { LEGAL_RETENTION_COLLECTION } from './legalRetention';
 import { RETENTION, olderThan } from './retention';
 
@@ -15,6 +18,8 @@ export type CleanupCounts = {
   webhookReceipts: number;
   legalRecords: number;
   privacyRequests: number;
+  /** Under-13 accounts deleted for lack of valid parental consent. */
+  childAccounts: number;
 };
 
 async function each(query: Query, run: (doc: QueryDocumentSnapshot) => Promise<void>): Promise<number> {
@@ -31,7 +36,11 @@ async function deletePrefix(prefix: string): Promise<void> {
  * Applies the retention periods in `retention.ts`. Each pass handles up to BATCH items per
  * category; the daily schedule catches up on anything left over.
  */
-export async function runRetentionCleanup(db: Firestore, now: Date = new Date()): Promise<CleanupCounts> {
+export async function runRetentionCleanup(
+  db: Firestore,
+  now: Date = new Date(),
+  deletionDeps: DeletionDeps = accountDeletionDeps,
+): Promise<CleanupCounts> {
   const nowIso = now.toISOString();
 
   const exportsExpired = await each(
@@ -86,10 +95,17 @@ export async function runRetentionCleanup(db: Firestore, now: Date = new Date())
     },
   );
 
-  return { exportsExpired, failedUploads, abandonedJobs, webhookReceipts, legalRecords, privacyRequests };
+  const childAccounts = await deleteUnconsentedChildAccounts(db, now, deletionDeps);
+
+  return { exportsExpired, failedUploads, abandonedJobs, webhookReceipts, legalRecords, privacyRequests, childAccounts };
 }
 
-export const retentionCleanup = onSchedule({ schedule: 'every day 03:30', timeZone: 'Europe/Zurich', timeoutSeconds: 540 }, async () => {
+export const retentionCleanup = onSchedule({
+  schedule: 'every day 03:30',
+  timeZone: 'Europe/Zurich',
+  timeoutSeconds: 540,
+  secrets: accountDeletionSecrets,
+}, async () => {
   const counts = await runRetentionCleanup(getFirestore());
   logger.info('Retention cleanup finished', counts);
 });

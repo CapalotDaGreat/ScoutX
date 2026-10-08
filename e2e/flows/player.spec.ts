@@ -113,7 +113,7 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
     await page.goto('/player/settings');
     await page.getByTestId('settings-open-privacy-center').click();
     await expect(page.getByTestId('privacy-center-consents')).toBeVisible({ timeout: 30_000 });
-    await expect(page.getByTestId('privacy-center-consents').getByText('Version 1.0.0', { exact: false }).first()).toBeVisible();
+    await expect(page.getByTestId('privacy-center-consents').getByText('Version 1.1.0', { exact: false }).first()).toBeVisible();
     await page.getByTestId('privacy-center-documents').getByText('Youth Safety Policy').click();
     await expect(page.getByTestId('legal-document-youth-safety-policy')).toBeVisible();
   });

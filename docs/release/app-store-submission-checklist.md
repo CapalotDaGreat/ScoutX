@@ -117,7 +117,7 @@ mode on iPad), on the latest iOS, signed out.
    iPad screenshots are not required because `supportsTablet` is `false`.
 2. Privacy policy URL `https://pitchproof.online/privacy/`, support URL `https://pitchproof.online/support/`.
 3. App Privacy labels match `docs/compliance/app-store-privacy-labels.md`; age rating questionnaire
-   matches `store/listing.json` (13+, user-generated content, no open chat).
+   matches `store/listing.json` (4+, user-generated content, no open chat, Parental Controls and Age Assurance Yes, not in the Kids Category).
 4. Export compliance: `ITSAppUsesNonExemptEncryption` is already `false`.
 5. Name: the app is PitchProof everywhere. In App Store Connect, set the app name to PitchProof
    (App Information → Name) and check that no screenshot or description still says ScoutX. The bundle

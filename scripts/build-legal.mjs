@@ -617,7 +617,7 @@ function renderSupportPage(legal, site) {
       'guardian',
       false,
       'Parents and guardians',
-      '<p>Players aged 13 to 17 need a guardian\'s approval for youth features. Guardians receive an email link to approve or decline. See the <a href="/legal/youth-safety-policy/">Youth Safety Policy</a> and the <a href="/legal/guardian-consent-notice/">Guardian Consent Notice</a>.</p>',
+      '<p>Players aged 13 to 17 need a guardian\'s approval for youth features. Accounts for children under 13 are always private and need a parent\'s signed consent, confirmed by a second email. Guardians receive an email link to approve or decline. See the <a href="/legal/youth-safety-policy/">Youth Safety Policy</a> and the <a href="/legal/guardian-consent-notice/">Guardian Consent Notice</a>.</p>',
     ),
     card(
       'document',
@@ -637,7 +637,7 @@ function renderSupportPage(legal, site) {
   <div class="wrap">
     <p class="eyebrow">${icon('guardian')}Support</p>
     <h1>We're here to <em>help</em>.</h1>
-    <p class="lead">${SITE_NAME} helps football players aged 13 and over build a Football Passport from match logs, videos, movement sessions, goals and coach endorsements. Here is how to get help with your account.</p>
+    <p class="lead">${SITE_NAME} helps football players build a Football Passport from match logs, videos, movement sessions, goals and coach endorsements. Here is how to get help with your account.</p>
   </div>
 </section>
 <section class="group">

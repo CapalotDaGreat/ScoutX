@@ -1,23 +1,38 @@
 ---
 id: guardian-consent-notice
 title: Guardian Consent Notice
-version: 1.0.0
+version: 1.1.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
-- A player aged 13 to 17 asked you to approve their PitchProof account.
-- You decide each permission separately. Nothing is allowed by default.
-- You can withdraw permissions at any time using the link in your confirmation email.
-- We store your email address only to contact you about this player's account.
+- A child or teenager in your care asked for your permission to use PitchProof.
+- For children under 13 the account is always private. You sign a consent form and confirm it from a second email.
+- For players aged 13 to 17 you decide each permission separately. Nothing is allowed by default.
+- You can withdraw permission at any time using the link in your confirmation email.
+- We use your email address only to contact you about this account.
 ---
 
 ## Why you received this
 
-A player in your care chose the age band "13 to 17" in PitchProof and entered your email address. PitchProof is operated by {{entityName}}, {{entityAddress}}.
+A player in your care chose an age band in PitchProof and entered your email address. PitchProof is operated by {{entityName}}, {{entityAddress}}. Contact: {{supportEmail}}.
 
-## What you are asked to decide
+## Notice to parents of children under 13
+
+If your child chose "Under 13", their account is a private account and stays locked until you give permission.
+
+What we have collected so far: your email address, your child's first name and the sign-in details of the account (an email address or an Apple or Google sign-in). We collected them only to ask for your permission. If you do not give permission within 14 days, we delete them together with the account.
+
+What we will collect with your permission: the name and profile details your child enters, their age band (never a date of birth), matches, training sessions and goals they log, videos they upload, movement summaries measured on the phone (location is never stored), push notification tokens, and security and usage records needed to keep the service safe.
+
+How we use it: only to provide the app to your child. Nobody else can see your child's profile, find it or contact your child. There is no public Passport, no scout contact, no trials, no endorsements, no sharing of videos and no advertising. Hosting, storage and email delivery are handled by service providers acting on our instructions, listed in the Privacy Policy. If you allow AI analysis, clips your child uploads are sent to an AI provider to produce feedback; the provider may not keep or train on them. We do not disclose your child's information to third parties for their own purposes, and we never sell it.
+
+How to give permission: open the link in the email, confirm that you are the child's parent or legal guardian and 18 or older, confirm that you have read this notice, choose whether to allow AI analysis and type your full name to sign. We then send a second email to the same address. Permission takes effect only when you confirm it from that email.
+
+Your rights: you can review the information we hold about your child, get a copy, have it corrected or deleted, and refuse any further collection or use, at any time. Use the link in your confirmation email or write to {{supportEmail}}. Withdrawing permission deletes the account. Permission lasts up to 12 months and has to be renewed.
+
+## What you decide for players aged 13 to 17
 
 Please confirm that you are the player's parent or legal guardian, and choose which of these the player may use:
 
@@ -32,15 +47,15 @@ Private features, such as logging matches and goals and recording movement sessi
 
 ## Trials
 
-If a scout invites the player to a trial, you receive a separate email and the player can accept only after you approve.
+If a scout invites a player aged 13 to 17 to a trial, you receive a separate email and the player can accept only after you approve. Children under 13 cannot receive trial invitations.
 
 ## Your data
 
-We store your email address, your decisions, the time of each decision and the consent version. The link we send you is single-use and expires after 7 days. We use your email address only for messages about this player's account. You can ask us to delete it, which also withdraws your consent.
+We store your email address, your decisions, the time of each decision, the consent version and, for children under 13, the name you typed as your signature. Links we send you are single-use and expire after 7 days. We use your email address only for messages about this player's account. You can ask us to delete it, which also withdraws your consent.
 
 ## Withdrawing consent
 
-Use the withdrawal link in your confirmation email at any time. Withdrawal takes effect immediately: the player's public Passport, discovery and scout contact stop.
+Use the withdrawal link in your confirmation email at any time. Withdrawal takes effect immediately. For players aged 13 to 17, the public Passport, discovery and scout contact stop. For children under 13, the account and its data are deleted.
 
 ## Contact
 

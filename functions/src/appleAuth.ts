@@ -15,6 +15,9 @@ const appleTeamIdSecret = defineSecret('APPLE_TEAM_ID');
 const appleKeyIdSecret = defineSecret('APPLE_KEY_ID');
 const applePrivateKeySecret = defineSecret('APPLE_PRIVATE_KEY');
 
+/** Functions that may delete an account declare these so Sign in with Apple tokens get revoked. */
+export const accountDeletionSecrets = [appleTeamIdSecret, appleKeyIdSecret, applePrivateKeySecret];
+
 const AUTH_PROVIDER_TOKENS_COLLECTION = 'authProviderTokens';
 
 type PersistAppleAuthorizationCodeRequest = {

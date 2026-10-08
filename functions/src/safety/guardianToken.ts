@@ -1,6 +1,7 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 
-export type GuardianTokenPurpose = 'consent' | 'revoke' | 'trial';
+/** `confirm` is the second email of the under-13 parental consent. */
+export type GuardianTokenPurpose = 'consent' | 'confirm' | 'revoke' | 'trial';
 
 export type GuardianTokenPayload = {
   /** Consent record id, or trial invitation id for purpose 'trial'. */

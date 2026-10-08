@@ -3,6 +3,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { createCallableOptions } from './callableOptions';
 import { isTargetHeld } from './moderation/holds';
+import { loadSafetyPolicy } from './safety/userSafety';
 
 const PLAYBACK_MS = 15 * 60 * 1000;
 
@@ -43,7 +44,7 @@ async function grantedStoragePath(
     if (typeof grant.expiresAt === 'string' && grant.expiresAt < now) {
       continue;
     }
-    if (!grant.ownerId) {
+    if (!grant.ownerId || (await loadSafetyPolicy(grant.ownerId)).privateOnly) {
       continue;
     }
     if (mediaId && grant.mediaId === mediaId) {

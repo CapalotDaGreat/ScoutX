@@ -14,7 +14,7 @@ Nothing in this register has been reviewed by counsel yet.
 | D1 | Account | uid, email, display name, sign-in provider | Firebase Auth, `users/{uid}` | User | Owner |
 | D2 | Role | `player` / `scout` / `coach` | `users/{uid}` | User | Owner, server |
 | D3 | Age band | `under13` / `13-17` / `18plus` only (no date of birth) | `userSafety/{uid}` (server-written) | User | Owner, server |
-| D4 | Guardian | guardian email, decision, granted scopes, consent version, expiry | `guardianContacts/{uid}`, `youthConsents`, `userSafety/{uid}` | Player, guardian via signed link | Owner (status only), server |
+| D4 | Guardian | guardian email, decision, granted scopes, consent version, expiry; for under-13 accounts also the typed signature name, adult/guardian declaration and confirmation time | `guardianContacts/{uid}`, `youthConsents`, `userSafety/{uid}` | Player, guardian via signed link | Owner (status only), server |
 | D5 | Profile | club, positions, foot, nationality, biography, career history | `players/{uid}` | User | Owner; public projection only if allowed (D17) |
 | D6 | Football data | match logs, stats, goals, training, notes | `players/{uid}/matches`, `developmentGoals`, `trainingSessions`, ... | User | Owner |
 | D7 | Media | videos, photos, reels and their metadata | Storage `profiles/{uid}/...`, `players/{uid}/media`, `reels`, `reelExports` | User | Owner; others only via visibility or grants |
@@ -45,7 +45,7 @@ anything is stored.
 | --- | --- | --- | --- | --- |
 | Account and sign-in | D1, D2, D19 | Provide the service | Contract (Art. 6(1)(b)) | Same |
 | Age gate | D3 | Apply age rules, block under-13 | Legal obligation / legitimate interest (child protection) | Core control |
-| Guardian consent | D4, D13 | Unlock youth scopes | Consent of the guardian (Art. 8) | Required for 13–17 |
+| Guardian consent | D4, D13 | Unlock youth scopes; unlock under-13 private accounts | Consent of the guardian (Art. 8) | Required for 13–17; under 13: signed form plus confirmation email, only `ai_analysis` grantable |
 | Passport and profile | D5, D6, D17 | Football identity | Contract; public projection by consent | Public parts need guardian scopes |
 | Media library | D7, D8 | Store and validate uploads | Contract | Public media needs `public_media` scope |
 | AI analysis | D7, D9 | Analysis the user requests | Consent (`ai_analysis` scope for minors); contract for adults | Guardian scope |

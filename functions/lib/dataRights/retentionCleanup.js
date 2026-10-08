@@ -6,6 +6,8 @@ const firestore_1 = require("firebase-admin/firestore");
 const storage_1 = require("firebase-admin/storage");
 const firebase_functions_1 = require("firebase-functions");
 const scheduler_1 = require("firebase-functions/v2/scheduler");
+const appleAuth_1 = require("../appleAuth");
+const childAccounts_1 = require("../safety/childAccounts");
 const model_1 = require("../uploads/model");
 const legalRetention_1 = require("./legalRetention");
 const retention_1 = require("./retention");
@@ -23,7 +25,7 @@ async function deletePrefix(prefix) {
  * Applies the retention periods in `retention.ts`. Each pass handles up to BATCH items per
  * category; the daily schedule catches up on anything left over.
  */
-async function runRetentionCleanup(db, now = new Date()) {
+async function runRetentionCleanup(db, now = new Date(), deletionDeps = appleAuth_1.accountDeletionDeps) {
     const nowIso = now.toISOString();
     const exportsExpired = await each(db.collection('dataExports').where('status', '==', 'ready').where('expiresAt', '<=', nowIso), async (doc) => {
         await deletePrefix(`exports/${String(doc.get('uid'))}/${doc.id}/`);
@@ -50,9 +52,15 @@ async function runRetentionCleanup(db, now = new Date()) {
     const privacyRequests = await each(db.collection('privacyRequests').where('status', 'in', ['completed', 'rejected']).where('closedAt', '<=', (0, retention_1.olderThan)(now, retention_1.RETENTION.privacyRequestDays)), async (doc) => {
         await doc.ref.delete();
     });
-    return { exportsExpired, failedUploads, abandonedJobs, webhookReceipts, legalRecords, privacyRequests };
+    const childAccounts = await (0, childAccounts_1.deleteUnconsentedChildAccounts)(db, now, deletionDeps);
+    return { exportsExpired, failedUploads, abandonedJobs, webhookReceipts, legalRecords, privacyRequests, childAccounts };
 }
-exports.retentionCleanup = (0, scheduler_1.onSchedule)({ schedule: 'every day 03:30', timeZone: 'Europe/Zurich', timeoutSeconds: 540 }, async () => {
+exports.retentionCleanup = (0, scheduler_1.onSchedule)({
+    schedule: 'every day 03:30',
+    timeZone: 'Europe/Zurich',
+    timeoutSeconds: 540,
+    secrets: appleAuth_1.accountDeletionSecrets,
+}, async () => {
     const counts = await runRetentionCleanup((0, firestore_1.getFirestore)());
     firebase_functions_1.logger.info('Retention cleanup finished', counts);
 });

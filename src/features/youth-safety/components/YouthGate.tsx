@@ -25,7 +25,25 @@ function Shell({ children, testID }: { children: React.ReactNode; testID: string
   );
 }
 
-function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
+function ConfirmBox({ checked, onToggle, label, testID }: { checked: boolean; onToggle: () => void; label: string; testID: string }) {
+  return (
+    <Pressable
+      className="flex-row items-start gap-3"
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
+      aria-checked={checked}
+      onPress={onToggle}
+      testID={testID}
+    >
+      <View className={`mt-1 h-5 w-5 rounded border ${checked ? 'border-accent bg-accent' : 'border-border'}`} />
+      <Text variant="body-sm" className="flex-1">
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+function AgeBandStep() {
   const { t } = useAppTranslation('safety');
   const [choice, setChoice] = useState<AgeBand | null>(null);
   const [confirmed, setConfirmed] = useState(false);
@@ -37,8 +55,7 @@ function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
     setBusy(true);
     setError(null);
     try {
-      const result = await UserSafetyRepository.setAgeBand(choice);
-      if (result.deleted) onBlocked();
+      await UserSafetyRepository.setAgeBand(choice);
     } catch (err) {
       setError(toUserMessage(err, t('errors.generic')));
     } finally {
@@ -51,6 +68,7 @@ function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
     { band: '13-17', label: t('age.teen') },
     { band: '18plus', label: t('age.adult') },
   ];
+  const needsConfirm = choice === 'under13' || choice === '13-17';
 
   return (
     <Shell testID="youth-gate-age">
@@ -65,6 +83,7 @@ function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
             variant={choice === option.band ? 'accent' : 'secondary'}
             accessibilityRole="radio"
             accessibilityState={{ selected: choice === option.band }}
+            testID={`age-band-${option.band}`}
             onPress={() => {
               setChoice(option.band);
               setConfirmed(false);
@@ -75,22 +94,20 @@ function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
         ))}
       </View>
       {choice === 'under13' ? (
-        <Card variant="outlined" padding="md">
-          <Text variant="body-sm">{t('age.under13Notice')}</Text>
+        <Card variant="outlined" padding="md" className="gap-2" testID="age-under13-notice">
+          <Text variant="body-sm" weight="semibold">
+            {t('age.childTitle')}
+          </Text>
+          <Text variant="body-sm">{t('age.childNotice')}</Text>
         </Card>
       ) : null}
-      {choice === '13-17' ? (
-        <Pressable
-          className="flex-row items-start gap-3"
-          accessibilityRole="checkbox"
-          accessibilityState={{ checked: confirmed }}
-          onPress={() => setConfirmed((value) => !value)}
-        >
-          <View className={`mt-1 h-5 w-5 rounded border ${confirmed ? 'border-accent bg-accent' : 'border-border'}`} />
-          <Text variant="body-sm" className="flex-1">
-            {t('age.teenConfirm')}
-          </Text>
-        </Pressable>
+      {needsConfirm ? (
+        <ConfirmBox
+          checked={confirmed}
+          onToggle={() => setConfirmed((value) => !value)}
+          label={choice === 'under13' ? t('age.childConfirm') : t('age.teenConfirm')}
+          testID="age-confirm"
+        />
       ) : null}
       {error ? (
         <Text variant="body-sm" color="error">
@@ -100,10 +117,11 @@ function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
       <Button
         variant="primary"
         loading={busy}
-        disabled={!choice || (choice === '13-17' && !confirmed)}
+        disabled={!choice || (needsConfirm && !confirmed)}
         onPress={() => void submit()}
+        testID="age-continue"
       >
-        {choice === 'under13' ? t('age.under13Continue') : t('age.continue')}
+        {t('age.continue')}
       </Button>
       <Text variant="caption" color="tertiary">
         {t('age.noBirthDate')}
@@ -113,10 +131,10 @@ function AgeBandStep({ onBlocked }: { onBlocked: () => void }) {
 }
 
 function GuardianStep({ resend }: { resend: boolean }) {
-  const { t } = useAppTranslation('safety');
+  const { t, i18n } = useAppTranslation('safety');
   const { t: tAuth } = useAppTranslation('auth');
   const { user, signOut } = useAuth();
-  const { record } = useUserSafety();
+  const { record, policy } = useUserSafety();
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState((user?.name ?? '').split(' ')[0] ?? '');
   const [editing, setEditing] = useState(!resend);
@@ -125,6 +143,10 @@ function GuardianStep({ resend }: { resend: boolean }) {
   const deletion = useAccountDeletion(user?.uid);
 
   const status = record?.guardianStatus;
+  const child = policy.privateOnly;
+  const deadline = child && record?.childDeleteAfter
+    ? new Date(record.childDeleteAfter).toLocaleDateString(i18n.language)
+    : null;
 
   const send = async () => {
     setBusy(true);
@@ -139,16 +161,28 @@ function GuardianStep({ resend }: { resend: boolean }) {
     }
   };
 
-  if (status === 'pending' && !editing) {
+  const deadlineNote = deadline ? (
+    <Text variant="caption" color="tertiary" testID="youth-gate-child-deadline">
+      {t('guardian.childDeadline', { date: deadline })}
+    </Text>
+  ) : null;
+
+  if ((status === 'pending' || status === 'confirming') && !editing) {
+    const body = child
+      ? status === 'confirming'
+        ? t('guardian.childConfirmingBody', { email: record?.guardianEmailMasked ?? '' })
+        : t('guardian.childWaitingBody', { email: record?.guardianEmailMasked ?? '' })
+      : t('guardian.waitingBody', { email: record?.guardianEmailMasked ?? '' });
     return (
       <Shell testID="youth-gate-waiting">
-        <Heading level={2}>{t('guardian.waitingTitle')}</Heading>
+        <Heading level={2}>{t(child ? 'guardian.childWaitingTitle' : 'guardian.waitingTitle')}</Heading>
         <Text variant="body" color="secondary">
-          {t('guardian.waitingBody', { email: record?.guardianEmailMasked ?? '' })}
+          {body}
         </Text>
         <Card variant="outlined" padding="md" className="gap-2">
-          <Text variant="body-sm">{t('guardian.whatHappens')}</Text>
+          <Text variant="body-sm">{t(child ? 'guardian.childWhatHappens' : 'guardian.whatHappens')}</Text>
         </Card>
+        {deadlineNote}
         <Button variant="secondary" onPress={() => setEditing(true)}>
           {t('guardian.resend')}
         </Button>
@@ -187,11 +221,11 @@ function GuardianStep({ resend }: { resend: boolean }) {
         ? t('guardian.revokedBody')
         : status === 'expired'
           ? t('guardian.expiredBody')
-          : t('guardian.requestBody');
+          : t(child ? 'guardian.childRequestBody' : 'guardian.requestBody');
 
   return (
     <Shell testID="youth-gate-guardian">
-      <Heading level={2}>{t('guardian.requestTitle')}</Heading>
+      <Heading level={2}>{t(child ? 'guardian.childRequestTitle' : 'guardian.requestTitle')}</Heading>
       <Text variant="body" color="secondary">
         {intro}
       </Text>
@@ -204,7 +238,7 @@ function GuardianStep({ resend }: { resend: boolean }) {
         testID="guardian-first-name"
       />
       <Input
-        label={t('guardian.emailLabel')}
+        label={t(child ? 'guardian.childEmailLabel' : 'guardian.emailLabel')}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -217,31 +251,17 @@ function GuardianStep({ resend }: { resend: boolean }) {
       <Text variant="caption" color="tertiary">
         {t('guardian.emailPrivacy')}
       </Text>
+      {deadlineNote}
       {error ? (
         <Text variant="body-sm" color="error">
           {error}
         </Text>
       ) : null}
-      <Button variant="primary" loading={busy} disabled={!email.includes('@')} onPress={() => void send()}>
+      <Button variant="primary" loading={busy} disabled={!email.includes('@')} onPress={() => void send()} testID="guardian-send">
         {t('guardian.send')}
       </Button>
       <Button variant="ghost" onPress={() => void signOut()}>
         {t('guardian.signOut')}
-      </Button>
-    </Shell>
-  );
-}
-
-function Under13Notice({ onClose }: { onClose: () => void }) {
-  const { t } = useAppTranslation('safety');
-  return (
-    <Shell testID="youth-gate-under13">
-      <Heading level={2}>{t('under13.title')}</Heading>
-      <Text variant="body" color="secondary">
-        {t('under13.body')}
-      </Text>
-      <Button variant="secondary" onPress={onClose}>
-        {t('under13.close')}
       </Button>
     </Shell>
   );
@@ -254,17 +274,12 @@ export function useYouthGateActive(): boolean {
 }
 
 /**
- * Blocks the signed-in app until an age band is recorded and, for 13-17, until a guardian
- * approves. Under-13 accounts are deleted server-side and the user sees a notice.
+ * Blocks the signed-in app until an age band is recorded and, for anyone under 18, until a
+ * parent or guardian approves. Under-13 accounts then run in private mode.
  */
 export function YouthGate() {
   const { gated, record, policy } = useUserSafety();
-  const { signOut } = useAuth();
-  const [blocked, setBlocked] = useState(false);
 
-  if (blocked) {
-    return <Under13Notice onClose={() => setBlocked(false)} />;
-  }
   if (!gated) return null;
   if (record === undefined) {
     return (
@@ -274,17 +289,11 @@ export function YouthGate() {
     );
   }
   if (policy.needsAgeBand) {
-    return (
-      <AgeBandStep
-        onBlocked={() => {
-          setBlocked(true);
-          void signOut();
-        }}
-      />
-    );
+    return <AgeBandStep />;
   }
   if (policy.awaitingGuardian) {
-    return <GuardianStep resend={record?.guardianStatus === 'pending'} />;
+    const status = record?.guardianStatus;
+    return <GuardianStep resend={status === 'pending' || status === 'confirming'} />;
   }
   return null;
 }

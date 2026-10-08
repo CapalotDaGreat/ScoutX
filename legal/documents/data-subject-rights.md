@@ -1,7 +1,7 @@
 ---
 id: data-subject-rights
 title: Your Data Protection Rights
-version: 1.0.0
+version: 1.1.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
@@ -9,7 +9,7 @@ requiresAcceptance: false
 summary:
 - You can see, correct, download and delete your data.
 - Most requests can be done directly in the Privacy Center.
-- Guardians of players aged 13 to 17 can withdraw consent at any time from their email link.
+- Parents and guardians of players under 18 can withdraw consent at any time from their email link. For children under 13 this deletes the account.
 ---
 
 ## Your rights
@@ -33,7 +33,7 @@ Under the Swiss Federal Act on Data Protection and, where it applies, the GDPR, 
 
 ## Guardians
 
-A parent or guardian of a player aged 13 to 17 can withdraw any permission at any time and can ask us about the player's data. We may ask for information to confirm the request.
+A parent or guardian of a player aged 13 to 17 can withdraw any permission at any time and can ask us about the player's data.
 
 ## Complaints
 

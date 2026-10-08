@@ -116,8 +116,8 @@ describe('deleteAuthenticatedAccount recent sign-in', () => {
   });
 });
 
-describe('setAgeBand under-13 deletion', () => {
-  test('an established account cannot be deleted by switching to under-13 with a stale session', async () => {
+describe('setAgeBand switch to under-13', () => {
+  test('an established account cannot be locked into under-13 with a stale session', async () => {
     const id = uid('adult');
     await call(youth.setAgeBand, id, { ageBand: '18plus' }, fresh());
     await seedUser(id);
@@ -128,12 +128,24 @@ describe('setAgeBand under-13 deletion', () => {
     assert.equal((await db.collection('userSafety').doc(id).get()).get('ageBand'), '18plus');
   });
 
-  test('the same switch with a fresh sign-in proceeds to deletion', async () => {
+  test('the same switch with a fresh sign-in makes the account private and waiting for a parent', async () => {
     const id = uid('adult-fresh');
     await call(youth.setAgeBand, id, { ageBand: '18plus' }, fresh());
     await seedUser(id);
+    const result = await call(youth.setAgeBand, id, { ageBand: 'under13' }, fresh());
+    assert.equal(result.ageBand, 'under13');
+    const safety = (await db.collection('userSafety').doc(id).get()).data();
+    assert.equal(safety.ageBand, 'under13');
+    assert.equal(safety.guardianStatus, 'required');
+    assert.ok(Date.parse(safety.childDeleteAfter) > Date.now() + 13 * 86_400_000, 'deleted after 14 days without consent');
+    assert.equal((await db.collection('deletionRequests').doc(id).get()).exists, false, 'not deleted straight away');
+  });
+
+  test('scout and coach accounts cannot become under-13 accounts', async () => {
+    const id = uid('scout');
+    await db.collection('users').doc(id).set({ name: 'Scout', role: 'scout', roleConfirmed: true });
     const result = await rejection(call(youth.setAgeBand, id, { ageBand: 'under13' }, fresh()));
-    assert.notEqual(result.reason, 'recent_login_required');
-    assert.equal((await db.collection('discoverablePlayers').doc(id).get()).exists, false);
+    assert.equal(result.code, 'failed-precondition');
+    assert.equal(result.reason, 'child_player_only');
   });
 });

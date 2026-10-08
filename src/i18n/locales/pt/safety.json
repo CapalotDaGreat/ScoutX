@@ -8,11 +8,12 @@
     "under13": "Menos de 13",
     "teen": "Dos 13 aos 17",
     "adult": "18 ou mais",
-    "under13Notice": "O PitchProof só está disponível a partir dos 13 anos. Se continuares, esta conta e o seu conteúdo serão eliminados.",
-    "under13Continue": "Continuar e eliminar esta conta",
     "teenConfirm": "Tenho entre 13 e 17 anos. Compreendo que o meu encarregado de educação tem de aprovar a minha conta antes de eu usar o PitchProof.",
     "continue": "Continuar",
-    "noBirthDate": "Guardamos apenas a tua faixa etária, nunca a tua data de nascimento."
+    "noBirthDate": "Guardamos apenas a tua faixa etária, nunca a tua data de nascimento.",
+    "childTitle": "Conta privada para jogadores com menos de 13 anos",
+    "childNotice": "Com menos de 13 anos podes registar jogos e treinos, definir objetivos, guardar vídeos e receber feedback da IA se o teu encarregado de educação permitir. A tua conta é privada: mais ninguém pode ver o teu perfil, encontrar-te ou contactar-te. Um pai, mãe ou tutor tem de dar autorização antes de começares.",
+    "childConfirm": "Tenho menos de 13 anos. Compreendo que um pai, mãe ou tutor tem de dar autorização antes de eu poder usar o PitchProof."
   },
   "guardian": {
     "requestTitle": "Pede ao teu encarregado de educação",
@@ -29,12 +30,15 @@
     "waitingBody": "Enviámos um e-mail para {{email}}. Após a aprovação, o PitchProof desbloqueia automaticamente.",
     "whatHappens": "O teu encarregado de educação decide separadamente sobre um perfil público, a visibilidade para olheiros, pedidos de olheiros, vídeos partilhados e análise por IA. Qualquer convite para um treino de captação também precisa da sua aprovação.",
     "resend": "Reenviar ou usar outro e-mail",
-    "deleteAccount": "Eliminar a minha conta"
-  },
-  "under13": {
-    "title": "O PitchProof é para maiores de 13 anos",
-    "body": "A tua conta foi eliminada e nada foi guardado. Serás bem-vindo quando fizeres 13 anos.",
-    "close": "Fechar"
+    "deleteAccount": "Eliminar a minha conta",
+    "childRequestTitle": "Pede autorização a um pai, mãe ou tutor",
+    "childRequestBody": "Escreve o email do teu pai, mãe ou tutor. Enviamos-lhe uma explicação do PitchProof e um formulário para assinar. A tua conta fica bloqueada até ele confirmar.",
+    "childEmailLabel": "Email do pai, mãe ou tutor",
+    "childWaitingTitle": "À espera do teu encarregado de educação",
+    "childWaitingBody": "Enviámos um email para {{email}}. Pede-lhe que leia o email e assine o formulário.",
+    "childConfirmingBody": "O formulário foi assinado. Agora falta clicar no link de confirmação de um segundo email enviado para {{email}}.",
+    "childWhatHappens": "A tua conta é privada. Mais ninguém a pode ver, encontrar ou contactar-te. O teu encarregado de educação também decide se a análise por IA pode ser usada.",
+    "childDeadline": "Sem autorização, esta conta e os seus dados serão eliminados a {{date}}."
   },
   "settings": {
     "title": "Idade e encarregado de educação",
@@ -54,11 +58,18 @@
       "public_movement": "Movimento no perfil",
       "ai_analysis": "Análise de vídeo por IA"
     },
-    "guardianDecides": "Quem decide é o teu encarregado de educação. Pode alterar as escolhas a partir do e-mail de confirmação."
+    "guardianDecides": "Quem decide é o teu encarregado de educação. Pode alterar as escolhas a partir do e-mail de confirmação.",
+    "ageChild": "Faixa etária: menos de 13 (conta privada)",
+    "privateMode": "A tua conta é privada. Mais ninguém pode ver o teu perfil, encontrar-te ou contactar-te.",
+    "revokeHintChild": "A tua conta fica bloqueada até o teu encarregado de educação voltar a dar autorização. Sem nova autorização, é eliminada após 14 dias."
   },
   "trial": {
     "awaitingGuardian": "À espera de que o teu encarregado de educação aprove este treino de captação.",
     "guardianDeclined": "O teu encarregado de educação recusou este treino de captação."
   },
-  "youthLabel": "Jogador jovem"
+  "youthLabel": "Jogador jovem",
+  "privateMode": {
+    "title": "Conta privada",
+    "body": "Só tu vês o teu perfil, os teus jogos e vídeos. Não há Passport público, não apareces nas pesquisas e nem olheiros nem outros utilizadores te podem contactar."
+  }
 }

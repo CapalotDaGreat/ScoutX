@@ -30,7 +30,8 @@ export type LegalConfig = {
   euRepresentative: string | null;
   governingLaw: string;
   jurisdiction: string | null;
-  minimumAge: number;
+  /** Children under this age use private mode: no public profile, discovery or contact. */
+  privateModeUntilAge: number;
   guardianConsentUntilAge: number;
   supervisoryAuthority: string;
 };
@@ -55,7 +56,7 @@ export const LEGAL_CONFIG: LegalConfig = {
   euRepresentative: null,
   governingLaw: 'Swiss law',
   jurisdiction: 'Dübendorf, Switzerland',
-  minimumAge: 13,
+  privateModeUntilAge: 13,
   guardianConsentUntilAge: 18,
   supervisoryAuthority: 'Federal Data Protection and Information Commissioner (FDPIC), Switzerland',
 };
@@ -89,7 +90,7 @@ export function resolveLegalTokens(text: string, config: LegalConfig = LEGAL_CON
     euRepresentative: config.euRepresentative ?? 'none appointed',
     governingLaw: config.governingLaw,
     jurisdiction: config.jurisdiction ?? LEGAL_REVIEW_REQUIRED,
-    minimumAge: String(config.minimumAge),
+    privateModeUntilAge: String(config.privateModeUntilAge),
     guardianConsentUntilAge: String(config.guardianConsentUntilAge),
     supervisoryAuthority: config.supervisoryAuthority,
   };

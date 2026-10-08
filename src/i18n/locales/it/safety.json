@@ -8,11 +8,12 @@
     "under13": "Meno di 13",
     "teen": "Da 13 a 17",
     "adult": "18 o più",
-    "under13Notice": "PitchProof è disponibile dai 13 anni. Se continui, questo account e i suoi contenuti verranno eliminati.",
-    "under13Continue": "Continua ed elimina questo account",
     "teenConfirm": "Ho tra 13 e 17 anni. Capisco che un genitore o tutore deve approvare il mio account prima che io possa usare PitchProof.",
     "continue": "Continua",
-    "noBirthDate": "Salviamo solo la tua fascia d'età, mai la data di nascita."
+    "noBirthDate": "Salviamo solo la tua fascia d'età, mai la data di nascita.",
+    "childTitle": "Account privato per giocatori sotto i 13 anni",
+    "childNotice": "Sotto i 13 anni puoi registrare partite e allenamenti, fissare obiettivi, conservare video e ricevere feedback dall'IA se un genitore lo permette. Il tuo account è privato: nessun altro può vedere il tuo profilo, trovarti o contattarti. Un genitore o tutore deve dare il permesso prima che tu possa iniziare.",
+    "childConfirm": "Ho meno di 13 anni. Capisco che un genitore o tutore deve dare il permesso prima che io possa usare PitchProof."
   },
   "guardian": {
     "requestTitle": "Chiedi a un genitore o tutore",
@@ -29,12 +30,15 @@
     "waitingBody": "Abbiamo scritto a {{email}}. Dopo l'approvazione, PitchProof si sblocca automaticamente.",
     "whatHappens": "Il tuo tutore decide separatamente su profilo pubblico, visibilità per gli osservatori, richieste degli osservatori, video condivisi e analisi IA. Ogni invito a un provino richiede anche la sua approvazione.",
     "resend": "Invia di nuovo o usa un'altra email",
-    "deleteAccount": "Elimina il mio account"
-  },
-  "under13": {
-    "title": "PitchProof è per chi ha almeno 13 anni",
-    "body": "Il tuo account è stato eliminato e non è stato conservato nulla. Ti aspettiamo quando compirai 13 anni.",
-    "close": "Chiudi"
+    "deleteAccount": "Elimina il mio account",
+    "childRequestTitle": "Chiedi il permesso a un genitore",
+    "childRequestBody": "Inserisci l'e-mail di un genitore o tutore. Gli inviamo una spiegazione di PitchProof e un modulo da firmare. Il tuo account resta bloccato finché non conferma.",
+    "childEmailLabel": "E-mail del genitore o tutore",
+    "childWaitingTitle": "In attesa del tuo genitore",
+    "childWaitingBody": "Abbiamo scritto a {{email}}. Chiedi al tuo genitore di leggere l'e-mail e firmare il modulo.",
+    "childConfirmingBody": "Il tuo genitore ha firmato il modulo. Ora deve cliccare il link di conferma in una seconda e-mail inviata a {{email}}.",
+    "childWhatHappens": "Il tuo account è privato. Nessun altro può vederlo, trovarlo o contattarti. Il tuo genitore decide anche se si può usare l'analisi con IA.",
+    "childDeadline": "Senza permesso, questo account e i suoi dati verranno eliminati il {{date}}."
   },
   "settings": {
     "title": "Età e tutore",
@@ -54,11 +58,18 @@
       "public_movement": "Movimento sul profilo",
       "ai_analysis": "Analisi video con IA"
     },
-    "guardianDecides": "Lo decide il tuo genitore o tutore. Può cambiare le sue scelte dall'email di conferma."
+    "guardianDecides": "Lo decide il tuo genitore o tutore. Può cambiare le sue scelte dall'email di conferma.",
+    "ageChild": "Fascia d'età: sotto i 13 anni (account privato)",
+    "privateMode": "Il tuo account è privato. Nessun altro può vedere il tuo profilo, trovarti o contattarti.",
+    "revokeHintChild": "Il tuo account resta bloccato finché un genitore non dà di nuovo il permesso. Senza un nuovo permesso viene eliminato dopo 14 giorni."
   },
   "trial": {
     "awaitingGuardian": "In attesa che il tuo genitore o tutore approvi questo provino.",
     "guardianDeclined": "Il tuo genitore o tutore ha rifiutato questo provino."
   },
-  "youthLabel": "Giovane calciatore"
+  "youthLabel": "Giovane calciatore",
+  "privateMode": {
+    "title": "Account privato",
+    "body": "Solo tu vedi il tuo profilo, le partite e i video. Non c'è un Passport pubblico, non compari nelle ricerche e né osservatori né altri utenti possono contattarti."
+  }
 }

@@ -83,8 +83,15 @@ check('Store listing and age rating match the age policy', async () => {
   const problems = [];
   if (!rating) problems.push('store/listing.json has no ios.ageRating');
   else {
-    if (rating.rating !== `${LEGAL_CONFIG.minimumAge}+`) problems.push(`rating ${rating.rating} != ${LEGAL_CONFIG.minimumAge}+`);
-    if (rating.minimumAccountAge !== LEGAL_CONFIG.minimumAge) problems.push('minimumAccountAge differs from LEGAL_CONFIG.minimumAge');
+    if (rating.privateModeUntilAge !== LEGAL_CONFIG.privateModeUntilAge) problems.push('privateModeUntilAge differs from LEGAL_CONFIG.privateModeUntilAge');
+    if (rating.rating === '4+') {
+      // A 4+ rating is only defensible while under-13 accounts stay private and parental consent is enforced server-side.
+      const policy = read('src/features/youth-safety/policy.ts');
+      const rules = read('firestore.rules');
+      if (!/CHILD_SCOPES[^=]*=\s*\[\s*'ai_analysis'\s*\]/.test(policy)) problems.push('under-13 accounts may be granted scopes beyond ai_analysis');
+      if (!/function isChild\(/.test(rules)) problems.push('firestore.rules has no under-13 private-mode guard');
+      if (LEGAL_CONFIG.privateModeUntilAge !== 13) problems.push('4+ requires private mode for every account under 13');
+    }
     if (rating.userGeneratedContent !== true) problems.push('userGeneratedContent must be declared');
   }
   const copy = JSON.stringify(listing);

@@ -18,6 +18,9 @@ both together. Cleanup runs in `retentionCleanup` (daily 03:30 Europe/Zurich) an
 | Deletion receipt | 3 years (`deletionReceiptDays`) | Deletion completed | `legalRetention` record `expiresAt` | Approved (legal review, 2026-10-08) |
 | Guardian approval | 365 days validity, then re-approval | Approval | `youthConsent.ts` `CONSENT_VALIDITY_MS` | Product decision |
 | Guardian approval link | 7 days | Link sent | `GUARDIAN_LINK_TTL_MS` | Product decision |
+| Under-13 account without parental consent | 14 days (`CHILD_CONSENT_WAIT_DAYS`) | Under-13 band chosen, or player withdraws request | daily `retentionCleanup` via `userSafety.childDeleteAfter` | Product decision (not lawyer-reviewed) |
+| Under-13 account after consent expiry | 30 days (`CHILD_EXPIRED_GRACE_DAYS`) | Consent expiry | daily `retentionCleanup` | Product decision (not lawyer-reviewed) |
+| Under-13 account after parent declines or withdraws | Immediate | Parent decision | `respondGuardianConsent` + retry in `retentionCleanup` | Product decision (not lawyer-reviewed) |
 | External football source links (incl. sources removed by moderation, which stay visible only to the owner) | Until the player removes the link or deletes the account; Passport and scout copies are dropped at once when a link is made private, reported, hidden, removed or its provider is disabled | User action, moderation, provider change | `removeExternalFootballSource`, projection sync, `deleteAuthenticatedAccount` | Product decision |
 | Everything else (profile, football data, media, analyses, scouting data) | Until the user deletes it or the account | User action | `deleteAuthenticatedAccount` | Product decision |
 | Sentry events | Sentry project setting | Event received | Sentry | EXTERNAL CONFIGURATION REQUIRED |

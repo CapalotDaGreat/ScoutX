@@ -2,7 +2,7 @@
   "ios": {
     "name": "PitchProof",
     "subtitle": "Your Football Passport",
-    "description": "PitchProof is the player-first football identity platform for players aged 13 and over. Build your Football Passport from your match logs, highlight videos, movement sessions, development goals and coach endorsements, with every item showing where it came from, so scouts see evidence, not hype.\n\nPlayers aged 13 to 17 need a parent or guardian to approve youth features, and every public or scout-facing feature is a separate permission. PitchProof does not track your location: movement sessions measure distance and a pitch heatmap on your phone and store no location. PitchProof does not guarantee trials, contracts or selection.",
+    "description": "PitchProof is the player-first football identity platform. Build your Football Passport from your match logs, highlight videos, movement sessions, development goals and coach endorsements, with every item showing where it came from, so scouts see evidence, not hype.\n\nPlayers aged 13 to 17 need a parent or guardian to approve youth features, and every public or scout-facing feature is a separate permission. Accounts for children under 13 are always private: nobody else can see, find or contact them, and a parent must give consent before the account can be used. PitchProof does not track your location: movement sessions measure distance and a pitch heatmap on your phone and store no location. PitchProof does not guarantee trials, contracts or selection.",
     "keywords": [
       "football",
       "soccer",
@@ -19,23 +19,23 @@
     "supportUrl": "https://pitchproof.online/support",
     "marketingUrl": "https://pitchproof.online",
     "ageRating": {
-      "rating": "13+",
-      "minimumAccountAge": 13,
+      "rating": "4+",
+      "privateModeUntilAge": 13,
       "userGeneratedContent": true,
       "messagingAndChat": true,
-      "messagingNote": "No open chat. Scouts can send structured requests and trial invitations with a short text (max 500 characters); requests to players aged 13-17 need guardian permission and notify the guardian.",
-      "ageAssurance": "Self-declared age band; under 13 blocked; guardian approval for 13-17.",
-      "contentControls": ["report", "block", "moderation", "guardian scopes"],
+      "messagingNote": "No open chat. Scouts can send structured requests and trial invitations with a short text (max 500 characters); requests to players aged 13-17 need guardian permission and notify the guardian. Children under 13 cannot be contacted.",
+      "ageAssurance": "Self-declared age band; under 13 private mode (no public profile, discovery, contact, trials or sharing) with parental consent by signed form plus confirmation email; guardian approval per permission for 13-17.",
+      "contentControls": ["report", "block", "moderation", "guardian scopes", "under-13 private mode", "parental consent"],
       "advertising": false,
       "gambling": false,
       "unrestrictedWebAccess": false,
-      "notes": "LEGAL REVIEW REQUIRED: confirm the questionnaire answers in App Store Connect match this block."
+      "notes": "Confirm the App Store Connect questionnaire matches this block: Parental Controls and Age Assurance = Yes; not in the Kids Category."
     }
   },
   "android": {
     "title": "PitchProof - Football Passport",
     "shortDescription": "Build your football identity from real evidence.",
-    "fullDescription": "PitchProof helps players aged 13 and over build a Football Passport: one shareable career hub for match logs, videos, movement sessions, endorsements and trials, with every item labelled by its source. Players aged 13 to 17 need guardian approval for youth features. PitchProof does not guarantee trials, contracts or selection.",
+    "fullDescription": "PitchProof helps players build a Football Passport: one shareable career hub for match logs, videos, movement sessions, endorsements and trials, with every item labelled by its source. Players aged 13 to 17 need guardian approval for youth features. Accounts for children under 13 are private and need parental consent. PitchProof does not guarantee trials, contracts or selection.",
     "category": "SPORTS",
     "privacyPolicyUrl": "https://pitchproof.online/privacy"
   }

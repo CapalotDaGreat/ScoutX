@@ -1,14 +1,14 @@
 ---
 id: terms-of-service
 title: Terms of Service
-version: 1.0.0
+version: 1.1.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
 requiresAcceptance: true
 summary:
 - PitchProof helps players document their football development and lets scouts and coaches discover and contact players safely.
-- You must be at least 13. Players aged 13 to 17 need a parent or guardian's approval.
+- Players under 18 need a parent or guardian's approval. Accounts for children under 13 are private and need a parent's verified consent.
 - You keep ownership of what you upload. You must have the right to upload it.
 - PitchProof does not guarantee trials, contracts or selection by any club.
 - We may remove content or suspend accounts that break these terms or the Community Guidelines.
@@ -16,11 +16,15 @@ summary:
 
 ## Agreement
 
-These terms are an agreement between you and {{entityName}}, {{entityAddress}}. By creating an account you accept these terms, the Privacy Policy and the Community Guidelines.
+These terms are an agreement between you and {{entityName}}, {{entityAddress}}. By creating an account you accept these terms, the Privacy Policy and the Community Guidelines. If you are under 18, your parent or guardian also agrees to them on your behalf when they approve your account.
 
 ## Eligibility
 
-You must be at least {{minimumAge}} years old. If you are under {{guardianConsentUntilAge}}, a parent or guardian must approve your account before youth features become active. Scouts and coaches must be 18 or older and must act on behalf of a genuine club, academy or organisation.
+Players of any age may use PitchProof. If you are under {{guardianConsentUntilAge}}, a parent or guardian must approve your account before you can use it.
+
+If you are under {{privateModeUntilAge}}, your account is private: nobody else can see your profile, find you or contact you, you cannot share videos or receive trial invitations, and you can only use the player role. A parent or legal guardian must give verifiable consent as described in the Youth Safety Policy. Without that consent the account is deleted after 14 days, and if the parent withdraws consent the account is deleted.
+
+Scouts and coaches must be 18 or older and must act on behalf of a genuine club, academy or organisation. Give your real age group; we may restrict or close accounts where we believe it is wrong.
 
 ## Your account
 
@@ -38,7 +42,7 @@ Follow the Community Guidelines. Do not harass anyone, contact minors outside Pi
 
 ## Scouting and trials
 
-PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval.
+PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval. Children under 13 cannot be contacted or invited by scouts.
 
 ## AI analysis
 

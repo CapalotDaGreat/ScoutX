@@ -29,7 +29,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | Area | State | Evidence / note |
 | --- | --- | --- |
 | Security blockers (client AI key, rules hardening, CORS, App Check wiring) | COMPLETED | release gate, rules suites, `callableCors.test.ts` |
-| Age gate (13+), age band only, under-13 blocked and deleted | COMPLETED | `safetyPolicy.test.ts`, rules "youth safety", E2E |
+| Age gate, age band only, under-13 private mode with parental consent (signed form plus confirmation email) | COMPLETED (legal text not lawyer-reviewed) | `safetyPolicy.test.ts`, rules "under-13 private mode", `guardianFlow.test.mjs` |
 | Guardian approval by signed email link, separate scopes, revoke | COMPLETED | `guardianFlow.test.mjs`, E2E guardian approval |
 | Scout contact with minors only through PitchProof, guardian notified, trial co-approval | COMPLETED | `requestCenter.test.mjs`, rules trial tests |
 | Minor display (first name + initial, youth label) | COMPLETED | `releaseCoverage.test.ts` |
@@ -53,7 +53,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 | Passport privacy preview, Discoverability Health, video-to-Passport chain | COMPLETED | `productLinks.test.ts`, `reelExport.test.mjs` |
 | Guardian and report deep links, AASA | COMPLETED (resolver); universal links on device NOT VALIDATED | `notifyLinksRecovery.test.ts`, release gate AASA check |
 | Privacy and security documentation, consistency and label matrices | COMPLETED; LEGAL REVIEW REQUIRED | `docs/privacy/`, `docs/security/`, `docs/compliance/` |
-| Store metadata 13+ with UGC | COMPLETED; questionnaire LEGAL REVIEW REQUIRED | `store/listing.json`, release gate |
+| Store metadata 4+ with UGC and under-13 private mode | COMPLETED; questionnaire to confirm in App Store Connect | `store/listing.json`, release gate |
 | Server-side recent sign-in for deletion | COMPLETED; anonymous and resume policy await owner acceptance | `deletionAuth.test.mjs`, `deletionAuth.test.ts`; client re-auth for password / Apple / Google; no local fallback |
 | Guardian links: transactional single use, 32-character secret minimum, re-approval when a minor's trial changes | COMPLETED | `guardianFlow.test.mjs` |
 | Trial notifications to minors need `scout_contact` | COMPLETED | `firestore.rules.test.mjs` |

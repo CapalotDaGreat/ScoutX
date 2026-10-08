@@ -399,6 +399,83 @@ describe('youth safety', () => {
   });
 });
 
+describe('under-13 private mode', () => {
+  // Every social scope stored, as if the safety document had been tampered with: rules must
+  // still keep the child private.
+  const child = {
+    ageBand: 'under13',
+    guardianStatus: 'approved',
+    scopes: ['public_passport', 'discovery', 'scout_contact', 'public_media', 'public_movement', 'ai_analysis'],
+    consentExpiresAt: null,
+  };
+
+  beforeEach(async () => {
+    await seed(`userSafety/${PLAYER}`, child);
+  });
+
+  test('nobody can invite, message or watch a child', async () => {
+    await denied(
+      setDocument(SCOUT, 'trialInvitations/c1', { scoutId: SCOUT, playerId: PLAYER, status: 'pending', club: 'FC', history: [], updatedAt: 't0' }),
+      'trial invitation',
+    );
+    await seed('trialInvitations/c2', { scoutId: SCOUT, playerId: PLAYER, status: 'pending', club: 'FC', history: [], updatedAt: 't0' });
+    await denied(
+      setDocument(SCOUT, 'trialNotifications/c3', { recipientId: PLAYER, trialInvitationId: 'c2', read: false, title: 'Trial', body: 'b' }),
+      'trial notification',
+    );
+    await denied(
+      setDocument(SCOUT, `recruitmentWorkspaces/${SCOUT}/entries/${PLAYER}`, { scoutId: SCOUT, playerId: PLAYER, stage: 'watching' }),
+      'pipeline entry',
+    );
+  });
+
+  test('nobody can endorse or observe a child, and their trust data stays private', async () => {
+    await denied(
+      setDocument(COACH, 'trustRecommendations/c4', { authorId: COACH, playerId: PLAYER, body: 'great' }),
+      'endorsement',
+    );
+    await denied(
+      setDocument(COACH, 'coachObservations/c5', { coachId: COACH, playerId: PLAYER, body: 'note', provenance: 'coach_provided' }),
+      'coach observation',
+    );
+    await seed(`trustProfiles/${PLAYER}`, { score: 10 });
+    await seed('trustRecommendations/c6', { authorId: COACH, playerId: PLAYER, body: 'old' });
+    await denied(getDocument(SCOUT, `trustProfiles/${PLAYER}`), 'scout reads trust profile');
+    await denied(getDocument(SCOUT, 'trustRecommendations/c6'), 'scout reads endorsement');
+    await allowed(getDocument(PLAYER, `trustProfiles/${PLAYER}`), 'child reads own trust profile');
+    await allowed(getDocument(PLAYER, 'trustRecommendations/c6'), 'child reads own endorsement');
+  });
+
+  test('a child cannot publish or share media or claim a public username', async () => {
+    const item = (patch) => ({
+      id: 'v1', ownerId: PLAYER, type: 'highlight', storagePath: 'profiles/p/videos/v1/video.mp4',
+      visibility: 'private', rightsState: 'user_confirmed', uploadState: 'ready', processingState: 'none',
+      favorite: false, tags: [], goalIds: [], title: 'Clip', durationSec: 12, thumbnailPath: null,
+      sourceMatchId: null, sourceJobId: null, createdAt: '2026-10-01', updatedAt: '2026-10-01', ...patch,
+    });
+    const path = `players/${PLAYER}/media/v1`;
+    await allowed(setDocument(PLAYER, path, item({})), 'private media');
+    await denied(setDocument(PLAYER, path, item({ visibility: 'passport' })), 'publish on Passport');
+    await denied(setDocument(PLAYER, path, item({ visibility: 'grant' })), 'share with a scout');
+    await denied(
+      setDocument(PLAYER, 'mediaGrants/c7', { ownerId: PLAYER, granteeId: SCOUT, mediaId: 'v1', expiresAt: '2026-12-01T00:00:00.000Z' }),
+      'media grant',
+    );
+    await denied(setDocument(PLAYER, 'portfolioSlugs/kid', { playerId: PLAYER }), 'username');
+  });
+
+  test('a child can still keep private records', async () => {
+    await allowed(
+      setDocument(PLAYER, `players/${PLAYER}/matches/m1`, { id: 'm1', date: '2026-10-01', opponent: 'FC Test', result: 'W', minutes: 60 }),
+      'log a match',
+    );
+    await allowed(
+      setDocument(PLAYER, `players/${PLAYER}/developmentGoals/g1`, { ownerId: PLAYER, id: 'g1', title: 'Weak foot', category: 'technical', status: 'active' }),
+      'set a goal',
+    );
+  });
+});
+
 describe('consent records', () => {
   test('owners read their consent proof; nobody writes it from the client', async () => {
     await seed(`consentRecords/${PLAYER}`, { uid: PLAYER, consents: {} });

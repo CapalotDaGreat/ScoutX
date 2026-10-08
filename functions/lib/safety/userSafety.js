@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CHILD_CONSENT_WAIT_DAYS = void 0;
 exports.parseSafetyState = parseSafetyState;
 exports.loadSafetyState = loadSafetyState;
 exports.loadSafetyPolicy = loadSafetyPolicy;
@@ -12,6 +13,7 @@ const GUARDIAN_STATUSES = [
     'not_required',
     'required',
     'pending',
+    'confirming',
     'approved',
     'declined',
     'revoked',
@@ -61,11 +63,29 @@ async function queueMail(db, input) {
 function escapeHtml(value) {
     return value.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
 }
+/** Days an under-13 account may wait for parental consent before it is deleted. */
+exports.CHILD_CONSENT_WAIT_DAYS = 14;
 function guardianEmail(kind, input) {
     const name = input.firstName;
     const paragraphs = [];
     let subject = '';
-    if (kind === 'consent') {
+    if (kind === 'child_consent') {
+        subject = `${name} needs your permission to use PitchProof`;
+        paragraphs.push(`${name} started creating a PitchProof account, a football development app, and named you as their parent or legal guardian. Because ${name} is under 13, the account cannot be used until you give permission.`, 'Accounts for children under 13 are private. Nobody else can see the profile, find it in search or contact your child. There is no public Passport, no scout contact, no trial invitations, no sharing of videos and no advertising.', `With your permission ${name} can log matches and training, track goals and keep videos in a private library. AI analysis of uploaded clips is only switched on if you allow it separately.`, 'So far we have stored only your email address, your child\'s first name and the sign-in details of the account, so that we can ask you. If you do not give permission within 14 days, the account and this information are deleted.', `Read the details and decide here: ${input.link ?? ''}`, 'After you sign the form we send a second email to this address. Your permission only takes effect when you confirm it from that email.', 'If you do not know this child, ignore this email and the account will be deleted. Questions: support@pitchproof.online', 'Privacy Policy: https://pitchproof.online/legal/privacy-policy/');
+    }
+    else if (kind === 'child_confirm') {
+        subject = `Confirm your permission for ${name}'s PitchProof account`;
+        paragraphs.push(`You signed the parental consent form for ${name}'s private PitchProof account. Please confirm it was you.`, `Confirm here: ${input.link ?? ''}`, 'This link works once and expires in 7 days. If you did not sign the form, do nothing: the account stays locked and is deleted after 14 days.');
+    }
+    else if (kind === 'child_confirmation') {
+        subject = `${name}'s private PitchProof account is active`;
+        paragraphs.push(`Thank you. ${name}'s PitchProof account is now active in private mode.`, 'You can review what we hold, ask for a copy, change your choice about AI analysis or delete the account at any time. Withdrawing consent deletes the account and its data.', `Keep this email. Manage or withdraw your consent here: ${input.link ?? ''}`, 'Questions or requests: support@pitchproof.online.');
+    }
+    else if (kind === 'child_closed') {
+        subject = `${name}'s PitchProof account has been deleted`;
+        paragraphs.push(`As you requested, ${name}'s PitchProof account and its data are being deleted.`, 'Some records may be kept for a limited time where the law requires it, as described in our Data Retention Policy. Questions: support@pitchproof.online.');
+    }
+    else if (kind === 'consent') {
         subject = `${name} asked you to approve their PitchProof account`;
         paragraphs.push(`${name} wants to use PitchProof, a football development app, and named you as their parent or guardian.`, 'Because they are under 18, their account stays limited until you review it. You decide separately whether their profile can be public, whether scouts can find or contact them, whether videos can be shared, and whether AI analysis may be used. Nothing is allowed until you choose it, and you can change or withdraw your decision at any time.', `Review and decide: ${input.link ?? ''}`, 'This link works once and expires in 7 days. If you do not know this person, ignore this email and nothing will happen.');
     }

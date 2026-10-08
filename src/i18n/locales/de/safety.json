@@ -8,11 +8,12 @@
     "under13": "Unter 13",
     "teen": "13 bis 17",
     "adult": "18 oder älter",
-    "under13Notice": "PitchProof ist erst ab 13 Jahren verfügbar. Wenn du fortfährst, werden dieses Konto und alle Inhalte gelöscht.",
-    "under13Continue": "Fortfahren und Konto löschen",
     "teenConfirm": "Ich bin zwischen 13 und 17. Ich verstehe, dass meine Eltern oder mein Vormund mein Konto genehmigen müssen, bevor ich PitchProof nutzen kann.",
     "continue": "Weiter",
-    "noBirthDate": "Wir speichern nur deine Altersgruppe, nie dein Geburtsdatum."
+    "noBirthDate": "Wir speichern nur deine Altersgruppe, nie dein Geburtsdatum.",
+    "childTitle": "Privates Konto für Spieler unter 13",
+    "childNotice": "Unter 13 kannst du Spiele und Trainings erfassen, Ziele setzen, Videos speichern und KI-Feedback erhalten, wenn deine Eltern es erlauben. Dein Konto ist privat: Niemand sonst kann dein Profil sehen, dich finden oder dich kontaktieren. Ein Elternteil oder Vormund muss zustimmen, bevor du loslegen kannst.",
+    "childConfirm": "Ich bin unter 13. Ich verstehe, dass ein Elternteil oder Vormund zustimmen muss, bevor ich PitchProof nutzen kann."
   },
   "guardian": {
     "requestTitle": "Eltern oder Vormund fragen",
@@ -29,12 +30,15 @@
     "waitingBody": "Wir haben {{email}} eine E-Mail gesendet. Nach der Genehmigung wird PitchProof automatisch freigeschaltet.",
     "whatHappens": "Deine Eltern entscheiden einzeln über ein öffentliches Profil, die Sichtbarkeit für Scouts, Scout-Anfragen, geteilte Videos und KI-Analyse. Jede Probetraining-Einladung braucht ebenfalls ihre Zustimmung.",
     "resend": "Erneut senden oder andere E-Mail verwenden",
-    "deleteAccount": "Mein Konto löschen"
-  },
-  "under13": {
-    "title": "PitchProof ist ab 13 Jahren",
-    "body": "Dein Konto wurde gelöscht und nichts wurde behalten. Du bist willkommen, sobald du 13 bist.",
-    "close": "Schliessen"
+    "deleteAccount": "Mein Konto löschen",
+    "childRequestTitle": "Frag deine Eltern um Erlaubnis",
+    "childRequestBody": "Gib die E-Mail-Adresse eines Elternteils oder Vormunds ein. Wir senden ihnen eine Erklärung zu PitchProof und ein Formular zum Unterschreiben. Dein Konto bleibt gesperrt, bis sie bestätigen.",
+    "childEmailLabel": "E-Mail eines Elternteils oder Vormunds",
+    "childWaitingTitle": "Warten auf deine Eltern",
+    "childWaitingBody": "Wir haben {{email}} eine E-Mail geschickt. Bitte deine Eltern, sie zu lesen und das Formular zu unterschreiben.",
+    "childConfirmingBody": "Deine Eltern haben das Formular unterschrieben. Jetzt müssen sie noch den Bestätigungslink in einer zweiten E-Mail an {{email}} anklicken.",
+    "childWhatHappens": "Dein Konto ist privat. Niemand sonst kann es sehen, finden oder dich kontaktieren. Deine Eltern entscheiden auch, ob KI-Analyse genutzt werden darf.",
+    "childDeadline": "Ohne Erlaubnis werden dieses Konto und seine Daten am {{date}} gelöscht."
   },
   "settings": {
     "title": "Alter und Vormund",
@@ -54,11 +58,18 @@
       "public_movement": "Bewegung im Profil",
       "ai_analysis": "KI-Videoanalyse"
     },
-    "guardianDecides": "Das entscheiden deine Eltern oder dein Vormund. Sie können ihre Auswahl über die Bestätigungs-E-Mail ändern."
+    "guardianDecides": "Das entscheiden deine Eltern oder dein Vormund. Sie können ihre Auswahl über die Bestätigungs-E-Mail ändern.",
+    "ageChild": "Altersgruppe: unter 13 (privates Konto)",
+    "privateMode": "Dein Konto ist privat. Niemand sonst kann dein Profil sehen, dich finden oder dich kontaktieren.",
+    "revokeHintChild": "Dein Konto wird gesperrt, bis deine Eltern wieder zustimmen. Ohne neue Zustimmung wird es nach 14 Tagen gelöscht."
   },
   "trial": {
     "awaitingGuardian": "Warten auf die Zustimmung deiner Eltern oder deines Vormunds zu diesem Probetraining.",
     "guardianDeclined": "Deine Eltern oder dein Vormund haben dieses Probetraining abgelehnt."
   },
-  "youthLabel": "Nachwuchsspieler"
+  "youthLabel": "Nachwuchsspieler",
+  "privateMode": {
+    "title": "Privates Konto",
+    "body": "Nur du siehst dein Profil, deine Spiele und Videos. Es gibt keinen öffentlichen Passport, keinen Sucheintrag und keinen Kontakt durch Scouts oder andere Nutzer."
+  }
 }

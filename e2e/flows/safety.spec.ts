@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import {
+  acceptLegalGate,
   accounts,
   callFunction,
   documentExists,
@@ -72,6 +73,51 @@ test.describe.serial('Youth safety, reporting, privacy and plan', () => {
     await expect.poll(async () => (await queryCollection('mail', 'scoutxUid', uid)).length, { timeout: 60_000 }).toBe(0);
     await expect.poll(async () => (await queryCollection('youthConsents', 'uid', uid)).length, { timeout: 60_000 }).toBe(0);
     await expect.poll(() => documentExists(`guardianContacts/${uid}`), { timeout: 60_000 }).toBe(false);
+  });
+
+  test('an under-13 player stays locked until a parent signs and confirms, then uses a private account', async ({ page }) => {
+    const errors = trackPageErrors(page);
+    await registerAccount(page, 'Noah Junior', 'child');
+    const gate = page.getByTestId('youth-gate-age');
+    await gate.getByRole('radio', { name: 'Under 13' }).click();
+    await expect(page.getByTestId('age-under13-notice')).toBeVisible();
+    await gate.getByRole('checkbox').click();
+    await gate.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByTestId('youth-gate-guardian')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId('youth-gate-child-deadline')).toBeVisible({ timeout: 30_000 });
+
+    const guardianEmail = `parent-${Date.now()}@e2e.scoutx.test`;
+    await page.getByTestId('guardian-email').fill(guardianEmail);
+    await page.getByTestId('guardian-send').click();
+    await expect(page.getByTestId('youth-gate-waiting')).toBeVisible({ timeout: 30_000 });
+
+    const { token, uid } = await guardianTokenFor(guardianEmail);
+    const view = await callFunction<{ child: boolean; scopes: string[] }>('getGuardianConsentRequest', { token });
+    expect(view).toMatchObject({ child: true, scopes: ['ai_analysis'] });
+    await callFunction('respondGuardianConsent', {
+      token,
+      decision: 'approve',
+      scopes: ['ai_analysis', 'discovery'],
+      confirmGuardian: true,
+      acknowledged: true,
+      signature: 'Anna Junior',
+    });
+    await expect(page.getByTestId('youth-gate-waiting')).toBeVisible();
+
+    const confirm = await guardianTokenFor(guardianEmail, 'guardian_child_confirm');
+    await callFunction('respondGuardianConsent', { token: confirm.token, decision: 'confirm' });
+    await expect(page.getByTestId('youth-gate-waiting')).toBeHidden({ timeout: 30_000 });
+    const [consent] = await queryCollection('youthConsents', 'uid', uid);
+    expect(consent.data.status).toBe('approved');
+    expect(consent.data.scopes).toEqual(['ai_analysis']);
+
+    await acceptLegalGate(page);
+    await expect(page.getByRole('heading', { name: 'Choose your role' })).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByRole('button', { name: /^Scout / })).toHaveCount(0);
+    await page.getByRole('button', { name: /^Player / }).click();
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await expect(page.getByTestId('private-mode-card')).toBeVisible({ timeout: 30_000 });
+    expect(errors).toEqual([]);
   });
 
   test('a scout reports a Passport video with "I appear in this video"', async ({ page }) => {

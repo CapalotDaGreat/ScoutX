@@ -18,11 +18,19 @@ service cloud.firestore {
     // Age band and guardian scopes are server-written (setAgeBand / guardian consent callables).
     function isMinor(userId) {
       return exists(/databases/$(database)/documents/userSafety/$(userId))
-        && get(/databases/$(database)/documents/userSafety/$(userId)).data.ageBand == '13-17';
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.ageBand in ['under13', '13-17'];
+    }
+
+    // Under-13 accounts are private: nobody else may see, find, endorse or contact them,
+    // whatever scopes are stored.
+    function isChild(userId) {
+      return exists(/databases/$(database)/documents/userSafety/$(userId))
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.ageBand == 'under13';
     }
 
     function hasGuardianScope(userId, scope) {
-      return get(/databases/$(database)/documents/userSafety/$(userId)).data.guardianStatus == 'approved'
+      return !isChild(userId)
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.guardianStatus == 'approved'
         && get(/databases/$(database)/documents/userSafety/$(userId)).data.scopes.hasAny([scope]);
     }
 
@@ -75,10 +83,12 @@ service cloud.firestore {
 
     // Owners choose private, a specific-scout grant or the Passport. Anything beyond private
     // needs confirmed rights, no moderation hold and, for minors, the public_media scope.
+    // Children's media is always private.
     function mediaVisibilityAllowed(userId, data) {
       return data.visibility in ['private', 'grant', 'passport']
         && (data.visibility == 'private' || (
-          data.get('rightsState', 'unconfirmed') == 'user_confirmed'
+          !isChild(userId)
+          && data.get('rightsState', 'unconfirmed') == 'user_confirmed'
           && data.get('moderationState', 'none') == 'none'
           && (data.visibility == 'grant' || !isMinor(userId) || hasGuardianScope(userId, 'public_media'))
         ));
@@ -264,19 +274,23 @@ service cloud.firestore {
 
     // Trust scores are server-maintained; players must not be able to inflate their own.
     match /trustProfiles/{playerId} {
-      allow read: if isSignedIn() || publicPortfolioEnabled(playerId);
+      allow read: if isOwner(playerId)
+        || (!isChild(playerId) && (isSignedIn() || publicPortfolioEnabled(playerId)));
       allow create, update: if false;
       allow delete: if isOwner(playerId);
     }
 
     match /trustRecommendations/{recommendationId} {
-      allow read: if isSignedIn()
-        || (resource != null && publicPortfolioEnabled(resource.data.playerId));
-      // No self-endorsement; author and subject are immutable after creation.
+      allow read: if (isSignedIn() && request.auth.uid == resource.data.playerId)
+        || (!isChild(resource.data.playerId)
+          && (isSignedIn() || publicPortfolioEnabled(resource.data.playerId)));
+      // No self-endorsement; author and subject are immutable after creation. Children
+      // cannot be endorsed.
       allow create: if isSignedIn()
         && request.auth.uid == request.resource.data.authorId
         && request.resource.data.playerId is string
-        && request.resource.data.playerId != request.auth.uid;
+        && request.resource.data.playerId != request.auth.uid
+        && !isChild(request.resource.data.playerId);
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.authorId
         && request.resource.data.authorId == resource.data.authorId
@@ -307,7 +321,8 @@ service cloud.firestore {
         allow create, update: if isOwner(scoutId)
           && hasRecruiterRole()
           && request.resource.data.scoutId == scoutId
-          && request.resource.data.playerId == playerId;
+          && request.resource.data.playerId == playerId
+          && !isChild(playerId);
         allow delete: if isOwner(scoutId) && hasRecruiterRole();
       }
     }
@@ -508,14 +523,17 @@ service cloud.firestore {
       allow create, update, delete: if false;
     }
 
-    // Usernames are first-come; only the current holder may change or release one.
+    // Usernames are first-come; only the current holder may change or release one. Children
+    // have no public username.
     match /portfolioSlugs/{username} {
       allow read: if true;
       allow create: if isSignedIn()
-        && request.resource.data.playerId == request.auth.uid;
+        && request.resource.data.playerId == request.auth.uid
+        && !isChild(request.auth.uid);
       allow update: if isSignedIn()
         && resource.data.playerId == request.auth.uid
-        && request.resource.data.playerId == request.auth.uid;
+        && request.resource.data.playerId == request.auth.uid
+        && !isChild(request.auth.uid);
       allow delete: if isSignedIn()
         && resource.data.playerId == request.auth.uid;
     }
@@ -758,7 +776,8 @@ service cloud.firestore {
         && request.auth.uid == request.resource.data.ownerId
         && request.resource.data.granteeId is string
         && request.resource.data.granteeId != request.auth.uid
-        && request.resource.data.expiresAt is string;
+        && request.resource.data.expiresAt is string
+        && !isChild(request.auth.uid);
       allow update: if false;
       allow delete: if isSignedIn() && request.auth.uid == resource.data.ownerId;
     }
@@ -786,7 +805,9 @@ service cloud.firestore {
       allow create: if isSignedIn()
         && tokenRole() == 'coach'
         && request.auth.uid == request.resource.data.coachId
-        && request.resource.data.provenance == 'coach_provided';
+        && request.resource.data.provenance == 'coach_provided'
+        && request.resource.data.playerId is string
+        && !isChild(request.resource.data.playerId);
       allow update: if isSignedIn()
         && request.auth.uid == resource.data.coachId
         && request.resource.data.coachId == resource.data.coachId

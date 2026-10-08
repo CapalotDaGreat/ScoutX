@@ -1,7 +1,7 @@
 ---
 id: ai-use-policy
 title: AI Use Policy
-version: 1.0.0
+version: 1.1.0
 effectiveDate: 2026-10-08
 status: final
 canonicalLanguage: en
@@ -11,7 +11,7 @@ summary:
 - Your data is never used to train AI models, by us or by our providers.
 - Requests are routed only to providers that do not collect or retain the data.
 - AI output can be wrong. It is guidance, not a rating or a professional assessment.
-- Players aged 13 to 17 can use AI analysis only if their guardian allows it.
+- Players under 18 can use AI analysis only if their parent or guardian allows it.
 ---
 
 ## What AI does in PitchProof

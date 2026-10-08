@@ -28,7 +28,7 @@ Source for the "App Privacy" answers in App Store Connect. They must match the p
 - **Third-party SDK manifests**: Sentry, RevenueCat and Firebase ship their own privacy manifests,
   which Xcode merges. Re-check the generated privacy report (Xcode → Archive → Generate Privacy
   Report) after the first EAS build. NOT VALIDATED.
-- **Age rating**: 13+, with user-generated content. See `store/listing.json`.
+- **Age rating**: 4+, with user-generated content. Under-13 accounts run in private mode with parental consent, so Parental Controls and Age Assurance are answered Yes. The app is not in the Kids Category. See `store/listing.json`.
 
 ## Permission strings (`app.json`)
 

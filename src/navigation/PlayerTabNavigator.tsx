@@ -33,6 +33,7 @@ import { PlayerMediaTab } from '@/navigation/PlayerMediaTab';
 import { PlayerPerformanceTab } from '@/navigation/PlayerPerformanceTab';
 import { type PlayerStackParamList, type PlayerTabParamList } from '@/navigation/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 
 const Tab = createBottomTabNavigator<PlayerTabParamList>();
 
@@ -52,7 +53,7 @@ function isOnboardingStepId(value: string | undefined): value is OnboardingStepI
 
 type PlayerTabId = keyof PlayerTabParamList;
 
-function createDynamicPlayerTabBar(onLogMatch: () => void, logMatchLabel: string) {
+function createDynamicPlayerTabBar(onLogMatch: () => void, logMatchLabel: string, showDiscover: boolean) {
   function PlayerTabBarComponent(props: BottomTabBarProps) {
     const { t, i18n } = useAppTranslation('navigation');
     const TabBar = useMemo(() => {
@@ -61,7 +62,7 @@ function createDynamicPlayerTabBar(onLogMatch: () => void, logMatchLabel: string
           { id: 'Home', label: t('tabs.home'), icon: Home },
           { id: 'Performance', label: t('tabs.performance'), icon: Activity },
           { id: 'Media', label: t('tabs.media'), icon: Clapperboard },
-          { id: 'Discover', label: t('tabs.discover'), icon: Compass },
+          ...(showDiscover ? [{ id: 'Discover' as const, label: t('tabs.discover'), icon: Compass }] : []),
         ],
         onCenterAction: onLogMatch,
         centerActionLabel: logMatchLabel,
@@ -84,6 +85,7 @@ function PlayerTabsContainer() {
   const tabNavigationRef = useRef<BottomTabNavigationProp<PlayerTabParamList> | null>(null);
   const { user } = useAuth();
   const { t } = useAppTranslation(['common', 'statistics']);
+  const privateMode = useUserSafety().policy.privateOnly;
   const {
     profile,
     isLoading,
@@ -144,8 +146,8 @@ function PlayerTabsContainer() {
   }, []);
 
   const PlayerTabBar = useMemo(
-    () => createDynamicPlayerTabBar(openLogMatch, t('statistics:logMatch')),
-    [openLogMatch, t],
+    () => createDynamicPlayerTabBar(openLogMatch, t('statistics:logMatch'), !privateMode),
+    [openLogMatch, t, privateMode],
   );
 
   const handleOnboardingStepPress = useCallback(
@@ -237,23 +239,26 @@ function PlayerTabsContainer() {
               onLogMatchPress={openLogMatch}
               onViewPerformancePress={() => tabNavigation.navigate('Performance')}
               onActivityPress={() => setIsActivityInboxVisible(true)}
-              onPortfolioPress={() =>
-                user?.id
-                  ? stackNavigation.navigate('PublicPortfolio', {
-                      playerId: user.id,
-                      slug: profile?.username,
-                      previewMode: true,
-                    })
-                  : undefined
+              onPortfolioPress={
+                privateMode
+                  ? undefined
+                  : () =>
+                      user?.id
+                        ? stackNavigation.navigate('PublicPortfolio', {
+                            playerId: user.id,
+                            slug: profile?.username,
+                            previewMode: true,
+                          })
+                        : undefined
               }
-              onSharePortfolioPress={() => setIsSharePortfolioVisible(true)}
-              onInviteCoachPress={() => setIsCoachInviteVisible(true)}
+              onSharePortfolioPress={privateMode ? undefined : () => setIsSharePortfolioVisible(true)}
+              onInviteCoachPress={privateMode ? undefined : () => setIsCoachInviteVisible(true)}
               onExportCvPress={
-                portfolioPreview
+                portfolioPreview && !privateMode
                   ? () => void exportFootballCvPdf(portfolioPreview)
                   : undefined
               }
-              onTrialsPress={() => stackNavigation.navigate('Trials')}
+              onTrialsPress={privateMode ? undefined : () => stackNavigation.navigate('Trials')}
               pendingTrialsCount={pendingTrialsCount}
               onboardingReport={shouldShowOnboarding ? onboardingReport : null}
               onOnboardingStepPress={handleOnboardingStepPress}
@@ -264,20 +269,22 @@ function PlayerTabsContainer() {
               }}
               passportSettingsFocusKey={passportSettingsFocusKey}
               onSettingsPress={() => stackNavigation.navigate('Settings')}
-              onSearchPress={() => stackNavigation.navigate('GlobalSearch')}
+              onSearchPress={privateMode ? undefined : () => stackNavigation.navigate('GlobalSearch')}
               embeddedInTabShell
               todaySlot={
                 <View className="gap-4">
                 <InterruptedUploadsCard uid={user?.id ?? null} onOpenPlan={() => stackNavigation.navigate('PlanUsage')} />
-                <RequestAttentionCard
-                  onViewAll={() => stackNavigation.navigate('RequestCenter')}
-                  onOpenTrial={(trialId) => stackNavigation.navigate('Trials', { trialId })}
-                />
+                {privateMode ? null : (
+                  <RequestAttentionCard
+                    onViewAll={() => stackNavigation.navigate('RequestCenter')}
+                    onOpenTrial={(trialId) => stackNavigation.navigate('Trials', { trialId })}
+                  />
+                )}
                 <PlayerTodayContainer
                   userId={user?.id ?? null}
                   profile={profile}
                   trials={trials}
-                  onboardingSteps={onboardingReport?.steps ?? EMPTY_ONBOARDING_STEPS}
+                  onboardingSteps={privateMode ? EMPTY_ONBOARDING_STEPS : (onboardingReport?.steps ?? EMPTY_ONBOARDING_STEPS)}
                   recommendations={trustState.recommendations}
                   trustProfile={trustState.trustProfile}
                   onAction={handleTodayAction}
@@ -308,7 +315,7 @@ function PlayerTabsContainer() {
             />
           )}
         </Tab.Screen>
-        <Tab.Screen name="Discover" component={PlayerDiscoverTab} />
+        {privateMode ? null : <Tab.Screen name="Discover" component={PlayerDiscoverTab} />}
       </Tab.Navigator>
 
       {profile ? (

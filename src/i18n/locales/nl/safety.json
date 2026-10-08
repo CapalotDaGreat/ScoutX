@@ -8,11 +8,12 @@
     "under13": "Jonger dan 13",
     "teen": "13 tot 17",
     "adult": "18 of ouder",
-    "under13Notice": "PitchProof is pas beschikbaar vanaf 13 jaar. Als je doorgaat, worden dit account en alles erin verwijderd.",
-    "under13Continue": "Doorgaan en dit account verwijderen",
     "teenConfirm": "Ik ben tussen 13 en 17. Ik begrijp dat een ouder of voogd mijn account moet goedkeuren voordat ik PitchProof kan gebruiken.",
     "continue": "Doorgaan",
-    "noBirthDate": "We bewaren alleen je leeftijdsgroep, nooit je geboortedatum."
+    "noBirthDate": "We bewaren alleen je leeftijdsgroep, nooit je geboortedatum.",
+    "childTitle": "Privéaccount voor spelers jonger dan 13",
+    "childNotice": "Onder de 13 kun je wedstrijden en trainingen bijhouden, doelen stellen, video's bewaren en AI-feedback krijgen als je ouder dat toestaat. Je account is privé: niemand anders kan je profiel zien, je vinden of contact met je opnemen. Een ouder of voogd moet toestemming geven voordat je kunt beginnen.",
+    "childConfirm": "Ik ben jonger dan 13. Ik begrijp dat een ouder of voogd toestemming moet geven voordat ik PitchProof kan gebruiken."
   },
   "guardian": {
     "requestTitle": "Vraag een ouder of voogd",
@@ -29,12 +30,15 @@
     "waitingBody": "We hebben {{email}} gemaild. Na goedkeuring wordt PitchProof automatisch ontgrendeld.",
     "whatHappens": "Je voogd beslist apart over een openbaar profiel, zichtbaarheid voor scouts, scoutverzoeken, gedeelde video's en AI-analyse. Elke uitnodiging voor een proeftraining heeft ook hun goedkeuring nodig.",
     "resend": "Opnieuw sturen of ander e-mailadres gebruiken",
-    "deleteAccount": "Mijn account verwijderen"
-  },
-  "under13": {
-    "title": "PitchProof is voor 13 jaar en ouder",
-    "body": "Je account is verwijderd en er is niets bewaard. Je bent welkom zodra je 13 bent.",
-    "close": "Sluiten"
+    "deleteAccount": "Mijn account verwijderen",
+    "childRequestTitle": "Vraag een ouder om toestemming",
+    "childRequestBody": "Vul het e-mailadres van je ouder of voogd in. We sturen hen uitleg over PitchProof en een formulier om te ondertekenen. Je account blijft vergrendeld tot zij bevestigen.",
+    "childEmailLabel": "E-mailadres van ouder of voogd",
+    "childWaitingTitle": "Wachten op je ouder",
+    "childWaitingBody": "We hebben {{email}} gemaild. Vraag je ouder de e-mail te lezen en het formulier te ondertekenen.",
+    "childConfirmingBody": "Je ouder heeft het formulier ondertekend. Nu moeten ze nog op de bevestigingslink klikken in een tweede e-mail aan {{email}}.",
+    "childWhatHappens": "Je account is privé. Niemand anders kan het zien, vinden of contact met je opnemen. Je ouder beslist ook of AI-analyse gebruikt mag worden.",
+    "childDeadline": "Zonder toestemming worden dit account en de gegevens op {{date}} verwijderd."
   },
   "settings": {
     "title": "Leeftijd en voogd",
@@ -54,11 +58,18 @@
       "public_movement": "Beweging op profiel",
       "ai_analysis": "AI-videoanalyse"
     },
-    "guardianDecides": "Dit bepaalt je ouder of voogd. Die kan de keuzes wijzigen via de bevestigingsmail."
+    "guardianDecides": "Dit bepaalt je ouder of voogd. Die kan de keuzes wijzigen via de bevestigingsmail.",
+    "ageChild": "Leeftijdsgroep: jonger dan 13 (privéaccount)",
+    "privateMode": "Je account is privé. Niemand anders kan je profiel zien, je vinden of contact met je opnemen.",
+    "revokeHintChild": "Je account wordt vergrendeld tot je ouder opnieuw toestemming geeft. Zonder nieuwe toestemming wordt het na 14 dagen verwijderd."
   },
   "trial": {
     "awaitingGuardian": "Wachten tot je ouder of voogd deze proeftraining goedkeurt.",
     "guardianDeclined": "Je ouder of voogd heeft deze proeftraining afgewezen."
   },
-  "youthLabel": "Jeugdspeler"
+  "youthLabel": "Jeugdspeler",
+  "privateMode": {
+    "title": "Privéaccount",
+    "body": "Alleen jij ziet je profiel, wedstrijden en video's. Er is geen openbaar Passport, geen vermelding in zoekresultaten en geen contact van scouts of andere gebruikers."
+  }
 }

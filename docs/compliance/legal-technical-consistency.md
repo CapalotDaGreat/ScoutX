@@ -9,7 +9,7 @@ configuration), **NOT VALIDATED**, **LEGAL REVIEW REQUIRED**.
 
 | # | Claim (source) | Code | Test | State |
 | --- | --- | --- | --- | --- |
-| C1 | Minimum age 13; under-13 blocked (privacy policy, terms, youth policy) | `LEGAL_CONFIG.minimumAge`, `getUserSafetyPolicy().blocked`, age-band onboarding | `safetyPolicy.test.ts` | PASS |
+| C1 | Under 13: private mode with verified parental consent (signed form plus confirmation email), deleted without consent after 14 days (privacy policy, terms, youth policy, guardian notice, retention) | `LEGAL_CONFIG.privateModeUntilAge`, `getUserSafetyPolicy().privateOnly`, `CHILD_SCOPES`, `isChild()` in `firestore.rules`, `respondGuardianConsent`, `deleteUnconsentedChildAccounts` | `safetyPolicy.test.ts`, rules "under-13 private mode", `guardianFlow.test.mjs` | PASS |
 | C2 | Only an age band is stored, never a date of birth (privacy policy) | `userSafety.ageBand`; no DOB field in any model or rule | `safetyPolicy.test.ts`, rules "youth safety" | PASS |
 | C3 | 13–17 need verified guardian approval before youth features (privacy policy, guardian notice) | `youthConsent.ts`, `guardianToken.ts`, `hasGuardianScope` in rules | `safetyPolicy.test.ts`, rules "youth safety", `guardianFlow.test.mjs`, E2E guardian approval | PASS |
 | C4 | Guardian chooses each permission separately and can withdraw (guardian notice) | `YOUTH_SCOPES`, revoke link (400-day token) | `safetyPolicy.test.ts` | PASS |
