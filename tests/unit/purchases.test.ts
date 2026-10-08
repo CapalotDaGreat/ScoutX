@@ -73,15 +73,18 @@ describe('RevenueCat purchase model', () => {
   });
 
   test('maps product ids to terms, including base-plan suffixes', () => {
+    assert.equal(termForProduct('PitchProven_Monthly'), 'monthly');
+    assert.equal(termForProduct('PitchProven_Yearly'), 'yearly');
     assert.equal(termForProduct('monthly'), 'monthly');
     assert.equal(termForProduct('yearly:base'), 'yearly');
+    assert.equal(termForProduct('pitchproven_monthly'), null);
     assert.equal(termForProduct('lifetime'), null);
     assert.equal(termForProduct(null), null);
   });
 
   test('orders packages yearly first, then monthly, then others', () => {
     const ordered = toPremiumPackages([
-      pkg('$rc_monthly', 'MONTHLY', 'monthly'),
+      pkg('$rc_monthly', 'MONTHLY', 'PitchProven_Monthly'),
       pkg('custom', 'CUSTOM', 'lifetime'),
       pkg('$rc_annual', 'ANNUAL', 'yearly'),
     ]);

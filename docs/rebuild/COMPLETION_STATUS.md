@@ -59,7 +59,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 1. Legal contacts (privacy, security, support) in `src/config/legalConfig.ts`; production builds are blocked until set.
 2. SMTP provider for the Trigger Email extension.
 3. Secrets: `GUARDIAN_LINK_SECRET`, `OPENROUTER_API_KEY`, `REVENUECAT_WEBHOOK_SECRET`, `ADMIN_USER_IDS`, Apple Sign in keys. Env: `GUARDIAN_LINK_BASE_URL`, `CALLABLE_ALLOWED_ORIGINS` if a browser origin needs callables.
-4. RevenueCat project (PitchProof): entitlement `pitchproven`, App Store products `monthly` and `yearly` in the current offering, a Paywall on that offering, Customer Center, webhook, and the production `appl_` key as `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (production builds refuse `test_` keys). RevenueCat sandbox events currently grant premium like production events; decide whether to ignore them in production.
+4. RevenueCat project (PitchProof): entitlement `pitchproven`, App Store products `PitchProven_Monthly` and `PitchProven_Yearly` (subscription group PitchProven) in the current offering, a Paywall on that offering, Customer Center, webhook, and the production `appl_` key as `EXPO_PUBLIC_REVENUECAT_IOS_KEY` (production builds refuse `test_` keys). RevenueCat sandbox events currently grant premium like production events; decide whether to ignore them in production.
 5. OpenRouter: confirm zero-data-retention providers exist for the chosen vision model.
 6. Deploy Cloud Tasks queues (`extractMatchSegment`, `analyzeMatchFrames`, `buildDataExport`), the `signBlob` permission for signed URLs, Firestore indexes, functions, rules.
 7. App Attest registration and App Check enforcement.

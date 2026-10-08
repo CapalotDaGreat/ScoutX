@@ -78,8 +78,8 @@ export const NO_STORE_ENTITLEMENT: StoreEntitlement = {
 export function termForProduct(productId: string | null | undefined): SubscriptionTerm | null {
   if (!productId) return null;
   const base = productId.split(':')[0];
-  if (base === SUBSCRIPTION_PRODUCTS.yearly) return 'yearly';
-  if (base === SUBSCRIPTION_PRODUCTS.monthly) return 'monthly';
+  if ((SUBSCRIPTION_PRODUCTS.yearly as readonly string[]).includes(base)) return 'yearly';
+  if ((SUBSCRIPTION_PRODUCTS.monthly as readonly string[]).includes(base)) return 'monthly';
   return null;
 }
 

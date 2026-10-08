@@ -43,7 +43,7 @@ function rcEvent(partial) {
     entitlement_ids: ['pitchproven'],
     expiration_at_ms: Date.now() + 30 * DAY,
     event_timestamp_ms: Date.now(),
-    product_id: 'monthly',
+    product_id: 'PitchProven_Monthly',
     store: 'APP_STORE',
     environment: 'SANDBOX',
     ...partial,

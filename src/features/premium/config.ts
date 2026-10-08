@@ -1,11 +1,14 @@
 /** RevenueCat entitlement that unlocks Premium. Must match the dashboard and the server webhook. */
 export const PREMIUM_ENTITLEMENT_ID = 'pitchproven';
 
-/** Store product identifiers attached to the entitlement and the current offering. */
+/**
+ * Product identifiers attached to the entitlement and the current offering: App Store Connect
+ * IDs first (permanent once created), then the RevenueCat Test Store IDs used in development.
+ */
 export const SUBSCRIPTION_PRODUCTS = {
-  monthly: 'monthly',
-  yearly: 'yearly',
-} as const;
+  monthly: ['PitchProven_Monthly', 'monthly'],
+  yearly: ['PitchProven_Yearly', 'yearly'],
+} as const satisfies Record<string, readonly string[]>;
 
 export type SubscriptionTerm = keyof typeof SUBSCRIPTION_PRODUCTS;
 
