@@ -34,7 +34,7 @@ export function buildIcsContent(invitation: TrialInvitation): string {
   const start = new Date(invitation.scheduledDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
   const stamp = formatIcsDate(new Date());
-  const uid = `${invitation.id}@scoutx.app`;
+  const uid = `${invitation.id}@pitchproof.online`;
 
   return [
     'BEGIN:VCALENDAR',

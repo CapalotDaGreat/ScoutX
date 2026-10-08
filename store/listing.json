@@ -15,9 +15,9 @@
     ],
     "primaryCategory": "SPORTS",
     "secondaryCategory": "SOCIAL_NETWORKING",
-    "privacyPolicyUrl": "https://scoutx.app/privacy",
-    "supportUrl": "https://scoutx.app/support",
-    "marketingUrl": "https://scoutx.app",
+    "privacyPolicyUrl": "https://pitchproof.online/privacy",
+    "supportUrl": "https://pitchproof.online/support",
+    "marketingUrl": "https://pitchproof.online",
     "ageRating": {
       "rating": "13+",
       "minimumAccountAge": 13,
@@ -37,6 +37,6 @@
     "shortDescription": "Build your football identity from real evidence.",
     "fullDescription": "ScoutX helps players aged 13 and over build a Football Passport: one shareable career hub for match logs, videos, movement sessions, endorsements and trials, with every item labelled by its source. Players aged 13 to 17 need guardian approval for youth features. ScoutX does not guarantee trials, contracts or selection.",
     "category": "SPORTS",
-    "privacyPolicyUrl": "https://scoutx.app/privacy"
+    "privacyPolicyUrl": "https://pitchproof.online/privacy"
   }
 }

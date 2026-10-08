@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security and Responsible Disclosure Policy | PitchProof</title>
+<style>
+:root { color-scheme: light dark; --bg: #F4EFE6; --card: #EBE3D4; --text: #1A1814; --muted: #5c564c; --accent: #1f8f53; }
+@media (prefers-color-scheme: dark) { :root { --bg: #161412; --card: #1E1C19; --text: #F7F4EF; --muted: #b9b2a6; --accent: #2FBF71; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+header a, footer a, main a { color: var(--accent); }
+nav { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; margin-bottom: 24px; }
+h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+h2 { font-size: 19px; margin: 32px 0 8px; }
+.meta { color: var(--muted); font-size: 14px; }
+.summary { background: var(--card); border-radius: 16px; padding: 16px 20px; margin: 20px 0; }
+footer { color: var(--muted); font-size: 13px; margin-top: 48px; }
+</style>
+</head>
+<body>
+<main>
+<nav><a href="/">PitchProof</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/subscription-terms/">Subscriptions</a><a href="/support/">Support</a><a href="/legal/">All policies</a></nav>
+<h1>Security and Responsible Disclosure Policy</h1>
+<p class="meta">Version 1.0.0 · Effective LEGAL_REVIEW_REQUIRED</p>
+<div class="summary"><strong>In short</strong><ul><li>Access to every database collection and storage path is restricted by server-side rules.</li><li>Privileged actions, AI calls and payments are handled only on our servers.</li><li>If you find a vulnerability, tell us privately. We will not take legal action against good-faith research.</li></ul></div>
+<h2>How we protect ScoutX</h2>
+<ul><li>Database and storage access rules deny by default and allow each user only their own data, plus what others have explicitly shared.</li><li>Roles (player, scout, coach, staff) are set on our servers, not by the app.</li><li>AI provider keys, signing secrets and payment webhooks exist only on our servers.</li><li>Uploaded files are validated on our servers before processing.</li><li>Staff actions on user content are logged in an audit log that users cannot change.</li><li>Data is encrypted in transit and at rest by our cloud provider.</li></ul>
+<h2>Reporting a vulnerability</h2>
+<p>Send details to LEGAL_CONTACT_REQUIRED. Please include steps to reproduce and the impact you observed.</p>
+<h2>Rules for researchers</h2>
+<ul><li>Only test against your own accounts.</li><li>Do not access, change or delete other people's data.</li><li>Do not run denial-of-service tests, spam or social engineering.</li><li>Give us reasonable time to fix the issue before disclosing it.</li></ul>
+<p>If you follow these rules, we will not pursue legal action against you for your research. We do not currently run a paid bug bounty programme.</p>
+<h2>Incidents</h2>
+<p>If a security incident affects your personal data, we will inform you and the Federal Data Protection and Information Commissioner (FDPIC), Switzerland as required by law.</p>
+<footer>The same text is available in the app under Settings → Privacy Center.</footer>
+</main>
+</body>
+</html>

@@ -32,7 +32,7 @@ export const MILESTONE_CATALOG: MilestoneDefinition[] = [
   {
     id: 'username_claimed',
     title: 'Custom Link Claimed',
-    description: 'Your scoutx.app link-in-bio is ready to share.',
+    description: 'Your pitchproof.online link-in-bio is ready to share.',
     category: 'portfolio',
     icon: '🔗',
   },

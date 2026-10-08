@@ -14,9 +14,9 @@ describe('resolveCallableCors', () => {
   it('accepts only exact https origins from the allowlist', () => {
     assert.deepEqual(
       resolveCallableCors({
-        CALLABLE_ALLOWED_ORIGINS: 'https://scoutx.app, http://insecure.example, *, https://admin.scoutx.app:8443',
+        CALLABLE_ALLOWED_ORIGINS: 'https://pitchproof.online, http://insecure.example, *, https://admin.pitchproof.online:8443',
       }),
-      ['https://scoutx.app', 'https://admin.scoutx.app:8443'],
+      ['https://pitchproof.online', 'https://admin.pitchproof.online:8443'],
     );
   });
 });

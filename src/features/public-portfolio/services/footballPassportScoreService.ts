@@ -122,7 +122,7 @@ function buildShareableSection(profile: PlayerProfile): PassportScoreSection {
       label: 'Custom portfolio link',
       complete: Boolean(profile.username && profile.username.length >= 3),
       weight: 50,
-      hint: 'Claim scoutx.app/player/your-name.',
+      hint: 'Claim pitchproof.online/player/your-name.',
     },
     {
       id: 'public',
@@ -206,7 +206,7 @@ function buildLaunchReadySection(profile: PlayerProfile, pushRegistered: boolean
       label: 'Custom portfolio URL claimed',
       complete: Boolean(profile.username && profile.username.length >= 3),
       weight: 25,
-      hint: 'Claim scoutx.app/player/your-name.',
+      hint: 'Claim pitchproof.online/player/your-name.',
     },
     {
       id: 'privacy_policy',

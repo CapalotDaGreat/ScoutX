@@ -22,7 +22,7 @@ export function buildOnboardingSteps(
     {
       id: 'claim_username',
       title: 'Claim your portfolio link',
-      description: 'Get a shareable scoutx.app/player/your-name URL.',
+      description: 'Get a shareable pitchproof.online/player/your-name URL.',
       complete: Boolean(profile.username && profile.username.length >= 3),
     },
     {

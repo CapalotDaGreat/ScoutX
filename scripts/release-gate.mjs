@@ -88,6 +88,49 @@ check('Store listing and age rating match the age policy', async () => {
   return problems.length === 0 ? [PASS, `${rating.rating}, user-generated content declared`] : [FAIL, problems.join('; ')];
 });
 
+function pngInfo(path) {
+  const data = readFileSync(join(root, path));
+  if (data.length < 33 || data.toString('ascii', 1, 4) !== 'PNG') return null;
+  return { width: data.readUInt32BE(16), height: data.readUInt32BE(20), colorType: data.readUInt8(25) };
+}
+
+// App Review rejects placeholder icons (2.3.8); App Store icons must be 1024x1024 without alpha.
+check('App icon and splash are final artwork', () => {
+  const expo = readJson('app.json').expo;
+  const splash = (expo.plugins ?? []).find((plugin) => Array.isArray(plugin) && plugin[0] === 'expo-splash-screen');
+  const problems = [];
+  const icon = expo.icon ? pngInfo(expo.icon) : null;
+  if (!icon) problems.push('app.json icon is missing or not a PNG');
+  else {
+    if (icon.width !== 1024 || icon.height !== 1024) problems.push(`icon is ${icon.width}x${icon.height}, needs 1024x1024`);
+    if (icon.colorType === 4 || icon.colorType === 6) problems.push('icon has an alpha channel; App Store icons must be opaque');
+  }
+  const splashImage = splash?.[1]?.image ? pngInfo(splash[1].image) : null;
+  if (!splashImage || splashImage.width < 200 || splashImage.height < 200) {
+    problems.push(`splash image is ${splashImage ? `${splashImage.width}x${splashImage.height}` : 'missing'}`);
+  }
+  return problems.length === 0 ? [PASS, '1024x1024 opaque icon, real splash image'] : [FAIL, problems.join('; ')];
+});
+
+// The App Store privacy policy, terms and support URLs must open real pages about this app.
+check('Website pages for App Store URLs', () => {
+  const host = readJson('app.json').expo.extra?.appLinkHost;
+  const listing = readJson('store/listing.json').ios ?? {};
+  const pages = { privacyPolicyUrl: 'public/privacy/index.html', supportUrl: 'public/support/index.html' };
+  const problems = [];
+  const placeholders = [];
+  for (const [field, page] of Object.entries(pages)) {
+    const url = listing[field] ?? '';
+    if (!url.startsWith(`https://${host}/`)) problems.push(`${field} ${url || '(missing)'} is not on ${host}`);
+    if (!existsSync(join(root, page))) problems.push(`${page} missing (run node scripts/build-legal.mjs)`);
+    else if (/LEGAL_(CONTACT|REVIEW)_REQUIRED/.test(read(page))) placeholders.push(page);
+  }
+  if (problems.length) return [FAIL, problems.join('; ')];
+  return placeholders.length === 0
+    ? [PASS, `privacy and support pages on ${host}`]
+    : [EXTERNAL, `placeholders (contacts or effective date) in ${placeholders.join(', ')}`];
+});
+
 check('Privacy manifest: no tracking, no location', () => {
   const expo = readJson('app.json').expo;
   const manifest = expo.ios?.privacyManifests ?? {};
@@ -167,7 +210,7 @@ check('Callable CORS closed by default', () => {
     [{}, false],
     [{ CALLABLE_ALLOWED_ORIGINS: '*' }, false],
     [{ CALLABLE_ALLOWED_ORIGINS: 'http://insecure.example' }, false],
-    [{ CALLABLE_ALLOWED_ORIGINS: 'https://scoutx.app' }, ['https://scoutx.app']],
+    [{ CALLABLE_ALLOWED_ORIGINS: 'https://pitchproof.online' }, ['https://pitchproof.online']],
   ];
   const wrong = cases.filter(([env, expected]) => JSON.stringify(resolveCallableCors(env)) !== JSON.stringify(expected));
   return wrong.length === 0 ? [PASS, 'no origins unless exact https origins are configured'] : [FAIL, `unexpected CORS for ${JSON.stringify(wrong.map(([env]) => env))}`];

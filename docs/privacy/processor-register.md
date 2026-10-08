@@ -14,7 +14,7 @@ launch. Where this repo cannot know a value, it says so instead of guessing.
 | Apple | App Store purchases, APNs | Purchase data, push token, notification content | Apple's infrastructure | Apple developer agreement | n/a |
 | Expo (650 Industries) | Push relay to APNs | Push token, notification title/body/path | United States | Expo DPA | Minors' notifications carry generic text only |
 | SMTP provider used by Trigger Email | Guardian approval emails | Guardian email, player first name, signed link | Depends on provider; not chosen yet | Provider DPA | EXTERNAL CONFIGURATION REQUIRED |
-| Cloudflare | Marketing site `scoutx.app` (hosted outside this repo) | Request metadata of site visitors | Global edge network | Cloudflare DPA | Outside this repo |
+| Google (Firebase Hosting) | Website `pitchproof.online`: privacy, terms, support, guardian and report pages (`public/`) | Request metadata of site visitors | Global edge network | Google Cloud DPA | Same as Firebase |
 
 ## Notes
 

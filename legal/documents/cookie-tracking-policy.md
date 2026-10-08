@@ -17,7 +17,7 @@ The app stores data on your device only to work: your sign-in session, language 
 
 ## On the website and guardian pages
 
-The scoutx.app website and guardian approval pages use browser storage only where needed for sign-in and security. The guardian page removes the approval link from the address bar after loading and does not set tracking cookies.
+The pitchproof.online website and guardian approval pages use browser storage only where needed for sign-in and security. The guardian page removes the approval link from the address bar after loading and does not set tracking cookies.
 
 ## Security signals
 

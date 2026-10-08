@@ -90,6 +90,10 @@
         ]
       }
     ],
+    "redirects": [
+      { "source": "/", "destination": "/welcome/", "type": 302 },
+      { "source": "/index.html", "destination": "/welcome/", "type": 302 }
+    ],
     "rewrites": [
       {
         "source": "/api/guardian/get",

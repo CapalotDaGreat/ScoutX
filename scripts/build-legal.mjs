@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
- * Compiles legal/documents/*.md into src/features/legal/content.generated.ts.
+ * Compiles legal/documents/*.md into src/features/legal/content.generated.ts, the server version
+ * table, and the public website pages under public/ (privacy, terms, subscription terms, support).
  *
  *   node scripts/build-legal.mjs          # write the generated module
  *   node scripts/build-legal.mjs --check  # exit 1 if the generated module is stale
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = new URL('../', import.meta.url);
@@ -126,9 +127,128 @@ export function renderServerVersions(root = ROOT) {
   ].join('\n');
 }
 
+// Public website pages (Firebase Hosting, `public/`). The App Store privacy policy, terms and
+// support URLs point here, so the web text is generated from the same source as the app.
+const SITE_NAME = 'PitchProof';
+const SITE_PAGES = { 'privacy-policy': 'privacy', 'terms-of-service': 'terms', 'subscription-terms': 'subscription-terms' };
+
+function escapeHtml(text) {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function pageShell(title, body) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHtml(title)} | ${SITE_NAME}</title>
+<style>
+:root { color-scheme: light dark; --bg: #F4EFE6; --card: #EBE3D4; --text: #1A1814; --muted: #5c564c; --accent: #1f8f53; }
+@media (prefers-color-scheme: dark) { :root { --bg: #161412; --card: #1E1C19; --text: #F7F4EF; --muted: #b9b2a6; --accent: #2FBF71; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+header a, footer a, main a { color: var(--accent); }
+nav { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; margin-bottom: 24px; }
+h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+h2 { font-size: 19px; margin: 32px 0 8px; }
+.meta { color: var(--muted); font-size: 14px; }
+.summary { background: var(--card); border-radius: 16px; padding: 16px 20px; margin: 20px 0; }
+footer { color: var(--muted); font-size: 13px; margin-top: 48px; }
+</style>
+</head>
+<body>
+<main>
+<nav><a href="/">${SITE_NAME}</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/subscription-terms/">Subscriptions</a><a href="/support/">Support</a><a href="/legal/">All policies</a></nav>
+${body}
+</main>
+</body>
+</html>
+`;
+}
+
+function renderBlocks(blocks, resolve) {
+  return blocks
+    .map((block) => {
+      if (block.type === 'paragraph') return `<p>${escapeHtml(resolve(block.text))}</p>`;
+      const tag = block.ordered ? 'ol' : 'ul';
+      return `<${tag}>${block.items.map((item) => `<li>${escapeHtml(resolve(item))}</li>`).join('')}</${tag}>`;
+    })
+    .join('\n');
+}
+
+function renderDocumentPage(doc, resolve) {
+  const summary = doc.summary.map((item) => `<li>${escapeHtml(resolve(item))}</li>`).join('');
+  const sections = doc.sections
+    .map((section) => `<h2>${escapeHtml(resolve(section.heading))}</h2>\n${renderBlocks(section.blocks, resolve)}`)
+    .join('\n');
+  return pageShell(
+    doc.title,
+    `<h1>${escapeHtml(doc.title)}</h1>
+<p class="meta">Version ${escapeHtml(doc.version)} · Effective ${escapeHtml(doc.effectiveDate)}</p>
+<div class="summary"><strong>In short</strong><ul>${summary}</ul></div>
+${sections}
+<footer>The same text is available in the app under Settings → Privacy Center.</footer>`,
+  );
+}
+
+function renderSupportPage(legal) {
+  const email = legal.displayLegalValue(legal.LEGAL_CONFIG.contacts.supportEmail);
+  const privacy = legal.displayLegalValue(legal.LEGAL_CONFIG.contacts.privacyEmail);
+  return pageShell(
+    'Support',
+    `<h1>Support</h1>
+<p>${SITE_NAME} (ScoutX in the App Store) helps football players aged 13 and over build a Football Passport from match logs, videos, movement sessions, goals and coach endorsements.</p>
+<h2>Contact</h2>
+<p>Email <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>. For privacy requests, email <a href="mailto:${escapeHtml(privacy)}">${escapeHtml(privacy)}</a>.</p>
+<h2>Delete your account</h2>
+<p>In the app, open Settings and tap Delete account. Deletion removes your profile, videos and records, except data we must keep by law, as described in the Data Retention Policy.</p>
+<h2>Subscriptions</h2>
+<p>Subscriptions are billed by Apple. Manage or cancel them in the app under Settings → Plan &amp; usage → Manage subscription, or in your iPhone settings under your Apple ID → Subscriptions. Restore purchases is on the same screen. See the <a href="/subscription-terms/">Subscription Terms</a>.</p>
+<h2>Report content or a user</h2>
+<p>Use Report on any profile, video or request in the app, or the <a href="/report/">web report form</a>. You can block users from their profile.</p>
+<h2>Parents and guardians</h2>
+<p>Players aged 13 to 17 need a guardian's approval for youth features. Guardians receive an email link to approve or decline. See the <a href="/legal/youth-safety-policy/">Youth Safety Policy</a>.</p>
+<footer>${escapeHtml(legal.LEGAL_CONFIG.entity.name)}, ${escapeHtml(legal.entityAddress())}</footer>`,
+  );
+}
+
+function renderHomePage() {
+  return pageShell(
+    'Football Passport',
+    `<h1>${SITE_NAME}</h1>
+<p>Your football identity, built from real evidence. Log matches, upload highlights, track movement sessions and collect coach endorsements in one Football Passport, with every item showing where it came from.</p>
+<p>For players aged 13 and over. Players aged 13 to 17 need a guardian's approval for youth features. ${SITE_NAME} does not guarantee trials, contracts or selection.</p>
+<p><a href="/support/">Support</a> · <a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a></p>`,
+  );
+}
+
+function renderLegalIndex(documents) {
+  const items = documents.map((doc) => `<li><a href="/legal/${doc.id}/">${escapeHtml(doc.title)}</a></li>`).join('');
+  return pageShell('Policies', `<h1>Policies</h1><ul>${items}</ul>`);
+}
+
+export async function renderSite(root = ROOT) {
+  const legal = await import(new URL('src/config/legalConfig.ts', root).href);
+  const resolve = (text) => legal.resolveLegalTokens(text);
+  const documents = loadLegalDocuments(root);
+  const files = [
+    { label: 'public/welcome/index.html', content: renderHomePage() },
+    { label: 'public/support/index.html', content: renderSupportPage(legal) },
+    { label: 'public/legal/index.html', content: renderLegalIndex(documents) },
+  ];
+  for (const doc of documents) {
+    const page = renderDocumentPage(doc, resolve);
+    files.push({ label: `public/legal/${doc.id}/index.html`, content: page });
+    if (SITE_PAGES[doc.id]) files.push({ label: `public/${SITE_PAGES[doc.id]}/index.html`, content: page });
+  }
+  return files;
+}
+
 const OUTPUTS = [
   { url: OUTPUT, label: 'src/features/legal/content.generated.ts', render: renderLegalModule },
   { url: SERVER_OUTPUT, label: 'functions/src/legal/legalVersions.generated.ts', render: renderServerVersions },
+  ...(await renderSite()).map((file) => ({ url: new URL(file.label, ROOT), label: file.label, render: () => file.content })),
 ];
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
@@ -148,6 +268,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
         stale = true;
       }
     } else {
+      mkdirSync(new URL('.', output.url), { recursive: true });
       writeFileSync(output.url, next);
       console.log(`Wrote ${output.label}`);
     }

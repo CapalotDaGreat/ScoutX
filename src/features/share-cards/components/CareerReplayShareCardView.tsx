@@ -59,7 +59,7 @@ export function CareerReplayShareCardView({ data }: CareerReplayShareCardViewPro
             </Text>
           ) : null}
           <Text variant="caption" className="text-[#8B939E]">
-            scoutx.app · Football Passport
+            pitchproof.online · Football Passport
           </Text>
         </View>
       </View>

@@ -1,4 +1,4 @@
-export const PUBLIC_PORTFOLIO_PATH_PREFIX = 'https://scoutx.app/player';
+export const PUBLIC_PORTFOLIO_PATH_PREFIX = 'https://pitchproof.online/player';
 
 export function buildPublicPortfolioUrl(playerId: string, username?: string | null): string {
   if (username && username.length >= 3) {

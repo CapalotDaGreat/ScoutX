@@ -3,7 +3,7 @@ import type { ActionCodeSettings } from 'firebase/auth';
 import Constants from 'expo-constants';
 
 // Expo only inlines static process.env.EXPO_PUBLIC_* references (not env[key]).
-const DEFAULT_APP_LINK_HOST = 'scoutx.app';
+const DEFAULT_APP_LINK_HOST = 'pitchproof.online';
 const APP_SCHEME = 'scoutx';
 
 export type FirebaseAuthActionMode =

@@ -13,7 +13,7 @@ async function callChat(params) {
         headers: {
             Authorization: `Bearer ${params.apiKey}`,
             'Content-Type': 'application/json',
-            'HTTP-Referer': 'https://scoutx.app',
+            'HTTP-Referer': 'https://pitchproof.online',
             'X-Title': params.title,
         },
         body: JSON.stringify((0, providerConfig_1.buildChatBody)(params.model, params.messages, params.temperature)),

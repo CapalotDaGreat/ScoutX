@@ -18,7 +18,7 @@ summary:
 
 ScoutX is operated by {{entityName}}, {{entityAddress}} ("we"). Privacy contact: {{privacyEmail}}. Data protection officer: {{dpo}}. EU representative: {{euRepresentative}}.
 
-This policy applies to the ScoutX iOS app, the ScoutX website at scoutx.app and the guardian approval pages.
+This policy applies to the ScoutX iOS app, the ScoutX website at pitchproof.online and the guardian approval pages.
 
 ## What we collect
 

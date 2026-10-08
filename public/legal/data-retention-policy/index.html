@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Retention Policy | PitchProof</title>
+<style>
+:root { color-scheme: light dark; --bg: #F4EFE6; --card: #EBE3D4; --text: #1A1814; --muted: #5c564c; --accent: #1f8f53; }
+@media (prefers-color-scheme: dark) { :root { --bg: #161412; --card: #1E1C19; --text: #F7F4EF; --muted: #b9b2a6; --accent: #2FBF71; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
+header a, footer a, main a { color: var(--accent); }
+nav { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; margin-bottom: 24px; }
+h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+h2 { font-size: 19px; margin: 32px 0 8px; }
+.meta { color: var(--muted); font-size: 14px; }
+.summary { background: var(--card); border-radius: 16px; padding: 16px 20px; margin: 20px 0; }
+footer { color: var(--muted); font-size: 13px; margin-top: 48px; }
+</style>
+</head>
+<body>
+<main>
+<nav><a href="/">PitchProof</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/subscription-terms/">Subscriptions</a><a href="/support/">Support</a><a href="/legal/">All policies</a></nav>
+<h1>Data Retention Policy</h1>
+<p class="meta">Version 1.0.0 · Effective LEGAL_REVIEW_REQUIRED</p>
+<div class="summary"><strong>In short</strong><ul><li>Most data stays while your account exists and is deleted when you delete your account.</li><li>Temporary files (failed uploads, data exports, extracted frames) are deleted automatically.</li><li>Proof of consent and moderation decisions may be kept in minimised form where the law requires it.</li></ul></div>
+<h2>Account data</h2>
+<p>Profile, match logs, goals, media, analysis results, movement summaries and scouting data are kept while your account exists. When you delete your account, they are deleted from our database and storage.</p>
+<h2>Temporary data</h2>
+<ul><li>Uploads that are abandoned or fail validation: deleted within 7 days.</li><li>Data export archives: download link valid for 7 days, then the archive is deleted.</li><li>Frames extracted for analysis: deleted after the analysis completes or fails, within the period set in our retention configuration.</li><li>Guardian approval links: expire after 7 days. Withdrawal links stay valid for about 13 months.</li><li>Cancelled or expired analysis jobs: cleaned up automatically.</li></ul>
+<h2>Records kept after deletion</h2>
+<p>Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media. LEGAL_REVIEW_REQUIRED: retention period for each record type.</p>
+<h2>Crash diagnostics</h2>
+<p>Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings. LEGAL_REVIEW_REQUIRED: confirm configured period.</p>
+<h2>Backups</h2>
+<p>Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire. LEGAL_REVIEW_REQUIRED: backup retention period.</p>
+<footer>The same text is available in the app under Settings → Privacy Center.</footer>
+</main>
+</body>
+</html>

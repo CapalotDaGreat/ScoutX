@@ -38,7 +38,7 @@ if (process.env.EAS_BUILD_PROFILE === 'production' && process.env.ALLOW_LEGAL_PL
   }
 }
 
-const appLinkHost = process.env.EXPO_PUBLIC_APP_LINK_HOST?.trim() || 'scoutx.app';
+const appLinkHost = process.env.EXPO_PUBLIC_APP_LINK_HOST?.trim() || 'pitchproof.online';
 const googleServicesJson =
   process.env.GOOGLE_SERVICES_JSON?.trim() || './google-services.json';
 const googleServicesPlist =

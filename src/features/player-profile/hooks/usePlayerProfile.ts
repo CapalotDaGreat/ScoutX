@@ -11,7 +11,7 @@ import { toUserMessage } from '@/utils/userFacingError';
 const PROFILE_LOAD_TIMEOUT_MS = 4_000;
 
 function buildSeedProfile(userId: string, name?: string | null, email?: string | null): PlayerProfile {
-  const seeded = ProfileModel.getDefaultProfile(userId, email?.trim() || 'player@scoutx.app');
+  const seeded = ProfileModel.getDefaultProfile(userId, email?.trim() || 'player@pitchproof.online');
   if (name?.trim()) {
     seeded.fullName = name.trim();
   }

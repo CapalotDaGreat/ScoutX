@@ -48,7 +48,7 @@ export async function loadSafetyPolicy(uid: string, db: Firestore = getFirestore
 
 export function guardianLinkBaseUrl(): string {
   const configured = process.env.GUARDIAN_LINK_BASE_URL?.trim();
-  return configured && /^https?:\/\//.test(configured) ? configured.replace(/\/$/, '') : 'https://scoutx.app';
+  return configured && /^https?:\/\//.test(configured) ? configured.replace(/\/$/, '') : 'https://pitchproof.online';
 }
 
 /** Queues an email through the Firebase Trigger Email extension's `mail` collection. */

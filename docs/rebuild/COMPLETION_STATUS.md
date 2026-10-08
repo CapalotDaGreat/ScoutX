@@ -63,7 +63,7 @@ credentials or production to verify), **LEGAL REVIEW REQUIRED**, **SECURITY REVI
 5. OpenRouter: confirm zero-data-retention providers exist for the chosen vision model.
 6. Deploy Cloud Tasks queues (`extractMatchSegment`, `analyzeMatchFrames`, `buildDataExport`), the `signBlob` permission for signed URLs, Firestore indexes, functions, rules.
 7. App Attest registration and App Check enforcement.
-8. AASA on `scoutx.app` (both copies in `public/` now carry Team ID `833CYAZ8XT`).
+8. AASA on `pitchproof.online` (both copies in `public/` now carry Team ID `833CYAZ8XT`).
 9. Firestore point-in-time recovery / backups, if wanted, with matching privacy policy wording.
 10. GPU CV worker (CV stays NOT AVAILABLE without it).
 11. Real devices and real footage for validation; icon and splash artwork; working support URL.

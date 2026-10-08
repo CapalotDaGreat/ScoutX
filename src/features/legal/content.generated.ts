@@ -27,7 +27,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             "type": "paragraph",
-            "text": "This policy applies to the ScoutX iOS app, the ScoutX website at scoutx.app and the guardian approval pages."
+            "text": "This policy applies to the ScoutX iOS app, the ScoutX website at pitchproof.online and the guardian approval pages."
           }
         ]
       },
@@ -1089,7 +1089,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "The scoutx.app website and guardian approval pages use browser storage only where needed for sign-in and security. The guardian page removes the approval link from the address bar after loading and does not set tracking cookies."
+            "text": "The pitchproof.online website and guardian approval pages use browser storage only where needed for sign-in and security. The guardian page removes the approval link from the address bar after loading and does not set tracking cookies."
           }
         ]
       },

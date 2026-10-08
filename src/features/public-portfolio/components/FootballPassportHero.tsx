@@ -57,7 +57,7 @@ export function FootballPassportHero({ data, username, verification }: FootballP
             </Text>
             {username ? (
               <Text variant="caption" color="secondary">
-                scoutx.app/player/{username}
+                pitchproof.online/player/{username}
               </Text>
             ) : null}
             <View className="flex-row flex-wrap gap-2">

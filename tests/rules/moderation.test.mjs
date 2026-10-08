@@ -165,7 +165,7 @@ describe('public report form', () => {
   test('honeypot, validation, passport lookup and daily rate limit', async () => {
     await db.doc('portfolioSlugs/mod-striker').set({ playerId: OWNER });
     const valid = {
-      passport: 'https://scoutx.app/player/mod-striker',
+      passport: 'https://pitchproof.online/player/mod-striker',
       reason: 'appears_in_video',
       relationship: 'self',
       details: 'I am the goalkeeper in the second clip.',

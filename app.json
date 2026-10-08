@@ -166,9 +166,9 @@
     ],
     "scheme": "scoutx",
     "extra": {
-      "privacyPolicyUrl": "https://scoutx.app/privacy",
-      "termsOfServiceUrl": "https://scoutx.app/terms",
-      "appLinkHost": "scoutx.app",
+      "privacyPolicyUrl": "https://pitchproof.online/privacy",
+      "termsOfServiceUrl": "https://pitchproof.online/terms",
+      "appLinkHost": "pitchproof.online",
       "eas": {
         "projectId": "a15ee8f0-6d2a-4a4c-9c5d-1ab76ceada10"
       }
