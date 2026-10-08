@@ -132,6 +132,15 @@ h2 { font-size: clamp(30px, 4vw, 46px); line-height: 1.1; letter-spacing: -0.03e
 .safety { padding: 88px 0; }
 .safety .panel { border-radius: 32px; padding: 56px 48px; background: radial-gradient(120% 140% at 0% 0%, rgba(47, 191, 113, 0.14), transparent 55%), var(--surface); border: 1px solid var(--line); }
 .safety .grid .card { background: rgba(0, 0, 0, 0.22); }
+.card.link { display: flex; flex-direction: column; text-decoration: none; transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
+.card.link:hover { transform: translateY(-2px); border-color: rgba(47, 191, 113, 0.45); background: rgba(0, 0, 0, 0.32); }
+.card.link p { margin-bottom: 18px; }
+.card .go { margin-top: auto; display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 650; font-size: 14.5px; }
+.card .go svg { width: 16px; height: 16px; transition: transform 0.15s ease; }
+.card.link:hover .go svg { transform: translateX(3px); }
+.policies-link { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; margin: 32px 0 0; font-size: 15px; color: var(--muted); }
+.policies-link a { color: var(--muted); text-decoration: none; }
+.policies-link a:hover { color: var(--text); }
 @media (max-width: 560px) { .safety .panel { padding: 40px 20px; } }
 
 /* Final CTA */
@@ -323,22 +332,26 @@ footer p { margin: 0; }
       <h2>Built with young players in mind.</h2>
       <p class="sub">Safety, privacy and reporting tools are part of every account and are never behind a paywall.</p>
       <div class="grid">
-        <div class="card">
+        <a class="card link" href="/legal/guardian-consent-notice/">
           <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 11l2 2 3-3"/></svg></div>
           <h3>Guardian approval</h3>
           <p>Players aged 13 to 17 need a parent or guardian to approve youth features by email. PitchProof is not available under 13.</p>
-        </div>
-        <div class="card">
+          <span class="go">Guardian Consent Notice<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="card link" href="/legal/reporting-takedown-policy/">
           <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V4"/><path d="M4 4h12l-2 4 2 4H4"/></svg></div>
           <h3>Report and block</h3>
           <p>Report any profile, video or request, and block users from their profile. Reports are reviewed by moderators.</p>
-        </div>
-        <div class="card">
+          <span class="go">Reporting and Takedown Policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="card link" href="/legal/data-subject-rights/">
           <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/></svg></div>
           <h3>Your data, your call</h3>
           <p>Export your data or delete your account at any time from Settings. No ads and no tracking across apps.</p>
-        </div>
+          <span class="go">Your Data Protection Rights<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span>
+        </a>
       </div>
+      <p class="policies-link"><a href="/legal/youth-safety-policy/">Youth Safety Policy</a><span aria-hidden="true">·</span><a href="/privacy/">Privacy Policy</a><span aria-hidden="true">·</span><a href="/legal/community-guidelines/">Community Guidelines</a><span aria-hidden="true">·</span><a href="/legal/">All policies</a></p>
     </div>
   </div>
 </section>

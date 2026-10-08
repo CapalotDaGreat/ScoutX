@@ -2,43 +2,302 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Subscription Terms | PitchProof</title>
+<meta name="description" content="Premium raises usage limits for AI analysis, full-match analysis and reel exports.">
+<meta name="theme-color" content="#121110">
+<meta name="apple-itunes-app" content="app-id=6820059284">
+<meta name="pitchproof:unfilled" content="LEGAL_REVIEW_REQUIRED">
+<link rel="canonical" href="https://pitchproof.online/subscription-terms/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Subscription Terms | PitchProof">
+<meta property="og:description" content="Premium raises usage limits for AI analysis, full-match analysis and reel exports.">
+<meta property="og:url" content="https://pitchproof.online/subscription-terms/">
+<meta property="og:image" content="https://pitchproof.online/welcome/img/icon.png">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
-:root { color-scheme: light dark; --bg: #F4EFE6; --card: #EBE3D4; --text: #1A1814; --muted: #5c564c; --accent: #1f8f53; }
-@media (prefers-color-scheme: dark) { :root { --bg: #161412; --card: #1E1C19; --text: #F7F4EF; --muted: #b9b2a6; --accent: #2FBF71; } }
-body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif; }
-main { max-width: 760px; margin: 0 auto; padding: 32px 20px 64px; }
-header a, footer a, main a { color: var(--accent); }
-nav { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; margin-bottom: 24px; }
-h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
-h2 { font-size: 19px; margin: 32px 0 8px; }
-.meta { color: var(--muted); font-size: 14px; }
-.summary { background: var(--card); border-radius: 16px; padding: 16px 20px; margin: 20px 0; }
-footer { color: var(--muted); font-size: 13px; margin-top: 48px; }
+:root {
+  --bg: #121110;
+  --surface: #1c1a18;
+  --surface-2: #24211e;
+  --line: #2f2b27;
+  --text: #f7f4ef;
+  --body: #ddd7cc;
+  --muted: #b3ac9f;
+  --green: #2fbf71;
+  --gold: #e0b23b;
+  --radius: 24px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 16px; top: 12px; z-index: 20; padding: 8px 14px; border-radius: 10px; background: var(--green); color: #0d0c0b; }
+
+.top { position: sticky; top: 0; z-index: 10; background: rgba(18, 17, 16, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: -0.01em; }
+.brand img { width: 34px; height: 34px; border-radius: 9px; }
+.top nav { display: flex; align-items: center; gap: 24px; font-size: 15px; }
+.top nav a { text-decoration: none; color: var(--muted); }
+.top nav a:hover, .top nav a[aria-current="page"] { color: var(--text); }
+.top nav .btn { color: #0d0c0b; }
+@media (max-width: 720px) { .top nav a:not(.btn) { display: none; } }
+
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 999px; font-weight: 650; font-size: 16px; text-decoration: none; background: var(--green); color: #0d0c0b; transition: transform 0.15s ease, background 0.15s ease; }
+.btn:hover { background: #3ad07f; transform: translateY(-1px); }
+.btn svg { width: 20px; height: 20px; }
+.btn.small { padding: 9px 18px; font-size: 14px; }
+.btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+.btn.ghost:hover { background: var(--surface); }
+
+.hero { position: relative; overflow: hidden; padding: 64px 0 40px; }
+.hero::before { content: ""; position: absolute; inset: -40% -10% auto auto; width: 640px; height: 640px; background: radial-gradient(closest-side, rgba(47, 191, 113, 0.18), transparent 70%); pointer-events: none; }
+.hero::after { content: ""; position: absolute; inset: auto auto -60% -10%; width: 540px; height: 540px; background: radial-gradient(closest-side, rgba(224, 178, 59, 0.10), transparent 70%); pointer-events: none; }
+.hero .wrap { position: relative; }
+.crumbs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); margin: 0 0 22px; }
+.crumbs a { text-decoration: none; }
+.crumbs a:hover { color: var(--text); }
+.crumbs span[aria-hidden] { opacity: 0.5; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(224, 178, 59, 0.12); color: var(--gold); font-size: 13px; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 18px; }
+.eyebrow svg { width: 15px; height: 15px; }
+h1 { font-size: clamp(36px, 5.4vw, 60px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; font-weight: 800; max-width: 16em; }
+h1 em { font-style: normal; background: linear-gradient(90deg, var(--green), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { font-size: 20px; color: var(--muted); max-width: 36em; margin: 0 0 26px; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pills li { padding: 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+.pills li.warn { color: var(--gold); background: rgba(224, 178, 59, 0.08); border-color: rgba(224, 178, 59, 0.28); }
+
+.notice { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 0; padding: 16px 20px; border-radius: 18px; background: rgba(224, 178, 59, 0.07); border: 1px solid rgba(224, 178, 59, 0.24); color: var(--body); font-size: 15px; }
+.notice svg { flex: none; width: 22px; height: 22px; color: var(--gold); margin-top: 1px; }
+.notice strong { color: var(--text); }
+
+.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 64px; padding: 32px 24px 96px; }
+.toc { position: sticky; top: 88px; align-self: start; max-height: calc(100vh - 112px); overflow: auto; }
+.toc details > summary { list-style: none; cursor: pointer; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.toc details > summary::-webkit-details-marker { display: none; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: flex; gap: 12px; padding: 8px 12px; border-radius: 12px; color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.4; transition: background 0.15s ease, color 0.15s ease; }
+.toc a .n { flex: none; min-width: 1.4em; color: var(--green); font-weight: 650; font-variant-numeric: tabular-nums; }
+.toc a:hover { color: var(--text); background: var(--surface); }
+.toc a.active { color: var(--text); background: var(--surface-2); }
+.toc .print { margin-top: 18px; padding: 0 12px; }
+.toc .print button { all: unset; cursor: pointer; font-size: 14px; color: var(--muted); }
+.toc .print button:hover { color: var(--text); }
+
+article { min-width: 0; max-width: 740px; }
+.summary { position: relative; overflow: hidden; border-radius: var(--radius); padding: 30px 32px; margin: 0 0 56px; background: radial-gradient(120% 140% at 0% 0%, rgba(47, 191, 113, 0.14), transparent 55%), var(--surface); border: 1px solid var(--line); }
+.kicker { color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 14px; }
+.points { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.points li { display: flex; gap: 12px; align-items: flex-start; font-size: 16.5px; color: var(--text); }
+.points li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%; background: rgba(47, 191, 113, 0.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232fbf71' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 13px no-repeat; }
+
+.doc-section { scroll-margin-top: 88px; padding: 0 0 36px; margin: 0 0 36px; border-bottom: 1px solid var(--line); }
+.sections .doc-section:last-child { border-bottom: 0; margin-bottom: 0; }
+.doc-section h2 { display: flex; gap: 14px; align-items: center; font-size: clamp(22px, 2.6vw, 27px); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 750; }
+.doc-section h2 .n { flex: none; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.doc-section h2 a { text-decoration: none; }
+.doc-section p, .doc-section li { color: var(--body); }
+.doc-section p { margin: 0 0 16px; }
+.doc-section ul, .doc-section ol { margin: 0 0 16px; padding-left: 22px; display: grid; gap: 8px; }
+.doc-section li::marker { color: var(--green); }
+.pending { display: inline-block; padding: 0 8px; border-radius: 7px; background: rgba(224, 178, 59, 0.13); color: var(--gold); font-size: 0.86em; font-weight: 650; white-space: nowrap; }
+
+.help { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; margin: 24px 0 56px; padding: 26px 28px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
+.help h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.help p { margin: 0; color: var(--muted); font-size: 15.5px; max-width: 34em; }
+
+.section-title { display: flex; align-items: center; gap: 14px; margin: 0 0 8px; }
+.section-title h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.03em; line-height: 1.1; margin: 0; font-weight: 800; }
+.section-title .icon { width: 44px; height: 44px; }
+.section-sub { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 40em; }
+.group { padding: 40px 0 24px; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.grid.two { grid-template-columns: repeat(2, 1fr); }
+.card { display: flex; flex-direction: column; padding: 26px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); text-decoration: none; }
+a.card { transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
+a.card:hover { transform: translateY(-2px); border-color: rgba(47, 191, 113, 0.45); background: var(--surface-2); }
+.icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); margin-bottom: 18px; flex: none; }
+.icon.gold { background: rgba(224, 178, 59, 0.12); color: var(--gold); }
+.icon svg { width: 24px; height: 24px; }
+.section-title .icon { margin: 0; }
+.card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: -0.01em; line-height: 1.3; }
+.card p { margin: 0 0 18px; color: var(--muted); font-size: 15.5px; }
+.card .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13.5px; color: var(--muted); }
+.card .go { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 650; }
+.card .go svg { width: 16px; height: 16px; transition: transform 0.15s ease; }
+a.card:hover .go svg { transform: translateX(3px); }
+.related { margin-top: 8px; }
+.related .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.related .card { padding: 22px; }
+.related .card h3 { font-size: 17px; }
+
+footer { border-top: 1px solid var(--line); padding: 36px 0 48px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: grid; gap: 18px; }
+footer nav { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+footer nav a { text-decoration: none; }
+footer nav a:hover { color: var(--text); }
+footer p { margin: 0; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; gap: 28px; padding-top: 16px; }
+  .toc { position: static; max-height: none; padding: 18px 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+  .toc details > summary { margin: 0; display: flex; align-items: center; justify-content: space-between; }
+  .toc details > summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translateY(-3px); transition: transform 0.15s ease; }
+  .toc details[open] > summary::after { transform: rotate(-135deg) translateY(-3px); }
+  .toc details[open] > summary { margin-bottom: 10px; }
+  .toc .print { display: none; }
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .hero { padding-top: 40px; }
+  .grid, .grid.two { grid-template-columns: 1fr; }
+  .summary { padding: 24px 22px; }
+}
+@media print {
+  .top, .toc, footer, .help, .related, .skip { display: none; }
+  body { background: #fff; color: #000; font-size: 12pt; }
+  .hero { padding: 0 0 12pt; }
+  .hero::before, .hero::after { display: none; }
+  .layout { display: block; padding: 0 24px; }
+  .summary, .notice, .pills li { background: none; border-color: #999; color: #000; }
+  .points li, .doc-section p, .doc-section li, .lead { color: #000; }
+  .doc-section { border-color: #ccc; break-inside: avoid-page; }
+  .pending { color: #000; border: 1px solid #999; background: none; }
+}
 </style>
 </head>
 <body>
-<main>
-<nav><a href="/">PitchProof</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/subscription-terms/">Subscriptions</a><a href="/support/">Support</a><a href="/legal/">All policies</a></nav>
-<h1>Subscription Terms</h1>
-<p class="meta">Version 1.0.0 · Effective LEGAL_REVIEW_REQUIRED</p>
-<div class="summary"><strong>In short</strong><ul><li>Premium raises usage limits for AI analysis, full-match analysis and reel exports.</li><li>Safety, privacy, deletion, reporting, guardian controls, match logging and basic development features are always free.</li><li>Subscriptions are billed and managed by Apple and renew automatically until you cancel.</li></ul></div>
-<h2>What Premium includes</h2>
+<a class="skip" href="#content">Skip to content</a>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/welcome/"><img src="/welcome/img/icon.png" alt="" width="34" height="34">PitchProof</a>
+    <nav aria-label="Main">
+      <a href="/welcome/">Product</a>
+      <a href="/welcome/#safety">Safety</a>
+      <a href="/legal/" aria-current="page">Policies</a>
+      <a href="/support/">Support</a>
+      <a class="btn small" href="https://apps.apple.com/app/id6820059284">Get the app</a>
+    </nav>
+  </div>
+</header>
+<main id="content">
+<section class="hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/legal/">Policies</a><span aria-hidden="true">/</span><a href="/legal/#terms-rights">Terms &amp; rights</a></nav>
+    <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>Terms</p>
+    <h1>Subscription Terms</h1>
+    <ul class="pills">
+      <li>Version 1.0.0</li>
+      <li class="warn">Effective date pending legal review</li>
+      <li>1 min read</li>
+      <li>Original language: English</li>
+    </ul>
+    <div class="notice" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><div><strong>Draft under legal review.</strong> This version is published for transparency. The effective date will be set once the review is complete.</div></div>
+  </div>
+</section>
+<div class="wrap layout">
+  <aside class="toc" aria-label="On this page">
+    <details open>
+      <summary>On this page</summary>
+      <ol><li><a href="#what-premium-includes"><span class="n">1</span><span>What Premium includes</span></a></li><li><a href="#always-free"><span class="n">2</span><span>Always free</span></a></li><li><a href="#billing"><span class="n">3</span><span>Billing</span></a></li><li><a href="#free-trials"><span class="n">4</span><span>Free trials</span></a></li><li><a href="#refunds"><span class="n">5</span><span>Refunds</span></a></li><li><a href="#changes-and-limits"><span class="n">6</span><span>Changes and limits</span></a></li><li><a href="#minors"><span class="n">7</span><span>Minors</span></a></li></ol>
+    </details>
+    <p class="print"><button type="button">Print or save as PDF</button></p>
+  </aside>
+  <article>
+    <div class="summary">
+      <p class="kicker">In short</p>
+      <ul class="points"><li>Premium raises usage limits for AI analysis, full-match analysis and reel exports.</li><li>Safety, privacy, deletion, reporting, guardian controls, match logging and basic development features are always free.</li><li>Subscriptions are billed and managed by Apple and renew automatically until you cancel.</li></ul>
+    </div>
+    <div class="sections">
+<section class="doc-section" id="what-premium-includes">
+<h2><span class="n">1</span><a href="#what-premium-includes">What Premium includes</a></h2>
 <p>Premium increases the monthly limits for frame analyses, full-match analyses and reel exports, and allows more analyses at the same time. Current limits are shown in the app before you buy. Premium does not improve your visibility to scouts or your chances of a trial.</p>
-<h2>Always free</h2>
+</section>
+<section class="doc-section" id="always-free">
+<h2><span class="n">2</span><a href="#always-free">Always free</a></h2>
 <p>Safety features, privacy controls, account deletion, data export, reporting, guardian controls, match logging and basic development features never require a subscription.</p>
-<h2>Billing</h2>
+</section>
+<section class="doc-section" id="billing">
+<h2><span class="n">3</span><a href="#billing">Billing</a></h2>
 <p>Subscriptions are purchased through your Apple ID and billed by Apple. They renew automatically at the end of each period unless you cancel at least 24 hours before renewal. You can manage or cancel your subscription in your Apple ID settings. Prices are shown in the app and on the App Store before purchase.</p>
-<h2>Free trials</h2>
+</section>
+<section class="doc-section" id="free-trials">
+<h2><span class="n">4</span><a href="#free-trials">Free trials</a></h2>
 <p>If a free trial is offered, it converts to a paid subscription at the end of the trial unless you cancel beforehand.</p>
-<h2>Refunds</h2>
+</section>
+<section class="doc-section" id="refunds">
+<h2><span class="n">5</span><a href="#refunds">Refunds</a></h2>
 <p>Refunds are handled by Apple under its policies.</p>
-<h2>Changes and limits</h2>
+</section>
+<section class="doc-section" id="changes-and-limits">
+<h2><span class="n">6</span><a href="#changes-and-limits">Changes and limits</a></h2>
 <p>We may change Premium features or prices with notice. Usage limits apply per 30-day period and reset as shown in the app. If a payment fails, Apple may provide a grace period during which Premium continues.</p>
-<h2>Minors</h2>
+</section>
+<section class="doc-section" id="minors">
+<h2><span class="n">7</span><a href="#minors">Minors</a></h2>
 <p>Players under 18 do not see subscription promotions outside Settings. Purchases by minors are subject to Apple's family and parental controls.</p>
-<footer>The same text is available in the app under Settings → Privacy Center.</footer>
+</section>
+    </div>
+    <div class="help">
+      <div>
+        <h2>Questions about this policy?</h2>
+        <p>Our support page explains how to reach us. The same text is available in the app under Settings → Privacy Center.</p>
+      </div>
+      <a class="btn ghost" href="/support/">Contact support</a>
+    </div>
+    <section class="related" aria-labelledby="related-title">
+      <p class="kicker" id="related-title">More in Terms &amp; rights</p>
+      <div class="grid"><a class="card" href="/legal/terms-of-service/"><h3>Terms of Service</h3><p>PitchProof helps players document their football development and lets scouts and coaches discover and contact players safely.</p><span class="foot"><span class="go">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></span></a><a class="card" href="/legal/copyright-policy/"><h3>Copyright and Intellectual Property Policy</h3><p>You own what you upload. We only use it to run PitchProof for you.</p><span class="foot"><span class="go">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></span></a><a class="card" href="/legal/security-disclosure-policy/"><h3>Security and Responsible Disclosure Policy</h3><p>Access to every database collection and storage path is restricted by server-side rules.</p><span class="foot"><span class="go">Read <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></span></a></div>
+    </section>
+  </article>
+</div>
 </main>
+<footer>
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="/privacy/">Privacy Policy</a>
+      <a href="/terms/">Terms of Service</a>
+      <a href="/subscription-terms/">Subscription Terms</a>
+      <a href="/legal/youth-safety-policy/">Youth Safety</a>
+      <a href="/support/">Support</a>
+      <a href="/report/">Report content</a>
+      <a href="/legal/">All policies</a>
+    </nav>
+    <p>© CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland. Apple and App Store are trademarks of Apple Inc.</p>
+  </div>
+</footer>
+<script>
+(function () {
+  var details = document.querySelector('.toc details');
+  var compact = window.matchMedia('(max-width: 960px)');
+  function syncToc() { if (details) details.open = !compact.matches; }
+  syncToc();
+  if (compact.addEventListener) compact.addEventListener('change', syncToc);
+  var printButton = document.querySelector('.toc .print button');
+  if (printButton) printButton.addEventListener('click', function () { window.print(); });
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  var byId = {};
+  links.forEach(function (link) { byId[link.getAttribute('href').slice(1)] = link; });
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      links.forEach(function (link) { link.classList.remove('active'); });
+      var active = byId[entry.target.id];
+      if (active) active.classList.add('active');
+    });
+  }, { rootMargin: '-90px 0px -65% 0px' });
+  Object.keys(byId).forEach(function (id) {
+    var section = document.getElementById(id);
+    if (section) observer.observe(section);
+  });
+})();
+</script>
 </body>
 </html>
