@@ -133,7 +133,6 @@ export function renderServerVersions(root = ROOT) {
 // below mirrors it.
 const SITE_NAME = 'PitchProof';
 const SITE_ORIGIN = 'https://pitchproof.online';
-const APP_STORE_URL = 'https://apps.apple.com/app/id6820059284';
 const SITE_PAGES = { 'privacy-policy': 'privacy', 'terms-of-service': 'terms', 'subscription-terms': 'subscription-terms' };
 
 const POLICY_GROUPS = [
@@ -257,6 +256,9 @@ img { display: block; max-width: 100%; }
 .btn.small { padding: 9px 18px; font-size: 14px; }
 .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
 .btn.ghost:hover { background: var(--surface); }
+.btn.soon { background: rgba(224, 178, 59, 0.14); color: var(--gold); border: 1px solid rgba(224, 178, 59, 0.35); cursor: default; }
+.btn.soon:hover { background: rgba(224, 178, 59, 0.14); transform: none; }
+.top nav .btn.soon { color: var(--gold); }
 
 .hero { position: relative; overflow: hidden; padding: 64px 0 40px; }
 .hero::before { content: ""; position: absolute; inset: -40% -10% auto auto; width: 640px; height: 640px; background: radial-gradient(closest-side, rgba(47, 191, 113, 0.18), transparent 70%); pointer-events: none; }
@@ -415,7 +417,6 @@ function pageShell({ title, description, path, current, placeholders, body, scri
 <title>${escapeHtml(title)} | ${SITE_NAME}</title>
 <meta name="description" content="${escapeHtml(description)}">
 <meta name="theme-color" content="#121110">
-<meta name="apple-itunes-app" content="app-id=6820059284">
 ${tokens.length ? `<meta name="pitchproof:unfilled" content="${tokens.join(' ')}">\n` : ''}<link rel="canonical" href="${SITE_ORIGIN}${path}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="${escapeHtml(title)} | ${SITE_NAME}">
@@ -436,7 +437,7 @@ ${tokens.length ? `<meta name="pitchproof:unfilled" content="${tokens.join(' ')}
       ${navLink('/welcome/#safety', 'Safety', 'safety')}
       ${navLink('/legal/', 'Policies', 'legal')}
       ${navLink('/support/', 'Support', 'support')}
-      <a class="btn small" href="${APP_STORE_URL}">Get the app</a>
+      <span class="btn small soon">Coming soon</span>
     </nav>
   </div>
 </header>
