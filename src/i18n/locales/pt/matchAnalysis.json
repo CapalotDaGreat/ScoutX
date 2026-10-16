@@ -61,11 +61,12 @@
     "stages": "Etapas",
     "emptyTimeline": "Não há observações com tempo guardadas.",
     "cvUnavailable": "Esta vista precisa de tracking por visão, que não está implantado.",
-    "noVideo": "Não há vídeo para saltar.",
+    "noVideo": "O vídeo original não está disponível. Foi eliminado após a análise, a menos que tenhas escolhido guardá-lo. Os carimbos de tempo ainda se referem a esse material; abre os fotogramas citados no relatório como evidência.",
     "open": "Abrir relatório completo",
     "reelTitle": "Reel de destaques",
     "reelHint": "Transforma os momentos deste relatório num rascunho de reel privado que podes rever e editar.",
-    "reelAction": "Criar um reel de destaques"
+    "reelAction": "Criar um reel de destaques",
+    "timestampOnly": "Observado às {{time}} (vídeo não guardado)"
   },
   "tabs": {
     "overview": "Resumo",

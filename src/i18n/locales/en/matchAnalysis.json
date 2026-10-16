@@ -61,11 +61,12 @@
     "stages": "Pipeline",
     "emptyTimeline": "No timestamped observations were stored.",
     "cvUnavailable": "This view needs computer-vision tracking, which is not deployed.",
-    "noVideo": "No video is available to seek.",
+    "noVideo": "The original video is not available. It was deleted after analysis unless you chose to keep it. Timestamps still refer to that footage; open cited frames from the report for evidence.",
     "open": "Open full report",
     "reelTitle": "Highlight reel",
     "reelHint": "Turn the moments from this report into a private reel draft you can review and edit.",
-    "reelAction": "Build a highlight reel"
+    "reelAction": "Build a highlight reel",
+    "timestampOnly": "Observed at {{time}} (video not retained)"
   },
   "tabs": {
     "overview": "Overview",

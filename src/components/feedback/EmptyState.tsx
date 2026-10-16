@@ -28,13 +28,13 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <View
-      accessibilityRole="text"
+      accessibilityRole="summary"
       className={cn(
         'flex-1 items-center justify-center px-6 py-12',
         className,
       )}
     >
-      {icon ? <View className="mb-6">{icon}</View> : null}
+      {icon ? <View className="mb-6" importantForAccessibility="no-hide-descendants">{icon}</View> : null}
 
       <Heading level={2} className="text-center">
         {title}

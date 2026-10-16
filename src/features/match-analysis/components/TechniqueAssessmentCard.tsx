@@ -13,6 +13,8 @@ export type TechniqueAssessmentCardProps = {
   assessment: TechniqueAssessment | null;
   frameTimestamps: Record<string, number>;
   onSeek: (timestampSec: number) => void;
+  /** False when the original video was deleted under the retention policy. */
+  canSeekVideo?: boolean;
 };
 
 function formatClock(seconds: number): string {
@@ -23,11 +25,13 @@ function RatingRow({
   rating,
   frameTimestamps,
   onSeek,
+  canSeekVideo,
   comparison,
 }: {
   rating: TechniqueRating;
   frameTimestamps: Record<string, number>;
   onSeek: (timestampSec: number) => void;
+  canSeekVideo: boolean;
   comparison: ReturnType<typeof compareWithSelfRating>;
 }) {
   const { t } = useAppTranslation('matchAnalysis');
@@ -66,17 +70,23 @@ function RatingRow({
       ) : null}
       {cited.length > 0 ? (
         <View className="flex-row flex-wrap gap-2">
-          {cited.map((timestampSec) => (
-            <Button
-              key={`${rating.dimension}-${timestampSec}`}
-              variant="ghost"
-              size="sm"
-              onPress={() => onSeek(timestampSec)}
-              accessibilityLabel={t('technique.seekA11y', { time: formatClock(timestampSec) })}
-            >
-              {formatClock(timestampSec)}
-            </Button>
-          ))}
+          {cited.map((timestampSec) =>
+            canSeekVideo ? (
+              <Button
+                key={`${rating.dimension}-${timestampSec}`}
+                variant="ghost"
+                size="sm"
+                onPress={() => onSeek(timestampSec)}
+                accessibilityLabel={t('technique.seekA11y', { time: formatClock(timestampSec) })}
+              >
+                {formatClock(timestampSec)}
+              </Button>
+            ) : (
+              <Text key={`${rating.dimension}-${timestampSec}`} variant="caption" color="secondary">
+                {formatClock(timestampSec)}
+              </Text>
+            ),
+          )}
         </View>
       ) : null}
     </View>
@@ -87,6 +97,7 @@ export function TechniqueAssessmentCard({
   assessment,
   frameTimestamps,
   onSeek,
+  canSeekVideo = true,
 }: TechniqueAssessmentCardProps) {
   const { t } = useAppTranslation('matchAnalysis');
 
@@ -133,6 +144,7 @@ export function TechniqueAssessmentCard({
               rating={rating}
               frameTimestamps={frameTimestamps}
               onSeek={onSeek}
+              canSeekVideo={canSeekVideo}
               comparison={
                 rating.dimension === 'weakFoot' || rating.dimension === 'skillMoves'
                   ? compareWithSelfRating(assessment, rating.dimension)

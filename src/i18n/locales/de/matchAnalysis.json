@@ -61,11 +61,12 @@
     "stages": "Pipeline",
     "emptyTimeline": "Keine zeitgestempelten Beobachtungen gespeichert.",
     "cvUnavailable": "Diese Ansicht braucht Computer-Vision-Tracking, das nicht bereitsteht.",
-    "noVideo": "Kein Video zum Springen verfügbar.",
+    "noVideo": "Das Originalvideo ist nicht verfügbar. Es wurde nach der Analyse gelöscht, sofern du es nicht behalten hast. Zeitstempel beziehen sich weiterhin auf dieses Material; öffne zitierte Einzelbilder im Bericht als Beleg.",
     "open": "Vollständigen Bericht öffnen",
     "reelTitle": "Highlight-Reel",
     "reelHint": "Mach aus den Momenten dieses Berichts einen privaten Reel-Entwurf, den du prüfen und bearbeiten kannst.",
-    "reelAction": "Highlight-Reel erstellen"
+    "reelAction": "Highlight-Reel erstellen",
+    "timestampOnly": "Beobachtet um {{time}} (Video nicht behalten)"
   },
   "tabs": {
     "overview": "Überblick",

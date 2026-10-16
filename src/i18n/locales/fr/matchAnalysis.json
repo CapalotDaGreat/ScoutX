@@ -61,11 +61,12 @@
     "stages": "Étapes",
     "emptyTimeline": "Aucune observation horodatée n’a été enregistrée.",
     "cvUnavailable": "Cette vue nécessite un suivi par vision, qui n’est pas déployé.",
-    "noVideo": "Aucune vidéo à parcourir.",
+    "noVideo": "La vidéo d'origine n'est pas disponible. Elle a été supprimée après l'analyse, sauf si tu as choisi de la conserver. Les horodatages s'y réfèrent encore ; ouvre les images citées dans le rapport comme preuve.",
     "open": "Ouvrir le rapport complet",
     "reelTitle": "Reel de temps forts",
     "reelHint": "Transforme les moments de ce rapport en un brouillon de reel privé que tu peux vérifier et modifier.",
-    "reelAction": "Créer un reel de temps forts"
+    "reelAction": "Créer un reel de temps forts",
+    "timestampOnly": "Observé à {{time}} (vidéo non conservée)"
   },
   "tabs": {
     "overview": "Aperçu",

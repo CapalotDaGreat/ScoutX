@@ -22,7 +22,16 @@ const EVENT_TYPES: readonly MatchEventType[] = [
  * Answers come from stored events, observations and coaching moments only, and each line
  * is a citation the player can open at its video timestamp.
  */
-export function AskThisMatchCard({ job, onSeek }: { job: MatchAnalysisJob; onSeek: (timestampSec: number) => void }) {
+export function AskThisMatchCard({
+  job,
+  onSeek,
+  canSeekVideo = true,
+}: {
+  job: MatchAnalysisJob;
+  onSeek: (timestampSec: number) => void;
+  /** False when the original video was deleted under the retention policy. */
+  canSeekVideo?: boolean;
+}) {
   const { t } = useAppTranslation('matchAnalysis');
   const [question, setQuestion] = useState('');
   const [citations, setCitations] = useState<AskThisMatchCitation[]>([]);
@@ -87,7 +96,7 @@ export function AskThisMatchCard({ job, onSeek }: { job: MatchAnalysisJob; onSee
           {citations.map((citation) => {
             const line = lineFor(citation);
             const timestamp = typeof citation.timestampSec === 'number' ? citation.timestampSec : null;
-            return timestamp !== null ? (
+            return timestamp !== null && canSeekVideo ? (
               <Pressable
                 key={citation.evidenceId}
                 accessibilityRole="button"
@@ -100,6 +109,13 @@ export function AskThisMatchCard({ job, onSeek }: { job: MatchAnalysisJob; onSee
                   {t('coaching.watch', { time: formatClock(timestamp) })}
                 </Text>
               </Pressable>
+            ) : timestamp !== null ? (
+              <View key={citation.evidenceId} className="rounded-lg border border-border px-3 py-2">
+                <Text variant="body-sm">{line}</Text>
+                <Text variant="caption" color="secondary">
+                  {t('report.timestampOnly', { time: formatClock(timestamp) })}
+                </Text>
+              </View>
             ) : (
               <View key={citation.evidenceId} className="rounded-lg border border-border px-3 py-2">
                 <Text variant="body-sm">{line}</Text>

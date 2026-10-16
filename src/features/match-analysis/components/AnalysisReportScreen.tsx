@@ -125,6 +125,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
 
   const report = job?.report;
   const videoUri = job?.videoDownloadUrl ?? null;
+  const canSeekVideo = Boolean(videoUri);
   const player = useVideoPlayer(videoUri, (instance) => {
     instance.loop = false;
   });
@@ -138,8 +139,12 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
     [t],
   );
 
+  /** Seek only when the source video is still retained; otherwise open the honest "no video" panel. */
   const seekTo = (timestampSec: number) => {
     setTab('video');
+    if (!canSeekVideo) {
+      return;
+    }
     player.currentTime = timestampSec;
   };
 
@@ -289,16 +294,30 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
               {(report.moments ?? []).length === 0 ? (
                 <Text variant="body-sm" color="secondary">{t('report.emptyTimeline')}</Text>
               ) : (
-                report.moments.map((moment) => (
-                  <Button
-                    key={`${moment.timestampSec}-${moment.label}`}
-                    variant="ghost"
-                    onPress={() => seekTo(moment.timestampSec)}
-                  >
-                    {`${Math.floor(moment.timestampSec / 60)}:${String(moment.timestampSec % 60).padStart(2, '0')} · ${moment.label}`}
-                  </Button>
-                ))
+                report.moments.map((moment) => {
+                  const stamp = `${Math.floor(moment.timestampSec / 60)}:${String(moment.timestampSec % 60).padStart(2, '0')}`;
+                  if (!canSeekVideo) {
+                    return (
+                      <Text key={`${moment.timestampSec}-${moment.label}`} variant="body-sm" color="secondary">
+                        {`${stamp} · ${moment.label}`}
+                      </Text>
+                    );
+                  }
+                  return (
+                    <Button
+                      key={`${moment.timestampSec}-${moment.label}`}
+                      variant="ghost"
+                      onPress={() => seekTo(moment.timestampSec)}
+                      accessibilityLabel={t('technique.seekA11y', { time: stamp })}
+                    >
+                      {`${stamp} · ${moment.label}`}
+                    </Button>
+                  );
+                })
               )}
+              {!canSeekVideo && (report.moments ?? []).length > 0 ? (
+                <Text variant="caption" color="secondary">{t('report.noVideo')}</Text>
+              ) : null}
             </Card>
           ) : null}
 
@@ -308,6 +327,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
                 assessment={parseTechniqueAssessment(report.techniqueAssessment)}
                 frameTimestamps={frameTimestamps}
                 onSeek={seekTo}
+                canSeekVideo={canSeekVideo}
               />
               <Card padding="lg" className="gap-2">
                 <Heading level={3}>{t('tabs.technical')}</Heading>
@@ -325,7 +345,12 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
 
           {tab === 'coaching' ? (
             <View className="gap-3">
-              <StructuredCoachingCard items={coaching} onSeek={seekTo} onCreateGoal={handleCreateGoal} />
+              <StructuredCoachingCard
+                items={coaching}
+                onSeek={seekTo}
+                onCreateGoal={handleCreateGoal}
+                canSeekVideo={canSeekVideo}
+              />
               {report.coachingNotes.trim() ? (
                 <Card padding="lg" className="gap-2">
                   <Heading level={3}>{t('tabs.coaching')}</Heading>
@@ -359,7 +384,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
             />
           ) : null}
 
-          {tab === 'ask' ? <AskThisMatchCard job={job} onSeek={seekTo} /> : null}
+          {tab === 'ask' ? <AskThisMatchCard job={job} onSeek={seekTo} canSeekVideo={canSeekVideo} /> : null}
 
           {candidates.length > 0 ? (
             <IdentityConfirmationCard

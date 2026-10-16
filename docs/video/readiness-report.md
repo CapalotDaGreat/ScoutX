@@ -1,7 +1,9 @@
 # Video Intelligence Readiness Report
 
-Updated 2026-10-09. Overall: **PRODUCTION LIMITED**. Public release gate: **BLOCKED** while any
-item below marked NOT VALIDATED, External or Legal remains open.
+Updated 2026-10-16. Overall: **PRODUCTION LIMITED**. Public release gate: **BLOCKED** while any
+item below marked NOT VALIDATED, External or Legal remains open. Report seek controls hide when the
+source video was deleted (`canSeekVideo`); continuous tracking remains unavailable until a worker
+is approved.
 
 Owner statement recorded on 2026-10-09: "The AI policies have been reviewed." This is the owner's
 statement; it is not a lawyer's review of the 1.2.0 policy texts, which stay flagged for legal review.

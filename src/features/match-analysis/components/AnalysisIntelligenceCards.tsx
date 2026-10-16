@@ -78,10 +78,13 @@ export function StructuredCoachingCard({
   items,
   onSeek,
   onCreateGoal,
+  canSeekVideo = true,
 }: {
   items: readonly StructuredCoaching[];
   onSeek: (timestampSec: number) => void;
   onCreateGoal?: (item: StructuredCoaching) => Promise<void>;
+  /** False when the original video was deleted under the retention policy. */
+  canSeekVideo?: boolean;
 }) {
   const { t } = useAppTranslation('matchAnalysis');
   const [created, setCreated] = useState<string[]>([]);
@@ -125,10 +128,14 @@ export function StructuredCoachingCard({
           {row(t('coaching.howToTrain'), item.howToTrain)}
           {row(t('coaching.howToMeasure'), item.howToMeasure)}
           <View className="flex-row flex-wrap gap-2 pt-1">
-            {item.evidence.timestampSec !== null ? (
+            {item.evidence.timestampSec !== null && canSeekVideo ? (
               <Button size="sm" variant="secondary" onPress={() => onSeek(item.evidence.timestampSec ?? 0)}>
                 {t('coaching.watch', { time: formatClock(item.evidence.timestampSec) })}
               </Button>
+            ) : item.evidence.timestampSec !== null ? (
+              <Text variant="caption" color="secondary">
+                {t('report.timestampOnly', { time: formatClock(item.evidence.timestampSec) })}
+              </Text>
             ) : null}
             {onCreateGoal && !item.whyItMatters ? (
               <Button

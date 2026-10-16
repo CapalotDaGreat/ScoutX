@@ -61,11 +61,12 @@
     "stages": "Pipeline",
     "emptyTimeline": "Nessuna osservazione con orario salvata.",
     "cvUnavailable": "Questa vista richiede il tracking visivo, non ancora disponibile.",
-    "noVideo": "Nessun video da scorrere.",
+    "noVideo": "Il video originale non è disponibile. È stato eliminato dopo l'analisi, a meno che tu non abbia scelto di tenerlo. I timestamp si riferiscono ancora a quel filmato; apri i fotogrammi citati nel report come prova.",
     "open": "Apri report completo",
     "reelTitle": "Reel degli highlight",
     "reelHint": "Trasforma i momenti di questo report in una bozza di reel privata da controllare e modificare.",
-    "reelAction": "Crea un reel degli highlight"
+    "reelAction": "Crea un reel degli highlight",
+    "timestampOnly": "Osservato alle {{time}} (video non conservato)"
   },
   "tabs": {
     "overview": "Panoramica",

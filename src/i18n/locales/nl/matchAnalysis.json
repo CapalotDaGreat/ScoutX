@@ -61,11 +61,12 @@
     "stages": "Pipeline",
     "emptyTimeline": "Geen observaties met tijdstempel opgeslagen.",
     "cvUnavailable": "Deze weergave heeft computer-vision-tracking nodig, die niet is uitgerold.",
-    "noVideo": "Geen video om naartoe te springen.",
+    "noVideo": "De originele video is niet beschikbaar. Die is na de analyse verwijderd, tenzij je koos om die te bewaren. Tijdstempels verwijzen nog naar dat beeldmateriaal; open geciteerde frames in het rapport als bewijs.",
     "open": "Volledig rapport openen",
     "reelTitle": "Highlightreel",
     "reelHint": "Maak van de momenten uit dit rapport een privé reelconcept dat je kunt controleren en bewerken.",
-    "reelAction": "Highlightreel maken"
+    "reelAction": "Highlightreel maken",
+    "timestampOnly": "Waargenomen om {{time}} (video niet bewaard)"
   },
   "tabs": {
     "overview": "Overzicht",

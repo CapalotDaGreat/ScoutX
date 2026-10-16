@@ -61,11 +61,12 @@
     "stages": "Proceso",
     "emptyTimeline": "No hay observaciones con marca de tiempo.",
     "cvUnavailable": "Esta vista necesita seguimiento por visión, que no está desplegado.",
-    "noVideo": "No hay vídeo para buscar.",
+    "noVideo": "El vídeo original no está disponible. Se eliminó tras el análisis salvo que eligieras conservarlo. Las marcas de tiempo siguen refiriéndose a ese material; abre los fotogramas citados del informe como evidencia.",
     "open": "Abrir informe completo",
     "reelTitle": "Reel de jugadas",
     "reelHint": "Convierte los momentos de este informe en un borrador de reel privado que puedes revisar y editar.",
-    "reelAction": "Crear un reel de jugadas"
+    "reelAction": "Crear un reel de jugadas",
+    "timestampOnly": "Observado a las {{time}} (vídeo no conservado)"
   },
   "tabs": {
     "overview": "Resumen",

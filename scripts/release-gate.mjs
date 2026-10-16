@@ -496,6 +496,29 @@ check('Encryption inventory documented', () => {
   return problems.length === 0 ? [PASS, 'encryption inventory present'] : [FAIL, problems.join('; ')];
 });
 
+check('Entitlement matrix matches server plans', () => {
+  const plans = read('functions/src/entitlements/plans.ts');
+  const matrix = read('docs/release/entitlement-matrix.md');
+  const inventory = read('docs/release/feature-inventory.md');
+  const problems = [];
+  if (!/NEVER_PAYWALLED/.test(plans)) problems.push('NEVER_PAYWALLED missing from plans.ts');
+  if (!/frame_analysis: 3/.test(plans) || !/full_match_analysis: 1/.test(plans)) {
+    problems.push('free limits drifted in plans.ts');
+  }
+  if (!/frame_analysis/.test(matrix) || !/Never paywalled/.test(matrix)) {
+    problems.push('docs/release/entitlement-matrix.md incomplete');
+  }
+  if (!/Unavailable/.test(inventory) || !/Continuous tracking/.test(inventory)) {
+    problems.push('docs/release/feature-inventory.md must list CV as unavailable');
+  }
+  if (!/presentPaywall/.test(read('src/features/premium/services/purchasesService.ts'))) {
+    problems.push('paywall entry point missing');
+  }
+  return problems.length === 0
+    ? [PASS, 'plans, matrix and inventory agree Free is metered and CV is unavailable']
+    : [FAIL, problems.join('; ')];
+});
+
 check('Client ids are not Math.random', () => {
   const secure = read('src/utils/secureId.ts');
   if (!/getRandomValues|getRandomBytes/.test(secure)) {
