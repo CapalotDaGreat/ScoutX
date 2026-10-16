@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { isFirebaseConfiguredForProject } from '@/config/firebase';
 import { shouldUseMockAuth } from '@/config/authSecurity';
 import { useMockData } from '@/config/appMode';
+import { createSecureId } from '@/utils/secureId';
 import { sampleFramesAt, sampleMatchFrames } from '@/features/match-analysis/services/matchFrameSamplingService';
 import { shortClipSampleTimes } from '@/features/match-analysis/services/analysisMode';
 import { uploadMatchFrame } from '@/features/match-analysis/services/matchFootageStorageService';
@@ -62,7 +63,7 @@ const VALIDATION_TIMEOUT_MESSAGE =
   'Your video arrived but checking it is taking longer than expected. Please check back shortly.';
 
 function createJobId(): string {
-  return `match_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+  return createSecureId('match', 9);
 }
 
 /** Demo reports are only allowed in development demo/mock mode — never in production. */

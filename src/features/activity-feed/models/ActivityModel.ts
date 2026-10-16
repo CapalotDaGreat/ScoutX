@@ -8,6 +8,7 @@ import {
   type ActivityTimelineSection,
   type ActivityType,
 } from '@/features/activity-feed/types';
+import { createSecureId } from '@/utils/secureId';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -75,7 +76,7 @@ function isActivityCategory(value: string): value is ActivityCategory {
 }
 
 export function createActivityId(): string {
-  return `activity-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  return createSecureId('activity', 9, '-');
 }
 
 export function buildActivityFromDraft(draft: ActivityDraft): ActivityItem {

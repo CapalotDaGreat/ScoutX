@@ -462,6 +462,65 @@ check('Video intelligence validated on real footage', () => {
   return [NOT_VALIDATED, 'PRODUCTION LIMITED: still-frame review only; no verified real-footage evaluation (docs/video/evaluation/approval.json absent)'];
 });
 
+check('Callable abuse rate limits', () => {
+  const module = read('functions/src/security/rateLimit.ts');
+  const problems = [];
+  if (!/assertCallableRateLimit/.test(module)) problems.push('assertCallableRateLimit missing');
+  if (!/DISCOVERY_SEARCH_LIMIT/.test(read('functions/src/discoveryProjection.ts'))) {
+    problems.push('discovery search is not rate-limited');
+  }
+  if (!/MEDIA_PLAYBACK_LIMIT/.test(read('functions/src/mediaAccess.ts'))) {
+    problems.push('media playback URL minting is not rate-limited');
+  }
+  if (!/ASK_THIS_MATCH_LIMIT/.test(read('functions/src/askThisMatch.ts'))) {
+    problems.push('askThisMatch is not rate-limited');
+  }
+  if (!/AI_INSIGHT_LIMIT/.test(read('functions/src/aiCoach.ts'))) {
+    problems.push('generateAiInsight is not rate-limited');
+  }
+  if (!/match \/callableRateLimits/.test(read('firestore.rules'))) {
+    problems.push('callableRateLimits rules missing');
+  }
+  return problems.length === 0
+    ? [PASS, 'discovery, playback, ask-this-match and AI insight callables are bounded']
+    : [FAIL, problems.join('; ')];
+});
+
+check('Encryption inventory documented', () => {
+  const doc = read('docs/security/encryption-inventory.md');
+  const problems = [];
+  if (!/Transport \(TLS\)/.test(doc)) problems.push('TLS section missing');
+  if (!/Encryption at rest/.test(doc)) problems.push('at-rest section missing');
+  if (!/Certificate pinning is \*\*not\*\* implemented/.test(doc)) problems.push('pinning decision missing');
+  if (!/Secret Manager/.test(doc)) problems.push('key material section incomplete');
+  return problems.length === 0 ? [PASS, 'encryption inventory present'] : [FAIL, problems.join('; ')];
+});
+
+check('Client ids are not Math.random', () => {
+  const secure = read('src/utils/secureId.ts');
+  if (!/getRandomValues|getRandomBytes/.test(secure)) {
+    return [FAIL, 'secureId.ts does not use a CSPRNG'];
+  }
+  const hits = scanTracked(/Math\.random\(\)\.toString\(36\)/, {
+    exclude: ['tests/', 'docs/', 'scripts/', 'functions/', 'workers/', 'e2e/'],
+  }).filter((file) => file.startsWith('src/') && !file.includes('mock'));
+  return hits.length === 0
+    ? [PASS, 'client-generated ids use secureId']
+    : [FAIL, `Math.random id generators remain in ${hits.join(', ')}`];
+});
+
+check('App Check enforcement defaults on outside the emulator', () => {
+  const options = read('functions/src/callableOptions.ts');
+  if (!/ENFORCE_APP_CHECK !== 'false'/.test(options) && !/shouldEnforceAppCheck/.test(options)) {
+    return [FAIL, 'callable App Check default is missing'];
+  }
+  const env = functionsEnv();
+  if (/^ENFORCE_APP_CHECK=false$/m.test(env)) {
+    return [FAIL, 'functions .env disables App Check; remove ENFORCE_APP_CHECK=false for production'];
+  }
+  return [EXTERNAL, 'App Check code defaults on; App Attest / provider registration still EXTERNAL (SEC-15)'];
+});
+
 check('Firestore and Storage rules suite', () => {
   if (skipTests) return [SKIPPED, '--skip-tests'];
   const result = spawnSync(npm, ['run', 'test:rules'], { cwd: root, encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 256 * 1024 * 1024 });

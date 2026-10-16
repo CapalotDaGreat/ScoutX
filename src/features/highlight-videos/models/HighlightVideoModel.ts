@@ -9,6 +9,7 @@ import {
   type VideoCategory,
   type VideoUploadStatus,
 } from '@/features/highlight-videos/types';
+import { createSecureId } from '@/utils/secureId';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -199,7 +200,7 @@ export function sortHighlightVideos(videos: HighlightVideo[]): HighlightVideo[] 
 }
 
 export function createHighlightVideoId(): string {
-  return `video-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return createSecureId('video', 8, '-');
 }
 
 export function createEmptyHighlightVideo(category: VideoCategory = 'skills'): HighlightVideo {

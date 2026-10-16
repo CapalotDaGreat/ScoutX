@@ -347,6 +347,8 @@ export const recordDiscoverableView = onCall(createCallableOptions(), async (req
   if (!uid) {
     throw new HttpsError('unauthenticated', 'Sign in required.');
   }
+  const { assertCallableRateLimit, DISCOVERY_VIEW_LIMIT } = await import('./security/rateLimit');
+  await assertCallableRateLimit(uid, DISCOVERY_VIEW_LIMIT);
   const playerId = typeof request.data?.playerId === 'string' ? request.data.playerId : '';
   if (!playerId || playerId === uid) {
     return { recorded: false };
@@ -384,6 +386,8 @@ export const searchDiscoverablePlayers = onCall(createCallableOptions(), async (
   if (!isRecruiter(request) && request.auth.token.role !== 'player') {
     throw new HttpsError('permission-denied', 'A signed-in PitchProof role is required.');
   }
+  const { assertCallableRateLimit, DISCOVERY_SEARCH_LIMIT } = await import('./security/rateLimit');
+  await assertCallableRateLimit(request.auth.uid, DISCOVERY_SEARCH_LIMIT);
   const filters = asRecord(request.data?.filters) as SearchFilters | null;
   const search = typeof request.data?.search === 'string' ? request.data.search.trim().toLowerCase() : '';
   const pageSize = Math.min(40, Math.max(1, typeof request.data?.pageSize === 'number' ? request.data.pageSize : 20));

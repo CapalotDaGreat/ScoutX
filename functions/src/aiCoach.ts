@@ -206,6 +206,9 @@ export const generateAiInsight = onCall(
       throw new HttpsError('unauthenticated', 'Authentication is required.');
     }
 
+    const { assertCallableRateLimit, AI_INSIGHT_LIMIT } = await import('./security/rateLimit');
+    await assertCallableRateLimit(uid, AI_INSIGHT_LIMIT);
+
     const data = (request.data ?? {}) as GenerateAiInsightRequest;
     if (!isInsightType(data.insightType)) {
       throw new HttpsError('invalid-argument', 'Unknown insight type.');

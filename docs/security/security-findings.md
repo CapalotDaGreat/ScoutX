@@ -32,6 +32,10 @@ awaits owner acceptance.
 | SEC-16 | Medium | EXTERNAL | No backups configured; no restore drill | `backups.md` (BACKUP_CONFIGURATION_REQUIRED) |
 | SEC-17 | Low | OWNER ACCEPTANCE REQUIRED | Guardian is whoever controls the email address the teen enters (T2) | Inherent to email-based consent; LEGAL REVIEW REQUIRED |
 | SEC-18 | Low | OWNER ACCEPTANCE REQUIRED | Choosing under-13 as the *first* age band deletes the account without re-auth, so a stolen session of an account that never picked a band could delete it | Picking a band is the first step after sign-up and the app is unusable without one, so such accounts hold no data yet |
+| SEC-21 | High | FIXED | Discovery search, signed playback URL minting, ask-this-match and AI insight callables had no per-user rate limits, enabling scraping and cost amplification | `functions/src/security/rateLimit.ts`; wired in discovery, mediaAccess, askThisMatch, aiCoach; `callableRateLimits` rules deny clients; `tests/unit/rateLimit.test.ts`, rules test |
+| SEC-22 | Medium | FIXED | Client-generated document ids used `Math.random()` | `src/utils/secureId.ts` (Web Crypto / expo-crypto); release gate refuses remaining `Math.random().toString(36)` id generators in `src/` |
+| SEC-23 | Medium | FIXED | Sign-out left pending upload resume metadata for the account on device | `PendingUploadStore.clearAll` on sign-out; SecureStore allowlist already cleared |
+| SEC-24 | Low | FIXED | Encryption / key inventory was only implied across docs | `docs/security/encryption-inventory.md`; release gate requires the inventory |
 
 ## Verified without findings
 

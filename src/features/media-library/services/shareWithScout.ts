@@ -1,6 +1,7 @@
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { type MediaGrant } from '@/features/media-library/types';
+import { createSecureId } from '@/utils/secureId';
 
 export async function shareMediaWithScout(input: {
   ownerId: string;
@@ -16,7 +17,7 @@ export async function shareMediaWithScout(input: {
   if (!input.granteeId.trim() || input.granteeId === input.ownerId) {
     throw new Error('Pick a scout to share with.');
   }
-  const id = `grant_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const id = createSecureId('grant', 8);
   const grant: MediaGrant = {
     id,
     ownerId: input.ownerId,

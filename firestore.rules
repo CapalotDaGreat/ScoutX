@@ -559,6 +559,10 @@ service cloud.firestore {
     match /uploadSessionLimits/{limitId} {
       allow read, write: if false;
     }
+    // Per-callable abuse counters (Admin SDK only).
+    match /callableRateLimits/{limitId} {
+      allow read, write: if false;
+    }
 
     // Moderation workflow and staff audit trail are server-only; staff use callables.
     match /moderationCases/{caseId} {

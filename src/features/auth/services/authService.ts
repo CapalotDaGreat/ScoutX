@@ -430,6 +430,8 @@ export async function signOutFromFirebase(): Promise<void> {
     return;
   }
 
+  const uid = auth.currentUser?.uid ?? null;
+
   // Clear native Google session and allowlisted SecureStore secrets.
   // Firebase Auth session material is owned by Firebase persistence — never mirrored here.
   void import('@/features/auth/services/googleAuthService')
@@ -439,6 +441,14 @@ export async function signOutFromFirebase(): Promise<void> {
   void import('@/services/secureStorage')
     .then(({ secureStorageService }) => secureStorageService.clearAllowlistedItems())
     .catch(() => undefined);
+
+  // Drop this account's local resume metadata so a later sign-in cannot resume another
+  // user's interrupted upload from the same device profile.
+  if (uid) {
+    void import('@/features/media-upload/repositories/PendingUploadStore')
+      .then(({ PendingUploadStore }) => PendingUploadStore.clearAll(uid))
+      .catch(() => undefined);
+  }
 
   await firebaseSignOut(auth);
 }

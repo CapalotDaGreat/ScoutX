@@ -33,8 +33,9 @@ flowchart LR
 | Staff | `staffRole` custom claim (`moderator` / `admin`), granted only by accounts in the `ADMIN_USER_IDS` secret; destructive actions need a sign-in within 15 minutes; every action goes to the append-only `adminAuditLog` | `functions/src/moderation/staff.ts` |
 | Notifications | Server-composed copy only; clients cannot forge pushes to other users; minors get generic lock-screen text | `pushDelivery.ts`, `notificationPolicy.ts` |
 | Deep links | Allow-listed path patterns, validated ids, auth gate before protected screens | `src/navigation/deepLinkResolver.ts` |
-| Device storage | Auth tokens in `expo-secure-store`; GPS coordinates never persisted | `docs/SECURE_STORAGE.md`, `gpsTrackingService.ts` |
+| Device storage | OAuth CSRF in SecureStore (Keychain/Keystore); Firebase Auth persistence owns tokens; GPS coordinates never persisted; pending uploads cleared on sign-out | `docs/SECURE_STORAGE.md`, `encryption-inventory.md`, `gpsTrackingService.ts` |
 | Diagnostics | Sentry only in production builds, `sendDefaultPii: false`, request/extra/context data scrubbed | `src/config/sentry.ts` |
+| Abuse / cost | Per-uid hourly counters in `callableRateLimits` for discovery, playback URLs, ask-this-match and AI insights; upload and plan quotas remain separate | `functions/src/security/rateLimit.ts` |
 
 ## Secrets
 

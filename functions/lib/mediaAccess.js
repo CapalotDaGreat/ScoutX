@@ -7,6 +7,7 @@ const storage_1 = require("firebase-admin/storage");
 const callableOptions_1 = require("./callableOptions");
 const holds_1 = require("./moderation/holds");
 const userSafety_1 = require("./safety/userSafety");
+const rateLimit_1 = require("./security/rateLimit");
 const PLAYBACK_MS = 15 * 60 * 1000;
 function asRecord(value) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -76,6 +77,7 @@ exports.getMediaPlaybackUrl = (0, https_1.onCall)((0, callableOptions_1.createCa
     if (!allowed) {
         throw new https_1.HttpsError('permission-denied', 'You cannot play this media.');
     }
+    await (0, rateLimit_1.assertCallableRateLimit)(uid, rateLimit_1.MEDIA_PLAYBACK_LIMIT);
     try {
         const expires = Date.now() + PLAYBACK_MS;
         const [url] = await (0, storage_1.getStorage)().bucket().file(storagePath).getSignedUrl({

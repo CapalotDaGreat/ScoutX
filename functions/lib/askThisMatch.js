@@ -6,6 +6,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const callableOptions_1 = require("./callableOptions");
 const askThisMatch_1 = require("./analysis/askThisMatch");
 const outputValidator_1 = require("./ai/outputValidator");
+const rateLimit_1 = require("./security/rateLimit");
 function asRecord(value) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
         return null;
@@ -29,6 +30,7 @@ exports.askThisMatch = (0, https_1.onCall)((0, callableOptions_1.createCallableO
     if (question.length > 400) {
         throw new https_1.HttpsError('invalid-argument', 'Question is too long.');
     }
+    await (0, rateLimit_1.assertCallableRateLimit)(request.auth.uid, rateLimit_1.ASK_THIS_MATCH_LIMIT);
     const snap = await (0, firestore_1.getFirestore)().collection('matchAnalysisJobs').doc(jobId).get();
     if (!snap.exists) {
         throw new https_1.HttpsError('not-found', 'Match analysis job not found.');

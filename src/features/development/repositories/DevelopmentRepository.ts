@@ -23,6 +23,7 @@ import {
   type IdentitySnapshot,
   type TrainingSession,
 } from '@/features/development/types';
+import { createSecureId } from '@/utils/secureId';
 
 /**
  * Owner-keyed development data:
@@ -46,7 +47,7 @@ export class DevelopmentRepository {
   }
 
   public newId(prefix: string): string {
-    return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+    return createSecureId(prefix, 8, '-');
   }
 
   public async listGoals(ownerId: string, max = 100): Promise<DevelopmentGoal[]> {

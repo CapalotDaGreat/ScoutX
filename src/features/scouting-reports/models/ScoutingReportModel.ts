@@ -7,6 +7,7 @@ import {
   defaultScoutingReportRatings,
 } from '@/features/scouting-reports/types';
 import { asRecord, parseStringList } from '@/utils/firestoreParsing';
+import { createSecureId } from '@/utils/secureId';
 
 function clampRating(value: unknown): number | null {
   if (typeof value !== 'number' || !Number.isFinite(value)) {
@@ -104,7 +105,7 @@ export function serializeScoutingReport(report: ScoutingReport): Record<string, 
 }
 
 export function createScoutingReportId(): string {
-  return `report-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return createSecureId('report', 8, '-');
 }
 
 export function createScoutingReportFromDraft(

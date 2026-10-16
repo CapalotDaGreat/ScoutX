@@ -6,6 +6,7 @@ import type {
   TrialNotification,
   TrialStatus,
 } from '@/features/trial-invitations/types';
+import { createSecureId } from '@/utils/secureId';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -220,11 +221,11 @@ export function serializeTrialNotification(notification: TrialNotification): Rec
 }
 
 export function createTrialInvitationId(): string {
-  return `trial-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return createSecureId('trial', 8, '-');
 }
 
 export function createHistoryEntryId(): string {
-  return `history-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return createSecureId('history', 8, '-');
 }
 
 export function createHistoryEntry(

@@ -40,5 +40,9 @@ entitlements, staff powers, account deletion and export, notification channel.
 | T26 | Server-side request forgery or scraping through a stored link | Functions runtime, provider sites | No code fetches, previews, embeds or schedules work for these links; release gate fails on network calls, task queues, schedules, WebViews or scraping packages in the feature | release gate `External football sources are link-only` | Low |
 | T27 | Spoofing: a link presented as proof that a player is verified or is the person on the page | Scouts' trust | Provenance is always `self_reported_with_link`; no verified/official field; disclaimer on every card; links never change trust or verification state | `footballSources.test.mjs`, release gate | Medium: viewers may still over-trust a link |
 | T28 | Tampering: a player sets status, provider or host directly, or re-shares a reported link | Moderation | Server-owned status and provider; re-sharing refused while not `active`; reports hide the link at once | `footballSources.test.mjs` | Low |
+| T29 | Information disclosure / DoS: unbounded discovery search or view increments scrape the index | Discoverable players | Per-uid hourly rate limits on `searchDiscoverablePlayers` and `recordDiscoverableView` | `rateLimit.test.ts`, rules `callableRateLimits` | Low |
+| T30 | DoS / cost: minting unlimited signed playback URLs or AI insight bursts | Storage, AI budget | Hourly limits on `getMediaPlaybackUrl`, `askThisMatch`, `generateAiInsight` (quotas remain authoritative for paid features) | `rateLimit.ts` | Low |
+| T31 | Predictable client ids for drafts / grants | Local naming | CSPRNG via `secureId` | `secureId.test.ts`, release gate | Low |
 
 Minor-safety and privacy threat models: `threat-model-minor-safety.md`, `threat-model-privacy.md`.
+Encryption map: `encryption-inventory.md`. Residual register: `residual-risk-register.md`.

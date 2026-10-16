@@ -23,4 +23,9 @@ export const PendingUploadStore = {
   async findForJob(uid: string, jobId: string): Promise<PendingUpload | null> {
     return (await this.list(uid)).find((entry) => entry.jobId === jobId) ?? null;
   },
+
+  /** Clears every pending resume record for one account (used on sign-out). */
+  async clearAll(uid: string): Promise<void> {
+    await AsyncStorage.removeItem(keyFor(uid));
+  },
 };

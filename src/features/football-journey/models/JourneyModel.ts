@@ -8,6 +8,7 @@ import type {
   JourneyEntryType,
   JourneyMedia,
 } from '@/features/football-journey/types';
+import { createSecureId } from '@/utils/secureId';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -222,7 +223,7 @@ export function groupJourneyByYear(entries: JourneyEntry[]): Array<{ year: strin
 }
 
 export function createJourneyEntryId(): string {
-  return `journey-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return createSecureId('journey', 8, '-');
 }
 
 export function resolveJourneyEntries(

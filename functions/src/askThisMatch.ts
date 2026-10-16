@@ -3,6 +3,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { createCallableOptions } from './callableOptions';
 import { NOT_ENOUGH_EVIDENCE } from './analysis/askThisMatch';
 import { cleanModelText, timestampWithin } from './ai/outputValidator';
+import { assertCallableRateLimit, ASK_THIS_MATCH_LIMIT } from './security/rateLimit';
 
 type Citation = {
   evidenceId: string;
@@ -48,6 +49,8 @@ export const askThisMatch = onCall(createCallableOptions({}), async (request) =>
   if (question.length > 400) {
     throw new HttpsError('invalid-argument', 'Question is too long.');
   }
+
+  await assertCallableRateLimit(request.auth.uid, ASK_THIS_MATCH_LIMIT);
 
   const snap = await getFirestore().collection('matchAnalysisJobs').doc(jobId).get();
   if (!snap.exists) {

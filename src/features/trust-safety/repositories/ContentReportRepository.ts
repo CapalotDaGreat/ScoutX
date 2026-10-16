@@ -2,9 +2,10 @@ import { doc, setDoc } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { CONTENT_REPORTS_COLLECTION } from '@/features/trust-safety/constants';
 import { type ContentReport, type ContentReportDraft } from '@/features/trust-safety/types';
+import { createSecureId } from '@/utils/secureId';
 
 function createReportId(): string {
-  return `report_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+  return createSecureId('report', 9);
 }
 
 export class ContentReportRepository {

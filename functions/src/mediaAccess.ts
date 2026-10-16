@@ -4,6 +4,7 @@ import { getStorage } from 'firebase-admin/storage';
 import { createCallableOptions } from './callableOptions';
 import { isTargetHeld } from './moderation/holds';
 import { loadSafetyPolicy } from './safety/userSafety';
+import { assertCallableRateLimit, MEDIA_PLAYBACK_LIMIT } from './security/rateLimit';
 
 const PLAYBACK_MS = 15 * 60 * 1000;
 
@@ -100,6 +101,7 @@ export const getMediaPlaybackUrl = onCall(createCallableOptions(), async (reques
   if (!allowed) {
     throw new HttpsError('permission-denied', 'You cannot play this media.');
   }
+  await assertCallableRateLimit(uid, MEDIA_PLAYBACK_LIMIT);
 
   try {
     const expires = Date.now() + PLAYBACK_MS;

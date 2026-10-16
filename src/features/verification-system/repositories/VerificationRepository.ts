@@ -5,12 +5,13 @@ import {
   type VerificationRequest,
   type VerificationRequestDraft,
 } from '@/features/verification-system/types';
+import { createSecureId } from '@/utils/secureId';
 
 const REQUESTS_COLLECTION = 'verificationRequests';
 const STATES_COLLECTION = 'verificationStates';
 
 function createRequestId(): string {
-  return `verification-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return createSecureId('verification', 8, '-');
 }
 
 export function emptyVerificationDimensions(): EntityVerificationState['dimensions'] {

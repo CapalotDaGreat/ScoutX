@@ -182,6 +182,15 @@ describe('profiles and GPS privacy', () => {
   });
 });
 
+describe('callable rate limits', () => {
+  test('clients cannot read or write abuse counters', async () => {
+    const path = `callableRateLimits/${PLAYER}_discovery_search_2026-10-16T14`;
+    await denied(setDocument(PLAYER, path, { count: 1, uid: PLAYER }), 'forge rate limit');
+    await denied(getDocument(PLAYER, path), 'read rate limit');
+    await denied(getDocument(null, path), 'anonymous rate limit');
+  });
+});
+
 describe('trust and verification', () => {
   test('trust profiles are server-only', async () => {
     await denied(setDocument(PLAYER, `trustProfiles/${PLAYER}`, { score: 100 }), 'self trust score');

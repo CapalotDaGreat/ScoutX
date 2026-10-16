@@ -39,3 +39,8 @@ This is a self-assessment, not an audit.
 | Age assurance beyond self-declaration | NOT AVAILABLE | accepted risk T1, LEGAL REVIEW REQUIRED |
 | Independent penetration test | SECURITY REVIEW REQUIRED | not performed |
 | Phase 14 adversarial self-review | PASS for code findings; owner acceptance pending | `security-findings.md` |
+| Callable rate limits (discovery, playback, ask-match, AI insight) | PASS | `rateLimit.ts`, rules `callableRateLimits`, unit + rules tests |
+| Client id CSPRNG | PASS | `secureId.ts`, release gate |
+| Sign-out clears pending upload resume metadata | PASS (code) | `authService.ts`, `PendingUploadStore.clearAll` |
+| Encryption inventory | PASS (documentation) | `encryption-inventory.md` |
+| Residual risk register | PASS (documentation) | `residual-risk-register.md` |
