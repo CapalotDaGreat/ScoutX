@@ -67,7 +67,17 @@
     "clearFilters": "Effacer les filtres",
     "compare": "Comparer",
     "addToPipeline": "Ajouter au pipeline",
-    "viewProfile": "Voir le profil"
+    "viewProfile": "Voir le profil",
+    "matchesCount_one": "{{count}} match",
+    "matchesCount_other": "{{count}} matchs",
+    "hasHighlights": "Vidéo de temps forts disponible",
+    "analysisSamples_one": "{{count}} match analysé",
+    "analysisSamples_other": "{{count}} matchs analysés",
+    "resultsCount_one": "{{count}} joueur trouvé",
+    "resultsCount_other": "{{count}} joueurs trouvés",
+    "resultsCountMore_one": "{{count}} joueur chargé, d’autres sont disponibles",
+    "resultsCountMore_other": "{{count}} joueurs chargés, d’autres sont disponibles",
+    "saveError": "Impossible de mettre à jour vos joueurs enregistrés. Réessayez."
   },
   "filters": {
     "minAge": "Âge min",
@@ -137,7 +147,12 @@
     "board": "Tableau",
     "emptyTitle": "Ton pipeline est vide",
     "emptyActionDescription": "Enregistre des joueurs depuis Découvrir pour les suivre à chaque étape du recrutement.",
-    "discoverPlayers": "Découvrir des joueurs"
+    "discoverPlayers": "Découvrir des joueurs",
+    "searchPlaceholder": "Rechercher par nom, club ou poste",
+    "stageAll": "Tous · {{count}}",
+    "noFilteredTitle": "Aucun joueur ne correspond à ces filtres",
+    "noFilteredDescription": "Essayez une autre recherche, étape, dossier ou liste.",
+    "clearSearch": "Effacer les filtres du pipeline"
   },
   "comparison": {
     "title": "Comparaison de joueurs",
@@ -152,7 +167,7 @@
     "needsTwoPlayers": "Ajoute au moins deux joueurs pour débloquer les graphiques et tableaux comparatifs.",
     "replacePlayer": "Remplacer le joueur",
     "addPlayerToComparison": "Ajouter un joueur à la comparaison",
-    "metricSubtitle": "Meilleure valeur marquée ▲ (vert), plus faible ▼ (rouge).",
+    "metricSubtitle": "Les valeurs sont affichées côte à côte sans gagnant. Vérifiez la couverture et la taille d’échantillon avant de comparer des rôles différents.",
     "sections": {
       "radar": "Profil radar",
       "statistics": "Statistiques",
@@ -225,7 +240,12 @@
       "clubCount_other": "{{count}} clubs",
       "footageSubtitle": "Vidéos highlights disponibles",
       "honoursSubtitle": "Palmarès"
-    }
+    },
+    "movementAvailable": "Résumé GPS partagé disponible",
+    "distanceKm": "Distance (km)",
+    "sprintSpeed": "Vitesse maximale (km/h)",
+    "movementSource": "Résumé de session GPS partagé par le joueur. Les valeurs manquantes sont indiquées comme indisponibles.",
+    "contactViaTrial": "Le contact commence par une invitation à un essai ou une demande de preuves, pas par message direct."
   },
   "search": {
     "scopeLabel": "Rechercher dans",
@@ -249,7 +269,7 @@
     "includeSearchHint": "Restaure aussi le texte et le champ de recherche",
     "deleteFilter": "Supprimer {{name}}",
     "presets": {
-      "preset-u21-potential": "U21 à fort potentiel",
+      "preset-u21-potential": "Moins de 21 ans avec preuves récentes",
       "preset-verified-wingers": "Ailiers vérifiés",
       "preset-available-now": "Disponibles maintenant"
     }
@@ -587,7 +607,12 @@
     "shortlistName": "Nom de la shortlist",
     "shortlistPlaceholder": "ex. Mercato d'été",
     "description": "Description",
-    "descriptionPlaceholder": "Contexte facultatif pour ton équipe"
+    "descriptionPlaceholder": "Contexte facultatif pour ton équipe",
+    "notesLabel": "Notes de recrutement privées",
+    "notesPlaceholder": "Points forts, doutes et prochaine étape…",
+    "notesPrivate": "Visibles uniquement dans votre espace de recrutement.",
+    "notesSave": "Enregistrer les notes",
+    "notesError": "Impossible d’enregistrer vos notes. Réessayez."
   },
   "comparisonUi": {
     "metricHeader": "Indicateur",
@@ -618,7 +643,8 @@
     "trendScale": "Points de forme par match : victoire 3, nul 1, défaite 0.",
     "trendPlayerA11y": "{{name}} : {{values}}",
     "trendPlayerEmptyA11y": "{{name}} : aucun résultat enregistré",
-    "matchShort": "M{{n}}"
+    "matchShort": "M{{n}}",
+    "unavailable": "Indisponible"
   },
   "comparisonMetric": {
     "goals": "Buts",
@@ -636,5 +662,9 @@
     "distance": "Distance moy. (km)",
     "topSpeed": "Vitesse max (km/h)",
     "sessions": "Séances GPS"
+  },
+  "playerCard": {
+    "openHint": "Ouvrir le profil complet du joueur",
+    "footValue": "Pied {{foot}}"
   }
 }

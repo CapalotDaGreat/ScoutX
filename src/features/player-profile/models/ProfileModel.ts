@@ -1,7 +1,10 @@
 import { useMockData } from '@/config/appMode';
 import { type PlayerProfile, type PlayerProfileStat, type PlayerProfilePerformanceItem } from '@/features/player-profile/types';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
-import { serializeMatchStatistics } from '@/features/player-statistics/models/MatchLogModel';
+import {
+  parseMatchReflection,
+  serializeMatchStatistics,
+} from '@/features/player-statistics/models/MatchLogModel';
 import { mockPlayerStatisticsMatches } from '@/features/player-statistics/services/mockPlayerStatisticsService';
 import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import {
@@ -78,6 +81,7 @@ export function parsePlayerMatchStatistics(value: unknown): PlayerMatchStatistic
       redCards: typeof match.redCards === 'number' ? match.redCards : 0,
       matchRating: typeof match.matchRating === 'number' ? match.matchRating : null,
       notes: typeof match.notes === 'string' ? match.notes : '',
+      reflection: parseMatchReflection(match.reflection),
     });
   }
 

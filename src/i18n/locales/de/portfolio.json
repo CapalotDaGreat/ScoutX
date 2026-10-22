@@ -216,6 +216,12 @@
         "description": "Gegner, Wettbewerb und Minuten reichen. Statistiken nur ergänzen, wenn du sie erfasst hast.",
         "reasonToday": "Du hast dich heute auf ein Spiel vorbereitet und noch nichts erfasst.",
         "reasonYesterday": "Du hast dich gestern auf ein Spiel vorbereitet und noch nichts erfasst."
+      },
+      "reflect_match": {
+        "title": "Reflektiere dein letztes Spiel",
+        "description": "Zwei Minuten zu dem, was gut lief, was schwierig war, und ein Schwerpunkt fürs nächste Training (gegen {{opponent}}).",
+        "reason": "für dein letztes Spiel gibt es noch keine Reflexion — das ist deine eigene Einschätzung, getrennt von jeder Analyse.",
+        "reasonWithPriority": "letztens hast du gewählt: „{{priority}}“. Schreibe eine neue Reflexion, um deinen nächsten Schwerpunkt zu setzen."
       }
     },
     "continue": {

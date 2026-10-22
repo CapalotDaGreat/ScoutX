@@ -1,4 +1,36 @@
-import type { MatchLogPayload, PlayerMatchStatistics } from '@/features/player-statistics/types';
+import {
+  hasMatchReflection,
+  type MatchLogPayload,
+  type MatchReflection,
+  type PlayerMatchStatistics,
+} from '@/features/player-statistics/types';
+
+/** Builds a reflection from raw form text; null when the player wrote nothing. */
+export function buildMatchReflection(
+  wentWell: string,
+  difficult: string,
+  nextPriority: string,
+): MatchReflection | null {
+  const reflection: MatchReflection = {
+    wentWell: wentWell.trim(),
+    difficult: difficult.trim(),
+    nextPriority: nextPriority.trim(),
+  };
+  return hasMatchReflection(reflection) ? reflection : null;
+}
+
+/** Normalises untrusted stored data into a reflection, or null when empty/invalid. */
+export function parseMatchReflection(value: unknown): MatchReflection | null {
+  if (typeof value !== 'object' || value === null) {
+    return null;
+  }
+  const record = value as Record<string, unknown>;
+  return buildMatchReflection(
+    typeof record.wentWell === 'string' ? record.wentWell : '',
+    typeof record.difficult === 'string' ? record.difficult : '',
+    typeof record.nextPriority === 'string' ? record.nextPriority : '',
+  );
+}
 
 export type MatchResultOutcome = 'W' | 'D' | 'L';
 
@@ -402,5 +434,6 @@ export function serializeMatchStatistics(
     redCards: match.redCards,
     matchRating: match.matchRating,
     notes: match.notes,
+    ...(hasMatchReflection(match.reflection) ? { reflection: match.reflection } : {}),
   };
 }

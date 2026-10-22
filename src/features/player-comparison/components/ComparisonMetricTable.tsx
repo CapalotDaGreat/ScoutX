@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants';
-import { getMetricDelta } from '@/features/player-comparison/services/comparisonMetricsService';
 import { type ComparisonMetricRow } from '@/features/player-comparison/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { cn } from '@/utils/cn';
@@ -14,24 +13,10 @@ export type ComparisonMetricTableProps = {
   playerNames: Record<string, string>;
 };
 
-const deltaStyles = {
-  best: 'bg-accent-muted',
-  worst: 'bg-error-muted',
-  neutral: '',
-} as const;
-
-const deltaTextStyles = {
-  best: 'text-accent',
-  worst: 'text-error',
-  neutral: '',
-} as const;
-
-const deltaMarkers = {
-  best: ' ▲',
-  worst: ' ▼',
-  neutral: '',
-} as const;
-
+/**
+ * Side-by-side values only. No best/worst highlighting: different positions, sample
+ * sizes and coverage make a per-row winner misleading. Missing values stay unavailable.
+ */
 export const ComparisonMetricTable = memo(function ComparisonMetricTable({
   rows,
   playerIds,
@@ -83,31 +68,29 @@ export const ComparisonMetricTable = memo(function ComparisonMetricTable({
             </View>
             {playerIds.map((playerId) => {
               const value = row.values.find((item) => item.playerId === playerId);
-              const delta = getMetricDelta(row, playerId);
-              const display = value?.display ?? '-';
+              const missing = value?.numeric === undefined;
+              const display = missing
+                ? t('comparisonUi.unavailable')
+                : value?.display ?? t('comparisonUi.unavailable');
               const playerName = playerNames[playerId] ?? t('comparisonUi.playerFallback');
-              const a11yLabel =
-                delta === 'neutral'
-                  ? t('comparisonUi.cellA11y', { metric: metricLabel, player: playerName, value: display })
-                  : t(delta === 'best' ? 'comparisonUi.cellBestA11y' : 'comparisonUi.cellWorstA11y', {
-                      metric: metricLabel,
-                      player: playerName,
-                      value: display,
-                    });
 
               return (
                 <View
                   key={`${row.key}-${playerId}`}
                   accessible
-                  accessibilityLabel={a11yLabel}
-                  className={cn('flex-1 justify-center px-2 py-3', deltaStyles[delta])}
+                  accessibilityLabel={t('comparisonUi.cellA11y', {
+                    metric: metricLabel,
+                    player: playerName,
+                    value: display,
+                  })}
+                  className="flex-1 justify-center px-2 py-3"
                 >
                   <Text
                     variant="body-sm"
-                    className={cn('font-sans-semibold', deltaTextStyles[delta])}
+                    color={missing ? 'tertiary' : 'primary'}
+                    className={missing ? undefined : 'font-sans-semibold'}
                   >
                     {display}
-                    {deltaMarkers[delta]}
                   </Text>
                 </View>
               );

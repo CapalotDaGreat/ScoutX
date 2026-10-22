@@ -19,12 +19,10 @@ export const SEARCH_SCOPE_OPTIONS: DiscoverySearchScope[] = [
 
 export const SORT_OPTIONS: DiscoverySortOption[] = [
   'relevance',
-  'overall',
-  'potential',
+  'recently_updated',
   'age',
   'name',
   'distance',
-  'recently_updated',
   'most_viewed',
   'sprint_speed',
   'weak_foot',
@@ -89,18 +87,18 @@ export const SEARCH_SUGGESTIONS = [
 export const DEFAULT_FILTER_PRESETS: FilterPreset[] = [
   {
     id: 'preset-u21-potential',
-    name: 'U21 High Potential',
-    sort: 'potential',
+    name: 'U21 recent evidence',
+    sort: 'recently_updated',
     filters: {
       ...defaultDiscoveryFilters,
       ageMax: 21,
-      potentialMin: 80,
+      recentlyActive: true,
     },
   },
   {
     id: 'preset-verified-wingers',
     name: 'Verified Wingers',
-    sort: 'overall',
+    sort: 'recently_updated',
     filters: {
       ...defaultDiscoveryFilters,
       positions: ['LW', 'RW'],

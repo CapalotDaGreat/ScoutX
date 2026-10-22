@@ -1,6 +1,6 @@
 # Feature inventory (release audit)
 
-Updated 2026-10-16 from the repository and release gate. Statuses:
+Updated 2026-10-17 (controlled evaluation closure). Statuses:
 
 - **Functional** — implemented with automated evidence; device/provider steps may still be open
 - **Partial** — usable core path; named gaps remain
@@ -23,7 +23,8 @@ Updated 2026-10-16 from the repository and release gate. Statuses:
 | Trends (≥ 3 analyses) | Functional | Conservative gating |
 | Highlights / Reel Studio | Functional | Quota metered |
 | Development goals | Functional | Always free (basic) |
-| Scout discovery / compare / watchlists | Functional | Rate-limited search |
+| Post-match reflection | Functional | Player's own words per match; prompted from Today; stripped from public Passport projection |
+| Scout discovery / compare / watchlists | Functional | Rate-limited search; no overall/potential grade sorting; neutral side-by-side comparison (no winner); pipeline search/stage filters + private workspace notes |
 | Evidence requests / trials | Functional | Guardian co-approval for minors |
 | Guardian consent | Functional | Email HMAC links |
 | Guest / public Passport | Functional | |

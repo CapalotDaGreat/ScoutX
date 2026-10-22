@@ -22,6 +22,27 @@ export type StatisticMetricDefinition = {
   maxRadarValue: number;
 };
 
+/**
+ * The player's own post-match reflection, in their own words. This is self-reported,
+ * never shown on the public Passport and never presented as a verified match event
+ * or an AI observation.
+ */
+export type MatchReflection = {
+  wentWell: string;
+  difficult: string;
+  /** One priority the player chose for the next training session. */
+  nextPriority: string;
+};
+
+export function hasMatchReflection(
+  reflection: MatchReflection | null | undefined,
+): reflection is MatchReflection {
+  return Boolean(
+    reflection &&
+      (reflection.wentWell.trim() || reflection.difficult.trim() || reflection.nextPriority.trim()),
+  );
+}
+
 /** `null` means the player did not record the value — never substitute a default. */
 export type PlayerMatchStatistics = {
   id: string;
@@ -42,6 +63,8 @@ export type PlayerMatchStatistics = {
   redCards: number;
   matchRating: number | null;
   notes: string;
+  /** Absent/null until the player writes a post-match reflection. */
+  reflection?: MatchReflection | null;
 };
 
 export type MatchLogPayload = Omit<PlayerMatchStatistics, 'id'>;
@@ -112,6 +135,7 @@ export type MatchHistoryItem = {
     cleanSheet: boolean;
   };
   notes: string;
+  reflection: MatchReflection | null;
 };
 
 export type PlayerStatisticsOverview = {

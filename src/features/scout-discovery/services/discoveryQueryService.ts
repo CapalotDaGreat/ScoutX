@@ -126,18 +126,24 @@ export function filterAndSortPlayers(
   return sortPlayers(filtered, query.sort);
 }
 
+/**
+ * Legacy sort values persisted in old presets/workspaces. Overall/potential are not
+ * PitchProof grades (server projections write null), so they fall back to recency
+ * instead of ranking players by an invented composite.
+ */
+export function normalizeDiscoverySort(sort: DiscoverySortOption): DiscoverySortOption {
+  return sort === 'overall' || sort === 'potential' ? 'recently_updated' : sort;
+}
+
 export function sortPlayers(
   players: DiscoverablePlayer[],
   sort: DiscoverySortOption,
 ): DiscoverablePlayer[] {
   const sorted = [...players];
+  const effectiveSort = normalizeDiscoverySort(sort);
 
   sorted.sort((a, b) => {
-    switch (sort) {
-      case 'overall':
-        return compareNullable(a.overallRating, b.overallRating, 'desc');
-      case 'potential':
-        return compareNullable(a.potentialRating, b.potentialRating, 'desc');
+    switch (effectiveSort) {
       case 'age':
         return compareNullable(a.age, b.age, 'asc');
       case 'name':

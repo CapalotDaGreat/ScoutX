@@ -67,7 +67,17 @@
     "clearFilters": "Filters wissen",
     "compare": "Vergelijken",
     "addToPipeline": "Aan pipeline toevoegen",
-    "viewProfile": "Profiel bekijken"
+    "viewProfile": "Profiel bekijken",
+    "matchesCount_one": "{{count}} wedstrijd",
+    "matchesCount_other": "{{count}} wedstrijden",
+    "hasHighlights": "Highlightvideo beschikbaar",
+    "analysisSamples_one": "{{count}} geanalyseerde wedstrijd",
+    "analysisSamples_other": "{{count}} geanalyseerde wedstrijden",
+    "resultsCount_one": "{{count}} speler gevonden",
+    "resultsCount_other": "{{count}} spelers gevonden",
+    "resultsCountMore_one": "{{count}} speler geladen, meer beschikbaar",
+    "resultsCountMore_other": "{{count}} spelers geladen, meer beschikbaar",
+    "saveError": "Opgeslagen spelers konden niet worden bijgewerkt. Probeer het opnieuw."
   },
   "filters": {
     "minAge": "Min. leeftijd",
@@ -137,7 +147,12 @@
     "board": "Bord",
     "emptyTitle": "Je pipeline is leeg",
     "emptyActionDescription": "Sla spelers op vanuit Ontdekken om ze door de recruitmentfases te volgen.",
-    "discoverPlayers": "Spelers ontdekken"
+    "discoverPlayers": "Spelers ontdekken",
+    "searchPlaceholder": "Zoek op naam, club of positie",
+    "stageAll": "Alle · {{count}}",
+    "noFilteredTitle": "Geen spelers voor deze filters",
+    "noFilteredDescription": "Probeer een andere zoekopdracht, fase, map of lijst.",
+    "clearSearch": "Pipelinefilters wissen"
   },
   "comparison": {
     "title": "Spelers vergelijken",
@@ -152,7 +167,7 @@
     "needsTwoPlayers": "Voeg minstens twee spelers toe om grafieken en tabellen naast elkaar te zien.",
     "replacePlayer": "Speler vervangen",
     "addPlayerToComparison": "Speler aan vergelijking toevoegen",
-    "metricSubtitle": "Beste waarde gemarkeerd met ▲ (groen), zwakste met ▼ (rood).",
+    "metricSubtitle": "Waarden staan naast elkaar zonder winnaar. Controleer dekking en steekproefgrootte voordat je verschillende rollen vergelijkt.",
     "sections": {
       "radar": "Radarprofiel",
       "statistics": "Statistieken",
@@ -225,7 +240,12 @@
       "clubCount_other": "{{count}} clubs",
       "footageSubtitle": "Beschikbare highlightvideo's",
       "honoursSubtitle": "Prestaties in de loopbaan"
-    }
+    },
+    "movementAvailable": "Gedeeld GPS-overzicht beschikbaar",
+    "distanceKm": "Afstand (km)",
+    "sprintSpeed": "Topsnelheid (km/h)",
+    "movementSource": "Door de speler gedeeld GPS-sessieoverzicht. Ontbrekende waarden worden als niet beschikbaar getoond.",
+    "contactViaTrial": "Contact begint via een proeftraininguitnodiging of bewijsverzoek, niet via directe berichten."
   },
   "search": {
     "scopeLabel": "Zoeken in",
@@ -249,7 +269,7 @@
     "includeSearchHint": "Herstelt ook de zoektekst en het bereik",
     "deleteFilter": "{{name}} verwijderen",
     "presets": {
-      "preset-u21-potential": "O21 met veel potentieel",
+      "preset-u21-potential": "Onder 21 met recent bewijs",
       "preset-verified-wingers": "Geverifieerde vleugelspelers",
       "preset-available-now": "Nu beschikbaar"
     }
@@ -587,7 +607,12 @@
     "shortlistName": "Naam shortlist",
     "shortlistPlaceholder": "bijv. Zomertransferperiode",
     "description": "Beschrijving",
-    "descriptionPlaceholder": "Optionele context voor je team"
+    "descriptionPlaceholder": "Optionele context voor je team",
+    "notesLabel": "Privé scoutingnotities",
+    "notesPlaceholder": "Sterke punten, twijfels en volgende stap…",
+    "notesPrivate": "Alleen zichtbaar in je scoutingruimte.",
+    "notesSave": "Notities opslaan",
+    "notesError": "Notities konden niet worden opgeslagen. Probeer het opnieuw."
   },
   "comparisonUi": {
     "metricHeader": "Statistiek",
@@ -618,7 +643,8 @@
     "trendScale": "Vormpunten per wedstrijd: winst 3, gelijk 1, verlies 0.",
     "trendPlayerA11y": "{{name}}: {{values}}",
     "trendPlayerEmptyA11y": "{{name}}: geen vastgelegde uitslagen",
-    "matchShort": "W{{n}}"
+    "matchShort": "W{{n}}",
+    "unavailable": "Niet beschikbaar"
   },
   "comparisonMetric": {
     "goals": "Doelpunten",
@@ -636,5 +662,9 @@
     "distance": "Gem. afstand (km)",
     "topSpeed": "Topsnelheid (km/u)",
     "sessions": "GPS-sessies"
+  },
+  "playerCard": {
+    "openHint": "Open het volledige spelersprofiel",
+    "footValue": "Voet {{foot}}"
   }
 }

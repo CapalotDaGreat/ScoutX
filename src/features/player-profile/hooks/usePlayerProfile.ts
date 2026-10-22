@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { PlayerProfileRepository } from '@/features/player-profile/repositories/PlayerProfileRepository';
 import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
 import { type PlayerProfile } from '@/features/player-profile/types';
-import { type MatchLogPayload } from '@/features/player-statistics';
+import { type MatchLogPayload, type MatchReflection } from '@/features/player-statistics';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { ActivityRecorder } from '@/features/activity-feed/services/activityRecorder';
 import { ensurePublicPassportProjected } from '@/features/public-portfolio/services/publicPassportSyncService';
@@ -183,6 +183,27 @@ export function usePlayerProfile() {
     [user?.id],
   );
 
+  const saveMatchReflection = useCallback(
+    async (matchId: string, reflection: MatchReflection | null) => {
+      if (!user?.id) {
+        throw new Error('User is not authenticated.');
+      }
+      setIsSaving(true);
+      setError(null);
+      try {
+        await PlayerProfileRepository.getInstance().updateMatchReflection(user.id, matchId, reflection);
+        await refreshProfile();
+      } catch (err) {
+        const message = toUserMessage(err, 'Failed to save reflection.');
+        setError(message);
+        throw err;
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [refreshProfile, user?.id],
+  );
+
   return useMemo(
     () => ({
       profile,
@@ -191,9 +212,10 @@ export function usePlayerProfile() {
       error,
       saveProfile,
       saveMatch,
+      saveMatchReflection,
       uploadImage,
       refreshProfile,
     }),
-    [error, isLoading, isSaving, profile, saveMatch, saveProfile, uploadImage, refreshProfile],
+    [error, isLoading, isSaving, profile, saveMatch, saveMatchReflection, saveProfile, uploadImage, refreshProfile],
   );
 }

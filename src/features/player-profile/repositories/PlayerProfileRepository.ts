@@ -19,6 +19,7 @@ import { appendSystemJourneyEvents } from '@/features/career-timeline/services/c
 import { serializeFootballJourney } from '@/features/football-journey/models/JourneyModel';
 import {
   type MatchLogPayload,
+  type MatchReflection,
   type PlayerMatchStatistics,
 } from '@/features/player-statistics/types';
 
@@ -164,6 +165,51 @@ export class PlayerProfileRepository {
       return match;
     } catch (error) {
       console.error('Error appending player match:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Saves (or clears, with null) the player's own reflection for one match. Updates the
+   * profile match array and the canonical match document atomically, mirroring appendMatch.
+   * Reflections never feed discovery or public projections.
+   */
+  public async updateMatchReflection(
+    userId: string,
+    matchId: string,
+    reflection: MatchReflection | null,
+  ): Promise<void> {
+    const db = getFirestoreDb();
+    if (!db) {
+      throw new Error('Firestore is not initialized.');
+    }
+
+    const docRef = doc(db, 'profiles', userId);
+    try {
+      await runTransaction(db, async (transaction) => {
+        const snapshot = await transaction.get(docRef);
+        if (!snapshot.exists()) {
+          throw new Error('Profile not found.');
+        }
+        const currentMatches = parsePlayerMatchStatistics(snapshot.data().statisticsMatches);
+        if (!currentMatches.some((match) => match.id === matchId)) {
+          throw new Error('Match not found.');
+        }
+        const nextMatches = currentMatches.map((match) =>
+          match.id === matchId ? { ...match, reflection } : match,
+        );
+        transaction.set(
+          docRef,
+          { statisticsMatches: nextMatches.map(serializeMatchStatistics) },
+          { merge: true },
+        );
+        const updated = nextMatches.find((match) => match.id === matchId);
+        if (updated) {
+          MatchRepository.getInstance().setInTransaction(transaction, db, userId, updated);
+        }
+      });
+    } catch (error) {
+      console.error('Error updating match reflection:', error);
       throw error;
     }
   }

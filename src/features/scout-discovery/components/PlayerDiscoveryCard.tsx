@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Image, Pressable, View, type ViewStyle } from 'react-native';
 import { Badge } from '@/components/primitives/Badge';
 import { StarRating } from '@/components/primitives/StarRating';
@@ -6,8 +6,7 @@ import { Text } from '@/components/primitives/Text';
 import { AnimatedListItem } from '@/components/feedback/AnimatedListItem';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
 import { PlayerQuickActions } from '@/features/scout-discovery/components/PlayerQuickActions';
-import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
-import { formatRating, joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
+import { joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
@@ -22,6 +21,8 @@ export type PlayerDiscoveryCardProps = {
   className?: string;
   isSaved?: boolean;
   onToggleSave?: (playerId: string) => void;
+  /** True while a save mutation for this player is in flight; blocks duplicate taps. */
+  saveDisabled?: boolean;
   isInComparison?: boolean;
   canAddToComparison?: boolean;
   onToggleCompare?: (playerId: string) => void;
@@ -39,6 +40,13 @@ const availabilityLabelKey = {
   on_loan: 'onLoan',
 } as const;
 
+export function playerInitials(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
+  return `${parts[0]!.charAt(0)}${parts[parts.length - 1]!.charAt(0)}`.toUpperCase();
+}
+
 export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
   player,
   onPress,
@@ -46,17 +54,31 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
   className,
   isSaved = false,
   onToggleSave,
+  saveDisabled = false,
   isInComparison = false,
   canAddToComparison = true,
   onToggleCompare,
 }: PlayerDiscoveryCardProps) {
   const { colors } = useTheme();
   const { t } = useAppTranslation(['scout', 'trust']);
+  const [coverFailed, setCoverFailed] = useState(false);
+  const [avatarFailed, setAvatarFailed] = useState(false);
 
   const handlePress = () => {
     void triggerHaptic('light');
     onPress(player);
   };
+
+  const showCover = player.coverImageUrl.trim().length > 0 && !coverFailed;
+  const showAvatar = player.avatarUrl.trim().length > 0 && !avatarFailed;
+  const footLabel = player.preferredFoot ? t(`scout:filters.${player.preferredFoot}`) : null;
+  const evidenceParts = [
+    t('scout:discover.matchesCount', { count: player.matchCount }),
+    player.hasHighlightVideos ? t('scout:discover.hasHighlights') : null,
+    player.analysisSampleCount > 0
+      ? t('scout:discover.analysisSamples', { count: player.analysisSampleCount })
+      : null,
+  ].filter(Boolean);
 
   return (
     <AnimatedListItem index={index}>
@@ -64,9 +86,11 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
         accessibilityRole="button"
         accessibilityLabel={joinKnown([
           player.fullName,
-          player.position.length > 0 ? player.position.join('/') : null,
-          player.overallRating !== null ? `overall ${formatRating(player.overallRating)}` : null,
+          player.primaryPosition,
+          player.club || null,
+          t('scout:discover.matchesCount', { count: player.matchCount }),
         ])}
+        accessibilityHint={t('scout:playerCard.openHint')}
         onPress={handlePress}
         className={cn(
           'overflow-hidden rounded-2xl border border-border bg-surface',
@@ -76,9 +100,23 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
           pressed ? ({ transform: [{ scale: 0.985 }] } satisfies ViewStyle) : undefined
         }
       >
-        <View className="relative h-32">
-          <Image source={{ uri: player.coverImageUrl }} className="h-full w-full" resizeMode="cover" />
-          <View className="absolute inset-0 bg-black/30" />
+        <View className="relative h-32 bg-background-secondary">
+          {showCover ? (
+            <Image
+              source={{ uri: player.coverImageUrl }}
+              className="h-full w-full"
+              resizeMode="cover"
+              onError={() => setCoverFailed(true)}
+              accessibilityIgnoresInvertColors
+            />
+          ) : (
+            <View className="flex-1 items-center justify-center" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+              <Text variant="body-lg" color="tertiary" className="font-sans-bold">
+                {playerInitials(player.fullName)}
+              </Text>
+            </View>
+          )}
+          {showCover ? <View className="absolute inset-0 bg-black/30" /> : null}
           <View className="absolute left-3 top-3 flex-row gap-2">
             {player.verified ? (
               <Badge label={t('trust:verified')} variant="prestige" size="sm" />
@@ -96,37 +134,45 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
               <PlayerQuickActions
                 isFavourite={isSaved}
                 onToggleFavourite={onToggleSave ? () => onToggleSave(player.id) : undefined}
+                favouriteDisabled={saveDisabled}
                 isInComparison={isInComparison}
                 canAddToComparison={canAddToComparison}
                 onToggleCompare={onToggleCompare ? () => onToggleCompare(player.id) : undefined}
               />
             </View>
           ) : null}
-          <View className="absolute bottom-3 left-3 right-3 flex-row items-end justify-between">
-            <View>
-              <Text variant="caption" className="text-white/80">
+          {showCover && (player.club || player.league) ? (
+            <View className="absolute bottom-3 left-3 right-3">
+              <Text variant="caption" className="text-white/80" numberOfLines={1}>
                 {player.league}
               </Text>
-              <Text variant="body-sm" className="font-sans-bold text-white">
+              <Text variant="body-sm" className="font-sans-bold text-white" numberOfLines={1}>
                 {player.club}
               </Text>
             </View>
-            {player.overallRating !== null ? (
-              <View className="rounded-lg bg-black/55 px-2.5 py-1">
-                <Text variant="caption" className="font-sans-bold text-white">
-                  OVR {formatRating(player.overallRating)}
-                </Text>
-              </View>
-            ) : null}
-          </View>
+          ) : null}
         </View>
 
         <View className="gap-3 p-4">
           <View className="flex-row items-start gap-3">
-            <Image
-              source={{ uri: player.avatarUrl }}
-              className="h-12 w-12 rounded-full border-2 border-surface"
-            />
+            {showAvatar ? (
+              <Image
+                source={{ uri: player.avatarUrl }}
+                className="h-12 w-12 rounded-full border-2 border-surface"
+                onError={() => setAvatarFailed(true)}
+                accessibilityIgnoresInvertColors
+              />
+            ) : (
+              <View
+                className="h-12 w-12 items-center justify-center rounded-full bg-background-secondary"
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                <Text variant="body-sm" weight="bold" color="secondary">
+                  {playerInitials(player.fullName)}
+                </Text>
+              </View>
+            )}
             <View className="min-w-0 flex-1">
               <View className="flex-row items-center gap-1">
                 <Text weight="semibold" numberOfLines={1} className="flex-shrink">
@@ -136,17 +182,21 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
                   <CheckCircle2 size={14} color={colors.accent} strokeWidth={2} />
                 ) : null}
               </View>
-              <Text variant="caption" color="secondary">
+              <Text variant="caption" color="secondary" numberOfLines={2}>
+                {joinKnown([
+                  player.primaryPosition,
+                  player.secondaryPositions.length > 0 ? player.secondaryPositions.join(' / ') : null,
+                  player.club || null,
+                ])}
+              </Text>
+              <Text variant="caption" color="tertiary" numberOfLines={1}>
                 {joinKnown([
                   player.age,
-                  player.nationality,
-                  player.position.length > 0 ? player.position.join(' / ') : null,
+                  player.nationality || null,
+                  footLabel ? t('scout:playerCard.footValue', { foot: footLabel }) : null,
                 ])}
               </Text>
             </View>
-            {player.potentialRating !== null ? (
-              <RatingPill label={t('comparisonUi.potentialLabel')} value={formatRating(player.potentialRating)} emphasis="primary" />
-            ) : null}
           </View>
 
           {player.weakFoot !== null || player.skillMoves !== null ? (
@@ -174,10 +224,10 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({
             </View>
           ) : null}
 
-          <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center justify-between gap-3">
             <PlayerFormStrip form={player.form} size="md" />
-            <Text variant="caption" color="secondary">
-              {player.matchCount} matches
+            <Text variant="caption" color="secondary" numberOfLines={2} className="flex-1 text-right">
+              {evidenceParts.join(' · ')}
             </Text>
           </View>
         </View>

@@ -213,6 +213,9 @@ function PlayerTabsContainer() {
         case 'development':
           tabNavigationRef.current?.navigate('Performance', { segment: 'development' });
           break;
+        case 'matchReflection':
+          tabNavigationRef.current?.navigate('Performance', { segment: 'stats' });
+          break;
       }
     },
     [handleOnboardingStepPress, openLogMatch, profile?.statisticsMatches, stackNavigation],

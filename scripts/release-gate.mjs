@@ -158,7 +158,11 @@ check('Legal documents approved by counsel', () => {
   const pending = trackedFiles().filter(
     (file) => file.startsWith('legal/documents/') && TEXT_FILE.test(file) && /LEGAL_REVIEW_REQUIRED/.test(read(file)),
   );
-  return pending.length === 0 ? [PASS, 'no LEGAL_REVIEW_REQUIRED markers'] : [LEGAL, `${pending.length} document(s) marked LEGAL_REVIEW_REQUIRED`];
+  if (pending.length > 0) {
+    return [LEGAL, `${pending.length} document(s) marked LEGAL_REVIEW_REQUIRED`];
+  }
+  // Absence of markers is not proof of counsel review (residual-risk / owner process).
+  return [NOT_VALIDATED, 'no LEGAL_REVIEW_REQUIRED markers; counsel review not independently verified'];
 });
 
 check('Retention periods approved', () => {
@@ -191,9 +195,24 @@ function functionsEnv() {
 }
 
 check('AI footage processing approved', () => {
-  if (!/AI_FOOTAGE_PROCESSING_APPROVED/.test(read('functions/src/ai/providerConfig.ts'))) {
-    return [FAIL, 'footage privacy gate missing from functions/src/ai/providerConfig.ts'];
+  const config = read('functions/src/ai/providerConfig.ts');
+  const problems = [];
+  if (!/export function isFootageProcessingApproved/.test(config)) {
+    problems.push('isFootageProcessingApproved missing');
   }
+  // Fail closed: only exact "true" (or emulator) authorises footage.
+  if (!/AI_FOOTAGE_PROCESSING_APPROVED\?\.trim\(\) === 'true'/.test(config)) {
+    problems.push('approval must require exact env value true');
+  }
+  for (const [file, needle] of [
+    ['functions/src/uploads/sessions.ts', 'isFootageProcessingApproved'],
+    ['functions/src/analysis/frameAnalysis.ts', 'isFootageProcessingApproved'],
+    ['functions/src/analysis/segmentPipeline.ts', 'isFootageProcessingApproved'],
+    ['functions/src/analysis/videoConsent.ts', 'isFootageProcessingApproved'],
+  ]) {
+    if (!new RegExp(needle).test(read(file))) problems.push(`${file} does not enforce the footage gate`);
+  }
+  if (problems.length) return [FAIL, problems.join('; ')];
   return /^AI_FOOTAGE_PROCESSING_APPROVED=true$/m.test(functionsEnv())
     ? [PASS, 'operator approved the AI provider for footage']
     : [EXTERNAL, 'AI_PRIVACY_CONFIGURATION_REQUIRED: footage analysis stays off until AI_FOOTAGE_PROCESSING_APPROVED=true'];
@@ -497,16 +516,45 @@ check('Encryption inventory documented', () => {
 });
 
 check('Entitlement matrix matches server plans', () => {
-  const plans = read('functions/src/entitlements/plans.ts');
+  const plansSource = read('functions/src/entitlements/plans.ts');
   const matrix = read('docs/release/entitlement-matrix.md');
   const inventory = read('docs/release/feature-inventory.md');
   const problems = [];
-  if (!/NEVER_PAYWALLED/.test(plans)) problems.push('NEVER_PAYWALLED missing from plans.ts');
-  if (!/frame_analysis: 3/.test(plans) || !/full_match_analysis: 1/.test(plans)) {
-    problems.push('free limits drifted in plans.ts');
+  if (!/NEVER_PAYWALLED/.test(plansSource)) problems.push('NEVER_PAYWALLED missing from plans.ts');
+  if (!/consumeQuota/.test(read('functions/src/entitlements/quotaService.ts'))) {
+    problems.push('quotaService missing consumeQuota');
   }
-  if (!/frame_analysis/.test(matrix) || !/Never paywalled/.test(matrix)) {
-    problems.push('docs/release/entitlement-matrix.md incomplete');
+  if (!/consumeQuota/.test(read('functions/src/uploads/sessions.ts'))) {
+    problems.push('upload sessions do not consume full_match quota');
+  }
+  // Load compiled plans (source of truth) and require the matrix to cite the same numbers.
+  const lib = join(root, 'functions/lib/entitlements/plans.js');
+  if (!existsSync(lib)) {
+    execFileSync(npm, ['run', 'build', '--prefix', 'functions'], { cwd: root, stdio: 'ignore', shell: process.platform === 'win32' });
+  }
+  const { PLANS, NEVER_PAYWALLED } = createRequire(import.meta.url)(lib);
+  const expected = [
+    ['frame_analysis', PLANS.free.limits.frame_analysis, PLANS.premium.limits.frame_analysis],
+    ['full_match_analysis', PLANS.free.limits.full_match_analysis, PLANS.premium.limits.full_match_analysis],
+    ['reel_export', PLANS.free.limits.reel_export, PLANS.premium.limits.reel_export],
+  ];
+  for (const [feature, freeLimit, premiumLimit] of expected) {
+    const row = new RegExp(`${feature}[^\\n]*\\|\\s*${freeLimit}\\s*\\|\\s*${premiumLimit}\\s*\\|`);
+    if (!row.test(matrix)) {
+      problems.push(`matrix missing ${feature} free=${freeLimit} premium=${premiumLimit} from plans.ts`);
+    }
+  }
+  if (!new RegExp(`Concurrent analysis jobs\\s*\\|\\s*${PLANS.free.maxConcurrentJobs}\\s*\\|\\s*${PLANS.premium.maxConcurrentJobs}\\s*\\|`).test(matrix)) {
+    problems.push('matrix concurrent-job limits do not match plans.ts');
+  }
+  if (!/Never paywalled/i.test(matrix)) {
+    problems.push('matrix missing Never paywalled section');
+  }
+  for (const item of NEVER_PAYWALLED) {
+    const prose = item.replace(/_/g, '[_ ]');
+    if (!new RegExp(prose, 'i').test(matrix)) {
+      problems.push(`never-paywalled item ${item} not reflected in matrix`);
+    }
   }
   if (!/Unavailable/.test(inventory) || !/Continuous tracking/.test(inventory)) {
     problems.push('docs/release/feature-inventory.md must list CV as unavailable');
@@ -514,8 +562,24 @@ check('Entitlement matrix matches server plans', () => {
   if (!/presentPaywall/.test(read('src/features/premium/services/purchasesService.ts'))) {
     problems.push('paywall entry point missing');
   }
+  if (/request\.data\.isPremium|data\.isPremium/.test(read('functions/src/entitlements/quotaService.ts'))) {
+    problems.push('quotaService must not read client isPremium');
+  }
   return problems.length === 0
-    ? [PASS, 'plans, matrix and inventory agree Free is metered and CV is unavailable']
+    ? [PASS, `plans.ts limits mirrored in matrix (free frame ${PLANS.free.limits.frame_analysis}, full ${PLANS.free.limits.full_match_analysis})`]
+    : [FAIL, problems.join('; ')];
+});
+
+check('Controlled evaluation checklist present', () => {
+  const doc = read('docs/release/controlled-evaluation-checklist.md');
+  const owner = read('docs/release/owner-acceptance.md');
+  const problems = [];
+  if (!/Sandbox purchases/.test(doc)) problems.push('purchase tests missing from checklist');
+  if (!/Pass \/ Fail/.test(doc)) problems.push('pass/fail columns missing');
+  if (!/Public release remains blocked/.test(doc)) problems.push('public-release blocker note missing');
+  if (!/SEC-10/.test(owner) || !/How to accept/.test(owner)) problems.push('owner-acceptance process incomplete');
+  return problems.length === 0
+    ? [PASS, 'controlled-evaluation and owner-acceptance docs ready']
     : [FAIL, problems.join('; ')];
 });
 

@@ -232,5 +232,24 @@
     "yellow_other": "{{count}} gialli",
     "red_one": "{{count}} rosso",
     "red_other": "{{count}} rossi"
+  },
+  "reflection": {
+    "title": "Riflessione su {{opponent}}",
+    "intro": "Le tue parole su questa partita. È la tua riflessione, non un registro verificato né un giudizio dell’IA.",
+    "wentWell": "Cosa è andato bene",
+    "wentWellPlaceholder": "Un momento o una scelta riuscita…",
+    "difficult": "Cosa è stato difficile",
+    "difficultPlaceholder": "Dove la partita ti ha messo in difficoltà…",
+    "nextPriority": "Una priorità per la prossima sessione",
+    "nextPriorityPlaceholder": "Una cosa precisa da allenare dopo…",
+    "privateNote": "Solo tu vedi questo. Le riflessioni non appaiono mai sul tuo Passport pubblico.",
+    "save": "Salva riflessione",
+    "saveError": "Impossibile salvare la riflessione. Riprova.",
+    "clear": "Elimina riflessione",
+    "historyLabel": "La tua riflessione",
+    "add": "Aggiungi una riflessione su {{opponent}}",
+    "edit": "Modifica la tua riflessione su {{opponent}}",
+    "addShort": "Aggiungi riflessione",
+    "editShort": "Modifica riflessione"
   }
 }

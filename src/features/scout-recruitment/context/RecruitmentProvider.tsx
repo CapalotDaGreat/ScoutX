@@ -43,6 +43,7 @@ type RecruitmentContextValue = {
   addToShortlist: (shortlistId: string, playerId: string) => Promise<void>;
   removeFromShortlist: (shortlistId: string, playerId: string) => Promise<void>;
   movePlayerWithinStage: (playerId: string, targetSortIndex: number) => Promise<void>;
+  updateEntryNotes: (playerId: string, notes: string) => Promise<void>;
 };
 
 const RecruitmentContext = createContext<RecruitmentContextValue | null>(null);
@@ -221,6 +222,16 @@ export function RecruitmentProvider({
     [repository, runMutation, scoutId],
   );
 
+  const updateEntryNotes = useCallback(
+    async (playerId: string, notes: string) => {
+      if (!scoutId) {
+        return;
+      }
+      await runMutation(() => repository.updateEntryNotes(scoutId, playerId, notes));
+    },
+    [repository, runMutation, scoutId],
+  );
+
   const entriesByStage = useMemo(
     () => groupEntriesByStage(workspace?.entries ?? []),
     [workspace?.entries],
@@ -245,9 +256,11 @@ export function RecruitmentProvider({
       addToShortlist,
       removeFromShortlist,
       movePlayerWithinStage,
+      updateEntryNotes,
     }),
     [
       addToShortlist,
+      updateEntryNotes,
       assignFolder,
       createFolder,
       createShortlist,

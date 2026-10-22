@@ -6,7 +6,8 @@ export type TodayRoute =
   | 'manageVideos'
   | 'trials'
   | 'passportSetup'
-  | 'development';
+  | 'development'
+  | 'matchReflection';
 
 export type NextBestActionType =
   | 'log_first_match'
@@ -21,7 +22,8 @@ export type NextBestActionType =
   | 'set_goal'
   | 'log_training'
   | 'review_goal'
-  | 'log_post_match';
+  | 'log_post_match'
+  | 'reflect_match';
 
 export type ActionParams = Record<string, string | number>;
 
@@ -57,6 +59,10 @@ export type TodayMatch = {
   id: string;
   date: string;
   opponent: string;
+  /** Undefined when reflection state is unknown — the engine must not guess. */
+  hasReflection?: boolean;
+  /** Next-training priority the player set in an earlier reflection, if any. */
+  reflectionPriority?: string | null;
 };
 
 export type TodayAnalysisJob = {

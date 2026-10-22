@@ -67,7 +67,17 @@
     "clearFilters": "Filter löschen",
     "compare": "Vergleichen",
     "addToPipeline": "Zur Pipeline hinzufügen",
-    "viewProfile": "Profil ansehen"
+    "viewProfile": "Profil ansehen",
+    "matchesCount_one": "{{count}} Spiel",
+    "matchesCount_other": "{{count}} Spiele",
+    "hasHighlights": "Highlight-Video verfügbar",
+    "analysisSamples_one": "{{count}} analysiertes Spiel",
+    "analysisSamples_other": "{{count}} analysierte Spiele",
+    "resultsCount_one": "{{count}} Spieler gefunden",
+    "resultsCount_other": "{{count}} Spieler gefunden",
+    "resultsCountMore_one": "{{count}} Spieler geladen, weitere verfügbar",
+    "resultsCountMore_other": "{{count}} Spieler geladen, weitere verfügbar",
+    "saveError": "Gespeicherte Spieler konnten nicht aktualisiert werden. Bitte erneut versuchen."
   },
   "filters": {
     "minAge": "Mindestalter",
@@ -137,7 +147,12 @@
     "board": "Board",
     "emptyTitle": "Deine Pipeline ist leer",
     "emptyActionDescription": "Speichere Spieler aus Entdecken, um sie durch die Rekrutierungsphasen zu verfolgen.",
-    "discoverPlayers": "Spieler entdecken"
+    "discoverPlayers": "Spieler entdecken",
+    "searchPlaceholder": "Pipeline nach Name, Verein oder Position durchsuchen",
+    "stageAll": "Alle · {{count}}",
+    "noFilteredTitle": "Keine Spieler für diese Filter",
+    "noFilteredDescription": "Andere Suche, Phase, Ordner oder Liste versuchen.",
+    "clearSearch": "Pipeline-Filter zurücksetzen"
   },
   "comparison": {
     "title": "Spielervergleich",
@@ -152,7 +167,7 @@
     "needsTwoPlayers": "Füge mindestens zwei Spieler hinzu, um Diagramme und Tabellen im direkten Vergleich zu sehen.",
     "replacePlayer": "Spieler ersetzen",
     "addPlayerToComparison": "Spieler zum Vergleich hinzufügen",
-    "metricSubtitle": "Bester Wert mit ▲ (grün), schwächster mit ▼ (rot) markiert.",
+    "metricSubtitle": "Werte werden ohne Sieger nebeneinander gezeigt. Vor einem Vergleich Deckung und Stichprobengrösse prüfen, besonders bei unterschiedlichen Rollen.",
     "sections": {
       "radar": "Radar-Profil",
       "statistics": "Statistiken",
@@ -225,7 +240,12 @@
       "clubCount_other": "{{count}} Vereine",
       "footageSubtitle": "Vorhandene Highlight-Videos",
       "honoursSubtitle": "Karriereerfolge"
-    }
+    },
+    "movementAvailable": "Geteilte GPS-Zusammenfassung verfügbar",
+    "distanceKm": "Distanz (km)",
+    "sprintSpeed": "Höchstgeschwindigkeit (km/h)",
+    "movementSource": "Vom Spieler geteilte GPS-Sitzungsübersicht. Fehlende Werte werden als nicht verfügbar angezeigt.",
+    "contactViaTrial": "Kontakt erfolgt über eine Probetrainings-Einladung oder Beweisanfrage, nicht über Direktnachrichten."
   },
   "search": {
     "scopeLabel": "Suchen in",
@@ -249,7 +269,7 @@
     "includeSearchHint": "Stellt auch Text und Suchbereich wieder her",
     "deleteFilter": "{{name}} löschen",
     "presets": {
-      "preset-u21-potential": "U21 mit hohem Potenzial",
+      "preset-u21-potential": "Unter 21 mit aktuellen Nachweisen",
       "preset-verified-wingers": "Verifizierte Flügelspieler",
       "preset-available-now": "Sofort verfügbar"
     }
@@ -587,7 +607,12 @@
     "shortlistName": "Name der Shortlist",
     "shortlistPlaceholder": "z. B. Sommer-Transferfenster",
     "description": "Beschreibung",
-    "descriptionPlaceholder": "Optionaler Kontext für dein Team"
+    "descriptionPlaceholder": "Optionaler Kontext für dein Team",
+    "notesLabel": "Private Scouting-Notizen",
+    "notesPlaceholder": "Stärken, Bedenken und nächster Schritt…",
+    "notesPrivate": "Nur in deinem Scouting-Bereich sichtbar.",
+    "notesSave": "Notizen speichern",
+    "notesError": "Notizen konnten nicht gespeichert werden. Bitte erneut versuchen."
   },
   "comparisonUi": {
     "metricHeader": "Kennzahl",
@@ -618,7 +643,8 @@
     "trendScale": "Formpunkte pro Spiel: Sieg 3, Unentschieden 1, Niederlage 0.",
     "trendPlayerA11y": "{{name}}: {{values}}",
     "trendPlayerEmptyA11y": "{{name}}: keine erfassten Ergebnisse",
-    "matchShort": "S{{n}}"
+    "matchShort": "S{{n}}",
+    "unavailable": "Nicht verfügbar"
   },
   "comparisonMetric": {
     "goals": "Tore",
@@ -636,5 +662,9 @@
     "distance": "Ø Distanz (km)",
     "topSpeed": "Höchsttempo (km/h)",
     "sessions": "GPS-Einheiten"
+  },
+  "playerCard": {
+    "openHint": "Vollständiges Spielerprofil öffnen",
+    "footValue": "Fuss {{foot}}"
   }
 }

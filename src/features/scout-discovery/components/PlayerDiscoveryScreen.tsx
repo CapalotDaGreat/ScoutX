@@ -83,15 +83,37 @@ export function PlayerDiscoveryScreen({
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [saveModalVisible, setSaveModalVisible] = useState(false);
+  const [pendingSaveIds, setPendingSaveIds] = useState<ReadonlySet<string>>(new Set());
+  const [saveError, setSaveError] = useState<string | null>(null);
   const canSaveFilters = allowSavedFilters ?? !guestMode;
 
-  const { players, isLoading, isLoadingMore, error, loadMore, refresh } = usePlayerDiscovery({
+  const { players, isLoading, isLoadingMore, error, hasMore, loadMore, refresh } = usePlayerDiscovery({
     search,
     searchScope,
     filters,
     sort,
     enabled: true,
   });
+
+  const handleToggleSave = useCallback(
+    async (player: DiscoverablePlayer) => {
+      if (pendingSaveIds.has(player.id)) return;
+      setPendingSaveIds((current) => new Set(current).add(player.id));
+      setSaveError(null);
+      try {
+        await playerSave.toggleSave(player);
+      } catch {
+        setSaveError(t('scout:discover.saveError'));
+      } finally {
+        setPendingSaveIds((current) => {
+          const next = new Set(current);
+          next.delete(player.id);
+          return next;
+        });
+      }
+    },
+    [pendingSaveIds, playerSave, t],
+  );
 
   const defaultPresetName = useMemo(() => {
     const nextIndex = workspace.filterPresets.filter((preset) =>
@@ -150,11 +172,12 @@ export function PlayerDiscoveryScreen({
           index={index}
           onPress={onPlayerPress}
           isSaved={guestMode ? false : playerSave.isSaved(item.id)}
+          saveDisabled={pendingSaveIds.has(item.id)}
           onToggleSave={
             guestMode
               ? undefined
               : () => {
-                  void playerSave.toggleSave(item);
+                  void handleToggleSave(item);
                 }
           }
           isInComparison={guestMode ? false : workspace.isInComparison(item.id)}
@@ -173,7 +196,7 @@ export function PlayerDiscoveryScreen({
         />
       </View>
     ),
-    [guestMode, onPlayerPress, playerSave, workspace],
+    [guestMode, handleToggleSave, onPlayerPress, pendingSaveIds, playerSave, workspace],
   );
 
   const listHeader = (
@@ -223,6 +246,18 @@ export function PlayerDiscoveryScreen({
       </View>
       <ActiveFilterChips filters={filters} onChange={onFiltersReplace} onClearAll={onResetFilters} />
       <DiscoverySortBar sort={sort} onSortChange={onSortChange} />
+      {!isLoading ? (
+        <Text variant="caption" color="secondary" accessibilityLiveRegion="polite">
+          {hasMore
+            ? t('scout:discover.resultsCountMore', { count: players.length })
+            : t('scout:discover.resultsCount', { count: players.length })}
+        </Text>
+      ) : null}
+      {saveError ? (
+        <Text variant="body-sm" color="error" accessibilityLiveRegion="assertive">
+          {saveError}
+        </Text>
+      ) : null}
     </View>
   );
 

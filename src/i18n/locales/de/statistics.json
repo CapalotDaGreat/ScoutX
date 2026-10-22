@@ -232,5 +232,24 @@
     "yellow_other": "{{count}} Gelb",
     "red_one": "{{count}} Rot",
     "red_other": "{{count}} Rot"
+  },
+  "reflection": {
+    "title": "Reflexion zu {{opponent}}",
+    "intro": "Deine eigenen Worte zu diesem Spiel. Das ist deine Reflexion, kein verifizierter Spielbericht und kein KI-Urteil.",
+    "wentWell": "Was gut lief",
+    "wentWellPlaceholder": "Ein Moment oder eine Entscheidung, die gut war…",
+    "difficult": "Was schwierig war",
+    "difficultPlaceholder": "Wo dich das Spiel gefordert hat…",
+    "nextPriority": "Ein Schwerpunkt für das nächste Training",
+    "nextPriorityPlaceholder": "Eine konkrete Sache, die du als Nächstes übst…",
+    "privateNote": "Nur du siehst das. Reflexionen erscheinen nie auf deinem öffentlichen Passport.",
+    "save": "Reflexion speichern",
+    "saveError": "Reflexion konnte nicht gespeichert werden. Bitte erneut versuchen.",
+    "clear": "Reflexion löschen",
+    "historyLabel": "Deine Reflexion",
+    "add": "Reflexion zu {{opponent}} hinzufügen",
+    "edit": "Reflexion zu {{opponent}} bearbeiten",
+    "addShort": "Reflexion hinzufügen",
+    "editShort": "Reflexion bearbeiten"
   }
 }

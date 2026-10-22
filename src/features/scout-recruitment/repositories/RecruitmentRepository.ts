@@ -15,6 +15,7 @@ import {
   removePlayerFromWorkspace,
   reorderEntryWithinStage,
   serializeRecruitmentWorkspace,
+  updateEntryNotes,
   updateEntryTrialMetadata,
 } from '@/features/scout-recruitment/models/RecruitmentModel';
 import {
@@ -220,6 +221,15 @@ export class RecruitmentRepository {
   ): Promise<RecruitmentWorkspace> {
     const workspace = await this.loadWorkspace(scoutId);
     return this.saveWorkspace(reorderEntryWithinStage(workspace, playerId, targetSortIndex));
+  }
+
+  public async updateEntryNotes(
+    scoutId: string,
+    playerId: string,
+    notes: string,
+  ): Promise<RecruitmentWorkspace> {
+    const workspace = await this.loadWorkspace(scoutId);
+    return this.saveWorkspace(updateEntryNotes(workspace, playerId, notes));
   }
 
   public async updateTrialLink(

@@ -163,6 +163,7 @@ function createMatchHistoryItem(match: PlayerMatchStatistics): MatchHistoryItem 
       matchRating: match.matchRating,
     },
     notes: match.notes,
+    reflection: match.reflection ?? null,
   };
 }
 

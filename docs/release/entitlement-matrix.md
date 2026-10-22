@@ -25,9 +25,11 @@ Statuses that unlock Premium limits: `premium`, `trial`, `grace`. Everything els
 
 ## Never paywalled (same on every plan)
 
-Listed in `NEVER_PAYWALLED`: safety and reporting, account deletion, privacy controls, guardian
-controls, match logging, basic development. The paywall is never auto-presented to players under
-18 (`presentPaywall` is user-initiated; UI hides upgrade CTAs for minors outside Settings).
+Listed in `NEVER_PAYWALLED`: safety_and_reporting, account_deletion, privacy_controls,
+guardian_controls, match_logging, basic_development (shown in product copy as safety and reporting,
+account deletion, privacy controls, guardian controls, match logging, basic development). The
+paywall is never auto-presented to players under 18 (`presentPaywall` is user-initiated; UI hides
+upgrade CTAs for minors outside Settings).
 
 ## Purchase / restore verification status
 

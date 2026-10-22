@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { View, Pressable } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
 import { Button } from '@/components/primitives/Button';
+import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { RecruitmentStageBadge } from '@/features/scout-recruitment/components/RecruitmentStageBadge';
 import {
@@ -37,12 +39,29 @@ export function RecruitmentEntryActionsModal({
     addToShortlist,
     removeFromShortlist,
     removePlayer,
+    updateEntryNotes,
     isSaving,
   } = useRecruitment();
+  const [notesDraft, setNotesDraft] = useState(entry?.notes ?? '');
+  const [notesError, setNotesError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setNotesDraft(entry?.notes ?? '');
+    setNotesError(null);
+  }, [entry?.playerId, entry?.notes, visible]);
 
   if (!entry) {
     return null;
   }
+
+  const handleSaveNotes = async () => {
+    setNotesError(null);
+    try {
+      await updateEntryNotes(entry.playerId, notesDraft.trim());
+    } catch {
+      setNotesError(t('pipelineUi.notesError'));
+    }
+  };
 
   const folders = workspace?.folders ?? [];
   const shortlists = workspace?.shortlists ?? [];
@@ -184,6 +203,35 @@ export function RecruitmentEntryActionsModal({
             })}
           </View>
         ) : null}
+
+        <View className="gap-2">
+          <Input
+            label={t('pipelineUi.notesLabel')}
+            value={notesDraft}
+            onChangeText={setNotesDraft}
+            placeholder={t('pipelineUi.notesPlaceholder')}
+            multiline
+            numberOfLines={3}
+            textAlignVertical="top"
+            editable={!isSaving}
+            inputClassName="min-h-20 py-2"
+          />
+          <Text variant="caption" color="secondary">
+            {t('pipelineUi.notesPrivate')}
+          </Text>
+          {notesError ? (
+            <Text variant="body-sm" color="error">
+              {notesError}
+            </Text>
+          ) : null}
+          <Button
+            variant="secondary"
+            onPress={() => void handleSaveNotes()}
+            disabled={isSaving || notesDraft.trim() === entry.notes.trim()}
+          >
+            {t('pipelineUi.notesSave')}
+          </Button>
+        </View>
 
         <Button variant="ghost" onPress={handleRemove} disabled={isSaving}>
           {t('pipelineUi.remove')}

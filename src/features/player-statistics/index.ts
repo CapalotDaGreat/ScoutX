@@ -8,6 +8,10 @@ export { RadarChart, type RadarChartProps } from './components/RadarChart';
 export { ProgressGraphs, type ProgressGraphsProps } from './components/ProgressGraphs';
 export { MatchHistory, type MatchHistoryProps } from './components/MatchHistory';
 export { LogMatchModal, type LogMatchModalProps } from './components/LogMatchModal';
+export {
+  MatchReflectionModal,
+  type MatchReflectionModalProps,
+} from './components/MatchReflectionModal';
 export { usePlayerStatistics, type UsePlayerStatisticsOptions } from './hooks/usePlayerStatistics';
 export { calculatePlayerStatistics } from './services/statisticsCalculator';
 export {
@@ -45,4 +49,5 @@ export type {
   StatisticTrend,
   StatisticTrendDirection,
   MatchLogPayload,
+  MatchReflection,
 } from './types';

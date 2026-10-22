@@ -127,8 +127,14 @@ export function buildPublicPassport(
     passport.username = profile.username;
   }
   if (showStatistics) {
+    // Match statistics are public when the player enables them, but their private
+    // post-match reflections never leave the owner's account.
     passport.statisticsMatches = Array.isArray(profile.statisticsMatches)
-      ? profile.statisticsMatches
+      ? profile.statisticsMatches.map((match) => {
+          if (typeof match !== 'object' || match === null) return match;
+          const { reflection: _reflection, ...publicMatch } = match as Record<string, unknown>;
+          return publicMatch;
+        })
       : [];
     passport.stats = Array.isArray(profile.stats) ? profile.stats : [];
   }

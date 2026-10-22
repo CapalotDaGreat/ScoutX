@@ -34,7 +34,7 @@ export function PlayerPerformanceTab({
   const { user } = useAuth();
   const stackNavigation = useNavigation<NativeStackNavigationProp<PlayerStackParamList>>();
   const route = useRoute<RouteProp<PlayerTabParamList, 'Performance'>>();
-  const { profile, isLoading, refreshProfile } = usePlayerWorkspace();
+  const { profile, isLoading, refreshProfile, saveMatchReflection } = usePlayerWorkspace();
   const [segment, setSegment] = useState<PerformanceSegment>(route.params?.segment ?? 'development');
 
   useEffect(() => {
@@ -103,6 +103,7 @@ export function PlayerPerformanceTab({
           embeddedInTabShell
           nestedUnderSegment
           renderMatchFooter={(matchId) => <MatchSourceChips sources={footballSources} matchId={matchId} />}
+          onSaveReflection={saveMatchReflection}
         />
       ) : (
         <CareerScreen

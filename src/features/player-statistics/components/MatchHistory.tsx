@@ -15,6 +15,8 @@ export type MatchHistoryProps = {
   /** Lighter chrome when embedded under a parent section heading. */
   compact?: boolean;
   renderItemFooter?: (item: MatchHistoryItem) => ReactNode;
+  /** Opens the post-match reflection editor for a match (owner-only surfaces). */
+  onReflectPress?: (item: MatchHistoryItem) => void;
 };
 
 function formatMatchDate(date: string, locale: string): string {
@@ -30,6 +32,7 @@ export function MatchHistory({
   onViewAllPress,
   compact = false,
   renderItemFooter,
+  onReflectPress,
 }: MatchHistoryProps) {
   const { t, i18n } = useAppTranslation(['common', 'statistics']);
   const summaryFor = (item: MatchHistoryItem) =>
@@ -107,6 +110,44 @@ export function MatchHistory({
             <Text variant="caption" color="secondary" className="mt-3">
               {item.notes}
             </Text>
+          ) : null}
+
+          {!compact && item.reflection ? (
+            <View className="mt-3 gap-1 rounded-lg bg-surface p-3">
+              <Text variant="caption" weight="semibold" color="secondary">
+                {t('statistics:reflection.historyLabel')}
+              </Text>
+              {item.reflection.wentWell ? (
+                <Text variant="caption" color="secondary">
+                  {`${t('statistics:reflection.wentWell')}: ${item.reflection.wentWell}`}
+                </Text>
+              ) : null}
+              {item.reflection.difficult ? (
+                <Text variant="caption" color="secondary">
+                  {`${t('statistics:reflection.difficult')}: ${item.reflection.difficult}`}
+                </Text>
+              ) : null}
+              {item.reflection.nextPriority ? (
+                <Text variant="caption" color="secondary">
+                  {`${t('statistics:reflection.nextPriority')}: ${item.reflection.nextPriority}`}
+                </Text>
+              ) : null}
+            </View>
+          ) : null}
+
+          {!compact && onReflectPress ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="mt-2 self-start"
+              accessibilityLabel={t(
+                item.reflection ? 'statistics:reflection.edit' : 'statistics:reflection.add',
+                { opponent: item.opponent },
+              )}
+              onPress={() => onReflectPress(item)}
+            >
+              {t(item.reflection ? 'statistics:reflection.editShort' : 'statistics:reflection.addShort')}
+            </Button>
           ) : null}
           {renderItemFooter?.(item)}
         </View>

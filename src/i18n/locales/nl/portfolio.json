@@ -216,6 +216,12 @@
         "description": "Tegenstander, competitie en minuten zijn genoeg. Voeg statistieken later alleen toe als je ze hebt bijgehouden.",
         "reasonToday": "Je hebt je vandaag voorbereid op een wedstrijd en er is nog niets vastgelegd.",
         "reasonYesterday": "Je hebt je gisteren voorbereid op een wedstrijd en er is nog niets vastgelegd."
+      },
+      "reflect_match": {
+        "title": "Reflecteer op je laatste wedstrijd",
+        "description": "Twee minuten over wat goed ging, wat moeilijk was, en één prioriteit voor de volgende training (tegen {{opponent}}).",
+        "reason": "je laatste wedstrijd heeft nog geen reflectie — dit is je eigen beoordeling, los van elke analyse.",
+        "reasonWithPriority": "vorige keer koos je: “{{priority}}”. Schrijf een nieuwe reflectie om je volgende prioriteit bij te werken."
       }
     },
     "continue": {

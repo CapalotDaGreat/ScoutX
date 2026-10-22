@@ -20,4 +20,7 @@ Statuses match `security-findings.md`. This is not a certification.
 | — | CMEK / customer-managed Storage keys | Low | Deferred | Google-managed encryption | Only if contract requires |
 | — | Certificate pinning | Low | Deferred | Firebase managed TLS | Only if MITM threat justifies |
 
-Review date: 2026-10-16. Next review: before public App Store release.
+Owner decision process: `docs/release/owner-acceptance.md`.  
+Controlled evaluation: `docs/release/controlled-evaluation-status.md`.
+
+Review date: 2026-10-17. Next review: before public App Store release.

@@ -8,13 +8,18 @@ import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
 import { FloatingActionButton } from '@/components/primitives/FloatingActionButton';
 import { MatchHistory } from '@/features/player-statistics/components/MatchHistory';
+import { MatchReflectionModal } from '@/features/player-statistics/components/MatchReflectionModal';
 import { ProgressGraphs } from '@/features/player-statistics/components/ProgressGraphs';
 import { RadarChart } from '@/features/player-statistics/components/RadarChart';
 import { StatisticsCards } from '@/features/player-statistics/components/StatisticsCards';
 import { AiInsightPanel } from '@/features/ai-insights';
 import { type AiInsightContext } from '@/features/ai-insights';
 import { usePlayerStatistics } from '@/features/player-statistics/hooks/usePlayerStatistics';
-import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
+import {
+  type MatchHistoryItem,
+  type MatchReflection,
+  type PlayerMatchStatistics,
+} from '@/features/player-statistics/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
@@ -28,6 +33,8 @@ export type StatisticsScreenProps = {
   embeddedInTabShell?: boolean;
   nestedUnderSegment?: boolean;
   renderMatchFooter?: (matchId: string) => ReactNode;
+  /** Persists a post-match reflection; when set, each match offers reflection editing. */
+  onSaveReflection?: (matchId: string, reflection: MatchReflection | null) => Promise<void>;
 };
 
 export function StatisticsScreen({
@@ -40,11 +47,13 @@ export function StatisticsScreen({
   embeddedInTabShell = false,
   nestedUnderSegment = false,
   renderMatchFooter,
+  onSaveReflection,
 }: StatisticsScreenProps) {
   const { t } = useAppTranslation(['statistics']);
   const { colors } = useTheme();
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
   const [showFullHistory, setShowFullHistory] = useState(false);
+  const [reflectionItem, setReflectionItem] = useState<MatchHistoryItem | null>(null);
   const screenProps = {
     ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
     ...(nestedUnderSegment ? { safeAreaEdges: ['left', 'right'] as Array<'left' | 'right'> } : {}),
@@ -165,8 +174,18 @@ export function StatisticsScreen({
               : undefined
           }
           renderItemFooter={renderMatchFooter ? (item) => renderMatchFooter(item.id) : undefined}
+          onReflectPress={onSaveReflection ? (item) => setReflectionItem(item) : undefined}
         />
       </Screen>
+
+      {onSaveReflection ? (
+        <MatchReflectionModal
+          visible={reflectionItem !== null}
+          item={reflectionItem}
+          onClose={() => setReflectionItem(null)}
+          onSave={onSaveReflection}
+        />
+      ) : null}
 
       {onLogMatchPress && !embeddedInTabShell ? (
         <FloatingActionButton

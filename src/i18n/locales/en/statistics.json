@@ -232,5 +232,24 @@
     "yellow_other": "{{count}} yellows",
     "red_one": "{{count}} red",
     "red_other": "{{count}} reds"
+  },
+  "reflection": {
+    "title": "Reflect on {{opponent}}",
+    "intro": "Your own words about this match. This is your reflection, not a verified match record or an AI judgement.",
+    "wentWell": "What went well",
+    "wentWellPlaceholder": "A moment or decision you were happy with…",
+    "difficult": "What was difficult",
+    "difficultPlaceholder": "Where the match challenged you…",
+    "nextPriority": "One priority for the next training session",
+    "nextPriorityPlaceholder": "One specific thing to practise next…",
+    "privateNote": "Only you can see this. Reflections never appear on your public Passport.",
+    "save": "Save reflection",
+    "saveError": "Could not save your reflection. Please try again.",
+    "clear": "Delete reflection",
+    "historyLabel": "Your reflection",
+    "add": "Add a reflection for {{opponent}}",
+    "edit": "Edit your reflection for {{opponent}}",
+    "addShort": "Add reflection",
+    "editShort": "Edit reflection"
   }
 }

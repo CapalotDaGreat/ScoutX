@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Image, Pressable, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { RecruitmentStageBadge } from '@/features/scout-recruitment/components/RecruitmentStageBadge';
@@ -20,6 +20,16 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
 }: RecruitmentPipelineCardProps) {
   const { colors } = useTheme();
   const { t } = useAppTranslation('scout');
+  const [avatarFailed, setAvatarFailed] = useState(false);
+  const showAvatar = entry.playerAvatarUrl.trim().length > 0 && !avatarFailed;
+  const initials = entry.playerName
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0))
+    .join('')
+    .toUpperCase();
 
   return (
     <Pressable
@@ -32,7 +42,24 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
       <View className="flex-row">
         <View className="flex-1 p-3">
           <View className="flex-row items-start gap-2.5">
-            <Image source={{ uri: entry.playerAvatarUrl }} className="h-10 w-10 rounded-full" />
+            {showAvatar ? (
+              <Image
+                source={{ uri: entry.playerAvatarUrl }}
+                className="h-10 w-10 rounded-full"
+                onError={() => setAvatarFailed(true)}
+                accessibilityIgnoresInvertColors
+              />
+            ) : (
+              <View
+                className="h-10 w-10 items-center justify-center rounded-full bg-background-secondary"
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                <Text variant="caption" weight="bold" color="secondary">
+                  {initials || '?'}
+                </Text>
+              </View>
+            )}
             <View className="flex-1">
               <Text weight="semibold" numberOfLines={1}>
                 {entry.playerName}
@@ -40,10 +67,8 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
               <Text variant="caption" color="secondary" numberOfLines={1}>
                 {entry.playerClub}
               </Text>
-              <Text variant="caption" color="secondary">
-                {entry.playerOverallRating !== null
-                  ? `${entry.playerPosition} · OVR ${Math.round(entry.playerOverallRating)}`
-                  : entry.playerPosition}
+              <Text variant="caption" color="secondary" numberOfLines={1}>
+                {entry.playerPosition}
               </Text>
             </View>
             {onMovePress ? (

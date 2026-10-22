@@ -216,6 +216,12 @@
         "description": "Opponent, competition and minutes are enough. Add stats later only if you recorded them.",
         "reasonToday": "You prepared for a match today and nothing is logged yet.",
         "reasonYesterday": "You prepared for a match yesterday and nothing is logged yet."
+      },
+      "reflect_match": {
+        "title": "Reflect on your last match",
+        "description": "Two minutes on what went well, what was difficult, and one priority for next training (vs {{opponent}}).",
+        "reason": "your latest match has no reflection yet — this is your own assessment, separate from any analysis.",
+        "reasonWithPriority": "last time you chose: “{{priority}}”. Write a new reflection to update your next priority."
       }
     },
     "continue": {

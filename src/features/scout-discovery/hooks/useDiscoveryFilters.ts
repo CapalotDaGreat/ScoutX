@@ -5,11 +5,14 @@ import {
   type DiscoverySortOption,
   type FilterPreset,
 } from '@/features/scout-discovery/types';
-import { countActiveFilters } from '@/features/scout-discovery/services/discoveryQueryService';
+import {
+  countActiveFilters,
+  normalizeDiscoverySort,
+} from '@/features/scout-discovery/services/discoveryQueryService';
 
 export function useDiscoveryFilters(initial?: Partial<{ filters: DiscoveryFilters; sort: DiscoverySortOption }>) {
   const [filters, setFilters] = useState<DiscoveryFilters>(initial?.filters ?? defaultDiscoveryFilters);
-  const [sort, setSort] = useState<DiscoverySortOption>(initial?.sort ?? 'overall');
+  const [sort, setSortState] = useState<DiscoverySortOption>(normalizeDiscoverySort(initial?.sort ?? 'recently_updated'));
   const [activePresetId, setActivePresetId] = useState<string | null>(null);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filters), [filters]);
@@ -32,11 +35,15 @@ export function useDiscoveryFilters(initial?: Partial<{ filters: DiscoveryFilter
     setFilters(defaultDiscoveryFilters);
   }, []);
 
+  const setSort = useCallback((next: DiscoverySortOption) => {
+    setSortState(normalizeDiscoverySort(next));
+  }, []);
+
   const applyPreset = useCallback((preset: FilterPreset) => {
     setFilters(preset.filters);
     setSort(preset.sort);
     setActivePresetId(preset.id);
-  }, []);
+  }, [setSort]);
 
   return {
     filters,

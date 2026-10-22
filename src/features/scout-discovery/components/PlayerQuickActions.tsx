@@ -8,6 +8,7 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 export type PlayerQuickActionsProps = {
   isFavourite?: boolean;
   onToggleFavourite?: () => void;
+  favouriteDisabled?: boolean;
   onOpenReport?: () => void;
   isInComparison?: boolean;
   canAddToComparison?: boolean;
@@ -18,6 +19,7 @@ export type PlayerQuickActionsProps = {
 export function PlayerQuickActions({
   isFavourite,
   onToggleFavourite,
+  favouriteDisabled = false,
   onOpenReport,
   isInComparison = false,
   canAddToComparison = true,
@@ -77,14 +79,16 @@ export function PlayerQuickActions({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={isFavourite ? t('scout:a11y.unsave') : t('scout:a11y.save')}
-          accessibilityState={{ selected: Boolean(isFavourite) }}
+          accessibilityState={{ selected: Boolean(isFavourite), disabled: favouriteDisabled, busy: favouriteDisabled }}
           hitSlop={4}
           onPress={handleFavourite}
+          disabled={favouriteDisabled}
           className={cn(
             'h-9 w-9 items-center justify-center rounded-full border',
             isFavourite
               ? 'border-accent bg-accent-muted'
               : 'border-border bg-surface',
+            favouriteDisabled && 'opacity-50',
           )}
         >
           <Bookmark

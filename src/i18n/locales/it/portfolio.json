@@ -216,6 +216,12 @@
         "description": "Avversario, competizione e minuti bastano. Aggiungi statistiche dopo solo se le hai registrate.",
         "reasonToday": "Ti sei preparato per una partita oggi e non hai ancora registrato nulla.",
         "reasonYesterday": "Ti sei preparato per una partita ieri e non hai ancora registrato nulla."
+      },
+      "reflect_match": {
+        "title": "Rifletti sulla tua ultima partita",
+        "description": "Due minuti su cosa è andato bene, cosa è stato difficile e una priorità per la prossima sessione (contro {{opponent}}).",
+        "reason": "la tua ultima partita non ha ancora una riflessione: è la tua valutazione, distinta da qualsiasi analisi.",
+        "reasonWithPriority": "l’ultima volta hai scelto: «{{priority}}». Scrivi una nuova riflessione per aggiornare la prossima priorità."
       }
     },
     "continue": {

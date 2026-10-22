@@ -168,6 +168,18 @@ function actionCopy(t: Translate, action: NextBestAction): ActionCopy {
             ? t('portfolio:today.actions.log_post_match.reasonToday')
             : t('portfolio:today.actions.log_post_match.reasonYesterday'),
       };
+    case 'reflect_match': {
+      const previousPriority = str(params.previousPriority);
+      return {
+        title: t('portfolio:today.actions.reflect_match.title'),
+        description: t('portfolio:today.actions.reflect_match.description', {
+          opponent: str(params.opponent),
+        }),
+        reason: previousPriority
+          ? t('portfolio:today.actions.reflect_match.reasonWithPriority', { priority: previousPriority })
+          : t('portfolio:today.actions.reflect_match.reason'),
+      };
+    }
   }
 }
 

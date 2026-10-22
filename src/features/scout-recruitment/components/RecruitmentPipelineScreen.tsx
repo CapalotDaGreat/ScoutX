@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { AppSafeAreaView } from '@/components/layout/AppSafeAreaView';
 import { Kanban, LayoutList } from 'lucide-react-native';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
+import { SearchBar } from '@/components/primitives/SearchBar';
 import { Text } from '@/components/primitives/Text';
 import { HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 import { CreateRecruitmentFolderModal } from '@/features/scout-recruitment/components/CreateRecruitmentFolderModal';
@@ -16,8 +17,9 @@ import { RecruitmentPipelineBoard } from '@/features/scout-recruitment/component
 import { RecruitmentPipelineListView } from '@/features/scout-recruitment/components/RecruitmentPipelineListView';
 import { RecruitmentShortlistBar } from '@/features/scout-recruitment/components/RecruitmentShortlistBar';
 import { groupEntriesByStage } from '@/features/scout-recruitment/models/RecruitmentModel';
+import { RECRUITMENT_STAGES } from '@/features/scout-recruitment/constants';
 import { useRecruitment } from '@/features/scout-recruitment/context/RecruitmentProvider';
-import { type RecruitmentEntry } from '@/features/scout-recruitment/types';
+import { type RecruitmentEntry, type RecruitmentStage } from '@/features/scout-recruitment/types';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
@@ -50,17 +52,39 @@ export function RecruitmentPipelineScreen({
   const [shortlistModalVisible, setShortlistModalVisible] = useState(false);
   const [activeEntry, setActiveEntry] = useState<RecruitmentEntry | null>(null);
   const [viewMode, setViewMode] = useState<PipelineViewMode>(isTablet ? 'kanban' : 'list');
+  const [pipelineSearch, setPipelineSearch] = useState('');
+  const [activeStage, setActiveStage] = useState<RecruitmentStage | null>(null);
 
-  const filteredEntriesByStage = useMemo(() => {
+  const filteredEntries = useMemo(() => {
     const entries = workspace?.entries ?? [];
-    const filtered = entries.filter((entry) => {
+    const query = pipelineSearch.trim().toLowerCase();
+    return entries.filter((entry) => {
       const folderMatch = activeFolderId === null || entry.folderId === activeFolderId;
       const shortlistMatch =
         activeShortlistId === null || entry.shortlistIds.includes(activeShortlistId);
-      return folderMatch && shortlistMatch;
+      const stageMatch = activeStage === null || entry.stage === activeStage;
+      const searchMatch =
+        query.length === 0 ||
+        [entry.playerName, entry.playerClub, entry.playerPosition]
+          .join(' ')
+          .toLowerCase()
+          .includes(query);
+      return folderMatch && shortlistMatch && stageMatch && searchMatch;
     });
-    return groupEntriesByStage(filtered);
-  }, [activeFolderId, activeShortlistId, workspace?.entries]);
+  }, [activeFolderId, activeShortlistId, activeStage, pipelineSearch, workspace?.entries]);
+
+  const filteredEntriesByStage = useMemo(
+    () => groupEntriesByStage(filteredEntries),
+    [filteredEntries],
+  );
+
+  const stageCounts = useMemo(() => {
+    const counts = new Map<RecruitmentStage, number>();
+    for (const entry of workspace?.entries ?? []) {
+      counts.set(entry.stage, (counts.get(entry.stage) ?? 0) + 1);
+    }
+    return counts;
+  }, [workspace?.entries]);
 
   if (!isReady) {
     return (
@@ -143,7 +167,52 @@ export function RecruitmentPipelineScreen({
             onCreateShortlist={() => setShortlistModalVisible(true)}
           />
 
-          {viewMode === 'kanban' ? (
+          <View className="gap-3 px-4">
+            <SearchBar
+              value={pipelineSearch}
+              onChangeText={setPipelineSearch}
+              onClear={() => setPipelineSearch('')}
+              placeholder={t('scout:pipeline.searchPlaceholder')}
+              accessibilityLabel={t('scout:pipeline.searchPlaceholder')}
+            />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View className="flex-row gap-2 pr-4">
+                <Button
+                  size="sm"
+                  variant={activeStage === null ? 'accent' : 'secondary'}
+                  accessibilityState={{ selected: activeStage === null }}
+                  onPress={() => setActiveStage(null)}
+                >
+                  {t('scout:pipeline.stageAll', { count: totalPlayers })}
+                </Button>
+                {RECRUITMENT_STAGES.map((stage) => (
+                  <Button
+                    key={stage}
+                    size="sm"
+                    variant={activeStage === stage ? 'accent' : 'secondary'}
+                    accessibilityState={{ selected: activeStage === stage }}
+                    onPress={() => setActiveStage(activeStage === stage ? null : stage)}
+                  >
+                    {`${t(`scout:stage.${stage}`)} (${stageCounts.get(stage) ?? 0})`}
+                  </Button>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+
+          {filteredEntries.length === 0 ? (
+            <EmptyState
+              title={t('scout:pipeline.noFilteredTitle')}
+              description={t('scout:pipeline.noFilteredDescription')}
+              actionLabel={t('scout:pipeline.clearSearch')}
+              onAction={() => {
+                setPipelineSearch('');
+                setActiveStage(null);
+                setActiveFolderId(null);
+                setActiveShortlistId(null);
+              }}
+            />
+          ) : viewMode === 'kanban' ? (
             <RecruitmentPipelineBoard
               entriesByStage={filteredEntriesByStage}
               onCardPress={(entry) => onPlayerPress?.(entry.playerId)}

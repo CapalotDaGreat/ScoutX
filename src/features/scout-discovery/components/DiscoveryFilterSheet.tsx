@@ -260,27 +260,6 @@ export function DiscoveryFilterSheet({
 
             <View className="flex-row gap-3">
               <Input
-                label={t('scout:filters.minOverall')}
-                value={filters.overallMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('overallMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
-              />
-              <Input
-                label={t('scout:filters.minPotential')}
-                value={filters.potentialMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('potentialMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
-              />
-            </View>
-
-            <View className="flex-row gap-3">
-              <Input
                 label={t('scout:filters.maxDistance')}
                 value={filters.distanceMaxKm?.toString() ?? ''}
                 onChangeText={(value) =>

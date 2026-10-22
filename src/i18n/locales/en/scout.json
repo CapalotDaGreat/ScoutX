@@ -67,7 +67,17 @@
     "clearFilters": "Clear Filters",
     "compare": "Compare",
     "addToPipeline": "Add to pipeline",
-    "viewProfile": "View profile"
+    "viewProfile": "View profile",
+    "matchesCount_one": "{{count}} match",
+    "matchesCount_other": "{{count}} matches",
+    "hasHighlights": "Highlight video available",
+    "analysisSamples_one": "{{count}} analysed match",
+    "analysisSamples_other": "{{count}} analysed matches",
+    "resultsCount_one": "{{count}} player found",
+    "resultsCount_other": "{{count}} players found",
+    "resultsCountMore_one": "{{count}} player loaded, more available",
+    "resultsCountMore_other": "{{count}} players loaded, more available",
+    "saveError": "Could not update your saved players. Please try again."
   },
   "search": {
     "scopeLabel": "Search in",
@@ -91,7 +101,7 @@
     "includeSearchHint": "Also restore the text query and search scope",
     "deleteFilter": "Delete {{name}}",
     "presets": {
-      "preset-u21-potential": "U21 high potential",
+      "preset-u21-potential": "Under-21 with recent evidence",
       "preset-verified-wingers": "Verified wingers",
       "preset-available-now": "Available now"
     }
@@ -164,7 +174,12 @@
     "board": "Board",
     "emptyTitle": "Your pipeline is empty",
     "emptyActionDescription": "Save players from Discover to start tracking them through recruitment stages.",
-    "discoverPlayers": "Discover Players"
+    "discoverPlayers": "Discover Players",
+    "searchPlaceholder": "Search pipeline by name, club or position",
+    "stageAll": "All · {{count}}",
+    "noFilteredTitle": "No players match these filters",
+    "noFilteredDescription": "Try a different search, stage, folder or shortlist.",
+    "clearSearch": "Clear pipeline filters"
   },
   "comparison": {
     "title": "Player Comparison",
@@ -179,7 +194,7 @@
     "needsTwoPlayers": "Add at least two players to unlock side-by-side charts and metric tables.",
     "replacePlayer": "Replace player",
     "addPlayerToComparison": "Add player to comparison",
-    "metricSubtitle": "Best value marked ▲ (green), weakest ▼ (red).",
+    "metricSubtitle": "Values are shown side by side without a winner. Check coverage and sample size before comparing players in different roles.",
     "sections": {
       "radar": "Radar Profile",
       "statistics": "Statistics",
@@ -252,7 +267,12 @@
       "clubCount_other": "{{count}} clubs",
       "footageSubtitle": "Highlight videos on file",
       "honoursSubtitle": "Career achievements"
-    }
+    },
+    "movementAvailable": "Shared GPS summary available",
+    "distanceKm": "Distance (km)",
+    "sprintSpeed": "Top speed (km/h)",
+    "movementSource": "Player-shared GPS session summary. Missing values are shown as unavailable.",
+    "contactViaTrial": "Contact starts through a trial invitation or evidence request, not direct messages."
   },
   "reports": {
     "notRatedTapToSet": "Not rated · tap to set",
@@ -587,7 +607,12 @@
     "shortlistName": "Shortlist name",
     "shortlistPlaceholder": "e.g. Summer window",
     "description": "Description",
-    "descriptionPlaceholder": "Optional context for your team"
+    "descriptionPlaceholder": "Optional context for your team",
+    "notesLabel": "Private scouting notes",
+    "notesPlaceholder": "Strengths, concerns and next step…",
+    "notesPrivate": "Only visible in your scouting workspace.",
+    "notesSave": "Save notes",
+    "notesError": "Could not save your notes. Please try again."
   },
   "comparisonUi": {
     "metricHeader": "Metric",
@@ -618,7 +643,8 @@
     "trendScale": "Recent form points per match: win 3, draw 1, loss 0.",
     "trendPlayerA11y": "{{name}}: {{values}}",
     "trendPlayerEmptyA11y": "{{name}}: no recorded results",
-    "matchShort": "M{{n}}"
+    "matchShort": "M{{n}}",
+    "unavailable": "Unavailable"
   },
   "comparisonMetric": {
     "goals": "Goals",
@@ -636,5 +662,9 @@
     "distance": "Avg distance (km)",
     "topSpeed": "Top speed (km/h)",
     "sessions": "GPS sessions"
+  },
+  "playerCard": {
+    "openHint": "Open full player profile",
+    "footValue": "{{foot}} foot"
   }
 }

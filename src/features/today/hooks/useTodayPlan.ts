@@ -28,6 +28,7 @@ import { type TrustProfile, type TrustRecommendation } from '@/features/trust-sy
 import { listRecentMatchAnalysisJobs } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
 import { type MatchAnalysisJob } from '@/features/match-analysis/types';
 import { type OnboardingStep } from '@/features/player-onboarding/types';
+import { hasMatchReflection } from '@/features/player-statistics/types';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { type TrialInvitation } from '@/features/trial-invitations/types';
 import { buildTodayPlan } from '@/features/today/services/nextBestActionService';
@@ -229,6 +230,8 @@ export function useTodayPlan({
         id: match.id,
         date: match.date,
         opponent: match.opponent,
+        hasReflection: hasMatchReflection(match.reflection),
+        reflectionPriority: match.reflection?.nextPriority ?? null,
       })),
       analyses: local.analyses,
       analysesLoaded: local.analysesLoaded,

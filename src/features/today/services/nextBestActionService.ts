@@ -178,6 +178,31 @@ export function buildTodayPlan(input: TodayInput): TodayPlan {
     }
   }
 
+  // Post-match reflection: the player's own words about their latest match, while it is
+  // still fresh. Only suggested when reflection state is actually known.
+  if (
+    latestMatch &&
+    latestMatch.hasReflection === false &&
+    daysBetween(latestMatch.date, now) <= ANALYZE_WINDOW_DAYS
+  ) {
+    const previousPriority =
+      matches
+        .slice(1)
+        .map((match) => match.reflectionPriority)
+        .find((priority) => priority && priority.trim().length > 0) ?? null;
+    actions.push({
+      id: `reflect-match-${latestMatch.id}`,
+      type: 'reflect_match',
+      priority: 72,
+      route: 'matchReflection',
+      entityId: latestMatch.id,
+      params: {
+        opponent: latestMatch.opponent,
+        ...(previousPriority ? { previousPriority } : {}),
+      },
+    });
+  }
+
   if (input.matchDraft) {
     continueItems.unshift({
       id: 'continue-match-draft',

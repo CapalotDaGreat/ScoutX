@@ -46,7 +46,7 @@ import { rankSimilarPlayers } from '@/features/scout-intelligence/services/simil
 import { useDiscoverablePlayerPool } from '@/features/scout-discovery/hooks/useDiscoverablePlayerPool';
 import { TrustSafetyActions } from '@/features/trust-safety/components/TrustSafetyActions';
 import { ScoutFootballSourcesSection } from '@/features/football-sources';
-import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Mail, Video } from 'lucide-react-native';
+import { ArrowLeft, Bookmark, ExternalLink, GitCompare, Video } from 'lucide-react-native';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useTheme } from '@/theme';
 
@@ -455,13 +455,35 @@ export function PlayerDetailScreen({
         <RevealSection step={8} className="px-4">
           <CollapsibleSection
             title={t('scout:playerDetail.movementIntelligence')}
-            subtitle={t('scout:playerDetail.noGpsData')}
+            subtitle={
+              player.distanceKm !== null || player.sprintSpeedKmh !== null
+                ? t('scout:playerDetail.movementAvailable')
+                : t('scout:playerDetail.noGpsData')
+            }
             persistKey={`detail-gps-${player.id}`}
             defaultOpen={false}
           >
-            <Text variant="body-sm" color="secondary">
-              {t('scout:playerDetail.noGpsData')}
-            </Text>
+            {player.distanceKm !== null || player.sprintSpeedKmh !== null ? (
+              <View className="flex-row flex-wrap gap-3">
+                <StatCard
+                  label={t('scout:playerDetail.distanceKm')}
+                  value={player.distanceKm !== null ? player.distanceKm.toFixed(1) : '—'}
+                  className="min-w-[45%] flex-1"
+                />
+                <StatCard
+                  label={t('scout:playerDetail.sprintSpeed')}
+                  value={player.sprintSpeedKmh !== null ? player.sprintSpeedKmh.toFixed(1) : '—'}
+                  className="min-w-[45%] flex-1"
+                />
+                <Text variant="caption" color="secondary">
+                  {t('scout:playerDetail.movementSource')}
+                </Text>
+              </View>
+            ) : (
+              <Text variant="body-sm" color="secondary">
+                {t('scout:playerDetail.noGpsData')}
+              </Text>
+            )}
           </CollapsibleSection>
         </RevealSection>
 
@@ -518,22 +540,17 @@ export function PlayerDetailScreen({
 
       {!guestMode ? (
       <View className="absolute bottom-0 left-0 right-0 border-t border-divider bg-surface px-4 pb-6 pt-3">
-        <View className="flex-row gap-3">
-          <Button
-            variant="secondary"
-            className="flex-1"
-            leftIcon={<Mail size={18} color={colors.textPrimary} />}
-          >
-            {t('scout:playerDetail.contact')}
-          </Button>
-          <Button
-            variant="accent"
-            className="flex-1"
-            onPress={() => setInviteSignal((current) => current + 1)}
-          >
-            {t('scout:playerDetail.inviteToTrial')}
-          </Button>
-        </View>
+        <Button
+          variant="accent"
+          className="w-full"
+          accessibilityLabel={t('scout:playerDetail.inviteToTrial')}
+          onPress={() => setInviteSignal((current) => current + 1)}
+        >
+          {t('scout:playerDetail.inviteToTrial')}
+        </Button>
+        <Text variant="caption" color="secondary" className="mt-2 text-center">
+          {t('scout:playerDetail.contactViaTrial')}
+        </Text>
       </View>
       ) : null}
     </View>

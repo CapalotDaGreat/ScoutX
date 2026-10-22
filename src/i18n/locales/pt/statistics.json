@@ -232,5 +232,24 @@
     "yellow_other": "{{count}} amarelos",
     "red_one": "{{count}} vermelho",
     "red_other": "{{count}} vermelhos"
+  },
+  "reflection": {
+    "title": "Reflexão sobre {{opponent}}",
+    "intro": "As suas próprias palavras sobre este jogo. É a sua reflexão, não um registo verificado nem um julgamento de IA.",
+    "wentWell": "O que correu bem",
+    "wentWellPlaceholder": "Um momento ou decisão de que gostou…",
+    "difficult": "O que foi difícil",
+    "difficultPlaceholder": "Onde o jogo o desafiou…",
+    "nextPriority": "Uma prioridade para a próxima sessão",
+    "nextPriorityPlaceholder": "Uma coisa específica para praticar a seguir…",
+    "privateNote": "Só você vê isto. As reflexões nunca aparecem no seu Passport público.",
+    "save": "Guardar reflexão",
+    "saveError": "Não foi possível guardar a sua reflexão. Tente novamente.",
+    "clear": "Eliminar reflexão",
+    "historyLabel": "A sua reflexão",
+    "add": "Adicionar uma reflexão sobre {{opponent}}",
+    "edit": "Editar a sua reflexão sobre {{opponent}}",
+    "addShort": "Adicionar reflexão",
+    "editShort": "Editar reflexão"
   }
 }

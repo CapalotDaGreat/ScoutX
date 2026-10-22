@@ -355,6 +355,20 @@ export function updateEntryTrialMetadata(
   });
 }
 
+export function updateEntryNotes(
+  workspace: RecruitmentWorkspace,
+  playerId: string,
+  notes: string,
+): RecruitmentWorkspace {
+  const now = new Date().toISOString();
+  return touchWorkspace({
+    ...workspace,
+    entries: workspace.entries.map((entry) =>
+      entry.playerId === playerId ? { ...entry, notes, updatedAt: now } : entry,
+    ),
+  });
+}
+
 export function assignEntryFolder(
   workspace: RecruitmentWorkspace,
   playerId: string,

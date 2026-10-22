@@ -232,5 +232,24 @@
     "yellow_other": "{{count}} geel",
     "red_one": "{{count}} rood",
     "red_other": "{{count}} rood"
+  },
+  "reflection": {
+    "title": "Reflectie op {{opponent}}",
+    "intro": "Je eigen woorden over deze wedstrijd. Dit is jouw reflectie, geen geverifieerd wedstrijdverslag en geen AI-oordeel.",
+    "wentWell": "Wat goed ging",
+    "wentWellPlaceholder": "Een moment of beslissing die goed uitpakte…",
+    "difficult": "Wat moeilijk was",
+    "difficultPlaceholder": "Waar de wedstrijd je uitdaagde…",
+    "nextPriority": "Eén prioriteit voor de volgende training",
+    "nextPriorityPlaceholder": "Eén concreet ding om hierna te oefenen…",
+    "privateNote": "Alleen jij ziet dit. Reflecties verschijnen nooit op je openbare Passport.",
+    "save": "Reflectie opslaan",
+    "saveError": "Je reflectie kon niet worden opgeslagen. Probeer het opnieuw.",
+    "clear": "Reflectie verwijderen",
+    "historyLabel": "Jouw reflectie",
+    "add": "Reflectie toevoegen voor {{opponent}}",
+    "edit": "Reflectie bewerken voor {{opponent}}",
+    "addShort": "Reflectie toevoegen",
+    "editShort": "Reflectie bewerken"
   }
 }
