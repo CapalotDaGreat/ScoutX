@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { BarChart3, Clapperboard } from 'lucide-react-native';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
@@ -6,7 +6,9 @@ import { Screen } from '@/components/layout/Screen';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Button } from '@/components/primitives/Button';
+import { Card } from '@/components/primitives/Card';
 import { FloatingActionButton } from '@/components/primitives/FloatingActionButton';
+import { Text } from '@/components/primitives/Text';
 import { MatchHistory } from '@/features/player-statistics/components/MatchHistory';
 import { MatchReflectionModal } from '@/features/player-statistics/components/MatchReflectionModal';
 import { ProgressGraphs } from '@/features/player-statistics/components/ProgressGraphs';
@@ -35,6 +37,9 @@ export type StatisticsScreenProps = {
   renderMatchFooter?: (matchId: string) => ReactNode;
   /** Persists a post-match reflection; when set, each match offers reflection editing. */
   onSaveReflection?: (matchId: string, reflection: MatchReflection | null) => Promise<void>;
+  /** When set (e.g. from the Today reflection prompt), open the editor for this match once. */
+  focusReflectionMatchId?: string;
+  onReflectionFocusHandled?: () => void;
 };
 
 export function StatisticsScreen({
@@ -48,12 +53,32 @@ export function StatisticsScreen({
   nestedUnderSegment = false,
   renderMatchFooter,
   onSaveReflection,
+  focusReflectionMatchId,
+  onReflectionFocusHandled,
 }: StatisticsScreenProps) {
   const { t } = useAppTranslation(['statistics']);
   const { colors } = useTheme();
   const { overview, isLoading, error } = usePlayerStatistics({ matches });
   const [showFullHistory, setShowFullHistory] = useState(false);
   const [reflectionItem, setReflectionItem] = useState<MatchHistoryItem | null>(null);
+  const handledFocusRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!focusReflectionMatchId) {
+      handledFocusRef.current = null;
+      return;
+    }
+    if (handledFocusRef.current === focusReflectionMatchId) {
+      return;
+    }
+    const item = overview.matchHistory.find((entry) => entry.id === focusReflectionMatchId);
+    if (item) {
+      handledFocusRef.current = focusReflectionMatchId;
+      setShowFullHistory(true);
+      setReflectionItem(item);
+      onReflectionFocusHandled?.();
+    }
+  }, [focusReflectionMatchId, onReflectionFocusHandled, overview.matchHistory]);
   const screenProps = {
     ...(embeddedInTabShell ? { embeddedInTabShell: true as const } : {}),
     ...(nestedUnderSegment ? { safeAreaEdges: ['left', 'right'] as Array<'left' | 'right'> } : {}),
@@ -126,6 +151,22 @@ export function StatisticsScreen({
           >
             {t('uploadAnalyzeAi')}
           </Button>
+        ) : null}
+
+        {onSaveReflection && overview.matchHistory[0] && !overview.matchHistory[0].reflection ? (
+          <Card variant="prestige" padding="md" className="gap-2">
+            <Text weight="semibold">{t('reflection.promptTitle')}</Text>
+            <Text variant="body-sm" color="secondary">
+              {t('reflection.promptBody', { opponent: overview.matchHistory[0].opponent })}
+            </Text>
+            <Button
+              variant="accent"
+              accessibilityLabel={t('reflection.add', { opponent: overview.matchHistory[0].opponent })}
+              onPress={() => setReflectionItem(overview.matchHistory[0] ?? null)}
+            >
+              {t('reflection.addShort')}
+            </Button>
+          </Card>
         ) : null}
 
         <StatisticsCards items={overview.totals} />

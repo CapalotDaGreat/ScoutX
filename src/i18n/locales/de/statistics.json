@@ -250,6 +250,8 @@
     "add": "Reflexion zu {{opponent}} hinzufügen",
     "edit": "Reflexion zu {{opponent}} bearbeiten",
     "addShort": "Reflexion hinzufügen",
-    "editShort": "Reflexion bearbeiten"
+    "editShort": "Reflexion bearbeiten",
+    "promptTitle": "Reflektiere dein letztes Spiel",
+    "promptBody": "Gegen {{opponent}}: Was lief gut, was war schwierig, und ein Schwerpunkt für das nächste Training — in deinen eigenen Worten."
   }
 }

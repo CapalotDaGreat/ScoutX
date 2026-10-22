@@ -250,6 +250,8 @@
     "add": "Adicionar uma reflexão sobre {{opponent}}",
     "edit": "Editar a sua reflexão sobre {{opponent}}",
     "addShort": "Adicionar reflexão",
-    "editShort": "Editar reflexão"
+    "editShort": "Editar reflexão",
+    "promptTitle": "Reflita sobre o seu último jogo",
+    "promptBody": "Contra {{opponent}}: o que correu bem, o que foi difícil e uma prioridade para a próxima sessão — nas suas próprias palavras."
   }
 }

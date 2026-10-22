@@ -12,12 +12,25 @@ export function useAppleCredentialRevokeListener(onRevoked: () => void): void {
       return;
     }
 
-    const subscription = AppleAuthentication.addRevokeListener(() => {
-      onRevoked();
-    });
+    let subscription: ReturnType<typeof AppleAuthentication.addRevokeListener> | null = null;
+    let cancelled = false;
+
+    // The native module is absent in Expo Go and other runtimes without Apple
+    // authentication; there the revoke listener simply cannot be registered.
+    void AppleAuthentication.isAvailableAsync()
+      .then((available) => {
+        if (cancelled || !available) {
+          return;
+        }
+        subscription = AppleAuthentication.addRevokeListener(() => {
+          onRevoked();
+        });
+      })
+      .catch(() => undefined);
 
     return () => {
-      subscription.remove();
+      cancelled = true;
+      subscription?.remove();
     };
   }, [onRevoked]);
 }

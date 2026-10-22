@@ -250,6 +250,8 @@
     "add": "Aggiungi una riflessione su {{opponent}}",
     "edit": "Modifica la tua riflessione su {{opponent}}",
     "addShort": "Aggiungi riflessione",
-    "editShort": "Modifica riflessione"
+    "editShort": "Modifica riflessione",
+    "promptTitle": "Rifletti sulla tua ultima partita",
+    "promptBody": "Contro {{opponent}}: cosa è andato bene, cosa è stato difficile e una priorità per la prossima sessione — con parole tue."
   }
 }

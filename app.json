@@ -149,7 +149,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "While you record a session, PitchProof uses your position on the phone to calculate distance and a pitch heatmap. Your location is never uploaded, stored, or shared.",
+          "locationWhenInUsePermission": "While you record a session, PitchProof uses your position to calculate distance and movement zones. Raw position points stay on your phone and are discarded; only the session summary is saved to your account.",
           "locationAlwaysAndWhenInUsePermission": false,
           "locationAlwaysPermission": false,
           "isIosBackgroundLocationEnabled": false,

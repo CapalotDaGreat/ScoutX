@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabSegmentControl } from '@/components/navigation/TabSegmentControl';
 import { CareerScreen } from '@/features/career-timeline/components/CareerScreen';
@@ -32,6 +33,7 @@ export function PlayerPerformanceTab({
   const { t } = useAppTranslation('navigation');
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
+  const tabNavigation = useNavigation<BottomTabNavigationProp<PlayerTabParamList>>();
   const stackNavigation = useNavigation<NativeStackNavigationProp<PlayerStackParamList>>();
   const route = useRoute<RouteProp<PlayerTabParamList, 'Performance'>>();
   const { profile, isLoading, refreshProfile, saveMatchReflection } = usePlayerWorkspace();
@@ -104,6 +106,8 @@ export function PlayerPerformanceTab({
           nestedUnderSegment
           renderMatchFooter={(matchId) => <MatchSourceChips sources={footballSources} matchId={matchId} />}
           onSaveReflection={saveMatchReflection}
+          focusReflectionMatchId={route.params?.reflectMatchId}
+          onReflectionFocusHandled={() => tabNavigation.setParams({ reflectMatchId: undefined })}
         />
       ) : (
         <CareerScreen

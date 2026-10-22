@@ -23,7 +23,7 @@
   "heatmaps": "Mapas de calor",
   "movementZones": "Zonas de movimento",
   "permissionRequired": "Permissão de localização necessária",
-  "permissionDescription": "O PitchProof usa a tua posição apenas durante a gravação, e apenas neste telemóvel, para calcular a distância e um mapa de calor do campo. A tua localização nunca é enviada nem partilhada.",
+  "permissionDescription": "O PitchProof usa a sua posição apenas durante a gravação. Os pontos de posição brutos ficam neste telemóvel e são descartados; apenas o resumo da sessão (distância, velocidades e zonas de movimento) é guardado na sua conta.",
   "movementDetail": "Detalhe do movimento",
   "movementDetailSubtitle": "Movimento e mapa de calor desta sessão",
   "latestAnalysisSubtitle": "Movimento e mapa de calor da tua última sessão",

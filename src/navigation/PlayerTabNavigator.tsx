@@ -214,7 +214,10 @@ function PlayerTabsContainer() {
           tabNavigationRef.current?.navigate('Performance', { segment: 'development' });
           break;
         case 'matchReflection':
-          tabNavigationRef.current?.navigate('Performance', { segment: 'stats' });
+          tabNavigationRef.current?.navigate('Performance', {
+            segment: 'stats',
+            ...(entityId ? { reflectMatchId: entityId } : {}),
+          });
           break;
       }
     },

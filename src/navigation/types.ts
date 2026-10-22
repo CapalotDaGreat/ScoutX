@@ -22,7 +22,7 @@ export type AuthStackParamList = {
 /** Player tabs: Home | Growth | Media | Discover */
 export type PlayerTabParamList = {
   Home: undefined;
-  Performance: { segment?: 'development' | 'stats' | 'career' } | undefined;
+  Performance: { segment?: 'development' | 'stats' | 'career'; reflectMatchId?: string } | undefined;
   Media: { reelId?: string } | undefined;
   Discover: undefined;
 };

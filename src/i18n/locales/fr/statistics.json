@@ -250,6 +250,8 @@
     "add": "Ajouter une réflexion pour {{opponent}}",
     "edit": "Modifier votre réflexion pour {{opponent}}",
     "addShort": "Ajouter une réflexion",
-    "editShort": "Modifier la réflexion"
+    "editShort": "Modifier la réflexion",
+    "promptTitle": "Revenez sur votre dernier match",
+    "promptBody": "Contre {{opponent}} : ce qui a bien fonctionné, ce qui a été difficile, et une priorité pour la prochaine séance — avec vos propres mots."
   }
 }

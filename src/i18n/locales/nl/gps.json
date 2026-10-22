@@ -23,7 +23,7 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Bewegingszones",
   "permissionRequired": "Locatietoestemming vereist",
-  "permissionDescription": "PitchProof gebruikt je positie alleen tijdens het opnemen, en alleen op deze telefoon, om afstand en een veld-heatmap te berekenen. Je locatie wordt nooit geüpload of gedeeld.",
+  "permissionDescription": "PitchProof gebruikt je positie alleen tijdens het opnemen. Ruwe positiepunten blijven op deze telefoon en worden verwijderd; alleen het sessieoverzicht (afstand, snelheden en bewegingszones) wordt in je account opgeslagen.",
   "movementDetail": "Bewegingsdetails",
   "movementDetailSubtitle": "Beweging en heatmap van deze sessie",
   "latestAnalysisSubtitle": "Beweging en heatmap van je laatste sessie",

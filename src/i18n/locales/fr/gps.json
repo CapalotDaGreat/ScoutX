@@ -23,7 +23,7 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Zones de déplacement",
   "permissionRequired": "Autorisation de localisation requise",
-  "permissionDescription": "PitchProof utilise ta position uniquement pendant l'enregistrement, et uniquement sur ce téléphone, pour calculer la distance et une heatmap du terrain. Ta localisation n'est jamais envoyée ni partagée.",
+  "permissionDescription": "PitchProof utilise votre position uniquement pendant l’enregistrement. Les points de position bruts restent sur ce téléphone et sont supprimés ; seul le résumé de session (distance, vitesses et zones de déplacement) est enregistré dans votre compte.",
   "movementDetail": "Détail des déplacements",
   "movementDetailSubtitle": "Déplacements et carte de chaleur de cette session",
   "latestAnalysisSubtitle": "Déplacements et carte de chaleur de ta dernière session",

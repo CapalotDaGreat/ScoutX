@@ -250,6 +250,8 @@
     "add": "Add a reflection for {{opponent}}",
     "edit": "Edit your reflection for {{opponent}}",
     "addShort": "Add reflection",
-    "editShort": "Edit reflection"
+    "editShort": "Edit reflection",
+    "promptTitle": "Reflect on your last match",
+    "promptBody": "Against {{opponent}}: what went well, what was difficult, and one priority for next training — in your own words."
   }
 }

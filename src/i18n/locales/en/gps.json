@@ -23,7 +23,7 @@
   "heatmaps": "Heatmaps",
   "movementZones": "Movement zones",
   "permissionRequired": "Location permission required",
-  "permissionDescription": "PitchProof uses your position only while you record, and only on this phone, to calculate distance and a pitch heatmap. Your location is never uploaded or shared.",
+  "permissionDescription": "PitchProof uses your position only while you record. Raw position points stay on this phone and are discarded; only the session summary (distance, speeds and movement zones) is saved to your account.",
   "movementDetail": "Movement detail",
   "movementDetailSubtitle": "Movement and heatmap for this session",
   "latestAnalysisSubtitle": "Movement and heatmap from your latest session",

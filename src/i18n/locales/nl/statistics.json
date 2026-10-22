@@ -250,6 +250,8 @@
     "add": "Reflectie toevoegen voor {{opponent}}",
     "edit": "Reflectie bewerken voor {{opponent}}",
     "addShort": "Reflectie toevoegen",
-    "editShort": "Reflectie bewerken"
+    "editShort": "Reflectie bewerken",
+    "promptTitle": "Reflecteer op je laatste wedstrijd",
+    "promptBody": "Tegen {{opponent}}: wat goed ging, wat moeilijk was, en één prioriteit voor de volgende training — in je eigen woorden."
   }
 }
