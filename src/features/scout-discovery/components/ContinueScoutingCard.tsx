@@ -32,9 +32,8 @@ export function ContinueScoutingCard({
       accessibilityLabel={t('continueCard.a11y', { name: player.fullName })}
       onPress={() => onPress(player)}
     >
-      <Card variant="elevated" padding="lg" className="overflow-hidden bg-surface-cool">
-        <View className="absolute right-0 top-0 h-24 w-24 rounded-full bg-accent/10" />
-        <View className="gap-4">
+      <Card variant="outlined" padding="md" className="overflow-hidden rounded-lg">
+        <View className="gap-3">
           <View>
             <Text variant="overline" color="secondary" className="uppercase">
               {t('continueCard.overline')}
@@ -64,7 +63,7 @@ export function ContinueScoutingCard({
             </View>
           </View>
 
-          <View className="gap-2">
+          <View className="flex-row flex-wrap gap-2">
             <Button
               variant="accent"
               rightIcon={<ArrowRight size={18} color={colors.accentForeground} />}

@@ -28,9 +28,9 @@ export function GpsSessionCard({ session }: GpsSessionCardProps) {
   const { t, i18n } = useAppTranslation(['gps']);
   const unit = useDistanceUnit();
   return (
-    <Card variant="outlined" padding="md" className="gap-3">
-      <View className="flex-row items-start justify-between gap-3">
-        <View className="flex-1">
+    <Card variant="outlined" padding="sm" className="gap-3 rounded-lg">
+      <View className="flex-row flex-wrap items-start justify-between gap-2">
+        <View className="min-w-0 flex-1">
           <Text weight="semibold">{session.matchLabel}</Text>
           <Text variant="caption" color="secondary" className="mt-1">
             {formatSessionDate(session.startedAt, i18n.language)}

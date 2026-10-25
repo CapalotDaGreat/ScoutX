@@ -13,7 +13,7 @@
   "deleteAccountDescription": "Elimina definitivamente il tuo account PitchProof e i dati del profilo.",
   "deleteAccount": "Elimina account",
   "deleteAccountTitle": "Elimina account",
-  "deleteAccountMessage": "Questa azione rimuove definitivamente il tuo account PitchProof, il profilo e le impostazioni push. Non può essere annullata.",
+  "deleteAccountMessage": "Il tuo account PitchProof e i dati associati saranno eliminati definitivamente, salvo le limitate eccezioni di conservazione descritte nell’Informativa sulla privacy. Non puoi annullare questa azione. Eliminare l’account non annulla un abbonamento Apple. Annulla separatamente il rinnovo nelle impostazioni degli abbonamenti Apple per evitare altri addebiti. Puoi eliminare subito l’account senza attendere la scadenza dell’abbonamento.",
   "language": "Lingua",
   "languageDescription": "Scegli la lingua preferita. Sostituisce il rilevamento automatico del dispositivo.",
   "languageAutomatic": "Automatica (dispositivo)",

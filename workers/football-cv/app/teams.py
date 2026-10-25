@@ -41,6 +41,16 @@ def team_match(torso: np.ndarray, primary: str, secondary: str = "") -> float:
     references = [rgb for rgb in (kit_rgb(primary), kit_rgb(secondary)) if rgb is not None]
     if not references:
         return 0.0
+    # Running poses make the person box much wider than the shirt. Suppress
+    # green-dominant background only for non-green kits, without selecting the
+    # requested colour itself. This is an uncalibrated heuristic, not segmentation.
     colour = dominant_colour(torso)
+    if KIT_COLOURS['green'] not in references:
+        pixels = torso.reshape(-1, 3).astype(float)
+        grass = (pixels[:, 1] > pixels[:, 0] * 1.05) & (pixels[:, 1] > pixels[:, 2] * 1.05)
+        retained = pixels[~grass]
+        if len(retained) < max(16, len(pixels) * 0.1):
+            return 0.0
+        colour = np.median(retained, axis=0)
     best = min(float(np.linalg.norm(colour - np.array(rgb, dtype=float))) for rgb in references)
     return max(0.0, 1.0 - best / (_MAX_DISTANCE * 0.5))

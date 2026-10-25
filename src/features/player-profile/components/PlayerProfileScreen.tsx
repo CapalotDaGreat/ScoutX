@@ -197,6 +197,8 @@ export function PlayerProfileScreen({
 
         {todaySlot}
 
+        <ProfileStatsGrid stats={homeQuickStats} compact />
+
         <HomePerformanceOverview
           matches={profile.statisticsMatches}
           onLogMatchPress={onLogMatchPress}
@@ -222,8 +224,6 @@ export function PlayerProfileScreen({
             onDismiss={onDismissOnboarding}
           />
         ) : null}
-
-        <ProfileStatsGrid stats={homeQuickStats} compact />
 
         {onActivityPress ? <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} /> : null}
 

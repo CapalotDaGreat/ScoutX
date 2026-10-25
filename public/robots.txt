@@ -1,0 +1,14 @@
+User-agent: *
+Disallow: /api/
+Disallow: /auth/
+Disallow: /guardian/
+Disallow: /player/
+Disallow: /scout/
+Disallow: /guest/
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /role
+Disallow: /link/
+
+Sitemap: https://pitchproof.online/sitemap.xml

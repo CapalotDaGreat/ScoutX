@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { ArrowRight, ShieldCheck, Sparkles, UserRound } from 'lucide-react-native';
+import { ArrowRight, Goal, UserRound } from 'lucide-react-native';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Screen } from '@/components/layout/Screen';
@@ -31,26 +31,24 @@ export function WelcomeScreen({
   const { t } = useAppTranslation('auth');
 
   return (
-    <Screen title={t('welcome.title')} subtitle={t('welcome.subtitle')} safeArea>
-      <View className="flex-1 justify-center">
-        <AuthCard title={t('welcome.cardTitle')} subtitle={t('welcome.cardSubtitle')}>
-          <View className="items-center justify-center rounded-2xl border border-gold/30 bg-gold-muted/50 p-6">
-            <View className="mb-4 rounded-full bg-gold-muted p-3">
-              <ShieldCheck size={28} color={colors.gold} strokeWidth={1.75} />
-            </View>
-            <Heading level={3} className="text-center">
+    <Screen safeArea>
+      <View className="flex-1 justify-center py-6">
+        <AuthCard title={t('welcome.title')} subtitle={t('welcome.subtitle')}>
+          <View className="gap-3 border-b border-divider pb-6">
+            <Goal size={36} color={colors.accent} strokeWidth={1.5} accessibilityElementsHidden importantForAccessibility="no" />
+            <Heading level={3}>
               {t('welcome.heroTitle')}
             </Heading>
-            <Text variant="body-sm" color="secondary" className="mt-2 text-center">
+            <Text variant="body-sm" color="secondary">
               {t('welcome.heroDescription')}
             </Text>
           </View>
 
           <View className="gap-3">
             <Button
-              variant="prestige"
+              variant="accent"
               onPress={onGetStarted}
-              rightIcon={<ArrowRight size={18} color={colors.goldForeground} strokeWidth={2} />}
+              rightIcon={<ArrowRight size={18} color={colors.accentForeground} strokeWidth={2} />}
             >
               {t('welcome.createAccount')}
             </Button>
@@ -64,7 +62,7 @@ export function WelcomeScreen({
               appleButtonType="sign-in"
             />
             <Button
-              variant="ghost"
+              variant="secondary"
               loading={isSubmitting}
               onPress={onContinueAsGuest}
               leftIcon={<UserRound size={18} color={colors.textSecondary} strokeWidth={1.75} />}
@@ -73,9 +71,8 @@ export function WelcomeScreen({
             </Button>
           </View>
 
-          <View className="flex-row items-center justify-center gap-2 pt-2">
-            <Sparkles size={16} color={colors.gold} strokeWidth={1.5} />
-            <Text variant="caption" color="prestige">
+          <View className="pt-1">
+            <Text variant="caption" color="secondary">
               {t('welcome.guestHint')}
             </Text>
           </View>

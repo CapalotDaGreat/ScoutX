@@ -69,7 +69,9 @@ if (expoGoSession) {
   env.EXPO_PUBLIC_EXPO_GO = '1';
   env.EXPO_PUBLIC_APP_CHECK_ENABLED = 'false';
 } else {
-  delete env.EXPO_PUBLIC_EXPO_GO;
+  // Explicit values take precedence over the Expo Go defaults in generated .env.local.
+  env.EXPO_PUBLIC_EXPO_GO = '0';
+  env.EXPO_PUBLIC_APP_CHECK_ENABLED = 'true';
   console.log('[expo] Development-client mode — native Google Sign-In / App Check enabled');
 }
 

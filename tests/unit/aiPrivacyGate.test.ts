@@ -31,7 +31,8 @@ describe('OpenRouter configuration stays server-side and constrained', () => {
   });
 
   test('models outside the allowlist are ignored', () => {
-    assert.equal(resolveModel('vision', deployed({ OPENROUTER_VISION_MODEL: 'some/unvetted-model' })), 'google/gemini-2.0-flash-001');
+    assert.equal(resolveModel('vision', deployed({ OPENROUTER_VISION_MODEL: 'some/unvetted-model' })), 'google/gemini-2.5-flash');
+    assert.equal(resolveModel('vision', deployed({ OPENROUTER_VISION_MODEL: 'google/gemini-2.0-flash-001' })), 'google/gemini-2.5-flash', 'retired overrides fall back to the available allowlisted model');
     assert.equal(resolveModel('vision', deployed({ OPENROUTER_VISION_MODEL: 'google/gemini-2.5-flash' })), 'google/gemini-2.5-flash');
   });
 });

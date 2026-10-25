@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
-import { StatCard } from '@/components/primitives/StatCard';
 import { Text } from '@/components/primitives/Text';
 import { type StatisticSummaryItem } from '@/features/player-statistics/types';
 import { useStatisticLabels } from '@/features/player-statistics/hooks/useStatisticLabels';
@@ -19,16 +18,13 @@ const DEFAULT_PRIMARY_KEYS = ['matches', 'goals', 'assists', 'minutes'];
 function MetricGrid({ items }: { items: StatisticSummaryItem[] }) {
   const labels = useStatisticLabels();
   return (
-    <View className="flex-row flex-wrap gap-3">
+    <View className="flex-row flex-wrap border-t border-border">
       {items.map((item) => (
-        <View key={item.key} className="min-w-[45%] flex-1">
-          <StatCard
-            label={labels.metric(item.key)}
-            value={item.formattedValue}
-            trend={{ direction: item.trend.direction, value: labels.trend(item.trend) }}
-            variant="elevated"
-          />
-          <Text variant="caption" color="secondary" className="mt-1 px-1">
+        <View key={item.key} className="min-w-[45%] flex-1 gap-1 border-b border-border px-2 py-4">
+          <Text variant="label" color="secondary">{labels.metric(item.key)}</Text>
+          <Text weight="bold" className="text-stat-lg">{item.formattedValue}</Text>
+          <Text variant="caption" color="secondary">{labels.trend(item.trend)}</Text>
+          <Text variant="caption" color="secondary">
             {labels.average(item.key, item.formattedAverage)}
           </Text>
         </View>

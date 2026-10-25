@@ -1,4 +1,19 @@
 {
+  "import": {
+    "title": "Import depuis un capteur",
+    "choose": "Choisir un fichier GPX, TCX ou CSV de mesures",
+    "privacy": "Traitement sur cet appareil. Les coordonnées brutes et les horodatages d'origine ne sont pas enregistrés. Aucun compte fournisseur n'est connecté.",
+    "label": "Nom de la séance locale",
+    "confirm": "Enregistrer le résumé localement",
+    "cancel": "Annuler",
+    "remove": "Supprimer l'import local",
+    "quality": "{{rejected}} mesures exclues ; {{gaps}} interruptions ; {{segments}} sections continues.",
+    "provenance": "Fichier de capteur fourni par l'utilisateur. La précision peut être inconnue. Aucun match associé, aucune synchronisation vidéo ni orientation du terrain confirmée. Les vitesses sont calculées à partir des positions.",
+    "saved": "Dernier import enregistré uniquement sur cet appareil, en remplacement du précédent import local. L'historique dans le cloud et l'association à un match ne sont pas implémentés.",
+    "unsupported": "Ce format n'est pas pris en charge. Les imports FIT et ZIP ne sont pas implémentés.",
+    "tooLarge": "Choisis un fichier de moins de 5 Mio contenant au maximum 50 000 mesures.",
+    "invalid": "Import impossible. Vérifie les coordonnées et les horodatages avec fuseau horaire. Le CSV doit contenir les colonnes timestamp,latitude,longitude et, éventuellement, accuracy_m, sans guillemets."
+  },
   "title": "Suivi GPS",
   "subtitle": "Enregistre déplacements, distance et heatmaps",
   "recordingSubtitle": "Enregistre tes déplacements en match avec un échantillonnage économe en batterie",

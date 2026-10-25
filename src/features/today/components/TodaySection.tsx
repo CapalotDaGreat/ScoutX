@@ -282,7 +282,7 @@ function PrimaryActionCard({ action, onAction }: { action: NextBestAction; onAct
   const { colors } = useTheme();
   const copy = actionCopy(t, action);
   return (
-    <Card variant="prestige" padding="md" className="gap-3">
+    <View className="gap-3 border-l-4 border-accent bg-surface px-4 py-4">
       <View className="flex-row items-center gap-2">
         <Sparkles size={16} color={colors.accent} />
         <Text variant="overline" color="secondary">
@@ -303,7 +303,7 @@ function PrimaryActionCard({ action, onAction }: { action: NextBestAction; onAct
       >
         {copy.title}
       </Button>
-    </Card>
+    </View>
   );
 }
 
@@ -317,7 +317,7 @@ function SecondaryActionRow({ action, onAction }: { action: NextBestAction; onAc
       accessibilityLabel={copy.title}
       accessibilityHint={copy.reason}
       onPress={() => onAction(action.route, action.entityId)}
-      className="min-h-14 flex-row items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 active:opacity-80"
+      className="min-h-14 flex-row items-center gap-3 border-b border-border py-3 active:opacity-80"
     >
       <View className="min-w-0 flex-1">
         <Text weight="semibold" numberOfLines={2}>
@@ -345,7 +345,7 @@ function ContinueList({ items, onAction }: { items: ContinueItem[]; onAction: To
         return (
           <View
             key={item.id}
-            className="flex-row items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3"
+            className="flex-row flex-wrap items-center gap-3 border-b border-border py-3"
           >
             <View className="min-w-0 flex-1">
               <Text weight="semibold" numberOfLines={1}>
@@ -502,10 +502,6 @@ export function TodaySection({
 
   return (
     <View className="gap-4">
-      {changes.length > 0 && onChangesSeen ? (
-        <SinceLastVisitCard changes={changes} onAction={onAction} onDismiss={onChangesSeen} />
-      ) : null}
-
       {plan.primary ? (
         <PrimaryActionCard action={plan.primary} onAction={onAction} />
       ) : (
@@ -514,6 +510,14 @@ export function TodaySection({
           <Text color="secondary">{t('portfolio:today.upToDateDescription')}</Text>
         </Card>
       )}
+
+      {plan.continueItems.length > 0 ? (
+        <ContinueList items={plan.continueItems} onAction={onAction} />
+      ) : null}
+
+      {changes.length > 0 && onChangesSeen ? (
+        <SinceLastVisitCard changes={changes} onAction={onAction} onDismiss={onChangesSeen} />
+      ) : null}
 
       {analysesUnavailable ? (
         <Text variant="caption" color="warning" className="px-1">
@@ -535,10 +539,6 @@ export function TodaySection({
       {goalFocus ? <GoalFocusCard focus={goalFocus} onAction={onAction} /> : null}
 
       {evidence ? <NextEvidenceCard evidence={evidence} onAction={onAction} /> : null}
-
-      {plan.continueItems.length > 0 ? (
-        <ContinueList items={plan.continueItems} onAction={onAction} />
-      ) : null}
 
       <View className="flex-row flex-wrap gap-3">
         {upcomingTrial ? (

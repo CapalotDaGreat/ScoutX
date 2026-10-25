@@ -21,8 +21,8 @@
     "web": "node scripts/start-expo.mjs --expo-go --web --online",
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tests",
-    "test:unit": "node --import ./tests/unit/support/register.mjs --test \"tests/unit/*.test.ts\"",
-    "test:rules": "npm run build --prefix functions && firebase emulators:exec --only firestore,storage --project demo-scoutx \"node --import ./tests/unit/support/register.mjs --test --test-concurrency=1 tests/rules/firestore.rules.test.mjs tests/rules/storage.rules.test.mjs tests/rules/accountDeletion.test.mjs tests/rules/aiCallables.test.mjs tests/rules/pushChain.test.mjs tests/rules/requestCenter.test.mjs tests/rules/reelExport.test.mjs tests/rules/moderation.test.mjs tests/rules/uploads.test.mjs tests/rules/analysisPipeline.test.mjs tests/rules/entitlements.test.mjs tests/rules/dataRights.test.mjs tests/rules/guardianFlow.test.mjs tests/rules/deletionAuth.test.mjs tests/rules/footballSources.test.mjs\"",
+    "test:unit": "node --import ./tests/unit/support/register.mjs --test --test-concurrency=2 \"tests/unit/*.test.ts\"",
+    "test:rules": "npm run build --prefix functions && firebase emulators:exec --only firestore,storage --project demo-scoutx \"node --import ./tests/unit/support/register.mjs --test --test-concurrency=1 tests/rules/firestore.rules.test.mjs tests/rules/storage.rules.test.mjs tests/rules/accountDeletion.test.mjs tests/rules/aiCallables.test.mjs tests/rules/pushChain.test.mjs tests/rules/requestCenter.test.mjs tests/rules/reelExport.test.mjs tests/rules/moderation.test.mjs tests/rules/uploads.test.mjs tests/rules/analysisPipeline.test.mjs tests/rules/targetAnchors.test.mjs tests/rules/entitlements.test.mjs tests/rules/dataRights.test.mjs tests/rules/guardianFlow.test.mjs tests/rules/deletionAuth.test.mjs tests/rules/footballSources.test.mjs tests/rules/discoverySearch.test.mjs\"",
     "legal:build": "node scripts/build-legal.mjs",
     "release:gate": "node scripts/release-gate.mjs",
     "cv:approval": "node scripts/cv-approval.mjs",
@@ -33,7 +33,15 @@
     "test:e2e:ui": "playwright test --ui",
     "agentation:apply": "re-agentation-apply",
     "test:e2e:emulators": "npm run build --prefix functions && node scripts/run-e2e-emulators.mjs",
-    "seed:emulators": "node scripts/seed-emulators.mjs"
+    "seed:emulators": "node scripts/seed-emulators.mjs",
+    "marketing:assets": "node scripts/marketing-compose.mjs && node scripts/marketing-web-assets.mjs && node scripts/marketing-validate.mjs && node scripts/marketing-preview.mjs",
+    "marketing:capture": "node scripts/marketing-capture.mjs",
+    "marketing:compose": "node scripts/marketing-compose.mjs",
+    "marketing:validate": "node scripts/marketing-validate.mjs",
+    "marketing:preview": "node scripts/marketing-preview.mjs",
+    "marketing:test": "node scripts/marketing-test.mjs",
+    "marketing:native:plan": "node scripts/marketing-native-compose.mjs --validate-plan",
+    "marketing:native:compose": "node scripts/marketing-native-compose.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.3",
@@ -48,6 +56,7 @@
     "@sentry/react-native": "~7.11.0",
     "@shopify/flash-list": "2.0.2",
     "@tanstack/react-query": "^5.103.2",
+    "@xmldom/xmldom": "0.8.15",
     "clsx": "^2.1.1",
     "expo": "~57.0.31",
     "expo-apple-authentication": "~57.0.2",
@@ -110,6 +119,21 @@
     "babel-preset-expo": "~57.0.0",
     "eslint": "^9.39.4",
     "typescript": "~6.0.3"
+  },
+  "overrides": {
+    "zod": "4.6.7",
+    "@expo/ngrok": {
+      "uuid": "11.1.1"
+    },
+    "@firebase/firestore": {
+      "@grpc/grpc-js": "1.13.6"
+    },
+    "tailwindcss": {
+      "postcss-selector-parser": "7.1.6"
+    },
+    "postcss-nested": {
+      "postcss-selector-parser": "7.1.6"
+    }
   },
   "private": true
 }

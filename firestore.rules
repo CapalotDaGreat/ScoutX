@@ -481,6 +481,10 @@ service cloud.firestore {
       allow read: if isSignedIn();
       allow write: if false;
     }
+    match /discoverySearchState/{stateId} {
+      allow get: if isSignedIn() && stateId == 'current';
+      allow list, write: if false;
+    }
 
     match /scoutBriefs/{briefId} {
       allow read: if isSignedIn() && request.auth.uid == resource.data.scoutId;

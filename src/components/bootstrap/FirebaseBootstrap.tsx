@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { LoadingScreen } from '@/components';
 import { ensureFirebaseInitialized } from '@/config/firebase';
+import { useMockData } from '@/config/appMode';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 type FirebaseBootstrapProps = {
@@ -17,7 +18,9 @@ export function FirebaseBootstrap({ children }: FirebaseBootstrapProps) {
 
     const bootstrap = async () => {
       try {
-        await ensureFirebaseInitialized();
+        // Explicit local demos must not initialize a real backend. Production
+        // useMockData() is always false, even when the environment flag is set.
+        if (!useMockData()) await ensureFirebaseInitialized();
         if (!cancelled) {
           setError(null);
           setIsReady(true);

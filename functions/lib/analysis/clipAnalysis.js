@@ -5,6 +5,7 @@ exports.buildClipPrompt = buildClipPrompt;
 exports.normalizeClipReport = normalizeClipReport;
 const promptBuilder_1 = require("../ai/promptBuilder");
 const outputValidator_1 = require("../ai/outputValidator");
+const positionFramework_1 = require("./positionFramework");
 /**
  * Short-clip analysis (up to 60 s): the phone samples a dense frame sequence and only those
  * stills are analysed. Every claim must cite frames from the sequence; timestamps always come
@@ -21,11 +22,12 @@ const SYSTEM = [
     'Confidence is at most "medium" because still frames miss motion between them.',
 ];
 function buildClipPrompt(params) {
-    const goalkeeperFocus = params.clipContext === 'save' || params.targeting.position === 'goalkeeper';
+    const goalkeeperFocus = params.clipContext === 'save' || params.targeting.position === 'goalkeeper' || params.targeting.position === 'GK';
     return (0, promptBuilder_1.buildPrompt)({
         system: SYSTEM,
         trusted: [
             'Analyse the nominated player described in USER_METADATA.targeting across the frame sequence.',
+            ...(0, positionFramework_1.positionEvaluationInstructions)(params.targeting),
             'Sequence guide:',
             ...params.frames.map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s`),
             params.identityConfirmed ? 'The player confirmed which person they are.' : 'Identity is based only on the nominated description.',

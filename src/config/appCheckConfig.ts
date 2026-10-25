@@ -1,5 +1,6 @@
 import Constants from 'expo-constants';
 import { isProductionApp } from '@/config/appMode';
+import { resolveAppCheckPolicy } from '@/config/appCheckPolicy';
 
 export type AndroidAppCheckProviderName = 'debug' | 'playIntegrity';
 
@@ -37,13 +38,11 @@ function trimEnv(value: string | undefined): string | undefined {
 }
 
 export function isAppCheckEnabled(): boolean {
-  const flag = trimEnv(process.env.EXPO_PUBLIC_APP_CHECK_ENABLED);
-  return flag !== 'false' && flag !== '0';
+  return resolveAppCheckPolicy(isProductionApp(), process.env.EXPO_PUBLIC_APP_CHECK_ENABLED).enabled;
 }
 
 export function getAppCheckRuntimeConfig(): AppCheckRuntimeConfig {
-  const explicitDebug = trimEnv(process.env.EXPO_PUBLIC_APP_CHECK_USE_DEBUG) === 'true';
-  const useDebugProvider = explicitDebug || !isProductionApp();
+  const { useDebugProvider } = resolveAppCheckPolicy(isProductionApp());
 
   const androidDebugToken = trimEnv(process.env.EXPO_PUBLIC_APP_CHECK_ANDROID_DEBUG_TOKEN);
   const appleDebugToken = trimEnv(process.env.EXPO_PUBLIC_APP_CHECK_IOS_DEBUG_TOKEN);
@@ -56,16 +55,16 @@ export function getAppCheckRuntimeConfig(): AppCheckRuntimeConfig {
     isExpoGo: Constants.executionEnvironment === 'storeClient',
     android: {
       provider: useDebugProvider ? 'debug' : 'playIntegrity',
-      debugToken: androidDebugToken,
+      debugToken: useDebugProvider ? androidDebugToken : undefined,
     },
     apple: {
       provider: useDebugProvider ? 'debug' : 'appAttestWithDeviceCheckFallback',
-      debugToken: appleDebugToken,
+      debugToken: useDebugProvider ? appleDebugToken : undefined,
     },
     web: {
       provider: useDebugProvider ? 'debug' : 'reCaptchaV3',
       recaptchaSiteKey,
-      debugToken: webDebugToken,
+      debugToken: useDebugProvider ? webDebugToken : undefined,
     },
   };
 }

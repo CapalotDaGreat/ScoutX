@@ -3,37 +3,20 @@ import { resolve } from 'node:path';
 import type { ExpoConfig } from 'expo/config';
 import appJson from './app.json';
 import { missingRequiredLegalContacts } from './src/config/legalConfig.ts';
+import { productionBuildProblems } from './src/config/releaseBuildPolicy.ts';
+import { withFirebaseBuildProperties } from './src/config/nativeBuildPlugins.ts';
 
 const baseConfig = appJson.expo as ExpoConfig;
 const projectRoot = __dirname;
 
 const isExpoGoDev = process.env.EXPO_PUBLIC_EXPO_GO === '1';
 
-// EXPO_PUBLIC_* values are inlined into the JS bundle, so a client AI key would ship to every user.
-if (
-  process.env.EAS_BUILD_PROFILE === 'production' &&
-  process.env.EXPO_PUBLIC_OPENROUTER_API_KEY?.trim()
-) {
-  throw new Error(
-    'EXPO_PUBLIC_OPENROUTER_API_KEY must not be set for production builds; AI runs through Cloud Functions.',
-  );
-}
-// RevenueCat Test Store keys complete purchases without the App Store; they must never reach users.
-if (
-  process.env.EAS_BUILD_PROFILE === 'production' &&
-  process.env.EXPO_PUBLIC_REVENUECAT_IOS_KEY?.trim().startsWith('test_')
-) {
-  throw new Error(
-    'EXPO_PUBLIC_REVENUECAT_IOS_KEY is a RevenueCat Test Store key; production builds need the App Store (appl_) key.',
-  );
-}
 // Legal documents render LEGAL_CONTACT_REQUIRED for missing contacts; production must not ship that.
-if (process.env.EAS_BUILD_PROFILE === 'production' && process.env.ALLOW_LEGAL_PLACEHOLDERS !== '1') {
+if (process.env.EAS_BUILD_PROFILE === 'production') {
   const missingContacts = missingRequiredLegalContacts();
   if (missingContacts.length > 0) {
     throw new Error(
-      `Production build blocked: LEGAL_CONFIG is missing ${missingContacts.join(', ')} in src/config/legalConfig.ts. ` +
-        'Set ALLOW_LEGAL_PLACEHOLDERS=1 only for internal test builds.',
+      `Production build blocked: LEGAL_CONFIG is missing ${missingContacts.join(', ')} in src/config/legalConfig.ts.`,
     );
   }
 }
@@ -76,7 +59,7 @@ const googleSignInPlugin: NonNullable<ExpoConfig['plugins']>[number] = googleIos
     ]
   : '@react-native-google-signin/google-signin';
 
-const plugins = [...(baseConfig.plugins ?? [])].filter((plugin) => {
+let plugins = [...(baseConfig.plugins ?? [])].filter((plugin) => {
   if (!isExpoGoDev) {
     return true;
   }
@@ -133,22 +116,7 @@ if (!isExpoGoDev) {
     plugins.push('@react-native-firebase/app-check');
   }
 
-  const hasBuildPropertiesPlugin = plugins.some((plugin) =>
-    plugin === 'expo-build-properties' ||
-    (Array.isArray(plugin) && plugin[0] === 'expo-build-properties'),
-  );
-
-  if (!hasBuildPropertiesPlugin) {
-    plugins.push([
-      'expo-build-properties',
-      {
-        ios: {
-          useFrameworks: 'static',
-          forceStaticLinking: ['RNFBApp', 'RNFBAppCheck'],
-        },
-      },
-    ]);
-  }
+  plugins = withFirebaseBuildProperties(plugins);
 }
 
 const hasSecureStorePlugin = plugins.some((plugin) =>
@@ -174,6 +142,15 @@ const iosConfig: NonNullable<ExpoConfig['ios']> = {
 
 if (configFileExists(googleServicesPlist)) {
   iosConfig.googleServicesFile = googleServicesPlist;
+}
+
+if (process.env.EAS_BUILD_PROFILE === 'production') {
+  const problems = productionBuildProblems(
+    process.env, process.env.EAS_BUILD_PLATFORM ?? 'ios', configFileExists(googleServicesPlist),
+  );
+  if (problems.length > 0) {
+    throw new Error(`Production build blocked:\n${problems.map((problem) => problem.message).join('\n')}`);
+  }
 }
 
 const androidConfig: NonNullable<ExpoConfig['android']> = {

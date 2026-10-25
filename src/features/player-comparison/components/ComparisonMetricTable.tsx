@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { View } from 'react-native';
-import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { COMPARISON_PLAYER_COLORS } from '@/features/player-comparison/constants';
 import { type ComparisonMetricRow } from '@/features/player-comparison/types';
@@ -29,7 +28,7 @@ export const ComparisonMetricTable = memo(function ComparisonMetricTable({
   }
 
   return (
-    <Card variant="outlined" padding="none" className="overflow-hidden">
+    <View className="overflow-hidden border-y border-divider">
       <View className="flex-row border-b border-divider bg-background-secondary">
         <View className="w-[38%] justify-center px-3 py-3">
           <Text variant="caption" className="font-sans-semibold uppercase text-foreground-secondary">
@@ -57,7 +56,8 @@ export const ComparisonMetricTable = memo(function ComparisonMetricTable({
           <View
             key={row.key}
             className={cn(
-              'flex-row border-b border-divider',
+              'min-h-[48px] flex-row border-b border-divider',
+              rowIndex % 2 === 1 && 'bg-background-secondary',
               rowIndex === rows.length - 1 && 'border-b-0',
             )}
           >
@@ -98,6 +98,6 @@ export const ComparisonMetricTable = memo(function ComparisonMetricTable({
           </View>
         );
       })}
-    </Card>
+    </View>
   );
 });

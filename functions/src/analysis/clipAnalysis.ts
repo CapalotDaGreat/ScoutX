@@ -1,6 +1,7 @@
 import { buildPrompt } from '../ai/promptBuilder';
 import { cleanModelText, knownFrameIds, oneOf } from '../ai/outputValidator';
 import type { ClipContext } from './mode';
+import { positionEvaluationInstructions } from './positionFramework';
 
 /**
  * Short-clip analysis (up to 60 s): the phone samples a dense frame sequence and only those
@@ -59,11 +60,12 @@ export function buildClipPrompt(params: {
   clipContext: ClipContext;
   identityConfirmed: boolean;
 }): { system: string; user: string } {
-  const goalkeeperFocus = params.clipContext === 'save' || params.targeting.position === 'goalkeeper';
+  const goalkeeperFocus = params.clipContext === 'save' || params.targeting.position === 'goalkeeper' || params.targeting.position === 'GK';
   return buildPrompt({
     system: SYSTEM,
     trusted: [
       'Analyse the nominated player described in USER_METADATA.targeting across the frame sequence.',
+      ...positionEvaluationInstructions(params.targeting),
       'Sequence guide:',
       ...params.frames.map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s`),
       params.identityConfirmed ? 'The player confirmed which person they are.' : 'Identity is based only on the nominated description.',

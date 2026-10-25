@@ -26,10 +26,10 @@ export function TrustSafetyActions({
   includePassportReport = false,
 }: TrustSafetyActionsProps) {
   const { colors } = useTheme();
-  const { t } = useAppTranslation(['trust', 'common']);
+  const { t } = useAppTranslation(['trust', 'common', 'errors']);
   const { user } = useAuth();
   const blockerId = user?.id ?? null;
-  const { isUserBlocked, blockUser, unblockUser } = useBlockedUsers(blockerId);
+  const { isUserBlocked, blockUser, unblockUser, isLoading, error, refresh } = useBlockedUsers(blockerId);
 
   if (!blockerId || (hideWhenSelf && blockerId === targetUserId)) {
     return null;
@@ -44,7 +44,7 @@ export function TrustSafetyActions({
         {
           text: t('trust:block.unblock'),
           onPress: () => {
-            void unblockUser(targetUserId);
+            void unblockUser(targetUserId).catch(() => Alert.alert(t('trust:block.unblockTitle'), t('errors:saveFailed')));
           },
         },
       ]);
@@ -60,7 +60,7 @@ export function TrustSafetyActions({
           text: t('trust:block.block'),
           style: 'destructive',
           onPress: () => {
-            void blockUser(targetUserId, targetUserName);
+            void blockUser(targetUserId, targetUserName).catch(() => Alert.alert(t('trust:block.blockTitle'), t('errors:saveFailed')));
           },
         },
       ],
@@ -68,7 +68,7 @@ export function TrustSafetyActions({
   };
 
   return (
-    <View className="flex-row flex-wrap items-center gap-2">
+    <View className="w-full min-w-0 flex-row flex-wrap items-center gap-2">
       <ReportContentButton
         targetType="user"
         targetId={targetUserId}
@@ -83,6 +83,7 @@ export function TrustSafetyActions({
         />
       ) : null}
       <Button
+        disabled={isLoading || Boolean(error)}
         variant="ghost"
         size="sm"
         leftIcon={
@@ -96,6 +97,7 @@ export function TrustSafetyActions({
       >
         {blocked ? t('trust:block.unblock') : t('trust:block.block')}
       </Button>
+      {error ? <Button variant="ghost" size="sm" onPress={() => { void refresh(); }}>{t('common:retry')}</Button> : null}
     </View>
   );
 }

@@ -66,7 +66,7 @@ export function PlayerMediaTab({
       />
       {segment === 'library' ? (
         <Screen
-          title={t('screens.highlights')}
+          title={t('tabs.media')}
           subtitle={t('screens.highlightsSubtitle')}
           safeArea
           embeddedInTabShell

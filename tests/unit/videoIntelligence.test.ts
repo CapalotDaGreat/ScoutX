@@ -190,7 +190,7 @@ describe('CV worker gating and contract v2', () => {
     segmentIndex: 1,
     stages: { tracking: 'complete', identity: 'complete', events: 'unavailable', pitch: 'unavailable' },
     cameraView: 'wide',
-    identity: { state: 'CANDIDATE', candidates: [{ trackId: 't4', jerseyRead: '8', jerseyConfidence: 0.8, teamMatch: 0.9, firstSec: 610, lastSec: 900 }] },
+    identity: { state: 'CONFIRMED_VISIBLE', candidates: [{ trackId: 't4', jerseyRead: '8', jerseyConfidence: 0.8, teamMatch: 0.9, firstSec: 610, lastSec: 900 }] },
     availability: [
       { startSec: 600, endSec: 700, state: 'CONFIRMED_VISIBLE', confidence: 0.8 },
       { startSec: 700, endSec: 760, state: 'LIKELY_ACTIVE_OFF_CAMERA', confidence: 0.5 },
@@ -257,7 +257,7 @@ describe('CV worker gating and contract v2', () => {
       'overlapping windows',
     );
     const odd = parseCvSegmentResult({ ...valid, availability: [{ startSec: 600, endSec: 700, state: 'TELEPORTED', confidence: 0.9 }] }, segment);
-    assert.equal(odd?.availability.length, 0);
+    assert.equal(odd, null, 'unknown windows cannot support claimed visible time');
   });
 
   test('gaps between tracked windows become unknown, never inferred', () => {

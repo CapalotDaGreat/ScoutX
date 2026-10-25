@@ -2,48 +2,28 @@ import {
   type DiscoverablePlayer,
   type DiscoveryFilters,
   type DiscoveryQuery,
-  type DiscoverySearchScope,
+  type DiscoveryPageResult,
   type DiscoverySortOption,
 } from '@/features/scout-discovery/types';
-import { rankPlayersBySearchRelevance } from '@/features/scout-discovery/services/smartDiscoveryService';
+import { matchesPlayerSearch } from '@/features/scout-discovery/services/smartDiscoveryService';
+import { publicEvidenceRank } from './discoverySearchIndex';
 import {
   matchesRole,
   meetsEvidenceCoverage,
   meetsEvidenceFreshness,
 } from '@/features/scout-intelligence/services/briefMatch';
 
-function matchesScopedField(value: string, query: string): boolean {
-  return value.toLowerCase().includes(query);
-}
-
-function matchesSearch(
-  player: DiscoverablePlayer,
-  search: string,
-  scope: DiscoverySearchScope = 'all',
-): boolean {
-  const query = search.trim().toLowerCase();
-  if (!query) {
-    return true;
+export function paginateDiscoveryPlayers(
+  players: DiscoverablePlayer[], cursor: string | null, pageSize: number,
+): DiscoveryPageResult {
+  if (!Number.isInteger(pageSize) || pageSize < 1 || pageSize > 40) {
+    throw new Error('Invalid discovery page size.');
   }
-
-  switch (scope) {
-    case 'name':
-      return (
-        matchesScopedField(player.fullName, query) ||
-        Boolean(player.username && matchesScopedField(player.username, query))
-      );
-    case 'club':
-      return matchesScopedField(player.club, query);
-    case 'position':
-      return player.position.some((position) => matchesScopedField(position, query));
-    case 'nationality':
-      return matchesScopedField(player.nationality, query);
-    case 'league':
-      return matchesScopedField(player.league, query);
-    case 'all':
-    default:
-      return player.searchKeywords.some((keyword) => keyword.includes(query));
-  }
+  const index = cursor === null ? -1 : players.findIndex((player) => player.id === cursor);
+  if (cursor !== null && index < 0) throw new Error('Discovery cursor is stale; restart search.');
+  const page = players.slice(index + 1, index + 1 + pageSize);
+  const hasMore = index + 1 + page.length < players.length;
+  return { players: page, nextCursor: hasMore ? page[page.length - 1]?.id ?? null : null, hasMore };
 }
 
 /**
@@ -60,6 +40,8 @@ function meetsMax(value: number | null, max: number | null): boolean {
 
 /** Sort helper: known values first (per direction), unknown values last. */
 function compareNullable(a: number | null, b: number | null, direction: 'asc' | 'desc'): number {
+  a = a !== null && Number.isFinite(a) ? a : null;
+  b = b !== null && Number.isFinite(b) ? b : null;
   if (a === null && b === null) return 0;
   if (a === null) return 1;
   if (b === null) return -1;
@@ -116,12 +98,8 @@ export function filterAndSortPlayers(
   const scope = query.searchScope ?? 'all';
   const filtered = players.filter(
     (player) =>
-      matchesSearch(player, query.search, scope) && matchesFilters(player, query.filters),
+      matchesPlayerSearch(player, query.search, scope) && matchesFilters(player, query.filters),
   );
-
-  if (query.search.trim() && query.sort === 'relevance') {
-    return rankPlayersBySearchRelevance(filtered, query.search);
-  }
 
   return sortPlayers(filtered, query.sort);
 }
@@ -132,7 +110,7 @@ export function filterAndSortPlayers(
  * instead of ranking players by an invented composite.
  */
 export function normalizeDiscoverySort(sort: DiscoverySortOption): DiscoverySortOption {
-  return sort === 'overall' || sort === 'potential' ? 'recently_updated' : sort;
+  return sort === 'overall' || sort === 'potential' || sort === 'newest' ? 'recently_updated' : sort;
 }
 
 export function sortPlayers(
@@ -142,16 +120,18 @@ export function sortPlayers(
   const sorted = [...players];
   const effectiveSort = normalizeDiscoverySort(sort);
 
-  sorted.sort((a, b) => {
+  const compare = (a: DiscoverablePlayer, b: DiscoverablePlayer): number => {
     switch (effectiveSort) {
+      case 'relevance':
+        return publicEvidenceRank(b) - publicEvidenceRank(a);
       case 'age':
         return compareNullable(a.age, b.age, 'asc');
       case 'name':
         return a.fullName.localeCompare(b.fullName);
       case 'distance':
-        return (a.distanceKm ?? 999) - (b.distanceKm ?? 999);
+        return compareNullable(a.distanceKm, b.distanceKm, 'asc');
       case 'recently_updated':
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        return compareNullable(Date.parse(a.updatedAt), Date.parse(b.updatedAt), 'desc');
       case 'most_viewed':
         return b.viewCount - a.viewCount;
       case 'sprint_speed':
@@ -164,12 +144,11 @@ export function sortPlayers(
         return b.goals - a.goals;
       case 'assists':
         return b.assists - a.assists;
-      case 'newest':
-        return a.id.localeCompare(b.id);
       default:
         return 0;
     }
-  });
+  };
+  sorted.sort((a, b) => compare(a, b) || a.id.localeCompare(b.id));
 
   return sorted;
 }

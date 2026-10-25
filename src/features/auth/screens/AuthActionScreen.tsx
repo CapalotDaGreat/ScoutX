@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button } from '@/components/primitives/Button';
@@ -10,6 +10,7 @@ import { handleAuthActionLink } from '@/features/auth/services/authActionLinkSer
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import type { AuthStackParamList, RootStackParamList } from '@/navigation/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useTheme } from '@/theme';
 
 export type AuthActionScreenProps = NativeStackScreenProps<AuthStackParamList, 'AuthAction'>;
 
@@ -27,6 +28,7 @@ function resolveAuthenticatedRoot(
 }
 
 export function AuthActionScreen({ navigation, route }: AuthActionScreenProps) {
+  const { colors } = useTheme();
   const { t } = useAppTranslation(['auth', 'common']);
   const { status, pendingRoleSelection, isGuest, role } = useAuth();
   const { mode, oobCode } = route.params;
@@ -113,16 +115,19 @@ export function AuthActionScreen({ navigation, route }: AuthActionScreenProps) {
   };
 
   return (
-    <Screen title={title} subtitle={t('auth:authAction.subtitle')} safeArea>
+    <Screen contentClassName="py-6" safeArea>
       <AuthCard title={title} subtitle={t('auth:authAction.cardSubtitle')}>
         {isProcessing ? (
-          <Text variant="body-sm" color="secondary">
-            {t('auth:authAction.processing')}
-          </Text>
+          <View accessibilityLiveRegion="polite" accessibilityState={{ busy: true }} className="flex-row items-center gap-3 py-4">
+            <ActivityIndicator size="small" color={colors.accent} />
+            <Text variant="body-sm" color="secondary" className="min-w-0 flex-1">
+              {t('auth:authAction.processing')}
+            </Text>
+          </View>
         ) : null}
 
         {error ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive" className="rounded-[8px] border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {error}
             </Text>
@@ -130,8 +135,8 @@ export function AuthActionScreen({ navigation, route }: AuthActionScreenProps) {
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
-            <Text variant="body-sm" color="accent">
+          <View accessibilityLiveRegion="polite" className="rounded-[8px] border border-success/20 bg-success-muted px-3 py-3">
+            <Text variant="body-sm" color="success">
               {successMessage}
             </Text>
           </View>

@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
-import { StatCard } from '@/components/primitives/StatCard';
 import { Text } from '@/components/primitives/Text';
 import { useCareerReplayShare } from '@/features/career-replay/hooks/useCareerReplayShare';
 import { buildCareerReplayData } from '@/features/career-replay/services/careerReplayService';
@@ -34,7 +33,7 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
   return (
     <>
       <ShareCaptureLayer />
-      <Card variant="outlined" padding="md" className="gap-4">
+      <Card variant="outlined" padding="sm" className="gap-3 rounded-lg">
         <View className="gap-1">
           <Text variant="overline" color="secondary">
             {t('career:replayCard.overline')}
@@ -63,9 +62,15 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
         </View>
 
         {hasSeasonActivity ? (
-          <View className="flex-row gap-3">
-            <StatCard label={t('statistics:metrics.matches')} value={replay.matchCount} className="flex-1" />
-            <StatCard label={t('statistics:metrics.goals')} value={replay.totalGoals} className="flex-1" />
+          <View className="flex-row border-y border-border py-3">
+            <View className="min-w-0 flex-1 gap-1 pr-3">
+              <Text variant="caption" color="secondary">{t('statistics:metrics.matches')}</Text>
+              <Text weight="semibold" className="text-xl">{replay.matchCount}</Text>
+            </View>
+            <View className="min-w-0 flex-1 gap-1 border-l border-border pl-3">
+              <Text variant="caption" color="secondary">{t('statistics:metrics.goals')}</Text>
+              <Text weight="semibold" className="text-xl">{replay.totalGoals}</Text>
+            </View>
           </View>
         ) : null}
 
@@ -75,7 +80,7 @@ export function CareerReplayCard({ profile, onOpenPress }: CareerReplayCardProps
           </Text>
         ) : null}
 
-        <View className="flex-row gap-2">
+        <View className="flex-row flex-wrap gap-2">
           {onOpenPress ? (
             <Button variant="accent" onPress={onOpenPress} className="flex-1">
               {t('career:replayCard.open')}

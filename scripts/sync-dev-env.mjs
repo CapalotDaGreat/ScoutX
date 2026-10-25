@@ -27,7 +27,6 @@ REACT_NATIVE_PACKAGER_HOSTNAME=${lanIp}
 EXPO_DEV_SERVER_PORT=${port}
 EXPO_PUBLIC_APP_CHECK_ENABLED=false
 EXPO_PUBLIC_EXPO_GO=1
-NODE_TLS_REJECT_UNAUTHORIZED=
 `;
 
 const target = resolve(process.cwd(), '.env.local');

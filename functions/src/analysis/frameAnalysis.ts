@@ -39,6 +39,7 @@ import {
   isDailyQuotaReached,
 } from './workerContract';
 import { logSafeError } from '../logging/redact';
+import { positionEvaluationInstructions } from './positionFramework';
 
 export const MATCH_COLLECTION = 'matchAnalysisJobs';
 const QUOTA_COLLECTION = 'analysisQuotas';
@@ -118,10 +119,15 @@ export async function failJob(
   code: AnalysisErrorCode,
   stages?: StageRecord[],
   activeStage?: string,
+  expectedGeneration?: number,
 ): Promise<void> {
   const now = new Date().toISOString();
-  await db.collection(MATCH_COLLECTION).doc(jobId).set(
-    {
+  const ref = db.collection(MATCH_COLLECTION).doc(jobId);
+  await db.runTransaction(async (tx) => {
+    const latest = await tx.get(ref);
+    if (!latest.exists || latest.get('cancelRequested') === true
+      || (expectedGeneration !== undefined && (latest.get('pipelineGeneration') ?? 0) !== expectedGeneration)) return;
+    tx.set(ref, {
       status: 'failed',
       pipelineState: 'failed',
       errorCode: code,
@@ -129,9 +135,8 @@ export async function failJob(
       lease: null,
       updatedAt: now,
       ...(stages && activeStage ? { pipelineStages: updateStage(stages, activeStage, 'failed', now, { retryable: true }) } : {}),
-    },
-    { merge: true },
-  );
+    }, { merge: true });
+  });
 }
 
 export function emptyStats(): Record<string, number | boolean | null> {
@@ -271,6 +276,7 @@ export async function acquireJobLease(
   jobId: string,
   requestId: string,
   idempotencyKey: string | undefined,
+  expectedGeneration?: number,
 ): Promise<MatchJobDoc> {
   const jobRef = db.collection(MATCH_COLLECTION).doc(jobId);
   const quotaRef = db.collection(QUOTA_COLLECTION).doc(uid);
@@ -282,6 +288,9 @@ export async function acquireJobLease(
     const snap = await tx.get(jobRef);
     if (!snap.exists) throw new HttpsError('not-found', 'Match analysis job not found.');
     const job = snap.data() as MatchJobDoc;
+    if (expectedGeneration !== undefined && (job.pipelineGeneration ?? 0) !== expectedGeneration) {
+      throw new HttpsError('aborted', 'Analysis was superseded.');
+    }
     if (job.playerId !== uid) throw new HttpsError('permission-denied', 'You can only analyze your own footage.');
     if (job.cancelRequested) throw new HttpsError('aborted', 'Analysis was cancelled.');
     if (job.status === 'complete') throw new HttpsError('already-exists', 'This analysis is already complete.');
@@ -330,7 +339,10 @@ export async function acquireJobLease(
   });
 }
 
-export const TARGET_POSITIONS = ['goalkeeper', 'defender', 'midfielder', 'forward', 'unknown'] as const;
+export const TARGET_POSITIONS = [
+  'goalkeeper', 'defender', 'midfielder', 'forward', 'unknown',
+  'GK', 'CB', 'LB', 'RB', 'LWB', 'RWB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'LW', 'RW', 'CF', 'ST',
+] as const;
 
 /** The target specification exactly as the player typed it; it reaches the model only as data. */
 export function targetingMetadata(job: Pick<MatchJobDoc, 'targeting'>): Record<string, unknown> {
@@ -347,7 +359,7 @@ export function targetingMetadata(job: Pick<MatchJobDoc, 'targeting'>): Record<s
 }
 
 export function isGoalkeeperJob(job: Pick<MatchJobDoc, 'targeting'>): boolean {
-  return job.targeting?.position === 'goalkeeper';
+  return job.targeting?.position === 'goalkeeper' || job.targeting?.position === 'GK';
 }
 
 /**
@@ -369,11 +381,13 @@ export type PendingCoaching = {
 export async function finishJob(
   db: Firestore,
   jobId: string,
-  params: { report: Record<string, unknown>; stages: StageRecord[]; pendingCoaching: PendingCoaching | null; now: string },
+  params: { report: Record<string, unknown>; stages: StageRecord[]; pendingCoaching: PendingCoaching | null; now: string; expectedGeneration?: number },
 ): Promise<void> {
   const jobRef = db.collection(MATCH_COLLECTION).doc(jobId);
   const cancelled = await db.runTransaction(async (tx) => {
     const latest = await tx.get(jobRef);
+    if (!latest.exists || (params.expectedGeneration !== undefined
+      && (latest.get('pipelineGeneration') ?? 0) !== params.expectedGeneration)) return true;
     if (latest.get('cancelRequested') === true) {
       tx.set(jobRef, { lease: null, updatedAt: params.now }, { merge: true });
       return true;
@@ -402,7 +416,7 @@ export async function finishJob(
     );
     return false;
   });
-  if (cancelled) throw new HttpsError('aborted', 'Analysis was cancelled.');
+  if (cancelled) throw new HttpsError('aborted', 'Analysis was cancelled or superseded.');
 }
 
 const SYSTEM_RULES = [
@@ -426,6 +440,7 @@ export function buildFramePrompt(params: {
     system: SYSTEM_RULES,
     trusted: [
       'Review sampled still frames for ONE nominated player described in USER_METADATA.targeting.',
+      ...positionEvaluationInstructions(targetingMetadata(job)),
       `Video duration seconds: ${job.measuredDurationSec ?? job.durationSec}`,
       'Frame timeline guide:',
       ...frames.map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s into the recording`),
@@ -478,15 +493,19 @@ export async function runFrameAnalysis(params: {
   requestId: string;
   idempotencyKey?: string;
   apiKey: string;
+  expectedGeneration?: number;
 }): Promise<{ jobId: string; status: 'complete' }> {
   const { db, uid, jobId, requestId } = params;
   const jobRef = db.collection(MATCH_COLLECTION).doc(jobId);
   const existing = await jobRef.get();
   if (!existing.exists) throw new HttpsError('not-found', 'Match analysis job not found.');
+  if (params.expectedGeneration !== undefined && (existing.get('pipelineGeneration') ?? 0) !== params.expectedGeneration) {
+    throw new HttpsError('aborted', 'Analysis was superseded.');
+  }
   if (existing.get('playerId') !== uid) throw new HttpsError('permission-denied', 'You can only analyze your own footage.');
   if (existing.get('status') === 'complete') throw new HttpsError('already-exists', 'This analysis is already complete.');
   if (!isFootageProcessingApproved()) {
-    await failJob(db, jobId, 'ai_privacy_configuration_required');
+    await failJob(db, jobId, 'ai_privacy_configuration_required', undefined, undefined, existing.get('pipelineGeneration') ?? 0);
     throw new HttpsError('failed-precondition', ERROR_TEXT.ai_privacy_configuration_required, {
       reason: 'ai_privacy_configuration_required',
     });
@@ -494,17 +513,17 @@ export async function runFrameAnalysis(params: {
   try {
     await assertAiConsent([uid], db);
   } catch (error) {
-    await failJob(db, jobId, 'ai_consent_required');
+    await failJob(db, jobId, 'ai_consent_required', undefined, undefined, existing.get('pipelineGeneration') ?? 0);
     throw error;
   }
   try {
     await assertVideoConsent(db, uid, jobId);
   } catch (error) {
-    await failJob(db, jobId, 'video_consent_required');
+    await failJob(db, jobId, 'video_consent_required', undefined, undefined, existing.get('pipelineGeneration') ?? 0);
     throw error;
   }
 
-  const job = await acquireJobLease(db, uid, jobId, requestId, params.idempotencyKey);
+  const job = await acquireJobLease(db, uid, jobId, requestId, params.idempotencyKey, params.expectedGeneration);
   const stages = parseStages(job.pipelineStages);
   const durationSec = job.measuredDurationSec ?? job.durationSec ?? 0;
   // Jobs created before modes existed have no server-set mode; they keep the frame review.
@@ -528,7 +547,7 @@ export async function runFrameAnalysis(params: {
   }
 
   if (imageContents.length < MIN_ANALYSIS_FRAMES) {
-    await failJob(db, jobId, 'frames_insufficient', stages, 'player-identification');
+    await failJob(db, jobId, 'frames_insufficient', stages, 'player-identification', job.pipelineGeneration ?? 0);
     throw new HttpsError('failed-precondition', ERROR_TEXT.frames_insufficient, { reason: 'frames_insufficient' });
   }
 
@@ -563,7 +582,7 @@ export async function runFrameAnalysis(params: {
     ],
   });
   if (!result.ok) {
-    await failJob(db, jobId, 'model_unavailable', stages, 'player-identification');
+    await failJob(db, jobId, 'model_unavailable', stages, 'player-identification', job.pipelineGeneration ?? 0);
     throw new HttpsError('unavailable', ERROR_TEXT.model_unavailable, { reason: 'model_unavailable' });
   }
 
@@ -572,7 +591,7 @@ export async function runFrameAnalysis(params: {
     raw = extractJsonObject(result.content);
   } catch {
     logger.error('Match analysis output was not a JSON object', { jobId });
-    await failJob(db, jobId, 'model_output_invalid', stages, 'player-identification');
+    await failJob(db, jobId, 'model_output_invalid', stages, 'player-identification', job.pipelineGeneration ?? 0);
     throw new HttpsError('internal', ERROR_TEXT.model_output_invalid, { reason: 'model_output_invalid' });
   }
 
@@ -596,7 +615,7 @@ export async function runFrameAnalysis(params: {
       modelId: model,
       versions,
     });
-    await finishJob(db, jobId, { report: built.report, stages: finalStages, pendingCoaching: built.pendingCoaching, now });
+    await finishJob(db, jobId, { report: built.report, stages: finalStages, pendingCoaching: built.pendingCoaching, now, expectedGeneration: job.pipelineGeneration ?? 0 });
     return { jobId, status: 'complete' };
   }
 
@@ -627,7 +646,7 @@ export async function runFrameAnalysis(params: {
   const pendingCoaching = identityConfirmed
     ? null
     : pendingFrameCoaching(raw, new Set(frameSamples.map((frame) => frame.id)), selfReported, evidence.length > 0);
-  await finishJob(db, jobId, { report, stages: finalStages, pendingCoaching, now });
+  await finishJob(db, jobId, { report, stages: finalStages, pendingCoaching, now, expectedGeneration: job.pipelineGeneration ?? 0 });
   return { jobId, status: 'complete' };
 }
 

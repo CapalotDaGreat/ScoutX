@@ -50,6 +50,7 @@
     }
   },
   "discover": {
+    "continueSearch": "Geen resultaten in deze reeks. Laad meer om verder te zoeken.",
     "title": "Spelers ontdekken",
     "subtitle": "Geavanceerd scouten met directe resultaten",
     "loadingSubtitle": "Doorzoek de wereldwijde talentenpool",
@@ -492,7 +493,7 @@
     }
   },
   "sort": {
-    "relevance": "Beste match",
+    "relevance": "Bewijs eerst",
     "overall": "Totaalscore",
     "potential": "Potentieel",
     "age": "Leeftijd",
@@ -664,6 +665,10 @@
     "sessions": "GPS-sessies"
   },
   "playerCard": {
+    "scoutingProfile": "Spelersprofiel",
+    "analysisSamples": "Analysevoorbeelden",
+    "noHighlights": "Nog geen hoogtepunten",
+    "viewProfile": "Bekijk speler",
     "openHint": "Open het volledige spelersprofiel",
     "footValue": "Voet {{foot}}"
   }

@@ -88,7 +88,7 @@ export function PlayerDetailScreen({
   const { t, i18n } = useAppTranslation(['scout', 'statistics', 'common', 'errors']);
   const { colors } = useTheme();
   const { player, isLoading, error, reload } = usePlayerDetail(playerId);
-  const { players: playerPool } = useDiscoverablePlayerPool();
+  const { players: playerPool, error: poolError, isLoading: poolLoading, reload: reloadPool } = useDiscoverablePlayerPool();
   const workspace = useScoutWorkspace();
   const playerSave = useScoutPlayerSave();
   const { recordPlayerView, isInComparison, canAddToComparison, addToComparison, removeFromComparison, comparisonPlayerIds } = workspace;
@@ -102,6 +102,8 @@ export function PlayerDetailScreen({
   }, [playerId, recordPlayerView]);
 
   useEffect(() => {
+    let cancelled = false;
+    setClubProfile(null);
     if (!player?.club) {
       setClubProfile(null);
       return;
@@ -109,8 +111,9 @@ export function PlayerDetailScreen({
 
     void ClubProfileRepository.getInstance()
       .fetchByClubName(player.club)
-      .then(setClubProfile)
-      .catch(() => setClubProfile(null));
+      .then((club) => { if (!cancelled) setClubProfile(club); })
+      .catch(() => { if (!cancelled) setClubProfile(null); });
+    return () => { cancelled = true; };
   }, [player?.club]);
 
   const radarPoints = useMemo(() => (player ? toRadarPoints(player) : []), [player]);
@@ -202,7 +205,7 @@ export function PlayerDetailScreen({
         scrollable
         safeArea
         onRefresh={reload}
-        contentClassName="gap-6 pb-28"
+        contentClassName="gap-4 pb-28"
         header={
           <View className="flex-row flex-wrap items-center justify-between gap-2">
             <Button
@@ -275,11 +278,16 @@ export function PlayerDetailScreen({
               <WhyNotCard reasons={whyNot} />
               {briefMatch ? <BriefMatchCard match={briefMatch} /> : null}
               <ScoutBriefCard brief={brief} />
-              <SimilarPlayersCard
+                {poolLoading ? <Text variant="body-sm" color="secondary">{t('common:loading')}</Text> : poolError ? (
+                  <View className="gap-2">
+                    <Text variant="body-sm" color="secondary">{t('errors:loadPlayers')}</Text>
+                    <Button variant="secondary" onPress={reloadPool}>{t('common:retry')}</Button>
+                  </View>
+                ) : <SimilarPlayersCard
                 scores={similar}
                 playersById={similarById}
                 onPressPlayer={(id) => onOpenPlayer?.(id)}
-              />
+              />}
               <EvidenceRequestComposer playerId={player.id} />
             </View>
           ) : null}
@@ -358,7 +366,7 @@ export function PlayerDetailScreen({
             subtitle={t('scout:playerDetail.sections.bioSubtitle')}
             persistKey={`detail-bio-${player.id}`}
           >
-            <Card variant="outlined" padding="md" className="gap-2">
+            <View className="gap-2 border-t border-divider py-3">
               <Text variant="body">{player.biography}</Text>
               <Text variant="caption" color="secondary">
                 {t('scout:playerDetail.refUpdated', {
@@ -366,7 +374,7 @@ export function PlayerDetailScreen({
                   date: new Date(player.updatedAt).toLocaleDateString(i18n.language),
                 })}
               </Text>
-            </Card>
+            </View>
           </CollapsibleSection>
         </RevealSection>
 

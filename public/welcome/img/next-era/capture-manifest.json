@@ -1,0 +1,63 @@
+{
+  "capturedAt": "2026-10-23T13:14:43.342Z",
+  "fixture": "e2e/fixtures/accounts.json",
+  "project": "demo-scoutx",
+  "platform": "Expo web",
+  "build": "Expo 57 local development, Firebase demo emulators",
+  "sourceSha256": "d109787bca739e69477102c733bacecad6bcbe4e86d9151a6e8ce9c63db64f92",
+  "locale": "en",
+  "theme": "dark",
+  "nativeAppStoreStatus": "pending native iOS capture",
+  "demonstrationData": true,
+  "captures": [
+    {
+      "file": "today.png",
+      "route": "/player/home",
+      "width": 390,
+      "height": 844,
+      "platform": "Expo web preview; not a native iOS capture"
+    },
+    {
+      "file": "performance.png",
+      "route": "/player/performance?segment=stats",
+      "width": 390,
+      "height": 844,
+      "platform": "Expo web preview; not a native iOS capture"
+    },
+    {
+      "file": "media.png",
+      "route": "/player/media",
+      "width": 390,
+      "height": 844,
+      "platform": "Expo web preview; not a native iOS capture"
+    },
+    {
+      "file": "passport.png",
+      "route": "/player/lena-seeded",
+      "width": 390,
+      "height": 844,
+      "platform": "Expo web preview; not a native iOS capture"
+    },
+    {
+      "file": "discovery.png",
+      "route": "/scout/discover",
+      "width": 390,
+      "height": 844,
+      "platform": "Expo web preview; not a native iOS capture"
+    },
+    {
+      "file": "pipeline.png",
+      "route": "/scout/pipeline",
+      "width": 390,
+      "height": 844,
+      "platform": "Expo web preview; not a native iOS capture"
+    },
+    {
+      "file": "trials.png",
+      "route": "/scout/trials",
+      "width": 390,
+      "height": 844,
+      "platform": "Expo web preview; not a native iOS capture"
+    }
+  ]
+}

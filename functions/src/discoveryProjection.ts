@@ -1,6 +1,6 @@
 import { onCall, HttpsError, type CallableRequest } from 'firebase-functions/v2/https';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
-import { FieldValue, getFirestore } from 'firebase-admin/firestore';
+import { FieldPath, FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { createCallableOptions } from './callableOptions';
 import { SCOUT_FOOTBALL_SOURCES_COLLECTION } from './footballSources/core';
@@ -8,6 +8,7 @@ import { loadVisibleSources } from './footballSources/service';
 import { isAccountHeld } from './moderation/holds';
 import { applyYouthDisplay } from './publicPassport';
 import { loadSafetyPolicy } from './safety/userSafety';
+import { buildDiscoverySearchIndex, indexedSearchMatches, searchWords } from './discoverySearchIndex';
 
 type Privacy = {
   discoverableByScouts?: boolean;
@@ -304,6 +305,7 @@ export async function projectDiscoverablePlayer(playerId: string): Promise<void>
         ].filter(Boolean)
       : projection.searchKeywords,
     viewCount,
+    _search: buildDiscoverySearchIndex({ ...display, viewCount }),
   });
 }
 
@@ -393,20 +395,29 @@ export const searchDiscoverablePlayers = onCall(createCallableOptions(), async (
   const pageSize = Math.min(40, Math.max(1, typeof request.data?.pageSize === 'number' ? request.data.pageSize : 20));
   const cursor = typeof request.data?.cursor === 'string' ? request.data.cursor : null;
 
-  const snapshot = await getFirestore()
-    .collection('discoverablePlayers')
-    .orderBy('updatedAt', 'desc')
-    .limit(200)
-    .get();
+  if (!Number.isSafeInteger(pageSize)) throw new HttpsError('invalid-argument', 'Invalid page size.');
+  const db = getFirestore();
+  const ready = await db.collection('discoverySearchState').doc('current').get();
+  if (ready.get('ready') !== true || ready.get('version') !== 1) throw new HttpsError('failed-precondition', 'Search index is updating.');
+  const identity = JSON.stringify({ search, filters });
+  let candidates = db.collection('discoverablePlayers').orderBy('_search.order.recently_updated').orderBy(FieldPath.documentId());
+  const firstTerm = searchWords(search)[0];
+  if (firstTerm) candidates = candidates.where('_search.tokens', 'array-contains', `all:${Array.from(firstTerm).slice(0, 32).join('')}`);
+  if (cursor) {
+    let decoded: unknown;
+    try { decoded = JSON.parse(cursor); } catch { throw new HttpsError('invalid-argument', 'Invalid search cursor.'); }
+    const value = asRecord(decoded);
+    if (!value || value.identity !== identity || typeof value.order !== 'string' || typeof value.id !== 'string'
+      || value.id.includes('/') || cursor.length > 16384) throw new HttpsError('invalid-argument', 'Search changed; restart discovery.');
+    candidates = candidates.startAfter(value.order, value.id);
+  }
+  const snapshot = await candidates.limit(pageSize).get();
 
   const players = snapshot.docs
-    .map((docSnap) => ({ id: docSnap.id, ...(docSnap.data() as Record<string, unknown>) } as Record<string, unknown> & { id: string }))
+    .map((docSnap) => ({ ...(docSnap.data() as Record<string, unknown>), id: docSnap.id } as Record<string, unknown> & { id: string }))
     .filter((player) => {
       if (search) {
-        const keywords = Array.isArray(player.searchKeywords)
-          ? player.searchKeywords.join(' ')
-          : `${player.fullName ?? ''} ${player.club ?? ''}`;
-        if (!keywords.toLowerCase().includes(search)) {
+        if (!indexedSearchMatches(player, search, 'all')) {
           return false;
         }
       }
@@ -435,11 +446,11 @@ export const searchDiscoverablePlayers = onCall(createCallableOptions(), async (
       return true;
     });
 
-  const start = cursor ? players.findIndex((player) => player.id === cursor) + 1 : 0;
-  const slice = players.slice(start, start + pageSize);
+  const last = snapshot.docs.at(-1);
+  const hasMore = snapshot.size === pageSize;
   return {
-    players: slice,
-    nextCursor: slice.length === pageSize ? slice[slice.length - 1]?.id ?? null : null,
-    hasMore: start + pageSize < players.length,
+    players,
+    nextCursor: hasMore && last ? JSON.stringify({ identity, order: last.get('_search.order.recently_updated'), id: last.id }) : null,
+    hasMore,
   };
 });

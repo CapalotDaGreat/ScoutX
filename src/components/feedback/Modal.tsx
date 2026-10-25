@@ -132,7 +132,7 @@ export function Modal({
                     paddingBottom: insets.bottom,
                   }
                 : isFullscreen
-                  ? { paddingTop: insets.top, paddingBottom: insets.bottom }
+                  ? { height, maxHeight: height, minHeight: 0, flexShrink: 1, paddingTop: insets.top, paddingBottom: insets.bottom }
                   : undefined,
             ]}
             className={cn(
@@ -151,7 +151,7 @@ export function Modal({
               style={
                 isSheet
                   ? { maxHeight: sheetMaxHeight - insets.bottom, flexShrink: 1 }
-                  : undefined
+                  : isFullscreen ? { flex: 1, minHeight: 0 } : undefined
               }
             >
               {isSheet ? (
@@ -187,7 +187,7 @@ export function Modal({
                 style={
                   isSheet
                     ? { maxHeight: sheetMaxHeight * 0.72, flexShrink: 1, minHeight: 0 }
-                    : undefined
+                    : isFullscreen ? { flex: 1, minHeight: 0 } : undefined
                 }
                 className={cn(isSheet ? 'min-h-[200px]' : 'flex-1')}
               >

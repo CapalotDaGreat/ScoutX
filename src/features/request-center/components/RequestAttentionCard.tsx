@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Button } from '@/components/primitives/Button';
-import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { FulfillRequestSheet } from '@/features/request-center/components/FulfillRequestSheet';
@@ -28,10 +27,10 @@ export function RequestAttentionCard({ onViewAll, onOpenTrial }: RequestAttentio
   const first = attention[0];
 
   return (
-    <Card variant="outlined" padding="md" className="gap-3" testID="today-request-attention">
-      <View className="flex-row items-center justify-between gap-3">
-        <Heading level={3}>{t('requestCenter.attentionTitle', { count: attention.length })}</Heading>
-        <Button size="sm" variant="ghost" onPress={onViewAll}>
+    <View className="gap-3 border-y border-divider py-4" testID="today-request-attention">
+      <View className="flex-row flex-wrap items-center justify-between gap-3">
+        <Heading level={3} className="flex-shrink">{t('requestCenter.attentionTitle', { count: attention.length })}</Heading>
+        <Button size="sm" className="min-h-[44px]" variant="ghost" onPress={onViewAll}>
           {t('requestCenter.view')}
         </Button>
       </View>
@@ -45,6 +44,6 @@ export function RequestAttentionCard({ onViewAll, onOpenTrial }: RequestAttentio
         onOpenTrial={onOpenTrial}
       />
       <FulfillRequestSheet request={fulfilling} onClose={() => setFulfilling(null)} onSubmit={fulfill} />
-    </Card>
+    </View>
   );
 }

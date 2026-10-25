@@ -1,5 +1,16 @@
 {
   "indexes": [
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.relevance", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.recently_updated", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.age", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.name", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.distance", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.most_viewed", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.sprint_speed", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.weak_foot", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.skill_moves", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.goals", "order": "ASCENDING" }] },
+    { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.assists", "order": "ASCENDING" }] },
     {
       "collectionGroup": "discoverablePlayers",
       "queryScope": "COLLECTION",

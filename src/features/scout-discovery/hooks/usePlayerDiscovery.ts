@@ -4,6 +4,7 @@ import { queryKeys } from '@/data/queryKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { useBlockedUsers } from '@/features/trust-safety/hooks/useBlockedUsers';
+import { visibleForViewer } from '@/features/trust-safety/services/blockedUserState';
 import { PlayerDiscoveryRepository } from '@/features/scout-discovery/repositories/PlayerDiscoveryRepository';
 import {
   type DiscoverablePlayer,
@@ -28,7 +29,7 @@ export function usePlayerDiscovery({
   enabled = true,
 }: UsePlayerDiscoveryOptions) {
   const { user } = useAuth();
-  const { blockedIds } = useBlockedUsers(user?.id ?? null);
+  const { blockedIds, isReady: blocksReady, error: blocksError, refresh: refreshBlocks } = useBlockedUsers(user?.id ?? null);
 
   const debouncedSearch = useDebounce(search, 300);
 
@@ -49,11 +50,8 @@ export function usePlayerDiscovery({
   });
 
   const players = useMemo(
-    () =>
-      query.data?.pages
-        .flatMap((page) => page.players)
-        .filter((player) => !blockedIds.has(player.id)) ?? [],
-    [blockedIds, query.data],
+    () => visibleForViewer(query.data?.pages.flatMap((page) => page.players) ?? [], blockedIds, blocksReady),
+    [blockedIds, blocksReady, query.data],
   );
 
   const loadMore = useCallback(() => {
@@ -63,13 +61,15 @@ export function usePlayerDiscovery({
     void query.fetchNextPage();
   }, [query]);
 
-  const refresh = useCallback(() => void query.refetch(), [query]);
+  const refresh = useCallback(() => { void query.refetch(); void refreshBlocks(); }, [query, refreshBlocks]);
 
   return {
     players,
-    isLoading: query.isLoading,
+    isSearchPending: search !== debouncedSearch,
+    isRefreshing: query.isRefetching && !query.isFetchingNextPage,
+    isLoading: query.isLoading || (!blocksReady && !blocksError),
     isLoadingMore: query.isFetchingNextPage,
-    error: query.error instanceof Error ? query.error.message : null,
+    error: blocksError instanceof Error ? blocksError.message : query.error instanceof Error ? query.error.message : null,
     hasMore: query.hasNextPage ?? false,
     loadMore,
     refresh,

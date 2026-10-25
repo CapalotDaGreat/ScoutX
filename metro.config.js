@@ -6,6 +6,17 @@ const isExpoGoDev = process.env.EXPO_PUBLIC_EXPO_GO === '1';
 
 const config = getDefaultConfig(__dirname);
 
+// Server dependencies, Python environments and release artifacts are not app modules.
+// Keeping them out of Metro's crawl also prevents exports from watching their own output.
+const existingBlockList = config.resolver.blockList;
+config.resolver.blockList = [
+  ...(Array.isArray(existingBlockList) ? existingBlockList : existingBlockList ? [existingBlockList] : []),
+  ...['functions', 'workers', '.local', '.firebase', 'test-results', 'playwright-report'].map((directory) => {
+    const absolutePath = path.resolve(__dirname, directory).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`${absolutePath}[/\\\\].*`);
+  }),
+];
+
 const stubs = {
   'react-native-image-picker': path.resolve(__dirname, 'src/dev/stubs/react-native-image-picker.js'),
   '@react-native-firebase/app': path.resolve(__dirname, 'src/dev/stubs/react-native-firebase-app.js'),

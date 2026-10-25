@@ -6,6 +6,7 @@
 <title>Data Retention Policy | PitchProof</title>
 <meta name="description" content="Most data stays while your account exists and is deleted when you delete your account.">
 <meta name="theme-color" content="#121110">
+<meta name="pitchproof:unfilled" content="LEGAL_REVIEW_REQUIRED">
 <link rel="canonical" href="https://pitchproof.online/legal/data-retention-policy/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Data Retention Policy | PitchProof">
@@ -16,73 +17,72 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
 :root {
-  --bg: #121110;
-  --surface: #1c1a18;
-  --surface-2: #24211e;
-  --line: #2f2b27;
-  --text: #f7f4ef;
-  --body: #ddd7cc;
-  --muted: #b3ac9f;
-  --green: #2fbf71;
-  --gold: #e0b23b;
-  --radius: 24px;
+  --bg: #0D1311;
+  --surface: #151D19;
+  --surface-2: #1D2922;
+  --line: #34483B;
+  --text: #F3F7F4;
+  --body: #F3F7F4;
+  --muted: #BCCABF;
+  --green: #57D6A0;
+  --gold: #C7E56A;
+  --radius: 8px;
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; letter-spacing: 0; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
 img { display: block; max-width: 100%; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.standalone-doc { max-width: 800px; padding-top: 32px; padding-bottom: 64px; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 16px; top: 12px; z-index: 20; padding: 8px 14px; border-radius: 10px; background: var(--green); color: #0d0c0b; }
 
-.top { position: sticky; top: 0; z-index: 10; background: rgba(18, 17, 16, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.top { position: sticky; top: 0; z-index: 10; background: rgba(13, 19, 17, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: -0.01em; }
-.brand img { width: 34px; height: 34px; border-radius: 9px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: 0; }
+.brand img { width: 34px; height: 34px; border-radius: 8px; }
 .top nav { display: flex; align-items: center; gap: 24px; font-size: 15px; }
 .top nav a { text-decoration: none; color: var(--muted); }
 .top nav a:hover, .top nav a[aria-current="page"] { color: var(--text); }
-.top nav .btn { color: #0d0c0b; }
+.top nav .btn { color: #0D1311; }
 @media (max-width: 720px) { .top nav a:not(.btn) { display: none; } }
 
-.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 999px; font-weight: 650; font-size: 16px; text-decoration: none; background: var(--green); color: #0d0c0b; transition: transform 0.15s ease, background 0.15s ease; }
-.btn:hover { background: #3ad07f; transform: translateY(-1px); }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 8px; font-weight: 650; font-size: 16px; text-decoration: none; background: var(--green); color: #0D1311; transition: transform 0.15s ease, background 0.15s ease; }
+.btn:hover { background: #C7E56A; transform: translateY(-1px); }
 .btn svg { width: 20px; height: 20px; }
 .btn.small { padding: 9px 18px; font-size: 14px; }
 .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
 .btn.ghost:hover { background: var(--surface); }
-.btn.soon { background: rgba(224, 178, 59, 0.14); color: var(--gold); border: 1px solid rgba(224, 178, 59, 0.35); cursor: default; }
-.btn.soon:hover { background: rgba(224, 178, 59, 0.14); transform: none; }
+.btn.soon { background: rgba(199, 229, 106, 0.14); color: var(--gold); border: 1px solid rgba(199, 229, 106, 0.35); cursor: default; }
+.btn.soon:hover { background: rgba(199, 229, 106, 0.14); transform: none; }
 .top nav .btn.soon { color: var(--gold); }
 
 .hero { position: relative; overflow: hidden; padding: 64px 0 40px; }
-.hero::before { content: ""; position: absolute; inset: -40% -10% auto auto; width: 640px; height: 640px; background: radial-gradient(closest-side, rgba(47, 191, 113, 0.18), transparent 70%); pointer-events: none; }
-.hero::after { content: ""; position: absolute; inset: auto auto -60% -10%; width: 540px; height: 540px; background: radial-gradient(closest-side, rgba(224, 178, 59, 0.10), transparent 70%); pointer-events: none; }
 .hero .wrap { position: relative; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); margin: 0 0 22px; }
 .crumbs a { text-decoration: none; }
 .crumbs a:hover { color: var(--text); }
 .crumbs span[aria-hidden] { opacity: 0.5; }
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(224, 178, 59, 0.12); color: var(--gold); font-size: 13px; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 18px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 8px; background: rgba(199, 229, 106, 0.12); color: var(--gold); font-size: 13px; font-weight: 650; letter-spacing: 0; text-transform: uppercase; margin: 0 0 18px; }
 .eyebrow svg { width: 15px; height: 15px; }
-h1 { font-size: clamp(36px, 5.4vw, 60px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; font-weight: 800; max-width: 16em; }
-h1 em { font-style: normal; background: linear-gradient(90deg, var(--green), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h1 { font-size: 40px; line-height: 1.05; letter-spacing: 0; margin: 0 0 18px; font-weight: 800; max-width: 16em; }
+h1 em { font-style: normal; color: var(--green); }
 .lead { font-size: 20px; color: var(--muted); max-width: 36em; margin: 0 0 26px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.pills li { padding: 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
-.pills li.warn { color: var(--gold); background: rgba(224, 178, 59, 0.08); border-color: rgba(224, 178, 59, 0.28); }
+.pills li { padding: 6px 14px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+.pills li.warn { color: var(--gold); background: rgba(199, 229, 106, 0.08); border-color: rgba(199, 229, 106, 0.28); }
 
-.notice { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 0; padding: 16px 20px; border-radius: 18px; background: rgba(224, 178, 59, 0.07); border: 1px solid rgba(224, 178, 59, 0.24); color: var(--body); font-size: 15px; }
+.notice { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 0; padding: 16px 20px; border-radius: 8px; background: rgba(199, 229, 106, 0.07); border: 1px solid rgba(199, 229, 106, 0.24); color: var(--body); font-size: 15px; }
 .notice svg { flex: none; width: 22px; height: 22px; color: var(--gold); margin-top: 1px; }
 .notice strong { color: var(--text); }
 
 .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 64px; padding: 32px 24px 96px; }
 .toc { position: sticky; top: 88px; align-self: start; max-height: calc(100vh - 112px); overflow: auto; }
-.toc details > summary { list-style: none; cursor: pointer; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.toc details > summary { list-style: none; cursor: pointer; font-size: 12.5px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 .toc details > summary::-webkit-details-marker { display: none; }
 .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.toc a { display: flex; gap: 12px; padding: 8px 12px; border-radius: 12px; color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.4; transition: background 0.15s ease, color 0.15s ease; }
+.toc a { display: flex; gap: 12px; padding: 8px 12px; border-radius: 8px; color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.4; transition: background 0.15s ease, color 0.15s ease; }
 .toc a .n { flex: none; min-width: 1.4em; color: var(--green); font-weight: 650; font-variant-numeric: tabular-nums; }
 .toc a:hover { color: var(--text); background: var(--surface); }
 .toc a.active { color: var(--text); background: var(--surface-2); }
@@ -91,29 +91,29 @@ h1 em { font-style: normal; background: linear-gradient(90deg, var(--green), var
 .toc .print button:hover { color: var(--text); }
 
 article { min-width: 0; max-width: 740px; }
-.summary { position: relative; overflow: hidden; border-radius: var(--radius); padding: 30px 32px; margin: 0 0 56px; background: radial-gradient(120% 140% at 0% 0%, rgba(47, 191, 113, 0.14), transparent 55%), var(--surface); border: 1px solid var(--line); }
-.kicker { color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 14px; }
+.summary { position: relative; overflow: hidden; border-radius: var(--radius); padding: 30px 32px; margin: 0 0 56px; background: var(--surface); border: 1px solid var(--line); }
+.kicker { color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: 0; text-transform: uppercase; margin: 0 0 14px; }
 .points { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
 .points li { display: flex; gap: 12px; align-items: flex-start; font-size: 16.5px; color: var(--text); }
-.points li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%; background: rgba(47, 191, 113, 0.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232fbf71' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 13px no-repeat; }
+.points li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 8px; background: rgba(87, 214, 160, 0.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2357D6A0' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 13px no-repeat; }
 
 .doc-section { scroll-margin-top: 88px; padding: 0 0 36px; margin: 0 0 36px; border-bottom: 1px solid var(--line); }
 .sections .doc-section:last-child { border-bottom: 0; margin-bottom: 0; }
-.doc-section h2 { display: flex; gap: 14px; align-items: center; font-size: clamp(22px, 2.6vw, 27px); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 750; }
-.doc-section h2 .n { flex: none; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.doc-section h2 { display: flex; gap: 14px; align-items: center; font-size: 24px; line-height: 1.2; letter-spacing: 0; margin: 0 0 16px; font-weight: 750; }
+.doc-section h2 .n { flex: none; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: rgba(87, 214, 160, 0.12); color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .doc-section h2 a { text-decoration: none; }
 .doc-section p, .doc-section li { color: var(--body); }
 .doc-section p { margin: 0 0 16px; }
 .doc-section ul, .doc-section ol { margin: 0 0 16px; padding-left: 22px; display: grid; gap: 8px; }
 .doc-section li::marker { color: var(--green); }
-.pending { display: inline-block; padding: 0 8px; border-radius: 7px; background: rgba(224, 178, 59, 0.13); color: var(--gold); font-size: 0.86em; font-weight: 650; white-space: nowrap; }
+.pending { display: inline-block; padding: 0 8px; border-radius: 7px; background: rgba(199, 229, 106, 0.13); color: var(--gold); font-size: 0.86em; font-weight: 650; white-space: nowrap; }
 
 .help { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; margin: 24px 0 56px; padding: 26px 28px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
-.help h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.help h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: 0; }
 .help p { margin: 0; color: var(--muted); font-size: 15.5px; max-width: 34em; }
 
 .section-title { display: flex; align-items: center; gap: 14px; margin: 0 0 8px; }
-.section-title h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.03em; line-height: 1.1; margin: 0; font-weight: 800; }
+.section-title h2 { font-size: 28px; letter-spacing: 0; line-height: 1.1; margin: 0; font-weight: 800; }
 .section-title .icon { width: 44px; height: 44px; }
 .section-sub { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 40em; }
 .group { padding: 40px 0 24px; }
@@ -122,12 +122,12 @@ article { min-width: 0; max-width: 740px; }
 .grid.two { grid-template-columns: repeat(2, 1fr); }
 .card { display: flex; flex-direction: column; padding: 26px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); text-decoration: none; }
 a.card { transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
-a.card:hover { transform: translateY(-2px); border-color: rgba(47, 191, 113, 0.45); background: var(--surface-2); }
-.icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); margin-bottom: 18px; flex: none; }
-.icon.gold { background: rgba(224, 178, 59, 0.12); color: var(--gold); }
+a.card:hover { transform: translateY(-2px); border-color: rgba(87, 214, 160, 0.45); background: var(--surface-2); }
+.icon { width: 48px; height: 48px; border-radius: 8px; display: grid; place-items: center; background: rgba(87, 214, 160, 0.12); color: var(--green); margin-bottom: 18px; flex: none; }
+.icon.gold { background: rgba(199, 229, 106, 0.12); color: var(--gold); }
 .icon svg { width: 24px; height: 24px; }
 .section-title .icon { margin: 0; }
-.card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: -0.01em; line-height: 1.3; }
+.card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: 0; line-height: 1.3; }
 .card p { margin: 0 0 18px; color: var(--muted); font-size: 15.5px; }
 .card .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13.5px; color: var(--muted); }
 .card .go { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 650; }
@@ -147,7 +147,7 @@ footer p { margin: 0; }
 
 @media (max-width: 960px) {
   .layout { grid-template-columns: 1fr; gap: 28px; padding-top: 16px; }
-  .toc { position: static; max-height: none; padding: 18px 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+  .toc { position: static; max-height: none; padding: 18px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
   .toc details > summary { margin: 0; display: flex; align-items: center; justify-content: space-between; }
   .toc details > summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translateY(-3px); transition: transform 0.15s ease; }
   .toc details[open] > summary::after { transform: rotate(-135deg) translateY(-3px); }
@@ -156,6 +156,9 @@ footer p { margin: 0; }
   .grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
+  h1 { font-size: 30px; }
+  .doc-section h2 { font-size: 22px; }
+  .section-title h2 { font-size: 24px; }
   .hero { padding-top: 40px; }
   .grid, .grid.two { grid-template-columns: 1fr; }
   .summary { padding: 24px 22px; }
@@ -194,19 +197,19 @@ footer p { margin: 0; }
     <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Privacy</p>
     <h1>Data Retention Policy</h1>
     <ul class="pills">
-      <li>Version 1.2.0</li>
-      <li>Effective 8 October 2026</li>
-      <li>2 min read</li>
+      <li>Version 1.3.0</li>
+      <li class="warn">Effective date pending legal review</li>
+      <li>3 min read</li>
       <li>Original language: English</li>
     </ul>
-    
+    <div class="notice" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><div><strong>Draft under legal review.</strong> This version is published for transparency. The effective date will be set once the review is complete.</div></div>
   </div>
 </section>
 <div class="wrap layout">
   <aside class="toc" aria-label="On this page">
     <details open>
       <summary>On this page</summary>
-      <ol><li><a href="#account-data"><span class="n">1</span><span>Account data</span></a></li><li><a href="#temporary-data"><span class="n">2</span><span>Temporary data</span></a></li><li><a href="#accounts-of-children-under-13"><span class="n">3</span><span>Accounts of children under 13</span></a></li><li><a href="#records-kept-after-deletion"><span class="n">4</span><span>Records kept after deletion</span></a></li><li><a href="#crash-diagnostics"><span class="n">5</span><span>Crash diagnostics</span></a></li><li><a href="#backups"><span class="n">6</span><span>Backups</span></a></li></ol>
+      <ol><li><a href="#account-data"><span class="n">1</span><span>Account data</span></a></li><li><a href="#temporary-data"><span class="n">2</span><span>Temporary data</span></a></li><li><a href="#accounts-of-children-under-13"><span class="n">3</span><span>Accounts of children under 13</span></a></li><li><a href="#records-kept-after-deletion"><span class="n">4</span><span>Records kept after deletion</span></a></li><li><a href="#records-held-by-other-services"><span class="n">5</span><span>Records held by other services</span></a></li><li><a href="#crash-diagnostics"><span class="n">6</span><span>Crash diagnostics</span></a></li><li><a href="#backups"><span class="n">7</span><span>Backups</span></a></li></ol>
     </details>
     <p class="print"><button type="button">Print or save as PDF</button></p>
   </aside>
@@ -219,10 +222,11 @@ footer p { margin: 0; }
 <section class="doc-section" id="account-data">
 <h2><span class="n">1</span><a href="#account-data">Account data</a></h2>
 <p>Profile, match logs, goals, media, analysis results, movement summaries and scouting data are kept while your account exists. When you delete your account, they are deleted from our database and storage.</p>
+<p>Deletion is performed by server jobs, with progress and retries if a step fails. Do not interpret a submitted request as proof that every deletion step completed. Scheduled cleanup periods below are targets from creation or the stated event; physical cleanup can run at the next scheduled sweep. We restrict retained records to the purpose that justifies keeping them.</p>
 </section>
 <section class="doc-section" id="temporary-data">
 <h2><span class="n">2</span><a href="#temporary-data">Temporary data</a></h2>
-<ul><li>Uploads that are abandoned or fail validation: deleted within 7 days.</li><li>Data export archives: download link valid for 7 days, then the archive is deleted.</li><li>Match videos uploaded for analysis: deleted when the analysis completes or is cancelled, unless you chose &quot;Keep match video&quot;. After a failed analysis: deleted after 24 hours, or after 7 days if you chose to keep it for a retry.</li><li>Frames extracted for analysis: frames the report does not cite are deleted when the analysis ends. Cited evidence frames stay with the analysis until you delete it.</li><li>Optional evidence clips: only made when you ask for them, and kept with the analysis until you delete it.</li><li>Analysis uploads that never finish: marked expired after 7 days and their files deleted.</li><li>Guardian approval and confirmation links: expire after 7 days. Withdrawal links stay valid for about 13 months.</li><li>Cancelled or expired analysis jobs: cleaned up automatically.</li></ul>
+<ul><li>Uploads that are abandoned or fail validation: deleted within 7 days.</li><li>Data export archives: download link valid for 7 days, then the archive is deleted.</li><li>Match videos uploaded for analysis: deleted when the analysis completes or is cancelled, unless you chose &quot;Keep match video&quot;. After a failed analysis: deleted after 24 hours, or after 7 days if you chose to keep it for a retry.</li><li>Frames extracted for analysis: frames the report does not cite are deleted when the analysis ends. Cited evidence frames stay with the analysis until you delete it.</li><li>Optional evidence clips: only made when you ask for them, and kept with the analysis until you delete it.</li><li>Analysis uploads that never finish: marked expired after 7 days and their files deleted.</li><li>Guardian approval and confirmation links: expire after 7 days. Withdrawal links stay valid for about 13 months.</li><li>Failed, cancelled or expired analysis-job records: cleaned up after 30 days; source-video and temporary-frame rules above can delete the media earlier.</li><li>RevenueCat webhook receipts used to prevent duplicate processing: 90 days unless the account-deletion job removes them sooner.</li></ul>
 </section>
 <section class="doc-section" id="accounts-of-children-under-13">
 <h2><span class="n">3</span><a href="#accounts-of-children-under-13">Accounts of children under 13</a></h2>
@@ -231,14 +235,20 @@ footer p { margin: 0; }
 <section class="doc-section" id="records-kept-after-deletion">
 <h2><span class="n">4</span><a href="#records-kept-after-deletion">Records kept after deletion</a></h2>
 <p>Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media.</p>
+<p>The configured schedules are three years for consent proof and deletion receipts, two years for moderation decisions, and three years for closed privacy-request records. These are implementation settings requiring owner/legal confirmation of their necessity and lawful basis, not a claim that every jurisdiction mandates those periods. Hashing reduces identification but does not automatically make a record anonymous. Any longer legal hold must be necessary, limited and documented.</p>
+</section>
+<section class="doc-section" id="records-held-by-other-services">
+<h2><span class="n">5</span><a href="#records-held-by-other-services">Records held by other services</a></h2>
+<p>The in-app deletion job does not automatically delete RevenueCat's customer record; a separate provider-side action is required. Apple controls its purchase, payment and account records. Diagnostic and email providers can hold their own service records under their configured schedules. Contact <a href="mailto:support@pitchproof.online">support@pitchproof.online</a> so we can assess a request and arrange processor-side deletion where applicable. We must confirm provider retention settings and procedures before launch; no unverified fixed deletion deadline is promised for them.</p>
+<p>Public content can have been copied outside PitchProof. We remove the copies we control, not another person's screenshots, downloads or the original content of an external football website you linked to.</p>
 </section>
 <section class="doc-section" id="crash-diagnostics">
-<h2><span class="n">5</span><a href="#crash-diagnostics">Crash diagnostics</a></h2>
-<p>Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings.</p>
+<h2><span class="n">6</span><a href="#crash-diagnostics">Crash diagnostics</a></h2>
+<p>If crash reporting is enabled, default personal-data collection is disabled and redaction controls are applied. Reports can still contain technical identifiers or incidental information. They are kept according to the provider's configured retention settings, which require confirmation before launch.</p>
 </section>
 <section class="doc-section" id="backups">
-<h2><span class="n">6</span><a href="#backups">Backups</a></h2>
-<p>Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire.</p>
+<h2><span class="n">7</span><a href="#backups">Backups</a></h2>
+<p>This repository does not configure a custom backup or restore schedule. If provider recovery copies or backups are enabled, they must have a documented expiry, access restriction and restore process that reapplies deletion requests. We do not promise a backup-expiry period that has not been verified. Contact <a href="mailto:support@pitchproof.online">support@pitchproof.online</a> for the current recovery-copy arrangements.</p>
 </section>
     </div>
     <div class="help">
@@ -263,6 +273,8 @@ footer p { margin: 0; }
       <a href="/subscription-terms/">Subscription Terms</a>
       <a href="/legal/youth-safety-policy/">Youth Safety</a>
       <a href="/support/">Support</a>
+      <a href="/account-deletion/">Account deletion</a>
+      <a href="/legal-notice/">Legal notice</a>
       <a href="/report/">Report content</a>
       <a href="/legal/">All policies</a>
     </nav>

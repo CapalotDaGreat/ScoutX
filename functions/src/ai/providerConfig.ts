@@ -9,13 +9,13 @@ export type ModelPurpose = 'text' | 'vision';
 
 /** Models vetted for PitchProof use. Env overrides outside this list are ignored. */
 export const MODEL_ALLOWLIST: Record<ModelPurpose, readonly string[]> = {
-  text: ['google/gemini-2.5-flash', 'google/gemini-2.0-flash-001'],
-  vision: ['google/gemini-2.5-flash', 'google/gemini-2.0-flash-001'],
+  text: ['google/gemini-2.5-flash'],
+  vision: ['google/gemini-2.5-flash'],
 };
 
 const DEFAULT_MODEL: Record<ModelPurpose, string> = {
-  text: 'google/gemini-2.0-flash-001',
-  vision: 'google/gemini-2.0-flash-001',
+  text: 'google/gemini-2.5-flash',
+  vision: 'google/gemini-2.5-flash',
 };
 
 const ENV_KEYS: Record<ModelPurpose, readonly string[]> = {

@@ -21,11 +21,11 @@ export function RoleSelectionScreen({ onContinue, onBack, successMessage }: Role
   const playerOnly = !useUserSafety().policy.canChooseNonPlayerRole;
 
   return (
-    <Screen title={t('roleSelection.title')} subtitle={t('roleSelection.subtitle')}>
-      <AuthCard title={t('roleSelection.cardTitle')} subtitle={t('roleSelection.cardSubtitle')}>
+    <Screen contentClassName="py-6">
+      <AuthCard title={t('roleSelection.title')} subtitle={t('roleSelection.subtitle')}>
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
-            <Text variant="body-sm" color="accent">
+          <View accessibilityLiveRegion="polite" className="rounded-[8px] border border-success/20 bg-success-muted px-3 py-3">
+            <Text variant="body-sm" color="success">
               {successMessage}
             </Text>
           </View>

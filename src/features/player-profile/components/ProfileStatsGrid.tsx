@@ -19,14 +19,14 @@ export function ProfileStatsGrid({ stats, compact = false }: ProfileStatsGridPro
     return (
       <Animated.View
         entering={reduceMotion ? undefined : FadeInUp.delay(80).duration(400)}
-        className="flex-row gap-2 rounded-xl border border-border bg-surface p-3"
+        className="flex-row flex-wrap gap-3 border-y border-border py-4"
       >
         {stats.map((stat) => (
-          <View key={stat.label} className="flex-1 items-center gap-1">
-            <Text weight="bold" className="text-center text-stat-lg text-foreground">
+          <View key={stat.label} className="min-w-[40%] flex-1 gap-1">
+            <Text weight="bold" className="text-stat-lg text-foreground">
               {stat.value}
             </Text>
-            <Text variant="caption" color="secondary" className="text-center" numberOfLines={1}>
+            <Text variant="caption" color="secondary">
               {labels.profileStat(stat).label}
             </Text>
           </View>

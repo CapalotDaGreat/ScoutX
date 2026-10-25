@@ -3,7 +3,7 @@
 Every item here maps to a rejection seen on an earlier app (TradeAcademy, Sept–Oct 2026) or to a
 common App Review guideline. Work top to bottom; later steps depend on earlier ones.
 
-Status on 2026-10-08: `scoutx-230b0` is on Blaze. APIs enabled; Firestore `(default)` and the
+Historical operator report on 2026-10-08 (not independently revalidated): `scoutx-230b0` is on Blaze. APIs enabled; Firestore `(default)` and the
 Storage bucket created in `europe-west6` (Zurich); all functions run in `europe-west6`. Secrets set:
 `GUARDIAN_LINK_SECRET`, `REVENUECAT_WEBHOOK_SECRET`, `OPENROUTER_API_KEY`, `APPLE_TEAM_ID`,
 `APPLE_KEY_ID` and `APPLE_PRIVATE_KEY` (Sign in with Apple key `H92VR9XJ8R`). `ADMIN_USER_IDS`
@@ -41,8 +41,8 @@ steps 4, 5, 7, 10.
    (AI_PRIVACY_CONFIGURATION_REQUIRED); until then video analysis uploads are refused with a
    translated "not available yet" message and the rest of the app works normally.
 
-   Internal TestFlight builds while legal contacts are still missing need
-   `ALLOW_LEGAL_PLACEHOLDERS=1` in the EAS build environment; App Store builds must not set it.
+   Production-signed TestFlight builds use the same strict configuration as App Store builds.
+   Do not set `ALLOW_LEGAL_PLACEHOLDERS`; it is refused by the production build policy.
 7. Extensions → install **Trigger Email from Firestore** on collection `mail` with an SMTP account.
    Guardian approval and moderation emails depend on it.
 8. Deploy:
@@ -67,10 +67,15 @@ steps 4, 5, 7, 10.
    `src/config/legalConfig.ts`. Before submission, send a test mail to confirm Cloudflare Email
    Routing delivers it. Legal documents are `final` with effective date 2026-10-08.
 3. **EAS production environment** (`npx eas-cli env:create --environment production`):
-   - `EXPO_PUBLIC_REVENUECAT_IOS_KEY` = RevenueCat App Store key (`appl_…`). Missing today: the
-     paywall would say purchases are unavailable (3.1.1).
+   - All six `EXPO_PUBLIC_FIREBASE_*` values used by `src/config/firebase.ts`, from the production
+     Firebase project, and `GOOGLE_SERVICES_PLIST` as an EAS file variable for that project's iOS app.
+   - `EXPO_PUBLIC_REVENUECAT_IOS_KEY` = RevenueCat App Store key (`appl_…`). The production build
+     now refuses missing or non-App-Store keys, rather than shipping an unavailable paywall.
    - Optional: `EXPO_PUBLIC_SENTRY_DSN`, `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`, `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`.
-   - Do not set `EXPO_PUBLIC_APP_CHECK_USE_DEBUG`, `EXPO_PUBLIC_USE_MOCK_DATA` or any OpenRouter key.
+   - Set `EXPO_PUBLIC_APP_CHECK_ENABLED=true`, `EXPO_PUBLIC_EXPO_GO=0`; remove debug tokens,
+     emulator/mock flags, demo passwords, legal overrides, and all client-side OpenRouter keys.
+   - Use the EAS production environment explicitly; see `eas.json`. Local `.env.local` is generated
+     for Expo Go and must not be used as production configuration.
 4. `node scripts/release-gate.mjs` must report **PASS** (no `--allow-external`).
 
 ## 3. In-app purchases (3.1.1)
@@ -94,7 +99,8 @@ mode on iPad), on the latest iOS, signed out.
    - [ ] Register with **Sign in with Apple**.
    - [ ] Register a **scout** and a **coach**.
    - [ ] Register a **13–17** player: guardian email arrives, approval link works, features unlock.
-   - [ ] Under-13 is blocked with a clear message.
+   - [ ] Under-13 parental consent: private mode before and after approval; no public profile,
+     discovery, scout contact, trials or sharing. Consent decline/withdrawal triggers deletion.
    - [ ] Log a match, upload a video, run an AI analysis, open the Football Passport.
    - [ ] Report a video and a profile; block a user.
    - [ ] Plan & usage → See plans → sandbox purchase → plan updates; Restore purchases; Manage subscription.
@@ -107,7 +113,8 @@ mode on iPad), on the latest iOS, signed out.
 
 1. Create the demo accounts **through the production app** (this also proves registration works):
    player 18+, scout, coach, and a 13–17 player approved by a guardian address you control.
-   Give the player sample content: a logged match, an uploaded clip and one analysis.
+   Give the player sample content: a logged match and an uploaded clip; include an analysis only
+   if footage processing is approved and working in production. Also test an under-13 private account.
 2. Enter the player 18+ account in App Review Information → Sign-in required; list the others in Notes.
 3. Paste `docs/release/app-review-notes.md` (filled in) into the Notes field and attach the screen recording.
 
@@ -117,7 +124,9 @@ mode on iPad), on the latest iOS, signed out.
    iPad screenshots are not required because `supportsTablet` is `false`.
 2. Privacy policy URL `https://pitchproof.online/privacy/`, support URL `https://pitchproof.online/support/`.
 3. App Privacy labels match `docs/compliance/app-store-privacy-labels.md`; age rating questionnaire
-   matches `store/listing.json` (4+, user-generated content, no open chat, Parental Controls and Age Assurance Yes, not in the Kids Category).
+   matches `store/listing.json` (desired 4+, user-generated content, structured messaging/contact,
+   Parental Controls and Age Assurance Yes, not in the Kids Category). Use truthful questionnaire
+   answers; the resulting rating is determined by App Store Connect, not by the repository.
 4. Export compliance: `ITSAppUsesNonExemptEncryption` is already `false`.
 5. Name: the app is PitchProof everywhere. In App Store Connect, set the app name to PitchProof
    (App Information → Name) and check that no screenshot or description still says ScoutX. The bundle

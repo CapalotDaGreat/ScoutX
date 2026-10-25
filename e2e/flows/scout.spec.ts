@@ -11,6 +11,21 @@ async function openSeededPlayer(page: Page) {
 }
 
 test.describe.serial('Scout: brief, discover, why, save, request, trial', () => {
+  test('searches across public fields and opens the evidence profile from a readable card', async ({ page }, testInfo) => {
+    await signIn(page, accounts.scout.email);
+    await page.getByRole('tab', { name: 'Discover' }).click();
+    await page.getByPlaceholder('Search by name, club, nationality, position...').fill('Lena E2E');
+    const card = page.locator('[data-testid^="player-card-"]').filter({ hasText: accounts.seededPlayer.name });
+    await expect(card).toBeVisible({ timeout: 30_000 });
+    await expect(card.getByText('Matches logged', { exact: true })).toBeVisible();
+    await expect(card).not.toContainText(accounts.seededPlayer.privateBiographyMarker);
+    await expect(card).not.toContainText(accounts.seededPlayer.phone);
+    await page.screenshot({ path: `.local/discovery-${testInfo.project.name}.png`, fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await card.getByRole('button', { name: 'View player', exact: true }).click();
+    await expect(page.getByRole('heading', { name: accounts.seededPlayer.name })).toBeVisible({ timeout: 30_000 });
+  });
+
   test('saves a brief as a filter preset and discovers the seeded player', async ({ page }) => {
     await signIn(page, accounts.scout.email);
     await page.getByRole('tab', { name: 'Discover' }).click();

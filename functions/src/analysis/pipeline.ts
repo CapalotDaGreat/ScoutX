@@ -332,7 +332,7 @@ export async function processAnalyzeTask(
   const retrying = state === 'failed' && job.errorCode === 'model_unavailable';
   if (job.cancelRequested || (state !== 'analyzing' && !retrying)) return 'skipped';
   if (!options.apiKey) {
-    await failJob(db, task.jobId, 'model_unavailable');
+    await failJob(db, task.jobId, 'model_unavailable', undefined, undefined, task.generation);
     return 'failed';
   }
   try {
@@ -342,6 +342,7 @@ export async function processAnalyzeTask(
       jobId: task.jobId,
       requestId: `task:${task.jobId}:${task.generation}`,
       apiKey: options.apiKey,
+      expectedGeneration: task.generation,
     });
     return 'complete';
   } catch (error) {

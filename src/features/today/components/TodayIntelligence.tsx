@@ -268,6 +268,16 @@ export function GoalFocusCard({ focus, onAction }: { focus: TodayGoalFocus; onAc
       <Text weight="semibold" numberOfLines={2}>
         {summary.goal.title}
       </Text>
+      {summary.percent !== null ? (
+        <View
+          accessibilityRole="progressbar"
+          accessibilityValue={{ min: 0, max: 100, now: Math.max(0, Math.min(100, summary.percent)) }}
+          accessibilityLabel={summary.goal.title}
+          className="h-1 overflow-hidden rounded-sm bg-background-secondary"
+        >
+          <View style={{ width: `${Math.max(0, Math.min(100, summary.percent))}%`, height: 4, backgroundColor: colors.accent }} />
+        </View>
+      ) : null}
       <Text variant="caption" color="secondary">
         {t('portfolio:today.goalFocus.next', { step })}
       </Text>

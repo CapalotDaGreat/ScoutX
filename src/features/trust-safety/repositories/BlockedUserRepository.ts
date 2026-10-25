@@ -45,7 +45,6 @@ export class BlockedUserRepository {
       return loadLocalBlockedUsers(blockerId);
     }
 
-    try {
       const blockedQuery = query(
         collection(db, BLOCKED_USERS_COLLECTION),
         where('blockerId', '==', blockerId),
@@ -55,9 +54,6 @@ export class BlockedUserRepository {
       return snapshot.docs
         .map((document) => parseBlockedUser(document.data(), document.id))
         .filter((entry): entry is BlockedUser => entry !== null);
-    } catch {
-      return loadLocalBlockedUsers(blockerId);
-    }
   }
 
   public async blockUser(
@@ -77,13 +73,8 @@ export class BlockedUserRepository {
     const docId = `${blockerId}_${blockedUserId}`;
 
     if (db) {
-      try {
         await setDoc(doc(db, BLOCKED_USERS_COLLECTION, docId), entry);
         return entry;
-      } catch {
-        await saveLocalBlockedUser(blockerId, entry);
-        return entry;
-      }
     }
 
     await saveLocalBlockedUser(blockerId, entry);
@@ -95,13 +86,8 @@ export class BlockedUserRepository {
     const docId = `${blockerId}_${blockedUserId}`;
 
     if (db) {
-      try {
         await setDoc(doc(db, BLOCKED_USERS_COLLECTION, docId), { active: false }, { merge: true });
         return;
-      } catch {
-        await removeLocalBlockedUser(blockerId, blockedUserId);
-        return;
-      }
     }
 
     await removeLocalBlockedUser(blockerId, blockedUserId);

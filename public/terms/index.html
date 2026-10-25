@@ -6,6 +6,7 @@
 <title>Terms of Service | PitchProof</title>
 <meta name="description" content="PitchProof helps players document their football development and lets scouts and coaches discover and contact players safely.">
 <meta name="theme-color" content="#121110">
+<meta name="pitchproof:unfilled" content="LEGAL_REVIEW_REQUIRED">
 <link rel="canonical" href="https://pitchproof.online/terms/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Terms of Service | PitchProof">
@@ -16,73 +17,72 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
 :root {
-  --bg: #121110;
-  --surface: #1c1a18;
-  --surface-2: #24211e;
-  --line: #2f2b27;
-  --text: #f7f4ef;
-  --body: #ddd7cc;
-  --muted: #b3ac9f;
-  --green: #2fbf71;
-  --gold: #e0b23b;
-  --radius: 24px;
+  --bg: #0D1311;
+  --surface: #151D19;
+  --surface-2: #1D2922;
+  --line: #34483B;
+  --text: #F3F7F4;
+  --body: #F3F7F4;
+  --muted: #BCCABF;
+  --green: #57D6A0;
+  --gold: #C7E56A;
+  --radius: 8px;
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; letter-spacing: 0; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
 img { display: block; max-width: 100%; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.standalone-doc { max-width: 800px; padding-top: 32px; padding-bottom: 64px; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 16px; top: 12px; z-index: 20; padding: 8px 14px; border-radius: 10px; background: var(--green); color: #0d0c0b; }
 
-.top { position: sticky; top: 0; z-index: 10; background: rgba(18, 17, 16, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.top { position: sticky; top: 0; z-index: 10; background: rgba(13, 19, 17, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: -0.01em; }
-.brand img { width: 34px; height: 34px; border-radius: 9px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: 0; }
+.brand img { width: 34px; height: 34px; border-radius: 8px; }
 .top nav { display: flex; align-items: center; gap: 24px; font-size: 15px; }
 .top nav a { text-decoration: none; color: var(--muted); }
 .top nav a:hover, .top nav a[aria-current="page"] { color: var(--text); }
-.top nav .btn { color: #0d0c0b; }
+.top nav .btn { color: #0D1311; }
 @media (max-width: 720px) { .top nav a:not(.btn) { display: none; } }
 
-.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 999px; font-weight: 650; font-size: 16px; text-decoration: none; background: var(--green); color: #0d0c0b; transition: transform 0.15s ease, background 0.15s ease; }
-.btn:hover { background: #3ad07f; transform: translateY(-1px); }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 8px; font-weight: 650; font-size: 16px; text-decoration: none; background: var(--green); color: #0D1311; transition: transform 0.15s ease, background 0.15s ease; }
+.btn:hover { background: #C7E56A; transform: translateY(-1px); }
 .btn svg { width: 20px; height: 20px; }
 .btn.small { padding: 9px 18px; font-size: 14px; }
 .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
 .btn.ghost:hover { background: var(--surface); }
-.btn.soon { background: rgba(224, 178, 59, 0.14); color: var(--gold); border: 1px solid rgba(224, 178, 59, 0.35); cursor: default; }
-.btn.soon:hover { background: rgba(224, 178, 59, 0.14); transform: none; }
+.btn.soon { background: rgba(199, 229, 106, 0.14); color: var(--gold); border: 1px solid rgba(199, 229, 106, 0.35); cursor: default; }
+.btn.soon:hover { background: rgba(199, 229, 106, 0.14); transform: none; }
 .top nav .btn.soon { color: var(--gold); }
 
 .hero { position: relative; overflow: hidden; padding: 64px 0 40px; }
-.hero::before { content: ""; position: absolute; inset: -40% -10% auto auto; width: 640px; height: 640px; background: radial-gradient(closest-side, rgba(47, 191, 113, 0.18), transparent 70%); pointer-events: none; }
-.hero::after { content: ""; position: absolute; inset: auto auto -60% -10%; width: 540px; height: 540px; background: radial-gradient(closest-side, rgba(224, 178, 59, 0.10), transparent 70%); pointer-events: none; }
 .hero .wrap { position: relative; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); margin: 0 0 22px; }
 .crumbs a { text-decoration: none; }
 .crumbs a:hover { color: var(--text); }
 .crumbs span[aria-hidden] { opacity: 0.5; }
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(224, 178, 59, 0.12); color: var(--gold); font-size: 13px; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 18px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 8px; background: rgba(199, 229, 106, 0.12); color: var(--gold); font-size: 13px; font-weight: 650; letter-spacing: 0; text-transform: uppercase; margin: 0 0 18px; }
 .eyebrow svg { width: 15px; height: 15px; }
-h1 { font-size: clamp(36px, 5.4vw, 60px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; font-weight: 800; max-width: 16em; }
-h1 em { font-style: normal; background: linear-gradient(90deg, var(--green), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h1 { font-size: 40px; line-height: 1.05; letter-spacing: 0; margin: 0 0 18px; font-weight: 800; max-width: 16em; }
+h1 em { font-style: normal; color: var(--green); }
 .lead { font-size: 20px; color: var(--muted); max-width: 36em; margin: 0 0 26px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.pills li { padding: 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
-.pills li.warn { color: var(--gold); background: rgba(224, 178, 59, 0.08); border-color: rgba(224, 178, 59, 0.28); }
+.pills li { padding: 6px 14px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+.pills li.warn { color: var(--gold); background: rgba(199, 229, 106, 0.08); border-color: rgba(199, 229, 106, 0.28); }
 
-.notice { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 0; padding: 16px 20px; border-radius: 18px; background: rgba(224, 178, 59, 0.07); border: 1px solid rgba(224, 178, 59, 0.24); color: var(--body); font-size: 15px; }
+.notice { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 0; padding: 16px 20px; border-radius: 8px; background: rgba(199, 229, 106, 0.07); border: 1px solid rgba(199, 229, 106, 0.24); color: var(--body); font-size: 15px; }
 .notice svg { flex: none; width: 22px; height: 22px; color: var(--gold); margin-top: 1px; }
 .notice strong { color: var(--text); }
 
 .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 64px; padding: 32px 24px 96px; }
 .toc { position: sticky; top: 88px; align-self: start; max-height: calc(100vh - 112px); overflow: auto; }
-.toc details > summary { list-style: none; cursor: pointer; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.toc details > summary { list-style: none; cursor: pointer; font-size: 12.5px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 .toc details > summary::-webkit-details-marker { display: none; }
 .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.toc a { display: flex; gap: 12px; padding: 8px 12px; border-radius: 12px; color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.4; transition: background 0.15s ease, color 0.15s ease; }
+.toc a { display: flex; gap: 12px; padding: 8px 12px; border-radius: 8px; color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.4; transition: background 0.15s ease, color 0.15s ease; }
 .toc a .n { flex: none; min-width: 1.4em; color: var(--green); font-weight: 650; font-variant-numeric: tabular-nums; }
 .toc a:hover { color: var(--text); background: var(--surface); }
 .toc a.active { color: var(--text); background: var(--surface-2); }
@@ -91,29 +91,29 @@ h1 em { font-style: normal; background: linear-gradient(90deg, var(--green), var
 .toc .print button:hover { color: var(--text); }
 
 article { min-width: 0; max-width: 740px; }
-.summary { position: relative; overflow: hidden; border-radius: var(--radius); padding: 30px 32px; margin: 0 0 56px; background: radial-gradient(120% 140% at 0% 0%, rgba(47, 191, 113, 0.14), transparent 55%), var(--surface); border: 1px solid var(--line); }
-.kicker { color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 14px; }
+.summary { position: relative; overflow: hidden; border-radius: var(--radius); padding: 30px 32px; margin: 0 0 56px; background: var(--surface); border: 1px solid var(--line); }
+.kicker { color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: 0; text-transform: uppercase; margin: 0 0 14px; }
 .points { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
 .points li { display: flex; gap: 12px; align-items: flex-start; font-size: 16.5px; color: var(--text); }
-.points li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%; background: rgba(47, 191, 113, 0.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232fbf71' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 13px no-repeat; }
+.points li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 8px; background: rgba(87, 214, 160, 0.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2357D6A0' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 13px no-repeat; }
 
 .doc-section { scroll-margin-top: 88px; padding: 0 0 36px; margin: 0 0 36px; border-bottom: 1px solid var(--line); }
 .sections .doc-section:last-child { border-bottom: 0; margin-bottom: 0; }
-.doc-section h2 { display: flex; gap: 14px; align-items: center; font-size: clamp(22px, 2.6vw, 27px); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 750; }
-.doc-section h2 .n { flex: none; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.doc-section h2 { display: flex; gap: 14px; align-items: center; font-size: 24px; line-height: 1.2; letter-spacing: 0; margin: 0 0 16px; font-weight: 750; }
+.doc-section h2 .n { flex: none; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: rgba(87, 214, 160, 0.12); color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .doc-section h2 a { text-decoration: none; }
 .doc-section p, .doc-section li { color: var(--body); }
 .doc-section p { margin: 0 0 16px; }
 .doc-section ul, .doc-section ol { margin: 0 0 16px; padding-left: 22px; display: grid; gap: 8px; }
 .doc-section li::marker { color: var(--green); }
-.pending { display: inline-block; padding: 0 8px; border-radius: 7px; background: rgba(224, 178, 59, 0.13); color: var(--gold); font-size: 0.86em; font-weight: 650; white-space: nowrap; }
+.pending { display: inline-block; padding: 0 8px; border-radius: 7px; background: rgba(199, 229, 106, 0.13); color: var(--gold); font-size: 0.86em; font-weight: 650; white-space: nowrap; }
 
 .help { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; margin: 24px 0 56px; padding: 26px 28px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
-.help h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.help h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: 0; }
 .help p { margin: 0; color: var(--muted); font-size: 15.5px; max-width: 34em; }
 
 .section-title { display: flex; align-items: center; gap: 14px; margin: 0 0 8px; }
-.section-title h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.03em; line-height: 1.1; margin: 0; font-weight: 800; }
+.section-title h2 { font-size: 28px; letter-spacing: 0; line-height: 1.1; margin: 0; font-weight: 800; }
 .section-title .icon { width: 44px; height: 44px; }
 .section-sub { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 40em; }
 .group { padding: 40px 0 24px; }
@@ -122,12 +122,12 @@ article { min-width: 0; max-width: 740px; }
 .grid.two { grid-template-columns: repeat(2, 1fr); }
 .card { display: flex; flex-direction: column; padding: 26px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); text-decoration: none; }
 a.card { transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
-a.card:hover { transform: translateY(-2px); border-color: rgba(47, 191, 113, 0.45); background: var(--surface-2); }
-.icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); margin-bottom: 18px; flex: none; }
-.icon.gold { background: rgba(224, 178, 59, 0.12); color: var(--gold); }
+a.card:hover { transform: translateY(-2px); border-color: rgba(87, 214, 160, 0.45); background: var(--surface-2); }
+.icon { width: 48px; height: 48px; border-radius: 8px; display: grid; place-items: center; background: rgba(87, 214, 160, 0.12); color: var(--green); margin-bottom: 18px; flex: none; }
+.icon.gold { background: rgba(199, 229, 106, 0.12); color: var(--gold); }
 .icon svg { width: 24px; height: 24px; }
 .section-title .icon { margin: 0; }
-.card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: -0.01em; line-height: 1.3; }
+.card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: 0; line-height: 1.3; }
 .card p { margin: 0 0 18px; color: var(--muted); font-size: 15.5px; }
 .card .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13.5px; color: var(--muted); }
 .card .go { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 650; }
@@ -147,7 +147,7 @@ footer p { margin: 0; }
 
 @media (max-width: 960px) {
   .layout { grid-template-columns: 1fr; gap: 28px; padding-top: 16px; }
-  .toc { position: static; max-height: none; padding: 18px 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+  .toc { position: static; max-height: none; padding: 18px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
   .toc details > summary { margin: 0; display: flex; align-items: center; justify-content: space-between; }
   .toc details > summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translateY(-3px); transition: transform 0.15s ease; }
   .toc details[open] > summary::after { transform: rotate(-135deg) translateY(-3px); }
@@ -156,6 +156,9 @@ footer p { margin: 0; }
   .grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
+  h1 { font-size: 30px; }
+  .doc-section h2 { font-size: 22px; }
+  .section-title h2 { font-size: 24px; }
   .hero { padding-top: 40px; }
   .grid, .grid.two { grid-template-columns: 1fr; }
   .summary { padding: 24px 22px; }
@@ -194,19 +197,19 @@ footer p { margin: 0; }
     <p class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>Terms</p>
     <h1>Terms of Service</h1>
     <ul class="pills">
-      <li>Version 1.1.0</li>
-      <li>Effective 8 October 2026</li>
-      <li>3 min read</li>
+      <li>Version 1.2.0</li>
+      <li class="warn">Effective date pending legal review</li>
+      <li>5 min read</li>
       <li>Original language: English</li>
     </ul>
-    
+    <div class="notice" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg><div><strong>Draft under legal review.</strong> This version is published for transparency. The effective date will be set once the review is complete.</div></div>
   </div>
 </section>
 <div class="wrap layout">
   <aside class="toc" aria-label="On this page">
     <details open>
       <summary>On this page</summary>
-      <ol><li><a href="#agreement"><span class="n">1</span><span>Agreement</span></a></li><li><a href="#eligibility"><span class="n">2</span><span>Eligibility</span></a></li><li><a href="#your-account"><span class="n">3</span><span>Your account</span></a></li><li><a href="#your-content"><span class="n">4</span><span>Your content</span></a></li><li><a href="#acceptable-use"><span class="n">5</span><span>Acceptable use</span></a></li><li><a href="#scouting-and-trials"><span class="n">6</span><span>Scouting and trials</span></a></li><li><a href="#ai-analysis"><span class="n">7</span><span>AI analysis</span></a></li><li><a href="#subscriptions"><span class="n">8</span><span>Subscriptions</span></a></li><li><a href="#moderation-and-termination"><span class="n">9</span><span>Moderation and termination</span></a></li><li><a href="#liability"><span class="n">10</span><span>Liability</span></a></li><li><a href="#governing-law"><span class="n">11</span><span>Governing law</span></a></li><li><a href="#contact"><span class="n">12</span><span>Contact</span></a></li></ol>
+      <ol><li><a href="#agreement"><span class="n">1</span><span>Agreement</span></a></li><li><a href="#app-licence-and-availability"><span class="n">2</span><span>App licence and availability</span></a></li><li><a href="#eligibility"><span class="n">3</span><span>Eligibility</span></a></li><li><a href="#your-account"><span class="n">4</span><span>Your account</span></a></li><li><a href="#your-content"><span class="n">5</span><span>Your content</span></a></li><li><a href="#acceptable-use"><span class="n">6</span><span>Acceptable use</span></a></li><li><a href="#scouting-and-trials"><span class="n">7</span><span>Scouting and trials</span></a></li><li><a href="#ai-analysis"><span class="n">8</span><span>AI analysis</span></a></li><li><a href="#subscriptions"><span class="n">9</span><span>Subscriptions</span></a></li><li><a href="#moderation-and-termination"><span class="n">10</span><span>Moderation and termination</span></a></li><li><a href="#changes-to-the-service-and-terms"><span class="n">11</span><span>Changes to the service and terms</span></a></li><li><a href="#liability"><span class="n">12</span><span>Liability</span></a></li><li><a href="#governing-law"><span class="n">13</span><span>Governing law</span></a></li><li><a href="#contact"><span class="n">14</span><span>Contact</span></a></li></ol>
     </details>
     <p class="print"><button type="button">Print or save as PDF</button></p>
   </aside>
@@ -219,52 +222,67 @@ footer p { margin: 0; }
 <section class="doc-section" id="agreement">
 <h2><span class="n">1</span><a href="#agreement">Agreement</a></h2>
 <p>These terms are an agreement between you and CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland. By creating an account you accept these terms, the Privacy Policy and the Community Guidelines. If you are under 18, your parent or guardian also agrees to them on your behalf when they approve your account.</p>
+<p>The Privacy Policy explains processing; acknowledging it is not consent to every optional use. Optional AI, sharing and guardian permissions are requested separately. The short summaries help you navigate but do not replace the full terms.</p>
+</section>
+<section class="doc-section" id="app-licence-and-availability">
+<h2><span class="n">2</span><a href="#app-licence-and-availability">App licence and availability</a></h2>
+<p>For an App Store download, Apple's Standard Licensed Application End User License Agreement applies to the software licence unless a valid custom licence is provided in the store listing: <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">https://www.apple.com/legal/internet-services/itunes/dev/stdeula/</a>. These terms govern the PitchProof service and do not remove rights you have under that licence or mandatory law. Apple is not the operator of PitchProof.</p>
+<p>Features depend on supported devices, network access, permissions, region and service availability. Beta/TestFlight builds can change, expire or fail and are not a promise of public availability. We do not promise uninterrupted service or features that are labelled unavailable. Recording movement is not a medical or safety-monitoring service; stop using your phone where it would distract you or put anyone at risk.</p>
 </section>
 <section class="doc-section" id="eligibility">
-<h2><span class="n">2</span><a href="#eligibility">Eligibility</a></h2>
+<h2><span class="n">3</span><a href="#eligibility">Eligibility</a></h2>
 <p>Players of any age may use PitchProof. If you are under 18, a parent or guardian must approve your account before you can use it.</p>
 <p>If you are under 13, your account is private: nobody else can see your profile, find you or contact you, you cannot share videos or receive trial invitations, and you can only use the player role. A parent or legal guardian must give verifiable consent as described in the Youth Safety Policy. Without that consent the account is deleted after 14 days, and if the parent withdraws consent the account is deleted.</p>
 <p>Scouts and coaches must be 18 or older and must act on behalf of a genuine club, academy or organisation. Give your real age group; we may restrict or close accounts where we believe it is wrong.</p>
 </section>
 <section class="doc-section" id="your-account">
-<h2><span class="n">3</span><a href="#your-account">Your account</a></h2>
+<h2><span class="n">4</span><a href="#your-account">Your account</a></h2>
 <p>Keep your sign-in details secure and give accurate information. You are responsible for activity on your account. Tell us if you suspect unauthorised access.</p>
 </section>
 <section class="doc-section" id="your-content">
-<h2><span class="n">4</span><a href="#your-content">Your content</a></h2>
+<h2><span class="n">5</span><a href="#your-content">Your content</a></h2>
 <p>You keep all rights to the content you upload. You give us a non-exclusive, worldwide, royalty-free licence to store, process, analyse and display that content only as needed to run PitchProof for you and to show it to the audiences you choose. This licence ends when you delete the content or your account, except for copies we must keep by law.</p>
 <p>You confirm that you have the rights and permissions needed for everything you upload, including consent from people who can be identified in your videos. See the Video and Recording Policy.</p>
+<p>Private storage, AI processing and public sharing are different uses: permission to record a match is not automatically permission to upload it, send frames to an AI service or publish it. Do not upload confidential club material, broadcast footage or another person's sensitive information without the required rights. We do not use uploaded player content in marketing merely because you use the app; that needs separate appropriate permission.</p>
 </section>
 <section class="doc-section" id="acceptable-use">
-<h2><span class="n">5</span><a href="#acceptable-use">Acceptable use</a></h2>
+<h2><span class="n">6</span><a href="#acceptable-use">Acceptable use</a></h2>
 <p>Follow the Community Guidelines. Do not harass anyone, contact minors outside PitchProof's controlled request system, upload content you do not have rights to, misrepresent your identity or club, scrape the service or attempt to bypass security or usage limits.</p>
 </section>
 <section class="doc-section" id="scouting-and-trials">
-<h2><span class="n">6</span><a href="#scouting-and-trials">Scouting and trials</a></h2>
+<h2><span class="n">7</span><a href="#scouting-and-trials">Scouting and trials</a></h2>
 <p>PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval. Children under 13 cannot be contacted or invited by scouts.</p>
+<p>A profile, badge, link or self-reported statistic is not independent verification of identity, affiliation or football ability. Check invitations and organisations carefully and report suspicious requests. Do not pay anyone for a promised trial, contract or recommendation.</p>
 </section>
 <section class="doc-section" id="ai-analysis">
-<h2><span class="n">7</span><a href="#ai-analysis">AI analysis</a></h2>
+<h2><span class="n">8</span><a href="#ai-analysis">AI analysis</a></h2>
 <p>AI analysis is an aid, not a professional assessment. It works from sampled frames and the information you provide, and it can be wrong or incomplete. Analysis stages that are not available are marked as such. There is no player rating. See the AI Use Policy.</p>
 </section>
 <section class="doc-section" id="subscriptions">
-<h2><span class="n">8</span><a href="#subscriptions">Subscriptions</a></h2>
+<h2><span class="n">9</span><a href="#subscriptions">Subscriptions</a></h2>
 <p>Some features may require a paid subscription. Safety, privacy, deletion, reporting, guardian controls, match logging and basic development features are always free. See the Subscription Terms.</p>
 </section>
 <section class="doc-section" id="moderation-and-termination">
-<h2><span class="n">9</span><a href="#moderation-and-termination">Moderation and termination</a></h2>
+<h2><span class="n">10</span><a href="#moderation-and-termination">Moderation and termination</a></h2>
 <p>We may restrict, remove or hide content and suspend or disable accounts that break these terms, the law or the Community Guidelines. Where possible we explain the decision and you can appeal. You can delete your account at any time.</p>
+<p>We may act immediately where necessary to protect a person, comply with law or prevent abuse. Restrictions should be proportionate; reporting and appeal routes are described in the Reporting and Takedown Policy. Account deletion or suspension does not automatically cancel an Apple subscription. Manage renewal separately through Apple; mandatory refund and consumer rights remain unaffected.</p>
+</section>
+<section class="doc-section" id="changes-to-the-service-and-terms">
+<h2><span class="n">11</span><a href="#changes-to-the-service-and-terms">Changes to the service and terms</a></h2>
+<p>We communicate material changes through appropriate in-app or account notices. Changes are not applied retroactively to remove accrued mandatory rights. If fresh agreement is required, we ask for it; you may stop using the service and delete your account. Subscription changes remain subject to Apple's purchase terms and any consent or notice required by law.</p>
 </section>
 <section class="doc-section" id="liability">
-<h2><span class="n">10</span><a href="#liability">Liability</a></h2>
+<h2><span class="n">12</span><a href="#liability">Liability</a></h2>
 <p>PitchProof is provided &quot;as is&quot;. To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law.</p>
+<p>In particular, these terms do not exclude mandatory liability for intentional misconduct, gross negligence, personal injury or other non-excludable claims. Any exclusions apply only as far as the law governing your claim permits, and do not remove mandatory remedies for a defective paid service.</p>
 </section>
 <section class="doc-section" id="governing-law">
-<h2><span class="n">11</span><a href="#governing-law">Governing law</a></h2>
+<h2><span class="n">13</span><a href="#governing-law">Governing law</a></h2>
 <p>These terms are governed by Swiss law. Place of jurisdiction: Dübendorf, Switzerland. Mandatory consumer protection rules of your country of residence remain unaffected.</p>
+<p>That jurisdiction is not an exclusive restriction where mandatory law lets a consumer bring a claim in their home courts. Contact us first to seek a practical resolution; doing so does not prevent you from contacting a regulator or exercising legal rights. If one provision is unenforceable, the rest applies only so far as it can lawfully stand on its own.</p>
 </section>
 <section class="doc-section" id="contact">
-<h2><span class="n">12</span><a href="#contact">Contact</a></h2>
+<h2><span class="n">14</span><a href="#contact">Contact</a></h2>
 <p><a href="mailto:support@pitchproof.online">support@pitchproof.online</a></p>
 </section>
     </div>
@@ -290,6 +308,8 @@ footer p { margin: 0; }
       <a href="/subscription-terms/">Subscription Terms</a>
       <a href="/legal/youth-safety-policy/">Youth Safety</a>
       <a href="/support/">Support</a>
+      <a href="/account-deletion/">Account deletion</a>
+      <a href="/legal-notice/">Legal notice</a>
       <a href="/report/">Report content</a>
       <a href="/legal/">All policies</a>
     </nav>

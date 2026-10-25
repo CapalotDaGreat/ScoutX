@@ -15,9 +15,11 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { GENERATED_PATH, generatedModule, verifyCvApproval } from './lib/cvApproval.mjs';
+import { validationStates } from './lib/releaseValidation.mjs';
+import { productionBuildProblems } from '../src/config/releaseBuildPolicy.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const args = new Set(process.argv.slice(2));
@@ -238,10 +240,21 @@ check('Security findings resolved or accepted', () => {
 });
 
 check('Real-device and end-to-end validation', () => {
-  const pending = read('docs/release/validation-matrix.md')
-    .split('\n')
-    .filter((line) => /^\|/.test(line) && /\|\s*NOT VALIDATED\s*\|/.test(line)).length;
+  const { failed, pending } = validationStates(read('docs/release/validation-matrix.md'));
+  if (failed > 0) return [FAIL, `${failed} failed acceptance item(s) in docs/release/validation-matrix.md`];
   return pending === 0 ? [PASS, 'validation matrix complete'] : [NOT_VALIDATED, `${pending} item(s) in docs/release/validation-matrix.md`];
+});
+
+check('Production build environment supplied', () => {
+  // EAS secrets are remote; a local pass only checks the supplied environment, not its provenance.
+  const env = { ...readJson('eas.json').build?.production?.env, ...process.env };
+  const plist = env.GOOGLE_SERVICES_PLIST?.trim() || 'GoogleService-Info.plist';
+  const problems = productionBuildProblems(env, 'ios', existsSync(resolve(root, plist)));
+  const unsafe = problems.filter((problem) => problem.kind === 'unsafe');
+  if (unsafe.length) return [FAIL, unsafe.map((problem) => problem.message).join('; ')];
+  return problems.length
+    ? [EXTERNAL, `not supplied locally (verify EAS production environment): ${problems.map((problem) => problem.field).join(', ')}`]
+    : [PASS, 'supplied iOS environment passes build policy; verify EAS values match'];
 });
 
 check('Privacy manifest: no tracking, no location', () => {
@@ -264,15 +277,22 @@ check('Privacy manifest: no tracking, no location', () => {
 });
 
 check('Mock data cannot run in production', () => {
-  const appMode = read('src/config/appMode.ts');
-  const guarded = /useMockData\(\): boolean \{\s*if \(typeof __DEV__ !== 'undefined' && !__DEV__\) \{\s*return false;/.test(appMode);
+  const moduleUrl = pathToFileURL(join(root, 'src/config/appMode.ts')).href;
+  const probe = `const {useMockData}=await import(${JSON.stringify(moduleUrl)});
+    globalThis.__DEV__=false; if(useMockData()!==false) process.exit(1);
+    delete globalThis.__DEV__; if(useMockData()!==false) process.exit(1);`;
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', probe], {
+    cwd: root, encoding: 'utf8', timeout: 10_000,
+    env: { ...process.env, EXPO_PUBLIC_USE_MOCK_DATA: 'true' },
+  });
+  const guarded = result.status === 0 && !result.error;
   const eas = readJson('eas.json');
   const prodEnv = eas.build?.production?.env ?? {};
   const problems = [];
   if (!guarded) problems.push('useMockData() is not forced off for release builds');
   if (prodEnv.EXPO_PUBLIC_USE_MOCK_DATA) problems.push('eas.json production sets EXPO_PUBLIC_USE_MOCK_DATA');
   if (prodEnv.EXPO_PUBLIC_MOCK_DEMO_PASSWORD) problems.push('eas.json production sets a demo password');
-  return problems.length === 0 ? [PASS, 'useMockData() returns false when __DEV__ is false'] : [FAIL, problems.join('; ')];
+  return problems.length === 0 ? [PASS, 'forced mock flag stays off in release and unknown runtimes (executed)'] : [FAIL, problems.join('; ')];
 });
 
 check('No AI key or AI endpoint in the client', () => {
@@ -284,7 +304,7 @@ check('No AI key or AI endpoint in the client', () => {
   const clientCalls = scanTracked(/openrouter\.ai/i, { exclude: ['functions/', 'docs/', 'legal/', 'tests/', 'scripts/'] })
     .filter((file) => file.startsWith('src/'));
   if (clientCalls.length) problems.push(`client calls OpenRouter: ${clientCalls.join(', ')}`);
-  if (!/EXPO_PUBLIC_OPENROUTER_API_KEY must not be set for production builds/.test(read('app.config.ts'))) {
+  if (!/productionBuildProblems\(/.test(read('app.config.ts'))) {
     problems.push('production build guard in app.config.ts is missing');
   }
   return problems.length === 0 ? [PASS, 'AI runs only through Cloud Functions secrets'] : [FAIL, problems.join('; ')];
@@ -309,10 +329,10 @@ check('RevenueCat production key is not a Test Store key', () => {
   if (prodKey.startsWith('test_')) problems.push('eas.json production uses a test_ key');
   const tracked = scanTracked(/EXPO_PUBLIC_REVENUECAT_IOS_KEY[ \t]*[=:][ \t]*["']?test_/);
   if (tracked.length) problems.push(`Test Store key in ${tracked.join(', ')}`);
-  if (!/RevenueCat Test Store key; production builds need/.test(read('app.config.ts'))) {
+  if (!/productionBuildProblems\(/.test(read('app.config.ts'))) {
     problems.push('production build guard in app.config.ts is missing');
   }
-  return problems.length === 0 ? [PASS, 'test_ keys are refused for production builds'] : [FAIL, problems.join('; ')];
+  return problems.length === 0 ? [PASS, 'missing or non-appl_ keys are refused by the production build policy'] : [FAIL, problems.join('; ')];
 });
 
 check('Callable CORS closed by default', () => {
@@ -604,6 +624,9 @@ check('App Check enforcement defaults on outside the emulator', () => {
   const env = functionsEnv();
   if (/^ENFORCE_APP_CHECK=false$/m.test(env)) {
     return [FAIL, 'functions .env disables App Check; remove ENFORCE_APP_CHECK=false for production'];
+  }
+  if (readJson('app.json').expo.ios?.entitlements?.['com.apple.developer.devicecheck.appattest-environment'] !== 'production') {
+    return [FAIL, 'iOS App Attest production entitlement is missing'];
   }
   return [EXTERNAL, 'App Check code defaults on; App Attest / provider registration still EXTERNAL (SEC-15)'];
 });

@@ -18,8 +18,10 @@ import { toUserMessage } from '@/utils/userFacingError';
 function Shell({ children, testID }: { children: React.ReactNode; testID: string }) {
   return (
     <SafeAreaView className="absolute inset-0 z-30 bg-background" testID={testID}>
-      <ScrollView contentContainerClassName="flex-grow justify-center gap-4 p-6" keyboardShouldPersistTaps="handled">
-        {children}
+      <ScrollView contentContainerClassName="flex-grow px-4 py-6" keyboardShouldPersistTaps="handled">
+        <View className="w-full max-w-[560px] self-center gap-4">
+          {children}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -28,7 +30,7 @@ function Shell({ children, testID }: { children: React.ReactNode; testID: string
 function ConfirmBox({ checked, onToggle, label, testID }: { checked: boolean; onToggle: () => void; label: string; testID: string }) {
   return (
     <Pressable
-      className="flex-row items-start gap-3"
+      className="min-h-11 flex-row items-start gap-3 py-2"
       accessibilityRole="checkbox"
       accessibilityState={{ checked }}
       aria-checked={checked}
@@ -72,7 +74,7 @@ function AgeBandStep() {
 
   return (
     <Shell testID="youth-gate-age">
-      <Heading level={2}>{t('age.title')}</Heading>
+      <Heading level={2} className="text-2xl leading-8">{t('age.title')}</Heading>
       <Text variant="body" color="secondary">
         {t('age.body')}
       </Text>
@@ -94,7 +96,7 @@ function AgeBandStep() {
         ))}
       </View>
       {choice === 'under13' ? (
-        <Card variant="outlined" padding="md" className="gap-2" testID="age-under13-notice">
+        <Card variant="outlined" padding="sm" className="gap-2 rounded-lg" testID="age-under13-notice">
           <Text variant="body-sm" weight="semibold">
             {t('age.childTitle')}
           </Text>
@@ -175,11 +177,11 @@ function GuardianStep({ resend }: { resend: boolean }) {
       : t('guardian.waitingBody', { email: record?.guardianEmailMasked ?? '' });
     return (
       <Shell testID="youth-gate-waiting">
-        <Heading level={2}>{t(child ? 'guardian.childWaitingTitle' : 'guardian.waitingTitle')}</Heading>
+        <Heading level={2} className="text-2xl leading-8">{t(child ? 'guardian.childWaitingTitle' : 'guardian.waitingTitle')}</Heading>
         <Text variant="body" color="secondary">
           {body}
         </Text>
-        <Card variant="outlined" padding="md" className="gap-2">
+        <Card variant="outlined" padding="sm" className="gap-2 rounded-lg">
           <Text variant="body-sm">{t(child ? 'guardian.childWhatHappens' : 'guardian.whatHappens')}</Text>
         </Card>
         {deadlineNote}
@@ -225,7 +227,7 @@ function GuardianStep({ resend }: { resend: boolean }) {
 
   return (
     <Shell testID="youth-gate-guardian">
-      <Heading level={2}>{t(child ? 'guardian.childRequestTitle' : 'guardian.requestTitle')}</Heading>
+      <Heading level={2} className="text-2xl leading-8">{t(child ? 'guardian.childRequestTitle' : 'guardian.requestTitle')}</Heading>
       <Text variant="body" color="secondary">
         {intro}
       </Text>

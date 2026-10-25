@@ -1,6 +1,7 @@
 import { buildPrompt } from '../ai/promptBuilder';
 import { cleanModelText, knownFrameIds, oneOf } from '../ai/outputValidator';
 import { MIN_TECHNIQUE_FRAMES } from './technique';
+import { positionEvaluationInstructions } from './positionFramework';
 
 /**
  * Longer videos are reviewed one 10-minute segment at a time (dense frames per segment) and
@@ -70,6 +71,7 @@ export function buildSegmentPrompt(params: {
     trusted: [
       `Segment ${params.segmentIndex + 1}: ${params.startSec}s to ${params.endSec}s of the recording.`,
       'Frame guide:',
+      ...positionEvaluationInstructions(params.targeting),
       ...params.frames.map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s`),
     ],
     userMetadata: { targeting: params.targeting },
@@ -94,8 +96,9 @@ export function normalizeSegmentReview(params: {
   now: string;
 }): SegmentReview {
   const { raw, segmentIndex } = params;
-  const known = new Set(params.frames.map((frame) => frame.id));
-  const times = new Map(params.frames.map((frame) => [frame.id, frame.timestampSec]));
+  const frames = params.frames.filter((frame) => Number.isFinite(frame.timestampSec) && frame.timestampSec >= 0);
+  const known = new Set(frames.map((frame) => frame.id));
+  const times = new Map(frames.map((frame) => [frame.id, frame.timestampSec]));
 
   const frameStates: SegmentReview['frameStates'] = [];
   for (const item of Array.isArray(raw.frames) ? raw.frames : []) {
@@ -108,7 +111,8 @@ export function normalizeSegmentReview(params: {
       cameraView: oneOf(row.cameraView, CAMERA_VIEWS, 'unclear'),
     });
   }
-  const visible = new Set(frameStates.filter((state) => state.targetVisible === 'yes').map((state) => state.frameId));
+  const visible = new Set(frameStates.filter((state) => state.targetVisible === 'yes' &&
+    !['replay', 'non_play', 'unclear'].includes(state.cameraView)).map((state) => state.frameId));
 
   // Only frames where the reviewer itself saw the target can carry an observation about them.
   const observations: SegmentObservation[] = [];
@@ -174,6 +178,8 @@ export function buildSynthesisPrompt(params: {
     trusted: [
       `Recording length: ${params.durationSec}s. Frames reviewed: ${params.sampledFrames}. Frames where the nominated player was seen: ${params.targetSeenFrames}.`,
       'Periods where the player was not seen are unknown, not poor performance.',
+      ...positionEvaluationInstructions(params.targeting),
+      'The nominated description is not verified identity. Do not infer successful actions from isolated stills. Free-text summaries must add no uncited claims.',
     ],
     userMetadata: {
       targeting: params.targeting,
@@ -233,6 +239,7 @@ function citedTexts(value: unknown, known: Set<string>, max: number): CitedText[
 }
 
 export function normalizeSynthesis(raw: Record<string, unknown>, observations: SegmentObservation[]): Synthesis {
+  observations = observations.filter((item) => Number.isFinite(item.timestampSec) && item.timestampSec >= 0);
   const known = new Set(observations.map((item) => item.id));
   const times = new Map(observations.map((item) => [item.id, item.timestampSec]));
   const opportunities: Opportunity[] = [];

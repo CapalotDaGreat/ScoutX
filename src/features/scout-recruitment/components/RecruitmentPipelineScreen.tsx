@@ -39,7 +39,7 @@ export function RecruitmentPipelineScreen({
 }: RecruitmentPipelineScreenProps) {
   const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { colors } = useTheme();
-  const { isCompact, isTablet } = useCompactLayout();
+  const { isTablet } = useCompactLayout();
   const {
     isReady,
     workspace,
@@ -120,7 +120,6 @@ export function RecruitmentPipelineScreen({
             </View>
           ) : null}
         </View>
-        {isCompact ? (
           <View className="mt-3 flex-row gap-2">
             <Button
               variant={viewMode === 'list' ? 'accent' : 'secondary'}
@@ -141,7 +140,6 @@ export function RecruitmentPipelineScreen({
               {t('scout:pipeline.board')}
             </Button>
           </View>
-        ) : null}
       </View>
 
       {totalPlayers === 0 ? (
@@ -152,7 +150,7 @@ export function RecruitmentPipelineScreen({
           onAction={onDiscoverPress}
         />
       ) : (
-        <View className="flex-1 gap-4 py-4">
+        <View className="flex-1 gap-3 py-3">
           <RecruitmentFolderBar
             folders={workspace?.folders ?? []}
             activeFolderId={activeFolderId}

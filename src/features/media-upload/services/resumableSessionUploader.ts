@@ -41,7 +41,7 @@ export type UploadIntegrityOptions = {
 
 type FetchLike = (
   url: string,
-  init: { method: string; headers: Record<string, string>; body?: ArrayBuffer },
+  init: { method: string; headers: Record<string, string>; body?: ArrayBuffer; signal?: AbortSignal },
 ) => Promise<{ status: number; headers: { get(name: string): string | null } }>;
 
 export class UploadSessionExpiredError extends Error {
@@ -63,6 +63,15 @@ export class UploadHttpError extends Error {
 
 const isRetryableStatus = (status: number) => status === 408 || status === 429 || status >= 500;
 
+export class UploadProtocolError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UploadProtocolError';
+  }
+}
+
+class UploadInterruptedError extends Error {}
+
 export type ResumableSessionUploaderOptions = {
   sessionUri: string;
   source: ChunkSource;
@@ -73,6 +82,8 @@ export type ResumableSessionUploaderOptions = {
   maxConsecutiveFailures?: number;
   sleep?: (ms: number) => Promise<void>;
   now?: () => number;
+  /** Bound a stalled network request, not the duration of the complete upload. */
+  requestTimeoutMs?: number;
 };
 
 /**
@@ -89,6 +100,12 @@ export class ResumableSessionUploader {
   private readonly options: ResumableSessionUploaderOptions;
 
   constructor(options: ResumableSessionUploaderOptions) {
+    if (!Number.isSafeInteger(options.source.size) || options.source.size <= 0
+      || !Number.isSafeInteger(options.chunkBytes) || options.chunkBytes <= 0
+      || (options.requestTimeoutMs !== undefined && (!Number.isFinite(options.requestTimeoutMs) || options.requestTimeoutMs <= 0))
+      || (options.maxConsecutiveFailures !== undefined && (!Number.isInteger(options.maxConsecutiveFailures) || options.maxConsecutiveFailures < 1))) {
+      throw new UploadProtocolError('Invalid upload size, chunk size, timeout or retry limit.');
+    }
     this.options = options;
     this.fetchImpl = options.fetchImpl ?? ((url, init) => fetch(url, init));
     this.sleep = options.sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
@@ -103,24 +120,74 @@ export class ResumableSessionUploader {
     this.cancelRequested = true;
   }
 
+  private checkInterrupted(): void {
+    if (this.cancelRequested || this.pauseRequested) throw new UploadInterruptedError();
+  }
+
+  private checkedOffset(offset: number, maximum = this.options.source.size): number {
+    if (!Number.isSafeInteger(offset) || offset < 0 || offset > maximum) {
+      throw new UploadProtocolError('The server returned an invalid committed offset.');
+    }
+    return offset;
+  }
+
+  private responseOffset(range: string | null): number {
+    if (range !== null && !/^bytes=0-\d+$/.test(range.trim())) {
+      throw new UploadProtocolError('The server returned a malformed committed range.');
+    }
+    return this.checkedOffset(nextOffsetFromRange(range));
+  }
+
+  private async request(init: Parameters<FetchLike>[1]): ReturnType<FetchLike> {
+    this.checkInterrupted();
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      return await Promise.race([
+        this.fetchImpl(this.options.sessionUri, { ...init, signal: controller.signal }),
+        new Promise<never>((_resolve, reject) => {
+          timer = setTimeout(() => {
+            controller.abort();
+            reject(new UploadHttpError(408));
+          }, this.options.requestTimeoutMs ?? 120_000);
+        }),
+      ]);
+    } finally {
+      if (timer !== undefined) clearTimeout(timer);
+    }
+  }
+
   /** Returns the next byte GCS expects, or the total size when the object is complete. */
   async queryOffset(): Promise<number> {
     const total = this.options.source.size;
-    const response = await this.fetchImpl(this.options.sessionUri, {
+    const response = await this.request({
       method: 'PUT',
       headers: { 'Content-Range': offsetQueryHeader(total) },
     });
     if (response.status === 200 || response.status === 201) return total;
-    if (response.status === 308) return nextOffsetFromRange(response.headers.get('Range'));
+    if (response.status === 308) return this.responseOffset(response.headers.get('Range'));
     if (response.status === 404 || response.status === 410) throw new UploadSessionExpiredError();
     throw new UploadHttpError(response.status);
   }
 
   /** `knownOffset` skips the initial offset query for a session that was just created. */
   async run(knownOffset?: number): Promise<SessionUploadOutcome> {
+    try {
+      return await this.runUntilSettled(knownOffset);
+    } catch (error) {
+      if (error instanceof UploadInterruptedError) return this.cancelRequested ? 'cancelled' : 'paused';
+      throw error;
+    } finally {
+      this.lastChunk = null;
+      this.samples = [];
+    }
+  }
+
+  private async runUntilSettled(knownOffset?: number): Promise<SessionUploadOutcome> {
+    this.checkInterrupted();
     const { source, chunkBytes } = this.options;
     const total = source.size;
-    let offset = knownOffset ?? (await this.withRetries(() => this.queryOffset()));
+    let offset = this.checkedOffset(knownOffset ?? (await this.withRetries(() => this.queryOffset())));
     if (offset < total) await this.foldCommitted(offset);
     this.emit(offset, total);
 
@@ -131,7 +198,7 @@ export class ResumableSessionUploader {
       if (offset < total) await this.foldCommitted(offset);
       this.emit(offset, total);
     }
-    return 'complete';
+    return this.cancelRequested ? 'cancelled' : 'complete';
   }
 
   private committed: CommittedChecksum = { offset: 0, crc32c: 0 };
@@ -158,7 +225,10 @@ export class ResumableSessionUploader {
     }
     while (offset < target) {
       const length = Math.min(this.options.chunkBytes, target - offset);
-      crc32c = crc32cUpdate(crc32c, new Uint8Array(await this.options.source.read(offset, length)));
+      this.checkInterrupted();
+      const body = await this.options.source.read(offset, length);
+      if (body.byteLength !== length) throw new UploadProtocolError('The source file returned an incomplete checksum chunk.');
+      crc32c = crc32cUpdate(crc32c, new Uint8Array(body));
       offset += length;
     }
     this.committed = { offset, crc32c };
@@ -168,6 +238,8 @@ export class ResumableSessionUploader {
   private async putChunk(offset: number, total: number, chunkBytes: number): Promise<number> {
     const length = chunkLength(offset, total, chunkBytes);
     const body = await this.options.source.read(offset, length);
+    if (body.byteLength !== length) throw new UploadProtocolError('The source file returned an incomplete chunk.');
+    this.checkInterrupted();
     const bytes = new Uint8Array(body);
     this.lastChunk = { offset, bytes };
     const integrity = this.options.integrity;
@@ -175,19 +247,27 @@ export class ResumableSessionUploader {
       await this.foldCommitted(offset);
       await integrity.declareFinal(crc32cToBase64(crc32cUpdate(this.committed.crc32c, bytes)));
     }
-    const response = await this.fetchImpl(this.options.sessionUri, {
+    const response = await this.request({
       method: 'PUT',
       headers: { 'Content-Range': contentRangeHeader(offset, length, total) },
       body,
     });
-    if (response.status === 200 || response.status === 201) return total;
-    if (response.status === 308) return nextOffsetFromRange(response.headers.get('Range'));
+    if (response.status === 200 || response.status === 201) {
+      if (offset + length !== total) throw new UploadProtocolError('The server completed an incomplete upload.');
+      return total;
+    }
+    if (response.status === 308) {
+      const next = this.responseOffset(response.headers.get('Range'));
+      this.checkedOffset(next, offset + length);
+      if (next <= offset) throw new UploadHttpError(408);
+      return next;
+    }
     if (response.status === 404 || response.status === 410) throw new UploadSessionExpiredError();
     throw new UploadHttpError(response.status);
   }
 
   private isTransient(error: unknown): boolean {
-    return !(error instanceof UploadSessionExpiredError)
+    return !(error instanceof UploadSessionExpiredError || error instanceof UploadProtocolError || error instanceof UploadInterruptedError)
       && (!(error instanceof UploadHttpError) || isRetryableStatus(error.status));
   }
 
@@ -203,13 +283,16 @@ export class ResumableSessionUploader {
     const maxFailures = this.options.maxConsecutiveFailures ?? 6;
     let failures = 0;
     for (;;) {
+      this.checkInterrupted();
       try {
         return await this.putChunk(startOffset, total, chunkBytes);
       } catch (error) {
         failures += 1;
         if (!this.isTransient(error) || failures >= maxFailures || this.cancelRequested) throw error;
         await this.sleep(this.backoffMs(failures));
+        this.checkInterrupted();
         const committed = await this.withRetries(() => this.queryOffset());
+        if (committed < startOffset) throw new UploadProtocolError('The committed offset moved backwards.');
         if (committed !== startOffset) return committed;
       }
     }
@@ -220,6 +303,7 @@ export class ResumableSessionUploader {
     const maxFailures = this.options.maxConsecutiveFailures ?? 6;
     let failures = 0;
     for (;;) {
+      this.checkInterrupted();
       try {
         return await attempt();
       } catch (error) {

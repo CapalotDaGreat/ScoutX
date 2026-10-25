@@ -189,14 +189,26 @@ const PLACEHOLDER = /\b(?:LEGAL|PRIVACY|SECURITY)_CONTACT_REQUIRED\b|\bLEGAL_REV
 const hasPlaceholder = (text) => new RegExp(PLACEHOLDER.source).test(text);
 
 /** Escapes text and shows unfilled config placeholders as readable badges, recording each one. */
-function richText(text, found) {
-  return escapeHtml(text)
-    .replace(PLACEHOLDER, (token) => {
+export function richText(text, found) {
+  const tokens = /\b(?:LEGAL|PRIVACY|SECURITY)_CONTACT_REQUIRED\b|\bLEGAL_REVIEW_REQUIRED\b|https:\/\/[^\s<>"']+|\b[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[a-z]{2,}\b/gi;
+  let end = 0;
+  let html = '';
+  for (const match of text.matchAll(tokens)) {
+    const token = match[0];
+    html += escapeHtml(text.slice(end, match.index));
+    if (hasPlaceholder(token)) {
       found.add(token);
       const label = token === 'LEGAL_REVIEW_REQUIRED' ? 'pending legal review' : 'to be published';
-      return `<span class="pending" title="${token}">${label}</span>`;
-    })
-    .replace(/\b[\w.+-]+@[\w-]+(?:\.[\w-]+)*\.[a-z]{2,}\b/gi, (email) => `<a href="mailto:${email}">${email}</a>`);
+      html += `<span class="pending" title="${token}">${label}</span>`;
+    } else if (token.toLowerCase().startsWith('https://')) {
+      const url = token.replace(/[.,;:!?]+$/, '');
+      html += `<a href="${escapeHtml(url)}">${escapeHtml(url)}</a>${escapeHtml(token.slice(url.length))}`;
+    } else {
+      html += `<a href="mailto:${escapeHtml(token)}">${escapeHtml(token)}</a>`;
+    }
+    end = match.index + token.length;
+  }
+  return html + escapeHtml(text.slice(end));
 }
 
 function slugify(text) {
@@ -220,73 +232,72 @@ function isDraft(doc) {
 
 const SITE_CSS = `
 :root {
-  --bg: #121110;
-  --surface: #1c1a18;
-  --surface-2: #24211e;
-  --line: #2f2b27;
-  --text: #f7f4ef;
-  --body: #ddd7cc;
-  --muted: #b3ac9f;
-  --green: #2fbf71;
-  --gold: #e0b23b;
-  --radius: 24px;
+  --bg: #0D1311;
+  --surface: #151D19;
+  --surface-2: #1D2922;
+  --line: #34483B;
+  --text: #F3F7F4;
+  --body: #F3F7F4;
+  --muted: #BCCABF;
+  --green: #57D6A0;
+  --gold: #C7E56A;
+  --radius: 8px;
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; letter-spacing: 0; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.65 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
 img { display: block; max-width: 100%; }
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.standalone-doc { max-width: 800px; padding-top: 32px; padding-bottom: 64px; }
 .skip { position: absolute; left: -9999px; }
 .skip:focus { left: 16px; top: 12px; z-index: 20; padding: 8px 14px; border-radius: 10px; background: var(--green); color: #0d0c0b; }
 
-.top { position: sticky; top: 0; z-index: 10; background: rgba(18, 17, 16, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.top { position: sticky; top: 0; z-index: 10; background: rgba(13, 19, 17, 0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: -0.01em; }
-.brand img { width: 34px; height: 34px; border-radius: 9px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; text-decoration: none; letter-spacing: 0; }
+.brand img { width: 34px; height: 34px; border-radius: 8px; }
 .top nav { display: flex; align-items: center; gap: 24px; font-size: 15px; }
 .top nav a { text-decoration: none; color: var(--muted); }
 .top nav a:hover, .top nav a[aria-current="page"] { color: var(--text); }
-.top nav .btn { color: #0d0c0b; }
+.top nav .btn { color: #0D1311; }
 @media (max-width: 720px) { .top nav a:not(.btn) { display: none; } }
 
-.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 999px; font-weight: 650; font-size: 16px; text-decoration: none; background: var(--green); color: #0d0c0b; transition: transform 0.15s ease, background 0.15s ease; }
-.btn:hover { background: #3ad07f; transform: translateY(-1px); }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 8px; font-weight: 650; font-size: 16px; text-decoration: none; background: var(--green); color: #0D1311; transition: transform 0.15s ease, background 0.15s ease; }
+.btn:hover { background: #C7E56A; transform: translateY(-1px); }
 .btn svg { width: 20px; height: 20px; }
 .btn.small { padding: 9px 18px; font-size: 14px; }
 .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
 .btn.ghost:hover { background: var(--surface); }
-.btn.soon { background: rgba(224, 178, 59, 0.14); color: var(--gold); border: 1px solid rgba(224, 178, 59, 0.35); cursor: default; }
-.btn.soon:hover { background: rgba(224, 178, 59, 0.14); transform: none; }
+.btn.soon { background: rgba(199, 229, 106, 0.14); color: var(--gold); border: 1px solid rgba(199, 229, 106, 0.35); cursor: default; }
+.btn.soon:hover { background: rgba(199, 229, 106, 0.14); transform: none; }
 .top nav .btn.soon { color: var(--gold); }
 
 .hero { position: relative; overflow: hidden; padding: 64px 0 40px; }
-.hero::before { content: ""; position: absolute; inset: -40% -10% auto auto; width: 640px; height: 640px; background: radial-gradient(closest-side, rgba(47, 191, 113, 0.18), transparent 70%); pointer-events: none; }
-.hero::after { content: ""; position: absolute; inset: auto auto -60% -10%; width: 540px; height: 540px; background: radial-gradient(closest-side, rgba(224, 178, 59, 0.10), transparent 70%); pointer-events: none; }
 .hero .wrap { position: relative; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); margin: 0 0 22px; }
 .crumbs a { text-decoration: none; }
 .crumbs a:hover { color: var(--text); }
 .crumbs span[aria-hidden] { opacity: 0.5; }
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(224, 178, 59, 0.12); color: var(--gold); font-size: 13px; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 18px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 8px; background: rgba(199, 229, 106, 0.12); color: var(--gold); font-size: 13px; font-weight: 650; letter-spacing: 0; text-transform: uppercase; margin: 0 0 18px; }
 .eyebrow svg { width: 15px; height: 15px; }
-h1 { font-size: clamp(36px, 5.4vw, 60px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; font-weight: 800; max-width: 16em; }
-h1 em { font-style: normal; background: linear-gradient(90deg, var(--green), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h1 { font-size: 40px; line-height: 1.05; letter-spacing: 0; margin: 0 0 18px; font-weight: 800; max-width: 16em; }
+h1 em { font-style: normal; color: var(--green); }
 .lead { font-size: 20px; color: var(--muted); max-width: 36em; margin: 0 0 26px; }
 .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.pills li { padding: 6px 14px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
-.pills li.warn { color: var(--gold); background: rgba(224, 178, 59, 0.08); border-color: rgba(224, 178, 59, 0.28); }
+.pills li { padding: 6px 14px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+.pills li.warn { color: var(--gold); background: rgba(199, 229, 106, 0.08); border-color: rgba(199, 229, 106, 0.28); }
 
-.notice { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 0; padding: 16px 20px; border-radius: 18px; background: rgba(224, 178, 59, 0.07); border: 1px solid rgba(224, 178, 59, 0.24); color: var(--body); font-size: 15px; }
+.notice { display: flex; gap: 14px; align-items: flex-start; margin: 8px 0 0; padding: 16px 20px; border-radius: 8px; background: rgba(199, 229, 106, 0.07); border: 1px solid rgba(199, 229, 106, 0.24); color: var(--body); font-size: 15px; }
 .notice svg { flex: none; width: 22px; height: 22px; color: var(--gold); margin-top: 1px; }
 .notice strong { color: var(--text); }
 
 .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 64px; padding: 32px 24px 96px; }
 .toc { position: sticky; top: 88px; align-self: start; max-height: calc(100vh - 112px); overflow: auto; }
-.toc details > summary { list-style: none; cursor: pointer; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.toc details > summary { list-style: none; cursor: pointer; font-size: 12.5px; font-weight: 700; letter-spacing: 0; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 .toc details > summary::-webkit-details-marker { display: none; }
 .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.toc a { display: flex; gap: 12px; padding: 8px 12px; border-radius: 12px; color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.4; transition: background 0.15s ease, color 0.15s ease; }
+.toc a { display: flex; gap: 12px; padding: 8px 12px; border-radius: 8px; color: var(--muted); text-decoration: none; font-size: 14.5px; line-height: 1.4; transition: background 0.15s ease, color 0.15s ease; }
 .toc a .n { flex: none; min-width: 1.4em; color: var(--green); font-weight: 650; font-variant-numeric: tabular-nums; }
 .toc a:hover { color: var(--text); background: var(--surface); }
 .toc a.active { color: var(--text); background: var(--surface-2); }
@@ -295,29 +306,29 @@ h1 em { font-style: normal; background: linear-gradient(90deg, var(--green), var
 .toc .print button:hover { color: var(--text); }
 
 article { min-width: 0; max-width: 740px; }
-.summary { position: relative; overflow: hidden; border-radius: var(--radius); padding: 30px 32px; margin: 0 0 56px; background: radial-gradient(120% 140% at 0% 0%, rgba(47, 191, 113, 0.14), transparent 55%), var(--surface); border: 1px solid var(--line); }
-.kicker { color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 14px; }
+.summary { position: relative; overflow: hidden; border-radius: var(--radius); padding: 30px 32px; margin: 0 0 56px; background: var(--surface); border: 1px solid var(--line); }
+.kicker { color: var(--green); font-weight: 700; font-size: 13px; letter-spacing: 0; text-transform: uppercase; margin: 0 0 14px; }
 .points { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
 .points li { display: flex; gap: 12px; align-items: flex-start; font-size: 16.5px; color: var(--text); }
-.points li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%; background: rgba(47, 191, 113, 0.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232fbf71' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 13px no-repeat; }
+.points li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 8px; background: rgba(87, 214, 160, 0.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2357D6A0' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center / 13px no-repeat; }
 
 .doc-section { scroll-margin-top: 88px; padding: 0 0 36px; margin: 0 0 36px; border-bottom: 1px solid var(--line); }
 .sections .doc-section:last-child { border-bottom: 0; margin-bottom: 0; }
-.doc-section h2 { display: flex; gap: 14px; align-items: center; font-size: clamp(22px, 2.6vw, 27px); line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 16px; font-weight: 750; }
-.doc-section h2 .n { flex: none; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.doc-section h2 { display: flex; gap: 14px; align-items: center; font-size: 24px; line-height: 1.2; letter-spacing: 0; margin: 0 0 16px; font-weight: 750; }
+.doc-section h2 .n { flex: none; width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; background: rgba(87, 214, 160, 0.12); color: var(--green); font-size: 15px; font-weight: 700; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .doc-section h2 a { text-decoration: none; }
 .doc-section p, .doc-section li { color: var(--body); }
 .doc-section p { margin: 0 0 16px; }
 .doc-section ul, .doc-section ol { margin: 0 0 16px; padding-left: 22px; display: grid; gap: 8px; }
 .doc-section li::marker { color: var(--green); }
-.pending { display: inline-block; padding: 0 8px; border-radius: 7px; background: rgba(224, 178, 59, 0.13); color: var(--gold); font-size: 0.86em; font-weight: 650; white-space: nowrap; }
+.pending { display: inline-block; padding: 0 8px; border-radius: 7px; background: rgba(199, 229, 106, 0.13); color: var(--gold); font-size: 0.86em; font-weight: 650; white-space: nowrap; }
 
 .help { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; margin: 24px 0 56px; padding: 26px 28px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
-.help h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: -0.01em; }
+.help h2 { font-size: 20px; margin: 0 0 4px; letter-spacing: 0; }
 .help p { margin: 0; color: var(--muted); font-size: 15.5px; max-width: 34em; }
 
 .section-title { display: flex; align-items: center; gap: 14px; margin: 0 0 8px; }
-.section-title h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.03em; line-height: 1.1; margin: 0; font-weight: 800; }
+.section-title h2 { font-size: 28px; letter-spacing: 0; line-height: 1.1; margin: 0; font-weight: 800; }
 .section-title .icon { width: 44px; height: 44px; }
 .section-sub { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 40em; }
 .group { padding: 40px 0 24px; }
@@ -326,12 +337,12 @@ article { min-width: 0; max-width: 740px; }
 .grid.two { grid-template-columns: repeat(2, 1fr); }
 .card { display: flex; flex-direction: column; padding: 26px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); text-decoration: none; }
 a.card { transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease; }
-a.card:hover { transform: translateY(-2px); border-color: rgba(47, 191, 113, 0.45); background: var(--surface-2); }
-.icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgba(47, 191, 113, 0.12); color: var(--green); margin-bottom: 18px; flex: none; }
-.icon.gold { background: rgba(224, 178, 59, 0.12); color: var(--gold); }
+a.card:hover { transform: translateY(-2px); border-color: rgba(87, 214, 160, 0.45); background: var(--surface-2); }
+.icon { width: 48px; height: 48px; border-radius: 8px; display: grid; place-items: center; background: rgba(87, 214, 160, 0.12); color: var(--green); margin-bottom: 18px; flex: none; }
+.icon.gold { background: rgba(199, 229, 106, 0.12); color: var(--gold); }
 .icon svg { width: 24px; height: 24px; }
 .section-title .icon { margin: 0; }
-.card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: -0.01em; line-height: 1.3; }
+.card h3 { margin: 0 0 8px; font-size: 19px; letter-spacing: 0; line-height: 1.3; }
 .card p { margin: 0 0 18px; color: var(--muted); font-size: 15.5px; }
 .card .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13.5px; color: var(--muted); }
 .card .go { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-weight: 650; }
@@ -351,7 +362,7 @@ footer p { margin: 0; }
 
 @media (max-width: 960px) {
   .layout { grid-template-columns: 1fr; gap: 28px; padding-top: 16px; }
-  .toc { position: static; max-height: none; padding: 18px 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+  .toc { position: static; max-height: none; padding: 18px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
   .toc details > summary { margin: 0; display: flex; align-items: center; justify-content: space-between; }
   .toc details > summary::after { content: ""; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translateY(-3px); transition: transform 0.15s ease; }
   .toc details[open] > summary::after { transform: rotate(-135deg) translateY(-3px); }
@@ -360,6 +371,9 @@ footer p { margin: 0; }
   .grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
+  h1 { font-size: 30px; }
+  .doc-section h2 { font-size: 22px; }
+  .section-title h2 { font-size: 24px; }
   .hero { padding-top: 40px; }
   .grid, .grid.two { grid-template-columns: 1fr; }
   .summary { padding: 24px 22px; }
@@ -452,6 +466,8 @@ ${body}
       <a href="/subscription-terms/">Subscription Terms</a>
       <a href="/legal/youth-safety-policy/">Youth Safety</a>
       <a href="/support/">Support</a>
+      <a href="/account-deletion/">Account deletion</a>
+      <a href="/legal-notice/">Legal notice</a>
       <a href="/report/">Report content</a>
       <a href="/legal/">All policies</a>
     </nav>
@@ -579,8 +595,7 @@ ${body}
 }
 
 function contactLine(value, found) {
-  const text = richText(value, found);
-  return /@/.test(value) && !hasPlaceholder(value) ? `<a href="mailto:${escapeHtml(value)}">${text}</a>` : text;
+  return richText(value, found);
 }
 
 function renderSupportPage(legal, site) {
@@ -600,7 +615,7 @@ function renderSupportPage(legal, site) {
       'trash',
       true,
       'Delete your account',
-      '<p>In the app, open Settings and tap Delete account. Deletion removes your profile, videos and records, except data we must keep by law, as described in the <a href="/legal/data-retention-policy/">Data Retention Policy</a>.</p>',
+      '<p>In the app, open Settings and tap Delete account. Deleting an account does not cancel Apple subscription billing. Read the <a href="/account-deletion/">account deletion instructions</a> for steps, retained records and help if you cannot sign in.</p>',
     ),
     card(
       'card',
@@ -694,6 +709,48 @@ ${groups}`,
   );
 }
 
+function renderLegalNoticePage(legal, site) {
+  const found = new Set();
+  const { entity, contacts } = legal.LEGAL_CONFIG;
+  const registration = [
+    entity.registerNumber ? `<p>Commercial register / UID: ${escapeHtml(entity.registerNumber)}</p>` : '',
+    entity.vatNumber ? `<p>VAT number: ${escapeHtml(entity.vatNumber)}</p>` : '',
+  ].join('');
+  return pageShell({
+    title: 'Legal notice',
+    description: 'The operator and contact details for PitchProof.',
+    path: '/legal-notice/',
+    current: 'legal',
+    placeholders: found,
+    body: `<section class="hero"><div class="wrap"><p class="eyebrow">PitchProof</p><h1>Legal notice</h1></div></section>
+<article class="wrap sections standalone-doc">
+  <section class="doc-section"><h2>Operator</h2><p>${escapeHtml(entity.name)}</p><p>${escapeHtml(legal.entityAddress())}</p>${registration}</section>
+  <section class="doc-section"><h2>Contact</h2><p>Legal and support enquiries: ${contactLine(legal.displayLegalValue(contacts.legalEmail), found)}.</p><p>Privacy enquiries: ${contactLine(legal.displayLegalValue(contacts.privacyEmail, legal.PRIVACY_CONTACT_REQUIRED), found)}.</p><p>Please do not email passwords, sign-in codes or unnecessary identity documents.</p></section>
+  <section class="doc-section"><h2>Policies and rights</h2><p>Read our <a href="/terms/">Terms of Service</a>, <a href="/privacy/">Privacy Policy</a> and <a href="/legal/">safety and rights policies</a>. Account-removal instructions are on the <a href="/account-deletion/">account deletion page</a>.</p><p>PitchProof is independent of Apple and the clubs or competitions mentioned by users. Third-party names and marks belong to their respective owners.</p></section>
+</article>`,
+  }, site);
+}
+
+function renderAccountDeletionPage(legal, site) {
+  const found = new Set();
+  const email = contactLine(legal.displayLegalValue(legal.LEGAL_CONFIG.contacts.privacyEmail, legal.PRIVACY_CONTACT_REQUIRED), found);
+  return pageShell({
+    title: 'Delete your account',
+    description: 'How to delete a PitchProof account, cancel Apple renewal and request help with retained records.',
+    path: '/account-deletion/',
+    current: 'support',
+    placeholders: found,
+    body: `<section class="hero"><div class="wrap"><p class="eyebrow">Account and data</p><h1>Delete your PitchProof account</h1></div></section>
+<article class="wrap sections standalone-doc">
+  <section class="doc-section"><h2>Delete in the app</h2><ol><li>Sign in to the PitchProof account you want to delete.</li><li>Open Settings and choose Delete account.</li><li>Read the confirmation and sign in again if asked to verify account ownership.</li><li>Confirm deletion and follow the displayed progress. If a step fails, retry so the server can continue where it stopped.</li></ol><p>This requests deletion of the whole account, not temporary deactivation. You do not need to wait for a paid subscription to expire.</p></section>
+  <section class="doc-section"><h2>Cancel Apple renewal separately</h2><p>Deleting the app or account does not cancel an Apple subscription. Before deleting, manage renewal through Settings, Plan &amp; usage, Manage subscription, or <a href="https://apps.apple.com/account/subscriptions">Apple subscription settings</a>. You can still delete your account immediately. Refund requests go through <a href="https://reportaproblem.apple.com/">Apple</a>.</p></section>
+  <section class="doc-section"><h2>What is removed and what can remain</h2><p>The server removes the account and associated profile, football records, media and derived data under its deletion workflow. Limited consent proof, moderation decisions, privacy-request records and a deletion receipt have separate retention schedules. Apple purchase history, RevenueCat customer records and copies made outside PitchProof are not all deleted by this job. Read the <a href="/legal/data-retention-policy/">Data Retention Policy</a> for periods and limits.</p></section>
+  <section class="doc-section"><h2>If you cannot use the app</h2><p>Email ${email} with the subject PitchProof account deletion and enough information to identify the account. We may reasonably verify ownership before acting. Do not send your password or two-factor code. Email is an additional help route, not a requirement to complete ordinary in-app deletion.</p></section>
+  <section class="doc-section"><h2>Parents, guardians and people in footage</h2><p>Guardians can use their withdrawal link or contact us. Withdrawing under-13 permission starts account deletion; withdrawing a teenager's optional sharing permission does not itself delete the whole account. If you appear in footage, you can use the <a href="/report/">public report form</a> without an account or contact us about your data rights.</p></section>
+</article>`,
+  }, site);
+}
+
 export async function renderSite(root = ROOT) {
   const legal = await import(new URL('src/config/legalConfig.ts', root).href);
   const resolve = (text) => legal.resolveLegalTokens(text);
@@ -706,6 +763,8 @@ export async function renderSite(root = ROOT) {
   const files = [
     { label: 'public/support/index.html', content: renderSupportPage(legal, site) },
     { label: 'public/legal/index.html', content: renderLegalIndex(documents, resolve, site) },
+    { label: 'public/legal-notice/index.html', content: renderLegalNoticePage(legal, site) },
+    { label: 'public/account-deletion/index.html', content: renderAccountDeletionPage(legal, site) },
   ];
   for (const doc of documents) {
     const page = renderDocumentPage(doc, documents, resolve, site);

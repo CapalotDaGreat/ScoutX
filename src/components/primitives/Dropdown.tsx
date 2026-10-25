@@ -63,23 +63,25 @@ export function Dropdown<T extends string = string>({
         accessibilityRole="button"
         accessibilityLabel={label ?? 'Dropdown'}
         accessibilityState={{ disabled, expanded: isOpen }}
+        accessibilityValue={{ text: selectedOption?.label ?? placeholder }}
         disabled={disabled}
         onPress={() => setIsOpen(true)}
       >
-        <View pointerEvents="none">
+        <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
           <Input
             label={label}
             value={selectedOption?.label ?? ''}
             placeholder={placeholder}
             editable={false}
-            error={error}
-            hint={hint}
+            fieldClassName={disabled ? undefined : 'opacity-100'}
             rightIcon={
               <ChevronDown size={20} color={colors.textSecondary} strokeWidth={1.75} />
             }
           />
         </View>
       </Pressable>
+      {error ? <Text variant="caption" color="error" className="mt-1" accessibilityRole="alert">{error}</Text>
+        : hint ? <Text variant="caption" color="secondary" className="mt-1">{hint}</Text> : null}
 
       <Modal
         visible={isOpen}

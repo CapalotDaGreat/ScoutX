@@ -1,4 +1,19 @@
 {
+  "import": {
+    "title": "Wearable-Import",
+    "choose": "GPX, TCX oder Messpunkt-CSV auswaehlen",
+    "privacy": "Verarbeitung auf diesem Geraet. Rohkoordinaten und urspruengliche Zeitstempel werden nicht gespeichert. Kein Anbieterkonto ist verbunden.",
+    "label": "Lokale Session-Bezeichnung",
+    "confirm": "Zusammenfassung lokal speichern",
+    "cancel": "Abbrechen",
+    "remove": "Lokalen Import loeschen",
+    "quality": "{{rejected}} Messpunkte ausgeschlossen; {{gaps}} Unterbrechungen; {{segments}} zusammenhaengende Abschnitte.",
+    "provenance": "Wearable-Datei vom Nutzer. Genauigkeit eventuell unbekannt. Keine Spielverknuepfung, Videosynchronisierung oder bestaetigte Spielfeldrichtung. Tempo aus Positionen berechnet.",
+    "saved": "Letzter Import nur auf diesem Geraet gespeichert; ersetzt den vorherigen lokalen Import. Cloud-Verlauf und Spielverknuepfung sind nicht implementiert.",
+    "unsupported": "Format nicht unterstuetzt. FIT- und ZIP-Import sind nicht implementiert.",
+    "tooLarge": "Datei unter 5 MiB mit maximal 50.000 Messpunkten auswaehlen.",
+    "invalid": "Import fehlgeschlagen. Koordinaten und Zeitstempel mit Zeitzone pruefen. CSV benoetigt timestamp,latitude,longitude und optional accuracy_m, ohne Anfuehrungszeichen."
+  },
   "title": "GPS-Tracking",
   "subtitle": "Bewegung, Distanz und Heatmaps aufzeichnen",
   "recordingSubtitle": "Spielbewegung akkuschonend aufzeichnen",

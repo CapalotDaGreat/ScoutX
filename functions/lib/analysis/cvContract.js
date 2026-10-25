@@ -6,8 +6,10 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CV_SAMPLE_FPS = exports.CV_CAMERA_VIEWS = exports.CV_EVENT_TYPES = exports.CV_STAGE_STATES = exports.CV_IDENTITY_STATES = exports.CV_AVAILABILITY_STATES = exports.CV_CONTRACT_VERSION = void 0;
+exports.targetOnlyCvResult = targetOnlyCvResult;
 exports.buildCvRequest = buildCvRequest;
 exports.parseCvSegmentResult = parseCvSegmentResult;
+exports.hasConfirmedEventCoverage = hasConfirmedEventCoverage;
 exports.reportWindowsFromCv = reportWindowsFromCv;
 exports.CV_CONTRACT_VERSION = 2;
 exports.CV_AVAILABILITY_STATES = [
@@ -21,6 +23,10 @@ exports.CV_STAGE_STATES = ['complete', 'failed', 'unavailable'];
 exports.CV_EVENT_TYPES = ['shot', 'pass', 'dribble', 'tackle', 'save', 'duel', 'other'];
 exports.CV_CAMERA_VIEWS = ['wide', 'medium', 'close', 'replay', 'non_play', 'unclear'];
 exports.CV_SAMPLE_FPS = 2;
+/** Candidate descriptions may belong to teammates/opponents; never retain them. */
+function targetOnlyCvResult(result) {
+    return { ...result, identity: { state: result.identity.state, candidates: [] } };
+}
 function buildCvRequest(params) {
     const text = (value, max = 40) => (typeof value === 'string' ? value.slice(0, max) : '');
     return {
@@ -73,6 +79,9 @@ function parseCvSegmentResult(value, expected) {
             models[key] = model.slice(0, 120);
     }
     const { startSec, endSec } = expected;
+    if (!Number.isInteger(expected.segmentIndex) || expected.segmentIndex < 0
+        || !Number.isFinite(startSec) || !Number.isFinite(endSec) || startSec < 0 || endSec <= startSec)
+        return null;
     const rawStages = isObject(value.stages) ? value.stages : {};
     const stages = {
         tracking: member(rawStages.tracking, exports.CV_STAGE_STATES) ?? 'unavailable',
@@ -126,7 +135,18 @@ function parseCvSegmentResult(value, expected) {
     const framesDecoded = finite(rawCoverage.framesDecoded);
     if (analysedSec === null || targetVisibleSec === null || framesDecoded === null)
         return null;
-    if (analysedSec < 0 || analysedSec > segmentLength + 1 || targetVisibleSec < 0 || targetVisibleSec > analysedSec)
+    if (analysedSec < 0 || analysedSec > segmentLength + 1 || targetVisibleSec < 0 || targetVisibleSec > analysedSec
+        || !Number.isSafeInteger(framesDecoded) || framesDecoded < 0)
+        return null;
+    const identityState = member(rawIdentity.state, exports.CV_IDENTITY_STATES) ?? 'UNKNOWN';
+    const visibleSec = availability.filter((window) => window.state === 'CONFIRMED_VISIBLE')
+        .reduce((sum, window) => sum + window.endSec - window.startSec, 0);
+    if (Math.abs(visibleSec - targetVisibleSec) > 0.01)
+        return null;
+    if ((visibleSec > 0 || identityState === 'CONFIRMED_VISIBLE')
+        && (stages.tracking !== 'complete' || stages.identity !== 'complete' || identityState !== 'CONFIRMED_VISIBLE'))
+        return null;
+    if (framesDecoded === 0 && (analysedSec > 0 || targetVisibleSec > 0))
         return null;
     const events = [];
     for (const item of Array.isArray(value.events) ? value.events.slice(0, 100) : []) {
@@ -136,11 +156,11 @@ function parseCvSegmentResult(value, expected) {
         const start = within(item.startSec, startSec, endSec);
         const end = within(item.endSec, startSec, endSec);
         const confidence = unit(item.confidence);
-        if (!type || start === null || end === null || end < start || confidence === null)
+        if (!type || start === null || end === null || end <= start || confidence === null)
             continue;
         const frameTimesSec = (Array.isArray(item.frameTimesSec) ? item.frameTimesSec : [])
             .map((time) => within(time, startSec, endSec))
-            .filter((time) => time !== null)
+            .filter((time) => time !== null && time >= start && time <= end)
             .slice(0, 8);
         if (frameTimesSec.length === 0)
             continue;
@@ -153,11 +173,29 @@ function parseCvSegmentResult(value, expected) {
         segmentIndex: expected.segmentIndex,
         stages,
         cameraView: member(value.cameraView, exports.CV_CAMERA_VIEWS) ?? 'unclear',
-        identity: { state: member(rawIdentity.state, exports.CV_IDENTITY_STATES) ?? 'UNKNOWN', candidates },
+        identity: { state: identityState, candidates },
         availability,
         coverage: { analysedSec, targetVisibleSec, framesDecoded: Math.round(framesDecoded) },
         events: stages.events === 'complete' ? events : [],
     };
+}
+/** Strong event claims require continuous confirmed-target evidence for the whole interval. */
+function hasConfirmedEventCoverage(result, event) {
+    if (result.identity.state !== 'CONFIRMED_VISIBLE' || result.stages.tracking !== 'complete'
+        || result.stages.identity !== 'complete' || result.stages.events !== 'complete')
+        return false;
+    let cursor = event.startSec;
+    for (const window of result.availability) {
+        if (window.endSec <= cursor)
+            continue;
+        if (window.startSec > cursor || window.state !== 'CONFIRMED_VISIBLE')
+            return false;
+        cursor = window.endSec;
+        if (cursor >= event.endSec)
+            return event.frameTimesSec.length > 0
+                && event.frameTimesSec.every((time) => time >= event.startSec && time <= event.endSec);
+    }
+    return false;
 }
 /** Lower-case availability windows used by the report; UNKNOWN fills every gap. */
 function reportWindowsFromCv(results, durationSec) {

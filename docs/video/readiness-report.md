@@ -1,5 +1,9 @@
 # Video Intelligence Readiness Report
 
+Implementation update 2026-10-23: see `intelligence-v2-delivery.md` for the bounded upload,
+identity/evidence, report, GPS import and card changes and their local tests. Overall production
+limitations and approval gates below remain open; this update is not real-footage validation.
+
 Updated 2026-10-16. Overall: **PRODUCTION LIMITED**. Public release gate: **BLOCKED** while any
 item below marked NOT VALIDATED, External or Legal remains open. Report seek controls hide when the
 source video was deleted (`canSeekVideo`); continuous tracking remains unavailable until a worker
@@ -13,7 +17,7 @@ statement; it is not a lawyer's review of the 1.2.0 policy texts, which stay fla
 | Consent, withdrawal, lifecycle, retention, deletion | Implemented; automated tests pass (including mid-pipeline withdrawal); real device NOT VALIDATED |
 | Upload integrity (server-verified CRC32C), resume after kill, stable ETA | Implemented; automated tests pass; multi-chunk resume tested against a fake endpoint only; real device NOT VALIDATED |
 | On-device preflight (resolution, frame rate, bitrate, orientation) | Implemented, warnings only; blur and exposure NOT CHECKED; real device NOT VALIDATED |
-| Short-clip mode (frames stay on device) | Implemented; real device NOT VALIDATED |
+| Short-clip mode (video stays on device; sampled frames upload) | Implemented; real device NOT VALIDATED |
 | Files / iCloud picker | Implemented; needs the new native build; NOT VALIDATED |
 | Segment review, partial progress, synthesis, versions | Implemented with mocked models; real footage NOT VALIDATED |
 | "Is this you?" with held-back coaching | Implemented; automated tests pass |

@@ -26,7 +26,7 @@
   "deleteAccountDescription": "Permanently delete your PitchProof account and profile data.",
   "deleteAccount": "Delete account",
   "deleteAccountTitle": "Delete account",
-  "deleteAccountMessage": "This permanently removes your PitchProof account, profile, and push settings. This cannot be undone.",
+  "deleteAccountMessage": "This permanently deletes your PitchProof account and associated data, subject to limited retention described in the Privacy Policy. This cannot be undone. Deleting your account does not cancel an Apple subscription. Cancel renewal separately in Apple subscription settings to avoid further charges. You can delete your account now without waiting for the subscription to expire.",
   "language": "Language",
   "languageDescription": "Choose your preferred language. This overrides automatic device detection.",
   "languageAutomatic": "Automatic (device)",

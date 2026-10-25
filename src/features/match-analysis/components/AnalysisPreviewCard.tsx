@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { type AnalysisPreview } from '@/features/match-analysis/services/analysisPreviewService';
@@ -23,19 +22,21 @@ export function AnalysisPreviewCard({ preview, loading }: { preview: AnalysisPre
   ].filter((item): item is string => item !== null);
 
   return (
-    <Card padding="lg" className="gap-2" testID="analysis-preflight">
+    <View className="gap-3 border-y border-border py-4" testID="analysis-preflight">
       <Heading level={3}>{t('preview.title')}</Heading>
       {preview.blockers.map((item) => (
         <Text key={item} variant="body-sm" color="error">
           {t(`preview.blocker.${item}`)}
         </Text>
       ))}
-      <Text variant="caption" weight="semibold">
-        {t('preview.measuredTitle')}
-      </Text>
-      <Text variant="body-sm" color="secondary">
-        {loading ? t('preview.reading') : measured.length > 0 ? measured.join(' · ') : t('preview.noMetadata')}
-      </Text>
+      <View className="gap-1 border-l-2 border-accent pl-3">
+        <Text variant="caption" weight="semibold">
+          {t('preview.measuredTitle')}
+        </Text>
+        <Text variant="body-sm" color="secondary">
+          {loading ? t('preview.reading') : measured.length > 0 ? measured.join(' · ') : t('preview.noMetadata')}
+        </Text>
+      </View>
       {preview.warnings.length > 0 ? (
         <View className="gap-1">
           <Text variant="caption" weight="semibold">
@@ -57,6 +58,6 @@ export function AnalysisPreviewCard({ preview, loading }: { preview: AnalysisPre
       <Text variant="caption" color="secondary">
         {t('preview.cvUnavailable')}
       </Text>
-    </Card>
+    </View>
   );
 }

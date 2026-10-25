@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 type AgentationProbeComponent = () => ReactElement | null;
 
@@ -17,4 +18,6 @@ function loadAgentationProbe(): AgentationProbeComponent {
  * Re-agentation in-app probe — dev only, not in Expo Go.
  */
 export const AgentationDevProbe: AgentationProbeComponent =
-  __DEV__ && !isExpoGo ? loadAgentationProbe() : () => null;
+  __DEV__ && !isExpoGo && !(Platform.OS === 'web' && process.env.EXPO_PUBLIC_CAPTURE_MODE === '1')
+    ? loadAgentationProbe()
+    : () => null;

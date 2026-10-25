@@ -16,7 +16,9 @@ from typing import Iterator
 
 import numpy as np
 
-from .pipeline import Box, Components
+from .pipeline import Box, Components, IDENTITY_DETECTION_THRESHOLD, TRACKING_DETECTION_THRESHOLD
+from .identity import valid_read
+from .source_pts import sample_recording_frames, validate_recording_interval
 
 DETECTOR_MODEL = os.environ.get("CV_DETECTOR_MODEL", "PekingU/rtdetr_r50vd_coco_o365")
 PERSON_LABELS = {"person"}
@@ -26,39 +28,31 @@ class PyAvFrameSource:
     def frames(self, url: str, headers: str | None, start_sec: float, end_sec: float, fps: float) -> Iterator[tuple[float, np.ndarray]]:
         import av  # noqa: PLC0415
 
+        validate_recording_interval(start_sec, end_sec, fps)
         options = {"rw_timeout": "30000000", "protocol_whitelist": "http,https,tcp,tls"}
         if headers:
             options["headers"] = headers
         with av.open(url, options=options, timeout=60) as container:
             stream = container.streams.video[0]
-            stream.thread_type = "AUTO"
-            container.seek(int(start_sec / stream.time_base), stream=stream, any_frame=False, backward=True)
-            next_time = start_sec
-            for frame in container.decode(stream):
-                if frame.time is None or frame.time < next_time:
-                    continue
-                if frame.time >= end_sec:
-                    break
-                next_time = frame.time + 1.0 / fps
-                yield float(frame.time), frame.to_ndarray(format="rgb24")
+            yield from sample_recording_frames(container, stream, start_sec, end_sec, fps)
 
 
 class RtDetrDetector:
-    def __init__(self) -> None:
+    def __init__(self, *, local_only: bool = False, cpu: bool = False) -> None:
         import torch  # noqa: PLC0415
         from transformers import AutoImageProcessor, RTDetrForObjectDetection  # noqa: PLC0415
 
         self._torch = torch
-        self._device = "cuda" if torch.cuda.is_available() else "cpu"
-        self._processor = AutoImageProcessor.from_pretrained(DETECTOR_MODEL)
-        self._model = RTDetrForObjectDetection.from_pretrained(DETECTOR_MODEL).to(self._device).eval()
+        self._device = "cuda" if not cpu and torch.cuda.is_available() else "cpu"
+        self._processor = AutoImageProcessor.from_pretrained(DETECTOR_MODEL, local_files_only=local_only)
+        self._model = RTDetrForObjectDetection.from_pretrained(DETECTOR_MODEL, local_files_only=local_only).to(self._device).eval()
 
     def people(self, frame: np.ndarray) -> list[Box]:
         inputs = self._processor(images=frame, return_tensors="pt").to(self._device)
         with self._torch.no_grad():
             outputs = self._model(**inputs)
         results = self._processor.post_process_object_detection(
-            outputs, target_sizes=[frame.shape[:2]], threshold=0.4
+            outputs, target_sizes=[frame.shape[:2]], threshold=TRACKING_DETECTION_THRESHOLD
         )[0]
         labels = self._model.config.id2label
         boxes = []
@@ -74,7 +68,8 @@ class ByteTrackTracker:
         import supervision as sv  # noqa: PLC0415
 
         self._sv = sv
-        self._tracker = sv.ByteTrack(frame_rate=max(1, int(round(fps))))
+        self._tracker = sv.ByteTrack(track_activation_threshold=IDENTITY_DETECTION_THRESHOLD,
+                                     frame_rate=max(1, int(round(fps))))
 
     def update(self, boxes: list[Box]) -> list[tuple[str, Box]]:
         if not boxes:
@@ -94,21 +89,25 @@ class ByteTrackTracker:
 
 
 class EasyOcrJerseyReader:
-    def __init__(self) -> None:
+    def __init__(self, *, local_only: bool = False, cpu: bool = False) -> None:
         import easyocr  # noqa: PLC0415
         import torch  # noqa: PLC0415
 
-        self._reader = easyocr.Reader(["en"], gpu=torch.cuda.is_available(), verbose=False)
+        self._reader = easyocr.Reader(["en"], gpu=not cpu and torch.cuda.is_available(),
+                                      download_enabled=not local_only, verbose=False)
 
     def read(self, back_crop: np.ndarray) -> tuple[str | None, float]:
         if back_crop.shape[0] < 24 or back_crop.shape[1] < 16:
             return None, 0.0
         best: tuple[str | None, float] = (None, 0.0)
+        readings = set()
         for _, text, confidence in self._reader.readtext(back_crop, allowlist="0123456789", detail=1):
-            digits = "".join(ch for ch in str(text) if ch.isdigit())
-            if 1 <= len(digits) <= 2 and float(confidence) > best[1]:
-                best = (digits, float(confidence))
-        return best
+            digits = str(text).strip()
+            if valid_read(digits, float(confidence)):
+                readings.add(digits)
+                if float(confidence) > best[1]:
+                    best = (digits, float(confidence))
+        return best if len(readings) == 1 else (None, 0.0)
 
 
 def _package_version(name: str) -> str:
@@ -130,11 +129,11 @@ def model_versions() -> dict[str, str]:
     }
 
 
-def default_components(fps: float = 2.0) -> Components:
+def default_components(fps: float = 2.0, *, local_only: bool = False, cpu: bool = False) -> Components:
     return Components(
         source=PyAvFrameSource(),
-        detector=RtDetrDetector(),
+        detector=RtDetrDetector(local_only=local_only, cpu=cpu),
         tracker_factory=lambda: ByteTrackTracker(fps),
-        jersey_reader=EasyOcrJerseyReader(),
+        jersey_reader=EasyOcrJerseyReader(local_only=local_only, cpu=cpu),
         models=model_versions(),
     )

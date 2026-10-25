@@ -91,14 +91,14 @@ export function ScoutTrialInvitationsSection({
             {t('sectionEmpty')}
           </Text>
         ) : (
-          <View className="gap-3">
+          <View className="gap-2">
             {trials.map((trial, index) => (
               <TrialInvitationCard
                 key={trial.id}
                 invitation={trial}
                 index={index}
                 footer={
-                  <View className="mt-2 gap-2">
+                  <View className="mt-2 gap-2 border-t border-divider pt-3">
                     {SCOUT_RESCHEDULABLE_STATUSES.includes(trial.status) ? (
                       <View className="flex-row gap-2">
                         <Button

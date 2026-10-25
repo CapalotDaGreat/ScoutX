@@ -54,14 +54,14 @@ export function ScoutReportsInboxScreen({
           description={t('scout:reports.inbox.emptyDescription')}
         />
       ) : (
-        <View className="gap-3">
+        <View className="gap-2">
           {reports.map((report) => (
             <Pressable
               key={report.id}
               accessibilityRole="button"
               onPress={() => onPlayerPress(report.playerId)}
             >
-              <Card variant="outlined" padding="md" className="gap-2">
+              <Card variant="outlined" padding="md" className="gap-2 rounded-lg">
                 <View className="flex-row items-start justify-between gap-3">
                   <View className="min-w-0 flex-1">
                     <Text weight="semibold">{report.playerName}</Text>

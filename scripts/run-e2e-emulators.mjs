@@ -9,9 +9,16 @@
 import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
+import { buildE2eRunCommands } from './lib/e2eRunPlan.mjs';
 
 const accounts = JSON.parse(fs.readFileSync(new URL('../e2e/fixtures/accounts.json', import.meta.url), 'utf8'));
 const port = process.env.PLAYWRIGHT_WEB_PORT ?? '8091';
+const commands = buildE2eRunCommands({
+  project: process.env.PLAYWRIGHT_PROJECT,
+  filters: process.argv.slice(2),
+  noRetries: process.env.E2E_NO_RETRIES,
+  marketingCapture: process.env.MARKETING_CAPTURE,
+});
 
 const env = {
   ...process.env,
@@ -35,14 +42,6 @@ const env = {
 };
 delete env.PLAYWRIGHT_SKIP_WEBSERVER;
 
-// Playwright ORs positional filters, so pass only the requested specs when filtering.
-const filters = process.argv.slice(2);
-const targets = filters.length ? filters.map((name) => `e2e/flows/${name}`).join(' ') : 'e2e/flows';
-const inner = [
-  'node scripts/seed-emulators.mjs',
-  `npx playwright test ${targets} --project=web-desktop`,
-].join(' && ');
-
 // The Functions emulator reads secrets from functions/.secret.local and otherwise asks the real
 // Secret Manager. Write a random throwaway value for this run only; it is gitignored and removed.
 const secretFile = new URL('../functions/.secret.local', import.meta.url);
@@ -62,21 +61,21 @@ const removeSecretFile = () => {
   if (createdSecretFile && fs.existsSync(secretFile)) fs.rmSync(secretFile);
 };
 
-const child = spawn(
-  'npx',
-  [
-    'firebase',
-    'emulators:exec',
-    '--only',
-    'auth,firestore,storage,functions',
-    '--project',
-    accounts.projectId,
-    `"${inner}"`,
-  ],
-  { stdio: 'inherit', shell: true, env },
-);
-
-child.on('exit', (code) => {
+let exitCode = 0;
+try {
+  // Restart the emulator process too: resetting documents alone does not drain
+  // background triggers left by the preceding browser project's mutations.
+  for (const inner of commands) {
+    exitCode = await new Promise((resolve, reject) => {
+      const child = spawn('npx', ['firebase', 'emulators:exec', '--only',
+        'auth,firestore,storage,functions', '--project', accounts.projectId, `"${inner}"`],
+      { stdio: 'inherit', shell: true, env });
+      child.once('error', reject);
+      child.once('exit', (code) => resolve(code ?? 1));
+    });
+    if (exitCode !== 0) break;
+  }
+} finally {
   removeSecretFile();
-  process.exit(code ?? 1);
-});
+}
+process.exitCode = exitCode;

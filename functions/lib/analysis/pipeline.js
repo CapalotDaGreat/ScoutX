@@ -308,7 +308,7 @@ async function processAnalyzeTask(db, task, options) {
     if (job.cancelRequested || (state !== 'analyzing' && !retrying))
         return 'skipped';
     if (!options.apiKey) {
-        await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable');
+        await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable', undefined, undefined, task.generation);
         return 'failed';
     }
     try {
@@ -318,6 +318,7 @@ async function processAnalyzeTask(db, task, options) {
             jobId: task.jobId,
             requestId: `task:${task.jobId}:${task.generation}`,
             apiKey: options.apiKey,
+            expectedGeneration: task.generation,
         });
         return 'complete';
     }

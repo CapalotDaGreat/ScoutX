@@ -1,4 +1,25 @@
-import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
+import { type DiscoverablePlayer, type DiscoverySearchScope } from '@/features/scout-discovery/types';
+import { indexedSearchMatches } from './discoverySearchIndex';
+
+export function normalizeSearch(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+export function searchFields(player: DiscoverablePlayer, scope: DiscoverySearchScope): string[] {
+  const fields = {
+    name: [player.fullName, player.username ?? ''],
+    club: [player.club],
+    position: player.position,
+    nationality: [player.nationality],
+    league: [player.league],
+  };
+  return (scope === 'all' ? [...Object.values(fields).flat(), ...player.searchKeywords] : fields[scope])
+    .map(normalizeSearch);
+}
+
+export function matchesPlayerSearch(player: DiscoverablePlayer, query: string, scope: DiscoverySearchScope): boolean {
+  return indexedSearchMatches(player, query, scope);
+}
 
 export type SearchRelevanceScore = {
   playerId: string;
@@ -7,7 +28,7 @@ export type SearchRelevanceScore = {
 };
 
 function tokenize(query: string): string[] {
-  return query
+  return normalizeSearch(query)
     .trim()
     .toLowerCase()
     .split(/\s+/)
@@ -31,6 +52,7 @@ function scoreTokenMatch(keywords: string[], token: string): number {
 export function scorePlayerSearchRelevance(
   player: DiscoverablePlayer,
   query: string,
+  scope: DiscoverySearchScope = 'all',
 ): SearchRelevanceScore {
   const tokens = tokenize(query);
   if (tokens.length === 0) {
@@ -39,23 +61,26 @@ export function scorePlayerSearchRelevance(
 
   let score = 0;
   const reasons: string[] = [];
+  if (!matchesPlayerSearch(player, query, scope)) {
+    return { playerId: player.id, score: 0, reasons };
+  }
 
   for (const token of tokens) {
-    const tokenScore = scoreTokenMatch(player.searchKeywords, token);
+    const tokenScore = scoreTokenMatch(searchFields(player, scope), token);
     score += tokenScore;
 
-    if (player.username?.toLowerCase() === token) {
+    if ((scope === 'all' || scope === 'name') && normalizeSearch(player.username ?? '') === token) {
       score += 120;
       reasons.push('Exact username match');
     }
-    if (player.fullName.toLowerCase().includes(token)) {
+    if ((scope === 'all' || scope === 'name') && normalizeSearch(player.fullName).includes(token)) {
       reasons.push('Name match');
     }
-    if (player.position.some((position) => position.toLowerCase() === token)) {
+    if ((scope === 'all' || scope === 'position') && player.position.some((position) => normalizeSearch(position) === token)) {
       score += 40;
       reasons.push('Position match');
     }
-    if (player.club.toLowerCase().includes(token)) {
+    if ((scope === 'all' || scope === 'club') && normalizeSearch(player.club).includes(token)) {
       score += 30;
       reasons.push('Club match');
     }
@@ -82,22 +107,23 @@ export function scorePlayerSearchRelevance(
 export function rankPlayersBySearchRelevance(
   players: DiscoverablePlayer[],
   query: string,
+  scope: DiscoverySearchScope = 'all',
 ): DiscoverablePlayer[] {
   const trimmed = query.trim();
   if (!trimmed) {
     return players;
   }
 
-  const scored = players.map((player) => ({
+  const scored = players.filter((player) => matchesPlayerSearch(player, query, scope)).map((player) => ({
     player,
-    relevance: scorePlayerSearchRelevance(player, trimmed),
+    relevance: scorePlayerSearchRelevance(player, trimmed, scope),
   }));
 
   scored.sort((a, b) => {
     if (b.relevance.score !== a.relevance.score) {
       return b.relevance.score - a.relevance.score;
     }
-    return (b.player.overallRating ?? -1) - (a.player.overallRating ?? -1);
+    return a.player.id.localeCompare(b.player.id);
   });
 
   return scored.map((item) => item.player);

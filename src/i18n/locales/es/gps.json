@@ -1,4 +1,19 @@
 {
+  "import": {
+    "title": "Importar desde un dispositivo deportivo",
+    "choose": "Elegir GPX, TCX o CSV de muestras",
+    "privacy": "Se procesa en este dispositivo. No se guardan las coordenadas originales ni las marcas de tiempo originales. No hay ninguna cuenta de proveedor conectada.",
+    "label": "Nombre de la sesión local",
+    "confirm": "Guardar resumen local",
+    "cancel": "Cancelar",
+    "remove": "Eliminar importación local",
+    "quality": "{{rejected}} muestras excluidas; {{gaps}} interrupciones; {{segments}} tramos continuos.",
+    "provenance": "Archivo del dispositivo aportado por el usuario. La precisión puede ser desconocida. Sin partido vinculado, sincronización de vídeo ni orientación del campo confirmada. Las velocidades se calculan a partir de las posiciones.",
+    "saved": "La última importación se ha guardado solo en este dispositivo y sustituye a la anterior. El historial en la nube y la vinculación con partidos no están implementados.",
+    "unsupported": "Este formato no es compatible. Las importaciones FIT y ZIP no están implementadas.",
+    "tooLarge": "Elige un archivo de menos de 5 MiB con un máximo de 50.000 muestras.",
+    "invalid": "No se puede importar. Comprueba las coordenadas y las marcas de tiempo con zona horaria. El CSV debe incluir timestamp,latitude,longitude y, opcionalmente, accuracy_m, sin comillas."
+  },
   "title": "Seguimiento GPS",
   "subtitle": "Registra movimiento, distancia y mapas de calor",
   "recordingSubtitle": "Registra el movimiento en el partido con un muestreo que ahorra batería",

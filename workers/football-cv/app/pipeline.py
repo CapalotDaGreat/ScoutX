@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from statistics import median
-from typing import Iterable, Iterator, Protocol
+from typing import Callable, Iterable, Iterator, Protocol
 
 import numpy as np
 
@@ -21,10 +21,13 @@ from .identity import (
     candidate_payload,
     target_trace,
     visible_seconds,
+    valid_read,
 )
 from .teams import kit_rgb, team_match
 
-WORKER_VERSION = "football-cv/0.2.0"
+WORKER_VERSION = "football-cv/0.7.0"
+TRACKING_DETECTION_THRESHOLD = 0.1
+IDENTITY_DETECTION_THRESHOLD = 0.4
 
 
 @dataclass
@@ -34,6 +37,16 @@ class Box:
     x2: float
     y2: float
     score: float
+
+
+def usable_box(box: Box, width: int, height: int) -> Box | None:
+    """Clip valid detections; malformed geometry must never reach tracking/OCR."""
+    if (not all(np.isfinite(value) for value in (box.x1, box.y1, box.x2, box.y2, box.score))
+            or not TRACKING_DETECTION_THRESHOLD < box.score <= 1):
+        return None
+    clipped = Box(max(0.0, box.x1), max(0.0, box.y1),
+                  min(float(width), box.x2), min(float(height), box.y2), box.score)
+    return clipped if clipped.x1 < clipped.x2 and clipped.y1 < clipped.y2 else None
 
 
 class FrameSource(Protocol):
@@ -87,7 +100,25 @@ def _crop(frame: np.ndarray, box: Box, top: float, bottom: float) -> np.ndarray:
     return frame[y1:y2, x1:x2]
 
 
-def analyse_segment(request: SegmentRequest, components: Components, trace: list[dict] | None = None) -> SegmentResult:
+def read_kit_number(frame: np.ndarray, box: Box, reader: JerseyReader) -> tuple[str | None, float]:
+    """One vote per frame, even when both garments show a number; conflicts abstain."""
+    readings = [reader.read(_crop(frame, box, top, bottom))
+                for top, bottom in ((0.15, 0.5), (0.5, 0.75))]
+    valid = [(number, confidence) for number, confidence in readings if valid_read(number, confidence)]
+    if not valid or len({number for number, _ in valid}) != 1:
+        return None, 0.0
+    return valid[0][0], min(confidence for _, confidence in valid)
+
+
+def scene_signature(frame: np.ndarray) -> np.ndarray:
+    """Small RGB grid for an intentionally coarse, unvalidated cut guard."""
+    ys = np.linspace(0, frame.shape[0] - 1, 16).astype(int)
+    xs = np.linspace(0, frame.shape[1] - 1, 16).astype(int)
+    return frame[ys[:, None], xs].astype(float) / 255.0
+
+
+def analyse_segment(request: SegmentRequest, components: Components, trace: list[dict] | None = None,
+                    observer: Callable[[list[Track]], None] | None = None) -> SegmentResult:
     """`trace` (evaluation only) receives the target's per-sample boxes; the service never passes it."""
     tracker = components.tracker_factory()
     tracks: dict[str, Track] = {}
@@ -95,26 +126,50 @@ def analyse_segment(request: SegmentRequest, components: Components, trace: list
     decoded = 0
     step = 1.0 / request.sampling.fps
     tracking_state = "complete"
+    previous_time = None
+    previous_scene = None
+    scene = 0
     try:
         for time_sec, frame in components.source.frames(
             request.source.url, request.source.headers, request.startSec, request.endSec, request.sampling.fps
         ):
+            if not np.isfinite(time_sec) or not request.startSec <= time_sec < request.endSec:
+                raise ValueError("sample outside requested window")
+            if previous_time is not None and time_sec <= previous_time:
+                raise ValueError("samples must be strictly chronological")
+            signature = scene_signature(frame)
+            if previous_time is not None and (
+                time_sec - previous_time > max(2.0, step * 1.5)
+                or float(np.mean(np.abs(signature - previous_scene))) > 0.35
+            ):
+                tracker = components.tracker_factory()
+                scene += 1
+            previous_time, previous_scene = time_sec, signature
             decoded += 1
             frame_height = frame.shape[0] or 1
-            boxes = [box for box in components.detector.people(frame) if box.score >= 0.4]
-            heights.extend((box.y2 - box.y1) / frame_height for box in boxes)
+            boxes = [clipped for box in components.detector.people(frame)
+                     if (clipped := usable_box(box, frame.shape[1], frame.shape[0])) is not None]
+            heights.extend((box.y2 - box.y1) / frame_height for box in boxes
+                           if box.score >= IDENTITY_DETECTION_THRESHOLD)
             for track_id, box in tracker.update(boxes):
+                box = usable_box(box, frame.shape[1], frame.shape[0])
+                if box is None:
+                    continue
+                track_id = f"s{scene}:{track_id}"
                 torso = _crop(frame, box, 0.15, 0.5)
                 if torso.size == 0:
                     continue
-                jersey, jersey_confidence = components.jersey_reader.read(torso)
+                # Low-score detections may preserve an existing anonymous trajectory,
+                # but cannot provide fresh identity evidence or trigger OCR work.
+                jersey, jersey_confidence = (read_kit_number(frame, box, components.jersey_reader)
+                                             if box.score >= IDENTITY_DETECTION_THRESHOLD else (None, 0.0))
                 tracks.setdefault(track_id, Track(track_id)).observations.append(
                     TrackObservation(
                         time_sec=time_sec,
                         jersey_read=jersey,
                         jersey_confidence=jersey_confidence,
                         team_match=team_match(torso, request.target.kitPrimaryColor, request.target.kitSecondaryColor),
-                        box=(box.x1, box.y1, box.x2, box.y2) if trace is not None else None,
+                        box=(box.x1, box.y1, box.x2, box.y2),
                     )
                 )
     except Exception:  # noqa: BLE001 - a broken stream must yield an honest failure, not a crash
@@ -152,5 +207,10 @@ def analyse_segment(request: SegmentRequest, components: Components, trace: list
         events=[],
     )
     # Only the target's description leaves the worker; all other tracks are dropped here.
-    tracks.clear()
+    try:
+        from .source_pts import enabled
+        if observer is not None and enabled() and tracking_state == "complete":
+            observer(list(tracks.values()))
+    finally:
+        tracks.clear()
     return result

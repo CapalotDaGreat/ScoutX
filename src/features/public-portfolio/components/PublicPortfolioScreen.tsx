@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { FreshnessLabel } from '@/components/evidence/FreshnessLabel';
@@ -181,7 +181,7 @@ export function PublicPortfolioScreen({
         </View>
       }
     >
-      <ScrollView contentContainerClassName="gap-6 pb-10" showsVerticalScrollIndicator={false}>
+      <View className="gap-6 pb-10">
         {previewMode ? (
           <Card variant="outlined" padding="md" className="gap-1" testID="stranger-view-note">
             <Text weight="semibold">{t('portfolio:strangerView.title')}</Text>
@@ -385,7 +385,7 @@ export function PublicPortfolioScreen({
             </CollapsibleSection>
           </PortfolioSection>
         ) : null}
-      </ScrollView>
+      </View>
 
       {canEndorse ? (
         <CoachEndorsementModal

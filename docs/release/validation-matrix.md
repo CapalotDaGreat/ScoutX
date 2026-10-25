@@ -1,9 +1,11 @@
 # Validation Matrix
 
-Updated 2026-10-08 (Phase 14). Only results that were actually observed are marked PASS. Every row
+Historical baseline: 2026-10-08 (Phase 14). Fresh local results are recorded in `asc-readiness.md`.
+Only results that were actually observed are marked PASS. Every row
 marked `NOT VALIDATED` is counted by the release gate ("Real-device and end-to-end validation").
 When a row is executed, replace the state with `PASS` or `FAIL`, and record the date, build number and
-tester.
+tester. A `FAIL` or `FAIL (manual)` state is a code blocker in the release gate; it cannot be cleared
+by simply removing `NOT VALIDATED`.
 
 States: **PASS (automated)** = covered by a test in this repo; **PASS (manual)** = observed by a
 person on the stated build; **NOT VALIDATED**; **NOT AVAILABLE** (feature deliberately absent).
@@ -110,7 +112,7 @@ load test.
 
 | Item | State | Notes |
 | --- | --- | --- |
-| Firestore and Cloud Functions APIs enabled on `scoutx-230b0` | NOT VALIDATED | 403 SERVICE_DISABLED observed on 2026-10-07 |
+| Firestore and Cloud Functions APIs enabled on `scoutx-230b0` | NOT VALIDATED | Historical 403 on 2026-10-07; provisioning reported 2026-10-08, needs current production smoke test |
 | Firestore indexes deployed (`firestore.indexes.json`) | NOT VALIDATED | |
 | Cloud Tasks queues deployed, OIDC-only invokers | NOT VALIDATED | |
 | App Check with App Attest enforced | NOT VALIDATED | |

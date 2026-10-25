@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { ShieldCheck } from 'lucide-react-native';
-import { Avatar } from '@/components/primitives/Avatar';
+import { PlayerIdentityPanel } from '@/components/player-card/PlayerIdentityPanel';
 import { Badge } from '@/components/primitives/Badge';
 import { StarRating } from '@/components/primitives/StarRating';
 import { Text } from '@/components/primitives/Text';
@@ -28,10 +28,10 @@ export function FootballPassportHero({ data, username, verification }: FootballP
   const isVerified = verification?.verified === true;
 
   return (
-    <View className="overflow-hidden rounded-3xl border-2 border-gold/30 bg-surface">
-      <View className="bg-gold-muted px-5 py-3">
-        <View className="flex-row items-center justify-between">
-          <View className="flex-row items-center gap-2">
+    <View className="border-b border-border bg-surface">
+      <View className="border-b border-divider px-4 py-3">
+        <View className="flex-row flex-wrap items-center justify-between gap-2">
+          <View className="min-w-0 flex-row items-center gap-2">
             <ShieldCheck size={18} color={colors.gold} />
             <Text weight="semibold" className="text-gold">
               {t('portfolio:passportHero.title')}
@@ -43,29 +43,20 @@ export function FootballPassportHero({ data, username, verification }: FootballP
         </View>
       </View>
 
-      <View className="gap-4 px-5 py-5">
-        <View className="flex-row items-start gap-4">
-          <Avatar
-            name={profile.fullName}
-            source={profile.avatarUrl ? { uri: profile.avatarUrl } : undefined}
-            size="2xl"
-            showBorder
-          />
-          <View className="flex-1 gap-2">
-            <Text weight="semibold" className="text-2xl">
-              {profile.fullName}
-            </Text>
+      <View className="gap-4 px-4 py-5">
+        <View className="flex-row flex-wrap items-start gap-4">
+          <View className="w-full">
+            <PlayerIdentityPanel expanded playerId={data.playerId} name={profile.fullName} portrait={profile.avatarUrl || ''}
+              position={[profile.position, ...secondaryPositions].filter(Boolean).join(' / ') || null}
+              context={profile.club} facts={profile.nationality} verified={isVerified} />
+          </View>
+          <View className="min-w-[160px] flex-1 gap-2">
             {username ? (
               <Text variant="caption" color="secondary">
                 pitchproof.online/player/{username}
               </Text>
             ) : null}
             <View className="flex-row flex-wrap gap-2">
-              {profile.position ? <Badge variant="prestige" label={profile.position} /> : null}
-              {secondaryPositions.map((position) => (
-                <Badge key={position} variant="default" label={position} />
-              ))}
-              {profile.nationality ? <Badge variant="info" label={profile.nationality} /> : null}
               {data.ageGroupLabel === 'youth' ? (
                 <Badge variant="default" label={t('portfolio:youthPlayer')} />
               ) : null}
@@ -73,7 +64,7 @@ export function FootballPassportHero({ data, username, verification }: FootballP
           </View>
         </View>
 
-        <View className="gap-2 rounded-2xl border border-border bg-background-secondary/60 p-4">
+        <View className="gap-3 border-t border-divider pt-4">
           <View className="flex-row flex-wrap gap-x-6 gap-y-2">
             <View>
               <Text variant="caption" color="secondary">

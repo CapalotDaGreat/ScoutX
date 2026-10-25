@@ -13,11 +13,11 @@ export function IdentityFieldCard({ label, value, className }: IdentityFieldCard
     <View
       accessibilityLabel={`${label}: ${value}`}
       className={cn(
-        'min-w-[45%] flex-1 gap-1 rounded-xl border border-border bg-background-secondary/70 px-4 py-3',
+        'min-w-[45%] flex-1 gap-1 border-b border-border py-3 pr-3',
         className,
       )}
     >
-      <Text variant="caption" color="secondary" className="uppercase tracking-wider">
+      <Text variant="caption" color="secondary" style={{ letterSpacing: 0 }}>
         {label}
       </Text>
       <Text variant="body" className="font-sans-medium">

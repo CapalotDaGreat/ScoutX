@@ -38,7 +38,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
       clearButtonMode="never"
       accessibilityRole="search"
       containerClassName={containerClassName}
-      fieldClassName="rounded-full"
+      fieldClassName="rounded-md"
       inputClassName={cn('py-2.5', inputClassName)}
       leftIcon={<Search size={20} color={colors.textSecondary} strokeWidth={1.75} />}
       rightIcon={
@@ -48,7 +48,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
             accessibilityLabel={t('a11y.clearSearch')}
             hitSlop={8}
             onPress={onClear}
-            className="h-6 w-6 items-center justify-center rounded-full bg-background-secondary"
+            className="h-11 w-11 items-center justify-center rounded-md bg-background-secondary"
           >
             <X size={14} color={colors.textSecondary} strokeWidth={2} />
           </Pressable>

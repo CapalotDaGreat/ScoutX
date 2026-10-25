@@ -50,6 +50,7 @@
     }
   },
   "discover": {
+    "continueSearch": "Nessun risultato in questo gruppo. Carica altro per continuare.",
     "title": "Scopri giocatori",
     "subtitle": "Ricerca scouting avanzata con risultati immediati",
     "loadingSubtitle": "Cerca nel pool globale di talenti",
@@ -492,7 +493,7 @@
     }
   },
   "sort": {
-    "relevance": "Migliore corrispondenza",
+    "relevance": "Prima le evidenze",
     "overall": "Valutazione complessiva",
     "potential": "Potenziale",
     "age": "Età",
@@ -664,6 +665,10 @@
     "sessions": "Sessioni GPS"
   },
   "playerCard": {
+    "scoutingProfile": "Profilo giocatore",
+    "analysisSamples": "Campioni analizzati",
+    "noHighlights": "Nessun highlight",
+    "viewProfile": "Vedi giocatore",
     "openHint": "Apri il profilo completo del giocatore",
     "footValue": "Piede {{foot}}"
   }

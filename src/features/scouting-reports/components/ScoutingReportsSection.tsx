@@ -58,7 +58,7 @@ export function ScoutingReportsSection({ playerId, playerName }: ScoutingReports
         {isLoading ? (
           <SkeletonLoader variant="card" count={2} />
         ) : reports.length === 0 ? (
-          <View className="rounded-xl border border-dashed border-border px-4 py-8">
+          <View className="border-y border-divider px-3 py-5">
             <Text variant="body-sm" color="secondary" className="text-center">
               {t('reports.sectionEmpty', { playerName })}
             </Text>
@@ -67,7 +67,7 @@ export function ScoutingReportsSection({ playerId, playerName }: ScoutingReports
             </Button>
           </View>
         ) : (
-          <View className="gap-3">
+          <View className="gap-2">
             {reports.map((report, index) => (
               <ScoutingReportCard
                 key={report.id}

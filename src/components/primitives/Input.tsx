@@ -33,6 +33,7 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
     onFocus,
     onBlur,
     accessibilityLabel,
+    style,
     ...props
   },
   ref,
@@ -51,12 +52,12 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
 
       <View
         className={cn(
-          'min-h-12 flex-row items-center rounded-xl border bg-surface px-4',
+          'min-h-12 flex-row items-center rounded-md border bg-surface px-4',
           hasError
             ? 'border-error'
             : isFocused
-              ? 'border-gold'
-              : 'border-gold/30',
+              ? 'border-accent'
+              : 'border-border',
           !editable && 'opacity-50',
           fieldClassName,
         )}
@@ -81,7 +82,7 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
             'flex-1 py-3 text-body',
             inputClassName,
           )}
-          style={[{ color: colors.textPrimary }, props.style]}
+          style={[{ color: colors.textPrimary, letterSpacing: 0 }, style]}
           {...props}
         />
 

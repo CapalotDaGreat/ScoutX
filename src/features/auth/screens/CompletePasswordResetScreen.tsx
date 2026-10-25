@@ -70,16 +70,15 @@ export function CompletePasswordResetScreen({ navigation, route }: CompletePassw
 
   return (
     <Screen
-      title={t('auth:completePasswordReset.title')}
-      subtitle={subtitle}
+      contentClassName="py-6"
       safeArea
     >
       <AuthCard
-        title={t('auth:completePasswordReset.cardTitle')}
-        subtitle={t('auth:completePasswordReset.cardSubtitle')}
+        title={t('auth:completePasswordReset.title')}
+        subtitle={subtitle}
       >
         {error ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive" className="rounded-[8px] border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {error}
             </Text>
@@ -87,8 +86,8 @@ export function CompletePasswordResetScreen({ navigation, route }: CompletePassw
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
-            <Text variant="body-sm" color="accent">
+          <View accessibilityLiveRegion="polite" className="rounded-[8px] border border-success/20 bg-success-muted px-3 py-3">
+            <Text variant="body-sm" color="success">
               {successMessage}
             </Text>
           </View>
@@ -96,6 +95,9 @@ export function CompletePasswordResetScreen({ navigation, route }: CompletePassw
 
         {!successMessage ? (
           <>
+            <Text variant="body-sm" color="secondary">
+              {t('auth:completePasswordReset.cardSubtitle')}
+            </Text>
             <FormField
               label={t('auth:completePasswordReset.password')}
               value={values.password}

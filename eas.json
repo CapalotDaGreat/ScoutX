@@ -7,6 +7,9 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "env": {
+        "FIREBASE_SDK_VERSION": "12.18.0"
+      },
       "ios": {
         "simulator": true
       }
@@ -20,16 +23,21 @@
         "image": "latest"
       },
       "env": {
+        "FIREBASE_SDK_VERSION": "12.18.0",
         "EXPO_PUBLIC_USE_CLOUD_AI": "true",
         "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
     },
     "production": {
+      "environment": "production",
       "autoIncrement": true,
       "ios": {
         "image": "latest"
       },
       "env": {
+        "FIREBASE_SDK_VERSION": "12.18.0",
+        "EXPO_PUBLIC_EXPO_GO": "0",
+        "EXPO_PUBLIC_APP_CHECK_ENABLED": "true",
         "EXPO_PUBLIC_USE_CLOUD_AI": "true",
         "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
@@ -38,6 +46,7 @@
   "submit": {
     "production": {
       "ios": {
+        "ascAppId": "6820059284",
         "appleTeamId": "833CYAZ8XT"
       },
       "android": {

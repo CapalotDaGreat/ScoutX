@@ -3,6 +3,7 @@ import { Text } from '@/components/primitives/Text';
 import { useTheme, type ThemePreference } from '@/theme';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { cn } from '@/utils/cn';
+import { lightColors, darkColors } from '@/theme/tokens/colors';
 
 const OPTIONS: Array<{
   value: ThemePreference;
@@ -13,20 +14,20 @@ const OPTIONS: Array<{
   {
     value: 'system',
     labelKey: 'appearanceSystem',
-    swatchLight: '#F3EFE8',
-    swatchDark: '#161412',
+    swatchLight: lightColors.surface,
+    swatchDark: darkColors.surface,
   },
   {
     value: 'light',
     labelKey: 'appearanceLight',
-    swatchLight: '#F3EFE8',
-    swatchDark: '#F3EFE8',
+    swatchLight: lightColors.surface,
+    swatchDark: lightColors.backgroundSecondary,
   },
   {
     value: 'dark',
     labelKey: 'appearanceDark',
-    swatchLight: '#161412',
-    swatchDark: '#161412',
+    swatchLight: darkColors.surface,
+    swatchDark: darkColors.backgroundSecondary,
   },
 ];
 
@@ -46,12 +47,12 @@ export function AppearanceSettingsSection() {
           return (
             <Pressable
               key={option.value}
-              accessibilityRole="button"
-              accessibilityState={{ selected }}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: selected }}
               onPress={() => void setPreference(option.value)}
               className={cn(
-                'min-h-[52px] flex-row items-center gap-3 rounded-2xl border px-4 py-3.5',
-                selected ? 'border-gold bg-gold-muted' : 'border-border bg-surface',
+                'min-h-[48px] flex-row items-center gap-3 rounded-lg border px-3 py-3',
+                selected ? 'border-accent bg-accent-muted' : 'border-border bg-surface',
               )}
             >
               <View className="flex-row overflow-hidden rounded-full border border-border">
@@ -68,7 +69,7 @@ export function AppearanceSettingsSection() {
               {selected ? (
                 <View
                   className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: colors.gold }}
+                  style={{ backgroundColor: colors.accent }}
                 />
               ) : null}
             </Pressable>

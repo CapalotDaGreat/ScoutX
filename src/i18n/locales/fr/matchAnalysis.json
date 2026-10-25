@@ -1,4 +1,28 @@
 {
+  "targetAnchor": {
+    "coordinate": "Vérifier l’identité",
+    "coordinateChecked": "Éléments vérifiés",
+    "coordinateUnavailable": "Les preuves de source vérifiées ou l’autorisation sont indisponibles.",
+    "panelTitle": "Vérification du joueur ciblé",
+    "anchor": "Repère à {{seconds}}s",
+    "remove": "Supprimer le repère à {{seconds}}s",
+    "scopeNote": "Un rectangle enregistré identifie le joueur uniquement dans cette image. Modifier les repères invalide les conclusions précédentes du rapport qui dépendent du joueur ciblé ; une nouvelle analyse est nécessaire.",
+    "noFrames": "Aucune image conservée sur le serveur n’est disponible pour sélectionner le joueur ciblé.",
+    "limit": "Jusqu’à 8 repères par match.",
+    "title": "Zone du joueur",
+    "firstCorner": "Sélectionnez le premier coin du rectangle du joueur.",
+    "secondCorner": "Sélectionnez le coin opposé.",
+    "image": "Image du joueur : sélectionner deux coins opposés",
+    "x": "Gauche (%)",
+    "y": "Haut (%)",
+    "width": "Largeur (%)",
+    "height": "Hauteur (%)",
+    "reset": "Réinitialiser la sélection",
+    "save": "Enregistrer la zone",
+    "invalid": "Saisissez un rectangle de taille positive compris entre 0 et 100 %.",
+    "imageError": "Impossible de charger l’image.",
+    "saveError": "Impossible d’enregistrer la zone. Réessayez."
+  },
   "preview": {
     "title": "Aperçu de l’analyse",
     "quality": "Qualité de la vidéo",
@@ -32,6 +56,7 @@
     "advisory": "Ce ne sont que des indications. PitchProof ne refuse jamais une vidéo à cause d’un score de qualité."
   },
   "identity": {
+    "saveError": "L’identité n’a pas pu être enregistrée. Recharge l’analyse et réessaie.",
     "title": "Confirme que c’est toi",
     "hint": "Sélectionne les images qui montrent ton maillot. Les stats restent inconnues tant que l’identité n’est pas confirmée.",
     "confirm": "Ces images me montrent",
@@ -200,7 +225,8 @@
     "pointsUnavailable": "Le détail des sprints n'est disponible que pour les sessions enregistrées avec la version actuelle de PitchProof.",
     "noSprints": "Aucun sprint détecté dans cette session.",
     "sprint": "Sprint · pointe {{kmh}} km/h",
-    "outsideVideo": "Hors de la vidéo"
+    "outsideVideo": "Hors de la vidéo",
+    "saveFailed": "Impossible d'enregistrer la synchronisation GPS. Réessaie."
   },
   "eventType": {
     "shot": "Tir",
@@ -470,7 +496,7 @@
       "not_me": "Tu as indiqué que cette image ne te montre pas.",
       "withdraw": "Retour retiré."
     },
-    "footnote": "Ton retour est enregistré à côté de l’analyse. L’analyse d’origine et les statistiques ne sont pas modifiées, et PitchProof n’utilise ni tes vidéos ni tes retours pour entraîner une IA.",
+    "footnote": "Ton retour ne confirme pas automatiquement les statistiques. Si tu rejettes l’identité du joueur, les conclusions du rapport qui en dépendent sont invalidées et nécessitent un nouvel examen. Annuler ce retour ne rétablit pas ces conclusions. PitchProof n’utilise ni tes vidéos ni tes retours pour entraîner une IA.",
     "identityHint": "Si l’une de ces images ne te montre pas, indique-le. Le coaching lié à cette image doit alors être pris avec prudence."
   },
   "trends": {

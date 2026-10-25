@@ -1,9 +1,9 @@
 ---
 id: data-retention-policy
 title: Data Retention Policy
-version: 1.2.0
-effectiveDate: 2026-10-08
-status: final
+version: 1.3.0
+effectiveDate: LEGAL_REVIEW_REQUIRED
+status: draft
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
@@ -17,6 +17,8 @@ summary:
 
 Profile, match logs, goals, media, analysis results, movement summaries and scouting data are kept while your account exists. When you delete your account, they are deleted from our database and storage.
 
+Deletion is performed by server jobs, with progress and retries if a step fails. Do not interpret a submitted request as proof that every deletion step completed. Scheduled cleanup periods below are targets from creation or the stated event; physical cleanup can run at the next scheduled sweep. We restrict retained records to the purpose that justifies keeping them.
+
 ## Temporary data
 
 - Uploads that are abandoned or fail validation: deleted within 7 days.
@@ -26,7 +28,8 @@ Profile, match logs, goals, media, analysis results, movement summaries and scou
 - Optional evidence clips: only made when you ask for them, and kept with the analysis until you delete it.
 - Analysis uploads that never finish: marked expired after 7 days and their files deleted.
 - Guardian approval and confirmation links: expire after 7 days. Withdrawal links stay valid for about 13 months.
-- Cancelled or expired analysis jobs: cleaned up automatically.
+- Failed, cancelled or expired analysis-job records: cleaned up after 30 days; source-video and temporary-frame rules above can delete the media earlier.
+- RevenueCat webhook receipts used to prevent duplicate processing: 90 days unless the account-deletion job removes them sooner.
 
 ## Accounts of children under 13
 
@@ -39,10 +42,18 @@ Profile, match logs, goals, media, analysis results, movement summaries and scou
 
 Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media.
 
+The configured schedules are three years for consent proof and deletion receipts, two years for moderation decisions, and three years for closed privacy-request records. These are implementation settings requiring owner/legal confirmation of their necessity and lawful basis, not a claim that every jurisdiction mandates those periods. Hashing reduces identification but does not automatically make a record anonymous. Any longer legal hold must be necessary, limited and documented.
+
+## Records held by other services
+
+The in-app deletion job does not automatically delete RevenueCat's customer record; a separate provider-side action is required. Apple controls its purchase, payment and account records. Diagnostic and email providers can hold their own service records under their configured schedules. Contact {{privacyEmail}} so we can assess a request and arrange processor-side deletion where applicable. We must confirm provider retention settings and procedures before launch; no unverified fixed deletion deadline is promised for them.
+
+Public content can have been copied outside PitchProof. We remove the copies we control, not another person's screenshots, downloads or the original content of an external football website you linked to.
+
 ## Crash diagnostics
 
-Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings.
+If crash reporting is enabled, default personal-data collection is disabled and redaction controls are applied. Reports can still contain technical identifiers or incidental information. They are kept according to the provider's configured retention settings, which require confirmation before launch.
 
 ## Backups
 
-Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire.
+This repository does not configure a custom backup or restore schedule. If provider recovery copies or backups are enabled, they must have a documented expiry, access restriction and restore process that reapplies deletion requests. We do not promise a backup-expiry period that has not been verified. Contact {{privacyEmail}} for the current recovery-copy arrangements.

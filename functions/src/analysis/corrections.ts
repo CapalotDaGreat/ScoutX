@@ -3,12 +3,14 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { createCallableOptions } from '../callableOptions';
 import { MATCH_COLLECTION } from './frameAnalysis';
 import { VIDEO_CONSENT_COLLECTION } from './videoConsent';
+import { clearIdentityArtifacts, invalidatedTargetData } from './identityCallable';
 
 /**
- * Player feedback on a finished analysis. The stored analysis is never edited: each correction
- * is an append-only record (actor, time, target, action, reason) in
+ * Player feedback on a finished analysis. Each correction is an append-only record
+ * (actor, time, target, action, reason) in
  * matchAnalysisJobs/{jobId}/corrections. Corrections never turn into confirmed statistics, and
- * they are not used to train any model.
+ * they are not used to train any model. Identity rejection additionally invalidates the
+ * current report's dependent claims; withdrawing feedback cannot resurrect them.
  */
 export const CORRECTIONS_SUBCOLLECTION = 'corrections';
 export const MAX_CORRECTIONS_PER_JOB = 300;
@@ -36,6 +38,7 @@ export type CorrectionRequest = {
   action: CorrectionAction;
   reason: CorrectionReason | null;
   note: string | null;
+  expectedAnchorRevision?: number;
 };
 
 export type CorrectionRecord = CorrectionRequest & {
@@ -45,6 +48,7 @@ export type CorrectionRecord = CorrectionRequest & {
   reportVersion: number | null;
   /** Always false: feedback is stored for the player's own report, never used as training data. */
   usedForTraining: false;
+  targetRevision?: number;
 };
 
 const JOB_ID = /^[A-Za-z0-9_-]{6,80}$/;
@@ -57,13 +61,16 @@ export function parseCorrectionRequest(data: unknown): CorrectionRequest | null 
   if (!data || typeof data !== 'object') return null;
   const input = data as Record<string, unknown>;
   if (typeof input.jobId !== 'string' || !JOB_ID.test(input.jobId)) return null;
+  if (input.expectedAnchorRevision !== undefined && (!Number.isSafeInteger(input.expectedAnchorRevision) || Number(input.expectedAnchorRevision) < 0)) return null;
   if (!oneOf(CORRECTION_TARGET_KINDS, input.targetKind)) return null;
   if (typeof input.targetId !== 'string' || !TARGET_ID.test(input.targetId)) return null;
   if (!oneOf(CORRECTION_ACTIONS, input.action) || !ALLOWED_ACTIONS[input.targetKind].includes(input.action)) return null;
   const reason = input.reason == null ? null : oneOf(CORRECTION_REASONS, input.reason) ? input.reason : undefined;
   if (reason === undefined) return null;
   const note = typeof input.note === 'string' ? input.note.replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 280) || null : null;
-  return { jobId: input.jobId, targetKind: input.targetKind, targetId: input.targetId, action: input.action, reason, note };
+  return { jobId: input.jobId, targetKind: input.targetKind, targetId: input.targetId, action: input.action, reason, note,
+    ...(input.expectedAnchorRevision !== undefined ? { expectedAnchorRevision: Number(input.expectedAnchorRevision) } : {}),
+  };
 }
 
 type ReportShape = {
@@ -129,11 +136,39 @@ export async function submitCorrection(
 
   const corrections = jobRef.collection(CORRECTIONS_SUBCOLLECTION);
   return db.runTransaction(async (tx) => {
+    const latest = await tx.get(jobRef);
+    const latestConsent = await tx.get(db.collection(VIDEO_CONSENT_COLLECTION).doc(request.jobId));
+    const priorEvidence = await tx.get(jobRef.collection('identityEvidence').doc('current'));
+    const priorStaging = await tx.get(jobRef.collection('identityEvidenceStaging').doc('current'));
+    if (!latest.exists || latest.get('playerId') !== uid || latest.get('status') !== 'complete') {
+      throw new HttpsError('failed-precondition', 'The analysis changed. Reload before adding feedback.');
+    }
+    const targetRevision = latest.get('experimentalTargetIdentity.revision') ?? 0;
+    if ((targetRevision > 0 && request.expectedAnchorRevision === undefined)
+      || (request.expectedAnchorRevision !== undefined && request.expectedAnchorRevision !== targetRevision)) {
+      throw new HttpsError('aborted', 'The target selection changed. Reload before adding feedback.');
+    }
+    if (latestConsent.exists && (latestConsent.get('uid') !== uid || latestConsent.get('revokedAt') != null)) {
+      throw new HttpsError('failed-precondition', 'Consent for this analysis was withdrawn.', { reason: 'consent_withdrawn' });
+    }
+    if (!correctionTargetExists(latest.get('report') as ReportShape, latest.get('frames'), request.targetKind, request.targetId)) {
+      throw new HttpsError('invalid-argument', 'This item is not part of the current analysis.', { reason: 'unknown_target' });
+    }
     const existing = await tx.get(corrections.orderBy('createdAt', 'desc').limit(MAX_CORRECTIONS_PER_JOB));
-    const records = existing.docs.map((doc) => ({ ...(doc.data() as CorrectionRecord), id: doc.id }));
+    const records = existing.docs.map((doc) => ({ ...(doc.data() as CorrectionRecord), id: doc.id }))
+      .filter((record) => (record.targetRevision ?? 0) === targetRevision);
     const key = correctionTargetKey(request.targetKind, request.targetId);
     const current = latestCorrections(records).get(key) ?? null;
     if (request.action === 'withdraw' ? current === null : current?.action === request.action && current.reason === request.reason) {
+      if (request.action === 'not_me' || (request.action === 'dispute' && request.reason === 'not_me')) {
+        clearIdentityArtifacts(tx, jobRef, priorEvidence.get('payloadParts'), priorStaging.get('payloadParts'));
+        tx.update(jobRef, {
+          ...invalidatedTargetData(latest.get('report') as Record<string, unknown>),
+          identityConfirmation: { state: 'rejected', frameIds: [], confirmedAt: null },
+          identityRejection: { generation: latest.get('pipelineGeneration') ?? 0, targetRevision },
+          pendingCoaching: null, lease: null, updatedAt: now.toISOString(),
+        });
+      }
       const last = records.find((record) => correctionTargetKey(record.targetKind, record.targetId) === key);
       return { correctionId: last?.id ?? '', deduplicated: true };
     }
@@ -141,7 +176,7 @@ export async function submitCorrection(
       throw new HttpsError('resource-exhausted', 'Too much feedback on this analysis.', { reason: 'limit_reached' });
     }
     const ref = corrections.doc();
-    const versions = job.get('report.versions') as { analysisVersion?: unknown } | undefined;
+    const versions = latest.get('report.versions') as { analysisVersion?: unknown } | undefined;
     const record: CorrectionRecord = {
       ...request,
       id: ref.id,
@@ -149,8 +184,21 @@ export async function submitCorrection(
       createdAt: now.toISOString(),
       reportVersion: typeof versions?.analysisVersion === 'number' ? versions.analysisVersion : null,
       usedForTraining: false,
+      targetRevision,
     };
     tx.create(ref, record);
+    if (request.action === 'not_me' || (request.action === 'dispute' && request.reason === 'not_me')) {
+      clearIdentityArtifacts(tx, jobRef, priorEvidence.get('payloadParts'), priorStaging.get('payloadParts'));
+      tx.update(jobRef, {
+        ...invalidatedTargetData(latest.get('report') as Record<string, unknown>),
+        identityConfirmation: { state: 'rejected', frameIds: [], confirmedAt: null },
+        pendingCoaching: null,
+        pipelineGeneration: (latest.get('pipelineGeneration') ?? 0) + 1,
+        identityRejection: { generation: (latest.get('pipelineGeneration') ?? 0) + 1, targetRevision },
+        lease: null,
+        updatedAt: now.toISOString(),
+      });
+    }
     return { correctionId: ref.id, deduplicated: false };
   });
 }

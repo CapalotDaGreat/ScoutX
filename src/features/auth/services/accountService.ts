@@ -3,6 +3,7 @@ import { deleteAuthenticatedAccountViaCloud } from '@/features/auth/services/app
 import { AuthError } from '@/features/auth/types';
 import { signOutFromFirebase } from '@/features/auth/services/authService';
 import { classifyDeletionError, type AccountDeletionFailure } from '@/features/auth/services/reauthModel';
+import { clearLocalGpsImport } from '@/features/gps/services/gpsImportStorage';
 
 /** Raised by `deleteCurrentAccount`; `kind` decides whether the UI asks for a fresh sign-in. */
 export class AccountDeletionError extends Error {
@@ -38,8 +39,12 @@ export async function deleteCurrentAccount(userId: string): Promise<void> {
   if (!deleted) throw new AccountDeletionError('failed');
 
   try {
-    await signOutFromFirebase();
-  } catch {
-    // The Auth user is already gone on the server; the local session ends with it.
+    await clearLocalGpsImport(userId);
+  } finally {
+    try {
+      await signOutFromFirebase();
+    } catch {
+      // The Auth user is already gone on the server; the local session ends with it.
+    }
   }
 }

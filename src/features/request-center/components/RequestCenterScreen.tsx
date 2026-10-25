@@ -38,8 +38,8 @@ export function RequestCard({
 }) {
   const { t } = useAppTranslation(['common', 'scout', 'trust']);
   return (
-    <Card variant="outlined" padding="md" className="gap-2">
-      <View className="flex-row items-start justify-between gap-3">
+    <Card variant="outlined" padding="md" className="gap-3 rounded-lg">
+      <View className="flex-row flex-wrap items-start justify-between gap-3">
         <View className="min-w-0 flex-1">
           <Text weight="semibold">{t(`common:requestCenter.sources.${request.source}`)}</Text>
           <Text variant="caption" color="secondary">
@@ -70,19 +70,19 @@ export function RequestCard({
         </Text>
       ) : null}
       {request.nextAction === 'fulfill' && onFulfill ? (
-        <View className="flex-row gap-2">
-          <Button size="sm" className="flex-1" onPress={() => onFulfill(request)}>
+        <View className="flex-row gap-2 border-t border-divider pt-3">
+          <Button size="sm" className="min-h-[44px] flex-1" onPress={() => onFulfill(request)}>
             {t('common:requestCenter.fulfill')}
           </Button>
           {onDecline ? (
-            <Button size="sm" variant="secondary" className="flex-1" onPress={() => onDecline(request)}>
+            <Button size="sm" variant="secondary" className="min-h-[44px] flex-1" onPress={() => onDecline(request)}>
               {t('common:requestCenter.decline')}
             </Button>
           ) : null}
         </View>
       ) : null}
       {request.source === 'trial_invitation' && onOpenTrial ? (
-        <Button size="sm" variant="secondary" onPress={() => onOpenTrial(request.entityId)}>
+        <Button size="sm" className="min-h-[44px]" variant="secondary" onPress={() => onOpenTrial(request.entityId)}>
           {request.nextAction === 'respond' ? t('common:requestCenter.respond') : t('common:requestCenter.view')}
         </Button>
       ) : null}
@@ -143,7 +143,7 @@ export function RequestCenterScreen({ onBack, onOpenTrial, focusRequestId }: Req
       {isLoading ? (
         <SkeletonLoader variant="card" count={3} />
       ) : (
-        <View className="gap-6">
+        <View className="gap-4">
           {focusMissing ? (
             <Card variant="outlined" padding="md" className="gap-1">
               <Text weight="semibold">{t('deepLink.not_found.title')}</Text>

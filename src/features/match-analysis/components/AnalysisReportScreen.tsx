@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Screen } from '@/components/layout/Screen';
+import { EmptyState } from '@/components/feedback/EmptyState';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
 import { ChoiceChip } from '@/components/primitives/ChoiceChip';
@@ -27,14 +28,17 @@ import type { DevelopmentGoal } from '@/features/development/types';
 import { GpsSessionRepository } from '@/features/gps/repositories/GpsSessionRepository';
 import type { GpsSession } from '@/features/gps/types';
 import { IdentityConfirmationCard } from '@/features/match-analysis/components/IdentityConfirmationCard';
+import { TargetAnchorPanel } from '@/features/match-analysis/components/TargetAnchorPanel';
+import { targetAnchorSelectionEnabled } from '@/features/match-analysis/hooks/useTargetAnchors';
 import { TechniqueAssessmentCard } from '@/features/match-analysis/components/TechniqueAssessmentCard';
 import { parseTechniqueAssessment } from '@/features/match-analysis/services/techniqueAssessment';
-import { getMatchAnalysisJob, updateMatchAnalysisJob } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
+import { getMatchAnalysisJob, subscribeMatchAnalysisJob, updateMatchAnalysisJob } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
 import { useJobFrames } from '@/features/match-analysis/hooks/useJobFrames';
 import { requestConfirmAnalysisIdentity } from '@/features/match-analysis/services/matchAnalysisCallable';
 import { VideoIntelligenceSections } from '@/features/match-analysis/components/VideoIntelligenceSections';
 import { hasApplyableEstimatedStats, type MatchAnalysisJob, type MatchEstimatedStats } from '@/features/match-analysis/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { ReportEvidenceOverview } from './intelligence/ReportEvidenceOverview';
 
 type ReportTab = 'overview' | 'timeline' | 'technical' | 'tactical' | 'coaching' | 'video' | 'ask';
 
@@ -80,6 +84,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
   const [tab, setTab] = useState<ReportTab>('overview');
   const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
   const [identityBusy, setIdentityBusy] = useState(false);
+  const [identityError, setIdentityError] = useState(false);
   const [goals, setGoals] = useState<DevelopmentGoal[]>([]);
   const [gpsSessions, setGpsSessions] = useState<GpsSession[]>([]);
   const playerId = job?.playerId ?? null;
@@ -105,22 +110,17 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
   }, [playerId]);
 
   useEffect(() => {
-    let cancelled = false;
-    void getMatchAnalysisJob(jobId)
-      .then((next) => {
-        if (!cancelled) {
-          setJob(next);
-          setSelectedFrameIds(next?.identityConfirmation?.frameIds ?? []);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError(t('report.missing'));
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
+    setJob(null);
+    setError(null);
+    setIdentityError(false);
+    return subscribeMatchAnalysisJob(jobId, (next) => {
+      setJob(next);
+      setError(next ? null : t('report.missing'));
+      setSelectedFrameIds(next?.identityConfirmation?.frameIds ?? []);
+    }, () => {
+      setJob(null);
+      setError(t('report.missing'));
+    });
   }, [jobId, t]);
 
   const report = job?.report;
@@ -142,7 +142,8 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
   /** Seek only when the source video is still retained; otherwise open the honest "no video" panel. */
   const seekTo = (timestampSec: number) => {
     setTab('video');
-    if (!canSeekVideo) {
+    const duration = job?.measuredDurationSec ?? job?.durationSec ?? 0;
+    if (!canSeekVideo || !Number.isFinite(timestampSec) || timestampSec < 0 || duration <= 0 || timestampSec > duration) {
       return;
     }
     player.currentTime = timestampSec;
@@ -196,10 +197,14 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
       return;
     }
     setIdentityBusy(true);
+    setIdentityError(false);
     try {
       // The server releases coaching that was held back until identity was confirmed.
-      await requestConfirmAnalysisIdentity({ jobId: job.id, decision: 'confirmed', frameIds: selectedFrameIds.slice(0, 6) });
+      await requestConfirmAnalysisIdentity({ jobId: job.id, decision: 'confirmed', frameIds: selectedFrameIds.slice(0, 6),
+        expectedGeneration: job.pipelineGeneration ?? 0, expectedAnchorRevision: job.experimentalTargetIdentity?.revision ?? 0 });
       setJob((await getMatchAnalysisJob(job.id)) ?? job);
+    } catch {
+      setIdentityError(true);
     } finally {
       setIdentityBusy(false);
     }
@@ -210,10 +215,14 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
       return;
     }
     setIdentityBusy(true);
+    setIdentityError(false);
     try {
-      await requestConfirmAnalysisIdentity({ jobId: job.id, decision: 'rejected', frameIds: [] });
+      await requestConfirmAnalysisIdentity({ jobId: job.id, decision: 'rejected', frameIds: [],
+        expectedGeneration: job.pipelineGeneration ?? 0, expectedAnchorRevision: job.experimentalTargetIdentity?.revision ?? 0 });
       setJob((await getMatchAnalysisJob(job.id)) ?? job);
       setSelectedFrameIds([]);
+    } catch {
+      setIdentityError(true);
     } finally {
       setIdentityBusy(false);
     }
@@ -230,11 +239,22 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
       subtitle={job ? `${job.match.date} vs ${job.match.opponent}` : undefined}
       headerLeading={<Button variant="ghost" onPress={onBack}>{t('report.back')}</Button>}
       loading={!job && !error}
-      error={error}
-      onRetry={onBack}
     >
+      {error ? (
+        <EmptyState title={t('report.title')} description={error}
+          actionLabel={t('report.back')} onAction={onBack} />
+      ) : null}
       {job && report ? (
         <View className="gap-4">
+          <View className="gap-2 border-l-4 border-accent py-3 pl-4">
+            <Heading level={3}>{report.headline}</Heading>
+            <Text variant="caption" color="secondary">
+              {t('report.coverageBand', {
+                band: t(`band.${report.confidenceDimensions?.overallCoverage ?? report.coverage.confidenceLabel}`),
+              })}
+            </Text>
+            <Text variant="body-sm" color="secondary">{report.methodology}</Text>
+          </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
             {tabs.map((item) => (
               <ChoiceChip
@@ -248,15 +268,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
 
           {tab === 'overview' ? (
             <View className="gap-4">
-              <Card padding="lg" className="gap-2">
-                <Heading level={3}>{report.headline}</Heading>
-                <Text variant="caption" color="secondary">
-                  {t('report.coverageBand', {
-                    band: t(`band.${report.confidenceDimensions?.overallCoverage ?? report.coverage.confidenceLabel}`),
-                  })}
-                </Text>
-                <Text variant="body-sm" color="secondary">{report.methodology}</Text>
-              </Card>
+              <ReportEvidenceOverview job={job} canSeekVideo={canSeekVideo} onSeek={seekTo} />
               <VideoIntelligenceSections job={job} />
               {quality ? <QualityReportCard quality={quality} /> : null}
               {onOpenReel && ((report.moments?.length ?? 0) > 0 || (report.evidence?.length ?? 0) > 0) ? (
@@ -268,57 +280,28 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
                   </Button>
                 </Card>
               ) : null}
-              <Card padding="lg" className="gap-3">
+              <View className="gap-3 border-y border-border py-4">
                 <Heading level={3}>{t('report.stats')}</Heading>
                 <StatGrid stats={report.estimatedStats} />
                 {!hasApplyableEstimatedStats(report.estimatedStats) ? (
                   <Text variant="caption" color="secondary">{t('report.statsUnknown')}</Text>
                 ) : null}
-              </Card>
-              <Card padding="lg" className="gap-2">
+              </View>
+              <View className="gap-2 border-b border-border pb-4">
                 <Heading level={3}>{t('report.stages')}</Heading>
                 {(report.pipelineStages ?? []).map((stage) => (
-                  <View key={stage.id} className="rounded-lg border border-border px-3 py-2">
+                  <View key={stage.id} className="border-l-2 border-border px-3 py-2">
                     <Text weight="semibold">{stage.label}</Text>
                     <Text variant="caption" color="secondary">{t(`stageStatus.${stage.status}`)}</Text>
                     {stage.note ? <Text variant="body-sm" color="secondary">{stage.note}</Text> : null}
                   </View>
                 ))}
-              </Card>
+              </View>
             </View>
           ) : null}
 
           {tab === 'timeline' ? (
-            <Card padding="lg" className="gap-2">
-              <Heading level={3}>{t('tabs.timeline')}</Heading>
-              {(report.moments ?? []).length === 0 ? (
-                <Text variant="body-sm" color="secondary">{t('report.emptyTimeline')}</Text>
-              ) : (
-                report.moments.map((moment) => {
-                  const stamp = `${Math.floor(moment.timestampSec / 60)}:${String(moment.timestampSec % 60).padStart(2, '0')}`;
-                  if (!canSeekVideo) {
-                    return (
-                      <Text key={`${moment.timestampSec}-${moment.label}`} variant="body-sm" color="secondary">
-                        {`${stamp} · ${moment.label}`}
-                      </Text>
-                    );
-                  }
-                  return (
-                    <Button
-                      key={`${moment.timestampSec}-${moment.label}`}
-                      variant="ghost"
-                      onPress={() => seekTo(moment.timestampSec)}
-                      accessibilityLabel={t('technique.seekA11y', { time: stamp })}
-                    >
-                      {`${stamp} · ${moment.label}`}
-                    </Button>
-                  );
-                })
-              )}
-              {!canSeekVideo && (report.moments ?? []).length > 0 ? (
-                <Text variant="caption" color="secondary">{t('report.noVideo')}</Text>
-              ) : null}
-            </Card>
+            <ReportEvidenceOverview job={job} timeline canSeekVideo={canSeekVideo} onSeek={seekTo} />
           ) : null}
 
           {tab === 'technical' ? (
@@ -401,6 +384,10 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
               frameUrls={frameUrls}
               busy={identityBusy}
             />
+          ) : null}
+          {identityError ? <Text color="error" accessibilityRole="alert">{t('identity.saveError')}</Text> : null}
+          {targetAnchorSelectionEnabled && job.status === 'complete' && job.videoStoragePath ? (
+            <TargetAnchorPanel key={job.id} job={job} frameUrls={frameUrls} />
           ) : null}
         </View>
       ) : null}

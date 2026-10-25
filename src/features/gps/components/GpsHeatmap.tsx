@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
-import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
@@ -31,7 +30,7 @@ export function GpsHeatmap({ heatmap, title }: GpsHeatmapProps) {
   }, [heatmap.cols, heatmap.rows]);
 
   return (
-    <Card variant="default" padding="lg" className="gap-4">
+    <View className="gap-3 border-t border-border py-3">
       <View>
         <Heading level={3}>{title ?? t('heatmap.title')}</Heading>
         <Text variant="body-sm" color="secondary" className="mt-1">
@@ -39,15 +38,16 @@ export function GpsHeatmap({ heatmap, title }: GpsHeatmapProps) {
         </Text>
       </View>
 
-      <View className="items-center rounded-lg bg-background-secondary p-3">
+      <View className="w-full overflow-hidden rounded-lg bg-background-secondary">
         {heatmap.cells.length === 0 ? (
           <Text variant="body-sm" color="secondary" className="py-10">
             {t('heatmap.empty')}
           </Text>
         ) : (
           <Svg
-            width={chartWidth}
-            height={chartHeight}
+            width="100%"
+            viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+            style={{ width: '100%', aspectRatio: chartWidth / chartHeight }}
             accessible
             accessibilityRole="image"
             accessibilityLabel={t('heatmap.a11y', { count: heatmap.cells.length })}
@@ -67,6 +67,6 @@ export function GpsHeatmap({ heatmap, title }: GpsHeatmapProps) {
           </Svg>
         )}
       </View>
-    </Card>
+    </View>
   );
 }

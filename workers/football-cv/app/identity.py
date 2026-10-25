@@ -8,15 +8,44 @@ discarded at the end of the request.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from math import isfinite
+from bisect import bisect_left, bisect_right
 
 # A jersey read this confident on enough frames makes a track the target.
 JERSEY_CONFIRM_CONFIDENCE = 0.6
 JERSEY_CONFIRM_READS = 3
 # Team colour alone never confirms identity; it only makes a track a candidate.
 TEAM_CANDIDATE_MATCH = 0.6
-# A gap shorter than this between two sightings is bridged as LIKELY_ACTIVE_OFF_CAMERA.
-MAX_BRIDGE_SEC = 20.0
-BRIDGE_CONFIDENCE = 0.4
+# Uncalibrated, conservative evidence bounds, not probabilities.
+CONSENSUS_RADIUS_SEC = 2.5
+CONSENSUS_SHARE = 0.75
+MAX_CONTINUITY_GAP_SEC = 2.0
+
+
+def valid_read(number: str | None, confidence: float) -> bool:
+    return bool(number and number.isascii() and number.isdigit() and len(number) <= 2
+                and isfinite(confidence) and JERSEY_CONFIRM_CONFIDENCE <= confidence <= 1)
+
+
+def consensus(observations: list[TrackObservation]) -> tuple[str | None, float]:
+    # One vote per timestamp; duplicate or conflicting same-frame reads add no evidence.
+    frames: dict[float, list[TrackObservation]] = {}
+    for observation in observations:
+        frames.setdefault(observation.time_sec, []).append(observation)
+    reads = [items[0] for items in frames.values() if len(items) == 1
+             and valid_read(items[0].jersey_read, items[0].jersey_confidence)]
+    weights: dict[str, float] = {}
+    counts: dict[str, int] = {}
+    for observation in reads:
+        number = observation.jersey_read
+        weights[number] = weights.get(number, 0) + observation.jersey_confidence
+        counts[number] = counts.get(number, 0) + 1
+    if not weights:
+        return None, 0.0
+    winner = max(weights, key=weights.get)
+    if counts[winner] < JERSEY_CONFIRM_READS or weights[winner] / sum(weights.values()) < CONSENSUS_SHARE:
+        return None, 0.0
+    return winner, weights[winner] / counts[winner]
 
 
 @dataclass
@@ -25,7 +54,7 @@ class TrackObservation:
     jersey_read: str | None
     jersey_confidence: float
     team_match: float
-    # Pixel box, kept only for the local evaluation trace; never part of the HTTP response.
+    # Pixel box for local continuity checks/evaluation; never part of the HTTP response.
     box: tuple[float, float, float, float] | None = None
 
 
@@ -50,11 +79,7 @@ class Track:
         )
 
     def best_jersey(self) -> tuple[str | None, float]:
-        reads = [o for o in self.observations if o.jersey_read]
-        if not reads:
-            return None, 0.0
-        best = max(reads, key=lambda o: o.jersey_confidence)
-        return best.jersey_read, best.jersey_confidence
+        return consensus(self.observations)
 
     def mean_team_match(self) -> float:
         return sum(o.team_match for o in self.observations) / len(self.observations)
@@ -70,25 +95,55 @@ class Association:
 
 
 def _co_visible(tracks: list[Track]) -> bool:
-    seen: set[float] = set()
-    for track in tracks:
-        times = {o.time_sec for o in track.observations}
-        if seen & times:
+    # Supported episodes are bounded by continuity guards. Comparing their time
+    # ranges is deliberately conservative and cannot miss millisecond PTS jitter.
+    last_end = float("-inf")
+    for track in sorted(tracks, key=lambda t: t.first_sec):
+        if track.first_sec <= last_end:
             return True
-        seen |= times
+        last_end = max(last_end, track.last_sec)
     return False
 
 
 def associate(tracks: list[Track], jersey_number: str, kit_known: bool = False) -> Association:
-    """Tracks whose jersey was read as the target number often enough become the target.
+    """Only locally supported observations become heuristic target samples.
 
     With a known kit, a number match in the wrong colours is someone else (e.g. the opponent
     wearing the same number). If two remaining number matches are on screen at the same time
     the worker cannot tell them apart and reports CANDIDATE instead of picking one."""
     tracks = [t for t in tracks if t.observations]
-    confirmed = [t for t in tracks if jersey_number and t.jersey_votes(jersey_number) >= JERSEY_CONFIRM_READS]
-    if kit_known:
-        confirmed = [t for t in confirmed if t.mean_team_match() >= TEAM_CANDIDATE_MATCH]
+    confirmed = []
+    for track in tracks:
+        # Never let distant evidence confirm an entire tracker ID. Gaps, kit changes and
+        # gross box jumps break continuity; each observation needs local OCR support.
+        episodes: list[list[TrackObservation]] = []
+        for observation in sorted(track.observations, key=lambda o: o.time_sec):
+            if kit_known and observation.team_match < TEAM_CANDIDATE_MATCH:
+                episodes.append([])
+                continue
+            previous = episodes[-1][-1] if episodes and episodes[-1] else None
+            jump = False
+            if previous and previous.box and observation.box:
+                a, b = previous.box, observation.box
+                scale = max(a[2] - a[0], a[3] - a[1], 1)
+                jump = max(abs((a[0] + a[2] - b[0] - b[2]) / 2),
+                           abs((a[1] + a[3] - b[1] - b[3]) / 2)) > 2 * scale
+            if previous is None or observation.time_sec - previous.time_sec > MAX_CONTINUITY_GAP_SEC or jump:
+                episodes.append([])
+            episodes[-1].append(observation)
+        for episode in episodes:
+            supported = []
+            times = [o.time_sec for o in episode]
+            for observation in episode:
+                left = bisect_left(times, observation.time_sec - CONSENSUS_RADIUS_SEC)
+                right = bisect_right(times, observation.time_sec + CONSENSUS_RADIUS_SEC)
+                local = episode[left:right]
+                number, _ = consensus(local)
+                if (number == jersey_number and valid_read(observation.jersey_read, observation.jersey_confidence)
+                        and observation.jersey_read == jersey_number):
+                    supported.append(observation)
+            if supported:
+                confirmed.append(Track(track.track_id, supported))
     if confirmed and _co_visible(confirmed):
         return Association("CANDIDATE", [], confirmed[:5], ambiguous=True)
     if confirmed:
@@ -106,7 +161,7 @@ def visible_intervals(tracks: list[Track], sample_step_sec: float) -> list[tuple
     times = sorted({o.time_sec for t in tracks for o in t.observations})
     intervals: list[tuple[float, float]] = []
     for time in times:
-        if intervals and time - intervals[-1][1] <= sample_step_sec * 1.5:
+        if intervals and time - intervals[-1][1] <= sample_step_sec + 1e-6:
             intervals[-1] = (intervals[-1][0], time)
         else:
             intervals.append((time, time))
@@ -120,9 +175,7 @@ def availability_windows(
     sample_step_sec: float,
     wide_camera: bool,
 ) -> list[dict]:
-    """CONFIRMED_VISIBLE only for a confirmed target; short gaps on a wide camera become
-    LIKELY_ACTIVE_OFF_CAMERA; everything else is UNKNOWN. Never CONFIRMED_OFF_PITCH: that needs
-    substitution detection, which this worker does not do."""
+    """Unseen intervals are UNKNOWN regardless of camera view. No activity is inferred."""
     if association.state != "CONFIRMED_VISIBLE":
         return [{"startSec": start_sec, "endSec": end_sec, "state": "UNKNOWN", "confidence": 0.0}]
     intervals = [
@@ -132,14 +185,13 @@ def availability_windows(
     ]
     windows: list[dict] = []
     cursor = start_sec
-    for index, (s, e) in enumerate(intervals):
+    for s, e in intervals:
         if s > cursor:
-            bridged = wide_camera and index > 0 and s - cursor <= MAX_BRIDGE_SEC
             windows.append({
                 "startSec": cursor,
                 "endSec": s,
-                "state": "LIKELY_ACTIVE_OFF_CAMERA" if bridged else "UNKNOWN",
-                "confidence": BRIDGE_CONFIDENCE if bridged else 0.0,
+                "state": "UNKNOWN",
+                "confidence": 0.0,
             })
         windows.append({"startSec": s, "endSec": e, "state": "CONFIRMED_VISIBLE", "confidence": 0.8})
         cursor = e

@@ -77,13 +77,13 @@ export function ChangePasswordSection({ email }: ChangePasswordSectionProps) {
       </Text>
 
       {error ? (
-        <Text variant="body-sm" color="error">
+        <Text variant="body-sm" color="error" accessibilityLiveRegion="assertive">
           {error}
         </Text>
       ) : null}
 
       {successMessage ? (
-        <Text variant="body-sm" color="accent">
+        <Text variant="body-sm" color="accent" accessibilityLiveRegion="polite">
           {successMessage}
         </Text>
       ) : null}
@@ -121,7 +121,7 @@ export function ChangePasswordSection({ email }: ChangePasswordSectionProps) {
         accessibilityLabel={t('settings:confirmNewPassword')}
       />
 
-      <Button variant="secondary" loading={isSubmitting} onPress={() => void handleSubmit()}>
+      <Button className="min-h-[44px]" variant="secondary" loading={isSubmitting} onPress={() => void handleSubmit()}>
         {t('settings:changePassword')}
       </Button>
     </View>

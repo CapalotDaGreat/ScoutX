@@ -9,6 +9,9 @@ from __future__ import annotations
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from .experimental_identity import StrictModel
+from .match_identity import MatchIdentityRequest
+from .source_pts import SourcePtsProof
 
 CONTRACT_VERSION = 2
 
@@ -140,4 +143,48 @@ class SegmentResult(BaseModel):
             raise ValueError("events reported without a complete event stage")
         if len(self.models) > 8 or any(len(k) > 40 or len(v) > 120 for k, v in self.models.items()):
             raise ValueError("model identifiers out of bounds")
+        return self
+
+
+# Private IAM/server-artifact wire contract; never accept end-user supplied proofs.
+class MatchIdentityEnvelope(StrictModel):
+    evidence: MatchIdentityRequest
+    sourceProof: SourcePtsProof
+
+    @field_validator("evidence", mode="before")
+    @classmethod
+    def json_evidence(cls, value):
+        # JSON arrays represent MatchSample's strict tuple on the HTTP wire.
+        if isinstance(value, dict):
+            import json
+            return MatchIdentityRequest.model_validate_json(json.dumps(value, allow_nan=False))
+        return value
+
+    @model_validator(mode="after")
+    def bound_source(self):
+        evidence, proof = self.evidence, self.sourceProof
+        if evidence.scope != proof.scope or not 1 <= len(evidence.references) <= 8:
+            raise ValueError("source scope or reference count mismatch")
+        frames = {f.timestampSec: f for f in proof.frames}
+        used = set()
+        claims = set()
+        for anchor in evidence.references:
+            frame = frames.get(anchor.timestampSec)
+            if (frame is None or frame.frameIndex != anchor.frameIndex
+                    or frame.frameId != anchor.anchorId
+                    or frame.evidenceHash != anchor.evidenceHash or anchor.frameIndex in claims):
+                raise ValueError("reference proof mismatch")
+            claims.add(anchor.frameIndex)
+            used.add(anchor.timestampSec)
+        for segment in evidence.segments:
+            for track in segment.tracklets:
+                for sample in track.samples:
+                    frame = frames.get(sample.timestampSec)
+                    if frame is None:
+                        raise ValueError("observation proof missing")
+                    if sample.box[2] > frame.width or sample.box[3] > frame.height:
+                        raise ValueError("observation exceeds source dimensions")
+                    used.add(sample.timestampSec)
+        if used != set(frames):
+            raise ValueError("unbound proof rows")
         return self

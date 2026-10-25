@@ -11,7 +11,7 @@ export type ChoiceChipProps = {
   testID?: string;
 };
 
-/** Single-select / multi-select pill with a 44pt touch target and selected state announced. */
+/** Single/multi-select control with a 44pt touch target and announced selected state. */
 export function ChoiceChip({
   label,
   selected,
@@ -29,7 +29,7 @@ export function ChoiceChip({
       onPress={onPress}
       testID={testID}
       className={cn(
-        'min-h-11 justify-center rounded-full border px-4',
+        'min-h-11 justify-center rounded-md border px-4 py-2',
         selected ? 'border-accent bg-accent-muted' : 'border-border bg-surface',
         disabled && 'opacity-50',
       )}

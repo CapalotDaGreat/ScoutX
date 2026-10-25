@@ -121,12 +121,12 @@ def test_unconfirmed_identity_yields_only_unknown_time():
     assert windows == [{"startSec": 0, "endSec": 60, "state": "UNKNOWN", "confidence": 0.0}]
 
 
-def test_short_gaps_on_wide_camera_are_likely_off_camera_long_gaps_unknown():
+def test_all_unseen_gaps_are_unknown_even_on_wide_camera():
     seen = [t / 2 for t in range(0, 20)] + [t / 2 for t in range(40, 60)] + [t / 2 for t in range(140, 150)]
     association = associate([track("a", seen, "8", 0.9, 0.9)], "8")
     windows = availability_windows(association, 0, 120, 0.5, wide_camera=True)
     states = [w["state"] for w in windows]
-    assert states == ["CONFIRMED_VISIBLE", "LIKELY_ACTIVE_OFF_CAMERA", "CONFIRMED_VISIBLE", "UNKNOWN", "CONFIRMED_VISIBLE", "UNKNOWN"]
+    assert states == ["CONFIRMED_VISIBLE", "UNKNOWN", "CONFIRMED_VISIBLE", "UNKNOWN", "CONFIRMED_VISIBLE", "UNKNOWN"]
     assert "CONFIRMED_OFF_PITCH" not in states
     close_camera = availability_windows(association, 0, 120, 0.5, wide_camera=False)
     assert "LIKELY_ACTIVE_OFF_CAMERA" not in [w["state"] for w in close_camera]
@@ -172,7 +172,7 @@ class FakeDetector:
 
 class FakeTracker:
     def update(self, boxes):
-        return [("t1", box) for box in boxes]
+        return [(f"t{index + 1}", box) for index, box in enumerate(boxes)]
 
 
 class FakeJersey:
@@ -230,13 +230,38 @@ def test_pipeline_broken_stream_fails_honestly():
 def test_http_endpoint_validates_and_answers():
     set_components(components())
     try:
-        client = TestClient(app)
-        assert client.get("/healthz").json()["ok"] is True
-        response = client.post("/v2/segments:analyze", json=request_body())
-        assert response.status_code == 200
-        assert response.json()["contractVersion"] == 2
-        refused = client.post("/v2/segments:analyze", json=request_body(privacy={"retainNonTargetIdentities": True, "faceRecognition": False, "persistMedia": False}))
-        assert refused.status_code == 422
-        assert client.get("/docs").status_code == 404
+        with TestClient(app) as client:
+            assert client.get("/healthz").json()["ok"] is True
+            response = client.post("/v2/segments:analyze", json=request_body())
+            assert response.status_code == 200
+            assert response.json()["contractVersion"] == 2
+            refused = client.post("/v2/segments:analyze", json=request_body(privacy={"retainNonTargetIdentities": True, "faceRecognition": False, "persistMedia": False}))
+            assert refused.status_code == 422
+            assert client.get("/docs").status_code == 404
+    finally:
+        set_components(None)
+
+
+def test_http_failure_recovery_and_repeated_client_cleanup(monkeypatch):
+    from app import main
+
+    def unavailable():
+        raise RuntimeError("private backend detail")
+
+    monkeypatch.setattr(main, "_default_components", unavailable)
+    try:
+        for _ in range(2):
+            with TestClient(app) as client:
+                set_components(None)
+                assert client.get("/healthz").status_code == 200
+                response = client.post("/v2/segments:analyze", json=request_body())
+                assert response.status_code == 503
+                assert response.json() == {"detail": "worker_not_ready"}
+                set_components(components(source=FakeSource(fail=True)))
+                failed = client.post("/v2/segments:analyze", json=request_body())
+                assert failed.json()["stages"]["tracking"] == "failed"
+                assert failed.json()["coverage"]["targetVisibleSec"] == 0
+                set_components(components())
+                assert client.post("/v2/segments:analyze", json=request_body()).status_code == 200
     finally:
         set_components(None)

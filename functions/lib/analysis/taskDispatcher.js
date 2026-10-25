@@ -34,7 +34,8 @@ function parseAnalysisTask(value) {
     if (!value || typeof value !== 'object')
         return null;
     const data = value;
-    if (typeof data.jobId !== 'string' || !data.jobId || typeof data.generation !== 'number')
+    if (typeof data.jobId !== 'string' || !/^[A-Za-z0-9_-]{1,80}$/.test(data.jobId)
+        || typeof data.generation !== 'number' || !Number.isSafeInteger(data.generation) || data.generation < 0)
         return null;
     if (data.kind === 'analyze_frames')
         return { kind: 'analyze_frames', jobId: data.jobId, generation: data.generation };

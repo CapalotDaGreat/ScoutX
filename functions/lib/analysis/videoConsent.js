@@ -139,6 +139,12 @@ exports.revokeVideoProcessingConsent = (0, https_1.onCall)((0, callableOptions_1
     await ref.update({ revokedAt: now });
     const jobRef = db.collection('matchAnalysisJobs').doc(jobId);
     const job = await jobRef.get();
+    if (job.exists && job.get('playerId') === uid) {
+        await jobRef.update({ experimentalTargetIdentity: firestore_1.FieldValue.delete(), experimentalIdentityCoordination: firestore_1.FieldValue.delete() });
+        await db.recursiveDelete(jobRef.collection('identityEvidence'));
+        await db.recursiveDelete(jobRef.collection('identityCoordination'));
+        await db.recursiveDelete(jobRef.collection('identityEvidenceStaging'));
+    }
     if (job.exists && !['complete', 'cancelled', 'expired'].includes(String(job.get('status')))) {
         await jobRef.update({
             cancelRequested: true,

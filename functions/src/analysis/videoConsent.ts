@@ -1,5 +1,5 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { getFirestore, type Firestore } from 'firebase-admin/firestore';
+import { FieldValue, getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { createCallableOptions } from '../callableOptions';
 import { isFootageProcessingApproved } from '../ai/providerConfig';
 import { discardUploadsForJob } from '../uploads/sessions';
@@ -169,6 +169,12 @@ export const revokeVideoProcessingConsent = onCall(createCallableOptions(), asyn
   await ref.update({ revokedAt: now });
   const jobRef = db.collection('matchAnalysisJobs').doc(jobId);
   const job = await jobRef.get();
+  if (job.exists && job.get('playerId') === uid) {
+    await jobRef.update({ experimentalTargetIdentity: FieldValue.delete(), experimentalIdentityCoordination: FieldValue.delete() });
+    await db.recursiveDelete(jobRef.collection('identityEvidence'));
+    await db.recursiveDelete(jobRef.collection('identityCoordination'));
+    await db.recursiveDelete(jobRef.collection('identityEvidenceStaging'));
+  }
   if (job.exists && !['complete', 'cancelled', 'expired'].includes(String(job.get('status')))) {
     await jobRef.update({
       cancelRequested: true,

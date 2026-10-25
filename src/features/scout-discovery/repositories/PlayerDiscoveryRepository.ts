@@ -6,15 +6,16 @@ import {
   limit,
   orderBy,
   query,
+  documentId,
   startAfter,
-  type DocumentSnapshot,
+  where,
 } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { useMockData } from '@/config/appMode';
-import { resolveQueryCursor } from '@/firebase/firestorePagination';
 import { DISCOVERY_PAGE_SIZE } from '@/features/scout-discovery/constants';
 import { parseDiscoverablePlayer } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
-import { filterAndSortPlayers } from '@/features/scout-discovery/services/discoveryQueryService';
+import { filterAndSortPlayers, paginateDiscoveryPlayers } from '@/features/scout-discovery/services/discoveryQueryService';
+import { discoveryIndexQuery, readIndexedDiscoveryPage, SEARCH_BATCH_SIZE } from '../services/indexedDiscoveryPage';
 import {
   getMockPlayerById,
   mockDiscoverablePlayers,
@@ -25,22 +26,6 @@ import {
   type DiscoveryQuery,
   type ScoutDashboardData,
 } from '@/features/scout-discovery/types';
-
-function paginatePlayers(
-  players: DiscoverablePlayer[],
-  cursor: string | null,
-  pageSize: number,
-): DiscoveryPageResult {
-  const startIndex = cursor ? players.findIndex((player) => player.id === cursor) + 1 : 0;
-  const slice = players.slice(startIndex, startIndex + pageSize);
-  const nextCursor = slice.length === pageSize ? slice[slice.length - 1]?.id ?? null : null;
-
-  return {
-    players: slice,
-    nextCursor,
-    hasMore: startIndex + pageSize < players.length,
-  };
-}
 
 function emptyDashboard(): ScoutDashboardData {
   return {
@@ -91,46 +76,22 @@ export class PlayerDiscoveryRepository {
     cursor: string | null,
     pageSize = DISCOVERY_PAGE_SIZE,
   ): Promise<DiscoveryPageResult> {
+    if (useMockData()) {
+      return paginateDiscoveryPlayers(filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery), cursor, pageSize);
+    }
     const db = getFirestoreDb();
-
-    if (!db) {
-      if (useMockData()) {
-        const filtered = filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery);
-        return paginatePlayers(filtered, cursor, pageSize);
-      }
-      return { players: [], nextCursor: null, hasMore: false };
-    }
-
-    try {
-      const playersRef = collection(db, 'discoverablePlayers');
-      const cursorSnapshot = await resolveQueryCursor(db, 'discoverablePlayers', cursor);
-      const playersQuery = query(
-        playersRef,
-        orderBy('updatedAt', 'desc'),
-        ...(cursorSnapshot ? [startAfter(cursorSnapshot)] : []),
-        limit(pageSize),
-      );
-
-      const snapshot = await getDocs(playersQuery);
-      const players = snapshot.docs
-        .map((docSnap) => parseDiscoverablePlayer({ id: docSnap.id, ...docSnap.data() }))
-        .filter((player): player is DiscoverablePlayer => player !== null);
-
-      const filtered = filterAndSortPlayers(players, discoveryQuery);
-      const lastDoc = snapshot.docs[snapshot.docs.length - 1] as DocumentSnapshot | undefined;
-
-      return {
-        players: filtered,
-        nextCursor: lastDoc?.id ?? null,
-        hasMore: snapshot.docs.length === pageSize,
-      };
-    } catch {
-      if (useMockData()) {
-        const filtered = filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery);
-        return paginatePlayers(filtered, cursor, pageSize);
-      }
-      return { players: [], nextCursor: null, hasMore: false };
-    }
+    if (!db) throw new Error('Discovery database is unavailable.');
+    const ready = await getDoc(doc(db, 'discoverySearchState', 'current'));
+    if (ready.get('version') !== 1 || ready.get('ready') !== true) throw new Error('Search index is updating. Please retry later.');
+    const index = discoveryIndexQuery(discoveryQuery);
+    return readIndexedDiscoveryPage(discoveryQuery, cursor, pageSize, async (after) => {
+      const snapshot = await getDocs(query(collection(db, 'discoverablePlayers'),
+        ...(index.token ? [where('_search.tokens', 'array-contains', index.token)] : []),
+        orderBy(`_search.order.${index.sort}`), orderBy(documentId()),
+        ...(after ? [startAfter(after.order, after.id)] : []), limit(SEARCH_BATCH_SIZE)));
+      return snapshot.docs.map((entry) => ({ id: entry.id, order: String(entry.get(`_search.order.${index.sort}`)),
+        player: parseDiscoverablePlayer({ ...entry.data(), id: entry.id }) }));
+    }, (player) => filterAndSortPlayers([player], discoveryQuery).length === 1);
   }
 
   public async fetchPlayerById(playerId: string): Promise<DiscoverablePlayer | null> {
@@ -140,18 +101,14 @@ export class PlayerDiscoveryRepository {
 
     const db = getFirestoreDb();
     if (!db) {
-      return null;
+      throw new Error('Discovery database is unavailable.');
     }
 
-    try {
-      const docSnap = await getDoc(doc(db, 'discoverablePlayers', playerId));
-      if (!docSnap.exists()) {
-        return null;
-      }
-      return parseDiscoverablePlayer({ id: docSnap.id, ...docSnap.data() });
-    } catch {
+    const docSnap = await getDoc(doc(db, 'discoverablePlayers', playerId));
+    if (!docSnap.exists()) {
       return null;
     }
+    return parseDiscoverablePlayer({ ...docSnap.data(), id: docSnap.id });
   }
 
   public async fetchPlayersByIds(playerIds: string[]): Promise<DiscoverablePlayer[]> {
@@ -161,21 +118,18 @@ export class PlayerDiscoveryRepository {
   }
 
   public async fetchAllDiscoverablePlayers(limitCount = 100): Promise<DiscoverablePlayer[]> {
+    if (useMockData()) return mockDiscoverablePlayers.slice(0, limitCount);
     const db = getFirestoreDb();
     if (!db) {
-      return useMockData() ? mockDiscoverablePlayers : [];
+      throw new Error('Discovery database is unavailable.');
     }
 
-    try {
-      const snapshot = await getDocs(
-        query(collection(db, 'discoverablePlayers'), orderBy('updatedAt', 'desc'), limit(limitCount)),
-      );
-      return snapshot.docs
-        .map((docSnap) => parseDiscoverablePlayer({ id: docSnap.id, ...docSnap.data() }))
-        .filter((player): player is DiscoverablePlayer => player !== null);
-    } catch {
-      return useMockData() ? mockDiscoverablePlayers : [];
-    }
+    const snapshot = await getDocs(
+      query(collection(db, 'discoverablePlayers'), orderBy('updatedAt', 'desc'), limit(limitCount)),
+    );
+    return snapshot.docs
+      .map((docSnap) => parseDiscoverablePlayer({ ...docSnap.data(), id: docSnap.id }))
+      .filter((player): player is DiscoverablePlayer => player !== null);
   }
 
   public async fetchDashboard(): Promise<ScoutDashboardData> {

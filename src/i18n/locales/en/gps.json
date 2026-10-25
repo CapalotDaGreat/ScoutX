@@ -1,4 +1,19 @@
 {
+  "import": {
+    "title": "Wearable import",
+    "choose": "Choose GPX, TCX or sample CSV",
+    "privacy": "Processed on this device. Raw coordinates and original timestamps are not saved. No provider account is connected.",
+    "label": "Local session label",
+    "confirm": "Save local summary",
+    "cancel": "Cancel",
+    "remove": "Delete local import",
+    "quality": "{{rejected}} samples excluded; {{gaps}} breaks; {{segments}} continuous sections.",
+    "provenance": "User-supplied wearable file. Accuracy may be unknown. No match linked, video synchronization or pitch orientation confirmed. Speeds are derived from positions.",
+    "saved": "Latest import saved on this device only, replacing the previous local import. Cloud history and match linking are not implemented.",
+    "unsupported": "This format is not supported. FIT and ZIP imports are not implemented.",
+    "tooLarge": "Choose a file under 5 MiB with at most 50,000 samples.",
+    "invalid": "Unable to import. Check sample coordinates and timezone-qualified timestamps. CSV requires timestamp,latitude,longitude and optional accuracy_m columns, without quotes."
+  },
   "title": "GPS Tracking",
   "subtitle": "Record movement, distance, and heatmaps",
   "recordingSubtitle": "Record match movement with battery-optimized sampling",

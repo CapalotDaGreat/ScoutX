@@ -13,6 +13,7 @@ export type AnalysisCorrection = {
   action: CorrectionAction;
   reason: CorrectionReason | null;
   createdAt: string;
+  targetRevision?: number;
 };
 
 export type SubmitCorrectionRequest = {
@@ -22,6 +23,7 @@ export type SubmitCorrectionRequest = {
   action: CorrectionAction;
   reason?: CorrectionReason | null;
   note?: string | null;
+  expectedAnchorRevision?: number;
 };
 
 const oneOf = <T extends string>(values: readonly T[], value: unknown): value is T =>
@@ -32,6 +34,9 @@ export function parseCorrection(id: string, data: unknown): AnalysisCorrection |
   const record = data as Record<string, unknown>;
   if (!oneOf(CORRECTION_TARGET_KINDS, record.targetKind) || !oneOf(CORRECTION_ACTIONS, record.action)) return null;
   if (typeof record.targetId !== 'string' || typeof record.createdAt !== 'string') return null;
+  const hasTargetRevision = 'targetRevision' in record;
+  const targetRevision = record.targetRevision;
+  if (hasTargetRevision && (typeof targetRevision !== 'number' || !Number.isSafeInteger(targetRevision) || targetRevision < 0)) return null;
   return {
     id,
     targetKind: record.targetKind,
@@ -39,6 +44,7 @@ export function parseCorrection(id: string, data: unknown): AnalysisCorrection |
     action: record.action,
     reason: oneOf(CORRECTION_REASONS, record.reason) ? record.reason : null,
     createdAt: record.createdAt,
+    ...(hasTargetRevision && typeof targetRevision === 'number' ? { targetRevision } : {}),
   };
 }
 

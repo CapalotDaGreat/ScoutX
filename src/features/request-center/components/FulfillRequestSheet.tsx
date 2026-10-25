@@ -151,13 +151,13 @@ export function FulfillRequestSheet({ request, onClose, onSubmit }: FulfillReque
                   accessibilityState={{ checked: isSelected }}
                   accessibilityLabel={`${item.label}, ${t(`common:requestCenter.kinds.${item.kind}`)}`}
                   onPress={() => toggle(item)}
-                  className="min-h-[48px] flex-row items-center gap-3 rounded-xl border border-divider px-3 py-2"
+                  className="min-h-[48px] flex-row items-center gap-3 rounded-lg border border-divider bg-surface px-3 py-2"
                 >
                   <View
                     className="h-6 w-6 items-center justify-center rounded-md border border-divider"
                     style={isSelected ? { backgroundColor: colors.accent, borderColor: colors.accent } : undefined}
                   >
-                    {isSelected ? <Check size={16} color={colors.background} strokeWidth={2.5} /> : null}
+                    {isSelected ? <Check size={16} color={colors.accentForeground} strokeWidth={2.5} /> : null}
                   </View>
                   <View className="min-w-0 flex-1">
                     <Text weight="semibold" numberOfLines={1}>{item.label}</Text>
@@ -171,6 +171,8 @@ export function FulfillRequestSheet({ request, onClose, onSubmit }: FulfillReque
           </View>
         )}
         <Input
+          style={{ minHeight: 88 }}
+          accessibilityLabel={t('common:requestCenter.notePlaceholder')}
           value={note}
           onChangeText={setNote}
           placeholder={t('common:requestCenter.notePlaceholder')}
@@ -182,7 +184,7 @@ export function FulfillRequestSheet({ request, onClose, onSubmit }: FulfillReque
             {error}
           </Text>
         ) : null}
-        <Button onPress={() => void submit()} disabled={selected.length === 0 || busy} loading={busy}>
+        <Button className="min-h-[44px]" onPress={() => void submit()} disabled={selected.length === 0 || busy} loading={busy}>
           {t('common:requestCenter.send', { count: selected.length })}
         </Button>
       </View>

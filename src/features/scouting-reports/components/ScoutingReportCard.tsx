@@ -25,7 +25,7 @@ export function ScoutingReportCard({ report, index = 0, onPress }: ScoutingRepor
   });
 
   const content = (
-    <Card variant="outlined" padding="md" className="gap-3">
+    <Card variant="outlined" padding="md" className="gap-3 rounded-lg">
       <View className="flex-row items-start justify-between gap-2">
         <View className="flex-1 gap-1">
           <Text variant="overline" color="accent">

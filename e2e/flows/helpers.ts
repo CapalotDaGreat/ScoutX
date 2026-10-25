@@ -26,7 +26,7 @@ export async function openGuestHome(page: Page) {
   await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible({ timeout: 120_000 });
 }
 
-async function openGuestAccountActions(page: Page) {
+export async function openGuestAccountActions(page: Page) {
   await openGuestHome(page);
   await page.getByRole('button', { name: 'Settings', exact: true }).first().click();
   await expect(page.getByRole('button', { name: 'I already have an account' })).toBeVisible({
@@ -38,7 +38,7 @@ export async function signIn(page: Page, email: string, password = accounts.pass
   await openGuestAccountActions(page);
   await page.getByRole('button', { name: 'I already have an account' }).click();
   await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Password').fill(password);
+  await page.getByLabel('Password', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeHidden({ timeout: 30_000 });
 }
@@ -136,6 +136,14 @@ export async function queryCollection(
 export async function documentExists(path: string): Promise<boolean> {
   const response = await fetch(`${FIRESTORE}/${path}`, { headers: { Authorization: 'Bearer owner' } });
   return response.status === 200;
+}
+
+export async function readDocument(path: string): Promise<EmulatorDoc | null> {
+  const response = await fetch(`${FIRESTORE}/${path}`, { headers: { Authorization: 'Bearer owner' } });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`Emulator document read failed: ${response.status}`);
+  const document = await response.json() as { name: string; fields?: Record<string, FirestoreValue> };
+  return { id: document.name.split('/').pop() ?? '', data: decodeFields(document.fields ?? {}) };
 }
 
 /** Calls a callable like the guardian web page does (no app account). */

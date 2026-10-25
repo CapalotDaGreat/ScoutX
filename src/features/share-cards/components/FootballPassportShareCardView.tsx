@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
+import { darkColors } from '@/theme/tokens/colors';
 import { type PassportShareCardData } from '@/features/share-cards/services/passportShareCardData';
 
 export const PASSPORT_SHARE_CARD_WIDTH = 360;
@@ -19,17 +20,17 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
 
   return (
     <View
-      className="overflow-hidden rounded-3xl bg-[#151617]"
-      style={{ width: PASSPORT_SHARE_CARD_WIDTH, height: PASSPORT_SHARE_CARD_HEIGHT }}
+      className="overflow-hidden rounded-lg"
+      style={{ width: PASSPORT_SHARE_CARD_WIDTH, height: PASSPORT_SHARE_CARD_HEIGHT, backgroundColor: darkColors.background }}
     >
-      <View className="bg-[#1C1E22] px-6 py-4 border-b border-[#2F343A]">
-        <Text variant="caption" className="uppercase tracking-widest text-[#D9A441]">
+      <View className="px-6 py-4 border-b" style={{ backgroundColor: darkColors.surface, borderColor: darkColors.border }}>
+        <Text variant="caption" style={{ color: darkColors.gold }}>
           Football Passport
         </Text>
-        <Text weight="semibold" className="text-3xl text-[#F7F6F3]">
+        <Text weight="semibold" className="text-2xl" numberOfLines={2} adjustsFontSizeToFit style={{ color: darkColors.textPrimary }}>
           {data.playerName}
         </Text>
-        <Text variant="body-sm" className="text-[#B7BDC8]">
+        <Text variant="body-sm" numberOfLines={2} style={{ color: darkColors.textSecondary }}>
           {data.position} · {data.club} · {data.nationality}
         </Text>
       </View>
@@ -39,12 +40,13 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
           {stats.map((item) => (
             <View
               key={item.label}
-              className="min-w-[45%] flex-1 rounded-2xl bg-[#25282D] px-3 py-3"
+              className="min-w-[45%] flex-1 border-t px-3 py-3"
+              style={{ borderColor: darkColors.border }}
             >
-              <Text variant="caption" className="uppercase text-[#8B939E]">
+              <Text variant="caption" style={{ color: darkColors.textSecondary }}>
                 {item.label}
               </Text>
-              <Text weight="semibold" className="text-2xl text-[#F7F6F3]">
+              <Text weight="semibold" className="text-2xl" style={{ color: darkColors.textPrimary }}>
                 {item.value}
               </Text>
             </View>
@@ -52,13 +54,13 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
         </View>
 
         <View className="gap-2">
-          <Text variant="body-sm" className="text-[#B7BDC8]">
+          <Text variant="body-sm" numberOfLines={2} style={{ color: darkColors.textSecondary }}>
             {data.tagline}
           </Text>
-          <Text variant="caption" className="text-[#2FBF71]">
+          <Text variant="caption" numberOfLines={2} style={{ color: darkColors.accent }}>
             {data.portfolioUrl.replace('https://', '')}
           </Text>
-          <Text variant="caption" className="text-[#8B939E]">
+          <Text variant="caption" style={{ color: darkColors.textSecondary }}>
             pitchproof.online · PitchProof Football Passport
           </Text>
         </View>

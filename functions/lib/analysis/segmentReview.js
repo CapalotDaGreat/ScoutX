@@ -8,6 +8,7 @@ exports.normalizeSynthesis = normalizeSynthesis;
 const promptBuilder_1 = require("../ai/promptBuilder");
 const outputValidator_1 = require("../ai/outputValidator");
 const technique_1 = require("./technique");
+const positionFramework_1 = require("./positionFramework");
 /**
  * Longer videos are reviewed one 10-minute segment at a time (dense frames per segment) and
  * then synthesised from the structured observations only. Possible events from a still-frame
@@ -33,6 +34,7 @@ function buildSegmentPrompt(params) {
         trusted: [
             `Segment ${params.segmentIndex + 1}: ${params.startSec}s to ${params.endSec}s of the recording.`,
             'Frame guide:',
+            ...(0, positionFramework_1.positionEvaluationInstructions)(params.targeting),
             ...params.frames.map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s`),
         ],
         userMetadata: { targeting: params.targeting },
@@ -50,8 +52,9 @@ function buildSegmentPrompt(params) {
 }
 function normalizeSegmentReview(params) {
     const { raw, segmentIndex } = params;
-    const known = new Set(params.frames.map((frame) => frame.id));
-    const times = new Map(params.frames.map((frame) => [frame.id, frame.timestampSec]));
+    const frames = params.frames.filter((frame) => Number.isFinite(frame.timestampSec) && frame.timestampSec >= 0);
+    const known = new Set(frames.map((frame) => frame.id));
+    const times = new Map(frames.map((frame) => [frame.id, frame.timestampSec]));
     const frameStates = [];
     for (const item of Array.isArray(raw.frames) ? raw.frames : []) {
         const row = (item ?? {});
@@ -64,7 +67,8 @@ function normalizeSegmentReview(params) {
             cameraView: (0, outputValidator_1.oneOf)(row.cameraView, exports.CAMERA_VIEWS, 'unclear'),
         });
     }
-    const visible = new Set(frameStates.filter((state) => state.targetVisible === 'yes').map((state) => state.frameId));
+    const visible = new Set(frameStates.filter((state) => state.targetVisible === 'yes' &&
+        !['replay', 'non_play', 'unclear'].includes(state.cameraView)).map((state) => state.frameId));
     // Only frames where the reviewer itself saw the target can carry an observation about them.
     const observations = [];
     for (const item of Array.isArray(raw.observations) ? raw.observations : []) {
@@ -121,6 +125,8 @@ function buildSynthesisPrompt(params) {
         trusted: [
             `Recording length: ${params.durationSec}s. Frames reviewed: ${params.sampledFrames}. Frames where the nominated player was seen: ${params.targetSeenFrames}.`,
             'Periods where the player was not seen are unknown, not poor performance.',
+            ...(0, positionFramework_1.positionEvaluationInstructions)(params.targeting),
+            'The nominated description is not verified identity. Do not infer successful actions from isolated stills. Free-text summaries must add no uncited claims.',
         ],
         userMetadata: {
             targeting: params.targeting,
@@ -168,6 +174,7 @@ function citedTexts(value, known, max) {
     return out;
 }
 function normalizeSynthesis(raw, observations) {
+    observations = observations.filter((item) => Number.isFinite(item.timestampSec) && item.timestampSec >= 0);
     const known = new Set(observations.map((item) => item.id));
     const times = new Map(observations.map((item) => [item.id, item.timestampSec]));
     const opportunities = [];

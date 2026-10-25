@@ -26,6 +26,7 @@ import {
 import {
   ResumableSessionUploader,
   UploadSessionExpiredError,
+  UploadProtocolError,
   type ChunkSource,
 } from '../../src/features/media-upload/services/resumableSessionUploader.ts';
 import {
@@ -155,6 +156,76 @@ describe('chunk plan', () => {
 });
 
 describe('ResumableSessionUploader', () => {
+  it('does not start analysis when cancellation arrives during the final chunk', async () => {
+    const bytes = Buffer.alloc(KIB256);
+    const gcs = new FakeGcsSession(bytes.length);
+    const uploader: ResumableSessionUploader = new ResumableSessionUploader({
+      sessionUri: 'https://storage.example/upload', source: sourceOf(bytes), chunkBytes: KIB256,
+      fetchImpl: async (url, init) => {
+        const reply = await gcs.fetch(url, init);
+        uploader.cancel();
+        return reply;
+      },
+    });
+    assert.equal(await uploader.run(0), 'cancelled');
+    assert.equal(gcs.finished, true, 'bytes may already be committed, but the caller must still cancel the upload record');
+  });
+
+  it('bounds successful 308 replies that never commit bytes', async () => {
+    let requests = 0;
+    const uploader = new ResumableSessionUploader({
+      sessionUri: 'https://storage.example/upload', source: sourceOf(Buffer.alloc(KIB256)), chunkBytes: KIB256,
+      fetchImpl: async () => { requests += 1; return { status: 308, headers: { get: () => null } }; },
+      maxConsecutiveFailures: 3, sleep: noSleep,
+    });
+    await assert.rejects(uploader.run(0), /HTTP 408/);
+    assert.equal(requests, 5, 'three bounded PUT attempts and two offset queries');
+  });
+
+  it('rejects malformed, unsafe and out-of-range committed offsets without restarting at zero', async () => {
+    for (const range of ['garbage', 'bytes=1-5', 'bytes=0-9007199254740992', `bytes=0-${KIB256 * 2}`]) {
+      const uploader = new ResumableSessionUploader({
+        sessionUri: 'https://storage.example/upload', source: sourceOf(Buffer.alloc(KIB256)), chunkBytes: KIB256,
+        fetchImpl: async () => ({ status: 308, headers: { get: () => range } }), sleep: noSleep,
+      });
+      await assert.rejects(uploader.run(), UploadProtocolError, range);
+    }
+  });
+
+  it('rejects short source reads and premature completion', async () => {
+    const source = sourceOf(Buffer.alloc(KIB256 * 2));
+    source.read = async () => new ArrayBuffer(1);
+    const uploader = new ResumableSessionUploader({ sessionUri: 'https://storage.example/upload', source, chunkBytes: KIB256 });
+    await assert.rejects(uploader.run(0), UploadProtocolError);
+    const premature = new ResumableSessionUploader({
+      sessionUri: 'https://storage.example/upload', source: sourceOf(Buffer.alloc(KIB256 * 2)), chunkBytes: KIB256,
+      fetchImpl: async () => ({ status: 200, headers: { get: () => null } }),
+    });
+    await assert.rejects(premature.run(0), UploadProtocolError);
+  });
+
+  it('honours pause during retry backoff without another request', async () => {
+    let requests = 0;
+    const uploader: ResumableSessionUploader = new ResumableSessionUploader({
+      sessionUri: 'https://storage.example/upload', source: sourceOf(Buffer.alloc(KIB256)), chunkBytes: KIB256,
+      fetchImpl: async () => { requests += 1; throw new TypeError('offline'); },
+      sleep: async (): Promise<void> => { uploader.pause(); },
+    });
+    assert.equal(await uploader.run(0), 'paused');
+    assert.equal(requests, 1);
+  });
+
+  it('bounds a hung transport and aborts it', async () => {
+    let signal: AbortSignal | undefined;
+    const uploader = new ResumableSessionUploader({
+      sessionUri: 'https://storage.example/upload', source: sourceOf(Buffer.alloc(KIB256)), chunkBytes: KIB256,
+      fetchImpl: async (_url, init) => { signal = init.signal; return new Promise(() => undefined); },
+      requestTimeoutMs: 10, maxConsecutiveFailures: 1,
+    });
+    await assert.rejects(uploader.run(0), /HTTP 408/);
+    assert.equal(signal?.aborted, true);
+  });
+
   it('uploads in fixed slices without reading the whole file at once', async () => {
     const bytes = randomBytes(KIB256 * 4 + 777);
     const gcs = new FakeGcsSession(bytes.length);

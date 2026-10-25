@@ -1,25 +1,18 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { openGuestAccountActions, openGuestHome, openRegister } from './flows/helpers';
 
-async function waitForAppReady(page: Page) {
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
+test.setTimeout(150_000);
 
-  await expect(page.getByRole('button', { name: 'Create your account' })).toBeVisible({
-    timeout: 90_000,
-  });
-}
+test.describe('Guest entry and account access', () => {
+  test('offers registration and sign-in from guest settings', async ({ page }) => {
+    await openGuestAccountActions(page);
 
-test.describe('Welcome screen', () => {
-  test('renders primary auth actions', async ({ page }) => {
-    await waitForAppReady(page);
-
-    await expect(page.getByText('PitchProof', { exact: true }).first()).toBeVisible();
     await expect(page.getByRole('button', { name: 'Create your account' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'I already have an account' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Continue as Guest' })).toBeVisible();
   });
 
   test('navigates to login screen', async ({ page }) => {
-    await waitForAppReady(page);
+    await openGuestAccountActions(page);
 
     await page.getByRole('button', { name: 'I already have an account' }).click();
     await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible({
@@ -29,9 +22,7 @@ test.describe('Welcome screen', () => {
   });
 
   test('navigates to register screen', async ({ page }) => {
-    await waitForAppReady(page);
-
-    await page.getByRole('button', { name: 'Create your account' }).click();
+    await openRegister(page);
     await expect(page.getByRole('heading', { name: 'Create account' })).toBeVisible({
       timeout: 15_000,
     });
@@ -44,21 +35,19 @@ test.describe('Welcome screen', () => {
       pageErrors.push(error.message);
     });
 
-    await waitForAppReady(page);
+    await openGuestHome(page);
     expect(pageErrors).toEqual([]);
   });
 
-  test('guest continue reaches the guest shell without crashing', async ({ page }) => {
+  test('a fresh installation can browse without creating an account', async ({ page }) => {
     const pageErrors: string[] = [];
     page.on('pageerror', (error) => {
       pageErrors.push(error.message);
     });
 
-    await waitForAppReady(page);
-    await page.getByRole('button', { name: 'Continue as Guest' }).click();
-    await expect(page.getByRole('button', { name: 'Create your account' })).toBeHidden({
-      timeout: 20_000,
-    });
+    await openGuestHome(page);
+    await expect(page.getByRole('heading', { name: 'Home', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Settings', exact: true }).first()).toBeVisible();
     expect(pageErrors).toEqual([]);
   });
 });

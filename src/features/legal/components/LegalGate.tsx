@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/primitives/Button';
-import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useAuth } from '@/features/auth/store/AuthProvider';
@@ -52,53 +51,55 @@ export function LegalGate() {
 
   return (
     <SafeAreaView className="absolute inset-0 z-30 bg-background" testID="legal-gate">
-      <ScrollView contentContainerStyle={{ padding: 20, gap: 16, paddingBottom: 48 }}>
-        <Heading level={2}>{reaccept ? t('legal:gate.reacceptTitle') : t('legal:gate.title')}</Heading>
-        <Text color="secondary">{reaccept ? t('legal:gate.reacceptBody') : t('legal:gate.body')}</Text>
+      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 48 }}>
+        <View className="w-full max-w-[560px] self-center gap-4">
+          <Heading level={2} className="text-2xl leading-8">{reaccept ? t('legal:gate.reacceptTitle') : t('legal:gate.title')}</Heading>
+          <Text color="secondary">{reaccept ? t('legal:gate.reacceptBody') : t('legal:gate.body')}</Text>
 
-        {pending.map((document) => (
-          <Card key={document.id} variant="outlined" padding="md" className="gap-2">
-            <Text weight="semibold">{document.title}</Text>
-            {document.summary.slice(0, 3).map((line) => (
-              <Text key={line.slice(0, 24)} variant="body-sm" color="secondary">
-                • {line}
-              </Text>
-            ))}
-            <Button variant="ghost" onPress={() => setReading(document.id)}>
-              {t('legal:readFull')}
-            </Button>
-          </Card>
-        ))}
+          {pending.map((document) => (
+            <View key={document.id} className="gap-2 border-t border-border pt-4">
+              <Text weight="semibold">{document.title}</Text>
+              {document.summary.slice(0, 3).map((line) => (
+                <Text key={line.slice(0, 24)} variant="body-sm" color="secondary">
+                  • {line}
+                </Text>
+              ))}
+              <Button variant="ghost" onPress={() => setReading(document.id)}>
+                {t('legal:readFull')}
+              </Button>
+            </View>
+          ))}
 
-        <Pressable
-          className="flex-row items-start gap-3"
-          accessibilityRole="checkbox"
-          accessibilityState={{ checked: agreed }}
-          accessibilityLabel={t('legal:gate.agree')}
-          onPress={() => setAgreed((value) => !value)}
-          testID="legal-gate-agree"
-        >
-          <View className={`mt-1 h-5 w-5 rounded border ${agreed ? 'border-accent bg-accent' : 'border-border'}`} />
-          <Text variant="body-sm" className="flex-1">
-            {t('legal:gate.agree')}
+          <Pressable
+            className="min-h-11 flex-row items-start gap-3 py-2"
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: agreed }}
+            accessibilityLabel={t('legal:gate.agree')}
+            onPress={() => setAgreed((value) => !value)}
+            testID="legal-gate-agree"
+          >
+            <View className={`mt-1 h-5 w-5 rounded border ${agreed ? 'border-accent bg-accent' : 'border-border'}`} />
+            <Text variant="body-sm" className="flex-1">
+              {t('legal:gate.agree')}
+            </Text>
+          </Pressable>
+          <Text variant="caption" color="tertiary">
+            {t('legal:gate.optionalLater')}
           </Text>
-        </Pressable>
-        <Text variant="caption" color="tertiary">
-          {t('legal:gate.optionalLater')}
-        </Text>
 
-        {error ? (
-          <Text variant="body-sm" color="error">
-            {error}
-          </Text>
-        ) : null}
-        <Button variant="primary" disabled={!agreed} loading={busy} onPress={() => void accept()}>
-          {t('legal:gate.continue')}
-        </Button>
-        <Button variant="ghost" onPress={() => void signOut()}>
-          {t('common:signOut')}
-        </Button>
-        {busy ? <ActivityIndicator /> : null}
+          {error ? (
+            <Text variant="body-sm" color="error">
+              {error}
+            </Text>
+          ) : null}
+          <Button variant="primary" disabled={!agreed} loading={busy} onPress={() => void accept()}>
+            {t('legal:gate.continue')}
+          </Button>
+          <Button variant="ghost" onPress={() => void signOut()}>
+            {t('common:signOut')}
+          </Button>
+          {busy ? <ActivityIndicator /> : null}
+        </View>
       </ScrollView>
       <LegalDocumentModal documentId={reading} onClose={() => setReading(null)} />
     </SafeAreaView>

@@ -18,24 +18,37 @@ from typing import Iterator
 
 import numpy as np
 
-from app.contract import SegmentRequest
+from app.contract import SegmentRequest, SegmentResult
 from app.pipeline import WORKER_VERSION, Components, FrameSource, analyse_segment
+from app.source_pts import sample_recording_frames, validate_recording_interval
 
 SEGMENT_SEC = 600.0
 
 
+def target_only_segment(result: SegmentResult) -> dict:
+    """Candidates may describe non-target players and must not be persisted."""
+    payload = result.model_dump()
+    payload["identity"]["candidates"] = []
+    return payload
+
+
 class LocalFile(FrameSource):
-    def __init__(self, inner: FrameSource, path: Path) -> None:
-        self._inner = inner
+    def __init__(self, path: Path) -> None:
         self._path = str(path)
 
     def frames(self, url: str, headers: str | None, start_sec: float, end_sec: float, fps: float) -> Iterator[tuple[float, np.ndarray]]:
-        return self._inner.frames(self._path, None, start_sec, end_sec, fps)
+        import av  # noqa: PLC0415
+
+        validate_recording_interval(start_sec, end_sec, fps)
+        # Local evaluation must not relax the production HTTP decoder's protocol policy.
+        with av.open(self._path, options={"protocol_whitelist": "file"}) as container:
+            stream = container.streams.video[0]
+            yield from sample_recording_frames(container, stream, start_sec, end_sec, fps)
 
 
 def predict_video(components: Components, footage: Path, annotation: dict, fps: float) -> dict:
     local = Components(
-        source=LocalFile(components.source, footage),
+        source=LocalFile(footage),
         detector=components.detector,
         tracker_factory=components.tracker_factory,
         jersey_reader=components.jersey_reader,
@@ -61,7 +74,7 @@ def predict_video(components: Components, footage: Path, annotation: dict, fps: 
             sampling={"fps": fps},
             privacy={"retainNonTargetIdentities": False, "faceRecognition": False, "persistMedia": False},
         )
-        segments.append(analyse_segment(request, local, trace).model_dump())
+        segments.append(target_only_segment(analyse_segment(request, local, trace)))
         index, start = index + 1, end
     return {
         "provenance": {"workerVersion": WORKER_VERSION, "models": components.models or {}},

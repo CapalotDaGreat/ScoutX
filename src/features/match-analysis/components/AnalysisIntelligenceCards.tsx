@@ -182,6 +182,7 @@ export function GpsVideoSyncCard({
   const { t, i18n } = useAppTranslation('matchAnalysis');
   const [selectedId, setSelectedId] = useState<string | null>(sync?.gpsSessionId ?? null);
   const [saving, setSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
   const session = sessions.find((item) => item.id === (sync?.gpsSessionId ?? selectedId)) ?? null;
   const sprints = session?.intelligence?.sprints ?? [];
   const sessionStartMs = session ? Date.parse(session.startedAt) : Number.NaN;
@@ -220,17 +221,23 @@ export function GpsVideoSyncCard({
           </View>
           <Button
             variant="accent"
-            disabled={!session}
+              disabled={!session || !Number.isFinite(sessionStartMs) || !Number.isFinite(videoDurationSec) || videoDurationSec <= 0}
             loading={saving}
             onPress={() => {
               if (!session) return;
+                const currentTime = getCurrentTime();
+                if (!Number.isFinite(currentTime) || currentTime < 0 || currentTime > videoDurationSec || !Number.isFinite(sessionStartMs)) {
+                  setSaveFailed(true);
+                  return;
+                }
+                setSaveFailed(false);
               setSaving(true);
               void onSaveSync({
                 gpsSessionId: session.id,
-                gpsAnchorMs: Date.parse(session.startedAt),
-                videoAnchorSec: Math.max(0, Math.round(getCurrentTime())),
+                  gpsAnchorMs: sessionStartMs,
+                  videoAnchorSec: Math.min(videoDurationSec, Math.round(currentTime)),
                 setAt: new Date().toISOString(),
-              }).finally(() => setSaving(false));
+                }).catch(() => setSaveFailed(true)).finally(() => setSaving(false));
             }}
           >
             {t('sync.markNow')}
@@ -270,6 +277,7 @@ export function GpsVideoSyncCard({
           )}
         </>
       )}
+      {saveFailed ? <Text variant="body-sm" color="error" accessibilityRole="alert">{t('sync.saveFailed')}</Text> : null}
     </Card>
   );
 }

@@ -53,13 +53,13 @@ export function LinkAppleAccountSection() {
   };
 
   return (
-    <View className="gap-3">
+    <View className="gap-3 border-t border-divider pt-3">
       <Text variant="body-sm" color="secondary">
         {t('auth:apple.linkDescription')}
       </Text>
 
       {error ? (
-        <Text variant="body-sm" color="error">
+        <Text variant="body-sm" color="error" accessibilityLiveRegion="assertive">
           {error}
         </Text>
       ) : null}

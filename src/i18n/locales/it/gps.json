@@ -1,4 +1,19 @@
 {
+  "import": {
+    "title": "Importazione da dispositivo indossabile",
+    "choose": "Scegli GPX, TCX o CSV di campioni",
+    "privacy": "Elaborazione su questo dispositivo. Le coordinate grezze e gli orari originali non vengono salvati. Nessun account del fornitore è collegato.",
+    "label": "Nome della sessione locale",
+    "confirm": "Salva riepilogo locale",
+    "cancel": "Annulla",
+    "remove": "Elimina importazione locale",
+    "quality": "{{rejected}} campioni esclusi; {{gaps}} interruzioni; {{segments}} sezioni continue.",
+    "provenance": "File del dispositivo fornito dall'utente. La precisione potrebbe essere sconosciuta. Nessuna partita collegata, sincronizzazione video o orientamento del campo confermato. Le velocità sono calcolate dalle posizioni.",
+    "saved": "Ultima importazione salvata solo su questo dispositivo, al posto della precedente importazione locale. Cronologia nel cloud e collegamento alle partite non implementati.",
+    "unsupported": "Formato non supportato. Le importazioni FIT e ZIP non sono implementate.",
+    "tooLarge": "Scegli un file inferiore a 5 MiB con un massimo di 50.000 campioni.",
+    "invalid": "Impossibile importare. Controlla le coordinate e gli orari con fuso orario. Il CSV deve contenere timestamp,latitude,longitude e, facoltativamente, accuracy_m, senza virgolette."
+  },
   "title": "Tracciamento GPS",
   "subtitle": "Registra movimenti, distanza e heatmap",
   "recordingSubtitle": "Registra i movimenti in partita con campionamento a basso consumo",

@@ -70,10 +70,10 @@ export function LoginScreen({
   const combinedError = useMemo(() => error ?? localError, [error, localError]);
 
   return (
-    <Screen title={t('login.title')} subtitle={t('login.subtitle')} onRefresh={undefined} refreshing={false}>
-      <AuthCard title={t('login.cardTitle')} subtitle={t('login.cardSubtitle')}>
+    <Screen contentClassName="py-6">
+      <AuthCard title={t('login.title')} subtitle={t('login.cardSubtitle')}>
         {combinedError ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive" className="rounded-[8px] border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {combinedError}
             </Text>
@@ -81,8 +81,8 @@ export function LoginScreen({
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
-            <Text variant="body-sm" color="accent">
+          <View accessibilityLiveRegion="polite" className="rounded-[8px] border border-success/20 bg-success-muted px-3 py-3">
+            <Text variant="body-sm" color="success">
               {successMessage}
             </Text>
           </View>
@@ -112,7 +112,14 @@ export function LoginScreen({
           accessibilityLabel={t('login.password')}
         />
 
-        <Text variant="body-sm" color="accent" className="self-end" onPress={onForgotPassword}>
+        <Text
+          variant="body-sm"
+          color="accent"
+          accessibilityRole="link"
+          accessibilityLabel={t('login.forgotPassword')}
+          className="min-h-11 self-end py-3"
+          onPress={onForgotPassword}
+        >
           {t('login.forgotPassword')}
         </Text>
 

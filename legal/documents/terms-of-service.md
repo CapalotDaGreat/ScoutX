@@ -1,9 +1,9 @@
 ---
 id: terms-of-service
 title: Terms of Service
-version: 1.1.0
-effectiveDate: 2026-10-08
-status: final
+version: 1.2.0
+effectiveDate: LEGAL_REVIEW_REQUIRED
+status: draft
 canonicalLanguage: en
 requiresAcceptance: true
 summary:
@@ -17,6 +17,14 @@ summary:
 ## Agreement
 
 These terms are an agreement between you and {{entityName}}, {{entityAddress}}. By creating an account you accept these terms, the Privacy Policy and the Community Guidelines. If you are under 18, your parent or guardian also agrees to them on your behalf when they approve your account.
+
+The Privacy Policy explains processing; acknowledging it is not consent to every optional use. Optional AI, sharing and guardian permissions are requested separately. The short summaries help you navigate but do not replace the full terms.
+
+## App licence and availability
+
+For an App Store download, Apple's Standard Licensed Application End User License Agreement applies to the software licence unless a valid custom licence is provided in the store listing: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/. These terms govern the PitchProof service and do not remove rights you have under that licence or mandatory law. Apple is not the operator of PitchProof.
+
+Features depend on supported devices, network access, permissions, region and service availability. Beta/TestFlight builds can change, expire or fail and are not a promise of public availability. We do not promise uninterrupted service or features that are labelled unavailable. Recording movement is not a medical or safety-monitoring service; stop using your phone where it would distract you or put anyone at risk.
 
 ## Eligibility
 
@@ -36,6 +44,8 @@ You keep all rights to the content you upload. You give us a non-exclusive, worl
 
 You confirm that you have the rights and permissions needed for everything you upload, including consent from people who can be identified in your videos. See the Video and Recording Policy.
 
+Private storage, AI processing and public sharing are different uses: permission to record a match is not automatically permission to upload it, send frames to an AI service or publish it. Do not upload confidential club material, broadcast footage or another person's sensitive information without the required rights. We do not use uploaded player content in marketing merely because you use the app; that needs separate appropriate permission.
+
 ## Acceptable use
 
 Follow the Community Guidelines. Do not harass anyone, contact minors outside PitchProof's controlled request system, upload content you do not have rights to, misrepresent your identity or club, scrape the service or attempt to bypass security or usage limits.
@@ -43,6 +53,8 @@ Follow the Community Guidelines. Do not harass anyone, contact minors outside Pi
 ## Scouting and trials
 
 PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval. Children under 13 cannot be contacted or invited by scouts.
+
+A profile, badge, link or self-reported statistic is not independent verification of identity, affiliation or football ability. Check invitations and organisations carefully and report suspicious requests. Do not pay anyone for a promised trial, contract or recommendation.
 
 ## AI analysis
 
@@ -56,13 +68,23 @@ Some features may require a paid subscription. Safety, privacy, deletion, report
 
 We may restrict, remove or hide content and suspend or disable accounts that break these terms, the law or the Community Guidelines. Where possible we explain the decision and you can appeal. You can delete your account at any time.
 
+We may act immediately where necessary to protect a person, comply with law or prevent abuse. Restrictions should be proportionate; reporting and appeal routes are described in the Reporting and Takedown Policy. Account deletion or suspension does not automatically cancel an Apple subscription. Manage renewal separately through Apple; mandatory refund and consumer rights remain unaffected.
+
+## Changes to the service and terms
+
+We communicate material changes through appropriate in-app or account notices. Changes are not applied retroactively to remove accrued mandatory rights. If fresh agreement is required, we ask for it; you may stop using the service and delete your account. Subscription changes remain subject to Apple's purchase terms and any consent or notice required by law.
+
 ## Liability
 
 PitchProof is provided "as is". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law.
 
+In particular, these terms do not exclude mandatory liability for intentional misconduct, gross negligence, personal injury or other non-excludable claims. Any exclusions apply only as far as the law governing your claim permits, and do not remove mandatory remedies for a defective paid service.
+
 ## Governing law
 
 These terms are governed by {{governingLaw}}. Place of jurisdiction: {{jurisdiction}}. Mandatory consumer protection rules of your country of residence remain unaffected.
+
+That jurisdiction is not an exclusive restriction where mandatory law lets a consumer bring a claim in their home courts. Contact us first to seek a practical resolution; doing so does not prevent you from contacting a regulator or exercising legal rights. If one provision is unenforceable, the rest applies only so far as it can lawfully stand on its own.
 
 ## Contact
 

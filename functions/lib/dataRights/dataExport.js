@@ -56,7 +56,7 @@ function toPlain(value, dropLocation = false) {
 function docJson(snap, dropLocation = false) {
     if (!snap.exists)
         return null;
-    return { id: snap.id, ...toPlain(snap.data(), dropLocation) };
+    return { ...toPlain(snap.data(), dropLocation), id: snap.id };
 }
 async function many(query, dropLocation = false) {
     const snap = await query.limit(MAX_DOCS_PER_SECTION).get();
@@ -126,6 +126,10 @@ async function buildExportArchive(db, uid, linkExpiresAt, now = new Date()) {
         .map((analysis) => analysis.id)
         .filter((id) => typeof id === 'string')
         .map((id) => many(db.collection('matchAnalysisJobs').doc(id).collection('corrections'))))).flat();
+    const analysisIdentityCoordination = (await Promise.all(analyses
+        .map((analysis) => analysis.id)
+        .filter((id) => typeof id === 'string')
+        .map((id) => many(db.collection('matchAnalysisJobs').doc(id).collection('identityCoordination'))))).flat();
     return {
         format: 'scoutx-data-export',
         formatVersion: 1,
@@ -147,6 +151,7 @@ async function buildExportArchive(db, uid, linkExpiresAt, now = new Date()) {
             development: { goals, training, evidence, identitySnapshots: identity, trialReflections: reflections },
             analyses,
             analysisFeedback,
+            analysisIdentityCoordination,
             coaching: { aboutYou: observationsAbout, writtenByYou: observationsBy },
             movementSessions: movement,
             media: { items: playerMedia, reels, reelExports, downloadLinks: await mediaLinks(uid, storagePathsIn(media), linkExpiresAt) },

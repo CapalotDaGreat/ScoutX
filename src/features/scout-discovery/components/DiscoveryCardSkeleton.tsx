@@ -3,9 +3,9 @@ import { Skeleton } from '@/components/feedback/SkeletonLoader';
 
 export function DiscoveryCardSkeleton() {
   return (
-    <View className="overflow-hidden rounded-2xl border border-border bg-surface">
-      <Skeleton height={112} radius="none" />
-      <View className="gap-3 p-4">
+    <View className="overflow-hidden rounded-lg border border-border bg-surface">
+      <Skeleton height={80} radius="none" />
+      <View className="gap-3 p-3">
         <View className="flex-row gap-3">
           <Skeleton height={48} width={48} radius="full" />
           <View className="flex-1 gap-2">

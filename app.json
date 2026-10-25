@@ -10,6 +10,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.scoutx.app",
       "usesAppleSignIn": true,
+      "entitlements": {
+        "com.apple.developer.devicecheck.appattest-environment": "production"
+      },
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "PitchProof needs access to Photos so you can upload highlight clips and match recordings from your library.",
         "NSPhotoLibraryAddUsageDescription": "PitchProof may save processed video thumbnails to your library when needed.",

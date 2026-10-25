@@ -61,7 +61,7 @@ export function DiscoverySearchPanel({
   ).slice(0, 4);
 
   return (
-    <View className="gap-4 rounded-xl border border-border bg-surface-cool p-3">
+    <View className="gap-3 border-y border-divider py-3">
       {recentSearches.length > 0 ? (
         <View className="gap-2">
           <View className="flex-row items-center justify-between">
@@ -82,7 +82,7 @@ export function DiscoverySearchPanel({
                   key={`${entry.scope}:${entry.term}:${entry.searchedAt}`}
                   accessibilityRole="button"
                   onPress={() => onSelectSearch(entry.term, entry.scope)}
-                  className="rounded-full border border-border bg-background px-3 py-2"
+                  className="min-h-[40px] justify-center rounded-md border border-border bg-surface px-3 py-2"
                 >
                   <Text variant="body-sm">{entry.term}</Text>
                   {entry.scope !== 'all' ? (
@@ -117,7 +117,7 @@ export function DiscoverySearchPanel({
               key={term}
               accessibilityRole="button"
               onPress={() => onSelectSearch(term, searchScope)}
-              className="rounded-full bg-background-secondary px-3 py-2"
+              className="min-h-[40px] justify-center rounded-md bg-background-secondary px-3 py-2"
             >
               <Text variant="body-sm">{term}</Text>
             </Pressable>

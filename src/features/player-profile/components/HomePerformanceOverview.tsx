@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
-import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -32,7 +31,7 @@ export function HomePerformanceOverview({
 
   if (overview.matchCount === 0) {
     return (
-      <Card variant="elevated" padding="lg">
+      <View className="border-y border-border py-4">
         <EmptyState
           title={t('statistics:emptyTitle', { defaultValue: 'No match data yet' })}
           description={t('statistics:emptyDescription', {
@@ -41,7 +40,7 @@ export function HomePerformanceOverview({
           actionLabel={t('statistics:logMatch')}
           onAction={onLogMatchPress}
         />
-      </Card>
+      </View>
     );
   }
 

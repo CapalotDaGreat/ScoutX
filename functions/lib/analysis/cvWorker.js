@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.notAvailableCvWorker = void 0;
 exports.getCvWorker = getCvWorker;
 exports.setCvWorker = setCvWorker;
+exports.identityToken = identityToken;
 exports.createHttpCvClient = createHttpCvClient;
 exports.setCvSegmentClient = setCvSegmentClient;
 exports.getCvSegmentClient = getCvSegmentClient;

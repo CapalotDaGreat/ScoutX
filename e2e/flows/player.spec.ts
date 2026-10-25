@@ -1,11 +1,14 @@
 import path from 'node:path';
 import { expect, test } from '@playwright/test';
+import { LEGAL_DOCUMENTS } from '../../src/features/legal/content.generated';
 import {
   acceptLegalGate,
   accounts,
   openRegister,
   passAgeGateAsAdult,
   requireEmulators,
+  readDocument,
+  seedState,
   signIn,
   trackPageErrors,
 } from './helpers';
@@ -104,8 +107,26 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
     const chooser = page.waitForEvent('filechooser', { timeout: 20_000 });
     await sheet.getByRole('button', { name: 'Upload from Photos' }).click();
     await (await chooser).setFiles(path.join(__dirname, '..', 'fixtures', 'clip.mp4'));
-
-    await expect(sheet.getByText('No highlight videos yet.', { exact: false })).toBeHidden({ timeout: 90_000 });
+    const editor = page.getByRole('dialog');
+    await expect(editor.getByRole('heading', { name: 'Add Highlight Video' })).toBeVisible({ timeout: 30_000 });
+    await editor.getByLabel('Title', { exact: true }).fill('E2E local highlight');
+    await editor.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(page.getByRole('dialog').getByRole('button', { name: 'E2E local highlight', exact: true })).toBeVisible({ timeout: 90_000 });
+    const playerId = seedState().playerId;
+    const uploadedVideo = async () => {
+      const profile = await readDocument(`profiles/${playerId}`);
+      const library = profile?.data.highlightVideos as { videos?: Array<{ id: string; title: string; uploadStatus: string; durationSec: number }> } | undefined;
+      return library?.videos?.find((video) => video.title === 'E2E local highlight');
+    };
+    await expect.poll(async () => (await uploadedVideo())?.uploadStatus, { timeout: 90_000 }).toBe('ready');
+    const uploaded = await uploadedVideo();
+    if (!uploaded) throw new Error('Saved highlight was not found in the emulator');
+    expect(uploaded.durationSec).toBeGreaterThan(0);
+    const media = await readDocument(`players/${playerId}/media/${uploaded.id}`);
+    expect(media?.data.uploadState).toBe('ready');
+    expect(media?.data.visibility).toBe('private');
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await expect(page.getByText('Your library is empty for now.', { exact: false })).toBeHidden({ timeout: 90_000 });
   });
 
   test('the seeded player opens the Privacy Center and reads a bundled document', async ({ page }) => {
@@ -113,7 +134,9 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
     await page.goto('/player/settings');
     await page.getByTestId('settings-open-privacy-center').click();
     await expect(page.getByTestId('privacy-center-consents')).toBeVisible({ timeout: 30_000 });
-    await expect(page.getByTestId('privacy-center-consents').getByText('Version 1.1.0', { exact: false }).first()).toBeVisible();
+    const privacyVersion = LEGAL_DOCUMENTS.find((document) => document.id === 'privacy-policy')?.version;
+    expect(privacyVersion).toBeTruthy();
+    await expect(page.getByTestId('privacy-center-consents').getByText(`Version ${privacyVersion}`, { exact: false }).first()).toBeVisible();
     await page.getByTestId('privacy-center-documents').getByText('Youth Safety Policy').click();
     await expect(page.getByTestId('legal-document-youth-safety-policy')).toBeVisible();
   });

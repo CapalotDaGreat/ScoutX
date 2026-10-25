@@ -2,7 +2,6 @@ import { useState, type ReactNode } from 'react';
 import { Alert, Pressable, Switch, View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { Button } from '@/components/primitives/Button';
-import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { DataExportSection } from '@/features/data-rights/components/DataExportSection';
@@ -31,12 +30,12 @@ export type PrivacyCenterScreenProps = {
 
 function Section({ title, children, testID }: { title: string; children: ReactNode; testID?: string }) {
   return (
-    <Card variant="elevated" padding="md" className="gap-3" testID={testID}>
+    <View className="gap-3 border-t border-border pt-4" testID={testID}>
       <Text variant="overline" color="secondary">
         {title}
       </Text>
       {children}
-    </Card>
+    </View>
   );
 }
 
@@ -51,7 +50,7 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
   const { user, isGuest } = useAuth();
   const { policy } = useUserSafety();
   const summary = useConsentSummary();
-  const { blockedUsers, unblockUser } = useBlockedUsers(user && !isGuest ? user.uid : null);
+  const { blockedUsers, unblockUser, isLoading: blocksLoading, error: blocksError, refresh: refreshBlocks } = useBlockedUsers(user && !isGuest ? user.uid : null);
   const [reading, setReading] = useState<LegalDocumentId | null>(null);
   const [savingAi, setSavingAi] = useState(false);
 
@@ -91,7 +90,7 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
               const entry = summary[type];
               const document = LEGAL_DOCUMENTS.find((item) => item.id === documentId);
               return (
-                <View key={type} className="flex-row items-center justify-between gap-3">
+                <View key={type} className="gap-1 py-1">
                   <Text variant="body-sm" className="flex-1">
                     {document?.title ?? documentId}
                   </Text>
@@ -127,7 +126,7 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
                 testID="privacy-center-ai-consent"
               />
             </View>
-            <View className="flex-row items-center justify-between gap-3">
+            <View className="gap-1 py-1">
               <Text variant="body-sm" className="flex-1">
                 {t('legal:consents.media.label')}
               </Text>
@@ -161,17 +160,22 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
 
         {user && !isGuest ? (
           <Section title={t('legal:blocked.title')}>
-            {blockedUsers.length === 0 ? (
+            {blocksLoading ? <Text variant="body-sm" color="secondary">{t('common:loading')}</Text> : blocksError ? (
+              <View className="gap-2">
+                <Text variant="body-sm" color="secondary">{t('legal:consents.failed')}</Text>
+                <Button variant="secondary" onPress={() => { void refreshBlocks(); }}>{t('common:retry')}</Button>
+              </View>
+            ) : blockedUsers.length === 0 ? (
               <Text variant="body-sm" color="secondary">
                 {t('legal:blocked.empty')}
               </Text>
             ) : (
               blockedUsers.map((entry) => (
-                <View key={entry.blockedUserId} className="flex-row items-center justify-between gap-3">
-                  <Text variant="body-sm" className="flex-1">
+                <View key={entry.blockedUserId} className="flex-row flex-wrap items-center justify-between gap-3">
+                  <Text variant="body-sm" className="min-w-[120px] flex-1">
                     {entry.blockedUserName}
                   </Text>
-                  <Button variant="ghost" size="sm" onPress={() => void unblockUser(entry.blockedUserId)}>
+                  <Button variant="ghost" size="sm" onPress={() => { void unblockUser(entry.blockedUserId).catch((error: unknown) => Alert.alert(t('common:errorTitle'), toUserMessage(error, t('legal:consents.failed')))); }}>
                     {t('legal:blocked.unblock')}
                   </Button>
                 </View>
@@ -196,7 +200,7 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
               key={document.id}
               accessibilityRole="button"
               onPress={() => setReading(document.id)}
-              className="flex-row items-center justify-between gap-3 py-2"
+              className="min-h-11 flex-row items-center justify-between gap-3 border-b border-border py-3"
             >
               <View className="flex-1">
                 <Text weight="semibold">{document.title}</Text>

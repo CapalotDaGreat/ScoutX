@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -14,7 +13,7 @@ export type GpsSessionHistoryProps = {
 export function GpsSessionHistory({ sessions }: GpsSessionHistoryProps) {
   const { t } = useAppTranslation('gps');
   return (
-    <Card variant="default" padding="lg" className="gap-4">
+    <View className="gap-3">
       <View>
         <Heading level={3}>{t('sessionHistory')}</Heading>
         <Text variant="body-sm" color="secondary" className="mt-1">
@@ -34,6 +33,6 @@ export function GpsSessionHistory({ sessions }: GpsSessionHistoryProps) {
           ))}
         </View>
       )}
-    </Card>
+    </View>
   );
 }

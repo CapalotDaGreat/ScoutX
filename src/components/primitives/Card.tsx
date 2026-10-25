@@ -6,11 +6,11 @@ import { triggerHaptic } from '@/utils/haptics';
 
 const variantStyles = {
   default: 'bg-surface border border-border',
-  outlined: 'bg-surface border border-gold/20',
-  elevated: 'bg-surface-elevated border border-gold/25',
+  outlined: 'bg-surface border border-border',
+  elevated: 'bg-surface-elevated border border-border',
   media: 'bg-surface border border-border overflow-hidden',
-  glass: 'bg-foreground/8 border border-foreground/15 overflow-hidden',
-  prestige: 'bg-gold-muted border border-gold/40',
+  glass: 'bg-surface border border-border overflow-hidden',
+  prestige: 'bg-gold-muted border border-border',
 } as const;
 
 export type CardVariant = keyof typeof variantStyles;
@@ -43,36 +43,25 @@ export const Card = forwardRef<View, CardProps>(function Card(
   },
   ref,
 ) {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
 
   const surfaceColor =
     variant === 'elevated'
       ? colors.surfaceElevated
       : variant === 'prestige'
         ? colors.goldMuted
-        : variant === 'glass'
-          ? undefined
-          : colors.surface;
+        : colors.surface;
 
   const content = (
     <View
       className={cn(
-        'rounded-2xl',
+        'rounded-lg',
         variantStyles[variant],
         paddingStyles[padding],
         className,
       )}
       style={[
         surfaceColor ? { backgroundColor: surfaceColor } : undefined,
-        variant === 'elevated' || variant === 'prestige'
-          ? {
-              shadowColor: variant === 'prestige' ? colors.gold : colors.primary,
-              shadowOpacity: isDark ? 0.22 : variant === 'prestige' ? 0.12 : 0.06,
-              shadowRadius: 12,
-              shadowOffset: { width: 0, height: 4 },
-              elevation: 3,
-            }
-          : undefined,
       ]}
     >
       {children}
@@ -97,10 +86,10 @@ export const Card = forwardRef<View, CardProps>(function Card(
       ref={ref}
       accessibilityRole="button"
       onPress={handlePress}
-      className="rounded-2xl"
+      className="rounded-lg"
       style={({ pressed }) =>
         pressed
-          ? ({ transform: [{ scale: 0.985 }] } satisfies ViewStyle)
+          ? ({ opacity: 0.88 } satisfies ViewStyle)
           : undefined
       }
       {...props}

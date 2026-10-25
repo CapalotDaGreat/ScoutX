@@ -9,6 +9,7 @@ import { Text } from '@/components/primitives/Text';
 import { resolveProgressAccentColor, useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 import { motion } from '@/theme/tokens/motion';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type ProgressBarProps = ViewProps & {
   value: number;
@@ -38,13 +39,14 @@ export function ProgressBar({
   ...props
 }: ProgressBarProps) {
   const { colors } = useTheme();
+  const reducedMotion = useReducedMotion();
   const progress = useSharedValue(0);
   const clampedValue = Math.min(Math.max(value, 0), max);
   const percentage = max === 0 ? 0 : (clampedValue / max) * 100;
 
   useEffect(() => {
-    progress.value = withTiming(percentage, { duration: motion.normal });
-  }, [percentage, progress]);
+    progress.value = withTiming(percentage, { duration: reducedMotion ? 0 : motion.normal });
+  }, [percentage, progress, reducedMotion]);
 
   const fillStyle = useAnimatedStyle(() => ({
     width: `${progress.value}%`,

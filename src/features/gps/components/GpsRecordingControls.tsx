@@ -45,11 +45,11 @@ export function GpsRecordingControls({
   const isActive = status === 'recording' || status === 'paused';
 
   return (
-    <View className="gap-4">
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center gap-2">
+    <View className="gap-3">
+      <View className="flex-row flex-wrap items-center justify-between gap-2">
+        <View className="min-w-0 flex-row items-center gap-2">
           <MapPin size={18} color={colors.accent} strokeWidth={2} />
-          <Text weight="semibold">{t('gps:controls.title')}</Text>
+          <Text weight="semibold" className="shrink">{t('gps:controls.title')}</Text>
         </View>
         <Badge label={t(`gps:controls.status.${status}`)} variant={statusVariants[status]} />
       </View>
@@ -73,7 +73,7 @@ export function GpsRecordingControls({
       ) : null}
 
       {status === 'recording' ? (
-        <View className="flex-row gap-3">
+        <View className="gap-2">
           <Button
             variant="secondary"
             className="flex-1"
@@ -103,7 +103,7 @@ export function GpsRecordingControls({
           >
             {t('gps:resumeRecording')}
           </Button>
-          <View className="flex-row gap-3">
+          <View className="gap-2">
             <Button variant="secondary" className="flex-1" onPress={onDiscard}>
               {t('gps:controls.discard')}
             </Button>

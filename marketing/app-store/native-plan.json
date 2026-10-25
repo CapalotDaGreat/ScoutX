@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "status": "pending-native-captures",
+  "specification": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications",
+  "specificationChecked": "2026-10-23",
+  "platform": "ios-native",
+  "locales": ["en", "de"],
+  "families": {
+    "iphone-1179": { "width": 1179, "height": 2556, "optional": false },
+    "iphone-1206": { "width": 1206, "height": 2622, "optional": false },
+    "duo-outer": { "width": 1398, "height": 2034, "optional": true },
+    "duo-inner": { "width": 2007, "height": 2853, "optional": true }
+  },
+  "template": {
+    "background": "#0d1311",
+    "headingColor": "#ffffff",
+    "accent": "#57d6a0",
+    "marginRatio": 0.075,
+    "captureTopRatio": 0.24,
+    "captureBottomRatio": 0.045,
+    "captureFit": "contain",
+    "fontSize": 52
+  },
+  "screens": [
+    { "id": "passport", "titles": { "en": "Your Football Passport", "de": "Dein Fussballpass" } },
+    { "id": "matches", "titles": { "en": "Every Match Matters", "de": "Jedes Spiel zählt" } },
+    { "id": "development", "titles": { "en": "Track Your Development", "de": "Deine Entwicklung" } },
+    { "id": "journey", "titles": { "en": "Your Journey, Documented", "de": "Dein Weg, dokumentiert" } },
+    { "id": "media", "titles": { "en": "Own Your Highlights", "de": "Deine Highlights" } },
+    { "id": "analysis", "titles": { "en": "Review Your Game", "de": "Dein Spiel im Blick" } },
+    { "id": "evidence", "titles": { "en": "Show the Evidence", "de": "Zeige deine Nachweise" } },
+    { "id": "discovery", "titles": { "en": "Discover Player Profiles", "de": "Spielerprofile entdecken" } },
+    { "id": "shortlist", "titles": { "en": "Build Your Shortlist", "de": "Deine Spielerauswahl" } },
+    { "id": "privacy", "titles": { "en": "Your Progress. Your Control.", "de": "Dein Fortschritt. Deine Wahl." } }
+  ],
+  "captureManifestSchema": {
+    "schemaVersion": 1,
+    "captures": [{
+      "platform": "ios-native",
+      "family": "iphone-1179",
+      "locale": "en",
+      "screen": "passport",
+      "sourcePath": "marketing/app-store/native/raw/en/iphone-1179/passport.png",
+      "sourceHash": "REPLACE_WITH_REAL_SHA256",
+      "device": "REPLACE_WITH_ACTUAL_DEVICE",
+      "osVersion": "REPLACE_WITH_ACTUAL_IOS_VERSION",
+      "build": "REPLACE_WITH_ACTUAL_BUILD_IDENTIFIER",
+      "commit": "REPLACE_WITH_REAL_COMMIT_SHA",
+      "captureMethod": "xcrun-simctl-io-screenshot",
+      "capturedAt": "REPLACE_WITH_ACTUAL_ISO_TIMESTAMP",
+      "sourceScreen": "REPLACE_WITH_ACTUAL_NATIVE_ROUTE",
+      "demoDataOnly": true,
+      "productionWritesDisabled": true,
+      "reviewedNoOverlays": true
+    }]
+  }
+}

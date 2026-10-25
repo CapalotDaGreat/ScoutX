@@ -1,4 +1,28 @@
 {
+  "targetAnchor": {
+    "coordinate": "Check identity",
+    "coordinateChecked": "Evidence checked",
+    "coordinateUnavailable": "Verified source evidence or approval is unavailable.",
+    "panelTitle": "Target review",
+    "anchor": "Anchor at {{seconds}}s",
+    "remove": "Remove anchor at {{seconds}}s",
+    "scopeNote": "A saved box identifies this frame only. Editing anchors invalidates earlier target-dependent report claims; a new analysis is required.",
+    "noFrames": "No retained server frames are available for target selection.",
+    "limit": "Up to 8 anchors per match.",
+    "title": "Player bounds",
+    "firstCorner": "Select the first corner of the player rectangle.",
+    "secondCorner": "Select the opposite corner.",
+    "image": "Player image: select two opposite corners",
+    "x": "Left (%)",
+    "y": "Top (%)",
+    "width": "Width (%)",
+    "height": "Height (%)",
+    "reset": "Reset selection",
+    "save": "Save bounds",
+    "invalid": "Enter a nonzero rectangle within 0–100%.",
+    "imageError": "The image could not be loaded.",
+    "saveError": "The bounds could not be saved. Please try again."
+  },
   "preview": {
     "title": "Analysis preview",
     "quality": "Footage quality",
@@ -32,6 +56,7 @@
     "advisory": "These are hints only. PitchProof never refuses a video because of a quality score."
   },
   "identity": {
+    "saveError": "Identity could not be saved. Reload the analysis and try again.",
     "title": "Confirm this is you",
     "hint": "Select sampled frames that show your jersey. Stats stay unknown until identity is confirmed.",
     "confirm": "These frames show me",
@@ -200,7 +225,8 @@
     "pointsUnavailable": "Sprint detail is only available for sessions recorded with the current version of PitchProof.",
     "noSprints": "No sprints were detected in this session.",
     "sprint": "Sprint · peak {{kmh}} km/h",
-    "outsideVideo": "Outside the video"
+    "outsideVideo": "Outside the video",
+    "saveFailed": "Could not save GPS sync. Please try again."
   },
   "eventType": {
     "shot": "Shot",
@@ -470,7 +496,7 @@
       "not_me": "You said this frame is not you.",
       "withdraw": "Feedback withdrawn."
     },
-    "footnote": "Your feedback is saved next to the analysis. The original analysis and any stats are not changed by it, and PitchProof does not use your footage or feedback to train AI.",
+    "footnote": "Your feedback does not automatically confirm statistics. Rejecting the player identity invalidates report claims that depend on it and requires a new review. Undoing that feedback does not restore those claims. PitchProof does not use your footage or feedback to train AI.",
     "identityHint": "If one of these frames is not you, say so. Coaching linked to that frame should then be treated with caution."
   },
   "trends": {

@@ -154,9 +154,14 @@ async function main() {
   await db.collection('portfolioSlugs').doc(seeded.username).set({ playerId, createdAt: now });
 
   const scoutId = await createAccount({ email: accounts.scout.email, name: accounts.scout.name, role: 'scout' });
+  // This script is restricted to the demo emulator project; no production migration.
+  await db.collection('discoverySearchState').doc('current').set({ version: 1, ready: true });
 
   await waitFor('public passport projection', async () =>
     (await db.collection('publicPassports').doc(playerId).get()).exists,
+  );
+  await waitFor('indexed discovery projection', async () =>
+    (await db.collection('discoverablePlayers').doc(playerId).get()).get('_search.version') === 1,
   );
 
   fs.writeFileSync(

@@ -52,7 +52,7 @@ function TabItem<T extends string>({
         badge ? `${tab.label}, ${badge} notifications` : tab.label
       }
       onPress={onPress}
-      className="min-h-[56px] flex-1 items-center justify-center gap-1 rounded-xl px-1.5 py-2"
+      className="min-h-[72px] flex-1 items-center justify-center gap-1 rounded-lg px-1 py-1"
     >
       <View className="relative h-7 w-8 items-center justify-center overflow-visible">
         <Icon
@@ -80,9 +80,12 @@ function TabItem<T extends string>({
       </View>
       <Text
         variant="caption"
-        numberOfLines={1}
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.85}
+        className="h-8 w-full text-center"
         weight="medium"
-        color={isActive ? 'prestige' : 'secondary'}
+        color={isActive ? 'accent' : 'secondary'}
       >
         {tab.label}
       </Text>
@@ -100,8 +103,7 @@ export function AppTabBar<T extends string>({
 }: AppTabBarProps<T>) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  /** Gold for selected tabs; emerald stays on the center FAB. */
-  const tabAccent = colors.gold;
+  const tabAccent = colors.accent;
 
   const mid = Math.ceil(tabs.length / 2);
   const leftTabs = onCenterAction ? tabs.slice(0, mid) : tabs;
@@ -110,7 +112,7 @@ export function AppTabBar<T extends string>({
   return (
     <View
       testID={testID}
-      className="border-t border-gold/20 bg-background px-2 pt-1.5"
+      className="border-t border-divider bg-background px-2 pt-1.5"
       style={{
         backgroundColor: colors.background,
         paddingBottom: Math.max(insets.bottom, 10),
@@ -132,7 +134,7 @@ export function AppTabBar<T extends string>({
         ))}
 
         {onCenterAction ? (
-          <View className="mx-1 w-16 items-center justify-end pb-1.5">
+          <View className="mx-1 w-12 items-center justify-end pb-1.5">
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={centerActionLabel}
@@ -140,14 +142,9 @@ export function AppTabBar<T extends string>({
                 void triggerHaptic('medium');
                 onCenterAction();
               }}
-              className="-mt-7 h-14 w-14 items-center justify-center rounded-full border-2 border-gold/50 bg-accent"
+              className="h-12 w-12 items-center justify-center rounded-lg bg-accent"
               style={{
                 backgroundColor: colors.accent,
-                elevation: 4,
-                shadowColor: colors.gold,
-                shadowOpacity: 0.28,
-                shadowRadius: 10,
-                shadowOffset: { width: 0, height: 4 },
               }}
             >
               <Plus size={28} color={colors.accentForeground} strokeWidth={2.5} />

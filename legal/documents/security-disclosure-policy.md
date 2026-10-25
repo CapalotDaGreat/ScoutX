@@ -1,14 +1,14 @@
 ---
 id: security-disclosure-policy
 title: Security and Responsible Disclosure Policy
-version: 1.0.0
-effectiveDate: 2026-10-08
-status: final
+version: 1.1.0
+effectiveDate: LEGAL_REVIEW_REQUIRED
+status: draft
 canonicalLanguage: en
 requiresAcceptance: false
 summary:
 - Access to every database collection and storage path is restricted by server-side rules.
-- Privileged actions, AI calls and payments are handled only on our servers.
+- Privileged server actions and AI credentials stay on our backend; Apple handles App Store payments, with RevenueCat used for subscription access.
 - If you find a vulnerability, tell us privately. We will not take legal action against good-faith research.
 ---
 
@@ -20,6 +20,8 @@ summary:
 - Uploaded files are validated on our servers before processing.
 - Staff actions on user content are logged in an audit log that users cannot change.
 - Data is encrypted in transit and at rest by our cloud provider.
+
+These controls reduce risk; they are not a guarantee that every account, upload or report is free from vulnerabilities or incidental personal data. App attestation and media format checks are not identity verification or malware scanning.
 
 ## Reporting a vulnerability
 

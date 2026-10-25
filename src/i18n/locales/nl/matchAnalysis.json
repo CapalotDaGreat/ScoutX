@@ -1,4 +1,28 @@
 {
+  "targetAnchor": {
+    "coordinate": "Identiteit controleren",
+    "coordinateChecked": "Bewijs gecontroleerd",
+    "coordinateUnavailable": "Geverifieerd bronbewijs of goedkeuring is niet beschikbaar.",
+    "panelTitle": "Doelspeler controleren",
+    "anchor": "Anker bij {{seconds}}s",
+    "remove": "Anker bij {{seconds}}s verwijderen",
+    "scopeNote": "Een opgeslagen kader identificeert de speler alleen in dit frame. Het bewerken van ankers maakt eerdere rapportuitspraken die van de doelspeler afhangen ongeldig; een nieuwe analyse is vereist.",
+    "noFrames": "Er zijn geen op de server bewaarde frames beschikbaar om de doelspeler te selecteren.",
+    "limit": "Maximaal 8 ankers per wedstrijd.",
+    "title": "Spelergebied",
+    "firstCorner": "Selecteer de eerste hoek van de rechthoek rond de speler.",
+    "secondCorner": "Selecteer de tegenoverliggende hoek.",
+    "image": "Spelerafbeelding: selecteer twee tegenoverliggende hoeken",
+    "x": "Links (%)",
+    "y": "Boven (%)",
+    "width": "Breedte (%)",
+    "height": "Hoogte (%)",
+    "reset": "Selectie wissen",
+    "save": "Gebied opslaan",
+    "invalid": "Voer een rechthoek met positieve afmetingen binnen 0–100% in.",
+    "imageError": "De afbeelding kon niet worden geladen.",
+    "saveError": "Het gebied kon niet worden opgeslagen. Probeer het opnieuw."
+  },
   "preview": {
     "title": "Analysevoorvertoning",
     "quality": "Beeldkwaliteit",
@@ -32,6 +56,7 @@
     "advisory": "Dit zijn alleen tips. PitchProof weigert nooit een video vanwege een kwaliteitsscore."
   },
   "identity": {
+    "saveError": "De identiteit kon niet worden opgeslagen. Laad de analyse opnieuw en probeer het nog eens.",
     "title": "Bevestig dat jij het bent",
     "hint": "Selecteer frames die jouw shirt tonen. Stats blijven onbekend tot identiteit is bevestigd.",
     "confirm": "Deze frames tonen mij",
@@ -200,7 +225,8 @@
     "pointsUnavailable": "Sprintdetails zijn alleen beschikbaar voor sessies die met de huidige versie van PitchProof zijn opgenomen.",
     "noSprints": "Er zijn geen sprints gedetecteerd in deze sessie.",
     "sprint": "Sprint · piek {{kmh}} km/u",
-    "outsideVideo": "Buiten de video"
+    "outsideVideo": "Buiten de video",
+    "saveFailed": "De GPS-synchronisatie kon niet worden opgeslagen. Probeer het opnieuw."
   },
   "eventType": {
     "shot": "Schot",
@@ -470,7 +496,7 @@
       "not_me": "Je gaf aan dat dit beeld jou niet toont.",
       "withdraw": "Feedback ingetrokken."
     },
-    "footnote": "Je feedback wordt naast de analyse opgeslagen. De oorspronkelijke analyse en statistieken veranderen niet, en PitchProof gebruikt je video’s en feedback niet om AI te trainen.",
+    "footnote": "Je feedback bevestigt statistieken niet automatisch. Als je de identiteit van de speler afwijst, worden de daarvan afhankelijke uitspraken in het rapport ongeldig en is een nieuwe beoordeling nodig. Het ongedaan maken van die feedback herstelt deze uitspraken niet. PitchProof gebruikt je video’s en feedback niet om AI te trainen.",
     "identityHint": "Als een van deze beelden jou niet toont, geef dat aan. Coaching bij dat beeld moet je dan met voorzichtigheid bekijken."
   },
   "trends": {

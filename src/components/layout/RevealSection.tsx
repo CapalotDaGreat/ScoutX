@@ -1,5 +1,6 @@
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { type ReactNode } from 'react';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export const REVEAL_DURATION_MS = 350;
 export const REVEAL_BASE_DELAY_MS = 60;
@@ -17,8 +18,9 @@ export type RevealSectionProps = {
 };
 
 export function RevealSection({ step, children, className, baseDelay }: RevealSectionProps) {
+  const reducedMotion = useReducedMotion();
   return (
-    <Animated.View entering={staggeredFadeIn(step, baseDelay)} className={className}>
+    <Animated.View entering={reducedMotion ? undefined : staggeredFadeIn(step, baseDelay)} className={className}>
       {children}
     </Animated.View>
   );

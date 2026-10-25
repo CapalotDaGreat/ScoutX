@@ -12,8 +12,7 @@ type Props = {
 };
 
 /**
- * "Looks right / Didn't happen / Not me" for one item. The original analysis stays unchanged;
- * the choice is stored as the player's feedback and shown next to the item.
+ * Feedback stays attributed; a "Not me" decision also invalidates dependent report claims.
  */
 export function CorrectionControls({ api, kind, targetId }: Props) {
   const { t } = useAppTranslation('matchAnalysis');

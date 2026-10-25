@@ -37,7 +37,7 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
       accessibilityLabel={`${entry.playerName}, ${entry.playerClub}`}
       testID={`recruitment-card-${entry.playerId}`}
       onPress={() => onPress?.(entry)}
-      className="mb-2 overflow-hidden rounded-2xl border border-border bg-surface"
+      className="mb-2 overflow-hidden rounded-lg border border-border bg-surface"
     >
       <View className="flex-row">
         <View className="flex-1 p-3">
@@ -76,8 +76,11 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
                 accessibilityRole="button"
                 accessibilityLabel={t('pipelineUi.move', { name: entry.playerName })}
                 hitSlop={6}
-                onPress={() => onMovePress(entry)}
-                className="h-8 w-8 items-center justify-center rounded-full bg-background-secondary"
+                onPress={(event) => {
+                  event.stopPropagation();
+                  onMovePress(entry);
+                }}
+                className="h-9 w-9 items-center justify-center rounded-md bg-background-secondary"
               >
                 <MoreHorizontal size={16} color={colors.textSecondary} />
               </Pressable>

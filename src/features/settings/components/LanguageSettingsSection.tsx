@@ -47,7 +47,7 @@ export function LanguageSettingsSection() {
         onPress={() => void handleAutomatic()}
         accessibilityRole="radio"
         accessibilityState={{ checked: isAutomatic }}
-        className={`rounded-xl border px-4 py-3 ${
+        className={`min-h-[48px] justify-center rounded-lg border px-3 py-3 ${
           isAutomatic ? 'border-accent bg-accent-muted' : 'border-border'
         }`}
       >
@@ -63,7 +63,7 @@ export function LanguageSettingsSection() {
               onPress={() => void handleSelect(language.code)}
               accessibilityRole="radio"
               accessibilityState={{ checked: selected }}
-              className={`rounded-xl border px-4 py-3 ${
+              className={`min-h-[48px] justify-center rounded-lg border px-3 py-3 ${
                 selected ? 'border-accent bg-accent-muted' : 'border-border'
               }`}
             >

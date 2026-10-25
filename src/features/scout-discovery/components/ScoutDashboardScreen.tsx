@@ -149,7 +149,7 @@ export function ScoutDashboardScreen({
       error={error}
       onRetry={refresh}
       safeArea
-      contentClassName="gap-8 pb-6"
+      contentClassName="gap-5 pb-6"
       {...screenProps}
       headerActions={
         <HeaderActionCluster>
@@ -190,7 +190,7 @@ export function ScoutDashboardScreen({
         returnKeyType="search"
       />
 
-      <View className="flex-row gap-3">
+      <View className="flex-row flex-wrap gap-3">
         <Button variant="accent" className="flex-1" onPress={onDiscoverPress}>
           {t('scout:dashboard.discoverTalent')}
         </Button>

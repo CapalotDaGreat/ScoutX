@@ -34,7 +34,7 @@ exports.MAX_REPORT_OBSERVATIONS = 60;
 exports.CV_EVENT_MIN_CONFIDENCE = 0.7;
 async function passesGates(db, job, jobId) {
     const fail = async (code) => {
-        await (0, frameAnalysis_1.failJob)(db, jobId, code);
+        await (0, frameAnalysis_1.failJob)(db, jobId, code, undefined, undefined, job.pipelineGeneration ?? 0);
         return false;
     };
     if (!(0, providerConfig_1.isFootageProcessingApproved)())
@@ -65,11 +65,18 @@ async function runCvForSegment(db, jobId, job, segmentIndex) {
     if (!client || !segment || !job.videoStoragePath)
         return;
     const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection('cvSegments').doc(String(segmentIndex));
-    if ((await ref.get()).exists)
+    const existing = await ref.get();
+    if (existing.exists && existing.get('generation') === (job.pipelineGeneration ?? 0) && !existing.get('failed'))
         return;
     const source = await (0, mediaSource_1.readableSourceFor)(job.videoStoragePath, 30 * 60 * 1000);
     const result = await client.analyzeSegment((0, cvContract_1.buildCvRequest)({ jobId, segment, source: { url: source.url, headers: source.headers }, targeting: (0, frameAnalysis_1.targetingMetadata)(job) }));
-    await ref.set(result ? { ...result, generation: job.pipelineGeneration ?? 0 } : { failed: true, generation: job.pipelineGeneration ?? 0 });
+    await db.runTransaction(async (tx) => {
+        const latest = await tx.get(db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId));
+        if (!latest.exists || latest.get('cancelRequested') === true
+            || latest.get('pipelineGeneration') !== job.pipelineGeneration || latest.get('pipelineState') !== 'analyzing')
+            return;
+        tx.set(ref, result ? { ...(0, cvContract_1.targetOnlyCvResult)(result), generation: job.pipelineGeneration ?? 0 } : { failed: true, generation: job.pipelineGeneration ?? 0 });
+    });
 }
 /**
  * Reviews one segment's frames (and, when a validated worker is configured, its tracking
@@ -89,7 +96,7 @@ async function processReviewTask(db, task, options) {
     if (!(await passesGates(db, job, task.jobId)))
         return 'failed';
     if (!options.apiKey) {
-        await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable');
+        await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable', undefined, undefined, task.generation);
         return 'failed';
     }
     try {
@@ -146,17 +153,17 @@ async function processReviewTask(db, task, options) {
             }
         }
     }
-    if (review) {
-        await jobRef.collection('segmentReviews').doc(String(task.segmentIndex)).set({ ...review, generation: task.generation });
-    }
     const settled = await db.runTransaction(async (tx) => {
         const latestSnap = await tx.get(jobRef);
         const latest = latestSnap.data();
-        if (!latest || latest.pipelineGeneration !== task.generation || !latest.segmentReview)
-            return false;
+        if (!latest || latest.pipelineGeneration !== task.generation || latest.cancelRequested
+            || (0, frameAnalysis_1.pipelineStateOf)(latest) !== 'analyzing' || !latest.segmentReview)
+            return null;
         const current = latest.segmentReview;
         if (current.reviewed.includes(task.segmentIndex) || current.failed.includes(task.segmentIndex))
-            return false;
+            return null;
+        if (review)
+            tx.set(jobRef.collection('segmentReviews').doc(String(task.segmentIndex)), { ...review, generation: task.generation });
         const next = {
             total: current.total,
             reviewed: review ? [...current.reviewed, task.segmentIndex] : current.reviewed,
@@ -178,6 +185,8 @@ async function processReviewTask(db, task, options) {
         tx.update(jobRef, update);
         return next.reviewed.length + next.failed.length >= next.total;
     });
+    if (settled === null)
+        return 'skipped';
     if (settled) {
         await (options.dispatcher ?? (0, taskDispatcher_1.getTaskDispatcher)()).enqueue({ kind: 'synthesize_report', jobId: task.jobId, generation: task.generation });
     }
@@ -194,7 +203,7 @@ function cvPossibleEvents(results) {
         note: '',
         confidence: event.confidence,
         source: 'cv_worker',
-        status: (validated && result.identity.state === 'CONFIRMED_VISIBLE' && event.confidence >= exports.CV_EVENT_MIN_CONFIDENCE
+        status: (validated && (0, cvContract_1.hasConfirmedEventCoverage)(result, event) && event.confidence >= exports.CV_EVENT_MIN_CONFIDENCE
             ? 'validated'
             : 'needs_review'),
     })));
@@ -219,12 +228,12 @@ async function processSynthesisTask(db, task, options) {
     if (!(await passesGates(db, pre, task.jobId)))
         return 'failed';
     if (!options.apiKey) {
-        await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable');
+        await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable', undefined, undefined, task.generation);
         return 'failed';
     }
     let job;
     try {
-        job = await (0, frameAnalysis_1.acquireJobLease)(db, pre.playerId, task.jobId, `task:${task.jobId}:${task.generation}:synth`, undefined);
+        job = await (0, frameAnalysis_1.acquireJobLease)(db, pre.playerId, task.jobId, `task:${task.jobId}:${task.generation}:synth`, undefined, task.generation);
     }
     catch (error) {
         firebase_functions_1.logger.warn('Synthesis lease refused', { jobId: task.jobId, ...(0, redact_1.logSafeError)(error) });
@@ -241,7 +250,12 @@ async function processSynthesisTask(db, task, options) {
         .sort((a, b) => a.segmentIndex - b.segmentIndex);
     const cvResults = (await jobRef.collection('cvSegments').get()).docs
         .map((doc) => doc.data())
-        .filter((result) => !result.failed && result.generation === task.generation);
+        .filter((result) => !result.failed && result.generation === task.generation)
+        .map((result) => {
+        const segment = job.extractionSegments?.[result.segmentIndex];
+        return segment ? (0, cvContract_1.parseCvSegmentResult)(result, { segmentIndex: segment.index, startSec: segment.startSec, endSec: segment.endSec }) : null;
+    })
+        .filter((result) => result !== null);
     const allObservations = reviews.flatMap((review) => review.observations);
     const observations = allObservations
         .sort((a, b) => (a.confidence === b.confidence ? a.timestampSec - b.timestampSec : a.confidence === 'medium' ? -1 : 1))
@@ -276,7 +290,7 @@ async function processSynthesisTask(db, task, options) {
             ],
         });
         if (!result.ok) {
-            await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable', stages, 'coaching-synthesis');
+            await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_unavailable', stages, 'coaching-synthesis', task.generation);
             if (!options.finalAttempt)
                 throw new https_1.HttpsError('unavailable', 'Synthesis is temporarily unavailable.', { reason: 'model_unavailable' });
             return 'failed';
@@ -285,7 +299,7 @@ async function processSynthesisTask(db, task, options) {
             raw = (0, outputValidator_1.extractJsonObject)(result.content);
         }
         catch {
-            await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_output_invalid', stages, 'coaching-synthesis');
+            await (0, frameAnalysis_1.failJob)(db, task.jobId, 'model_output_invalid', stages, 'coaching-synthesis', task.generation);
             return 'failed';
         }
     }
@@ -303,7 +317,8 @@ async function processSynthesisTask(db, task, options) {
     for (const id of ['coaching-synthesis', 'validation', 'final-report'])
         finalStages = (0, stages_1.updateStage)(finalStages, id, 'complete', now);
     if (cvResults.length > 0) {
-        const allComplete = (key) => cvResults.every((result) => result.stages[key] === 'complete');
+        const allComplete = (key) => cvResults.length === progress.total
+            && cvResults.every((result) => result.stages[key] === 'complete');
         finalStages = (0, stages_1.setCvStageResult)(finalStages, 'player-tracking', allComplete('tracking') ? 'complete' : 'failed', now, 'From the computer-vision worker.');
         finalStages = (0, stages_1.setCvStageResult)(finalStages, 'event-detection', allComplete('events') ? 'complete' : 'unavailable', now, validatedEventCount > 0 ? 'Validated tracker events.' : 'Tracker events are suggestions until the worker is validated.');
     }
@@ -404,7 +419,7 @@ async function processSynthesisTask(db, task, options) {
             clipCoaching: null,
         };
     try {
-        await (0, frameAnalysis_1.finishJob)(db, task.jobId, { report, stages: finalStages, pendingCoaching, now });
+        await (0, frameAnalysis_1.finishJob)(db, task.jobId, { report, stages: finalStages, pendingCoaching, now, expectedGeneration: task.generation });
     }
     catch (error) {
         if (error instanceof https_1.HttpsError && error.code === 'aborted')

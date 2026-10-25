@@ -5,9 +5,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "privacy-policy",
     "title": "Privacy Policy",
-    "version": "1.1.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.2.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
@@ -15,7 +15,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
       "Your Passport and scout discovery are off until you switch them on. For players aged 13 to 17, a parent or guardian decides.",
       "Accounts for children under 13 are always private and need a parent's verified permission. Nobody else can see, find or contact them.",
       "Movement sessions record distance and a pitch heatmap. Your location is never stored or uploaded.",
-      "AI providers process your footage only to produce your analysis. They are not allowed to train on it or keep it.",
+      "Optional AI requests require no-training and zero-retention routing settings. Availability depends on provider approval; these settings are not a guarantee about every provider's operations.",
       "You can download your data or delete your account at any time from the Privacy Center."
     ],
     "sections": [
@@ -48,12 +48,27 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Movement sessions: distance, speed, sprints, zones and a heatmap expressed in metres relative to the pitch. See \"Movement sessions\" below.",
               "Scouting data: if you are a scout or coach, the players you save, your reports and your trial invitations. If you are a player, reports and invitations that scouts address to you.",
               "Guardian data (players under 18): your parent's or guardian's email address and their consent decisions. For children under 13, also the name the parent typed to sign the consent form.",
-              "Device and technical data: push notification token, app version, crash diagnostics and security signals (Firebase App Check)."
+              "Device and technical data: push notification token, app version, crash diagnostics and security signals (Firebase App Check).",
+              "Subscription data: the Firebase account identifier used by RevenueCat, product, purchase, renewal and entitlement events. Apple handles payment details; PitchProof does not receive your full payment-card details.",
+              "Website, support and safety data: network request metadata such as IP address and user agent processed by hosting/security providers, messages you send us, reports, appeals and records of consent and deletion requests."
             ]
           },
           {
             "type": "paragraph",
+            "text": "We receive most data from you. Other users can provide observations, reports, invitations or footage in which you appear. Apple, RevenueCat and our infrastructure providers supply transaction and technical information. Photos and videos can identify teammates, opponents, spectators or their voices; private visibility does not remove the need to have permission to upload and process them. Do not include medical records or other unnecessary sensitive information in notes or footage."
+          },
+          {
+            "type": "paragraph",
             "text": "We do not use advertising SDKs, analytics SDKs or cross-app tracking."
+          }
+        ]
+      },
+      {
+        "heading": "Permissions and choices",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Photos access is used for media you choose to upload. Location is requested only for recording movement, and notification permission is optional. You can change permissions in your device settings. Refusing a permission prevents the feature that needs it, not unrelated match logging or privacy controls. Recording is foreground-only; we do not run background location tracking."
           }
         ]
       },
@@ -79,6 +94,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "For our legitimate interests: keeping PitchProof secure, preventing abuse, fixing crashes and moderating reported content.",
               "To meet legal obligations: keeping proof of consent and moderation decisions for as long as the law requires."
             ]
+          },
+          {
+            "type": "paragraph",
+            "text": "The GDPR legal bases above apply where the GDPR governs the processing; Swiss processing is also subject to the FADP. Reading or acknowledging this notice is not blanket consent to every optional use. We use the data required to provide the feature you request; optional public sharing and AI choices are separate. If you do not supply necessary account information, we cannot provide an account. We do not use your data for targeted advertising or sell it."
           }
         ]
       },
@@ -91,7 +110,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
             "items": [
               "Google Firebase and Google Cloud (authentication, database, file storage, server functions, hosting).",
               "OpenRouter and the AI model providers it routes to, for analysis you request. Requests are sent with data collection denied and zero data retention required.",
-              "Sentry, for crash diagnostics. Personal data in crash reports is scrubbed before sending.",
+              "Sentry, if diagnostics are enabled, for crash and performance diagnostics. We disable default personal-data collection and apply redaction controls, but cannot promise that every free-text diagnostic is anonymous.",
               "Apple and Expo, to deliver push notifications.",
               "RevenueCat and Apple, if you buy a subscription.",
               "An email delivery provider, to send guardian approval emails.",
@@ -100,7 +119,24 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             "type": "paragraph",
-            "text": "A detailed list of processors, their locations and safeguards for transfers outside Switzerland is maintained in our processor register."
+            "text": "A public Passport or public media can be viewed by people outside your country and may be copied or indexed outside PitchProof. Changing visibility stops further access through PitchProof, but cannot recall screenshots or copies someone already made. A link to another football website takes you to a service with its own privacy terms; we store the link, not a verified copy of that site's content."
+          },
+          {
+            "type": "paragraph",
+            "text": "We may disclose data when necessary to comply with law, respond to a valid legal request or protect people from harm. We limit disclosure to what is necessary."
+          }
+        ]
+      },
+      {
+        "heading": "Processing outside your country",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "The configured Firestore, Storage and server-function region is Zurich, Switzerland (europe-west6). That does not mean all processing stays in Switzerland: authentication, hosting/CDN, push and security services can involve other countries. Our current register identifies the United States for RevenueCat, Expo and OpenRouter. Sentry's region, the email delivery provider and the countries used by each AI endpoint require confirmation before those services are enabled for launch."
+          },
+          {
+            "type": "paragraph",
+            "text": "Transfers must use an applicable adequacy basis or appropriate safeguards, such as recognised standard contractual clauses with the required Swiss adaptations and additional measures where needed. We do not claim that a provider is certified under a data privacy framework or that a particular transfer contract is signed without verifying it. Contact {{privacyEmail}} for the current recipients, destination countries and a copy or description of applicable safeguards. Unresolved recipient, country or contract details must be completed before the corresponding processing is launched."
           }
         ]
       },
@@ -139,7 +175,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "We keep your data while your account exists. When you delete your account, we delete your personal data and files. A minimised record of consent and moderation decisions may be kept where the law requires it. Details are in the Data Retention Policy."
+            "text": "Most account data stays until you delete it or your account. Temporary files have shorter schedules. Account deletion is a server-side process with progress and retries, not a promise that every copy disappears instantly. Limited consent, moderation and deletion records have separate retention periods. Apple purchase history, RevenueCat customer records and externally copied material are not all removed by the in-app deletion job. See the Data Retention Policy and contact {{privacyEmail}} for help with processor-held records."
           }
         ]
       },
@@ -149,6 +185,19 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "You can access, correct, export and delete your data, object to processing and withdraw consent. Most of this is available directly in the Privacy Center. For anything else contact {{privacyEmail}}. You can also complain to the {{supervisoryAuthority}} or your local data protection authority."
+          },
+          {
+            "type": "paragraph",
+            "text": "Where applicable, rights also include restriction of processing and portability. Rights have legal conditions and exceptions; we explain any refusal and available complaint routes. We may reasonably verify identity without asking for unnecessary documents. Details and response deadlines are in Your Data Protection Rights."
+          }
+        ]
+      },
+      {
+        "heading": "AI and decisions about players",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "AI-assisted observations can be incomplete or wrong and are not a professional assessment, medical advice or a guarantee of a trial. Reports distinguish user-provided data from available evidence. We do not use facial recognition to identify you or make solely automated decisions to award contracts or select players. Scouts and clubs make their own decisions; you can report inaccurate information or raise concerns with support. See the AI Use Policy for the data sent and the feature's limits."
           }
         ]
       },
@@ -175,9 +224,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "terms-of-service",
     "title": "Terms of Service",
-    "version": "1.1.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.2.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": true,
     "summary": [
@@ -194,6 +243,23 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "These terms are an agreement between you and {{entityName}}, {{entityAddress}}. By creating an account you accept these terms, the Privacy Policy and the Community Guidelines. If you are under 18, your parent or guardian also agrees to them on your behalf when they approve your account."
+          },
+          {
+            "type": "paragraph",
+            "text": "The Privacy Policy explains processing; acknowledging it is not consent to every optional use. Optional AI, sharing and guardian permissions are requested separately. The short summaries help you navigate but do not replace the full terms."
+          }
+        ]
+      },
+      {
+        "heading": "App licence and availability",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "For an App Store download, Apple's Standard Licensed Application End User License Agreement applies to the software licence unless a valid custom licence is provided in the store listing: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/. These terms govern the PitchProof service and do not remove rights you have under that licence or mandatory law. Apple is not the operator of PitchProof."
+          },
+          {
+            "type": "paragraph",
+            "text": "Features depend on supported devices, network access, permissions, region and service availability. Beta/TestFlight builds can change, expire or fail and are not a promise of public availability. We do not promise uninterrupted service or features that are labelled unavailable. Recording movement is not a medical or safety-monitoring service; stop using your phone where it would distract you or put anyone at risk."
           }
         ]
       },
@@ -233,6 +299,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "You confirm that you have the rights and permissions needed for everything you upload, including consent from people who can be identified in your videos. See the Video and Recording Policy."
+          },
+          {
+            "type": "paragraph",
+            "text": "Private storage, AI processing and public sharing are different uses: permission to record a match is not automatically permission to upload it, send frames to an AI service or publish it. Do not upload confidential club material, broadcast footage or another person's sensitive information without the required rights. We do not use uploaded player content in marketing merely because you use the app; that needs separate appropriate permission."
           }
         ]
       },
@@ -251,6 +321,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "PitchProof does not act as an agent, intermediary or employer. Information from scouts, coaches and clubs comes from them, not from us. PitchProof does not guarantee any trial, contract, selection or outcome. Trials involving players aged 13 to 17 require guardian co-approval. Children under 13 cannot be contacted or invited by scouts."
+          },
+          {
+            "type": "paragraph",
+            "text": "A profile, badge, link or self-reported statistic is not independent verification of identity, affiliation or football ability. Check invitations and organisations carefully and report suspicious requests. Do not pay anyone for a promised trial, contract or recommendation."
           }
         ]
       },
@@ -278,6 +352,19 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "We may restrict, remove or hide content and suspend or disable accounts that break these terms, the law or the Community Guidelines. Where possible we explain the decision and you can appeal. You can delete your account at any time."
+          },
+          {
+            "type": "paragraph",
+            "text": "We may act immediately where necessary to protect a person, comply with law or prevent abuse. Restrictions should be proportionate; reporting and appeal routes are described in the Reporting and Takedown Policy. Account deletion or suspension does not automatically cancel an Apple subscription. Manage renewal separately through Apple; mandatory refund and consumer rights remain unaffected."
+          }
+        ]
+      },
+      {
+        "heading": "Changes to the service and terms",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "We communicate material changes through appropriate in-app or account notices. Changes are not applied retroactively to remove accrued mandatory rights. If fresh agreement is required, we ask for it; you may stop using the service and delete your account. Subscription changes remain subject to Apple's purchase terms and any consent or notice required by law."
           }
         ]
       },
@@ -287,6 +374,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "PitchProof is provided \"as is\". To the extent permitted by law, we are not liable for indirect damages or for decisions made by other users. Nothing in these terms limits liability that cannot be limited by law."
+          },
+          {
+            "type": "paragraph",
+            "text": "In particular, these terms do not exclude mandatory liability for intentional misconduct, gross negligence, personal injury or other non-excludable claims. Any exclusions apply only as far as the law governing your claim permits, and do not remove mandatory remedies for a defective paid service."
           }
         ]
       },
@@ -296,6 +387,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "These terms are governed by {{governingLaw}}. Place of jurisdiction: {{jurisdiction}}. Mandatory consumer protection rules of your country of residence remain unaffected."
+          },
+          {
+            "type": "paragraph",
+            "text": "That jurisdiction is not an exclusive restriction where mandatory law lets a consumer bring a claim in their home courts. Contact us first to seek a practical resolution; doing so does not prevent you from contacting a regulator or exercising legal rights. If one provision is unenforceable, the rest applies only so far as it can lawfully stand on its own."
           }
         ]
       },
@@ -543,9 +638,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "guardian-consent-notice",
     "title": "Guardian Consent Notice",
-    "version": "1.1.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.2.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -582,7 +677,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           },
           {
             "type": "paragraph",
-            "text": "How we use it: only to provide the app to your child. Nobody else can see your child's profile, find it or contact your child. There is no public Passport, no scout contact, no trials, no endorsements, no sharing of videos and no advertising. Hosting, storage and email delivery are handled by service providers acting on our instructions, listed in the Privacy Policy. If you allow AI analysis, clips your child uploads are sent to an AI provider to produce feedback; the provider may not keep or train on them. We do not disclose your child's information to third parties for their own purposes, and we never sell it."
+            "text": "How we use it: only to provide the app to your child. Nobody else can see your child's profile, find it or contact your child. There is no public Passport, no scout contact, no trials, no endorsements, no sharing of videos and no advertising. Hosting, storage and email delivery are handled by service providers acting on our instructions, listed in the Privacy Policy. If you allow AI analysis and that feature is enabled, selected frames and the context needed for feedback are sent through OpenRouter under the no-training and zero-retention routing requirements in the AI Use Policy. The operator must verify provider contracts and transfer arrangements before enabling that processing. We do not disclose your child's information to third parties for their own purposes, and we never sell it."
           },
           {
             "type": "paragraph",
@@ -633,7 +728,11 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "We store your email address, your decisions, the time of each decision, the consent version and, for children under 13, the name you typed as your signature. Links we send you are single-use and expire after 7 days. We use your email address only for messages about this player's account. You can ask us to delete it, which also withdraws your consent."
+            "text": "We store your email address, your decisions, the time of each decision, the consent version and, for children under 13, the name you typed as your signature. Approval and confirmation links are single-use and expire after 7 days. Withdrawal links have a longer lifetime of about 13 months; contact us if yours expires. We use your email address only for messages about this player's account. You can ask us to delete it, which also withdraws your consent. Limited proof of consent can be retained after account deletion as described in the Data Retention Policy."
+          },
+          {
+            "type": "paragraph",
+            "text": "Our approval workflow records a signed declaration and confirmation of access to an email address; it is not a government-identity check. The operator must assess whether this method is sufficient for the child's country, the services used and any permitted disclosures. We do not describe the workflow as a universal certification of legal compliance."
           }
         ]
       },
@@ -764,15 +863,15 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "ai-use-policy",
     "title": "AI Use Policy",
-    "version": "1.2.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.3.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
       "AI analysis runs only when you ask for it.",
-      "Your data is never used to train AI models, by us or by our providers.",
-      "Requests are routed only to providers that do not collect or retain the data.",
+      "Your data is never used to train AI models by PitchProof; provider requests require no-training and zero-retention routing conditions.",
+      "Footage analysis stays unavailable until the operator approves the provider privacy setup. Routing flags alone do not prove contractual or operational compliance.",
       "AI output can be wrong. It is guidance, not a rating or a professional assessment.",
       "Players under 18 can use AI analysis only if their parent or guardian allows it."
     ],
@@ -792,6 +891,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "Only the data needed for the request: selected frames from your video, and the match details you entered (such as opponent, competition and position), clearly marked as user-provided data. Your email address and account identifiers are not sent."
+          },
+          {
+            "type": "paragraph",
+            "text": "Frames can still identify people by face, clothing, surroundings or other details, and text you enter can contain personal information. Omitting your account identifier does not make footage anonymous. Only upload and request analysis where you have the required permissions, including for other players and minors shown in the footage."
           }
         ]
       },
@@ -801,6 +904,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "We do not train AI models on your data. We send requests through OpenRouter with data collection denied and zero data retention required, so requests are routed only to providers that commit not to store your data or use it for training."
+          },
+          {
+            "type": "paragraph",
+            "text": "These are required routing settings, not an independent audit or a guarantee that a processor has no operational metadata. The operator must verify the provider contract, supported endpoint, destination countries and retention terms before enabling footage processing. If no eligible endpoint is available, the request must fail rather than relax those settings. The Privacy Policy describes the current recipients and outstanding transfer confirmations."
           }
         ]
       },
@@ -816,7 +923,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Actions suggested from still frames are labelled \"Needs review\" and are never counted as statistics.",
               "Coaching about you is only shown after you confirm which frames show you. PitchProof does not use facial recognition.",
               "PitchProof does not give player ratings or predict careers.",
-              "Each result shows what it was based on and how much of the match it covered."
+              "Each result shows what it was based on and how much of the match it covered.",
+              "AI feedback is not medical advice, a professional scouting decision or a promise of development, selection or employment. Do not rely on it alone for decisions affecting a player."
             ]
           }
         ]
@@ -836,6 +944,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "You can choose not to use AI analysis. All non-AI features keep working. You can delete analysis results at any time."
+          },
+          {
+            "type": "paragraph",
+            "text": "Optional AI permission can be withdrawn in the Privacy Center; per-video processing can be cancelled through the analysis workflow. Withdrawal does not reverse processing already completed. Deleting an analysis removes the data controlled by PitchProof according to the Data Retention Policy, not records held independently by another user. Tell {{supportEmail}} about incorrect or harmful output so it can be reviewed."
           }
         ]
       }
@@ -994,9 +1106,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "data-subject-rights",
     "title": "Your Data Protection Rights",
-    "version": "1.1.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.2.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -1021,8 +1133,13 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "receive your data in a portable format;",
               "have your data deleted;",
               "object to processing based on legitimate interests;",
+              "request restriction of processing where the applicable legal conditions are met;",
               "withdraw consent at any time, without affecting processing before the withdrawal."
             ]
+          },
+          {
+            "type": "paragraph",
+            "text": "The scope of each right depends on the applicable law, purpose and legal basis. Portability does not cover every internal record or another person's information. We explain a lawful limitation or refusal rather than treating all rights as unconditional."
           }
         ]
       },
@@ -1039,6 +1156,32 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Withdraw consent: Privacy Center, or for guardians the withdrawal link in the confirmation email.",
               "Anything else: contact {{privacyEmail}}. We respond within the period required by law."
             ]
+          },
+          {
+            "type": "paragraph",
+            "text": "You do not need an account to contact us about footage in which you appear, a child's data or a privacy concern. Tell us the account or content involved and the action requested; do not email passwords, sign-in codes or unnecessary identity documents. We may ask for proportionate information to verify your identity or authority to act for someone else."
+          }
+        ]
+      },
+      {
+        "heading": "Response times and cost",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "We normally respond free of charge. Under Swiss rules the ordinary access-response period is 30 days; where the GDPR applies it is one calendar month. If the law permits an extension, we explain the reason and the new deadline within the original period. We explain any permitted fee or refusal for a manifestly unfounded or excessive request and how you can challenge it."
+          }
+        ]
+      },
+      {
+        "heading": "Deletion and separate services",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Deletion removes the account through a server-side process with progress and retry controls. Some limited records have separate retention periods; see the Data Retention Policy. Deleting your account does not cancel Apple billing or erase Apple's purchase history. RevenueCat customer records require a separate processor-side action; contact us for assistance. We cannot delete another website's original page or copies someone made outside PitchProof."
+          },
+          {
+            "type": "paragraph",
+            "text": "Optional AI consent can be withdrawn in the Privacy Center. Acknowledging the Privacy Policy is not the legal basis for all processing; object to a particular use or request restriction by contacting us. If you no longer want the account, use account deletion rather than assuming that withdrawing one optional permission deletes it."
           }
         ]
       },
@@ -1065,9 +1208,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "data-retention-policy",
     "title": "Data Retention Policy",
-    "version": "1.2.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.3.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -1083,6 +1226,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "Profile, match logs, goals, media, analysis results, movement summaries and scouting data are kept while your account exists. When you delete your account, they are deleted from our database and storage."
+          },
+          {
+            "type": "paragraph",
+            "text": "Deletion is performed by server jobs, with progress and retries if a step fails. Do not interpret a submitted request as proof that every deletion step completed. Scheduled cleanup periods below are targets from creation or the stated event; physical cleanup can run at the next scheduled sweep. We restrict retained records to the purpose that justifies keeping them."
           }
         ]
       },
@@ -1100,7 +1247,8 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Optional evidence clips: only made when you ask for them, and kept with the analysis until you delete it.",
               "Analysis uploads that never finish: marked expired after 7 days and their files deleted.",
               "Guardian approval and confirmation links: expire after 7 days. Withdrawal links stay valid for about 13 months.",
-              "Cancelled or expired analysis jobs: cleaned up automatically."
+              "Failed, cancelled or expired analysis-job records: cleaned up after 30 days; source-video and temporary-frame rules above can delete the media earlier.",
+              "RevenueCat webhook receipts used to prevent duplicate processing: 90 days unless the account-deletion job removes them sooner."
             ]
           }
         ]
@@ -1126,6 +1274,23 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "Where the law requires it, we keep a minimised record of consent decisions (including guardian consent) and moderation decisions. These records use hashed identifiers and contain no profile content or media."
+          },
+          {
+            "type": "paragraph",
+            "text": "The configured schedules are three years for consent proof and deletion receipts, two years for moderation decisions, and three years for closed privacy-request records. These are implementation settings requiring owner/legal confirmation of their necessity and lawful basis, not a claim that every jurisdiction mandates those periods. Hashing reduces identification but does not automatically make a record anonymous. Any longer legal hold must be necessary, limited and documented."
+          }
+        ]
+      },
+      {
+        "heading": "Records held by other services",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "The in-app deletion job does not automatically delete RevenueCat's customer record; a separate provider-side action is required. Apple controls its purchase, payment and account records. Diagnostic and email providers can hold their own service records under their configured schedules. Contact {{privacyEmail}} so we can assess a request and arrange processor-side deletion where applicable. We must confirm provider retention settings and procedures before launch; no unverified fixed deletion deadline is promised for them."
+          },
+          {
+            "type": "paragraph",
+            "text": "Public content can have been copied outside PitchProof. We remove the copies we control, not another person's screenshots, downloads or the original content of an external football website you linked to."
           }
         ]
       },
@@ -1134,7 +1299,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Crash reports are scrubbed of personal data before sending and kept according to our crash reporting provider's retention settings."
+            "text": "If crash reporting is enabled, default personal-data collection is disabled and redaction controls are applied. Reports can still contain technical identifiers or incidental information. They are kept according to the provider's configured retention settings, which require confirmation before launch."
           }
         ]
       },
@@ -1143,7 +1308,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Our cloud provider may keep encrypted backups for a limited time. Deleted data disappears from backups as they expire."
+            "text": "This repository does not configure a custom backup or restore schedule. If provider recovery copies or backups are enabled, they must have a documented expiry, access restriction and restore process that reapplies deletion requests. We do not promise a backup-expiry period that has not been verified. Contact {{privacyEmail}} for the current recovery-copy arrangements."
           }
         ]
       }
@@ -1152,14 +1317,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "security-disclosure-policy",
     "title": "Security and Responsible Disclosure Policy",
-    "version": "1.0.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.1.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
       "Access to every database collection and storage path is restricted by server-side rules.",
-      "Privileged actions, AI calls and payments are handled only on our servers.",
+      "Privileged server actions and AI credentials stay on our backend; Apple handles App Store payments, with RevenueCat used for subscription access.",
       "If you find a vulnerability, tell us privately. We will not take legal action against good-faith research."
     ],
     "sections": [
@@ -1177,6 +1342,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
               "Staff actions on user content are logged in an audit log that users cannot change.",
               "Data is encrypted in transit and at rest by our cloud provider."
             ]
+          },
+          {
+            "type": "paragraph",
+            "text": "These controls reduce risk; they are not a guarantee that every account, upload or report is free from vulnerabilities or incidental personal data. App attestation and media format checks are not identity verification or malware scanning."
           }
         ]
       },
@@ -1222,9 +1391,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "cookie-tracking-policy",
     "title": "Cookie and Tracking Policy",
-    "version": "1.0.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.1.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -1247,6 +1416,14 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "The pitchproof.online website and guardian approval pages use browser storage only where needed for sign-in and security. The guardian page removes the approval link from the address bar after loading and does not set tracking cookies."
+          },
+          {
+            "type": "paragraph",
+            "text": "The public policy pages do not require a PitchProof account and do not embed advertising or audience-analytics trackers. Hosting and security providers still receive network request metadata, including an IP address and user agent. A guardian approval or withdrawal link contains a sensitive token: do not forward it or publish it. Clearing your browser history is not a withdrawal of consent."
+          },
+          {
+            "type": "paragraph",
+            "text": "Links to Apple, external football websites and other services open destinations with their own storage and privacy rules. If we add optional tracking in future, we must update this notice and obtain any legally required consent before enabling it; the present policy is not advance consent."
           }
         ]
       },
@@ -1255,7 +1432,7 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "Firebase App Check confirms that requests come from a genuine copy of the app. It does not track your activity."
+            "text": "Firebase App Check supplies device/app-attestation signals used to assess whether a request is legitimate. This is a security control, not advertising or cross-app tracking, and it is not an absolute guarantee that every request is genuine."
           }
         ]
       },
@@ -1264,7 +1441,16 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
         "blocks": [
           {
             "type": "paragraph",
-            "text": "When the app crashes, a diagnostic report is sent to our crash reporting provider with personal data removed. It is used only to fix bugs."
+            "text": "Where configured and enabled, Sentry receives crash and sampled performance diagnostics to help fix faults and reliability issues. Default personal-data collection is disabled and redaction is applied; this is not a guarantee that every diagnostic is anonymous. It is not an advertising or audience-analytics service. Provider retention and region must be confirmed before launch, as described in the Privacy Policy."
+          }
+        ]
+      },
+      {
+        "heading": "Managing device and browser storage",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "You can change system permissions, clear browser storage or uninstall the app using device controls. Doing so may sign you out or remove local drafts and offline data; it does not delete your server account, withdraw a guardian approval or cancel an Apple subscription. Use the in-app account controls or contact {{supportEmail}} for those actions."
           }
         ]
       }
@@ -1273,9 +1459,9 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
   {
     "id": "subscription-terms",
     "title": "Subscription Terms",
-    "version": "1.1.0",
-    "effectiveDate": "2026-10-08",
-    "status": "final",
+    "version": "1.2.0",
+    "effectiveDate": "LEGAL_REVIEW_REQUIRED",
+    "status": "draft",
     "canonicalLanguage": "en",
     "requiresAcceptance": false,
     "summary": [
@@ -1290,6 +1476,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "Premium increases the monthly limits for frame analyses, full-match analyses and reel exports, and allows more analyses at the same time. Current limits are shown in the app before you buy. Premium does not improve your visibility to scouts or your chances of a trial."
+          },
+          {
+            "type": "paragraph",
+            "text": "The purchase screen and Apple's confirmation show the subscription name, billing period, local price and any trial. Availability and technical/privacy restrictions still apply; Premium does not enable disabled AI, unavailable tracking or unvalidated measurements. Do not purchase for a capability that is marked unavailable."
           }
         ]
       },
@@ -1308,6 +1498,32 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "Subscriptions are purchased through your Apple ID and billed by Apple. They renew automatically at the end of each period unless you cancel at least 24 hours before renewal. You can manage or cancel your subscription in your Apple ID settings. Prices are shown in the app and on the App Store before purchase."
+          },
+          {
+            "type": "paragraph",
+            "text": "Payment is charged to your Apple account when you confirm purchase. Apple may charge renewal within the 24 hours before the current period ends, at the price shown under its applicable terms. Monthly and annual options, where offered, are different billing periods; usage quotas are not a promise of unlimited processing."
+          }
+        ]
+      },
+      {
+        "heading": "Cancellation and account deletion",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Use Settings, Plan & usage, Manage subscription in PitchProof, or https://apps.apple.com/account/subscriptions. Cancellation normally stops the next renewal, not access for the remainder of a paid period, subject to refunds or Apple's adjustments."
+          },
+          {
+            "type": "paragraph",
+            "text": "Deleting PitchProof, deleting your PitchProof account, signing out or withdrawing guardian permission does not cancel an Apple subscription. Cancel renewal separately with Apple to avoid further charges. You can still delete your PitchProof account immediately; deletion is not conditional on waiting for a subscription to expire."
+          }
+        ]
+      },
+      {
+        "heading": "Restore and account access",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "text": "Use Restore purchases in Plan & usage with the Apple account used to purchase and the intended PitchProof account. Purchases are linked to your PitchProof account identifier through RevenueCat. If restoration or account switching assigns access incorrectly, contact {{supportEmail}}; we do not promise automatic transfer between unrelated accounts or Family Sharing unless explicitly offered."
           }
         ]
       },
@@ -1317,6 +1533,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "If a free trial is offered, it converts to a paid subscription at the end of the trial unless you cancel beforehand."
+          },
+          {
+            "type": "paragraph",
+            "text": "The exact eligibility, length, price after trial and cancellation conditions are shown before purchase. Follow Apple's trial cancellation deadline, including cancelling at least 24 hours before the trial ends where specified. No trial is promised unless it appears in the actual offer."
           }
         ]
       },
@@ -1326,6 +1546,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "Refunds are handled by Apple under its policies."
+          },
+          {
+            "type": "paragraph",
+            "text": "You can request one at https://reportaproblem.apple.com/. Cancelling does not itself request a refund. Nothing here limits mandatory cancellation, withdrawal, refund or other consumer rights that apply to your purchase."
           }
         ]
       },
@@ -1335,6 +1559,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocument[] = [
           {
             "type": "paragraph",
             "text": "We may change Premium features or prices with notice. Usage limits apply per 30-day period and reset as shown in the app. If a payment fails, Apple may provide a grace period during which Premium continues."
+          },
+          {
+            "type": "paragraph",
+            "text": "Usage windows are anchored to the account's first metered use and can differ from Apple's monthly or annual billing dates. Unused capacity is not a cash balance. A price increase is subject to Apple's applicable notice/consent process and mandatory law. If access does not appear after a successful purchase, restore purchases or contact support rather than buying again."
           }
         ]
       },

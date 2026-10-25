@@ -365,13 +365,13 @@ export function LogMatchModal({
           {t('statistics:quickMatch.draftSaved', { time: formatTime(savedAt) })}
         </Text>
       ) : null}
-      <View className="flex-row gap-3">
-        <Button variant="secondary" className="flex-1" onPress={handleClose} disabled={isSaving}>
+      <View className="flex-row flex-wrap gap-3">
+        <Button variant="secondary" className="min-w-[120px] flex-1 py-2" onPress={handleClose} disabled={isSaving}>
           {t('common:cancel')}
         </Button>
         <Button
           variant="accent"
-          className="flex-1"
+          className="min-w-[120px] flex-1 py-2"
           onPress={() => void handleSave()}
           loading={isSaving}
           disabled={!ready}
@@ -398,7 +398,7 @@ export function LogMatchModal({
       >
         <View className="gap-5">
           {restoredAt ? (
-            <View className="gap-2 rounded-xl border border-border bg-surface p-3">
+            <View className="gap-2 rounded-lg border border-border bg-surface p-3">
               <Text variant="caption" color="secondary">
                 {t('statistics:quickMatch.draftRestored', { time: formatTime(restoredAt) })}
               </Text>
@@ -579,7 +579,7 @@ export function LogMatchModal({
           </Button>
 
           {showMoreStats ? (
-            <View className="gap-4">
+            <View className="gap-4 border-t border-border pt-4">
               <Text variant="caption" color="secondary">
                 {t('statistics:quickMatch.notRecordedHint')}
               </Text>
@@ -639,7 +639,7 @@ export function LogMatchModal({
               </View>
               <View>
                 <FieldLabel>{t('statistics:quickMatch.cleanSheet')}</FieldLabel>
-                <View className="flex-row gap-2">
+                <View className="flex-row flex-wrap gap-2">
                   <ChoiceChip
                     label={t('common:yes')}
                     selected={form.cleanSheet}

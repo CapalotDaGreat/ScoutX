@@ -62,6 +62,14 @@ before(async () => {
     provenance: 'self_reported_with_link', visibility: 'private', status: 'active', matchIds: [],
   });
   await db.collection('players').doc(OTHER).collection('footballSources').doc('fs2').set({ ownerId: OTHER, url: 'https://www.fupa.net/x' });
+  // A client-written body ID must never redirect child reads to another job.
+  await db.collection('matchAnalysisJobs').doc('rights-analysis').set({ id: 'other-analysis', playerId: USER, status: 'complete' });
+  await db.collection('matchAnalysisJobs').doc('rights-analysis').collection('identityCoordination').doc('current').set({
+    scope: { jobId: 'rights-analysis' }, calibrated: false, windows: [{ startSec: 0, endSec: 10, state: 'UNKNOWN', confidence: 0 }],
+  });
+  await db.collection('matchAnalysisJobs').doc('rights-analysis').collection('identityEvidence').doc('current').set({ payloadBase64: 'INTERNAL_PROOF_CHUNK' });
+  await db.collection('matchAnalysisJobs').doc('other-analysis').set({ playerId: OTHER, status: 'complete' });
+  await db.collection('matchAnalysisJobs').doc('other-analysis').collection('identityCoordination').doc('current').set({ note: 'Not mine' });
 });
 
 describe('data export', () => {
@@ -94,6 +102,10 @@ describe('data export', () => {
     assert.equal(archive.sections.consents.summary.consents.ai_analysis.version, '1.0.0');
     assert.deepEqual(archive.sections.externalFootballSources.map((source) => source.url), ['https://www.fvrz.ch/team/5']);
     assert.equal(archive.sections.externalFootballSources[0].provenance, 'self_reported_with_link');
+    assert.equal(archive.sections.analysisIdentityCoordination.length, 1);
+    assert.equal(archive.sections.analysisIdentityCoordination[0].scope.jobId, 'rights-analysis');
+    assert.equal(archive.sections.analyses[0].id, 'rights-analysis');
+    assert.equal(JSON.stringify(archive).includes('INTERNAL_PROOF_CHUNK'), false);
     const movement = archive.sections.movementSessions[0];
     assert.equal(movement.distanceMeters, 8200);
     assert.ok(movement.heatmap);

@@ -1,4 +1,19 @@
 {
+  "import": {
+    "title": "Importeren van een sporttracker",
+    "choose": "GPX, TCX of CSV met meetpunten kiezen",
+    "privacy": "Verwerking op dit apparaat. Ruwe coördinaten en oorspronkelijke tijdstempels worden niet opgeslagen. Er is geen leveranciersaccount gekoppeld.",
+    "label": "Naam van de lokale sessie",
+    "confirm": "Samenvatting lokaal opslaan",
+    "cancel": "Annuleren",
+    "remove": "Lokale import verwijderen",
+    "quality": "{{rejected}} meetpunten uitgesloten; {{gaps}} onderbrekingen; {{segments}} aaneengesloten delen.",
+    "provenance": "Trackerbestand aangeleverd door de gebruiker. De nauwkeurigheid kan onbekend zijn. Geen wedstrijd gekoppeld, videosynchronisatie of veldoriëntatie bevestigd. Snelheden worden uit posities berekend.",
+    "saved": "De laatste import is alleen op dit apparaat opgeslagen en vervangt de vorige lokale import. Cloudgeschiedenis en wedstrijdkoppeling zijn niet geïmplementeerd.",
+    "unsupported": "Dit formaat wordt niet ondersteund. FIT- en ZIP-imports zijn niet geïmplementeerd.",
+    "tooLarge": "Kies een bestand kleiner dan 5 MiB met maximaal 50.000 meetpunten.",
+    "invalid": "Importeren mislukt. Controleer de coördinaten en tijdstempels met tijdzone. CSV vereist timestamp,latitude,longitude en eventueel accuracy_m, zonder aanhalingstekens."
+  },
   "title": "GPS-tracking",
   "subtitle": "Leg beweging, afstand en heatmaps vast",
   "recordingSubtitle": "Leg je beweging in wedstrijden vast met batterijzuinige meting",

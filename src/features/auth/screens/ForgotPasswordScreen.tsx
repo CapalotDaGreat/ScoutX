@@ -46,10 +46,10 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
   const combinedError = useMemo(() => error ?? localError, [error, localError]);
 
   return (
-    <Screen title={t('forgotPassword.title')} subtitle={t('forgotPassword.subtitle')}>
-      <AuthCard title={t('forgotPassword.cardTitle')} subtitle={t('forgotPassword.cardSubtitle')}>
+    <Screen contentClassName="py-6">
+      <AuthCard title={t('forgotPassword.title')} subtitle={t('forgotPassword.cardSubtitle')}>
         {combinedError ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive" className="rounded-[8px] border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {combinedError}
             </Text>
@@ -57,8 +57,8 @@ export function ForgotPasswordScreen({ onSubmit, onBack, isSubmitting = false, e
         ) : null}
 
         {successMessage ? (
-          <View className="rounded-lg border border-accent/20 bg-accent-muted px-3 py-3">
-            <Text variant="body-sm" color="accent">
+          <View accessibilityLiveRegion="polite" className="rounded-[8px] border border-success/20 bg-success-muted px-3 py-3">
+            <Text variant="body-sm" color="success">
               {successMessage}
             </Text>
           </View>

@@ -121,11 +121,11 @@ export function EditProfileModal({
   };
 
   const footer = (
-    <View className="flex-row gap-3">
-      <Button variant="secondary" className="flex-1" onPress={onClose} disabled={saving}>
+    <View className="flex-row flex-wrap gap-3">
+      <Button variant="secondary" className="min-h-[44px] min-w-[120px] flex-1" onPress={onClose} disabled={saving}>
         {t('common:cancel')}
       </Button>
-      <Button variant="accent" className="flex-1" onPress={handleSave} loading={saving}>
+      <Button variant="accent" className="min-h-[44px] min-w-[120px] flex-1" onPress={handleSave} loading={saving}>
         {t('common:save')}
       </Button>
     </View>
@@ -138,15 +138,15 @@ export function EditProfileModal({
         contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="relative mb-6 overflow-hidden rounded-xl bg-background-secondary">
+        <View className="relative mb-4 overflow-hidden rounded-lg border border-border bg-background-secondary">
           {profile.coverImageUrl.trim() ? (
             <Image
               source={{ uri: profile.coverImageUrl }}
-              className="h-32 w-full opacity-60"
+              className="h-28 w-full"
               resizeMode="cover"
             />
           ) : (
-            <View className="h-32 w-full bg-background-secondary" />
+            <View className="h-28 w-full bg-background-secondary" />
           )}
           {uploadingCover ? (
             <View className="absolute inset-0 items-center justify-center bg-black/50">
@@ -157,9 +157,9 @@ export function EditProfileModal({
               onPress={() => void handleImagePick('cover')}
               accessibilityRole="button"
               accessibilityLabel={t('editModal.changeCover')}
-              className="absolute inset-0 items-center justify-center bg-black/30 active:bg-black/45"
+              className="absolute bottom-2 right-2 min-h-[44px] items-center justify-center active:opacity-80"
             >
-              <View className="flex-row items-center gap-2 rounded-full bg-black/60 px-4 py-2">
+              <View className="min-h-[44px] flex-row items-center gap-2 rounded-md bg-black/70 px-3 py-2">
                 <Camera size={16} color={colors.onMedia} />
                 <Text className="font-sans-medium text-xs text-white">{t('editModal.changeCover')}</Text>
               </View>
@@ -167,10 +167,10 @@ export function EditProfileModal({
           )}
         </View>
 
-        <View className="-mt-16 mb-6 items-center">
+        <View className="mb-5 flex-row flex-wrap items-center gap-3 border-b border-border pb-4">
           <View className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-surface bg-background-secondary">
             {profile.avatarUrl.trim() ? (
-              <Image source={{ uri: profile.avatarUrl }} className="h-full w-full opacity-70" />
+              <Image source={{ uri: profile.avatarUrl }} className="h-full w-full" />
             ) : (
               <View className="h-full w-full bg-surface-elevated" />
             )}
@@ -189,7 +189,7 @@ export function EditProfileModal({
               </Pressable>
             )}
           </View>
-          <Text variant="caption" color="secondary" className="mt-2">
+          <Text variant="caption" color="secondary" className="min-w-[140px] flex-1">
             {t('editModal.tapAvatar')}
           </Text>
         </View>
@@ -200,20 +200,20 @@ export function EditProfileModal({
           </Text>
           <Input label={t('editModal.fullName')} value={fullName} onChangeText={setFullName} placeholder={t('profileUi.fullNamePlaceholder')} />
           <Input label={t('editModal.nationality')} value={nationality} onChangeText={setNationality} placeholder={t('profileUi.nationalityPlaceholder')} />
-          <View className="flex-row gap-4">
+          <View className="flex-row flex-wrap gap-4">
             <Input
               label={t('editModal.height')}
               value={height}
               onChangeText={setHeight}
               placeholder="178 cm"
-              containerClassName="flex-1"
+              containerClassName="min-w-[140px] flex-1"
             />
             <Input
               label={t('editModal.weight')}
               value={weight}
               onChangeText={setWeight}
               placeholder="72 kg"
-              containerClassName="flex-1"
+              containerClassName="min-w-[140px] flex-1"
             />
           </View>
           <Input

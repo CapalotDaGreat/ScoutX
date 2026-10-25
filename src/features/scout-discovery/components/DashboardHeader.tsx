@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Card } from '@/components/primitives/Card';
 import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -26,12 +25,12 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const { t } = useAppTranslation('scout');
   return (
-    <View className="gap-5">
+    <View className="gap-4">
       <View className="gap-1.5">
-        <Text variant="overline" color="secondary" className="uppercase tracking-widest">
+        <Text variant="overline" color="secondary" style={{ letterSpacing: 0 }}>
           {t('header.overline')}
         </Text>
-        <Heading level={1}>
+        <Heading level={2}>
           {t(`header.greeting.${greetingKey()}`, { name: scoutName })}
         </Heading>
         <Text variant="body-sm" color="secondary" className="mt-0.5">
@@ -39,31 +38,31 @@ export function DashboardHeader({
         </Text>
       </View>
 
-      <View className="flex-row gap-3">
-        <Card variant="elevated" padding="sm" className="flex-1">
-          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
+      <View className="flex-row border-y border-divider py-3">
+        <View className="min-w-0 flex-1 pr-2">
+          <Text variant="caption" color="secondary">
             {t('header.statMatching')}
           </Text>
-          <Text className="mt-1 font-sans-bold text-stat-lg text-foreground">
+          <Text variant="body-lg" weight="bold" className="mt-1">
             {matchingCount}
           </Text>
-        </Card>
-        <Card variant="elevated" padding="sm" className="flex-1">
-          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
+        </View>
+        <View className="min-w-0 flex-1 border-l border-divider px-3">
+          <Text variant="caption" color="secondary">
             {t('header.statPipeline')}
           </Text>
-          <Text className="mt-1 font-sans-bold text-stat-lg text-foreground">
+          <Text variant="body-lg" weight="bold" className="mt-1">
             {savedCount}
           </Text>
-        </Card>
-        <Card variant="elevated" padding="sm" className="flex-1">
-          <Text variant="caption" color="secondary" className="uppercase tracking-wider">
+        </View>
+        <View className="min-w-0 flex-1 border-l border-divider pl-3">
+          <Text variant="caption" color="secondary">
             {t('header.statRecent')}
           </Text>
-          <Text className="mt-1 font-sans-bold text-stat-lg text-foreground">
+          <Text variant="body-lg" weight="bold" className="mt-1">
             {recentlyViewedCount}
           </Text>
-        </Card>
+        </View>
       </View>
     </View>
   );

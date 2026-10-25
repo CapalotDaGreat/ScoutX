@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
-import { LEGAL_DOCUMENT_ORDER, renderLegalModule, renderServerVersions } from '../../scripts/build-legal.mjs';
+import { LEGAL_DOCUMENT_ORDER, renderLegalModule, renderServerVersions, renderSite, richText } from '../../scripts/build-legal.mjs';
 import {
   LEGAL_CONFIG,
   CONTACT_PLACEHOLDER_PATTERN,
   LEGAL_CONTACT_REQUIRED,
+  LEGAL_REVIEW_REQUIRED,
   PRIVACY_CONTACT_REQUIRED,
   SECURITY_CONTACT_REQUIRED,
   missingRequiredLegalContacts,
@@ -36,9 +37,12 @@ describe('bundled legal documents', () => {
     );
     for (const doc of LEGAL_DOCUMENTS) {
       assert.equal(doc.canonicalLanguage, 'en', doc.id);
-      assert.match(doc.effectiveDate, /^\d{4}-\d{2}-\d{2}$/, `${doc.id} needs a reviewed effective date`);
-      assert.equal(doc.status, 'final', doc.id);
-      assert.doesNotMatch(JSON.stringify(doc), /LEGAL_REVIEW_REQUIRED/, `${doc.id} still has an open review note`);
+      assert.ok(['final', 'draft'].includes(doc.status), doc.id);
+      if (doc.status === 'draft') {
+        assert.equal(doc.effectiveDate, LEGAL_REVIEW_REQUIRED, `${doc.id} must not claim legal approval`);
+      } else {
+        assert.match(doc.effectiveDate, /^\d{4}-\d{2}-\d{2}$/, `${doc.id} needs a publication date`);
+      }
       assert.ok(doc.summary.length > 0 && doc.sections.length > 0, doc.id);
     }
   });
@@ -55,6 +59,70 @@ describe('bundled legal documents', () => {
     assert.match(aiPolicy, /never used to train/);
     const privacy = JSON.stringify(LEGAL_DOCUMENTS.find((doc) => doc.id === 'privacy-policy'));
     assert.match(privacy, /never written to your device storage, our servers/);
+  });
+
+  it('covers billing, processing limits, qualified rights and processor-held records', () => {
+    const text = (id: string) => JSON.stringify(LEGAL_DOCUMENTS.find((doc) => doc.id === id));
+    assert.match(text('subscription-terms'), /does not cancel an Apple subscription/);
+    assert.match(text('subscription-terms'), /Restore purchases/);
+    assert.match(text('subscription-terms'), /mandatory.*consumer rights/);
+    assert.match(text('privacy-policy'), /Processing outside your country/);
+    assert.match(text('privacy-policy'), /United States/);
+    assert.match(text('privacy-policy'), /not blanket consent/);
+    assert.match(text('data-subject-rights'), /one calendar month/);
+    assert.match(text('data-subject-rights'), /restriction of processing/);
+    assert.match(text('data-retention-policy'), /does not automatically delete RevenueCat/);
+    assert.match(text('ai-use-policy'), /not an independent audit/);
+    assert.match(text('guardian-consent-notice'), /Withdrawal links have a longer lifetime/);
+  });
+});
+
+describe('generated legal website', () => {
+  it('renders safe email and HTTPS links once without nested anchors', () => {
+    const found = new Set<string>();
+    assert.equal(
+      richText('Email help+privacy@example.com or https://example.com/?a=1&b=2. <script>bad</script>', found),
+      'Email <a href="mailto:help+privacy@example.com">help+privacy@example.com</a> or <a href="https://example.com/?a=1&amp;b=2">https://example.com/?a=1&amp;b=2</a>. &lt;script&gt;bad&lt;/script&gt;',
+    );
+    assert.equal(found.size, 0);
+    assert.match(richText('LEGAL_REVIEW_REQUIRED', found), /pending legal review/);
+    assert.ok(found.has('LEGAL_REVIEW_REQUIRED'));
+  });
+
+  it('keeps every generated public page in sync and labels unapproved revisions', async () => {
+    const files: Array<{ label: string; content: string }> = await renderSite();
+    assert.equal(files.length, 21);
+    for (const file of files) {
+      assert.equal(read(`../../${file.label}`), file.content, file.label);
+      assert.match(file.content, /href="\/account-deletion\/"/, file.label);
+      assert.match(file.content, /href="\/legal-notice\/"/, file.label);
+      assert.doesNotMatch(file.content, /<a\b[^>]*>(?:(?!<\/a>)[\s\S])*<a\b/, file.label);
+    }
+    const privacy = files.find((file) => file.label === 'public/privacy/index.html')?.content ?? '';
+    assert.match(privacy, /Draft under legal review/);
+    assert.match(privacy, /Effective date pending legal review/);
+    const notice = files.find((file) => file.label === 'public/legal-notice/index.html')?.content ?? '';
+    assert.match(notice, /CML Electronics/);
+    assert.doesNotMatch(notice, /Commercial register \/ UID:/);
+    const deletion = files.find((file) => file.label === 'public/account-deletion/index.html')?.content ?? '';
+    assert.match(deletion, /does not cancel an Apple subscription/);
+    assert.match(deletion, /If you cannot use the app/);
+  });
+
+  it('warns about continuing Apple billing in every supported deletion confirmation', () => {
+    for (const locale of ['en', 'de', 'fr', 'es', 'it', 'nl', 'pt']) {
+      const settings: { deleteAccountMessage: string } = JSON.parse(read(`../../src/i18n/locales/${locale}/settings.json`));
+      assert.match(settings.deleteAccountMessage, /Apple/, locale);
+      assert.ok(settings.deleteAccountMessage.length > 200, locale);
+    }
+  });
+
+  it('keeps the direct guardian form consistent with the AI disclosure', () => {
+    const form = read('../../public/guardian/index.html');
+    assert.match(form, /selected frames and match context can be sent through OpenRouter/i);
+    assert.match(form, /privacy-approved processing is enabled/);
+    assert.match(form, /href="\/legal\/ai-use-policy\/"/);
+    assert.doesNotMatch(form, /nothing is sold/);
   });
 });
 
@@ -88,7 +156,8 @@ describe('legal config', () => {
   it('wires the release gate into app.config.ts', () => {
     const appConfig = read('../../app.config.ts');
     assert.match(appConfig, /missingRequiredLegalContacts\(\)/);
-    assert.match(appConfig, /ALLOW_LEGAL_PLACEHOLDERS/);
+    assert.match(appConfig, /productionBuildProblems\(/);
+    assert.doesNotMatch(appConfig, /ALLOW_LEGAL_PLACEHOLDERS/);
   });
 });
 

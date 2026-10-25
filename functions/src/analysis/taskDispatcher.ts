@@ -43,7 +43,8 @@ export function setTaskDispatcher(dispatcher: TaskDispatcher): void {
 export function parseAnalysisTask(value: unknown): AnalysisTask | null {
   if (!value || typeof value !== 'object') return null;
   const data = value as Record<string, unknown>;
-  if (typeof data.jobId !== 'string' || !data.jobId || typeof data.generation !== 'number') return null;
+  if (typeof data.jobId !== 'string' || !/^[A-Za-z0-9_-]{1,80}$/.test(data.jobId)
+    || typeof data.generation !== 'number' || !Number.isSafeInteger(data.generation) || data.generation < 0) return null;
   if (data.kind === 'analyze_frames') return { kind: 'analyze_frames', jobId: data.jobId, generation: data.generation };
   if (data.kind === 'synthesize_report') return { kind: 'synthesize_report', jobId: data.jobId, generation: data.generation };
   const segmentIndex = data.segmentIndex;

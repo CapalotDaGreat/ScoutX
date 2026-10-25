@@ -3,9 +3,10 @@
 Account deletion is an idempotent state machine (`functions/src/dataRights/deletion.ts`,
 `functions/src/accountDeletion.ts`) recorded in `deletionRequests/{uid}`:
 `requested → access_revoked → jobs_cancelled → primary → media → derived → verified → completed`.
-A failed step is retried from where it stopped. The app shows the progress. Unlike data export
-(10-minute recent sign-in check in `dataExport.ts`), the deletion callable does not yet enforce a
-recent sign-in on the server; SECURITY REVIEW REQUIRED.
+A failed step is retried from where it stopped. The app shows the progress. The deletion callable
+enforces account ownership and recent sign-in through `assertDeletionAuthorized` in `appleAuth.ts`;
+moving an established account into the under-13 band also requires that check in `youthConsent.ts`. See
+`tests/rules/deletionAuth.test.mjs`. This is a code/test observation, not a production-device validation.
 
 Evidence: `tests/rules/accountDeletion.test.mjs` seeds every collection below, runs the deletion and
 asserts nothing is left (`verifyUserDataDeleted`). The E2E flow deletes a waiting 13–17 account and
@@ -44,3 +45,12 @@ and the reported external football link (`targetContext`).
 | Backups | No custom backup exists. Firestore point-in-time recovery, if enabled, keeps data up to 7 days; see `docs/security/disaster-recovery.md` |
 | Copies other users made outside PitchProof (screenshots, downloads of public media) | Outside PitchProof's control |
 | Pages on external football websites the player linked to | PitchProof only stored the link; the page belongs to that website |
+
+Experimental target identity metadata under a match job (`identityEvidence`,
+`identityCoordination` and `identityEvidenceStaging`) is server-only and inherits
+recursive job/account deletion. Video-consent withdrawal removes all three
+collections, including completed jobs and unpublished staging chunks.
+Anchor edits invalidate the summary and delete the current evidence/chunk pointers.
+These records contain target-only metadata and hashes, not footage or non-target
+candidate identities. Owner data exports include the target summary, not internal
+proof chunks.

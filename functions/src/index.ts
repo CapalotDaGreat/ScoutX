@@ -77,6 +77,9 @@ export {
 
 initializeApp();
 export { getUsageSummary } from './entitlements/quotaService';
+export { saveAnalysisTargetAnchor } from './analysis/targetAnchorCallable';
+export { coordinateAnalysisTarget } from './analysis/identityCoordinator';
+export { onDiscoverableSearchIndexWritten } from './discoverySearchMaintenance';
 export { revenueCatWebhook } from './entitlements/revenueCat';
 export { requestDataExport, buildDataExport } from './dataRights/dataExport';
 export { submitPrivacyRequest, updatePrivacyRequest } from './dataRights/privacyRequests';

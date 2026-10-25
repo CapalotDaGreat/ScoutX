@@ -38,7 +38,9 @@ function needsLocalCopy(uri: string): boolean {
 export async function materializePickedVideo(
   asset: ImagePickerAsset,
 ): Promise<PickedVideoAsset> {
-  const durationSec = asset.duration ? Math.round(asset.duration / 1000) : 0;
+  const durationSec = asset.duration
+    ? Math.round(Platform.OS === 'web' ? asset.duration : asset.duration / 1000)
+    : 0;
   const fileName = asset.fileName ?? undefined;
   const extension = guessVideoExtension(asset);
 

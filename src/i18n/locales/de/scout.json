@@ -50,6 +50,7 @@
     }
   },
   "discover": {
+    "continueSearch": "Keine Treffer in diesem Abschnitt. Mehr laden, um weiterzusuchen.",
     "title": "Spieler entdecken",
     "subtitle": "Erweiterte Scouting-Suche mit sofortigen Ergebnissen",
     "loadingSubtitle": "Durchsuche den weltweiten Talentpool",
@@ -492,7 +493,7 @@
     }
   },
   "sort": {
-    "relevance": "Beste Übereinstimmung",
+    "relevance": "Nachweise zuerst",
     "overall": "Gesamtwertung",
     "potential": "Potenzial",
     "age": "Alter",
@@ -664,6 +665,10 @@
     "sessions": "GPS-Einheiten"
   },
   "playerCard": {
+    "scoutingProfile": "Spielerprofil",
+    "analysisSamples": "Analyse-Stichproben",
+    "noHighlights": "Noch keine Highlights",
+    "viewProfile": "Spieler ansehen",
     "openHint": "Vollständiges Spielerprofil öffnen",
     "footValue": "Fuss {{foot}}"
   }

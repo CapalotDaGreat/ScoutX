@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { GitCompare } from 'lucide-react-native';
 import { Button } from '@/components/primitives/Button';
-import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import { useTheme } from '@/theme';
@@ -21,16 +20,13 @@ export function ComparisonQueueCard({ onOpenComparison }: ComparisonQueueCardPro
   }
 
   return (
-    <Card variant="outlined" padding="md" className="gap-3">
-      <View>
+    <View className="flex-row flex-wrap items-center gap-3 border-y border-divider py-3">
+      <View className="min-w-[160px] flex-1">
         <Text variant="overline" color="secondary">
           {t('comparison.title')}
         </Text>
         <Text weight="semibold">
           {t('comparisonUi.queueCount', { count: comparisonPlayerIds.length })}
-        </Text>
-        <Text variant="body-sm" color="secondary">
-          {t('comparisonUi.queueBody')}
         </Text>
       </View>
       <Button
@@ -40,6 +36,6 @@ export function ComparisonQueueCard({ onOpenComparison }: ComparisonQueueCardPro
       >
         {t('comparisonUi.openComparison')}
       </Button>
-    </Card>
+    </View>
   );
 }

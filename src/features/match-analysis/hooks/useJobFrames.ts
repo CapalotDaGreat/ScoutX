@@ -17,7 +17,8 @@ export function useJobFrames(job: MatchAnalysisJob | null): {
     return frames && frames.length > 0 ? candidatesFromFrames(frames) : [];
   }, [frames, job?.identityCandidates]);
 
-  const [resolved, setResolved] = useState<Record<string, string>>({});
+  const scope = `${job?.playerId ?? ''}:${job?.id ?? ''}:${(frames ?? []).map((frame) => `${frame.id}:${frame.storagePath}`).join('|')}`;
+  const [resolved, setResolved] = useState<{ scope: string; urls: Record<string, string> }>({ scope: '', urls: {} });
 
   useEffect(() => {
     let cancelled = false;
@@ -28,22 +29,19 @@ export function useJobFrames(job: MatchAnalysisJob | null): {
       missing.map(async (frame) => [frame.id, await resolveFrameUrl(frame.storagePath)] as const),
     ).then((entries) => {
       if (cancelled) return;
-      setResolved((current) => ({
-        ...current,
-        ...Object.fromEntries(entries.filter((entry): entry is readonly [string, string] => Boolean(entry[1]))),
-      }));
-    });
+      setResolved({ scope, urls: Object.fromEntries(entries.filter((entry): entry is readonly [string, string] => Boolean(entry[1]))) });
+    }).catch(() => undefined);
     return () => {
       cancelled = true;
     };
-  }, [candidates, frames]);
+  }, [candidates, frames, scope]);
 
   const frameUrls = useMemo(
     () => ({
+      ...(resolved.scope === scope ? resolved.urls : {}),
       ...Object.fromEntries((frames ?? []).filter((frame) => frame.downloadUrl).map((frame) => [frame.id, frame.downloadUrl])),
-      ...resolved,
     }),
-    [frames, resolved],
+    [frames, resolved, scope],
   );
 
   return { candidates, frameUrls };

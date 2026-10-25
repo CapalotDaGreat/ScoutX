@@ -153,7 +153,7 @@ export function SnackbarHost() {
         accessibilityLiveRegion="polite"
         style={{
           backgroundColor: colors.textPrimary,
-          borderRadius: 14,
+          borderRadius: 8,
           paddingHorizontal: 16,
           paddingVertical: 12,
           flexDirection: 'row',

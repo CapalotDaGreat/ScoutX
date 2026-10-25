@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import {
   GPS_MAX_MEDIAN_ACCURACY_M,
@@ -17,7 +16,7 @@ export function GpsIntelligenceCard({ session }: { session: GpsSession }) {
   const intel = session.intelligence;
 
   return (
-    <Card variant="outlined" padding="md" className="gap-2" testID="gps-intelligence">
+    <View className="gap-2 border-t border-border py-3" testID="gps-intelligence">
       <Text variant="body" className="font-sans-semibold" accessibilityRole="header">
         {t('gps:intel.title')}
       </Text>
@@ -63,13 +62,13 @@ export function GpsIntelligenceCard({ session }: { session: GpsSession }) {
               </Text>
               {BANDS.map((band) => (
                 <View key={band} className="flex-row items-center gap-2" accessible accessibilityLabel={`${t(`gps:intel.band.${band}`)}: ${intel.bands?.[band] ?? 0}%`}>
-                  <Text variant="body-sm" className="w-20">
+                  <Text variant="body-sm" className="w-24 shrink">
                     {t(`gps:intel.band.${band}`)}
                   </Text>
                   <View className="h-2 flex-1 overflow-hidden rounded-full bg-surface-elevated">
                     <View className="h-2 rounded-full bg-accent" style={{ width: `${intel.bands?.[band] ?? 0}%` }} />
                   </View>
-                  <Text variant="caption" className="w-10 text-right">
+                  <Text variant="caption" className="min-w-10 text-right">
                     {intel.bands?.[band] ?? 0}%
                   </Text>
                 </View>
@@ -81,6 +80,6 @@ export function GpsIntelligenceCard({ session }: { session: GpsSession }) {
           </Text>
         </>
       )}
-    </Card>
+    </View>
   );
 }

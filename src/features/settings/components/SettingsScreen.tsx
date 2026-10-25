@@ -5,7 +5,6 @@ import { Screen } from '@/components/layout/Screen';
 import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
-import { Card } from '@/components/primitives/Card';
 import { SafetySettingsSection } from '@/features/youth-safety/components/SafetySettingsSection';
 import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 import { DeleteAccountReauthModal, deletionErrorKey } from '@/features/auth/components/DeleteAccountReauthModal';
@@ -125,8 +124,8 @@ export function SettingsScreen({
         </View>
       }
     >
-      <View className="gap-6">
-        <Card variant="elevated" padding="md" className="gap-2">
+      <View className="gap-4">
+        <View className="gap-2 border-b border-divider pb-4">
           <Text variant="overline" color="secondary">
             {t('settings:account')}
           </Text>
@@ -152,43 +151,43 @@ export function SettingsScreen({
               </Button>
             </View>
           ) : null}
-        </Card>
+        </View>
 
-        <Card variant="elevated" padding="md" className="gap-3">
+        <View className="gap-3 border-b border-divider pb-4">
           <Text variant="overline" color="secondary">
             {t('settings:appearance')}
           </Text>
           <AppearanceSettingsSection />
-        </Card>
+        </View>
 
-        <Card variant="elevated" padding="md" className="gap-3">
+        <View className="gap-3 border-b border-divider pb-4">
           <Text variant="overline" color="secondary">
             {t('settings:language')}
           </Text>
           <LanguageSettingsSection />
-        </Card>
+        </View>
 
         <SafetySettingsSection />
 
         {!user?.isAnonymous ? (
-          <Card variant="elevated" padding="md" className="gap-3">
+          <View className="gap-3 border-b border-divider pb-4">
             <Text variant="overline" color="secondary">
               {t('settings:security')}
             </Text>
             {user?.email ? <ChangePasswordSection email={user.email} /> : null}
             {isGoogleSignInSupportedPlatform() ? <LinkGoogleAccountSection /> : null}
             {isAppleSignInSupportedPlatform() ? <LinkAppleAccountSection /> : null}
-          </Card>
+          </View>
         ) : null}
 
-        <Card variant="elevated" padding="md" className="gap-3">
+        <View className="gap-3 border-b border-divider pb-4">
           <Text variant="overline" color="secondary">
             {t('settings:notifications')}
           </Text>
           <Text variant="body-sm" color="secondary">
             {t('settings:notificationsDescription')}
           </Text>
-          <View className="flex-row items-center justify-between gap-3">
+          <View className="min-h-[44px] flex-row items-center justify-between gap-3">
             <View className="flex-1">
               <Text weight="semibold">{t('settings:pushNotifications')}</Text>
               <Text variant="caption" color="secondary">
@@ -208,7 +207,7 @@ export function SettingsScreen({
           </View>
           {pushEnabled && hasToken
             ? NOTIFICATION_CATEGORIES.map((category) => (
-                <View key={category} className="flex-row items-center justify-between gap-3">
+                <View key={category} className="min-h-[44px] flex-row items-center justify-between gap-3">
                   <Text className="flex-1">{t(`settings:category.${category}`)}</Text>
                   <Switch
                     value={categories[category]}
@@ -220,7 +219,7 @@ export function SettingsScreen({
               ))
             : null}
           {pushEnabled && hasToken ? (
-            <View className="flex-row items-center justify-between gap-3" testID="lock-screen-preview">
+            <View className="min-h-[44px] flex-row items-center justify-between gap-3" testID="lock-screen-preview">
               <View className="flex-1">
                 <Text weight="semibold">{t('settings:lockScreen.title')}</Text>
                 <Text variant="caption" color="secondary">
@@ -235,9 +234,9 @@ export function SettingsScreen({
               />
             </View>
           ) : null}
-        </Card>
+        </View>
 
-        <Card variant="elevated" padding="md" className="gap-3">
+        <View className="gap-3 border-b border-divider pb-4">
           <Text variant="overline" color="secondary">
             {t('settings:privacyData')}
           </Text>
@@ -264,9 +263,9 @@ export function SettingsScreen({
               {t('premium:openPlan')}
             </Button>
           ) : null}
-        </Card>
+        </View>
 
-        <Card variant="elevated" padding="md" className="gap-3">
+        <View className="gap-3 border-b border-divider pb-4">
           <Text variant="overline" color="secondary">
             {t('settings:about')}
           </Text>
@@ -282,17 +281,17 @@ export function SettingsScreen({
               {t('settings:contactSupport')}
             </Button>
           ) : null}
-        </Card>
+        </View>
 
-        <Card variant="elevated" padding="md" className="gap-2">
+        <View className="gap-2 border-b border-divider pb-4">
           <Text variant="overline" color="secondary">
             {t('settings:legal')}
           </Text>
           <LegalFooterLinks />
-        </Card>
+        </View>
 
         {!user?.isAnonymous ? (
-          <Card variant="elevated" padding="md" className="gap-3">
+          <View className="gap-3 border-b border-divider pb-4">
             <Text variant="overline" color="secondary">
               {t('settings:dangerZone')}
             </Text>
@@ -321,7 +320,7 @@ export function SettingsScreen({
               onConfirm={(method, password) => void deletion.confirmReauth(method, password)}
               onCancel={deletion.cancelReauth}
             />
-          </Card>
+          </View>
         ) : null}
       </View>
     </Screen>

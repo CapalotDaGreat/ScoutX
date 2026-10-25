@@ -129,7 +129,10 @@ export type PlayerTargeting = {
   notes?: string;
 };
 
-export const TARGET_POSITIONS = ['goalkeeper', 'defender', 'midfielder', 'forward', 'unknown'] as const;
+export const TARGET_POSITIONS = [
+  'goalkeeper', 'defender', 'midfielder', 'forward', 'unknown',
+  'GK', 'CB', 'LB', 'RB', 'LWB', 'RWB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'LW', 'RW', 'CF', 'ST',
+] as const;
 export type TargetPosition = (typeof TARGET_POSITIONS)[number];
 
 export type MatchContextInput = {
@@ -509,6 +512,20 @@ export type MatchAnalysisJob = {
   frames: MatchFrameSample[];
   identityCandidates?: IdentityCandidate[];
   identityConfirmation?: IdentityConfirmation;
+  /** Experimental user anchors; never proof of continuous target visibility. Server-owned. */
+  experimentalTargetIdentity?: {
+    schemaVersion: 1;
+    targetId: string;
+    sourcePath: string;
+    revision: number;
+    anchors: Array<{
+      frameId: string;
+      timestampSec: number;
+      box: { x: number; y: number; width: number; height: number };
+      provenance: 'user_selected';
+    }>;
+    updatedAt: string;
+  };
   confidenceDimensions?: AnalysisConfidenceDimensions;
   preprocessing?: AnalysisPreprocessing;
   idempotencyKey?: string;

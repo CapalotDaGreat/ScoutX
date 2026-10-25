@@ -13,7 +13,7 @@
   "deleteAccountDescription": "Verwijder je PitchProof-account en profielgegevens definitief.",
   "deleteAccount": "Account verwijderen",
   "deleteAccountTitle": "Account verwijderen",
-  "deleteAccountMessage": "Hiermee worden je PitchProof-account, profiel en pushinstellingen definitief verwijderd. Dit kan niet ongedaan worden gemaakt.",
+  "deleteAccountMessage": "Je PitchProof-account en bijbehorende gegevens worden definitief verwijderd, behalve de beperkte bewaargegevens uit het privacybeleid. Dit kan niet ongedaan worden gemaakt. Je account verwijderen beëindigt geen Apple-abonnement. Zeg de verlenging apart op in de Apple-abonnementsinstellingen om verdere kosten te voorkomen. Je kunt je account direct verwijderen zonder te wachten tot het abonnement afloopt.",
   "language": "Taal",
   "languageDescription": "Kies je voorkeurstaal. Dit overschrijft de automatische apparaatdetectie.",
   "languageAutomatic": "Automatisch (apparaat)",

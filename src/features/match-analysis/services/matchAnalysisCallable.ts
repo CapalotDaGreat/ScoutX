@@ -8,6 +8,15 @@ export type AnalyzeMatchFootageRequest = {
   idempotencyKey?: string;
 };
 
+export type CoordinateIdentityRequest = { jobId: string; expectedGeneration: number; expectedAnchorRevision: number };
+
+/** Metadata only; approval, consent, provenance and revision checks remain server-owned. */
+export async function requestCoordinateAnalysisTarget(request: CoordinateIdentityRequest): Promise<void> {
+  const callable = createCallableFunction<CoordinateIdentityRequest>('coordinateAnalysisTarget');
+  if (!callable) throw new Error('Cloud Functions unavailable.');
+  await callable(request);
+}
+
 export type AnalyzeMatchFootageResponse = {
   jobId: string;
   /** `queued` when the server restarted key-frame extraction instead of analysing directly. */
@@ -83,6 +92,8 @@ export type ConfirmIdentityRequest = {
   jobId: string;
   decision: 'confirmed' | 'rejected';
   frameIds: string[];
+  expectedGeneration?: number;
+  expectedAnchorRevision?: number;
 };
 
 export async function requestConfirmAnalysisIdentity(request: ConfirmIdentityRequest): Promise<{ state: string; released: boolean }> {

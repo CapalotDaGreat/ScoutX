@@ -1,0 +1,57 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MAX_TARGET_ANCHORS = void 0;
+exports.parseTargetBox = parseTargetBox;
+exports.parseTargetAnchorRequest = parseTargetAnchorRequest;
+exports.editTargetAnchors = editTargetAnchors;
+exports.MAX_TARGET_ANCHORS = 8;
+function record(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value) ? value : null;
+}
+function parseTargetBox(value) {
+    const input = record(value);
+    if (!input || Object.keys(input).length !== 4 || !['x', 'y', 'width', 'height'].every((key) => typeof input[key] === 'number' && Number.isFinite(input[key])))
+        return null;
+    const { x, y, width, height } = input;
+    if (x < 0 || y < 0 || width <= 0 || height <= 0 || x + width > 1 || y + height > 1)
+        return null;
+    return { x, y, width, height };
+}
+function parseTargetAnchorRequest(value) {
+    const input = record(value);
+    if (!input || Object.keys(input).some((key) => ![
+        'jobId', 'frameId', 'operationId', 'operation', 'expectedGeneration', 'expectedRevision', 'box',
+    ].includes(key)))
+        return null;
+    if (typeof input.jobId !== 'string' || !/^[A-Za-z0-9_-]{6,80}$/.test(input.jobId)
+        || typeof input.frameId !== 'string' || !/^frame_[0-9]{1,6}$/.test(input.frameId)
+        || typeof input.operationId !== 'string' || !/^[A-Za-z0-9_-]{16,80}$/.test(input.operationId)
+        || (input.operation !== 'upsert' && input.operation !== 'remove')
+        || !Number.isSafeInteger(input.expectedGeneration) || Number(input.expectedGeneration) < 0
+        || !Number.isSafeInteger(input.expectedRevision) || Number(input.expectedRevision) < 0)
+        return null;
+    const box = input.operation === 'upsert' ? parseTargetBox(input.box) : undefined;
+    if (input.operation === 'upsert' && !box)
+        return null;
+    if (input.operation === 'remove' && input.box !== undefined)
+        return null;
+    return {
+        jobId: input.jobId, frameId: input.frameId, operationId: input.operationId,
+        operation: input.operation, expectedGeneration: Number(input.expectedGeneration), expectedRevision: Number(input.expectedRevision),
+        ...(box ? { box } : {}),
+    };
+}
+/** Anchor edits identify only the selected observation, never a whole tracker or match. */
+function editTargetAnchors(anchors, request, timestampSec) {
+    const next = anchors.filter((anchor) => anchor.frameId !== request.frameId);
+    if (request.operation === 'upsert') {
+        const box = parseTargetBox(request.box);
+        if (!box || !Number.isFinite(timestampSec) || timestampSec < 0)
+            throw new Error('Invalid target anchor');
+        next.push({ frameId: request.frameId, timestampSec, box, provenance: 'user_selected' });
+    }
+    if (next.length > exports.MAX_TARGET_ANCHORS)
+        throw new Error('Too many target anchors');
+    return next.sort((a, b) => a.timestampSec - b.timestampSec || a.frameId.localeCompare(b.frameId));
+}
+//# sourceMappingURL=targetAnchors.js.map

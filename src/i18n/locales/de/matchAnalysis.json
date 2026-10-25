@@ -1,4 +1,28 @@
 {
+  "targetAnchor": {
+    "coordinate": "Identität prüfen",
+    "coordinateChecked": "Nachweise geprüft",
+    "coordinateUnavailable": "Verifizierte Quelldaten oder die Freigabe sind nicht verfügbar.",
+    "panelTitle": "Zielspieler prüfen",
+    "anchor": "Anker bei {{seconds}}s",
+    "remove": "Anker bei {{seconds}}s entfernen",
+    "scopeNote": "Ein gespeichertes Rechteck identifiziert den Spieler nur in diesem Einzelbild. Das Bearbeiten von Ankern macht frühere, vom Zielspieler abhängige Berichtsaussagen ungültig; eine neue Analyse ist erforderlich.",
+    "noFrames": "Für die Auswahl des Zielspielers sind keine auf dem Server aufbewahrten Einzelbilder verfügbar.",
+    "limit": "Bis zu 8 Anker pro Spiel.",
+    "title": "Spielerbereich",
+    "firstCorner": "Wähle die erste Ecke des Spielerrechtecks.",
+    "secondCorner": "Wähle die gegenüberliegende Ecke.",
+    "image": "Spielerbild: zwei gegenüberliegende Ecken wählen",
+    "x": "Links (%)",
+    "y": "Oben (%)",
+    "width": "Breite (%)",
+    "height": "Höhe (%)",
+    "reset": "Auswahl zurücksetzen",
+    "save": "Bereich speichern",
+    "invalid": "Gib ein Rechteck mit positiver Größe innerhalb von 0–100 % ein.",
+    "imageError": "Das Bild konnte nicht geladen werden.",
+    "saveError": "Der Bereich konnte nicht gespeichert werden. Bitte versuche es erneut."
+  },
   "preview": {
     "title": "Analysevorschau",
     "quality": "Bildqualität",
@@ -32,6 +56,7 @@
     "advisory": "Das sind nur Hinweise. PitchProof lehnt nie ein Video wegen eines Qualitätswerts ab."
   },
   "identity": {
+    "saveError": "Die Identität konnte nicht gespeichert werden. Lade die Analyse neu und versuche es erneut.",
     "title": "Bestätige, dass du es bist",
     "hint": "Wähle Standbilder, die dein Trikot zeigen. Statistiken bleiben unbekannt, bis die Identität bestätigt ist.",
     "confirm": "Diese Bilder zeigen mich",
@@ -200,7 +225,8 @@
     "pointsUnavailable": "Sprintdetails gibt es nur für Sessions, die mit der aktuellen PitchProof-Version aufgezeichnet wurden.",
     "noSprints": "In dieser Sitzung wurden keine Sprints erkannt.",
     "sprint": "Sprint · Spitze {{kmh}} km/h",
-    "outsideVideo": "Außerhalb des Videos"
+    "outsideVideo": "Außerhalb des Videos",
+    "saveFailed": "Die GPS-Synchronisierung konnte nicht gespeichert werden. Bitte versuche es erneut."
   },
   "eventType": {
     "shot": "Schuss",
@@ -470,7 +496,7 @@
       "not_me": "Du hast angegeben, dass dieses Bild nicht dich zeigt.",
       "withdraw": "Rückmeldung zurückgezogen."
     },
-    "footnote": "Deine Rückmeldung wird neben der Analyse gespeichert. Die ursprüngliche Analyse und allfällige Statistiken werden dadurch nicht verändert, und PitchProof nutzt weder deine Videos noch deine Rückmeldungen zum Trainieren von KI.",
+    "footnote": "Deine Rückmeldung bestätigt Statistiken nicht automatisch. Wenn du die Spieleridentität ablehnst, werden davon abhängige Aussagen im Bericht ungültig und müssen neu geprüft werden. Das Zurücknehmen der Rückmeldung stellt diese Aussagen nicht wieder her. PitchProof nutzt weder deine Videos noch deine Rückmeldungen zum Trainieren von KI.",
     "identityHint": "Wenn eines dieser Bilder nicht dich zeigt, gib es an. Coaching zu diesem Bild solltest du dann mit Vorsicht betrachten."
   },
   "trends": {

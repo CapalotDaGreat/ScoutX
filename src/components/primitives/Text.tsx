@@ -169,7 +169,7 @@ export function Text({
         color && colorStyles[color],
         className,
       )}
-      style={[{ color: resolvedColor } satisfies TextStyle, style]}
+      style={[{ color: resolvedColor, letterSpacing: 0 } satisfies TextStyle, style]}
       {...props}
     />
   );

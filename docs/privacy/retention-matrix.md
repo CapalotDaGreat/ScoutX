@@ -21,10 +21,10 @@ Jobs completed before the footage lifecycle shipped keep their media until a one
 | Analysis uploads never finished | Marked expired after 7 days (`abandonedUploadDays`), media deleted | Job created | `mediaLifecycleSweep` | Product decision (not lawyer-reviewed) |
 | Video processing consent records (`videoProcessingConsents`) | Until the account is deleted | Consent given | `deleteAuthenticatedAccount` (`OWNED_QUERIES`) | Product decision (not lawyer-reviewed) |
 | RevenueCat webhook receipts | 90 days (`webhookReceiptDays`) | Receipt stored | `retentionCleanup` | Product decision |
-| Closed privacy requests | 3 years (`privacyRequestDays`) | Request closed | `retentionCleanup` | Approved (legal review, 2026-10-08) |
-| Consent proof after deletion | 3 years (`consentProofDays`) | Account deleted | `legalRetention` record `expiresAt` | Approved (legal review, 2026-10-08) |
-| Moderation decisions about a deleted account | 2 years (`moderationDecisionDays`) | Account deleted | `legalRetention` record `expiresAt` | Approved (legal review, 2026-10-08) |
-| Deletion receipt | 3 years (`deletionReceiptDays`) | Deletion completed | `legalRetention` record `expiresAt` | Approved (legal review, 2026-10-08) |
+| Closed privacy requests | 3 years (`privacyRequestDays`) | Request closed | `retentionCleanup` | LEGAL REVIEW REQUIRED; no independently verified approval |
+| Consent proof after deletion | 3 years (`consentProofDays`) | Account deleted | `legalRetention` record `deleteAfter` | LEGAL REVIEW REQUIRED; no independently verified approval |
+| Moderation decisions about a deleted account | 2 years (`moderationDecisionDays`) | Account deleted | `legalRetention` record `deleteAfter` | LEGAL REVIEW REQUIRED; no independently verified approval |
+| Deletion receipt | 3 years (`deletionReceiptDays`) | Deletion completed | `legalRetention` record `deleteAfter` | LEGAL REVIEW REQUIRED; no independently verified approval |
 | Guardian approval | 365 days validity, then re-approval | Approval | `youthConsent.ts` `CONSENT_VALIDITY_MS` | Product decision |
 | Guardian approval link | 7 days | Link sent | `GUARDIAN_LINK_TTL_MS` | Product decision |
 | Under-13 account without parental consent | 14 days (`CHILD_CONSENT_WAIT_DAYS`) | Under-13 band chosen, or player withdraws request | daily `retentionCleanup` via `userSafety.childDeleteAfter` | Product decision (not lawyer-reviewed) |
@@ -38,3 +38,15 @@ Privacy request reply deadline: 30 days (`PRIVACY_REQUEST_DEADLINE_DAYS`).
 
 `legalRetention` records hold hashed identifiers and only the fields needed as proof. They are not
 joined back to a live account.
+
+Experimental `identityEvidence`, `identityCoordination` and `identityEvidenceStaging` subcollections inherit
+their parent match-analysis job's retention and recursive deletion. They are not
+an independent training dataset. Withdrawal of video consent deletes them even
+for completed jobs; current summaries/evidence are invalidated on anchor edits.
+The target-only summary is included in owner data exports. Internal proof chunks
+are not exported as media or exposed through client Firestore access.
+
+Staging leases expire logically after 20 minutes; this is not a Firestore TTL
+deletion promise. An authorized retry removes abandoned chunks before staging.
+Failed staging attempts clean up their own unpublished chunks. Anchor edits,
+identity rejection and video-consent withdrawal also clear staging metadata.

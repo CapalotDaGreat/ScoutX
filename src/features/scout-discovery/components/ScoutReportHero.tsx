@@ -1,13 +1,11 @@
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Avatar } from '@/components/primitives/Avatar';
+import { PlayerIdentityPanel } from '@/components/player-card/PlayerIdentityPanel';
 import { Badge } from '@/components/primitives/Badge';
 import { StarRating } from '@/components/primitives/StarRating';
 import { Text } from '@/components/primitives/Text';
-import { Heading } from '@/components/primitives/Heading';
 import { PlayerFormStrip } from '@/features/scout-discovery/components/PlayerFormStrip';
 import { RatingPill } from '@/features/scout-discovery/components/RatingPill';
-import { VerificationBadge } from '@/features/trust-system';
 import { type DiscoverablePlayer } from '@/features/scout-discovery/types';
 import { joinKnown } from '@/features/scout-discovery/models/DiscoverablePlayerModel';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -20,37 +18,16 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
   const { t } = useAppTranslation(['scout', 'evidence']);
   return (
     <Animated.View entering={FadeInDown.duration(400)} className="gap-4">
-      <View className="overflow-hidden rounded-2xl">
-        <Image source={{ uri: player.coverImageUrl }} className="h-48 w-full" resizeMode="cover" />
-        <View className="absolute inset-0 bg-black/35" />
-        <View className="absolute bottom-0 left-0 right-0 p-4">
-          <Text variant="overline" className="text-white/80">
+      <View className="border-b border-divider pb-4">
+        <View>
+          <Text variant="overline" color="secondary" style={{ letterSpacing: 0 }}>
             {t('scout:reports.cardOverline')}
           </Text>
-          <View className="mt-2 flex-row items-end gap-3">
-            <Avatar
-              source={{ uri: player.avatarUrl }}
-              name={player.fullName}
-              size="xl"
-              className="border-4 border-white/20"
-            />
-            <View className="flex-1 pb-1">
-              <View className="flex-row flex-wrap items-center gap-2">
-                <Heading level={2} className="text-white">
-                  {player.fullName}
-                </Heading>
-                {player.verified ? (
-                  <VerificationBadge entity="player" size="sm" />
-                ) : null}
-              </View>
-              <Text variant="body-sm" className="text-white/85">
-                {joinKnown([
-                  player.age !== null ? t('scout:playerDetail.ageYears', { count: player.age }) : null,
-                  player.nationality,
-                  player.club,
-                ])}
-              </Text>
-            </View>
+          <View className="mt-3">
+            <PlayerIdentityPanel expanded playerId={player.id} name={player.fullName} portrait={player.avatarUrl || player.coverImageUrl}
+              position={player.position.join(' / ') || null} context={joinKnown([player.club, player.league])}
+              facts={joinKnown([player.age !== null ? t('scout:playerDetail.ageYears', { count: player.age }) : null, player.nationality])}
+              verified={player.verified} />
           </View>
         </View>
       </View>
@@ -70,6 +47,8 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
           />
         </View>
         {player.weakFoot !== null || player.skillMoves !== null ? (
+          <View className="gap-2">
+          <Text variant="caption" color="tertiary">{t('scout:brief.confidence.self_reported')}</Text>
           <View className="flex-row gap-3">
             <View className="flex-1 gap-1 rounded-lg bg-background-secondary px-3 py-2">
               <Text variant="caption" color="secondary">
@@ -87,6 +66,7 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
                 emptyLabel="—"
               />
             </View>
+          </View>
           </View>
         ) : null}
         <View className="flex-row flex-wrap items-center gap-2">

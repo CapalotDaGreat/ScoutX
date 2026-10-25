@@ -181,6 +181,12 @@ describe('stages and computer-vision seam', () => {
     assert.equal(parseAnalysisTask({ kind: 'extract_segment', jobId: 'j', generation: 2 }), null);
     assert.equal(parseAnalysisTask({ kind: 'delete_everything', jobId: 'j', generation: 1 }), null);
     assert.equal(parseAnalysisTask(null), null);
+    for (const generation of [-1, 0.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
+      assert.equal(parseAnalysisTask({ kind: 'synthesize_report', jobId: 'j', generation }), null);
+    }
+    for (const jobId of ['../job', 'a/b', 'a'.repeat(81)]) {
+      assert.equal(parseAnalysisTask({ kind: 'analyze_frames', jobId, generation: 1 }), null);
+    }
   });
 });
 

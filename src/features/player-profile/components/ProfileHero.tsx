@@ -1,15 +1,15 @@
 import { Image, View } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
-import { Avatar } from '@/components/primitives/Avatar';
+import { PlayerIdentityPanel } from '@/components/player-card/PlayerIdentityPanel';
 import { Badge } from '@/components/primitives/Badge';
 import { Button } from '@/components/primitives/Button';
-import { Heading } from '@/components/primitives/Heading';
 import { Text } from '@/components/primitives/Text';
 import { useIdentityLabels } from '@/features/player-profile/hooks/useIdentityLabels';
 import { type PlayerProfile } from '@/features/player-profile/types';
 import { VerificationBadgeStrip } from '@/features/trust-system';
 import { type TrustProfile } from '@/features/trust-system/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type ProfileHeroProps = {
   profile: PlayerProfile;
@@ -20,6 +20,7 @@ export type ProfileHeroProps = {
 export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroProps) {
   const { t } = useAppTranslation('portfolio');
   const labels = useIdentityLabels();
+  const reduceMotion = useReducedMotion();
   const { identity } = profile;
   const primaryPosition = identity.preferredPositions[0] ?? profile.position;
   const bodyLine = [profile.height, profile.weight].filter(Boolean).join(' · ');
@@ -33,26 +34,21 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
 
   return (
     <Animated.View
-      entering={FadeInUp.duration(500)}
-      className="overflow-hidden rounded-3xl border border-gold/30 bg-surface"
+      entering={reduceMotion ? undefined : FadeInUp.duration(500)}
+      className="overflow-hidden border-b border-border bg-surface"
     >
       {coverUri ? (
-        <Image source={{ uri: coverUri }} className="h-36 w-full" resizeMode="cover" />
-      ) : (
-        <View className="h-36 w-full bg-gold-muted" />
-      )}
+        <Image source={{ uri: coverUri }} className="h-28 w-full" resizeMode="cover" accessibilityIgnoresInvertColors />
+      ) : null}
 
-      <View className="px-5 pb-5 pt-0">
-        <View className="-mt-8 flex-row items-end justify-between">
-          <Avatar
-            source={avatarUri ? { uri: avatarUri } : undefined}
-            name={profile.fullName}
-            size="2xl"
-            showBorder
-            className="border-4 border-surface"
-          />
+      <View className="px-4 py-4">
+        <PlayerIdentityPanel expanded playerId={profile.id} name={profile.fullName} portrait={avatarUri}
+          position={primaryPosition || null} context={identity.currentClub || profile.club}
+          facts={metaParts.join(' · ')} />
+        <View className="mt-3 flex-row flex-wrap items-center justify-between gap-3">
+          <Text variant="caption" color="secondary" className="min-w-0 flex-1">{t('passportHero.selfReportedNote')}</Text>
           {onEditPress ? (
-            <Button variant="prestige" size="sm" onPress={onEditPress}>
+            <Button variant="secondary" size="sm" onPress={onEditPress}>
               {t('editProfile')}
             </Button>
           ) : null}
@@ -65,11 +61,9 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
             </Text>
           ) : null}
           <View className="flex-row flex-wrap items-center gap-2">
-            <Heading level={2}>{profile.fullName}</Heading>
             {identity.jerseyNumber ? (
               <Badge label={`#${identity.jerseyNumber}`} variant="prestige" size="sm" />
             ) : null}
-            {primaryPosition ? <Badge label={primaryPosition} variant="prestige" /> : null}
           </View>
         </View>
 

@@ -8,6 +8,7 @@ import { Button } from '@/components/primitives/Button';
 import { ChoiceChip } from '@/components/primitives/ChoiceChip';
 import { Text } from '@/components/primitives/Text';
 import { GpsHeatmap } from '@/features/gps/components/GpsHeatmap';
+import { GpsImportPanel } from '@/features/gps/components/GpsImportPanel';
 import { GpsLiveMetrics } from '@/features/gps/components/GpsLiveMetrics';
 import { GpsIntelligenceCard } from '@/features/gps/components/GpsIntelligenceCard';
 import { GpsRecordingControls } from '@/features/gps/components/GpsRecordingControls';
@@ -76,7 +77,7 @@ export function GpsTrackingScreen({
       error={error ?? sessionsError ?? null}
       onRetry={refreshSessions}
       safeArea
-      contentClassName="gap-8"
+      contentClassName="gap-5"
       embeddedInTabShell={embeddedInTabShell}
       safeAreaEdges={nestedUnderSegment ? (['left', 'right'] as Array<'left' | 'right'>) : undefined}
     >
@@ -95,12 +96,14 @@ export function GpsTrackingScreen({
         />
 
         {status !== 'idle' ? <GpsLiveMetrics metrics={liveMetrics} /> : null}
-        <View className="flex-row items-center gap-2">
+        <View className="min-h-11 flex-row flex-wrap items-center gap-2">
           <Text variant="caption" color="secondary">{t('gps:units.label')}</Text>
           <ChoiceChip label={t('gps:units.km')} selected={unit === 'km'} onPress={() => void setDistanceUnit('km')} />
           <ChoiceChip label={t('gps:units.mi')} selected={unit === 'mi'} onPress={() => void setDistanceUnit('mi')} />
         </View>
       </Section>
+
+      <GpsImportPanel playerId={playerId} disabled={status !== 'idle' || isSaving} />
 
       {completedSession ? (
         <Section title={t('gps:sessionSummary')} gap="md">
@@ -145,7 +148,7 @@ export function GpsTrackingScreen({
                 variant="ghost"
                 size="sm"
                 onPress={() => setShowFullHistory((current) => !current)}
-                className="self-start"
+                className="min-h-11 self-start"
               >
                 {showFullHistory
                   ? t('common:seeLess')

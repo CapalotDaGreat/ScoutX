@@ -34,7 +34,7 @@ export function Heading({
     <RNText
       accessibilityRole={accessibilityRole}
       className={cn(levelStyles[level], className)}
-      style={[{ color: colors.textPrimary } satisfies TextStyle, style]}
+      style={[{ color: colors.textPrimary, letterSpacing: 0 } satisfies TextStyle, style]}
       {...props}
     />
   );

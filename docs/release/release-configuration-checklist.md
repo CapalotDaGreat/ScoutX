@@ -19,6 +19,12 @@ acceptance of open security findings.
 Production builds also refuse `EXPO_PUBLIC_OPENROUTER_API_KEY` and mock data (`app.config.ts`,
 release gate). Test accounts, demo data and emulator hosts must never point at production.
 
+The production build policy requires all six Firebase client values, an existing iOS Firebase
+plist, and the RevenueCat `appl_` key. It refuses debug App Check tokens, disabled attestation,
+Expo Go mode, demo projects/passwords, emulator/mock flags, and legal placeholder overrides.
+The local release gate can validate only the environment supplied to its process; it cannot
+prove what is stored in the EAS console. Use the explicit `production` EAS environment.
+
 ## LEGAL
 
 - [x] `privacyEmail`, `securityEmail`, `legalEmail`, `supportEmail` in `src/config/legalConfig.ts`: all `support@pitchproof.online` (Cloudflare Email Routing must deliver it)

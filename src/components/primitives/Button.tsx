@@ -15,16 +15,16 @@ const variantStyles = {
   primary: 'bg-primary border border-transparent active:opacity-90',
   accent: 'bg-accent border border-transparent active:opacity-90',
   prestige: 'bg-gold border border-transparent active:opacity-90',
-  secondary: 'bg-surface border border-gold/30 active:opacity-80',
+  secondary: 'bg-surface border border-border active:opacity-80',
   ghost: 'bg-transparent border border-transparent active:opacity-70',
   destructive: 'bg-error-muted border border-transparent active:opacity-90',
   link: 'bg-transparent border border-transparent',
 } as const;
 
 const sizeStyles = {
-  sm: 'min-h-10 px-3.5 rounded-xl',
-  md: 'min-h-12 px-5 rounded-xl',
-  lg: 'min-h-14 px-6 rounded-xl',
+  sm: 'min-h-[44px] px-3.5 rounded-md',
+  md: 'min-h-12 px-5 rounded-md',
+  lg: 'min-h-[52px] px-6 rounded-md',
 } as const;
 
 const textVariantStyles = {
@@ -125,7 +125,7 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
       )}
       style={({ pressed }) =>
         pressed && !isDisabled
-          ? ({ transform: [{ scale: 0.98 }] } satisfies ViewStyle)
+          ? ({ opacity: 0.88 } satisfies ViewStyle)
           : undefined
       }
       {...props}
@@ -138,7 +138,7 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
           {typeof children === 'string' ? (
             <Text
               className={cn(
-                'font-sans-semibold',
+                'min-w-0 shrink text-center font-sans-semibold',
                 textVariantStyles[variant],
                 textSizeStyles[size],
                 textClassName,

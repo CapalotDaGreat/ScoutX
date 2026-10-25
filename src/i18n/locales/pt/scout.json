@@ -50,6 +50,7 @@
     }
   },
   "discover": {
+    "continueSearch": "Sem resultados neste lote. Carregue mais para continuar.",
     "title": "Descobrir jogadores",
     "subtitle": "Pesquisa avançada de observação com resultados instantâneos",
     "loadingSubtitle": "Pesquisa o leque global de talento",
@@ -492,7 +493,7 @@
     }
   },
   "sort": {
-    "relevance": "Melhor correspondência",
+    "relevance": "Evid\u00eancias primeiro",
     "overall": "Avaliação global",
     "potential": "Potencial",
     "age": "Idade",
@@ -664,6 +665,10 @@
     "sessions": "Sessões GPS"
   },
   "playerCard": {
+    "scoutingProfile": "Perfil do jogador",
+    "analysisSamples": "Amostras analisadas",
+    "noHighlights": "Ainda sem destaques",
+    "viewProfile": "Ver jogador",
     "openHint": "Abrir o perfil completo do jogador",
     "footValue": "Pé {{foot}}"
   }

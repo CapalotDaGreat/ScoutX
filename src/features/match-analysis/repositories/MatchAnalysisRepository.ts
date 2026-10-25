@@ -86,6 +86,7 @@ export async function getMatchAnalysisJob(jobId: string): Promise<MatchAnalysisJ
 export function subscribeMatchAnalysisJob(
   jobId: string,
   onChange: (job: MatchAnalysisJob | null) => void,
+  onError?: (error: Error) => void,
 ): Unsubscribe {
   if (!isFirebaseConfiguredForProject()) {
     onChange(null);
@@ -93,7 +94,7 @@ export function subscribeMatchAnalysisJob(
   }
   return onSnapshot(doc(jobsCollection(), jobId), (snap) => {
     onChange(snap.exists() ? (snap.data() as MatchAnalysisJob) : null);
-  });
+  }, onError);
 }
 
 export async function listRecentMatchAnalysisJobs(

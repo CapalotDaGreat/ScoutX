@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { Button } from '@/components/primitives/Button';
-import { Card } from '@/components/primitives/Card';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import {
@@ -106,7 +105,7 @@ export function FootballMemoryScreen({ index, onBack, onOpenLink }: FootballMemo
         </View>
       ) : (
         <View className="mt-4 gap-3">
-          <Card variant="outlined" padding="md" className="gap-1" testID="memory-answer">
+          <View className="gap-2 border-l-2 border-accent bg-surface px-3 py-3" testID="memory-answer">
             <Text variant="body" weight="semibold" accessibilityLiveRegion="polite">
               {describe(answer)}
             </Text>
@@ -115,14 +114,14 @@ export function FootballMemoryScreen({ index, onBack, onOpenLink }: FootballMemo
                 {t('common:memory.groundedNote')}
               </Text>
             ) : null}
-          </Card>
+          </View>
           {answer.links.map((record) => (
             <Pressable
               key={record.id}
               accessibilityRole="link"
               accessibilityLabel={`${t(`common:memory.kind.${record.kind as MemoryKind}`)}: ${record.title}`}
               onPress={() => onOpenLink(record.link)}
-              className="min-h-11 rounded-xl border border-border bg-surface px-4 py-3 active:opacity-80"
+              className="min-h-11 gap-1 border-b border-border py-3 active:opacity-80"
             >
               <Text variant="body" className="font-sans-semibold">
                 {record.title}

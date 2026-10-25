@@ -1,4 +1,19 @@
 {
+  "import": {
+    "title": "Importar de um dispositivo desportivo",
+    "choose": "Escolher GPX, TCX ou CSV de amostras",
+    "privacy": "Processamento neste dispositivo. As coordenadas brutas e os carimbos de data e hora originais não são guardados. Nenhuma conta de fornecedor está ligada.",
+    "label": "Nome da sessão local",
+    "confirm": "Guardar resumo local",
+    "cancel": "Cancelar",
+    "remove": "Eliminar importação local",
+    "quality": "{{rejected}} amostras excluídas; {{gaps}} interrupções; {{segments}} secções contínuas.",
+    "provenance": "Ficheiro do dispositivo fornecido pelo utilizador. A precisão pode ser desconhecida. Sem jogo associado, sincronização de vídeo ou orientação do campo confirmada. As velocidades são calculadas a partir das posições.",
+    "saved": "A última importação foi guardada apenas neste dispositivo, substituindo a anterior. O histórico na nuvem e a associação a jogos não estão implementados.",
+    "unsupported": "Este formato não é suportado. As importações FIT e ZIP não estão implementadas.",
+    "tooLarge": "Escolhe um ficheiro com menos de 5 MiB e um máximo de 50.000 amostras.",
+    "invalid": "Não foi possível importar. Verifica as coordenadas e os carimbos de data e hora com fuso horário. O CSV requer timestamp,latitude,longitude e, opcionalmente, accuracy_m, sem aspas."
+  },
   "title": "Registo GPS",
   "subtitle": "Regista movimento, distância e mapas de calor",
   "recordingSubtitle": "Regista o movimento no jogo com amostragem que poupa bateria",

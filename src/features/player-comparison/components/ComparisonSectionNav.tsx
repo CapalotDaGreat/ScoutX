@@ -53,7 +53,7 @@ export function ComparisonSectionNav({
             accessibilityState={{ selected: isActive }}
             onPress={() => onSectionChange(key)}
             className={cn(
-              isVertical ? 'rounded-xl border px-3 py-3' : 'rounded-full border px-3 py-2',
+              isVertical ? 'min-h-[44px] rounded-md border px-3 py-3' : 'min-h-[44px] rounded-md border px-3 py-2',
               isActive
                 ? 'border-accent bg-accent-muted'
                 : 'border-border bg-surface',

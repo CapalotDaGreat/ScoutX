@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export type AnimatedListItemProps = {
   children: ReactNode;
@@ -18,7 +19,8 @@ export function AnimatedListItem({
   durationMs = 320,
   className,
 }: AnimatedListItemProps) {
-  const animation = FadeInUp.delay(Math.min(index, maxStaggerIndex) * staggerMs).duration(durationMs);
+  const reducedMotion = useReducedMotion();
+  const animation = reducedMotion ? undefined : FadeInUp.delay(Math.min(index, maxStaggerIndex) * staggerMs).duration(durationMs);
 
   return (
     <Animated.View entering={animation} className={className}>

@@ -17,6 +17,6 @@ module.exports = [
     },
   },
   {
-    ignores: ['src/dev/stubs/**', 'dist-web/**', 'tmp/**', 'functions/lib/**', '**/*.generated.ts'],
+    ignores: ['src/dev/stubs/**', 'dist-web/**', 'tmp/**', 'functions/lib/**', '**/*.generated.ts', '**/.venv/**'],
   },
 ];

@@ -122,7 +122,7 @@ function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
       {rows.map(([label, value]) => (
         <View
           key={label}
-          className="min-w-[30%] flex-1 rounded-lg border border-border bg-background-secondary px-3 py-2"
+          className="min-w-[120px] flex-1 border-b border-border px-3 py-3"
         >
           <Text variant="caption" color="secondary">
             {label}
@@ -148,7 +148,7 @@ function PipelineStageList({ stages }: { stages: Array<{ id?: string; label: str
   return (
     <View className="gap-2">
       {stages.map((stage) => (
-        <View key={stage.id ?? stage.label} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
+        <View key={stage.id ?? stage.label} className="gap-1 border-b border-border py-3">
           <Text weight="semibold">{stage.id ? t(`stages.${stage.id}`, { defaultValue: stage.label }) : stage.label}</Text>
           <Text variant="caption" color="secondary">
             {t(`stageStatus.${toStageStatus(stage.status)}`)}
@@ -169,7 +169,7 @@ function SegmentList({ segments }: { segments: Array<{ label: string; startSec: 
   return (
     <View className="gap-2">
       {segments.map((segment) => (
-        <View key={`${segment.label}-${segment.startSec}`} className="rounded-lg border border-border bg-background-secondary px-3 py-2">
+        <View key={`${segment.label}-${segment.startSec}`} className="gap-1 border-b border-border py-3">
           <Text weight="semibold">{segment.label}</Text>
           <Text variant="caption" color="secondary">
             {formatClock(segment.startSec)}–{formatClock(segment.endSec)}
@@ -203,7 +203,12 @@ function ReportView({
 
   return (
     <View className="gap-4">
-      <Card variant="elevated" padding="lg" className="gap-2">
+      {onOpenReport ? (
+        <Button variant="secondary" onPress={onOpenReport}>
+          {t('modalReport.openFull')}
+        </Button>
+      ) : null}
+      <Card variant="outlined" padding="md" className="gap-2 rounded-lg">
         <Heading level={3}>{report.headline}</Heading>
         <Text variant="caption" color="secondary">
           {t('modalReport.quality', { band: t(`band.${report.coverage?.confidenceLabel ?? 'Insufficient'}`), jersey: job.targeting.jerseyNumber })}
@@ -215,7 +220,7 @@ function ReportView({
 
       <VideoIntelligenceSections job={job} />
 
-      <Card variant="default" padding="lg" className="gap-3">
+      <View className="gap-3 border-t border-border pt-4">
         <Heading level={3}>{t('modalReport.coverageTitle')}</Heading>
         <View className="gap-1">
           <Text variant="body-sm">{t('modalReport.visible', { pct: report.coverage?.visiblePct ?? 0 })}</Text>
@@ -225,26 +230,21 @@ function ReportView({
             {report.coverage?.note ?? t('modalReport.noCoverage')}
           </Text>
         </View>
-      </Card>
+      </View>
 
-      <Card variant="default" padding="lg" className="gap-3">
+      <View className="gap-3 border-t border-border pt-4">
         <Heading level={3}>{t('modalReport.pipelineTitle')}</Heading>
         <PipelineStageList stages={report.pipelineStages ?? []} />
-      </Card>
+      </View>
 
-      <Card variant="default" padding="lg" className="gap-3">
+      <View className="gap-3 border-t border-border pt-4">
         <Heading level={3}>{t('modalReport.segmentsTitle')}</Heading>
         <SegmentList segments={report.segments ?? []} />
-      </Card>
+      </View>
 
-      <Card variant="default" padding="lg" className="gap-3">
+      <View className="gap-3 border-t border-border pt-4">
         <Heading level={3}>{t('modalReport.statsTitle')}</Heading>
         <StatGrid stats={report.estimatedStats} />
-        {onOpenReport ? (
-          <Button variant="secondary" onPress={onOpenReport}>
-            {t('modalReport.openFull')}
-          </Button>
-        ) : null}
         {onApply && hasApplyableEstimatedStats(report.estimatedStats) && job.identityConfirmation?.state === 'confirmed' ? (
           <Button variant="accent" loading={applying} onPress={onApply}>
             {t('modalReport.apply')}
@@ -260,35 +260,35 @@ function ReportView({
             {t('modalReport.buildReel')}
           </Button>
         ) : null}
-      </Card>
+      </View>
 
-      <Card variant="default" padding="lg" className="gap-2">
+      <View className="gap-2 border-t border-border pt-4">
         <Heading level={3}>{t('modalReport.strengths')}</Heading>
         {report.strengths.map((item) => (
           <Text key={item} variant="body-sm">
             • {item}
           </Text>
         ))}
-      </Card>
+      </View>
 
-      <Card variant="default" padding="lg" className="gap-2">
+      <View className="gap-2 border-t border-border pt-4">
         <Heading level={3}>{t('modalReport.improvements')}</Heading>
         {report.improvements.map((item) => (
           <Text key={item} variant="body-sm">
             • {item}
           </Text>
         ))}
-      </Card>
+      </View>
 
       {report.coachingNotes.trim() ? (
-        <Card variant="default" padding="lg" className="gap-2">
+        <View className="gap-2 border-t border-border pt-4">
           <Heading level={3}>{t('modalReport.coachNotes')}</Heading>
           <Text variant="body-sm">{report.coachingNotes}</Text>
-        </Card>
+        </View>
       ) : null}
 
       {report.evidence?.length ? (
-        <Card variant="default" padding="lg" className="gap-2">
+        <View className="gap-2 border-t border-border pt-4">
           <Heading level={3}>{t('modalReport.evidenceTitle')}</Heading>
           {report.evidence.map((item, index) => (
             <View key={`${item.label}-${index}`} className="gap-1 border-b border-border pb-2 last:border-0 last:pb-0">
@@ -305,7 +305,7 @@ function ReportView({
             </View>
           ))}
           <CorrectionFootnote api={corrections} />
-        </Card>
+        </View>
       ) : null}
 
       {report.moments.length > 0 ? (
@@ -609,7 +609,11 @@ export function MatchAnalysisModal({
 
   return (
     <Modal visible={visible && !isPicking} onClose={onClose} title={t('modal.title')} size="fullscreen">
-      <ScrollView className="flex-1" contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ gap: 20, padding: 16, paddingBottom: 32 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="body-sm" color="secondary">
           {t('modal.intro')}
         </Text>
@@ -750,7 +754,7 @@ export function MatchAnalysisModal({
               <Text weight="semibold">{t('matchAnalysis:video.position.title')}</Text>
               <View className="flex-row flex-wrap gap-2">
                 {TARGET_POSITIONS.map((item) => (
-                  <ChoiceChip key={item} label={t(`matchAnalysis:video.position.${item}`)} selected={position === item} onPress={() => setPosition(item)} />
+                  <ChoiceChip key={item} label={item === 'goalkeeper' || item === 'defender' || item === 'midfielder' || item === 'forward' || item === 'unknown' ? t(`matchAnalysis:video.position.${item}`) : item} selected={position === item} onPress={() => setPosition(item)} />
                 ))}
               </View>
             </View>
@@ -767,8 +771,8 @@ export function MatchAnalysisModal({
               keyboardType="number-pad"
               placeholder="10"
             />
-            <View className="flex-row gap-3">
-              <View className="flex-1">
+            <View className="flex-row flex-wrap gap-3">
+              <View className="min-w-[140px] flex-1">
                 <Input
                   label={t('matchAnalysis:modalForm.kitPrimary')}
                   value={kitPrimaryColor}
@@ -776,7 +780,7 @@ export function MatchAnalysisModal({
                   placeholder={t('matchAnalysis:modalForm.kitPrimaryPlaceholder')}
                 />
               </View>
-              <View className="flex-1">
+              <View className="min-w-[140px] flex-1">
                 <Input
                   label={t('matchAnalysis:modalForm.kitSecondary')}
                   value={kitSecondaryColor}

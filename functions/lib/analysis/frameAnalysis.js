@@ -33,6 +33,7 @@ const validation_1 = require("./validation");
 const technique_1 = require("./technique");
 const workerContract_1 = require("./workerContract");
 const redact_1 = require("../logging/redact");
+const positionFramework_1 = require("./positionFramework");
 exports.MATCH_COLLECTION = 'matchAnalysisJobs';
 const QUOTA_COLLECTION = 'analysisQuotas';
 const MAX_FRAME_BYTES = 1.8 * 1024 * 1024;
@@ -48,17 +49,24 @@ const ERROR_TEXT = {
     ai_privacy_configuration_required: 'Video analysis is not available yet.',
     video_consent_required: 'Confirm how your video is processed before analysis starts.',
 };
-async function failJob(db, jobId, code, stages, activeStage) {
+async function failJob(db, jobId, code, stages, activeStage, expectedGeneration) {
     const now = new Date().toISOString();
-    await db.collection(exports.MATCH_COLLECTION).doc(jobId).set({
-        status: 'failed',
-        pipelineState: 'failed',
-        errorCode: code,
-        error: ERROR_TEXT[code],
-        lease: null,
-        updatedAt: now,
-        ...(stages && activeStage ? { pipelineStages: (0, stages_1.updateStage)(stages, activeStage, 'failed', now, { retryable: true }) } : {}),
-    }, { merge: true });
+    const ref = db.collection(exports.MATCH_COLLECTION).doc(jobId);
+    await db.runTransaction(async (tx) => {
+        const latest = await tx.get(ref);
+        if (!latest.exists || latest.get('cancelRequested') === true
+            || (expectedGeneration !== undefined && (latest.get('pipelineGeneration') ?? 0) !== expectedGeneration))
+            return;
+        tx.set(ref, {
+            status: 'failed',
+            pipelineState: 'failed',
+            errorCode: code,
+            error: ERROR_TEXT[code],
+            lease: null,
+            updatedAt: now,
+            ...(stages && activeStage ? { pipelineStages: (0, stages_1.updateStage)(stages, activeStage, 'failed', now, { retryable: true }) } : {}),
+        }, { merge: true });
+    });
 }
 function emptyStats() {
     return {
@@ -166,7 +174,7 @@ async function readOwnedFrameAsDataUrl(uid, jobId, storagePath) {
         return null;
     }
 }
-async function acquireJobLease(db, uid, jobId, requestId, idempotencyKey) {
+async function acquireJobLease(db, uid, jobId, requestId, idempotencyKey, expectedGeneration) {
     const jobRef = db.collection(exports.MATCH_COLLECTION).doc(jobId);
     const quotaRef = db.collection(QUOTA_COLLECTION).doc(uid);
     const now = new Date();
@@ -177,6 +185,9 @@ async function acquireJobLease(db, uid, jobId, requestId, idempotencyKey) {
         if (!snap.exists)
             throw new https_1.HttpsError('not-found', 'Match analysis job not found.');
         const job = snap.data();
+        if (expectedGeneration !== undefined && (job.pipelineGeneration ?? 0) !== expectedGeneration) {
+            throw new https_1.HttpsError('aborted', 'Analysis was superseded.');
+        }
         if (job.playerId !== uid)
             throw new https_1.HttpsError('permission-denied', 'You can only analyze your own footage.');
         if (job.cancelRequested)
@@ -220,7 +231,10 @@ async function acquireJobLease(db, uid, jobId, requestId, idempotencyKey) {
         return { ...job, pipelineStages: stages };
     });
 }
-exports.TARGET_POSITIONS = ['goalkeeper', 'defender', 'midfielder', 'forward', 'unknown'];
+exports.TARGET_POSITIONS = [
+    'goalkeeper', 'defender', 'midfielder', 'forward', 'unknown',
+    'GK', 'CB', 'LB', 'RB', 'LWB', 'RWB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'LW', 'RW', 'CF', 'ST',
+];
 /** The target specification exactly as the player typed it; it reaches the model only as data. */
 function targetingMetadata(job) {
     const targeting = job.targeting ?? {};
@@ -235,13 +249,16 @@ function targetingMetadata(job) {
     };
 }
 function isGoalkeeperJob(job) {
-    return job.targeting?.position === 'goalkeeper';
+    return job.targeting?.position === 'goalkeeper' || job.targeting?.position === 'GK';
 }
 /** Writes the finished report unless the job was cancelled meanwhile. */
 async function finishJob(db, jobId, params) {
     const jobRef = db.collection(exports.MATCH_COLLECTION).doc(jobId);
     const cancelled = await db.runTransaction(async (tx) => {
         const latest = await tx.get(jobRef);
+        if (!latest.exists || (params.expectedGeneration !== undefined
+            && (latest.get('pipelineGeneration') ?? 0) !== params.expectedGeneration))
+            return true;
         if (latest.get('cancelRequested') === true) {
             tx.set(jobRef, { lease: null, updatedAt: params.now }, { merge: true });
             return true;
@@ -267,7 +284,7 @@ async function finishJob(db, jobId, params) {
         return false;
     });
     if (cancelled)
-        throw new https_1.HttpsError('aborted', 'Analysis was cancelled.');
+        throw new https_1.HttpsError('aborted', 'Analysis was cancelled or superseded.');
 }
 const SYSTEM_RULES = [
     'You are PitchProof Match Analyst.',
@@ -284,6 +301,7 @@ function buildFramePrompt(params) {
         system: SYSTEM_RULES,
         trusted: [
             'Review sampled still frames for ONE nominated player described in USER_METADATA.targeting.',
+            ...(0, positionFramework_1.positionEvaluationInstructions)(targetingMetadata(job)),
             `Video duration seconds: ${job.measuredDurationSec ?? job.durationSec}`,
             'Frame timeline guide:',
             ...frames.map((frame, index) => `Image ${index + 1} (frameId=${frame.id}): ${frame.timestampSec}s into the recording`),
@@ -334,12 +352,15 @@ async function runFrameAnalysis(params) {
     const existing = await jobRef.get();
     if (!existing.exists)
         throw new https_1.HttpsError('not-found', 'Match analysis job not found.');
+    if (params.expectedGeneration !== undefined && (existing.get('pipelineGeneration') ?? 0) !== params.expectedGeneration) {
+        throw new https_1.HttpsError('aborted', 'Analysis was superseded.');
+    }
     if (existing.get('playerId') !== uid)
         throw new https_1.HttpsError('permission-denied', 'You can only analyze your own footage.');
     if (existing.get('status') === 'complete')
         throw new https_1.HttpsError('already-exists', 'This analysis is already complete.');
     if (!(0, providerConfig_1.isFootageProcessingApproved)()) {
-        await failJob(db, jobId, 'ai_privacy_configuration_required');
+        await failJob(db, jobId, 'ai_privacy_configuration_required', undefined, undefined, existing.get('pipelineGeneration') ?? 0);
         throw new https_1.HttpsError('failed-precondition', ERROR_TEXT.ai_privacy_configuration_required, {
             reason: 'ai_privacy_configuration_required',
         });
@@ -348,17 +369,17 @@ async function runFrameAnalysis(params) {
         await (0, consentGate_1.assertAiConsent)([uid], db);
     }
     catch (error) {
-        await failJob(db, jobId, 'ai_consent_required');
+        await failJob(db, jobId, 'ai_consent_required', undefined, undefined, existing.get('pipelineGeneration') ?? 0);
         throw error;
     }
     try {
         await (0, videoConsent_1.assertVideoConsent)(db, uid, jobId);
     }
     catch (error) {
-        await failJob(db, jobId, 'video_consent_required');
+        await failJob(db, jobId, 'video_consent_required', undefined, undefined, existing.get('pipelineGeneration') ?? 0);
         throw error;
     }
-    const job = await acquireJobLease(db, uid, jobId, requestId, params.idempotencyKey);
+    const job = await acquireJobLease(db, uid, jobId, requestId, params.idempotencyKey, params.expectedGeneration);
     const stages = (0, stages_1.parseStages)(job.pipelineStages);
     const durationSec = job.measuredDurationSec ?? job.durationSec ?? 0;
     // Jobs created before modes existed have no server-set mode; they keep the frame review.
@@ -378,7 +399,7 @@ async function runFrameAnalysis(params) {
         }
     }
     if (imageContents.length < exports.MIN_ANALYSIS_FRAMES) {
-        await failJob(db, jobId, 'frames_insufficient', stages, 'player-identification');
+        await failJob(db, jobId, 'frames_insufficient', stages, 'player-identification', job.pipelineGeneration ?? 0);
         throw new https_1.HttpsError('failed-precondition', ERROR_TEXT.frames_insufficient, { reason: 'frames_insufficient' });
     }
     const identityConfirmed = job.identityConfirmation?.state === 'confirmed';
@@ -412,7 +433,7 @@ async function runFrameAnalysis(params) {
         ],
     });
     if (!result.ok) {
-        await failJob(db, jobId, 'model_unavailable', stages, 'player-identification');
+        await failJob(db, jobId, 'model_unavailable', stages, 'player-identification', job.pipelineGeneration ?? 0);
         throw new https_1.HttpsError('unavailable', ERROR_TEXT.model_unavailable, { reason: 'model_unavailable' });
     }
     let raw;
@@ -421,7 +442,7 @@ async function runFrameAnalysis(params) {
     }
     catch {
         firebase_functions_1.logger.error('Match analysis output was not a JSON object', { jobId });
-        await failJob(db, jobId, 'model_output_invalid', stages, 'player-identification');
+        await failJob(db, jobId, 'model_output_invalid', stages, 'player-identification', job.pipelineGeneration ?? 0);
         throw new https_1.HttpsError('internal', ERROR_TEXT.model_output_invalid, { reason: 'model_output_invalid' });
     }
     const now = new Date().toISOString();
@@ -443,7 +464,7 @@ async function runFrameAnalysis(params) {
             modelId: model,
             versions,
         });
-        await finishJob(db, jobId, { report: built.report, stages: finalStages, pendingCoaching: built.pendingCoaching, now });
+        await finishJob(db, jobId, { report: built.report, stages: finalStages, pendingCoaching: built.pendingCoaching, now, expectedGeneration: job.pipelineGeneration ?? 0 });
         return { jobId, status: 'complete' };
     }
     const report = normalizeReport({
@@ -473,7 +494,7 @@ async function runFrameAnalysis(params) {
     const pendingCoaching = identityConfirmed
         ? null
         : pendingFrameCoaching(raw, new Set(frameSamples.map((frame) => frame.id)), selfReported, evidence.length > 0);
-    await finishJob(db, jobId, { report, stages: finalStages, pendingCoaching, now });
+    await finishJob(db, jobId, { report, stages: finalStages, pendingCoaching, now, expectedGeneration: job.pipelineGeneration ?? 0 });
     return { jobId, status: 'complete' };
 }
 function pendingFrameCoaching(raw, knownFrameIds, selfReported, hasEvidence) {

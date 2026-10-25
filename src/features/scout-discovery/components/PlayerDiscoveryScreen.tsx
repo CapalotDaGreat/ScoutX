@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, useWindowDimensions } from 'react-native';
+import { discoveryColumns } from '@/components/player-card/playerCardPresentation';
 import { AppSafeAreaView } from '@/components/layout/AppSafeAreaView';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { Button } from '@/components/primitives/Button';
@@ -8,7 +9,7 @@ import { SearchBar } from '@/components/primitives/SearchBar';
 import { Text } from '@/components/primitives/Text';
 import { FlashListView } from '@/components/lists/FlashListView';
 import { ActiveFilterChips } from '@/features/scout-discovery/components/ActiveFilterChips';
-import { DiscoveryCardSkeleton, DiscoveryListSkeleton } from '@/features/scout-discovery/components/DiscoveryCardSkeleton';
+import { DiscoveryCardSkeleton } from '@/features/scout-discovery/components/DiscoveryCardSkeleton';
 import { DiscoveryFilterSheet } from '@/features/scout-discovery/components/DiscoveryFilterSheet';
 import { DiscoverySearchPanel } from '@/features/scout-discovery/components/DiscoverySearchPanel';
 import { DiscoverySortBar } from '@/features/scout-discovery/components/DiscoverySortBar';
@@ -78,6 +79,7 @@ export function PlayerDiscoveryScreen({
 }: PlayerDiscoveryScreenProps) {
   const { t } = useAppTranslation(['scout', 'common', 'errors']);
   const { colors } = useTheme();
+  const columns = discoveryColumns(useWindowDimensions().width);
   const workspace = useScoutWorkspace();
   const playerSave = useScoutPlayerSave();
   const [filtersVisible, setFiltersVisible] = useState(false);
@@ -87,7 +89,7 @@ export function PlayerDiscoveryScreen({
   const [saveError, setSaveError] = useState<string | null>(null);
   const canSaveFilters = allowSavedFilters ?? !guestMode;
 
-  const { players, isLoading, isLoadingMore, error, hasMore, loadMore, refresh } = usePlayerDiscovery({
+  const { players, isLoading, isLoadingMore, isRefreshing, isSearchPending, error, hasMore, loadMore, refresh } = usePlayerDiscovery({
     search,
     searchScope,
     filters,
@@ -162,11 +164,11 @@ export function PlayerDiscoveryScreen({
     [onSaveCurrentPreset],
   );
 
-  const showSearchPanel = searchFocused || search.trim().length === 0;
+  const showSearchPanel = searchFocused;
 
   const renderItem = useCallback(
     ({ item, index }: { item: DiscoverablePlayer; index: number }) => (
-      <View className="mb-3 px-4">
+      <View className="mb-4 px-4" style={{ flex: 1 }}>
         <PlayerDiscoveryCard
           player={item}
           index={index}
@@ -205,6 +207,7 @@ export function PlayerDiscoveryScreen({
         <SearchScopeDropdown value={searchScope} onChange={onSearchScopeChange} />
         <View className="min-w-0 flex-1">
           <SearchBar
+            maxLength={256}
             value={search}
             onChangeText={onSearchChange}
             onClear={() => onSearchChange('')}
@@ -232,10 +235,10 @@ export function PlayerDiscoveryScreen({
         onSaveCurrent={canSaveFilters ? () => setSaveModalVisible(true) : undefined}
         onRemovePreset={canSaveFilters ? workspace.removeFilterPreset : undefined}
       />
-      <View className="flex-row items-center gap-3">
+      <View className="flex-row items-end gap-3 border-t border-divider pt-3">
         <Button
           variant="secondary"
-          className="flex-1"
+          className="min-h-[44px] flex-1 rounded-md"
           leftIcon={<SlidersHorizontal size={18} color={colors.textPrimary} />}
           onPress={() => setFiltersVisible(true)}
         >
@@ -243,10 +246,10 @@ export function PlayerDiscoveryScreen({
             ? t('scout:discover.filtersWithCount', { count: activeFilterCount })
             : t('scout:discover.filters')}
         </Button>
+        <View className="min-w-0 flex-1"><DiscoverySortBar sort={sort} onSortChange={onSortChange} /></View>
       </View>
       <ActiveFilterChips filters={filters} onChange={onFiltersReplace} onClearAll={onResetFilters} />
-      <DiscoverySortBar sort={sort} onSortChange={onSortChange} />
-      {!isLoading ? (
+      {!isLoading && !isSearchPending ? (
         <Text variant="caption" color="secondary" accessibilityLiveRegion="polite">
           {hasMore
             ? t('scout:discover.resultsCountMore', { count: players.length })
@@ -261,34 +264,12 @@ export function PlayerDiscoveryScreen({
     </View>
   );
 
-  if (isLoading && players.length === 0) {
-    return (
-      <AppSafeAreaView className="flex-1" edges={['top']}>
-        <View className="flex-row items-start gap-2 border-b border-divider px-4 pb-4 pt-4">
-          <View className="min-w-0 flex-1">
-            <Heading level={2}>{t('scout:discover.title')}</Heading>
-            <Text variant="body-sm" color="secondary" className="mt-1">
-              {t('scout:discover.loadingSubtitle')}
-            </Text>
-          </View>
-          {onSettingsPress ? (
-            <View className="shrink-0">
-              <HeaderIconButton
-                accessibilityLabel={t('common:settings')}
-                onPress={onSettingsPress}
-              />
-            </View>
-          ) : null}
-        </View>
-        <DiscoveryListSkeleton count={4} />
-      </AppSafeAreaView>
-    );
-  }
-
   return (
     <AppSafeAreaView className="flex-1" edges={['top']}>
       <FlashListView
-        data={players}
+        key={columns}
+        numColumns={columns}
+        data={isSearchPending ? [] : players}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         ListHeaderComponent={
@@ -313,7 +294,9 @@ export function PlayerDiscoveryScreen({
           </>
         }
         ListEmptyComponent={
-          <View className="px-4 py-8">
+          isLoading || isSearchPending ? <View className="gap-3 p-4"><ActivityIndicator color={colors.accent} /><DiscoveryCardSkeleton /></View> : error ? null : hasMore ? (
+            <View className="px-4 py-6"><Text color="secondary">{t('scout:discover.continueSearch')}</Text></View>
+          ) : <View className="px-4 py-8">
             <EmptyState
               title={
                 search
@@ -330,9 +313,12 @@ export function PlayerDiscoveryScreen({
             />
           </View>
         }
-        onEndReached={loadMore}
+        onEndReached={() => {
+          // Empty filtered batches require an explicit continuation, not a silent full-directory scan.
+          if (players.length > 0 && !isLoading && !isLoadingMore && !isSearchPending && !error) loadMore();
+        }}
         onEndReachedThreshold={0.4}
-        refreshing={isLoading}
+        refreshing={isRefreshing}
         onRefresh={refresh}
         ListFooterComponent={
           isLoadingMore ? (
@@ -340,7 +326,7 @@ export function PlayerDiscoveryScreen({
               <DiscoveryCardSkeleton />
               <ActivityIndicator color={colors.accent} />
             </View>
-          ) : null
+          ) : hasMore && !isSearchPending && !error ? <View className="px-4 py-4"><Button variant="secondary" onPress={loadMore}>{t('common:loadMore')}</Button></View> : null
         }
       />
 

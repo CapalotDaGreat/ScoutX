@@ -1,7 +1,7 @@
 import { ScrollView, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { RecruitmentPipelineCard } from '@/features/scout-recruitment/components/RecruitmentPipelineCard';
-import { RECRUITMENT_STAGE_COLORS } from '@/features/scout-recruitment/constants';
+import { useTheme } from '@/theme';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { type RecruitmentEntry, type RecruitmentStage } from '@/features/scout-recruitment/types';
 import { useCompactLayout } from '@/hooks/useCompactLayout';
@@ -20,12 +20,13 @@ export function RecruitmentStageColumn({
   onMovePress,
 }: RecruitmentStageColumnProps) {
   const { t } = useAppTranslation('scout');
-  const color = RECRUITMENT_STAGE_COLORS[stage];
+  const { colors } = useTheme();
+  const color = colors.accent;
   const { pipelineColumnWidth } = useCompactLayout();
 
   return (
     <View
-      className="mr-3 rounded-2xl border border-border bg-surface-cool"
+      className="mr-3 border-r border-divider"
       style={{ width: pipelineColumnWidth }}
       testID={`recruitment-column-${stage}`}
     >
@@ -37,9 +38,9 @@ export function RecruitmentStageColumn({
           </View>
           <View
             className="min-w-[24px] rounded-full px-2 py-0.5"
-            style={{ backgroundColor: `${color}22` }}
+            style={{ backgroundColor: colors.backgroundSecondary }}
           >
-            <Text variant="caption" className="text-center font-sans-bold" style={{ color }}>
+            <Text variant="caption" className="text-center font-sans-bold" color="secondary">
               {entries.length}
             </Text>
           </View>

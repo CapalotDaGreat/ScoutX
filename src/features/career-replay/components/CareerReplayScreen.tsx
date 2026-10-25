@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
+import { ScrollView, View } from 'react-native';
 import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
-import { AmbientBackdrop } from '@/components/layout/AmbientBackdrop';
 import { Button } from '@/components/primitives/Button';
 import { Text } from '@/components/primitives/Text';
 import { EMPTY_CAREER_REPLAY } from '@/features/career-replay/constants';
@@ -24,7 +22,6 @@ import {
 import { usePortfolioAnalytics } from '@/features/portfolio-analytics/hooks/usePortfolioAnalytics';
 import { usePlayerWorkspace } from '@/features/player-profile/context/PlayerWorkspaceProvider';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
-import { useTheme } from '@/theme';
 
 export type CareerReplayScreenProps = {
   onBack: () => void;
@@ -41,45 +38,17 @@ function CareerReplayHero({
   position: string;
   club: string;
 }) {
-  const { colors } = useTheme();
-  const [size, setSize] = useState({ width: 360, height: 160 });
-
-  const onLayout = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    if (width > 0 && height > 0) {
-      setSize({ width, height });
-    }
-  };
-
   return (
-    <View onLayout={onLayout} className="overflow-hidden rounded-2xl border border-border">
-      <View className="absolute inset-0" pointerEvents="none">
-        <Svg width={size.width} height={size.height}>
-          <Defs>
-            <LinearGradient id="careerReplayWash" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor="#1B1D22" stopOpacity="1" />
-              <Stop offset="0.55" stopColor="#1A2A22" stopOpacity="1" />
-              <Stop offset="1" stopColor={colors.accent} stopOpacity="0.4" />
-            </LinearGradient>
-            <LinearGradient id="careerReplayGold" x1="0" y1="1" x2="1" y2="0">
-              <Stop offset="0" stopColor={colors.gold} stopOpacity="0" />
-              <Stop offset="1" stopColor={colors.gold} stopOpacity="0.3" />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width={size.width} height={size.height} fill="url(#careerReplayWash)" />
-          <Rect x="0" y="0" width={size.width} height={size.height} fill="url(#careerReplayGold)" />
-        </Svg>
-      </View>
-
-      <View className="gap-2 p-4">
-        <Text variant="overline" className="text-gold">
+    <View className="border-b border-border pb-4">
+      <View className="gap-2 border-l-2 border-accent pl-3">
+        <Text variant="overline" className="text-accent">
           {seasonLabel}
         </Text>
-        <Text weight="semibold" className="text-2xl text-[#F7F6F3]">
+        <Text weight="semibold" className="text-2xl text-foreground">
           {playerName}
         </Text>
         {position || club ? (
-          <Text variant="body-sm" className="text-[#B7BDC8]">
+          <Text variant="body-sm" color="secondary">
             {[position, club].filter(Boolean).join(' · ')}
           </Text>
         ) : null}
@@ -141,15 +110,11 @@ export function CareerReplayScreen({ onBack }: CareerReplayScreenProps) {
   return (
     <>
       <ShareCaptureLayer />
-      <View className="absolute inset-0" pointerEvents="none">
-        <AmbientBackdrop mood="celebration" />
-      </View>
       <Screen
         title={t('career:replayTitle')}
         subtitle={season ?? t('career:replaySeasonSubtitle')}
         safeArea
         scrollable
-        className="bg-transparent"
         footer={
           <Button variant="secondary" onPress={onBack} fullWidth>
             {t('common:back')}
@@ -193,8 +158,8 @@ export function CareerReplayScreen({ onBack }: CareerReplayScreenProps) {
             >
               <View className="gap-2">
                 {seasonMatches.map((match) => (
-                  <View key={match.id} className="flex-row items-center justify-between gap-2">
-                    <Text variant="body-sm" className="min-w-0 flex-1" numberOfLines={1}>
+                  <View key={match.id} className="gap-1 border-b border-border py-2">
+                    <Text variant="body-sm" className="min-w-0 flex-1">
                       {match.opponent}
                       {match.position ? ` · ${match.position}` : ''}
                     </Text>

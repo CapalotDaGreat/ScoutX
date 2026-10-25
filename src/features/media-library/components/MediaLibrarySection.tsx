@@ -7,6 +7,7 @@ import { ChoiceChip as Chip } from '@/components/primitives/ChoiceChip';
 import { Heading } from '@/components/primitives/Heading';
 import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
+import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { MediaRepository } from '@/features/media-library/repositories/MediaRepository';
 import {
   EMPTY_MEDIA_FILTER,
@@ -44,6 +45,7 @@ export function MediaLibrarySection({
   const { t } = useAppTranslation('media');
   const [items, setItems] = useState<MediaItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [granteeId, setGranteeId] = useState('');
   const [busyId, setBusyId] = useState<string | null>(null);
   const [filter, setFilter] = useState<MediaFilter>(EMPTY_MEDIA_FILTER);
@@ -66,7 +68,12 @@ export function MediaLibrarySection({
   }, [legacyVideos, userId]);
 
   useEffect(() => {
-    void reload().catch((err: unknown) => setError(toUserMessage(err, t('library.loadFailed'))));
+    let active = true;
+    setIsLoading(true);
+    void reload()
+      .catch((err: unknown) => { if (active) setError(toUserMessage(err, t('library.loadFailed'))); })
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
   }, [reload, t]);
 
   useEffect(() => {
@@ -143,6 +150,9 @@ export function MediaLibrarySection({
   return (
     <View className="gap-3">
       <Heading level={3}>{t('library.title')}</Heading>
+      {!isLoading ? <Text variant="caption" color="secondary">
+        {t('filter.showing', { shown: visible.length, total: items.length })}
+      </Text> : null}
       {error ? <Text variant="body-sm" color="error">{error}</Text> : null}
       {items.length > 0 ? (
         <View className="gap-2" testID="media-filters">
@@ -185,8 +195,20 @@ export function MediaLibrarySection({
           ) : null}
         </View>
       ) : null}
-      {items.length === 0 ? (
-        <Text variant="body-sm" color="secondary">{t('library.empty')}</Text>
+      {items.length > 0 ? (
+        <View className="border-y border-border py-3">
+          <Input
+            label={t('share.scoutId')}
+            value={granteeId}
+            onChangeText={setGranteeId}
+            placeholder={t('share.placeholder')}
+          />
+        </View>
+      ) : null}
+      {isLoading ? (
+        <SkeletonLoader variant="card" />
+      ) : items.length === 0 ? (
+        error ? null : <Text variant="body-sm" color="secondary">{t('library.empty')}</Text>
       ) : visible.length === 0 ? (
         <Text variant="body-sm" color="secondary">{t('filter.noMatches')}</Text>
       ) : (
@@ -232,12 +254,6 @@ export function MediaLibrarySection({
                     {t('library.makePrivate')}
                   </Button>
                 </View>
-                <Input
-                  label={t('share.scoutId')}
-                  value={granteeId}
-                  onChangeText={setGranteeId}
-                  placeholder={t('share.placeholder')}
-                />
                 <Button
                   size="sm"
                   variant="secondary"

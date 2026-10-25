@@ -80,9 +80,9 @@ export function PlayerTrialsScreen({
         ) : undefined
       }
     >
-      <View className="gap-6">
+      <View className="gap-4">
         {focusMissing ? (
-          <Card variant="outlined" padding="md" className="gap-1">
+          <Card variant="outlined" padding="md" className="gap-1 rounded-lg">
             <Text weight="semibold">{t('common:deepLink.not_found.title')}</Text>
             <Text variant="body-sm" color="secondary">
               {t('common:deepLink.not_found.body')}
@@ -117,7 +117,7 @@ export function PlayerTrialsScreen({
           <EmptyState title={t('noInvitations')} description={t('noInvitationsDescriptionFull')} />
         ) : (
           <Section title={t('yourInvitations')}>
-            <View className="gap-3">
+            <View className="gap-2">
               {trials.map((trial, index) => (
                 <TrialInvitationCard
                   key={trial.id}

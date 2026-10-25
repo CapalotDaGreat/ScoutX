@@ -27,8 +27,8 @@ export function TabSegmentControl<T extends string>({
   return (
     <View
       testID={testID}
-      className="mx-5 mb-4 flex-row rounded-2xl border border-gold/30 bg-gold-muted/40 p-1.5"
-      style={{ backgroundColor: `${colors.goldMuted}66` }}
+      className="mx-5 mb-4 flex-row rounded-lg border border-border bg-background-secondary p-1"
+      style={{ backgroundColor: colors.backgroundSecondary }}
     >
       {segments.map((segment) => {
         const isActive = segment.id === activeSegment;
@@ -43,14 +43,15 @@ export function TabSegmentControl<T extends string>({
             }}
             className={cn(
               'min-h-[44px] flex-1 items-center justify-center rounded-xl px-3 py-2.5',
-              isActive && 'bg-gold',
+              isActive && 'bg-primary',
             )}
-            style={isActive ? { backgroundColor: colors.gold } : undefined}
+            style={isActive ? { backgroundColor: colors.primary } : undefined}
           >
             <Text
               variant="label"
               weight={isActive ? 'semibold' : 'medium'}
-              color={isActive ? 'onGold' : 'secondary'}
+              color={isActive ? 'onPrimary' : 'secondary'}
+              className="text-center"
             >
               {segment.label}
             </Text>

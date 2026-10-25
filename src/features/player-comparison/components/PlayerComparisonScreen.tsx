@@ -179,7 +179,7 @@ export function PlayerComparisonScreen({
         emptyDescription={t('scout:comparison.emptyDescription')}
         emptyActionLabel={onDiscoverPress ? t('scout:pipeline.discoverPlayers') : undefined}
         onEmptyAction={onDiscoverPress}
-        contentClassName="gap-6"
+        contentClassName="gap-4"
       >
         {players.length > 0 ? (
           <View className="flex-row justify-end">
@@ -210,8 +210,8 @@ export function PlayerComparisonScreen({
         ) : (
           <>
             {isTablet ? (
-              <View className="flex-row gap-6">
-                <View className="w-[220px]">
+              <View className="flex-row gap-4">
+                <View className="w-[180px] border-r border-divider pr-3">
                   <ComparisonSectionNav
                     activeSection={resolvedSection}
                     onSectionChange={setActiveSection}

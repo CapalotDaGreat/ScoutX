@@ -1,5 +1,59 @@
 # Dependency Audit
 
+## Blocker Follow-Up: 2026-10-24
+
+Compatible overrides now resolve Firestore's gRPC 1.13.6 patch, the PostCSS
+selector parser 7.1.6 fix, Functions UUID 11.1.1 consumers, and Zod 4.6.7. The
+Zod major override is covered against Expo's actual dev-tools extension schema
+and is subject to export/browser verification; no framework downgrade was used.
+Functions production audit reports zero advisories. App production audit reports
+8 high affected package entries, all from the unpatched node-forge leaf advisory
+GHSA-86w9-cpqp-85rv (affected <=1.4.0, no published patched release). This remaining
+issue is not waived. See `docs/release/blocker-follow-up-2026-10-24.md` for the
+rollout and remaining flagship evidence requirements. Logs are
+`.local/blockers-{app,functions}-audit-final.json`; counts are production-only.
+The final full app audit (including dev dependencies) also reports 8 high,
+0 moderate/critical affected entries, all node-forge. Compatible tooling patches
+updated body-parser to 2.4.0, fast-uri to 3.1.9, ip-address to 10.7.4 and Expo
+ngrok's UUID to 11.1.1. See `.local/blockers-app-all-audit-final.json`.
+
+## Product Pass: 2026-10-24 (Production Dependencies Only)
+
+Read-only `npm audit --omit=dev --json` reported app 18 affected package entries
+(13 high, 5 moderate, 0 critical). This excludes dev dependencies and is not
+directly comparable with the all-dependency historical counts below. The
+Functions production audit initially reported 1 high and 8 moderate entries.
+The compatible `body-parser` 1.20.8 -> 1.20.9 update changed only its lock entry;
+the final production audit reports 8 moderate, 0 high/critical entries.
+
+Raw logs: `.local/project-audit-dependencies.json`,
+`.local/project-audit-functions-dependencies-final.json`. Windows system CA
+trust was enabled for npm; TLS verification was not disabled. Major framework
+downgrades suggested by npm were not applied. Remaining advisories still need
+SDK-compatible remediation and exposure review; they have not been accepted
+or certified harmless by this pass.
+
+## Fresh Release Check: 2026-10-22
+
+Both dependency trees were audited again without changing installed versions. Results: app **40**
+package entries (**34 high, 6 moderate, 0 critical**); Functions **9 moderate, 0 high/critical**.
+These are affected dependency entries, not 49 distinct advisories. The leaf advisories remain
+`@grpc/grpc-js`, `braces`, `node-forge`, `postcss-selector-parser` and `uuid`, described below.
+No advisory was silently fixed or accepted by this release-preparation change.
+
+The initial sandbox request failed DNS resolution, and the existing inspection-proxy PEM did not
+validate the current certificate chain. The successful read-only audit used Windows system trust
+with `$env:NODE_OPTIONS="$env:NODE_OPTIONS --use-system-ca"` in a temporary PowerShell process.
+TLS verification remained enabled. Raw results are in gitignored `.local/asc-audit-app.json` and
+`.local/asc-audit-functions.json`.
+
+The advertised app fixes still include incompatible SDK downgrades and Tailwind 4; the server fix
+requires Firebase Admin 14 / Functions 7 major upgrades. These are not suitable for an automatic
+`npm audit fix --force`. The exposure assessment below and pending owner finding SEC-14 still need
+review before launch. Reassess any major upgrade with the complete emulator and native-device suite.
+
+## Historical Baseline: 2026-10-09
+
 Re-run on 2026-10-09 with `npm audit --json` (all dependencies, including dev) for the app and
 `npm audit --json --prefix functions`. The earlier SDK-migration baseline is in
 `docs/rebuild/DEPENDENCY_AUDIT.md`. Each advisory was reviewed individually; no blanket fix was run.

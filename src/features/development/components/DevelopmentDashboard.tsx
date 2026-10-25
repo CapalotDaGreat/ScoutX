@@ -6,7 +6,6 @@ import { EmptyState } from '@/components/feedback/EmptyState';
 import { SkeletonLoader } from '@/components/feedback/SkeletonLoader';
 import { Badge, type BadgeVariant } from '@/components/primitives/Badge';
 import { Button } from '@/components/primitives/Button';
-import { Card } from '@/components/primitives/Card';
 import { Text } from '@/components/primitives/Text';
 import { EvidenceStateBadge } from '@/components/evidence/EvidenceStateBadge';
 import { ProvenanceBadge } from '@/components/evidence/ProvenanceBadge';
@@ -31,6 +30,7 @@ import { useGoalStepCopy } from '@/features/today/components/TodayIntelligence';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { FreshnessLabel } from '@/components/evidence/FreshnessLabel';
 import { toUserMessage } from '@/utils/userFacingError';
+import { useTheme } from '@/theme';
 
 export type DevelopmentDashboardProps = {
   development: UseDevelopmentResult;
@@ -161,8 +161,9 @@ function GoalCard({
   const { t } = useAppTranslation(['development', 'portfolio']);
   const goalStepCopy = useGoalStepCopy();
   const { goal, status, current, percent, daysLeft } = summary;
+  const { colors } = useTheme();
   return (
-    <Card variant="default" padding="sm" className="gap-2">
+    <View className="gap-3 border-b border-border py-4">
       <View className="flex-row items-start justify-between gap-2">
         <View className="min-w-0 flex-1 gap-1">
           <Text weight="semibold" numberOfLines={2}>
@@ -196,9 +197,16 @@ function GoalCard({
         </Text>
       )}
       {percent !== null ? (
-        <Text variant="caption" color="secondary">
-          {t('development:goal.percentComplete', { percent })}
-        </Text>
+        <View className="gap-2">
+          <Text variant="caption" color="secondary">
+            {t('development:goal.percentComplete', { percent })}
+          </Text>
+          <View accessibilityRole="progressbar" accessibilityLabel={goal.title}
+            accessibilityValue={{ min: 0, max: 100, now: Math.max(0, Math.min(100, percent)) }}
+            className="h-1 overflow-hidden rounded-sm bg-background-secondary">
+            <View style={{ width: `${Math.max(0, Math.min(100, percent))}%`, height: 4, backgroundColor: colors.accent }} />
+          </View>
+        </View>
       ) : null}
       {daysLeft !== null ? (
         <Text variant="caption" color={daysLeft < 0 ? 'warning' : 'secondary'}>
@@ -217,7 +225,7 @@ function GoalCard({
           {t('development:goal.markAchieved')}
         </Button>
       ) : null}
-    </Card>
+    </View>
   );
 }
 
@@ -227,7 +235,7 @@ function TrainingRow({ session }: { session: TrainingSession }) {
     ? session.date
     : new Intl.DateTimeFormat(i18n.language, { day: 'numeric', month: 'short' }).format(new Date(session.date));
   return (
-    <View className="flex-row items-start gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+    <View className="flex-row items-start gap-3 border-b border-border py-3">
       <View className="min-w-0 flex-1">
         <Text weight="semibold" numberOfLines={1}>
           {session.focus}
@@ -250,7 +258,7 @@ function BeforeVsNowRow({ comparison }: { comparison: BeforeVsNowComparison }) {
   const { t } = useAppTranslation(['development']);
   if (comparison.state === 'insufficient') {
     return (
-      <View className="gap-1 rounded-xl border border-border bg-surface px-4 py-3">
+      <View className="gap-1 border-b border-border py-3">
         <View className="flex-row items-center justify-between gap-2">
           <Text weight="semibold">{metricShort(t, comparison.metricKey)}</Text>
           <EvidenceStateBadge state="insufficient" />
@@ -276,7 +284,7 @@ function BeforeVsNowRow({ comparison }: { comparison: BeforeVsNowComparison }) {
         ? t('development:beforeVsNow.improved', { delta: Math.abs(comparison.delta).toFixed(2) })
         : t('development:beforeVsNow.declined', { delta: Math.abs(comparison.delta).toFixed(2) });
   return (
-    <View className="gap-1 rounded-xl border border-border bg-surface px-4 py-3">
+    <View className="gap-1 border-b border-border py-3">
       <View className="flex-row items-center justify-between gap-2">
         <Text weight="semibold">{metricShort(t, comparison.metricKey)}</Text>
         <ProvenanceBadge provenance={comparison.provenance} />
@@ -301,7 +309,7 @@ function BeforeVsNowRow({ comparison }: { comparison: BeforeVsNowComparison }) {
 function DnaRow({ trait }: { trait: PlayerDnaTrait }) {
   const { t } = useAppTranslation(['development']);
   return (
-    <View className="flex-row items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3">
+    <View className="flex-row items-center gap-3 border-b border-border py-3">
       <View className="min-w-0 flex-1">
         <Text weight="semibold">{dnaLabel(t, trait.id)}</Text>
         {trait.value === null ? (
@@ -329,7 +337,7 @@ function HowIPlayCard({ howIPlay }: { howIPlay: HowIPlay }) {
   const positions = selfReported.positions.join(' · ');
   return (
     <View className="gap-3">
-      <Card variant="default" padding="sm" className="gap-2">
+      <View className="gap-2 border-b border-border py-3">
         <View className="flex-row items-center justify-between">
           <Text weight="semibold">{t('development:howIPlay.selfReportedTitle')}</Text>
           <ProvenanceBadge provenance="self_reported" />
@@ -344,7 +352,7 @@ function HowIPlayCard({ howIPlay }: { howIPlay: HowIPlay }) {
         ) : (
           <Text color="tertiary">{t('development:howIPlay.noStyle')}</Text>
         )}
-      </Card>
+      </View>
       <Text variant="caption" color="tertiary">
         {t('development:howIPlay.matchDerivedHint', { count: sampleSize })}
       </Text>
@@ -518,7 +526,7 @@ export function DevelopmentDashboard({
           />
         ) : (
           <View className="gap-2">
-            {trainingSessions.slice(0, 8).map((session) => (
+            {trainingSessions.map((session) => (
               <TrainingRow key={session.id} session={session} />
             ))}
           </View>

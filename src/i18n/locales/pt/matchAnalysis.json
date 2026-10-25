@@ -1,4 +1,28 @@
 {
+  "targetAnchor": {
+    "coordinate": "Verificar identidade",
+    "coordinateChecked": "Evidência verificada",
+    "coordinateUnavailable": "A evidência de origem verificada ou a aprovação não está disponível.",
+    "panelTitle": "Revisão do jogador-alvo",
+    "anchor": "Âncora aos {{seconds}}s",
+    "remove": "Remover âncora aos {{seconds}}s",
+    "scopeNote": "Um retângulo guardado identifica o jogador apenas neste fotograma. Editar as âncoras invalida as afirmações anteriores do relatório que dependem do jogador-alvo; é necessária uma nova análise.",
+    "noFrames": "Não há fotogramas conservados no servidor disponíveis para selecionar o jogador-alvo.",
+    "limit": "Até 8 âncoras por jogo.",
+    "title": "Área do jogador",
+    "firstCorner": "Seleciona o primeiro canto do retângulo do jogador.",
+    "secondCorner": "Seleciona o canto oposto.",
+    "image": "Imagem do jogador: seleciona dois cantos opostos",
+    "x": "Esquerda (%)",
+    "y": "Topo (%)",
+    "width": "Largura (%)",
+    "height": "Altura (%)",
+    "reset": "Repor seleção",
+    "save": "Guardar área",
+    "invalid": "Introduz um retângulo de dimensões positivas dentro de 0–100%.",
+    "imageError": "Não foi possível carregar a imagem.",
+    "saveError": "Não foi possível guardar a área. Tenta novamente."
+  },
   "preview": {
     "title": "Pré-visualização da análise",
     "quality": "Qualidade do vídeo",
@@ -32,6 +56,7 @@
     "advisory": "São apenas indicações. A PitchProof nunca recusa um vídeo por causa de uma pontuação de qualidade."
   },
   "identity": {
+    "saveError": "Não foi possível guardar a identidade. Recarrega a análise e tenta novamente.",
     "title": "Confirma que és tu",
     "hint": "Seleciona fotogramas que mostrem a tua camisola. As estatísticas ficam desconhecidas até a identidade ser confirmada.",
     "confirm": "Estes fotogramas mostram-me",
@@ -200,7 +225,8 @@
     "pointsUnavailable": "O detalhe dos sprints só está disponível para sessões gravadas com a versão atual do PitchProof.",
     "noSprints": "Não foram detetados sprints nesta sessão.",
     "sprint": "Sprint · pico {{kmh}} km/h",
-    "outsideVideo": "Fora do vídeo"
+    "outsideVideo": "Fora do vídeo",
+    "saveFailed": "Não foi possível guardar a sincronização GPS. Tenta novamente."
   },
   "eventType": {
     "shot": "Remate",
@@ -470,7 +496,7 @@
       "not_me": "Indicaste que esta imagem não és tu.",
       "withdraw": "Feedback retirado."
     },
-    "footnote": "O teu feedback é guardado junto da análise. A análise original e as estatísticas não mudam, e a PitchProof não usa os teus vídeos nem o teu feedback para treinar IA.",
+    "footnote": "O teu feedback não confirma automaticamente as estatísticas. Se rejeitares a identidade do jogador, as afirmações do relatório que dependem dela são invalidadas e exigem uma nova revisão. Anular esse feedback não restaura essas afirmações. A PitchProof não usa os teus vídeos nem o teu feedback para treinar IA.",
     "identityHint": "Se uma destas imagens não fores tu, indica-o. O coaching ligado a essa imagem deve então ser visto com cautela."
   },
   "trends": {

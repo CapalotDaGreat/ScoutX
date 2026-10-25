@@ -460,6 +460,8 @@ export function useMatchAnalysis(playerId: string | null) {
         jobId: job.id,
         decision: frameIds.length > 0 ? 'confirmed' : 'rejected',
         frameIds: frameIds.slice(0, 6),
+        expectedGeneration: job.pipelineGeneration ?? 0,
+        expectedAnchorRevision: job.experimentalTargetIdentity?.revision ?? 0,
       });
     } catch (identityError) {
       setError(toUserMessage(identityError, ANALYSIS_UNAVAILABLE_MESSAGE));

@@ -38,7 +38,7 @@ const CV_TIMEOUT_MS = 10 * 60 * 1000;
 const METADATA_IDENTITY_URL = 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity';
 
 /** Google-signed ID token for the worker's Cloud Run audience (private service, IAM invoker). */
-async function identityToken(audience: string): Promise<string | null> {
+export async function identityToken(audience: string): Promise<string | null> {
   try {
     const response = await fetch(`${METADATA_IDENTITY_URL}?audience=${encodeURIComponent(audience)}`, {
       headers: { 'Metadata-Flavor': 'Google' },

@@ -2,8 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { PublicPortfolioRepository } from '@/features/public-portfolio/repositories/PublicPortfolioRepository';
 import { type PublicPortfolioData } from '@/features/public-portfolio/types';
 import { toUserMessage } from '@/utils/userFacingError';
+import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 
 export function usePublicPortfolio(playerId: string | null) {
+  const { t } = useAppTranslation('portfolio');
   const [data, setData] = useState<PublicPortfolioData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,18 +23,18 @@ export function usePublicPortfolio(playerId: string | null) {
     try {
       const portfolio = await PublicPortfolioRepository.getInstance().fetchPublicPortfolio(playerId);
       if (!portfolio) {
-        setError('This portfolio is private or unavailable.');
+        setError(t('publicUi.resolveError.not_found'));
         setData(null);
       } else {
         setData(portfolio);
       }
     } catch (err) {
-      setError(toUserMessage(err, 'Unable to load portfolio.'));
+      setError(toUserMessage(err, t('publicUi.resolveError.failed')));
       setData(null);
     } finally {
       setIsLoading(false);
     }
-  }, [playerId]);
+  }, [playerId, t]);
 
   useEffect(() => {
     void refresh();

@@ -115,7 +115,7 @@ export function DiscoveryFilterSheet({
           contentContainerStyle={{ paddingBottom: 32 }}
           showsVerticalScrollIndicator={false}
         >
-          <View className="gap-5">
+          <View className="gap-4">
             <View className="flex-row gap-3">
               <Input
                 label={t('scout:filters.minAge')}
@@ -449,7 +449,7 @@ export function DiscoveryFilterSheet({
               </View>
             </View>
 
-            <View className="flex-row gap-3 pt-2">
+            <View className="flex-row gap-3 border-t border-divider pt-3">
               <Button variant="secondary" className="flex-1" onPress={onReset}>
                 {t('scout:filters.reset')}
               </Button>

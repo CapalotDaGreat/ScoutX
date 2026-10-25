@@ -1,11 +1,13 @@
 # Video Intelligence Device Test Protocol
 
-Run on a TestFlight build with `AI_FOOTAGE_PROCESSING_APPROVED=true` and footage the tester may
-use. Record results in `docs/release/validation-matrix.md` (date, build, device, tester).
+Run on a controlled build only after the provider/privacy review permits footage processing
+and with footage the tester may use. `AI_FOOTAGE_PROCESSING_APPROVED=true` is an approval record,
+not a workaround for a disabled feature. Record results in `docs/release/validation-matrix.md`
+(date, build, device, tester).
 
 1. **Consent gate** — pick a 2 min clip, fill the form, tap Upload & analyze. Verify nothing
    uploads before all four points are ticked; all options start off. Cancel → no job in progress.
-2. **Short clip** — 20 s clip of a shot. Verify the mode line says frames stay on the phone, the
+2. **Short clip** — 20 s clip of a shot. Verify the mode line says the original video stays on the phone and only sampled frames upload, the
    clip-context chips appear, the clip review shows observable / not observable, and Storage holds
    only `frames/` for the job (no `video.mp4`).
 3. **Files / iCloud** — choose an iCloud-only 45 min MOV from Files. Verify the preparing label,
@@ -35,8 +37,22 @@ use. Record results in `docs/release/validation-matrix.md` (date, build, device,
 16. **Preflight** — a 4K 60 fps clip, a 480p clip and a portrait clip: measured facts match the
     file; low-resolution and portrait show warnings but the Analyse button stays enabled. Compare
     width/height/fps with the Photos "info" panel (iOS track metadata may ignore rotation).
-17. **Corrections** — on a completed report, tap "Didn't happen" on a possible event, "Not me" on an
-    identity frame, then undo: labels update, report numbers do not change; another account cannot
-    see the feedback.
+17. **Corrections** — on a completed report, tap "Didn't happen" on a possible event: feedback stays
+    attributed and does not confirm a statistic. Then reject identity or tap "Not me": dependent
+    evidence, events and coaching disappear, including on another open report view. Undo must not
+    restore invalidated conclusions; a new review is required. Another account cannot see feedback.
 18. **Trends** — with 2 completed analyses: the locked message; after the 3rd: rows with "–" for
     unrated dimensions and the not-statistically-reliable caveat.
+19. **Wearable text imports** — select authorized GPX, TCX and documented CSV files. Preview,
+    cancel, confirm, restart and delete. Compare against the source reference; raw coordinates,
+    source filename/URI and original fix timestamps must not persist or upload. FIT/ZIP must
+    report unsupported, not claim a connected provider. Repeat with malformed/timezone-free
+    timestamps, oversized files, duplicates, poor accuracy, spikes and separated tracks.
+20. **Local import ownership** — switch accounts while picking/saving/deleting, including A -> B
+    -> A; no stale preview may appear or write for the new owner. Delete the account and verify
+    its local import is removed. Validate real native content-URI/cloud-provider picker access.
+21. **Import geometry** — a single-frame heatmap is session-local and direction-unknown;
+    independent coordinate frames must not be overlaid. Do not present it as calibrated pitch
+    occupancy or a video heatmap. Imported sessions do not yet support match synchronization.
+22. **Final-chunk cancel** — cancel while the final PUT is in flight. Even if Storage has already
+    committed the bytes, the client must take its cancellation path and not start analysis.

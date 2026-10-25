@@ -17,21 +17,21 @@ export function GpsLiveMetrics({ metrics }: GpsLiveMetricsProps) {
   const { t } = useAppTranslation('gps');
   const unit = useDistanceUnit();
   return (
-    <View className="flex-row flex-wrap gap-3">
+    <View className="flex-row flex-wrap gap-2">
       <View className="min-w-[45%] flex-1">
-        <StatCard label={t('distance')} value={formatDistance(metrics.distanceM, unit)} variant="elevated" />
+        <StatCard label={t('distance')} value={formatDistance(metrics.distanceM, unit)} variant="outlined" />
       </View>
       <View className="min-w-[45%] flex-1">
-        <StatCard label={t('avgSpeed')} value={formatSpeed(metrics.avgSpeedKmh, unit)} variant="elevated" />
+        <StatCard label={t('avgSpeed')} value={formatSpeed(metrics.avgSpeedKmh, unit)} variant="outlined" />
       </View>
       <View className="min-w-[45%] flex-1">
-        <StatCard label={t('maxSpeed')} value={formatSpeed(metrics.maxSpeedKmh, unit)} variant="elevated" />
+        <StatCard label={t('maxSpeed')} value={formatSpeed(metrics.maxSpeedKmh, unit)} variant="outlined" />
       </View>
       <View className="min-w-[45%] flex-1">
         <StatCard
           label={t('duration')}
           value={formatDuration(metrics.durationSec)}
-          variant="elevated"
+          variant="outlined"
         />
       </View>
     </View>

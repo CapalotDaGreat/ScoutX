@@ -40,8 +40,8 @@ let analyzeMatchFootage;
 let videoBytes;
 let VIDEO_CONSENT_VERSION;
 
-function modelReply(content) {
-  replies.push({ status: 200, body: { choices: [{ message: { content } }] } });
+function modelReply(content, beforeReply) {
+  replies.push({ status: 200, body: { choices: [{ message: { content } }] }, beforeReply });
 }
 
 function call(uid, data) {
@@ -124,9 +124,10 @@ before(async () => {
     req.on('data', (chunk) => {
       body += chunk;
     });
-    req.on('end', () => {
+    req.on('end', async () => {
       received.push({ url: req.url, body: body ? JSON.parse(body) : null });
       const next = replies.shift() ?? { status: 500, body: { error: { message: 'no canned reply' } } };
+      if (next.beforeReply) await next.beforeReply();
       res.writeHead(next.status, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(next.body));
     });
@@ -424,6 +425,41 @@ describe('video consent and media lifecycle', () => {
 });
 
 describe('segment review, synthesis and identity', () => {
+  test('superseded report commits and failures leave the newer generation untouched', async () => {
+    const frameAnalysis = require('./lib/analysis/frameAnalysis.js');
+    await seedValidatedJob('generation-final', { pipelineGeneration: 2, status: 'processing', pipelineState: 'analyzing', lease: { holder: 'new', until: '2099-01-01' } });
+    await expectCode(frameAnalysis.finishJob(db, 'generation-final', {
+      report: { headline: 'stale' }, stages: [], pendingCoaching: null, now: new Date().toISOString(), expectedGeneration: 1,
+    }), 'aborted');
+    await frameAnalysis.failJob(db, 'generation-final', 'model_unavailable', undefined, undefined, 1);
+    await expectCode(frameAnalysis.acquireJobLease(db, OWNER, 'generation-final', 'old', undefined, 1), 'aborted');
+    const latest = await job('generation-final');
+    assert.equal(latest.pipelineGeneration, 2);
+    assert.equal(latest.status, 'processing');
+    assert.equal(latest.lease.holder, 'new');
+    assert.equal(latest.report, undefined);
+  });
+
+  test('in-flight segment review cannot overwrite a newer generation', async () => {
+    await seedValidatedJob('generation-review', { durationSec: 1200, measuredDurationSec: 1200 });
+    await pipeline.startMatchPipeline(db, 'generation-review', dispatcher);
+    const extraction = queue.splice(0);
+    for (const { task } of extraction) {
+      await pipeline.processExtractTask(db, task, { finalAttempt: false, dispatcher, extractor: stubExtractor(2) });
+    }
+    const task = queue.find((entry) => entry.task.kind === 'review_segment').task;
+    const ref = db.collection('matchAnalysisJobs').doc(task.jobId);
+    modelReply(JSON.stringify({ frames: [{ frameId: 'frame_0', targetVisible: 'yes', cameraView: 'wide' }], observations: [], possibleEvents: [] }), async () => {
+      await ref.update({ pipelineGeneration: task.generation + 1 });
+      await ref.collection('segmentReviews').doc('0').set({ generation: task.generation + 1, summary: 'new generation' });
+    });
+    assert.equal(await segmentPipeline.processReviewTask(db, task, { finalAttempt: true, apiKey: 'test-key', dispatcher }), 'skipped');
+    const stored = (await ref.collection('segmentReviews').doc('0').get()).data();
+    assert.equal(stored.summary, 'new generation');
+    assert.equal(stored.generation, task.generation + 1);
+    assert.deepEqual((await job(task.jobId)).segmentReview.reviewed, []);
+  });
+
   const review = (frameId) => JSON.stringify({
     frames: [{ frameId, targetVisible: 'yes', cameraView: 'wide' }],
     observations: [{ frameId, category: 'technique', label: 'First touch', detail: 'Cushions a pass with the right foot', confidence: 'medium' }],
@@ -749,7 +785,7 @@ describe('analysis corrections', () => {
     ({ submitAnalysisCorrection } = require('./lib/analysis/corrections.js'));
   });
 
-  test('stores append-only, attributed feedback and never edits the analysis or its stats', async () => {
+  test('ordinary event feedback stays append-only and never becomes a confirmed statistic', async () => {
     await seedComplete('corr-1');
     const first = await submitAnalysisCorrection.run(call(OWNER, {
       jobId: 'corr-1', targetKind: 'event', targetId: 'ev_1', action: 'dismiss_false_event', reason: 'did_not_happen',
@@ -760,11 +796,10 @@ describe('analysis corrections', () => {
     }));
     assert.equal(again.deduplicated, true, 'a repeated tap does not create a second record');
     await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-1', targetKind: 'event', targetId: 'ev_1', action: 'withdraw' }));
-    await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-1', targetKind: 'identity_frame', targetId: 'frame_0', action: 'not_me', reason: 'not_me' }));
     await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-1', targetKind: 'observation', targetId: 'obs_1', action: 'confirm' }));
 
     const records = (await db.collection('matchAnalysisJobs').doc('corr-1').collection('corrections').orderBy('createdAt').get()).docs.map((d) => d.data());
-    assert.equal(records.length, 4);
+    assert.equal(records.length, 3);
     for (const record of records) {
       assert.equal(record.actorId, OWNER);
       assert.equal(record.usedForTraining, false);
@@ -774,6 +809,23 @@ describe('analysis corrections', () => {
     const stored = await job('corr-1');
     assert.deepEqual(stored.report, report, 'the original analysis is untouched');
     assert.deepEqual(stored.identityConfirmation.frameIds, ['frame_0'], 'no silent identity switch');
+  });
+
+  test('not-me feedback invalidates target-dependent claims and withdrawal cannot restore them', async () => {
+    await seedComplete('corr-identity', { pipelineGeneration: 1, pendingCoaching: { strengths: ['old'] } });
+    await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-identity', targetKind: 'identity_frame', targetId: 'frame_0', action: 'not_me', reason: 'not_me' }));
+    let stored = await job('corr-identity');
+    assert.equal(stored.identityConfirmation.state, 'rejected');
+    assert.equal(stored.pipelineGeneration, 2);
+    assert.equal(stored.pendingCoaching, null);
+    assert.deepEqual(stored.report.evidence, []);
+    assert.deepEqual(stored.report.events, []);
+    assert.equal(stored.report.eventCounts, null);
+    await expectCode(submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-identity', targetKind: 'observation', targetId: 'obs_1', action: 'confirm' })), 'invalid-argument');
+    await submitAnalysisCorrection.run(call(OWNER, { jobId: 'corr-identity', targetKind: 'identity_frame', targetId: 'frame_0', action: 'withdraw' }));
+    stored = await job('corr-identity');
+    assert.equal(stored.report.identityRejected, true);
+    assert.deepEqual(stored.report.evidence, []);
   });
 
   test('rejects other users, unknown targets, unfinished analyses and withdrawn consent', async () => {

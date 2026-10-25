@@ -89,12 +89,12 @@ export function GoalEditorModal({ visible, saving, onClose, onSave }: GoalEditor
 
   const footer = useMemo(
     () => (
-      <View className="flex-row gap-3">
-        <Button variant="secondary" className="flex-1" onPress={onClose} disabled={saving}>
+      <View className="flex-row flex-wrap gap-3">
+        <Button variant="secondary" className="min-h-[44px] min-w-[120px] flex-1" onPress={onClose} disabled={saving}>
           {t('common:cancel')}
         </Button>
         <Button
-          className="flex-1"
+          className="min-h-[44px] min-w-[120px] flex-1"
           loading={saving}
           onPress={() => {
             const next: DevelopmentGoalDraft = {
@@ -131,8 +131,8 @@ export function GoalEditorModal({ visible, saving, onClose, onSave }: GoalEditor
       size="sheet"
       footer={footer}
     >
-      <ScrollView className="px-5 py-4" keyboardShouldPersistTaps="handled">
-        <View className="gap-4">
+      <ScrollView className="px-4" contentContainerStyle={{ paddingTop: 16, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
+        <View className="gap-5">
           <Input
             label={t('development:goal.titleLabel')}
             value={draft.title}
@@ -140,7 +140,7 @@ export function GoalEditorModal({ visible, saving, onClose, onSave }: GoalEditor
             placeholder={t('development:goal.titlePlaceholder')}
           />
 
-          <View>
+          <View className="border-t border-border pt-4">
             <Text variant="label" className="mb-2">
               {t('development:goal.categoryLabel')}
             </Text>
@@ -156,7 +156,7 @@ export function GoalEditorModal({ visible, saving, onClose, onSave }: GoalEditor
             </View>
           </View>
 
-          <View>
+          <View className="border-t border-border pt-4">
             <Text variant="label" className="mb-2">
               {t('development:goal.metricLabel')}
             </Text>
@@ -186,6 +186,7 @@ export function GoalEditorModal({ visible, saving, onClose, onSave }: GoalEditor
             />
           ) : null}
 
+          <View className="gap-4 border-t border-border pt-4">
           <Input
             label={t('development:goal.targetLabelFree')}
             value={draft.targetLabel}
@@ -203,6 +204,7 @@ export function GoalEditorModal({ visible, saving, onClose, onSave }: GoalEditor
             hint={t('development:goal.timeframeHint')}
             keyboardType="numbers-and-punctuation"
           />
+          </View>
 
           {error ? (
             <Text color="error" variant="caption">

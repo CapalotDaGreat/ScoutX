@@ -34,7 +34,7 @@ export function ComparisonPlayerSlot({
         accessibilityRole="button"
         accessibilityLabel={t('comparison.addPlayerToComparison')}
         onPress={onAdd}
-        className="min-h-[108px] flex-1 items-center justify-center rounded-xl border border-dashed border-border bg-surface"
+        className="min-h-[120px] min-w-0 flex-1 items-center justify-center rounded-lg border border-dashed border-border bg-surface px-2"
       >
         <Plus size={20} color={colors.textSecondary} />
         <Text variant="caption" color="secondary" className="mt-1 font-sans-semibold">
@@ -47,7 +47,7 @@ export function ComparisonPlayerSlot({
   return (
     <View
       className={cn(
-        'min-h-[108px] flex-1 overflow-hidden rounded-xl border bg-surface',
+        'min-h-[120px] min-w-0 flex-1 overflow-hidden rounded-lg border bg-surface',
       )}
       style={{ borderColor: accentColor }}
     >
@@ -58,7 +58,7 @@ export function ComparisonPlayerSlot({
           className="h-10 w-10 rounded-full"
           accessibilityIgnoresInvertColors
         />
-        <View className="flex-1">
+        <View className="min-w-0 flex-1">
           <Text variant="caption" numberOfLines={1} className="font-sans-bold">
             {player.fullName}
           </Text>

@@ -25,6 +25,7 @@ export type AnalysisCorrectionsApi = {
 
 export function useAnalysisCorrections(job: MatchAnalysisJob | null): AnalysisCorrectionsApi {
   const jobId = job?.id ?? null;
+  const currentRevision = job?.experimentalTargetIdentity?.revision ?? 0;
   const enabled = Boolean(job && job.status === 'complete' && job.report && isFirebaseConfiguredForProject());
   const [records, setRecords] = useState<AnalysisCorrection[]>([]);
   const [pendingKey, setPendingKey] = useState<string | null>(null);
@@ -36,7 +37,10 @@ export function useAnalysisCorrections(job: MatchAnalysisJob | null): AnalysisCo
     return subscribeCorrections(jobId, setRecords, () => setRecords([]));
   }, [enabled, jobId]);
 
-  const latest = useMemo(() => latestCorrections(records), [records]);
+  const latest = useMemo(
+    () => latestCorrections(records.filter(record => (record.targetRevision ?? 0) === currentRevision)),
+    [records, currentRevision],
+  );
 
   const current = useCallback(
     (kind: CorrectionTargetKind, id: string) => latest.get(correctionTargetKey(kind, id)) ?? null,
@@ -50,14 +54,14 @@ export function useAnalysisCorrections(job: MatchAnalysisJob | null): AnalysisCo
       setPendingKey(key);
       setError(null);
       try {
-        await requestSubmitCorrection({ jobId, targetKind: kind, targetId: id, action, reason: reason ?? null });
+        await requestSubmitCorrection({ jobId, targetKind: kind, targetId: id, action, reason: reason ?? null, expectedAnchorRevision: currentRevision });
       } catch (submitError) {
         setError(toUserMessage(submitError, 'Your feedback could not be saved. Please try again.'));
       } finally {
         setPendingKey(null);
       }
     },
-    [enabled, jobId],
+    [enabled, jobId, currentRevision],
   );
 
   return { enabled, current, submit, pendingKey, error, latest };

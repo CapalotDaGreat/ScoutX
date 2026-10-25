@@ -74,10 +74,10 @@ export function RegisterScreen({
   const combinedError = useMemo(() => error ?? localError, [error, localError]);
 
   return (
-    <Screen title={t('register.title')} subtitle={t('register.subtitle')}>
-      <AuthCard title={t('register.cardTitle')} subtitle={t('register.cardSubtitle')}>
+    <Screen contentClassName="py-6">
+      <AuthCard title={t('register.title')} subtitle={t('register.cardSubtitle')}>
         {combinedError ? (
-          <View className="rounded-lg border border-error/30 bg-error-muted px-3 py-3">
+          <View accessibilityRole="alert" accessibilityLiveRegion="assertive" className="rounded-[8px] border border-error/30 bg-error-muted px-3 py-3">
             <Text variant="body-sm" color="error">
               {combinedError}
             </Text>

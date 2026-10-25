@@ -47,6 +47,7 @@ const service_1 = require("./footballSources/service");
 const holds_1 = require("./moderation/holds");
 const publicPassport_1 = require("./publicPassport");
 const userSafety_1 = require("./safety/userSafety");
+const discoverySearchIndex_1 = require("./discoverySearchIndex");
 const POSITIONS = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST', 'CF'];
 function asRecord(value) {
     return value && typeof value === 'object' && !Array.isArray(value)
@@ -296,6 +297,7 @@ async function projectDiscoverablePlayer(playerId) {
             ].filter(Boolean)
             : projection.searchKeywords,
         viewCount,
+        _search: (0, discoverySearchIndex_1.buildDiscoverySearchIndex)({ ...display, viewCount }),
     });
 }
 exports.onProfileWrittenProjectDiscovery = (0, firestore_1.onDocumentWritten)('profiles/{playerId}', async (event) => {
@@ -362,19 +364,37 @@ exports.searchDiscoverablePlayers = (0, https_1.onCall)((0, callableOptions_1.cr
     const search = typeof request.data?.search === 'string' ? request.data.search.trim().toLowerCase() : '';
     const pageSize = Math.min(40, Math.max(1, typeof request.data?.pageSize === 'number' ? request.data.pageSize : 20));
     const cursor = typeof request.data?.cursor === 'string' ? request.data.cursor : null;
-    const snapshot = await (0, firestore_2.getFirestore)()
-        .collection('discoverablePlayers')
-        .orderBy('updatedAt', 'desc')
-        .limit(200)
-        .get();
+    if (!Number.isSafeInteger(pageSize))
+        throw new https_1.HttpsError('invalid-argument', 'Invalid page size.');
+    const db = (0, firestore_2.getFirestore)();
+    const ready = await db.collection('discoverySearchState').doc('current').get();
+    if (ready.get('ready') !== true || ready.get('version') !== 1)
+        throw new https_1.HttpsError('failed-precondition', 'Search index is updating.');
+    const identity = JSON.stringify({ search, filters });
+    let candidates = db.collection('discoverablePlayers').orderBy('_search.order.recently_updated').orderBy(firestore_2.FieldPath.documentId());
+    const firstTerm = (0, discoverySearchIndex_1.searchWords)(search)[0];
+    if (firstTerm)
+        candidates = candidates.where('_search.tokens', 'array-contains', `all:${Array.from(firstTerm).slice(0, 32).join('')}`);
+    if (cursor) {
+        let decoded;
+        try {
+            decoded = JSON.parse(cursor);
+        }
+        catch {
+            throw new https_1.HttpsError('invalid-argument', 'Invalid search cursor.');
+        }
+        const value = asRecord(decoded);
+        if (!value || value.identity !== identity || typeof value.order !== 'string' || typeof value.id !== 'string'
+            || value.id.includes('/') || cursor.length > 16384)
+            throw new https_1.HttpsError('invalid-argument', 'Search changed; restart discovery.');
+        candidates = candidates.startAfter(value.order, value.id);
+    }
+    const snapshot = await candidates.limit(pageSize).get();
     const players = snapshot.docs
-        .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }))
+        .map((docSnap) => ({ ...docSnap.data(), id: docSnap.id }))
         .filter((player) => {
         if (search) {
-            const keywords = Array.isArray(player.searchKeywords)
-                ? player.searchKeywords.join(' ')
-                : `${player.fullName ?? ''} ${player.club ?? ''}`;
-            if (!keywords.toLowerCase().includes(search)) {
+            if (!(0, discoverySearchIndex_1.indexedSearchMatches)(player, search, 'all')) {
                 return false;
             }
         }
@@ -411,12 +431,12 @@ exports.searchDiscoverablePlayers = (0, https_1.onCall)((0, callableOptions_1.cr
             return false;
         return true;
     });
-    const start = cursor ? players.findIndex((player) => player.id === cursor) + 1 : 0;
-    const slice = players.slice(start, start + pageSize);
+    const last = snapshot.docs.at(-1);
+    const hasMore = snapshot.size === pageSize;
     return {
-        players: slice,
-        nextCursor: slice.length === pageSize ? slice[slice.length - 1]?.id ?? null : null,
-        hasMore: start + pageSize < players.length,
+        players,
+        nextCursor: hasMore && last ? JSON.stringify({ identity, order: last.get('_search.order.recently_updated'), id: last.id }) : null,
+        hasMore,
     };
 });
 //# sourceMappingURL=discoveryProjection.js.map

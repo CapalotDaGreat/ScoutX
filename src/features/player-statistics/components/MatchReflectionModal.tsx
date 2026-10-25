@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
 import { Button } from '@/components/primitives/Button';
 import { Input } from '@/components/primitives/Input';
@@ -77,8 +77,12 @@ export function MatchReflectionModal({ visible, item, onClose, onSave }: MatchRe
       onClose={onClose}
       title={t('reflection.title', { opponent: item.opponent })}
       size="lg"
+      className="rounded-lg"
     >
-      <View className="gap-4">
+      <ScrollView
+        contentContainerStyle={{ gap: 16, padding: 16, paddingBottom: 32 }}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text variant="body-sm" color="secondary">
           {t('reflection.intro')}
         </Text>
@@ -115,7 +119,7 @@ export function MatchReflectionModal({ visible, item, onClose, onSave }: MatchRe
           editable={!isSaving}
           inputClassName="min-h-16 py-2"
         />
-        <Text variant="caption" color="tertiary">
+        <Text variant="caption" color="secondary" className="border-t border-border pt-3">
           {t('reflection.privateNote')}
         </Text>
         {error ? (
@@ -131,7 +135,7 @@ export function MatchReflectionModal({ visible, item, onClose, onSave }: MatchRe
             {t('reflection.clear')}
           </Button>
         ) : null}
-      </View>
+      </ScrollView>
     </Modal>
   );
 }

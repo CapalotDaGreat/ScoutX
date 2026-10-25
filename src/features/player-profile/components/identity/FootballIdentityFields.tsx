@@ -1,5 +1,4 @@
-import { View } from 'react-native';
-import { Button } from '@/components/primitives/Button';
+import { Switch, View } from 'react-native';
 import { Dropdown } from '@/components/primitives/Dropdown';
 import { Input } from '@/components/primitives/Input';
 import { StarRating } from '@/components/primitives/StarRating';
@@ -24,6 +23,7 @@ import {
 } from '@/features/player-profile/utils/identityFormUtils';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { starLevelKey } from '@/utils/starRating';
+import { useTheme } from '@/theme';
 
 export type FootballIdentityFieldsProps = {
   identity: FootballIdentity;
@@ -36,9 +36,10 @@ export type FootballIdentityFieldsProps = {
 export function FootballIdentityFields({ identity, onChange }: FootballIdentityFieldsProps) {
   const { t } = useAppTranslation('portfolio');
   const labels = useIdentityLabels();
+  const { colors } = useTheme();
   return (
     <View className="gap-5">
-      <Text variant="label" color="secondary">
+      <Text variant="label" color="secondary" className="border-t border-border pt-4">
         {t('identity.sections.career')}
       </Text>
       <Input
@@ -56,7 +57,7 @@ export function FootballIdentityFields({ identity, onChange }: FootballIdentityF
         onChange={(entries) => onChange('careerTimeline', entries)}
       />
 
-      <Text variant="label" color="secondary">
+      <Text variant="label" color="secondary" className="border-t border-border pt-4">
         {t('identity.sections.playingProfile')}
       </Text>
       <Input
@@ -136,7 +137,7 @@ export function FootballIdentityFields({ identity, onChange }: FootballIdentityF
         {t('identity.fields.selfRatingHint')}
       </Text>
 
-      <Text variant="label" color="secondary">
+      <Text variant="label" color="secondary" className="border-t border-border pt-4">
         {t('identity.sections.professionalStatus')}
       </Text>
       <Dropdown
@@ -182,28 +183,30 @@ export function FootballIdentityFields({ identity, onChange }: FootballIdentityF
         placeholder={t('identity.fields.listPlaceholder')}
       />
 
-      <Text variant="label" color="secondary">
+      <Text variant="label" color="secondary" className="border-t border-border pt-4">
         {t('identity.sections.personal')}
       </Text>
-      <View className="flex-row gap-3">
+      <View className="flex-row flex-wrap gap-3">
         <Input
           label={t('identity.fields.jerseyNumber')}
           value={identity.jerseyNumber?.toString() ?? ''}
           onChangeText={(value) => onChange('jerseyNumber', parseOptionalNumber(value))}
           keyboardType="number-pad"
-          containerClassName="flex-1"
+          containerClassName="min-w-[140px] flex-1"
         />
-        <View className="flex-1 justify-end">
-          <Button
-            variant={identity.hasCaptainExperience ? 'accent' : 'secondary'}
-            onPress={() => onChange('hasCaptainExperience', !identity.hasCaptainExperience)}
-            accessibilityRole="switch"
-            accessibilityState={{ checked: identity.hasCaptainExperience }}
-          >
+        <View className="min-h-[44px] min-w-[140px] flex-1 flex-row items-center justify-between gap-3">
+          <Text variant="body-sm" className="flex-1">
             {`${t('identity.fields.captain')}: ${
               identity.hasCaptainExperience ? t('identity.yes') : t('identity.no')
             }`}
-          </Button>
+          </Text>
+          <Switch
+            value={identity.hasCaptainExperience}
+            onValueChange={() => onChange('hasCaptainExperience', !identity.hasCaptainExperience)}
+            accessibilityLabel={t('identity.fields.captain')}
+            trackColor={{ false: colors.border, true: colors.accent }}
+            style={{ minHeight: 44, minWidth: 44 }}
+          />
         </View>
       </View>
       <Dropdown
@@ -223,7 +226,7 @@ export function FootballIdentityFields({ identity, onChange }: FootballIdentityF
         placeholder={t('identity.fields.listPlaceholder')}
       />
 
-      <Text variant="label" color="secondary">
+      <Text variant="label" color="secondary" className="border-t border-border pt-4">
         {t('identity.sections.story')}
       </Text>
       <Input

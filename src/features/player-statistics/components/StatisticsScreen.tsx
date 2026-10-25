@@ -140,18 +140,26 @@ export function StatisticsScreen({
         onRefresh={onRefresh}
         refreshing={refreshing}
         safeArea
-        contentClassName="gap-8"
+        contentClassName="gap-6"
         {...screenProps}
       >
-        {onAnalyzeMatchVideoPress ? (
-          <Button
-            variant="secondary"
-            onPress={onAnalyzeMatchVideoPress}
-            leftIcon={<Clapperboard size={18} color={colors.accent} />}
-          >
-            {t('uploadAnalyzeAi')}
-          </Button>
-        ) : null}
+        <View className="flex-row flex-wrap gap-2">
+          {onLogMatchPress ? (
+            <Button variant="accent" onPress={onLogMatchPress}
+              leftIcon={<BarChart3 size={18} color={colors.accentForeground} />}>
+              {t('logMatch')}
+            </Button>
+          ) : null}
+          {onAnalyzeMatchVideoPress ? (
+            <Button
+              variant="secondary"
+              onPress={onAnalyzeMatchVideoPress}
+              leftIcon={<Clapperboard size={18} color={colors.accent} />}
+            >
+              {t('uploadAnalyzeAi')}
+            </Button>
+          ) : null}
+        </View>
 
         {onSaveReflection && overview.matchHistory[0] && !overview.matchHistory[0].reflection ? (
           <Card variant="prestige" padding="md" className="gap-2">
@@ -170,6 +178,18 @@ export function StatisticsScreen({
         ) : null}
 
         <StatisticsCards items={overview.totals} />
+
+        <MatchHistory
+          items={overview.matchHistory}
+          maxItems={showFullHistory ? undefined : 5}
+          onViewAllPress={
+            overview.matchHistory.length > 5 && !showFullHistory
+              ? () => setShowFullHistory(true)
+              : undefined
+          }
+          renderItemFooter={renderMatchFooter ? (item) => renderMatchFooter(item.id) : undefined}
+          onReflectPress={onSaveReflection ? (item) => setReflectionItem(item) : undefined}
+        />
 
         <CollapsibleSection
           title={t('attributeProfile')}
@@ -206,17 +226,6 @@ export function StatisticsScreen({
           <ProgressGraphs graphs={overview.progressGraphs} />
         </CollapsibleSection>
 
-        <MatchHistory
-          items={overview.matchHistory}
-          maxItems={showFullHistory ? undefined : 5}
-          onViewAllPress={
-            overview.matchHistory.length > 5 && !showFullHistory
-              ? () => setShowFullHistory(true)
-              : undefined
-          }
-          renderItemFooter={renderMatchFooter ? (item) => renderMatchFooter(item.id) : undefined}
-          onReflectPress={onSaveReflection ? (item) => setReflectionItem(item) : undefined}
-        />
       </Screen>
 
       {onSaveReflection ? (

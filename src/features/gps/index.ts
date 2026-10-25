@@ -8,6 +8,9 @@ export { GpsRecordingControls, type GpsRecordingControlsProps } from './componen
 export { useGpsTracking, type UseGpsTrackingOptions } from './hooks/useGpsTracking';
 export { useGpsSessions, type UseGpsSessionsOptions } from './hooks/useGpsSessions';
 export { GpsSessionRepository } from './repositories/GpsSessionRepository';
+export { previewGpsImport, confirmGpsImport, GPS_IMPORT_MAX_BYTES } from './services/gpsImportService';
+export type { GpsImportPreview } from './services/gpsImportService';
+export { loadLocalGpsImport, saveLocalGpsImport, clearLocalGpsImport } from './services/gpsImportStorage';
 export {
   calculateSessionMetrics,
   calculateMovementZones,
