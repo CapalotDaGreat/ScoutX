@@ -151,3 +151,16 @@ def test_source_changes_are_not_published_as_a_complete_comparison(tmp_path, mon
     assert main(['--input', str(source), '--out', str(out), '--start', '0', '--end', '2',
                  '--jersey-number', '20', '--kit-primary-color', 'red', '--authorize-local-evaluation']) == 1
     assert not out.exists()
+
+
+def test_opposing_same_number_is_only_an_aggregate_rejection_not_a_retained_identity():
+    class OpponentSource:
+        def frames(self, *args):
+            for t, frame in FakeSource().frames(*args):
+                frame[:] = (30, 60, 180)
+                yield t, frame
+    result = run(components(number='20'), OpponentSource(), request())
+    assert result['qualifyingReads'] == result['numberReadCandidateTracks'] == 0
+    assert result['cropRejections']['kit_rejected'] == 20
+    assert all(not f['numberReadCandidates'] for f in result['frames'])
+    assert '1:t1' not in json.dumps(result)

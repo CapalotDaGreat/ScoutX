@@ -134,7 +134,10 @@ class Audit:
                 if not valid or valid[0]['number'] != self.target.jerseyNumber:
                     continue
                 kit_ok = observation['kitMatch'] >= TEAM_CANDIDATE_MATCH
-                reads += kit_ok
+                if not kit_ok:
+                    rejections['kit_rejected'] += 1
+                    continue
+                reads += 1
                 candidate_keys.add(observation['key'])
                 target_observations.append({'candidateKey': observation['key'], 'kitMatch': observation['kitMatch'],
                     'qualifyingRead': kit_ok, 'confidence': min(c['confidence'] for c in valid),
