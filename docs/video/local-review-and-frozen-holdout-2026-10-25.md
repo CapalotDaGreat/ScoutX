@@ -65,7 +65,13 @@ Coverage, false-claim rate, ID switches, fragmentation and sampled target recall
 - Worker suite: 446 passed; one existing Starlette/httpx deprecation warning.
 - Worker contract suite: 13 passed.
 - Functions TypeScript build: passed.
+- App TypeScript checks: passed. App unit suite: 650 passed, zero failures/skips.
+- ESLint on Git-tracked JS/TS sources: zero errors; 110 warnings identify explicitly ignored generated files. The unrestricted `npm run lint` exhausted Node's default 2 GB heap. A larger-heap workspace traversal was stopped after sustained memory growth; it is not reported as passing. Tracked-source lint completed successfully without changing configuration.
 - Static review UI: desktop/mobile passed, export/import and malformed-box rejection passed, no external requests, overlay exposure latching passed. Tests use synthetic labels only.
 - Actual development pack: 30 frames prepared locally, zero reviewed labels. Source integrity checked. No holdout inference, full-recording inference or density scan was run.
 
 No accuracy, detection recall, ID switches, fragmentation or full-match coverage has been established for orange #20. No gate was loosened and no experiment was approved. The historical 83-second runtime for six seconds of footage extrapolates to roughly 7.8 hours at 5 fps, not a newly profiled runtime guarantee. A resumable runner, evidence-yield optimizations and independent evidence fusion acceptance remain future work after the human-label gate. The full recording was NOT validated.
+
+## Git delivery
+
+The review workflow was committed separately as `944dd98`. At the user's explicit request, the earlier pending project changes were checkpointed separately as `af75079` and pushed to `main`. That broader checkpoint is not a claim that this phase implemented or independently audited all previous work. Local footage, labels and review artifacts remain ignored. No deployment was performed.
