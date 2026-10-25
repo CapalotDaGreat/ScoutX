@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' file: data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="data:,"><title>ScoutX | Local Review</title>
+<style>
+:root{color-scheme:dark;font:14px system-ui,Arial,sans-serif;color:#f3f7f4;background:#0d1311}
+*{box-sizing:border-box;letter-spacing:0}body{margin:0}header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 22px;border-bottom:1px solid #2f3e35;flex-wrap:wrap}h1{font-size:20px;margin:0 0 3px}small,.muted{color:#bccabf}main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:0;min-height:calc(100vh - 85px)}section{padding:18px;min-width:0}aside{padding:18px;border-left:1px solid #2f3e35;background:#151d19;min-width:0}.toolbar,.exports,.overlay-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar input[type=range]{flex:1;min-width:80px}.viewport{overflow:auto;max-height:72vh;background:#060908;border:1px solid #2f3e35}canvas{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}.field{display:block;margin:0 0 12px}.field>span{display:block;margin-bottom:5px;color:#bccabf}input,select,button{font:inherit;min-height:36px;border:1px solid #566b5d;border-radius:4px;background:#1c2822;color:#f3f7f4;padding:6px 9px;max-width:100%}input[type=text],input[type=number],select{width:100%}input[type=checkbox]{min-height:auto;accent-color:#57d6a0}input[type=range]{padding:0;accent-color:#57d6a0}button{cursor:pointer}button:hover{border-color:#57d6a0}button:disabled{opacity:.4;cursor:not-allowed}.icon{width:38px;flex:0 0 38px;font-size:20px;padding:0}.primary{background:#57d6a0;color:#061a11;border-color:#57d6a0}.box-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.box-grid label{font-size:12px;color:#bccabf}.box-grid input{margin-top:4px}.tags{display:grid;gap:9px;margin:12px 0 18px}.check{display:flex;align-items:center;gap:8px}.divider{border-top:1px solid #2f3e35;margin:16px 0}.status{min-height:22px;color:#88c9dd;overflow-wrap:anywhere}.source{font-size:12px;color:#8f9f94;overflow-wrap:anywhere}progress{accent-color:#57d6a0;width:140px;max-width:100%;height:7px}.reviewed{color:#57d6a0}#time{font-variant-numeric:tabular-nums;min-width:112px}#zoom{width:90px}#frame-number{width:72px}#file-import{display:none}.exports button{font-size:13px}.overlay-controls{font-size:12px}.overlay-controls label{display:flex;gap:5px;align-items:center}@media(max-width:850px){main{grid-template-columns:minmax(0,1fr)}aside{border-left:0;border-top:1px solid #2f3e35}header,section,aside{padding:12px}.viewport{max-height:60vh}.toolbar{gap:5px}#time{min-width:96px;font-size:12px}.icon{width:34px;flex-basis:34px}.tags{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body>
+<header><div><h1 id="target">Local Review</h1><div class="source" id="source"></div></div><div><div id="progress-text"></div><progress id="progress" value="0" max="1"></progress></div></header>
+<main><section aria-label="Source frame">
+<div class="toolbar"><button class="icon" id="prev" aria-label="Previous frame" title="Previous frame">&larr;</button><button class="icon" id="next" aria-label="Next frame" title="Next frame">&rarr;</button><output id="time"></output><input id="timeline" type="range" min="0" max="0" value="0" aria-label="Sample timeline"><input id="frame-number" type="number" min="1" value="1" aria-label="Frame number"><select id="zoom" aria-label="Frame zoom"><option value="100">100%</option><option value="200">200%</option><option value="400">400%</option></select></div>
+<div class="viewport"><canvas id="frame" aria-label="Source frame and manual target box"></canvas></div>
+<div class="overlay-controls"><label><input type="checkbox" id="detections">Detection boxes</label><label><input type="checkbox" id="tracks">Tracker IDs</label><span id="exposure" class="muted">Overlay exposure: none</span></div>
+<div class="exports"><button id="import">Import labels or review notes</button><input id="file-import" type="file" accept="application/json,.json"><button id="draft">Save draft</button><button id="notes">Export review notes</button><button id="export" class="primary" disabled>Export reviewed labels</button></div>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+</section><aside aria-label="Review labels">
+<label class="field"><span>Reviewer ID</span><input id="reviewer" type="text" maxlength="80" autocomplete="off"></label>
+<label class="field"><span>Target visibility</span><select id="visibility"><option value="uncertain">Uncertain</option><option value="visible">Visible</option><option value="off_camera">Not visible / off camera</option><option value="occluded">Occluded / unjudgeable</option></select></label>
+<div class="box-grid"><label>X1<input id="x1" type="number" min="0" step="1"></label><label>Y1<input id="y1" type="number" min="0" step="1"></label><label>X2<input id="x2" type="number" min="0" step="1"></label><label>Y2<input id="y2" type="number" min="0" step="1"></label></div>
+<button id="clear" style="margin:10px 0 14px">Clear target box</button>
+<label class="field"><span>Number legible</span><select id="legibility"><option value="unknown">Unknown</option><option value="yes">Yes</option><option value="no">No</option></select></label>
+<label class="field"><span>Occlusion</span><select id="occlusion"><option value="unknown">Unknown</option><option value="none">None</option><option value="partial">Partial</option><option value="full">Full</option></select></label>
+<label class="field"><span>Camera</span><select id="camera"><option value="unknown">Unknown</option><option value="stable">Stable</option><option value="pan">Pan</option><option value="zoom">Zoom</option><option value="cut">Cut</option></select></label>
+<div class="tags"><label class="check"><input id="crossing" type="checkbox">Crossing</label><label class="check"><input id="re_entry" type="checkbox">Re-entry</label><label class="check"><input id="back_facing" type="checkbox">Back-facing</label><label class="check"><input id="far_small" type="checkbox">Far / small</label></div>
+<div class="divider"></div><label class="check reviewed"><input id="reviewed" type="checkbox">Frame reviewed</label><button id="unreviewed" style="margin-top:14px">Next unreviewed</button>
+</aside></main>
+<script id="review-data" type="application/json">__REVIEW_DATA__</script>
+<script>
+'use strict';
+const data=JSON.parse(document.getElementById('review-data').textContent),pack=data.pack;
+let labels=structuredClone(data.draft),index=0,dirty=false,overlaysShown=false,image=null,drag=null;
+let notes=pack.frames.map(f=>({timeSec:f.timeSec,reviewed:false,numberLegible:'unknown',tags:[]}));
+const $=id=>document.getElementById(id),canvas=$('frame'),ctx=canvas.getContext('2d');
+const validReviewer=()=>/^[A-Za-z0-9_-]{1,80}$/.test($('reviewer').value)&&!$('reviewer').value.startsWith('REPLACE_');
+const sameTarget=t=>['jerseyNumber','kitPrimaryColor','kitSecondaryColor'].every(k=>(t[k]||'')===(pack.target[k]||''));
+const validBox=(b,f)=>Array.isArray(b)&&b.length===4&&b.every(Number.isFinite)&&0<=b[0]&&b[0]<b[2]&&b[2]<=f.width&&0<=b[1]&&b[1]<b[3]&&b[3]<=f.height;
+function validFrame(f,i){return ['visible','off_camera','occluded','uncertain'].includes(f.state)&&(f.state==='visible'?validBox(f.box,pack.frames[i]):f.box==null)&&(!('occlusion'in f)||['none','partial','full','unknown'].includes(f.occlusion))&&(!('camera'in f)||['stable','pan','zoom','cut','unknown'].includes(f.camera))&&(!('crossing'in f)||typeof f.crossing==='boolean');}
+function status(text){$('status').textContent=text;}
+function progress(){const n=notes.filter((n,i)=>n.reviewed&&validFrame(labels.frames[i],i)).length;$('progress').max=notes.length;$('progress').value=n;$('progress-text').textContent=`${n} / ${notes.length} frames reviewed`;$('export').disabled=n!==notes.length||!validReviewer();}
+function changed(){notes[index].reviewed=false;$('reviewed').checked=false;dirty=true;progress();}
+function draw(){if(!image)return;const f=pack.frames[index];ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(image,0,0,f.width,f.height);
+function rectangle(b,label,color){ctx.strokeStyle=color;ctx.lineWidth=Math.max(2,f.width/650);ctx.strokeRect(b[0],b[1],b[2]-b[0],b[3]-b[1]);if(label){const fontSize=14*f.width/Math.max(1,canvas.getBoundingClientRect().width);ctx.font=`${fontSize}px Arial`;ctx.fillStyle=color;ctx.fillText(label,b[0]+3,Math.max(fontSize,b[1]-5));}}
+if($('detections').checked)for(const b of f.detections)rectangle(b.box,b.trackId,'#e4b860');
+if($('tracks').checked)for(const b of f.tracks)rectangle(b.box,b.trackId,'#88c9dd');
+if(labels.frames[index].box)rectangle(labels.frames[index].box,'Target','#57d6a0');
+if(drag)rectangle([Math.min(drag.x,drag.tx),Math.min(drag.y,drag.ty),Math.max(drag.x,drag.tx),Math.max(drag.y,drag.ty)],'', '#57d6a0');}
+function show(i){index=Math.max(0,Math.min(pack.frames.length-1,i));drag=null;image=null;canvas.dataset.loaded='false';const f=pack.frames[index],l=labels.frames[index],n=notes[index];canvas.width=f.width;canvas.height=f.height;$('timeline').value=index;$('frame-number').value=index+1;$('time').textContent=`${Math.floor(f.timeSec/60).toString().padStart(2,'0')}:${(f.timeSec%60).toFixed(3).padStart(6,'0')}`;
+$('visibility').value=l.state;$('occlusion').value=l.occlusion||'unknown';$('camera').value=l.camera||'unknown';$('crossing').checked=!!l.crossing;$('legibility').value=n.numberLegible;$('reviewed').checked=n.reviewed;
+['x1','y1','x2','y2'].forEach((id,k)=>{$(id).value=l.box?l.box[k]:'';});for(const tag of ['re_entry','back_facing','far_small'])$(tag).checked=n.tags.includes(tag);
+$('prev').disabled=index===0;$('next').disabled=index===pack.frames.length-1;
+const selected=index,img=new Image();img.onload=()=>{if(index===selected){image=img;draw();canvas.dataset.loaded='true';}};img.onerror=()=>status('Source preview unavailable');img.src=f.image;progress();}
+function point(event){const r=canvas.getBoundingClientRect(),f=pack.frames[index];return {x:Math.max(0,Math.min(f.width,(event.clientX-r.left)*f.width/r.width)),y:Math.max(0,Math.min(f.height,(event.clientY-r.top)*f.height/r.height))};}
+canvas.addEventListener('pointerdown',e=>{if(!image)return;const p=point(e);drag={...p,tx:p.x,ty:p.y};canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener('pointermove',e=>{if(drag){const p=point(e);drag.tx=p.x;drag.ty=p.y;draw();}});
+canvas.addEventListener('pointerup',e=>{if(!drag)return;const p=point(e),box=[Math.min(drag.x,p.x),Math.min(drag.y,p.y),Math.max(drag.x,p.x),Math.max(drag.y,p.y)].map(Math.round);drag=null;if(validBox(box,pack.frames[index])){labels.frames[index].box=box;labels.frames[index].state='visible';changed();show(index);}else draw();});
+canvas.addEventListener('pointercancel',()=>{drag=null;draw();});
+$('prev').onclick=()=>show(index-1);$('next').onclick=()=>show(index+1);$('timeline').oninput=e=>show(Number(e.target.value));$('frame-number').onchange=e=>show(Number(e.target.value)-1);$('zoom').onchange=e=>{canvas.style.width=e.target.value+'%';};
+$('visibility').onchange=e=>{labels.frames[index].state=e.target.value;if(e.target.value!=='visible')labels.frames[index].box=null;changed();show(index);};
+$('clear').onclick=()=>{labels.frames[index].box=null;labels.frames[index].state='uncertain';changed();show(index);};
+for(const id of ['x1','y1','x2','y2'])$(id).onchange=()=>{const fields=['x1','y1','x2','y2'].map(k=>$(k).value);const box=fields.map(Number);if(fields.every(v=>v!=='')&&validBox(box,pack.frames[index])){labels.frames[index].box=box;labels.frames[index].state='visible';$('visibility').value='visible';status('');}else{labels.frames[index].box=null;status('Invalid target box');}changed();draw();};
+for(const id of ['occlusion','camera'])$(id).onchange=e=>{labels.frames[index][id]=e.target.value;changed();};
+$('crossing').onchange=e=>{labels.frames[index].crossing=e.target.checked;changed();};
+$('legibility').onchange=e=>{notes[index].numberLegible=e.target.value;changed();};
+for(const tag of ['re_entry','back_facing','far_small'])$(tag).onchange=e=>{notes[index].tags=notes[index].tags.filter(t=>t!==tag);if(e.target.checked)notes[index].tags.push(tag);changed();};
+$('reviewed').onchange=e=>{if(e.target.checked&&!validFrame(labels.frames[index],index)){e.target.checked=false;status('Target box missing or invalid');return;}notes[index].reviewed=e.target.checked;dirty=true;progress();};
+$('unreviewed').onclick=()=>{for(let offset=1;offset<=notes.length;offset++){const i=(index+offset)%notes.length;if(!notes[i].reviewed){show(i);return;}}};
+$('reviewer').oninput=()=>{dirty=true;progress();};
+for(const id of ['detections','tracks']){$(id).disabled=!pack.overlaysAvailable;$(id).onchange=()=>{if($(id).checked){overlaysShown=true;dirty=true;$('exposure').textContent='Overlay exposure: recorded';}draw();};}
+function download(value,prefix){const blob=new Blob([JSON.stringify(value,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');const nonce=Array.from(crypto.getRandomValues(new Uint32Array(2))).join('-');a.href=url;a.download=`${prefix}-${Date.now()}-${nonce}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);status('Exported locally');}
+function exportLabels(reviewed){const value=structuredClone(labels);value.reviewed=reviewed;value.reviewerId=$('reviewer').value||'REPLACE_WITH_ACTUAL_REVIEWER';return value;}
+$('draft').onclick=()=>{download(exportLabels(false),'labels-draft');dirty=false;};
+$('notes').onclick=()=>download({schemaVersion:1,sourceSha256:pack.sourceSha256,packSha256:data.packSha256,reviewerId:$('reviewer').value,overlaysShown,frames:notes},'review-notes');
+$('export').onclick=()=>{progress();if(!$('export').disabled){download(exportLabels(true),'labels-reviewed');dirty=false;}};
+$('import').onclick=()=>$('file-import').click();
+$('file-import').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>16777216)throw Error('File exceeds metadata limit');const v=JSON.parse(await file.text());if(v.sourceSha256!==pack.sourceSha256||!Array.isArray(v.frames)||v.frames.length!==pack.frames.length||v.frames.some((f,i)=>f.timeSec!==pack.frames[i].timeSec))throw Error('Source or sample mismatch');
+if(v.packSha256){if(v.packSha256!==data.packSha256||v.reviewerId!==$('reviewer').value||typeof v.overlaysShown!=='boolean'||v.frames.some(n=>typeof n.reviewed!=='boolean'||!['yes','no','unknown'].includes(n.numberLegible)||!Array.isArray(n.tags)||n.tags.some(t=>!['re_entry','back_facing','far_small'].includes(t))))throw Error('Review notes mismatch');notes=structuredClone(v.frames);overlaysShown=overlaysShown||v.overlaysShown;if(overlaysShown)$('exposure').textContent='Overlay exposure: recorded';}
+else{const rootKeys=['schemaVersion','sourceSha256','target','reviewerId','reviewed','frames'],frameKeys=['timeSec','state','box','occlusion','camera','crossing'];if(v.schemaVersion!==1||typeof v.reviewed!=='boolean'||typeof v.reviewerId!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(v.reviewerId)||Object.keys(v).some(k=>!rootKeys.includes(k))||!v.target||Object.keys(v.target).some(k=>!['jerseyNumber','kitPrimaryColor','kitSecondaryColor'].includes(k))||!sameTarget(v.target)||v.frames.some((f,i)=>Object.keys(f).some(k=>!frameKeys.includes(k))||!validFrame(f,i)))throw Error('Target, schema or geometry mismatch');labels=structuredClone(v);labels.reviewed=false;notes.forEach(n=>n.reviewed=false);$('reviewer').value=v.reviewerId||'';}
+dirty=true;show(index);status('Imported locally');}catch(error){status(error.message);}finally{e.target.value='';}};
+window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+window.addEventListener('resize',draw);
+window.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName))return;if(e.key==='ArrowRight')show(index+1);if(e.key==='ArrowLeft')show(index-1);});
+$('target').textContent=`${pack.target.kitPrimaryColor[0].toUpperCase()+pack.target.kitPrimaryColor.slice(1)} #${pack.target.jerseyNumber}`;$('source').textContent=`ScoutX Review | ${pack.split||'development'} | ${pack.sourceSha256.slice(0,16)}`;$('reviewer').value=labels.reviewerId;$('timeline').max=pack.frames.length-1;$('frame-number').max=pack.frames.length;show(0);
+</script></body></html>
