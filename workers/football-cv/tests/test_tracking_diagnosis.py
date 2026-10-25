@@ -1,4 +1,5 @@
 import json
+from types import SimpleNamespace
 
 import pytest
 
@@ -6,6 +7,7 @@ from app.contract import SegmentRequest
 from app.pipeline import analyse_segment
 from eval.tracking_diagnosis import main, run
 from test_worker import components, request_body, FakeSource
+import sys
 
 
 def request():
@@ -61,3 +63,91 @@ def test_requires_authorization_before_source_access(tmp_path):
     with pytest.raises(SystemExit):
         main(['--input', str(tmp_path/'missing.mp4'), '--out', str(tmp_path/'new'), '--start', '1', '--end', '2',
               '--jersey-number', '20', '--kit-primary-color', 'orange'])
+
+
+def test_lost_state_does_not_propagate_an_earlier_confirmed_number():
+    parts = components(number='20')
+    reads = iter([('20', .9)] * 6 + [(None, 0.)] * 34)
+    parts.jersey_reader = SimpleNamespace(read=lambda _: next(reads))
+    result = run(parts, FakeSource(), request())
+    assert [f['trailState'] for f in result['frames'][:3]] == ['confirmed']*3
+    assert all(f['trailState'] == 'lost' and f['confidence'] == 0 for f in result['frames'][3:])
+    assert len(result['claims']) == 3
+
+
+def test_wrong_source_labels_fail_before_inference(tmp_path):
+    source = tmp_path/'source.mp4'
+    source.write_bytes(b'not decoded: labels should fail first')
+    labels = tmp_path/'labels.json'
+    labels.write_text(json.dumps({'schemaVersion': 1, 'sourceSha256': 'a'*64,
+        'target': {'jerseyNumber': '20', 'kitPrimaryColor': 'orange'}, 'reviewerId': 'reviewer',
+        'reviewed': True, 'frames': [{'timeSec': 1., 'state': 'uncertain', 'box': None}]}))
+    out = tmp_path/'out'
+    assert main(['--input', str(source), '--out', str(out), '--start', '1', '--end', '2',
+                 '--jersey-number', '20', '--kit-primary-color', 'orange', '--labels', str(labels),
+                 '--authorize-local-evaluation']) == 1
+    assert not out.exists()
+
+
+@pytest.mark.parametrize('source', ['https://example.com/match.mp4', r'\\server\share\match.mp4'])
+def test_remote_sources_are_rejected_before_network_access(tmp_path, source):
+    with pytest.raises(SystemExit):
+        main(['--input', source, '--out', str(tmp_path/'out'), '--start', '1', '--end', '2',
+              '--jersey-number', '20', '--kit-primary-color', 'orange', '--authorize-local-evaluation'])
+
+
+def test_single_command_compares_fresh_trackers_and_publishes_unreviewed_template(tmp_path, monkeypatch):
+    from eval import tracking_diagnosis as workflow
+    from app import backends
+    source = tmp_path/'source.mp4'
+    source.write_bytes(b'controlled test, not footage')
+    monkeypatch.setitem(sys.modules, 'torch', SimpleNamespace(set_num_threads=lambda _: None,
+                                                             set_num_interop_threads=lambda _: None))
+    monkeypatch.setattr(backends, 'default_components', lambda *a, **kw: components(number='20'))
+    monkeypatch.setattr(workflow, 'LocalFile', lambda _: FakeSource(count=4))
+    for key in ('HF_HUB_OFFLINE', 'TRANSFORMERS_OFFLINE', 'CUDA_VISIBLE_DEVICES'):
+        monkeypatch.setenv(key, '')
+    out = tmp_path/'out'
+    args = ['--input', str(source), '--out', str(out), '--start', '0', '--end', '2', '--fps', '2',
+            '--jersey-number', '20', '--kit-primary-color', 'red', '--kit-secondary-color', 'white',
+            '--compare-scale2x', '--authorize-local-evaluation']
+    assert main(args) == 0
+    value = json.loads((out/'diagnosis.json').read_text())
+    assert value['baseline']['qualifyingReads'] == value['candidate']['qualifyingReads'] == 4
+    assert value['candidateDecision'] == 'rejected_no_target_read_gain'
+    assert value['candidateSelectedForProduction'] is value['fullRecordingValidated'] is False
+    assert len(value['codeSha256']) == 7
+    assert value['baseline']['metrics']['falseClaimRate'] is None
+    assert json.loads((out/'labels.template.json').read_text())['reviewed'] is False
+    original = (out/'diagnosis.json').read_bytes()
+    assert main(args) == 1
+    assert (out/'diagnosis.json').read_bytes() == original
+
+
+def test_review_boxes_must_fit_actual_source_dimensions():
+    from eval.trail_metrics import TrailLabels
+    truth = TrailLabels.model_validate_json(json.dumps({'schemaVersion': 1, 'sourceSha256': 'a'*64,
+        'target': {'jerseyNumber': '20', 'kitPrimaryColor': 'red'}, 'reviewerId': 'reviewer', 'reviewed': True,
+        'frames': [{'timeSec': i*.5, 'state': 'visible', 'box': [0., 0., 1300., 20.]} for i in range(20)]}))
+    with pytest.raises(ValueError, match='source dimensions'):
+        run(components(number='20'), FakeSource(), request(), truth)
+
+
+def test_source_changes_are_not_published_as_a_complete_comparison(tmp_path, monkeypatch):
+    from eval import tracking_diagnosis as workflow
+    from app import backends
+    source = tmp_path/'source.mp4'
+    source.write_bytes(b'original fixture')
+    monkeypatch.setitem(sys.modules, 'torch', SimpleNamespace(set_num_threads=lambda _: None,
+                                                             set_num_interop_threads=lambda _: None))
+    monkeypatch.setattr(backends, 'default_components', lambda *a, **kw: components())
+    for key in ('HF_HUB_OFFLINE', 'TRANSFORMERS_OFFLINE', 'CUDA_VISIBLE_DEVICES'):
+        monkeypatch.setenv(key, '')
+    def changing(*args):
+        source.write_bytes(b'mutated fixture')
+        return {}
+    monkeypatch.setattr(workflow, 'run', changing)
+    out = tmp_path/'out'
+    assert main(['--input', str(source), '--out', str(out), '--start', '0', '--end', '2',
+                 '--jersey-number', '20', '--kit-primary-color', 'red', '--authorize-local-evaluation']) == 1
+    assert not out.exists()

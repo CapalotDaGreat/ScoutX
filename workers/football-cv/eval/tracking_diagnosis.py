@@ -12,9 +12,9 @@ import time
 import numpy as np
 
 from app.contract import SegmentRequest
-from app.identity import valid_read, TEAM_CANDIDATE_MATCH
+from app.identity import valid_read, TEAM_CANDIDATE_MATCH, JERSEY_CONFIRM_CONFIDENCE
 from app.match_identity import MatchTarget
-from app.pipeline import Components, WORKER_VERSION, _crop, analyse_segment, usable_box
+from app.pipeline import Components, WORKER_VERSION, IDENTITY_DETECTION_THRESHOLD, _crop, analyse_segment, usable_box
 from app.source_pts import source_sha256
 from app.teams import team_match
 from eval.full_match_validation import encoded, publish, read_json
@@ -40,7 +40,8 @@ class Audit:
             def frames(self, *args):
                 for t, frame in source.frames(*args):
                     audit.frame, audit.crop_index, audit.eligible = frame, 0, []
-                    audit.current = {'timeSec': t, 'detections': 0, 'tracked': 0, 'observations': []}
+                    audit.current = {'timeSec': t, 'width': frame.shape[1], 'height': frame.shape[0],
+                                     'detections': 0, 'tracked': 0}
                     audit.frames.append(audit.current)
                     yield t, frame
         return Source()
@@ -50,8 +51,9 @@ class Audit:
         class Detector:
             def people(self, frame):
                 boxes = detector.people(frame)
-                audit.current['detections'] = sum(usable_box(b, frame.shape[1], frame.shape[0]) is not None for b in boxes)
-                audit.current['_detections'] = boxes
+                valid = [v for b in boxes if (v := usable_box(b, frame.shape[1], frame.shape[0])) is not None]
+                audit.current['detections'] = len(valid)
+                audit.current['_detections'] = valid
                 return boxes
         return Detector()
 
@@ -73,7 +75,7 @@ class Audit:
                                'kitMatch': team_match(_crop(audit.frame, b, .15, .5),
                                                      audit.target.kitPrimaryColor, audit.target.kitSecondaryColor)}
                         audit.current['_tracks'].append(row)
-                        if b.score >= .4 and _crop(audit.frame, b, .15, .5).size:
+                        if b.score >= IDENTITY_DETECTION_THRESHOLD and _crop(audit.frame, b, .15, .5).size:
                             audit.eligible.append(row)
                     return result
             return Tracker()
@@ -104,7 +106,8 @@ class Audit:
                 reason = ('too_small' if crop.shape[0] < 24 or crop.shape[1] < 16 else
                           'conflicting_regions' if len(valid) > 1 else
                           'accepted' if valid_read(number, confidence) else
-                          'low_confidence_or_invalid_text' if raw else 'no_text')
+                          'low_confidence' if any(math.isfinite(float(s)) and 0 <= float(s) < JERSEY_CONFIRM_CONFIDENCE for _, _, s in raw)
+                          else 'invalid_text' if raw else 'no_text')
                 gray = crop.astype(float).mean(axis=2) if crop.size else np.zeros((1, 1))
                 focus = float(np.mean(np.diff(gray, axis=0)**2)) if gray.shape[0] > 1 else 0.
                 audit.eligible[index // 2]['crops'].append({'region': 'torso' if index % 2 == 0 else 'shorts',
@@ -118,6 +121,7 @@ class Audit:
         counts = Counter()
         candidate_keys = set()
         reads = 0
+        seen_confirmed = False
         for frame in self.frames:
             rejections = Counter(c['reason'] for o in frame.get('_tracks', []) for c in o['crops'])
             target_observations = []
@@ -143,19 +147,27 @@ class Audit:
                     raise ValueError('trace cannot be attributed uniquely to an anonymous track')
                 claims.append({**point, 'trackId': matches[0]['key'], 'state': 'confirmed',
                                'confidence': .8, 'confidenceCalibrated': False})
-            detection_hit = None
+            detection_hit, label = None, None
             if labels is not None:
                 label = next((v for v in labels.frames if abs(v.timeSec-frame['timeSec']) <= 1e-6), None)
                 if label and label.state == 'visible':
+                    if label.box[2] > frame['width'] or label.box[3] > frame['height']:
+                        raise ValueError('reviewed box exceeds decoded source dimensions')
                     from eval.evaluate import iou
                     detection_hit = any(iou(list(label.box), [b.x1, b.y1, b.x2, b.y2]) >= .5
                                         for b in frame.get('_detections', []))
             counts.update(rejections)
-            rows.append({'timeSec': frame['timeSec'], 'detections': frame['detections'], 'tracked': frame['tracked'],
+            confirmed = any(c['timeSec'] == frame['timeSec'] for c in claims)
+            state = 'confirmed' if confirmed else 'lost' if seen_confirmed else 'abstained'
+            seen_confirmed = seen_confirmed or confirmed
+            rows.append({'timeSec': frame['timeSec'], 'width': frame['width'], 'height': frame['height'],
+                         'detections': frame['detections'], 'tracked': frame['tracked'],
                          'targetDetectionHit': detection_hit, 'rejections': dict(rejections),
                          'numberReadCandidates': target_observations,
-                         'trailState': 'confirmed' if any(c['timeSec'] == frame['timeSec'] for c in claims) else 'abstained',
-                         'occlusion': 'unmeasured', 'cameraMotion': 'unmeasured', 'crossing': 'unmeasured'})
+                         'trailState': state, 'confidence': .8 if confirmed else 0., 'confidenceCalibrated': False,
+                         'occlusion': label.occlusion if label else 'unmeasured',
+                         'cameraMotion': label.camera if label else 'unmeasured',
+                         'crossing': label.crossing if label else 'unmeasured'})
         metrics = trail_metrics([r['timeSec'] for r in rows], claims, labels)
         hits = [r['targetDetectionHit'] for r in rows if r['targetDetectionHit'] is not None]
         if hits:
@@ -163,6 +175,7 @@ class Audit:
         self.frames.clear()
         self.eligible.clear()
         self.frame = None
+        self.current.clear()
         return {'frames': rows, 'claims': claims, 'metrics': metrics, 'qualifyingReads': reads,
                 'numberReadCandidateTracks': len(candidate_keys), 'cropRejections': dict(counts)}
 
@@ -196,6 +209,7 @@ def main(argv=None) -> int:
     parser.add_argument('--kit-primary-color', required=True)
     parser.add_argument('--kit-secondary-color', default='')
     parser.add_argument('--labels', type=_local_path)
+    parser.add_argument('--compare-scale2x', action='store_true')
     parser.add_argument('--authorize-local-evaluation', action='store_true', required=True)
     args = parser.parse_args(argv)
     try:
@@ -208,7 +222,12 @@ def main(argv=None) -> int:
             raise ValueError('bounded local source and new output directory required')
         _local_path(args.out.resolve())
         before, digest = source.stat(), source_sha256(source)
-        labels = TrailLabels.model_validate_json(args.labels.read_text()) if args.labels else None
+        root = Path(__file__).resolve().parents[1]
+        code_files = ['app/backends.py', 'app/pipeline.py', 'app/identity.py', 'app/teams.py',
+                      'eval/tracking_diagnosis.py', 'eval/trail_metrics.py', 'eval/ocr_augmentation.py']
+        code_hashes = {name: source_sha256(root/name) for name in code_files}
+        labels = (TrailLabels.model_validate_json(json.dumps(read_json(_local_path(args.labels.resolve(strict=True)))))
+                  if args.labels else None)
         if labels and (labels.sourceSha256 != digest or labels.target != target):
             raise ValueError('reviewed source/target mismatch')
         os.environ.update(HF_HUB_OFFLINE='1', TRANSFORMERS_OFFLINE='1', CUDA_VISIBLE_DEVICES='')
@@ -222,15 +241,33 @@ def main(argv=None) -> int:
             target=target.model_dump(), sampling={'fps': args.fps},
             privacy={'retainNonTargetIdentities': False, 'faceRecognition': False, 'persistMedia': False})
         baseline = run(components, LocalFile(source), request, labels)
+        candidate = None
+        if args.compare_scale2x:
+            from eval.ocr_augmentation import ConservativeScaleReader
+            variant = Components(components.source, components.detector, components.tracker_factory,
+                                 ConservativeScaleReader(components.jersey_reader), components.models)
+            candidate = run(variant, LocalFile(source), request, labels)
         if _signature(source.stat()) != _signature(before) or source_sha256(source) != digest:
             raise ValueError('source changed')
+        if any(source_sha256(root/name) != value for name, value in code_hashes.items()):
+            raise ValueError('evaluation code changed during inference')
         payload = {'schemaVersion': 1, 'sourceSha256': digest, 'target': target.model_dump(exclude_defaults=True),
-            'workerVersion': WORKER_VERSION, 'models': components.models, 'fps': args.fps,
+            'workerVersion': WORKER_VERSION, 'models': components.models, 'codeSha256': code_hashes, 'fps': args.fps,
             'interval': [args.start, args.end], 'authorizedLocalEvaluation': True,
             'productionApproval': False, 'modelTraining': False, 'cloudUpload': False,
-            'baseline': baseline, 'candidate': None, 'fullRecordingValidated': False}
-        publish(args.out, {'diagnosis.json': encoded(payload)})
-        print(json.dumps({'qualifyingReads': baseline['qualifyingReads'], **baseline['metrics']}))
+            'baseline': baseline, 'candidate': candidate, 'candidateName': 'offline_interpolate2x' if candidate else None,
+            'candidateSelectedForProduction': False, 'fullRecordingValidated': False}
+        payload['candidateDecision'] = ('rejected_no_target_read_gain' if candidate is not None
+                                       and candidate['qualifyingReads'] <= baseline['qualifyingReads']
+                                       else 'unvalidated_no_held_out_acceptance' if candidate is not None else 'not_run')
+        template = {'schemaVersion': 1, 'sourceSha256': digest, 'target': target.model_dump(exclude_defaults=True),
+            'reviewerId': 'REPLACE_WITH_ACTUAL_REVIEWER', 'reviewed': False,
+            'frames': [{'timeSec': f['timeSec'], 'state': 'uncertain', 'box': None,
+                        'occlusion': 'unknown', 'camera': 'unknown', 'crossing': False}
+                       for f in baseline['frames']]}
+        publish(args.out, {'diagnosis.json': encoded(payload), 'labels.template.json': encoded(template)})
+        print(json.dumps({name: {'qualifyingReads': value['qualifyingReads'], **value['metrics']}
+                          for name, value in [('baseline', baseline), ('candidate', candidate)] if value is not None}))
         return 0
     except Exception:
         print('Diagnosis failed; no complete comparison or approval claimed.')
