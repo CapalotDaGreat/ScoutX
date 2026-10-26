@@ -22,12 +22,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+import cv2
 import numpy as np
 
 MAX_SPEED_BH = 5.0      # body-heights per second (~9 m/s) a player can cover
 SLACK_BH = 1.2          # box noise allowance
 PLAYER_HEIGHT_M = 1.8
 PRIOR_LOGODDS = 1.0     # most same-kit tracklets are NOT the target
+MIN_QUESTION_BOX_PX = 90.0   # smaller players can't be recognised by the user either
+QUESTION_BATCH = 8           # compact first review batch; more on request
 
 
 @dataclass
@@ -50,6 +53,13 @@ class IdentityResult:
     iterations: list[dict]
     questions: list[dict]
     excluded: dict
+    # Uncalibrated per-candidate target score in [0, 1] (NOT a probability until calibrated on
+    # labelled footage), and which tracklets carry hard evidence.
+    score: dict = field(default_factory=dict)
+    confirmed: set = field(default_factory=set)
+    # Moments (source seconds) of hard evidence per tracklet: target-number reads, user answers.
+    evidence_times: dict = field(default_factory=dict)
+    appearance_score: dict = field(default_factory=dict)  # same as score, before hard evidence
 
 
 def number_votes(reads: list[tuple], number: str | None) -> tuple[float, float, int, int, str | None]:
@@ -149,7 +159,7 @@ class AppearanceModel:
 
 def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target, fps: float,
                      rows: np.ndarray, by_tid: dict, feats: dict[int, np.ndarray] | None = None,
-                     iterations: int = 4, kit_min: float = 0.22, n_questions: int = 12,
+                     iterations: int = 4, kit_min: float = 0.22, n_questions: int = QUESTION_BATCH,
                      row_kit: np.ndarray | None = None) -> IdentityResult:
     n = len(summary)
     kit = np.array([s["kit1"] + 0.5 * s["kit2"] for s in summary])
@@ -258,44 +268,78 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
             confidence[k] = float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS + 1.0))))
     questions = _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence,
                            anchor_ix, number_pos, n_questions, row_kit)
+    score = {int(k): float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS)))) for k in cands}
+    appearance_score = dict(score)
+    for k in anchor_ix | number_pos:
+        score[int(k)] = 1.0
+    ev_times: dict[int, list[float]] = {}
+    for k in number_pos:
+        tid = summary[k]["tid"]
+        ix = by_tid[tid]
+        fr_t = {int(rows[r, 0]): float(rows[r, 1]) for r in ix}
+        ev_times[int(k)] = [fr_t[f] for f, num, _, _ in reads.get(tid, []) if num == target.number and f in fr_t]
+    for (t, _, _), k in zip(target.anchors, locate(summary, rows, by_tid, target.anchors)):
+        ev_times.setdefault(int(k), []).append(float(t))
     return IdentityResult(chosen, unary, evidence, confidence, seeds, list(map(int, cands)), history,
-                          questions, {int(k): v for k, v in excluded.items()})
+                          questions, {int(k): v for k, v in excluded.items()}, score,
+                          {int(k) for k in (anchor_ix | number_pos)}, ev_times, appearance_score)
+
+
+def _appearance_clusters(summary, ks: list[int], n_clusters: int = 10) -> dict[int, int]:
+    """Coarse look-alike groups over candidate tracklets (shirt/shorts/socks colour signature)."""
+    if len(ks) <= n_clusters:
+        return {k: i for i, k in enumerate(ks)}
+    X = np.stack([summary[k]["sig"] for k in ks]).astype(np.float32)
+    _, labels, _ = cv2.kmeans(X, n_clusters, None, (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 50, 1e-3),
+                              3, cv2.KMEANS_PP_CENTERS)
+    return {k: int(lab) for k, lab in zip(ks, labels.ravel())}
 
 
 def _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence, anchors, numbered, k_max,
                row_kit=None):
-    """Most valuable yes/no checks: long segments whose identity is least certain."""
+    """Active review selection. Value of asking about a tracklet =
+        affected seconds x uncertainty (how close the score is to 0.5) x crop quality,
+    plus a bonus when it is currently attributed to the target (a wrong claim costs more than a
+    missed one). Diversity: at most one question per look-alike cluster and per 8 s window, so one
+    batch never asks the same ambiguity twice. Tiny players (< 90 px) are never asked about."""
     chosen_set = set(chosen)
     items = []
     for k in cands:
-        if k in anchors or k in numbered or dur[k] < 2.0:
+        if k in anchors or k in numbered or dur[k] < 2.0 or summary[k]["h_max"] < MIN_QUESTION_BOX_PX:
             continue
         p = 1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS + (1.0 if k in chosen_set else 0.0))))
-        value = dur[k] * (1 - abs(2 * p - 1)) + (0.5 * dur[k] if k in chosen_set else 0.0)
-        if k in chosen_set or p > 0.15:
-            items.append((value, int(k), p))
+        if not (k in chosen_set or p > 0.15):
+            continue
+        quality = float(np.clip(summary[k]["h_max"] / 200.0, 0.4, 1.0))
+        affected = min(float(dur[k]), 60.0)
+        value = affected * (1 - abs(2 * p - 1)) * quality * (1.5 if k in chosen_set else 1.0)
+        items.append((value, int(k), p))
     items.sort(reverse=True)
-    out, used_t = [], []
-    picked = []
-    for value, k, p in items:
+    clusters = _appearance_clusters(summary, [k for _, k, _ in items[:80]])
+    picked, used_t, used_c = [], [], set()
+    for value, k, p in items[:80]:
         mid = 0.5 * (summary[k]["t0"] + summary[k]["t1"])
-        if any(abs(mid - u) < 8.0 for u in used_t):
+        c = clusters.get(k, -1)
+        if any(abs(mid - u) < 8.0 for u in used_t) or c in used_c:
             continue
         used_t.append(mid)
+        used_c.add(c)
         picked.append((value, k, p))
-        if len(picked) >= k_max:
+        if len(picked) >= min(k_max, QUESTION_BATCH):
             break
+    out = []
     for value, k, p in picked:
         s = summary[k]
         ix = by_tid[s["tid"]]
         hs = rows[ix, 6] - rows[ix, 4]
-        # Show the clearest moment: a big box that clearly shows the target kit and is not
-        # one of the largest outliers (those are usually two overlapping players).
+        # Show the clearest moment: big, clearly target-coloured, not an outlier merge of two people.
         quality = np.minimum(hs, np.percentile(hs, 80)) * (0.2 + (row_kit[ix] if row_kit is not None else 1.0)) * rows[ix, 7]
         r = rows[ix[int(np.argmax(quality))]]
         out.append({"tid": s["tid"], "t": float(r[1]), "box": [float(v) for v in r[3:7]],
                     "from": s["t0"], "to": s["t1"], "currentlyTarget": k in chosen_set,
-                    "probability": round(float(p), 2), "seconds": round(float(dur[k]), 1)})
+                    "score": round(float(p), 2), "scoreKind": "uncalibrated",
+                    "affectedSec": round(float(dur[k]), 1), "value": round(float(value), 2),
+                    "options": ["yes", "not_me", "unsure", "skip"]})
     return out
 
 

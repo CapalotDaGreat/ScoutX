@@ -19,7 +19,12 @@ from .pipeline import WORKER_VERSION, Components, analyse_segment
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("football-cv")
 
-app = FastAPI(title="PitchProof football-cv reference worker", version=WORKER_VERSION, docs_url=None, redoc_url=None)
+app = FastAPI(title="PitchProof football-cv reference worker", version=WORKER_VERSION, docs_url=None, redoc_url=None,
+              openapi_url=None)
+
+from .tracking_v3 import router as tracking_v3_router  # noqa: E402
+
+app.include_router(tracking_v3_router)
 
 
 @app.exception_handler(RequestValidationError)

@@ -35,60 +35,85 @@ segments where one answer changes the most, each with a clear picture. Answers a
 time + position (`feedback.json`), so they survive re-tracking, and they train the per-match
 appearance model, which improves the rest of the match too.
 
-## Result on `IMG_4809.MOV` (orange #20, white sleeves)
+## Result on `IMG_4809.MOV` (orange #20, white sleeves) — engine 3.1
 
-Automatic only (no answers): number reads excluded 21 look-alike tracklets (#17 ×, #24 ×, …) and
-confirmed #20 twice (04:00 shorts number, 32:23); the appearance model was too conservative and
-committed to ~1 minute.
+> Superseded numbers: an earlier draft of this page reported "15.8 min tracked, ~1.2 km".
+> Those figures counted appearance-only guesses as tracking and used an inconsistent speed
+> estimator. They are withdrawn. The figures below come from the 3.1 engine, and its invariant
+> checks pass.
 
-After 4 review rounds (39 answers: 11 yes, 28 no, 5–10 seconds each):
+These figures come from the run after 39 review answers (11 yes, 28 no). 33:55 of video was
+recorded and treated as match time, because no period corrections were given.
 
-| | |
+| State (seconds of analysed match time) | |
 | --- | --- |
-| Tracked on camera | 15.8 min of 33:55 (47 %) |
-| …confirmed by number / answers | 5.6 min |
-| …by appearance + continuity | 10.2 min |
-| Distance while visible (estimate) | ~1.2 km, work rate ~74 m/min |
-| Top speed (99th pct, estimate) | ~22 km/h; 5 sprints ≥ 20 km/h, 11 runs ≥ 14.4 km/h |
-| Ball involvements | 10 (4.7 s on the ball) |
+| Analysed (camera on play) | 1864 s; 171 s unobserved (camera pointed away from play) |
+| CONFIRMED_VISIBLE: number read or answer within ±4 s | **72.8 s** |
+| LIKELY_VISIBLE: appearance plus continuity, not verified | 443.5 s |
+| AMBIGUOUS: could be #20 or a team-mate | 988.6 s |
+| Not identified | 359.2 s |
 
-Spot check (developer review of 30 random appearance-only moments): ~18 clearly #20, ~6 too small
-to tell, ~6 wrong (3 boxes on an opponent during occlusion — now filtered by a frame-level kit
-check — 1 #19, 2 team-mates). Number- and answer-confirmed segments were all correct.
-**These are development checks on one video, not an independent accuracy benchmark.**
-The existing evaluation protocol (`full-match-validation.md`) still applies before production.
+Physical figures are **experimental**. They come from an uncalibrated moving camera and are
+measured only while the player was validly observed (406 s):
+
+| Metric | Value |
+| --- | --- |
+| Distance while observed | 373 m |
+| Work rate while observed | 55 m/min |
+| Peak speed | 24.1 km/h, the highest sprint, consistent with the sprint list |
+| Sprints | 1 |
+
+The ball module found 1 contact and 1 pass attempt, with outcome unknown. These figures have not
+been validated.
+
+On 47 crops where another player's number is clearly readable (#17, #24 and #19), none are
+attributed to #20. Before the number-conflict split and the local-evidence rule, 2 were. Only
+3 crops show a certain, readable #20. Of those, the engine catches 1.
+
+**These are development checks on one video. They are not an accuracy benchmark.** The full
+audit, performance and cost figures are in `tracking-v3-report-2026-10-26.md`.
 
 ## Run it
 
-Windows, one click: right-click `workers/football-cv/Track-Player.ps1` → *Run with PowerShell*.
-It installs the engine once, asks for the video, number and colours, runs, opens the report and
-offers the answer loop. Command line:
+On Windows, right-click `workers/football-cv/Track-Player.ps1` and choose *Run with PowerShell*.
+The script asks for:
+- the video;
+- the shirt number;
+- the kit colours;
+- the position (optional);
+- the age group (optional; it sets the speed thresholds).
+
+It then runs, opens the report and offers the answer loop. From the command line:
 
 ```powershell
-python -m scoutx_tracker track "C:\...\IMG_4809.MOV" --number 20 --kit orange --kit2 white
-python -m scoutx_tracker answer "C:\...\IMG_4809_scoutx" 1y 2n 5y      # after looking at the report
-python -m scoutx_tracker pick "C:\...\IMG_4809.MOV" --at 4:02            # optional: point at the player
-python -m scoutx_tracker track ... --anchor 4:02#3                        # "box 3 at 4:02 is me"
+python -m scoutx_tracker track "C:\...\IMG_4809.MOV" --number 20 --kit orange --kit2 white --position winger --age-group adult
+python -m scoutx_tracker answer "C:\...\IMG_4809_scoutx" 1y 2n 3u 4s   # y=me n=not me u=unsure s=skip
+python -m scoutx_tracker undo "C:\...\IMG_4809_scoutx"
+python -m scoutx_tracker periods "C:\...\IMG_4809_scoutx" --kickoff 0:45 --halftime 35:10 --second-half 45:00 --fulltime 1:20:30
+python -m scoutx_tracker pick "C:\...\IMG_4809.MOV" --at 4:02          # optional: point at the player
 ```
 
-Outputs next to the video in `<name>_scoutx/`: `report.html`, `highlights.mp4`,
-`who_we_followed.jpg`, `result.json` (all stats, timeline summary, review questions),
-`timeline.npz` (per-frame box/speed).
+Results are written next to the video, in a folder named `<name>_scoutx/`:
+- `report.html`;
+- `highlights.mp4`;
+- `who_we_followed.jpg`;
+- `result.json` (schema `pitchproof.tracking.v3`);
+- `timeline.npz` (per-frame states).
 
 ## Limits (stated in the report too)
 
-* Stats cover only the time the player is on camera; nothing is invented off camera.
-* Distance/speed come from one uncalibrated moving camera: sideways motion is good, motion
-  towards/away from the camera is estimated from player height and damped; treat as ±20–30 %.
-* Pass/ball outcomes depend on seeing the ball (small, often missed far away) and are rough.
-* Ultralytics YOLO11 is AGPL-3.0: fine for this local tool; check licensing (or swap the detector
-  for the existing Apache-2.0 RT-DETR) before shipping it inside a commercial service.
+* No time off camera is ever claimed, and OFF_CAMERA is never emitted automatically.
+  Percentages use analysed match time as the denominator, not the player's playing time.
+* Only CONFIRMED_VISIBLE time counts as verified. LIKELY_VISIBLE is labelled as unverified.
+  On this footage #17 and #20 are often indistinguishable by appearance alone.
+* Movement metrics stay experimental until the pitch is calibrated (manual landmarks). Automatic
+  calibration is not possible on this footage: fewer than 3 % of frames show two line directions.
+* Ball, pass and contact counts are lower bounds and have not been validated.
+* Ultralytics YOLO11 is AGPL-3.0. Its licensing must be resolved before commercial deployment.
 
-## Next steps
+## In the app
 
-1. App integration: run `scoutx_tracker` in the GPU worker as an async job (stage 1 is ~10× faster
-   on an L4), store `result.json`, and render the stats + "Is this you?" cards in the match report
-   (swipe yes / not me). The answer loop maps 1:1 to `feedback.json`.
-2. Optional vision-model number reader (OpenRouter is already configured in Functions) for
-   back-number crops the OCR can't read — every extra number read removes a question.
-3. Independent labelled evaluation per `full-match-validation.md` before enabling in production.
+The `tracking` tab appears in the analysis report when a tracking document exists. Swipe review
+cards answer the questions, and any answer can be undone. Server-side the feature is gated by
+`TRACKING_V3_ENABLED` and the existing CV approval gate, and it stays **off** until it is
+validated. See the report document for the deployment steps.

@@ -100,7 +100,8 @@
     "tactical": "Tactical",
     "coaching": "Coaching",
     "video": "Video",
-    "ask": "Ask"
+    "ask": "Ask",
+    "tracking": "Player tracking"
   },
   "band": {
     "Excellent": "Excellent",
@@ -516,5 +517,113 @@
     },
     "unknown": "Not enough ratings to compare: {{metrics}}. A missing rating means unknown, not zero.",
     "caveat": "A few analyses describe those videos only; they are not a statistically reliable trend. Different footage, camera angles and opponents change what can be seen."
+  },
+  "tracking": {
+    "processing": "Player tracking is being prepared.",
+    "stale": "Updating after your answers - statistics will refresh shortly.",
+    "stalePending": "Your answers are saved. The analysis updates as soon as the tracking service is available.",
+    "coverageTitle": "How much of the match we have you",
+    "confirmed": "Confirmed you",
+    "ofAnalysed": "{{pct}}% of analysed match time",
+    "likely": "Probably you",
+    "likelySub": "appearance + movement, not confirmed",
+    "ambiguous": "Unsure",
+    "ambiguousSub": "a look-alike team-mate is possible",
+    "analysed": "Analysed match time",
+    "analysedSub": "of {{recording}} min recording · {{unobserved}} min camera off play",
+    "coverageA11y": "Coverage of the recording by identity state",
+    "denominatorNote": "Percentages refer to analysed match time (camera showing play), not to your playing time. Identity scores are uncalibrated.",
+    "timelineTitle": "When we had you",
+    "state": {
+      "CONFIRMED_VISIBLE": "Confirmed you (number or your answer)",
+      "LIKELY_VISIBLE": "Probably you",
+      "AMBIGUOUS": "Unsure",
+      "OFF_CAMERA": "Off camera",
+      "CONFIRMED_OFF_PITCH": "Off the pitch",
+      "NON_MATCH_PERIOD": "Outside the match",
+      "UNKNOWN": "Not identified"
+    },
+    "period": {
+      "play": "play",
+      "non_play": "no play",
+      "unobserved": "camera not on play",
+      "byYou": "set by you"
+    },
+    "ballTitle": "On the ball",
+    "prov": {
+      "verified": "Verified",
+      "likely": "Probably",
+      "unvalidated": "Unvalidated estimate",
+      "experimental": "Experimental",
+      "unavailable": "Unavailable"
+    },
+    "ballSummary": "{{contacts}} ball contacts · {{attempts}} pass attempts: {{completed}} completed, {{incomplete}} incomplete, {{unknown}} unknown.",
+    "event": {
+      "contact": "Ball contact",
+      "carry": "Carry",
+      "pass_attempt": "Pass attempt"
+    },
+    "outcome": {
+      "completed": "completed",
+      "incomplete": "incomplete",
+      "unknown": "outcome unknown"
+    },
+    "movementTitle": "Movement",
+    "experimentalNote": "Experimental estimate from an uncalibrated camera - not a verified statistic.",
+    "metric": {
+      "distanceObserved": "Distance while validly observed",
+      "workRate": "Work rate (per observed minute)",
+      "peakSpeed": "Peak speed",
+      "sprintCount": "Sprints",
+      "highSpeedRunCount": "High-speed runs"
+    },
+    "unavailableTitle": "Not available for this recording",
+    "unavailable": {
+      "heatmap": "Movement heatmap",
+      "calibration": "Needs a validated pitch calibration (visible pitch landmarks).",
+      "passAccuracy": "Passing accuracy",
+      "passAccuracyWhy": "Only counted with a continuous ball track to a controlled reception; {{count}} attempt(s) had an unknown outcome.",
+      "defensive": "Tackles, interceptions, shots",
+      "notValidated": "Not implemented or not validated yet."
+    },
+    "identityFootnote": "Identity confirmed {{numbers}}x by shirt number and {{answers}}x by you. No facial recognition is used.",
+    "review": {
+      "title": "Is this you?",
+      "subtitle": "A few quick checks make the whole analysis more accurate. Swipe right for yes, left for not me.",
+      "updating": "Updating the analysis...",
+      "cardA11y": "Candidate player at {{time}}",
+      "candidate": "Candidate",
+      "reference": "Confirmed you",
+      "question": "Is this #{{number}}? ({{time}})",
+      "affects": "Affects about {{minutes}} min",
+      "remaining": "{{count}} left",
+      "yes": "Yes, that's me",
+      "notMe": "Not me",
+      "unsure": "Not sure",
+      "skip": "Skip",
+      "done": "All checks done - thank you!",
+      "undo": "Undo last answer",
+      "error": "Could not save your answer. Please try again.",
+      "privacy": "Answers only change this match's analysis. They are never used to train models."
+    },
+    "import": {
+      "title": "Import from a link",
+      "label": "Video link (Veo match page or direct video file)",
+      "check": "Check link",
+      "invalid": "Paste a full https:// link.",
+      "failed": "Could not check the link. Please try again.",
+      "veoStep1": "Open the match in the Veo app with an account that belongs to the team or club.",
+      "veoStep2": "Choose Download → Download full game (follow-cam MP4). Panorama views cannot be downloaded.",
+      "veoStep3": "Upload the downloaded video here, or paste a direct https:// link to the exported file.",
+      "status": {
+        "ready": "Video link verified. Importing from links isn't switched on yet - please download the file and upload it here.",
+        "requires_export": "Veo links can't be imported directly. Export the video first:",
+        "partner_access_required": "A Veo partner connection is needed. Export the video instead:",
+        "invalid": "This link isn't supported.",
+        "unreachable": "The link could not be reached.",
+        "not_video": "This link isn't a video file.",
+        "too_large": "This video is larger than your plan allows."
+      }
+    }
   }
 }

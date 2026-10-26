@@ -32,6 +32,9 @@ class Timeline:
     interpolated: np.ndarray  # (F,) bool
 
 
+HARD_EVIDENCE_RADIUS_SEC = 4.0
+
+
 def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None = None,
                    kit_floor: float = 0.12) -> Timeline:
     F = len(D.times)
@@ -54,6 +57,18 @@ def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None =
                 continue
             ix = ix[keep]
         fr = T.rows[ix, 0].astype(int)
+        lab = result.evidence[k]
+        ev_t = getattr(result, "evidence_times", {}).get(k, [])
+        if lab in ("anchor", "number"):
+            # Hard evidence is local: one read / answer confirms its own neighbourhood only. The
+            # rest of the tracklet keeps it as continuity (a same-team swap can hide inside).
+            tt = T.rows[ix, 1]
+            near = np.zeros(len(ix), bool)
+            for et in ev_t:
+                near |= np.abs(tt - et) <= HARD_EVIDENCE_RADIUS_SEC
+            labels = np.where(near, lab, "continuity")
+        else:
+            labels = np.full(len(ix), lab, dtype=object)
         if last is not None:
             lf, lb, lp = last
             gap = fr[0] - lf
@@ -71,7 +86,12 @@ def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None =
         boxes[fr] = T.rows[ix, 3:7]
         pano[fr] = T.pano[ix]
         conf[fr] = result.confidence[k]
-        ev[fr] = result.evidence[k]
+        if lab in ("anchor", "number"):
+            # Away from the evidence, confidence is what appearance alone supports, but never below
+            # the continuity floor of a tracklet that is anchored somewhere.
+            app = getattr(result, "appearance_score", {}).get(k, 0.5)
+            conf[fr] = np.where(labels == lab, result.confidence[k], max(app, 0.5))
+        ev[fr] = labels
         last = (fr[-1], T.rows[ix[-1], 3:7], T.pano[ix[-1]])
     return Timeline(np.arange(F), D.times.copy(), present, boxes, pano, D.segment.copy(), conf, ev, interp)
 

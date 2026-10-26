@@ -32,6 +32,7 @@ class Detections:
     sources: list = field(default_factory=list)  # (video, first global frame, n frames, start offset s)
     width: int = 1920
     height: int = 1080
+    grass: np.ndarray | None = None  # (F,) pitch-green share per frame
 
 
 def load_runs(run_dirs: list[str]) -> Detections:
@@ -42,7 +43,7 @@ def load_runs(run_dirs: list[str]) -> Detections:
         z = np.load(Path(d) / "detections.npz")
         parts.append((meta, z, Path(d)))
     parts.sort(key=lambda p: p[0]["t0"] + p[0]["start"])
-    D, S, EI, E, B, W, T, SEG, crops, sources = [], [], [], [], [], [], [], [], {}, []
+    D, S, EI, E, B, W, T, SEG, crops, sources, G = [], [], [], [], [], [], [], [], {}, [], []
     foff = doff = 0
     seg = 0
     fps, width, height = parts[0][0]["fps"], parts[0][0].get("width") or 1920, parts[0][0].get("height") or 1080
@@ -63,12 +64,20 @@ def load_runs(run_dirs: list[str]) -> Detections:
             crops[int(di) + doff] = str(p)
         D.append(dets); S.append(z["sigs"]); EI.append(z["emb_idx"] + doff); E.append(z["embs"])
         B.append(balls); W.append(z["warps"]); T.append(z["times"]); SEG.append(segs)
+        if "grass" in z.files:
+            G.append(z["grass"].astype(np.float32))
+        elif (path / "scene.npz").exists():
+            G.append(np.load(path / "scene.npz")["grass"].astype(np.float32))
+        else:
+            G.append(np.full(n_f, np.nan, np.float32))
         sources.append((meta["video"], foff, n_f, float(meta.get("start", 0.0))))
         foff += n_f
         doff += len(dets)
-    return Detections(np.concatenate(D), np.concatenate(S).astype(np.float32), np.concatenate(EI),
-                      np.concatenate(E), np.concatenate(B), np.concatenate(W), np.concatenate(T),
-                      np.concatenate(SEG), crops, fps, sources, width, height)
+    det = Detections(np.concatenate(D), np.concatenate(S).astype(np.float32), np.concatenate(EI),
+                     np.concatenate(E), np.concatenate(B), np.concatenate(W), np.concatenate(T),
+                     np.concatenate(SEG), crops, fps, sources, width, height)
+    det.grass = np.concatenate(G)
+    return det
 
 
 def panorama_transforms(warps: np.ndarray, segment: np.ndarray) -> np.ndarray:
@@ -147,9 +156,57 @@ class Tracklets:
     pano: np.ndarray        # (R, 3) foot x, y in shot panorama coords, box height in pano units
     summary: list[dict]     # one dict per tracklet
     by_tid: dict            # tid -> row indices (sorted by frame)
+    number_splits: int = 0  # tracklets split because of conflicting shirt-number reads
 
 
-def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "") -> Tracklets:
+def compatible(a: str, b: str) -> bool:
+    """Two number reads can come from the same shirt (a partial read is a substring)."""
+    return a == b or (len(a) != len(b) and (a in b or b in a))
+
+
+def split_on_number_conflicts(R: np.ndarray, sigs: np.ndarray, det_reads: dict[int, str]) -> tuple[np.ndarray, int]:
+    """Split tracklets carrying incompatible shirt-number reads (e.g. "4"/"24" then "20"): an
+    identity swap between team-mates that colour purification cannot see. The cut is placed at
+    the largest shirt-colour change between the two conflicting reads (or midway)."""
+    R = R.copy()
+    next_id = int(R[:, 2].max()) + 1 if len(R) else 1
+    splits = 0
+    changed = True
+    while changed:
+        changed = False
+        order = np.lexsort((R[:, 0], R[:, 2]))
+        tids, first = np.unique(R[order, 2], return_index=True)
+        bounds = list(first) + [len(order)]
+        for k in range(len(tids)):
+            ix = order[bounds[k]:bounds[k + 1]]
+            reads = [(p, det_reads[int(R[r, 8])]) for p, r in enumerate(ix) if int(R[r, 8]) in det_reads]
+            # A single-digit read is often half of a two-digit number or noise: it only counts
+            # as evidence when the same digit was read at least twice on this tracklet.
+            counts: dict[str, int] = {}
+            for _, n_ in reads:
+                counts[n_] = counts.get(n_, 0) + 1
+            reads = [(p, n_) for p, n_ in reads if len(n_) >= 2 or counts[n_] >= 2]
+            cut = None
+            for (pa, na), (pb, nb) in zip(reads, reads[1:]):
+                if not compatible(na, nb) and pb - pa >= 1:
+                    S = _shirt_parts(sigs[R[ix[pa:pb + 1], 8].astype(int)])
+                    if len(S) >= 3:
+                        d = 1 - np.sum(S[1:] * S[:-1], axis=1)
+                        cut = pa + 1 + int(np.argmax(d))
+                    else:
+                        cut = pa + 1 + (pb - pa) // 2
+                    break
+            if cut is not None:
+                R[ix[cut:], 2] = next_id
+                next_id += 1
+                splits += 1
+                changed = True
+                break
+    return R, splits
+
+
+def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "",
+                    det_reads: dict[int, str] | None = None) -> Tracklets:
     trk = PlayerTracker(fps=D.fps)
     F = len(D.times)
     order = np.argsort(D.dets[:, 0], kind="stable")
@@ -169,6 +226,9 @@ def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "
             rows.append([f, D.times[f], tid, *box, sc, idx[di]])
     R = np.array(rows, np.float64).reshape(-1, 9)
     R = purify(R, D.sigs)
+    splits = 0
+    if det_reads:
+        R, splits = split_on_number_conflicts(R, D.sigs, det_reads)
     P = panorama_transforms(D.warps, D.segment)
     fr = R[:, 0].astype(int)
     fx = (R[:, 3] + R[:, 5]) / 2
@@ -205,7 +265,7 @@ def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "
             "crops": [D.crops[d] for d in di if d in D.crops],
             "p_start": pano[ix[0]].tolist(), "p_end": pano[ix[-1]].tolist(),
         })
-    return Tracklets(R, pano, summary, by_tid)
+    return Tracklets(R, pano, summary, by_tid, splits)
 
 
 def tracklet_features(D: Detections, T: Tracklets, min_h: float = 36.0, pca_dim: int = 48) -> dict[int, np.ndarray]:

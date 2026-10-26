@@ -162,7 +162,7 @@ def question_cards(D, questions: list[dict], out_path: str, cell: int = 260, col
         cv2.rectangle(crop, (int(x1 - X1), int(y1 - Y1)), (int(x2 - X1), int(y2 - Y1)), (0, 255, 255), 2)
         crop = cv2.resize(crop, (cell, cell))
         cv2.rectangle(crop, (0, 0), (cell, 30), (0, 0, 0), -1)
-        cv2.putText(crop, f"{i + 1}.  {fmt_time(q['t'])}  ({q['seconds']:.0f}s)", (6, 22), cv2.FONT_HERSHEY_SIMPLEX,
+        cv2.putText(crop, f"{i + 1}.  {fmt_time(q['t'])}  ({q.get('affectedSec', q.get('seconds', 0)):.0f}s)", (6, 22), cv2.FONT_HERSHEY_SIMPLEX,
                     0.65, (255, 255, 255), 2)
         cards[i] = crop
     if not cards:

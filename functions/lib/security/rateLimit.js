@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DISCOVERY_VIEW_LIMIT = exports.AI_INSIGHT_LIMIT = exports.ASK_THIS_MATCH_LIMIT = exports.MEDIA_PLAYBACK_LIMIT = exports.DISCOVERY_SEARCH_LIMIT = void 0;
+exports.VIDEO_SOURCE_INSPECT_LIMIT = exports.DISCOVERY_VIEW_LIMIT = exports.AI_INSIGHT_LIMIT = exports.ASK_THIS_MATCH_LIMIT = exports.MEDIA_PLAYBACK_LIMIT = exports.DISCOVERY_SEARCH_LIMIT = void 0;
 exports.rateLimitDocId = rateLimitDocId;
 exports.assertCallableRateLimit = assertCallableRateLimit;
 const firestore_1 = require("firebase-admin/firestore");
@@ -54,4 +54,6 @@ exports.ASK_THIS_MATCH_LIMIT = { action: 'ask_this_match', max: 40, window: 'hou
 exports.AI_INSIGHT_LIMIT = { action: 'ai_insight', max: 30, window: 'hour' };
 /** View counters should not be a free write amplifier. */
 exports.DISCOVERY_VIEW_LIMIT = { action: 'discovery_view', max: 200, window: 'hour' };
+/** Video link inspection performs outbound DNS/HEAD requests: bounded per user. */
+exports.VIDEO_SOURCE_INSPECT_LIMIT = { action: 'video_source_inspect', max: 30, window: 'hour' };
 //# sourceMappingURL=rateLimit.js.map

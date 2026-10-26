@@ -85,60 +85,62 @@ def cmd_track(a) -> None:
             for i, done in enumerate(ex.map(_extract_one, todo), 1):
                 log(f"  part {i}/{len(todo)} done")
     (out / "config.json").write_text(json.dumps({"video": a.video, "number": a.number, "kit": a.kit,
-                                                  "kit2": a.kit2, "highlight_sec": a.highlight_sec}, indent=2))
+                                                  "kit2": a.kit2, "highlight_sec": a.highlight_sec,
+                                                  "position": a.position, "age_group": a.age_group}, indent=2))
     anchors = [resolve_anchor(s, out, jobs) for s in a.anchor]
     feedback = load_feedback(out)
     anchors += [tuple(x) for x in feedback["yes"]]
     rejects = [tuple(x) for x in feedback["no"]]
-    finish(out, jobs, a.number, a.kit, a.kit2, anchors, rejects, a.highlight_sec, log)
+    finish(out, jobs, a.number, a.kit, a.kit2, anchors, rejects, a.highlight_sec, log, feedback, a.position, a.age_group)
 
 
 def load_feedback(out: Path) -> dict:
     p = out / "feedback.json"
-    return json.loads(p.read_text()) if p.exists() else {"yes": [], "no": []}
+    fb = json.loads(p.read_text()) if p.exists() else {}
+    fb.setdefault("yes", [])
+    fb.setdefault("no", [])
+    return fb
 
 
-def finish(out: Path, jobs, number, kit, kit2, anchors, rejects, highlight_sec, log) -> None:
+def finish(out: Path, jobs, number, kit, kit2, anchors, rejects, highlight_sec, log, feedback=None,
+           position="unknown", age_group="") -> None:
     from .analyze import analyze  # noqa: PLC0415
     from .render import contact_sheet, question_cards, render_windows  # noqa: PLC0415
     from .report import write_report  # noqa: PLC0415
-    from .stats import build_timeline  # noqa: F401,PLC0415
-
-    log("identifying the player across the match...")
-    result = analyze([j[2] for j in jobs], str(out), number, kit, kit2, anchors, log=log, rejects=rejects)
-    tl_npz = np.load(out / "timeline.npz", allow_pickle=False)
-    label = f"#{number}" if number else "player"
-    # Rebuild light timeline object for rendering.
     from .tracklets import load_runs  # noqa: PLC0415
 
+    log("identifying the player across the match...")
+    result = analyze([j[2] for j in jobs], str(out), number, kit, kit2, anchors, log=log, rejects=rejects,
+                     feedback=feedback, position=position, age_group=age_group)
+    z = np.load(out / "timeline.npz", allow_pickle=False)
+    label = f"#{number}" if number else "player"
     D = load_runs([j[2] for j in jobs])
+    states = z["states"]
+    claim = np.isin(states, ["CONFIRMED_VISIBLE", "LIKELY_VISIBLE"])
 
-    class TL:
-        times = tl_npz["times"]; present = tl_npz["present"]; boxes = tl_npz["boxes"]  # noqa: E702
-        evidence = tl_npz["evidence"]; interpolated = tl_npz["evidence"] == "interpolated"  # noqa: E702
+    class TL:  # what the renderers need; only claimed frames are drawn as the player
+        times = z["times"]; present = z["present"] & claim; boxes = z["boxes"]  # noqa: E702
+        evidence = np.where(states == "CONFIRMED_VISIBLE", "number", np.where(claim, "appearance", ""))
+        interpolated = z["evidence"] == "interpolated"
 
     log("drawing report...")
     contact_sheet(D, TL, str(out / "who_we_followed.jpg"), label=label)
-    windows = []
-    for e in result["stats"]["involvementList"]:
-        windows.append((e["start"] - 2.5, e["end"] + 2.5))
-    for e in result["stats"]["sprintList"]:
-        windows.append((e["start"] - 1.0, e["end"] + 1.0))
+    windows = [(e["start"] - 2.5, e["end"] + 2.5) for e in result["events"] if e["identityState"] in
+               ("CONFIRMED_VISIBLE", "LIKELY_VISIBLE")]
+    windows += [(e["start"] - 1.0, e["end"] + 1.0) for e in result["physical"].get("sprints", [])]
     windows = merge_windows(windows, max_total=highlight_sec)
     if windows:
-        render_windows(D, TL, tl_npz["speed"], windows, str(out / "highlights.mp4"), label)
+        render_windows(D, TL, z["speed"], windows, str(out / "highlights.mp4"), label)
     qpath = out / "questions.jpg"
     if result.get("reviewQuestions"):
         question_cards(D, result["reviewQuestions"], str(qpath))
     elif qpath.exists():
         qpath.unlink()
-    write_report(str(out / "report.html"), result,
-                 {"times": TL.times, "present": TL.present, "evidence": TL.evidence},
+    write_report(str(out / "report.html"), result, {"times": z["times"], "states": states},
                  str(out / "who_we_followed.jpg"), str(out / "highlights.mp4") if windows else None,
                  str(qpath) if qpath.exists() else None, str(out))
-    s = result["stats"]
     log(f"done -> {out / 'report.html'}")
-    print(json.dumps({k: v for k, v in s.items() if k not in ("buckets", "involvementList", "sprintList")}, indent=2))
+    print(json.dumps({"coverage": result["coverage"], "invariants": result["invariants"]}, indent=2))
 
 
 def merge_windows(windows, max_total: float = 240.0):
@@ -181,21 +183,7 @@ def resolve_anchor(spec: str, out: Path, jobs) -> tuple[float, float, float]:
     return parse_clock(clock), float(x), float(y)
 
 
-def cmd_answer(a) -> None:
-    """Record yes/no answers to the report's numbered questions and re-solve (takes seconds)."""
-    out = Path(a.out)
-    result = json.loads((out / "result.json").read_text())
-    qs = result.get("reviewQuestions", [])
-    fb = load_feedback(out)
-    for ans in a.answers:
-        num, yn = int(ans[:-1]), ans[-1].lower()
-        if not 1 <= num <= len(qs) or yn not in "yn":
-            sys.exit(f"answer '{ans}' should look like 3y or 3n (question 1..{len(qs)})")
-        q = qs[num - 1]
-        x1, y1, x2, y2 = q["box"]
-        point = [q["t"], (x1 + x2) / 2, (y1 + y2) / 2]
-        fb["yes" if yn == "y" else "no"].append(point)
-    (out / "feedback.json").write_text(json.dumps(fb, indent=2))
+def _rerun(out: Path, fb: dict) -> None:
     cfg = json.loads((out / "config.json").read_text())
     jobs = sorted(((None, float(p.name[2:]), str(p)) for p in (out / "stage1").glob("c_*")), key=lambda j: j[1])
     t_start = time.time()
@@ -204,7 +192,63 @@ def cmd_answer(a) -> None:
         print(f"[{time.time() - t_start:6.0f}s] {msg}", flush=True)
 
     finish(out, jobs, cfg["number"], cfg["kit"], cfg["kit2"], [tuple(x) for x in fb["yes"]],
-           [tuple(x) for x in fb["no"]], cfg.get("highlight_sec", 240.0), log)
+           [tuple(x) for x in fb["no"]], cfg.get("highlight_sec", 240.0), log, fb,
+           cfg.get("position", "unknown"), cfg.get("age_group", ""))
+
+
+def cmd_answer(a) -> None:
+    """Answer the report's questions: 3y (that's me), 3n (not me), 3u (unsure), 3s (skip).
+    Re-solves identity in seconds - the video is not processed again."""
+    out = Path(a.out)
+    result = json.loads((out / "result.json").read_text())
+    qs = result.get("reviewQuestions", [])
+    fb = load_feedback(out)
+    fb.setdefault("history", [])
+    for ans in a.answers:
+        if len(ans) < 2 or not ans[:-1].isdigit() or ans[-1].lower() not in "ynus":
+            sys.exit(f"answer '{ans}' should look like 3y, 3n, 3u or 3s")
+        num, kind = int(ans[:-1]), ans[-1].lower()
+        if not 1 <= num <= len(qs):
+            sys.exit(f"question {num} does not exist (1..{len(qs)})")
+        q = qs[num - 1]
+        x1, y1, x2, y2 = q["box"]
+        point = [q["t"], (x1 + x2) / 2, (y1 + y2) / 2]
+        if kind in "yn":
+            fb["yes" if kind == "y" else "no"].append(point)
+        fb["history"].append({"q": q["tid"], "t": q["t"], "answer": {"y": "yes", "n": "not_me", "u": "unsure",
+                                                                    "s": "skip"}[kind], "point": point})
+    (out / "feedback.json").write_text(json.dumps(fb, indent=2))
+    _rerun(out, fb)
+
+
+def cmd_undo(a) -> None:
+    """Undo the last yes / not-me answer."""
+    out = Path(a.out)
+    fb = load_feedback(out)
+    hist = [h for h in fb.get("history", []) if h["answer"] in ("yes", "not_me")]
+    if not hist:
+        sys.exit("nothing to undo")
+    last = hist[-1]
+    key = "yes" if last["answer"] == "yes" else "no"
+    if last["point"] in fb[key]:
+        fb[key].remove(last["point"])
+    fb["history"].remove(last)
+    (out / "feedback.json").write_text(json.dumps(fb, indent=2))
+    _rerun(out, fb)
+
+
+def cmd_periods(a) -> None:
+    """Correct match boundaries, e.g. --kickoff 2:10 --halftime 47:30 --second-half 62:00 --fulltime 108:20."""
+    out = Path(a.out)
+    fb = load_feedback(out)
+    per = fb.get("periods", {})
+    for key, val in (("kickoff", a.kickoff), ("halftimeStart", a.halftime), ("secondHalfStart", a.second_half),
+                     ("fulltime", a.fulltime)):
+        if val:
+            per[key] = parse_clock(val)
+    fb["periods"] = per
+    (out / "feedback.json").write_text(json.dumps(fb, indent=2))
+    _rerun(out, fb)
 
 
 def cmd_pick(a) -> None:
@@ -246,9 +290,22 @@ def main(argv=None) -> None:
     t.add_argument("--anchor", action="append", default=[], help="help the AI: 4:02#3 or 4:02@x,y")
     t.add_argument("--out", help="output folder (default: next to the video)")
     t.add_argument("--workers", type=int, default=2)
+    t.add_argument("--position", default="unknown",
+                   help="goalkeeper, centre_back, full_back, defensive_midfielder, midfielder, winger, striker")
+    t.add_argument("--age-group", default="", help="e.g. u14, u17, adult, pro (sets speed thresholds)")
     t.add_argument("--highlight-sec", type=float, default=240.0)
     t.set_defaults(func=cmd_track)
-    r = sub.add_parser("answer", help="answer the report's 'is this your player?' questions, e.g. 1y 2n 5y")
+    u = sub.add_parser("undo", help="undo the last yes / not-me answer")
+    u.add_argument("out")
+    u.set_defaults(func=cmd_undo)
+    pr = sub.add_parser("periods", help="correct kick-off / half-time / full-time")
+    pr.add_argument("out")
+    pr.add_argument("--kickoff")
+    pr.add_argument("--halftime")
+    pr.add_argument("--second-half")
+    pr.add_argument("--fulltime")
+    pr.set_defaults(func=cmd_periods)
+    r = sub.add_parser("answer", help="answer the report's questions, e.g. 1y 2n 3u 4s")
     r.add_argument("out", help="the output folder of a previous track run")
     r.add_argument("answers", nargs="+")
     r.set_defaults(func=cmd_answer)

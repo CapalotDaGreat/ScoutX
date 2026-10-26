@@ -37,6 +37,13 @@ service firebase.storage {
     }
 
     // Optional short evidence clips, cut by the server only when the player asked for them.
+    // Identity-review images for player tracking: written by the server only, owner-readable.
+    match /profiles/{userId}/matchFootage/{jobId}/tracking/{fileName} {
+      allow read: if isOwner(userId);
+      allow create, update: if false;
+      allow delete: if isOwner(userId);
+    }
+
     match /profiles/{userId}/matchFootage/{jobId}/clips/{fileName} {
       allow read: if isOwner(userId);
       allow create, update: if false;

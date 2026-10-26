@@ -37,6 +37,7 @@ import { useJobFrames } from '@/features/match-analysis/hooks/useJobFrames';
 import { ChoiceChip } from '@/components/primitives/ChoiceChip';
 import { FilePickError } from '@/features/match-analysis/services/matchVideoFilePickerService';
 import { VideoConsentSheet } from '@/features/match-analysis/components/VideoConsentSheet';
+import { ImportFromLinkPanel } from '@/features/match-analysis/components/ImportFromLinkPanel';
 import { CorrectionControls, CorrectionFootnote } from '@/features/match-analysis/components/CorrectionControls';
 import { useAnalysisCorrections } from '@/features/match-analysis/hooks/useAnalysisCorrections';
 import { VideoIntelligenceSections } from '@/features/match-analysis/components/VideoIntelligenceSections';
@@ -715,6 +716,7 @@ export function MatchAnalysisModal({
                 >
                   {preparingFile ? t('matchAnalysis:video.files.preparing') : t('matchAnalysis:video.files.pick')}
                 </Button>
+                <ImportFromLinkPanel />
               </View>
             )}
             {preview ? <AnalysisPreviewCard preview={preview} loading={readingTrack} /> : null}

@@ -100,7 +100,8 @@
     "tactical": "Táctico",
     "coaching": "Entrenamiento",
     "video": "Vídeo",
-    "ask": "Preguntar"
+    "ask": "Preguntar",
+    "tracking": "Seguimiento del jugador"
   },
   "band": {
     "Excellent": "Excelente",
@@ -516,5 +517,113 @@
     },
     "unknown": "No hay suficientes valoraciones para comparar: {{metrics}}. Una valoración que falta significa desconocido, no cero.",
     "caveat": "Unos pocos análisis solo describen esos vídeos; no son una tendencia estadísticamente fiable. Otras grabaciones, ángulos de cámara y rivales cambian lo que se puede ver."
+  },
+  "tracking": {
+    "processing": "Se está preparando el seguimiento del jugador.",
+    "stale": "Actualizando tras tus respuestas: las estadísticas se renovarán en breve.",
+    "stalePending": "Tus respuestas se han guardado. El análisis se actualizará en cuanto el servicio de seguimiento esté disponible.",
+    "coverageTitle": "Cuánto del partido tenemos de ti",
+    "confirmed": "Confirmado tú",
+    "ofAnalysed": "{{pct}} % del tiempo de partido analizado",
+    "likely": "Probablemente tú",
+    "likelySub": "apariencia + movimiento, sin confirmar",
+    "ambiguous": "Dudoso",
+    "ambiguousSub": "es posible un compañero parecido",
+    "analysed": "Tiempo de partido analizado",
+    "analysedSub": "de {{recording}} min de grabación · {{unobserved}} min con la cámara fuera del juego",
+    "coverageA11y": "Cobertura de la grabación por estado de identidad",
+    "denominatorNote": "Los porcentajes se refieren al tiempo de partido analizado (cámara en el juego), no a tus minutos jugados. Las puntuaciones de identidad no están calibradas.",
+    "timelineTitle": "Cuándo te teníamos",
+    "state": {
+      "CONFIRMED_VISIBLE": "Confirmado tú (dorsal o tu respuesta)",
+      "LIKELY_VISIBLE": "Probablemente tú",
+      "AMBIGUOUS": "Dudoso",
+      "OFF_CAMERA": "Fuera de cámara",
+      "CONFIRMED_OFF_PITCH": "Fuera del campo",
+      "NON_MATCH_PERIOD": "Fuera del partido",
+      "UNKNOWN": "No identificado"
+    },
+    "period": {
+      "play": "juego",
+      "non_play": "sin juego",
+      "unobserved": "cámara fuera del juego",
+      "byYou": "fijado por ti"
+    },
+    "ballTitle": "Con el balón",
+    "prov": {
+      "verified": "Verificado",
+      "likely": "Probable",
+      "unvalidated": "Estimación no validada",
+      "experimental": "Experimental",
+      "unavailable": "No disponible"
+    },
+    "ballSummary": "{{contacts}} contactos con el balón · {{attempts}} intentos de pase: {{completed}} completados, {{incomplete}} fallidos, {{unknown}} desconocidos.",
+    "event": {
+      "contact": "Contacto con el balón",
+      "carry": "Conducción",
+      "pass_attempt": "Intento de pase"
+    },
+    "outcome": {
+      "completed": "completado",
+      "incomplete": "fallido",
+      "unknown": "resultado desconocido"
+    },
+    "movementTitle": "Movimiento",
+    "experimentalNote": "Estimación experimental de una cámara sin calibrar: no es una estadística verificada.",
+    "metric": {
+      "distanceObserved": "Distancia durante observación válida",
+      "workRate": "Ritmo de trabajo (por minuto observado)",
+      "peakSpeed": "Velocidad máxima",
+      "sprintCount": "Sprints",
+      "highSpeedRunCount": "Carreras a alta velocidad"
+    },
+    "unavailableTitle": "No disponible para esta grabación",
+    "unavailable": {
+      "heatmap": "Mapa de calor",
+      "calibration": "Requiere una calibración del campo validada (referencias visibles).",
+      "passAccuracy": "Precisión de pase",
+      "passAccuracyWhy": "Solo se cuenta con un seguimiento continuo del balón hasta una recepción controlada; {{count}} intento(s) con resultado desconocido.",
+      "defensive": "Entradas, intercepciones, tiros",
+      "notValidated": "Aún no implementado o no validado."
+    },
+    "identityFootnote": "Identidad confirmada {{numbers}} veces por el dorsal y {{answers}} veces por ti. No se usa reconocimiento facial.",
+    "review": {
+      "title": "¿Eres tú?",
+      "subtitle": "Unas comprobaciones rápidas hacen todo el análisis más preciso. Desliza a la derecha para sí, a la izquierda para no soy yo.",
+      "updating": "Actualizando el análisis...",
+      "cardA11y": "Jugador candidato en {{time}}",
+      "candidate": "Candidato",
+      "reference": "Confirmado tú",
+      "question": "¿Es el #{{number}}? ({{time}})",
+      "affects": "Afecta a unos {{minutes}} min",
+      "remaining": "quedan {{count}}",
+      "yes": "Sí, soy yo",
+      "notMe": "No soy yo",
+      "unsure": "No estoy seguro",
+      "skip": "Saltar",
+      "done": "Todo comprobado, ¡gracias!",
+      "undo": "Deshacer la última respuesta",
+      "error": "No se pudo guardar tu respuesta. Inténtalo de nuevo.",
+      "privacy": "Las respuestas solo cambian el análisis de este partido. Nunca se usan para entrenar modelos."
+    },
+    "import": {
+      "title": "Importar desde un enlace",
+      "label": "Enlace de vídeo (página de partido de Veo o archivo de vídeo directo)",
+      "check": "Comprobar enlace",
+      "invalid": "Pega un enlace https:// completo.",
+      "failed": "No se pudo comprobar el enlace. Inténtalo de nuevo.",
+      "veoStep1": "Abre el partido en la app de Veo con una cuenta del equipo o del club.",
+      "veoStep2": "Elige Descargar → Descargar partido completo (MP4 follow-cam). Las vistas panorámicas no se pueden descargar.",
+      "veoStep3": "Sube aquí el vídeo descargado o pega un enlace https:// directo al archivo exportado.",
+      "status": {
+        "ready": "Enlace de vídeo verificado. La importación desde enlaces aún no está activada: descarga el archivo y súbelo aquí.",
+        "requires_export": "Los enlaces de Veo no se pueden importar directamente. Exporta primero el vídeo:",
+        "partner_access_required": "Se necesita una conexión de socio de Veo. Exporta el vídeo en su lugar:",
+        "invalid": "Este enlace no es compatible.",
+        "unreachable": "No se pudo acceder al enlace.",
+        "not_video": "Este enlace no es un archivo de vídeo.",
+        "too_large": "Este vídeo supera el tamaño permitido por tu plan."
+      }
+    }
   }
 }

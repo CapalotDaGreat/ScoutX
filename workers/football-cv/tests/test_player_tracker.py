@@ -211,14 +211,22 @@ def test_cli_helpers():
 
 
 def test_report_is_written(tmp_path):
-    tl = _timeline(n=50)
-    D = SimpleNamespace(balls=np.zeros((0, 7)), width=1920)
-    st = compute_stats(D, SimpleNamespace(rows=np.zeros((0, 9)), summary=[]), tl, 10.0,
-                       SimpleNamespace(chosen=[], evidence={}))
-    st.pop("speed")
-    result = {"target": {"number": "20", "kit": "orange", "kit2": "white"}, "stats": st, "reviewQuestions": []}
+    from scoutx_tracker.metrics import physical_metrics
+    from scoutx_tracker.states import coverage
+
+    tl = _timeline(n=400)
+    states = np.array(["CONFIRMED_VISIBLE"] * 400, dtype=object)
+    kinds = np.array(["play"] * 400, dtype=object)
+    phys, _ = physical_metrics(tl, 10.0, states, None, np.ones(400), kinds)
+    result = {"target": {"number": "20", "kit": "orange", "kit2": "white", "position": "winger"},
+              "engine": {"version": "3.0.0"}, "coverage": coverage(tl.times, states, kinds, None),
+              "physical": phys, "ball": {"contacts": 0, "passAttempts": 0, "provenance": "model_estimate_unvalidated"},
+              "identity": {"numberSightings": 1, "confirmedByUser": 0}, "events": [], "reviewQuestions": [],
+              "timeline": {"periods": [{"start": 0, "end": 40, "kind": "play", "label": "play", "source": "detected"}]},
+              "invariants": {"ok": True, "violations": []}}
     out = tmp_path / "report.html"
-    write_report(str(out), json.loads(json.dumps(result, default=float)),
-                 {"times": tl.times, "present": tl.present, "evidence": tl.evidence.astype(str)})
+    write_report(str(out), json.loads(json.dumps(result, default=float)), {"times": tl.times, "states": states.astype(str)})
     html = out.read_text(encoding="utf-8")
     assert "Player tracking" in html and "#20" in html
+    assert "Experimental - not shown as verified statistics" in html
+    assert "analysed match time" in html

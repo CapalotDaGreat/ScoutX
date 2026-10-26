@@ -74,3 +74,6 @@ export const AI_INSIGHT_LIMIT: RateLimitPolicy = { action: 'ai_insight', max: 30
 
 /** View counters should not be a free write amplifier. */
 export const DISCOVERY_VIEW_LIMIT: RateLimitPolicy = { action: 'discovery_view', max: 200, window: 'hour' };
+
+/** Video link inspection performs outbound DNS/HEAD requests: bounded per user. */
+export const VIDEO_SOURCE_INSPECT_LIMIT: RateLimitPolicy = { action: 'video_source_inspect', max: 30, window: 'hour' };

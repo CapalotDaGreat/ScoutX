@@ -84,3 +84,5 @@ export { revenueCatWebhook } from './entitlements/revenueCat';
 export { requestDataExport, buildDataExport } from './dataRights/dataExport';
 export { submitPrivacyRequest, updatePrivacyRequest } from './dataRights/privacyRequests';
 export { retentionCleanup } from './dataRights/retentionCleanup';
+export { inspectVideoSource } from './analysis/videoSourceCallable';
+export { answerTrackingQuestion, undoTrackingAnswer, setTrackingPeriods, resolveTrackingTask } from './analysis/trackingCallables';

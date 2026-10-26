@@ -100,7 +100,8 @@
     "tactical": "Taktisch",
     "coaching": "Coaching",
     "video": "Video",
-    "ask": "Fragen"
+    "ask": "Fragen",
+    "tracking": "Spieler-Tracking"
   },
   "band": {
     "Excellent": "Ausgezeichnet",
@@ -516,5 +517,113 @@
     },
     "unknown": "Zu wenige Bewertungen für einen Vergleich: {{metrics}}. Eine fehlende Bewertung bedeutet unbekannt, nicht null.",
     "caveat": "Wenige Analysen beschreiben nur diese Videos; sie sind kein statistisch verlässlicher Trend. Anderes Material, andere Kamerawinkel und Gegner verändern, was sichtbar ist."
+  },
+  "tracking": {
+    "processing": "Das Spieler-Tracking wird vorbereitet.",
+    "stale": "Wird nach deinen Antworten aktualisiert - die Statistiken folgen in Kürze.",
+    "stalePending": "Deine Antworten sind gespeichert. Die Analyse wird aktualisiert, sobald der Tracking-Dienst verfügbar ist.",
+    "coverageTitle": "Wie viel vom Spiel wir von dir haben",
+    "confirmed": "Sicher du",
+    "ofAnalysed": "{{pct}}% der analysierten Spielzeit",
+    "likely": "Wahrscheinlich du",
+    "likelySub": "Aussehen + Bewegung, nicht bestätigt",
+    "ambiguous": "Unsicher",
+    "ambiguousSub": "ein ähnlich aussehender Mitspieler ist möglich",
+    "analysed": "Analysierte Spielzeit",
+    "analysedSub": "von {{recording}} Min. Aufnahme · {{unobserved}} Min. Kamera nicht auf dem Spiel",
+    "coverageA11y": "Abdeckung der Aufnahme nach Identitätsstatus",
+    "denominatorNote": "Prozentangaben beziehen sich auf die analysierte Spielzeit (Kamera zeigt das Spiel), nicht auf deine Spielzeit. Identitätswerte sind unkalibriert.",
+    "timelineTitle": "Wann wir dich hatten",
+    "state": {
+      "CONFIRMED_VISIBLE": "Sicher du (Nummer oder deine Antwort)",
+      "LIKELY_VISIBLE": "Wahrscheinlich du",
+      "AMBIGUOUS": "Unsicher",
+      "OFF_CAMERA": "Nicht im Bild",
+      "CONFIRMED_OFF_PITCH": "Nicht auf dem Platz",
+      "NON_MATCH_PERIOD": "Außerhalb des Spiels",
+      "UNKNOWN": "Nicht erkannt"
+    },
+    "period": {
+      "play": "Spiel",
+      "non_play": "kein Spiel",
+      "unobserved": "Kamera nicht auf dem Spiel",
+      "byYou": "von dir gesetzt"
+    },
+    "ballTitle": "Am Ball",
+    "prov": {
+      "verified": "Bestätigt",
+      "likely": "Wahrscheinlich",
+      "unvalidated": "Nicht validierte Schätzung",
+      "experimental": "Experimentell",
+      "unavailable": "Nicht verfügbar"
+    },
+    "ballSummary": "{{contacts}} Ballkontakte · {{attempts}} Passversuche: {{completed}} angekommen, {{incomplete}} nicht angekommen, {{unknown}} unbekannt.",
+    "event": {
+      "contact": "Ballkontakt",
+      "carry": "Ballführung",
+      "pass_attempt": "Passversuch"
+    },
+    "outcome": {
+      "completed": "angekommen",
+      "incomplete": "nicht angekommen",
+      "unknown": "Ausgang unbekannt"
+    },
+    "movementTitle": "Bewegung",
+    "experimentalNote": "Experimentelle Schätzung einer unkalibrierten Kamera - keine bestätigte Statistik.",
+    "metric": {
+      "distanceObserved": "Distanz während gültiger Beobachtung",
+      "workRate": "Laufleistung (pro beobachteter Minute)",
+      "peakSpeed": "Höchstgeschwindigkeit",
+      "sprintCount": "Sprints",
+      "highSpeedRunCount": "Läufe mit hoher Geschwindigkeit"
+    },
+    "unavailableTitle": "Für diese Aufnahme nicht verfügbar",
+    "unavailable": {
+      "heatmap": "Heatmap",
+      "calibration": "Benötigt eine validierte Platzkalibrierung (sichtbare Platzmarkierungen).",
+      "passAccuracy": "Passquote",
+      "passAccuracyWhy": "Wird nur mit durchgehender Ballverfolgung bis zur kontrollierten Annahme gezählt; bei {{count}} Versuch(en) ist der Ausgang unbekannt.",
+      "defensive": "Tacklings, Ballgewinne, Schüsse",
+      "notValidated": "Noch nicht umgesetzt oder nicht validiert."
+    },
+    "identityFootnote": "Identität {{numbers}}x per Rückennummer und {{answers}}x durch dich bestätigt. Es wird keine Gesichtserkennung verwendet.",
+    "review": {
+      "title": "Bist du das?",
+      "subtitle": "Ein paar kurze Prüfungen machen die ganze Analyse genauer. Nach rechts wischen für Ja, nach links für Nicht ich.",
+      "updating": "Analyse wird aktualisiert ...",
+      "cardA11y": "Kandidat bei {{time}}",
+      "candidate": "Kandidat",
+      "reference": "Sicher du",
+      "question": "Ist das #{{number}}? ({{time}})",
+      "affects": "Betrifft etwa {{minutes}} Min.",
+      "remaining": "noch {{count}}",
+      "yes": "Ja, das bin ich",
+      "notMe": "Nicht ich",
+      "unsure": "Unsicher",
+      "skip": "Überspringen",
+      "done": "Alles geprüft - danke!",
+      "undo": "Letzte Antwort rückgängig",
+      "error": "Deine Antwort konnte nicht gespeichert werden. Bitte versuche es erneut.",
+      "privacy": "Antworten ändern nur die Analyse dieses Spiels. Sie werden nie zum Trainieren von Modellen verwendet."
+    },
+    "import": {
+      "title": "Über einen Link importieren",
+      "label": "Video-Link (Veo-Spielseite oder direkte Videodatei)",
+      "check": "Link prüfen",
+      "invalid": "Füge einen vollständigen https://-Link ein.",
+      "failed": "Der Link konnte nicht geprüft werden. Bitte versuche es erneut.",
+      "veoStep1": "Öffne das Spiel in der Veo-App mit einem Konto, das zum Team oder Verein gehört.",
+      "veoStep2": "Wähle Herunterladen → Ganzes Spiel herunterladen (Follow-Cam-MP4). Panorama-Ansichten können nicht heruntergeladen werden.",
+      "veoStep3": "Lade das heruntergeladene Video hier hoch oder füge einen direkten https://-Link zur exportierten Datei ein.",
+      "status": {
+        "ready": "Video-Link geprüft. Der Import über Links ist noch nicht aktiviert - bitte lade die Datei herunter und hier hoch.",
+        "requires_export": "Veo-Links können nicht direkt importiert werden. Exportiere das Video zuerst:",
+        "partner_access_required": "Eine Veo-Partnerverbindung ist nötig. Exportiere das Video stattdessen:",
+        "invalid": "Dieser Link wird nicht unterstützt.",
+        "unreachable": "Der Link ist nicht erreichbar.",
+        "not_video": "Dieser Link ist keine Videodatei.",
+        "too_large": "Dieses Video ist größer, als dein Abo erlaubt."
+      }
+    }
   }
 }

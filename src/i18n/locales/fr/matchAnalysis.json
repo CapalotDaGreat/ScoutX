@@ -100,7 +100,8 @@
     "tactical": "Tactique",
     "coaching": "Coaching",
     "video": "Vidéo",
-    "ask": "Demander"
+    "ask": "Demander",
+    "tracking": "Suivi du joueur"
   },
   "band": {
     "Excellent": "Excellent",
@@ -516,5 +517,113 @@
     },
     "unknown": "Pas assez de notes pour comparer : {{metrics}}. Une note manquante signifie inconnu, pas zéro.",
     "caveat": "Quelques analyses ne décrivent que ces vidéos ; ce n’est pas une tendance statistiquement fiable. D’autres images, angles de caméra et adversaires changent ce qui est visible."
+  },
+  "tracking": {
+    "processing": "Le suivi du joueur est en préparation.",
+    "stale": "Mise à jour après tes réponses - les statistiques seront bientôt actualisées.",
+    "stalePending": "Tes réponses sont enregistrées. L'analyse sera mise à jour dès que le service de suivi sera disponible.",
+    "coverageTitle": "Quelle part du match nous avons de toi",
+    "confirmed": "C'est toi (confirmé)",
+    "ofAnalysed": "{{pct}} % du temps de match analysé",
+    "likely": "Probablement toi",
+    "likelySub": "apparence + mouvement, non confirmé",
+    "ambiguous": "Incertain",
+    "ambiguousSub": "un coéquipier ressemblant est possible",
+    "analysed": "Temps de match analysé",
+    "analysedSub": "sur {{recording}} min d'enregistrement · {{unobserved}} min caméra hors du jeu",
+    "coverageA11y": "Couverture de l'enregistrement par état d'identité",
+    "denominatorNote": "Les pourcentages se rapportent au temps de match analysé (caméra sur le jeu), pas à ton temps de jeu. Les scores d'identité ne sont pas calibrés.",
+    "timelineTitle": "Quand nous t'avions",
+    "state": {
+      "CONFIRMED_VISIBLE": "C'est toi (numéro ou ta réponse)",
+      "LIKELY_VISIBLE": "Probablement toi",
+      "AMBIGUOUS": "Incertain",
+      "OFF_CAMERA": "Hors champ",
+      "CONFIRMED_OFF_PITCH": "Hors du terrain",
+      "NON_MATCH_PERIOD": "Hors match",
+      "UNKNOWN": "Non identifié"
+    },
+    "period": {
+      "play": "jeu",
+      "non_play": "pas de jeu",
+      "unobserved": "caméra hors du jeu",
+      "byYou": "défini par toi"
+    },
+    "ballTitle": "Avec le ballon",
+    "prov": {
+      "verified": "Vérifié",
+      "likely": "Probable",
+      "unvalidated": "Estimation non validée",
+      "experimental": "Expérimental",
+      "unavailable": "Indisponible"
+    },
+    "ballSummary": "{{contacts}} contacts de balle · {{attempts}} tentatives de passe : {{completed}} réussies, {{incomplete}} manquées, {{unknown}} inconnues.",
+    "event": {
+      "contact": "Contact de balle",
+      "carry": "Conduite de balle",
+      "pass_attempt": "Tentative de passe"
+    },
+    "outcome": {
+      "completed": "réussie",
+      "incomplete": "manquée",
+      "unknown": "issue inconnue"
+    },
+    "movementTitle": "Déplacements",
+    "experimentalNote": "Estimation expérimentale d'une caméra non calibrée - pas une statistique vérifiée.",
+    "metric": {
+      "distanceObserved": "Distance pendant l'observation valide",
+      "workRate": "Volume de course (par minute observée)",
+      "peakSpeed": "Vitesse de pointe",
+      "sprintCount": "Sprints",
+      "highSpeedRunCount": "Courses à haute vitesse"
+    },
+    "unavailableTitle": "Indisponible pour cet enregistrement",
+    "unavailable": {
+      "heatmap": "Carte de chaleur",
+      "calibration": "Nécessite une calibration validée du terrain (repères visibles).",
+      "passAccuracy": "Précision des passes",
+      "passAccuracyWhy": "Comptée uniquement avec un suivi continu du ballon jusqu'à une réception contrôlée ; {{count}} tentative(s) ont une issue inconnue.",
+      "defensive": "Tacles, interceptions, tirs",
+      "notValidated": "Pas encore implémenté ou non validé."
+    },
+    "identityFootnote": "Identité confirmée {{numbers}} fois par le numéro et {{answers}} fois par toi. Aucune reconnaissance faciale n'est utilisée.",
+    "review": {
+      "title": "C'est toi ?",
+      "subtitle": "Quelques vérifications rapides rendent toute l'analyse plus précise. Glisse à droite pour oui, à gauche pour pas moi.",
+      "updating": "Mise à jour de l'analyse...",
+      "cardA11y": "Joueur candidat à {{time}}",
+      "candidate": "Candidat",
+      "reference": "C'est toi (confirmé)",
+      "question": "Est-ce le #{{number}} ? ({{time}})",
+      "affects": "Concerne environ {{minutes}} min",
+      "remaining": "{{count}} restantes",
+      "yes": "Oui, c'est moi",
+      "notMe": "Pas moi",
+      "unsure": "Pas sûr",
+      "skip": "Passer",
+      "done": "Tout est vérifié - merci !",
+      "undo": "Annuler la dernière réponse",
+      "error": "Impossible d'enregistrer ta réponse. Réessaie.",
+      "privacy": "Les réponses ne modifient que l'analyse de ce match. Elles ne servent jamais à entraîner des modèles."
+    },
+    "import": {
+      "title": "Importer depuis un lien",
+      "label": "Lien vidéo (page de match Veo ou fichier vidéo direct)",
+      "check": "Vérifier le lien",
+      "invalid": "Colle un lien https:// complet.",
+      "failed": "Impossible de vérifier le lien. Réessaie.",
+      "veoStep1": "Ouvre le match dans l'app Veo avec un compte de l'équipe ou du club.",
+      "veoStep2": "Choisis Télécharger → Télécharger le match complet (MP4 follow-cam). Les vues panoramiques ne sont pas téléchargeables.",
+      "veoStep3": "Importe ici la vidéo téléchargée, ou colle un lien https:// direct vers le fichier exporté.",
+      "status": {
+        "ready": "Lien vidéo vérifié. L'import par lien n'est pas encore activé - télécharge le fichier puis importe-le ici.",
+        "requires_export": "Les liens Veo ne peuvent pas être importés directement. Exporte d'abord la vidéo :",
+        "partner_access_required": "Une connexion partenaire Veo est nécessaire. Exporte plutôt la vidéo :",
+        "invalid": "Ce lien n'est pas pris en charge.",
+        "unreachable": "Le lien est inaccessible.",
+        "not_video": "Ce lien n'est pas un fichier vidéo.",
+        "too_large": "Cette vidéo dépasse la taille autorisée par ton abonnement."
+      }
+    }
   }
 }

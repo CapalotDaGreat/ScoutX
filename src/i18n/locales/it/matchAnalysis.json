@@ -100,7 +100,8 @@
     "tactical": "Tattico",
     "coaching": "Coaching",
     "video": "Video",
-    "ask": "Chiedi"
+    "ask": "Chiedi",
+    "tracking": "Tracciamento giocatore"
   },
   "band": {
     "Excellent": "Eccellente",
@@ -516,5 +517,113 @@
     },
     "unknown": "Valutazioni insufficienti per un confronto: {{metrics}}. Una valutazione mancante significa sconosciuto, non zero.",
     "caveat": "Poche analisi descrivono solo quei video; non sono una tendenza statisticamente affidabile. Riprese, angolazioni e avversari diversi cambiano ciò che si vede."
+  },
+  "tracking": {
+    "processing": "Il tracciamento del giocatore è in preparazione.",
+    "stale": "Aggiornamento dopo le tue risposte - le statistiche si aggiorneranno a breve.",
+    "stalePending": "Le tue risposte sono salvate. L'analisi si aggiornerà appena il servizio di tracciamento sarà disponibile.",
+    "coverageTitle": "Quanta parte della partita abbiamo di te",
+    "confirmed": "Sei tu (confermato)",
+    "ofAnalysed": "{{pct}}% del tempo di gioco analizzato",
+    "likely": "Probabilmente tu",
+    "likelySub": "aspetto + movimento, non confermato",
+    "ambiguous": "Incerto",
+    "ambiguousSub": "possibile compagno simile",
+    "analysed": "Tempo di gioco analizzato",
+    "analysedSub": "su {{recording}} min di registrazione · {{unobserved}} min con la telecamera fuori dal gioco",
+    "coverageA11y": "Copertura della registrazione per stato d'identità",
+    "denominatorNote": "Le percentuali si riferiscono al tempo di gioco analizzato (telecamera sul gioco), non al tuo minutaggio. I punteggi d'identità non sono calibrati.",
+    "timelineTitle": "Quando ti abbiamo visto",
+    "state": {
+      "CONFIRMED_VISIBLE": "Sei tu (numero o tua risposta)",
+      "LIKELY_VISIBLE": "Probabilmente tu",
+      "AMBIGUOUS": "Incerto",
+      "OFF_CAMERA": "Fuori inquadratura",
+      "CONFIRMED_OFF_PITCH": "Fuori dal campo",
+      "NON_MATCH_PERIOD": "Fuori dalla partita",
+      "UNKNOWN": "Non identificato"
+    },
+    "period": {
+      "play": "gioco",
+      "non_play": "nessun gioco",
+      "unobserved": "telecamera fuori dal gioco",
+      "byYou": "impostato da te"
+    },
+    "ballTitle": "Con la palla",
+    "prov": {
+      "verified": "Verificato",
+      "likely": "Probabile",
+      "unvalidated": "Stima non validata",
+      "experimental": "Sperimentale",
+      "unavailable": "Non disponibile"
+    },
+    "ballSummary": "{{contacts}} tocchi di palla · {{attempts}} tentativi di passaggio: {{completed}} riusciti, {{incomplete}} non riusciti, {{unknown}} sconosciuti.",
+    "event": {
+      "contact": "Tocco di palla",
+      "carry": "Conduzione",
+      "pass_attempt": "Tentativo di passaggio"
+    },
+    "outcome": {
+      "completed": "riuscito",
+      "incomplete": "non riuscito",
+      "unknown": "esito sconosciuto"
+    },
+    "movementTitle": "Movimento",
+    "experimentalNote": "Stima sperimentale da una telecamera non calibrata - non è una statistica verificata.",
+    "metric": {
+      "distanceObserved": "Distanza durante l'osservazione valida",
+      "workRate": "Intensità (per minuto osservato)",
+      "peakSpeed": "Velocità massima",
+      "sprintCount": "Sprint",
+      "highSpeedRunCount": "Corse ad alta velocità"
+    },
+    "unavailableTitle": "Non disponibile per questa registrazione",
+    "unavailable": {
+      "heatmap": "Heatmap",
+      "calibration": "Richiede una calibrazione del campo validata (riferimenti visibili).",
+      "passAccuracy": "Precisione dei passaggi",
+      "passAccuracyWhy": "Conteggiata solo con un tracciamento continuo della palla fino a una ricezione controllata; {{count}} tentativo/i con esito sconosciuto.",
+      "defensive": "Contrasti, intercetti, tiri",
+      "notValidated": "Non ancora implementato o non validato."
+    },
+    "identityFootnote": "Identità confermata {{numbers}} volte dal numero di maglia e {{answers}} volte da te. Nessun riconoscimento facciale.",
+    "review": {
+      "title": "Sei tu?",
+      "subtitle": "Pochi controlli rapidi rendono più precisa tutta l'analisi. Scorri a destra per sì, a sinistra per non io.",
+      "updating": "Aggiornamento dell'analisi...",
+      "cardA11y": "Giocatore candidato a {{time}}",
+      "candidate": "Candidato",
+      "reference": "Sei tu (confermato)",
+      "question": "È il #{{number}}? ({{time}})",
+      "affects": "Riguarda circa {{minutes}} min",
+      "remaining": "ne restano {{count}}",
+      "yes": "Sì, sono io",
+      "notMe": "Non io",
+      "unsure": "Non sono sicuro",
+      "skip": "Salta",
+      "done": "Tutto controllato - grazie!",
+      "undo": "Annulla l'ultima risposta",
+      "error": "Impossibile salvare la risposta. Riprova.",
+      "privacy": "Le risposte cambiano solo l'analisi di questa partita. Non vengono mai usate per addestrare modelli."
+    },
+    "import": {
+      "title": "Importa da un link",
+      "label": "Link video (pagina partita Veo o file video diretto)",
+      "check": "Controlla link",
+      "invalid": "Incolla un link https:// completo.",
+      "failed": "Impossibile controllare il link. Riprova.",
+      "veoStep1": "Apri la partita nell'app Veo con un account della squadra o del club.",
+      "veoStep2": "Scegli Scarica → Scarica partita completa (MP4 follow-cam). Le viste panoramiche non si possono scaricare.",
+      "veoStep3": "Carica qui il video scaricato, oppure incolla un link https:// diretto al file esportato.",
+      "status": {
+        "ready": "Link video verificato. L'importazione da link non è ancora attiva - scarica il file e caricalo qui.",
+        "requires_export": "I link Veo non si possono importare direttamente. Esporta prima il video:",
+        "partner_access_required": "Serve una connessione partner Veo. Esporta invece il video:",
+        "invalid": "Questo link non è supportato.",
+        "unreachable": "Il link non è raggiungibile.",
+        "not_video": "Questo link non è un file video.",
+        "too_large": "Questo video supera il limite del tuo piano."
+      }
+    }
   }
 }

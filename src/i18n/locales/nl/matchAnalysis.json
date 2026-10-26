@@ -100,7 +100,8 @@
     "tactical": "Tactisch",
     "coaching": "Coaching",
     "video": "Video",
-    "ask": "Vragen"
+    "ask": "Vragen",
+    "tracking": "Spelersvolgen"
   },
   "band": {
     "Excellent": "Uitstekend",
@@ -516,5 +517,113 @@
     },
     "unknown": "Te weinig beoordelingen om te vergelijken: {{metrics}}. Een ontbrekende beoordeling betekent onbekend, niet nul.",
     "caveat": "Enkele analyses beschrijven alleen die video’s; het is geen statistisch betrouwbare trend. Ander beeldmateriaal, camerahoeken en tegenstanders veranderen wat zichtbaar is."
+  },
+  "tracking": {
+    "processing": "Het spelersvolgen wordt voorbereid.",
+    "stale": "Wordt bijgewerkt na je antwoorden - de statistieken volgen zo.",
+    "stalePending": "Je antwoorden zijn opgeslagen. De analyse wordt bijgewerkt zodra de volgdienst beschikbaar is.",
+    "coverageTitle": "Hoeveel van de wedstrijd we van jou hebben",
+    "confirmed": "Zeker jij",
+    "ofAnalysed": "{{pct}}% van de geanalyseerde speeltijd",
+    "likely": "Waarschijnlijk jij",
+    "likelySub": "uiterlijk + beweging, niet bevestigd",
+    "ambiguous": "Onzeker",
+    "ambiguousSub": "een gelijkende teamgenoot is mogelijk",
+    "analysed": "Geanalyseerde speeltijd",
+    "analysedSub": "van {{recording}} min opname · {{unobserved}} min camera niet op het spel",
+    "coverageA11y": "Dekking van de opname per identiteitsstatus",
+    "denominatorNote": "Percentages gaan over de geanalyseerde speeltijd (camera op het spel), niet over jouw speelminuten. Identiteitsscores zijn niet gekalibreerd.",
+    "timelineTitle": "Wanneer we je hadden",
+    "state": {
+      "CONFIRMED_VISIBLE": "Zeker jij (rugnummer of jouw antwoord)",
+      "LIKELY_VISIBLE": "Waarschijnlijk jij",
+      "AMBIGUOUS": "Onzeker",
+      "OFF_CAMERA": "Buiten beeld",
+      "CONFIRMED_OFF_PITCH": "Niet op het veld",
+      "NON_MATCH_PERIOD": "Buiten de wedstrijd",
+      "UNKNOWN": "Niet herkend"
+    },
+    "period": {
+      "play": "spel",
+      "non_play": "geen spel",
+      "unobserved": "camera niet op het spel",
+      "byYou": "door jou ingesteld"
+    },
+    "ballTitle": "Aan de bal",
+    "prov": {
+      "verified": "Bevestigd",
+      "likely": "Waarschijnlijk",
+      "unvalidated": "Niet-gevalideerde schatting",
+      "experimental": "Experimenteel",
+      "unavailable": "Niet beschikbaar"
+    },
+    "ballSummary": "{{contacts}} balcontacten · {{attempts}} passpogingen: {{completed}} aangekomen, {{incomplete}} niet aangekomen, {{unknown}} onbekend.",
+    "event": {
+      "contact": "Balcontact",
+      "carry": "Dribbel met bal",
+      "pass_attempt": "Passpoging"
+    },
+    "outcome": {
+      "completed": "aangekomen",
+      "incomplete": "niet aangekomen",
+      "unknown": "uitkomst onbekend"
+    },
+    "movementTitle": "Beweging",
+    "experimentalNote": "Experimentele schatting van een niet-gekalibreerde camera - geen bevestigde statistiek.",
+    "metric": {
+      "distanceObserved": "Afstand tijdens geldige waarneming",
+      "workRate": "Loopvolume (per waargenomen minuut)",
+      "peakSpeed": "Topsnelheid",
+      "sprintCount": "Sprints",
+      "highSpeedRunCount": "Runs op hoge snelheid"
+    },
+    "unavailableTitle": "Niet beschikbaar voor deze opname",
+    "unavailable": {
+      "heatmap": "Heatmap",
+      "calibration": "Vereist een gevalideerde veldkalibratie (zichtbare veldmarkeringen).",
+      "passAccuracy": "Passnauwkeurigheid",
+      "passAccuracyWhy": "Alleen geteld met een doorlopend gevolgde bal tot een gecontroleerde aanname; bij {{count}} poging(en) is de uitkomst onbekend.",
+      "defensive": "Tackles, onderscheppingen, schoten",
+      "notValidated": "Nog niet gebouwd of niet gevalideerd."
+    },
+    "identityFootnote": "Identiteit {{numbers}}x bevestigd via rugnummer en {{answers}}x door jou. Er wordt geen gezichtsherkenning gebruikt.",
+    "review": {
+      "title": "Ben jij dit?",
+      "subtitle": "Een paar snelle checks maken de hele analyse nauwkeuriger. Veeg naar rechts voor ja, naar links voor niet ik.",
+      "updating": "Analyse wordt bijgewerkt...",
+      "cardA11y": "Kandidaat op {{time}}",
+      "candidate": "Kandidaat",
+      "reference": "Zeker jij",
+      "question": "Is dit #{{number}}? ({{time}})",
+      "affects": "Betreft ongeveer {{minutes}} min",
+      "remaining": "nog {{count}}",
+      "yes": "Ja, dat ben ik",
+      "notMe": "Niet ik",
+      "unsure": "Weet ik niet",
+      "skip": "Overslaan",
+      "done": "Alles gecontroleerd - bedankt!",
+      "undo": "Laatste antwoord ongedaan maken",
+      "error": "Je antwoord kon niet worden opgeslagen. Probeer het opnieuw.",
+      "privacy": "Antwoorden veranderen alleen de analyse van deze wedstrijd. Ze worden nooit gebruikt om modellen te trainen."
+    },
+    "import": {
+      "title": "Importeren via een link",
+      "label": "Videolink (Veo-wedstrijdpagina of direct videobestand)",
+      "check": "Link controleren",
+      "invalid": "Plak een volledige https://-link.",
+      "failed": "De link kon niet worden gecontroleerd. Probeer het opnieuw.",
+      "veoStep1": "Open de wedstrijd in de Veo-app met een account van het team of de club.",
+      "veoStep2": "Kies Downloaden → Volledige wedstrijd downloaden (follow-cam MP4). Panoramabeelden kunnen niet worden gedownload.",
+      "veoStep3": "Upload de gedownloade video hier, of plak een directe https://-link naar het geëxporteerde bestand.",
+      "status": {
+        "ready": "Videolink gecontroleerd. Importeren via links staat nog niet aan - download het bestand en upload het hier.",
+        "requires_export": "Veo-links kunnen niet direct worden geïmporteerd. Exporteer eerst de video:",
+        "partner_access_required": "Er is een Veo-partnerkoppeling nodig. Exporteer in plaats daarvan de video:",
+        "invalid": "Deze link wordt niet ondersteund.",
+        "unreachable": "De link is niet bereikbaar.",
+        "not_video": "Deze link is geen videobestand.",
+        "too_large": "Deze video is groter dan je abonnement toestaat."
+      }
+    }
   }
 }

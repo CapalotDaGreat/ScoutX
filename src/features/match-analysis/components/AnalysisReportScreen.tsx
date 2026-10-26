@@ -39,8 +39,10 @@ import { VideoIntelligenceSections } from '@/features/match-analysis/components/
 import { hasApplyableEstimatedStats, type MatchAnalysisJob, type MatchEstimatedStats } from '@/features/match-analysis/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { ReportEvidenceOverview } from './intelligence/ReportEvidenceOverview';
+import { TrackingReportSection } from '@/features/match-analysis/components/TrackingReportSection';
+import { useTracking } from '@/features/match-analysis/hooks/useTracking';
 
-type ReportTab = 'overview' | 'timeline' | 'technical' | 'tactical' | 'coaching' | 'video' | 'ask';
+type ReportTab = 'overview' | 'tracking' | 'timeline' | 'technical' | 'tactical' | 'coaching' | 'video' | 'ask';
 
 export type AnalysisReportScreenProps = {
   jobId: string;
@@ -88,6 +90,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
   const [goals, setGoals] = useState<DevelopmentGoal[]>([]);
   const [gpsSessions, setGpsSessions] = useState<GpsSession[]>([]);
   const playerId = job?.playerId ?? null;
+  const { tracking } = useTracking(jobId);
 
   useEffect(() => {
     if (!playerId) return undefined;
@@ -132,11 +135,13 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
 
   const tabs = useMemo(
     () =>
-      (['overview', 'timeline', 'technical', 'tactical', 'coaching', 'video', 'ask'] as const).map((id) => ({
-        id,
-        label: t(`tabs.${id}`),
-      })),
-    [t],
+      (['overview', 'tracking', 'timeline', 'technical', 'tactical', 'coaching', 'video', 'ask'] as const)
+        .filter((id) => id !== 'tracking' || tracking !== null)
+        .map((id) => ({
+          id,
+          label: t(`tabs.${id}`),
+        })),
+    [t, tracking],
   );
 
   /** Seek only when the source video is still retained; otherwise open the honest "no video" panel. */
@@ -265,6 +270,8 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
               />
             ))}
           </ScrollView>
+
+          {tab === 'tracking' && tracking ? <TrackingReportSection jobId={jobId} tracking={tracking} /> : null}
 
           {tab === 'overview' ? (
             <View className="gap-4">

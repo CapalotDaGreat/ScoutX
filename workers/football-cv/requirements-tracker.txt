@@ -10,3 +10,4 @@ torch>=2.3
 easyocr>=1.7
 python-doctr[torch]>=0.10
 scikit-learn>=1.4
+# Measured: onnxruntime CPU inference was slower than torch here (0.268 vs 0.233 s/frame) - not used.

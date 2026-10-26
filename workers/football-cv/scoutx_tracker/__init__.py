@@ -6,4 +6,4 @@ tracking with camera-motion compensation and colour gating) -> number reading ->
 Run `python -m scoutx_tracker --help`.
 """
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"

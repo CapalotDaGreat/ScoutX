@@ -12,6 +12,7 @@ Output `<out>/detections.npz`:
   warps  (F, 7)  2x3 camera motion prev->cur (row-major) + quality
   cuts   (C,)    frames where a hard scene cut was detected
   times  (F,)    timestamp of every processed frame
+  grass  (F,)    share of pitch-green pixels (camera state)
 `<out>/crops/<frame>_<det>.jpg` close-up person crops (>= 80 px) for jersey-number reading.
 """
 
@@ -28,6 +29,7 @@ import numpy as np
 
 from .cmc import CameraMotion, scene_cut
 from .features import SIG_DIM, DeepEmbedder, colour_signature
+from .periods import grass_fraction
 
 PERSON, BALL = 0, 32
 
@@ -65,12 +67,15 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     det = Detector(imgsz=imgsz)
     emb = DeepEmbedder()
     cmc = CameraMotion()
-    dets, sigs, embs, emb_idx, balls, warps, cuts, times = [], [], [], [], [], [], [], []
+    dets, sigs, embs, emb_idx, balls, warps, cuts, times, grass = [], [], [], [], [], [], [], [], []
     prev_small = None
     fi = -1
     t_start = time.time()
+    tm = {"decode": 0.0, "detect": 0.0, "scene_cmc": 0.0, "colour_signature": 0.0, "embedding": 0.0, "crops_io": 0.0}
     while True:
+        _t = time.perf_counter()
         ok, frame = cap.read()
+        tm["decode"] += time.perf_counter() - _t
         if not ok:
             break
         k += 1
@@ -81,18 +86,25 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
             break
         fi += 1
         times.append(t)
-        small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
+        _t = time.perf_counter()
         pb, ps, bb, bs = det(frame)
+        tm["detect"] += time.perf_counter() - _t
+        _t = time.perf_counter()
+        grass.append(grass_fraction(frame))
+        small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
         if scene_cut(prev_small, small):
             cuts.append(fi)
             cmc.reset()
         prev_small = small
         warp, q = cmc.update(frame, pb[ps >= 0.3] if len(pb) else None)
         warps.append(np.r_[warp.ravel(), q])
+        tm["scene_cmc"] += time.perf_counter() - _t
         for b, s in zip(bb, bs):
             balls.append([fi, t, *b, s])
         base = len(dets)
         want_emb = []
+        _t = time.perf_counter()
+        _io = 0.0
         for i, (b, s) in enumerate(zip(pb, ps)):
             sig, _ = colour_signature(frame, b)
             dets.append([fi, t, *b, s])
@@ -105,12 +117,18 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
                 pad = int(0.05 * h)
                 crop = frame[max(0, y1 - pad): y2, max(0, x1 - pad): x2 + pad]
                 if crop.size:
+                    _w = time.perf_counter()
                     cv2.imwrite(str(out / "crops" / f"{fi:06d}_{base + i}.jpg"), crop, [cv2.IMWRITE_JPEG_QUALITY, 92])
+                    _io += time.perf_counter() - _w
+        tm["colour_signature"] += time.perf_counter() - _t - _io
+        tm["crops_io"] += _io
+        _t = time.perf_counter()
         if want_emb:
             E = emb(frame, pb[want_emb])
             for i, e in zip(want_emb, E):
                 emb_idx.append(base + i)
                 embs.append(e.astype(np.float16))
+        tm["embedding"] += time.perf_counter() - _t
         if progress and fi % 100 == 0:
             progress(fi, t, time.time() - t_start)
     cap.release()
@@ -119,10 +137,11 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         dets=np.array(dets, np.float64).reshape(-1, 7), sigs=np.array(sigs, np.float16).reshape(-1, SIG_DIM),
         emb_idx=np.array(emb_idx, np.int64), embs=np.array(embs, np.float16).reshape(-1, 1280),
         balls=np.array(balls, np.float64).reshape(-1, 7), warps=np.array(warps, np.float64).reshape(-1, 7),
-        cuts=np.array(cuts, np.int64), times=np.array(times, np.float64),
+        cuts=np.array(cuts, np.int64), times=np.array(times, np.float64), grass=np.array(grass, np.float32),
     )
     meta = {"video": os.path.abspath(video), "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
-            "width": width, "height": height, "seconds": round(time.time() - t_start, 1)}
+            "width": width, "height": height, "seconds": round(time.time() - t_start, 1),
+            "stageSeconds": {k: round(v, 2) for k, v in tm.items()}}
     (out / "meta.json").write_text(json.dumps(meta, indent=2))
     return meta
 
