@@ -3,3 +3,6 @@ __pycache__/
 .pytest_cache/
 eval/data/
 eval/report.json
+
+# downloaded model weights (scoutx_tracker)
+*.pt

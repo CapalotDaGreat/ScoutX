@@ -1,5 +1,10 @@
 # football-cv — reference GPU worker
 
+> **New: player tracking v3** (`scoutx_tracker/`) follows one player through a whole match and
+> produces stats, a report and highlights. One click on Windows: `Track-Player.ps1`.
+> CLI: `python -m scoutx_tracker track VIDEO --number 20 --kit orange`. Details and measured
+> results: [docs/video/player-tracking-v3.md](../../docs/video/player-tracking-v3.md).
+
 Status: **REFERENCE IMPLEMENTATION — NOT DEPLOYED — NOT VALIDATED ON REAL FOOTAGE.**
 
 This service tracks people in one segment of a match video, follows the target player by

@@ -1,0 +1,12 @@
+# Player tracking engine (scoutx_tracker). CPU works; a CUDA GPU makes stage 1 ~10x faster.
+# Model weights download on first use from the official GitHub releases:
+#   YOLO11 (Ultralytics, AGPL-3.0 - check licensing before commercial deployment),
+#   EasyOCR (Apache-2.0), docTR PARSeq (Apache-2.0).
+numpy>=1.26
+scipy>=1.11
+opencv-python-headless>=4.9
+ultralytics>=8.3
+torch>=2.3
+easyocr>=1.7
+python-doctr[torch]>=0.10
+scikit-learn>=1.4
