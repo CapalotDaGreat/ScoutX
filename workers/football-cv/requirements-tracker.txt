@@ -1,13 +1,15 @@
-# Player tracking engine (scoutx_tracker). CPU works; a CUDA GPU makes stage 1 ~10x faster.
-# Model weights download on first use from the official GitHub releases:
-#   YOLO11 (Ultralytics, AGPL-3.0 - check licensing before commercial deployment),
+# Player tracking engine (scoutx_tracker). CPU works; a CUDA GPU makes stage 1 much faster.
+# Model weights (all Apache-2.0) download on first use from official releases and are hash-pinned:
+#   YOLOX COCO detector (Megvii-BaseDetection/YOLOX releases; network defined in yolox_net.py),
 #   EasyOCR (Apache-2.0), docTR PARSeq (Apache-2.0).
+# No AGPL components: Ultralytics YOLO11 was removed in 3.2.
 numpy>=1.26
 scipy>=1.11
 opencv-python-headless>=4.9
-ultralytics>=8.3
 torch>=2.3
+torchvision>=0.18
 easyocr>=1.7
 python-doctr[torch]>=0.10
 scikit-learn>=1.4
-# Measured: onnxruntime CPU inference was slower than torch here (0.268 vs 0.233 s/frame) - not used.
+onnxruntime>=1.17
+# ONNX Runtime is the default CPU backend for the detector (measured 285 vs 405 ms/frame, YOLOX-s @1280).

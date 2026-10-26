@@ -40,6 +40,7 @@ export const MATCH_ANALYSIS_ERROR_CODES = [
   'video_rejected',
   'ai_privacy_configuration_required',
   'video_consent_required',
+  'link_import_failed',
 ] as const;
 export type MatchAnalysisErrorCode = (typeof MATCH_ANALYSIS_ERROR_CODES)[number];
 

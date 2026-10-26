@@ -32,7 +32,7 @@ export type TrackingReport = {
   };
   ball: { contacts: number; carries: number; passAttempts: number; completedPasses: number; incompletePasses: number;
     unknownOutcomePasses: number; provenance: TrackingProvenance };
-  events: Array<{ type: 'contact' | 'carry' | 'pass_attempt'; start: number; end: number; identityState: TrackingIdentityState;
+  events: Array<{ type: 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate'; candidate?: true; start: number; end: number; identityState: TrackingIdentityState;
     outcome?: 'completed' | 'incomplete' | 'unknown' }>;
   reviewQuestions: TrackingQuestion[];
   identity: { numberSightings: number; confirmedByUser: number };

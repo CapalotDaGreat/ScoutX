@@ -323,7 +323,8 @@
     "queue_unavailable": "No se pudo poner el análisis en cola. Inténtalo de nuevo en unos minutos.",
     "video_rejected": "Este vídeo no superó las comprobaciones de formato y duración.",
     "ai_privacy_configuration_required": "El análisis de vídeo aún no está disponible. Puedes seguir registrando partidos y siguiendo tu desarrollo.",
-    "video_consent_required": "Falta el consentimiento para este vídeo o se retiró. Vuelve a iniciar el análisis para darlo."
+    "video_consent_required": "Falta el consentimiento para este vídeo o se retiró. Vuelve a iniciar el análisis para darlo.",
+    "link_import_failed": "No se pudo importar el vídeo desde este enlace. Comprueba que el enlace siga funcionando y apunte a un archivo MP4 o MOV."
   },
   "pipeline": {
     "title": "Análisis en curso",
@@ -561,7 +562,9 @@
     "event": {
       "contact": "Contacto con el balón",
       "carry": "Conducción",
-      "pass_attempt": "Intento de pase"
+      "pass_attempt": "Intento de pase",
+      "duel_candidate": "Posible duelo (por revisar)",
+      "tackle_candidate": "Posible entrada (por revisar)"
     },
     "outcome": {
       "completed": "completado",
@@ -616,14 +619,20 @@
       "veoStep2": "Elige Descargar → Descargar partido completo (MP4 follow-cam). Las vistas panorámicas no se pueden descargar.",
       "veoStep3": "Sube aquí el vídeo descargado o pega un enlace https:// directo al archivo exportado.",
       "status": {
-        "ready": "Enlace de vídeo verificado. La importación desde enlaces aún no está activada: descarga el archivo y súbelo aquí.",
+        "ready": "Enlace de vídeo verificado. Completa los datos del partido abajo y toca Analizar: el vídeo se importa en nuestros servidores y se comprueba como una subida.",
         "requires_export": "Los enlaces de Veo no se pueden importar directamente. Exporta primero el vídeo:",
         "partner_access_required": "Se necesita una conexión de socio de Veo. Exporta el vídeo en su lugar:",
         "invalid": "Este enlace no es compatible.",
         "unreachable": "No se pudo acceder al enlace.",
         "not_video": "Este enlace no es un archivo de vídeo.",
         "too_large": "Este vídeo supera el tamaño permitido por tu plan."
-      }
+      },
+      "tooShort": "Se pueden importar enlaces de grabaciones de partidos más largas que un clip corto. Para un clip corto, elige el vídeo de este dispositivo.",
+      "linkedTitle": "Vídeo enlazado ({{host}})",
+      "linkedSize": "{{mb}} MB - se importa al iniciar el análisis",
+      "durationLabel": "Duración prevista (minutos)",
+      "durationHint": "Se usa para elegir el modo de análisis; la duración real se mide tras la importación.",
+      "remove": "Quitar enlace"
     }
   }
 }

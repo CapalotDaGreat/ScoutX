@@ -51,12 +51,22 @@ import {
 } from '@/features/match-analysis/services/identityConfirmation';
 import { quotaErrorFrom, type QuotaErrorInfo } from '@/features/premium/types';
 import { toUserMessage } from '@/utils/userFacingError';
+import { startLinkImport } from '@/features/match-analysis/services/trackingV3Service';
+
+export type CreateLinkAnalysisInput = Omit<CreateMatchAnalysisInput, 'localVideoUri' | 'fileName'> & {
+  /** Verified direct https link (inspectVideoSource returned `ready`). */
+  url: string;
+};
 
 const ANALYSIS_FAILED_MESSAGE =
   "The AI couldn't finish analyzing this match. Your footage is saved — tap Retry analysis to try again.";
 const ANALYSIS_UNAVAILABLE_MESSAGE =
   'Match analysis is unavailable right now. Please try again later.';
 const VALIDATION_WAIT_MS = 10 * 60_000;
+/** Server download (<=30 min task) plus the same validation as an upload. */
+const LINK_IMPORT_WAIT_MS = 40 * 60_000;
+const LINK_IMPORT_FAILED_MESSAGE =
+  'The video could not be imported from this link. Check that the link still works and points to an MP4 or MOV file.';
 const VIDEO_REJECTED_MESSAGE =
   'This video could not be accepted. Check that it is a playable MP4 or MOV match recording and try again.';
 const VALIDATION_TIMEOUT_MESSAGE =
@@ -76,6 +86,7 @@ export function canRetryMatchAnalysis(job: MatchAnalysisJob | null): boolean {
     job &&
       job.status === 'failed' &&
       job.errorCode !== 'video_rejected' &&
+      job.errorCode !== 'link_import_failed' &&
       (job.videoStoragePath || job.frames.length > 0),
   );
 }
@@ -366,6 +377,97 @@ export function useMatchAnalysis(playerId: string | null) {
     [playerId, afterUploadAttempt, requestServerAnalysis, runDemoAnalysis, startUpload],
   );
 
+  /**
+   * Analysis from a verified direct link: the server downloads the file into the same quarantine
+   * and validation path as an upload. The declared duration only selects the consent mode; the
+   * server re-measures it after download. Links are always cloud-processed (there is no local file).
+   */
+  const startAnalysisFromLink = useCallback(
+    async (input: CreateLinkAnalysisInput) => {
+      if (!playerId) throw new Error('Sign in to analyze match footage.');
+      if (!isFirebaseConfiguredForProject()) {
+        setError(ANALYSIS_UNAVAILABLE_MESSAGE);
+        throw new Error(ANALYSIS_UNAVAILABLE_MESSAGE);
+      }
+      setIsBusy(true);
+      setError(null);
+      const now = new Date().toISOString();
+      const jobId = createJobId();
+      const job: MatchAnalysisJob = {
+        id: jobId,
+        playerId,
+        status: 'uploading',
+        targeting: input.targeting,
+        match: input.match,
+        durationSec: input.durationSec,
+        fileSizeBytes: input.fileSizeBytes,
+        frames: [],
+        identityConfirmation: pendingIdentityConfirmation(),
+        identityCandidates: [],
+        idempotencyKey: jobId,
+        analysisIntent: input.analysisIntent,
+        clipContext: 'auto',
+        createdAt: now,
+        updatedAt: now,
+      };
+      setActiveJob(job);
+      try {
+        await createMatchAnalysisJob(job);
+        setPhaseLabel('Recording your consent…');
+        const consent = await requestRecordVideoConsent(jobId, input.consent).catch(async (consentError: unknown) => {
+          await requestCancelMatchAnalysis(jobId).catch(() => undefined);
+          throw consentError;
+        });
+        if (consent.processingMode !== 'cloud_video') {
+          await requestCancelMatchAnalysis(jobId).catch(() => undefined);
+          throw new Error('Short clips can only be analysed from a video on this device.');
+        }
+        const consented: MatchAnalysisJob = {
+          ...job,
+          analysisMode: consent.analysisMode,
+          processingMode: consent.processingMode,
+          retainSource: input.consent.retainSource,
+          keepForRetry: input.consent.keepForRetry,
+          evidenceClipsRequested: input.consent.evidenceClips,
+        };
+        setActiveJob(consented);
+        setPhaseLabel('Importing your video from the link…');
+        let started;
+        try {
+          started = await startLinkImport(jobId, input.url);
+        } catch (importError) {
+          const quota = quotaErrorFrom(importError);
+          setQuotaError(quota);
+          await requestCancelMatchAnalysis(jobId).catch(() => undefined);
+          throw importError;
+        }
+        const unsubscribe = UploadSessionRepository.subscribe(started.uploadId, (record) => {
+          if (record?.state === 'uploading' && record.receivedBytes && started.bytes > 0) {
+            setPhaseLabel(`Importing your video from the link… ${Math.min(99, Math.floor((record.receivedBytes / started.bytes) * 100))}%`);
+          } else if (record?.state === 'quarantined' || record?.state === 'validated') {
+            setPhaseLabel('Checking your video…');
+          }
+        }, () => undefined);
+        const outcome = await UploadSessionRepository.waitForOutcome(started.uploadId, LINK_IMPORT_WAIT_MS).finally(unsubscribe);
+        if (!outcome || outcome.state !== 'ready') {
+          throw new Error(outcome ? LINK_IMPORT_FAILED_MESSAGE : VALIDATION_TIMEOUT_MESSAGE);
+        }
+        const latest = (await getMatchAnalysisJob(jobId).catch(() => null)) ?? consented;
+        setActiveJob(latest);
+        return latest;
+      } catch (err) {
+        const message = toUserMessage(err, LINK_IMPORT_FAILED_MESSAGE);
+        setError(message);
+        throw new Error(message);
+      } finally {
+        setIsBusy(false);
+        setPhaseLabel(null);
+        await refreshRecent().catch(() => undefined);
+      }
+    },
+    [playerId, refreshRecent],
+  );
+
   /** Withdraws consent: the server stops processing and removes temporary media. */
   const revokeConsent = useCallback(
     async (job: MatchAnalysisJob) => {
@@ -490,6 +592,7 @@ export function useMatchAnalysis(playerId: string | null) {
     pickVideo,
     pickVideoFile,
     startAnalysis,
+    startAnalysisFromLink,
     retryAnalysis,
     cancelAnalysis,
     analyzeWithDeviceFrames,

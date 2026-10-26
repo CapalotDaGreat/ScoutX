@@ -44,3 +44,13 @@ export async function inspectVideoSource(url: string): Promise<VideoSourceInspec
   const result = await callable({ url });
   return result.data as VideoSourceInspection;
 }
+
+export type LinkImportStart = { uploadId: string; state: string; bytes: number; host: string; reused: boolean };
+
+/** Starts the server-side import of a verified direct video link into the job's quarantine. */
+export async function startLinkImport(jobId: string, url: string): Promise<LinkImportStart> {
+  const callable = createCallableFunction<{ jobId: string; url: string }>('startLinkImport');
+  if (!callable) throw new Error('Cloud Functions unavailable.');
+  const result = await callable({ jobId, url });
+  return result.data as LinkImportStart;
+}

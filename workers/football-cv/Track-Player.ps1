@@ -72,7 +72,12 @@ try {
   while ($true) {
     Say "The report shows up to 8 numbered 'Is this you?' pictures under 'Help the AI'."
     $ans = Read-Host "Answer like '1y 2n 3u 4s' (y = me, n = not me, u = unsure, s = skip; 'undo' to undo; Enter to finish)"
-    if (-not $ans.Trim()) { break }
+    if (-not $ans.Trim()) {
+      Say "Finishing: refreshing the highlights video with your answers..."
+      & $Py -m scoutx_tracker render "$Out"
+      Start-Process (Join-Path $Out "report.html")
+      break
+    }
     if ($ans.Trim() -eq "undo") { & $Py -m scoutx_tracker undo "$Out" }
     else { & $Py -m scoutx_tracker answer "$Out" $ans.Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries) }
     Start-Process (Join-Path $Out "report.html")

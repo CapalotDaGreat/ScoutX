@@ -99,7 +99,8 @@ export type AnalysisErrorCode =
   | 'queue_unavailable'
   | 'video_rejected'
   | 'ai_privacy_configuration_required'
-  | 'video_consent_required';
+  | 'video_consent_required'
+  | 'link_import_failed';
 
 const ERROR_TEXT: Record<AnalysisErrorCode, string> = {
   frames_insufficient: 'Not enough readable frames to analyze.',
@@ -111,6 +112,7 @@ const ERROR_TEXT: Record<AnalysisErrorCode, string> = {
   video_rejected: 'The video did not pass validation.',
   ai_privacy_configuration_required: 'Video analysis is not available yet.',
   video_consent_required: 'Confirm how your video is processed before analysis starts.',
+  link_import_failed: 'The video could not be imported from the link.',
 };
 
 export async function failJob(

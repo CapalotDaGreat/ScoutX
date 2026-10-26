@@ -105,7 +105,7 @@ function bufferSource(bytes) {
 }
 
 async function clearUploads() {
-  for (const name of ['mediaUploads', 'mediaUploadSessions', 'uploadSessionLimits']) {
+  for (const name of ['mediaUploads', 'mediaUploadSessions', 'mediaImportSources', 'uploadSessionLimits']) {
     const docs = await db.collection(name).get();
     await Promise.all(docs.docs.map((doc) => doc.ref.delete()));
   }
@@ -476,6 +476,10 @@ describe('rules', () => {
     assert.ok(isDenied(await setDocument(UID, 'mediaUploads/rules_u1', { ownerId: UID, state: 'ready' })));
     assert.ok(isDenied(await getDocument(UID, 'mediaUploadSessions/rules_u1')));
     assert.ok(isDenied(await getDocument(UID, `uploadSessionLimits/${UID}_2026-01-01`)));
+    // Link-import sources can hold access tokens: not even the owner can read or write them.
+    await db.doc('mediaImportSources/rules_u1').set({ ownerId: UID, url: 'https://cdn.example.com/m.mp4?token=x' });
+    assert.ok(isDenied(await getDocument(UID, 'mediaImportSources/rules_u1')));
+    assert.ok(isDenied(await setDocument(UID, 'mediaImportSources/rules_u2', { ownerId: UID, url: 'https://x' })));
   });
 
   test('clients cannot forge validated video fields on their analysis jobs', async () => {

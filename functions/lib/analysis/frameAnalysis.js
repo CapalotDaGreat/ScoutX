@@ -48,6 +48,7 @@ const ERROR_TEXT = {
     video_rejected: 'The video did not pass validation.',
     ai_privacy_configuration_required: 'Video analysis is not available yet.',
     video_consent_required: 'Confirm how your video is processed before analysis starts.',
+    link_import_failed: 'The video could not be imported from the link.',
 };
 async function failJob(db, jobId, code, stages, activeStage, expectedGeneration) {
     const now = new Date().toISOString();

@@ -28,10 +28,15 @@ def select_ocr_crops(summary: list[dict], kit_min: float = 0.22, min_h: int = 90
         if s["kit1"] + 0.5 * s["kit2"] < kit_min or s["n"] < min_len or not s["crops"]:
             continue
         sized = []
-        for c in s["crops"]:
-            img = cv2.imread(c, cv2.IMREAD_REDUCED_GRAYSCALE_4)
-            if img is not None and img.shape[0] * 4 >= min_h:
-                sized.append((img.shape[0], int(Path(c).stem.split("_")[0]), c))
+        heights = s.get("crop_h")
+        for i, c in enumerate(s["crops"]):
+            if heights is not None:
+                hgt = heights[i]
+            else:  # older tracklet summaries: read the image size
+                img = cv2.imread(c, cv2.IMREAD_REDUCED_GRAYSCALE_4)
+                hgt = img.shape[0] * 4 if img is not None else 0
+            if hgt >= min_h:
+                sized.append((hgt, int(Path(c).stem.split("_")[0]), c))
         sized.sort(reverse=True)
         sel, used = [], []
         for _, f, c in sized:
@@ -86,36 +91,39 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                 counts[num] = counts.get(num, 0) + 1
                 if early_stop and counts[num] >= 2:
                     break
-    cache_path.write_text(json.dumps(cache))
+    if done:
+        cache_path.write_text(json.dumps(cache))
     return cache
 
 
 SCHEMA = "pitchproof.tracking.v3"
+OCR_DENSE = {"min_h": 120, "min_gap": 4, "per_tracklet": 10**6, "min_len": 3}
 
 
 def cached_tracklets(D, kit: str, kit2: str, det_reads: dict | None, cache_dir: Path):
-    """Tracklets depend only on stage-1 output, kit colours and number reads - never on user
-    answers - so a correction re-uses them instead of re-tracking the whole match."""
+    """Tracking rows depend only on stage-1 output - never on kit, number reads or user answers -
+    so they are computed once per match; corrections only re-run the cheap assembly (splits,
+    summaries). Measured on IMG_4809 (34 min, CPU): 40 s once, then ~3 s per correction."""
     import hashlib  # noqa: PLC0415
-    import pickle  # noqa: PLC0415
+
+    from .tracklets import TRACKLET_ALGO_VERSION, assemble, track_rows  # noqa: PLC0415
 
     h = hashlib.sha256()
-    h.update(f"{len(D.dets)}|{D.dets[:, :7].sum():.6f}|{kit}|{kit2}|{cache_dir.resolve()}|v3".encode())
-    h.update(json.dumps(sorted((det_reads or {}).items())).encode())
-    path = cache_dir / f"tracklets_{h.hexdigest()[:16]}.pkl"
+    h.update(f"{len(D.dets)}|{D.dets[:, :7].sum():.6f}|{cache_dir.resolve()}|{TRACKLET_ALGO_VERSION}".encode())
+    path = cache_dir / f"trackrows_{h.hexdigest()[:16]}.npy"
+    rows = None
     if path.exists():
         try:
-            with open(path, "rb") as fh:
-                return pickle.load(fh)
+            rows = np.load(path, allow_pickle=False)
         except Exception:  # noqa: BLE001 - a broken cache is rebuilt
+            rows = None
+    if rows is None:
+        rows = track_rows(D)
+        try:
+            np.save(path, rows, allow_pickle=False)
+        except OSError:
             pass
-    T = build_tracklets(D, kit, kit2, det_reads=det_reads)
-    try:
-        with open(path, "wb") as fh:
-            pickle.dump(T, fh, protocol=pickle.HIGHEST_PROTOCOL)
-    except OSError:
-        pass
-    return T
+    return assemble(D, rows, kit, kit2, det_reads)
 
 
 def _frame_of(D, t: float) -> int:
@@ -147,7 +155,7 @@ def frame_activity(T, n_frames: int) -> np.ndarray:
 def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit2: str = "",
             anchors: list[tuple[float, float, float]] | None = None, ocr: bool = True, log=print,
             rejects: list[tuple[float, float, float]] | None = None, feedback: dict | None = None,
-            position: str = "unknown", age_group: str = "") -> dict:
+            position: str = "unknown", age_group: str = "", ocr_dense: bool = True, D=None) -> dict:
     from .ball import ball_events  # noqa: PLC0415
     from .features import kit_score  # noqa: PLC0415
     from .invariants import check  # noqa: PLC0415
@@ -161,7 +169,7 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     t = time.time()
-    D = load_runs(run_dirs)
+    D = load_runs(run_dirs) if D is None else D
     timings["load"] = time.time() - t
     t = time.time()
     T = cached_tracklets(D, kit, kit2, None, Path(run_dirs[0]).parent)
@@ -170,9 +178,13 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
     t = time.time()
     reads: dict[int, list] = {}
     if ocr and number:
-        crops = select_ocr_crops(T.summary)
+        # Dense temporal OCR (3.2): every target-kit close-up >= 120 px, one per 0.4 s, no early
+        # stop - shirt numbers are visible in only a few moments, and reads inside a tracklet are
+        # also how identity swaps between team-mates are found. Measured on IMG_4809: keeps 187/192
+        # full-number reads (7/7 target reads) of reading every close-up, at 48 % of the crops.
+        crops = select_ocr_crops(T.summary, **OCR_DENSE) if ocr_dense else select_ocr_crops(T.summary)
         log(f"ocr crops: {sum(len(v) for v in crops.values())} across {len(crops)} tracklets")
-        cache = run_ocr(crops, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log)
+        cache = run_ocr(crops, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log, early_stop=not ocr_dense)
         det_of = {crop_key(v): k for k, v in D.crops.items()}
         det_reads = {det_of[c]: v[0] for c, v in cache.items() if v[0] and c in det_of}
         # Same-team identity swaps are invisible to colour: split where shirt numbers conflict.
@@ -187,7 +199,8 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
                 reads.setdefault(int(T.rows[r, 2]), []).append((int(T.rows[r, 0]), num, conf, band))
     timings["numbers"] = time.time() - t
     t = time.time()
-    target = Target(number=number, kit_primary=kit, kit_secondary=kit2, anchors=anchors or [], rejects=rejects or [])
+    target = Target(number=number, kit_primary=kit, kit_secondary=kit2, anchors=anchors or [], rejects=rejects or [],
+                    asked=[tuple(x) for x in feedback.get("asked", [])])
     feats = tracklet_features(D, T)
     row_kit = np.array([kit_score(D.sigs[int(d)], kit) for d in T.rows[:, 8]]) if kit else None
     res = resolve_identity(T.summary, reads, target, D.fps, T.rows, T.by_tid, feats, row_kit=row_kit)
@@ -229,14 +242,28 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         crops = by_tid_summary.get(q["tid"], {}).get("crops", [])
         if crops:
             q["crop"] = min(crops, key=lambda c: abs(int(Path(c).stem.split("_")[0]) - _frame_of(D, q["t"])))
-    reference = None
+    # Reference image: the largest close-up whose own crop was READ as the target number (the
+    # clearest proof of who we follow); falls back to the nearest crop to any target read.
+    reference, best_h = None, -1.0
     for k in res.chosen:
-        if res.evidence.get(k) == "number" and T.summary[k]["crops"]:
-            ev_t = res.evidence_times.get(k, [])
-            crops = T.summary[k]["crops"]
-            reference = min(crops, key=lambda c: min((abs(int(Path(c).stem.split("_")[0]) - _frame_of(D, et)) for et in ev_t),
-                                                     default=0))
-            break
+        if res.evidence.get(k) != "number":
+            continue
+        s_ = T.summary[k]
+        target_frames = {f for f, num, _, _ in reads.get(s_["tid"], []) if num == number}
+        heights = s_.get("crop_h") or [0.0] * len(s_["crops"])
+        for c, h_ in zip(s_["crops"], heights):
+            f_local = int(Path(c).stem.split("_")[0])
+            g_ = next((g for g in target_frames if _frame_of(D, float(D.times[g])) == f_local), None)
+            if g_ is not None and h_ > best_h:
+                reference, best_h = c, h_
+    if reference is None:
+        for k in res.chosen:
+            if res.evidence.get(k) == "number" and T.summary[k]["crops"]:
+                ev_t = res.evidence_times.get(k, [])
+                crops = T.summary[k]["crops"]
+                reference = min(crops, key=lambda c: min((abs(int(Path(c).stem.split("_")[0]) - _frame_of(D, et)) for et in ev_t),
+                                                         default=0))
+                break
 
     t = time.time()
     F = len(D.times)
@@ -248,9 +275,11 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
     states, competitor = frame_states(T, res, tl, period_kind, camera,
                                       [tuple(x) for x in feedback.get("offPitch", [])])
     cov = coverage(D.times, states, period_kind, camera)
-    phys, speed = physical_metrics(tl, D.fps, states, camera, D.warps[:, 6], period_kind,
-                                   Thresholds.for_age_group(age_group), D.width or 1920)
     P = panorama_transforms(D.warps, D.segment)
+    calib = apply_calibrations(feedback.get("calibrations", []), D, P, tl, states)
+    phys, speed = physical_metrics(tl, D.fps, states, camera, D.warps[:, 6], period_kind,
+                                   Thresholds.for_age_group(age_group), D.width or 1920,
+                                   positions=calib["positions"] if calib["calibratedFrames"] else None)
     events, ball = ball_events(D, T, tl, states, P, camera, D.fps)
     timings["timeline_metrics_events"] = time.time() - t
 
@@ -274,6 +303,8 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
                      "confirmedByUser": sum(1 for k in res.chosen if res.evidence.get(k) == "anchor"),
                      "scoreNote": "Identity scores are uncalibrated (not probabilities)."},
         "physical": phys,
+        "calibration": {k: v for k, v in calib.items() if k != "positions"},
+        "heatmap": calib["heatmap"],
         "ball": ball,
         "events": events,
         "tracklets": tracklets,
@@ -289,6 +320,36 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         log(f"INVARIANT VIOLATIONS: {report['invariants']['violations']}")
     (out / "result.json").write_text(json.dumps(report, indent=2, default=float))
     return report
+
+
+def apply_calibrations(cals: list[dict], D, P, tl, states) -> dict:
+    """User calibrations {t, names[], points[[x,y]]} -> per-frame pitch positions of the claimed
+    target (nan where no valid propagated homography). Invalid calibrations are reported, never used."""
+    from .calibration import fit_manual, observed_heatmap, pitch_positions, propagate  # noqa: PLC0415
+    from .states import CONFIRMED_VISIBLE, LIKELY_VISIBLE  # noqa: PLC0415
+
+    H_by_frame: dict[int, np.ndarray] = {}
+    dist_ref: dict[int, float] = {}
+    cal_of: dict[int, str] = {}
+    report = []
+    for i, c in enumerate(cals or []):
+        g = int(np.argmin(np.abs(D.times - float(c.get("t", -1)))))
+        cal = fit_manual(f"cal_{i + 1}", g, [tuple(p) for p in c.get("points", [])], list(c.get("names", [])))
+        frames = propagate(cal, P, D.segment, D.times, D.warps[:, 6]) if cal.status == "valid" else {}
+        for f, H in frames.items():
+            d = abs(float(D.times[f] - D.times[g]))
+            if f not in H_by_frame or d < dist_ref[f]:  # nearest reference wins (least drift)
+                H_by_frame[f], dist_ref[f], cal_of[f] = H, d, cal.id
+        report.append({"id": cal.id, "t": round(float(D.times[g]), 2), "status": cal.status, "reason": cal.reason,
+                       "reprojectionM": None if cal.reprojection_m is None else round(cal.reprojection_m, 3),
+                       "propagatedSec": round(len(frames) / D.fps, 1)})
+    claimed = np.asarray(tl.present, bool) & np.isin(states, [CONFIRMED_VISIBLE, LIKELY_VISIBLE])
+    pos, _prov = pitch_positions(tl.boxes, claimed, H_by_frame, cal_of)
+    ok = ~np.isnan(pos[:, 0])
+    return {"calibrations": report, "calibratedFrames": int(ok.sum()), "calibratedSec": round(float(ok.sum()) / D.fps, 1),
+            "positions": pos,
+            "heatmap": observed_heatmap(pos) if ok.any() else
+            {"status": "unavailable", "reason": "No validated pitch calibration covers the player's visible time."}}
 
 
 def parse_anchor(s: str) -> tuple[float, float, float]:

@@ -14,6 +14,7 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 /**
  * "Import from link": recognises Veo match pages (explains the official export path - there is no
  * public Veo API) and validates direct HTTPS video links server-side (size, type, SSRF-safe).
+ * A verified link is handed to the form (`onReady`); the server imports it when analysis starts.
  */
 export function ImportFromLinkPanel({ onReady }: { onReady?: (inspection: VideoSourceInspection, url: string) => void }) {
   const { t } = useAppTranslation('matchAnalysis');

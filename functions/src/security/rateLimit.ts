@@ -77,3 +77,6 @@ export const DISCOVERY_VIEW_LIMIT: RateLimitPolicy = { action: 'discovery_view',
 
 /** Video link inspection performs outbound DNS/HEAD requests: bounded per user. */
 export const VIDEO_SOURCE_INSPECT_LIMIT: RateLimitPolicy = { action: 'video_source_inspect', max: 30, window: 'hour' };
+
+/** Starting a server-side link import downloads up to the plan's byte limit: tightly bounded. */
+export const LINK_IMPORT_START_LIMIT: RateLimitPolicy = { action: 'link_import_start', max: 10, window: 'day' };

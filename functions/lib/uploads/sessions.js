@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cleanupAbandonedUploads = exports.cancelUploadSession = exports.declareUploadChecksum = exports.createUploadSession = void 0;
+exports.assertMayUpload = assertMayUpload;
+exports.reserveUploadSlot = reserveUploadSlot;
 exports.discardUploadsForJob = discardUploadsForJob;
 exports.expireAbandonedUploads = expireAbandonedUploads;
 const https_1 = require("firebase-functions/v2/https");
@@ -45,6 +47,33 @@ async function assertMayUpload(uid, db) {
             reason: 'consent_required',
         });
     }
+}
+/**
+ * Shared by device uploads and link imports: at most `maxActivePerUser` unfinished uploads
+ * (other jobs) and `maxSessionsPerDay` started per day. Counts the new session.
+ */
+async function reserveUploadSlot(db, uid, jobId, now) {
+    const active = await db
+        .collection('mediaUploads')
+        .where('ownerId', '==', uid)
+        .where('state', 'in', [...model_1.ACTIVE_UPLOAD_STATES])
+        .limit(model_1.UPLOAD_LIMITS.maxActivePerUser + 1)
+        .get();
+    if (active.docs.filter((doc) => doc.get('jobId') !== jobId).length >= model_1.UPLOAD_LIMITS.maxActivePerUser) {
+        throw new https_1.HttpsError('resource-exhausted', 'Finish or cancel your current uploads before starting another.', {
+            reason: 'limit_reached',
+        });
+    }
+    const limitRef = db.collection('uploadSessionLimits').doc(`${uid}_${(0, model_1.dayKey)(now)}`);
+    await db.runTransaction(async (transaction) => {
+        const count = (await transaction.get(limitRef)).get('count') ?? 0;
+        if (count >= model_1.UPLOAD_LIMITS.maxSessionsPerDay) {
+            throw new https_1.HttpsError('resource-exhausted', 'You have started the maximum number of uploads for today.', {
+                reason: 'limit_reached',
+            });
+        }
+        transaction.set(limitRef, { ownerId: uid, count: count + 1, updatedAt: now.toISOString() }, { merge: true });
+    });
 }
 async function sessionUriFor(db, uploadId) {
     const uri = (await db.collection('mediaUploadSessions').doc(uploadId).get()).get('sessionUri');
@@ -104,28 +133,8 @@ exports.createUploadSession = (0, https_1.onCall)((0, callableOptions_1.createCa
             return { uploadId: reusable.id, sessionUri, state, chunkBytes: model_1.UPLOAD_LIMITS.chunkBytes, reused: true };
         }
     }
-    const active = await db
-        .collection('mediaUploads')
-        .where('ownerId', '==', uid)
-        .where('state', 'in', [...model_1.ACTIVE_UPLOAD_STATES])
-        .limit(model_1.UPLOAD_LIMITS.maxActivePerUser + 1)
-        .get();
-    if (active.docs.filter((doc) => doc.get('jobId') !== input.jobId).length >= model_1.UPLOAD_LIMITS.maxActivePerUser) {
-        throw new https_1.HttpsError('resource-exhausted', 'Finish or cancel your current uploads before starting another.', {
-            reason: 'limit_reached',
-        });
-    }
     const now = new Date();
-    const limitRef = db.collection('uploadSessionLimits').doc(`${uid}_${(0, model_1.dayKey)(now)}`);
-    await db.runTransaction(async (transaction) => {
-        const count = (await transaction.get(limitRef)).get('count') ?? 0;
-        if (count >= model_1.UPLOAD_LIMITS.maxSessionsPerDay) {
-            throw new https_1.HttpsError('resource-exhausted', 'You have started the maximum number of uploads for today.', {
-                reason: 'limit_reached',
-            });
-        }
-        transaction.set(limitRef, { ownerId: uid, count: count + 1, updatedAt: now.toISOString() }, { merge: true });
-    });
+    await reserveUploadSlot(db, uid, input.jobId, now);
     const uploadRef = db.collection('mediaUploads').doc();
     const storagePath = (0, model_1.quarantinePath)(uid, uploadRef.id);
     const [sessionUri] = await (0, storage_1.getStorage)()

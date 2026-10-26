@@ -323,7 +323,8 @@
     "queue_unavailable": "L'analyse n'a pas pu être mise en file d'attente. Réessaie dans quelques minutes.",
     "video_rejected": "Cette vidéo n'a pas passé les contrôles de format et de durée.",
     "ai_privacy_configuration_required": "L'analyse vidéo n'est pas encore disponible. Tu peux toujours enregistrer tes matchs et suivre ta progression.",
-    "video_consent_required": "Le consentement pour cette vidéo manque ou a été retiré. Relance l’analyse pour donner ton consentement."
+    "video_consent_required": "Le consentement pour cette vidéo manque ou a été retiré. Relance l’analyse pour donner ton consentement.",
+    "link_import_failed": "La vidéo n'a pas pu être importée depuis ce lien. Vérifie que le lien fonctionne toujours et pointe vers un fichier MP4 ou MOV."
   },
   "pipeline": {
     "title": "Analyse en cours",
@@ -561,7 +562,9 @@
     "event": {
       "contact": "Contact de balle",
       "carry": "Conduite de balle",
-      "pass_attempt": "Tentative de passe"
+      "pass_attempt": "Tentative de passe",
+      "duel_candidate": "Duel possible (à vérifier)",
+      "tackle_candidate": "Tacle possible (à vérifier)"
     },
     "outcome": {
       "completed": "réussie",
@@ -616,14 +619,20 @@
       "veoStep2": "Choisis Télécharger → Télécharger le match complet (MP4 follow-cam). Les vues panoramiques ne sont pas téléchargeables.",
       "veoStep3": "Importe ici la vidéo téléchargée, ou colle un lien https:// direct vers le fichier exporté.",
       "status": {
-        "ready": "Lien vidéo vérifié. L'import par lien n'est pas encore activé - télécharge le fichier puis importe-le ici.",
+        "ready": "Lien vidéo vérifié. Complète les infos du match ci-dessous et touche Analyser - la vidéo est importée sur nos serveurs et contrôlée comme un envoi.",
         "requires_export": "Les liens Veo ne peuvent pas être importés directement. Exporte d'abord la vidéo :",
         "partner_access_required": "Une connexion partenaire Veo est nécessaire. Exporte plutôt la vidéo :",
         "invalid": "Ce lien n'est pas pris en charge.",
         "unreachable": "Le lien est inaccessible.",
         "not_video": "Ce lien n'est pas un fichier vidéo.",
         "too_large": "Cette vidéo dépasse la taille autorisée par ton abonnement."
-      }
+      },
+      "tooShort": "Les liens peuvent être importés pour des enregistrements de match plus longs qu'un court extrait. Pour un court extrait, choisis la vidéo sur cet appareil.",
+      "linkedTitle": "Vidéo liée ({{host}})",
+      "linkedSize": "{{mb}} Mo - importée au démarrage de l'analyse",
+      "durationLabel": "Durée prévue (minutes)",
+      "durationHint": "Sert à choisir le mode d'analyse ; la durée réelle est mesurée après l'import.",
+      "remove": "Retirer le lien"
     }
   }
 }

@@ -323,7 +323,8 @@
     "queue_unavailable": "Die Analyse konnte nicht eingereiht werden. Versuche es in ein paar Minuten erneut.",
     "video_rejected": "Dieses Video hat die Format- und Längenprüfung nicht bestanden.",
     "ai_privacy_configuration_required": "Die Videoanalyse ist noch nicht verfügbar. Du kannst weiterhin Spiele erfassen und deine Entwicklung verfolgen.",
-    "video_consent_required": "Die Einwilligung für dieses Video fehlt oder wurde widerrufen. Starte die Analyse erneut, um einzuwilligen."
+    "video_consent_required": "Die Einwilligung für dieses Video fehlt oder wurde widerrufen. Starte die Analyse erneut, um einzuwilligen.",
+    "link_import_failed": "Das Video konnte nicht über diesen Link importiert werden. Prüfe, ob der Link noch funktioniert und auf eine MP4- oder MOV-Datei zeigt."
   },
   "pipeline": {
     "title": "Analyse läuft",
@@ -561,7 +562,9 @@
     "event": {
       "contact": "Ballkontakt",
       "carry": "Ballführung",
-      "pass_attempt": "Passversuch"
+      "pass_attempt": "Passversuch",
+      "duel_candidate": "Möglicher Zweikampf (zu prüfen)",
+      "tackle_candidate": "Mögliches Tackling (zu prüfen)"
     },
     "outcome": {
       "completed": "angekommen",
@@ -616,14 +619,20 @@
       "veoStep2": "Wähle Herunterladen → Ganzes Spiel herunterladen (Follow-Cam-MP4). Panorama-Ansichten können nicht heruntergeladen werden.",
       "veoStep3": "Lade das heruntergeladene Video hier hoch oder füge einen direkten https://-Link zur exportierten Datei ein.",
       "status": {
-        "ready": "Video-Link geprüft. Der Import über Links ist noch nicht aktiviert - bitte lade die Datei herunter und hier hoch.",
+        "ready": "Videolink geprüft. Fülle unten die Spieldaten aus und tippe auf Analysieren - das Video wird auf unseren Servern importiert und wie ein Upload geprüft.",
         "requires_export": "Veo-Links können nicht direkt importiert werden. Exportiere das Video zuerst:",
         "partner_access_required": "Eine Veo-Partnerverbindung ist nötig. Exportiere das Video stattdessen:",
         "invalid": "Dieser Link wird nicht unterstützt.",
         "unreachable": "Der Link ist nicht erreichbar.",
         "not_video": "Dieser Link ist keine Videodatei.",
         "too_large": "Dieses Video ist größer, als dein Abo erlaubt."
-      }
+      },
+      "tooShort": "Links können für Spielaufnahmen importiert werden, die länger als ein kurzer Clip sind. Für einen kurzen Clip wähle das Video auf diesem Gerät.",
+      "linkedTitle": "Verlinktes Video ({{host}})",
+      "linkedSize": "{{mb}} MB - wird beim Start der Analyse importiert",
+      "durationLabel": "Erwartete Länge (Minuten)",
+      "durationHint": "Bestimmt den Analysemodus; die tatsächliche Länge wird nach dem Import gemessen.",
+      "remove": "Link entfernen"
     }
   }
 }

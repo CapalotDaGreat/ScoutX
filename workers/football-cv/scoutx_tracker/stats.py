@@ -35,9 +35,42 @@ class Timeline:
 HARD_EVIDENCE_RADIUS_SEC = 4.0
 
 
+SAME_KIT_OVERLAP = 0.5   # share of the smaller box covered by a team-mate's box
+SAME_KIT_SCORE = 0.3     # kit score that makes the other box a team-mate
+
+
+def same_kit_occlusions(T, row_kit: np.ndarray | None) -> np.ndarray:
+    """Per tracklet row: does another detection wearing the same kit overlap this box heavily?
+    Tracker identity swaps between team-mates need such contact, so hard evidence (a number read,
+    a user answer) never reaches across one."""
+    R = T.rows
+    occ = np.zeros(len(R), bool)
+    if row_kit is None or len(R) == 0:
+        return occ
+    order = np.argsort(R[:, 0], kind="stable")
+    frames = R[order, 0].astype(int)
+    bounds = np.flatnonzero(np.diff(frames)) + 1
+    for grp in np.split(order, bounds):
+        if len(grp) < 2:
+            continue
+        b = R[grp, 3:7]
+        x1 = np.maximum(b[:, None, 0], b[None, :, 0])
+        y1 = np.maximum(b[:, None, 1], b[None, :, 1])
+        x2 = np.minimum(b[:, None, 2], b[None, :, 2])
+        y2 = np.minimum(b[:, None, 3], b[None, :, 3])
+        inter = np.clip(x2 - x1, 0, None) * np.clip(y2 - y1, 0, None)
+        area = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
+        cover = inter / np.maximum(np.minimum(area[:, None], area[None, :]), 1e-9)
+        np.fill_diagonal(cover, 0)
+        mate = row_kit[grp] >= SAME_KIT_SCORE
+        occ[grp] = ((cover >= SAME_KIT_OVERLAP) & mate[None, :]).any(1)
+    return occ
+
+
 def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None = None,
                    kit_floor: float = 0.12) -> Timeline:
     F = len(D.times)
+    occluded = same_kit_occlusions(T, row_kit)
     present = np.zeros(F, bool)
     boxes = np.zeros((F, 4))
     pano = np.zeros((F, 3))
@@ -64,11 +97,36 @@ def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None =
             # rest of the tracklet keeps it as continuity (a same-team swap can hide inside).
             tt = T.rows[ix, 1]
             near = np.zeros(len(ix), bool)
+            conflicts = getattr(result, "conflict_times", {}).get(k, [])
             for et in ev_t:
-                near |= np.abs(tt - et) <= HARD_EVIDENCE_RADIUS_SEC
+                lo, hi = et - HARD_EVIDENCE_RADIUS_SEC, et + HARD_EVIDENCE_RADIUS_SEC
+                # Never past the midpoint towards a read that cannot be the target: the identity
+                # may change anywhere between the two reads.
+                for ct in conflicts:
+                    if ct > et:
+                        hi = min(hi, (et + ct) / 2)
+                    elif ct < et:
+                        lo = max(lo, (et + ct) / 2)
+                # ... nor across contact with a team-mate (where trackers swap identities).
+                occ_t = tt[occluded[ix]]
+                before, after = occ_t[occ_t < et], occ_t[occ_t > et]
+                if len(before):
+                    lo = max(lo, float(before.max()))
+                if len(after):
+                    hi = min(hi, float(after.min()))
+                near |= (tt >= lo) & (tt <= hi)
             labels = np.where(near, lab, "continuity")
         else:
             labels = np.full(len(ix), lab, dtype=object)
+        conflicts = getattr(result, "conflict_times", {}).get(k, [])
+        if conflicts:
+            # Contrary evidence: where the nearest read on this tracklet cannot be the target
+            # (another number, or a digit the target number lacks), the moment is not claimed.
+            tt = T.rows[ix, 1]
+            ev_t = getattr(result, "evidence_times", {}).get(k, []) if lab in ("anchor", "number") else []
+            d_conf = np.min(np.abs(tt[:, None] - np.asarray(conflicts)[None, :]), axis=1)
+            d_ev = np.min(np.abs(tt[:, None] - np.asarray(ev_t)[None, :]), axis=1) if ev_t else np.full(len(tt), np.inf)
+            labels = np.where((d_conf <= HARD_EVIDENCE_RADIUS_SEC) & (d_conf < d_ev), "conflict", labels)
         if last is not None:
             lf, lb, lp = last
             gap = fr[0] - lf

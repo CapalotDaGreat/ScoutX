@@ -91,6 +91,7 @@ export const OWNED_QUERIES: ReadonlyArray<readonly [collection: string, field: s
   ['appeals', 'ownerId'],
   ['mediaUploads', 'ownerId'],
   ['mediaUploadSessions', 'ownerId'],
+  ['mediaImportSources', 'ownerId'],
   ['uploadSessionLimits', 'ownerId'],
   ['revenueCatEvents', 'uid'],
   ['dataExports', 'uid'],

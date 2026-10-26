@@ -31,6 +31,10 @@ PLAYER_HEIGHT_M = 1.8
 PRIOR_LOGODDS = 1.0     # most same-kit tracklets are NOT the target
 MIN_QUESTION_BOX_PX = 90.0   # smaller players can't be recognised by the user either
 QUESTION_BATCH = 8           # compact first review batch; more on request
+# "resolve" (3.2): a question's value includes the ambiguity it removes - a "not me" on a look-alike
+# that is in view while the target is claimed clears that whole overlap. "legacy": 3.1 behaviour.
+QUESTION_STRATEGY = "resolve"
+COMPETITOR_SCORE = 0.35      # same threshold as states.COMPETITOR
 
 
 @dataclass
@@ -40,6 +44,8 @@ class Target:
     kit_secondary: str = ""
     anchors: list[tuple[float, float, float]] = field(default_factory=list)  # (t, x, y): "this is me"
     rejects: list[tuple[float, float, float]] = field(default_factory=list)  # (t, x, y): "not me"
+    # (t, x, y) the user already saw and answered "unsure"/"skip": no evidence, never asked again.
+    asked: list[tuple[float, float, float]] = field(default_factory=list)
 
 
 @dataclass
@@ -60,6 +66,18 @@ class IdentityResult:
     # Moments (source seconds) of hard evidence per tracklet: target-number reads, user answers.
     evidence_times: dict = field(default_factory=dict)
     appearance_score: dict = field(default_factory=dict)  # same as score, before hard evidence
+    # Moments of reads that cannot be the target number (another number, or a digit the target
+    # number does not contain). Hard evidence never reaches past the midpoint towards one.
+    conflict_times: dict = field(default_factory=dict)
+
+
+def incompatible_with_target(num: str, target: str | None) -> bool:
+    """A read that cannot come from the target's shirt: a different FULL number ("17" vs "20").
+    Lone digits are never used: measured on IMG_4809, the OCR read a lone "1" on a clearly visible
+    "20" and a "4" on the same shirt at confidence 1.0 - lone digits are noise, not evidence."""
+    if not target or not num or len(num) != len(target):
+        return False
+    return num != target
 
 
 def number_votes(reads: list[tuple], number: str | None) -> tuple[float, float, int, int, str | None]:
@@ -198,7 +216,8 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
     model = AppearanceModel(feats or {})
     sig = np.stack([s["sig"] for s in summary])
     emb_ok = np.array([s["emb"] is not None for s in summary])
-    emb = np.stack([s["emb"] if s["emb"] is not None else np.zeros(1280, np.float32) for s in summary])
+    emb_dim = next((len(s["emb"]) for s in summary if s["emb"] is not None), 1)
+    emb = np.stack([s["emb"] if s["emb"] is not None else np.zeros(emb_dim, np.float32) for s in summary])
     rel = np.clip(hmed / 60.0, 0.35, 1.0) * np.clip(nlen / 10.0, 0.3, 1.0)
 
     positives = set(seeds)
@@ -266,8 +285,11 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
             confidence[k] = 0.99
         else:
             confidence[k] = float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS + 1.0))))
+    contrary = {int(k) for k in cands
+                if any(incompatible_with_target(num, target.number) for _, num, _, _ in reads.get(summary[k]["tid"], []))}
+    already_asked = set(locate(summary, rows, by_tid, target.asked)) if target.asked else set()
     questions = _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence,
-                           anchor_ix, number_pos, n_questions, row_kit)
+                           anchor_ix | already_asked, number_pos, n_questions, row_kit, contrary, fps)
     score = {int(k): float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS)))) for k in cands}
     appearance_score = dict(score)
     for k in anchor_ix | number_pos:
@@ -280,9 +302,17 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
         ev_times[int(k)] = [fr_t[f] for f, num, _, _ in reads.get(tid, []) if num == target.number and f in fr_t]
     for (t, _, _), k in zip(target.anchors, locate(summary, rows, by_tid, target.anchors)):
         ev_times.setdefault(int(k), []).append(float(t))
+    conflicts: dict[int, list[float]] = {}
+    for k in chosen:
+        tid = summary[k]["tid"]
+        ix = by_tid[tid]
+        fr_t = {int(rows[r, 0]): float(rows[r, 1]) for r in ix}
+        ct = [fr_t[f] for f, num, _, _ in reads.get(tid, []) if f in fr_t and incompatible_with_target(num, target.number)]
+        if ct:
+            conflicts[int(k)] = sorted(ct)
     return IdentityResult(chosen, unary, evidence, confidence, seeds, list(map(int, cands)), history,
                           questions, {int(k): v for k, v in excluded.items()}, score,
-                          {int(k) for k in (anchor_ix | number_pos)}, ev_times, appearance_score)
+                          {int(k) for k in (anchor_ix | number_pos)}, ev_times, appearance_score, conflicts)
 
 
 def _appearance_clusters(summary, ks: list[int], n_clusters: int = 10) -> dict[int, int]:
@@ -296,22 +326,34 @@ def _appearance_clusters(summary, ks: list[int], n_clusters: int = 10) -> dict[i
 
 
 def _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence, anchors, numbered, k_max,
-               row_kit=None):
+               row_kit=None, contrary=frozenset(), fps: float = 10.0):
     """Active review selection. Value of asking about a tracklet =
         affected seconds x uncertainty (how close the score is to 0.5) x crop quality,
     plus a bonus when it is currently attributed to the target (a wrong claim costs more than a
     missed one). Diversity: at most one question per look-alike cluster and per 8 s window, so one
     batch never asks the same ambiguity twice. Tiny players (< 90 px) are never asked about."""
     chosen_set = set(chosen)
+    resolve = QUESTION_STRATEGY == "resolve"
+    chain_frames = np.zeros(int(rows[:, 0].max()) + 2 if len(rows) else 1, bool)
+    for k in chosen:
+        chain_frames[rows[by_tid[summary[k]["tid"]], 0].astype(int)] = True
     items = []
     for k in cands:
         if k in anchors or k in numbered or dur[k] < 2.0 or summary[k]["h_max"] < MIN_QUESTION_BOX_PX:
             continue
+        if resolve and k in contrary:
+            continue  # a full other-number read already settled it
         p = 1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS + (1.0 if k in chosen_set else 0.0))))
         if not (k in chosen_set or p > 0.15):
             continue
         quality = float(np.clip(summary[k]["h_max"] / 200.0, 0.4, 1.0))
         affected = min(float(dur[k]), 60.0)
+        if resolve and k not in chosen_set:
+            raw_p = 1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS)))
+            if raw_p >= COMPETITOR_SCORE:
+                # In view while the target is claimed: "not me" clears this ambiguity entirely.
+                overlap = float(chain_frames[rows[by_tid[summary[k]["tid"]], 0].astype(int)].sum()) / max(fps, 1e-9)
+                affected = min(affected + overlap, 120.0)
         value = affected * (1 - abs(2 * p - 1)) * quality * (1.5 if k in chosen_set else 1.0)
         items.append((value, int(k), p))
     items.sort(reverse=True)

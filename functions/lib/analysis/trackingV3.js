@@ -32,6 +32,7 @@ exports.TRACKING_COLLECTION = 'tracking';
 exports.IDENTITY_STATES = [
     'CONFIRMED_VISIBLE', 'LIKELY_VISIBLE', 'AMBIGUOUS', 'OFF_CAMERA', 'CONFIRMED_OFF_PITCH', 'NON_MATCH_PERIOD', 'UNKNOWN',
 ];
+const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate'];
 /** Decodes the worker's small review-card JPEGs (bounded size, JPEG magic bytes checked). */
 function decodeReviewImage(b64) {
     if (typeof b64 !== 'string' || b64.length === 0 || b64.length > 200_000 || !/^[A-Za-z0-9+/=]+$/.test(b64))
@@ -154,7 +155,7 @@ function parseTrackingReport(raw, timeline) {
         return null;
     for (const item of r.events) {
         const e = asRecord(item);
-        if (!e || !['contact', 'carry', 'pass_attempt'].includes(String(e.type)) || !nonNeg(e.start) || !nonNeg(e.end)
+        if (!e || !EVENT_TYPES.includes(String(e.type)) || !nonNeg(e.start) || !nonNeg(e.end)
             || !exports.IDENTITY_STATES.includes(e.identityState) || !isNum(e.confidence))
             return null;
         // Only events on the target's claimed frames are kept.
@@ -167,6 +168,7 @@ function parseTrackingReport(raw, timeline) {
             ...(e.outcomeEvidence ? { outcomeEvidence: String(e.outcomeEvidence).slice(0, 60) } : {}),
             evidenceTimes: Array.isArray(e.evidenceTimes) ? e.evidenceTimes.filter(nonNeg).slice(0, 8) : [],
             confidence: Math.max(0, Math.min(1, e.confidence)),
+            ...(String(e.type).endsWith('_candidate') ? { candidate: true } : {}),
         });
     }
     const counts = (k) => (nonNeg(ball[k]) ? Math.floor(ball[k]) : 0);
@@ -194,7 +196,8 @@ function parseTrackingReport(raw, timeline) {
             thresholds: { sprint_kmh: thresholds.sprint_kmh, hsr_kmh: thresholds.hsr_kmh } },
         ball: { contacts: counts('contacts'), carries: counts('carries'), passAttempts: counts('passAttempts'),
             completedPasses: counts('completedPasses'), incompletePasses: counts('incompletePasses'),
-            unknownOutcomePasses: counts('unknownOutcomePasses'), provenance: 'model_estimate_unvalidated' },
+            unknownOutcomePasses: counts('unknownOutcomePasses'), contactsConfirmedIdentity: counts('contactsConfirmedIdentity'),
+            duelCandidates: counts('duelCandidates'), tackleCandidates: counts('tackleCandidates'), provenance: 'model_estimate_unvalidated' },
         events,
         reviewQuestions: questions,
         identity: { numberSightings: nonNeg(ident.numberSightings) ? ident.numberSightings : 0,
@@ -262,6 +265,8 @@ function workerFeedback(feedback) {
         no: feedback.entries.filter((e) => e.answer === 'not_me').map(pt),
         periods: feedback.periods,
         offPitch: feedback.offPitch,
+        // Unsure/skip carry no identity evidence; they only stop the same player being asked again.
+        asked: feedback.entries.filter((e) => e.answer === 'unsure' || e.answer === 'skip').map(pt),
     };
 }
 function validPeriods(p, durationSec) {

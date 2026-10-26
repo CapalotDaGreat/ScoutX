@@ -33,9 +33,13 @@ export type TrackingCoverage = {
 export type TrackingPeriod = { start: number; end: number; kind: 'play' | 'non_play' | 'unobserved'; label: string; source: 'detected' | 'user' };
 export type TrackingRun = { start: number; end: number; durationSec: number; peakKmh: number; distanceM: number };
 export type TrackingEvent = {
-  type: 'contact' | 'carry' | 'pass_attempt'; start: number; end: number; identityState: IdentityState;
-  outcome?: 'completed' | 'incomplete' | 'unknown'; outcomeEvidence?: string; evidenceTimes: number[]; confidence: number;
+  type: 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate'; start: number; end: number;
+  identityState: IdentityState; outcome?: 'completed' | 'incomplete' | 'unknown'; outcomeEvidence?: string;
+  evidenceTimes: number[]; confidence: number;
+  /** Duel/tackle candidates need review and are never counted as statistics. */
+  candidate?: true;
 };
+const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate'];
 export type ReviewQuestion = {
   id: string; t: number; box: [number, number, number, number]; affectedSec: number; currentlyTarget: boolean;
   score: number; imagePath?: string | null;
@@ -60,7 +64,8 @@ export type TrackingReport = {
     thresholds: { sprint_kmh: number; hsr_kmh: number };
   };
   ball: { contacts: number; carries: number; passAttempts: number; completedPasses: number; incompletePasses: number;
-    unknownOutcomePasses: number; provenance: Provenance };
+    unknownOutcomePasses: number; contactsConfirmedIdentity: number; duelCandidates: number; tackleCandidates: number;
+    provenance: Provenance };
   events: TrackingEvent[];
   reviewQuestions: ReviewQuestion[];
   identity: { numberSightings: number; confirmedByUser: number };
@@ -176,7 +181,7 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
   if (!Array.isArray(r.events) || r.events.length > 2000) return null;
   for (const item of r.events) {
     const e = asRecord(item);
-    if (!e || !['contact', 'carry', 'pass_attempt'].includes(String(e.type)) || !nonNeg(e.start) || !nonNeg(e.end)
+    if (!e || !EVENT_TYPES.includes(String(e.type)) || !nonNeg(e.start) || !nonNeg(e.end)
       || !IDENTITY_STATES.includes(e.identityState as IdentityState) || !isNum(e.confidence)) return null;
     // Only events on the target's claimed frames are kept.
     if (!['CONFIRMED_VISIBLE', 'LIKELY_VISIBLE'].includes(String(e.identityState))) continue;
@@ -187,6 +192,7 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
       ...(e.outcomeEvidence ? { outcomeEvidence: String(e.outcomeEvidence).slice(0, 60) } : {}),
       evidenceTimes: Array.isArray(e.evidenceTimes) ? (e.evidenceTimes as unknown[]).filter(nonNeg).slice(0, 8) : [],
       confidence: Math.max(0, Math.min(1, e.confidence as number)),
+      ...(String(e.type).endsWith('_candidate') ? { candidate: true as const } : {}),
     });
   }
   const counts = (k: string) => (nonNeg(ball[k]) ? Math.floor(ball[k] as number) : 0);
@@ -213,7 +219,8 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
       thresholds: { sprint_kmh: thresholds.sprint_kmh as number, hsr_kmh: thresholds.hsr_kmh as number } },
     ball: { contacts: counts('contacts'), carries: counts('carries'), passAttempts: counts('passAttempts'),
       completedPasses: counts('completedPasses'), incompletePasses: counts('incompletePasses'),
-      unknownOutcomePasses: counts('unknownOutcomePasses'), provenance: 'model_estimate_unvalidated' },
+      unknownOutcomePasses: counts('unknownOutcomePasses'), contactsConfirmedIdentity: counts('contactsConfirmedIdentity'),
+      duelCandidates: counts('duelCandidates'), tackleCandidates: counts('tackleCandidates'), provenance: 'model_estimate_unvalidated' },
     events,
     reviewQuestions: questions,
     identity: { numberSightings: nonNeg(ident.numberSightings) ? ident.numberSightings as number : 0,
@@ -284,13 +291,17 @@ export function undoLast(feedback: TrackingFeedback): TrackingFeedback {
 }
 
 /** Feedback in the worker's format: yes/no points; unsure and skip carry no identity evidence. */
-export function workerFeedback(feedback: TrackingFeedback): { yes: number[][]; no: number[][]; periods: TrackingFeedback['periods']; offPitch: Array<[number, number]> } {
+export function workerFeedback(feedback: TrackingFeedback): {
+  yes: number[][]; no: number[][]; periods: TrackingFeedback['periods']; offPitch: Array<[number, number]>; asked: number[][];
+} {
   const pt = (e: FeedbackEntry) => [e.t, e.point[0], e.point[1]];
   return {
     yes: feedback.entries.filter((e) => e.answer === 'yes').map(pt),
     no: feedback.entries.filter((e) => e.answer === 'not_me').map(pt),
     periods: feedback.periods,
     offPitch: feedback.offPitch,
+    // Unsure/skip carry no identity evidence; they only stop the same player being asked again.
+    asked: feedback.entries.filter((e) => e.answer === 'unsure' || e.answer === 'skip').map(pt),
   };
 }
 

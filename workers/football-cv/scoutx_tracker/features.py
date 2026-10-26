@@ -1,6 +1,6 @@
-"""Appearance features for players: body-region colour signatures and an optional CNN embedding.
+"""Appearance features for players: body-region colour signatures and a grid colour descriptor.
 
-No faces are modelled. The colour signature splits the person box into head / shirt / shorts /
+No faces are modelled and no third-party model weights are used. The colour signature splits the person box into head / shirt / shorts /
 socks bands and histograms each band over a small named colour palette with grass removed.
 """
 
@@ -93,39 +93,41 @@ def kit_score(sig: np.ndarray, kit: str, region: str = "shirt") -> float:
     return float(sum(part[PALETTE.index(n)] for n in names))
 
 
-class DeepEmbedder:
-    """Generic CNN embedding of a person crop (ImageNet-pretrained YOLO classifier backbone).
-    Used only for re-linking the same player across tracklets inside one match."""
+EMB_DIM = 256
 
-    def __init__(self, weights: str = "yolo11n-cls.pt", size: tuple[int, int] = (224, 96)) -> None:
-        import torch  # noqa: PLC0415
-        from ultralytics import YOLO  # noqa: PLC0415
 
-        self.torch = torch
-        model = YOLO(weights).model.eval()
-        # Everything except the final classification head -> global pooled feature.
-        self.body = model.model[:-1]
-        head = model.model[-1]
-        self.head_conv = head.conv
-        self.pool = head.pool
+class GridEmbedder:
+    """Weight-free appearance descriptor of a person crop (3.2): a 4x2 grid of hue/saturation
+    histograms (8 hue x 4 saturation bins per cell, grass suppressed), L2-normalised.
+
+    Replaces the former CNN embedding (Ultralytics yolo11n-cls, AGPL-3.0): no model weights, no
+    licence question. Used only by the template fallback before the per-match classifier has
+    positives; the classifier itself uses the body-region colour signature."""
+
+    def __init__(self, size: tuple[int, int] = (128, 64)) -> None:
         self.size = size  # (h, w)
 
     def __call__(self, frame_bgr: np.ndarray, boxes: np.ndarray) -> np.ndarray:
-        torch = self.torch
         if len(boxes) == 0:
-            return np.zeros((0, 1280), np.float32)
+            return np.zeros((0, EMB_DIM), np.float32)
         H, W = frame_bgr.shape[:2]
-        crops = []
-        for x1, y1, x2, y2 in boxes:
+        out = np.zeros((len(boxes), EMB_DIM), np.float32)
+        for i, (x1, y1, x2, y2) in enumerate(boxes):
             x1, y1, x2, y2 = int(max(0, x1)), int(max(0, y1)), int(min(W, x2)), int(min(H, y2))
             c = frame_bgr[y1:max(y2, y1 + 2), x1:max(x2, x1 + 2)]
-            c = cv2.resize(c, (self.size[1], self.size[0]), interpolation=cv2.INTER_LINEAR)
-            crops.append(c[:, :, ::-1])
-        x = torch.from_numpy(np.stack(crops)).permute(0, 3, 1, 2).float() / 255.0
-        with torch.no_grad():
-            y = x
-            for layer in self.body:
-                y = layer(y)
-            y = self.pool(self.head_conv(y)).flatten(1)
-            y = torch.nn.functional.normalize(y, dim=1)
-        return y.numpy().astype(np.float32)
+            c = cv2.resize(c, (self.size[1], self.size[0]), interpolation=cv2.INTER_AREA)
+            hsv = cv2.cvtColor(c, cv2.COLOR_BGR2HSV)
+            h = hsv[:, :, 0].astype(np.int32) * 8 // 180
+            sat = np.minimum(hsv[:, :, 1].astype(np.int32) * 4 // 256, 3)
+            grass = (hsv[:, :, 0] >= 33) & (hsv[:, :, 0] < 85) & (hsv[:, :, 1] >= 40)
+            code = h * 4 + sat
+            feats = []
+            for gy in range(4):
+                for gx in range(2):
+                    sl = (slice(gy * self.size[0] // 4, (gy + 1) * self.size[0] // 4),
+                          slice(gx * self.size[1] // 2, (gx + 1) * self.size[1] // 2))
+                    v = code[sl][~grass[sl]]
+                    feats.append(np.bincount(v.ravel(), minlength=32)[:32].astype(np.float32))
+            f = np.sqrt(np.concatenate(feats))
+            out[i] = f / max(np.linalg.norm(f), 1e-9)
+        return out

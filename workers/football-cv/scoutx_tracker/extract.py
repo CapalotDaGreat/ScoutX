@@ -7,7 +7,7 @@ Output `<out>/detections.npz`:
   dets   (N, 7)  frame, t, x1, y1, x2, y2, score              (people)
   sigs   (N, 80) body-region colour signature per detection
   emb_idx (M,)   detection index for each CNN embedding
-  embs   (M, 1280) float16 CNN embeddings (every 2nd frame, people >= 36 px tall)
+  embs   (M, 256) float16 grid colour descriptors (every 2nd frame, people >= 36 px tall)
   balls  (B, 7)  frame, t, x1, y1, x2, y2, score
   warps  (F, 7)  2x3 camera motion prev->cur (row-major) + quality
   cuts   (C,)    frames where a hard scene cut was detected
@@ -28,24 +28,72 @@ import cv2
 import numpy as np
 
 from .cmc import CameraMotion, scene_cut
-from .features import SIG_DIM, DeepEmbedder, colour_signature
+from .features import EMB_DIM, SIG_DIM, GridEmbedder, colour_signature
 from .periods import grass_fraction
 
 PERSON, BALL = 0, 32
 
 
-class Detector:
-    def __init__(self, weights: str = "yolo11n.pt", imgsz: int = 1280) -> None:
-        from ultralytics import YOLO  # noqa: PLC0415
+DETECTOR = os.environ.get("SCOUTX_DETECTOR", "yolox_s")
+WEIGHTS_DIR = Path(os.environ.get("SCOUTX_WEIGHTS_DIR", Path.home() / ".cache" / "scoutx" / "weights"))
+# Official YOLOX COCO weights (Apache-2.0), pinned by SHA-256.
+WEIGHTS_SHA256 = {
+    "yolox_tiny": "9de513de589ac98bb92d3bca53b5af7b9acfa9b0bacb831f7999d0f7afaee8f0",
+    "yolox_s": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+    "yolox_m": "60076992b32da82951c90cfa7bd6ab70eba9eda243e08b940a396f60ac2d19b6",
+}
 
-        self.model = YOLO(weights)
-        self.imgsz = imgsz
+
+def weights_path(variant: str) -> Path:
+    """Local weights for `variant`, downloaded once from the official release and hash-checked."""
+    import hashlib  # noqa: PLC0415
+    import urllib.request  # noqa: PLC0415
+
+    from .yolox_net import WEIGHTS_URL  # noqa: PLC0415
+
+    path = WEIGHTS_DIR / f"{variant}.pth"
+    if not path.exists():
+        WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
+        tmp = path.with_suffix(".part")
+        urllib.request.urlretrieve(WEIGHTS_URL.format(name=variant), tmp)  # noqa: S310 - fixed https URL
+        tmp.rename(path)
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if WEIGHTS_SHA256.get(variant) and digest != WEIGHTS_SHA256[variant]:
+        raise RuntimeError(f"{path} does not match the pinned SHA-256 for {variant}")
+    return path
+
+
+def _has_onnxruntime() -> bool:
+    try:
+        import onnxruntime  # noqa: F401, PLC0415
+    except ImportError:
+        return False
+    return True
+
+
+class Detector:
+    """Person + ball detector. Default: YOLOX-s (Apache-2.0, self-contained network in
+    yolox_net.py). The former Ultralytics YOLO11 (AGPL-3.0) is no longer used."""
+
+    def __init__(self, variant: str = DETECTOR, imgsz: int = 1280) -> None:
+        import torch  # noqa: PLC0415
+
+        from .yolox_net import Detector as Yolox  # noqa: PLC0415
+
+        backend = os.environ.get("SCOUTX_BACKEND", "auto")
+        use_onnx = backend == "onnx" or (backend == "auto" and not torch.cuda.is_available() and _has_onnxruntime())
+        if use_onnx:
+            from .yolox_net import OnnxDetector  # noqa: PLC0415
+
+            self.model = OnnxDetector(variant, weights_path(variant), imgsz)
+        else:
+            self.model = Yolox(variant, weights_path(variant), imgsz)
+        self.name = self.model.name
 
     def __call__(self, frame: np.ndarray):
-        r = self.model.predict(frame, imgsz=self.imgsz, classes=[PERSON, BALL], conf=0.05, verbose=False)[0]
-        b = r.boxes.xyxy.cpu().numpy().astype(np.float32)
-        c = r.boxes.cls.cpu().numpy().astype(int)
-        s = r.boxes.conf.cpu().numpy().astype(np.float32)
+        b, s, c = self.model([frame], conf=0.05)[0]
+        b = b.astype(np.float32)
+        s = s.astype(np.float32)
         p = (c == PERSON) & (s >= 0.12)
         q = c == BALL
         return b[p], s[p], b[q], s[q]
@@ -65,7 +113,7 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         k = int(round(start * fps_src)) - 1
         cap.set(cv2.CAP_PROP_POS_FRAMES, k + 1)
     det = Detector(imgsz=imgsz)
-    emb = DeepEmbedder()
+    emb = GridEmbedder()
     cmc = CameraMotion()
     dets, sigs, embs, emb_idx, balls, warps, cuts, times, grass = [], [], [], [], [], [], [], [], []
     prev_small = None
@@ -135,11 +183,11 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     np.savez_compressed(
         out / "detections.npz",
         dets=np.array(dets, np.float64).reshape(-1, 7), sigs=np.array(sigs, np.float16).reshape(-1, SIG_DIM),
-        emb_idx=np.array(emb_idx, np.int64), embs=np.array(embs, np.float16).reshape(-1, 1280),
+        emb_idx=np.array(emb_idx, np.int64), embs=np.array(embs, np.float16).reshape(-1, EMB_DIM),
         balls=np.array(balls, np.float64).reshape(-1, 7), warps=np.array(warps, np.float64).reshape(-1, 7),
         cuts=np.array(cuts, np.int64), times=np.array(times, np.float64), grass=np.array(grass, np.float32),
     )
-    meta = {"video": os.path.abspath(video), "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
+    meta = {"video": os.path.abspath(video), "detector": det.name, "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
             "width": width, "height": height, "seconds": round(time.time() - t_start, 1),
             "stageSeconds": {k: round(v, 2) for k, v in tm.items()}}
     (out / "meta.json").write_text(json.dumps(meta, indent=2))

@@ -560,6 +560,10 @@ service cloud.firestore {
     match /mediaUploadSessions/{uploadId} {
       allow read, write: if false;
     }
+    // Link-import sources may contain access tokens: server-only, deleted when the import ends.
+    match /mediaImportSources/{uploadId} {
+      allow read, write: if false;
+    }
     match /uploadSessionLimits/{limitId} {
       allow read, write: if false;
     }

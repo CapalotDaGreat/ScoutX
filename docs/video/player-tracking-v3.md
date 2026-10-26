@@ -89,6 +89,8 @@ It then runs, opens the report and offers the answer loop. From the command line
 python -m scoutx_tracker track "C:\...\IMG_4809.MOV" --number 20 --kit orange --kit2 white --position winger --age-group adult
 python -m scoutx_tracker answer "C:\...\IMG_4809_scoutx" 1y 2n 3u 4s   # y=me n=not me u=unsure s=skip
 python -m scoutx_tracker undo "C:\...\IMG_4809_scoutx"
+python -m scoutx_tracker render "C:\...\IMG_4809_scoutx"                 # refresh highlights after reviewing
+python -m scoutx_tracker calibrate "C:\...\IMG_4809_scoutx" --at 14:17   # pitch calibration assistance
 python -m scoutx_tracker periods "C:\...\IMG_4809_scoutx" --kickoff 0:45 --halftime 35:10 --second-half 45:00 --fulltime 1:20:30
 python -m scoutx_tracker pick "C:\...\IMG_4809.MOV" --at 4:02          # optional: point at the player
 ```
@@ -109,7 +111,8 @@ Results are written next to the video, in a folder named `<name>_scoutx/`:
 * Movement metrics stay experimental until the pitch is calibrated (manual landmarks). Automatic
   calibration is not possible on this footage: fewer than 3 % of frames show two line directions.
 * Ball, pass and contact counts are lower bounds and have not been validated.
-* Ultralytics YOLO11 is AGPL-3.0. Its licensing must be resolved before commercial deployment.
+* Engine 3.2 uses YOLOX (Apache-2.0) and no Ultralytics/AGPL components. See `tracking-v3.2-report-2026-10-27.md`
+  for the 3.2 accuracy, speed and calibration findings, which supersede the 3.1 numbers above.
 
 ## In the app
 

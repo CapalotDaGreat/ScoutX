@@ -56,6 +56,9 @@ export type ServerUploadRecord = {
   state: UploadState;
   jobId: string | null;
   rejectionReason: UploadRejectionReason | null;
+  /** Server-side link imports report progress here (device uploads track it on the client). */
+  receivedBytes?: number | null;
+  sizeBytes?: number | null;
 };
 
 export type UploadPhase =
@@ -154,6 +157,8 @@ export function parseServerUploadRecord(uploadId: string, data: unknown): Server
     state,
     jobId: typeof record.jobId === 'string' ? record.jobId : null,
     rejectionReason: parseRejectionReason(record.rejectionReason),
+    ...(typeof record.receivedBytes === 'number' ? { receivedBytes: record.receivedBytes } : {}),
+    ...(typeof record.sizeBytes === 'number' ? { sizeBytes: record.sizeBytes } : {}),
   };
 }
 

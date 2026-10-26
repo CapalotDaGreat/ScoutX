@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VIDEO_SOURCE_INSPECT_LIMIT = exports.DISCOVERY_VIEW_LIMIT = exports.AI_INSIGHT_LIMIT = exports.ASK_THIS_MATCH_LIMIT = exports.MEDIA_PLAYBACK_LIMIT = exports.DISCOVERY_SEARCH_LIMIT = void 0;
+exports.LINK_IMPORT_START_LIMIT = exports.VIDEO_SOURCE_INSPECT_LIMIT = exports.DISCOVERY_VIEW_LIMIT = exports.AI_INSIGHT_LIMIT = exports.ASK_THIS_MATCH_LIMIT = exports.MEDIA_PLAYBACK_LIMIT = exports.DISCOVERY_SEARCH_LIMIT = void 0;
 exports.rateLimitDocId = rateLimitDocId;
 exports.assertCallableRateLimit = assertCallableRateLimit;
 const firestore_1 = require("firebase-admin/firestore");
@@ -56,4 +56,6 @@ exports.AI_INSIGHT_LIMIT = { action: 'ai_insight', max: 30, window: 'hour' };
 exports.DISCOVERY_VIEW_LIMIT = { action: 'discovery_view', max: 200, window: 'hour' };
 /** Video link inspection performs outbound DNS/HEAD requests: bounded per user. */
 exports.VIDEO_SOURCE_INSPECT_LIMIT = { action: 'video_source_inspect', max: 30, window: 'hour' };
+/** Starting a server-side link import downloads up to the plan's byte limit: tightly bounded. */
+exports.LINK_IMPORT_START_LIMIT = { action: 'link_import_start', max: 10, window: 'day' };
 //# sourceMappingURL=rateLimit.js.map

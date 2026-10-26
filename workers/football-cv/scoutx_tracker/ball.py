@@ -15,6 +15,13 @@ Pass outcome:
   incomplete - same, but the first controlled contact is by an opponent.
   unknown    - anything else (ball lost from view, receiver unclear, referee, camera cut ...).
 Unknown outcomes are never counted as completed or incomplete.
+Duel / tackle CANDIDATES (3.2) - listed for review, never counted as statistics:
+  duel_candidate   - the target and an opponent are both within reach of the tracked ball
+                     (foot zone widened by 50 %) on >= 3 frames of one ball track.
+  tackle_candidate - a duel candidate where the opponent had controlled contact (>= 2 frames)
+                     before and the target has controlled contact after, on the same ball track.
+Counts in the summary are split by identity state: only CONFIRMED_VISIBLE moments may ever back
+a verified statistic; LIKELY moments are reported separately as unverified.
 """
 
 from __future__ import annotations
@@ -163,8 +170,13 @@ def ball_events(D, T, tl, states: np.ndarray, P: np.ndarray, camera: np.ndarray 
                        "outcome": outcome, "outcomeEvidence": evidence, "identityState": str(states[a]),
                        "evidenceTimes": [float(tl.times[frames[-1]])], "tid": None, "reviewState": "unreviewed",
                        "confidence": 0.5 if outcome == "unknown" else 0.7, "confidenceKind": "uncalibrated"})
+    events += _duel_candidates(balls, T, order, rf, team_by_tid, tl, states, target_ok, fps)
     passes = [e for e in events if e["type"] == "pass_attempt"]
+    contacts = [e for e in events if e["type"] in ("contact", "carry")]
     summary = {
+        "contactsConfirmedIdentity": sum(1 for e in contacts if e["identityState"] == "CONFIRMED_VISIBLE"),
+        "duelCandidates": sum(1 for e in events if e["type"] == "duel_candidate"),
+        "tackleCandidates": sum(1 for e in events if e["type"] == "tackle_candidate"),
         "contacts": sum(1 for e in events if e["type"] in ("contact", "carry")),
         "carries": sum(1 for e in events if e["type"] == "carry"),
         "passAttempts": len(passes),
@@ -174,7 +186,8 @@ def ball_events(D, T, tl, states: np.ndarray, P: np.ndarray, camera: np.ndarray 
         "ballFramesTracked": len(balls),
         "provenance": "model_estimate_unvalidated",
         "note": "Ball detections are frequently missed for far-away play; counts are lower bounds "
-                "and have not been validated against labelled events.",
+                "and have not been validated against labelled events. Duel/tackle candidates need review "
+                "and are never counted as statistics.",
     }
     return events, summary
 
@@ -244,3 +257,68 @@ def _receive(balls, P, T, order, rf, team_by_tid, tl, dep, track_id, camera, fps
                 return "incomplete", float(tl.times[f]), "verified"
             return "unknown", float(tl.times[f]), "receiver team unclear"
     return "unknown", None, "no controlled reception observed"
+
+
+def _reach(ball_xy: np.ndarray, box: np.ndarray, widen: float = 1.5) -> bool:
+    x1, y1, x2, y2 = box
+    h = max(y2 - y1, 1.0)
+    fx = (x1 + x2) / 2
+    return abs(ball_xy[0] - fx) <= 0.5 * h * widen and (y2 - 0.45 * h) <= ball_xy[1] <= (y2 + 0.25 * h)
+
+
+def _duel_candidates(balls, T, order, rf, team_by_tid, tl, states, target_ok, fps) -> list[dict]:
+    """Target and an opponent simultaneously within reach of the same tracked ball."""
+    F = len(tl.times)
+    contest = np.zeros(F, bool)
+    opp_holder: dict[int, int] = {}
+    for f in np.flatnonzero(target_ok):
+        b = balls.get(int(f))
+        if b is None or not _reach(b[:2], tl.boxes[f]):
+            continue
+        lo, hi = np.searchsorted(rf, f), np.searchsorted(rf, f, side="right")
+        for r in T.rows[order[lo:hi]]:
+            if np.allclose(r[3:7], tl.boxes[f], atol=2) or team_by_tid.get(int(r[2])) != "opponent":
+                continue
+            if _reach(b[:2], r[3:7]):
+                contest[f] = True
+                opp_holder[int(f)] = int(r[2])
+                break
+    out = []
+    for a, b_ in _runs_bool(contest):
+        if b_ - a < 3:
+            continue
+        ev = {"type": "duel_candidate", "start": float(tl.times[a]), "end": float(tl.times[b_ - 1]),
+              "evidenceTimes": [float(tl.times[g]) for g in range(a, b_, max(1, (b_ - a) // 4))],
+              "identityState": str(states[a]), "reviewState": "candidate", "countedInStats": False,
+              "confidence": 0.4, "confidenceKind": "uncalibrated"}
+        out.append(ev)
+        # Tackle: opponent controlled the ball (in his foot zone, >= 2 frames) just before, target after.
+        track = int(balls[a][4])
+        before = [g for g in range(max(0, a - int(fps)), a) if g in balls and int(balls[g][4]) == track
+                  and opp_holder.get(a) is not None and _holder_has(T, order, rf, opp_holder[a], g, balls[g])]
+        after = [g for g in range(b_, min(F, b_ + int(fps))) if g in balls and int(balls[g][4]) == track
+                 and target_ok[g] and _foot_zone(balls[g][:2], tl.boxes[g])]
+        if len(before) >= 2 and len(after) >= 2:
+            out.append({**ev, "type": "tackle_candidate", "end": float(tl.times[after[-1]]),
+                        "evidence": "opponent control before, target control after on one ball track"})
+    return out
+
+
+def _holder_has(T, order, rf, tid, f, ball) -> bool:
+    lo, hi = np.searchsorted(rf, f), np.searchsorted(rf, f, side="right")
+    for r in T.rows[order[lo:hi]]:
+        if int(r[2]) == tid:
+            return _foot_zone(ball[:2], r[3:7])
+    return False
+
+
+def _runs_bool(mask: np.ndarray) -> list[tuple[int, int]]:
+    out, a = [], None
+    for i, v in enumerate(mask):
+        if v and a is None:
+            a = i
+        elif not v and a is not None:
+            out.append((a, i)); a = None  # noqa: E702
+    if a is not None:
+        out.append((a, len(mask)))
+    return out

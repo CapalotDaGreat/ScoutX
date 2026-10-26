@@ -85,6 +85,26 @@ def speed_series(tl, fps: float, valid: np.ndarray, th: Thresholds, frame_width:
     return v
 
 
+def ground_speed_series(pos: np.ndarray, valid: np.ndarray, fps: float, th: Thresholds) -> np.ndarray:
+    """m/s from calibrated pitch positions (metres) on valid frames; nan elsewhere.
+    Positions are median- then mean-smoothed over 0.5 s inside each continuous valid run only."""
+    v = np.full(len(pos), np.nan)
+    ok = valid & ~np.isnan(pos[:, 0])
+    k = max(3, int(round(0.5 * fps)) | 1)
+    for a, b in _runs(ok):
+        if b - a < k + 2:
+            continue
+        seg = pos[a:b].copy()
+        for d in range(2):
+            x = seg[:, d]
+            med = np.array([np.median(x[max(0, i - k // 2): i + k // 2 + 1]) for i in range(len(x))])
+            seg[:, d] = np.convolve(np.pad(med, k // 2, mode="edge"), np.ones(k) / k, mode="valid")
+        step = np.linalg.norm(np.diff(seg, axis=0), axis=1) * fps
+        v[a + 1:b] = step
+    v[v * 3.6 > th.max_speed_kmh] = np.nan
+    return v
+
+
 def _events(v: np.ndarray, times: np.ndarray, lo_kmh: float, hi_kmh: float | None, th: Thresholds, fps: float) -> list[dict]:
     kmh = np.nan_to_num(v, nan=-1.0) * 3.6
     band = (kmh >= lo_kmh) & ((kmh < hi_kmh) if hi_kmh else True)
@@ -110,13 +130,22 @@ def _events(v: np.ndarray, times: np.ndarray, lo_kmh: float, hi_kmh: float | Non
 
 def physical_metrics(tl, fps: float, states: np.ndarray, camera: np.ndarray | None, cmc_quality: np.ndarray,
                      period_kind: np.ndarray, th: Thresholds | None = None, frame_width: int = 1920,
-                     calibrated: bool = False) -> tuple[dict, np.ndarray]:
+                     calibrated: bool = False, positions: np.ndarray | None = None) -> tuple[dict, np.ndarray]:
+    """`positions` (frames x 2, pitch metres, nan where no valid calibration): when the calibrated
+    valid observation reaches 30 s, metrics come ONLY from calibrated frames (provenance
+    "calibrated"); otherwise the experimental estimator is used and labelled as such."""
     th = th or Thresholds()
     valid = valid_motion_mask(tl, states, camera, cmc_quality, period_kind, th)
-    v = speed_series(tl, fps, valid, th, frame_width)
+    calibrated_sec = 0.0
+    if positions is not None:
+        vc = ground_speed_series(positions, valid, fps, th)
+        calibrated_sec = float(np.count_nonzero(~np.isnan(vc))) / fps
+        calibrated = calibrated_sec >= 30
+    v = vc if calibrated and positions is not None else speed_series(tl, fps, valid, th, frame_width)
     basis = float(np.count_nonzero(~np.isnan(v))) / fps
     prov = "calibrated" if calibrated else "estimate_experimental"
-    method = ("pitch-calibrated ground positions" if calibrated else
+    method = ("pitch-calibrated ground positions (manual landmarks propagated by camera motion; "
+              "only calibrated, validly observed frames)" if calibrated else
               "uncalibrated: camera-motion-compensated image motion scaled by an assumed 1.8 m player height "
               "(pinhole depth from box height, damped); single moving camera, no pitch calibration")
     if basis < 30:
@@ -144,4 +173,5 @@ def physical_metrics(tl, fps: float, states: np.ndarray, camera: np.ndarray | No
     return {"status": "calibrated" if calibrated else "experimental", "provenance": prov,
             "reason": None if calibrated else "No validated pitch calibration for this recording; values are development estimates.",
             "values": values, "sprints": sprints, "highSpeedRuns": hsr, "thresholds": th.__dict__,
-            "productionVisible": bool(calibrated), "validObservationSec": round(basis, 1)}, v
+            "productionVisible": bool(calibrated), "validObservationSec": round(basis, 1),
+            "calibratedObservationSec": round(calibrated_sec, 1)}, v

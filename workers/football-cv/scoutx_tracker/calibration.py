@@ -6,8 +6,13 @@ Two sources, both validated the same way:
               The homography is propagated to the other frames of the same shot through the
               camera-motion chain (panorama transforms). Propagation is only trusted while the
               accumulated camera-motion quality stays high and within MAX_PROPAGATION_SEC.
-  * automatic line-based landmark detection is NOT implemented: `line_evidence` only measures
-              how much pitch-line geometry is visible, to decide whether it is worth attempting.
+  * automatic: `detect_pitch_lines` finds confidence-scored pitch-line candidates (white, thin,
+              grass on BOTH sides - which rejects advertising boards and fences) and their
+              intersections (candidate landmarks). An automatic homography needs >= 4 identified,
+              non-collinear landmarks; `auto_calibration_feasibility` reports per frame whether that
+              geometry is even present. On a touchline phone recording it almost never is (measured:
+              see docs/video/tracking-v3.2-report), so the candidates are offered to the user instead
+              (manual calibration assistance), never silently turned into a homography.
 A position is accepted only when its calibration is valid; otherwise it is dropped (never guessed).
 Every accepted position carries its calibration id (provenance).
 """
@@ -146,3 +151,134 @@ def line_evidence(frame_bgr: np.ndarray) -> dict:
         if not clusters or min(abs(a - clusters[-1]), 180 - abs(a - clusters[-1])) > 15:
             clusters.append(a)
     return {"segments": int(len(segs)), "orientations": len(clusters)}
+
+
+# --------------------------------------------------------------------------- landmark candidates
+@dataclass
+class LineCandidate:
+    p1: tuple[float, float]
+    p2: tuple[float, float]
+    angle: float          # degrees in [0, 180)
+    length: float         # source pixels
+    confidence: float     # 0..1: length x straightness x grass-on-both-sides
+
+
+def _grass_both_sides(grass: np.ndarray, x1, y1, x2, y2, off: int = 6) -> float:
+    """Share of samples along the segment with grass on both normal sides (rejects board edges)."""
+    n = 20
+    dx, dy = x2 - x1, y2 - y1
+    L = max(np.hypot(dx, dy), 1e-6)
+    nx, ny = -dy / L, dx / L
+    ok = 0
+    H, W = grass.shape
+    for t in np.linspace(0.05, 0.95, n):
+        x, y = x1 + t * dx, y1 + t * dy
+        a = (int(round(y + ny * off)), int(round(x + nx * off)))
+        b = (int(round(y - ny * off)), int(round(x - nx * off)))
+        if 0 <= a[0] < H and 0 <= a[1] < W and 0 <= b[0] < H and 0 <= b[1] < W and grass[a] and grass[b]:
+            ok += 1
+    return ok / n
+
+
+def detect_pitch_lines(frame_bgr: np.ndarray, work_w: int = 960) -> list[LineCandidate]:
+    """Pitch-line candidates in source pixels, merged per direction, with confidence."""
+    H0, W0 = frame_bgr.shape[:2]
+    sc = work_w / W0
+    small = cv2.resize(frame_bgr, (work_w, int(round(H0 * sc))), interpolation=cv2.INTER_AREA)
+    hsv = cv2.cvtColor(small, cv2.COLOR_BGR2HSV)
+    grass = cv2.inRange(hsv, (30, 40, 40), (90, 255, 255)) > 0
+    white = cv2.inRange(hsv, (0, 0, 165), (180, 70, 255))
+    tophat = cv2.morphologyEx(white, cv2.MORPH_TOPHAT, np.ones((9, 9), np.uint8))
+    near_grass = cv2.dilate(grass.astype(np.uint8) * 255, np.ones((11, 11), np.uint8))
+    lines_img = cv2.bitwise_and(tophat, near_grass)
+    segs = cv2.HoughLinesP(lines_img, 1, np.pi / 360, 35, minLineLength=40, maxLineGap=12)
+    if segs is None:
+        return []
+    raw = []
+    for x1, y1, x2, y2 in segs[:, 0].astype(float):
+        both = _grass_both_sides(grass, x1, y1, x2, y2)
+        if both < 0.6:
+            continue
+        raw.append((x1, y1, x2, y2, both))
+    # Merge collinear pieces (same angle within 3 deg, normal distance within 6 px).
+    merged: list[list] = []
+    for x1, y1, x2, y2, both in sorted(raw, key=lambda r: -np.hypot(r[2] - r[0], r[3] - r[1])):
+        ang = np.degrees(np.arctan2(y2 - y1, x2 - x1)) % 180
+        th = np.radians(ang)
+        rho = -x1 * np.sin(th) + y1 * np.cos(th)
+        for m in merged:
+            da = min(abs(ang - m[0]), 180 - abs(ang - m[0]))
+            if da < 3 and abs(rho - m[1]) < 6:
+                m[2].append((x1, y1, x2, y2, both))
+                break
+        else:
+            merged.append([ang, rho, [(x1, y1, x2, y2, both)]])
+    out = []
+    for ang, _rho, parts in merged:
+        pts = np.array([[p[0], p[1]] for p in parts] + [[p[2], p[3]] for p in parts])
+        d = np.array([np.cos(np.radians(ang)), np.sin(np.radians(ang))])
+        proj = pts @ d
+        a, b = pts[np.argmin(proj)], pts[np.argmax(proj)]
+        length = float(np.hypot(*(b - a)))
+        covered = sum(np.hypot(p[2] - p[0], p[3] - p[1]) for p in parts) / max(length, 1e-6)
+        both = float(np.mean([p[4] for p in parts]))
+        conf = float(np.clip(length / (0.5 * work_w), 0, 1) * np.clip(covered, 0, 1) ** 0.5 * both)
+        out.append(LineCandidate((a[0] / sc, a[1] / sc), (b[0] / sc, b[1] / sc), float(ang), length / sc, conf))
+    return sorted(out, key=lambda c: -c.confidence)
+
+
+def line_intersections(lines: list[LineCandidate], min_angle: float = 15.0, margin: float = 0.15,
+                       shape: tuple[int, int] = (1080, 1920)) -> list[dict]:
+    """Intersections of non-parallel line candidates near both segments: landmark candidates."""
+    out = []
+    H, W = shape
+    for i in range(len(lines)):
+        for j in range(i + 1, len(lines)):
+            a, b = lines[i], lines[j]
+            da = min(abs(a.angle - b.angle), 180 - abs(a.angle - b.angle))
+            if da < min_angle:
+                continue
+            p = _intersect(a, b)
+            if p is None or not (-0.05 * W <= p[0] <= 1.05 * W and -0.05 * H <= p[1] <= 1.05 * H):
+                continue
+            if _near_segment(a, p, margin) and _near_segment(b, p, margin):
+                out.append({"point": (float(p[0]), float(p[1])), "lines": (i, j), "angle": float(da),
+                            "confidence": round(min(a.confidence, b.confidence) * min(da / 45.0, 1.0), 3)})
+    return sorted(out, key=lambda c: -c["confidence"])
+
+
+def _intersect(a: LineCandidate, b: LineCandidate):
+    (x1, y1), (x2, y2) = a.p1, a.p2
+    (x3, y3), (x4, y4) = b.p1, b.p2
+    den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+    if abs(den) < 1e-9:
+        return None
+    px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / den
+    py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / den
+    return px, py
+
+
+def _near_segment(line: LineCandidate, p, margin: float) -> bool:
+    (x1, y1), (x2, y2) = line.p1, line.p2
+    d = np.array([x2 - x1, y2 - y1])
+    L2 = float(d @ d)
+    t = float((np.array(p) - np.array([x1, y1])) @ d / max(L2, 1e-9))
+    return -margin <= t <= 1 + margin
+
+
+def auto_calibration_feasibility(frame_bgr: np.ndarray, min_conf: float = 0.15) -> dict:
+    """Per-frame geometry check: is an automatic homography even possible here?
+    Needs >= 2 line directions and >= 4 well-spread landmark candidates (exact, non-collinear)."""
+    lines = [c for c in detect_pitch_lines(frame_bgr) if c.confidence >= min_conf]
+    dirs = []
+    for c in lines:
+        if all(min(abs(c.angle - d), 180 - abs(c.angle - d)) > 12 for d in dirs):
+            dirs.append(c.angle)
+    xs = line_intersections(lines, shape=frame_bgr.shape[:2])
+    good = [x for x in xs if x["confidence"] >= min_conf]
+    spread = 0.0
+    if len(good) >= 3:
+        spread = float(cv2.contourArea(cv2.convexHull(np.array([g["point"] for g in good], np.float32))))
+    feasible = len(dirs) >= 2 and len(good) >= 4 and spread >= 0.02 * frame_bgr.shape[0] * frame_bgr.shape[1]
+    return {"lines": len(lines), "directions": len(dirs), "landmarkCandidates": len(good),
+            "spreadPx2": round(spread), "feasible": bool(feasible)}

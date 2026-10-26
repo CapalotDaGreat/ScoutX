@@ -46,6 +46,17 @@ test('a consistent worker report is accepted and persisted target-only', () => {
   assert.equal(r.heatmap.status, 'unavailable');
 });
 
+test('duel/tackle candidates are kept for review, flagged and never counted', () => {
+  const r = parseTrackingReport(raw({ events: [
+    { type: 'duel_candidate', start: 3, end: 4, identityState: 'CONFIRMED_VISIBLE', evidenceTimes: [3], confidence: 0.4 },
+  ] }));
+  assert.ok(r);
+  assert.equal(r.events[0].candidate, true);
+  assert.equal(r.ball.contacts, 1, 'candidates do not change the counted statistics');
+  assert.equal(parseTrackingReport(raw({ events: [{ type: 'goal', start: 1, end: 2, identityState: 'CONFIRMED_VISIBLE',
+    evidenceTimes: [], confidence: 1 }] })), null, 'unknown event types are rejected');
+});
+
 test('inconsistent reports are rejected, never shown', () => {
   const badCoverage = raw();
   (badCoverage.coverage as Record<string, number>).confirmedVisibleSec = 50;
@@ -77,7 +88,8 @@ test('answers are idempotent, replace earlier answers to the same question and c
   assert.equal(applyAnswer(emptyFeedback(), report, 'q_unknown', 'yes', 'op_00000003', 'now'), null);
   const unsure = applyAnswer(emptyFeedback(), report, qid, 'unsure', 'op_00000004', 'now');
   assert.ok(unsure);
-  assert.deepEqual(workerFeedback(unsure), { yes: [], no: [], periods: {}, offPitch: [] }, 'unsure carries no evidence');
+  assert.deepEqual(workerFeedback(unsure), { yes: [], no: [], periods: {}, offPitch: [], asked: [[42.1, 120, 250]] },
+    'unsure carries no evidence - it only stops the same player being asked again');
 });
 
 test('period corrections must be ordered, inside the video and paired for half-time', () => {

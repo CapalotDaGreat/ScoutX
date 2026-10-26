@@ -10,8 +10,9 @@ States (exactly one per analysed frame, highest priority first):
   LIKELY_VISIBLE       The target is in view according to appearance + motion continuity, the
                        uncalibrated identity score is >= LIKELY and no competing candidate of
                        similar score is in view at the same moment.
-  AMBIGUOUS            Either the chosen candidate scores below LIKELY, or another plausible
-                       candidate (score >= COMPETITOR) is in view at the same time.
+  AMBIGUOUS            Either the chosen candidate scores below LIKELY, another plausible
+                       candidate (score >= COMPETITOR) is in view at the same time, or the
+                       followed box carries a nearby read that cannot be the target number.
   OFF_CAMERA           Reserved: requires positive evidence that the player is on the pitch but
                        outside the camera view (e.g. calibrated full-pitch view without him).
                        The handheld/follow-cam pipeline cannot establish this, so it is never
@@ -56,10 +57,13 @@ def frame_states(T, res, tl, period_kind: np.ndarray, camera: np.ndarray | None 
     ev = np.asarray(tl.evidence).astype(str)
     present = np.asarray(tl.present, bool)
     hard = present & np.isin(ev, ["number", "anchor"])
-    soft = present & ~hard
+    contrary = present & (ev == "conflict")
+    soft = present & ~hard & ~contrary
     states[soft & (conf >= likely) & (comp < competitor)] = LIKELY_VISIBLE
     states[soft & ((conf < likely) | (comp >= competitor))] = AMBIGUOUS
     states[hard] = CONFIRMED_VISIBLE
+    # A read on the followed box that cannot be the target: never claimed, at best ambiguous.
+    states[contrary] = AMBIGUOUS
     states[~present & (comp >= competitor)] = AMBIGUOUS
     if camera is not None:
         # A frame where the camera shows no football can't hold a visible target claim.

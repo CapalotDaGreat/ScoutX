@@ -68,6 +68,8 @@ class Feedback(BaseModel):
     no: list[list[float]] = Field(default_factory=list, max_length=500)
     periods: dict[str, float] = Field(default_factory=dict)
     offPitch: list[list[float]] = Field(default_factory=list, max_length=50)
+    # Players the owner already saw and answered "unsure"/"skip": no evidence, just never re-asked.
+    asked: list[list[float]] = Field(default_factory=list, max_length=500)
 
 
 class ResolveRequest(BaseModel):
@@ -174,7 +176,8 @@ def resolve(request: ResolveRequest) -> dict:
     with tempfile.TemporaryDirectory(prefix="track_") as tmp:
         report = fn(runs, tmp, request.target.jerseyNumber or None, request.target.kitPrimaryColor,
                     request.target.kitSecondaryColor, _points(fb.yes), log=lambda _m: None,
-                    rejects=_points(fb.no), feedback={"periods": fb.periods, "offPitch": fb.offPitch},
+                    rejects=_points(fb.no),
+                    feedback={"periods": fb.periods, "offPitch": fb.offPitch, "asked": _points(fb.asked)},
                     position=request.target.position)
         timeline = {}
         tl_path = Path(tmp) / "timeline.npz"

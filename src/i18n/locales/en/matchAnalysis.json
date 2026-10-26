@@ -323,7 +323,8 @@
     "queue_unavailable": "Analysis could not be queued. Try again in a few minutes.",
     "video_rejected": "This video did not pass the format and length checks.",
     "ai_privacy_configuration_required": "Video analysis isn't available yet. You can still log matches and track your development.",
-    "video_consent_required": "Consent for this video is missing or was withdrawn. Start the analysis again to give consent."
+    "video_consent_required": "Consent for this video is missing or was withdrawn. Start the analysis again to give consent.",
+    "link_import_failed": "The video could not be imported from this link. Check that the link still works and points to an MP4 or MOV file."
   },
   "pipeline": {
     "title": "Analysis in progress",
@@ -561,7 +562,9 @@
     "event": {
       "contact": "Ball contact",
       "carry": "Carry",
-      "pass_attempt": "Pass attempt"
+      "pass_attempt": "Pass attempt",
+      "duel_candidate": "Possible duel (needs review)",
+      "tackle_candidate": "Possible tackle (needs review)"
     },
     "outcome": {
       "completed": "completed",
@@ -616,14 +619,20 @@
       "veoStep2": "Choose Download → Download full game (follow-cam MP4). Panorama views cannot be downloaded.",
       "veoStep3": "Upload the downloaded video here, or paste a direct https:// link to the exported file.",
       "status": {
-        "ready": "Video link verified. Importing from links isn't switched on yet - please download the file and upload it here.",
+        "ready": "Video link verified. Fill in the match details below and tap Analyse - the video is imported on our servers and checked like an upload.",
         "requires_export": "Veo links can't be imported directly. Export the video first:",
         "partner_access_required": "A Veo partner connection is needed. Export the video instead:",
         "invalid": "This link isn't supported.",
         "unreachable": "The link could not be reached.",
         "not_video": "This link isn't a video file.",
         "too_large": "This video is larger than your plan allows."
-      }
+      },
+      "tooShort": "Links can be imported for match recordings longer than a short clip. For a short clip, pick the video from this device.",
+      "linkedTitle": "Linked video ({{host}})",
+      "linkedSize": "{{mb}} MB - imported when the analysis starts",
+      "durationLabel": "Expected length (minutes)",
+      "durationHint": "Used to choose the analysis mode; the real length is measured after import.",
+      "remove": "Remove link"
     }
   }
 }

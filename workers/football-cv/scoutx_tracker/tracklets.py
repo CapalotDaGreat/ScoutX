@@ -159,6 +159,15 @@ class Tracklets:
     number_splits: int = 0  # tracklets split because of conflicting shirt-number reads
 
 
+# A lone digit that cannot belong to a two-digit number read on the same tracklet splits it.
+# Measured on IMG_4809: OCR misreads a lone digit even at confidence 1.0 (a "4" on #20's shirt),
+# so splitting on one lone digit broke a correct track. Off: lone conflicting digits instead bound
+# how far hard evidence reaches (identity.conflict_times / stats.build_timeline).
+SPLIT_ON_DIGIT_CONFLICT = False
+# Bump whenever tracklet building/splitting changes: it is part of the tracklet cache key.
+TRACKLET_ALGO_VERSION = "3.2" if SPLIT_ON_DIGIT_CONFLICT else "3.1"
+
+
 def compatible(a: str, b: str) -> bool:
     """Two number reads can come from the same shirt (a partial read is a substring)."""
     return a == b or (len(a) != len(b) and (a in b or b in a))
@@ -180,12 +189,17 @@ def split_on_number_conflicts(R: np.ndarray, sigs: np.ndarray, det_reads: dict[i
         for k in range(len(tids)):
             ix = order[bounds[k]:bounds[k + 1]]
             reads = [(p, det_reads[int(R[r, 8])]) for p, r in enumerate(ix) if int(R[r, 8]) in det_reads]
-            # A single-digit read is often half of a two-digit number or noise: it only counts
-            # as evidence when the same digit was read at least twice on this tracklet.
+            # A single-digit read is often half of a two-digit number or noise: it counts when the
+            # same digit was read at least twice, or when it cannot be part of a two-digit number
+            # read on this same tracklet ("20" ... "4": the "4" belongs to somebody else). Splitting
+            # is the safe direction - a missed split lets hard evidence leak onto a team-mate.
             counts: dict[str, int] = {}
             for _, n_ in reads:
                 counts[n_] = counts.get(n_, 0) + 1
-            reads = [(p, n_) for p, n_ in reads if len(n_) >= 2 or counts[n_] >= 2]
+            full = {n_ for _, n_ in reads if len(n_) >= 2}
+            reads = [(p, n_) for p, n_ in reads
+                     if len(n_) >= 2 or counts[n_] >= 2
+                     or (SPLIT_ON_DIGIT_CONFLICT and any(not compatible(n_, f) for f in full))]
             cut = None
             for (pa, na), (pb, nb) in zip(reads, reads[1:]):
                 if not compatible(na, nb) and pb - pa >= 1:
@@ -205,8 +219,9 @@ def split_on_number_conflicts(R: np.ndarray, sigs: np.ndarray, det_reads: dict[i
     return R, splits
 
 
-def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "",
-                    det_reads: dict[int, str] | None = None) -> Tracklets:
+def track_rows(D: Detections) -> np.ndarray:
+    """The expensive part (frame-by-frame tracking + colour purification). Depends only on stage-1
+    output, so it is computed once per match and reused by every correction."""
     trk = PlayerTracker(fps=D.fps)
     F = len(D.times)
     order = np.argsort(D.dets[:, 0], kind="stable")
@@ -225,7 +240,17 @@ def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "
         for tid, box, sc, di in trk.update(boxes, scores, feats, warp, f):
             rows.append([f, D.times[f], tid, *box, sc, idx[di]])
     R = np.array(rows, np.float64).reshape(-1, 9)
-    R = purify(R, D.sigs)
+    return purify(R, D.sigs)
+
+
+def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "",
+                    det_reads: dict[int, str] | None = None, rows: np.ndarray | None = None) -> Tracklets:
+    return assemble(D, track_rows(D) if rows is None else rows, kit_primary, kit_secondary, det_reads)
+
+
+def assemble(D: Detections, R: np.ndarray, kit_primary: str = "", kit_secondary: str = "",
+             det_reads: dict[int, str] | None = None) -> Tracklets:
+    """Cheap part: number-conflict splits, panorama coordinates and per-tracklet summaries."""
     splits = 0
     if det_reads:
         R, splits = split_on_number_conflicts(R, D.sigs, det_reads)
@@ -263,29 +288,28 @@ def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "
             "kit1": float(kit_score(sig, kit_primary)) if kit_primary else 0.0,
             "kit2": float(kit_score(sig, kit_secondary)) if kit_secondary else 0.0,
             "crops": [D.crops[d] for d in di if d in D.crops],
+            # Crop file heights follow the box (+5 % top pad): lets OCR selection skip image I/O.
+            "crop_h": [float(hh * 1.05) for d, hh in zip(di, h) if d in D.crops],
             "p_start": pano[ix[0]].tolist(), "p_end": pano[ix[-1]].tolist(),
         })
     return Tracklets(R, pano, summary, by_tid, splits)
 
 
-def tracklet_features(D: Detections, T: Tracklets, min_h: float = 36.0, pca_dim: int = 48) -> dict[int, np.ndarray]:
-    """Per-detection appearance vectors (colour signature + PCA of the CNN embedding) per tracklet."""
-    emb_of = {int(i): k for k, i in enumerate(D.emb_idx)}
-    E = D.embs.astype(np.float32)
-    if len(E) >= pca_dim * 2:
-        mu = E.mean(0)
-        sample = E[:: max(1, len(E) // 20000)] - mu
-        _, _, Vt = np.linalg.svd(sample, full_matrices=False)
-        P = Vt[:pca_dim]
-    else:
-        mu, P = np.zeros(E.shape[1] if len(E) else 1280, np.float32), None
+def tracklet_features(D: Detections, T: Tracklets, min_h: float = 36.0) -> dict[int, np.ndarray]:
+    """Per-detection appearance vectors per tracklet for the per-match identity classifier.
+
+    Only the body-region colour signature (x4) is used: the classifier reads columns 0-80, so the
+    former CNN-embedding PCA (an SVD over all embeddings, ~9 s per correction on CPU) was computed
+    and discarded. Rows: detections with a stored embedding (every 2nd frame) and box >= min_h px,
+    exactly as before, so the classifier sees identical inputs."""
+    R = T.rows
+    has_emb = np.zeros(len(D.sigs), bool)
+    has_emb[D.emb_idx.astype(int)] = True
+    di = R[:, 8].astype(int)
+    keep = has_emb[di] & (R[:, 6] - R[:, 4] >= min_h)
+    sig4 = D.sigs.astype(np.float32) * 4.0
     out = {}
     for tid, ix in T.by_tid.items():
-        feats = []
-        for r in ix:
-            di = int(T.rows[r, 8])
-            if di in emb_of and T.rows[r, 6] - T.rows[r, 4] >= min_h:
-                e = (E[emb_of[di]] - mu) @ P.T if P is not None else np.zeros(pca_dim, np.float32)
-                feats.append(np.r_[D.sigs[di] * 4.0, e])
-        out[tid] = np.array(feats, np.float32).reshape(-1, 80 + pca_dim)
+        sel = ix[keep[ix]]
+        out[tid] = sig4[di[sel]].reshape(-1, sig4.shape[1])
     return out

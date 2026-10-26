@@ -95,6 +95,7 @@ exports.OWNED_QUERIES = [
     ['appeals', 'ownerId'],
     ['mediaUploads', 'ownerId'],
     ['mediaUploadSessions', 'ownerId'],
+    ['mediaImportSources', 'ownerId'],
     ['uploadSessionLimits', 'ownerId'],
     ['revenueCatEvents', 'uid'],
     ['dataExports', 'uid'],

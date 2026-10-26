@@ -15,15 +15,35 @@ EV_COLOUR = {  # BGR
 
 
 class FrameReader:
-    """Random-ish access to global frames across the chunked proxy videos."""
+    """Random-ish access to global frames across the chunked proxy videos.
 
-    def __init__(self, sources: list) -> None:
+    With `cache_dir`, decoded frames are kept as JPEG so repeated corrections (which redraw the
+    same cards and contact-sheet cells) do not seek the video again - a seek costs ~0.4 s on
+    phone H.264 proxies."""
+
+    def __init__(self, sources: list, cache_dir: str | Path | None = None) -> None:
         self.sources = sources
         self._cap = None
         self._src = None
         self._pos = -1
+        self.cache = Path(cache_dir) if cache_dir else None
+        if self.cache:
+            self.cache.mkdir(parents=True, exist_ok=True)
 
     def get(self, g: int) -> np.ndarray | None:
+        if self.cache is None:
+            return self._decode(g)
+        path = self.cache / f"{g:07d}.jpg"
+        if path.exists():
+            img = cv2.imread(str(path))
+            if img is not None:
+                return img
+        img = self._decode(g)
+        if img is not None:
+            cv2.imwrite(str(path), img, [cv2.IMWRITE_JPEG_QUALITY, 92])
+        return img
+
+    def _decode(self, g: int) -> np.ndarray | None:
         for k, (video, first, n, start) in enumerate(self.sources):
             if first <= g < first + n:
                 local = g - first
@@ -108,13 +128,25 @@ def render_windows(D, tl, speed, windows: list[tuple[float, float]], out_path: s
     write_video(gen(), out_path, D.fps, (width, h))
 
 
-def contact_sheet(D, tl, out_path: str, n: int = 60, cols: int = 10, cell_h: int = 220, label: str = "") -> list[float]:
-    """Grid of target crops at evenly spaced visible moments (for quick human verification)."""
-    reader = FrameReader(D.sources)
+def contact_sheet(D, tl, out_path: str, n: int = 60, cols: int = 10, cell_h: int = 220, label: str = "",
+                  cache_dir: str | Path | None = None) -> list[float]:
+    """Grid of target crops at visible moments spread over the match (quick human verification).
+    One cell per fixed time bin, on a 1 s grid where possible, so a correction that changes the
+    chain elsewhere keeps the other cells (and their cached frames) unchanged."""
+    reader = FrameReader(D.sources, cache_dir)
     vis = np.where(tl.present & ~tl.interpolated)[0]
     if len(vis) == 0:
         return []
-    pick = vis[np.linspace(0, len(vis) - 1, min(n, len(vis))).round().astype(int)]
+    step = max(1, int(round(D.fps)))
+    edges = np.linspace(0, len(tl.times), n + 1).astype(int)
+    pick = []
+    for a, b in zip(edges[:-1], edges[1:]):
+        inside = vis[(vis >= a) & (vis < b)]
+        if len(inside) == 0:
+            continue
+        on_grid = inside[inside % step == 0]
+        pick.append(int((on_grid if len(on_grid) else inside)[0]))
+    pick = np.array(pick, int)
     cells, times = [], []
     for g in sorted(set(pick.tolist())):
         fr = reader.get(int(g))
@@ -142,9 +174,10 @@ def contact_sheet(D, tl, out_path: str, n: int = 60, cols: int = 10, cell_h: int
     return times
 
 
-def question_cards(D, questions: list[dict], out_path: str, cell: int = 260, cols: int = 4) -> None:
+def question_cards(D, questions: list[dict], out_path: str, cell: int = 260, cols: int = 4,
+                   cache_dir: str | Path | None = None) -> None:
     """Numbered 'Is this your player?' cards: a context crop with the candidate boxed."""
-    reader = FrameReader(D.sources)
+    reader = FrameReader(D.sources, cache_dir)
     order = sorted(range(len(questions)), key=lambda i: questions[i]["t"])
     cards: dict[int, np.ndarray] = {}
     for i in order:

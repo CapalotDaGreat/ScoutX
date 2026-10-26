@@ -348,6 +348,7 @@ export function MatchAnalysisModal({
     pickVideo,
     pickVideoFile,
     startAnalysis,
+    startAnalysisFromLink,
     retryAnalysis,
     cancelAnalysis,
     analyzeWithDeviceFrames,
@@ -368,6 +369,9 @@ export function MatchAnalysisModal({
   const [selectedFrameIds, setSelectedFrameIds] = useState<string[]>([]);
 
   const [picked, setPicked] = useState<PickedVideoAsset | null>(null);
+  /** A verified direct link the server will import instead of a file from this device. */
+  const [linked, setLinked] = useState<{ url: string; bytes: number; host: string } | null>(null);
+  const [linkMinutes, setLinkMinutes] = useState('90');
   const [jerseyNumber, setJerseyNumber] = useState('');
   const [kitPrimaryColor, setKitPrimaryColor] = useState('');
   const [kitSecondaryColor, setKitSecondaryColor] = useState('');
@@ -470,8 +474,10 @@ export function MatchAnalysisModal({
     [picked, pickedTrack],
   );
 
-  const analysisMode = picked ? selectAnalysisMode(picked.durationSec, intent) : null;
-  const processingMode = analysisMode && picked ? processingModeFor(analysisMode, picked.durationSec) : null;
+  const linkDurationSec = linked ? Math.round(Number(linkMinutes.replace(',', '.')) * 60) : 0;
+  const sourceDurationSec = picked ? picked.durationSec : linked ? linkDurationSec : 0;
+  const analysisMode = picked || linked ? selectAnalysisMode(sourceDurationSec, intent) : null;
+  const processingMode = analysisMode ? processingModeFor(analysisMode, sourceDurationSec) : null;
   const deviceFrameCount = picked && processingMode === 'device_frames' ? shortClipSampleTimes(picked.durationSec).length : 0;
   const segmentReview = activeJob?.segmentReview;
 
@@ -482,6 +488,7 @@ export function MatchAnalysisModal({
       const video = await pickVideo();
       if (video) {
         setPicked(video);
+        setLinked(null);
         resetActive();
       }
     } catch (err) {
@@ -499,6 +506,7 @@ export function MatchAnalysisModal({
       const video = await pickVideoFile();
       if (video) {
         setPicked(video);
+        setLinked(null);
         resetActive();
       }
     } catch (err) {
@@ -513,7 +521,7 @@ export function MatchAnalysisModal({
   };
 
   const handleAnalyze = async () => {
-    if (!picked) {
+    if (!picked && !linked) {
       Alert.alert(t('matchAnalysis:modalForm.videoTitle'), t('matchAnalysis:modalForm.pickFirst'));
       return;
     }
@@ -536,10 +544,47 @@ export function MatchAnalysisModal({
       Alert.alert(t('matchAnalysis:modalForm.videoTitle'), t('matchAnalysis:video.mode.tooLong', { minutes: MODE_LIMITS.maxDurationSec / 60 }));
       return;
     }
+    if (linked && processingMode !== 'cloud_video') {
+      Alert.alert(t('matchAnalysis:modalForm.videoTitle'), t('matchAnalysis:tracking.import.tooShort'));
+      return;
+    }
     setConsentOpen(true);
   };
 
+  const targetingInput = () => ({
+    jerseyNumber: jerseyNumber.trim(),
+    kitPrimaryColor: kitPrimaryColor.trim() || 'unknown',
+    kitSecondaryColor: kitSecondaryColor.trim() || 'unknown',
+    teamName: teamName.trim() || undefined,
+    position,
+    notes: notes.trim() || undefined,
+  });
+  const matchInput = () => ({
+    opponent: opponent.trim(),
+    competition: competition.trim(),
+    date,
+    result: result.trim() || undefined,
+  });
+
   const handleConsent = async (consent: VideoConsentChoices) => {
+    if (!picked && linked) {
+      setConsentOpen(false);
+      try {
+        await startAnalysisFromLink({
+          url: linked.url,
+          analysisIntent: intent,
+          clipContext: 'auto',
+          consent,
+          durationSec: linkDurationSec,
+          fileSizeBytes: linked.bytes,
+          targeting: targetingInput(),
+          match: matchInput(),
+        });
+      } catch {
+        // The hook surfaces a friendly message through `error`.
+      }
+      return;
+    }
     if (!picked) {
       return;
     }
@@ -716,7 +761,29 @@ export function MatchAnalysisModal({
                 >
                   {preparingFile ? t('matchAnalysis:video.files.preparing') : t('matchAnalysis:video.files.pick')}
                 </Button>
-                <ImportFromLinkPanel />
+                <ImportFromLinkPanel
+                  onReady={(inspection, url) => {
+                    setLinked({ url, bytes: Number(inspection.metadata.bytes) || 0, host: String(inspection.metadata.host ?? '') });
+                    setPicked(null);
+                    resetActive();
+                  }}
+                />
+                {linked ? (
+                  <Card className="gap-2" testID="linked-video">
+                    <Text weight="semibold">{t('matchAnalysis:tracking.import.linkedTitle', { host: linked.host })}</Text>
+                    <Text variant="caption" color="secondary">
+                      {t('matchAnalysis:tracking.import.linkedSize', { mb: Math.round(linked.bytes / (1024 * 1024)) })}
+                    </Text>
+                    <Input
+                      label={t('matchAnalysis:tracking.import.durationLabel')}
+                      value={linkMinutes}
+                      onChangeText={setLinkMinutes}
+                      keyboardType="numeric"
+                    />
+                    <Text variant="caption" color="tertiary">{t('matchAnalysis:tracking.import.durationHint')}</Text>
+                    <Button size="sm" variant="ghost" onPress={() => setLinked(null)}>{t('matchAnalysis:tracking.import.remove')}</Button>
+                  </Card>
+                ) : null}
               </View>
             )}
             {preview ? <AnalysisPreviewCard preview={preview} loading={readingTrack} /> : null}

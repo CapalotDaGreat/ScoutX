@@ -44,6 +44,7 @@ const ownedByField = [
   ['appeals', 'ownerId'],
   ['mediaUploads', 'ownerId'],
   ['mediaUploadSessions', 'ownerId'],
+  ['mediaImportSources', 'ownerId'],
   ['uploadSessionLimits', 'ownerId'],
   ['matchAnalysisJobs', 'playerId'],
   ['careerReplays', 'playerId'],

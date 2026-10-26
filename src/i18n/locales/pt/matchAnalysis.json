@@ -323,7 +323,8 @@
     "queue_unavailable": "Não foi possível colocar a análise na fila. Tenta novamente dentro de alguns minutos.",
     "video_rejected": "Este vídeo não passou nas verificações de formato e duração.",
     "ai_privacy_configuration_required": "A análise de vídeo ainda não está disponível. Podes continuar a registar jogos e acompanhar a tua evolução.",
-    "video_consent_required": "O consentimento para este vídeo falta ou foi retirado. Inicia a análise de novo para dar o consentimento."
+    "video_consent_required": "O consentimento para este vídeo falta ou foi retirado. Inicia a análise de novo para dar o consentimento.",
+    "link_import_failed": "Não foi possível importar o vídeo deste link. Verifica se o link ainda funciona e aponta para um ficheiro MP4 ou MOV."
   },
   "pipeline": {
     "title": "Análise em curso",
@@ -561,7 +562,9 @@
     "event": {
       "contact": "Contacto com a bola",
       "carry": "Condução",
-      "pass_attempt": "Tentativa de passe"
+      "pass_attempt": "Tentativa de passe",
+      "duel_candidate": "Possível duelo (a rever)",
+      "tackle_candidate": "Possível desarme (a rever)"
     },
     "outcome": {
       "completed": "certo",
@@ -616,14 +619,20 @@
       "veoStep2": "Escolhe Transferir → Transferir jogo completo (MP4 follow-cam). As vistas panorâmicas não podem ser transferidas.",
       "veoStep3": "Carrega aqui o vídeo transferido ou cola um link https:// direto para o ficheiro exportado.",
       "status": {
-        "ready": "Link de vídeo verificado. A importação por link ainda não está ativa - transfere o ficheiro e carrega-o aqui.",
+        "ready": "Link de vídeo verificado. Preenche os dados do jogo abaixo e toca em Analisar - o vídeo é importado nos nossos servidores e verificado como um envio.",
         "requires_export": "Os links Veo não podem ser importados diretamente. Exporta primeiro o vídeo:",
         "partner_access_required": "É necessária uma ligação de parceiro Veo. Exporta antes o vídeo:",
         "invalid": "Este link não é suportado.",
         "unreachable": "Não foi possível aceder ao link.",
         "not_video": "Este link não é um ficheiro de vídeo.",
         "too_large": "Este vídeo é maior do que o teu plano permite."
-      }
+      },
+      "tooShort": "Os links podem ser importados para gravações de jogos mais longas do que um clipe curto. Para um clipe curto, escolhe o vídeo deste dispositivo.",
+      "linkedTitle": "Vídeo ligado ({{host}})",
+      "linkedSize": "{{mb}} MB - importado quando a análise começar",
+      "durationLabel": "Duração prevista (minutos)",
+      "durationHint": "Serve para escolher o modo de análise; a duração real é medida após a importação.",
+      "remove": "Remover link"
     }
   }
 }

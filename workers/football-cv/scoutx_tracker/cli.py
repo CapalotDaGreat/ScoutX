@@ -19,6 +19,7 @@ import time
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
+import cv2
 import numpy as np
 
 CHUNK_SEC = 300
@@ -103,18 +104,18 @@ def load_feedback(out: Path) -> dict:
 
 
 def finish(out: Path, jobs, number, kit, kit2, anchors, rejects, highlight_sec, log, feedback=None,
-           position="unknown", age_group="") -> None:
+           position="unknown", age_group="", render_video: bool = True) -> None:
     from .analyze import analyze  # noqa: PLC0415
     from .render import contact_sheet, question_cards, render_windows  # noqa: PLC0415
     from .report import write_report  # noqa: PLC0415
     from .tracklets import load_runs  # noqa: PLC0415
 
     log("identifying the player across the match...")
+    D = load_runs([j[2] for j in jobs])
     result = analyze([j[2] for j in jobs], str(out), number, kit, kit2, anchors, log=log, rejects=rejects,
-                     feedback=feedback, position=position, age_group=age_group)
+                     feedback=feedback, position=position, age_group=age_group, D=D)
     z = np.load(out / "timeline.npz", allow_pickle=False)
     label = f"#{number}" if number else "player"
-    D = load_runs([j[2] for j in jobs])
     states = z["states"]
     claim = np.isin(states, ["CONFIRMED_VISIBLE", "LIKELY_VISIBLE"])
 
@@ -124,21 +125,28 @@ def finish(out: Path, jobs, number, kit, kit2, anchors, rejects, highlight_sec, 
         interpolated = z["evidence"] == "interpolated"
 
     log("drawing report...")
-    contact_sheet(D, TL, str(out / "who_we_followed.jpg"), label=label)
+    frames = out / ".frames"  # decoded-frame cache shared by every correction of this run
+    contact_sheet(D, TL, str(out / "who_we_followed.jpg"), label=label, cache_dir=frames)
     windows = [(e["start"] - 2.5, e["end"] + 2.5) for e in result["events"] if e["identityState"] in
                ("CONFIRMED_VISIBLE", "LIKELY_VISIBLE")]
     windows += [(e["start"] - 1.0, e["end"] + 1.0) for e in result["physical"].get("sprints", [])]
     windows = merge_windows(windows, max_total=highlight_sec)
-    if windows:
-        render_windows(D, TL, z["speed"], windows, str(out / "highlights.mp4"), label)
+    video = out / "highlights.mp4"
+    if render_video and windows:
+        render_windows(D, TL, z["speed"], windows, str(video), label)
+    elif not render_video and video.exists():
+        # Corrections skip the slow video; a stale video must not be shown as current.
+        video.unlink()
     qpath = out / "questions.jpg"
     if result.get("reviewQuestions"):
-        question_cards(D, result["reviewQuestions"], str(qpath))
+        question_cards(D, result["reviewQuestions"], str(qpath), cache_dir=frames)
     elif qpath.exists():
         qpath.unlink()
     write_report(str(out / "report.html"), result, {"times": z["times"], "states": states},
-                 str(out / "who_we_followed.jpg"), str(out / "highlights.mp4") if windows else None,
+                 str(out / "who_we_followed.jpg"), str(video) if (render_video and windows) else None,
                  str(qpath) if qpath.exists() else None, str(out))
+    if not render_video:
+        log("highlights video: run `python -m scoutx_tracker render <folder>` when you have finished reviewing")
     log(f"done -> {out / 'report.html'}")
     print(json.dumps({"coverage": result["coverage"], "invariants": result["invariants"]}, indent=2))
 
@@ -183,7 +191,7 @@ def resolve_anchor(spec: str, out: Path, jobs) -> tuple[float, float, float]:
     return parse_clock(clock), float(x), float(y)
 
 
-def _rerun(out: Path, fb: dict) -> None:
+def _rerun(out: Path, fb: dict, render_video: bool = False) -> None:
     cfg = json.loads((out / "config.json").read_text())
     jobs = sorted(((None, float(p.name[2:]), str(p)) for p in (out / "stage1").glob("c_*")), key=lambda j: j[1])
     t_start = time.time()
@@ -193,7 +201,75 @@ def _rerun(out: Path, fb: dict) -> None:
 
     finish(out, jobs, cfg["number"], cfg["kit"], cfg["kit2"], [tuple(x) for x in fb["yes"]],
            [tuple(x) for x in fb["no"]], cfg.get("highlight_sec", 240.0), log, fb,
-           cfg.get("position", "unknown"), cfg.get("age_group", ""))
+           cfg.get("position", "unknown"), cfg.get("age_group", ""), render_video=render_video)
+
+
+def cmd_calibrate(a) -> None:
+    """Manual pitch calibration assistance.
+    Step 1:  calibrate OUT --at 14:17          -> OUT/calibrate_<t>.jpg with numbered landmark candidates
+    Step 2:  calibrate OUT --at 14:17 --set "1=lbox_top 2=lbox_goal_top 3=rbox_top 812,640=centre_spot"
+    At least 4 named pitch landmarks; the fit is validated (spread, reprojection) and propagated through
+    camera motion for at most 20 s of the same shot. Only then do metrics become "calibrated"."""
+    from .calibration import LANDMARKS, detect_pitch_lines, fit_manual, line_intersections  # noqa: PLC0415
+    from .render import FrameReader  # noqa: PLC0415
+    from .tracklets import load_runs  # noqa: PLC0415
+
+    out = Path(a.out)
+    jobs = [str(p) for p in sorted((out / "stage1").glob("c_*"))]
+    D = load_runs(jobs)
+    t = parse_clock(a.at)
+    g = int(np.argmin(np.abs(D.times - t)))
+    frame = FrameReader(D.sources, out / ".frames").get(g)
+    if frame is None:
+        sys.exit("could not read that moment of the video")
+    lines = detect_pitch_lines(frame)
+    cands = line_intersections(lines, shape=frame.shape[:2])
+    if not a.set:
+        img = frame.copy()
+        for x in range(0, img.shape[1], 100):
+            cv2.line(img, (x, 0), (x, img.shape[0]), (80, 80, 80), 1)
+            cv2.putText(img, str(x), (x + 2, 14), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+        for y in range(0, img.shape[0], 100):
+            cv2.line(img, (0, y), (img.shape[1], y), (80, 80, 80), 1)
+            cv2.putText(img, str(y), (2, y - 2), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+        for c in lines[:12]:
+            cv2.line(img, tuple(map(int, c.p1)), tuple(map(int, c.p2)), (0, 0, 255), 2)
+        for i, c in enumerate(cands[:20]):
+            x, y = map(int, c["point"])
+            cv2.circle(img, (x, y), 9, (0, 255, 255), 2)
+            cv2.putText(img, f"{i + 1} ({c['confidence']:.2f})", (x + 10, y - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
+        path = out / f"calibrate_{int(D.times[g])}.jpg"
+        cv2.imwrite(str(path), img, [cv2.IMWRITE_JPEG_QUALITY, 90])
+        print(f"Open {path}. Name at least 4 pitch landmarks, by candidate number or pixel x,y:")
+        print(f'  python -m scoutx_tracker calibrate "{out}" --at {a.at} --set "1=lbox_top 2=lbox_goal_top 640,512=lpenalty_spot ..."')
+        print("Landmark names:", ", ".join(LANDMARKS))
+        return
+    pts, names = [], []
+    for tok in a.set.split():
+        key, name = tok.split("=", 1)
+        if "," in key:
+            x, y = (float(v) for v in key.split(","))
+        else:
+            k = int(key) - 1
+            if not 0 <= k < len(cands):
+                sys.exit(f"candidate {key} does not exist")
+            x, y = cands[k]["point"]
+        pts.append([x, y])
+        names.append(name)
+    cal = fit_manual("check", g, [tuple(p) for p in pts], names)
+    if cal.status != "valid":
+        sys.exit(f"calibration rejected: {cal.reason}")
+    fb = load_feedback(out)
+    fb.setdefault("calibrations", []).append({"t": float(D.times[g]), "names": names, "points": pts})
+    (out / "feedback.json").write_text(json.dumps(fb, indent=2))
+    print(f"calibration accepted (max reprojection {cal.reprojection_m:.2f} m); re-solving ...")
+    _rerun(out, fb)
+
+
+def cmd_render(a) -> None:
+    """Re-run with the current answers and render the highlights video (end of a review session)."""
+    out = Path(a.out)
+    _rerun(out, load_feedback(out), render_video=True)
 
 
 def cmd_answer(a) -> None:
@@ -215,6 +291,8 @@ def cmd_answer(a) -> None:
         point = [q["t"], (x1 + x2) / 2, (y1 + y2) / 2]
         if kind in "yn":
             fb["yes" if kind == "y" else "no"].append(point)
+        else:  # unsure / skip: no evidence, but don't ask about this player again
+            fb.setdefault("asked", []).append(point)
         fb["history"].append({"q": q["tid"], "t": q["t"], "answer": {"y": "yes", "n": "not_me", "u": "unsure",
                                                                     "s": "skip"}[kind], "point": point})
     (out / "feedback.json").write_text(json.dumps(fb, indent=2))
@@ -222,15 +300,15 @@ def cmd_answer(a) -> None:
 
 
 def cmd_undo(a) -> None:
-    """Undo the last yes / not-me answer."""
+    """Undo the last answer (yes, not me, unsure or skip)."""
     out = Path(a.out)
     fb = load_feedback(out)
-    hist = [h for h in fb.get("history", []) if h["answer"] in ("yes", "not_me")]
+    hist = fb.get("history", [])
     if not hist:
         sys.exit("nothing to undo")
     last = hist[-1]
-    key = "yes" if last["answer"] == "yes" else "no"
-    if last["point"] in fb[key]:
+    key = {"yes": "yes", "not_me": "no"}.get(last["answer"], "asked")
+    if last["point"] in fb.get(key, []):
         fb[key].remove(last["point"])
     fb["history"].remove(last)
     (out / "feedback.json").write_text(json.dumps(fb, indent=2))
@@ -295,7 +373,7 @@ def main(argv=None) -> None:
     t.add_argument("--age-group", default="", help="e.g. u14, u17, adult, pro (sets speed thresholds)")
     t.add_argument("--highlight-sec", type=float, default=240.0)
     t.set_defaults(func=cmd_track)
-    u = sub.add_parser("undo", help="undo the last yes / not-me answer")
+    u = sub.add_parser("undo", help="undo the last answer")
     u.add_argument("out")
     u.set_defaults(func=cmd_undo)
     pr = sub.add_parser("periods", help="correct kick-off / half-time / full-time")
@@ -309,6 +387,14 @@ def main(argv=None) -> None:
     r.add_argument("out", help="the output folder of a previous track run")
     r.add_argument("answers", nargs="+")
     r.set_defaults(func=cmd_answer)
+    cb = sub.add_parser("calibrate", help="calibrate the pitch at a moment (enables calibrated metrics)")
+    cb.add_argument("out")
+    cb.add_argument("--at", required=True, help="time, e.g. 14:17")
+    cb.add_argument("--set", help='landmarks, e.g. "1=lbox_top 2=lbox_goal_top 812,640=centre_spot"')
+    cb.set_defaults(func=cmd_calibrate)
+    rd = sub.add_parser("render", help="refresh everything incl. the highlights video after reviewing")
+    rd.add_argument("out")
+    rd.set_defaults(func=cmd_render)
     p = sub.add_parser("pick", help="show numbered players at a moment so you can point at yours")
     p.add_argument("video")
     p.add_argument("--at", required=True, help="time, e.g. 4:02")

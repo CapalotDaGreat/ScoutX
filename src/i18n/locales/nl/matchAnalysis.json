@@ -323,7 +323,8 @@
     "queue_unavailable": "De analyse kon niet in de wachtrij worden gezet. Probeer het over een paar minuten opnieuw.",
     "video_rejected": "Deze video heeft de controles op formaat en lengte niet doorstaan.",
     "ai_privacy_configuration_required": "Videoanalyse is nog niet beschikbaar. Je kunt nog steeds wedstrijden vastleggen en je ontwikkeling volgen.",
-    "video_consent_required": "Toestemming voor deze video ontbreekt of is ingetrokken. Start de analyse opnieuw om toestemming te geven."
+    "video_consent_required": "Toestemming voor deze video ontbreekt of is ingetrokken. Start de analyse opnieuw om toestemming te geven.",
+    "link_import_failed": "De video kon niet via deze link worden geïmporteerd. Controleer of de link nog werkt en naar een MP4- of MOV-bestand verwijst."
   },
   "pipeline": {
     "title": "Analyse bezig",
@@ -561,7 +562,9 @@
     "event": {
       "contact": "Balcontact",
       "carry": "Dribbel met bal",
-      "pass_attempt": "Passpoging"
+      "pass_attempt": "Passpoging",
+      "duel_candidate": "Mogelijk duel (te controleren)",
+      "tackle_candidate": "Mogelijke tackle (te controleren)"
     },
     "outcome": {
       "completed": "aangekomen",
@@ -616,14 +619,20 @@
       "veoStep2": "Kies Downloaden → Volledige wedstrijd downloaden (follow-cam MP4). Panoramabeelden kunnen niet worden gedownload.",
       "veoStep3": "Upload de gedownloade video hier, of plak een directe https://-link naar het geëxporteerde bestand.",
       "status": {
-        "ready": "Videolink gecontroleerd. Importeren via links staat nog niet aan - download het bestand en upload het hier.",
+        "ready": "Videolink gecontroleerd. Vul hieronder de wedstrijdgegevens in en tik op Analyseren - de video wordt op onze servers geïmporteerd en gecontroleerd zoals een upload.",
         "requires_export": "Veo-links kunnen niet direct worden geïmporteerd. Exporteer eerst de video:",
         "partner_access_required": "Er is een Veo-partnerkoppeling nodig. Exporteer in plaats daarvan de video:",
         "invalid": "Deze link wordt niet ondersteund.",
         "unreachable": "De link is niet bereikbaar.",
         "not_video": "Deze link is geen videobestand.",
         "too_large": "Deze video is groter dan je abonnement toestaat."
-      }
+      },
+      "tooShort": "Links kunnen worden geïmporteerd voor wedstrijdopnames die langer zijn dan een korte clip. Kies voor een korte clip de video op dit apparaat.",
+      "linkedTitle": "Gekoppelde video ({{host}})",
+      "linkedSize": "{{mb}} MB - wordt geïmporteerd zodra de analyse start",
+      "durationLabel": "Verwachte lengte (minuten)",
+      "durationHint": "Bepaalt de analysemodus; de echte lengte wordt na het importeren gemeten.",
+      "remove": "Link verwijderen"
     }
   }
 }

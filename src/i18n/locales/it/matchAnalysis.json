@@ -323,7 +323,8 @@
     "queue_unavailable": "Non è stato possibile mettere in coda l'analisi. Riprova tra qualche minuto.",
     "video_rejected": "Questo video non ha superato i controlli di formato e durata.",
     "ai_privacy_configuration_required": "L'analisi video non è ancora disponibile. Puoi comunque registrare le partite e seguire i tuoi progressi.",
-    "video_consent_required": "Il consenso per questo video manca o è stato revocato. Riavvia l’analisi per dare il consenso."
+    "video_consent_required": "Il consenso per questo video manca o è stato revocato. Riavvia l’analisi per dare il consenso.",
+    "link_import_failed": "Non è stato possibile importare il video da questo link. Controlla che il link funzioni ancora e porti a un file MP4 o MOV."
   },
   "pipeline": {
     "title": "Analisi in corso",
@@ -561,7 +562,9 @@
     "event": {
       "contact": "Tocco di palla",
       "carry": "Conduzione",
-      "pass_attempt": "Tentativo di passaggio"
+      "pass_attempt": "Tentativo di passaggio",
+      "duel_candidate": "Possibile contrasto (da verificare)",
+      "tackle_candidate": "Possibile tackle (da verificare)"
     },
     "outcome": {
       "completed": "riuscito",
@@ -616,14 +619,20 @@
       "veoStep2": "Scegli Scarica → Scarica partita completa (MP4 follow-cam). Le viste panoramiche non si possono scaricare.",
       "veoStep3": "Carica qui il video scaricato, oppure incolla un link https:// diretto al file esportato.",
       "status": {
-        "ready": "Link video verificato. L'importazione da link non è ancora attiva - scarica il file e caricalo qui.",
+        "ready": "Link video verificato. Compila i dettagli della partita qui sotto e tocca Analizza - il video viene importato sui nostri server e controllato come un caricamento.",
         "requires_export": "I link Veo non si possono importare direttamente. Esporta prima il video:",
         "partner_access_required": "Serve una connessione partner Veo. Esporta invece il video:",
         "invalid": "Questo link non è supportato.",
         "unreachable": "Il link non è raggiungibile.",
         "not_video": "Questo link non è un file video.",
         "too_large": "Questo video supera il limite del tuo piano."
-      }
+      },
+      "tooShort": "I link possono essere importati per registrazioni di partite più lunghe di una breve clip. Per una breve clip, scegli il video da questo dispositivo.",
+      "linkedTitle": "Video collegato ({{host}})",
+      "linkedSize": "{{mb}} MB - importato all'avvio dell'analisi",
+      "durationLabel": "Durata prevista (minuti)",
+      "durationHint": "Serve a scegliere la modalità di analisi; la durata reale viene misurata dopo l'importazione.",
+      "remove": "Rimuovi link"
     }
   }
 }
