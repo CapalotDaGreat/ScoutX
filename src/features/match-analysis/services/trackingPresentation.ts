@@ -38,8 +38,39 @@ export type TrackingReport = {
   identity: { numberSightings: number; confirmedByUser: number };
   heatmap: { status: 'observed_only' | 'unavailable'; reason?: string };
   referenceImagePath?: string | null;
+  /** 4.0: watchable clip windows around the target's own measured actions / identified spells. */
+  moments?: TrackingMoment[];
+  analysedRange?: { startSec: number; endSec: number; parts: number };
+  videoSize?: { width: number; height: number } | null;
 };
-export type TrackingDoc = { report: TrackingReport | null; version: number; stale: boolean; pendingReason?: string | null };
+export type TrackingMomentKind = 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate' | 'spell';
+export type TrackingMoment = {
+  id: string; kind: TrackingMomentKind; kinds: TrackingMomentKind[]; start: number; end: number;
+  clipStart: number; clipEnd: number; identityState: 'CONFIRMED_VISIBLE' | 'LIKELY_VISIBLE'; candidate: boolean;
+  outcome?: 'completed' | 'incomplete' | 'unknown';
+  /** [t, x, y, w, h], box normalised to the frame */
+  indicator: Array<[number, number, number, number, number]>;
+  imagePath?: string | null;
+};
+export type TrackingDoc = { report: TrackingReport | null; version: number; stale: boolean; pendingReason?: string | null;
+  /** 'preliminary' while the rest of the match is still being analysed. */
+  scope?: 'preliminary' | 'full'; parts?: number };
+
+/** Mirrors functions/src/analysis/trackingProgress.ts: persisted facts only, never a percentage. */
+export type TrackingProgressDoc = {
+  generation: number;
+  durationSec: number;
+  plan: Array<{ index: number; startSec: number; endSec: number }>;
+  segments: Record<string, { status: 'queued' | 'running' | 'done' | 'failed'; attempts: number; processingSec?: number;
+    startedAt?: string; doneAt?: string }>;
+  startedAt: string;
+  updatedAt: string;
+  resolving: 'preliminary' | 'full' | null;
+  preliminary: { scope: 'preliminary' | 'full'; parts: number; analysedEndSec: number; moments: number; reviewQuestions: number; at: string } | null;
+  full: { scope: 'preliminary' | 'full'; parts: number; analysedEndSec: number; moments: number; reviewQuestions: number; at: string } | null;
+  outcome: null | 'interrupted' | 'cancelled';
+  blocked: null | 'worker_unavailable' | 'consent_required' | 'source_missing';
+};
 
 export const STATE_COLORS: Record<TrackingIdentityState, string> = {
   CONFIRMED_VISIBLE: '#1f9d55', LIKELY_VISIBLE: '#8bc34a', AMBIGUOUS: '#f0a500', OFF_CAMERA: '#c9d3e6',

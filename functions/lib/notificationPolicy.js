@@ -33,6 +33,10 @@ exports.ACTIVITY_CATEGORY = {
     weekly_report_ready: 'development',
     analysis_completed: 'analysis',
     analysis_failed: 'analysis',
+    analysis_first_moments: 'analysis',
+    analysis_review_needed: 'analysis',
+    analysis_interrupted: 'analysis',
+    analysis_action_required: 'analysis',
     evidence_requested: 'scouting',
     evidence_fulfilled: 'scouting',
     watchlist_change: 'scouting',
@@ -47,7 +51,13 @@ function pushPathFor(type, reference, recipientRole) {
     switch (type) {
         case 'analysis_completed':
         case 'analysis_failed':
+        case 'analysis_interrupted':
+        case 'analysis_action_required':
             return id ? `match/${id}` : 'player/home';
+        case 'analysis_first_moments':
+            return id ? `match/${id}/moments` : 'player/home';
+        case 'analysis_review_needed':
+            return id ? `match/${id}/review` : 'player/home';
         case 'trial_invitation':
         case 'trial_update':
             return id ? `trial/${id}` : scout ? 'scout/trials' : 'player/trials';

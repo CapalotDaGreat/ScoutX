@@ -205,6 +205,7 @@ function AnalysisReportRoute({
   return (
     <AnalysisReportScreen
       jobId={route.params.jobId}
+      initialSection={route.params.section === 'moments' || route.params.section === 'review' ? route.params.section : undefined}
       onBack={() => navigation.goBack()}
       onOpenReel={(reelId) => navigation.navigate('PlayerTabs', { screen: 'Media', params: { reelId } })}
     />

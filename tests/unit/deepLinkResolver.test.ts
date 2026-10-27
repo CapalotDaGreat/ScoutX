@@ -38,6 +38,10 @@ describe('deep link resolver', () => {
     assert.equal(resolutionToPath(resolveDeepLinkPath('reel/reel_1', player)), 'player/media?reelId=reel_1');
     assert.equal(resolutionToPath(resolveDeepLinkPath('match/job1', player)), 'match/job1');
     assert.equal(resolutionToPath(resolveDeepLinkPath('match/job1', scout)), 'link/unavailable?reason=wrong_role');
+    assert.equal(resolutionToPath(resolveDeepLinkPath('match/job1/moments', player)), 'match/job1?section=moments');
+    assert.equal(resolutionToPath(resolveDeepLinkPath('match/job1/review', player)), 'match/job1?section=review');
+    assert.equal(resolutionToPath(resolveDeepLinkPath('match/job1/admin', player)), 'link/unavailable?reason=invalid');
+    assert.equal(isValidPushPath('match/job1/moments'), true);
   });
 
   test('evidence links open the player for every role', () => {

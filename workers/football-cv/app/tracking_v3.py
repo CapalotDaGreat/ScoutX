@@ -24,7 +24,10 @@ from pydantic import BaseModel, ConfigDict, Field
 
 JOB = re.compile(r"^[A-Za-z0-9_-]{1,80}$")
 TARGET_ONLY_KEYS = ("schema", "engine", "target", "timeline", "coverage", "identity", "physical", "ball", "events",
-                    "reviewQuestions", "invariants", "heatmap")
+                    "reviewQuestions", "invariants", "heatmap", "analysedRange", "videoSize")
+MOMENT_KEYS = ("id", "kind", "kinds", "start", "end", "clipStart", "clipEnd", "identityState", "candidate", "outcome",
+               "indicator")
+MAX_MOMENT_THUMBS = 40
 
 
 def enabled() -> bool:
@@ -128,7 +131,8 @@ def extract_segment(request: ExtractRequest) -> dict:
     meta = fn(request.source.url, str(out), t0=request.startSec, start=request.startSec,
               end=request.endSec - request.startSec)
     return {"jobId": request.jobId, "segmentIndex": request.segmentIndex, "status": "complete",
-            "frames": int(meta.get("frames", 0)), "stageSeconds": meta.get("stageSeconds", {})}
+            "frames": int(meta.get("frames", 0)), "processingSec": float(meta.get("seconds", 0.0)),
+            "stageSeconds": meta.get("stageSeconds", {})}
 
 
 def _thumb(path: str | None, max_h: int = 320) -> str | None:
@@ -158,6 +162,13 @@ def target_only(report: dict) -> dict:
                                "imageJpegBase64": _thumb(q.get("crop"))}
                               for q in report.get("reviewQuestions", [])]
     out["referenceImageJpegBase64"] = _thumb(report.get("referenceCrop"))
+    # Moments: target-only clip windows; thumbnails only of the target's own close-up crops.
+    moments = []
+    for i, m in enumerate(report.get("moments", [])):
+        item = {k: m[k] for k in MOMENT_KEYS if k in m}
+        item["imageJpegBase64"] = _thumb(m.get("thumbCrop"), max_h=200) if i < MAX_MOMENT_THUMBS else None
+        moments.append(item)
+    out["moments"] = moments
     return out
 
 

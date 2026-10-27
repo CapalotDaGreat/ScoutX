@@ -135,3 +135,26 @@ test('app presentation: honest denominators, fenced physical metrics, question o
   assert.ok(looksLikeVideoLink('https://app.veo.co/matches/x'));
   assert.ok(!looksLikeVideoLink('app.veo.co/matches/x') && !looksLikeVideoLink('http://x.y/z'));
 });
+
+test('4.0 moments: validated, target-only and answerable as "Is this you?"', async () => {
+  const { answerTarget, parseMoments } = await import('../../functions/src/analysis/trackingV3.ts');
+  const moment = { id: 'm_50', kind: 'spell', kinds: ['spell'], start: 6, end: 11, clipStart: 5, clipEnd: 12,
+    identityState: 'LIKELY_VISIBLE', candidate: false, indicator: [[6, 0.1, 0.2, 0.1, 0.2], [9, 0.5, 0.5, 0.1, 0.2]] };
+  const r = parseTrackingReport(raw({ moments: [moment], videoSize: { width: 1000, height: 500 },
+    analysedRange: { startSec: 0, endSec: 100, parts: 3 } }));
+  assert.ok(r);
+  assert.equal(r.moments.length, 1);
+  assert.equal(r.analysedRange.parts, 3);
+  const tgt = answerTarget(r, 'm_50');
+  assert.deepEqual(tgt, { t: 9, point: [550, 300] });
+  const fb = applyAnswer(emptyFeedback(), r, 'm_50', 'yes', 'op_12345678', '2026-10-27T00:00:00Z');
+  assert.deepEqual(workerFeedback(fb!).yes, [[9, 550, 300]]);
+  // Invalid moments invalidate the report: wrong identity, overlong clip, candidate flag mismatch, outside the recording.
+  for (const bad of [{ identityState: 'AMBIGUOUS' }, { clipEnd: 40 }, { kind: 'duel_candidate', candidate: false },
+    { clipStart: 95, clipEnd: 110, start: 96, end: 97 }, { indicator: [[50, 0.1, 0.1, 0.1, 0.1]] }]) {
+    assert.equal(parseTrackingReport(raw({ moments: [{ ...moment, ...bad }] })), null, JSON.stringify(bad));
+  }
+  assert.deepEqual(parseMoments(undefined, 100), [], 'older workers without moments still parse');
+  const noSize = parseTrackingReport(raw({ moments: [moment] }));
+  assert.equal(answerTarget(noSize!, 'm_50'), null, 'without frame size a moment cannot be answered');
+});

@@ -41,14 +41,19 @@ import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { ReportEvidenceOverview } from './intelligence/ReportEvidenceOverview';
 import { TrackingReportSection } from '@/features/match-analysis/components/TrackingReportSection';
 import { useTracking } from '@/features/match-analysis/hooks/useTracking';
+import { MatchReviewView } from '@/features/match-review/components/MatchReviewView';
+import { useTrackingProgress } from '@/features/match-review/hooks/useMatchReviewData';
+import type { Insight } from '@/features/match-review/services/coach';
 
-type ReportTab = 'overview' | 'tracking' | 'timeline' | 'technical' | 'tactical' | 'coaching' | 'video' | 'ask';
+type ReportTab = 'review' | 'overview' | 'tracking' | 'timeline' | 'technical' | 'tactical' | 'coaching' | 'video' | 'ask';
 
 export type AnalysisReportScreenProps = {
   jobId: string;
   onBack: () => void;
   /** Opens a reel built from this report's highlight moments. */
   onOpenReel?: (reelId: string) => void;
+  /** Deep-linked section of the match review (push notifications). */
+  initialSection?: 'moments' | 'review';
 };
 
 function formatUnknown(value: number | null | undefined): string {
@@ -78,7 +83,7 @@ function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
   );
 }
 
-export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisReportScreenProps) {
+export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection }: AnalysisReportScreenProps) {
   const { t } = useAppTranslation('matchAnalysis');
   const [studioVisible, setStudioVisible] = useState(false);
   const [job, setJob] = useState<MatchAnalysisJob | null>(null);
@@ -91,6 +96,13 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
   const [gpsSessions, setGpsSessions] = useState<GpsSession[]>([]);
   const playerId = job?.playerId ?? null;
   const { tracking } = useTracking(jobId);
+  const progress = useTrackingProgress(jobId);
+  const reviewAvailable = tracking !== null || progress !== null;
+  const [tabChosen, setTabChosen] = useState(false);
+  useEffect(() => {
+    // The player-first review is the default view as soon as it exists (unless the user picked a tab).
+    if (reviewAvailable && !tabChosen) setTab('review');
+  }, [reviewAvailable, tabChosen]);
 
   useEffect(() => {
     if (!playerId) return undefined;
@@ -135,13 +147,13 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
 
   const tabs = useMemo(
     () =>
-      (['overview', 'tracking', 'timeline', 'technical', 'tactical', 'coaching', 'video', 'ask'] as const)
-        .filter((id) => id !== 'tracking' || tracking !== null)
+      (['review', 'overview', 'tracking', 'timeline', 'technical', 'tactical', 'coaching', 'video', 'ask'] as const)
+        .filter((id) => (id === 'review' ? reviewAvailable || !job?.report : id === 'tracking' ? tracking !== null : Boolean(job?.report)))
         .map((id) => ({
           id,
-          label: t(`tabs.${id}`),
+          label: id === 'review' ? t('review.tab') : t(`tabs.${id}`),
         })),
-    [t, tracking],
+    [t, tracking, reviewAvailable, job?.report],
   );
 
   /** Seek only when the source video is still retained; otherwise open the honest "no video" panel. */
@@ -193,6 +205,21 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
       null,
       new Date(),
     );
+    await repository.saveGoal(goal);
+    setGoals((current) => [goal, ...current]);
+  };
+
+  /** "Add as development goal" from an evidence-backed review insight. */
+  const handleCreateReviewGoal = async (insight: Insight) => {
+    if (!job) return;
+    const repository = DevelopmentRepository.getInstance();
+    const goal = createDevelopmentGoal(job.playerId, repository.newId('goal'), {
+      title: t('review.focus.skill', { topic: (t as unknown as (k: string) => string)(`review.topic.${insight.topic}`) }).slice(0, 120),
+      category: 'technical', metricKey: 'none', targetValue: null, targetLabel: '', timeframeEnd: null,
+      practiceSuggestions: insight.drill ? [(t as unknown as (k: string) => string)(`review.drill.${insight.drill.id}.how`)] : [],
+      evidenceIds: insight.momentIds.slice(0, 5).map((id) => `${job.id}:${id}`),
+      origin: 'coaching_moment',
+    }, null, new Date());
     await repository.saveGoal(goal);
     setGoals((current) => [goal, ...current]);
   };
@@ -249,8 +276,9 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
         <EmptyState title={t('report.title')} description={error}
           actionLabel={t('report.back')} onAction={onBack} />
       ) : null}
-      {job && report ? (
+      {job ? (
         <View className="gap-4">
+          {report ? (
           <View className="gap-2 border-l-4 border-accent py-3 pl-4">
             <Heading level={3}>{report.headline}</Heading>
             <Text variant="caption" color="secondary">
@@ -260,20 +288,37 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
             </Text>
             <Text variant="body-sm" color="secondary">{report.methodology}</Text>
           </View>
+          ) : null}
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
             {tabs.map((item) => (
               <ChoiceChip
                 key={item.id}
                 label={item.label}
                 selected={tab === item.id}
-                onPress={() => setTab(item.id)}
+                onPress={() => { setTabChosen(true); setTab(item.id); }}
               />
             ))}
           </ScrollView>
 
+          {tab === 'review' || (!report && !reviewAvailable) ? (
+            <MatchReviewView
+              jobId={jobId}
+              playerId={job.playerId}
+              match={job.match}
+              position={job.targeting.position ?? null}
+              job={job}
+              tracking={tracking}
+              progress={progress}
+              goals={goals}
+              initialSection={initialSection}
+              onOpenReel={onOpenReel}
+              onCreateGoal={handleCreateReviewGoal}
+            />
+          ) : null}
+
           {tab === 'tracking' && tracking ? <TrackingReportSection jobId={jobId} tracking={tracking} /> : null}
 
-          {tab === 'overview' ? (
+          {tab === 'overview' && report ? (
             <View className="gap-4">
               <ReportEvidenceOverview job={job} canSeekVideo={canSeekVideo} onSeek={seekTo} />
               <VideoIntelligenceSections job={job} />
@@ -307,11 +352,11 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
             </View>
           ) : null}
 
-          {tab === 'timeline' ? (
+          {tab === 'timeline' && report ? (
             <ReportEvidenceOverview job={job} timeline canSeekVideo={canSeekVideo} onSeek={seekTo} />
           ) : null}
 
-          {tab === 'technical' ? (
+          {tab === 'technical' && report ? (
             <View className="gap-4">
               <TechniqueAssessmentCard
                 assessment={parseTechniqueAssessment(report.techniqueAssessment)}
@@ -326,14 +371,14 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel }: AnalysisRepo
             </View>
           ) : null}
 
-          {tab === 'tactical' ? (
+          {tab === 'tactical' && report ? (
             <Card padding="lg" className="gap-2">
               <Heading level={3}>{t('tabs.tactical')}</Heading>
               <Text variant="body-sm">{report.tacticalSummary ?? t('report.cvUnavailable')}</Text>
             </Card>
           ) : null}
 
-          {tab === 'coaching' ? (
+          {tab === 'coaching' && report ? (
             <View className="gap-3">
               <StructuredCoachingCard
                 items={coaching}

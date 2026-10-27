@@ -157,6 +157,7 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
             rejects: list[tuple[float, float, float]] | None = None, feedback: dict | None = None,
             position: str = "unknown", age_group: str = "", ocr_dense: bool = True, D=None) -> dict:
     from .ball import ball_events  # noqa: PLC0415
+    from .moments import build_moments  # noqa: PLC0415
     from .features import kit_score  # noqa: PLC0415
     from .invariants import check  # noqa: PLC0415
     from .metrics import Thresholds, physical_metrics  # noqa: PLC0415
@@ -282,6 +283,12 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
                                    positions=calib["positions"] if calib["calibratedFrames"] else None)
     events, ball = ball_events(D, T, tl, states, P, camera, D.fps)
     timings["timeline_metrics_events"] = time.time() - t
+    # Moments: watchable clip windows around the target's own (already measured) actions.
+    want = {c for k in res.chosen for c in T.summary[k].get("crops", [])}
+    crop_times = sorted((float(D.times[int(D.dets[di, 0])]), c) for di, c in D.crops.items() if c in want)
+    moments = build_moments(tl.times, states, tl.present, tl.boxes, tl.segment, period_kind, events,
+                            chunk_starts={int(first) for _v, first, _n, _s in D.sources},
+                            crop_times=crop_times, width=D.width or 1920, height=D.height or 1080)
 
     np.savez_compressed(out / "timeline.npz", times=tl.times, present=tl.present, boxes=tl.boxes,
                         conf=tl.conf, evidence=tl.evidence.astype(str), speed=speed, segment=tl.segment,
@@ -307,6 +314,11 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         "heatmap": calib["heatmap"],
         "ball": ball,
         "events": events,
+        "moments": moments,
+        "videoSize": {"width": int(D.width or 1920), "height": int(D.height or 1080)},
+        "analysedRange": {"startSec": round(float(D.times[0]), 2) if len(D.times) else 0.0,
+                          "endSec": round(float(D.times[-1]), 2) if len(D.times) else 0.0,
+                          "parts": len(D.sources)},
         "tracklets": tracklets,
         "reviewQuestions": res.questions,
         "referenceCrop": reference,

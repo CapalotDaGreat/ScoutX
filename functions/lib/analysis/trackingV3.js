@@ -15,14 +15,16 @@
  * (cvWorkerStatus() === 'available') plus TRACKING_V3_ENABLED=true.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ANSWERS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.ANSWERS = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
 exports.decodeReviewImage = decodeReviewImage;
 exports.reviewImagePath = reviewImagePath;
 exports.trackingInvariantViolations = trackingInvariantViolations;
 exports.parseTrackingReport = parseTrackingReport;
+exports.parseMoments = parseMoments;
 exports.encodeStateStrip = encodeStateStrip;
 exports.emptyFeedback = emptyFeedback;
 exports.applyAnswer = applyAnswer;
+exports.answerTarget = answerTarget;
 exports.undoLast = undoLast;
 exports.workerFeedback = workerFeedback;
 exports.validPeriods = validPeriods;
@@ -33,6 +35,9 @@ exports.IDENTITY_STATES = [
     'CONFIRMED_VISIBLE', 'LIKELY_VISIBLE', 'AMBIGUOUS', 'OFF_CAMERA', 'CONFIRMED_OFF_PITCH', 'NON_MATCH_PERIOD', 'UNKNOWN',
 ];
 const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate'];
+exports.MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell'];
+exports.MAX_MOMENTS = 80;
+exports.MAX_CLIP_SEC = 20;
 /** Decodes the worker's small review-card JPEGs (bounded size, JPEG magic bytes checked). */
 function decodeReviewImage(b64) {
     if (typeof b64 !== 'string' || b64.length === 0 || b64.length > 200_000 || !/^[A-Za-z0-9+/=]+$/.test(b64))
@@ -182,6 +187,14 @@ function parseTrackingReport(raw, timeline) {
             box: box, affectedSec: q.affectedSec,
             currentlyTarget: q.currentlyTarget === true, score: isNum(q.score) ? q.score : 0, imagePath: null });
     }
+    const moments = parseMoments(r.moments, coverage.recordingSec);
+    if (!moments)
+        return null;
+    const range = asRecord(r.analysedRange);
+    const analysedRange = range && nonNeg(range.startSec) && nonNeg(range.endSec) && nonNeg(range.parts)
+        && range.endSec >= range.startSec
+        ? { startSec: range.startSec, endSec: range.endSec, parts: Math.floor(range.parts) }
+        : { startSec: 0, endSec: coverage.recordingSec, parts: 0 };
     const heatRaw = asRecord(r.heatmap);
     const report = {
         schema: exports.TRACKING_SCHEMA,
@@ -199,6 +212,13 @@ function parseTrackingReport(raw, timeline) {
             unknownOutcomePasses: counts('unknownOutcomePasses'), contactsConfirmedIdentity: counts('contactsConfirmedIdentity'),
             duelCandidates: counts('duelCandidates'), tackleCandidates: counts('tackleCandidates'), provenance: 'model_estimate_unvalidated' },
         events,
+        moments,
+        analysedRange,
+        videoSize: (() => {
+            const v = asRecord(r.videoSize);
+            return v && isNum(v.width) && isNum(v.height) && v.width > 0 && v.height > 0 && v.width <= 8192 && v.height <= 8192
+                ? { width: v.width, height: v.height } : null;
+        })(),
         reviewQuestions: questions,
         identity: { numberSightings: nonNeg(ident.numberSightings) ? ident.numberSightings : 0,
             confirmedByUser: nonNeg(ident.confirmedByUser) ? ident.confirmedByUser : 0 },
@@ -206,6 +226,52 @@ function parseTrackingReport(raw, timeline) {
             : { status: 'unavailable', reason: String(heatRaw?.reason ?? 'No validated pitch calibration for this recording.').slice(0, 200) },
     };
     return trackingInvariantViolations(report).length === 0 ? report : null;
+}
+/**
+ * Validates the worker's moments. Anything not on claimed target frames, outside the recording,
+ * longer than MAX_CLIP_SEC or of an unknown kind invalidates the whole report (never shown).
+ */
+function parseMoments(raw, recordingSec) {
+    if (raw === undefined)
+        return [];
+    if (!Array.isArray(raw) || raw.length > exports.MAX_MOMENTS)
+        return null;
+    const out = [];
+    const ids = new Set();
+    for (const item of raw) {
+        const m = asRecord(item);
+        if (!m || typeof m.id !== 'string' || !/^m_[0-9]{1,6}$/.test(m.id) || ids.has(m.id))
+            return null;
+        if (!exports.MOMENT_KINDS.includes(m.kind))
+            return null;
+        if (!['CONFIRMED_VISIBLE', 'LIKELY_VISIBLE'].includes(String(m.identityState)))
+            return null;
+        if (![m.start, m.end, m.clipStart, m.clipEnd].every(nonNeg))
+            return null;
+        const [start, end, c0, c1] = [m.start, m.end, m.clipStart, m.clipEnd];
+        if (end < start || c1 < c0 || c1 - c0 > exports.MAX_CLIP_SEC + 0.01 || (recordingSec > 0 && c1 > recordingSec + 0.5))
+            return null;
+        const kinds = Array.isArray(m.kinds) ? m.kinds.filter((k) => exports.MOMENT_KINDS.includes(k)) : [];
+        const candidate = m.candidate === true;
+        // A candidate flag must agree with the kind: duel/tackle candidates are never presented as actions.
+        if (candidate !== String(m.kind).endsWith('_candidate'))
+            return null;
+        const indicator = [];
+        for (const p of Array.isArray(m.indicator) ? m.indicator.slice(0, 60) : []) {
+            if (!Array.isArray(p) || p.length !== 5 || !p.every(isNum))
+                return null;
+            const [t, x, y, w, h] = p;
+            if (t < c0 - 0.01 || t > c1 + 0.01 || [x, y, w, h].some((v) => v < -0.05 || v > 1.05))
+                return null;
+            indicator.push([t, x, y, w, h]);
+        }
+        ids.add(m.id);
+        out.push({ id: m.id, kind: m.kind, kinds: kinds.length ? kinds : [m.kind], start, end,
+            clipStart: c0, clipEnd: c1, identityState: m.identityState, candidate,
+            ...(m.outcome ? { outcome: (['completed', 'incomplete'].includes(String(m.outcome)) ? m.outcome : 'unknown') } : {}),
+            indicator, imagePath: null });
+    }
+    return out.sort((a, b) => a.clipStart - b.clipStart);
 }
 /** Per-second majority state, run-length encoded: [startSec, endSec, state]. */
 function encodeStateStrip(times, states) {
@@ -247,12 +313,28 @@ function emptyFeedback() {
 function applyAnswer(feedback, report, questionId, answer, operationId, now) {
     if (feedback.entries.some((e) => e.operationId === operationId))
         return feedback;
-    const q = report.reviewQuestions.find((item) => item.id === questionId);
-    if (!q)
+    const target = answerTarget(report, questionId);
+    if (!target)
         return null;
-    const point = [(q.box[0] + q.box[2]) / 2, (q.box[1] + q.box[3]) / 2];
     const entries = feedback.entries.filter((e) => e.questionId !== questionId);
-    return { ...feedback, entries: [...entries, { questionId, answer, t: q.t, point, operationId, at: now }].slice(-500) };
+    return { ...feedback, entries: [...entries, { questionId, answer, t: target.t, point: target.point, operationId, at: now }].slice(-500) };
+}
+/**
+ * Where an identity answer points: a review question's box, or - "Is this you?" asked while
+ * watching a moment - the moment's target indicator sample nearest the middle of the action.
+ * The answer is per-match feedback only (never training data).
+ */
+function answerTarget(report, id) {
+    const q = report.reviewQuestions.find((item) => item.id === id);
+    if (q)
+        return { t: q.t, point: [(q.box[0] + q.box[2]) / 2, (q.box[1] + q.box[3]) / 2] };
+    const m = (report.moments ?? []).find((item) => item.id === id);
+    if (!m || !report.videoSize || m.indicator.length === 0)
+        return null;
+    const mid = (m.start + m.end) / 2;
+    const s = m.indicator.reduce((best, p) => (Math.abs(p[0] - mid) < Math.abs(best[0] - mid) ? p : best));
+    const { width, height } = report.videoSize;
+    return { t: s[0], point: [(s[1] + s[3] / 2) * width, (s[2] + s[4] / 2) * height] };
 }
 function undoLast(feedback) {
     return { ...feedback, entries: feedback.entries.slice(0, -1) };

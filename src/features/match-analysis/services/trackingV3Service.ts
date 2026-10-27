@@ -5,7 +5,30 @@ import { MATCH_ANALYSIS_COLLECTION } from '@/features/match-analysis/constants';
 import { createSecureId } from '@/utils/secureId';
 
 export * from '@/features/match-analysis/services/trackingPresentation';
-import type { TrackingAnswer, TrackingDoc } from '@/features/match-analysis/services/trackingPresentation';
+import type { TrackingAnswer, TrackingDoc, TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
+
+/** Live progress facts of the progressive analysis (null when none was started). */
+export function subscribeTrackingProgress(jobId: string, onChange: (doc: TrackingProgressDoc | null) => void,
+  onError?: (e: Error) => void): Unsubscribe {
+  const db = getFirestoreDb();
+  if (!db || !isFirebaseConfiguredForProject()) {
+    onChange(null);
+    return () => undefined;
+  }
+  return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'progress'),
+    (snap) => onChange(snap.exists() ? (snap.data() as TrackingProgressDoc) : null), onError);
+}
+
+export type PlayerAnalysisStart = { status: 'started' | 'running' | 'complete' | 'blocked'; generation: number; segments: number;
+  blocked?: TrackingProgressDoc['blocked'] };
+
+/** Starts or resumes the progressive analysis (idempotent; finished parts are never re-processed). */
+export async function startPlayerAnalysis(jobId: string): Promise<PlayerAnalysisStart> {
+  const callable = createCallableFunction<{ jobId: string }>('startPlayerAnalysis');
+  if (!callable) throw new Error('Cloud Functions unavailable.');
+  const result = await callable({ jobId });
+  return result.data as PlayerAnalysisStart;
+}
 
 export function subscribeTracking(jobId: string, onChange: (doc: TrackingDoc | null) => void, onError?: (e: Error) => void): Unsubscribe {
   const db = getFirestoreDb();

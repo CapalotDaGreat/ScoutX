@@ -58,6 +58,16 @@ def check(report: dict) -> list[str]:
             v.append("events: completed outcome without verified evidence")
         if e.get("tid") in rejected:
             v.append("events: event attributed to a rejected tracklet")
+    n_events = len(report.get("events", []))
+    for m in report.get("moments", []):
+        if m.get("identityState") not in ("CONFIRMED_VISIBLE", "LIKELY_VISIBLE"):
+            v.append("moments: moment on frames not claimed for the target")
+        if not (0 <= m["clipStart"] <= m["clipEnd"] <= (rec if rec > 0 else float("inf")) + EPS) or m["clipEnd"] - m["clipStart"] > 20.0 + EPS:
+            v.append("moments: clip window invalid")
+        if any(not (0 <= i < n_events) for i in m.get("eventIndices", [])):
+            v.append("moments: references a missing event")
+        if m.get("kind") != "spell" and not m.get("eventIndices"):
+            v.append("moments: action moment without a measured event")
     ball = report.get("ball", {})
     if ball and ball.get("completedPasses", 0) > ball.get("passAttempts", 0):
         v.append("ball: completed passes exceed attempts")

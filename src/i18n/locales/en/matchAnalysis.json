@@ -634,5 +634,398 @@
       "durationHint": "Used to choose the analysis mode; the real length is measured after import.",
       "remove": "Remove link"
     }
+  },
+  "review": {
+    "tab": "My review",
+    "view": {
+      "label": "View",
+      "simple": "Simple",
+      "detailed": "Detailed",
+      "scout": "Scout view"
+    },
+    "workspace": {
+      "title": "Your analysis",
+      "intro": "PitchProof will find your moments, review your movement and build your personal match report.",
+      "leave": "You can leave this screen or lock your phone. The analysis continues on our servers and we will let you know when there is something to see.",
+      "parts": "{{done}} of {{total}} parts of the match prepared",
+      "remainingMinutes": "About {{value}} min left at the speed measured so far",
+      "remainingHours": "About {{value}} h left at the speed measured so far",
+      "measuring": "A time estimate appears once the first part is finished.",
+      "partial": "Early results up to {{until}} of the recording. More moments are added while the analysis continues.",
+      "stage": {
+        "received": "Video received",
+        "preparing": "Preparing match",
+        "finding": "Finding your player",
+        "moments": "Discovering moments",
+        "actions": "Reviewing your actions",
+        "report": "Building your report",
+        "ready": "Ready"
+      },
+      "status": {
+        "done": "done",
+        "active": "in progress",
+        "pending": "waiting",
+        "blocked": "stopped"
+      }
+    },
+    "problem": {
+      "consent_required": {
+        "title": "Your consent is needed",
+        "body": "We only analyse your video after you confirm how it is processed.",
+        "action": "Review consent"
+      },
+      "source_missing": {
+        "title": "The video is not available",
+        "body": "The source video was removed or never finished uploading.",
+        "action": "Upload again"
+      },
+      "worker_unavailable": {
+        "title": "Analysis is not available right now",
+        "body": "The video analysis service is not switched on for this account yet. Your video is stored safely and nothing was lost.",
+        "action": "Check again later"
+      },
+      "interrupted": {
+        "title": "Analysis paused",
+        "body": "Part of the match could not be analysed. Finished parts are kept, so resuming only processes what is missing.",
+        "action": "Resume analysis"
+      },
+      "cancelled": {
+        "title": "Analysis cancelled",
+        "body": "This analysis was cancelled. Start a new one from the match screen if you change your mind.",
+        "action": ""
+      },
+      "retryHelps": "Trying again is likely to help.",
+      "retryNoHelp": "Trying again will not help until this is fixed."
+    },
+    "start": {
+      "title": "Analyse my player",
+      "body": "PitchProof will find your moments, review your movement and build your personal match report. You can leave the app while it works.",
+      "action": "Start analysis",
+      "starting": "Starting…",
+      "failed": "The analysis could not be started. Please try again."
+    },
+    "hero": {
+      "strong": "Your match, verified on video",
+      "limited": "Here is what PitchProof could verify",
+      "none": "We could not confirm you clearly in this recording yet",
+      "confirmedMoments_one": "{{count}} confirmed moment",
+      "confirmedMoments_other": "{{count}} confirmed moments",
+      "reviewMoments_one": "{{count}} moment to check",
+      "reviewMoments_other": "{{count}} moments to check",
+      "seen": "Seen on video for {{seen}} min, confirmed for {{confirmed}} min, of {{analysed}} min analysed",
+      "partial": "Early review: analysed up to {{until}} so far"
+    },
+    "section": {
+      "story": "Match story",
+      "best": "Best moments",
+      "well": "What went well",
+      "improve": "What to work on",
+      "focus": "Next match focus",
+      "details": "Analysis details",
+      "ask": "Ask PitchProof",
+      "moments": "My moments",
+      "needsReview": "Is this you?",
+      "highlights": "Highlight reel",
+      "development": "Am I improving?"
+    },
+    "moments": {
+      "all": "All",
+      "category": {
+        "on_ball": "On the ball",
+        "passing": "Passing",
+        "duels": "Duels",
+        "on_camera": "On camera"
+      },
+      "kind": {
+        "contact": "Ball contact",
+        "carry": "Carry",
+        "pass_attempt": "Pass",
+        "duel_candidate": "Possible duel",
+        "tackle_candidate": "Possible tackle",
+        "spell": "You on camera"
+      },
+      "outcome": {
+        "completed": "reached a team-mate",
+        "incomplete": "did not reach a team-mate",
+        "unknown": "outcome not visible"
+      },
+      "evidence": {
+        "confirmed": "Confirmed on video",
+        "estimated": "Estimated from video",
+        "needs_review": "Needs your review",
+        "not_measurable": "Not measurable from this recording"
+      },
+      "empty": "No moments yet",
+      "emptyBody": "Moments appear here as soon as PitchProof has found you in the footage.",
+      "noneConfirmed": "No confirmed moments yet. Check the moments below so PitchProof can follow you.",
+      "needsReviewIntro": "PitchProof thinks this is you, but is not sure. Your answer only improves this match's report.",
+      "open": "Play {{kind}} at {{time}}",
+      "duration": "{{sec}} s"
+    },
+    "player": {
+      "title": "{{kind}} at {{time}}",
+      "play": "Play",
+      "pause": "Pause",
+      "slow": "Slow motion",
+      "normal": "Normal speed",
+      "stepBack": "Back 0.1 s",
+      "stepForward": "Forward 0.1 s",
+      "replay": "Replay",
+      "loopOn": "Loop on",
+      "loopOff": "Loop off",
+      "indicator": "Yellow outline: the player PitchProof followed",
+      "isThisYou": "Is this you?",
+      "yes": "Yes, that's me",
+      "notMe": "Not me",
+      "notSure": "Not sure",
+      "skip": "Skip",
+      "undo": "Undo",
+      "answered": "Thanks. Your report updates in a few seconds.",
+      "answerError": "Your answer could not be saved. Please try again.",
+      "startEarlier": "Start 2 s earlier",
+      "endLater": "End 2 s later",
+      "note": "Your note",
+      "notePlaceholder": "What do you notice in this moment?",
+      "saveNote": "Save note",
+      "noteSaved": "Note saved on this device.",
+      "unavailable": "Playback unavailable: the source video is no longer stored. The moment and its details stay in your report.",
+      "close": "Close"
+    },
+    "label": {
+      "whatHappened": "What happened",
+      "whyItMatters": "Why it matters",
+      "doDifferently": "What to do differently",
+      "howToPractise": "How to practise",
+      "whereToSee": "Where to see it",
+      "evidence": "Evidence"
+    },
+    "coach": {
+      "involvement": {
+        "strength": {
+          "what": "The footage shows you on the ball {{count}} times with your identity confirmed.",
+          "why": "Being available for the ball is how you influence the game.",
+          "do": "Keep offering angles, especially right after you pass."
+        },
+        "improve": {
+          "what": "You were clearly on camera for {{minutes}} min but on the ball only {{count}} times.",
+          "why": "Players who show for the ball more often shape more of the game.",
+          "do": "Move into the gaps between opponents before the ball comes to your side."
+        }
+      },
+      "passing": {
+        "strength": {
+          "what": "{{count}} of your passes reached a team-mate, verified on video.",
+          "why": "Keeping the ball lets your team control the game.",
+          "do": "Keep your head up before receiving so you can choose the best pass early."
+        }
+      },
+      "passing_accuracy": {
+        "improve": {
+          "what": "{{count}} of your passes did not reach a team-mate ({{completed}} verified as completed).",
+          "why": "Losing the ball in your own build-up gives the opponent chances.",
+          "do": "Check your options before the ball arrives, so you already know where the next pass goes."
+        }
+      },
+      "carrying": {
+        "strength": {
+          "what": "You carried the ball forward {{count}} times.",
+          "why": "Carrying into space moves the whole team up the pitch.",
+          "do": "Look for the next pass at the end of each carry."
+        }
+      },
+      "identity": {
+        "limitation": {
+          "what": "I could confirm you on video for only {{confirmedMin}} min of {{analysedMin}} min analysed. {{review}} moments still need your check.",
+          "why": "With so little confirmed footage I cannot judge your performance reliably.",
+          "do": "Answer \"Is this you?\" on your moments. Each answer improves this report."
+        }
+      },
+      "ball_visibility": {
+        "limitation": {
+          "what": "I cannot verify your on-ball actions: the ball was rarely trackable near you in this recording.",
+          "why": "Touches, passes and duels can only be measured when the ball is in view.",
+          "do": "A higher, steadier camera position that follows the ball helps most."
+        }
+      },
+      "physical": {
+        "limitation": {
+          "what": "I cannot verify distance or speed: this recording has no pitch calibration.",
+          "why": "Without knowing the pitch size on screen, any distance or speed figure would be a guess.",
+          "do": "Physical stats are only shown when the pitch can be calibrated."
+        }
+      }
+    },
+    "topic": {
+      "involvement": "getting on the ball",
+      "carrying": "carrying the ball",
+      "passing": "passing",
+      "passing_accuracy": "keeping your passes",
+      "identity": "being recognised on video",
+      "ball_visibility": "ball visibility",
+      "physical": "physical data"
+    },
+    "drill": {
+      "minutes": "{{minutes}} min",
+      "scan_before_receive": {
+        "name": "Scan before you receive",
+        "how": "A partner passes to you on a signal; before every touch, look over both shoulders and call out where a free team-mate is."
+      },
+      "rondo_4v2": {
+        "name": "Rondo 4 v 2",
+        "how": "Four players keep the ball in a 10 x 10 m square against two. Two touches maximum; swap defenders after an interception."
+      },
+      "wall_pass_weight": {
+        "name": "Wall-pass weight",
+        "how": "Pass against a wall or rebounder from 8, 12 and 16 m. Aim for a pass your partner could take in stride, 20 repetitions per foot."
+      },
+      "carry_into_space": {
+        "name": "Carry into space",
+        "how": "Receive, take a first touch into the open side and carry 10 m before passing to a cone gate. Alternate sides."
+      },
+      "show_for_ball": {
+        "name": "Show for the ball",
+        "how": "In a 3 v 1 channel, move off the defender's shadow every time the ball moves so the passer always has a line to you."
+      },
+      "width_and_depth": {
+        "name": "Width and depth",
+        "how": "Play 4 v 4 with wide gates: a goal only counts after the ball reaches a winger who stayed wide."
+      },
+      "build_up_angles": {
+        "name": "Build-up angles",
+        "how": "Play out from the goal line against one presser. Offer a diagonal angle to the ball carrier on every pass."
+      },
+      "first_touch_away": {
+        "name": "First touch away from pressure",
+        "how": "A coach shouts \"left\" or \"right\" as the pass arrives; take the first touch away from that side."
+      },
+      "distribution_targets": {
+        "name": "Distribution targets",
+        "how": "From the goal area, play to three marked target zones with feet and hands, 10 repetitions each."
+      }
+    },
+    "tip": {
+      "wider_view": "Next recording: film from higher and wider so every player stays in the picture.",
+      "follow_play": "Next recording: keep the camera on the play. Large parts of this match were off screen.",
+      "bold_numbers": "Next recording: make sure your shirt number is large and clearly readable.",
+      "record_whole_match": "Next recording: record the whole match without pausing.",
+      "steady_camera": "Next recording: keep the camera steady and the ball in view."
+    },
+    "focus": {
+      "skill": "In your next match, focus on {{topic}}.",
+      "recording": "Your next step",
+      "matchesGoal": "This fits your development goal \"{{title}}\".",
+      "addGoal": "Add as development goal",
+      "goalAdded": "Added to your development goals.",
+      "none": "Nothing specific to focus on yet. More confirmed moments will make this more useful."
+    },
+    "story": {
+      "confirmed": "confirmed on video",
+      "likely": "probably you",
+      "not_seen": "not seen",
+      "no_play": "no play",
+      "bucket": "{{from}} to {{to}}: {{state}}",
+      "moments_one": "{{count}} moment",
+      "moments_other": "{{count}} moments"
+    },
+    "details": {
+      "coverage": "Coverage",
+      "analysed": "Match time analysed",
+      "confirmed": "Confirmed on video",
+      "likely": "Probably you",
+      "ambiguous": "Could be you or a team-mate",
+      "notIdentified": "Not identified",
+      "unobserved": "Off screen",
+      "nonMatch": "No play",
+      "minutes": "{{value}} min",
+      "sightings": "Shirt-number sightings",
+      "confirmedByUser": "Confirmed by you",
+      "engine": "Analysis version",
+      "physicalVerified": "Physical data: calibrated",
+      "physicalNot": "Physical data: not available (no calibration)",
+      "ballEvents": "Ball actions measured",
+      "limitations": "What this recording cannot show",
+      "aiDisclosure": "Results come from computer vision on your video. Every number shown is measured; nothing is generated by a language model."
+    },
+    "ask": {
+      "placeholder": "Ask about your match…",
+      "send": "Ask",
+      "disclosure": "Answers use only this match's verified evidence. Your video is not sent to an external AI.",
+      "q": {
+        "best_moment": "What was my best moment?",
+        "moments": "When was I involved?",
+        "passing": "How were my passes?",
+        "distance": "How far did I run?",
+        "speed": "How fast was I?",
+        "heatmap": "Where was I on the pitch?",
+        "goals": "Did I score?",
+        "improve": "What should I work on?",
+        "well": "What did I do well?",
+        "identity": "How sure are you it was me?",
+        "review": "Which moments should I check?",
+        "compare": "Am I improving?",
+        "unknown": "What can you tell me?"
+      },
+      "a": {
+        "noReport": "There is no report for this match yet. Answers appear once your first moments are ready.",
+        "distanceUncalibrated": "I cannot verify how far you ran: this recording has no pitch calibration, so any kilometre figure would be a guess.",
+        "speedUncalibrated": "I cannot verify your speed: this recording has no pitch calibration.",
+        "physicalMissing": "That value was not measured in this match.",
+        "distance": "Measured distance while you were on camera: {{value}} {{unit}}.",
+        "speed": "Highest measured speed: {{value}} {{unit}}.",
+        "heatmapObserved": "Your positions are shown for the moments you were on camera only.",
+        "heatmapUnavailable": "I cannot show where you were on the pitch: this recording has no pitch calibration.",
+        "goalsNotMeasured": "I cannot verify goals, assists or shots: they are not measured by the tracking. Here are your strongest moments instead.",
+        "compareSeeDevelopment": "Comparisons only use matches with enough confirmed footage. See \"Am I improving?\" for what can be compared.",
+        "noPasses": "No passes of yours were measured in this match, so I cannot judge your passing.",
+        "passes": "{{total}} passes measured: {{completed}} reached a team-mate, {{incomplete}} did not, {{unknown}} with an outcome that was not visible.",
+        "improve": "Here is the one thing the footage supports working on:",
+        "noImprove": "The footage does not show enough of your actions to suggest an improvement with confidence.",
+        "well": "Here is what the footage shows you did well:",
+        "noStrength": "There is not enough confirmed footage of your actions to name a strength yet.",
+        "identity": "I confirmed you on video for {{confirmedMin}} min and probably saw you for {{likelyMin}} more, out of {{analysedMin}} min analysed. {{review}} moments are waiting for your check.",
+        "review": "{{count}} moments need your check:",
+        "reviewNone": "No moments need your check right now.",
+        "best": "Your strongest moment, by evidence:",
+        "noMoments": "There are no confirmed moments yet.",
+        "moments": "{{count}} moments found. The first ones:",
+        "unknown": "I can answer questions about your moments, passes, identity coverage and what to work on. Try one of these:"
+      },
+      "followUp": "You could also ask"
+    },
+    "highlights": {
+      "intro": "Reels use your best moments, ranked by evidence. Uncertain moments are never added automatically.",
+      "preset": {
+        "my_match": "My match highlights",
+        "attacking": "Best attacking moments",
+        "ball": "Ball involvements",
+        "defensive": "Defensive actions",
+        "goalkeeper": "Goalkeeper actions",
+        "custom": "Custom selection"
+      },
+      "unavailable": {
+        "no_confirmed_moments": "No confirmed moments yet",
+        "no_measured_actions": "No measured ball actions in this match",
+        "defensive_not_validated": "Defensive actions are not validated yet",
+        "not_goalkeeper": "For goalkeepers"
+      },
+      "summary_one": "{{count}} clip, {{sec}} s",
+      "summary_other": "{{count}} clips, {{sec}} s",
+      "create": "Save as private draft reel",
+      "created": "Draft reel saved. It stays private until you share it.",
+      "failed": "The reel could not be saved. Please try again.",
+      "selectHint": "Tap moments to add them to a custom reel."
+    },
+    "development": {
+      "notEnough": "A trend needs at least two complete matches with 10 or more confirmed minutes each. This keeps comparisons fair.",
+      "excluded": {
+        "partial_report": "analysis not finished",
+        "engine_changed": "analysed with a different version",
+        "low_confirmed_coverage": "too little confirmed footage"
+      },
+      "point": "{{date}}: {{value}} actions per 10 confirmed minutes",
+      "excludedLine": "{{date}} not compared: {{reason}}"
+    },
+    "preliminaryBadge": "Early results",
+    "updating": "Updating with your answers…"
   }
 }

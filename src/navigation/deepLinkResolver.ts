@@ -44,6 +44,9 @@ export function isValidPushPath(value: string): boolean {
 
 export const LINK_UNAVAILABLE_PATH = 'link/unavailable';
 
+/** Sections of a match review a link may open directly. */
+export const MATCH_SECTIONS: readonly string[] = ['moments', 'review'];
+
 export function unavailablePath(reason: DeepLinkUnavailableReason): string {
   return `${LINK_UNAVAILABLE_PATH}?reason=${reason}`;
 }
@@ -124,10 +127,12 @@ export function resolveDeepLinkPath(rawPath: string, session: DeepLinkSession): 
       });
     }
     case 'match': {
-      if (segments.length !== 2 || !isValidLinkId(first)) return { kind: 'unavailable', reason: 'invalid' };
+      // match/<jobId>[/moments|/review]: push taps open the relevant part of the match review.
+      const section = segments.length === 3 && MATCH_SECTIONS.includes(second) ? second : null;
+      if ((segments.length !== 2 && !section) || !isValidLinkId(first)) return { kind: 'unavailable', reason: 'invalid' };
       return gated(path, session, (role) =>
         role === 'player'
-          ? { kind: 'route', path: `match/${first}` }
+          ? { kind: 'route', path: section ? `match/${first}?section=${section}` : `match/${first}` }
           : { kind: 'unavailable', reason: 'wrong_role' },
       );
     }

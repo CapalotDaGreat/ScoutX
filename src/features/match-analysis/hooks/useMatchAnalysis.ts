@@ -51,7 +51,7 @@ import {
 } from '@/features/match-analysis/services/identityConfirmation';
 import { quotaErrorFrom, type QuotaErrorInfo } from '@/features/premium/types';
 import { toUserMessage } from '@/utils/userFacingError';
-import { startLinkImport } from '@/features/match-analysis/services/trackingV3Service';
+import { startLinkImport, startPlayerAnalysis } from '@/features/match-analysis/services/trackingV3Service';
 
 export type CreateLinkAnalysisInput = Omit<CreateMatchAnalysisInput, 'localVideoUri' | 'fileName'> & {
   /** Verified direct https link (inspectVideoSource returned `ready`). */
@@ -174,6 +174,9 @@ export function useMatchAnalysis(playerId: string | null) {
       }
       uploadJobRef.current = null;
       resetUpload();
+      // 4.0: start the progressive player analysis right away (server-gated, idempotent). The
+      // workspace shows its real progress; a refusal here never blocks the existing pipeline.
+      void startPlayerAnalysis(job.id).catch(() => undefined);
       const latest = (await getMatchAnalysisJob(job.id).catch(() => null)) ?? job;
       setActiveJob(latest);
       return latest;
@@ -452,6 +455,7 @@ export function useMatchAnalysis(playerId: string | null) {
         if (!outcome || outcome.state !== 'ready') {
           throw new Error(outcome ? LINK_IMPORT_FAILED_MESSAGE : VALIDATION_TIMEOUT_MESSAGE);
         }
+        void startPlayerAnalysis(jobId).catch(() => undefined);
         const latest = (await getMatchAnalysisJob(jobId).catch(() => null)) ?? consented;
         setActiveJob(latest);
         return latest;

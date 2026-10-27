@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolveTrackingTask = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
 exports.httpTrackingClient = httpTrackingClient;
 exports.processResolveTask = processResolveTask;
+exports.settleOrchestratedResolve = settleOrchestratedResolve;
 const firestore_1 = require("firebase-admin/firestore");
 const functions_1 = require("firebase-admin/functions");
 const storage_1 = require("firebase-admin/storage");
@@ -15,6 +16,8 @@ const cvWorker_1 = require("./cvWorker");
 const frameAnalysis_1 = require("./frameAnalysis");
 const trackingV3_1 = require("./trackingV3");
 const videoConsent_1 = require("./videoConsent");
+const notificationProducers_1 = require("../notificationProducers");
+const trackingProgress_1 = require("./trackingProgress");
 const OP_ID = /^[A-Za-z0-9_-]{8,64}$/;
 const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
 async function ownedJob(tx, db, jobId, uid) {
@@ -110,18 +113,18 @@ exports.setTrackingPeriods = (0, https_1.onCall)((0, callableOptions_1.createCal
         return { ...fb, periods: clean };
     });
 });
-function httpTrackingClient(baseUrl, env = process.env) {
+function httpTrackingClient(baseUrl, env = process.env, route = 'resolve', timeoutMs = 10 * 60 * 1000) {
     return async (body) => {
         const emulated = env.FUNCTIONS_EMULATOR === 'true';
         const token = emulated ? null : await (0, cvWorker_1.identityToken)(baseUrl);
         if (!emulated && !token)
             return null;
         try {
-            const res = await fetch(`${baseUrl}/v3/tracking:resolve`, {
+            const res = await fetch(`${baseUrl}/v3/tracking:${route}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
                 body: JSON.stringify(body),
-                signal: AbortSignal.timeout(10 * 60 * 1000),
+                signal: AbortSignal.timeout(timeoutMs),
             });
             return res.ok ? await res.json() : null;
         }
@@ -135,10 +138,17 @@ const storageImageStore = async (path, jpeg) => {
         metadata: { cacheControl: 'private, max-age=3600' } });
 };
 exports.storageImageStore = storageImageStore;
-/** Re-solves identity from cached stage-1 artifacts + feedback. Never re-runs detection. */
-async function processResolveTask(db, jobId, feedbackRevision, client, env = process.env, storeImage = exports.storageImageStore) {
+/**
+ * Re-solves identity from cached stage-1 artifacts + feedback. Never re-runs detection.
+ * Writes the report only when it covers at least as much of the recording as the current one
+ * (a preliminary report never overwrites a fuller one), then records the publication in the
+ * progress document and sends the de-duplicated "first moments" / "review needed" / "ready"
+ * notifications.
+ */
+async function processResolveTask(db, jobId, feedbackRevision, client, env = process.env, storeImage = exports.storageImageStore, opts = {}) {
     if (!client || !(0, trackingV3_1.trackingV3Enabled)(env) || (0, cvConfig_1.cvWorkerStatus)(env) !== 'available')
         return 'unavailable';
+    const now = opts.now ?? (() => new Date());
     const base = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION);
     const fbSnap = await base.doc('feedback').get();
     const fb = (fbSnap.exists ? fbSnap.data() : { ...(0, trackingV3_1.emptyFeedback)(), revision: 0 });
@@ -157,8 +167,13 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const report = (0, trackingV3_1.parseTrackingReport)(raw.report, raw.timeline);
     if (!report)
         return 'rejected';
+    const progressSnap = await base.doc('progress').get();
+    const progress = progressSnap.exists ? progressSnap.data() : null;
+    const totalParts = progress?.plan.length ?? 0;
+    const scope = !progress || report.analysedRange.parts >= totalParts ? 'full' : 'preliminary';
     // Review-card images: stored owner-only; a question without a valid image keeps imagePath null.
-    const rawQuestions = raw.report.reviewQuestions ?? [];
+    const rawReport = raw.report;
+    const rawQuestions = rawReport.reviewQuestions ?? [];
     for (let i = 0; i < report.reviewQuestions.length; i += 1) {
         const jpeg = (0, trackingV3_1.decodeReviewImage)(rawQuestions[i]?.imageJpegBase64);
         if (!jpeg)
@@ -167,27 +182,91 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         await storeImage(path, jpeg);
         report.reviewQuestions[i].imagePath = path;
     }
-    const ref = (0, trackingV3_1.decodeReviewImage)(raw.report.referenceImageJpegBase64);
+    // Moment thumbnails: the target's own close-up crop inside the clip, owner-only.
+    const momentImages = new Map((rawReport.moments ?? []).map((m) => [String(m?.id), m?.imageJpegBase64]));
+    for (const m of report.moments) {
+        const jpeg = (0, trackingV3_1.decodeReviewImage)(momentImages.get(m.id));
+        if (!jpeg)
+            continue;
+        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${m.id}_p${report.analysedRange.parts}_r${feedbackRevision}`);
+        await storeImage(path, jpeg);
+        m.imagePath = path;
+    }
+    const ref = (0, trackingV3_1.decodeReviewImage)(rawReport.referenceImageJpegBase64);
     if (ref) {
         const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, 'reference');
         await storeImage(path, ref);
         report.referenceImagePath = path;
     }
-    return db.runTransaction(async (tx) => {
+    const at = now().toISOString();
+    const outcome = await db.runTransaction(async (tx) => {
         const fresh = await tx.get(base.doc('feedback'));
         const cur = await tx.get(base.doc('current'));
         if ((fresh.data()?.revision ?? 0) !== feedbackRevision)
             return 'superseded';
-        tx.set(base.doc('current'), { report, version: (cur.data()?.version ?? 0) + 1,
-            stale: false, pendingReason: null, feedbackRevision, updatedAt: new Date().toISOString() });
+        const curDoc = cur.data();
+        if (!(0, trackingProgress_1.shouldReplaceReport)(curDoc?.report ? { parts: curDoc.parts ?? 0, scope: curDoc.scope } : null, { parts: report.analysedRange.parts, scope })) {
+            return 'stale';
+        }
+        tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+            stale: false, pendingReason: null, feedbackRevision, updatedAt: at });
+        if (progress) {
+            const published = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
+                moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };
+            tx.set(base.doc('progress'), { [scope]: published, resolving: null, updatedAt: at }, { merge: true });
+        }
         return 'done';
     });
+    if (outcome !== 'done' || !progress)
+        return outcome;
+    const notify = opts.notify ?? ((id, input) => (0, notificationProducers_1.writeSystemActivity)(db, id, input));
+    const ref_ = { entityType: 'match_analysis', entityId: jobId, label: 'Match analysis' };
+    const gen = progress.generation;
+    if (report.moments.some((m) => !m.candidate)) {
+        await notify((0, trackingProgress_1.notificationId)('first_moments', jobId, gen), { recipientId: job.playerId, recipientRole: 'player',
+            type: 'analysis_first_moments', category: 'analysis', title: 'Your first moments are ready',
+            body: scope === 'full' ? 'Your match moments are ready to watch.' : 'Watch your first moments while the rest of the match is analysed.',
+            reference: ref_ });
+    }
+    if ((0, trackingProgress_1.reviewNeeded)(report)) {
+        await notify((0, trackingProgress_1.notificationId)('review_needed', jobId, gen), { recipientId: job.playerId, recipientRole: 'player',
+            type: 'analysis_review_needed', category: 'analysis', title: 'Is this you?',
+            body: 'A few quick answers help PitchProof follow the right player.', reference: ref_ });
+    }
+    if (scope === 'full' && opts.scope !== 'feedback') {
+        await notify((0, trackingProgress_1.notificationId)('ready', jobId, gen), { recipientId: job.playerId, recipientRole: 'player',
+            type: 'analysis_completed', category: 'analysis', title: 'Your match review is ready',
+            body: 'Your full match review is ready. Open it to see your moments and next steps.', reference: ref_ });
+    }
+    return outcome;
 }
 exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: 3, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 4 }, timeoutSeconds: 900 }, async (request) => {
     const d = request.data;
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision))
         return;
+    const scope = d.scope === 'preliminary' || d.scope === 'full' ? d.scope : 'feedback';
     const url = (0, cvConfig_1.cvWorkerUrl)();
-    await processResolveTask((0, firestore_1.getFirestore)(), d.jobId, d.feedbackRevision, url ? httpTrackingClient(url) : null);
+    const db = (0, firestore_1.getFirestore)();
+    let fbRevision = d.feedbackRevision;
+    if (scope !== 'feedback') {
+        // Orchestrated resolves always use the latest answers.
+        const fb = await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(d.jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('feedback').get();
+        fbRevision = fb.data()?.revision ?? 0;
+    }
+    const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope });
+    if (scope !== 'feedback')
+        await settleOrchestratedResolve(db, d.jobId, scope, outcome);
 });
+/**
+ * Releases the "resolving" slot after an orchestrated resolve that did not publish, so later
+ * segments can schedule another one. A full report that cannot be built interrupts the analysis
+ * (the owner can resume; cached segments are kept).
+ */
+async function settleOrchestratedResolve(db, jobId, scope, outcome, now = new Date()) {
+    if (outcome === 'done')
+        return;
+    const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('progress');
+    const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable');
+    await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
+}
 //# sourceMappingURL=trackingCallables.js.map

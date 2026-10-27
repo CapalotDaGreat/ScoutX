@@ -40,6 +40,21 @@ export type TrackingEvent = {
   candidate?: true;
 };
 const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate'];
+export const MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell'] as const;
+export type MomentKind = (typeof MOMENT_KINDS)[number];
+/**
+ * A watchable clip window around the target's own measured action (or a confirmed on-camera
+ * spell). Built by the worker from existing events/identity only - never a new football event.
+ */
+export type TrackingMoment = {
+  id: string; kind: MomentKind; kinds: MomentKind[]; start: number; end: number; clipStart: number; clipEnd: number;
+  identityState: 'CONFIRMED_VISIBLE' | 'LIKELY_VISIBLE'; candidate: boolean; outcome?: 'completed' | 'incomplete' | 'unknown';
+  /** [t, x, y, w, h] normalised target box samples inside the clip (target indicator). */
+  indicator: Array<[number, number, number, number, number]>;
+  imagePath?: string | null;
+};
+export const MAX_MOMENTS = 80;
+export const MAX_CLIP_SEC = 20;
 export type ReviewQuestion = {
   id: string; t: number; box: [number, number, number, number]; affectedSec: number; currentlyTarget: boolean;
   score: number; imagePath?: string | null;
@@ -72,6 +87,11 @@ export type TrackingReport = {
   heatmap: { status: 'observed_only' | 'unavailable'; reason?: string };
   /** Owner-only Storage path of a number-confirmed sighting, shown next to each review card. */
   referenceImagePath?: string | null;
+  moments: TrackingMoment[];
+  /** Part of the recording covered by this report. A partial (preliminary) report covers less. */
+  analysedRange: { startSec: number; endSec: number; parts: number };
+  /** Source frame size; turns a moment's normalised target box into an identity answer point. */
+  videoSize: { width: number; height: number } | null;
 };
 
 /** Decodes the worker's small review-card JPEGs (bounded size, JPEG magic bytes checked). */
@@ -205,6 +225,13 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
       box: box as [number, number, number, number], affectedSec: q.affectedSec as number,
       currentlyTarget: q.currentlyTarget === true, score: isNum(q.score) ? q.score : 0, imagePath: null });
   }
+  const moments = parseMoments(r.moments, coverage.recordingSec);
+  if (!moments) return null;
+  const range = asRecord(r.analysedRange);
+  const analysedRange = range && nonNeg(range.startSec) && nonNeg(range.endSec) && nonNeg(range.parts)
+    && (range.endSec as number) >= (range.startSec as number)
+    ? { startSec: range.startSec as number, endSec: range.endSec as number, parts: Math.floor(range.parts as number) }
+    : { startSec: 0, endSec: coverage.recordingSec, parts: 0 };
   const heatRaw = asRecord(r.heatmap);
   const report: TrackingReport = {
     schema: TRACKING_SCHEMA,
@@ -222,6 +249,13 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
       unknownOutcomePasses: counts('unknownOutcomePasses'), contactsConfirmedIdentity: counts('contactsConfirmedIdentity'),
       duelCandidates: counts('duelCandidates'), tackleCandidates: counts('tackleCandidates'), provenance: 'model_estimate_unvalidated' },
     events,
+    moments,
+    analysedRange,
+    videoSize: (() => {
+      const v = asRecord(r.videoSize);
+      return v && isNum(v.width) && isNum(v.height) && v.width > 0 && v.height > 0 && v.width <= 8192 && v.height <= 8192
+        ? { width: v.width, height: v.height } : null;
+    })(),
     reviewQuestions: questions,
     identity: { numberSightings: nonNeg(ident.numberSightings) ? ident.numberSightings as number : 0,
       confirmedByUser: nonNeg(ident.confirmedByUser) ? ident.confirmedByUser as number : 0 },
@@ -229,6 +263,43 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
       : { status: 'unavailable', reason: String(heatRaw?.reason ?? 'No validated pitch calibration for this recording.').slice(0, 200) },
   };
   return trackingInvariantViolations(report).length === 0 ? report : null;
+}
+
+/**
+ * Validates the worker's moments. Anything not on claimed target frames, outside the recording,
+ * longer than MAX_CLIP_SEC or of an unknown kind invalidates the whole report (never shown).
+ */
+export function parseMoments(raw: unknown, recordingSec: number): TrackingMoment[] | null {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw) || raw.length > MAX_MOMENTS) return null;
+  const out: TrackingMoment[] = [];
+  const ids = new Set<string>();
+  for (const item of raw) {
+    const m = asRecord(item);
+    if (!m || typeof m.id !== 'string' || !/^m_[0-9]{1,6}$/.test(m.id) || ids.has(m.id)) return null;
+    if (!MOMENT_KINDS.includes(m.kind as MomentKind)) return null;
+    if (!['CONFIRMED_VISIBLE', 'LIKELY_VISIBLE'].includes(String(m.identityState))) return null;
+    if (![m.start, m.end, m.clipStart, m.clipEnd].every(nonNeg)) return null;
+    const [start, end, c0, c1] = [m.start, m.end, m.clipStart, m.clipEnd] as number[];
+    if (end < start || c1 < c0 || c1 - c0 > MAX_CLIP_SEC + 0.01 || (recordingSec > 0 && c1 > recordingSec + 0.5)) return null;
+    const kinds = Array.isArray(m.kinds) ? (m.kinds as unknown[]).filter((k): k is MomentKind => MOMENT_KINDS.includes(k as MomentKind)) : [];
+    const candidate = m.candidate === true;
+    // A candidate flag must agree with the kind: duel/tackle candidates are never presented as actions.
+    if (candidate !== String(m.kind).endsWith('_candidate')) return null;
+    const indicator: TrackingMoment['indicator'] = [];
+    for (const p of Array.isArray(m.indicator) ? (m.indicator as unknown[]).slice(0, 60) : []) {
+      if (!Array.isArray(p) || p.length !== 5 || !p.every(isNum)) return null;
+      const [t, x, y, w, h] = p as number[];
+      if (t < c0 - 0.01 || t > c1 + 0.01 || [x, y, w, h].some((v) => v < -0.05 || v > 1.05)) return null;
+      indicator.push([t, x, y, w, h]);
+    }
+    ids.add(m.id);
+    out.push({ id: m.id, kind: m.kind as MomentKind, kinds: kinds.length ? kinds : [m.kind as MomentKind], start, end,
+      clipStart: c0, clipEnd: c1, identityState: m.identityState as TrackingMoment['identityState'], candidate,
+      ...(m.outcome ? { outcome: (['completed', 'incomplete'].includes(String(m.outcome)) ? m.outcome : 'unknown') as TrackingMoment['outcome'] } : {}),
+      indicator, imagePath: null });
+  }
+  return out.sort((a, b) => a.clipStart - b.clipStart);
 }
 
 /** Per-second majority state, run-length encoded: [startSec, endSec, state]. */
@@ -279,11 +350,26 @@ export function emptyFeedback(): TrackingFeedback {
 export function applyAnswer(feedback: TrackingFeedback, report: TrackingReport, questionId: string, answer: Answer,
   operationId: string, now: string): TrackingFeedback | null {
   if (feedback.entries.some((e) => e.operationId === operationId)) return feedback;
-  const q = report.reviewQuestions.find((item) => item.id === questionId);
-  if (!q) return null;
-  const point: [number, number] = [(q.box[0] + q.box[2]) / 2, (q.box[1] + q.box[3]) / 2];
+  const target = answerTarget(report, questionId);
+  if (!target) return null;
   const entries = feedback.entries.filter((e) => e.questionId !== questionId);
-  return { ...feedback, entries: [...entries, { questionId, answer, t: q.t, point, operationId, at: now }].slice(-500) };
+  return { ...feedback, entries: [...entries, { questionId, answer, t: target.t, point: target.point, operationId, at: now }].slice(-500) };
+}
+
+/**
+ * Where an identity answer points: a review question's box, or - "Is this you?" asked while
+ * watching a moment - the moment's target indicator sample nearest the middle of the action.
+ * The answer is per-match feedback only (never training data).
+ */
+export function answerTarget(report: TrackingReport, id: string): { t: number; point: [number, number] } | null {
+  const q = report.reviewQuestions.find((item) => item.id === id);
+  if (q) return { t: q.t, point: [(q.box[0] + q.box[2]) / 2, (q.box[1] + q.box[3]) / 2] };
+  const m = (report.moments ?? []).find((item) => item.id === id);
+  if (!m || !report.videoSize || m.indicator.length === 0) return null;
+  const mid = (m.start + m.end) / 2;
+  const s = m.indicator.reduce((best, p) => (Math.abs(p[0] - mid) < Math.abs(best[0] - mid) ? p : best));
+  const { width, height } = report.videoSize;
+  return { t: s[0], point: [(s[1] + s[3] / 2) * width, (s[2] + s[4] / 2) * height] };
 }
 
 export function undoLast(feedback: TrackingFeedback): TrackingFeedback {

@@ -38,7 +38,7 @@ export type PlayerStackParamList = {
   Trials: { trialId?: string } | undefined;
   RequestCenter: { requestId?: string } | undefined;
   PlayerDetail: { playerId: string; evidenceId?: string };
-  AnalysisReport: { jobId: string };
+  AnalysisReport: { jobId: string; section?: 'moments' | 'review' };
   GlobalSearch: undefined;
   PlayerLogin: undefined;
   PlayerRegister: undefined;

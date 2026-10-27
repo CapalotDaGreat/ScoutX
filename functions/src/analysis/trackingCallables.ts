@@ -14,6 +14,10 @@ import {
   validPeriods, workerFeedback, type Answer, type TrackingFeedback, type TrackingReport,
 } from './trackingV3';
 import { VIDEO_CONSENT_COLLECTION, VIDEO_CONSENT_VERSION } from './videoConsent';
+import { writeSystemActivity, type SystemActivityInput } from '../notificationProducers';
+import {
+  notificationId, reviewNeeded, shouldReplaceReport, type PublishedReport, type ReportScope, type TrackingProgress,
+} from './trackingProgress';
 
 type CurrentDoc = { report: TrackingReport | null; version: number; stale: boolean; feedbackRevision: number;
   pendingReason?: string | null; updatedAt?: string };
@@ -113,17 +117,18 @@ export const setTrackingPeriods = onCall(createCallableOptions(), async (request
 
 export type TrackingWorkerClient = (body: Record<string, unknown>) => Promise<unknown | null>;
 
-export function httpTrackingClient(baseUrl: string, env: NodeJS.ProcessEnv = process.env): TrackingWorkerClient {
+export function httpTrackingClient(baseUrl: string, env: NodeJS.ProcessEnv = process.env,
+  route: 'resolve' | 'extract' = 'resolve', timeoutMs = 10 * 60 * 1000): TrackingWorkerClient {
   return async (body) => {
     const emulated = env.FUNCTIONS_EMULATOR === 'true';
     const token = emulated ? null : await identityToken(baseUrl);
     if (!emulated && !token) return null;
     try {
-      const res = await fetch(`${baseUrl}/v3/tracking:resolve`, {
+      const res = await fetch(`${baseUrl}/v3/tracking:${route}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify(body),
-        signal: AbortSignal.timeout(10 * 60 * 1000),
+        signal: AbortSignal.timeout(timeoutMs),
       });
       return res.ok ? await res.json() : null;
     } catch {
@@ -139,11 +144,30 @@ export const storageImageStore: ImageStore = async (path, jpeg) => {
     metadata: { cacheControl: 'private, max-age=3600' } });
 };
 
-/** Re-solves identity from cached stage-1 artifacts + feedback. Never re-runs detection. */
+/** Writes a server activity (push policy, preferences and de-duplication apply downstream). */
+export type TrackingNotifier = (activityId: string, input: SystemActivityInput) => Promise<boolean>;
+
+export type ResolveOptions = {
+  /** 'feedback' = re-resolve after an identity answer; 'preliminary'/'full' = orchestrated. */
+  scope?: 'feedback' | 'preliminary' | 'full';
+  notify?: TrackingNotifier;
+  now?: () => Date;
+};
+
+type ProgressDoc = TrackingProgress;
+
+/**
+ * Re-solves identity from cached stage-1 artifacts + feedback. Never re-runs detection.
+ * Writes the report only when it covers at least as much of the recording as the current one
+ * (a preliminary report never overwrites a fuller one), then records the publication in the
+ * progress document and sends the de-duplicated "first moments" / "review needed" / "ready"
+ * notifications.
+ */
 export async function processResolveTask(db: Firestore, jobId: string, feedbackRevision: number,
   client: TrackingWorkerClient | null, env: NodeJS.ProcessEnv = process.env,
-  storeImage: ImageStore = storageImageStore): Promise<'done' | 'superseded' | 'unavailable' | 'rejected'> {
+  storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<'done' | 'superseded' | 'unavailable' | 'rejected' | 'stale'> {
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available') return 'unavailable';
+  const now = opts.now ?? (() => new Date());
   const base = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION);
   const fbSnap = await base.doc('feedback').get();
   const fb = (fbSnap.exists ? fbSnap.data() : { ...emptyFeedback(), revision: 0 }) as FeedbackDoc;
@@ -159,8 +183,14 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   }
   const report = parseTrackingReport(raw.report, raw.timeline);
   if (!report) return 'rejected';
+  const progressSnap = await base.doc('progress').get();
+  const progress = progressSnap.exists ? progressSnap.data() as ProgressDoc : null;
+  const totalParts = progress?.plan.length ?? 0;
+  const scope: ReportScope = !progress || report.analysedRange.parts >= totalParts ? 'full' : 'preliminary';
   // Review-card images: stored owner-only; a question without a valid image keeps imagePath null.
-  const rawQuestions = (raw.report as { reviewQuestions?: Array<{ imageJpegBase64?: unknown }> }).reviewQuestions ?? [];
+  const rawReport = raw.report as { reviewQuestions?: Array<{ imageJpegBase64?: unknown }>;
+    moments?: Array<{ id?: unknown; imageJpegBase64?: unknown }>; referenceImageJpegBase64?: unknown };
+  const rawQuestions = rawReport.reviewQuestions ?? [];
   for (let i = 0; i < report.reviewQuestions.length; i += 1) {
     const jpeg = decodeReviewImage(rawQuestions[i]?.imageJpegBase64);
     if (!jpeg) continue;
@@ -168,28 +198,92 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     await storeImage(path, jpeg);
     report.reviewQuestions[i].imagePath = path;
   }
-  const ref = decodeReviewImage((raw.report as { referenceImageJpegBase64?: unknown }).referenceImageJpegBase64);
+  // Moment thumbnails: the target's own close-up crop inside the clip, owner-only.
+  const momentImages = new Map<string, unknown>((rawReport.moments ?? []).map((m) => [String(m?.id), m?.imageJpegBase64]));
+  for (const m of report.moments) {
+    const jpeg = decodeReviewImage(momentImages.get(m.id));
+    if (!jpeg) continue;
+    const path = reviewImagePath(job.playerId, jobId, `${m.id}_p${report.analysedRange.parts}_r${feedbackRevision}`);
+    await storeImage(path, jpeg);
+    m.imagePath = path;
+  }
+  const ref = decodeReviewImage(rawReport.referenceImageJpegBase64);
   if (ref) {
     const path = reviewImagePath(job.playerId, jobId, 'reference');
     await storeImage(path, ref);
     report.referenceImagePath = path;
   }
-  return db.runTransaction(async (tx) => {
+  const at = now().toISOString();
+  const outcome = await db.runTransaction(async (tx) => {
     const fresh = await tx.get(base.doc('feedback'));
     const cur = await tx.get(base.doc('current'));
-    if (((fresh.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded';
-    tx.set(base.doc('current'), { report, version: ((cur.data() as CurrentDoc | undefined)?.version ?? 0) + 1,
-      stale: false, pendingReason: null, feedbackRevision, updatedAt: new Date().toISOString() });
-    return 'done';
+    if (((fresh.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded' as const;
+    const curDoc = cur.data() as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
+    if (!shouldReplaceReport(curDoc?.report ? { parts: curDoc.parts ?? 0, scope: curDoc.scope } : null,
+      { parts: report.analysedRange.parts, scope })) {
+      return 'stale' as const;
+    }
+    tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+      stale: false, pendingReason: null, feedbackRevision, updatedAt: at });
+    if (progress) {
+      const published: PublishedReport = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
+        moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };
+      tx.set(base.doc('progress'), { [scope]: published, resolving: null, updatedAt: at }, { merge: true });
+    }
+    return 'done' as const;
   });
+  if (outcome !== 'done' || !progress) return outcome;
+  const notify = opts.notify ?? ((id, input) => writeSystemActivity(db, id, input));
+  const ref_ = { entityType: 'match_analysis', entityId: jobId, label: 'Match analysis' };
+  const gen = progress.generation;
+  if (report.moments.some((m) => !m.candidate)) {
+    await notify(notificationId('first_moments', jobId, gen), { recipientId: job.playerId, recipientRole: 'player',
+      type: 'analysis_first_moments', category: 'analysis', title: 'Your first moments are ready',
+      body: scope === 'full' ? 'Your match moments are ready to watch.' : 'Watch your first moments while the rest of the match is analysed.',
+      reference: ref_ });
+  }
+  if (reviewNeeded(report)) {
+    await notify(notificationId('review_needed', jobId, gen), { recipientId: job.playerId, recipientRole: 'player',
+      type: 'analysis_review_needed', category: 'analysis', title: 'Is this you?',
+      body: 'A few quick answers help PitchProof follow the right player.', reference: ref_ });
+  }
+  if (scope === 'full' && opts.scope !== 'feedback') {
+    await notify(notificationId('ready', jobId, gen), { recipientId: job.playerId, recipientRole: 'player',
+      type: 'analysis_completed', category: 'analysis', title: 'Your match review is ready',
+      body: 'Your full match review is ready. Open it to see your moments and next steps.', reference: ref_ });
+  }
+  return outcome;
 }
 
 export const resolveTrackingTask = onTaskDispatched(
   { retryConfig: { maxAttempts: 3, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 4 }, timeoutSeconds: 900 },
   async (request) => {
-    const d = request.data as { jobId?: unknown; feedbackRevision?: unknown };
+    const d = request.data as { jobId?: unknown; feedbackRevision?: unknown; scope?: unknown };
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision)) return;
+    const scope = d.scope === 'preliminary' || d.scope === 'full' ? d.scope : 'feedback';
     const url = cvWorkerUrl();
-    await processResolveTask(getFirestore(), d.jobId, d.feedbackRevision as number, url ? httpTrackingClient(url) : null);
+    const db = getFirestore();
+    let fbRevision = d.feedbackRevision as number;
+    if (scope !== 'feedback') {
+      // Orchestrated resolves always use the latest answers.
+      const fb = await db.collection(MATCH_COLLECTION).doc(d.jobId).collection(TRACKING_COLLECTION).doc('feedback').get();
+      fbRevision = (fb.data() as FeedbackDoc | undefined)?.revision ?? 0;
+    }
+    const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env,
+      storageImageStore, { scope });
+    if (scope !== 'feedback') await settleOrchestratedResolve(db, d.jobId, scope, outcome);
   },
 );
+
+/**
+ * Releases the "resolving" slot after an orchestrated resolve that did not publish, so later
+ * segments can schedule another one. A full report that cannot be built interrupts the analysis
+ * (the owner can resume; cached segments are kept).
+ */
+export async function settleOrchestratedResolve(db: Firestore, jobId: string, scope: ReportScope,
+  outcome: Awaited<ReturnType<typeof processResolveTask>>, now = new Date()): Promise<void> {
+  if (outcome === 'done') return;
+  const ref = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc('progress');
+  const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable');
+  await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
+}

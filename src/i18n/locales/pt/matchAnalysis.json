@@ -634,5 +634,398 @@
       "durationHint": "Serve para escolher o modo de análise; a duração real é medida após a importação.",
       "remove": "Remover link"
     }
+  },
+  "review": {
+    "tab": "Minha análise",
+    "view": {
+      "label": "Visualização",
+      "simple": "Simples",
+      "detailed": "Detalhada",
+      "scout": "Visão de olheiro"
+    },
+    "workspace": {
+      "title": "A tua análise",
+      "intro": "O PitchProof vai encontrar os teus lances, rever os teus movimentos e criar o teu relatório pessoal da partida.",
+      "leave": "Podes sair deste ecrã ou bloquear o telemóvel. A análise continua nos nossos servidores e avisamos quando houver algo para ver.",
+      "parts": "{{done}} de {{total}} partes da partida preparadas",
+      "remainingMinutes": "Faltam cerca de {{value}} min à velocidade medida até agora",
+      "remainingHours": "Faltam cerca de {{value}} h à velocidade medida até agora",
+      "measuring": "Uma estimativa de tempo aparece quando a primeira parte terminar.",
+      "partial": "Primeiros resultados até {{until}} da gravação. Mais lances são adicionados enquanto a análise continua.",
+      "stage": {
+        "received": "Vídeo recebido",
+        "preparing": "A preparar a partida",
+        "finding": "A procurar o teu jogador",
+        "moments": "A descobrir lances",
+        "actions": "A rever as tuas ações",
+        "report": "A criar o teu relatório",
+        "ready": "Pronto"
+      },
+      "status": {
+        "done": "concluído",
+        "active": "em curso",
+        "pending": "em espera",
+        "blocked": "parado"
+      }
+    },
+    "problem": {
+      "consent_required": {
+        "title": "É necessário o teu consentimento",
+        "body": "Só analisamos o teu vídeo depois de confirmares como é tratado.",
+        "action": "Rever consentimento"
+      },
+      "source_missing": {
+        "title": "O vídeo não está disponível",
+        "body": "O vídeo original foi removido ou o envio nunca terminou.",
+        "action": "Enviar novamente"
+      },
+      "worker_unavailable": {
+        "title": "A análise não está disponível agora",
+        "body": "O serviço de análise de vídeo ainda não está ativo nesta conta. O teu vídeo está guardado em segurança e nada se perdeu.",
+        "action": "Verificar mais tarde"
+      },
+      "interrupted": {
+        "title": "Análise em pausa",
+        "body": "Uma parte da partida não pôde ser analisada. As partes concluídas são mantidas, por isso ao retomar só se processa o que falta.",
+        "action": "Retomar análise"
+      },
+      "cancelled": {
+        "title": "Análise cancelada",
+        "body": "Esta análise foi cancelada. Podes iniciar uma nova no ecrã da partida.",
+        "action": ""
+      },
+      "retryHelps": "Tentar novamente deverá ajudar.",
+      "retryNoHelp": "Tentar novamente não ajuda enquanto isto não for resolvido."
+    },
+    "start": {
+      "title": "Analisar o meu jogador",
+      "body": "O PitchProof vai encontrar os teus lances, rever os teus movimentos e criar o teu relatório pessoal da partida. Podes sair da app enquanto trabalha.",
+      "action": "Iniciar análise",
+      "starting": "A iniciar…",
+      "failed": "Não foi possível iniciar a análise. Tenta novamente."
+    },
+    "hero": {
+      "strong": "A tua partida, verificada em vídeo",
+      "limited": "Eis o que o PitchProof conseguiu verificar",
+      "none": "Ainda não conseguimos reconhecer-te com clareza nesta gravação",
+      "confirmedMoments_one": "{{count}} lance confirmado",
+      "confirmedMoments_other": "{{count}} lances confirmados",
+      "reviewMoments_one": "{{count}} lance para verificar",
+      "reviewMoments_other": "{{count}} lances para verificar",
+      "seen": "Visto em vídeo durante {{seen}} min, confirmado durante {{confirmed}} min, de {{analysed}} min analisados",
+      "partial": "Revisão inicial: analisado até {{until}} por agora"
+    },
+    "section": {
+      "story": "História da partida",
+      "best": "Melhores lances",
+      "well": "O que correu bem",
+      "improve": "O que trabalhar",
+      "focus": "Foco para a próxima partida",
+      "details": "Detalhes da análise",
+      "ask": "Pergunta ao PitchProof",
+      "moments": "Os meus lances",
+      "needsReview": "És tu?",
+      "highlights": "Vídeo de destaques",
+      "development": "Estou a melhorar?"
+    },
+    "moments": {
+      "all": "Todos",
+      "category": {
+        "on_ball": "Com bola",
+        "passing": "Passes",
+        "duels": "Duelos",
+        "on_camera": "Em imagem"
+      },
+      "kind": {
+        "contact": "Contacto com a bola",
+        "carry": "Condução",
+        "pass_attempt": "Passe",
+        "duel_candidate": "Possível duelo",
+        "tackle_candidate": "Possível desarme",
+        "spell": "Tu em imagem"
+      },
+      "outcome": {
+        "completed": "chegou a um colega",
+        "incomplete": "não chegou a um colega",
+        "unknown": "resultado não visível"
+      },
+      "evidence": {
+        "confirmed": "Confirmado em vídeo",
+        "estimated": "Estimado a partir do vídeo",
+        "needs_review": "Precisa da tua verificação",
+        "not_measurable": "Não mensurável nesta gravação"
+      },
+      "empty": "Ainda sem lances",
+      "emptyBody": "Os lances aparecem aqui assim que o PitchProof te encontrar no vídeo.",
+      "noneConfirmed": "Ainda sem lances confirmados. Verifica os lances abaixo para que o PitchProof te possa seguir.",
+      "needsReviewIntro": "O PitchProof acha que és tu, mas não tem certeza. A tua resposta só melhora o relatório desta partida.",
+      "open": "Reproduzir {{kind}} em {{time}}",
+      "duration": "{{sec}} s"
+    },
+    "player": {
+      "title": "{{kind}} em {{time}}",
+      "play": "Reproduzir",
+      "pause": "Pausa",
+      "slow": "Câmara lenta",
+      "normal": "Velocidade normal",
+      "stepBack": "Recuar 0,1 s",
+      "stepForward": "Avançar 0,1 s",
+      "replay": "Rever",
+      "loopOn": "Repetição ligada",
+      "loopOff": "Repetição desligada",
+      "indicator": "Moldura amarela: o jogador seguido pelo PitchProof",
+      "isThisYou": "És tu?",
+      "yes": "Sim, sou eu",
+      "notMe": "Não sou eu",
+      "notSure": "Não tenho certeza",
+      "skip": "Saltar",
+      "undo": "Desfazer",
+      "answered": "Obrigado. O teu relatório é atualizado dentro de segundos.",
+      "answerError": "Não foi possível guardar a tua resposta. Tenta novamente.",
+      "startEarlier": "Começar 2 s antes",
+      "endLater": "Terminar 2 s depois",
+      "note": "A tua nota",
+      "notePlaceholder": "O que reparas neste lance?",
+      "saveNote": "Guardar nota",
+      "noteSaved": "Nota guardada neste dispositivo.",
+      "unavailable": "Reprodução indisponível: o vídeo original já não está guardado. O lance e os seus detalhes continuam no relatório.",
+      "close": "Fechar"
+    },
+    "label": {
+      "whatHappened": "O que aconteceu",
+      "whyItMatters": "Porque é importante",
+      "doDifferently": "O que fazer de forma diferente",
+      "howToPractise": "Como treinar",
+      "whereToSee": "Onde ver",
+      "evidence": "Evidência"
+    },
+    "coach": {
+      "involvement": {
+        "strength": {
+          "what": "O vídete mostra-te com a bola {{count}} vezes, com identidade confirmada.",
+          "why": "Estar disponível para a bola é a forma de influenciar o jogo.",
+          "do": "Continua a oferecer linhas de passe, sobretudo logo depois de passar."
+        },
+        "improve": {
+          "what": "Estiveste claramente em imagem durante {{minutes}} min, mas só {{count}} vezes com a bola.",
+          "why": "Quem se oferece mais vezes influencia mais a partida.",
+          "do": "Move-te para os espaços entre adversários antes de a bola chegar ao teu lado."
+        }
+      },
+      "passing": {
+        "strength": {
+          "what": "{{count}} dos teus passes chegaram a um colega, verificado em vídeo.",
+          "why": "Manter a bola permite à equipa controlar a partida.",
+          "do": "Levanta a cabeça antes de receber para escolher cedo o melhor passe."
+        }
+      },
+      "passing_accuracy": {
+        "improve": {
+          "what": "{{count}} dos teus passes não chegaram a um colega ({{completed}} verificados como certos).",
+          "why": "Perder a bola na construção dá oportunidades ao adversário.",
+          "do": "Vê as opções antes de a bola chegar, para já saberes para onde vai o próximo passe."
+        }
+      },
+      "carrying": {
+        "strength": {
+          "what": "Conduziste a bola para a frente {{count}} vezes.",
+          "why": "Conduzir para o espaço faz avançar toda a equipa.",
+          "do": "Procura o próximo passe no fim de cada condução."
+        }
+      },
+      "identity": {
+        "limitation": {
+          "what": "Só consegui confirmar-te em vídeo durante {{confirmedMin}} min de {{analysedMin}} min analisados. {{review}} lances ainda aguardam a tua verificação.",
+          "why": "Com tão pouca imagem confirmada não consigo avaliar o teu desempenho de forma fiável.",
+          "do": "Responde a \"És tu?\" nos teus lances. Cada resposta melhora este relatório."
+        }
+      },
+      "ball_visibility": {
+        "limitation": {
+          "what": "Não consigo verificar as tuas ações com bola: nesta gravação a bola raramente pôde ser seguida perto de ti.",
+          "why": "Toques, passes e duelos só se medem quando a bola está em imagem.",
+          "do": "Ajuda sobretudo uma câmara mais alta e estável que siga a bola."
+        }
+      },
+      "physical": {
+        "limitation": {
+          "what": "Não consigo verificar distância nem velocidade: esta gravação não tem calibração do campo.",
+          "why": "Sem saber o tamanho do campo na imagem, qualquer valor de distância ou velocidade seria um palpite.",
+          "do": "Os dados físicos só sãte mostrados quando o campo pode ser calibrado."
+        }
+      }
+    },
+    "topic": {
+      "involvement": "participar mais com bola",
+      "carrying": "a condução de bola",
+      "passing": "o passe",
+      "passing_accuracy": "acertar os passes",
+      "identity": "ser reconhecido no vídeo",
+      "ball_visibility": "a visibilidade da bola",
+      "physical": "os dados físicos"
+    },
+    "drill": {
+      "minutes": "{{minutes}} min",
+      "scan_before_receive": {
+        "name": "Olhar antes de receber",
+        "how": "Um colega passa-te a bola a um sinal; antes de cada toque olha por cima dos dois ombros e diz onde está um colega livre."
+      },
+      "rondo_4v2": {
+        "name": "Meinho 4 contra 2",
+        "how": "Quatro jogadores mantêm a bola num quadrado de 10 x 10 m contra dois. No máximo dois toques; os defensores trocam após recuperar."
+      },
+      "wall_pass_weight": {
+        "name": "Força do passe contra a parede",
+        "how": "Passa contra uma parede ou rebatedor a 8, 12 e 16 m. Procura um passe que o colega possa receber em corrida, 20 repetições por pé."
+      },
+      "carry_into_space": {
+        "name": "Conduzir para o espaço",
+        "how": "Recebe, orienta o primeiro toque para o lado livre e conduz 10 m antes de passar por uma baliza de cones. Alterna os lados."
+      },
+      "show_for_ball": {
+        "name": "Oferecer-se",
+        "how": "Num 3 contra 1 em corredor, sai da sombra do defensor sempre que a bola se mexe para que quem passa tenha sempre linha para ti."
+      },
+      "width_and_depth": {
+        "name": "Largura e profundidade",
+        "how": "Joga 4 contra 4 com balizas nas laterais: um golo só conta se antes a bola chegou a um extremo aberto."
+      },
+      "build_up_angles": {
+        "name": "Ângulos na construção",
+        "how": "Sai a jogar a partir da linha de fundo contra um pressionante. Oferece um ângulo na diagonal ao portador em cada passe."
+      },
+      "first_touch_away": {
+        "name": "Primeiro toque longe da pressão",
+        "how": "O treinador grita \"esquerda\" ou \"direita\" quando o passe chega; orienta o primeiro toque para o lado oposto."
+      },
+      "distribution_targets": {
+        "name": "Zonas de reposição",
+        "how": "Da pequena área, joga com pé e mão para três zonas marcadas, 10 repetições cada."
+      }
+    },
+    "tip": {
+      "wider_view": "Próxima gravação: filma de mais alto e mais aberto para que todos os jogadores fiquem em imagem.",
+      "follow_play": "Próxima gravação: mantém a câmara no jogo. Grande parte desta partida ficou fora de imagem.",
+      "bold_numbers": "Próxima gravação: garante que o número da camisola é grande e bem legível.",
+      "record_whole_match": "Próxima gravação: grava a partida inteira sem pausas.",
+      "steady_camera": "Próxima gravação: mantém a câmara estável e a bola em imagem."
+    },
+    "focus": {
+      "skill": "Na próxima partida, concentra-te em {{topic}}.",
+      "recording": "O teu próximo passo",
+      "matchesGoal": "Isto encaixa no teu objetivo de desenvolvimento \"{{title}}\".",
+      "addGoal": "Adicionar como objetivo de desenvolvimento",
+      "goalAdded": "Adicionado aos teus objetivos de desenvolvimento.",
+      "none": "Ainda sem foco específico. Mais lances confirmados tornarão isto mais útil."
+    },
+    "story": {
+      "confirmed": "confirmado em vídeo",
+      "likely": "provavelmente tu",
+      "not_seen": "não visto",
+      "no_play": "sem jogo",
+      "bucket": "{{from}} a {{to}}: {{state}}",
+      "moments_one": "{{count}} lance",
+      "moments_other": "{{count}} lances"
+    },
+    "details": {
+      "coverage": "Cobertura",
+      "analysed": "Tempo de jogo analisado",
+      "confirmed": "Confirmado em vídeo",
+      "likely": "Provavelmente tu",
+      "ambiguous": "Tu ou um colega",
+      "notIdentified": "Não identificado",
+      "unobserved": "Fora de imagem",
+      "nonMatch": "Sem jogo",
+      "minutes": "{{value}} min",
+      "sightings": "Números de camisola vistos",
+      "confirmedByUser": "Confirmado por ti",
+      "engine": "Versão da análise",
+      "physicalVerified": "Dados físicos: calibrados",
+      "physicalNot": "Dados físicos: indisponíveis (sem calibração)",
+      "ballEvents": "Ações com bola medidas",
+      "limitations": "O que esta gravação não consegue mostrar",
+      "aiDisclosure": "Os resultados vêm de visão computacional aplicada ao teu vídeo. Cada númerte mostrado é medido; nada é gerado por um modelo de linguagem."
+    },
+    "ask": {
+      "placeholder": "Pergunta sobre a tua partida…",
+      "send": "Perguntar",
+      "disclosure": "As respostas usam apenas a evidência verificada desta partida. O teu vídeo não é enviado a nenhuma IA externa.",
+      "q": {
+        "best_moment": "Qual foi o meu melhor lance?",
+        "moments": "Quando participei?",
+        "passing": "Como foram os meus passes?",
+        "distance": "Quanto corri?",
+        "speed": "Que velocidade atingi?",
+        "heatmap": "Onde estive no campo?",
+        "goals": "Marquei?",
+        "improve": "Em que devo trabalhar?",
+        "well": "O que fiz bem?",
+        "identity": "Que certeza tens de que era eu?",
+        "review": "Que lances devo verificar?",
+        "compare": "Estou a melhorar?",
+        "unknown": "O que me podes dizer?"
+      },
+      "a": {
+        "noReport": "Ainda não há relatório desta partida. As respostas aparecem quando os teus primeiros lances estiverem prontos.",
+        "distanceUncalibrated": "Não consigo verificar quanto correste: esta gravação não tem calibração do campo, por isso qualquer valor em quilómetros seria um palpite.",
+        "speedUncalibrated": "Não consigo verificar a tua velocidade: esta gravação não tem calibração do campo.",
+        "physicalMissing": "Esse valor não foi medido nesta partida.",
+        "distance": "Distância medida enquanto estavas em imagem: {{value}} {{unit}}.",
+        "speed": "Velocidade máxima medida: {{value}} {{unit}}.",
+        "heatmapObserved": "As tuas posições só sãte mostradas nos momentos em que estavas em imagem.",
+        "heatmapUnavailable": "Não consigte mostrar onde estiveste no campo: esta gravação não tem calibração do campo.",
+        "goalsNotMeasured": "Não consigo verificar golos, assistências ou remates: o seguimento não os mede. Aqui estão antes os teus melhores lances.",
+        "compareSeeDevelopment": "As comparações só usam partidas com imagem confirmada suficiente. Vê \"Estou a melhorar?\" para saber o que é comparável.",
+        "noPasses": "Nesta partida não foi medido nenhum passe teu, por isso não consigo avaliar o teu passe.",
+        "passes": "{{total}} passes medidos: {{completed}} chegaram a um colega, {{incomplete}} não, e em {{unknown}} o resultado não era visível.",
+        "improve": "Eis o único ponto que o vídeo sustenta trabalhar:",
+        "noImprove": "O vídeo nãte mostra ações tuas suficientes para sugerir uma melhoria com segurança.",
+        "well": "Eis o que o vídete mostra que fizeste bem:",
+        "noStrength": "Ainda não há imagem confirmada suficiente das tuas ações para indicar um ponto forte.",
+        "identity": "Confirmei-te em vídeo durante {{confirmedMin}} min e provavelmente vi-te durante mais {{likelyMin}} min, de {{analysedMin}} min analisados. {{review}} lances aguardam a tua verificação.",
+        "review": "{{count}} lances aguardam a tua verificação:",
+        "reviewNone": "De momento não há lances para verificar.",
+        "best": "O teu melhor lance, segundo a evidência:",
+        "noMoments": "Ainda não há lances confirmados.",
+        "moments": "{{count}} lances encontrados. Os primeiros:",
+        "unknown": "Posso responder sobre os teus lances, passes, o teu reconhecimento no vídeo e o que trabalhar. Experimenta uma destas:"
+      },
+      "followUp": "Também podes perguntar"
+    },
+    "highlights": {
+      "intro": "Os vídeos usam os teus melhores lances, ordenados por evidência. Lances incertos nunca são adicionados automaticamente.",
+      "preset": {
+        "my_match": "Destaques da minha partida",
+        "attacking": "Melhores lances ofensivos",
+        "ball": "Ações com bola",
+        "defensive": "Ações defensivas",
+        "goalkeeper": "Ações de guarda-redes",
+        "custom": "Seleção própria"
+      },
+      "unavailable": {
+        "no_confirmed_moments": "Ainda sem lances confirmados",
+        "no_measured_actions": "Sem ações com bola medidas nesta partida",
+        "defensive_not_validated": "As ações defensivas ainda não estão validadas",
+        "not_goalkeeper": "Para guarda-redes"
+      },
+      "summary_one": "{{count}} clip, {{sec}} s",
+      "summary_other": "{{count}} clips, {{sec}} s",
+      "create": "Guardar como rascunho privado",
+      "created": "Rascunho guardado. Fica privado até decidires partilhá-lo.",
+      "failed": "Não foi possível guardar o vídeo. Tenta novamente.",
+      "selectHint": "Toca nos lances para os adicionar a uma seleção própria."
+    },
+    "development": {
+      "notEnough": "Uma tendência precisa de pelo menos duas partidas completas com 10 ou mais minutos confirmados cada. Assim as comparações são justas.",
+      "excluded": {
+        "partial_report": "análise não terminada",
+        "engine_changed": "analisada com outra versão",
+        "low_confirmed_coverage": "pouca imagem confirmada"
+      },
+      "point": "{{date}}: {{value}} ações por 10 minutos confirmados",
+      "excludedLine": "{{date}} não comparada: {{reason}}"
+    },
+    "preliminaryBadge": "Primeiros resultados",
+    "updating": "A atualizar com as tuas respostas…"
   }
 }

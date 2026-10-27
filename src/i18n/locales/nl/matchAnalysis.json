@@ -634,5 +634,398 @@
       "durationHint": "Bepaalt de analysemodus; de echte lengte wordt na het importeren gemeten.",
       "remove": "Link verwijderen"
     }
+  },
+  "review": {
+    "tab": "Mijn analyse",
+    "view": {
+      "label": "Weergave",
+      "simple": "Eenvoudig",
+      "detailed": "Gedetailleerd",
+      "scout": "Scoutweergave"
+    },
+    "workspace": {
+      "title": "Jouw analyse",
+      "intro": "PitchProof zoekt je momenten, bekijkt je bewegingen en maakt je persoonlijke wedstrijdrapport.",
+      "leave": "Je kunt dit scherm verlaten of je telefoon vergrendelen. De analyse gaat door op onze servers en we laten het je weten zodra er iets te zien is.",
+      "parts": "{{done}} van {{total}} delen van de wedstrijd voorbereid",
+      "remainingMinutes": "Nog ongeveer {{value}} min bij de tot nu toe gemeten snelheid",
+      "remainingHours": "Nog ongeveer {{value}} uur bij de tot nu toe gemeten snelheid",
+      "measuring": "Een tijdsinschatting verschijnt zodra het eerste deel klaar is.",
+      "partial": "Eerste resultaten tot {{until}} van de opname. Er komen meer momenten bij terwijl de analyse doorgaat.",
+      "stage": {
+        "received": "Video ontvangen",
+        "preparing": "Wedstrijd voorbereiden",
+        "finding": "Je speler zoeken",
+        "moments": "Momenten ontdekken",
+        "actions": "Je acties bekijken",
+        "report": "Je rapport maken",
+        "ready": "Klaar"
+      },
+      "status": {
+        "done": "klaar",
+        "active": "bezig",
+        "pending": "wacht",
+        "blocked": "gestopt"
+      }
+    },
+    "problem": {
+      "consent_required": {
+        "title": "Je toestemming is nodig",
+        "body": "We analyseren je video pas nadat je hebt bevestigd hoe hij wordt verwerkt.",
+        "action": "Toestemming bekijken"
+      },
+      "source_missing": {
+        "title": "De video is niet beschikbaar",
+        "body": "De originele video is verwijderd of nooit volledig geüpload.",
+        "action": "Opnieuw uploaden"
+      },
+      "worker_unavailable": {
+        "title": "De analyse is nu niet beschikbaar",
+        "body": "De videoanalyse is voor dit account nog niet ingeschakeld. Je video is veilig opgeslagen en er is niets verloren.",
+        "action": "Later opnieuw controleren"
+      },
+      "interrupted": {
+        "title": "Analyse gepauzeerd",
+        "body": "Een deel van de wedstrijd kon niet worden geanalyseerd. Afgeronde delen blijven bewaard, dus bij hervatten wordt alleen de rest verwerkt.",
+        "action": "Analyse hervatten"
+      },
+      "cancelled": {
+        "title": "Analyse geannuleerd",
+        "body": "Deze analyse is geannuleerd. Je kunt vanuit het wedstrijdscherm een nieuwe starten.",
+        "action": ""
+      },
+      "retryHelps": "Opnieuw proberen helpt waarschijnlijk.",
+      "retryNoHelp": "Opnieuw proberen helpt pas als dit is opgelost."
+    },
+    "start": {
+      "title": "Mijn speler analyseren",
+      "body": "PitchProof zoekt je momenten, bekijkt je bewegingen en maakt je persoonlijke wedstrijdrapport. Je kunt de app ondertussen verlaten.",
+      "action": "Analyse starten",
+      "starting": "Starten…",
+      "failed": "De analyse kon niet worden gestart. Probeer het opnieuw."
+    },
+    "hero": {
+      "strong": "Je wedstrijd, bevestigd op video",
+      "limited": "Dit kon PitchProof bevestigen",
+      "none": "We konden je nog niet duidelijk herkennen in deze opname",
+      "confirmedMoments_one": "{{count}} bevestigd moment",
+      "confirmedMoments_other": "{{count}} bevestigde momenten",
+      "reviewMoments_one": "{{count}} moment om te controleren",
+      "reviewMoments_other": "{{count}} momenten om te controleren",
+      "seen": "Op video gezien gedurende {{seen}} min, bevestigd gedurende {{confirmed}} min, van {{analysed}} min geanalyseerd",
+      "partial": "Eerste beoordeling: tot nu toe geanalyseerd tot {{until}}"
+    },
+    "section": {
+      "story": "Wedstrijdverloop",
+      "best": "Beste momenten",
+      "well": "Wat goed ging",
+      "improve": "Waar je aan kunt werken",
+      "focus": "Focus voor de volgende wedstrijd",
+      "details": "Details van de analyse",
+      "ask": "Vraag het PitchProof",
+      "moments": "Mijn momenten",
+      "needsReview": "Ben jij dit?",
+      "highlights": "Samenvattingsvideo",
+      "development": "Word ik beter?"
+    },
+    "moments": {
+      "all": "Alle",
+      "category": {
+        "on_ball": "Aan de bal",
+        "passing": "Passes",
+        "duels": "Duels",
+        "on_camera": "In beeld"
+      },
+      "kind": {
+        "contact": "Balcontact",
+        "carry": "Dribbel",
+        "pass_attempt": "Pass",
+        "duel_candidate": "Mogelijk duel",
+        "tackle_candidate": "Mogelijke tackle",
+        "spell": "Jij in beeld"
+      },
+      "outcome": {
+        "completed": "kwam aan bij een teamgenoot",
+        "incomplete": "kwam niet aan bij een teamgenoot",
+        "unknown": "afloop niet zichtbaar"
+      },
+      "evidence": {
+        "confirmed": "Bevestigd op video",
+        "estimated": "Geschat uit de video",
+        "needs_review": "Controleer dit",
+        "not_measurable": "Niet meetbaar in deze opname"
+      },
+      "empty": "Nog geen momenten",
+      "emptyBody": "Momenten verschijnen hier zodra PitchProof je in de video heeft gevonden.",
+      "noneConfirmed": "Nog geen bevestigde momenten. Controleer de momenten hieronder zodat PitchProof je kan volgen.",
+      "needsReviewIntro": "PitchProof denkt dat jij dit bent, maar weet het niet zeker. Je antwoord verbetert alleen het rapport van deze wedstrijd.",
+      "open": "{{kind}} op {{time}} afspelen",
+      "duration": "{{sec}} s"
+    },
+    "player": {
+      "title": "{{kind}} op {{time}}",
+      "play": "Afspelen",
+      "pause": "Pauze",
+      "slow": "Slow motion",
+      "normal": "Normale snelheid",
+      "stepBack": "0,1 s terug",
+      "stepForward": "0,1 s vooruit",
+      "replay": "Opnieuw",
+      "loopOn": "Herhalen aan",
+      "loopOff": "Herhalen uit",
+      "indicator": "Geel kader: de speler die PitchProof volgde",
+      "isThisYou": "Ben jij dit?",
+      "yes": "Ja, dat ben ik",
+      "notMe": "Niet ik",
+      "notSure": "Weet ik niet zeker",
+      "skip": "Overslaan",
+      "undo": "Ongedaan maken",
+      "answered": "Bedankt. Je rapport wordt over een paar seconden bijgewerkt.",
+      "answerError": "Je antwoord kon niet worden opgeslagen. Probeer het opnieuw.",
+      "startEarlier": "2 s eerder beginnen",
+      "endLater": "2 s later eindigen",
+      "note": "Je notitie",
+      "notePlaceholder": "Wat valt je op in dit moment?",
+      "saveNote": "Notitie opslaan",
+      "noteSaved": "Notitie opgeslagen op dit apparaat.",
+      "unavailable": "Afspelen niet mogelijk: de originele video is niet meer opgeslagen. Het moment en de details blijven in je rapport.",
+      "close": "Sluiten"
+    },
+    "label": {
+      "whatHappened": "Wat er gebeurde",
+      "whyItMatters": "Waarom het belangrijk is",
+      "doDifferently": "Wat je anders kunt doen",
+      "howToPractise": "Zo train je het",
+      "whereToSee": "Waar je het ziet",
+      "evidence": "Bewijs"
+    },
+    "coach": {
+      "involvement": {
+        "strength": {
+          "what": "De video toont je {{count}} keer aan de bal, met bevestigde identiteit.",
+          "why": "Aanspeelbaar zijn is hoe je invloed hebt op het spel.",
+          "do": "Blijf aanspeelhoeken geven, vooral direct na je pass."
+        },
+        "improve": {
+          "what": "Je was {{minutes}} min duidelijk in beeld, maar maar {{count}} keer aan de bal.",
+          "why": "Spelers die zich vaker aanbieden, bepalen meer van de wedstrijd.",
+          "do": "Beweeg naar de ruimtes tussen tegenstanders voordat de bal naar jouw kant komt."
+        }
+      },
+      "passing": {
+        "strength": {
+          "what": "{{count}} van je passes kwamen aan bij een teamgenoot, bevestigd op video.",
+          "why": "Balbezit houden geeft je team controle over de wedstrijd.",
+          "do": "Kijk op voordat je de bal krijgt, zodat je vroeg de beste pass kiest."
+        }
+      },
+      "passing_accuracy": {
+        "improve": {
+          "what": "{{count}} van je passes kwamen niet aan bij een teamgenoot ({{completed}} bevestigd als aangekomen).",
+          "why": "Balverlies in de opbouw geeft de tegenstander kansen.",
+          "do": "Bekijk je opties voordat de bal komt, zodat je al weet waar de volgende pass heen gaat."
+        }
+      },
+      "carrying": {
+        "strength": {
+          "what": "Je nam de bal {{count}} keer mee naar voren.",
+          "why": "De bal meenemen in de ruimte duwt het hele team naar voren.",
+          "do": "Zoek aan het eind van elke dribbel al de volgende pass."
+        }
+      },
+      "identity": {
+        "limitation": {
+          "what": "Ik kon je maar {{confirmedMin}} min van de {{analysedMin}} geanalyseerde min op video bevestigen. {{review}} momenten wachten nog op je controle.",
+          "why": "Met zo weinig bevestigd beeld kan ik je prestatie niet betrouwbaar beoordelen.",
+          "do": "Beantwoord \"Ben jij dit?\" bij je momenten. Elk antwoord verbetert dit rapport."
+        }
+      },
+      "ball_visibility": {
+        "limitation": {
+          "what": "Ik kan je acties aan de bal niet bevestigen: de bal was in deze opname zelden te volgen bij jou in de buurt.",
+          "why": "Balcontacten, passes en duels zijn alleen meetbaar als de bal in beeld is.",
+          "do": "Een hogere, stabielere camerapositie die de bal volgt, helpt het meest."
+        }
+      },
+      "physical": {
+        "limitation": {
+          "what": "Ik kan afstand en snelheid niet bevestigen: deze opname heeft geen veldkalibratie.",
+          "why": "Zonder de veldgrootte in beeld te kennen, zou elke afstand of snelheid een gok zijn.",
+          "do": "Fysieke gegevens worden alleen getoond als het veld gekalibreerd kan worden."
+        }
+      }
+    },
+    "topic": {
+      "involvement": "vaker aan de bal komen",
+      "carrying": "de bal meenemen",
+      "passing": "je passing",
+      "passing_accuracy": "je passes laten aankomen",
+      "identity": "herkend worden op video",
+      "ball_visibility": "de zichtbaarheid van de bal",
+      "physical": "fysieke gegevens"
+    },
+    "drill": {
+      "minutes": "{{minutes}} min",
+      "scan_before_receive": {
+        "name": "Kijken voor je de bal krijgt",
+        "how": "Een partner speelt je aan op een signaal; kijk voor elke balaanraking over beide schouders en roep waar een vrije teamgenoot staat."
+      },
+      "rondo_4v2": {
+        "name": "Rondo 4 tegen 2",
+        "how": "Vier spelers houden de bal in een vak van 10 x 10 m tegen twee. Maximaal twee keer raken; verdedigers wisselen na balverovering."
+      },
+      "wall_pass_weight": {
+        "name": "Passkracht tegen de muur",
+        "how": "Pass tegen een muur of rebounder vanaf 8, 12 en 16 m. Mik op een pass die je partner in de loop kan meenemen, 20 herhalingen per voet."
+      },
+      "carry_into_space": {
+        "name": "Bal meenemen in de ruimte",
+        "how": "Ontvang, neem de bal mee naar de open kant en dribbel 10 m voordat je door een pionnenpoortje passt. Wissel van kant."
+      },
+      "show_for_ball": {
+        "name": "Aanbieden",
+        "how": "In een 3 tegen 1 in een strook kom je bij elke balverplaatsing uit de schaduw van de verdediger, zodat de passer altijd een lijn naar jou heeft."
+      },
+      "width_and_depth": {
+        "name": "Breedte en diepte",
+        "how": "Speel 4 tegen 4 met doeltjes op de zijkanten: een doelpunt telt alleen als de bal eerst een breed staande vleugelspeler bereikte."
+      },
+      "build_up_angles": {
+        "name": "Hoeken in de opbouw",
+        "how": "Speel vanaf de doellijn uit tegen één druk zettende speler. Bied de balbezitter bij elke pass een diagonale hoek aan."
+      },
+      "first_touch_away": {
+        "name": "Eerste aanname weg van de druk",
+        "how": "De trainer roept \"links\" of \"rechts\" als de pass aankomt; neem de bal mee naar de andere kant."
+      },
+      "distribution_targets": {
+        "name": "Doelzones bij het uitverdedigen",
+        "how": "Speel vanuit het doelgebied met voet en hand naar drie gemarkeerde zones, elk 10 herhalingen."
+      }
+    },
+    "tip": {
+      "wider_view": "Volgende opname: film van hoger en breder, zodat alle spelers in beeld blijven.",
+      "follow_play": "Volgende opname: houd de camera op het spel. Grote delen van deze wedstrijd waren niet in beeld.",
+      "bold_numbers": "Volgende opname: zorg dat je rugnummer groot en goed leesbaar is.",
+      "record_whole_match": "Volgende opname: neem de hele wedstrijd op zonder pauze.",
+      "steady_camera": "Volgende opname: houd de camera stil en de bal in beeld."
+    },
+    "focus": {
+      "skill": "Focus in je volgende wedstrijd op {{topic}}.",
+      "recording": "Je volgende stap",
+      "matchesGoal": "Dit past bij je ontwikkeldoel \"{{title}}\".",
+      "addGoal": "Toevoegen als ontwikkeldoel",
+      "goalAdded": "Toegevoegd aan je ontwikkeldoelen.",
+      "none": "Nog geen specifieke focus. Meer bevestigde momenten maken dit nuttiger."
+    },
+    "story": {
+      "confirmed": "bevestigd op video",
+      "likely": "waarschijnlijk jij",
+      "not_seen": "niet gezien",
+      "no_play": "geen spel",
+      "bucket": "{{from}} tot {{to}}: {{state}}",
+      "moments_one": "{{count}} moment",
+      "moments_other": "{{count}} momenten"
+    },
+    "details": {
+      "coverage": "Dekking",
+      "analysed": "Geanalyseerde speeltijd",
+      "confirmed": "Bevestigd op video",
+      "likely": "Waarschijnlijk jij",
+      "ambiguous": "Jij of een teamgenoot",
+      "notIdentified": "Niet herkend",
+      "unobserved": "Niet in beeld",
+      "nonMatch": "Geen spel",
+      "minutes": "{{value}} min",
+      "sightings": "Rugnummers gezien",
+      "confirmedByUser": "Door jou bevestigd",
+      "engine": "Analyseversie",
+      "physicalVerified": "Fysieke gegevens: gekalibreerd",
+      "physicalNot": "Fysieke gegevens: niet beschikbaar (geen kalibratie)",
+      "ballEvents": "Gemeten balacties",
+      "limitations": "Wat deze opname niet kan laten zien",
+      "aiDisclosure": "De resultaten komen van computer vision op je video. Elk getoond getal is gemeten; niets wordt door een taalmodel gegenereerd."
+    },
+    "ask": {
+      "placeholder": "Stel een vraag over je wedstrijd…",
+      "send": "Vragen",
+      "disclosure": "Antwoorden gebruiken alleen het bevestigde bewijs van deze wedstrijd. Je video wordt niet naar een externe AI gestuurd.",
+      "q": {
+        "best_moment": "Wat was mijn beste moment?",
+        "moments": "Wanneer was ik betrokken?",
+        "passing": "Hoe waren mijn passes?",
+        "distance": "Hoe ver heb ik gelopen?",
+        "speed": "Hoe snel was ik?",
+        "heatmap": "Waar stond ik op het veld?",
+        "goals": "Heb ik gescoord?",
+        "improve": "Waar moet ik aan werken?",
+        "well": "Wat deed ik goed?",
+        "identity": "Hoe zeker ben je dat ik het was?",
+        "review": "Welke momenten moet ik controleren?",
+        "compare": "Word ik beter?",
+        "unknown": "Wat kun je me vertellen?"
+      },
+      "a": {
+        "noReport": "Er is nog geen rapport voor deze wedstrijd. Antwoorden verschijnen zodra je eerste momenten klaar zijn.",
+        "distanceUncalibrated": "Ik kan niet bevestigen hoe ver je hebt gelopen: deze opname heeft geen veldkalibratie, dus elk aantal kilometers zou een gok zijn.",
+        "speedUncalibrated": "Ik kan je snelheid niet bevestigen: deze opname heeft geen veldkalibratie.",
+        "physicalMissing": "Die waarde is in deze wedstrijd niet gemeten.",
+        "distance": "Gemeten afstand terwijl je in beeld was: {{value}} {{unit}}.",
+        "speed": "Hoogste gemeten snelheid: {{value}} {{unit}}.",
+        "heatmapObserved": "Je posities worden alleen getoond voor de momenten waarop je in beeld was.",
+        "heatmapUnavailable": "Ik kan niet laten zien waar je op het veld stond: deze opname heeft geen veldkalibratie.",
+        "goalsNotMeasured": "Doelpunten, assists of schoten kan ik niet bevestigen: de tracking meet ze niet. Hier zijn in plaats daarvan je sterkste momenten.",
+        "compareSeeDevelopment": "Vergelijkingen gebruiken alleen wedstrijden met genoeg bevestigd beeld. Zie \"Word ik beter?\" voor wat vergelijkbaar is.",
+        "noPasses": "In deze wedstrijd zijn geen passes van jou gemeten, dus ik kan je passing niet beoordelen.",
+        "passes": "{{total}} passes gemeten: {{completed}} kwamen aan bij een teamgenoot, {{incomplete}} niet, bij {{unknown}} was de afloop niet zichtbaar.",
+        "improve": "Dit is het ene punt waar de video werk voor ondersteunt:",
+        "noImprove": "De video toont niet genoeg van je acties om met zekerheid een verbetering voor te stellen.",
+        "well": "Dit deed je volgens de video goed:",
+        "noStrength": "Er is nog niet genoeg bevestigd beeld van je acties om een sterk punt te noemen.",
+        "identity": "Ik heb je {{confirmedMin}} min op video bevestigd en waarschijnlijk nog {{likelyMin}} min gezien, van {{analysedMin}} min geanalyseerd. {{review}} momenten wachten op je controle.",
+        "review": "{{count}} momenten wachten op je controle:",
+        "reviewNone": "Er hoeven nu geen momenten gecontroleerd te worden.",
+        "best": "Je sterkste moment, volgens het bewijs:",
+        "noMoments": "Er zijn nog geen bevestigde momenten.",
+        "moments": "{{count}} momenten gevonden. De eerste:",
+        "unknown": "Ik kan vragen beantwoorden over je momenten, passes, je herkenning in de video en waar je aan kunt werken. Probeer er een:"
+      },
+      "followUp": "Je kunt ook vragen"
+    },
+    "highlights": {
+      "intro": "Video's gebruiken je beste momenten, gerangschikt op bewijs. Onzekere momenten worden nooit automatisch toegevoegd.",
+      "preset": {
+        "my_match": "Mijn wedstrijdhoogtepunten",
+        "attacking": "Beste aanvallende momenten",
+        "ball": "Balacties",
+        "defensive": "Verdedigende acties",
+        "goalkeeper": "Keepersacties",
+        "custom": "Eigen selectie"
+      },
+      "unavailable": {
+        "no_confirmed_moments": "Nog geen bevestigde momenten",
+        "no_measured_actions": "Geen gemeten balacties in deze wedstrijd",
+        "defensive_not_validated": "Verdedigende acties zijn nog niet gevalideerd",
+        "not_goalkeeper": "Voor keepers"
+      },
+      "summary_one": "{{count}} clip, {{sec}} s",
+      "summary_other": "{{count}} clips, {{sec}} s",
+      "create": "Opslaan als privé-concept",
+      "created": "Concept opgeslagen. Het blijft privé tot je het deelt.",
+      "failed": "De video kon niet worden opgeslagen. Probeer het opnieuw.",
+      "selectHint": "Tik op momenten om ze aan een eigen selectie toe te voegen."
+    },
+    "development": {
+      "notEnough": "Voor een trend zijn minstens twee volledige wedstrijden nodig met elk 10 of meer bevestigde minuten. Zo blijven vergelijkingen eerlijk.",
+      "excluded": {
+        "partial_report": "analyse niet klaar",
+        "engine_changed": "met een andere versie geanalyseerd",
+        "low_confirmed_coverage": "te weinig bevestigd beeld"
+      },
+      "point": "{{date}}: {{value}} acties per 10 bevestigde minuten",
+      "excludedLine": "{{date}} niet vergeleken: {{reason}}"
+    },
+    "preliminaryBadge": "Eerste resultaten",
+    "updating": "Bijwerken met je antwoorden…"
   }
 }
