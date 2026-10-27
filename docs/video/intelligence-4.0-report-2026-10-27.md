@@ -207,8 +207,7 @@ devices; moment playback on iOS/Android (web render only); the accuracy audit (i
 candidates (never counted); physical metrics (withheld without calibration).
 
 **Blocked by third-party access**: GPU benchmark and deployment; Veo orange #8 (no authorised
-access); physical devices; GitHub push for this session (the Claude GitHub App is not installed for
-`CapalotDaGreat/scoutx`).
+access); physical devices.
 
 **Not implemented**: Passport opt-in sharing of evidence and the scout-side view of shared moments;
 loading earlier matches into "Am I improving?" (only the current match is evaluated, so no trend is
