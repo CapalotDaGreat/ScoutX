@@ -76,9 +76,9 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
             key = crop_key(c)
             if key not in cache:
                 if reader is None:
-                    from .ocr import NumberReader  # noqa: PLC0415
+                    from .ocr import shared_reader  # noqa: PLC0415
 
-                    reader = NumberReader()
+                    reader = shared_reader()
                 img = cv2.imread(c)
                 num, conf, band = reader.read(img) if img is not None else (None, 0.0, None)
                 cache[key] = [num, conf, band]
@@ -126,6 +126,38 @@ def cached_tracklets(D, kit: str, kit2: str, det_reads: dict | None, cache_dir: 
     return assemble(D, rows, kit, kit2, det_reads)
 
 
+def attach_sightings(reads: dict, sightings: list[dict], number: str, D, T) -> int:
+    rows = T.rows
+    by_frame: dict[int, list[int]] = {}
+    for i, f in enumerate(rows[:, 0].astype(int)):
+        by_frame.setdefault(f, []).append(i)
+    added = 0
+    for s_ in sightings:
+        if str(s_.get("number")) != number:
+            continue
+        g = int(np.argmin(np.abs(D.times - float(s_["t"]))))
+        if abs(D.times[g] - float(s_["t"])) > 0.06:
+            continue
+        b = s_["box"]
+        best, best_iou = None, 0.0
+        for i in by_frame.get(g, []):
+            x1, y1, x2, y2 = rows[i, 3:7]
+            ix = max(0.0, min(x2, b[2]) - max(x1, b[0])) * max(0.0, min(y2, b[3]) - max(y1, b[1]))
+            u = (x2 - x1) * (y2 - y1) + (b[2] - b[0]) * (b[3] - b[1]) - ix
+            iou = ix / u if u > 0 else 0.0
+            if iou > best_iou:
+                best, best_iou = i, iou
+        if best is None or best_iou < 0.5:
+            continue
+        tid = int(rows[best, 2])
+        existing = reads.setdefault(tid, [])
+        if any(e[0] == g and e[1] == number for e in existing):
+            continue  # this frame already has the read (dense OCR or an earlier attach)
+        existing.append((g, number, float(s_.get("conf", 0.95)), "discovery"))
+        added += 1
+    return added
+
+
 def _frame_of(D, t: float) -> int:
     """Local (per stage-1 part) frame index of source time t, matching crop file names."""
     g = int(np.argmin(np.abs(D.times - t)))
@@ -155,7 +187,8 @@ def frame_activity(T, n_frames: int) -> np.ndarray:
 def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit2: str = "",
             anchors: list[tuple[float, float, float]] | None = None, ocr: bool = True, log=print,
             rejects: list[tuple[float, float, float]] | None = None, feedback: dict | None = None,
-            position: str = "unknown", age_group: str = "", ocr_dense: bool = True, D=None) -> dict:
+            position: str = "unknown", age_group: str = "", ocr_dense: bool = True, D=None,
+            sightings: list[dict] | None = None) -> dict:
     from .ball import ball_events  # noqa: PLC0415
     from .moments import build_moments  # noqa: PLC0415
     from .features import kit_score  # noqa: PLC0415
@@ -198,6 +231,12 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
             r = row_of_det.get(det_of[c])
             if r is not None:
                 reads.setdefault(int(T.rows[r, 2]), []).append((int(T.rows[r, 0]), num, conf, band))
+    # 4.1: number sightings from the discovery pass are the same kind of evidence as a dense-OCR
+    # read (the target number read on that player's shirt) - attach each to the detection it
+    # shows (same frame, box overlap) so identity resolution can use it.
+    if number and sightings:
+        added_s = attach_sightings(reads, sightings, number, D, T)
+        log(f"discovery sightings attached: {added_s}/{len(sightings)}")
     timings["numbers"] = time.time() - t
     t = time.time()
     target = Target(number=number, kit_primary=kit, kit_secondary=kit2, anchors=anchors or [], rejects=rejects or [],
@@ -283,6 +322,12 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
                                    positions=calib["positions"] if calib["calibratedFrames"] else None)
     events, ball = ball_events(D, T, tl, states, P, camera, D.fps)
     timings["timeline_metrics_events"] = time.time() - t
+    # Off-ball observations (4.1): distances to nearest opponent/team-mate on confirmed frames only.
+    from .ball import team_of  # noqa: PLC0415
+    from .offball import offball_observations  # noqa: PLC0415
+
+    offball = offball_observations(tl.times, states, tl.boxes, tl.present, T.rows,
+                                   {s_["tid"]: team_of(s_, 0.22) for s_ in T.summary}, D.fps)
     # Moments: watchable clip windows around the target's own (already measured) actions.
     want = {c for k in res.chosen for c in T.summary[k].get("crops", [])}
     crop_times = sorted((float(D.times[int(D.dets[di, 0])]), c) for di, c in D.crops.items() if c in want)
@@ -315,6 +360,7 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         "ball": ball,
         "events": events,
         "moments": moments,
+        "offball": offball,
         "videoSize": {"width": int(D.width or 1920), "height": int(D.height or 1080)},
         "analysedRange": {"startSec": round(float(D.times[0]), 2) if len(D.times) else 0.0,
                           "endSec": round(float(D.times[-1]), 2) if len(D.times) else 0.0,

@@ -42,7 +42,7 @@ import { ReportEvidenceOverview } from './intelligence/ReportEvidenceOverview';
 import { TrackingReportSection } from '@/features/match-analysis/components/TrackingReportSection';
 import { useTracking } from '@/features/match-analysis/hooks/useTracking';
 import { MatchReviewView } from '@/features/match-review/components/MatchReviewView';
-import { useTrackingProgress } from '@/features/match-review/hooks/useMatchReviewData';
+import { useTrackingDiscovery, useTrackingProgress } from '@/features/match-review/hooks/useMatchReviewData';
 import type { Insight } from '@/features/match-review/services/coach';
 
 type ReportTab = 'review' | 'overview' | 'tracking' | 'timeline' | 'technical' | 'tactical' | 'coaching' | 'video' | 'ask';
@@ -97,6 +97,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
   const playerId = job?.playerId ?? null;
   const { tracking } = useTracking(jobId);
   const progress = useTrackingProgress(jobId);
+  const discovery = useTrackingDiscovery(jobId);
   const reviewAvailable = tracking !== null || progress !== null;
   const [tabChosen, setTabChosen] = useState(false);
   useEffect(() => {
@@ -306,9 +307,10 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
               playerId={job.playerId}
               match={job.match}
               position={job.targeting.position ?? null}
-              job={job}
+              job={{ ...job, jerseyNumber: job.targeting.jerseyNumber }}
               tracking={tracking}
               progress={progress}
+              discovery={discovery}
               goals={goals}
               initialSection={initialSection}
               onOpenReel={onOpenReel}

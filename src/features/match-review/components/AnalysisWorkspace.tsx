@@ -14,13 +14,14 @@ export type AnalysisWorkspaceProps = {
   journey: Journey;
   onProblemAction?: (action: JourneyProblem['action']) => void;
   busy?: boolean;
+  number?: string | null;
 };
 
 /**
  * The processing workspace. Never blocks: the user can leave at any time, early results unlock
  * as they arrive, and every progress statement maps to persisted processing facts.
  */
-export function AnalysisWorkspace({ journey, onProblemAction, busy }: AnalysisWorkspaceProps) {
+export function AnalysisWorkspace({ journey, onProblemAction, busy, number }: AnalysisWorkspaceProps) {
   const t = useReviewT();
   const { parts, remainingSec, problem } = journey;
   const estimate = remainingSec !== null ? roundEstimate(remainingSec) : null;
@@ -44,7 +45,12 @@ export function AnalysisWorkspace({ journey, onProblemAction, busy }: AnalysisWo
           </View>
         ))}
       </View>
-      {parts.total > 0 && !journey.complete ? (
+      {journey.scan ? (
+        <Text variant="body-sm" weight="semibold">
+          {t('review.workspace.scanning', { number: number ?? '', done: journey.scan.done, total: journey.scan.total })}
+        </Text>
+      ) : null}
+      {parts.total > 0 && !journey.complete && !journey.scan ? (
         <Text variant="body-sm" weight="semibold">{t('review.workspace.parts', { done: parts.done, total: parts.total })}</Text>
       ) : null}
       {!journey.complete && !problem ? (

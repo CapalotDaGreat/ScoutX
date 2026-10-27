@@ -125,7 +125,7 @@ async function deleteQueryInBatches(query) {
         }
     }
 }
-exports.ANALYSIS_JOB_SUBCOLLECTIONS = ['segmentReviews', 'cvSegments', 'reports', 'corrections'];
+exports.ANALYSIS_JOB_SUBCOLLECTIONS = ['segmentReviews', 'cvSegments', 'reports', 'corrections', 'tracking'];
 async function deleteAnalysisJobsRecursively(uid) {
     const db = (0, firestore_1.getFirestore)();
     let deleted = 0;

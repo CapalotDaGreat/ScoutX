@@ -16,11 +16,13 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ANSWERS = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.parseOffball = parseOffball;
 exports.decodeReviewImage = decodeReviewImage;
 exports.reviewImagePath = reviewImagePath;
 exports.trackingInvariantViolations = trackingInvariantViolations;
 exports.parseTrackingReport = parseTrackingReport;
 exports.parseMoments = parseMoments;
+exports.parseDiscoveryMoments = parseDiscoveryMoments;
 exports.encodeStateStrip = encodeStateStrip;
 exports.emptyFeedback = emptyFeedback;
 exports.applyAnswer = applyAnswer;
@@ -35,9 +37,33 @@ exports.IDENTITY_STATES = [
     'CONFIRMED_VISIBLE', 'LIKELY_VISIBLE', 'AMBIGUOUS', 'OFF_CAMERA', 'CONFIRMED_OFF_PITCH', 'NON_MATCH_PERIOD', 'UNKNOWN',
 ];
 const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate'];
-exports.MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell'];
+exports.MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell', 'sighting'];
 exports.MAX_MOMENTS = 80;
 exports.MAX_CLIP_SEC = 20;
+/** Validates the worker's off-ball block; malformed -> null (the coach then says nothing about it). */
+function parseOffball(raw, recordingSec) {
+    const o = asRecord(raw);
+    if (!o || !['measured', 'insufficient'].includes(String(o.status)) || !nonNeg(o.confirmedSec) || !nonNeg(o.minConfirmedSec))
+        return null;
+    const base = { confirmedSec: o.confirmedSec, minConfirmedSec: o.minConfirmedSec };
+    if (o.status === 'insufficient')
+        return { status: 'insufficient', ...base };
+    const share = (v) => nonNeg(v) && v <= 1;
+    const opp = asRecord(o.nearestOpponentBodyHeights);
+    if (!opp || !nonNeg(opp.median) || !nonNeg(opp.p25) || !nonNeg(opp.p75) || !share(o.freeShare) || !share(o.tightShare)
+        || !nonNeg(o.measuredSec))
+        return null;
+    const eps = (v) => (Array.isArray(v) ? v.slice(0, 20) : []).map(asRecord)
+        .filter((e) => !!e && nonNeg(e.start) && nonNeg(e.end) && e.end >= e.start
+        && (recordingSec <= 0 || e.end <= recordingSec + 0.5))
+        .map((e) => ({ start: e.start, end: e.end }));
+    const mate = asRecord(o.nearestTeammateBodyHeights);
+    return { status: 'measured', ...base, measuredSec: o.measuredSec,
+        nearestOpponentBodyHeights: { median: opp.median, p25: opp.p25, p75: opp.p75 },
+        nearestTeammateBodyHeights: mate && nonNeg(mate.median) ? { median: mate.median } : null,
+        freeShare: o.freeShare, tightShare: o.tightShare,
+        freeEpisodes: eps(o.freeEpisodes), tightEpisodes: eps(o.tightEpisodes) };
+}
 /** Decodes the worker's small review-card JPEGs (bounded size, JPEG magic bytes checked). */
 function decodeReviewImage(b64) {
     if (typeof b64 !== 'string' || b64.length === 0 || b64.length > 200_000 || !/^[A-Za-z0-9+/=]+$/.test(b64))
@@ -214,6 +240,7 @@ function parseTrackingReport(raw, timeline) {
         events,
         moments,
         analysedRange,
+        offball: parseOffball(r.offball, coverage.recordingSec),
         videoSize: (() => {
             const v = asRecord(r.videoSize);
             return v && isNum(v.width) && isNum(v.height) && v.width > 0 && v.height > 0 && v.width <= 8192 && v.height <= 8192
@@ -272,6 +299,41 @@ function parseMoments(raw, recordingSec) {
             indicator, imagePath: null });
     }
     return out.sort((a, b) => a.clipStart - b.clipStart);
+}
+/**
+ * Discovery sightings (4.1). Each must show the TARGET number read (the worker only returns
+ * those), lie inside the chunk it came from and inside the recording. Anything else rejects the
+ * whole chunk.
+ */
+function parseDiscoveryMoments(raw, chunk, recordingSec, number) {
+    if (!Array.isArray(raw) || raw.length > 40)
+        return null;
+    const out = [];
+    for (const item of raw) {
+        const m = asRecord(item);
+        if (!m || typeof m.id !== 'string' || !/^d_[0-9]{1,6}$/.test(m.id) || m.kind !== 'sighting' || m.evidence !== 'number_read'
+            || m.identityState !== 'CONFIRMED_VISIBLE' || String(m.number) !== number || !number)
+            return null;
+        if (![m.start, m.clipStart, m.clipEnd].every(nonNeg))
+            return null;
+        const [start, c0, c1] = [m.start, m.clipStart, m.clipEnd];
+        if (start < chunk.startSec - 0.5 || start > chunk.endSec + 0.5 || c1 < c0 || c1 - c0 > exports.MAX_CLIP_SEC + 0.01
+            || (recordingSec > 0 && c1 > recordingSec + 0.5) || start < c0 - 0.01 || start > c1 + 0.01)
+            return null;
+        const indicator = [];
+        for (const p of Array.isArray(m.indicator) ? m.indicator.slice(0, 40) : []) {
+            if (!Array.isArray(p) || p.length !== 5 || !p.every(isNum))
+                return null;
+            const [t, x, y, w, h] = p;
+            if (t < c0 - 0.01 || t > c1 + 0.01 || [x, y, w, h].some((v) => v < -0.05 || v > 1.05))
+                return null;
+            indicator.push([t, x, y, w, h]);
+        }
+        out.push({ id: m.id, kind: 'sighting', kinds: ['sighting'], start, end: start, clipStart: c0, clipEnd: c1,
+            identityState: 'CONFIRMED_VISIBLE', candidate: false, indicator, imagePath: null, evidence: 'number_read',
+            readFrames: nonNeg(m.readFrames) ? Math.floor(m.readFrames) : 1 });
+    }
+    return out;
 }
 /** Per-second majority state, run-length encoded: [startSec, endSec, state]. */
 function encodeStateStrip(times, states) {

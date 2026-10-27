@@ -666,7 +666,8 @@
         "active": "en curso",
         "pending": "en espera",
         "blocked": "detenido"
-      }
+      },
+      "scanning": "Buscando el #{{number}}: {{done}} de {{total}} partes revisadas"
     },
     "problem": {
       "consent_required": {
@@ -726,7 +727,8 @@
       "moments": "Mis jugadas",
       "needsReview": "¿Eres tú?",
       "highlights": "Vídeo de resumen",
-      "development": "¿Estoy mejorando?"
+      "development": "¿Estoy mejorando?",
+      "offball": "Sin balón"
     },
     "moments": {
       "all": "Todas",
@@ -742,7 +744,8 @@
         "pass_attempt": "Pase",
         "duel_candidate": "Posible duelo",
         "tackle_candidate": "Posible entrada",
-        "spell": "Tú en imagen"
+        "spell": "Tú en imagen",
+        "sighting": "Dorsal visto"
       },
       "outcome": {
         "completed": "llegó a un compañero",
@@ -760,7 +763,10 @@
       "noneConfirmed": "Aún no hay jugadas confirmadas. Revisa las jugadas de abajo para que PitchProof pueda seguirte.",
       "needsReviewIntro": "PitchProof cree que eres tú, pero no está seguro. Tu respuesta solo mejora el informe de este partido.",
       "open": "Reproducir {{kind}} en {{time}}",
-      "duration": "{{sec}} s"
+      "duration": "{{sec}} s",
+      "numberRead": "Dorsal leído",
+      "earlyTitle": "Tus jugadas hasta ahora",
+      "earlyBody": "PitchProof leyó tu dorsal en estas jugadas. Aparecerán más mientras continúa el análisis completo."
     },
     "player": {
       "title": "{{kind}} en {{time}}",
@@ -789,7 +795,9 @@
       "saveNote": "Guardar nota",
       "noteSaved": "Nota guardada en este dispositivo.",
       "unavailable": "Reproducción no disponible: el vídeo original ya no está guardado. La jugada y sus detalles siguen en tu informe.",
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "saveClip": "Guardar clip",
+      "clipSaved": "Guardado en privado en tus vídeos."
     },
     "label": {
       "whatHappened": "Qué pasó",
@@ -797,7 +805,8 @@
       "doDifferently": "Qué hacer diferente",
       "howToPractise": "Cómo entrenarlo",
       "whereToSee": "Dónde verlo",
-      "evidence": "Evidencia"
+      "evidence": "Evidencia",
+      "interpretation": "Interpretación (no verificada)"
     },
     "coach": {
       "involvement": {
@@ -853,6 +862,18 @@
           "why": "Sin conocer el tamaño del campo en pantalla, cualquier cifra de distancia o velocidad sería una suposición.",
           "do": "Los datos físicos solo se muestran cuando el campo se puede calibrar."
         }
+      },
+      "positioning": {
+        "observation": {
+          "what": "En los {{measuredMin}} min en que estás confirmado en vídeo, ningún rival estuvo a menos de 3 alturas corporales el {{freePct}}% del tiempo y uno estuvo a menos de 1 altura el {{tightPct}}% (distancia mediana {{median}} alturas).",
+          "why": "Interpretación (no verificada): el espacio libre puede hacerte disponible para un pase y el marcaje cerrado limita tus opciones. El vídeo no muestra si un compañero podía pasarte realmente.",
+          "do": "Mira los clips y comprueba: ¿había línea de pase hacia ti cuando estabas libre? ¿Te soltaste de tu marcador cuando estaba encima?"
+        },
+        "limitation": {
+          "what": "Todavía no puedo describir tu posicionamiento: necesito al menos {{minSec}} s de vídeo confirmado tuyo y esta grabación tiene {{confirmedSec}} s.",
+          "why": "Las distancias a los rivales solo tienen sentido si sé que eres tú.",
+          "do": "Responde \"¿Eres tú?\" en tus jugadas. Cada jugada confirmada añade vídeo que puedo medir."
+        }
       }
     },
     "topic": {
@@ -862,7 +883,8 @@
       "passing_accuracy": "asegurar tus pases",
       "identity": "que te reconozcan en vídeo",
       "ball_visibility": "la visibilidad del balón",
-      "physical": "los datos físicos"
+      "physical": "los datos físicos",
+      "positioning": "encontrar espacios"
     },
     "drill": {
       "minutes": "{{minutes}} min",
@@ -963,7 +985,9 @@
         "identity": "¿Qué tan seguro estás de que era yo?",
         "review": "¿Qué jugadas debo revisar?",
         "compare": "¿Estoy mejorando?",
-        "unknown": "¿Qué me puedes decir?"
+        "unknown": "¿Qué me puedes decir?",
+        "space": "¿Estaba libre o muy marcado?",
+        "at_time": "¿Qué pasó en el 32:30?"
       },
       "a": {
         "noReport": "Todavía no hay informe de este partido. Las respuestas aparecen cuando tus primeras jugadas estén listas.",
@@ -988,7 +1012,13 @@
         "best": "Tu mejor jugada, según la evidencia:",
         "noMoments": "Todavía no hay jugadas confirmadas.",
         "moments": "{{count}} jugadas encontradas. Las primeras:",
-        "unknown": "Puedo responder sobre tus jugadas, pases, tu reconocimiento en el vídeo y en qué trabajar. Prueba una de estas:"
+        "unknown": "Puedo responder sobre tus jugadas, pases, tu reconocimiento en el vídeo y en qué trabajar. Prueba una de estas:",
+        "atTime": "Jugadas tuyas alrededor de {{time}}:",
+        "atTimeUnsure": "Alrededor de {{time}} hay jugadas que podrían mostrarte; revísalas:",
+        "atTimeNone": "No tengo vídeo tuyo alrededor de {{time}}. La jugada más cercana:",
+        "space": "Esto es lo que muestra el vídeo sobre tu espacio sin balón:",
+        "spaceInsufficient": "Aún no puedo medirlo: necesito al menos {{minSec}} s de vídeo confirmado tuyo y tengo {{confirmedSec}} s. Confirmar tus jugadas ayuda.",
+        "spaceUnavailable": "Este análisis aún no incluye mediciones sin balón."
       },
       "followUp": "También podrías preguntar"
     },

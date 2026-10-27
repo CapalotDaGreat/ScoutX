@@ -118,7 +118,7 @@ export const setTrackingPeriods = onCall(createCallableOptions(), async (request
 export type TrackingWorkerClient = (body: Record<string, unknown>) => Promise<unknown | null>;
 
 export function httpTrackingClient(baseUrl: string, env: NodeJS.ProcessEnv = process.env,
-  route: 'resolve' | 'extract' = 'resolve', timeoutMs = 10 * 60 * 1000): TrackingWorkerClient {
+  route: 'resolve' | 'extract' | 'discover' = 'resolve', timeoutMs = 10 * 60 * 1000): TrackingWorkerClient {
   return async (body) => {
     const emulated = env.FUNCTIONS_EMULATOR === 'true';
     const token = emulated ? null : await identityToken(baseUrl);

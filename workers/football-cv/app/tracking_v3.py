@@ -12,11 +12,13 @@ number reads and exclusion lists are stripped before anything leaves the worker.
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import tempfile
 from pathlib import Path
-from typing import Callable, Literal
+from collections import OrderedDict
+from typing import Any, Callable, Literal
 
 import numpy as np
 from fastapi import APIRouter, Depends, HTTPException
@@ -24,7 +26,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 JOB = re.compile(r"^[A-Za-z0-9_-]{1,80}$")
 TARGET_ONLY_KEYS = ("schema", "engine", "target", "timeline", "coverage", "identity", "physical", "ball", "events",
-                    "reviewQuestions", "invariants", "heatmap", "analysedRange", "videoSize")
+                    "reviewQuestions", "invariants", "heatmap", "analysedRange", "videoSize", "offball")
 MOMENT_KEYS = ("id", "kind", "kinds", "start", "end", "clipStart", "clipEnd", "identityState", "candidate", "outcome",
                "indicator")
 MAX_MOMENT_THUMBS = 40
@@ -100,16 +102,77 @@ class ExtractRequest(BaseModel):
     privacy: Privacy
 
 
+class DiscoverTarget(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    jerseyNumber: str = Field(default="", max_length=3, pattern=r"^[0-9]{0,3}$")
+    kitPrimaryColor: str = Field(min_length=1, max_length=40)
+
+
+class DiscoverRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    contractVersion: Literal[3]
+    jobId: str = Field(pattern=JOB.pattern)
+    chunkIndex: int = Field(ge=0, le=60)
+    startSec: float = Field(ge=0)
+    endSec: float = Field(gt=0)
+    source: Source
+    target: DiscoverTarget
+    privacy: Privacy
+
+
 # Injectable for tests (no models / video needed).
 AnalyzeFn = Callable[..., dict]
 ExtractFn = Callable[..., dict]
+DiscoverFn = Callable[..., Any]
 _analyze: AnalyzeFn | None = None
 _extract: ExtractFn | None = None
+_discover: DiscoverFn | None = None
 
 
-def set_engine(analyze: AnalyzeFn | None = None, extract: ExtractFn | None = None) -> None:
-    global _analyze, _extract
-    _analyze, _extract = analyze, extract
+def set_engine(analyze: AnalyzeFn | None = None, extract: ExtractFn | None = None, discover: DiscoverFn | None = None) -> None:
+    global _analyze, _extract, _discover
+    _analyze, _extract, _discover = analyze, extract, discover
+
+
+# Persistent per-process state (4.1): models load once per worker, and the stage-1 artifacts of
+# the most recent jobs stay in memory so an identity answer re-solves without reloading them.
+_MODELS: dict[str, Any] = {}
+_D_CACHE: "OrderedDict[tuple, Any]" = OrderedDict()
+D_CACHE_JOBS = 2
+
+
+def _job_sightings(job_id: str) -> list[dict]:
+    """Discovery sightings stored for this job (target number reads only)."""
+    out: list[dict] = []
+    for p in sorted((artifact_root() / job_id / "discovery").glob("d_*/sightings.json")):
+        try:
+            out += json.loads(p.read_text())
+        except (OSError, ValueError):
+            continue
+    return out
+
+
+def _discovery_detector():
+    if "det640" not in _MODELS:
+        from scoutx_tracker.extract import Detector  # noqa: PLC0415
+
+        det = Detector(imgsz=640)
+        _MODELS["det640"] = lambda frame: det(frame)[:2]
+    return _MODELS["det640"]
+
+
+def _cached_detections(runs: list[str]):
+    key = tuple((r, os.path.getmtime(Path(r) / "detections.npz")) for r in runs)
+    if key in _D_CACHE:
+        _D_CACHE.move_to_end(key)
+        return _D_CACHE[key]
+    from scoutx_tracker.tracklets import load_runs  # noqa: PLC0415
+
+    D = load_runs(runs)
+    _D_CACHE[key] = D
+    while len(_D_CACHE) > D_CACHE_JOBS:
+        _D_CACHE.popitem(last=False)
+    return D
 
 
 def _points(rows: list[list[float]]) -> list[tuple[float, float, float]]:
@@ -128,8 +191,9 @@ def extract_segment(request: ExtractRequest) -> dict:
     fn = _extract
     if fn is None:
         from scoutx_tracker.extract import extract as fn  # noqa: PLC0415
-    meta = fn(request.source.url, str(out), t0=request.startSec, start=request.startSec,
-              end=request.endSec - request.startSec)
+    # extract() timestamps frames as t0 + absolute source time and stops at the absolute `end`;
+    # passing t0=startSec or a duration as `end` would double-shift and truncate the segment.
+    meta = fn(request.source.url, str(out), t0=0.0, start=request.startSec, end=request.endSec)
     return {"jobId": request.jobId, "segmentIndex": request.segmentIndex, "status": "complete",
             "frames": int(meta.get("frames", 0)), "processingSec": float(meta.get("seconds", 0.0)),
             "stageSeconds": meta.get("stageSeconds", {})}
@@ -185,11 +249,13 @@ def resolve(request: ResolveRequest) -> dict:
         from scoutx_tracker.analyze import analyze as fn  # noqa: PLC0415
     fb = request.feedback
     with tempfile.TemporaryDirectory(prefix="track_") as tmp:
+        extra = {} if _analyze is not None else {"D": _cached_detections(runs),
+                                                   "sightings": _job_sightings(request.jobId)}
         report = fn(runs, tmp, request.target.jerseyNumber or None, request.target.kitPrimaryColor,
                     request.target.kitSecondaryColor, _points(fb.yes), log=lambda _m: None,
                     rejects=_points(fb.no),
                     feedback={"periods": fb.periods, "offPitch": fb.offPitch, "asked": _points(fb.asked)},
-                    position=request.target.position)
+                    position=request.target.position, **extra)
         timeline = {}
         tl_path = Path(tmp) / "timeline.npz"
         if tl_path.exists():
@@ -204,3 +270,37 @@ def resolve(request: ResolveRequest) -> dict:
     from .pipeline import WORKER_VERSION  # noqa: PLC0415
 
     return {"workerVersion": WORKER_VERSION, "models": model_versions(), "report": target_only(report), "timeline": timeline}
+
+
+@router.post("/v3/tracking:discover")
+def discover_chunk(request: DiscoverRequest) -> dict:
+    """Early discovery (4.1): number sightings of the target in one chunk of the source, as
+    playable moments. Target-only: other players' reads never leave the worker."""
+    if not enabled():
+        raise HTTPException(status_code=404, detail="not_available")
+    if request.endSec <= request.startSec or request.endSec - request.startSec > 1800:
+        raise HTTPException(status_code=422, detail="chunk must be 0-1800 seconds long")
+    if not request.target.jerseyNumber:
+        return {"jobId": request.jobId, "chunkIndex": request.chunkIndex, "status": "no_number", "moments": []}
+    crops = artifact_root() / request.jobId / "discovery" / f"d_{int(request.startSec):05d}"
+    fn = _discover
+    if fn is None:
+        from scoutx_tracker.discovery import discover as fn  # noqa: PLC0415
+        from scoutx_tracker.ocr import shared_reader  # noqa: PLC0415
+
+        detector, reader = _discovery_detector(), shared_reader()
+    else:
+        detector = reader = None
+    res = fn(request.source.url, request.startSec, request.endSec, request.target.jerseyNumber,
+             request.target.kitPrimaryColor, detector, reader, crops_dir=str(crops))
+    # Job-scoped evidence for later resolves (identity uses the reads; lifecycle = job retention).
+    crops.mkdir(parents=True, exist_ok=True)
+    (crops / "sightings.json").write_text(json.dumps([{"t": s.t, "box": s.box, "number": s.number, "conf": s.conf}
+                                                      for s in getattr(res, "sightings", [])]))
+    keys = ("id", "kind", "start", "end", "clipStart", "clipEnd", "identityState", "evidence", "number", "readFrames",
+            "candidate", "indicator")
+    moments = [{**{k: m[k] for k in keys if k in m}, "imageJpegBase64": _thumb(m.get("thumbCrop"), max_h=240)}
+               for m in res.moments]
+    return {"jobId": request.jobId, "chunkIndex": request.chunkIndex, "status": "complete", "moments": moments,
+            "frames": res.frames, "processingSec": res.timings.get("wall", 0.0), "stageSeconds": res.timings,
+            "videoSize": {"width": res.width, "height": res.height}}

@@ -224,3 +224,52 @@ test('development: only comparable matches form a trend', () => {
   assert.equal(none.points.length, 0, 'latest match not comparable -> no trend shown');
   assert.ok(none.excluded.some((e) => e.jobId === 'c'));
 });
+
+test('4.1 discovery: sightings are playable before any report, merge without duplicates, and an empty report is no milestone', async () => {
+  const { mergeDiscoveryMoments } = await import('../../src/features/match-analysis/services/trackingPresentation.ts');
+  const sighting = (t: number) => ({ id: `d_${t * 10}`, kind: 'sighting' as const, kinds: ['sighting' as const], start: t, end: t,
+    clipStart: t - 5, clipEnd: t + 4, identityState: 'CONFIRMED_VISIBLE' as const, candidate: false, evidence: 'number_read' as const,
+    indicator: [[t, 0.3, 0.3, 0.1, 0.4]] as Array<[number, number, number, number, number]> });
+  const auto = fixture('auto');
+  const confirmed = (auto.moments ?? []).find((m) => m.identityState === 'CONFIRMED_VISIBLE')!;
+  const merged = mergeDiscoveryMoments(auto.moments, [sighting(242), sighting(confirmed.start + 1)]);
+  assert.equal(merged.length, (auto.moments ?? []).length + 1, 'a sighting inside a confirmed report moment is not repeated');
+  const card = toMomentCard(sighting(242));
+  assert.equal(card.evidence, 'confirmed');
+  assert.equal(card.numberRead, true);
+  const t0 = Date.parse('2026-10-27T10:00:00Z');
+  const progress: TrackingProgressDoc = {
+    generation: 1, durationSec: 2035, plan: [{ index: 0, startSec: 0, endSec: 120 }], segments: { 0: { status: 'queued', attempts: 0 } },
+    startedAt: new Date(t0).toISOString(), updatedAt: '', resolving: null, preliminary: null, full: null, outcome: null, blocked: null,
+    discovery: { chunks: [{ index: 0, startSec: 0, endSec: 600 }, { index: 1, startSec: 600, endSec: 1200 }],
+      state: { 0: { status: 'done', attempts: 1, moments: 1 }, 1: { status: 'queued', attempts: 0 } }, firstMomentAt: '', sightingTimes: [242],
+      extractionQueued: false },
+  };
+  let j = deriveJourney(progress, null, t0 + 60_000, 1)!;
+  assert.deepEqual(j.scan, { done: 1, total: 2 });
+  assert.equal(j.unlocked.moments, true);
+  assert.equal(j.stages.find((s) => s.id === 'moments')?.status, 'done');
+  j = deriveJourney(progress, { report: { ...auto, moments: [] }, version: 1, stale: false, scope: 'preliminary' }, t0 + 60_000, 0)!;
+  assert.notEqual(j.stages.find((s) => s.id === 'moments')?.status, 'done', 'an empty preliminary report does not complete "moments"');
+});
+
+test('4.1 coach + Ask: off-ball observation stays separate from interpretation; time retrieval; honest limits', async () => {
+  const base = fixture('answers');
+  const measured: TrackingReport = { ...base, offball: { status: 'measured', confirmedSec: 300, minConfirmedSec: 60, measuredSec: 240,
+    nearestOpponentBodyHeights: { median: 2.4, p25: 1.2, p75: 4.1 }, nearestTeammateBodyHeights: { median: 3 }, freeShare: 0.31,
+    tightShare: 0.12, freeEpisodes: [{ start: 100, end: 104 }], tightEpisodes: [{ start: 500, end: 503 }] } };
+  const obs = buildCoachInsights(measured).find((i) => i.kind === 'observation');
+  assert.ok(obs);
+  assert.deepEqual(obs.params, { freePct: 31, tightPct: 12, median: 2.4, measuredMin: 4 });
+  assert.equal(obs.clips?.length, 2);
+  assert.ok(!buildCoachInsights(measured).some((i) => i.kind === 'strength' && i.topic === 'positioning'), 'never a strength/weakness');
+  const insufficient = buildCoachInsights({ ...base, offball: { status: 'insufficient', confirmedSec: 56.7, minConfirmedSec: 60 } });
+  assert.deepEqual(insufficient.find((i) => i.topic === 'positioning')?.params, { confirmedSec: 57, minSec: 60 });
+  assert.equal(answerQuestion('Was I free or tightly marked?', measured).key, 'space');
+  assert.equal(answerQuestion('Ai-je marqué ?', measured).intent, 'goals');
+  assert.equal(answerQuestion('Was I free?', base).key, 'spaceUnavailable');
+  const at = answerQuestion('What happened at 32:40?', base);
+  assert.equal(at.intent, 'at_time');
+  assert.ok(at.moments.length > 0 && at.moments.every((m) => Math.abs(m.actionAt - 1960) < 40));
+  assert.equal(answerQuestion('What happened at 0:10?', fixture('auto')).key, 'atTimeNone');
+});

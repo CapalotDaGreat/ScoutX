@@ -666,7 +666,8 @@
         "active": "in progress",
         "pending": "waiting",
         "blocked": "stopped"
-      }
+      },
+      "scanning": "Looking for #{{number}}: {{done}} of {{total}} parts scanned"
     },
     "problem": {
       "consent_required": {
@@ -726,7 +727,8 @@
       "moments": "My moments",
       "needsReview": "Is this you?",
       "highlights": "Highlight reel",
-      "development": "Am I improving?"
+      "development": "Am I improving?",
+      "offball": "Without the ball"
     },
     "moments": {
       "all": "All",
@@ -742,7 +744,8 @@
         "pass_attempt": "Pass",
         "duel_candidate": "Possible duel",
         "tackle_candidate": "Possible tackle",
-        "spell": "You on camera"
+        "spell": "You on camera",
+        "sighting": "Shirt number seen"
       },
       "outcome": {
         "completed": "reached a team-mate",
@@ -760,7 +763,10 @@
       "noneConfirmed": "No confirmed moments yet. Check the moments below so PitchProof can follow you.",
       "needsReviewIntro": "PitchProof thinks this is you, but is not sure. Your answer only improves this match's report.",
       "open": "Play {{kind}} at {{time}}",
-      "duration": "{{sec}} s"
+      "duration": "{{sec}} s",
+      "numberRead": "Shirt number read",
+      "earlyTitle": "Your moments so far",
+      "earlyBody": "PitchProof read your shirt number in these moments. More appear while the full analysis continues."
     },
     "player": {
       "title": "{{kind}} at {{time}}",
@@ -789,7 +795,9 @@
       "saveNote": "Save note",
       "noteSaved": "Note saved on this device.",
       "unavailable": "Playback unavailable: the source video is no longer stored. The moment and its details stay in your report.",
-      "close": "Close"
+      "close": "Close",
+      "saveClip": "Save clip",
+      "clipSaved": "Saved privately to your reels."
     },
     "label": {
       "whatHappened": "What happened",
@@ -797,7 +805,8 @@
       "doDifferently": "What to do differently",
       "howToPractise": "How to practise",
       "whereToSee": "Where to see it",
-      "evidence": "Evidence"
+      "evidence": "Evidence",
+      "interpretation": "Interpretation (not verified)"
     },
     "coach": {
       "involvement": {
@@ -853,6 +862,18 @@
           "why": "Without knowing the pitch size on screen, any distance or speed figure would be a guess.",
           "do": "Physical stats are only shown when the pitch can be calibrated."
         }
+      },
+      "positioning": {
+        "observation": {
+          "what": "On the {{measuredMin}} min where you are confirmed on video, no opponent was within 3 body heights of you {{freePct}}% of the time and one was within 1 body height {{tightPct}}% of the time (median distance {{median}} body heights).",
+          "why": "Interpretation (not verified): open space can make you available for a pass, while tight marking limits your options. The video cannot show whether a team-mate could actually play you in.",
+          "do": "Watch the clips and check: was there a passing line to you when you were free, and did you move off your marker when you were tight?"
+        },
+        "limitation": {
+          "what": "I cannot describe your positioning yet: it needs at least {{minSec}} s of confirmed footage of you, and this recording has {{confirmedSec}} s.",
+          "why": "Distances to opponents are only meaningful when I know it is really you.",
+          "do": "Answer \"Is this you?\" on your moments. Each confirmed moment adds footage I can measure."
+        }
       }
     },
     "topic": {
@@ -862,7 +883,8 @@
       "passing_accuracy": "keeping your passes",
       "identity": "being recognised on video",
       "ball_visibility": "ball visibility",
-      "physical": "physical data"
+      "physical": "physical data",
+      "positioning": "finding space"
     },
     "drill": {
       "minutes": "{{minutes}} min",
@@ -963,7 +985,9 @@
         "identity": "How sure are you it was me?",
         "review": "Which moments should I check?",
         "compare": "Am I improving?",
-        "unknown": "What can you tell me?"
+        "unknown": "What can you tell me?",
+        "space": "Was I free or tightly marked?",
+        "at_time": "What happened at 32:30?"
       },
       "a": {
         "noReport": "There is no report for this match yet. Answers appear once your first moments are ready.",
@@ -988,7 +1012,13 @@
         "best": "Your strongest moment, by evidence:",
         "noMoments": "There are no confirmed moments yet.",
         "moments": "{{count}} moments found. The first ones:",
-        "unknown": "I can answer questions about your moments, passes, identity coverage and what to work on. Try one of these:"
+        "unknown": "I can answer questions about your moments, passes, identity coverage and what to work on. Try one of these:",
+        "atTime": "Moments of you around {{time}}:",
+        "atTimeUnsure": "Around {{time}} there are moments that may show you; please check them:",
+        "atTimeNone": "I have no footage of you around {{time}}. The nearest moment I have:",
+        "space": "Here is what the footage shows about your space without the ball:",
+        "spaceInsufficient": "I can't measure that yet: I need at least {{minSec}} s of confirmed footage of you and have {{confirmedSec}} s. Confirming your moments helps.",
+        "spaceUnavailable": "This analysis does not include off-ball measurements yet."
       },
       "followUp": "You could also ask"
     },

@@ -31,6 +31,8 @@ export type MomentPlayerModalProps = {
   videoUrl: string | null;
   videoSize: { width: number; height: number } | null;
   recordingSec: number;
+  /** Saves the (possibly adjusted) clip as a private draft reel; resolves when saved. */
+  onSaveClip?: (moment: MomentCard, clip: { clipStart: number; clipEnd: number }) => Promise<void>;
 };
 
 /** Contain-fit rectangle of the video inside its view. */
@@ -44,7 +46,7 @@ function fitRect(view: { w: number; h: number }, video: { width: number; height:
  * Plays one moment: starts at the clip, loops inside it, slow motion and 0.1 s frame steps, the
  * followed player outlined, "Is this you?" on uncertain moments, and a private note.
  */
-export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, videoSize, recordingSec }: MomentPlayerModalProps) {
+export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, videoSize, recordingSec, onSaveClip }: MomentPlayerModalProps) {
   const t = useReviewT();
   const [clip, setClip] = useState<{ clipStart: number; clipEnd: number } | null>(null);
   const [loop, setLoop] = useState(true);
@@ -57,6 +59,7 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
   const [answerError, setAnswerError] = useState(false);
   const [note, setNote] = useState('');
   const [noteSaved, setNoteSaved] = useState(false);
+  const [clipState, setClipState] = useState<'idle' | 'saving' | 'saved' | 'failed'>('idle');
 
   const player = useVideoPlayer(visible && videoUrl ? videoUrl : null, (p) => {
     p.loop = false;
@@ -69,6 +72,7 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
     setAnswered(null);
     setAnswerError(false);
     setNoteSaved(false);
+    setClipState('idle');
     setTime(moment.clipStart);
     void readKeyedValue<string>(NOTES_KEY, `${jobId}:${moment.id}`).then((n) => setNote(n ?? '')).catch(() => setNote(''));
   }, [jobId, moment, visible]);
@@ -208,6 +212,19 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
             {noteSaved ? <Text variant="caption" color="secondary">{t('review.player.noteSaved')}</Text> : null}
           </View>
         </View>
+        {onSaveClip && clip ? (
+          <View className="flex-row flex-wrap items-center gap-3">
+            <Button size="sm" variant="secondary" loading={clipState === 'saving'} disabled={clipState === 'saved'} testID="moment-save-clip"
+              onPress={() => {
+                setClipState('saving');
+                void onSaveClip(moment, clip).then(() => setClipState('saved')).catch(() => setClipState('failed'));
+              }}>
+              {t('review.player.saveClip')}
+            </Button>
+            {clipState === 'saved' ? <Text variant="caption" color="secondary">{t('review.player.clipSaved')}</Text> : null}
+            {clipState === 'failed' ? <Text variant="caption" color="error">{t('review.highlights.failed')}</Text> : null}
+          </View>
+        ) : null}
         <Button variant="ghost" onPress={onClose}>{t('review.player.close')}</Button>
       </View>
     </Modal>

@@ -16,12 +16,12 @@ import { initI18n } from '@/i18n';
 import type { SupportedLanguageCode } from '@/i18n/config';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n';
-import type { TrackingDoc, TrackingProgressDoc, TrackingReport } from '@/features/match-analysis/services/trackingPresentation';
+import type { TrackingDoc, TrackingMoment, TrackingProgressDoc, TrackingReport } from '@/features/match-analysis/services/trackingPresentation';
 import { MatchReviewView } from '@/features/match-review/components/MatchReviewView';
 // Written by prepare.ts: the recorded worker output after validation by the real server parser.
 import reports from './.generated/reports.json';
 
-const REPORTS = reports as unknown as { auto: TrackingReport; answers: TrackingReport };
+const REPORTS = reports as unknown as { auto: TrackingReport; answers: TrackingReport; discovery: TrackingMoment[] };
 
 const NOW = Date.parse('2026-10-27T15:00:00Z');
 function progress(done: number, total: number, extra: Partial<TrackingProgressDoc> = {}): TrackingProgressDoc {
@@ -48,11 +48,23 @@ function synthetic(base: TrackingReport): TrackingReport {
 }
 
 function scenario(state: string): { tracking: TrackingDoc | null; progress: TrackingProgressDoc | null; view?: 'simple' | 'detailed' | 'scout';
-  momentId?: string; videoUrl?: string } {
+  momentId?: string; videoUrl?: string; discovery?: TrackingMoment[] } {
   const auto = REPORTS.auto;
   const answers = REPORTS.answers;
   const doc = (report: TrackingReport, scope: 'preliminary' | 'full'): TrackingDoc => ({ report, version: 1, stale: false, scope, parts: 12 });
   switch (state) {
+    case 'discovering': {
+      // 4.1: scan running, first sighting found, extraction not started yet.
+      const first = REPORTS.discovery.filter((m) => m.start < 600);
+      const p = progress(0, 8, { startedAt: new Date(NOW - 2 * 60_000).toISOString(),
+        discovery: { chunks: [0, 1, 2, 3].map((i) => ({ index: i, startSec: i * 600, endSec: Math.min(2035, (i + 1) * 600) })),
+          state: { 0: { status: 'done', attempts: 1, moments: first.length }, 1: { status: 'queued', attempts: 0 },
+            2: { status: 'queued', attempts: 0 }, 3: { status: 'queued', attempts: 0 } },
+          firstMomentAt: new Date(NOW - 60_000).toISOString(), sightingTimes: first.map((m) => m.start), extractionQueued: false } });
+      return { tracking: null, progress: p, discovery: first };
+    }
+    case 'review-discovery':
+      return { tracking: doc(auto, 'full'), progress: null, discovery: REPORTS.discovery };
     case 'workspace':
       return { tracking: null, progress: progress(0, 8, { startedAt: new Date(NOW - 3 * 60_000).toISOString() }) };
     case 'early': {
@@ -103,8 +115,9 @@ export default function PreviewApp() {
             <View style={{ padding: 16, paddingBottom: 48 }} className="bg-background">
               <View testID="preview-root">
                 <MatchReviewView jobId="preview" playerId="preview-player" match={{ date: '2026-09-27', opponent: 'FC Example' }}
-                  position="winger" job={{ videoDownloadUrl: s.videoUrl, durationSec: 2035 }} tracking={s.tracking} progress={s.progress}
-                  goals={[]} initialView={s.view} initialMomentId={s.momentId} />
+                  position="winger" job={{ videoDownloadUrl: s.videoUrl, durationSec: 2035, jerseyNumber: '20' }} tracking={s.tracking} progress={s.progress}
+                  goals={[]} initialView={s.view} initialMomentId={s.momentId}
+                  discovery={s.discovery ? { moments: s.discovery, generation: 1, updatedAt: '' } : null} />
               </View>
             </View>
           </SnackbarProvider>

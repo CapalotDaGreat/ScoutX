@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import time
 from pathlib import Path
 
@@ -89,18 +90,28 @@ class Detector:
         else:
             self.model = Yolox(variant, weights_path(variant), imgsz)
         self.name = self.model.name
+        self.on_gpu = not use_onnx and torch.cuda.is_available()
 
-    def __call__(self, frame: np.ndarray):
-        b, s, c = self.model([frame], conf=0.05)[0]
+    @staticmethod
+    def _split(b, s, c):
         b = b.astype(np.float32)
         s = s.astype(np.float32)
         p = (c == PERSON) & (s >= 0.12)
         q = c == BALL
         return b[p], s[p], b[q], s[q]
 
+    def __call__(self, frame: np.ndarray):
+        return self._split(*self.model([frame], conf=0.05)[0])
+
+    def batch(self, frames: list[np.ndarray]):
+        """One forward pass for several frames (GPU throughput); same results as per-frame calls."""
+        return [self._split(*r) for r in self.model(frames, conf=0.05)]
+
 
 def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: float | None = None,
-            stride: int = 1, imgsz: int = 1280, crop_min_h: int = 80, progress=None) -> dict:
+            stride: int = 1, imgsz: int = 1280, crop_min_h: int = 80, progress=None,
+            decoder: str = os.environ.get("SCOUTX_DECODER", "cv2"),
+            batch: int = int(os.environ.get("SCOUTX_BATCH", "0"))) -> dict:
     out = Path(out_dir)
     (out / "crops").mkdir(parents=True, exist_ok=True)
     cap = cv2.VideoCapture(video)
@@ -109,7 +120,19 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = fps_src / stride
     k = -1
-    if start > 0:
+    # 4.1: ffmpeg decodes multi-threaded (14.5 s vs 77 s for 120 s of 1080p on 2 vCPU) and can use
+    # NVDEC on GPU hosts (SCOUTX_HWACCEL=cuda). It is opt-in (SCOUTX_DECODER=ffmpeg): for the 10-bit
+    # HLG iPhone footage its colour conversion differs from OpenCV's by ~22 grey levels, and the
+    # kit-colour model was calibrated on OpenCV frames - re-validate before switching the default.
+    use_ffmpeg = decoder == "ffmpeg" and shutil.which("ffmpeg") is not None
+    ff = None
+    if use_ffmpeg:
+        cap.release()
+        from .discovery import ffmpeg_frames  # noqa: PLC0415
+
+        ff = ffmpeg_frames(video, start, end if end is not None else 1e9, fps)
+        k = int(round(start * fps_src / stride)) * stride - stride
+    elif start > 0:
         k = int(round(start * fps_src)) - 1
         cap.set(cv2.CAP_PROP_POS_FRAMES, k + 1)
     det = Detector(imgsz=imgsz)
@@ -120,23 +143,26 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     fi = -1
     t_start = time.time()
     tm = {"decode": 0.0, "detect": 0.0, "scene_cmc": 0.0, "colour_signature": 0.0, "embedding": 0.0, "crops_io": 0.0}
-    while True:
-        _t = time.perf_counter()
-        ok, frame = cap.read()
-        tm["decode"] += time.perf_counter() - _t
-        if not ok:
-            break
-        k += 1
-        if (k % stride) != 0:
-            continue
-        t = t0 + k / fps_src
-        if end is not None and k / fps_src >= end:
-            break
+    # 4.1 batched inference: frames are detected in batches (default 8 on CUDA, 1 on CPU where
+    # batching gives no speed-up); everything after detection still runs frame by frame, in order.
+    if batch <= 0:
+        batch = 8 if det.on_gpu else 1
+    pending: list[tuple[float, np.ndarray]] = []
+
+    def run_batch() -> None:
+        if not pending:
+            return
+        _tb = time.perf_counter()
+        results = det.batch([f for _, f in pending])
+        tm["detect"] += time.perf_counter() - _tb
+        for (tt, fr), r in zip(pending, results):
+            consume(tt, fr, *r)
+        pending.clear()
+
+    def consume(t, frame, pb, ps, bb, bs) -> None:
+        nonlocal fi, prev_small
         fi += 1
         times.append(t)
-        _t = time.perf_counter()
-        pb, ps, bb, bs = det(frame)
-        tm["detect"] += time.perf_counter() - _t
         _t = time.perf_counter()
         grass.append(grass_fraction(frame))
         small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
@@ -179,7 +205,31 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         tm["embedding"] += time.perf_counter() - _t
         if progress and fi % 100 == 0:
             progress(fi, t, time.time() - t_start)
-    cap.release()
+
+    while True:
+        _t = time.perf_counter()
+        if ff is not None:
+            nxt = next(ff, None)
+            ok, frame = (nxt is not None), (nxt[1] if nxt is not None else None)
+            if ok:
+                k += stride - 1
+        else:
+            ok, frame = cap.read()
+        tm["decode"] += time.perf_counter() - _t
+        if not ok:
+            break
+        k += 1
+        if (k % stride) != 0:
+            continue
+        t = t0 + k / fps_src
+        if end is not None and k / fps_src >= end:
+            break
+        pending.append((t, frame))
+        if len(pending) >= batch:
+            run_batch()
+    run_batch()
+    if ff is None:
+        cap.release()
     np.savez_compressed(
         out / "detections.npz",
         dets=np.array(dets, np.float64).reshape(-1, 7), sigs=np.array(sigs, np.float16).reshape(-1, SIG_DIM),

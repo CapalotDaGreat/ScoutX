@@ -666,7 +666,8 @@
         "active": "in corso",
         "pending": "in attesa",
         "blocked": "fermo"
-      }
+      },
+      "scanning": "Ricerca del n. {{number}}: {{done}} parti su {{total}} esaminate"
     },
     "problem": {
       "consent_required": {
@@ -726,7 +727,8 @@
       "moments": "Le mie azioni",
       "needsReview": "Sei tu?",
       "highlights": "Video highlights",
-      "development": "Sto migliorando?"
+      "development": "Sto migliorando?",
+      "offball": "Senza palla"
     },
     "moments": {
       "all": "Tutte",
@@ -742,7 +744,8 @@
         "pass_attempt": "Passaggio",
         "duel_candidate": "Possibile duello",
         "tackle_candidate": "Possibile contrasto",
-        "spell": "Tu in video"
+        "spell": "Tu in video",
+        "sighting": "Numero di maglia visto"
       },
       "outcome": {
         "completed": "è arrivato a un compagno",
@@ -760,7 +763,10 @@
       "noneConfirmed": "Ancora nessuna azione confermata. Controlla le azioni qui sotto così PitchProof può seguirti.",
       "needsReviewIntro": "PitchProof pensa che sia tu, ma non ne è sicuro. La tua risposta migliora solo il report di questa partita.",
       "open": "Riproduci {{kind}} a {{time}}",
-      "duration": "{{sec}} s"
+      "duration": "{{sec}} s",
+      "numberRead": "Numero di maglia letto",
+      "earlyTitle": "Le tue azioni finora",
+      "earlyBody": "PitchProof ha letto il tuo numero di maglia in queste azioni. Altre compariranno mentre l'analisi completa continua."
     },
     "player": {
       "title": "{{kind}} a {{time}}",
@@ -789,7 +795,9 @@
       "saveNote": "Salva nota",
       "noteSaved": "Nota salvata su questo dispositivo.",
       "unavailable": "Riproduzione non disponibile: il video originale non è più salvato. L'azione e i suoi dettagli restano nel tuo report.",
-      "close": "Chiudi"
+      "close": "Chiudi",
+      "saveClip": "Salva clip",
+      "clipSaved": "Salvata in privato nei tuoi video."
     },
     "label": {
       "whatHappened": "Cosa è successo",
@@ -797,7 +805,8 @@
       "doDifferently": "Cosa fare diversamente",
       "howToPractise": "Come allenarlo",
       "whereToSee": "Dove vederlo",
-      "evidence": "Prova"
+      "evidence": "Prova",
+      "interpretation": "Interpretazione (non verificata)"
     },
     "coach": {
       "involvement": {
@@ -853,6 +862,18 @@
           "why": "Senza conoscere le dimensioni del campo nell'immagine, qualsiasi dato di distanza o velocità sarebbe un'ipotesi.",
           "do": "I dati fisici vengono mostrati solo quando il campo può essere calibrato."
         }
+      },
+      "positioning": {
+        "observation": {
+          "what": "Nei {{measuredMin}} min in cui sei confermato in video, nessun avversario era entro 3 altezze corporee per il {{freePct}}% del tempo e uno era entro 1 altezza per il {{tightPct}}% (distanza mediana {{median}} altezze).",
+          "why": "Interpretazione (non verificata): lo spazio libero può renderti disponibile per un passaggio, la marcatura stretta limita le opzioni. Il video non mostra se un compagno poteva davvero servirti.",
+          "do": "Guarda le clip e verifica: c'era una linea di passaggio verso di te quando eri libero, e ti sei smarcato quando l'avversario era addosso?"
+        },
+        "limitation": {
+          "what": "Non posso ancora descrivere il tuo posizionamento: servono almeno {{minSec}} s di video confermato di te, questa registrazione ne ha {{confirmedSec}} s.",
+          "why": "Le distanze dagli avversari hanno senso solo se so che sei davvero tu.",
+          "do": "Rispondi a \"Sei tu?\" sulle tue azioni. Ogni azione confermata aggiunge video che posso misurare."
+        }
       }
     },
     "topic": {
@@ -862,7 +883,8 @@
       "passing_accuracy": "la precisione dei passaggi",
       "identity": "farti riconoscere in video",
       "ball_visibility": "la visibilità della palla",
-      "physical": "i dati fisici"
+      "physical": "i dati fisici",
+      "positioning": "trovare spazio"
     },
     "drill": {
       "minutes": "{{minutes}} min",
@@ -963,7 +985,9 @@
         "identity": "Quanto sei sicuro che fossi io?",
         "review": "Quali azioni devo controllare?",
         "compare": "Sto migliorando?",
-        "unknown": "Cosa puoi dirmi?"
+        "unknown": "Cosa puoi dirmi?",
+        "space": "Ero libero o marcato stretto?",
+        "at_time": "Cosa è successo al 32:30?"
       },
       "a": {
         "noReport": "Non c'è ancora un report per questa partita. Le risposte compaiono quando le tue prime azioni sono pronte.",
@@ -988,7 +1012,13 @@
         "best": "La tua azione migliore, secondo le prove:",
         "noMoments": "Non ci sono ancora azioni confermate.",
         "moments": "{{count}} azioni trovate. Le prime:",
-        "unknown": "Posso rispondere su azioni, passaggi, riconoscimento nel video e su cosa lavorare. Prova una di queste:"
+        "unknown": "Posso rispondere su azioni, passaggi, riconoscimento nel video e su cosa lavorare. Prova una di queste:",
+        "atTime": "Le tue azioni intorno a {{time}}:",
+        "atTimeUnsure": "Intorno a {{time}} ci sono azioni che potrebbero mostrarti; controllale:",
+        "atTimeNone": "Non ho video di te intorno a {{time}}. L'azione più vicina:",
+        "space": "Ecco cosa mostra il video sul tuo spazio senza palla:",
+        "spaceInsufficient": "Non posso ancora misurarlo: servono almeno {{minSec}} s di video confermato di te e ne ho {{confirmedSec}} s. Confermare le azioni aiuta.",
+        "spaceUnavailable": "Questa analisi non include ancora misure senza palla."
       },
       "followUp": "Potresti anche chiedere"
     },

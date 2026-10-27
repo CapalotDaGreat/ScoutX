@@ -45,6 +45,7 @@ export function MomentCard({ moment, imageUrl, onPress, selected, width = 168 }:
         <Text variant="caption" color="secondary">
           {time} · {t('review.moments.duration', { sec: Math.round(moment.durationSec) })}
         </Text>
+        {moment.numberRead ? <Text variant="caption" color="secondary" numberOfLines={1}>{t('review.moments.numberRead')}</Text> : null}
         {moment.outcome ? <Text variant="caption" color="secondary" numberOfLines={1}>{t(`review.moments.outcome.${moment.outcome}`)}</Text> : null}
         <Badge size="sm" variant={EVIDENCE_BADGE[moment.evidence]} label={t(`review.moments.evidence.${moment.evidence}`)} />
       </View>

@@ -25,7 +25,7 @@ export function observationFrom(jobId: string, date: string, doc: TrackingDoc | 
   const r = doc?.report;
   if (!r) return null;
   const moments = r.moments ?? [];
-  const confirmedActions = moments.filter((m) => m.identityState === 'CONFIRMED_VISIBLE' && !m.candidate && m.kind !== 'spell').length;
+  const confirmedActions = moments.filter((m) => m.identityState === 'CONFIRMED_VISIBLE' && !m.candidate && m.kind !== 'spell' && m.kind !== 'sighting').length;
   const passes = moments.filter((m) => m.kind === 'pass_attempt' && !m.candidate);
   return { jobId, date, engineMajor: r.engineVersion.split('.')[0] ?? r.engineVersion, scope: doc?.scope ?? 'full',
     confirmedSec: r.coverage.confirmedVisibleSec, analysedSec: r.coverage.analysedSec, confirmedActions,

@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractTrackingSegmentTask = exports.startPlayerAnalysis = exports.cloudTasksEnqueue = exports.EXTRACT_MAX_ATTEMPTS = exports.PLAYER_ANALYSIS_START_LIMIT = void 0;
+exports.extractTrackingSegmentTask = exports.startPlayerAnalysis = exports.discoverTrackingTask = exports.DISCOVERY_COLLECTION_DOC = exports.cloudTasksEnqueue = exports.EXTRACT_MAX_ATTEMPTS = exports.PLAYER_ANALYSIS_START_LIMIT = void 0;
 exports.startAnalysis = startAnalysis;
 exports.processExtractTask = processExtractTask;
+exports.processDiscoverTask = processDiscoverTask;
 /**
  * Video Intelligence 4.0 - progressive, resumable player analysis.
  *
@@ -73,32 +74,48 @@ async function startAnalysis(db, uid, jobId, enqueue, env = process.env, now = n
         if (block) {
             const p = existing ?? (0, trackingProgress_1.newProgress)(1, job.measuredDurationSec ?? job.durationSec ?? 0, at);
             tx.set(progressRef(db, jobId), { ...p, blocked: block, updatedAt: at });
-            return { status: 'blocked', generation: p.generation, segments: p.plan.length, blocked: block, toQueue: [], job };
+            return { status: 'blocked', generation: p.generation, segments: p.plan.length, blocked: block, toQueue: [], discoveryQueue: [], pendingSegments: [], job };
         }
         if (existing && !existing.outcome && !existing.blocked) {
             return { status: existing.full ? 'complete' : 'running', generation: existing.generation,
-                segments: existing.plan.length, toQueue: [], job };
+                segments: existing.plan.length, toQueue: [], discoveryQueue: [], pendingSegments: [], job };
         }
         // New analysis, or resume after an interruption/block: same generation keeps finished segments.
-        const base = existing && existing.plan.length > 0 ? existing
-            : (0, trackingProgress_1.newProgress)((existing?.generation ?? 0) + 1, job.measuredDurationSec ?? job.durationSec, at);
+        const duration = job.measuredDurationSec ?? job.durationSec;
+        const fresh = !(existing && existing.plan.length > 0);
+        const base = fresh || !existing ? (0, trackingProgress_1.newProgress)((existing?.generation ?? 0) + 1, duration, at) : existing;
+        // 4.1: with a shirt number, an early discovery pass runs first and finds playable sightings.
+        const discovery = fresh
+            ? (/^[0-9]{1,3}$/.test(job.targeting?.jerseyNumber ?? '') ? (0, trackingProgress_1.planDiscovery)(duration) : null)
+            : base.discovery ?? null;
+        const discoveryQueue = discovery && !(0, trackingProgress_1.discoveryFinished)(discovery)
+            ? discovery.chunks.filter((c) => discovery.state[String(c.index)]?.status === 'queued').map((c) => c.index) : [];
         const segments = { ...base.segments };
-        const toQueue = [];
+        const pendingSegments = [];
         for (const s of base.plan) {
             const st = segments[String(s.index)];
             if (st?.status !== 'done') {
                 segments[String(s.index)] = { status: 'queued', attempts: 0 };
-                toQueue.push(s.index);
+                pendingSegments.push(s.index);
             }
         }
-        tx.set(progressRef(db, jobId), { ...base, segments, outcome: null, blocked: null, updatedAt: at,
+        // Extraction waits for discovery (it is then queued sightings-first by the last discovery task).
+        const waitForDiscovery = discoveryQueue.length > 0;
+        const toQueue = waitForDiscovery ? [] : (0, trackingProgress_1.prioritisedSegments)(base.plan, discovery?.sightingTimes ?? [])
+            .filter((i) => pendingSegments.includes(i));
+        const nextDiscovery = discovery ? { ...discovery, extractionQueued: !waitForDiscovery } : null;
+        tx.set(progressRef(db, jobId), { ...base, segments, discovery: nextDiscovery, outcome: null, blocked: null, updatedAt: at,
             startedAt: existing?.outcome ? at : base.startedAt });
-        return { status: 'started', generation: base.generation, segments: base.plan.length, toQueue, job };
+        return { status: 'started', generation: base.generation, segments: base.plan.length, toQueue, discoveryQueue,
+            pendingSegments, job };
     });
+    for (const index of result.discoveryQueue) {
+        await enqueue('discoverTrackingTask', { jobId, generation: result.generation, index });
+    }
     for (const index of result.toQueue) {
         await enqueue('extractTrackingSegmentTask', { jobId, generation: result.generation, index });
     }
-    if (result.status === 'started' && result.toQueue.length === 0) {
+    if (result.status === 'started' && result.pendingSegments.length === 0) {
         // Every segment was already cached: only the report needs (re)building.
         await enqueue('resolveTrackingTask', { jobId, feedbackRevision: 0, scope: 'full' });
     }
@@ -179,6 +196,113 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
         await enqueue('resolveTrackingTask', { jobId, feedbackRevision: 0, scope: next });
     return res.status === 'cached' ? 'cached' : 'done';
 }
+exports.DISCOVERY_COLLECTION_DOC = 'discovery';
+/**
+ * One chunk of the early discovery pass. Sightings (target number read) are validated, their
+ * thumbnails stored owner-only and merged into tracking/discovery immediately, so the player can
+ * watch them while the full pass has not even started. The last chunk queues extraction with
+ * segments containing sightings first.
+ */
+async function processDiscoverTask(db, jobId, generation, index, attempt, client, enqueue, env = process.env, sourceUrl = async (p) => (await (0, mediaSource_1.readableSourceFor)(p, 60 * 60 * 1000)).url, now = () => new Date(), notify, storeImage = trackingCallables_1.storageImageStore) {
+    const ref = progressRef(db, jobId);
+    const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
+    const prog = (await ref.get()).data();
+    const d = prog?.discovery;
+    if (!job || !prog || !d || prog.generation !== generation || prog.outcome)
+        return 'stale';
+    if (job.cancelRequested) {
+        await ref.set({ outcome: 'cancelled', updatedAt: now().toISOString() }, { merge: true });
+        return 'cancelled';
+    }
+    const chunk = d.chunks.find((c) => c.index === index);
+    if (!chunk || d.state[String(index)]?.status !== 'queued')
+        return 'stale';
+    if (!client || !(0, trackingV3_1.trackingV3Enabled)(env) || (0, cvConfig_1.cvWorkerStatus)(env) !== 'available' || !job.videoStoragePath)
+        return 'unavailable';
+    const number = job.targeting?.jerseyNumber ?? '';
+    const res = await client({
+        contractVersion: 3, jobId, chunkIndex: index, startSec: chunk.startSec, endSec: chunk.endSec,
+        source: { url: await sourceUrl(job.videoStoragePath) },
+        target: { jerseyNumber: number, kitPrimaryColor: job.targeting?.kitPrimaryColor ?? '' },
+        privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
+    });
+    const at = now().toISOString();
+    const lastAttempt = attempt + 1 >= exports.EXTRACT_MAX_ATTEMPTS;
+    let moments = null;
+    if (res && (res.status === 'complete' || res.status === 'no_number')) {
+        moments = (0, trackingV3_1.parseDiscoveryMoments)(res.moments ?? [], chunk, prog.durationSec, number);
+        if (!moments)
+            return finishDiscovery(db, jobId, generation, index, 'failed', [], at, enqueue, null, notify, job.playerId, 'rejected');
+    }
+    else if (!lastAttempt) {
+        await ref.set({ discovery: { state: { [String(index)]: { status: 'queued', attempts: attempt + 1 } } }, updatedAt: at }, { merge: true });
+        return 'retry';
+    }
+    const raw = new Map((res?.moments ?? [])
+        .map((m) => [String(m?.id), m?.imageJpegBase64]));
+    for (const m of moments ?? []) {
+        const jpeg = (0, trackingV3_1.decodeReviewImage)(raw.get(m.id));
+        if (!jpeg)
+            continue;
+        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${m.id}_g${generation}`);
+        await storeImage(path, jpeg);
+        m.imagePath = path;
+    }
+    const processingSec = typeof res?.processingSec === 'number' && Number.isFinite(res.processingSec) ? res.processingSec : undefined;
+    return finishDiscovery(db, jobId, generation, index, moments ? 'done' : 'failed', moments ?? [], at, enqueue, processingSec ?? null, notify, job.playerId, moments ? 'done' : 'failed');
+}
+async function finishDiscovery(db, jobId, generation, index, status, moments, at, enqueue, processingSec, notify, playerId, outcome) {
+    const ref = progressRef(db, jobId);
+    const docRef = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc(exports.DISCOVERY_COLLECTION_DOC);
+    const next = await db.runTransaction(async (tx) => {
+        const prog = (await tx.get(ref)).data();
+        const cur = (await tx.get(docRef)).data();
+        if (!prog?.discovery || prog.generation !== generation)
+            return null;
+        const d = { ...prog.discovery, state: { ...prog.discovery.state,
+                [String(index)]: { status, attempts: (prog.discovery.state[String(index)]?.attempts ?? 0) + 1, doneAt: at,
+                    moments: moments.length, ...(processingSec !== null ? { processingSec } : {}) } } };
+        const merged = [...(cur?.moments ?? []).filter((m) => !moments.some((n) => n.id === m.id)), ...moments]
+            .sort((a, b) => a.clipStart - b.clipStart);
+        const first = d.firstMomentAt === null && merged.length > 0;
+        if (first)
+            d.firstMomentAt = at;
+        d.sightingTimes = merged.map((m) => m.start);
+        const finished = (0, trackingProgress_1.discoveryFinished)(d);
+        const queueExtraction = finished && !d.extractionQueued;
+        if (queueExtraction)
+            d.extractionQueued = true;
+        tx.set(docRef, { moments: merged, generation, updatedAt: at });
+        tx.set(ref, { discovery: d, updatedAt: at }, { merge: true });
+        const pending = prog.plan.map((s) => s.index).filter((i) => prog.segments[String(i)]?.status !== 'done');
+        return { first, queueExtraction, order: (0, trackingProgress_1.prioritisedSegments)(prog.plan, d.sightingTimes).filter((i) => pending.includes(i)) };
+    });
+    if (!next)
+        return 'stale';
+    if (next.first) {
+        await (notify ?? ((id, input) => (0, notificationProducers_1.writeSystemActivity)(db, id, input)))((0, trackingProgress_1.notificationId)('first_moments', jobId, generation), {
+            recipientId: playerId, recipientRole: 'player', type: 'analysis_first_moments', category: 'analysis',
+            title: 'Your first moments are ready', body: 'We found you on video. Watch your first moments while the rest of the match is analysed.',
+            reference: { entityType: 'match_analysis', entityId: jobId, label: 'Match analysis' }
+        });
+    }
+    if (next.queueExtraction) {
+        for (const i of next.order)
+            await enqueue('extractTrackingSegmentTask', { jobId, generation, index: i });
+    }
+    return outcome;
+}
+exports.discoverTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: exports.EXTRACT_MAX_ATTEMPTS, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 6 },
+    timeoutSeconds: 1800, memory: '512MiB' }, async (request) => {
+    const d = request.data;
+    if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.generation)
+        || !Number.isSafeInteger(d.index))
+        return;
+    const url = (0, cvConfig_1.cvWorkerUrl)();
+    const outcome = await processDiscoverTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'discover', 28 * 60 * 1000) : null, exports.cloudTasksEnqueue);
+    if (outcome === 'retry')
+        throw new Error('discovery chunk failed; retrying');
+});
 exports.startPlayerAnalysis = (0, https_1.onCall)((0, callableOptions_1.createCallableOptions)(), async (request) => {
     const uid = request.auth?.uid;
     if (!uid)

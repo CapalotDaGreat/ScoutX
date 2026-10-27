@@ -158,3 +158,25 @@ test('4.0 moments: validated, target-only and answerable as "Is this you?"', asy
   const noSize = parseTrackingReport(raw({ moments: [moment] }));
   assert.equal(answerTarget(noSize!, 'm_50'), null, 'without frame size a moment cannot be answered');
 });
+
+test('4.1 discovery sightings and off-ball observations are validated server-side', async () => {
+  const { parseDiscoveryMoments, parseOffball } = await import('../../functions/src/analysis/trackingV3.ts');
+  const ok = { id: 'd_360', kind: 'sighting', start: 36, end: 36, clipStart: 31, clipEnd: 40, identityState: 'CONFIRMED_VISIBLE',
+    evidence: 'number_read', number: '20', readFrames: 2, candidate: false, indicator: [[36, 0.4, 0.3, 0.05, 0.2]] };
+  const chunk = { startSec: 0, endSec: 600 };
+  const parsed = parseDiscoveryMoments([ok], chunk, 2035, '20');
+  assert.equal(parsed?.[0].evidence, 'number_read');
+  assert.equal(parsed?.[0].kind, 'sighting');
+  for (const bad of [{ number: '17' }, { identityState: 'LIKELY_VISIBLE' }, { start: 700, clipStart: 695, clipEnd: 704 },
+    { clipEnd: 70 }, { evidence: 'appearance' }, { id: 'x' }]) {
+    assert.equal(parseDiscoveryMoments([{ ...ok, ...bad }], chunk, 2035, '20'), null, JSON.stringify(bad));
+  }
+  assert.equal(parseDiscoveryMoments([ok], chunk, 2035, ''), null, 'no number, no sightings');
+  assert.deepEqual(parseOffball({ status: 'insufficient', confirmedSec: 15, minConfirmedSec: 60 }, 2035),
+    { status: 'insufficient', confirmedSec: 15, minConfirmedSec: 60 });
+  const measured = parseOffball({ status: 'measured', confirmedSec: 300, minConfirmedSec: 60, measuredSec: 200,
+    nearestOpponentBodyHeights: { median: 2, p25: 1, p75: 3 }, freeShare: 0.3, tightShare: 0.1,
+    freeEpisodes: [{ start: 10, end: 13 }, { start: 5000, end: 5003 }], tightEpisodes: [] }, 2035);
+  assert.equal(measured?.freeEpisodes?.length, 1, 'episodes outside the recording are dropped');
+  assert.equal(parseOffball({ status: 'measured', confirmedSec: 300, minConfirmedSec: 60, freeShare: 3 }, 2035), null);
+});

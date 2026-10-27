@@ -666,7 +666,8 @@
         "active": "em curso",
         "pending": "em espera",
         "blocked": "parado"
-      }
+      },
+      "scanning": "À procura do n.º {{number}}: {{done}} de {{total}} partes analisadas"
     },
     "problem": {
       "consent_required": {
@@ -726,7 +727,8 @@
       "moments": "Os meus lances",
       "needsReview": "És tu?",
       "highlights": "Vídeo de destaques",
-      "development": "Estou a melhorar?"
+      "development": "Estou a melhorar?",
+      "offball": "Sem bola"
     },
     "moments": {
       "all": "Todos",
@@ -742,7 +744,8 @@
         "pass_attempt": "Passe",
         "duel_candidate": "Possível duelo",
         "tackle_candidate": "Possível desarme",
-        "spell": "Tu em imagem"
+        "spell": "Tu em imagem",
+        "sighting": "Número da camisola visto"
       },
       "outcome": {
         "completed": "chegou a um colega",
@@ -760,7 +763,10 @@
       "noneConfirmed": "Ainda sem lances confirmados. Verifica os lances abaixo para que o PitchProof te possa seguir.",
       "needsReviewIntro": "O PitchProof acha que és tu, mas não tem certeza. A tua resposta só melhora o relatório desta partida.",
       "open": "Reproduzir {{kind}} em {{time}}",
-      "duration": "{{sec}} s"
+      "duration": "{{sec}} s",
+      "numberRead": "Número da camisola lido",
+      "earlyTitle": "Os teus lances até agora",
+      "earlyBody": "O PitchProof leu o número da tua camisola nestes lances. Aparecem mais enquanto a análise completa continua."
     },
     "player": {
       "title": "{{kind}} em {{time}}",
@@ -789,7 +795,9 @@
       "saveNote": "Guardar nota",
       "noteSaved": "Nota guardada neste dispositivo.",
       "unavailable": "Reprodução indisponível: o vídeo original já não está guardado. O lance e os seus detalhes continuam no relatório.",
-      "close": "Fechar"
+      "close": "Fechar",
+      "saveClip": "Guardar clip",
+      "clipSaved": "Guardado em privado nos teus vídeos."
     },
     "label": {
       "whatHappened": "O que aconteceu",
@@ -797,7 +805,8 @@
       "doDifferently": "O que fazer de forma diferente",
       "howToPractise": "Como treinar",
       "whereToSee": "Onde ver",
-      "evidence": "Evidência"
+      "evidence": "Evidência",
+      "interpretation": "Interpretação (não verificada)"
     },
     "coach": {
       "involvement": {
@@ -853,6 +862,18 @@
           "why": "Sem saber o tamanho do campo na imagem, qualquer valor de distância ou velocidade seria um palpite.",
           "do": "Os dados físicos só sãte mostrados quando o campo pode ser calibrado."
         }
+      },
+      "positioning": {
+        "observation": {
+          "what": "Nos {{measuredMin}} min em que estás confirmado no vídeo, nenhum adversário esteve a menos de 3 alturas do corpo {{freePct}}% do tempo e um esteve a menos de 1 altura {{tightPct}}% do tempo (distância mediana {{median}} alturas).",
+          "why": "Interpretação (não verificada): espaço livre pode deixar-te disponível para um passe, marcação apertada limita as tuas opções. O vídeo não mostra se um colega te podia realmente passar a bola.",
+          "do": "Vê os clips e confirma: havia linha de passe para ti quando estavas livre, e soltaste-te do teu marcador quando estava em cima de ti?"
+        },
+        "limitation": {
+          "what": "Ainda não consigo descrever o teu posicionamento: são precisos pelo menos {{minSec}} s de imagem confirmada tua e esta gravação tem {{confirmedSec}} s.",
+          "why": "As distâncias aos adversários só fazem sentido se eu souber que és mesmo tu.",
+          "do": "Responde a \"És tu?\" nos teus lances. Cada lance confirmado acrescenta imagem que posso medir."
+        }
       }
     },
     "topic": {
@@ -862,7 +883,8 @@
       "passing_accuracy": "acertar os passes",
       "identity": "ser reconhecido no vídeo",
       "ball_visibility": "a visibilidade da bola",
-      "physical": "os dados físicos"
+      "physical": "os dados físicos",
+      "positioning": "encontrar espaço"
     },
     "drill": {
       "minutes": "{{minutes}} min",
@@ -963,7 +985,9 @@
         "identity": "Que certeza tens de que era eu?",
         "review": "Que lances devo verificar?",
         "compare": "Estou a melhorar?",
-        "unknown": "O que me podes dizer?"
+        "unknown": "O que me podes dizer?",
+        "space": "Estava livre ou com marcação apertada?",
+        "at_time": "O que aconteceu aos 32:30?"
       },
       "a": {
         "noReport": "Ainda não há relatório desta partida. As respostas aparecem quando os teus primeiros lances estiverem prontos.",
@@ -988,7 +1012,13 @@
         "best": "O teu melhor lance, segundo a evidência:",
         "noMoments": "Ainda não há lances confirmados.",
         "moments": "{{count}} lances encontrados. Os primeiros:",
-        "unknown": "Posso responder sobre os teus lances, passes, o teu reconhecimento no vídeo e o que trabalhar. Experimenta uma destas:"
+        "unknown": "Posso responder sobre os teus lances, passes, o teu reconhecimento no vídeo e o que trabalhar. Experimenta uma destas:",
+        "atTime": "Os teus lances por volta de {{time}}:",
+        "atTimeUnsure": "Por volta de {{time}} há lances que te podem mostrar; verifica-os:",
+        "atTimeNone": "Não tenho imagens tuas por volta de {{time}}. O lance mais próximo:",
+        "space": "Eis o que o vídeo mostra sobre o teu espaço sem bola:",
+        "spaceInsufficient": "Ainda não consigo medir isso: preciso de pelo menos {{minSec}} s de imagem confirmada tua e tenho {{confirmedSec}} s. Confirmar os teus lances ajuda.",
+        "spaceUnavailable": "Esta análise ainda não inclui medições sem bola."
       },
       "followUp": "Também podes perguntar"
     },

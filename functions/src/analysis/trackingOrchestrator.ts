@@ -26,10 +26,15 @@ import { assertCallableRateLimit } from '../security/rateLimit';
 import { readableSourceFor } from '../uploads/mediaSource';
 import { cvWorkerStatus, cvWorkerUrl } from './cvConfig';
 import { MATCH_COLLECTION, type MatchJobDoc } from './frameAnalysis';
-import { TRACKING_COLLECTION, trackingV3Enabled } from './trackingV3';
-import { httpTrackingClient, type TrackingNotifier, type TrackingWorkerClient } from './trackingCallables';
 import {
-  doneCount, newProgress, notificationId, shouldResolvePreliminary, type ProgressBlock, type SegmentState, type TrackingProgress,
+  TRACKING_COLLECTION, decodeReviewImage, parseDiscoveryMoments, reviewImagePath, trackingV3Enabled, type TrackingMoment,
+} from './trackingV3';
+import {
+  httpTrackingClient, storageImageStore, type ImageStore, type TrackingNotifier, type TrackingWorkerClient,
+} from './trackingCallables';
+import {
+  discoveryFinished, doneCount, newProgress, notificationId, planDiscovery, prioritisedSegments, shouldResolvePreliminary,
+  type DiscoveryProgress, type ProgressBlock, type SegmentState, type TrackingProgress,
 } from './trackingProgress';
 import { VIDEO_CONSENT_COLLECTION, VIDEO_CONSENT_VERSION } from './videoConsent';
 
@@ -37,7 +42,8 @@ const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
 export const PLAYER_ANALYSIS_START_LIMIT = { action: 'player_analysis_start', max: 10, window: 'day' as const };
 export const EXTRACT_MAX_ATTEMPTS = 3;
 
-export type Enqueue = (queue: 'extractTrackingSegmentTask' | 'resolveTrackingTask', payload: Record<string, unknown>) => Promise<void>;
+export type Enqueue = (queue: 'discoverTrackingTask' | 'extractTrackingSegmentTask' | 'resolveTrackingTask',
+  payload: Record<string, unknown>) => Promise<void>;
 
 export const cloudTasksEnqueue: Enqueue = async (queue, payload) => {
   await getFunctions().taskQueue(taskQueueName(queue)).enqueue(payload, { dispatchDeadlineSeconds: 1800 });
@@ -76,32 +82,48 @@ export async function startAnalysis(db: Firestore, uid: string, jobId: string, e
     if (block) {
       const p = existing ?? newProgress(1, job.measuredDurationSec ?? job.durationSec ?? 0, at);
       tx.set(progressRef(db, jobId), { ...p, blocked: block, updatedAt: at });
-      return { status: 'blocked' as const, generation: p.generation, segments: p.plan.length, blocked: block, toQueue: [], job };
+      return { status: 'blocked' as const, generation: p.generation, segments: p.plan.length, blocked: block, toQueue: [] as number[], discoveryQueue: [] as number[], pendingSegments: [] as number[], job };
     }
     if (existing && !existing.outcome && !existing.blocked) {
       return { status: existing.full ? 'complete' as const : 'running' as const, generation: existing.generation,
-        segments: existing.plan.length, toQueue: [], job };
+        segments: existing.plan.length, toQueue: [] as number[], discoveryQueue: [] as number[], pendingSegments: [] as number[], job };
     }
     // New analysis, or resume after an interruption/block: same generation keeps finished segments.
-    const base = existing && existing.plan.length > 0 ? existing
-      : newProgress((existing?.generation ?? 0) + 1, job.measuredDurationSec ?? job.durationSec, at);
+    const duration = job.measuredDurationSec ?? job.durationSec;
+    const fresh = !(existing && existing.plan.length > 0);
+    const base = fresh || !existing ? newProgress((existing?.generation ?? 0) + 1, duration, at) : existing;
+    // 4.1: with a shirt number, an early discovery pass runs first and finds playable sightings.
+    const discovery = fresh
+      ? (/^[0-9]{1,3}$/.test(job.targeting?.jerseyNumber ?? '') ? planDiscovery(duration) : null)
+      : base.discovery ?? null;
+    const discoveryQueue = discovery && !discoveryFinished(discovery)
+      ? discovery.chunks.filter((c) => discovery.state[String(c.index)]?.status === 'queued').map((c) => c.index) : [];
     const segments: Record<string, SegmentState> = { ...base.segments };
-    const toQueue: number[] = [];
+    const pendingSegments: number[] = [];
     for (const s of base.plan) {
       const st = segments[String(s.index)];
       if (st?.status !== 'done') {
         segments[String(s.index)] = { status: 'queued', attempts: 0 };
-        toQueue.push(s.index);
+        pendingSegments.push(s.index);
       }
     }
-    tx.set(progressRef(db, jobId), { ...base, segments, outcome: null, blocked: null, updatedAt: at,
+    // Extraction waits for discovery (it is then queued sightings-first by the last discovery task).
+    const waitForDiscovery = discoveryQueue.length > 0;
+    const toQueue = waitForDiscovery ? [] : prioritisedSegments(base.plan, discovery?.sightingTimes ?? [])
+      .filter((i) => pendingSegments.includes(i));
+    const nextDiscovery = discovery ? { ...discovery, extractionQueued: !waitForDiscovery } : null;
+    tx.set(progressRef(db, jobId), { ...base, segments, discovery: nextDiscovery, outcome: null, blocked: null, updatedAt: at,
       startedAt: existing?.outcome ? at : base.startedAt });
-    return { status: 'started' as const, generation: base.generation, segments: base.plan.length, toQueue, job };
+    return { status: 'started' as const, generation: base.generation, segments: base.plan.length, toQueue, discoveryQueue,
+      pendingSegments, job };
   });
+  for (const index of result.discoveryQueue) {
+    await enqueue('discoverTrackingTask', { jobId, generation: result.generation, index });
+  }
   for (const index of result.toQueue) {
     await enqueue('extractTrackingSegmentTask', { jobId, generation: result.generation, index });
   }
-  if (result.status === 'started' && result.toQueue.length === 0) {
+  if (result.status === 'started' && result.pendingSegments.length === 0) {
     // Every segment was already cached: only the report needs (re)building.
     await enqueue('resolveTrackingTask', { jobId, feedbackRevision: 0, scope: 'full' });
   }
@@ -181,6 +203,115 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   if (next) await enqueue('resolveTrackingTask', { jobId, feedbackRevision: 0, scope: next });
   return res.status === 'cached' ? 'cached' : 'done';
 }
+
+export type DiscoverOutcome = 'done' | 'stale' | 'cancelled' | 'retry' | 'failed' | 'unavailable' | 'rejected';
+
+export const DISCOVERY_COLLECTION_DOC = 'discovery';
+
+/**
+ * One chunk of the early discovery pass. Sightings (target number read) are validated, their
+ * thumbnails stored owner-only and merged into tracking/discovery immediately, so the player can
+ * watch them while the full pass has not even started. The last chunk queues extraction with
+ * segments containing sightings first.
+ */
+export async function processDiscoverTask(db: Firestore, jobId: string, generation: number, index: number, attempt: number,
+  client: TrackingWorkerClient | null, enqueue: Enqueue, env: NodeJS.ProcessEnv = process.env,
+  sourceUrl: (path: string) => Promise<string> = async (p) => (await readableSourceFor(p, 60 * 60 * 1000)).url,
+  now: () => Date = () => new Date(), notify?: TrackingNotifier, storeImage: ImageStore = storageImageStore): Promise<DiscoverOutcome> {
+  const ref = progressRef(db, jobId);
+  const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
+  const prog = (await ref.get()).data() as TrackingProgress | undefined;
+  const d = prog?.discovery;
+  if (!job || !prog || !d || prog.generation !== generation || prog.outcome) return 'stale';
+  if (job.cancelRequested) {
+    await ref.set({ outcome: 'cancelled', updatedAt: now().toISOString() }, { merge: true });
+    return 'cancelled';
+  }
+  const chunk = d.chunks.find((c) => c.index === index);
+  if (!chunk || d.state[String(index)]?.status !== 'queued') return 'stale';
+  if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available' || !job.videoStoragePath) return 'unavailable';
+  const number = job.targeting?.jerseyNumber ?? '';
+  const res = await client({
+    contractVersion: 3, jobId, chunkIndex: index, startSec: chunk.startSec, endSec: chunk.endSec,
+    source: { url: await sourceUrl(job.videoStoragePath) },
+    target: { jerseyNumber: number, kitPrimaryColor: job.targeting?.kitPrimaryColor ?? '' },
+    privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
+  }) as { status?: string; moments?: unknown; processingSec?: unknown } | null;
+  const at = now().toISOString();
+  const lastAttempt = attempt + 1 >= EXTRACT_MAX_ATTEMPTS;
+  let moments: TrackingMoment[] | null = null;
+  if (res && (res.status === 'complete' || res.status === 'no_number')) {
+    moments = parseDiscoveryMoments(res.moments ?? [], chunk, prog.durationSec, number);
+    if (!moments) return finishDiscovery(db, jobId, generation, index, 'failed', [], at, enqueue, null, notify, job.playerId, 'rejected');
+  } else if (!lastAttempt) {
+    await ref.set({ discovery: { state: { [String(index)]: { status: 'queued', attempts: attempt + 1 } } }, updatedAt: at }, { merge: true });
+    return 'retry';
+  }
+  const raw = new Map<string, unknown>(((res?.moments ?? []) as Array<{ id?: unknown; imageJpegBase64?: unknown }>)
+    .map((m) => [String(m?.id), m?.imageJpegBase64]));
+  for (const m of moments ?? []) {
+    const jpeg = decodeReviewImage(raw.get(m.id));
+    if (!jpeg) continue;
+    const path = reviewImagePath(job.playerId, jobId, `${m.id}_g${generation}`);
+    await storeImage(path, jpeg);
+    m.imagePath = path;
+  }
+  const processingSec = typeof res?.processingSec === 'number' && Number.isFinite(res.processingSec) ? res.processingSec : undefined;
+  return finishDiscovery(db, jobId, generation, index, moments ? 'done' : 'failed', moments ?? [], at, enqueue, processingSec ?? null,
+    notify, job.playerId, moments ? 'done' : 'failed');
+}
+
+async function finishDiscovery(db: Firestore, jobId: string, generation: number, index: number, status: 'done' | 'failed',
+  moments: TrackingMoment[], at: string, enqueue: Enqueue, processingSec: number | null, notify: TrackingNotifier | undefined,
+  playerId: string, outcome: DiscoverOutcome): Promise<DiscoverOutcome> {
+  const ref = progressRef(db, jobId);
+  const docRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc(DISCOVERY_COLLECTION_DOC);
+  const next = await db.runTransaction(async (tx) => {
+    const prog = (await tx.get(ref)).data() as TrackingProgress | undefined;
+    const cur = (await tx.get(docRef)).data() as { moments?: TrackingMoment[] } | undefined;
+    if (!prog?.discovery || prog.generation !== generation) return null;
+    const d: DiscoveryProgress = { ...prog.discovery, state: { ...prog.discovery.state,
+      [String(index)]: { status, attempts: (prog.discovery.state[String(index)]?.attempts ?? 0) + 1, doneAt: at,
+        moments: moments.length, ...(processingSec !== null ? { processingSec } : {}) } } };
+    const merged = [...(cur?.moments ?? []).filter((m) => !moments.some((n) => n.id === m.id)), ...moments]
+      .sort((a, b) => a.clipStart - b.clipStart);
+    const first = d.firstMomentAt === null && merged.length > 0;
+    if (first) d.firstMomentAt = at;
+    d.sightingTimes = merged.map((m) => m.start);
+    const finished = discoveryFinished(d);
+    const queueExtraction = finished && !d.extractionQueued;
+    if (queueExtraction) d.extractionQueued = true;
+    tx.set(docRef, { moments: merged, generation, updatedAt: at });
+    tx.set(ref, { discovery: d, updatedAt: at }, { merge: true });
+    const pending = prog.plan.map((s) => s.index).filter((i) => prog.segments[String(i)]?.status !== 'done');
+    return { first, queueExtraction, order: prioritisedSegments(prog.plan, d.sightingTimes).filter((i) => pending.includes(i)) };
+  });
+  if (!next) return 'stale';
+  if (next.first) {
+    await (notify ?? ((id, input) => writeSystemActivity(db, id, input)))(notificationId('first_moments', jobId, generation), {
+      recipientId: playerId, recipientRole: 'player', type: 'analysis_first_moments', category: 'analysis',
+      title: 'Your first moments are ready', body: 'We found you on video. Watch your first moments while the rest of the match is analysed.',
+      reference: { entityType: 'match_analysis', entityId: jobId, label: 'Match analysis' } });
+  }
+  if (next.queueExtraction) {
+    for (const i of next.order) await enqueue('extractTrackingSegmentTask', { jobId, generation, index: i });
+  }
+  return outcome;
+}
+
+export const discoverTrackingTask = onTaskDispatched(
+  { retryConfig: { maxAttempts: EXTRACT_MAX_ATTEMPTS, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 6 },
+    timeoutSeconds: 1800, memory: '512MiB' },
+  async (request) => {
+    const d = request.data as { jobId?: unknown; generation?: unknown; index?: unknown };
+    if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.generation)
+      || !Number.isSafeInteger(d.index)) return;
+    const url = cvWorkerUrl();
+    const outcome = await processDiscoverTask(getFirestore(), d.jobId, d.generation as number, d.index as number,
+      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'discover', 28 * 60 * 1000) : null, cloudTasksEnqueue);
+    if (outcome === 'retry') throw new Error('discovery chunk failed; retrying');
+  },
+);
 
 export const startPlayerAnalysis = onCall(createCallableOptions(), async (request) => {
   const uid = request.auth?.uid;

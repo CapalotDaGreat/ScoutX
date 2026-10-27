@@ -40,10 +40,18 @@ export type TrackingReport = {
   referenceImagePath?: string | null;
   /** 4.0: watchable clip windows around the target's own measured actions / identified spells. */
   moments?: TrackingMoment[];
+  /** 4.1: distances to nearest opponent/team-mate on confirmed frames (body heights, image plane). */
+  offball?: {
+    status: 'measured' | 'insufficient'; confirmedSec: number; minConfirmedSec: number; measuredSec?: number;
+    nearestOpponentBodyHeights?: { median: number; p25: number; p75: number };
+    nearestTeammateBodyHeights?: { median: number } | null;
+    freeShare?: number; tightShare?: number;
+    freeEpisodes?: Array<{ start: number; end: number }>; tightEpisodes?: Array<{ start: number; end: number }>;
+  } | null;
   analysedRange?: { startSec: number; endSec: number; parts: number };
   videoSize?: { width: number; height: number } | null;
 };
-export type TrackingMomentKind = 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate' | 'spell';
+export type TrackingMomentKind = 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate' | 'spell' | 'sighting';
 export type TrackingMoment = {
   id: string; kind: TrackingMomentKind; kinds: TrackingMomentKind[]; start: number; end: number;
   clipStart: number; clipEnd: number; identityState: 'CONFIRMED_VISIBLE' | 'LIKELY_VISIBLE'; candidate: boolean;
@@ -51,7 +59,12 @@ export type TrackingMoment = {
   /** [t, x, y, w, h], box normalised to the frame */
   indicator: Array<[number, number, number, number, number]>;
   imagePath?: string | null;
+  /** 4.1 discovery: the shirt number was read in this moment */
+  evidence?: 'number_read';
+  readFrames?: number;
 };
+/** 4.1: number sightings found by the early discovery pass (owner-only, server-written). */
+export type TrackingDiscoveryDoc = { moments: TrackingMoment[]; generation: number; updatedAt: string };
 export type TrackingDoc = { report: TrackingReport | null; version: number; stale: boolean; pendingReason?: string | null;
   /** 'preliminary' while the rest of the match is still being analysed. */
   scope?: 'preliminary' | 'full'; parts?: number };
@@ -70,7 +83,30 @@ export type TrackingProgressDoc = {
   full: { scope: 'preliminary' | 'full'; parts: number; analysedEndSec: number; moments: number; reviewQuestions: number; at: string } | null;
   outcome: null | 'interrupted' | 'cancelled';
   blocked: null | 'worker_unavailable' | 'consent_required' | 'source_missing';
+  discovery?: {
+    chunks: Array<{ index: number; startSec: number; endSec: number }>;
+    state: Record<string, { status: 'queued' | 'done' | 'failed'; attempts: number; moments?: number; doneAt?: string }>;
+    firstMomentAt: string | null;
+    sightingTimes: number[];
+    extractionQueued: boolean;
+  } | null;
 };
+
+/**
+ * Report moments plus discovery sightings not already covered by a report moment (4.1). A
+ * sighting overlapping a confirmed report moment is dropped (the report moment shows it).
+ */
+export function mergeDiscoveryMoments(reportMoments: TrackingMoment[] | undefined, discovery: TrackingMoment[] | undefined): TrackingMoment[] {
+  const base = reportMoments ?? [];
+  const extra = (discovery ?? []).filter((d) => !base.some((m) => m.identityState === 'CONFIRMED_VISIBLE'
+    && d.start >= m.clipStart - 1 && d.start <= m.clipEnd + 1));
+  return [...base, ...extra].sort((a, b) => a.clipStart - b.clipStart);
+}
+
+export function withDiscovery(report: TrackingReport | null, discovery: TrackingMoment[] | undefined): TrackingReport | null {
+  if (!report || !discovery?.length) return report;
+  return { ...report, moments: mergeDiscoveryMoments(report.moments, discovery) };
+}
 
 export const STATE_COLORS: Record<TrackingIdentityState, string> = {
   CONFIRMED_VISIBLE: '#1f9d55', LIKELY_VISIBLE: '#8bc34a', AMBIGUOUS: '#f0a500', OFF_CAMERA: '#c9d3e6',

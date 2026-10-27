@@ -31,6 +31,8 @@ export type Journey = {
   stages: JourneyStage[];
   /** Extraction work units: parts of the recording finished / planned. */
   parts: { done: number; total: number };
+  /** 4.1 discovery scan (shirt-number search) while it runs: chunks finished / planned. */
+  scan: { done: number; total: number } | null;
   /** Seconds left for extraction, from this job's measured speed; null = not measured yet. */
   remainingSec: number | null;
   /** Which results the user can open right now. */
@@ -71,14 +73,19 @@ function measuredRemaining(p: TrackingProgressDoc, nowMs: number): number | null
   return Math.max(0, Math.round(remaining * rate));
 }
 
-export function deriveJourney(progress: TrackingProgressDoc | null, tracking: TrackingDoc | null, nowMs = Date.now()): Journey | null {
+export function deriveJourney(progress: TrackingProgressDoc | null, tracking: TrackingDoc | null, nowMs = Date.now(),
+  discoveryMoments = 0): Journey | null {
   if (!progress && !tracking?.report) return null;
   const report = tracking?.report ?? null;
+  const disc = progress?.discovery ?? null;
+  const scanDone = disc ? Object.values(disc.state).filter((c) => c.status !== 'queued').length : 0;
+  const scanning = Boolean(disc && !disc.extractionQueued && scanDone < disc.chunks.length);
   const total = progress?.plan.length ?? 0;
   const done = progress ? Object.values(progress.segments).filter((s) => s.status === 'done').length : 0;
   const extractionDone = progress ? total > 0 && done >= total : true;
   const full = Boolean(progress?.full) || (!progress && Boolean(report)) || tracking?.scope === 'full';
-  const hasMoments = (report?.moments?.length ?? 0) > 0;
+  const hasMoments = (report?.moments?.length ?? 0) > 0 || discoveryMoments > 0;
+  const identityFound = Boolean(report) || discoveryMoments > 0;
   const problemKind: JourneyProblem['kind'] | null = progress?.blocked ?? progress?.outcome ?? null;
   const problem = problemKind ? { kind: problemKind, ...PROBLEMS[problemKind] } : null;
   const anyRunning = progress ? Object.values(progress.segments).some((s) => s.status === 'running') : false;
@@ -88,8 +95,9 @@ export function deriveJourney(progress: TrackingProgressDoc | null, tracking: Tr
   const stages: JourneyStage[] = [
     { id: 'received', status: 'done' },
     { id: 'preparing', status: status(extractionDone, !extractionDone && (anyRunning || done > 0 || Boolean(progress))) },
-    { id: 'finding', status: status(Boolean(report), !report && (progress?.resolving != null || done > 0)) },
-    { id: 'moments', status: status(Boolean(report) && (hasMoments || full), Boolean(report) && !hasMoments && !full) },
+    { id: 'finding', status: status(identityFound, !identityFound && (scanning || progress?.resolving != null || done > 0)) },
+    // A report without moments is not a milestone: "moments" completes only when there is something to watch.
+    { id: 'moments', status: status(hasMoments || full, (identityFound || scanning) && !hasMoments && !full) },
     { id: 'actions', status: status(extractionDone && Boolean(report), Boolean(report) && !extractionDone) },
     { id: 'report', status: status(full, extractionDone && !full) },
     { id: 'ready', status: full ? 'done' : 'pending' },
@@ -97,10 +105,11 @@ export function deriveJourney(progress: TrackingProgressDoc | null, tracking: Tr
   return {
     stages,
     parts: { done, total },
+    scan: scanning && disc ? { done: scanDone, total: disc.chunks.length } : null,
     remainingSec: progress && !extractionDone && !problem ? measuredRemaining(progress, nowMs) : null,
     unlocked: { preview: true, timeline: Boolean(report), moments: hasMoments, review: (report?.reviewQuestions.length ?? 0) > 0,
       coaching: full },
-    partial: Boolean(report) && !full,
+    partial: (Boolean(report) || discoveryMoments > 0) && !full,
     analysedUntilSec: report?.analysedRange?.endSec ?? null,
     problem,
     complete: full,

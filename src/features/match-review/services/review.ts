@@ -29,6 +29,8 @@ export type MatchReview = {
   best: MomentCard[];
   well: Insight[];
   improve: Insight[];
+  /** measured off-ball observations (with separate, uncertain interpretations) */
+  observations: Insight[];
   limitations: Insight[];
   details: { coverage: TrackingReport['coverage']; numberSightings: number; confirmedByUser: number; engineVersion: string;
     physical: 'verified' | 'not_calibrated'; ballEventsMeasured: number };
@@ -92,6 +94,7 @@ export function buildMatchReview(doc: TrackingDoc | null, view: ReviewView = 'si
     best,
     well: insights.filter((i) => i.kind === 'strength'),
     improve: insights.filter((i) => i.kind === 'improve'),
+    observations: insights.filter((i) => i.kind === 'observation'),
     limitations: allLimits,
     details: { coverage: c, numberSightings: report.identity.numberSightings, confirmedByUser: report.identity.confirmedByUser,
       engineVersion: report.engineVersion,

@@ -47,7 +47,51 @@ export type TrackingProgress = {
   /** Terminal problem: the analysis stopped and the user may need to act. */
   outcome: null | 'interrupted' | 'cancelled';
   blocked: ProgressBlock | null;
+  /**
+   * 4.1 early discovery pass (only when a shirt number is known): sparse sampling that finds
+   * the player's number sightings and publishes them as playable moments before the full pass.
+   * Extraction is queued when discovery finishes, segments with sightings first.
+   */
+  discovery?: DiscoveryProgress | null;
 };
+
+export type DiscoveryChunkState = { status: 'queued' | 'done' | 'failed'; attempts: number; processingSec?: number;
+  moments?: number; doneAt?: string };
+export type DiscoveryProgress = {
+  chunks: Array<{ index: number; startSec: number; endSec: number }>;
+  state: Record<string, DiscoveryChunkState>;
+  /** wall time of the first playable moment (any source) */
+  firstMomentAt: string | null;
+  sightingTimes: number[];
+  extractionQueued: boolean;
+};
+
+export const DISCOVERY_CHUNK_SEC = 600;
+
+/** Discovery chunks: 600 s each (the worker accepts up to 1800 s), so sightings stream early. */
+export function planDiscovery(durationSec: number, chunkSec = DISCOVERY_CHUNK_SEC): DiscoveryProgress | null {
+  if (!Number.isFinite(durationSec) || durationSec <= 0) return null;
+  const chunks: DiscoveryProgress['chunks'] = [];
+  for (let a = 0, i = 0; a < durationSec && i <= 60; a += chunkSec, i += 1) {
+    chunks.push({ index: i, startSec: round2(a), endSec: round2(Math.min(durationSec, a + chunkSec)) });
+  }
+  const state: DiscoveryProgress['state'] = {};
+  for (const c of chunks) state[String(c.index)] = { status: 'queued', attempts: 0 };
+  return { chunks, state, firstMomentAt: null, sightingTimes: [], extractionQueued: false };
+}
+
+export function discoveryFinished(d: DiscoveryProgress): boolean {
+  return d.chunks.every((c) => ['done', 'failed'].includes(d.state[String(c.index)]?.status ?? 'queued'));
+}
+
+/**
+ * Prioritised extraction order: segments that contain a sighting first (they anchor identity,
+ * so the first full-quality report around them is useful), then the rest in match order.
+ */
+export function prioritisedSegments(plan: SegmentPlan[], sightingTimes: number[]): number[] {
+  const hit = plan.filter((s) => sightingTimes.some((t) => t >= s.startSec && t < s.endSec)).map((s) => s.index);
+  return [...hit, ...plan.map((s) => s.index).filter((i) => !hit.includes(i))];
+}
 
 /**
  * Splits the recording into extraction segments. The first segment is short so first results

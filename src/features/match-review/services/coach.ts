@@ -8,7 +8,7 @@
 import type { TrackingReport } from '@/features/match-analysis/services/trackingPresentation';
 import { buildMomentsView, type EvidenceLabel, type MomentCard } from './moments';
 
-export type CoachTopic = 'involvement' | 'carrying' | 'passing' | 'passing_accuracy' | 'identity' | 'ball_visibility' | 'physical';
+export type CoachTopic = 'involvement' | 'carrying' | 'passing' | 'passing_accuracy' | 'identity' | 'ball_visibility' | 'physical' | 'positioning';
 export type PositionGroup = 'goalkeeper' | 'defender' | 'midfielder' | 'winger' | 'forward' | 'unknown';
 export type AgeBand = 'youth' | 'adult';
 
@@ -25,11 +25,17 @@ export const DRILLS: Drill[] = [
   { id: 'build_up_angles', topics: ['involvement', 'passing'], positions: ['defender', 'goalkeeper'], minutes: 15, youth: false },
   { id: 'first_touch_away', topics: ['carrying', 'passing_accuracy'], positions: 'all', minutes: 10, youth: true },
   { id: 'distribution_targets', topics: ['passing', 'passing_accuracy'], positions: ['goalkeeper'], minutes: 12, youth: true },
+  { id: 'show_for_ball', topics: ['positioning'], positions: ['midfielder', 'winger', 'forward'], minutes: 12, youth: true },
+  { id: 'build_up_angles', topics: ['positioning'], positions: ['defender', 'goalkeeper'], minutes: 15, youth: false },
 ];
 
 export type Insight = {
   id: string;
-  kind: 'strength' | 'improve' | 'limitation';
+  /**
+   * observation: directly measured behaviour (4.1 off-ball) with a separate, explicitly
+   * uncertain interpretation - never presented as a strength or weakness.
+   */
+  kind: 'strength' | 'improve' | 'limitation' | 'observation';
   topic: CoachTopic;
   evidence: EvidenceLabel;
   /** i18n keys under review.coach.<topic>.<kind>.*; params are measured values only */
@@ -37,6 +43,8 @@ export type Insight = {
   drill: Drill | null;
   /** where to see it */
   momentIds: string[];
+  /** watchable time ranges that are not moments (e.g. off-ball episodes) */
+  clips?: Array<{ start: number; end: number }>;
 };
 
 export function positionGroup(position: string | null | undefined): PositionGroup {
@@ -104,6 +112,20 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
     }
   }
 
+  // Off-ball (4.1): measured on confirmed frames only; reported as an observation with a separate,
+  // uncertain interpretation. Too little confirmed footage -> an explicit limitation instead.
+  const ob = report.offball;
+  if (ob?.status === 'measured' && ob.nearestOpponentBodyHeights) {
+    const episodes = [...(ob.freeEpisodes ?? []), ...(ob.tightEpisodes ?? [])].sort((a, b) => a.start - b.start).slice(0, 4);
+    out.push({ id: 'positioning_observation', kind: 'observation', topic: 'positioning', evidence: 'confirmed',
+      params: { freePct: Math.round((ob.freeShare ?? 0) * 100), tightPct: Math.round((ob.tightShare ?? 0) * 100),
+        median: ob.nearestOpponentBodyHeights.median, measuredMin: Math.round((ob.measuredSec ?? 0) / 6) / 10 },
+      drill: pickDrill('positioning', position, age), momentIds: [], clips: episodes });
+  } else if (ob?.status === 'insufficient') {
+    out.push({ id: 'positioning_limit', kind: 'limitation', topic: 'positioning', evidence: 'not_measurable',
+      params: { confirmedSec: Math.round(ob.confirmedSec), minSec: Math.round(ob.minConfirmedSec) }, drill: null, momentIds: [] });
+  }
+
   // Limitations: what I could not verify, and why.
   const analysed = c.analysedSec;
   if (analysed > 0 && c.confirmedVisibleSec / analysed < 0.1) {
@@ -121,7 +143,7 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
   }
   const strengths = out.filter((i) => i.kind === 'strength').slice(0, 2);
   const improve = out.filter((i) => i.kind === 'improve').slice(0, 2);
-  return [...strengths, ...improve, ...out.filter((i) => i.kind === 'limitation')];
+  return [...strengths, ...improve, ...out.filter((i) => i.kind === 'observation'), ...out.filter((i) => i.kind === 'limitation')];
 }
 
 export type RecordingTip = 'wider_view' | 'follow_play' | 'bold_numbers' | 'record_whole_match' | 'steady_camera';
@@ -152,7 +174,7 @@ export function nextMatchFocus(insights: Insight[], tips: RecordingTip[], goals:
   if (improve) {
     const words: Record<CoachTopic, RegExp> = {
       passing: /pass/i, passing_accuracy: /pass/i, carrying: /(carry|dribbl|drib)/i, involvement: /(involv|touch|ball)/i,
-      identity: /$^/, ball_visibility: /$^/, physical: /(sprint|speed|fit)/i,
+      identity: /$^/, ball_visibility: /$^/, physical: /(sprint|speed|fit)/i, positioning: /(position|space|move)/i,
     };
     const goal = goals.find((g) => words[improve.topic].test(g.title));
     return { kind: 'skill', insightId: improve.id, topic: improve.topic, drill: improve.drill, matchesGoalId: goal?.id ?? null };

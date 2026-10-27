@@ -5,7 +5,19 @@ import { MATCH_ANALYSIS_COLLECTION } from '@/features/match-analysis/constants';
 import { createSecureId } from '@/utils/secureId';
 
 export * from '@/features/match-analysis/services/trackingPresentation';
-import type { TrackingAnswer, TrackingDoc, TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
+import type { TrackingAnswer, TrackingDiscoveryDoc, TrackingDoc, TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
+
+/** Live discovery sightings (4.1): playable before the full analysis has a report. */
+export function subscribeTrackingDiscovery(jobId: string, onChange: (doc: TrackingDiscoveryDoc | null) => void,
+  onError?: (e: Error) => void): Unsubscribe {
+  const db = getFirestoreDb();
+  if (!db || !isFirebaseConfiguredForProject()) {
+    onChange(null);
+    return () => undefined;
+  }
+  return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'discovery'),
+    (snap) => onChange(snap.exists() ? (snap.data() as TrackingDiscoveryDoc) : null), onError);
+}
 
 /** Live progress facts of the progressive analysis (null when none was started). */
 export function subscribeTrackingProgress(jobId: string, onChange: (doc: TrackingProgressDoc | null) => void,

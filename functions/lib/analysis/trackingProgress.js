@@ -10,7 +10,10 @@
  * Kept dependency-free so the unit suite imports it directly.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MAX_SEGMENT_SEC = exports.SEGMENT_SEC = exports.FIRST_SEGMENT_SEC = exports.MAX_SEGMENTS = exports.PROGRESS_SCHEMA = void 0;
+exports.DISCOVERY_CHUNK_SEC = exports.MAX_SEGMENT_SEC = exports.SEGMENT_SEC = exports.FIRST_SEGMENT_SEC = exports.MAX_SEGMENTS = exports.PROGRESS_SCHEMA = void 0;
+exports.planDiscovery = planDiscovery;
+exports.discoveryFinished = discoveryFinished;
+exports.prioritisedSegments = prioritisedSegments;
 exports.planSegments = planSegments;
 exports.newProgress = newProgress;
 exports.doneCount = doneCount;
@@ -27,6 +30,31 @@ exports.MAX_SEGMENTS = 61;
 exports.FIRST_SEGMENT_SEC = 120;
 exports.SEGMENT_SEC = 300;
 exports.MAX_SEGMENT_SEC = 900;
+exports.DISCOVERY_CHUNK_SEC = 600;
+/** Discovery chunks: 600 s each (the worker accepts up to 1800 s), so sightings stream early. */
+function planDiscovery(durationSec, chunkSec = exports.DISCOVERY_CHUNK_SEC) {
+    if (!Number.isFinite(durationSec) || durationSec <= 0)
+        return null;
+    const chunks = [];
+    for (let a = 0, i = 0; a < durationSec && i <= 60; a += chunkSec, i += 1) {
+        chunks.push({ index: i, startSec: round2(a), endSec: round2(Math.min(durationSec, a + chunkSec)) });
+    }
+    const state = {};
+    for (const c of chunks)
+        state[String(c.index)] = { status: 'queued', attempts: 0 };
+    return { chunks, state, firstMomentAt: null, sightingTimes: [], extractionQueued: false };
+}
+function discoveryFinished(d) {
+    return d.chunks.every((c) => ['done', 'failed'].includes(d.state[String(c.index)]?.status ?? 'queued'));
+}
+/**
+ * Prioritised extraction order: segments that contain a sighting first (they anchor identity,
+ * so the first full-quality report around them is useful), then the rest in match order.
+ */
+function prioritisedSegments(plan, sightingTimes) {
+    const hit = plan.filter((s) => sightingTimes.some((t) => t >= s.startSec && t < s.endSec)).map((s) => s.index);
+    return [...hit, ...plan.map((s) => s.index).filter((i) => !hit.includes(i))];
+}
 /**
  * Splits the recording into extraction segments. The first segment is short so first results
  * arrive early; the rest are SEGMENT_SEC long (grown if needed to stay within MAX_SEGMENTS).

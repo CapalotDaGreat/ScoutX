@@ -10,7 +10,7 @@ import { Text } from '@/components/primitives/Text';
 import { useStorageUrls } from '@/features/match-analysis/hooks/useTracking';
 import { startPlayerAnalysis } from '@/features/match-analysis/services/trackingV3Service';
 import {
-  STATE_COLORS, formatClock, type TrackingDoc, type TrackingProgressDoc,
+  STATE_COLORS, formatClock, withDiscovery, type TrackingDiscoveryDoc, type TrackingDoc, type TrackingProgressDoc,
 } from '@/features/match-analysis/services/trackingPresentation';
 import { ReelRepository } from '@/features/reel-studio/repositories/ReelRepository';
 import { useReviewT } from '../hooks/useReviewT';
@@ -19,7 +19,7 @@ import { positionGroup, type Insight } from '../services/coach';
 import { developmentTrend, observationFrom } from '../services/development';
 import { draftReel, presetAvailability, selectHighlights, type HighlightPreset } from '../services/highlights';
 import { deriveJourney, type JourneyProblem } from '../services/journey';
-import { buildMomentsView, type MomentCard as MomentCardModel, type MomentCategory } from '../services/moments';
+import { buildMomentsView, toMomentCard, type MomentCard as MomentCardModel, type MomentCategory } from '../services/moments';
 import { buildMatchReview, type MatchReview, type ReviewView } from '../services/review';
 import { useNow, usePlaybackUrl } from '../hooks/useMatchReviewData';
 import { AnalysisWorkspace } from './AnalysisWorkspace';
@@ -31,9 +31,11 @@ export type MatchReviewViewProps = {
   playerId: string;
   match: { date: string; opponent: string };
   position: string | null;
-  job: { videoDownloadUrl?: string; videoStoragePath?: string; measuredDurationSec?: number; durationSec?: number };
+  job: { videoDownloadUrl?: string; videoStoragePath?: string; measuredDurationSec?: number; durationSec?: number; jerseyNumber?: string };
   tracking: TrackingDoc | null;
   progress: TrackingProgressDoc | null;
+  /** 4.1: number sightings from the early discovery pass (playable before any report). */
+  discovery?: TrackingDiscoveryDoc | null;
   goals: Array<{ id: string; title: string }>;
   initialSection?: 'moments' | 'review';
   initialView?: ReviewView;
@@ -72,7 +74,9 @@ function InsightCard({ insight, moments, onOpen, onCreateGoal }: { insight: Insi
     <View className="gap-2 rounded-lg border border-border px-3 py-3" testID={`insight-${insight.id}`}>
       <Text weight="semibold">{t(`${base}.what`, params)}</Text>
       <View className="gap-1">
-        <Text variant="caption" weight="semibold" color="secondary">{t('review.label.whyItMatters')}</Text>
+        <Text variant="caption" weight="semibold" color="secondary">
+          {t(insight.kind === 'observation' ? 'review.label.interpretation' : 'review.label.whyItMatters')}
+        </Text>
         <Text variant="body-sm">{t(`${base}.why`, params)}</Text>
       </View>
       <View className="gap-1">
@@ -86,6 +90,16 @@ function InsightCard({ insight, moments, onOpen, onCreateGoal }: { insight: Insi
             {t(`review.drill.${insight.drill.id}.name`)} · {t('review.drill.minutes', { minutes: insight.drill.minutes })}
           </Text>
           <Text variant="body-sm">{t(`review.drill.${insight.drill.id}.how`)}</Text>
+        </View>
+      ) : null}
+      {(insight.clips ?? []).length > 0 ? (
+        <View className="gap-1">
+          <Text variant="caption" weight="semibold" color="secondary">{t('review.label.whereToSee')}</Text>
+          <View className="flex-row flex-wrap gap-2">
+            {(insight.clips ?? []).map((c) => (
+              <Button key={c.start} size="sm" variant="secondary" onPress={() => onOpen(clipCard(c))}>{`▶ ${formatClock(c.start)}`}</Button>
+            ))}
+          </View>
         </View>
       ) : null}
       {linked.length > 0 ? (
@@ -111,6 +125,14 @@ function InsightCard({ insight, moments, onOpen, onCreateGoal }: { insight: Insi
       ) : null}
     </View>
   );
+}
+
+/** A watchable time range (e.g. an off-ball episode) as a player-ready card without an outline. */
+function clipCard(c: { start: number; end: number }): MomentCardModel {
+  const start = Math.max(0, c.start - 1);
+  const end = Math.min(start + 20, Math.max(c.end + 1, start + 4));
+  return toMomentCard({ id: `c_${Math.round(c.start * 10)}`, kind: 'spell', kinds: ['spell'], start: c.start, end: c.end,
+    clipStart: start, clipEnd: end, identityState: 'CONFIRMED_VISIBLE', candidate: false, indicator: [] });
 }
 
 function StoryStrip({ review }: { review: MatchReview }) {
@@ -250,7 +272,7 @@ function HighlightsCard({ jobId, playerId, moments, position, title, onOpenReel 
 
 /** The player-first Match Review (Video Intelligence 4.0). */
 export function MatchReviewView(props: MatchReviewViewProps) {
-  const { jobId, playerId, match, position, job, tracking, progress, goals, initialSection, initialView, initialMomentId,
+  const { jobId, playerId, match, position, job, tracking: trackingDoc, progress, discovery, goals, initialSection, initialView, initialMomentId,
     onCreateGoal, onOpenReel, onGiveConsent } = props;
   const t = useReviewT();
   const now = useNow();
@@ -260,11 +282,16 @@ export function MatchReviewView(props: MatchReviewViewProps) {
   const [open, setOpen] = useState<MomentCardModel | null>(null);
   const [startBusy, setStartBusy] = useState(false);
   const [startError, setStartError] = useState(false);
-  const journey = useMemo(() => deriveJourney(progress, tracking, now), [progress, tracking, now]);
+  // Discovery sightings join the report's moments (a sighting already shown by a confirmed report
+  // moment is not repeated); before any report exists they are shown on their own.
+  const tracking = useMemo<TrackingDoc | null>(() => (trackingDoc?.report
+    ? { ...trackingDoc, report: withDiscovery(trackingDoc.report, discovery?.moments) } : trackingDoc), [trackingDoc, discovery]);
+  const earlyCards = useMemo(() => (trackingDoc?.report ? [] : (discovery?.moments ?? []).map(toMomentCard)), [trackingDoc, discovery]);
+  const journey = useMemo(() => deriveJourney(progress, tracking, now, discovery?.moments.length ?? 0), [progress, tracking, now, discovery]);
   const review = useMemo(() => buildMatchReview(tracking, view, { position, goals }), [tracking, view, position, goals]);
   const momentsView = useMemo(() => buildMomentsView(tracking?.report ?? null, filter), [tracking, filter]);
   const allCards = useMemo(() => { const v = buildMomentsView(tracking?.report ?? null); return [...v.moments, ...v.needsReview]; }, [tracking]);
-  const urls = useStorageUrls(allCards.map((m) => m.imagePath));
+  const urls = useStorageUrls([...allCards, ...earlyCards].map((m) => m.imagePath));
   const playback = usePlaybackUrl(job);
   const report = tracking?.report ?? null;
   const recordingSec = report?.coverage.recordingSec ?? job.measuredDurationSec ?? job.durationSec ?? 0;
@@ -273,8 +300,8 @@ export function MatchReviewView(props: MatchReviewViewProps) {
     if (initialSection === 'moments') setShowAll(true);
   }, [initialSection]);
   useEffect(() => {
-    if (initialMomentId) setOpen(allCards.find((m) => m.id === initialMomentId) ?? null);
-  }, [initialMomentId, allCards]);
+    if (initialMomentId) setOpen([...allCards, ...earlyCards].find((m) => m.id === initialMomentId) ?? null);
+  }, [initialMomentId, allCards, earlyCards]);
 
   const start = async () => {
     setStartBusy(true);
@@ -309,7 +336,16 @@ export function MatchReviewView(props: MatchReviewViewProps) {
 
   return (
     <View className="gap-4" testID="match-review">
-      {showWorkspace ? <AnalysisWorkspace journey={journey} onProblemAction={onProblemAction} busy={startBusy} /> : null}
+      {showWorkspace ? <AnalysisWorkspace journey={journey} onProblemAction={onProblemAction} busy={startBusy}
+        number={job.jerseyNumber ?? null} /> : null}
+
+      {!review && earlyCards.length > 0 ? (
+        <Card padding="lg" className="gap-2" testID="review-early-moments">
+          <SectionTitle badge={t('review.preliminaryBadge')}>{t('review.moments.earlyTitle')}</SectionTitle>
+          <Text variant="caption" color="secondary">{t('review.moments.earlyBody')}</Text>
+          <MomentRow items={earlyCards} urls={urls} onOpen={setOpen} />
+        </Card>
+      ) : null}
 
       {review ? (
         <>
@@ -396,6 +432,13 @@ export function MatchReviewView(props: MatchReviewViewProps) {
             </Card>
           ) : null}
 
+          {view !== 'scout' && review.observations.length > 0 ? (
+            <Card padding="lg" className="gap-3" testID="review-offball">
+              <SectionTitle>{t('review.section.offball')}</SectionTitle>
+              {review.observations.map((i) => <InsightCard key={i.id} insight={i} moments={allCards} onOpen={setOpen} />)}
+            </Card>
+          ) : null}
+
           {/* H Next match focus */}
           {has('focus') ? (
             <Card padding="lg" className="gap-2" testID="review-focus">
@@ -477,7 +520,12 @@ export function MatchReviewView(props: MatchReviewViewProps) {
       ) : null}
 
       <MomentPlayerModal visible={open !== null} onClose={() => setOpen(null)} jobId={jobId} moment={open}
-        videoUrl={playback.url} videoSize={report?.videoSize ?? null} recordingSec={recordingSec} />
+        videoUrl={playback.url} videoSize={report?.videoSize ?? null} recordingSec={recordingSec}
+        onSaveClip={async (m, c) => {
+          const reel = draftReel(playerId, jobId, 'custom', [{ momentId: m.id, inSec: c.clipStart, outSec: c.clipEnd, evidence: m.evidence }],
+            `${t(`review.moments.kind.${m.titleKey}`)} · ${formatClock(m.actionAt)} · ${match.opponent}`, new Date(), `reel_${Date.now()}`);
+          await ReelRepository.getInstance().saveReel(reel);
+        }} />
     </View>
   );
 }

@@ -666,7 +666,8 @@
         "active": "läuft",
         "pending": "wartet",
         "blocked": "angehalten"
-      }
+      },
+      "scanning": "Suche nach #{{number}}: {{done}} von {{total}} Abschnitten durchsucht"
     },
     "problem": {
       "consent_required": {
@@ -726,7 +727,8 @@
       "moments": "Meine Szenen",
       "needsReview": "Bist du das?",
       "highlights": "Highlight-Video",
-      "development": "Werde ich besser?"
+      "development": "Werde ich besser?",
+      "offball": "Ohne Ball"
     },
     "moments": {
       "all": "Alle",
@@ -742,7 +744,8 @@
         "pass_attempt": "Pass",
         "duel_candidate": "Möglicher Zweikampf",
         "tackle_candidate": "Mögliches Tackling",
-        "spell": "Du im Bild"
+        "spell": "Du im Bild",
+        "sighting": "Rückennummer gesehen"
       },
       "outcome": {
         "completed": "kam beim Mitspieler an",
@@ -760,7 +763,10 @@
       "noneConfirmed": "Noch keine bestätigten Szenen. Prüfe die Szenen unten, damit PitchProof dir folgen kann.",
       "needsReviewIntro": "PitchProof glaubt, dass du das bist, ist aber nicht sicher. Deine Antwort verbessert nur den Bericht dieses Spiels.",
       "open": "{{kind}} bei {{time}} abspielen",
-      "duration": "{{sec}} s"
+      "duration": "{{sec}} s",
+      "numberRead": "Rückennummer gelesen",
+      "earlyTitle": "Deine Szenen bisher",
+      "earlyBody": "In diesen Szenen hat PitchProof deine Rückennummer gelesen. Weitere erscheinen, während die vollständige Analyse läuft."
     },
     "player": {
       "title": "{{kind}} bei {{time}}",
@@ -789,7 +795,9 @@
       "saveNote": "Notiz speichern",
       "noteSaved": "Notiz auf diesem Gerät gespeichert.",
       "unavailable": "Wiedergabe nicht möglich: Das Originalvideo ist nicht mehr gespeichert. Die Szene und ihre Details bleiben in deinem Bericht.",
-      "close": "Schließen"
+      "close": "Schließen",
+      "saveClip": "Clip speichern",
+      "clipSaved": "Privat in deinen Videos gespeichert."
     },
     "label": {
       "whatHappened": "Was passiert ist",
@@ -797,7 +805,8 @@
       "doDifferently": "Was du anders machen kannst",
       "howToPractise": "So trainierst du es",
       "whereToSee": "Wo du es siehst",
-      "evidence": "Beleg"
+      "evidence": "Beleg",
+      "interpretation": "Deutung (nicht überprüft)"
     },
     "coach": {
       "involvement": {
@@ -853,6 +862,18 @@
           "why": "Ohne die Spielfeldgröße im Bild wäre jede Distanz- oder Tempoangabe geraten.",
           "do": "Physische Werte werden nur gezeigt, wenn das Spielfeld kalibriert werden kann."
         }
+      },
+      "positioning": {
+        "observation": {
+          "what": "In den {{measuredMin}} Min., in denen du im Video bestätigt bist, war {{freePct}}% der Zeit kein Gegner näher als 3 Körperlängen und {{tightPct}}% der Zeit einer näher als 1 Körperlänge (Median {{median}} Körperlängen).",
+          "why": "Deutung (nicht überprüft): Freier Raum kann dich anspielbar machen, enge Deckung schränkt deine Optionen ein. Ob ein Mitspieler dich wirklich anspielen konnte, zeigt das Video nicht.",
+          "do": "Schau dir die Clips an: Gab es eine Passlinie zu dir, als du frei warst, und hast du dich von deinem Gegenspieler gelöst, als er eng an dir war?"
+        },
+        "limitation": {
+          "what": "Dein Positionsspiel kann ich noch nicht beschreiben: Dafür braucht es mindestens {{minSec}} s bestätigtes Material von dir, diese Aufnahme hat {{confirmedSec}} s.",
+          "why": "Abstände zu Gegnern sind nur aussagekräftig, wenn sicher ist, dass du es bist.",
+          "do": "Beantworte bei deinen Szenen \"Bist du das?\". Jede bestätigte Szene liefert Material, das ich messen kann."
+        }
       }
     },
     "topic": {
@@ -862,7 +883,8 @@
       "passing_accuracy": "deine Pässe beim Mitspieler anzubringen",
       "identity": "im Video erkannt zu werden",
       "ball_visibility": "die Sichtbarkeit des Balls",
-      "physical": "physische Daten"
+      "physical": "physische Daten",
+      "positioning": "Räume zu finden"
     },
     "drill": {
       "minutes": "{{minutes}} Min.",
@@ -963,7 +985,9 @@
         "identity": "Wie sicher bist du, dass ich das war?",
         "review": "Welche Szenen soll ich prüfen?",
         "compare": "Werde ich besser?",
-        "unknown": "Was kannst du mir sagen?"
+        "unknown": "Was kannst du mir sagen?",
+        "space": "War ich frei oder eng gedeckt?",
+        "at_time": "Was ist bei 32:30 passiert?"
       },
       "a": {
         "noReport": "Für dieses Spiel gibt es noch keinen Bericht. Antworten erscheinen, sobald deine ersten Szenen bereit sind.",
@@ -988,7 +1012,13 @@
         "best": "Deine stärkste Szene, nach Beleglage:",
         "noMoments": "Es gibt noch keine bestätigten Szenen.",
         "moments": "{{count}} Szenen gefunden. Die ersten:",
-        "unknown": "Ich beantworte Fragen zu deinen Szenen, Pässen, deiner Erkennung im Video und woran du arbeiten kannst. Probier eine davon:"
+        "unknown": "Ich beantworte Fragen zu deinen Szenen, Pässen, deiner Erkennung im Video und woran du arbeiten kannst. Probier eine davon:",
+        "atTime": "Szenen von dir um {{time}}:",
+        "atTimeUnsure": "Um {{time}} gibt es Szenen, die dich zeigen könnten – bitte prüfe sie:",
+        "atTimeNone": "Um {{time}} habe ich kein Material von dir. Die nächste Szene:",
+        "space": "Das zeigt das Video über deinen Raum ohne Ball:",
+        "spaceInsufficient": "Das kann ich noch nicht messen: Ich brauche mindestens {{minSec}} s bestätigtes Material von dir und habe {{confirmedSec}} s. Bestätigte Szenen helfen.",
+        "spaceUnavailable": "Diese Analyse enthält noch keine Messungen ohne Ball."
       },
       "followUp": "Du könntest auch fragen"
     },

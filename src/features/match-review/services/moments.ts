@@ -24,13 +24,16 @@ export type MomentCard = {
   indicator: TrackingMoment['indicator'];
   /** deterministic ordering score: evidence strength first, then informativeness */
   rank: number;
+  /** shirt number read in this moment (4.1 discovery) */
+  numberRead: boolean;
 };
 
 const CATEGORY: Record<TrackingMoment['kind'], MomentCategory> = {
   contact: 'on_ball', carry: 'on_ball', pass_attempt: 'passing', duel_candidate: 'duels', tackle_candidate: 'duels', spell: 'on_camera',
+  sighting: 'on_camera',
 };
 const KIND_WEIGHT: Record<TrackingMoment['kind'], number> = {
-  pass_attempt: 5, carry: 4, contact: 3, tackle_candidate: 2, duel_candidate: 2, spell: 1,
+  pass_attempt: 5, carry: 4, contact: 3, tackle_candidate: 2, duel_candidate: 2, sighting: 1.5, spell: 1,
 };
 
 /**
@@ -63,6 +66,7 @@ export function toMomentCard(m: TrackingMoment): MomentCard {
     imagePath: m.imagePath ?? null,
     indicator: m.indicator,
     rank: evidenceWeight + KIND_WEIGHT[m.kind] * 10 + outcomeWeight + Math.min(9, m.end - m.start) / 10,
+    numberRead: m.evidence === 'number_read',
   };
 }
 

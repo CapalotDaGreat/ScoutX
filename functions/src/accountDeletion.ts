@@ -123,7 +123,7 @@ async function deleteQueryInBatches(query: Query): Promise<number> {
   }
 }
 
-export const ANALYSIS_JOB_SUBCOLLECTIONS = ['segmentReviews', 'cvSegments', 'reports', 'corrections'] as const;
+export const ANALYSIS_JOB_SUBCOLLECTIONS = ['segmentReviews', 'cvSegments', 'reports', 'corrections', 'tracking'] as const;
 
 async function deleteAnalysisJobsRecursively(uid: string): Promise<number> {
   const db = getFirestore();

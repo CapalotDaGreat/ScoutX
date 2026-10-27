@@ -1,0 +1,44 @@
+# Player-tracking worker (scoutx_tracker + /v3 endpoints) for a CUDA GPU (e.g. Cloud Run + NVIDIA L4).
+# NOT DEPLOYED and NOT BENCHMARKED from this repository: build it on a GPU host, then run
+#   docker run --gpus all -v /path/to/video:/data <image> python3.11 bench/pipeline_benchmark.py \
+#       --video /data/match.mp4 --number 20 --kit orange --out /tmp/bench.json --price-per-hour <your rate>
+# before quoting any GPU runtime or cost.
+#
+# The original Dockerfile only packaged the 2.x frame-analysis backends; tracking v3 needs the
+# scoutx_tracker engine, its requirements and the hash-pinned YOLOX weights (Apache-2.0).
+FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    HF_HOME=/opt/models \
+    EASYOCR_MODULE_PATH=/opt/models/easyocr \
+    DOCTR_CACHE_DIR=/opt/models/doctr \
+    SCOUTX_WEIGHTS_DIR=/opt/models/yolox \
+    SCOUTX_DETECTOR=yolox_s \
+    SCOUTX_BACKEND=auto \
+    PORT=8080
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3.11 python3-pip ffmpeg libgl1 libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /srv
+COPY requirements.txt requirements-tracker.txt ./
+RUN python3.11 -m pip install --no-cache-dir -r requirements.txt -r requirements-tracker.txt
+
+COPY scoutx_tracker ./scoutx_tracker
+COPY app ./app
+COPY bench ./bench
+
+# Weights are fetched once at build time (hash-checked) so no request downloads models; the
+# persistent worker then keeps detector and OCR loaded between calls.
+RUN python3.11 -c "from scoutx_tracker.extract import weights_path; weights_path('yolox_s')" \
+    && python3.11 -c "from scoutx_tracker.ocr import NumberReader; NumberReader()" \
+    && chmod -R a+rX /opt/models
+
+RUN useradd --uid 10001 --no-create-home worker
+USER worker
+
+# One request at a time per instance (a GPU is not shared between concurrent segments);
+# TRACKING_V3_ENABLED and TRACKING_ARTIFACT_ROOT are set by the deployment, never baked in.
+CMD ["sh", "-c", "python3.11 -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --workers 1"]

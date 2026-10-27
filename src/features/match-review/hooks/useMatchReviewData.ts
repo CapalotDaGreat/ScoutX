@@ -1,7 +1,17 @@
 import { useEffect, useState } from 'react';
 import { getMediaPlaybackUrl } from '@/features/media-library/services/mediaAccessCallable';
-import { subscribeTrackingProgress } from '@/features/match-analysis/services/trackingV3Service';
-import type { TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
+import { subscribeTrackingDiscovery, subscribeTrackingProgress } from '@/features/match-analysis/services/trackingV3Service';
+import type { TrackingDiscoveryDoc, TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
+
+/** Discovery sightings for a job (4.1). */
+export function useTrackingDiscovery(jobId: string | null): TrackingDiscoveryDoc | null {
+  const [doc, setDoc] = useState<TrackingDiscoveryDoc | null>(null);
+  useEffect(() => {
+    if (!jobId) return undefined;
+    return subscribeTrackingDiscovery(jobId, setDoc, () => setDoc(null));
+  }, [jobId]);
+  return doc;
+}
 
 /** Live progress facts of the progressive analysis (null until one was started). */
 export function useTrackingProgress(jobId: string | null): TrackingProgressDoc | null {

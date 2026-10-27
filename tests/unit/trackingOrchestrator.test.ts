@@ -51,9 +51,9 @@ const approval = { workerVersion: 'football-cv/0.7.0', models: { detector: 'd' }
 const PROGRESS = 'matchAnalysisJobs/job_1/tracking/progress';
 const T0 = Date.parse('2026-10-27T10:00:00Z');
 
-function seed(extra: Record<string, Record<string, unknown>> = {}, consent = true) {
+function seed(extra: Record<string, Record<string, unknown>> = {}, consent = true, jerseyNumber = '20') {
   return {
-    'matchAnalysisJobs/job_1': { playerId: 'u1', targeting: { jerseyNumber: '20', kitPrimaryColor: 'orange' },
+    'matchAnalysisJobs/job_1': { playerId: 'u1', targeting: { jerseyNumber, kitPrimaryColor: 'orange' },
       videoStoragePath: 'profiles/u1/matchFootage/job_1/source.mp4', measuredDurationSec: 1020, durationSec: 1020 },
     ...(consent ? { 'videoProcessingConsents/job_1': { uid: 'u1', revokedAt: null, policyVersion: CONSENT_VERSION } } : {}),
     ...extra,
@@ -138,11 +138,11 @@ test('start: consent, source and worker gates block honestly; a start is idempot
   assert.equal(off.blocked, 'worker_unavailable');
   await assert.rejects(startAnalysis(fakeDb(seed()).db, 'intruder', 'job_1', r1.enqueue, env, now, r1.notify), /owner/);
 
-  const { db, data } = fakeDb(seed());
+  const { db, data } = fakeDb(seed({}, true, ''));
   const r = recorder();
   const started = await startAnalysis(db, 'u1', 'job_1', r.enqueue, env, now, r.notify);
   assert.equal(started.status, 'started');
-  assert.equal(r.queued.length, started.segments);
+  assert.equal(r.queued.length, started.segments, 'without a shirt number extraction starts directly');
   assert.ok(r.queued.every(([q]) => q === 'extractTrackingSegmentTask'));
   assert.equal(r.notes[0][0], notificationId('started', 'job_1', 1));
   const again = await startAnalysis(db, 'u1', 'job_1', r.enqueue, env, now, r.notify);
@@ -155,7 +155,7 @@ test('start: consent, source and worker gates block honestly; a start is idempot
 
 test('extract: records measured time, publishes early, then full; failures retry then interrupt once', async () => {
   setEmulatorCvApproval(approval);
-  const { db, data } = fakeDb(seed());
+  const { db, data } = fakeDb(seed({}, true, ''));
   const r = recorder();
   await startAnalysis(db, 'u1', 'job_1', r.enqueue, env, new Date(T0), r.notify);
   r.queued.length = 0;
@@ -302,4 +302,41 @@ test('progress metrics come from persisted facts only', async () => {
   assert.equal(m.workerSecPerVideoSec, 2);
   assert.equal(m.segmentRetries, 1);
   assert.equal(m.firstReportHadMoments, false);
+});
+
+
+test('4.1 discovery: runs first, streams sightings as moments, then queues extraction sightings-first', async () => {
+  setEmulatorCvApproval(approval);
+  const { db, data } = fakeDb(seed());
+  const r = recorder();
+  const started = await startAnalysis(db, 'u1', 'job_1', r.enqueue, env, new Date(T0), r.notify);
+  assert.equal(started.status, 'started');
+  assert.deepEqual(r.queued.map(([q]) => q), ['discoverTrackingTask', 'discoverTrackingTask'], '1020 s -> two 600 s chunks, no extraction yet');
+  const { processDiscoverTask } = await import('../../functions/src/analysis/trackingOrchestrator.ts');
+  const sighting = (t: number) => ({ id: `d_${t * 10}`, kind: 'sighting', start: t, end: t, clipStart: t - 5, clipEnd: t + 4,
+    identityState: 'CONFIRMED_VISIBLE', evidence: 'number_read', number: '20', readFrames: 2, candidate: false,
+    indicator: [[t, 0.3, 0.3, 0.1, 0.4]], imageJpegBase64: JPEG });
+  const stored: string[] = [];
+  const store = async (p: string) => { stored.push(p); };
+  const src = async () => 'https://signed.example/source';
+  r.queued.length = 0;
+  // chunk 1 (600-1020 s) finishes first and finds #20 at 800 s
+  const c1 = async () => ({ status: 'complete', moments: [sighting(800)], processingSec: 40 });
+  assert.equal(await processDiscoverTask(db, 'job_1', 1, 1, 0, c1, r.enqueue, env, src, () => new Date(T0 + 60_000), r.notify, store), 'done');
+  const disc = data.get('matchAnalysisJobs/job_1/tracking/discovery') as { moments: Array<{ id: string; imagePath: string }> };
+  assert.equal(disc.moments.length, 1);
+  assert.match(disc.moments[0].imagePath, /^profiles\/u1\//);
+  assert.ok(r.notes.some(([id]) => id === notificationId('first_moments', 'job_1', 1)), 'first playable moment notifies');
+  assert.equal(r.queued.length, 0, 'extraction waits until discovery finished');
+  // a forged moment (other number) rejects the chunk
+  const bad = async () => ({ status: 'complete', moments: [{ ...sighting(100), number: '17' }] });
+  assert.equal(await processDiscoverTask(db, 'job_1', 1, 0, 0, bad, r.enqueue, env, src, () => new Date(T0 + 90_000), r.notify, store), 'rejected');
+  // discovery finished (one chunk failed, one done) -> extraction queued, segment containing 800 s first
+  const p = data.get(PROGRESS) as TrackingProgress;
+  assert.equal(p.discovery?.extractionQueued, true);
+  const order = r.queued.filter(([q]) => q === 'extractTrackingSegmentTask').map(([, x]) => x.index as number);
+  assert.equal(order.length, p.plan.length);
+  const first = p.plan[order[0]];
+  assert.ok(first.startSec <= 800 && 800 < first.endSec, 'segment with the sighting is extracted first');
+  setEmulatorCvApproval(null);
 });

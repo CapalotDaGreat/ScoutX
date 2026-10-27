@@ -40,7 +40,7 @@ export type TrackingEvent = {
   candidate?: true;
 };
 const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate'];
-export const MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell'] as const;
+export const MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell', 'sighting'] as const;
 export type MomentKind = (typeof MOMENT_KINDS)[number];
 /**
  * A watchable clip window around the target's own measured action (or a confirmed on-camera
@@ -52,6 +52,9 @@ export type TrackingMoment = {
   /** [t, x, y, w, h] normalised target box samples inside the clip (target indicator). */
   indicator: Array<[number, number, number, number, number]>;
   imagePath?: string | null;
+  /** 'number_read': the target's shirt number was read in this moment (4.1 discovery). */
+  evidence?: 'number_read';
+  readFrames?: number;
 };
 export const MAX_MOMENTS = 80;
 export const MAX_CLIP_SEC = 20;
@@ -92,7 +95,44 @@ export type TrackingReport = {
   analysedRange: { startSec: number; endSec: number; parts: number };
   /** Source frame size; turns a moment's normalised target box into an identity answer point. */
   videoSize: { width: number; height: number } | null;
+  /** 4.1 off-ball observations (confirmed frames only); null for older workers. */
+  offball?: OffballObservations | null;
 };
+
+export type OffballObservations = {
+  status: 'measured' | 'insufficient';
+  confirmedSec: number;
+  minConfirmedSec: number;
+  measuredSec?: number;
+  nearestOpponentBodyHeights?: { median: number; p25: number; p75: number };
+  nearestTeammateBodyHeights?: { median: number } | null;
+  freeShare?: number;
+  tightShare?: number;
+  freeEpisodes?: Array<{ start: number; end: number }>;
+  tightEpisodes?: Array<{ start: number; end: number }>;
+};
+
+/** Validates the worker's off-ball block; malformed -> null (the coach then says nothing about it). */
+export function parseOffball(raw: unknown, recordingSec: number): OffballObservations | null {
+  const o = asRecord(raw);
+  if (!o || !['measured', 'insufficient'].includes(String(o.status)) || !nonNeg(o.confirmedSec) || !nonNeg(o.minConfirmedSec)) return null;
+  const base = { confirmedSec: o.confirmedSec as number, minConfirmedSec: o.minConfirmedSec as number };
+  if (o.status === 'insufficient') return { status: 'insufficient', ...base };
+  const share = (v: unknown) => nonNeg(v) && (v as number) <= 1;
+  const opp = asRecord(o.nearestOpponentBodyHeights);
+  if (!opp || !nonNeg(opp.median) || !nonNeg(opp.p25) || !nonNeg(opp.p75) || !share(o.freeShare) || !share(o.tightShare)
+    || !nonNeg(o.measuredSec)) return null;
+  const eps = (v: unknown) => (Array.isArray(v) ? v.slice(0, 20) : []).map(asRecord)
+    .filter((e): e is Record<string, unknown> => !!e && nonNeg(e.start) && nonNeg(e.end) && (e.end as number) >= (e.start as number)
+      && (recordingSec <= 0 || (e.end as number) <= recordingSec + 0.5))
+    .map((e) => ({ start: e.start as number, end: e.end as number }));
+  const mate = asRecord(o.nearestTeammateBodyHeights);
+  return { status: 'measured', ...base, measuredSec: o.measuredSec as number,
+    nearestOpponentBodyHeights: { median: opp.median as number, p25: opp.p25 as number, p75: opp.p75 as number },
+    nearestTeammateBodyHeights: mate && nonNeg(mate.median) ? { median: mate.median as number } : null,
+    freeShare: o.freeShare as number, tightShare: o.tightShare as number,
+    freeEpisodes: eps(o.freeEpisodes), tightEpisodes: eps(o.tightEpisodes) };
+}
 
 /** Decodes the worker's small review-card JPEGs (bounded size, JPEG magic bytes checked). */
 export function decodeReviewImage(b64: unknown): Buffer | null {
@@ -251,6 +291,7 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
     events,
     moments,
     analysedRange,
+    offball: parseOffball(r.offball, coverage.recordingSec),
     videoSize: (() => {
       const v = asRecord(r.videoSize);
       return v && isNum(v.width) && isNum(v.height) && v.width > 0 && v.height > 0 && v.width <= 8192 && v.height <= 8192
@@ -300,6 +341,37 @@ export function parseMoments(raw: unknown, recordingSec: number): TrackingMoment
       indicator, imagePath: null });
   }
   return out.sort((a, b) => a.clipStart - b.clipStart);
+}
+
+/**
+ * Discovery sightings (4.1). Each must show the TARGET number read (the worker only returns
+ * those), lie inside the chunk it came from and inside the recording. Anything else rejects the
+ * whole chunk.
+ */
+export function parseDiscoveryMoments(raw: unknown, chunk: { startSec: number; endSec: number }, recordingSec: number,
+  number: string): TrackingMoment[] | null {
+  if (!Array.isArray(raw) || raw.length > 40) return null;
+  const out: TrackingMoment[] = [];
+  for (const item of raw) {
+    const m = asRecord(item);
+    if (!m || typeof m.id !== 'string' || !/^d_[0-9]{1,6}$/.test(m.id) || m.kind !== 'sighting' || m.evidence !== 'number_read'
+      || m.identityState !== 'CONFIRMED_VISIBLE' || String(m.number) !== number || !number) return null;
+    if (![m.start, m.clipStart, m.clipEnd].every(nonNeg)) return null;
+    const [start, c0, c1] = [m.start, m.clipStart, m.clipEnd] as number[];
+    if (start < chunk.startSec - 0.5 || start > chunk.endSec + 0.5 || c1 < c0 || c1 - c0 > MAX_CLIP_SEC + 0.01
+      || (recordingSec > 0 && c1 > recordingSec + 0.5) || start < c0 - 0.01 || start > c1 + 0.01) return null;
+    const indicator: TrackingMoment['indicator'] = [];
+    for (const p of Array.isArray(m.indicator) ? (m.indicator as unknown[]).slice(0, 40) : []) {
+      if (!Array.isArray(p) || p.length !== 5 || !p.every(isNum)) return null;
+      const [t, x, y, w, h] = p as number[];
+      if (t < c0 - 0.01 || t > c1 + 0.01 || [x, y, w, h].some((v) => v < -0.05 || v > 1.05)) return null;
+      indicator.push([t, x, y, w, h]);
+    }
+    out.push({ id: m.id, kind: 'sighting', kinds: ['sighting'], start, end: start, clipStart: c0, clipEnd: c1,
+      identityState: 'CONFIRMED_VISIBLE', candidate: false, indicator, imagePath: null, evidence: 'number_read',
+      readFrames: nonNeg(m.readFrames) ? Math.floor(m.readFrames) : 1 });
+  }
+  return out;
 }
 
 /** Per-second majority state, run-length encoded: [startSec, endSec, state]. */

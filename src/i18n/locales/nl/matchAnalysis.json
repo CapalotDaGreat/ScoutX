@@ -666,7 +666,8 @@
         "active": "bezig",
         "pending": "wacht",
         "blocked": "gestopt"
-      }
+      },
+      "scanning": "Zoeken naar #{{number}}: {{done}} van {{total}} delen doorzocht"
     },
     "problem": {
       "consent_required": {
@@ -726,7 +727,8 @@
       "moments": "Mijn momenten",
       "needsReview": "Ben jij dit?",
       "highlights": "Samenvattingsvideo",
-      "development": "Word ik beter?"
+      "development": "Word ik beter?",
+      "offball": "Zonder bal"
     },
     "moments": {
       "all": "Alle",
@@ -742,7 +744,8 @@
         "pass_attempt": "Pass",
         "duel_candidate": "Mogelijk duel",
         "tackle_candidate": "Mogelijke tackle",
-        "spell": "Jij in beeld"
+        "spell": "Jij in beeld",
+        "sighting": "Rugnummer gezien"
       },
       "outcome": {
         "completed": "kwam aan bij een teamgenoot",
@@ -760,7 +763,10 @@
       "noneConfirmed": "Nog geen bevestigde momenten. Controleer de momenten hieronder zodat PitchProof je kan volgen.",
       "needsReviewIntro": "PitchProof denkt dat jij dit bent, maar weet het niet zeker. Je antwoord verbetert alleen het rapport van deze wedstrijd.",
       "open": "{{kind}} op {{time}} afspelen",
-      "duration": "{{sec}} s"
+      "duration": "{{sec}} s",
+      "numberRead": "Rugnummer gelezen",
+      "earlyTitle": "Je momenten tot nu toe",
+      "earlyBody": "PitchProof las je rugnummer in deze momenten. Er verschijnen er meer terwijl de volledige analyse doorgaat."
     },
     "player": {
       "title": "{{kind}} op {{time}}",
@@ -789,7 +795,9 @@
       "saveNote": "Notitie opslaan",
       "noteSaved": "Notitie opgeslagen op dit apparaat.",
       "unavailable": "Afspelen niet mogelijk: de originele video is niet meer opgeslagen. Het moment en de details blijven in je rapport.",
-      "close": "Sluiten"
+      "close": "Sluiten",
+      "saveClip": "Clip opslaan",
+      "clipSaved": "Privé opgeslagen bij je video's."
     },
     "label": {
       "whatHappened": "Wat er gebeurde",
@@ -797,7 +805,8 @@
       "doDifferently": "Wat je anders kunt doen",
       "howToPractise": "Zo train je het",
       "whereToSee": "Waar je het ziet",
-      "evidence": "Bewijs"
+      "evidence": "Bewijs",
+      "interpretation": "Interpretatie (niet gecontroleerd)"
     },
     "coach": {
       "involvement": {
@@ -853,6 +862,18 @@
           "why": "Zonder de veldgrootte in beeld te kennen, zou elke afstand of snelheid een gok zijn.",
           "do": "Fysieke gegevens worden alleen getoond als het veld gekalibreerd kan worden."
         }
+      },
+      "positioning": {
+        "observation": {
+          "what": "In de {{measuredMin}} min waarin je op video bevestigd bent, stond {{freePct}}% van de tijd geen tegenstander binnen 3 lichaamslengtes en {{tightPct}}% van de tijd een binnen 1 lichaamslengte (mediaan {{median}} lichaamslengtes).",
+          "why": "Interpretatie (niet gecontroleerd): vrije ruimte kan je aanspeelbaar maken, krappe dekking beperkt je opties. De video laat niet zien of een teamgenoot je echt kon aanspelen.",
+          "do": "Bekijk de clips: was er een passlijn naar jou toen je vrij stond, en maakte je je los toen je tegenstander dicht op je zat?"
+        },
+        "limitation": {
+          "what": "Ik kan je positiespel nog niet beschrijven: daarvoor is minstens {{minSec}} s bevestigd beeld van jou nodig, deze opname heeft {{confirmedSec}} s.",
+          "why": "Afstanden tot tegenstanders zeggen pas iets als zeker is dat jij het bent.",
+          "do": "Beantwoord \"Ben jij dit?\" bij je momenten. Elk bevestigd moment levert beeld op dat ik kan meten."
+        }
       }
     },
     "topic": {
@@ -862,7 +883,8 @@
       "passing_accuracy": "je passes laten aankomen",
       "identity": "herkend worden op video",
       "ball_visibility": "de zichtbaarheid van de bal",
-      "physical": "fysieke gegevens"
+      "physical": "fysieke gegevens",
+      "positioning": "ruimte vinden"
     },
     "drill": {
       "minutes": "{{minutes}} min",
@@ -963,7 +985,9 @@
         "identity": "Hoe zeker ben je dat ik het was?",
         "review": "Welke momenten moet ik controleren?",
         "compare": "Word ik beter?",
-        "unknown": "Wat kun je me vertellen?"
+        "unknown": "Wat kun je me vertellen?",
+        "space": "Stond ik vrij of werd ik kort gedekt?",
+        "at_time": "Wat gebeurde er op 32:30?"
       },
       "a": {
         "noReport": "Er is nog geen rapport voor deze wedstrijd. Antwoorden verschijnen zodra je eerste momenten klaar zijn.",
@@ -988,7 +1012,13 @@
         "best": "Je sterkste moment, volgens het bewijs:",
         "noMoments": "Er zijn nog geen bevestigde momenten.",
         "moments": "{{count}} momenten gevonden. De eerste:",
-        "unknown": "Ik kan vragen beantwoorden over je momenten, passes, je herkenning in de video en waar je aan kunt werken. Probeer er een:"
+        "unknown": "Ik kan vragen beantwoorden over je momenten, passes, je herkenning in de video en waar je aan kunt werken. Probeer er een:",
+        "atTime": "Momenten van jou rond {{time}}:",
+        "atTimeUnsure": "Rond {{time}} zijn er momenten die jou kunnen tonen; controleer ze:",
+        "atTimeNone": "Ik heb geen beeld van jou rond {{time}}. Het dichtstbijzijnde moment:",
+        "space": "Dit laat de video zien over je ruimte zonder bal:",
+        "spaceInsufficient": "Dat kan ik nog niet meten: ik heb minstens {{minSec}} s bevestigd beeld van jou nodig en heb er {{confirmedSec}} s. Je momenten bevestigen helpt.",
+        "spaceUnavailable": "Deze analyse bevat nog geen metingen zonder bal."
       },
       "followUp": "Je kunt ook vragen"
     },

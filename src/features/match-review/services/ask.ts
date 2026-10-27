@@ -11,10 +11,11 @@ import { buildMomentsView, type MomentCard } from './moments';
 
 export type AskIntent =
   | 'best_moment' | 'moments' | 'passing' | 'distance' | 'speed' | 'heatmap' | 'goals' | 'improve' | 'well'
-  | 'identity' | 'review' | 'compare' | 'unknown';
+  | 'identity' | 'review' | 'compare' | 'space' | 'at_time' | 'unknown';
 
 /** Multilingual keyword cues (en, de, es, fr, it, nl, pt). Order matters: first match wins. */
 const CUES: Array<[AskIntent, RegExp]> = [
+  ['space', /(free|space|unmarked|marked|marking|off the ball|without the ball|frei|raum|deckung|ohne ball|espacio|libre|marcad|sin bal[oó]n|espace|libre|marquage|sans ballon|spazio|smarc|marcat|senza palla|ruimte|vrij|gedekt|zonder bal|espa[cç]o|marca[cç][aã]o|sem bola)/i],
   ['distance', /(\bkm\b|kilomet|distance|distanz|strecke|distancia|distanza|afstand|dist[aâ]ncia|how far|wie weit|run\b|ran\b|gelaufen|corr[ií]|couru|percors|gelopen)/i],
   ['speed', /(speed|sprint|fast|quick|tempo|geschwind|schnell|velocidad|r[aá]pid|vitesse|velocit|snelheid|snel|velocidade)/i],
   ['heatmap', /(heat ?map|heatmap|position(ing)?|where was i|wo war ich|d[oó]nde estaba|o[uù] [ée]tais|dove ero|waar was ik|onde eu estava|mapa de calor|carte de chaleur|mappa di calore)/i],
@@ -29,9 +30,17 @@ const CUES: Array<[AskIntent, RegExp]> = [
   ['moments', /(moment|touch|ball|when|wann|cu[aá]ndo|quand|quando|wanneer|szene|clip|jugada|action|aktion|azione|actie|a[cç][aã]o)/i],
 ];
 
+/** "What happened at 32:30?" -> 1950 s. Accepts m:ss and mm:ss (also h:mm:ss). */
+export function parseTimestamp(question: string): number | null {
+  const m = /\b(?:(\d{1,2}):)?(\d{1,3}):([0-5]\d)\b/.exec(question);
+  if (!m) return null;
+  return (m[1] ? Number(m[1]) * 3600 : 0) + Number(m[2]) * 60 + Number(m[3]);
+}
+
 export function detectIntent(question: string): AskIntent {
   const q = question.trim();
   if (!q) return 'unknown';
+  if (parseTimestamp(q) !== null) return 'at_time';
   for (const [intent, re] of CUES) if (re.test(q)) return intent;
   return 'unknown';
 }
@@ -52,6 +61,7 @@ const FOLLOW_UPS: Record<AskIntent, AskIntent[]> = {
   distance: ['identity', 'moments'], speed: ['identity', 'moments'], heatmap: ['moments', 'identity'],
   goals: ['moments', 'best_moment'], improve: ['well', 'moments'], well: ['improve', 'best_moment'],
   identity: ['review', 'moments'], review: ['moments', 'identity'], compare: ['improve', 'well'], unknown: ['best_moment', 'improve'],
+  space: ['moments', 'identity'], at_time: ['moments', 'best_moment'],
 };
 
 export function answerQuestion(question: string, report: TrackingReport | null, profile: { position?: string | null } = {}): AskAnswer {
@@ -63,6 +73,27 @@ export function answerQuestion(question: string, report: TrackingReport | null, 
   const insights = buildCoachInsights(report, profile);
   const c = report.coverage;
   switch (intent) {
+    case 'at_time': {
+      // Clip retrieval by time: moments near the asked time (incl. ones to check), nearest first.
+      const at = parseTimestamp(question) ?? 0;
+      const all = [...view.moments, ...view.needsReview];
+      const near = all.filter((m) => m.clipEnd >= at - 30 && m.clipStart <= at + 30)
+        .sort((a, b) => Math.abs(a.actionAt - at) - Math.abs(b.actionAt - at)).slice(0, 4);
+      if (near.length > 0) {
+        const confirmed = near.some((m) => m.evidence === 'confirmed');
+        return { ...base, kind: 'answer', key: confirmed ? 'atTime' : 'atTimeUnsure', moments: near,
+          params: { time: clock(at), count: near.length } };
+      }
+      const nearest = [...all].sort((a, b) => Math.abs(a.actionAt - at) - Math.abs(b.actionAt - at)).slice(0, 1);
+      return { ...base, kind: 'not_enough_evidence', key: 'atTimeNone', moments: nearest, params: { time: clock(at) } };
+    }
+    case 'space': {
+      const obs = insights.find((x) => x.kind === 'observation' && x.topic === 'positioning');
+      if (obs) return { ...base, kind: 'answer', key: 'space', insight: obs, params: obs.params };
+      const lim = insights.find((x) => x.topic === 'positioning');
+      return lim ? { ...base, kind: 'not_enough_evidence', key: 'spaceInsufficient', params: lim.params }
+        : { ...base, kind: 'cannot_verify', key: 'spaceUnavailable' };
+    }
     case 'distance':
     case 'speed': {
       const calibrated = report.physical.status === 'calibrated' && report.physical.productionVisible;
@@ -125,6 +156,12 @@ export function suggestedQuestions(report: TrackingReport | null): AskIntent[] {
   const out: AskIntent[] = [];
   if (view.moments.length > 0) out.push('best_moment');
   if (view.needsReview.length > 0) out.push('review');
+  if (report.offball?.status === 'measured') out.push('space');
   out.push('improve', 'identity', 'distance');
   return out.slice(0, 4);
+}
+
+function clock(sec: number): string {
+  const s = Math.max(0, Math.floor(sec));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
