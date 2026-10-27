@@ -15,7 +15,8 @@
  * (cvWorkerStatus() === 'available') plus TRACKING_V3_ENABLED=true.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ANSWERS = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.ANSWERS = exports.MIN_SEQUENCE_SEC = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.parseOffballSequences = parseOffballSequences;
 exports.parseOffball = parseOffball;
 exports.decodeReviewImage = decodeReviewImage;
 exports.reviewImagePath = reviewImagePath;
@@ -40,6 +41,35 @@ const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tack
 exports.MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell', 'sighting'];
 exports.MAX_MOMENTS = 80;
 exports.MAX_CLIP_SEC = 20;
+exports.MIN_SEQUENCE_SEC = 6;
+/**
+ * 5.0: keeps only sequences that lie entirely inside CONFIRMED_VISIBLE time of the state strip and
+ * are at least MIN_SEQUENCE_SEC long - a sequence observation is never built on uncertain identity.
+ */
+function parseOffballSequences(raw, strip) {
+    const confirmed = strip.filter(([, , st]) => st === 'CONFIRMED_VISIBLE');
+    // merge adjacent confirmed strip cells so a sequence may span several encoded runs
+    const runs = [];
+    for (const [s, e] of confirmed) {
+        const last = runs[runs.length - 1];
+        if (last && s - last[1] <= 0.55)
+            last[1] = Math.max(last[1], e);
+        else
+            runs.push([s, e]);
+    }
+    const within = (a, b) => runs.some(([s, e]) => a >= s - 0.15 && b <= e + 0.15);
+    const share = (v) => nonNeg(v) && v <= 1;
+    return (Array.isArray(raw) ? raw.slice(0, 20) : []).map(asRecord)
+        .filter((q) => !!q && nonNeg(q.start) && nonNeg(q.end)
+        && q.end - q.start >= exports.MIN_SEQUENCE_SEC - 0.05
+        && ['free', 'tight', 'mixed', 'unmeasured'].includes(String(q.kind)) && within(q.start, q.end))
+        .filter((q) => q.kind === 'unmeasured' || (nonNeg(q.measuredSec) && nonNeg(q.nearestOpponentMedianBH) && share(q.freeShare) && share(q.tightShare)))
+        .map((q) => q.kind === 'unmeasured'
+        ? { start: q.start, end: q.end, kind: 'unmeasured' }
+        : { start: q.start, end: q.end, kind: q.kind, measuredSec: q.measuredSec,
+            nearestOpponentMedianBH: q.nearestOpponentMedianBH, freeShare: q.freeShare, tightShare: q.tightShare,
+            nearestTeammateMedianBH: nonNeg(q.nearestTeammateMedianBH) ? q.nearestTeammateMedianBH : null });
+}
 /** Validates the worker's off-ball block; malformed -> null (the coach then says nothing about it). */
 function parseOffball(raw, recordingSec) {
     const o = asRecord(raw);
@@ -240,7 +270,14 @@ function parseTrackingReport(raw, timeline) {
         events,
         moments,
         analysedRange,
-        offball: parseOffball(r.offball, coverage.recordingSec),
+        offball: (() => {
+            const ob = parseOffball(r.offball, coverage.recordingSec);
+            if (!ob)
+                return null;
+            const strip = timeline ? encodeStateStrip(timeline.times, timeline.states) : [];
+            const sequences = parseOffballSequences(asRecord(r.offball)?.sequences, strip);
+            return sequences.length ? { ...ob, sequences } : ob;
+        })(),
         videoSize: (() => {
             const v = asRecord(r.videoSize);
             return v && isNum(v.width) && isNum(v.height) && v.width > 0 && v.height > 0 && v.width <= 8192 && v.height <= 8192

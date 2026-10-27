@@ -69,6 +69,9 @@ export const MEDIA_PLAYBACK_LIMIT: RateLimitPolicy = { action: 'media_playback',
 /** Local ask-this-match is cheap but unbounded loops waste Functions time. */
 export const ASK_THIS_MATCH_LIMIT: RateLimitPolicy = { action: 'ask_this_match', max: 40, window: 'hour' };
 
+/** 5.0 clip explanations send footage frames to a provider: few per day, cached per moment. */
+export const VIDEO_REASONING_LIMIT: RateLimitPolicy = { action: 'video_reasoning', max: 20, window: 'day' };
+
 /** Text AI coaching is metered by quota elsewhere; this bounds burst spend. */
 export const AI_INSIGHT_LIMIT: RateLimitPolicy = { action: 'ai_insight', max: 30, window: 'hour' };
 

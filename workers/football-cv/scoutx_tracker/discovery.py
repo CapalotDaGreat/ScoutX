@@ -40,7 +40,7 @@ CLUSTER_GAP_SEC = 1.5
 class DiscoveryConfig:
     fps: float = 10.0              # decode rate (source is resampled to this)
     sample_every: int = 5          # detector on every 5th decoded frame -> 2 fps
-    det_size: int = 640
+    det_size: int = 416            # informational: the caller's detector input size
     min_kit: float = 0.30          # shirt share of the target kit colour
     min_h: int = 110               # px; smaller players' numbers are not readable
     neighbours: tuple[int, ...] = (2, 4)  # adaptive extra frames after a candidate (0.2, 0.4 s)
@@ -50,6 +50,12 @@ class DiscoveryConfig:
     dense_min_h: int = 160         # extra neighbour reads only for players this large
     close_min_h: int = 240         # very close players: every following frame, re-read every 0.5 s
     close_neighbours: tuple[int, ...] = (1, 2, 3, 4)
+    # 5.0: neighbour frames are read only when the sample itself gave evidence for the target
+    # (its number, or one of its digits as a partial read) or the player is very close; the
+    # neighbours are found by re-detecting inside a region around the player, not the whole frame.
+    evidence_densify: bool = True
+    roi_det: bool = True
+    roi_scale: float = 2.2
 
 
 @dataclass
@@ -98,14 +104,16 @@ def cv2_frames(src: str, start: float, end: float, fps: float):
         cap.release()
 
 
-def ffmpeg_frames(src: str, start: float, end: float, fps: float):
-    """Yields (t, frame) decoded by ffmpeg (multi-threaded; much faster than cv2 for H.264/HEVC)."""
-    probe = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
-                            "-of", "csv=p=0", src], capture_output=True, text=True, check=True)
-    w, h = (int(v) for v in probe.stdout.strip().split(",")[:2])
+def ffmpeg_frames(src: str, start: float, end: float, fps: float, select_every: int = 1):
+    """Yields (t, frame) decoded by ffmpeg (multi-threaded, runs in parallel with inference) and
+    converted explicitly to the working colour space (5.0, see colour.py). `select_every` keeps
+    one frame in N before conversion."""
+    from .colour import decode_command, probe  # noqa: PLC0415
+
+    info = probe(src)
+    w, h = info.width, info.height
     hw = os.environ.get("SCOUTX_HWACCEL", "").strip()  # e.g. "cuda" on GPU hosts (NVDEC)
-    cmd = ["ffmpeg", "-v", "error", *(["-hwaccel", hw] if hw else []), "-ss", f"{start:.3f}", "-t", f"{end - start:.3f}", "-i", src,
-           "-vf", f"fps={fps}", "-f", "rawvideo", "-pix_fmt", "bgr24", "-"]
+    cmd = decode_command(src, start, end, fps, info, hwaccel=hw, select_every=select_every)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, bufsize=w * h * 3 * 4)
     size = w * h * 3
     k = 0
@@ -114,12 +122,23 @@ def ffmpeg_frames(src: str, start: float, end: float, fps: float):
             buf = proc.stdout.read(size)
             if len(buf) < size:
                 break
-            yield start + k / fps, np.frombuffer(buf, np.uint8).reshape(h, w, 3)
+            yield start + k * select_every / fps, np.frombuffer(buf, np.uint8).reshape(h, w, 3)
             k += 1
     finally:
         proc.stdout.close()
         proc.kill()
         proc.wait()
+
+
+def default_frames(src: str, start: float, end: float, fps: float):
+    """Decoder choice for discovery: SCOUTX_DECODER=cv2|ffmpeg|auto (default auto = ffmpeg with
+    explicit colour handling when ffmpeg/zscale are installed, else OpenCV)."""
+    from .colour import ffmpeg_available, zscale_available  # noqa: PLC0415
+
+    choice = os.environ.get("SCOUTX_DECODER", "auto").strip().lower()
+    if choice == "ffmpeg" or (choice == "auto" and ffmpeg_available() and zscale_available()):
+        return ffmpeg_frames(src, start, end, fps)
+    return cv2_frames(src, start, end, fps)
 
 
 def _iou(a, b) -> float:
@@ -138,7 +157,7 @@ def _crop(frame, box):
 
 def discover(src: str, start: float, end: float, number: str, kit: str, detector, reader,
              cfg: DiscoveryConfig | None = None, crops_dir: str | None = None, on_sighting=None,
-             frames=None, progress=None) -> DiscoveryResult:
+             frames=None, progress=None, roi_detector=None) -> DiscoveryResult:
     """`detector(frame) -> (person boxes, scores)`, `reader.read(crop) -> (number, conf, where)`.
     `frames`: iterable of (t, frame or zero-arg getter) overriding the decoder (tests).
     `on_sighting(sighting, wall_sec)` streams results as soon as a sighting is settled."""
@@ -154,7 +173,8 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
     stats = {"samples": 0, "candidates": 0, "reads": 0, "skipped": 0}
     emitted: set[float] = set()
     prev_small = None
-    it = iter(frames) if frames is not None else cv2_frames(src, start, end, cfg.fps)
+    it = iter(frames) if frames is not None else default_frames(src, start, end, cfg.fps)
+    digits = set(number)
     forward = sorted(d for d in cfg.neighbours if d > 0)
 
     def detect(frame):
@@ -175,10 +195,30 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
         tm["kit"] += time.perf_counter() - _t
         return out
 
+    def roi_detect(frame, box):
+        """Person boxes near `box` (frame coordinates) from a detection on the surrounding region."""
+        H, W = frame.shape[:2]
+        x1, y1, x2, y2 = box
+        cx, cy, bw, bh = (x1 + x2) / 2, (y1 + y2) / 2, (x2 - x1), (y2 - y1)
+        half_w, half_h = max(bw, bh * 0.6) * cfg.roi_scale / 2, bh * cfg.roi_scale / 2 * 0.8
+        rx1, ry1 = int(max(0, cx - half_w)), int(max(0, cy - half_h))
+        rx2, ry2 = int(min(W, cx + half_w)), int(min(H, cy + half_h))
+        if rx2 - rx1 < 16 or ry2 - ry1 < 16:
+            return np.zeros((0, 4)), np.zeros(0)
+        # 16:9 canvas: the detector input keeps the frame's shape (fixed-shape ONNX graphs)
+        cw = int(max(rx2 - rx1, (ry2 - ry1) * 16 / 9)) + 1
+        canvas = np.full((int(cw * 9 / 16) + 1, cw, 3), 114, np.uint8)
+        canvas[: ry2 - ry1, : rx2 - rx1] = frame[ry1:ry2, rx1:rx2]
+        _t = time.perf_counter()
+        b, sc = (roi_detector or detector)(canvas)
+        tm["detect"] += time.perf_counter() - _t
+        b = np.asarray(b, float).reshape(-1, 4) + np.array([rx1, ry1, rx1, ry1], float)
+        return b, np.asarray(sc, float)
+
     def ocr(idx, t, frame, box):
         crop = _crop(frame, box)
         if crop.size == 0:
-            return
+            return None
         _t = time.perf_counter()
         num, conf, where = reader.read(crop)
         tm["ocr"] += time.perf_counter() - _t
@@ -187,6 +227,7 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
         if num == number and crops_dir:
             Path(crops_dir).mkdir(parents=True, exist_ok=True)
             cv2.imwrite(str(Path(crops_dir) / f"s_{int(round(t * 10)):06d}.jpg"), crop, [cv2.IMWRITE_JPEG_QUALITY, 90])
+        return num
 
     def flush(final: bool, now_t: float) -> None:
         if not reads:
@@ -225,7 +266,7 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
         if frame is None:
             continue
         res.height, res.width = frame.shape[:2]
-        boxes, scores = detect(frame)
+        boxes, scores = detect(frame) if (sample or not cfg.roi_det) else (None, None)
         if sample:
             small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
             if scene_cut(prev_small, small):
@@ -248,22 +289,29 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
                     prev["box"] = b
                     stats["skipped"] += 1
                     continue
-                ocr(k, t, frame, b)
+                got = ocr(k, t, frame, b)
                 if prev:
                     prev.update(box=b, t=t, h=h)
                 else:
                     last_read.append({"box": b, "t": t, "h": h})
                 nb = sorted(d for d in cfg.close_neighbours if d > 0) if close else forward
-                if nb and h >= cfg.dense_min_h and not any(_iou(b, w["box"]) >= 0.3 for w in active):
+                evidence = got == number or (got is not None and len(got) == 1 and got in digits)
+                wanted = (evidence or close) if cfg.evidence_densify else h >= cfg.dense_min_h
+                if nb and wanted and not any(_iou(b, w["box"]) >= 0.3 for w in active):
                     active.append({"box": b, "want": {k + d for d in nb}})
         for w in due:
             # adaptive density: same player (overlap) on the following frames, read again
-            if len(boxes):
-                ious = [_iou(w["box"], x) for x in boxes]
+            wb, ws = (boxes, scores) if boxes is not None else roi_detect(frame, w["box"])
+            if len(wb):
+                ious = [_iou(w["box"], x) for x in wb]
                 m = int(np.argmax(ious))
                 if ious[m] >= 0.3:
-                    w["box"] = boxes[m]
-                    ocr(k, t, frame, boxes[m])
+                    w["box"] = wb[m]
+                    got = ocr(k, t, frame, wb[m])
+                    if cfg.evidence_densify and (got == number or (got and len(got) == 1 and got in digits)):
+                        # keep following a player who keeps showing (part of) the number
+                        last = max(w["want"] | {k})
+                        w["want"] |= {last + 1, last + 2} if last - k < 8 else set()
             w["want"].discard(k)
         active[:] = [w for w in active if w["want"]]
         if sample:

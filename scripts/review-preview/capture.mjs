@@ -65,6 +65,7 @@ const shots = [
   ['05-review-detailed', 'detailed'], ['06-scout-view', 'scout'], ['07-coach-illustrative', 'coach'], ['08-interrupted', 'interrupted'],
   ['09-review-de', 'review&lang=de'], ['10-early-es', 'early&lang=es'],
   ['14-discovering', 'discovering'], ['15-review-with-sightings', 'review-discovery'],
+  ['16-review-50-offball', 'review-50'], ['17-focus-followup', 'review-50-followup'], ['18-review-50-de', 'review-50&lang=de'],
 ];
 for (const [name, hash] of shots) {
   await page.goto(`http://localhost:8123/#${hash}`);

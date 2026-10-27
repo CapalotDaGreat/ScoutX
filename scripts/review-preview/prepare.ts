@@ -9,6 +9,13 @@ for (const name of ['auto', 'answers']) {
   if (!report) throw new Error(`fixture ${name} failed server validation`);
   out[name] = report;
 }
+// 5.0 engine output (7 discovery sightings attached, off-ball sequences), validated the same way.
+for (const name of ['auto', 'answers']) {
+  const raw = JSON.parse(readFileSync(new URL(`../../tests/fixtures/tracking50-img4809-${name}.json`, import.meta.url), 'utf8'));
+  const report = parseTrackingReport(raw.report, raw.timeline);
+  if (!report) throw new Error(`5.0 fixture ${name} failed server validation`);
+  out[`${name}50`] = report;
+}
 // 4.1 discovery sightings recorded on IMG_4809 (images removed), validated per 600 s chunk.
 const disc = JSON.parse(readFileSync(new URL('../../tests/fixtures/tracking41-img4809-discovery.json', import.meta.url), 'utf8'));
 const discovery = [];

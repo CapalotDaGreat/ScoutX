@@ -131,3 +131,19 @@ class GridEmbedder:
             f = np.sqrt(np.concatenate(feats))
             out[i] = f / max(np.linalg.norm(f), 1e-9)
         return out
+
+
+def warm_fraction(frame_bgr: np.ndarray, box) -> float:
+    """5.0 ball check: share of strongly saturated red/orange/yellow pixels inside a box. A
+    standard match ball is white with dark panels (measured on IMG_4809: <= 0.04 for 90 % of
+    true detections); corner flags, umbrellas, socks and boots that the detector calls "ball"
+    are mostly warm-coloured (median 0.22)."""
+    import cv2  # noqa: PLC0415
+
+    H, W = frame_bgr.shape[:2]
+    x1, y1, x2, y2 = (int(round(v)) for v in box[:4])
+    crop = frame_bgr[max(0, y1): min(H, y2 + 1), max(0, x1): min(W, x2 + 1)]
+    if crop.size == 0:
+        return float("nan")
+    hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+    return float(((hsv[..., 0] < 25) & (hsv[..., 1] > 90)).mean())

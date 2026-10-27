@@ -29,7 +29,7 @@ import cv2
 import numpy as np
 
 from .cmc import CameraMotion, scene_cut
-from .features import EMB_DIM, SIG_DIM, GridEmbedder, colour_signature
+from .features import EMB_DIM, SIG_DIM, GridEmbedder, colour_signature, warm_fraction
 from .periods import grass_fraction
 
 PERSON, BALL = 0, 32
@@ -120,10 +120,12 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = fps_src / stride
     k = -1
-    # 4.1: ffmpeg decodes multi-threaded (14.5 s vs 77 s for 120 s of 1080p on 2 vCPU) and can use
-    # NVDEC on GPU hosts (SCOUTX_HWACCEL=cuda). It is opt-in (SCOUTX_DECODER=ffmpeg): for the 10-bit
-    # HLG iPhone footage its colour conversion differs from OpenCV's by ~22 grey levels, and the
-    # kit-colour model was calibrated on OpenCV frames - re-validate before switching the default.
+    # ffmpeg decodes multi-threaded (9.9 s vs 32.5 s per minute of 10 fps 1080p HLG on 2 vCPU,
+    # including colour conversion) and can use NVDEC on GPU hosts (SCOUTX_HWACCEL=cuda). Since 5.0
+    # it converts explicitly to the BT.709 working space (colour.py); on 8-bit SDR it is
+    # bit-identical to OpenCV. For HDR it is still opt-in here (SCOUTX_DECODER=ffmpeg): the kit
+    # classification was re-validated on discovery, but stage-1 identity results have only been
+    # evaluated on OpenCV-decoded HDR frames.
     use_ffmpeg = decoder == "ffmpeg" and shutil.which("ffmpeg") is not None
     ff = None
     if use_ffmpeg:
@@ -139,6 +141,7 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     emb = GridEmbedder()
     cmc = CameraMotion()
     dets, sigs, embs, emb_idx, balls, warps, cuts, times, grass = [], [], [], [], [], [], [], [], []
+    ball_warm: list[float] = []
     prev_small = None
     fi = -1
     t_start = time.time()
@@ -175,6 +178,7 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         tm["scene_cmc"] += time.perf_counter() - _t
         for b, s in zip(bb, bs):
             balls.append([fi, t, *b, s])
+            ball_warm.append(warm_fraction(frame, b))
         base = len(dets)
         want_emb = []
         _t = time.perf_counter()
@@ -234,7 +238,8 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         out / "detections.npz",
         dets=np.array(dets, np.float64).reshape(-1, 7), sigs=np.array(sigs, np.float16).reshape(-1, SIG_DIM),
         emb_idx=np.array(emb_idx, np.int64), embs=np.array(embs, np.float16).reshape(-1, EMB_DIM),
-        balls=np.array(balls, np.float64).reshape(-1, 7), warps=np.array(warps, np.float64).reshape(-1, 7),
+        balls=np.array(balls, np.float64).reshape(-1, 7), ball_warm=np.array(ball_warm, np.float32),
+        warps=np.array(warps, np.float64).reshape(-1, 7),
         cuts=np.array(cuts, np.int64), times=np.array(times, np.float64), grass=np.array(grass, np.float32),
     )
     meta = {"video": os.path.abspath(video), "detector": det.name, "t0": t0, "start": start, "fps": fps, "frames": fi + 1,

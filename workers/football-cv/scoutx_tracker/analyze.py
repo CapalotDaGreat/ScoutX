@@ -135,18 +135,22 @@ def attach_sightings(reads: dict, sightings: list[dict], number: str, D, T) -> i
     for s_ in sightings:
         if str(s_.get("number")) != number:
             continue
-        g = int(np.argmin(np.abs(D.times - float(s_["t"]))))
-        if abs(D.times[g] - float(s_["t"])) > 0.06:
+        g0 = int(np.argmin(np.abs(D.times - float(s_["t"]))))
+        if abs(D.times[g0] - float(s_["t"])) > 0.06:
             continue
         b = s_["box"]
-        best, best_iou = None, 0.0
-        for i in by_frame.get(g, []):
-            x1, y1, x2, y2 = rows[i, 3:7]
-            ix = max(0.0, min(x2, b[2]) - max(x1, b[0])) * max(0.0, min(y2, b[3]) - max(y1, b[1]))
-            u = (x2 - x1) * (y2 - y1) + (b[2] - b[0]) * (b[3] - b[1]) - ix
-            iou = ix / u if u > 0 else 0.0
-            if iou > best_iou:
-                best, best_iou = i, iou
+        # 5.0: discovery may decode with ffmpeg and stage 1 with OpenCV; their frame grids can
+        # differ by one frame, so the read is matched on the nearest frame or its neighbours
+        # (best overlap, still >= 0.5 IoU with one detection).
+        best, best_iou, g = None, 0.0, g0
+        for gg in (g0, g0 - 1, g0 + 1):
+            for i in by_frame.get(gg, []):
+                x1, y1, x2, y2 = rows[i, 3:7]
+                ix = max(0.0, min(x2, b[2]) - max(x1, b[0])) * max(0.0, min(y2, b[3]) - max(y1, b[1]))
+                u = (x2 - x1) * (y2 - y1) + (b[2] - b[0]) * (b[3] - b[1]) - ix
+                iou = ix / u if u > 0 else 0.0
+                if iou > best_iou + (0.05 if gg != g0 else 0.0):
+                    best, best_iou, g = i, iou, gg
         if best is None or best_iou < 0.5:
             continue
         tid = int(rows[best, 2])
@@ -324,10 +328,12 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
     timings["timeline_metrics_events"] = time.time() - t
     # Off-ball observations (4.1): distances to nearest opponent/team-mate on confirmed frames only.
     from .ball import team_of  # noqa: PLC0415
-    from .offball import offball_observations  # noqa: PLC0415
+    from .offball import offball_observations, sequence_observations  # noqa: PLC0415
 
-    offball = offball_observations(tl.times, states, tl.boxes, tl.present, T.rows,
-                                   {s_["tid"]: team_of(s_, 0.22) for s_ in T.summary}, D.fps)
+    teams = {s_["tid"]: team_of(s_, 0.22) for s_ in T.summary}
+    offball = offball_observations(tl.times, states, tl.boxes, tl.present, T.rows, teams, D.fps)
+    # 5.0: narrow clip-level observations from continuous confirmed sequences (>= 6 s)
+    offball["sequences"] = sequence_observations(tl.times, states, tl.boxes, tl.present, T.rows, teams, D.fps)
     # Moments: watchable clip windows around the target's own (already measured) actions.
     want = {c for k in res.chosen for c in T.summary[k].get("crops", [])}
     crop_times = sorted((float(D.times[int(D.dets[di, 0])]), c) for di, c in D.crops.items() if c in want)

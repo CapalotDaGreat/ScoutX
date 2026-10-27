@@ -110,7 +110,43 @@ export type OffballObservations = {
   tightShare?: number;
   freeEpisodes?: Array<{ start: number; end: number }>;
   tightEpisodes?: Array<{ start: number; end: number }>;
+  /** 5.0: narrow clip-level observations from continuous confirmed sequences (>= 6 s). */
+  sequences?: OffballSequence[];
 };
+
+export type OffballSequence = {
+  start: number; end: number; kind: 'free' | 'tight' | 'mixed' | 'unmeasured';
+  measuredSec?: number; nearestOpponentMedianBH?: number; freeShare?: number; tightShare?: number;
+  nearestTeammateMedianBH?: number | null;
+};
+
+export const MIN_SEQUENCE_SEC = 6;
+
+/**
+ * 5.0: keeps only sequences that lie entirely inside CONFIRMED_VISIBLE time of the state strip and
+ * are at least MIN_SEQUENCE_SEC long - a sequence observation is never built on uncertain identity.
+ */
+export function parseOffballSequences(raw: unknown, strip: Array<[number, number, IdentityState]>): OffballSequence[] {
+  const confirmed = strip.filter(([, , st]) => st === 'CONFIRMED_VISIBLE');
+  // merge adjacent confirmed strip cells so a sequence may span several encoded runs
+  const runs: Array<[number, number]> = [];
+  for (const [s, e] of confirmed) {
+    const last = runs[runs.length - 1];
+    if (last && s - last[1] <= 0.55) last[1] = Math.max(last[1], e); else runs.push([s, e]);
+  }
+  const within = (a: number, b: number) => runs.some(([s, e]) => a >= s - 0.15 && b <= e + 0.15);
+  const share = (v: unknown) => nonNeg(v) && (v as number) <= 1;
+  return (Array.isArray(raw) ? raw.slice(0, 20) : []).map(asRecord)
+    .filter((q): q is Record<string, unknown> => !!q && nonNeg(q.start) && nonNeg(q.end)
+      && (q.end as number) - (q.start as number) >= MIN_SEQUENCE_SEC - 0.05
+      && ['free', 'tight', 'mixed', 'unmeasured'].includes(String(q.kind)) && within(q.start as number, q.end as number))
+    .filter((q) => q.kind === 'unmeasured' || (nonNeg(q.measuredSec) && nonNeg(q.nearestOpponentMedianBH) && share(q.freeShare) && share(q.tightShare)))
+    .map((q) => q.kind === 'unmeasured'
+      ? { start: q.start as number, end: q.end as number, kind: 'unmeasured' as const }
+      : { start: q.start as number, end: q.end as number, kind: q.kind as OffballSequence['kind'], measuredSec: q.measuredSec as number,
+          nearestOpponentMedianBH: q.nearestOpponentMedianBH as number, freeShare: q.freeShare as number, tightShare: q.tightShare as number,
+          nearestTeammateMedianBH: nonNeg(q.nearestTeammateMedianBH) ? q.nearestTeammateMedianBH as number : null });
+}
 
 /** Validates the worker's off-ball block; malformed -> null (the coach then says nothing about it). */
 export function parseOffball(raw: unknown, recordingSec: number): OffballObservations | null {
@@ -291,7 +327,13 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
     events,
     moments,
     analysedRange,
-    offball: parseOffball(r.offball, coverage.recordingSec),
+    offball: (() => {
+      const ob = parseOffball(r.offball, coverage.recordingSec);
+      if (!ob) return null;
+      const strip = timeline ? encodeStateStrip(timeline.times, timeline.states) : [];
+      const sequences = parseOffballSequences(asRecord(r.offball)?.sequences, strip);
+      return sequences.length ? { ...ob, sequences } : ob;
+    })(),
     videoSize: (() => {
       const v = asRecord(r.videoSize);
       return v && isNum(v.width) && isNum(v.height) && v.width > 0 && v.height > 0 && v.width <= 8192 && v.height <= 8192

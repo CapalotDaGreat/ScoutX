@@ -10,7 +10,10 @@ import { Text } from '@/components/primitives/Text';
 import { readKeyedValue, writeKeyedValue } from '@/data/scopedAsyncStorage';
 import {
   answerTrackingQuestion,
+  explainTrackingMoment,
   undoTrackingAnswer,
+  videoReasoningUiEnabled,
+  type ClipExplanation,
   type TrackingAnswer,
 } from '@/features/match-analysis/services/trackingV3Service';
 import { formatClock } from '@/features/match-analysis/services/trackingPresentation';
@@ -18,6 +21,7 @@ import { useReviewT } from '../hooks/useReviewT';
 import { triggerHaptic } from '@/utils/haptics';
 import { adjustClip, indicatorAt, type MomentCard } from '../services/moments';
 import { EVIDENCE_BADGE } from './MomentCard';
+import { focusTransform, smoothedTarget, type IndicatorPoint } from '../services/virtualCamera';
 
 const NOTES_KEY = 'pitchproof.momentNotes.v1';
 const FRAME_STEP = 0.1;
@@ -60,6 +64,8 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
   const [note, setNote] = useState('');
   const [noteSaved, setNoteSaved] = useState(false);
   const [clipState, setClipState] = useState<'idle' | 'saving' | 'saved' | 'failed'>('idle');
+  const [focus, setFocus] = useState(false);
+  const [explain, setExplain] = useState<{ busy: boolean; result: ClipExplanation | null; error: boolean }>({ busy: false, result: null, error: false });
 
   const player = useVideoPlayer(visible && videoUrl ? videoUrl : null, (p) => {
     p.loop = false;
@@ -73,6 +79,7 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
     setAnswerError(false);
     setNoteSaved(false);
     setClipState('idle');
+    setExplain({ busy: false, result: null, error: false });
     setTime(moment.clipStart);
     void readKeyedValue<string>(NOTES_KEY, `${jobId}:${moment.id}`).then((n) => setNote(n ?? '')).catch(() => setNote(''));
   }, [jobId, moment, visible]);
@@ -103,6 +110,9 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
 
   const rect = fitRect(view, videoSize);
   const box = useMemo(() => (moment ? indicatorAt(moment.indicator, time) : null), [moment, time]);
+  const hasTrack = (moment?.indicator ?? []).length > 1;
+  const cam = useMemo(() => (focus && moment ? focusTransform(smoothedTarget(moment.indicator as IndicatorPoint[], time), view, rect) : null),
+    [focus, moment, time, view, rect]);
 
   if (!moment) return null;
   const kind = t(`review.moments.kind.${moment.titleKey}`);
@@ -135,12 +145,15 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
         {videoUrl ? (
           <View className="overflow-hidden rounded-xl bg-black" style={{ height: 240 }}
             onLayout={(e: LayoutChangeEvent) => setView({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
-            <VideoView player={player} style={{ width: '100%', height: 240 }} contentFit="contain" nativeControls={false} />
-            {box && rect ? (
-              <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
-                style={{ position: 'absolute', left: rect.x + box.x * rect.w, top: rect.y + box.y * rect.h,
-                  width: box.w * rect.w, height: box.h * rect.h, borderWidth: 2, borderColor: '#FFD400', borderRadius: 4 }} />
-            ) : null}
+            <View style={{ width: '100%', height: 240, transform: cam
+              ? [{ translateX: cam.translateX }, { translateY: cam.translateY }, { scale: cam.scale }] : [] }}>
+              <VideoView player={player} style={{ width: '100%', height: 240 }} contentFit="contain" nativeControls={false} />
+              {box && rect ? (
+                <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants"
+                  style={{ position: 'absolute', left: rect.x + box.x * rect.w, top: rect.y + box.y * rect.h,
+                    width: box.w * rect.w, height: box.h * rect.h, borderWidth: 2 / (cam?.scale ?? 1), borderColor: '#FFD400', borderRadius: 4 }} />
+              ) : null}
+            </View>
           </View>
         ) : (
           <View className="items-center justify-center rounded-xl bg-background-secondary px-4" style={{ height: 160 }}>
@@ -170,6 +183,11 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
               <Button size="sm" variant="ghost" onPress={() => { if (clip) { player.currentTime = clip.clipStart; player.play(); setPlaying(true); } }}>
                 {t('review.player.replay')}
               </Button>
+              {hasTrack ? (
+                <Button size="sm" variant="ghost" accessibilityState={{ selected: focus }} onPress={() => setFocus((f) => !f)} testID="moment-focus">
+                  {focus ? t('review.player.fullField') : t('review.player.focusPlayer')}
+                </Button>
+              ) : null}
             </View>
             <View className="flex-row flex-wrap gap-2">
               <Button size="sm" variant="link" onPress={() => clip && setClip(adjustClip(clip, -2, 0, recordingSec))}>{t('review.player.startEarlier')}</Button>
@@ -223,6 +241,43 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
             </Button>
             {clipState === 'saved' ? <Text variant="caption" color="secondary">{t('review.player.clipSaved')}</Text> : null}
             {clipState === 'failed' ? <Text variant="caption" color="error">{t('review.highlights.failed')}</Text> : null}
+          </View>
+        ) : null}
+        {videoReasoningUiEnabled() && moment.evidence === 'confirmed' ? (
+          <View className="gap-2 rounded-md border border-border px-3 py-3" testID="moment-explain">
+            <Text variant="caption" color="secondary">{t('review.ask.explain.disclosure', { seconds: 20, provider: 'OpenRouter (zero data retention)' })}</Text>
+            <View className="flex-row flex-wrap gap-2">
+              {(['explain', 'alternatives'] as const).map((k) => (
+                <Button key={k} size="sm" variant="secondary" loading={explain.busy} disabled={explain.busy}
+                  onPress={() => {
+                    setExplain({ busy: true, result: null, error: false });
+                    void explainTrackingMoment(jobId, moment.id, k).then((result) => setExplain({ busy: false, result, error: false }))
+                      .catch(() => setExplain({ busy: false, result: null, error: true }));
+                  }}>
+                  {t(k === 'explain' ? 'review.ask.explain.button' : 'review.ask.explain.alternatives')}
+                </Button>
+              ))}
+            </View>
+            {explain.result?.status === 'answered' ? (
+              <View className="gap-1" accessibilityLiveRegion="polite">
+                <Text variant="body-sm" weight="semibold">{explain.result.answer.observation}</Text>
+                {explain.result.answer.interpretation ? (
+                  <>
+                    <Text variant="caption" weight="semibold" color="secondary">{t('review.label.interpretation')}</Text>
+                    <Text variant="body-sm">{explain.result.answer.interpretation}</Text>
+                  </>
+                ) : null}
+                {explain.result.answer.suggestion ? <Text variant="body-sm">{explain.result.answer.suggestion}</Text> : null}
+                <Text variant="caption" color="tertiary">
+                  {t(`review.ask.explain.confidence.${explain.result.answer.confidence}`)}
+                  {explain.result.answer.limitations.length ? ` · ${explain.result.answer.limitations.join(' ')}` : ''}
+                </Text>
+              </View>
+            ) : null}
+            {explain.result && explain.result.status !== 'answered' ? (
+              <Text variant="caption" color="secondary">{t(`review.ask.explain.${explain.result.status}`)}</Text>
+            ) : null}
+            {explain.error ? <Text variant="caption" color="error">{t('review.ask.explain.failed')}</Text> : null}
           </View>
         ) : null}
         <Button variant="ghost" onPress={onClose}>{t('review.player.close')}</Button>

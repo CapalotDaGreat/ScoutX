@@ -16,7 +16,7 @@ import { ReelRepository } from '@/features/reel-studio/repositories/ReelReposito
 import { useReviewT } from '../hooks/useReviewT';
 import { answerQuestion, suggestedQuestions, type AskAnswer, type AskIntent } from '../services/ask';
 import { positionGroup, type Insight } from '../services/coach';
-import { developmentTrend, observationFrom } from '../services/development';
+import { developmentTrend, focusFollowUps, observationFrom } from '../services/development';
 import { draftReel, presetAvailability, selectHighlights, type HighlightPreset } from '../services/highlights';
 import { deriveJourney, type JourneyProblem } from '../services/journey';
 import { buildMomentsView, toMomentCard, type MomentCard as MomentCardModel, type MomentCategory } from '../services/moments';
@@ -36,7 +36,7 @@ export type MatchReviewViewProps = {
   progress: TrackingProgressDoc | null;
   /** 4.1: number sightings from the early discovery pass (playable before any report). */
   discovery?: TrackingDiscoveryDoc | null;
-  goals: Array<{ id: string; title: string }>;
+  goals: Array<{ id: string; title: string; evidenceIds?: string[] }>;
   initialSection?: 'moments' | 'review';
   initialView?: ReviewView;
   /** Opens this moment's player on mount (deep links). */
@@ -67,7 +67,7 @@ function InsightCard({ insight, moments, onOpen, onCreateGoal }: { insight: Insi
   onOpen: (m: MomentCardModel) => void; onCreateGoal?: (i: Insight) => Promise<void> }) {
   const t = useReviewT();
   const [added, setAdded] = useState(false);
-  const base = `review.coach.${insight.topic}.${insight.kind}`;
+  const base = insight.textKey ?? `review.coach.${insight.topic}.${insight.kind}`;
   const params = insight.params as Record<string, number>;
   const linked = moments.filter((m) => insight.momentIds.includes(m.id));
   return (
@@ -77,7 +77,7 @@ function InsightCard({ insight, moments, onOpen, onCreateGoal }: { insight: Insi
         <Text variant="caption" weight="semibold" color="secondary">
           {t(insight.kind === 'observation' ? 'review.label.interpretation' : 'review.label.whyItMatters')}
         </Text>
-        <Text variant="body-sm">{t(`${base}.why`, params)}</Text>
+        <Text variant="body-sm">{t(insight.whyKey ?? `${base}.why`, params)}</Text>
       </View>
       <View className="gap-1">
         <Text variant="caption" weight="semibold" color="secondary">{t('review.label.doDifferently')}</Text>
@@ -289,6 +289,7 @@ export function MatchReviewView(props: MatchReviewViewProps) {
   const earlyCards = useMemo(() => (trackingDoc?.report ? [] : (discovery?.moments ?? []).map(toMomentCard)), [trackingDoc, discovery]);
   const journey = useMemo(() => deriveJourney(progress, tracking, now, discovery?.moments.length ?? 0), [progress, tracking, now, discovery]);
   const review = useMemo(() => buildMatchReview(tracking, view, { position, goals }), [tracking, view, position, goals]);
+  const followUps = useMemo(() => focusFollowUps(goals, jobId, tracking?.report ?? null), [goals, jobId, tracking]);
   const momentsView = useMemo(() => buildMomentsView(tracking?.report ?? null, filter), [tracking, filter]);
   const allCards = useMemo(() => { const v = buildMomentsView(tracking?.report ?? null); return [...v.moments, ...v.needsReview]; }, [tracking]);
   const urls = useStorageUrls([...allCards, ...earlyCards].map((m) => m.imagePath));
@@ -436,6 +437,28 @@ export function MatchReviewView(props: MatchReviewViewProps) {
             <Card padding="lg" className="gap-3" testID="review-offball">
               <SectionTitle>{t('review.section.offball')}</SectionTitle>
               {review.observations.map((i) => <InsightCard key={i.id} insight={i} moments={allCards} onOpen={setOpen} />)}
+            </Card>
+          ) : null}
+
+          {/* 5.0 follow-up of focuses saved after earlier matches */}
+          {view !== 'scout' && followUps.length > 0 ? (
+            <Card padding="lg" className="gap-2" testID="review-focus-followup">
+              <SectionTitle>{t('review.followUp.title')}</SectionTitle>
+              {followUps.map((f) => (
+                <View key={f.goalId} className="gap-1 rounded-md border border-border px-3 py-2">
+                  <Text weight="semibold">{f.title}</Text>
+                  <Text variant="body-sm">{t(`review.followUp.${f.status}`, f.params)}</Text>
+                  {f.status === 'evidence' ? (
+                    <View className="flex-row flex-wrap gap-2">
+                      {f.clips.map((c) => <Button key={c.start} size="sm" variant="secondary" onPress={() => setOpen(clipCard(c))}>{`▶ ${formatClock(c.start)}`}</Button>)}
+                      {allCards.filter((m) => f.momentIds.includes(m.id)).map((m) => (
+                        <Button key={m.id} size="sm" variant="secondary" onPress={() => setOpen(m)}>{`▶ ${formatClock(m.actionAt)}`}</Button>
+                      ))}
+                    </View>
+                  ) : null}
+                </View>
+              ))}
+              <Text variant="caption" color="tertiary">{t('review.followUp.note')}</Text>
             </Card>
           ) : null}
 

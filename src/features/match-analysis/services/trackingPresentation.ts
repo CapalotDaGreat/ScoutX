@@ -47,9 +47,15 @@ export type TrackingReport = {
     nearestTeammateBodyHeights?: { median: number } | null;
     freeShare?: number; tightShare?: number;
     freeEpisodes?: Array<{ start: number; end: number }>; tightEpisodes?: Array<{ start: number; end: number }>;
+    /** 5.0: clip-level observations from continuous confirmed sequences (server-checked against the state strip) */
+    sequences?: OffballSequence[];
   } | null;
   analysedRange?: { startSec: number; endSec: number; parts: number };
   videoSize?: { width: number; height: number } | null;
+};
+export type OffballSequence = {
+  start: number; end: number; kind: 'free' | 'tight' | 'mixed' | 'unmeasured';
+  measuredSec?: number; nearestOpponentMedianBH?: number; freeShare?: number; tightShare?: number; nearestTeammateMedianBH?: number | null;
 };
 export type TrackingMomentKind = 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate' | 'spell' | 'sighting';
 export type TrackingMoment = {

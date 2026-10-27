@@ -33,6 +33,7 @@ class Detections:
     width: int = 1920
     height: int = 1080
     grass: np.ndarray | None = None  # (F,) pitch-green share per frame
+    ball_warm: np.ndarray | None = None  # (B,) 5.0 warm-colour share per ball box (NaN = not measured)
 
 
 def load_runs(run_dirs: list[str]) -> Detections:
@@ -43,7 +44,7 @@ def load_runs(run_dirs: list[str]) -> Detections:
         z = np.load(Path(d) / "detections.npz")
         parts.append((meta, z, Path(d)))
     parts.sort(key=lambda p: p[0]["t0"] + p[0]["start"])
-    D, S, EI, E, B, W, T, SEG, crops, sources, G = [], [], [], [], [], [], [], [], {}, [], []
+    D, S, EI, E, B, W, T, SEG, crops, sources, G, BW = [], [], [], [], [], [], [], [], {}, [], [], []
     foff = doff = 0
     seg = 0
     fps, width, height = parts[0][0]["fps"], parts[0][0].get("width") or 1920, parts[0][0].get("height") or 1080
@@ -64,6 +65,8 @@ def load_runs(run_dirs: list[str]) -> Detections:
             crops[int(di) + doff] = str(p)
         D.append(dets); S.append(z["sigs"]); EI.append(z["emb_idx"] + doff); E.append(z["embs"])
         B.append(balls); W.append(z["warps"]); T.append(z["times"]); SEG.append(segs)
+        BW.append(z["ball_warm"].astype(np.float32) if "ball_warm" in z.files and len(z["ball_warm"]) == len(balls)
+                  else np.full(len(balls), np.nan, np.float32))
         if "grass" in z.files:
             G.append(z["grass"].astype(np.float32))
         elif (path / "scene.npz").exists():
@@ -77,6 +80,7 @@ def load_runs(run_dirs: list[str]) -> Detections:
                      np.concatenate(E), np.concatenate(B), np.concatenate(W), np.concatenate(T),
                      np.concatenate(SEG), crops, fps, sources, width, height)
     det.grass = np.concatenate(G)
+    det.ball_warm = np.concatenate(BW) if BW else np.zeros(0, np.float32)
     return det
 
 

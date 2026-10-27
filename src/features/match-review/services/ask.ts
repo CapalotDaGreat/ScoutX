@@ -11,11 +11,14 @@ import { buildMomentsView, type MomentCard } from './moments';
 
 export type AskIntent =
   | 'best_moment' | 'moments' | 'passing' | 'distance' | 'speed' | 'heatmap' | 'goals' | 'improve' | 'well'
-  | 'identity' | 'review' | 'compare' | 'space' | 'at_time' | 'unknown';
+  | 'identity' | 'review' | 'compare' | 'space' | 'at_time' | 'halves' | 'defending' | 'practice' | 'unknown';
 
 /** Multilingual keyword cues (en, de, es, fr, it, nl, pt). Order matters: first match wins. */
 const CUES: Array<[AskIntent, RegExp]> = [
-  ['space', /(free|space|unmarked|marked|marking|off the ball|without the ball|frei|raum|deckung|ohne ball|espacio|libre|marcad|sin bal[oó]n|espace|libre|marquage|sans ballon|spazio|smarc|marcat|senza palla|ruimte|vrij|gedekt|zonder bal|espa[cç]o|marca[cç][aã]o|sem bola)/i],
+  ['halves', /(first (and|vs\.?|versus) second half|second half|first half|halves|halbzeit|hälfte|primer tiempo|segundo tiempo|mi-temps|première mi|seconde mi|primo tempo|secondo tempo|eerste helft|tweede helft|primeiro tempo|segundo tempo)/i],
+  ['practice', /(practi[cs]e|train(ing)? (this|next) week|what should i (train|practi[cs]e)|drill|üben|trainieren|übung|practicar|entrenar|ejercicio|m'entraîner|entraîner|exercice|allenar|esercizio|oefenen|trainen|oefening|praticar|treinar|exerc[ií]cio)/i],
+  ['defending', /(defen[cs]|defensive|tackl|intercept|duel|zweikampf|verteidig|defensiv|defensa|defensiv|entrada|intercep|duelo|défens|tacle|duel|difes|contrast|verdedig|duel|defesa|desarme)/i],
+  ['space', /(free|space|unmarked|marked|marking|off the ball|without the ball|support(ing)? run|passing option|passing angle|angle|position(ed)? (myself|well)|anspielstation|freilaufen|opción de pase|línea de pase|solution de passe|soluzione di passaggio|aanspeelbaar|op[cç][aã]o de passe|frei|raum|deckung|ohne ball|espacio|libre|marcad|sin bal[oó]n|espace|libre|marquage|sans ballon|spazio|smarc|marcat|senza palla|ruimte|vrij|gedekt|zonder bal|espa[cç]o|marca[cç][aã]o|sem bola)/i],
   ['distance', /(\bkm\b|kilomet|distance|distanz|strecke|distancia|distanza|afstand|dist[aâ]ncia|how far|wie weit|run\b|ran\b|gelaufen|corr[ií]|couru|percors|gelopen)/i],
   ['speed', /(speed|sprint|fast|quick|tempo|geschwind|schnell|velocidad|r[aá]pid|vitesse|velocit|snelheid|snel|velocidade)/i],
   ['heatmap', /(heat ?map|heatmap|position(ing)?|where was i|wo war ich|d[oó]nde estaba|o[uù] [ée]tais|dove ero|waar was ik|onde eu estava|mapa de calor|carte de chaleur|mappa di calore)/i],
@@ -54,6 +57,8 @@ export type AskAnswer = {
   moments: MomentCard[];
   insight: Insight | null;
   followUps: AskIntent[];
+  /** 5.0: the question needs an explanation of a confirmed clip (offered only if the owner enabled video reasoning) */
+  explainable?: boolean;
 };
 
 const FOLLOW_UPS: Record<AskIntent, AskIntent[]> = {
@@ -62,7 +67,11 @@ const FOLLOW_UPS: Record<AskIntent, AskIntent[]> = {
   goals: ['moments', 'best_moment'], improve: ['well', 'moments'], well: ['improve', 'best_moment'],
   identity: ['review', 'moments'], review: ['moments', 'identity'], compare: ['improve', 'well'], unknown: ['best_moment', 'improve'],
   space: ['moments', 'identity'], at_time: ['moments', 'best_moment'],
+  halves: ['moments', 'identity'], defending: ['review', 'moments'], practice: ['improve', 'well'],
 };
+
+/** 5.0: questions about one moment that only video reasoning could answer ("what could I have done differently at 24:15?"). */
+const ADVICE = /(differently|better|should i have|could i have|anders|besser|hätte ich|diferente|mejor|debería|autrement|mieux|aurais|diversamente|meglio|avrei|anders|beter|had ik|diferente|melhor|deveria)/i;
 
 export function answerQuestion(question: string, report: TrackingReport | null, profile: { position?: string | null } = {}): AskAnswer {
   const intent = detectIntent(question);
@@ -81,15 +90,23 @@ export function answerQuestion(question: string, report: TrackingReport | null, 
         .sort((a, b) => Math.abs(a.actionAt - at) - Math.abs(b.actionAt - at)).slice(0, 4);
       if (near.length > 0) {
         const confirmed = near.some((m) => m.evidence === 'confirmed');
-        return { ...base, kind: 'answer', key: confirmed ? 'atTime' : 'atTimeUnsure', moments: near,
-          params: { time: clock(at), count: near.length } };
+        // "What could I have done differently at 24:15?" - the clip is retrievable, a judgement of
+        // alternatives is not something the measurements contain: say so and offer the clip
+        // (and, where the owner enabled it, an explanation of the clip - see videoReasoning).
+        const advice = ADVICE.test(question);
+        return { ...base, kind: advice ? 'not_enough_evidence' : 'answer',
+          key: advice ? (confirmed ? 'atTimeAdvice' : 'atTimeAdviceUnsure') : confirmed ? 'atTime' : 'atTimeUnsure', moments: near,
+          params: { time: clock(at), count: near.length }, explainable: advice && confirmed };
       }
       const nearest = [...all].sort((a, b) => Math.abs(a.actionAt - at) - Math.abs(b.actionAt - at)).slice(0, 1);
       return { ...base, kind: 'not_enough_evidence', key: 'atTimeNone', moments: nearest, params: { time: clock(at) } };
     }
     case 'space': {
-      const obs = insights.find((x) => x.kind === 'observation' && x.topic === 'positioning');
+      const obs = insights.find((x) => x.id === 'positioning_observation');
       if (obs) return { ...base, kind: 'answer', key: 'space', insight: obs, params: obs.params };
+      // 5.0: only clip-level observations - answered for those clips, explicitly not for the match
+      const clip = insights.find((x) => x.kind === 'observation' && x.topic === 'positioning');
+      if (clip) return { ...base, kind: 'answer', key: 'spaceClip', insight: clip, params: { ...clip.params, count: insights.filter((x) => x.id.startsWith('sequence_')).length } };
       const lim = insights.find((x) => x.topic === 'positioning');
       return lim ? { ...base, kind: 'not_enough_evidence', key: 'spaceInsufficient', params: lim.params }
         : { ...base, kind: 'cannot_verify', key: 'spaceUnavailable' };
@@ -111,6 +128,30 @@ export function answerQuestion(question: string, report: TrackingReport | null, 
       return { ...base, kind: 'cannot_verify', key: 'goalsNotMeasured', moments: ranked.slice(0, 3) };
     case 'compare':
       return { ...base, kind: 'not_enough_evidence', key: 'compareSeeDevelopment' };
+    case 'halves': {
+      // Only when half-time is known (a non-play period of 5+ min, detected or set by the owner).
+      const ht = report.periods.find((p) => p.kind === 'non_play' && p.end - p.start >= 300);
+      if (!ht) return { ...base, kind: 'not_enough_evidence', key: 'halvesUnknown' };
+      const sec = (a: number, b: number, st: string) => report.stateStrip
+        .reduce((acc, [s, e, x]) => acc + (x === st ? Math.max(0, Math.min(e, b) - Math.max(s, a)) : 0), 0);
+      const rec = c.recordingSec;
+      const h1 = { c: sec(0, ht.start, 'CONFIRMED_VISIBLE'), m: view.moments.filter((m) => m.actionAt < ht.start).length };
+      const h2 = { c: sec(ht.end, rec, 'CONFIRMED_VISIBLE'), m: view.moments.filter((m) => m.actionAt >= ht.end).length };
+      return { ...base, kind: 'answer', key: 'halves', moments: [...ranked.filter((m) => m.actionAt < ht.start).slice(0, 2), ...ranked.filter((m) => m.actionAt >= ht.end).slice(0, 2)],
+        params: { firstMin: Math.round(h1.c / 6) / 10, secondMin: Math.round(h2.c / 6) / 10, firstMoments: h1.m, secondMoments: h2.m } };
+    }
+    case 'defending': {
+      // Tackles/duels are only ever candidates (not validated); they are shown as such.
+      const cands = [...view.moments, ...view.needsReview].filter((m) => m.titleKey === 'tackle_candidate' || m.titleKey === 'duel_candidate');
+      return cands.length > 0
+        ? { ...base, kind: 'answer', key: 'defendingCandidates', moments: cands.slice(0, 5), params: { count: cands.length } }
+        : { ...base, kind: 'not_enough_evidence', key: 'noDefending' };
+    }
+    case 'practice': {
+      const i = insights.find((x) => x.kind === 'improve' && x.drill) ?? insights.find((x) => x.drill);
+      return i ? { ...base, kind: 'answer', key: 'practice', insight: i, moments: view.moments.filter((m) => i.momentIds.includes(m.id)) }
+        : { ...base, kind: 'not_enough_evidence', key: 'noPractice' };
+    }
     case 'passing': {
       const passes = view.moments.filter((m) => m.titleKey === 'pass_attempt');
       if (passes.length === 0) return { ...base, kind: 'not_enough_evidence', key: 'noPasses' };
@@ -156,7 +197,7 @@ export function suggestedQuestions(report: TrackingReport | null): AskIntent[] {
   const out: AskIntent[] = [];
   if (view.moments.length > 0) out.push('best_moment');
   if (view.needsReview.length > 0) out.push('review');
-  if (report.offball?.status === 'measured') out.push('space');
+  if (report.offball?.status === 'measured' || (report.offball?.sequences ?? []).some((q) => q.kind === 'free' || q.kind === 'tight')) out.push('space');
   out.push('improve', 'identity', 'distance');
   return out.slice(0, 4);
 }

@@ -8,6 +8,11 @@
 # scoutx_tracker engine, its requirements and the hash-pinned YOLOX weights (Apache-2.0).
 FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
 
+ARG WORKER_VERSION=football-cv/5.0.0-dev
+LABEL org.opencontainers.image.title="pitchproof-football-cv-tracker-gpu" \
+      org.opencontainers.image.version="${WORKER_VERSION}" \
+      org.opencontainers.image.licenses="proprietary; YOLOX weights Apache-2.0; EasyOCR Apache-2.0; docTR Apache-2.0"
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     HF_HOME=/opt/models \
@@ -16,6 +21,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     SCOUTX_WEIGHTS_DIR=/opt/models/yolox \
     SCOUTX_DETECTOR=yolox_s \
     SCOUTX_BACKEND=auto \
+    SCOUTX_DISCOVERY_DET=416 \
+    SCOUTX_DECODER=auto \
+    SCOUTX_HWACCEL=cuda \
+    WORKER_VERSION=${WORKER_VERSION} \
     PORT=8080
 
 RUN apt-get update \
@@ -38,6 +47,9 @@ RUN python3.11 -c "from scoutx_tracker.extract import weights_path; weights_path
 
 RUN useradd --uid 10001 --no-create-home worker
 USER worker
+
+# Liveness only (models are loaded on first request and then kept); Cloud Run uses its own probe.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s CMD curl -fsS "http://127.0.0.1:${PORT}/healthz" || exit 1
 
 # One request at a time per instance (a GPU is not shared between concurrent segments);
 # TRACKING_V3_ENABLED and TRACKING_ARTIFACT_ROOT are set by the deployment, never baked in.

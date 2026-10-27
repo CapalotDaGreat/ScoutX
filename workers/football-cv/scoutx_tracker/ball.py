@@ -41,12 +41,29 @@ def _foot_zone(ball_xy: np.ndarray, box: np.ndarray) -> bool:
     return abs(ball_xy[0] - fx) <= 0.5 * h and (y2 - 0.35 * h) <= ball_xy[1] <= (y2 + 0.15 * h)
 
 
+WARM_MAX = 0.12
+
+
+def warm_gate(balls: np.ndarray, warm: np.ndarray | None) -> bool:
+    """5.0: reject warm-coloured "balls" only when this match's ball is evidently not warm-coloured
+    (median warm share of confident detections < 0.05), so an orange winter ball is never filtered.
+    Measured on 60 developer-labelled IMG_4809 detections: confident detections 26/30 -> 26/27
+    correct, low-score 11/30 -> 11/18, no true ball removed (labels and threshold from the same
+    sample; see the 5.0 report)."""
+    if warm is None or len(warm) != len(balls) or not np.isfinite(warm).any():
+        return False
+    conf = np.isfinite(warm) & (balls[:, 6] >= 0.5)
+    return bool(conf.sum() >= 20 and float(np.median(warm[conf])) < 0.05)
+
+
 def ball_tracks(D, P: np.ndarray, min_score: float = 0.15, min_len: int = 4) -> dict[int, np.ndarray]:
     """Returns {frame: [x, y, diameter, score, track_id]} for frames on a valid ball track.
     P: (F,3,3) panorama transforms (image -> shot reference)."""
     by_frame: dict[int, list] = {}
-    for f, _, x1, y1, x2, y2, s in D.balls:
-        if s < min_score:
+    warm = getattr(D, "ball_warm", None)
+    reject_warm = warm_gate(D.balls, warm)
+    for k, (f, _, x1, y1, x2, y2, s) in enumerate(D.balls):
+        if s < min_score or (reject_warm and np.isfinite(warm[k]) and warm[k] > WARM_MAX):
             continue
         d = max(x2 - x1, y2 - y1)
         if d < 3 or d > 90:

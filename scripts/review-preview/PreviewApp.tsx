@@ -21,7 +21,8 @@ import { MatchReviewView } from '@/features/match-review/components/MatchReviewV
 // Written by prepare.ts: the recorded worker output after validation by the real server parser.
 import reports from './.generated/reports.json';
 
-const REPORTS = reports as unknown as { auto: TrackingReport; answers: TrackingReport; discovery: TrackingMoment[] };
+const REPORTS = reports as unknown as { auto: TrackingReport; answers: TrackingReport; auto50: TrackingReport; answers50: TrackingReport;
+  discovery: TrackingMoment[] };
 
 const NOW = Date.parse('2026-10-27T15:00:00Z');
 function progress(done: number, total: number, extra: Partial<TrackingProgressDoc> = {}): TrackingProgressDoc {
@@ -48,7 +49,7 @@ function synthetic(base: TrackingReport): TrackingReport {
 }
 
 function scenario(state: string): { tracking: TrackingDoc | null; progress: TrackingProgressDoc | null; view?: 'simple' | 'detailed' | 'scout';
-  momentId?: string; videoUrl?: string; discovery?: TrackingMoment[] } {
+  momentId?: string; videoUrl?: string; discovery?: TrackingMoment[]; goals?: Array<{ id: string; title: string; evidenceIds?: string[] }> } {
   const auto = REPORTS.auto;
   const answers = REPORTS.answers;
   const doc = (report: TrackingReport, scope: 'preliminary' | 'full'): TrackingDoc => ({ report, version: 1, stale: false, scope, parts: 12 });
@@ -88,6 +89,13 @@ function scenario(state: string): { tracking: TrackingDoc | null; progress: Trac
         indicator: mm.indicator.map((p) => [p[0] - off, p[1], p[2], p[3], p[4]] as [number, number, number, number, number]) } : null;
       return { tracking: doc({ ...auto, moments: rebased ? [rebased] : [] }, 'full'), progress: null, momentId: rebased?.id, videoUrl: './excerpt.mp4' };
     }
+    case 'review-50':
+      // 5.0: 39 owner answers + discovery sightings; measured off-ball observation and one clip-level sequence.
+      return { tracking: doc(REPORTS.answers50, 'full'), progress: null };
+    case 'review-50-followup':
+      return { tracking: doc(REPORTS.answers50, 'full'), progress: null, view: 'detailed',
+        goals: [{ id: 'g1', title: 'Work on: finding space', evidenceIds: ['earlier:m_1', 'coach-topic:positioning'] },
+          { id: 'g2', title: 'Work on: passing', evidenceIds: ['earlier:m_2', 'coach-topic:passing'] }] };
     case 'review-auto':
       return { tracking: doc(auto, 'full'), progress: null };
     default:
@@ -116,7 +124,7 @@ export default function PreviewApp() {
               <View testID="preview-root">
                 <MatchReviewView jobId="preview" playerId="preview-player" match={{ date: '2026-09-27', opponent: 'FC Example' }}
                   position="winger" job={{ videoDownloadUrl: s.videoUrl, durationSec: 2035, jerseyNumber: '20' }} tracking={s.tracking} progress={s.progress}
-                  goals={[]} initialView={s.view} initialMomentId={s.momentId}
+                  goals={s.goals ?? []} initialView={s.view} initialMomentId={s.momentId}
                   discovery={s.discovery ? { moments: s.discovery, generation: 1, updatedAt: '' } : null} />
               </View>
             </View>

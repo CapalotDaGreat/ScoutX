@@ -99,7 +99,9 @@ def detect_periods(times: np.ndarray, states: np.ndarray, activity: np.ndarray, 
     interruptions are 'unobserved': the match may well continue, we just can't see it.
     User corrections (kickoff / half-time / full-time) replace the detected match boundaries."""
     fps = 1.0 / max(float(np.median(np.diff(times))), 1e-3) if len(times) > 1 else 10.0
-    win = max(1, int(round(30 * fps)))
+    # 5.0 fix: for recordings shorter than the 30 s window np.convolve(mode="same") returned the
+    # window's length instead of the recording's, and period detection crashed.
+    win = max(1, min(int(round(30 * fps)), len(activity)))
     act = np.convolve(np.nan_to_num(activity), np.ones(win) / win, mode="same")
     cat = np.where(states == NON_FOOTBALL, 2, np.where(act >= 0.05, 0, 1))  # 0 play, 1 idle, 2 unobserved
     # Absorb short idle / unobserved runs into play.

@@ -87,4 +87,5 @@ export { retentionCleanup } from './dataRights/retentionCleanup';
 export { inspectVideoSource } from './analysis/videoSourceCallable';
 export { answerTrackingQuestion, undoTrackingAnswer, setTrackingPeriods, resolveTrackingTask } from './analysis/trackingCallables';
 export { startPlayerAnalysis, extractTrackingSegmentTask, discoverTrackingTask } from './analysis/trackingOrchestrator';
+export { explainTrackingMoment } from './analysis/trackingReasoning';
 export { startLinkImport, processLinkImportTask } from './uploads/linkImportJobs';

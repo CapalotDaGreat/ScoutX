@@ -797,7 +797,9 @@
       "unavailable": "Afspelen niet mogelijk: de originele video is niet meer opgeslagen. Het moment en de details blijven in je rapport.",
       "close": "Sluiten",
       "saveClip": "Clip opslaan",
-      "clipSaved": "Privé opgeslagen bij je video's."
+      "clipSaved": "Privé opgeslagen bij je video's.",
+      "focusPlayer": "Volg mij",
+      "fullField": "Volledig beeld"
     },
     "label": {
       "whatHappened": "Wat er gebeurde",
@@ -866,13 +868,36 @@
       "positioning": {
         "observation": {
           "what": "In de {{measuredMin}} min waarin je op video bevestigd bent, stond {{freePct}}% van de tijd geen tegenstander binnen 3 lichaamslengtes en {{tightPct}}% van de tijd een binnen 1 lichaamslengte (mediaan {{median}} lichaamslengtes).",
-          "why": "Interpretatie (niet gecontroleerd): vrije ruimte kan je aanspeelbaar maken, krappe dekking beperkt je opties. De video laat niet zien of een teamgenoot je echt kon aanspelen.",
+          "why": "Vrije ruimte kan je aanspeelbaar maken, krappe dekking beperkt je opties. De video laat niet zien of een teamgenoot je echt kon aanspelen.",
           "do": "Bekijk de clips: was er een passlijn naar jou toen je vrij stond, en maakte je je los toen je tegenstander dicht op je zat?"
         },
         "limitation": {
           "what": "Ik kan je positiespel nog niet beschrijven: daarvoor is minstens {{minSec}} s bevestigd beeld van jou nodig, deze opname heeft {{confirmedSec}} s.",
           "why": "Afstanden tot tegenstanders zeggen pas iets als zeker is dat jij het bent.",
           "do": "Beantwoord \"Ben jij dit?\" bij je momenten. Elk bevestigd moment levert beeld op dat ik kan meten."
+        },
+        "limitationClips": {
+          "what": "Ik kan je positiespel over de hele wedstrijd niet beschrijven: daarvoor heb ik minstens {{minSec}} s bevestigde beelden van je nodig, en deze opname heeft {{confirmedSec}} s. Hieronder staan korte clips waarover ik alleen iets over dat moment kan zeggen.",
+          "why": "Een paar seconden beeld laten niet zien hoe je je meestal opstelt.",
+          "do": "Beantwoord \"Ben jij dit?\" bij je momenten. Elk bevestigd moment geeft me meer beeld om te meten."
+        }
+      },
+      "sequence": {
+        "free": {
+          "what": "In deze clip van {{seconds}} seconden waarin je bevestigd bent, was {{pct}} % van de tijd geen tegenstander binnen 3 lichaamslengtes van je.",
+          "why_defence": "Ruimte om je heen als verdediger of controleur kan je team een veilige uitweg geven. Kijk of de balbezitter je kon zien.",
+          "why_midfield": "Ruimte op het middenveld kan je aanspeelbaar maken om aan te nemen en te draaien. Kijk of er een passlijn naar je was.",
+          "why_attack": "Ruimte als aanvaller kan een kans zijn om de bal met je gezicht naar het doel te krijgen. Kijk of een teamgenoot je kon aanspelen.",
+          "why_general": "Vrije ruimte kan je aanspeelbaar maken. De clip laat niet zien of een teamgenoot je echt kon aanspelen.",
+          "do": "Bekijk de clip: bood je je aan toen je vrij stond? Dit zegt niets over de rest van je wedstrijd."
+        },
+        "tight": {
+          "what": "In deze clip van {{seconds}} seconden waarin je bevestigd bent, was {{pct}} % van de tijd een tegenstander binnen 1 lichaamslengte van je.",
+          "why_defence": "Als verdediger kan zo dichtbij betekenen dat je een tegenstander dekte of zette - of dat je zelf onder druk stond aan de bal.",
+          "why_midfield": "Een tegenstander zo dichtbij neemt je tijd aan de bal. Een stap weg voor de pass kan een passhoek openen.",
+          "why_attack": "Kort dekken beperkt je opties. Een tempo- of richtingsverandering kan je vrijmaken van je tegenstander.",
+          "why_general": "Kort dekken beperkt je opties als de bal naar je toe komt.",
+          "do": "Bekijk de clip: probeerde je los te komen van je tegenstander voordat de bal kwam? Dit zegt niets over de rest van je wedstrijd."
         }
       }
     },
@@ -987,7 +1012,10 @@
         "compare": "Word ik beter?",
         "unknown": "Wat kun je me vertellen?",
         "space": "Stond ik vrij of werd ik kort gedekt?",
-        "at_time": "Wat gebeurde er op 32:30?"
+        "at_time": "Wat gebeurde er op 32:30?",
+        "halves": "Vergelijk mijn eerste en tweede helft",
+        "defending": "Laat mijn verdedigende acties zien",
+        "practice": "Wat moet ik deze week oefenen?"
       },
       "a": {
         "noReport": "Er is nog geen rapport voor deze wedstrijd. Antwoorden verschijnen zodra je eerste momenten klaar zijn.",
@@ -1018,9 +1046,31 @@
         "atTimeNone": "Ik heb geen beeld van jou rond {{time}}. Het dichtstbijzijnde moment:",
         "space": "Dit laat de video zien over je ruimte zonder bal:",
         "spaceInsufficient": "Dat kan ik nog niet meten: ik heb minstens {{minSec}} s bevestigd beeld van jou nodig en heb er {{confirmedSec}} s. Je momenten bevestigen helpt.",
-        "spaceUnavailable": "Deze analyse bevat nog geen metingen zonder bal."
+        "spaceUnavailable": "Deze analyse bevat nog geen metingen zonder bal.",
+        "spaceClip": "Over de hele wedstrijd kan ik je ruimte niet beschrijven, maar in {{count}} korte bevestigde clip(s) wel. Hier is er een ({{seconds}} s):",
+        "halves": "Bevestigd in beeld: {{firstMin}} min in de eerste en {{secondMin}} min in de tweede helft, met {{firstMoments}} en {{secondMoments}} momenten. Dit vergelijkt wat de camera van je liet zien, niet hoe goed je speelde.",
+        "halvesUnknown": "Ik weet niet wanneer de rust was in deze opname, dus ik kan hem niet in helften splitsen. Markeer de rust bij de wedstrijdperiodes en vraag het opnieuw.",
+        "defendingCandidates": "Ik vond {{count}} mogelijke tackles of duels bij je in de buurt. Het zijn kandidaten die de tracking niet kon controleren - bekijk ze en oordeel zelf:",
+        "noDefending": "Ik vond geen tackles of duels van je die de beelden onderbouwen. Dat betekent niet dat er geen waren - de bal en duels waren in deze opname zelden te volgen.",
+        "practice": "Op basis van wat deze wedstrijd laat zien, oefen dit:",
+        "noPractice": "De beelden zijn voor deze wedstrijd nog niet genoeg voor een concreet oefenadvies.",
+        "atTimeAdvice": "Hier is de clip rond {{time}}. Mijn metingen laten zien waar je was, niet wat de betere keuze was geweest - bekijk hem en vergelijk hem met de vragen in je coachingtips.",
+        "atTimeAdviceUnsure": "Rond {{time}} zijn er momenten die jou kunnen tonen. Bevestig ze eerst - ik beoordeel geen moment als ik niet zeker weet dat jij het bent:"
       },
-      "followUp": "Je kunt ook vragen"
+      "followUp": "Je kunt ook vragen",
+      "explain": {
+        "button": "Leg deze clip uit",
+        "alternatives": "Wat had ik anders kunnen doen?",
+        "disclosure": "Stuurt een paar stilstaande beelden van deze clip (max. {{seconds}} s) naar {{provider}} voor uitleg. Alleen mogelijk als je AI-analyse voor deze wedstrijd hebt toegestaan.",
+        "confidence": {
+          "clear": "Duidelijk zichtbaar in de beelden",
+          "partial": "Deels zichtbaar - zie het als suggestie",
+          "unclear": "Niet duidelijk zichtbaar - met voorzichtigheid lezen"
+        },
+        "unavailable": "Er is geen uitleg beschikbaar voor deze clip (daarvoor zijn je toestemming voor AI-analyse en een als jou bevestigd moment nodig). Je clip en het gemeten bewijs blijven ongewijzigd.",
+        "rejected": "De uitleg kwam niet door onze bewijscontrole en wordt daarom niet getoond. Bekijk de clip en gebruik je coachingtips.",
+        "failed": "De uitleg kon niet worden geladen. Probeer het later opnieuw."
+      }
     },
     "highlights": {
       "intro": "Video's gebruiken je beste momenten, gerangschikt op bewijs. Onzekere momenten worden nooit automatisch toegevoegd.",
@@ -1056,6 +1106,12 @@
       "excludedLine": "{{date}} niet vergeleken: {{reason}}"
     },
     "preliminaryBadge": "Eerste resultaten",
-    "updating": "Bijwerken met je antwoorden…"
+    "updating": "Bijwerken met je antwoorden…",
+    "followUp": {
+      "title": "Je focus uit eerdere wedstrijden",
+      "evidence": "Deze wedstrijd heeft beelden over deze focus ({{count}}). Bekijk ze en oordeel zelf.",
+      "insufficient": "Deze opname laat niet genoeg zien om naar deze focus te kijken (bevestigde beelden van jou: {{confirmedSec}} s).",
+      "note": "PitchProof toont bewijs over je focus - het beoordeelt hem niet als gehaald of niet gehaald."
+    }
   }
 }

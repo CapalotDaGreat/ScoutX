@@ -797,7 +797,9 @@
       "unavailable": "Playback unavailable: the source video is no longer stored. The moment and its details stay in your report.",
       "close": "Close",
       "saveClip": "Save clip",
-      "clipSaved": "Saved privately to your reels."
+      "clipSaved": "Saved privately to your reels.",
+      "focusPlayer": "Follow me",
+      "fullField": "Full view"
     },
     "label": {
       "whatHappened": "What happened",
@@ -866,13 +868,36 @@
       "positioning": {
         "observation": {
           "what": "On the {{measuredMin}} min where you are confirmed on video, no opponent was within 3 body heights of you {{freePct}}% of the time and one was within 1 body height {{tightPct}}% of the time (median distance {{median}} body heights).",
-          "why": "Interpretation (not verified): open space can make you available for a pass, while tight marking limits your options. The video cannot show whether a team-mate could actually play you in.",
+          "why": "Open space can make you available for a pass, while tight marking limits your options. The video cannot show whether a team-mate could actually play you in.",
           "do": "Watch the clips and check: was there a passing line to you when you were free, and did you move off your marker when you were tight?"
         },
         "limitation": {
           "what": "I cannot describe your positioning yet: it needs at least {{minSec}} s of confirmed footage of you, and this recording has {{confirmedSec}} s.",
           "why": "Distances to opponents are only meaningful when I know it is really you.",
           "do": "Answer \"Is this you?\" on your moments. Each confirmed moment adds footage I can measure."
+        },
+        "limitationClips": {
+          "what": "I cannot describe your positioning across the match: that needs at least {{minSec}} s of confirmed footage of you, and this recording has {{confirmedSec}} s. Below are short clips where I can say something about that moment only.",
+          "why": "A few seconds of footage do not show how you usually position yourself.",
+          "do": "Answer \"Is this you?\" on your moments. Each confirmed moment adds footage I can measure."
+        }
+      },
+      "sequence": {
+        "free": {
+          "what": "In this {{seconds}}-second clip where you are confirmed, no opponent was within 3 body heights of you {{pct}}% of the time.",
+          "why_defence": "Space around you as a defender or holding player can give your team a safe option to play out. Check whether the ball carrier could actually see you.",
+          "why_midfield": "Space in midfield can make you available to receive and turn. Check whether there was a passing line to you.",
+          "why_attack": "Space as an attacker can be a chance to receive facing goal. Check whether a team-mate could play you in.",
+          "why_general": "Open space can make you available for a pass. The clip cannot show whether a team-mate could actually play you in.",
+          "do": "Watch the clip: did you show for the ball while you were free? This says nothing about the rest of your match."
+        },
+        "tight": {
+          "what": "In this {{seconds}}-second clip where you are confirmed, an opponent was within 1 body height of you {{pct}}% of the time.",
+          "why_defence": "As a defender, being this close may mean you were marking or pressing an opponent - or that you were being pressed on the ball.",
+          "why_midfield": "A marker this close limits your time on the ball. A step away before the pass can create a passing angle.",
+          "why_attack": "Close marking limits your options. A change of pace or direction can get you away from your marker.",
+          "why_general": "Tight marking limits your options when the ball comes to you.",
+          "do": "Watch the clip: did you try to move away from your marker before the ball arrived? This says nothing about the rest of your match."
         }
       }
     },
@@ -987,7 +1012,10 @@
         "compare": "Am I improving?",
         "unknown": "What can you tell me?",
         "space": "Was I free or tightly marked?",
-        "at_time": "What happened at 32:30?"
+        "at_time": "What happened at 32:30?",
+        "halves": "Compare my first and second half",
+        "defending": "Show my defensive actions",
+        "practice": "What should I practise this week?"
       },
       "a": {
         "noReport": "There is no report for this match yet. Answers appear once your first moments are ready.",
@@ -1018,9 +1046,31 @@
         "atTimeNone": "I have no footage of you around {{time}}. The nearest moment I have:",
         "space": "Here is what the footage shows about your space without the ball:",
         "spaceInsufficient": "I can't measure that yet: I need at least {{minSec}} s of confirmed footage of you and have {{confirmedSec}} s. Confirming your moments helps.",
-        "spaceUnavailable": "This analysis does not include off-ball measurements yet."
+        "spaceUnavailable": "This analysis does not include off-ball measurements yet.",
+        "spaceClip": "I can't describe your space across the whole match, but in {{count}} short confirmed clip(s) I can. Here is one ({{seconds}} s):",
+        "halves": "Confirmed on video: {{firstMin}} min in the first half and {{secondMin}} min in the second, with {{firstMoments}} and {{secondMoments}} moments. This compares what the camera showed of you, not how well you played.",
+        "halvesUnknown": "I don't know when half-time was in this recording, so I can't split it into halves. Mark the half-time break in the match periods and ask again.",
+        "defendingCandidates": "I found {{count}} possible tackles or duels near you. They are candidates the tracking could not verify - watch them and judge for yourself:",
+        "noDefending": "I found no tackles or duels of yours that the footage supports. That does not mean there were none - the ball and challenges were rarely trackable in this recording.",
+        "practice": "Based on what this match shows, practise this:",
+        "noPractice": "The footage does not support a specific practice recommendation for this match yet.",
+        "atTimeAdvice": "Here is the clip around {{time}}. My measurements show where you were, not what the better option would have been - watch it and compare it with the questions in your coaching notes.",
+        "atTimeAdviceUnsure": "Around {{time}} there are moments that may show you. Please confirm them first - I won't judge a moment when I'm not sure it is you:"
       },
-      "followUp": "You could also ask"
+      "followUp": "You could also ask",
+      "explain": {
+        "button": "Explain this clip",
+        "alternatives": "What could I have done differently?",
+        "disclosure": "Sends a few still frames of this clip (max. {{seconds}} s) to {{provider}} for an explanation. Only possible when you allowed AI analysis for this match.",
+        "confidence": {
+          "clear": "Clearly visible in the frames",
+          "partial": "Partly visible - treat as a suggestion",
+          "unclear": "Not clearly visible - treat with caution"
+        },
+        "unavailable": "An explanation is not available for this clip (it needs your AI-analysis permission and a moment confirmed as you). Your clip and the measured evidence are unchanged.",
+        "rejected": "The explanation did not pass our evidence check, so it is not shown. Watch the clip and use your coaching notes instead.",
+        "failed": "The explanation could not be loaded. Please try again later."
+      }
     },
     "highlights": {
       "intro": "Reels use your best moments, ranked by evidence. Uncertain moments are never added automatically.",
@@ -1056,6 +1106,12 @@
       "excludedLine": "{{date}} not compared: {{reason}}"
     },
     "preliminaryBadge": "Early results",
-    "updating": "Updating with your answers…"
+    "updating": "Updating with your answers…",
+    "followUp": {
+      "title": "Your focus from earlier matches",
+      "evidence": "This match has footage about this focus ({{count}}). Watch it and judge for yourself.",
+      "insufficient": "This recording does not show enough to look at this focus (confirmed footage of you: {{confirmedSec}} s).",
+      "note": "PitchProof shows evidence about your focus - it does not grade it as achieved or failed."
+    }
   }
 }

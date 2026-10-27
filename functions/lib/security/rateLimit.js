@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LINK_IMPORT_START_LIMIT = exports.VIDEO_SOURCE_INSPECT_LIMIT = exports.DISCOVERY_VIEW_LIMIT = exports.AI_INSIGHT_LIMIT = exports.ASK_THIS_MATCH_LIMIT = exports.MEDIA_PLAYBACK_LIMIT = exports.DISCOVERY_SEARCH_LIMIT = void 0;
+exports.LINK_IMPORT_START_LIMIT = exports.VIDEO_SOURCE_INSPECT_LIMIT = exports.DISCOVERY_VIEW_LIMIT = exports.AI_INSIGHT_LIMIT = exports.VIDEO_REASONING_LIMIT = exports.ASK_THIS_MATCH_LIMIT = exports.MEDIA_PLAYBACK_LIMIT = exports.DISCOVERY_SEARCH_LIMIT = void 0;
 exports.rateLimitDocId = rateLimitDocId;
 exports.assertCallableRateLimit = assertCallableRateLimit;
 const firestore_1 = require("firebase-admin/firestore");
@@ -50,6 +50,8 @@ exports.DISCOVERY_SEARCH_LIMIT = { action: 'discovery_search', max: 60, window: 
 exports.MEDIA_PLAYBACK_LIMIT = { action: 'media_playback', max: 120, window: 'hour' };
 /** Local ask-this-match is cheap but unbounded loops waste Functions time. */
 exports.ASK_THIS_MATCH_LIMIT = { action: 'ask_this_match', max: 40, window: 'hour' };
+/** 5.0 clip explanations send footage frames to a provider: few per day, cached per moment. */
+exports.VIDEO_REASONING_LIMIT = { action: 'video_reasoning', max: 20, window: 'day' };
 /** Text AI coaching is metered by quota elsewhere; this bounds burst spend. */
 exports.AI_INSIGHT_LIMIT = { action: 'ai_insight', max: 30, window: 'hour' };
 /** View counters should not be a free write amplifier. */

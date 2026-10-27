@@ -218,7 +218,8 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
       title: t('review.focus.skill', { topic: (t as unknown as (k: string) => string)(`review.topic.${insight.topic}`) }).slice(0, 120),
       category: 'technical', metricKey: 'none', targetValue: null, targetLabel: '', timeframeEnd: null,
       practiceSuggestions: insight.drill ? [(t as unknown as (k: string) => string)(`review.drill.${insight.drill.id}.how`)] : [],
-      evidenceIds: insight.momentIds.slice(0, 5).map((id) => `${job.id}:${id}`),
+      // the coach topic travels with the goal so the next match can follow it up (5.0)
+      evidenceIds: [...insight.momentIds.slice(0, 5).map((id) => `${job.id}:${id}`), `coach-topic:${insight.topic}`],
       origin: 'coaching_moment',
     }, null, new Date());
     await repository.saveGoal(goal);

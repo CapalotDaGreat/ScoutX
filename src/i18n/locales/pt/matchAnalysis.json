@@ -797,7 +797,9 @@
       "unavailable": "Reprodução indisponível: o vídeo original já não está guardado. O lance e os seus detalhes continuam no relatório.",
       "close": "Fechar",
       "saveClip": "Guardar clip",
-      "clipSaved": "Guardado em privado nos teus vídeos."
+      "clipSaved": "Guardado em privado nos teus vídeos.",
+      "focusPlayer": "Seguir-me",
+      "fullField": "Vista completa"
     },
     "label": {
       "whatHappened": "O que aconteceu",
@@ -866,13 +868,36 @@
       "positioning": {
         "observation": {
           "what": "Nos {{measuredMin}} min em que estás confirmado no vídeo, nenhum adversário esteve a menos de 3 alturas do corpo {{freePct}}% do tempo e um esteve a menos de 1 altura {{tightPct}}% do tempo (distância mediana {{median}} alturas).",
-          "why": "Interpretação (não verificada): espaço livre pode deixar-te disponível para um passe, marcação apertada limita as tuas opções. O vídeo não mostra se um colega te podia realmente passar a bola.",
+          "why": "Espaço livre pode deixar-te disponível para um passe, marcação apertada limita as tuas opções. O vídeo não mostra se um colega te podia realmente passar a bola.",
           "do": "Vê os clips e confirma: havia linha de passe para ti quando estavas livre, e soltaste-te do teu marcador quando estava em cima de ti?"
         },
         "limitation": {
           "what": "Ainda não consigo descrever o teu posicionamento: são precisos pelo menos {{minSec}} s de imagem confirmada tua e esta gravação tem {{confirmedSec}} s.",
           "why": "As distâncias aos adversários só fazem sentido se eu souber que és mesmo tu.",
           "do": "Responde a \"És tu?\" nos teus lances. Cada lance confirmado acrescenta imagem que posso medir."
+        },
+        "limitationClips": {
+          "what": "Não consigo descrever o teu posicionamento no jogo inteiro: preciso de pelo menos {{minSec}} s de vídeo confirmado de ti, e esta gravação tem {{confirmedSec}} s. Abaixo há clipes curtos sobre os quais só posso dizer algo desse momento.",
+          "why": "Alguns segundos de vídeo não mostram como costumas posicionar-te.",
+          "do": "Responde \"És tu?\" nos teus momentos. Cada momento confirmado dá-me mais vídeo para medir."
+        }
+      },
+      "sequence": {
+        "free": {
+          "what": "Neste clipe de {{seconds}} segundos em que estás confirmado, nenhum adversário esteve a menos de 3 alturas do corpo de ti em {{pct}} % do tempo.",
+          "why_defence": "Espaço à tua volta como defesa ou volante pode dar à equipa uma saída segura. Verifica se quem tinha a bola te conseguia ver.",
+          "why_midfield": "Espaço no meio-campo pode deixar-te disponível para receber e rodar. Verifica se havia uma linha de passe para ti.",
+          "why_attack": "Espaço como atacante pode ser uma oportunidade de receber de frente para a baliza. Verifica se um colega te podia passar a bola.",
+          "why_general": "Espaço livre pode deixar-te disponível para um passe. O clipe não mostra se um colega te podia realmente passar a bola.",
+          "do": "Vê o clipe: ofereceste-te para receber quando estavas livre? Isto não diz nada sobre o resto do teu jogo."
+        },
+        "tight": {
+          "what": "Neste clipe de {{seconds}} segundos em que estás confirmado, um adversário esteve a menos de 1 altura do corpo de ti em {{pct}} % do tempo.",
+          "why_defence": "Como defesa, estar tão perto pode significar que marcavas ou pressionavas um adversário - ou que estavas a ser pressionado com a bola.",
+          "why_midfield": "Um marcador tão perto tira-te tempo com a bola. Um passo para o lado antes do passe pode abrir um ângulo.",
+          "why_attack": "Uma marcação apertada limita as tuas opções. Uma mudança de ritmo ou de direção pode ajudar-te a soltar-te do marcador.",
+          "why_general": "Uma marcação apertada limita as tuas opções quando a bola chega.",
+          "do": "Vê o clipe: tentaste afastar-te do teu marcador antes de a bola chegar? Isto não diz nada sobre o resto do teu jogo."
         }
       }
     },
@@ -987,7 +1012,10 @@
         "compare": "Estou a melhorar?",
         "unknown": "O que me podes dizer?",
         "space": "Estava livre ou com marcação apertada?",
-        "at_time": "O que aconteceu aos 32:30?"
+        "at_time": "O que aconteceu aos 32:30?",
+        "halves": "Compara o meu primeiro e segundo tempo",
+        "defending": "Mostra as minhas ações defensivas",
+        "practice": "O que devo treinar esta semana?"
       },
       "a": {
         "noReport": "Ainda não há relatório desta partida. As respostas aparecem quando os teus primeiros lances estiverem prontos.",
@@ -1018,9 +1046,31 @@
         "atTimeNone": "Não tenho imagens tuas por volta de {{time}}. O lance mais próximo:",
         "space": "Eis o que o vídeo mostra sobre o teu espaço sem bola:",
         "spaceInsufficient": "Ainda não consigo medir isso: preciso de pelo menos {{minSec}} s de imagem confirmada tua e tenho {{confirmedSec}} s. Confirmar os teus lances ajuda.",
-        "spaceUnavailable": "Esta análise ainda não inclui medições sem bola."
+        "spaceUnavailable": "Esta análise ainda não inclui medições sem bola.",
+        "spaceClip": "Não consigo descrever o teu espaço no jogo inteiro, mas consigo em {{count}} clipe(s) curto(s) confirmado(s). Aqui está um ({{seconds}} s):",
+        "halves": "Confirmado em vídeo: {{firstMin}} min no primeiro tempo e {{secondMin}} min no segundo, com {{firstMoments}} e {{secondMoments}} momentos. Isto compara o que a câmara mostrou de ti, não o quão bem jogaste.",
+        "halvesUnknown": "Não sei quando foi o intervalo nesta gravação, por isso não a consigo dividir em tempos. Marca o intervalo nos períodos do jogo e pergunta de novo.",
+        "defendingCandidates": "Encontrei {{count}} possíveis desarmes ou duelos perto de ti. São candidatos que o seguimento não conseguiu verificar - vê-os e julga por ti:",
+        "noDefending": "Não encontrei desarmes nem duelos teus confirmados pelo vídeo. Isso não quer dizer que não houve - a bola e os duelos raramente puderam ser seguidos nesta gravação.",
+        "practice": "Com base no que este jogo mostra, treina isto:",
+        "noPractice": "O vídeo ainda não permite uma recomendação de treino concreta para este jogo.",
+        "atTimeAdvice": "Aqui está o clipe por volta de {{time}}. As minhas medições mostram onde estavas, não qual teria sido a melhor opção - vê-o e compara-o com as perguntas das tuas notas de treino.",
+        "atTimeAdviceUnsure": "Por volta de {{time}} há momentos que te podem mostrar. Confirma-os primeiro - não avalio um momento se não tiver a certeza de que és tu:"
       },
-      "followUp": "Também podes perguntar"
+      "followUp": "Também podes perguntar",
+      "explain": {
+        "button": "Explicar este clipe",
+        "alternatives": "O que podia ter feito de diferente?",
+        "disclosure": "Envia algumas imagens deste clipe (máx. {{seconds}} s) para {{provider}} para uma explicação. Só é possível se permitiste a análise por IA para este jogo.",
+        "confidence": {
+          "clear": "Claramente visível nas imagens",
+          "partial": "Parcialmente visível - vê como sugestão",
+          "unclear": "Não claramente visível - lê com cautela"
+        },
+        "unavailable": "Não há explicação disponível para este clipe (é preciso a tua permissão de análise por IA e um momento confirmado como sendo tu). O teu clipe e as provas medidas não mudam.",
+        "rejected": "A explicação não passou a nossa verificação de provas, por isso não é mostrada. Vê o clipe e usa as tuas notas de treino.",
+        "failed": "Não foi possível carregar a explicação. Tenta mais tarde."
+      }
     },
     "highlights": {
       "intro": "Os vídeos usam os teus melhores lances, ordenados por evidência. Lances incertos nunca são adicionados automaticamente.",
@@ -1056,6 +1106,12 @@
       "excludedLine": "{{date}} não comparada: {{reason}}"
     },
     "preliminaryBadge": "Primeiros resultados",
-    "updating": "A atualizar com as tuas respostas…"
+    "updating": "A atualizar com as tuas respostas…",
+    "followUp": {
+      "title": "O teu foco de jogos anteriores",
+      "evidence": "Este jogo tem vídeo sobre este foco ({{count}}). Vê-o e julga por ti.",
+      "insufficient": "Esta gravação não mostra o suficiente para analisar este foco (vídeo confirmado de ti: {{confirmedSec}} s).",
+      "note": "O PitchProof mostra provas sobre o teu foco - não o classifica como alcançado ou falhado."
+    }
   }
 }

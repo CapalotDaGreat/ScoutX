@@ -63,7 +63,13 @@ def main() -> None:
     ap.add_argument("--price-per-hour", type=float, default=None)
     a = ap.parse_args()
     total = duration(a.video)
-    res: dict = {"hardware": hardware(), "videoSec": round(total, 1), "measured": {}}
+    from scoutx_tracker.colour import probe, zscale_available  # noqa: PLC0415
+
+    info = probe(a.video)
+    res: dict = {"hardware": hardware(), "videoSec": round(total, 1), "measured": {},
+                 "video": {"dynamicRange": info.dynamic_range, "bitDepth": info.bit_depth, "pixFmt": info.pix_fmt,
+                           "size": [info.width, info.height], "fps": round(info.fps, 2)},
+                 "decoder": os.environ.get("SCOUTX_DECODER", "auto"), "zscale": zscale_available()}
     work = Path(tempfile.mkdtemp(prefix="ppbench_"))
 
     # 1. discovery
@@ -72,7 +78,7 @@ def main() -> None:
     from scoutx_tracker.ocr import shared_reader  # noqa: PLC0415
 
     t = time.time()
-    det640 = Detector(imgsz=640)
+    det640 = Detector(imgsz=int(os.environ.get("SCOUTX_DISCOVERY_DET", "416")))
     reader = shared_reader()
     res["measured"]["modelInitSec"] = round(time.time() - t, 1)
     d_end = a.discovery_end or total

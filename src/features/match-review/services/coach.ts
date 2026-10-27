@@ -10,6 +10,17 @@ import { buildMomentsView, type EvidenceLabel, type MomentCard } from './moments
 
 export type CoachTopic = 'involvement' | 'carrying' | 'passing' | 'passing_accuracy' | 'identity' | 'ball_visibility' | 'physical' | 'positioning';
 export type PositionGroup = 'goalkeeper' | 'defender' | 'midfielder' | 'winger' | 'forward' | 'unknown';
+/** 5.0: the eight roles the coach adapts its explanations to (drills still use the broader group). */
+export type PositionRole = 'goalkeeper' | 'centre_back' | 'full_back' | 'defensive_mid' | 'central_mid' | 'attacking_mid'
+  | 'winger' | 'striker' | 'unknown';
+/**
+ * Evidence tiers (5.0):
+ *  1 strong   - confirmed identity and a clear measurement: specific coaching allowed
+ *  2 partial  - likely identity or incomplete action: qualified wording, never a verified statistic
+ *  3 context  - general match context without confirmed involvement: kept apart from personal analysis
+ *  4 none     - insufficient evidence: the limitation and a practical next step
+ */
+export type EvidenceTier = 1 | 2 | 3 | 4;
 export type AgeBand = 'youth' | 'adult';
 
 export type Drill = { id: string; topics: CoachTopic[]; positions: PositionGroup[] | 'all'; minutes: number; youth: boolean };
@@ -45,9 +56,50 @@ export type Insight = {
   momentIds: string[];
   /** watchable time ranges that are not moments (e.g. off-ball episodes) */
   clips?: Array<{ start: number; end: number }>;
+  tier: EvidenceTier;
+  /** i18n base overriding review.coach.<topic>.<kind> (5.0 sequence observations) */
+  textKey?: string;
+  /** role-specific "why it matters" key */
+  whyKey?: string;
 };
 
+export function positionRole(position: string | null | undefined): PositionRole {
+  const p = ` ${(position ?? '').toLowerCase().replace(/[-_]/g, ' ')} `;
+  if (/(goal|keeper|\bgk\b|torwart|portero|gardien|portiere|guarda.?redes|doelman|goleiro)/.test(p)) return 'goalkeeper';
+  if (/(full ?back|wing ?back|\b[lr]w?b\b|außenverteidiger|aussenverteidiger|lateral|arrière latéral|terzino|vleugelverdediger|back (left|right)|(left|right) back)/.test(p)) return 'full_back';
+  if (/(cent(re|er) ?back|\bcb\b|central defender|innenverteidiger|defensa central|défenseur central|difensore centrale|centrale verdediger|zagueiro|stopper|libero|sweeper)/.test(p)) return 'centre_back';
+  if (/(defensive mid|\bcdm\b|\bdm\b|holding|sechser|\b6\b|pivote|mediocentro defensivo|milieu défensif|mediano|volante|controleur)/.test(p)) return 'defensive_mid';
+  if (/(attacking mid|\bcam\b|\bam\b|zehner|\b10\b|offensives mittelfeld|mediapunta|meneur|trequartista|aanvallende middenvelder|meia.?atacante|playmaker)/.test(p)) return 'attacking_mid';
+  if (/(wing|flügel|fluegel|ailier|extremo|\bala\b|esterno|vleugel|ponta|\b[lr]m\b|\b[lr]w\b)/.test(p)) return 'winger';
+  if (/(striker|forward|\bst\b|\bcf\b|stürm|sturm|attaquant|delantero|attacc|aanvall|spits|centroavante|\b9\b)/.test(p)) return 'striker';
+  if (/(mid|\bcm\b|mittelf|milieu|centrocamp|medio|meio|middenveld|\b8\b)/.test(p)) return 'central_mid';
+  if (/(back|defen|verteid|défens|defens|difens|verdedig)/.test(p)) return 'centre_back';
+  return 'unknown';
+}
+
+/** role -> drill group */
+export function groupOfRole(role: PositionRole): PositionGroup {
+  switch (role) {
+    case 'goalkeeper': return 'goalkeeper';
+    case 'centre_back': case 'full_back': return 'defender';
+    case 'defensive_mid': case 'central_mid': case 'attacking_mid': return 'midfielder';
+    case 'winger': return 'winger';
+    case 'striker': return 'forward';
+    default: return 'unknown';
+  }
+}
+
+/** coarse line used for role-specific explanations */
+export function lineOfRole(role: PositionRole): 'defence' | 'midfield' | 'attack' | 'general' {
+  if (role === 'goalkeeper' || role === 'centre_back' || role === 'full_back' || role === 'defensive_mid') return 'defence';
+  if (role === 'central_mid') return 'midfield';
+  if (role === 'attacking_mid' || role === 'winger' || role === 'striker') return 'attack';
+  return 'general';
+}
+
 export function positionGroup(position: string | null | undefined): PositionGroup {
+  const r = positionRole(position);
+  if (r !== 'unknown') return groupOfRole(r);
   const p = (position ?? '').toLowerCase();
   if (/(goal|keeper|gk|torwart|portero|gardien|portiere|keeper|guarda)/.test(p)) return 'goalkeeper';
   if (/(wing|flügel|fluegel|ailier|extremo|ala|esterno|vleugel|ponta)/.test(p)) return 'winger';
@@ -69,12 +121,13 @@ function ids(cards: MomentCard[], pred: (c: MomentCard) => boolean, max = 5): st
 }
 
 /**
- * At most two strengths and two improvements (quality over quantity), plus the limitations that
+ * At most three strengths and three improvements (quality over quantity), plus the limitations that
  * explain what could not be assessed from this recording.
  */
 export function buildCoachInsights(report: TrackingReport | null, profile: { position?: string | null; ageBand?: AgeBand } = {}): Insight[] {
   if (!report) return [];
-  const position = positionGroup(profile.position ?? report.target.position);
+  const role = positionRole(profile.position ?? report.target.position);
+  const position = role !== 'unknown' ? groupOfRole(role) : positionGroup(profile.position ?? report.target.position);
   const age = profile.ageBand ?? 'adult';
   const view = buildMomentsView(report);
   const cards = view.moments; // confirmed + estimated only
@@ -87,20 +140,21 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
 
   if (confirmedOnBall.length >= 3) {
     out.push({ id: 'involvement_strength', kind: 'strength', topic: 'involvement', evidence: 'confirmed',
-      params: { count: confirmedOnBall.length }, drill: null, momentIds: ids(confirmedOnBall, () => true) });
+      params: { count: confirmedOnBall.length }, drill: null, momentIds: ids(confirmedOnBall, () => true), tier: 1 });
   }
   if (completed.length >= 2) {
     out.push({ id: 'passing_strength', kind: 'strength', topic: 'passing', evidence: 'confirmed',
-      params: { count: completed.length }, drill: null, momentIds: ids(completed, () => true) });
+      params: { count: completed.length }, drill: null, momentIds: ids(completed, () => true), tier: 1 });
   }
   if (carries.length >= 2 && out.length < 2) {
-    out.push({ id: 'carrying_strength', kind: 'strength', topic: 'carrying', evidence: carries.every((m) => m.evidence === 'confirmed') ? 'confirmed' : 'estimated',
-      params: { count: carries.length }, drill: null, momentIds: ids(carries, () => true) });
+    const allConfirmed = carries.every((m) => m.evidence === 'confirmed');
+    out.push({ id: 'carrying_strength', kind: 'strength', topic: 'carrying', evidence: allConfirmed ? 'confirmed' : 'estimated',
+      params: { count: carries.length }, drill: null, momentIds: ids(carries, () => true), tier: allConfirmed ? 1 : 2 });
   }
   if (incomplete.length >= 2) {
     out.push({ id: 'passing_improve', kind: 'improve', topic: 'passing_accuracy', evidence: 'confirmed',
       params: { count: incomplete.length, completed: completed.length }, drill: pickDrill('passing_accuracy', position, age),
-      momentIds: ids(incomplete, () => true) });
+      momentIds: ids(incomplete, () => true), tier: 1 });
   }
   if (c.confirmedVisibleSec >= MIN_CONFIRMED_FOR_COACHING_SEC && confirmedOnBall.length < 2) {
     // Seen for long stretches but rarely on the ball: an involvement opportunity - only when the
@@ -108,7 +162,7 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
     if (report.ball.contacts > 0) {
       out.push({ id: 'involvement_improve', kind: 'improve', topic: 'involvement', evidence: 'estimated',
         params: { minutes: Math.round(c.confirmedVisibleSec / 60), count: confirmedOnBall.length },
-        drill: pickDrill('involvement', position, age), momentIds: ids(cards, (m) => m.category === 'on_camera', 3) });
+        drill: pickDrill('involvement', position, age), momentIds: ids(cards, (m) => m.category === 'on_camera', 3), tier: 2 });
     }
   }
 
@@ -120,10 +174,23 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
     out.push({ id: 'positioning_observation', kind: 'observation', topic: 'positioning', evidence: 'confirmed',
       params: { freePct: Math.round((ob.freeShare ?? 0) * 100), tightPct: Math.round((ob.tightShare ?? 0) * 100),
         median: ob.nearestOpponentBodyHeights.median, measuredMin: Math.round((ob.measuredSec ?? 0) / 6) / 10 },
-      drill: pickDrill('positioning', position, age), momentIds: [], clips: episodes });
+      drill: pickDrill('positioning', position, age), momentIds: [], clips: episodes, tier: 1 });
   } else if (ob?.status === 'insufficient') {
     out.push({ id: 'positioning_limit', kind: 'limitation', topic: 'positioning', evidence: 'not_measurable',
-      params: { confirmedSec: Math.round(ob.confirmedSec), minSec: Math.round(ob.minConfirmedSec) }, drill: null, momentIds: [] });
+      params: { confirmedSec: Math.round(ob.confirmedSec), minSec: Math.round(ob.minConfirmedSec) }, drill: null, momentIds: [], tier: 4,
+      textKey: (ob.sequences ?? []).some((q) => q.kind === 'free' || q.kind === 'tight') ? 'review.coach.positioning.limitationClips' : undefined });
+  }
+  // 5.0 evidence-specific sufficiency: one continuous confirmed sequence (>= 6 s, server-checked)
+  // supports a narrow observation about that clip only - never about the whole match.
+  const line = lineOfRole(role);
+  const seqs = (ob?.sequences ?? []).filter((q) => q.kind === 'free' || q.kind === 'tight')
+    .sort((a, b) => (b.measuredSec ?? 0) - (a.measuredSec ?? 0)).slice(0, 2);
+  for (const q of seqs) {
+    const share = q.kind === 'free' ? q.freeShare ?? 0 : q.tightShare ?? 0;
+    out.push({ id: `sequence_${q.kind}_${Math.round(q.start)}`, kind: 'observation', topic: 'positioning', evidence: 'confirmed',
+      params: { seconds: Math.round(q.end - q.start), pct: Math.round(share * 100), median: q.nearestOpponentMedianBH ?? 0 },
+      drill: pickDrill('positioning', position, age), momentIds: [], clips: [{ start: q.start, end: q.end }], tier: 1,
+      textKey: `review.coach.sequence.${q.kind}`, whyKey: `review.coach.sequence.${q.kind}.why_${line}` });
   }
 
   // Limitations: what I could not verify, and why.
@@ -131,18 +198,19 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
   if (analysed > 0 && c.confirmedVisibleSec / analysed < 0.1) {
     out.push({ id: 'identity_limit', kind: 'limitation', topic: 'identity', evidence: 'not_measurable',
       params: { confirmedMin: Math.round(c.confirmedVisibleSec / 6) / 10, analysedMin: Math.round(analysed / 60),
-        review: view.needsReview.length }, drill: null, momentIds: [] });
+        review: view.needsReview.length }, drill: null, momentIds: [], tier: 4 });
   }
   if (report.ball.contacts === 0 && report.events.length === 0) {
     out.push({ id: 'ball_limit', kind: 'limitation', topic: 'ball_visibility', evidence: 'not_measurable', params: {},
-      drill: null, momentIds: [] });
+      drill: null, momentIds: [], tier: 4 });
   }
   if (!(report.physical.status === 'calibrated' && report.physical.productionVisible)) {
     out.push({ id: 'physical_limit', kind: 'limitation', topic: 'physical', evidence: 'not_measurable', params: {},
-      drill: null, momentIds: [] });
+      drill: null, momentIds: [], tier: 4 });
   }
-  const strengths = out.filter((i) => i.kind === 'strength').slice(0, 2);
-  const improve = out.filter((i) => i.kind === 'improve').slice(0, 2);
+  // up to three of each - only as many as the evidence supports
+  const strengths = out.filter((i) => i.kind === 'strength').slice(0, 3);
+  const improve = out.filter((i) => i.kind === 'improve').slice(0, 3);
   return [...strengths, ...improve, ...out.filter((i) => i.kind === 'observation'), ...out.filter((i) => i.kind === 'limitation')];
 }
 

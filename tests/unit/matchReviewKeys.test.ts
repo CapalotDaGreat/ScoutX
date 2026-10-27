@@ -19,9 +19,17 @@ test('every composed match-review key exists in the English locale', () => {
   const hasPlural = (key: string) => has(`${key}_one`) && has(`${key}_other`);
   const keys: string[] = [];
   const insightPairs = ['involvement.strength', 'involvement.improve', 'passing.strength', 'passing_accuracy.improve', 'carrying.strength',
-    'positioning.observation', 'positioning.limitation',
+    'positioning.observation', 'positioning.limitation', 'positioning.limitationClips',
     'identity.limitation', 'ball_visibility.limitation', 'physical.limitation'];
   for (const p of insightPairs) for (const part of ['what', 'why', 'do']) keys.push(`review.coach.${p}.${part}`);
+  for (const k of ['free', 'tight']) {
+    keys.push(`review.coach.sequence.${k}.what`, `review.coach.sequence.${k}.do`);
+    for (const line of ['defence', 'midfield', 'attack', 'general']) keys.push(`review.coach.sequence.${k}.why_${line}`);
+  }
+  for (const k of ['button', 'alternatives', 'disclosure', 'confidence.clear', 'confidence.partial', 'confidence.unclear', 'unavailable', 'rejected', 'failed']) {
+    keys.push(`review.ask.explain.${k}`);
+  }
+  keys.push('review.player.focusPlayer', 'review.player.fullField');
   for (const d of DRILLS) keys.push(`review.drill.${d.id}.name`, `review.drill.${d.id}.how`);
   for (const topic of ['involvement', 'carrying', 'passing', 'passing_accuracy', 'identity', 'ball_visibility', 'physical', 'positioning']) keys.push(`review.topic.${topic}`);
   for (const tip of ['wider_view', 'follow_play', 'bold_numbers', 'record_whole_match', 'steady_camera']) keys.push(`review.tip.${tip}`);
@@ -36,13 +44,14 @@ test('every composed match-review key exists in the English locale', () => {
   for (const c of ['on_ball', 'passing', 'duels', 'on_camera']) keys.push(`review.moments.category.${c}`);
   for (const e of ['confirmed', 'estimated', 'needs_review', 'not_measurable']) keys.push(`review.moments.evidence.${e}`);
   for (const o of ['completed', 'incomplete', 'unknown']) keys.push(`review.moments.outcome.${o}`);
-  for (const intent of ['best_moment', 'moments', 'passing', 'distance', 'speed', 'heatmap', 'goals', 'improve', 'well', 'identity', 'review', 'compare', 'space', 'at_time', 'unknown']) {
+  for (const intent of ['best_moment', 'moments', 'passing', 'distance', 'speed', 'heatmap', 'goals', 'improve', 'well', 'identity', 'review', 'compare', 'space', 'at_time', 'halves', 'defending', 'practice', 'unknown']) {
     keys.push(`review.ask.q.${intent}`);
   }
   for (const a of ['noReport', 'distanceUncalibrated', 'speedUncalibrated', 'physicalMissing', 'distance', 'speed', 'heatmapObserved',
     'heatmapUnavailable', 'goalsNotMeasured', 'compareSeeDevelopment', 'noPasses', 'passes', 'improve', 'noImprove', 'well', 'noStrength',
     'identity', 'review', 'reviewNone', 'best', 'noMoments', 'moments', 'unknown', 'atTime', 'atTimeUnsure', 'atTimeNone', 'space',
-    'spaceInsufficient', 'spaceUnavailable']) keys.push(`review.ask.a.${a}`);
+    'spaceInsufficient', 'spaceUnavailable', 'spaceClip', 'halves', 'halvesUnknown', 'defendingCandidates', 'noDefending', 'practice', 'noPractice',
+    'atTimeAdvice', 'atTimeAdviceUnsure']) keys.push(`review.ask.a.${a}`);
   for (const s of ['confirmed', 'likely', 'not_seen', 'no_play']) keys.push(`review.story.${s}`);
   for (const v of ['simple', 'detailed', 'scout']) keys.push(`review.view.${v}`);
   for (const h of ['strong', 'limited', 'none']) keys.push(`review.hero.${h}`);

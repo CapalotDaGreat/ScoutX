@@ -797,7 +797,9 @@
       "unavailable": "Wiedergabe nicht möglich: Das Originalvideo ist nicht mehr gespeichert. Die Szene und ihre Details bleiben in deinem Bericht.",
       "close": "Schließen",
       "saveClip": "Clip speichern",
-      "clipSaved": "Privat in deinen Videos gespeichert."
+      "clipSaved": "Privat in deinen Videos gespeichert.",
+      "focusPlayer": "Mir folgen",
+      "fullField": "Ganzes Bild"
     },
     "label": {
       "whatHappened": "Was passiert ist",
@@ -873,6 +875,29 @@
           "what": "Dein Positionsspiel kann ich noch nicht beschreiben: Dafür braucht es mindestens {{minSec}} s bestätigtes Material von dir, diese Aufnahme hat {{confirmedSec}} s.",
           "why": "Abstände zu Gegnern sind nur aussagekräftig, wenn sicher ist, dass du es bist.",
           "do": "Beantworte bei deinen Szenen \"Bist du das?\". Jede bestätigte Szene liefert Material, das ich messen kann."
+        },
+        "limitationClips": {
+          "what": "Deine Positionierung über das ganze Spiel kann ich nicht beschreiben: Dafür brauche ich mindestens {{minSec}} s bestätigtes Videomaterial von dir, diese Aufnahme hat {{confirmedSec}} s. Unten sind kurze Clips, zu denen ich nur über diesen Moment etwas sagen kann.",
+          "why": "Ein paar Sekunden Video zeigen nicht, wie du dich normalerweise positionierst.",
+          "do": "Beantworte bei deinen Momenten \"Bist das du?\". Jeder bestätigte Moment gibt mir mehr Material zum Messen."
+        }
+      },
+      "sequence": {
+        "free": {
+          "what": "In diesem {{seconds}}-Sekunden-Clip, in dem du bestätigt bist, war {{pct}} % der Zeit kein Gegner innerhalb von 3 Körperhöhen von dir.",
+          "why_defence": "Platz um dich als Verteidiger oder Absicherer kann deinem Team eine sichere Anspielstation geben. Prüfe, ob der Ballführende dich überhaupt sehen konnte.",
+          "why_midfield": "Platz im Mittelfeld kann dich anspielbar machen, um anzunehmen und aufzudrehen. Prüfe, ob es eine Passlinie zu dir gab.",
+          "why_attack": "Platz als Angreifer kann eine Chance sein, den Ball mit Blick zum Tor zu bekommen. Prüfe, ob ein Mitspieler dich anspielen konnte.",
+          "why_general": "Freier Raum kann dich anspielbar machen. Der Clip zeigt nicht, ob ein Mitspieler dich tatsächlich anspielen konnte.",
+          "do": "Schau dir den Clip an: Hast du dich angeboten, als du frei warst? Über den Rest deines Spiels sagt das nichts aus."
+        },
+        "tight": {
+          "what": "In diesem {{seconds}}-Sekunden-Clip, in dem du bestätigt bist, war {{pct}} % der Zeit ein Gegner innerhalb von 1 Körperhöhe von dir.",
+          "why_defence": "Als Verteidiger kann so viel Nähe heißen, dass du einen Gegner gedeckt oder angelaufen hast - oder dass du am Ball unter Druck standest.",
+          "why_midfield": "Ein so naher Gegenspieler nimmt dir Zeit am Ball. Ein Schritt weg vor dem Pass kann einen Passwinkel öffnen.",
+          "why_attack": "Enge Deckung schränkt deine Möglichkeiten ein. Ein Tempo- oder Richtungswechsel kann dich von deinem Gegenspieler lösen.",
+          "why_general": "Enge Deckung schränkt deine Möglichkeiten ein, wenn der Ball zu dir kommt.",
+          "do": "Schau dir den Clip an: Hast du versucht, dich vor der Ballannahme von deinem Gegenspieler zu lösen? Über den Rest deines Spiels sagt das nichts aus."
         }
       }
     },
@@ -987,7 +1012,10 @@
         "compare": "Werde ich besser?",
         "unknown": "Was kannst du mir sagen?",
         "space": "War ich frei oder eng gedeckt?",
-        "at_time": "Was ist bei 32:30 passiert?"
+        "at_time": "Was ist bei 32:30 passiert?",
+        "halves": "Vergleiche meine erste und zweite Halbzeit",
+        "defending": "Zeig meine Defensivaktionen",
+        "practice": "Was soll ich diese Woche üben?"
       },
       "a": {
         "noReport": "Für dieses Spiel gibt es noch keinen Bericht. Antworten erscheinen, sobald deine ersten Szenen bereit sind.",
@@ -1018,9 +1046,31 @@
         "atTimeNone": "Um {{time}} habe ich kein Material von dir. Die nächste Szene:",
         "space": "Das zeigt das Video über deinen Raum ohne Ball:",
         "spaceInsufficient": "Das kann ich noch nicht messen: Ich brauche mindestens {{minSec}} s bestätigtes Material von dir und habe {{confirmedSec}} s. Bestätigte Szenen helfen.",
-        "spaceUnavailable": "Diese Analyse enthält noch keine Messungen ohne Ball."
+        "spaceUnavailable": "Diese Analyse enthält noch keine Messungen ohne Ball.",
+        "spaceClip": "Über das ganze Spiel kann ich deinen Raum nicht beschreiben, aber in {{count}} kurzen bestätigten Clip(s) schon. Hier ist einer ({{seconds}} s):",
+        "halves": "Im Video bestätigt: {{firstMin}} min in der ersten und {{secondMin}} min in der zweiten Halbzeit, mit {{firstMoments}} und {{secondMoments}} Momenten. Das vergleicht, was die Kamera von dir gezeigt hat, nicht wie gut du gespielt hast.",
+        "halvesUnknown": "Ich weiß nicht, wann in dieser Aufnahme Halbzeit war, deshalb kann ich sie nicht aufteilen. Markiere die Halbzeitpause in den Spielphasen und frag noch einmal.",
+        "defendingCandidates": "Ich habe {{count}} mögliche Tacklings oder Zweikämpfe in deiner Nähe gefunden. Es sind Kandidaten, die das Tracking nicht überprüfen konnte - schau sie an und urteile selbst:",
+        "noDefending": "Ich habe keine Tacklings oder Zweikämpfe von dir gefunden, die das Video belegt. Das heißt nicht, dass es keine gab - Ball und Zweikämpfe waren in dieser Aufnahme selten verfolgbar.",
+        "practice": "Nach dem, was dieses Spiel zeigt, übe das:",
+        "noPractice": "Das Video reicht für dieses Spiel noch nicht für eine konkrete Übungsempfehlung.",
+        "atTimeAdvice": "Hier ist der Clip um {{time}}. Meine Messungen zeigen, wo du warst, nicht was die bessere Option gewesen wäre - schau ihn an und vergleiche ihn mit den Fragen in deinen Coaching-Hinweisen.",
+        "atTimeAdviceUnsure": "Um {{time}} gibt es Momente, die dich zeigen könnten. Bitte bestätige sie zuerst - ich bewerte keinen Moment, bei dem ich nicht sicher bin, dass du es bist:"
       },
-      "followUp": "Du könntest auch fragen"
+      "followUp": "Du könntest auch fragen",
+      "explain": {
+        "button": "Diesen Clip erklären",
+        "alternatives": "Was hätte ich anders machen können?",
+        "disclosure": "Sendet einige Standbilder dieses Clips (max. {{seconds}} s) zur Erklärung an {{provider}}. Nur möglich, wenn du KI-Analyse für dieses Spiel erlaubt hast.",
+        "confidence": {
+          "clear": "In den Bildern klar zu sehen",
+          "partial": "Teilweise zu sehen - als Vorschlag verstehen",
+          "unclear": "Nicht klar zu sehen - mit Vorsicht verstehen"
+        },
+        "unavailable": "Für diesen Clip ist keine Erklärung verfügbar (dafür braucht es deine Erlaubnis zur KI-Analyse und einen als dich bestätigten Moment). Dein Clip und die gemessenen Belege bleiben unverändert.",
+        "rejected": "Die Erklärung hat unsere Beleg-Prüfung nicht bestanden und wird deshalb nicht angezeigt. Schau dir den Clip an und nutze stattdessen deine Coaching-Hinweise.",
+        "failed": "Die Erklärung konnte nicht geladen werden. Bitte versuch es später noch einmal."
+      }
     },
     "highlights": {
       "intro": "Videos nutzen deine besten Szenen, sortiert nach Beleglage. Unsichere Szenen werden nie automatisch hinzugefügt.",
@@ -1056,6 +1106,12 @@
       "excludedLine": "{{date}} nicht verglichen: {{reason}}"
     },
     "preliminaryBadge": "Erste Ergebnisse",
-    "updating": "Wird mit deinen Antworten aktualisiert…"
+    "updating": "Wird mit deinen Antworten aktualisiert…",
+    "followUp": {
+      "title": "Dein Fokus aus früheren Spielen",
+      "evidence": "Dieses Spiel enthält Videomaterial zu diesem Fokus ({{count}}). Schau es an und urteile selbst.",
+      "insufficient": "Diese Aufnahme zeigt nicht genug, um diesen Fokus anzuschauen (bestätigtes Videomaterial von dir: {{confirmedSec}} s).",
+      "note": "PitchProof zeigt Belege zu deinem Fokus - es bewertet ihn nicht als erreicht oder verfehlt."
+    }
   }
 }

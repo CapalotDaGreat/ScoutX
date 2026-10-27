@@ -89,3 +89,22 @@ export async function startLinkImport(jobId: string, url: string): Promise<LinkI
   const result = await callable({ jobId, url });
   return result.data as LinkImportStart;
 }
+
+/** 5.0 optional clip explanation (server-gated: flag, operator approval, consents, confirmed moment). */
+export type ClipExplanation =
+  | { status: 'answered'; cached: boolean; clip: { start: number; end: number };
+      answer: { observation: string; interpretation: string; evidence: Array<{ frameId: string; t: number }>;
+        confidence: 'clear' | 'partial' | 'unclear'; limitations: string[]; suggestion: string } }
+  | { status: 'unavailable' | 'rejected'; reason: string };
+
+/** Mirrors the server flag so the button is not offered where it can never work. */
+export function videoReasoningUiEnabled(): boolean {
+  return process.env.EXPO_PUBLIC_VIDEO_REASONING?.trim() === 'true';
+}
+
+export async function explainTrackingMoment(jobId: string, momentId: string, kind: 'explain' | 'alternatives'): Promise<ClipExplanation> {
+  const callable = createCallableFunction<{ jobId: string; momentId: string; kind: string }>('explainTrackingMoment');
+  if (!callable) throw new Error('Cloud Functions unavailable.');
+  const res = await callable({ jobId, momentId, kind });
+  return res.data as ClipExplanation;
+}
