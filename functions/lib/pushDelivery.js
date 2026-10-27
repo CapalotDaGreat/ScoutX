@@ -56,6 +56,11 @@ const PUSH_COOLDOWN_MS = {
     watchlist_change: 6 * HOUR_MS,
     passport_improved: 24 * HOUR_MS,
     development_reminder: 72 * HOUR_MS,
+    // Video Intelligence 4.0: each event is already de-duplicated per analysis; these stop several
+    // parallel analyses from producing a burst.
+    analysis_first_moments: 0.25 * HOUR_MS,
+    analysis_review_needed: 1 * HOUR_MS,
+    analysis_interrupted: 1 * HOUR_MS,
 };
 const PUSH_THROTTLE_COLLECTION = 'pushThrottle';
 /**

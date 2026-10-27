@@ -54,5 +54,9 @@
     "title": "Details auf dem Sperrbildschirm zeigen",
     "hint": "Wenn aus, steht in Mitteilungen nur „Du hast ein neues Update“, bis du PitchProof öffnest.",
     "youth": "Bei Konten unter 18 zeigen Mitteilungen auf dem Sperrbildschirm nie Details."
+  },
+  "quietHours": {
+    "title": "Ruhezeit (22:00 bis 07:00)",
+    "hint": "Nachts keine Push-Mitteilungen. Neuigkeiten erscheinen weiterhin in deinem Aktivitäten-Feed."
   }
 }

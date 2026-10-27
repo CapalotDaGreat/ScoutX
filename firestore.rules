@@ -630,7 +630,17 @@ service cloud.firestore {
     match /notificationPreferences/{userId} {
       allow read, delete: if isOwner(userId);
       allow create, update: if isOwner(userId)
-        && request.resource.data.keys().hasOnly(['pushEnabled', 'categories', 'lockScreenPreview', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(['pushEnabled', 'categories', 'lockScreenPreview', 'quietHours', 'updatedAt'])
+        && (!('quietHours' in request.resource.data) || (
+          request.resource.data.quietHours is map
+          && request.resource.data.quietHours.keys().hasOnly(['enabled', 'startMinute', 'endMinute', 'utcOffsetMinutes'])
+          && request.resource.data.quietHours.enabled is bool
+          && request.resource.data.quietHours.startMinute is int && request.resource.data.quietHours.startMinute >= 0
+          && request.resource.data.quietHours.startMinute < 1440
+          && request.resource.data.quietHours.endMinute is int && request.resource.data.quietHours.endMinute >= 0
+          && request.resource.data.quietHours.endMinute < 1440
+          && request.resource.data.quietHours.utcOffsetMinutes is int
+          && request.resource.data.quietHours.utcOffsetMinutes >= -840 && request.resource.data.quietHours.utcOffsetMinutes <= 840))
         && request.resource.data.pushEnabled is bool
         && request.resource.data.get('lockScreenPreview', 'details') in ['details', 'generic']
         && request.resource.data.categories is map

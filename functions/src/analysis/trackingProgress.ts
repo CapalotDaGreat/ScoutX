@@ -159,3 +159,50 @@ export function reviewNeeded(report: { reviewQuestions: unknown[]; coverage: { c
 function round2(v: number): number {
   return Math.round(v * 100) / 100;
 }
+
+export type ProgressMetrics = {
+  /** wall time from start to the first published report (preliminary or full) */
+  timeToFirstReportSec: number | null;
+  timeToFullReportSec: number | null;
+  /** worker seconds per second of video, over finished segments */
+  workerSecPerVideoSec: number | null;
+  segmentRetries: number;
+  segmentFailures: number;
+  firstReportHadMoments: boolean | null;
+};
+
+/**
+ * Quality/latency metrics of one analysis, computed from the persisted facts only (for
+ * dashboards; nothing user-identifying beyond the job itself).
+ */
+export function progressMetrics(p: TrackingProgress): ProgressMetrics {
+  const started = Date.parse(p.startedAt);
+  const since = (at: string | undefined) => {
+    const t = Date.parse(at ?? '');
+    return Number.isFinite(t) && Number.isFinite(started) && t >= started ? Math.round((t - started) / 1000) : null;
+  };
+  const first = [p.preliminary, p.full].filter((r): r is PublishedReport => r !== null)
+    .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))[0] ?? null;
+  let video = 0;
+  let worker = 0;
+  let retries = 0;
+  let failures = 0;
+  for (const s of p.plan) {
+    const st = p.segments[String(s.index)];
+    if (!st) continue;
+    retries += Math.max(0, st.attempts - 1);
+    if (st.status === 'failed') failures += 1;
+    if (st.status === 'done' && typeof st.processingSec === 'number') {
+      video += s.endSec - s.startSec;
+      worker += st.processingSec;
+    }
+  }
+  return {
+    timeToFirstReportSec: first ? since(first.at) : null,
+    timeToFullReportSec: p.full ? since(p.full.at) : null,
+    workerSecPerVideoSec: video > 0 ? Math.round((worker / video) * 100) / 100 : null,
+    segmentRetries: retries,
+    segmentFailures: failures,
+    firstReportHadMoments: first ? first.moments > 0 : null,
+  };
+}

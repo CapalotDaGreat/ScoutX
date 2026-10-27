@@ -289,3 +289,17 @@ test('an orchestrated resolve that does not publish frees the slot; a failed ful
   await settleOrchestratedResolve(db, 'job_1', 'full', 'rejected');
   assert.equal((data.get(PROGRESS) as TrackingProgress).outcome, 'interrupted');
 });
+
+test('progress metrics come from persisted facts only', async () => {
+  const { progressMetrics } = await import('../../functions/src/analysis/trackingProgress.ts');
+  const p = newProgress(1, 600, new Date(T0).toISOString());
+  assert.deepEqual(progressMetrics(p), { timeToFirstReportSec: null, timeToFullReportSec: null, workerSecPerVideoSec: null,
+    segmentRetries: 0, segmentFailures: 0, firstReportHadMoments: null });
+  p.segments['0'] = { status: 'done', attempts: 2, processingSec: 240, doneAt: new Date(T0 + 300_000).toISOString() };
+  p.preliminary = { scope: 'preliminary', parts: 1, analysedEndSec: 120, moments: 0, reviewQuestions: 2, at: new Date(T0 + 360_000).toISOString() };
+  const m = progressMetrics(p);
+  assert.equal(m.timeToFirstReportSec, 360);
+  assert.equal(m.workerSecPerVideoSec, 2);
+  assert.equal(m.segmentRetries, 1);
+  assert.equal(m.firstReportHadMoments, false);
+});

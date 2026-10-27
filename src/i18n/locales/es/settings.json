@@ -54,5 +54,9 @@
     "title": "Mostrar detalles en la pantalla de bloqueo",
     "hint": "Si está desactivado, las notificaciones solo dicen «Tienes una novedad» hasta que abras PitchProof.",
     "youth": "En cuentas de menores de 18 años, las notificaciones nunca muestran detalles en la pantalla de bloqueo."
+  },
+  "quietHours": {
+    "title": "Horas de silencio (22:00 a 07:00)",
+    "hint": "Sin notificaciones push por la noche. Las novedades siguen apareciendo en tu actividad."
   }
 }

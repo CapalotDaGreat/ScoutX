@@ -14,6 +14,8 @@ export {
   type LockScreenPreview,
   type NotificationCategory,
   type NotificationPreferences,
+  type QuietHours,
+  DEFAULT_QUIET_HOURS,
 } from '@/features/notifications/services/notificationPreferencesParser';
 
 const STORAGE_PREFIX = '@scoutx/notification-preferences/';
@@ -55,6 +57,7 @@ export async function saveNotificationPreferences(
     pushEnabled: preferences.pushEnabled,
     categories: preferences.categories,
     lockScreenPreview: preferences.lockScreenPreview,
+    ...(preferences.quietHours ? { quietHours: preferences.quietHours } : {}),
     updatedAt: new Date().toISOString(),
   });
 }

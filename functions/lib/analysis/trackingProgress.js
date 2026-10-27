@@ -20,6 +20,7 @@ exports.measuredThroughput = measuredThroughput;
 exports.remainingExtractionSec = remainingExtractionSec;
 exports.notificationId = notificationId;
 exports.reviewNeeded = reviewNeeded;
+exports.progressMetrics = progressMetrics;
 exports.PROGRESS_SCHEMA = 'pitchproof.tracking.progress.v1';
 /** The worker accepts segment indexes 0..60 and segments of at most 900 s. */
 exports.MAX_SEGMENTS = 61;
@@ -133,5 +134,42 @@ function reviewNeeded(report) {
 }
 function round2(v) {
     return Math.round(v * 100) / 100;
+}
+/**
+ * Quality/latency metrics of one analysis, computed from the persisted facts only (for
+ * dashboards; nothing user-identifying beyond the job itself).
+ */
+function progressMetrics(p) {
+    const started = Date.parse(p.startedAt);
+    const since = (at) => {
+        const t = Date.parse(at ?? '');
+        return Number.isFinite(t) && Number.isFinite(started) && t >= started ? Math.round((t - started) / 1000) : null;
+    };
+    const first = [p.preliminary, p.full].filter((r) => r !== null)
+        .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))[0] ?? null;
+    let video = 0;
+    let worker = 0;
+    let retries = 0;
+    let failures = 0;
+    for (const s of p.plan) {
+        const st = p.segments[String(s.index)];
+        if (!st)
+            continue;
+        retries += Math.max(0, st.attempts - 1);
+        if (st.status === 'failed')
+            failures += 1;
+        if (st.status === 'done' && typeof st.processingSec === 'number') {
+            video += s.endSec - s.startSec;
+            worker += st.processingSec;
+        }
+    }
+    return {
+        timeToFirstReportSec: first ? since(first.at) : null,
+        timeToFullReportSec: p.full ? since(p.full.at) : null,
+        workerSecPerVideoSec: video > 0 ? Math.round((worker / video) * 100) / 100 : null,
+        segmentRetries: retries,
+        segmentFailures: failures,
+        firstReportHadMoments: first ? first.moments > 0 : null,
+    };
 }
 //# sourceMappingURL=trackingProgress.js.map

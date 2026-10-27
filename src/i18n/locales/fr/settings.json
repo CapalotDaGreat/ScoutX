@@ -54,5 +54,9 @@
     "title": "Afficher les détails sur l'écran verrouillé",
     "hint": "Désactivé, les notifications indiquent seulement « Tu as une nouvelle mise à jour » jusqu'à l'ouverture de PitchProof.",
     "youth": "Pour les comptes de moins de 18 ans, les notifications n'affichent jamais de détails sur l'écran verrouillé."
+  },
+  "quietHours": {
+    "title": "Heures calmes (22:00 à 07:00)",
+    "hint": "Pas de notifications push la nuit. Les nouveautés restent visibles dans ton fil d'activité."
   }
 }

@@ -36,6 +36,9 @@ export type MatchReviewViewProps = {
   progress: TrackingProgressDoc | null;
   goals: Array<{ id: string; title: string }>;
   initialSection?: 'moments' | 'review';
+  initialView?: ReviewView;
+  /** Opens this moment's player on mount (deep links). */
+  initialMomentId?: string;
   onCreateGoal?: (insight: Insight) => Promise<void>;
   onOpenReel?: (reelId: string) => void;
   onGiveConsent?: () => void;
@@ -247,10 +250,11 @@ function HighlightsCard({ jobId, playerId, moments, position, title, onOpenReel 
 
 /** The player-first Match Review (Video Intelligence 4.0). */
 export function MatchReviewView(props: MatchReviewViewProps) {
-  const { jobId, playerId, match, position, job, tracking, progress, goals, initialSection, onCreateGoal, onOpenReel, onGiveConsent } = props;
+  const { jobId, playerId, match, position, job, tracking, progress, goals, initialSection, initialView, initialMomentId,
+    onCreateGoal, onOpenReel, onGiveConsent } = props;
   const t = useReviewT();
   const now = useNow();
-  const [view, setView] = useState<ReviewView>('simple');
+  const [view, setView] = useState<ReviewView>(initialView ?? 'simple');
   const [filter, setFilter] = useState<MomentCategory | 'all'>('all');
   const [showAll, setShowAll] = useState(initialSection === 'moments');
   const [open, setOpen] = useState<MomentCardModel | null>(null);
@@ -268,6 +272,9 @@ export function MatchReviewView(props: MatchReviewViewProps) {
   useEffect(() => {
     if (initialSection === 'moments') setShowAll(true);
   }, [initialSection]);
+  useEffect(() => {
+    if (initialMomentId) setOpen(allCards.find((m) => m.id === initialMomentId) ?? null);
+  }, [initialMomentId, allCards]);
 
   const start = async () => {
     setStartBusy(true);

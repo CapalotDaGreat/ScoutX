@@ -83,6 +83,8 @@ export function SettingsScreen({
     setCategoryPreference,
     lockScreenPreview,
     setLockScreenPreference,
+    quietHours,
+    setQuietHoursEnabled,
   } = useNotificationPreferences(user?.uid);
   const { policy: safetyPolicy } = useUserSafety();
   const deletion = useAccountDeletion(user && !user.isAnonymous ? user.uid : null);
@@ -231,6 +233,20 @@ export function SettingsScreen({
                 disabled={safetyPolicy.genericLockScreenOnly || isUpdating || !user?.uid}
                 onValueChange={(value) => void setLockScreenPreference(value ? 'details' : 'generic')}
                 accessibilityLabel={t('settings:lockScreen.title')}
+              />
+            </View>
+          ) : null}
+          {pushEnabled && hasToken ? (
+            <View className="min-h-[44px] flex-row items-center justify-between gap-3" testID="quiet-hours">
+              <View className="flex-1">
+                <Text weight="semibold">{t('settings:quietHours.title')}</Text>
+                <Text variant="caption" color="secondary">{t('settings:quietHours.hint')}</Text>
+              </View>
+              <Switch
+                value={quietHours?.enabled ?? false}
+                disabled={isUpdating || !user?.uid}
+                onValueChange={(value) => void setQuietHoursEnabled(value)}
+                accessibilityLabel={t('settings:quietHours.title')}
               />
             </View>
           ) : null}

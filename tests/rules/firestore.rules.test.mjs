@@ -596,6 +596,12 @@ describe('match analysis jobs', () => {
     await denied(getDocument(OUTSIDER, 'matchAnalysisJobs/s1/segmentReviews/0'), 'outsider reads review');
     await denied(setDocument(PLAYER, 'matchAnalysisJobs/s1/segmentReviews/1', { observations: [{ detail: 'fake' }] }), 'forge review');
     await denied(setDocument(PLAYER, 'matchAnalysisJobs/s1/reports/2', { report: {} }), 'forge version');
+    // 4.0 progress facts: owner-readable, never client-written (no forged progress or reports).
+    await seed('matchAnalysisJobs/s1/tracking/progress', { generation: 1, plan: [], segments: {} });
+    await allowed(getDocument(PLAYER, 'matchAnalysisJobs/s1/tracking/progress'), 'owner reads progress');
+    await denied(getDocument(OUTSIDER, 'matchAnalysisJobs/s1/tracking/progress'), 'outsider reads progress');
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/s1/tracking/progress', { generation: 2, full: { parts: 99 } }), 'forge progress');
+    await denied(setDocument(PLAYER, 'matchAnalysisJobs/s1/tracking/current', { report: {}, scope: 'full' }), 'forge report');
   });
 
   test('clients may confirm identity but cannot write events, lease, or quota', async () => {
@@ -1107,5 +1113,16 @@ describe('notification preferences', () => {
       setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, lockScreenPreview: 'everything' }),
       'unknown lock-screen preview value',
     );
+  });
+
+  test('quiet hours are validated', async () => {
+    const quietHours = { enabled: true, startMinute: 1320, endMinute: 420, utcOffsetMinutes: 60 };
+    await allowed(setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, quietHours }), 'valid quiet hours');
+    await denied(setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, quietHours: { ...quietHours, startMinute: 1440 } }),
+      'minute out of range');
+    await denied(setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, quietHours: { ...quietHours, extra: 1 } }),
+      'unknown quiet-hours key');
+    await denied(setDocument(PLAYER, 'notificationPreferences/' + PLAYER, { ...valid, quietHours: { ...quietHours, utcOffsetMinutes: 900 } }),
+      'impossible UTC offset');
   });
 });

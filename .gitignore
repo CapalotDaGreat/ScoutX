@@ -32,3 +32,7 @@ e2e/.seed-state.json
 
 # Operator reports with private object names (scripts/legacy-media.mjs)
 .local/
+
+# Match Review preview export (scripts/review-preview)
+.review-preview-dist/
+scripts/review-preview/.generated/

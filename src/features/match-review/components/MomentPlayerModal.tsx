@@ -84,6 +84,9 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
     player.playbackRate = slow ? 0.5 : 1;
   }, [player, slow]);
 
+  // The player's real state wins (e.g. a browser refusing autoplay), so the button never lies.
+  useEventListener(player, 'playingChange', ({ isPlaying }) => setPlaying(isPlaying));
+
   useEventListener(player, 'timeUpdate', ({ currentTime }) => {
     setTime(currentTime);
     if (!clip || currentTime < clip.clipEnd) return;

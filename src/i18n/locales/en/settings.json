@@ -54,5 +54,9 @@
     "title": "Show details on lock screen",
     "hint": "When off, notifications only say \"You have a new update\" until you open PitchProof.",
     "youth": "For accounts under 18, notifications never show details on the lock screen."
+  },
+  "quietHours": {
+    "title": "Quiet hours (22:00 to 07:00)",
+    "hint": "No push notifications at night. Updates still appear in your activity feed."
   }
 }

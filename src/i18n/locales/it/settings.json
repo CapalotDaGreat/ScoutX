@@ -54,5 +54,9 @@
     "title": "Mostra dettagli nella schermata di blocco",
     "hint": "Se disattivato, le notifiche dicono solo «Hai un nuovo aggiornamento» finché non apri PitchProof.",
     "youth": "Per gli account sotto i 18 anni, le notifiche non mostrano mai dettagli nella schermata di blocco."
+  },
+  "quietHours": {
+    "title": "Ore di silenzio (22:00 - 07:00)",
+    "hint": "Nessuna notifica push di notte. Gli aggiornamenti restano visibili nel tuo feed attività."
   }
 }

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GENERIC_PUSH_COPY = exports.MAX_PUSHES_PER_HOUR = exports.ACTIVITY_CATEGORY = exports.NOTIFICATION_CATEGORIES = void 0;
+exports.parseQuietHours = parseQuietHours;
+exports.inQuietHours = inQuietHours;
 exports.pushPathFor = pushPathFor;
 exports.solidCoverageCount = solidCoverageCount;
 exports.isMeaningfulPassportImprovement = isMeaningfulPassportImprovement;
@@ -24,6 +26,27 @@ exports.NOTIFICATION_CATEGORIES = [
     'passport',
     'system',
 ];
+function parseQuietHours(value) {
+    const q = asRecord(value);
+    if (!q)
+        return null;
+    const minute = (v) => typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < 1440;
+    if (typeof q.enabled !== 'boolean' || !minute(q.startMinute) || !minute(q.endMinute)
+        || typeof q.utcOffsetMinutes !== 'number' || !Number.isInteger(q.utcOffsetMinutes) || Math.abs(q.utcOffsetMinutes) > 840) {
+        return null;
+    }
+    return { enabled: q.enabled, startMinute: q.startMinute, endMinute: q.endMinute,
+        utcOffsetMinutes: q.utcOffsetMinutes };
+}
+/** True when `now` falls inside the quiet window (which may wrap past midnight). */
+function inQuietHours(quiet, now) {
+    if (!quiet?.enabled || quiet.startMinute === quiet.endMinute)
+        return false;
+    const local = Math.floor((now / 60000 + quiet.utcOffsetMinutes) % 1440 + 1440) % 1440;
+    return quiet.startMinute < quiet.endMinute
+        ? local >= quiet.startMinute && local < quiet.endMinute
+        : local >= quiet.startMinute || local < quiet.endMinute;
+}
 /** Activity types that can produce a push, and the user-facing category each belongs to. */
 exports.ACTIVITY_CATEGORY = {
     portfolio_viewed: 'passport',
@@ -138,7 +161,7 @@ function defaultStoredPreferences() {
     const categories = {};
     for (const key of exports.NOTIFICATION_CATEGORIES)
         categories[key] = true;
-    return { pushEnabled: true, categories, lockScreenPreview: 'details' };
+    return { pushEnabled: true, categories, lockScreenPreview: 'details', quietHours: null };
 }
 function parseStoredPreferences(value) {
     const result = defaultStoredPreferences();
@@ -147,6 +170,7 @@ function parseStoredPreferences(value) {
         return result;
     result.pushEnabled = record.pushEnabled !== false;
     result.lockScreenPreview = record.lockScreenPreview === 'generic' ? 'generic' : 'details';
+    result.quietHours = parseQuietHours(record.quietHours);
     const categories = asRecord(record.categories) ?? {};
     for (const [key, enabled] of Object.entries(categories)) {
         if (typeof enabled !== 'boolean')
@@ -167,6 +191,8 @@ function decidePush(activityType, preferences, recentSendTimes, now) {
         return { send: false, reason: 'push_disabled' };
     if (!preferences.categories[category])
         return { send: false, reason: 'category_disabled' };
+    if (inQuietHours(preferences.quietHours, now))
+        return { send: false, reason: 'quiet_hours' };
     const lastHour = recentSendTimes.filter((time) => now - time < 60 * 60 * 1000);
     if (lastHour.length >= exports.MAX_PUSHES_PER_HOUR)
         return { send: false, reason: 'hourly_cap' };

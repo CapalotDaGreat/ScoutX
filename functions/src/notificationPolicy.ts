@@ -17,11 +17,36 @@ export type NotificationCategory = (typeof NOTIFICATION_CATEGORIES)[number];
 
 export type LockScreenPreview = 'details' | 'generic';
 
+export type QuietHours = { enabled: boolean; startMinute: number; endMinute: number; utcOffsetMinutes: number };
+
 export type StoredNotificationPreferences = {
   pushEnabled: boolean;
   categories: Record<NotificationCategory, boolean>;
   lockScreenPreview: LockScreenPreview;
+  /** No push in this local window; the activity still appears in the in-app feed. */
+  quietHours: QuietHours | null;
 };
+
+export function parseQuietHours(value: unknown): QuietHours | null {
+  const q = asRecord(value);
+  if (!q) return null;
+  const minute = (v: unknown) => typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < 1440;
+  if (typeof q.enabled !== 'boolean' || !minute(q.startMinute) || !minute(q.endMinute)
+    || typeof q.utcOffsetMinutes !== 'number' || !Number.isInteger(q.utcOffsetMinutes) || Math.abs(q.utcOffsetMinutes) > 840) {
+    return null;
+  }
+  return { enabled: q.enabled, startMinute: q.startMinute as number, endMinute: q.endMinute as number,
+    utcOffsetMinutes: q.utcOffsetMinutes as number };
+}
+
+/** True when `now` falls inside the quiet window (which may wrap past midnight). */
+export function inQuietHours(quiet: QuietHours | null, now: number): boolean {
+  if (!quiet?.enabled || quiet.startMinute === quiet.endMinute) return false;
+  const local = Math.floor((now / 60000 + quiet.utcOffsetMinutes) % 1440 + 1440) % 1440;
+  return quiet.startMinute < quiet.endMinute
+    ? local >= quiet.startMinute && local < quiet.endMinute
+    : local >= quiet.startMinute || local < quiet.endMinute;
+}
 
 /** Activity types that can produce a push, and the user-facing category each belongs to. */
 export const ACTIVITY_CATEGORY: Record<string, NotificationCategory> = {
@@ -154,7 +179,7 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 export function defaultStoredPreferences(): StoredNotificationPreferences {
   const categories = {} as Record<NotificationCategory, boolean>;
   for (const key of NOTIFICATION_CATEGORIES) categories[key] = true;
-  return { pushEnabled: true, categories, lockScreenPreview: 'details' };
+  return { pushEnabled: true, categories, lockScreenPreview: 'details', quietHours: null };
 }
 
 export function parseStoredPreferences(value: unknown): StoredNotificationPreferences {
@@ -163,6 +188,7 @@ export function parseStoredPreferences(value: unknown): StoredNotificationPrefer
   if (!record) return result;
   result.pushEnabled = record.pushEnabled !== false;
   result.lockScreenPreview = record.lockScreenPreview === 'generic' ? 'generic' : 'details';
+  result.quietHours = parseQuietHours(record.quietHours);
   const categories = asRecord(record.categories) ?? {};
   for (const [key, enabled] of Object.entries(categories)) {
     if (typeof enabled !== 'boolean') continue;
@@ -178,7 +204,7 @@ export type PushDecision =
   | { send: true; category: NotificationCategory }
   | {
       send: false;
-      reason: 'unknown_type' | 'push_disabled' | 'category_disabled' | 'hourly_cap' | 'cooldown';
+      reason: 'unknown_type' | 'push_disabled' | 'category_disabled' | 'quiet_hours' | 'hourly_cap' | 'cooldown';
     };
 
 export function decidePush(
@@ -191,6 +217,7 @@ export function decidePush(
   if (!category) return { send: false, reason: 'unknown_type' };
   if (!preferences.pushEnabled) return { send: false, reason: 'push_disabled' };
   if (!preferences.categories[category]) return { send: false, reason: 'category_disabled' };
+  if (inQuietHours(preferences.quietHours, now)) return { send: false, reason: 'quiet_hours' };
   const lastHour = recentSendTimes.filter((time) => now - time < 60 * 60 * 1000);
   if (lastHour.length >= MAX_PUSHES_PER_HOUR) return { send: false, reason: 'hourly_cap' };
   return { send: true, category };
