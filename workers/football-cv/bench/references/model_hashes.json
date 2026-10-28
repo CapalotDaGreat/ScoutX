@@ -1,0 +1,9 @@
+{
+  "note": "SHA-256 of the model files the validated CPU environment used for every 5.x result (2026-10-28). The GPU image must contain exactly these files; scoutx_tracker.envinfo verifies them at build and at run time.",
+  "files": {
+    "yolox/yolox_s.pth": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+    "easyocr/model/craft_mlt_25k.pth": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+    "easyocr/model/english_g2.pth": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+    "doctr/models/parseq-56125471.pt": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba"
+  }
+}

@@ -175,3 +175,47 @@ def test_regression_heldout_1073_answer_not_carried_back_across_a_box_steal(monk
     wrong, right, target = run(True)
     assert wrong == 0, "the other player was attributed to the answered player"
     assert right >= 0.75 * target, (right, target)
+
+
+def test_extract_endpoint_checkpoints_segments_and_never_mixes_attempts(tmp_path, monkeypatch):
+    """5.2: /v3/tracking:extract writes a segment atomically with a checkpoint. A crashed attempt's
+    crops are never mixed into the retry, a repeat call is served from the checkpoint, and a segment
+    from different stage-1 settings is redone."""
+    from pathlib import Path
+
+    from fastapi.testclient import TestClient
+
+    from app import tracking_v3
+    from app.main import app
+
+    calls = []
+
+    def fake_extract(url, out, t0=0.0, start=0.0, end=None):
+        calls.append(out)
+        (Path(out) / "crops").mkdir(parents=True, exist_ok=True)
+        (Path(out) / "crops" / f"{len(calls):06d}_0.jpg").write_bytes(b"x")
+        np.savez_compressed(Path(out) / "detections.npz", dets=np.zeros((2, 7)))
+        (Path(out) / "meta.json").write_text('{"frames": 2}')
+        return {"frames": 2, "seconds": 1.0}
+
+    monkeypatch.setenv("TRACKING_V3_ENABLED", "true")
+    monkeypatch.setenv("TRACKING_ARTIFACT_ROOT", str(tmp_path))
+    seg = tmp_path / "j1" / "stage1" / "c_00120"
+    seg.mkdir(parents=True)
+    (seg / "crops").mkdir()
+    (seg / "crops" / "999999_7.jpg").write_bytes(b"stale")          # leftovers of a crashed attempt
+    body = {"contractVersion": 3, "jobId": "j1", "segmentIndex": 1, "startSec": 120, "endSec": 420,
+            "source": {"url": "https://example.org/v.mp4?sig=1"},
+            "privacy": {"retainNonTargetIdentities": False, "faceRecognition": False, "persistMedia": False}}
+    tracking_v3.set_engine(extract=fake_extract)
+    try:
+        with TestClient(app) as client:
+            assert client.post("/v3/tracking:extract", json=body).json()["status"] == "complete"
+            assert sorted(p.name for p in (seg / "crops").iterdir()) == ["000001_0.jpg"]   # no stale crop mixed in
+            body["source"]["url"] = "https://example.org/v.mp4?sig=2"                      # re-signed URL, same source
+            assert client.post("/v3/tracking:extract", json=body).json()["status"] == "cached" and len(calls) == 1
+            monkeypatch.setenv("SCOUTX_KEYFRAME_EVERY", "2")                               # other stage-1 settings
+            assert client.post("/v3/tracking:extract", json=body).json()["status"] == "complete" and len(calls) == 2
+    finally:
+        tracking_v3.set_engine()
+    assert not [p for p in seg.parent.iterdir() if ".stale-" in p.name or ".tmp-" in p.name]   # bounded cleanup

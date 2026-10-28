@@ -15,7 +15,7 @@ VIDEO=${1:?video path}
 OUT=${2:-bench/results/5.2/gpu}
 PRICE=${PRICE_PER_HOUR:-}
 mkdir -p "$OUT"
-PY=${PYTHON:-python3.11}
+PY=${PYTHON:-python}
 
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv > "$OUT/nvidia-smi.csv" || echo "no nvidia-smi" > "$OUT/nvidia-smi.csv"
 $PY - > "$OUT/runtime.json" <<'EOF'

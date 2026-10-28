@@ -1,8 +1,27 @@
-"""Full-recording PitchProof GPU benchmark: discovery + all extraction chunks + resolve.
+"""Full-recording PitchProof benchmark (5.2): discovery + every stage-1 chunk + resolve, on CPU or GPU.
 
-Run from workers/football-cv with the repository's tracking dependencies installed.
-This script does NOT emulate Cloud Tasks or measure Cloud Run queue latency. Cost is
-an estimate based on *measured wall time* and the operator-supplied all-in host rate.
+    python bench/full_match_benchmark.py --video IMG_4809_proxy_10fps.mp4 --number 20 --kit orange --kit2 white \
+        --out out/full_match.json --reference bench/references/img4809_proxy_10fps.json \
+        --ground-truth bench/results/5.1/gt_img4809_intervals.json --gate bench/gates/balanced_5.2.json \
+        [--baseline cpu/full_match.json] [--prices bench/gcp/prices_europe-west6.json] [--require-gpu --require-models]
+
+What the JSON proves (schema pitchproof.full-match-benchmark.v2):
+  * input: codec / HDR / resolution / fps / duration / frame count / SHA-256, effective processing fps, and
+    whether it is byte-identical to the validated reference recording;
+  * environment: Python and package versions, CUDA / driver / providers actually executing on the GPU,
+    model files checked against bench/references/model_hashes.json, image provenance;
+  * timing per stage (model init, discovery, every chunk, resolve) - `timingComplete` is false when
+    checkpointed work was reused, so a resumed run is never presented as a full measurement;
+  * accuracy against ground truth with wrong identity separated from overlap-ambiguous annotations, the
+    accuracy gate verdict (exit code 3 when it fails) and, with --baseline, the comparison with the
+    reference run (same recording/settings/models/ground truth required, otherwise exit code 5);
+  * cost: ESTIMATES from list prices x measured durations (never an invoice).
+Stage-1 chunks are checkpointed in --work-dir (scoutx_tracker.checkpoint): an interrupted run resumes,
+retries are bounded, and chunks from other settings are refused, never mixed.
+Not measured here: Cloud Tasks queueing, upload latency, parallel workers (single sequential worker).
+
+Exit codes: 0 ok, 2 run failed, 3 accuracy gate failed, 4 GPU/model verification failed, 5 runs not comparable /
+configuration mismatch, 6 not enough disk space.
 """
 from __future__ import annotations
 
@@ -10,50 +29,26 @@ import argparse
 import dataclasses
 import json
 import os
-import platform
 import shutil
 import subprocess
 import sys
-import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent))
+sys.path.insert(0, str(HERE))
 
+import pp_bench  # noqa: E402
 
-def probe_duration(video: str) -> float:
-    p = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", video],
-                       capture_output=True, text=True, check=True)
-    duration = float(p.stdout.strip())
-    if duration <= 0:
-        raise ValueError("Video has no valid positive duration")
-    return duration
-
-
-def price_breakdown(wall_sec: float, host_hourly_usd: float | None, startup_sec: float) -> dict:
-    """Explicit cost model: instance compute only; startup is an optional billed allowance."""
-    if host_hourly_usd is None:
-        return {"status": "not_calculated", "reason": "--host-usd-per-hour not supplied"}
-    if host_hourly_usd < 0 or startup_sec < 0:
-        raise ValueError("Price and startup allowance must be nonnegative")
-    billed_sec = wall_sec + startup_sec
-    return {
-        "status": "estimated_from_measured_runtime",
-        "currency": "USD",
-        "hostUsdPerHour": host_hourly_usd,
-        "measuredProcessingSec": round(wall_sec, 3),
-        "additionalBillableStartupSec_assumption": startup_sec,
-        "billableSec_assumption": round(billed_sec, 3),
-        "computeUsd_estimate": round(billed_sec * host_hourly_usd / 3600, 5),
-        "excluded": ["Cloud Tasks/queue", "storage", "data transfer", "Firebase/Functions", "idle minimum instances", "taxes", "discounts"],
-        "warning": "Not a provider invoice; validate billing granularity and effective rates before publishing costs.",
-    }
+EXIT_FAILED, EXIT_GATE, EXIT_VERIFY, EXIT_MISMATCH, EXIT_DISK = 2, 3, 4, 5, 6
+STAGE1_IMGSZ, STAGE1_STRIDE = 1280, 1
 
 
 class GpuSampler:
-    """Polls nvidia-smi once per second: whole-device memory in use (covers torch, ONNX Runtime and
-    the OCR models, unlike torch's allocator counters) and utilisation."""
+    """Polls nvidia-smi once per second: whole-device memory in use (covers torch, ONNX Runtime and the
+    OCR models, unlike torch's allocator counters) and utilisation."""
 
     def __init__(self, period: float = 1.0) -> None:
         import threading  # noqa: PLC0415
@@ -89,231 +84,284 @@ class GpuSampler:
                 "meanUtilizationPct": round(sum(util) / len(util), 1), "p95UtilizationPct": sorted(util)[int(0.95 * (len(util) - 1))]}
 
 
-def _iou(a, b) -> float:
-    x1, y1, x2, y2 = max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])
-    i = max(0.0, x2 - x1) * max(0.0, y2 - y1)
-    u = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - i
-    return i / u if u > 0 else 0.0
+def vm_overheads(timestamps: dict) -> dict:
+    """Durations from the VM's timestamps.json (bench/gcp/run_l4_benchmark.sh)."""
+    def ts(k):
+        v = timestamps.get(k)
+        return datetime.fromisoformat(v.replace("Z", "+00:00")).timestamp() if v else None
+
+    boot, gpu, built, video, end = (ts(k) for k in ("vmBooted", "gpuReady", "imageBuilt", "videoDownloaded", "end"))
+    out = {}
+    if boot and end:
+        out["uptimeSec"] = end - boot
+    if boot and gpu:
+        out["driverWaitSec"] = gpu - boot
+    if gpu and built:
+        out["imageBuildSec"] = built - gpu
+    if built and video:
+        out["videoDownloadSec"] = video - built
+    return out
 
 
-CLAIM = ("CONFIRMED_VISIBLE", "LIKELY_VISIBLE")
+def chunk_bounds(duration: float, chunk_sec: int) -> list[tuple[int, float, float]]:
+    out = []
+    for i in range(int((duration - 1e-9) // chunk_sec) + 1):
+        start, end = float(i * chunk_sec), min(duration, float((i + 1) * chunk_sec))
+        if start < end:
+            out.append((i, start, end))
+    return out
 
 
-def accuracy_vs_ground_truth(claims: list, gt: dict, size: tuple[int, int], gt_size: tuple[int, int] = (1920, 1080),
-                             tol: float = 0.051) -> dict:
-    """Frame-level identity metrics of a run's claims (t, state, box) against interval ground truth
-    in the format of bench/results/5.1/gt_img4809_intervals.json (frames matched by time, boxes
-    rescaled to the ground truth's resolution, hit = IoU >= 0.5). Same definitions as the 5.1/5.2
-    reports: a claim on a labelled non-target is a false attribution."""
-    import bisect  # noqa: PLC0415
-
-    sx, sy = gt_size[0] / size[0], gt_size[1] / size[1]
-    ts = [c[0] for c in claims]
-    fps = float(gt.get("fps", 10.0))
-    tgt = hit_t = wrong = conf_wrong = matched = overlap_wrong = 0
-    for fs, labels in gt["frames"].items():
-        t = float(gt["times"][fs])
-        tgt += any(x["label"] == "T" for x in labels)
-        k = bisect.bisect_left(ts, t - tol)
-        c = claims[k] if k < len(claims) and abs(claims[k][0] - t) <= tol else None
-        if c is None or c[1] not in CLAIM:
-            continue
-        box = [c[2][0] * sx, c[2][1] * sy, c[2][2] * sx, c[2][3] * sy]
-        best = max(labels, key=lambda x: _iou(box, x["box"]), default=None)
-        if best is None or _iou(box, best["box"]) < 0.5:
-            continue
-        matched += 1
-        if best["label"] == "T":
-            hit_t += 1
-        elif best["label"] == "N":
-            wrong += 1
-            conf_wrong += c[1] == "CONFIRMED_VISIBLE"
-            # the claimed box also overlaps the target's box (two players overlapping): reported separately
-            overlap_wrong += any(x["label"] == "T" and _iou(box, x["box"]) >= 0.3 for x in labels)
-    claimed_on_labelled = hit_t + wrong
-    idf1 = 2 * hit_t / (2 * hit_t + wrong + (tgt - hit_t)) if tgt else None
-    return {"targetLabelledSec": round(tgt / fps, 1), "claimedCorrectSec": round(hit_t / fps, 1),
-            "falseAttributionSec": round(wrong / fps, 1), "confirmedWrongSec": round(conf_wrong / fps, 1),
-            "falseAttributionWhileOverlappingTargetSec": round(overlap_wrong / fps, 1),
-            "claimedRecall": round(hit_t / tgt, 3) if tgt else None,
-            "precisionOnLabelled": round(hit_t / claimed_on_labelled, 3) if claimed_on_labelled else None,
-            "IDF1": round(idf1, 3) if idf1 is not None else None,
-            "note": "auto mode (no answers). Reference (CPU, 5.2 engine, experiment harness with dense OCR): IDF1 0.918, "
-                    "falseAttribution 0 s - a GPU run must show 0 s false attribution; small recall differences can come "
-                    "from different OCR/discovery reads and need a same-pipeline CPU run to attribute."}
-
-
-def hardware() -> dict:
-    import torch
-    info = {"host": platform.platform(), "cpuCores": os.cpu_count(), "torch": torch.__version__,
-            "cudaAvailable": torch.cuda.is_available(), "cudaVersion": torch.version.cuda}
-    if torch.cuda.is_available():
-        info["gpu"] = torch.cuda.get_device_name(0)
-    try:
-        import onnxruntime as ort  # noqa: PLC0415
-
-        info["onnxruntime"] = ort.__version__
-        info["ortProviders"] = ort.get_available_providers()
-    except ImportError:
-        info["onnxruntime"] = None
-    try:
-        import scoutx_tracker  # noqa: PLC0415
-
-        info["engineVersion"] = scoutx_tracker.__version__
-    except Exception:  # noqa: BLE001
-        pass
-    if shutil.which("nvidia-smi"):
-        p = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"], capture_output=True, text=True)
-        info["nvidiaSmi"] = p.stdout.strip() if p.returncode == 0 else None
-    return info
-
-
-def main() -> None:
-    ap = argparse.ArgumentParser(description=__doc__)
+def parse_args(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--video", required=True)
     ap.add_argument("--number", required=True)
     ap.add_argument("--kit", required=True)
     ap.add_argument("--kit2", default="")
-    ap.add_argument("--out", required=True, help="Output JSON file")
+    ap.add_argument("--out", required=True, help="output JSON file; claims go to <stem>_claims.json next to it")
     ap.add_argument("--chunk-sec", type=int, default=300)
-    ap.add_argument("--host-usd-per-hour", type=float, default=None, help="ALL-IN GPU host rate including CPU/RAM; operator-supplied")
-    ap.add_argument("--billable-startup-sec", type=float, default=0.0, help="Additional billed startup allowance, not measured by this script")
-    ap.add_argument("--require-gpu", action="store_true", help="Refuse CPU-only execution")
-    ap.add_argument("--keep-work", action="store_true", help="Preserve large intermediate artifacts next to JSON")
-    ap.add_argument("--ground-truth", default=None,
-                    help="Interval ground truth JSON for THIS recording (e.g. bench/results/5.1/gt_img4809_intervals.json for IMG_4809)")
-    args = ap.parse_args()
-    if args.chunk_sec <= 0:
+    ap.add_argument("--work-dir", default=None, help="checkpoint directory (default: <out dir>/<stem>_work); reuse it to resume")
+    ap.add_argument("--resume-policy", choices=("fail", "replace"), default="fail",
+                    help="existing chunk/discovery from DIFFERENT settings: fail (default) or replace it")
+    ap.add_argument("--retries", type=int, default=1, help="extra attempts per failed chunk")
+    ap.add_argument("--min-free-gb", type=float, default=2.0)
+    ap.add_argument("--keep-work", action="store_true", help="keep checkpoints after a successful run (always kept on failure)")
+    ap.add_argument("--reference", default=None, help="reference recording JSON (bench/references/*.json)")
+    ap.add_argument("--ground-truth", default=None)
+    ap.add_argument("--gate", default=None, help="accuracy gate JSON (bench/gates/*.json)")
+    ap.add_argument("--baseline", default=None, help="benchmark JSON of the reference run (normally CPU) to compare with")
+    ap.add_argument("--prices", default=None, help="price list JSON (bench/gcp/prices_*.json)")
+    ap.add_argument("--host-usd-per-hour", type=float, default=None, help="overrides the price list's vmUsdPerHour")
+    ap.add_argument("--vm-timestamps", default=None, help="timestamps.json of the VM run (adds VM uptime/overheads to the cost)")
+    ap.add_argument("--require-gpu", action="store_true", help="refuse unless torch AND ONNX Runtime really execute on the GPU")
+    ap.add_argument("--require-models", action="store_true", help="refuse unless model files match bench/references/model_hashes.json")
+    a = ap.parse_args(argv)
+    if a.chunk_sec <= 0:
         ap.error("--chunk-sec must be positive")
-    if args.host_usd_per_hour is not None and args.host_usd_per_hour < 0:
+    if a.retries < 0 or a.min_free_gb < 0:
+        ap.error("--retries and --min-free-gb must be nonnegative")
+    if a.host_usd_per_hour is not None and a.host_usd_per_hour < 0:
         ap.error("--host-usd-per-hour must be nonnegative")
-    if args.billable_startup_sec < 0:
-        ap.error("--billable-startup-sec must be nonnegative")
-    if not Path(args.video).is_file():
-        ap.error("--video must be a readable local file")
-    if args.ground_truth and not Path(args.ground_truth).is_file():
-        ap.error("--ground-truth must be a readable file")
+    for f in ("video", "reference", "ground_truth", "gate", "baseline", "prices", "vm_timestamps"):
+        v = getattr(a, f)
+        if v and not Path(v).is_file():
+            ap.error(f"--{f.replace('_', '-')} must be a readable file: {v}")
+    return a
+
+
+def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchmark script
+    a = parse_args(argv)
+    from scoutx_tracker.checkpoint import ConfigMismatch, DiskSpaceError, Stage1Store, fingerprint, stage1_settings  # noqa: PLC0415
+    from scoutx_tracker.envinfo import environment_metadata, sha256_file, verify_gpu_providers, verify_models  # noqa: PLC0415
+    from scoutx_tracker.media_info import describe, match_reference  # noqa: PLC0415
     from scoutx_tracker.modes import mode_env  # noqa: PLC0415
 
     mode = os.environ.get("SCOUTX_MODE", "balanced")
     mode_env(mode)  # refuses accuracy-unvalidated modes unless SCOUTX_ALLOW_UNVALIDATED_MODE=1
-    out = Path(args.out).resolve()
+    out = Path(a.out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
-    hw = hardware()
-    if args.require_gpu and not hw["cudaAvailable"]:
-        raise RuntimeError("GPU required but torch.cuda.is_available() is false; refusing misleading CPU benchmark")
-    duration = probe_duration(args.video)
-    import torch
-    from scoutx_tracker.discovery import discover
-    from scoutx_tracker.extract import Detector, extract
-    from scoutx_tracker.ocr import shared_reader
-    from scoutx_tracker.analyze import analyze
+    work = Path(a.work_dir).resolve() if a.work_dir else out.parent / (out.stem + "_work")
+    work.mkdir(parents=True, exist_ok=True)
+    record: dict = {"schema": "pitchproof.full-match-benchmark.v2", "status": "starting",
+                    "timestampUtc": datetime.now(timezone.utc).isoformat(), "target": {"number": a.number, "kit": a.kit, "kit2": a.kit2},
+                    "notes": ["Single sequential worker; not a Cloud Tasks / parallel-segment test.",
+                              "firstPlayable = time after model initialisation, not upload-to-play latency.",
+                              "No footage, crops or images are written to this JSON or the claims file."]}
 
-    record = {
-        "schema": "pitchproof.gpu.full-match-benchmark.v1", "status": "running",
-        "timestampUtc": datetime.now(timezone.utc).isoformat(),
-        "video": {"basename": Path(args.video).name, "durationSec": round(duration, 3), "sizeBytes": Path(args.video).stat().st_size},
-        "target": {"number": args.number, "kit": args.kit, "kit2": args.kit2},
-        "hardware": hw, "configuration": {"chunkSec": args.chunk_sec, "backend": os.environ.get("SCOUTX_BACKEND", "auto"),
-                "decoder": os.environ.get("SCOUTX_DECODER", "auto"), "keyframeEvery": os.environ.get("SCOUTX_KEYFRAME_EVERY", "1"),
-                "mode": mode, "env": {k: v for k, v in sorted(os.environ.items()) if k.startswith("SCOUTX_")}},
-        "stages": {}, "notes": ["Single-worker sequential complete video benchmark; not a Cloud Tasks parallel execution test.",
-                "First playable moment is time after model initialization, not upload-to-play latency.",
-                "Discovery and extraction run one after the other here; production runs discovery chunks first and extraction segments in parallel workers.",
-                "No source footage or crops are included in the JSON report."],
-    }
-    def save():
-        out.write_text(json.dumps(record, indent=2, default=str), encoding="utf-8")
+    def save() -> None:
+        tmp = out.with_suffix(".json.part")
+        tmp.write_text(json.dumps(record, indent=2, default=str), encoding="utf-8")
+        tmp.replace(out)
+
+    # ---- environment, models, providers, input (before any heavy work)
+    record["environment"] = environment_metadata()
+    record["models"] = verify_models()
+    cuda = bool(record["environment"].get("torch") and record["environment"]["torch"].get("cudaAvailable"))
+    if cuda or a.require_gpu:
+        record["gpuProviders"] = verify_gpu_providers()
+    record["input"] = describe(a.video)
+    if a.reference:
+        record["input"]["referenceMatch"] = match_reference(record["input"], json.loads(Path(a.reference).read_text()))
+    if a.ground_truth:
+        record["groundTruth"] = {"file": Path(a.ground_truth).name, "sha256": sha256_file(a.ground_truth)}
+    duration = float(record["input"]["durationSec"])
+    settings = stage1_settings(imgsz=STAGE1_IMGSZ, stride=STAGE1_STRIDE,
+                               discoveryImgsz=int(os.environ.get("SCOUTX_DISCOVERY_DET", "416")),
+                               device="cuda" if cuda else "cpu")
+    record["configuration"] = {"chunkSec": a.chunk_sec, "mode": mode, "stage1Settings": settings,
+                               "stage1Fingerprint": fingerprint(settings), "resumePolicy": a.resume_policy, "retries": a.retries}
     save()
+    if a.require_models and not record["models"]["ok"]:
+        record["status"] = "refused"
+        record["error"] = {"type": "ModelVerification", "message": "model files differ from bench/references/model_hashes.json"}
+        save()
+        return EXIT_VERIFY
+    if a.require_gpu and not record["gpuProviders"]["ok"]:
+        record["status"] = "refused"
+        record["error"] = {"type": "GpuVerification", "message": json.dumps(record["gpuProviders"], default=str)}
+        save()
+        return EXIT_VERIFY
+    baseline = json.loads(Path(a.baseline).read_text()) if a.baseline else None
+    if baseline is not None:
+        why = pp_bench.comparable(record, baseline)
+        if why:
+            record["status"] = "refused"
+            record["error"] = {"type": "NotComparable", "message": "; ".join(why)}
+            save()
+            return EXIT_MISMATCH
+
+    import torch  # noqa: PLC0415
+
+    from scoutx_tracker.analyze import analyze  # noqa: PLC0415
+    from scoutx_tracker.discovery import Sighting, discover  # noqa: PLC0415
+    from scoutx_tracker.extract import Detector, extract  # noqa: PLC0415
+    from scoutx_tracker.ocr import shared_reader  # noqa: PLC0415
+
     gpu = GpuSampler().start()
     started = time.perf_counter()
-    work = out.parent / (out.stem + "_work") if args.keep_work else Path(tempfile.mkdtemp(prefix="pitchproof_full_bench_"))
-    work.mkdir(parents=True, exist_ok=True)
+    record["status"] = "running"
+    record["stages"] = {}
+    store = Stage1Store(work / "stage1", record["input"]["sha256"], settings, policy=a.resume_policy,
+                        min_free_bytes=int(a.min_free_gb * 2**30))
+    record["stages"]["cleanupBefore"] = store.cleanup()
+    rc = 0
+    reused = False
     try:
         t = time.perf_counter()
-        det = Detector(imgsz=int(os.environ.get("SCOUTX_DISCOVERY_DET", "416")))
+        det = Detector(imgsz=settings["discoveryImgsz"])
         reader = shared_reader()
-        record["stages"]["modelInitialization"] = {"wallSec": round(time.perf_counter() - t, 3)}
+        record["stages"]["modelInitialization"] = {"wallSec": round(time.perf_counter() - t, 3), "discoveryDetector": det.name,
+                                                   "discoveryDetectorOnGpu": det.on_gpu}
         save()
-        t = time.perf_counter()
-        first = []
-        discovery = discover(args.video, 0.0, duration, args.number, args.kit, lambda f: det(f)[:2], reader,
-                             crops_dir=str(work / "discovery"), on_sighting=lambda _s, elapsed: first.append(elapsed))
-        record["stages"]["discovery"] = {"wallSec": round(time.perf_counter() - t, 3),
-                 "firstPlayableAfterDiscoveryStartSec": round(first[0], 3) if first else None,
-                 "firstPlayableAfterModelInitSec": round(record["stages"]["modelInitialization"]["wallSec"] + first[0], 3) if first else None,
-                 "sightings": len(discovery.sightings), "timingsSec": discovery.timings}
-        save()
-        run_dirs = []
-        chunks = []
-        for i in range(int((duration - 1e-9) // args.chunk_sec) + 1):
-            start = i * args.chunk_sec
-            end = min(duration, start + args.chunk_sec)
-            if start >= end:
-                continue
-            run = work / "stage1" / f"c_{i:05d}"
+        # ---- discovery (checkpointed: sightings only)
+        disc_fp = fingerprint({"video": record["input"]["sha256"], "number": a.number, "kit": a.kit, "settings": settings})
+        disc_file = work / "discovery.json"
+        prev = json.loads(disc_file.read_text()) if disc_file.exists() else None
+        if prev and prev.get("fingerprint") != disc_fp:
+            if a.resume_policy == "fail":
+                raise ConfigMismatch(f"{disc_file} was produced with different input/settings")
+            prev = None
+        if prev:
+            reused = True
+            sightings = [Sighting(**s) for s in prev["sightings"]]
+            record["stages"]["discovery"] = {**prev["record"], "status": "resumed"}
+        else:
             t = time.perf_counter()
-            meta = extract(args.video, str(run), start=start, end=end)
-            chunks.append({"startSec": start, "endSec": round(end, 3), "wallSec": round(time.perf_counter() - t, 3),
-                           "frames": meta.get("frames"), "stageSeconds": meta.get("stageSeconds")})
-            run_dirs.append(str(run))
-            record["stages"]["extraction"] = {"chunks": chunks, "wallSec": round(sum(x["wallSec"] for x in chunks), 3)}
+            first: list = []
+            disc = discover(a.video, 0.0, duration, a.number, a.kit, lambda f: det(f)[:2], reader,
+                            crops_dir=str(work / "discovery_crops"), on_sighting=lambda _s, elapsed: first.append(elapsed))
+            sightings = disc.sightings
+            rec = {"wallSec": round(time.perf_counter() - t, 3),
+                   "firstPlayableAfterDiscoveryStartSec": round(first[0], 3) if first else None,
+                   "firstPlayableAfterModelInitSec": round(record["stages"]["modelInitialization"]["wallSec"] + first[0], 3) if first else None,
+                   "sightings": len(sightings), "timingsSec": disc.timings, "status": "measured",
+                   "effectiveDetectFps": round(disc.timings.get("samples", 0) / duration, 3) if duration else None}
+            disc_file.write_text(json.dumps({"fingerprint": disc_fp, "sightings": [dataclasses.asdict(s) for s in sightings],
+                                             "record": rec}, default=str))
+            shutil.rmtree(work / "discovery_crops", ignore_errors=True)   # thumbnails only - not used by resolve
+            record["stages"]["discovery"] = rec
+        save()
+        # ---- stage 1, chunk by chunk (checkpointed)
+        chunks = []
+        for i, start, end in chunk_bounds(duration, a.chunk_sec):
+            res = store.chunk(i, start, end, lambda d, s=start, e=end: extract(a.video, d, start=s, end=e,
+                                                                                 imgsz=STAGE1_IMGSZ, stride=STAGE1_STRIDE),
+                              retries=a.retries)
+            reused |= res.status == "resumed"
+            chunks.append({"index": i, "startSec": start, "endSec": round(end, 3), "status": res.status, "attempts": res.attempts,
+                           "wallSec": round(res.wall_sec, 3), "replaced": res.replaced, "frames": res.meta.get("frames"),
+                           "fps": res.meta.get("fps"), "detector": res.meta.get("detector"),
+                           "stageSeconds": res.meta.get("stageSeconds") if res.status == "extracted" else None})
+            tot: dict = {}
+            for c in chunks:
+                for k, v in (c.get("stageSeconds") or {}).items():
+                    tot[k] = round(tot.get(k, 0.0) + float(v), 2)
+            frames = sum(c["frames"] or 0 for c in chunks)
+            record["stages"]["extraction"] = {
+                "chunks": chunks, "wallSecMeasured": round(sum(c["wallSec"] for c in chunks), 3),
+                "resumedChunks": sum(c["status"] == "resumed" for c in chunks), "stageSecondsTotal": tot,
+                "framesProcessed": frames, "effectiveProcessingFps": round(frames / min(duration, end), 3) if end else None,
+                "diskBytesPerVideoSec": round(store.bytes_per_sec or 0.0), "freeBytes": shutil.disk_usage(work).free}
             save()
+        record["input"]["effectiveProcessingFps"] = record["stages"]["extraction"]["effectiveProcessingFps"]
+        # ---- resolve
         t = time.perf_counter()
-        report = analyze(run_dirs, str(work / "report"), args.number, args.kit, kit2=args.kit2,
-                         sightings=[dataclasses.asdict(s) for s in discovery.sightings], log=lambda _msg: None)
-        record["stages"]["resolve"] = {"wallSec": round(time.perf_counter() - t, 3),
-                                        "invariantsOk": report.get("invariants", {}).get("ok"),
-                                        "timingsSec": report.get("engine", {}).get("timingsSec"),
-                                        "ocrDeferred": report.get("engine", {}).get("ocrDeferred"),
-                                        "coverage": report.get("coverage"), "identity": report.get("identity")}
-        # stage totals across the whole run (seconds of wall time inside each step)
-        tot: dict = {}
-        for c in chunks:
-            for k, v in (c.get("stageSeconds") or {}).items():
-                tot[k] = round(tot.get(k, 0.0) + float(v), 2)
-        record["stages"]["extraction"]["stageSecondsTotal"] = tot
-        # claims timeline (times, states, boxes - numbers only, no images) for accuracy checks
+        report = analyze([str(store.run_dir(i)) for i, _, _ in chunk_bounds(duration, a.chunk_sec)], str(work / "report"),
+                         a.number, a.kit, kit2=a.kit2, sightings=[dataclasses.asdict(s) for s in sightings], log=lambda _m: None)
+        record["stages"]["resolve"] = {"wallSec": round(time.perf_counter() - t, 3), "invariantsOk": report.get("invariants", {}).get("ok"),
+                                       "timingsSec": report.get("engine", {}).get("timingsSec"),
+                                       "ocrDeferred": report.get("engine", {}).get("ocrDeferred"),
+                                       "coverage": report.get("coverage"), "identity": report.get("identity")}
         import numpy as np  # noqa: PLC0415
 
         z = np.load(work / "report" / "timeline.npz", allow_pickle=False)
-        claims = [[round(float(z["times"][i]), 2), str(z["states"][i]), [round(float(v), 1) for v in z["boxes"][i]]]
-                  for i in range(len(z["times"])) if z["present"][i]]
-        (out.parent / (out.stem + "_claims.json")).write_text(json.dumps(claims), encoding="utf-8")
-        if args.ground_truth:
-            import cv2  # noqa: PLC0415
-
-            cap = cv2.VideoCapture(args.video)
-            size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-            cap.release()
-            gt = json.loads(Path(args.ground_truth).read_text(encoding="utf-8"))
-            record["accuracy"] = accuracy_vs_ground_truth(claims, gt, size)
-            record["accuracy"]["groundTruth"] = Path(args.ground_truth).name
+        claims = [[round(float(z["times"][k]), 2), str(z["states"][k]), [round(float(v), 1) for v in z["boxes"][k]]]
+                  for k in range(len(z["times"])) if z["present"][k]]
+        claims_file = out.parent / (out.stem + "_claims.json")
+        claims_file.write_text(json.dumps(claims), encoding="utf-8")
+        record["claimsFile"] = {"file": claims_file.name, "sha256": sha256_file(claims_file), "frames": len(claims)}
         if not record["stages"]["resolve"]["invariantsOk"]:
-            raise RuntimeError("Tracking report invariant validation failed")
-        record["status"] = "complete"
-    except Exception as exc:
-        record["status"] = "failed"
-        record["error"] = {"type": type(exc).__name__, "message": str(exc)}
-        raise
+            raise RuntimeError("tracking report invariant validation failed")
+        # ---- accuracy, gate, comparison
+        if a.ground_truth:
+            gt = json.loads(Path(a.ground_truth).read_text())
+            record["accuracy"] = pp_bench.accuracy(claims, gt, (record["input"]["width"], record["input"]["height"]))
+        if baseline is not None:
+            bclaims_path = Path(a.baseline).parent / baseline.get("claimsFile", {}).get("file", "")
+            if bclaims_path.is_file():
+                record["comparison"] = {"baseline": Path(a.baseline).name,
+                                        "agreement": pp_bench.claims_agreement(json.loads(bclaims_path.read_text()), claims),
+                                        "baselineAccuracy": baseline.get("accuracy")}
+        if a.gate:
+            gate = pp_bench.load_gate(a.gate)
+            if "accuracy" not in record:
+                record["gate"] = {"gate": gate.get("name"), "passed": False, "failures": ["no ground truth - gate cannot be evaluated"]}
+            else:
+                g = pp_bench.evaluate_gate(record["accuracy"], gate, (baseline or {}).get("accuracy"))
+                agr = (record.get("comparison") or {}).get("agreement")
+                for field, rule in gate.get("agreementWithBaseline", {}).items():
+                    if agr is None:
+                        continue
+                    v = agr.get(field)
+                    if v is not None and v < rule["min"]:
+                        g["failures"].append(f"{field} = {v} < min {rule['min']}")
+                g["passed"] = not g["failures"]
+                record["gate"] = g
+            if not record["gate"]["passed"]:
+                rc = EXIT_GATE
+        record["status"] = "complete" if rc == 0 else "gate_failed"
+    except ConfigMismatch as exc:
+        record["status"], record["error"], rc = "refused", {"type": "ConfigMismatch", "message": str(exc)}, EXIT_MISMATCH
+    except DiskSpaceError as exc:
+        record["status"], record["error"], rc = "failed", {"type": "DiskSpaceError", "message": str(exc)}, EXIT_DISK
+    except Exception as exc:  # noqa: BLE001 - recorded, checkpoints kept for a resume
+        record["status"], record["error"], rc = "failed", {"type": type(exc).__name__, "message": str(exc)}, EXIT_FAILED
     finally:
         elapsed = time.perf_counter() - started
-        record["measuredTotalWallSec"] = round(elapsed, 3)
-        record["videoSecondsPerWallSecond"] = round(duration / elapsed, 4) if elapsed else None
-        record["cost"] = price_breakdown(elapsed, args.host_usd_per_hour, args.billable_startup_sec)
+        record["timing"] = {"measuredTotalWallSec": round(elapsed, 3), "timingComplete": not reused,
+                            "note": None if not reused else "checkpointed work was reused - this is NOT a full-run measurement",
+                            "videoSecondsPerWallSecond": round(duration / elapsed, 4) if elapsed and not reused else None}
+        prices = json.loads(Path(a.prices).read_text()) if a.prices else None
+        if a.host_usd_per_hour is not None:
+            prices = {**(prices or {}), "vmUsdPerHour": a.host_usd_per_hour, "source": (prices or {}).get("source", "operator-supplied rate")}
+        vm = vm_overheads(json.loads(Path(a.vm_timestamps).read_text())) if a.vm_timestamps else None
+        record["cost"] = pp_bench.cost_breakdown(prices, elapsed, vm=vm,
+                                                 storage={"gb": round(record["input"]["sizeBytes"] / 1e9, 3), "days": 1},
+                                                 video_sec=duration if not reused else None)
         record["gpuSampling"] = gpu.stop()
         import resource  # noqa: PLC0415
 
         record["peakRssMiB"] = round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024, 1)
-        if hw["cudaAvailable"]:
+        if cuda:
             record["peakTorchAllocatedGpuMiB"] = round(torch.cuda.max_memory_allocated() / 2**20, 2)
-            record["peakTorchReservedGpuMiB"] = round(torch.cuda.max_memory_reserved() / 2**20, 2)
         save()
-        if not args.keep_work:
-            shutil.rmtree(work, ignore_errors=True)
-    print(json.dumps({"status": record["status"], "measuredTotalWallSec": record["measuredTotalWallSec"],
-                      "cost": record["cost"], "accuracy": record.get("accuracy"), "report": str(out)}, indent=2))
+        if record["status"] == "complete" and not a.keep_work:
+            shutil.rmtree(work, ignore_errors=True)        # success: bounded cleanup of all checkpoints
+    print(json.dumps({"status": record["status"], "exitCode": rc, "timing": record.get("timing"),
+                      "accuracy": {k: v for k, v in (record.get("accuracy") or {}).items() if k != "wrongIdentityTimes"},
+                      "gate": record.get("gate"), "report": str(out)}, indent=2, default=str))
+    return rc
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

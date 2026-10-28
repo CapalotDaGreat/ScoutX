@@ -1,0 +1,19 @@
+{
+  "name": "balanced-5.2",
+  "note": "Accuracy gate for the validated balanced mode on a recording with interval ground truth. Absolute rules hold for every run; relative rules compare against the reference run of the SAME script, recording, settings, model files and ground truth (normally the CPU run). A GPU configuration or optimisation that fails is rejected. Thresholds are fixed here, before any GPU result exists.",
+  "absolute": {
+    "wrongIdentitySec": {"max": 0.0},
+    "confirmedWrongIdentitySec": {"max": 0.0},
+    "overlapAmbiguousSec": {"max": 1.0}
+  },
+  "relativeToBaseline": {
+    "IDF1": {"maxDrop": 0.01},
+    "claimedRecall": {"maxDrop": 0.02},
+    "confirmedCorrectSec": {"maxDrop": 0.5},
+    "overlapAmbiguousSec": {"maxRise": 0.3}
+  },
+  "agreementWithBaseline": {
+    "stateAgreement": {"min": 0.97},
+    "boxAgreementWhenBothClaim": {"min": 0.97}
+  }
+}

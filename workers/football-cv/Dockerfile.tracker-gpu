@@ -1,69 +1,97 @@
-# Player-tracking worker (scoutx_tracker + /v3 endpoints) for a CUDA GPU (e.g. Cloud Run + NVIDIA L4).
-# NOT DEPLOYED, NOT BUILT and NOT BENCHMARKED from this repository (5.1: no Docker daemon and no
-# registry access in the development environment): build it on a GPU host, then run
-#   docker run --gpus all -v /path/to/video:/data <image> python3.11 bench/pipeline_benchmark.py \
-#       --video /data/match.mp4 --number 20 --kit orange --out /tmp/bench.json --price-per-hour <your rate>
-# before quoting any GPU runtime or cost. 5.2: `bash bench/gpu_runbook.sh /data/<video> /out` runs the
-# full benchmark set (detector backends x batch sizes, end-to-end per inference mode).
+# Player-tracking worker (scoutx_tracker + /v3 endpoints) for a CUDA GPU (e.g. NVIDIA L4).
+# NOT DEPLOYED and NOT YET BUILT from this repository (no Docker daemon / registry access in the
+# development environment). Build and verify on the GPU host:
+#   docker build -f Dockerfile.tracker-gpu --build-arg GIT_COMMIT=$(git rev-parse HEAD) -t pitchproof-tracker-gpu:5.2 .
+#   docker run --rm --gpus all pitchproof-tracker-gpu:5.2 python -m scoutx_tracker.envinfo --require-gpu --require-models
+# Then: bench/run_gpu_match.sh (full-match benchmark) - see docs/video/gpu-benchmark-setup.md.
 #
-# The original Dockerfile only packaged the 2.x frame-analysis backends; tracking v3 needs the
-# scoutx_tracker engine, its requirements and the hash-pinned YOLOX weights (Apache-2.0).
-FROM nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04
+# 5.2 hardening - the image reproduces the CPU environment every 5.x accuracy result was measured in:
+#   * Ubuntu 24.04 + ffmpeg 7:6.1.1-3ubuntu5 (same as the CPU environment), Python 3.13.17 (uv-managed,
+#     pinned), every Python package from requirements-gpu.lock with --require-hashes (same versions as the
+#     CPU environment; CUDA comes from the torch / onnxruntime-gpu wheels, so the base image has no CUDA
+#     toolkit and the host only needs an NVIDIA driver >= 580 for CUDA 13.0);
+#   * model files downloaded at build time and checked against bench/references/model_hashes.json (the
+#     exact files used on CPU) - the build FAILS on any mismatch;
+#   * the ONNX exports (1280 px stage 1, 416 px discovery) are created at build time from the checked weights;
+#   * build provenance (commit, lock hash, base image, build time) is baked into the environment and
+#     recorded by `python -m scoutx_tracker.envinfo` / every benchmark JSON.
+# Pin the base image by digest for a fully reproducible rebuild: --build-arg BASE_IMAGE=ubuntu:24.04@sha256:<digest>
+# (the digest of the first build is recorded in the benchmark output via `docker image inspect`).
+ARG BASE_IMAGE=ubuntu:24.04
+FROM ghcr.io/astral-sh/uv:0.11.32 AS uv
+FROM ${BASE_IMAGE}
 
-ARG WORKER_VERSION=football-cv/5.2.0-dev
+ARG BASE_IMAGE
+ARG GIT_COMMIT=unknown
+ARG WORKER_VERSION=football-cv/0.9.0
+ARG PYTHON_VERSION=3.13.17
+ARG FFMPEG_VERSION=7:6.1.1-3ubuntu5
 LABEL org.opencontainers.image.title="pitchproof-football-cv-tracker-gpu" \
       org.opencontainers.image.version="${WORKER_VERSION}" \
+      org.opencontainers.image.revision="${GIT_COMMIT}" \
       org.opencontainers.image.licenses="proprietary; YOLOX weights Apache-2.0; EasyOCR Apache-2.0; docTR Apache-2.0"
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    HF_HOME=/opt/models \
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility,video \
+    HF_HOME=/opt/models/hf \
     EASYOCR_MODULE_PATH=/opt/models/easyocr \
     DOCTR_CACHE_DIR=/opt/models/doctr \
     SCOUTX_WEIGHTS_DIR=/opt/models/yolox \
     SCOUTX_DETECTOR=yolox_s \
     SCOUTX_BACKEND=auto \
     SCOUTX_DISCOVERY_DET=416 \
-    SCOUTX_DECODER=auto \
-    SCOUTX_HWACCEL=cuda \
     WORKER_VERSION=${WORKER_VERSION} \
+    SCOUTX_GIT_COMMIT=${GIT_COMMIT} \
+    SCOUTX_BASE_IMAGE=${BASE_IMAGE} \
+    UV_PYTHON_INSTALL_DIR=/opt/python \
     PORT=8080
+# SCOUTX_DECODER is deliberately NOT set: stage 1 then decodes with OpenCV exactly as in every validated
+# CPU run. The NVDEC path (SCOUTX_DECODER=ffmpeg SCOUTX_HWACCEL=cuda) is an A/B variant in bench/gpu_matrix.py.
 
-# 5.1 fix (static review, not built here): Ubuntu 22.04's python3-pip belongs to the system
-# Python 3.10, so `python3.11 -m pip` failed; a 3.11 virtual environment provides its own pip.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3.11 python3.11-venv ffmpeg libgl1 libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/* \
-    && python3.11 -m venv /opt/venv
-ENV PATH=/opt/venv/bin:$PATH
+    && apt-get install -y --no-install-recommends ca-certificates "ffmpeg=${FFMPEG_VERSION}" libgl1 libglib2.0-0t64 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=uv /uv /usr/local/bin/uv
+RUN uv python install "${PYTHON_VERSION}" \
+    && uv venv --python "${PYTHON_VERSION}" /opt/venv
+ENV PATH=/opt/venv/bin:$PATH VIRTUAL_ENV=/opt/venv
 
 WORKDIR /srv
-COPY requirements.txt requirements-tracker.txt ./
-RUN python3.11 -m pip install --no-cache-dir -r requirements.txt -r requirements-tracker.txt
-# 5.2 (not built here): the CUDA execution provider for ONNX Runtime ships in onnxruntime-gpu
-# (CUDA 12 builds since 1.19); the CPU wheel is replaced so SCOUTX_ORT_PROVIDERS=auto can pick CUDA.
-# torch fp16 stays the default GPU backend (SCOUTX_BACKEND=auto); bench/gpu_runbook.sh A/Bs both.
-RUN python3.11 -m pip uninstall -y onnxruntime \
-    && python3.11 -m pip install --no-cache-dir "onnxruntime-gpu>=1.19,<2"
+COPY requirements-gpu.lock ./
+RUN uv pip sync --require-hashes requirements-gpu.lock \
+    && python -c "import sys, torch, onnxruntime as ort; \
+assert sys.version.split()[0] == '${PYTHON_VERSION}', sys.version; \
+assert torch.version.cuda and torch.version.cuda.startswith('13.'), torch.version.cuda; \
+assert 'CUDAExecutionProvider' in ort.get_available_providers(), ort.get_available_providers(); \
+print('python', sys.version.split()[0], 'torch', torch.__version__, 'cuda', torch.version.cuda, 'ort', ort.__version__)" \
+    && echo "SCOUTX_LOCK_SHA256=$(sha256sum requirements-gpu.lock | cut -d' ' -f1)" > /etc/scoutx-build.env
 
 COPY scoutx_tracker ./scoutx_tracker
 COPY app ./app
 COPY bench ./bench
 
-# Weights are fetched once at build time (hash-checked) so no request downloads models; the
-# persistent worker then keeps detector and OCR loaded between calls.
-RUN python3.11 -c "from scoutx_tracker.extract import weights_path; weights_path('yolox_s')" \
-    && python3.11 -c "from scoutx_tracker.ocr import NumberReader; NumberReader()" \
-    && chmod -R a+rX /opt/models
+# Models: downloaded once at build time, hash-verified against the files used on CPU, ONNX exported.
+RUN python -c "from scoutx_tracker.extract import weights_path; weights_path('yolox_s')" \
+    && python -c "from scoutx_tracker.ocr import NumberReader; NumberReader()" \
+    && python -c "from scoutx_tracker.extract import weights_path; from scoutx_tracker.yolox_net import export_onnx; \
+p = weights_path('yolox_s'); [export_onnx('yolox_s', p, p.with_suffix(f'.{s}.onnx'), s) for s in (1280, 416)]" \
+    && python -m scoutx_tracker.envinfo --require-models > /opt/models/build-envinfo.json \
+    && echo "SCOUTX_IMAGE_BUILT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> /etc/scoutx-build.env \
+    && chmod -R a+rX /opt/models /opt/python /opt/venv
 
 RUN useradd --uid 10001 --no-create-home worker
 USER worker
 
+# Build provenance (lock hash, build time) is exported for every process via the entrypoint.
+ENTRYPOINT ["/bin/sh", "-c", "set -a; . /etc/scoutx-build.env; set +a; exec \"$@\"", "--"]
+
 # Liveness only (models are loaded on first request and then kept); Cloud Run uses its own probe.
-# (5.1: no curl in the image - the check uses Python's standard library)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s \
-    CMD python3.11 -c "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ.get(\"PORT\", \"8080\")}/healthz', timeout=4)" || exit 1
+    CMD python -c "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ.get(\"PORT\", \"8080\")}/healthz', timeout=4)" || exit 1
 
 # One request at a time per instance (a GPU is not shared between concurrent segments);
 # TRACKING_V3_ENABLED and TRACKING_ARTIFACT_ROOT are set by the deployment, never baked in.
-CMD ["sh", "-c", "python3.11 -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --workers 1"]
+CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --workers 1"]

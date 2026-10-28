@@ -1,0 +1,182 @@
+{
+  "schema": "pitchproof.full-match-benchmark.v2",
+  "status": "refused",
+  "timestampUtc": "2026-10-28T23:04:01.610111+00:00",
+  "target": {
+    "number": "20",
+    "kit": "orange",
+    "kit2": ""
+  },
+  "notes": [
+    "Single sequential worker; not a Cloud Tasks / parallel-segment test.",
+    "firstPlayable = time after model initialisation, not upload-to-play latency.",
+    "No footage, crops or images are written to this JSON or the claims file."
+  ],
+  "environment": {
+    "python": "3.13.17",
+    "platform": "Linux-6.18.44-fc-v185-x86_64-with-glibc2.39",
+    "cpuCores": 2,
+    "packages": {
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "4.14.0.94",
+      "opencv-python-headless": "5.0.0.93",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime": "1.29.0",
+      "av": "19.0.2",
+      "pillow": "12.3.0",
+      "fastapi": "0.162.0",
+      "pydantic": "2.13.5"
+    },
+    "torch": {
+      "version": "2.14.1+cu130",
+      "cuda": "13.0",
+      "cudaAvailable": false,
+      "cudnn": 92400
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "AzureExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "4.14.0",
+      "videoIO": [
+        "FFMPEG:                      YES",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+    "nvidiaSmi": null,
+    "driverMajor": null,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": null,
+      "built": null,
+      "baseImage": null,
+      "lockSha256": null
+    },
+    "scoutxEnv": {
+      "SCOUTX_ALLOW_UNVALIDATED_MODE": "1",
+      "SCOUTX_KEYFRAME_EVERY": "2",
+      "SCOUTX_MODE": "fast",
+      "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+    }
+  },
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "/home/claude/work/det/yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "/root/.EasyOCR/model/craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "/root/.EasyOCR/model/english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "/root/.cache/doctr/models/parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "input": {
+    "basename": "clip_1140.mp4",
+    "container": "mov,mp4,m4a,3gp,3g2,mj2",
+    "codec": "h264",
+    "profile": "High 10",
+    "pixFmt": "yuv420p10le",
+    "colorTransfer": "arib-std-b67",
+    "colorPrimaries": "bt2020",
+    "colorSpace": "bt2020nc",
+    "hdr": "HLG",
+    "width": 1920,
+    "height": 1080,
+    "rotation": null,
+    "fps": 10.0,
+    "avgFps": 10.0,
+    "frames": 600,
+    "durationSec": 60.0,
+    "sizeBytes": 50817096,
+    "bitRate": 6775612,
+    "sha256": "713eaee2edd93f9329b79335c77f91219c55c055a242ff52779f140d6da3c3e5"
+  },
+  "configuration": {
+    "chunkSec": 30,
+    "mode": "fast",
+    "stage1Settings": {
+      "engine": "5.2.0",
+      "env": {
+        "SCOUTX_DETECTOR": null,
+        "SCOUTX_BACKEND": null,
+        "SCOUTX_DECODER": null,
+        "SCOUTX_HWACCEL": null,
+        "SCOUTX_KEYFRAME_EVERY": "2",
+        "SCOUTX_PROP_SCORE_CAP": null,
+        "SCOUTX_BATCH": null,
+        "SCOUTX_ORT_PROVIDERS": null,
+        "SCOUTX_OCR_ENHANCE": null
+      },
+      "packages": {
+        "torch": "2.14.1",
+        "opencv-python": "4.14.0.94",
+        "opencv-python-headless": "5.0.0.93",
+        "numpy": "2.5.3",
+        "onnxruntime": "1.29.0",
+        "onnxruntime-gpu": null
+      },
+      "imgsz": 1280,
+      "stride": 1,
+      "discoveryImgsz": 416,
+      "device": "cpu"
+    },
+    "stage1Fingerprint": "a9712a60bf9d9d1e233c457ee3d8c87f9ed3fdb0f79ad7134239141f3b5d85a2",
+    "resumePolicy": "fail",
+    "retries": 1
+  },
+  "stages": {
+    "cleanupBefore": [],
+    "modelInitialization": {
+      "wallSec": 4.416,
+      "discoveryDetector": "yolox_s@416/onnx",
+      "discoveryDetectorOnGpu": false
+    }
+  },
+  "error": {
+    "type": "ConfigMismatch",
+    "message": "/home/claude/work/gpubench/v2/cpu_work/discovery.json was produced with different input/settings"
+  },
+  "timing": {
+    "measuredTotalWallSec": 4.417,
+    "timingComplete": true,
+    "note": null,
+    "videoSecondsPerWallSecond": 13.5831
+  },
+  "cost": {
+    "status": "not_calculated",
+    "reason": "no price list / rate supplied",
+    "measuredComputeSec": 4.4
+  },
+  "gpuSampling": {
+    "status": "not_sampled"
+  },
+  "peakRssMiB": 1529.9
+}

@@ -1,0 +1,21 @@
+# 5.2 GPU tracker image: the SAME package versions as the CPU environment every 5.x accuracy result was
+# measured in (Python 3.13.17), except the CUDA builds: torch/torchvision from PyPI (CUDA 13.0 wheels,
+# need an NVIDIA driver >= 580) and onnxruntime-gpu instead of onnxruntime (same 1.29.0 release).
+# Locked with hashes in requirements-gpu.lock:
+#   uv pip compile requirements-gpu.in --python-version 3.13 --python-platform x86_64-manylinux_2_28 \
+#       --generate-hashes --emit-index-url -o requirements-gpu.lock
+numpy==2.5.3
+scipy==1.18.1
+opencv-python-headless==4.14.0.94
+opencv-python==4.14.0.94   # python-doctr depends on it; same build as the CPU environment
+torch==2.14.1
+torchvision==0.29.1
+easyocr==1.7.2
+python-doctr==1.1.0
+scikit-learn==1.9.1
+onnxruntime-gpu==1.29.0
+pillow==12.3.0
+av==19.0.2
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+pydantic==2.13.5

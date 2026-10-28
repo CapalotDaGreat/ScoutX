@@ -96,6 +96,11 @@ def test_extract_endpoint_passes_absolute_segment_bounds(tmp_path, monkeypatch):
 
     def fake_extract(url, out, t0=0.0, start=0.0, end=None):
         seen.update(t0=t0, start=start, end=end)
+        from pathlib import Path  # noqa: PLC0415
+
+        (Path(out) / "crops").mkdir(parents=True, exist_ok=True)
+        (Path(out) / "detections.npz").write_bytes(b"npz")
+        (Path(out) / "meta.json").write_text("{}")
         return {"frames": 3000, "seconds": 12.5}
 
     monkeypatch.setenv("TRACKING_V3_ENABLED", "true")

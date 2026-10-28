@@ -299,7 +299,12 @@ class OnnxDetector:
         so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
         if threads:
             so.intra_op_num_threads = threads
-        self.sess = ort.InferenceSession(str(path), so, providers=ort_providers(ort.get_available_providers()))
+        providers = ort_providers(ort.get_available_providers())
+        if providers[0] != "CPUExecutionProvider" and hasattr(ort, "preload_dlls"):
+            # 5.2: the GPU image has no system CUDA - load CUDA/cuDNN from the nvidia-* wheels first,
+            # otherwise ONNX Runtime silently falls back to the CPU provider
+            ort.preload_dlls()
+        self.sess = ort.InferenceSession(str(path), so, providers=providers)
         self.providers = self.sess.get_providers()
         self.on_gpu = self.providers[0] in ("CUDAExecutionProvider", "TensorrtExecutionProvider")
         self.imgsz = imgsz

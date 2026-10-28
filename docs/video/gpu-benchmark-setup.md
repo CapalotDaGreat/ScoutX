@@ -1,5 +1,9 @@
 # PitchProof full-match GPU benchmark setup
 
+> **5.2 pre-benchmark hardening (2026-10-29):** the current, exact commands are in [`gpu-benchmark-commands.md`](gpu-benchmark-commands.md).
+> The script arguments changed: `run_gpu_match.sh VIDEO OUTDIR` uses the validated reference defaults, and `run_l4_benchmark.sh VIDEO_GS OUT_GS` takes no price argument because it uses `bench/gcp/prices_europe-west6.json`.
+> The command examples below are kept for history and partly use the old arguments.
+
 This kit adds a **measured** sequential end-to-end worker benchmark. It processes the whole recording, unlike `pipeline_benchmark.py`, which processes one segment. It does not claim to measure Cloud Tasks scheduling, upload time, Cloud Run cold starts, or parallel production execution. No GPU or cloud account was available during preparation, so **no actual GPU measurements are claimed**.
 
 ## 1. GPU host

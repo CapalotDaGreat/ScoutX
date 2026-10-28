@@ -203,15 +203,35 @@ def extract_segment(request: ExtractRequest) -> dict:
         raise HTTPException(status_code=404, detail="not_available")
     if request.endSec - request.startSec > 900 or request.endSec <= request.startSec:
         raise HTTPException(status_code=422, detail="segment must be 0-900 seconds long")
-    out = artifact_root() / request.jobId / "stage1" / f"c_{int(request.startSec):05d}"
-    if (out / "detections.npz").exists():
+    import hashlib  # noqa: PLC0415
+    from urllib.parse import urlsplit  # noqa: PLC0415
+
+    from scoutx_tracker.checkpoint import Stage1Store, stage1_settings  # noqa: PLC0415
+
+    root = artifact_root() / request.jobId / "stage1"
+    out = root / f"c_{int(request.startSec):05d}"
+    if (out / "detections.npz").exists() and not (out / "checkpoint.json").exists():
+        # written by a worker before 5.2 (no checkpoint): kept as before
         return {"jobId": request.jobId, "segmentIndex": request.segmentIndex, "status": "cached"}
     fn = _extract
     if fn is None:
         from scoutx_tracker.extract import extract as fn  # noqa: PLC0415
+    # 5.2: a segment is written to a temporary directory and only moved into place with a checkpoint
+    # (source, bounds, stage-1 settings, file hashes). A crashed attempt can no longer leave crops that a
+    # retry would mix into its own output, and a segment from other settings (e.g. a new worker version)
+    # is redone instead of reused. Source identity: job + URL without its (expiring) query string.
+    u = urlsplit(request.source.url)
+    source_id = hashlib.sha256(f"{request.jobId}|{u.scheme}://{u.netloc}{u.path}".encode()).hexdigest()
+    store = Stage1Store(root, source_id, stage1_settings(imgsz=1280, stride=1), policy="replace", min_free_bytes=0,
+                        check_space=False)
     # extract() timestamps frames as t0 + absolute source time and stops at the absolute `end`;
     # passing t0=startSec or a duration as `end` would double-shift and truncate the segment.
-    meta = fn(request.source.url, str(out), t0=0.0, start=request.startSec, end=request.endSec)
+    res = store.chunk(int(request.startSec), float(request.startSec), float(request.endSec),
+                      lambda d: fn(request.source.url, d, t0=0.0, start=request.startSec, end=request.endSec), retries=0)
+    store.cleanup()
+    if res.status == "resumed":
+        return {"jobId": request.jobId, "segmentIndex": request.segmentIndex, "status": "cached"}
+    meta = res.meta
     return {"jobId": request.jobId, "segmentIndex": request.segmentIndex, "status": "complete",
             "frames": int(meta.get("frames", 0)), "processingSec": float(meta.get("seconds", 0.0)),
             "stageSeconds": meta.get("stageSeconds", {})}
