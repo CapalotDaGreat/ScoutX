@@ -267,6 +267,23 @@ def export_onnx(variant: str, weights: str | Path, out: str | Path, imgsz: int =
     return Path(out)
 
 
+def ort_providers(available: list[str], wanted: str | None = None) -> list[str]:
+    """5.2: ONNX Runtime execution providers. `SCOUTX_ORT_PROVIDERS` (comma list, e.g.
+    "CUDAExecutionProvider,CPUExecutionProvider") or "auto": CUDA first when the installed
+    onnxruntime offers it (onnxruntime-gpu), CPU always last as the fallback. TensorRT is only used
+    when named explicitly (its engine build takes minutes per input shape - not measured here)."""
+    import os  # noqa: PLC0415
+
+    wanted = wanted if wanted is not None else os.environ.get("SCOUTX_ORT_PROVIDERS", "auto")
+    if wanted and wanted != "auto":
+        out = [p.strip() for p in wanted.split(",") if p.strip() in available]
+    else:
+        out = [p for p in ("CUDAExecutionProvider",) if p in available]
+    if "CPUExecutionProvider" not in out:
+        out.append("CPUExecutionProvider")
+    return out
+
+
 class OnnxDetector:
     """Same contract as Detector, executed by ONNX Runtime. Measured on a 2-core CPU (YOLOX-s @1280,
     IMG_4809 frames): 285 ms/frame vs 405 ms/frame for torch fp32 - the default CPU backend.
@@ -282,9 +299,11 @@ class OnnxDetector:
         so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
         if threads:
             so.intra_op_num_threads = threads
-        self.sess = ort.InferenceSession(str(path), so, providers=["CPUExecutionProvider"])
+        self.sess = ort.InferenceSession(str(path), so, providers=ort_providers(ort.get_available_providers()))
+        self.providers = self.sess.get_providers()
+        self.on_gpu = self.providers[0] in ("CUDAExecutionProvider", "TensorrtExecutionProvider")
         self.imgsz = imgsz
-        self.name = f"{variant}@{imgsz}/onnx"
+        self.name = f"{variant}@{imgsz}/onnx" + ("-cuda" if self.on_gpu else "")
 
     def __call__(self, images: list[np.ndarray], conf: float = 0.05):
         boxes, ratios = zip(*(letterbox(im, self.imgsz) for im in images))

@@ -25,7 +25,7 @@ from .identity import (
 )
 from .teams import kit_rgb, team_match
 
-WORKER_VERSION = "football-cv/0.8.0"  # 5.1: identity rules changed - needs its own CV_WORKER_APPROVED entry
+WORKER_VERSION = "football-cv/0.9.0"  # 5.2: identity rules changed (box-steal splits), OCR refresh contract - needs its own CV_WORKER_APPROVED entry
 TRACKING_DETECTION_THRESHOLD = 0.1
 IDENTITY_DETECTION_THRESHOLD = 0.4
 

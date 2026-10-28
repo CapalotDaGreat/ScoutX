@@ -1,0 +1,703 @@
+{
+ "what": "Night / small-number reading, evaluation only (no training). Night set: 140 crops from IMG_4529 pieces 960, 1260 (threshold selection) and 1440 (held out), developer labels (14 legible numbers: #20 x10, #12 x4; 31 non-players; 17 unsure).",
+ "methodsOnNightSet": {
+  "main": {
+   "correct": 0,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  },
+  "main+clahe": {
+   "correct": 1,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  },
+  "main+upscale_sharpen": {
+   "correct": 0,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  },
+  "torso_open_2of3": {
+   "correct": 0,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  },
+  "torso_open_2of3+clahe": {
+   "correct": 0,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  },
+  "multiframe_median+main": {
+   "correct": 0,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  },
+  "multiframe_median+torso_open": {
+   "correct": 0,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  },
+  "tracklet_vote_main(+-1s)": {
+   "correct": 0,
+   "wrongOnLabelled": 0,
+   "readOnUnreadable": 0,
+   "readOnNonPlayer": 0,
+   "readOnUnsure": 0,
+   "positives": 14
+  }
+ },
+ "openSetTorsoGrid": {
+  "frozenThreshold": {
+   "minConf": 0.99,
+   "conflictConf": 0.9,
+   "chosenOn": "night pieces 960+1260 only"
+  },
+  "sweep": {
+   "0.9/0.5": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 1,
+     "readOnNonPlayer": 1
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 1
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 1,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 20
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 63,
+     "disagree": 1,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 14
+    }
+   },
+   "0.9/0.7": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 2,
+     "readOnNonPlayer": 1
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 1
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 1,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 24
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 72,
+     "disagree": 2,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 16
+    }
+   },
+   "0.9/0.9": {
+    "nightDev": {
+     "correct": 6,
+     "wrong": 0,
+     "missed": 3,
+     "readOnNoNumber": 3,
+     "readOnNonPlayer": 1
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 1
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 1,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 34
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 92,
+     "disagree": 5,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 22
+    }
+   },
+   "0.95/0.5": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 1,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 1
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 13
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 60,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 10
+    }
+   },
+   "0.95/0.7": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 1,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 1
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 14
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 67,
+     "disagree": 1,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 10
+    }
+   },
+   "0.95/0.9": {
+    "nightDev": {
+     "correct": 6,
+     "wrong": 0,
+     "missed": 3,
+     "readOnNoNumber": 2,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 1
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 18
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 86,
+     "disagree": 2,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 14
+    }
+   },
+   "0.97/0.5": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 1,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 8
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 56,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 9
+    }
+   },
+   "0.97/0.7": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 1,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 9
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 62,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 9
+    }
+   },
+   "0.97/0.9": {
+    "nightDev": {
+     "correct": 6,
+     "wrong": 0,
+     "missed": 3,
+     "readOnNoNumber": 2,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 12
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 80,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 13
+    }
+   },
+   "0.98/0.5": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 8
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 52,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 6
+    }
+   },
+   "0.98/0.7": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 9
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 58,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 6
+    }
+   },
+   "0.98/0.9": {
+    "nightDev": {
+     "correct": 6,
+     "wrong": 0,
+     "missed": 3,
+     "readOnNoNumber": 1,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 11
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 75,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 10
+    }
+   },
+   "0.99/0.5": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 6
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 45,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 4
+    }
+   },
+   "0.99/0.7": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 7
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 51,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 4
+    }
+   },
+   "0.99/0.9": {
+    "nightDev": {
+     "correct": 6,
+     "wrong": 0,
+     "missed": 3,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 1,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 9
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 66,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 6
+    }
+   },
+   "0.995/0.5": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 0,
+     "wrong": 0,
+     "missed": 5,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 5
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 38,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 1
+    }
+   },
+   "0.995/0.7": {
+    "nightDev": {
+     "correct": 5,
+     "wrong": 0,
+     "missed": 4,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 0,
+     "wrong": 0,
+     "missed": 5,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 6
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 43,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 1
+    }
+   },
+   "0.995/0.9": {
+    "nightDev": {
+     "correct": 6,
+     "wrong": 0,
+     "missed": 3,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "nightVal": {
+     "correct": 0,
+     "wrong": 0,
+     "missed": 5,
+     "readOnNoNumber": 0,
+     "readOnNonPlayer": 0
+    },
+    "img5105": {
+     "withMainRead": 1,
+     "agree": 0,
+     "disagree": 0,
+     "noMainRead": 258,
+     "readWhereMainHadNone": 7
+    },
+    "img4809": {
+     "withMainRead": 200,
+     "agree": 55,
+     "disagree": 0,
+     "noMainRead": 150,
+     "readWhereMainHadNone": 3
+    }
+   }
+  },
+  "daylightCheck": {
+   "what": "15 crops (IMG_5105 day x9, IMG_4809 x6) where the main reader had no read and the open-set read fired at the frozen threshold, inspected by eye",
+   "reads": [
+    [
+     "img5105",
+     116,
+     "35"
+    ],
+    [
+     "img5105",
+     97,
+     "15"
+    ],
+    [
+     "img5105",
+     48,
+     "17"
+    ],
+    [
+     "img5105",
+     39,
+     "50"
+    ],
+    [
+     "img5105",
+     73,
+     "51"
+    ],
+    [
+     "img5105",
+     18,
+     "14"
+    ],
+    [
+     "img5105",
+     20,
+     "17"
+    ],
+    [
+     "img5105",
+     177,
+     "15"
+    ],
+    [
+     "img5105",
+     121,
+     "15"
+    ],
+    [
+     "img4809",
+     2415,
+     "75"
+    ],
+    [
+     "img4809",
+     197,
+     "24"
+    ],
+    [
+     "img4809",
+     502,
+     "20"
+    ],
+    [
+     "img4809",
+     1632,
+     "17"
+    ],
+    [
+     "img4809",
+     2208,
+     "24"
+    ],
+    [
+     "img4809",
+     2024,
+     "24"
+    ]
+   ],
+   "correct": 5,
+   "clearlyWrongDigits": 3,
+   "numberOnShirtFrontWithoutNumber": 3,
+   "unverifiable": 4
+  }
+ },
+ "decision": "Not enabled in the pipeline: night recall rises (dev 6/9, held-out piece 1/5, 0 wrong) but on daylight crops 6 of 15 reads were wrong. Kept as scoutx_tracker.ocr.open_torso_read (unused) with tests."
+}

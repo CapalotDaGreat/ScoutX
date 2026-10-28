@@ -90,7 +90,7 @@ class Detector:
         else:
             self.model = Yolox(variant, weights_path(variant), imgsz)
         self.name = self.model.name
-        self.on_gpu = not use_onnx and torch.cuda.is_available()
+        self.on_gpu = bool(getattr(self.model, "on_gpu", False)) if use_onnx else torch.cuda.is_available()
 
     @staticmethod
     def _split(b, s, c):

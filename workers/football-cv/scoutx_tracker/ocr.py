@@ -193,6 +193,51 @@ def target_roi_confidence(reader: "NumberReader", crop: np.ndarray, number: str)
     return max((float(p) for t, p in reader.parseq(rois) if t.strip() == number), default=0.0)
 
 
+# 5.2 open-set torso reading (night / no localisable digits): colour torso windows at several
+# heights and widths, one PARSeq batch. Inside one crop the windows share pixels, so their
+# agreement is NOT independent evidence: the result is at most ONE weak read per crop.
+# NOT USED BY THE PIPELINE (measured, bench/results/5.2/night_ocr.json): on developer-labelled night
+# crops (IMG_4529) it reads 6/9 legible numbers on the threshold-selection pieces and 1/5 on the
+# held-out piece with 0 wrong reads (the main reader: 0/14) - but on daylight crops the main reader
+# could not read, 3 of its 15 reads were clearly wrong digits and 3 more were numbers "read" on
+# shirt fronts without a number. Integrating it would need a separate verification step first.
+TORSO_GRID = [(ya, ya + hh, xa, 1.0 - xa) for hh in (0.25, 0.33) for ya in (0.08, 0.13, 0.18, 0.23) for xa in (0.15, 0.22)
+              if ya + hh <= 0.62]
+
+
+def torso_grid(crop: np.ndarray) -> list[np.ndarray]:
+    h, w = crop.shape[:2]
+    out = []
+    for ya, yb, xa, xb in TORSO_GRID:
+        t = crop[int(h * ya):int(h * yb), int(w * xa):int(w * xb)]
+        if t.shape[0] < 6 or t.shape[1] < 6:
+            continue
+        t = cv2.resize(t, (max(8, int(t.shape[1] * 64 / t.shape[0])), 64), interpolation=cv2.INTER_CUBIC)
+        out.append(cv2.cvtColor(t, cv2.COLOR_BGR2RGB))
+    return out
+
+
+def open_torso_read(reader: "NumberReader", crop: np.ndarray, min_conf: float = 0.99, conflict_conf: float = 0.9,
+                    digits: int = 2) -> tuple[str | None, float]:
+    """Weak, number-agnostic read of a crop: the most confident `digits`-digit string over the torso
+    grid, if >= min_conf and no OTHER `digits`-digit string reaches conflict_conf. Never evidence on
+    its own (see identity rules)."""
+    rois = torso_grid(crop)
+    if not rois:
+        return None, 0.0
+    best: dict[str, float] = {}
+    for t, p in reader.parseq(rois):
+        t = t.strip()
+        if len(t) == digits and _DIGITS.match(t):
+            best[t] = max(best.get(t, 0.0), float(p))
+    if not best:
+        return None, 0.0
+    top = max(best, key=best.get)
+    if best[top] < min_conf or any(v >= conflict_conf for k, v in best.items() if k != top):
+        return None, 0.0
+    return top, best[top]
+
+
 _SHARED: "NumberReader | None" = None
 
 

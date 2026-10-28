@@ -1,0 +1,383 @@
+{
+ "what": "Video Intelligence 5.2 identity evaluation, IMG_4809 (34 min), dense OCR reads + discovery sightings, CPU. 5.1 = commit 6e5303d engine; 5.2 = this commit (box-steal splits). Same stage-1 data, OCR and answers.",
+ "devIntervalGT": {
+  "source": "bench/results/5.1/gt_img4809_intervals.json (developer labels, single annotator; development set - 5.1 and 5.2 decisions were made on it)",
+  "5.1": {
+   "auto": {
+    "name": "auto",
+    "solveSec": 1.95,
+    "coverage": {
+     "confirmedVisibleSec": 25.7,
+     "likelyVisibleSec": 182.2,
+     "ambiguousSec": 1428.1,
+     "notIdentifiedSec": 228.1,
+     "analysedSec": 1864.1
+    },
+    "crops": {
+     "targetCrops": 10,
+     "targetClaimed": 9.0,
+     "targetConfirmed": 7.0,
+     "otherNumberCrops": 138,
+     "otherClaimed": 0.0,
+     "otherConfirmed": 0.0,
+     "nonPlayerClaimed": 0.0
+    },
+    "claimed17Crops": 0,
+    "intervalGT": {
+     "targetLabelledSec": 50.4,
+     "confirmedCorrectSec": 18.8,
+     "confirmedWrongSec": 0.0,
+     "likelyCorrectSec": 22.5,
+     "likelyWrongSec": 0.0,
+     "claimOnUnlabelledSec": 28.0,
+     "falseAttributionSec": 0.0,
+     "confirmedPrecision": 1.0,
+     "confirmedRecall": 0.373,
+     "likelyPrecision": 1.0,
+     "claimedRecall": 0.819,
+     "IDF1": 0.901,
+     "identitySwitches": 0,
+     "targetClaimRuns": 7,
+     "IDF1_ci95_byInterval": [
+      0.826,
+      0.976
+     ],
+     "claimedRecall_ci95_byInterval": [
+      0.704,
+      0.952
+     ]
+    }
+   },
+   "39answers": {
+    "name": "39answers",
+    "solveSec": 0.45,
+    "coverage": {
+     "confirmedVisibleSec": 68.2,
+     "likelyVisibleSec": 355.0,
+     "ambiguousSec": 1182.3,
+     "notIdentifiedSec": 258.6,
+     "analysedSec": 1864.1
+    },
+    "crops": {
+     "targetCrops": 10,
+     "targetClaimed": 9.0,
+     "targetConfirmed": 7.0,
+     "otherNumberCrops": 138,
+     "otherClaimed": 0.0,
+     "otherConfirmed": 0.0,
+     "nonPlayerClaimed": 0.0
+    },
+    "claimed17Crops": 0,
+    "intervalGT": {
+     "targetLabelledSec": 50.4,
+     "confirmedCorrectSec": 18.8,
+     "confirmedWrongSec": 0.0,
+     "likelyCorrectSec": 23.3,
+     "likelyWrongSec": 0.0,
+     "claimOnUnlabelledSec": 37.8,
+     "falseAttributionSec": 0.0,
+     "confirmedPrecision": 1.0,
+     "confirmedRecall": 0.373,
+     "likelyPrecision": 1.0,
+     "claimedRecall": 0.835,
+     "IDF1": 0.91,
+     "identitySwitches": 0,
+     "targetClaimRuns": 7,
+     "IDF1_ci95_byInterval": [
+      0.811,
+      0.999
+     ],
+     "claimedRecall_ci95_byInterval": [
+      0.682,
+      0.997
+     ]
+    }
+   }
+  },
+  "5.2": {
+   "auto": {
+    "name": "auto",
+    "solveSec": 1.9,
+    "coverage": {
+     "confirmedVisibleSec": 25.7,
+     "likelyVisibleSec": 190.9,
+     "ambiguousSec": 1389.3,
+     "notIdentifiedSec": 258.2,
+     "analysedSec": 1864.1
+    },
+    "crops": {
+     "targetCrops": 10,
+     "targetClaimed": 9.0,
+     "targetConfirmed": 7.0,
+     "otherNumberCrops": 138,
+     "otherClaimed": 0.0,
+     "otherConfirmed": 0.0,
+     "nonPlayerClaimed": 0
+    },
+    "claimed17Crops": 0,
+    "intervalGT": {
+     "targetLabelledSec": 50.4,
+     "confirmedCorrectSec": 18.8,
+     "confirmedWrongSec": 0.0,
+     "likelyCorrectSec": 24.0,
+     "likelyWrongSec": 0.0,
+     "claimOnUnlabelledSec": 26.7,
+     "falseAttributionSec": 0.0,
+     "confirmedPrecision": 1.0,
+     "confirmedRecall": 0.373,
+     "likelyPrecision": 1.0,
+     "claimedRecall": 0.849,
+     "IDF1": 0.918,
+     "identitySwitches": 0,
+     "targetClaimRuns": 8,
+     "IDF1_ci95_byInterval": [
+      0.87,
+      0.999
+     ],
+     "claimedRecall_ci95_byInterval": [
+      0.77,
+      0.997
+     ]
+    }
+   },
+   "39answers": {
+    "name": "39answers",
+    "solveSec": 0.44,
+    "coverage": {
+     "confirmedVisibleSec": 66.1,
+     "likelyVisibleSec": 389.2,
+     "ambiguousSec": 1118.9,
+     "notIdentifiedSec": 289.9,
+     "analysedSec": 1864.1
+    },
+    "crops": {
+     "targetCrops": 10,
+     "targetClaimed": 9.0,
+     "targetConfirmed": 7.0,
+     "otherNumberCrops": 138,
+     "otherClaimed": 0.0,
+     "otherConfirmed": 0.0,
+     "nonPlayerClaimed": 0.0
+    },
+    "claimed17Crops": 0,
+    "intervalGT": {
+     "targetLabelledSec": 50.4,
+     "confirmedCorrectSec": 18.8,
+     "confirmedWrongSec": 0.0,
+     "likelyCorrectSec": 23.3,
+     "likelyWrongSec": 0.0,
+     "claimOnUnlabelledSec": 41.6,
+     "falseAttributionSec": 0.0,
+     "confirmedPrecision": 1.0,
+     "confirmedRecall": 0.373,
+     "likelyPrecision": 1.0,
+     "claimedRecall": 0.835,
+     "IDF1": 0.91,
+     "identitySwitches": 0,
+     "targetClaimRuns": 7,
+     "IDF1_ci95_byInterval": [
+      0.811,
+      0.999
+     ],
+     "claimedRecall_ci95_byInterval": [
+      0.682,
+      0.997
+     ]
+    }
+   }
+  }
+ },
+ "heldOut": {
+  "windows": [
+   [
+    129,
+    159
+   ],
+   [
+    819,
+    849
+   ],
+   [
+    893,
+    923
+   ],
+   [
+    1050,
+    1080
+   ],
+   [
+    1988,
+    2018
+   ]
+  ],
+  "note": "IMG_4809 windows excluded from the interval ground truth (gt_img4809_intervals.json) and chosen at random before 5.2 work; 5.1 thresholds frozen. Every claimed box was inspected on crop sheets (developer, single annotator). The 1050-1080 window was then used to diagnose the failure and is part of a regression fixture, so it is no longer held out for future releases.",
+  "engines": {
+   "5.1": {
+    "auto": {
+     "claimedFrames": 45,
+     "claimedSpansSec": [
+      [
+       1072.7,
+       1074.9
+      ],
+      [
+       1076.7,
+       1078.5
+      ],
+      [
+       1079.2,
+       1079.5
+      ]
+     ]
+    },
+    "answers": {
+     "claimedFrames": 307,
+     "claimedSpansSec": [
+      [
+       129.3,
+       130.8
+      ],
+      [
+       133.0,
+       133.3
+      ],
+      [
+       141.2,
+       141.4
+      ],
+      [
+       141.8,
+       159.0
+      ],
+      [
+       1064.6,
+       1065.7
+      ],
+      [
+       1067.5,
+       1068.8
+      ],
+      [
+       1069.8,
+       1069.9
+      ],
+      [
+       1070.7,
+       1075.1
+      ],
+      [
+       1075.6,
+       1079.5
+      ],
+      [
+       1079.9,
+       1080.0
+      ]
+     ]
+    }
+   },
+   "5.2": {
+    "answers": {
+     "claimedFrames": 253,
+     "claimedSpansSec": [
+      [
+       129.3,
+       130.8
+      ],
+      [
+       133.0,
+       133.3
+      ],
+      [
+       141.3,
+       141.4
+      ],
+      [
+       141.8,
+       159.0
+      ],
+      [
+       1073.3,
+       1075.1
+      ],
+      [
+       1075.6,
+       1079.5
+      ],
+      [
+       1079.9,
+       1080.0
+      ]
+     ]
+    }
+   }
+  },
+  "labels": {
+   "wrong": [
+    {
+     "span": [
+      1064.6,
+      1073.2
+     ],
+     "engine": "5.1",
+     "mode": "answers",
+     "claimedFrames": 53,
+     "what": "LIKELY (anchored) on a different player: the owner's \"yes\" at 1073.4 s was carried back along tracker track 2250, which had jumped onto the answered player at 1073.3 s (and briefly at 1072.4-1072.6) from another player (fair-haired, #24 read on his own track)."
+    },
+    {
+     "span": [
+      1072.7,
+      1073.2
+     ],
+     "engine": "5.1",
+     "mode": "auto",
+     "claimedFrames": 6,
+     "what": "LIKELY (appearance) on the same other player"
+    }
+   ],
+   "correct": [
+    {
+     "span": [
+      1073.3,
+      1080.0
+     ],
+     "what": "the answered player (5.1 and 5.2 answers mode)"
+    }
+   ],
+   "unverifiable": [
+    {
+     "span": [
+      129.3,
+      159.0
+     ],
+     "what": "distant ~50 px player; identity cannot be confirmed or refuted by eye (both engines, answers mode)"
+    }
+   ],
+   "lostCoverage": [
+    {
+     "span": [
+      1073.3,
+      1079.5
+     ],
+     "engine": "5.2",
+     "mode": "auto",
+     "frames": 39,
+     "what": "5.1 auto showed the answered player as LIKELY by appearance (after the jump); 5.2 shows ambiguous there because the jump is unclear"
+    }
+   ]
+  }
+ },
+ "multiMatch": {
+  "note": "Dense stage 1 on 60 s pieces of IMG_4529 (night: 960, 1260, 1440) and IMG_5105 (day: 0, 180). 5.2 claims are identical (same frames, states and boxes) to 5.1 on all five pieces; labels of those claims in bench/results/5.1/multimatch_claim_audit.json (IMG_4529@1440: 61 frames T, 12 unsure, 0 wrong).",
+  "identicalToFiveOne": true
+ },
+ "boxSteals": {
+  "img4809Steals": 137,
+  "contactEvents": 463,
+  "detectSec2vCPU": 0.22,
+  "splitAtContactsSec2vCPU": {
+   "5.1": 0.89,
+   "5.2_unoptimised": 1.68
+  }
+ }
+}

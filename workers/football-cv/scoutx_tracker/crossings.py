@@ -41,6 +41,19 @@ SMALL_PX = 90.0
 SAME_MARGIN_SMALL = 0.10
 CLEAR_MARGIN = 0.12      # pieces without a tracker continuation (track started/ended at the contact)
 REGION_WEIGHTS = (1.0, 0.25, 1.0, 1.0)  # head, shirt, shorts, socks: the shirt does not separate team-mates
+# 5.2 box steals. A tracker can also switch people WITHOUT an overlap in the same frame: the other
+# team-mate's track is lost for a frame or two (occluded, missed detection) and this track's box
+# jumps onto him. Held-out IMG_4809 17:53 (1073.3 s): track 2250 went from one player (h 113 px)
+# to the player whose track 2212 had just ended (h 141 px); the owner's "yes" was given on the
+# second player and 5.1 carried it back ~9 s onto the first. A steal: this track's new box matches
+# the motion-extrapolated box of a same-kit track that ended within STEAL_LOOK frames (IoU >=
+# STEAL_IOU) clearly better than its own previous box (by STEAL_LEAD). The track is cut there and
+# the pieces are linked like a contact: identity follows only when appearance decides it.
+STEAL_SPLIT = __import__("os").environ.get("SCOUTX_STEAL_SPLIT", "1") != "0"
+STEAL_LOOK = 3
+STEAL_IOU = 0.4
+STEAL_LEAD = 0.15
+STEAL_SAME_MARGIN = float(__import__("os").environ.get("SCOUTX_STEAL_SAME_MARGIN", "0.0"))
 
 
 @dataclass
@@ -62,6 +75,7 @@ class ContactSplit:
     events: int = 0
     origin: dict = field(default_factory=dict)        # piece tid -> original tracker tid
     contact_pre: dict = field(default_factory=dict)   # contact piece tid -> the piece before it (same track)
+    steals: int = 0                                   # 5.2 box-steal cuts
 
 
 def contact_rows(R: np.ndarray, row_kit: np.ndarray, cover: float = CONTACT_COVER,
@@ -94,6 +108,66 @@ def contact_rows(R: np.ndarray, row_kit: np.ndarray, cover: float = CONTACT_COVE
         best = np.argmax(np.where(ok, cov, -1), 1)
         partner[grp[hit]] = grp[best[hit]]
     return occ, partner
+
+
+def _iou_many(b: np.ndarray, B: np.ndarray) -> np.ndarray:
+    x1 = np.maximum(b[0], B[:, 0])
+    y1 = np.maximum(b[1], B[:, 1])
+    x2 = np.minimum(b[2], B[:, 2])
+    y2 = np.minimum(b[3], B[:, 3])
+    i = np.clip(x2 - x1, 0, None) * np.clip(y2 - y1, 0, None)
+    u = (b[2] - b[0]) * (b[3] - b[1]) + (B[:, 2] - B[:, 0]) * (B[:, 3] - B[:, 1]) - i
+    return np.where(u > 0, i / np.maximum(u, 1e-9), 0.0)
+
+
+def steal_rows(R: np.ndarray, row_kit: np.ndarray, skip: np.ndarray | None = None, mate: float = MATE_KIT,
+               look: int = STEAL_LOOK, min_iou: float = STEAL_IOU, lead: float = STEAL_LEAD) -> list[tuple[int, int]]:
+    """(row b, row q): the track of b jumps at b onto the box of the same-kit track of q, whose track
+    has no row from q's frame up to b's frame (lost) and q is at most `look` frames before b (q's box
+    extrapolated with its own last motion). `skip`: rows never treated as steals (contact frames -
+    handled as contacts). Only rows where a track pauses or ends can be q, so the search runs from
+    those (~ms per thousand rows)."""
+    if len(R) == 0:
+        return []
+    fr = R[:, 0].astype(int)
+    tid = R[:, 2].astype(int)
+    order = np.lexsort((fr, tid))
+    cont = tid[order[:-1]] == tid[order[1:]]
+    nxt = np.full(len(R), np.iinfo(np.int64).max, np.int64)   # next frame of the same track
+    nxt[order[:-1][cont]] = fr[order[1:][cont]]
+    prv = np.full(len(R), -1, np.int64)                        # previous row of the same track (within `look`)
+    near = cont & (fr[order[1:]] - fr[order[:-1]] <= look)
+    prv[order[1:][near]] = order[:-1][near]
+    by_frame = np.argsort(fr, kind="stable")
+    fs = fr[by_frame]
+    ok_b = (prv >= 0) & (row_kit >= mate)
+    if skip is not None:
+        ok_b &= ~skip
+        ok_b[prv >= 0] &= ~skip[prv[prv >= 0]]
+    best_v = np.zeros(len(R))
+    best_q = np.full(len(R), -1, np.int64)
+    for q in np.flatnonzero((row_kit >= mate) & (nxt - fr >= 2)):
+        pq = prv[q]
+        step = (R[q, 3:7] - R[pq, 3:7]) / (fr[q] - fr[pq]) if pq >= 0 and fr[q] > fr[pq] else 0.0
+        for d in range(1, look + 1):
+            f = fr[q] + d
+            if nxt[q] <= f:
+                break
+            lo, hi = np.searchsorted(fs, f), np.searchsorted(fs, f, side="right")
+            cand = by_frame[lo:hi]
+            cand = cand[ok_b[cand] & (tid[cand] != tid[q])]
+            if not len(cand):
+                continue
+            v = _iou_many(R[q, 3:7] + step * d, R[cand, 3:7])
+            upd = v > best_v[cand]
+            best_v[cand[upd]] = v[upd]
+            best_q[cand[upd]] = q
+    out = []
+    for b in np.flatnonzero(best_v >= min_iou):
+        own = float(_iou_many(R[b, 3:7], R[prv[b], 3:7][None])[0])
+        if own < 1.0 - lead and best_v[b] > own + lead:
+            out.append((int(b), int(best_q[b])))
+    return out
 
 
 def _runs(mask: np.ndarray, join: int) -> list[tuple[int, int]]:
@@ -147,6 +221,9 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
     """Cut every track at same-kit contacts and link pre -> post pieces per contact event."""
     R = R.copy()
     occ, partner = contact_rows(R, row_kit)
+    # box steals are found on the tracker's own tracks (before any cut: a piece ending at a contact
+    # is not a lost track); contact frames are contacts, not steals
+    stolen = steal_rows(R, row_kit, skip=occ) if STEAL_SPLIT else []
     next_id = int(R[:, 2].max()) + 1 if len(R) else 1
     out = ContactSplit(R)
     order = np.lexsort((R[:, 0], R[:, 2]))
@@ -179,6 +256,23 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
                 out.contact_pre[c] = pre
             contacts.append({"contact": c, "pre": pre, "post": post, "rows": ix[a:b],
                              "t0": float(R[ix[a], 1]), "t1": float(R[ix[b - 1], 1])})
+    steals = []
+    if STEAL_SPLIT:
+        for b, q in sorted(stolen, key=lambda x: (R[x[0], 2], R[x[0], 0])):
+            old = int(R[b, 2])
+            ix = np.flatnonzero(R[:, 2] == old)
+            ix = ix[R[ix, 0] >= R[b, 0]]
+            R[ix, 2] = next_id
+            out.origin[next_id] = out.origin.get(old, old)
+            for c in contacts:  # the later part of the piece is now the 'pre' of its next contact
+                if c["pre"] == old and c["t0"] >= R[b, 1]:
+                    c["pre"] = next_id
+                    out.contact_pre[c["contact"]] = next_id
+            steals.append({"pre": old, "post": next_id, "q": int(q), "t": float(R[b, 1])})
+            next_id += 1
+        for st in steals:  # the other track's piece as it is after all cuts
+            st["other"] = int(R[st["q"], 2])
+    out.steals = len(steals)
     out.rows = R
     # partner rows were labelled with the partner's ORIGINAL tid before splitting: map to pieces
     by_contact = {c["contact"]: c for c in contacts}
@@ -240,7 +334,38 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
         succ = {e["pre"]: e["post"] for e in comp if e["pre"] is not None}
         small = min([height(p, "pre") for p, _ in pres] + [height(p, "post") for p, _ in posts]) < SMALL_PX
         _link_event(out, pres, posts, cost, max(e["t1"] for e in comp), succ, small)
+    for st in steals:
+        _link_steal(out, st, desc(st["pre"], "pre"), desc(st["other"], "pre"), desc(st["post"], "post"))
     return out
+
+
+def _link_steal(out: ContactSplit, st: dict, d_own, d_other, d_post) -> None:
+    """Link the pieces around a box steal. The tracker continued `pre` with `post`, but its box jumped
+    onto where `other` was: post is `other`'s person when appearance says so by SWAP_MARGIN (a swap
+    link other -> post), `pre`'s when appearance prefers it (by more than STEAL_SAME_MARGIN), otherwise
+    unclear (identity does not cross the jump). Without a usable `other` appearance, `pre` is followed
+    only on a close match (CLEAR_MARGIN), as for a contact piece without a competitor."""
+    t = round(st["t"], 2)
+    if d_post is None or d_own is None:
+        out.links.append(Link(pre=st["pre"], post=st["post"], t=t, clear=False, margin=0.0, cost=0.0, decision="unclear"))
+        return
+    c_own = distance(d_own, d_post)
+    if d_other is None:
+        # the other piece has no usable appearance (too short / all contact frames): the same rule as
+        # a contact piece without a competitor - follow only a close appearance match (CLEAR_MARGIN)
+        ok = c_own <= CLEAR_MARGIN
+        out.links.append(Link(pre=st["pre"], post=st["post"], t=t, clear=ok, margin=0.0, cost=round(c_own, 3),
+                              decision="same" if ok else "unclear"))
+        return
+    c_oth = distance(d_other, d_post)
+    m = c_oth - c_own   # > 0: appearance prefers the tracker's own piece
+    if -m >= SWAP_MARGIN:
+        out.links.append(Link(pre=st["other"], post=st["post"], t=t, clear=True, margin=round(-m, 3), cost=round(c_oth, 3), decision="swap"))
+        out.links.append(Link(pre=st["pre"], post=st["post"], t=t, clear=False, margin=round(-m, 3), cost=round(c_own, 3), decision="unclear"))
+    elif m > STEAL_SAME_MARGIN:
+        out.links.append(Link(pre=st["pre"], post=st["post"], t=t, clear=True, margin=round(m, 3), cost=round(c_own, 3), decision="same"))
+    else:
+        out.links.append(Link(pre=st["pre"], post=st["post"], t=t, clear=False, margin=round(m, 3), cost=round(c_own, 3), decision="unclear"))
 
 
 def _link_event(out: ContactSplit, pres, posts, cost: np.ndarray, t_end: float, succ: dict | None = None,
