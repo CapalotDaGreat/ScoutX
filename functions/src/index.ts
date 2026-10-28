@@ -85,7 +85,7 @@ export { requestDataExport, buildDataExport } from './dataRights/dataExport';
 export { submitPrivacyRequest, updatePrivacyRequest } from './dataRights/privacyRequests';
 export { retentionCleanup } from './dataRights/retentionCleanup';
 export { inspectVideoSource } from './analysis/videoSourceCallable';
-export { answerTrackingQuestion, undoTrackingAnswer, setTrackingPeriods, resolveTrackingTask } from './analysis/trackingCallables';
+export { answerTrackingQuestion, undoTrackingAnswer, setTrackingPeriods, resolveTrackingTask, refreshTrackingOcrTask } from './analysis/trackingCallables';
 export { startPlayerAnalysis, extractTrackingSegmentTask, discoverTrackingTask } from './analysis/trackingOrchestrator';
 export { explainTrackingMoment } from './analysis/trackingReasoning';
 export { startLinkImport, processLinkImportTask } from './uploads/linkImportJobs';

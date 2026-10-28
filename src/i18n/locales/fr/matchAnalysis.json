@@ -1108,6 +1108,7 @@
     },
     "preliminaryBadge": "Premiers résultats",
     "updating": "Mise à jour avec tes réponses…",
+    "checkingMore": "Ton match est mis à jour. Vérification de quelques moments supplémentaires.",
     "followUp": {
       "title": "Ton objectif des matchs précédents",
       "evidence": "Ce match contient de la vidéo sur cet objectif ({{count}}). Regarde-la et juge toi-même.",

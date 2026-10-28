@@ -74,7 +74,14 @@ export type TrackingMoment = {
 export type TrackingDiscoveryDoc = { moments: TrackingMoment[]; generation: number; updatedAt: string };
 export type TrackingDoc = { report: TrackingReport | null; version: number; stale: boolean; pendingReason?: string | null;
   /** 'preliminary' while the rest of the match is still being analysed. */
-  scope?: 'preliminary' | 'full'; parts?: number };
+  scope?: 'preliminary' | 'full'; parts?: number;
+  /** 5.2 deferred number reading after a correction (server-written facts, see trackingFollowUp.ts). */
+  followUp?: { status: 'scheduled' | 'running' | 'done' | 'stale' | 'cancelled' | 'limited' | 'failed'; round: number } | null };
+
+/** True only while a follow-up is really queued or running - never shown speculatively. */
+export function checkingMoreMoments(doc: Pick<TrackingDoc, 'stale' | 'followUp'> | null | undefined): boolean {
+  return !!doc && !doc.stale && (doc.followUp?.status === 'scheduled' || doc.followUp?.status === 'running');
+}
 
 /** Mirrors functions/src/analysis/trackingProgress.ts: persisted facts only, never a percentage. */
 export type TrackingProgressDoc = {

@@ -106,13 +106,17 @@ def load_ocr_cache(cache_path: Path) -> dict:
 
 
 def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: int = 2, log=print,
-            early_stop: bool = True, budget_sec: float | None = None, skipped: list | None = None) -> dict[str, list]:
+            early_stop: bool = True, budget_sec: float | None = None, skipped: list | None = None,
+            max_new: int | None = None, read_new: list | None = None) -> dict[str, list]:
     """Reads crops tracklet by tracklet; stops early once a tracklet's number is settled.
     5.1: `budget_sec` bounds the time spent reading crops that are not cached yet (a correction
     must answer in seconds; the first resolve after extraction fills the cache without a budget).
-    Crops left unread are counted in `skipped` and read by a later unbudgeted resolve."""
+    Crops left unread are counted in `skipped` and read by a later unbudgeted resolve.
+    5.2: `max_new` bounds the NUMBER of uncached crops read (deferred-OCR follow-up); the crop
+    order is deterministic, so repeated follow-ups make progress and never loop."""
     cache = load_ocr_cache(cache_path)
     t_budget = time.time()
+    n_new = 0
     reader = None
     t, done = time.time(), 0
     total = sum(len(v) for v in crops_by_tid.values())
@@ -120,7 +124,8 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
         counts: dict[str, int] = {}
         for c in crops:
             key = crop_key(c)
-            if key not in cache and budget_sec is not None and time.time() - t_budget > budget_sec:
+            if key not in cache and ((budget_sec is not None and time.time() - t_budget > budget_sec)
+                                     or (max_new is not None and n_new >= max_new)):
                 if skipped is not None:
                     skipped.append(key)
                 continue
@@ -133,6 +138,9 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                 num, conf, band = reader.read(img) if img is not None else (None, 0.0, None)
                 cache[key] = [num, conf, band]
                 done += 1
+                n_new += 1
+                if read_new is not None:
+                    read_new.append(key)
                 if done % 100 == 0:
                     cache_path.write_text(json.dumps(cache))
                     log(f"reading numbers: {done} crops ({(time.time() - t) / done:.2f}s each), tracklet {k + 1}/{len(crops_by_tid)}")
@@ -247,7 +255,8 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
             anchors: list[tuple[float, float, float]] | None = None, ocr: bool = True, log=print,
             rejects: list[tuple[float, float, float]] | None = None, feedback: dict | None = None,
             position: str = "unknown", age_group: str = "", ocr_dense: bool = True, D=None,
-            sightings: list[dict] | None = None, ocr_budget_sec: float | None = None) -> dict:
+            sightings: list[dict] | None = None, ocr_budget_sec: float | None = None,
+            ocr_max_new: int | None = None) -> dict:
     from .ball import ball_events  # noqa: PLC0415
     from .moments import build_moments  # noqa: PLC0415
     from .invariants import check  # noqa: PLC0415
@@ -278,8 +287,9 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         log(f"ocr crops: {sum(len(v) for v in crops.values())} across {len(crops)} tracklets")
         ocr_skipped: list = []
         t_ocr0 = time.time()
+        ocr_new: list = []
         cache = run_ocr(crops, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log, early_stop=not ocr_dense,
-                        budget_sec=ocr_budget_sec, skipped=ocr_skipped)
+                        budget_sec=ocr_budget_sec, skipped=ocr_skipped, max_new=ocr_max_new, read_new=ocr_new)
         det_of = det_of_crop(D)
         det_reads = {det_of[c]: v[0] for c, v in cache.items() if v[0] and c in det_of}
         # Same-team identity swaps are invisible to colour: split where shirt numbers conflict.
@@ -323,7 +333,8 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         before = sum(len(v) for v in reads.values())
         cache = run_ocr(extra, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log, early_stop=False,
                         budget_sec=None if ocr_budget_sec is None else max(0.0, ocr_budget_sec - (time.time() - t_ocr0)),
-                        skipped=ocr_skipped if (ocr and number) else None)
+                        skipped=ocr_skipped if (ocr and number) else None,
+                        max_new=None if ocr_max_new is None else max(0, ocr_max_new - len(ocr_new)), read_new=ocr_new)
         row_of_det = memo(("row_of_det", _token(T)), lambda: {int(d): i for i, d in enumerate(T.rows[:, 8])})
         det_of = det_of_crop(D)
         seen = {(tid, f) for tid, rs in reads.items() for f, *_ in rs}
@@ -415,7 +426,8 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
     report = {
         "schema": SCHEMA,
         "engine": {"version": __import__("scoutx_tracker").__version__, "timingsSec": {k: round(v, 1) for k, v in timings.items()},
-                   "ocrDeferred": len(set(ocr_skipped)) if (ocr and number) else 0},
+                   "ocrDeferred": len(set(ocr_skipped) - set(ocr_new)) if (ocr and number) else 0,
+                   "ocrRead": len(ocr_new) if (ocr and number) else 0},
         "target": {"number": number, "kit": kit, "kit2": kit2, "position": position, "ageGroup": age_group,
                    "anchors": anchors or [], "rejects": rejects or []},
         "timeline": {"periods": timeline.to_json(),

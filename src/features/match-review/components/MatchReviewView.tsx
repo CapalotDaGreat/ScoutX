@@ -10,7 +10,7 @@ import { Text } from '@/components/primitives/Text';
 import { useStorageUrls } from '@/features/match-analysis/hooks/useTracking';
 import { startPlayerAnalysis } from '@/features/match-analysis/services/trackingV3Service';
 import {
-  STATE_COLORS, formatClock, withDiscovery, type TrackingDiscoveryDoc, type TrackingDoc, type TrackingProgressDoc,
+  STATE_COLORS, checkingMoreMoments, formatClock, withDiscovery, type TrackingDiscoveryDoc, type TrackingDoc, type TrackingProgressDoc,
 } from '@/features/match-analysis/services/trackingPresentation';
 import { ReelRepository } from '@/features/reel-studio/repositories/ReelRepository';
 import { useReviewT } from '../hooks/useReviewT';
@@ -355,6 +355,7 @@ export function MatchReviewView(props: MatchReviewViewProps) {
               <ChoiceChip key={v} label={t(`review.view.${v}`)} selected={view === v} onPress={() => setView(v)} />
             ))}
             {tracking?.stale ? <Badge size="sm" variant="warning" label={t('review.updating')} /> : null}
+            {checkingMoreMoments(tracking) ? <Text variant="body-sm" color="secondary" testID="review-checking-more">{t('review.checkingMore')}</Text> : null}
           </View>
 
           {/* A Hero */}

@@ -68,6 +68,8 @@ export type ReviewQuestion = {
 export type TrackingReport = {
   schema: typeof TRACKING_SCHEMA;
   engineVersion: string;
+  /** 5.2: shirt-number crops this resolve did not read (a correction defers them); 0 when complete */
+  ocrDeferred: number;
   target: { number: string | null; kit: string; kit2: string; position: string };
   coverage: TrackingCoverage;
   periods: TrackingPeriod[];
@@ -314,6 +316,7 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
   const report: TrackingReport = {
     schema: TRACKING_SCHEMA,
     engineVersion: String(asRecord(r.engine)?.version ?? 'unknown').slice(0, 40),
+    ocrDeferred: Math.min(100000, Math.max(0, Math.floor(Number(asRecord(r.engine)?.ocrDeferred) || 0))),
     target: { number: target.number ? String(target.number).slice(0, 3) : null, kit: String(target.kit ?? '').slice(0, 40),
       kit2: String(target.kit2 ?? '').slice(0, 40), position: String(target.position ?? 'unknown').slice(0, 30) },
     coverage, periods, statesSec,

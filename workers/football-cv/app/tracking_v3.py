@@ -77,6 +77,14 @@ class Feedback(BaseModel):
     asked: list[list[float]] = Field(default_factory=list, max_length=500)
 
 
+class OcrRefresh(BaseModel):
+    """5.2 deferred-OCR follow-up: read at most `maxNewCrops` of the number crops a correction
+    deferred (deterministic order), then resolve again. Never more than the cap per request."""
+    model_config = ConfigDict(extra="forbid")
+    mode: Literal["refresh"]
+    maxNewCrops: int = Field(default=400, ge=1, le=2000)
+
+
 class ResolveRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     contractVersion: Literal[3]
@@ -84,6 +92,7 @@ class ResolveRequest(BaseModel):
     privacy: Privacy
     target: Target
     feedback: Feedback = Field(default_factory=Feedback)
+    ocr: OcrRefresh | None = None
 
 
 class Source(BaseModel):
@@ -260,7 +269,9 @@ def resolve(request: ResolveRequest) -> dict:
     with tempfile.TemporaryDirectory(prefix="track_") as tmp:
         extra = {} if _analyze is not None else {"D": _cached_detections(runs),
                                                    "sightings": _job_sightings(request.jobId)}
-        if _analyze is None and (fb.yes or fb.no):
+        if _analyze is None and request.ocr is not None:
+            extra["ocr_max_new"] = request.ocr.maxNewCrops
+        elif _analyze is None and (fb.yes or fb.no):
             # 5.1: a correction answers within seconds - number reads not cached yet are deferred
             # to the next unbudgeted resolve instead of being read now
             extra["ocr_budget_sec"] = CORRECTION_OCR_BUDGET_SEC

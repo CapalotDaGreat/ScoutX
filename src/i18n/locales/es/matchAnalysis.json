@@ -1108,6 +1108,7 @@
     },
     "preliminaryBadge": "Primeros resultados",
     "updating": "Actualizando con tus respuestas…",
+    "checkingMore": "Tu partido está actualizado. Estamos revisando algunos momentos más.",
     "followUp": {
       "title": "Tu objetivo de partidos anteriores",
       "evidence": "Este partido tiene vídeo sobre este objetivo ({{count}}). Míralo y juzga tú mismo.",

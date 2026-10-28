@@ -1108,6 +1108,7 @@
     },
     "preliminaryBadge": "Erste Ergebnisse",
     "updating": "Wird mit deinen Antworten aktualisiert…",
+    "checkingMore": "Dein Spiel ist aktualisiert. Ein paar weitere Momente werden noch geprüft.",
     "followUp": {
       "title": "Dein Fokus aus früheren Spielen",
       "evidence": "Dieses Spiel enthält Videomaterial zu diesem Fokus ({{count}}). Schau es an und urteile selbst.",

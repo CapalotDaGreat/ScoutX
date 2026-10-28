@@ -214,3 +214,47 @@ def test_batched_read_and_verify_gives_the_same_sighting_as_two_calls():
     sa = [(s.t, s.frames, s.weak_frames) for s in a.sightings]
     assert sa and sa == [(s.t, s.frames, s.weak_frames) for s in b.sightings]
     assert all(s.frames == 0 for s in a.sightings), "weak-only: a moment to check, never confirmed"
+
+
+def test_52_refresh_reads_at_most_max_new_crops_in_a_fixed_order(tmp_path, monkeypatch):
+    import json as _json
+
+    import scoutx_tracker.analyze as A
+    import scoutx_tracker.ocr as O
+
+    class R:
+        def __init__(self):
+            self.n = 0
+
+        def read(self, img):
+            self.n += 1
+            return ("20", 0.97, "shirt:white")
+
+    r = R()
+    monkeypatch.setattr(O, "shared_reader", lambda: r)
+    monkeypatch.setattr(A.cv2, "imread", lambda p: np.zeros((10, 10, 3), np.uint8))
+    crops = {1: [f"/x/c_00000/crops/{i:06d}_{i}.jpg" for i in range(10)]}
+    cache = tmp_path / "ocr_cache.json"
+    skipped, new = [], []
+    A.run_ocr(crops, cache, 2, log=lambda m: None, early_stop=False, budget_sec=0.0, skipped=skipped)
+    assert r.n == 0 and len(skipped) == 10, "a correction reads nothing new"
+    A.run_ocr(crops, cache, 2, log=lambda m: None, early_stop=False, max_new=4, read_new=new)
+    assert r.n == 4 and new == [A.crop_key(c) for c in crops[1][:4]], "first 4 in the fixed order"
+    A.run_ocr(crops, cache, 2, log=lambda m: None, early_stop=False, max_new=4, read_new=new)
+    assert r.n == 8 and len(_json.loads(cache.read_text())) == 8, "the next follow-up continues, never re-reads"
+
+
+def test_52_resolve_contract_accepts_bounded_refresh_only():
+    import pytest
+    from pydantic import ValidationError
+
+    from app.tracking_v3 import ResolveRequest
+
+    base = {"contractVersion": 3, "jobId": "job_1", "privacy": {"retainNonTargetIdentities": False, "faceRecognition": False,
+                                                                  "persistMedia": False},
+            "target": {"jerseyNumber": "20", "kitPrimaryColor": "orange"}}
+    assert ResolveRequest(**base).ocr is None
+    assert ResolveRequest(**base, ocr={"mode": "refresh", "maxNewCrops": 400}).ocr.maxNewCrops == 400
+    for bad in ({"mode": "refresh", "maxNewCrops": 5000}, {"mode": "everything"}, {"mode": "refresh", "budget": 1}):
+        with pytest.raises(ValidationError):
+            ResolveRequest(**base, ocr=bad)

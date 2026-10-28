@@ -1108,6 +1108,7 @@
     },
     "preliminaryBadge": "Early results",
     "updating": "Updating with your answers…",
+    "checkingMore": "Updated your match. Checking a few additional moments.",
     "followUp": {
       "title": "Your focus from earlier matches",
       "evidence": "This match has footage about this focus ({{count}}). Watch it and judge for yourself.",

@@ -1108,6 +1108,7 @@
     },
     "preliminaryBadge": "Primi risultati",
     "updating": "Aggiornamento con le tue risposte…",
+    "checkingMore": "La tua partita è aggiornata. Stiamo controllando qualche altro momento.",
     "followUp": {
       "title": "Il tuo obiettivo dalle partite precedenti",
       "evidence": "Questa partita contiene video su questo obiettivo ({{count}}). Guardalo e giudica tu.",

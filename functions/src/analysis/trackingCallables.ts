@@ -18,9 +18,14 @@ import { writeSystemActivity, type SystemActivityInput } from '../notificationPr
 import {
   notificationId, reviewNeeded, shouldReplaceReport, type PublishedReport, type ReportScope, type TrackingProgress,
 } from './trackingProgress';
+import {
+  OCR_FOLLOW_UP_ACTION, OCR_FOLLOW_UP_DAILY_LIMIT, OCR_FOLLOW_UP_MAX_CROPS, followUpRunnable, followUpTaskId, planOcrFollowUp,
+  type OcrFollowUp,
+} from './trackingFollowUp';
+import { rateLimitDocId } from '../security/rateLimit';
 
 type CurrentDoc = { report: TrackingReport | null; version: number; stale: boolean; feedbackRevision: number;
-  pendingReason?: string | null; updatedAt?: string };
+  pendingReason?: string | null; updatedAt?: string; followUp?: OcrFollowUp | null };
 type FeedbackDoc = TrackingFeedback & { revision: number };
 
 const OP_ID = /^[A-Za-z0-9_-]{8,64}$/;
@@ -147,9 +152,25 @@ export const storageImageStore: ImageStore = async (path, jpeg) => {
 /** Writes a server activity (push policy, preferences and de-duplication apply downstream). */
 export type TrackingNotifier = (activityId: string, input: SystemActivityInput) => Promise<boolean>;
 
+/** Schedules one deferred-OCR follow-up round (5.2); the task id de-duplicates retries. */
+export type FollowUpEnqueue = (payload: { jobId: string; feedbackRevision: number; round: number }, taskId: string) => Promise<void>;
+
+export const cloudTasksFollowUpEnqueue: FollowUpEnqueue = async (payload, taskId) => {
+  try {
+    await getFunctions().taskQueue(taskQueueName('refreshTrackingOcrTask'))
+      .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: 900 });
+  } catch (e) {
+    // ALREADY_EXISTS: this round was scheduled before (a retried publish) - nothing to do
+    if (!String((e as { code?: unknown })?.code ?? e).includes('already-exists')) throw e;
+  }
+};
+
 export type ResolveOptions = {
-  /** 'feedback' = re-resolve after an identity answer; 'preliminary'/'full' = orchestrated. */
-  scope?: 'feedback' | 'preliminary' | 'full';
+  /** 'feedback' = re-resolve after an identity answer; 'preliminary'/'full' = orchestrated;
+   *  'refresh' = 5.2 deferred-OCR follow-up round `followUpRound`. */
+  scope?: 'feedback' | 'preliminary' | 'full' | 'refresh';
+  followUpRound?: number;
+  enqueueFollowUp?: FollowUpEnqueue;
   notify?: TrackingNotifier;
   now?: () => Date;
 };
@@ -174,9 +195,11 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   if ((fb.revision ?? 0) !== feedbackRevision) return 'superseded';
   const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
   if (!job || job.cancelRequested) return 'unavailable';
+  const refresh = opts.scope === 'refresh';
   const raw = await client({
     contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
     target: job.targeting ?? {}, feedback: workerFeedback(fb),
+    ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: OCR_FOLLOW_UP_MAX_CROPS } } : {}),
   }) as { report?: unknown; timeline?: { times: number[]; states: string[] }; workerVersion?: string; models?: Record<string, string> } | null;
   if (!raw || !raw.workerVersion || !raw.models || !isApprovedWorkerOutput({ workerVersion: raw.workerVersion, models: raw.models }, env)) {
     return 'rejected';
@@ -214,17 +237,31 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     report.referenceImagePath = path;
   }
   const at = now().toISOString();
+  let followUp: OcrFollowUp | null = null;
   const outcome = await db.runTransaction(async (tx) => {
     const fresh = await tx.get(base.doc('feedback'));
     const cur = await tx.get(base.doc('current'));
     if (((fresh.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded' as const;
     const curDoc = cur.data() as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
+    if (refresh && !followUpRunnable(curDoc?.followUp, feedbackRevision, opts.followUpRound ?? -1)) return 'stale' as const;
     if (!shouldReplaceReport(curDoc?.report ? { parts: curDoc.parts ?? 0, scope: curDoc.scope } : null,
       { parts: report.analysedRange.parts, scope })) {
       return 'stale' as const;
     }
+    // 5.2 deferred OCR: decide the follow-up from facts; per-user daily quota in the same transaction
+    const quotaRef = db.collection('callableRateLimits').doc(rateLimitDocId(job.playerId, OCR_FOLLOW_UP_ACTION, 'day', now()));
+    const quota = await tx.get(quotaRef);
+    const used = (quota.get('count') as number | undefined) ?? 0;
+    followUp = planOcrFollowUp(opts.scope ?? 'feedback', feedbackRevision, report.ocrDeferred, curDoc?.followUp ?? null, at,
+      refresh ? opts.followUpRound ?? null : null, used < OCR_FOLLOW_UP_DAILY_LIMIT);
+    const scheduledNow = followUp?.status === 'scheduled'
+      && !(curDoc?.followUp?.revision === followUp.revision && curDoc?.followUp?.round === followUp.round);
+    if (scheduledNow) {
+      tx.set(quotaRef, { uid: job.playerId, action: OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
+        updatedAt: at }, { merge: true });
+    }
     tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-      stale: false, pendingReason: null, feedbackRevision, updatedAt: at });
+      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp });
     if (progress) {
       const published: PublishedReport = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
         moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };
@@ -232,7 +269,12 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     }
     return 'done' as const;
   });
-  if (outcome !== 'done' || !progress) return outcome;
+  const fu = followUp as OcrFollowUp | null;
+  if (outcome === 'done' && fu && fu.status === 'scheduled') {
+    await (opts.enqueueFollowUp ?? cloudTasksFollowUpEnqueue)({ jobId, feedbackRevision, round: fu.round },
+      followUpTaskId(jobId, feedbackRevision, fu.round));
+  }
+  if (outcome !== 'done' || !progress || refresh) return outcome;
   const notify = opts.notify ?? ((id, input) => writeSystemActivity(db, id, input));
   const ref_ = { entityType: 'match_analysis', entityId: jobId, label: 'Match analysis' };
   const gen = progress.generation;
@@ -272,6 +314,53 @@ export const resolveTrackingTask = onTaskDispatched(
     const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env,
       storageImageStore, { scope });
     if (scope !== 'feedback') await settleOrchestratedResolve(db, d.jobId, scope, outcome);
+  },
+);
+
+/**
+ * 5.2 deferred-OCR follow-up round: runs only if it is still the current round of the current
+ * feedback revision (duplicates and stale tasks do nothing), publishes a newer report version
+ * through the normal guarded path and records the outcome. Never loops: the next round is only
+ * scheduled by processResolveTask when this one made progress (trackingFollowUp.ts).
+ */
+export async function processOcrFollowUpTask(db: Firestore, jobId: string, feedbackRevision: number, round: number,
+  client: TrackingWorkerClient | null, env: NodeJS.ProcessEnv = process.env, storeImage: ImageStore = storageImageStore,
+  opts: Omit<ResolveOptions, 'scope' | 'followUpRound'> = {}): Promise<Awaited<ReturnType<typeof processResolveTask>>> {
+  const now = opts.now ?? (() => new Date());
+  const ref = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc('current');
+  const claimed = await db.runTransaction(async (tx) => {
+    const cur = await tx.get(ref);
+    const f = (cur.data() as CurrentDoc | undefined)?.followUp ?? null;
+    if (!followUpRunnable(f, feedbackRevision, round)) return false;
+    tx.set(ref, { followUp: { ...(f as OcrFollowUp), status: 'running', updatedAt: now().toISOString() } }, { merge: true });
+    return true;
+  });
+  if (!claimed) return 'stale';
+  const outcome = await processResolveTask(db, jobId, feedbackRevision, client, env, storeImage,
+    { ...opts, scope: 'refresh', followUpRound: round });
+  if (outcome !== 'done') {
+    const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
+    const status = outcome === 'superseded' || outcome === 'stale' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
+    await db.runTransaction(async (tx) => {
+      const cur = await tx.get(ref);
+      const f = (cur.data() as CurrentDoc | undefined)?.followUp ?? null;
+      if (f && f.revision === feedbackRevision && f.round === round && ['scheduled', 'running'].includes(f.status)) {
+        tx.set(ref, { followUp: { ...f, status, updatedAt: now().toISOString() } }, { merge: true });
+      }
+    });
+  }
+  return outcome;
+}
+
+export const refreshTrackingOcrTask = onTaskDispatched(
+  { retryConfig: { maxAttempts: 2, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 2 }, timeoutSeconds: 900 },
+  async (request) => {
+    const d = request.data as { jobId?: unknown; feedbackRevision?: unknown; round?: unknown };
+    if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision)
+      || !Number.isSafeInteger(d.round) || (d.round as number) < 1) return;
+    const url = cvWorkerUrl();
+    await processOcrFollowUpTask(getFirestore(), d.jobId, d.feedbackRevision as number, d.round as number,
+      url ? httpTrackingClient(url) : null);
   },
 );
 
