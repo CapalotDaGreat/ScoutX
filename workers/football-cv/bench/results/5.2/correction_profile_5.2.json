@@ -1,0 +1,167 @@
+{
+ "what": "Correction path profile, IMG_4809 full resolve (34 min), CPU 2 vCPU, same machine/session, A/B of SCOUTX_STEAL_SPLIT; second repetition of each (OCR cache filled by both variants). cold = first call in a fresh process (models + caches), warm = repeat, newAnswer = a correction with one added answer (no new OCR).",
+ "steal_off_5.1_assembly": [
+  {
+   "name": "cold",
+   "wallSec": 31.89,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 4.6,
+    "numbers": 7.4,
+    "identity": 15.9,
+    "timeline_metrics_events": 2.8
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 386.2
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "warm",
+   "wallSec": 2.17,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.3,
+    "identity": 0.9,
+    "timeline_metrics_events": 0.2
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 386.2
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "warm2",
+   "wallSec": 2.57,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.4,
+    "identity": 1.2,
+    "timeline_metrics_events": 0.2
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 386.2
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "newAnswer",
+   "wallSec": 2.9,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.5,
+    "identity": 1.3,
+    "timeline_metrics_events": 0.3
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 392.5
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "newAnswer2",
+   "wallSec": 2.53,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.4,
+    "identity": 1.1,
+    "timeline_metrics_events": 0.3
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.6,
+    "likelyVisibleSec": 410.1
+   },
+   "ocrDeferred": 8
+  }
+ ],
+ "steal_on_5.2": [
+  {
+   "name": "cold",
+   "wallSec": 18.2,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 4.9,
+    "numbers": 7.3,
+    "identity": 2.7,
+    "timeline_metrics_events": 2.6
+   },
+   "coverage": {
+    "confirmedVisibleSec": 67.9,
+    "likelyVisibleSec": 390.8
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "warm",
+   "wallSec": 2.09,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.3,
+    "identity": 0.9,
+    "timeline_metrics_events": 0.2
+   },
+   "coverage": {
+    "confirmedVisibleSec": 67.9,
+    "likelyVisibleSec": 390.8
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "warm2",
+   "wallSec": 2.17,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.4,
+    "identity": 0.9,
+    "timeline_metrics_events": 0.2
+   },
+   "coverage": {
+    "confirmedVisibleSec": 67.9,
+    "likelyVisibleSec": 390.8
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "newAnswer",
+   "wallSec": 2.42,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.4,
+    "identity": 1.1,
+    "timeline_metrics_events": 0.3
+   },
+   "coverage": {
+    "confirmedVisibleSec": 67.9,
+    "likelyVisibleSec": 391.1
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "newAnswer2",
+   "wallSec": 2.3,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.3,
+    "identity": 0.9,
+    "timeline_metrics_events": 0.3
+   },
+   "coverage": {
+    "confirmedVisibleSec": 76.0,
+    "likelyVisibleSec": 394.8
+   },
+   "ocrDeferred": 46
+  }
+ ]
+}

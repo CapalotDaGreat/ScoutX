@@ -1,0 +1,141 @@
+{
+ "what": "Deferred-OCR follow-up rounds (worker side, analyze(ocr_max_new=400) = what refreshTrackingOcrTask sends), IMG_4809, CPU 2 vCPU. natural = the production OCR cache (nothing deferred); drop1500 = 1500 random cached reads removed from a COPY of the cache, to emulate crops the earlier passes never read. Cloud Tasks / Firestore not exercised (blocked).",
+ "natural": {
+  "droppedCacheEntries": 0,
+  "cacheEntries": 8579,
+  "rounds": [
+   {
+    "name": "warmup (cold models)",
+    "wallSec": 37.72,
+    "ocrDeferred": 0,
+    "ocrRead": 0,
+    "stages": {
+     "load": 0.0,
+     "tracklets": 29.6,
+     "numbers": 4.8,
+     "identity": 1.6,
+     "timeline_metrics_events": 1.4
+    },
+    "coverage": {
+     "confirmedVisibleSec": 67.9,
+     "likelyVisibleSec": 390.8,
+     "ambiguousSec": 1105.4
+    }
+   },
+   {
+    "name": "correction (5.1: no OCR)",
+    "wallSec": 1.16,
+    "ocrDeferred": 0,
+    "ocrRead": 0,
+    "stages": {
+     "load": 0.0,
+     "tracklets": 0.0,
+     "numbers": 0.1,
+     "identity": 0.5,
+     "timeline_metrics_events": 0.2
+    },
+    "coverage": {
+     "confirmedVisibleSec": 67.9,
+     "likelyVisibleSec": 390.8,
+     "ambiguousSec": 1105.4
+    }
+   }
+  ]
+ },
+ "drop1500": {
+  "droppedCacheEntries": 1500,
+  "cacheEntries": 7079,
+  "rounds": [
+   {
+    "name": "warmup (cold models)",
+    "wallSec": 11.39,
+    "ocrDeferred": 878,
+    "ocrRead": 0,
+    "stages": {
+     "load": 0.0,
+     "tracklets": 3.4,
+     "numbers": 5.0,
+     "identity": 1.5,
+     "timeline_metrics_events": 1.2
+    },
+    "coverage": {
+     "confirmedVisibleSec": 70.0,
+     "likelyVisibleSec": 385.5,
+     "ambiguousSec": 1110.7
+    }
+   },
+   {
+    "name": "correction (5.1: no OCR)",
+    "wallSec": 0.96,
+    "ocrDeferred": 878,
+    "ocrRead": 0,
+    "stages": {
+     "load": 0.0,
+     "tracklets": 0.0,
+     "numbers": 0.1,
+     "identity": 0.5,
+     "timeline_metrics_events": 0.1
+    },
+    "coverage": {
+     "confirmedVisibleSec": 70.0,
+     "likelyVisibleSec": 385.5,
+     "ambiguousSec": 1110.7
+    }
+   },
+   {
+    "name": "refresh round 1",
+    "wallSec": 163.68,
+    "ocrDeferred": 474,
+    "ocrRead": 400,
+    "stages": {
+     "load": 0.0,
+     "tracklets": 0.0,
+     "numbers": 161.8,
+     "identity": 0.7,
+     "timeline_metrics_events": 0.9
+    },
+    "coverage": {
+     "confirmedVisibleSec": 70.0,
+     "likelyVisibleSec": 385.6,
+     "ambiguousSec": 1110.6
+    }
+   },
+   {
+    "name": "refresh round 2",
+    "wallSec": 61.26,
+    "ocrDeferred": 60,
+    "ocrRead": 400,
+    "stages": {
+     "load": 0.0,
+     "tracklets": 0.0,
+     "numbers": 37.6,
+     "identity": 22.1,
+     "timeline_metrics_events": 1.1
+    },
+    "coverage": {
+     "confirmedVisibleSec": 67.9,
+     "likelyVisibleSec": 391.2,
+     "ambiguousSec": 1105.2
+    }
+   },
+   {
+    "name": "refresh round 3",
+    "wallSec": 15.84,
+    "ocrDeferred": 0,
+    "ocrRead": 66,
+    "stages": {
+     "load": 0.0,
+     "tracklets": 0.0,
+     "numbers": 6.5,
+     "identity": 8.2,
+     "timeline_metrics_events": 0.8
+    },
+    "coverage": {
+     "confirmedVisibleSec": 67.9,
+     "likelyVisibleSec": 391.2,
+     "ambiguousSec": 1105.2
+    }
+   }
+  ]
+ }
+}
