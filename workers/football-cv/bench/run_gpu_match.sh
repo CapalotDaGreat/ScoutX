@@ -18,10 +18,14 @@ IMAGE=${PITCHPROOF_GPU_IMAGE:-pitchproof-tracker-gpu:5.2}
 if [[ "${SKIP_GPU_BUILD:-0}" != 1 ]]; then
   docker build -f "$ROOT/workers/football-cv/Dockerfile.tracker-gpu" -t "$IMAGE" "$ROOT/workers/football-cv"
 fi
+GT_ARGS=()
+if [[ -n "${GROUND_TRUTH:-}" ]]; then GT_ARGS=(--ground-truth "$GROUND_TRUTH"); fi   # path INSIDE the image, e.g. bench/results/5.1/gt_img4809_intervals.json
+# The image runs as an unprivileged user; run as the caller so results land in $OUT with the caller's ownership.
 # Separate container startup is outside the measured Python pipeline. Include it in a provider billing audit.
-docker run --rm --gpus all --ipc=host \
+docker run --rm --gpus all --ipc=host --user "$(id -u):$(id -g)" -e HOME=/tmp \
+  -e SCOUTX_MODE="${SCOUTX_MODE:-balanced}" \
   -v "$(dirname "$VIDEO"):/videos:ro" -v "$OUT:/out" \
   --entrypoint python3.11 "$IMAGE" bench/full_match_benchmark.py \
   --video "/videos/$(basename "$VIDEO")" --number "$NUMBER" --kit "$KIT" --kit2 "$KIT2" \
-  --chunk-sec "${CHUNK_SEC:-300}" --host-usd-per-hour "$RATE" --require-gpu --out /out/full_match.json
+  --chunk-sec "${CHUNK_SEC:-300}" --host-usd-per-hour "$RATE" --require-gpu ${GT_ARGS[@]+"${GT_ARGS[@]}"} --out /out/full_match.json
 printf '\nResults: %s/full_match.json\n' "$OUT"
