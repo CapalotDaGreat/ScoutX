@@ -123,3 +123,23 @@ GROUND_TRUTH=bench/results/5.1/gt_img4809_intervals.json \
 **Costs.** The JSON cost covers the measured pipeline only. The VM is also billed for boot, driver install, image build and video download, so use the `timestamps.json` start and end for the billed VM time. The bucket storage is billed separately, so delete the video after the runs.
 
 **What stays blocked after this run:** Cloud Run GPU, Cloud Tasks queueing and upload latency. This is a single-VM sequential benchmark.
+
+**Checked on 2026-10-28 (read-only).**
+
+Quotas in `scoutx-230b0`:
+
+- `NVIDIA_L4_GPUS` in europe-west6: limit 1.
+- `CPUS` in europe-west6: limit 100.
+- `CPUS_ALL_REGIONS`: limit 32.
+- **`GPUS_ALL_REGIONS`: limit 0.** This blocks any GPU VM until a quota increase to 1 is granted.
+
+On-demand list prices in Zurich, from the Cloud Billing Catalog API, in USD:
+
+| Item | Price |
+|---|---|
+| L4 GPU | 0.783 per hour |
+| G2 vCPU | 0.0327 per hour |
+| G2 RAM | 0.00384 per GiB-hour |
+| Balanced PD disk | 0.13 per GB-month |
+
+Total for `g2-standard-8` (8 vCPU, 32 GB, 1× L4) with a 200 GB disk: **about 1.20 USD per hour**. Discounts and taxes are not included.
