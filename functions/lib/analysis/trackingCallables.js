@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resolveTrackingTask = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
+exports.refreshTrackingOcrTask = exports.resolveTrackingTask = exports.cloudTasksFollowUpEnqueue = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
 exports.httpTrackingClient = httpTrackingClient;
 exports.processResolveTask = processResolveTask;
+exports.processOcrFollowUpTask = processOcrFollowUpTask;
 exports.settleOrchestratedResolve = settleOrchestratedResolve;
 const firestore_1 = require("firebase-admin/firestore");
 const functions_1 = require("firebase-admin/functions");
@@ -18,6 +19,8 @@ const trackingV3_1 = require("./trackingV3");
 const videoConsent_1 = require("./videoConsent");
 const notificationProducers_1 = require("../notificationProducers");
 const trackingProgress_1 = require("./trackingProgress");
+const trackingFollowUp_1 = require("./trackingFollowUp");
+const rateLimit_1 = require("../security/rateLimit");
 const OP_ID = /^[A-Za-z0-9_-]{8,64}$/;
 const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
 async function ownedJob(tx, db, jobId, uid) {
@@ -138,6 +141,18 @@ const storageImageStore = async (path, jpeg) => {
         metadata: { cacheControl: 'private, max-age=3600' } });
 };
 exports.storageImageStore = storageImageStore;
+const cloudTasksFollowUpEnqueue = async (payload, taskId) => {
+    try {
+        await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('refreshTrackingOcrTask'))
+            .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: 900 });
+    }
+    catch (e) {
+        // ALREADY_EXISTS: this round was scheduled before (a retried publish) - nothing to do
+        if (!String(e?.code ?? e).includes('already-exists'))
+            throw e;
+    }
+};
+exports.cloudTasksFollowUpEnqueue = cloudTasksFollowUpEnqueue;
 /**
  * Re-solves identity from cached stage-1 artifacts + feedback. Never re-runs detection.
  * Writes the report only when it covers at least as much of the recording as the current one
@@ -157,9 +172,11 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
     if (!job || job.cancelRequested)
         return 'unavailable';
+    const refresh = opts.scope === 'refresh';
     const raw = await client({
         contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
         target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
+        ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: trackingFollowUp_1.OCR_FOLLOW_UP_MAX_CROPS } } : {}),
     });
     if (!raw || !raw.workerVersion || !raw.models || !(0, cvConfig_1.isApprovedWorkerOutput)({ workerVersion: raw.workerVersion, models: raw.models }, env)) {
         return 'rejected';
@@ -199,17 +216,31 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         report.referenceImagePath = path;
     }
     const at = now().toISOString();
+    let followUp = null;
     const outcome = await db.runTransaction(async (tx) => {
         const fresh = await tx.get(base.doc('feedback'));
         const cur = await tx.get(base.doc('current'));
         if ((fresh.data()?.revision ?? 0) !== feedbackRevision)
             return 'superseded';
         const curDoc = cur.data();
+        if (refresh && !(0, trackingFollowUp_1.followUpRunnable)(curDoc?.followUp, feedbackRevision, opts.followUpRound ?? -1))
+            return 'stale';
         if (!(0, trackingProgress_1.shouldReplaceReport)(curDoc?.report ? { parts: curDoc.parts ?? 0, scope: curDoc.scope } : null, { parts: report.analysedRange.parts, scope })) {
             return 'stale';
         }
+        // 5.2 deferred OCR: decide the follow-up from facts; per-user daily quota in the same transaction
+        const quotaRef = db.collection('callableRateLimits').doc((0, rateLimit_1.rateLimitDocId)(job.playerId, trackingFollowUp_1.OCR_FOLLOW_UP_ACTION, 'day', now()));
+        const quota = await tx.get(quotaRef);
+        const used = quota.get('count') ?? 0;
+        followUp = (0, trackingFollowUp_1.planOcrFollowUp)(opts.scope ?? 'feedback', feedbackRevision, report.ocrDeferred, curDoc?.followUp ?? null, at, refresh ? opts.followUpRound ?? null : null, used < trackingFollowUp_1.OCR_FOLLOW_UP_DAILY_LIMIT);
+        const scheduledNow = followUp?.status === 'scheduled'
+            && !(curDoc?.followUp?.revision === followUp.revision && curDoc?.followUp?.round === followUp.round);
+        if (scheduledNow) {
+            tx.set(quotaRef, { uid: job.playerId, action: trackingFollowUp_1.OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
+                updatedAt: at }, { merge: true });
+        }
         tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-            stale: false, pendingReason: null, feedbackRevision, updatedAt: at });
+            stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp });
         if (progress) {
             const published = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
                 moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };
@@ -217,7 +248,11 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         }
         return 'done';
     });
-    if (outcome !== 'done' || !progress)
+    const fu = followUp;
+    if (outcome === 'done' && fu && fu.status === 'scheduled') {
+        await (opts.enqueueFollowUp ?? exports.cloudTasksFollowUpEnqueue)({ jobId, feedbackRevision, round: fu.round }, (0, trackingFollowUp_1.followUpTaskId)(jobId, feedbackRevision, fu.round));
+    }
+    if (outcome !== 'done' || !progress || refresh)
         return outcome;
     const notify = opts.notify ?? ((id, input) => (0, notificationProducers_1.writeSystemActivity)(db, id, input));
     const ref_ = { entityType: 'match_analysis', entityId: jobId, label: 'Match analysis' };
@@ -256,6 +291,47 @@ exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { max
     const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope });
     if (scope !== 'feedback')
         await settleOrchestratedResolve(db, d.jobId, scope, outcome);
+});
+/**
+ * 5.2 deferred-OCR follow-up round: runs only if it is still the current round of the current
+ * feedback revision (duplicates and stale tasks do nothing), publishes a newer report version
+ * through the normal guarded path and records the outcome. Never loops: the next round is only
+ * scheduled by processResolveTask when this one made progress (trackingFollowUp.ts).
+ */
+async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client, env = process.env, storeImage = exports.storageImageStore, opts = {}) {
+    const now = opts.now ?? (() => new Date());
+    const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('current');
+    const claimed = await db.runTransaction(async (tx) => {
+        const cur = await tx.get(ref);
+        const f = cur.data()?.followUp ?? null;
+        if (!(0, trackingFollowUp_1.followUpRunnable)(f, feedbackRevision, round))
+            return false;
+        tx.set(ref, { followUp: { ...f, status: 'running', updatedAt: now().toISOString() } }, { merge: true });
+        return true;
+    });
+    if (!claimed)
+        return 'stale';
+    const outcome = await processResolveTask(db, jobId, feedbackRevision, client, env, storeImage, { ...opts, scope: 'refresh', followUpRound: round });
+    if (outcome !== 'done') {
+        const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
+        const status = outcome === 'superseded' || outcome === 'stale' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
+        await db.runTransaction(async (tx) => {
+            const cur = await tx.get(ref);
+            const f = cur.data()?.followUp ?? null;
+            if (f && f.revision === feedbackRevision && f.round === round && ['scheduled', 'running'].includes(f.status)) {
+                tx.set(ref, { followUp: { ...f, status, updatedAt: now().toISOString() } }, { merge: true });
+            }
+        });
+    }
+    return outcome;
+}
+exports.refreshTrackingOcrTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: 2, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 2 }, timeoutSeconds: 900 }, async (request) => {
+    const d = request.data;
+    if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision)
+        || !Number.isSafeInteger(d.round) || d.round < 1)
+        return;
+    const url = (0, cvConfig_1.cvWorkerUrl)();
+    await processOcrFollowUpTask((0, firestore_1.getFirestore)(), d.jobId, d.feedbackRevision, d.round, url ? httpTrackingClient(url) : null);
 });
 /**
  * Releases the "resolving" slot after an orchestrated resolve that did not publish, so later

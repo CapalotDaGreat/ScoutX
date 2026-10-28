@@ -255,6 +255,7 @@ function parseTrackingReport(raw, timeline) {
     const report = {
         schema: exports.TRACKING_SCHEMA,
         engineVersion: String(asRecord(r.engine)?.version ?? 'unknown').slice(0, 40),
+        ocrDeferred: Math.min(100000, Math.max(0, Math.floor(Number(asRecord(r.engine)?.ocrDeferred) || 0))),
         target: { number: target.number ? String(target.number).slice(0, 3) : null, kit: String(target.kit ?? '').slice(0, 40),
             kit2: String(target.kit2 ?? '').slice(0, 40), position: String(target.position ?? 'unknown').slice(0, 30) },
         coverage, periods, statesSec,
