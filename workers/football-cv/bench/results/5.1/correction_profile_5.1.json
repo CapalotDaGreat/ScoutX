@@ -1,0 +1,86 @@
+{
+ "loadRunsSec": 3.11,
+ "runs": [
+  {
+   "name": "cold",
+   "wallSec": 16.34,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 3.7,
+    "numbers": 6.6,
+    "identity": 3.0,
+    "timeline_metrics_events": 2.5
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 386.3
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "warm",
+   "wallSec": 2.87,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.5,
+    "identity": 1.3,
+    "timeline_metrics_events": 0.3
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 386.3
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "warm2",
+   "wallSec": 2.4,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.3,
+    "identity": 1.0,
+    "timeline_metrics_events": 0.3
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 386.3
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "newAnswer",
+   "wallSec": 2.24,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.4,
+    "identity": 1.0,
+    "timeline_metrics_events": 0.2
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.0,
+    "likelyVisibleSec": 392.3
+   },
+   "ocrDeferred": 0
+  },
+  {
+   "name": "newAnswer2",
+   "wallSec": 2.29,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 0.0,
+    "numbers": 0.3,
+    "identity": 0.9,
+    "timeline_metrics_events": 0.2
+   },
+   "coverage": {
+    "confirmedVisibleSec": 70.6,
+    "likelyVisibleSec": 415.1
+   },
+   "ocrDeferred": 53
+  }
+ ],
+ "maxRssMB": 1176
+}

@@ -140,7 +140,10 @@ def team_of(summary_row: dict, kit_min: float) -> str:
 
 def ball_events(D, T, tl, states: np.ndarray, P: np.ndarray, camera: np.ndarray | None, fps: float,
                 kit_min: float = 0.22) -> tuple[list[dict], dict]:
-    balls = ball_tracks(D, P)
+    # 5.1: ball tracks depend on stage 1 only - cached per process across corrections
+    from .analyze import _token, memo  # noqa: PLC0415
+
+    balls = memo(("ball_tracks", _token(D)), lambda: ball_tracks(D, P))
     F = len(tl.times)
     target_ok = tl.present & np.isin(states, ["CONFIRMED_VISIBLE", "LIKELY_VISIBLE"])
     near = np.zeros(F, bool)

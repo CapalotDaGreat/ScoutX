@@ -70,7 +70,10 @@ def same_kit_occlusions(T, row_kit: np.ndarray | None) -> np.ndarray:
 def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None = None,
                    kit_floor: float = 0.12) -> Timeline:
     F = len(D.times)
-    occluded = same_kit_occlusions(T, row_kit)
+    from .analyze import _token, memo  # noqa: PLC0415
+
+    occluded = memo(("occluded", _token(T), _token(row_kit) if row_kit is not None else None),
+                    lambda: same_kit_occlusions(T, row_kit))
     present = np.zeros(F, bool)
     boxes = np.zeros((F, 4))
     pano = np.zeros((F, 3))

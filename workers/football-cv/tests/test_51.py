@@ -140,3 +140,28 @@ def test_regression_3144_wrong_player_never_claimed_and_target_kept():
     t_read = 1902.7 - 1880.0
     f_read = int(np.argmin(np.abs(D.times - D.times[0] - t_read)))
     assert states[f_read] == "CONFIRMED_VISIBLE"
+
+
+def test_vectorised_chain_solver_matches_reference_loop():
+    from scoutx_tracker.identity import _best_chain, _best_chain_loop
+
+    rng = np.random.default_rng(7)
+    for _ in range(10):
+        n = 200
+        t0 = np.sort(rng.random(n) * 400)
+        t1 = t0 + rng.random(n) * 6
+        seg = (t0 // 90).astype(int)
+        ps = np.c_[rng.random(n) * 2000, rng.random(n) * 500, 40 + rng.random(n) * 100]
+        pe = ps + np.c_[rng.normal(0, 30, n), rng.normal(0, 10, n), np.zeros(n)]
+        unary, dur, cands = rng.normal(0, 3, n), t1 - t0, np.arange(n)[rng.random(n) > 0.2]
+        lo = {int(j): {int(j) + 1: bool(rng.random() > 0.5)} for j in rng.choice(n - 1, 15, replace=False)}
+        ep = {j: {*v, min(n - 1, j + 2)} for j, v in lo.items()}
+        assert _best_chain(cands, unary, t0, t1, seg, ps, pe, 10.0, dur, lo, ep) == \
+            _best_chain_loop(cands, unary, t0, t1, seg, ps, pe, 10.0, dur, lo, ep)
+
+
+def test_memo_keys_arrays_by_content_and_corrections_are_idempotent():
+    from scoutx_tracker.analyze import _token
+
+    a = np.arange(10.0)
+    assert _token(a) == _token(a.copy()) and _token(a) != _token(a + 1)

@@ -111,7 +111,8 @@ class Detector:
 def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: float | None = None,
             stride: int = 1, imgsz: int = 1280, crop_min_h: int = 80, progress=None,
             decoder: str = os.environ.get("SCOUTX_DECODER", "cv2"),
-            batch: int = int(os.environ.get("SCOUTX_BATCH", "0"))) -> dict:
+            batch: int = int(os.environ.get("SCOUTX_BATCH", "0")),
+            key_every: int = int(os.environ.get("SCOUTX_KEYFRAME_EVERY", "1"))) -> dict:
     out = Path(out_dir)
     (out / "crops").mkdir(parents=True, exist_ok=True)
     cap = cv2.VideoCapture(video)
@@ -145,7 +146,15 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     prev_small = None
     fi = -1
     t_start = time.time()
-    tm = {"decode": 0.0, "detect": 0.0, "scene_cmc": 0.0, "colour_signature": 0.0, "embedding": 0.0, "crops_io": 0.0}
+    tm = {"decode": 0.0, "detect": 0.0, "propagate": 0.0, "scene_cmc": 0.0, "colour_signature": 0.0, "embedding": 0.0,
+          "crops_io": 0.0}
+    # 5.1 adaptive detection (propagate.py): detector on every `key_every`-th frame, boxes carried
+    # by optical flow in between. CPU path only (batch == 1); a scene cut always gets the detector.
+    from .propagate import BoxPropagator  # noqa: PLC0415
+
+    prop = BoxPropagator() if key_every > 1 else None
+    prop_flags: list[bool] = []
+    last_small: list = [None]
     # 4.1 batched inference: frames are detected in batches (default 8 on CUDA, 1 on CPU where
     # batching gives no speed-up); everything after detection still runs frame by frame, in order.
     if batch <= 0:
@@ -159,16 +168,19 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         results = det.batch([f for _, f in pending])
         tm["detect"] += time.perf_counter() - _tb
         for (tt, fr), r in zip(pending, results):
+            if prop is not None:
+                prop.key(fr, r[0], r[1])
             consume(tt, fr, *r)
         pending.clear()
 
-    def consume(t, frame, pb, ps, bb, bs) -> None:
+    def consume(t, frame, pb, ps, bb, bs, propagated: bool = False) -> None:
         nonlocal fi, prev_small
         fi += 1
         times.append(t)
         _t = time.perf_counter()
         grass.append(grass_fraction(frame))
-        small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
+        small = last_small[0] if last_small[0] is not None and propagated else \
+            cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
         if scene_cut(prev_small, small):
             cuts.append(fi)
             cmc.reset()
@@ -186,6 +198,7 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         for i, (b, s) in enumerate(zip(pb, ps)):
             sig, _ = colour_signature(frame, b)
             dets.append([fi, t, *b, s])
+            prop_flags.append(propagated)
             sigs.append(sig.astype(np.float16))
             h = b[3] - b[1]
             if fi % 2 == 0 and h >= 36 and s >= 0.25:
@@ -228,6 +241,17 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         t = t0 + k / fps_src
         if end is not None and k / fps_src >= end:
             break
+        if prop is not None and batch == 1 and (fi + 1) % key_every != 0:
+            # in-between frame: propagate unless the scene changed (then detect)
+            small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
+            if not scene_cut(prev_small, small):
+                _tp = time.perf_counter()
+                pb, ps = prop.step(frame)
+                tm["propagate"] += time.perf_counter() - _tp
+                last_small[0] = small
+                consume(t, frame, pb, ps, np.zeros((0, 4), np.float32), np.zeros(0, np.float32), propagated=True)
+                last_small[0] = None
+                continue
         pending.append((t, frame))
         if len(pending) >= batch:
             run_batch()
@@ -241,8 +265,9 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         balls=np.array(balls, np.float64).reshape(-1, 7), ball_warm=np.array(ball_warm, np.float32),
         warps=np.array(warps, np.float64).reshape(-1, 7),
         cuts=np.array(cuts, np.int64), times=np.array(times, np.float64), grass=np.array(grass, np.float32),
+        propagated=np.array(prop_flags, bool),
     )
-    meta = {"video": os.path.abspath(video), "detector": det.name, "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
+    meta = {"video": os.path.abspath(video), "detector": det.name, "keyframeEvery": key_every if prop is not None else 1, "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
             "width": width, "height": height, "seconds": round(time.time() - t_start, 1),
             "stageSeconds": {k: round(v, 2) for k, v in tm.items()}}
     (out / "meta.json").write_text(json.dumps(meta, indent=2))

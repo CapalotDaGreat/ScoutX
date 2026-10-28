@@ -183,6 +183,22 @@ class AppearanceModel:
         d = self.clf.decision_function((F - self.mu) / self.sd)
         return float(np.clip(np.median(d), -6, 6))
 
+    def scores(self, tids: list[int]) -> dict[int, float]:
+        """5.1: `score` for many tracklets in one matrix product (same values)."""
+        if self.clf is None:
+            return {}
+        have = [t for t in tids if t in self.feats and len(self.feats[t])]
+        if not have:
+            return {}
+        X = np.vstack([self.feats[t] for t in have])
+        d = ((X - self.mu) / self.sd) @ self.clf.coef_.ravel() + float(self.clf.intercept_[0])
+        out, i = {}, 0
+        for t in have:
+            n = len(self.feats[t])
+            out[t] = float(np.clip(np.median(d[i:i + n]), -6, 6))
+            i += n
+        return out
+
 
 def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target, fps: float,
                      rows: np.ndarray, by_tid: dict, feats: dict[int, np.ndarray] | None = None,
@@ -265,8 +281,9 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
         trained = bool(feats) and model.fit([summary[k]["tid"] for k in positives], [summary[k]["tid"] for k in negs])
         if trained:
             raw = np.full(n, np.nan)
+            sc_all = model.scores([summary[k]["tid"] for k in cands])
             for k in cands:
-                sc = model.score(summary[k]["tid"])
+                sc = sc_all.get(summary[k]["tid"])
                 if sc is not None:
                     raw[k] = sc
             # Raw logits don't transfer across distance/lighting: rank-normalise among candidates.
@@ -356,8 +373,9 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
     contrary = {int(k) for k in cands
                 if any(incompatible_with_target(num, target.number) for _, num, _, _ in reads.get(summary[k]["tid"], []))}
     already_asked = set(locate(summary, rows, by_tid, target.asked)) if target.asked else set()
+    comp = continuity_components(cands, t0, t1, seg, ps, pe, link_out, event_posts) if QUESTION_STRATEGY == "component" else None
     questions = _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence,
-                           anchor_ix | already_asked, number_pos, n_questions, row_kit, contrary, fps)
+                           anchor_ix | already_asked, number_pos, n_questions, row_kit, contrary, fps, comp)
     score = {int(k): float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS)))) for k in cands}
     # 5.1: what appearance alone says, before the hard-evidence boost (used for the parts of an
     # anchored tracklet away from its evidence)
@@ -398,15 +416,56 @@ def _appearance_clusters(summary, ks: list[int], n_clusters: int = 10) -> dict[i
     return {k: int(lab) for k, lab in zip(ks, labels.ravel())}
 
 
+def continuity_components(cands, t0, t1, seg, ps, pe, link_out=None, event_posts=None) -> dict[int, int]:
+    """5.1: candidate pieces that one answer settles together - joined by clean tracker hand-offs
+    (<= 0.5 s, <= 0.75 body heights, same shot) or clear contact links. -> {piece: component id}."""
+    parent = {int(k): int(k) for k in cands}
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: int, b: int) -> None:
+        if a in parent and b in parent:
+            parent[find(a)] = find(b)
+
+    order = sorted((int(k) for k in cands), key=lambda k: t0[k])
+    starts = np.array([t0[k] for k in order])
+    for j in (int(k) for k in cands):
+        if link_out and j in link_out:
+            for i, clear in link_out[j].items():
+                if clear:
+                    union(j, int(i))
+            continue
+        lo, hi = np.searchsorted(starts, t1[j]), np.searchsorted(starts, t1[j] + 0.5, side="right")
+        for i in order[lo:hi]:
+            if i == j or seg[i] != seg[j]:
+                continue
+            h = max(0.5 * (pe[j][2] + ps[i][2]), 1.0)
+            if float(np.hypot(ps[i][0] - pe[j][0], ps[i][1] - pe[j][1])) / h <= 0.75:
+                union(j, i)
+    return {k: find(k) for k in parent}
+
+
 def _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence, anchors, numbered, k_max,
-               row_kit=None, contrary=frozenset(), fps: float = 10.0):
+               row_kit=None, contrary=frozenset(), fps: float = 10.0, comp: dict | None = None):
     """Active review selection. Value of asking about a tracklet =
         affected seconds x uncertainty (how close the score is to 0.5) x crop quality,
     plus a bonus when it is currently attributed to the target (a wrong claim costs more than a
     missed one). Diversity: at most one question per look-alike cluster and per 8 s window, so one
     batch never asks the same ambiguity twice. Tiny players (< 90 px) are never asked about."""
     chosen_set = set(chosen)
-    resolve = QUESTION_STRATEGY == "resolve"
+    resolve = QUESTION_STRATEGY in ("resolve", "component")
+    comp_dur: dict[int, float] = {}
+    if comp is not None:
+        # 5.1 "component": one answer settles every piece joined to the asked one by clean hand-offs
+        # or clear contact links, so that is the affected time (no hard evidence in it yet)
+        settled = {comp.get(int(k)) for k in set(numbered) | set(anchors)}
+        for k, c in comp.items():
+            if c not in settled:
+                comp_dur[c] = comp_dur.get(c, 0.0) + float(dur[k])
     chain_frames = np.zeros(int(rows[:, 0].max()) + 2 if len(rows) else 1, bool)
     for k in chosen:
         chain_frames[rows[by_tid[summary[k]["tid"]], 0].astype(int)] = True
@@ -420,7 +479,10 @@ def _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence, an
         if not (k in chosen_set or p > 0.15):
             continue
         quality = float(np.clip(summary[k]["h_max"] / 200.0, 0.4, 1.0))
-        affected = min(float(dur[k]), 60.0)
+        if comp is not None and comp.get(int(k)) in comp_dur:
+            affected = min(comp_dur[comp[int(k)]], 120.0)
+        else:  # no components, or the component already holds hard evidence: this piece only
+            affected = min(float(dur[k]), 60.0)
         if resolve and k not in chosen_set:
             raw_p = 1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS)))
             if raw_p >= COMPETITOR_SCORE:
@@ -431,12 +493,16 @@ def _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence, an
         items.append((value, int(k), p))
     items.sort(reverse=True)
     clusters = _appearance_clusters(summary, [k for _, k, _ in items[:80]])
-    picked, used_t, used_c = [], [], set()
+    picked, used_t, used_c, used_comp = [], [], set(), set()
     for value, k, p in items[:80]:
         mid = 0.5 * (summary[k]["t0"] + summary[k]["t1"])
         c = clusters.get(k, -1)
         if any(abs(mid - u) < 8.0 for u in used_t) or c in used_c:
             continue
+        if comp is not None:
+            if comp.get(k) in used_comp:
+                continue
+            used_comp.add(comp.get(k))
         used_t.append(mid)
         used_c.add(c)
         picked.append((value, k, p))
@@ -505,7 +571,79 @@ def _edge_kind(j: int | None, i: int, t0, t1, seg, link_out, event_posts, ps=Non
 def _best_chain(cands: np.ndarray, unary: np.ndarray, t0, t1, seg, ps, pe, fps, dur=None,
                 link_out=None, event_posts=None) -> tuple[list[int], dict]:
     """Best-scoring chain of non-overlapping tracklets (one person can't be in two places).
-    Returns (chain, how each member was reached - see _edge_kind)."""
+    Returns (chain, how each member was reached - see _edge_kind).
+    5.1: the transitions into each tracklet are computed as one vector over its time window
+    (identical results to `_best_chain_loop`; ~10x faster on a 34-min match)."""
+    if len(cands) == 0:
+        return [], {}
+    t0, t1 = np.asarray(t0, float), np.asarray(t1, float)
+    seg = np.asarray(seg)
+    ps, pe = np.asarray(ps, float), np.asarray(pe, float)
+    order = cands[np.argsort(t1[cands], kind="stable")]
+    n_all = len(unary)
+    dp = np.full(n_all, -np.inf)
+    back: dict[int, int | None] = {}
+    ends = t1[order]
+    prefix_best: list[int] = []
+    is_pre = np.zeros(n_all, bool)
+    if link_out:
+        is_pre[[j for j in link_out if j < n_all]] = True
+    dur_a = None if dur is None else np.asarray(dur, float)
+    for pos, i in enumerate(order):
+        best, arg = 0.0, None
+        lo = int(np.searchsorted(ends, t0[i] - 120.0))
+        hi = int(np.searchsorted(ends, t0[i] + 1.5 / fps, side="right"))
+        js = order[lo:min(hi, pos)]
+        if len(js):
+            gap = t0[i] - t1[js]
+            tr = np.zeros(len(js))
+            valid = gap >= -1.5 / fps
+            g = np.maximum(gap, 0.0)
+            same = seg[js] == seg[i]
+            h = np.maximum(0.5 * (pe[js, 2] + ps[i, 2]), 1.0)
+            d = np.hypot(ps[i, 0] - pe[js, 0], ps[i, 1] - pe[js, 1]) / h
+            far = same & (d > SLACK_BH + MAX_SPEED_BH * g)
+            tr[far] = np.where(g[far] < 6.0, -np.inf, -2.0)
+            near = same & ~far
+            if dur_a is not None:
+                hand = near & (g <= 0.5) & (d <= 0.75)
+                tr[hand] = 3.0 + (PRIOR_LOGODDS + 0.3) * min(float(dur_a[i]), 15.0)
+            else:
+                hand = np.zeros(len(js), bool)
+            short = near & ~hand & (g <= 2.0)
+            tr[short] = 3.0 * np.exp(-d[short] / 1.5)
+            tr[~valid] = -np.inf
+            if is_pre[js].any():
+                for m in np.flatnonzero(is_pre[js]):
+                    j = int(js[m])
+                    if valid[m] and event_posts and i in event_posts.get(j, ()):
+                        tr[m] = (3.0 + (PRIOR_LOGODDS + 0.3) * min(float(dur_a[i]) if dur_a is not None else 1.0, 15.0)
+                                 if link_out[j].get(i) else 0.0)
+            v = dp[js] + tr
+            m = int(np.argmax(v))
+            if v[m] > best:
+                best, arg = float(v[m]), int(js[m])
+        if lo > 0:
+            jbest = prefix_best[min(lo, pos) - 1]
+            if dp[jbest] > best:
+                best, arg = float(dp[jbest]), jbest
+        dp[i] = unary[i] + best
+        back[int(i)] = arg
+        prefix_best.append(int(i) if not prefix_best or dp[i] > dp[prefix_best[-1]] else prefix_best[-1])
+    end = int(order[int(np.argmax(dp[order]))])
+    chain = []
+    while end is not None:
+        chain.append(int(end))
+        end = back[end]
+    chain = chain[::-1]
+    edges = {k: _edge_kind(chain[n - 1] if n else None, k, t0, t1, seg, link_out, event_posts, ps, pe)
+             for n, k in enumerate(chain)}
+    return chain, edges
+
+
+def _best_chain_loop(cands: np.ndarray, unary: np.ndarray, t0, t1, seg, ps, pe, fps, dur=None,
+                link_out=None, event_posts=None) -> tuple[list[int], dict]:
+    """Reference implementation of `_best_chain` (one Python call per transition); kept for tests."""
     if len(cands) == 0:
         return [], {}
     order = cands[np.argsort(t1[cands])]

@@ -165,6 +165,11 @@ def _discovery_detector():
     return _MODELS[key]
 
 
+# 0 = corrections never read new crops: the same correction on the same cache gives the same report
+# (idempotent); deferred reads are counted in report.engine.ocrDeferred.
+CORRECTION_OCR_BUDGET_SEC = float(os.environ.get("SCOUTX_CORRECTION_OCR_BUDGET_SEC", "0"))
+
+
 def _cached_detections(runs: list[str]):
     key = tuple((r, os.path.getmtime(Path(r) / "detections.npz")) for r in runs)
     if key in _D_CACHE:
@@ -255,6 +260,10 @@ def resolve(request: ResolveRequest) -> dict:
     with tempfile.TemporaryDirectory(prefix="track_") as tmp:
         extra = {} if _analyze is not None else {"D": _cached_detections(runs),
                                                    "sightings": _job_sightings(request.jobId)}
+        if _analyze is None and (fb.yes or fb.no):
+            # 5.1: a correction answers within seconds - number reads not cached yet are deferred
+            # to the next unbudgeted resolve instead of being read now
+            extra["ocr_budget_sec"] = CORRECTION_OCR_BUDGET_SEC
         report = fn(runs, tmp, request.target.jerseyNumber or None, request.target.kitPrimaryColor,
                     request.target.kitSecondaryColor, _points(fb.yes), log=lambda _m: None,
                     rejects=_points(fb.no),
