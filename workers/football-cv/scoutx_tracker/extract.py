@@ -112,7 +112,8 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
             stride: int = 1, imgsz: int = 1280, crop_min_h: int = 80, progress=None,
             decoder: str = os.environ.get("SCOUTX_DECODER", "cv2"),
             batch: int = int(os.environ.get("SCOUTX_BATCH", "0")),
-            key_every: int = int(os.environ.get("SCOUTX_KEYFRAME_EVERY", "1"))) -> dict:
+            key_every: int = int(os.environ.get("SCOUTX_KEYFRAME_EVERY", "1")),
+            prefetch: int = int(os.environ.get("SCOUTX_DECODE_PREFETCH", "-1"))) -> dict:
     out = Path(out_dir)
     (out / "crops").mkdir(parents=True, exist_ok=True)
     cap = cv2.VideoCapture(video)
@@ -223,6 +224,29 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         if progress and fi % 100 == 0:
             progress(fi, t, time.time() - t_start)
 
+    # 5.1: OpenCV decoding runs in a background thread with a bounded queue (backpressure:
+    # at most PREFETCH decoded frames in memory), overlapping decode with detection. Same pixels.
+    # Measured on 2 vCPU (IMG_4809, 60 s, YOLOX-s 1280): identical output, but no gain (235.7 s vs
+    # 224.5 s) - decode and detector compete for the same cores. Default (-1): on only when the
+    # detector runs on a GPU (not measured: no GPU available).
+    if prefetch < 0:
+        prefetch = 4 if det.on_gpu else 0
+    reader = None
+    if ff is None and prefetch > 0:
+        import queue  # noqa: PLC0415
+        import threading  # noqa: PLC0415
+
+        q: "queue.Queue" = queue.Queue(maxsize=prefetch)
+
+        def _pump() -> None:
+            while True:
+                ok_, fr_ = cap.read()
+                q.put((ok_, fr_))
+                if not ok_:
+                    return
+
+        threading.Thread(target=_pump, daemon=True).start()
+        reader = q
     while True:
         _t = time.perf_counter()
         if ff is not None:
@@ -230,6 +254,8 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
             ok, frame = (nxt is not None), (nxt[1] if nxt is not None else None)
             if ok:
                 k += stride - 1
+        elif reader is not None:
+            ok, frame = reader.get()
         else:
             ok, frame = cap.read()
         tm["decode"] += time.perf_counter() - _t
@@ -256,7 +282,7 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         if len(pending) >= batch:
             run_batch()
     run_batch()
-    if ff is None:
+    if ff is None and reader is None:
         cap.release()
     np.savez_compressed(
         out / "detections.npz",

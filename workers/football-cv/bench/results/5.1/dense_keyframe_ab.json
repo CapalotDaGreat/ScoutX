@@ -1,0 +1,269 @@
+{
+ "note": "IMG_4809, YOLOX-s 1280, CPU 2 vCPU, two 60 s slices; identity from 5.0 discovery sightings only (no OCR) so only tracking differs. Slice 225-285 timing of k1cv2 is not valid (machine contention during that run); 1150-1210 is.",
+ "variants": {
+  "k1cv2": {
+   "variant": "k1cv2",
+   "keyEvery": 1,
+   "decoder": "cv2",
+   "slices": [
+    {
+     "slice": [
+      225,
+      285
+     ],
+     "wallSec": 608.3,
+     "secPerVideoSec": 10.14,
+     "stageSeconds": {
+      "decode": 65.8,
+      "detect": 508.14,
+      "propagate": 0.0,
+      "scene_cmc": 24.04,
+      "colour_signature": 5.58,
+      "embedding": 1.38,
+      "crops_io": 0.74
+     },
+     "gtTargetSec": 6.8,
+     "claimedCorrectSec": 6.0,
+     "claimedWrongSec": 0.0,
+     "claimUnlabelledSec": 0.3,
+     "coverage": {
+      "confirmedVisibleSec": 0.6,
+      "likelyVisibleSec": 5.7
+     }
+    },
+    {
+     "slice": [
+      1150,
+      1210
+     ],
+     "wallSec": 224.5,
+     "secPerVideoSec": 3.74,
+     "stageSeconds": {
+      "decode": 33.15,
+      "detect": 174.96,
+      "propagate": 0.0,
+      "scene_cmc": 10.53,
+      "colour_signature": 3.52,
+      "embedding": 1.05,
+      "crops_io": 0.42
+     },
+     "gtTargetSec": 28.8,
+     "claimedCorrectSec": 23.6,
+     "claimedWrongSec": 0.0,
+     "claimUnlabelledSec": 2.0,
+     "coverage": {
+      "confirmedVisibleSec": 8.8,
+      "likelyVisibleSec": 23.7
+     }
+    }
+   ]
+  },
+  "k2cv2": {
+   "variant": "k2cv2",
+   "keyEvery": 2,
+   "decoder": "cv2",
+   "slices": [
+    {
+     "slice": [
+      225,
+      285
+     ],
+     "wallSec": 142.3,
+     "secPerVideoSec": 2.37,
+     "stageSeconds": {
+      "decode": 33.71,
+      "detect": 89.63,
+      "propagate": 2.29,
+      "scene_cmc": 8.74,
+      "colour_signature": 3.09,
+      "embedding": 0.87,
+      "crops_io": 0.37
+     },
+     "gtTargetSec": 6.8,
+     "claimedCorrectSec": 5.6,
+     "claimedWrongSec": 0.5,
+     "claimUnlabelledSec": 3.8,
+     "coverage": {
+      "confirmedVisibleSec": 0.4,
+      "likelyVisibleSec": 9.5
+     }
+    },
+    {
+     "slice": [
+      1150,
+      1210
+     ],
+     "wallSec": 138.9,
+     "secPerVideoSec": 2.31,
+     "stageSeconds": {
+      "decode": 32.23,
+      "detect": 88.5,
+      "propagate": 2.45,
+      "scene_cmc": 8.6,
+      "colour_signature": 3.61,
+      "embedding": 1.02,
+      "crops_io": 0.42
+     },
+     "gtTargetSec": 28.8,
+     "claimedCorrectSec": 17.4,
+     "claimedWrongSec": 0.0,
+     "claimUnlabelledSec": 1.6,
+     "coverage": {
+      "confirmedVisibleSec": 11.5,
+      "likelyVisibleSec": 13.2
+     }
+    }
+   ]
+  },
+  "k2ff": {
+   "variant": "k2ff",
+   "keyEvery": 2,
+   "decoder": "ffmpeg",
+   "slices": [
+    {
+     "slice": [
+      225,
+      285
+     ],
+     "wallSec": 116.6,
+     "secPerVideoSec": 1.94,
+     "stageSeconds": {
+      "decode": 3.17,
+      "detect": 92.38,
+      "propagate": 4.15,
+      "scene_cmc": 9.33,
+      "colour_signature": 2.99,
+      "embedding": 0.87,
+      "crops_io": 0.36
+     },
+     "gtTargetSec": 6.8,
+     "claimedCorrectSec": 0.0,
+     "claimedWrongSec": 0.0,
+     "claimUnlabelledSec": 0.0,
+     "coverage": {
+      "confirmedVisibleSec": 0.0,
+      "likelyVisibleSec": 0.0
+     }
+    },
+    {
+     "slice": [
+      1150,
+      1210
+     ],
+     "wallSec": 117.2,
+     "secPerVideoSec": 1.95,
+     "stageSeconds": {
+      "decode": 3.0,
+      "detect": 92.7,
+      "propagate": 4.54,
+      "scene_cmc": 9.48,
+      "colour_signature": 3.75,
+      "embedding": 1.09,
+      "crops_io": 0.46
+     },
+     "gtTargetSec": 28.8,
+     "claimedCorrectSec": 17.3,
+     "claimedWrongSec": 0.0,
+     "claimUnlabelledSec": 1.7,
+     "coverage": {
+      "confirmedVisibleSec": 11.8,
+      "likelyVisibleSec": 12.9
+     }
+    }
+   ]
+  },
+  "k2cap": {
+   "variant": "k2cap",
+   "keyEvery": 2,
+   "decoder": "cv2",
+   "slices": [
+    {
+     "slice": [
+      225,
+      285
+     ],
+     "wallSec": 141.5,
+     "secPerVideoSec": 2.36,
+     "stageSeconds": {
+      "decode": 33.31,
+      "detect": 89.56,
+      "propagate": 2.25,
+      "scene_cmc": 8.56,
+      "colour_signature": 3.07,
+      "embedding": 0.89,
+      "crops_io": 0.37
+     },
+     "gtTargetSec": 6.8,
+     "claimedCorrectSec": 0.0,
+     "claimedWrongSec": 0.0,
+     "claimUnlabelledSec": 0.0,
+     "coverage": {
+      "confirmedVisibleSec": 0.0,
+      "likelyVisibleSec": 0.0
+     }
+    },
+    {
+     "slice": [
+      1150,
+      1210
+     ],
+     "wallSec": 133.3,
+     "secPerVideoSec": 2.22,
+     "stageSeconds": {
+      "decode": 31.31,
+      "detect": 84.49,
+      "propagate": 2.39,
+      "scene_cmc": 8.21,
+      "colour_signature": 3.47,
+      "embedding": 0.99,
+      "crops_io": 0.46
+     },
+     "gtTargetSec": 28.8,
+     "claimedCorrectSec": 0.0,
+     "claimedWrongSec": 0.0,
+     "claimUnlabelledSec": 0.0,
+     "coverage": {
+      "confirmedVisibleSec": 0.0,
+      "likelyVisibleSec": 0.0
+     }
+    }
+   ]
+  }
+ },
+ "boxRecallVsFullRate_k2": {
+  "note": "person boxes with score >= 0.45 of the full-rate run matched at IoU >= 0.5; balls score >= 0.3 at IoU >= 0.3",
+  "slices": [
+   {
+    "slice": [
+     225,
+     285
+    ],
+    "h40": 0.9489,
+    "h80": 0.9432,
+    "h40_inbetweenFrames": 0.8977,
+    "ball": 0.5059,
+    "extraBoxes_h40": 0.0246
+   },
+   {
+    "slice": [
+     1150,
+     1210
+    ],
+    "h40": 0.9737,
+    "h80": 0.9801,
+    "h40_inbetweenFrames": 0.9475,
+    "ball": 0.4947,
+    "extraBoxes_h40": 0.011
+   }
+  ]
+ },
+ "decodePrefetch": {
+  "slice": [
+   1150,
+   1210
+  ],
+  "wallSec": 235.7,
+  "withoutPrefetchWallSec": 224.5,
+  "identicalOutput": true
+ }
+}

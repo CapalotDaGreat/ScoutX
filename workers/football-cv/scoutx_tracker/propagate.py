@@ -16,6 +16,9 @@ import cv2
 import numpy as np
 
 SCORE_DECAY = 0.92        # a propagated box is a little less certain than a detection
+# Propagated boxes enter the tracker below its high-confidence threshold (0.45): they can only
+# extend an existing track (IoU stage), never start one or win an appearance re-association.
+PROP_SCORE_CAP = float(__import__("os").environ.get("SCOUTX_PROP_SCORE_CAP", "1.0"))
 MIN_POINTS = 4
 MAX_SCALE_STEP = 0.15     # per frame
 
@@ -91,4 +94,4 @@ class BoxPropagator:
         keep = ((out_b[:, 2] - out_b[:, 0]) >= 2) & ((out_b[:, 3] - out_b[:, 1]) >= 4)
         self.boxes, self.scores = out_b[keep], (self.scores * SCORE_DECAY)[keep]
         self._gray = gray
-        return self.boxes.copy(), self.scores.copy()
+        return self.boxes.copy(), np.minimum(self.scores, PROP_SCORE_CAP)
