@@ -61,6 +61,7 @@ def main() -> None:
     ap.add_argument("--segment", type=float, default=300.0)
     ap.add_argument("--discovery-end", type=float, default=0.0)
     ap.add_argument("--price-per-hour", type=float, default=None)
+    ap.add_argument("--keyframe-every", type=int, default=1, help="5.1 adaptive detection (1 = every frame, the default)")
     a = ap.parse_args()
     total = duration(a.video)
     from scoutx_tracker.colour import probe, zscale_available  # noqa: PLC0415
@@ -93,7 +94,7 @@ def main() -> None:
     # 2. extraction of one segment
     seg_end = min(a.segment, total)
     t = time.time()
-    meta = extract(a.video, str(work / "stage1" / "c_00000"), start=0.0, end=seg_end)
+    meta = extract(a.video, str(work / "stage1" / "c_00000"), start=0.0, end=seg_end, key_every=a.keyframe_every)
     wall = time.time() - t
     res["measured"]["extractSegment"] = {"videoSec": round(seg_end, 1), "wallSec": round(wall, 1),
                                          "secPerVideoSec": round(wall / seg_end, 3), "detector": meta["detector"],
@@ -112,6 +113,20 @@ def main() -> None:
     analyze(runs, str(work / "r2"), a.number, a.kit, log=lambda _m: None, D=D)
     res["measured"]["resolveWarmSec"] = round(time.time() - t, 1)
 
+    # 5.1: process and GPU memory peaks (same clip and settings on every host)
+    import resource  # noqa: PLC0415
+
+    res["measured"]["peakRssMB"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024
+    try:
+        import torch  # noqa: PLC0415
+
+        if torch.cuda.is_available():
+            res["measured"]["peakGpuMemMB"] = round(torch.cuda.max_memory_allocated() / 2**20, 1)
+    except ImportError:
+        pass
+    res["settings"] = {"segmentSec": seg_end, "keyframeEvery": a.keyframe_every, "discoveryDet": os.environ.get("SCOUTX_DISCOVERY_DET", "416"),
+                       "detector": os.environ.get("SCOUTX_DETECTOR", "yolox_s"), "backend": os.environ.get("SCOUTX_BACKEND", "auto")}
+    res["notMeasuredHere"] = ["queue delay (Cloud Tasks)", "cold start of the Cloud Run instance"]
     per_video = wall / seg_end
     res["projection"] = {
         "note": "PROJECTION, not a measurement: measured extraction rate x video length, one worker.",
