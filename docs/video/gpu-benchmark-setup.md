@@ -71,3 +71,55 @@ For a production comparison also measure actual wall-clock latency from user upl
 - Accuracy does not regress compared with 5.2 balanced mode.
 - Report includes actual duration, stage timings, GPU hardware and operator-supplied rate.
 - Cloud and device integration remain separate blocked gates until exercised.
+
+## 5. Google Cloud: one-shot L4 run from Cloud Shell (project `scoutx-230b0`)
+
+Status on 2026-10-28:
+
+- Billing is enabled.
+- The Compute Engine API has been enabled.
+- L4 GPUs are offered in `europe-west6-b` and `europe-west6-c` (Zurich), among other zones.
+- The `NVIDIA_L4_GPUS` and `GPUS_ALL_REGIONS` quota values were not printed yet.
+
+**Check the quota:**
+
+```bash
+gcloud compute regions describe europe-west6 --flatten="quotas[]" \
+  --format="table(quotas.metric,quotas.limit,quotas.usage)" | grep -E "NVIDIA_L4_GPUS|^CPUS "
+gcloud compute project-info describe --flatten="quotas[]" \
+  --format="table(quotas.metric,quotas.limit,quotas.usage)" | grep GPUS_ALL_REGIONS
+```
+
+Both limits must be at least 1. If either is 0, request 1 under IAM & Admin → Quotas and wait for approval.
+
+**Which video to use.** The worker processes every source frame. There is no step in the backend that converts videos to 10 fps. All 5.x accuracy and speed results come from the **10 fps 1080p proxy** of IMG_4809 (`IMG_4809_proxy_10fps.mp4`, 2035 s). The original `IMG_4809.MOV` is HEVC 1080p at **30 fps**, which means 3× the stage-1 frames, and its accuracy has not been validated.
+
+1. **Run 1 (validated configuration):** the proxy, with the accuracy gate.
+2. **Run 2 (optional):** the original, which shows what the current backend would cost on raw phone video.
+
+**Upload the video and run the benchmark (Cloud Shell):**
+
+```bash
+gcloud storage buckets create gs://scoutx-230b0-benchmarks --location=europe-west6 \
+  --uniform-bucket-level-access --public-access-prevention
+# upload IMG_4809_proxy_10fps.mp4 into gs://scoutx-230b0-benchmarks/videos/ (console: Cloud Storage -> bucket -> Upload)
+git clone --depth 1 -b feature/player-tracking-v3 https://github.com/CapalotDaGreat/ScoutX.git
+GROUND_TRUTH=bench/results/5.1/gt_img4809_intervals.json \
+  bash ScoutX/workers/football-cv/bench/gcp/run_l4_benchmark.sh \
+  gs://scoutx-230b0-benchmarks/videos/IMG_4809_proxy_10fps.mp4 gs://scoutx-230b0-benchmarks/results <USD/h of g2-standard-8 in europe-west6>
+```
+
+**What the script does:**
+
+1. It creates one `g2-standard-8` VM (1× L4) from a Google Deep Learning VM image (CUDA 12, Ubuntu 22.04).
+   - The VM has a hard `--max-run-duration` (6 h by default) with deletion when that time runs out.
+2. The VM then:
+   - builds the GPU image from the public repository;
+   - downloads the video and runs `run_gpu_match.sh`;
+   - uploads `full_match.json`, `full_match_claims.json`, `timestamps.json` (boot, driver ready, image built, video downloaded, finished), `nvidia-smi.txt`, `commit.txt` and `run.log` to `results/<run id>/`;
+   - deletes itself.
+3. Cloud Shell waits for the results, copies them to `~/pitchproof-benchmarks/<run id>/`, and deletes the VM if it still exists. Pressing Ctrl+C also deletes it.
+
+**Costs.** The JSON cost covers the measured pipeline only. The VM is also billed for boot, driver install, image build and video download, so use the `timestamps.json` start and end for the billed VM time. The bucket storage is billed separately, so delete the video after the runs.
+
+**What stays blocked after this run:** Cloud Run GPU, Cloud Tasks queueing and upload latency. This is a single-VM sequential benchmark.
