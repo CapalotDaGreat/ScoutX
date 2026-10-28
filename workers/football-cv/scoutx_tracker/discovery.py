@@ -68,6 +68,13 @@ class DiscoveryConfig:
     # exactly the target number (weak evidence: can only create a moment to check)
     weak_verify: bool = True
     weak_min_conf: float = 0.95
+    # 5.1: a player whose shirt read the same OTHER full number twice is settled: not re-read for
+    # this long (unless he comes clearly closer). 0 = off.
+    settled_sec: float = 0.0
+    # 5.1 legibility gate (legibility.py); None = read every candidate (5.0 behaviour)
+    gate: object | None = None
+    # 5.1: main read + weak torso check in one PARSeq batch (same results, fewer model calls)
+    batch_verify: bool = True
 
 
 @dataclass
@@ -237,15 +244,34 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
         if crop.size == 0:
             return None
         _t = time.perf_counter()
-        num, conf, where = reader.read(crop)
-        t_main = time.perf_counter() - _t
-        weak_conf = None
-        if num is None and cfg.weak_verify and hasattr(reader, "parseq"):
-            from .ocr import target_roi_confidence  # noqa: PLC0415
+        leg = None
+        if cfg.gate is not None:
+            from .legibility import features as _leg  # noqa: PLC0415
 
-            wc = weak_conf = target_roi_confidence(reader, crop, number)
-            if wc >= cfg.weak_min_conf:
-                num, conf, where = number, wc, "weak:torso"
+            leg = _leg(crop)
+            if not cfg.gate.main(leg):
+                stats["gated"] = stats.get("gated", 0) + 1
+                tm["ocr"] += time.perf_counter() - _t
+                return None
+        weak_conf = None
+        want_weak = cfg.weak_verify and hasattr(reader, "parseq") and (leg is None or cfg.gate.weak(leg))
+        if want_weak and cfg.batch_verify and hasattr(reader, "read_and_verify"):
+            # 5.1: one PARSeq batch for the main read and the weak torso check
+            num, conf, where, wc = reader.read_and_verify(crop, number)
+            t_main = time.perf_counter() - _t
+            if num is None:
+                weak_conf = wc
+                if wc >= cfg.weak_min_conf:
+                    num, conf, where = number, wc, "weak:torso"
+        else:
+            num, conf, where = reader.read(crop)
+            t_main = time.perf_counter() - _t
+            if num is None and want_weak:
+                from .ocr import target_roi_confidence  # noqa: PLC0415
+
+                wc = weak_conf = target_roi_confidence(reader, crop, number)
+                if wc >= cfg.weak_min_conf:
+                    num, conf, where = number, wc, "weak:torso"
         t_total = time.perf_counter() - _t
         tm["ocr"] += t_total
         if log_reads_dir is not None:
@@ -313,7 +339,7 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
             cands = sorted((b for b in tb if b[3] - b[1] >= cfg.min_h), key=lambda b: -(b[3] - b[1]))
             stats["samples"] += 1
             stats["candidates"] += len(cands)
-            last_read[:] = [r for r in last_read if t - r["t"] <= cfg.reread_sec * 2]
+            last_read[:] = [r for r in last_read if t - r["t"] <= max(cfg.reread_sec * 2, cfg.settled_sec)]
             for b in cands[: cfg.max_ocr_per_sample]:
                 h = b[3] - b[1]
                 prev = next((r for r in last_read if _iou(b, r["box"]) >= 0.3), None)
@@ -322,11 +348,22 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
                     prev["box"] = b
                     stats["skipped"] += 1
                     continue
+                if (prev and cfg.settled_sec > 0 and prev.get("settled") and t - prev["settled"] < cfg.settled_sec
+                        and h < prev["h"] * cfg.reread_growth):
+                    prev["box"] = b
+                    stats["settled"] = stats.get("settled", 0) + 1
+                    continue
                 got = ocr(k, t, frame, b)
                 if prev:
                     prev.update(box=b, t=t, h=h)
                 else:
-                    last_read.append({"box": b, "t": t, "h": h})
+                    prev = {"box": b, "t": t, "h": h}
+                    last_read.append(prev)
+                if got and len(got) == len(number) and got != number:
+                    seen = prev.setdefault("others", {})
+                    seen[got] = seen.get(got, 0) + 1
+                    if seen[got] >= 2:
+                        prev["settled"] = t
                 nb = sorted(d for d in cfg.close_neighbours if d > 0) if close else forward
                 evidence = got == number or (got is not None and len(got) == 1 and got in digits)
                 wanted = (evidence or close) if cfg.evidence_densify else h >= cfg.dense_min_h

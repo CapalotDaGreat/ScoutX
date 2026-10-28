@@ -165,3 +165,52 @@ def test_memo_keys_arrays_by_content_and_corrections_are_idempotent():
 
     a = np.arange(10.0)
     assert _token(a) == _token(a.copy()) and _token(a) != _token(a + 1)
+
+
+def test_discovery_settled_other_number_is_not_reread_and_gate_never_creates_evidence():
+    from scoutx_tracker.discovery import DiscoveryConfig, discover
+    from scoutx_tracker.legibility import Gate
+    from tests.test_discovery_41 import Det, Reader, frames
+
+    # a team-mate whose shirt reads "17": after two agreeing reads he is settled for 6 s
+    base = Reader(lambda i: ("17", 0.97, "shirt:white"))
+    discover("", 0, 10, "20", "orange", Det(), base, cfg=DiscoveryConfig(weak_verify=False), frames=frames(100))
+    settled = Reader(lambda i: ("17", 0.97, "shirt:white"))
+    res = discover("", 0, 10, "20", "orange", Det(), settled, cfg=DiscoveryConfig(weak_verify=False, settled_sec=6.0), frames=frames(100))
+    assert settled.calls < base.calls and res.timings.get("settled", 0) > 0 and not res.sightings
+    # a gate that rejects everything reads nothing and finds nothing (an unread number is no evidence)
+    gated = Reader(lambda i: ("20", 0.99, "shirt:white"))
+    res = discover("", 0, 6, "20", "orange", Det(), gated, cfg=DiscoveryConfig(gate=Gate(min_h=10_000)), frames=frames())
+    assert gated.calls == 0 and not res.sightings and res.timings.get("gated", 0) > 0
+
+
+def test_batched_read_and_verify_gives_the_same_sighting_as_two_calls():
+    from scoutx_tracker.discovery import DiscoveryConfig, discover
+    from tests.test_discovery_41 import Det, frames
+
+    class R:
+        parseq = True
+
+        def __init__(self):
+            self.calls = 0
+
+        def read(self, crop):
+            self.calls += 1
+            return (None, 0.0, None)
+
+        def read_and_verify(self, crop, number):
+            self.calls += 1
+            return (None, 0.0, None, 0.97)
+
+    import scoutx_tracker.ocr as ocr_mod
+
+    orig = ocr_mod.target_roi_confidence
+    ocr_mod.target_roi_confidence = lambda reader, crop, number: 0.97
+    try:
+        a = discover("", 0, 6, "20", "orange", Det(), R(), cfg=DiscoveryConfig(batch_verify=False), frames=frames())
+        b = discover("", 0, 6, "20", "orange", Det(), R(), cfg=DiscoveryConfig(batch_verify=True), frames=frames())
+    finally:
+        ocr_mod.target_roi_confidence = orig
+    sa = [(s.t, s.frames, s.weak_frames) for s in a.sightings]
+    assert sa and sa == [(s.t, s.frames, s.weak_frames) for s in b.sightings]
+    assert all(s.frames == 0 for s in a.sightings), "weak-only: a moment to check, never confirmed"

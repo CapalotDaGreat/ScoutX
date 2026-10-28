@@ -113,12 +113,31 @@ class NumberReader:
 
     def read(self, crop_bgr: np.ndarray) -> tuple[str | None, float, str | None]:
         """Returns (number, confidence, where) or (None, 0, None)."""
+        return self._read(crop_bgr)
+
+    def read_and_verify(self, crop_bgr: np.ndarray, number: str) -> tuple[str | None, float, str | None, float]:
+        """5.1: `read` plus `target_roi_confidence` in ONE PARSeq batch (main-reader candidates and
+        the three colour torso regions together): same results, one model call instead of two
+        (-29 % PARSeq time measured). Returns (number, conf, where, weak_conf)."""
+        rois = torso_rois(crop_bgr)
+        extra: list = []
+        num, conf, where = self._read(crop_bgr, extra_imgs=rois, extra_out=extra)
+        weak = max((float(p) for t, p in extra if t.strip() == number), default=0.0)
+        return num, conf, where, weak
+
+    def _read(self, crop_bgr: np.ndarray, extra_imgs: list | None = None, extra_out: list | None = None):
         if self.enhance and crop_bgr.size:
             crop_bgr = enhance(crop_bgr)
         cands = self._candidates(crop_bgr)
+        extra_imgs = extra_imgs or []
         if not cands:
+            if extra_imgs and extra_out is not None:
+                extra_out.extend(self.parseq(extra_imgs))
             return None, 0.0, None
-        pq = self.parseq([img for _, img in cands])
+        pq_all = self.parseq([img for _, img in cands] + list(extra_imgs))
+        pq = pq_all[:len(cands)]
+        if extra_out is not None:
+            extra_out.extend(pq_all[len(cands):])
         votes: dict[str, tuple[float, str]] = {}
         for (where, img), (text, conf) in zip(cands, pq):
             text = text.strip()
