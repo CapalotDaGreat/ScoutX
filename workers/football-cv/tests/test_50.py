@@ -110,3 +110,39 @@ def test_period_detection_handles_recordings_shorter_than_the_activity_window():
     times = np.arange(200) / 10.0
     tl = detect_periods(times, np.zeros(200, int), np.full(200, 0.3))
     assert len(tl.kind_at(times)) == 200
+
+
+def test_a_single_number_read_is_a_moment_to_check_not_a_confirmation():
+    """5.0: single reads at 0.90-0.95 were wrong 3x in 20 min of IMG_5105 -> two agreeing reads confirm."""
+    seq = iter([("20", 0.95, "s")] + [(None, 0.0, None)] * 200)
+    res = discover("", 0, 6, "20", "orange", Det(), Reader(lambda i: next(seq)), cfg=DiscoveryConfig(), frames=frames())
+    assert res.moments and res.moments[0]["identityState"] == "LIKELY_VISIBLE" and res.moments[0]["candidate"] is True
+    seq2 = iter([("20", 0.95, "s")] * 200)
+    res2 = discover("", 0, 6, "20", "orange", Det(), Reader(lambda i: next(seq2)), cfg=DiscoveryConfig(), frames=frames())
+    assert res2.moments[0]["identityState"] == "CONFIRMED_VISIBLE" and res2.moments[0]["readFrames"] >= 2
+
+
+def test_weak_reads_only_ask_and_on_pitch_filter_drops_spectators():
+    from scoutx_tracker.discovery import is_confirmed
+    from scoutx_tracker.features import ground_green
+
+    assert not is_confirmed(0, 9) and not is_confirmed(1, 1) and is_confirmed(1, 2) and is_confirmed(2, 0)
+    f = np.full((1080, 1920, 3), (40, 140, 40), np.uint8)
+    assert ground_green(f, (800, 300, 900, 600)) > 0.9
+    assert ground_green(f, (800, 700, 900, 1080)) == 0.0, "cut off by the bottom of the frame"
+    f[560:700, 700:1000] = (60, 60, 60)  # standing on the stand / pavement
+    assert ground_green(f, (800, 300, 900, 600)) < 0.25
+
+
+def test_weak_only_sightings_never_become_identity_evidence():
+    from scoutx_tracker.analyze import attach_sightings
+
+    class D_:
+        times = np.array([0.0, 0.1, 0.2])
+
+    class T_:
+        rows = np.array([[1, 0.1, 7, 100, 100, 150, 250, 0.9, 0]], float)
+
+    reads: dict = {}
+    assert attach_sightings(reads, [{"t": 0.1, "box": [100, 100, 150, 250], "number": "20", "frames": 0, "weak": 5}], "20", D_, T_) == 0
+    assert attach_sightings(reads, [{"t": 0.1, "box": [100, 100, 150, 250], "number": "20", "frames": 2}], "20", D_, T_) == 1

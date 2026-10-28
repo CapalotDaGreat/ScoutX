@@ -167,7 +167,17 @@ test('4.1 discovery sightings and off-ball observations are validated server-sid
   const parsed = parseDiscoveryMoments([ok], chunk, 2035, '20');
   assert.equal(parsed?.[0].evidence, 'number_read');
   assert.equal(parsed?.[0].kind, 'sighting');
-  for (const bad of [{ number: '17' }, { identityState: 'LIKELY_VISIBLE' }, { start: 700, clipStart: 695, clipEnd: 704 },
+  // 5.0: a single read is never confirmed - it is downgraded to a candidate to check
+  const single = parseDiscoveryMoments([{ ...ok, readFrames: 1 }], chunk, 2035, '20');
+  assert.equal(single?.[0].identityState, 'LIKELY_VISIBLE');
+  assert.equal(single?.[0].candidate, true);
+  assert.equal(parseDiscoveryMoments([{ ...ok, identityState: 'LIKELY_VISIBLE', candidate: true }], chunk, 2035, '20')?.[0].candidate, true);
+  // one main-reader read backed by two weak reads confirms; weak reads alone never do
+  assert.equal(parseDiscoveryMoments([{ ...ok, readFrames: 1, weakFrames: 2 }], chunk, 2035, '20')?.[0].identityState, 'CONFIRMED_VISIBLE');
+  const weakOnly = parseDiscoveryMoments([{ ...ok, readFrames: 0, weakFrames: 9 }], chunk, 2035, '20')?.[0];
+  assert.equal(weakOnly?.identityState, 'LIKELY_VISIBLE');
+  assert.equal(weakOnly?.weakFrames, 9);
+  for (const bad of [{ number: '17' }, { identityState: 'AMBIGUOUS' }, { start: 700, clipStart: 695, clipEnd: 704 },
     { clipEnd: 70 }, { evidence: 'appearance' }, { id: 'x' }]) {
     assert.equal(parseDiscoveryMoments([{ ...ok, ...bad }], chunk, 2035, '20'), null, JSON.stringify(bad));
   }

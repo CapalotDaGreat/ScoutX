@@ -766,7 +766,8 @@
       "duration": "{{sec}} s",
       "numberRead": "Shirt number read",
       "earlyTitle": "Your moments so far",
-      "earlyBody": "PitchProof read your shirt number in these moments. More appear while the full analysis continues."
+      "earlyBody": "PitchProof read your shirt number in these moments. More appear while the full analysis continues.",
+      "numberMaybe": "Your number may be visible"
     },
     "player": {
       "title": "{{kind}} at {{time}}",

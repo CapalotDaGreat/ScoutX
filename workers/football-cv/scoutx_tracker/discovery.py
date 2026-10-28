@@ -30,9 +30,16 @@ import cv2
 import numpy as np
 
 from .cmc import scene_cut
-from .features import colour_signature, kit_score
+from .features import colour_signature, ground_green, kit_score
 
 LEAD_SEC, TAIL_SEC = 5.0, 4.0
+MIN_CONFIRM_READS = 2
+
+
+def is_confirmed(strong: int, weak: int) -> bool:
+    """>= 2 main-reader reads, or 1 main-reader read backed by >= 2 weak (torso-region) reads of
+    the same number in other frames of the same sighting. Weak reads alone never confirm."""
+    return strong >= MIN_CONFIRM_READS or (strong >= 1 and weak >= 2)
 CLUSTER_GAP_SEC = 1.5
 
 
@@ -42,6 +49,7 @@ class DiscoveryConfig:
     sample_every: int = 5          # detector on every 5th decoded frame -> 2 fps
     det_size: int = 416            # informational: the caller's detector input size
     min_kit: float = 0.30          # shirt share of the target kit colour
+    min_ground: float = 0.25       # 5.0: pitch-green share around the feet (spectators in front are not players)
     min_h: int = 110               # px; smaller players' numbers are not readable
     neighbours: tuple[int, ...] = (2, 4)  # adaptive extra frames after a candidate (0.2, 0.4 s)
     max_ocr_per_sample: int = 2    # largest candidates first
@@ -56,6 +64,10 @@ class DiscoveryConfig:
     evidence_densify: bool = True
     roi_det: bool = True
     roi_scale: float = 2.2
+    # 5.0: when the main reader abstains, ask PARSeq on colour torso regions whether this is
+    # exactly the target number (weak evidence: can only create a moment to check)
+    weak_verify: bool = True
+    weak_min_conf: float = 0.95
 
 
 @dataclass
@@ -64,8 +76,9 @@ class Sighting:
     box: list[float]               # x1, y1, x2, y2 (px)
     number: str
     conf: float
-    frames: int                    # frames that read the number
+    frames: int                    # frames that read the number (main reader)
     crop: str | None = None
+    weak_frames: int = 0           # 5.0: frames with only weak (torso-region) evidence
 
 
 @dataclass
@@ -77,6 +90,8 @@ class DiscoveryResult:
     height: int = 1080
     frames: int = 0
     first_sighting_wall_sec: float | None = None
+    # diagnostics (worker-internal, never returned by the API): reads per recognised number
+    read_counts: dict = field(default_factory=dict)
 
 
 def cv2_frames(src: str, start: float, end: float, fps: float):
@@ -190,7 +205,7 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
             if sc < 0.3 or b[3] - b[1] < 36:
                 continue
             sig, _ = colour_signature(frame, b)
-            if kit_score(sig, kit) >= cfg.min_kit:
+            if kit_score(sig, kit) >= cfg.min_kit and (cfg.min_ground <= 0 or ground_green(frame, b) >= cfg.min_ground):
                 out.append(b)
         tm["kit"] += time.perf_counter() - _t
         return out
@@ -221,6 +236,12 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
             return None
         _t = time.perf_counter()
         num, conf, where = reader.read(crop)
+        if num is None and cfg.weak_verify and hasattr(reader, "parseq"):
+            from .ocr import target_roi_confidence  # noqa: PLC0415
+
+            wc = target_roi_confidence(reader, crop, number)
+            if wc >= cfg.weak_min_conf:
+                num, conf, where = number, wc, "weak:torso"
         tm["ocr"] += time.perf_counter() - _t
         stats["reads"] += 1
         reads.append((t, [float(v) for v in box], num, float(conf), where, idx))
@@ -305,7 +326,9 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
             if len(wb):
                 ious = [_iou(w["box"], x) for x in wb]
                 m = int(np.argmax(ious))
-                if ious[m] >= 0.3:
+                if ious[m] >= 0.3 and target_boxes(frame, [wb[m]], [1.0]):
+                    # 5.0: the followed box must still look like a target-kit player on the pitch
+                    # (a window can otherwise drift onto a spectator or another person)
                     w["box"] = wb[m]
                     got = ocr(k, t, frame, wb[m])
                     if cfg.evidence_densify and (got == number or (got and len(got) == 1 and got in digits)):
@@ -320,6 +343,9 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
                 progress(t, time.time() - t_wall, dict(stats))
     flush(final=True, now_t=t)
     res.frames = k + 1
+    for r_ in reads:
+        if r_[2]:
+            res.read_counts[r_[2]] = res.read_counts.get(r_[2], 0) + 1
     res.moments = merge_overlapping([sighting_moment(sg, track, cuts, start, end, res.width, res.height)
                                      for sg in res.sightings])
     res.timings = {k_: round(v, 2) for k_, v in tm.items()} | {"wall": round(time.time() - t_wall, 1)} | stats
@@ -346,8 +372,10 @@ def _cluster(reads, number: str, gap: float) -> list[Sighting]:
         if nums != {number}:
             continue
         hits = [r for r in g if r[2] == number]
-        best = max(hits, key=lambda r: r[3])
-        out.append(Sighting(t=round(best[0], 2), box=best[1], number=number, conf=round(best[3], 3), frames=len(hits)))
+        strong = [r for r in hits if not str(r[4] or "").startswith("weak")]
+        best = max(strong or hits, key=lambda r: r[3])
+        out.append(Sighting(t=round(best[0], 2), box=best[1], number=number, conf=round(best[3], 3), frames=len(strong),
+                            weak_frames=len(hits) - len(strong)))
     return out
 
 
@@ -376,9 +404,16 @@ def sighting_moment(s: Sighting, track, cuts, start: float, end: float, width: i
             cur = cands[m]
             indicator.append([t, *_norm(cur, width, height)])
     indicator.sort(key=lambda p: p[0])
+    # 5.0: one read is not enough to confirm. On a second recording (IMG_5105) single reads at
+    # 0.90-0.95 confidence were wrong 3 times in 20 minutes ("19" on a #17, "11" on a spectator,
+    # "41" on a side view). A sighting is CONFIRMED only with >= MIN_CONFIRM_READS agreeing reads
+    # in different frames; a single read is a moment to check ("Is this you?").
+    confirmed = is_confirmed(s.frames, s.weak_frames)
     return {"id": f"d_{int(round(s.t * 10))}", "kind": "sighting", "start": s.t, "end": s.t,
-            "clipStart": round(c0, 2), "clipEnd": round(c1, 2), "identityState": "CONFIRMED_VISIBLE",
-            "evidence": "number_read", "number": s.number, "readFrames": s.frames, "candidate": False,
+            "clipStart": round(c0, 2), "clipEnd": round(c1, 2),
+            "identityState": "CONFIRMED_VISIBLE" if confirmed else "LIKELY_VISIBLE",
+            "evidence": "number_read", "number": s.number, "readFrames": s.frames, "weakFrames": s.weak_frames,
+            "candidate": not confirmed,
             "indicator": [[round(v, 4) if i else round(v, 2) for i, v in enumerate(p)] for p in indicator][:40],
             "thumbCrop": s.crop}
 
@@ -391,8 +426,12 @@ def merge_overlapping(moments: list[dict], max_clip: float = 20.0) -> list[dict]
         prev = out[-1] if out else None
         if prev and m["clipStart"] <= prev["clipEnd"] and max(m["clipEnd"], prev["clipEnd"]) - prev["clipStart"] <= max_clip:
             keep = m if m["readFrames"] > prev["readFrames"] else prev
+            frames = prev["readFrames"] + m["readFrames"]
+            weak = prev.get("weakFrames", 0) + m.get("weakFrames", 0)
+            ok = is_confirmed(frames, weak)
             merged = dict(keep, clipStart=prev["clipStart"], clipEnd=max(m["clipEnd"], prev["clipEnd"]),
-                          readFrames=prev["readFrames"] + m["readFrames"],
+                          readFrames=frames, weakFrames=weak, identityState="CONFIRMED_VISIBLE" if ok else "LIKELY_VISIBLE",
+                          candidate=not ok,
                           indicator=sorted(prev["indicator"] + [p for p in m["indicator"] if p[0] not in {q[0] for q in prev["indicator"]}])[:40])
             out[-1] = merged
         else:

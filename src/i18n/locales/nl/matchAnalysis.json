@@ -766,7 +766,8 @@
       "duration": "{{sec}} s",
       "numberRead": "Rugnummer gelezen",
       "earlyTitle": "Je momenten tot nu toe",
-      "earlyBody": "PitchProof las je rugnummer in deze momenten. Er verschijnen er meer terwijl de volledige analyse doorgaat."
+      "earlyBody": "PitchProof las je rugnummer in deze momenten. Er verschijnen er meer terwijl de volledige analyse doorgaat.",
+      "numberMaybe": "Je nummer is misschien te zien"
     },
     "player": {
       "title": "{{kind}} op {{time}}",

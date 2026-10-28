@@ -55,6 +55,8 @@ export type TrackingMoment = {
   /** 'number_read': the target's shirt number was read in this moment (4.1 discovery). */
   evidence?: 'number_read';
   readFrames?: number;
+  /** 5.0: frames with only weak (torso-region) evidence for the number - never confirms */
+  weakFrames?: number;
 };
 export const MAX_MOMENTS = 80;
 export const MAX_CLIP_SEC = 20;
@@ -390,6 +392,8 @@ export function parseMoments(raw: unknown, recordingSec: number): TrackingMoment
  * those), lie inside the chunk it came from and inside the recording. Anything else rejects the
  * whole chunk.
  */
+export const DISCOVERY_MIN_CONFIRM_READS = 2;
+
 export function parseDiscoveryMoments(raw: unknown, chunk: { startSec: number; endSec: number }, recordingSec: number,
   number: string): TrackingMoment[] | null {
   if (!Array.isArray(raw) || raw.length > 40) return null;
@@ -397,7 +401,12 @@ export function parseDiscoveryMoments(raw: unknown, chunk: { startSec: number; e
   for (const item of raw) {
     const m = asRecord(item);
     if (!m || typeof m.id !== 'string' || !/^d_[0-9]{1,6}$/.test(m.id) || m.kind !== 'sighting' || m.evidence !== 'number_read'
-      || m.identityState !== 'CONFIRMED_VISIBLE' || String(m.number) !== number || !number) return null;
+      || !['CONFIRMED_VISIBLE', 'LIKELY_VISIBLE'].includes(String(m.identityState)) || String(m.number) !== number || !number) return null;
+    const readFrames = nonNeg(m.readFrames) ? Math.floor(m.readFrames as number) : 1;
+    // 5.0: confirmed only with >= 2 agreeing reads; a single read is a candidate to check
+    const weakFrames = nonNeg(m.weakFrames) ? Math.floor(m.weakFrames as number) : 0;
+    const confirmed = m.identityState === 'CONFIRMED_VISIBLE'
+      && (readFrames >= DISCOVERY_MIN_CONFIRM_READS || (readFrames >= 1 && weakFrames >= 2));
     if (![m.start, m.clipStart, m.clipEnd].every(nonNeg)) return null;
     const [start, c0, c1] = [m.start, m.clipStart, m.clipEnd] as number[];
     if (start < chunk.startSec - 0.5 || start > chunk.endSec + 0.5 || c1 < c0 || c1 - c0 > MAX_CLIP_SEC + 0.01
@@ -410,8 +419,8 @@ export function parseDiscoveryMoments(raw: unknown, chunk: { startSec: number; e
       indicator.push([t, x, y, w, h]);
     }
     out.push({ id: m.id, kind: 'sighting', kinds: ['sighting'], start, end: start, clipStart: c0, clipEnd: c1,
-      identityState: 'CONFIRMED_VISIBLE', candidate: false, indicator, imagePath: null, evidence: 'number_read',
-      readFrames: nonNeg(m.readFrames) ? Math.floor(m.readFrames) : 1 });
+      identityState: confirmed ? 'CONFIRMED_VISIBLE' : 'LIKELY_VISIBLE', candidate: !confirmed, indicator, imagePath: null,
+      evidence: 'number_read', readFrames, ...(weakFrames > 0 ? { weakFrames } : {}) });
   }
   return out;
 }

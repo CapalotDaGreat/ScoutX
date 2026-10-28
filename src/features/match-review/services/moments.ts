@@ -26,6 +26,8 @@ export type MomentCard = {
   rank: number;
   /** shirt number read in this moment (4.1 discovery) */
   numberRead: boolean;
+  /** 5.0: the number was only possibly seen (weak evidence) - shown as a moment to check */
+  numberMaybe: boolean;
 };
 
 const CATEGORY: Record<TrackingMoment['kind'], MomentCategory> = {
@@ -66,7 +68,8 @@ export function toMomentCard(m: TrackingMoment): MomentCard {
     imagePath: m.imagePath ?? null,
     indicator: m.indicator,
     rank: evidenceWeight + KIND_WEIGHT[m.kind] * 10 + outcomeWeight + Math.min(9, m.end - m.start) / 10,
-    numberRead: m.evidence === 'number_read',
+    numberRead: m.evidence === 'number_read' && (m.readFrames ?? 1) > 0,
+    numberMaybe: m.evidence === 'number_read' && (m.readFrames ?? 1) === 0,
   };
 }
 

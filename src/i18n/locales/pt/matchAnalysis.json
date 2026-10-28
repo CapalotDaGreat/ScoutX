@@ -766,7 +766,8 @@
       "duration": "{{sec}} s",
       "numberRead": "Número da camisola lido",
       "earlyTitle": "Os teus lances até agora",
-      "earlyBody": "O PitchProof leu o número da tua camisola nestes lances. Aparecem mais enquanto a análise completa continua."
+      "earlyBody": "O PitchProof leu o número da tua camisola nestes lances. Aparecem mais enquanto a análise completa continua.",
+      "numberMaybe": "O teu número pode estar visível"
     },
     "player": {
       "title": "{{kind}} em {{time}}",

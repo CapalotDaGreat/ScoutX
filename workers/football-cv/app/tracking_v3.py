@@ -299,10 +299,11 @@ def discover_chunk(request: DiscoverRequest) -> dict:
              request.target.kitPrimaryColor, detector, reader, crops_dir=str(crops))
     # Job-scoped evidence for later resolves (identity uses the reads; lifecycle = job retention).
     crops.mkdir(parents=True, exist_ok=True)
-    (crops / "sightings.json").write_text(json.dumps([{"t": s.t, "box": s.box, "number": s.number, "conf": s.conf}
+    (crops / "sightings.json").write_text(json.dumps([{"t": s.t, "box": s.box, "number": s.number, "conf": s.conf,
+                                                       "frames": s.frames, "weak": getattr(s, "weak_frames", 0)}
                                                       for s in getattr(res, "sightings", [])]))
     keys = ("id", "kind", "start", "end", "clipStart", "clipEnd", "identityState", "evidence", "number", "readFrames",
-            "candidate", "indicator")
+            "weakFrames", "candidate", "indicator")
     moments = [{**{k: m[k] for k in keys if k in m}, "imageJpegBase64": _thumb(m.get("thumbCrop"), max_h=240)}
                for m in res.moments]
     return {"jobId": request.jobId, "chunkIndex": request.chunkIndex, "status": "complete", "moments": moments,

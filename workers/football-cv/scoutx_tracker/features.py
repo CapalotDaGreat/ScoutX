@@ -147,3 +147,26 @@ def warm_fraction(frame_bgr: np.ndarray, box) -> float:
         return float("nan")
     hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
     return float(((hsv[..., 0] < 25) & (hsv[..., 1] > 90)).mean())
+
+
+def ground_green(frame_bgr: np.ndarray, box) -> float:
+    """5.0: share of pitch-green pixels in a thin band around the feet of a person box. Players
+    stand on grass; spectators, coaches and bench players in the foreground (often large, close
+    and lit like skin-coloured "kit" under floodlights) usually do not, or are cut off by the
+    bottom of the frame. Returns 0 when the feet are outside the picture."""
+    import cv2  # noqa: PLC0415
+
+    H, W = frame_bgr.shape[:2]
+    x1, y1, x2, y2 = (float(v) for v in box[:4])
+    h = max(1.0, y2 - y1)
+    if y2 >= H - 2:
+        return 0.0
+    ya, yb = int(max(0, y2 - 0.04 * h)), int(min(H, y2 + 0.10 * h + 2))
+    pad = 0.35 * (x2 - x1)
+    xa, xb = int(max(0, x1 - pad)), int(min(W, x2 + pad))
+    band = frame_bgr[ya:yb, xa:xb]
+    if band.size == 0:
+        return 0.0
+    hsv = cv2.cvtColor(band, cv2.COLOR_BGR2HSV)
+    g = (hsv[..., 0] >= 30) & (hsv[..., 0] <= 90) & (hsv[..., 1] >= 40) & (hsv[..., 2] >= 35)
+    return float(g.mean())

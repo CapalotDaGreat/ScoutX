@@ -766,7 +766,8 @@
       "duration": "{{sec}} s",
       "numberRead": "Numéro de maillot lu",
       "earlyTitle": "Tes actions pour l'instant",
-      "earlyBody": "PitchProof a lu ton numéro de maillot dans ces actions. D'autres apparaissent pendant que l'analyse complète continue."
+      "earlyBody": "PitchProof a lu ton numéro de maillot dans ces actions. D'autres apparaissent pendant que l'analyse complète continue.",
+      "numberMaybe": "Ton numéro est peut-être visible"
     },
     "player": {
       "title": "{{kind}} à {{time}}",

@@ -68,6 +68,7 @@ export type TrackingMoment = {
   /** 4.1 discovery: the shirt number was read in this moment */
   evidence?: 'number_read';
   readFrames?: number;
+  weakFrames?: number;
 };
 /** 4.1: number sightings found by the early discovery pass (owner-only, server-written). */
 export type TrackingDiscoveryDoc = { moments: TrackingMoment[]; generation: number; updatedAt: string };

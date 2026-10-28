@@ -149,6 +149,31 @@ class NumberReader:
         return num, conf, where
 
 
+def torso_rois(crop: np.ndarray) -> list[np.ndarray]:
+    """Three colour torso regions (no binarisation), height 64 - for target verification."""
+    h, w = crop.shape[:2]
+    out = []
+    for ya, yb, xa, xb in ((0.12, 0.45, 0.15, 0.85), (0.15, 0.40, 0.20, 0.80), (0.10, 0.50, 0.10, 0.90)):
+        t = crop[int(h * ya):int(h * yb), int(w * xa):int(w * xb)]
+        if t.shape[0] < 6 or t.shape[1] < 6:
+            continue
+        t = cv2.resize(t, (max(8, int(t.shape[1] * 64 / t.shape[0])), 64), interpolation=cv2.INTER_CUBIC)
+        out.append(cv2.cvtColor(t, cv2.COLOR_BGR2RGB))
+    return out
+
+
+def target_roi_confidence(reader: "NumberReader", crop: np.ndarray, number: str) -> float:
+    """5.0 weak evidence for ONE known number: PARSeq on colour torso regions must read exactly
+    `number`. Used only when the main reader abstains, and only ever as a reason to ASK the owner
+    (never to confirm). Measured: 0 of 423 crops of other players / spectators gave the target
+    "20" at >= 0.95 (IMG_4809, IMG_5105, IMG_4529); it recovers some blurred night-match prints the
+    binarised reader cannot localise (low recall)."""
+    rois = torso_rois(crop)
+    if not rois:
+        return 0.0
+    return max((float(p) for t, p in reader.parseq(rois) if t.strip() == number), default=0.0)
+
+
 _SHARED: "NumberReader | None" = None
 
 

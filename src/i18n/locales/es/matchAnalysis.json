@@ -766,7 +766,8 @@
       "duration": "{{sec}} s",
       "numberRead": "Dorsal leído",
       "earlyTitle": "Tus jugadas hasta ahora",
-      "earlyBody": "PitchProof leyó tu dorsal en estas jugadas. Aparecerán más mientras continúa el análisis completo."
+      "earlyBody": "PitchProof leyó tu dorsal en estas jugadas. Aparecerán más mientras continúa el análisis completo.",
+      "numberMaybe": "Puede que se vea tu número"
     },
     "player": {
       "title": "{{kind}} en {{time}}",

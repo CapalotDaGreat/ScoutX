@@ -15,7 +15,7 @@
  * (cvWorkerStatus() === 'available') plus TRACKING_V3_ENABLED=true.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ANSWERS = exports.MIN_SEQUENCE_SEC = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.ANSWERS = exports.DISCOVERY_MIN_CONFIRM_READS = exports.MIN_SEQUENCE_SEC = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
 exports.parseOffballSequences = parseOffballSequences;
 exports.parseOffball = parseOffball;
 exports.decodeReviewImage = decodeReviewImage;
@@ -342,6 +342,7 @@ function parseMoments(raw, recordingSec) {
  * those), lie inside the chunk it came from and inside the recording. Anything else rejects the
  * whole chunk.
  */
+exports.DISCOVERY_MIN_CONFIRM_READS = 2;
 function parseDiscoveryMoments(raw, chunk, recordingSec, number) {
     if (!Array.isArray(raw) || raw.length > 40)
         return null;
@@ -349,8 +350,13 @@ function parseDiscoveryMoments(raw, chunk, recordingSec, number) {
     for (const item of raw) {
         const m = asRecord(item);
         if (!m || typeof m.id !== 'string' || !/^d_[0-9]{1,6}$/.test(m.id) || m.kind !== 'sighting' || m.evidence !== 'number_read'
-            || m.identityState !== 'CONFIRMED_VISIBLE' || String(m.number) !== number || !number)
+            || !['CONFIRMED_VISIBLE', 'LIKELY_VISIBLE'].includes(String(m.identityState)) || String(m.number) !== number || !number)
             return null;
+        const readFrames = nonNeg(m.readFrames) ? Math.floor(m.readFrames) : 1;
+        // 5.0: confirmed only with >= 2 agreeing reads; a single read is a candidate to check
+        const weakFrames = nonNeg(m.weakFrames) ? Math.floor(m.weakFrames) : 0;
+        const confirmed = m.identityState === 'CONFIRMED_VISIBLE'
+            && (readFrames >= exports.DISCOVERY_MIN_CONFIRM_READS || (readFrames >= 1 && weakFrames >= 2));
         if (![m.start, m.clipStart, m.clipEnd].every(nonNeg))
             return null;
         const [start, c0, c1] = [m.start, m.clipStart, m.clipEnd];
@@ -367,8 +373,8 @@ function parseDiscoveryMoments(raw, chunk, recordingSec, number) {
             indicator.push([t, x, y, w, h]);
         }
         out.push({ id: m.id, kind: 'sighting', kinds: ['sighting'], start, end: start, clipStart: c0, clipEnd: c1,
-            identityState: 'CONFIRMED_VISIBLE', candidate: false, indicator, imagePath: null, evidence: 'number_read',
-            readFrames: nonNeg(m.readFrames) ? Math.floor(m.readFrames) : 1 });
+            identityState: confirmed ? 'CONFIRMED_VISIBLE' : 'LIKELY_VISIBLE', candidate: !confirmed, indicator, imagePath: null,
+            evidence: 'number_read', readFrames, ...(weakFrames > 0 ? { weakFrames } : {}) });
     }
     return out;
 }

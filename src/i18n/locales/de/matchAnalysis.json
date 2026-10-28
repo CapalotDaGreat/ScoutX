@@ -766,7 +766,8 @@
       "duration": "{{sec}} s",
       "numberRead": "Rückennummer gelesen",
       "earlyTitle": "Deine Szenen bisher",
-      "earlyBody": "In diesen Szenen hat PitchProof deine Rückennummer gelesen. Weitere erscheinen, während die vollständige Analyse läuft."
+      "earlyBody": "In diesen Szenen hat PitchProof deine Rückennummer gelesen. Weitere erscheinen, während die vollständige Analyse läuft.",
+      "numberMaybe": "Deine Nummer ist vielleicht zu sehen"
     },
     "player": {
       "title": "{{kind}} bei {{time}}",

@@ -133,8 +133,8 @@ def attach_sightings(reads: dict, sightings: list[dict], number: str, D, T) -> i
         by_frame.setdefault(f, []).append(i)
     added = 0
     for s_ in sightings:
-        if str(s_.get("number")) != number:
-            continue
+        if str(s_.get("number")) != number or int(s_.get("frames", 1)) < 1:
+            continue  # 5.0: weak-only sightings (torso-region reads) never become identity evidence
         g0 = int(np.argmin(np.abs(D.times - float(s_["t"]))))
         if abs(D.times[g0] - float(s_["t"])) > 0.06:
             continue

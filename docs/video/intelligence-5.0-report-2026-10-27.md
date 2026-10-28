@@ -14,8 +14,10 @@ screenshots in `screenshots-5.0/`.
 * Branch `feature/player-tracking-v3` at `02f768d` (4.1), in sync with GitHub before 5.0.
 * Re-run at the start of 5.0: worker `pytest` 500 passed; app + Functions unit tests 702 passed;
   `tsc` and ESLint clean — the 4.1 claims hold.
-* Evaluation data: one recording (IMG_4809, 34 min, 1080p 30 fps 10-bit HLG HEVC, 10 fps proxy),
-  developer labels (single annotator). PLACEHOLDER_RECORDINGS
+* Evaluation data: IMG_4809 (34 min, 1080p 30 fps 10-bit HLG HEVC, 10 fps proxy, developer
+  labels, single annotator) and **two further matches from the owner's iCloud library** (used for
+  testing only, never training), see §3b. Two more requested recordings (IMG_6565, IMG_7332, #7)
+  had not finished downloading on the laptop and are not evaluated.
 
 ## 2. Architecture (four layers)
 
@@ -62,6 +64,55 @@ What changed (measured on the first minute and the whole match):
   around the player (same model, 16:9 canvas) instead of the whole frame.
 * A frame-grid offset between ffmpeg and OpenCV (one frame after long runs) was found and is
   handled when sightings are attached to the dense pass (±1 frame, IoU ≥ 0.5).
+
+## 3b. Evaluation on two more matches (owner's recordings, #20)
+
+| | IMG_4529 | IMG_5105 |
+|---|---|---|
+| Recorded | 27.03.2024, evening, floodlights | 31.08.2024, afternoon sun |
+| Video | 47 min, 1080p 30 fps 8-bit SDR H.264 | 46 min, 1080p 30 fps 8-bit SDR H.264 |
+| Conditions | far camera, motion blur, red opponents, spectators in the foreground | sideline camera, orange vs white/green, children on the bench in front |
+| Is #20 on camera? (checked by eye) | yes — readable to a person at e.g. 4:24, 16:13, 21:48, 24:28 | **not seen near the camera** in an inventory of orange players over the whole match (visible numbers 5, 7, 9, 10, 17) |
+| Discovery wall time (CPU, 10 fps proxy, all 60 s parts) | 1,243 s for 47 min | 1,292 s for 46 min |
+| Moments found | **8**, all "is this you?" (weak or single reads); 39 crops, **all #20** | **0** |
+| Wrong moments | **0** | **0** |
+
+Findings that changed the system (each fix measured):
+
+1. **Spectators in front of the camera consumed the OCR budget** (IMG_4529: every large
+   "target-kit" candidate in a sampled minute was a spectator — skin under floodlights scores as
+   orange). New **on-pitch check** (`ground_green`): pitch-green share around the feet. Real
+   players ≥ 0.47 (all 7 IMG_4809 sightings 0.97–1.0), spectators 0.0. Night-match discovery
+   time per minute of video fell from ≈ 30 s to ≈ 13 s (first 8 minutes); the weak verification
+   added afterwards (point 3) brings the whole match to ≈ 26 s per minute.
+2. **A single number read is not proof.** On IMG_5105 the main reader produced 3 wrong two-digit
+   reads in 20 minutes at 0.90–0.95 confidence ("19" on the #17, "11" on a child on the bench,
+   "41" on a side view). Rule since 5.0: a discovery moment is **confirmed only with ≥ 2 agreeing
+   reads** (or 1 read backed by ≥ 2 weak reads); otherwise it is a moment to check. The server
+   enforces the same rule. Neighbour reads now also re-check kit and on-pitch, so a followed
+   window cannot drift onto a spectator.
+3. **The main reader could not read clearly visible numbers at night.** Its binarised digit maps
+   miss white prints tinted by floodlight (saturation ≈ 100) and touching digits. Tried and
+   **rejected** (measured, no gain or regressions on IMG_4809): extra "pale print" map,
+   sleeve masking, relaxed digit shape, blue-channel contrast, scene-text detection, generic
+   recognisers on raw torso crops. **Kept: weak target verification** — PARSeq on three colour
+   torso regions must read exactly the target number (≥ 0.95). It never confirms on its own.
+   Precision check: 0 of 423 crops of other players and spectators (3 matches) gave "20";
+   recall gain: IMG_4529 0 → 8 moments, all correct.
+4. **Two-digit prints on 100–150 px players remain the main recall limit** (IMG_5105: "17"
+   visible in many frames, read 11 times in 46 min; IMG_4529: "20" readable to a person in
+   many more frames than were found). A jersey-number recogniser trained for this task (as in
+   the SoccerNet jersey challenge) is the next step; it needs licence-reviewed training data
+   and cannot be built from customer footage.
+
+IMG_4809 with the same final rules (on-pitch filter, weak verification, two-read rule; CPU, 2 vCPU):
+discovery took 1,518 s (part 1: 1,257 s; the extra time is the weak-verification OCR), the first
+sighting appeared after 33.5 s, and it produced 8 moments from 11 sightings. All 23 saved crops
+show an orange #20 (checked by eye, one annotator), so no wrong number was read. Two moments
+(4:02 and 19:22) have at least two main-reader reads and are confirmed; the other six rest on
+one main-reader read or on weak reads only. The benchmark script did not record per-moment weak
+counts, so how many of those six the strong+weak rule confirms is **not measured**; the server
+applies the rule and shows the rest as "maybe you" for the player to confirm.
 
 ### Dense analysis, corrections, GPU
 
@@ -153,7 +204,21 @@ validated, rate-limited (20/day) — **not quality-evaluated** (no provider reac
 
 ## 9. Tests
 
-PLACEHOLDER_TESTS
+All suites run on 2026-10-28 in this session:
+
+| Suite | Result |
+|---|---|
+| App + Functions unit tests (`npm run test:unit`) | 713 passed, 0 failed |
+| Worker tests (`pytest workers/football-cv/tests`) | 509 passed, 0 failed |
+| `npm run typecheck`, `npm run lint`, Functions `tsc` build | clean |
+| Firestore rules tests | **not run** — Firebase CLI / emulator not installable here |
+| Device / browser tests on real phones | **not run** — no devices |
+
+New 5.0 tests cover: colour conversion, period detection on short recordings, the two-read rule
+(one read → LIKELY; two reads or one read plus two weak reads → CONFIRMED; weak reads alone never
+confirm, in Python and in the Functions parser), the on-pitch filter, weak-only sightings never
+becoming identity evidence, video-reasoning gates and validator, coach tiers and roles, the new
+Ask intents, the virtual camera bounds and focus follow-up.
 
 ## 10. Deployment plan
 
@@ -172,4 +237,21 @@ PLACEHOLDER_TESTS
 
 ## 11. Remaining blockers
 
-PLACEHOLDER_BLOCKERS
+1. **GPU not measured.** `Dockerfile.tracker-gpu` and the benchmark exist, but no GPU was
+   available; all timings above are CPU (2 vCPU). No GPU speed-up is claimed.
+2. **#7 recordings not evaluated.** IMG_6565 (16.08.2025) and IMG_7332 (14.02.2026) are still
+   only partly downloaded from iCloud (about 4.6 of 7.7 GB and 3.9 of 8.5 GB; the files have no
+   index yet), so tracking #7 was not tested. They can be run as soon as the downloads finish.
+3. **Two-digit shirt numbers on small players.** On the 46-min day match (IMG_5105) #20 was
+   never close enough to read; false two-digit reads exist but the two-read rule stops them from
+   being confirmed. A jersey-specific recogniser with a legibility filter needs licence-reviewed
+   training data (not customer footage).
+4. **Weak-only moments need the player.** Moments backed only by weak reads stay "maybe you";
+   auto mode therefore confirms less than before until the player answers.
+5. **Video reasoning quality not evaluated.** No AI provider is reachable from this session; the
+   feature stays off (`VIDEO_REASONING_ENABLED`) and behind all consent gates.
+6. **No live Firebase, no rules emulator, no device tests** (see §9).
+7. **Evaluation size.** Three recordings, one annotator (the developer), one team kit colour per
+   match. Results are indicative, not validated.
+8. **Release gates unchanged.** `CV_WORKER_APPROVED`, `CV_EVENTS_VALIDATED` and
+   `TRACKING_V3_ENABLED` were not set; nothing here is marked production-ready.
