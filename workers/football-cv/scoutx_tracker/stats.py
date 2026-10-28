@@ -115,7 +115,27 @@ def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None =
                 if len(after):
                     hi = min(hi, float(after.min()))
                 near |= (tt >= lo) & (tt <= hi)
-            labels = np.where(near, lab, "continuity")
+            # 5.1: the rest of the same piece (no team-mate contact in between - checked above via
+            # the occlusion bounds) is the same followed person: anchored continuity up to
+            # ANCHOR_SEC from the evidence, LIKELY at most.
+            from .identity import ANCHOR_SEC  # noqa: PLC0415
+
+            anch = np.zeros(len(ix), bool)
+            for et in ev_t:
+                lo, hi = et - ANCHOR_SEC, et + ANCHOR_SEC
+                for ct in conflicts:
+                    if ct > et:
+                        hi = min(hi, (et + ct) / 2)
+                    elif ct < et:
+                        lo = max(lo, (et + ct) / 2)
+                occ_t = tt[occluded[ix]]
+                before, after = occ_t[occ_t < et], occ_t[occ_t > et]
+                if len(before):
+                    lo = max(lo, float(before.max()))
+                if len(after):
+                    hi = min(hi, float(after.min()))
+                anch |= (tt >= lo) & (tt <= hi)
+            labels = np.where(near, lab, np.where(anch, "anchored", "continuity"))
         else:
             labels = np.full(len(ix), lab, dtype=object)
         conflicts = getattr(result, "conflict_times", {}).get(k, [])
@@ -148,7 +168,7 @@ def build_timeline(D, T, result, max_fill: int = 6, row_kit: np.ndarray | None =
             # Away from the evidence, confidence is what appearance alone supports, but never below
             # the continuity floor of a tracklet that is anchored somewhere.
             app = getattr(result, "appearance_score", {}).get(k, 0.5)
-            conf[fr] = np.where(labels == lab, result.confidence[k], max(app, 0.5))
+            conf[fr] = np.where(labels == lab, result.confidence[k], np.where(labels == "anchored", max(app, 0.8), max(app, 0.5)))
         ev[fr] = labels
         last = (fr[-1], T.rows[ix[-1], 3:7], T.pano[ix[-1]])
     return Timeline(np.arange(F), D.times.copy(), present, boxes, pano, D.segment.copy(), conf, ev, interp)
@@ -318,7 +338,7 @@ def compute_stats(D, T, tl: Timeline, fps: float, result) -> dict:
             "sprints": sum(1 for s, _ in sprint_runs if a <= tl.times[s] < b),
         })
     evidence_sec = {}
-    for lab in ("number", "anchor", "appearance", "continuity", "interpolated"):
+    for lab in ("number", "anchor", "anchored", "appearance", "continuity", "contact_unclear", "interpolated"):
         evidence_sec[lab] = round(float(((tl.evidence == lab) & vis).sum() * dt), 1)
     return {
         "recordingSec": round(total_sec, 1),

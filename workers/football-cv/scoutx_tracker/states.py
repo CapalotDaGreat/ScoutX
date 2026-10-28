@@ -9,10 +9,14 @@ States (exactly one per analysed frame, highest priority first):
                        number was read on it, or the user confirmed it ("that's me").
   LIKELY_VISIBLE       The target is in view according to appearance + motion continuity, the
                        uncalibrated identity score is >= LIKELY and no competing candidate of
-                       similar score is in view at the same moment.
+                       similar score is in view at the same moment; or (5.1, "anchored") the
+                       followed person is joined to hard evidence by clean tracker hand-offs or
+                       clear team-mate-contact links within 30 s of it.
   AMBIGUOUS            Either the chosen candidate scores below LIKELY, another plausible
-                       candidate (score >= COMPETITOR) is in view at the same time, or the
-                       followed box carries a nearby read that cannot be the target number.
+                       candidate (score >= COMPETITOR) is in view at the same time, the
+                       followed box carries a nearby read that cannot be the target number, or
+                       (5.1) the chain reached it through a team-mate contact with an unclear
+                       outcome and no new hard evidence since.
   OFF_CAMERA           Reserved: requires positive evidence that the player is on the pitch but
                        outside the camera view (e.g. calibrated full-pitch view without him).
                        The handheld/follow-cam pipeline cannot establish this, so it is never
@@ -59,8 +63,16 @@ def frame_states(T, res, tl, period_kind: np.ndarray, camera: np.ndarray | None 
     hard = present & np.isin(ev, ["number", "anchor"])
     contrary = present & (ev == "conflict")
     soft = present & ~hard & ~contrary
-    states[soft & (conf >= likely) & (comp < competitor)] = LIKELY_VISIBLE
-    states[soft & ((conf < likely) | (comp >= competitor))] = AMBIGUOUS
+    # 5.1: reached through a team-mate contact whose outcome is unclear -> never likely
+    unclear = soft & (ev == "contact_unclear")
+    # 5.1 anchored continuity: joined to hard evidence by clean hand-offs / clear contact links
+    # within ANCHOR_SEC -> LIKELY whatever look-alikes are in view (never confirmed)
+    anchored = soft & (ev == "anchored")
+    rest = soft & ~unclear & ~anchored
+    states[rest & (conf >= likely) & (comp < competitor)] = LIKELY_VISIBLE
+    states[rest & ((conf < likely) | (comp >= competitor))] = AMBIGUOUS
+    states[unclear] = AMBIGUOUS
+    states[anchored] = LIKELY_VISIBLE
     states[hard] = CONFIRMED_VISIBLE
     # A read on the followed box that cannot be the target: never claimed, at best ambiguous.
     states[contrary] = AMBIGUOUS

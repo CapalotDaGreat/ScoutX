@@ -92,6 +92,8 @@ class DiscoveryResult:
     first_sighting_wall_sec: float | None = None
     # diagnostics (worker-internal, never returned by the API): reads per recognised number
     read_counts: dict = field(default_factory=dict)
+    # 5.1 diagnostics (benchmarks only, never returned by the API): one record per OCR attempt
+    read_log: list = field(default_factory=list)
 
 
 def cv2_frames(src: str, start: float, end: float, fps: float):
@@ -172,7 +174,7 @@ def _crop(frame, box):
 
 def discover(src: str, start: float, end: float, number: str, kit: str, detector, reader,
              cfg: DiscoveryConfig | None = None, crops_dir: str | None = None, on_sighting=None,
-             frames=None, progress=None, roi_detector=None) -> DiscoveryResult:
+             frames=None, progress=None, roi_detector=None, log_reads_dir: str | None = None) -> DiscoveryResult:
     """`detector(frame) -> (person boxes, scores)`, `reader.read(crop) -> (number, conf, where)`.
     `frames`: iterable of (t, frame or zero-arg getter) overriding the decoder (tests).
     `on_sighting(sighting, wall_sec)` streams results as soon as a sighting is settled."""
@@ -236,13 +238,23 @@ def discover(src: str, start: float, end: float, number: str, kit: str, detector
             return None
         _t = time.perf_counter()
         num, conf, where = reader.read(crop)
+        t_main = time.perf_counter() - _t
+        weak_conf = None
         if num is None and cfg.weak_verify and hasattr(reader, "parseq"):
             from .ocr import target_roi_confidence  # noqa: PLC0415
 
-            wc = target_roi_confidence(reader, crop, number)
+            wc = weak_conf = target_roi_confidence(reader, crop, number)
             if wc >= cfg.weak_min_conf:
                 num, conf, where = number, wc, "weak:torso"
-        tm["ocr"] += time.perf_counter() - _t
+        t_total = time.perf_counter() - _t
+        tm["ocr"] += t_total
+        if log_reads_dir is not None:
+            i = len(res.read_log)
+            Path(log_reads_dir).mkdir(parents=True, exist_ok=True)
+            cv2.imwrite(str(Path(log_reads_dir) / f"r_{i:06d}.jpg"), crop, [cv2.IMWRITE_JPEG_QUALITY, 90])
+            res.read_log.append({"i": i, "t": round(t, 2), "k": idx, "box": [round(float(v), 1) for v in box], "num": num,
+                                 "conf": round(float(conf), 4), "where": where, "weakConf": weak_conf,
+                                 "msMain": round(1000 * t_main, 1), "msTotal": round(1000 * t_total, 1)})
         stats["reads"] += 1
         reads.append((t, [float(v) for v in box], num, float(conf), where, idx))
         if num == number and crops_dir:

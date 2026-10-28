@@ -1,0 +1,51 @@
+{
+ "loadRunsSec": 30.51,
+ "runs": [
+  {
+   "name": "cold",
+   "wallSec": 18.57,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 2.7,
+    "numbers": 5.4,
+    "identity": 6.4,
+    "timeline_metrics_events": 3.3
+   },
+   "coverage": {
+    "confirmedVisibleSec": 71.3,
+    "likelyVisibleSec": 409.6
+   }
+  },
+  {
+   "name": "warm",
+   "wallSec": 15.53,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 1.8,
+    "numbers": 4.9,
+    "identity": 4.8,
+    "timeline_metrics_events": 3.1
+   },
+   "coverage": {
+    "confirmedVisibleSec": 71.3,
+    "likelyVisibleSec": 409.6
+   }
+  },
+  {
+   "name": "warm2",
+   "wallSec": 115.29,
+   "stages": {
+    "load": 0.0,
+    "tracklets": 2.2,
+    "numbers": 5.5,
+    "identity": 103.7,
+    "timeline_metrics_events": 3.2
+   },
+   "coverage": {
+    "confirmedVisibleSec": 71.3,
+    "likelyVisibleSec": 409.6
+   }
+  }
+ ],
+ "maxRssMB": 2129
+}

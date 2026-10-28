@@ -1,0 +1,95 @@
+{
+ "tag": "true50",
+ "runs": [
+  {
+   "name": "auto",
+   "solveSec": 3.06,
+   "coverage": {
+    "confirmedVisibleSec": 26.6,
+    "likelyVisibleSec": 226.4,
+    "ambiguousSec": 1348.5,
+    "notIdentifiedSec": 262.6,
+    "analysedSec": 1864.1
+   },
+   "crops": {
+    "targetCrops": 10,
+    "targetClaimed": 7.0,
+    "targetConfirmed": 7.0,
+    "otherNumberCrops": 138,
+    "otherClaimed": 21.0,
+    "otherConfirmed": 0.0,
+    "nonPlayerClaimed": 0.0
+   },
+   "claimed17Crops": 0,
+   "intervalGT": {
+    "targetLabelledSec": 50.4,
+    "confirmedCorrectSec": 19.2,
+    "confirmedWrongSec": 0.0,
+    "likelyCorrectSec": 1.9,
+    "likelyWrongSec": 2.4,
+    "claimOnUnlabelledSec": 39.4,
+    "falseAttributionSec": 2.4,
+    "confirmedPrecision": 1.0,
+    "confirmedRecall": 0.381,
+    "likelyPrecision": 0.442,
+    "claimedRecall": 0.419,
+    "IDF1": 0.571,
+    "identitySwitches": 1,
+    "targetClaimRuns": 7,
+    "IDF1_ci95_byInterval": [
+     0.445,
+     0.78
+    ],
+    "claimedRecall_ci95_byInterval": [
+     0.287,
+     0.704
+    ]
+   }
+  },
+  {
+   "name": "39answers",
+   "solveSec": 2.11,
+   "coverage": {
+    "confirmedVisibleSec": 69.4,
+    "likelyVisibleSec": 384.9,
+    "ambiguousSec": 1110.2,
+    "notIdentifiedSec": 299.6,
+    "analysedSec": 1864.1
+   },
+   "crops": {
+    "targetCrops": 10,
+    "targetClaimed": 7.0,
+    "targetConfirmed": 7.0,
+    "otherNumberCrops": 138,
+    "otherClaimed": 7.0,
+    "otherConfirmed": 0.0,
+    "nonPlayerClaimed": 0.0
+   },
+   "claimed17Crops": 0,
+   "intervalGT": {
+    "targetLabelledSec": 50.4,
+    "confirmedCorrectSec": 19.2,
+    "confirmedWrongSec": 0.0,
+    "likelyCorrectSec": 5.9,
+    "likelyWrongSec": 0.9,
+    "claimOnUnlabelledSec": 67.7,
+    "falseAttributionSec": 0.9,
+    "confirmedPrecision": 1.0,
+    "confirmedRecall": 0.381,
+    "likelyPrecision": 0.868,
+    "claimedRecall": 0.498,
+    "IDF1": 0.657,
+    "identitySwitches": 1,
+    "targetClaimRuns": 9,
+    "IDF1_ci95_byInterval": [
+     0.545,
+     0.922
+    ],
+    "claimedRecall_ci95_byInterval": [
+     0.374,
+     0.878
+    ]
+   }
+  }
+ ]
+}

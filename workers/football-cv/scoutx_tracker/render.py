@@ -10,7 +10,8 @@ import numpy as np
 
 EV_COLOUR = {  # BGR
     "number": (60, 220, 60), "anchor": (60, 220, 60), "appearance": (0, 200, 255),
-    "continuity": (0, 140, 255), "interpolated": (180, 180, 180), "": (255, 255, 255),
+    "continuity": (0, 140, 255), "anchored": (0, 200, 255), "contact_unclear": (0, 0, 255),
+    "interpolated": (180, 180, 180), "": (255, 255, 255),
 }
 
 

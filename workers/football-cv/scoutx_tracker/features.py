@@ -84,6 +84,20 @@ def region_hist(sig: np.ndarray, region: str) -> np.ndarray:
     return part / max(part.sum(), 1e-9)
 
 
+def kit_scores(sigs: np.ndarray, kit: str, region: str = "shirt") -> np.ndarray:
+    """5.1: `kit_score` for many signatures at once (N, SIG_DIM) -> (N,). Same values, vectorised:
+    the per-detection Python loop cost ~2.4 s per correction on a 34-min match."""
+    names = KIT_NAMES.get(kit.strip().lower())
+    sigs = np.asarray(sigs, np.float32).reshape(-1, SIG_DIM)
+    if not names or len(sigs) == 0:
+        return np.zeros(len(sigs), np.float32)
+    k = [r for r, _, _ in REGIONS].index(region)
+    part = sigs[:, k * NB:(k + 1) * NB].astype(np.float32) ** 2
+    tot = np.maximum(part.sum(1), 1e-9)
+    cols = [PALETTE.index(n) for n in names]
+    return (part[:, cols].sum(1) / tot).astype(np.float32)
+
+
 def kit_score(sig: np.ndarray, kit: str, region: str = "shirt") -> float:
     """Fraction of the region's non-grass pixels that fall in the named kit colour."""
     names = KIT_NAMES.get(kit.strip().lower())

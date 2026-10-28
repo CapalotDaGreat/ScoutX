@@ -8,12 +8,13 @@ compared even though the phone panned in between.
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 
-from .features import SIG_DIM, kit_score
+from .features import SIG_DIM, kit_score, kit_scores
 from .tracker import PlayerTracker
 
 
@@ -161,6 +162,13 @@ class Tracklets:
     summary: list[dict]     # one dict per tracklet
     by_tid: dict            # tid -> row indices (sorted by frame)
     number_splits: int = 0  # tracklets split because of conflicting shirt-number reads
+    # 5.1 tracklet-first identity (crossings.py): pieces cut at same-kit contacts, the contact
+    # pieces themselves, pre -> post links with a decision, and each piece's original tracker id.
+    links: list = field(default_factory=list)
+    contact_tids: set = field(default_factory=set)
+    origin: dict = field(default_factory=dict)
+    contact_events: int = 0
+    contact_pre: dict = field(default_factory=dict)
 
 
 # A lone digit that cannot belong to a two-digit number read on the same tracklet splits it.
@@ -170,6 +178,9 @@ class Tracklets:
 SPLIT_ON_DIGIT_CONFLICT = False
 # Bump whenever tracklet building/splitting changes: it is part of the tracklet cache key.
 TRACKLET_ALGO_VERSION = "3.2" if SPLIT_ON_DIGIT_CONFLICT else "3.1"
+# 5.1: cut tracks at same-kit contacts (crossings.py). Runs in the cheap assembly step (it needs the
+# target kit), so the cached tracking rows above are unchanged. SCOUTX_CONTACT_SPLIT=0 restores 5.0.
+CONTACT_SPLIT = os.environ.get("SCOUTX_CONTACT_SPLIT", "1") != "0"
 
 
 def compatible(a: str, b: str) -> bool:
@@ -253,12 +264,23 @@ def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "
 
 
 def assemble(D: Detections, R: np.ndarray, kit_primary: str = "", kit_secondary: str = "",
-             det_reads: dict[int, str] | None = None) -> Tracklets:
-    """Cheap part: number-conflict splits, panorama coordinates and per-tracklet summaries."""
+             det_reads: dict[int, str] | None = None, contact_split: bool | None = None,
+             P: np.ndarray | None = None) -> Tracklets:
+    """Cheap part: number-conflict splits, contact pieces (5.1), panorama coordinates and
+    per-tracklet summaries. `P`: precomputed panorama transforms (they depend on stage 1 only)."""
     splits = 0
     if det_reads:
         R, splits = split_on_number_conflicts(R, D.sigs, det_reads)
-    P = panorama_transforms(D.warps, D.segment)
+    cs = None
+    if (CONTACT_SPLIT if contact_split is None else contact_split) and kit_primary and len(R):
+        from .crossings import split_at_contacts  # noqa: PLC0415
+
+        row_kit = kit_scores(D.sigs[R[:, 8].astype(int)], kit_primary)
+        emb_of_ = {int(i): k for k, i in enumerate(D.emb_idx)}
+        cs = split_at_contacts(R, row_kit, D.sigs, D.times, D.fps, emb_of_, D.embs, D.segment)
+        R = cs.rows
+    if P is None:
+        P = panorama_transforms(D.warps, D.segment)
     fr = R[:, 0].astype(int)
     fx = (R[:, 3] + R[:, 5]) / 2
     fy = R[:, 6]
@@ -277,7 +299,7 @@ def assemble(D: Detections, R: np.ndarray, kit_primary: str = "", kit_secondary:
         di = R[ix, 8].astype(int)
         h = R[ix, 6] - R[ix, 4]
         w = np.clip(R[ix, 7], 0.1, 1) * np.clip(h, 10, 200)
-        sig = (D.sigs[di] * w[:, None]).sum(0)
+        sig = (D.sigs[di].astype(np.float32) * w[:, None]).sum(0)
         sig /= max(np.linalg.norm(sig), 1e-9)
         e_rows = [emb_of[d] for d in di if d in emb_of]
         emb = None
@@ -291,12 +313,15 @@ def assemble(D: Detections, R: np.ndarray, kit_primary: str = "", kit_secondary:
             "sig": sig.astype(np.float32), "emb": emb, "n_emb": len(e_rows),
             "kit1": float(kit_score(sig, kit_primary)) if kit_primary else 0.0,
             "kit2": float(kit_score(sig, kit_secondary)) if kit_secondary else 0.0,
+            "contact": bool(cs is not None and int(tid) in cs.contact_tids),
             "crops": [D.crops[d] for d in di if d in D.crops],
             # Crop file heights follow the box (+5 % top pad): lets OCR selection skip image I/O.
             "crop_h": [float(hh * 1.05) for d, hh in zip(di, h) if d in D.crops],
             "p_start": pano[ix[0]].tolist(), "p_end": pano[ix[-1]].tolist(),
         })
-    return Tracklets(R, pano, summary, by_tid, splits)
+    if cs is None:
+        return Tracklets(R, pano, summary, by_tid, splits)
+    return Tracklets(R, pano, summary, by_tid, splits, cs.links, cs.contact_tids, cs.origin, cs.events, cs.contact_pre)
 
 
 def tracklet_features(D: Detections, T: Tracklets, min_h: float = 36.0) -> dict[int, np.ndarray]:

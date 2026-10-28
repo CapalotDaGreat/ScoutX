@@ -35,6 +35,15 @@ QUESTION_BATCH = 8           # compact first review batch; more on request
 # that is in view while the target is claimed clears that whole overlap. "legacy": 3.1 behaviour.
 QUESTION_STRATEGY = "resolve"
 COMPETITOR_SCORE = 0.35      # same threshold as states.COMPETITOR
+# 5.1: only confirmed observations (number reads, "that's me") are trusted positive anchors of the
+# match-scoped appearance model. 3.x-5.0 also added confident chain members ("self-training"),
+# which lets a likely - possibly wrong - observation expand the gallery. Off since 5.1.
+GALLERY_SELF_TRAINING = False
+CONTINUITY_GAP_SEC = 2.0     # a chain step longer than this is a re-identification, not continuity
+# 5.1 anchored continuity: a piece joined to hard evidence only by clean tracker hand-offs (gap
+# <= 0.5 s, <= 0.75 body heights) or clear contact links is the same visually followed person; it is
+# LIKELY (never confirmed) up to this far in time from the evidence, whatever look-alikes are in view.
+ANCHOR_SEC = 30.0
 
 
 @dataclass
@@ -178,7 +187,8 @@ class AppearanceModel:
 def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target, fps: float,
                      rows: np.ndarray, by_tid: dict, feats: dict[int, np.ndarray] | None = None,
                      iterations: int = 4, kit_min: float = 0.22, n_questions: int = QUESTION_BATCH,
-                     row_kit: np.ndarray | None = None) -> IdentityResult:
+                     row_kit: np.ndarray | None = None, links: list | None = None,
+                     contact_pre: dict | None = None) -> IdentityResult:
     n = len(summary)
     kit = np.array([s["kit1"] + 0.5 * s["kit2"] for s in summary])
     nlen = np.array([s["n"] for s in summary])
@@ -211,6 +221,26 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
         cand_mask[k] = False
     cands = np.where(cand_mask)[0]
     number_pos = {int(k) for k in cands if nt[k] >= 1 and tw[k] > ow[k]}
+    # 5.1 crossing links (pre piece -> post piece) by summary index
+    kix = {s["tid"]: k for k, s in enumerate(summary)}
+    link_out: dict[int, dict[int, bool]] = {}
+    event_posts: dict[int, set[int]] = {}
+    by_t: dict[float, list] = {}
+    for lk in links or []:
+        if lk.pre in kix and lk.post in kix:
+            link_out.setdefault(kix[lk.pre], {})[kix[lk.post]] = bool(lk.clear)
+            by_t.setdefault(lk.t, []).append(lk)
+    for lks in by_t.values():
+        posts = {kix[lk.post] for lk in lks if lk.post in kix}
+        for lk in lks:
+            if lk.pre in kix:
+                event_posts.setdefault(kix[lk.pre], set()).update(posts)
+    # Leaving a contact piece is the same decision as leaving the piece before it: the contact
+    # frames themselves never decide who continues (a read there is evidence for its own frames).
+    for c, pre in (contact_pre or {}).items():
+        if c in kix and pre in kix and kix[pre] in link_out:
+            link_out[kix[c]] = link_out[kix[pre]]
+            event_posts[kix[c]] = event_posts.get(kix[pre], set())
     seeds = sorted(anchor_ix | number_pos)
 
     model = AppearanceModel(feats or {})
@@ -227,6 +257,11 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
     for it in range(iterations):
         negs = set(excluded) | {int(k) for k in cands if k not in positives and nlen[k] >= 5 and
                                 any(_overlap(summary[k], summary[p]) for p in positives)}
+        # 5.1 negative gallery: the other player(s) of a contact the target clearly left
+        for p in positives:
+            for post, clear in link_out.get(p, {}).items():
+                if clear:
+                    negs |= {q for q in event_posts.get(p, set()) if q != post and q not in positives and cand_mask[q]}
         trained = bool(feats) and model.fit([summary[k]["tid"] for k in positives], [summary[k]["tid"] for k in negs])
         if trained:
             raw = np.full(n, np.nan)
@@ -238,6 +273,7 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
             ref = cand_mask & (nlen >= 10) & ~np.isnan(raw)
             z = _zscore(np.nan_to_num(raw, nan=np.nanmedian(raw[ref]) if ref.any() else 0.0), ref)
             app = 1.2 * z - 0.3
+            app_raw = app.copy()
             for k in positives:
                 app[k] = max(app[k], 3.0)
             mode = "classifier"
@@ -254,16 +290,17 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
                 s_emb = emb @ (t_emb / max(np.linalg.norm(t_emb), 1e-9))
             z = 0.6 * _zscore(sig @ t_sig, cand_mask & (nlen >= 5)) + 0.4 * _zscore(s_emb, cand_mask & emb_ok & (nlen >= 5))
             app = 1.2 * z - 0.3
+            app_raw = app.copy()
             mode = "template"
         unary = dur * (app * rel - PRIOR_LOGODDS) + 12.0 * nt
         for k in anchor_ix:
             unary[k] += 60.0
         unary[~cand_mask] = -np.inf
-        chosen = _best_chain(cands, unary, t0, t1, seg, ps, pe, fps, dur)
-        # Self-training: only very confident, reasonably sized chain members become positives.
+        chosen, edges = _best_chain(cands, unary, t0, t1, seg, ps, pe, fps, dur, link_out, event_posts)
+        # Self-training (until 5.0): very confident chain members became positives.
         conf_ = sorted((app[k] * rel[k], k) for k in chosen
                        if k not in positives and app[k] * rel[k] > 2.2 and dur[k] >= 3.0 and hmed[k] >= 50)
-        new_pos = {k for _, k in conf_[-10:]} | (positives - set(seeds))
+        new_pos = ({k for _, k in conf_[-10:]} | (positives - set(seeds))) if GALLERY_SELF_TRAINING else set()
         history.append({"iteration": it, "mode": mode, "chosen": len(chosen),
                         "seconds": round(float(dur[chosen].sum()), 1) if chosen else 0.0,
                         "positives": len(positives), "negatives": len(negs)})
@@ -272,17 +309,48 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
         positives = set(seeds) | new_pos
 
     evidence, confidence = {}, {}
-    for k in chosen:
+    unclear = False
+    for idx, k in enumerate(chosen):
+        # 5.1: identity does not pass through a contact whose outcome is unclear. Everything after
+        # it on the chain stays ambiguous until new hard evidence, or until the chain re-identifies
+        # (a step longer than CONTINUITY_GAP_SEC or across a camera cut is not continuity).
+        e = edges.get(k)
+        if e == "unclear":
+            unclear = True
+        elif e in ("gap", None):
+            unclear = False
         if k in anchor_ix:
             evidence[k] = "anchor"
+            unclear = False
         elif k in number_pos:
             evidence[k] = "number"
+            unclear = False
+        elif unclear:
+            evidence[k] = "contact_unclear"
         elif app[k] * rel[k] > PRIOR_LOGODDS:
             evidence[k] = "appearance"
         else:
             evidence[k] = "continuity"
+    # anchored continuity, forwards and backwards from every hard-evidence member
+    for n, k in enumerate(chosen):
+        if evidence[k] not in ("anchor", "number"):
+            continue
+        for step in (1, -1):
+            m, ref = n, (t1[k] if step == 1 else t0[k])
+            while 0 <= m + step < len(chosen):
+                nxt = chosen[m + step]
+                via = edges.get(nxt) if step == 1 else edges.get(chosen[m])
+                if via not in ("handoff", "clear") or evidence[nxt] in ("anchor", "number"):
+                    break
+                if (t1[nxt] - ref if step == 1 else ref - t0[nxt]) > ANCHOR_SEC:
+                    break
+                evidence[nxt] = "anchored"
+                m += step
+    for k in chosen:
         if evidence[k] in ("anchor", "number"):
             confidence[k] = 0.99
+        elif evidence[k] == "anchored":
+            confidence[k] = max(0.8, float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS + 1.0)))))
         else:
             confidence[k] = float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS + 1.0))))
     contrary = {int(k) for k in cands
@@ -291,7 +359,9 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
     questions = _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence,
                            anchor_ix | already_asked, number_pos, n_questions, row_kit, contrary, fps)
     score = {int(k): float(1 / (1 + np.exp(-(app[k] * rel[k] - PRIOR_LOGODDS)))) for k in cands}
-    appearance_score = dict(score)
+    # 5.1: what appearance alone says, before the hard-evidence boost (used for the parts of an
+    # anchored tracklet away from its evidence)
+    appearance_score = {int(k): float(1 / (1 + np.exp(-(app_raw[k] * rel[k] - PRIOR_LOGODDS)))) for k in cands}
     for k in anchor_ix | number_pos:
         score[int(k)] = 1.0
     ev_times: dict[int, list[float]] = {}
@@ -320,6 +390,9 @@ def _appearance_clusters(summary, ks: list[int], n_clusters: int = 10) -> dict[i
     if len(ks) <= n_clusters:
         return {k: i for i, k in enumerate(ks)}
     X = np.stack([summary[k]["sig"] for k in ks]).astype(np.float32)
+    # 5.1: seeded - k-means++ is random, so identical corrections used to get different review
+    # questions (and a different refinement OCR workload: 15 s vs 115 s measured on IMG_4809).
+    cv2.setRNGSeed(51)
     _, labels, _ = cv2.kmeans(X, n_clusters, None, (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 50, 1e-3),
                               3, cv2.KMEANS_PP_CENTERS)
     return {k: int(lab) for k, lab in zip(ks, labels.ravel())}
@@ -385,11 +458,17 @@ def _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence, an
     return out
 
 
-def _transition(j: int, i: int, t0, t1, seg, ps, pe, fps, dur=None) -> float:
+def _transition(j: int, i: int, t0, t1, seg, ps, pe, fps, dur=None, link_out=None, event_posts=None) -> float:
     gap = t0[i] - t1[j]
     if gap < -1.5 / fps:
         return -np.inf
     gap = max(gap, 0.0)
+    if link_out and j in link_out and event_posts and i in event_posts.get(j, ()):
+        # 5.1: j ended in a contact with team-mates and i is one of the pieces after it. Only a
+        # clear link continues the identity; otherwise no continuity credit at all.
+        if link_out[j].get(i):
+            return 3.0 + (PRIOR_LOGODDS + 0.3) * min(float(dur[i]) if dur is not None else 1.0, 15.0)
+        return 0.0
     if seg[i] != seg[j]:
         return 0.0
     h = max(0.5 * (pe[j][2] + ps[i][2]), 1.0)
@@ -405,10 +484,30 @@ def _transition(j: int, i: int, t0, t1, seg, ps, pe, fps, dur=None) -> float:
     return 0.0
 
 
-def _best_chain(cands: np.ndarray, unary: np.ndarray, t0, t1, seg, ps, pe, fps, dur=None) -> list[int]:
-    """Best-scoring chain of non-overlapping tracklets (one person can't be in two places)."""
+def _edge_kind(j: int | None, i: int, t0, t1, seg, link_out, event_posts, ps=None, pe=None) -> str | None:
+    """How chain member i was reached from j: None (first), 'clear'/'unclear' (contact link),
+    'gap' (re-identification: long gap or camera cut), 'handoff' (clean tracker hand-off: <= 0.5 s,
+    <= 0.75 body heights), 'continuity' (other short same-shot step)."""
+    if j is None:
+        return None
+    if link_out and j in link_out and event_posts and i in event_posts.get(j, ()):
+        return "clear" if link_out[j].get(i) else "unclear"
+    gap = t0[i] - t1[j]
+    if seg[i] != seg[j] or gap > CONTINUITY_GAP_SEC:
+        return "gap"
+    if ps is not None and pe is not None and gap <= 0.5:
+        h = max(0.5 * (pe[j][2] + ps[i][2]), 1.0)
+        if float(np.hypot(ps[i][0] - pe[j][0], ps[i][1] - pe[j][1])) / h <= 0.75:
+            return "handoff"
+    return "continuity"
+
+
+def _best_chain(cands: np.ndarray, unary: np.ndarray, t0, t1, seg, ps, pe, fps, dur=None,
+                link_out=None, event_posts=None) -> tuple[list[int], dict]:
+    """Best-scoring chain of non-overlapping tracklets (one person can't be in two places).
+    Returns (chain, how each member was reached - see _edge_kind)."""
     if len(cands) == 0:
-        return []
+        return [], {}
     order = cands[np.argsort(t1[cands])]
     dp, back = {}, {}
     ends = t1[order]
@@ -418,7 +517,7 @@ def _best_chain(cands: np.ndarray, unary: np.ndarray, t0, t1, seg, ps, pe, fps, 
         lo = np.searchsorted(ends, t0[i] - 120.0)
         hi = np.searchsorted(ends, t0[i] + 1.5 / fps, side="right")
         for j in order[lo:min(hi, pos)]:
-            tr = _transition(j, i, t0, t1, seg, ps, pe, fps, dur)
+            tr = _transition(j, i, t0, t1, seg, ps, pe, fps, dur, link_out, event_posts)
             if tr == -np.inf:
                 continue
             v = dp[j] + tr
@@ -436,4 +535,7 @@ def _best_chain(cands: np.ndarray, unary: np.ndarray, t0, t1, seg, ps, pe, fps, 
     while end is not None:
         chain.append(int(end))
         end = back[end]
-    return chain[::-1]
+    chain = chain[::-1]
+    edges = {k: _edge_kind(chain[n - 1] if n else None, k, t0, t1, seg, link_out, event_posts, ps, pe)
+             for n, k in enumerate(chain)}
+    return chain, edges

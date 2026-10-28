@@ -247,14 +247,15 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
                     asked=[tuple(x) for x in feedback.get("asked", [])])
     feats = tracklet_features(D, T)
     row_kit = np.array([kit_score(D.sigs[int(d)], kit) for d in T.rows[:, 8]]) if kit else None
-    res = resolve_identity(T.summary, reads, target, D.fps, T.rows, T.by_tid, feats, row_kit=row_kit)
+    res = resolve_identity(T.summary, reads, target, D.fps, T.rows, T.by_tid, feats, row_kit=row_kit,
+                         links=T.links, contact_pre=T.contact_pre)
     # Pass 2 - targeted refinement: before asking the user, read every close-up crop of the
     # candidate tracklets behind the questions (and of chain members without hard evidence).
     # A clearly read other number answers the question automatically.
     refined: set[int] = set()
     for _pass in range(3 if (ocr and number) else 0):
         focus = {q["tid"] for q in res.questions}
-        focus |= {T.summary[k]["tid"] for k in res.chosen if res.evidence.get(k) in ("appearance", "continuity")}
+        focus |= {T.summary[k]["tid"] for k in res.chosen if res.evidence.get(k) in ("appearance", "continuity", "anchored", "contact_unclear")}
         focus -= refined
         if not focus:
             break
@@ -275,7 +276,8 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         log(f"refinement: {sum(len(v) for v in extra.values())} focused crops, {added} new number reads")
         if not added:
             break
-        res = resolve_identity(T.summary, reads, target, D.fps, T.rows, T.by_tid, feats, row_kit=row_kit)
+        res = resolve_identity(T.summary, reads, target, D.fps, T.rows, T.by_tid, feats, row_kit=row_kit,
+                         links=T.links, contact_pre=T.contact_pre)
     timings["identity"] = time.time() - t
     log(f"identity: {res.iterations[-1]} seeds={len(res.seeds)} candidates={len(res.candidates)}")
 
