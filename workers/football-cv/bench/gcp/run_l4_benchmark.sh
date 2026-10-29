@@ -31,6 +31,18 @@ MAX_RUN_MIN=${MAX_RUN_MIN:-300}
 BRANCH=${BRANCH:-feature/player-tracking-v3}
 RUN_ID=${RUN_ID:-l4-$(date -u +%Y%m%d-%H%M%S)}
 VM=pitchproof-bench-${RUN_ID}
+# PRICE_FILE is an operator-verified catalog snapshot for this session's region. Embed it
+# in the startup script so cost calculations do not silently retain Zurich pricing.
+PRICE_FILE=${PRICE_FILE:-$(dirname "${BASH_SOURCE[0]}")/prices_europe-west6.json}
+python3 - "$PRICE_FILE" "$ZONE" <<'PY'
+import json, math, sys
+p = json.load(open(sys.argv[1]))
+region = sys.argv[2].rsplit('-', 1)[0]
+rate = p.get('vmUsdPerHour')
+if p.get('region') != region or not isinstance(rate, (int, float)) or not math.isfinite(rate) or rate <= 0:
+    raise SystemExit('price snapshot must match the VM region and contain a positive finite hourly rate')
+PY
+PRICE_B64=$(base64 < "$PRICE_FILE" | tr -d '\n')
 [[ -n "$PROJECT" ]] || { echo "no project: gcloud config set project scoutx-230b0" >&2; exit 1; }
 gcloud storage ls "$VIDEO_GS" >/dev/null || { echo "video not found: $VIDEO_GS" >&2; exit 1; }
 EXISTING=$(gcloud compute instances list --filter="labels.purpose=pitchproof-benchmark" --format="value(name)")
@@ -51,6 +63,11 @@ BOOT=\$(date +%s)
 DEADLINE=\$(( BOOT + (${MAX_RUN_MIN} - 12) * 60 ))  # leave time for compare + upload before the hard delete
 shutdown -h +\$(( ${MAX_RUN_MIN} - 5 )) "pitchproof benchmark guest safeguard" || true
 OUT=/data/out; mkdir -p \$OUT /data/videos
+echo '${PRICE_B64}' | base64 -d > \$OUT/prices.json
+mkdir -p \$OUT/gpu \$OUT/cpu
+cp \$OUT/prices.json \$OUT/gpu/prices.json
+cp \$OUT/prices.json \$OUT/cpu/prices.json
+export PRICES=/out/prices.json
 GS="${OUT_GS}/${RUN_ID}"
 ts() { echo "\"\$1\": \"\$(date -u +%Y-%m-%dT%H:%M:%SZ)\"," >> /data/ts.txt; echo "PHASE \$1"; }
 tsjson() { echo "{ \$(cat /data/ts.txt 2>/dev/null) \"end\": \"\$(date -u +%Y-%m-%dT%H:%M:%SZ)\" }" > \$OUT/timestamps.json; }
@@ -74,7 +91,7 @@ finish() {
     docker run --rm -v \$OUT:/out pitchproof-tracker-gpu:5.2 python bench/compare_runs.py --reference /out/cpu/full_match.json \
       --candidate /out/gpu/full_match.json --gate bench/gates/balanced_5.2.json --out /out/comparison.json
     docker run --rm -v \$OUT:/out pitchproof-tracker-gpu:5.2 python bench/vm_cost.py --timestamps /out/timestamps.json \
-      --prices bench/gcp/prices_europe-west6.json --run cpu=/out/cpu/full_match.json --run gpu=/out/gpu/full_match.json \
+      --prices /out/prices.json --run cpu=/out/cpu/full_match.json --run gpu=/out/gpu/full_match.json \
       --out /out/cost_summary.json
   fi
   cp /var/log/pitchproof.log \$OUT/run.log
@@ -140,12 +157,14 @@ gcloud storage rsync -r -x ".*/work/.*|.*_work/.*" \$OUT "\$GS/partial" >/dev/nu
 status "waiting for control: experiments <list> | finish"
 CMD=\$(wait_ctl 1200)
 case "\$CMD" in experiments*)
+  # Relative accuracy gates are mandatory before spending time on optimisations.
+  grep -q '"exitCode": 0' \$OUT/comparison.json 2>/dev/null || { status experiments_refused_without_passing_comparison; exit 1; }
   V=\$(echo "\$CMD" | cut -d' ' -f2 | tr ',' ' ')
   BASE=/out/gpu/full_match.json; grep -q '"exitCode": 0' \$OUT/comparison.json 2>/dev/null && BASE=/out/cpu/full_match.json
   status "experiments \$V (budget \$(( \$(left) - 300 ))s)"
   docker run --rm --gpus all --ipc=host -e HOME=/tmp -v /data/videos:/videos:ro -v \$OUT:/out pitchproof-tracker-gpu:5.2 \
     timeout --signal=INT --kill-after=120 \$(( \$(left) - 300 )) python bench/gpu_matrix.py --video "/videos/\$(basename "\$VID")" \
-    --out-dir /out/matrix --baseline \$BASE --prices bench/gcp/prices_europe-west6.json --gpu-reference /out/gpu/full_match.json --variants \$V
+    --out-dir /out/matrix --baseline \$BASE --prices /out/prices.json --gpu-reference /out/gpu/full_match.json --variants \$V
   echo "matrix exit \$?"; ts experimentsFinished;;
 esac
 status finishing
