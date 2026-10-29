@@ -54,7 +54,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates "ffmpeg=${FFMPEG_VERSION}" libgl1 libglib2.0-0t64 \
-       python3-venv \
+       python3-venv build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # uv itself only installs the pinned Python and the locked packages (the system python3 is not used at runtime)
