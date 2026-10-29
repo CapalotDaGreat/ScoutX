@@ -105,7 +105,7 @@ def evaluate_gate(acc: dict, gate: dict, baseline: dict | None = None) -> dict:
 
 # ---------------------------------------------------------------- run comparison
 
-COMPARABLE_KEYS = (("input", "sha256"), ("target",), ("configuration", "chunkSec"), ("configuration", "mode"),
+COMPARABLE_KEYS = (("input", "videoStreamSha256"), ("target",), ("configuration", "chunkSec"), ("configuration", "mode"),
                    ("environment", "engineVersion"), ("models", "files"), ("groundTruth", "sha256"))
 
 

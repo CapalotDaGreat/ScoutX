@@ -4,16 +4,18 @@ None of this has run on a GPU yet. Every command that creates or uses billed clo
 
 ## 0. Prerequisites (project `scoutx-230b0`)
 
-| Item | Status 2026-10-29 |
+| Item | Status 2026-10-29 (afternoon) |
 |---|---|
 | Billing | enabled |
 | Compute Engine API | enabled |
 | L4 GPUs offered in europe-west6 (Zurich) | yes (zones b and c) |
 | `NVIDIA_L4_GPUS` quota, europe-west6 | 1 |
-| **`GPUS_ALL_REGIONS` quota** | **0 — blocks every GPU VM; request 1 (IAM & Admin → Quotas)** |
+| `GPUS_ALL_REGIONS` quota | **1** (requested and approved 2026-10-29, preference `gpus-all-regions-1`) |
 | List price, g2-standard-8 + L4 + 200 GB disk | USD 1.2036 per hour (`workers/football-cv/bench/gcp/prices_europe-west6.json`) |
 
-**Input video.** Use `IMG_4809_proxy_10fps.mp4`, the validated reference. It is on the owner's computer in `Downloads/Mobile Devices/`. The benchmark checks it byte for byte against `bench/references/img4809_proxy_10fps.json` (SHA-256 `b1077af3…679c`, H.264 High 10, HLG HDR, 1920×1080, 10 fps, 20 350 frames, 2035 s).
+**Input video.** Use `IMG_4809_proxy_10fps.mp4`, the validated reference. It is on the owner's computer in `Downloads/Mobile Devices/`, and an identical remux is in the development container.
+
+The benchmark identifies it by the **video-stream hash** against `bench/references/img4809_proxy_10fps.json`: streamhash SHA-256 `c0a48508…a66b`, H.264 High 10, HLG HDR, 1920×1080, 10 fps, 20 350 frames, 2035 s. Remuxes by different ffmpeg versions therefore count as the same recording, even though their file hashes differ.
 
 ## 1. One-shot run on Google Cloud (Cloud Shell)
 

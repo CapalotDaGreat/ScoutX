@@ -54,18 +54,29 @@ def probe(video: str | Path, count_frames: bool = True) -> dict:
     }
 
 
+def video_stream_sha256(video: str | Path) -> str | None:
+    """SHA-256 of the first video stream's packets (ffmpeg streamhash, no decoding). Independent of the
+    container: the same frames remuxed by another ffmpeg version (different metadata, so a different
+    file SHA-256) give the same value."""
+    p = subprocess.run(["ffmpeg", "-v", "error", "-i", str(video), "-map", "0:v:0", "-c", "copy", "-f", "streamhash",
+                        "-hash", "sha256", "-"], capture_output=True, text=True)
+    line = p.stdout.strip().splitlines()[-1] if p.returncode == 0 and p.stdout.strip() else ""
+    return line.split("SHA256=", 1)[1] if "SHA256=" in line else None
+
+
 def describe(video: str | Path, with_hash: bool = True) -> dict:
     info = {"basename": Path(video).name, **probe(video)}
     if with_hash:
         info["sha256"] = sha256_file(video)
+        info["videoStreamSha256"] = video_stream_sha256(video)
     return info
 
 
 def match_reference(info: dict, reference: dict) -> dict:
-    """Is `info` exactly the validated reference recording? Byte identity (SHA-256) decides; the other
-    fields explain a mismatch."""
-    fields = ("sha256", "sizeBytes", "codec", "width", "height", "fps", "frames", "durationSec")
+    """Is `info` the validated reference recording? The video stream hash decides (identical frames,
+    whatever container metadata the remuxing ffmpeg wrote); file SHA-256 and size are reported only."""
+    fields = ("videoStreamSha256", "codec", "width", "height", "fps", "frames", "durationSec")
     diff = {k: {"input": info.get(k), "reference": reference.get(k)} for k in fields
             if reference.get(k) is not None and info.get(k) != reference.get(k)}
-    return {"isReference": info.get("sha256") == reference.get("sha256") and not diff, "reference": reference.get("name"),
-            "differences": diff}
+    return {"isReference": bool(reference.get("videoStreamSha256")) and not diff, "reference": reference.get("name"),
+            "sameFileBytes": info.get("sha256") == reference.get("sha256"), "differences": diff}

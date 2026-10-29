@@ -1,6 +1,6 @@
 {
   "name": "IMG_4809 10 fps proxy (validated reference)",
-  "note": "The recording every 5.x accuracy and CPU speed result was measured on. Built by concatenating the 12 proxy pieces (stream copy, +faststart) on 2026-10-28; on the owner's computer as Downloads/Mobile Devices/IMG_4809_proxy_10fps.mp4. The original IMG_4809.MOV is HEVC 1080p at 30 fps (2034.9 s) - 3x the stage-1 frames, accuracy not validated.",
+  "note": "The recording every 5.x accuracy and CPU speed result was measured on. Built by concatenating the 12 proxy pieces (stream copy, +faststart) on 2026-10-28; on the owner's computer as Downloads/Mobile Devices/IMG_4809_proxy_10fps.mp4. The original IMG_4809.MOV is HEVC 1080p at 30 fps (2034.9 s) - 3x the stage-1 frames, accuracy not validated. Identity is the video-stream hash (ffmpeg streamhash sha256): the copy remuxed in the development container with ffmpeg 6.1.1 has file SHA-256 007cd4e5...f9aa but the same stream hash.",
   "sha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
   "sizeBytes": 1413632177,
   "codec": "h264",
@@ -13,10 +13,15 @@
   "frames": 20350,
   "durationSec": 2035.0,
   "groundTruth": "bench/results/5.1/gt_img4809_intervals.json",
-  "target": {"number": "20", "kit": "orange", "kit2": "white"},
+  "target": {
+    "number": "20",
+    "kit": "orange",
+    "kit2": "white"
+  },
   "cpuReference": {
     "status": "not yet run with bench/full_match_benchmark.py on the full recording",
     "harnessIDF1Auto": 0.918,
     "note": "0.918 is the experiment-harness value (dense OCR cache); the gate comparison needs a CPU run of the SAME script and settings (bench/gpu_benchmark_commands.md)."
-  }
+  },
+  "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b"
 }

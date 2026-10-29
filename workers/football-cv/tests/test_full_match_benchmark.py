@@ -60,7 +60,7 @@ def test_gate_absolute_and_relative_rules():
 
 
 def _rec(**over):
-    r = {"input": {"sha256": "abc"}, "target": {"number": "20", "kit": "orange", "kit2": "white"},
+    r = {"input": {"videoStreamSha256": "abc"}, "target": {"number": "20", "kit": "orange", "kit2": "white"},
          "configuration": {"chunkSec": 300, "mode": "balanced",
                            "stage1Settings": {"env": {"SCOUTX_DETECTOR": "yolox_s", "SCOUTX_KEYFRAME_EVERY": None},
                                               "imgsz": 1280, "stride": 1, "discoveryImgsz": 416, "device": "cpu"}},
@@ -77,7 +77,7 @@ def _rec(**over):
 
 def test_runs_are_comparable_only_on_the_same_task():
     assert pp_bench.comparable(_rec(), _rec(**{"configuration.stage1Settings.device": "cuda"})) == []   # device may differ
-    assert "input.sha256 differs" in pp_bench.comparable(_rec(), _rec(**{"input.sha256": "other"}))
+    assert "input.videoStreamSha256 differs" in pp_bench.comparable(_rec(), _rec(**{"input.videoStreamSha256": "other"}))
     assert "models.files differs" in pp_bench.comparable(_rec(), _rec(**{"models.files": {"m": {"sha256": "2"}}}))
     assert "groundTruth.sha256 differs" in pp_bench.comparable(_rec(), _rec(**{"groundTruth.sha256": "h"}))
     assert any("KEYFRAME" in w for w in pp_bench.comparable(
@@ -218,6 +218,20 @@ def test_benchmark_refuses_unverified_models(tmp_path, tiny_video, monkeypatch):
     rec = json.loads(out.read_text())
     assert rc == fmb.EXIT_VERIFY and rec["status"] == "refused" and rec["error"]["type"] == "ModelVerification"
     assert rec["input"]["frames"] == 20 and rec["input"]["fps"] == 10.0 and len(rec["input"]["sha256"]) == 64
+    assert len(rec["input"]["videoStreamSha256"]) == 64
+
+
+def test_reference_identity_is_the_video_stream_not_the_container(tmp_path, tiny_video):
+    from scoutx_tracker.media_info import describe, match_reference
+
+    remux = tmp_path / "remux.mp4"
+    subprocess.run(["ffmpeg", "-v", "error", "-i", str(tiny_video), "-c", "copy", "-metadata", "title=other",
+                    "-movflags", "+faststart", str(remux)], check=True)
+    a, b = describe(tiny_video), describe(remux)
+    assert a["sha256"] != b["sha256"] and a["videoStreamSha256"] == b["videoStreamSha256"]
+    m = match_reference(b, {"name": "tiny", **{k: a[k] for k in ("videoStreamSha256", "sha256", "frames", "fps")}})
+    assert m["isReference"] and not m["sameFileBytes"]
+    assert not match_reference(b, {"name": "x", "videoStreamSha256": "0" * 64})["isReference"]
 
 
 def test_benchmark_refuses_a_baseline_from_another_recording(tmp_path, tiny_video):
@@ -229,7 +243,7 @@ def test_benchmark_refuses_a_baseline_from_another_recording(tmp_path, tiny_vide
     rc = fmb.main(["--video", str(tiny_video), "--number", "20", "--kit", "orange", "--kit2", "white", "--out", str(out),
                    "--baseline", str(base)])
     rec = json.loads(out.read_text())
-    assert rc == fmb.EXIT_MISMATCH and rec["error"]["type"] == "NotComparable" and "input.sha256 differs" in rec["error"]["message"]
+    assert rc == fmb.EXIT_MISMATCH and rec["error"]["type"] == "NotComparable" and "input.videoStreamSha256 differs" in rec["error"]["message"]
 
 
 def test_benchmark_rejects_unvalidated_mode(tmp_path, tiny_video, monkeypatch):
