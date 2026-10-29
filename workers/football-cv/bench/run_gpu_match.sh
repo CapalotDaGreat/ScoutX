@@ -60,7 +60,10 @@ if [[ -n "${VM_TIMESTAMPS:-}" ]]; then
   RUN+=(-v "$(realpath "$VM_TIMESTAMPS"):/vm_timestamps.json:ro"); ARGS+=(--vm-timestamps /vm_timestamps.json)
 fi
 set +e
-"${RUN[@]}" "$IMAGE" python bench/full_match_benchmark.py "${ARGS[@]}"
+# BENCH_TIMEOUT_SEC: time budget - SIGINT after it; the benchmark then records status "interrupted" and keeps
+# its completed chunks (used so a slow CPU reference cannot use up a paid session)
+TO=(); [[ -n "${BENCH_TIMEOUT_SEC:-}" ]] && TO=(timeout --signal=INT --kill-after=120 "$BENCH_TIMEOUT_SEC")
+"${RUN[@]}" "$IMAGE" ${TO[@]+"${TO[@]}"} python bench/full_match_benchmark.py "${ARGS[@]}"
 rc=$?
 set -e
 printf '\nResults: %s/full_match.json (exit %s)\n' "$OUT" "$rc"

@@ -87,10 +87,23 @@ def main(argv=None) -> int:
     ap.add_argument("--ground-truth", default=str(HERE / "results" / "5.1" / "gt_img4809_intervals.json"))
     ap.add_argument("--gate", default=str(HERE / "gates" / "balanced_5.2.json"))
     ap.add_argument("--prices", default=None)
+    ap.add_argument("--gpu-reference", default=None,
+                    help="existing gpu-balanced full_match.json to use as the speed reference instead of running it again")
     a = ap.parse_args(argv)
     names = ["gpu-balanced"] + [v for v in a.variants if v != "gpu-balanced"]
     rows = []
     gpu_ref = None
+    if a.gpu_reference:
+        rec = json.loads(Path(a.gpu_reference).read_text())
+        rows.append({"variant": "gpu-balanced", "what": VARIANTS["gpu-balanced"][1] + " (existing run)", "env": {},
+                     "exitCode": 0 if rec.get("status") == "complete" else 2, "status": rec.get("status"),
+                     "wallSec": (rec.get("timing") or {}).get("measuredTotalWallSec"),
+                     "timingComplete": (rec.get("timing") or {}).get("timingComplete"), "gate": rec.get("gate"),
+                     "accuracy": {k: v for k, v in (rec.get("accuracy") or {}).items() if k != "wrongIdentityTimes"},
+                     "agreement": None, "gpuSampling": rec.get("gpuSampling"), "gpuProviders": rec.get("gpuProviders"),
+                     "result": a.gpu_reference})
+        gpu_ref = a.gpu_reference
+        names = [n for n in names if n != "gpu-balanced"]
     for n in names:
         base = a.baseline or (gpu_ref if n != "gpu-balanced" else None)
         rows.append(run_variant(n, a, base))

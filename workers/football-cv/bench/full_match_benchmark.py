@@ -334,6 +334,8 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
         record["status"], record["error"], rc = "refused", {"type": "ConfigMismatch", "message": str(exc)}, EXIT_MISMATCH
     except DiskSpaceError as exc:
         record["status"], record["error"], rc = "failed", {"type": "DiskSpaceError", "message": str(exc)}, EXIT_DISK
+    except KeyboardInterrupt:  # time budget (timeout --signal=INT) or operator: completed chunks stay checkpointed
+        record["status"], record["error"], rc = "interrupted", {"type": "Interrupted", "message": "stopped by time budget or operator"}, EXIT_FAILED
     except Exception as exc:  # noqa: BLE001 - recorded, checkpoints kept for a resume
         record["status"], record["error"], rc = "failed", {"type": type(exc).__name__, "message": str(exc)}, EXIT_FAILED
     finally:

@@ -253,3 +253,35 @@ def test_benchmark_rejects_unvalidated_mode(tmp_path, tiny_video, monkeypatch):
     monkeypatch.delenv("SCOUTX_ALLOW_UNVALIDATED_MODE", raising=False)
     with pytest.raises(PermissionError):
         fmb.main(["--video", str(tiny_video), "--number", "20", "--kit", "orange", "--out", str(tmp_path / "r.json")])
+
+
+# ------------------------------------------------------------------ offline comparison (5.3)
+
+def _run_rec(device, status="complete", acc=None, wall=100.0, complete=True, chunks=None):
+    r = _rec(**{"configuration.stage1Settings.device": device})
+    r.update(status=status, accuracy=acc, timing={"measuredTotalWallSec": wall, "timingComplete": complete},
+             stages={"extraction": {"chunks": chunks or []}})
+    return r
+
+
+def test_compare_runs_gate_speedup_and_incomplete_reference():
+    import compare_runs
+
+    gate = json.loads((BENCH / "gates" / "balanced_5.2.json").read_text())
+    acc = {"wrongIdentitySec": 0.0, "confirmedWrongIdentitySec": 0.0, "overlapAmbiguousSec": 0.1, "IDF1": 0.90,
+           "claimedRecall": 0.8, "confirmedCorrectSec": 10.0}
+    ch = [{"index": 0, "startSec": 0, "endSec": 300, "status": "extracted", "wallSec": 300.0}]
+    cpu = _run_rec("cpu", acc=acc, wall=4000.0, chunks=ch)
+    gpu = _run_rec("cuda", acc=acc, wall=400.0, chunks=[{**ch[0], "wallSec": 30.0}])
+    claims = [[0.0, "LIKELY_VISIBLE", [0, 0, 10, 10]]]
+    res, rc = compare_runs.compare(cpu, gpu, claims, claims, gate)
+    assert rc == 0 and res["result"] == "PASSED" and res["speedup"] == 10.0 and res["chunkSpeed"][0]["speedup"] == 10.0
+    worse = _run_rec("cuda", acc={**acc, "IDF1": 0.85}, wall=400.0)
+    res, rc = compare_runs.compare(cpu, worse, claims, claims, gate)
+    assert rc == 3 and res["result"] == "FAILED"
+    partial = _run_rec("cpu", status="interrupted", acc=None, wall=9000.0, complete=False, chunks=ch)
+    res, rc = compare_runs.compare(partial, gpu, None, claims, gate)
+    assert rc == 7 and res["result"].startswith("INCOMPLETE") and "speedup" not in res and res["chunkSpeed"][0]["speedup"] == 10.0
+    other = _run_rec("cuda", acc=acc)
+    other["input"]["videoStreamSha256"] = "different"
+    assert compare_runs.compare(cpu, other, claims, claims, gate)[1] == 5
