@@ -160,6 +160,18 @@ def test_single_touchline_view_is_reported_infeasible():
     assert f["directions"] == 1 and f["landmarkCandidates"] == 0 and not f["feasible"]
 
 
+def test_pitch_line_layouts_produce_identical_candidates(monkeypatch):
+    import scoutx_tracker.calibration as calibration
+
+    image = _pitch_image([((100, 900), (1800, 700))])
+    segments = np.array([[50, 450, 900, 350]], dtype=np.int32)
+    monkeypatch.setattr(calibration.cv2, "HoughLinesP", lambda *a, **kw: segments[:, None, :])
+    old = calibration.detect_pitch_lines(image)
+    monkeypatch.setattr(calibration.cv2, "HoughLinesP", lambda *a, **kw: segments)
+    new = calibration.detect_pitch_lines(image)
+    assert old and new == old
+
+
 def test_ground_speed_series_from_calibrated_positions():
     from scoutx_tracker.metrics import Thresholds, ground_speed_series
 

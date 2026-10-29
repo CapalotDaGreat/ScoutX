@@ -195,7 +195,8 @@ def detect_pitch_lines(frame_bgr: np.ndarray, work_w: int = 960) -> list[LineCan
     if segs is None:
         return []
     raw = []
-    for x1, y1, x2, y2 in segs[:, 0].astype(float):
+    # OpenCV 4 returns (N, 1, 4); OpenCV 5 also exposes (N, 4).
+    for x1, y1, x2, y2 in np.asarray(segs).reshape(-1, 4).astype(float):
         both = _grass_both_sides(grass, x1, y1, x2, y2)
         if both < 0.6:
             continue

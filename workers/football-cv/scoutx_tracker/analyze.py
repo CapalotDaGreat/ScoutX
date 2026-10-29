@@ -115,7 +115,7 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
     5.2: `max_new` bounds the NUMBER of uncached crops read (deferred-OCR follow-up); the crop
     order is deterministic, so repeated follow-ups make progress and never loop."""
     cache = load_ocr_cache(cache_path)
-    t_budget = time.time()
+    t_budget = time.perf_counter()
     n_new = 0
     reader = None
     t, done = time.time(), 0
@@ -124,7 +124,7 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
         counts: dict[str, int] = {}
         for c in crops:
             key = crop_key(c)
-            if key not in cache and ((budget_sec is not None and time.time() - t_budget > budget_sec)
+            if key not in cache and ((budget_sec is not None and time.perf_counter() - t_budget >= budget_sec)
                                      or (max_new is not None and n_new >= max_new)):
                 if skipped is not None:
                     skipped.append(key)

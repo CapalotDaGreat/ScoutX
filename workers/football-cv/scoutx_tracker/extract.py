@@ -19,6 +19,7 @@ Output `<out>/detections.npz`:
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 import json
 import os
 import shutil
@@ -30,6 +31,7 @@ import numpy as np
 
 from .cmc import CameraMotion, scene_cut
 from .features import EMB_DIM, SIG_DIM, GridEmbedder, colour_signature, warm_fraction
+from .frame_reader import CaptureReader
 from .periods import grass_fraction
 
 PERSON, BALL = 0, 32
@@ -231,59 +233,41 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
     # detector runs on a GPU (not measured: no GPU available).
     if prefetch < 0:
         prefetch = 4 if det.on_gpu else 0
-    reader = None
-    if ff is None and prefetch > 0:
-        import queue  # noqa: PLC0415
-        import threading  # noqa: PLC0415
-
-        q: "queue.Queue" = queue.Queue(maxsize=prefetch)
-
-        def _pump() -> None:
-            while True:
-                ok_, fr_ = cap.read()
-                q.put((ok_, fr_))
-                if not ok_:
-                    return
-
-        threading.Thread(target=_pump, daemon=True).start()
-        reader = q
-    while True:
-        _t = time.perf_counter()
-        if ff is not None:
-            nxt = next(ff, None)
-            ok, frame = (nxt is not None), (nxt[1] if nxt is not None else None)
-            if ok:
-                k += stride - 1
-        elif reader is not None:
-            ok, frame = reader.get()
-        else:
-            ok, frame = cap.read()
-        tm["decode"] += time.perf_counter() - _t
-        if not ok:
-            break
-        k += 1
-        if (k % stride) != 0:
-            continue
-        t = t0 + k / fps_src
-        if end is not None and k / fps_src >= end:
-            break
-        if prop is not None and batch == 1 and (fi + 1) % key_every != 0:
-            # in-between frame: propagate unless the scene changed (then detect)
-            small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
-            if not scene_cut(prev_small, small):
-                _tp = time.perf_counter()
-                pb, ps = prop.step(frame)
-                tm["propagate"] += time.perf_counter() - _tp
-                last_small[0] = small
-                consume(t, frame, pb, ps, np.zeros((0, 4), np.float32), np.zeros(0, np.float32), propagated=True)
-                last_small[0] = None
+    source = CaptureReader(cap, prefetch) if ff is None else nullcontext(None)
+    with source as reader:
+        while True:
+            _t = time.perf_counter()
+            if ff is not None:
+                nxt = next(ff, None)
+                ok, frame = (nxt is not None), (nxt[1] if nxt is not None else None)
+                if ok:
+                    k += stride - 1
+            else:
+                ok, frame = reader.read()
+            tm["decode"] += time.perf_counter() - _t
+            if not ok:
+                break
+            k += 1
+            if (k % stride) != 0:
                 continue
-        pending.append((t, frame))
-        if len(pending) >= batch:
-            run_batch()
-    run_batch()
-    if ff is None and reader is None:
-        cap.release()
+            t = t0 + k / fps_src
+            if end is not None and k / fps_src >= end:
+                break
+            if prop is not None and batch == 1 and (fi + 1) % key_every != 0:
+                # in-between frame: propagate unless the scene changed (then detect)
+                small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
+                if not scene_cut(prev_small, small):
+                    _tp = time.perf_counter()
+                    pb, ps = prop.step(frame)
+                    tm["propagate"] += time.perf_counter() - _tp
+                    last_small[0] = small
+                    consume(t, frame, pb, ps, np.zeros((0, 4), np.float32), np.zeros(0, np.float32), propagated=True)
+                    last_small[0] = None
+                    continue
+            pending.append((t, frame))
+            if len(pending) >= batch:
+                run_batch()
+        run_batch()
     np.savez_compressed(
         out / "detections.npz",
         dets=np.array(dets, np.float64).reshape(-1, 7), sigs=np.array(sigs, np.float16).reshape(-1, SIG_DIM),
