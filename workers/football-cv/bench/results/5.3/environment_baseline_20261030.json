@@ -1,0 +1,156 @@
+{
+  "schema": "pitchproof.baseline-environment.v1",
+  "date": "2026-10-30",
+  "gitCommit": "883229e86edb2fe8d49aceec8aea7b62e0119b33",
+  "branch": "codex/gpu-benchmark-5-3",
+  "referenceFootage": {
+    "basename": "IMG_4809_proxy_10fps.mp4",
+    "sizeBytes": 1413632177,
+    "measuredFileSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+    "matchesCommittedReference": true
+  },
+  "workerBeforeEvaluationPatch": {
+    "passed": 550,
+    "skipped": 5,
+    "collected": 555
+  },
+  "historical941f019": {
+    "collectedNow": 543,
+    "historicalCommitMessagePassed": 543,
+    "executedNow": false
+  },
+  "app": {
+    "passed": 718,
+    "failed": 0,
+    "skipped": 0,
+    "command": "npm run test:unit"
+  },
+  "workerAfterEvaluationPatch": {
+    "passed": 560,
+    "skipped": 5,
+    "failed": 0,
+    "collected": 565,
+    "command": "python -m pytest -q -rs",
+    "skipReasons": {
+      "ffmpegMissing": 4,
+      "onnxruntimeMissing": 1
+    }
+  },
+  "logs": {
+    "current-engine-worker-20261029.log": {
+      "path": "C:\\ZLI\\M335\\ScoutX\\tmp\\current-engine-worker-20261029.log",
+      "sha256": "ce0c506b253f79b79e31c0e14dcc327689c4c457643f1b5b535486fe63515ad3"
+    },
+    "historical-941f019-collection-20261030.log": {
+      "path": "C:\\ZLI\\M335\\ScoutX\\tmp\\historical-941f019-collection-20261030.log",
+      "sha256": "b1a197fd365c8b9252c350c8612262ddbf4f974ae0a6079b4aa0c0d1d59a683a"
+    },
+    "current-engine-unit-ready-20261030.log": {
+      "path": "C:\\ZLI\\M335\\ScoutX\\tmp\\current-engine-unit-ready-20261030.log",
+      "sha256": "06a98546f5e642a2c4b5a9b5b0411c3c0580eca33893cc64ab7d4ebceaa47975"
+    },
+    "baseline-worker-final-20261030.log": {
+      "path": "C:\\ZLI\\M335\\ScoutX\\tmp\\baseline-worker-final-20261030.log",
+      "sha256": "84c26d193b549f1bfb6ca744f0dd2e815e7d1ef2dc9c37f44acb2fc2f7db2be5"
+    },
+    "baseline-typecheck-ready-20261030.log": {
+      "path": "C:\\ZLI\\M335\\ScoutX\\tmp\\baseline-typecheck-ready-20261030.log",
+      "sha256": "e4cfd0b26052ac47d2cb47ef733475ee5f22c6b79077fa77439371cb16189b70"
+    }
+  },
+  "cloud": {
+    "cliAvailable": false,
+    "standardGcloudCredentialsPresent": false,
+    "liveResourceQueriesRun": false,
+    "gpuRunLaunched": false
+  },
+  "environment": {
+    "environment": {
+      "python": "3.12.10",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "cpuCores": 16,
+      "packages": {
+        "torch": "2.8.0+cpu",
+        "torchvision": "0.23.0+cpu",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "opencv-python": "5.0.0.93",
+        "opencv-python-headless": "5.0.0.93",
+        "easyocr": "1.7.2",
+        "scikit-learn": "1.9.1",
+        "av": "14.2.0",
+        "pillow": "12.3.0",
+        "fastapi": "0.143.0",
+        "pydantic": "2.14.0"
+      },
+      "torch": {
+        "version": "2.8.0+cpu",
+        "cuda": null,
+        "cudaAvailable": false,
+        "cudnn": null
+      },
+      "onnxruntime": null,
+      "opencv": {
+        "version": "5.0.0",
+        "videoIO": [
+          "FFMPEG:                      YES (prebuilt binaries)",
+          "GStreamer:                   NO"
+        ]
+      },
+      "ffmpeg": null,
+      "nvidiaSmi": null,
+      "driverMajor": null,
+      "engineVersion": "5.2.0",
+      "image": {
+        "gitCommit": null,
+        "built": null,
+        "baseImage": null,
+        "lockSha256": null
+      },
+      "scoutxEnv": {}
+    },
+    "models": {
+      "ok": false,
+      "files": {
+        "yolox/yolox_s.pth": {
+          "path": "C:\\Users\\masap\\.cache\\scoutx\\weights\\yolox_s.pth",
+          "sha256": null,
+          "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+          "ok": false
+        },
+        "easyocr/model/craft_mlt_25k.pth": {
+          "path": "C:\\Users\\masap\\.EasyOCR\\model\\craft_mlt_25k.pth",
+          "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+          "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+          "ok": true
+        },
+        "easyocr/model/english_g2.pth": {
+          "path": "C:\\Users\\masap\\.EasyOCR\\model\\english_g2.pth",
+          "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+          "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+          "ok": true
+        },
+        "doctr/models/parseq-56125471.pt": {
+          "path": "C:\\Users\\masap\\.cache\\doctr\\models\\parseq-56125471.pt",
+          "sha256": null,
+          "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+          "ok": false
+        }
+      }
+    }
+  },
+  "codeFilesSha256": {
+    "bench/pp_bench.py": "b2befff3949afc71f53f718b6cddffc42b44c3b688595b50efe7cd96dbd937af",
+    "bench/compare_runs.py": "85b9b86dc000d10395e35e85d3123f499c8e980b8f9ebe37d412334188bbd70f",
+    "bench/full_match_benchmark.py": "8d55858d08c39062d9bed6128afee89853690f91dfc2486ef38958e70e834d73",
+    "bench/replay_identity_baseline.py": "c0e084a5c3ca737cba84a397d8217b99a6fb3a21465206b2aacd727312b78500"
+  },
+  "productionApproval": false,
+  "fullRecordingValidated": false,
+  "typecheck": {
+    "passed": true,
+    "command": "npm run typecheck",
+    "preparation": "node --import ./tests/unit/support/register.mjs scripts/review-preview/prepare.ts",
+    "initialIssue": "ignored preview reports.json absent; regenerated from committed fixtures without suppressing checks"
+  }
+}

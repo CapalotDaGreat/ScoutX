@@ -349,6 +349,10 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
         else:
             evidence[k] = "continuity"
     # anchored continuity, forwards and backwards from every hard-evidence member
+    # A proximity-only handoff from an unrelated piece into a contact must not
+    # carry a contact answer backwards onto another player. The tracker-recorded
+    # predecessor and explicit pre->post contact links keep their existing rules.
+    contact_pre_ix = {kix[c]: kix[p] for c, p in (contact_pre or {}).items() if c in kix and p in kix}
     for n, k in enumerate(chosen):
         if evidence[k] not in ("anchor", "number"):
             continue
@@ -356,6 +360,9 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
             m, ref = n, (t1[k] if step == 1 else t0[k])
             while 0 <= m + step < len(chosen):
                 nxt = chosen[m + step]
+                pre, post = (chosen[m], nxt) if step == 1 else (nxt, chosen[m])
+                if post in contact_pre_ix and pre != contact_pre_ix[post]:
+                    break
                 via = edges.get(nxt) if step == 1 else edges.get(chosen[m])
                 if via not in ("handoff", "clear") or evidence[nxt] in ("anchor", "number"):
                     break

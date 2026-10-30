@@ -1,0 +1,102 @@
+[
+    {
+        "Id": "sha256:03ebec3941e727f60ea8f45f69c45164587ef78b268233415ae1b9f441a99b8e",
+        "RepoTags": [
+            "pitchproof-tracker-gpu:5.2"
+        ],
+        "RepoDigests": [
+            "pitchproof-tracker-gpu@sha256:03ebec3941e727f60ea8f45f69c45164587ef78b268233415ae1b9f441a99b8e"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-29T15:11:31.507302354Z",
+        "Config": {
+            "User": "worker",
+            "Env": [
+                "PATH=/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "PYTHONDONTWRITEBYTECODE=1",
+                "PYTHONUNBUFFERED=1",
+                "NVIDIA_VISIBLE_DEVICES=all",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility,video",
+                "HF_HOME=/opt/models/hf",
+                "EASYOCR_MODULE_PATH=/opt/models/easyocr",
+                "DOCTR_CACHE_DIR=/opt/models/doctr",
+                "SCOUTX_WEIGHTS_DIR=/opt/models/yolox",
+                "SCOUTX_DETECTOR=yolox_s",
+                "SCOUTX_BACKEND=auto",
+                "SCOUTX_DISCOVERY_DET=416",
+                "WORKER_VERSION=football-cv/0.9.0",
+                "SCOUTX_GIT_COMMIT=3b8f3bbded2b12c5fe020d95ef8b1270df107aa7",
+                "SCOUTX_BASE_IMAGE=ubuntu:24.04",
+                "UV_PYTHON_INSTALL_DIR=/opt/python",
+                "PORT=8080",
+                "VIRTUAL_ENV=/opt/venv"
+            ],
+            "Entrypoint": [
+                "/bin/sh",
+                "-c",
+                "set -a; . /etc/scoutx-build.env; set +a; exec \"$@\"",
+                "--"
+            ],
+            "Cmd": [
+                "sh",
+                "-c",
+                "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --workers 1"
+            ],
+            "WorkingDir": "/srv",
+            "Labels": {
+                "org.opencontainers.image.licenses": "proprietary; YOLOX weights Apache-2.0; EasyOCR Apache-2.0; docTR Apache-2.0",
+                "org.opencontainers.image.revision": "3b8f3bbded2b12c5fe020d95ef8b1270df107aa7",
+                "org.opencontainers.image.title": "pitchproof-football-cv-tracker-gpu",
+                "org.opencontainers.image.version": "football-cv/0.9.0",
+                "org.pitchproof.runtime-patch": "883229e"
+            },
+            "ArgsEscaped": true,
+            "Healthcheck": {
+                "Test": [
+                    "CMD-SHELL",
+                    "python -c \"import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.environ.get(\\\"PORT\\\", \\\"8080\\\")}/healthz', timeout=4)\" || exit 1"
+                ],
+                "Interval": 30000000000,
+                "Timeout": 5000000000,
+                "StartPeriod": 60000000000
+            }
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 12485314368,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:bec87777bc2fb2edcdf9af11df1531469e7df911309c1413082b18fcb8610278",
+                "sha256:298884bf1886547997e16f2c5309392e840cd3533fd77aa44699da9d8dc27a23",
+                "sha256:682fd14006f5031f029fa410024667166cac7d97439365c68e91f7b1b99f9642",
+                "sha256:63f148252b8d24cdc7c766824a1cef555b73f24b39a9af8070624e4858c76a1a",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:5395380e841fc40363f1b8ae3a4d804d16162e710b629f1a2d91aa0398ace0a5",
+                "sha256:738fb89dac1e1c4524a1da668a3ae6143897584a27826ec5bda8a3bf31217db9",
+                "sha256:92eb1dae589200a0db6a0f8da85164ff53eecd4be0181f4f1f16d88390be116e",
+                "sha256:3bd3b27012b1668eb9882b43af9972bbc4f9429084100141861bf2e2f0c61eca",
+                "sha256:4a8114cba83d739de38569b6b3ec6519bb178dd4b9caf75cd47d57952dfe96a8",
+                "sha256:4cbe65167a0057cac1fb129e6d9287c69d872f3fc65e2564486d07a9c3fa3b35",
+                "sha256:ae9a8b92671df9eaa196398c97abbfcb02a9ff90cf75ca87a8ab9a494ff3c1e8",
+                "sha256:b9c8922afbde081b560edeccbc43b43e9ab40c052995e49bcf11f05f6cb19359"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-29T15:11:45.401230024Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:03ebec3941e727f60ea8f45f69c45164587ef78b268233415ae1b9f441a99b8e",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "5ad9nuvapmhif0bnfd97vjt92",
+                    "CreatedAt": "2026-10-29T15:11:47.936166811Z"
+                }
+            ]
+        }
+    }
+]

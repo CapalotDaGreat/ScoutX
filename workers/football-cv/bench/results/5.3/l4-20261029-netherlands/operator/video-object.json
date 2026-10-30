@@ -1,0 +1,16 @@
+{
+  "bucket": "scoutx-230b0-benchmarks",
+  "component_count": 29,
+  "content_type": "video/mp4",
+  "crc32c_hash": "qQmNfg==",
+  "creation_time": "2026-10-29T14:21:53+0000",
+  "etag": "CO668bW235cDEAE=",
+  "generation": "1793283713686894",
+  "metageneration": 1,
+  "name": "videos/IMG_4809_proxy_10fps.mp4",
+  "size": 1413632177,
+  "storage_class": "STANDARD",
+  "storage_class_update_time": "2026-10-29T14:21:53+0000",
+  "storage_url": "gs://scoutx-230b0-benchmarks/videos/IMG_4809_proxy_10fps.mp4#1793283713686894",
+  "update_time": "2026-10-29T14:21:53+0000"
+}

@@ -1,0 +1,110 @@
+{
+  "environment": {
+    "python": "3.13.17",
+    "platform": "Linux-6.8.0-1070-gcp-x86_64-with-glibc2.39",
+    "cpuCores": 8,
+    "packages": {
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "4.14.0.94",
+      "opencv-python-headless": "4.14.0.94",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime-gpu": "1.29.0",
+      "av": "19.0.2",
+      "pillow": "12.3.0",
+      "fastapi": "0.162.0",
+      "pydantic": "2.13.5"
+    },
+    "torch": {
+      "version": "2.14.1+cu130",
+      "cuda": "13.0",
+      "cudaAvailable": true,
+      "cudnn": 92400,
+      "device": "NVIDIA L4",
+      "capability": "8.9"
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "TensorrtExecutionProvider",
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "4.14.0",
+      "videoIO": [
+        "FFMPEG:                      YES",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+    "nvidiaSmi": "NVIDIA L4, 23034 MiB, 580.178.04",
+    "driverMajor": 580,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": "3b8f3bbded2b12c5fe020d95ef8b1270df107aa7",
+      "built": "2026-10-29T14:59:39Z",
+      "baseImage": "ubuntu:24.04",
+      "lockSha256": "7a7dfa9601658ffe0c00fb403f95e60c46d2badd482bc41bfdaf6824f3e96389"
+    },
+    "scoutxEnv": {
+      "SCOUTX_BACKEND": "auto",
+      "SCOUTX_BASE_IMAGE": "ubuntu:24.04",
+      "SCOUTX_DETECTOR": "yolox_s",
+      "SCOUTX_DISCOVERY_DET": "416",
+      "SCOUTX_GIT_COMMIT": "3b8f3bbded2b12c5fe020d95ef8b1270df107aa7",
+      "SCOUTX_IMAGE_BUILT": "2026-10-29T14:59:39Z",
+      "SCOUTX_LOCK_SHA256": "7a7dfa9601658ffe0c00fb403f95e60c46d2badd482bc41bfdaf6824f3e96389",
+      "SCOUTX_MODE": "balanced",
+      "SCOUTX_WEIGHTS_DIR": "/opt/models/yolox"
+    }
+  },
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "/opt/models/yolox/yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "/opt/models/easyocr/model/craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "/opt/models/easyocr/model/english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "/opt/models/doctr/models/parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "gpuProviders": {
+    "torch": {
+      "ok": true,
+      "fp16": true
+    },
+    "onnxruntimeCuda": {
+      "ok": true,
+      "providers": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "ok": true
+  }
+}

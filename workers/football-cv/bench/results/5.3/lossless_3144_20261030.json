@@ -1,0 +1,213 @@
+{
+  "schema": "pitchproof.lossless-crop-experiment.v1",
+  "window": "3144",
+  "baselineFileSha256": "ad06fb0e17b9ce4791335ff0e42dba017cca77faa1d13e38854d16635678d11a",
+  "sourceSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-models-20261030\\yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "C:\\Users\\masap\\.EasyOCR\\model\\craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "C:\\Users\\masap\\.EasyOCR\\model\\english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "C:\\Users\\masap\\.cache\\doctr\\models\\parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "codeSha256": {
+    "bench/pp_bench.py": "b2befff3949afc71f53f718b6cddffc42b44c3b688595b50efe7cd96dbd937af",
+    "bench/validate_identity_windows.py": "06282619a52fde98f1d89bebee0c95c277c559cd70e29d3df92b8df55bd354ae",
+    "scoutx_tracker/__init__.py": "d5723c0d1c1af64671653b364b766a46a831c7deb1b9e4d1549c531fed2fff51",
+    "scoutx_tracker/__main__.py": "4bf9f2d71d484bd9d0ac74619afe892d8aaeb54fca0bb355063f33b212744cb1",
+    "scoutx_tracker/analyze.py": "ac1feb9eaa2f6e2bdc6e1292e29b6284ef5ccd643e16f3e403b90723686449c7",
+    "scoutx_tracker/ball.py": "01227c4924e80e7c56e99c2553332904d70117c2c269dabd11467b85d7eef6f2",
+    "scoutx_tracker/calibration.py": "c26964dbdfdca33b504ee15209ee79baa697f034b4b507d399a2b31ebbdbe056",
+    "scoutx_tracker/checkpoint.py": "7535e89358d837095e36ba0ff29da272f4e510a63628750665ccf8ca9c40c3eb",
+    "scoutx_tracker/cli.py": "ffa3b3f4b34335e0d7a69edb906801fe1c41b740496f71c49978c75e9a5d9422",
+    "scoutx_tracker/cmc.py": "22eca5d79d2356a4b9dae0b0801ca4bcf3a29bbd812e5dc40fc86ad9e34648bf",
+    "scoutx_tracker/colour.py": "3d5a0ea6b99200dec2c8da7f0193a02978fe34ed411629666df868566decb3ec",
+    "scoutx_tracker/crossings.py": "1cd022da32c98b353cc97d1acd3c643240b01e75b764a809985b38ba9d924b78",
+    "scoutx_tracker/discovery.py": "a825c50925360b66778e99d6de4ea9a4654c3f05fb5fa0e92964b6d5aa9c146f",
+    "scoutx_tracker/envinfo.py": "505b13af48839540a913968ef3579e9e4f77f94db265ad3fbc4c56722ca88268",
+    "scoutx_tracker/extract.py": "093bbeb67d852f3b3516fd4a1665f1fc86e39da4b6750428bb1d7b3b1f04df9e",
+    "scoutx_tracker/features.py": "19ef10196ff7cb96fcff215fecdfb5d2344f0b382c1d0ff3b4402b5257a317af",
+    "scoutx_tracker/frame_reader.py": "55c468e2645f2f073f6a9893bd624c895f7f3d393f0e81f6845341a439a48b91",
+    "scoutx_tracker/identity.py": "1da41ced6c77338d91194fa2d0435c386473801a33f4b064de491e06280abec6",
+    "scoutx_tracker/invariants.py": "0b5b4a4721bc82dcdf5e2f228f78cae4fbbfe27b80ca59d5bc3dce2315d54e3b",
+    "scoutx_tracker/legibility.py": "a54455681f0f191a8e08f31759db5b8f58a8910d966935f5fc0aff54350813aa",
+    "scoutx_tracker/media_info.py": "524615d9f9d269c0093de48f96a915b7c77f973d04f35ad814fda07faa1249c5",
+    "scoutx_tracker/metrics.py": "5883eb9556911658256f4c5ce7c1d60c71cd601e25836bb6b0577db2c3962844",
+    "scoutx_tracker/modes.py": "446a280da8fb388be25ad709951a70e5a0b158bb7e8d22f9a949292f3f0b8c8d",
+    "scoutx_tracker/moments.py": "83c312b52406a8d9a446362897991974773b772efcc3b6240f9acd5f993cd1f5",
+    "scoutx_tracker/ocr.py": "d88ffe3f3b45f43907b46547f5326387554f7af843c2b744ed2deb6b7a77918e",
+    "scoutx_tracker/offball.py": "56626b3c40806ae76ecabf7a3d57709f65a70d6b5a60009bd1c110343a017817",
+    "scoutx_tracker/periods.py": "2e79004f93c4119b21f197834dbf7c6b711b24386b95663cb0b10a95d5f33c9d",
+    "scoutx_tracker/propagate.py": "5eef694e1532341f0cff21755f60dbe6c1dfed9ff58239581ea80e3b0f992d4d",
+    "scoutx_tracker/render.py": "fa2d18b392d494abcc8a253ccbd6cd725c5f8f35635f73f7c677586856ac10e1",
+    "scoutx_tracker/report.py": "514cb3d5ddad0c7bf5f2975ae83cb2f6e994f90b2a043f2acfbab03e2e342741",
+    "scoutx_tracker/states.py": "5f251043c601d13d27b2e00ab5fdf71b5c014376a093fc9824c7cb692386c1ad",
+    "scoutx_tracker/stats.py": "3405a194f52f0f119cb5f502b0f196f76be8736df22e80745c95567344e177ef",
+    "scoutx_tracker/tracker.py": "6a637e4eeacad4b140571ca4b37a9dfe0e344ef489d53def8f5f52e116eafcd1",
+    "scoutx_tracker/tracklets.py": "c3e8d12d42fce9129122b0a0fcd201f00f1fdabdff971b6eee37671342a597e2",
+    "scoutx_tracker/yolox_net.py": "9331e2f710f5e3dd0f1697748dd00ab70ff2015f85f81e3ad8b7c6355987592d",
+    "tests/fixtures/img4809_1073_slice.json": "6a428d7f3333bbf118a8fbbb0dd912e732a5024dae47feb00f52b1f8a7482c90",
+    "tests/fixtures/img4809_3144_slice.json": "81a8d314003607888439634c329a6febe84a98a372822e837863cfbd38971ad6"
+  },
+  "experimentCodeSha256": "3cf7a71b186366287f93a9d0858cfaec333663a7a7fedbe998d264ed35c5799e",
+  "reusedDetectionsSha256": "ce0d422346d23b9aef5912954d1e5543424f5dd287a80efd422af04010ede364",
+  "cropCount": 1153,
+  "baselineMetrics": {
+    "targetLabelledSec": 5.4,
+    "claimedCorrectSec": 0.0,
+    "confirmedCorrectSec": 0.0,
+    "wrongIdentitySec": 0.0,
+    "confirmedWrongIdentitySec": 0.0,
+    "overlapAmbiguousSec": 0.0,
+    "falseAttributionSec": 0.0,
+    "claimedRecall": 0.0,
+    "IDF1": 0.0,
+    "wrongIdentityTimes": [],
+    "abstainedVisibleFrames": 54,
+    "confirmedRecall": 0.0,
+    "abstentionRateOnVisibleLabels": 1.0
+  },
+  "candidateMetrics": {
+    "targetLabelledSec": 5.4,
+    "claimedCorrectSec": 4.0,
+    "confirmedCorrectSec": 2.6,
+    "wrongIdentitySec": 0.0,
+    "confirmedWrongIdentitySec": 0.0,
+    "overlapAmbiguousSec": 0.0,
+    "falseAttributionSec": 0.0,
+    "claimedRecall": 0.741,
+    "IDF1": 0.851,
+    "wrongIdentityTimes": [],
+    "abstainedVisibleFrames": 2,
+    "confirmedRecall": 0.481,
+    "abstentionRateOnVisibleLabels": 0.037
+  },
+  "candidateConditions": [
+    {
+      "mode": "automatic",
+      "metrics": {
+        "targetLabelledSec": 5.4,
+        "claimedCorrectSec": 4.0,
+        "confirmedCorrectSec": 2.6,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.741,
+        "IDF1": 0.851,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 2,
+        "confirmedRecall": 0.481,
+        "abstentionRateOnVisibleLabels": 0.037
+      },
+      "coverage": {
+        "recordingSec": 45.0,
+        "nonMatchSec": 0.0,
+        "offPitchSec": 0.0,
+        "matchSec": 45.0,
+        "unobservedSec": 0.0,
+        "analysedSec": 45.0,
+        "confirmedVisibleSec": 6.7,
+        "likelyVisibleSec": 18.0,
+        "ambiguousSec": 10.0,
+        "notIdentifiedSec": 10.3,
+        "denominators": {
+          "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+          "note": "Percentages of the recording are not percentages of the player's playing time."
+        },
+        "visiblePctOfAnalysed": 54.9
+      },
+      "engine": {
+        "version": "5.2.0",
+        "timingsSec": {
+          "load": 0.0,
+          "tracklets": 2.4,
+          "numbers": 62.4,
+          "identity": 46.6,
+          "timeline_metrics_events": 0.1
+        },
+        "ocrDeferred": 0,
+        "ocrRead": 262
+      }
+    }
+  ],
+  "baselineConditions": [
+    {
+      "mode": "automatic",
+      "anchors": [],
+      "resolveSec": 2.501,
+      "metrics": {
+        "targetLabelledSec": 5.4,
+        "claimedCorrectSec": 0.0,
+        "confirmedCorrectSec": 0.0,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.0,
+        "IDF1": 0.0,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 54,
+        "confirmedRecall": 0.0,
+        "abstentionRateOnVisibleLabels": 1.0
+      },
+      "coverage": {
+        "recordingSec": 45.0,
+        "nonMatchSec": 0.0,
+        "offPitchSec": 0.0,
+        "matchSec": 45.0,
+        "unobservedSec": 0.0,
+        "analysedSec": 45.0,
+        "confirmedVisibleSec": 0.0,
+        "likelyVisibleSec": 0.0,
+        "ambiguousSec": 44.8,
+        "notIdentifiedSec": 0.2,
+        "denominators": {
+          "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+          "note": "Percentages of the recording are not percentages of the player's playing time."
+        },
+        "visiblePctOfAnalysed": 0.0
+      },
+      "engine": {
+        "version": "5.2.0",
+        "timingsSec": {
+          "load": 0.0,
+          "tracklets": 2.1,
+          "numbers": 0.2,
+          "identity": 0.1,
+          "timeline_metrics_events": 0.1
+        },
+        "ocrDeferred": 0,
+        "ocrRead": 0
+      }
+    }
+  ],
+  "cropRegenerationSec": 12.138,
+  "cropAndResolveSec": 126.14,
+  "scope": "All retained crops regenerated, unchanged crop geometry/models/thresholds; reused detections/features",
+  "fullEndToEndTiming": false,
+  "productionSelected": false,
+  "fullRecordingValidated": false
+}

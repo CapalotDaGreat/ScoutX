@@ -52,6 +52,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # SCOUTX_DECODER is deliberately NOT set: stage 1 then decodes with OpenCV exactly as in every validated
 # CPU run. The NVDEC path (SCOUTX_DECODER=ffmpeg SCOUTX_HWACCEL=cuda) is an A/B variant in bench/gpu_matrix.py.
 
+# Triton compiles launch helpers during first GPU inference (including OCR), so
+# a C compiler and development headers are runtime requirements, not just build tools.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates "ffmpeg=${FFMPEG_VERSION}" libgl1 libglib2.0-0t64 \
        python3-venv build-essential \

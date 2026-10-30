@@ -1,0 +1,31 @@
+{
+  "scope": "Developer interval labels within 2035 s recording; not densely labelled full match",
+  "runs": {
+    "cpu": {
+      "allLabelledFrames": {
+        "abstained": 2120,
+        "correctClaim": 313,
+        "unmatchedClaim": 88,
+        "indeterminateLabelClaim": 131
+      },
+      "targetVisibleLabelledFrames": {
+        "abstained": 160,
+        "correctClaim": 313,
+        "unmatchedClaim": 31
+      }
+    },
+    "gpu": {
+      "allLabelledFrames": {
+        "indeterminateLabelClaim": 136,
+        "unmatchedClaim": 80,
+        "abstained": 2187,
+        "correctClaim": 249
+      },
+      "targetVisibleLabelledFrames": {
+        "abstained": 229,
+        "correctClaim": 249,
+        "unmatchedClaim": 26
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "initialInstanceQuery": "TLS EOF; discarded, successful retry used",
+  "project": "scoutx-230b0",
+  "disks": [],
+  "queryExitCodes": {
+    "instances": 0,
+    "snapshots": 0,
+    "disks": 0
+  },
+  "instances": [],
+  "createdResources": [],
+  "checkedAtUtc": "2026-10-30T20:46:36.2062777Z",
+  "snapshots": [],
+  "video": {
+    "verification": "One or more URLs matched no objects",
+    "object": "gs://scoutx-230b0-benchmarks/videos/IMG_4809_proxy_10fps.mp4",
+    "resultsRetained": true,
+    "deletedAfter": "77 non-media objects verified locally",
+    "deleteExit": 0
+  }
+}

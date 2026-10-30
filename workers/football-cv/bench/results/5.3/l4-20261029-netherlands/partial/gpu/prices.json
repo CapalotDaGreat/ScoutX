@@ -1,0 +1,23 @@
+{
+  "source": "Google Cloud Billing Catalog API, Compute Engine service 6F81-5844-456A, on-demand USD; no discounts or taxes",
+  "retrieved": "2026-10-29",
+  "region": "europe-west4",
+  "machine": "g2-standard-8 (8 vCPU, 32 GiB, 1 NVIDIA L4) + 200 GiB balanced persistent disk",
+  "components": {
+    "l4GpuUsdPerHour": 0.588630286,
+    "g2VcpuUsdPerHour": 0.02626386,
+    "g2RamUsdPerGibHour": 0.003076895,
+    "balancedPdUsdPerGbMonth": 0.11
+  },
+  "skuIds": {
+    "l4": "E975-984D-BEFA",
+    "cpu": "CB1A-E671-2608",
+    "ram": "8BFF-12ED-8AD9",
+    "disk": "5CFD-16B2-4F41"
+  },
+  "vmUsdPerHour": 0.9273387923013698,
+  "vmUsdPerHourFormula": "8*0.026263860 + 32*0.003076895 + 0.588630286 + 200*0.11/730",
+  "storageUsdPerGbMonth": 0.025,
+  "egressUsdPerGb": null,
+  "egressNote": "Source bucket remains in Zurich; cross-region video transfer is additional and is not included. Storage rate retained from Zurich snapshot, not reverified for this session."
+}

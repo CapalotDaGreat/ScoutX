@@ -46,6 +46,32 @@ EXIT_FAILED, EXIT_GATE, EXIT_VERIFY, EXIT_MISMATCH, EXIT_DISK = 2, 3, 4, 5, 6
 STAGE1_IMGSZ, STAGE1_STRIDE = 1280, 1
 
 
+def peak_rss_mib() -> float:
+    """Peak resident memory, including Windows where resource is unavailable."""
+    if sys.platform == 'win32':
+        import ctypes
+        from ctypes import wintypes
+
+        class Counters(ctypes.Structure):
+            _fields_ = [('cb', wintypes.DWORD), ('PageFaultCount', wintypes.DWORD)] + [
+                (name, ctypes.c_size_t) for name in ('PeakWorkingSetSize', 'WorkingSetSize', 'QuotaPeakPagedPoolUsage',
+                    'QuotaPagedPoolUsage', 'QuotaPeakNonPagedPoolUsage', 'QuotaNonPagedPoolUsage',
+                    'PagefileUsage', 'PeakPagefileUsage')]
+        kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel.GetCurrentProcess.restype = wintypes.HANDLE
+        psapi = ctypes.WinDLL('psapi', use_last_error=True)
+        psapi.GetProcessMemoryInfo.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]
+        psapi.GetProcessMemoryInfo.restype = wintypes.BOOL
+        counters = Counters()
+        counters.cb = ctypes.sizeof(counters)
+        if not psapi.GetProcessMemoryInfo(kernel.GetCurrentProcess(), ctypes.byref(counters), counters.cb):
+            raise ctypes.WinError(ctypes.get_last_error())
+        return round(counters.PeakWorkingSetSize / 2**20, 1)
+    import resource
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return round(peak / (2**20 if sys.platform == 'darwin' else 1024), 1)
+
+
 class GpuSampler:
     """Polls nvidia-smi once per second: whole-device memory in use (covers torch, ONNX Runtime and the
     OCR models, unlike torch's allocator counters) and utilisation."""
@@ -319,12 +345,10 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
             else:
                 g = pp_bench.evaluate_gate(record["accuracy"], gate, (baseline or {}).get("accuracy"))
                 agr = (record.get("comparison") or {}).get("agreement")
-                for field, rule in gate.get("agreementWithBaseline", {}).items():
-                    if agr is None:
-                        continue
-                    v = agr.get(field)
-                    if v is not None and v < rule["min"]:
-                        g["failures"].append(f"{field} = {v} < min {rule['min']}")
+                if baseline is not None:
+                    if not baseline.get("accuracy"):
+                        g["failures"].append("baseline accuracy: missing")
+                    g["failures"].extend(pp_bench.agreement_failures(agr, gate))
                 g["passed"] = not g["failures"]
                 record["gate"] = g
             if not record["gate"]["passed"]:
@@ -351,9 +375,7 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
                                                  storage={"gb": round(record["input"]["sizeBytes"] / 1e9, 3), "days": 1},
                                                  video_sec=duration if not reused else None)
         record["gpuSampling"] = gpu.stop()
-        import resource  # noqa: PLC0415
-
-        record["peakRssMiB"] = round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024, 1)
+        record["peakRssMiB"] = peak_rss_mib()
         if cuda:
             record["peakTorchAllocatedGpuMiB"] = round(torch.cuda.max_memory_allocated() / 2**20, 2)
         save()

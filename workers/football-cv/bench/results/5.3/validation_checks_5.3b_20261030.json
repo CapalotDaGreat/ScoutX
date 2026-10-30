@@ -1,0 +1,35 @@
+{
+  "schema": "pitchproof.validation-checks.v1",
+  "branch": "codex/gpu-benchmark-5-3",
+  "baseCommit": "883229e86edb2fe8d49aceec8aea7b62e0119b33",
+  "worker": {
+    "command": "python -m pytest -q -rs",
+    "passed": 579,
+    "skipped": 0,
+    "warnings": 3,
+    "wallSec": 59.55,
+    "python": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-validation-runtime-20261030\\Scripts\\python.exe",
+    "environment": {
+      "SCOUTX_WEIGHTS_DIR": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-models-20261030",
+      "OMP_NUM_THREADS": "2",
+      "MKL_NUM_THREADS": "2",
+      "ffmpeg": "9.0.2 on PATH"
+    }
+  },
+  "app": {
+    "command": "npm run test:unit",
+    "passed": 718,
+    "skipped": 0,
+    "failed": 0
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exitCode": 0
+  },
+  "diffCheck": {
+    "command": "git -c core.whitespace=cr-at-eol diff --cached --check -- . :(exclude)workers/football-cv/bench/results/5.3/**",
+    "exitCode": 0,
+    "scope": "Source/docs only; CRLF accepted, immutable raw historical artifacts excluded"
+  },
+  "historicalCounts": "Feature archive 544 collected; benchmark base archive 555 collected; local changes add 24 cases to 579 passed/0 skipped. Earlier 577 preceded two audit-report tests."
+}

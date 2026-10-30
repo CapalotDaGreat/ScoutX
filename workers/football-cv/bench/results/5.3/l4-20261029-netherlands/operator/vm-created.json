@@ -1,0 +1,132 @@
+{
+  "canIpForward": false,
+  "cpuPlatform": "Intel Cascade Lake",
+  "creationTimestamp": "2026-10-29T07:56:01.015-07:00",
+  "deletionProtection": false,
+  "disks": [
+    {
+      "autoDelete": true,
+      "boot": true,
+      "deviceName": "persistent-disk-0",
+      "diskSizeGb": "200",
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "index": 0,
+      "interface": "NVME",
+      "kind": "compute#attachedDisk",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-dlvm",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-gvnic",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-py310",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-gpu-common-cu129",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-ubuntu-2204"
+      ],
+      "mode": "READ_WRITE",
+      "source": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/zones/europe-west4-c/disks/pitchproof-bench-l4-20261029-netherlands",
+      "type": "PERSISTENT"
+    }
+  ],
+  "fingerprint": "NEzWubpVr7w=",
+  "guestAccelerators": [
+    {
+      "acceleratorCount": 1,
+      "acceleratorType": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/zones/europe-west4-c/acceleratorTypes/nvidia-l4"
+    }
+  ],
+  "id": "5310493216444702831",
+  "kind": "compute#instance",
+  "labelFingerprint": "D529j8cGp-g=",
+  "labels": {
+    "purpose": "pitchproof-benchmark",
+    "run": "l4-20261029-netherlands"
+  },
+  "lastStartTimestamp": "2026-10-29T07:56:09.083-07:00",
+  "machineType": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/zones/europe-west4-c/machineTypes/g2-standard-8",
+  "metadata": {
+    "fingerprint": "Zn-5gxCJ98Q=",
+    "items": [
+      {
+        "key": "install-nvidia-driver",
+        "value": "True"
+      },
+      {
+        "key": "startup-script",
+        "value": "#!/bin/bash\n[ -f /var/pitchproof_started ] && exit 0; touch /var/pitchproof_started\nexec > >(tee -a /var/log/pitchproof.log) 2>&1      # also on the serial console (startup-script runner)\nset -x\nBOOT=$(date +%s)\nDEADLINE=$(( BOOT + (300 - 12) * 60 ))  # leave time for compare + upload before the hard delete\nshutdown -h +$(( 300 - 5 )) \"pitchproof benchmark guest safeguard\" || true\nOUT=/data/out; mkdir -p $OUT /data/videos\necho 'ewogICJzb3VyY2UiOiAiR29vZ2xlIENsb3VkIEJpbGxpbmcgQ2F0YWxvZyBBUEksIENvbXB1dGUgRW5naW5lIHNlcnZpY2UgNkY4MS01ODQ0LTQ1NkEsIG9uLWRlbWFuZCBVU0Q7IG5vIGRpc2NvdW50cyBvciB0YXhlcyIsCiAgInJldHJpZXZlZCI6ICIyMDI2LTEwLTI5IiwKICAicmVnaW9uIjogImV1cm9wZS13ZXN0NCIsCiAgIm1hY2hpbmUiOiAiZzItc3RhbmRhcmQtOCAoOCB2Q1BVLCAzMiBHaUIsIDEgTlZJRElBIEw0KSArIDIwMCBHaUIgYmFsYW5jZWQgcGVyc2lzdGVudCBkaXNrIiwKICAiY29tcG9uZW50cyI6IHsKICAgICJsNEdwdVVzZFBlckhvdXIiOiAwLjU4ODYzMDI4NiwKICAgICJnMlZjcHVVc2RQZXJIb3VyIjogMC4wMjYyNjM4NiwKICAgICJnMlJhbVVzZFBlckdpYkhvdXIiOiAwLjAwMzA3Njg5NSwKICAgICJiYWxhbmNlZFBkVXNkUGVyR2JNb250aCI6IDAuMTEKICB9LAogICJza3VJZHMiOiB7CiAgICAibDQiOiAiRTk3NS05ODRELUJFRkEiLAogICAgImNwdSI6ICJDQjFBLUU2NzEtMjYwOCIsCiAgICAicmFtIjogIjhCRkYtMTJFRC04QUQ5IiwKICAgICJkaXNrIjogIjVDRkQtMTZCMi00RjQxIgogIH0sCiAgInZtVXNkUGVySG91ciI6IDAuOTI3MzM4NzkyMzAxMzY5OCwKICAidm1Vc2RQZXJIb3VyRm9ybXVsYSI6ICI4KjAuMDI2MjYzODYwICsgMzIqMC4wMDMwNzY4OTUgKyAwLjU4ODYzMDI4NiArIDIwMCowLjExLzczMCIsCiAgInN0b3JhZ2VVc2RQZXJHYk1vbnRoIjogMC4wMjUsCiAgImVncmVzc1VzZFBlckdiIjogbnVsbCwKICAiZWdyZXNzTm90ZSI6ICJTb3VyY2UgYnVja2V0IHJlbWFpbnMgaW4gWnVyaWNoOyBjcm9zcy1yZWdpb24gdmlkZW8gdHJhbnNmZXIgaXMgYWRkaXRpb25hbCBhbmQgaXMgbm90IGluY2x1ZGVkLiBTdG9yYWdlIHJhdGUgcmV0YWluZWQgZnJvbSBadXJpY2ggc25hcHNob3QsIG5vdCByZXZlcmlmaWVkIGZvciB0aGlzIHNlc3Npb24uIgp9Cg==' | base64 -d > $OUT/prices.json\nmkdir -p $OUT/gpu $OUT/cpu\ncp $OUT/prices.json $OUT/gpu/prices.json\ncp $OUT/prices.json $OUT/cpu/prices.json\nexport PRICES=/out/prices.json\nGS=\"gs://scoutx-230b0-benchmarks/results/l4-20261029-netherlands\"\nts() { echo \"\\\"$1\\\": \\\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\\\",\" >> /data/ts.txt; echo \"PHASE $1\"; }\ntsjson() { echo \"{ $(cat /data/ts.txt 2>/dev/null) \\\"end\\\": \\\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\\\" }\" > $OUT/timestamps.json; }\nstatus() { echo \"$1\" > $OUT/STATUS; gcloud storage cp $OUT/STATUS \"$GS/STATUS\" >/dev/null 2>&1; echo \"STATUS $1\"; }\nleft() { echo $(( DEADLINE - $(date +%s) )); }\nwait_ctl() {  # $1 = max seconds; prints the command (and deletes it) or \"finish\"\n  local end=$(( $(date +%s) + $1 ))\n  while [ $(date +%s) -lt $end ] && [ $(left) -gt 300 ]; do\n    c=$(gcloud storage cat \"$GS/control/next\" 2>/dev/null) && { gcloud storage rm \"$GS/control/next\" >/dev/null 2>&1; echo \"$c\"; return; }\n    sleep 30\n  done\n  echo finish\n}\nfinish() {\n  set +e\n  ts finished; tsjson\n  nvidia-smi > $OUT/nvidia-smi.txt 2>&1\n  df -h /data > $OUT/disk.txt 2>&1; free -m >> $OUT/disk.txt 2>&1\n  docker image inspect pitchproof-tracker-gpu:5.2 > $OUT/image_inspect.json 2>/dev/null\n  if docker image inspect pitchproof-tracker-gpu:5.2 >/dev/null 2>&1; then\n    docker run --rm -v $OUT:/out pitchproof-tracker-gpu:5.2 python bench/compare_runs.py --reference /out/cpu/full_match.json       --candidate /out/gpu/full_match.json --gate bench/gates/balanced_5.2.json --out /out/comparison.json\n    docker run --rm -v $OUT:/out pitchproof-tracker-gpu:5.2 python bench/vm_cost.py --timestamps /out/timestamps.json       --prices /out/prices.json --run cpu=/out/cpu/full_match.json --run gpu=/out/gpu/full_match.json       --out /out/cost_summary.json\n  fi\n  cp /var/log/pitchproof.log $OUT/run.log\n  rm -rf $OUT/cpu/work $OUT/gpu/work $OUT/matrix/*/full_match_work\n  gcloud storage cp -r $OUT/* \"$GS/\"\n  echo done | gcloud storage cp - \"$GS/_DONE\"\n  gcloud compute instances delete $(hostname) --zone europe-west4-c --quiet || shutdown -h now\n}\ntrap finish EXIT\nts vmBooted; status booting\n( while sleep 300; do tsjson; cp /var/log/pitchproof.log $OUT/run.log\n    gcloud storage rsync -r -x \".*/work/.*|.*_work/.*\" $OUT \"$GS/partial\" >/dev/null 2>&1; done ) &\nfor i in $(seq 1 120); do nvidia-smi >/dev/null 2>&1 && break; sleep 10; done\nnvidia-smi || { status driver_failed; exit 1; }\nts gpuReady; status driver_ready\ncommand -v docker >/dev/null || (curl -fsSL https://get.docker.com | sh)\nif ! docker info 2>/dev/null | grep -qi nvidia; then\n  curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg\n  curl -fsSL https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' > /etc/apt/sources.list.d/nvidia-container-toolkit.list\n  apt-get update && apt-get install -y nvidia-container-toolkit && nvidia-ctk runtime configure --runtime=docker && systemctl restart docker\nfi\ngit clone -b feature/player-tracking-v3 https://github.com/CapalotDaGreat/ScoutX.git /data/ScoutX\ncd /data/ScoutX\ngcloud storage cp \"gs://scoutx-230b0-benchmarks/videos/IMG_4809_proxy_10fps.mp4\" /data/videos/ && ts videoDownloaded\nVID=/data/videos/$(basename \"gs://scoutx-230b0-benchmarks/videos/IMG_4809_proxy_10fps.mp4\")\n# ---- build + verify (retry through the control channel after a fix is pushed)\nfor attempt in 1 2 3; do\n  git fetch -q origin feature/player-tracking-v3 && git reset -q --hard origin/feature/player-tracking-v3\n  git rev-parse HEAD > $OUT/commit.txt\n  status \"building attempt $attempt\"\n  if docker build -f workers/football-cv/Dockerfile.tracker-gpu --build-arg GIT_COMMIT=$(cat $OUT/commit.txt)        -t pitchproof-tracker-gpu:5.2 workers/football-cv > $OUT/build_$attempt.log 2>&1      && docker run --rm --gpus all pitchproof-tracker-gpu:5.2 python -m scoutx_tracker.envinfo --require-gpu --require-models > $OUT/envinfo_gpu.json; then\n    ts imageBuilt; status image_verified; break\n  fi\n  tail -60 $OUT/build_$attempt.log; cat $OUT/envinfo_gpu.json 2>/dev/null | tail -40\n  status \"build_or_verify_failed attempt $attempt - waiting for control (retry|finish)\"\n  gcloud storage cp $OUT/build_$attempt.log \"$GS/\" >/dev/null 2>&1; gcloud storage cp $OUT/envinfo_gpu.json \"$GS/\" >/dev/null 2>&1\n  [ \"$(wait_ctl 2400)\" = retry ] || exit 1\ndone\ndocker image inspect pitchproof-tracker-gpu:5.2 >/dev/null 2>&1 && [ \"$(cat $OUT/STATUS)\" = image_verified ] || exit 1\nexport SKIP_GPU_BUILD=1 NUMBER=\"20\" KIT=\"orange\" KIT2=\"white\" CHUNK_SEC=\"300\"\n\n\n# ---- GPU run (balanced, absolute gate; the CPU-relative gate is applied after the reference finishes)\nstatus gpu_run\nVM_TIMESTAMPS= bash workers/football-cv/bench/run_gpu_match.sh \"$VID\" $OUT/gpu; echo \"gpu exit $?\" | tee $OUT/gpu_exit.txt\nts gpuRunFinished; tsjson\n# ---- CPU reference in the same image, within the remaining budget\nBUDGET=$(( $(left) - 1200 ))\nif [ $BUDGET -gt 1200 ]; then\n  status \"cpu_reference budget ${BUDGET}s\"\n  CPU_REFERENCE=1 BENCH_TIMEOUT_SEC=$BUDGET bash workers/football-cv/bench/run_gpu_match.sh \"$VID\" $OUT/cpu\n  echo \"cpu exit $?\" | tee $OUT/cpu_exit.txt\nelse\n  echo \"cpu reference skipped: only $(left)s left\" | tee $OUT/cpu_exit.txt\nfi\nts cpuReferenceFinished; tsjson\ndocker run --rm -v $OUT:/out pitchproof-tracker-gpu:5.2 python bench/compare_runs.py --reference /out/cpu/full_match.json   --candidate /out/gpu/full_match.json --gate bench/gates/balanced_5.2.json --out /out/comparison.json; echo \"compare exit $?\"\ngcloud storage rsync -r -x \".*/work/.*|.*_work/.*\" $OUT \"$GS/partial\" >/dev/null 2>&1\n# ---- optional experiments (chosen from the measured bottleneck through the control channel)\nstatus \"waiting for control: experiments <list> | finish\"\nCMD=$(wait_ctl 1200)\ncase \"$CMD\" in experiments*)\n  # Relative accuracy gates are mandatory before spending time on optimisations.\n  grep -q '\"exitCode\": 0' $OUT/comparison.json 2>/dev/null || { status experiments_refused_without_passing_comparison; exit 1; }\n  V=$(echo \"$CMD\" | cut -d' ' -f2 | tr ',' ' ')\n  BASE=/out/gpu/full_match.json; grep -q '\"exitCode\": 0' $OUT/comparison.json 2>/dev/null && BASE=/out/cpu/full_match.json\n  status \"experiments $V (budget $(( $(left) - 300 ))s)\"\n  docker run --rm --gpus all --ipc=host -e HOME=/tmp -v /data/videos:/videos:ro -v $OUT:/out pitchproof-tracker-gpu:5.2     timeout --signal=INT --kill-after=120 $(( $(left) - 300 )) python bench/gpu_matrix.py --video \"/videos/$(basename \"$VID\")\"     --out-dir /out/matrix --baseline $BASE --prices /out/prices.json --gpu-reference /out/gpu/full_match.json --variants $V\n  echo \"matrix exit $?\"; ts experimentsFinished;;\nesac\nstatus finishing\n"
+      }
+    ],
+    "kind": "compute#metadata"
+  },
+  "name": "pitchproof-bench-l4-20261029-netherlands",
+  "networkInterfaces": [
+    {
+      "accessConfigs": [
+        {
+          "kind": "compute#accessConfig",
+          "name": "external-nat",
+          "natIP": "34.147.35.147",
+          "networkTier": "PREMIUM",
+          "type": "ONE_TO_ONE_NAT"
+        }
+      ],
+      "fingerprint": "nPcsxUfq3q0=",
+      "kind": "compute#networkInterface",
+      "name": "nic0",
+      "network": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/global/networks/default",
+      "networkIP": "10.164.0.4",
+      "stackType": "IPV4_ONLY",
+      "subnetwork": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/regions/europe-west4/subnetworks/default"
+    }
+  ],
+  "resourceStatus": {
+    "effectiveInstanceMetadata": {
+      "vmDnsSettingMetadataValue": "ZonalOnly"
+    },
+    "scheduling": {
+      "terminationTimestamp": "2026-10-29T19:56:02.353865Z"
+    }
+  },
+  "satisfiesPzi": false,
+  "scheduling": {
+    "automaticRestart": true,
+    "instanceTerminationAction": "DELETE",
+    "maxRunDuration": {
+      "nanos": 0,
+      "seconds": "18000"
+    },
+    "onHostMaintenance": "TERMINATE",
+    "preemptible": false,
+    "provisioningModel": "STANDARD"
+  },
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/zones/europe-west4-c/instances/pitchproof-bench-l4-20261029-netherlands",
+  "serviceAccounts": [
+    {
+      "email": "141939766260-compute@developer.gserviceaccount.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/cloud-platform"
+      ]
+    }
+  ],
+  "shieldedInstanceConfig": {
+    "enableIntegrityMonitoring": true,
+    "enableSecureBoot": false,
+    "enableVtpm": true
+  },
+  "shieldedInstanceIntegrityPolicy": {
+    "updateAutoLearnPolicy": true
+  },
+  "startRestricted": false,
+  "status": "RUNNING",
+  "tags": {
+    "fingerprint": "42WmSpB8rSM="
+  },
+  "zone": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/zones/europe-west4-c"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "pitchproof.test-collection-reconciliation.v1",
+  "environment": "Python 3.12.10 restored Windows CPU overlay; collect-only, no historical outcome inferred",
+  "command": "python -m pytest --collect-only -q <immutable archive>/workers/football-cv/tests",
+  "collections": [
+    {
+      "commit": "3b8f3bb",
+      "branch": "feature/player-tracking-v3",
+      "collected": 544,
+      "wallSec": 19.12
+    },
+    {
+      "commit": "883229e",
+      "branch": "codex/gpu-benchmark-5-3 base",
+      "collected": 555,
+      "wallSec": 16.34
+    },
+    {
+      "commit": "working tree after local changes",
+      "collected": 579,
+      "passed": 579,
+      "skipped": 0
+    }
+  ],
+  "interpretation": "Four newer commits add 11 collected cases; local changes add 24 more. Base total 555 agrees with reported 550 passed+5 skipped. Earlier 543 passed outcome lacks command/skip details; not proof of removed tests."
+}

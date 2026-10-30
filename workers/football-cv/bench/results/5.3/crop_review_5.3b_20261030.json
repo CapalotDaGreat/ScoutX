@@ -1,0 +1,90 @@
+{
+  "schema": "pitchproof.crop-review.v1",
+  "scope": "Two previously examined IMG_4809 development windows; reused detections/features, not end-to-end or full-match timing",
+  "productionSelected": false,
+  "windows": [
+    {
+      "window": "3144",
+      "durationSec": 45,
+      "jpeg": {
+        "bytes": 9386687,
+        "files": 1153,
+        "bytesPerVideoSec": 208593.04444444444
+      },
+      "png": {
+        "bytes": 37723799,
+        "files": 1153,
+        "bytesPerVideoSec": 838306.6444444444
+      },
+      "jpegOcrSec": [
+        0.2
+      ],
+      "pngOcrSec": [
+        62.4
+      ],
+      "ocrTimingNote": "Reported numbers stage; later assisted condition may reuse OCR caches; different crop/recognition opportunity counts; not a codec-only speed benchmark",
+      "freshJpegNumbersStageSec": [
+        40.3
+      ],
+      "newCachePngNumbersStageSec": [
+        66.7
+      ]
+    },
+    {
+      "window": "1073",
+      "durationSec": 35,
+      "jpeg": {
+        "bytes": 11903434,
+        "files": 1182,
+        "bytesPerVideoSec": 340098.1142857143
+      },
+      "png": {
+        "bytes": 48712371,
+        "files": 1182,
+        "bytesPerVideoSec": 1391782.0285714285
+      },
+      "jpegOcrSec": [
+        0.2,
+        0.0
+      ],
+      "pngOcrSec": [
+        81.2,
+        0.2
+      ],
+      "ocrTimingNote": "Reported numbers stage; later assisted condition may reuse OCR caches; different crop/recognition opportunity counts; not a codec-only speed benchmark",
+      "freshJpegNumbersStageSec": [
+        59.2,
+        0.2
+      ],
+      "newCachePngNumbersStageSec": [
+        83.8,
+        0.2
+      ]
+    }
+  ],
+  "unmatchedTargetFrameReview": {
+    "timesSec": [
+      1901.2,
+      1903.9,
+      1904.0,
+      1904.3,
+      1904.4,
+      1904.5,
+      1904.6,
+      1904.7,
+      1904.9,
+      1905.0,
+      1905.1,
+      1905.2
+    ],
+    "method": "Side-by-side same-source body crops with upper 35 percent removed, claim versus existing target box; visual inspection",
+    "assessment": "Body/clothing continuity appears consistent with the existing target. Ground-truth geometry mismatch suspected. The existing T label already asserts target visibility; this does not independently validate claim boxes or resolve other unmatched claims.",
+    "labelsChanged": false,
+    "newIdentityLabels": 0,
+    "reason": "No new identities established independently; do not replace ground-truth boxes with model predictions",
+    "unmatchedRetained": 12,
+    "allWindowUnmatchedRetained": 125,
+    "localSheet": "C:\\ZLI\\M335\\ScoutX\\.local\\5.3b-owner-crops\\png-unmatched-bodies.png"
+  },
+  "coldTimingLimitation": "Fresh JPEG numbers stages 40.3/59.2 s; new-cache PNG 66.7/83.8 s, PNG windows ran concurrently, so not a controlled codec-only speed comparison"
+}

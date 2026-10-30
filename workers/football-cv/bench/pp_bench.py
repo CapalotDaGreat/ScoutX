@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import bisect
 import json
+import math
+from numbers import Real
 from pathlib import Path
 
 CLAIM = ("CONFIRMED_VISIBLE", "LIKELY_VISIBLE")
@@ -80,8 +82,8 @@ def evaluate_gate(acc: dict, gate: dict, baseline: dict | None = None) -> dict:
     failures, checks = [], []
     for field, rule in gate.get("absolute", {}).items():
         v = acc.get(field)
-        if v is None:
-            failures.append(f"{field}: missing")
+        if isinstance(v, bool) or not isinstance(v, Real) or not math.isfinite(v):
+            failures.append(f"{field}: missing or non-finite")
             continue
         if "max" in rule and v > rule["max"]:
             failures.append(f"{field} = {v} > max {rule['max']}")
@@ -91,8 +93,8 @@ def evaluate_gate(acc: dict, gate: dict, baseline: dict | None = None) -> dict:
     if baseline is not None:
         for field, rule in gate.get("relativeToBaseline", {}).items():
             v, b = acc.get(field), baseline.get(field)
-            if v is None or b is None:
-                failures.append(f"{field}: missing in run or baseline")
+            if any(isinstance(x, bool) or not isinstance(x, Real) or not math.isfinite(x) for x in (v, b)):
+                failures.append(f"{field}: missing or non-finite in run or baseline")
                 continue
             if "maxDrop" in rule and b - v > rule["maxDrop"] + 1e-9:
                 failures.append(f"{field} dropped {b} -> {v} (> {rule['maxDrop']})")
@@ -101,6 +103,17 @@ def evaluate_gate(acc: dict, gate: dict, baseline: dict | None = None) -> dict:
             checks.append(f"{field} vs baseline")
     return {"gate": gate.get("name"), "passed": not failures, "failures": failures, "checked": checks,
             "baselineUsed": baseline is not None}
+
+
+def agreement_failures(agreement: dict | None, gate: dict) -> list[str]:
+    failures = []
+    for field, rule in gate.get("agreementWithBaseline", {}).items():
+        value = (agreement or {}).get(field)
+        if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value):
+            failures.append(f"{field}: missing or non-finite")
+        elif value < rule["min"]:
+            failures.append(f"{field} = {value} < min {rule['min']}")
+    return failures
 
 
 # ---------------------------------------------------------------- run comparison
@@ -144,15 +157,32 @@ def comparable(a: dict, b: dict) -> list[str]:
 
 
 def claims_agreement(ca: list, cb: list, tol: float = 0.051) -> dict:
-    """Frame-level agreement of two claim timelines: same state, and for claimed frames the same box."""
+    """One-to-one timestamp matching; missing frames count against state agreement.
+
+    Box agreement remains conditional on both runs claiming a matched frame.
+    Coverage differences are reflected in state agreement over the timeline union.
+    """
+    if not math.isfinite(tol) or tol < 0:
+        raise ValueError("timestamp tolerance must be finite and nonnegative")
+    for timeline in (ca, cb):
+        times = [c[0] for c in timeline]
+        if any(not math.isfinite(t) or t < 0 for t in times) or len(set(times)) != len(times):
+            raise ValueError("claim timestamps must be finite, nonnegative and unique")
     bt = sorted(cb, key=lambda c: c[0])
     ts = [c[0] for c in bt]
     n = same_state = both_claim = same_box = only_a = only_b = 0
-    for t, s, box in ca:
-        k = bisect.bisect_left(ts, t - tol)
-        o = bt[k] if k < len(bt) and abs(bt[k][0] - t) <= tol else None
+    used = set()
+    missing_a = 0
+    for t, s, box in sorted(ca, key=lambda c: c[0]):
+        left, right = bisect.bisect_left(ts, t - tol), bisect.bisect_right(ts, t + tol)
+        candidates = [k for k in range(left, right) if k not in used]
+        k = min(candidates, key=lambda k: (abs(ts[k] - t), ts[k])) if candidates else None
+        o = bt[k] if k is not None else None
         if o is None:
+            missing_a += 1
+            only_a += s in CLAIM
             continue
+        used.add(k)
         n += 1
         same_state += s == o[1]
         ca_, cb_ = s in CLAIM, o[1] in CLAIM
@@ -161,7 +191,12 @@ def claims_agreement(ca: list, cb: list, tol: float = 0.051) -> dict:
             same_box += iou(box, o[2]) >= 0.5
         only_a += ca_ and not cb_
         only_b += cb_ and not ca_
-    return {"framesCompared": n, "stateAgreement": round(same_state / n, 4) if n else None,
+    missing_b = len(bt) - len(used)
+    only_b += sum(c[1] in CLAIM for k, c in enumerate(bt) if k not in used)
+    union = n + missing_a + missing_b
+    return {"framesCompared": n, "framesInUnion": union,
+            "unmatchedInFirst": missing_a, "unmatchedInSecond": missing_b,
+            "stateAgreement": round(same_state / union, 4) if union else None,
             "boxAgreementWhenBothClaim": round(same_box / both_claim, 4) if both_claim else None,
             "claimedOnlyInFirst": only_a, "claimedOnlyInSecond": only_b}
 

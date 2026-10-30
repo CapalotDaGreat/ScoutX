@@ -93,6 +93,37 @@ def test_claims_agreement():
     assert r["boxAgreementWhenBothClaim"] == 0.5 and r["claimedOnlyInSecond"] == 1
 
 
+@pytest.mark.parametrize('invalid', [None, float('nan'), float('inf'), float('-inf'), True, '0'])
+def test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics(invalid):
+    gate = {'absolute': {'wrongIdentitySec': {'max': 0}},
+            'relativeToBaseline': {'IDF1': {'maxDrop': 0.01}},
+            'agreementWithBaseline': {'stateAgreement': {'min': 0.97}}}
+    assert not pp_bench.evaluate_gate({'wrongIdentitySec': invalid}, gate)['passed']
+    for acc, base in [({'IDF1': invalid}, {'IDF1': 0.9}), ({'IDF1': 0.9}, {'IDF1': invalid})]:
+        assert not pp_bench.evaluate_gate({'wrongIdentitySec': 0, **acc}, gate, base)['passed']
+    assert pp_bench.agreement_failures({'stateAgreement': invalid}, gate)
+
+
+def test_missing_timeline_frames_cannot_look_like_perfect_agreement():
+    timeline = [[i / 10, 'LIKELY_VISIBLE', [0, 0, 10, 10]] for i in range(10)]
+    for first, second in [(timeline, timeline[:1]), (timeline[:1], timeline)]:
+        result = pp_bench.claims_agreement(first, second)
+        assert result['framesCompared'] == 1 and result['framesInUnion'] == 10
+        assert result['stateAgreement'] == 0.1
+        assert result['claimedOnlyInFirst'] + result['claimedOnlyInSecond'] == 9
+
+
+def test_timestamp_agreement_uses_nearest_match_once():
+    claim = lambda t: [t, 'LIKELY_VISIBLE', [0, 0, 10, 10]]
+    other = [[0.049, 'AMBIGUOUS', [0, 0, 10, 10]], claim(0.1)]
+    assert pp_bench.claims_agreement([claim(0.1)], other)['claimedOnlyInFirst'] == 0
+    result = pp_bench.claims_agreement([claim(0.0), claim(0.05)], [claim(0.02)])
+    assert result['framesCompared'] == 1 and result['stateAgreement'] == 0.5
+    for bad in [[claim(float('nan'))], [claim(0), claim(0)]]:
+        with pytest.raises(ValueError, match='timestamps'):
+            pp_bench.claims_agreement(bad, [])
+
+
 # ------------------------------------------------------------------ cost
 
 PRICES = {"vmUsdPerHour": 1.2, "storageUsdPerGbMonth": 0.025, "egressUsdPerGb": None, "source": "test"}
@@ -120,6 +151,23 @@ def test_vm_overheads_from_timestamps():
     assert fmb.vm_overheads(ts) == {"uptimeSec": 3600.0, "driverWaitSec": 120.0, "imageBuildSec": 600.0, "videoDownloadSec": 60.0}
     assert fmb.chunk_bounds(650.0, 300) == [(0, 0.0, 300.0), (1, 300.0, 600.0), (2, 600.0, 650.0)]
     assert fmb.chunk_bounds(600.0, 300) == [(0, 0.0, 300.0), (1, 300.0, 600.0)]
+
+
+def test_peak_process_memory_available_on_this_platform():
+    import full_match_benchmark as fmb
+    assert fmb.peak_rss_mib() > 0
+
+
+@pytest.mark.parametrize('platform,peak', [('linux', 65536), ('darwin', 67108864)])
+def test_peak_memory_units_match_platform(monkeypatch, platform, peak):
+    from types import SimpleNamespace
+    import full_match_benchmark as fmb
+    with monkeypatch.context() as patch:
+        patch.setattr(fmb.sys, 'platform', platform)
+        patch.setitem(sys.modules, 'resource', SimpleNamespace(RUSAGE_SELF=0,
+            getrusage=lambda _: SimpleNamespace(ru_maxrss=peak)))
+        actual = fmb.peak_rss_mib()
+    assert actual == 64.0
 
 
 # ------------------------------------------------------------------ checkpoints
@@ -285,3 +333,7 @@ def test_compare_runs_gate_speedup_and_incomplete_reference():
     other = _run_rec("cuda", acc=acc)
     other["input"]["videoStreamSha256"] = "different"
     assert compare_runs.compare(cpu, other, claims, claims, gate)[1] == 5
+    failed_candidate = _run_rec('cuda', status='interrupted', acc=acc, complete=False)
+    result, code = compare_runs.compare(cpu, failed_candidate, claims, claims, gate)
+    assert code == 7 and result['result'].startswith('INCOMPLETE')
+    assert 'speedup' not in result

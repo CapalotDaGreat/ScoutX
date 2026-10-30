@@ -1,0 +1,245 @@
+{
+  "schema": "pitchproof.full-match-benchmark.v2",
+  "status": "interrupted",
+  "timestampUtc": "2026-10-29T15:07:30.161552+00:00",
+  "target": {
+    "number": "20",
+    "kit": "orange",
+    "kit2": "white"
+  },
+  "notes": [
+    "Single sequential worker; not a Cloud Tasks / parallel-segment test.",
+    "firstPlayable = time after model initialisation, not upload-to-play latency.",
+    "No footage, crops or images are written to this JSON or the claims file."
+  ],
+  "environment": {
+    "python": "3.13.17",
+    "platform": "Linux-6.8.0-1070-gcp-x86_64-with-glibc2.39",
+    "cpuCores": 8,
+    "packages": {
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "4.14.0.94",
+      "opencv-python-headless": "4.14.0.94",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime-gpu": "1.29.0",
+      "av": "19.0.2",
+      "pillow": "12.3.0",
+      "fastapi": "0.162.0",
+      "pydantic": "2.13.5"
+    },
+    "torch": {
+      "version": "2.14.1+cu130",
+      "cuda": "13.0",
+      "cudaAvailable": false,
+      "cudnn": 92400
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "TensorrtExecutionProvider",
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "4.14.0",
+      "videoIO": [
+        "FFMPEG:                      YES",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+    "nvidiaSmi": null,
+    "driverMajor": null,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": "3b8f3bbded2b12c5fe020d95ef8b1270df107aa7",
+      "built": "2026-10-29T14:59:39Z",
+      "baseImage": "ubuntu:24.04",
+      "lockSha256": "7a7dfa9601658ffe0c00fb403f95e60c46d2badd482bc41bfdaf6824f3e96389"
+    },
+    "scoutxEnv": {
+      "SCOUTX_BACKEND": "auto",
+      "SCOUTX_BASE_IMAGE": "ubuntu:24.04",
+      "SCOUTX_DETECTOR": "yolox_s",
+      "SCOUTX_DISCOVERY_DET": "416",
+      "SCOUTX_GIT_COMMIT": "3b8f3bbded2b12c5fe020d95ef8b1270df107aa7",
+      "SCOUTX_IMAGE_BUILT": "2026-10-29T14:59:39Z",
+      "SCOUTX_LOCK_SHA256": "7a7dfa9601658ffe0c00fb403f95e60c46d2badd482bc41bfdaf6824f3e96389",
+      "SCOUTX_MODE": "balanced",
+      "SCOUTX_WEIGHTS_DIR": "/opt/models/yolox"
+    }
+  },
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "/opt/models/yolox/yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "/opt/models/easyocr/model/craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "/opt/models/easyocr/model/english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "/opt/models/doctr/models/parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "input": {
+    "basename": "IMG_4809_proxy_10fps.mp4",
+    "container": "mov,mp4,m4a,3gp,3g2,mj2",
+    "codec": "h264",
+    "profile": "High 10",
+    "pixFmt": "yuv420p10le",
+    "colorTransfer": "arib-std-b67",
+    "colorPrimaries": "bt2020",
+    "colorSpace": "bt2020nc",
+    "hdr": "HLG",
+    "width": 1920,
+    "height": 1080,
+    "rotation": null,
+    "fps": 10.0,
+    "avgFps": 10.0,
+    "frames": 20350,
+    "durationSec": 2035.0,
+    "sizeBytes": 1413632177,
+    "bitRate": 5557276,
+    "sha256": "007cd4e55f918b934f20401f3fa7621a51d5a44156cda03a62f72588195bf9aa",
+    "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b",
+    "referenceMatch": {
+      "isReference": true,
+      "reference": "IMG_4809 10 fps proxy (validated reference)",
+      "sameFileBytes": false,
+      "differences": {}
+    }
+  },
+  "groundTruth": {
+    "file": "gt_img4809_intervals.json",
+    "sha256": "36b16fbae5091ca524f1c47c697e56db6da2d191e79dc0ab4f880815dc995078"
+  },
+  "configuration": {
+    "chunkSec": 300,
+    "mode": "balanced",
+    "stage1Settings": {
+      "engine": "5.2.0",
+      "env": {
+        "SCOUTX_DETECTOR": "yolox_s",
+        "SCOUTX_BACKEND": "auto",
+        "SCOUTX_DECODER": null,
+        "SCOUTX_HWACCEL": null,
+        "SCOUTX_KEYFRAME_EVERY": null,
+        "SCOUTX_PROP_SCORE_CAP": null,
+        "SCOUTX_BATCH": null,
+        "SCOUTX_ORT_PROVIDERS": null,
+        "SCOUTX_OCR_ENHANCE": null
+      },
+      "packages": {
+        "torch": "2.14.1",
+        "opencv-python": "4.14.0.94",
+        "opencv-python-headless": "4.14.0.94",
+        "numpy": "2.5.3",
+        "onnxruntime": null,
+        "onnxruntime-gpu": "1.29.0"
+      },
+      "imgsz": 1280,
+      "stride": 1,
+      "discoveryImgsz": 416,
+      "device": "cpu"
+    },
+    "stage1Fingerprint": "4d56ec05559190ec7c1ad5e2321865f7a003299282788fb8f21fa47893fd1c06",
+    "resumePolicy": "fail",
+    "retries": 1
+  },
+  "stages": {
+    "cleanupBefore": [],
+    "modelInitialization": {
+      "wallSec": 10.095,
+      "discoveryDetector": "yolox_s@416/onnx",
+      "discoveryDetectorOnGpu": false
+    }
+  },
+  "error": {
+    "type": "Interrupted",
+    "message": "stopped by time budget or operator"
+  },
+  "timing": {
+    "measuredTotalWallSec": 208.951,
+    "timingComplete": true,
+    "note": null,
+    "videoSecondsPerWallSecond": 9.7391
+  },
+  "cost": {
+    "status": "estimate",
+    "label": "ESTIMATE from list prices x measured durations - not an invoice charge",
+    "currency": "USD",
+    "prices": {
+      "source": "Google Cloud Billing Catalog API, Compute Engine service 6F81-5844-456A, on-demand USD; no discounts or taxes",
+      "retrieved": "2026-10-29",
+      "region": "europe-west4",
+      "machine": "g2-standard-8 (8 vCPU, 32 GiB, 1 NVIDIA L4) + 200 GiB balanced persistent disk",
+      "components": {
+        "l4GpuUsdPerHour": 0.588630286,
+        "g2VcpuUsdPerHour": 0.02626386,
+        "g2RamUsdPerGibHour": 0.003076895,
+        "balancedPdUsdPerGbMonth": 0.11
+      },
+      "skuIds": {
+        "l4": "E975-984D-BEFA",
+        "cpu": "CB1A-E671-2608",
+        "ram": "8BFF-12ED-8AD9",
+        "disk": "5CFD-16B2-4F41"
+      },
+      "vmUsdPerHour": 0.9273387923013698,
+      "vmUsdPerHourFormula": "8*0.026263860 + 32*0.003076895 + 0.588630286 + 200*0.11/730",
+      "storageUsdPerGbMonth": 0.025,
+      "egressUsdPerGb": null,
+      "egressNote": "Source bucket remains in Zurich; cross-region video transfer is additional and is not included. Storage rate retained from Zurich snapshot, not reverified for this session."
+    },
+    "measuredComputeSec": 209.0,
+    "computeUsd": 0.0538,
+    "storage": {
+      "gb": 1.414,
+      "days": 1,
+      "usd": 0.0012
+    },
+    "recurringPerMatchEstimate": {
+      "basis": "measured compute seconds per video second on THIS recording x match length; warm worker with the image already built (no VM boot/build); excludes storage, queueing and idle capacity",
+      "computeSecPerVideoSec": 0.1027,
+      "34min": {
+        "computeSec": 209.5,
+        "usd": 0.054
+      },
+      "90min": {
+        "computeSec": 554.5,
+        "usd": 0.1428
+      },
+      "140min": {
+        "computeSec": 862.5,
+        "usd": 0.2222
+      }
+    }
+  },
+  "gpuSampling": {
+    "status": "not_sampled"
+  },
+  "peakRssMiB": 1511.6
+}

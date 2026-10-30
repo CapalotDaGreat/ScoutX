@@ -1,0 +1,397 @@
+{
+  "schema": "pitchproof.cloud-download-verification.v1",
+  "expectedNonMediaObjects": 77,
+  "missing": [],
+  "completeRuns": [
+    "gpu",
+    "cpu"
+  ],
+  "downloadTransport": "gcloud storage rsync; object hashes checked by CLI",
+  "objects": [
+    {
+      "file": "Dockerfile.compiler",
+      "bytes": 209,
+      "sha256": "cec8ebdb29e7648221d27d0b652bb25d0f1e92916108a16b6344c21acc1cd300"
+    },
+    {
+      "file": "STATUS",
+      "bytes": 10,
+      "sha256": "47b0f97a5b6b15d85e1252070f25827cad4c3a9ab27ea8691337b58a847adfe8"
+    },
+    {
+      "file": "_DONE",
+      "bytes": 5,
+      "sha256": "d117fa006ba9208500b2930ce69cbde436c647afa917cb7396a9bc9111a46dd2"
+    },
+    {
+      "file": "benchmark-recovery-runner.sh",
+      "bytes": 1455,
+      "sha256": "7e9eb5f8332fc77cc24bb2225e50e33801b4fae9ea7faa5c47790cc3b77b0a64"
+    },
+    {
+      "file": "build_1.log",
+      "bytes": 113958,
+      "sha256": "1865fe7b95cf8d657fba3936cc4ad663ddb5d4d9c0dcf228df054dd4fec928fb"
+    },
+    {
+      "file": "commit.txt",
+      "bytes": 41,
+      "sha256": "f31b2d2c91bbbb20d31d44f092d7ea481940dc1daba431622f8f0e915c161472"
+    },
+    {
+      "file": "compiler-build.log",
+      "bytes": 30007,
+      "sha256": "42338963fd621b1ebb2d48e9a7f15be3d6e0d79875b1532929caa797d5cfc81c"
+    },
+    {
+      "file": "compiler-recovery.sh",
+      "bytes": 1039,
+      "sha256": "eea52f0d0beb27607ebc5fecec8f7660283b6c8cef619032065193eb82dfb57a"
+    },
+    {
+      "file": "cpu_exit.txt",
+      "bytes": 11,
+      "sha256": "c3f7cbe91095b55eed0a799d2a48693ad38ce316ded27af1719874cb09cf368f"
+    },
+    {
+      "file": "cpu_retry_exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "disk.txt",
+      "bytes": 296,
+      "sha256": "5931c7f908407598654d2317469c011e8522ffb3049f8e5acf2390fa03a3b67d"
+    },
+    {
+      "file": "envinfo_gpu.json",
+      "bytes": 3491,
+      "sha256": "aec7a9fd0dda965b58ecadd10e89a04faddc5dda85b81974005853fe088296e5"
+    },
+    {
+      "file": "gpu_exit.txt",
+      "bytes": 11,
+      "sha256": "1d1abe7193958051ac090559ec38fede20330155125f35392853db077f187a89"
+    },
+    {
+      "file": "gpu_retry_exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "image_inspect.json",
+      "bytes": 4698,
+      "sha256": "95bf4e15e749223f7180fff3be911a96ca0062c3fe0021c359078c0d1fdccaab"
+    },
+    {
+      "file": "nvidia-smi.txt",
+      "bytes": 1689,
+      "sha256": "63baf5d4e6e055055d21325503e1eaa65d071f148926a9c22511a33ba1ca2927"
+    },
+    {
+      "file": "prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "recovery.log",
+      "bytes": 10204,
+      "sha256": "fb5264beb83359046c59e4f2da15bc60c5d96ef6e5fcd8a8ec4fe9c7ca398b06"
+    },
+    {
+      "file": "recovery_timestamps.json",
+      "bytes": 287,
+      "sha256": "760ef24b11b611bf41e309b246bd516758d87b28d8083e025c3c56d27faa4eb1"
+    },
+    {
+      "file": "run.log",
+      "bytes": 36539,
+      "sha256": "ec307b5b34a919d5f32a5601edf44045456e990ddd4bdf6fb93498692b86b097"
+    },
+    {
+      "file": "timestamps.json",
+      "bytes": 313,
+      "sha256": "c30578b1e84013bde1673dcbe60423aebcfe2f0850065341bc97bfc6d5483011"
+    },
+    {
+      "file": "cpu/envinfo.json",
+      "bytes": 3198,
+      "sha256": "f3b5f6548af888fc38834ceef098a828e58112d418366e5dac028663e1f6e0f2"
+    },
+    {
+      "file": "cpu/full_match.json",
+      "bytes": 15244,
+      "sha256": "e2f5ca86c5e6d2058574020a571b7e5e095247841bf00634b01f3cd1e60da3aa"
+    },
+    {
+      "file": "cpu/full_match_claims.json",
+      "bytes": 683965,
+      "sha256": "fed6e20178b85e2dbd2536363420590a90fd8e14fa2a33c884fd003cabdec803"
+    },
+    {
+      "file": "cpu/image.json",
+      "bytes": 607,
+      "sha256": "c1b36aaa9a801cfcaa7c0260ed698ff16b7eab6e225c3d4ba64541d4bf292b18"
+    },
+    {
+      "file": "cpu/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "cpu_interrupted_attempt1/envinfo.json",
+      "bytes": 3198,
+      "sha256": "f3b5f6548af888fc38834ceef098a828e58112d418366e5dac028663e1f6e0f2"
+    },
+    {
+      "file": "cpu_interrupted_attempt1/full_match.json",
+      "bytes": 7960,
+      "sha256": "b93bdb38f500ed28f91d4b0928035b8a657349895ec77ee97a077b591cd33476"
+    },
+    {
+      "file": "cpu_interrupted_attempt1/image.json",
+      "bytes": 566,
+      "sha256": "8ab8a07ee9c3491ba11b0980c32d35a1ec716b3ff608d5cc77432dba9cae5ed3"
+    },
+    {
+      "file": "cpu_interrupted_attempt1/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "gpu/envinfo.json",
+      "bytes": 3524,
+      "sha256": "f8389cb590f584cd71f74290f23b5d1bbc5da10c3521b4907e09f909e13b4e9c"
+    },
+    {
+      "file": "gpu/full_match.json",
+      "bytes": 15633,
+      "sha256": "c691aa10a03e945504c936bc095eeeadd7de9902bd5fdb7699c885edf4338849"
+    },
+    {
+      "file": "gpu/full_match_claims.json",
+      "bytes": 699310,
+      "sha256": "72798be3f15299b4ee998ef12b8b2271eccb7dcf1194017565bd5d0d0f5f167f"
+    },
+    {
+      "file": "gpu/image.json",
+      "bytes": 607,
+      "sha256": "c1b36aaa9a801cfcaa7c0260ed698ff16b7eab6e225c3d4ba64541d4bf292b18"
+    },
+    {
+      "file": "gpu/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "gpu_failed_attempt1/envinfo.json",
+      "bytes": 3524,
+      "sha256": "f8389cb590f584cd71f74290f23b5d1bbc5da10c3521b4907e09f909e13b4e9c"
+    },
+    {
+      "file": "gpu_failed_attempt1/full_match.json",
+      "bytes": 8462,
+      "sha256": "2e82ed2021e73d3a0de7356c4ee5f1d0b9ab3a9edfdddc0db4b307c6022f1d9d"
+    },
+    {
+      "file": "gpu_failed_attempt1/image.json",
+      "bytes": 566,
+      "sha256": "8ab8a07ee9c3491ba11b0980c32d35a1ec716b3ff608d5cc77432dba9cae5ed3"
+    },
+    {
+      "file": "gpu_failed_attempt1/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "operator/catalog-skus.json",
+      "bytes": 16826,
+      "sha256": "a61449254a5b1ec64c774e38d9971c98efa4f9351499ec4eb3174c00dd6fdab5"
+    },
+    {
+      "file": "operator/video-object.json",
+      "bytes": 563,
+      "sha256": "0efce7836200b15f00f384542ff9c5f01c7de4056e8000c10a65992d8acf9ecd"
+    },
+    {
+      "file": "operator/vm-created.json",
+      "bytes": 13002,
+      "sha256": "70c20bdcdf4e969ded578f3f559851496ebf4b25d0c007ad8c67bc2043a19d32"
+    },
+    {
+      "file": "partial/Dockerfile.compiler",
+      "bytes": 209,
+      "sha256": "cec8ebdb29e7648221d27d0b652bb25d0f1e92916108a16b6344c21acc1cd300"
+    },
+    {
+      "file": "partial/STATUS",
+      "bytes": 23,
+      "sha256": "3e39519f66ba4a9fb5094cbaff4351ed44d54ee3963444e1e5ce1ff1dca5432f"
+    },
+    {
+      "file": "partial/benchmark-recovery-runner.sh",
+      "bytes": 1455,
+      "sha256": "7e9eb5f8332fc77cc24bb2225e50e33801b4fae9ea7faa5c47790cc3b77b0a64"
+    },
+    {
+      "file": "partial/build_1.log",
+      "bytes": 113958,
+      "sha256": "1865fe7b95cf8d657fba3936cc4ad663ddb5d4d9c0dcf228df054dd4fec928fb"
+    },
+    {
+      "file": "partial/commit.txt",
+      "bytes": 41,
+      "sha256": "f31b2d2c91bbbb20d31d44f092d7ea481940dc1daba431622f8f0e915c161472"
+    },
+    {
+      "file": "partial/compiler-build.log",
+      "bytes": 30007,
+      "sha256": "42338963fd621b1ebb2d48e9a7f15be3d6e0d79875b1532929caa797d5cfc81c"
+    },
+    {
+      "file": "partial/compiler-recovery.sh",
+      "bytes": 1039,
+      "sha256": "eea52f0d0beb27607ebc5fecec8f7660283b6c8cef619032065193eb82dfb57a"
+    },
+    {
+      "file": "partial/cpu_exit.txt",
+      "bytes": 11,
+      "sha256": "c3f7cbe91095b55eed0a799d2a48693ad38ce316ded27af1719874cb09cf368f"
+    },
+    {
+      "file": "partial/cpu_retry_exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "partial/envinfo_gpu.json",
+      "bytes": 3491,
+      "sha256": "aec7a9fd0dda965b58ecadd10e89a04faddc5dda85b81974005853fe088296e5"
+    },
+    {
+      "file": "partial/gpu_exit.txt",
+      "bytes": 11,
+      "sha256": "1d1abe7193958051ac090559ec38fede20330155125f35392853db077f187a89"
+    },
+    {
+      "file": "partial/gpu_retry_exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "file": "partial/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "partial/recovery.log",
+      "bytes": 10204,
+      "sha256": "fb5264beb83359046c59e4f2da15bc60c5d96ef6e5fcd8a8ec4fe9c7ca398b06"
+    },
+    {
+      "file": "partial/recovery_timestamps.json",
+      "bytes": 287,
+      "sha256": "760ef24b11b611bf41e309b246bd516758d87b28d8083e025c3c56d27faa4eb1"
+    },
+    {
+      "file": "partial/run.log",
+      "bytes": 29816,
+      "sha256": "25cdf3ae0ecadacff702ef6b6b8849902da82336964b49d1c474b327354c1d1a"
+    },
+    {
+      "file": "partial/timestamps.json",
+      "bytes": 277,
+      "sha256": "dbd67c52bd847cf932a0327a0984f178c9dbaf6af31301ecd2c76e6ac33bb2ca"
+    },
+    {
+      "file": "partial/cpu/envinfo.json",
+      "bytes": 3198,
+      "sha256": "f3b5f6548af888fc38834ceef098a828e58112d418366e5dac028663e1f6e0f2"
+    },
+    {
+      "file": "partial/cpu/full_match.json",
+      "bytes": 15244,
+      "sha256": "e2f5ca86c5e6d2058574020a571b7e5e095247841bf00634b01f3cd1e60da3aa"
+    },
+    {
+      "file": "partial/cpu/full_match_claims.json",
+      "bytes": 683965,
+      "sha256": "fed6e20178b85e2dbd2536363420590a90fd8e14fa2a33c884fd003cabdec803"
+    },
+    {
+      "file": "partial/cpu/image.json",
+      "bytes": 607,
+      "sha256": "c1b36aaa9a801cfcaa7c0260ed698ff16b7eab6e225c3d4ba64541d4bf292b18"
+    },
+    {
+      "file": "partial/cpu/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "partial/cpu_interrupted_attempt1/envinfo.json",
+      "bytes": 3198,
+      "sha256": "f3b5f6548af888fc38834ceef098a828e58112d418366e5dac028663e1f6e0f2"
+    },
+    {
+      "file": "partial/cpu_interrupted_attempt1/full_match.json",
+      "bytes": 7960,
+      "sha256": "b93bdb38f500ed28f91d4b0928035b8a657349895ec77ee97a077b591cd33476"
+    },
+    {
+      "file": "partial/cpu_interrupted_attempt1/image.json",
+      "bytes": 566,
+      "sha256": "8ab8a07ee9c3491ba11b0980c32d35a1ec716b3ff608d5cc77432dba9cae5ed3"
+    },
+    {
+      "file": "partial/cpu_interrupted_attempt1/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "partial/gpu/envinfo.json",
+      "bytes": 3524,
+      "sha256": "f8389cb590f584cd71f74290f23b5d1bbc5da10c3521b4907e09f909e13b4e9c"
+    },
+    {
+      "file": "partial/gpu/full_match.json",
+      "bytes": 15633,
+      "sha256": "c691aa10a03e945504c936bc095eeeadd7de9902bd5fdb7699c885edf4338849"
+    },
+    {
+      "file": "partial/gpu/full_match_claims.json",
+      "bytes": 699310,
+      "sha256": "72798be3f15299b4ee998ef12b8b2271eccb7dcf1194017565bd5d0d0f5f167f"
+    },
+    {
+      "file": "partial/gpu/image.json",
+      "bytes": 607,
+      "sha256": "c1b36aaa9a801cfcaa7c0260ed698ff16b7eab6e225c3d4ba64541d4bf292b18"
+    },
+    {
+      "file": "partial/gpu/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    },
+    {
+      "file": "partial/gpu_failed_attempt1/envinfo.json",
+      "bytes": 3524,
+      "sha256": "f8389cb590f584cd71f74290f23b5d1bbc5da10c3521b4907e09f909e13b4e9c"
+    },
+    {
+      "file": "partial/gpu_failed_attempt1/full_match.json",
+      "bytes": 8462,
+      "sha256": "2e82ed2021e73d3a0de7356c4ee5f1d0b9ab3a9edfdddc0db4b307c6022f1d9d"
+    },
+    {
+      "file": "partial/gpu_failed_attempt1/image.json",
+      "bytes": 566,
+      "sha256": "8ab8a07ee9c3491ba11b0980c32d35a1ec716b3ff608d5cc77432dba9cae5ed3"
+    },
+    {
+      "file": "partial/gpu_failed_attempt1/prices.json",
+      "bytes": 961,
+      "sha256": "93084c7ec893b29264255ba28fe97ecd8963699c7b5f1dafb22c53128ca5bb33"
+    }
+  ]
+}

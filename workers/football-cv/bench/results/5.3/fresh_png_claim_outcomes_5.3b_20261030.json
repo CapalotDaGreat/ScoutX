@@ -1,0 +1,281 @@
+{
+  "schema": "pitchproof.claim-outcome-audit.v1",
+  "sourceSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+  "baselineManifestSha256": "d9b0c67d5517eeb685fe5fff61b5bec8dff95dac327af6a36e0fc4ebb09383db",
+  "auditCodeSha256": "89aee61e4268d4640674ba1277f04748590ece9b0e668322b2838cd9bea3cda6",
+  "rows": [
+    {
+      "window": "3144",
+      "codec": "jpeg",
+      "mode": "automatic",
+      "sourceOffsetSec": 1880.0,
+      "metrics": {
+        "targetLabelledSec": 5.4,
+        "claimedCorrectSec": 0.0,
+        "confirmedCorrectSec": 0.0,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.0,
+        "IDF1": 0.0,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 54,
+        "confirmedRecall": 0.0,
+        "abstentionRateOnVisibleLabels": 1.0
+      },
+      "outcomes": {
+        "allLabelledFrames": {
+          "abstained": 248
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 54
+        },
+        "frameDurationSec": 0.1,
+        "timelineSha256": "3f9ac2ec36c199290d16011ff3ba972636b42633855d758b336abc20fab36c8e",
+        "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+      },
+      "absoluteSafetyGate": {
+        "gate": "balanced-5.2",
+        "passed": true,
+        "failures": [],
+        "checked": [
+          "wrongIdentitySec",
+          "confirmedWrongIdentitySec",
+          "overlapAmbiguousSec"
+        ],
+        "baselineUsed": false
+      }
+    },
+    {
+      "window": "3144",
+      "codec": "png-experiment",
+      "mode": "automatic",
+      "sourceOffsetSec": 1880.0,
+      "metrics": {
+        "targetLabelledSec": 5.4,
+        "claimedCorrectSec": 4.0,
+        "confirmedCorrectSec": 2.6,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.741,
+        "IDF1": 0.851,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 2,
+        "confirmedRecall": 0.481,
+        "abstentionRateOnVisibleLabels": 0.037
+      },
+      "outcomes": {
+        "allLabelledFrames": {
+          "unmatchedClaim": 125,
+          "abstained": 83,
+          "correctClaim": 40
+        },
+        "targetVisibleLabelledFrames": {
+          "correctClaim": 40,
+          "abstained": 2,
+          "unmatchedClaim": 12
+        },
+        "frameDurationSec": 0.1,
+        "timelineSha256": "d570cfb62474500b618f48f87db26f5ca66c11602426653021e6586b929d3f32",
+        "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+      },
+      "absoluteSafetyGate": {
+        "gate": "balanced-5.2",
+        "passed": true,
+        "failures": [],
+        "checked": [
+          "wrongIdentitySec",
+          "confirmedWrongIdentitySec",
+          "overlapAmbiguousSec"
+        ],
+        "baselineUsed": false
+      }
+    },
+    {
+      "window": "1073",
+      "codec": "jpeg",
+      "mode": "automatic",
+      "sourceOffsetSec": 1050.0,
+      "metrics": {
+        "targetLabelledSec": 3.1,
+        "claimedCorrectSec": 0.0,
+        "confirmedCorrectSec": 0.0,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.0,
+        "IDF1": 0.0,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 31,
+        "confirmedRecall": 0.0,
+        "abstentionRateOnVisibleLabels": 1.0
+      },
+      "outcomes": {
+        "allLabelledFrames": {
+          "abstained": 83
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 31
+        },
+        "frameDurationSec": 0.1,
+        "timelineSha256": "1b8235ee3fc62cefd726d598df1f11f7a19c546c0e7dfe24fd196457f1ac170a",
+        "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+      },
+      "absoluteSafetyGate": {
+        "gate": "balanced-5.2",
+        "passed": true,
+        "failures": [],
+        "checked": [
+          "wrongIdentitySec",
+          "confirmedWrongIdentitySec",
+          "overlapAmbiguousSec"
+        ],
+        "baselineUsed": false
+      }
+    },
+    {
+      "window": "1073",
+      "codec": "jpeg",
+      "mode": "recorded-owner-anchor",
+      "sourceOffsetSec": 1050.0,
+      "metrics": {
+        "targetLabelledSec": 3.1,
+        "claimedCorrectSec": 0.4,
+        "confirmedCorrectSec": 0.4,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.129,
+        "IDF1": 0.229,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 27,
+        "confirmedRecall": 0.129,
+        "abstentionRateOnVisibleLabels": 0.871
+      },
+      "outcomes": {
+        "allLabelledFrames": {
+          "abstained": 79,
+          "correctClaim": 4
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 27,
+          "correctClaim": 4
+        },
+        "frameDurationSec": 0.1,
+        "timelineSha256": "e6254f7f536dffb79bbe626bf0c38b3501a7a47b6b90c44bb2bd8e8464a0969e",
+        "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+      },
+      "absoluteSafetyGate": {
+        "gate": "balanced-5.2",
+        "passed": true,
+        "failures": [],
+        "checked": [
+          "wrongIdentitySec",
+          "confirmedWrongIdentitySec",
+          "overlapAmbiguousSec"
+        ],
+        "baselineUsed": false
+      }
+    },
+    {
+      "window": "1073",
+      "codec": "png-experiment",
+      "mode": "automatic",
+      "sourceOffsetSec": 1050.0,
+      "metrics": {
+        "targetLabelledSec": 3.1,
+        "claimedCorrectSec": 0.0,
+        "confirmedCorrectSec": 0.0,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.0,
+        "IDF1": 0.0,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 31,
+        "confirmedRecall": 0.0,
+        "abstentionRateOnVisibleLabels": 1.0
+      },
+      "outcomes": {
+        "allLabelledFrames": {
+          "abstained": 83
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 31
+        },
+        "frameDurationSec": 0.1,
+        "timelineSha256": "e89e9b817e31bbf7ca13e448b95923ae51d5ffe08fa0179aab5e8602f1891bf2",
+        "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+      },
+      "absoluteSafetyGate": {
+        "gate": "balanced-5.2",
+        "passed": true,
+        "failures": [],
+        "checked": [
+          "wrongIdentitySec",
+          "confirmedWrongIdentitySec",
+          "overlapAmbiguousSec"
+        ],
+        "baselineUsed": false
+      }
+    },
+    {
+      "window": "1073",
+      "codec": "png-experiment",
+      "mode": "recorded-owner-anchor",
+      "sourceOffsetSec": 1050.0,
+      "metrics": {
+        "targetLabelledSec": 3.1,
+        "claimedCorrectSec": 0.4,
+        "confirmedCorrectSec": 0.4,
+        "wrongIdentitySec": 0.0,
+        "confirmedWrongIdentitySec": 0.0,
+        "overlapAmbiguousSec": 0.0,
+        "falseAttributionSec": 0.0,
+        "claimedRecall": 0.129,
+        "IDF1": 0.229,
+        "wrongIdentityTimes": [],
+        "abstainedVisibleFrames": 27,
+        "confirmedRecall": 0.129,
+        "abstentionRateOnVisibleLabels": 0.871
+      },
+      "outcomes": {
+        "allLabelledFrames": {
+          "abstained": 79,
+          "correctClaim": 4
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 27,
+          "correctClaim": 4
+        },
+        "frameDurationSec": 0.1,
+        "timelineSha256": "ef9a11a7a21756aa28598c4b51e267ed860f669b6979be6591645e368e924652",
+        "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+      },
+      "absoluteSafetyGate": {
+        "gate": "balanced-5.2",
+        "passed": true,
+        "failures": [],
+        "checked": [
+          "wrongIdentitySec",
+          "confirmedWrongIdentitySec",
+          "overlapAmbiguousSec"
+        ],
+        "baselineUsed": false
+      }
+    }
+  ],
+  "scope": "Previously examined labelled regressions; unmatched claims explicitly separated",
+  "productionSelected": false,
+  "fullRecordingValidated": false,
+  "promotionBlockers": [
+    "Unmatched claims require review",
+    "No independent/full-match/GPU validation of this crop candidate"
+  ]
+}

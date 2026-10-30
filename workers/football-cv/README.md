@@ -80,3 +80,9 @@ With any of the first two unset, every CV stage reports `unavailable` and the ap
 the frame review, which is labelled as such in the report. The flags alone are not enough: Cloud
 Functions also needs a verified approval compiled in (`functions/src/analysis/cvApproval.generated.ts`,
 currently `null`), and discards any response whose `workerVersion` or `models` differ from it.
+
+Current development evidence: [5.3b benchmark and accuracy report](../../docs/video/intelligence-5.3-gpu-benchmark-report.md).
+The narrow contact-entry guard removes the demonstrated fresh owner-assisted
+wrong-player interval; automatic acquisition still abstains on both development
+windows. The completed L4 candidate fails CPU-relative accuracy. PNG remains an
+offline experiment, and production approval flags remain unchanged.

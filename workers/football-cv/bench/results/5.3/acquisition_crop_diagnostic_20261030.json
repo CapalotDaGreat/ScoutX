@@ -1,0 +1,39 @@
+{
+  "timeSec": 1902.6,
+  "savedCrop": "000226_4746.jpg",
+  "readInNormalRun": true,
+  "cachedReadKind": "abstain",
+  "scope": "diagnostic only; no evidence injected into normal result",
+  "variants": {
+    "tight_raw": {
+      "shape": [
+        132,
+        66,
+        3
+      ],
+      "read": "target",
+      "confidence": 0.9999939203262329,
+      "band": "shirt:contrast"
+    },
+    "padded_raw": {
+      "shape": [
+        138,
+        78,
+        3
+      ],
+      "read": "target",
+      "confidence": 0.9488989949226379,
+      "band": "shirt:contrast"
+    },
+    "saved_padded_jpeg": {
+      "shape": [
+        138,
+        78,
+        3
+      ],
+      "read": "abstain",
+      "confidence": 0.0,
+      "band": null
+    }
+  }
+}

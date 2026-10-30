@@ -1,0 +1,37 @@
+{
+  "schema": "pitchproof.acquisition-evidence-manifest.v1",
+  "date": "2026-10-30",
+  "gitCommit": "883229e86edb2fe8d49aceec8aea7b62e0119b33",
+  "engineVersion": "5.2.0",
+  "workerTests": {
+    "passed": 575,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 3,
+    "wallSec": 65.59,
+    "logSha256": "c7dc6b5caf1c2211b96dbd0c09932e51be3003965f54c9f6ab53e31e66adba67"
+  },
+  "artifactSha256": {
+    "runtime_restored_20261030.json": "29fdf0f371fd484e72c19feb238f09e7fa89472ec8b0e6acbdc9e1e3aa475d2f",
+    "fresh_jpeg_windows_20261030.json": "ad06fb0e17b9ce4791335ff0e42dba017cca77faa1d13e38854d16635678d11a",
+    "lossless_3144_20261030.json": "1824211cf63a286e43bade974a069a5a653d37d36d3ca6b96c9b5063e7320e80",
+    "lossless_1073_20261030.json": "70cf2faaa3afccac9a82c615306b5291b9def54ae3548c485bb2419cfe8ffc5a",
+    "fresh_claim_outcomes_20261030.json": "ca9b48b2db16f32a554fb61888b35d6876018b8daeab06bcce9a6311f934ae86",
+    "acquisition_crop_diagnostic_20261030.json": "85a0c7295b48bc529de64225d0c37a18b53cccf763dbdffe26b5703dbdc4fc56"
+  },
+  "cloud": {
+    "cliVersion": "591.0.0",
+    "lastObservedActiveAccounts": 0,
+    "resourcesInspected": false,
+    "resourcesCreated": false
+  },
+  "milestoneAccepted": false,
+  "productionChangeSelected": false,
+  "fullRecordingValidated": false,
+  "blockers": [
+    "0.5 sec wrong likely attribution in fresh owner-assisted window",
+    "Unmatched claims require review",
+    "No independent representative multi-match evaluation",
+    "Cloud authentication pending; GPU run not executed"
+  ]
+}

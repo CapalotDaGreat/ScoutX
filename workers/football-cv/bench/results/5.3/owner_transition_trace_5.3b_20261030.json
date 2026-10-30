@@ -1,0 +1,204 @@
+{
+  "pieces": [
+    {
+      "k": 82,
+      "tid": 83,
+      "t0": 21.5,
+      "t1": 22.40000000000009,
+      "evidence": "anchored",
+      "edge": null,
+      "evidenceTimes": [],
+      "score": 0.40476361518661674,
+      "n": 10
+    },
+    {
+      "k": 243,
+      "tid": 244,
+      "t0": 22.700000000000045,
+      "t1": 23.200000000000045,
+      "evidence": "anchored",
+      "edge": null,
+      "evidenceTimes": [],
+      "score": 0.41911177183850645,
+      "n": 6
+    },
+    {
+      "k": 213,
+      "tid": 214,
+      "t0": 23.299999999999955,
+      "t1": 23.59999999999991,
+      "evidence": "anchor",
+      "edge": null,
+      "evidenceTimes": [
+        23.40000000000009
+      ],
+      "score": 1.0,
+      "n": 4
+    }
+  ],
+  "links": [
+    {
+      "pre": 186,
+      "post": 188,
+      "t": 23.2,
+      "clear": true,
+      "margin": 0.113,
+      "cost": 0.074,
+      "decision": "same"
+    },
+    {
+      "pre": 84,
+      "post": 255,
+      "t": 23.2,
+      "clear": false,
+      "margin": 0.077,
+      "cost": 0.102,
+      "decision": "unclear"
+    },
+    {
+      "pre": 211,
+      "post": 213,
+      "t": 23.2,
+      "clear": false,
+      "margin": 0.077,
+      "cost": 0.056,
+      "decision": "unclear"
+    },
+    {
+      "pre": 190,
+      "post": 192,
+      "t": 21.4,
+      "clear": true,
+      "margin": 0.117,
+      "cost": 0.032,
+      "decision": "same"
+    },
+    {
+      "pre": 202,
+      "post": 204,
+      "t": 21.4,
+      "clear": true,
+      "margin": 0.117,
+      "cost": 0.102,
+      "decision": "same"
+    },
+    {
+      "pre": 192,
+      "post": 194,
+      "t": 21.9,
+      "clear": true,
+      "margin": 0.215,
+      "cost": 0.027,
+      "decision": "same"
+    },
+    {
+      "pre": 204,
+      "post": 206,
+      "t": 21.9,
+      "clear": true,
+      "margin": 0.215,
+      "cost": 0.058,
+      "decision": "same"
+    },
+    {
+      "pre": 194,
+      "post": 196,
+      "t": 22.4,
+      "clear": true,
+      "margin": 0.115,
+      "cost": 0.046,
+      "decision": "same"
+    },
+    {
+      "pre": 206,
+      "post": 208,
+      "t": 22.4,
+      "clear": true,
+      "margin": 0.115,
+      "cost": 0.075,
+      "decision": "same"
+    },
+    {
+      "pre": 213,
+      "post": 215,
+      "t": 24.0,
+      "clear": false,
+      "margin": 0.03,
+      "cost": 0.07,
+      "decision": "unclear"
+    },
+    {
+      "pre": 244,
+      "post": 246,
+      "t": 24.0,
+      "clear": true,
+      "margin": 0.03,
+      "cost": 0.099,
+      "decision": "same"
+    },
+    {
+      "pre": 215,
+      "post": 217,
+      "t": 24.0,
+      "clear": false,
+      "margin": 0.111,
+      "cost": 0.086,
+      "decision": "unclear"
+    },
+    {
+      "pre": 217,
+      "post": 219,
+      "t": 24.6,
+      "clear": true,
+      "margin": 0.0,
+      "cost": 0.063,
+      "decision": "same"
+    },
+    {
+      "pre": 83,
+      "post": 244,
+      "t": 22.5,
+      "clear": true,
+      "margin": 0.0,
+      "cost": 0.105,
+      "decision": "same"
+    },
+    {
+      "pre": 246,
+      "post": 248,
+      "t": 24.7,
+      "clear": true,
+      "margin": 0.0,
+      "cost": 0.046,
+      "decision": "same"
+    },
+    {
+      "pre": 144,
+      "post": 284,
+      "t": 23.9,
+      "clear": false,
+      "margin": 0.0,
+      "cost": 0.0,
+      "decision": "unclear"
+    }
+  ],
+  "schema": "pitchproof.owner-contact-trace.v1",
+  "scope": "Pre-guard fresh JPEG development replay; times in pieces are window-local",
+  "sourceOffsetSec": 1050.0,
+  "anchorSourceSec": 1073.4,
+  "wrongLabelledSourceTimesSec": [
+    1072.7,
+    1072.8,
+    1072.9,
+    1073.0,
+    1073.1
+  ],
+  "interpretation": "Unrelated proximity handoff into contact allowed backward anchored evidence; no verified clear link from tid244 to tid214",
+  "currentFreshContactPreCheck": [
+    {
+      "contactTid": 214,
+      "predecessorTid": 213
+    }
+  ],
+  "currentFreshContactPreSource": "Fresh 5.3b 1073 stage1 and completed OCR cache, reassembled with current guard"
+}

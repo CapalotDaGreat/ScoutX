@@ -48,16 +48,14 @@ def compare(ref: dict, cand: dict, ref_claims: list | None, cand_claims: list | 
     if ref.get("status") not in ("complete", "gate_failed") or not ref.get("accuracy"):
         out["result"] = "INCOMPLETE: the reference run did not finish - only per-chunk stage-1 speed is compared"
         return out, 7
+    if cand.get("status") not in ("complete", "gate_failed") or not cand.get("accuracy"):
+        out["result"] = "INCOMPLETE: the candidate run did not finish or has no accuracy results"
+        return out, 7
     if ref_claims is not None and cand_claims is not None:
         out["agreement"] = pp_bench.claims_agreement(ref_claims, cand_claims)
     if gate:
         g = pp_bench.evaluate_gate(cand.get("accuracy") or {}, gate, ref.get("accuracy"))
-        for field, rule in gate.get("agreementWithBaseline", {}).items():
-            v = (out.get("agreement") or {}).get(field)
-            if v is None:
-                g["failures"].append(f"{field}: not available")
-            elif v < rule["min"]:
-                g["failures"].append(f"{field} = {v} < min {rule['min']}")
+        g["failures"].extend(pp_bench.agreement_failures(out.get("agreement"), gate))
         g["passed"] = not g["failures"]
         out["gate"] = g
         out["result"] = "PASSED" if g["passed"] else "FAILED"
