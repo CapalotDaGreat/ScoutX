@@ -1,0 +1,194 @@
+{
+  "profile": "cpu-torch",
+  "settings": {
+    "device": "cpu",
+    "backend": "torch",
+    "half": false,
+    "batch": 1
+  },
+  "probeSha256": "ecad7efd96ccdb13713005b825ea1b2d744ed65ab6c64ea0590c644989958fd2",
+  "decodedPixels": {
+    "19026": "260592706149ec10d5d31d8032c2a64ed037dd3e0a612ca950ecd7e88ea1de8a"
+  },
+  "detectors": [
+    {
+      "imgsz": 416,
+      "device": "cpu",
+      "dtype": "torch.float32"
+    }
+  ],
+  "ocr": [
+    {
+      "pixelSha256": "d2f16e7f16965eba046372cda123890a2d0dd09015e41243bdf56297440ba915",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        0,
+        1
+      ]
+    }
+  ],
+  "rawReaderEvents": [
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "968d8e8f8c5ca187279471063fb9961e6d9ba38a086e56984eeff3b8170f4620",
+        "5e4a2e511dd7e89fc0503060929d186fe5319ff9107f2e72a729a3197b863fac",
+        "1436e53a6cf21118e4428b93a65c6707bc3d39cef4ae51e783a0d9cbd40fcbc8"
+      ],
+      "reads": [
+        [
+          "A",
+          0.4281160235404968
+        ],
+        [
+          "L",
+          0.35494449734687805
+        ],
+        [
+          "P",
+          0.9867671132087708
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "e6ecdcee6be5bcfed3dab48a52e8a52a62aa4b4e65477a48fe0c6b21c14edea6",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              128,
+              0
+            ],
+            [
+              128,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "20",
+          0.999999915706304
+        ]
+      ]
+    }
+  ],
+  "ocrDevices": [
+    "cpu",
+    "cpu"
+  ],
+  "ocrDtypes": [
+    "torch.float32",
+    "torch.float32"
+  ],
+  "status": "complete",
+  "scope": "Local CPU adapter smoke only: one source frame, Torch FP32 detector 416, one fixed JPEG OCR crop and synthetic numeral recognizer call; not CUDA or an accuracy benchmark",
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-models-20261030\\yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "C:\\Users\\masap\\.EasyOCR\\model\\craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "C:\\Users\\masap\\.EasyOCR\\model\\english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "C:\\Users\\masap\\.cache\\doctr\\models\\parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "cpuCores": 16,
+    "packages": {
+      "torch": "2.8.0+cpu",
+      "torchvision": "0.23.0+cpu",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime": "1.29.0",
+      "av": "14.2.0",
+      "pillow": "12.3.0",
+      "fastapi": "0.143.0",
+      "pydantic": "2.14.0"
+    },
+    "torch": {
+      "version": "2.8.0+cpu",
+      "cuda": null,
+      "cudaAvailable": false,
+      "cudnn": null
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "AzureExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "5.0.0",
+      "videoIO": [
+        "FFMPEG:                      YES (prebuilt binaries)",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": null,
+    "nvidiaSmi": null,
+    "driverMajor": null,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": null,
+      "built": null,
+      "baseImage": null,
+      "lockSha256": null
+    },
+    "scoutxEnv": {
+      "SCOUTX_BACKEND": "torch",
+      "SCOUTX_BATCH": "1",
+      "SCOUTX_DECODER": "cv2",
+      "SCOUTX_DETECTOR": "yolox_s",
+      "SCOUTX_DISCOVERY_DET": "416",
+      "SCOUTX_KEYFRAME_EVERY": "1",
+      "SCOUTX_MODE": "balanced",
+      "SCOUTX_OCR_ENHANCE": "0",
+      "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+      "SCOUTX_WEIGHTS_DIR": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-models-20261030"
+    }
+  },
+  "personDetections": 11,
+  "ocrResult": [
+    null,
+    0.0,
+    null
+  ]
+}

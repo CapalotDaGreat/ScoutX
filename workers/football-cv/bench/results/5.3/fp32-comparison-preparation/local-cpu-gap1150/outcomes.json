@@ -1,0 +1,15 @@
+{
+  "allLabelledFrames": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+  },
+  "targetVisibleLabelledFrames": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+  },
+  "frameDurationSec": 0.1,
+  "timelineSha256": "5cce2f765a6dc93b17398123bab1f73071fa670d713b0316fcf35e23f916fd6a",
+  "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+}

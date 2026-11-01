@@ -1,0 +1,30 @@
+{
+  "schema": "pitchproof.fp32-preparation-checks.v1",
+  "reviewDate": "2026-11-01",
+  "workerTests": {
+    "passed": 589,
+    "skipped": 0,
+    "warnings": 3,
+    "command": "python -m pytest -q -rs",
+    "wallSec": 88.86
+  },
+  "probeSha256": "39e839f6f2158a2ea59fd597995f10088e0eb79206202af348f3de0117233ff9",
+  "gpuRunPerformed": false,
+  "productionEngineChanged": false,
+  "dockerChange": "Include three numeric JSON evaluation fixtures; no packages, models or footage added",
+  "limitations": [
+    "CUDA profiles require approved L4 session",
+    "Linux Docker daemon not available locally",
+    "Expected runtime and cost remain estimates"
+  ],
+  "fixedCorpusCpuReplay": {
+    "status": "complete",
+    "entries": 96,
+    "note": "Local gap1150-only corpus smoke; approved matrix freezes a new corpus spanning all three windows",
+    "enriched": true,
+    "target20PipelineEntries": 4,
+    "target20ReplayLosses": 0
+  },
+  "diffCheck": "git -c core.whitespace=cr-at-eol diff --cached --check",
+  "versionNote": "Full CPU window predates corpus-selection enrichment; unchanged production engine/adapters. Enriched corpus replay and final unit tests bind the final probe SHA."
+}

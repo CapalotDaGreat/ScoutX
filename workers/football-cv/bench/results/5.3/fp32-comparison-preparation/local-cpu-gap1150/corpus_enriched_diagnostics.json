@@ -1,0 +1,6941 @@
+{
+  "profile": "cpu-onnx",
+  "settings": {
+    "device": "cpu",
+    "backend": "onnx",
+    "half": false,
+    "batch": 1
+  },
+  "probeSha256": "39e839f6f2158a2ea59fd597995f10088e0eb79206202af348f3de0117233ff9",
+  "decodedPixels": {},
+  "detectors": [],
+  "ocr": [
+    {
+      "pixelSha256": "91e5036934a0630bcb5c73de6f68d88388f114f2399900f1f3903dba91c7d603",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        0,
+        2
+      ]
+    },
+    {
+      "pixelSha256": "059fca8db62ff890a48224cbdf47a450f6913271f418975782f6f2cb54b5b67e",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        2,
+        3
+      ]
+    },
+    {
+      "pixelSha256": "a3b6649fc8c124e46d93da51791f7f67738a3463dfc70fe48e05c345a81a685d",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        3,
+        4
+      ]
+    },
+    {
+      "pixelSha256": "94f06e6374ee72e4c326bb6caa56cbfbe26594441f9a6d849f8dd0eedb5b25c2",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        4,
+        5
+      ]
+    },
+    {
+      "pixelSha256": "12344125233ef5aaeb66ec59e62224bacbd13994910e5bc393025a9c3e238983",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        5,
+        7
+      ]
+    },
+    {
+      "pixelSha256": "743435d9b3b62ab43f18091a05c5cc20ef07dae5666a446a0dd3807cd53e9605",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        7,
+        8
+      ]
+    },
+    {
+      "pixelSha256": "c278f58b9dd3b2698333b88656056acea9c636f047a15a6540a8fd7631026942",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        8,
+        9
+      ]
+    },
+    {
+      "pixelSha256": "79f766ece060d708eb809b562ee2cbe635a027451edaf65c2be2ae0b5675b560",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        9,
+        10
+      ]
+    },
+    {
+      "pixelSha256": "286304d30841719c8fad1e8dab45428d5e436e90cbf80a6fbca791dd0328be08",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        10,
+        11
+      ]
+    },
+    {
+      "pixelSha256": "8fd0ce4572b069fe55af255d3970968a10805451d52270dfaca2e9c60c8f22e3",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        11,
+        12
+      ]
+    },
+    {
+      "pixelSha256": "43089b1ed48674bbd52784774b5cfd069b904c5ae34caeaeb7f5513363bb2326",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        12,
+        13
+      ]
+    },
+    {
+      "pixelSha256": "6d893600e52550c2e24161d3fed7ed29fb951b43da9afcb5b56eda240eecc3a6",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        13,
+        15
+      ]
+    },
+    {
+      "pixelSha256": "e13679548edc6277528cab81eec560c3caf1b42afffe489b02c86674edf1bf0f",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        15,
+        19
+      ]
+    },
+    {
+      "pixelSha256": "120afe009d837c81c5b28a2dd57b6207d528cb9cfe2d8b1451521b1a388aafcb",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        19,
+        20
+      ]
+    },
+    {
+      "pixelSha256": "cef1d16f32f7ff6fdd67be142a5a75a1fa95a02b9a6dbaa75ad3379dc729d77e",
+      "result": [
+        "4",
+        0.9778273701667786,
+        "shirt:white"
+      ],
+      "readerEvents": [
+        20,
+        22
+      ]
+    },
+    {
+      "pixelSha256": "70a7790f9b096dd5152e877d93ac69cc1eb6260d6751da729ea79c62ee389b9c",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        22,
+        23
+      ]
+    },
+    {
+      "pixelSha256": "161cb3557d0f25dea6cbefc3861dd56ef77d0266e61d605c2ba292bf00d12a76",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        23,
+        24
+      ]
+    },
+    {
+      "pixelSha256": "6b0e3f3b50a24af82d8a037d1a8f601eab7c804628411e66458ff40d65dd68c4",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        24,
+        25
+      ]
+    },
+    {
+      "pixelSha256": "f751f1ea3c98ba4fec8387d38e61c6f3b5a830a039b65b4833eeca7de1720724",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        25,
+        27
+      ]
+    },
+    {
+      "pixelSha256": "2879257ae5695d520097ee46c3507bed26ff367659cf1048aefb96b300ca3ffb",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        27,
+        29
+      ]
+    },
+    {
+      "pixelSha256": "958b91b9d7d1f3715b9e6076effc918a68ac41853eb9d3d0cc8f66cc00ae823e",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        29,
+        30
+      ]
+    },
+    {
+      "pixelSha256": "4bc8383aa5f51c3cdff7d069f6e244014fb17f0fb333afdeaad72fa11eea70d6",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        30,
+        31
+      ]
+    },
+    {
+      "pixelSha256": "61c7fb54263b52a8424a98de84ed23b7c41598b68ac3cc617fc5808daa7a3422",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        31,
+        34
+      ]
+    },
+    {
+      "pixelSha256": "1a7457005c275d3f788e36b02d6ab4348d26553e9f29466c97f3d19d3b25fc98",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        34,
+        35
+      ]
+    },
+    {
+      "pixelSha256": "f275d5f3a2b1a80205377185d7d35e70e4a2af1491965de437135b45a392f12c",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        35,
+        37
+      ]
+    },
+    {
+      "pixelSha256": "e5e48a860e865d13dbd48f10e03634af74fb46b7f793f6d7968c3ef3e1591da7",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        37,
+        39
+      ]
+    },
+    {
+      "pixelSha256": "1156f2009983262ca2f476c1c59aa5e525b774a70a333c5cabf0b7e665924c5e",
+      "result": [
+        "19",
+        0.94996138215065,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        39,
+        41
+      ]
+    },
+    {
+      "pixelSha256": "af9346f2bb9de13226daca25c92e65382db130bc0d928eff2b78b873e094c8c6",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        41,
+        42
+      ]
+    },
+    {
+      "pixelSha256": "8a2e5b520b2ba980dcffe3bfae8399c24fc2ad914d087b209597edffb123401b",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        42,
+        43
+      ]
+    },
+    {
+      "pixelSha256": "727c9e1c5b522d2a3dc6cc44bb53c5ec5cec6dc15305bddb20eb8f92a9b4d322",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        43,
+        44
+      ]
+    },
+    {
+      "pixelSha256": "ef54a0c1bdf2f4a95c51e4f0e3da930b9b3d200e5df927e58b70285ed6a50989",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        44,
+        45
+      ]
+    },
+    {
+      "pixelSha256": "e1984e232dbc276cafa8d548ff3aadc7fae1d99bdb02417b6e9c74b7a14cf15e",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        45,
+        47
+      ]
+    },
+    {
+      "pixelSha256": "541d8680a8e2bccd022f6ee933b710c410ff115928c3107650867ea379af3b94",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        47,
+        49
+      ]
+    },
+    {
+      "pixelSha256": "c9f091deed52dc1da12e7f7539c42b2b3f9bfa71ec4fecff527c025da902554b",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        49,
+        51
+      ]
+    },
+    {
+      "pixelSha256": "77f33fc0d45911a4bd0e42e6b10f3f6f2a262e7ca1f3d40b524c0b2452105c10",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        51,
+        52
+      ]
+    },
+    {
+      "pixelSha256": "e39e5ecdf8b9262a14a3bed777ace754e139d8e21935e75711b57ae0f44f0771",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        52,
+        54
+      ]
+    },
+    {
+      "pixelSha256": "07f289bfb28984423f048ccdd27d5fbee00e156e7cadba01bcd13837b98c47db",
+      "result": [
+        "20",
+        0.9999807476997375,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        54,
+        58
+      ]
+    },
+    {
+      "pixelSha256": "d5bcb658d8332e70ed51ea912da94c839cc78f1f102f76c932268f9954772f73",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        58,
+        59
+      ]
+    },
+    {
+      "pixelSha256": "9e0434cd5db1c18709c1d7b04ab7d70e58c11914a477bf597112447058d844ce",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        59,
+        61
+      ]
+    },
+    {
+      "pixelSha256": "d7bf5f12837c7465bef8de37b4a175f13e4dd116379de125e17a0557e9130799",
+      "result": [
+        "17",
+        0.989464521408081,
+        "shirt:white"
+      ],
+      "readerEvents": [
+        61,
+        63
+      ]
+    },
+    {
+      "pixelSha256": "c76f74db0e306a3d114cd0cd54cd0d6242c8c032c3114f04e0512faedf66963a",
+      "result": [
+        "20",
+        0.9454553246498107,
+        "shirt:white"
+      ],
+      "readerEvents": [
+        63,
+        66
+      ]
+    },
+    {
+      "pixelSha256": "2213bc393389e2daad5a6062acb5922e2005cc7690f35308d4c23d6c2d4ef564",
+      "result": [
+        "2",
+        0.9972714941616232,
+        "shirt:white"
+      ],
+      "readerEvents": [
+        66,
+        68
+      ]
+    },
+    {
+      "pixelSha256": "cfad2ed64b8c37838178689b2ce2e1b75fab90b3b628bb1711babbd1bd8cd812",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        68,
+        70
+      ]
+    },
+    {
+      "pixelSha256": "a360d398bcae1845c44c3457ce1bd4d5d57ec32d0bfb934819c09bb4dc0f82f9",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        70,
+        71
+      ]
+    },
+    {
+      "pixelSha256": "d7cb032536603827ff52d8f74eda05a25ed0aed4969fa4f1d70e8262104353ee",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        71,
+        72
+      ]
+    },
+    {
+      "pixelSha256": "c4983c3c39af826b4462bb439292e0418be759e4dbc24fbbb9390f442f1ae005",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        72,
+        73
+      ]
+    },
+    {
+      "pixelSha256": "9dbef340c691aa3613eb4fab698640542240bd02d25a03ab1ae1cb9f6dc44b15",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        73,
+        74
+      ]
+    },
+    {
+      "pixelSha256": "733839ddd5e9b211482199fba47ada09e9825cc17d56e50f78fd80a7b0793b54",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        74,
+        76
+      ]
+    },
+    {
+      "pixelSha256": "932aad85b2fc1e8fc9cff79fa189e330a950192e212e8f03b884495d6b1920a8",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        76,
+        77
+      ]
+    },
+    {
+      "pixelSha256": "9c100036340c3fd409e8693c14b991d5edfab18d624bb70dde47157d1a46aa6c",
+      "result": [
+        "11",
+        0.9443180561065674,
+        "shirt:dark"
+      ],
+      "readerEvents": [
+        77,
+        79
+      ]
+    },
+    {
+      "pixelSha256": "1fc2fa6acac80e0f4b23802cb8028a4229648e397a1b13d8f0c22ef29d8a4124",
+      "result": [
+        "8",
+        0.9820032715797424,
+        "shirt:white"
+      ],
+      "readerEvents": [
+        79,
+        81
+      ]
+    },
+    {
+      "pixelSha256": "757fa6131525f209899c7e21c037e009dadde9c06717e7f5721d866f3cf95c36",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        81,
+        82
+      ]
+    },
+    {
+      "pixelSha256": "fabe5cdd05993434032d5c1d24e156ab20078584ff453ece472155e2f9c5fd2d",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        82,
+        84
+      ]
+    },
+    {
+      "pixelSha256": "ff5f262a7dbaad8951100be7db247d3d627a944584341e0150e8baca23593dea",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        84,
+        86
+      ]
+    },
+    {
+      "pixelSha256": "932d50ce2a8d42c21e6799debc40b14517ab3a9840cd5a1349dc4411096a7310",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        86,
+        87
+      ]
+    },
+    {
+      "pixelSha256": "c3352c5e8cdd2228d8257e83da00457744242ce82dc1e7a6d4b8373b2b1f9d2f",
+      "result": [
+        "20",
+        0.949970045685768,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        87,
+        90
+      ]
+    },
+    {
+      "pixelSha256": "fcec9a276d6045d9fd029aef61d14d35550fa805429887643a38cf3a2e27fe80",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        90,
+        92
+      ]
+    },
+    {
+      "pixelSha256": "62967e464dd80c387c70efb6725fc19f30dd203241f2397ad91dcc9d988b26c8",
+      "result": [
+        "10",
+        0.9870313405990601,
+        "shirt:white"
+      ],
+      "readerEvents": [
+        92,
+        94
+      ]
+    },
+    {
+      "pixelSha256": "6dedcd8bb022b79dbf2a05bc21aaa33018eb33700346670bcf2bbd530d18252b",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        94,
+        95
+      ]
+    },
+    {
+      "pixelSha256": "5be48f8911fff2cbf2f74374761592a0a5b3bb3b3a663553b54feabf566bb0b5",
+      "result": [
+        "8",
+        0.9692411710536284,
+        "shirt:white"
+      ],
+      "readerEvents": [
+        95,
+        99
+      ]
+    },
+    {
+      "pixelSha256": "700124baa73c686f9deaa50d263584b3218217d27e294fd213eb1d2aa7555dfc",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        99,
+        101
+      ]
+    },
+    {
+      "pixelSha256": "4fd6a848d555ca9fe6eb993393354526316fab763b9857856ca1a56fdeacfada",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        101,
+        102
+      ]
+    },
+    {
+      "pixelSha256": "210f6a1e6e5cfa7cb6546cb7886b5ac8f1235b52d4db3ff8c953ad9f1dc4d0c1",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        102,
+        103
+      ]
+    },
+    {
+      "pixelSha256": "98d9103e827858bf6cae8c2081a81b5431e722185569923b963ecd7af6bf1719",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        103,
+        104
+      ]
+    },
+    {
+      "pixelSha256": "09c4e5d474b2560dcd9bb36a352a49c006e3907e2ab93ab2c0a07253d3ab61d5",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        104,
+        105
+      ]
+    },
+    {
+      "pixelSha256": "514e80ff4a097e983da14517908ee08f0cfb28f70482da32c6386b34770b3b3c",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        105,
+        106
+      ]
+    },
+    {
+      "pixelSha256": "a71c6493af7bfd4f47f4a73b96b1016a48af95b322de28a1d46a34d82619cd94",
+      "result": [
+        "19",
+        0.9989237785339355,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        106,
+        108
+      ]
+    },
+    {
+      "pixelSha256": "0a4f04773cde7095de9de9b97d022dfe658da498c9eca7c963a795fc202e2b36",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        108,
+        110
+      ]
+    },
+    {
+      "pixelSha256": "a20928818b5c0a383451f56b92d118ead5bc3767cb4fc928fcffc4691e7abfc8",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        110,
+        112
+      ]
+    },
+    {
+      "pixelSha256": "5fa08af78a27c2fb5301cba4aea9cb11a3b1e6d669845a404056a948f6f5ecdb",
+      "result": [
+        "17",
+        0.9958021640777588,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        112,
+        116
+      ]
+    },
+    {
+      "pixelSha256": "26e1f7a58eb1aa6df7f4a90cda0d3150ca36d55d5d6b4da2d5864e6deb04f356",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        116,
+        117
+      ]
+    },
+    {
+      "pixelSha256": "91725f0923a04b1d4e60b54a01fef793ea596a7fbf8dc3545cea7bef424e8655",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        117,
+        120
+      ]
+    },
+    {
+      "pixelSha256": "e463cbaeb6f12441fda837f1cbecdc021cf16ca3963f51a044c85471ee642227",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        120,
+        120
+      ]
+    },
+    {
+      "pixelSha256": "b2cc5334c81aa4efc891967941094ade44e7e15bd51fb7a6437adaf3990f3e48",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        120,
+        122
+      ]
+    },
+    {
+      "pixelSha256": "dc2d7541c5bdcd3cf08cfcf355bdd9e3d84e43db29a8bc062ffa028da58f39a8",
+      "result": [
+        "19",
+        0.998645544052124,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        122,
+        125
+      ]
+    },
+    {
+      "pixelSha256": "aa6246af6b2e6b12708bba05244e8aa3dd7de2bca42093dd7e8a1a135d5845bf",
+      "result": [
+        "19",
+        0.9979802370071411,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        125,
+        127
+      ]
+    },
+    {
+      "pixelSha256": "4f3f3d43591e55fb25b464a2efd48726820b8701c092f00f11ff93f345154f1d",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        127,
+        128
+      ]
+    },
+    {
+      "pixelSha256": "3b135781616a02e3f08abfe737657db371dd2f198288ab184c8c94f43ae41751",
+      "result": [
+        "20",
+        0.9454048156738281,
+        "shirt:contrast"
+      ],
+      "readerEvents": [
+        128,
+        130
+      ]
+    },
+    {
+      "pixelSha256": "429d469f9ef2b4155852d3f430a234256f171cbd7f282a53f7194310140c469f",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        130,
+        131
+      ]
+    },
+    {
+      "pixelSha256": "019efb39e66ae3c5b85da6a13c0ddfb14e2f462aa713bdc7e9c9a72f733db2b9",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        131,
+        132
+      ]
+    },
+    {
+      "pixelSha256": "0e65b81b83c1e62cce5875420616e39c73f3609cb639a7504d0899260390bb8d",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        132,
+        132
+      ]
+    },
+    {
+      "pixelSha256": "895ef20cb4a7d370a8af5cb75c0b345f5962400530780b9dfd8b21cf24ecf194",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        132,
+        133
+      ]
+    },
+    {
+      "pixelSha256": "d0fada7fbe0f178b73529814a6606a0b1c86ef3f4bcb1e88def8a925acbe4600",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        133,
+        134
+      ]
+    },
+    {
+      "pixelSha256": "0faf6c3c2ebc10b1432b49635bf4c89826eb75480fecf89adeaf582f2d32ef7a",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        134,
+        136
+      ]
+    },
+    {
+      "pixelSha256": "10efd24e6c138ed2e56a63430e06e59c9847f67ab931655cc2b33e8cc05d7bef",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        136,
+        137
+      ]
+    },
+    {
+      "pixelSha256": "21a23ae4b2e82c2445ca418c21466a14ad256d7252cd409b08d46d564a239aeb",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        137,
+        138
+      ]
+    },
+    {
+      "pixelSha256": "6d68abce39bbbc1464383e02cb812a11833789ae78bc303947d38f5101256141",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        138,
+        139
+      ]
+    },
+    {
+      "pixelSha256": "50e70e0152b389c43941f291dfd47aa8c72a8cf5b80d6518b9d28b8eaaec748d",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        139,
+        140
+      ]
+    },
+    {
+      "pixelSha256": "2c6ee847852baf8cbc71be9e6ad2282748b0727721ae6e8de7f970aeff3e0344",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        140,
+        141
+      ]
+    },
+    {
+      "pixelSha256": "3502c117e215886ee5267335085ba574ef1341eeb3c3522a109289f48683fbd5",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        141,
+        142
+      ]
+    },
+    {
+      "pixelSha256": "1c88dd526c31549f37220da5f57aeab2595e0641194be2831cb85909ab47aaa9",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        142,
+        146
+      ]
+    },
+    {
+      "pixelSha256": "ea587c7449b968a9d134a4ecfb4169f1eae5215bc413fb185ebe9cd9ee1b3ca4",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        146,
+        148
+      ]
+    },
+    {
+      "pixelSha256": "8aa70392f2dcbdc2696b573b7bffee18bb6b9eece7e1161a6d145fd7d860fb15",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        148,
+        149
+      ]
+    },
+    {
+      "pixelSha256": "74dbff9c740b3f996fd01d486856cc10ac51a45223a223104aa4f5f44667a235",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        149,
+        150
+      ]
+    },
+    {
+      "pixelSha256": "e5b45b32a5bc7601a86dbebaf6704df77c587bebb9790ecf234083c29fb63b0b",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        150,
+        151
+      ]
+    },
+    {
+      "pixelSha256": "95bae60cc6d8d75c3210e462f1f220c186ba1f32d240e237a72497facd4e3e8f",
+      "result": [
+        null,
+        0.0,
+        null
+      ],
+      "readerEvents": [
+        151,
+        152
+      ]
+    }
+  ],
+  "rawReaderEvents": [
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "89415f1b0c6fb8f17fa94c5066243e8c8530815dacdc55b9cc47fe51af44ddf0"
+      ],
+      "reads": [
+        [
+          "I",
+          0.9515447020530701
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.readtext",
+      "pixelSha256": "3b0a084e56172284c0b206b81b3777163eabeff65e8025820abca09b14b32ce2",
+      "reads": []
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "2aded6c8e3c82fe474a0dafc1a901eaee80fae102342fa014953f610a2491f78"
+      ],
+      "reads": [
+        [
+          "\u20ac",
+          0.3788849115371704
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "656dfb97ce5cd556305b53b309aeee0791b4bf5b4efd05aed82c56a72df6639c",
+        "abf2a440a4fc77cd51f02a2bdf1b4938bcd3dd9574eb041b7479b0d7fd882389",
+        "8b102c95bdca0daa0961e4320d4233787d83cb99355922247344894e9a4ab374",
+        "9e70b5b621470988c5fdfc7bcb186e994b1d6c73356b345d17e4dde8c17af494"
+      ],
+      "reads": [
+        [
+          ",",
+          0.3262902498245239
+        ],
+        [
+          "I",
+          0.23112744092941284
+        ],
+        [
+          "*",
+          0.5684171319007874
+        ],
+        [
+          "Cf",
+          0.5657402276992798
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "bfdf42a4e4f8dbc6a0d4491b25f33f03ee5ce404bbb9101e5ca2f6d08e0449af",
+        "b7e7bafbe76a8b5439eb817358dbd45256dc56e05fbdfa8dc60a728c9e83e656",
+        "6e6f513337539abd2a6631511790f01fc20699768d9d5bf357db779aaa4419f5"
+      ],
+      "reads": [
+        [
+          "r",
+          0.305512398481369
+        ],
+        [
+          "I",
+          0.47849854826927185
+        ],
+        [
+          "I",
+          0.7831926345825195
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "6d29cc523d91ba6db335b6f9e80167d02ff18cfb4e2604fa37e2923dc3ab4c33",
+        "ae533d41569a5dc5ca7e4e0ddf98864c19c650a1e7e4169beb7972e93516d4f3",
+        "b27f7dc89f549add3bae4dd94b9d337c993280043fe11939cf775a55a37bc2a5",
+        "2bdc4a91d7d07c3efeea03954969f271a11b44542e752a6d709ec945df3abb53"
+      ],
+      "reads": [
+        [
+          "ga",
+          0.7521371841430664
+        ],
+        [
+          "1",
+          0.6899803876876831
+        ],
+        [
+          "S",
+          0.2808372974395752
+        ],
+        [
+          "f",
+          0.989624559879303
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "ae533d41569a5dc5ca7e4e0ddf98864c19c650a1e7e4169beb7972e93516d4f3",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              41,
+              0
+            ],
+            [
+              41,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "1",
+          0.5738773082796342
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "769735f3bd4be0e1d7a5e82de931213414bad81cc2c790df3d28f4a6fd248424",
+        "76d69b4f3430c647fb3b0c394c94594267fc8b8cbc924aaabeea0a20b0b88b94",
+        "40107981fb580c76daccdb8539d21d623d0b58f54d9f2879bd68dce869820b71"
+      ],
+      "reads": [
+        [
+          "t",
+          0.29938533902168274
+        ],
+        [
+          "th",
+          0.7576216459274292
+        ],
+        [
+          "*",
+          0.2937956750392914
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "2ea295b7b5873895b4ceb969c33137107c6742b10fbdfa971287ee31d6042b0c",
+        "cfad1507a9db719d9e0f3f4d3287fe192774bb054973fe1aacd97e3204a3f01d",
+        "46f8910a4258820798a44ec31b450b86c4bab5cf2f2e2686b68e942848eae34d",
+        "3be00232d65148805d4dbb4b5d2978880a7fd56a417d1fecc35e21e64eba6514"
+      ],
+      "reads": [
+        [
+          "*",
+          0.7444112300872803
+        ],
+        [
+          "E",
+          0.9975554347038269
+        ],
+        [
+          "*",
+          0.2389725148677826
+        ],
+        [
+          "A",
+          0.5956225991249084
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "6858afbea0fe54564cb85f69c4d01a7c78b713e9887a42d1cdbe9464775e62aa"
+      ],
+      "reads": [
+        [
+          "E",
+          0.4991826117038727
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "0735070c620d876ce3381e2dd5d46944aaca292ac934731015e29ea92d0816d4",
+        "ecca04793d98281292db19eae3550f8b7f3e618f0da128a8272c75479200b99d"
+      ],
+      "reads": [
+        [
+          "a",
+          0.45027485489845276
+        ],
+        [
+          "S",
+          0.3568304479122162
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "d9266590a49f8cfcdbb29b9c8996728fe232cf3d0495bfec0fa970b6b9dd1f79",
+        "b6eb75d5d2e60fc40d42423dcb88a92c7d75b8de110aa3d731ef9da45aa8e404"
+      ],
+      "reads": [
+        [
+          "-",
+          0.8758623003959656
+        ],
+        [
+          "F",
+          0.8354262709617615
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "d6428e582ec7000d2165cc652ea12a3751dcd66de76a31667bdd76912f7ca3b8",
+        "711c7f91611303649b8ba101e3880da2f71f2b1fd599f72f636a71017b1d2e9b"
+      ],
+      "reads": [
+        [
+          "E",
+          0.5239102840423584
+        ],
+        [
+          "a",
+          0.5672072768211365
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "8372e8a924443e5a9ebf666cd5f99edb30d349e937f821a9599c4fdeae10110d",
+        "aeffc8a8e7a137ed262568404367abdbb039c33d5b623bda5a48b11f3dcb7309",
+        "2696216eaab62ba4758f76abc5140539357096656bca2f7cee4f5e6b571078c7",
+        "fb9a93488eed9823c4bca87def7a7405e6d93b97e48f81fdf5a40019524de371"
+      ],
+      "reads": [
+        [
+          "f",
+          0.558647632598877
+        ],
+        [
+          "4",
+          0.5285310745239258
+        ],
+        [
+          "(",
+          0.9460253119468689
+        ],
+        [
+          "*",
+          0.3181614279747009
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "aeffc8a8e7a137ed262568404367abdbb039c33d5b623bda5a48b11f3dcb7309",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              62,
+              0
+            ],
+            [
+              62,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "70",
+          0.051346988580969324
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "5a75c8271e72dd1cfcb4feee1688d229feef533c2453649810dc3e9b9089b089",
+        "dc0d3d6ac9cfa74b73638e1ff7b0c145ab6b7dee37a4d8898fb40d7f39260bc6",
+        "8f8db866760b787c53bdfcc42da835aab66f65dd60b370ac659e2ef0bd90e131",
+        "7a52e6b0f9bf64c5a8dff735ac7067ae08f96394ccba098d7dc3aa7df63fa39e",
+        "2ecd4fb525847b2de93f655eae314bed4bc9e9c3d14182dbd1b3493ada45b381"
+      ],
+      "reads": [
+        [
+          "79",
+          0.8236920237541199
+        ],
+        [
+          "e",
+          0.7075008153915405
+        ],
+        [
+          "A",
+          0.42828255891799927
+        ],
+        [
+          "4",
+          0.45730024576187134
+        ],
+        [
+          "I",
+          0.32788601517677307
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "5a75c8271e72dd1cfcb4feee1688d229feef533c2453649810dc3e9b9089b089",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              68,
+              0
+            ],
+            [
+              68,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "759",
+          0.3481897557143261
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "7a52e6b0f9bf64c5a8dff735ac7067ae08f96394ccba098d7dc3aa7df63fa39e",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              72,
+              0
+            ],
+            [
+              72,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.5282470264359205
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.readtext",
+      "pixelSha256": "2aed70e53d27dc5b0aa034208368d3d326765308d08b0bc362da4ea177efc956",
+      "reads": []
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "e9bf9fe9ca053ce81ad3111a2534a3795a2c6b2e07ce3fdf45df334cd81382bb"
+      ],
+      "reads": [
+        [
+          "-",
+          0.7373210191726685
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "24386e4890c804e25c2816b9ff99649bf1527e5e66166defaa9592d1ef63dc98",
+        "fa7ce666c69172d948c3142fadedeb652df7ae8def0a519ea9edc10f75f0957b",
+        "1770ce835dec6f15a448eb62d871fc3e0c8f125fcf25150fa862380c48bc0d54",
+        "0360905f6e21d3302c5ffa63676f49f356d16a1f8e3c36267d9715de7c0916e0"
+      ],
+      "reads": [
+        [
+          "4",
+          0.9778273701667786
+        ],
+        [
+          "A",
+          0.41970911622047424
+        ],
+        [
+          "-",
+          0.9670995473861694
+        ],
+        [
+          "I",
+          0.8515763878822327
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "24386e4890c804e25c2816b9ff99649bf1527e5e66166defaa9592d1ef63dc98",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              47,
+              0
+            ],
+            [
+              47,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.8215399352532273
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "d6aa648d989565fe21105ddca258f9f3fecf979a1f4976835349843e61f16a4c",
+        "e35efe94a89936e23f322a9503c65d1a233e213c2b1685fd473480fb738d9b6e",
+        "02ba905841459fe6914775a8b6dd7529867132fdc0793f9b3dcbd6cf2f1c715f",
+        "5fa46e02240f9be0ea4f8cef1b1651485b3e5da769875eb9e8cfd0f9eaf2d8e8"
+      ],
+      "reads": [
+        [
+          "E",
+          0.885482132434845
+        ],
+        [
+          "-",
+          0.6745875477790833
+        ],
+        [
+          "*",
+          0.9485690593719482
+        ],
+        [
+          "\u20ac",
+          0.31655725836753845
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "c311f6ca10a685625110d7c81943862b19973dacb3987a5f0ff1e1031013c65d",
+        "13a084a150a364337f312ecca6fcc94a7e32e4c91b1caa22c579459a17d8c58f"
+      ],
+      "reads": [
+        [
+          "A",
+          0.5415529012680054
+        ],
+        [
+          "A",
+          0.7936459183692932
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "5e2c5fa334a4e354fa39c6c2d1d93006c53860a13c7c5a3b6b11507531b82be4",
+        "da3dc9913a74f49a40242d01947851c5b4fd20865231c00b203a468e71645bc8"
+      ],
+      "reads": [
+        [
+          "I",
+          0.4495878517627716
+        ],
+        [
+          "*",
+          0.30981919169425964
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "eda105a07bb9df5e007e0abcbcccec40ed18332911d157ad4c0ffa2955f87523",
+        "47a4025ffd17c91041c89532b328a3e14f67b090097e73ce689cdf2a4343267b",
+        "01fb39d29208717060093046cfceb46a4ec2955b70e6a17e8abd8639390501df",
+        "b290186ae7143e767a860608c7c7d4cac75ba6485aa4b166c31ccc1134f4afde"
+      ],
+      "reads": [
+        [
+          "-",
+          0.40105509757995605
+        ],
+        [
+          "I",
+          0.8820413947105408
+        ],
+        [
+          "*",
+          0.966831624507904
+        ],
+        [
+          "4",
+          0.259551465511322
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "b290186ae7143e767a860608c7c7d4cac75ba6485aa4b166c31ccc1134f4afde",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              56,
+              0
+            ],
+            [
+              56,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.06467080823926441
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "850f00978cdedac10341932a94caefa968386df7cadde0d0ddba5e35e3785a8c",
+        "6fe509899c6e2ab808c2e846a5e1a89f86038b957d23b0c60fffbdbd06d0dedd",
+        "079294c7f9e020ce242d7fa9fdb507a3e6ceed74bf1199f94d6751ebf0934020",
+        "df9af475c9f157167e6d906f6c84510eeae489ce7bfb9b3ef2664ee9341744f8"
+      ],
+      "reads": [
+        [
+          "5",
+          0.8441821932792664
+        ],
+        [
+          "\u20ac",
+          0.9611741304397583
+        ],
+        [
+          "*",
+          0.9473559856414795
+        ],
+        [
+          "TH",
+          0.6904449462890625
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "850f00978cdedac10341932a94caefa968386df7cadde0d0ddba5e35e3785a8c",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              60,
+              0
+            ],
+            [
+              60,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.47782536270693754
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "ad894aed15daf71b4357982023f3ccf8679cb84f3b3868795f66d94658827453",
+        "4dfbc5f9c6b1f2f7596987f5a923a7a7de63865b75e5e2729e9f9d9b62fe64d8",
+        "4ac9b402b01dcfc7066ae0ae3fdd5e6233e41601189dfbba46b9cfcc0acb5ea4"
+      ],
+      "reads": [
+        [
+          "*",
+          0.8486336469650269
+        ],
+        [
+          "*",
+          0.6330739259719849
+        ],
+        [
+          "-",
+          0.9587903022766113
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "55cdaa05bad7908f0f71686ce822aedb3ff3ad5180bca74d808ebfd81c149f91"
+      ],
+      "reads": [
+        [
+          "a",
+          0.97209632396698
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "4811738060e275d5f42a3b17d9b3745f88e5e9f7d40b55a2a65db2e45a300b83",
+        "c041a892050b1a7d090ede80f0fa67e349dfee43333c86a83a291b38064006ef",
+        "467f6cf300afdc3a2701e9958661497f5e857e05bc1c03d49f7fb35c15f3fab9",
+        "c1711c5f2718e9ab9330334d10097aa357954772d68d4ccd56f41906ece0ca65"
+      ],
+      "reads": [
+        [
+          "-",
+          0.36115238070487976
+        ],
+        [
+          "1",
+          0.9880556464195251
+        ],
+        [
+          "st",
+          0.5550499558448792
+        ],
+        [
+          "a",
+          0.5062363147735596
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "c041a892050b1a7d090ede80f0fa67e349dfee43333c86a83a291b38064006ef",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              64,
+              0
+            ],
+            [
+              64,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "",
+          0.0
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.readtext",
+      "pixelSha256": "7c9924d102ff09f2be414f8c6a8f4a72d15244f5d546d757bd5591165ebdb79a",
+      "reads": []
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "4b5b10fc5dbf37c5b6251694ec8da69a409146ba6a04a3ffac5904336ae71845",
+        "754185efc9003e6b9f6eefbde889f9b861e8039d1dc5b7abde9fd1c4fb9c1fd3",
+        "6f1729b0578c1231305b33e98daca70089ac1a4b8e941e732f0d5b0b2b7dad73"
+      ],
+      "reads": [
+        [
+          "E",
+          0.9978528022766113
+        ],
+        [
+          ":",
+          0.36337214708328247
+        ],
+        [
+          "-",
+          0.457304447889328
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "0e5c9e1a3ac6bdab106d5ff4705fc8f3069621f4323e467a22c10ac0d0d23d5a",
+        "da6eea63ca71d2deb83c2dcc61db48711b93be88a897bca63d8b8467a21b1f1e",
+        "4cee12fac87a1a4a92e4ec1d2b305af9499108239d6a49c16ef03ee3719138ff",
+        "c3eaee34f828bdc2f26b646b36ea345f556333798e4d311e3578bda2645170a8",
+        "c7257d3b6a504bf2c9788c380f40710ff580649b20bbfee36fba9e9108d9bc22",
+        "1d24a574ec2499cc43caf1014acd0371b2da38808bfb5602e60a656ea969b1c0"
+      ],
+      "reads": [
+        [
+          "f",
+          0.783150315284729
+        ],
+        [
+          "*",
+          0.9828528761863708
+        ],
+        [
+          "*",
+          0.37140530347824097
+        ],
+        [
+          "A",
+          0.9978801012039185
+        ],
+        [
+          "4",
+          0.5096120834350586
+        ],
+        [
+          ":",
+          0.25133565068244934
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "c7257d3b6a504bf2c9788c380f40710ff580649b20bbfee36fba9e9108d9bc22",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              57,
+              0
+            ],
+            [
+              57,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "0",
+          0.3519401600088976
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "38d1d4377c102b7cb3073706925d941b1c9997257f6ffba7cc625a250973912a",
+        "99cf1c7217fc30b200be4fb965c1122faf5c8a20488107817c42203e078113f1"
+      ],
+      "reads": [
+        [
+          "a",
+          0.6626032590866089
+        ],
+        [
+          "-",
+          0.3945770263671875
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.readtext",
+      "pixelSha256": "65c4521c1f5b4afc20a838efc7248de8a8b1c6230283c3877c78f30765d2cdfb",
+      "reads": []
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "4c321c45ab4b7a31a9068ee5617166168e4c15e517d3c33c0dcbcd4e703d8d99",
+        "ba2352de962315d652e22219adac473751401d1c32d1334fbfe740d34d2df581",
+        "f27d0214d7fa1518e6d4c9808a518854494540da800d99520a727aef368bab42",
+        "08fdba9d0f381fe23aec8b8c8850bb95210365d46738b855a94cad1c9a48802c"
+      ],
+      "reads": [
+        [
+          "T",
+          0.7905255556106567
+        ],
+        [
+          "I",
+          0.6618818044662476
+        ],
+        [
+          "19",
+          0.9999593496322632
+        ],
+        [
+          "(",
+          0.7664967775344849
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "f27d0214d7fa1518e6d4c9808a518854494540da800d99520a727aef368bab42",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              64,
+              0
+            ],
+            [
+              64,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "2",
+          0.9621407016852324
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "95353d4b6ca0c8429fe74b9d8ce49f44051df65aa43f21a14b36ce0dbb36a504",
+        "15acc3d7979f8c00d210f3e8a11ae2ebe18d3d5a710a68d6d98f7dc288d8f2ce"
+      ],
+      "reads": [
+        [
+          "L",
+          0.8683955669403076
+        ],
+        [
+          "a",
+          0.33380961418151855
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "4fb1e6d4ea1ec1045a19e9b0fe749b0b5c2ca07ecf848c42db26b19dec732d50",
+        "ac7a2173a7d5863c45953bb9d89b7cffab3a8cd272bc121dce987b0bc373ac5a",
+        "dab390a747f9ee4610f07a78e737d5936f7aa410c683c8f5fc1867f940bdabca"
+      ],
+      "reads": [
+        [
+          "-",
+          0.49065396189689636
+        ],
+        [
+          "a",
+          0.9997733235359192
+        ],
+        [
+          "a",
+          0.6367571353912354
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "3fcdaf9fc550c3121a92412bf4143abfe81f77957d2ef45720bb5f0edd23f8ac",
+        "8323644f166f2f5cfe9ec08cd99f30405e9fba2435e2334c71d3977d3c3b563a",
+        "c150f188b3cc20b25e9e4428b11c64586392c1abb2de41e8310617b85e2b1e7c",
+        "34752a71ae59bb3d8c305e8128ad0ac0324e6058f37770c52394ef5c0b3063b8"
+      ],
+      "reads": [
+        [
+          "A",
+          0.9756119251251221
+        ],
+        [
+          "I",
+          0.7873653769493103
+        ],
+        [
+          "A",
+          0.9669701457023621
+        ],
+        [
+          "-",
+          0.8088118433952332
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "bcf3215ac8882542aee5ae73774a1884de69edc08b6e2d54832d54a13db139e9",
+        "6947dd85458a77fdf4d359a97461efb4b5a3b58f5c606e18e0f23acf3f4e5397",
+        "37f2e040c24525f1d20d08e23a4dd3d20192032a7397955eb404ac8b2ac86a9d"
+      ],
+      "reads": [
+        [
+          "-",
+          0.8166280388832092
+        ],
+        [
+          "-",
+          0.3925275206565857
+        ],
+        [
+          "-",
+          0.8805227279663086
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "2796bc4bc55945425d0679ee020251e42978e7319bd3e6a98eb0ea03d2f894b8",
+        "67b89a3e90e37c0216a143742343a8f3b03be690fbd9965a40b94d8389bbabd3"
+      ],
+      "reads": [
+        [
+          "Fv",
+          0.5770206451416016
+        ],
+        [
+          "a",
+          0.9982292056083679
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.readtext",
+      "pixelSha256": "9edd3317f4c6560ad3b02a602fe0b76fe49a20f5a88f89dbcff98209947adcff",
+      "reads": []
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "39a806e1f1105602acb7108cb41e396d461799f9e02c535a0dd8596149df24e9",
+        "193339f25352a7f81ce9921cb4e0597a98edeab2e1fbdde04a1ea48539291ba5",
+        "9303401b7668f30e9521e315f3e10b8ebae0d511ad4bf5f694b04431ec3aa638",
+        "6b8e30cb075ad1d1cf6ebc295cfc75a71c87b0f65fe677eb3559c7f188cb5a4a"
+      ],
+      "reads": [
+        [
+          "2",
+          0.9518929719924927
+        ],
+        [
+          "E",
+          0.9775838851928711
+        ],
+        [
+          "A",
+          0.4516736567020416
+        ],
+        [
+          "a",
+          0.8707552552223206
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "39a806e1f1105602acb7108cb41e396d461799f9e02c535a0dd8596149df24e9",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              38,
+              0
+            ],
+            [
+              38,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "1",
+          0.9845292086654274
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "b674f7d0b54d56c7f02fb4a525571965b6141d8e42110577d0e52c975dc5403f",
+        "2c4e47f3c55d613b47887c30766838b42e03e86759f16ed6fdad7dcbef0a721a",
+        "cfc0d15cd7ad3b43993dfa13f9c23c58e5cae827f2cfba2433e4a7b7aa385c3c",
+        "f63aed43b19643dd6b48040f52102b9f970f27189a2bde2d2407bbb346d9c323"
+      ],
+      "reads": [
+        [
+          "7",
+          0.9997480511665344
+        ],
+        [
+          "FIT",
+          0.6947285532951355
+        ],
+        [
+          "a",
+          0.8956655859947205
+        ],
+        [
+          "L",
+          0.3694038689136505
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "b674f7d0b54d56c7f02fb4a525571965b6141d8e42110577d0e52c975dc5403f",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              42,
+              0
+            ],
+            [
+              42,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "17",
+          0.28623860729658357
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "fc0ba13336da822dc6577cc10c013b52721fc52245c2803d95dc5c16c0c4d4cb",
+        "eee46cddae9ac2aa6a7881dd7dd7eb3cdc199931b00c79d9d07d49a9874d32ef"
+      ],
+      "reads": [
+        [
+          "f",
+          0.46306782960891724
+        ],
+        [
+          "&",
+          0.8695035576820374
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "20e6bfcfc19b6bdbb3207ba05f3fb1a75b2ab6a37b4e2941fcfe326a2b1ffb4f"
+      ],
+      "reads": [
+        [
+          "1",
+          0.6393619179725647
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "20e6bfcfc19b6bdbb3207ba05f3fb1a75b2ab6a37b4e2941fcfe326a2b1ffb4f",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              48,
+              0
+            ],
+            [
+              48,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "0",
+          0.659139637435203
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "bb956660e3133e32a11cf7b72ee3f5aa71ca3ba01e516d67b23a0bfa4f933201",
+        "e682e1aefe9dfdd55034e02da6a9ebdd777072681e7c900e7d38c6367572a78d",
+        "e78291898afaa00ad429eb6d634fb60a0b73c73b0afb00dbc3d177fe3135c99c",
+        "b121126460c4322f7baef2503c442ef736b125dfe500e2217c7fb50fd44b7b06"
+      ],
+      "reads": [
+        [
+          "20",
+          0.9999958276748657
+        ],
+        [
+          "1",
+          0.5141820311546326
+        ],
+        [
+          "20",
+          0.9999807476997375
+        ],
+        [
+          "I",
+          0.8698518872261047
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "bb956660e3133e32a11cf7b72ee3f5aa71ca3ba01e516d67b23a0bfa4f933201",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              65,
+              0
+            ],
+            [
+              65,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "2",
+          0.9961888217312698
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "e682e1aefe9dfdd55034e02da6a9ebdd777072681e7c900e7d38c6367572a78d",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              99,
+              0
+            ],
+            [
+              99,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "1",
+          0.721156247386844
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "e78291898afaa00ad429eb6d634fb60a0b73c73b0afb00dbc3d177fe3135c99c",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              64,
+              0
+            ],
+            [
+              64,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "20",
+          0.6117233553729142
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "4315d73e1892fe2e79043d8fdf8deeb117693715e6e320d19ab30dbf7b39f19a",
+        "d677db4e68e54f3c329285a05ffd2e482453ddb6e483a40dc65afd3300b53a3d"
+      ],
+      "reads": [
+        [
+          "A",
+          0.4218892455101013
+        ],
+        [
+          "-",
+          0.7339658141136169
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "9a279f8ac9b5d4fc1dddf2538109927af12ab7125e5d8f078a7000ceec083837",
+        "ca06c2e3459f9472950c4a60a004c6ccabacf33b6e7558e0c56a06903ce51632",
+        "f3eeda801ea76c9a0cb19fe99fd797e218806664adcab4c1af8a18b94179540a",
+        "94350bfb80d12ac524e171b3bf4cc91fe2c352f299cdf387c1026a2d0d73daf3"
+      ],
+      "reads": [
+        [
+          "E",
+          0.4545176029205322
+        ],
+        [
+          "\u20ac",
+          0.4586617052555084
+        ],
+        [
+          "R",
+          0.985557496547699
+        ],
+        [
+          ".",
+          0.6275753378868103
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.readtext",
+      "pixelSha256": "fe2e275566f262a99cb44d7c9a9d8b5cdba4e6b809948c652394f5766e87efc2",
+      "reads": []
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "e7537acd380060de6b9f0e465a9e5d5ad08b101e4fb2bffcb0be7bfe45082504",
+        "457b6922c3eddee614db1d012ba810851c2eb4b0f25907cb6737e6dfaa06abbf",
+        "f87e8f19d7bbfde1db6708142f61a8b22dfcfcc76674a3fbc35fe1818c41fdf7",
+        "4d0e6b44fd9e7a8bf8a0ac94cfca53ef1b53227bddfb71d4bcf3fee593d0152c",
+        "781e8b6217e471c045e69b0ca0d4c32543960e06cce8092173c3efbe2cd662c3"
+      ],
+      "reads": [
+        [
+          "17",
+          0.989464521408081
+        ],
+        [
+          "A",
+          0.9999759197235107
+        ],
+        [
+          "des",
+          0.8053848147392273
+        ],
+        [
+          "K",
+          0.8662735819816589
+        ],
+        [
+          "EN",
+          0.8910000324249268
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "e7537acd380060de6b9f0e465a9e5d5ad08b101e4fb2bffcb0be7bfe45082504",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              57,
+              0
+            ],
+            [
+              57,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "17",
+          0.6852832134616774
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "f4e01766707ffa910ad895abfb3ed7202dea2d2f3aa3e4cddea2fe9c33d82b36",
+        "30b281e8ecd85cd0eded447a4ff57faae261cf3021a6038c3fefb6ccde06b2ed",
+        "9feda290d385d237abdd0ca5a4ea677393b36a22463da47b3c97f4a11dc0637b",
+        "d92d7cc1e33d975e7a591c4cae8502facb9723f61eec5d8b64a4e207e8450c4c",
+        "bc5f3c95d77b77f3986507156559a3b7f9d65b008f1ddb148d417c453aee00da",
+        "a57025cc03e503f4ad9cb11e5e33b5f381b6206b0cda0f349c6d7717e889b4b6"
+      ],
+      "reads": [
+        [
+          "20",
+          0.9952161312103271
+        ],
+        [
+          "11",
+          0.7505968809127808
+        ],
+        [
+          "0",
+          0.9731019735336304
+        ],
+        [
+          "-",
+          0.24018865823745728
+        ],
+        [
+          "T",
+          0.3643166422843933
+        ],
+        [
+          "W",
+          0.32482603192329407
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "f4e01766707ffa910ad895abfb3ed7202dea2d2f3aa3e4cddea2fe9c33d82b36",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              57,
+              0
+            ],
+            [
+              57,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "0",
+          0.209849430971226
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "30b281e8ecd85cd0eded447a4ff57faae261cf3021a6038c3fefb6ccde06b2ed",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              113,
+              0
+            ],
+            [
+              113,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "740",
+          0.07708162692845338
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "f17431cbb2c130657131c45f11f48b8a1499b1246ca6ba1893d251a05758939c",
+        "79f91e7a9a9121719632d6934b91cf2c2ec253166adf40aec9913b30329d3861",
+        "76359136de02879ef99cb31aef85305959a73b263a053812c089fe2dd5a45b8d",
+        "6bb84a5b9312ac2dda460002f830bb445a8b8f9fd407757ae76a106c8c43578a"
+      ],
+      "reads": [
+        [
+          "2",
+          0.9249835014343262
+        ],
+        [
+          "ri",
+          0.356306254863739
+        ],
+        [
+          "-",
+          0.41165784001350403
+        ],
+        [
+          "T",
+          0.9810274839401245
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "f17431cbb2c130657131c45f11f48b8a1499b1246ca6ba1893d251a05758939c",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              45,
+              0
+            ],
+            [
+              45,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "2",
+          0.9972714941616232
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "7371ef0ef8af18d90241867be4316f9d5be4b1e201635a72d9a0df90b3bb1cd2",
+        "afe64d5e03e6cc638c8d87a1085bf611ad3fc2bb4b8b635b5c480d54bc84f83e",
+        "a4f1023866cbc528e6d945254bc8df3ccc7ae22560de85eacebedd81cc220abe"
+      ],
+      "reads": [
+        [
+          "I",
+          0.5799098610877991
+        ],
+        [
+          "2",
+          0.3904116153717041
+        ],
+        [
+          "R",
+          0.921790599822998
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "afe64d5e03e6cc638c8d87a1085bf611ad3fc2bb4b8b635b5c480d54bc84f83e",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              74,
+              0
+            ],
+            [
+              74,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "0",
+          0.13156345104017309
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "ba989ba99fde89cfedecbc6bbcc26505777900445182f93b466493302a46e32e",
+        "967c1d143cf699f8c77b6723cbfa8c58f8f990bcfbed90cc83a53ceadcf8b2ea",
+        "0c106b6c76fecb2077f862aeeaa67300d94acb42cff0b0fb2c0e563469e65b2b",
+        "19d92bee415b2c685e533c159b6d6f88dc229d962c6ba8222beac45e1b904d4f"
+      ],
+      "reads": [
+        [
+          "*",
+          0.5469274520874023
+        ],
+        [
+          "TAS",
+          0.5630548000335693
+        ],
+        [
+          "W",
+          0.8086363077163696
+        ],
+        [
+          "-",
+          0.22706426680088043
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "af0c94329ae3da87261f8b1d2cd5021b9caad842f40d08bf63a3fd7d0aaab56a",
+        "2e5880d127122837271105cba3708853f4c468677a664516b7e90e69a1e2b7d7",
+        "5e56362f6ad26592f38673b60ed872de1f75cdfd842fa374194461b1fd00f142",
+        "f575fd70bedad5ddb61679ac92599c959ad21ca9460d898b94792a236ef05163"
+      ],
+      "reads": [
+        [
+          "A",
+          0.2838607132434845
+        ],
+        [
+          "A",
+          0.8171634078025818
+        ],
+        [
+          ".'s",
+          0.7207056879997253
+        ],
+        [
+          "-",
+          0.4068492352962494
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "42ad511bb36ef871bf667aa5d9139eedf605412169858993ef69e59bb4294e8a",
+        "ba6106592c08f61af845eb064069a1207ea8c2ac97d649c6cafdabb2c044278d",
+        "565854d1ab38e2c2a86915aea4fbb0b6123e33f8e17edab0d8bc77347388dc96",
+        "9818199e468db24437c3e3b1b16e5dc67908bdebf96f85cd18477f911fbf72a1"
+      ],
+      "reads": [
+        [
+          "*",
+          0.5770964622497559
+        ],
+        [
+          "I",
+          0.8316081166267395
+        ],
+        [
+          "F",
+          0.823549211025238
+        ],
+        [
+          "E",
+          0.8732039928436279
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "a3734d1d9c99e6884963e25479daa8d3104b41d2f183bc049d0d24703c805d96",
+        "b45b000bd2172153b678e9a992ae579d3f010145617b047cd591a91680c13de7",
+        "8eb7f0852284e475ea9ce247574ec75272d532c50bd9fd8ca72f9bfa883818bc",
+        "1135a9a6e9f1fcda485a7660a377df7b5f511c4cee44231f42e2f0a7f8be18f0",
+        "79b0f864c055f34bb81e8a06081eda17a85c0506c531de09dfad684253341585",
+        "93294d4749f937f6b368dc0b4899f8ab5152fd5024a5dd9ecb7f407113f5fc72"
+      ],
+      "reads": [
+        [
+          "L.",
+          0.7694628238677979
+        ],
+        [
+          "A",
+          0.7143706679344177
+        ],
+        [
+          "-",
+          0.6706956624984741
+        ],
+        [
+          "M",
+          0.8404569029808044
+        ],
+        [
+          "a",
+          0.5002731680870056
+        ],
+        [
+          "a",
+          0.4168558418750763
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "80ae573d42333ae03add0da2811bcdba211f2f46dd7ac9390a2efb630a4efa43",
+        "8f97918df6de58721b781de86fe9f923e342670ee840efb5fdb9be54d5204328"
+      ],
+      "reads": [
+        [
+          "a",
+          0.38542425632476807
+        ],
+        [
+          "3",
+          0.9212476015090942
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "8f97918df6de58721b781de86fe9f923e342670ee840efb5fdb9be54d5204328",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              38,
+              0
+            ],
+            [
+              38,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.9005102741432438
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "eb110c1ef6dbca297e6bdf042a8a0d0f49f8b055fad8d9944246af150f66b412",
+        "e4ea55f6922e62cb5e2fbabad6179db0ff1fd13b972fb0a4578935296735e1dd",
+        "9b88d0b14f2d83811e6b33190ff5db89bdac4e8d516cb41c1aa8fdab74a25bfb",
+        "5a8d6b56338618d644419dc5a95477499624e85c92416289e3996c7673ae475f"
+      ],
+      "reads": [
+        [
+          "h",
+          0.8217271566390991
+        ],
+        [
+          "a",
+          0.5739057064056396
+        ],
+        [
+          "t",
+          0.9277400374412537
+        ],
+        [
+          "t",
+          0.5940368175506592
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "713deed4cde2df8026fa904d34b465a881c23900bba41a014a969b6e24dc2a0c",
+        "3f68682c945ed0d1457301f0077bb4d41808dff4acbc0a9f2afe464505bece38",
+        "364bd5dc62518bb52af847efb01343a536460706c2640bab1b64887e3e4906e2"
+      ],
+      "reads": [
+        [
+          "11",
+          0.9443180561065674
+        ],
+        [
+          "a",
+          0.5107500553131104
+        ],
+        [
+          "-",
+          0.261284738779068
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "713deed4cde2df8026fa904d34b465a881c23900bba41a014a969b6e24dc2a0c",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              126,
+              0
+            ],
+            [
+              126,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "11",
+          0.25487787278733887
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "f0a2fa1200fbbc8fa6685d6004666235a2ab28764a97082532026aec28f13342",
+        "065fe9d763d2e99d27d4306a37350e14e037a66f70d706aa0baead87da52e7fa"
+      ],
+      "reads": [
+        [
+          "8",
+          0.9820032715797424
+        ],
+        [
+          "F",
+          0.2760852575302124
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "f0a2fa1200fbbc8fa6685d6004666235a2ab28764a97082532026aec28f13342",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              29,
+              0
+            ],
+            [
+              29,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "8",
+          0.9812850334907495
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "7ce8762182159a4fe99e4b960e4c00901d2bcf88e5da70fc2e636ea9818cc8dd",
+        "56bff5ace6b22043a26c7ed94b3633c088fd5113f08c4875744696fed940152d"
+      ],
+      "reads": [
+        [
+          "P",
+          0.9896712899208069
+        ],
+        [
+          "e",
+          0.5736023783683777
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "88cbcc480c6ead8400a1c0308533ff7c7e359940460ee3346b89a18bd151bd25",
+        "28977f7cefc12a0488f0bef6bd853b43c7db124e67c9487fe1922c31e69bb731",
+        "dfd03766dd0b2622e6baf557de7c6772da9281c075e51059009c18387ae19bfe",
+        "267c56517ab4d9d19ed6f883b166078522c8926d066e3ed6519cc3664292fc2e",
+        "0e40bdb340e6a33dc26f2a8f44ef02d762937def9df29cf82270ed65f0f62912"
+      ],
+      "reads": [
+        [
+          "T",
+          0.9774297475814819
+        ],
+        [
+          "4",
+          0.2624985873699188
+        ],
+        [
+          "A",
+          0.5070950388908386
+        ],
+        [
+          "I",
+          0.4399782121181488
+        ],
+        [
+          "IT",
+          0.8337603211402893
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "28977f7cefc12a0488f0bef6bd853b43c7db124e67c9487fe1922c31e69bb731",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              52,
+              0
+            ],
+            [
+              52,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.2261613760530432
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "cc68ebbf81259829d406f1e3e2bd2ac3680bd6b7cf70bace2664193126a87e95",
+        "e6fbcb009582f6b4e4a43d3bc913ffa6d76c5c729f5c8bae3974a5bc1556027f",
+        "0c265e58dc7461c2ae6173c40c1c03696c19dc35899c5996db3054fb3cdd7882",
+        "c6a6772bc056f918095fdb58305f67af45d93ba17ca3fc405b3e0b97431e8eef"
+      ],
+      "reads": [
+        [
+          "L",
+          0.9999334812164307
+        ],
+        [
+          "1",
+          0.9452130794525146
+        ],
+        [
+          "ik",
+          0.8870917558670044
+        ],
+        [
+          "A",
+          0.46619758009910583
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "e6fbcb009582f6b4e4a43d3bc913ffa6d76c5c729f5c8bae3974a5bc1556027f",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              35,
+              0
+            ],
+            [
+              35,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "12",
+          0.20553516871153404
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "a4f3e7df6420c22f048b969a2c432dfcbd246d80f874b0406f2d832e86a53124",
+        "110ed05935454ba51e1dc0fb5cc2742f5937ac9d2c7b419ff3af7bb3029050fb",
+        "de77406066175c5ff3178f4e8ffe293343d58965399386e7bd7036210abd69d4",
+        "e5ddc10361db2bcbdf05144d882ccf6510755e0dd6d1ac786a2ef939865832e4"
+      ],
+      "reads": [
+        [
+          "I",
+          0.9926438927650452
+        ],
+        [
+          "a",
+          0.8183163404464722
+        ],
+        [
+          "a",
+          0.6853286623954773
+        ],
+        [
+          "-",
+          0.4822498559951782
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "61978eda5c94a2702a82d0b4d95e1b25350464bed908f8f519544699265aa55f",
+        "0e076e507ee59a62a211a78d1d3f0c5f070b85de539faaab48af4f1d2cedf5ef",
+        "17dfbe0aab02f54512a2479eb4c71954203f1084e338f115e69f8ba2341c6882",
+        "35ce89ea68e61744679bad86bcaeee441c17471aec83ed870876f3416cfa8e48",
+        "6f7329cc9a49b0071b464acc0d3ec8d4645416585208c9feee6a91c08c60c12d"
+      ],
+      "reads": [
+        [
+          "4",
+          0.8304885625839233
+        ],
+        [
+          "-",
+          0.7181724905967712
+        ],
+        [
+          "20",
+          0.9999684691429138
+        ],
+        [
+          "a",
+          0.5468308925628662
+        ],
+        [
+          "L",
+          0.6229245066642761
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "61978eda5c94a2702a82d0b4d95e1b25350464bed908f8f519544699265aa55f",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              35,
+              0
+            ],
+            [
+              35,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.29768755194448104
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "17dfbe0aab02f54512a2479eb4c71954203f1084e338f115e69f8ba2341c6882",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              64,
+              0
+            ],
+            [
+              64,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "7",
+          0.12028993980175429
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "fe8e71081cb42f0628625044006f22fdab537d434830e1463d791dd2815daad3",
+        "1184b4ddec4b5584087d29bc711eef4608c24495b9afb73d2cabb44e9176b8ee",
+        "f5449450ff2f78430991f5d65663cc7e6a85c633c4043892d404a386f586906d"
+      ],
+      "reads": [
+        [
+          "1",
+          0.8475401997566223
+        ],
+        [
+          "*",
+          0.4867181181907654
+        ],
+        [
+          "E",
+          0.9874086380004883
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "fe8e71081cb42f0628625044006f22fdab537d434830e1463d791dd2815daad3",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              54,
+              0
+            ],
+            [
+              54,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "6",
+          0.4738427386656099
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "f2d0e0d3ce0279396e81923e9ecf11c11418816a5e2ac238c14529f4f4030e70",
+        "86eca04037e531174bfdb875103011c1237151dfa8c38c4a619f390abc6f684d",
+        "b88f09cdd84194ffdd333a35090fee4178db6c5b83a2a463e74db433e2b0c8fb",
+        "2ebd9e8fae4e69d64ccbb2b9eb83d2de840163dc1bd6be74ba3d7cfb36762d3d",
+        "00ee2f8db1ef3ebf60a3b4bd6363426268fb76a6bf256b970ba2833c47b9780d",
+        "236b6a467241449b611f61cf750db7d58ef74c7fc60986fe70aa5278c99f0c9c"
+      ],
+      "reads": [
+        [
+          "10",
+          0.9870313405990601
+        ],
+        [
+          "LA",
+          0.9827033281326294
+        ],
+        [
+          "HO",
+          0.5892091989517212
+        ],
+        [
+          "W",
+          0.7205173969268799
+        ],
+        [
+          "A",
+          0.8149494528770447
+        ],
+        [
+          "A",
+          0.9378806352615356
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "f2d0e0d3ce0279396e81923e9ecf11c11418816a5e2ac238c14529f4f4030e70",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              54,
+              0
+            ],
+            [
+              54,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "10",
+          0.15705223398457363
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "f1026ba859498baa7617760a217de919dd1ea6943a7eced9736ed580c2887c3c",
+        "aea8bc8c7c223e19730f6726f012d617605c04b79b87d70e894ef6634589a54d",
+        "1c57a11bbdffc5db5cfab11fadf6130ef85c62e07d9d62c75ceb4fceeb73936a",
+        "2b995078198f550f5500f6b5d68f23ff37fd6afaf9619dd2702ef1d03cacb1de"
+      ],
+      "reads": [
+        [
+          "T",
+          0.32594025135040283
+        ],
+        [
+          "T",
+          0.9987865090370178
+        ],
+        [
+          "*",
+          0.9454739689826965
+        ],
+        [
+          "A",
+          0.891382098197937
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "af086772023b7dc0c36094587d5034e1cc31d324da449ad4fd90c12a4bed8735",
+        "9a2131f13ec54e83e5de8cbae68064758eeefac1e9c2e04ecd66bb266a2b66fc",
+        "38410768692a789c9b9abde5be0ea60ed7e3864ba16144428c3c0150ae176436",
+        "d754a248dfe675c85bcf330900fda1462c295d2d495dd4e4f42d85f58fd4df42",
+        "7e89d42dfc2747542777482bb14077accefa2cd6fcedbf2ac099b8ab52d29a0d"
+      ],
+      "reads": [
+        [
+          "8",
+          0.845729649066925
+        ],
+        [
+          "4",
+          0.3750862181186676
+        ],
+        [
+          "a",
+          0.31672415137290955
+        ],
+        [
+          "of",
+          0.420790433883667
+        ],
+        [
+          "2",
+          0.27462002635002136
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "af086772023b7dc0c36094587d5034e1cc31d324da449ad4fd90c12a4bed8735",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              31,
+              0
+            ],
+            [
+              31,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "8",
+          0.9692411710536284
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "9a2131f13ec54e83e5de8cbae68064758eeefac1e9c2e04ecd66bb266a2b66fc",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              68,
+              0
+            ],
+            [
+              68,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "4",
+          0.5794116636871571
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "7e89d42dfc2747542777482bb14077accefa2cd6fcedbf2ac099b8ab52d29a0d",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              120,
+              0
+            ],
+            [
+              120,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "6",
+          0.3641747071824284
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "4b88888a876a1db2c2ebfd48faa45a51ac4cd49db02a86c2516a5bbcbc8c258d",
+        "d5228eae8b535eac4e3cdde1442af8b5fc6c419a5e68984645b9a7e56aea32d2",
+        "0df7349d64fce6203cd3b38ae348a6461a739a93f6acf1f60ac3672447fee754",
+        "6450406584a96e4c886d108fe738cefb2c0a9220e2c60649495bcf6f662c3f24",
+        "1e21af8b9b3ef034751aec8260686ec7b5649dec24e5505ff3caf0120732e39c"
+      ],
+      "reads": [
+        [
+          "-",
+          0.303046315908432
+        ],
+        [
+          "W",
+          0.8218950629234314
+        ],
+        [
+          "IS",
+          0.6831074953079224
+        ],
+        [
+          "-",
+          0.2721330225467682
+        ],
+        [
+          "4",
+          0.3454286754131317
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "1e21af8b9b3ef034751aec8260686ec7b5649dec24e5505ff3caf0120732e39c",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              50,
+              0
+            ],
+            [
+              50,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "6",
+          0.2165591952327759
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "c23fa75c9fddf841d632e649e776510a0ded5672d8a4724ee7ed5317f4402992",
+        "2ded05dc3ffb33b36fb6638cf602614f7a55710cfc15b38a760f9857fce78941"
+      ],
+      "reads": [
+        [
+          "N",
+          0.32715916633605957
+        ],
+        [
+          "-",
+          0.32836011052131653
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "58d2259437384dd37023d46429027162bfb58479d33dbf82eae864b3bd51ea3b"
+      ],
+      "reads": [
+        [
+          "*",
+          0.8344569802284241
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "7ecaa3573166d304fd833ef8a90c7ef1d46053a29025b6cf46d4d0fc3b78d772",
+        "7423a4916df6d78dccdcb1b9f079e8353225978b09c17e8de54c718ec1c4dbfb"
+      ],
+      "reads": [
+        [
+          "P",
+          0.8111799359321594
+        ],
+        [
+          "La",
+          0.8347061276435852
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "7d2a902dc9031da16a1f9a98688610bc986d3576a30300fed4c85a2463ec479e",
+        "1b6c2d9a529fd9fd12dbf0f5ba99c40590a8a2d1e03ae002b4060b73e6a01d58",
+        "8a5c86388745e8974dc67f2210fa077f9234ab37dd722c8d02babd262b606d75"
+      ],
+      "reads": [
+        [
+          "-",
+          0.24133706092834473
+        ],
+        [
+          "J",
+          0.8966338038444519
+        ],
+        [
+          "-",
+          0.38670456409454346
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "d824955bfb87ad734116f7110958ed7b7d2ff4eb8f1bcd9ba405988a4d846728",
+        "ef6b10545d9fe91c243070e6254781b21bba7962ee42c006cf25545021140cb1",
+        "aa04ab452f3094424b335ab8585b49663e478a8cb809516d6fcf8a1ff0dbff77"
+      ],
+      "reads": [
+        [
+          "a",
+          0.6125953793525696
+        ],
+        [
+          "#",
+          0.6438520550727844
+        ],
+        [
+          "I",
+          0.8808488249778748
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "e299926c8f2f96f562b970d86c647c7b7c7a6f783544e724225b621eac9ef226",
+        "165d3d37713ff0f320cba1b312483a63107ac3d3b9227a0659db6f57f2e20bb1",
+        "65f2358a67083491026807b55a7a0bbf8b7b8e7c0c11ca140def784aaf55c96f"
+      ],
+      "reads": [
+        [
+          "a",
+          0.43136918544769287
+        ],
+        [
+          "f",
+          0.5280614495277405
+        ],
+        [
+          "19",
+          0.9989237785339355
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "65f2358a67083491026807b55a7a0bbf8b7b8e7c0c11ca140def784aaf55c96f",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              68,
+              0
+            ],
+            [
+              68,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "19",
+          0.6668556355916675
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "3914f9128071413dd4649d98392a785500738fa7234ef91f9d1b5ebabf96d436"
+      ],
+      "reads": [
+        [
+          "2",
+          0.5899503231048584
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "3914f9128071413dd4649d98392a785500738fa7234ef91f9d1b5ebabf96d436",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              82,
+              0
+            ],
+            [
+              82,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "14",
+          0.08339303081455965
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "5f8d526bc00b2bf3e1e58e1d37429ef670e2fbde82013245bc4b347a68bd68a3",
+        "f4aca5e9e17cd0d467049affb280d4f6fc5382394c5d7b271bc6db8dc8edfef6"
+      ],
+      "reads": [
+        [
+          "A",
+          0.3266303539276123
+        ],
+        [
+          "4",
+          0.6552807092666626
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "f4aca5e9e17cd0d467049affb280d4f6fc5382394c5d7b271bc6db8dc8edfef6",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              35,
+              0
+            ],
+            [
+              35,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "0",
+          0.6504617954902301
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "b787521446584b28ce958953da1e3501d13a6823f780c98933a38b27c1ed227c",
+        "454f64cc2c322b9cc65551de71b986b572a88e96b284c6ac1f9cc9e62358d5dc",
+        "444ac405b205484b7248f6700b2720c97f2b99645015be4746e338852ae2a800",
+        "2a75532ecbf6fb9225f5d4e79383698aa9898fd106b3f0113613186278ab0262"
+      ],
+      "reads": [
+        [
+          "-",
+          0.5520439147949219
+        ],
+        [
+          "17",
+          0.9958021640777588
+        ],
+        [
+          "4",
+          0.9856175780296326
+        ],
+        [
+          "4",
+          0.6078838109970093
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "454f64cc2c322b9cc65551de71b986b572a88e96b284c6ac1f9cc9e62358d5dc",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              65,
+              0
+            ],
+            [
+              65,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "17",
+          0.6787207826041431
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "444ac405b205484b7248f6700b2720c97f2b99645015be4746e338852ae2a800",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              75,
+              0
+            ],
+            [
+              75,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "7",
+          0.13104058258949536
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "2a75532ecbf6fb9225f5d4e79383698aa9898fd106b3f0113613186278ab0262",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              78,
+              0
+            ],
+            [
+              78,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "7",
+          0.89060020650642
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "40f2b62fb9a2101313b62cb865c67218e051e171ff471e2b387a0295a332edb6",
+        "9b58bbce996bd6cad909d645ebfdae36d7040eae22ee2b6017af191c3fef21fc",
+        "5eab127cc155d8750c3d7e3a8ad3294046a85fa911acc854a5c83c7f405148ff",
+        "7b32842ee101cde431ad707cfb985dbe0e0d54b2c82ee933fb60fa9acdc1601c"
+      ],
+      "reads": [
+        [
+          "A",
+          0.622389554977417
+        ],
+        [
+          "a",
+          0.31879138946533203
+        ],
+        [
+          "-",
+          0.9644797444343567
+        ],
+        [
+          "F",
+          0.7091364860534668
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "995879a2b182f967c2fd301cc64de74288c218e68e20e9afb33be62a1f329037",
+        "4f58822b9565337c9ac909271f6a25bdebf6ae4e226ab699b7e23ba70f5529b3",
+        "cce9e7b9a02bdc55f19ce4f73ea82f5c3cfbf790c51f338e07652d1d2bef6673",
+        "983ac9b62935946677fd07f44c26461ffe155b24089615244d238abc30f2a401",
+        "a5fbd0b9f39936e403fe6d920a1a3a12e80b43e4ea98c94e5d38fdd438a3db07"
+      ],
+      "reads": [
+        [
+          "1",
+          0.3965681195259094
+        ],
+        [
+          "buf",
+          0.8542556166648865
+        ],
+        [
+          "1",
+          0.8977248668670654
+        ],
+        [
+          "I",
+          0.44918426871299744
+        ],
+        [
+          "I",
+          0.4942795932292938
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "995879a2b182f967c2fd301cc64de74288c218e68e20e9afb33be62a1f329037",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              35,
+              0
+            ],
+            [
+              35,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "1",
+          0.3593698067136053
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "cce9e7b9a02bdc55f19ce4f73ea82f5c3cfbf790c51f338e07652d1d2bef6673",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              35,
+              0
+            ],
+            [
+              35,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "7",
+          0.8890646850745476
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "4c12b0ae087843ffb52905e5f56a26866fa4801ad85fa70c78bc10a9a7b417aa",
+        "1a25314e7d067bee5e2700231d0b1515d6c16c8a98fd814441c1f56e6f6f414e",
+        "f04e192a9c17e32cb45f4999e546fbcbc79abff36258a07d2255937aaa3a55f3",
+        "63bccacaf5d71af7a360658b16ef3cbbe22b71c8133c4c07387815880a361df4",
+        "8d1a3cc0ea4dcc4acabde4e7c5a24e3a047004cc1833826caf7b2bc1d580466c"
+      ],
+      "reads": [
+        [
+          ">",
+          0.9996304512023926
+        ],
+        [
+          "B",
+          0.486149400472641
+        ],
+        [
+          "E",
+          0.4500921666622162
+        ],
+        [
+          "A",
+          0.715996503829956
+        ],
+        [
+          "7",
+          0.58348149061203
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "8d1a3cc0ea4dcc4acabde4e7c5a24e3a047004cc1833826caf7b2bc1d580466c",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              64,
+              0
+            ],
+            [
+              64,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "7",
+          0.2011268881128423
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "3af9707d1493d311bf71f26e711cbfca2cbcd0ed64552fe362e7f17de414367c",
+        "adabff4fb524ac9e49f66a6cb046f28c6fdbf03c1b91f9ed6b9e17ff2bbb361d"
+      ],
+      "reads": [
+        [
+          "19",
+          0.998645544052124
+        ],
+        [
+          "1",
+          0.6828833818435669
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "3af9707d1493d311bf71f26e711cbfca2cbcd0ed64552fe362e7f17de414367c",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              56,
+              0
+            ],
+            [
+              56,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "19",
+          0.6916258975302968
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "adabff4fb524ac9e49f66a6cb046f28c6fdbf03c1b91f9ed6b9e17ff2bbb361d",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              44,
+              0
+            ],
+            [
+              44,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "1",
+          0.5002516312225112
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "e6ac5175f4e6c8f482c9806611581d5bc90323a4f1665e2bbae97665b4b87ce0",
+        "d405f0e1ce21b1066551b30e78e14f0f0564067a938f5fb88addec203732bef9"
+      ],
+      "reads": [
+        [
+          "19",
+          0.9979802370071411
+        ],
+        [
+          "t",
+          0.7674391269683838
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "e6ac5175f4e6c8f482c9806611581d5bc90323a4f1665e2bbae97665b4b87ce0",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              64,
+              0
+            ],
+            [
+              64,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "19",
+          0.6860296417769556
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "68b672afa5ea9e5a19891646cdf71071513dfbe2f263b92c1a4b5afdad4916ab"
+      ],
+      "reads": [
+        [
+          "I",
+          0.9776942729949951
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "1c15a1d39b0057c529df5cebf3526b88963b4d430eea25d94c3222aad414f3f9",
+        "e9e32c4c425894fce0c730da69cb07b8e1fdfa4c40628d4faa11d5cc2e9552c5",
+        "22bb29d717ddb14f4f1e3625047f9080ed800171a0a5c51c6e906072db04278b",
+        "18084add65a05828eae3889dd9d036beb3be1610156a3d5d8aad9f2812229dd7"
+      ],
+      "reads": [
+        [
+          "I",
+          0.7994732856750488
+        ],
+        [
+          "20",
+          0.9951629638671875
+        ],
+        [
+          "W",
+          0.43636688590049744
+        ],
+        [
+          "e",
+          0.4465428292751312
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "e9e32c4c425894fce0c730da69cb07b8e1fdfa4c40628d4faa11d5cc2e9552c5",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              69,
+              0
+            ],
+            [
+              69,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "7",
+          0.2759079311806687
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "f44694f91d429e9549761aefbad0c946b7ed6eb145282da522561e11f8f6429b",
+        "446d6cac5dbef3819eac29fbedb6a4a548b3098e958501d3bb74d911d78d5e5d"
+      ],
+      "reads": [
+        [
+          "F4",
+          0.8614161014556885
+        ],
+        [
+          "F",
+          0.6008925437927246
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "c208b0a2ef83426e86df43332aa5d9247a98e1fa076d89d7d8628e5b775ca459",
+        "8a02b16b78cdb47c5f5ecf64d8b605b146ab1274accd2ef94924b3b778f76d97"
+      ],
+      "reads": [
+        [
+          "*",
+          0.7992817163467407
+        ],
+        [
+          "a",
+          0.4454876482486725
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "edd3f128d1f64a3e3e71b1914482a908d9f221ad81d1af0909f8c781c92a7dcc",
+        "b2f047002c141c4353ef30c27acda9ecb1d181cab250c772d107c947dd0079b8"
+      ],
+      "reads": [
+        [
+          "d",
+          0.9195950627326965
+        ],
+        [
+          "a",
+          0.9510790109634399
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "3d5917c67ca4467fa82dc98a22c90378197136593ec3eadc10185f04afe8ad08",
+        "b7f5f1f6f6f6e4cb1b07f95cf78e7f1b15adae88aeb209632442a8db0d8b8507"
+      ],
+      "reads": [
+        [
+          "e",
+          0.6226218342781067
+        ],
+        [
+          "f",
+          0.9483547210693359
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "975df7c4050a4a00f9ff12383813153a8535c3ac1efd498bb126d301822d156a",
+        "92cadea996e22f1fbc0a3fddcac390a93e52d4633db32d4be4f294d23525b03f",
+        "6d89ea5c8ea0f595babd39bd46693c6ac65ef3a17f50bdecab7adba6d8b8eec3",
+        "4b215e0ead9b5f9f783dce6fe78ed985d2e4ff9fd58c14bcc8bee5f4c7f6016a"
+      ],
+      "reads": [
+        [
+          "L",
+          0.9939968585968018
+        ],
+        [
+          "-",
+          0.9784201979637146
+        ],
+        [
+          "a",
+          0.9997588992118835
+        ],
+        [
+          "3",
+          0.5620383024215698
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "4b215e0ead9b5f9f783dce6fe78ed985d2e4ff9fd58c14bcc8bee5f4c7f6016a",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              78,
+              0
+            ],
+            [
+              78,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "3",
+          0.3254506142225786
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "65ae377e00f4d267040d3afe10e5a1bc09791bdbe782c9c838fb2e946d1ea720",
+        "17527d71747f33ac16a4471acdd6161a1ec1ee21291d73ad1ba07872330f9de4",
+        "2eac862779d78ff6cecde68df10760bbb4f1a08aea0db67ee8fd1183c58345ff",
+        "8f382c6b219d886446dc456ec7d38c69557758207565f814f8f49f5cf6932da5",
+        "409be811639809176978d7d8ae77ea7e4557d4e9b614cdea4060f751e6a3a933"
+      ],
+      "reads": [
+        [
+          "A",
+          0.82441645860672
+        ],
+        [
+          "-",
+          0.3727584481239319
+        ],
+        [
+          "-",
+          0.46583792567253113
+        ],
+        [
+          "F",
+          0.7257795929908752
+        ],
+        [
+          "L",
+          0.4785962998867035
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "16bc05d115df6cd45a5fd6b7de5f4fd7184bab51e315159fc9e527fb67ae082b"
+      ],
+      "reads": [
+        [
+          "f",
+          0.9674988985061646
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "e87299e55a821fd3885c5914f6fff5bd08ba8bf0e9d56241ea79ebe77da9d6db"
+      ],
+      "reads": [
+        [
+          "I",
+          0.5965518951416016
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "d31b0e6d5b691aca8099a62546f968d5f0537f9125c306406a5da3b2b4d7979c",
+        "adeb5fbb81b56d14dde4767acba3ef745f8545052b946762fcf06ae0e641b1c0",
+        "b1f074f3f170172c772dcbd88a808a69e7e7ba7a13364e3d03dfc784cad7c8de"
+      ],
+      "reads": [
+        [
+          "a",
+          0.8909363150596619
+        ],
+        [
+          "*",
+          0.6037996411323547
+        ],
+        [
+          "a",
+          0.9862728714942932
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "c03e09b9fc16cba0a081c2dbe5ddf93bece4548c598ec96622ac2f8702908e49",
+        "b1a0e7c60f6aea64cda2564b32252430557cecd350b6f4ab4cfeb5954b195cfb"
+      ],
+      "reads": [
+        [
+          "T.f",
+          0.7074880003929138
+        ],
+        [
+          "Ly",
+          0.40178149938583374
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "74d465e597c6bd42b247148adce8d4f50600ecfd82e887630913cec35087bce8",
+        "f6493d7b644bc98554e1c1eabd26ecb5d70a8a71cb7c5ab589eb06353edf526e"
+      ],
+      "reads": [
+        [
+          "/",
+          0.7970110177993774
+        ],
+        [
+          "a",
+          0.9097337126731873
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "09e77cb76ac902f05e93947a6de74e9cb8f0c903e7fb72200b0c7cc21475d46a",
+        "2b8268138815e7fcbe0b1ac9874f7792c2775d33bf9b2111c94249e258973bba",
+        "1bea507840aa94960b3f8cd24da1196776052917f05e5a296c78fbee6d7f5d20",
+        "be2bfc84e9dedfafdebb1d1e3c43dd1138cd8212259edd120809182af6c3437a",
+        "def35615175ef6314d587810d41771bfd3b5a3928ffb53883fb1831972da5d32",
+        "6c33c50aa5714091c151dc38afd0ea3f8eee24a3ce82968de3566fa44062bbd6"
+      ],
+      "reads": [
+        [
+          "7",
+          0.5368472933769226
+        ],
+        [
+          "4",
+          0.28933513164520264
+        ],
+        [
+          "f",
+          0.7226680517196655
+        ],
+        [
+          "A",
+          0.3118736445903778
+        ],
+        [
+          "3",
+          0.7645967602729797
+        ],
+        [
+          "I",
+          0.9154607057571411
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "09e77cb76ac902f05e93947a6de74e9cb8f0c903e7fb72200b0c7cc21475d46a",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              43,
+              0
+            ],
+            [
+              43,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "7",
+          0.18540179704093251
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "2b8268138815e7fcbe0b1ac9874f7792c2775d33bf9b2111c94249e258973bba",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              47,
+              0
+            ],
+            [
+              47,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "5",
+          0.12007613566752529
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "def35615175ef6314d587810d41771bfd3b5a3928ffb53883fb1831972da5d32",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              72,
+              0
+            ],
+            [
+              72,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "3",
+          0.3349989784986498
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "58bc3157a06a41f851f2ef6f71e8c78cc7ed3eb3e6ca4f8db9eff1e4764a7709",
+        "51b2b8ec4ba45f010a3163a2289613778fa09da5b4638f580d3a385ea20b9aff",
+        "423fb00d1be33a5783f5e4b6703bf6a90ab5f1a97a03356130db97c4dd9bd03d",
+        "48aa3eb6785ca367110e3564b54ffee58979d74139949c504dd6c0910def484d"
+      ],
+      "reads": [
+        [
+          "t",
+          0.8646787405014038
+        ],
+        [
+          "I",
+          0.8156882524490356
+        ],
+        [
+          "74",
+          0.5194281935691833
+        ],
+        [
+          "a",
+          0.9997257590293884
+        ]
+      ]
+    },
+    {
+      "reader": "EasyOCR.recognize",
+      "pixelSha256": "423fb00d1be33a5783f5e4b6703bf6a90ab5f1a97a03356130db97c4dd9bd03d",
+      "reads": [
+        [
+          [
+            [
+              0,
+              0
+            ],
+            [
+              50,
+              0
+            ],
+            [
+              50,
+              64
+            ],
+            [
+              0,
+              64
+            ]
+          ],
+          "1",
+          0.3349905608858741
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "33a91dba47c726ab53fad2738568c4d4921064277d3789a18b9b0e0dc6901211"
+      ],
+      "reads": [
+        [
+          "f",
+          0.8329448699951172
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "f331b554eff0d55e79f09ebd5481f0d7e06b2dbf89b7b36fd701f61314b550fb",
+        "286f36da7152b7db971a9494ad77bc06af0829b70b4817bdc283e875813b9ed7"
+      ],
+      "reads": [
+        [
+          "A",
+          0.6228752136230469
+        ],
+        [
+          "*",
+          0.3845444917678833
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "e077726eb02d17fd583116156d29095c22f26dea7a39fe5f6dea1aba656ad509",
+        "a0a3cbdae625f397279400f9790ac7b5998d28ac80ae3e0d0a51f22331f34511",
+        "cd871982cb76296363173715d0d7cfa87f5998d131f2b0b57803d06398d8607d",
+        "d2b219568350c5c39d304eb54a3ea58170cd8da33438936c3349b538809c23a6"
+      ],
+      "reads": [
+        [
+          "I",
+          0.9761635661125183
+        ],
+        [
+          "E",
+          0.6129963397979736
+        ],
+        [
+          "'",
+          0.5547751188278198
+        ],
+        [
+          "-",
+          0.39438745379447937
+        ]
+      ]
+    },
+    {
+      "reader": "PARSeq",
+      "pixels": [
+        "408583cde24ec6c0c3b28efa964f56042bc1d487c3d7eed0ed74079b23270abc",
+        "373b10d741aa40741fc6ec82739e25e7af1c1fbbb14815cddd3f237b1eaaf9dd"
+      ],
+      "reads": [
+        [
+          "F",
+          0.6216606497764587
+        ],
+        [
+          "a",
+          0.6822552680969238
+        ]
+      ]
+    }
+  ],
+  "ocrDevices": [
+    "cpu",
+    "cpu"
+  ],
+  "ocrDtypes": [
+    "torch.float32",
+    "torch.float32"
+  ],
+  "corpusReads": [
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000000_0.jpg",
+      "fileSha256": "889dc190b0a132611681d345b1dede7db4e122130a56287badb605d9b37641e5",
+      "window": "gap1150",
+      "sourceTimeSec": 1150.0,
+      "box": [
+        425.99737548828125,
+        459.490478515625,
+        500.1456604003906,
+        713.7080688476562
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "91e5036934a0630bcb5c73de6f68d88388f114f2399900f1f3903dba91c7d603",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000008_209.jpg",
+      "fileSha256": "eef9a75e4f429c79530312df9bb0312027c75153970d2220f15429a7b8142091",
+      "window": "gap1150",
+      "sourceTimeSec": 1150.8,
+      "box": [
+        -0.05621337890625,
+        595.9933471679688,
+        106.94137573242188,
+        710.46923828125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "059fca8db62ff890a48224cbdf47a450f6913271f418975782f6f2cb54b5b67e",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000014_342.jpg",
+      "fileSha256": "91de59a690edd04429ba2943dd7b92e9dcb5dfa3a8cdc6a1f5528eab75a9de3d",
+      "window": "gap1150",
+      "sourceTimeSec": 1151.4,
+      "box": [
+        997.90087890625,
+        541.5203247070312,
+        1031.40185546875,
+        641.0994262695312
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "a3b6649fc8c124e46d93da51791f7f67738a3463dfc70fe48e05c345a81a685d",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000018_451.jpg",
+      "fileSha256": "20e04eb3b93fa2e1b986bab33d70919b80cf9f55790bbc63fe987263dc952e82",
+      "window": "gap1150",
+      "sourceTimeSec": 1151.8,
+      "box": [
+        348.2079162597656,
+        534.8983154296875,
+        381.3242492675781,
+        619.0514526367188
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "94f06e6374ee72e4c326bb6caa56cbfbe26594441f9a6d849f8dd0eedb5b25c2",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000022_561.jpg",
+      "fileSha256": "7bdb4db4920043b8661a8d495920668e4e5976f175ae6a268939afc632ab47a9",
+      "window": "gap1150",
+      "sourceTimeSec": 1152.2,
+      "box": [
+        723.0673828125,
+        547.626220703125,
+        759.4696044921875,
+        653.624267578125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "12344125233ef5aaeb66ec59e62224bacbd13994910e5bc393025a9c3e238983",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000028_693.jpg",
+      "fileSha256": "666c67f84ea1012844051438a531d5f9c95b4a3a1116b88a7bdcb86ebd7333b0",
+      "window": "gap1150",
+      "sourceTimeSec": 1152.8,
+      "box": [
+        1077.8603515625,
+        541.5115966796875,
+        1149.0869140625,
+        668.3530883789062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "743435d9b3b62ab43f18091a05c5cc20ef07dae5666a446a0dd3807cd53e9605",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000032_774.jpg",
+      "fileSha256": "426bfacb20917e1d40adedf215da769e6192a7bec58673393a8c43cec6403ac2",
+      "window": "gap1150",
+      "sourceTimeSec": 1153.2,
+      "box": [
+        969.0451049804688,
+        530.3017578125,
+        1011.325439453125,
+        613.249267578125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "c278f58b9dd3b2698333b88656056acea9c636f047a15a6540a8fd7631026942",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000036_864.jpg",
+      "fileSha256": "f4f95ce6273acf3a396a77068ba12c872b0379f7ce8c98118b4f71c583cb53b5",
+      "window": "gap1150",
+      "sourceTimeSec": 1153.6,
+      "box": [
+        147.77066040039062,
+        529.4537963867188,
+        185.27899169921875,
+        626.1502075195312
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "79f766ece060d708eb809b562ee2cbe635a027451edaf65c2be2ae0b5675b560",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000040_945.jpg",
+      "fileSha256": "e3d4cd820c2e967865f0b4661a9bbd1e6ed3bc52d360e21f00ede4bfe0a5691b",
+      "window": "gap1150",
+      "sourceTimeSec": 1154.0,
+      "box": [
+        53.56350326538086,
+        525.8770751953125,
+        101.35101318359375,
+        649.6340942382812
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "286304d30841719c8fad1e8dab45428d5e436e90cbf80a6fbca791dd0328be08",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000044_1032.jpg",
+      "fileSha256": "f3f70b60c98f0e1b2a1ed917686aebec59923c35196ae1681e34dd76b40efb37",
+      "window": "gap1150",
+      "sourceTimeSec": 1154.4,
+      "box": [
+        693.4127807617188,
+        546.0484008789062,
+        729.2400512695312,
+        627.6467895507812
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "8fd0ce4572b069fe55af255d3970968a10805451d52270dfaca2e9c60c8f22e3",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000050_1140.jpg",
+      "fileSha256": "87fec3cea014250f9687d053d2f76ee4b07deb631ee747cc76deb1319c1a4c28",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.0,
+      "box": [
+        514.6430053710938,
+        571.985595703125,
+        568.5093383789062,
+        682.224609375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "43089b1ed48674bbd52784774b5cfd069b904c5ae34caeaeb7f5513363bb2326",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1217.jpg",
+      "fileSha256": "d425660d6dc449b6f9b85656d5e5e21e8a7670eda50a9f48d7646a9ef8749c00",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.4,
+      "box": [
+        352.1072082519531,
+        586.8094482421875,
+        507.3884582519531,
+        771.3257446289062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "6d893600e52550c2e24161d3fed7ed29fb951b43da9afcb5b56eda240eecc3a6",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1218.jpg",
+      "fileSha256": "6b57137a3bdd53a6e1b87683b8c1e1172cbbbed3bb1f65ee4e1966b06c6b5797",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.4,
+      "box": [
+        1548.10595703125,
+        557.5347290039062,
+        1759.302001953125,
+        871.0977783203125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "e13679548edc6277528cab81eec560c3caf1b42afffe489b02c86674edf1bf0f",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1219.jpg",
+      "fileSha256": "6160d23b1a2a57292a9abd9d2c271bd421cd4ee83826c330166660cf054d29e9",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.4,
+      "box": [
+        1785.158203125,
+        562.5025024414062,
+        1850.7425537109375,
+        692.1131591796875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "120afe009d837c81c5b28a2dd57b6207d528cb9cfe2d8b1451521b1a388aafcb",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1222.jpg",
+      "fileSha256": "d87bf11ec86afec9daea218bd939e18812529bce82da80f898963c49836b38d6",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.4,
+      "box": [
+        1215.6517333984375,
+        635.5379638671875,
+        1473.5775146484375,
+        817.0398559570312
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "cef1d16f32f7ff6fdd67be142a5a75a1fa95a02b9a6dbaa75ad3379dc729d77e",
+      "result": [
+        "4",
+        0.9778273701667786,
+        "shirt:white"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1223.jpg",
+      "fileSha256": "e1f2b2c87ae766b19a64c7a121204ace786a4d7f43cbd9d486b354195add26c6",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.4,
+      "box": [
+        471.369873046875,
+        592.8831176757812,
+        577.6368408203125,
+        726.0936279296875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "70a7790f9b096dd5152e877d93ac69cc1eb6260d6751da729ea79c62ee389b9c",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1224.jpg",
+      "fileSha256": "f963797ecdcaa151f14fb92b24e85a64e9a0db48a571b9ee69fc02729b7ac5e2",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.4,
+      "box": [
+        539.6522827148438,
+        596.5729370117188,
+        580.8267822265625,
+        720.6520385742188
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "161cb3557d0f25dea6cbefc3861dd56ef77d0266e61d605c2ba292bf00d12a76",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1227.jpg",
+      "fileSha256": "43a3f94030c2dde93c793b538121573c69e367c6a688146990f025e3d227bcfd",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.4,
+      "box": [
+        1219.7059326171875,
+        651.5554809570312,
+        1333.6956787109375,
+        805.6802368164062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "6b0e3f3b50a24af82d8a037d1a8f601eab7c804628411e66458ff40d65dd68c4",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000056_1257.jpg",
+      "fileSha256": "e8eb8440db8cf633847cea6f6212a891f3d32e44be2c638e5a935aeef54823f1",
+      "window": "gap1150",
+      "sourceTimeSec": 1155.6,
+      "box": [
+        321.0848693847656,
+        609.1854248046875,
+        385.10394287109375,
+        729.2495727539062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "f751f1ea3c98ba4fec8387d38e61c6f3b5a830a039b65b4833eeca7de1720724",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000060_1332.jpg",
+      "fileSha256": "fa42799510ac411f18f40e6ac5612b7f11c738ff27ef1bc553dd6c118baf166f",
+      "window": "gap1150",
+      "sourceTimeSec": 1156.0,
+      "box": [
+        431.1182861328125,
+        615.9255981445312,
+        474.969482421875,
+        699.60693359375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "2879257ae5695d520097ee46c3507bed26ff367659cf1048aefb96b300ca3ffb",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000066_1442.jpg",
+      "fileSha256": "e9a62dc717e347cd0de08783bf25ec41f61c5dc9abd93680cd895c5cd8982d07",
+      "window": "gap1150",
+      "sourceTimeSec": 1156.6,
+      "box": [
+        155.4290008544922,
+        592.83935546875,
+        315.2142028808594,
+        818.64404296875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "958b91b9d7d1f3715b9e6076effc918a68ac41853eb9d3d0cc8f66cc00ae823e",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000070_1515.jpg",
+      "fileSha256": "1de76ff9479d900b4b1eb6ffc1a13b3295b2ffd8c6a2d610fc84f9c81205ccb4",
+      "window": "gap1150",
+      "sourceTimeSec": 1157.0,
+      "box": [
+        143.25741577148438,
+        613.5535888671875,
+        228.0175018310547,
+        757.2197875976562
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "4bc8383aa5f51c3cdff7d069f6e244014fb17f0fb333afdeaad72fa11eea70d6",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000076_1611.jpg",
+      "fileSha256": "cfd5670e22ceb3317335a0fb3c5757775f221cad7cf36d4af2d816b59da68898",
+      "window": "gap1150",
+      "sourceTimeSec": 1157.6,
+      "box": [
+        1416.9517822265625,
+        492.5087585449219,
+        1573.046630859375,
+        763.5488891601562
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "61c7fb54263b52a8424a98de84ed23b7c41598b68ac3cc617fc5808daa7a3422",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000080_1674.jpg",
+      "fileSha256": "1a2ab7f4ae22df494a1e7d8cde2ea222da4f5fe666984f1b4a2b2bd13d38545e",
+      "window": "gap1150",
+      "sourceTimeSec": 1158.0,
+      "box": [
+        1167.4541015625,
+        514.8549194335938,
+        1217.1988525390625,
+        624.0137939453125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "1a7457005c275d3f788e36b02d6ab4348d26553e9f29466c97f3d19d3b25fc98",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000084_1729.jpg",
+      "fileSha256": "c9c8002e0267853bbd5fe605bcbbca95df255e62ef43935626487ca1bc214c4b",
+      "window": "gap1150",
+      "sourceTimeSec": 1158.4,
+      "box": [
+        802.8768310546875,
+        624.6187133789062,
+        899.4232177734375,
+        751.5499877929688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "f275d5f3a2b1a80205377185d7d35e70e4a2af1491965de437135b45a392f12c",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000088_1792.jpg",
+      "fileSha256": "cb23ace8e964443b855033320129b5baca0268b2f6a5cc54029910037de5f2e1",
+      "window": "gap1150",
+      "sourceTimeSec": 1158.8,
+      "box": [
+        22.9328670501709,
+        483.6720886230469,
+        213.21043395996094,
+        824.1743774414062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "e5e48a860e865d13dbd48f10e03634af74fb46b7f793f6d7968c3ef3e1591da7",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000092_1839.jpg",
+      "fileSha256": "9f1f7278be870a980bdff5ce6a3e1a23261c6508a885a121243e6a98b07d2f7f",
+      "window": "gap1150",
+      "sourceTimeSec": 1159.2,
+      "box": [
+        129.47930908203125,
+        500.65283203125,
+        193.0316619873047,
+        675.28955078125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "19",
+        0.94996138215065,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "1156f2009983262ca2f476c1c59aa5e525b774a70a333c5cabf0b7e665924c5e",
+      "result": [
+        "19",
+        0.94996138215065,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000092_1843.jpg",
+      "fileSha256": "89cebdb6e2f95a622865130c7ca28ec4b4ac7a722e51ab00848682b518df0b82",
+      "window": "gap1150",
+      "sourceTimeSec": 1159.2,
+      "box": [
+        1303.8355712890625,
+        480.8835144042969,
+        1336.728271484375,
+        578.4303588867188
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "af9346f2bb9de13226daca25c92e65382db130bc0d928eff2b78b873e094c8c6",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000096_1898.jpg",
+      "fileSha256": "caf37ce5f67d2b1c7da0f6ce115ec66d858719e358faaa87a885aaf681d3e55d",
+      "window": "gap1150",
+      "sourceTimeSec": 1159.6,
+      "box": [
+        1.8476314544677734,
+        508.82025146484375,
+        73.30706787109375,
+        665.1820678710938
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "8a2e5b520b2ba980dcffe3bfae8399c24fc2ad914d087b209597edffb123401b",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000098_1938.jpg",
+      "fileSha256": "13c91ec3427590db3eb6b590d61b0ef1221bd26333acfe287d1cdc4099478b40",
+      "window": "gap1150",
+      "sourceTimeSec": 1159.8,
+      "box": [
+        773.4122314453125,
+        593.6844482421875,
+        837.3173217773438,
+        720.16015625
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "727c9e1c5b522d2a3dc6cc44bb53c5ec5cec6dc15305bddb20eb8f92a9b4d322",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000102_2007.jpg",
+      "fileSha256": "e933870b32ef370599b2fe6a214efffb5c9b22554c29167c4cda56edd79f8653",
+      "window": "gap1150",
+      "sourceTimeSec": 1160.2,
+      "box": [
+        1424.173583984375,
+        491.6530456542969,
+        1481.181884765625,
+        596.8906860351562
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "ef54a0c1bdf2f4a95c51e4f0e3da930b9b3d200e5df927e58b70285ed6a50989",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000106_2078.jpg",
+      "fileSha256": "d1c1e73269c0c840f1ae25e964029b8130b42d0c4e05ceec1cfec5c2f8529910",
+      "window": "gap1150",
+      "sourceTimeSec": 1160.6,
+      "box": [
+        14.543678283691406,
+        496.9624328613281,
+        241.4735565185547,
+        867.5225830078125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "e1984e232dbc276cafa8d548ff3aadc7fae1d99bdb02417b6e9c74b7a14cf15e",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000108_2115.jpg",
+      "fileSha256": "efb55f710e87b6046e637fb8a58fb8ebe5d0ff9da169f8a9d6808cc4b5a51608",
+      "window": "gap1150",
+      "sourceTimeSec": 1160.8,
+      "box": [
+        1554.8514404296875,
+        552.0158081054688,
+        1599.2054443359375,
+        659.2572021484375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "541d8680a8e2bccd022f6ee933b710c410ff115928c3107650867ea379af3b94",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000112_2176.jpg",
+      "fileSha256": "3c06d1ad675d68b0c1a4d21ffce71bc2c485753714bd6dafcd5f382050a2624e",
+      "window": "gap1150",
+      "sourceTimeSec": 1161.2,
+      "box": [
+        1483.776611328125,
+        621.0576171875,
+        1565.402099609375,
+        846.1371459960938
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "c9f091deed52dc1da12e7f7539c42b2b3f9bfa71ec4fecff527c025da902554b",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000114_2223.jpg",
+      "fileSha256": "10fe7e9794d20658c89baa6daf4d64fab9a1641953035f83fc0e6cd6623e6378",
+      "window": "gap1150",
+      "sourceTimeSec": 1161.4,
+      "box": [
+        543.9764404296875,
+        627.6052856445312,
+        580.4362182617188,
+        777.7893676757812
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "77f33fc0d45911a4bd0e42e6b10f3f6f2a262e7ca1f3d40b524c0b2452105c10",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000118_2291.jpg",
+      "fileSha256": "3b84eb9cf2682e528c44f68070d415be705c409b7a9de76c9e8a5d014682fc23",
+      "window": "gap1150",
+      "sourceTimeSec": 1161.8,
+      "box": [
+        660.3228759765625,
+        672.5899658203125,
+        764.0263061523438,
+        836.41796875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "e39e5ecdf8b9262a14a3bed777ace754e139d8e21935e75711b57ae0f44f0771",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000120_2319.jpg",
+      "fileSha256": "280ecd8b08acff58161bef84dfeff9f4b80b4a8b55bf1d992dce733c5c1c0394",
+      "window": "gap1150",
+      "sourceTimeSec": 1162.0,
+      "box": [
+        933.8338623046875,
+        649.718994140625,
+        1025.5848388671875,
+        912.8497924804688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "20",
+        0.9999807476997375,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "07f289bfb28984423f048ccdd27d5fbee00e156e7cadba01bcd13837b98c47db",
+      "result": [
+        "20",
+        0.9999807476997375,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000122_2357.jpg",
+      "fileSha256": "55475435039968cfa95554719ba72332a4f85d87d60c236e95716e978b3e5b8f",
+      "window": "gap1150",
+      "sourceTimeSec": 1162.2,
+      "box": [
+        546.5303955078125,
+        694.4652099609375,
+        598.4273071289062,
+        832.08349609375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "d5bcb658d8332e70ed51ea912da94c839cc78f1f102f76c932268f9954772f73",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000128_2451.jpg",
+      "fileSha256": "86022fa12108be860bd3ac1016be51f6a3e3b8fa720069bd7161405464d4f82d",
+      "window": "gap1150",
+      "sourceTimeSec": 1162.8,
+      "box": [
+        750.1378784179688,
+        619.9033203125,
+        889.847900390625,
+        919.9923706054688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "9e0434cd5db1c18709c1d7b04ab7d70e58c11914a477bf597112447058d844ce",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000132_2522.jpg",
+      "fileSha256": "a05fd5ccb751ad9f30a58342e1797597ed27c3c8cb1d46d004c02fae9d9c10b5",
+      "window": "gap1150",
+      "sourceTimeSec": 1163.2,
+      "box": [
+        1851.2872314453125,
+        541.0183715820312,
+        1919.0955810546875,
+        728.3160400390625
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "d7bf5f12837c7465bef8de37b4a175f13e4dd116379de125e17a0557e9130799",
+      "result": [
+        "17",
+        0.989464521408081,
+        "shirt:white"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000134_2557.jpg",
+      "fileSha256": "253e9e996ca6eac22c670d28f8821570353ab2c71c4d9f8f8118a81e3a0cc8ee",
+      "window": "gap1150",
+      "sourceTimeSec": 1163.4,
+      "box": [
+        1127.1898193359375,
+        582.0034790039062,
+        1221.5537109375,
+        819.238037109375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "20",
+        0.9454553246498107,
+        "shirt:white"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "c76f74db0e306a3d114cd0cd54cd0d6242c8c032c3114f04e0512faedf66963a",
+      "result": [
+        "20",
+        0.9454553246498107,
+        "shirt:white"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000136_2598.jpg",
+      "fileSha256": "389562bd04c223bb546ec120b7c20aa8311555b147942efee17554aff7cb4292",
+      "window": "gap1150",
+      "sourceTimeSec": 1163.6,
+      "box": [
+        1117.3822021484375,
+        580.0817260742188,
+        1207.909423828125,
+        812.2861328125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "2213bc393389e2daad5a6062acb5922e2005cc7690f35308d4c23d6c2d4ef564",
+      "result": [
+        "2",
+        0.9972714941616232,
+        "shirt:white"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000138_2654.jpg",
+      "fileSha256": "60e1f7269b7dc0dc32f89f57a8b87b667606623a27f9532d78d9797c053edb36",
+      "window": "gap1150",
+      "sourceTimeSec": 1163.8,
+      "box": [
+        838.799072265625,
+        614.5918579101562,
+        886.0217895507812,
+        770.7775268554688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "cfad2ed64b8c37838178689b2ce2e1b75fab90b3b628bb1711babbd1bd8cd812",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000142_2734.jpg",
+      "fileSha256": "2c96d598ada485dd6371af82e7022e9ddba1781f1bd9919b7d6b2576d785ad2f",
+      "window": "gap1150",
+      "sourceTimeSec": 1164.2,
+      "box": [
+        787.2697143554688,
+        612.3638305664062,
+        857.2174682617188,
+        792.6708984375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "a360d398bcae1845c44c3457ce1bd4d5d57ec32d0bfb934819c09bb4dc0f82f9",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000146_2831.jpg",
+      "fileSha256": "f93b2df54e04971f3e8606675b0b5e6101014c0727a013c3b33a5ca30db81d83",
+      "window": "gap1150",
+      "sourceTimeSec": 1164.6,
+      "box": [
+        1822.476318359375,
+        505.668212890625,
+        1911.011474609375,
+        679.2482299804688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "d7cb032536603827ff52d8f74eda05a25ed0aed4969fa4f1d70e8262104353ee",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000148_2884.jpg",
+      "fileSha256": "55fc391b1fa7699107fdcb8f7c3dab56f95a18cfade6c8753c7d2e64304cf7d4",
+      "window": "gap1150",
+      "sourceTimeSec": 1164.8,
+      "box": [
+        1595.4742431640625,
+        538.1412963867188,
+        1637.9122314453125,
+        635.6944580078125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "c4983c3c39af826b4462bb439292e0418be759e4dbc24fbbb9390f442f1ae005",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000152_2978.jpg",
+      "fileSha256": "3d1f6dd110f711cbcc18b4d525f65de01697c5907aa2c1eeeb6830b37dd96eb4",
+      "window": "gap1150",
+      "sourceTimeSec": 1165.2,
+      "box": [
+        1287.1414794921875,
+        550.458984375,
+        1344.2442626953125,
+        681.7293090820312
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "9dbef340c691aa3613eb4fab698640542240bd02d25a03ab1ae1cb9f6dc44b15",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000154_3036.jpg",
+      "fileSha256": "2508d58c4dead2deb32ce37e9a84af4a4c97a31520783cd83f72f4c43454a9f1",
+      "window": "gap1150",
+      "sourceTimeSec": 1165.4,
+      "box": [
+        858.982177734375,
+        579.63671875,
+        904.3610229492188,
+        717.5888671875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "733839ddd5e9b211482199fba47ada09e9825cc17d56e50f78fd80a7b0793b54",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000158_3127.jpg",
+      "fileSha256": "a3a75b1d55f154d0dc41d5447615fc7603d97580284c8b3e4e0e809fddec1022",
+      "window": "gap1150",
+      "sourceTimeSec": 1165.8,
+      "box": [
+        1017.1373291015625,
+        560.5325927734375,
+        1068.724853515625,
+        685.846435546875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "932aad85b2fc1e8fc9cff79fa189e330a950192e212e8f03b884495d6b1920a8",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000160_3166.jpg",
+      "fileSha256": "6014b120d1f39f701fc55664e6c8996122f2fe1eb6a35a92a1f1de84891433ac",
+      "window": "gap1150",
+      "sourceTimeSec": 1166.0,
+      "box": [
+        1247.1488037109375,
+        521.6282958984375,
+        1319.6534423828125,
+        712.9102172851562
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "11",
+        0.9443180561065674,
+        "shirt:dark"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "9c100036340c3fd409e8693c14b991d5edfab18d624bb70dde47157d1a46aa6c",
+      "result": [
+        "11",
+        0.9443180561065674,
+        "shirt:dark"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000162_3208.jpg",
+      "fileSha256": "60ca73d13ddf258998b0791c0102c4b6dfa138792a677296567fae81af0342bd",
+      "window": "gap1150",
+      "sourceTimeSec": 1166.2,
+      "box": [
+        1848.4117431640625,
+        461.98553466796875,
+        1919.6207275390625,
+        694.1614379882812
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "1fc2fa6acac80e0f4b23802cb8028a4229648e397a1b13d8f0c22ef29d8a4124",
+      "result": [
+        "8",
+        0.9820032715797424,
+        "shirt:white"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000164_3261.jpg",
+      "fileSha256": "8815f9299209d346f0383db28dbd4dcce8ae4a75200bf9ca7d43ce73481dce20",
+      "window": "gap1150",
+      "sourceTimeSec": 1166.4,
+      "box": [
+        133.0946044921875,
+        627.5942993164062,
+        198.60589599609375,
+        786.0732421875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "757fa6131525f209899c7e21c037e009dadde9c06717e7f5721d866f3cf95c36",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000168_3348.jpg",
+      "fileSha256": "87dd27cb36a91043689ed1fc40b0ba5d1c44278f9d83b53ecc6238561911433a",
+      "window": "gap1150",
+      "sourceTimeSec": 1166.8,
+      "box": [
+        1240.984619140625,
+        519.197509765625,
+        1322.4559326171875,
+        695.98681640625
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "fabe5cdd05993434032d5c1d24e156ab20078584ff453ece472155e2f9c5fd2d",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000170_3402.jpg",
+      "fileSha256": "87694a480cef93404794f2d4b0a79fda4368770dba6f732956bc204ed9c92594",
+      "window": "gap1150",
+      "sourceTimeSec": 1167.0,
+      "box": [
+        1032.26171875,
+        548.7020263671875,
+        1087.420166015625,
+        668.255615234375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "ff5f262a7dbaad8951100be7db247d3d627a944584341e0150e8baca23593dea",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000172_3455.jpg",
+      "fileSha256": "16795e89946d72ed0f5ce84bab72678680f928eb83f264ebfa9f9533b9010124",
+      "window": "gap1150",
+      "sourceTimeSec": 1167.2,
+      "box": [
+        884.5444946289062,
+        549.3928833007812,
+        929.0455322265625,
+        671.8954467773438
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "932d50ce2a8d42c21e6799debc40b14517ab3a9840cd5a1349dc4411096a7310",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000176_3554.jpg",
+      "fileSha256": "9948d834985b37d84fc16cffa41a36c50aa57f535c8470794d307dff7dabd84a",
+      "window": "gap1150",
+      "sourceTimeSec": 1167.6,
+      "box": [
+        1243.641845703125,
+        520.9524536132812,
+        1310.095947265625,
+        685.7698974609375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "20",
+        0.949970045685768,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "c3352c5e8cdd2228d8257e83da00457744242ce82dc1e7a6d4b8373b2b1f9d2f",
+      "result": [
+        "20",
+        0.949970045685768,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000176_3555.jpg",
+      "fileSha256": "0d910da6d9478732f436ea7009f7e4199ab7b1513463abcfc66b9cb3cf4ea838",
+      "window": "gap1150",
+      "sourceTimeSec": 1167.6,
+      "box": [
+        929.5472412109375,
+        535.9912719726562,
+        1003.393310546875,
+        739.4137573242188
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "fcec9a276d6045d9fd029aef61d14d35550fa805429887643a38cf3a2e27fe80",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000178_3604.jpg",
+      "fileSha256": "f753397e344935dd3bebdec334b4485f8d4a52ecc9dd32c5dd9fa0d2855608a5",
+      "window": "gap1150",
+      "sourceTimeSec": 1167.8,
+      "box": [
+        1299.57421875,
+        530.7086791992188,
+        1340.494873046875,
+        640.2130737304688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "62967e464dd80c387c70efb6725fc19f30dd203241f2397ad91dcc9d988b26c8",
+      "result": [
+        "10",
+        0.9870313405990601,
+        "shirt:white"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000182_3698.jpg",
+      "fileSha256": "8ed94b52aeb64410a55aff7e6a3b962cfb851c096898e036d77e7a9d36e7b2ee",
+      "window": "gap1150",
+      "sourceTimeSec": 1168.2,
+      "box": [
+        494.89190673828125,
+        591.333984375,
+        581.35302734375,
+        729.6438598632812
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "6dedcd8bb022b79dbf2a05bc21aaa33018eb33700346670bcf2bbd530d18252b",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000186_3787.jpg",
+      "fileSha256": "9feb4486a9e56bdb3c17627dcecc19350014bee12da59da5f7a67fb88f3f1ce8",
+      "window": "gap1150",
+      "sourceTimeSec": 1168.6,
+      "box": [
+        1448.870849609375,
+        501.9055480957031,
+        1512.9451904296875,
+        715.383544921875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "5be48f8911fff2cbf2f74374761592a0a5b3bb3b3a663553b54feabf566bb0b5",
+      "result": [
+        "8",
+        0.9692411710536284,
+        "shirt:white"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000190_3877.jpg",
+      "fileSha256": "b3b4be373848f2ec45097577abf6f1f3934ae4dc7bebe51eb8f0197797195c77",
+      "window": "gap1150",
+      "sourceTimeSec": 1169.0,
+      "box": [
+        974.8831787109375,
+        536.5792236328125,
+        1054.4000244140625,
+        749.9898071289062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "700124baa73c686f9deaa50d263584b3218217d27e294fd213eb1d2aa7555dfc",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000192_3924.jpg",
+      "fileSha256": "b487fdb8f9badea5e29011c537187ec2766763868ac16a3b41262760b393a4f7",
+      "window": "gap1150",
+      "sourceTimeSec": 1169.2,
+      "box": [
+        1138.013671875,
+        554.1353149414062,
+        1165.7099609375,
+        644.3615112304688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "4fd6a848d555ca9fe6eb993393354526316fab763b9857856ca1a56fdeacfada",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000196_4000.jpg",
+      "fileSha256": "3a4b09320928c7c0f63aa2937cf17b4b6ec960e8917133bd1f81249442e8854a",
+      "window": "gap1150",
+      "sourceTimeSec": 1169.6,
+      "box": [
+        739.7006225585938,
+        573.205810546875,
+        784.0900268554688,
+        692.5921630859375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "210f6a1e6e5cfa7cb6546cb7886b5ac8f1235b52d4db3ff8c953ad9f1dc4d0c1",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000198_4058.jpg",
+      "fileSha256": "a00bf5bde43f79274f04b1b33ffd71589b137cbe8652ed49ef304e9098cca449",
+      "window": "gap1150",
+      "sourceTimeSec": 1169.8,
+      "box": [
+        1064.1884765625,
+        563.6734619140625,
+        1089.3104248046875,
+        646.6931762695312
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "98d9103e827858bf6cae8c2081a81b5431e722185569923b963ecd7af6bf1719",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000202_4145.jpg",
+      "fileSha256": "5cb810c41db67c20927906aad1b3dcfd49eb25435f0ed282e7c2adfc74fdbcb3",
+      "window": "gap1150",
+      "sourceTimeSec": 1170.2,
+      "box": [
+        1774.8321533203125,
+        492.4691162109375,
+        1828.72119140625,
+        630.181640625
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "09c4e5d474b2560dcd9bb36a352a49c006e3907e2ab93ab2c0a07253d3ab61d5",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000204_4197.jpg",
+      "fileSha256": "7de23f1d15fad25210206ac740adb24353a01f3177f0b9357ad16bb8899df9c6",
+      "window": "gap1150",
+      "sourceTimeSec": 1170.4,
+      "box": [
+        1577.2984619140625,
+        499.41058349609375,
+        1664.0640869140625,
+        698.5726318359375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "514e80ff4a097e983da14517908ee08f0cfb28f70482da32c6386b34770b3b3c",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000206_4250.jpg",
+      "fileSha256": "91d883a7b7935c1b5ce7e0d573b2cecf68277ed90bd5d1611dba8cf0caa245bc",
+      "window": "gap1150",
+      "sourceTimeSec": 1170.6,
+      "box": [
+        1300.270751953125,
+        533.2783813476562,
+        1343.6414794921875,
+        636.2634887695312
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "19",
+        0.9989237785339355,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "a71c6493af7bfd4f47f4a73b96b1016a48af95b322de28a1d46a34d82619cd94",
+      "result": [
+        "19",
+        0.9989237785339355,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000208_4299.jpg",
+      "fileSha256": "70ccad7a172f89737777a21059ac1517d06ca2e8d2b643fa5dd81268a9928465",
+      "window": "gap1150",
+      "sourceTimeSec": 1170.8,
+      "box": [
+        1623.9063720703125,
+        492.3745422363281,
+        1717.3377685546875,
+        687.3931884765625
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "0a4f04773cde7095de9de9b97d022dfe658da498c9eca7c963a795fc202e2b36",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000210_4358.jpg",
+      "fileSha256": "415e7f2976912bcad373dd917f292eecea7e7dac0a8ef64213ded0a32079ca81",
+      "window": "gap1150",
+      "sourceTimeSec": 1171.0,
+      "box": [
+        1565.222900390625,
+        494.8377990722656,
+        1622.9066162109375,
+        705.0703125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "a20928818b5c0a383451f56b92d118ead5bc3767cb4fc928fcffc4691e7abfc8",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000212_4409.jpg",
+      "fileSha256": "28025c5772e7909140949f8bd8c687d371299e3bce08f98b1426bfdc6ae3d51d",
+      "window": "gap1150",
+      "sourceTimeSec": 1171.2,
+      "box": [
+        1652.3050537109375,
+        488.2998046875,
+        1737.9332275390625,
+        681.9014282226562
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "17",
+        0.9958021640777588,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "5fa08af78a27c2fb5301cba4aea9cb11a3b1e6d669845a404056a948f6f5ecdb",
+      "result": [
+        "17",
+        0.9958021640777588,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000212_4422.jpg",
+      "fileSha256": "b52f957cc0122edda7b964514bb3b0e28681c61a69f22e94f1399a689782d46c",
+      "window": "gap1150",
+      "sourceTimeSec": 1171.2,
+      "box": [
+        1139.987060546875,
+        540.95263671875,
+        1168.7984619140625,
+        628.05029296875
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "26e1f7a58eb1aa6df7f4a90cda0d3150ca36d55d5d6b4da2d5864e6deb04f356",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000216_4517.jpg",
+      "fileSha256": "3f686cb4cffaa86af914b02a851f0b4fb35b950f9896278cf72d51438235c75d",
+      "window": "gap1150",
+      "sourceTimeSec": 1171.6,
+      "box": [
+        1096.81396484375,
+        520.0801391601562,
+        1186.61474609375,
+        729.6876220703125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "91725f0923a04b1d4e60b54a01fef793ea596a7fbf8dc3545cea7bef424e8655",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000218_4583.jpg",
+      "fileSha256": "a459c68f03aaaf50957b55f3417338798f098fbe47c6db0def8fece04f86615c",
+      "window": "gap1150",
+      "sourceTimeSec": 1171.8,
+      "box": [
+        980.1356201171875,
+        562.3047485351562,
+        1014.9503784179688,
+        655.0511474609375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "e463cbaeb6f12441fda837f1cbecdc021cf16ca3963f51a044c85471ee642227",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000222_4688.jpg",
+      "fileSha256": "55c83b8fa6db07327a7f97afc3122838562ddef06de5a86e37c6c435a72fe4a7",
+      "window": "gap1150",
+      "sourceTimeSec": 1172.2,
+      "box": [
+        1599.2955322265625,
+        502.7961730957031,
+        1679.0299072265625,
+        704.8998413085938
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "b2cc5334c81aa4efc891967941094ade44e7e15bd51fb7a6437adaf3990f3e48",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000222_4694.jpg",
+      "fileSha256": "90e6b4f26cb7e59fed12fb41d283feecce13702c41bab2221e6c7a924f2aaad2",
+      "window": "gap1150",
+      "sourceTimeSec": 1172.2,
+      "box": [
+        1371.2177734375,
+        532.9779663085938,
+        1407.4891357421875,
+        627.6648559570312
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "19",
+        0.998645544052124,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "dc2d7541c5bdcd3cf08cfcf355bdd9e3d84e43db29a8bc062ffa028da58f39a8",
+      "result": [
+        "19",
+        0.998645544052124,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000224_4741.jpg",
+      "fileSha256": "4f83e0fefc5fd1a5159d6be043b4785c58bca1873adbc151b6ad6da29eeefde2",
+      "window": "gap1150",
+      "sourceTimeSec": 1172.4,
+      "box": [
+        1380.5655517578125,
+        534.4061279296875,
+        1421.0831298828125,
+        628.5052490234375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "19",
+        0.9979802370071411,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "aa6246af6b2e6b12708bba05244e8aa3dd7de2bca42093dd7e8a1a135d5845bf",
+      "result": [
+        "19",
+        0.9979802370071411,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000226_4784.jpg",
+      "fileSha256": "d5b4e0144f3b2cc2e6648adcf9c96c0cdce8826e9ac13f6fefc9b2d8b9761d51",
+      "window": "gap1150",
+      "sourceTimeSec": 1172.6,
+      "box": [
+        1629.986572265625,
+        503.74053955078125,
+        1705.02392578125,
+        702.16064453125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "4f3f3d43591e55fb25b464a2efd48726820b8701c092f00f11ff93f345154f1d",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000228_4835.jpg",
+      "fileSha256": "b2f001f131caf965a3f5d0fe95a0632f0efdf18d7477c10a5716d86873ac125d",
+      "window": "gap1150",
+      "sourceTimeSec": 1172.8,
+      "box": [
+        1511.8056640625,
+        524.5504760742188,
+        1560.7501220703125,
+        650.2653198242188
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": [
+        "20",
+        0.9454048156738281,
+        "shirt:contrast"
+      ],
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "3b135781616a02e3f08abfe737657db371dd2f198288ab184c8c94f43ae41751",
+      "result": [
+        "20",
+        0.9454048156738281,
+        "shirt:contrast"
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000228_4846.jpg",
+      "fileSha256": "5a2281e736c7084cc3d7355f99a2738ff25e2d1c687eedaafb415a7cec1c0939",
+      "window": "gap1150",
+      "sourceTimeSec": 1172.8,
+      "box": [
+        1782.027099609375,
+        510.854736328125,
+        1818.100341796875,
+        634.6080322265625
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "429d469f9ef2b4155852d3f430a234256f171cbd7f282a53f7194310140c469f",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000232_4948.jpg",
+      "fileSha256": "0ed5385ad3b7bf643205d85b1dcc081096e6f4dff65ff35f9ddee17833c40d7d",
+      "window": "gap1150",
+      "sourceTimeSec": 1173.2,
+      "box": [
+        1083.715576171875,
+        564.7959594726562,
+        1114.62451171875,
+        656.3784790039062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "019efb39e66ae3c5b85da6a13c0ddfb14e2f462aa713bdc7e9c9a72f733db2b9",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000236_5039.jpg",
+      "fileSha256": "c5ab6b2cbccf406eae648148d33c28190cac592358df7224f09ba152b555e093",
+      "window": "gap1150",
+      "sourceTimeSec": 1173.6,
+      "box": [
+        1508.177978515625,
+        546.0359497070312,
+        1545.71484375,
+        636.9976196289062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "0e65b81b83c1e62cce5875420616e39c73f3609cb639a7504d0899260390bb8d",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000240_5131.jpg",
+      "fileSha256": "993b361babe74f1d32178ae00a1817171b4b5b53b6c113168aae09e78d190396",
+      "window": "gap1150",
+      "sourceTimeSec": 1174.0,
+      "box": [
+        0.44970130920410156,
+        592.30712890625,
+        47.46952438354492,
+        727.9989624023438
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "895ef20cb4a7d370a8af5cb75c0b345f5962400530780b9dfd8b21cf24ecf194",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000242_5185.jpg",
+      "fileSha256": "9ceeb39e4a5cf8bb13bea15a4c9078042c7ca88de6a7be990069817b089045fa",
+      "window": "gap1150",
+      "sourceTimeSec": 1174.2,
+      "box": [
+        243.9410858154297,
+        582.2452392578125,
+        286.7059020996094,
+        666.6304321289062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "d0fada7fbe0f178b73529814a6606a0b1c86ef3f4bcb1e88def8a925acbe4600",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000246_5261.jpg",
+      "fileSha256": "0fc88bc81da51639af47a942cfd5ed081b91f7243820442f26981fbfa387d886",
+      "window": "gap1150",
+      "sourceTimeSec": 1174.6,
+      "box": [
+        108.08210754394531,
+        538.4560546875,
+        160.27394104003906,
+        670.7012939453125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "0faf6c3c2ebc10b1432b49635bf4c89826eb75480fecf89adeaf582f2d32ef7a",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000250_5328.jpg",
+      "fileSha256": "92a6b2529f607443fe0ec6b82d51a123272131744f2ebfaebd3e5f5e63add725",
+      "window": "gap1150",
+      "sourceTimeSec": 1175.0,
+      "box": [
+        1550.50341796875,
+        502.8741760253906,
+        1630.30078125,
+        703.0327758789062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "10efd24e6c138ed2e56a63430e06e59c9847f67ab931655cc2b33e8cc05d7bef",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000252_5370.jpg",
+      "fileSha256": "5380165ca1e47a0a2d7de77778b1bd26d50770ff9798dca7f42d2e425fc388f5",
+      "window": "gap1150",
+      "sourceTimeSec": 1175.2,
+      "box": [
+        334.876220703125,
+        505.56787109375,
+        366.66009521484375,
+        587.666015625
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "21a23ae4b2e82c2445ca418c21466a14ad256d7252cd409b08d46d564a239aeb",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000256_5470.jpg",
+      "fileSha256": "95181d62ba814f3a564d5b6e5d5b5cb2f8332b0c15a229466001a899de63c273",
+      "window": "gap1150",
+      "sourceTimeSec": 1175.6,
+      "box": [
+        1641.5875244140625,
+        513.5968627929688,
+        1671.5531005859375,
+        598.7678833007812
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "6d68abce39bbbc1464383e02cb812a11833789ae78bc303947d38f5101256141",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000260_5561.jpg",
+      "fileSha256": "05c67e7688d9df65a46cd52df797a5a5e67722eb9e1104c0d110a4a0d5bed825",
+      "window": "gap1150",
+      "sourceTimeSec": 1176.0,
+      "box": [
+        188.77926635742188,
+        461.6060485839844,
+        235.61965942382812,
+        582.6447143554688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "50e70e0152b389c43941f291dfd47aa8c72a8cf5b80d6518b9d28b8eaaec748d",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000264_5652.jpg",
+      "fileSha256": "40ab2de85919b09d72c138710261b1bc18a11fbf88e67daadafd943f2b275994",
+      "window": "gap1150",
+      "sourceTimeSec": 1176.4,
+      "box": [
+        1676.75244140625,
+        505.5736083984375,
+        1711.822998046875,
+        590.8843383789062
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "2c6ee847852baf8cbc71be9e6ad2282748b0727721ae6e8de7f970aeff3e0344",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000268_5740.jpg",
+      "fileSha256": "2a20bcc1dbf22898a04b4836cc142fef6ca4b1868c9a21d60f5827361cd9fbb8",
+      "window": "gap1150",
+      "sourceTimeSec": 1176.8,
+      "box": [
+        299.38067626953125,
+        452.3202209472656,
+        335.7347717285156,
+        537.9239501953125
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "3502c117e215886ee5267335085ba574ef1341eeb3c3522a109289f48683fbd5",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000274_5891.jpg",
+      "fileSha256": "918c5920a1041c2df21eba622af86c883296033f960f508faa0b49ddf499f910",
+      "window": "gap1150",
+      "sourceTimeSec": 1177.4,
+      "box": [
+        1576.6502685546875,
+        444.9416198730469,
+        1659.599609375,
+        643.0888061523438
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "1c88dd526c31549f37220da5f57aeab2595e0641194be2831cb85909ab47aaa9",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000278_5995.jpg",
+      "fileSha256": "5f9b7707b69ed051b075c4a706737913001c8c52d29ed6293770f2837891fe3b",
+      "window": "gap1150",
+      "sourceTimeSec": 1177.8,
+      "box": [
+        209.42286682128906,
+        434.75347900390625,
+        248.30316162109375,
+        553.7228393554688
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "ea587c7449b968a9d134a4ecfb4169f1eae5215bc413fb185ebe9cd9ee1b3ca4",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000282_6099.jpg",
+      "fileSha256": "2bdae1444bc437244184ce5248d27b1d1f970a81c3c114ae768ea9613cf9eda7",
+      "window": "gap1150",
+      "sourceTimeSec": 1178.2,
+      "box": [
+        1612.545166015625,
+        456.97430419921875,
+        1643.1241455078125,
+        542.0361938476562
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "8aa70392f2dcbdc2696b573b7bffee18bb6b9eece7e1161a6d145fd7d860fb15",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000288_6236.jpg",
+      "fileSha256": "729988b75d969e798387166bcea14b70c8fa260d74efdfa9b379d2932f0a9ebd",
+      "window": "gap1150",
+      "sourceTimeSec": 1178.8,
+      "box": [
+        181.58877563476562,
+        459.1409912109375,
+        237.17469787597656,
+        578.5179443359375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "74dbff9c740b3f996fd01d486856cc10ac51a45223a223104aa4f5f44667a235",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000294_6364.jpg",
+      "fileSha256": "a579f27ab593c8508fe93e8eee4d0ab31310ffc53a79d70d978823174705074a",
+      "window": "gap1150",
+      "sourceTimeSec": 1179.4,
+      "box": [
+        1730.61181640625,
+        505.5969543457031,
+        1761.9993896484375,
+        590.0628662109375
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "e5b45b32a5bc7601a86dbebaf6704df77c587bebb9790ecf234083c29fb63b0b",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    },
+    {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000298_6454.jpg",
+      "fileSha256": "40205e93b61f63d2877be35b2185162c70d462d520c958f339484b8e164511b2",
+      "window": "gap1150",
+      "sourceTimeSec": 1179.8,
+      "box": [
+        347.729736328125,
+        504.5827331542969,
+        382.4830322265625,
+        597.3036499023438
+      ],
+      "jpegQuality": 92,
+      "cpuPipelineRead": null,
+      "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+      "pixelSha256": "95bae60cc6d8d75c3210e462f1f220c186ba1f32d240e237a72497facd4e3e8f",
+      "result": [
+        null,
+        0.0,
+        null
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "cpuCores": 16,
+    "packages": {
+      "torch": "2.8.0+cpu",
+      "torchvision": "0.23.0+cpu",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime": "1.29.0",
+      "av": "14.2.0",
+      "pillow": "12.3.0",
+      "fastapi": "0.143.0",
+      "pydantic": "2.14.0"
+    },
+    "torch": {
+      "version": "2.8.0+cpu",
+      "cuda": null,
+      "cudaAvailable": false,
+      "cudnn": null
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "AzureExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "5.0.0",
+      "videoIO": [
+        "FFMPEG:                      YES (prebuilt binaries)",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": null,
+    "nvidiaSmi": null,
+    "driverMajor": null,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": null,
+      "built": null,
+      "baseImage": null,
+      "lockSha256": null
+    },
+    "scoutxEnv": {
+      "SCOUTX_BACKEND": "onnx",
+      "SCOUTX_BATCH": "1",
+      "SCOUTX_DECODER": "cv2",
+      "SCOUTX_DETECTOR": "yolox_s",
+      "SCOUTX_DISCOVERY_DET": "416",
+      "SCOUTX_KEYFRAME_EVERY": "1",
+      "SCOUTX_MODE": "balanced",
+      "SCOUTX_OCR_ENHANCE": "0",
+      "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+      "SCOUTX_WEIGHTS_DIR": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-models-20261030"
+    }
+  },
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-models-20261030\\yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "C:\\Users\\masap\\.EasyOCR\\model\\craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "C:\\Users\\masap\\.EasyOCR\\model\\english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "C:\\Users\\masap\\.cache\\doctr\\models\\parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "status": "complete"
+}

@@ -1,0 +1,1442 @@
+[
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000000_0.jpg",
+    "fileSha256": "889dc190b0a132611681d345b1dede7db4e122130a56287badb605d9b37641e5",
+    "window": "gap1150",
+    "sourceTimeSec": 1150.0,
+    "box": [
+      425.99737548828125,
+      459.490478515625,
+      500.1456604003906,
+      713.7080688476562
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "91e5036934a0630bcb5c73de6f68d88388f114f2399900f1f3903dba91c7d603"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000008_203.jpg",
+    "fileSha256": "5e426e6cce45935b3d913b4a18c4ff0cad49d41689e7621c144ebcfa5931c6aa",
+    "window": "gap1150",
+    "sourceTimeSec": 1150.8,
+    "box": [
+      0.2899761199951172,
+      599.916259765625,
+      106.94766998291016,
+      836.370849609375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "cba5f1cecabe34c3e4cb0b46884603addf8474086eee9d574b534a6041561212"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000012_306.jpg",
+    "fileSha256": "8d66edc709d022cc4ce195ba6df6081c3872ec90abb898725fa17fa6a435fcbe",
+    "window": "gap1150",
+    "sourceTimeSec": 1151.2,
+    "box": [
+      0.8484249114990234,
+      606.9459838867188,
+      105.35547637939453,
+      838.8167724609375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "2b02d2e1fec7e0642b1de91c406ec50f82b5973c90ced4751a10647c5a5b06b5"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000016_395.jpg",
+    "fileSha256": "fe4de2567d6c756b8b2d61140d157b37a1738435fcdfa3e08cfa43d31d025c78",
+    "window": "gap1150",
+    "sourceTimeSec": 1151.6,
+    "box": [
+      999.838623046875,
+      548.6603393554688,
+      1046.73095703125,
+      643.9383544921875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e0250e142ab7da2389587c3adf9d22a79735ea300d16a9fad65a20be0e1a4db5"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000020_511.jpg",
+    "fileSha256": "19ef98bad3ff8d81a0c7b50953365f284a78504885a08b4a7fccf6488d6cd712",
+    "window": "gap1150",
+    "sourceTimeSec": 1152.0,
+    "box": [
+      700.8847045898438,
+      539.1454467773438,
+      736.7684326171875,
+      645.119873046875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "4b30a35ed7fa01c16274283f9fb4b641da58aa1a36d9a6950aec1493d6174305"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000024_614.jpg",
+    "fileSha256": "ef57779b6cf23573071a75b68ceae8a6b9f4735dae0706a79709250d1c7cc822",
+    "window": "gap1150",
+    "sourceTimeSec": 1152.4,
+    "box": [
+      467.61376953125,
+      543.614990234375,
+      494.931640625,
+      629.9215698242188
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "72da902b73b1152ee817963efed6f0b2351e4cf573ba20bdb1b1082c59d1c2cf"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000030_736.jpg",
+    "fileSha256": "389555acf14d9b295e28eb0e538d8992ff74dc67014f67aa44750c61f5b765eb",
+    "window": "gap1150",
+    "sourceTimeSec": 1153.0,
+    "box": [
+      498.17724609375,
+      527.1158447265625,
+      572.2178344726562,
+      661.4390869140625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "f2cc8a20f72b40c9361944693d52c225afb6b19e0f19900dd4dc7d1b889f1f67"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000034_808.jpg",
+    "fileSha256": "9dfb278f238e0bdddcb77a572b5bc3147da2d06a533f42f2b09cfd1b2b316506",
+    "window": "gap1150",
+    "sourceTimeSec": 1153.4,
+    "box": [
+      540.6322021484375,
+      515.348388671875,
+      603.6983032226562,
+      680.8626708984375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "8c1d053721178e085ed849d4d12c17fa7c607c7efc5d3ee8b2c8e9dfa4f538b6"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000036_871.jpg",
+    "fileSha256": "e2d7a130d19de4b0a3043641e52224158e85fc3da81283c33b18c0bc47487790",
+    "window": "gap1150",
+    "sourceTimeSec": 1153.6,
+    "box": [
+      831.813232421875,
+      522.8040161132812,
+      865.9371337890625,
+      612.1070556640625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "cf16248ad4ed6deb1c5c9653787554532569c725f87ed25d95675169f0cbe7fd"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000040_946.jpg",
+    "fileSha256": "61962ce4c700ff9b4eb64f8765f551e7996e2965d75ce681136264f5d17a888e",
+    "window": "gap1150",
+    "sourceTimeSec": 1154.0,
+    "box": [
+      769.684814453125,
+      530.0665283203125,
+      803.2559204101562,
+      622.7142333984375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "355f516331eb882583f619ba3ef6fe66acce0179a48a4487cdfc341def89b946"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000044_1027.jpg",
+    "fileSha256": "9345ca0afdc30b1dd8bacc7db34c92ef89a6bf7f2e215eeef6841a74f36d21e0",
+    "window": "gap1150",
+    "sourceTimeSec": 1154.4,
+    "box": [
+      671.5297241210938,
+      544.5020751953125,
+      729.9684448242188,
+      645.5958862304688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "705ee245ec3e1eed3f5008d99c1f24439b21be68251c1f8e48cdacce124e559d"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000050_1137.jpg",
+    "fileSha256": "3a54beff72a1399ed66a30e64d4e1a954018eb676453ba328f91cd34c28d4222",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.0,
+    "box": [
+      1429.400146484375,
+      311.3052062988281,
+      1920.345458984375,
+      1074.7261962890625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "32c9446af68a638131ef2c228cd4e8020b42192d565ccd8e296f92c481602bb5"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000052_1191.jpg",
+    "fileSha256": "9ad7c212af4222b3ca2e14abc2a2be8a1b735c4e55cc25183d707800f2161bc6",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.2,
+    "box": [
+      1876.3902587890625,
+      562.6856079101562,
+      1919.3416748046875,
+      660.1048583984375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6ba28b8b1a0a13755f4de97e1de4a5090cd727bb15f2c10ab5bf476ae1363ee3"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1217.jpg",
+    "fileSha256": "d425660d6dc449b6f9b85656d5e5e21e8a7670eda50a9f48d7646a9ef8749c00",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      352.1072082519531,
+      586.8094482421875,
+      507.3884582519531,
+      771.3257446289062
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6d893600e52550c2e24161d3fed7ed29fb951b43da9afcb5b56eda240eecc3a6"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1218.jpg",
+    "fileSha256": "6b57137a3bdd53a6e1b87683b8c1e1172cbbbed3bb1f65ee4e1966b06c6b5797",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1548.10595703125,
+      557.5347290039062,
+      1759.302001953125,
+      871.0977783203125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e13679548edc6277528cab81eec560c3caf1b42afffe489b02c86674edf1bf0f"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1219.jpg",
+    "fileSha256": "6160d23b1a2a57292a9abd9d2c271bd421cd4ee83826c330166660cf054d29e9",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1785.158203125,
+      562.5025024414062,
+      1850.7425537109375,
+      692.1131591796875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "120afe009d837c81c5b28a2dd57b6207d528cb9cfe2d8b1451521b1a388aafcb"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1222.jpg",
+    "fileSha256": "d87bf11ec86afec9daea218bd939e18812529bce82da80f898963c49836b38d6",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1215.6517333984375,
+      635.5379638671875,
+      1473.5775146484375,
+      817.0398559570312
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "cef1d16f32f7ff6fdd67be142a5a75a1fa95a02b9a6dbaa75ad3379dc729d77e"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1223.jpg",
+    "fileSha256": "e1f2b2c87ae766b19a64c7a121204ace786a4d7f43cbd9d486b354195add26c6",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      471.369873046875,
+      592.8831176757812,
+      577.6368408203125,
+      726.0936279296875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "70a7790f9b096dd5152e877d93ac69cc1eb6260d6751da729ea79c62ee389b9c"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1224.jpg",
+    "fileSha256": "f963797ecdcaa151f14fb92b24e85a64e9a0db48a571b9ee69fc02729b7ac5e2",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      539.6522827148438,
+      596.5729370117188,
+      580.8267822265625,
+      720.6520385742188
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "161cb3557d0f25dea6cbefc3861dd56ef77d0266e61d605c2ba292bf00d12a76"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000054_1227.jpg",
+    "fileSha256": "43a3f94030c2dde93c793b538121573c69e367c6a688146990f025e3d227bcfd",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1219.7059326171875,
+      651.5554809570312,
+      1333.6956787109375,
+      805.6802368164062
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6b0e3f3b50a24af82d8a037d1a8f601eab7c804628411e66458ff40d65dd68c4"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000060_1326.jpg",
+    "fileSha256": "0e0e2ec44cc3226bc3d98f6da40275afa167a129024a59aca250305ea1d14ea7",
+    "window": "gap1150",
+    "sourceTimeSec": 1156.0,
+    "box": [
+      251.384033203125,
+      586.7261352539062,
+      380.4754333496094,
+      796.7984619140625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "ad0cf5f5abc8b9357dcda9f1e8329dcd49a0ad0f152cb5ba665db169d084544a"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000064_1403.jpg",
+    "fileSha256": "28c41b628b8f70ef2520343f455b682241f7991846b55ceb19e7fb6f535b4c4f",
+    "window": "gap1150",
+    "sourceTimeSec": 1156.4,
+    "box": [
+      1582.345947265625,
+      562.2936401367188,
+      1718.10400390625,
+      800.754638671875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "f0266f586feff2ee46f50122256ffb432f6285f8e134c8599caef4de47923c18"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000068_1476.jpg",
+    "fileSha256": "1e19a00c13f78c1c22038f85db1f3b18b13d7c813319c7bbc241d93345bd5853",
+    "window": "gap1150",
+    "sourceTimeSec": 1156.8,
+    "box": [
+      155.50241088867188,
+      571.5157470703125,
+      306.4789123535156,
+      815.8463745117188
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "0207f0acf807cdb09e8848ffdac60bea478993f9131b3f1f77ff788ebf335c68"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000072_1546.jpg",
+    "fileSha256": "c184f0af1096564b55586e7024ea2c1ea1a2507fdd390d0dfc279c01d68e4c48",
+    "window": "gap1150",
+    "sourceTimeSec": 1157.2,
+    "box": [
+      565.8396606445312,
+      542.4637451171875,
+      664.45751953125,
+      805.08056640625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "39b5f841a7834511cbb13ef71940beccb864d2b1cb681e2b711dcff56d8dcfb1"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000076_1614.jpg",
+    "fileSha256": "ca8fe2ecbcfc86178246b3d64cdf4ce5a5ce7d703c2270fce1ffd510cc96853a",
+    "window": "gap1150",
+    "sourceTimeSec": 1157.6,
+    "box": [
+      1.437143325805664,
+      592.736572265625,
+      83.7702865600586,
+      722.7911376953125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "75a8ecf80df8713bd481d5a191fbf199b75a288fdb59640ace456c2cca7c63d0"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000080_1675.jpg",
+    "fileSha256": "ab074ab550c4aa2bc55d13d9085fd31668091fa7bd7aceb1e911b6895ee7f6fe",
+    "window": "gap1150",
+    "sourceTimeSec": 1158.0,
+    "box": [
+      166.21295166015625,
+      575.5877075195312,
+      218.2249755859375,
+      679.859619140625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "bb05cd5814ee468450363ece3afde852b82b7a9c22914fe4b41b5233bad46bdf"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000084_1728.jpg",
+    "fileSha256": "af61b0ff33c97fcbf62aa0f9e663c53ba939db9f76f670ee0d3807a3d03794a6",
+    "window": "gap1150",
+    "sourceTimeSec": 1158.4,
+    "box": [
+      165.17010498046875,
+      540.3886108398438,
+      234.82815551757812,
+      670.8279418945312
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "c3ab1ffdf73685c69dd9f56244721c3d64ffdeda6ff3a8e04516ac6989ec79f5"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000088_1790.jpg",
+    "fileSha256": "dfc6352641a7dfec320a0063a0de9f42b85389957bfc238282e084af6571848b",
+    "window": "gap1150",
+    "sourceTimeSec": 1158.8,
+    "box": [
+      1586.7723388671875,
+      415.19891357421875,
+      1725.9925537109375,
+      767.1685180664062
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a9429286075251ab0bbc07d06530de67542d70c667047bd37ee88c5ea033bb96"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000092_1838.jpg",
+    "fileSha256": "3fe9f3c1dc9f00869618d3e2e1f5566de2a46e9ccd1023c53aafc34986609d13",
+    "window": "gap1150",
+    "sourceTimeSec": 1159.2,
+    "box": [
+      352.34033203125,
+      448.10186767578125,
+      520.0601806640625,
+      771.0921020507812
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "68633274f1c1a505f3a980db47f928749974af1509285b06575ebe1e6d904a17"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000094_1872.jpg",
+    "fileSha256": "c4987515e5b273a6bfb440477294ae0bb197f4c35d0ab58d3dcbc3cd47dc3385",
+    "window": "gap1150",
+    "sourceTimeSec": 1159.4,
+    "box": [
+      1319.21826171875,
+      470.1982727050781,
+      1373.2847900390625,
+      574.6066284179688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "24492162b97c01aad1592a871f9fb347ce8c0cb7ea9045359c98abde37ce1746"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000098_1926.jpg",
+    "fileSha256": "cb601e46b45cba5deea00532c1dbfe458d87dd578c8fc5bf6effd4c7ad749286",
+    "window": "gap1150",
+    "sourceTimeSec": 1159.8,
+    "box": [
+      56.950538635253906,
+      508.3288879394531,
+      129.92083740234375,
+      666.2347412109375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "4c24358486aa05499a834c18fb9df8a739cad4435c28a34cf8a6d5664d34a100"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000100_1968.jpg",
+    "fileSha256": "3cbe3e99c8dc184319439be11b7caa49da4e9ccaad8f1b2488b8df320b6ccaa3",
+    "window": "gap1150",
+    "sourceTimeSec": 1160.0,
+    "box": [
+      256.7123107910156,
+      502.2119140625,
+      309.7396545410156,
+      672.7757568359375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "059ada6a5802d3d81983244adefd57053e63d9f852cdbea2aca665595781464b"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000102_2014.jpg",
+    "fileSha256": "ca47eea04850e635f9dd5a2bec4fbbeb04f3de0a8d93237e8551fdd62dec1020",
+    "window": "gap1150",
+    "sourceTimeSec": 1160.2,
+    "box": [
+      799.1422119140625,
+      582.3546142578125,
+      824.1117553710938,
+      721.82275390625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9e075ab317bbd01193a1845145f18bef437e9f9e4e6b7fcb5fab864a067c6931"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000106_2080.jpg",
+    "fileSha256": "57cd7b922d9683bea8428730ed056e23256f751d8376a55cd246151283444356",
+    "window": "gap1150",
+    "sourceTimeSec": 1160.6,
+    "box": [
+      1201.005615234375,
+      497.3193054199219,
+      1281.2056884765625,
+      746.63671875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e8e0846dc8716ace650b45b158c616169bc3bd98d01a44bbc9f8c608197a5728"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000108_2116.jpg",
+    "fileSha256": "1dc2ecb11cc5b74c44ab6e0e080fd82f87ee5f9b0622863ea4918a12a60bc391",
+    "window": "gap1150",
+    "sourceTimeSec": 1160.8,
+    "box": [
+      796.145751953125,
+      567.1376342773438,
+      837.0328369140625,
+      668.7855224609375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "233b17c826bad12d1ddead721a94972cb1204ebc063120e8dfac5810fc7c144e"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000112_2176.jpg",
+    "fileSha256": "3c06d1ad675d68b0c1a4d21ffce71bc2c485753714bd6dafcd5f382050a2624e",
+    "window": "gap1150",
+    "sourceTimeSec": 1161.2,
+    "box": [
+      1483.776611328125,
+      621.0576171875,
+      1565.402099609375,
+      846.1371459960938
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "c9f091deed52dc1da12e7f7539c42b2b3f9bfa71ec4fecff527c025da902554b"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000114_2219.jpg",
+    "fileSha256": "870f73ab8b04483ae8dabd170c63bcd2166e5a0542d09b8958780c3253529a96",
+    "window": "gap1150",
+    "sourceTimeSec": 1161.4,
+    "box": [
+      608.1602783203125,
+      642.4412841796875,
+      687.4729614257812,
+      788.4135131835938
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "96c9bf484f491e71ffb02f95f6aac1ddef4a5ed97e2c755424088160f5c2be4e"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000118_2285.jpg",
+    "fileSha256": "e3b412ab44f212e5c6d7c4bb33c50d3fa377a9c6a9f117d5d692690f01c6d9c2",
+    "window": "gap1150",
+    "sourceTimeSec": 1161.8,
+    "box": [
+      1258.8065185546875,
+      676.407958984375,
+      1327.0244140625,
+      854.8419799804688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6e05646e3dc632a266ccbe5747c9d09452c8c76712c0057a5825564d67e32905"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000122_2349.jpg",
+    "fileSha256": "d60dd1419a76c15d7c680be262a39c09aeba30e429ca41a57cde6948fb347183",
+    "window": "gap1150",
+    "sourceTimeSec": 1162.2,
+    "box": [
+      564.66796875,
+      657.6611938476562,
+      729.411376953125,
+      971.4069213867188
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "488a07239bc1cddfd4c85f274f6dc1fe308c89dae91e41d29924d0d8dfc8c42e"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000124_2387.jpg",
+    "fileSha256": "77f51a3eea4476cf5cae4b1c7feed31a4d113ffbce5f80bd61eaf4a57a24fab1",
+    "window": "gap1150",
+    "sourceTimeSec": 1162.4,
+    "box": [
+      692.8445434570312,
+      664.3905029296875,
+      769.3792114257812,
+      815.40966796875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "b94caeae15b5fd6336067f1bef2c73dea0348d9a099e290ffb72e7bce800a845"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000128_2457.jpg",
+    "fileSha256": "891868277fae9bac91fb6de2859482e9ea7fc16431aa35e0ba3228e80f7153c2",
+    "window": "gap1150",
+    "sourceTimeSec": 1162.8,
+    "box": [
+      1732.3729248046875,
+      564.8750610351562,
+      1773.3837890625,
+      670.764404296875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "8323e416d2ed28ea87f45fd05e605ffa54c6579e0e592dd5bf9503f4ebd9cd91"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000132_2526.jpg",
+    "fileSha256": "21cc72f7c33b747a789f3d63f4e7c58858410c8a01e88a6fe599b0090711b066",
+    "window": "gap1150",
+    "sourceTimeSec": 1163.2,
+    "box": [
+      1280.0518798828125,
+      586.2745361328125,
+      1340.3492431640625,
+      740.5908813476562
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9d906e64429b973622091e896c56566af8b2cd436b2ced88c6be60faffe80ff1"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000136_2599.jpg",
+    "fileSha256": "407c81d75dd0d5d6837809996046930362a92eac4dee3c88dfb0c4831bef595e",
+    "window": "gap1150",
+    "sourceTimeSec": 1163.6,
+    "box": [
+      862.532958984375,
+      592.2970581054688,
+      953.8846435546875,
+      865.2459106445312
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7d945646c4dfc666b2a14f5419d580f3b5e9a7bdebca3609a7da4cf615e4537c"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000138_2654.jpg",
+    "fileSha256": "60e1f7269b7dc0dc32f89f57a8b87b667606623a27f9532d78d9797c053edb36",
+    "window": "gap1150",
+    "sourceTimeSec": 1163.8,
+    "box": [
+      838.799072265625,
+      614.5918579101562,
+      886.0217895507812,
+      770.7775268554688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "cfad2ed64b8c37838178689b2ce2e1b75fab90b3b628bb1711babbd1bd8cd812"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000142_2732.jpg",
+    "fileSha256": "1018cab0e5835483ea6301655e03ae6200700e9f3c24f707ced79e66fb992609",
+    "window": "gap1150",
+    "sourceTimeSec": 1164.2,
+    "box": [
+      1780.3485107421875,
+      513.7772216796875,
+      1857.525634765625,
+      688.660400390625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "8988b2abd8bfb9c7f5b2a56bac7ad0615ac942c7c2923695289e9b27f7717213"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000144_2782.jpg",
+    "fileSha256": "2f3a0115fb54084dbd89c59baca2f1c19e761688abc7b3565d97c158b2737bef",
+    "window": "gap1150",
+    "sourceTimeSec": 1164.4,
+    "box": [
+      1592.636474609375,
+      542.8643188476562,
+      1633.678466796875,
+      639.5592041015625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "45f382290b53066225b3326c25f9665a9301475ac80bf794033c8b49201a6191"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000148_2878.jpg",
+    "fileSha256": "833afac240c98644784b4421c2a5d553a3187615b31c60ff0d4eeed5bd614c4b",
+    "window": "gap1150",
+    "sourceTimeSec": 1164.8,
+    "box": [
+      943.3811645507812,
+      574.21533203125,
+      1046.01025390625,
+      817.3272094726562
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "d792baccd7c19e61a14415af009a19ab3b9616786c88b5ccc3bbddb617275175"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000150_2934.jpg",
+    "fileSha256": "7b735bf5eb575985a1f8bf8307c594f7f7df46224c3226de7a063fa49342beb8",
+    "window": "gap1150",
+    "sourceTimeSec": 1165.0,
+    "box": [
+      1266.0516357421875,
+      559.335205078125,
+      1315.6536865234375,
+      689.7642211914062
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "ea8e146ea539528d584c1306aaa209d34b741efa64696f5e0d795700dde9be7a"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000152_2985.jpg",
+    "fileSha256": "5941b16ba22fdeedfbb82ae603f6c2e4d8a33bd81ec2ba856e2ca08149b6ce89",
+    "window": "gap1150",
+    "sourceTimeSec": 1165.2,
+    "box": [
+      1149.3111572265625,
+      575.517333984375,
+      1187.27001953125,
+      674.3104248046875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a6de660aadf624b1821ca3c2e0ab6c8f64287b2e5f3ac9d5820e8a6265dc028a"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000156_3079.jpg",
+    "fileSha256": "bbe040b7397f493af91ff007a39eaeff0e06858a00dd0a7588f651d81eabcbbf",
+    "window": "gap1150",
+    "sourceTimeSec": 1165.6,
+    "box": [
+      1061.1773681640625,
+      533.4783935546875,
+      1136.7271728515625,
+      768.1777954101562
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "eb35eff52d67ae1246c8056674763167ba8afe53a376c0e490adbf70427eeadc"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000158_3130.jpg",
+    "fileSha256": "71bb7ec137cae66d385f86f8f7d45ad3ce9caac319e022b59d3fc04d172bbfd5",
+    "window": "gap1150",
+    "sourceTimeSec": 1165.8,
+    "box": [
+      1596.0263671875,
+      522.3447875976562,
+      1629.5072021484375,
+      611.7472534179688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5d5cdf1d7bfcee24fe153e0bfa29018c302b914040f7eaff013d6c6ad423b14f"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000162_3208.jpg",
+    "fileSha256": "60ca73d13ddf258998b0791c0102c4b6dfa138792a677296567fae81af0342bd",
+    "window": "gap1150",
+    "sourceTimeSec": 1166.2,
+    "box": [
+      1848.4117431640625,
+      461.98553466796875,
+      1919.6207275390625,
+      694.1614379882812
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "1fc2fa6acac80e0f4b23802cb8028a4229648e397a1b13d8f0c22ef29d8a4124"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000164_3261.jpg",
+    "fileSha256": "8815f9299209d346f0383db28dbd4dcce8ae4a75200bf9ca7d43ce73481dce20",
+    "window": "gap1150",
+    "sourceTimeSec": 1166.4,
+    "box": [
+      133.0946044921875,
+      627.5942993164062,
+      198.60589599609375,
+      786.0732421875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "757fa6131525f209899c7e21c037e009dadde9c06717e7f5721d866f3cf95c36"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000166_3308.jpg",
+    "fileSha256": "2c06d93d0af1150c4375ab377b39db1303d74551ae4b676c6cb8ffc98dc5b9e5",
+    "window": "gap1150",
+    "sourceTimeSec": 1166.6,
+    "box": [
+      1523.337890625,
+      513.2134399414062,
+      1564.9376220703125,
+      616.0856323242188
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "637ffb85521cca6125032bbab2529dd8c449cf559bde704829cad22634da335b"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000170_3398.jpg",
+    "fileSha256": "eeb09a772bb33b473818c9649887ee59df96892fe3ad72efe4c8fe2e06d60075",
+    "window": "gap1150",
+    "sourceTimeSec": 1167.0,
+    "box": [
+      1624.739990234375,
+      484.28265380859375,
+      1736.3328857421875,
+      694.0989990234375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "3937a0e790a81a2ae1fa3eebb8331413de2125c8b02fe9074de5b88a8c60ad69"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000172_3449.jpg",
+    "fileSha256": "55aca269df6ef9d28661f78155e728e7e53a2e558da778757b6413880807512e",
+    "window": "gap1150",
+    "sourceTimeSec": 1167.2,
+    "box": [
+      1586.8421630859375,
+      482.8149108886719,
+      1652.853515625,
+      697.683837890625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9712b4b341e2b21b3a75973fdd3d19e2e9d0a1508b3861a951797b0da03afd76"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000174_3503.jpg",
+    "fileSha256": "9c6166dc0b51a94f5c6fa743faf94fae551425eca709ca90d2d3a77183a2a993",
+    "window": "gap1150",
+    "sourceTimeSec": 1167.4,
+    "box": [
+      1300.7333984375,
+      530.0626831054688,
+      1338.9697265625,
+      642.0692749023438
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5e3e4aeead4a6a34e9696862dfae8470be9e81f3766fd272e571b01f458ef729"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000176_3561.jpg",
+    "fileSha256": "f7b361198e5722f63e785f81b255027ce91d218b3ad18443473d81f3cb1429ff",
+    "window": "gap1150",
+    "sourceTimeSec": 1167.6,
+    "box": [
+      1134.11474609375,
+      547.9194946289062,
+      1172.896484375,
+      642.4384155273438
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "87453ace99e4cdd59620e14caae4e47730f6ee3b51d4530bfea1548f5f27be3d"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000180_3645.jpg",
+    "fileSha256": "cde0c461609a707bb99f397914beb4029dbb7f7da4dcf72ff68519e2d87b0ea1",
+    "window": "gap1150",
+    "sourceTimeSec": 1168.0,
+    "box": [
+      1458.3338623046875,
+      504.078857421875,
+      1531.0955810546875,
+      709.6790771484375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "621a82e1fc492ca5c6b6d49375766b15f0961019895b21659131b596f52d12a2"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000182_3700.jpg",
+    "fileSha256": "186b0237f8a3b138da2cc3722c5596fac2575780b76b54e13e98be0d8f50bdd1",
+    "window": "gap1150",
+    "sourceTimeSec": 1168.2,
+    "box": [
+      829.4557495117188,
+      566.1680297851562,
+      878.2760620117188,
+      683.069091796875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "98b246db7d5757c0d9774788c339700e5c940da8bf2436dbe31fd02791a0353e"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000186_3788.jpg",
+    "fileSha256": "b0a9d596de729ed899778167147f68f399adc44510a1061a335d0dbbc6f4bb5e",
+    "window": "gap1150",
+    "sourceTimeSec": 1168.6,
+    "box": [
+      1723.9537353515625,
+      492.1754455566406,
+      1788.1724853515625,
+      634.7305297851562
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "08bf43f8a140f85cb15df30ba5c01b929f94febb9051a0e0c0497d7d643d5d92"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000190_3876.jpg",
+    "fileSha256": "649de37b39e03beeb250b83b8a2f8969156e81146a70c40bacde388dc4505aa1",
+    "window": "gap1150",
+    "sourceTimeSec": 1169.0,
+    "box": [
+      1430.0595703125,
+      500.6150207519531,
+      1525.103759765625,
+      716.1298828125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "559ee78cdd426a1aa52e9065a6561fac8de13d2a68630a87af17f29fa424af7d"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000192_3921.jpg",
+    "fileSha256": "5fd17dff3a40c9882845656e52dd9083f27665c1a73cb7760c5f9d7b7ee7d907",
+    "window": "gap1150",
+    "sourceTimeSec": 1169.2,
+    "box": [
+      866.0107421875,
+      564.260498046875,
+      910.9345703125,
+      675.5712280273438
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "3d37afb290c879dc56833b8c2bc3644b29314acdba7becb65072bf8837ef2b58"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000196_3995.jpg",
+    "fileSha256": "4b1471b8feddf065873be607d8878139525de6388c9e40c2f09f7622e385065c",
+    "window": "gap1150",
+    "sourceTimeSec": 1169.6,
+    "box": [
+      0.36287498474121094,
+      593.7005615234375,
+      119.82291412353516,
+      935.7617797851562
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "233448b85485614ebf4408a48e4e3f6e644ee7a5865a98667acd10dd8f7f5ac5"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000198_4049.jpg",
+    "fileSha256": "2719cf9be2db6eab9b1afd0d4c4219e6e041902d8205048bfbcb9f5f9007a3f9",
+    "window": "gap1150",
+    "sourceTimeSec": 1169.8,
+    "box": [
+      1340.3466796875,
+      535.1475219726562,
+      1396.1229248046875,
+      669.16455078125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "33872ed17b1ea9b2057bb067e047a070a24558ed92d8b8fba530087abe28e45f"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000200_4099.jpg",
+    "fileSha256": "d41c10ce0e0f71ff5b2dc679eb210ff87568823a395f58b1f4fde33f451e71a3",
+    "window": "gap1150",
+    "sourceTimeSec": 1170.0,
+    "box": [
+      899.2326049804688,
+      559.8343505859375,
+      947.4197387695312,
+      667.4844970703125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7f42de013540866fd8b633db4463741b86f015666b1ac48befce0170b9fbade7"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000202_4151.jpg",
+    "fileSha256": "0879defed966177e1dc31d28be0825f142538246bd9fbb2ab9329fddca1ee1f3",
+    "window": "gap1150",
+    "sourceTimeSec": 1170.2,
+    "box": [
+      1076.468505859375,
+      544.5228881835938,
+      1110.427734375,
+      644.4562377929688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "15ba604904789d12f8cbf01784f7ff21ca8cc914720a2e28998af96d2e6a4659"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000206_4243.jpg",
+    "fileSha256": "f006cf0261ed9066da3b2fc7ed3066f6c7fd62d969ba368902362a3c3f7dd02f",
+    "window": "gap1150",
+    "sourceTimeSec": 1170.6,
+    "box": [
+      222.70925903320312,
+      666.5330200195312,
+      430.71124267578125,
+      895.552734375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5493fd0356823c5af9f1eeb10c3222faec06ad0bcbb76e01af8fbe2314db8a32"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000208_4301.jpg",
+    "fileSha256": "3ad58f00629c96c7c3d54058e04ca8e2c060a1d93ed316d72aff222165793b9d",
+    "window": "gap1150",
+    "sourceTimeSec": 1170.8,
+    "box": [
+      1796.5906982421875,
+      490.8788757324219,
+      1854.6417236328125,
+      626.7531127929688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "61345305c80400b83fce2991c9e8714b57b0f602653ec909c1abb5946f206f6f"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000210_4359.jpg",
+    "fileSha256": "2c769980f6f21fd1425ac82b3ff90f7e28cc7b45bdd1ad1d3b29673c512b69ed",
+    "window": "gap1150",
+    "sourceTimeSec": 1171.0,
+    "box": [
+      1490.3062744140625,
+      521.7095336914062,
+      1526.39892578125,
+      612.046875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6b99737eb020ab91f2ad8d31cc29fd29a1d099e4ee6a19dba87ba42327d9e90b"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000212_4418.jpg",
+    "fileSha256": "edc54db5e9f9b6d1e5a0811216bf49828d89f267189c1e20b5f48861c2ec835f",
+    "window": "gap1150",
+    "sourceTimeSec": 1171.2,
+    "box": [
+      1212.9605712890625,
+      545.3121337890625,
+      1249.34912109375,
+      631.5851440429688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "b47382d7a1f120b08e5172218c3f713f52172e2570511570978905fe156988c0"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000214_4474.jpg",
+    "fileSha256": "afcaf1801f2ed3f10707e33860750ed76349a7965f9e3065968f94d3e6d6337c",
+    "window": "gap1150",
+    "sourceTimeSec": 1171.4,
+    "box": [
+      1224.128173828125,
+      546.8977661132812,
+      1248.343017578125,
+      629.8342895507812
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "4770bd78c5ece27bd39420d9e1fd051ff3e3c056bc7089ce1c4b4840a09d88bb"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000218_4577.jpg",
+    "fileSha256": "a421476204f7e658de50ccab96650b5c7e629b60800dd763bc3e8e2e004cfcbe",
+    "window": "gap1150",
+    "sourceTimeSec": 1171.8,
+    "box": [
+      1570.260986328125,
+      498.58941650390625,
+      1661.4910888671875,
+      703.192626953125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e8f8c98fd6f1866b21a11da83279d802072d3c67ab98f2d31f1b74039f7798b5"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000220_4638.jpg",
+    "fileSha256": "e7d9a69462403709d500a2e6e68fff7ff61ac3416e0bf564e4d1c6a3bddf67ca",
+    "window": "gap1150",
+    "sourceTimeSec": 1172.0,
+    "box": [
+      1364.4085693359375,
+      532.386474609375,
+      1404.948486328125,
+      626.5191040039062
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "8b8f8f83fd4454daee9328861794db67f37778b9da3f938524bcd8f91e4d08b4"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000224_4734.jpg",
+    "fileSha256": "b5b87609075b08560b7a5eaaf408690a5a9ca5d7cf862d5b428d2aea148612d8",
+    "window": "gap1150",
+    "sourceTimeSec": 1172.4,
+    "box": [
+      0.13552093505859375,
+      578.2677001953125,
+      144.30569458007812,
+      941.29541015625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "362db7f690c1d50cd3fde40c6cc106b89d798750e5033afa6b4e58fcb93cfe83"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000226_4787.jpg",
+    "fileSha256": "4cf763fe8bca26ef346687d0af08f87b0cceff200f79549623ad2028f65d5013",
+    "window": "gap1150",
+    "sourceTimeSec": 1172.6,
+    "box": [
+      944.0015869140625,
+      566.7028198242188,
+      981.0950927734375,
+      662.8972778320312
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7761cfc1ca8cbd6e843a3d3171e0181ddff070c3f5769b766d083d195a701140"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000228_4849.jpg",
+    "fileSha256": "eb13109677e78f3fcccf030bfedf20948806ed1c74aa3bf4b3052fcc2c7a35da",
+    "window": "gap1150",
+    "sourceTimeSec": 1172.8,
+    "box": [
+      -0.08817100524902344,
+      700.826904296875,
+      52.48097229003906,
+      942.0579223632812
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5bfd97b457b02f8fd4ce49f1f2e9d1f79f024b15e5bdde33ca99e99b965848c3"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000232_4947.jpg",
+    "fileSha256": "33294b60fad6537b3173b333ed09ce243d3389d3234df2b8853ce99909df6136",
+    "window": "gap1150",
+    "sourceTimeSec": 1173.2,
+    "box": [
+      1453.4422607421875,
+      541.8446044921875,
+      1490.2064208984375,
+      636.3651123046875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5a1d2557d5caa11ba3209ac81fb7b3b207eda021452a70ee60fade066cfe9917"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000236_5036.jpg",
+    "fileSha256": "69c8057f7e6a7aa32ea7696d4b1db4c128764881f6334d7bdf309fd3c67b86d4",
+    "window": "gap1150",
+    "sourceTimeSec": 1173.6,
+    "box": [
+      1342.6431884765625,
+      529.4158935546875,
+      1416.65625,
+      728.7018432617188
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "0c89ab2fb7bb56d0e76a5818992e8e8701e8db191c0724090550ba8db77211b5"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000238_5085.jpg",
+    "fileSha256": "eb061db5fe5dce7e185cc8e2b7a114743fb9ba4772d0ed8bb0d101ebd38fdbe0",
+    "window": "gap1150",
+    "sourceTimeSec": 1173.8,
+    "box": [
+      1062.733154296875,
+      568.707275390625,
+      1096.91259765625,
+      655.7060546875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "d5a289521b1c8d53acf3613c6f4ec0222b9e94ea1032f8b3c5c285a1f877a648"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000240_5145.jpg",
+    "fileSha256": "e0597d6917b5b316a21921ee29245a7396df8e3592c60653febcf18980bae157",
+    "window": "gap1150",
+    "sourceTimeSec": 1174.0,
+    "box": [
+      1886.1171875,
+      526.25439453125,
+      1918.0394287109375,
+      655.1298828125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9782a6915fe7ccfecd28a247cbbe5008d0a9b49ae0d6b66b92252213d0ed885b"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000244_5223.jpg",
+    "fileSha256": "52957741ff0006d9b7c11fe4814ba8070b5333d400e9a53b58bcd9b72eaa13b7",
+    "window": "gap1150",
+    "sourceTimeSec": 1174.4,
+    "box": [
+      72.01946258544922,
+      557.6389770507812,
+      116.65007019042969,
+      691.4055786132812
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a67fb1f3b8473fcdab3ef56756220f616cd6dabd3bbbc7cdb1a5508039ff9d45"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000246_5269.jpg",
+    "fileSha256": "5b928f7566c5d2fc917322914e868a43853f5a365958b29fb5fa63e59edc4ca0",
+    "window": "gap1150",
+    "sourceTimeSec": 1174.6,
+    "box": [
+      290.3337707519531,
+      544.2382202148438,
+      336.2919921875,
+      631.102294921875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "59c290017f3052ace1d4a32bab73e4ed39bab9d277adf652a8fde310fe9934f9"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000250_5332.jpg",
+    "fileSha256": "43a39954a4038532e8620e27ee2f87dc8b1bc226fafd388a12255aa7db32c930",
+    "window": "gap1150",
+    "sourceTimeSec": 1175.0,
+    "box": [
+      1476.21484375,
+      531.5966186523438,
+      1504.6058349609375,
+      612.3820190429688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9f48ba4fd2a206a8163e562c0770b27840147642fd77ad3cbe0100a279efb790"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000254_5414.jpg",
+    "fileSha256": "05e20f3ec85f276b77f3ccaaf49af636dbebf2317865f83e2fb23e96751a68e7",
+    "window": "gap1150",
+    "sourceTimeSec": 1175.4,
+    "box": [
+      1776.5592041015625,
+      515.5120849609375,
+      1816.359375,
+      626.816162109375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a941bb95fc4dca72923fa2ef304b1fe9949038003e1fc4fd80c9840c2981236b"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000256_5475.jpg",
+    "fileSha256": "5c7ad125ef31b5c1b690eff6c02ec67abc4697d9cac8592b947504c010b503d2",
+    "window": "gap1150",
+    "sourceTimeSec": 1175.6,
+    "box": [
+      1898.5916748046875,
+      519.7788696289062,
+      1919.707763671875,
+      628.5206298828125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "b816d6429355f2d5646bd2dc951cbef2b4db46f398604e99767f3e04e577f03a"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000260_5560.jpg",
+    "fileSha256": "ac3937d11a1f93976bf6b472b9dd36a4a94a642c392a95468b1b290d618b5502",
+    "window": "gap1150",
+    "sourceTimeSec": 1176.0,
+    "box": [
+      1702.4051513671875,
+      510.776123046875,
+      1735.067138671875,
+      598.90625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a65d7ed133c866073ac4aab6f04d25ff4665458c3cd308a07ba8c05d7105b420"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000264_5650.jpg",
+    "fileSha256": "2ff5ad5f9fd1dbb4b6a77ea96a4d6286a30879bb621b221aba5e2973ae45fa84",
+    "window": "gap1150",
+    "sourceTimeSec": 1176.4,
+    "box": [
+      1848.2867431640625,
+      507.6158752441406,
+      1887.19482421875,
+      612.6925048828125
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5cb105eaea4708cd28f7f4f7da047dcf19a1d709dce883af5d42b00c107ea398"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000268_5736.jpg",
+    "fileSha256": "33740979cbeac1bfb406543ee78a246bad740908e0a15ee45ab925614bcaa2ad",
+    "window": "gap1150",
+    "sourceTimeSec": 1176.8,
+    "box": [
+      1596.3055419921875,
+      467.0260925292969,
+      1667.4493408203125,
+      667.0269775390625
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "53d10e3f7db4403b61e6466bda9ce5ea126a6898206b558b1afb3cb5cd49151c"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000272_5841.jpg",
+    "fileSha256": "f2bdc2f308ef4353af1a86188a5ab41b432db666c755e72995dd1acc3d9332e5",
+    "window": "gap1150",
+    "sourceTimeSec": 1177.2,
+    "box": [
+      1728.427001953125,
+      478.41827392578125,
+      1767.320068359375,
+      578.3674926757812
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "756845dc5cc9b46f828ac927cce8bc82b1904898c85931326c6c37675e92275f"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000276_5942.jpg",
+    "fileSha256": "47959167f07f6b2f0c6deaff497bbdd6100aca149b1184b03a4fc08e95cc8666",
+    "window": "gap1150",
+    "sourceTimeSec": 1177.6,
+    "box": [
+      1711.4967041015625,
+      465.8869934082031,
+      1745.8414306640625,
+      561.7962646484375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7ce3b5ea3e858ec26b779e10be12628c7dd5fa6635a0eaa4127df5e18f108cea"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000280_6045.jpg",
+    "fileSha256": "48a3ddf48376ffd47c3bd3981e686373999845965677265f8442fb12aac65443",
+    "window": "gap1150",
+    "sourceTimeSec": 1178.0,
+    "box": [
+      257.6612548828125,
+      439.3074645996094,
+      291.04156494140625,
+      526.5413818359375
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "eacfb35d2ad938bd5265c7eb07e462b0bad7220288cc34edc41098190b6d7c51"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000284_6147.jpg",
+    "fileSha256": "4f1f24edfa001b1df0065d5812cfa2728c2eec96a4954dc1dd93ce1f76226b2a",
+    "window": "gap1150",
+    "sourceTimeSec": 1178.4,
+    "box": [
+      1610.00146484375,
+      463.14202880859375,
+      1639.655029296875,
+      543.14794921875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "00aa32fcdb93926ec119cf5edb8ab23d63a6505d256e1783b5d829d46a52aa2d"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000290_6278.jpg",
+    "fileSha256": "c7f5b29a7fbd11b2999a34bc1fb818bb68312b8af6cf8f6ad6821d34cd0250cb",
+    "window": "gap1150",
+    "sourceTimeSec": 1179.0,
+    "box": [
+      183.72528076171875,
+      471.66607666015625,
+      252.3848876953125,
+      586.9181518554688
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "d98bacaf1b41fc534753e5e03adefd7620b453c31977c6b65d0d838bcd6048cc"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000294_6366.jpg",
+    "fileSha256": "3a26af57be9810c607eca7cce43ae6c615d246b224b85f4fc42229b71efd7c2c",
+    "window": "gap1150",
+    "sourceTimeSec": 1179.4,
+    "box": [
+      1530.19970703125,
+      476.9160461425781,
+      1604.38818359375,
+      658.55810546875
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "757f5d59bc89feec63b93a322f95b51477e76f43f2e77b7de8542b6088eb53a4"
+  },
+  {
+    "path": "C:\\ZLI\\M335\\ScoutX\\.local\\fp32-prepare-gap1150-cpu-20261030\\gap1150\\stage1\\chunk\\crops\\000298_6454.jpg",
+    "fileSha256": "40205e93b61f63d2877be35b2185162c70d462d520c958f339484b8e164511b2",
+    "window": "gap1150",
+    "sourceTimeSec": 1179.8,
+    "box": [
+      347.729736328125,
+      504.5827331542969,
+      382.4830322265625,
+      597.3036499023438
+    ],
+    "jpegQuality": 92,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "95bae60cc6d8d75c3210e462f1f220c186ba1f32d240e237a72497facd4e3e8f"
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "schema": "pitchproof.fp32-plan.v1",
+  "profiles": {
+    "cpu-onnx": {
+      "device": "cpu",
+      "backend": "onnx",
+      "half": false,
+      "batch": 1
+    },
+    "cpu-torch": {
+      "device": "cpu",
+      "backend": "torch",
+      "half": false,
+      "batch": 1
+    },
+    "gpu-fp16-b8": {
+      "device": "cuda",
+      "backend": "torch",
+      "half": true,
+      "batch": 8
+    },
+    "gpu-fp32-b8": {
+      "device": "cuda",
+      "backend": "torch",
+      "half": false,
+      "batch": 8
+    },
+    "gpu-fp32-b1": {
+      "device": "cuda",
+      "backend": "torch",
+      "half": false,
+      "batch": 1
+    },
+    "gpu-fp32-b8-repeat": {
+      "device": "cuda",
+      "backend": "torch",
+      "half": false,
+      "batch": 8
+    }
+  },
+  "windows": {
+    "gap1150": [
+      1150.0,
+      1180.0
+    ],
+    "3144": [
+      1880.0,
+      1925.0
+    ],
+    "1073": [
+      1050.0,
+      1085.0
+    ]
+  },
+  "scope": "Previously examined development regressions, not independent or full-match accuracy",
+  "controlled": [
+    "same image/commit/model hashes",
+    "OpenCV BGR decoding and JPEG quality 92",
+    "same identity and gate thresholds",
+    "fresh per-profile caches",
+    "seed 0, TF32 disabled, deterministic Torch algorithms",
+    "same fixed JPEG corpus replayed on CPU and GPU OCR"
+  ],
+  "source": {
+    "name": "IMG_4809 10 fps proxy (validated reference)",
+    "note": "The recording every 5.x accuracy and CPU speed result was measured on. Built by concatenating the 12 proxy pieces (stream copy, +faststart) on 2026-10-28; on the owner's computer as Downloads/Mobile Devices/IMG_4809_proxy_10fps.mp4. The original IMG_4809.MOV is HEVC 1080p at 30 fps (2034.9 s) - 3x the stage-1 frames, accuracy not validated. Identity is the video-stream hash (ffmpeg streamhash sha256): the copy remuxed in the development container with ffmpeg 6.1.1 has file SHA-256 007cd4e5...f9aa but the same stream hash.",
+    "sha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+    "sizeBytes": 1413632177,
+    "codec": "h264",
+    "profile": "High 10",
+    "pixFmt": "yuv420p10le",
+    "colorTransfer": "arib-std-b67",
+    "width": 1920,
+    "height": 1080,
+    "fps": 10.0,
+    "frames": 20350,
+    "durationSec": 2035.0,
+    "groundTruth": "bench/results/5.1/gt_img4809_intervals.json",
+    "target": {
+      "number": "20",
+      "kit": "orange",
+      "kit2": "white"
+    },
+    "cpuReference": {
+      "status": "not yet run with bench/full_match_benchmark.py on the full recording",
+      "harnessIDF1Auto": 0.918,
+      "note": "0.918 is the experiment-harness value (dense OCR cache); the gate comparison needs a CPU run of the SAME script and settings (bench/gpu_benchmark_commands.md)."
+    },
+    "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b"
+  },
+  "budgetSec": 5400,
+  "maximumVmSessionSec": 10800,
+  "createsCloudResources": false,
+  "proposedHost": {
+    "project": "scoutx-230b0",
+    "region": "europe-west4",
+    "zone": "europe-west4-c",
+    "machine": "g2-standard-8",
+    "diskGb": 200,
+    "priceSnapshot": "2026-10-29",
+    "usdPerHour": 0.9273387923013698,
+    "expectedSessionHours": [
+      1,
+      1.5
+    ],
+    "maximumThreeHourComputeEstimateUsd": 2.7820163769041093,
+    "excludes": [
+      "tax",
+      "storage",
+      "network transfer"
+    ],
+    "capacity": "Not established by quota or prior successful allocation"
+  },
+  "historicalComparison": "Old full-match results are contextual only: source code and decode controls differ."
+}

@@ -81,6 +81,9 @@ print('python', sys.version.split()[0], 'torch', torch.__version__, 'cuda', torc
 COPY scoutx_tracker ./scoutx_tracker
 COPY app ./app
 COPY bench ./bench
+# Bound, numeric development labels required by the precision diagnostic harness.
+# No footage or crop images are included in the image.
+COPY tests/fixtures/img4809_3144_slice.json tests/fixtures/img4809_1073_slice.json tests/fixtures/img4809_gap1150_slice.json ./tests/fixtures/
 
 # Models: downloaded once at build time, hash-verified against the files used on CPU, ONNX exported.
 RUN python -c "from scoutx_tracker.extract import weights_path; weights_path('yolox_s')" \
