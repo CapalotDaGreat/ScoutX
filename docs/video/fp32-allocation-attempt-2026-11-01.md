@@ -139,3 +139,34 @@ The owner approved one session in `europe-west6`, trying zone b and then zone c 
 The startup script is the committed 0355-a script with one change: the video is uploaded only after allocation succeeds, and the guest waits at most 20 minutes for it.
 
 **What remains open.** All three L4 regions tried so far had no capacity: europe-west4-c and europe-west4-a on 2026-11-01, and europe-west6-b and -c on both 2026-10-29 and 2026-11-01. The FP32 comparison therefore remains pending. Another attempt needs a new approval: a later retry, another region, or a different GPU type, which would no longer be like-for-like with the L4 run.
+
+## Approved Frankfurt attempt (2026-11-01 evening): also stockout
+
+The owner approved one session in `europe-west3`: zone a, then zone b only after a definitive rejection with no VM present, at most one VM.
+
+**Settings:** the same pinned commit, source archive (SHA `308c07a4…a62f`, re-verified), image, machine and 180-minute DELETE lifetime.
+
+**Price** (Cloud Billing Catalog API, effective 2026-11-01, retrieved 17:53 UTC):
+
+- USD 1.0389/h in total: instance USD 1.0060/h plus 200 GB balanced disk USD 0.0329/h;
+- SKUs: AFF4-6DF9-A774, 10AA-7064-F09F, D8F8-12AA-CE07 and B1B5-0BAA-CB31.
+
+**Machine catalogs:** g2-standard-8 with an L4 is listed in europe-west3-a and -b, but not in -c. Quota: `NVIDIA_L4_GPUS` 1 (usage 0) and `GPUS_ALL_REGIONS` 1. Neither proves live capacity.
+
+**Result:**
+
+- `europe-west3-a`: rejected with STOCKOUT (`resource_availability`).
+- After confirming that no instance or disk existed, `europe-west3-b` was tried: rejected, "not enough resources".
+- **No VM was created**, the video was never uploaded, and no inference ran.
+- The staged source archive was removed. Cleanup verified zero instances, disks and snapshots, and no `runs/` or `videos/` objects.
+- Estimated VM compute charge: USD 0. Charges for the briefly staged archive are not asserted to be zero.
+
+**Upload method.** The video upload from the owner's computer was prepared as a stateless, resumable chunked upload ([device_upload_chunks.sh](../../workers/football-cv/bench/results/5.3/fp32-20261101-f-51d41c9/device_upload_chunks.sh)). It is needed because the pinned harness requires the exact file bytes `b1077af3…`, and a remux made in the development container has a different file hash. The script was never used.
+
+**Status.** The FP32 comparison has still not run, so the GPU accuracy gap remains unexplained. Every L4 zone tried has had no capacity:
+
+- europe-west4-a and -c;
+- europe-west6-b and -c;
+- europe-west3-a and -b.
+
+Evidence: [fp32-20261101-f-51d41c9/](../../workers/football-cv/bench/results/5.3/fp32-20261101-f-51d41c9/).

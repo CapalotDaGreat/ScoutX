@@ -1,0 +1,46 @@
+{
+  "run": "fp32-20261101-f-51d41c9",
+  "vm": "pitchproof-fp32-f-51d41c9",
+  "project": "scoutx-230b0",
+  "region": "europe-west3",
+  "commit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "sourceArchiveSha256": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f",
+  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+  "machine": "g2-standard-8",
+  "maxRunMinutes": 180,
+  "price": {
+    "usdPerHour": 1.0389,
+    "instanceUsdPerHour": 1.006,
+    "diskUsdPerHour": 0.0329,
+    "source": "https://cloudbilling.googleapis.com/v1/services/6F81-5844-456A/skus (SKUs AFF4-6DF9-A774 core, 10AA-7064-F09F ram, D8F8-12AA-CE07 L4, B1B5-0BAA-CB31 balanced PD)",
+    "effective": "2026-11-01T07:00:00Z",
+    "retrievedUtc": "2026-11-01T17:53:19Z",
+    "currency": "USD"
+  },
+  "allocationAttempts": [
+    {
+      "zone": "europe-west3-a",
+      "requestUtc": "2026-11-01T18:37:45Z",
+      "result": "STOCKOUT (resource_availability)"
+    },
+    {
+      "zone": "europe-west3-b",
+      "requestUtc": "2026-11-01T18:38:14Z",
+      "result": "resource_availability (not enough resources)"
+    }
+  ],
+  "created": false,
+  "videoUploaded": false,
+  "inferenceRun": false,
+  "cleanup": {
+    "verifiedUtc": "2026-11-01T18:38:49.605847+00:00",
+    "instances": "",
+    "disks": "",
+    "snapshots": "",
+    "runsObjects": "",
+    "videoObjects": "",
+    "sourceArchiveRemoved": true
+  },
+  "vmComputeEstimateUsd": 0,
+  "note": "Estimates only; the briefly staged 10.8 MB archive's storage/network charge is not asserted to be zero."
+}
