@@ -105,10 +105,21 @@ def evaluate_gate(acc: dict, gate: dict, baseline: dict | None = None) -> dict:
             "baselineUsed": baseline is not None}
 
 
+def box_agreement_vacuous(agreement: dict | None) -> bool:
+    """True only when frames were compared and NEITHER run claimed any of them (both abstained throughout).
+    A run that claims frames the other does not is never vacuous: that disagreement shows in stateAgreement
+    and claimedOnlyIn*."""
+    a = agreement or {}
+    return bool(a.get("framesCompared")) and a.get("claimedOnlyInFirst") == 0 and a.get("claimedOnlyInSecond") == 0 \
+        and a.get("boxAgreementWhenBothClaim") is None
+
+
 def agreement_failures(agreement: dict | None, gate: dict) -> list[str]:
     failures = []
     for field, rule in gate.get("agreementWithBaseline", {}).items():
         value = (agreement or {}).get(field)
+        if field == "boxAgreementWhenBothClaim" and value is None and box_agreement_vacuous(agreement):
+            continue  # no frame was claimed by either run: there is no box to disagree on (stateAgreement still applies)
         if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value):
             failures.append(f"{field}: missing or non-finite")
         elif value < rule["min"]:

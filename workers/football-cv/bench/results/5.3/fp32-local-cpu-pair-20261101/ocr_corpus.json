@@ -1,0 +1,1622 @@
+[
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000000_0.jpg",
+    "fileSha256": "a5f489d977201244b353c3ce7830b11e25669fa461abff394db219c914db6bd6",
+    "window": "1073",
+    "sourceTimeSec": 1050.0,
+    "box": [
+      449.22894287109375,
+      588.4861450195312,
+      548.4700927734375,
+      766.8779296875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "c54904c9e4d41b22233aa1a1029d0b9d5e14c7dce880e309d25382caf126f63d"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000028_419.jpg",
+    "fileSha256": "64827249fb632ad84bf166c719f65c440a9d31228df159acaf49c512cb4b03e2",
+    "window": "1073",
+    "sourceTimeSec": 1052.8,
+    "box": [
+      1676.1373291015625,
+      427.7029724121094,
+      1761.383544921875,
+      540.6332397460938
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e15eb6ed2b9fbcb8b2ee273feab4338c781c00d28931676829efb31cf3151739"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000050_732.jpg",
+    "fileSha256": "53ad4bb0bf9334fd315708970b4d76a586a4699e16a12ad531d258eb1ff2a2d1",
+    "window": "1073",
+    "sourceTimeSec": 1055.0,
+    "box": [
+      1485.8572998046875,
+      475.74151611328125,
+      1546.8570556640625,
+      580.3209228515625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9812bbd061bb0a2241d2694490cf1dca23b780e271553b8036a28503f8f72833"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000064_888.jpg",
+    "fileSha256": "8f4b1076680ef7ecf174019ec51bdaeddbbf94c6d8a644be8cbd494e87439db7",
+    "window": "1073",
+    "sourceTimeSec": 1056.4,
+    "box": [
+      1851.7786865234375,
+      372.2586364746094,
+      1919.424072265625,
+      599.845458984375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "19",
+      0.9626662731170654,
+      "shirt:contrast"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "afc54cd0c49d59d1883d0b2088aaf2f1b010557e30a1f0f701e19f7fc69c41c2"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000072_1027.jpg",
+    "fileSha256": "1ca400ead889b967dae8b6b5c3ba86d3540652dc53439d2b2157c01171ef3404",
+    "window": "1073",
+    "sourceTimeSec": 1057.2,
+    "box": [
+      827.0057983398438,
+      527.57666015625,
+      857.1859741210938,
+      610.5185546875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "705e4676a1eb523d58850b9981123b63101798d315ae726b68f84b1ecf366be9"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000092_1421.jpg",
+    "fileSha256": "f4ebec11b86216f8437be5334169c15a4b2652e5ddb1f5482c6cc1bfca62fefb",
+    "window": "1073",
+    "sourceTimeSec": 1059.2,
+    "box": [
+      1382.5714111328125,
+      265.921142578125,
+      1415.864501953125,
+      353.5020751953125
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "1ca01b4c41ac91a838ac17b14bc997a28c0ee057e0feacd180ff7a456b72a685"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000118_2068.jpg",
+    "fileSha256": "bde8ffa327292d63b51fbd04133e658fadcce29e736ba8c3579defaf47ecadf7",
+    "window": "1073",
+    "sourceTimeSec": 1061.8,
+    "box": [
+      1829.4332275390625,
+      242.62998962402344,
+      1867.250732421875,
+      346.5346984863281
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "2d0988c6a102437ddce9025147d05eb9d055c4cb436a5f43c4a75f6045acbc52"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000126_2251.jpg",
+    "fileSha256": "12b7ea0b48f928b98d862c7d7a47d7b58ae3c2dc4b99fcd8e91cf5ca4050992d",
+    "window": "1073",
+    "sourceTimeSec": 1062.6,
+    "box": [
+      1022.71533203125,
+      300.38555908203125,
+      1184.3253173828125,
+      664.668212890625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9999915957450867,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5bfd491527bc4c79c1d89884f196270bc84860118eb05327695d48cd1f46e35e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000130_2315.jpg",
+    "fileSha256": "8a4f70b4ee7ef618828f0942de5fc16d466a0dba7356225b787701ae3c58e339",
+    "window": "1073",
+    "sourceTimeSec": 1063.0,
+    "box": [
+      1178.7257080078125,
+      315.7076110839844,
+      1354.3507080078125,
+      708.9120483398438
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9494133710861206,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e851217bf4844ea164cc88b20af5b86965253a8e42062d38b85bc7fcfc42315e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000134_2379.jpg",
+    "fileSha256": "53398ced234ff26f7bad7aa45a654823dc483e14bc480361c27883cbfb6d0e45",
+    "window": "1073",
+    "sourceTimeSec": 1063.4,
+    "box": [
+      1317.2962646484375,
+      312.91680908203125,
+      1568.4775390625,
+      757.8131103515625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.99992436170578,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "dc739a0275bc972724f1f651d8f6aae88ffbe519a6e8aa581b4e2f24b883442c"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000138_2441.jpg",
+    "fileSha256": "5d1e7ede2df004d7387c5a03f39c7609605aa543a89fb948966a55b1029fc080",
+    "window": "1073",
+    "sourceTimeSec": 1063.8,
+    "box": [
+      1463.32763671875,
+      304.5616760253906,
+      1682.7601318359375,
+      822.2111206054688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9499912798404693,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "1e9425b6a50671e9c838d4e9c14c5b5e1cfa5d2c7a58f5b4e59bed18c061c511"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000142_2512.jpg",
+    "fileSha256": "dc74c97e43533b0f2f1e3eb1047ac77b2266cf99c8b669995c4b2f8c5836066c",
+    "window": "1073",
+    "sourceTimeSec": 1064.2,
+    "box": [
+      1502.1199951171875,
+      349.72332763671875,
+      1805.5458984375,
+      916.34619140625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9982633175153357,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "95494ef82cd1827c018e31e2adddfd21a024320d1a61bbad6a60c9fad96c11b2"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000144_2539.jpg",
+    "fileSha256": "8ae55c57f18f0b2005537239eb4699a3646396318f00404b1dee230b9cfbdc9b",
+    "window": "1073",
+    "sourceTimeSec": 1064.4,
+    "box": [
+      1496.07470703125,
+      312.2441711425781,
+      1812.023193359375,
+      903.1485595703125
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.996101975440979,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "ca7fe838bf42180cbff3267dbc557e5876dc1929d3d60928b7acdebb677d0c0b"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000152_2633.jpg",
+    "fileSha256": "3264a593b1ec0f36d9e6aeda55afb72f363bd7865bdd9b9341aeb7e3e747e4e9",
+    "window": "1073",
+    "sourceTimeSec": 1065.2,
+    "box": [
+      1086.232177734375,
+      419.025146484375,
+      1419.0966796875,
+      946.38525390625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "f26eb5fee2666171e0e44ba646dc77fd6d018f53e312b1f184193373f9933064"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000156_2678.jpg",
+    "fileSha256": "0dfbda5c226b1185c26b48c3cc017b6529ad6d94b7a5b46721e01db3e64a2f8d",
+    "window": "1073",
+    "sourceTimeSec": 1065.6,
+    "box": [
+      820.33837890625,
+      461.9643859863281,
+      1072.6434326171875,
+      910.8232421875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9998315572738647,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "ea64b7579fa3dfc3b52800846314f0e68c3a06a0755fd89dec7b155aecb3e2e2"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000164_2770.jpg",
+    "fileSha256": "f8a5e753f9cc52a0f2f184b17e36e0cd9d999e783c65e5ea64fd90af0b437c6c",
+    "window": "1073",
+    "sourceTimeSec": 1066.4,
+    "box": [
+      370.5714111328125,
+      500.5098571777344,
+      525.36279296875,
+      873.8424682617188
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9999989867210388,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "bb83e3ae21e06deed866aa099cdc0477781c47cfe8eeae229b39dad5cc09786c"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000176_2935.jpg",
+    "fileSha256": "df6b97101f39e8bcac639c9420aa0c196b378be8c45a1b86b11eb7c94dc1688e",
+    "window": "1073",
+    "sourceTimeSec": 1067.6,
+    "box": [
+      1624.6627197265625,
+      394.632568359375,
+      1664.9305419921875,
+      489.3049621582031
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "cc85f45b24779075683fd0aa77ee9b4ecdf979d5f6f67a6d3232aa89f996d3da"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000194_3276.jpg",
+    "fileSha256": "d28eccb5b859b03953c799a9c1b31602e6ba466d9bf2d463986aa87a15dad681",
+    "window": "1073",
+    "sourceTimeSec": 1069.4,
+    "box": [
+      69.3335189819336,
+      659.7200927734375,
+      169.8038330078125,
+      833.2974243164062
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "35dc84924d5a39e957621b04eef9b3986b82d5fab23739eee8b85b587d5654c6"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000194_3277.jpg",
+    "fileSha256": "75c0d90ca5df4b4319b7f4a32c94d5982d511d14c85b92c814c72ff155e6200b",
+    "window": "1073",
+    "sourceTimeSec": 1069.4,
+    "box": [
+      503.88519287109375,
+      499.19415283203125,
+      723.834228515625,
+      1053.819580078125
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.979968045116671,
+      "shorts:scene"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "f81e81c3ff2f662b3e4aeda5bda0ffdb9ee30d4bb7b2898a0a3ae339556d88c4"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000200_3374.jpg",
+    "fileSha256": "51dbfacd34acfe22952e46b4eb3f53b06e3a28a7e93534e07a56d3507a35438c",
+    "window": "1073",
+    "sourceTimeSec": 1070.0,
+    "box": [
+      1285.5069580078125,
+      327.33892822265625,
+      1808.2115478515625,
+      1064.45068359375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9646284668397574,
+      "shorts:scene"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "b6c830cc4e33d785522de98caa800e791c0342dabf621cb7fe2cd26f50c0e43b"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000210_3517.jpg",
+    "fileSha256": "885c3177fffeccf71f948ebffe40cfc045d3c3e0469958aee3e52c2df96cc289",
+    "window": "1073",
+    "sourceTimeSec": 1071.0,
+    "box": [
+      665.7520751953125,
+      618.5169067382812,
+      697.6616821289062,
+      707.7951049804688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9bdd73cb102eb493541048765dda1f6b60296225f1291042004f167d1cb0241a"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000226_3739.jpg",
+    "fileSha256": "a419fb28fc76a42b35d458e963800c1b1ab5f5c03c598f95a7ea1614633f62ee",
+    "window": "1073",
+    "sourceTimeSec": 1072.6,
+    "box": [
+      644.0595092773438,
+      565.6535034179688,
+      699.5220336914062,
+      713.5865478515625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6ed44e53681d4c4df54db34d7257afa0c7d8fc244c2f65afcf052c01249b3277"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000232_3816.jpg",
+    "fileSha256": "0e7686738b047e5d807ab0ea3e1314c9d8c979f9fb8d225ce3063dc475a46c6a",
+    "window": "1073",
+    "sourceTimeSec": 1073.2,
+    "box": [
+      1119.0418701171875,
+      428.6715087890625,
+      1367.935546875,
+      776.5457763671875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.9999741315841675,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "06e14aa8cd897d97c446d43b33dc8b76265a0296580c319aa8fbd1a52c9f118e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3852.jpg",
+    "fileSha256": "f1d1da63b91af81a52310e505696481d746651fbba4eb72ed8cacda199df1400",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      1621.483154296875,
+      401.4295349121094,
+      1732.575439453125,
+      558.3506469726562
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "127f50ffee2c9ef5a9d35a2550c41108127336b125e202b2a84f00647391c234"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3853.jpg",
+    "fileSha256": "215bc7ee751221ee59279f916a5264f191938cd41aa23dc018c354a5d7a64cdf",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      1440.30322265625,
+      408.40887451171875,
+      1529.7718505859375,
+      618.8345947265625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "1a6b25d3a492700389cbc17f862effd32fb097aebd1ec5798025954529258c10"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3854.jpg",
+    "fileSha256": "2bde1195ec8ec415e128fe710a56e50e647a5523d0758b8ed480bb6e5a6a28c6",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      1323.5548095703125,
+      434.4601135253906,
+      1419.56982421875,
+      616.7459716796875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "b40ff537948e53a77f76cddc628d89e9641b9d4c6d9817700d48c8123c3799f8"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3855.jpg",
+    "fileSha256": "d66dc9892ae4605a1452e2a1b2585075d26bf690e1b72eae32b034792f5a0fc3",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      523.9210205078125,
+      527.2564697265625,
+      612.4092407226562,
+      725.183349609375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "0d81e9f0d6a7233754dc6b68ae0485ca784a2de7d205e801f4aa549aa61a976e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3856.jpg",
+    "fileSha256": "ccc055c74b4379e9a7efe773dd4ba42f97cd3686c199149f718cc4e8d1a35100",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      1033.6881103515625,
+      446.03118896484375,
+      1209.2545166015625,
+      761.6843872070312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e35c047df3e934205358ac0bda5f97303d8a3c0da9d6605960a2a494f707c354"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3857.jpg",
+    "fileSha256": "332261872d6f76a0d0bb190acefe8e2d3c33c3060326e4476042a6d93080b7b0",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      703.893310546875,
+      524.10400390625,
+      784.8245239257812,
+      657.310302734375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a3ab5434d5bc46f8deba32d795b221d86c503a23b1831d4bdce1f9b095c35fef"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3858.jpg",
+    "fileSha256": "e5a0d1bcafc53e17b63df257cbc0a0347caae80b376f1f4bc94643fb7ad45adb",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      989.3787841796875,
+      496.6932067871094,
+      1024.6676025390625,
+      590.0092163085938
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "64219fbf0273bed88676c4b40ad93b5c6d09349fd796e0f9bd60b85a229c908f"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3859.jpg",
+    "fileSha256": "154373ccf81ca435d1be4f52cc982c49346231c81c9ad8b3a89f19f068c48e5c",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      770.7339477539062,
+      528.5198364257812,
+      809.9512939453125,
+      618.3109130859375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "d74bd1b3c20c9e1702d15f91a1fad749a181863657fff456eafd339e1caaf861"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000234_3861.jpg",
+    "fileSha256": "5964edb3475227232c490c50b64e0a6cad5801da58fe38a1ac80a07aad7bb979",
+    "window": "1073",
+    "sourceTimeSec": 1073.4,
+    "box": [
+      1032.8946533203125,
+      490.5968933105469,
+      1081.1407470703125,
+      624.87060546875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "0d9685163f766784c528aca31b02ee7a00deb6be6e573f3a5eb21dbf9a04cf61"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000244_4007.jpg",
+    "fileSha256": "04ff9326649a894b7a04b0555e8da7e78af1479a58ac65a1816a8e79363708a7",
+    "window": "1073",
+    "sourceTimeSec": 1074.4,
+    "box": [
+      380.61053466796875,
+      538.4589233398438,
+      458.7699279785156,
+      706.2274780273438
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "34f27ded48286ae83ce891412f27e756b07f8205fed54c504535688b3a1fb4ce"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000260_4209.jpg",
+    "fileSha256": "bc3702dfbc2ff49dc23f6150292f3f929d49ca2b9545c61ead7749540507fa24",
+    "window": "1073",
+    "sourceTimeSec": 1076.0,
+    "box": [
+      0.2728157043457031,
+      500.2944030761719,
+      171.0953826904297,
+      816.0828247070312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "08357aca21d47aa7d848bc8b9d288a1ad586cd59607da14e31f7de595962e58e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000274_4417.jpg",
+    "fileSha256": "c2ab412ceed503c87ff6e16a1acf228232c2772218d25b62671d37c1e7373e44",
+    "window": "1073",
+    "sourceTimeSec": 1077.4,
+    "box": [
+      1438.293701171875,
+      525.1082153320312,
+      1477.3861083984375,
+      623.8298950195312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "69761705253b81756d1ee02fe1281e2f270a42afae844c96a7b551fd107f176e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000294_4796.jpg",
+    "fileSha256": "59a7aa8ddef7400c7e5410ec85b4b595c51b5ca0a68d66191c61d61616685edd",
+    "window": "1073",
+    "sourceTimeSec": 1079.4,
+    "box": [
+      -0.6483707427978516,
+      625.9656372070312,
+      102.91861724853516,
+      990.406494140625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a6fe0f52228b27a70666b6d51a77ca6cc638288caaa9f704e82a4b84a2c48776"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000320_5255.jpg",
+    "fileSha256": "579deb9aa98c5056c5c714a3c57ddf96e67e030f834a66c2adae8168ab6abb92",
+    "window": "1073",
+    "sourceTimeSec": 1082.0,
+    "box": [
+      750.6068725585938,
+      536.76123046875,
+      906.468994140625,
+      956.677978515625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "de6faad2ddcc30275a21aba61afdec5e715f690d4358bbb914939e3e7d09465e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/1073/stage1/chunk/crops/000342_5685.jpg",
+    "fileSha256": "0e8d7794647c3607d48e48600b89623d264db004a3071be429cdef3e46a69097",
+    "window": "1073",
+    "sourceTimeSec": 1084.2,
+    "box": [
+      1657.75048828125,
+      420.2527770996094,
+      1706.9381103515625,
+      502.1853332519531
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "0f23953786d4c0c3010e7e00ce1bb5c349688c72ee6eea5eb3792e1775306bef"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000024_482.jpg",
+    "fileSha256": "36f4fd18e7e881e2afdc596d7fe93c9fcf612800a79ea74b63be98e33e09599b",
+    "window": "3144",
+    "sourceTimeSec": 1882.4,
+    "box": [
+      1.0655136108398438,
+      408.9342956542969,
+      222.29591369628906,
+      1015.9083862304688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9fa97484b9c399491740466e5b76dacad89ac3328320d09f7301957590cb11ce"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000078_1729.jpg",
+    "fileSha256": "9273bfa2d64c20401d23b8db833c7350fe4b39b381fcc60173ea58f838f1f498",
+    "window": "3144",
+    "sourceTimeSec": 1887.8,
+    "box": [
+      1374.7071533203125,
+      471.6716613769531,
+      1437.7410888671875,
+      551.84375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "99efb690028f348fce7bd19e8d035184242f0ed60d6a6bf609956b6a2dee9386"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000106_2310.jpg",
+    "fileSha256": "02bdec7df074305ac1d4b4d974a8ba5d6e3a3dad1ff3909e48abd9697798bcaa",
+    "window": "3144",
+    "sourceTimeSec": 1890.6,
+    "box": [
+      1566.44677734375,
+      453.74664306640625,
+      1627.0103759765625,
+      537.5883178710938
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "aaf274a8ce9c25bd1b701fa83260f836dc64daa910ce44690b93bc3c01338892"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000130_2790.jpg",
+    "fileSha256": "a073a778273caab4f139b259a66ed074cb647b33e93b53cdf345f0cf987ca592",
+    "window": "3144",
+    "sourceTimeSec": 1893.0,
+    "box": [
+      386.37042236328125,
+      512.0537109375,
+      420.5685729980469,
+      606.7473754882812
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "bb18c370b302d312e6bf2cc5732a57ac17c8b50332f174fe0e2264600346d8fa"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000152_3260.jpg",
+    "fileSha256": "409012d015bdeec2fb44a161ddb2dc8eaadaf34a1e685d8ed5576cca7ce764bd",
+    "window": "3144",
+    "sourceTimeSec": 1895.2,
+    "box": [
+      798.6771240234375,
+      463.88922119140625,
+      868.1292114257812,
+      637.3657836914062
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5f9100f6cb1736257183ac8d0846174cd4ba0e3d15ac92aba25f97a752473186"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000168_3661.jpg",
+    "fileSha256": "1241111f72f212c65736a361084eab3ba3ebdb2a209a97c1aff7be0da8fb8efb",
+    "window": "3144",
+    "sourceTimeSec": 1896.8,
+    "box": [
+      1351.341064453125,
+      448.7860107421875,
+      1387.1907958984375,
+      544.1654663085938
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "d6fa66b1fa11e3ca57b4590640fa85ed3192b9ef2c611a60b05068c159d0e771"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000192_4096.jpg",
+    "fileSha256": "07375b4be15ccbe37f0f27baf3f8c1b19114e0876bc924f40d02c96cc61949d6",
+    "window": "3144",
+    "sourceTimeSec": 1899.2,
+    "box": [
+      1083.5333251953125,
+      492.90875244140625,
+      1120.6461181640625,
+      581.2901000976562
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5d901ea2c3e19a07b5dfc8c215397dc82169c7d93478b87320075f2e758ed8c3"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000212_4472.jpg",
+    "fileSha256": "7c206f46e1fa361f91ed7a5b16904789de53ff99a5795a75dd9c088a65c2cc38",
+    "window": "3144",
+    "sourceTimeSec": 1901.2,
+    "box": [
+      454.81121826171875,
+      589.5796508789062,
+      514.0894165039062,
+      679.2515258789062
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "2e26fdb8b1223caf20e69ae2fb107e9d3c1111ff59a22192c0543f6773ebbe8d"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000226_4704.jpg",
+    "fileSha256": "a04f0f04f114618e1f3eb08f9d9a84a3e8df27f83a186078340ff184de590044",
+    "window": "3144",
+    "sourceTimeSec": 1902.6,
+    "box": [
+      1734.6468505859375,
+      417.2450866699219,
+      1827.844970703125,
+      672.607177734375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "3f9408d23563763f7a0cd68fed303531309c47e38307bf7c8f75398bfb59bd30"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000226_4705.jpg",
+    "fileSha256": "0543c66f44b31f68219dbd9e9aa6a6080207522cc6895d360c3b7b172323c694",
+    "window": "3144",
+    "sourceTimeSec": 1902.6,
+    "box": [
+      813.226318359375,
+      421.3219299316406,
+      978.01318359375,
+      911.4169921875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "c536ac81644b43b35f2c521f4d13ba5436eec905c56ffb84b8c4b1fc100b96cc"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000226_4706.jpg",
+    "fileSha256": "e6cfd76633d0116e448f513d3a6b1412bf340f988c83c4d6bdecf9b56482260e",
+    "window": "3144",
+    "sourceTimeSec": 1902.6,
+    "box": [
+      701.9470825195312,
+      528.2772216796875,
+      766.6895751953125,
+      659.95361328125
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "471fa74a02723e68c5bd7e42b752d8bdc8c9e701b7fd185e44f02f5f496f3ab3"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000226_4708.jpg",
+    "fileSha256": "ee9e1ba03f9647d1f3e7f175f5aa9c8b33e135c62fab52a8e8ed9d3a281bdf04",
+    "window": "3144",
+    "sourceTimeSec": 1902.6,
+    "box": [
+      1198.269287109375,
+      492.9947204589844,
+      1238.1591796875,
+      602.8870239257812
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7cbc3982afc8287b69c7563f75b0602e48ea4223d78d68fb7a6affabacecf361"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000226_4709.jpg",
+    "fileSha256": "b306149e14f73b2bf7e84086c5ea878a634535a75add4bbd9109d149690f3e91",
+    "window": "3144",
+    "sourceTimeSec": 1902.6,
+    "box": [
+      200.83969116210938,
+      575.8128662109375,
+      277.3274230957031,
+      699.0115356445312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "23910a918e33307b94f5f0b79bb63b090d27cc35feebf309a7d9420d8b7c720f"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000226_4712.jpg",
+    "fileSha256": "48c97a4d8244dbe3c2e9a24ba2e46756314c7ead0a63808b07c54cf3baaeaf02",
+    "window": "3144",
+    "sourceTimeSec": 1902.6,
+    "box": [
+      146.70521545410156,
+      582.499755859375,
+      176.88629150390625,
+      668.4712524414062
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "89efe4e4c24bbfe5d81a66c3ae04a7099766e4e7b4d60e4ffe8eda1a8848b006"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000226_4715.jpg",
+    "fileSha256": "9e2d0ea2e6eb01fcdeddb830c602a7c18ea653826c95b44a7947355ee72dc053",
+    "window": "3144",
+    "sourceTimeSec": 1902.6,
+    "box": [
+      1572.303955078125,
+      469.7784118652344,
+      1602.50830078125,
+      559.1343383789062
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "eef9f52e1df38745e086422f583e7d97f84e6a790afbc70fbf0b7fca7b30dd7c"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000232_4842.jpg",
+    "fileSha256": "97f49f3fa0bb100d1da20132848e9aeade1cfef3296bc0dcf4d9b852d7e2bbb2",
+    "window": "3144",
+    "sourceTimeSec": 1903.2,
+    "box": [
+      1491.6800537109375,
+      481.03887939453125,
+      1522.1143798828125,
+      566.7254638671875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "1654c96434b2d2580258b7cad43c1dfd867b30f18bc28a9e4fb348eefad91718"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000250_5153.jpg",
+    "fileSha256": "f0e157450d91ebd95c4854acf7fdfa3138373a108b91da8d4afed9b47ac013e8",
+    "window": "3144",
+    "sourceTimeSec": 1905.0,
+    "box": [
+      1365.0499267578125,
+      321.7484436035156,
+      1643.6507568359375,
+      1001.1954956054688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "17",
+      0.9465839624404907,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "f8edc46b49c924463fe8f1333f2edc35fe346246c3890812c04d813b1e892eaf"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000252_5182.jpg",
+    "fileSha256": "8f373fcb08805d7651c6334d186f9caf90d38f82ab979ba8dfb66f7f4bc3d555",
+    "window": "3144",
+    "sourceTimeSec": 1905.2,
+    "box": [
+      1282.535888671875,
+      348.8400573730469,
+      1673.499755859375,
+      1010.5193481445312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "fb2d9b7c441276bee9e93e68d9a5fb6430871d534f0f8040a1edcef883bbfa19"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000268_5429.jpg",
+    "fileSha256": "1517a2bdd32a83593deaf7e2916b9c9547c353b23214776087e1fa405fa6ed2f",
+    "window": "3144",
+    "sourceTimeSec": 1906.8,
+    "box": [
+      1682.66357421875,
+      461.2451477050781,
+      1716.827392578125,
+      556.9506225585938
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "aae7efba6241a211f87d9ae836102699f4047f9884441dfa21bb5dfc1acde459"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000274_5495.jpg",
+    "fileSha256": "3ccc059905c20d2a0a6e1611f6e88d1363af9ed0bbdaf39a15f53f06ba05324e",
+    "window": "3144",
+    "sourceTimeSec": 1907.4,
+    "box": [
+      775.1266479492188,
+      388.60638427734375,
+      919.3046264648438,
+      904.9863891601562
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "17",
+      0.9999986290931702,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "13ecb691b6fb527250fc22aabb2abb7c1bce39e38eba8c5c55a0f92cac8e8902"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000292_5737.jpg",
+    "fileSha256": "394330ae0c3c3d6b731c59c1e2d2fe76d9f42a700705553b603a20048b4febc0",
+    "window": "3144",
+    "sourceTimeSec": 1909.2,
+    "box": [
+      940.5505981445312,
+      491.4148254394531,
+      991.0730590820312,
+      603.5042724609375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "8ba3095de21005fc016e360132cf0ee2c520ec2f61eb8fbd713533dbc614a8d9"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000312_6082.jpg",
+    "fileSha256": "f12650a1342e7a5cf6a6a03ec5216b186b46fd7bde349f3a071f8701a34150df",
+    "window": "3144",
+    "sourceTimeSec": 1911.2,
+    "box": [
+      1492.1268310546875,
+      322.986328125,
+      1733.5316162109375,
+      764.6715698242188
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "17",
+      0.9999640583992004,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "5b9fd7a5ee1823d93c26fe91bdd4e8672dd2a4d21d6ac0243c8920d3a4c281b8"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000318_6198.jpg",
+    "fileSha256": "ab74c51fbdeb0d08cf36b7b7b23b3e036fd9693ba0c848ae69cefde6e853628b",
+    "window": "3144",
+    "sourceTimeSec": 1911.8,
+    "box": [
+      328.20599365234375,
+      476.4312744140625,
+      420.1412658691406,
+      629.3449096679688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e5bae240d169671c86c92da195165b5be1194f308bc2443fd74db7e9786079a3"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000332_6482.jpg",
+    "fileSha256": "e5b314a05c562474f35c33bd247bd7109790e35f61bdd907dccbc36182a2e4bb",
+    "window": "3144",
+    "sourceTimeSec": 1913.2,
+    "box": [
+      1724.504150390625,
+      395.8190002441406,
+      1881.3548583984375,
+      751.267333984375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "17",
+      0.9999696016311646,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "9e43b9bac2f4b784e42c0e4cf8161b6c08db9e5895ccdaf08d834527e07d2823"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000338_6624.jpg",
+    "fileSha256": "aec8b9fcc6ad3fe37052220b88fce8d8297ed4c4e263df608751bbff7eb03819",
+    "window": "3144",
+    "sourceTimeSec": 1913.8,
+    "box": [
+      1747.373291015625,
+      436.4879150390625,
+      1901.0775146484375,
+      747.001708984375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "0bdd5fe538ce0f2b2098c880961e4bae8e33651272c410c605c15e90f90736cf"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000340_6673.jpg",
+    "fileSha256": "c64c978c083c9023ee5720f2e99e2cfb98b92aaf7d7ec3ccdd0b35932913b014",
+    "window": "3144",
+    "sourceTimeSec": 1914.0,
+    "box": [
+      1774.10009765625,
+      437.8787841796875,
+      1890.3603515625,
+      747.4363403320312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "17",
+      0.9488753825426102,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "868a88d5dc23da74a613852edf91a409622573b277898cf8584586c7ef033959"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000344_6770.jpg",
+    "fileSha256": "00ee084c0a02f981911e05a533e02bc7b02834c5923f0451f50dfbad08bd78a0",
+    "window": "3144",
+    "sourceTimeSec": 1914.4,
+    "box": [
+      1757.732666015625,
+      470.0116271972656,
+      1840.5780029296875,
+      746.2675170898438
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "17",
+      0.9997915625572205,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7a350999ec01affd380d61ddd284496be4c84aa84dcedc0ea47b219454ce309e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000378_7557.jpg",
+    "fileSha256": "b4e9c110abefcbb0c481e3be7fddb25ae88840a09058ee167814e4b099b59e79",
+    "window": "3144",
+    "sourceTimeSec": 1917.8,
+    "box": [
+      1521.892578125,
+      622.0282592773438,
+      1591.162109375,
+      752.5164184570312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e7cf46221aef09f5eabeed036c3310f1aaa6045c7601b11cfd111f0c765f39f2"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000426_8558.jpg",
+    "fileSha256": "eec4e8fdc18d3d41375edb3a248fcca04be706f0d6d0d4d5a362aaae78ecdd0e",
+    "window": "3144",
+    "sourceTimeSec": 1922.6,
+    "box": [
+      1653.251953125,
+      745.8314208984375,
+      1684.213623046875,
+      828.9647827148438
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "292f99ce1eb681436c848290ac3be19bca96152e338493697190fbc8574339a7"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/3144/stage1/chunk/crops/000442_8873.jpg",
+    "fileSha256": "77294c773633bf5382e7539a37ecb57719e048836ce4d616fa549f42fdf2bcdf",
+    "window": "3144",
+    "sourceTimeSec": 1924.2,
+    "box": [
+      1050.992919921875,
+      699.5667114257812,
+      1098.925537109375,
+      837.8955688476562
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "24",
+      0.999999463558197,
+      "shirt:contrast"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7f2c1bd73e86b3523a2e037a3ea4cc4fd71279e9ccd6d595580feee0664e5b0a"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000016_406.jpg",
+    "fileSha256": "6371284ce0427b33a988324c35d64cc6d34b374a6c660607029e925f0998992b",
+    "window": "gap1150",
+    "sourceTimeSec": 1151.6,
+    "box": [
+      637.3515014648438,
+      544.4317016601562,
+      687.806396484375,
+      634.18798828125
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "a4360f721aadf9bed8ef6fb751722dc032162e0ef4954487822e2c995267c485"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000036_872.jpg",
+    "fileSha256": "3ba3c7b0005696861ae50614ad8528f946b0da1183593b8546b6083b8cc48dbd",
+    "window": "gap1150",
+    "sourceTimeSec": 1153.6,
+    "box": [
+      745.3487548828125,
+      519.5624389648438,
+      865.3097534179688,
+      704.7885131835938
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "86f45d3f56dd92c041bffde274a2600ae00bd00680e611d765eb9607c589cbdb"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000054_1224.jpg",
+    "fileSha256": "8dca36d8aab74b83444ce94682dd83dcc8170d73a8de1431ab702d877797714d",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      351.9564514160156,
+      586.9901123046875,
+      507.58740234375,
+      771.318115234375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "900c52c8a01f37f2b951454c5635f0076003f90e113242b1b74e2c7f0487d221"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000054_1225.jpg",
+    "fileSha256": "d1ec225fa7fc1ac6f24de5fc11d3340eb9f18d7400491a1a12ef35eafc99e2f6",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1546.109375,
+      557.3163452148438,
+      1759.5902099609375,
+      872.0286865234375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "66d5fad643cb1e53706cc0d925a0ae51185d2119d7b83a64ac1ecfce1f1e00e1"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000054_1226.jpg",
+    "fileSha256": "4b61058c56d0cbde111ae56700dc3664861dfff61774c15f07c70b585a514fc2",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1784.9718017578125,
+      561.6844482421875,
+      1850.9073486328125,
+      692.0568237304688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6c3d2ff13057fd16f97651052175b38978ffa985ddf81e88bd76895287c5e837"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000054_1229.jpg",
+    "fileSha256": "eac5a4cbf709c8b165429ebe864f19dbe075e72accec89736a15dccfbdfbf9c0",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      537.8902587890625,
+      595.3099975585938,
+      580.0462036132812,
+      721.58154296875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "b634ecf8f5e401dd20bcd2b90f1ca33933c13e658c4b507303547d602d628972"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000054_1230.jpg",
+    "fileSha256": "5684176c00776abf54ed7f47d73a33f5e4d5a059bb7aab6a7678ef159260569a",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1219.9334716796875,
+      635.0706176757812,
+      1473.3709716796875,
+      817.3443603515625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "205e59e999d64077a6c8abc47a75b3f6e814e943a25d328fe03dfce04ed10d56"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000054_1232.jpg",
+    "fileSha256": "7e4631fff611ea45436cab59e3f64998d9bae8417a8779cdeadf5fa0de884df2",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      470.4514465332031,
+      591.9910888671875,
+      574.9115600585938,
+      725.5562744140625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "aca52fc9a50ce9480c87ca97184f116a1dfcd8e3c96e67c89b0c7d56d9a8bd63"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000054_1233.jpg",
+    "fileSha256": "6b2b77cdd0b144ea2232116b5c36c310a0a2d968e61b22dbd1dde82bbc5e8545",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.4,
+    "box": [
+      1248.474609375,
+      652.0382690429688,
+      1333.609375,
+      808.302978515625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "e81199eb96448f18172e31fd252a32084d2f2aa7cce4fe3ad1ffb27f02eb01ad"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000056_1265.jpg",
+    "fileSha256": "e030e97d3337efb4c735f231132c82231058c126d46e9d1729962c7ad47ea786",
+    "window": "gap1150",
+    "sourceTimeSec": 1155.6,
+    "box": [
+      460.0348205566406,
+      605.6708374023438,
+      532.4181518554688,
+      743.1793212890625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "391468f712e380b7fa8d3b6694d17af07a0fc7c36a0bb75f9a83fba6a95afe41"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000076_1622.jpg",
+    "fileSha256": "09d675aa41b6ae39f19fcbe62e38fbc9012a8bc7926f615631c94f80745907a8",
+    "window": "gap1150",
+    "sourceTimeSec": 1157.6,
+    "box": [
+      1156.005126953125,
+      524.6124267578125,
+      1197.315673828125,
+      635.315185546875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "8e4f49bb569e8fdce24ce3e483ff4e6c916d7e68d6ed6bfdba74ce36a2e7a51e"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000094_1870.jpg",
+    "fileSha256": "42d94d3a88428ef1ed4d39ede921ae313c4374948ec640b1e60977c3cd626868",
+    "window": "gap1150",
+    "sourceTimeSec": 1159.4,
+    "box": [
+      154.9749298095703,
+      498.8507995605469,
+      213.38536071777344,
+      672.2913818359375
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "cfd212928fad998e6b9d61467c486061ec5135a41de45e323b979e5faadda6c7"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000108_2110.jpg",
+    "fileSha256": "c61481926435444b421cf7ea7dcf6ff44b57cfd91e96521996ceb7036105c35e",
+    "window": "gap1150",
+    "sourceTimeSec": 1160.8,
+    "box": [
+      162.28199768066406,
+      517.5584716796875,
+      306.0143737792969,
+      870.5897827148438
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "2a30ab06fbb4ba93a117bf82b6deceb377eb301b854117d4397e6784e8a689fe"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000120_2307.jpg",
+    "fileSha256": "6d9c8332b978729c8c775048c45b358563355fd23208412908f310c5e2d7c719",
+    "window": "gap1150",
+    "sourceTimeSec": 1162.0,
+    "box": [
+      933.773681640625,
+      650.6211547851562,
+      1025.5040283203125,
+      912.5117797851562
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "20",
+      0.999559760093689,
+      "shirt:white"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "365882bf84dfd3d0be5182872b395fafa4c5b3ac1eecf5297799df24852959f9"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000124_2364.jpg",
+    "fileSha256": "b85fde2ceb9f410b19bbb5288a99990ac4f9473d2f49d78dc3002854f34529b6",
+    "window": "gap1150",
+    "sourceTimeSec": 1162.4,
+    "box": [
+      970.1426391601562,
+      623.7650756835938,
+      1064.8780517578125,
+      876.9335327148438
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "2264536bca5e0e65da4397b34731978b064cf486ab44cf14223fb3f8332eb4dc"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000140_2655.jpg",
+    "fileSha256": "dfb57e72f0ffa99f043a685f5867e2bbff5edc6afe59408dbe5991bdc399002a",
+    "window": "gap1150",
+    "sourceTimeSec": 1164.0,
+    "box": [
+      765.0908813476562,
+      618.4089965820312,
+      868.0119018554688,
+      794.8848266601562
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "30ce68eee008dd23c23afc525f5c6fa82be67f40384bb9d2886ddb3b3ed03528"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000154_2978.jpg",
+    "fileSha256": "0a4b0935011bd68d9c06f2c15b2dc847ea9281de7af30cbfb6527305d7f2d480",
+    "window": "gap1150",
+    "sourceTimeSec": 1165.4,
+    "box": [
+      1034.8623046875,
+      547.6971435546875,
+      1145.2496337890625,
+      781.8397216796875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "25de9ed6bdf6b28e6d944115b8a36861825acbe8df0abbb43565d981b87e5d03"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000166_3255.jpg",
+    "fileSha256": "6f6245e963b78851022b293fd4762d1978b34178fe8c122b4910c2f213062f93",
+    "window": "gap1150",
+    "sourceTimeSec": 1166.6,
+    "box": [
+      1311.120361328125,
+      522.2078247070312,
+      1358.575439453125,
+      646.7335815429688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6f78ddd9438caba807daaec250850501bbb995ef6fae138da02c6811a4b730fe"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000178_3537.jpg",
+    "fileSha256": "74e82bafb6871d287b22d166d58eb9f62ac83232a465753246e917af25412c26",
+    "window": "gap1150",
+    "sourceTimeSec": 1167.8,
+    "box": [
+      1129.1136474609375,
+      550.1600952148438,
+      1164.1763916015625,
+      646.1627197265625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "7a5bb26c456a42a55bdc7048afef1b0e79624adc767dead4a83261268865b5a2"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000184_3679.jpg",
+    "fileSha256": "1d6eb64dfe69c5fae4482e97aa6826383d2957b9ac19f393b594ddea72cf8174",
+    "window": "gap1150",
+    "sourceTimeSec": 1168.4,
+    "box": [
+      1109.5899658203125,
+      545.2573852539062,
+      1168.722412109375,
+      661.0453491210938
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": [
+      "74",
+      0.9480674654245376,
+      "shorts:dark"
+    ],
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "23494b1cf11f67b27a0ddef799f92358e3515b97772ec89be400c56edb226a95"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000194_3899.jpg",
+    "fileSha256": "9479851f2e1f60724f537636785bd536a9e2c8ebd3006a0a8bd77615fbf00627",
+    "window": "gap1150",
+    "sourceTimeSec": 1169.4,
+    "box": [
+      1471.4200439453125,
+      504.4471435546875,
+      1535.8765869140625,
+      713.9141845703125
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "2d65140a1e9f9dee09dff0b58f46c95e91e0ed017202f7c79d92e53d350d5357"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000206_4194.jpg",
+    "fileSha256": "0030ba9b6d5dff5759b618ea40c6ebbdbbc20b35a1ebe384dfd126ee8af60277",
+    "window": "gap1150",
+    "sourceTimeSec": 1170.6,
+    "box": [
+      1557.008056640625,
+      496.7558288574219,
+      1622.1895751953125,
+      705.4855346679688
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "36934db25a6535d6d556d5ac9e092de4a9a93cd344c08b841c6843de179ee4a7"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000216_4470.jpg",
+    "fileSha256": "6bc0b639df5a778b18f4a07ba1e6b74ffb19dfe474092f383ac60ebd5b7fdd5c",
+    "window": "gap1150",
+    "sourceTimeSec": 1171.6,
+    "box": [
+      1494.3775634765625,
+      526.196533203125,
+      1522.2567138671875,
+      611.8306274414062
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "6e8208adfc766c8c96b3e1d0a8910d23e6674fdb47df26e3bc0f16ef2107ff64"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000230_4828.jpg",
+    "fileSha256": "3365bb39b1146e8cb89127dd08f15feac431f1ee83ed76557a0e36b1278374c9",
+    "window": "gap1150",
+    "sourceTimeSec": 1173.0,
+    "box": [
+      1060.477294921875,
+      567.478759765625,
+      1091.7703857421875,
+      656.7060546875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "181018c3162e4202bacdfb62402055f6ad0c94db42801df338108892426db37f"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000244_5163.jpg",
+    "fileSha256": "4f15ca7d1f734ac41cc52f26705c522a380764d443afe8f31336b16ae2446fbf",
+    "window": "gap1150",
+    "sourceTimeSec": 1174.4,
+    "box": [
+      1559.4449462890625,
+      543.8939208984375,
+      1587.6512451171875,
+      628.37744140625
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "d80a547f008bda21552e3f04bdf85d161d1434268bbc2ab9028233989a291799"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000260_5473.jpg",
+    "fileSha256": "b0540c94092ae92a6ab0d1e54c4af7480c834afbdc1cf32bdbffc16d08b15e9f",
+    "window": "gap1150",
+    "sourceTimeSec": 1176.0,
+    "box": [
+      1575.8695068359375,
+      480.6127014160156,
+      1652.8199462890625,
+      681.6875
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "3312a7ccf027bd5213f140e7bbe42d29963445b7141aa270306dd89460cb0228"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000278_5907.jpg",
+    "fileSha256": "8052686670d0b9bc6a320ee7861805100c1fef31353c425abbd77982f072803d",
+    "window": "gap1150",
+    "sourceTimeSec": 1177.8,
+    "box": [
+      1699.9498291015625,
+      457.4769592285156,
+      1738.677734375,
+      554.2488403320312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "589f5643d925770220a28bcef769348c20090a371890cc60577ffc877bd5879f"
+  },
+  {
+    "path": "/home/claude/work/fp32local/cpu-onnx/gap1150/stage1/chunk/crops/000298_6381.jpg",
+    "fileSha256": "0c23a9ce7fd1c3fd2cb540d517f124aea3e2cdada22bc5a676f6dfcce7631ee2",
+    "window": "gap1150",
+    "sourceTimeSec": 1179.8,
+    "box": [
+      1580.4412841796875,
+      515.2774658203125,
+      1604.769775390625,
+      595.4890747070312
+    ],
+    "jpegQuality": 92,
+    "cpuPipelineRead": null,
+    "padding": "floor(0.05*float box height), left and top only; production stage1 geometry",
+    "pixelSha256": "4fe4dde794d888777cd22898f4df2c7a58c3d90ef0d17770915e66df7d3dbe4d"
+  }
+]

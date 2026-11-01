@@ -174,3 +174,61 @@ window predates only the corpus-selection refinement; the final enriched replay
 and final tests bind the updated harness hash. No production engine code changed.
 Linux Docker image execution and CUDA profiles remain unverified locally; the
 Dockerfile now explicitly copies the required numeric label fixtures.
+
+## Local CPU half of the matrix (2026-11-01): profiles 1–2 run, GPU profiles 3–6 not run
+
+L4 capacity was unavailable in every approved zone, so only the two CPU profiles were run. They used the pinned harness unchanged, in the Linux development container:
+
+- Python 3.13.17, torch 2.14.1 (CPU), ONNX Runtime 1.29.0, OpenCV 4.14.0;
+- 2 vCPU with `OMP_NUM_THREADS=2`;
+- the code from `51d41c9`, unchanged up to `95cf3a8`;
+- all three windows, using `profile_env`;
+- the exact reference bytes `b1077af3…`.
+
+**Reference bytes.** The container's own remux differed from the reference file only in the 13-byte MP4 encoder tag (`Lavf60.16.100` vs `Lavf58.76.100`). Restoring that tag reproduced SHA `b1077af3…`, and the harness then accepted the file.
+
+**Run times:**
+
+| Profile | Wall time |
+|---|---|
+| cpu-onnx | 781.7 s |
+| cpu-onnx, OCR corpus only | 20.4 s |
+| cpu-torch | 903.2 s |
+
+Model loading is included and the work runs sequentially. These are development-window timings and are not scaled to a match.
+
+**CPU ONNX vs CPU Torch: no backend effect at any layer.**
+
+- **Decoding:** 1,103 common frames, 0 pixel-hash mismatches.
+- **Detection:** person detections are the same count in every window (6,407 / 9,026 / 5,838). All match one to one, with mean IoU 1.0 and at most 0.0016 px coordinate difference. They are not bit-identical.
+- **OCR:** the fixed 96-crop corpus is identical, and no CPU-accepted read was lost.
+- **Identity:** timelines are identical in every window and mode (state agreement 1.0).
+
+Accuracy, the same for both profiles:
+
+| Window | Mode | Correct | Abstained | Unmatched claims | Wrong identity | Overlap-ambiguous | IDF1 |
+|---|---|---|---|---|---|---|---|
+| 1150–1180 (287 target frames) | automatic | 228 | 46 | 13 | 0 s | 0 s | 0.885 |
+| 1880–1925 (54) | automatic | 0 | 54 | 0 | 0 s | 0 s | 0 |
+| 1050–1085 (31) | automatic | 0 | 31 | 0 | 0 s | 0 s | 0 |
+| 1050–1085 (31) | owner anchor 1073.4 s | 26 | 5 | 0 | 0 s | 0 s | 0.912 |
+
+The 13 unmatched target-frame claims in 1150–1180 still need review; they are not counted as correct.
+
+**Evaluation fix (`pp_bench.agreement_failures`).**
+
+- **Problem:** the gate had marked the two all-abstaining automatic windows as failed with "boxAgreementWhenBothClaim: missing", although both runs were identical.
+- **Fix:** box agreement is now treated as not applicable **only** when frames were compared and neither run claimed any of them.
+- **Kept as failures:** one-sided claims, zero compared frames and a missing comparison. State agreement is still required.
+- **Result:** with the fix, all four CPU-pair conditions pass. A regression test covers both the fixed case and the failure cases.
+- **Inference unchanged:** this changes evaluation tooling only. The approved GPU source stays `51d41c9`, and its comparison can be re-evaluated offline with the fixed tooling.
+
+**Cross-environment observation (not a controlled comparison).** On the same 1150–1180 window and harness, this Linux run claims 228/287 correct with 46 abstentions. The earlier Windows CPU ONNX run reported 152 correct, 128 abstentions and 7 unmatched. That run used Python 3.12, torch 2.8 and OpenCV 5.0.
+
+- **What it shows:** environment and package differences alone can move window recall a lot, with no GPU involved.
+- **What is unknown:** this pair was not controlled, so the layer responsible (decode, OCR or detector numerics) is not established. Comparing the two runs' `precision_diagnostics` (pixel hashes, corpus reads) is the cheapest next diagnostic.
+- **Why it matters for the GPU:** it makes "different numerics/libraries change OCR acceptance" a plausible explanation for the L4 gap. That explanation is a hypothesis, not a finding.
+
+**Still unknown:** the FP16, batching and CUDA-device effects. The GPU accuracy gap remains unexplained.
+
+Evidence: [fp32-local-cpu-pair-20261101/](../../workers/football-cv/bench/results/5.3/fp32-local-cpu-pair-20261101/). It contains JSON only, with no footage, crops or images.

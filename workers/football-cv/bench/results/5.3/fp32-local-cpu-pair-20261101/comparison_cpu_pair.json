@@ -1,0 +1,414 @@
+{
+  "schema": "pitchproof.fp32-comparison.v1",
+  "pairs": [
+    {
+      "reference": "cpu-onnx",
+      "candidate": "cpu-torch",
+      "decodedCommonFrames": 1103,
+      "decodedPixelMismatches": [],
+      "decodeValid": true,
+      "decodedOnlyReference": 0,
+      "decodedOnlyCandidate": 0,
+      "windows": [
+        {
+          "window": "gap1150",
+          "conditions": [
+            {
+              "mode": "automatic",
+              "referenceMetrics": {
+                "targetLabelledSec": 28.7,
+                "claimedCorrectSec": 22.8,
+                "confirmedCorrectSec": 1.7,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.794,
+                "IDF1": 0.885,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 46,
+                "confirmedRecall": 0.059,
+                "abstentionRateOnVisibleLabels": 0.16
+              },
+              "candidateMetrics": {
+                "targetLabelledSec": 28.7,
+                "claimedCorrectSec": 22.8,
+                "confirmedCorrectSec": 1.7,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.794,
+                "IDF1": 0.885,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 46,
+                "confirmedRecall": 0.059,
+                "abstentionRateOnVisibleLabels": 0.16
+              },
+              "agreement": {
+                "framesCompared": 290,
+                "framesInUnion": 290,
+                "unmatchedInFirst": 0,
+                "unmatchedInSecond": 0,
+                "stateAgreement": 1.0,
+                "boxAgreementWhenBothClaim": 1.0,
+                "claimedOnlyInFirst": 0,
+                "claimedOnlyInSecond": 0
+              },
+              "accuracyGate": {
+                "gate": "balanced-5.2",
+                "passed": true,
+                "failures": [],
+                "checked": [
+                  "wrongIdentitySec",
+                  "confirmedWrongIdentitySec",
+                  "overlapAmbiguousSec",
+                  "IDF1 vs baseline",
+                  "claimedRecall vs baseline",
+                  "confirmedCorrectSec vs baseline",
+                  "overlapAmbiguousSec vs baseline"
+                ],
+                "baselineUsed": true
+              },
+              "referenceOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 55,
+                  "correctClaim": 228,
+                  "unmatchedClaim": 15,
+                  "indeterminateLabelClaim": 2
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 46,
+                  "correctClaim": 228,
+                  "unmatchedClaim": 13
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "80aaadea663e1d21b6e1ce059bf9abe92e9d83db49f30a2adf7ef44446a94162",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              },
+              "candidateOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 55,
+                  "correctClaim": 228,
+                  "unmatchedClaim": 15,
+                  "indeterminateLabelClaim": 2
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 46,
+                  "correctClaim": 228,
+                  "unmatchedClaim": 13
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "28204940d5be17877a0a2a9ebb370ab384e8fb8e0f7e3c6def2919befd529593",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              }
+            }
+          ],
+          "referencePersonDetections": 6407,
+          "candidatePersonDetections": 6407,
+          "personDetectionsBitIdentical": false,
+          "detectorAgreement": {
+            "method": "Greedy descending IoU, one-to-one, threshold 0.5; person detections",
+            "matched": 6407,
+            "reference": 6407,
+            "candidate": 6407,
+            "meanMatchedIoU": 0.9999989940584493,
+            "maxMatchedCoordinateDeltaPx": 0.0015869140625,
+            "framesWithUnmatchedDetections": []
+          }
+        },
+        {
+          "window": "3144",
+          "conditions": [
+            {
+              "mode": "automatic",
+              "referenceMetrics": {
+                "targetLabelledSec": 5.4,
+                "claimedCorrectSec": 0.0,
+                "confirmedCorrectSec": 0.0,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.0,
+                "IDF1": 0.0,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 54,
+                "confirmedRecall": 0.0,
+                "abstentionRateOnVisibleLabels": 1.0
+              },
+              "candidateMetrics": {
+                "targetLabelledSec": 5.4,
+                "claimedCorrectSec": 0.0,
+                "confirmedCorrectSec": 0.0,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.0,
+                "IDF1": 0.0,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 54,
+                "confirmedRecall": 0.0,
+                "abstentionRateOnVisibleLabels": 1.0
+              },
+              "agreement": {
+                "framesCompared": 198,
+                "framesInUnion": 198,
+                "unmatchedInFirst": 0,
+                "unmatchedInSecond": 0,
+                "stateAgreement": 1.0,
+                "boxAgreementWhenBothClaim": null,
+                "claimedOnlyInFirst": 0,
+                "claimedOnlyInSecond": 0
+              },
+              "accuracyGate": {
+                "gate": "balanced-5.2",
+                "passed": true,
+                "failures": [],
+                "checked": [
+                  "wrongIdentitySec",
+                  "confirmedWrongIdentitySec",
+                  "overlapAmbiguousSec",
+                  "IDF1 vs baseline",
+                  "claimedRecall vs baseline",
+                  "confirmedCorrectSec vs baseline",
+                  "overlapAmbiguousSec vs baseline"
+                ],
+                "baselineUsed": true
+              },
+              "referenceOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 248
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 54
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "6757cb002ef1074a63a7c77c344767c34c2ff6bd1f9b58b78660a4895f8216e8",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              },
+              "candidateOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 248
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 54
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "c4953f42a12543d2780c14c04455fd004f91c22ad357f587b3f64083b497b786",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              }
+            }
+          ],
+          "referencePersonDetections": 9026,
+          "candidatePersonDetections": 9026,
+          "personDetectionsBitIdentical": false,
+          "detectorAgreement": {
+            "method": "Greedy descending IoU, one-to-one, threshold 0.5; person detections",
+            "matched": 9026,
+            "reference": 9026,
+            "candidate": 9026,
+            "meanMatchedIoU": 0.9999988911571331,
+            "maxMatchedCoordinateDeltaPx": 0.000732421875,
+            "framesWithUnmatchedDetections": []
+          }
+        },
+        {
+          "window": "1073",
+          "conditions": [
+            {
+              "mode": "automatic",
+              "referenceMetrics": {
+                "targetLabelledSec": 3.1,
+                "claimedCorrectSec": 0.0,
+                "confirmedCorrectSec": 0.0,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.0,
+                "IDF1": 0.0,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 31,
+                "confirmedRecall": 0.0,
+                "abstentionRateOnVisibleLabels": 1.0
+              },
+              "candidateMetrics": {
+                "targetLabelledSec": 3.1,
+                "claimedCorrectSec": 0.0,
+                "confirmedCorrectSec": 0.0,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.0,
+                "IDF1": 0.0,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 31,
+                "confirmedRecall": 0.0,
+                "abstentionRateOnVisibleLabels": 1.0
+              },
+              "agreement": {
+                "framesCompared": 237,
+                "framesInUnion": 237,
+                "unmatchedInFirst": 0,
+                "unmatchedInSecond": 0,
+                "stateAgreement": 1.0,
+                "boxAgreementWhenBothClaim": null,
+                "claimedOnlyInFirst": 0,
+                "claimedOnlyInSecond": 0
+              },
+              "accuracyGate": {
+                "gate": "balanced-5.2",
+                "passed": true,
+                "failures": [],
+                "checked": [
+                  "wrongIdentitySec",
+                  "confirmedWrongIdentitySec",
+                  "overlapAmbiguousSec",
+                  "IDF1 vs baseline",
+                  "claimedRecall vs baseline",
+                  "confirmedCorrectSec vs baseline",
+                  "overlapAmbiguousSec vs baseline"
+                ],
+                "baselineUsed": true
+              },
+              "referenceOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 83
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 31
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "81689caad217d2cf772bf80e6eaafe742b0898587f1a3bda155dc5626872669c",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              },
+              "candidateOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 83
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 31
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "9f872eabf89e1815dcb89afe261a16cf55cb818d6974a8ec636b7d8e122339a6",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              }
+            },
+            {
+              "mode": "recorded-owner-anchor",
+              "referenceMetrics": {
+                "targetLabelledSec": 3.1,
+                "claimedCorrectSec": 2.6,
+                "confirmedCorrectSec": 0.3,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.839,
+                "IDF1": 0.912,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 5,
+                "confirmedRecall": 0.097,
+                "abstentionRateOnVisibleLabels": 0.161
+              },
+              "candidateMetrics": {
+                "targetLabelledSec": 3.1,
+                "claimedCorrectSec": 2.6,
+                "confirmedCorrectSec": 0.3,
+                "wrongIdentitySec": 0.0,
+                "confirmedWrongIdentitySec": 0.0,
+                "overlapAmbiguousSec": 0.0,
+                "falseAttributionSec": 0.0,
+                "claimedRecall": 0.839,
+                "IDF1": 0.912,
+                "wrongIdentityTimes": [],
+                "abstainedVisibleFrames": 5,
+                "confirmedRecall": 0.097,
+                "abstentionRateOnVisibleLabels": 0.161
+              },
+              "agreement": {
+                "framesCompared": 292,
+                "framesInUnion": 292,
+                "unmatchedInFirst": 0,
+                "unmatchedInSecond": 0,
+                "stateAgreement": 1.0,
+                "boxAgreementWhenBothClaim": 1.0,
+                "claimedOnlyInFirst": 0,
+                "claimedOnlyInSecond": 0
+              },
+              "accuracyGate": {
+                "gate": "balanced-5.2",
+                "passed": true,
+                "failures": [],
+                "checked": [
+                  "wrongIdentitySec",
+                  "confirmedWrongIdentitySec",
+                  "overlapAmbiguousSec",
+                  "IDF1 vs baseline",
+                  "claimedRecall vs baseline",
+                  "confirmedCorrectSec vs baseline",
+                  "overlapAmbiguousSec vs baseline"
+                ],
+                "baselineUsed": true
+              },
+              "referenceOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 51,
+                  "unmatchedClaim": 6,
+                  "correctClaim": 26
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 5,
+                  "correctClaim": 26
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "282c80e2111827d5c60747ec7c846cdca8195d12aea151b180508202acd13f2b",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              },
+              "candidateOutcomes": {
+                "allLabelledFrames": {
+                  "abstained": 51,
+                  "unmatchedClaim": 6,
+                  "correctClaim": 26
+                },
+                "targetVisibleLabelledFrames": {
+                  "abstained": 5,
+                  "correctClaim": 26
+                },
+                "frameDurationSec": 0.1,
+                "timelineSha256": "253c36b76a3a000df396fc477403b67754cb7a7f0d18cbab9e11d26c6a005283",
+                "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+              }
+            }
+          ],
+          "referencePersonDetections": 5838,
+          "candidatePersonDetections": 5838,
+          "personDetectionsBitIdentical": false,
+          "detectorAgreement": {
+            "method": "Greedy descending IoU, one-to-one, threshold 0.5; person detections",
+            "matched": 5838,
+            "reference": 5838,
+            "candidate": 5838,
+            "meanMatchedIoU": 0.9999989396076446,
+            "maxMatchedCoordinateDeltaPx": 0.0023193359375,
+            "framesWithUnmatchedDetections": []
+          }
+        }
+      ]
+    }
+  ],
+  "fixedCorpusOcr": {
+    "cpu-torch": {
+      "crops": 96,
+      "cpuAcceptedReadLosses": [],
+      "sameCorpus": true
+    }
+  },
+  "scope": "Previously examined development regressions, not independent or full-match accuracy",
+  "productionApproval": false,
+  "controlledDecodeValid": true,
+  "note": "LOCAL CPU-only partial matrix (profiles 1-2 of 6) on the pinned harness, development container Python 3.13.17 / torch 2.14.1 CPU; GPU profiles 3-6 NOT run (L4 stockouts). productionApproval=false."
+}

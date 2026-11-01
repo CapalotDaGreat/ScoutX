@@ -1,0 +1,20 @@
+[
+  {
+    "profile": "cpu-onnx",
+    "ocrOnly": false,
+    "rc": 0,
+    "wallSec": 781.7
+  },
+  {
+    "profile": "cpu-onnx",
+    "ocrOnly": true,
+    "rc": 0,
+    "wallSec": 20.4
+  },
+  {
+    "profile": "cpu-torch",
+    "ocrOnly": false,
+    "rc": 0,
+    "wallSec": 903.2
+  }
+]

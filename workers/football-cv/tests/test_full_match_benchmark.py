@@ -337,3 +337,18 @@ def test_compare_runs_gate_speedup_and_incomplete_reference():
     result, code = compare_runs.compare(cpu, failed_candidate, claims, claims, gate)
     assert code == 7 and result['result'].startswith('INCOMPLETE')
     assert 'speedup' not in result
+
+
+def test_box_agreement_is_not_applicable_only_when_both_runs_abstain_everywhere():
+    """Observed on CPU ONNX vs CPU Torch (2026-11-01): both runs abstained on every frame of a window, so
+    boxAgreementWhenBothClaim was None and the gate reported a failure although the runs were identical.
+    Box agreement is vacuous only then; any one-sided claim or missing comparison still fails."""
+    gate = json.loads((BENCH / 'gates' / 'balanced_5.2.json').read_text())
+    both_abstain = {'framesCompared': 450, 'stateAgreement': 1.0, 'boxAgreementWhenBothClaim': None,
+                    'claimedOnlyInFirst': 0, 'claimedOnlyInSecond': 0}
+    assert pp_bench.agreement_failures(both_abstain, gate) == []
+    one_sided = {**both_abstain, 'claimedOnlyInSecond': 3, 'stateAgreement': 0.993}
+    assert any('boxAgreementWhenBothClaim' in f for f in pp_bench.agreement_failures(one_sided, gate))
+    assert any('boxAgreementWhenBothClaim' in f for f in pp_bench.agreement_failures({**both_abstain, 'framesCompared': 0}, gate))
+    assert pp_bench.agreement_failures(None, gate)                                      # no comparison at all
+    assert any('stateAgreement' in f for f in pp_bench.agreement_failures({**both_abstain, 'stateAgreement': 0.5}, gate))
