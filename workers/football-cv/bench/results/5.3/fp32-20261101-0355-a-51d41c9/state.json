@@ -1,0 +1,43 @@
+{
+  "run": "fp32-20261101-0355-a-51d41c9",
+  "vm": "pitchproof-fp32-20261101-0355-a-51d41c9",
+  "zone": "europe-west4-a",
+  "project": "scoutx-230b0",
+  "commit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+  "sourceGs": "gs://scoutx-230b0-benchmarks/runs/fp32-20261101-0355-a-51d41c9/source.tar",
+  "sourceSha256": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f",
+  "videoGs": "gs://scoutx-230b0-benchmarks/videos/fp32-20261101-0355-a-51d41c9/IMG_4809_proxy_10fps.mp4",
+  "resultsGs": "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9",
+  "approvedMaxHours": 3,
+  "phase": "inputs_uploaded",
+  "created": false,
+  "createRequestedUtc": "2026-11-01T04:01:13.241482+00:00",
+  "allocationAttempts": [
+    {
+      "machine": "g2-standard-8",
+      "requestUtc": "2026-11-01T04:01:13.241482+00:00",
+      "result": "STOCKOUT"
+    },
+    {
+      "machine": "g2-standard-4",
+      "requestUtc": "2026-11-01T04:03:10.985538+00:00",
+      "createExit": 1
+    }
+  ],
+  "requestedMachine": "g2-standard-4",
+  "smallerShapeRequestUtc": "2026-11-01T04:03:10.985538+00:00",
+  "actualHostProposal": {
+    "machine": "g2-standard-4",
+    "vcpus": 4,
+    "memoryGiB": 16,
+    "gpu": "NVIDIA L4",
+    "gpuCount": 1,
+    "diskGb": 200,
+    "usdPerHourEstimate": 0.7730530323013699,
+    "threeHourComputeEstimateUsd": 2.3191590969041096,
+    "priceSnapshot": "2026-10-29",
+    "reason": "g2-standard-8 rejected for stockout; smaller shape in same approved zone, same L4 and lower cost",
+    "timingComparability": "All matrix profiles share this host; do not compare CPU speed directly to prior 8-vCPU full-match run"
+  }
+}

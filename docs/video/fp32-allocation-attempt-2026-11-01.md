@@ -55,3 +55,49 @@ excluding network, storage and tax. No region change is proposed.
 
 The operator is asking for explicit permission to try another Netherlands zone;
 no resource will be launched under that proposal before approval.
+
+## Approved europe-west4-a attempt: also stockout
+
+After the owner approved `europe-west4-a`, the same source archive and proxy were
+verified and staged again. The g2-standard-8 request at 04:01:13 UTC was rejected
+with the same stockout code. A smaller g2-standard-4 (4 vCPU, 16 GiB, still one
+L4) was then requested in the same approved zone, within the existing one-GPU,
+three-hour and cost bounds. Its regional compute estimate was lower ($0.7731/hour,
+$2.32 for three hours); the hardware difference was disclosed before requesting it.
+That request was also rejected with `ZONE_RESOURCE_POOL_EXHAUSTED_WITH_DETAILS`,
+reason `resource_availability`, and an empty `zonesAvailable` field.
+
+Neither request created a VM. No inference, model build, CUDA test or new timing
+measurement occurred. All matrix work remains pending; these failures do not
+establish that FP32 fixes or fails to fix the accuracy gap.
+
+The failed allocation evidence is in
+[the second attempt folder](../../workers/football-cv/bench/results/5.3/fp32-20261101-0355-a-51d41c9/),
+including both provider logs, the requested configurations and source hash.
+Cleanup again verified zero instances/disks/snapshots and absence of both temporary
+input objects. Results are retained in the matching private GCS results folder.
+Estimated VM compute charge is zero because no VM allocated; storage/network
+charges are not asserted to be zero.
+
+## Proposed Zurich fallback: not yet authorised
+
+Read-only checks found L4 quota 1, usage 0 in `europe-west6`, and the required
+g2-standard-8/L4 listed in both `europe-west6-b` and `europe-west6-c`. Catalog
+support and quota do not establish present capacity. A proposed fallback is to
+try b, then c only if b cannot allocate, stopping after **one VM** is created.
+The inference commit remains `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac`.
+
+The retained 2026-10-28 Zurich snapshot estimates $1.2036/hour including the
+200 GB balanced disk: approximately $1.81–$2.41 for a 90–120-minute planning
+allowance, and $3.61 for the three-hour maximum. Taxes/storage/network are extra;
+these are estimates, not invoices or a total-billing cap. This higher regional
+price needs fresh explicit approval before allocation.
+
+To avoid retransferring the 1.4 GB video for rejected requests, the next proposed
+controller uploads the small approved source archive first, allocates one VM,
+and transfers the video only after allocation succeeds. The guest waits at most
+20 minutes for that object, verifies its exact SHA before inference, and retains
+the server-enforced three-hour deletion limit. The matrix time budget is bounded
+by remaining session time, reserving time for export and teardown. If all approved
+zones reject allocation, remove the staged source archive; no video is uploaded.
+These are orchestration changes; the approved inference source stays unchanged.

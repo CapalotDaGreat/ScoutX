@@ -1,0 +1,22 @@
+{
+  "accelerators": [
+    {
+      "guestAcceleratorCount": 1,
+      "guestAcceleratorType": "nvidia-l4"
+    }
+  ],
+  "architecture": "X86_64",
+  "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
+  "description": "Graphics Optimized: 1 NVIDIA L4 GPU, 4 vCPUs, 16GB RAM",
+  "guestCpus": 4,
+  "id": "1600004",
+  "imageSpaceGb": 0,
+  "isSharedCpu": false,
+  "kind": "compute#machineType",
+  "maximumPersistentDisks": 128,
+  "maximumPersistentDisksSizeGb": "263168",
+  "memoryMb": 16384,
+  "name": "g2-standard-4",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/scoutx-230b0/zones/europe-west4-a/machineTypes/g2-standard-4",
+  "zone": "europe-west4-a"
+}

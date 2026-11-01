@@ -1,0 +1,44 @@
+{
+  "schema": "pitchproof.fp32-allocation-attempt.v1",
+  "approvedCommit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "zone": "europe-west4-a",
+  "requestUtc": "2026-11-01T04:01:13.241482+00:00",
+  "errorCode": "ZONE_RESOURCE_POOL_EXHAUSTED_WITH_DETAILS",
+  "reason": "gpu_availability / STOCKOUT; provider zonesAvailable empty",
+  "benchmarkExecuted": false,
+  "vmCreated": false,
+  "computeCostEstimateUsd": 0,
+  "costNote": "No VM allocated; temporary storage/network may incur small charges, not an invoice",
+  "quotaL4": {
+    "limit": 1,
+    "usageBefore": 0
+  },
+  "sourceArchiveSha256": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f",
+  "allocationAttempts": [
+    {
+      "machine": "g2-standard-8",
+      "requestUtc": "2026-11-01T04:01:13.241482+00:00",
+      "result": "STOCKOUT"
+    },
+    {
+      "machine": "g2-standard-4",
+      "requestUtc": "2026-11-01T04:03:10.985538+00:00",
+      "createExit": 1,
+      "result": "STOCKOUT / resource_availability"
+    }
+  ],
+  "smallerHostProposal": {
+    "machine": "g2-standard-4",
+    "vcpus": 4,
+    "memoryGiB": 16,
+    "gpu": "NVIDIA L4",
+    "gpuCount": 1,
+    "diskGb": 200,
+    "usdPerHourEstimate": 0.7730530323013699,
+    "threeHourComputeEstimateUsd": 2.3191590969041096,
+    "priceSnapshot": "2026-10-29",
+    "reason": "g2-standard-8 rejected for stockout; smaller shape in same approved zone, same L4 and lower cost",
+    "timingComparability": "All matrix profiles share this host; do not compare CPU speed directly to prior 8-vCPU full-match run"
+  },
+  "note": "Neither 8-vCPU/32-GiB nor 4-vCPU/16-GiB one-L4 shape could allocate; no VM or inference executed"
+}
