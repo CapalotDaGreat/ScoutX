@@ -101,3 +101,41 @@ the server-enforced three-hour deletion limit. The matrix time budget is bounded
 by remaining session time, reserving time for export and teardown. If all approved
 zones reject allocation, remove the staged source archive; no video is uploaded.
 These are orchestration changes; the approved inference source stays unchanged.
+
+## Approved Zurich attempt (2026-11-01, afternoon): also stockout
+
+The owner approved one session in `europe-west6`, trying zone b and then zone c only if b rejected allocation, with at most one VM.
+
+**Settings, all as approved:**
+
+- inference commit `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac`;
+- g2-standard-8 with one L4;
+- 200 GB balanced auto-delete disk;
+- `--max-run-duration=180m` with termination action DELETE, plus a guest shutdown at 175 minutes;
+- image `common-cu129-ubuntu-2204-nvidia-580-v20261029`.
+
+**Preflight:**
+
+- The source archive was rebuilt with `git archive --format=tar 51d41c9 workers/football-cv`. Its SHA-256 was `308c07a4…a62f`, identical to the pinned archive.
+- The local reference proxy on the owner's computer was re-hashed and matched `b1077af3…679c`.
+- Price, re-checked on 2026-11-01: USD 1.2037/hour, unchanged.
+- The worker suite on `d402d67` gave 589 passed and 0 skipped. This was in the Linux development container with CPU torch 2.14.1 and Python 3.13.17.
+- Before the attempt: zero instances, disks and snapshots, and no video objects.
+
+**Result:**
+
+- **`europe-west6-b`:** rejected with STOCKOUT (`resource_availability`, empty `zonesAvailable`).
+- **`europe-west6-c`:** rejected with `resource_availability`, "not enough resources".
+- **No VM was created**, the video was never uploaded, and no inference ran.
+- The staged source archive was deleted afterwards. Cleanup then verified zero instances, disks and snapshots, and no `runs/` or `videos/` objects.
+- Estimated VM compute charge: USD 0.
+
+**Evidence:**
+
+- [state.json](../../workers/football-cv/bench/results/5.3/fp32-20261101-z-51d41c9/state.json)
+- the provider logs and the exact startup scripts, in the same folder
+- the matching private results folder in GCS
+
+The startup script is the committed 0355-a script with one change: the video is uploaded only after allocation succeeds, and the guest waits at most 20 minutes for it.
+
+**What remains open.** All three L4 regions tried so far had no capacity: europe-west4-c and europe-west4-a on 2026-11-01, and europe-west6-b and -c on both 2026-10-29 and 2026-11-01. The FP32 comparison therefore remains pending. Another attempt needs a new approval: a later retry, another region, or a different GPU type, which would no longer be like-for-like with the L4 run.

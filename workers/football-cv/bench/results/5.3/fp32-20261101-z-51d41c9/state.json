@@ -1,0 +1,38 @@
+{
+  "run": "fp32-20261101-z-51d41c9",
+  "vm": "pitchproof-fp32-z-51d41c9",
+  "project": "scoutx-230b0",
+  "commit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "sourceArchiveSha256": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f",
+  "sourceArchiveRecipe": "git archive --format=tar 51d41c9 workers/football-cv",
+  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+  "machine": "g2-standard-8",
+  "maxRunMinutes": 180,
+  "priceCheckedUtc": "2026-11-01",
+  "usdPerHourEstimate": 1.2037,
+  "allocationAttempts": [
+    {
+      "zone": "europe-west6-b",
+      "requestUtc": "2026-11-01T17:16:44Z",
+      "result": "STOCKOUT (ZONE_RESOURCE_POOL_EXHAUSTED, resource_availability)"
+    },
+    {
+      "zone": "europe-west6-c",
+      "requestUtc": "2026-11-01T17:17:06Z",
+      "result": "resource_availability (not enough resources)"
+    }
+  ],
+  "created": false,
+  "videoUploaded": false,
+  "inferenceRun": false,
+  "cleanup": {
+    "verifiedUtc": "2026-11-01T17:17:42.998243+00:00",
+    "instances": "",
+    "disks": "",
+    "snapshots": "",
+    "sourceArchiveRemoved": true,
+    "videoObjects": "none"
+  },
+  "vmComputeEstimateUsd": 0,
+  "note": "Estimate only; storage/network for the 10.8 MB staged archive not asserted zero."
+}
