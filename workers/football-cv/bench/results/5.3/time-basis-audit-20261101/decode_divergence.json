@@ -1,0 +1,10 @@
+{
+  "framesCompared": 301,
+  "windowsRunVsLinuxRun_identical": 0,
+  "linuxOpenCV_4_14_vs_linuxRun_identical": 301,
+  "linuxOpenCV_5_0_vs_linuxRun_identical": 301,
+  "linuxOpenCV_5_0_vs_windowsRun_identical": 0,
+  "linuxOpenCV_4_14_vs_5_0_maxAbsPixelDiff_frames_11500_11650_11800": 0,
+  "method": "cv2.VideoCapture, seek CAP_PROP_POS_FRAMES=11500, sequential read, sha256(frame.tobytes()) - same as the fp32 harness probe; exact reference bytes b1077af3",
+  "conclusion": "Earliest divergence is decoding. On Linux, OpenCV 4.14 and 5.0 (pip wheels with their bundled FFmpeg) decode identically and reproduce the Linux run; neither reproduces the Windows run. The Windows decode path differs (platform/bundled-FFmpeg build); its pixel values are not available here."
+}

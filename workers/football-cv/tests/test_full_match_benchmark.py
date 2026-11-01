@@ -352,3 +352,25 @@ def test_box_agreement_is_not_applicable_only_when_both_runs_abstain_everywhere(
     assert any('boxAgreementWhenBothClaim' in f for f in pp_bench.agreement_failures({**both_abstain, 'framesCompared': 0}, gate))
     assert pp_bench.agreement_failures(None, gate)                                      # no comparison at all
     assert any('stateAgreement' in f for f in pp_bench.agreement_failures({**both_abstain, 'stateAgreement': 0.5}, gate))
+
+
+def test_label_time_basis_correction_is_detected_without_identity_and_never_rescues_wrong_players():
+    """2026-11-01 audit: gap1150/3144 labels are stamped 0.1 s early. The shift is found from raw detections of
+    all players (no identity output), and correcting it only re-pairs labels with prediction samples: a claim on
+    another player stays a wrong-player claim."""
+    # a player moving 40 px/frame; labels stamped one frame (0.1 s) early
+    pos = {round(i / 10, 1): [100 + 40 * i, 100, 160 + 40 * i, 300] for i in range(20)}
+    labels = {round(t - 0.1, 1): [b] for t, b in pos.items() if t >= 0.1}
+    shift = pp_bench.best_label_time_shift(labels, lambda t: [pos[round(t, 1)]] if round(t, 1) in pos else None)
+    assert max(shift, key=lambda s: shift[s]['medianIoU']) == 0.1 and shift[0.1]['medianIoU'] == 1.0
+    gt = {'fps': 10.0, 'times': {'0': 5.0, '1': 1150.0}, 'frames': {
+        '0': [{'box': [0, 0, 10, 10], 'label': 'T'}],
+        '1': [{'box': [100, 100, 150, 250], 'label': 'T'}, {'box': [500, 100, 550, 250], 'label': 'N'}]}}
+    corr = {'corrections': [{'intervalsSec': [[1150, 1180]], 'addToLabelTimeSec': 0.1}]}
+    g2 = pp_bench.apply_time_basis(gt, corr)
+    assert g2['times'] == {'0': 5.0, '1': 1150.1} and g2['frames'] == gt['frames'] and gt['times']['1'] == 1150.0
+    wrong = [[1150.1, 'LIKELY_VISIBLE', [500, 100, 550, 250]]]      # on the other player at the corrected time
+    a = pp_bench.accuracy(wrong, g2, (1920, 1080))
+    assert a['wrongIdentitySec'] == 0.1 and a['claimedCorrectSec'] == 0.0
+    shipped = json.loads((BENCH / 'references' / 'gt_time_basis_corrections.json').read_text())
+    assert shipped['originalLabelsUnchanged'] and shipped['corrections'][0]['addToLabelTimeSec'] == 0.1

@@ -1,0 +1,929 @@
+[
+ {
+  "frameKey": "41",
+  "sourceTimeSec": 1154.1,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   833.1,
+   524.0,
+   941.7,
+   747.4
+  ],
+  "boxH": 223.5,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.445,
+    "T",
+    [
+     879,
+     538,
+     962,
+     759
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1285,
+     553,
+     1314,
+     607
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     35,
+     542,
+     71,
+     626
+    ]
+   ]
+  ],
+  "nLabels": 4,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.932,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.93)"
+ },
+ {
+  "frameKey": "42",
+  "sourceTimeSec": 1154.2,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   875.0,
+   536.7,
+   963.5,
+   758.4
+  ],
+  "boxH": 221.7,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.493,
+    "T",
+    [
+     854,
+     533,
+     1027,
+     762
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     711,
+     540,
+     746,
+     634
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     631,
+     539,
+     704,
+     656
+    ]
+   ]
+  ],
+  "nLabels": 3,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.961,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.96)"
+ },
+ {
+  "frameKey": "45",
+  "sourceTimeSec": 1154.5,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   987.5,
+   540.9,
+   1065.2,
+   778.7
+  ],
+  "boxH": 237.8,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.406,
+    "T",
+    [
+     1010,
+     542,
+     1119,
+     770
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1195,
+     565,
+     1222,
+     629
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     574,
+     554,
+     673,
+     672
+    ]
+   ]
+  ],
+  "nLabels": 4,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.953,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.95)"
+ },
+ {
+  "frameKey": "46",
+  "sourceTimeSec": 1154.6,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1011.9,
+   545.3,
+   1120.8,
+   769.3
+  ],
+  "boxH": 224.1,
+  "targetVisibleLabel": false,
+  "labelsByIoU": [
+   [
+    0.0,
+    "N",
+    [
+     590,
+     558,
+     656,
+     683
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     178,
+     574,
+     208,
+     642
+    ]
+   ],
+   [
+    0.0,
+    "?",
+    [
+     1156,
+     575,
+     1195,
+     629
+    ]
+   ]
+  ],
+  "nLabels": 4,
+  "alignedPlus0_1s": {
+   "outcome": "abstained",
+   "state": null,
+   "labelsByIoU": null
+  },
+  "classification": "unresolved (aligned outcome abstained)"
+ },
+ {
+  "frameKey": "49",
+  "sourceTimeSec": 1154.9,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1032.6,
+   555.6,
+   1227.5,
+   767.4
+  ],
+  "boxH": 211.7,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.41,
+    "T",
+    [
+     1119,
+     568,
+     1260,
+     802
+    ]
+   ],
+   [
+    0.05,
+    "N",
+    [
+     1076,
+     590,
+     1112,
+     646
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     514,
+     573,
+     570,
+     688
+    ]
+   ]
+  ],
+  "nLabels": 4,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.936,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.94)"
+ },
+ {
+  "frameKey": "52",
+  "sourceTimeSec": 1155.2,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1169.7,
+   585.6,
+   1349.2,
+   814.8
+  ],
+  "boxH": 229.2,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.432,
+    "T",
+    [
+     1207,
+     602,
+     1476,
+     822
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1003,
+     602,
+     1028,
+     666
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     513,
+     590,
+     567,
+     725
+    ]
+   ]
+  ],
+  "nLabels": 4,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.937,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.94)"
+ },
+ {
+  "frameKey": "60",
+  "sourceTimeSec": 1156.0,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1237.7,
+   734.9,
+   1510.3,
+   821.6
+  ],
+  "boxH": 86.6,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.485,
+    "T",
+    [
+     1191,
+     725,
+     1440,
+     846
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     697,
+     617,
+     750,
+     685
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     328,
+     608,
+     415,
+     754
+    ]
+   ]
+  ],
+  "nLabels": 4,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.757,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.76)"
+ },
+ {
+  "frameKey": "126",
+  "sourceTimeSec": 1162.6,
+  "state": "CONFIRMED_VISIBLE",
+  "evidence": "number",
+  "conf": 0.99,
+  "box": [
+   1019.9,
+   611.1,
+   1093.6,
+   858.4
+  ],
+  "boxH": 247.3,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.444,
+    "T",
+    [
+     1045,
+     606,
+     1125,
+     851
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     714,
+     625,
+     868,
+     928
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     661,
+     672,
+     711,
+     799
+    ]
+   ]
+  ],
+  "nLabels": 4,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "CONFIRMED_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.982,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.98)"
+ },
+ {
+  "frameKey": "179",
+  "sourceTimeSec": 1167.9,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1248.1,
+   525.2,
+   1314.3,
+   688.1
+  ],
+  "boxH": 162.9,
+  "targetVisibleLabel": false,
+  "labelsByIoU": [
+   [
+    0.0,
+    "N",
+    [
+     924,
+     559,
+     955,
+     662
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     484,
+     593,
+     530,
+     736
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     383,
+     637,
+     403,
+     681
+    ]
+   ]
+  ],
+  "nLabels": 5,
+  "alignedPlus0_1s": {
+   "outcome": "abstained",
+   "state": "AMBIGUOUS",
+   "labelsByIoU": [
+    [
+     0.0,
+     "N"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "unresolved (aligned outcome abstained)"
+ },
+ {
+  "frameKey": "185",
+  "sourceTimeSec": 1168.5,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1265.6,
+   522.1,
+   1341.1,
+   711.7
+  ],
+  "boxH": 189.7,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.491,
+    "N",
+    [
+     1279,
+     523,
+     1391,
+     715
+    ]
+   ],
+   [
+    0.459,
+    "T",
+    [
+     1268,
+     523,
+     1309,
+     686
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1122,
+     547,
+     1170,
+     659
+    ]
+   ]
+  ],
+  "nLabels": 5,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.885,
+     "T"
+    ],
+    [
+     0.24,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.89)"
+ },
+ {
+  "frameKey": "238",
+  "sourceTimeSec": 1173.8,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1641.1,
+   535.5,
+   1688.3,
+   653.3
+  ],
+  "boxH": 117.8,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.493,
+    "T",
+    [
+     1656,
+     537,
+     1706,
+     656
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1552,
+     544,
+     1587,
+     639
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1341,
+     557,
+     1372,
+     640
+    ]
+   ]
+  ],
+  "nLabels": 6,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.935,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.94)"
+ },
+ {
+  "frameKey": "294",
+  "sourceTimeSec": 1179.4,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1730.9,
+   505.6,
+   1761.9,
+   590.5
+  ],
+  "boxH": 84.9,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.482,
+    "T",
+    [
+     1740,
+     510,
+     1772,
+     596
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1466,
+     507,
+     1490,
+     576
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1422,
+     509,
+     1448,
+     580
+    ]
+   ]
+  ],
+  "nLabels": 7,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.937,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.94)"
+ },
+ {
+  "frameKey": "295",
+  "sourceTimeSec": 1179.5,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1740.5,
+   509.8,
+   1771.5,
+   595.5
+  ],
+  "boxH": 85.8,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.428,
+    "T",
+    [
+     1751,
+     513,
+     1784,
+     603
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1477,
+     512,
+     1502,
+     580
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1435,
+     513,
+     1461,
+     583
+    ]
+   ]
+  ],
+  "nLabels": 7,
+  "alignedPlus0_1s": {
+   "outcome": "abstained",
+   "state": null,
+   "labelsByIoU": null
+  },
+  "classification": "unresolved (aligned outcome abstained)"
+ },
+ {
+  "frameKey": "297",
+  "sourceTimeSec": 1179.7,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1762.7,
+   517.6,
+   1795.5,
+   605.2
+  ],
+  "boxH": 87.6,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.446,
+    "T",
+    [
+     1775,
+     518,
+     1807,
+     609
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1500,
+     520,
+     1526,
+     588
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1462,
+     524,
+     1485,
+     591
+    ]
+   ]
+  ],
+  "nLabels": 7,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.935,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.94)"
+ },
+ {
+  "frameKey": "298",
+  "sourceTimeSec": 1179.8,
+  "state": "LIKELY_VISIBLE",
+  "evidence": "anchored",
+  "conf": 0.8,
+  "box": [
+   1774.8,
+   519.1,
+   1808.5,
+   607.7
+  ],
+  "boxH": 88.6,
+  "targetVisibleLabel": true,
+  "labelsByIoU": [
+   [
+    0.477,
+    "T",
+    [
+     1785,
+     523,
+     1821,
+     612
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1512,
+     523,
+     1539,
+     589
+    ]
+   ],
+   [
+    0.0,
+    "N",
+    [
+     1476,
+     524,
+     1498,
+     593
+    ]
+   ]
+  ],
+  "nLabels": 7,
+  "alignedPlus0_1s": {
+   "outcome": "correctClaim",
+   "state": "LIKELY_VISIBLE",
+   "labelsByIoU": [
+    [
+     0.982,
+     "T"
+    ],
+    [
+     0.0,
+     "N"
+    ]
+   ]
+  },
+  "classification": "timeBasisAlignmentDefect: correct target at +0.1 s (claim matches T label, IoU 0.98)"
+ }
+]

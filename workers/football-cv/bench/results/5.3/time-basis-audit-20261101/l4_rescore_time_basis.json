@@ -1,0 +1,340 @@
+{
+ "original/cpu": {
+  "targetLabelledSec": 50.4,
+  "claimedCorrectSec": 31.3,
+  "confirmedCorrectSec": 10.5,
+  "wrongIdentitySec": 0.0,
+  "confirmedWrongIdentitySec": 0.0,
+  "overlapAmbiguousSec": 0.0,
+  "falseAttributionSec": 0.0,
+  "claimedRecall": 0.621,
+  "IDF1": 0.766
+ },
+ "original/gpu": {
+  "targetLabelledSec": 50.4,
+  "claimedCorrectSec": 24.9,
+  "confirmedCorrectSec": 10.0,
+  "wrongIdentitySec": 0.0,
+  "confirmedWrongIdentitySec": 0.0,
+  "overlapAmbiguousSec": 0.0,
+  "falseAttributionSec": 0.0,
+  "claimedRecall": 0.494,
+  "IDF1": 0.661
+ },
+ "timeCorrected/cpu": {
+  "targetLabelledSec": 50.4,
+  "claimedCorrectSec": 34.4,
+  "confirmedCorrectSec": 12.3,
+  "wrongIdentitySec": 0.0,
+  "confirmedWrongIdentitySec": 0.0,
+  "overlapAmbiguousSec": 0.0,
+  "falseAttributionSec": 0.0,
+  "claimedRecall": 0.683,
+  "IDF1": 0.811
+ },
+ "timeCorrected/gpu": {
+  "targetLabelledSec": 50.4,
+  "claimedCorrectSec": 27.5,
+  "confirmedCorrectSec": 11.9,
+  "wrongIdentitySec": 0.0,
+  "confirmedWrongIdentitySec": 0.0,
+  "overlapAmbiguousSec": 0.0,
+  "falseAttributionSec": 0.0,
+  "claimedRecall": 0.546,
+  "IDF1": 0.706
+ },
+ "perInterval": {
+  "original": {
+   "225-255": {
+    "cpu": {
+     "targetLabelledSec": 6.8,
+     "claimedCorrectSec": 6.0,
+     "confirmedCorrectSec": 0.6,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 6.8,
+     "claimedCorrectSec": 6.0,
+     "confirmedCorrectSec": 0.6,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "400-430": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "600-630": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1150-1180": {
+    "cpu": {
+     "targetLabelledSec": 28.8,
+     "claimedCorrectSec": 23.4,
+     "confirmedCorrectSec": 8.2,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 28.8,
+     "claimedCorrectSec": 16.9,
+     "confirmedCorrectSec": 7.6,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1295-1325": {
+    "cpu": {
+     "targetLabelledSec": 9.4,
+     "claimedCorrectSec": 1.9,
+     "confirmedCorrectSec": 1.7,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 9.4,
+     "claimedCorrectSec": 2.0,
+     "confirmedCorrectSec": 1.8,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1500-1530": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1680-1710": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1800-1830": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1890-1920": {
+    "cpu": {
+     "targetLabelledSec": 5.4,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 5.4,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   }
+  },
+  "timeCorrected": {
+   "225-255": {
+    "cpu": {
+     "targetLabelledSec": 6.8,
+     "claimedCorrectSec": 6.0,
+     "confirmedCorrectSec": 0.6,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 6.8,
+     "claimedCorrectSec": 6.0,
+     "confirmedCorrectSec": 0.6,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "400-430": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "600-630": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1150-1180": {
+    "cpu": {
+     "targetLabelledSec": 28.8,
+     "claimedCorrectSec": 25.0,
+     "confirmedCorrectSec": 8.4,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 28.8,
+     "claimedCorrectSec": 18.1,
+     "confirmedCorrectSec": 8.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1295-1325": {
+    "cpu": {
+     "targetLabelledSec": 9.4,
+     "claimedCorrectSec": 3.4,
+     "confirmedCorrectSec": 3.3,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 9.4,
+     "claimedCorrectSec": 3.4,
+     "confirmedCorrectSec": 3.3,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1500-1530": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1680-1710": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1800-1830": {
+    "cpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 0.0,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   },
+   "1890-1920": {
+    "cpu": {
+     "targetLabelledSec": 5.4,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    },
+    "gpu": {
+     "targetLabelledSec": 5.4,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0
+    }
+   }
+  }
+ }
+}

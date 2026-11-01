@@ -1,0 +1,16 @@
+{
+  "schema": "pitchproof.gt-time-basis-correction.v1",
+  "groundTruth": "bench/results/5.1/gt_img4809_intervals.json",
+  "groundTruthSha256": "36b16fbae5091ca524f1c47c697e56db6da2d191e79dc0ab4f880815dc995078",
+  "originalLabelsUnchanged": true,
+  "corrections": [
+    {"intervalsSec": [[1150, 1180], [1295, 1325], [1500, 1530], [1680, 1710], [1800, 1830], [1890, 1920]],
+     "addToLabelTimeSec": 0.1,
+     "observation": "In these intervals every label has times[k] = k/10 - 0.1 for frame index k; in 225-630 s times[k] = k/10.",
+     "independentEvidence": "Identity-independent: labelled boxes of OTHER players ('N') against raw person detections of a fresh stage-1 run (2026-11-01, bench/results/5.3/time-basis-audit-20261101/label_time_alignment_detections.json). gap1150: 1,286 N boxes, median best IoU 0.65 (69.5% >= 0.5) at the stored time vs 0.913 (99.9%) at +0.1 s. 3144 (1880-1925): 523 N boxes, 0.666 vs 0.932 (100%). Control 1073 (labels made separately): best at +0 s (N 0.887, 100%).",
+     "origin": "Unconfirmed: most likely a one-frame index/time offset in the 5.1 full-match stage-1 run between 630 s and 1150 s when the labels were drawn. The boxes themselves are unchanged; only their time stamp is corrected."}
+  ],
+  "fixturesAffected": ["tests/fixtures/img4809_gap1150_slice.json (derived from gt.times)", "tests/fixtures/img4809_3144_slice.json (frame - f0 from the same 5.1 run)"],
+  "fixturesNotAffected": ["tests/fixtures/img4809_1073_slice.json"],
+  "use": "Report metrics under BOTH time bases. The acceptance gate is not changed by this file; any switch of the default basis needs a separate decision."
+}

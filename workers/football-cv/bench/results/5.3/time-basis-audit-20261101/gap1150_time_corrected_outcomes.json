@@ -1,0 +1,195 @@
+{
+ "allLabelledFrames": {
+  "abstained": 54,
+  "correctClaim": 241,
+  "unmatchedClaim": 1,
+  "indeterminateLabelClaim": 3,
+  "noPrediction": 1
+ },
+ "targetVisibleLabelledFrames": {
+  "abstained": 45,
+  "correctClaim": 241
+ },
+ "nonCorrectClaims": [
+  {
+   "frameKey": "97",
+   "labelTimeCorrected": 1159.8,
+   "outcome": "unmatchedClaim",
+   "state": "LIKELY_VISIBLE",
+   "box": [
+    775.1,
+    592.3,
+    901.0,
+    732.3
+   ],
+   "labels": [
+    [
+     0.0,
+     "?",
+     [
+      762,
+      513,
+      792,
+      582
+     ]
+    ],
+    [
+     0.0,
+     "?",
+     [
+      199,
+      502,
+      277,
+      672
+     ]
+    ],
+    [
+     0.0,
+     "?",
+     [
+      58,
+      510,
+      129,
+      666
+     ]
+    ]
+   ],
+   "targetVisible": false
+  },
+  {
+   "frameKey": "181",
+   "labelTimeCorrected": 1168.2,
+   "outcome": "indeterminateLabelClaim",
+   "state": "LIKELY_VISIBLE",
+   "box": [
+    1222.8,
+    518.4,
+    1328.4,
+    719.6
+   ],
+   "labels": [
+    [
+     0.95,
+     "?",
+     [
+      1224,
+      521,
+      1326,
+      719
+     ]
+    ],
+    [
+     0.0,
+     "N",
+     [
+      935,
+      542,
+      970,
+      664
+     ]
+    ],
+    [
+     0.0,
+     "N",
+     [
+      497,
+      592,
+      581,
+      727
+     ]
+    ]
+   ],
+   "targetVisible": false
+  },
+  {
+   "frameKey": "182",
+   "labelTimeCorrected": 1168.3,
+   "outcome": "indeterminateLabelClaim",
+   "state": "LIKELY_VISIBLE",
+   "box": [
+    1240.1,
+    517.2,
+    1326.6,
+    717.6
+   ],
+   "labels": [
+    [
+     0.969,
+     "?",
+     [
+      1239,
+      518,
+      1325,
+      718
+     ]
+    ],
+    [
+     0.0,
+     "N",
+     [
+      536,
+      592,
+      584,
+      725
+     ]
+    ],
+    [
+     0.0,
+     "N",
+     [
+      398,
+      626,
+      422,
+      680
+     ]
+    ]
+   ],
+   "targetVisible": false
+  },
+  {
+   "frameKey": "183",
+   "labelTimeCorrected": 1168.4,
+   "outcome": "indeterminateLabelClaim",
+   "state": "LIKELY_VISIBLE",
+   "box": [
+    1260.2,
+    515.2,
+    1329.5,
+    715.8
+   ],
+   "labels": [
+    [
+     0.946,
+     "?",
+     [
+      1260,
+      514,
+      1327,
+      715
+     ]
+    ],
+    [
+     0.0,
+     "N",
+     [
+      553,
+      589,
+      611,
+      727
+     ]
+    ],
+    [
+     0.0,
+     "N",
+     [
+      406,
+      634,
+      426,
+      680
+     ]
+    ]
+   ],
+   "targetVisible": false
+  }
+ ]
+}

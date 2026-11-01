@@ -70,6 +70,42 @@ def accuracy(claims: list, gt: dict, size: tuple[int, int], gt_size: tuple[int, 
             "wrongIdentityTimes": wrong_t[:50]}
 
 
+# ---------------------------------------------------------------- label time basis
+
+def apply_time_basis(gt: dict, corrections: dict) -> dict:
+    """Copy of interval ground truth with label TIMES shifted per `corrections`
+    (bench/references/gt_time_basis_corrections.json). Boxes and labels are never changed, so a claim on
+    another player stays wrong; only which prediction sample a label is compared with changes."""
+    import copy  # noqa: PLC0415
+
+    out = copy.deepcopy(gt)
+    for c in corrections.get("corrections", []):
+        for a, b in c["intervalsSec"]:
+            for k, t in gt["times"].items():
+                if a <= float(t) <= b:
+                    out["times"][k] = round(float(t) + float(c["addToLabelTimeSec"]), 3)
+    return out
+
+
+def best_label_time_shift(label_boxes_by_time: dict, detections_by_time, shifts=(-0.2, -0.1, 0.0, 0.1, 0.2)) -> dict:
+    """Identity-independent alignment check: for each candidate shift, the median best IoU of every labelled
+    box against raw detections at (label time + shift). `detections_by_time(t)` returns boxes or None."""
+    import statistics  # noqa: PLC0415
+
+    out = {}
+    for s in shifts:
+        vals = []
+        for t, boxes in label_boxes_by_time.items():
+            dets = detections_by_time(round(float(t) + s, 3))
+            if dets is None:
+                continue
+            vals += [max((iou(d, b) for d in dets), default=0.0) for b in boxes]
+        if vals:
+            out[s] = {"n": len(vals), "medianIoU": round(statistics.median(vals), 3),
+                      "shareIoU50": round(sum(v >= 0.5 for v in vals) / len(vals), 3)}
+    return out
+
+
 # ---------------------------------------------------------------- gates
 
 def load_gate(path: str | Path) -> dict:
