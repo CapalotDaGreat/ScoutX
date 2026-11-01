@@ -1,0 +1,17 @@
+{
+  "schema": "pitchproof.fp32-allocation-attempt.v1",
+  "approvedCommit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "zone": "europe-west4-c",
+  "requestUtc": "2026-11-01T03:50:55.937772+00:00",
+  "errorCode": "ZONE_RESOURCE_POOL_EXHAUSTED_WITH_DETAILS",
+  "reason": "gpu_availability / STOCKOUT; provider zonesAvailable empty",
+  "benchmarkExecuted": false,
+  "vmCreated": false,
+  "computeCostEstimateUsd": 0,
+  "costNote": "No VM allocated; temporary storage/network may incur small charges, not an invoice",
+  "quotaL4": {
+    "limit": 1,
+    "usageBefore": 0
+  },
+  "sourceArchiveSha256": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f"
+}

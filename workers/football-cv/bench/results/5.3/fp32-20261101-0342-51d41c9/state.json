@@ -1,0 +1,16 @@
+{
+  "run": "fp32-20261101-0342-51d41c9",
+  "vm": "pitchproof-fp32-20261101-0342-51d41c9",
+  "zone": "europe-west4-c",
+  "project": "scoutx-230b0",
+  "commit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+  "sourceGs": "gs://scoutx-230b0-benchmarks/runs/fp32-20261101-0342-51d41c9/source.tar",
+  "sourceSha256": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f",
+  "videoGs": "gs://scoutx-230b0-benchmarks/videos/fp32-20261101-0342-51d41c9/IMG_4809_proxy_10fps.mp4",
+  "resultsGs": "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0342-51d41c9",
+  "approvedMaxHours": 3,
+  "phase": "inputs_uploaded",
+  "created": false,
+  "createRequestedUtc": "2026-11-01T03:50:55.937772+00:00"
+}
