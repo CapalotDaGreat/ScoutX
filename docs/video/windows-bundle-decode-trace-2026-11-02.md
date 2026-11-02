@@ -146,7 +146,7 @@ source frame 11660 → Windows-path pixels (established by the swap) → target 
 - 18.5–18.7 s: 3 frames, unresolved.
 - Windows-only: 9 frames (10.9–11.0 s and 27.3–29.6 s), associated with Windows' extra #20 reads at frames 228/247.
 
-**Explained:** 33 of the 91 frames (36%) are traced to one OCR read through the conflict rule, and the replays confirm the OCR dependence (§6a). 55 (60%) are traced through colour signatures, tracker association and the contact-link rule (§6b). 3 are unresolved.
+**Explained:** superseded by the frame-level reconciliation in [hdr-reference-and-validation-2026-11-02.md](hdr-reference-and-validation-2026-11-02.md) §2. The interval counts above (33 / 55 / 3) were interval sizes, not per-frame recoveries. Per frame: 29 Linux-only frames are recovered by the OCR-read swap, 61 by the colour swap (51 of them by colour on frames 35–60 alone), the two sets are disjoint, and 1 frame is recovered by neither.
 
 ## 6a. Identity replays: OCR reads and sightings swapped separately
 
@@ -223,8 +223,8 @@ A colour swap also changes which crops OCR is asked to read. With Linux colour, 
 | | Windows colour (v1, m2) | Linux colour on 3.5–6.0 s (m1, v2) |
 |---|---|---|
 | Target's own tracker association | target piece 4.0–4.3 → contact piece 4.4–4.6 → piece 4.7/4.9–9.6/9.7 | same pieces from 3.0 to 9.6 s (no differing tracker continuation involves a target detection); in v2 the single frame at 9.7 s forms its own piece |
-| Contact event after 4.4–4.6 s | merged with a neighbouring same-kit contact: 5 pre × 4 post pieces, ends 5.7 s; event marked small (< 90 px piece) | 3 pre × 3 post pieces, ends 4.6 s; small |
-| Target pre → its tracker successor | cost 0.116; nearest competitor (another player's piece) 0.120; **margin 0.059** | cost 0.125–0.13; competitors ≥ 0.308; **margin 0.159–0.188** |
+| Contact event after 4.4–4.6 s | 5 pre × 4 post pieces, ends 5.7 s; `small` because pieces of 46.5 px and 79.7 px are in the event (the target pieces are 221 px / 117 px) | 3 pre × 3 post pieces, ends 4.6 s; `small` (46.5 px and 50.3 px pieces) |
+| Target pre → its tracker successor | cost 0.116. **Corrected 2026-11-02:** the margin is not 0.120 − 0.116. It is the gap between the optimal joint assignment and the best alternative, here: target pre left unassigned and its successor given to pre 14 (46.5 px, no tracker continuation in this event, cost 0.174): 0.174 − 0.116 = 0.058 from the rounded trace costs, **0.059 recorded** | 0.125–0.13; best alternative swaps the target pre and pre 14 (which has its own successor here): **margin 0.158–0.188** |
 | Link decision (rule: small-player continuation needs margin ≥ 0.10) | **unclear** (identity may not follow) | **same** (clear) |
 | Identity decision for 4.7–9.7 s | not chosen; contact pieces claimed `contact_unclear`; owner question (score 0.23–0.28, not currently target) | chosen through the clear link, `anchored`; owner question raised but already currently target (score 0.44–0.5) |
 
@@ -239,14 +239,14 @@ A colour swap also changes which crops OCR is asked to read. With Linux colour, 
 
 Holding association rows fixed while swapping the contact-stage colour (kit scores and link costs) gives the same split: Windows association → unclear (0.059 / 0.049), Linux association → same (0.164 / 0.159). The decision therefore follows the **online tracker association** (`PlayerTracker.update`, colour signatures as association features). It does not follow purification, the contact/kit stage or link costs.
 
-In the raw tracker rows, the first continuation that differs is at **frame 38 (3.8 s)**: a neighbouring player's track, lost after frame 32, resumes on detection 906 at frame 38 with Windows colour, and on detection 931 at frame 39 with Linux colour. No differing continuation involves a target detection (IoU with the target label ≤ 0.09). These neighbouring re-associations put a second same-kit pair into the target's contact event. That adds a near-equal competitor and drops the margin below the small-player rule.
+In the raw tracker rows, the first continuation that differs is at **frame 38 (3.8 s)**: a neighbouring player's track, lost after frame 32, resumes on detection 906 at frame 38 with Windows colour, and on detection 931 at frame 39 with Linux colour. No differing continuation involves a target detection (IoU with the target label ≤ 0.09). These neighbouring re-associations change the target's contact event: two more pre pieces and two more post pieces join it, and pre 14 is left without its own continuation inside the event. Pre 14 then competes for the target's successor at cost 0.174 against 0.116, and the margin falls below the small-event rule (see the corrected row above).
 
 **Causal chain, as supported:** decoded pixels → colour signatures of neighbouring players' detections (3.5–6.0 s) → tracker re-association of those neighbours from 3.8 s → contact-event composition → the target's continuation margin 0.059 < 0.10 → link `unclear` → identity is not carried into the 4.7–9.7 s piece → abstention and an owner question for 55 frames.
 
 - Each arrow from colour onward is verified by a one-factor replay or split.
 - What is not established is which colour difference in which neighbouring detection is decisive. Many detections change together in a 26-frame span.
 
-**This is not a defect.** The `unclear` decision is the documented guard: small-player continuations need margin ≥ 0.10, after a measured 75 px swap with margin 0.081. Here it abstains on a true target because a team-mate's piece is almost as similar. Linux colour happens to keep the competitor out of the event; that is not evidence that Linux colour is more correct. No threshold, guard or solver change is made.
+**This is not a defect.** The `unclear` decision is the documented guard: small-player continuations need margin ≥ 0.10, after a measured 75 px swap with margin 0.081. Here it abstains on a true target because another piece in the event could take the target's continuation at a small extra cost. With Linux colour, pre 14 keeps its own continuation, so the alternative costs much more; that is not evidence that Linux colour is more correct. No threshold, guard or solver change is made.
 
 **Changed claims to review (not counted as correct):**
 

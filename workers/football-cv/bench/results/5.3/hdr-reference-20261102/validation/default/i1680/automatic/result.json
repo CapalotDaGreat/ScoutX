@@ -1,0 +1,242 @@
+{
+  "schema": "pitchproof.tracking.v3",
+  "engine": {
+    "version": "5.2.0",
+    "timingsSec": {
+      "load": 0.0,
+      "tracklets": 0.4,
+      "numbers": 8.7,
+      "identity": 2.4,
+      "timeline_metrics_events": 0.0
+    },
+    "ocrDeferred": 0,
+    "ocrRead": 63
+  },
+  "target": {
+    "number": "20",
+    "kit": "orange",
+    "kit2": "white",
+    "position": "unknown",
+    "ageGroup": "",
+    "anchors": [],
+    "rejects": []
+  },
+  "timeline": {
+    "periods": [
+      {
+        "start": 0.0,
+        "end": 30.0,
+        "kind": "play",
+        "label": "play",
+        "source": "detected",
+        "confidence": "heuristic"
+      }
+    ],
+    "cameraStatesSec": {
+      "NON_FOOTBALL": 2.4,
+      "PLAY_VIEW": 27.6
+    }
+  },
+  "coverage": {
+    "recordingSec": 30.0,
+    "nonMatchSec": 0.0,
+    "offPitchSec": 0.0,
+    "matchSec": 30.0,
+    "unobservedSec": 2.4,
+    "analysedSec": 27.6,
+    "confirmedVisibleSec": 0.0,
+    "likelyVisibleSec": 0.0,
+    "ambiguousSec": 26.5,
+    "notIdentifiedSec": 1.1,
+    "denominators": {
+      "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+      "note": "Percentages of the recording are not percentages of the player's playing time."
+    },
+    "visiblePctOfAnalysed": 0.0
+  },
+  "identity": {
+    "statesSec": {
+      "AMBIGUOUS": 26.5,
+      "UNKNOWN": 3.5
+    },
+    "iterations": [
+      {
+        "iteration": 0,
+        "mode": "template",
+        "chosen": 2,
+        "seconds": 20.5,
+        "positives": 0,
+        "negatives": 0
+      },
+      {
+        "iteration": 1,
+        "mode": "template",
+        "chosen": 2,
+        "seconds": 20.5,
+        "positives": 0,
+        "negatives": 0
+      }
+    ],
+    "numberSightings": 0,
+    "confirmedByUser": 0,
+    "scoreNote": "Identity scores are uncalibrated (not probabilities)."
+  },
+  "physical": {
+    "status": "unavailable",
+    "reason": "only 0 s of valid motion observations (need >= 30 s)",
+    "provenance": "unavailable",
+    "values": {
+      "distanceObserved": {
+        "value": null,
+        "unit": "m",
+        "provenance": "unavailable",
+        "method": "uncalibrated: camera-motion-compensated image motion scaled by an assumed 1.8 m player height (pinhole depth from box height, damped); single moving camera, no pitch calibration",
+        "reason": "only 0 s of valid motion observations (need >= 30 s)"
+      },
+      "peakSpeed": {
+        "value": null,
+        "unit": "km/h",
+        "provenance": "unavailable",
+        "method": "uncalibrated: camera-motion-compensated image motion scaled by an assumed 1.8 m player height (pinhole depth from box height, damped); single moving camera, no pitch calibration",
+        "reason": "only 0 s of valid motion observations (need >= 30 s)"
+      },
+      "workRate": {
+        "value": null,
+        "unit": "m/min",
+        "provenance": "unavailable",
+        "method": "uncalibrated: camera-motion-compensated image motion scaled by an assumed 1.8 m player height (pinhole depth from box height, damped); single moving camera, no pitch calibration",
+        "reason": "only 0 s of valid motion observations (need >= 30 s)"
+      }
+    },
+    "sprints": [],
+    "highSpeedRuns": [],
+    "thresholds": {
+      "sprint_kmh": 19.8,
+      "hsr_kmh": 14.4,
+      "min_run_sec": 1.0,
+      "merge_gap_sec": 0.5,
+      "max_speed_kmh": 36.0,
+      "max_accel_ms2": 6.0,
+      "min_cmc_quality": 0.7,
+      "min_box_px": 30.0,
+      "min_valid_run_sec": 1.5
+    },
+    "productionVisible": false
+  },
+  "calibration": {
+    "calibrations": [],
+    "calibratedFrames": 0,
+    "calibratedSec": 0.0,
+    "heatmap": {
+      "status": "unavailable",
+      "reason": "No validated pitch calibration covers the player's visible time."
+    }
+  },
+  "heatmap": {
+    "status": "unavailable",
+    "reason": "No validated pitch calibration covers the player's visible time."
+  },
+  "ball": {
+    "contactsConfirmedIdentity": 0,
+    "duelCandidates": 0,
+    "tackleCandidates": 0,
+    "contacts": 0,
+    "carries": 0,
+    "passAttempts": 0,
+    "completedPasses": 0,
+    "incompletePasses": 0,
+    "unknownOutcomePasses": 0,
+    "ballFramesTracked": 17,
+    "provenance": "model_estimate_unvalidated",
+    "note": "Ball detections are frequently missed for far-away play; counts are lower bounds and have not been validated against labelled events. Duel/tackle candidates need review and are never counted as statistics."
+  },
+  "events": [],
+  "moments": [],
+  "offball": {
+    "status": "insufficient",
+    "method": "image-plane distance to the nearest opponent / team-mate, in the target's body heights, on confirmed frames only",
+    "caveat": "perspective distorts distances; not metres",
+    "confirmedSec": 0.0,
+    "minConfirmedSec": 60.0,
+    "sequences": []
+  },
+  "videoSize": {
+    "width": 1920,
+    "height": 1080
+  },
+  "analysedRange": {
+    "startSec": 0.0,
+    "endSec": 29.9,
+    "parts": 1
+  },
+  "tracklets": [
+    {
+      "tid": 7,
+      "t0": 0.0,
+      "t1": 0.7000000000000455,
+      "evidence": "continuity",
+      "score": 0.268,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 120,
+      "t0": 1.099999999999909,
+      "t1": 25.799999999999955,
+      "evidence": "continuity",
+      "score": 0.436,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    }
+  ],
+  "reviewQuestions": [
+    {
+      "tid": 23,
+      "t": 3.2999999999999545,
+      "box": [
+        1674.116455078125,
+        278.6253662109375,
+        1771.80908203125,
+        472.12774658203125
+      ],
+      "from": 3.2000000000000455,
+      "to": 15.400000000000091,
+      "currentlyTarget": false,
+      "score": 0.35,
+      "scoreKind": "uncalibrated",
+      "affectedSec": 12.3,
+      "value": 14.85,
+      "options": [
+        "yes",
+        "not_me",
+        "unsure",
+        "skip"
+      ],
+      "crop": "/home/claude/work/dval/default/i1680/stage1/chunk/crops/000032_341.jpg"
+    }
+  ],
+  "referenceCrop": null,
+  "excluded": [],
+  "numberReads": {
+    "23": [
+      [
+        36,
+        "7",
+        0.9358542561531067,
+        "shirt:white"
+      ]
+    ],
+    "4": [
+      [
+        2,
+        "4",
+        0.9453491950266404,
+        "shirt:white"
+      ]
+    ]
+  },
+  "invariants": {
+    "violations": [],
+    "ok": true
+  }
+}

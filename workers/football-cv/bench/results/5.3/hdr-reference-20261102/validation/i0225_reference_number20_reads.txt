@@ -1,0 +1,4 @@
+chunk/000168_3128.jpg frame 168 t 16.8 read ['20', 0.9999989884757856, 'shorts:scene'] h 512 label IoUs [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')]
+chunk/000170_3159.jpg frame 170 t 17.0 read ['20', 0.9999922449886813, 'shorts:scene'] h 515 label IoUs [(np.float64(0.97), 'T'), (np.float64(0.0), 'N'), (np.float64(0.0), 'N')]
+chunk/000194_3597.jpg frame 194 t 19.4 read ['20', 0.9499864101409912, 'shirt:contrast'] h 158 label IoUs [(np.float64(0.91), 'T'), (np.float64(0.0), 'N'), (np.float64(0.0), 'N')]
+sighting t 241.8 conf 1.0 frames 5 label IoUs [(0.94, 'T'), (0.0, 'N')]

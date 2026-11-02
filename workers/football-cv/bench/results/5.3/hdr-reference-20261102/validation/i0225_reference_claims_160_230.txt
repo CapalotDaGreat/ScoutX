@@ -1,0 +1,72 @@
+160 UNKN  claimTid None labels None targetTid 188
+161 UNKN  claimTid None labels None targetTid 188
+162 UNKN  claimTid None labels None targetTid 188
+163 AMBI continui claimTid 189 labels [(np.float64(0.0), 'N'), (np.float64(0.0), 'N')] targetTid None
+164 AMBI continui claimTid 189 labels [(np.float64(0.94), 'T'), (np.float64(0.0), 'N')] targetTid 189
+165 AMBI continui claimTid 189 labels [(np.float64(0.23), 'T'), (np.float64(0.0), 'N')] targetTid 196
+166 CONF number claimTid 189 labels [(np.float64(0.9), 'T'), (np.float64(0.03), 'N')] targetTid 189
+167 CONF number claimTid 189 labels [(np.float64(0.86), 'T'), (np.float64(0.0), 'N')] targetTid 189
+168 CONF number claimTid 189 labels [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')] targetTid 189
+169 CONF number claimTid 190 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 190
+170 CONF number claimTid 190 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 190
+171 CONF number claimTid 190 labels [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')] targetTid 190
+172 CONF number claimTid 190 labels [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')] targetTid 190
+173 CONF number claimTid 190 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 190
+174 LIKE interpol claimTid None labels [(np.float64(0.4), 'T'), (np.float64(0.0), 'N')] targetTid 191
+175 LIKE interpol claimTid None labels [(np.float64(0.09), 'T'), (np.float64(0.0), 'N')] targetTid 192
+176 CONF number claimTid 205 labels [(np.float64(0.95), 'N'), (np.float64(0.0), 'T')] targetTid 192
+177 CONF number claimTid 205 labels [(np.float64(0.94), 'N'), (np.float64(0.0), 'T')] targetTid 192
+178 CONF number claimTid 205 labels [(np.float64(0.93), 'N'), (np.float64(0.0), 'T')] targetTid 192
+179 CONF number claimTid 205 labels [(np.float64(0.94), 'N'), (np.float64(0.0), 'T')] targetTid 192
+180 CONF number claimTid 205 labels [(np.float64(0.92), 'N'), (np.float64(0.0), 'T')] targetTid 192
+181 CONF number claimTid 205 labels [(np.float64(0.92), 'N'), (np.float64(0.0), 'T')] targetTid 193
+182 CONF number claimTid 205 labels [(np.float64(0.95), 'N'), (np.float64(0.0), 'T')] targetTid 193
+183 CONF number claimTid 205 labels [(np.float64(0.92), '?'), (np.float64(0.0), 'N')] targetTid None
+184 CONF number claimTid 205 labels [(np.float64(0.94), 'N'), (np.float64(0.0), 'T')] targetTid 194
+185 CONF number claimTid 205 labels [(np.float64(0.96), 'N'), (np.float64(0.0), 'T')] targetTid 194
+186 CONF number claimTid 205 labels [(np.float64(0.82), 'N'), (np.float64(0.0), 'T')] targetTid 194
+187 UNKN  claimTid None labels None targetTid 194
+188 UNKN  claimTid None labels None targetTid 194
+189 CONF number claimTid 205 labels [(np.float64(0.83), 'N'), (np.float64(0.0), 'T')] targetTid 194
+190 CONF number claimTid 205 labels [(np.float64(0.91), 'N'), (np.float64(0.0), 'T')] targetTid 194
+191 CONF number claimTid 205 labels [(np.float64(0.94), 'N'), (np.float64(0.0), 'T')] targetTid 194
+192 CONF number claimTid 205 labels [(np.float64(0.88), '?'), (np.float64(0.0), 'N')] targetTid None
+193 UNKN  claimTid None labels None targetTid 194
+194 CONF number claimTid 205 labels [(np.float64(0.91), 'T'), (np.float64(0.0), 'N')] targetTid 205
+195 CONF number claimTid 205 labels [(np.float64(0.94), 'N'), (np.float64(0.0), 'T')] targetTid 194
+196 CONF number claimTid 205 labels [(np.float64(0.92), 'N'), (np.float64(0.0), 'T')] targetTid 194
+197 CONF number claimTid 205 labels [(np.float64(0.92), 'N'), (np.float64(0.0), 'T')] targetTid 194
+198 CONF number claimTid 205 labels [(np.float64(0.86), '?'), (np.float64(0.0), 'N')] targetTid None
+199 CONF number claimTid 205 labels [(np.float64(0.95), '?'), (np.float64(0.0), 'N')] targetTid None
+200 CONF number claimTid 205 labels [(np.float64(0.97), '?'), (np.float64(0.0), 'N')] targetTid None
+201 CONF number claimTid 205 labels [(np.float64(0.93), '?'), (np.float64(0.0), 'N')] targetTid None
+202 CONF number claimTid 205 labels [(np.float64(0.95), '?'), (np.float64(0.0), 'N')] targetTid None
+203 CONF number claimTid 205 labels [(np.float64(0.97), '?'), (np.float64(0.0), 'N')] targetTid None
+204 CONF number claimTid 205 labels [(np.float64(0.94), '?'), (np.float64(0.0), 'N')] targetTid None
+205 CONF number claimTid 205 labels [(np.float64(0.96), '?'), (np.float64(0.0), 'N')] targetTid None
+206 CONF number claimTid 205 labels [(np.float64(0.96), '?'), (np.float64(0.0), 'N')] targetTid None
+207 CONF number claimTid 205 labels [(np.float64(0.91), '?'), (np.float64(0.0), 'N')] targetTid None
+208 CONF number claimTid 205 labels [(np.float64(0.8), 'N'), (np.float64(0.0), 'N')] targetTid None
+209 UNKN  claimTid None labels None targetTid None
+210 CONF number claimTid 205 labels [(np.float64(0.0), 'N'), (np.float64(0.0), '?')] targetTid None
+211 CONF number claimTid 205 labels [(np.float64(0.79), 'N'), (np.float64(0.0), 'N')] targetTid None
+212 CONF number claimTid 205 labels [(np.float64(0.87), '?'), (np.float64(0.0), 'N')] targetTid None
+213 CONF number claimTid 205 labels [(np.float64(0.94), '?'), (np.float64(0.0), 'N')] targetTid None
+214 CONF number claimTid 205 labels [(np.float64(0.9), '?'), (np.float64(0.0), 'N')] targetTid None
+215 CONF number claimTid 205 labels [(np.float64(0.95), '?'), (np.float64(0.0), 'N')] targetTid None
+216 CONF number claimTid 205 labels [(np.float64(0.93), '?'), (np.float64(0.0), 'N')] targetTid None
+217 CONF number claimTid 205 labels [(np.float64(0.74), '?'), (np.float64(0.0), 'N')] targetTid None
+218 CONF number claimTid 205 labels [(np.float64(0.83), '?'), (np.float64(0.0), 'N')] targetTid None
+219 CONF number claimTid 205 labels [(np.float64(0.89), '?'), (np.float64(0.0), 'N')] targetTid None
+220 CONF number claimTid 205 labels [(np.float64(0.84), '?'), (np.float64(0.0), 'N')] targetTid None
+221 CONF number claimTid 205 labels [(np.float64(0.83), '?'), (np.float64(0.0), 'N')] targetTid None
+222 CONF number claimTid 205 labels [(np.float64(0.85), '?'), (np.float64(0.0), 'N')] targetTid None
+223 CONF number claimTid 205 labels [(np.float64(0.81), '?'), (np.float64(0.0), 'N')] targetTid None
+224 CONF number claimTid 205 labels [(np.float64(0.86), '?'), (np.float64(0.0), 'N')] targetTid None
+225 UNKN  claimTid None labels None targetTid None
+226 UNKN  claimTid None labels None targetTid None
+227 UNKN  claimTid None labels None targetTid None
+228 CONF number claimTid 205 labels [(np.float64(0.0), 'N'), (np.float64(0.0), 'N')] targetTid None
+229 UNKN  claimTid None labels None targetTid None
+230 UNKN  claimTid None labels None targetTid None
+links []

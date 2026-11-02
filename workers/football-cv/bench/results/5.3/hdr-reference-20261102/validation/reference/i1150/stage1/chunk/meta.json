@@ -1,0 +1,21 @@
+{
+  "video": "/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4",
+  "detector": "yolox_s@1280/onnx",
+  "keyframeEvery": 1,
+  "t0": 0.0,
+  "start": 1150.0,
+  "fps": 10.0,
+  "frames": 300,
+  "width": 1920,
+  "height": 1080,
+  "seconds": 208.3,
+  "stageSeconds": {
+    "decode": 108.21,
+    "detect": 91.2,
+    "propagate": 0.0,
+    "scene_cmc": 5.72,
+    "colour_signature": 2.04,
+    "embedding": 0.62,
+    "crops_io": 0.31
+  }
+}

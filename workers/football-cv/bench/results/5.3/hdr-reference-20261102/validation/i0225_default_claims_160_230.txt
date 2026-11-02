@@ -1,0 +1,72 @@
+160 LIKE anchored claimTid 139 labels [(np.float64(0.94), 'T'), (np.float64(0.0), 'N')] targetTid 139
+161 LIKE anchored claimTid 139 labels [(np.float64(0.92), 'T'), (np.float64(0.0), 'N')] targetTid 139
+162 LIKE anchored claimTid 139 labels [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')] targetTid 139
+163 AMBI continui claimTid 198 labels [(np.float64(0.0), 'N'), (np.float64(0.0), 'N')] targetTid None
+164 AMBI continui claimTid 198 labels [(np.float64(0.93), 'T'), (np.float64(0.0), 'N')] targetTid 198
+165 AMBI continui claimTid 198 labels [(np.float64(0.9), 'T'), (np.float64(0.0), 'N')] targetTid 198
+166 CONF number claimTid 198 labels [(np.float64(0.9), 'T'), (np.float64(0.03), 'N')] targetTid 198
+167 CONF number claimTid 198 labels [(np.float64(0.84), 'T'), (np.float64(0.0), 'N')] targetTid 198
+168 CONF number claimTid 198 labels [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')] targetTid 198
+169 CONF number claimTid 198 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 198
+170 CONF number claimTid 198 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 198
+171 CONF number claimTid 198 labels [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')] targetTid 198
+172 AMBI continui claimTid 198 labels [(np.float64(0.96), 'T'), (np.float64(0.0), 'N')] targetTid 198
+173 AMBI continui claimTid 198 labels [(np.float64(0.98), 'T'), (np.float64(0.0), 'N')] targetTid 198
+174 AMBI continui claimTid 198 labels [(np.float64(0.98), 'T'), (np.float64(0.0), 'N')] targetTid 198
+175 LIKE anchored claimTid 199 labels [(np.float64(0.98), 'T'), (np.float64(0.0), 'N')] targetTid 199
+176 LIKE anchored claimTid 199 labels [(np.float64(0.99), 'T'), (np.float64(0.0), 'N')] targetTid 199
+177 LIKE anchored claimTid 199 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 199
+178 LIKE anchored claimTid 199 labels [(np.float64(0.98), 'T'), (np.float64(0.0), 'N')] targetTid 199
+179 LIKE anchored claimTid 199 labels [(np.float64(0.92), 'T'), (np.float64(0.0), 'N')] targetTid 199
+180 LIKE anchored claimTid 200 labels [(np.float64(0.96), 'T'), (np.float64(0.0), 'N')] targetTid 200
+181 LIKE anchored claimTid 200 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 200
+182 LIKE anchored claimTid 200 labels [(np.float64(0.98), 'T'), (np.float64(0.0), 'N')] targetTid 200
+183 LIKE anchored claimTid 200 labels [(np.float64(0.0), 'N'), (np.float64(0.0), '?')] targetTid None
+184 LIKE anchored claimTid 200 labels [(np.float64(0.97), 'T'), (np.float64(0.0), 'N')] targetTid 200
+185 LIKE anchored claimTid 201 labels [(np.float64(0.95), 'T'), (np.float64(0.0), 'N')] targetTid 201
+186 LIKE anchored claimTid 201 labels [(np.float64(0.98), 'T'), (np.float64(0.0), 'N')] targetTid 201
+187 LIKE anchored claimTid 201 labels [(np.float64(0.94), 'T'), (np.float64(0.0), 'N')] targetTid 201
+188 LIKE anchored claimTid 201 labels [(np.float64(0.96), 'T'), (np.float64(0.0), 'N')] targetTid 201
+189 LIKE anchored claimTid 201 labels [(np.float64(0.96), 'T'), (np.float64(0.0), 'N')] targetTid 201
+190 LIKE anchored claimTid 201 labels [(np.float64(0.96), 'T'), (np.float64(0.0), 'N')] targetTid 201
+191 LIKE anchored claimTid 201 labels [(np.float64(0.9), 'T'), (np.float64(0.0), 'N')] targetTid 201
+192 AMBI  claimTid None labels None targetTid None
+193 AMBI  claimTid None labels None targetTid 203
+194 LIKE anchored claimTid 201 labels [(np.float64(0.09), 'T'), (np.float64(0.0), 'N')] targetTid 203
+195 LIKE anchored claimTid 201 labels [(np.float64(0.88), 'T'), (np.float64(0.0), 'N')] targetTid 201
+196 LIKE anchored claimTid 201 labels [(np.float64(0.79), 'T'), (np.float64(0.0), 'N')] targetTid 201
+197 LIKE anchored claimTid 201 labels [(np.float64(0.88), 'T'), (np.float64(0.0), 'N')] targetTid 201
+198 AMBI  claimTid None labels None targetTid None
+199 AMBI  claimTid None labels None targetTid None
+200 AMBI  claimTid None labels None targetTid None
+201 AMBI  claimTid None labels None targetTid None
+202 AMBI  claimTid None labels None targetTid None
+203 AMBI  claimTid None labels None targetTid None
+204 AMBI  claimTid None labels None targetTid None
+205 AMBI  claimTid None labels None targetTid None
+206 AMBI  claimTid None labels None targetTid None
+207 AMBI  claimTid None labels None targetTid None
+208 AMBI  claimTid None labels None targetTid None
+209 AMBI  claimTid None labels None targetTid None
+210 AMBI  claimTid None labels None targetTid None
+211 AMBI  claimTid None labels None targetTid None
+212 AMBI  claimTid None labels None targetTid None
+213 AMBI  claimTid None labels None targetTid None
+214 AMBI  claimTid None labels None targetTid None
+215 AMBI  claimTid None labels None targetTid None
+216 AMBI  claimTid None labels None targetTid None
+217 AMBI  claimTid None labels None targetTid None
+218 AMBI  claimTid None labels None targetTid None
+219 AMBI  claimTid None labels None targetTid None
+220 AMBI  claimTid None labels None targetTid None
+221 AMBI  claimTid None labels None targetTid None
+222 AMBI continui claimTid 184 labels [(np.float64(0.05), 'N'), (np.float64(0.0), 'N')] targetTid None
+223 AMBI continui claimTid 184 labels [(np.float64(0.9), '?'), (np.float64(0.0), 'N')] targetTid None
+224 AMBI continui claimTid 184 labels [(np.float64(0.9), '?'), (np.float64(0.0), 'N')] targetTid None
+225 AMBI continui claimTid 184 labels [(np.float64(0.85), '?'), (np.float64(0.0), 'N')] targetTid None
+226 AMBI continui claimTid 184 labels [(np.float64(0.87), '?'), (np.float64(0.0), 'N')] targetTid None
+227 AMBI continui claimTid 184 labels [(np.float64(0.89), '?'), (np.float64(0.0), 'N')] targetTid None
+228 AMBI continui claimTid 184 labels [(np.float64(0.81), '?'), (np.float64(0.0), 'N')] targetTid None
+229 AMBI interpol claimTid None labels [(np.float64(0.0), 'N'), (np.float64(0.0), 'N')] targetTid None
+230 AMBI interpol claimTid None labels [(np.float64(0.0), 'N'), (np.float64(0.0), 'N')] targetTid None
+links []

@@ -1,0 +1,2 @@
+chunk/000170_3162.jpg frame 170 t 17.0 read ['20', 0.9999959539049404, 'shorts:scene'] h 517 label IoUs [(np.float64(0.97), 'T'), (np.float64(0.0), 'N'), (np.float64(0.0), 'N')]
+sighting t 241.8 conf 1.0 frames 5 label IoUs [(0.94, 'T'), (0.0, 'N')]

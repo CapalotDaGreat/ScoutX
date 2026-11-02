@@ -1,0 +1,599 @@
+{
+  "schema": "pitchproof.fresh-window-validation.v1",
+  "timestampUtc": "2026-11-02T04:22:11.567272+00:00",
+  "environment": {
+    "python": "3.13.17",
+    "platform": "Linux-6.18.44-fc-v185-x86_64-with-glibc2.39",
+    "cpuCores": 2,
+    "packages": {
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "4.14.0.94",
+      "opencv-python-headless": "5.0.0.93",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime": "1.29.0",
+      "av": "19.0.2",
+      "pillow": "12.3.0",
+      "fastapi": "0.162.0",
+      "pydantic": "2.13.5"
+    },
+    "torch": {
+      "version": "2.14.1+cu130",
+      "cuda": "13.0",
+      "cudaAvailable": false,
+      "cudnn": 92400
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "AzureExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "4.14.0",
+      "videoIO": [
+        "FFMPEG:                      YES",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+    "nvidiaSmi": null,
+    "driverMajor": null,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": null,
+      "built": null,
+      "baseImage": null,
+      "lockSha256": null
+    },
+    "scoutxEnv": {
+      "SCOUTX_BACKEND": "onnx",
+      "SCOUTX_BATCH": "1",
+      "SCOUTX_DECODER": "cv2",
+      "SCOUTX_DETECTOR": "yolox_s",
+      "SCOUTX_DISCOVERY_DET": "416",
+      "SCOUTX_KEYFRAME_EVERY": "1",
+      "SCOUTX_MODE": "balanced",
+      "SCOUTX_OCR_ENHANCE": "0",
+      "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+      "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+    }
+  },
+  "gitCommit": "ec9d637d5b808e4456b20e6d2f873239efdaa2e0",
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "/home/claude/work/det/yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "/root/.EasyOCR/model/craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "/root/.EasyOCR/model/english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "/root/.cache/doctr/models/parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "sourceSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+  "codeSha256": {
+    "bench/decoder_interval_eval.py": "edc9c906077771289e7eaa0512729501911cf9eeeae1b23d4e735686f2410a63",
+    "bench/hdr_reference.py": "3399bd8eb77b2d5adb960417dde83123cf5dd0a8ffb3a451c2dc03b24d79891a",
+    "bench/pp_bench.py": "3e0c96e3763fc20686477041e178d8927d677c9ae2a5a11e7705d258bc31096b",
+    "bench/results/5.1/gt_img4809_intervals.json": "36b16fbae5091ca524f1c47c697e56db6da2d191e79dc0ab4f880815dc995078",
+    "bench/validate_identity_windows.py": "06282619a52fde98f1d89bebee0c95c277c559cd70e29d3df92b8df55bd354ae",
+    "scoutx_tracker/__init__.py": "d5723c0d1c1af64671653b364b766a46a831c7deb1b9e4d1549c531fed2fff51",
+    "scoutx_tracker/__main__.py": "4bf9f2d71d484bd9d0ac74619afe892d8aaeb54fca0bb355063f33b212744cb1",
+    "scoutx_tracker/analyze.py": "ac1feb9eaa2f6e2bdc6e1292e29b6284ef5ccd643e16f3e403b90723686449c7",
+    "scoutx_tracker/ball.py": "01227c4924e80e7c56e99c2553332904d70117c2c269dabd11467b85d7eef6f2",
+    "scoutx_tracker/calibration.py": "c26964dbdfdca33b504ee15209ee79baa697f034b4b507d399a2b31ebbdbe056",
+    "scoutx_tracker/checkpoint.py": "7535e89358d837095e36ba0ff29da272f4e510a63628750665ccf8ca9c40c3eb",
+    "scoutx_tracker/cli.py": "ffa3b3f4b34335e0d7a69edb906801fe1c41b740496f71c49978c75e9a5d9422",
+    "scoutx_tracker/cmc.py": "22eca5d79d2356a4b9dae0b0801ca4bcf3a29bbd812e5dc40fc86ad9e34648bf",
+    "scoutx_tracker/colour.py": "3d5a0ea6b99200dec2c8da7f0193a02978fe34ed411629666df868566decb3ec",
+    "scoutx_tracker/crossings.py": "1cd022da32c98b353cc97d1acd3c643240b01e75b764a809985b38ba9d924b78",
+    "scoutx_tracker/discovery.py": "a825c50925360b66778e99d6de4ea9a4654c3f05fb5fa0e92964b6d5aa9c146f",
+    "scoutx_tracker/envinfo.py": "505b13af48839540a913968ef3579e9e4f77f94db265ad3fbc4c56722ca88268",
+    "scoutx_tracker/extract.py": "093bbeb67d852f3b3516fd4a1665f1fc86e39da4b6750428bb1d7b3b1f04df9e",
+    "scoutx_tracker/features.py": "19ef10196ff7cb96fcff215fecdfb5d2344f0b382c1d0ff3b4402b5257a317af",
+    "scoutx_tracker/frame_reader.py": "55c468e2645f2f073f6a9893bd624c895f7f3d393f0e81f6845341a439a48b91",
+    "scoutx_tracker/identity.py": "8d5910146ac79f516a397478d196f73cdeaa5950a7c0d42abbf123825e03c3c1",
+    "scoutx_tracker/invariants.py": "0b5b4a4721bc82dcdf5e2f228f78cae4fbbfe27b80ca59d5bc3dce2315d54e3b",
+    "scoutx_tracker/legibility.py": "a54455681f0f191a8e08f31759db5b8f58a8910d966935f5fc0aff54350813aa",
+    "scoutx_tracker/media_info.py": "524615d9f9d269c0093de48f96a915b7c77f973d04f35ad814fda07faa1249c5",
+    "scoutx_tracker/metrics.py": "5883eb9556911658256f4c5ce7c1d60c71cd601e25836bb6b0577db2c3962844",
+    "scoutx_tracker/modes.py": "446a280da8fb388be25ad709951a70e5a0b158bb7e8d22f9a949292f3f0b8c8d",
+    "scoutx_tracker/moments.py": "83c312b52406a8d9a446362897991974773b772efcc3b6240f9acd5f993cd1f5",
+    "scoutx_tracker/ocr.py": "d88ffe3f3b45f43907b46547f5326387554f7af843c2b744ed2deb6b7a77918e",
+    "scoutx_tracker/offball.py": "56626b3c40806ae76ecabf7a3d57709f65a70d6b5a60009bd1c110343a017817",
+    "scoutx_tracker/periods.py": "2e79004f93c4119b21f197834dbf7c6b711b24386b95663cb0b10a95d5f33c9d",
+    "scoutx_tracker/propagate.py": "5eef694e1532341f0cff21755f60dbe6c1dfed9ff58239581ea80e3b0f992d4d",
+    "scoutx_tracker/render.py": "fa2d18b392d494abcc8a253ccbd6cd725c5f8f35635f73f7c677586856ac10e1",
+    "scoutx_tracker/report.py": "514cb3d5ddad0c7bf5f2975ae83cb2f6e994f90b2a043f2acfbab03e2e342741",
+    "scoutx_tracker/states.py": "5f251043c601d13d27b2e00ab5fdf71b5c014376a093fc9824c7cb692386c1ad",
+    "scoutx_tracker/stats.py": "3405a194f52f0f119cb5f502b0f196f76be8736df22e80745c95567344e177ef",
+    "scoutx_tracker/tracker.py": "6a637e4eeacad4b140571ca4b37a9dfe0e344ef489d53def8f5f52e116eafcd1",
+    "scoutx_tracker/tracklets.py": "c3e8d12d42fce9129122b0a0fcd201f00f1fdabdff971b6eee37671342a597e2",
+    "scoutx_tracker/yolox_net.py": "9331e2f710f5e3dd0f1697748dd00ab70ff2015f85f81e3ad8b7c6355987592d"
+  },
+  "configuration": {
+    "stage1Imgsz": 1280,
+    "stage1Stride": 1,
+    "keyframeEvery": 1,
+    "stage1Decoder": "cv2",
+    "discoveryDecoder": "auto",
+    "torchThreads": 2
+  },
+  "scope": "Fresh inference on fixed development regressions; not independent holdout or full match",
+  "reportTimeBasis": "window-local, with absolute source interval and source offsets retained",
+  "reusedStage1AndDiscovery": false,
+  "timingComplete": true,
+  "productionApproval": false,
+  "fullRecordingValidated": false,
+  "results": [
+    {
+      "window": "i1500",
+      "intervalSec": [
+        1500.0,
+        1530.0
+      ],
+      "discoverySec": 112.443,
+      "sightings": 0,
+      "discoverySightings": [],
+      "discoveryTimings": {
+        "decode": 106.52,
+        "convert": 0.35,
+        "detect": 5.0,
+        "kit": 0.07,
+        "ocr": 0.33,
+        "wall": 112.4,
+        "samples": 60,
+        "candidates": 1,
+        "reads": 1,
+        "skipped": 0
+      },
+      "conditions": [
+        {
+          "mode": "automatic",
+          "anchors": [],
+          "resolveSec": 5.689,
+          "metrics": {
+            "targetLabelledSec": 0.0,
+            "claimedCorrectSec": 0.0,
+            "confirmedCorrectSec": 0.0,
+            "wrongIdentitySec": 0.0,
+            "confirmedWrongIdentitySec": 0.0,
+            "overlapAmbiguousSec": 0.0,
+            "falseAttributionSec": 0.0,
+            "claimedRecall": null,
+            "IDF1": null,
+            "wrongIdentityTimes": [],
+            "abstainedVisibleFrames": 0,
+            "confirmedRecall": null,
+            "abstentionRateOnVisibleLabels": null
+          },
+          "coverage": {
+            "recordingSec": 30.0,
+            "nonMatchSec": 0.0,
+            "offPitchSec": 0.0,
+            "matchSec": 30.0,
+            "unobservedSec": 0.0,
+            "analysedSec": 30.0,
+            "confirmedVisibleSec": 0.0,
+            "likelyVisibleSec": 0.0,
+            "ambiguousSec": 30.0,
+            "notIdentifiedSec": 0.0,
+            "denominators": {
+              "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+              "note": "Percentages of the recording are not percentages of the player's playing time."
+            },
+            "visiblePctOfAnalysed": 0.0
+          },
+          "engine": {
+            "version": "5.2.0",
+            "timingsSec": {
+              "load": 0.0,
+              "tracklets": 0.7,
+              "numbers": 0.9,
+              "identity": 4.1,
+              "timeline_metrics_events": 0.0
+            },
+            "ocrDeferred": 0,
+            "ocrRead": 52
+          }
+        }
+      ],
+      "extractionSec": 206.234,
+      "extraction": {
+        "video": "/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4",
+        "detector": "yolox_s@1280/onnx",
+        "keyframeEvery": 1,
+        "t0": 0.0,
+        "start": 1500.0,
+        "fps": 10.0,
+        "frames": 300,
+        "width": 1920,
+        "height": 1080,
+        "seconds": 205.5,
+        "stageSeconds": {
+          "decode": 106.5,
+          "detect": 90.87,
+          "propagate": 0.0,
+          "scene_cmc": 5.71,
+          "colour_signature": 1.68,
+          "embedding": 0.46,
+          "crops_io": 0.08
+        }
+      },
+      "retainedStage1Sha256": "616c0b96831bdb05321ff20cd22516b95c48f5197fcf55e7842ebd76dca0eca5"
+    },
+    {
+      "window": "i1680",
+      "intervalSec": [
+        1680.0,
+        1710.0
+      ],
+      "discoverySec": 111.053,
+      "sightings": 2,
+      "discoverySightings": [
+        {
+          "t": 1690.5,
+          "box": [
+            1739.139404296875,
+            363.6650390625,
+            1787.153076171875,
+            501.8958435058594
+          ],
+          "number": "20",
+          "conf": 1.0,
+          "frames": 0,
+          "crop": "/home/claude/work/dval/reference_b/i1680/discovery-crops/s_016905.jpg",
+          "weak_frames": 1
+        },
+        {
+          "t": 1692.7,
+          "box": [
+            1407.4469528198242,
+            460.01558685302734,
+            1448.604507446289,
+            575.3890380859375
+          ],
+          "number": "20",
+          "conf": 1.0,
+          "frames": 0,
+          "crop": "/home/claude/work/dval/reference_b/i1680/discovery-crops/s_016927.jpg",
+          "weak_frames": 5
+        }
+      ],
+      "discoveryTimings": {
+        "decode": 101.45,
+        "convert": 0.46,
+        "detect": 3.95,
+        "kit": 0.17,
+        "ocr": 4.84,
+        "wall": 111.1,
+        "samples": 60,
+        "candidates": 18,
+        "reads": 21,
+        "skipped": 1
+      },
+      "conditions": [
+        {
+          "mode": "automatic",
+          "anchors": [],
+          "resolveSec": 17.683,
+          "metrics": {
+            "targetLabelledSec": 0.0,
+            "claimedCorrectSec": 0.0,
+            "confirmedCorrectSec": 0.0,
+            "wrongIdentitySec": 0.0,
+            "confirmedWrongIdentitySec": 0.0,
+            "overlapAmbiguousSec": 0.0,
+            "falseAttributionSec": 0.0,
+            "claimedRecall": null,
+            "IDF1": null,
+            "wrongIdentityTimes": [],
+            "abstainedVisibleFrames": 0,
+            "confirmedRecall": null,
+            "abstentionRateOnVisibleLabels": null
+          },
+          "coverage": {
+            "recordingSec": 30.0,
+            "nonMatchSec": 0.0,
+            "offPitchSec": 0.0,
+            "matchSec": 30.0,
+            "unobservedSec": 2.4,
+            "analysedSec": 27.6,
+            "confirmedVisibleSec": 0.0,
+            "likelyVisibleSec": 0.0,
+            "ambiguousSec": 26.7,
+            "notIdentifiedSec": 0.9,
+            "denominators": {
+              "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+              "note": "Percentages of the recording are not percentages of the player's playing time."
+            },
+            "visiblePctOfAnalysed": 0.0
+          },
+          "engine": {
+            "version": "5.2.0",
+            "timingsSec": {
+              "load": 0.0,
+              "tracklets": 0.4,
+              "numbers": 10.7,
+              "identity": 6.6,
+              "timeline_metrics_events": 0.0
+            },
+            "ocrDeferred": 0,
+            "ocrRead": 104
+          }
+        }
+      ],
+      "extractionSec": 205.815,
+      "extraction": {
+        "video": "/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4",
+        "detector": "yolox_s@1280/onnx",
+        "keyframeEvery": 1,
+        "t0": 0.0,
+        "start": 1680.0,
+        "fps": 10.0,
+        "frames": 300,
+        "width": 1920,
+        "height": 1080,
+        "seconds": 205.1,
+        "stageSeconds": {
+          "decode": 105.33,
+          "detect": 91.61,
+          "propagate": 0.0,
+          "scene_cmc": 6.0,
+          "colour_signature": 1.41,
+          "embedding": 0.4,
+          "crops_io": 0.21
+        }
+      },
+      "retainedStage1Sha256": "371204fb402910ba2845b0a43a859addffa03a6f1bd98c43593e709871848d98"
+    },
+    {
+      "window": "i1800",
+      "intervalSec": [
+        1800.0,
+        1830.0
+      ],
+      "discoverySec": 113.614,
+      "sightings": 0,
+      "discoverySightings": [],
+      "discoveryTimings": {
+        "decode": 104.28,
+        "convert": 0.34,
+        "detect": 3.16,
+        "kit": 0.28,
+        "ocr": 5.41,
+        "wall": 113.6,
+        "samples": 60,
+        "candidates": 24,
+        "reads": 23,
+        "skipped": 1
+      },
+      "conditions": [
+        {
+          "mode": "automatic",
+          "anchors": [],
+          "resolveSec": 13.978,
+          "metrics": {
+            "targetLabelledSec": 0.0,
+            "claimedCorrectSec": 0.0,
+            "confirmedCorrectSec": 0.0,
+            "wrongIdentitySec": 0.0,
+            "confirmedWrongIdentitySec": 0.0,
+            "overlapAmbiguousSec": 0.0,
+            "falseAttributionSec": 0.0,
+            "claimedRecall": null,
+            "IDF1": null,
+            "wrongIdentityTimes": [],
+            "abstainedVisibleFrames": 0,
+            "confirmedRecall": null,
+            "abstentionRateOnVisibleLabels": null
+          },
+          "coverage": {
+            "recordingSec": 30.0,
+            "nonMatchSec": 0.0,
+            "offPitchSec": 0.0,
+            "matchSec": 30.0,
+            "unobservedSec": 0.0,
+            "analysedSec": 30.0,
+            "confirmedVisibleSec": 0.0,
+            "likelyVisibleSec": 0.0,
+            "ambiguousSec": 29.9,
+            "notIdentifiedSec": 0.1,
+            "denominators": {
+              "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+              "note": "Percentages of the recording are not percentages of the player's playing time."
+            },
+            "visiblePctOfAnalysed": 0.0
+          },
+          "engine": {
+            "version": "5.2.0",
+            "timingsSec": {
+              "load": 0.0,
+              "tracklets": 0.5,
+              "numbers": 6.2,
+              "identity": 7.3,
+              "timeline_metrics_events": 0.0
+            },
+            "ocrDeferred": 0,
+            "ocrRead": 130
+          }
+        }
+      ],
+      "extractionSec": 210.627,
+      "extraction": {
+        "video": "/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4",
+        "detector": "yolox_s@1280/onnx",
+        "keyframeEvery": 1,
+        "t0": 0.0,
+        "start": 1800.0,
+        "fps": 10.0,
+        "frames": 300,
+        "width": 1920,
+        "height": 1080,
+        "seconds": 209.9,
+        "stageSeconds": {
+          "decode": 108.05,
+          "detect": 93.14,
+          "propagate": 0.0,
+          "scene_cmc": 6.02,
+          "colour_signature": 1.74,
+          "embedding": 0.52,
+          "crops_io": 0.21
+        }
+      },
+      "retainedStage1Sha256": "089e37f94ceb89904dd4ed14abfd4f3d3ce4d316db922c8e83b32a41a7f1f6bc"
+    },
+    {
+      "window": "i1890",
+      "intervalSec": [
+        1890.0,
+        1920.0
+      ],
+      "discoverySec": 167.111,
+      "sightings": 2,
+      "discoverySightings": [
+        {
+          "t": 1899.5,
+          "box": [
+            967.411865234375,
+            507.74627685546875,
+            1018.0664672851562,
+            621.3672485351562
+          ],
+          "number": "20",
+          "conf": 1.0,
+          "frames": 0,
+          "crop": "/home/claude/work/dval/reference_b/i1890/discovery-crops/s_018995.jpg",
+          "weak_frames": 1
+        },
+        {
+          "t": 1902.5,
+          "box": [
+            719.8056030273438,
+            536.1060791015625,
+            769.591552734375,
+            662.7877197265625
+          ],
+          "number": "20",
+          "conf": 1.0,
+          "frames": 0,
+          "crop": "/home/claude/work/dval/reference_b/i1890/discovery-crops/s_019025.jpg",
+          "weak_frames": 1
+        }
+      ],
+      "discoveryTimings": {
+        "decode": 108.31,
+        "convert": 0.88,
+        "detect": 8.17,
+        "kit": 0.47,
+        "ocr": 48.98,
+        "wall": 167.1,
+        "samples": 60,
+        "candidates": 41,
+        "reads": 121,
+        "skipped": 3
+      },
+      "conditions": [
+        {
+          "mode": "automatic",
+          "anchors": [],
+          "resolveSec": 24.933,
+          "metrics": {
+            "targetLabelledSec": 5.4,
+            "claimedCorrectSec": 0.0,
+            "confirmedCorrectSec": 0.0,
+            "wrongIdentitySec": 0.0,
+            "confirmedWrongIdentitySec": 0.0,
+            "overlapAmbiguousSec": 0.0,
+            "falseAttributionSec": 0.0,
+            "claimedRecall": 0.0,
+            "IDF1": 0.0,
+            "wrongIdentityTimes": [],
+            "abstainedVisibleFrames": 54,
+            "confirmedRecall": 0.0,
+            "abstentionRateOnVisibleLabels": 1.0
+          },
+          "coverage": {
+            "recordingSec": 30.0,
+            "nonMatchSec": 0.0,
+            "offPitchSec": 0.0,
+            "matchSec": 30.0,
+            "unobservedSec": 0.0,
+            "analysedSec": 30.0,
+            "confirmedVisibleSec": 0.0,
+            "likelyVisibleSec": 0.0,
+            "ambiguousSec": 28.6,
+            "notIdentifiedSec": 1.4,
+            "denominators": {
+              "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+              "note": "Percentages of the recording are not percentages of the player's playing time."
+            },
+            "visiblePctOfAnalysed": 0.0
+          },
+          "engine": {
+            "version": "5.2.0",
+            "timingsSec": {
+              "load": 0.0,
+              "tracklets": 0.6,
+              "numbers": 16.1,
+              "identity": 8.2,
+              "timeline_metrics_events": 0.0
+            },
+            "ocrDeferred": 0,
+            "ocrRead": 154
+          }
+        }
+      ],
+      "extractionSec": 226.268,
+      "extraction": {
+        "video": "/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4",
+        "detector": "yolox_s@1280/onnx",
+        "keyframeEvery": 1,
+        "t0": 0.0,
+        "start": 1890.0,
+        "fps": 10.0,
+        "frames": 300,
+        "width": 1920,
+        "height": 1080,
+        "seconds": 225.6,
+        "stageSeconds": {
+          "decode": 116.52,
+          "detect": 99.59,
+          "propagate": 0.0,
+          "scene_cmc": 6.4,
+          "colour_signature": 2.15,
+          "embedding": 0.53,
+          "crops_io": 0.24
+        }
+      },
+      "retainedStage1Sha256": "ed9b6f076248f96b58ce304f2502ed61a38eb1b0fdd693402f098831f21e0f10"
+    }
+  ],
+  "status": "complete",
+  "modelInitialisationSec": 4.785,
+  "measuredWindowWallSec": 1422.084
+}
