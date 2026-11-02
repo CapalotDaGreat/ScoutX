@@ -1,0 +1,95 @@
+{
+ "schema": "pitchproof.appearance-reconstruction.v1",
+ "base": "Windows bundle stage1/chunk/detections.npz (original 2026-10-30 Windows run)",
+ "baseSha256": "7c02278ef46fc6a5dfd2ec5040acb626800623c90a5f1fd28f61351acf7f0444",
+ "boxesUsed": "saved Windows dets[:,2:6] cast to float32 (the detector output dtype in extract.consume); order, frames, scores unchanged",
+ "emb_idxCheck": "saved emb_idx equals the extract.consume rule (even frame, h>=36, score>=0.25) for these boxes",
+ "cropSetCheck": "the 1333 OCR crop files of the decode-swap run equal the extract.consume crop rule (even frame, h>=80, score>=0.4) for the Windows boxes",
+ "decodedFrames": {
+  "windowsPath": "FFmpeg 6.1.1 CLI, scale=in_color_matrix=bt601:in_range=tv, bgr24: 300/300 hashes equal the Windows probe (which equals the original Windows run 301/301)",
+  "linuxPath": "cv2.VideoCapture (OpenCV 4.14.0 pip wheel), seek CAP_PROP_POS_FRAMES 11500: 300/300 hashes equal the Linux probe/run"
+ },
+ "reconstructionVsSavedWindows": {
+  "sigs": {
+   "shape": [
+    6492,
+    80
+   ],
+   "identical": false,
+   "maxAbs": 0.000244140625,
+   "elementsDiffering": 1,
+   "rowsDiffering": 1
+  },
+  "embs": {
+   "shape": [
+    2536,
+    256
+   ],
+   "identical": true,
+   "maxAbs": 0.0,
+   "elementsDiffering": 0,
+   "rowsDiffering": 0
+  }
+ },
+ "sigsResidual": {
+  "row": 138,
+  "frame": 6,
+  "element": 37,
+  "float32Recomputed": 0.3038330376148224,
+  "float16Recomputed": 0.303955078125,
+  "float16SavedWindows": 0.3037109375,
+  "float16RoundingMidpoint": 0.30383300781,
+  "explanation": "the float32 value lies 3e-8 (about one float32 ulp) above the midpoint between two float16 values; a one-ulp float32 difference between the Windows and Linux numpy/OpenCV builds flips the float16 rounding. One element, one float16 ulp (2.4e-4). Tolerance: exact equality except elements within one float32 ulp of a float16 rounding midpoint; no other element differs."
+ },
+ "linuxPixelsVsSavedWindows": {
+  "sigs": {
+   "shape": [
+    6492,
+    80
+   ],
+   "identical": false,
+   "maxAbs": 0.5546112060546875,
+   "elementsDiffering": 195727,
+   "rowsDiffering": 6492
+  },
+  "embs": {
+   "shape": [
+    2536,
+    256
+   ],
+   "identical": false,
+   "maxAbs": 0.4091796875,
+   "elementsDiffering": 269505,
+   "rowsDiffering": 2536
+  }
+ },
+ "featureFiles": {
+  "windowsPixels": "69e7def1920824d3e979ba1f34e4ca0584fff85c2ea1637ecdfa5f8fbd7b29e6",
+  "linuxPixels": "a8091162e3a0b7f5ab450309724ec052ce4e9914f24a0089f93445109588079f"
+ },
+ "recomputedFields": [
+  "sigs (features.colour_signature, float16)",
+  "embs (features.GridEmbedder, float16)"
+ ],
+ "unchangedFields": [
+  "dets",
+  "emb_idx",
+  "balls",
+  "ball_warm",
+  "warps",
+  "cuts",
+  "times",
+  "grass",
+  "propagated",
+  "meta.json",
+  "OCR crop files (Windows-pixel crops from the decode-swap run)"
+ ],
+ "hiddenDependencies": [
+  "tracker association (tracklets.track_rows -> PlayerTracker.update) uses sigs as appearance features, so a colour swap is also an association swap",
+  "tracklets.purify (track-wide colour purification) uses sigs and can relabel rows before the swapped frames",
+  "kit scores (contacts, team filter, identity) derive from sigs",
+  "crossings contact-link costs use sigs and embs (EMB_WEIGHT 0.3)",
+  "OCR crop SELECTION depends on tracklet structure: a colour swap made the pipeline ask for 25 crops the Windows run never read; they were read on Windows pixels (read) or answered with no text (blank) - both gave identical outcomes",
+  "grass, warps/cuts (camera motion), ball_warm and OCR crop pixels stay Windows-decoded in every variant"
+ ]
+}

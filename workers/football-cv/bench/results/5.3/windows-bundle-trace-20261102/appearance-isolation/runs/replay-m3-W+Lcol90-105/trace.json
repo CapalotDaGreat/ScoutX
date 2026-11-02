@@ -1,0 +1,369 @@
+{
+ "window": "gap1150",
+ "spanSec": [
+  3.5,
+  11.5
+ ],
+ "basis": "corrected (+0.1 s) label times, window-local",
+ "targetPieces": [
+  {
+   "f0": "30",
+   "f1": "32",
+   "tid": 131
+  },
+  {
+   "f0": "33",
+   "f1": "39",
+   "tid": 132
+  },
+  {
+   "f0": "40",
+   "f1": "43",
+   "tid": 133
+  },
+  {
+   "f0": "44",
+   "f1": "46",
+   "tid": 134
+  },
+  {
+   "f0": "47",
+   "f1": "48",
+   "tid": null
+  },
+  {
+   "f0": "49",
+   "f1": "97",
+   "tid": 135
+  },
+  {
+   "f0": "98",
+   "f1": "98",
+   "tid": null
+  },
+  {
+   "f0": "99",
+   "f1": "108",
+   "tid": 119
+  },
+  {
+   "f0": "109",
+   "f1": "111",
+   "tid": 188
+  },
+  {
+   "f0": "112",
+   "f1": "120",
+   "tid": 189
+  }
+ ],
+ "trackingTargetTids": [
+  119,
+  131,
+  132,
+  133,
+  134,
+  135,
+  188,
+  189
+ ],
+ "identityDecisions": [
+  {
+   "tid": 119,
+   "t0": 9.8,
+   "t1": 10.8,
+   "n": 11,
+   "contactPiece": false,
+   "kit1": 0.475,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.476163045730091,
+   "appearanceScore": 0.476163045730091,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 119
+  },
+  {
+   "tid": 131,
+   "t0": 1.9,
+   "t1": 3.2,
+   "n": 13,
+   "contactPiece": false,
+   "kit1": 0.722,
+   "candidate": true,
+   "chosen": false,
+   "seed": false,
+   "evidence": null,
+   "score": 0.11374333617945517,
+   "appearanceScore": 0.11374333617945517,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [
+    [
+     28,
+     "1",
+     0.9806681179542274,
+     "shirt:white"
+    ]
+   ],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 132,
+   "t0": 3.3,
+   "t1": 3.9,
+   "n": 7,
+   "contactPiece": true,
+   "kit1": 0.67,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "continuity",
+   "score": 0.3209826540596853,
+   "appearanceScore": 0.3209826540596853,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 133,
+   "t0": 4.0,
+   "t1": 4.3,
+   "n": 4,
+   "contactPiece": false,
+   "kit1": 0.592,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "contact_unclear",
+   "score": 0.22150389232373796,
+   "appearanceScore": 0.22150389232373796,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 134,
+   "t0": 4.4,
+   "t1": 4.6,
+   "n": 3,
+   "contactPiece": true,
+   "kit1": 0.564,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "contact_unclear",
+   "score": 0.2342700375799188,
+   "appearanceScore": 0.2342700375799188,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 135,
+   "t0": 4.7,
+   "t1": 9.7,
+   "n": 50,
+   "contactPiece": false,
+   "kit1": 0.431,
+   "candidate": true,
+   "chosen": false,
+   "seed": false,
+   "evidence": null,
+   "score": 0.23130890861602016,
+   "appearanceScore": 0.23130890861602016,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [
+    [
+     90,
+     "1",
+     0.9882190227508545,
+     "shirt:contrast"
+    ],
+    [
+     54,
+     "4",
+     0.977827250957489,
+     "shirt:white"
+    ],
+    [
+     58,
+     "1",
+     0.9950969815254211,
+     "shorts:white"
+    ],
+    [
+     60,
+     "1",
+     0.9989142417907715,
+     "shorts:white"
+    ]
+   ],
+   "ownerQuestion": {
+    "score": 0.23,
+    "from": 4.7000000000000455,
+    "to": 9.700000000000045,
+    "currentlyTarget": false
+   },
+   "origin": 3
+  },
+  {
+   "tid": 188,
+   "t0": 10.9,
+   "t1": 11.1,
+   "n": 3,
+   "contactPiece": true,
+   "kit1": 0.563,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.3239379716037122,
+   "appearanceScore": 0.3239379716037122,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 119
+  },
+  {
+   "tid": 189,
+   "t0": 11.2,
+   "t1": 12.8,
+   "n": 17,
+   "contactPiece": false,
+   "kit1": 0.599,
+   "candidate": true,
+   "chosen": true,
+   "seed": true,
+   "evidence": "number",
+   "score": 1.0,
+   "appearanceScore": 0.8225428350889369,
+   "confirmed": true,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": [
+    12.0,
+    11.799999999999955
+   ],
+   "reads": [
+    [
+     120,
+     "20",
+     0.999980628490448,
+     "shirt:contrast"
+    ],
+    [
+     118,
+     "20",
+     0.999,
+     "discovery"
+    ]
+   ],
+   "ownerQuestion": null,
+   "origin": 119
+  }
+ ],
+ "contactLinksNearTarget": [
+  {
+   "pre": 131,
+   "post": 133,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.016,
+   "cost": 0.054,
+   "decision": "unclear"
+  },
+  {
+   "pre": 133,
+   "post": 135,
+   "t": 5.7,
+   "clear": false,
+   "margin": 0.059,
+   "cost": 0.116,
+   "decision": "unclear"
+  },
+  {
+   "pre": 129,
+   "post": 131,
+   "t": 1.8,
+   "clear": false,
+   "margin": 0.005,
+   "cost": 0.083,
+   "decision": "unclear"
+  },
+  {
+   "pre": 119,
+   "post": 189,
+   "t": 11.1,
+   "clear": true,
+   "margin": 0.0,
+   "cost": 0.091,
+   "decision": "same"
+  },
+  {
+   "pre": 189,
+   "post": 191,
+   "t": 12.9,
+   "clear": true,
+   "margin": 0.175,
+   "cost": 0.031,
+   "decision": "same"
+  }
+ ],
+ "contactEvents": 15,
+ "chosenTidsOverall": [
+  2,
+  123,
+  30,
+  132,
+  133,
+  134,
+  200,
+  127,
+  119,
+  188,
+  189,
+  191,
+  120,
+  173,
+  197,
+  121
+ ],
+ "solver": {
+  "iteration": 1,
+  "mode": "classifier",
+  "chosen": 16,
+  "seconds": 24.3,
+  "positives": 5,
+  "negatives": 22
+ },
+ "identityPasses": 3,
+ "note": "tracking association (targetPieces, links) is reported separately from identity assignment"
+}

@@ -88,12 +88,85 @@ def transfer_ocr(base_dets: np.ndarray, base_cache: dict, base_crops: list[str],
     return out, counts
 
 
+def trace(captured: dict, truth: dict, span, start: float, window: str) -> dict:
+    """Read-only: which tracklets carry the target (IoU >= 0.5 to the corrected-basis target label), how they are
+    linked at contacts, and what the identity solver decided for each (score before/after hard evidence, chosen,
+    evidence label, excluded reason, owner question). Tracking association and identity assignment are reported
+    separately."""
+    import pp_bench  # noqa: PLC0415
+
+    corr = pp_bench.apply_time_basis(truth, json.loads((HERE / "references" / "gt_time_basis_corrections.json").read_text()))
+    tgt = {round(corr["times"][k] - start, 1): next(l["box"] for l in v if l["label"] == "T")
+           for k, v in corr["frames"].items() if any(l["label"] == "T" for l in v)}
+    T, res, summary = captured["T"], captured["passes"][-1], captured["summary"]
+    R = T.rows
+    k_of = {s["tid"]: k for k, s in enumerate(summary)}
+    per_frame, tids = [], set()
+    for f in sorted(set(R[:, 0].astype(int))):
+        t = round(f / 10, 1)
+        if not span[0] - 0.5 <= t <= span[1] + 0.5:
+            continue
+        ix = np.where(R[:, 0] == f)[0]
+        tb = tgt.get(t)
+        best = max(ix, key=lambda r: pp_bench.iou(R[r, 3:7], tb)) if tb is not None and len(ix) else None
+        tid = int(R[best, 2]) if best is not None and pp_bench.iou(R[best, 3:7], tb) >= 0.5 else None
+        per_frame.append({"frame": f, "t": t, "targetLabel": tb is not None, "targetTid": tid,
+                          "targetDet": int(R[best, 8]) if tid is not None else None})
+        if tid is not None:
+            tids.add(tid)
+    pieces = []
+    for e in per_frame:
+        if pieces and pieces[-1]["tid"] == e["targetTid"]:
+            pieces[-1]["f1"] = e["frame"]
+        else:
+            pieces.append({"f0": e["frame"], "f1": e["frame"], "tid": e["targetTid"]})
+    qs = {q["tid"]: q for q in res.questions}
+
+    def dec(tid):
+        k = k_of.get(tid)
+        if k is None:
+            return None
+        s = summary[k]
+        return {"tid": tid, "t0": round(s["t0"], 2), "t1": round(s["t1"], 2), "n": s["n"], "contactPiece": s["contact"],
+                "kit1": round(s["kit1"], 3), "candidate": k in res.candidates, "chosen": k in res.chosen,
+                "seed": k in res.seeds, "evidence": res.evidence.get(k), "score": res.score.get(k),
+                "appearanceScore": res.appearance_score.get(k), "confirmed": k in res.confirmed,
+                "excluded": res.excluded.get(k), "conflictTimes": res.conflict_times.get(k),
+                "evidenceTimes": res.evidence_times.get(k), "reads": captured["reads"].get(tid, []),
+                "ownerQuestion": {x: qs[tid][x] for x in ("score", "from", "to", "currentlyTarget") if x in qs[tid]}
+                if tid in qs else None, "origin": T.origin.get(tid)}
+    links = [dict(l) if isinstance(l, dict) else vars(l) for l in T.links]
+    near = [l for l in links if l.get("pre") in tids or l.get("post") in tids
+            or (span[0] - 1 <= float(l.get("t", -1)) <= span[1] + 1)]
+    # the LAST assembly's events are the ones behind T.links; earlier assemblies (before number reads) are kept too
+    events = captured.get("linkEvents", [])
+    final_ids = {(l["pre"], l["post"], l["t"]) for l in links}
+    for e in events:
+        e["inFinalAssembly"] = all((x["pre"], x["post"], x["t"]) in final_ids for x in e["links"]) and bool(e["links"])
+        e["targetPres"] = [p for p in e["pres"] if p in tids]
+        e["targetPosts"] = [p for p in e["posts"] if p in tids]
+    near_events = [e for e in events if e["inFinalAssembly"] and span[0] - 1 <= e["tEnd"] <= span[1] + 1]
+    chosen = [summary[k]["tid"] for k in res.chosen]
+    return {"window": window, "spanSec": list(span), "basis": "corrected (+0.1 s) label times, window-local",
+            "targetPieces": pieces, "trackingTargetTids": sorted(tids),
+            "identityDecisions": [dec(t) for t in sorted(tids)],
+            "contactLinksNearTarget": near, "contactEventsNearTarget": near_events, "contactEvents": T.contact_events,
+            "chosenTidsOverall": chosen, "solver": res.iterations[-1], "identityPasses": len(captured["passes"]),
+            "note": "tracking association (targetPieces, links) is reported separately from identity assignment"}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for name in ("--base", "--base-validation", "--other", "--other-validation", "--out"):
         ap.add_argument(name, required=True)
     ap.add_argument("--window", default="gap1150")
     ap.add_argument("--variant", choices=("own", "ocr", "sightings", "both"), required=True)
+    ap.add_argument("--unseen-ocr", choices=("read", "blank"), default="read",
+                    help="own-OCR variants: a crop the base run never read is read on base pixels (read, default) or "
+                         "answered with no text (blank: the read set stays a subset of the base run's)")
+    ap.add_argument("--trace", nargs=2, type=float, metavar=("T0", "T1"),
+                    help="read-only trace of tracklets/links/identity decisions overlapping the target in [T0, T1] "
+                         "window seconds (corrected label basis); writes trace.json")
     a = ap.parse_args(argv)
 
     import fp32_comparison as fc  # noqa: PLC0415
@@ -145,8 +218,10 @@ def main(argv=None) -> int:
             return v
         if transferred:
             raise RuntimeError("replay must not run OCR on base pixels when OCR is transferred")
-        new_reads[0] += 1            # base pixels, base reader: a crop the original run never selected
-        return original_read(self, image)
+        new_reads[0] += 1            # a crop the original run never selected
+        if a.unseen_ocr == "blank":
+            return (None, 0.0, None)
+        return original_read(self, image)    # base pixels, base reader
     ocr.NumberReader.read = serve
     sightings = sightings_of(a.other_validation if a.variant in ("sightings", "both") else a.base_validation, a.window)
     record["sightings"] = len(sightings)
@@ -154,12 +229,46 @@ def main(argv=None) -> int:
     start = fc.WINDOWS[a.window][0]
     data = load_runs([str(stage1 / "chunk")])
     _, _, local = viw.window_local_time(data, truth, [], sightings, start)
+    captured: dict = {}
+    if a.trace:
+        import scoutx_tracker.analyze as an  # noqa: PLC0415
+
+        orig_ct, orig_ri = an.cached_tracklets, an.resolve_identity
+
+        def ct(*args, **kw):
+            captured["T"] = orig_ct(*args, **kw)
+            return captured["T"]
+
+        def ri(*args, **kw):
+            res = orig_ri(*args, **kw)
+            captured.setdefault("passes", []).append(res)
+            captured["summary"], captured["reads"] = args[0], {k: list(v) for k, v in args[1].items()}
+            return res
+        an.cached_tracklets, an.resolve_identity = ct, ri
+        import scoutx_tracker.crossings as cr  # noqa: PLC0415
+
+        orig_le = cr._link_event
+        captured["linkEvents"] = []
+
+        def le(out_, pres, posts, cost, t_end, succ=None, small=False):   # read-only spy on the contact decision
+            n0 = len(out_.links)
+            orig_le(out_, pres, posts, cost, t_end, succ, small)
+            captured["linkEvents"].append({
+                "tEnd": round(float(t_end), 2), "pres": [int(p[0]) for p in pres], "posts": [int(p[0]) for p in posts],
+                "cost": np.round(np.asarray(cost, float), 3).tolist(), "small": bool(small),
+                "trackerSuccessor": {str(int(k)): (None if v is None else int(v)) for k, v in (succ or {}).items()},
+                "links": [dict(vars(x)) for x in out_.links[n0:]]})
+        cr._link_event = le
+    analyze = __import__("scoutx_tracker.analyze", fromlist=["analyze"]).analyze
     report = analyze([str(stage1 / "chunk")], str(out / "automatic"), "20", "orange", kit2="white", anchors=[], D=data,
                      sightings=local, log=lambda m: print(m, flush=True))
     record["servedReads"], record["newBaseCropReads"] = served[0], new_reads[0]
+    record["unseenOcr"] = a.unseen_ocr
     record["invariantsOk"] = report["invariants"]["ok"]
     record["identity"] = report["identity"]
     (out / "replay.json").write_text(json.dumps(record, indent=2, default=str))
+    if a.trace:
+        (out / "trace.json").write_text(json.dumps(trace(captured, truth, a.trace, start, a.window), indent=1, default=str))
     print(json.dumps({k: v for k, v in record.items() if k != "identity"}, default=str))
     return 0 if record["invariantsOk"] else 2
 

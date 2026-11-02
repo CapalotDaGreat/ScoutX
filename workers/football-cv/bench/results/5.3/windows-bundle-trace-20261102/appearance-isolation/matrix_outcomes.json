@@ -1,0 +1,2036 @@
+[
+ {
+  "variant": "windows (original run)",
+  "colour": "saved",
+  "embeddings": "saved",
+  "unseenOcr": "-",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   },
+   "correctConfirmed": 132,
+   "correctLikely": 20,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 134,
+   "correctLikely": 25,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 2,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.7,
+    "score": 0.23,
+    "currentlyTarget": false
+   }
+  ],
+  "statesEqualWindows": 300
+ },
+ {
+  "variant": "v0 saved features",
+  "colour": "saved W",
+  "embeddings": "saved W",
+  "unseenOcr": "read",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   },
+   "correctConfirmed": 132,
+   "correctLikely": 20,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 134,
+   "correctLikely": 25,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 2,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.7,
+    "score": 0.23,
+    "currentlyTarget": false
+   }
+  ],
+  "statesEqualWindows": 300,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 253,
+   "newBaseCropReads": 0
+  }
+ },
+ {
+  "variant": "v1 control: recon W colour + W emb",
+  "colour": "W",
+  "embeddings": "W",
+  "unseenOcr": "read",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   },
+   "correctConfirmed": 132,
+   "correctLikely": 20,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 134,
+   "correctLikely": 25,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 2,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.7,
+    "score": 0.23,
+    "currentlyTarget": false
+   }
+  ],
+  "statesEqualWindows": 300,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 253,
+   "newBaseCropReads": 0
+  }
+ },
+ {
+  "variant": "v2 L colour + W emb",
+  "colour": "L",
+  "embeddings": "W",
+  "unseenOcr": "read",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 67,
+    "correctClaim": 207,
+    "unmatchedClaim": 13
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 72,
+    "correctClaim": 207,
+    "unmatchedClaim": 17,
+    "indeterminateLabelClaim": 4
+   },
+   "correctConfirmed": 141,
+   "correctLikely": 66,
+   "interval55": 47,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "41",
+     1154.1,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "42",
+     1154.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "45",
+     1154.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "46",
+     1154.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "47",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "49",
+     1154.9,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "52",
+     1155.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "60",
+     1156.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "180",
+     1168.0,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "182",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 65,
+    "correctClaim": 221,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 71,
+    "correctClaim": 221,
+    "unmatchedClaim": 3,
+    "indeterminateLabelClaim": 4,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 142,
+   "correctLikely": 79,
+   "interval55": 54,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "46",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "179",
+     1168.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "180",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "182",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.4,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 3,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.6,
+    "score": 0.5,
+    "currentlyTarget": true
+   }
+  ],
+  "statesEqualWindows": 229,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 233,
+   "newBaseCropReads": 25
+  }
+ },
+ {
+  "variant": "v2 (unseen crops blank)",
+  "colour": "L",
+  "embeddings": "W",
+  "unseenOcr": "blank",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 67,
+    "correctClaim": 207,
+    "unmatchedClaim": 13
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 72,
+    "correctClaim": 207,
+    "unmatchedClaim": 17,
+    "indeterminateLabelClaim": 4
+   },
+   "correctConfirmed": 141,
+   "correctLikely": 66,
+   "interval55": 47,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "41",
+     1154.1,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "42",
+     1154.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "45",
+     1154.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "46",
+     1154.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "47",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "49",
+     1154.9,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "52",
+     1155.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "60",
+     1156.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "180",
+     1168.0,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "182",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 65,
+    "correctClaim": 221,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 71,
+    "correctClaim": 221,
+    "unmatchedClaim": 3,
+    "indeterminateLabelClaim": 4,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 142,
+   "correctLikely": 79,
+   "interval55": 54,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "46",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "179",
+     1168.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "180",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "182",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.4,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 3,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.6,
+    "score": 0.5,
+    "currentlyTarget": true
+   }
+  ],
+  "statesEqualWindows": 229,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 233,
+   "newBaseCropReads": 25,
+   "unseenOcr": "blank"
+  }
+ },
+ {
+  "variant": "v3 W colour + L emb",
+  "colour": "W",
+  "embeddings": "L",
+  "unseenOcr": "read",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   },
+   "correctConfirmed": 132,
+   "correctLikely": 20,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 134,
+   "correctLikely": 25,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 2,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.7,
+    "score": 0.23,
+    "currentlyTarget": false
+   }
+  ],
+  "statesEqualWindows": 300,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 253,
+   "newBaseCropReads": 0
+  }
+ },
+ {
+  "variant": "v4 L colour + L emb",
+  "colour": "L",
+  "embeddings": "L",
+  "unseenOcr": "read",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 67,
+    "correctClaim": 207,
+    "unmatchedClaim": 13
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 72,
+    "correctClaim": 207,
+    "unmatchedClaim": 17,
+    "indeterminateLabelClaim": 4
+   },
+   "correctConfirmed": 141,
+   "correctLikely": 66,
+   "interval55": 47,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "41",
+     1154.1,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "42",
+     1154.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "45",
+     1154.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "46",
+     1154.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "47",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "49",
+     1154.9,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "52",
+     1155.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "60",
+     1156.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "180",
+     1168.0,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "182",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 65,
+    "correctClaim": 221,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 71,
+    "correctClaim": 221,
+    "unmatchedClaim": 3,
+    "indeterminateLabelClaim": 4,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 142,
+   "correctLikely": 79,
+   "interval55": 54,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "46",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "179",
+     1168.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "180",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "182",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.4,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 3,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.6,
+    "score": 0.5,
+    "currentlyTarget": true
+   }
+  ],
+  "statesEqualWindows": 229,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 233,
+   "newBaseCropReads": 25
+  }
+ },
+ {
+  "variant": "v4 (unseen crops blank)",
+  "colour": "L",
+  "embeddings": "L",
+  "unseenOcr": "blank",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 67,
+    "correctClaim": 207,
+    "unmatchedClaim": 13
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 72,
+    "correctClaim": 207,
+    "unmatchedClaim": 17,
+    "indeterminateLabelClaim": 4
+   },
+   "correctConfirmed": 141,
+   "correctLikely": 66,
+   "interval55": 47,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "41",
+     1154.1,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "42",
+     1154.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "45",
+     1154.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "46",
+     1154.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "47",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "49",
+     1154.9,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "52",
+     1155.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "60",
+     1156.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "180",
+     1168.0,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "182",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 65,
+    "correctClaim": 221,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 71,
+    "correctClaim": 221,
+    "unmatchedClaim": 3,
+    "indeterminateLabelClaim": 4,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 142,
+   "correctLikely": 79,
+   "interval55": 54,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "46",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "179",
+     1168.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "180",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "182",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.4,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 3,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.6,
+    "score": 0.5,
+    "currentlyTarget": true
+   }
+  ],
+  "statesEqualWindows": 229,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 233,
+   "newBaseCropReads": 25,
+   "unseenOcr": "blank"
+  }
+ },
+ {
+  "variant": "m1 v1 + L colour on frames 35-60 only",
+  "colour": "W, L on 35-60",
+  "embeddings": "W",
+  "unseenOcr": "blank",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 78,
+    "correctClaim": 196,
+    "unmatchedClaim": 13
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 87,
+    "correctClaim": 196,
+    "unmatchedClaim": 17
+   },
+   "correctConfirmed": 132,
+   "correctLikely": 64,
+   "interval55": 44,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "41",
+     1154.1,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "42",
+     1154.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "45",
+     1154.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "46",
+     1154.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "47",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "49",
+     1154.9,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "52",
+     1155.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "60",
+     1156.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 75,
+    "correctClaim": 211,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 86,
+    "correctClaim": 211,
+    "unmatchedClaim": 2,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 134,
+   "correctLikely": 77,
+   "interval55": 51,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "46",
+     1154.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 2,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.7,
+    "score": 0.44,
+    "currentlyTarget": true
+   }
+  ],
+  "statesEqualWindows": 246,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 238,
+   "newBaseCropReads": 2,
+   "unseenOcr": "blank"
+  }
+ },
+ {
+  "variant": "m2 v2 + W colour on frames 35-60 only",
+  "colour": "L, W on 35-60",
+  "embeddings": "W",
+  "unseenOcr": "blank",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 120,
+    "correctClaim": 160,
+    "unmatchedClaim": 7
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 128,
+    "correctClaim": 160,
+    "unmatchedClaim": 8,
+    "indeterminateLabelClaim": 4
+   },
+   "correctConfirmed": 141,
+   "correctLikely": 19,
+   "interval55": 0,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "180",
+     1168.0,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "182",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 120,
+    "correctClaim": 166,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 127,
+    "unmatchedClaim": 2,
+    "correctClaim": 166,
+    "indeterminateLabelClaim": 4,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 142,
+   "correctLikely": 24,
+   "interval55": 0,
+   "interval33": 4,
+   "nonCorrectClaims": [
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "179",
+     1168.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "180",
+     1168.1,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.2,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "182",
+     1168.3,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "183",
+     1168.4,
+     "indeterminateLabelClaim",
+     "CONFIRMED_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 3,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.6,
+    "score": 0.28,
+    "currentlyTarget": false
+   }
+  ],
+  "statesEqualWindows": 286,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 245,
+   "newBaseCropReads": 26,
+   "unseenOcr": "blank"
+  }
+ },
+ {
+  "variant": "m3 v1 + L colour on frames 90-105 only",
+  "colour": "W, L on 90-105",
+  "embeddings": "W",
+  "unseenOcr": "blank",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   },
+   "correctConfirmed": 132,
+   "correctLikely": 20,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "293",
+     1179.3,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "296",
+     1179.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 134,
+   "correctLikely": 25,
+   "interval55": 0,
+   "interval33": 0,
+   "nonCorrectClaims": [
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 3,
+  "ownerQuestionsOnTarget": [
+   {
+    "from": 4.7,
+    "to": 9.7,
+    "score": 0.23,
+    "currentlyTarget": false
+   }
+  ],
+  "statesEqualWindows": 300,
+  "replay": {
+   "sightings": 3,
+   "servedReads": 253,
+   "newBaseCropReads": 23,
+   "unseenOcr": "blank"
+  }
+ },
+ {
+  "variant": "linux (original run)",
+  "colour": "-",
+  "embeddings": "-",
+  "unseenOcr": "-",
+  "stored": {
+   "targetLabelled": {
+    "abstained": 46,
+    "correctClaim": 228,
+    "unmatchedClaim": 13
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 287,
+   "allLabelled": {
+    "abstained": 55,
+    "correctClaim": 228,
+    "unmatchedClaim": 15,
+    "indeterminateLabelClaim": 2
+   },
+   "correctConfirmed": 17,
+   "correctLikely": 211,
+   "interval55": 48,
+   "interval33": 33,
+   "nonCorrectClaims": [
+    [
+     "41",
+     1154.1,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "42",
+     1154.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "45",
+     1154.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "46",
+     1154.6,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "49",
+     1154.9,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "52",
+     1155.2,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "60",
+     1156.0,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "126",
+     1162.6,
+     "unmatchedClaim",
+     "CONFIRMED_VISIBLE"
+    ],
+    [
+     "179",
+     1167.9,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "182",
+     1168.2,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "183",
+     1168.3,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "185",
+     1168.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "238",
+     1173.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "294",
+     1179.4,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "295",
+     1179.5,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "297",
+     1179.7,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "298",
+     1179.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "corrected": {
+   "targetLabelled": {
+    "abstained": 45,
+    "correctClaim": 241,
+    "noPrediction": 1
+   },
+   "denominatorTargetLabelled": 287,
+   "scorable": 286,
+   "allLabelled": {
+    "abstained": 54,
+    "correctClaim": 241,
+    "unmatchedClaim": 1,
+    "indeterminateLabelClaim": 3,
+    "noPrediction": 1
+   },
+   "correctConfirmed": 18,
+   "correctLikely": 223,
+   "interval55": 55,
+   "interval33": 33,
+   "nonCorrectClaims": [
+    [
+     "97",
+     1159.8,
+     "unmatchedClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "181",
+     1168.2,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "182",
+     1168.3,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ],
+    [
+     "183",
+     1168.4,
+     "indeterminateLabelClaim",
+     "LIKELY_VISIBLE"
+    ]
+   ]
+  },
+  "ownerQuestions": 2,
+  "ownerQuestionsOnTarget": [],
+  "statesEqualWindows": 82
+ }
+]

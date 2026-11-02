@@ -178,13 +178,13 @@
     "frames": 55,
     "windows": "10 contact_unclear + 7 contact_unclear + 38 not identified",
     "linux": "anchored",
-    "status": "localised to the stage-1 output by identity replays (identity-replays/); OCR reads, sightings and solver mode ruled out for this interval; mechanism within stage 1 not isolated",
+    "status": "traced (appearance-isolation/): colour signatures on 3.5-6.0 s -> tracker re-association of neighbouring players from frame 38 -> contact-event composition -> target continuation margin 0.059 < 0.10 (small-player rule) -> link unclear -> identity not carried into 4.7-9.7 s; embeddings no observable effect; OCR reads and sightings ruled out",
     "evidence": [
      "base tracking without OCR keeps the target in one track over 4.9-9.6/9.7 s on BOTH detection sets (base_tracking_without_ocr.json), so detection differences alone do not fragment it",
      "Windows accepted more #20 evidence (7 reads on 5 tracklets, 3 discovery sightings, identity numberSightings 5) than Linux (2 reads on 1 tracklet, 1 sighting); the identity solver ran in classifier mode (5 positives, 22 negatives) instead of template mode (1 positive, 4 negatives)",
      "Windows number-conflict splits 3 vs Linux 1"
     ],
-    "unresolved": "which stage-1 quantity (boxes, colour signatures, embeddings, crops) causes it"
+    "unresolved": "which neighbouring detection's colour difference is decisive (many change together in frames 35-60)"
    },
    {
     "t": "18.5-18.7 s",
@@ -201,7 +201,7 @@
     "status": "follows from the extra Windows #20 reads at frames 228/247 (number evidence)"
    }
   ],
-  "explainedShare": "33 of 91 Linux-only correct frames (36 %) traced to one OCR misread through the conflict rule and confirmed by OCR-swap replays; 55 (60 %) localised to the stage-1 output; 3 unresolved"
+  "explainedShare": "33 of 91 Linux-only correct frames traced to one OCR misread through the conflict rule; 55 traced through colour signatures, tracker association and the contact-link margin rule (both chains verified by one-factor replays); 3 unresolved. Neither chain is a defect: both are safeguards abstaining."
  },
  "thirteenClaimAudit": "see claim_audit_reconciliation.json: of the 12 alignment-defect claims Windows also claims correctly 5 (126, 238, 294, 297, 298) and abstains on 7 (41, 42, 45, 49, 52, 60, 185); frame 295 is correct in Windows after alignment and abstained in Linux; frame 97 (1159.8 s, no target label) is an unmatched claim in BOTH runs and stays unresolved; the 3 '?'-label claims (1168.2-1168.4 s) are Linux-only (Windows abstains)",
  "gpu": "Not addressed by this evidence. The L4 CPU and GPU runs shared one machine and opencv-python 4.14.0.94; no GPU decoded-pixel hashes were recorded. The GPU gap remains unresolved.",
@@ -254,5 +254,30 @@
   },
   "wrongPlayerClaims": 0,
   "note": "effects are not additive; unmatched and '?'-label claims are never counted as correct"
+ },
+ "appearanceIsolation": {
+  "evidence": "appearance-isolation/",
+  "reconstruction": "embeddings bit-identical; colour signatures identical except 1 element by 1 float16 ulp (float32 value within one ulp of a float16 rounding midpoint); v0 and v1 replays reproduce the Windows run 300/300",
+  "matrixCorrect_of286": {
+   "v1_Wcol_Wemb": 159,
+   "v2_Lcol_Wemb": 221,
+   "v3_Wcol_Lemb": 159,
+   "v4_Lcol_Lemb": 221,
+   "m1_W_plus_Lcol_frames35to60": 211,
+   "m2_L_plus_Wcol_frames35to60": 166,
+   "m3_W_plus_Lcol_frames90to105": 159
+  },
+  "interval55": {
+   "v1": 0,
+   "v2": 54,
+   "v3": 0,
+   "v4": 54,
+   "m1": 51,
+   "m2": 0,
+   "m3": 0
+  },
+  "wrongPlayerClaims": 0,
+  "earliestChangedDecision": "tracker association (PlayerTracker.update) of a neighbouring player at frame 38-39; not purify, kit/contact stage or link costs",
+  "defect": false
  }
 }

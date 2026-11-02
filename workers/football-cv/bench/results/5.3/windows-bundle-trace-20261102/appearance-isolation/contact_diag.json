@@ -1,0 +1,412 @@
+{
+ "v1-Wcol-Wemb": {
+  "mateKitThreshold": 0.3,
+  "targetRows": [
+   {
+    "frame": 40,
+    "trackId": 3,
+    "det": 940,
+    "targetKit": 0.615,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 41,
+    "trackId": 3,
+    "det": 962,
+    "targetKit": 0.654,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 42,
+    "trackId": 3,
+    "det": 982,
+    "targetKit": 0.583,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 43,
+    "trackId": 3,
+    "det": 1002,
+    "targetKit": 0.482,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 44,
+    "trackId": 3,
+    "det": 1021,
+    "targetKit": 0.491,
+    "contact": true,
+    "partnerDet": 1029,
+    "partnerKit": 0.422,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 45,
+    "trackId": 3,
+    "det": 1054,
+    "targetKit": 0.596,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 46,
+    "trackId": 3,
+    "det": 1068,
+    "targetKit": 0.596,
+    "contact": true,
+    "partnerDet": 1070,
+    "partnerKit": 0.314,
+    "bestOverlapKit": 0.314
+   },
+   {
+    "frame": 49,
+    "trackId": 3,
+    "det": 1126,
+    "targetKit": 0.689,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.48
+   },
+   {
+    "frame": 50,
+    "trackId": 3,
+    "det": 1141,
+    "targetKit": 0.545,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 51,
+    "trackId": 3,
+    "det": 1165,
+    "targetKit": 0.496,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 52,
+    "trackId": 3,
+    "det": 1179,
+    "targetKit": 0.366,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 53,
+    "trackId": 3,
+    "det": 1206,
+    "targetKit": 0.267,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.158
+   },
+   {
+    "frame": 54,
+    "trackId": 3,
+    "det": 1222,
+    "targetKit": 0.349,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 55,
+    "trackId": 3,
+    "det": 1241,
+    "targetKit": 0.221,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.006
+   },
+   {
+    "frame": 56,
+    "trackId": 3,
+    "det": 1258,
+    "targetKit": 0.074,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.062
+   },
+   {
+    "frame": 57,
+    "trackId": 3,
+    "det": 1272,
+    "targetKit": 0.278,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 58,
+    "trackId": 3,
+    "det": 1290,
+    "targetKit": 0.096,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 59,
+    "trackId": 3,
+    "det": 1312,
+    "targetKit": 0.519,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 60,
+    "trackId": 3,
+    "det": 1330,
+    "targetKit": 0.417,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 61,
+    "trackId": 3,
+    "det": 1347,
+    "targetKit": 0.403,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   }
+  ]
+ },
+ "m1-W+Lcol35-60": {
+  "mateKitThreshold": 0.3,
+  "targetRows": [
+   {
+    "frame": 40,
+    "trackId": 3,
+    "det": 940,
+    "targetKit": 0.596,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 41,
+    "trackId": 3,
+    "det": 962,
+    "targetKit": 0.598,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 42,
+    "trackId": 3,
+    "det": 982,
+    "targetKit": 0.506,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 43,
+    "trackId": 3,
+    "det": 1002,
+    "targetKit": 0.439,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 44,
+    "trackId": 3,
+    "det": 1021,
+    "targetKit": 0.448,
+    "contact": true,
+    "partnerDet": 1029,
+    "partnerKit": 0.342,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 45,
+    "trackId": 3,
+    "det": 1054,
+    "targetKit": 0.456,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 46,
+    "trackId": 3,
+    "det": 1068,
+    "targetKit": 0.505,
+    "contact": true,
+    "partnerDet": 1070,
+    "partnerKit": 0.339,
+    "bestOverlapKit": 0.339
+   },
+   {
+    "frame": 49,
+    "trackId": 3,
+    "det": 1126,
+    "targetKit": 0.544,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.462
+   },
+   {
+    "frame": 50,
+    "trackId": 3,
+    "det": 1141,
+    "targetKit": 0.437,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 51,
+    "trackId": 3,
+    "det": 1165,
+    "targetKit": 0.382,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 52,
+    "trackId": 3,
+    "det": 1179,
+    "targetKit": 0.307,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 53,
+    "trackId": 3,
+    "det": 1206,
+    "targetKit": 0.202,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.17
+   },
+   {
+    "frame": 54,
+    "trackId": 3,
+    "det": 1222,
+    "targetKit": 0.252,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 55,
+    "trackId": 3,
+    "det": 1241,
+    "targetKit": 0.162,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.019
+   },
+   {
+    "frame": 56,
+    "trackId": 3,
+    "det": 1258,
+    "targetKit": 0.119,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": 0.075
+   },
+   {
+    "frame": 57,
+    "trackId": 3,
+    "det": 1272,
+    "targetKit": 0.274,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 58,
+    "trackId": 3,
+    "det": 1290,
+    "targetKit": 0.15,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 59,
+    "trackId": 3,
+    "det": 1312,
+    "targetKit": 0.53,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 60,
+    "trackId": 3,
+    "det": 1330,
+    "targetKit": 0.345,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   },
+   {
+    "frame": 61,
+    "trackId": 3,
+    "det": 1347,
+    "targetKit": 0.403,
+    "contact": false,
+    "partnerDet": null,
+    "partnerKit": null,
+    "bestOverlapKit": -1.0
+   }
+  ]
+ }
+}

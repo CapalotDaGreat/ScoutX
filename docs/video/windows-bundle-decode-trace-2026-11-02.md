@@ -140,13 +140,13 @@ source frame 11660 → Windows-path pixels (established by the swap) → target 
 
 - Windows has `contact_unclear` contact pieces plus unidentified frames; Linux has one anchored tracklet.
 - The earlier hypothesis (number-conflict splits, extra #20 evidence, solver mode) is **refuted for this interval** by the replays in §6a.
-- Which stage-1 quantity (boxes, colour signatures, embeddings or crops) causes it is not isolated.
+- §6b isolates it with the boxes fixed: it follows the colour signatures on 3.5–6.0 s through tracker association of neighbouring players and the contact-link margin rule; embeddings have no observable effect.
 
 **Other frames:**
 - 18.5–18.7 s: 3 frames, unresolved.
 - Windows-only: 9 frames (10.9–11.0 s and 27.3–29.6 s), associated with Windows' extra #20 reads at frames 228/247.
 
-**Explained:** 33 of the 91 frames (36%) are traced to one OCR read through the conflict rule, and the replays confirm the OCR dependence (§6a). 55 (60%) are localised to the stage-1 output, mechanism within stage 1 not isolated. 3 are unresolved.
+**Explained:** 33 of the 91 frames (36%) are traced to one OCR read through the conflict rule, and the replays confirm the OCR dependence (§6a). 55 (60%) are traced through colour signatures, tracker association and the contact-link rule (§6b). 3 are unresolved.
 
 ## 6a. Identity replays: OCR reads and sightings swapped separately
 
@@ -180,6 +180,85 @@ What this shows, and what it does not:
 - Windows sightings on Linux stage 1 give 249 correct (0 wrong), but 2 unmatched and 3 "?"-label claims remain. That is not evidence that more sightings are better in general.
 - The conflicting-number safeguard is unchanged in every replay. Abstaining after a plausible "11" read is the intended cautious behaviour.
 
+## 6b. Appearance features with the Windows boxes fixed (2026-11-02, later)
+
+Evidence: [appearance-isolation/](../../workers/football-cv/bench/results/5.3/windows-bundle-trace-20261102/appearance-isolation/). Tool: `bench/appearance_features.py`. Replays with `bench/identity_replay_swap.py --variant own` (cold OCR cache, Windows OCR reads and Windows discovery sightings in every variant).
+
+**Baseline reconstruction (verified before any swap).**
+
+- Base: the original Windows run's `detections.npz` (bundle). Boxes are the saved float32 detector boxes; frame indices, detection order, scores and `emb_idx` are unchanged. The saved `emb_idx` equals the extraction rule for these boxes, and the 1,333 OCR crop files equal the crop rule.
+- Frames were decoded fresh: the BT.601 FFmpeg path matches the Windows probe on 300/300 frames, and the Linux `cv2` path matches the Linux probe on 300/300.
+- Colour signatures and grid embeddings were recomputed from Windows-path pixels at the Windows boxes:
+  - **embeddings: bit-identical** (2,536 × 256);
+  - **colour signatures: identical except one element of one detection** (frame 6, by one float16 ulp, 2.4e-4). The float32 value lies one float32 ulp from a float16 rounding midpoint, so a one-ulp platform difference flips the rounding. No tolerance was widened; this single element is the only difference.
+- **Replays.** The saved features (v0) and the reconstructed features (v1) both reproduce the original Windows run on 300/300 states and evidence, with the same outcomes, the same unresolved claim (frame 97) and the same owner question.
+
+**What a swap changes, and hidden dependencies.** Only `sigs` and/or `embs` are replaced (`variants/*.json` record this and assert every other field byte-identical). Grass, camera motion, ball features and OCR crop pixels stay Windows-decoded. A colour swap is **not** colour alone downstream:
+
+- colour signatures are also the tracker's association feature;
+- they feed the track-wide colour purification, kit scores and contact-link costs.
+
+A colour swap also changes which crops OCR is asked to read. With Linux colour, the pipeline asked for 25 crops the Windows run never read. Reading them on Windows pixels or answering them with no text gave identical outcomes.
+
+**Matrix** (corrected basis: 286 scorable target-labelled frames, plus 1 label at 1180.0 s without prediction; original basis: 287). Wrong-player and overlap-ambiguous claims are 0 everywhere. Unmatched and "?"-label claims are counted over all labelled frames and never as correct.
+
+| Variant (colour / embeddings) | Correct (confirmed + likely) | Abstained | Unmatched | "?" claims | 4.0–9.6 s (of 55) | 13.5–16.7 s (of 33) | Original basis correct /287 | Target piece 4.7–9.7 s |
+|---|---|---|---|---|---|---|---|---|
+| Windows run (original) | 159 (134 + 25) | 127 | 1 | 0 | 0 | 0 | 152 | not chosen; owner question, score 0.23 |
+| v1 control: W / W (reconstructed) | 159 (134 + 25) | 127 | 1 | 0 | 0 | 0 | 152 | same |
+| v2: **L** / W | 221 (142 + 79) | 65 | 3 | 4 | **54** | 4 | 207 | chosen (anchored); owner question, currently target |
+| v3: W / **L** | 159 (134 + 25) | 127 | 1 | 0 | 0 | 0 | 152 | not chosen (identical to v1, 300/300) |
+| v4: **L** / **L** | 221 (142 + 79) | 65 | 3 | 4 | **54** | 4 | 207 | identical to v2, 300/300 |
+| m1: W, **L colour on frames 35–60 only** / W | 211 (134 + 77) | 75 | 2 | 0 | **51** | 0 | 196 | chosen (anchored); owner question, currently target |
+| m2: L, **W colour on frames 35–60 only** / W | 166 (142 + 24) | 120 | 2 | 4 | **0** | 4 | 160 | not chosen; owner question |
+| m3: W, L colour on frames 90–105 only / W | 159 | 127 | 1 | 0 | 0 | 0 | 152 | identical to v1 |
+| Linux run (original) | 241 (18 + 223) | 45 | 1 | 3 | 55 | 33 | 228 | — |
+
+- **Embeddings: no observable effect** in this window (v3 ≡ v1, v4 ≡ v2 on 300/300 frames). No colour × embedding interaction was observed.
+- **Colour signatures on frames 35–60 (3.5–6.0 s) are sufficient and necessary for the interval** in these replays: m1 recovers 51/55 and m2 loses 55/55. Colour around 9.8 s (m3) changes nothing.
+- The 13.5–16.7 s interval stays OCR-driven: the Windows "11" read is kept here, and the safeguard abstains as designed.
+
+**Contact-linking trace** (`runs/*/trace.json`: read-only spy on `crossings._link_event`, window-local seconds, exact frames verified against the corrected labels).
+
+| | Windows colour (v1, m2) | Linux colour on 3.5–6.0 s (m1, v2) |
+|---|---|---|
+| Target's own tracker association | target piece 4.0–4.3 → contact piece 4.4–4.6 → piece 4.7/4.9–9.6/9.7 | same pieces from 3.0 to 9.6 s (no differing tracker continuation involves a target detection); in v2 the single frame at 9.7 s forms its own piece |
+| Contact event after 4.4–4.6 s | merged with a neighbouring same-kit contact: 5 pre × 4 post pieces, ends 5.7 s; event marked small (< 90 px piece) | 3 pre × 3 post pieces, ends 4.6 s; small |
+| Target pre → its tracker successor | cost 0.116; nearest competitor (another player's piece) 0.120; **margin 0.059** | cost 0.125–0.13; competitors ≥ 0.308; **margin 0.159–0.188** |
+| Link decision (rule: small-player continuation needs margin ≥ 0.10) | **unclear** (identity may not follow) | **same** (clear) |
+| Identity decision for 4.7–9.7 s | not chosen; contact pieces claimed `contact_unclear`; owner question (score 0.23–0.28, not currently target) | chosen through the clear link, `anchored`; owner question raised but already currently target (score 0.44–0.5) |
+
+**Earliest changed decision, verified by one-factor splits:**
+
+| Tracker association sigs | Purification sigs | Target link at contact exit |
+|---|---|---|
+| Windows | Windows | unclear, 0.059 |
+| Windows | Linux | unclear, 0.059 |
+| Linux | Windows | same, 0.164 |
+| Linux | Linux | same, 0.164 |
+
+Holding association rows fixed while swapping the contact-stage colour (kit scores and link costs) gives the same split: Windows association → unclear (0.059 / 0.049), Linux association → same (0.164 / 0.159). The decision therefore follows the **online tracker association** (`PlayerTracker.update`, colour signatures as association features). It does not follow purification, the contact/kit stage or link costs.
+
+In the raw tracker rows, the first continuation that differs is at **frame 38 (3.8 s)**: a neighbouring player's track, lost after frame 32, resumes on detection 906 at frame 38 with Windows colour, and on detection 931 at frame 39 with Linux colour. No differing continuation involves a target detection (IoU with the target label ≤ 0.09). These neighbouring re-associations put a second same-kit pair into the target's contact event. That adds a near-equal competitor and drops the margin below the small-player rule.
+
+**Causal chain, as supported:** decoded pixels → colour signatures of neighbouring players' detections (3.5–6.0 s) → tracker re-association of those neighbours from 3.8 s → contact-event composition → the target's continuation margin 0.059 < 0.10 → link `unclear` → identity is not carried into the 4.7–9.7 s piece → abstention and an owner question for 55 frames.
+
+- Each arrow from colour onward is verified by a one-factor replay or split.
+- What is not established is which colour difference in which neighbouring detection is decisive. Many detections change together in a 26-frame span.
+
+**This is not a defect.** The `unclear` decision is the documented guard: small-player continuations need margin ≥ 0.10, after a measured 75 px swap with margin 0.081. Here it abstains on a true target because a team-mate's piece is almost as similar. Linux colour happens to keep the competitor out of the event; that is not evidence that Linux colour is more correct. No threshold, guard or solver change is made.
+
+**Changed claims to review (not counted as correct):**
+
+- Frame 46 (1154.7 s corrected, labels N, ?, ?, N; no target label): v2 and m1 claim a box that overlaps no label (IoU ≤ 0.05). It continues the target's 1154.6 s claim (IoU 0.95). Most likely an annotation gap like frame 97; unresolved.
+- Frame 97 (1159.8 s): unmatched in every variant, as before.
+- Frames 180–183 (1168.1–1168.4 s, "?" labels): v2 and v4 claim them (three of them **confirmed** by number) on the "?" box (IoU 0.86–0.97). Linux claims 181–183 as likely, and Windows abstains. These stay indeterminate. A confirmed claim on an annotator-uncertain box is not evidence of a correct identification.
+- Frame 179 (1168.0 s, no target box under the claim): unmatched in v2 and v4.
+- Contact-transition claims at 1154.6–1154.7 s and 1168.5 s:
+  - frame 45 is correct in all claiming variants;
+  - at frame 184, v1 and m1 are AMBIGUOUS on a box overlapping an N label (IoU 0.87), which is an abstention, not a claim;
+  - v2 claims the T box there (IoU 0.83, N 0.38).
+
 ## 7. Changes and tests
 
 - `bench/compare_window_runs.py` (new) compares two runs of one window layer by layer:
@@ -193,6 +272,9 @@ What this shows, and what it does not:
   - checks frame offsets −2…+2 in `--compare`;
   - takes `--ffmpeg-vf` to probe an explicitly documented FFmpeg-CLI decode path.
 - `bench/identity_replay_swap.py` (new) replays stage 2 on one run's stage-1 output with OCR reads and/or sightings from another run, cold OCR cache, reads served by crop pixel hash, OCR on base pixels refused when reads are transferred.
+- `bench/appearance_features.py` (new) recomputes colour signatures and grid embeddings for fixed boxes from an explicitly named decode path (frame hashes checked against a probe), and builds stage-1 variants that change only `sigs` and/or `embs` (optionally only on a frame range), asserting every other field byte-identical.
+- `bench/identity_replay_swap.py`: `--trace` (read-only capture of target pieces, contact-link events with cost matrices, tracker successors and decisions, and per-tracklet identity decisions including owner questions) and `--unseen-ocr {read,blank}`.
+- `tests/test_appearance_isolation.py` covers the extraction rules, reconstruction equality for fixed boxes, refusal of inconsistent `emb_idx` or missing frames, field-isolated variant building, and the contact-link rule with the observed costs. It includes a wrong-player counterexample: an appearance disagreement below the swap margin never re-points identity to a team-mate.
 - `tests/test_window_run_comparison.py` covers:
   - one-to-one matching with near-duplicate boxes;
   - abstentions staying abstentions in interval comparison;
@@ -202,6 +284,6 @@ What this shows, and what it does not:
 
 ## 8. Remaining limits and the smallest next experiments
 
-1. **Isolate the 4.0–9.6 s loss within stage 1** (local, no cloud). OCR reads and sightings are ruled out (§6a). The next one-factor split, in the same Linux environment, is to recompute the colour signatures and embeddings from Linux-decoded pixels at the Windows detection boxes, keep the Windows boxes, and replay. That separates box geometry from appearance features. Then inspect the contact-link decisions (`crossings.split_at_contacts`) around 5.5 s and 9.8 s in both cases. No threshold or safeguard changes.
+1. **Which neighbouring detection decides it** (local, optional). Bisect the Linux-colour substitution within frames 35–60 by detection (or by player track) and re-run the tracker-only split. This would name the decisive colour difference. It would not change any conclusion above, and nothing should be tuned on it.
 2. **Which decode path is right for HLG.** Both paths stay experimental; the default decoder and the pinned GPU baseline are unchanged. A defensible reference is needed first, for example an owner-reviewed colour target or kit-colour calibration on both paths. No brightness correction should be applied before that.
 3. **The GPU gap remains unresolved.** The L4 CPU and GPU runs shared one machine and `opencv-python 4.14.0.94`, so this decode difference does not explain them. No GPU decoded-pixel hashes were recorded. A further GPU run needs separate approval of zone, exact commit, cost and lifetime.

@@ -1,0 +1,50 @@
+{
+ "tracker sigs W / purify sigs W": [
+  [
+   5.7,
+   5,
+   [
+    [
+     "unclear",
+     0.059
+    ]
+   ]
+  ]
+ ],
+ "tracker sigs W / purify sigs L": [
+  [
+   5.7,
+   5,
+   [
+    [
+     "unclear",
+     0.059
+    ]
+   ]
+  ]
+ ],
+ "tracker sigs L / purify sigs W": [
+  [
+   4.6,
+   3,
+   [
+    [
+     "same",
+     0.164
+    ]
+   ]
+  ]
+ ],
+ "tracker sigs L / purify sigs L": [
+  [
+   4.6,
+   3,
+   [
+    [
+     "same",
+     0.164
+    ]
+   ]
+  ]
+ ]
+}

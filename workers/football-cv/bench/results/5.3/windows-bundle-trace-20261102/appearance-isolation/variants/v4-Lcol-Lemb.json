@@ -1,0 +1,36 @@
+{
+ "base": "/home/claude/work/appear/base/chunk",
+ "sigsFrom": "/home/claude/work/appear/feat_linpix.npz",
+ "embsFrom": "/home/claude/work/appear/feat_linpix.npz",
+ "unchangedFields": [
+  "dets",
+  "emb_idx",
+  "balls",
+  "ball_warm",
+  "warps",
+  "cuts",
+  "times",
+  "grass",
+  "propagated"
+ ],
+ "sigs": {
+  "shape": [
+   6492,
+   80
+  ],
+  "identical": false,
+  "maxAbs": 0.5546112060546875,
+  "elementsDiffering": 195727,
+  "rowsDiffering": 6492
+ },
+ "embs": {
+  "shape": [
+   2536,
+   256
+  ],
+  "identical": false,
+  "maxAbs": 0.4091796875,
+  "elementsDiffering": 269505,
+  "rowsDiffering": 2536
+ }
+}

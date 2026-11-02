@@ -1,0 +1,825 @@
+{
+ "window": "gap1150",
+ "spanSec": [
+  3.5,
+  11.5
+ ],
+ "basis": "corrected (+0.1 s) label times, window-local",
+ "targetPieces": [
+  {
+   "f0": "30",
+   "f1": "32",
+   "tid": 142
+  },
+  {
+   "f0": "33",
+   "f1": "39",
+   "tid": 143
+  },
+  {
+   "f0": "40",
+   "f1": "43",
+   "tid": 144
+  },
+  {
+   "f0": "44",
+   "f1": "46",
+   "tid": 145
+  },
+  {
+   "f0": "47",
+   "f1": "48",
+   "tid": null
+  },
+  {
+   "f0": "49",
+   "f1": "97",
+   "tid": 146
+  },
+  {
+   "f0": "98",
+   "f1": "98",
+   "tid": null
+  },
+  {
+   "f0": "99",
+   "f1": "108",
+   "tid": 124
+  },
+  {
+   "f0": "109",
+   "f1": "111",
+   "tid": 197
+  },
+  {
+   "f0": "112",
+   "f1": "120",
+   "tid": 198
+  }
+ ],
+ "trackingTargetTids": [
+  124,
+  142,
+  143,
+  144,
+  145,
+  146,
+  197,
+  198
+ ],
+ "identityDecisions": [
+  {
+   "tid": 124,
+   "t0": 9.8,
+   "t1": 10.8,
+   "n": 11,
+   "contactPiece": false,
+   "kit1": 0.486,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.5137280426925742,
+   "appearanceScore": 0.5137280426925742,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 124
+  },
+  {
+   "tid": 142,
+   "t0": 1.9,
+   "t1": 3.2,
+   "n": 13,
+   "contactPiece": false,
+   "kit1": 0.722,
+   "candidate": true,
+   "chosen": false,
+   "seed": false,
+   "evidence": null,
+   "score": 0.10589643186952219,
+   "appearanceScore": 0.10589643186952219,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [
+    [
+     28,
+     "1",
+     0.9806681179542274,
+     "shirt:white"
+    ]
+   ],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 143,
+   "t0": 3.3,
+   "t1": 3.9,
+   "n": 7,
+   "contactPiece": true,
+   "kit1": 0.619,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "continuity",
+   "score": 0.28813079237683664,
+   "appearanceScore": 0.28813079237683664,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 144,
+   "t0": 4.0,
+   "t1": 4.3,
+   "n": 4,
+   "contactPiece": false,
+   "kit1": 0.544,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.19717466870919206,
+   "appearanceScore": 0.19717466870919206,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 145,
+   "t0": 4.4,
+   "t1": 4.6,
+   "n": 3,
+   "contactPiece": true,
+   "kit1": 0.475,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.21572559949744707,
+   "appearanceScore": 0.21572559949744707,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 146,
+   "t0": 4.7,
+   "t1": 9.7,
+   "n": 50,
+   "contactPiece": false,
+   "kit1": 0.427,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.22091553654613102,
+   "appearanceScore": 0.22091553654613102,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [
+    [
+     90,
+     "1",
+     0.9882190227508545,
+     "shirt:contrast"
+    ],
+    [
+     54,
+     "4",
+     0.977827250957489,
+     "shirt:white"
+    ],
+    [
+     58,
+     "1",
+     0.9950969815254211,
+     "shorts:white"
+    ],
+    [
+     60,
+     "1",
+     0.9989142417907715,
+     "shorts:white"
+    ]
+   ],
+   "ownerQuestion": {
+    "score": 0.44,
+    "from": 4.7000000000000455,
+    "to": 9.700000000000045,
+    "currentlyTarget": true
+   },
+   "origin": 3
+  },
+  {
+   "tid": 197,
+   "t0": 10.9,
+   "t1": 11.1,
+   "n": 3,
+   "contactPiece": true,
+   "kit1": 0.563,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.3237592528098009,
+   "appearanceScore": 0.3237592528098009,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 124
+  },
+  {
+   "tid": 198,
+   "t0": 11.2,
+   "t1": 12.8,
+   "n": 17,
+   "contactPiece": false,
+   "kit1": 0.599,
+   "candidate": true,
+   "chosen": true,
+   "seed": true,
+   "evidence": "number",
+   "score": 1.0,
+   "appearanceScore": 0.8263061859850381,
+   "confirmed": true,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": [
+    12.0,
+    11.799999999999955
+   ],
+   "reads": [
+    [
+     120,
+     "20",
+     0.999980628490448,
+     "shirt:contrast"
+    ],
+    [
+     118,
+     "20",
+     0.999,
+     "discovery"
+    ]
+   ],
+   "ownerQuestion": null,
+   "origin": 124
+  }
+ ],
+ "contactLinksNearTarget": [
+  {
+   "pre": 207,
+   "post": 130,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.001,
+   "cost": 0.148,
+   "decision": "unclear"
+  },
+  {
+   "pre": 142,
+   "post": 144,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.008,
+   "cost": 0.091,
+   "decision": "unclear"
+  },
+  {
+   "pre": 210,
+   "post": 158,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.007,
+   "cost": 0.08,
+   "decision": "unclear"
+  },
+  {
+   "pre": 30,
+   "post": 165,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.001,
+   "cost": 0.082,
+   "decision": "unclear"
+  },
+  {
+   "pre": 209,
+   "post": 134,
+   "t": 12.5,
+   "clear": true,
+   "margin": 0.15,
+   "cost": 0.039,
+   "decision": "same"
+  },
+  {
+   "pre": 173,
+   "post": 175,
+   "t": 12.5,
+   "clear": true,
+   "margin": 0.15,
+   "cost": 0.061,
+   "decision": "same"
+  },
+  {
+   "pre": 6,
+   "post": 150,
+   "t": 12.5,
+   "clear": true,
+   "margin": 0.292,
+   "cost": 0.045,
+   "decision": "same"
+  },
+  {
+   "pre": 140,
+   "post": 142,
+   "t": 1.8,
+   "clear": false,
+   "margin": 0.005,
+   "cost": 0.083,
+   "decision": "unclear"
+  },
+  {
+   "pre": 144,
+   "post": 146,
+   "t": 4.6,
+   "clear": true,
+   "margin": 0.159,
+   "cost": 0.13,
+   "decision": "same"
+  },
+  {
+   "pre": 14,
+   "post": 160,
+   "t": 4.6,
+   "clear": true,
+   "margin": 0.159,
+   "cost": 0.198,
+   "decision": "same"
+  },
+  {
+   "pre": 5,
+   "post": 148,
+   "t": 4.6,
+   "clear": true,
+   "margin": 0.277,
+   "cost": 0.069,
+   "decision": "same"
+  },
+  {
+   "pre": 45,
+   "post": 167,
+   "t": 5.7,
+   "clear": false,
+   "margin": 0.0,
+   "cost": 0.184,
+   "decision": "unclear"
+  },
+  {
+   "pre": 21,
+   "post": 163,
+   "t": 6.3,
+   "clear": false,
+   "margin": 0.0,
+   "cost": 0.156,
+   "decision": "unclear"
+  },
+  {
+   "pre": 124,
+   "post": 198,
+   "t": 11.1,
+   "clear": true,
+   "margin": 0.0,
+   "cost": 0.082,
+   "decision": "same"
+  },
+  {
+   "pre": 198,
+   "post": 200,
+   "t": 12.9,
+   "clear": true,
+   "margin": 0.175,
+   "cost": 0.031,
+   "decision": "same"
+  },
+  {
+   "pre": 130,
+   "post": 208,
+   "t": 4.6,
+   "clear": true,
+   "margin": 0.007,
+   "cost": 0.054,
+   "decision": "same"
+  },
+  {
+   "pre": 132,
+   "post": 209,
+   "t": 5.3,
+   "clear": false,
+   "margin": 0.0,
+   "cost": 0.0,
+   "decision": "unclear"
+  },
+  {
+   "pre": 156,
+   "post": 210,
+   "t": 2.5,
+   "clear": false,
+   "margin": -0.027,
+   "cost": 0.139,
+   "decision": "unclear"
+  }
+ ],
+ "contactEventsNearTarget": [
+  {
+   "tEnd": 3.9,
+   "pres": [
+    207,
+    142,
+    210,
+    30
+   ],
+   "posts": [
+    130,
+    144,
+    158,
+    165
+   ],
+   "cost": [
+    [
+     0.148,
+     0.156,
+     0.163,
+     0.082
+    ],
+    [
+     0.1,
+     0.091,
+     0.098,
+     0.138
+    ],
+    [
+     0.073,
+     0.145,
+     0.08,
+     0.147
+    ],
+    [
+     0.148,
+     0.161,
+     0.17,
+     0.082
+    ]
+   ],
+   "small": true,
+   "trackerSuccessor": {
+    "207": 130,
+    "142": 144,
+    "210": 158,
+    "30": 165
+   },
+   "links": [
+    {
+     "pre": 207,
+     "post": 130,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.001,
+     "cost": 0.148,
+     "decision": "unclear"
+    },
+    {
+     "pre": 142,
+     "post": 144,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.008,
+     "cost": 0.091,
+     "decision": "unclear"
+    },
+    {
+     "pre": 210,
+     "post": 158,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.007,
+     "cost": 0.08,
+     "decision": "unclear"
+    },
+    {
+     "pre": 30,
+     "post": 165,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.001,
+     "cost": 0.082,
+     "decision": "unclear"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [
+    142
+   ],
+   "targetPosts": [
+    144
+   ]
+  },
+  {
+   "tEnd": 12.5,
+   "pres": [
+    209,
+    173,
+    6
+   ],
+   "posts": [
+    134,
+    175,
+    150
+   ],
+   "cost": [
+    [
+     0.039,
+     0.136,
+     0.24
+    ],
+    [
+     0.115,
+     0.061,
+     0.201
+    ],
+    [
+     0.179,
+     0.197,
+     0.045
+    ]
+   ],
+   "small": false,
+   "trackerSuccessor": {
+    "209": 134,
+    "173": 175,
+    "6": 150
+   },
+   "links": [
+    {
+     "pre": 209,
+     "post": 134,
+     "t": 12.5,
+     "clear": true,
+     "margin": 0.15,
+     "cost": 0.039,
+     "decision": "same"
+    },
+    {
+     "pre": 173,
+     "post": 175,
+     "t": 12.5,
+     "clear": true,
+     "margin": 0.15,
+     "cost": 0.061,
+     "decision": "same"
+    },
+    {
+     "pre": 6,
+     "post": 150,
+     "t": 12.5,
+     "clear": true,
+     "margin": 0.292,
+     "cost": 0.045,
+     "decision": "same"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [],
+   "targetPosts": []
+  },
+  {
+   "tEnd": 4.6,
+   "pres": [
+    144,
+    14,
+    5
+   ],
+   "posts": [
+    146,
+    160,
+    148
+   ],
+   "cost": [
+    [
+     0.13,
+     0.308,
+     0.409
+    ],
+    [
+     0.178,
+     0.198,
+     0.358
+    ],
+    [
+     0.342,
+     0.186,
+     0.069
+    ]
+   ],
+   "small": true,
+   "trackerSuccessor": {
+    "144": 146,
+    "14": 160,
+    "5": 148
+   },
+   "links": [
+    {
+     "pre": 144,
+     "post": 146,
+     "t": 4.6,
+     "clear": true,
+     "margin": 0.159,
+     "cost": 0.13,
+     "decision": "same"
+    },
+    {
+     "pre": 14,
+     "post": 160,
+     "t": 4.6,
+     "clear": true,
+     "margin": 0.159,
+     "cost": 0.198,
+     "decision": "same"
+    },
+    {
+     "pre": 5,
+     "post": 148,
+     "t": 4.6,
+     "clear": true,
+     "margin": 0.277,
+     "cost": 0.069,
+     "decision": "same"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [
+    144
+   ],
+   "targetPosts": [
+    146
+   ]
+  },
+  {
+   "tEnd": 5.7,
+   "pres": [
+    160,
+    45
+   ],
+   "posts": [
+    167
+   ],
+   "cost": [
+    [
+     0.306
+    ],
+    [
+     0.184
+    ]
+   ],
+   "small": true,
+   "trackerSuccessor": {
+    "160": null,
+    "45": 167
+   },
+   "links": [
+    {
+     "pre": 45,
+     "post": 167,
+     "t": 5.7,
+     "clear": false,
+     "margin": 0.0,
+     "cost": 0.184,
+     "decision": "unclear"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [],
+   "targetPosts": []
+  },
+  {
+   "tEnd": 6.3,
+   "pres": [
+    21
+   ],
+   "posts": [
+    163
+   ],
+   "cost": [
+    [
+     0.156
+    ]
+   ],
+   "small": true,
+   "trackerSuccessor": {
+    "21": 163
+   },
+   "links": [
+    {
+     "pre": 21,
+     "post": 163,
+     "t": 6.3,
+     "clear": false,
+     "margin": 0.0,
+     "cost": 0.156,
+     "decision": "unclear"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [],
+   "targetPosts": []
+  },
+  {
+   "tEnd": 11.1,
+   "pres": [
+    124
+   ],
+   "posts": [
+    198
+   ],
+   "cost": [
+    [
+     0.082
+    ]
+   ],
+   "small": false,
+   "trackerSuccessor": {
+    "124": 198
+   },
+   "links": [
+    {
+     "pre": 124,
+     "post": 198,
+     "t": 11.1,
+     "clear": true,
+     "margin": 0.0,
+     "cost": 0.082,
+     "decision": "same"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [
+    124
+   ],
+   "targetPosts": [
+    198
+   ]
+  }
+ ],
+ "contactEvents": 18,
+ "chosenTidsOverall": [
+  2,
+  128,
+  30,
+  143,
+  144,
+  145,
+  146,
+  124,
+  197,
+  198,
+  200,
+  125,
+  182,
+  206,
+  126
+ ],
+ "solver": {
+  "iteration": 1,
+  "mode": "classifier",
+  "chosen": 15,
+  "seconds": 28.3,
+  "positives": 5,
+  "negatives": 22
+ },
+ "identityPasses": 3,
+ "note": "tracking association (targetPieces, links) is reported separately from identity assignment"
+}

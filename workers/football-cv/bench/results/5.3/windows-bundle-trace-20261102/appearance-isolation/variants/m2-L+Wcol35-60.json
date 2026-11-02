@@ -1,0 +1,40 @@
+{
+ "base": "/home/claude/work/appear/var/v2-Lcol-Wemb/gap1150/stage1/chunk",
+ "sigsFrom": "/home/claude/work/appear/feat_winpix.npz",
+ "embsFrom": null,
+ "sigFrames": [
+  35,
+  60
+ ],
+ "unchangedFields": [
+  "dets",
+  "emb_idx",
+  "balls",
+  "ball_warm",
+  "warps",
+  "cuts",
+  "times",
+  "grass",
+  "propagated"
+ ],
+ "sigs": {
+  "shape": [
+   6492,
+   80
+  ],
+  "identical": false,
+  "maxAbs": 0.5,
+  "elementsDiffering": 16564,
+  "rowsDiffering": 511
+ },
+ "embs": {
+  "shape": [
+   2536,
+   256
+  ],
+  "identical": true,
+  "maxAbs": 0.0,
+  "elementsDiffering": 0,
+  "rowsDiffering": 0
+ }
+}
