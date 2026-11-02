@@ -1,0 +1,43 @@
+{
+ "schema": "pitchproof.decoder-validation-protocol.v1",
+ "writtenUtc": "2026-11-02T03:20:33.615964+00:00",
+ "writtenBefore": "any tracking output of the frozen reference outside gap1150 was produced",
+ "frozenReference": "hlg-bc709-g2.2-v1, bench/hdr_reference.py at commit 22a58b9 (moduleSha256 in freeze.json)",
+ "comparison": {
+  "default": "unchanged default decoder: cv2.VideoCapture (OpenCV 4.14.0.94 wheel, Linux container)",
+  "candidate": "ReferenceCapture (frozen reference)",
+  "heldConstant": "source commit, models (4 SHA-256), cpu-onnx profile env (ONNX CPU, batch 1, keyframe 1, discovery 416, OCR enhance 0, 2 threads, PYTHONHASHSEED 0), thresholds, evaluation definitions; fresh output and cache directories per decoder"
+ },
+ "footageInventory": {
+  "IMG_4809_proxy_10fps.mp4": "HLG BT.2020 H.264 High 10 x264 proxy of IMG_4809.MOV; the only HLG footage with identity labels",
+  "IMG_4809.MOV": "original iPhone 15 Pro HEVC Main 10, HLG, Dolby Vision profile 8 configuration record; same match as the proxy (NOT independent); no labels on its own time base; technical checks only",
+  "IMG_4529 / IMG_5105": "other matches, SDR BT.709 8-bit H.264; claim-audit labels only (boxes the 5.0/5.1 engine claimed); the reference refuses SDR, so these serve only as SDR-compatibility controls of the default path"
+ },
+ "selection": {
+  "rule": "all labelled 30 s intervals of gt_img4809_intervals.json (no selection by outcome)",
+  "developmentSample": [
+   "1150-1180 (gap1150: the window every earlier 5.3 analysis used; baseline-reproduction anchor)"
+  ],
+  "otherIntervalsSameVideo": [
+   "225-255",
+   "400-430",
+   "600-630",
+   "1295-1325",
+   "1500-1530",
+   "1680-1710",
+   "1800-1830",
+   "1890-1920"
+  ],
+  "status": "these 8 are existing developer evaluation labels from the same match, used in 5.1/5.2 evaluation and gates: they are held out from the 5.3 decode analysis only, NOT independent footage and NOT a holdout in the strict sense",
+  "independentVideos": "none with HLG and identity labels"
+ },
+ "scenarioDescriptors": "computed per interval from labels and default-decoder stage-1 output (target box heights, label counts, cuts, camera-motion magnitude, frame luma) - not from candidate outcomes",
+ "timeBasis": "verified per interval with pp_bench.best_label_time_shift on default-decoder detections against N labels; the IMG_4809 correction record is applied only where that check confirms it; both bases reported",
+ "metrics": "per interval and aggregate: correct, wrong-player, overlap-ambiguous, unmatched, \"?\"-label claims, abstained, confirmed vs likely, automatic only (no owner anchors), counts with denominators; intervals without target labels report claims only (safety)",
+ "expansionCriteria": {
+  "E1": "any wrong-player or overlap-ambiguous claim, or more unmatched / \"?\"-label claims for the candidate than the default in any interval -> trace each such claim to its earliest pipeline difference before any further conclusion",
+  "E2": "a full-match comparison (both decoders, ~2-4 h each locally) is the next stage only if E1 finds no unexplained safety regression; it is not run in this task",
+  "E3": "an independent labelled HLG match is required before any promotion proposal"
+ },
+ "nonGoals": "no decoder default change, no threshold change, the reference is not tuned on these outcomes"
+}
