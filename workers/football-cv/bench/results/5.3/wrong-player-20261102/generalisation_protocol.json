@@ -1,0 +1,33 @@
+{
+ "schema": "pitchproof.generalisation-protocol.v1",
+ "writtenUtc": "2026-11-02T20:21:44.173812+00:00",
+ "writtenBefore": "any candidate (SCOUTX_EXCHANGE_SPLIT=1) or baseline run on these clips",
+ "candidate": "93258f739a1d8a3334c76f43ae4cc08b66b06bac with SCOUTX_EXCHANGE_SPLIT=1; baseline = same commit, flag 0 (verified identical to 461c440 on 18 interval replays)",
+ "inventory": {
+  "development": "IMG_4809 i0225 (diagnosed and repaired), i1150 (all 5.3 analysis)",
+  "heldOutSameMatch": "IMG_4809 i0400, i0600, i1295, i1500, i1680, i1800, i1890 (existing labels, same match; held out from this repair, NOT independent)",
+  "independentVideos": {
+   "IMG_4529": "other match, night, SDR BT.709 8-bit; #20 readable to a person at 16:13 and 24:28 (5.0 report); a #12 team-mate wrongly claimed by older engines at 24:21-24:27 (5.1 report)",
+   "IMG_5105": "other match, day, SDR BT.709 8-bit; #20 not seen near the camera in the whole match (5.0 inventory): every #20 claim is a false attribution"
+  },
+  "labelsForIndependentVideos": "none usable: the 5.1 claim audit labels only boxes older engines claimed (no boxes stored); no new full labels are made here",
+  "additionalHDR": "IMG_4809.MOV is the same match; no other HDR footage accessible"
+ },
+ "selection": {
+  "IMG_4529_p01440 15-45 s (24:15-24:45)": "documented #12/#20 confusion and a readable #20 (selected from prior reports, not outcomes)",
+  "IMG_4529_p00960 0-30 s (16:00-16:30)": "night, readable #20 at 16:13, weak reads",
+  "IMG_5105_p00000 0-30 s": "day, target absent, known misreads (\"19\",\"41\",\"17\")",
+  "IMG_5105_p00180 0-30 s": "day, target absent"
+ },
+ "scenarioCoverage": {
+  "crossings/similar kits": "IMG_4809 i0225, i1150 (labelled); IMG_4529 24:21-24:27 #12",
+  "small players": "i1295, i1500 (labelled)",
+  "exposure change": "night floodlight vs day vs HDR",
+  "off-screen returns": "i1680 (cuts/zoom, no target labels)",
+  "SDR": "IMG_4529, IMG_5105",
+  "other HDR": "none"
+ },
+ "metricsIndependent": "claims only (no recall): every claim is listed and reviewed by eye; on IMG_5105 any #20 claim is false; on IMG_4529 claims are checked visually for a readable number; outcome changes between baseline and candidate are traced",
+ "expansionCriteria": "any new wrong or unverifiable confirmed claim by the candidate -> candidate needs revision and these clips become development data; otherwise a full-match local run of both is the next proportionate step",
+ "timeBasis": "IMG_4809 correction record applies only to IMG_4809; not applied to IMG_4529/IMG_5105 (no labels used)"
+}
