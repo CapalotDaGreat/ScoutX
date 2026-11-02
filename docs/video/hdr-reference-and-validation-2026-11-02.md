@@ -300,3 +300,11 @@ The default decoder, every threshold and every safeguard are unchanged. The orig
 - colour-science 0.4.7 was installed in the container for cross-checks only. No test depends on it.
 
 **Smallest next validation step.** A visual review of source frames 2443–2445 (244.3–244.5 s) and the surrounding 242–247 s, to decide whether the 225 s failure is a one-frame crossing the tracker mis-associated (a pipeline defect independent of decoding) or a label/OCR coincidence. Only then should a narrowly scoped evidence-continuity candidate be considered.
+
+## Addendum (2026-11-02, later): 225 s failure reviewed
+
+The visual review asked for in §6 item 1 was done. Details: [wrong-player-exchange-2026-11-02.md](wrong-player-exchange-2026-11-02.md). The tables above are unchanged (original labels), but two statements in §5 need qualifying:
+
+- **The 18 confirmed wrong-player frames are two different things.** 13 are real (an unrepaired track exchange at 244.4 s carried a correct #20 read back onto another orange player). 5 (window frames 195–197, 208, 211) are an **annotation issue**: the claimed box shows a visible "20" but is labelled N. Labels were not changed.
+- **"Default: 0 wrong-player claims" holds only under the original labels.** At window frames 195–197 the default claims (likely) the other player after its own exchange. The label file follows the same exchange, so these count as correct but are visually wrong-player. Frame 194 is an unmatched claim.
+- The 8 likely wrong-player claims at 238.6–239.9 s are a separate mechanism (an appearance-only choice of a distant, blurred orange player while #20 was unclaimed). The exchange repair does not address them.
