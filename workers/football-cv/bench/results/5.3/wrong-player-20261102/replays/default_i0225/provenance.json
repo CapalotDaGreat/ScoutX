@@ -1,0 +1,35 @@
+{
+ "schema": "pitchproof.regression-replay.v1",
+ "window": "i0225",
+ "startSec": 225.0,
+ "sourceRun": "/home/claude/work/dval/default/i0225",
+ "validation": "/home/claude/work/dval/default/validation.json",
+ "environment": {
+  "SCOUTX_BACKEND": "onnx",
+  "SCOUTX_BATCH": "1",
+  "SCOUTX_DECODER": "cv2",
+  "SCOUTX_DETECTOR": "yolox_s",
+  "SCOUTX_DISCOVERY_DET": "416",
+  "SCOUTX_KEYFRAME_EVERY": "1",
+  "SCOUTX_MODE": "balanced",
+  "SCOUTX_OCR_ENHANCE": "0",
+  "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+  "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+ },
+ "models": {
+  "yolox/yolox_s.pth": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+  "easyocr/model/craft_mlt_25k.pth": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+  "easyocr/model/english_g2.pth": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+  "doctr/models/parseq-56125471.pt": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba"
+ },
+ "videoSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+ "files": {
+  "crops.json": "3dfe7be88d4d0fd7232272c3fc4cb125faa5025f217a87879cc099a066627ce0",
+  "detections.npz": "cecf0448eed526895289a4e59f8c4d703d6d3fb450d14b093196a196de6f5db2",
+  "meta.json": "5ffae649c5916bde15b53d1ef381e1ec7a2461d782c8e0d076d44dbc88412443",
+  "ocr_reads.json": "57914ad5f9b3fd2824bd313c627cd5aa9eb12f13677fc4bac32f1ac4b0ade07e",
+  "original_result.json": "3ef1814a63450a0decbc231c67763a4aa0e52f4d93d7eaf894eecafe1f686142",
+  "original_timeline.npz": "102a1c8bda1a950e8c9b90d534da84abfe5a3ec7ee88891e9e95c600599c4c25",
+  "sightings.json": "5a53799d8b744d993c32c49939c41e634d7d1329c1fd9ab05680aeb27b6d20d2"
+ }
+}

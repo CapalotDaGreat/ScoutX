@@ -1,0 +1,70 @@
+{
+ "schema": "pitchproof.wrong-player-visual-review.v1",
+ "reviewed": "2026-11-02, developer review of locally rendered frames (default cv2 path and frozen HLG reference); no images exported",
+ "indexing": {
+  "interval": "225-255 s (i0225), stored label basis verified (+0 s)",
+  "sourceFrame": "source frame = 2250 + window frame; time = source frame / 10",
+  "offendingRead": {
+   "sourceFrame": 2444,
+   "windowFrame": 194,
+   "timeSec": 244.4,
+   "crop": "chunk/000194_3597.jpg",
+   "detIndex": 3597,
+   "read": [
+    "20",
+    0.9499864101409912,
+    "shirt:contrast"
+   ],
+   "box": [
+    1219,
+    520,
+    1290,
+    678
+   ]
+  }
+ },
+ "players": {
+  "#20": "orange, ball carrier, back to camera; \"20\" visible on the back at source 2441, 2444, 2445, 2447, 2450",
+  "playerA": "orange team-mate facing the camera (no back number visible); runs from x~1087 (2436) rightwards"
+ },
+ "event": "crossing of #20 (moving left) and player A (moving right) at source 2442-2444; partial box overlap, no 50 % cover",
+ "associationBothDecoders": {
+  "reference": "raw track 98 (player A) has no row at 2443 and resumes at 2444 on #20 (det 3597); raw track 67 (#20) continues at 2444 onto a fragment of player A (det 3598) and follows player A afterwards. Contact rule: no row flagged; steal rule: no (victim track 67 did not pause). Mutual exchange.",
+  "default": "raw track 84 (player A) jumps at 2443 onto #20 (det 3564) while #20's track 61 pauses 2442-2443 (steal rule fires: cut + appearance link); track 61 resumes at 2444 on player A and follows him (not cut)."
+ },
+ "ocrCropBelongsToTarget": true,
+ "traceReference": [
+  "decoded frame 2444 (reference rendering)",
+  "detection 3597 = #20 (label T, IoU 0.91; \"20\" visible)",
+  "OCR \"20\" 0.95 shirt:contrast (correct read of #20)",
+  "raw track 98 = player A until 2442, #20 from 2444 (exchange not cut)",
+  "final tracklet 205 = player A (2426-2442) + #20 (2444-2512); the read makes it a number tracklet",
+  "timeline: frames within the hard-evidence radius claimed CONFIRMED/number on both people"
+ ],
+ "counts": {
+  "reads": 1,
+  "identityEvents": {
+   "E1 exchange + backward number propagation": "reference",
+   "E2 annotation issue (see below)": "not a prediction error",
+   "E3 appearance-only choice of a distant player at 238.6-239.9 s": "reference, separate mechanism, LIKELY only"
+  },
+  "referenceWrongPlayerFramesByLabels": {
+   "total": 26,
+   "E1_confirmed_on_playerA_labelled_N": 13,
+   "E1_confirmed_on_playerA_labelled_?": 2,
+   "E2_confirmed_on_#20_labelled_N": 5,
+   "E3_likely_on_distant_player_labelled_N": 8
+  },
+  "note": "26 = 13 (E1) + 5 (E2) + 8 (E3); E2 frames are wrong only under the original labels"
+ },
+ "annotationIssue": {
+  "frames": "window 195-197 (T label on player A), 195-197, 208, 211 (N label on #20)",
+  "evidence": "\"20\" visible on the N-labelled ball carrier at 2445 and 2447; T-labelled box is player A facing the camera; label file is piece-based (field \"piece\") and follows the same tracker exchange",
+  "action": "labels NOT changed; results reported under the original labels with these frames listed separately"
+ },
+ "defaultAffected": "the default run claims player A (LIKELY, anchored) at window 195-197 after its own exchange; these frames count as correct under the original labels but are visually wrong-player; frame 194 is an unmatched claim",
+ "uncertainty": [
+  "identity of player A not established beyond \"not #20\" (front view, no number)",
+  "E3 claimed player is distant and blurred; label N accepted, not independently verified by a visible number"
+ ]
+}

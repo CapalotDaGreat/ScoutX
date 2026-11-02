@@ -1,0 +1,635 @@
+{
+  "schema": "pitchproof.tracking.v3",
+  "engine": {
+    "version": "5.2.0",
+    "timingsSec": {
+      "load": 0.0,
+      "tracklets": 0.5,
+      "numbers": 12.2,
+      "identity": 9.2,
+      "timeline_metrics_events": 0.0
+    },
+    "ocrDeferred": 0,
+    "ocrRead": 196
+  },
+  "target": {
+    "number": "20",
+    "kit": "orange",
+    "kit2": "white",
+    "position": "unknown",
+    "ageGroup": "",
+    "anchors": [],
+    "rejects": []
+  },
+  "timeline": {
+    "periods": [
+      {
+        "start": 0.0,
+        "end": 30.0,
+        "kind": "play",
+        "label": "play",
+        "source": "detected",
+        "confidence": "heuristic"
+      }
+    ],
+    "cameraStatesSec": {
+      "PLAY_VIEW": 30.0
+    }
+  },
+  "coverage": {
+    "recordingSec": 30.0,
+    "nonMatchSec": 0.0,
+    "offPitchSec": 0.0,
+    "matchSec": 30.0,
+    "unobservedSec": 0.0,
+    "analysedSec": 30.0,
+    "confirmedVisibleSec": 0.6,
+    "likelyVisibleSec": 5.7,
+    "ambiguousSec": 19.3,
+    "notIdentifiedSec": 4.4,
+    "denominators": {
+      "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+      "note": "Percentages of the recording are not percentages of the player's playing time."
+    },
+    "visiblePctOfAnalysed": 21.0
+  },
+  "identity": {
+    "statesSec": {
+      "AMBIGUOUS": 19.3,
+      "CONFIRMED_VISIBLE": 0.6,
+      "LIKELY_VISIBLE": 5.7,
+      "UNKNOWN": 4.4
+    },
+    "iterations": [
+      {
+        "iteration": 0,
+        "mode": "template",
+        "chosen": 13,
+        "seconds": 15.7,
+        "positives": 1,
+        "negatives": 6
+      },
+      {
+        "iteration": 1,
+        "mode": "template",
+        "chosen": 13,
+        "seconds": 15.7,
+        "positives": 1,
+        "negatives": 6
+      }
+    ],
+    "numberSightings": 1,
+    "confirmedByUser": 0,
+    "scoreNote": "Identity scores are uncalibrated (not probabilities)."
+  },
+  "physical": {
+    "status": "unavailable",
+    "reason": "only 2 s of valid motion observations (need >= 30 s)",
+    "provenance": "unavailable",
+    "values": {
+      "distanceObserved": {
+        "value": null,
+        "unit": "m",
+        "provenance": "unavailable",
+        "method": "uncalibrated: camera-motion-compensated image motion scaled by an assumed 1.8 m player height (pinhole depth from box height, damped); single moving camera, no pitch calibration",
+        "reason": "only 2 s of valid motion observations (need >= 30 s)"
+      },
+      "peakSpeed": {
+        "value": null,
+        "unit": "km/h",
+        "provenance": "unavailable",
+        "method": "uncalibrated: camera-motion-compensated image motion scaled by an assumed 1.8 m player height (pinhole depth from box height, damped); single moving camera, no pitch calibration",
+        "reason": "only 2 s of valid motion observations (need >= 30 s)"
+      },
+      "workRate": {
+        "value": null,
+        "unit": "m/min",
+        "provenance": "unavailable",
+        "method": "uncalibrated: camera-motion-compensated image motion scaled by an assumed 1.8 m player height (pinhole depth from box height, damped); single moving camera, no pitch calibration",
+        "reason": "only 2 s of valid motion observations (need >= 30 s)"
+      }
+    },
+    "sprints": [],
+    "highSpeedRuns": [],
+    "thresholds": {
+      "sprint_kmh": 19.8,
+      "hsr_kmh": 14.4,
+      "min_run_sec": 1.0,
+      "merge_gap_sec": 0.5,
+      "max_speed_kmh": 36.0,
+      "max_accel_ms2": 6.0,
+      "min_cmc_quality": 0.7,
+      "min_box_px": 30.0,
+      "min_valid_run_sec": 1.5
+    },
+    "productionVisible": false
+  },
+  "calibration": {
+    "calibrations": [],
+    "calibratedFrames": 0,
+    "calibratedSec": 0.0,
+    "heatmap": {
+      "status": "unavailable",
+      "reason": "No validated pitch calibration covers the player's visible time."
+    }
+  },
+  "heatmap": {
+    "status": "unavailable",
+    "reason": "No validated pitch calibration covers the player's visible time."
+  },
+  "ball": {
+    "contactsConfirmedIdentity": 0,
+    "duelCandidates": 0,
+    "tackleCandidates": 0,
+    "contacts": 1,
+    "carries": 0,
+    "passAttempts": 1,
+    "completedPasses": 1,
+    "incompletePasses": 0,
+    "unknownOutcomePasses": 0,
+    "ballFramesTracked": 98,
+    "provenance": "model_estimate_unvalidated",
+    "note": "Ball detections are frequently missed for far-away play; counts are lower bounds and have not been validated against labelled events. Duel/tackle candidates need review and are never counted as statistics."
+  },
+  "events": [
+    {
+      "type": "contact",
+      "start": 18.0,
+      "end": 18.900000000000006,
+      "evidenceTimes": [
+        18.0,
+        18.19999999999999,
+        18.400000000000006,
+        18.599999999999994,
+        18.80000000000001
+      ],
+      "identityState": "LIKELY_VISIBLE",
+      "tid": null,
+      "reviewState": "unreviewed",
+      "confidence": 1.0,
+      "confidenceKind": "uncalibrated"
+    },
+    {
+      "type": "pass_attempt",
+      "start": 18.900000000000006,
+      "end": 19.400000000000006,
+      "outcome": "completed",
+      "outcomeEvidence": "verified",
+      "identityState": "LIKELY_VISIBLE",
+      "evidenceTimes": [
+        18.900000000000006
+      ],
+      "tid": null,
+      "reviewState": "unreviewed",
+      "confidence": 0.7,
+      "confidenceKind": "uncalibrated"
+    }
+  ],
+  "moments": [
+    {
+      "id": "m_140",
+      "kind": "pass_attempt",
+      "kinds": [
+        "pass_attempt",
+        "contact"
+      ],
+      "start": 18.0,
+      "end": 19.4,
+      "clipStart": 14.0,
+      "clipEnd": 21.9,
+      "identityState": "LIKELY_VISIBLE",
+      "candidate": false,
+      "outcome": "completed",
+      "eventIndices": [
+        0,
+        1
+      ],
+      "indicator": [
+        [
+          14.0,
+          0.2708,
+          0.2975,
+          0.049,
+          0.1401
+        ],
+        [
+          14.5,
+          0.2726,
+          0.3274,
+          0.0363,
+          0.1235
+        ],
+        [
+          15.0,
+          0.2357,
+          0.3366,
+          0.0502,
+          0.1478
+        ],
+        [
+          15.5,
+          0.1811,
+          0.336,
+          0.0655,
+          0.1706
+        ],
+        [
+          16.0,
+          0.1718,
+          0.3258,
+          0.0725,
+          0.2458
+        ],
+        [
+          16.6,
+          0.2279,
+          0.2859,
+          0.1468,
+          0.3938
+        ],
+        [
+          17.1,
+          0.4217,
+          0.3307,
+          0.1389,
+          0.4935
+        ],
+        [
+          17.6,
+          0.6665,
+          0.3618,
+          0.1499,
+          0.405
+        ],
+        [
+          18.1,
+          0.7219,
+          0.3915,
+          0.0969,
+          0.2699
+        ],
+        [
+          18.6,
+          0.7104,
+          0.4338,
+          0.077,
+          0.191
+        ],
+        [
+          19.1,
+          0.668,
+          0.4714,
+          0.0529,
+          0.1614
+        ],
+        [
+          19.6,
+          0.6999,
+          0.4848,
+          0.0257,
+          0.1089
+        ]
+      ],
+      "thumbCrop": "/home/claude/work/dval/default/i0225/stage1/chunk/crops/000180_3331.jpg"
+    }
+  ],
+  "offball": {
+    "status": "insufficient",
+    "method": "image-plane distance to the nearest opponent / team-mate, in the target's body heights, on confirmed frames only",
+    "caveat": "perspective distorts distances; not metres",
+    "confirmedSec": 0.6,
+    "minConfirmedSec": 60.0,
+    "sequences": []
+  },
+  "videoSize": {
+    "width": 1920,
+    "height": 1080
+  },
+  "analysedRange": {
+    "startSec": 0.0,
+    "endSec": 29.9,
+    "parts": 1
+  },
+  "tracklets": [
+    {
+      "tid": 1,
+      "t0": 0.0,
+      "t1": 1.5,
+      "evidence": "continuity",
+      "score": 0.231,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 140,
+      "t0": 1.6999999999999886,
+      "t1": 1.9000000000000057,
+      "evidence": "continuity",
+      "score": 0.276,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 142,
+      "t0": 2.1999999999999886,
+      "t1": 3.4000000000000057,
+      "evidence": "continuity",
+      "score": 0.361,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 144,
+      "t0": 5.5,
+      "t1": 5.900000000000006,
+      "evidence": "continuity",
+      "score": 0.255,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 167,
+      "t0": 12.699999999999989,
+      "t1": 16.19999999999999,
+      "evidence": "anchored",
+      "score": 0.533,
+      "scoreKind": "uncalibrated",
+      "reads": [
+        [
+          146,
+          "1",
+          0.9942887546566368,
+          "shorts:white"
+        ],
+        [
+          154,
+          "7",
+          0.9998570680618286,
+          "shorts:contrast"
+        ],
+        [
+          132,
+          "7",
+          0.9500890374183655,
+          "shirt:white"
+        ]
+      ]
+    },
+    {
+      "tid": 168,
+      "t0": 16.30000000000001,
+      "t1": 17.400000000000006,
+      "evidence": "number",
+      "score": 1.0,
+      "scoreKind": "uncalibrated",
+      "reads": [
+        [
+          170,
+          "20",
+          0.9999959539049404,
+          "shorts:scene"
+        ],
+        [
+          168,
+          "20",
+          1.0,
+          "discovery"
+        ]
+      ]
+    },
+    {
+      "tid": 169,
+      "t0": 17.5,
+      "t1": 17.900000000000006,
+      "evidence": "anchored",
+      "score": 0.379,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 170,
+      "t0": 18.0,
+      "t1": 18.400000000000006,
+      "evidence": "anchored",
+      "score": 0.35,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 171,
+      "t0": 18.5,
+      "t1": 19.69999999999999,
+      "evidence": "anchored",
+      "score": 0.422,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 187,
+      "t0": 22.19999999999999,
+      "t1": 22.80000000000001,
+      "evidence": "continuity",
+      "score": 0.216,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 112,
+      "t0": 22.900000000000006,
+      "t1": 27.69999999999999,
+      "evidence": "continuity",
+      "score": 0.28,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 188,
+      "t0": 27.80000000000001,
+      "t1": 28.900000000000006,
+      "evidence": "continuity",
+      "score": 0.251,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    },
+    {
+      "tid": 179,
+      "t0": 29.0,
+      "t1": 29.900000000000006,
+      "evidence": "continuity",
+      "score": 0.353,
+      "scoreKind": "uncalibrated",
+      "reads": []
+    }
+  ],
+  "reviewQuestions": [
+    {
+      "tid": 49,
+      "t": 15.599999999999994,
+      "box": [
+        987.9650268554688,
+        305.3482360839844,
+        1034.8802490234375,
+        451.904296875
+      ],
+      "from": 11.0,
+      "to": 16.5,
+      "currentlyTarget": false,
+      "score": 0.46,
+      "scoreKind": "uncalibrated",
+      "affectedSec": 5.6,
+      "value": 8.82,
+      "options": [
+        "yes",
+        "not_me",
+        "unsure",
+        "skip"
+      ],
+      "crop": "/home/claude/work/dval/default/i0225/stage1/chunk/crops/000156_2961.jpg"
+    },
+    {
+      "tid": 175,
+      "t": 17.30000000000001,
+      "box": [
+        612.5405883789062,
+        423.79022216796875,
+        653.7955322265625,
+        526.5961303710938
+      ],
+      "from": 17.19999999999999,
+      "to": 27.5,
+      "currentlyTarget": false,
+      "score": 0.43,
+      "scoreKind": "uncalibrated",
+      "affectedSec": 9.9,
+      "value": 7.69,
+      "options": [
+        "yes",
+        "not_me",
+        "unsure",
+        "skip"
+      ],
+      "crop": "/home/claude/work/dval/default/i0225/stage1/chunk/crops/000172_3198.jpg"
+    },
+    {
+      "tid": 148,
+      "t": 5.900000000000006,
+      "box": [
+        689.2515869140625,
+        317.9524841308594,
+        728.9190063476562,
+        421.5308837890625
+      ],
+      "from": 3.5999999999999943,
+      "to": 6.5,
+      "currentlyTarget": false,
+      "score": 0.27,
+      "scoreKind": "uncalibrated",
+      "affectedSec": 2.6,
+      "value": 0.93,
+      "options": [
+        "yes",
+        "not_me",
+        "unsure",
+        "skip"
+      ],
+      "crop": "/home/claude/work/dval/default/i0225/stage1/chunk/crops/000058_1284.jpg"
+    }
+  ],
+  "referenceCrop": "/home/claude/work/dval/default/i0225/stage1/chunk/crops/000170_3162.jpg",
+  "excluded": [
+    {
+      "tid": 143,
+      "t0": 3.5,
+      "t1": 5.400000000000006,
+      "why": "shows #17"
+    }
+  ],
+  "numberReads": {
+    "167": [
+      [
+        146,
+        "1",
+        0.9942887546566368,
+        "shorts:white"
+      ],
+      [
+        154,
+        "7",
+        0.9998570680618286,
+        "shorts:contrast"
+      ],
+      [
+        132,
+        "7",
+        0.9500890374183655,
+        "shirt:white"
+      ]
+    ],
+    "195": [
+      [
+        284,
+        "4",
+        0.9959555864334106,
+        "shorts:white"
+      ]
+    ],
+    "168": [
+      [
+        170,
+        "20",
+        0.9999959539049404,
+        "shorts:scene"
+      ],
+      [
+        168,
+        "20",
+        1.0,
+        "discovery"
+      ]
+    ],
+    "202": [
+      [
+        194,
+        "4",
+        0.9916957882726507,
+        "shorts:white"
+      ]
+    ],
+    "181": [
+      [
+        190,
+        "4",
+        0.999712607054537,
+        "shorts:dark"
+      ]
+    ],
+    "143": [
+      [
+        40,
+        "17",
+        0.9959058165550232,
+        "shirt:white"
+      ]
+    ],
+    "162": [
+      [
+        106,
+        "4",
+        0.9363293051719666,
+        "shorts:white"
+      ]
+    ],
+    "120": [
+      [
+        250,
+        "4",
+        0.9999209642410278,
+        "shirt:white"
+      ]
+    ]
+  },
+  "invariants": {
+    "violations": [],
+    "ok": true
+  }
+}
