@@ -1,0 +1,29 @@
+{
+ "schema": "pitchproof.hdr-reference-freeze.v1",
+ "reference": {
+  "name": "hlg-bc709-g2.2-v1",
+  "matrix": "bt2020nc",
+  "range": "limited",
+  "chroma": "bilinear, loc 0 (left)",
+  "rendering": "HLG signal as SDR gamma 2.2 display signal",
+  "gamut": "BT.2020->BT.709 linear matrix, hard clip",
+  "gamma": 2.2,
+  "output": "8-bit full-range BGR, round half up"
+ },
+ "moduleSha256": "3399bd8eb77b2d5adb960417dde83123cf5dd0a8ffb3a451c2dc03b24d79891a",
+ "frozenBeforeBroaderTrackingRuns": true,
+ "status": "experimental reference candidate; not a default; not ground truth",
+ "videoSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+ "tools": {
+  "ffmpegCli": "6.1.1-3ubuntu5 (libzimg enabled)",
+  "pyav": "19.0.2 (libavcodec 63.1.102, libswscale 10.1.102)",
+  "opencvLinux": "4.14.0.94 wheel (libavcodec 62.28.102, libswscale 9.5.102)",
+  "numpy": "2.5.3",
+  "colourScience": "0.4.7 (cross-check only)"
+ },
+ "commands": {
+  "nativePlanes": "ffmpeg -ss <first/fps> -i <video> -frames:v N -pix_fmt yuv420p10le -f rawvideo -",
+  "zimgCrossCheckStages2to3": "zscale=matrixin=2020_ncl:rangein=limited:chromal=left:filter=bilinear:transferin=arib-std-b67:transfer=arib-std-b67:primariesin=2020:primaries=2020:range=full,format=gbrpf32le",
+  "probe": "python bench/hdr_reference.py --video <video> --start 11500 --count 301 --out ref.json"
+ }
+}

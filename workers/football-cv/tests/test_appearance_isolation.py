@@ -90,9 +90,9 @@ def _link(cost, small):
     return {l.pre: l for l in out.links}
 
 
-def test_small_player_continuation_with_a_near_equal_competitor_stays_unclear():
-    # The 1155.7 s event with Windows-decoded colour: the tracker's continuation is also the best
-    # appearance assignment, but a team-mate's piece is almost as close (margin 0.059 < 0.10).
+def test_small_event_continuation_with_low_margin_stays_unclear():
+    # Generic 2x2 rule check (margin = best alternative joint assignment - optimal = 0.255 - 0.196 = 0.059).
+    # The recorded 1155.7 s event itself is reproduced exactly in the next test.
     links = _link([[0.116, 0.12], [0.135, 0.08]], small=True)
     assert links[1].decision == "unclear" and not links[1].clear and links[1].post == 10
     # same costs for players >= 90 px: the tracker continuation is kept
@@ -107,3 +107,32 @@ def test_appearance_disagreement_below_swap_margin_never_moves_identity_to_the_t
     assert links[1].decision == "unclear" and not links[1].clear
     assert links[1].post == 10            # never re-pointed to the team-mate's piece
     assert all(l.decision != "swap" for l in links.values())
+
+
+# Saved trace, Windows-colour replay, contact event ending 5.7 s (window-local), costs rounded to 3 dp by the trace.
+EVENT_1155_7 = {"pres": [199, 14, 133, 5, 6], "posts": [127, 135, 137, 139],
+                "succ": {199: 127, 14: None, 133: 135, 5: 137, 6: 139},
+                "cost": [[0.079, 0.138, 0.335, 0.211], [0.182, 0.174, 0.346, 0.321], [0.12, 0.116, 0.385, 0.202],
+                         [0.411, 0.338, 0.066, 0.264], [0.248, 0.262, 0.432, 0.119]]}
+
+
+def test_recorded_1155_7_event_margin_is_the_joint_assignment_gap_not_a_pairwise_cost_difference():
+    e = EVENT_1155_7
+    out = cr.ContactSplit(np.zeros((0, 9)))
+    cr._link_event(out, [(p, None) for p in e["pres"]], [(q, None) for q in e["posts"]], np.array(e["cost"]), 5.7,
+                   succ=e["succ"], small=True)
+    links = {l.pre: l for l in out.links}
+    target = links[133]                          # target pre piece (221 px) -> its tracker successor 135
+    assert target.post == 135 and target.cost == 0.116
+    # 5 pres, 4 posts: the best alternative leaves the target pre UNASSIGNED and gives 135 to pre 14
+    # (46.5 px piece without a tracker continuation, cost 0.174): margin = 0.174 - 0.116 = 0.058
+    # from the rounded trace costs (0.059 recorded from unrounded costs). It is NOT 0.120 - 0.116.
+    assert target.margin == pytest.approx(0.058, abs=0.0015)
+    assert target.decision == "unclear" and not target.clear      # small event (pieces 46.5 / 79.7 px) needs 0.10
+    # wrong-player counterexample: the competing piece 14 never receives the target's continuation
+    assert 14 not in links and all(l.post != 135 for p, l in links.items() if p != 133)
+    # without the small-event rule the same costs keep the tracker continuation
+    out2 = cr.ContactSplit(np.zeros((0, 9)))
+    cr._link_event(out2, [(p, None) for p in e["pres"]], [(q, None) for q in e["posts"]], np.array(e["cost"]), 5.7,
+                   succ=e["succ"], small=False)
+    assert {l.pre: l for l in out2.links}[133].decision == "same"

@@ -146,6 +146,21 @@ def trace(captured: dict, truth: dict, span, start: float, window: str) -> dict:
         e["targetPres"] = [p for p in e["pres"] if p in tids]
         e["targetPosts"] = [p for p in e["posts"] if p in tids]
     near_events = [e for e in events if e["inFinalAssembly"] and span[0] - 1 <= e["tEnd"] <= span[1] + 1]
+    # crossings.split_at_contacts: 'small' is an EVENT flag - the minimum over the event's pre/post pieces of the
+    # median box height in the 2.5 s next to the contact (pre: last rows, post: first rows) is below SMALL_PX.
+    import scoutx_tracker.crossings as cr  # noqa: PLC0415
+
+    win = int(round(cr.DESC_WINDOW_SEC * 10))
+    for e in near_events:
+        hts = {}
+        for side, ids in (("pre", e["pres"]), ("post", e["posts"])):
+            for pid in ids:
+                ix = np.where(R[:, 2] == pid)[0]
+                ix = ix[np.argsort(R[ix, 0], kind="stable")]
+                ix = ix[-win:] if side == "pre" else ix[:win]
+                hts[f"{side}:{pid}"] = round(float(np.median(R[ix, 6] - R[ix, 4])), 1) if len(ix) else None
+        e["pieceMedianHeightPx"] = hts
+        e["smallPx"] = cr.SMALL_PX
     chosen = [summary[k]["tid"] for k in res.chosen]
     return {"window": window, "spanSec": list(span), "basis": "corrected (+0.1 s) label times, window-local",
             "targetPieces": pieces, "trackingTargetTids": sorted(tids),

@@ -1,0 +1,814 @@
+{
+ "window": "gap1150",
+ "spanSec": [
+  3.5,
+  11.5
+ ],
+ "basis": "corrected (+0.1 s) label times, window-local",
+ "targetPieces": [
+  {
+   "f0": "30",
+   "f1": "32",
+   "tid": 131
+  },
+  {
+   "f0": "33",
+   "f1": "39",
+   "tid": 132
+  },
+  {
+   "f0": "40",
+   "f1": "43",
+   "tid": 133
+  },
+  {
+   "f0": "44",
+   "f1": "46",
+   "tid": 134
+  },
+  {
+   "f0": "47",
+   "f1": "48",
+   "tid": null
+  },
+  {
+   "f0": "49",
+   "f1": "97",
+   "tid": 135
+  },
+  {
+   "f0": "98",
+   "f1": "98",
+   "tid": null
+  },
+  {
+   "f0": "99",
+   "f1": "108",
+   "tid": 119
+  },
+  {
+   "f0": "109",
+   "f1": "111",
+   "tid": 188
+  },
+  {
+   "f0": "112",
+   "f1": "120",
+   "tid": 189
+  }
+ ],
+ "trackingTargetTids": [
+  119,
+  131,
+  132,
+  133,
+  134,
+  135,
+  188,
+  189
+ ],
+ "identityDecisions": [
+  {
+   "tid": 119,
+   "t0": 9.8,
+   "t1": 10.8,
+   "n": 11,
+   "contactPiece": false,
+   "kit1": 0.486,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.5062978217341416,
+   "appearanceScore": 0.5062978217341416,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 119
+  },
+  {
+   "tid": 131,
+   "t0": 1.9,
+   "t1": 3.2,
+   "n": 13,
+   "contactPiece": false,
+   "kit1": 0.722,
+   "candidate": true,
+   "chosen": false,
+   "seed": false,
+   "evidence": null,
+   "score": 0.103511482124536,
+   "appearanceScore": 0.103511482124536,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [
+    [
+     28,
+     "1",
+     0.9806681179542274,
+     "shirt:white"
+    ]
+   ],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 132,
+   "t0": 3.3,
+   "t1": 3.9,
+   "n": 7,
+   "contactPiece": true,
+   "kit1": 0.67,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "continuity",
+   "score": 0.3221672242377913,
+   "appearanceScore": 0.3221672242377913,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 133,
+   "t0": 4.0,
+   "t1": 4.3,
+   "n": 4,
+   "contactPiece": false,
+   "kit1": 0.592,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "contact_unclear",
+   "score": 0.22150890292267078,
+   "appearanceScore": 0.22150890292267078,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 134,
+   "t0": 4.4,
+   "t1": 4.6,
+   "n": 3,
+   "contactPiece": true,
+   "kit1": 0.564,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "contact_unclear",
+   "score": 0.23467992448205952,
+   "appearanceScore": 0.23467992448205952,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 3
+  },
+  {
+   "tid": 135,
+   "t0": 4.7,
+   "t1": 9.7,
+   "n": 50,
+   "contactPiece": false,
+   "kit1": 0.437,
+   "candidate": true,
+   "chosen": false,
+   "seed": false,
+   "evidence": null,
+   "score": 0.22926347711539397,
+   "appearanceScore": 0.22926347711539397,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [
+    [
+     90,
+     "1",
+     0.9882190227508545,
+     "shirt:contrast"
+    ],
+    [
+     54,
+     "4",
+     0.977827250957489,
+     "shirt:white"
+    ],
+    [
+     58,
+     "1",
+     0.9950969815254211,
+     "shorts:white"
+    ],
+    [
+     60,
+     "1",
+     0.9989142417907715,
+     "shorts:white"
+    ]
+   ],
+   "ownerQuestion": {
+    "score": 0.23,
+    "from": 4.7000000000000455,
+    "to": 9.700000000000045,
+    "currentlyTarget": false
+   },
+   "origin": 3
+  },
+  {
+   "tid": 188,
+   "t0": 10.9,
+   "t1": 11.1,
+   "n": 3,
+   "contactPiece": true,
+   "kit1": 0.563,
+   "candidate": true,
+   "chosen": true,
+   "seed": false,
+   "evidence": "anchored",
+   "score": 0.3225929484287535,
+   "appearanceScore": 0.3225929484287535,
+   "confirmed": false,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": null,
+   "reads": [],
+   "ownerQuestion": null,
+   "origin": 119
+  },
+  {
+   "tid": 189,
+   "t0": 11.2,
+   "t1": 12.8,
+   "n": 17,
+   "contactPiece": false,
+   "kit1": 0.599,
+   "candidate": true,
+   "chosen": true,
+   "seed": true,
+   "evidence": "number",
+   "score": 1.0,
+   "appearanceScore": 0.8185956322490111,
+   "confirmed": true,
+   "excluded": null,
+   "conflictTimes": null,
+   "evidenceTimes": [
+    12.0,
+    11.799999999999955
+   ],
+   "reads": [
+    [
+     120,
+     "20",
+     0.999980628490448,
+     "shirt:contrast"
+    ],
+    [
+     118,
+     "20",
+     0.999,
+     "discovery"
+    ]
+   ],
+   "ownerQuestion": null,
+   "origin": 119
+  }
+ ],
+ "contactLinksNearTarget": [
+  {
+   "pre": 198,
+   "post": 125,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.003,
+   "cost": 0.109,
+   "decision": "unclear"
+  },
+  {
+   "pre": 131,
+   "post": 133,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.016,
+   "cost": 0.054,
+   "decision": "unclear"
+  },
+  {
+   "pre": 30,
+   "post": 152,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.003,
+   "cost": 0.087,
+   "decision": "unclear"
+  },
+  {
+   "pre": 201,
+   "post": 149,
+   "t": 3.9,
+   "clear": false,
+   "margin": 0.016,
+   "cost": 0.062,
+   "decision": "unclear"
+  },
+  {
+   "pre": 199,
+   "post": 127,
+   "t": 5.7,
+   "clear": false,
+   "margin": 0.064,
+   "cost": 0.079,
+   "decision": "unclear"
+  },
+  {
+   "pre": 133,
+   "post": 135,
+   "t": 5.7,
+   "clear": false,
+   "margin": 0.059,
+   "cost": 0.116,
+   "decision": "unclear"
+  },
+  {
+   "pre": 5,
+   "post": 137,
+   "t": 5.7,
+   "clear": true,
+   "margin": 0.279,
+   "cost": 0.066,
+   "decision": "same"
+  },
+  {
+   "pre": 6,
+   "post": 139,
+   "t": 5.7,
+   "clear": true,
+   "margin": 0.142,
+   "cost": 0.119,
+   "decision": "same"
+  },
+  {
+   "pre": 129,
+   "post": 131,
+   "t": 1.8,
+   "clear": false,
+   "margin": 0.005,
+   "cost": 0.083,
+   "decision": "unclear"
+  },
+  {
+   "pre": 139,
+   "post": 141,
+   "t": 12.5,
+   "clear": true,
+   "margin": 0.292,
+   "cost": 0.045,
+   "decision": "same"
+  },
+  {
+   "pre": 164,
+   "post": 166,
+   "t": 12.5,
+   "clear": true,
+   "margin": 0.15,
+   "cost": 0.061,
+   "decision": "same"
+  },
+  {
+   "pre": 59,
+   "post": 156,
+   "t": 12.5,
+   "clear": true,
+   "margin": 0.15,
+   "cost": 0.039,
+   "decision": "same"
+  },
+  {
+   "pre": 119,
+   "post": 189,
+   "t": 11.1,
+   "clear": true,
+   "margin": 0.0,
+   "cost": 0.082,
+   "decision": "same"
+  },
+  {
+   "pre": 189,
+   "post": 191,
+   "t": 12.9,
+   "clear": true,
+   "margin": 0.175,
+   "cost": 0.031,
+   "decision": "same"
+  },
+  {
+   "pre": 125,
+   "post": 199,
+   "t": 4.6,
+   "clear": true,
+   "margin": 0.006,
+   "cost": 0.052,
+   "decision": "same"
+  },
+  {
+   "pre": 126,
+   "post": 200,
+   "t": 5.3,
+   "clear": false,
+   "margin": 0.0,
+   "cost": 0.0,
+   "decision": "unclear"
+  },
+  {
+   "pre": 147,
+   "post": 201,
+   "t": 2.5,
+   "clear": false,
+   "margin": -0.023,
+   "cost": 0.138,
+   "decision": "unclear"
+  }
+ ],
+ "contactEventsNearTarget": [
+  {
+   "tEnd": 3.9,
+   "pres": [
+    198,
+    131,
+    30,
+    201
+   ],
+   "posts": [
+    125,
+    133,
+    152,
+    149
+   ],
+   "cost": [
+    [
+     0.109,
+     0.119,
+     0.054,
+     0.134
+    ],
+    [
+     0.075,
+     0.054,
+     0.116,
+     0.07
+    ],
+    [
+     0.145,
+     0.144,
+     0.087,
+     0.169
+    ],
+    [
+     0.059,
+     0.118,
+     0.135,
+     0.062
+    ]
+   ],
+   "small": true,
+   "trackerSuccessor": {
+    "198": 125,
+    "131": 133,
+    "30": 152,
+    "201": 149
+   },
+   "links": [
+    {
+     "pre": 198,
+     "post": 125,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.003,
+     "cost": 0.109,
+     "decision": "unclear"
+    },
+    {
+     "pre": 131,
+     "post": 133,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.016,
+     "cost": 0.054,
+     "decision": "unclear"
+    },
+    {
+     "pre": 30,
+     "post": 152,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.003,
+     "cost": 0.087,
+     "decision": "unclear"
+    },
+    {
+     "pre": 201,
+     "post": 149,
+     "t": 3.9,
+     "clear": false,
+     "margin": 0.016,
+     "cost": 0.062,
+     "decision": "unclear"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [
+    131
+   ],
+   "targetPosts": [
+    133
+   ],
+   "pieceMedianHeightPx": {
+    "pre:198": 48.2,
+    "pre:131": 113.2,
+    "pre:30": 55.0,
+    "pre:201": 82.0,
+    "post:125": 95.5,
+    "post:133": 221.2,
+    "post:152": 63.2,
+    "post:149": 109.3
+   },
+   "smallPx": 90.0
+  },
+  {
+   "tEnd": 5.7,
+   "pres": [
+    199,
+    14,
+    133,
+    5,
+    6
+   ],
+   "posts": [
+    127,
+    135,
+    137,
+    139
+   ],
+   "cost": [
+    [
+     0.079,
+     0.138,
+     0.335,
+     0.211
+    ],
+    [
+     0.182,
+     0.174,
+     0.346,
+     0.321
+    ],
+    [
+     0.12,
+     0.116,
+     0.385,
+     0.202
+    ],
+    [
+     0.411,
+     0.338,
+     0.066,
+     0.264
+    ],
+    [
+     0.248,
+     0.262,
+     0.432,
+     0.119
+    ]
+   ],
+   "small": true,
+   "trackerSuccessor": {
+    "199": 127,
+    "14": null,
+    "133": 135,
+    "5": 137,
+    "6": 139
+   },
+   "links": [
+    {
+     "pre": 199,
+     "post": 127,
+     "t": 5.7,
+     "clear": false,
+     "margin": 0.064,
+     "cost": 0.079,
+     "decision": "unclear"
+    },
+    {
+     "pre": 133,
+     "post": 135,
+     "t": 5.7,
+     "clear": false,
+     "margin": 0.059,
+     "cost": 0.116,
+     "decision": "unclear"
+    },
+    {
+     "pre": 5,
+     "post": 137,
+     "t": 5.7,
+     "clear": true,
+     "margin": 0.279,
+     "cost": 0.066,
+     "decision": "same"
+    },
+    {
+     "pre": 6,
+     "post": 139,
+     "t": 5.7,
+     "clear": true,
+     "margin": 0.142,
+     "cost": 0.119,
+     "decision": "same"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [
+    133
+   ],
+   "targetPosts": [
+    135
+   ],
+   "pieceMedianHeightPx": {
+    "pre:199": 123.1,
+    "pre:14": 46.5,
+    "pre:133": 221.2,
+    "pre:5": 163.2,
+    "pre:6": 79.7,
+    "post:127": 132.0,
+    "post:135": 116.8,
+    "post:137": 275.9,
+    "post:139": 125.9
+   },
+   "smallPx": 90.0
+  },
+  {
+   "tEnd": 12.5,
+   "pres": [
+    139,
+    164,
+    59
+   ],
+   "posts": [
+    141,
+    166,
+    156
+   ],
+   "cost": [
+    [
+     0.045,
+     0.197,
+     0.179
+    ],
+    [
+     0.201,
+     0.061,
+     0.115
+    ],
+    [
+     0.24,
+     0.136,
+     0.039
+    ]
+   ],
+   "small": false,
+   "trackerSuccessor": {
+    "139": 141,
+    "164": 166,
+    "59": 156
+   },
+   "links": [
+    {
+     "pre": 139,
+     "post": 141,
+     "t": 12.5,
+     "clear": true,
+     "margin": 0.292,
+     "cost": 0.045,
+     "decision": "same"
+    },
+    {
+     "pre": 164,
+     "post": 166,
+     "t": 12.5,
+     "clear": true,
+     "margin": 0.15,
+     "cost": 0.061,
+     "decision": "same"
+    },
+    {
+     "pre": 59,
+     "post": 156,
+     "t": 12.5,
+     "clear": true,
+     "margin": 0.15,
+     "cost": 0.039,
+     "decision": "same"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [],
+   "targetPosts": [],
+   "pieceMedianHeightPx": {
+    "pre:139": 157.7,
+    "pre:164": 324.8,
+    "pre:59": 161.8,
+    "post:141": 144.9,
+    "post:166": 282.8,
+    "post:156": 130.2
+   },
+   "smallPx": 90.0
+  },
+  {
+   "tEnd": 11.1,
+   "pres": [
+    119
+   ],
+   "posts": [
+    189
+   ],
+   "cost": [
+    [
+     0.082
+    ]
+   ],
+   "small": false,
+   "trackerSuccessor": {
+    "119": 189
+   },
+   "links": [
+    {
+     "pre": 119,
+     "post": 189,
+     "t": 11.1,
+     "clear": true,
+     "margin": 0.0,
+     "cost": 0.082,
+     "decision": "same"
+    }
+   ],
+   "inFinalAssembly": true,
+   "targetPres": [
+    119
+   ],
+   "targetPosts": [
+    189
+   ],
+   "pieceMedianHeightPx": {
+    "pre:119": 174.5,
+    "post:189": 258.5
+   },
+   "smallPx": 90.0
+  }
+ ],
+ "contactEvents": 15,
+ "chosenTidsOverall": [
+  2,
+  123,
+  30,
+  132,
+  133,
+  134,
+  200,
+  127,
+  119,
+  188,
+  189,
+  191,
+  120,
+  173,
+  197,
+  121
+ ],
+ "solver": {
+  "iteration": 1,
+  "mode": "classifier",
+  "chosen": 16,
+  "seconds": 24.3,
+  "positives": 5,
+  "negatives": 22
+ },
+ "identityPasses": 3,
+ "note": "tracking association (targetPieces, links) is reported separately from identity assignment"
+}

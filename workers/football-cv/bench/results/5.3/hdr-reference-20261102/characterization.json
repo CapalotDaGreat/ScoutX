@@ -1,0 +1,375 @@
+{
+ "perFrame": {
+  "11500": {
+   "ref_vs_linux": {
+    "meanAbs": 22.3163,
+    "p99Abs": 54,
+    "maxAbs": 128,
+    "shareExact": 0.0139,
+    "shareWithin1": 0.0266,
+    "meanSignedBGR": [
+     -18.225,
+     -23.543,
+     -25.103
+    ]
+   },
+   "ref_vs_windows": {
+    "meanAbs": 6.7617,
+    "p99Abs": 47,
+    "maxAbs": 101,
+    "shareExact": 0.1018,
+    "shareWithin1": 0.3217,
+    "meanSignedBGR": [
+     -13.826,
+     -1.793,
+     -2.623
+    ]
+   },
+   "linux_vs_windows": {
+    "meanAbs": 21.8862,
+    "p99Abs": 55,
+    "maxAbs": 95,
+    "shareExact": 0.0157,
+    "shareWithin1": 0.0437,
+    "meanSignedBGR": [
+     4.399,
+     21.75,
+     22.481
+    ]
+   },
+   "ref22_vs_ref24": {
+    "meanAbs": 0.8927,
+    "p99Abs": 17,
+    "maxAbs": 43,
+    "shareExact": 0.7929,
+    "shareWithin1": 0.8672,
+    "meanSignedBGR": [
+     2.487,
+     0.029,
+     0.163
+    ]
+   },
+   "stats": {
+    "reference": {
+     "meanBGR": [
+      108.23,
+      163.553,
+      153.564
+     ],
+     "stdBGR": [
+      83.544,
+      58.399,
+      59.743
+     ],
+     "share0": 0.01985,
+     "share255": 0.00041
+    },
+    "linux": {
+     "meanBGR": [
+      126.455,
+      187.096,
+      178.667
+     ],
+     "stdBGR": [
+      94.754,
+      69.388,
+      70.014
+     ],
+     "share0": 0.00821,
+     "share255": 0.17935
+    },
+    "windows": {
+     "meanBGR": [
+      122.056,
+      165.346,
+      156.186
+     ],
+     "stdBGR": [
+      73.678,
+      58.311,
+      59.129
+     ],
+     "share0": 0.0021,
+     "share255": 0.00022
+    },
+    "reference_g2.4": {
+     "meanBGR": [
+      105.743,
+      163.524,
+      153.401
+     ],
+     "stdBGR": [
+      85.623,
+      58.418,
+      59.797
+     ],
+     "share0": 0.0321,
+     "share255": 0.00041
+    }
+   },
+   "renderDiagnostics": {
+    "signalBelow0": 0.0019839891975308643,
+    "signalAbove1": 0.00019483024691358024,
+    "gamutClipBelow0": 0.01949636702674897,
+    "gamutClipAbove1": 0.00034657921810699586
+   }
+  },
+  "11650": {
+   "ref_vs_linux": {
+    "meanAbs": 23.082,
+    "p99Abs": 57,
+    "maxAbs": 95,
+    "shareExact": 0.0119,
+    "shareWithin1": 0.0215,
+    "meanSignedBGR": [
+     -24.488,
+     -21.299,
+     -23.363
+    ]
+   },
+   "ref_vs_windows": {
+    "meanAbs": 7.1816,
+    "p99Abs": 40,
+    "maxAbs": 90,
+    "shareExact": 0.0346,
+    "shareWithin1": 0.1551,
+    "meanSignedBGR": [
+     -9.232,
+     0.018,
+     -7.026
+    ]
+   },
+   "linux_vs_windows": {
+    "meanAbs": 21.4198,
+    "p99Abs": 59,
+    "maxAbs": 85,
+    "shareExact": 0.0186,
+    "shareWithin1": 0.0544,
+    "meanSignedBGR": [
+     15.256,
+     21.317,
+     16.338
+    ]
+   },
+   "ref22_vs_ref24": {
+    "meanAbs": 0.7846,
+    "p99Abs": 15,
+    "maxAbs": 34,
+    "shareExact": 0.7779,
+    "shareWithin1": 0.8885,
+    "meanSignedBGR": [
+     2.01,
+     0.038,
+     0.305
+    ]
+   },
+   "stats": {
+    "reference": {
+     "meanBGR": [
+      126.573,
+      160.06,
+      141.714
+     ],
+     "stdBGR": [
+      87.068,
+      51.001,
+      58.306
+     ],
+     "share0": 0.02172,
+     "share255": 0.00035
+    },
+    "linux": {
+     "meanBGR": [
+      151.061,
+      181.359,
+      165.078
+     ],
+     "stdBGR": [
+      99.952,
+      63.456,
+      67.759
+     ],
+     "share0": 0.00828,
+     "share255": 0.17106
+    },
+    "windows": {
+     "meanBGR": [
+      135.805,
+      160.042,
+      148.74
+     ],
+     "stdBGR": [
+      75.781,
+      50.019,
+      55.189
+     ],
+     "share0": 0.00212,
+     "share255": 9e-05
+    },
+    "reference_g2.4": {
+     "meanBGR": [
+      124.562,
+      160.022,
+      141.409
+     ],
+     "stdBGR": [
+      89.318,
+      51.038,
+      58.553
+     ],
+     "share0": 0.03585,
+     "share255": 0.00033
+    }
+   },
+   "renderDiagnostics": {
+    "signalBelow0": 0.0016304976851851851,
+    "signalAbove1": 7.989326131687243e-05,
+    "gamutClipBelow0": 0.021397408693415637,
+    "gamutClipAbove1": 0.0003123392489711934
+   }
+  },
+  "11800": {
+   "ref_vs_linux": {
+    "meanAbs": 24.1962,
+    "p99Abs": 60,
+    "maxAbs": 80,
+    "shareExact": 0.0124,
+    "shareWithin1": 0.0189,
+    "meanSignedBGR": [
+     -24.68,
+     -22.83,
+     -24.983
+    ]
+   },
+   "ref_vs_windows": {
+    "meanAbs": 7.4797,
+    "p99Abs": 43,
+    "maxAbs": 104,
+    "shareExact": 0.0476,
+    "shareWithin1": 0.2027,
+    "meanSignedBGR": [
+     -11.911,
+     -0.843,
+     -5.59
+    ]
+   },
+   "linux_vs_windows": {
+    "meanAbs": 22.5994,
+    "p99Abs": 61,
+    "maxAbs": 103,
+    "shareExact": 0.0172,
+    "shareWithin1": 0.0506,
+    "meanSignedBGR": [
+     12.77,
+     21.986,
+     19.393
+    ]
+   },
+   "ref22_vs_ref24": {
+    "meanAbs": 0.8582,
+    "p99Abs": 16,
+    "maxAbs": 39,
+    "shareExact": 0.7707,
+    "shareWithin1": 0.8698,
+    "meanSignedBGR": [
+     2.281,
+     0.039,
+     0.254
+    ]
+   },
+   "stats": {
+    "reference": {
+     "meanBGR": [
+      114.859,
+      159.904,
+      144.083
+     ],
+     "stdBGR": [
+      82.531,
+      44.653,
+      51.7
+     ],
+     "share0": 0.02436,
+     "share255": 0.00059
+    },
+    "linux": {
+     "meanBGR": [
+      139.539,
+      182.734,
+      169.066
+     ],
+     "stdBGR": [
+      97.068,
+      58.059,
+      62.632
+     ],
+     "share0": 0.00974,
+     "share255": 0.15151
+    },
+    "windows": {
+     "meanBGR": [
+      126.769,
+      160.748,
+      149.673
+     ],
+     "stdBGR": [
+      70.365,
+      43.818,
+      48.775
+     ],
+     "share0": 0.00148,
+     "share255": 0.00013
+    },
+    "reference_g2.4": {
+     "meanBGR": [
+      112.578,
+      159.865,
+      143.829
+     ],
+     "stdBGR": [
+      84.811,
+      44.693,
+      51.874
+     ],
+     "share0": 0.03889,
+     "share255": 0.00051
+    }
+   },
+   "renderDiagnostics": {
+    "signalBelow0": 0.0010106417181069958,
+    "signalAbove1": 0.0001080246913580247,
+    "gamutClipBelow0": 0.024128247170781894,
+    "gamutClipAbove1": 0.0005250128600823046
+   }
+  }
+ },
+ "aggregate": {
+  "ref_vs_linux": {
+   "meanOfFrameMeanAbs": 23.108,
+   "min": 20.897,
+   "max": 26.71
+  },
+  "ref_vs_windows": {
+   "meanOfFrameMeanAbs": 7.199,
+   "min": 5.628,
+   "max": 8.396
+  },
+  "linux_vs_windows": {
+   "meanOfFrameMeanAbs": 21.56,
+   "min": 19.044,
+   "max": 25.208
+  },
+  "ref22_vs_ref24": {
+   "meanOfFrameMeanAbs": 0.804,
+   "min": 0.538,
+   "max": 0.956
+  },
+  "renderDiagnosticsMean": {
+   "signalBelow0": 0.00156,
+   "signalAbove1": 0.00012,
+   "gamutClipBelow0": 0.02164,
+   "gamutClipAbove1": 0.00044
+  }
+ },
+ "frames": 301
+}
