@@ -54,6 +54,14 @@ STEAL_LOOK = 3
 STEAL_IOU = 0.4
 STEAL_LEAD = 0.15
 STEAL_SAME_MARGIN = float(__import__("os").environ.get("SCOUTX_STEAL_SAME_MARGIN", "0.0"))
+# 5.3 CANDIDATE (off by default; SCOUTX_EXCHANGE_SPLIT=1 enables it): mutual exchanges at a partial-overlap
+# crossing. IMG_4809 244.4 s (HDR-reference decode): track A (another orange player) missed one frame and resumed on
+# #20's detection, while #20's own track continued onto A's fragment - neither track paused, the boxes never covered
+# each other by CONTACT_COVER, so neither the contact nor the steal rule cut them. A's tracklet then held two people
+# and one correct #20 read confirmed A for 1.5 s before the exchange. Same evidence as a steal (B's extrapolated box,
+# STEAL_IOU / STEAL_LEAD), plus: B's own row at that frame continues B clearly worse (by STEAL_LEAD) than A's row
+# does. Both tracks are cut and linked like steals: identity crosses only when appearance decides it.
+EXCHANGE_SPLIT = __import__("os").environ.get("SCOUTX_EXCHANGE_SPLIT", "0") != "0"
 
 
 @dataclass
@@ -170,6 +178,69 @@ def steal_rows(R: np.ndarray, row_kit: np.ndarray, skip: np.ndarray | None = Non
     return out
 
 
+def exchange_rows(R: np.ndarray, row_kit: np.ndarray, skip: np.ndarray | None = None, mate: float = MATE_KIT,
+                  look: int = STEAL_LOOK, min_iou: float = STEAL_IOU, lead: float = STEAL_LEAD) -> list[tuple[int, int]]:
+    """Mutual exchanges the steal rule cannot see because the victim's track did not pause. Returns (b, q) pairs in
+    the steal_rows format: row b of track A at frame f jumps onto the motion-extrapolated box of same-kit track B
+    (q = B's last row before f, at most `look` frames back) with IoU >= min_iou, better than A's own previous box by
+    `lead`, AND better by `lead` than B's own row at f. For each exchange both (b, q) and (B's row at f, A's last row
+    before f) are returned, so both tracks are cut at f."""
+    if len(R) == 0:
+        return []
+    fr = R[:, 0].astype(int)
+    tid = R[:, 2].astype(int)
+    ok = row_kit >= mate
+    if skip is not None:
+        ok &= ~skip
+    rows_of: dict[int, np.ndarray] = {}
+    for t in np.unique(tid):
+        ix = np.flatnonzero(tid == t)
+        rows_of[int(t)] = ix[np.argsort(fr[ix], kind="stable")]
+    at: dict[tuple[int, int], int] = {(int(tid[i]), int(fr[i])): int(i) for i in range(len(R))}
+
+    def last_before(t: int, f: int) -> int | None:
+        ix = rows_of[t]
+        k = np.searchsorted(fr[ix], f) - 1
+        return int(ix[k]) if k >= 0 and f - fr[ix[k]] <= look else None
+
+    def extrap(t: int, q: int, f: int) -> np.ndarray:
+        ix = rows_of[t]
+        k = int(np.searchsorted(fr[ix], fr[q])) - 1
+        if k >= 0 and fr[q] - fr[ix[k]] <= look:
+            p = ix[k]
+            return R[q, 3:7] + (R[q, 3:7] - R[p, 3:7]) / (fr[q] - fr[p]) * (f - fr[q])
+        return R[q, 3:7]
+
+    out: set[tuple[int, int]] = set()
+    by_frame: dict[int, list[int]] = {}
+    for i in np.flatnonzero(ok):
+        by_frame.setdefault(int(fr[i]), []).append(int(i))
+    for f, rows in by_frame.items():
+        for b in rows:
+            ta = int(tid[b])
+            pa = last_before(ta, f)
+            if pa is None:
+                continue
+            own = float(_iou_many(R[b, 3:7], R[pa, 3:7][None])[0])
+            if own >= 1.0 - lead:
+                continue
+            for bb in rows:
+                tb = int(tid[bb])
+                if tb == ta:
+                    continue
+                q = last_before(tb, f)
+                if q is None or not ok[q]:
+                    continue
+                e = extrap(tb, q, f)
+                v = float(_iou_many(e, R[b, 3:7][None])[0])
+                v_own_b = float(_iou_many(e, R[bb, 3:7][None])[0])
+                if v >= min_iou and v > own + lead and v > v_own_b + lead:
+                    out.add((b, q))
+                    out.add((bb, pa))
+    # a row already explained as a steal keeps the steal rule's decision
+    return sorted(out)
+
+
 def _runs(mask: np.ndarray, join: int) -> list[tuple[int, int]]:
     """[a, b) index runs of True, joining runs separated by fewer than `join` False entries."""
     idx = np.flatnonzero(mask)
@@ -224,6 +295,9 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
     # box steals are found on the tracker's own tracks (before any cut: a piece ending at a contact
     # is not a lost track); contact frames are contacts, not steals
     stolen = steal_rows(R, row_kit, skip=occ) if STEAL_SPLIT else []
+    if EXCHANGE_SPLIT:
+        seen_b = {b for b, _ in stolen}
+        stolen = stolen + [(b, q) for b, q in exchange_rows(R, row_kit, skip=occ) if b not in seen_b]
     next_id = int(R[:, 2].max()) + 1 if len(R) else 1
     out = ContactSplit(R)
     order = np.lexsort((R[:, 0], R[:, 2]))
