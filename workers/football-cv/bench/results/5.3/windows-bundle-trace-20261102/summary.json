@@ -1,0 +1,208 @@
+{
+ "schema": "pitchproof.windows-bundle-trace.v1",
+ "date": "2026-11-02",
+ "window": "gap1150 (1150-1180 s)",
+ "productionApproval": false,
+ "cloudResourcesUsed": false,
+ "bundle": {
+  "path": "C:\\ZLI\\M335\\ScoutX\\.local\\cpu-windows-handoff-20261102.zip",
+  "sha256": "6271354514bd751273265a36e7ab0c14c44a613d9f06642851fdff071598348d",
+  "sha256Verified": true,
+  "bytes": 1074134,
+  "memberSha256": {
+   "decode_windows_20261102.json": "548d41ed914527849f77ce65e7563d3e6f558e81ec846b6c7195e0d1f1c1c29d",
+   "automatic/result.json": "5f5ef1fcb3bce9facfed69d8038388b055b671604d308e4b41f1e18760191329",
+   "automatic/timeline.npz": "5cce2f765a6dc93b17398123bab1f73071fa670d713b0316fcf35e23f916fd6a",
+   "stage1/chunk/detections.npz": "7c02278ef46fc6a5dfd2ec5040acb626800623c90a5f1fd28f61351acf7f0444",
+   "stage1/chunk/meta.json": "a5ccb4be2929398d3f68f4017eb48129a6e786135a088ffbb1627173fa6b6f44"
+  },
+  "memberDates": {
+   "automatic/*, stage1/chunk/*": "2026-10-30 (original Windows run)",
+   "decode_windows_20261102.json": "2026-11-02 (later probe)"
+  },
+  "containsFootageOrCrops": false
+ },
+ "provenance": {
+  "windowsRun": {
+   "date": "2026-10-30",
+   "python": "3.12.10",
+   "platform": "Windows-11-10.0.26300-SP0",
+   "torch": "2.8.0+cpu",
+   "opencv": "5.0.0 (prebuilt FFmpeg)",
+   "onnxruntime": "1.29.0 CPUExecutionProvider",
+   "harnessProbeSha256": "6c0e4dd720660c9a7a21438ffa3164193d321c198524ac3eac5bce4aa33d83f5",
+   "videoSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+   "models": {
+    "ok": true,
+    "files": {
+     "yolox/yolox_s.pth": {
+      "path": "C:\\ZLI\\M335\\ScoutX\\.local\\identity-models-20261030\\yolox_s.pth",
+      "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+      "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+      "ok": true
+     },
+     "easyocr/model/craft_mlt_25k.pth": {
+      "path": "C:\\Users\\masap\\.EasyOCR\\model\\craft_mlt_25k.pth",
+      "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+      "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+      "ok": true
+     },
+     "easyocr/model/english_g2.pth": {
+      "path": "C:\\Users\\masap\\.EasyOCR\\model\\english_g2.pth",
+      "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+      "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+      "ok": true
+     },
+     "doctr/models/parseq-56125471.pt": {
+      "path": "C:\\Users\\masap\\.cache\\doctr\\models\\parseq-56125471.pt",
+      "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+      "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+      "ok": true
+     }
+    }
+   }
+  },
+  "linuxRun": {
+   "date": "2026-11-01",
+   "python": "3.13.17",
+   "torch": "2.14.1",
+   "opencv": "4.14.0 (pip wheel; avcodec 62.28.102, swscale 9.5.102)",
+   "harnessProbeSha256": "39e839f6f2158a2ea59fd597995f10088e0eb79206202af348f3de0117233ff9",
+   "videoSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c"
+  },
+  "decodeSwapRun": {
+   "date": "2026-11-02",
+   "environment": "same Linux container as linuxRun",
+   "source": "worktree 8012c3d; scoutx_tracker/ and bench/fp32_comparison.py unchanged since 51d41c9",
+   "harnessProbeSha256": "39e839f6f2158a2ea59fd597995f10088e0eb79206202af348f3de0117233ff9",
+   "decoder": "FFmpeg 6.1.1 CLI, -vf scale=in_color_matrix=bt601:in_range=tv, bgr24",
+   "modelsEqualToWindows": true,
+   "modelFileSha256Compared": 4
+  },
+  "frameAlignment": "source frame index 11500+i <-> window frame i <-> time 1150+i/10 in all runs (detections.npz times equal); no hash match at offsets -2..+2",
+  "knownConfounders": [
+   "harness probe hash differs (corpus refinement only)",
+   "torch 2.8.0 vs 2.14.1 (OCR models)",
+   "Python 3.12 vs 3.13",
+   "16 vs 2 CPU cores"
+  ]
+ },
+ "decoding": {
+  "windowsProbeReproducesOriginalWindowsRun": "301/301 decodedPixels hashes identical",
+  "linuxProbeReproducesLinuxRun": "301/301",
+  "windowsVsLinux": "0/301 identical; both report backend FFMPEG",
+  "documentedReproduction": "FFmpeg 6.1.1 CLI with swscale BT.601 limited-range YUV->BGR24 reproduces 301/301 Windows hashes; BT.709 or BT.2020 matrices and full-range input do not",
+  "linuxPathIdentified": false,
+  "linuxPathCandidatesTried": [
+   "swscale bt601/bt709/bt2020 x tv/pc",
+   "zscale BT.709 (with and without linearisation)",
+   "tonemap none/clip/hable",
+   "colorspace bt2020->bt709"
+  ],
+  "note": "Neither path is shown to be the correct rendering of this BT.2020/HLG source; the repo calibrated kit colour on OpenCV's (Linux-style) conversion (discovery.py)."
+ },
+ "decodeSwapResult": {
+  "detections": "6492 vs 6492, all matched one-to-one, max |coordinate/score| difference 0.0009; embeddings identical",
+  "ocr": "253/253 OCR input pixel hashes identical; 253/253 texts and regions identical; max confidence difference 0.0035",
+  "tracklets": "16 chosen tracklets identical (tid, t0, t1, evidence)",
+  "timeline": "states, evidence, presence identical on 300/300 frames; boxes within 0.00025 px",
+  "metrics": "identical (claimedCorrect 15.2 s, abstained 128 target-visible frames, IDF1 0.692 on stored label times)",
+  "conclusion": "With Windows-equivalent decoded pixels, the Linux environment reproduces the Windows run. Platform, Python, torch and harness-hash differences do not change any identity output in this window; the decoded pixels account for the whole Linux/Windows CPU difference here."
+ },
+ "rescoringTimeCorrected": {
+  "denominator": "286 target-visible labelled frames (corrected basis); 300 labelled frames in all",
+  "linux": {
+   "correct": 241,
+   "wrong": 0,
+   "overlapAmbiguous": 0,
+   "abstained": 45,
+   "unmatched": 0
+  },
+  "windows": {
+   "correct": 159,
+   "wrong": 0,
+   "overlapAmbiguous": 0,
+   "abstained": 127,
+   "unmatched": 0
+  },
+  "allLabelledFrames": {
+   "linux": {
+    "correct": 241,
+    "abstained": 54,
+    "unmatched": 1,
+    "indeterminateQuestionLabel": 3,
+    "noPrediction": 1
+   },
+   "windows": {
+    "correct": 159,
+    "abstained": 139,
+    "unmatched": 1,
+    "noPrediction": 1
+   }
+  },
+  "storedLabelTimesOriginal": {
+   "linux": {
+    "correct": 228,
+    "abstained": 46,
+    "unmatched": 13
+   },
+   "windows": {
+    "correct": 152,
+    "abstained": 128,
+    "unmatched": 7
+   }
+  }
+ },
+ "differenceTrace": {
+  "linuxCorrectWindowsNot": 91,
+  "windowsCorrectLinuxNot": 9,
+  "net": 82,
+  "intervals": [
+   {
+    "t": "13.5-16.7 s (1163.5-1166.7)",
+    "frames": 33,
+    "windows": "29 conflict + 4 interpolated (AMBIGUOUS)",
+    "linux": "anchored (LIKELY_VISIBLE)",
+    "status": "causal within the rules",
+    "chain": [
+     "decode: Windows-style pixels (established by decode swap)",
+     "detection: target box present in both runs (IoU>=0.5 on 286/286 target frames)",
+     "OCR: Windows-path crop of the target at window frame 160 (1166.0 s) read '11' (0.944, shirt:dark); the Linux-path crop at the same frame read nothing",
+     "identity: '11' is a different full number -> identity.incompatible_with_target -> conflict_times on tracklet 120",
+     "timeline: stats.build_timeline labels frames within 4 s of the conflict and nearer to it than any #20 evidence 'conflict' -> not claimed"
+    ],
+    "unresolved": "whether pixel values or the 0.001-px box difference produced '11' is not separated (both follow from decoding)"
+   },
+   {
+    "t": "4.0-9.6 s (1154.0-1159.6)",
+    "frames": 55,
+    "windows": "10 contact_unclear + 7 contact_unclear + 38 not identified",
+    "linux": "anchored",
+    "status": "association / unresolved dependency",
+    "evidence": [
+     "base tracking without OCR keeps the target in one track over 4.9-9.6/9.7 s on BOTH detection sets (base_tracking_without_ocr.json), so detection differences alone do not fragment it",
+     "Windows accepted more #20 evidence (7 reads on 5 tracklets, 5 discovery sightings) than Linux (2 reads on 1 tracklet, 1 sighting); the identity solver ran in classifier mode (5 positives, 22 negatives) instead of template mode (1 positive, 4 negatives)",
+     "Windows number-conflict splits 3 vs Linux 1"
+    ],
+    "unresolved": "which of the extra sightings, the conflict splits or the solver mode removes the target's 4.0-9.6 s piece is not isolated"
+   },
+   {
+    "t": "18.5-18.7 s",
+    "frames": 3,
+    "windows": "continuity",
+    "linux": "anchored",
+    "status": "unresolved"
+   },
+   {
+    "t": "Windows-only correct",
+    "frames": 9,
+    "windows": "number/anchored at 10.9-11.0, 27.3-29.6 s",
+    "linux": "interpolated / not identified",
+    "status": "follows from the extra Windows #20 reads at frames 228/247 (number evidence)"
+   }
+  ],
+  "explainedShare": "33 of 91 Linux-only correct frames (36 %) traced to one OCR misread through the conflict rule; 55 (60 %) associated with a different identity solution; 3 unresolved"
+ },
+ "thirteenClaimAudit": "see claim_audit_reconciliation.json: of the 12 alignment-defect claims Windows also claims correctly 5 (126, 238, 294, 297, 298) and abstains on 7 (41, 42, 45, 49, 52, 60, 185); frame 295 is correct in Windows after alignment and abstained in Linux; frame 97 (1159.8 s, no target label) is an unmatched claim in BOTH runs and stays unresolved; the 3 '?'-label claims (1168.2-1168.4 s) are Linux-only (Windows abstains)",
+ "gpu": "Not addressed by this evidence. The L4 CPU and GPU runs shared one machine and opencv-python 4.14.0.94; no GPU decoded-pixel hashes were recorded. The GPU gap remains unresolved."
+}

@@ -126,6 +126,8 @@ Across all labelled frames, one unmatched and three "?"-label claims remain.
 
 ## 6. Unknown, and the smallest next experiments
 
+> **Update 2026-11-02:** items 1 and 2 are done. See [windows-bundle-decode-trace-2026-11-02.md](windows-bundle-decode-trace-2026-11-02.md). The Windows decode is reproduced exactly by FFmpeg BT.601 limited-range conversion, and a one-factor decode swap on Linux reproduces the Windows run end to end.
+
 1. **Windows decode magnitude.** On the Windows machine, in the same overlay:
    `python bench/decode_probe.py --video "C:\Users\masap\Downloads\Mobile Devices\IMG_4809_proxy_10fps.mp4" --out decode_windows.json`.
    Then compare with `decode_probe_linux.json` using `--compare`. This shows the backend (FFMPEG or MSMF) and the per-channel brightness/histogram shift: one file, no footage exported.

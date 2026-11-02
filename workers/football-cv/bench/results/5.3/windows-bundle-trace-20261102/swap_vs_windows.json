@@ -1,0 +1,285 @@
+{
+  "schema": "pitchproof.window-run-comparison.v1",
+  "window": "gap1150",
+  "runs": {
+    "A": "swap",
+    "B": "windows"
+  },
+  "frameTimesEqual": true,
+  "metaA": {
+    "video": "/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4",
+    "detector": "yolox_s@1280/onnx",
+    "keyframeEvery": 1,
+    "t0": 0.0,
+    "start": 1150.0,
+    "fps": 10.0,
+    "frames": 300,
+    "width": 1920,
+    "height": 1080,
+    "seconds": 103.0,
+    "stageSeconds": {
+      "decode": 4.45,
+      "detect": 89.64,
+      "propagate": 0.0,
+      "scene_cmc": 5.89,
+      "colour_signature": 1.94,
+      "embedding": 0.57,
+      "crops_io": 0.31
+    }
+  },
+  "metaB": {
+    "video": "C:\\Users\\masap\\Downloads\\Mobile Devices\\IMG_4809_proxy_10fps.mp4",
+    "detector": "yolox_s@1280/onnx",
+    "keyframeEvery": 1,
+    "t0": 0.0,
+    "start": 1150.0,
+    "fps": 10.0,
+    "frames": 300,
+    "width": 1920,
+    "height": 1080,
+    "seconds": 96.7,
+    "stageSeconds": {
+      "decode": 4.32,
+      "detect": 80.78,
+      "propagate": 0.0,
+      "scene_cmc": 4.93,
+      "colour_signature": 3.31,
+      "embedding": 1.04,
+      "crops_io": 2.04
+    }
+  },
+  "decoding": {
+    "probeVsProbe": {
+      "frames": 301,
+      "identical": 301,
+      "backends": [
+        "FFMPEG-CLI vf=scale=in_color_matrix=bt601:in_range=tv",
+        "FFMPEG"
+      ],
+      "cv2": [
+        null,
+        "5.0.0"
+      ]
+    },
+    "probeReproducesRunA": {
+      "frames": 301,
+      "identical": 301
+    },
+    "probeReproducesRunB": {
+      "frames": 301,
+      "identical": 301
+    }
+  },
+  "detection": {
+    "frames": 300,
+    "a": 6492,
+    "b": 6492,
+    "matched": 6492,
+    "onlyA": 0,
+    "onlyB": 0,
+    "meanIoU": 1.0,
+    "scoreDeltaMean": -0.0,
+    "onlyANearThreshold": 0,
+    "onlyBNearThreshold": 0,
+    "targetFrames": 286,
+    "targetMatched": 286,
+    "targetOnlyA": 0,
+    "targetOnlyB": 0,
+    "framesWithChanges": []
+  },
+  "ocr": {
+    "acceptedReadsA": 30,
+    "acceptedReadsB": 30,
+    "numbersA": {
+      "1": 11,
+      "20": 7,
+      "4": 6,
+      "19": 4,
+      "17": 1,
+      "11": 1
+    },
+    "numbersB": {
+      "1": 11,
+      "20": 7,
+      "4": 6,
+      "19": 4,
+      "11": 1,
+      "17": 1
+    },
+    "target20A": [
+      {
+        "tid": 121,
+        "frame": 228,
+        "number": "20",
+        "conf": 0.9454,
+        "where": "shirt:contrast"
+      },
+      {
+        "tid": 121,
+        "frame": 247,
+        "number": "20",
+        "conf": 1.0,
+        "where": "discovery"
+      },
+      {
+        "tid": 191,
+        "frame": 134,
+        "number": "20",
+        "conf": 0.9455,
+        "where": "shirt:white"
+      },
+      {
+        "tid": 120,
+        "frame": 176,
+        "number": "20",
+        "conf": 0.95,
+        "where": "shirt:contrast"
+      },
+      {
+        "tid": 197,
+        "frame": 195,
+        "number": "20",
+        "conf": 0.95,
+        "where": "discovery"
+      },
+      {
+        "tid": 189,
+        "frame": 120,
+        "number": "20",
+        "conf": 1.0,
+        "where": "shirt:contrast"
+      },
+      {
+        "tid": 189,
+        "frame": 118,
+        "number": "20",
+        "conf": 0.999,
+        "where": "discovery"
+      }
+    ],
+    "target20B": [
+      {
+        "tid": 189,
+        "frame": 120,
+        "number": "20",
+        "conf": 1.0,
+        "where": "shirt:contrast"
+      },
+      {
+        "tid": 189,
+        "frame": 118,
+        "number": "20",
+        "conf": 0.999,
+        "where": "discovery"
+      },
+      {
+        "tid": 191,
+        "frame": 134,
+        "number": "20",
+        "conf": 0.9455,
+        "where": "shirt:white"
+      },
+      {
+        "tid": 120,
+        "frame": 176,
+        "number": "20",
+        "conf": 0.95,
+        "where": "shirt:contrast"
+      },
+      {
+        "tid": 197,
+        "frame": 195,
+        "number": "20",
+        "conf": 0.95,
+        "where": "discovery"
+      },
+      {
+        "tid": 121,
+        "frame": 228,
+        "number": "20",
+        "conf": 0.9454,
+        "where": "shirt:contrast"
+      },
+      {
+        "tid": 121,
+        "frame": 247,
+        "number": "20",
+        "conf": 1.0,
+        "where": "discovery"
+      }
+    ],
+    "sightingsA": 5,
+    "sightingsB": 5,
+    "note": "numberReads are accepted reads attached to tracklets (frame = window-local frame index); raw rejected reads are not in result.json"
+  },
+  "identity": {
+    "frames": 300,
+    "stateAgreement": 1.0,
+    "statePairs": {
+      "CONFIRMED_VISIBLE|CONFIRMED_VISIBLE": 134,
+      "AMBIGUOUS|AMBIGUOUS": 98,
+      "UNKNOWN|UNKNOWN": 42,
+      "LIKELY_VISIBLE|LIKELY_VISIBLE": 26
+    },
+    "claimIntervals": [],
+    "tracklets": {
+      "A": 16,
+      "B": 16
+    }
+  },
+  "accuracy": {
+    "storedLabelTimes": {
+      "swap": {
+        "allLabelledFrames": {
+          "abstained": 140,
+          "correctClaim": 152,
+          "unmatchedClaim": 8
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 128,
+          "correctClaim": 152,
+          "unmatchedClaim": 7
+        }
+      },
+      "windows": {
+        "allLabelledFrames": {
+          "abstained": 140,
+          "correctClaim": 152,
+          "unmatchedClaim": 8
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 128,
+          "correctClaim": 152,
+          "unmatchedClaim": 7
+        }
+      }
+    },
+    "timeCorrected": {
+      "swap": {
+        "allLabelledFrames": {
+          "abstained": 139,
+          "unmatchedClaim": 1,
+          "correctClaim": 159,
+          "noPrediction": 1
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 127,
+          "correctClaim": 159
+        }
+      },
+      "windows": {
+        "allLabelledFrames": {
+          "abstained": 139,
+          "unmatchedClaim": 1,
+          "correctClaim": 159,
+          "noPrediction": 1
+        },
+        "targetVisibleLabelledFrames": {
+          "abstained": 127,
+          "correctClaim": 159
+        }
+      }
+    }
+  },
+  "productionApproval": false
+}

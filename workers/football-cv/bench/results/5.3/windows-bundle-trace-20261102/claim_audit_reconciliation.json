@@ -1,0 +1,137 @@
+[
+ {
+  "frame": "41",
+  "t": 1154.1,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/AMBI",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "abstained/AMBI"
+ },
+ {
+  "frame": "42",
+  "t": 1154.2,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/AMBI",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "abstained/AMBI"
+ },
+ {
+  "frame": "45",
+  "t": 1154.5,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/AMBI",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "abstained/AMBI"
+ },
+ {
+  "frame": "46",
+  "t": 1154.6,
+  "linuxClass": "unresolved (aligned outcome abstained)",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/AMBI",
+  "linux:corrected": "abstained/UNKN",
+  "windows:corrected": "abstained/UNKN"
+ },
+ {
+  "frame": "49",
+  "t": 1154.9,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/UNKN",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "abstained/UNKN"
+ },
+ {
+  "frame": "52",
+  "t": 1155.2,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/UNKN",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "abstained/AMBI"
+ },
+ {
+  "frame": "60",
+  "t": 1156.0,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/AMBI",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "abstained/AMBI"
+ },
+ {
+  "frame": "126",
+  "t": 1162.6,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/CONF",
+  "windows:stored": "unmatchedClaim/CONF",
+  "linux:corrected": "correctClaim/CONF",
+  "windows:corrected": "correctClaim/CONF"
+ },
+ {
+  "frame": "179",
+  "t": 1167.9,
+  "linuxClass": "unresolved (aligned outcome abstained)",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "unmatchedClaim/CONF",
+  "linux:corrected": "abstained/AMBI",
+  "windows:corrected": "abstained/AMBI"
+ },
+ {
+  "frame": "185",
+  "t": 1168.5,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "abstained/AMBI",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "abstained/AMBI"
+ },
+ {
+  "frame": "238",
+  "t": 1173.8,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "correctClaim/CONF",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "correctClaim/CONF"
+ },
+ {
+  "frame": "294",
+  "t": 1179.4,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "unmatchedClaim/LIKE",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "correctClaim/LIKE"
+ },
+ {
+  "frame": "295",
+  "t": 1179.5,
+  "linuxClass": "unresolved (aligned outcome abstained)",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "unmatchedClaim/LIKE",
+  "linux:corrected": "abstained/AMBI",
+  "windows:corrected": "correctClaim/LIKE"
+ },
+ {
+  "frame": "297",
+  "t": 1179.7,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "unmatchedClaim/LIKE",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "correctClaim/LIKE"
+ },
+ {
+  "frame": "298",
+  "t": 1179.8,
+  "linuxClass": "timeBasisAlignmentDefect: correct target at +0.1 s (claim ma",
+  "linux:stored": "unmatchedClaim/LIKE",
+  "windows:stored": "unmatchedClaim/LIKE",
+  "linux:corrected": "correctClaim/LIKE",
+  "windows:corrected": "correctClaim/LIKE"
+ }
+]

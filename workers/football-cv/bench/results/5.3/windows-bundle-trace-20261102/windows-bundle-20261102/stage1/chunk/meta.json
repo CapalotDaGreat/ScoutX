@@ -1,0 +1,21 @@
+{
+  "video": "C:\\Users\\masap\\Downloads\\Mobile Devices\\IMG_4809_proxy_10fps.mp4",
+  "detector": "yolox_s@1280/onnx",
+  "keyframeEvery": 1,
+  "t0": 0.0,
+  "start": 1150.0,
+  "fps": 10.0,
+  "frames": 300,
+  "width": 1920,
+  "height": 1080,
+  "seconds": 96.7,
+  "stageSeconds": {
+    "decode": 4.32,
+    "detect": 80.78,
+    "propagate": 0.0,
+    "scene_cmc": 4.93,
+    "colour_signature": 3.31,
+    "embedding": 1.04,
+    "crops_io": 2.04
+  }
+}
