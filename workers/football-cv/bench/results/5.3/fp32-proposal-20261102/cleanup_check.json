@@ -1,0 +1,10 @@
+{
+ "checkedUtc": "2026-11-02T20:45:46.105892+00:00",
+ "account": "clusiola4@gmail.com (gcloud auth list)",
+ "instances": [],
+ "disks": [],
+ "snapshots": [],
+ "customImages": [],
+ "bucketNonResultObjects": 0,
+ "bucketResultObjects": "111 objects, 3.54 MiB, all under results/"
+}

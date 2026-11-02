@@ -1,0 +1,72 @@
+{
+ "retrievedUtc": "2026-11-02T20:18:57.687176+00:00",
+ "source": "Cloud Billing Catalog API services/6F81-5844-456A/skus (USD, list price)",
+ "skus": {
+  "europe-west3": {
+   "G2 Instance Ram running in Frankfurt": [
+    0.003450105,
+    "GiBy.h",
+    "10AA-7064-F09F"
+   ],
+   "G2 Instance Core running in Frankfurt": [
+    0.029449516,
+    "h",
+    "AFF4-6DF9-A774"
+   ],
+   "Balanced PD Capacity in Frankfurt": [
+    0.12,
+    "GiBy.mo",
+    "B1B5-0BAA-CB31"
+   ],
+   "Nvidia L4 GPU running in Frankfurt": [
+    0.660027786,
+    "h",
+    "D8F8-12AA-CE07"
+   ]
+  },
+  "europe-west4": {
+   "Balanced PD Capacity in Netherlands": [
+    0.11,
+    "GiBy.mo",
+    "5CFD-16B2-4F41"
+   ],
+   "G2 Instance Ram running in Netherlands": [
+    0.003076895,
+    "GiBy.h",
+    "8BFF-12ED-8AD9"
+   ],
+   "G2 Instance Core running in Netherlands": [
+    0.02626386,
+    "h",
+    "CB1A-E671-2608"
+   ],
+   "Nvidia L4 GPU running in Netherlands": [
+    0.588630286,
+    "h",
+    "E975-984D-BEFA"
+   ]
+  },
+  "europe-west6": {
+   "G2 Instance Core running in Zurich": [
+    0.0327363,
+    "h",
+    "31E8-B339-85E4"
+   ],
+   "G2 Instance Ram running in Zurich": [
+    0.003835162,
+    "GiBy.h",
+    "621A-366D-7D71"
+   ],
+   "Nvidia L4 GPU running in Zurich": [
+    0.7834403,
+    "h",
+    "8B4F-7888-65CA"
+   ],
+   "Balanced PD Capacity in Zurich": [
+    0.13,
+    "GiBy.mo",
+    "CAF4-ADE9-58BA"
+   ]
+  }
+ }
+}
