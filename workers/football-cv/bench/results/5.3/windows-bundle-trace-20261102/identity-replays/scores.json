@@ -1,0 +1,417 @@
+{
+ "linux(original)": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 46,
+    "correctClaim": 228,
+    "unmatchedClaim": 13
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 55,
+    "correctClaim": 228,
+    "unmatchedClaim": 15,
+    "indeterminateLabelClaim": 2
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 45,
+    "correctClaim": 241,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 54,
+    "correctClaim": 241,
+    "unmatchedClaim": 1,
+    "indeterminateLabelClaim": 3,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "4.0-9.6": 55,
+   "13.5-16.7": 33,
+   "18.5-18.7": 3,
+   "27.3-29.6": 17
+  },
+  "evidence4.0-9.6": {
+   "anchored": 54,
+   "interpolated": 1,
+   "": 2
+  },
+  "statesEqualWindows": 82,
+  "statesEqualLinux": 300
+ },
+ "windows(original)": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "10.9-11.0": 2,
+   "27.3-29.6": 24
+  },
+  "evidence4.0-9.6": {
+   "contact_unclear": 17,
+   "": 40
+  },
+  "statesEqualWindows": 300,
+  "statesEqualLinux": 82
+ },
+ "winbase-own": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "10.9-11.0": 2,
+   "27.3-29.6": 24
+  },
+  "evidence4.0-9.6": {
+   "contact_unclear": 17,
+   "": 40
+  },
+  "statesEqualWindows": 300,
+  "statesEqualLinux": 82
+ },
+ "winbase-ocr": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 110,
+    "correctClaim": 170,
+    "unmatchedClaim": 7
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 122,
+    "correctClaim": 170,
+    "unmatchedClaim": 8
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 108,
+    "correctClaim": 178,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 121,
+    "correctClaim": 178,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "10.9-11.0": 2,
+   "13.5-16.7": 29,
+   "27.3-29.6": 24
+  },
+  "evidence4.0-9.6": {
+   "contact_unclear": 17,
+   "": 40
+  },
+  "statesEqualWindows": 243,
+  "statesEqualLinux": 117
+ },
+ "winbase-sightings": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 128,
+    "correctClaim": 152,
+    "unmatchedClaim": 7
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 152,
+    "unmatchedClaim": 8
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 127,
+    "correctClaim": 159,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 139,
+    "unmatchedClaim": 1,
+    "correctClaim": 159,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "10.9-11.0": 2,
+   "27.3-29.6": 24
+  },
+  "evidence4.0-9.6": {
+   "contact_unclear": 17,
+   "": 40
+  },
+  "statesEqualWindows": 281,
+  "statesEqualLinux": 96
+ },
+ "winbase-both": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 222,
+    "correctClaim": 64,
+    "unmatchedClaim": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 234,
+    "correctClaim": 64,
+    "unmatchedClaim": 2
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 220,
+    "correctClaim": 66,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 233,
+    "correctClaim": 66,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "10.9-11.0": 2,
+   "13.5-16.7": 29
+  },
+  "evidence4.0-9.6": {
+   "contact_unclear": 17,
+   "": 40
+  },
+  "statesEqualWindows": 91,
+  "statesEqualLinux": 105
+ },
+ "linbase-own": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 46,
+    "correctClaim": 228,
+    "unmatchedClaim": 13
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 55,
+    "correctClaim": 228,
+    "unmatchedClaim": 15,
+    "indeterminateLabelClaim": 2
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 45,
+    "correctClaim": 241,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 54,
+    "correctClaim": 241,
+    "unmatchedClaim": 1,
+    "indeterminateLabelClaim": 3,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "4.0-9.6": 55,
+   "13.5-16.7": 33,
+   "18.5-18.7": 3,
+   "27.3-29.6": 17
+  },
+  "evidence4.0-9.6": {
+   "anchored": 54,
+   "interpolated": 1,
+   "": 2
+  },
+  "statesEqualWindows": 82,
+  "statesEqualLinux": 300
+ },
+ "linbase-ocr": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 133,
+    "correctClaim": 146,
+    "unmatchedClaim": 8
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 146,
+    "unmatchedClaim": 10,
+    "indeterminateLabelClaim": 4
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 132,
+    "correctClaim": 154,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 139,
+    "correctClaim": 154,
+    "unmatchedClaim": 2,
+    "indeterminateLabelClaim": 4,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "4.0-9.6": 54,
+   "10.9-11.0": 2,
+   "13.5-16.7": 17,
+   "18.5-18.7": 3
+  },
+  "evidence4.0-9.6": {
+   "anchored": 54,
+   "interpolated": 1,
+   "": 2
+  },
+  "statesEqualWindows": 140,
+  "statesEqualLinux": 126
+ },
+ "linbase-sightings": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 38,
+    "correctClaim": 234,
+    "unmatchedClaim": 15
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 46,
+    "correctClaim": 234,
+    "unmatchedClaim": 17,
+    "indeterminateLabelClaim": 3
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 37,
+    "correctClaim": 249,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 45,
+    "correctClaim": 249,
+    "unmatchedClaim": 2,
+    "indeterminateLabelClaim": 3,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "4.0-9.6": 54,
+   "10.9-11.0": 2,
+   "13.5-16.7": 33,
+   "18.5-18.7": 3,
+   "27.3-29.6": 24
+  },
+  "evidence4.0-9.6": {
+   "anchored": 54,
+   "interpolated": 1,
+   "": 2
+  },
+  "statesEqualWindows": 187,
+  "statesEqualLinux": 187
+ },
+ "linbase-both": {
+  "stored": {
+   "targetVisible": {
+    "abstained": 133,
+    "correctClaim": 146,
+    "unmatchedClaim": 8
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 140,
+    "correctClaim": 146,
+    "unmatchedClaim": 10,
+    "indeterminateLabelClaim": 4
+   }
+  },
+  "corrected": {
+   "targetVisible": {
+    "abstained": 132,
+    "correctClaim": 154,
+    "noPrediction": 1
+   },
+   "targetVisibleDenominator": 287,
+   "allLabelled": {
+    "abstained": 139,
+    "correctClaim": 154,
+    "unmatchedClaim": 2,
+    "indeterminateLabelClaim": 4,
+    "noPrediction": 1
+   }
+  },
+  "correctByInterval(corrected)": {
+   "4.0-9.6": 54,
+   "10.9-11.0": 2,
+   "13.5-16.7": 17,
+   "18.5-18.7": 3
+  },
+  "evidence4.0-9.6": {
+   "anchored": 54,
+   "interpolated": 1,
+   "": 2
+  },
+  "statesEqualWindows": 140,
+  "statesEqualLinux": 126
+ }
+}

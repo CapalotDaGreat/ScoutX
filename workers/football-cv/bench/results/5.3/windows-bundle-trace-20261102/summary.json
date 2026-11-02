@@ -107,10 +107,10 @@
   "tracklets": "16 chosen tracklets identical (tid, t0, t1, evidence)",
   "timeline": "states, evidence, presence identical on 300/300 frames; boxes within 0.00025 px",
   "metrics": "identical (claimedCorrect 15.2 s, abstained 128 target-visible frames, IDF1 0.692 on stored label times)",
-  "conclusion": "With Windows-equivalent decoded pixels, the Linux environment reproduces the Windows run. Platform, Python, torch and harness-hash differences do not change any identity output in this window; the decoded pixels account for the whole Linux/Windows CPU difference here."
+  "conclusion": "With Windows-equivalent decoded pixels, the Linux environment reproduces the Windows run. The other environment differences (platform, Python, torch, harness hash, core count) had no observable effect in this controlled replay - not a general claim. Both decode paths remain experimental; neither is shown correct for HLG."
  },
  "rescoringTimeCorrected": {
-  "denominator": "286 target-visible labelled frames (corrected basis); 300 labelled frames in all",
+  "denominator": "stored label times: 287 target-labelled frames, all scorable; corrected (+0.1 s): 286 scorable target-labelled frames, the 287th label moves to 1180.0 s outside the window (no prediction); all labelled: 300 stored, 299 scorable corrected",
   "linux": {
    "correct": 241,
    "wrong": 0,
@@ -178,13 +178,13 @@
     "frames": 55,
     "windows": "10 contact_unclear + 7 contact_unclear + 38 not identified",
     "linux": "anchored",
-    "status": "association / unresolved dependency",
+    "status": "localised to the stage-1 output by identity replays (identity-replays/); OCR reads, sightings and solver mode ruled out for this interval; mechanism within stage 1 not isolated",
     "evidence": [
      "base tracking without OCR keeps the target in one track over 4.9-9.6/9.7 s on BOTH detection sets (base_tracking_without_ocr.json), so detection differences alone do not fragment it",
-     "Windows accepted more #20 evidence (7 reads on 5 tracklets, 5 discovery sightings) than Linux (2 reads on 1 tracklet, 1 sighting); the identity solver ran in classifier mode (5 positives, 22 negatives) instead of template mode (1 positive, 4 negatives)",
+     "Windows accepted more #20 evidence (7 reads on 5 tracklets, 3 discovery sightings, identity numberSightings 5) than Linux (2 reads on 1 tracklet, 1 sighting); the identity solver ran in classifier mode (5 positives, 22 negatives) instead of template mode (1 positive, 4 negatives)",
      "Windows number-conflict splits 3 vs Linux 1"
     ],
-    "unresolved": "which of the extra sightings, the conflict splits or the solver mode removes the target's 4.0-9.6 s piece is not isolated"
+    "unresolved": "which stage-1 quantity (boxes, colour signatures, embeddings, crops) causes it"
    },
    {
     "t": "18.5-18.7 s",
@@ -201,8 +201,58 @@
     "status": "follows from the extra Windows #20 reads at frames 228/247 (number evidence)"
    }
   ],
-  "explainedShare": "33 of 91 Linux-only correct frames (36 %) traced to one OCR misread through the conflict rule; 55 (60 %) associated with a different identity solution; 3 unresolved"
+  "explainedShare": "33 of 91 Linux-only correct frames (36 %) traced to one OCR misread through the conflict rule and confirmed by OCR-swap replays; 55 (60 %) localised to the stage-1 output; 3 unresolved"
  },
  "thirteenClaimAudit": "see claim_audit_reconciliation.json: of the 12 alignment-defect claims Windows also claims correctly 5 (126, 238, 294, 297, 298) and abstains on 7 (41, 42, 45, 49, 52, 60, 185); frame 295 is correct in Windows after alignment and abstained in Linux; frame 97 (1159.8 s, no target label) is an unmatched claim in BOTH runs and stays unresolved; the 3 '?'-label claims (1168.2-1168.4 s) are Linux-only (Windows abstains)",
- "gpu": "Not addressed by this evidence. The L4 CPU and GPU runs shared one machine and opencv-python 4.14.0.94; no GPU decoded-pixel hashes were recorded. The GPU gap remains unresolved."
+ "gpu": "Not addressed by this evidence. The L4 CPU and GPU runs shared one machine and opencv-python 4.14.0.94; no GPU decoded-pixel hashes were recorded. The GPU gap remains unresolved.",
+ "identityReplays": {
+  "tool": "bench/identity_replay_swap.py",
+  "scores": "identity-replays/scores.json",
+  "coldOcrCache": true,
+  "sanity": "own-input replays reproduce both original runs on 300/300 frames; a warm-cache attempt did not (discarded)",
+  "correctedTargetCorrect_den286": {
+   "winStage1": {
+    "own": 159,
+    "linuxOcr": 178,
+    "linuxSightings": 159,
+    "both": 66
+   },
+   "linuxStage1": {
+    "own": 241,
+    "windowsOcr": 154,
+    "windowsSightings": 249,
+    "both": 154
+   }
+  },
+  "interval4.0to9.6_correct_of55": {
+   "winStage1": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "linuxStage1": [
+    55,
+    54,
+    54,
+    54
+   ]
+  },
+  "interval13.5to16.7_correct_of33": {
+   "winStage1": [
+    0,
+    29,
+    0,
+    29
+   ],
+   "linuxStage1": [
+    33,
+    17,
+    33,
+    17
+   ]
+  },
+  "wrongPlayerClaims": 0,
+  "note": "effects are not additive; unmatched and '?'-label claims are never counted as correct"
+ }
 }

@@ -7,7 +7,7 @@ Branch `codex/gpu-benchmark-5-3`, follows [cpu-divergence-and-label-time-audit-2
 
 ## Result in one paragraph
 
-The Windows probe reproduces the original Windows run's decoded pixels exactly (301/301). Those pixels are reproduced exactly on Linux by an explicitly documented path: FFmpeg CLI with swscale's BT.601 limited-range YUV→BGR24 conversion. Re-running the Linux pipeline with only that decode path swapped in reproduces the Windows run end to end: same detections, same OCR text, same tracklets, the same 300/300 timeline states and the same metrics. **The decoded pixels account for the whole Linux/Windows CPU difference in this window.** Platform, Python, torch and harness-hash differences change nothing measurable here. Neither decode path is shown to be the correct rendering of this BT.2020/HLG source. **The GPU gap is not addressed by this and remains unresolved.**
+The Windows probe reproduces the original Windows run's decoded pixels exactly (301/301). Those pixels are reproduced exactly on Linux by an explicitly documented path: FFmpeg CLI with swscale's BT.601 limited-range YUV→BGR24 conversion. Re-running the Linux pipeline with only that decode path swapped in reproduces the Windows run end to end: same detections, same OCR text, same tracklets, the same 300/300 timeline states and the same metrics. **The decoded pixels account for the whole Linux/Windows CPU difference in this window.** The other environment differences (platform, Python, torch, harness hash, core count) had no observable effect in this controlled replay; that is not a claim about other windows or machines. Neither decode path is shown to be the correct rendering of this BT.2020/HLG source: both stay experimental, and the default decoder is unchanged. **The GPU gap is not addressed by this and remains unresolved.**
 
 ## 1. Bundle and provenance
 
@@ -24,7 +24,7 @@ The Windows probe reproduces the original Windows run's decoded pixels exactly (
   - Python 3.12 vs 3.13;
   - 16 vs 2 cores.
 
-  The decode swap below shows that none of these alter outputs in this window.
+  In the decode swap below, none of them had an observable effect on any output in this window. That does not make them irrelevant in general.
 
 ## 2. Decoding (earliest divergence)
 
@@ -82,7 +82,8 @@ The differences are mostly low-score boxes, many near the target.
 |---|---|---|
 | Accepted reads | 25 | 30 |
 | "20" reads | 2, on 1 tracklet | 7, on 5 tracklets |
-| Discovery sightings | 1 | 5 |
+| Discovery sightings | 1 | 3 |
+| Identity `numberSightings` (discovery + attached reads) | 1 | 5 |
 | Number-conflict splits | 1 | 3 |
 
 - Raw OCR events: 746 on Linux vs 253 on Windows.
@@ -92,16 +93,21 @@ The differences are mostly low-score boxes, many near the target.
 
 ## 5. Consistent rescoring (gap1150, automatic; the same basis for both runs)
 
-Denominator: 286 target-visible labelled frames on the corrected basis, 287 on stored times. Original scores are kept alongside.
+Denominators differ by basis and are stated separately:
 
-| Basis | Run | Correct | Wrong player | Overlap-ambiguous | Abstained | Unmatched |
+- **Stored label times:** 287 target-labelled frames, all scorable.
+- **Corrected (+0.1 s):** 286 target-labelled frames are scorable; the 287th label moves to 1180.0 s, outside the window, and has no prediction.
+
+Original scores are kept alongside.
+
+| Basis (denominator) | Run | Correct | Wrong player | Overlap-ambiguous | Abstained | Unmatched |
 |---|---|---|---|---|---|---|
-| Stored label times (original) | Linux | 228 | 0 | 0 | 46 | 13 |
+| Stored label times, original (287) | Linux | 228 | 0 | 0 | 46 | 13 |
 | | Windows | 152 | 0 | 0 | 128 | 7 |
-| +0.1 s time-corrected | Linux | **241** | 0 | 0 | 45 | 0 |
+| +0.1 s time-corrected (286) | Linux | **241** | 0 | 0 | 45 | 0 |
 | | Windows | **159** | 0 | 0 | 127 | 0 |
 
-**All 300 labelled frames, corrected basis:**
+**All 300 labelled frames, corrected basis** (299 scorable, 1 without prediction):
 
 | | Correct | Abstained | Unmatched | "?"-label claims | No prediction |
 |---|---|---|---|---|---|
@@ -130,17 +136,49 @@ source frame 11660 → Windows-path pixels (established by the swap) → target 
 - This is the existing wrong-player safeguard abstaining on an OCR misread of the true target. It produced no wrong claim, and it is not changed.
 - Not separated: whether pixel values or the 0.001-px box difference produced "11". Both follow from decoding.
 
-**4.0–9.6 s (1154.0–1159.6 s): 55 frames. Association / unresolved dependency.**
+**4.0–9.6 s (1154.0–1159.6 s): 55 frames. Follows the stage-1 output; not OCR reads or sightings (see §6a).**
 
-- Windows has `contact_unclear` contact pieces plus 38 unidentified frames; Linux has one anchored tracklet.
-- Base tracking keeps the target in one track on both detection sets, so the loss arises downstream of OCR feedback. That is the number-conflict splits (3 vs 1), the extra #20 evidence and the classifier-vs-template solver mode.
-- Which of these removes the piece is not isolated.
+- Windows has `contact_unclear` contact pieces plus unidentified frames; Linux has one anchored tracklet.
+- The earlier hypothesis (number-conflict splits, extra #20 evidence, solver mode) is **refuted for this interval** by the replays in §6a.
+- Which stage-1 quantity (boxes, colour signatures, embeddings or crops) causes it is not isolated.
 
 **Other frames:**
 - 18.5–18.7 s: 3 frames, unresolved.
 - Windows-only: 9 frames (10.9–11.0 s and 27.3–29.6 s), associated with Windows' extra #20 reads at frames 228/247.
 
-**Explained:** 33 of the 91 frames (36%) are traced causally; 55 (60%) are associated but not isolated.
+**Explained:** 33 of the 91 frames (36%) are traced to one OCR read through the conflict rule, and the replays confirm the OCR dependence (§6a). 55 (60%) are localised to the stage-1 output, mechanism within stage 1 not isolated. 3 are unresolved.
+
+## 6a. Identity replays: OCR reads and sightings swapped separately
+
+`bench/identity_replay_swap.py`, local, CPU, same Linux container. Each replay copies one run's stage-1 output (detections, colour signatures, embeddings, crops) into a fresh directory and re-runs stage 2 only, with one input taken from the other run:
+
+- **OCR reads:** every base crop gets the read the other decode gives for the matched detection (one-to-one, IoU ≥ 0.5). That is the other run's cached read (266 / 252 crops), else a fresh read of the other run's own crop file (other pixels, same reader; 1,047 / 1,060), else no text (20 / 38 crops with no matching detection or no other crop). No number is ever invented, and no base-pixel crop is read.
+- **Sightings:** the other run's retained discovery sightings (Windows 3, Linux 1).
+- **The OCR cache starts empty**, as in the original runs, and reads are served when the pipeline asks. A first attempt with a pre-filled cache did **not** reproduce either run (Windows 200 instead of 159 correct), because which reads exist at the first tracklet split changes; that attempt was discarded.
+- **Sanity check:** both own-input replays reproduce their original run on 300/300 frames.
+- Sightings-only variants may read crops the base run never selected, on base pixels (52 Windows-base, 12 Linux-base); they are counted.
+
+Correct target frames, corrected basis (denominator 286; 1 further label has no prediction). Wrong-player and overlap-ambiguous claims are 0 in every replay; unmatched and "?"-label claims are listed and never counted as correct.
+
+| Stage 1 from | OCR reads | Sightings | Correct | Abstained | Correct in 4.0–9.6 s (of 55) | Correct in 13.5–16.7 s (of 33) | All-labelled unmatched / "?" | Solver |
+|---|---|---|---|---|---|---|---|---|
+| Windows pixels | Windows | Windows | 159 | 127 | **0** | 0 | 1 / 0 | classifier, 5 pos |
+| Windows pixels | **Linux** | Windows | 178 | 108 | **0** | 29 | 0 / 0 | classifier, 2 pos |
+| Windows pixels | Windows | **Linux** | 159 | 127 | **0** | 0 | 1 / 0 | classifier, 5 pos |
+| Windows pixels | **Linux** | **Linux** | 66 | 220 | **0** | 29 | 0 / 0 | template, 1 pos |
+| Linux pixels | Linux | Linux | 241 | 45 | **55** | 33 | 1 / 3 | template, 1 pos |
+| Linux pixels | **Windows** | Linux | 154 | 132 | **54** | 17 | 2 / 4 | classifier, 4 pos |
+| Linux pixels | Linux | **Windows** | 249 | 37 | **54** | 33 | 2 / 3 | classifier, 2 pos |
+| Linux pixels | **Windows** | **Windows** | 154 | 132 | **54** | 17 | 2 / 4 | classifier, 4 pos |
+
+What this shows, and what it does not:
+
+- **4.0–9.6 s follows the stage-1 output.** It is lost in all four Windows-stage-1 replays and kept (54–55 of 55) in all four Linux-stage-1 replays, whichever OCR reads, sightings or solver mode are used. OCR reads, sightings and solver mode are therefore not the cause of this interval.
+- Under Windows stage 1 the target's piece over this interval exists but is not chosen. With its own reads it is split at about 5.5 and 9.8 s and is raised as an owner review question (tracklet 135, 4.7–9.7 s, uncalibrated score 0.23; its box matches the target label at IoU 0.97). With Linux reads it is one piece (4.9–10.8 s), and it is still not claimed. So that split is not necessary for the loss.
+- **13.5–16.7 s follows the OCR reads.** Linux reads on Windows stage 1 recover 29 of 33 frames; Windows reads on Linux stage 1 lose 16 of 33. This is consistent with the "11" trace above.
+- **The effects are not additive.** Swapping both inputs on Windows stage 1 gives 66 correct, fewer than either single swap, because the solver switches to template mode with one positive. Per-input attributions should not be summed.
+- Windows sightings on Linux stage 1 give 249 correct (0 wrong), but 2 unmatched and 3 "?"-label claims remain. That is not evidence that more sightings are better in general.
+- The conflicting-number safeguard is unchanged in every replay. Abstaining after a plausible "11" read is the intended cautious behaviour.
 
 ## 7. Changes and tests
 
@@ -154,18 +192,16 @@ source frame 11660 → Windows-path pixels (established by the swap) → target 
   - records OpenCV's bundled FFmpeg library versions and the stream colour metadata;
   - checks frame offsets −2…+2 in `--compare`;
   - takes `--ffmpeg-vf` to probe an explicitly documented FFmpeg-CLI decode path.
+- `bench/identity_replay_swap.py` (new) replays stage 2 on one run's stage-1 output with OCR reads and/or sightings from another run, cold OCR cache, reads served by crop pixel hash, OCR on base pixels refused when reads are transferred.
 - `tests/test_window_run_comparison.py` covers:
   - one-to-one matching with near-duplicate boxes;
   - abstentions staying abstentions in interval comparison;
-  - detection of a frame offset hidden by pixel differences.
+  - detection of a frame offset hidden by pixel differences;
+  - OCR transfer using only matched reads and never inventing text (a base misread such as "11" does not survive transfer).
 - The worker suite result is in the commit message.
 
 ## 8. Remaining limits and the smallest next experiments
 
-1. **Isolate the 4.0–9.6 s loss** (local, no cloud). In the fixed Linux environment, start from the decode-swap stage-1 output and replay identity with one input changed at a time:
-   - (a) Linux accepted reads instead of Windows reads;
-   - (b) Linux discovery sightings only.
-
-   This shows whether solver mode or the extra splits drop the target piece. No threshold changes.
-2. **Which decode path is right for HLG.** A defensible reference is needed first, for example an owner-reviewed colour target or kit-colour calibration on both paths. No brightness correction should be applied before that.
+1. **Isolate the 4.0–9.6 s loss within stage 1** (local, no cloud). OCR reads and sightings are ruled out (§6a). The next one-factor split, in the same Linux environment, is to recompute the colour signatures and embeddings from Linux-decoded pixels at the Windows detection boxes, keep the Windows boxes, and replay. That separates box geometry from appearance features. Then inspect the contact-link decisions (`crossings.split_at_contacts`) around 5.5 s and 9.8 s in both cases. No threshold or safeguard changes.
+2. **Which decode path is right for HLG.** Both paths stay experimental; the default decoder and the pinned GPU baseline are unchanged. A defensible reference is needed first, for example an owner-reviewed colour target or kit-colour calibration on both paths. No brightness correction should be applied before that.
 3. **The GPU gap remains unresolved.** The L4 CPU and GPU runs shared one machine and `opencv-python 4.14.0.94`, so this decode difference does not explain them. No GPU decoded-pixel hashes were recorded. A further GPU run needs separate approval of zone, exact commit, cost and lifetime.

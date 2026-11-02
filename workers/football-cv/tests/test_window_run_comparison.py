@@ -42,3 +42,22 @@ def test_decode_compare_detects_frame_offset_hidden_behind_pixel_differences():
     r = decode_probe.compare(a, shifted)
     assert r["identicalFrames"] == 0
     assert r["identicalAtOffset"]["-1"] == 9
+
+
+def test_replay_ocr_transfer_uses_matched_reads_and_never_invents_text():
+    import identity_replay_swap as irs
+
+    base = np.array([[5, 0.5, 0, 0, 10, 20, 0.9], [5, 0.5, 100, 0, 110, 20, 0.9], [5, 0.5, 300, 0, 310, 20, 0.9]], float)
+    other = np.array([[5, 0.5, 0.2, 0, 10.2, 20, 0.9], [5, 0.5, 100, 0, 110, 20, 0.9]], float)
+    base_cache = {"chunk/000005_0.jpg": ["11", 0.94, "shirt:dark"]}
+    other_cache = {"chunk/000005_0.jpg": [None, 0.0, None]}
+    crops = ["chunk/000005_0.jpg", "chunk/000005_1.jpg", "chunk/000005_2.jpg"]
+    calls = []
+    out, counts = irs.transfer_ocr(base, base_cache, crops, other, other_cache, Path("/nonexistent"),
+                                   lambda im: calls.append(im) or ("20", 1.0, "x"))
+    # matched + read in the other run -> its read (the misread "11" does not survive the transfer)
+    assert out["chunk/000005_0.jpg"] == [None, 0.0, None]
+    # matched but the other run has neither a read nor a crop file, unmatched -> no text, never a guessed number
+    assert out["chunk/000005_1.jpg"] == [None, 0.0, None] and out["chunk/000005_2.jpg"] == [None, 0.0, None]
+    assert calls == [] and counts["fromOtherCache"] == 1 and counts["noMatchingDetection"] == 2
+    assert counts["textChangedVsBaseCache"] == 1

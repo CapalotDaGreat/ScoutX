@@ -1,0 +1,42 @@
+{
+  "schema": "pitchproof.identity-replay-swap.v1",
+  "variant": "own",
+  "window": "gap1150",
+  "base": "/home/claude/work/decswap/out/gap1150",
+  "other": "/home/claude/work/fp32local/cpu-onnx/gap1150",
+  "productionApproval": false,
+  "ocrCache": "cold (empty) as in the original runs; reads are served per crop when the pipeline asks",
+  "sightings": 3,
+  "servedReads": 253,
+  "newBaseCropReads": 0,
+  "invariantsOk": true,
+  "identity": {
+    "statesSec": {
+      "AMBIGUOUS": 9.8,
+      "CONFIRMED_VISIBLE": 13.4,
+      "LIKELY_VISIBLE": 2.6,
+      "UNKNOWN": 4.2
+    },
+    "iterations": [
+      {
+        "iteration": 0,
+        "mode": "classifier",
+        "chosen": 16,
+        "seconds": 24.3,
+        "positives": 5,
+        "negatives": 22
+      },
+      {
+        "iteration": 1,
+        "mode": "classifier",
+        "chosen": 16,
+        "seconds": 24.3,
+        "positives": 5,
+        "negatives": 22
+      }
+    ],
+    "numberSightings": 5,
+    "confirmedByUser": 0,
+    "scoreNote": "Identity scores are uncalibrated (not probabilities)."
+  }
+}
