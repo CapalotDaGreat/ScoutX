@@ -76,6 +76,7 @@ def test_no_steal_no_resume_cut():
 
 def test_flag_off_keeps_the_baseline_tracks(monkeypatch):
     monkeypatch.setattr(crossings, "RESUME_SPLIT", False)
+    monkeypatch.setattr(crossings, "EXCHANGE_SPLIT", False)     # B is tested in isolation (A also cuts this scene)
     R = _scene(resume_on_own_path=False)
     s = np.zeros((len(R), 80), np.float32)
     s[:, 0] = 1
@@ -86,6 +87,7 @@ def test_flag_off_keeps_the_baseline_tracks(monkeypatch):
 
 def test_flag_on_cuts_and_links_without_identity_when_appearance_cannot_tell(monkeypatch):
     monkeypatch.setattr(crossings, "RESUME_SPLIT", True)
+    monkeypatch.setattr(crossings, "EXCHANGE_SPLIT", False)
     R = _scene(resume_on_own_path=False)
     s = np.zeros((len(R), 80), np.float32)
     s[:, 0] = 1

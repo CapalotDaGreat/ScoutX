@@ -1,0 +1,19 @@
+{
+ "config": "A",
+ "flags": "SCOUTX_EXCHANGE_SPLIT=1 SCOUTX_RESUME_SPLIT=0",
+ "command": "env SCOUTX_WEIGHTS_DIR=/home/claude/work/det SCOUTX_EXCHANGE_SPLIT=1 SCOUTX_RESUME_SPLIT=0 python3 -m pytest -v -rA -p no:cacheprovider --junitxml=bench/results/5.3/full-match-identity-20261103/tests/junit_A.xml",
+ "cwd": "workers/football-cv",
+ "gitCommit": "d061d8cbafb24341e23074cbf0549636f5bcc0b4",
+ "workingTreeNote": "uncommitted: docs/evidence/tests in progress (see next commit)",
+ "exitCode": 1,
+ "summaryLine": "======= 1 failed, 625 passed, 9 skipped, 6 xfailed, 2 warnings in 59.14s =======",
+ "python": "3.13.17",
+ "platform": "Linux-6.18.44-fc-v230-x86_64-with-glibc2.39",
+ "packages": {
+  "torch": "2.14.1",
+  "numpy": "2.5.3",
+  "opencv-python-headless": "5.0.0.93",
+  "onnxruntime": "1.29.0",
+  "pytest": "9.1.1"
+ }
+}

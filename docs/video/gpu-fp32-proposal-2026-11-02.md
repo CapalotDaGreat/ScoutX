@@ -93,3 +93,59 @@
 | Uncertain creation outcome | list instances in the zone before any retry; never a second create while one may exist |
 
 To approve, please name the zone(s), the commit, the cost ceiling and the maximum lifetime, or change any of them. **No approval has been given.** Prices must be refreshed again if the session starts more than a few days after 2026-11-03.
+
+
+## Re-check, 2026-11-03 evening (read-only)
+
+**Cloud state** (`scoutx-230b0`):
+
+- 0 instances, 0 disks, 0 snapshots, 0 custom images. The bucket holds only `results/`.
+
+**Quota:**
+
+- `NVIDIA_L4_GPUS` in europe-west4: 1, usage 0.
+- `GPUS_ALL_REGIONS`: 1, usage 0.
+
+**Catalogue:**
+
+- `nvidia-l4` and `g2-standard-8` are listed in europe-west4-a, -b and -c. A listing does not prove capacity.
+- Image `common-cu129-ubuntu-2204-nvidia-580-v20261029` is READY and still the family's latest.
+
+**Exact inputs:**
+
+- Source archive of `51d41c9` re-hashed: `308c07a4…795a62f` (unchanged).
+- At `51d41c9` the harness sets seed 0, `cudnn.benchmark=False`, `cudnn.deterministic=True`, TF32 off, `use_deterministic_algorithms(True)`, `CUBLAS_WORKSPACE_CONFIG=:4096:8`, `PYTHONHASHSEED=0`, and fresh per-profile caches.
+
+**Pricing:** unchanged. Retrieved 2026-11-03T20:00:09Z (`pricing_20261103_evening.json`):
+
+- compute (VM + L4) $0.8972/h;
+- disk $0.0301/h;
+- external IPv4 $0.005/h;
+- **total $0.9323/h.**
+
+**Costs:**
+
+- **Compute estimate** for 60–90 min: **$0.93–1.40**.
+- **At the 180-min maximum lifetime:** compute + disk + IP **$2.80**.
+- **Worst-case total** including storage and network: **$2.89**.
+- **Proposed approval ceiling: $3.00 before tax.** Swiss VAT is not included. Any sustained-use discount is ignored.
+
+**What is technically enforced, and what is not:**
+
+- **Enforced by the server:**
+  - `--max-run-duration=180m` with `--instance-termination-action=DELETE`;
+  - boot-disk auto-delete.
+- **Enforced by the guest:**
+  - `shutdown -h +175`;
+  - the experiment runs under `timeout 5400`;
+  - the video wait is bounded at 20 min.
+- **Enforced by procedure:**
+  - at most one VM;
+  - list instances before any retry, never a second create while one may exist;
+  - the video is uploaded only after the VM exists;
+  - the bucket objects are deleted after export verification.
+- **Not enforced:**
+  - **The cost estimate is not a billing cap.** No budget, quota cap or billing stop is configured; Cloud Billing budgets only alert.
+  - Charges after VM deletion (storage until objects are deleted, result download) are bounded only by the cleanup procedure.
+
+**Scope is unchanged:** the original controlled comparison on `51d41c9` only. Neither CPU identity candidate (A: `93258f7`, B: `d061d8c`) is included. **No approval has been given. Nothing was uploaded or created.**

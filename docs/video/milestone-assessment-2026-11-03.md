@@ -179,3 +179,49 @@ These results supersede the statements marked above. Details: [wrong-player-exch
   1. **Independent review of the 8 label corrections**, plus a label pass over the full-match claim segments that are still unverified. This is cheap and fixes the safety baseline.
   2. **Characterisation replays for the two full-match default failures** (#17 at 1301 s, #6 at 706 s), built from the full-match stage-1 output already on disk, before any repair is attempted.
   3. The GPU FP32 session remains a separate workstream on `51d41c9`. Pricing was refreshed 2026-11-03T12:25:49Z: compute estimate $0.93–1.40, total ceiling $2.89 (proposed $3.00 before tax). **Not approved; nothing launched.**
+
+## Update, 2026-11-03 evening
+
+**This update supersedes the "−8 confirmed-correct frames" statement above, which was a warm-cache artefact.** Details: [wrong-player-exchange-2026-11-02.md](wrong-player-exchange-2026-11-02.md) §9. Evidence: `bench/results/5.3/full-match-identity-20261103/`.
+
+| Commit | What it is |
+|---|---|
+| `d061d8c` | Candidate B (`SCOUTX_RESUME_SPLIT`, off), whole-match replay, review-packet tool |
+| next commit | Real-OCR evaluations, failure inventory, report §9, opt-in full-match tests, GPU proposal re-check |
+
+**Demonstrated:**
+
+- **The whole-match identity stage is deterministic.** A replay reproduces the full-match baseline bit for bit, and a repeat run is identical.
+- **The OCR cache state changes identity results.** A warm cache (with earlier refinement-pass reads) alone changes 36 claim frames, including 8 confirmed-correct #20 frames. This is a real, unrepaired pipeline sensitivity.
+- **Candidate A** on the default full match (cold cache, real OCR):
+  - −28 verified-wrong LIKELY frames (#6) and +4 unverified LIKELY frames;
+  - confirmed frames and labelled scores unchanged;
+  - the #6 change is a side effect: a nearby #17 tracklet loses its excluding "17" read and becomes a competitor.
+- **Candidate B** repairs the pause-and-resume transfer P in real runs, with no labelled correct or confirmed frame lost.
+- **F17's first failure is OCR recall:** 34/34 crops of a legible "17" read as nothing.
+- **A lone-digit exclusion rule would remove correct #20 tracklets.** It is rejected on whole-match evidence.
+
+**Provisional:**
+
+- Candidate B changes one crowded-scene identity path (1188.6–1191.5 s, 30 LIKELY frames, unverifiable).
+- **Candidate B adds 2 false LIKELY claims** on independent footage (IMG_5105 0:27, by protocol) through a non-local effect. **Verdict: needs revision.**
+- All label corrections, and all unverified claims, await **independent** review. The packet is prepared; no reviewer has seen it yet.
+
+**Failed or unknown:**
+
+- E3, E4, F6, F17 and cache-state sensitivity are unrepaired.
+- No independent labelled footage.
+- The GPU accuracy gap is unexplained; the FP32 comparison has not run.
+
+**Before any promotion:**
+
+- an independent review of the packet;
+- a decision on cache-state sensitivity: make tracklet splitting independent of when reads arrive, or record the risk explicitly;
+- OCR recall work, with a labelled number-crop set, for cases like F17;
+- independent labelled footage;
+- the GPU comparison.
+
+**Smallest next action:**
+
+1. **Have an independent reviewer fill in the review packet**, about 160 boxes.
+2. Separately, if approved, run the GPU FP32 session on `51d41c9`. Pricing re-checked 2026-11-03T20:00Z: compute estimate $0.93–1.40, worst-case total $2.89, proposed ceiling $3.00 before tax. **The estimate is not a billing cap. Not approved; nothing launched.**

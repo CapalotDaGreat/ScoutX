@@ -1,0 +1,136 @@
+{
+ "schema": "pitchproof.identity-failure-inventory.v1",
+ "written": "2026-11-03",
+ "commonProvenance": {
+  "video": "IMG_4809_proxy_10fps.exact.mp4, sha256 b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+  "models": "bench/references/model_hashes.json (yolox_s, craft_mlt_25k, english_g2, parseq-56125471); verified per run",
+  "settings": "cpu-onnx profile: SCOUTX_MODE=balanced SCOUTX_DETECTOR=yolox_s SCOUTX_BACKEND=onnx SCOUTX_BATCH=1 SCOUTX_KEYFRAME_EVERY=1 SCOUTX_DISCOVERY_DET=416 SCOUTX_OCR_ENHANCE=0 (validation/env.txt)",
+  "labels": "bench/results/5.1/gt_img4809_intervals.json sha256 36b16fba... (original, unchanged); proposed corrections label_corrections_i0225.json (opt-in, not independently reviewed)",
+  "timeBasis": "verified per interval by box geometry (interval_scores.py): 225/400/600 s stored basis; 1150-1890 s +0.1 s (labels stamped 0.1 s early); never applied to other videos",
+  "environment": "Linux container, Python 3.13.17, CPU only"
+ },
+ "failures": [
+  {
+   "id": "E1",
+   "name": "mutual exchange at 244.4 s",
+   "decoder": "experimental HLG reference only",
+   "run": "interval run i0225 (decoder_interval_eval.py --decoder reference) at 93258f7 flag 0 = 461c440",
+   "sourceFrames": "2442-2444 (crossing); read at 2444 (det 3597, '20' 0.95, shirt:contrast); claims w176-191 (242.6-244.1 s)",
+   "counts": {
+    "reads": 1,
+    "identityEvents": 1,
+    "wrongPlayerFramesOriginalLabels": 13,
+    "confirmed": 13,
+    "plusQuestionLabelled": 2
+   },
+   "trace": "visual_review.json; trace_reads.py/trace_claims.py; first unsupported transition: raw track 98 (player A) resumes at 2444 on #20's detection while #20's track 67 continues onto A - not cut by contact (cover<0.5) or steal (victim did not pause)",
+   "replay": "replays/reference_i0225 (exact, 300/300); tests/test_exchange_split.py::test_regression_replay_244s_wrong_player_confirmation",
+   "status": "repaired by candidate A (SCOUTX_EXCHANGE_SPLIT=1, 93258f7), default off",
+   "uncertainty": "player A identified only as 'not #20' (front view)"
+  },
+  {
+   "id": "P",
+   "name": "pause-and-resume transfer",
+   "decoder": "default (cv2)",
+   "run": "interval run i0225 default; also present in the full-match default run (fm/x0, 49ec8f0)",
+   "sourceFrames": "steal at 2443 (A's track 84 takes #20's box), #20's track 61 paused 2442-2443, resumes 2444 on A; claims w194-197 (244.4-244.7 s)",
+   "counts": {
+    "reads": 0,
+    "identityEvents": 1,
+    "wrongPlayerFramesCorrectedLabels": 3,
+    "wrongPlayerFramesOriginalLabels": 0,
+    "confirmed": 0,
+    "likely": 4,
+    "unmatched": 1
+   },
+   "trace": "trace_tl.py: tracklet 201 anchored (link 199->201 'same', margin 0.50) continues on A; steal link 178->203 unclear; first unsupported transition: #20's resumed row at 2444 accepted without self-continuity (IoU with own extrapolation 0.15)",
+   "replay": "replays/default_i0225 (exact); tests/test_known_identity_failures.py P tests (strict xfail with defaults)",
+   "status": "candidate B (SCOUTX_RESUME_SPLIT=1, d061d8c) under evaluation",
+   "uncertainty": "wrong only under the proposed label corrections (C1-C6)"
+  },
+  {
+   "id": "E3",
+   "name": "appearance-only choice of a distant player",
+   "decoder": "experimental HLG reference only",
+   "run": "interval run i0225 reference",
+   "sourceFrames": "w133-153 (238.3-240.3 s); wrong frames w136-138, w145-149",
+   "counts": {
+    "reads": 0,
+    "identityEvents": 1,
+    "wrongPlayerFrames": 8,
+    "confirmed": 0,
+    "likely": 8
+   },
+   "trace": "e3_scores.py: classifier mode (3 positives, 13 negatives); tracklet 78 app 2.36 vs #20's tracklet 188 app -0.06; persists with clean positives",
+   "replay": "replays/reference_i0225; test_known_identity_failures.py E3 (strict xfail)",
+   "status": "unrepaired",
+   "uncertainty": "claimed player distant and blurred; N label not verified by a legible number"
+  },
+  {
+   "id": "E4",
+   "name": "one-frame detour through a detector merge",
+   "decoder": "experimental HLG reference only",
+   "run": "interval run i0225 reference",
+   "sourceFrames": "2460 merged box, 2461 (w211) other player's box (det 3927), back on #20 at 2462",
+   "counts": {
+    "reads": 0,
+    "identityEvents": 1,
+    "wrongPlayerFrames": 1,
+    "confirmed": 1
+   },
+   "trace": "trace_tl.py (number tracklet 205); label at 2461 verified correct (N, other player)",
+   "replay": "replays/reference_i0225; test_known_identity_failures.py E4 (strict xfail)",
+   "status": "unrepaired; not changed by A or B"
+  },
+  {
+   "id": "F6",
+   "name": "full-match LIKELY claims on #6",
+   "decoder": "default (cv2)",
+   "run": "full match fm/x0 (bench/full_match_benchmark.py via full_match_exchange_audit.py, 49ec8f0, flag 0, cold OCR cache)",
+   "sourceFrames": "7064-7087, 7112-7114, 7164 (706.4-708.7, 711.2-711.4, 716.4 s)",
+   "counts": {
+    "reads": "lone digits on the tracklet: '6' x2 (1.00), '5' x1 (1.00), '1' x3",
+    "identityEvents": 1,
+    "wrongPlayerFrames": 28,
+    "confirmed": 0,
+    "likely": 28,
+    "labelled": false
+   },
+   "trace": "full_match_replay (exact) + comp_dump.py/tl_dump.py: chosen tracklet 8453 (695.5-719.1 s, raw track 1704), template mode (3 positives), conf 0.753 vs LIKELY 0.75; LIKELY only on frames with no competitor >= 0.35. '6' legible at 706.2 s. Lone digits are ignored by design (incompatible_with_target); whole-match data show agreeing lone '1'/'4'/'7' reads on #20's own tracklets, so a lone-digit exclusion would drop correct #20 tracklets",
+   "replay": "full-match replay (local, 60 MB; manifest committed); characterisation test skips when absent",
+   "status": "unrepaired; removed as a side effect by A (competitor appears) - not by design"
+  },
+  {
+   "id": "F17",
+   "name": "full-match LIKELY claims on #17",
+   "decoder": "default (cv2)",
+   "run": "full match fm/x0",
+   "sourceFrames": "label times 1301.6-1302.2, 1302.5, 1304.3-1304.4, 1305.7 s (11 labelled frames); the timeline is 0.1 s earlier on the verified basis (labels >= 1150 s stamped 0.1 s early)",
+   "counts": {
+    "reads": 0,
+    "ocrCropsOnTracklet": 34,
+    "ocrCropsReadAsNothing": 34,
+    "identityEvents": 1,
+    "wrongPlayerFrames": 11,
+    "confirmed": 0,
+    "likely": 11,
+    "labelled": "N (i1295)"
+   },
+   "trace": "tracklet 7615 (raw track 3224, 1299.7-1306.4 s), app 1.13, score 0.533; '17' legible to a person on 5/6 sampled crops; NumberReader returns nothing on all of them (re-run from scratch): _digit_box finds no 2-digit region (candidates 'I','a',',' / easy '1','4'); scene-text fallback also empty. First unsupported transition: OCR region proposal misses a legible '17' -> no exclusion -> appearance-only LIKELY",
+   "replay": "full-match replay (local)",
+   "status": "unrepaired; no narrow identity fix justified (OCR recall)"
+  },
+  {
+   "id": "N1161",
+   "name": "reported loss of 8 confirmed #20 frames at 1161.1-1162.8 s",
+   "decoder": "default (cv2)",
+   "run": "fm/x1 (candidate A, started from the baseline's FINAL OCR cache)",
+   "counts": {
+    "confirmedFramesBaseline": 8,
+    "afterWarmCacheRun": "2 dropped, 6 LIKELY anchored"
+   },
+   "trace": "full_match_replay: flag 0 with the same warm cache reproduces the identical 36-frame difference; flag 1 vs flag 0 under the warm cache: 0 claim differences; cold-cache candidate keeps the 8 confirmed frames. Mechanism: number-conflict splits use the reads present when tracklets are built; a warm cache contains the baseline's refinement-pass reads, so the tracklet carrying the '20' read is split differently (positive 1161.1-1162.8 s vs 1161.3-1162.2 s)",
+   "status": "NOT a candidate-A effect: an artefact of the 2026-11-03 run design (warm cache). The warm-cache sensitivity itself is real pipeline behaviour (re-analysis with a populated cache gives different identity)"
+  }
+ ]
+}

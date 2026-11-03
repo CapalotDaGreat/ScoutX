@@ -1,0 +1,1742 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.17, pytest-9.1.1, pluggy-1.7.0 -- /usr/local/bin/python3
+rootdir: /home/claude/work/b53/workers/football-cv
+configfile: pytest.ini
+testpaths: tests
+plugins: platformdirs-4.12.4, anyio-4.15.1
+collecting ... collected 641 items
+
+tests/test_50.py::test_working_space_filter_is_explicit_per_dynamic_range PASSED [  0%]
+tests/test_50.py::test_neighbours_are_read_only_after_target_evidence PASSED [  0%]
+tests/test_50.py::test_roi_detection_maps_boxes_back_to_frame_coordinates PASSED [  0%]
+tests/test_50.py::test_sequence_observations_need_six_confirmed_seconds_and_stay_clip_level PASSED [  0%]
+tests/test_50.py::test_clip_frames_endpoint_outlines_target_and_is_gated PASSED [  0%]
+tests/test_50.py::test_period_detection_handles_recordings_shorter_than_the_activity_window PASSED [  0%]
+tests/test_50.py::test_a_single_number_read_is_a_moment_to_check_not_a_confirmation PASSED [  1%]
+tests/test_50.py::test_weak_reads_only_ask_and_on_pitch_filter_drops_spectators PASSED [  1%]
+tests/test_50.py::test_weak_only_sightings_never_become_identity_evidence PASSED [  1%]
+tests/test_51.py::test_kit_scores_vectorised_matches_scalar PASSED       [  1%]
+tests/test_51.py::test_contact_rows_and_split_into_pre_contact_post PASSED [  1%]
+tests/test_51.py::test_link_rule_tracker_prior_swap_only_with_large_margin PASSED [  1%]
+tests/test_51.py::test_regression_3144_wrong_player_never_claimed_and_target_kept PASSED [  2%]
+tests/test_51.py::test_vectorised_chain_solver_matches_reference_loop PASSED [  2%]
+tests/test_51.py::test_memo_keys_arrays_by_content_and_corrections_are_idempotent PASSED [  2%]
+tests/test_51.py::test_discovery_settled_other_number_is_not_reread_and_gate_never_creates_evidence PASSED [  2%]
+tests/test_51.py::test_batched_read_and_verify_gives_the_same_sighting_as_two_calls PASSED [  2%]
+tests/test_51.py::test_52_refresh_reads_at_most_max_new_crops_in_a_fixed_order PASSED [  2%]
+tests/test_51.py::test_52_resolve_contract_accepts_bounded_refresh_only PASSED [  2%]
+tests/test_52.py::test_steal_detected_only_for_a_jump_onto_a_lost_mate PASSED [  3%]
+tests/test_52.py::test_steal_split_identity_does_not_cross_when_appearance_cannot_tell PASSED [  3%]
+tests/test_52.py::test_steal_split_follows_appearance_when_it_is_decisive PASSED [  3%]
+tests/test_52.py::test_steal_split_keeps_the_tracker_when_appearance_agrees PASSED [  3%]
+tests/test_52.py::test_ort_providers_prefers_cuda_only_when_installed PASSED [  3%]
+tests/test_52.py::test_modes_only_balanced_is_accuracy_validated PASSED  [  3%]
+tests/test_52.py::test_open_torso_read_is_one_weak_read_with_a_conflict_rule PASSED [  4%]
+tests/test_52.py::test_regression_heldout_1073_answer_not_carried_back_across_a_box_steal PASSED [  4%]
+tests/test_52.py::test_extract_endpoint_checkpoints_segments_and_never_mixes_attempts PASSED [  4%]
+tests/test_appearance_isolation.py::test_embedding_selection_is_the_extract_rule PASSED [  4%]
+tests/test_appearance_isolation.py::test_recompute_reproduces_extract_features_for_fixed_boxes PASSED [  4%]
+tests/test_appearance_isolation.py::test_recompute_refuses_an_emb_idx_that_is_not_the_extract_selection PASSED [  4%]
+tests/test_appearance_isolation.py::test_recompute_refuses_missing_frames PASSED [  4%]
+tests/test_appearance_isolation.py::test_build_changes_only_the_requested_field_and_frames PASSED [  5%]
+tests/test_appearance_isolation.py::test_small_event_continuation_with_low_margin_stays_unclear PASSED [  5%]
+tests/test_appearance_isolation.py::test_appearance_disagreement_below_swap_margin_never_moves_identity_to_the_team_mate PASSED [  5%]
+tests/test_appearance_isolation.py::test_recorded_1155_7_event_margin_is_the_joint_assignment_gap_not_a_pairwise_cost_difference PASSED [  5%]
+tests/test_claim_outcome_audit.py::test_unmatched_claim_is_neither_correct_nor_abstention PASSED [  5%]
+tests/test_claim_outcome_audit.py::test_promotion_report_does_not_repeat_a_fixed_wrong_identity_failure PASSED [  5%]
+tests/test_claim_outcome_audit.py::test_promotion_report_keeps_actual_gate_failures_and_unmatched_claims PASSED [  6%]
+tests/test_coordinated_evaluation.py::test_gated_end_to_end_evaluation_persists_only_target PASSED [  6%]
+tests/test_coordinated_evaluation.py::test_frame_hash_mismatch_blocks_completion PASSED [  6%]
+tests/test_coordinated_evaluation.py::test_wrong_model_scope_fails_before_sampling PASSED [  6%]
+tests/test_coordinated_evaluation.py::test_changed_source_is_rejected_before_coordination PASSED [  6%]
+tests/test_coordinated_evaluation.py::test_coordinator_cannot_run_after_gate_withdrawal[EXPERIMENTAL_TARGET_ANCHORS] PASSED [  6%]
+tests/test_coordinated_evaluation.py::test_coordinator_cannot_run_after_gate_withdrawal[CV_WORKER_APPROVED] PASSED [  7%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-hash] PASSED [  7%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-duration] PASSED [  7%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-models] PASSED [  7%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-unverified] PASSED [  7%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-job] PASSED [  7%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-hash] PASSED [  7%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-duration] PASSED [  8%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-models] PASSED [  8%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-unverified] PASSED [  8%]
+tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-job] PASSED [  8%]
+tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[target] PASSED [  8%]
+tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[durationSec] PASSED [  8%]
+tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[anchorsReviewed] PASSED [  9%]
+tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[anchors] PASSED [  9%]
+tests/test_coordinated_evaluation.py::test_anchor_plan_verifies_frames_without_loading_models PASSED [  9%]
+tests/test_discovery_41.py::test_number_sighting_becomes_a_playable_moment PASSED [  9%]
+tests/test_discovery_41.py::test_conflicting_number_in_the_same_sighting_abstains_and_other_numbers_are_ignored PASSED [  9%]
+tests/test_discovery_41.py::test_only_large_target_kit_players_are_read PASSED [  9%]
+tests/test_discovery_41.py::test_clip_stops_at_a_camera_cut PASSED       [  9%]
+tests/test_discovery_41.py::test_segments_with_sightings_are_scheduled_first PASSED [ 10%]
+tests/test_discovery_41.py::test_extract_endpoint_passes_absolute_segment_bounds PASSED [ 10%]
+tests/test_discovery_41.py::test_discover_endpoint_is_gated_target_only_and_needs_a_number PASSED [ 10%]
+tests/test_discovery_41.py::test_sightings_attach_to_the_overlapping_detection_as_number_reads PASSED [ 10%]
+tests/test_discovery_41.py::test_overlapping_sightings_merge_into_one_moment PASSED [ 10%]
+tests/test_evaluate.py::test_interval_helpers PASSED                     [ 10%]
+tests/test_evaluate.py::test_visibility_precision_recall_and_false_confirms PASSED [ 11%]
+tests/test_evaluate.py::test_identity_accuracy_switches_and_continuity_from_keyframes PASSED [ 11%]
+tests/test_evaluate.py::test_events_only_count_from_a_complete_event_stage PASSED [ 11%]
+tests/test_evaluate.py::test_event_matching_respects_type_and_tolerance PASSED [ 11%]
+tests/test_evaluate.py::test_missing_worker_output_counts_as_unreliable PASSED [ 11%]
+tests/test_evaluate.py::test_gate_requires_videos_slices_and_measured_metrics_and_never_approves_proposed_thresholds PASSED [ 11%]
+tests/test_evaluate.py::test_unmeasured_identity_fails_the_gate PASSED   [ 12%]
+tests/test_evaluate.py::test_run_reads_files_and_records_provenance PASSED [ 12%]
+tests/test_evaluate.py::test_run_fails_without_manifest_or_worker_provenance PASSED [ 12%]
+tests/test_exchange_split.py::test_exchange_detected_where_the_steal_rule_cannot_see_it PASSED [ 12%]
+tests/test_exchange_split.py::test_no_exchange_for_valid_continuations_occlusion_small_or_other_kit_players PASSED [ 12%]
+tests/test_exchange_split.py::test_flag_off_keeps_the_baseline_tracks PASSED [ 12%]
+tests/test_exchange_split.py::test_identity_does_not_cross_an_exchange_when_appearance_cannot_tell PASSED [ 12%]
+tests/test_exchange_split.py::test_identity_follows_the_person_through_an_exchange_when_appearance_decides PASSED [ 13%]
+tests/test_exchange_split.py::test_regression_replay_244s_wrong_player_confirmation PASSED [ 13%]
+tests/test_experimental_identity.py::test_anchor_only_confirms_observation_not_track_or_gap PASSED [ 13%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-jobId] PASSED [ 13%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-sourceSha256] PASSED [ 13%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-generation] PASSED [ 13%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-modelSetDigest] PASSED [ 14%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-jobId] PASSED [ 14%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-sourceSha256] PASSED [ 14%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-generation] PASSED [ 14%]
+tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-modelSetDigest] PASSED [ 14%]
+tests/test_experimental_identity.py::test_box_strict_finite_bounds[nan] PASSED [ 14%]
+tests/test_experimental_identity.py::test_box_strict_finite_bounds[inf] PASSED [ 14%]
+tests/test_experimental_identity.py::test_box_strict_finite_bounds[-inf] PASSED [ 15%]
+tests/test_experimental_identity.py::test_box_strict_finite_bounds[-0.1] PASSED [ 15%]
+tests/test_experimental_identity.py::test_box_strict_finite_bounds[1.1] PASSED [ 15%]
+tests/test_experimental_identity.py::test_box_strict_finite_bounds[0.2] PASSED [ 15%]
+tests/test_experimental_identity.py::test_box_strict_finite_bounds[True] PASSED [ 15%]
+tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch0] PASSED [ 15%]
+tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch1] PASSED [ 16%]
+tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch2] PASSED [ 16%]
+tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch3] PASSED [ 16%]
+tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[request] PASSED [ 16%]
+tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[scope] PASSED [ 16%]
+tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[anchor] PASSED [ 16%]
+tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[segment] PASSED [ 17%]
+tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[track] PASSED [ 17%]
+tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[observation] PASSED [ 17%]
+tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[interval] PASSED [ 17%]
+tests/test_experimental_identity.py::test_duplicate_ids_rejected[anchor] PASSED [ 17%]
+tests/test_experimental_identity.py::test_duplicate_ids_rejected[segment] PASSED [ 17%]
+tests/test_experimental_identity.py::test_duplicate_ids_rejected[track] PASSED [ 17%]
+tests/test_experimental_identity.py::test_duplicate_ids_rejected[observation] PASSED [ 18%]
+tests/test_experimental_identity.py::test_unique_cross_segment_overlap_and_owned_union PASSED [ 18%]
+tests/test_experimental_identity.py::test_competing_detection_in_same_segment_is_ambiguous PASSED [ 18%]
+tests/test_experimental_identity.py::test_conflicting_copy_invalidates_anchor[change0] PASSED [ 18%]
+tests/test_experimental_identity.py::test_conflicting_copy_invalidates_anchor[change1] PASSED [ 18%]
+tests/test_experimental_identity.py::test_appearance_or_readable_jersey_alone_never_confirms PASSED [ 18%]
+tests/test_experimental_identity.py::test_observation_invalid_values[timestampSec-nan] PASSED [ 19%]
+tests/test_experimental_identity.py::test_observation_invalid_values[appearanceScore-inf] PASSED [ 19%]
+tests/test_experimental_identity.py::test_observation_invalid_values[frameIndex-True] PASSED [ 19%]
+tests/test_experimental_identity.py::test_observation_invalid_values[readableJersey-\uff11\uff17] PASSED [ 19%]
+tests/test_experimental_identity.py::test_observation_invalid_values[evidenceHash-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA] PASSED [ 19%]
+tests/test_experimental_identity.py::test_corrected_anchor_replaces_context_without_hidden_identity PASSED [ 19%]
+tests/test_experimental_identity.py::test_anchor_requires_exact_frame_and_time[timestampSec] PASSED [ 19%]
+tests/test_experimental_identity.py::test_anchor_requires_exact_frame_and_time[frameIndex] PASSED [ 20%]
+tests/test_experimental_identity.py::test_small_caps_and_context_boundaries PASSED [ 20%]
+tests/test_experimental_identity.py::test_untrusted_construct_revalidated PASSED [ 20%]
+tests/test_experimental_identity.py::test_disjoint_simultaneous_anchors_are_not_two_confirmed_targets PASSED [ 20%]
+tests/test_experimental_identity.py::test_overlapping_chain_does_not_create_transitive_identity PASSED [ 20%]
+tests/test_experimental_identity.py::test_duplicate_copy_with_inconsistent_frame_time_is_rejected PASSED [ 20%]
+tests/test_experimental_identity.py::test_disjoint_owned_intervals_leave_gap_unanalysed PASSED [ 21%]
+tests/test_experimental_identity.py::test_full_global_observation_cap_and_one_over PASSED [ 21%]
+tests/test_experimental_identity.py::test_output_forbids_nonfinite_and_extra_fields PASSED [ 21%]
+tests/test_experimental_identity.py::test_scope_strict_generation_and_hash PASSED [ 21%]
+tests/test_experimental_identity_cli.py::test_synthetic_cli_resolves_and_validates_output PASSED [ 21%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{] PASSED [ 21%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[[]] PASSED [ 21%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{}] PASSED [ 22%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[null] PASSED [ 22%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[\xff] PASSED [ 22%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{"x":NaN}] PASSED [ 22%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{"x":1,"x":2}] PASSED [ 22%]
+tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[] PASSED [ 22%]
+tests/test_experimental_identity_cli.py::test_invalid_evidence_never_creates_output[extra] PASSED [ 23%]
+tests/test_experimental_identity_cli.py::test_invalid_evidence_never_creates_output[scope] PASSED [ 23%]
+tests/test_experimental_identity_cli.py::test_invalid_evidence_never_creates_output[nan] PASSED [ 23%]
+tests/test_experimental_identity_cli.py::test_exact_one_mib_allowed_but_one_byte_over_rejected PASSED [ 23%]
+tests/test_experimental_identity_cli.py::test_existing_output_is_never_overwritten[file] PASSED [ 23%]
+tests/test_experimental_identity_cli.py::test_existing_output_is_never_overwritten[directory] PASSED [ 23%]
+tests/test_experimental_identity_cli.py::test_existing_output_is_never_overwritten[same-input] PASSED [ 24%]
+tests/test_experimental_identity_cli.py::test_missing_input_or_output_parent_fails_without_creating_paths PASSED [ 24%]
+tests/test_experimental_identity_cli.py::test_nonlocal_path_rejected[https://example.invalid/request.json] PASSED [ 24%]
+tests/test_experimental_identity_cli.py::test_nonlocal_path_rejected[//server/share/request.json] PASSED [ 24%]
+tests/test_experimental_identity_cli.py::test_no_evaluate_subcommand PASSED [ 24%]
+tests/test_experimental_identity_cli.py::test_invalid_resolver_output_is_validated_before_creation PASSED [ 24%]
+tests/test_fp32_comparison.py::test_profiles_change_one_detector_factor_at_a_time PASSED [ 24%]
+tests/test_fp32_comparison.py::test_profile_environment_does_not_inherit_experimental_output_knobs PASSED [ 25%]
+tests/test_fp32_comparison.py::test_plan_does_not_import_cuda_or_start_inference PASSED [ 25%]
+tests/test_fp32_comparison.py::test_corpus_sampling_is_bounded_stable_and_keeps_diagnostic_frames PASSED [ 25%]
+tests/test_fp32_comparison.py::test_detector_comparison_counts_missing_boxes_without_reusing_matches PASSED [ 25%]
+tests/test_fp32_comparison.py::test_matrix_budget_leaves_setup_and_cleanup_time PASSED [ 25%]
+tests/test_fp32_comparison.py::test_execute_refuses_an_image_from_a_different_commit_before_cuda PASSED [ 25%]
+tests/test_fp32_comparison.py::test_execute_requires_a_bound_commit_before_creating_output PASSED [ 26%]
+tests/test_fp32_comparison.py::test_matrix_comparison_exposes_decode_mismatch_and_lost_cpu_number PASSED [ 26%]
+tests/test_fp32_comparison.py::test_gap_window_uses_existing_authoritative_label_times_without_new_annotations PASSED [ 26%]
+tests/test_frame_reader.py::test_frame_order_and_eof[0] PASSED           [ 26%]
+tests/test_frame_reader.py::test_frame_order_and_eof[1] PASSED           [ 26%]
+tests/test_frame_reader.py::test_frame_order_and_eof[4] PASSED           [ 26%]
+tests/test_frame_reader.py::test_chunk_boundary_stops_full_prefetch_queue PASSED [ 26%]
+tests/test_frame_reader.py::test_decoder_error_reaches_caller_and_releases_capture[0] PASSED [ 27%]
+tests/test_frame_reader.py::test_decoder_error_reaches_caller_and_releases_capture[1] PASSED [ 27%]
+tests/test_frame_reader.py::test_decoder_error_reaches_caller_and_releases_capture[4] PASSED [ 27%]
+tests/test_frame_reader.py::test_consumer_error_stops_decoder PASSED     [ 27%]
+tests/test_frame_reader.py::test_extract_chunk_prefetch_matches_synchronous_output PASSED [ 27%]
+tests/test_fresh_identity_windows.py::test_scoring_separates_correct_wrong_and_abstention PASSED [ 27%]
+tests/test_fresh_identity_windows.py::test_wrong_source_is_refused_before_models_or_output PASSED [ 28%]
+tests/test_fresh_identity_windows.py::test_fixture_labels_keep_absolute_times_and_owner_anchor_separate PASSED [ 28%]
+tests/test_fresh_identity_windows.py::test_window_reports_use_local_times_without_changing_source_decode_offsets PASSED [ 28%]
+tests/test_full_match_benchmark.py::test_accuracy_separates_wrong_identity_from_overlap_and_rescales PASSED [ 28%]
+tests/test_full_match_benchmark.py::test_gate_absolute_and_relative_rules PASSED [ 28%]
+tests/test_full_match_benchmark.py::test_runs_are_comparable_only_on_the_same_task PASSED [ 28%]
+tests/test_full_match_benchmark.py::test_claims_agreement PASSED         [ 29%]
+tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[None] PASSED [ 29%]
+tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[nan] PASSED [ 29%]
+tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[inf] PASSED [ 29%]
+tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[-inf] PASSED [ 29%]
+tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[True] PASSED [ 29%]
+tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[0] PASSED [ 29%]
+tests/test_full_match_benchmark.py::test_missing_timeline_frames_cannot_look_like_perfect_agreement PASSED [ 30%]
+tests/test_full_match_benchmark.py::test_timestamp_agreement_uses_nearest_match_once PASSED [ 30%]
+tests/test_full_match_benchmark.py::test_cost_is_labelled_estimate_with_separate_components PASSED [ 30%]
+tests/test_full_match_benchmark.py::test_vm_overheads_from_timestamps PASSED [ 30%]
+tests/test_full_match_benchmark.py::test_peak_process_memory_available_on_this_platform PASSED [ 30%]
+tests/test_full_match_benchmark.py::test_peak_memory_units_match_platform[linux-65536] PASSED [ 30%]
+tests/test_full_match_benchmark.py::test_peak_memory_units_match_platform[darwin-67108864] PASSED [ 31%]
+tests/test_full_match_benchmark.py::test_checkpoint_resume_skips_valid_chunk_and_redoes_corrupt PASSED [ 31%]
+tests/test_full_match_benchmark.py::test_checkpoint_never_mixes_configurations PASSED [ 31%]
+tests/test_full_match_benchmark.py::test_checkpoint_retries_and_interrupted_chunks PASSED [ 31%]
+tests/test_full_match_benchmark.py::test_checkpoint_disk_space_check PASSED [ 31%]
+tests/test_full_match_benchmark.py::test_stage1_settings_capture_affecting_env_only PASSED [ 31%]
+tests/test_full_match_benchmark.py::test_benchmark_refuses_unverified_models PASSED [ 31%]
+tests/test_full_match_benchmark.py::test_reference_identity_is_the_video_stream_not_the_container PASSED [ 32%]
+tests/test_full_match_benchmark.py::test_benchmark_refuses_a_baseline_from_another_recording PASSED [ 32%]
+tests/test_full_match_benchmark.py::test_benchmark_rejects_unvalidated_mode PASSED [ 32%]
+tests/test_full_match_benchmark.py::test_compare_runs_gate_speedup_and_incomplete_reference PASSED [ 32%]
+tests/test_full_match_benchmark.py::test_box_agreement_is_not_applicable_only_when_both_runs_abstain_everywhere PASSED [ 32%]
+tests/test_full_match_benchmark.py::test_label_time_basis_correction_is_detected_without_identity_and_never_rescues_wrong_players PASSED [ 32%]
+tests/test_full_match_identity.py::test_replay_inputs_match_the_committed_provenance SKIPPED [ 33%]
+tests/test_full_match_identity.py::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably SKIPPED [ 33%]
+tests/test_full_match_identity.py::test_legitimate_confirmed_20_evidence_at_1161_is_kept SKIPPED [ 33%]
+tests/test_full_match_identity.py::test_F6_characterisation_likely_appearance_claims_on_player_6 SKIPPED [ 33%]
+tests/test_full_match_identity.py::test_F6_desired_no_claim_on_player_6 SKIPPED [ 33%]
+tests/test_full_match_identity.py::test_F17_characterisation_likely_appearance_claims_on_player_17 SKIPPED [ 33%]
+tests/test_full_match_identity.py::test_F17_desired_no_claim_on_player_17 SKIPPED [ 34%]
+tests/test_full_match_identity.py::test_cache_state_characterisation_warm_ocr_cache_changes_identity SKIPPED [ 34%]
+tests/test_full_match_identity.py::test_cache_state_desired_same_identity_warm_or_cold SKIPPED [ 34%]
+tests/test_full_match_validation.py::test_metrics_distinguish_wrong_player_localization_misses_and_visibility PASSED [ 34%]
+tests/test_full_match_validation.py::test_zero_denominators_and_calibration_exclusion PASSED [ 34%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[unreviewed] PASSED [ 34%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[same_reviewer] PASSED [ 34%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[same_anchor_reviewer] PASSED [ 35%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[unblinded] PASSED [ 35%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[unreviewed_anchors] PASSED [ 35%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[missing] PASSED [ 35%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[wrong_target] PASSED [ 35%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[bad_box] PASSED [ 35%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[nonfinite] PASSED [ 36%]
+tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[url_field] PASSED [ 36%]
+tests/test_full_match_validation.py::test_full_140_minute_schedule_report_and_per_segment_denominators PASSED [ 36%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[partial] PASSED [ 36%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[gap] PASSED [ 36%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[wrong_source] PASSED [ 36%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[wrong_anchor] PASSED [ 36%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[wrong_models] PASSED [ 37%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[unordered_trace] PASSED [ 37%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[candidate] PASSED [ 37%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[training] PASSED [ 37%]
+tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[missing_segment] PASSED [ 37%]
+tests/test_full_match_validation.py::test_seal_tampering_and_no_overwrite PASSED [ 37%]
+tests/test_full_match_validation.py::test_cli_explicit_authorization_and_local_paths PASSED [ 38%]
+tests/test_full_match_validation.py::test_prepare_checks_source_and_reviewed_pts_without_models_or_output PASSED [ 38%]
+tests/test_full_match_validation.py::test_cli_writes_new_sealed_and_accuracy_outputs PASSED [ 38%]
+tests/test_full_match_validation.py::test_quantized_source_sampling_uses_audit_not_nominal_frame_rate PASSED [ 38%]
+tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[missing] PASSED [ 38%]
+tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[None] PASSED [ 38%]
+tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[trace2] PASSED [ 39%]
+tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[] PASSED [ 39%]
+tests/test_full_match_validation.py::test_anchor_reviewer_may_be_producer_but_not_ground_truth_reviewer PASSED [ 39%]
+tests/test_full_match_validation.py::test_explicit_target_survives_review_run_and_report[8-orange] PASSED [ 39%]
+tests/test_full_match_validation.py::test_explicit_target_survives_review_run_and_report[20-orange] PASSED [ 39%]
+tests/test_full_match_validation.py::test_explicit_target_survives_review_run_and_report[7-blue] PASSED [ 39%]
+tests/test_full_match_validation.py::test_orange_twenty_review_rejects_old_orange_eight_run PASSED [ 39%]
+tests/test_full_match_validation.py::test_sealed_target_cannot_be_overridden_at_report_time PASSED [ 40%]
+tests/test_full_match_validation.py::test_prepare_does_not_default_to_previous_target PASSED [ 40%]
+tests/test_hdr_reference.py::test_bt2020_to_bt709_matrix_matches_the_published_bt2087_values PASSED [ 40%]
+tests/test_hdr_reference.py::test_narrow_range_bt2020_ycbcr_reference_values PASSED [ 40%]
+tests/test_hdr_reference.py::test_chroma_upsampling_respects_left_siting_and_constants PASSED [ 40%]
+tests/test_hdr_reference.py::test_render_keeps_neutrals_and_outputs_bgr PASSED [ 40%]
+tests/test_hdr_reference.py::test_metadata_guard_refuses_sdr_missing_and_conflicting_metadata PASSED [ 41%]
+tests/test_identity_baseline.py::test_real_crossing_replay_exposes_missing_identity_evidence_without_false_claims PASSED [ 41%]
+tests/test_identity_baseline.py::test_baseline_manifest_binds_code_runtime_and_scope PASSED [ 41%]
+tests/test_identity_contact_entry.py::test_number_inside_contact_does_not_anchor_an_unrelated_handoff[10-True] PASSED [ 41%]
+tests/test_identity_contact_entry.py::test_number_inside_contact_does_not_anchor_an_unrelated_handoff[30-False] PASSED [ 41%]
+tests/test_identity_coordinator.py::test_both_gates[true-true-True] PASSED [ 41%]
+tests/test_identity_coordinator.py::test_both_gates[true-false-False] PASSED [ 41%]
+tests/test_identity_coordinator.py::test_both_gates[false-true-False] PASSED [ 42%]
+tests/test_identity_coordinator.py::test_both_gates[TRUE-true-False] PASSED [ 42%]
+tests/test_identity_coordinator.py::test_sanitized_result PASSED         [ 42%]
+tests/test_identity_coordinator.py::test_stale_proof[generation] PASSED  [ 42%]
+tests/test_identity_coordinator.py::test_stale_proof[source] PASSED      [ 42%]
+tests/test_identity_coordinator.py::test_stale_proof[hash] PASSED        [ 42%]
+tests/test_identity_coordinator.py::test_stale_proof[time] PASSED        [ 43%]
+tests/test_identity_coordinator.py::test_stale_proof[index] PASSED       [ 43%]
+tests/test_identity_coordinator.py::test_stale_proof[missing] PASSED     [ 43%]
+tests/test_identity_coordinator.py::test_http_contract_and_private_validation PASSED [ 43%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[1?] PASSED [ 43%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[?7] PASSED [ 43%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[\uff11\uff17] PASSED [ 43%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[123] PASSED [ 44%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[] PASSED [ 44%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[None] PASSED [ 44%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[ 17] PASSED [ 44%]
+tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[17x] PASSED [ 44%]
+tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[nan] PASSED [ 44%]
+tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[inf] PASSED [ 45%]
+tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[-1] PASSED [ 45%]
+tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[1.1] PASSED [ 45%]
+tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[0.59] PASSED [ 45%]
+tests/test_identity_hardening.py::test_consensus_beats_single_highest_confidence_and_excludes_conflict PASSED [ 45%]
+tests/test_identity_hardening.py::test_tied_conflicting_consensus_stays_unknown PASSED [ 45%]
+tests/test_identity_hardening.py::test_duplicate_frame_votes_do_not_confirm PASSED [ 46%]
+tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts0-17] PASSED [ 46%]
+tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts1-None] PASSED [ 46%]
+tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts2-None] PASSED [ 46%]
+tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts3-17] PASSED [ 46%]
+tests/test_identity_hardening.py::test_later_reads_do_not_contaminate_unread_prefix_or_switched_suffix PASSED [ 46%]
+tests/test_identity_hardening.py::test_tracker_reuse_needs_fresh_evidence[gap] PASSED [ 46%]
+tests/test_identity_hardening.py::test_tracker_reuse_needs_fresh_evidence[jump] PASSED [ 47%]
+tests/test_identity_hardening.py::test_tracker_reuse_needs_fresh_evidence[kit] PASSED [ 47%]
+tests/test_identity_hardening.py::test_45_second_reentry_gap_remains_unknown_without_trace_or_action PASSED [ 47%]
+tests/test_identity_hardening.py::test_pipeline_cut_or_gap_cannot_reuse_tracker_votes[source0] PASSED [ 47%]
+tests/test_identity_hardening.py::test_pipeline_cut_or_gap_cannot_reuse_tracker_votes[source1] PASSED [ 47%]
+tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times0] PASSED [ 47%]
+tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times1] PASSED [ 48%]
+tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times2] PASSED [ 48%]
+tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times3] PASSED [ 48%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso0-shorts0-expected0] PASSED [ 48%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso1-shorts1-expected1] PASSED [ 48%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso2-shorts2-expected2] PASSED [ 48%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso3-shorts3-expected3] PASSED [ 48%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso4-shorts4-expected4] PASSED [ 49%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso5-shorts5-expected5] PASSED [ 49%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso6-shorts6-expected6] PASSED [ 49%]
+tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso7-shorts7-expected7] PASSED [ 49%]
+tests/test_kit_number.py::test_two_matching_garments_on_one_frame_cannot_supply_three_votes PASSED [ 49%]
+tests/test_kit_number.py::test_pipeline_requires_three_distinct_uncontested_number_observations[None-20-3] PASSED [ 49%]
+tests/test_kit_number.py::test_pipeline_requires_three_distinct_uncontested_number_observations[20-18-0] PASSED [ 50%]
+tests/test_known_identity_failures.py::test_P_characterisation_default_claims_player_a_after_pause_and_resume[0] PASSED [ 50%]
+tests/test_known_identity_failures.py::test_P_characterisation_default_claims_player_a_after_pause_and_resume[1] PASSED [ 50%]
+tests/test_known_identity_failures.py::test_P_desired_no_claim_on_player_a[0] XFAIL [ 50%]
+tests/test_known_identity_failures.py::test_P_desired_no_claim_on_player_a[1] XFAIL [ 50%]
+tests/test_known_identity_failures.py::test_E3_characterisation_reference_claims_distant_n_player_by_appearance[0] PASSED [ 50%]
+tests/test_known_identity_failures.py::test_E3_characterisation_reference_claims_distant_n_player_by_appearance[1] PASSED [ 51%]
+tests/test_known_identity_failures.py::test_E3_desired_no_claim_on_n_labelled_player[0] XFAIL [ 51%]
+tests/test_known_identity_failures.py::test_E3_desired_no_claim_on_n_labelled_player[1] XFAIL [ 51%]
+tests/test_known_identity_failures.py::test_E4_characterisation_confirmed_claim_on_other_player_at_w211[0] PASSED [ 51%]
+tests/test_known_identity_failures.py::test_E4_characterisation_confirmed_claim_on_other_player_at_w211[1] PASSED [ 51%]
+tests/test_known_identity_failures.py::test_E4_desired_no_confirmed_claim_on_other_player[0] XFAIL [ 51%]
+tests/test_known_identity_failures.py::test_E4_desired_no_confirmed_claim_on_other_player[1] XFAIL [ 51%]
+tests/test_local_decode.py::test_local_decode_uses_file_only_and_bounds_sampling[0] PASSED [ 52%]
+tests/test_local_decode.py::test_local_decode_uses_file_only_and_bounds_sampling[3] PASSED [ 52%]
+tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[1-1-2] PASSED [ 52%]
+tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[-1-2-2] PASSED [ 52%]
+tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[0-2-0] PASSED [ 52%]
+tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[0-2-31] PASSED [ 52%]
+tests/test_local_decode.py::test_missing_metadata_origin_probes_then_resets_decode PASSED [ 53%]
+tests/test_local_decode.py::test_missing_first_pts_fails_closed PASSED   [ 53%]
+tests/test_local_models.py::test_detector_and_ocr_honor_explicit_local_cpu_policy[False-False] PASSED [ 53%]
+tests/test_local_models.py::test_detector_and_ocr_honor_explicit_local_cpu_policy[True-True] PASSED [ 53%]
+tests/test_local_models.py::test_factory_forwards_policy_without_changing_defaults PASSED [ 53%]
+tests/test_local_review.py::test_default_pack_is_model_free_static_and_unreviewed PASSED [ 53%]
+tests/test_local_review.py::test_optional_overlays_use_only_anonymous_boxes_not_crops PASSED [ 53%]
+tests/test_local_review.py::test_valid_labels_redecode_exact_samples_and_do_not_grant_approval PASSED [ 54%]
+tests/test_local_review.py::test_invalid_labels_fail_closed[wrong_source] PASSED [ 54%]
+tests/test_local_review.py::test_invalid_labels_fail_closed[missing_time] PASSED [ 54%]
+tests/test_local_review.py::test_invalid_labels_fail_closed[changed_time] PASSED [ 54%]
+tests/test_local_review.py::test_invalid_labels_fail_closed[outside_box] PASSED [ 54%]
+tests/test_local_review.py::test_invalid_labels_fail_closed[unreviewed] PASSED [ 54%]
+tests/test_local_review.py::test_invalid_labels_fail_closed[wrong_target] PASSED [ 55%]
+tests/test_local_review.py::test_changed_preview_cannot_validate_labels PASSED [ 55%]
+tests/test_local_review.py::test_changed_decoded_rgb_is_not_a_matching_source_frame PASSED [ 55%]
+tests/test_local_review.py::test_overlay_exposure_cannot_pass_blinded_holdout_validation PASSED [ 55%]
+tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[reviewer] PASSED [ 55%]
+tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[missing_review] PASSED [ 55%]
+tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[wrong_pack] PASSED [ 56%]
+tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[bad_tag] PASSED [ 56%]
+tests/test_local_review.py::test_freeze_is_deterministic_disjoint_and_does_not_claim_negatives_exist PASSED [ 56%]
+tests/test_local_review.py::test_impossible_freeze_fails_instead_of_substituting_seen_windows PASSED [ 56%]
+tests/test_local_review.py::test_network_paths_rejected_before_access PASSED [ 56%]
+tests/test_local_review.py::test_existing_output_is_preserved PASSED     [ 56%]
+tests/test_local_review.py::test_source_mutation_prevents_pack_publication PASSED [ 56%]
+tests/test_local_review.py::test_holdout_sampling_and_window_cannot_drift_after_freeze PASSED [ 57%]
+tests/test_local_review.py::test_holdout_validation_requires_original_plan_and_unexposed_notes PASSED [ 57%]
+tests/test_local_review.py::test_validation_cli_produces_only_a_validation_record PASSED [ 57%]
+tests/test_local_review.py::test_score_cli_reuses_retained_predictions_without_models PASSED [ 57%]
+tests/test_local_review.py::test_placeholder_reviewer_is_not_a_completed_review PASSED [ 57%]
+tests/test_lossless_crop_experiment.py::test_regeneration_preserves_every_retained_crop_and_rejects_missing_frames[False] PASSED [ 57%]
+tests/test_lossless_crop_experiment.py::test_regeneration_preserves_every_retained_crop_and_rejects_missing_frames[True] PASSED [ 58%]
+tests/test_match_evaluation.py::test_invalid_arguments[--jersey-number-100] PASSED [ 58%]
+tests/test_match_evaluation.py::test_invalid_arguments[--jersey-number-\u0668] PASSED [ 58%]
+tests/test_match_evaluation.py::test_invalid_arguments[--jersey-number-8\n] PASSED [ 58%]
+tests/test_match_evaluation.py::test_invalid_arguments[--kit-primary-color-unknown] PASSED [ 58%]
+tests/test_match_evaluation.py::test_invalid_arguments[--reference-sec-nan] PASSED [ 58%]
+tests/test_match_evaluation.py::test_invalid_arguments[--reference-sec-inf] PASSED [ 58%]
+tests/test_match_evaluation.py::test_invalid_arguments[--reference-sec--1] PASSED [ 59%]
+tests/test_match_evaluation.py::test_authorization_required PASSED       [ 59%]
+tests/test_match_evaluation.py::test_plan_preserves_explicit_orange_twenty_and_white_sleeves PASSED [ 59%]
+tests/test_match_evaluation.py::test_provider_links_return_actionable_error_without_fetch_or_token_echo[https://app.veo.co/matches/example/?secret=do-not-echo-authorized provider integration] PASSED [ 59%]
+tests/test_match_evaluation.py::test_provider_links_return_actionable_error_without_fetch_or_token_echo[https://example.org/video.mp4?token=do-not-echo-authorized local MP4] PASSED [ 59%]
+tests/test_match_evaluation.py::test_invalid_metadata[0] PASSED          [ 59%]
+tests/test_match_evaluation.py::test_invalid_metadata[-1] PASSED         [ 60%]
+tests/test_match_evaluation.py::test_invalid_metadata[nan] PASSED        [ 60%]
+tests/test_match_evaluation.py::test_invalid_metadata[inf] PASSED        [ 60%]
+tests/test_match_evaluation.py::test_invalid_metadata[9001] PASSED       [ 60%]
+tests/test_match_evaluation.py::test_full_match_plan_never_loads_models PASSED [ 60%]
+tests/test_match_evaluation.py::test_reference_must_be_in_actual_duration[20] PASSED [ 60%]
+tests/test_match_evaluation.py::test_reference_must_be_in_actual_duration[21] PASSED [ 60%]
+tests/test_match_evaluation.py::test_nonoverwrite_paths[source] PASSED   [ 61%]
+tests/test_match_evaluation.py::test_nonoverwrite_paths[existing] PASSED [ 61%]
+tests/test_match_evaluation.py::test_nonoverwrite_paths[ancestor] PASSED [ 61%]
+tests/test_match_evaluation.py::test_missing_input_is_nonzero PASSED     [ 61%]
+tests/test_match_evaluation.py::test_atomic_publication_never_replaces PASSED [ 61%]
+tests/test_match_evaluation.py::test_result_filename_cannot_escape PASSED [ 61%]
+tests/test_match_evaluation.py::test_run_uses_local_source_and_separate_traces PASSED [ 62%]
+tests/test_match_evaluation.py::test_failed_pipeline_has_no_completion PASSED [ 62%]
+tests/test_match_evaluation.py::test_metadata_inspection_is_file_only PASSED [ 62%]
+tests/test_match_evaluation.py::test_real_pipeline_resets_identity_without_interpolation PASSED [ 62%]
+tests/test_match_evaluation.py::test_helper_also_requires_authorization PASSED [ 62%]
+tests/test_match_evaluation.py::test_non_target_candidates_are_never_persisted[False] PASSED [ 62%]
+tests/test_match_evaluation.py::test_non_target_candidates_are_never_persisted[True] PASSED [ 63%]
+tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps0] PASSED [ 63%]
+tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps1] PASSED [ 63%]
+tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps2] PASSED [ 63%]
+tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps3] PASSED [ 63%]
+tests/test_match_evaluation.py::test_sampled_coverage_tolerates_frame_quantization_but_rejects_bad_pts PASSED [ 63%]
+tests/test_match_evaluation.py::test_audited_decoder_records_only_current_segment_pts PASSED [ 63%]
+tests/test_match_identity.py::test_orange_eight_preserves_source_target_and_unknown_remainder PASSED [ 64%]
+tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[8-0.1-3] PASSED [ 64%]
+tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[None-0.9-3] PASSED [ 64%]
+tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[18-0.9-3] PASSED [ 64%]
+tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[8-0.9-0] PASSED [ 64%]
+tests/test_match_identity.py::test_competing_orange_eights_with_millisecond_jitter_are_ambiguous PASSED [ 64%]
+tests/test_match_identity.py::test_break_requires_fresh_votes_even_with_same_tracker_id[halftime] PASSED [ 65%]
+tests/test_match_identity.py::test_break_requires_fresh_votes_even_with_same_tracker_id[camera_cut] PASSED [ 65%]
+tests/test_match_identity.py::test_break_requires_fresh_votes_even_with_same_tracker_id[manual_reset] PASSED [ 65%]
+tests/test_match_identity.py::test_reentry_and_segment_boundary_do_not_inherit_identity PASSED [ 65%]
+tests/test_match_identity.py::test_halftime_is_unknown_even_when_target_is_visible_warming_up PASSED [ 65%]
+tests/test_match_identity.py::test_large_camera_motion_does_not_carry_old_votes PASSED [ 65%]
+tests/test_match_identity.py::test_reference_is_preserved_but_never_labels_unread_track PASSED [ 65%]
+tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[missing_target] PASSED [ 66%]
+tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[overlap] PASSED [ 66%]
+tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[scope] PASSED [ 66%]
+tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[duplicate_time] PASSED [ 66%]
+tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[nan] PASSED [ 66%]
+tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[blank_kit] PASSED [ 66%]
+tests/test_moments_40.py::test_clip_never_crosses_a_camera_cut PASSED    [ 67%]
+tests/test_moments_40.py::test_chunk_join_is_not_a_cut PASSED            [ 67%]
+tests/test_moments_40.py::test_clip_stays_out_of_non_play_and_respects_bounds PASSED [ 67%]
+tests/test_moments_40.py::test_moments_only_from_claimed_events_and_candidates_kept_separate PASSED [ 67%]
+tests/test_moments_40.py::test_spells_fill_in_when_no_ball_events_and_report_invariants_hold PASSED [ 67%]
+tests/test_moments_40.py::test_thumbnail_only_from_crop_inside_clip PASSED [ 67%]
+tests/test_moments_40.py::test_target_only_moments_strip_crop_paths_and_cap_thumbnails PASSED [ 68%]
+tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows0-expected0] PASSED [ 68%]
+tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows1-expected1] PASSED [ 68%]
+tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows2-expected2] PASSED [ 68%]
+tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows3-expected3] PASSED [ 68%]
+tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows4-expected4] PASSED [ 68%]
+tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows5-expected5] PASSED [ 68%]
+tests/test_ocr_augmentation.py::test_too_small_crop_is_not_rescued_by_resizing PASSED [ 69%]
+tests/test_ocr_augmentation.py::test_large_crop_is_not_expanded_without_a_memory_bound PASSED [ 69%]
+tests/test_ocr_augmentation.py::test_delegate_is_restored_if_augmentation_throws PASSED [ 69%]
+tests/test_ocr_budget.py::test_zero_budget_with_unchanged_clock_keeps_cached_reads PASSED [ 69%]
+tests/test_offball_41.py::test_measures_free_space_in_body_heights_and_lists_watchable_episodes PASSED [ 69%]
+tests/test_offball_41.py::test_insufficient_without_enough_confirmed_footage PASSED [ 69%]
+tests/test_offball_41.py::test_episodes_tolerate_short_gaps_and_need_minimum_length PASSED [ 70%]
+tests/test_player_tracker.py::test_palette_marks_grass_and_named_colours PASSED [ 70%]
+tests/test_player_tracker.py::test_colour_signature_kit_score_ignores_grass PASSED [ 70%]
+tests/test_player_tracker.py::test_tracker_keeps_identities_through_crossing PASSED [ 70%]
+tests/test_player_tracker.py::test_tracker_compensates_camera_pan PASSED [ 70%]
+tests/test_player_tracker.py::test_purify_splits_a_colour_swap PASSED    [ 70%]
+tests/test_player_tracker.py::test_identity_links_number_seed_and_excludes_other_numbers PASSED [ 70%]
+tests/test_player_tracker.py::test_identity_never_jumps_impossible_distance PASSED [ 71%]
+tests/test_player_tracker.py::test_user_feedback_overrides PASSED        [ 71%]
+tests/test_player_tracker.py::test_single_digit_partial_reads_are_ignored_for_two_digit_target PASSED [ 71%]
+tests/test_player_tracker.py::test_speed_estimate_matches_lateral_motion PASSED [ 71%]
+tests/test_player_tracker.py::test_compute_stats_counts_ball_involvement PASSED [ 71%]
+tests/test_player_tracker.py::test_cli_helpers PASSED                    [ 71%]
+tests/test_player_tracker.py::test_report_is_written PASSED              [ 72%]
+tests/test_prepare_anchor.py::test_exact_vfr_nonzero_origin_draft_and_png PASSED [ 72%]
+tests/test_prepare_anchor.py::test_exact_reference_includes_equal_frame PASSED [ 72%]
+tests/test_prepare_anchor.py::test_bad_reference[-1] PASSED              [ 72%]
+tests/test_prepare_anchor.py::test_bad_reference[nan] PASSED             [ 72%]
+tests/test_prepare_anchor.py::test_bad_reference[inf] PASSED             [ 72%]
+tests/test_prepare_anchor.py::test_bad_reference[10] PASSED              [ 73%]
+tests/test_prepare_anchor.py::test_bad_reference[11] PASSED              [ 73%]
+tests/test_prepare_anchor.py::test_bad_duration[0] PASSED                [ 73%]
+tests/test_prepare_anchor.py::test_bad_duration[-1] PASSED               [ 73%]
+tests/test_prepare_anchor.py::test_bad_duration[27000001] PASSED         [ 73%]
+tests/test_prepare_anchor.py::test_bad_duration[nan] PASSED              [ 73%]
+tests/test_prepare_anchor.py::test_bad_duration[inf] PASSED              [ 73%]
+tests/test_prepare_anchor.py::test_no_frame_after_reference PASSED       [ 74%]
+tests/test_prepare_anchor.py::test_authorization_required_for_helper_and_cli PASSED [ 74%]
+tests/test_prepare_anchor.py::test_overwrite_preserves_existing[dir] PASSED [ 74%]
+tests/test_prepare_anchor.py::test_overwrite_preserves_existing[video] PASSED [ 74%]
+tests/test_prepare_anchor.py::test_overwrite_preserves_existing[annotation] PASSED [ 74%]
+tests/test_prepare_anchor.py::test_source_change_rejected_before_output PASSED [ 74%]
+tests/test_prepare_anchor.py::test_network_paths_rejected[https://example.test/video.mp4] PASSED [ 75%]
+tests/test_prepare_anchor.py::test_network_paths_rejected[//server/share/v.mp4] PASSED [ 75%]
+tests/test_prepare_anchor.py::test_network_paths_rejected[\\\\server\\share\\v.mp4] PASSED [ 75%]
+tests/test_prepare_anchor.py::test_no_model_initialization PASSED        [ 75%]
+tests/test_prepare_anchor.py::test_cli_success_explains_review_required PASSED [ 75%]
+tests/test_prepare_anchor.py::test_atomic_publication_never_replaces PASSED [ 75%]
+tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[frame_id-../bad] PASSED [ 75%]
+tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[job_id-bad/job] PASSED [ 76%]
+tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[generation--1] PASSED [ 76%]
+tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[generation-1000001] PASSED [ 76%]
+tests/test_prepare_anchor.py::test_prepare_falls_back_to_first_actual_frame_origin PASSED [ 76%]
+tests/test_prepare_anchor.py::test_prepare_preserves_fractional_origin PASSED [ 76%]
+tests/test_remote_decode.py::test_remote_decode_uses_recording_clock_without_relaxing_network_policy PASSED [ 76%]
+tests/test_resume_split.py::test_resume_on_the_thiefs_path_is_cut PASSED [ 77%]
+tests/test_resume_split.py::test_resume_continuing_the_victims_own_path_is_not_cut PASSED [ 77%]
+tests/test_resume_split.py::test_no_steal_no_resume_cut PASSED           [ 77%]
+tests/test_resume_split.py::test_flag_off_keeps_the_baseline_tracks PASSED [ 77%]
+tests/test_resume_split.py::test_flag_on_cuts_and_links_without_identity_when_appearance_cannot_tell PASSED [ 77%]
+tests/test_resume_split.py::test_replay_P_candidate_B_follows_20_not_player_a PASSED [ 77%]
+tests/test_review_scoring.py::test_reviewed_metrics_are_recovered_without_rerunning_inference PASSED [ 78%]
+tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[source] PASSED [ 78%]
+tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[target] PASSED [ 78%]
+tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[partial] PASSED [ 78%]
+tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[missing_claims] PASSED [ 78%]
+tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[false_abstention] PASSED [ 78%]
+tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[propagation] PASSED [ 78%]
+tests/test_review_scoring.py::test_all_uncertain_review_does_not_fabricate_zero_identity_errors PASSED [ 79%]
+tests/test_smoke.py::test_explicit_target_does_not_reuse_previous_player PASSED [ 79%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--start-nan] PASSED [ 79%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--end-inf] PASSED [ 79%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--end-256] PASSED [ 79%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--start--1] PASSED [ 79%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--end-240] PASSED [ 80%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--cpu-threads-9] PASSED [ 80%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--jersey-number-100] PASSED [ 80%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--jersey-number-\u0668] PASSED [ 80%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--kit-primary-color- ] PASSED [ 80%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--kit-primary-color-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] PASSED [ 80%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--kit-primary-color-orange\nwhite] PASSED [ 80%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--fps-nan] PASSED [ 81%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--fps-0] PASSED  [ 81%]
+tests/test_smoke.py::test_rejects_invalid_configuration[--fps-6] PASSED  [ 81%]
+tests/test_smoke.py::test_preserves_existing_files[False] PASSED         [ 81%]
+tests/test_smoke.py::test_preserves_existing_files[True] PASSED          [ 81%]
+tests/test_smoke.py::test_requires_explicit_jersey PASSED                [ 81%]
+tests/test_smoke.py::test_requires_local_evaluation_authorization PASSED [ 82%]
+tests/test_smoke.py::test_smoke_initializes_only_cached_cpu_models PASSED [ 82%]
+tests/test_source_pts.py::test_vfr_nonzero_origin_exact_pts PASSED       [ 82%]
+tests/test_source_pts.py::test_hash_checked_before_decode PASSED         [ 82%]
+tests/test_source_pts.py::test_bad_claims[hash] PASSED                   [ 82%]
+tests/test_source_pts.py::test_bad_claims[missing] PASSED                [ 82%]
+tests/test_source_pts.py::test_bad_claims[ambiguous] PASSED              [ 82%]
+tests/test_source_pts.py::test_bad_claims[duplicate] PASSED              [ 83%]
+tests/test_source_pts.py::test_bad_claims[rounded] PASSED                [ 83%]
+tests/test_source_pts.py::test_bad_claims[box] PASSED                    [ 83%]
+tests/test_source_pts.py::test_source_changed_during_decode PASSED       [ 83%]
+tests/test_source_pts.py::test_manifest_bounded_and_duplicate_keys PASSED [ 83%]
+tests/test_source_pts.py::test_vfr_sampling_uses_exact_global_indices_and_anchor_precedence PASSED [ 83%]
+tests/test_source_pts.py::test_sampling_resets_at_600_second_boundary PASSED [ 84%]
+tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts0-None] PASSED [ 84%]
+tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts0-2.0] PASSED [ 84%]
+tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts1-None] PASSED [ 84%]
+tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts1-2.0] PASSED [ 84%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[0] PASSED [ 84%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[-1] PASSED [ 85%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[31] PASSED [ 85%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[nan] PASSED [ 85%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[inf] PASSED [ 85%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[-inf] PASSED [ 85%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[True] PASSED [ 85%]
+tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[2] PASSED [ 85%]
+tests/test_source_pts.py::test_sampling_nonzero_origin_resets_relative_600_boundary PASSED [ 86%]
+tests/test_source_pts.py::test_first_decoded_pts_fallback_origin PASSED  [ 86%]
+tests/test_source_pts.py::test_manifest_origin_must_match_source PASSED  [ 86%]
+tests/test_source_pts.py::test_proof_requires_consistent_origins PASSED  [ 86%]
+tests/test_source_pts.py::test_fractional_recording_origin_is_not_rounded PASSED [ 86%]
+tests/test_team_background.py::test_orange_shirt_is_not_rejected_because_grass_dominates_person_box PASSED [ 86%]
+tests/test_team_background.py::test_wrong_kit_remains_rejected_after_background_suppression PASSED [ 87%]
+tests/test_team_background.py::test_too_few_foreground_pixels_fail_closed[0.0] PASSED [ 87%]
+tests/test_team_background.py::test_too_few_foreground_pixels_fail_closed[0.01] PASSED [ 87%]
+tests/test_team_background.py::test_too_few_foreground_pixels_fail_closed[0.09] PASSED [ 87%]
+tests/test_team_background.py::test_green_kit_is_not_suppressed_as_grass PASSED [ 87%]
+tests/test_team_background.py::test_unknown_kit_does_not_become_known_from_non_green_pixels PASSED [ 87%]
+tests/test_tracking_32.py::test_yolox_network_round_trips_a_state_dict_strictly_and_fusion_is_exact PASSED [ 87%]
+tests/test_tracking_32.py::test_yolox_rejects_a_mismatched_checkpoint PASSED [ 88%]
+tests/test_tracking_32.py::test_letterbox_and_postprocess_map_boxes_back_to_source_pixels PASSED [ 88%]
+tests/test_tracking_32.py::test_grid_embedder_is_weight_free_normalised_and_separates_kits PASSED [ 88%]
+tests/test_tracking_32.py::test_only_full_other_numbers_are_contrary_evidence PASSED [ 88%]
+tests/test_tracking_32.py::test_same_kit_contact_is_detected_only_for_team_mates PASSED [ 88%]
+tests/test_tracking_32.py::test_ocr_crop_selection_uses_recorded_heights_without_reading_images PASSED [ 88%]
+tests/test_tracking_32.py::test_conflict_reads_are_reported_for_chosen_tracklets PASSED [ 89%]
+tests/test_tracking_32.py::test_pitch_lines_need_grass_on_both_sides_and_intersections_become_landmark_candidates PASSED [ 89%]
+tests/test_tracking_32.py::test_single_touchline_view_is_reported_infeasible PASSED [ 89%]
+tests/test_tracking_32.py::test_pitch_line_layouts_produce_identical_candidates PASSED [ 89%]
+tests/test_tracking_32.py::test_ground_speed_series_from_calibrated_positions PASSED [ 89%]
+tests/test_tracking_32.py::test_manual_calibration_propagates_through_camera_motion_and_stops_on_bad_motion PASSED [ 89%]
+tests/test_tracking_32.py::test_calibration_with_too_few_or_clustered_landmarks_is_rejected PASSED [ 90%]
+tests/test_tracking_32.py::test_onnx_backend_matches_torch PASSED        [ 90%]
+tests/test_tracking_diagnosis.py::test_instrumentation_does_not_change_existing_pipeline_or_double_count_crops PASSED [ 90%]
+tests/test_tracking_diagnosis.py::test_wrong_number_is_not_exported_as_identity_or_candidate PASSED [ 90%]
+tests/test_tracking_diagnosis.py::test_weak_or_unreadable_evidence_remains_abstention PASSED [ 90%]
+tests/test_tracking_diagnosis.py::test_partial_decode_is_not_reported_as_successful_abstention PASSED [ 90%]
+tests/test_tracking_diagnosis.py::test_missing_source_and_existing_output_fail_without_loading_models PASSED [ 90%]
+tests/test_tracking_diagnosis.py::test_requires_authorization_before_source_access PASSED [ 91%]
+tests/test_tracking_diagnosis.py::test_lost_state_does_not_propagate_an_earlier_confirmed_number PASSED [ 91%]
+tests/test_tracking_diagnosis.py::test_wrong_source_labels_fail_before_inference PASSED [ 91%]
+tests/test_tracking_diagnosis.py::test_remote_sources_are_rejected_before_network_access[https://example.com/match.mp4] PASSED [ 91%]
+tests/test_tracking_diagnosis.py::test_remote_sources_are_rejected_before_network_access[\\\\server\\share\\match.mp4] PASSED [ 91%]
+tests/test_tracking_diagnosis.py::test_single_command_compares_fresh_trackers_and_publishes_unreviewed_template PASSED [ 91%]
+tests/test_tracking_diagnosis.py::test_review_boxes_must_fit_actual_source_dimensions PASSED [ 92%]
+tests/test_tracking_diagnosis.py::test_source_changes_are_not_published_as_a_complete_comparison PASSED [ 92%]
+tests/test_tracking_diagnosis.py::test_opposing_same_number_is_only_an_aggregate_rejection_not_a_retained_identity PASSED [ 92%]
+tests/test_tracking_recovery.py::test_bytetrack_keeps_existing_id_through_low_score_detection PASSED [ 92%]
+tests/test_tracking_recovery.py::test_low_score_boxes_cannot_start_a_new_bytetrack_identity PASSED [ 92%]
+tests/test_tracking_recovery.py::test_detector_preserves_low_confidence_person_for_tracker PASSED [ 92%]
+tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box0] PASSED [ 92%]
+tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box1] PASSED [ 93%]
+tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box2] PASSED [ 93%]
+tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box3] PASSED [ 93%]
+tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box4] PASSED [ 93%]
+tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box5] PASSED [ 93%]
+tests/test_tracking_recovery.py::test_partly_visible_detection_is_clipped_before_ocr PASSED [ 93%]
+tests/test_tracking_recovery.py::test_low_score_recovery_does_not_invent_jersey_evidence_or_visibility PASSED [ 94%]
+tests/test_tracking_recovery.py::test_low_score_only_pipeline_never_calls_ocr_or_confirms_target PASSED [ 94%]
+tests/test_tracking_v3.py::test_states_partition_and_competitor_makes_ambiguous PASSED [ 94%]
+tests/test_tracking_v3.py::test_metrics_single_estimator_consistency_and_gates PASSED [ 94%]
+tests/test_tracking_v3.py::test_age_group_thresholds PASSED              [ 94%]
+tests/test_tracking_v3.py::test_invariants_detect_inconsistent_peaks_and_unverified_passes PASSED [ 94%]
+tests/test_tracking_v3.py::test_periods_absorb_stoppages_and_respect_user_boundaries PASSED [ 95%]
+tests/test_tracking_v3.py::test_manual_calibration_validates_and_maps_feet PASSED [ 95%]
+tests/test_tracking_v3.py::test_number_conflict_splits_same_team_swap PASSED [ 95%]
+tests/test_tracking_v3.py::test_v3_endpoints_flag_privacy_and_target_only PASSED [ 95%]
+tests/test_trail_metrics.py::test_unlabeled_metrics_are_unmeasured_not_zero_errors PASSED [ 95%]
+tests/test_trail_metrics.py::test_wrong_player_miss_switch_fragment_and_absent_target PASSED [ 95%]
+tests/test_trail_metrics.py::test_occlusion_and_reentry_do_not_invent_switches_or_fragments PASSED [ 95%]
+tests/test_trail_metrics.py::test_malformed_trace_is_not_abstention[claims0] PASSED [ 96%]
+tests/test_trail_metrics.py::test_malformed_trace_is_not_abstention[claims1] PASSED [ 96%]
+tests/test_trail_metrics.py::test_malformed_trace_is_not_abstention[claims2] PASSED [ 96%]
+tests/test_trail_metrics.py::test_missing_review_sample_is_not_cherry_picked PASSED [ 96%]
+tests/test_trail_metrics.py::test_wholly_uncertain_review_cannot_claim_perfect_accuracy PASSED [ 96%]
+tests/test_trail_metrics.py::test_millisecond_label_quantization_uses_matched_sample_not_float_key PASSED [ 96%]
+tests/test_window_run_comparison.py::test_detection_matching_is_one_to_one_and_reports_missed_and_extra_boxes PASSED [ 97%]
+tests/test_window_run_comparison.py::test_identity_intervals_keep_abstentions_as_abstentions PASSED [ 97%]
+tests/test_window_run_comparison.py::test_decode_compare_detects_frame_offset_hidden_behind_pixel_differences PASSED [ 97%]
+tests/test_window_run_comparison.py::test_replay_ocr_transfer_uses_matched_reads_and_never_invents_text PASSED [ 97%]
+tests/test_worker.py::test_request_requires_privacy_flags_false PASSED   [ 97%]
+tests/test_worker.py::test_request_rejects_unbounded_or_odd_input PASSED [ 97%]
+tests/test_worker.py::test_result_rejects_inconsistent_output PASSED     [ 97%]
+tests/test_worker.py::test_jersey_reads_confirm_identity_team_colour_alone_does_not PASSED [ 98%]
+tests/test_worker.py::test_two_people_with_the_target_number_at_once_are_ambiguous_not_confirmed PASSED [ 98%]
+tests/test_worker.py::test_same_number_in_the_wrong_kit_is_not_the_target PASSED [ 98%]
+tests/test_worker.py::test_unconfirmed_identity_yields_only_unknown_time PASSED [ 98%]
+tests/test_worker.py::test_all_unseen_gaps_are_unknown_even_on_wide_camera PASSED [ 98%]
+tests/test_worker.py::test_kit_colour_matching PASSED                    [ 98%]
+tests/test_worker.py::test_camera_view_from_person_size PASSED           [ 99%]
+tests/test_worker.py::test_pipeline_confirms_target_and_reports_no_events PASSED [ 99%]
+tests/test_worker.py::test_evaluation_trace_is_local_only_and_models_are_reported PASSED [ 99%]
+tests/test_worker.py::test_pipeline_wrong_jersey_stays_candidate PASSED  [ 99%]
+tests/test_worker.py::test_pipeline_broken_stream_fails_honestly PASSED  [ 99%]
+tests/test_worker.py::test_http_endpoint_validates_and_answers PASSED    [ 99%]
+tests/test_worker.py::test_http_failure_recovery_and_repeated_client_cleanup PASSED [100%]
+
+=============================== warnings summary ===============================
+tests/test_tracking_32.py::test_onnx_backend_matches_torch
+  /home/claude/work/b53/workers/football-cv/scoutx_tracker/yolox_net.py:265: DeprecationWarning: You are using the legacy TorchScript-based ONNX export. Starting in PyTorch 2.9, the new torch.export-based ONNX exporter has become the default. Learn more about the new export logic: https://docs.pytorch.org/docs/stable/onnx_export.html. For exporting control flow: https://pytorch.org/tutorials/beginner/onnx/export_control_flow_model_to_onnx_tutorial.html
+    torch.onnx.export(model, torch.zeros(1, 3, h, imgsz), str(out), input_names=["images"], output_names=["out"],
+
+tests/test_tracking_32.py::test_onnx_backend_matches_torch
+  /usr/local/lib/python3.13/site-packages/torch/onnx/_internal/torchscript_exporter/utils.py:218: DeprecationWarning: The feature will be removed. Please remove usage of this function
+    setup_onnx_logging(verbose) as log_ctx,
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+________ test_discover_endpoint_is_gated_target_only_and_needs_a_number ________
+----------------------------- Captured stderr call -----------------------------
+[ WARN:3@21.291] global loadsave.cpp:278 findDecoder imread_('/secret/s_002420.jpg'): can't open/read file: check file path/integrity
+_______________ test_matrix_budget_leaves_setup_and_cleanup_time _______________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] [--video VIDEO] --out-dir OUT_DIR [--execute]
+                   [--expected-commit EXPECTED_COMMIT]
+                   [--windows {gap1150,3144,1073} [{gap1150,3144,1073} ...]]
+                   [--budget-sec BUDGET_SEC]
+__main__.py: error: inference budget must be 60..5400 s; reserve VM time for setup/export/cleanup
+_________ test_execute_requires_a_bound_commit_before_creating_output __________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] [--video VIDEO] --out-dir OUT_DIR [--execute]
+                   [--expected-commit EXPECTED_COMMIT]
+                   [--windows {gap1150,3144,1073} [{gap1150,3144,1073} ...]]
+                   [--budget-sec BUDGET_SEC]
+__main__.py: error: --execute requires --video and --expected-commit
+_______________ test_cli_explicit_authorization_and_local_paths ________________
+----------------------------- Captured stdout call -----------------------------
+Validation failed: check local paths, independent review, exact source/anchor scope and complete run. No approval or existing output changed.
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --out OUT --authorize-local-evaluation
+                   [--jersey-number JERSEY_NUMBER]
+                   [--kit-primary-color KIT_PRIMARY_COLOR]
+                   [--kit-secondary-color KIT_SECONDARY_COLOR] [--input INPUT]
+                   [--anchors ANCHORS] [--review REVIEW] [--run-dir RUN_DIR]
+                   [--evaluator EVALUATOR] [--producer PRODUCER]
+                   [--anchor-reviewer ANCHOR_REVIEWER]
+                   {prepare,seal,report}
+__main__.py: error: the following arguments are required: --authorize-local-evaluation
+_______________ test_cli_writes_new_sealed_and_accuracy_outputs ________________
+----------------------------- Captured stdout call -----------------------------
+Validation failed: check local paths, independent review, exact source/anchor scope and complete run. No approval or existing output changed.
+____________ test_sealed_target_cannot_be_overridden_at_report_time ____________
+----------------------------- Captured stdout call -----------------------------
+Validation failed: check local paths, independent review, exact source/anchor scope and complete run. No approval or existing output changed.
+_______________ test_prepare_does_not_default_to_previous_target _______________
+----------------------------- Captured stdout call -----------------------------
+Validation failed: check local paths, independent review, exact source/anchor scope and complete run. No approval or existing output changed.
+_____________ test_baseline_manifest_binds_code_runtime_and_scope ______________
+----------------------------- Captured stdout call -----------------------------
+{"fixture": "img4809_3144_slice", "mode": "automatic", "metrics": {"targetLabelledSec": 5.4, "claimedCorrectSec": 5.3, "confirmedCorrectSec": 3.8, "wrongIdentitySec": 0.0, "confirmedWrongIdentitySec": 0.0, "overlapAmbiguousSec": 0.0, "falseAttributionSec": 0.0, "claimedRecall": 0.981, "IDF1": 0.991, "wrongIdentityTimes": [], "confirmedRecall": 0.704, "abstainedVisibleFrames": 1, "abstentionRateOnVisibleLabels": 0.019}, "stageDiagnostics": {"targetVisibleLabelledFrames": 54, "retainedDetectionHitFrames": 54, "assembledTrackHitFrames": 54, "selectedTargetHitFrames": 53}}
+{"fixture": "img4809_1073_slice", "mode": "automatic", "metrics": {"targetLabelledSec": 3.1, "claimedCorrectSec": 0.0, "confirmedCorrectSec": 0.0, "wrongIdentitySec": 0.0, "confirmedWrongIdentitySec": 0.0, "overlapAmbiguousSec": 0.0, "falseAttributionSec": 0.0, "claimedRecall": 0.0, "IDF1": 0.0, "wrongIdentityTimes": [], "confirmedRecall": 0.0, "abstainedVisibleFrames": 31, "abstentionRateOnVisibleLabels": 1.0}, "stageDiagnostics": {"targetVisibleLabelledFrames": 31, "retainedDetectionHitFrames": 31, "assembledTrackHitFrames": 31, "selectedTargetHitFrames": 0}}
+{"fixture": "img4809_1073_slice", "mode": "recorded-anchor", "metrics": {"targetLabelledSec": 3.1, "claimedCorrectSec": 2.8, "confirmedCorrectSec": 1.6, "wrongIdentitySec": 0.0, "confirmedWrongIdentitySec": 0.0, "overlapAmbiguousSec": 0.0, "falseAttributionSec": 0.0, "claimedRecall": 0.903, "IDF1": 0.949, "wrongIdentityTimes": [], "confirmedRecall": 0.516, "abstainedVisibleFrames": 3, "abstentionRateOnVisibleLabels": 0.097}, "stageDiagnostics": {"targetVisibleLabelledFrames": 31, "retainedDetectionHitFrames": 31, "assembledTrackHitFrames": 31, "selectedTargetHitFrames": 31}}
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --out OUT
+__main__.py: error: output already exists
+______________________ test_existing_output_is_preserved _______________________
+----------------------------- Captured stdout call -----------------------------
+Review operation failed: check local paths, source hashes, complete labels, bounds and cached models. No approval granted.
+________________ test_source_mutation_prevents_pack_publication ________________
+----------------------------- Captured stdout call -----------------------------
+Review operation failed: check local paths, source hashes, complete labels, bounds and cached models. No approval granted.
+____________ test_validation_cli_produces_only_a_validation_record _____________
+----------------------------- Captured stdout call -----------------------------
+{"status": "complete", "mode": "validate", "productionApproval": false, "reviewedLabelsCreatedByAgent": false}
+__________ test_score_cli_reuses_retained_predictions_without_models ___________
+----------------------------- Captured stdout call -----------------------------
+{"status": "complete", "mode": "score", "productionApproval": false, "reviewedLabelsCreatedByAgent": false}
+_________________ test_invalid_arguments[--jersey-number-100] __________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Jersey must contain one or two ASCII digits
+________________ test_invalid_arguments[--jersey-number-\u0668] ________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Jersey must contain one or two ASCII digits
+_________________ test_invalid_arguments[--jersey-number-8\n] __________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Jersey must contain one or two ASCII digits
+_____________ test_invalid_arguments[--kit-primary-color-unknown] ______________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: argument --kit-primary-color: invalid choice: 'unknown' (choose from 'black', 'blue', 'gray', 'green', 'grey', 'maroon', 'navy', 'orange', 'pink', 'purple', 'red', 'sky blue', 'white', 'yellow')
+_________________ test_invalid_arguments[--reference-sec-nan] __________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Reference timestamp must be finite and nonnegative
+_________________ test_invalid_arguments[--reference-sec-inf] __________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Reference timestamp must be finite and nonnegative
+__________________ test_invalid_arguments[--reference-sec--1] __________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Reference timestamp must be finite and nonnegative
+_________________________ test_authorization_required __________________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: the following arguments are required: --authorize-local-evaluation
+_______________________ test_nonoverwrite_paths[source] ________________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Supply a local file and a new output directory with an existing parent
+______________________ test_nonoverwrite_paths[existing] _______________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Supply a local file and a new output directory with an existing parent
+______________________ test_nonoverwrite_paths[ancestor] _______________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --jersey-number JERSEY_NUMBER
+                   --kit-primary-color {black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}
+                   [--kit-secondary-color {,black,blue,gray,green,grey,maroon,navy,orange,pink,purple,red,sky blue,white,yellow}]
+                   --reference-sec REFERENCE_SEC --authorize-local-evaluation
+                   [--anchor-manifest ANCHOR_MANIFEST]
+                   [--preflight-review PREFLIGHT_REVIEW]
+                   [--source-path SOURCE_PATH]
+                   [--anchor-revision ANCHOR_REVISION] [--run | --plan-only]
+__main__.py: error: Supply a local file and a new output directory with an existing parent
+________________________ test_missing_input_is_nonzero _________________________
+----------------------------- Captured stderr call -----------------------------
+Local evaluation failed; no successful completion is claimed.
+_________ test_target_only_moments_strip_crop_paths_and_cap_thumbnails _________
+----------------------------- Captured stderr call -----------------------------
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+[ WARN:0@44.904] global loadsave.cpp:278 findDecoder imread_('/secret/path/crops/000001_7.jpg'): can't open/read file: check file path/integrity
+________________ test_authorization_required_for_helper_and_cli ________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --reference-sec REFERENCE_SEC
+                   --job-id JOB_ID --generation GENERATION
+                   [--frame-id FRAME_ID] --authorize-local-evaluation
+__main__.py: error: the following arguments are required: --authorize-local-evaluation
+_______________ test_rejects_invalid_configuration[--start-nan] ________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Supply a local video and an interval no longer than 15 seconds
+________________ test_rejects_invalid_configuration[--end-inf] _________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Supply a local video and an interval no longer than 15 seconds
+________________ test_rejects_invalid_configuration[--end-256] _________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Supply a local video and an interval no longer than 15 seconds
+________________ test_rejects_invalid_configuration[--start--1] ________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Supply a local video and an interval no longer than 15 seconds
+________________ test_rejects_invalid_configuration[--end-240] _________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Supply a local video and an interval no longer than 15 seconds
+_____________ test_rejects_invalid_configuration[--cpu-threads-9] ______________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: CPU threads must be between 1 and 8
+___________ test_rejects_invalid_configuration[--jersey-number-100] ____________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Jersey number must contain one or two ASCII digits
+__________ test_rejects_invalid_configuration[--jersey-number-\u0668] __________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Jersey number must contain one or two ASCII digits
+__________ test_rejects_invalid_configuration[--kit-primary-color- ] ___________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: A primary kit colour is required
+_ test_rejects_invalid_configuration[--kit-primary-color-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] _
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Kit colours must be plain text of at most 40 characters
+____ test_rejects_invalid_configuration[--kit-primary-color-orange\nwhite] _____
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Kit colours must be plain text of at most 40 characters
+________________ test_rejects_invalid_configuration[--fps-nan] _________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Sampling must be finite, positive and at most five frames per second
+_________________ test_rejects_invalid_configuration[--fps-0] __________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Sampling must be finite, positive and at most five frames per second
+_________________ test_rejects_invalid_configuration[--fps-6] __________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Sampling must be finite, positive and at most five frames per second
+_____________________ test_preserves_existing_files[False] _____________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Output must be a new file distinct from the input
+_____________________ test_preserves_existing_files[True] ______________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: Output must be a new file distinct from the input
+________________________ test_requires_explicit_jersey _________________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: the following arguments are required: --jersey-number
+_________________ test_requires_local_evaluation_authorization _________________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--cpu-threads CPU_THREADS] [--fps FPS]
+                   --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   --authorize-local-evaluation
+__main__.py: error: the following arguments are required: --authorize-local-evaluation
+_____ test_missing_source_and_existing_output_fail_without_loading_models ______
+----------------------------- Captured stdout call -----------------------------
+Diagnosis failed; no complete comparison or approval claimed.
+_______________ test_requires_authorization_before_source_access _______________
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--fps FPS] --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   [--labels LABELS] [--compare-scale2x]
+                   --authorize-local-evaluation
+__main__.py: error: the following arguments are required: --authorize-local-evaluation
+________________ test_wrong_source_labels_fail_before_inference ________________
+----------------------------- Captured stdout call -----------------------------
+Diagnosis failed; no complete comparison or approval claimed.
+_ test_remote_sources_are_rejected_before_network_access[https://example.com/match.mp4] _
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--fps FPS] --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   [--labels LABELS] [--compare-scale2x]
+                   --authorize-local-evaluation
+__main__.py: error: argument --input: invalid _local_path value: 'https://example.com/match.mp4'
+_ test_remote_sources_are_rejected_before_network_access[\\\\server\\share\\match.mp4] _
+----------------------------- Captured stderr call -----------------------------
+usage: __main__.py [-h] --input INPUT --out OUT --start START --end END
+                   [--fps FPS] --jersey-number JERSEY_NUMBER
+                   --kit-primary-color KIT_PRIMARY_COLOR
+                   [--kit-secondary-color KIT_SECONDARY_COLOR]
+                   [--labels LABELS] [--compare-scale2x]
+                   --authorize-local-evaluation
+__main__.py: error: argument --input: invalid _local_path value: '\\\\server\\share\\match.mp4'
+_ test_single_command_compares_fresh_trackers_and_publishes_unreviewed_template _
+----------------------------- Captured stdout call -----------------------------
+{"baseline": {"qualifyingReads": 4, "sampledFrames": 4, "claimedFrames": 4, "sampledAbstentionRate": 0.0, "groundTruthAvailable": false, "trailCoverage": null, "falseClaimRate": null, "falseClaimsAmongClaims": null, "idSwitches": null, "fragmentations": null, "detectionRecall": null, "scope": "sampled frames only; no production approval or continuous-frame guarantee"}, "candidate": {"qualifyingReads": 4, "sampledFrames": 4, "claimedFrames": 4, "sampledAbstentionRate": 0.0, "groundTruthAvailable": false, "trailCoverage": null, "falseClaimRate": null, "falseClaimsAmongClaims": null, "idSwitches": null, "fragmentations": null, "detectionRecall": null, "scope": "sampled frames only; no production approval or continuous-frame guarantee"}}
+Diagnosis failed; no complete comparison or approval claimed.
+________ test_source_changes_are_not_published_as_a_complete_comparison ________
+----------------------------- Captured stdout call -----------------------------
+Diagnosis failed; no complete comparison or approval claimed.
+____________ test_http_failure_recovery_and_repeated_client_cleanup ____________
+------------------------------ Captured log call -------------------------------
+ERROR    football-cv:main.py:64 model backends unavailable: RuntimeError
+ERROR    football-cv:main.py:64 model backends unavailable: RuntimeError
+- generated xml file: /home/claude/work/b53/workers/football-cv/bench/results/5.3/full-match-identity-20261103/tests/junit_B.xml -
+=========================== short test summary info ============================
+PASSED tests/test_50.py::test_working_space_filter_is_explicit_per_dynamic_range
+PASSED tests/test_50.py::test_neighbours_are_read_only_after_target_evidence
+PASSED tests/test_50.py::test_roi_detection_maps_boxes_back_to_frame_coordinates
+PASSED tests/test_50.py::test_sequence_observations_need_six_confirmed_seconds_and_stay_clip_level
+PASSED tests/test_50.py::test_clip_frames_endpoint_outlines_target_and_is_gated
+PASSED tests/test_50.py::test_period_detection_handles_recordings_shorter_than_the_activity_window
+PASSED tests/test_50.py::test_a_single_number_read_is_a_moment_to_check_not_a_confirmation
+PASSED tests/test_50.py::test_weak_reads_only_ask_and_on_pitch_filter_drops_spectators
+PASSED tests/test_50.py::test_weak_only_sightings_never_become_identity_evidence
+PASSED tests/test_51.py::test_kit_scores_vectorised_matches_scalar
+PASSED tests/test_51.py::test_contact_rows_and_split_into_pre_contact_post
+PASSED tests/test_51.py::test_link_rule_tracker_prior_swap_only_with_large_margin
+PASSED tests/test_51.py::test_regression_3144_wrong_player_never_claimed_and_target_kept
+PASSED tests/test_51.py::test_vectorised_chain_solver_matches_reference_loop
+PASSED tests/test_51.py::test_memo_keys_arrays_by_content_and_corrections_are_idempotent
+PASSED tests/test_51.py::test_discovery_settled_other_number_is_not_reread_and_gate_never_creates_evidence
+PASSED tests/test_51.py::test_batched_read_and_verify_gives_the_same_sighting_as_two_calls
+PASSED tests/test_51.py::test_52_refresh_reads_at_most_max_new_crops_in_a_fixed_order
+PASSED tests/test_51.py::test_52_resolve_contract_accepts_bounded_refresh_only
+PASSED tests/test_52.py::test_steal_detected_only_for_a_jump_onto_a_lost_mate
+PASSED tests/test_52.py::test_steal_split_identity_does_not_cross_when_appearance_cannot_tell
+PASSED tests/test_52.py::test_steal_split_follows_appearance_when_it_is_decisive
+PASSED tests/test_52.py::test_steal_split_keeps_the_tracker_when_appearance_agrees
+PASSED tests/test_52.py::test_ort_providers_prefers_cuda_only_when_installed
+PASSED tests/test_52.py::test_modes_only_balanced_is_accuracy_validated
+PASSED tests/test_52.py::test_open_torso_read_is_one_weak_read_with_a_conflict_rule
+PASSED tests/test_52.py::test_regression_heldout_1073_answer_not_carried_back_across_a_box_steal
+PASSED tests/test_52.py::test_extract_endpoint_checkpoints_segments_and_never_mixes_attempts
+PASSED tests/test_appearance_isolation.py::test_embedding_selection_is_the_extract_rule
+PASSED tests/test_appearance_isolation.py::test_recompute_reproduces_extract_features_for_fixed_boxes
+PASSED tests/test_appearance_isolation.py::test_recompute_refuses_an_emb_idx_that_is_not_the_extract_selection
+PASSED tests/test_appearance_isolation.py::test_recompute_refuses_missing_frames
+PASSED tests/test_appearance_isolation.py::test_build_changes_only_the_requested_field_and_frames
+PASSED tests/test_appearance_isolation.py::test_small_event_continuation_with_low_margin_stays_unclear
+PASSED tests/test_appearance_isolation.py::test_appearance_disagreement_below_swap_margin_never_moves_identity_to_the_team_mate
+PASSED tests/test_appearance_isolation.py::test_recorded_1155_7_event_margin_is_the_joint_assignment_gap_not_a_pairwise_cost_difference
+PASSED tests/test_claim_outcome_audit.py::test_unmatched_claim_is_neither_correct_nor_abstention
+PASSED tests/test_claim_outcome_audit.py::test_promotion_report_does_not_repeat_a_fixed_wrong_identity_failure
+PASSED tests/test_claim_outcome_audit.py::test_promotion_report_keeps_actual_gate_failures_and_unmatched_claims
+PASSED tests/test_coordinated_evaluation.py::test_gated_end_to_end_evaluation_persists_only_target
+PASSED tests/test_coordinated_evaluation.py::test_frame_hash_mismatch_blocks_completion
+PASSED tests/test_coordinated_evaluation.py::test_wrong_model_scope_fails_before_sampling
+PASSED tests/test_coordinated_evaluation.py::test_changed_source_is_rejected_before_coordination
+PASSED tests/test_coordinated_evaluation.py::test_coordinator_cannot_run_after_gate_withdrawal[EXPERIMENTAL_TARGET_ANCHORS]
+PASSED tests/test_coordinated_evaluation.py::test_coordinator_cannot_run_after_gate_withdrawal[CV_WORKER_APPROVED]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-hash]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-duration]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-models]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-unverified]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[False-job]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-hash]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-duration]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-models]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-unverified]
+PASSED tests/test_coordinated_evaluation.py::test_preflight_rejects_before_output_or_models[True-job]
+PASSED tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[target]
+PASSED tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[durationSec]
+PASSED tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[anchorsReviewed]
+PASSED tests/test_coordinated_evaluation.py::test_review_contradictions_rejected_before_decode[anchors]
+PASSED tests/test_coordinated_evaluation.py::test_anchor_plan_verifies_frames_without_loading_models
+PASSED tests/test_discovery_41.py::test_number_sighting_becomes_a_playable_moment
+PASSED tests/test_discovery_41.py::test_conflicting_number_in_the_same_sighting_abstains_and_other_numbers_are_ignored
+PASSED tests/test_discovery_41.py::test_only_large_target_kit_players_are_read
+PASSED tests/test_discovery_41.py::test_clip_stops_at_a_camera_cut
+PASSED tests/test_discovery_41.py::test_segments_with_sightings_are_scheduled_first
+PASSED tests/test_discovery_41.py::test_extract_endpoint_passes_absolute_segment_bounds
+PASSED tests/test_discovery_41.py::test_discover_endpoint_is_gated_target_only_and_needs_a_number
+PASSED tests/test_discovery_41.py::test_sightings_attach_to_the_overlapping_detection_as_number_reads
+PASSED tests/test_discovery_41.py::test_overlapping_sightings_merge_into_one_moment
+PASSED tests/test_evaluate.py::test_interval_helpers
+PASSED tests/test_evaluate.py::test_visibility_precision_recall_and_false_confirms
+PASSED tests/test_evaluate.py::test_identity_accuracy_switches_and_continuity_from_keyframes
+PASSED tests/test_evaluate.py::test_events_only_count_from_a_complete_event_stage
+PASSED tests/test_evaluate.py::test_event_matching_respects_type_and_tolerance
+PASSED tests/test_evaluate.py::test_missing_worker_output_counts_as_unreliable
+PASSED tests/test_evaluate.py::test_gate_requires_videos_slices_and_measured_metrics_and_never_approves_proposed_thresholds
+PASSED tests/test_evaluate.py::test_unmeasured_identity_fails_the_gate
+PASSED tests/test_evaluate.py::test_run_reads_files_and_records_provenance
+PASSED tests/test_evaluate.py::test_run_fails_without_manifest_or_worker_provenance
+PASSED tests/test_exchange_split.py::test_exchange_detected_where_the_steal_rule_cannot_see_it
+PASSED tests/test_exchange_split.py::test_no_exchange_for_valid_continuations_occlusion_small_or_other_kit_players
+PASSED tests/test_exchange_split.py::test_flag_off_keeps_the_baseline_tracks
+PASSED tests/test_exchange_split.py::test_identity_does_not_cross_an_exchange_when_appearance_cannot_tell
+PASSED tests/test_exchange_split.py::test_identity_follows_the_person_through_an_exchange_when_appearance_decides
+PASSED tests/test_exchange_split.py::test_regression_replay_244s_wrong_player_confirmation
+PASSED tests/test_experimental_identity.py::test_anchor_only_confirms_observation_not_track_or_gap
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-jobId]
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-sourceSha256]
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-generation]
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[anchor-modelSetDigest]
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-jobId]
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-sourceSha256]
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-generation]
+PASSED tests/test_experimental_identity.py::test_all_scope_fields_must_match[segment-modelSetDigest]
+PASSED tests/test_experimental_identity.py::test_box_strict_finite_bounds[nan]
+PASSED tests/test_experimental_identity.py::test_box_strict_finite_bounds[inf]
+PASSED tests/test_experimental_identity.py::test_box_strict_finite_bounds[-inf]
+PASSED tests/test_experimental_identity.py::test_box_strict_finite_bounds[-0.1]
+PASSED tests/test_experimental_identity.py::test_box_strict_finite_bounds[1.1]
+PASSED tests/test_experimental_identity.py::test_box_strict_finite_bounds[0.2]
+PASSED tests/test_experimental_identity.py::test_box_strict_finite_bounds[True]
+PASSED tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch0]
+PASSED tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch1]
+PASSED tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch2]
+PASSED tests/test_experimental_identity.py::test_box_extent_and_extra_rejected[patch3]
+PASSED tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[request]
+PASSED tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[scope]
+PASSED tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[anchor]
+PASSED tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[segment]
+PASSED tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[track]
+PASSED tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[observation]
+PASSED tests/test_experimental_identity.py::test_extra_forbidden_at_every_level[interval]
+PASSED tests/test_experimental_identity.py::test_duplicate_ids_rejected[anchor]
+PASSED tests/test_experimental_identity.py::test_duplicate_ids_rejected[segment]
+PASSED tests/test_experimental_identity.py::test_duplicate_ids_rejected[track]
+PASSED tests/test_experimental_identity.py::test_duplicate_ids_rejected[observation]
+PASSED tests/test_experimental_identity.py::test_unique_cross_segment_overlap_and_owned_union
+PASSED tests/test_experimental_identity.py::test_competing_detection_in_same_segment_is_ambiguous
+PASSED tests/test_experimental_identity.py::test_conflicting_copy_invalidates_anchor[change0]
+PASSED tests/test_experimental_identity.py::test_conflicting_copy_invalidates_anchor[change1]
+PASSED tests/test_experimental_identity.py::test_appearance_or_readable_jersey_alone_never_confirms
+PASSED tests/test_experimental_identity.py::test_observation_invalid_values[timestampSec-nan]
+PASSED tests/test_experimental_identity.py::test_observation_invalid_values[appearanceScore-inf]
+PASSED tests/test_experimental_identity.py::test_observation_invalid_values[frameIndex-True]
+PASSED tests/test_experimental_identity.py::test_observation_invalid_values[readableJersey-\uff11\uff17]
+PASSED tests/test_experimental_identity.py::test_observation_invalid_values[evidenceHash-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]
+PASSED tests/test_experimental_identity.py::test_corrected_anchor_replaces_context_without_hidden_identity
+PASSED tests/test_experimental_identity.py::test_anchor_requires_exact_frame_and_time[timestampSec]
+PASSED tests/test_experimental_identity.py::test_anchor_requires_exact_frame_and_time[frameIndex]
+PASSED tests/test_experimental_identity.py::test_small_caps_and_context_boundaries
+PASSED tests/test_experimental_identity.py::test_untrusted_construct_revalidated
+PASSED tests/test_experimental_identity.py::test_disjoint_simultaneous_anchors_are_not_two_confirmed_targets
+PASSED tests/test_experimental_identity.py::test_overlapping_chain_does_not_create_transitive_identity
+PASSED tests/test_experimental_identity.py::test_duplicate_copy_with_inconsistent_frame_time_is_rejected
+PASSED tests/test_experimental_identity.py::test_disjoint_owned_intervals_leave_gap_unanalysed
+PASSED tests/test_experimental_identity.py::test_full_global_observation_cap_and_one_over
+PASSED tests/test_experimental_identity.py::test_output_forbids_nonfinite_and_extra_fields
+PASSED tests/test_experimental_identity.py::test_scope_strict_generation_and_hash
+PASSED tests/test_experimental_identity_cli.py::test_synthetic_cli_resolves_and_validates_output
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[[]]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{}]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[null]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[\xff]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{"x":NaN}]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[{"x":1,"x":2}]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_json_or_schema_never_creates_output[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_evidence_never_creates_output[extra]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_evidence_never_creates_output[scope]
+PASSED tests/test_experimental_identity_cli.py::test_invalid_evidence_never_creates_output[nan]
+PASSED tests/test_experimental_identity_cli.py::test_exact_one_mib_allowed_but_one_byte_over_rejected
+PASSED tests/test_experimental_identity_cli.py::test_existing_output_is_never_overwritten[file]
+PASSED tests/test_experimental_identity_cli.py::test_existing_output_is_never_overwritten[directory]
+PASSED tests/test_experimental_identity_cli.py::test_existing_output_is_never_overwritten[same-input]
+PASSED tests/test_experimental_identity_cli.py::test_missing_input_or_output_parent_fails_without_creating_paths
+PASSED tests/test_experimental_identity_cli.py::test_nonlocal_path_rejected[https://example.invalid/request.json]
+PASSED tests/test_experimental_identity_cli.py::test_nonlocal_path_rejected[//server/share/request.json]
+PASSED tests/test_experimental_identity_cli.py::test_no_evaluate_subcommand
+PASSED tests/test_experimental_identity_cli.py::test_invalid_resolver_output_is_validated_before_creation
+PASSED tests/test_fp32_comparison.py::test_profiles_change_one_detector_factor_at_a_time
+PASSED tests/test_fp32_comparison.py::test_profile_environment_does_not_inherit_experimental_output_knobs
+PASSED tests/test_fp32_comparison.py::test_plan_does_not_import_cuda_or_start_inference
+PASSED tests/test_fp32_comparison.py::test_corpus_sampling_is_bounded_stable_and_keeps_diagnostic_frames
+PASSED tests/test_fp32_comparison.py::test_detector_comparison_counts_missing_boxes_without_reusing_matches
+PASSED tests/test_fp32_comparison.py::test_matrix_budget_leaves_setup_and_cleanup_time
+PASSED tests/test_fp32_comparison.py::test_execute_refuses_an_image_from_a_different_commit_before_cuda
+PASSED tests/test_fp32_comparison.py::test_execute_requires_a_bound_commit_before_creating_output
+PASSED tests/test_fp32_comparison.py::test_matrix_comparison_exposes_decode_mismatch_and_lost_cpu_number
+PASSED tests/test_fp32_comparison.py::test_gap_window_uses_existing_authoritative_label_times_without_new_annotations
+PASSED tests/test_frame_reader.py::test_frame_order_and_eof[0]
+PASSED tests/test_frame_reader.py::test_frame_order_and_eof[1]
+PASSED tests/test_frame_reader.py::test_frame_order_and_eof[4]
+PASSED tests/test_frame_reader.py::test_chunk_boundary_stops_full_prefetch_queue
+PASSED tests/test_frame_reader.py::test_decoder_error_reaches_caller_and_releases_capture[0]
+PASSED tests/test_frame_reader.py::test_decoder_error_reaches_caller_and_releases_capture[1]
+PASSED tests/test_frame_reader.py::test_decoder_error_reaches_caller_and_releases_capture[4]
+PASSED tests/test_frame_reader.py::test_consumer_error_stops_decoder
+PASSED tests/test_frame_reader.py::test_extract_chunk_prefetch_matches_synchronous_output
+PASSED tests/test_fresh_identity_windows.py::test_scoring_separates_correct_wrong_and_abstention
+PASSED tests/test_fresh_identity_windows.py::test_wrong_source_is_refused_before_models_or_output
+PASSED tests/test_fresh_identity_windows.py::test_fixture_labels_keep_absolute_times_and_owner_anchor_separate
+PASSED tests/test_fresh_identity_windows.py::test_window_reports_use_local_times_without_changing_source_decode_offsets
+PASSED tests/test_full_match_benchmark.py::test_accuracy_separates_wrong_identity_from_overlap_and_rescales
+PASSED tests/test_full_match_benchmark.py::test_gate_absolute_and_relative_rules
+PASSED tests/test_full_match_benchmark.py::test_runs_are_comparable_only_on_the_same_task
+PASSED tests/test_full_match_benchmark.py::test_claims_agreement
+PASSED tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[None]
+PASSED tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[nan]
+PASSED tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[inf]
+PASSED tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[-inf]
+PASSED tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[True]
+PASSED tests/test_full_match_benchmark.py::test_accuracy_gate_rejects_unmeasured_or_nonfinite_metrics[0]
+PASSED tests/test_full_match_benchmark.py::test_missing_timeline_frames_cannot_look_like_perfect_agreement
+PASSED tests/test_full_match_benchmark.py::test_timestamp_agreement_uses_nearest_match_once
+PASSED tests/test_full_match_benchmark.py::test_cost_is_labelled_estimate_with_separate_components
+PASSED tests/test_full_match_benchmark.py::test_vm_overheads_from_timestamps
+PASSED tests/test_full_match_benchmark.py::test_peak_process_memory_available_on_this_platform
+PASSED tests/test_full_match_benchmark.py::test_peak_memory_units_match_platform[linux-65536]
+PASSED tests/test_full_match_benchmark.py::test_peak_memory_units_match_platform[darwin-67108864]
+PASSED tests/test_full_match_benchmark.py::test_checkpoint_resume_skips_valid_chunk_and_redoes_corrupt
+PASSED tests/test_full_match_benchmark.py::test_checkpoint_never_mixes_configurations
+PASSED tests/test_full_match_benchmark.py::test_checkpoint_retries_and_interrupted_chunks
+PASSED tests/test_full_match_benchmark.py::test_checkpoint_disk_space_check
+PASSED tests/test_full_match_benchmark.py::test_stage1_settings_capture_affecting_env_only
+PASSED tests/test_full_match_benchmark.py::test_benchmark_refuses_unverified_models
+PASSED tests/test_full_match_benchmark.py::test_reference_identity_is_the_video_stream_not_the_container
+PASSED tests/test_full_match_benchmark.py::test_benchmark_refuses_a_baseline_from_another_recording
+PASSED tests/test_full_match_benchmark.py::test_benchmark_rejects_unvalidated_mode
+PASSED tests/test_full_match_benchmark.py::test_compare_runs_gate_speedup_and_incomplete_reference
+PASSED tests/test_full_match_benchmark.py::test_box_agreement_is_not_applicable_only_when_both_runs_abstain_everywhere
+PASSED tests/test_full_match_benchmark.py::test_label_time_basis_correction_is_detected_without_identity_and_never_rescues_wrong_players
+PASSED tests/test_full_match_validation.py::test_metrics_distinguish_wrong_player_localization_misses_and_visibility
+PASSED tests/test_full_match_validation.py::test_zero_denominators_and_calibration_exclusion
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[unreviewed]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[same_reviewer]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[same_anchor_reviewer]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[unblinded]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[unreviewed_anchors]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[missing]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[wrong_target]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[bad_box]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[nonfinite]
+PASSED tests/test_full_match_validation.py::test_review_cannot_silently_cherry_pick_or_skip_review[url_field]
+PASSED tests/test_full_match_validation.py::test_full_140_minute_schedule_report_and_per_segment_denominators
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[partial]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[gap]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[wrong_source]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[wrong_anchor]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[wrong_models]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[unordered_trace]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[candidate]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[training]
+PASSED tests/test_full_match_validation.py::test_incomplete_or_mismatched_runs_fail_closed[missing_segment]
+PASSED tests/test_full_match_validation.py::test_seal_tampering_and_no_overwrite
+PASSED tests/test_full_match_validation.py::test_cli_explicit_authorization_and_local_paths
+PASSED tests/test_full_match_validation.py::test_prepare_checks_source_and_reviewed_pts_without_models_or_output
+PASSED tests/test_full_match_validation.py::test_cli_writes_new_sealed_and_accuracy_outputs
+PASSED tests/test_full_match_validation.py::test_quantized_source_sampling_uses_audit_not_nominal_frame_rate
+PASSED tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[missing]
+PASSED tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[None]
+PASSED tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[trace2]
+PASSED tests/test_full_match_validation.py::test_missing_or_non_list_trace_is_not_silent_abstention[]
+PASSED tests/test_full_match_validation.py::test_anchor_reviewer_may_be_producer_but_not_ground_truth_reviewer
+PASSED tests/test_full_match_validation.py::test_explicit_target_survives_review_run_and_report[8-orange]
+PASSED tests/test_full_match_validation.py::test_explicit_target_survives_review_run_and_report[20-orange]
+PASSED tests/test_full_match_validation.py::test_explicit_target_survives_review_run_and_report[7-blue]
+PASSED tests/test_full_match_validation.py::test_orange_twenty_review_rejects_old_orange_eight_run
+PASSED tests/test_full_match_validation.py::test_sealed_target_cannot_be_overridden_at_report_time
+PASSED tests/test_full_match_validation.py::test_prepare_does_not_default_to_previous_target
+PASSED tests/test_hdr_reference.py::test_bt2020_to_bt709_matrix_matches_the_published_bt2087_values
+PASSED tests/test_hdr_reference.py::test_narrow_range_bt2020_ycbcr_reference_values
+PASSED tests/test_hdr_reference.py::test_chroma_upsampling_respects_left_siting_and_constants
+PASSED tests/test_hdr_reference.py::test_render_keeps_neutrals_and_outputs_bgr
+PASSED tests/test_hdr_reference.py::test_metadata_guard_refuses_sdr_missing_and_conflicting_metadata
+PASSED tests/test_identity_baseline.py::test_real_crossing_replay_exposes_missing_identity_evidence_without_false_claims
+PASSED tests/test_identity_baseline.py::test_baseline_manifest_binds_code_runtime_and_scope
+PASSED tests/test_identity_contact_entry.py::test_number_inside_contact_does_not_anchor_an_unrelated_handoff[10-True]
+PASSED tests/test_identity_contact_entry.py::test_number_inside_contact_does_not_anchor_an_unrelated_handoff[30-False]
+PASSED tests/test_identity_coordinator.py::test_both_gates[true-true-True]
+PASSED tests/test_identity_coordinator.py::test_both_gates[true-false-False]
+PASSED tests/test_identity_coordinator.py::test_both_gates[false-true-False]
+PASSED tests/test_identity_coordinator.py::test_both_gates[TRUE-true-False]
+PASSED tests/test_identity_coordinator.py::test_sanitized_result
+PASSED tests/test_identity_coordinator.py::test_stale_proof[generation]
+PASSED tests/test_identity_coordinator.py::test_stale_proof[source]
+PASSED tests/test_identity_coordinator.py::test_stale_proof[hash]
+PASSED tests/test_identity_coordinator.py::test_stale_proof[time]
+PASSED tests/test_identity_coordinator.py::test_stale_proof[index]
+PASSED tests/test_identity_coordinator.py::test_stale_proof[missing]
+PASSED tests/test_identity_coordinator.py::test_http_contract_and_private_validation
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[1?]
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[?7]
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[\uff11\uff17]
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[123]
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[]
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[None]
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[ 17]
+PASSED tests/test_identity_hardening.py::test_invalid_readings_cannot_confirm[17x]
+PASSED tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[nan]
+PASSED tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[inf]
+PASSED tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[-1]
+PASSED tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[1.1]
+PASSED tests/test_identity_hardening.py::test_invalid_confidence_cannot_confirm[0.59]
+PASSED tests/test_identity_hardening.py::test_consensus_beats_single_highest_confidence_and_excludes_conflict
+PASSED tests/test_identity_hardening.py::test_tied_conflicting_consensus_stays_unknown
+PASSED tests/test_identity_hardening.py::test_duplicate_frame_votes_do_not_confirm
+PASSED tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts0-17]
+PASSED tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts1-None]
+PASSED tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts2-None]
+PASSED tests/test_identity_hardening.py::test_ocr_never_strips_partial_digits_or_picks_conflicting_regions[texts3-17]
+PASSED tests/test_identity_hardening.py::test_later_reads_do_not_contaminate_unread_prefix_or_switched_suffix
+PASSED tests/test_identity_hardening.py::test_tracker_reuse_needs_fresh_evidence[gap]
+PASSED tests/test_identity_hardening.py::test_tracker_reuse_needs_fresh_evidence[jump]
+PASSED tests/test_identity_hardening.py::test_tracker_reuse_needs_fresh_evidence[kit]
+PASSED tests/test_identity_hardening.py::test_45_second_reentry_gap_remains_unknown_without_trace_or_action
+PASSED tests/test_identity_hardening.py::test_pipeline_cut_or_gap_cannot_reuse_tracker_votes[source0]
+PASSED tests/test_identity_hardening.py::test_pipeline_cut_or_gap_cannot_reuse_tracker_votes[source1]
+PASSED tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times0]
+PASSED tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times1]
+PASSED tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times2]
+PASSED tests/test_identity_hardening.py::test_invalid_frame_times_fail_closed[bad_times3]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso0-shorts0-expected0]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso1-shorts1-expected1]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso2-shorts2-expected2]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso3-shorts3-expected3]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso4-shorts4-expected4]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso5-shorts5-expected5]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso6-shorts6-expected6]
+PASSED tests/test_kit_number.py::test_garment_reads_are_one_conservative_vote[torso7-shorts7-expected7]
+PASSED tests/test_kit_number.py::test_two_matching_garments_on_one_frame_cannot_supply_three_votes
+PASSED tests/test_kit_number.py::test_pipeline_requires_three_distinct_uncontested_number_observations[None-20-3]
+PASSED tests/test_kit_number.py::test_pipeline_requires_three_distinct_uncontested_number_observations[20-18-0]
+PASSED tests/test_known_identity_failures.py::test_P_characterisation_default_claims_player_a_after_pause_and_resume[0]
+PASSED tests/test_known_identity_failures.py::test_P_characterisation_default_claims_player_a_after_pause_and_resume[1]
+PASSED tests/test_known_identity_failures.py::test_E3_characterisation_reference_claims_distant_n_player_by_appearance[0]
+PASSED tests/test_known_identity_failures.py::test_E3_characterisation_reference_claims_distant_n_player_by_appearance[1]
+PASSED tests/test_known_identity_failures.py::test_E4_characterisation_confirmed_claim_on_other_player_at_w211[0]
+PASSED tests/test_known_identity_failures.py::test_E4_characterisation_confirmed_claim_on_other_player_at_w211[1]
+PASSED tests/test_local_decode.py::test_local_decode_uses_file_only_and_bounds_sampling[0]
+PASSED tests/test_local_decode.py::test_local_decode_uses_file_only_and_bounds_sampling[3]
+PASSED tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[1-1-2]
+PASSED tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[-1-2-2]
+PASSED tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[0-2-0]
+PASSED tests/test_local_decode.py::test_local_decode_rejects_invalid_interval[0-2-31]
+PASSED tests/test_local_decode.py::test_missing_metadata_origin_probes_then_resets_decode
+PASSED tests/test_local_decode.py::test_missing_first_pts_fails_closed
+PASSED tests/test_local_models.py::test_detector_and_ocr_honor_explicit_local_cpu_policy[False-False]
+PASSED tests/test_local_models.py::test_detector_and_ocr_honor_explicit_local_cpu_policy[True-True]
+PASSED tests/test_local_models.py::test_factory_forwards_policy_without_changing_defaults
+PASSED tests/test_local_review.py::test_default_pack_is_model_free_static_and_unreviewed
+PASSED tests/test_local_review.py::test_optional_overlays_use_only_anonymous_boxes_not_crops
+PASSED tests/test_local_review.py::test_valid_labels_redecode_exact_samples_and_do_not_grant_approval
+PASSED tests/test_local_review.py::test_invalid_labels_fail_closed[wrong_source]
+PASSED tests/test_local_review.py::test_invalid_labels_fail_closed[missing_time]
+PASSED tests/test_local_review.py::test_invalid_labels_fail_closed[changed_time]
+PASSED tests/test_local_review.py::test_invalid_labels_fail_closed[outside_box]
+PASSED tests/test_local_review.py::test_invalid_labels_fail_closed[unreviewed]
+PASSED tests/test_local_review.py::test_invalid_labels_fail_closed[wrong_target]
+PASSED tests/test_local_review.py::test_changed_preview_cannot_validate_labels
+PASSED tests/test_local_review.py::test_changed_decoded_rgb_is_not_a_matching_source_frame
+PASSED tests/test_local_review.py::test_overlay_exposure_cannot_pass_blinded_holdout_validation
+PASSED tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[reviewer]
+PASSED tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[missing_review]
+PASSED tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[wrong_pack]
+PASSED tests/test_local_review.py::test_review_notes_are_bound_to_source_pack_and_reviewer[bad_tag]
+PASSED tests/test_local_review.py::test_freeze_is_deterministic_disjoint_and_does_not_claim_negatives_exist
+PASSED tests/test_local_review.py::test_impossible_freeze_fails_instead_of_substituting_seen_windows
+PASSED tests/test_local_review.py::test_network_paths_rejected_before_access
+PASSED tests/test_local_review.py::test_existing_output_is_preserved
+PASSED tests/test_local_review.py::test_source_mutation_prevents_pack_publication
+PASSED tests/test_local_review.py::test_holdout_sampling_and_window_cannot_drift_after_freeze
+PASSED tests/test_local_review.py::test_holdout_validation_requires_original_plan_and_unexposed_notes
+PASSED tests/test_local_review.py::test_validation_cli_produces_only_a_validation_record
+PASSED tests/test_local_review.py::test_score_cli_reuses_retained_predictions_without_models
+PASSED tests/test_local_review.py::test_placeholder_reviewer_is_not_a_completed_review
+PASSED tests/test_lossless_crop_experiment.py::test_regeneration_preserves_every_retained_crop_and_rejects_missing_frames[False]
+PASSED tests/test_lossless_crop_experiment.py::test_regeneration_preserves_every_retained_crop_and_rejects_missing_frames[True]
+PASSED tests/test_match_evaluation.py::test_invalid_arguments[--jersey-number-100]
+PASSED tests/test_match_evaluation.py::test_invalid_arguments[--jersey-number-\u0668]
+PASSED tests/test_match_evaluation.py::test_invalid_arguments[--jersey-number-8\n]
+PASSED tests/test_match_evaluation.py::test_invalid_arguments[--kit-primary-color-unknown]
+PASSED tests/test_match_evaluation.py::test_invalid_arguments[--reference-sec-nan]
+PASSED tests/test_match_evaluation.py::test_invalid_arguments[--reference-sec-inf]
+PASSED tests/test_match_evaluation.py::test_invalid_arguments[--reference-sec--1]
+PASSED tests/test_match_evaluation.py::test_authorization_required
+PASSED tests/test_match_evaluation.py::test_plan_preserves_explicit_orange_twenty_and_white_sleeves
+PASSED tests/test_match_evaluation.py::test_provider_links_return_actionable_error_without_fetch_or_token_echo[https://app.veo.co/matches/example/?secret=do-not-echo-authorized provider integration]
+PASSED tests/test_match_evaluation.py::test_provider_links_return_actionable_error_without_fetch_or_token_echo[https://example.org/video.mp4?token=do-not-echo-authorized local MP4]
+PASSED tests/test_match_evaluation.py::test_invalid_metadata[0]
+PASSED tests/test_match_evaluation.py::test_invalid_metadata[-1]
+PASSED tests/test_match_evaluation.py::test_invalid_metadata[nan]
+PASSED tests/test_match_evaluation.py::test_invalid_metadata[inf]
+PASSED tests/test_match_evaluation.py::test_invalid_metadata[9001]
+PASSED tests/test_match_evaluation.py::test_full_match_plan_never_loads_models
+PASSED tests/test_match_evaluation.py::test_reference_must_be_in_actual_duration[20]
+PASSED tests/test_match_evaluation.py::test_reference_must_be_in_actual_duration[21]
+PASSED tests/test_match_evaluation.py::test_nonoverwrite_paths[source]
+PASSED tests/test_match_evaluation.py::test_nonoverwrite_paths[existing]
+PASSED tests/test_match_evaluation.py::test_nonoverwrite_paths[ancestor]
+PASSED tests/test_match_evaluation.py::test_missing_input_is_nonzero
+PASSED tests/test_match_evaluation.py::test_atomic_publication_never_replaces
+PASSED tests/test_match_evaluation.py::test_result_filename_cannot_escape
+PASSED tests/test_match_evaluation.py::test_run_uses_local_source_and_separate_traces
+PASSED tests/test_match_evaluation.py::test_failed_pipeline_has_no_completion
+PASSED tests/test_match_evaluation.py::test_metadata_inspection_is_file_only
+PASSED tests/test_match_evaluation.py::test_real_pipeline_resets_identity_without_interpolation
+PASSED tests/test_match_evaluation.py::test_helper_also_requires_authorization
+PASSED tests/test_match_evaluation.py::test_non_target_candidates_are_never_persisted[False]
+PASSED tests/test_match_evaluation.py::test_non_target_candidates_are_never_persisted[True]
+PASSED tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps0]
+PASSED tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps1]
+PASSED tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps2]
+PASSED tests/test_match_evaluation.py::test_partial_decode_never_claims_full_match_completion[timestamps3]
+PASSED tests/test_match_evaluation.py::test_sampled_coverage_tolerates_frame_quantization_but_rejects_bad_pts
+PASSED tests/test_match_evaluation.py::test_audited_decoder_records_only_current_segment_pts
+PASSED tests/test_match_identity.py::test_orange_eight_preserves_source_target_and_unknown_remainder
+PASSED tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[8-0.1-3]
+PASSED tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[None-0.9-3]
+PASSED tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[18-0.9-3]
+PASSED tests/test_match_identity.py::test_opposing_duplicate_number_similar_kit_and_ocr_failure[8-0.9-0]
+PASSED tests/test_match_identity.py::test_competing_orange_eights_with_millisecond_jitter_are_ambiguous
+PASSED tests/test_match_identity.py::test_break_requires_fresh_votes_even_with_same_tracker_id[halftime]
+PASSED tests/test_match_identity.py::test_break_requires_fresh_votes_even_with_same_tracker_id[camera_cut]
+PASSED tests/test_match_identity.py::test_break_requires_fresh_votes_even_with_same_tracker_id[manual_reset]
+PASSED tests/test_match_identity.py::test_reentry_and_segment_boundary_do_not_inherit_identity
+PASSED tests/test_match_identity.py::test_halftime_is_unknown_even_when_target_is_visible_warming_up
+PASSED tests/test_match_identity.py::test_large_camera_motion_does_not_carry_old_votes
+PASSED tests/test_match_identity.py::test_reference_is_preserved_but_never_labels_unread_track
+PASSED tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[missing_target]
+PASSED tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[overlap]
+PASSED tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[scope]
+PASSED tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[duplicate_time]
+PASSED tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[nan]
+PASSED tests/test_match_identity.py::test_invalid_match_evidence_fails_closed[blank_kit]
+PASSED tests/test_moments_40.py::test_clip_never_crosses_a_camera_cut
+PASSED tests/test_moments_40.py::test_chunk_join_is_not_a_cut
+PASSED tests/test_moments_40.py::test_clip_stays_out_of_non_play_and_respects_bounds
+PASSED tests/test_moments_40.py::test_moments_only_from_claimed_events_and_candidates_kept_separate
+PASSED tests/test_moments_40.py::test_spells_fill_in_when_no_ball_events_and_report_invariants_hold
+PASSED tests/test_moments_40.py::test_thumbnail_only_from_crop_inside_clip
+PASSED tests/test_moments_40.py::test_target_only_moments_strip_crop_paths_and_cap_thumbnails
+PASSED tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows0-expected0]
+PASSED tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows1-expected1]
+PASSED tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows2-expected2]
+PASSED tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows3-expected3]
+PASSED tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows4-expected4]
+PASSED tests/test_ocr_augmentation.py::test_augmentation_never_counts_multiple_votes_or_ignores_original_conflict[rows5-expected5]
+PASSED tests/test_ocr_augmentation.py::test_too_small_crop_is_not_rescued_by_resizing
+PASSED tests/test_ocr_augmentation.py::test_large_crop_is_not_expanded_without_a_memory_bound
+PASSED tests/test_ocr_augmentation.py::test_delegate_is_restored_if_augmentation_throws
+PASSED tests/test_ocr_budget.py::test_zero_budget_with_unchanged_clock_keeps_cached_reads
+PASSED tests/test_offball_41.py::test_measures_free_space_in_body_heights_and_lists_watchable_episodes
+PASSED tests/test_offball_41.py::test_insufficient_without_enough_confirmed_footage
+PASSED tests/test_offball_41.py::test_episodes_tolerate_short_gaps_and_need_minimum_length
+PASSED tests/test_player_tracker.py::test_palette_marks_grass_and_named_colours
+PASSED tests/test_player_tracker.py::test_colour_signature_kit_score_ignores_grass
+PASSED tests/test_player_tracker.py::test_tracker_keeps_identities_through_crossing
+PASSED tests/test_player_tracker.py::test_tracker_compensates_camera_pan
+PASSED tests/test_player_tracker.py::test_purify_splits_a_colour_swap
+PASSED tests/test_player_tracker.py::test_identity_links_number_seed_and_excludes_other_numbers
+PASSED tests/test_player_tracker.py::test_identity_never_jumps_impossible_distance
+PASSED tests/test_player_tracker.py::test_user_feedback_overrides
+PASSED tests/test_player_tracker.py::test_single_digit_partial_reads_are_ignored_for_two_digit_target
+PASSED tests/test_player_tracker.py::test_speed_estimate_matches_lateral_motion
+PASSED tests/test_player_tracker.py::test_compute_stats_counts_ball_involvement
+PASSED tests/test_player_tracker.py::test_cli_helpers
+PASSED tests/test_player_tracker.py::test_report_is_written
+PASSED tests/test_prepare_anchor.py::test_exact_vfr_nonzero_origin_draft_and_png
+PASSED tests/test_prepare_anchor.py::test_exact_reference_includes_equal_frame
+PASSED tests/test_prepare_anchor.py::test_bad_reference[-1]
+PASSED tests/test_prepare_anchor.py::test_bad_reference[nan]
+PASSED tests/test_prepare_anchor.py::test_bad_reference[inf]
+PASSED tests/test_prepare_anchor.py::test_bad_reference[10]
+PASSED tests/test_prepare_anchor.py::test_bad_reference[11]
+PASSED tests/test_prepare_anchor.py::test_bad_duration[0]
+PASSED tests/test_prepare_anchor.py::test_bad_duration[-1]
+PASSED tests/test_prepare_anchor.py::test_bad_duration[27000001]
+PASSED tests/test_prepare_anchor.py::test_bad_duration[nan]
+PASSED tests/test_prepare_anchor.py::test_bad_duration[inf]
+PASSED tests/test_prepare_anchor.py::test_no_frame_after_reference
+PASSED tests/test_prepare_anchor.py::test_authorization_required_for_helper_and_cli
+PASSED tests/test_prepare_anchor.py::test_overwrite_preserves_existing[dir]
+PASSED tests/test_prepare_anchor.py::test_overwrite_preserves_existing[video]
+PASSED tests/test_prepare_anchor.py::test_overwrite_preserves_existing[annotation]
+PASSED tests/test_prepare_anchor.py::test_source_change_rejected_before_output
+PASSED tests/test_prepare_anchor.py::test_network_paths_rejected[https://example.test/video.mp4]
+PASSED tests/test_prepare_anchor.py::test_network_paths_rejected[//server/share/v.mp4]
+PASSED tests/test_prepare_anchor.py::test_network_paths_rejected[\\\\server\\share\\v.mp4]
+PASSED tests/test_prepare_anchor.py::test_no_model_initialization
+PASSED tests/test_prepare_anchor.py::test_cli_success_explains_review_required
+PASSED tests/test_prepare_anchor.py::test_atomic_publication_never_replaces
+PASSED tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[frame_id-../bad]
+PASSED tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[job_id-bad/job]
+PASSED tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[generation--1]
+PASSED tests/test_prepare_anchor.py::test_scope_and_frame_id_validation[generation-1000001]
+PASSED tests/test_prepare_anchor.py::test_prepare_falls_back_to_first_actual_frame_origin
+PASSED tests/test_prepare_anchor.py::test_prepare_preserves_fractional_origin
+PASSED tests/test_remote_decode.py::test_remote_decode_uses_recording_clock_without_relaxing_network_policy
+PASSED tests/test_resume_split.py::test_resume_on_the_thiefs_path_is_cut
+PASSED tests/test_resume_split.py::test_resume_continuing_the_victims_own_path_is_not_cut
+PASSED tests/test_resume_split.py::test_no_steal_no_resume_cut
+PASSED tests/test_resume_split.py::test_flag_off_keeps_the_baseline_tracks
+PASSED tests/test_resume_split.py::test_flag_on_cuts_and_links_without_identity_when_appearance_cannot_tell
+PASSED tests/test_resume_split.py::test_replay_P_candidate_B_follows_20_not_player_a
+PASSED tests/test_review_scoring.py::test_reviewed_metrics_are_recovered_without_rerunning_inference
+PASSED tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[source]
+PASSED tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[target]
+PASSED tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[partial]
+PASSED tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[missing_claims]
+PASSED tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[false_abstention]
+PASSED tests/test_review_scoring.py::test_mismatched_or_incomplete_saved_comparisons_are_rejected[propagation]
+PASSED tests/test_review_scoring.py::test_all_uncertain_review_does_not_fabricate_zero_identity_errors
+PASSED tests/test_smoke.py::test_explicit_target_does_not_reuse_previous_player
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--start-nan]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--end-inf]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--end-256]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--start--1]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--end-240]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--cpu-threads-9]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--jersey-number-100]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--jersey-number-\u0668]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--kit-primary-color- ]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--kit-primary-color-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--kit-primary-color-orange\nwhite]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--fps-nan]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--fps-0]
+PASSED tests/test_smoke.py::test_rejects_invalid_configuration[--fps-6]
+PASSED tests/test_smoke.py::test_preserves_existing_files[False]
+PASSED tests/test_smoke.py::test_preserves_existing_files[True]
+PASSED tests/test_smoke.py::test_requires_explicit_jersey
+PASSED tests/test_smoke.py::test_requires_local_evaluation_authorization
+PASSED tests/test_smoke.py::test_smoke_initializes_only_cached_cpu_models
+PASSED tests/test_source_pts.py::test_vfr_nonzero_origin_exact_pts
+PASSED tests/test_source_pts.py::test_hash_checked_before_decode
+PASSED tests/test_source_pts.py::test_bad_claims[hash]
+PASSED tests/test_source_pts.py::test_bad_claims[missing]
+PASSED tests/test_source_pts.py::test_bad_claims[ambiguous]
+PASSED tests/test_source_pts.py::test_bad_claims[duplicate]
+PASSED tests/test_source_pts.py::test_bad_claims[rounded]
+PASSED tests/test_source_pts.py::test_bad_claims[box]
+PASSED tests/test_source_pts.py::test_source_changed_during_decode
+PASSED tests/test_source_pts.py::test_manifest_bounded_and_duplicate_keys
+PASSED tests/test_source_pts.py::test_vfr_sampling_uses_exact_global_indices_and_anchor_precedence
+PASSED tests/test_source_pts.py::test_sampling_resets_at_600_second_boundary
+PASSED tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts0-None]
+PASSED tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts0-2.0]
+PASSED tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts1-None]
+PASSED tests/test_source_pts.py::test_rejects_duplicate_or_backward_pts_even_outside_anchor[pts1-2.0]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[0]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[-1]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[31]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[nan]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[inf]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[-inf]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[True]
+PASSED tests/test_source_pts.py::test_invalid_sampling_fps_rejected_before_decode[2]
+PASSED tests/test_source_pts.py::test_sampling_nonzero_origin_resets_relative_600_boundary
+PASSED tests/test_source_pts.py::test_first_decoded_pts_fallback_origin
+PASSED tests/test_source_pts.py::test_manifest_origin_must_match_source
+PASSED tests/test_source_pts.py::test_proof_requires_consistent_origins
+PASSED tests/test_source_pts.py::test_fractional_recording_origin_is_not_rounded
+PASSED tests/test_team_background.py::test_orange_shirt_is_not_rejected_because_grass_dominates_person_box
+PASSED tests/test_team_background.py::test_wrong_kit_remains_rejected_after_background_suppression
+PASSED tests/test_team_background.py::test_too_few_foreground_pixels_fail_closed[0.0]
+PASSED tests/test_team_background.py::test_too_few_foreground_pixels_fail_closed[0.01]
+PASSED tests/test_team_background.py::test_too_few_foreground_pixels_fail_closed[0.09]
+PASSED tests/test_team_background.py::test_green_kit_is_not_suppressed_as_grass
+PASSED tests/test_team_background.py::test_unknown_kit_does_not_become_known_from_non_green_pixels
+PASSED tests/test_tracking_32.py::test_yolox_network_round_trips_a_state_dict_strictly_and_fusion_is_exact
+PASSED tests/test_tracking_32.py::test_yolox_rejects_a_mismatched_checkpoint
+PASSED tests/test_tracking_32.py::test_letterbox_and_postprocess_map_boxes_back_to_source_pixels
+PASSED tests/test_tracking_32.py::test_grid_embedder_is_weight_free_normalised_and_separates_kits
+PASSED tests/test_tracking_32.py::test_only_full_other_numbers_are_contrary_evidence
+PASSED tests/test_tracking_32.py::test_same_kit_contact_is_detected_only_for_team_mates
+PASSED tests/test_tracking_32.py::test_ocr_crop_selection_uses_recorded_heights_without_reading_images
+PASSED tests/test_tracking_32.py::test_conflict_reads_are_reported_for_chosen_tracklets
+PASSED tests/test_tracking_32.py::test_pitch_lines_need_grass_on_both_sides_and_intersections_become_landmark_candidates
+PASSED tests/test_tracking_32.py::test_single_touchline_view_is_reported_infeasible
+PASSED tests/test_tracking_32.py::test_pitch_line_layouts_produce_identical_candidates
+PASSED tests/test_tracking_32.py::test_ground_speed_series_from_calibrated_positions
+PASSED tests/test_tracking_32.py::test_manual_calibration_propagates_through_camera_motion_and_stops_on_bad_motion
+PASSED tests/test_tracking_32.py::test_calibration_with_too_few_or_clustered_landmarks_is_rejected
+PASSED tests/test_tracking_32.py::test_onnx_backend_matches_torch
+PASSED tests/test_tracking_diagnosis.py::test_instrumentation_does_not_change_existing_pipeline_or_double_count_crops
+PASSED tests/test_tracking_diagnosis.py::test_wrong_number_is_not_exported_as_identity_or_candidate
+PASSED tests/test_tracking_diagnosis.py::test_weak_or_unreadable_evidence_remains_abstention
+PASSED tests/test_tracking_diagnosis.py::test_partial_decode_is_not_reported_as_successful_abstention
+PASSED tests/test_tracking_diagnosis.py::test_missing_source_and_existing_output_fail_without_loading_models
+PASSED tests/test_tracking_diagnosis.py::test_requires_authorization_before_source_access
+PASSED tests/test_tracking_diagnosis.py::test_lost_state_does_not_propagate_an_earlier_confirmed_number
+PASSED tests/test_tracking_diagnosis.py::test_wrong_source_labels_fail_before_inference
+PASSED tests/test_tracking_diagnosis.py::test_remote_sources_are_rejected_before_network_access[https://example.com/match.mp4]
+PASSED tests/test_tracking_diagnosis.py::test_remote_sources_are_rejected_before_network_access[\\\\server\\share\\match.mp4]
+PASSED tests/test_tracking_diagnosis.py::test_single_command_compares_fresh_trackers_and_publishes_unreviewed_template
+PASSED tests/test_tracking_diagnosis.py::test_review_boxes_must_fit_actual_source_dimensions
+PASSED tests/test_tracking_diagnosis.py::test_source_changes_are_not_published_as_a_complete_comparison
+PASSED tests/test_tracking_diagnosis.py::test_opposing_same_number_is_only_an_aggregate_rejection_not_a_retained_identity
+PASSED tests/test_tracking_recovery.py::test_bytetrack_keeps_existing_id_through_low_score_detection
+PASSED tests/test_tracking_recovery.py::test_low_score_boxes_cannot_start_a_new_bytetrack_identity
+PASSED tests/test_tracking_recovery.py::test_detector_preserves_low_confidence_person_for_tracker
+PASSED tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box0]
+PASSED tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box1]
+PASSED tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box2]
+PASSED tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box3]
+PASSED tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box4]
+PASSED tests/test_tracking_recovery.py::test_invalid_or_outside_boxes_are_rejected[box5]
+PASSED tests/test_tracking_recovery.py::test_partly_visible_detection_is_clipped_before_ocr
+PASSED tests/test_tracking_recovery.py::test_low_score_recovery_does_not_invent_jersey_evidence_or_visibility
+PASSED tests/test_tracking_recovery.py::test_low_score_only_pipeline_never_calls_ocr_or_confirms_target
+PASSED tests/test_tracking_v3.py::test_states_partition_and_competitor_makes_ambiguous
+PASSED tests/test_tracking_v3.py::test_metrics_single_estimator_consistency_and_gates
+PASSED tests/test_tracking_v3.py::test_age_group_thresholds
+PASSED tests/test_tracking_v3.py::test_invariants_detect_inconsistent_peaks_and_unverified_passes
+PASSED tests/test_tracking_v3.py::test_periods_absorb_stoppages_and_respect_user_boundaries
+PASSED tests/test_tracking_v3.py::test_manual_calibration_validates_and_maps_feet
+PASSED tests/test_tracking_v3.py::test_number_conflict_splits_same_team_swap
+PASSED tests/test_tracking_v3.py::test_v3_endpoints_flag_privacy_and_target_only
+PASSED tests/test_trail_metrics.py::test_unlabeled_metrics_are_unmeasured_not_zero_errors
+PASSED tests/test_trail_metrics.py::test_wrong_player_miss_switch_fragment_and_absent_target
+PASSED tests/test_trail_metrics.py::test_occlusion_and_reentry_do_not_invent_switches_or_fragments
+PASSED tests/test_trail_metrics.py::test_malformed_trace_is_not_abstention[claims0]
+PASSED tests/test_trail_metrics.py::test_malformed_trace_is_not_abstention[claims1]
+PASSED tests/test_trail_metrics.py::test_malformed_trace_is_not_abstention[claims2]
+PASSED tests/test_trail_metrics.py::test_missing_review_sample_is_not_cherry_picked
+PASSED tests/test_trail_metrics.py::test_wholly_uncertain_review_cannot_claim_perfect_accuracy
+PASSED tests/test_trail_metrics.py::test_millisecond_label_quantization_uses_matched_sample_not_float_key
+PASSED tests/test_window_run_comparison.py::test_detection_matching_is_one_to_one_and_reports_missed_and_extra_boxes
+PASSED tests/test_window_run_comparison.py::test_identity_intervals_keep_abstentions_as_abstentions
+PASSED tests/test_window_run_comparison.py::test_decode_compare_detects_frame_offset_hidden_behind_pixel_differences
+PASSED tests/test_window_run_comparison.py::test_replay_ocr_transfer_uses_matched_reads_and_never_invents_text
+PASSED tests/test_worker.py::test_request_requires_privacy_flags_false
+PASSED tests/test_worker.py::test_request_rejects_unbounded_or_odd_input
+PASSED tests/test_worker.py::test_result_rejects_inconsistent_output
+PASSED tests/test_worker.py::test_jersey_reads_confirm_identity_team_colour_alone_does_not
+PASSED tests/test_worker.py::test_two_people_with_the_target_number_at_once_are_ambiguous_not_confirmed
+PASSED tests/test_worker.py::test_same_number_in_the_wrong_kit_is_not_the_target
+PASSED tests/test_worker.py::test_unconfirmed_identity_yields_only_unknown_time
+PASSED tests/test_worker.py::test_all_unseen_gaps_are_unknown_even_on_wide_camera
+PASSED tests/test_worker.py::test_kit_colour_matching
+PASSED tests/test_worker.py::test_camera_view_from_person_size
+PASSED tests/test_worker.py::test_pipeline_confirms_target_and_reports_no_events
+PASSED tests/test_worker.py::test_evaluation_trace_is_local_only_and_models_are_reported
+PASSED tests/test_worker.py::test_pipeline_wrong_jersey_stays_candidate
+PASSED tests/test_worker.py::test_pipeline_broken_stream_fails_honestly
+PASSED tests/test_worker.py::test_http_endpoint_validates_and_answers
+PASSED tests/test_worker.py::test_http_failure_recovery_and_repeated_client_cleanup
+SKIPPED [1] tests/test_full_match_identity.py:46: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:50: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:58: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:64: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:70: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:76: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:82: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:88: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+SKIPPED [1] tests/test_full_match_identity.py:99: set SCOUTX_FULL_MATCH_REPLAY (opt-in)
+XFAIL tests/test_known_identity_failures.py::test_P_desired_no_claim_on_player_a[0] - P unrepaired: identity passes to player A when #20's paused track resumes on A
+XFAIL tests/test_known_identity_failures.py::test_P_desired_no_claim_on_player_a[1] - P unrepaired: identity passes to player A when #20's paused track resumes on A
+XFAIL tests/test_known_identity_failures.py::test_E3_desired_no_claim_on_n_labelled_player[0] - E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet
+XFAIL tests/test_known_identity_failures.py::test_E3_desired_no_claim_on_n_labelled_player[1] - E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet
+XFAIL tests/test_known_identity_failures.py::test_E4_desired_no_confirmed_claim_on_other_player[0] - E4 unrepaired: confirmed claim jumps to another player for one frame at w211
+XFAIL tests/test_known_identity_failures.py::test_E4_desired_no_confirmed_claim_on_other_player[1] - E4 unrepaired: confirmed claim jumps to another player for one frame at w211
+============ 626 passed, 9 skipped, 6 xfailed, 2 warnings in 51.53s ============

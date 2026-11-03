@@ -395,6 +395,8 @@ All 9 intervals, automatic mode, verified time basis. Every run was rescored; no
 - In both runs, no claim between 1 s before and 3 s after any event lies on either involved player's rows (IoU < 0.3 for all claims).
 - 4 events (8 rows) have target claims within ±5 s: 1151.1, 1152.6, 1187.9 and 1374.1 s. Those claims are identical in both runs.
 
+**Correction (§9.2): the comparison below was confounded.** The candidate run started from the baseline's finished OCR cache, and that warm cache alone produces all 36 differences. The real cold-cache candidate keeps the 8 confirmed frames. The original text is kept for the record.
+
 **But the candidate still changes claims elsewhere, non-locally.** 36 claim frames differ, and **all of them are more than 5 s from every exchange event**. Traced with `scripts/trace_full.py`: the tracklets carrying these claims are **identical** in both runs. What changes is the identity solver's global choice. Its appearance classifier and chain are fitted over the whole match, so 69 extra cuts elsewhere shift its training set and scores.
 
 - **706.4–716.4 s, 28 LIKELY / appearance frames, removed by the candidate.**
@@ -439,3 +441,156 @@ All 9 intervals, automatic mode, verified time basis. Every run was rescored; no
 
 - Its full-match wrong-player claims are **all LIKELY / appearance** (or anchored after P). The known cases are a one-digit shirt (#6), a legible-but-unread "17", and the P transfer.
 - **No verified confirmed wrong-player claim** was found on the default decoder in the full match. The 0 confirmed is a count over reviewed frames, not a proof.
+
+
+## 9. Full-match identity: replays, the confounded comparison, candidate B (2026-11-03 evening)
+
+**Evidence:** [full-match-identity-20261103/](../../workers/football-cv/bench/results/5.3/full-match-identity-20261103/).
+
+**Failure inventory:** `failure_inventory.json` links E1, P, E3, E4, F6 (#6), F17 (#17) and the 1161 s change to:
+
+- provenance and source frames;
+- counts of reads, events, frames and states;
+- traces and replays;
+- status and uncertainty.
+
+**Review packet:** `identity-review-packet-20261103/` holds a tool and an item list for a genuinely independent reviewer. There are no images in git, and no predictions or reasons are shown to the reviewer. **Nobody independent has reviewed it yet.**
+
+### 9.1 Whole-match replay (`bench/full_match_replay.py`)
+
+**What it keeps:** all 7 stage-1 chunks (numbers only, about 60 MB, kept locally; hashes in `full_match_replay_provenance.json`), crop names, every OCR read, and the discovery sightings.
+
+**What it runs:** the real `analyze` over the whole match, exactly as `full_match_benchmark.py` calls it. Whole-match appearance training, normalisation, candidates and the solver all run unchanged.
+
+**Reproduction:**
+
+- The baseline full match is reproduced **bit for bit** (timeline `fad444c1…`).
+- A repeat run is bit-identical, including every identity-solver term dumped per pass. **There is no nondeterminism.**
+- The warm-cache candidate run is also reproduced bit for bit (`27503d1a…`).
+
+**Boundary:**
+
+- OCR inference is not exercised. Crops the original never read are answered with no text (counted).
+- Real-OCR runs settle such cases. For the cold-cache exchange candidate, the real run (`x1c`) **equals the replay bit for bit**: 23 new crops, no effect.
+
+### 9.2 Nonlocal changes: the 2026-11-03 comparison was confounded
+
+| Comparison (default decoder, full match) | Claim frames | Confirmed | Differing claim frames |
+|---|---|---|---|
+| Baseline, cold cache | 453 | 42 | — |
+| Baseline, **warm** cache (flags off) | 423 | 34 | **36** (identical to the reported candidate difference) |
+| Exchange candidate A, warm cache vs baseline warm | 423 | 34 | **0** |
+| Exchange candidate A, **cold** cache (real OCR, `x1c`) | 429 | **42** | 32 |
+
+**The warm cache, not the candidate, caused the reported changes.** That includes the −8 confirmed-correct frames at 1161–1163 s.
+
+**Mechanism:**
+
+- Tracklets are split where shirt numbers conflict, using the reads present when tracklets are built.
+- A warm cache also contains the earlier run's refinement-pass reads.
+- The tracklet carrying the "20" read is then split differently (positive 1161.3–1162.2 s instead of 1161.1–1162.8 s).
+- **This cache-state sensitivity is real pipeline behaviour.** Re-analysing a match with a populated cache gives different identity results. It has a characterisation test and a strict xfail (`tests/test_full_match_identity.py`).
+
+**What candidate A really changes (cold cache, real OCR):**
+
+- **−28 LIKELY frames on #6** (verified wrong).
+- **+4 LIKELY frames at 1881.3–1883.6 s** (side views; unverified).
+- Confirmed frames unchanged (42); labelled-interval scores identical to the baseline.
+
+**Mechanism of the #6 change** (`comp_dump.py`, `tl_dump.py`):
+
+- The #6 claim is marginal: chain tracklet 8453, confidence **0.753 against the 0.75 LIKELY threshold**. It is LIKELY only on frames where no competitor scoring ≥ 0.35 is in view.
+- In the baseline, the nearby player #17 (tracklet 6750, 705.5–719.3 s) carries a "17" read (0.98, at 716.6 s). It is therefore **excluded** ("shows #17") and is not a competitor.
+- In candidate A the same tracklet has **no reads**, so it becomes a competitor (score 0.521), and every #6 frame becomes AMBIGUOUS.
+- **Inference, not directly traced:** the tracklet is identical in both runs, so the initial dense crop selection should be identical too. The "17" read must therefore come from the refinement pass, whose focus is driven by global solver state.
+- Appearance training is **identical** in both runs: template mode, the same 3 positive spans (241.3–242.4, 1161.1–1162.8, 1954.9–1956.6 s), 63 vs 62 negatives, 2,693 vs 2,745 candidates.
+- **Verdict:** legitimate global sensitivity, not nondeterminism, leakage or an implementation defect. But it means the #6 removal is **not a property** of either candidate.
+
+### 9.3 Full-match failures F6 (#6) and F17 (#17): first unsupported transition
+
+**F17 (1301.6–1305.7 s):**
+
+- "17" is legible to a person on 5 of 6 sampled crops.
+- **OCR read nothing on all 34 crops** of that tracklet. Re-running the reader from scratch gives the same result.
+- `_digit_box` never isolates a two-digit region on this shirt (PARSeq/EasyOCR candidates "I", "a", ","; "1", "4"). The scene-text fallback also returns nothing.
+- With no read, there is no exclusion, and appearance alone gives LIKELY (score 0.533).
+- **The first failure is OCR region proposal / recall, not identity logic.** No narrow identity fix is justified. An OCR change would need its own labelled number-crop evaluation and would invalidate every saved OCR cache.
+
+**F6 (706.4–716.4 s):**
+
+- Appearance-only LIKELY at confidence 0.753, on a tracklet with lone-digit reads "6" ×2 (1.00), "5" and "1" ×3.
+- **A lone-digit exclusion rule is rejected on evidence.** Over the whole match, 46 tracklets carry ≥ 2 agreeing high-confidence lone digits that are not in "20". These include #20's own tracklets: "4" ×2 at 1151.9–1153.2 s, "1" ×3 at 1154.5–1160.8 s, "7" ×2 at 1168.2–1190.3 s, and "4" ×3 just before a confirmed "20".
+- Tuning the 0.75 LIKELY threshold is out of scope.
+- **F6 stays unrepaired**, with a characterisation test and a strict xfail.
+
+### 9.4 Candidate B: pause-and-resume split (`d061d8c`, `SCOUTX_RESUME_SPLIT`, off by default)
+
+**Contract:**
+
+- After a steal (thief track X takes victim Y's box while Y is paused), Y's first row after its pause, within the steal look-ahead (3 frames), is cut and linked like a steal **if**:
+  - it fits X's motion-extrapolated path better than Y's own by `STEAL_LEAD`, **or**
+  - it does not continue Y's own extrapolated path (IoU < `STEAL_IOU`).
+- No new thresholds. Identity crosses only when appearance decides it.
+- At P neither extrapolation fits the resumed box (IoU 0.09 and 0.15: the boxes are distorted by the overlap), which is why the second condition exists.
+
+**Real-OCR results:**
+
+| Run (default decoder) | Change vs baseline |
+|---|---|
+| Interval 225 s (fresh caches; stage 1 bit-identical) | **only frames w194–197 change**: LIKELY on player A → AMBIGUOUS. No new claim, no lost correct frame. Original labels: correct 60 → 57 (the 3 "correct" frames were the swapped labels). Corrected labels: wrong 3 → **0**, correct 57 → 57, abstained 7 → 11. |
+| Interval 1800 s | claims unchanged (0) |
+| Other 7 default intervals and all 9 HLG-reference intervals (replay screen; no new crops) | no change at all |
+| Full match (cold, real OCR, `x2c`) | **32 resume cuts** (about 1 per minute); 2 on the target's path |
+
+**Full-match changes in detail:**
+
+- **244.4–244.7 s:** 4 LIKELY frames on player A removed. **P fixed.**
+- **706.4–716.4 s:** the 28 #6 frames removed again. This is the same marginal-claim sensitivity as for A, not traced separately.
+- **1188.6–1191.5 s, a crowded corner/set piece:** the target's path changes **from one orange player to another**. Base and B LIKELY/anchored boxes differ by about 40 px; 16 frames change box and 14 are newly claimed (30 total). Both paths are **unverifiable** (small players, no legible number). They are review items J1/J2.
+- Confirmed frames unchanged (42). Labelled intervals under corrected labels: wrong 14 → 11, correct unchanged, abstained +4.
+
+**Unlabelled independent clips** (pre-registered protocol `candidate_B_validation_protocol.json`, written before the runs; default decoder, real OCR):
+
+- IMG_4529 (two clips) and IMG_5105 3:00–3:30: 0 claims, the same as the baseline.
+- **IMG_5105 0:00–0:30: B adds 2 LIKELY / appearance claims (27.2–27.3 s)** on a distant orange player, about 45 px tall, in contact with an opponent.
+  - The baseline was rerun at the current code: 0 claims, identical to the earlier baseline.
+  - Under the protocol (#20 is absent from IMG_5105 near the camera) these count as **false attributions**.
+  - The only resume cut in that clip is at 15.4 s, elsewhere in the frame. So this is another **non-local** solver effect, not the cut itself.
+  - This clip is now **development data** for B.
+
+**The replay screen overstated B:**
+
+- With 23 never-read crops answered as empty, the replay showed B following #20 through 193–224, with 25 "?" claims.
+- Real OCR on those crops (for example "24" on another player) leaves B **abstaining** instead.
+- Replays without OCR are screens. Only real-OCR runs are reported as results.
+
+### 9.5 Tests
+
+**Suite results:**
+
+- Default flags: see the commit message for counts.
+- New tests:
+  - `tests/test_resume_split.py`: synthetic transfer, own-path continuation, no steal, flag off, unclear link, and the P replay with B (it asserts 23 never-read crops as the replay boundary).
+  - `tests/test_full_match_identity.py`, **opt-in** with `SCOUTX_FULL_MATCH_REPLAY`: exact reproduction and repeatability, the legitimate confirmed #20 at 1161 s, F6, F17 and cache-state characterisation, plus 3 strict xfails.
+- The known-failure replays pin both flags to their defaults.
+
+### 9.6 Verdicts
+
+**Candidate A (exchange split, `93258f7`): experimental.**
+
+- It repairs E1 on the HLG reference only.
+- On the default decoder it never touches the target path in the full match. Its full-match side effects (−28 wrong #6 frames, +4 unverified LIKELY frames) are not caused by its rule.
+- It stays off.
+
+**Candidate B (resume split, `d061d8c`): experimental — needs revision before further validation.**
+
+- It repairs P in real runs and loses no labelled correct frame or confirmed frame.
+- But it:
+  - **changes one unverifiable crowded identity path** (30 LIKELY frames);
+  - **adds 2 false LIKELY claims on independent footage** (IMG_5105), through a non-local effect.
+- No confirmed claim changed anywhere, so the protocol's confirmed-claim rule is not triggered. It is still not a demonstrated improvement.
+- It stays off.
+
+**What the evidence points to.** Both candidates mainly reveal one fragility: marginal **appearance-only LIKELY claims** (#6 at confidence 0.753 against 0.75, the IMG_5105 claims, the crowded path) flip whenever any tracklet changes anywhere in the match. Narrow tracklet fixes cannot be judged until that fragility is understood. Thresholds must not be tuned to hide it.
+
+**Still unrepaired:** E3, E4, F6, F17, and cache-state sensitivity.

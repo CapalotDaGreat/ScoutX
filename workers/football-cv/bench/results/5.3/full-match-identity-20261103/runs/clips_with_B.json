@@ -1,0 +1,125 @@
+{
+ "IMG_4529_p00960_B": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 290,
+   "UNKNOWN": 10
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_4529_p00960_x0": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 290,
+   "UNKNOWN": 10
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_4529_p00960_x1": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 291,
+   "UNKNOWN": 9
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_4529_p01440_B": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 289,
+   "UNKNOWN": 11
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_4529_p01440_x0": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 289,
+   "UNKNOWN": 11
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_4529_p01440_x1": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 289,
+   "UNKNOWN": 11
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_5105_p00000_B": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 296,
+   "UNKNOWN": 2,
+   "LIKELY_VISIBLE": 2
+  },
+  "claims": 2,
+  "claimTimes": [
+   27.2,
+   27.3
+  ],
+  "evidence": {
+   "appearance": 2
+  }
+ },
+ "IMG_5105_p00000_x0": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 298,
+   "UNKNOWN": 2
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_5105_p00000_x1": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 298,
+   "UNKNOWN": 2
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_5105_p00180_B": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 300
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_5105_p00180_x0": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 300
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ },
+ "IMG_5105_p00180_x1": {
+  "frames": 300,
+  "states": {
+   "AMBIGUOUS": 300
+  },
+  "claims": 0,
+  "claimTimes": [],
+  "evidence": {}
+ }
+}

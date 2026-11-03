@@ -1,0 +1,332 @@
+[
+ {
+  "pair": "base->resume_cold",
+  "claims": [
+   453,
+   435
+  ],
+  "confirmed": [
+   42,
+   42
+  ],
+  "framesDiffering": 62,
+  "segments": [
+   {
+    "t": [
+     244.4,
+     244.7
+    ],
+    "n": 4,
+    "base": {
+     "LIKE": 4
+    },
+    "resume_cold": {
+     "-": 4
+    }
+   },
+   {
+    "t": [
+     706.4,
+     708.7
+    ],
+    "n": 24,
+    "base": {
+     "LIKE": 24
+    },
+    "resume_cold": {
+     "-": 24
+    }
+   },
+   {
+    "t": [
+     711.2,
+     711.4
+    ],
+    "n": 3,
+    "base": {
+     "LIKE": 3
+    },
+    "resume_cold": {
+     "-": 3
+    }
+   },
+   {
+    "t": [
+     716.4,
+     716.4
+    ],
+    "n": 1,
+    "base": {
+     "LIKE": 1
+    },
+    "resume_cold": {
+     "-": 1
+    }
+   },
+   {
+    "t": [
+     1188.6,
+     1191.5
+    ],
+    "n": 30,
+    "base": {
+     "-": 14,
+     "LIKE": 16
+    },
+    "resume_cold": {
+     "LIKE": 30
+    }
+   }
+  ]
+ },
+ {
+  "pair": "base->cand_cold",
+  "claims": [
+   453,
+   429
+  ],
+  "confirmed": [
+   42,
+   42
+  ],
+  "framesDiffering": 32,
+  "segments": [
+   {
+    "t": [
+     706.4,
+     708.7
+    ],
+    "n": 24,
+    "base": {
+     "LIKE": 24
+    },
+    "cand_cold": {
+     "-": 24
+    }
+   },
+   {
+    "t": [
+     711.2,
+     711.4
+    ],
+    "n": 3,
+    "base": {
+     "LIKE": 3
+    },
+    "cand_cold": {
+     "-": 3
+    }
+   },
+   {
+    "t": [
+     716.4,
+     716.4
+    ],
+    "n": 1,
+    "base": {
+     "LIKE": 1
+    },
+    "cand_cold": {
+     "-": 1
+    }
+   },
+   {
+    "t": [
+     1881.3,
+     1881.5
+    ],
+    "n": 3,
+    "base": {
+     "-": 3
+    },
+    "cand_cold": {
+     "LIKE": 3
+    }
+   },
+   {
+    "t": [
+     1883.6,
+     1883.6
+    ],
+    "n": 1,
+    "base": {
+     "-": 1
+    },
+    "cand_cold": {
+     "LIKE": 1
+    }
+   }
+  ]
+ },
+ {
+  "pair": "base->base_warm",
+  "claims": [
+   453,
+   423
+  ],
+  "confirmed": [
+   42,
+   34
+  ],
+  "framesDiffering": 36,
+  "segments": [
+   {
+    "t": [
+     706.4,
+     708.7
+    ],
+    "n": 24,
+    "base": {
+     "LIKE": 24
+    },
+    "base_warm": {
+     "-": 24
+    }
+   },
+   {
+    "t": [
+     711.2,
+     711.4
+    ],
+    "n": 3,
+    "base": {
+     "LIKE": 3
+    },
+    "base_warm": {
+     "-": 3
+    }
+   },
+   {
+    "t": [
+     716.4,
+     716.4
+    ],
+    "n": 1,
+    "base": {
+     "LIKE": 1
+    },
+    "base_warm": {
+     "-": 1
+    }
+   },
+   {
+    "t": [
+     1161.1,
+     1161.2
+    ],
+    "n": 2,
+    "base": {
+     "CONF": 2
+    },
+    "base_warm": {
+     "-": 2
+    }
+   },
+   {
+    "t": [
+     1162.3,
+     1162.8
+    ],
+    "n": 6,
+    "base": {
+     "CONF": 6
+    },
+    "base_warm": {
+     "LIKE": 6
+    }
+   }
+  ]
+ },
+ {
+  "pair": "base_warm->cand_warm",
+  "claims": [
+   423,
+   423
+  ],
+  "confirmed": [
+   34,
+   34
+  ],
+  "framesDiffering": 0,
+  "segments": []
+ },
+ {
+  "pair": "base->cand_warm",
+  "claims": [
+   453,
+   423
+  ],
+  "confirmed": [
+   42,
+   34
+  ],
+  "framesDiffering": 36,
+  "segments": [
+   {
+    "t": [
+     706.4,
+     708.7
+    ],
+    "n": 24,
+    "base": {
+     "LIKE": 24
+    },
+    "cand_warm": {
+     "-": 24
+    }
+   },
+   {
+    "t": [
+     711.2,
+     711.4
+    ],
+    "n": 3,
+    "base": {
+     "LIKE": 3
+    },
+    "cand_warm": {
+     "-": 3
+    }
+   },
+   {
+    "t": [
+     716.4,
+     716.4
+    ],
+    "n": 1,
+    "base": {
+     "LIKE": 1
+    },
+    "cand_warm": {
+     "-": 1
+    }
+   },
+   {
+    "t": [
+     1161.1,
+     1161.2
+    ],
+    "n": 2,
+    "base": {
+     "CONF": 2
+    },
+    "cand_warm": {
+     "-": 2
+    }
+   },
+   {
+    "t": [
+     1162.3,
+     1162.8
+    ],
+    "n": 6,
+    "base": {
+     "CONF": 6
+    },
+    "cand_warm": {
+     "LIKE": 6
+    }
+   }
+  ]
+ }
+]

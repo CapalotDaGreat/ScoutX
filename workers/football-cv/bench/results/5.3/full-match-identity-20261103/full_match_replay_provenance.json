@@ -1,0 +1,38 @@
+{
+ "schema": "pitchproof.full-match-replay.v1",
+ "sourceWork": "/home/claude/work/fm/work_x0",
+ "extraReads": [
+  "/home/claude/work/fm/work_x1/stage1/ocr_cache.json"
+ ],
+ "discoveryFingerprint": "c84c3e2f5a9594a8c54ae326ef669ca0a0a58dceb15adb0f286152db270ec4df",
+ "chunks": [
+  "c_00000",
+  "c_00001",
+  "c_00002",
+  "c_00003",
+  "c_00004",
+  "c_00005",
+  "c_00006"
+ ],
+ "files": {
+  "chunks/c_00000/detections.npz": "4b9914adf42ad21d0b8e0ddd0f214b84e55c971297d115ba3f84661c2e4f322d",
+  "chunks/c_00000/meta.json": "f77f035aaa05ed417357f4379a1e2318be85d49f96b264901fb2c4e27c0540e0",
+  "chunks/c_00001/detections.npz": "9dc106579b28aea3cd248752cb2d62cd8b4c104c8963bdcce2bd75579866367a",
+  "chunks/c_00001/meta.json": "dca43e6a9e0e2fcf05419a8a47bf740da616ae72d1e40329d8c43cb66b1d066d",
+  "chunks/c_00002/detections.npz": "6c295aac5578d1471d8e08cff6bcd443f33b19391ffb4c01ed82bde32ae445e3",
+  "chunks/c_00002/meta.json": "0bea87b239dfce965c5e1a37b5cfc6dfdcbda98d86c9da1a6a1ec39d2a0708a6",
+  "chunks/c_00003/detections.npz": "e57479fefe3dd664488c68fe6d8241fad33efc691d61ffa167ba21eb848420a8",
+  "chunks/c_00003/meta.json": "dd048f04a9e878de30d774061a946069afb7ab5a5a5adacf629361a7cfb0fa52",
+  "chunks/c_00004/detections.npz": "59045ec04c8d5c1001268f2c623cbca6e90c0bab9a3de5807241ed7a916eaa4d",
+  "chunks/c_00004/meta.json": "f7f25786298c8a4f3386781f89e867af7791fb500ef335b0a266c3d9ea412923",
+  "chunks/c_00005/detections.npz": "2b6208605926354e976c7c410400dd80671ea1ec90cf433e814f933a24288109",
+  "chunks/c_00005/meta.json": "d3ba9239453bfd65c7ade3fc098804977e7b19a0687d445f5cca68a866522446",
+  "chunks/c_00006/detections.npz": "e03c95fa8438a7e8d7faac40e709fc20ec730c5c350ae38ff05c7d6fef725d0a",
+  "chunks/c_00006/meta.json": "95f279b68e7f2f05c11c3451535bfd7147e32c741defd1451520b20408bf50f2",
+  "crops.json": "75b266546c9f100789b5c86fa0bed024e179898812d7b567017f71878a0682c0",
+  "ocr_reads.json": "781b40b18874c6faf31259cab7f677ab0e0d934374870d25b7531c4b02c49ec5",
+  "original_result.json": "1276bf38d3e9b748d6a8fbd326494edba9014422ba3c467d2b0a1517b658006f",
+  "original_timeline.npz": "fad444c127030a41c9e07e1b7bb0fbc25f668a6f6860f65c605c96e8e0277d7c",
+  "sightings.json": "0b77a1719a9eae97f0c92ffed9ca0ca2757c8a968814c05a11163df297a98dd9"
+ }
+}

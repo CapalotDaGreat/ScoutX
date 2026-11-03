@@ -1,0 +1,36 @@
+{
+ "replay": "/home/claude/work/fmr/replay",
+ "warmCache": null,
+ "invariantsOk": true,
+ "identityIterations": [
+  {
+   "iteration": 0,
+   "mode": "template",
+   "chosen": 515,
+   "seconds": 1180.7,
+   "positives": 3,
+   "negatives": 62
+  },
+  {
+   "iteration": 1,
+   "mode": "template",
+   "chosen": 515,
+   "seconds": 1180.7,
+   "positives": 3,
+   "negatives": 62
+  }
+ ],
+ "ocr": {
+  "served": 5637,
+  "neverReadInOriginal": 23,
+  "imageReads": 5660
+ },
+ "timelineSha256": "1150291f890a64e70325514d02676cadb90ad755dfe8ff275568754ed7f0992c",
+ "matches": {
+  "present": false,
+  "states": false,
+  "evidence": false,
+  "boxesMaxAbs": 1857.6090698242188,
+  "framesDiffering": 370
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "schema": "pitchproof.generalisation-protocol.v1",
+ "writtenUtc": "2026-11-03T20:05Z (before any candidate-B run on clips or the full match)",
+ "candidate": "d061d8cbafb24341e23074cbf0549636f5bcc0b4 with SCOUTX_RESUME_SPLIT=1 (SCOUTX_EXCHANGE_SPLIT=0); crossings.py sha256 46f85b41...; baseline = same commit, both flags 0",
+ "frozen": true,
+ "inventory": {
+  "development": "IMG_4809 i0225 (P was diagnosed there; replays default_i0225/reference_i0225)",
+  "heldOutSameMatch": "IMG_4809 i0400, i0600, i1150, i1295, i1500, i1680, i1800, i1890 and the full match outside 241-248 s (same match, camera, annotator: NOT independent)",
+  "independentVideos": "IMG_4529 (night, SDR) and IMG_5105 (day, SDR): unlabelled; clips p00960 0-30 s, p01440 15-45 s (IMG_4529), p00000 and p00180 0-30 s (IMG_5105), selected 2026-11-02 from prior reports, not from outcomes",
+  "additionalHDR": "none accessible"
+ },
+ "scenarioCoverage": {"crossings/similar kits": "i0225, i1150, full match (204 steals)", "small players": "i1295, i1500", "off-screen returns": "i1680", "exposure": "night/day SDR clips", "number confusion": "#6/#17 full-match segments"},
+ "metrics": "labelled intervals: correct/wrong/confirmed/likely/abstained/unmatched/'?' under original AND proposed-corrected labels; full match: every changed claim segment reviewed (verdicts only from legible numbers or labels; else unverified); clips: claims only - no claims is not evidence of correct tracking",
+ "decisionRule": "any new wrong or unverifiable CONFIRMED claim, or any lost correct confirmed frame, -> candidate needs revision and the sample becomes development data; otherwise 'supported for further validation' (never production)",
+ "realOcrRequired": "replay screens answer never-read crops empty; every reported number for B comes from runs with real OCR"
+}
