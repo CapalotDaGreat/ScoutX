@@ -1,0 +1,33 @@
+{
+ "schema": "pitchproof.label-corrections.v1",
+ "appliesTo": {"file": "bench/results/5.1/gt_img4809_intervals.json", "sha256": "36b16fbae5091ca524f1c47c697e56db6da2d191e79dc0ab4f880815dc995078"},
+ "originalLabelsChanged": false,
+ "status": "PROPOSED - second-reviewer confirmation pending",
+ "review": {
+  "reviewer": "Claude (AI assistant) for the developer, 2026-11-03",
+  "independence": "NOT independent of the predictions: this reviewer had seen the 2026-11-02 traces and claim boxes before this review. Sheets for this review drew label boxes only, no predictions. An independent second review (someone who has not seen the predictions) is still required before these corrections count as verified.",
+  "method": "Label-only overlays and enlarged crops of source frames 2441-2464, decoded from the exact proxy (b1077af3...) with the default cv2 path. Each person was followed frame by frame using ball possession, direction of motion, back-or-front view, hair and shorts. The label file's own rule was applied: T = #20 with the number visible or in direct continuity with a visible number; N = not #20; ? = unsure.",
+  "numberVisibility": "No number is legible at 2441-2464 in the default rendering. #20's identity at 2444 rests on the label file's own T label and on the OCR read \"20\" (0.95) of detection 3597 in the reference rendering. The corrections below rest on continuity from that frame."
+ },
+ "corrections": [
+  {"id": "C1", "sourceFrame": 2445, "windowFrame": "i0225:195", "labelIndex": 2, "piece": 38, "box": [1277.8, 521.5, 1362.9, 640.1], "from": "T", "to": "N", "confidence": "high",
+   "evidence": "This box is a different orange player (player A), face to the camera and running right, with no ball. #20, the ball carrier seen from behind, is the box labelled N at index 3."},
+  {"id": "C2", "sourceFrame": 2445, "windowFrame": "i0225:195", "labelIndex": 3, "piece": 39, "box": [1208.3, 522.1, 1278.8, 670.0], "from": "N", "to": "T", "confidence": "high",
+   "evidence": "Direct continuity with the T box at 2444 (the frame read \"20\"): same person, back to the camera, keeps the ball, continues left."},
+  {"id": "C3", "sourceFrame": 2446, "windowFrame": "i0225:196", "labelIndex": 2, "piece": 38, "box": [1332.0, 524.4, 1392.8, 640.2], "from": "T", "to": "N", "confidence": "high", "evidence": "As C1: player A."},
+  {"id": "C4", "sourceFrame": 2446, "windowFrame": "i0225:196", "labelIndex": 3, "piece": 39, "box": [1197.0, 531.6, 1265.1, 672.0], "from": "N", "to": "T", "confidence": "high", "evidence": "As C2: the ball carrier, #20."},
+  {"id": "C5", "sourceFrame": 2447, "windowFrame": "i0225:197", "labelIndex": 2, "piece": 38, "box": [1380.3, 521.1, 1433.3, 641.9], "from": "T", "to": "N", "confidence": "high", "evidence": "As C1: player A."},
+  {"id": "C6", "sourceFrame": 2447, "windowFrame": "i0225:197", "labelIndex": 3, "piece": 39, "box": [1170.7, 527.3, 1249.2, 673.7], "from": "N", "to": "T", "confidence": "high", "evidence": "As C2: the ball carrier, #20."},
+  {"id": "C7", "sourceFrame": 2458, "windowFrame": "i0225:208", "labelIndex": 2, "piece": 33, "box": [1133.9, 551.0, 1181.4, 647.0], "from": "N", "to": "?", "confidence": "medium-high",
+   "evidence": "Same person as the ball carrier labelled ? at 2448-2457 (back to the camera, dribbling left), so N contradicts the file's own ? labels. Set to ?, not T, to keep the annotator's uncertainty for this person over 2448-2457."},
+  {"id": "C8", "sourceFrame": 2459, "windowFrame": "i0225:209", "labelIndex": 2, "piece": 33, "box": [1122.2, 542.9, 1189.4, 645.6], "from": "N", "to": "?", "confidence": "medium-high", "evidence": "As C7."}
+ ],
+ "reviewedAndNotChanged": [
+  {"sourceFrame": 2461, "windowFrame": "i0225:211", "box": [1144.5, 540.7, 1177.6, 636.8], "label": "N",
+   "finding": "The N label is correct. At 2460, #20 crosses another orange player. From 2461, the N box (piece 33) is that other player, face to the camera. #20 is the box labelled ? to its left (back to the camera, running left). The piece follows the tracker through this second crossing too.",
+   "consequence": "This reverses the 2026-11-02 review. The reference run's confirmed claim at 2461 is on the other player, so it is a REAL wrong-player frame, not an annotation issue."},
+  {"sourceFrames": "2448-2457, 2461-2464", "finding": "#20 is labelled ? on these frames. Left as ?: the label is uncertain, not wrong."},
+  {"sourceFrame": 2444, "finding": "Player A is visible behind #20 but has no label box. No box was added: a box would have to be drawn after seeing the default run's claim (unmatched) on him."}
+ ],
+ "scope": "Only the 2441-2464 span around the verified 244.4 s failure was re-reviewed. No other interval or frame was re-reviewed."
+}

@@ -80,14 +80,16 @@
 | Live VMs | at most **one** |
 | Commit | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` only |
 | Machine / GPU / disk / image | g2-standard-8, 1× NVIDIA L4, 200 GB balanced PD (auto-delete), `common-cu129-ubuntu-2204-nvidia-580-v20261029` |
-| Price (list, USD, before tax and discounts) | g2-standard-8 + L4 **$0.8972/h** + 200 GB balanced PD **$0.0301/h** = **$0.9273/h** |
-| Expected session | 60–90 min → **$0.93–$1.39** (planning allowance, not a measured runtime) |
-| Maximum lifetime | **180 min** server-enforced → **$2.78** maximum compute + disk |
-| Other charges | bucket storage of the 1.4 GB video for under 3 h (< $0.01); in-region transfer free; upload ingress free |
-| Pricing source | Cloud Billing Catalog API `services/6F81-5844-456A/skus`, retrieved **2026-11-02T20:18:57Z** (SKUs CB1A-E671-2608 core, 8BFF-12ED-8AD9 RAM, E975-984D-BEFA L4, 5CFD-16B2-4F41 PD; `pricing.json`) |
+| Price (list, USD, before tax and discounts), refreshed **2026-11-03T12:25:49Z** | g2-standard-8 (8 × $0.026264 core + 32 GiB × $0.003077 RAM = $0.3086/h) + L4 $0.5886/h = **$0.8972/h compute**; 200 GiB balanced PD $0.0301/h; ephemeral external IPv4 $0.005/h. **Total $0.9323/h**, unchanged from 2026-11-02 apart from the IP, which is now included. |
+| **Compute estimate** (not a measurement) | VM + GPU + disk + IP for **60–90 min: $0.93–$1.40** |
+| **Compute at the maximum lifetime** | 180 min server-enforced (`--max-run-duration=180m`, then DELETE) → compute $2.69 + disk $0.09 + IP $0.02 = **$2.80** |
+| Storage charges | video 1.32 GiB + source archive at $0.020/GiB-month (Standard, europe-west4): **< $0.01** if deleted the same day, **$0.03** if cleanup failed for a whole month. Operations (a few hundred Class A/B requests): < $0.01. |
+| Network charges | Upload into the bucket: free (ingress). VM ↔ bucket in the same region: free. VM downloads (packages, image layers): free (ingress). **Billable:** download of the exported results from the bucket at $0.12/GiB after the free tier. ≤ 0.5 GiB expected → **≤ $0.06**. |
+| **Total cost ceiling** (all of the above, worst case at the maximum lifetime) | **$2.89**. Proposed approval ceiling: **$3.00 before tax**. This is a ceiling, not an expected cost. |
+| Pricing source | Cloud Billing Catalog API, read-only (`bench/results/5.3/fp32-proposal-20261102/fetch_pricing.py`). Retrieved **2026-11-03T12:25:49Z** → `pricing_20261103.json`. Compute Engine SKUs: CB1A-E671-2608 core, 8BFF-12ED-8AD9 RAM, E975-984D-BEFA L4, 5CFD-16B2-4F41 PD, C054-7F72-A02E external IP. Cloud Storage SKUs: 89D8-0CF9-9F2E storage, 22EB-AAE8-FBCD download. Assumptions: the 1.32 GiB video is stored briefly; results ≤ 0.5 GiB; no sustained-use or committed-use discount assumed; VAT not included. |
 | Experiment | `fp32_comparison.py --execute --expected-commit 51d41c9… --budget-sec 5400` |
 | Outputs | per profile × window: decoded-frame hashes, device/dtype/providers, detections, OCR evidence, tracklets, timelines, validation metrics, exit codes, timing; SHA-256 manifest |
 | Export verification and cleanup | `_DONE` marker plus manifest check locally. Then delete the run's `runs/` objects (source + video), confirm VM and disk deletion (self-delete, with manual delete if needed), and verify by listing instances, disks and bucket. |
 | Uncertain creation outcome | list instances in the zone before any retry; never a second create while one may exist |
 
-To approve, please name the zone(s), the commit, the cost ceiling and the maximum lifetime, or change any of them.
+To approve, please name the zone(s), the commit, the cost ceiling and the maximum lifetime, or change any of them. **No approval has been given.** Prices must be refreshed again if the session starts more than a few days after 2026-11-03.

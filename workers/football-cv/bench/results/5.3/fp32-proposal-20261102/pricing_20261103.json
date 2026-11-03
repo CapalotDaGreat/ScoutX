@@ -1,0 +1,207 @@
+{
+ "retrievedUtc": "2026-11-03T12:25:49.319091+00:00",
+ "source": "Cloud Billing Catalog API (USD list prices, before tax/discounts); read-only",
+ "computeEngine": [
+  {
+   "skuId": "5CFD-16B2-4F41",
+   "description": "Balanced PD Capacity in Netherlands",
+   "unit": "GiBy.mo",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.11
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "70E0-08DF-FFFF",
+   "description": "Regional Balanced PD Capacity in Netherlands",
+   "unit": "GiBy.mo",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.22
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "8BFF-12ED-8AD9",
+   "description": "G2 Instance Ram running in Netherlands",
+   "unit": "GiBy.h",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.003076895
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "CB1A-E671-2608",
+   "description": "G2 Instance Core running in Netherlands",
+   "unit": "h",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.02626386
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "E975-984D-BEFA",
+   "description": "Nvidia L4 GPU running in Netherlands",
+   "unit": "h",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.588630286
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  }
+ ],
+ "externalIp": [
+  {
+   "skuId": "4AF8-7C1F-39C4",
+   "description": "External IP Charge on a Spot Preemptible VM",
+   "unit": "h",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.0025
+    }
+   ],
+   "regions": [
+    "global"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "C054-7F72-A02E",
+   "description": "External IP Charge on a Standard VM",
+   "unit": "h",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.0
+    },
+    {
+     "startUsage": 721,
+     "usd": 0.005
+    }
+   ],
+   "regions": [
+    "global"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  }
+ ],
+ "networkEgress": [],
+ "cloudStorage": [
+  {
+   "skuId": "0548-E341-C883",
+   "description": "Standard Storage Netherlands Dual-region",
+   "unit": "GiBy.mo",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.022
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "22EB-AAE8-FBCD",
+   "description": "Download Worldwide Destinations (excluding Asia & Australia)",
+   "unit": "GiBy",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.0
+    },
+    {
+     "startUsage": 100,
+     "usd": 0.12
+    },
+    {
+     "startUsage": 1024,
+     "usd": 0.11
+    },
+    {
+     "startUsage": 10240,
+     "usd": 0.08
+    }
+   ],
+   "regions": [
+    "global"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "89D8-0CF9-9F2E",
+   "description": "Standard Storage Netherlands",
+   "unit": "GiBy.mo",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.02
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "9DCE-B940-C29B",
+   "description": "Autoclass Standard Storage Netherlands Dual-region",
+   "unit": "GiBy.mo",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.022
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  },
+  {
+   "skuId": "A870-E556-4353",
+   "description": "Autoclass Standard Storage Netherlands",
+   "unit": "GiBy.mo",
+   "tiers": [
+    {
+     "startUsage": 0,
+     "usd": 0.02
+    }
+   ],
+   "regions": [
+    "europe-west4"
+   ],
+   "effective": "2026-11-03T08:00:00Z"
+  }
+ ]
+}

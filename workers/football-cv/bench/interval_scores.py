@@ -64,6 +64,26 @@ def score(tl: dict, truth: dict, offset: float) -> dict:
             "_per": {k: o for k, (o, _, _) in per.items()}}
 
 
+def apply_label_corrections(truth: dict, start: float, rec: dict, gt_path: Path) -> dict:
+    """Return a copy of the interval truth with corrections applied. Each correction must match the original label
+    exactly (source frame, index, label and box) and the file must be the one the corrections were made for."""
+    import hashlib  # noqa: PLC0415
+
+    want = rec["appliesTo"]["sha256"]
+    if hashlib.sha256(Path(gt_path).read_bytes()).hexdigest() != want:
+        raise ValueError("label corrections were made for a different label file")
+    out = {**truth, "frames": {k: [dict(x) for x in v] for k, v in truth["frames"].items()}}
+    for c in rec["corrections"]:
+        local = str(int(c["sourceFrame"]) - int(round(start * 10)))
+        if local not in out["frames"]:
+            continue
+        lab = out["frames"][local][c["labelIndex"]]
+        if lab["label"] != c["from"] or any(abs(a - b) > 0.05 for a, b in zip(lab["box"], c["box"])):
+            raise ValueError(f"correction {c['id']} does not match the original label")
+        lab["label"] = c["to"]
+    return out
+
+
 def descriptors(truth: dict, default_dir: Path, video: str, start: float) -> dict:
     import hdr_reference as hr  # noqa: PLC0415
 
@@ -88,6 +108,9 @@ def main(argv=None) -> int:
     ap.add_argument("--run", action="append", required=True, help="name=output dir of decoder_interval_eval.py")
     ap.add_argument("--video", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--label-corrections", default=None,
+                    help="label-corrections JSON (pitchproof.label-corrections.v1) applied ON TOP of the original labels; "
+                         "the original label file is never modified and the default scores the original labels")
     a = ap.parse_args(argv)
     import pp_bench  # noqa: PLC0415
     from decoder_interval_eval import GT, interval_truth, key  # noqa: PLC0415
@@ -96,7 +119,9 @@ def main(argv=None) -> int:
     names = list(runs)
     corr_rec = json.loads((HERE / "references" / "gt_time_basis_corrections.json").read_text())
     g = json.loads(GT.read_text())
-    res = {"schema": "pitchproof.decoder-interval-scores.v1", "runs": runs, "intervals": {}, "productionApproval": False}
+    res = {"schema": "pitchproof.decoder-interval-scores.v1", "runs": runs, "intervals": {}, "productionApproval": False,
+           "labels": {"file": GT.name, "corrections": None if not a.label_corrections else {
+               "file": Path(a.label_corrections).name, "status": json.loads(Path(a.label_corrections).read_text()).get("status")}}}
     agg = {n: {b: Counter() for b in ("stored", "verified")} for n in names}
     for s, e in g["intervals"]:
         k = key(s)
@@ -105,6 +130,8 @@ def main(argv=None) -> int:
             res["intervals"][k] = {"missing": [n for n, d in dirs.items() if not (d / "automatic" / "timeline.npz").exists()]}
             continue
         truth = interval_truth(s, e)
+        if a.label_corrections:
+            truth = apply_label_corrections(truth, s, json.loads(Path(a.label_corrections).read_text()), GT)
         boxes_by_t = {}
         for kk, labs in truth["frames"].items():
             boxes_by_t[truth["times"][kk]] = [lab["box"] for lab in labs]
