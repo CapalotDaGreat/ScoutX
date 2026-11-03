@@ -105,7 +105,7 @@
    "name": "full-match LIKELY claims on #17",
    "decoder": "default (cv2)",
    "run": "full match fm/x0",
-   "sourceFrames": "label times 1301.6-1302.2, 1302.5, 1304.3-1304.4, 1305.7 s (11 labelled frames); the timeline is 0.1 s earlier on the verified basis (labels >= 1150 s stamped 0.1 s early)",
+   "sourceFrames": "timeline times 1301.6-1302.2, 1302.5, 1304.3-1304.4, 1305.7 s: 11 LIKELY frames scored wrong-player against N labels (label time basis verified +0.1 s for this interval)",
    "counts": {
     "reads": 0,
     "ocrCropsOnTracklet": 34,

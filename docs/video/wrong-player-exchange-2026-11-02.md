@@ -568,10 +568,10 @@ All 9 intervals, automatic mode, verified time basis. Every run was rescored; no
 
 **Suite results:**
 
-- Default flags: see the commit message for counts.
+- **626 passed, 9 skipped, 6 xfailed, exit code 0** with flags default, A only, B only and A+B (`full-match-identity-20261103/tests/suite_{default,A,B,AB}.log` + provenance). A first A-only run failed one B unit test: the synthetic scene is also an exchange, so A cut it. The test now pins A off; the failed log is kept.
 - New tests:
   - `tests/test_resume_split.py`: synthetic transfer, own-path continuation, no steal, flag off, unclear link, and the P replay with B (it asserts 23 never-read crops as the replay boundary).
-  - `tests/test_full_match_identity.py`, **opt-in** with `SCOUTX_FULL_MATCH_REPLAY`: exact reproduction and repeatability, the legitimate confirmed #20 at 1161 s, F6, F17 and cache-state characterisation, plus 3 strict xfails.
+  - `tests/test_full_match_identity.py`, **opt-in** with `SCOUTX_FULL_MATCH_REPLAY`: exact reproduction and repeatability, the legitimate confirmed #20 at 1161 s, F6, F17 and cache-state characterisation, plus 3 strict xfails. **6 passed, 3 xfailed** (`tests/optin_full_match.log`; the first attempt failed on a wrong time span in the F17 test and is kept as `optin_full_match_first_attempt.log`).
 - The known-failure replays pin both flags to their defaults.
 
 ### 9.6 Verdicts

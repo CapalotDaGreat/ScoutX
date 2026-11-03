@@ -75,14 +75,14 @@ def test_F6_desired_no_claim_on_player_6(tmp_path_factory):
 
 def test_F17_characterisation_likely_appearance_claims_on_player_17(tmp_path_factory):
     tl, _ = _run("base", tmp_path_factory)
-    ix = _span(tl, 1301.5, 1302.1)                                         # timeline basis (labels are +0.1 s)
+    ix = _span(tl, 1301.6, 1302.2)                                         # timeline times (labels are stamped 0.1 s early)
     assert all(str(tl["states"][i]) == "LIKELY_VISIBLE" and str(tl["evidence"][i]) == "appearance" for i in ix)
 
 
 @pytest.mark.xfail(strict=True, reason="F17 unrepaired: OCR reads nothing on a legible '17', so appearance claims him")
 def test_F17_desired_no_claim_on_player_17(tmp_path_factory):
     tl, _ = _run("base", tmp_path_factory)
-    assert not any(str(tl["states"][i]) in CLAIM for i in _span(tl, 1301.5, 1305.7))
+    assert not any(str(tl["states"][i]) in CLAIM for i in _span(tl, 1301.5, 1305.8))
 
 
 def test_cache_state_characterisation_warm_ocr_cache_changes_identity(tmp_path_factory):

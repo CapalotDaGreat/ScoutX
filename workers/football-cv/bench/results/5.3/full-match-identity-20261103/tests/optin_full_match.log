@@ -1,0 +1,30 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.17, pytest-9.1.1, pluggy-1.7.0 -- /usr/local/bin/python3
+rootdir: /home/claude/work/b53/workers/football-cv
+configfile: pytest.ini
+plugins: platformdirs-4.12.4, anyio-4.15.1
+collecting ... collected 9 items
+
+tests/test_full_match_identity.py::test_replay_inputs_match_the_committed_provenance PASSED [ 11%]
+tests/test_full_match_identity.py::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably PASSED [ 22%]
+tests/test_full_match_identity.py::test_legitimate_confirmed_20_evidence_at_1161_is_kept PASSED [ 33%]
+tests/test_full_match_identity.py::test_F6_characterisation_likely_appearance_claims_on_player_6 PASSED [ 44%]
+tests/test_full_match_identity.py::test_F6_desired_no_claim_on_player_6 XFAIL [ 55%]
+tests/test_full_match_identity.py::test_F17_characterisation_likely_appearance_claims_on_player_17 PASSED [ 66%]
+tests/test_full_match_identity.py::test_F17_desired_no_claim_on_player_17 XFAIL [ 77%]
+tests/test_full_match_identity.py::test_cache_state_characterisation_warm_ocr_cache_changes_identity PASSED [ 88%]
+tests/test_full_match_identity.py::test_cache_state_desired_same_identity_warm_or_cold XFAIL [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED tests/test_full_match_identity.py::test_replay_inputs_match_the_committed_provenance
+PASSED tests/test_full_match_identity.py::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably
+PASSED tests/test_full_match_identity.py::test_legitimate_confirmed_20_evidence_at_1161_is_kept
+PASSED tests/test_full_match_identity.py::test_F6_characterisation_likely_appearance_claims_on_player_6
+PASSED tests/test_full_match_identity.py::test_F17_characterisation_likely_appearance_claims_on_player_17
+PASSED tests/test_full_match_identity.py::test_cache_state_characterisation_warm_ocr_cache_changes_identity
+XFAIL tests/test_full_match_identity.py::test_F6_desired_no_claim_on_player_6 - F6 unrepaired: appearance-only LIKELY on a player whose '6' is legible (lone digits ignored)
+XFAIL tests/test_full_match_identity.py::test_F17_desired_no_claim_on_player_17 - F17 unrepaired: OCR reads nothing on a legible '17', so appearance claims him
+XFAIL tests/test_full_match_identity.py::test_cache_state_desired_same_identity_warm_or_cold - unrepaired: identity depends on the OCR cache state (warm vs cold)
+=================== 6 passed, 3 xfailed in 138.02s (0:02:18) ===================
+rc=0
