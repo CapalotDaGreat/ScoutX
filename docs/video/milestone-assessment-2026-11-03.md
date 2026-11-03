@@ -225,3 +225,34 @@ These results supersede the statements marked above. Details: [wrong-player-exch
 
 1. **Have an independent reviewer fill in the review packet**, about 160 boxes.
 2. Separately, if approved, run the GPU FP32 session on `51d41c9`. Pricing re-checked 2026-11-03T20:00Z: compute estimate $0.93–1.40, worst-case total $2.89, proposed ceiling $3.00 before tax. **The estimate is not a billing cap. Not approved; nothing launched.**
+
+## Update, 2026-11-03 late
+
+Details: [wrong-player-exchange-2026-11-02.md](wrong-player-exchange-2026-11-02.md) §10.
+
+**Cache equivalence (traced and repaired by a candidate):**
+
+- A warm cache leaked an earlier run's refinement reads into first-pass evidence.
+- **Candidate C** (`SCOUTX_OCR_CONSULTED_ONLY`, `86ec1db`, off) makes warm and cold full-match runs **bit-identical**, and leaves cold runs unchanged.
+
+**Appearance-only false attribution (traced):**
+
+- A relative, z-scored template similarity, plus a +1-logit chain bonus, grants LIKELY without any hard evidence.
+- On IMG_5105 the template even falls back to "the most orange tracklets" when no #20 evidence exists.
+- Across all labelled IMG_4809 frames, appearance-only LIKELY claims were **never correct** (0 correct, 19 wrong, 12 unmatched).
+- **Candidate D** (`SCOUTX_APPEARANCE_ONLY_LIKELY=0`, `86ec1db`, off) removes exactly that class:
+  - full match: 39 verified-wrong and 16 unverified frames removed, no labelled correct or confirmed frame lost;
+  - HLG reference: E3 removed;
+  - the effect is local by construction.
+
+**Candidates A (exchange) and B (resume)** remain experimental and off. B is not ready: it causes false IMG_5105 claims (removed by D, but its crowded-path change remains).
+
+**Independent review:** still not done. Corrections, the crowded set piece (J1/J2) and the 16 frames D would remove stay **unresolved**.
+
+**Tests:** every run records skipped and xfailed tests by name and reason (`tests_night/accounting.json`). The 9 (now 11) skips are the opt-in whole-match tests. With them enabled, all of them run.
+
+**Next:**
+
+1. Independent review of the packet.
+2. If D's 16 unverified frames are confirmed wrong or unresolvable, and C is approved, propose **C + D** as a default change. Both need explicit approval before becoming default.
+3. The GPU session remains separate, and needs explicit approval. **Its dollar amounts are estimates, not an enforced spending cap.**

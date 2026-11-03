@@ -1,0 +1,14 @@
+default rc=0 ====== 633 passed, 11 skipped, 6 xfailed, 2 warnings in 69.88s (0:01:09) =======
+default_optin rc=0 ============ 641 passed, 9 xfailed, 2 warnings in 332.75s (0:05:32) ============
+A rc=0 =========== 633 passed, 11 skipped, 6 xfailed, 2 warnings in 59.28s ============
+B rc=0 =========== 633 passed, 11 skipped, 6 xfailed, 2 warnings in 56.42s ============
+C rc=0 =========== 633 passed, 11 skipped, 6 xfailed, 2 warnings in 57.85s ============
+D rc=1 ====== 1 failed, 632 passed, 11 skipped, 6 xfailed, 2 warnings in 56.44s =======
+default {'passed': 633, 'failed': 0, 'skipped': 11, 'xfailed': 6, 'xpassed': 0, 'errors': 0}
+default_optin {'passed': 641, 'failed': 0, 'skipped': 0, 'xfailed': 9, 'xpassed': 0, 'errors': 0}
+A {'passed': 633, 'failed': 0, 'skipped': 11, 'xfailed': 6, 'xpassed': 0, 'errors': 0}
+B {'passed': 633, 'failed': 0, 'skipped': 11, 'xfailed': 6, 'xpassed': 0, 'errors': 0}
+C {'passed': 633, 'failed': 0, 'skipped': 11, 'xfailed': 6, 'xpassed': 0, 'errors': 0}
+D {'passed': 632, 'failed': 1, 'skipped': 11, 'xfailed': 6, 'xpassed': 0, 'errors': 0}
+done
+D (after pinning the default contract in test_tracking_v3) rc=0 =========== 633 passed, 11 skipped, 6 xfailed, 2 warnings in 54.94s ============

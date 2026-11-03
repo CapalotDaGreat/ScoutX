@@ -1,0 +1,16 @@
+{
+ "note": "Full-match default baseline (cold), template appearance model (3 positives). Tracklets labelled by majority of IMG_4809 labels they cover (>=3 frames, 2:1). appearance score = sigmoid(app*rel - PRIOR); chain-member confidence = sigmoid(app*rel) (+1 logit).",
+ "tracklets": {
+  "T": 16,
+  "N": 112
+ },
+ "aucAppearanceTvsN": 0.804,
+ "medianScore": {
+  "T": 0.48,
+  "N": 0.352
+ },
+ "wouldReachLikelyAsChainMember": {
+  "T": 3,
+  "N": 2
+ }
+}

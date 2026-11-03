@@ -1,0 +1,20 @@
+{
+ "config": "default_optin",
+ "command": "env SCOUTX_WEIGHTS_DIR=<weights> SCOUTX_FULL_MATCH_REPLAY=/home/claude/work/fmr/replay PYTHONUNBUFFERED=1 OPENBLAS_NUM_THREADS=1 SCOUTX_MODE=balanced SCOUTX_DETECTOR=yolox_s SCOUTX_DECODER=cv2 SCOUTX_KEYFRAME_EVERY=1 SCOUTX_DISCOVERY_DET=416 SCOUTX_BACKEND=onnx SCOUTX_BATCH=1 SCOUTX_OCR_ENHANCE=0 SCOUTX_ORT_PROVIDERS=CPUExecutionProvider OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 PYTHONHASHSEED=0 CUDA_VISIBLE_DEVICES= SCOUTX_WEIGHTS_DIR=<weights> python3 -m pytest -v -rA -p no:cacheprovider --junitxml=bench/results/5.3/full-match-identity-20261103/tests_night/junit_default_optin.xml",
+ "cwd": "workers/football-cv",
+ "gitCommit": "bad5617568b4793fd25683353c3c9b74caa875e8",
+ "startedUtc": "2026-11-03T21:38:26Z",
+ "finishedUtc": "2026-11-03T21:44:01.831640+00:00",
+ "exitCode": 0,
+ "summaryLine": "============ 641 passed, 9 xfailed, 2 warnings in 332.75s (0:05:32) ============",
+ "python": "3.13.17",
+ "platform": "Linux-6.18.44-fc-v230-x86_64-with-glibc2.39",
+ "device": "CPU only",
+ "packages": {
+  "torch": "2.14.1",
+  "numpy": "2.5.3",
+  "opencv-python-headless": "5.0.0.93",
+  "onnxruntime": "1.29.0",
+  "pytest": "9.1.1"
+ }
+}

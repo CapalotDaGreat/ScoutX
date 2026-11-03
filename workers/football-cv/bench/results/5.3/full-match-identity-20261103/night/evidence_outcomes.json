@@ -1,0 +1,58 @@
+{
+ "full_default_base_original": {
+  "CONF / number / correctClaim": 24,
+  "LIKE / anchored / correctClaim": 241,
+  "LIKE / anchored / indeterminateLabelClaim": 3,
+  "LIKE / anchored / unmatchedClaim": 3,
+  "LIKE / appearance / wrongPlayerClaim": 11,
+  "LIKE / interpolated / correctClaim": 1
+ },
+ "full_default_base_corrected": {
+  "CONF / number / correctClaim": 24,
+  "LIKE / anchored / correctClaim": 238,
+  "LIKE / anchored / indeterminateLabelClaim": 3,
+  "LIKE / anchored / unmatchedClaim": 3,
+  "LIKE / anchored / wrongPlayerClaim": 3,
+  "LIKE / appearance / wrongPlayerClaim": 11,
+  "LIKE / interpolated / correctClaim": 1
+ },
+ "interval_default_original": {
+  "CONF / number / correctClaim": 24,
+  "LIKE / anchored / correctClaim": 276,
+  "LIKE / anchored / indeterminateLabelClaim": 3,
+  "LIKE / anchored / unmatchedClaim": 4,
+  "LIKE / interpolated / correctClaim": 1
+ },
+ "interval_default_corrected": {
+  "CONF / number / correctClaim": 24,
+  "LIKE / anchored / correctClaim": 273,
+  "LIKE / anchored / indeterminateLabelClaim": 3,
+  "LIKE / anchored / unmatchedClaim": 4,
+  "LIKE / anchored / wrongPlayerClaim": 3,
+  "LIKE / interpolated / correctClaim": 1
+ },
+ "interval_reference_original": {
+  "CONF / number / correctClaim": 132,
+  "CONF / number / indeterminateLabelClaim": 25,
+  "CONF / number / unmatchedClaim": 8,
+  "CONF / number / wrongPlayerClaim": 18,
+  "LIKE / anchored / correctClaim": 154,
+  "LIKE / anchored / indeterminateLabelClaim": 41,
+  "LIKE / anchored / unmatchedClaim": 1,
+  "LIKE / appearance / unmatchedClaim": 12,
+  "LIKE / appearance / wrongPlayerClaim": 8,
+  "LIKE / interpolated / unmatchedClaim": 5
+ },
+ "interval_reference_corrected": {
+  "CONF / number / correctClaim": 135,
+  "CONF / number / indeterminateLabelClaim": 26,
+  "CONF / number / unmatchedClaim": 8,
+  "CONF / number / wrongPlayerClaim": 14,
+  "LIKE / anchored / correctClaim": 154,
+  "LIKE / anchored / indeterminateLabelClaim": 41,
+  "LIKE / anchored / unmatchedClaim": 1,
+  "LIKE / appearance / unmatchedClaim": 12,
+  "LIKE / appearance / wrongPlayerClaim": 8,
+  "LIKE / interpolated / unmatchedClaim": 5
+ }
+}

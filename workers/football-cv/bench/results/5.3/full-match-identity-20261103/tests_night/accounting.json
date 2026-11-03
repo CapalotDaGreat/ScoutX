@@ -1,0 +1,485 @@
+{
+ "default": {
+  "passed": 633,
+  "failed": [],
+  "skipped": [
+   {
+    "test": "tests.test_full_match_identity::test_replay_inputs_match_the_committed_provenance",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_legitimate_confirmed_20_evidence_at_1161_is_kept",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_characterisation_likely_appearance_claims_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_desired_no_claim_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_characterisation_likely_appearance_claims_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_desired_no_claim_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_characterisation_warm_ocr_cache_changes_identity",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_desired_same_identity_warm_or_cold",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_D_removes_appearance_only_claims_and_keeps_confirmed_20",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   }
+  ],
+  "xfailed": [
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[0]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[1]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[0]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[1]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[0]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[1]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   }
+  ],
+  "xpassed": [],
+  "errors": [],
+  "counts": {
+   "passed": 633,
+   "failed": 0,
+   "skipped": 11,
+   "xfailed": 6,
+   "xpassed": 0,
+   "errors": 0
+  }
+ },
+ "default_optin": {
+  "passed": 641,
+  "failed": [],
+  "skipped": [],
+  "xfailed": [
+   {
+    "test": "tests.test_full_match_identity::test_F6_desired_no_claim_on_player_6",
+    "reason": "F6 unrepaired: appearance-only LIKELY on a player whose '6' is legible (lone digits ignored)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_desired_no_claim_on_player_17",
+    "reason": "F17 unrepaired: OCR reads nothing on a legible '17', so appearance claims him"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_desired_same_identity_warm_or_cold",
+    "reason": "unrepaired: identity depends on the OCR cache state (warm vs cold)"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[0]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[1]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[0]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[1]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[0]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[1]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   }
+  ],
+  "xpassed": [],
+  "errors": [],
+  "counts": {
+   "passed": 641,
+   "failed": 0,
+   "skipped": 0,
+   "xfailed": 9,
+   "xpassed": 0,
+   "errors": 0
+  }
+ },
+ "A": {
+  "passed": 633,
+  "failed": [],
+  "skipped": [
+   {
+    "test": "tests.test_full_match_identity::test_replay_inputs_match_the_committed_provenance",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_legitimate_confirmed_20_evidence_at_1161_is_kept",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_characterisation_likely_appearance_claims_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_desired_no_claim_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_characterisation_likely_appearance_claims_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_desired_no_claim_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_characterisation_warm_ocr_cache_changes_identity",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_desired_same_identity_warm_or_cold",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_D_removes_appearance_only_claims_and_keeps_confirmed_20",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   }
+  ],
+  "xfailed": [
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[0]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[1]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[0]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[1]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[0]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[1]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   }
+  ],
+  "xpassed": [],
+  "errors": [],
+  "counts": {
+   "passed": 633,
+   "failed": 0,
+   "skipped": 11,
+   "xfailed": 6,
+   "xpassed": 0,
+   "errors": 0
+  }
+ },
+ "B": {
+  "passed": 633,
+  "failed": [],
+  "skipped": [
+   {
+    "test": "tests.test_full_match_identity::test_replay_inputs_match_the_committed_provenance",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_legitimate_confirmed_20_evidence_at_1161_is_kept",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_characterisation_likely_appearance_claims_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_desired_no_claim_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_characterisation_likely_appearance_claims_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_desired_no_claim_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_characterisation_warm_ocr_cache_changes_identity",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_desired_same_identity_warm_or_cold",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_D_removes_appearance_only_claims_and_keeps_confirmed_20",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   }
+  ],
+  "xfailed": [
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[0]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[1]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[0]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[1]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[0]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[1]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   }
+  ],
+  "xpassed": [],
+  "errors": [],
+  "counts": {
+   "passed": 633,
+   "failed": 0,
+   "skipped": 11,
+   "xfailed": 6,
+   "xpassed": 0,
+   "errors": 0
+  }
+ },
+ "C": {
+  "passed": 633,
+  "failed": [],
+  "skipped": [
+   {
+    "test": "tests.test_full_match_identity::test_replay_inputs_match_the_committed_provenance",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_legitimate_confirmed_20_evidence_at_1161_is_kept",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_characterisation_likely_appearance_claims_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_desired_no_claim_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_characterisation_likely_appearance_claims_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_desired_no_claim_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_characterisation_warm_ocr_cache_changes_identity",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_desired_same_identity_warm_or_cold",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_D_removes_appearance_only_claims_and_keeps_confirmed_20",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   }
+  ],
+  "xfailed": [
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[0]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[1]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[0]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[1]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[0]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[1]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   }
+  ],
+  "xpassed": [],
+  "errors": [],
+  "counts": {
+   "passed": 633,
+   "failed": 0,
+   "skipped": 11,
+   "xfailed": 6,
+   "xpassed": 0,
+   "errors": 0
+  }
+ },
+ "D": {
+  "passed": 633,
+  "failed": [],
+  "skipped": [
+   {
+    "test": "tests.test_full_match_identity::test_replay_inputs_match_the_committed_provenance",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_legitimate_confirmed_20_evidence_at_1161_is_kept",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_characterisation_likely_appearance_claims_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F6_desired_no_claim_on_player_6",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_characterisation_likely_appearance_claims_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_F17_desired_no_claim_on_player_17",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_characterisation_warm_ocr_cache_changes_identity",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_cache_state_desired_same_identity_warm_or_cold",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   },
+   {
+    "test": "tests.test_full_match_identity::test_candidate_D_removes_appearance_only_claims_and_keeps_confirmed_20",
+    "reason": "set SCOUTX_FULL_MATCH_REPLAY (opt-in)"
+   }
+  ],
+  "xfailed": [
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[0]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_P_desired_no_claim_on_player_a[1]",
+    "reason": "P unrepaired: identity passes to player A when #20's paused track resumes on A"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[0]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E3_desired_no_claim_on_n_labelled_player[1]",
+    "reason": "E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[0]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   },
+   {
+    "test": "tests.test_known_identity_failures::test_E4_desired_no_confirmed_claim_on_other_player[1]",
+    "reason": "E4 unrepaired: confirmed claim jumps to another player for one frame at w211"
+   }
+  ],
+  "xpassed": [],
+  "errors": [],
+  "counts": {
+   "passed": 633,
+   "failed": 0,
+   "skipped": 11,
+   "xfailed": 6,
+   "xpassed": 0,
+   "errors": 0
+  }
+ }
+}

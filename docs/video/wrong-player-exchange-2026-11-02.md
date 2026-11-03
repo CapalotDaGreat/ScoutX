@@ -594,3 +594,122 @@ All 9 intervals, automatic mode, verified time basis. Every run was rescored; no
 **What the evidence points to.** Both candidates mainly reveal one fragility: marginal **appearance-only LIKELY claims** (#6 at confidence 0.753 against 0.75, the IMG_5105 claims, the crowded path) flip whenever any tracklet changes anywhere in the match. Narrow tracklet fixes cannot be judged until that fragility is understood. Thresholds must not be tuned to hide it.
 
 **Still unrepaired:** E3, E4, F6, F17, and cache-state sensitivity.
+
+## 10. Cache equivalence and appearance-only acceptance (2026-11-03, late)
+
+**Evidence:** `full-match-identity-20261103/night/`.
+
+**Flags:** all candidate flags stay **off** by default (`SCOUTX_EXCHANGE_SPLIT`, `SCOUTX_RESUME_SPLIT`, and C and D below). The default decoder, thresholds and safeguards are unchanged.
+
+### 10.1 Why warm and cold caches differ (traced)
+
+**Where the cache enters:**
+
+- `run_ocr` returns the **whole** `ocr_cache.json`.
+- `analyze` then used **every** entry as first-pass evidence: for the number-conflict tracklet splits (`det_reads`) and for the identity reads.
+
+**What a warm cache leaks in:**
+
+- The entries include reads that the **previous run's refinement passes** stored: crops this run's first pass never selected.
+- A cold run only sees those reads later (refinement adds them to identity reads), and **never** in the tracklet splits.
+
+**What does not differ:**
+
+- Scheduling, ordering and crop selection are the same. Crop selection depends only on tracklets.
+- Early-stop consults crops in the same order with the same values.
+- With no budget (full-match path), every selected crop is read either way.
+- Only **evidence attachment** differs.
+- With an OCR budget or `max_new` (deferred OCR), a warm run can still consult more of its selected crops. That is intended progressive behaviour and is documented, not changed.
+
+### 10.2 Candidate C: `SCOUTX_OCR_CONSULTED_ONLY=1` (`86ec1db`, off)
+
+**Contract:** the first pass uses only the crops it selected **and consulted** (`run_ocr(..., consulted=set)`). Refinement passes already use only their own crops. **A cache saves time and never adds evidence.**
+
+**Results:**
+
+| Check | Result |
+|---|---|
+| Full match, cold, C | **bit-identical** to the baseline (`fad444c1…`) |
+| Full match, warm with the baseline's final cache, C | **bit-identical** to the cold baseline (no crop needed reading) |
+| Full match, warm with the union of all runs' caches, C | **bit-identical** to the cold baseline |
+| 18 interval replays (9 × 2 decoders), cold, C | identical to the originals |
+| `default_i0225` with two foreign "17" reads injected into the cache | C: identical to cold. Flag off: the outcome changes (characterisation test). |
+
+**Scope:**
+
+- Cold runs are unaffected by construction, so all earlier cold comparisons stand.
+- Replays are exact for C because cached crops need no OCR.
+
+**Verdict: supported for further validation.** It is the precondition for interpreting any full-match change. Making it the default is a separate decision that needs your approval, because it changes reruns that start with a warm cache.
+
+### 10.3 Appearance-only acceptance: why the system positively assigned #20
+
+**The acceptance path for a chain member without hard evidence** (evidence "appearance": not number, anchored or interpolated):
+
+1. **Appearance score.** In full-match template mode the template is the duration-weighted mean signature and embedding of the **positives**. A member's appearance is `app = 1.2·z − 0.3`, where `z` is its similarity to that template, **z-scored against all ~2,700 orange candidates**. It is a **relative** score: "more template-like than the average team-mate", not "is #20".
+2. **Chain choice.** The solver picks one chain through the match from the same appearance terms.
+3. **Chain bonus.** For a chain member, `confidence = sigmoid(app·rel)`, which is **+1 logit** over its standalone score `sigmoid(app·rel − 1)`. Chain membership counts as evidence, yet it was chosen from the same appearance score.
+4. **LIKELY** when confidence ≥ 0.75 and no non-chain competitor scoring ≥ 0.35 is in view.
+
+**The three cases:**
+
+| Case | Positives behind the template | Standalone score | Chain confidence | Why LIKELY |
+|---|---|---|---|---|
+| #6, 706–716 s | 3 number tracklets (about 5 s in total) | 0.528 | 0.753 | the chain bonus lifts a coin-flip score past 0.75, and no competitor is in view (#17 excluded by its "17" read) |
+| #17, 1301–1306 s | the same 3 | 0.533 | 0.757 | the same; OCR missed "17", so there is no exclusion |
+| IMG_5105, 27.2–27.3 s (with candidate B) | **none**: no "20" read or sighting in the clip, so the template falls back to **the 5 most orange, longest tracklets** (`identity.py:299`) | — | 0.856 | **there is no target evidence at all.** Without B, a competitor (0.39) kept it AMBIGUOUS; B's cut elsewhere removed the competitor. |
+
+**Measured on every labelled IMG_4809 frame** (`evidence_outcomes.json`; default full match, default and HLG-reference interval runs; original and corrected labels):
+
+- Appearance-only LIKELY claims: **0 correct, 19 wrong-player, 12 unmatched.**
+- Every correct claim came from number (CONFIRMED), anchored or interpolated evidence.
+- Appearance does carry some signal: AUC 0.80 for labelled #20 vs not-#20 tracklets (16 vs 112). But at the LIKELY operating point, 3 #20 and 2 non-#20 tracklets would pass. That is too few, and too mixed, to support a positive identity claim.
+
+**The first unsupported transition** in #6, #17 and IMG_5105 is therefore step 3: LIKELY granted to a chain member **whose only support is relative appearance**, including the case with **zero** positives. OCR's miss on "17" only removed a safeguard.
+
+### 10.4 Candidate D: `SCOUTX_APPEARANCE_ONLY_LIKELY=0` (`86ec1db`, off)
+
+**Contract:**
+
+- Frames whose evidence is "appearance" are at most AMBIGUOUS.
+- Number, anchored and interpolated claims are unchanged, and so are thresholds and identity resolution.
+- It acts in `frame_states` only, so the effect is **local**: no tracklet, OCR or solver change, and therefore no non-local side effects.
+
+**Results:**
+
+| Run | Effect |
+|---|---|
+| Full match, default (cold) | 55 frames LIKELY → AMBIGUOUS, all with "appearance" evidence: **39 verified wrong** (#6 ×28, #17 ×11), **16 unverified** (1378–1387 s, 1584–1585 s, 1943.9 s), **0 verified correct**. Confirmed frames 42 = 42. Presence and evidence are identical. |
+| 9 default intervals | no change (they contain no appearance-only claims) |
+| 9 HLG-reference intervals | wrong 26 → 18 (E3's 8 removed), unmatched 26 → 14, correct unchanged (286), abstained 181 → 197 target frames |
+| IMG_5105 0:00–0:30 with B (+D) | 2 → 0 claims |
+| Full match B + D vs B | 27 more appearance frames removed. **B's crowded-path change (anchored) remains.** |
+
+**Cost:**
+
+- The 16 unverified frames may include correct #20 claims. They are review items F, G and H.
+- No labelled correct claim is lost.
+- This is a narrow removal of one evidence class that labelled data shows is never right. It is **not** blanket abstention: 398 claim frames remain.
+
+**Verdict: supported for further validation.** The 16 unverified frames must be reviewed independently before any default change.
+
+### 10.5 Test accounting
+
+**Every suite run now writes JUnit XML**, and `bench/test_accounting.py` lists every skipped, xfailed or xpassed test with its reason (`tests_night/accounting.json`).
+
+**The previously reported "9 skipped"** were exactly the 9 opt-in whole-match tests in `tests/test_full_match_identity.py`. They skip unless `SCOUTX_FULL_MATCH_REPLAY` points to the local whole-match replay, which is about 60 MB and not in git. So in those runs **nothing about the whole match was validated**.
+
+**The 6 expected failures** are strict xfails for the unrepaired known failures P, E3 and E4, each with the exchange flag off and on.
+
+**Tonight's runs** (`tests_night/`, commit `bad5617`, Linux, Python 3.13.17, CPU):
+
+| Run | Result | Not validated in this run |
+|---|---|---|
+| default flags | 633 passed, **11 skipped**, 6 xfailed, exit code 0 | the 11 skips are all the opt-in whole-match tests; the 6 xfails are P, E3 and E4 (×2 exchange flag) |
+| default + `SCOUTX_FULL_MATCH_REPLAY` | **641 passed, 0 skipped, 9 xfailed**, exit code 0 | xfails: P, E3, E4 (×2), F6, F17, cache state. The C and D whole-match tests pass. |
+| A only / B only / C only | 633 passed, 11 skipped, 6 xfailed, exit code 0 | as for the default run |
+| D only, first attempt | **1 failed** | `test_tracking_v3::test_states_partition_and_competitor_makes_ambiguous` asserts the **default** contract (appearance-only frames can be LIKELY), which D deliberately changes |
+| D only, after pinning that test to the default contract | 633 passed, 11 skipped, 6 xfailed, exit code 0 | — |
+
+- D contradicts the documented `LIKELY_VISIBLE` definition in `states.py`. Promoting D would require changing that contract on purpose. The failed log and JUnit file are kept.
+- `accounting.json` lists every skipped and xfailed test by name and reason.

@@ -132,5 +132,32 @@
    "trace": "full_match_replay: flag 0 with the same warm cache reproduces the identical 36-frame difference; flag 1 vs flag 0 under the warm cache: 0 claim differences; cold-cache candidate keeps the 8 confirmed frames. Mechanism: number-conflict splits use the reads present when tracklets are built; a warm cache contains the baseline's refinement-pass reads, so the tracklet carrying the '20' read is split differently (positive 1161.1-1162.8 s vs 1161.3-1162.2 s)",
    "status": "NOT a candidate-A effect: an artefact of the 2026-11-03 run design (warm cache). The warm-cache sensitivity itself is real pipeline behaviour (re-analysis with a populated cache gives different identity)"
   }
- ]
+ ],
+ "update_2026_11_03_late": {
+  "cacheState": {
+   "mechanism": "run_ocr returns the whole cache; analyze used every entry (incl. a previous run's refinement-pass reads) as first-pass evidence for number-conflict splits and identity reads. Scheduling/ordering/selection unchanged; only evidence attachment differs (budgeted/deferred OCR can consult more selected crops when warm, by design).",
+   "candidateC": "SCOUTX_OCR_CONSULTED_ONLY=1 (86ec1db, off): warm (baseline cache, union cache) and cold full-match replays bit-identical to the cold baseline fad444c1; 18 interval replays unchanged; polluted-cache test"
+  },
+  "appearanceOnlyAcceptance": {
+   "path": "relative template z-score (vs ~2,700 orange candidates) -> chain choice -> chain member confidence sigmoid(app*rel) (+1 logit over standalone) -> LIKELY if >=0.75 and no competitor >=0.35",
+   "F6": {
+    "standalone": 0.528,
+    "chainConf": 0.753,
+    "positives": 3
+   },
+   "F17": {
+    "standalone": 0.533,
+    "chainConf": 0.757,
+    "positives": 3
+   },
+   "IMG_5105_B": {
+    "chainConf": 0.856,
+    "positives": 0,
+    "template": "5 most orange, longest tracklets (identity.py:299)",
+    "withoutB": "competitor 0.387 kept AMBIGUOUS"
+   },
+   "labelledOutcomes": "appearance-only LIKELY: 0 correct, 19 wrong-player, 12 unmatched (night/evidence_outcomes.json)",
+   "candidateD": "SCOUTX_APPEARANCE_ONLY_LIKELY=0 (86ec1db, off): full match -55 appearance LIKELY frames (39 verified wrong, 16 unverified, 0 verified correct), confirmed unchanged; reference intervals wrong 26->18"
+  }
+ }
 }

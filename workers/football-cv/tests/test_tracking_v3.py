@@ -30,7 +30,11 @@ def timeline(n=200, px=6.0, h=180.0, evidence="number"):
 
 
 # --------------------------------------------------------------------------- states / coverage
-def test_states_partition_and_competitor_makes_ambiguous():
+def test_states_partition_and_competitor_makes_ambiguous(monkeypatch):
+    # documents the DEFAULT contract (appearance-only frames can be LIKELY); candidate D
+    # (SCOUTX_APPEARANCE_ONLY_LIKELY=0) deliberately changes it - see tests/test_appearance_only_likely.py
+    from scoutx_tracker import states as _states
+    monkeypatch.setattr(_states, "APPEARANCE_ONLY_LIKELY", True)
     tl = timeline(n=100, evidence="appearance")
     tl.conf[:] = 0.9
     T = SimpleNamespace(rows=np.array([[f, f / FPS, 7, 0, 0, 1, 1, 0.9, 0] for f in range(50, 60)], float),

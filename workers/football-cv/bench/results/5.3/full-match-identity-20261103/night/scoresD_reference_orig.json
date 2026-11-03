@@ -1,0 +1,4788 @@
+{
+ "schema": "pitchproof.decoder-interval-scores.v1",
+ "runs": {
+  "default": "/home/claude/work/dval/default",
+  "base": "/home/claude/work/rplout/off/reference",
+  "D": "/home/claude/work/rplout/D/reference"
+ },
+ "intervals": {
+  "i0225": {
+   "intervalSec": [
+    225,
+    255
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 1118,
+     "medianIoU": 0.375,
+     "shareIoU50": 0.353
+    },
+    "-0.1": {
+     "n": 1121,
+     "medianIoU": 0.568,
+     "shareIoU50": 0.583
+    },
+    "0.0": {
+     "n": 1124,
+     "medianIoU": 0.92,
+     "shareIoU50": 0.998
+    },
+    "0.1": {
+     "n": 1119,
+     "medianIoU": 0.552,
+     "shareIoU50": 0.584
+    },
+    "0.2": {
+     "n": 1112,
+     "medianIoU": 0.386,
+     "shareIoU50": 0.371
+    }
+   },
+   "bestShiftSec": 0.0,
+   "correctionRecordCovers": false,
+   "verifiedBasis": "stored",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "?": 413,
+     "N": 643,
+     "T": 68
+    },
+    "targetLabelledFrames": 68,
+    "targetBoxHeightPx": {
+     "median": 179.7,
+     "p10": 110.2
+    },
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 15.5,
+     "p90": 51.5
+    },
+    "personDetectionsPerFrame": 19.3,
+    "shareDetectionsBelow90px": 0.74,
+    "nativeLumaCode10bit": {
+     "mean": 643.2,
+     "min": 598.3,
+     "max": 666.1
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 68,
+       "scorable": 68,
+       "abstained": 7,
+       "correctClaim": 60,
+       "unmatchedClaim": 1
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "abstained": 232,
+       "correctClaim": 60,
+       "unmatchedClaim": 3
+      },
+      "correctConfirmed": 6,
+      "correctLikely": 54,
+      "nonCorrectClaims": [
+       [
+        "150",
+        240.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "183",
+        243.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "194",
+        244.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 68,
+       "scorable": 68,
+       "abstained": 7,
+       "correctClaim": 60,
+       "unmatchedClaim": 1
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "abstained": 232,
+       "correctClaim": 60,
+       "unmatchedClaim": 3
+      },
+      "correctConfirmed": 6,
+      "correctLikely": 54,
+      "nonCorrectClaims": [
+       [
+        "150",
+        240.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "183",
+        243.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "194",
+        244.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 68,
+       "scorable": 68,
+       "abstained": 25,
+       "unmatchedClaim": 10,
+       "wrongPlayerClaim": 24,
+       "correctClaim": 9
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "unmatchedClaim": 16,
+       "abstained": 219,
+       "wrongPlayerClaim": 26,
+       "correctClaim": 9,
+       "indeterminateLabelClaim": 25
+      },
+      "correctConfirmed": 9,
+      "correctLikely": 0,
+      "nonCorrectClaims": [
+       [
+        "0",
+        225.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "1",
+        225.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "48",
+        229.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "133",
+        238.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "134",
+        238.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "135",
+        238.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "136",
+        238.6,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "137",
+        238.7,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "138",
+        238.8,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "139",
+        238.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "144",
+        239.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "145",
+        239.5,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "146",
+        239.6,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "147",
+        239.7,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "148",
+        239.8,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "149",
+        239.9,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "150",
+        240.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "151",
+        240.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "152",
+        240.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "153",
+        240.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "174",
+        242.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "175",
+        242.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "176",
+        242.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "177",
+        242.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "178",
+        242.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "179",
+        242.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "180",
+        243.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "181",
+        243.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "182",
+        243.2,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "183",
+        243.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "184",
+        243.4,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "185",
+        243.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "186",
+        243.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "189",
+        243.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "190",
+        244.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "191",
+        244.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "192",
+        244.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "195",
+        244.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "196",
+        244.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "197",
+        244.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "198",
+        244.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "199",
+        244.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "200",
+        245.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "201",
+        245.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "202",
+        245.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "203",
+        245.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "204",
+        245.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "205",
+        245.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "206",
+        245.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "207",
+        245.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "208",
+        245.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "210",
+        246.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "211",
+        246.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "212",
+        246.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "213",
+        246.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "214",
+        246.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "215",
+        246.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "216",
+        246.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "217",
+        246.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "218",
+        246.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "219",
+        246.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "220",
+        247.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "221",
+        247.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "222",
+        247.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "223",
+        247.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "224",
+        247.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "228",
+        247.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 68,
+       "scorable": 68,
+       "abstained": 25,
+       "unmatchedClaim": 10,
+       "wrongPlayerClaim": 24,
+       "correctClaim": 9
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "unmatchedClaim": 16,
+       "abstained": 219,
+       "wrongPlayerClaim": 26,
+       "correctClaim": 9,
+       "indeterminateLabelClaim": 25
+      },
+      "correctConfirmed": 9,
+      "correctLikely": 0,
+      "nonCorrectClaims": [
+       [
+        "0",
+        225.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "1",
+        225.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "48",
+        229.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "133",
+        238.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "134",
+        238.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "135",
+        238.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "136",
+        238.6,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "137",
+        238.7,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "138",
+        238.8,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "139",
+        238.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "144",
+        239.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "145",
+        239.5,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "146",
+        239.6,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "147",
+        239.7,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "148",
+        239.8,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "149",
+        239.9,
+        "wrongPlayerClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "150",
+        240.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "151",
+        240.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "152",
+        240.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "153",
+        240.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "174",
+        242.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "175",
+        242.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "176",
+        242.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "177",
+        242.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "178",
+        242.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "179",
+        242.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "180",
+        243.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "181",
+        243.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "182",
+        243.2,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "183",
+        243.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "184",
+        243.4,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "185",
+        243.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "186",
+        243.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "189",
+        243.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "190",
+        244.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "191",
+        244.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "192",
+        244.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "195",
+        244.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "196",
+        244.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "197",
+        244.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "198",
+        244.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "199",
+        244.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "200",
+        245.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "201",
+        245.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "202",
+        245.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "203",
+        245.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "204",
+        245.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "205",
+        245.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "206",
+        245.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "207",
+        245.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "208",
+        245.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "210",
+        246.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "211",
+        246.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "212",
+        246.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "213",
+        246.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "214",
+        246.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "215",
+        246.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "216",
+        246.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "217",
+        246.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "218",
+        246.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "219",
+        246.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "220",
+        247.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "221",
+        247.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "222",
+        247.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "223",
+        247.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "224",
+        247.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "228",
+        247.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 68,
+       "scorable": 68,
+       "abstained": 41,
+       "correctClaim": 9,
+       "unmatchedClaim": 2,
+       "wrongPlayerClaim": 16
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "abstained": 239,
+       "correctClaim": 9,
+       "unmatchedClaim": 4,
+       "wrongPlayerClaim": 18,
+       "indeterminateLabelClaim": 25
+      },
+      "correctConfirmed": 9,
+      "correctLikely": 0,
+      "nonCorrectClaims": [
+       [
+        "174",
+        242.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "175",
+        242.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "176",
+        242.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "177",
+        242.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "178",
+        242.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "179",
+        242.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "180",
+        243.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "181",
+        243.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "182",
+        243.2,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "183",
+        243.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "184",
+        243.4,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "185",
+        243.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "186",
+        243.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "189",
+        243.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "190",
+        244.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "191",
+        244.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "192",
+        244.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "195",
+        244.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "196",
+        244.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "197",
+        244.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "198",
+        244.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "199",
+        244.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "200",
+        245.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "201",
+        245.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "202",
+        245.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "203",
+        245.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "204",
+        245.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "205",
+        245.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "206",
+        245.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "207",
+        245.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "208",
+        245.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "210",
+        246.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "211",
+        246.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "212",
+        246.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "213",
+        246.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "214",
+        246.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "215",
+        246.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "216",
+        246.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "217",
+        246.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "218",
+        246.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "219",
+        246.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "220",
+        247.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "221",
+        247.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "222",
+        247.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "223",
+        247.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "224",
+        247.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "228",
+        247.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 68,
+       "scorable": 68,
+       "abstained": 41,
+       "correctClaim": 9,
+       "unmatchedClaim": 2,
+       "wrongPlayerClaim": 16
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "abstained": 239,
+       "correctClaim": 9,
+       "unmatchedClaim": 4,
+       "wrongPlayerClaim": 18,
+       "indeterminateLabelClaim": 25
+      },
+      "correctConfirmed": 9,
+      "correctLikely": 0,
+      "nonCorrectClaims": [
+       [
+        "174",
+        242.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "175",
+        242.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "176",
+        242.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "177",
+        242.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "178",
+        242.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "179",
+        242.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "180",
+        243.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "181",
+        243.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "182",
+        243.2,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "183",
+        243.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "184",
+        243.4,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "185",
+        243.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "186",
+        243.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "189",
+        243.9,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "190",
+        244.0,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "191",
+        244.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "192",
+        244.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "195",
+        244.5,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "196",
+        244.6,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "197",
+        244.7,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "198",
+        244.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "199",
+        244.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "200",
+        245.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "201",
+        245.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "202",
+        245.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "203",
+        245.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "204",
+        245.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "205",
+        245.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "206",
+        245.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "207",
+        245.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "208",
+        245.8,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "210",
+        246.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "211",
+        246.1,
+        "wrongPlayerClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "212",
+        246.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "213",
+        246.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "214",
+        246.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "215",
+        246.5,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "216",
+        246.6,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "217",
+        246.7,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "218",
+        246.8,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "219",
+        246.9,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "220",
+        247.0,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "221",
+        247.1,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "222",
+        247.2,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "223",
+        247.3,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "224",
+        247.4,
+        "indeterminateLabelClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "228",
+        247.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 6,
+     "only_default": 54,
+     "only_base": 3,
+     "neither": 5
+    },
+    "verified": {
+     "both": 6,
+     "only_default": 54,
+     "only_base": 3,
+     "neither": 5
+    }
+   }
+  },
+  "i0400": {
+   "intervalSec": [
+    400,
+    430
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 1266,
+     "medianIoU": 0.441,
+     "shareIoU50": 0.408
+    },
+    "-0.1": {
+     "n": 1272,
+     "medianIoU": 0.634,
+     "shareIoU50": 0.694
+    },
+    "0.0": {
+     "n": 1278,
+     "medianIoU": 0.916,
+     "shareIoU50": 0.998
+    },
+    "0.1": {
+     "n": 1273,
+     "medianIoU": 0.625,
+     "shareIoU50": 0.67
+    },
+    "0.2": {
+     "n": 1268,
+     "medianIoU": 0.435,
+     "shareIoU50": 0.403
+    }
+   },
+   "bestShiftSec": 0.0,
+   "correctionRecordCovers": false,
+   "verifiedBasis": "stored",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "?": 912,
+     "N": 366
+    },
+    "targetLabelledFrames": 0,
+    "targetBoxHeightPx": null,
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 6.46,
+     "p90": 18.08
+    },
+    "personDetectionsPerFrame": 18.2,
+    "shareDetectionsBelow90px": 0.761,
+    "nativeLumaCode10bit": {
+     "mean": 623.8,
+     "min": 598.5,
+     "max": 650.7
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    },
+    "verified": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    }
+   }
+  },
+  "i0600": {
+   "intervalSec": [
+    600,
+    630
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 1163,
+     "medianIoU": 0.605,
+     "shareIoU50": 0.641
+    },
+    "-0.1": {
+     "n": 1167,
+     "medianIoU": 0.726,
+     "shareIoU50": 0.824
+    },
+    "0.0": {
+     "n": 1171,
+     "medianIoU": 0.905,
+     "shareIoU50": 0.997
+    },
+    "0.1": {
+     "n": 1167,
+     "medianIoU": 0.733,
+     "shareIoU50": 0.806
+    },
+    "0.2": {
+     "n": 1163,
+     "medianIoU": 0.609,
+     "shareIoU50": 0.641
+    }
+   },
+   "bestShiftSec": 0.0,
+   "correctionRecordCovers": false,
+   "verifiedBasis": "stored",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "N": 102,
+     "?": 1069
+    },
+    "targetLabelledFrames": 0,
+    "targetBoxHeightPx": null,
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 3.17,
+     "p90": 12.42
+    },
+    "personDetectionsPerFrame": 21.9,
+    "shareDetectionsBelow90px": 0.867,
+    "nativeLumaCode10bit": {
+     "mean": 628.9,
+     "min": 619.5,
+     "max": 637.4
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 300,
+       "abstained": 300
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    },
+    "verified": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    }
+   }
+  },
+  "i1150": {
+   "intervalSec": [
+    1150,
+    1180
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 1601,
+     "medianIoU": 0.392,
+     "shareIoU50": 0.377
+    },
+    "-0.1": {
+     "n": 1606,
+     "medianIoU": 0.495,
+     "shareIoU50": 0.494
+    },
+    "0.0": {
+     "n": 1611,
+     "medianIoU": 0.672,
+     "shareIoU50": 0.738
+    },
+    "0.1": {
+     "n": 1611,
+     "medianIoU": 0.92,
+     "shareIoU50": 0.999
+    },
+    "0.2": {
+     "n": 1604,
+     "medianIoU": 0.667,
+     "shareIoU50": 0.731
+    }
+   },
+   "bestShiftSec": 0.1,
+   "correctionRecordCovers": true,
+   "verifiedBasis": "corrected (+0.1 s)",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "?": 39,
+     "N": 1286,
+     "T": 286
+    },
+    "targetLabelledFrames": 286,
+    "targetBoxHeightPx": {
+     "median": 130.9,
+     "p10": 91.8
+    },
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 6.56,
+     "p90": 38.14
+    },
+    "personDetectionsPerFrame": 21.4,
+    "shareDetectionsBelow90px": 0.623,
+    "nativeLumaCode10bit": {
+     "mean": 596.5,
+     "min": 580.6,
+     "max": 619.5
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 286,
+       "scorable": 286,
+       "abstained": 46,
+       "correctClaim": 227,
+       "unmatchedClaim": 13
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 55,
+       "correctClaim": 227,
+       "unmatchedClaim": 15,
+       "indeterminateLabelClaim": 2
+      },
+      "correctConfirmed": 17,
+      "correctLikely": 210,
+      "nonCorrectClaims": [
+       [
+        "42",
+        1154.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "43",
+        1154.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "46",
+        1154.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "47",
+        1154.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "50",
+        1154.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "53",
+        1155.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "61",
+        1156.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "127",
+        1162.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "180",
+        1167.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "183",
+        1168.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "184",
+        1168.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "186",
+        1168.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "239",
+        1173.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "295",
+        1179.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "296",
+        1179.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "298",
+        1179.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "299",
+        1179.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 286,
+       "scorable": 286,
+       "abstained": 45,
+       "correctClaim": 241
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 54,
+       "correctClaim": 241,
+       "unmatchedClaim": 1,
+       "indeterminateLabelClaim": 3
+      },
+      "correctConfirmed": 18,
+      "correctLikely": 223,
+      "nonCorrectClaims": [
+       [
+        "98",
+        1159.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "182",
+        1168.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "183",
+        1168.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "184",
+        1168.4,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 286,
+       "scorable": 286,
+       "abstained": 43,
+       "correctClaim": 229,
+       "unmatchedClaim": 14
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 52,
+       "correctClaim": 229,
+       "unmatchedClaim": 18
+      },
+      "correctConfirmed": 88,
+      "correctLikely": 141,
+      "nonCorrectClaims": [
+       [
+        "42",
+        1154.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "43",
+        1154.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "46",
+        1154.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "47",
+        1154.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "48",
+        1154.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "50",
+        1154.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "53",
+        1155.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "61",
+        1156.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "98",
+        1159.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "127",
+        1162.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "180",
+        1167.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "239",
+        1173.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "294",
+        1179.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "295",
+        1179.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "296",
+        1179.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "297",
+        1179.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "298",
+        1179.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "299",
+        1179.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 286,
+       "scorable": 286,
+       "abstained": 41,
+       "correctClaim": 244,
+       "unmatchedClaim": 1
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 51,
+       "correctClaim": 244,
+       "unmatchedClaim": 4
+      },
+      "correctConfirmed": 90,
+      "correctLikely": 154,
+      "nonCorrectClaims": [
+       [
+        "47",
+        1154.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "48",
+        1154.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "97",
+        1159.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "98",
+        1159.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 286,
+       "scorable": 286,
+       "abstained": 43,
+       "correctClaim": 229,
+       "unmatchedClaim": 14
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 52,
+       "correctClaim": 229,
+       "unmatchedClaim": 18
+      },
+      "correctConfirmed": 88,
+      "correctLikely": 141,
+      "nonCorrectClaims": [
+       [
+        "42",
+        1154.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "43",
+        1154.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "46",
+        1154.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "47",
+        1154.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "48",
+        1154.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "50",
+        1154.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "53",
+        1155.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "61",
+        1156.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "98",
+        1159.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "127",
+        1162.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "180",
+        1167.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "239",
+        1173.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "294",
+        1179.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "295",
+        1179.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "296",
+        1179.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "297",
+        1179.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "298",
+        1179.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "299",
+        1179.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 286,
+       "scorable": 286,
+       "abstained": 41,
+       "correctClaim": 244,
+       "unmatchedClaim": 1
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 51,
+       "correctClaim": 244,
+       "unmatchedClaim": 4
+      },
+      "correctConfirmed": 90,
+      "correctLikely": 154,
+      "nonCorrectClaims": [
+       [
+        "47",
+        1154.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "48",
+        1154.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "97",
+        1159.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "98",
+        1159.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ]
+      ]
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 221,
+     "only_default": 6,
+     "only_base": 8,
+     "neither": 51
+    },
+    "verified": {
+     "both": 235,
+     "only_default": 6,
+     "only_base": 9,
+     "neither": 36
+    }
+   }
+  },
+  "i1295": {
+   "intervalSec": [
+    1295,
+    1325
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 1014,
+     "medianIoU": 0.199,
+     "shareIoU50": 0.175
+    },
+    "-0.1": {
+     "n": 1017,
+     "medianIoU": 0.271,
+     "shareIoU50": 0.266
+    },
+    "0.0": {
+     "n": 1020,
+     "medianIoU": 0.498,
+     "shareIoU50": 0.498
+    },
+    "0.1": {
+     "n": 1020,
+     "medianIoU": 0.911,
+     "shareIoU50": 1.0
+    },
+    "0.2": {
+     "n": 1016,
+     "medianIoU": 0.485,
+     "shareIoU50": 0.474
+    }
+   },
+   "bestShiftSec": 0.1,
+   "correctionRecordCovers": true,
+   "verifiedBasis": "corrected (+0.1 s)",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "N": 398,
+     "?": 528,
+     "T": 94
+    },
+    "targetLabelledFrames": 94,
+    "targetBoxHeightPx": {
+     "median": 97.2,
+     "p10": 85.3
+    },
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 13.17,
+     "p90": 23.52
+    },
+    "personDetectionsPerFrame": 21.3,
+    "shareDetectionsBelow90px": 0.862,
+    "nativeLumaCode10bit": {
+     "mean": 597.1,
+     "min": 574.3,
+     "max": 622.5
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 94,
+       "scorable": 94,
+       "abstained": 94
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "abstained": 295
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 94,
+       "scorable": 94,
+       "abstained": 94
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "abstained": 295
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 94,
+       "scorable": 94,
+       "correctClaim": 16,
+       "unmatchedClaim": 17,
+       "abstained": 61
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "indeterminateLabelClaim": 15,
+       "unmatchedClaim": 49,
+       "abstained": 215,
+       "correctClaim": 16
+      },
+      "correctConfirmed": 15,
+      "correctLikely": 1,
+      "nonCorrectClaims": [
+       [
+        "1",
+        1295.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "2",
+        1295.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "3",
+        1295.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "4",
+        1295.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "5",
+        1295.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "6",
+        1295.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "7",
+        1295.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "8",
+        1295.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "9",
+        1295.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "10",
+        1295.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "11",
+        1296.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "12",
+        1296.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "13",
+        1296.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "14",
+        1296.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "15",
+        1296.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "16",
+        1296.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "17",
+        1296.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "18",
+        1296.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "19",
+        1296.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "20",
+        1296.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "21",
+        1297.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "22",
+        1297.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "23",
+        1297.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "24",
+        1297.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "25",
+        1297.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "26",
+        1297.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "27",
+        1297.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "28",
+        1297.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "29",
+        1297.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "30",
+        1297.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "31",
+        1298.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "32",
+        1298.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "37",
+        1298.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "38",
+        1298.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "39",
+        1298.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "40",
+        1298.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "41",
+        1299.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "42",
+        1299.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "43",
+        1299.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "44",
+        1299.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "51",
+        1300.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "58",
+        1300.7,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "59",
+        1300.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "65",
+        1301.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "66",
+        1301.5,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "73",
+        1302.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "74",
+        1302.3,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "75",
+        1302.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "77",
+        1302.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "78",
+        1302.7,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "80",
+        1302.9,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "81",
+        1303.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "82",
+        1303.1,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "83",
+        1303.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "84",
+        1303.3,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "85",
+        1303.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "86",
+        1303.5,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "87",
+        1303.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "88",
+        1303.7,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "89",
+        1303.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "90",
+        1303.9,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "91",
+        1304.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "92",
+        1304.1,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "93",
+        1304.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 94,
+       "scorable": 94,
+       "correctClaim": 33,
+       "abstained": 61
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "indeterminateLabelClaim": 41,
+       "abstained": 215,
+       "correctClaim": 33,
+       "unmatchedClaim": 6
+      },
+      "correctConfirmed": 33,
+      "correctLikely": 0,
+      "nonCorrectClaims": [
+       [
+        "1",
+        1295.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "2",
+        1295.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "3",
+        1295.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "4",
+        1295.4,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "5",
+        1295.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "6",
+        1295.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "7",
+        1295.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "8",
+        1295.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "9",
+        1295.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "10",
+        1296.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "11",
+        1296.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "12",
+        1296.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "13",
+        1296.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "14",
+        1296.4,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "15",
+        1296.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "16",
+        1296.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "17",
+        1296.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "18",
+        1296.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "19",
+        1296.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "20",
+        1297.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "21",
+        1297.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "22",
+        1297.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "23",
+        1297.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "24",
+        1297.4,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "25",
+        1297.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "26",
+        1297.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "27",
+        1297.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "28",
+        1297.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "29",
+        1297.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "30",
+        1298.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "31",
+        1298.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "32",
+        1298.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "36",
+        1298.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "37",
+        1298.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "38",
+        1298.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "39",
+        1298.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "40",
+        1299.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "41",
+        1299.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "42",
+        1299.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "43",
+        1299.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "45",
+        1299.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "65",
+        1301.5,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "72",
+        1302.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "73",
+        1302.3,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "74",
+        1302.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "76",
+        1302.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "92",
+        1304.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 94,
+       "scorable": 94,
+       "correctClaim": 16,
+       "unmatchedClaim": 17,
+       "abstained": 61
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "indeterminateLabelClaim": 15,
+       "unmatchedClaim": 49,
+       "abstained": 215,
+       "correctClaim": 16
+      },
+      "correctConfirmed": 15,
+      "correctLikely": 1,
+      "nonCorrectClaims": [
+       [
+        "1",
+        1295.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "2",
+        1295.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "3",
+        1295.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "4",
+        1295.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "5",
+        1295.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "6",
+        1295.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "7",
+        1295.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "8",
+        1295.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "9",
+        1295.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "10",
+        1295.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "11",
+        1296.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "12",
+        1296.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "13",
+        1296.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "14",
+        1296.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "15",
+        1296.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "16",
+        1296.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "17",
+        1296.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "18",
+        1296.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "19",
+        1296.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "20",
+        1296.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "21",
+        1297.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "22",
+        1297.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "23",
+        1297.2,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "24",
+        1297.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "25",
+        1297.4,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "26",
+        1297.5,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "27",
+        1297.6,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "28",
+        1297.7,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "29",
+        1297.8,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "30",
+        1297.9,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "31",
+        1298.0,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "32",
+        1298.1,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "37",
+        1298.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "38",
+        1298.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "39",
+        1298.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "40",
+        1298.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "41",
+        1299.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "42",
+        1299.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "43",
+        1299.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "44",
+        1299.3,
+        "unmatchedClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "51",
+        1300.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "58",
+        1300.7,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "59",
+        1300.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "65",
+        1301.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "66",
+        1301.5,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "73",
+        1302.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "74",
+        1302.3,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "75",
+        1302.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "77",
+        1302.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "78",
+        1302.7,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "80",
+        1302.9,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "81",
+        1303.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "82",
+        1303.1,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "83",
+        1303.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "84",
+        1303.3,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "85",
+        1303.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "86",
+        1303.5,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "87",
+        1303.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "88",
+        1303.7,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "89",
+        1303.8,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "90",
+        1303.9,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "91",
+        1304.0,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "92",
+        1304.1,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "93",
+        1304.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 94,
+       "scorable": 94,
+       "correctClaim": 33,
+       "abstained": 61
+      },
+      "allLabelled": {
+       "denominator": 295,
+       "indeterminateLabelClaim": 41,
+       "abstained": 215,
+       "correctClaim": 33,
+       "unmatchedClaim": 6
+      },
+      "correctConfirmed": 33,
+      "correctLikely": 0,
+      "nonCorrectClaims": [
+       [
+        "1",
+        1295.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "2",
+        1295.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "3",
+        1295.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "4",
+        1295.4,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "5",
+        1295.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "6",
+        1295.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "7",
+        1295.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "8",
+        1295.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "9",
+        1295.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "10",
+        1296.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "11",
+        1296.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "12",
+        1296.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "13",
+        1296.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "14",
+        1296.4,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "15",
+        1296.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "16",
+        1296.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "17",
+        1296.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "18",
+        1296.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "19",
+        1296.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "20",
+        1297.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "21",
+        1297.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "22",
+        1297.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "23",
+        1297.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "24",
+        1297.4,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "25",
+        1297.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "26",
+        1297.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "27",
+        1297.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "28",
+        1297.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "29",
+        1297.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "30",
+        1298.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "31",
+        1298.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "32",
+        1298.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "36",
+        1298.6,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "37",
+        1298.7,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "38",
+        1298.8,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "39",
+        1298.9,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "40",
+        1299.0,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "41",
+        1299.1,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "42",
+        1299.2,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "43",
+        1299.3,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "45",
+        1299.5,
+        "indeterminateLabelClaim",
+        "LIKELY_VISIBLE"
+       ],
+       [
+        "65",
+        1301.5,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "72",
+        1302.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "73",
+        1302.3,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "74",
+        1302.4,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "76",
+        1302.6,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ],
+       [
+        "92",
+        1304.2,
+        "unmatchedClaim",
+        "CONFIRMED_VISIBLE"
+       ]
+      ]
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 16,
+     "neither": 78
+    },
+    "verified": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 33,
+     "neither": 61
+    }
+   }
+  },
+  "i1500": {
+   "intervalSec": [
+    1500,
+    1530
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 500,
+     "medianIoU": 0.326,
+     "shareIoU50": 0.294
+    },
+    "-0.1": {
+     "n": 500,
+     "medianIoU": 0.433,
+     "shareIoU50": 0.416
+    },
+    "0.0": {
+     "n": 500,
+     "medianIoU": 0.624,
+     "shareIoU50": 0.682
+    },
+    "0.1": {
+     "n": 500,
+     "medianIoU": 0.894,
+     "shareIoU50": 0.996
+    },
+    "0.2": {
+     "n": 499,
+     "medianIoU": 0.646,
+     "shareIoU50": 0.697
+    }
+   },
+   "bestShiftSec": 0.1,
+   "correctionRecordCovers": true,
+   "verifiedBasis": "corrected (+0.1 s)",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "?": 500
+    },
+    "targetLabelledFrames": 0,
+    "targetBoxHeightPx": null,
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 5.27,
+     "p90": 16.42
+    },
+    "personDetectionsPerFrame": 26.1,
+    "shareDetectionsBelow90px": 0.959,
+    "nativeLumaCode10bit": {
+     "mean": 592.6,
+     "min": 576.4,
+     "max": 600.6
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 287,
+       "abstained": 287
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 287,
+       "abstained": 287
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 287,
+       "abstained": 287
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 287,
+       "abstained": 287
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 287,
+       "abstained": 287
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 287,
+       "abstained": 287
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    },
+    "verified": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    }
+   }
+  },
+  "i1680": {
+   "intervalSec": [
+    1680,
+    1710
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 714,
+     "medianIoU": 0.166,
+     "shareIoU50": 0.207
+    },
+    "-0.1": {
+     "n": 719,
+     "medianIoU": 0.191,
+     "shareIoU50": 0.277
+    },
+    "0.0": {
+     "n": 724,
+     "medianIoU": 0.387,
+     "shareIoU50": 0.363
+    },
+    "0.1": {
+     "n": 724,
+     "medianIoU": 0.905,
+     "shareIoU50": 0.997
+    },
+    "0.2": {
+     "n": 724,
+     "medianIoU": 0.394,
+     "shareIoU50": 0.36
+    }
+   },
+   "bestShiftSec": 0.1,
+   "correctionRecordCovers": true,
+   "verifiedBasis": "corrected (+0.1 s)",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "?": 706,
+     "N": 18
+    },
+    "targetLabelledFrames": 0,
+    "targetBoxHeightPx": null,
+    "sceneCuts": 3,
+    "cameraMotionPxPerFrame": {
+     "median": 11.46,
+     "p90": 92.91
+    },
+    "personDetectionsPerFrame": 17.6,
+    "shareDetectionsBelow90px": 0.84,
+    "nativeLumaCode10bit": {
+     "mean": 596.2,
+     "min": 579.2,
+     "max": 680.3
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 265,
+       "abstained": 265
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 265,
+       "abstained": 265
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 265,
+       "abstained": 265
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 265,
+       "abstained": 265
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 265,
+       "abstained": 265
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 265,
+       "abstained": 265
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    },
+    "verified": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    }
+   }
+  },
+  "i1800": {
+   "intervalSec": [
+    1800,
+    1830
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 1201,
+     "medianIoU": 0.289,
+     "shareIoU50": 0.3
+    },
+    "-0.1": {
+     "n": 1203,
+     "medianIoU": 0.424,
+     "shareIoU50": 0.409
+    },
+    "0.0": {
+     "n": 1205,
+     "medianIoU": 0.612,
+     "shareIoU50": 0.643
+    },
+    "0.1": {
+     "n": 1205,
+     "medianIoU": 0.901,
+     "shareIoU50": 0.997
+    },
+    "0.2": {
+     "n": 1202,
+     "medianIoU": 0.613,
+     "shareIoU50": 0.639
+    }
+   },
+   "bestShiftSec": 0.1,
+   "correctionRecordCovers": true,
+   "verifiedBasis": "corrected (+0.1 s)",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "N": 295,
+     "?": 910
+    },
+    "targetLabelledFrames": 0,
+    "targetBoxHeightPx": null,
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 6.67,
+     "p90": 20.19
+    },
+    "personDetectionsPerFrame": 20.6,
+    "shareDetectionsBelow90px": 0.761,
+    "nativeLumaCode10bit": {
+     "mean": 589.0,
+     "min": 569.0,
+     "max": 613.4
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 0,
+       "scorable": 0
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    },
+    "verified": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 0
+    }
+   }
+  },
+  "i1890": {
+   "intervalSec": [
+    1890,
+    1920
+   ],
+   "timeBasisCheck": {
+    "-0.2": {
+     "n": 1223,
+     "medianIoU": 0.268,
+     "shareIoU50": 0.244
+    },
+    "-0.1": {
+     "n": 1228,
+     "medianIoU": 0.369,
+     "shareIoU50": 0.375
+    },
+    "0.0": {
+     "n": 1234,
+     "medianIoU": 0.591,
+     "shareIoU50": 0.609
+    },
+    "0.1": {
+     "n": 1234,
+     "medianIoU": 0.924,
+     "shareIoU50": 0.999
+    },
+    "0.2": {
+     "n": 1232,
+     "medianIoU": 0.584,
+     "shareIoU50": 0.608
+    }
+   },
+   "bestShiftSec": 0.1,
+   "correctionRecordCovers": true,
+   "verifiedBasis": "corrected (+0.1 s)",
+   "basisDisagreement": false,
+   "descriptors": {
+    "labels": {
+     "N": 523,
+     "?": 657,
+     "T": 54
+    },
+    "targetLabelledFrames": 54,
+    "targetBoxHeightPx": {
+     "median": 126.7,
+     "p10": 117.3
+    },
+    "sceneCuts": 0,
+    "cameraMotionPxPerFrame": {
+     "median": 9.09,
+     "p90": 28.02
+    },
+    "personDetectionsPerFrame": 19.6,
+    "shareDetectionsBelow90px": 0.758,
+    "nativeLumaCode10bit": {
+     "mean": 584.8,
+     "min": 575.9,
+     "max": 595.0
+    }
+   },
+   "runs": {
+    "default": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 54,
+       "scorable": 54,
+       "abstained": 54
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 54,
+       "scorable": 54,
+       "abstained": 54
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "base": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 54,
+       "scorable": 54,
+       "abstained": 54
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 54,
+       "scorable": 54,
+       "abstained": 54
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    },
+    "D": {
+     "stored": {
+      "targetLabelled": {
+       "denominator": 54,
+       "scorable": 54,
+       "abstained": 54
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     },
+     "verified": {
+      "targetLabelled": {
+       "denominator": 54,
+       "scorable": 54,
+       "abstained": 54
+      },
+      "allLabelled": {
+       "denominator": 299,
+       "abstained": 299
+      },
+      "correctConfirmed": 0,
+      "correctLikely": 0,
+      "nonCorrectClaims": []
+     }
+    }
+   },
+   "frameSets": {
+    "stored": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 54
+    },
+    "verified": {
+     "both": 0,
+     "only_default": 0,
+     "only_base": 0,
+     "neither": 54
+    }
+   }
+  }
+ },
+ "productionApproval": false,
+ "labels": {
+  "file": "gt_img4809_intervals.json",
+  "corrections": null
+ },
+ "aggregate": {
+  "default": {
+   "stored": {
+    "target:denominator": 502,
+    "target:scorable": 502,
+    "target:abstained": 201,
+    "target:correctClaim": 287,
+    "target:unmatchedClaim": 14,
+    "all:denominator": 2639,
+    "all:abstained": 2332,
+    "all:correctClaim": 287,
+    "all:unmatchedClaim": 18,
+    "correctConfirmed": 23,
+    "correctLikely": 264,
+    "all:indeterminateLabelClaim": 2
+   },
+   "verified": {
+    "target:denominator": 502,
+    "target:scorable": 502,
+    "target:abstained": 200,
+    "target:correctClaim": 301,
+    "target:unmatchedClaim": 1,
+    "all:denominator": 2639,
+    "all:abstained": 2331,
+    "all:correctClaim": 301,
+    "all:unmatchedClaim": 4,
+    "correctConfirmed": 24,
+    "correctLikely": 277,
+    "all:indeterminateLabelClaim": 3
+   }
+  },
+  "base": {
+   "stored": {
+    "target:denominator": 502,
+    "target:scorable": 502,
+    "target:abstained": 183,
+    "target:unmatchedClaim": 41,
+    "target:wrongPlayerClaim": 24,
+    "target:correctClaim": 254,
+    "all:denominator": 2639,
+    "all:unmatchedClaim": 83,
+    "all:abstained": 2236,
+    "all:wrongPlayerClaim": 26,
+    "all:correctClaim": 254,
+    "all:indeterminateLabelClaim": 40,
+    "correctConfirmed": 112,
+    "correctLikely": 142
+   },
+   "verified": {
+    "target:denominator": 502,
+    "target:scorable": 502,
+    "target:abstained": 181,
+    "target:unmatchedClaim": 11,
+    "target:wrongPlayerClaim": 24,
+    "target:correctClaim": 286,
+    "all:denominator": 2639,
+    "all:unmatchedClaim": 26,
+    "all:abstained": 2235,
+    "all:wrongPlayerClaim": 26,
+    "all:correctClaim": 286,
+    "all:indeterminateLabelClaim": 66,
+    "correctConfirmed": 132,
+    "correctLikely": 154
+   }
+  },
+  "D": {
+   "stored": {
+    "target:denominator": 502,
+    "target:scorable": 502,
+    "target:abstained": 199,
+    "target:correctClaim": 254,
+    "target:unmatchedClaim": 33,
+    "target:wrongPlayerClaim": 16,
+    "all:denominator": 2639,
+    "all:abstained": 2256,
+    "all:correctClaim": 254,
+    "all:unmatchedClaim": 71,
+    "all:wrongPlayerClaim": 18,
+    "all:indeterminateLabelClaim": 40,
+    "correctConfirmed": 112,
+    "correctLikely": 142
+   },
+   "verified": {
+    "target:denominator": 502,
+    "target:scorable": 502,
+    "target:abstained": 197,
+    "target:correctClaim": 286,
+    "target:unmatchedClaim": 3,
+    "target:wrongPlayerClaim": 16,
+    "all:denominator": 2639,
+    "all:abstained": 2255,
+    "all:correctClaim": 286,
+    "all:unmatchedClaim": 14,
+    "all:wrongPlayerClaim": 18,
+    "all:indeterminateLabelClaim": 66,
+    "correctConfirmed": 132,
+    "correctLikely": 154
+   }
+  }
+ }
+}
