@@ -1,0 +1,28 @@
+{
+ "flag": {
+  "SCOUTX_EXCHANGE_SPLIT": "0"
+ },
+ "command": "env SCOUTX_WEIGHTS_DIR=/home/claude/work/det SCOUTX_EXCHANGE_SPLIT=0 python3 -m pytest -v -rA -p no:cacheprovider --junitxml=bench/results/5.3/wrong-player-20261102/validation/tests/rerun_with_known_failures/junit_x0.xml",
+ "cwd": "workers/football-cv",
+ "gitCommit": "c1a0e566e23a554917cd3af876d8c4cdac1d3999",
+ "startedUtc": "2026-11-03T15:53:57Z",
+ "finishedUtc": "2026-11-03T15:54:51.238902+00:00",
+ "exitCode": 0,
+ "summaryLine": "================= 620 passed, 6 xfailed, 2 warnings in 51.41s ==================",
+ "environment": {
+  "platform": "Linux-6.18.44-fc-v230-x86_64-with-glibc2.39",
+  "python": "3.13.17",
+  "packages": {
+   "torch": "2.14.1",
+   "numpy": "2.5.3",
+   "opencv-python-headless": "5.0.0.93",
+   "onnxruntime": "1.29.0",
+   "pytest": "9.1.1",
+   "easyocr": "1.7.2",
+   "python-doctr": "1.1.0",
+   "scipy": "1.18.1"
+  },
+  "device": "CPU only (no CUDA device)",
+  "otherScoutxEnv": "none set in the shell besides SCOUTX_WEIGHTS_DIR and SCOUTX_EXCHANGE_SPLIT"
+ }
+}

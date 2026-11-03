@@ -361,6 +361,7 @@ All 9 intervals, automatic mode, verified time basis. Every run was rescored; no
 - The two original runs behind "614 passed": exact commands (only the flag-off run used `-x`), `rc=0` lines and the environment.
 - A verbose rerun of each, with JUnit XML and a provenance JSON per flag (command, commit, exit code, packages).
 - `*.log` is git-ignored, so the logs were force-added.
+- **After adding the known-failure tests** (`c1a0e56`): **620 passed, 6 xfailed, exit code 0** with the flag off, and the same with it on (`validation/tests/rerun_with_known_failures/`).
 
 ### 8.5 Full-match exchange-trigger audit (IMG_4809, default decoder)
 

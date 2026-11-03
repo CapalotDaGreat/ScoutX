@@ -26,3 +26,11 @@ These are the runs behind "614 passed" in commit `c8e95ce`.
 - Results: exit code 0 for both runs; 614 passed in each, the same counts as the original runs.
 - Each log lists every test with its outcome.
 - A full-match benchmark was running on the same 2-CPU container at the same time, so the durations are not timing evidence.
+
+## Rerun with the known-failure replays, 2026-11-03 ~17:05 CET (`rerun_with_known_failures/`)
+
+- Commit `c1a0e56`. It adds `tests/test_known_identity_failures.py`; the engine code is unchanged.
+- Command: `rerun_with_known_failures/../run_suite.sh` with the output directory changed. Each run is recorded in its provenance JSON.
+- **Flag off: 620 passed, 6 xfailed, exit code 0. Flag on: the same.**
+  - The 620 passed are the 614 earlier tests plus the 6 new characterisation tests.
+  - The 6 xfailed are the strict xfail tests for P, E3 and E4.
