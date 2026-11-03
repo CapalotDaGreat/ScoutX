@@ -27,7 +27,7 @@ CLAIM = ("CONFIRMED_VISIBLE", "LIKELY_VISIBLE")
 def _run(tag, tmp_path_factory, warm=False, **flags):
     if tag not in _CACHE:
         out = tmp_path_factory.mktemp(tag) / "run"
-        env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": "0", "SCOUTX_RESUME_SPLIT": "0", "PYTHONHASHSEED": "0", **flags}
+        env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": "0", "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_OCR_CONSULTED_ONLY": "0", "SCOUTX_APPEARANCE_ONLY_LIKELY": "1", "PYTHONHASHSEED": "0", **flags}
         cmd = [sys.executable, str(ROOT / "bench" / "full_match_replay.py"), "run", "--replay", str(REPLAY), "--out", str(out)]
         if warm:
             cmd += ["--warm-cache", str(REPLAY / "ocr_reads.json")]
@@ -101,3 +101,21 @@ def test_cache_state_desired_same_identity_warm_or_cold(tmp_path_factory):
     tl, _ = _run("base", tmp_path_factory)
     tw, _ = _run("warm", tmp_path_factory, warm=True)
     assert np.array_equal(tl["states"], tw["states"])
+
+
+def test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline(tmp_path_factory):
+    """Candidate C (SCOUTX_OCR_CONSULTED_ONLY=1): with the union cache of both earlier runs the whole match resolves
+    bit-identically to the cold baseline; cold with C is the baseline itself."""
+    _, hw = _run("C_warm", tmp_path_factory, warm=True, SCOUTX_OCR_CONSULTED_ONLY="1")
+    assert hw == BASELINE_TIMELINE_SHA
+
+
+def test_candidate_D_removes_appearance_only_claims_and_keeps_confirmed_20(tmp_path_factory):
+    """Candidate D: F6 and F17 frames become AMBIGUOUS; claims with number/anchored evidence are untouched."""
+    tl, _ = _run("base", tmp_path_factory)
+    td, _ = _run("D", tmp_path_factory, SCOUTX_APPEARANCE_ONLY_LIKELY="0")
+    for a, b in ((706.4, 716.4), (1301.5, 1305.8)):
+        assert not any(str(td["states"][i]) in CLAIM for i in _span(td, a, b))
+    changed = np.flatnonzero(tl["states"] != td["states"])
+    assert len(changed) == 55 and all(str(tl["evidence"][i]) == "appearance" for i in changed)
+    assert int((td["states"] == "CONFIRMED_VISIBLE").sum()) == int((tl["states"] == "CONFIRMED_VISIBLE").sum())

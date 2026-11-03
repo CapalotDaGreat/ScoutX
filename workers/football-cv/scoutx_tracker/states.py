@@ -28,6 +28,8 @@ Scores are UNCALIBRATED (not probabilities) until calibrated on labelled footage
 
 from __future__ import annotations
 
+import os
+
 import numpy as np
 
 CONFIRMED_VISIBLE = "CONFIRMED_VISIBLE"
@@ -41,6 +43,14 @@ ALL_STATES = (CONFIRMED_VISIBLE, LIKELY_VISIBLE, AMBIGUOUS, OFF_CAMERA, CONFIRME
 
 LIKELY = 0.75
 COMPETITOR = 0.35
+# 5.3 CANDIDATE D (off by default; SCOUTX_APPEARANCE_ONLY_LIKELY=0 enables it): no LIKELY claim from appearance alone.
+# A chain member with evidence "appearance" (not joined to hard evidence: not number/anchor/anchored/interpolated)
+# gets conf = sigmoid(app*rel), i.e. its own appearance posterior plus +1 logit for being on the chain - but its
+# chain membership was chosen from that same appearance score. Measured on IMG_4809 (all labelled frames: default
+# full match, default and HLG-reference interval runs): 0 correct appearance-only LIKELY claims, 19 wrong-player and
+# 12 unmatched; every correct claim came from number / anchored / interpolated evidence. With the flag such frames
+# are AMBIGUOUS. Thresholds are unchanged; identity resolution itself is unchanged (states only).
+APPEARANCE_ONLY_LIKELY = os.environ.get("SCOUTX_APPEARANCE_ONLY_LIKELY", "1") != "0"
 
 
 def frame_states(T, res, tl, period_kind: np.ndarray, camera: np.ndarray | None = None,
@@ -71,6 +81,8 @@ def frame_states(T, res, tl, period_kind: np.ndarray, camera: np.ndarray | None 
     rest = soft & ~unclear & ~anchored
     states[rest & (conf >= likely) & (comp < competitor)] = LIKELY_VISIBLE
     states[rest & ((conf < likely) | (comp >= competitor))] = AMBIGUOUS
+    if not APPEARANCE_ONLY_LIKELY:
+        states[rest & (ev == "appearance")] = AMBIGUOUS
     states[unclear] = AMBIGUOUS
     states[anchored] = LIKELY_VISIBLE
     states[hard] = CONFIRMED_VISIBLE

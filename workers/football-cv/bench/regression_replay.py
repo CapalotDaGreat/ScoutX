@@ -61,7 +61,7 @@ def build(run: Path, validation: Path, window: str, start: float, out: Path) -> 
     return prov
 
 
-def run(replay: Path, out: Path) -> dict:
+def run(replay: Path, out: Path, warm_cache: Path | None = None) -> dict:
     import cv2  # noqa: PLC0415
 
     from scoutx_tracker import analyze as an  # noqa: PLC0415
@@ -81,6 +81,8 @@ def run(replay: Path, out: Path) -> dict:
         shutil.copy2(replay / name, chunk / name)
     for name in json.loads((replay / "crops.json").read_text()):
         (chunk / "crops" / name).touch()
+    if warm_cache:                      # start from a populated cache instead of an empty one (cache-equivalence checks)
+        shutil.copy2(warm_cache, out / "stage1" / "ocr_cache.json")
     reads = json.loads((replay / "ocr_reads.json").read_text())
     stats = {"served": 0, "neverReadInOriginal": [], "imageReads": 0}
     real_imread = cv2.imread
@@ -133,11 +135,12 @@ def main(argv=None) -> int:
     r = sub.add_parser("run")
     r.add_argument("--replay", required=True)
     r.add_argument("--out", required=True)
+    r.add_argument("--warm-cache", default=None)
     a = ap.parse_args(argv)
     if a.cmd == "build":
         print(json.dumps(build(Path(a.run), Path(a.validation), a.window, a.start, Path(a.out))["files"], indent=1))
     else:
-        print(json.dumps(run(Path(a.replay), Path(a.out)), indent=1))
+        print(json.dumps(run(Path(a.replay), Path(a.out), Path(a.warm_cache) if a.warm_cache else None), indent=1))
     return 0
 
 

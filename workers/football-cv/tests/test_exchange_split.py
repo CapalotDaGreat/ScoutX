@@ -117,7 +117,7 @@ def test_identity_follows_the_person_through_an_exchange_when_appearance_decides
 
 
 def _replay(tmp_path, flag):
-    env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "PYTHONHASHSEED": "0"}
+    env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_OCR_CONSULTED_ONLY": "0", "SCOUTX_APPEARANCE_ONLY_LIKELY": "1", "PYTHONHASHSEED": "0"}
     out = tmp_path / f"x{flag}"
     subprocess.run([sys.executable, str(ROOT / "bench" / "regression_replay.py"), "run", "--replay", str(REPLAY),
                     "--out", str(out)], env=env, cwd=ROOT, check=True, capture_output=True)

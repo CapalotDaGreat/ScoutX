@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from pathlib import Path
 
@@ -107,7 +108,8 @@ def load_ocr_cache(cache_path: Path) -> dict:
 
 def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: int = 2, log=print,
             early_stop: bool = True, budget_sec: float | None = None, skipped: list | None = None,
-            max_new: int | None = None, read_new: list | None = None) -> dict[str, list]:
+            max_new: int | None = None, read_new: list | None = None,
+            consulted: set | None = None) -> dict[str, list]:
     """Reads crops tracklet by tracklet; stops early once a tracklet's number is settled.
     5.1: `budget_sec` bounds the time spent reading crops that are not cached yet (a correction
     must answer in seconds; the first resolve after extraction fills the cache without a budget).
@@ -144,6 +146,8 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                 if done % 100 == 0:
                     cache_path.write_text(json.dumps(cache))
                     log(f"reading numbers: {done} crops ({(time.time() - t) / done:.2f}s each), tracklet {k + 1}/{len(crops_by_tid)}")
+            if consulted is not None:
+                consulted.add(key)
             num = cache[key][0]
             if num and len(num) == number_len:
                 counts[num] = counts.get(num, 0) + 1
@@ -153,6 +157,14 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
         cache_path.write_text(json.dumps(cache))
     return cache
 
+
+# 5.3 CANDIDATE C (off by default; SCOUTX_OCR_CONSULTED_ONLY=1): cache equivalence. run_ocr returns the WHOLE cache
+# file; the first pass used every entry as evidence - including reads that a previous run's refinement passes (or other
+# runs) left in the cache - for number-conflict splits and identity. Verified on IMG_4809 (full match): a warm cache
+# alone changed 36 claim frames (8 confirmed-correct #20 frames weakened). With this flag the first pass uses only the
+# crops it selected and consulted itself; refinement passes already use only their own crops. A cache then only saves
+# OCR time and never adds evidence (a budgeted/deferred run can still read more crops when warm, by design).
+OCR_CONSULTED_ONLY = os.environ.get("SCOUTX_OCR_CONSULTED_ONLY", "0") != "0"
 
 SCHEMA = "pitchproof.tracking.v3"
 OCR_DENSE = {"min_h": 120, "min_gap": 4, "per_tracklet": 10**6, "min_len": 3}
@@ -289,8 +301,13 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         ocr_skipped: list = []
         t_ocr0 = time.time()
         ocr_new: list = []
+        consulted: set = set()
         cache = run_ocr(crops, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log, early_stop=not ocr_dense,
-                        budget_sec=ocr_budget_sec, skipped=ocr_skipped, max_new=ocr_max_new, read_new=ocr_new)
+                        budget_sec=ocr_budget_sec, skipped=ocr_skipped, max_new=ocr_max_new, read_new=ocr_new,
+                        consulted=consulted)
+        if OCR_CONSULTED_ONLY:
+            # 5.3 candidate C: evidence = the crops THIS pass selected and consulted, never other cache entries.
+            cache = {k: v for k, v in cache.items() if k in consulted}
         det_of = det_of_crop(D)
         det_reads = {det_of[c]: v[0] for c, v in cache.items() if v[0] and c in det_of}
         # Same-team identity swaps are invisible to colour: split where shirt numbers conflict.

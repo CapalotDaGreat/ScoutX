@@ -99,7 +99,7 @@ def test_flag_on_cuts_and_links_without_identity_when_appearance_cannot_tell(mon
 
 
 def _replay(tmp_path, resume):
-    env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": "0", "SCOUTX_RESUME_SPLIT": resume, "PYTHONHASHSEED": "0"}
+    env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": "0", "SCOUTX_RESUME_SPLIT": resume, "SCOUTX_OCR_CONSULTED_ONLY": "0", "SCOUTX_APPEARANCE_ONLY_LIKELY": "1", "PYTHONHASHSEED": "0"}
     out = tmp_path / f"r{resume}"
     subprocess.run([sys.executable, str(ROOT / "bench" / "regression_replay.py"), "run", "--replay", str(REPLAY),
                     "--out", str(out)], env=env, cwd=ROOT, check=True, capture_output=True)
