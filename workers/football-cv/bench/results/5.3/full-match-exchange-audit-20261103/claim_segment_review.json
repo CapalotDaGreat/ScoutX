@@ -1,0 +1,20 @@
+{
+ "schema": "pitchproof.full-match-claim-review.v1",
+ "run": "IMG_4809 full match (2035 s), default cv2 decoder, automatic, SCOUTX_EXCHANGE_SPLIT=0 (baseline) and =1 (candidate)",
+ "reviewer": "Claude (AI assistant), 2026-11-03. Label-free crops of the claimed box, rendered locally (scripts/claimcrops.py). No images committed. Single reviewer; not independent.",
+ "rule": "verdict 'wrong' only when another player's number is legible on the claimed box; 'correct' only when '20' is legible or the frame is labelled T; otherwise 'unverified'",
+ "baselineSegments": [
+  {"t": "241.6-244.7", "frames": 27, "confirmed": 6, "verdict": "labelled interval i0225: 22 correct, 3 wrong-player (P, w195-197) under the proposed label corrections; 2 unmatched", "candidate": "identical"},
+  {"t": "706.4-716.4", "frames": 28, "confirmed": 0, "evidence": "appearance", "verdict": "WRONG: claimed player wears #6. '6' is legible at 706.2 s, and OCR read '6' twice (conf 1.00) and '5' once on the same tracklet. Lone digits are ignored by design (identity.incompatible_with_target), so conflicting-number abstention cannot apply to a one-digit shirt.", "candidate": "removed (the candidate makes no claim here)"},
+  {"t": "1154.0-1180.0", "frames": 245, "confirmed": 18, "verdict": "labelled interval i1150: 241 correct, 0 wrong (identical to the interval run)", "candidate": "239 correct; confirmed 18 -> 10 (8 frames at 1161.1-1162.8 lose CONFIRMED: 2 dropped, 6 downgraded to LIKELY/anchored)"},
+  {"t": "1180.0-1183.3, 1185.7-1190.3", "frames": 51, "confirmed": 0, "evidence": "anchored", "verdict": "unverified (front view, no legible number); continuation of the correct 1150-1180 claim", "candidate": "identical"},
+  {"t": "1301.6-1305.7", "frames": 11, "confirmed": 0, "evidence": "appearance", "verdict": "WRONG: labelled N, and '17' is legible on the claimed player (label-only sheet 13012-13027). No number read on that tracklet in the window.", "candidate": "identical"},
+  {"t": "1378.6-1387.2", "frames": 7, "evidence": "appearance", "verdict": "unverified (front view)", "candidate": "identical"},
+  {"t": "1584.4-1585.1", "frames": 8, "evidence": "appearance", "verdict": "unverified (front view)", "candidate": "identical"},
+  {"t": "1943.9", "frames": 1, "evidence": "appearance", "verdict": "unverified", "candidate": "identical"},
+  {"t": "1954.9-1962.9", "frames": 75, "confirmed": 18, "verdict": "'20' legible at 1955.5 s (CONFIRMED/number): correct there; anchored frames after it unverified", "candidate": "identical"}
+ ],
+ "totals": {"baselineClaimFrames": 453, "candidateClaimFrames": 423, "baselineConfirmed": 42, "candidateConfirmed": 34,
+            "verifiedWrongBaseline": "28 (#6, 706-716 s) + 11 (#17, 1301-1306 s) + 3 (P, 244.5-244.7 s, under the proposed corrections) = 42 LIKELY frames, 0 confirmed",
+            "verifiedWrongCandidate": "11 + 3 = 14 LIKELY frames, 0 confirmed"}
+}

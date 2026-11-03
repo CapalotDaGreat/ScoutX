@@ -90,7 +90,7 @@
 **The HLG reference is technically verified but stays experimental.**
 
 - Baseline: 286/502 correct, 26 wrong (18 confirmed).
-- With the candidate: 304/502 correct, 13 wrong (5 confirmed). The 5 confirmed are an annotation issue (visibly #20); the 8 likely are a separate unrepaired mechanism.
+- With the candidate: 304/502 correct, 13 wrong (5 confirmed). *Superseded by the update below:* 4 of the 5 confirmed frames are an annotation issue and 1 (w211, E4) is a real wrong-player frame; the 8 likely frames are E3.
 
 ## 3. Failed or unknown
 
@@ -104,14 +104,14 @@
 
 **Labels:**
 
-- The label file has an annotation issue at 225 s: frames 195–197, 208 and 211 are labelled N but show #20.
+- The label file has an annotation issue at 225 s (*corrected by the update below:* frames 195–197 and 208–209; frame 211 is labelled correctly).
 - Labels were not changed. All scores keep the original labels.
 
 **Not tested at all:**
 
 - independent labelled footage;
 - other HDR footage;
-- a full-match run;
+- a full-match run (*done since: see the update below*);
 - runtime at full-match scale. Window timings here, 10–15 min per 30 s on a 2-CPU container under contention, are **not** a performance estimate.
 - The independent clips used the IMG_4809 target settings (#20 orange vs white), but IMG_4529's opponents wear red.
 
@@ -136,3 +136,46 @@ There are two candidates. Choose either; neither needs the other.
    - List every frame where `exchange_rows` fires in IMG_4809 and review those claims.
    - It needs stage-1 detections for the full match. Only tracking is rerun; OCR is needed only around frames where the rule fires.
    - It decides whether a full baseline/candidate run is worth its CPU hours.
+
+## Update, 2026-11-03 afternoon
+
+These results supersede the statements marked above. Details: [wrong-player-exchange-2026-11-02.md](wrong-player-exchange-2026-11-02.md) §8.
+
+| Commit | What it is |
+|---|---|
+| `49ec8f0` | Full-match exchange-trigger audit wrapper (bench only) |
+| `f5603c6` | Label corrections (proposed, separate file); rescoring; known-failure replays; test-log evidence; refreshed GPU pricing |
+| next commit | Full-match audit results, report §8, this update |
+
+**Demonstrated:**
+
+- **The default decoder's apparent zero wrong-player claims was a labelling artefact.**
+  - Under the proposed label corrections (8 corrections, original labels untouched), the 9 interval runs give **3 LIKELY wrong-player frames** (the pause-and-resume transfer P).
+  - The **full-match** default run adds verified LIKELY wrong-player claims on **#17** (11 labelled frames, 1301.6–1305.7 s) and **#6** (28 unlabelled frames, 706–716 s).
+  - **No confirmed wrong-player claim** was found for the default decoder, among the frames reviewed.
+- **The remaining failures have numeric replays:** characterisation tests plus strict-xfail tests (6 passed, 6 xfailed).
+  - **P** (default): the steal rule cuts one half of a split-frame exchange, and #20's paused track resumes on player A.
+  - **E3** (reference): the appearance classifier prefers a distant player (2.36 vs −0.06).
+  - **E4** (reference): a one-frame detour of a number tracklet through a detector merge. It confirms another player for one frame.
+- **Full match (default):** 35 mutual-exchange events. **None** lies on the target's identity path.
+  - The candidate's full-match changes are all non-local identity-solver side effects: −28 wrong LIKELY frames (on #6) and **−8 confirmed-correct frames** (1161–1163 s, with 2 correct frames lost).
+
+**Provisional:**
+
+- The label corrections need an **independent second reviewer**. The reviewer here had seen the predictions.
+- 141 full-match claim frames remain unverified (front views without a legible number).
+
+**Failed or unknown:**
+
+- The candidate's interval-level "no correct identity lost" **does not hold at full-match scale**.
+- Interval runs do not predict full-match behaviour of the default decoder. At 225 s the full-match run has 22 vs 57 correct frames, and at 1295 s it makes 11 wrong claims where the interval run abstained.
+- One-digit shirts cannot trigger conflicting-number abstention for a two-digit target. This is by design (lone digits are noise on "20"), and it allowed the #6 claims.
+- The GPU accuracy gap is unchanged and unresolved.
+
+**Recommendation:**
+
+- Keep `SCOUTX_EXCHANGE_SPLIT` off by default.
+- The smallest next actions:
+  1. **Independent review of the 8 label corrections**, plus a label pass over the full-match claim segments that are still unverified. This is cheap and fixes the safety baseline.
+  2. **Characterisation replays for the two full-match default failures** (#17 at 1301 s, #6 at 706 s), built from the full-match stage-1 output already on disk, before any repair is attempted.
+  3. The GPU FP32 session remains a separate workstream on `51d41c9`. Pricing was refreshed 2026-11-03T12:25:49Z: compute estimate $0.93–1.40, total ceiling $2.89 (proposed $3.00 before tax). **Not approved; nothing launched.**

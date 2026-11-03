@@ -1,0 +1,406 @@
+{
+  "schema": "pitchproof.full-match-benchmark.v2",
+  "status": "complete",
+  "timestampUtc": "2026-11-03T15:43:11.603071+00:00",
+  "target": {
+    "number": "20",
+    "kit": "orange",
+    "kit2": "white"
+  },
+  "notes": [
+    "Single sequential worker; not a Cloud Tasks / parallel-segment test.",
+    "firstPlayable = time after model initialisation, not upload-to-play latency.",
+    "No footage, crops or images are written to this JSON or the claims file."
+  ],
+  "environment": {
+    "python": "3.13.17",
+    "platform": "Linux-6.18.44-fc-v230-x86_64-with-glibc2.39",
+    "cpuCores": 2,
+    "packages": {
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "4.14.0.94",
+      "opencv-python-headless": "5.0.0.93",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime": "1.29.0",
+      "av": "19.0.2",
+      "pillow": "12.3.0",
+      "fastapi": "0.162.0",
+      "pydantic": "2.13.5"
+    },
+    "torch": {
+      "version": "2.14.1+cu130",
+      "cuda": "13.0",
+      "cudaAvailable": false,
+      "cudnn": 92400
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "AzureExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "4.14.0",
+      "videoIO": [
+        "FFMPEG:                      YES",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+    "nvidiaSmi": null,
+    "driverMajor": null,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": null,
+      "built": null,
+      "baseImage": null,
+      "lockSha256": null
+    },
+    "scoutxEnv": {
+      "SCOUTX_BACKEND": "onnx",
+      "SCOUTX_BATCH": "1",
+      "SCOUTX_DECODER": "cv2",
+      "SCOUTX_DETECTOR": "yolox_s",
+      "SCOUTX_DISCOVERY_DET": "416",
+      "SCOUTX_EXCHANGE_SPLIT": "1",
+      "SCOUTX_KEYFRAME_EVERY": "1",
+      "SCOUTX_MODE": "balanced",
+      "SCOUTX_OCR_ENHANCE": "0",
+      "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+      "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+    }
+  },
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "/home/claude/work/det/yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "/root/.EasyOCR/model/craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "/root/.EasyOCR/model/english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "/root/.cache/doctr/models/parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "input": {
+    "basename": "IMG_4809_proxy_10fps.exact.mp4",
+    "container": "mov,mp4,m4a,3gp,3g2,mj2",
+    "codec": "h264",
+    "profile": "High 10",
+    "pixFmt": "yuv420p10le",
+    "colorTransfer": "arib-std-b67",
+    "colorPrimaries": "bt2020",
+    "colorSpace": "bt2020nc",
+    "hdr": "HLG",
+    "width": 1920,
+    "height": 1080,
+    "rotation": null,
+    "fps": 10.0,
+    "avgFps": 10.0,
+    "frames": 20350,
+    "durationSec": 2035.0,
+    "sizeBytes": 1413632177,
+    "bitRate": 5557276,
+    "sha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+    "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b",
+    "referenceMatch": {
+      "isReference": true,
+      "reference": "IMG_4809 10 fps proxy (validated reference)",
+      "sameFileBytes": true,
+      "differences": {}
+    },
+    "effectiveProcessingFps": 10.0
+  },
+  "groundTruth": {
+    "file": "gt_img4809_intervals.json",
+    "sha256": "36b16fbae5091ca524f1c47c697e56db6da2d191e79dc0ab4f880815dc995078"
+  },
+  "configuration": {
+    "chunkSec": 300,
+    "mode": "balanced",
+    "stage1Settings": {
+      "engine": "5.2.0",
+      "env": {
+        "SCOUTX_DETECTOR": "yolox_s",
+        "SCOUTX_BACKEND": "onnx",
+        "SCOUTX_DECODER": "cv2",
+        "SCOUTX_HWACCEL": null,
+        "SCOUTX_KEYFRAME_EVERY": "1",
+        "SCOUTX_PROP_SCORE_CAP": null,
+        "SCOUTX_BATCH": "1",
+        "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+        "SCOUTX_OCR_ENHANCE": "0"
+      },
+      "packages": {
+        "torch": "2.14.1",
+        "opencv-python": "4.14.0.94",
+        "opencv-python-headless": "5.0.0.93",
+        "numpy": "2.5.3",
+        "onnxruntime": "1.29.0",
+        "onnxruntime-gpu": null
+      },
+      "imgsz": 1280,
+      "stride": 1,
+      "discoveryImgsz": 416,
+      "device": "cpu"
+    },
+    "stage1Fingerprint": "e1ad0887c7591f0e78173eed5a229aea228d26211efd97b9da10fb48d9afed14",
+    "resumePolicy": "fail",
+    "retries": 1
+  },
+  "stages": {
+    "cleanupBefore": [],
+    "modelInitialization": {
+      "wallSec": 6.994,
+      "discoveryDetector": "yolox_s@416/onnx",
+      "discoveryDetectorOnGpu": false
+    },
+    "discovery": {
+      "wallSec": 2531.848,
+      "firstPlayableAfterDiscoveryStartSec": 125.908,
+      "firstPlayableAfterModelInitSec": 151.138,
+      "sightings": 9,
+      "timingsSec": {
+        "decode": 174.98,
+        "convert": 367.04,
+        "detect": 345.38,
+        "kit": 13.64,
+        "ocr": 1438.52,
+        "wall": 2531.8,
+        "samples": 4070,
+        "candidates": 2411,
+        "reads": 3964,
+        "skipped": 414
+      },
+      "status": "resumed",
+      "effectiveDetectFps": 2.0
+    },
+    "extraction": {
+      "chunks": [
+        {
+          "index": 0,
+          "startSec": 0.0,
+          "endSec": 300.0,
+          "status": "resumed",
+          "attempts": 0,
+          "wallSec": 0.0,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": null
+        },
+        {
+          "index": 1,
+          "startSec": 300.0,
+          "endSec": 600.0,
+          "status": "resumed",
+          "attempts": 0,
+          "wallSec": 0.0,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": null
+        },
+        {
+          "index": 2,
+          "startSec": 600.0,
+          "endSec": 900.0,
+          "status": "resumed",
+          "attempts": 0,
+          "wallSec": 0.0,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": null
+        },
+        {
+          "index": 3,
+          "startSec": 900.0,
+          "endSec": 1200.0,
+          "status": "resumed",
+          "attempts": 0,
+          "wallSec": 0.0,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": null
+        },
+        {
+          "index": 4,
+          "startSec": 1200.0,
+          "endSec": 1500.0,
+          "status": "resumed",
+          "attempts": 0,
+          "wallSec": 0.0,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": null
+        },
+        {
+          "index": 5,
+          "startSec": 1500.0,
+          "endSec": 1800.0,
+          "status": "resumed",
+          "attempts": 0,
+          "wallSec": 0.0,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": null
+        },
+        {
+          "index": 6,
+          "startSec": 1800.0,
+          "endSec": 2035.0,
+          "status": "resumed",
+          "attempts": 0,
+          "wallSec": 0.0,
+          "replaced": null,
+          "frames": 2350,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": null
+        }
+      ],
+      "wallSecMeasured": 0.0,
+      "resumedChunks": 7,
+      "stageSecondsTotal": {},
+      "framesProcessed": 20350,
+      "effectiveProcessingFps": 10.0,
+      "diskBytesPerVideoSec": 0,
+      "freeBytes": 4680519680
+    },
+    "resolve": {
+      "wallSec": 148.541,
+      "invariantsOk": true,
+      "timingsSec": {
+        "load": 1.7,
+        "tracklets": 74.6,
+        "numbers": 43.5,
+        "identity": 26.6,
+        "timeline_metrics_events": 1.9
+      },
+      "ocrDeferred": 0,
+      "coverage": {
+        "recordingSec": 2035.0,
+        "nonMatchSec": 0.0,
+        "offPitchSec": 0.0,
+        "matchSec": 2035.0,
+        "unobservedSec": 170.9,
+        "analysedSec": 1864.1,
+        "confirmedVisibleSec": 3.4,
+        "likelyVisibleSec": 38.9,
+        "ambiguousSec": 1586.8,
+        "notIdentifiedSec": 235.0,
+        "denominators": {
+          "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+          "note": "Percentages of the recording are not percentages of the player's playing time."
+        },
+        "visiblePctOfAnalysed": 2.3
+      },
+      "identity": {
+        "statesSec": {
+          "AMBIGUOUS": 1586.8,
+          "CONFIRMED_VISIBLE": 3.4,
+          "LIKELY_VISIBLE": 38.9,
+          "UNKNOWN": 405.9
+        },
+        "iterations": [
+          {
+            "iteration": 0,
+            "mode": "template",
+            "chosen": 542,
+            "seconds": 1149.0,
+            "positives": 3,
+            "negatives": 62
+          },
+          {
+            "iteration": 1,
+            "mode": "template",
+            "chosen": 542,
+            "seconds": 1149.0,
+            "positives": 3,
+            "negatives": 62
+          }
+        ],
+        "numberSightings": 3,
+        "confirmedByUser": 0,
+        "scoreNote": "Identity scores are uncalibrated (not probabilities)."
+      }
+    }
+  },
+  "claimsFile": {
+    "file": "full_match_claims.json",
+    "sha256": "aa126e37d6fe9d3712e44ac3d350cf7a00de246b3626650c34854cdebbd166ed",
+    "frames": 11643
+  },
+  "accuracy": {
+    "targetLabelledSec": 50.4,
+    "claimedCorrectSec": 25.1,
+    "confirmedCorrectSec": 1.6,
+    "wrongIdentitySec": 1.1,
+    "confirmedWrongIdentitySec": 0.0,
+    "overlapAmbiguousSec": 0.0,
+    "falseAttributionSec": 1.1,
+    "claimedRecall": 0.498,
+    "IDF1": 0.655,
+    "wrongIdentityTimes": [
+      1301.6,
+      1301.7,
+      1301.8,
+      1301.9,
+      1302.0,
+      1302.1,
+      1302.2,
+      1302.5,
+      1304.3,
+      1304.4,
+      1305.7
+    ]
+  },
+  "timing": {
+    "measuredTotalWallSec": 208.492,
+    "timingComplete": false,
+    "note": "checkpointed work was reused - this is NOT a full-run measurement",
+    "videoSecondsPerWallSecond": null
+  },
+  "cost": {
+    "status": "not_calculated",
+    "reason": "no price list / rate supplied",
+    "measuredComputeSec": 208.5
+  },
+  "gpuSampling": {
+    "status": "not_sampled"
+  },
+  "peakRssMiB": 1836.3
+}

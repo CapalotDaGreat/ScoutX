@@ -19,7 +19,8 @@ P - pause-and-resume transfer (DEFAULT decoder, w194-197):
   - At w193 A's raw track takes #20's box. The steal rule cuts it there, with an UNCLEAR link.
   - At w194 #20's track resumes on player A's box and stays with A to w197.
   - This is not a mutual exchange, because the two jumps happen on different frames.
-  - The identity of 201 (anchored by a discovery sighting) passes to A: LIKELY claims on A at w194-197.
+  - The identity of 201 ("anchored": joined by clean hand-offs to the tracklet read "20") passes to A: LIKELY
+    claims on A at w194-197.
   - Under the original labels these frames count as correct, because the piece-based labels make the same swap
     (label_corrections_i0225.json C1-C6, proposed).
 
@@ -35,6 +36,8 @@ E4 - one-frame claim on another player after a second crossing (REFERENCE render
   - At w211 the CONFIRMED / number claim sits on that other player: the N box, verified on review 2026-11-03.
   - At w212 it is back on #20.
   - The 2026-11-02 review had wrongly listed w211 as an annotation issue.
+  - Mechanism: number tracklet 205 takes a merged two-player box at w210 and the other player's box at w211 (no
+    clean #20 detection there), then returns to #20 at w212. That one-frame detour is never cut.
 """
 import json
 import os

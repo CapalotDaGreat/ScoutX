@@ -1,0 +1,4421 @@
+{
+ "exchangeTriggersShadowBaseline": 71,
+ "exchangeTriggersCandidate": 72,
+ "sameTriggerSet": false,
+ "newExchangesNotSteals": 70,
+ "steals": {
+  "base": 209,
+  "cand": 212
+ },
+ "claimFramesDiffering": 36,
+ "differingOutside5sOfAnyTrigger": [
+  {
+   "t": 706.4,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     23.3,
+     495.8,
+     141.3,
+     793.6
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 706.5,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     2.6,
+     486.7,
+     115.1,
+     780.1
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 706.6,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.1,
+     480.1,
+     114.6,
+     770.2
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 706.7,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     -0.0,
+     497.4,
+     102.4,
+     771.8
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 706.8,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.3,
+     499.2,
+     94.5,
+     769.8
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 706.9,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.1,
+     485.7,
+     72.6,
+     764.3
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.0,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.2,
+     486.4,
+     60.4,
+     735.2
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.1,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.1,
+     496.9,
+     59.8,
+     735.4
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.2,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.2,
+     506.1,
+     49.4,
+     731.8
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.3,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.3,
+     503.1,
+     47.7,
+     723.3
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.4,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.1,
+     505.9,
+     52.0,
+     691.5
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.5,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.2,
+     522.1,
+     44.4,
+     684.2
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.6,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.5,
+     506.9,
+     39.7,
+     702.0
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.7,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.3,
+     507.2,
+     34.0,
+     696.6
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.8,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.3,
+     512.0,
+     49.0,
+     687.0
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 707.9,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.3,
+     489.3,
+     57.7,
+     682.7
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.0,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     -0.0,
+     476.7,
+     49.2,
+     686.2
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.1,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.5,
+     467.7,
+     63.1,
+     676.5
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.2,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.8,
+     479.3,
+     83.0,
+     674.3
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.3,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     0.7,
+     479.9,
+     91.9,
+     671.5
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.4,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     19.2,
+     471.1,
+     97.4,
+     668.8
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.5,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     39.7,
+     471.5,
+     117.8,
+     664.6
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.6,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     61.1,
+     479.2,
+     144.8,
+     660.3
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 708.7,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     87.0,
+     481.6,
+     168.6,
+     659.5
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 711.2,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     552.6,
+     441.2,
+     619.6,
+     578.2
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 711.3,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     567.0,
+     434.1,
+     629.0,
+     575.9
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 711.4,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     581.0,
+     432.2,
+     629.0,
+     574.9
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 716.4,
+   "base": [
+    "LIKELY_VISIBLE",
+    "appearance",
+    [
+     521.7,
+     635.3,
+     575.8,
+     769.8
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 1161.1,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     923.7,
+     639.9,
+     1062.4,
+     850.1
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 1161.2,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     936.4,
+     643.6,
+     1079.7,
+     873.2
+    ]
+   ],
+   "cand": null
+  },
+  {
+   "t": 1162.3,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     955.7,
+     627.2,
+     1047.9,
+     885.3
+    ]
+   ],
+   "cand": [
+    "LIKELY_VISIBLE",
+    "anchored",
+    [
+     955.7,
+     627.2,
+     1047.9,
+     885.3
+    ]
+   ]
+  },
+  {
+   "t": 1162.4,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     970.1,
+     623.8,
+     1064.9,
+     876.9
+    ]
+   ],
+   "cand": [
+    "LIKELY_VISIBLE",
+    "anchored",
+    [
+     970.1,
+     623.8,
+     1064.9,
+     876.9
+    ]
+   ]
+  },
+  {
+   "t": 1162.5,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     989.0,
+     618.8,
+     1083.0,
+     869.0
+    ]
+   ],
+   "cand": [
+    "LIKELY_VISIBLE",
+    "anchored",
+    [
+     989.0,
+     618.8,
+     1083.0,
+     869.0
+    ]
+   ]
+  },
+  {
+   "t": 1162.6,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     1019.9,
+     611.1,
+     1093.6,
+     858.4
+    ]
+   ],
+   "cand": [
+    "LIKELY_VISIBLE",
+    "anchored",
+    [
+     1019.9,
+     611.1,
+     1093.6,
+     858.4
+    ]
+   ]
+  },
+  {
+   "t": 1162.7,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     1045.2,
+     603.3,
+     1125.1,
+     850.6
+    ]
+   ],
+   "cand": [
+    "LIKELY_VISIBLE",
+    "anchored",
+    [
+     1045.2,
+     603.3,
+     1125.1,
+     850.6
+    ]
+   ]
+  },
+  {
+   "t": 1162.8,
+   "base": [
+    "CONFIRMED_VISIBLE",
+    "number",
+    [
+     1066.6,
+     602.3,
+     1156.4,
+     848.9
+    ]
+   ],
+   "cand": [
+    "LIKELY_VISIBLE",
+    "anchored",
+    [
+     1066.6,
+     602.3,
+     1156.4,
+     848.9
+    ]
+   ]
+  }
+ ],
+ "claims": {
+  "base": 453,
+  "cand": 423,
+  "baseConfirmed": 42,
+  "candConfirmed": 34
+ },
+ "triggers": [
+  {
+   "t": 120.9,
+   "frame": 1209,
+   "track": 289,
+   "row": {
+    "frame": 1209,
+    "t": 120.9,
+    "track": 289,
+    "box": [
+     898.6,
+     514.6,
+     931.4,
+     555.3
+    ]
+   },
+   "other": {
+    "frame": 1208,
+    "t": 120.8,
+    "track": 362,
+    "box": [
+     899.5,
+     509.4,
+     920.8,
+     562.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 120.9,
+   "frame": 1209,
+   "track": 362,
+   "row": {
+    "frame": 1209,
+    "t": 120.9,
+    "track": 362,
+    "box": [
+     854.1,
+     512.9,
+     877.3,
+     567.4
+    ]
+   },
+   "other": {
+    "frame": 1208,
+    "t": 120.8,
+    "track": 289,
+    "box": [
+     948.3,
+     511.3,
+     971.0,
+     550.0
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 130.2,
+   "frame": 1302,
+   "track": 5297,
+   "row": {
+    "frame": 1302,
+    "t": 130.2,
+    "track": 5297,
+    "box": [
+     82.9,
+     425.4,
+     100.5,
+     465.4
+    ]
+   },
+   "other": {
+    "frame": 1301,
+    "t": 130.1,
+    "track": 434,
+    "box": [
+     45.9,
+     431.4,
+     64.1,
+     472.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 130.2,
+   "frame": 1302,
+   "track": 434,
+   "row": {
+    "frame": 1302,
+    "t": 130.2,
+    "track": 434,
+    "box": [
+     64.3,
+     427.8,
+     82.1,
+     468.6
+    ]
+   },
+   "other": {
+    "frame": 1301,
+    "t": 130.1,
+    "track": 5297,
+    "box": [
+     65.1,
+     428.4,
+     83.3,
+     467.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 142.4,
+   "frame": 1424,
+   "track": 434,
+   "row": {
+    "frame": 1424,
+    "t": 142.4,
+    "track": 434,
+    "box": [
+     545.2,
+     404.3,
+     565.4,
+     448.1
+    ]
+   },
+   "other": {
+    "frame": 1423,
+    "t": 142.3,
+    "track": 450,
+    "box": [
+     546.8,
+     404.4,
+     565.6,
+     449.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 142.4,
+   "frame": 1424,
+   "track": 450,
+   "row": {
+    "frame": 1424,
+    "t": 142.4,
+    "track": 450,
+    "box": [
+     584.0,
+     399.5,
+     607.4,
+     446.9
+    ]
+   },
+   "other": {
+    "frame": 1423,
+    "t": 142.3,
+    "track": 434,
+    "box": [
+     587.2,
+     401.6,
+     603.3,
+     441.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 158.8,
+   "frame": 1588,
+   "track": 5284,
+   "row": {
+    "frame": 1588,
+    "t": 158.8,
+    "track": 5284,
+    "box": [
+     598.9,
+     537.6,
+     616.4,
+     583.4
+    ]
+   },
+   "other": {
+    "frame": 1587,
+    "t": 158.7,
+    "track": 5297,
+    "box": [
+     603.7,
+     537.2,
+     619.8,
+     583.5
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 158.8,
+   "frame": 1588,
+   "track": 5297,
+   "row": {
+    "frame": 1588,
+    "t": 158.8,
+    "track": 5297,
+    "box": [
+     620.6,
+     534.5,
+     636.2,
+     579.6
+    ]
+   },
+   "other": {
+    "frame": 1586,
+    "t": 158.6,
+    "track": 5284,
+    "box": [
+     609.1,
+     538.3,
+     624.7,
+     582.7
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 174.1,
+   "frame": 1741,
+   "track": 5284,
+   "row": {
+    "frame": 1741,
+    "t": 174.1,
+    "track": 5284,
+    "box": [
+     928.8,
+     436.5,
+     942.9,
+     472.6
+    ]
+   },
+   "other": {
+    "frame": 1740,
+    "t": 174.0,
+    "track": 475,
+    "box": [
+     923.0,
+     438.1,
+     937.9,
+     474.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 174.1,
+   "frame": 1741,
+   "track": 475,
+   "row": {
+    "frame": 1741,
+    "t": 174.1,
+    "track": 475,
+    "box": [
+     954.8,
+     428.0,
+     974.8,
+     481.0
+    ]
+   },
+   "other": {
+    "frame": 1740,
+    "t": 174.0,
+    "track": 5284,
+    "box": [
+     952.6,
+     425.7,
+     975.5,
+     479.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 216.7,
+   "frame": 2167,
+   "track": 5284,
+   "row": {
+    "frame": 2167,
+    "t": 216.7,
+    "track": 5284,
+    "box": [
+     407.9,
+     476.8,
+     426.5,
+     518.8
+    ]
+   },
+   "other": {
+    "frame": 2166,
+    "t": 216.6,
+    "track": 5313,
+    "box": [
+     406.1,
+     478.7,
+     425.8,
+     517.7
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 216.7,
+   "frame": 2167,
+   "track": 5313,
+   "row": {
+    "frame": 2167,
+    "t": 216.7,
+    "track": 5313,
+    "box": [
+     376.4,
+     480.6,
+     397.0,
+     517.9
+    ]
+   },
+   "other": {
+    "frame": 2166,
+    "t": 216.6,
+    "track": 5284,
+    "box": [
+     377.5,
+     480.4,
+     395.7,
+     522.3
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 314.3,
+   "frame": 3143,
+   "track": 800,
+   "row": {
+    "frame": 3143,
+    "t": 314.3,
+    "track": 800,
+    "box": [
+     512.4,
+     510.0,
+     534.7,
+     556.0
+    ]
+   },
+   "other": {
+    "frame": 3142,
+    "t": 314.2,
+    "track": 818,
+    "box": [
+     521.1,
+     508.2,
+     537.9,
+     553.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 314.3,
+   "frame": 3143,
+   "track": 818,
+   "row": {
+    "frame": 3143,
+    "t": 314.3,
+    "track": 818,
+    "box": [
+     544.9,
+     507.3,
+     559.8,
+     543.6
+    ]
+   },
+   "other": {
+    "frame": 3142,
+    "t": 314.2,
+    "track": 800,
+    "box": [
+     485.4,
+     505.9,
+     508.7,
+     555.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 346.1,
+   "frame": 3461,
+   "track": 883,
+   "row": {
+    "frame": 3461,
+    "t": 346.1,
+    "track": 883,
+    "box": [
+     1541.6,
+     398.3,
+     1582.1,
+     457.9
+    ]
+   },
+   "other": {
+    "frame": 3460,
+    "t": 346.0,
+    "track": 946,
+    "box": [
+     1564.5,
+     391.0,
+     1594.2,
+     447.1
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 346.1,
+   "frame": 3461,
+   "track": 946,
+   "row": {
+    "frame": 3461,
+    "t": 346.1,
+    "track": 946,
+    "box": [
+     1518.9,
+     382.8,
+     1552.5,
+     464.6
+    ]
+   },
+   "other": {
+    "frame": 3460,
+    "t": 346.0,
+    "track": 883,
+    "box": [
+     1517.0,
+     379.6,
+     1561.1,
+     465.5
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 359.6,
+   "frame": 3596,
+   "track": 964,
+   "row": {
+    "frame": 3596,
+    "t": 359.6,
+    "track": 964,
+    "box": [
+     894.6,
+     412.4,
+     924.4,
+     493.3
+    ]
+   },
+   "other": {
+    "frame": 3595,
+    "t": 359.5,
+    "track": 986,
+    "box": [
+     878.2,
+     415.5,
+     914.7,
+     495.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 359.6,
+   "frame": 3596,
+   "track": 986,
+   "row": {
+    "frame": 3596,
+    "t": 359.6,
+    "track": 986,
+    "box": [
+     861.0,
+     417.0,
+     883.8,
+     487.8
+    ]
+   },
+   "other": {
+    "frame": 3594,
+    "t": 359.4,
+    "track": 964,
+    "box": [
+     843.7,
+     402.7,
+     903.6,
+     501.0
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 401.0,
+   "frame": 4010,
+   "track": 1041,
+   "row": {
+    "frame": 4010,
+    "t": 401.0,
+    "track": 1041,
+    "box": [
+     1696.4,
+     405.8,
+     1717.2,
+     455.7
+    ]
+   },
+   "other": {
+    "frame": 4007,
+    "t": 400.7,
+    "track": 1099,
+    "box": [
+     1631.1,
+     414.9,
+     1654.3,
+     468.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 401.0,
+   "frame": 4010,
+   "track": 1099,
+   "row": {
+    "frame": 4010,
+    "t": 401.0,
+    "track": 1099,
+    "box": [
+     1670.8,
+     403.1,
+     1700.5,
+     473.6
+    ]
+   },
+   "other": {
+    "frame": 4007,
+    "t": 400.7,
+    "track": 1041,
+    "box": [
+     1606.7,
+     410.1,
+     1633.0,
+     478.0
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 457.8,
+   "frame": 4578,
+   "track": 1089,
+   "row": {
+    "frame": 4578,
+    "t": 457.8,
+    "track": 1089,
+    "box": [
+     1258.2,
+     344.9,
+     1281.3,
+     402.0
+    ]
+   },
+   "other": {
+    "frame": 4577,
+    "t": 457.7,
+    "track": 1206,
+    "box": [
+     1283.8,
+     338.2,
+     1306.6,
+     397.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 457.8,
+   "frame": 4578,
+   "track": 1206,
+   "row": {
+    "frame": 4578,
+    "t": 457.8,
+    "track": 1206,
+    "box": [
+     1279.6,
+     347.2,
+     1302.9,
+     393.3
+    ]
+   },
+   "other": {
+    "frame": 4577,
+    "t": 457.7,
+    "track": 1089,
+    "box": [
+     1306.1,
+     341.4,
+     1328.2,
+     388.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 528.5,
+   "frame": 5285,
+   "track": 1266,
+   "row": {
+    "frame": 5285,
+    "t": 528.5,
+    "track": 1266,
+    "box": [
+     1087.8,
+     388.2,
+     1116.3,
+     457.0
+    ]
+   },
+   "other": {
+    "frame": 5284,
+    "t": 528.4,
+    "track": 1395,
+    "box": [
+     1087.1,
+     388.7,
+     1121.6,
+     457.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 528.5,
+   "frame": 5285,
+   "track": 1395,
+   "row": {
+    "frame": 5285,
+    "t": 528.5,
+    "track": 1395,
+    "box": [
+     1111.9,
+     393.7,
+     1132.1,
+     438.8
+    ]
+   },
+   "other": {
+    "frame": 5284,
+    "t": 528.4,
+    "track": 1266,
+    "box": [
+     1114.1,
+     392.5,
+     1135.6,
+     437.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 574.5,
+   "frame": 5745,
+   "track": 1428,
+   "row": {
+    "frame": 5745,
+    "t": 574.5,
+    "track": 1428,
+    "box": [
+     365.1,
+     381.1,
+     383.5,
+     417.2
+    ]
+   },
+   "other": {
+    "frame": 5744,
+    "t": 574.4,
+    "track": 1464,
+    "box": [
+     329.0,
+     383.5,
+     346.6,
+     424.3
+    ]
+   },
+   "alsoSteal": true,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 574.5,
+   "frame": 5745,
+   "track": 1464,
+   "row": {
+    "frame": 5745,
+    "t": 574.5,
+    "track": 1464,
+    "box": [
+     341.8,
+     378.5,
+     362.7,
+     420.6
+    ]
+   },
+   "other": {
+    "frame": 5744,
+    "t": 574.4,
+    "track": 1428,
+    "box": [
+     343.5,
+     379.9,
+     363.1,
+     421.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 594.8,
+   "frame": 5948,
+   "track": 1331,
+   "row": {
+    "frame": 5948,
+    "t": 594.8,
+    "track": 1331,
+    "box": [
+     540.9,
+     567.5,
+     557.7,
+     607.5
+    ]
+   },
+   "other": {
+    "frame": 5947,
+    "t": 594.7,
+    "track": 1404,
+    "box": [
+     591.5,
+     582.3,
+     608.4,
+     630.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 594.8,
+   "frame": 5948,
+   "track": 1404,
+   "row": {
+    "frame": 5948,
+    "t": 594.8,
+    "track": 1404,
+    "box": [
+     578.6,
+     567.7,
+     596.2,
+     615.7
+    ]
+   },
+   "other": {
+    "frame": 5947,
+    "t": 594.7,
+    "track": 1331,
+    "box": [
+     552.5,
+     584.4,
+     570.8,
+     621.7
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 601.8,
+   "frame": 6018,
+   "track": 1515,
+   "row": {
+    "frame": 6018,
+    "t": 601.8,
+    "track": 1515,
+    "box": [
+     655.8,
+     426.2,
+     677.1,
+     479.8
+    ]
+   },
+   "other": {
+    "frame": 6017,
+    "t": 601.7,
+    "track": 1523,
+    "box": [
+     653.8,
+     426.1,
+     673.8,
+     478.0
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 601.8,
+   "frame": 6018,
+   "track": 1523,
+   "row": {
+    "frame": 6018,
+    "t": 601.8,
+    "track": 1523,
+    "box": [
+     690.8,
+     429.6,
+     707.8,
+     476.6
+    ]
+   },
+   "other": {
+    "frame": 6016,
+    "t": 601.6,
+    "track": 1515,
+    "box": [
+     624.9,
+     435.5,
+     642.1,
+     472.5
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 627.0,
+   "frame": 6270,
+   "track": 1515,
+   "row": {
+    "frame": 6270,
+    "t": 627.0,
+    "track": 1515,
+    "box": [
+     1112.7,
+     501.3,
+     1135.0,
+     552.6
+    ]
+   },
+   "other": {
+    "frame": 6269,
+    "t": 626.9,
+    "track": 1556,
+    "box": [
+     1106.8,
+     500.8,
+     1130.6,
+     551.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 627.0,
+   "frame": 6270,
+   "track": 1556,
+   "row": {
+    "frame": 6270,
+    "t": 627.0,
+    "track": 1556,
+    "box": [
+     1086.4,
+     509.8,
+     1100.4,
+     544.4
+    ]
+   },
+   "other": {
+    "frame": 6269,
+    "t": 626.9,
+    "track": 1515,
+    "box": [
+     1126.5,
+     502.9,
+     1145.7,
+     554.3
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 760.5,
+   "frame": 7605,
+   "track": 1950,
+   "row": {
+    "frame": 7605,
+    "t": 760.5,
+    "track": 1950,
+    "box": [
+     1262.2,
+     660.3,
+     1282.6,
+     700.9
+    ]
+   },
+   "other": {
+    "frame": 7604,
+    "t": 760.4,
+    "track": 2030,
+    "box": [
+     1260.2,
+     653.6,
+     1290.0,
+     715.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 760.5,
+   "frame": 7605,
+   "track": 2030,
+   "row": {
+    "frame": 7605,
+    "t": 760.5,
+    "track": 2030,
+    "box": [
+     1230.5,
+     653.5,
+     1261.9,
+     714.5
+    ]
+   },
+   "other": {
+    "frame": 7604,
+    "t": 760.4,
+    "track": 1950,
+    "box": [
+     1283.1,
+     660.0,
+     1302.0,
+     699.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 764.0,
+   "frame": 7640,
+   "track": 2050,
+   "row": {
+    "frame": 7640,
+    "t": 764.0,
+    "track": 2050,
+    "box": [
+     1646.6,
+     512.5,
+     1680.3,
+     578.0
+    ]
+   },
+   "other": {
+    "frame": 7639,
+    "t": 763.9,
+    "track": 2055,
+    "box": [
+     1636.6,
+     510.8,
+     1673.2,
+     604.5
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 764.0,
+   "frame": 7640,
+   "track": 2055,
+   "row": {
+    "frame": 7640,
+    "t": 764.0,
+    "track": 2055,
+    "box": [
+     1607.1,
+     515.6,
+     1645.4,
+     608.5
+    ]
+   },
+   "other": {
+    "frame": 7639,
+    "t": 763.9,
+    "track": 2050,
+    "box": [
+     1664.7,
+     509.9,
+     1699.7,
+     585.0
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 775.1,
+   "frame": 7751,
+   "track": 2050,
+   "row": {
+    "frame": 7751,
+    "t": 775.1,
+    "track": 2050,
+    "box": [
+     1512.2,
+     441.2,
+     1534.0,
+     500.8
+    ]
+   },
+   "other": {
+    "frame": 7750,
+    "t": 775.0,
+    "track": 2079,
+    "box": [
+     1501.8,
+     436.5,
+     1529.6,
+     511.1
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 775.1,
+   "frame": 7751,
+   "track": 2079,
+   "row": {
+    "frame": 7751,
+    "t": 775.1,
+    "track": 2079,
+    "box": [
+     1473.7,
+     435.2,
+     1501.6,
+     508.2
+    ]
+   },
+   "other": {
+    "frame": 7750,
+    "t": 775.0,
+    "track": 2050,
+    "box": [
+     1536.3,
+     442.9,
+     1558.9,
+     500.3
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 782.0,
+   "frame": 7820,
+   "track": 2067,
+   "row": {
+    "frame": 7820,
+    "t": 782.0,
+    "track": 2067,
+    "box": [
+     1135.2,
+     647.7,
+     1210.6,
+     822.9
+    ]
+   },
+   "other": {
+    "frame": 7819,
+    "t": 781.9,
+    "track": 2068,
+    "box": [
+     1149.6,
+     645.0,
+     1246.6,
+     825.3
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 782.0,
+   "frame": 7820,
+   "track": 2068,
+   "row": {
+    "frame": 7820,
+    "t": 782.0,
+    "track": 2068,
+    "box": [
+     1189.6,
+     649.2,
+     1238.6,
+     768.8
+    ]
+   },
+   "other": {
+    "frame": 7818,
+    "t": 781.8,
+    "track": 2067,
+    "box": [
+     1099.2,
+     648.1,
+     1170.3,
+     765.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 782.0,
+   "frame": 7820,
+   "track": 5413,
+   "row": {
+    "frame": 7820,
+    "t": 782.0,
+    "track": 5413,
+    "box": [
+     1189.6,
+     649.2,
+     1238.6,
+     768.8
+    ]
+   },
+   "other": {
+    "frame": 7818,
+    "t": 781.8,
+    "track": 2067,
+    "box": [
+     1099.2,
+     648.1,
+     1170.3,
+     765.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": false,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 962.5,
+   "frame": 9625,
+   "track": 2443,
+   "row": {
+    "frame": 9625,
+    "t": 962.5,
+    "track": 2443,
+    "box": [
+     910.8,
+     487.8,
+     934.1,
+     550.7
+    ]
+   },
+   "other": {
+    "frame": 9624,
+    "t": 962.4,
+    "track": 2451,
+    "box": [
+     918.2,
+     495.0,
+     934.2,
+     536.5
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 962.5,
+   "frame": 9625,
+   "track": 2451,
+   "row": {
+    "frame": 9625,
+    "t": 962.5,
+    "track": 2451,
+    "box": [
+     933.6,
+     490.1,
+     951.6,
+     533.6
+    ]
+   },
+   "other": {
+    "frame": 9624,
+    "t": 962.4,
+    "track": 2443,
+    "box": [
+     899.5,
+     493.6,
+     921.1,
+     552.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 967.9,
+   "frame": 9679,
+   "track": 2399,
+   "row": {
+    "frame": 9679,
+    "t": 967.9,
+    "track": 2399,
+    "box": [
+     926.9,
+     528.8,
+     949.4,
+     591.3
+    ]
+   },
+   "other": {
+    "frame": 9678,
+    "t": 967.8,
+    "track": 2475,
+    "box": [
+     868.0,
+     513.1,
+     898.5,
+     581.3
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 967.9,
+   "frame": 9679,
+   "track": 2475,
+   "row": {
+    "frame": 9679,
+    "t": 967.9,
+    "track": 2475,
+    "box": [
+     903.8,
+     532.3,
+     930.7,
+     597.8
+    ]
+   },
+   "other": {
+    "frame": 9678,
+    "t": 967.8,
+    "track": 2399,
+    "box": [
+     890.3,
+     512.6,
+     911.6,
+     565.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 968.0,
+   "frame": 9680,
+   "track": 2399,
+   "row": {
+    "frame": 9680,
+    "t": 968.0,
+    "track": 2399,
+    "box": [
+     941.8,
+     544.7,
+     971.7,
+     610.8
+    ]
+   },
+   "other": {
+    "frame": 9679,
+    "t": 967.9,
+    "track": 2475,
+    "box": [
+     903.8,
+     532.3,
+     930.7,
+     597.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 968.0,
+   "frame": 9680,
+   "track": 2475,
+   "row": {
+    "frame": 9680,
+    "t": 968.0,
+    "track": 2475,
+    "box": [
+     924.2,
+     551.5,
+     946.4,
+     615.8
+    ]
+   },
+   "other": {
+    "frame": 9679,
+    "t": 967.9,
+    "track": 2399,
+    "box": [
+     926.9,
+     528.8,
+     949.4,
+     591.3
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 968.3,
+   "frame": 9683,
+   "track": 2305,
+   "row": {
+    "frame": 9683,
+    "t": 968.3,
+    "track": 2305,
+    "box": [
+     1005.7,
+     648.8,
+     1029.7,
+     708.8
+    ]
+   },
+   "other": {
+    "frame": 9682,
+    "t": 968.2,
+    "track": 2399,
+    "box": [
+     955.4,
+     594.9,
+     983.4,
+     662.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 968.3,
+   "frame": 9683,
+   "track": 2399,
+   "row": {
+    "frame": 9683,
+    "t": 968.3,
+    "track": 2399,
+    "box": [
+     979.4,
+     643.2,
+     1007.9,
+     715.9
+    ]
+   },
+   "other": {
+    "frame": 9682,
+    "t": 968.2,
+    "track": 2305,
+    "box": [
+     983.2,
+     596.5,
+     1007.2,
+     656.5
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1003.0,
+   "frame": 10030,
+   "track": 2451,
+   "row": {
+    "frame": 10030,
+    "t": 1003.0,
+    "track": 2451,
+    "box": [
+     1026.8,
+     451.4,
+     1051.6,
+     521.9
+    ]
+   },
+   "other": {
+    "frame": 10029,
+    "t": 1002.9,
+    "track": 2540,
+    "box": [
+     1029.8,
+     454.6,
+     1051.3,
+     523.0
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1003.0,
+   "frame": 10030,
+   "track": 2540,
+   "row": {
+    "frame": 10030,
+    "t": 1003.0,
+    "track": 2540,
+    "box": [
+     1017.1,
+     450.0,
+     1036.5,
+     520.4
+    ]
+   },
+   "other": {
+    "frame": 10029,
+    "t": 1002.9,
+    "track": 2451,
+    "box": [
+     1014.9,
+     451.8,
+     1032.7,
+     512.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1105.6,
+   "frame": 11056,
+   "track": 2783,
+   "row": {
+    "frame": 11056,
+    "t": 1105.6,
+    "track": 2783,
+    "box": [
+     1265.7,
+     549.3,
+     1287.0,
+     598.5
+    ]
+   },
+   "other": {
+    "frame": 11055,
+    "t": 1105.5,
+    "track": 2853,
+    "box": [
+     1226.5,
+     538.6,
+     1243.7,
+     583.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1105.6,
+   "frame": 11056,
+   "track": 2853,
+   "row": {
+    "frame": 11056,
+    "t": 1105.6,
+    "track": 2853,
+    "box": [
+     1247.7,
+     550.5,
+     1265.7,
+     595.4
+    ]
+   },
+   "other": {
+    "frame": 11055,
+    "t": 1105.5,
+    "track": 2783,
+    "box": [
+     1245.6,
+     538.9,
+     1265.7,
+     586.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1107.2,
+   "frame": 11072,
+   "track": 2810,
+   "row": {
+    "frame": 11072,
+    "t": 1107.2,
+    "track": 2810,
+    "box": [
+     1223.0,
+     670.2,
+     1246.1,
+     710.8
+    ]
+   },
+   "other": {
+    "frame": 11071,
+    "t": 1107.1,
+    "track": 2853,
+    "box": [
+     1268.5,
+     674.5,
+     1284.3,
+     717.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1107.2,
+   "frame": 11072,
+   "track": 2853,
+   "row": {
+    "frame": 11072,
+    "t": 1107.2,
+    "track": 2853,
+    "box": [
+     1246.5,
+     673.9,
+     1264.9,
+     718.0
+    ]
+   },
+   "other": {
+    "frame": 11071,
+    "t": 1107.1,
+    "track": 2810,
+    "box": [
+     1250.9,
+     669.7,
+     1269.3,
+     714.5
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1124.8,
+   "frame": 11248,
+   "track": 2887,
+   "row": {
+    "frame": 11248,
+    "t": 1124.8,
+    "track": 2887,
+    "box": [
+     1042.4,
+     605.5,
+     1057.2,
+     644.2
+    ]
+   },
+   "other": {
+    "frame": 11245,
+    "t": 1124.5,
+    "track": 2888,
+    "box": [
+     1045.6,
+     604.4,
+     1065.6,
+     646.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1124.8,
+   "frame": 11248,
+   "track": 2888,
+   "row": {
+    "frame": 11248,
+    "t": 1124.8,
+    "track": 2888,
+    "box": [
+     1056.1,
+     603.8,
+     1072.4,
+     644.5
+    ]
+   },
+   "other": {
+    "frame": 11247,
+    "t": 1124.7,
+    "track": 2887,
+    "box": [
+     1053.4,
+     605.6,
+     1074.9,
+     641.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1125.2,
+   "frame": 11252,
+   "track": 2873,
+   "row": {
+    "frame": 11252,
+    "t": 1125.2,
+    "track": 2873,
+    "box": [
+     1026.8,
+     603.6,
+     1042.9,
+     644.8
+    ]
+   },
+   "other": {
+    "frame": 11251,
+    "t": 1125.1,
+    "track": 2893,
+    "box": [
+     928.2,
+     597.9,
+     949.6,
+     655.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1125.2,
+   "frame": 11252,
+   "track": 2893,
+   "row": {
+    "frame": 11252,
+    "t": 1125.2,
+    "track": 2893,
+    "box": [
+     989.4,
+     601.5,
+     1005.3,
+     644.8
+    ]
+   },
+   "other": {
+    "frame": 11251,
+    "t": 1125.1,
+    "track": 2873,
+    "box": [
+     984.7,
+     602.4,
+     1000.5,
+     644.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1134.8,
+   "frame": 11348,
+   "track": 2873,
+   "row": {
+    "frame": 11348,
+    "t": 1134.8,
+    "track": 2873,
+    "box": [
+     619.3,
+     494.0,
+     637.8,
+     539.7
+    ]
+   },
+   "other": {
+    "frame": 11347,
+    "t": 1134.7,
+    "track": 2908,
+    "box": [
+     621.1,
+     494.5,
+     637.6,
+     537.1
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1134.8,
+   "frame": 11348,
+   "track": 2908,
+   "row": {
+    "frame": 11348,
+    "t": 1134.8,
+    "track": 2908,
+    "box": [
+     644.5,
+     496.5,
+     663.7,
+     537.5
+    ]
+   },
+   "other": {
+    "frame": 11345,
+    "t": 1134.5,
+    "track": 2873,
+    "box": [
+     539.9,
+     487.0,
+     557.4,
+     535.1
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1151.1,
+   "frame": 11511,
+   "track": 2947,
+   "row": {
+    "frame": 11511,
+    "t": 1151.1,
+    "track": 2947,
+    "box": [
+     616.6,
+     527.8,
+     641.1,
+     590.9
+    ]
+   },
+   "other": {
+    "frame": 11510,
+    "t": 1151.0,
+    "track": 2953,
+    "box": [
+     509.9,
+     532.4,
+     529.3,
+     590.1
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 20,
+    "cand": 20
+   },
+   "claimsNearTrigger": [
+    {
+     "t": 1154.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    }
+   ],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1151.1,
+   "frame": 11511,
+   "track": 2953,
+   "row": {
+    "frame": 11511,
+    "t": 1151.1,
+    "track": 2953,
+    "box": [
+     545.7,
+     526.9,
+     581.1,
+     609.2
+    ]
+   },
+   "other": {
+    "frame": 11510,
+    "t": 1151.0,
+    "track": 2947,
+    "box": [
+     539.6,
+     526.3,
+     569.6,
+     607.8
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 20,
+    "cand": 20
+   },
+   "claimsNearTrigger": [
+    {
+     "t": 1154.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    }
+   ],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1152.6,
+   "frame": 11526,
+   "track": 2888,
+   "row": {
+    "frame": 11526,
+    "t": 1152.6,
+    "track": 2888,
+    "box": [
+     809.5,
+     546.3,
+     832.0,
+     612.4
+    ]
+   },
+   "other": {
+    "frame": 11524,
+    "t": 1152.4,
+    "track": 2947,
+    "box": [
+     732.8,
+     546.4,
+     798.7,
+     656.2
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 35,
+    "cand": 35
+   },
+   "claimsNearTrigger": [
+    {
+     "t": 1154.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.04,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.04,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "interpolated",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "interpolated",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.5,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.5,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.6,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.6,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.5,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.5,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.6,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.6,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    }
+   ],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1152.6,
+   "frame": 11526,
+   "track": 2947,
+   "row": {
+    "frame": 11526,
+    "t": 1152.6,
+    "track": 2947,
+    "box": [
+     824.3,
+     539.9,
+     854.6,
+     618.7
+    ]
+   },
+   "other": {
+    "frame": 11525,
+    "t": 1152.5,
+    "track": 2888,
+    "box": [
+     811.2,
+     539.4,
+     841.3,
+     617.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": true,
+   "targetClaimsWithin5s": {
+    "base": 35,
+    "cand": 35
+   },
+   "claimsNearTrigger": [
+    {
+     "t": 1154.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.1,
+     "onOtherRow": 0.08
+    },
+    {
+     "t": 1154.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.1,
+     "onOtherRow": 0.08
+    },
+    {
+     "t": 1154.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.07,
+     "onOtherRow": 0.02
+    },
+    {
+     "t": 1154.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.07,
+     "onOtherRow": 0.02
+    },
+    {
+     "t": 1154.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "interpolated",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "interpolated",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.5,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.5,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.6,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.6,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1154.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.5,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.5,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.6,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1155.6,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    }
+   ],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1187.9,
+   "frame": 11879,
+   "track": 2989,
+   "row": {
+    "frame": 11879,
+    "t": 1187.9,
+    "track": 2989,
+    "box": [
+     1423.0,
+     412.6,
+     1458.3,
+     494.3
+    ]
+   },
+   "other": {
+    "frame": 11878,
+    "t": 1187.8,
+    "track": 3051,
+    "box": [
+     1467.8,
+     425.8,
+     1503.5,
+     506.7
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 36,
+    "cand": 36
+   },
+   "claimsNearTrigger": [
+    {
+     "t": 1186.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1186.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.8,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.8,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.5,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.5,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.6,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.6,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.7,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.7,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.8,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.8,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    }
+   ],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1187.9,
+   "frame": 11879,
+   "track": 3051,
+   "row": {
+    "frame": 11879,
+    "t": 1187.9,
+    "track": 3051,
+    "box": [
+     1453.2,
+     416.8,
+     1480.3,
+     483.3
+    ]
+   },
+   "other": {
+    "frame": 11878,
+    "t": 1187.8,
+    "track": 2989,
+    "box": [
+     1453.1,
+     430.2,
+     1475.8,
+     506.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 36,
+    "cand": 36
+   },
+   "claimsNearTrigger": [
+    {
+     "t": 1186.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1186.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1187.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.8,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.8,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1188.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.4,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.4,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.5,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.5,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.6,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.6,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.7,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.7,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.8,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.8,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.9,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1189.9,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.0,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.0,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.1,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.1,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.2,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.2,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.3,
+     "run": "base",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    },
+    {
+     "t": 1190.3,
+     "run": "cand",
+     "state": "LIKE",
+     "evidence": "anchored",
+     "onTriggerRow": 0.0,
+     "onOtherRow": 0.0
+    }
+   ],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1374.1,
+   "frame": 13741,
+   "track": 3462,
+   "row": {
+    "frame": 13741,
+    "t": 1374.1,
+    "track": 3462,
+    "box": [
+     1150.5,
+     507.1,
+     1176.5,
+     574.7
+    ]
+   },
+   "other": {
+    "frame": 13740,
+    "t": 1374.0,
+    "track": 3466,
+    "box": [
+     1159.1,
+     512.0,
+     1176.8,
+     562.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 4,
+    "cand": 4
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1374.1,
+   "frame": 13741,
+   "track": 3466,
+   "row": {
+    "frame": 13741,
+    "t": 1374.1,
+    "track": 3466,
+    "box": [
+     1183.6,
+     512.3,
+     1202.3,
+     561.5
+    ]
+   },
+   "other": {
+    "frame": 13740,
+    "t": 1374.0,
+    "track": 3462,
+    "box": [
+     1129.5,
+     510.5,
+     1154.8,
+     577.6
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 4,
+    "cand": 4
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1570.1,
+   "frame": 15701,
+   "track": 3962,
+   "row": {
+    "frame": 15701,
+    "t": 1570.1,
+    "track": 3962,
+    "box": [
+     1084.9,
+     618.7,
+     1101.3,
+     670.1
+    ]
+   },
+   "other": {
+    "frame": 15700,
+    "t": 1570.0,
+    "track": 4014,
+    "box": [
+     1078.0,
+     617.3,
+     1107.5,
+     671.0
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  },
+  {
+   "t": 1570.1,
+   "frame": 15701,
+   "track": 4014,
+   "row": {
+    "frame": 15701,
+    "t": 1570.1,
+    "track": 4014,
+    "box": [
+     1068.4,
+     619.1,
+     1084.0,
+     664.0
+    ]
+   },
+   "other": {
+    "frame": 15698,
+    "t": 1569.8,
+    "track": 3962,
+    "box": [
+     1117.0,
+     621.0,
+     1134.5,
+     660.4
+    ]
+   },
+   "alsoSteal": false,
+   "appliedInCandidate": true,
+   "inLabelledInterval": false,
+   "targetClaimsWithin5s": {
+    "base": 0,
+    "cand": 0
+   },
+   "claimsNearTrigger": [],
+   "changedClaimFrames": []
+  }
+ ]
+}
