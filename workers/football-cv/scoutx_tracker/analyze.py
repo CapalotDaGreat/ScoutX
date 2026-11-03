@@ -164,11 +164,11 @@ def cached_tracklets(D, kit: str, kit2: str, det_reads: dict | None, cache_dir: 
     summaries). Measured on IMG_4809 (34 min, CPU): 40 s once, then ~3 s per correction."""
     import hashlib  # noqa: PLC0415
 
-    from .crossings import EXCHANGE_SPLIT  # noqa: PLC0415
+    from .crossings import EXCHANGE_SPLIT, RESUME_SPLIT  # noqa: PLC0415
     from .tracklets import CONTACT_SPLIT, TRACKLET_ALGO_VERSION, assemble, panorama_transforms, track_rows  # noqa: PLC0415
 
     reads_key = hash(tuple(sorted(det_reads.items()))) if det_reads else None
-    key = ("tracklets", _token(D), kit, kit2, reads_key, CONTACT_SPLIT, EXCHANGE_SPLIT, TRACKLET_ALGO_VERSION, str(cache_dir))
+    key = ("tracklets", _token(D), kit, kit2, reads_key, CONTACT_SPLIT, EXCHANGE_SPLIT, RESUME_SPLIT, TRACKLET_ALGO_VERSION, str(cache_dir))
     if key in _MEMO:
         return memo(key, lambda: None)
     h = hashlib.sha256()

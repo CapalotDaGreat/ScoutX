@@ -62,6 +62,16 @@ STEAL_SAME_MARGIN = float(__import__("os").environ.get("SCOUTX_STEAL_SAME_MARGIN
 # STEAL_IOU / STEAL_LEAD), plus: B's own row at that frame continues B clearly worse (by STEAL_LEAD) than A's row
 # does. Both tracks are cut and linked like steals: identity crosses only when appearance decides it.
 EXCHANGE_SPLIT = __import__("os").environ.get("SCOUTX_EXCHANGE_SPLIT", "0") != "0"
+# 5.3 CANDIDATE B (off by default; SCOUTX_RESUME_SPLIT=1 enables it; independent of EXCHANGE_SPLIT): the second half of
+# an exchange spread over frames. IMG_4809 244.4 s, DEFAULT decode: at 2443 player A's track takes #20's box (the
+# steal rule cuts A there, with an unclear link), while #20's own track pauses at 2442-2443 and RESUMES at 2444 on
+# A's box, then follows A. Nothing cut #20's track, so #20's anchored identity passed to A (LIKELY claims). For every
+# steal (thief track X takes victim Y's box at frame f while Y is paused): if Y's first row after its pause, within
+# STEAL_LOOK frames of f, fits X's own motion-extrapolated box (STEAL_IOU) better by STEAL_LEAD than Y's own
+# extrapolation - or does not continue Y's own extrapolation at all (IoU < STEAL_IOU; at 244.4 s the boxes are
+# distorted by the overlap, so neither extrapolation reaches STEAL_IOU) - Y is cut there too and linked like a steal
+# (identity crosses only when appearance decides it).
+RESUME_SPLIT = __import__("os").environ.get("SCOUTX_RESUME_SPLIT", "0") != "0"
 
 
 @dataclass
@@ -175,6 +185,48 @@ def steal_rows(R: np.ndarray, row_kit: np.ndarray, skip: np.ndarray | None = Non
         own = float(_iou_many(R[b, 3:7], R[prv[b], 3:7][None])[0])
         if own < 1.0 - lead and best_v[b] > own + lead:
             out.append((int(b), int(best_q[b])))
+    return out
+
+
+def resume_rows(R: np.ndarray, steals: list[tuple[int, int]], skip: np.ndarray | None = None,
+                look: int = STEAL_LOOK, min_iou: float = STEAL_IOU, lead: float = STEAL_LEAD) -> list[tuple[int, int]]:
+    """For steals (b, q) = (thief row b on track X, victim Y's last row q before its pause): (r, p) pairs where r is
+    Y's first row after the pause, at most `look` frames after b, that lands on X's motion-extrapolated path
+    (IoU >= min_iou, better by `lead` than Y's own extrapolation from q), and p is X's last row before b. Returned in
+    the steal_rows format, so r is cut and linked by the existing steal machinery."""
+    if len(R) == 0 or not steals:
+        return []
+    fr = R[:, 0].astype(int)
+    tid = R[:, 2].astype(int)
+    order = np.lexsort((fr, tid))
+    cont = tid[order[:-1]] == tid[order[1:]]
+    nxt_row = np.full(len(R), -1, np.int64)
+    nxt_row[order[:-1][cont]] = order[1:][cont]
+    prv_row = np.full(len(R), -1, np.int64)
+    prv_row[order[1:][cont]] = order[:-1][cont]
+    out, seen = [], set()
+    for b, q in steals:
+        r = nxt_row[q]                                        # victim's first row after its pause
+        if r in seen:
+            continue
+        p = prv_row[b]                                        # thief's last row before the steal
+        if r < 0 or p < 0 or not (fr[b] <= fr[r] <= fr[b] + look) or fr[p] >= fr[b]:
+            continue
+        if skip is not None and (skip[r] or skip[p]):
+            continue
+        pp = prv_row[p]
+        step_x = (R[p, 3:7] - R[pp, 3:7]) / (fr[p] - fr[pp]) if pp >= 0 and fr[p] > fr[pp] and fr[p] - fr[pp] <= look else 0.0
+        ex = R[p, 3:7] + step_x * (fr[r] - fr[p])
+        pq = prv_row[q]
+        step_y = (R[q, 3:7] - R[pq, 3:7]) / (fr[q] - fr[pq]) if pq >= 0 and fr[q] > fr[pq] and fr[q] - fr[pq] <= look else 0.0
+        ey = R[q, 3:7] + step_y * (fr[r] - fr[q])
+        vx = float(_iou_many(ex, R[r, 3:7][None])[0])
+        vy = float(_iou_many(ey, R[r, 3:7][None])[0])
+        # Y resumed on X's path, or (B2) Y's resumption is not continuous with Y itself: the steal already shows
+        # the two boxes were confused at this moment, so a resumption that does not continue Y is not Y's evidence.
+        if (vx >= min_iou and vx > vy + lead) or vy < min_iou:
+            out.append((int(r), int(p)))
+            seen.add(r)
     return out
 
 
@@ -295,6 +347,9 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
     # box steals are found on the tracker's own tracks (before any cut: a piece ending at a contact
     # is not a lost track); contact frames are contacts, not steals
     stolen = steal_rows(R, row_kit, skip=occ) if STEAL_SPLIT else []
+    if RESUME_SPLIT:
+        seen_b = {b for b, _ in stolen}
+        stolen = stolen + [(r, p) for r, p in resume_rows(R, stolen, skip=occ) if r not in seen_b]
     if EXCHANGE_SPLIT:
         seen_b = {b for b, _ in stolen}
         stolen = stolen + [(b, q) for b, q in exchange_rows(R, row_kit, skip=occ) if b not in seen_b]

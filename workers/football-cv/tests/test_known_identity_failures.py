@@ -61,7 +61,7 @@ _CACHE: dict = {}
 def _replay(name: str, flag: str, tmp_path_factory):
     if (name, flag) not in _CACHE:
         out = tmp_path_factory.mktemp(f"{name}_x{flag}") / "run"
-        env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "PYTHONHASHSEED": "0"}
+        env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "SCOUTX_RESUME_SPLIT": "0", "PYTHONHASHSEED": "0"}   # default behaviour
         subprocess.run([sys.executable, str(ROOT / "bench" / "regression_replay.py"), "run", "--replay",
                         str(EV / "replays" / name), "--out", str(out)], env=env, cwd=ROOT, check=True, capture_output=True)
         with np.load(out / "automatic" / "timeline.npz") as z:
