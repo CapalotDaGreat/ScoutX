@@ -398,11 +398,19 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
             <View className="gap-3">
               {coachingSufficiency && !coachingSufficiency.ready ? (
                 <Card padding="lg" className="gap-2" testID="coaching-insufficient">
-                  <Heading level={3}>{t('coaching.title')}</Heading>
+                  <Heading level={3}>
+                    {t(`coaching.insufficient.${coachingSufficiency.reason}.title`, {
+                      defaultValue: t('coaching.title'),
+                    })}
+                  </Heading>
                   <Text variant="body-sm" color="secondary">
-                    {t('ask.insufficient')}
+                    {t('coaching.insufficient.lead')}
                   </Text>
-                  <Text variant="body-sm">{coachingSufficiency.nextStep}</Text>
+                  <Text variant="body-sm">
+                    {t(`coaching.insufficient.${coachingSufficiency.reason}.body`, {
+                      defaultValue: coachingSufficiency.nextStep,
+                    })}
+                  </Text>
                 </Card>
               ) : (
                 <StructuredCoachingCard

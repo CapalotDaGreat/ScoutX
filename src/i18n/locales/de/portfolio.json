@@ -6,7 +6,8 @@
   "loadingSubtitle": "Profil wird vorbereitetâ€¦",
   "errorSubtitle": "Dein Portfolio konnte nicht geladen werden",
   "emptySubtitle": "Keine Portfolio-Daten verfÃ¼gbar",
-  "unavailableTitle": "Portfolio nicht verfÃ¼gbar",
+  "unavailableTitle": "Profil konnte nicht geladen werden",
+  "unavailableBody": "PitchProof konnte dein Spielerprofil nicht synchronisieren. Du kannst Media und Entdecken weiter nutzen und es danach erneut versuchen.",
   "buildTitle": "Baue deinen Football Passport",
   "buildDescription": "ErgÃ¤nze Geschichte, Stats und Videos, damit Scouts dich entdecken.",
   "editProfile": "Profil bearbeiten",
@@ -140,7 +141,7 @@
   "managePrivacy": "Privatsphäre verwalten",
   "today": {
     "title": "Heute",
-    "nextBestAction": "Nächster sinnvoller Schritt",
+    "nextBestAction": "Dein nächster Schritt",
     "why": "Warum: {{reason}}",
     "alsoWorthDoing": "Ebenfalls sinnvoll",
     "continueTitle": "Weitermachen, wo du aufgehört hast",

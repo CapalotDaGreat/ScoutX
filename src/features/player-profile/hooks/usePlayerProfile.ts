@@ -69,7 +69,7 @@ export function usePlayerProfile() {
         resolveWithSeed();
       },
       (err) => {
-        setError(toUserMessage(err, 'Unable to sync profile.'));
+        setError(toUserMessage(err, 'Could not sync your player profile. Check your connection and try again.'));
         resolveWithSeed();
       },
     );

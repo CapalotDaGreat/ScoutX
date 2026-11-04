@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { ArrowRight, Goal, UserRound } from 'lucide-react-native';
+import { ArrowRight, Target, UserRound } from 'lucide-react-native';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Screen } from '@/components/layout/Screen';
@@ -35,13 +35,24 @@ export function WelcomeScreen({
       <View className="flex-1 justify-center py-6">
         <AuthCard title={t('welcome.title')} subtitle={t('welcome.subtitle')}>
           <View className="gap-3 border-b border-divider pb-6">
-            <Goal size={36} color={colors.accent} strokeWidth={1.5} accessibilityElementsHidden importantForAccessibility="no" />
+            <Target size={36} color={colors.accent} strokeWidth={1.5} accessibilityElementsHidden importantForAccessibility="no" />
             <Heading level={3}>
               {t('welcome.heroTitle')}
             </Heading>
             <Text variant="body-sm" color="secondary">
               {t('welcome.heroDescription')}
             </Text>
+            <View className="gap-2 pt-1" accessibilityRole="summary">
+              <Text variant="caption" color="tertiary">
+                · {t('welcome.trustMatch')}
+              </Text>
+              <Text variant="caption" color="tertiary">
+                · {t('welcome.trustFootage')}
+              </Text>
+              <Text variant="caption" color="tertiary">
+                · {t('welcome.trustShare')}
+              </Text>
+            </View>
           </View>
 
           <View className="gap-3">

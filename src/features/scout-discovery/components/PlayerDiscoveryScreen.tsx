@@ -275,10 +275,13 @@ export function PlayerDiscoveryScreen({
         ListHeaderComponent={
           <>
             <View className="flex-row items-start gap-2 border-b border-divider px-4 pb-4 pt-4">
-              <View className="min-w-0 flex-1">
+              <View className="min-w-0 flex-1 gap-2">
                 <Heading level={2}>{t('scout:discover.title')}</Heading>
-                <Text variant="body-sm" color="secondary" className="mt-1">
+                <Text variant="body-sm" color="secondary">
                   {t('scout:discover.subtitle')}
+                </Text>
+                <Text variant="caption" color="tertiary" accessibilityLiveRegion="polite">
+                  {t('scout:discover.evidenceNote')}
                 </Text>
               </View>
               {onSettingsPress ? (

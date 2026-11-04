@@ -78,7 +78,8 @@
     "resultsCount_other": "{{count}} jogadores encontrados",
     "resultsCountMore_one": "{{count}} jogador carregado, há mais disponíveis",
     "resultsCountMore_other": "{{count}} jogadores carregados, há mais disponíveis",
-    "saveError": "Não foi possível atualizar os jogadores guardados. Tente novamente."
+    "saveError": "Não foi possível atualizar os jogadores guardados. Tente novamente.",
+    "evidenceNote": "Cards show self-entered profile fields and logged matches. Analysed samples appear only when recorded. Sparse film is not a full scouting judgment."
   },
   "filters": {
     "minAge": "Idade mín.",
@@ -493,7 +494,7 @@
     }
   },
   "sort": {
-    "relevance": "Evid\u00eancias primeiro",
+    "relevance": "Evidências primeiro",
     "overall": "Avaliação global",
     "potential": "Potencial",
     "age": "Idade",

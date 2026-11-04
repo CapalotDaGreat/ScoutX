@@ -1,8 +1,9 @@
 # PitchProof 5.3 App Store submission handoff
 
-**Updated:** 2026-11-04 (~22:20 CET) after share-card preview, coaching scenarios, card labeling  
+**Updated:** 2026-11-04 (~22:30 CET) after UX honesty / navigation pass  
 **Authoritative ledger:** `docs/release/blocker-register-2026-11-04.md`  
-**Engineering progress:** `docs/release/engine-cards-progress-2026-11-04.md`
+**Engineering progress:** `docs/release/engine-cards-progress-2026-11-04.md`  
+**UX audit:** `docs/release/ux-audit-2026-11-04.md`
 
 ---
 
@@ -10,9 +11,9 @@
 
 # READY AFTER SPECIFIC NAMED EXTERNAL ACTIONS
 
-Local engineering for this tip is complete: privacy-safe share-card field selection + preview, coaching scenario evaluations, player-card verified vs profile labeling, OCR provenance **E** ON, E4 retained as known xfail. Unit **733** pass; typecheck green. Submission still blocked on **named external** evidence. Not “READY FOR APP STORE SUBMISSION.” No tracking perfection or Apple acceptance claimed.
+Local product UX honesty improved (Welcome/Discover/coaching gates/Performance tab). Prior engine/cards work retained. **Controlled pilot** possible after Firebase/TestFlight for invited users; **not** App Store ready. Submission still blocked on **named external** evidence. No tracking perfection or Apple acceptance claimed.
 
-**Superseded:** any device/IPA validation against `6679226` / build 1.0.0 (4); shipping freezes at `6d1266c` / `3c9f983` / docs tip `5293420` — freeze **this engineering tip** instead.
+**Superseded:** any device/IPA validation against `6679226` / build 1.0.0 (4); product freezes at `79c00d6` / docs `83c7600` — freeze the **post-UX tip SHA** after this commit.
 
 ---
 

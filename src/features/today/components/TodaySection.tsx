@@ -1,5 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { ChevronRight, CalendarClock, Sparkles } from 'lucide-react-native';
+import { ChevronRight, CalendarClock, Target } from 'lucide-react-native';
 import { Badge } from '@/components/primitives/Badge';
 import { Button } from '@/components/primitives/Button';
 import { Card } from '@/components/primitives/Card';
@@ -284,7 +284,7 @@ function PrimaryActionCard({ action, onAction }: { action: NextBestAction; onAct
   return (
     <View className="gap-3 border-l-4 border-accent bg-surface px-4 py-4">
       <View className="flex-row items-center gap-2">
-        <Sparkles size={16} color={colors.accent} />
+        <Target size={16} color={colors.accent} accessibilityElementsHidden importantForAccessibility="no" />
         <Text variant="overline" color="secondary">
           {t('portfolio:today.nextBestAction')}
         </Text>

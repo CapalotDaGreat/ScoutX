@@ -78,7 +78,8 @@
     "resultsCount_other": "{{count}} giocatori trovati",
     "resultsCountMore_one": "{{count}} giocatore caricato, altri disponibili",
     "resultsCountMore_other": "{{count}} giocatori caricati, altri disponibili",
-    "saveError": "Impossibile aggiornare i giocatori salvati. Riprova."
+    "saveError": "Impossibile aggiornare i giocatori salvati. Riprova.",
+    "evidenceNote": "Cards show self-entered profile fields and logged matches. Analysed samples appear only when recorded. Sparse film is not a full scouting judgment."
   },
   "filters": {
     "minAge": "Età min",

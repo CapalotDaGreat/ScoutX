@@ -78,7 +78,8 @@
     "resultsCount_other": "{{count}} spelers gevonden",
     "resultsCountMore_one": "{{count}} speler geladen, meer beschikbaar",
     "resultsCountMore_other": "{{count}} spelers geladen, meer beschikbaar",
-    "saveError": "Opgeslagen spelers konden niet worden bijgewerkt. Probeer het opnieuw."
+    "saveError": "Opgeslagen spelers konden niet worden bijgewerkt. Probeer het opnieuw.",
+    "evidenceNote": "Cards show self-entered profile fields and logged matches. Analysed samples appear only when recorded. Sparse film is not a full scouting judgment."
   },
   "filters": {
     "minAge": "Min. leeftijd",

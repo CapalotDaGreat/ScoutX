@@ -50,7 +50,7 @@
     }
   },
   "discover": {
-    "continueSearch": "Aucun r\u00e9sultat dans ce lot. Chargez la suite pour continuer.",
+    "continueSearch": "Aucun résultat dans ce lot. Chargez la suite pour continuer.",
     "title": "Découvrir des joueurs",
     "subtitle": "Recherche avancée avec résultats instantanés",
     "loadingSubtitle": "Explore le vivier mondial de talents",
@@ -78,7 +78,8 @@
     "resultsCount_other": "{{count}} joueurs trouvés",
     "resultsCountMore_one": "{{count}} joueur chargé, d’autres sont disponibles",
     "resultsCountMore_other": "{{count}} joueurs chargés, d’autres sont disponibles",
-    "saveError": "Impossible de mettre à jour vos joueurs enregistrés. Réessayez."
+    "saveError": "Impossible de mettre à jour vos joueurs enregistrés. Réessayez.",
+    "evidenceNote": "Cards show self-entered profile fields and logged matches. Analysed samples appear only when recorded. Sparse film is not a full scouting judgment."
   },
   "filters": {
     "minAge": "Âge min",
@@ -666,7 +667,7 @@
   },
   "playerCard": {
     "scoutingProfile": "Profil du joueur",
-    "analysisSamples": "\u00c9chantillons analys\u00e9s",
+    "analysisSamples": "Échantillons analysés",
     "noHighlights": "Pas encore de temps forts",
     "viewProfile": "Voir le joueur",
     "openHint": "Ouvrir le profil complet du joueur",

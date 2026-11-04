@@ -615,5 +615,6 @@
     "body": "Voici exactement la version que PitchProof montre aux personnes que tu n'as pas approuvées. Elle est générée sur notre serveur à partir de tes paramètres de confidentialité et des règles de sécurité ; elle peut donc masquer plus que tes seuls paramètres.",
     "hiddenTitle": "Invisible pour les inconnus",
     "hiddenBody": "Les personnes que tu n'as pas approuvées ne peuvent pas voir ton Passport pour l'instant. Active le Passport public dans tes paramètres de confidentialité. Si tu as moins de 18 ans, ton parent ou tuteur doit aussi l'autoriser. Les changements peuvent prendre un instant."
-  }
+  },
+  "unavailableBody": "PitchProof could not sync your player profile. You can keep browsing Media and Discover, then try again."
 }

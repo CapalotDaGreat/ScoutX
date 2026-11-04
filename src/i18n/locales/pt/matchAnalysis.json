@@ -215,6 +215,29 @@
       "observation": "Observado",
       "inference": "Deduzido",
       "unknown": "Incerto"
+    },
+    "insufficient": {
+      "lead": "Personalized coaching stays closed until the footage can support it.",
+      "identity_unconfirmed": {
+        "title": "Confirm it is you first",
+        "body": "Select frames that show your jersey, or mark the analysis as not you and re-run with clearer footage."
+      },
+      "no_moments": {
+        "title": "Not enough clear moments yet",
+        "body": "Record a longer clip where you stay in frame, or mark frames where you are clearly visible."
+      },
+      "coverage_insufficient": {
+        "title": "Too little of you is on camera",
+        "body": "Film from a wider angle with more continuous coverage of your movement before asking for coaching."
+      },
+      "no_accepted_events": {
+        "title": "No confirmed actions yet",
+        "body": "Review suggested moments and confirm identity. Coaching waits for accepted, attributed observations."
+      },
+      "ok": {
+        "title": "Coaching ready",
+        "body": "Each point ties to a timestamp or an accepted event from this match."
+      }
     }
   },
   "sync": {
