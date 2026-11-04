@@ -24,7 +24,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - [x] E4 addressed with before/after on faithful `reference_i0225` replay
 - [x] No new confirmed-N frames on labelled reference window; likely-N cleared (E3 side-effect)
 - [x] E4 fixed; P remains xfail; E3 desired now passing under DETOUR
-- [ ] Coaching quality evals expanded (next)
+- [x] Coaching: confirmed-only pass insights; clip coaching needs observable + drill criteria
 - [x] Owner-assisted recovery path unchanged (not touched)
 
 ---
@@ -71,8 +71,9 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 
 | SHA | Summary | Invalidates |
 |---|---|---|
-| _(pending)_ | Scout UX honesty | UX audit screenshots / tip SHA |
-| _(pending)_ | DETOUR_SPLIT E4 | Identity replay evidence; known-failure xfails E3/E4 |
+| `1eebf5c009e88d9ac5adbc804abd5ac459d81cd0` | Scout UX honesty + research | UX audit screenshots / tip SHA |
+| `cd8ba966b3bc34751a06391f16952dcb4e2a1b1e` | DETOUR_SPLIT E4 (+ E3 side-effect) | Identity replay evidence; E3/E4 xfails |
+| `45a1ee5c789851ccb7c677a91d6b919be6be0edc` | Coaching confirmed/cited gates | Match-review / clip coaching evals |
 
 ---
 

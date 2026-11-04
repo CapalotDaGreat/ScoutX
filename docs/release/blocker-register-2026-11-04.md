@@ -2,8 +2,10 @@
 
 **Verified:** 2026-11-04 share-card preview + coaching scenarios + card labeling  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA (product RC):** `47e49cf037671d964180404ee0cfd6212ed76006`  
-**Prior product RC (superseded):** `79c00d6e8009ed68a6139cd39467afa78e8b0aa1`  
+**Full SHA (app/scout RC):** `1eebf5c009e88d9ac5adbc804abd5ac459d81cd0`  
+**Engine tip (DETOUR_SPLIT):** `cd8ba966b3bc34751a06391f16952dcb4e2a1b1e`  
+**Coaching tip:** `45a1ee5c789851ccb7c677a91d6b919be6be0edc`  
+**Prior product RC (superseded):** `47e49cf037671d964180404ee0cfd6212ed76006`  
 **Prior docs tip (superseded):** `83c760097e6bcbb8cadc1be43a745a14a9e798d3`  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream**  

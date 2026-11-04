@@ -1,9 +1,10 @@
 # PitchProof 5.3 App Store submission handoff
 
-**Updated:** 2026-11-04 (~22:30 CET) after UX honesty / navigation pass  
+**Updated:** 2026-11-04 (~23:55 CET) after scout honesty + DETOUR_SPLIT (E4)  
 **Authoritative ledger:** `docs/release/blocker-register-2026-11-04.md`  
 **Engineering progress:** `docs/release/engine-cards-progress-2026-11-04.md`  
-**UX audit:** `docs/release/ux-audit-2026-11-04.md`
+**UX audit:** `docs/release/ux-audit-2026-11-04.md` (screenshots predate this tip — renew)  
+**Scout + tracking ledger:** `docs/release/scout-tracking-ledger-2026-11-04.md`
 
 ---
 
@@ -11,9 +12,9 @@
 
 # READY AFTER SPECIFIC NAMED EXTERNAL ACTIONS
 
-Local product UX honesty improved (Welcome/Discover/coaching gates/Performance tab). Prior engine/cards work retained. **Controlled pilot** possible after Firebase/TestFlight for invited users; **not** App Store ready. Submission still blocked on **named external** evidence. No tracking perfection or Apple acceptance claimed.
+Scout Discover honesty improved (freshness/coverage, no preference/potential overclaim). Engine **DETOUR_SPLIT** repairs E4 (and clears E3 likely-N on `reference_i0225`). **Controlled pilot** possible after Firebase/TestFlight for invited users; **not** App Store ready. Tracking is **not** yet flagship-ready (P open; full-match cold replay with DETOUR not re-run here). Submission still blocked on **named external** evidence.
 
-**Superseded:** any device/IPA validation against `6679226` / build 1.0.0 (4); product freezes at `79c00d6` / docs `83c7600` — freeze the **post-UX tip SHA** after this commit.
+**Superseded:** product `47e49cf` / docs `bfbda44`; any device/IPA against `6679226` / build 1.0.0 (4). Freeze the **post-update tip SHA** after this commit.
 
 ---
 
@@ -22,9 +23,11 @@ Local product UX honesty improved (Welcome/Discover/coaching gates/Performance t
 | Field | Value |
 |---|---|
 | Branch | `release/pitchproof-5-3-candidate` |
-| **Release candidate (full)** | `47e49cf037671d964180404ee0cfd6212ed76006` |
-| Prior product RC (superseded) | `79c00d6e8009ed68a6139cd39467afa78e8b0aa1` |
-| Prior docs tip (superseded) | `83c760097e6bcbb8cadc1be43a745a14a9e798d3` |
+| **Release candidate (app/scout)** | `1eebf5c009e88d9ac5adbc804abd5ac459d81cd0` |
+| **Engine tip (DETOUR_SPLIT)** | `cd8ba966b3bc34751a06391f16952dcb4e2a1b1e` |
+| **Coaching tip** | `45a1ee5c789851ccb7c677a91d6b919be6be0edc` |
+| Prior product RC (superseded) | `47e49cf037671d964180404ee0cfd6212ed76006` |
+| Prior docs tip (superseded) | `bfbda446dfd09acd9a9a1ec7afa2606da836989c` |
 | Bundle / version | `com.scoutx.app` / `1.0.0` |
 | ASC / Team | `6820059284` / `833CYAZ8XT` |
 | Firebase / iOS app | `scoutx-230b0` / `1:141939766260:ios:c23d6b9fe65e8a65bd3fa1` |
@@ -42,17 +45,16 @@ Local product UX honesty improved (Welcome/Discover/coaching gates/Performance t
 | E OCR cache provenance | **ON** |
 | D appearance-only LIKELY disabled | **not promoted** |
 | A/B | **off** |
+| DETOUR_SPLIT (E4 one-frame detour) | **ON** (default; `SCOUTX_DETOUR_SPLIT=0` disables) |
 | AI footage / CV worker | fail-closed / null |
 
 ---
 
 ## 3. What changed (this tip)
 
-- Share sheet: omit stats/endorsements/photo/tagline; confirm export preview before card share; downloaded copies cannot be recalled (copy disclosed in UI).
-- Coaching scenario unit evaluations (strong/weak/mixed/sparse/identity/contradiction/coverage).
-- Player cards: explicit evidence captions (trust-verified vs self-entered) on identity panels.
-- E4 tracking defect: **left xfail** (no silent threshold drop / no solver overhaul).
-- Owner decision pack template: `owner-decisions-template-5-3.md`.
+- Scout Discover honesty: freshness/coverage on cards; brief gap codes; filter chips; no preference/potential overclaim (`1eebf5c`). Research: `scout-product-research-2026-11-04.md`. Mock evidence: `docs/release/evidence/scout-discover-freshness-2026-11-04.png`.
+- **DETOUR_SPLIT** (default on): repairs E4 one-frame CONFIRMED on wrong player at `reference_i0225` w211; clears E3 likely-N as side-effect (`cd8ba96`). P remains xfail. Full-match cold replay with DETOUR **not** re-run locally (no stage-1 replay package).
+- Coaching gates: match-review pass insights require confirmed evidence; short-clip coaching requires cited observables + drill objective/success criteria (`45a1ee5`).
 
 ---
 
@@ -77,9 +79,9 @@ Local product UX honesty improved (Welcome/Discover/coaching gates/Performance t
 ## 5. Tracking / coaching honesty
 
 - Continuous tracking **not** claimed as shipping; CV worker null.
-- Known wrong-player xfails (incl. **E4**) retained — pipeline may **abstain** or mis-claim on some windows; do not describe as successfully tracking the selected player end-to-end.
-- Coaching withheld until identity confirmed + moments/accepted events; insufficient paths give concrete next steps.
-- Qualitative coaching judgment still needs **human review** in the field.
+- **E4 repaired** on `reference_i0225` under DETOUR_SPLIT; **P** still xfail (pause-and-resume). Residual confirmed-N on exchange region 176–191 / 195–197 / 208 unchanged.
+- Do **not** describe full-match processing as full-match accuracy validation without labelled review + DETOUR cold replay.
+- Coaching withheld until identity confirmed + moments/accepted events; pass “confirmed” copy no longer counts LIKELY moments. Qualitative judgment still needs **human review**.
 
 ---
 
