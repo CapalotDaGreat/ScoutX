@@ -1,0 +1,1166 @@
+{
+ "i0225": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 68,
+   "firstCorrectDelaySec": {
+    "base": 4.0,
+    "cand": 4.0
+   },
+   "claimsAllFrames": {
+    "base": 76,
+    "cand": 76
+   },
+   "confirmedAllFrames": {
+    "base": 54,
+    "cand": 54
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 68,
+   "firstCorrectDelaySec": {
+    "base": 4.0,
+    "cand": 4.0
+   },
+   "claimsAllFrames": {
+    "base": 76,
+    "cand": 76
+   },
+   "confirmedAllFrames": {
+    "base": 54,
+    "cand": 54
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 68,
+   "firstCorrectDelaySec": {
+    "base": 4.0,
+    "cand": 4.0
+   },
+   "claimsAllFrames": {
+    "base": 76,
+    "cand": 76
+   },
+   "confirmedAllFrames": {
+    "base": 54,
+    "cand": 54
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {
+    "unmatchedClaim->abstained": 12,
+    "wrongPlayerClaim->abstained": 8
+   },
+   "targetFrames": 68,
+   "firstCorrectDelaySec": {
+    "base": 4.0,
+    "cand": 4.0
+   },
+   "claimsAllFrames": {
+    "base": 76,
+    "cand": 56
+   },
+   "confirmedAllFrames": {
+    "base": 54,
+    "cand": 54
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {
+    "unmatchedClaim->abstained": 12,
+    "wrongPlayerClaim->abstained": 8
+   },
+   "targetFrames": 68,
+   "firstCorrectDelaySec": {
+    "base": 4.0,
+    "cand": 4.0
+   },
+   "claimsAllFrames": {
+    "base": 76,
+    "cand": 56
+   },
+   "confirmedAllFrames": {
+    "base": 54,
+    "cand": 54
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {
+    "unmatchedClaim->abstained": 12,
+    "wrongPlayerClaim->abstained": 8
+   },
+   "targetFrames": 68,
+   "firstCorrectDelaySec": {
+    "base": 4.0,
+    "cand": 4.0
+   },
+   "claimsAllFrames": {
+    "base": 76,
+    "cand": 56
+   },
+   "confirmedAllFrames": {
+    "base": 54,
+    "cand": 54
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {
+    "unmatchedClaim->abstained": 12,
+    "wrongPlayerClaim->abstained": 8
+   },
+   "targetFrames": 68,
+   "firstCorrectDelaySec": {
+    "base": 4.0,
+    "cand": 4.0
+   },
+   "claimsAllFrames": {
+    "base": 76,
+    "cand": 56
+   },
+   "confirmedAllFrames": {
+    "base": 54,
+    "cand": 54
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i0400": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i0600": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i1150": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 286,
+   "firstCorrectDelaySec": {
+    "base": 3.6,
+    "cand": 3.6
+   },
+   "claimsAllFrames": {
+    "base": 248,
+    "cand": 248
+   },
+   "confirmedAllFrames": {
+    "base": 90,
+    "cand": 90
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 286,
+   "firstCorrectDelaySec": {
+    "base": 3.6,
+    "cand": 3.6
+   },
+   "claimsAllFrames": {
+    "base": 248,
+    "cand": 248
+   },
+   "confirmedAllFrames": {
+    "base": 90,
+    "cand": 90
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 286,
+   "firstCorrectDelaySec": {
+    "base": 3.6,
+    "cand": 3.6
+   },
+   "claimsAllFrames": {
+    "base": 248,
+    "cand": 248
+   },
+   "confirmedAllFrames": {
+    "base": 90,
+    "cand": 90
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 286,
+   "firstCorrectDelaySec": {
+    "base": 3.6,
+    "cand": 3.6
+   },
+   "claimsAllFrames": {
+    "base": 248,
+    "cand": 248
+   },
+   "confirmedAllFrames": {
+    "base": 90,
+    "cand": 90
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 286,
+   "firstCorrectDelaySec": {
+    "base": 3.6,
+    "cand": 3.6
+   },
+   "claimsAllFrames": {
+    "base": 248,
+    "cand": 248
+   },
+   "confirmedAllFrames": {
+    "base": 90,
+    "cand": 90
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 286,
+   "firstCorrectDelaySec": {
+    "base": 3.6,
+    "cand": 3.6
+   },
+   "claimsAllFrames": {
+    "base": 248,
+    "cand": 248
+   },
+   "confirmedAllFrames": {
+    "base": 90,
+    "cand": 90
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 286,
+   "firstCorrectDelaySec": {
+    "base": 3.6,
+    "cand": 3.6
+   },
+   "claimsAllFrames": {
+    "base": 248,
+    "cand": 248
+   },
+   "confirmedAllFrames": {
+    "base": 90,
+    "cand": 90
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i1295": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 94,
+   "firstCorrectDelaySec": {
+    "base": 0.0,
+    "cand": 0.0
+   },
+   "claimsAllFrames": {
+    "base": 82,
+    "cand": 82
+   },
+   "confirmedAllFrames": {
+    "base": 39,
+    "cand": 39
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 94,
+   "firstCorrectDelaySec": {
+    "base": 0.0,
+    "cand": 0.0
+   },
+   "claimsAllFrames": {
+    "base": 82,
+    "cand": 82
+   },
+   "confirmedAllFrames": {
+    "base": 39,
+    "cand": 39
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 94,
+   "firstCorrectDelaySec": {
+    "base": 0.0,
+    "cand": 0.0
+   },
+   "claimsAllFrames": {
+    "base": 82,
+    "cand": 82
+   },
+   "confirmedAllFrames": {
+    "base": 39,
+    "cand": 39
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 94,
+   "firstCorrectDelaySec": {
+    "base": 0.0,
+    "cand": 0.0
+   },
+   "claimsAllFrames": {
+    "base": 82,
+    "cand": 82
+   },
+   "confirmedAllFrames": {
+    "base": 39,
+    "cand": 39
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 94,
+   "firstCorrectDelaySec": {
+    "base": 0.0,
+    "cand": 0.0
+   },
+   "claimsAllFrames": {
+    "base": 82,
+    "cand": 82
+   },
+   "confirmedAllFrames": {
+    "base": 39,
+    "cand": 39
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 94,
+   "firstCorrectDelaySec": {
+    "base": 0.0,
+    "cand": 0.0
+   },
+   "claimsAllFrames": {
+    "base": 82,
+    "cand": 82
+   },
+   "confirmedAllFrames": {
+    "base": 39,
+    "cand": 39
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 94,
+   "firstCorrectDelaySec": {
+    "base": 0.0,
+    "cand": 0.0
+   },
+   "claimsAllFrames": {
+    "base": 82,
+    "cand": 82
+   },
+   "confirmedAllFrames": {
+    "base": 39,
+    "cand": 39
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i1500": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i1680": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i1800": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 0,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ },
+ "i1890": {
+  "base_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 54,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 54,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "C_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 54,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 54,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "D_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 54,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_cold": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 54,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  },
+  "CD_warm": {
+   "transitionsAllLabelled": {},
+   "targetFrames": 54,
+   "firstCorrectDelaySec": {
+    "base": null,
+    "cand": null
+   },
+   "claimsAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "confirmedAllFrames": {
+    "base": 0,
+    "cand": 0
+   },
+   "lostCorrectTargetFrames": [],
+   "gainedCorrectTargetFrames": []
+  }
+ }
+}

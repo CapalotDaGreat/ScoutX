@@ -713,3 +713,165 @@ All 9 intervals, automatic mode, verified time basis. Every run was rescored; no
 
 - D contradicts the documented `LIKELY_VISIBLE` definition in `states.py`. Promoting D would require changing that contract on purpose. The failed log and JUnit file are kept.
 - `accounting.json` lists every skipped and xfailed test by name and reason.
+
+## 11. Candidates C and D: separate and combined validation (2026-11-04)
+
+**Status:** validation only. C, D and the new E stay **off by default**. A and B are off throughout this section. The default decoder, every threshold and safeguard, `productionApproval=false` and the pinned GPU baseline `51d41c9…` are unchanged. Nothing was deployed, uploaded or launched. These CPU findings **do not** resolve the original GPU accuracy gap.
+
+**Evidence:** `bench/results/5.3/cd-validation-20261104/`. **Contracts:** [identity-contracts-C-D-2026-11-04.md](identity-contracts-C-D-2026-11-04.md).
+
+**Source:** frozen at `13a5174` for every replay (C and D from `86ec1db`); E and the tests at `ed2b242`.
+
+### 11.1 Contracts (Phase 1)
+
+The contracts doc defines, for each candidate:
+
+- C's selected / consulted / cached / accepted observations;
+- which evidence each pass consumes;
+- legitimate budget differences;
+- D's evidence-to-state table;
+- which outputs may attribute in each state.
+
+Every mismatch is recorded as its own defect, DEF-1 to DEF-8. **Neither implementation was broadened.**
+
+**Is an appearance model trained from number evidence enough to qualify a new tracklet?** **Not established.** On labelled data, appearance-only LIKELY claims were 0 correct, 19 wrong, 12 unmatched. With zero positives, the template is built with no target evidence at all (DEF-8).
+
+### 11.2 Whole-match four-way matrix (fresh caches; warm = the baseline's own final cache)
+
+| Config | Cold claims / confirmed | Warm claims / confirmed | Cold = warm? | Timeline |
+|---|---|---|---|---|
+| baseline | 453 / 42 | 423 / 34 | **no** (124 states differ) | cold `fad444c1` = original |
+| C | 453 / 42 | 453 / 42 | **yes, bit-identical** | `fad444c1` |
+| D | 398 / 42 | 396 / 34 | **no** | `ebd6231f` / `f036885d` |
+| C+D | 398 / 42 | 398 / 42 | **yes** | `ebd6231f` |
+
+**Interaction: none beyond composition.**
+
+- C acts on evidence input (first-pass reads). D acts on the output state of one evidence class.
+- C+D cold equals D cold, and C+D warm equals C+D cold.
+- **D does not fix cache sensitivity.** D warm still loses 8 confirmed frames. Only C does.
+
+**Downstream (full-match result.json):**
+
+| | baseline | C+D |
+|---|---|---|
+| Likely-visible seconds | 41.1 | 35.6 |
+| Moments | 4 | 4 |
+| Events | 2 | 2 |
+| Owner review questions | 8 | 8 |
+
+Physical metrics are None in both (uncalibrated).
+
+### 11.3 Reconciling D's 39 removed wrong-player frames with the earlier 42 (from the data, `reconcile_42.json`)
+
+| Group | Frames | Evidence | Baseline state | Under D |
+|---|---|---|---|---|
+| #6, 706.4–716.4 s (legible "6", unlabelled) | 28 | appearance | LIKELY | AMBIGUOUS |
+| #17, 1301.6–1305.7 s (original N labels) | 11 | appearance | LIKELY | AMBIGUOUS |
+| P, 244.5–244.7 s | 3 | **anchored** | LIKELY | **LIKELY (unchanged)** |
+
+- 28 + 11 + 3 = 42. D removes 39.
+- The 3 P frames are wrong **only under the proposed (unreviewed) label corrections**. D does not touch anchored evidence by contract.
+- The #6 group is the author's judgement (legible 6) and is in the independent review packet.
+
+### 11.4 Intervals and clips (cold and warm per config; scores on the verified time basis)
+
+**9 default intervals** (502 target frames; corrected labels in brackets):
+
+| Config | Correct (conf / likely) | Wrong | Unmatched | ? | Abstained |
+|---|---|---|---|---|---|
+| baseline cold, C, D, C+D (cold and warm) | 301 [298] (24 / 277) | 0 [3] | 4 | 3 | 200 |
+| baseline warm, D warm | **267 [264] (16 / 251)** | 0 [3] | 3 | 3 | 234 |
+
+- Warm without C loses 32 correct frames at 225 s, where first-correct delay goes from 0.1 s to 3.4 s, and 2 at 1150 s.
+- D has **no effect** on the default intervals: they contain no appearance-only claims.
+
+**9 HLG-reference intervals (experimental diagnostic):**
+
+| Config | Correct | Wrong (confirmed) | Unmatched | ? | Abstained |
+|---|---|---|---|---|---|
+| baseline / C (cold = warm) | 286 [289] | 26 [22] (18 [14]) | 26 | 66 [67] | 181 |
+| D / C+D (cold = warm) | 286 [289] | **18 [14]** (18 [14]) | **14** | 66 [67] | 197 |
+
+- D's effect is all at 225 s: 8 wrong and 12 unmatched claims → abstained (E3). Acquisition delay is unchanged (4.0 s).
+- The remaining wrong frames on the reference are all **CONFIRMED** (number evidence), which D does not touch.
+
+**Negative and other clips** (clip windows IMG_5105 p00000 and p00180, IMG_4529 p00960 and p01440): **0 claims in all 8 configs** (with A and B off).
+
+**Replay caveat:**
+
+- Warm interval replays of the baseline and of D needed 46 crops that the original runs never read. They were served as "no text" (cold, C and C+D needed none).
+- Those two rows approximate a real warm run. The full-match warm rows needed 25 such crops.
+
+### 11.5 Cache edge cases (Phase 3; `tests/test_ocr_cache_edge_cases.py`, deterministic doubles: fake reader, fake clock)
+
+**Tested:**
+
+- empty vs full cache;
+- partial cache and cached "no text";
+- interrupted then resumed run (equal to cold);
+- work-count budget (deterministic; warm covers more **selected** crops);
+- wall-clock exhaustion exactly at a hit/miss boundary;
+- pass order and selection;
+- colliding ids (DEF-2b);
+- stale reads after chunk re-extraction (DEF-2);
+- truncated or malformed cache (DEF-3);
+- atomic writes.
+
+Real-OCR integration is covered by the replays above (real cached reads) and by `test_ocr_cache_equivalence`.
+
+**Fixed narrowly:** **DEF-3a**, non-atomic cache writes, now temp file + `os.replace`. Outputs are unchanged: every cold replay stays bit-identical.
+
+**Candidate E** (`SCOUTX_OCR_CACHE_PROVENANCE=1`, off; `ed2b242`): per-chunk provenance tags in a sidecar file, and a tolerant load.
+
+| Whole-match check | Result |
+|---|---|
+| E cold | bit-identical (`fad444c1`) |
+| E warm with the legacy baseline cache (no sidecar) | bit-identical. **Every legacy entry is dropped**, so the first E run is a full cold OCR. |
+| E alone, warm with its **own** cache | `621ab26d`, **exactly the baseline warm leak**. E is not a substitute for C. |
+| C+E, warm with E's cache | bit-identical, 0 image reads |
+
+**Gaps not covered by E:** model-weight provenance, and concurrent writers.
+
+### 11.6 Downstream attribution (Phase 4)
+
+Every consumer was traced (contracts doc, last table).
+
+**Under D, AMBIGUOUS frames never reach** metrics, ball events, moments/highlights, off-ball observations or heatmaps. The functions layer rejects them. The app shows them as unsure.
+
+**Owner review:**
+
+- Review questions are unchanged (candidates stay askable).
+- An `anchor` (CONFIRMED) only comes from an explicit owner "yes".
+- New test `test_attribution_boundary_under_D_ambiguous_frames_never_reach_attributing_outputs` checks this.
+
+**Pre-existing state-blind consumers** (not in the API): the local CLI renderer and contact sheet (DEF-5), and legacy `stats.compute_stats` (DEF-6).
+
+**Compatibility:**
+
+- No schema change and no migration.
+- Stored results keep their states until a job is resolved again.
+- No migration or re-resolve was executed.
+
+**App tests were not run:** no app code changed.
+
+### 11.7 Independent review (Phase 5)
+
+**Packet v2:** `identity-review-packet-20261103/items_v2.json`.
+
+- 25 neutral, shuffled items (231 boxes).
+- Context frames are shown with nothing drawn on them.
+- Controls with known answers are mixed in.
+- The rubric is target / other / uncertain + legible number + uncertainty type + notes.
+- Stage 2 asks about the proposed corrections only after the stage-1 answers are committed.
+- The private mapping is in `identity-review-private-20261104/`, sha256 `ee9004d3…`.
+
+The images were built locally and **not** committed, sent or uploaded.
+
+**Status: PENDING.** No independent reviewer was available. **Still unresolved:**
+
+- the label corrections;
+- D's 16 unverified frames;
+- the B set-piece paths;
+- the anchored continuations;
+- the remaining wrong / unmatched / ambiguous cases.

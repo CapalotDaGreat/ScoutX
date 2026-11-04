@@ -1,0 +1,36 @@
+{
+ "replay": "/home/claude/work/fmr/replay",
+ "warmCache": "/home/claude/work/fm/work_x0/stage1/ocr_cache.json",
+ "invariantsOk": true,
+ "identityIterations": [
+  {
+   "iteration": 0,
+   "mode": "template",
+   "chosen": 533,
+   "seconds": 1134.6,
+   "positives": 3,
+   "negatives": 61
+  },
+  {
+   "iteration": 1,
+   "mode": "template",
+   "chosen": 533,
+   "seconds": 1134.6,
+   "positives": 3,
+   "negatives": 61
+  }
+ ],
+ "ocr": {
+  "served": 123,
+  "neverReadInOriginal": 25,
+  "imageReads": 148
+ },
+ "timelineSha256": "f036885da29a7469395653dbf73406824e44db7a060d5efc70606cfa4b8bdbb9",
+ "matches": {
+  "present": false,
+  "states": false,
+  "evidence": false,
+  "boxesMaxAbs": 1857.6090698242188,
+  "framesDiffering": 517
+ }
+}
