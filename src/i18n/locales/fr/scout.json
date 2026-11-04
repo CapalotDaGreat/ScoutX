@@ -444,7 +444,14 @@
       "match": "nouveau match",
       "video": "nouvelle vidéo"
     },
-    "watchFilterEmpty": "Aucun événement pour ce filtre."
+    "watchFilterEmpty": "Aucun événement pour ce filtre.",
+    "gapCodes": {
+      "no_matches": "logged matches",
+      "no_video": "match film",
+      "technical": "technical evidence",
+      "tactical": "tactical evidence",
+      "age_unknown": "age"
+    }
   },
   "coach": {
     "rosterTitle": "Effectif de l entraineur",
@@ -533,7 +540,11 @@
     "verified": "Vérifié",
     "recentlyActive": "Actif récemment",
     "hasVideos": "Avec vidéos",
-    "sprint": "Sprint {{value}}+ km/h"
+    "sprint": "Sprint {{value}}+ km/h",
+    "matchCount": "{{value}}+ matches",
+    "role": "Role: {{value}}",
+    "coverage": "Evidence {{value}}+",
+    "evidenceAge": "Evidence ≤{{value}}d"
   },
   "continueCard": {
     "a11y": "Continuer le scouting de {{name}}",

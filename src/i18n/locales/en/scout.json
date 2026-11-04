@@ -9,8 +9,8 @@
     "searchPlaceholder": "Search players, clubs, positions...",
     "discoverTalent": "Discover Talent",
     "pipelineWithCount": "Pipeline ({{count}})",
-    "matchingPreferencesTitle": "Players Matching Your Preferences",
-    "matchingPreferencesSubtitle": "Players with recent match evidence and film on file — not a potential rating",
+    "matchingPreferencesTitle": "Players with recent evidence & film",
+    "matchingPreferencesSubtitle": "Logged matches plus highlight film on file — not a brief match and not a potential rating",
     "trendingTitle": "Trending Players",
     "trendingSubtitle": "Most viewed talent this week",
     "recentlyViewedTitle": "Recently Viewed",
@@ -186,7 +186,7 @@
   "comparison": {
     "title": "Player Comparison",
     "subtitle": "Compare up to 3 players side by side",
-    "subtitleFull": "Compare up to four players across radar, stats, trends, and career signals.",
+    "subtitleFull": "Compare up to three players across radar, stats, trends, and career signals.",
     "addPlayer": "Add player",
     "removePlayer": "Remove player",
     "selectPlayers": "Select players to compare",
@@ -353,6 +353,13 @@
     "similarEmpty": "No other listed players share position, club, league, or style tags.",
     "briefTitle": "Scout brief",
     "gaps": "Missing: {{gaps}}",
+    "gapCodes": {
+      "no_matches": "logged matches",
+      "no_video": "match film",
+      "technical": "technical evidence",
+      "tactical": "tactical evidence",
+      "age_unknown": "age"
+    },
     "recommendation": {
       "monitor": "Monitor — evidence exists, no sign recommendation",
       "invite": "Invite to talk",
@@ -533,7 +540,11 @@
     "verified": "Verified",
     "recentlyActive": "Recently active",
     "hasVideos": "Has videos",
-    "sprint": "Sprint {{value}}+ km/h"
+    "sprint": "Sprint {{value}}+ km/h",
+    "matchCount": "{{value}}+ matches",
+    "role": "Role: {{value}}",
+    "coverage": "Evidence {{value}}+",
+    "evidenceAge": "Evidence ≤{{value}}d"
   },
   "continueCard": {
     "a11y": "Continue scouting {{name}}",
@@ -550,9 +561,9 @@
       "afternoon": "Good afternoon, {{name}}",
       "evening": "Good evening, {{name}}"
     },
-    "matching_one": "{{count}} player matches your preferences today.",
-    "matching_other": "{{count}} players match your preferences today.",
-    "statMatching": "Matching",
+    "matching_one": "{{count}} player has recent evidence and film today.",
+    "matching_other": "{{count}} players have recent evidence and film today.",
+    "statMatching": "With evidence",
     "statPipeline": "Pipeline",
     "statRecent": "Recent"
   },

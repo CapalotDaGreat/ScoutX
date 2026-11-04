@@ -97,6 +97,43 @@ export function buildFilterChips(filters: DiscoveryFilters): FilterChip[] {
     });
   }
 
+  if (filters.matchCountMin !== null) {
+    chips.push({
+      id: 'match-count-min',
+      kind: 'matchCount',
+      value: filters.matchCountMin,
+      filterKey: 'matchCountMin',
+    });
+  }
+
+  for (const role of filters.roles) {
+    chips.push({
+      id: `role-${role}`,
+      kind: 'roles',
+      value: role,
+      filterKey: 'roles',
+      filterValue: role,
+    });
+  }
+
+  if (filters.minEvidenceCoverage) {
+    chips.push({
+      id: 'min-evidence-coverage',
+      kind: 'coverage',
+      value: filters.minEvidenceCoverage,
+      filterKey: 'minEvidenceCoverage',
+    });
+  }
+
+  if (filters.evidenceMaxAgeDays !== null) {
+    chips.push({
+      id: 'evidence-max-age',
+      kind: 'evidenceAge',
+      value: filters.evidenceMaxAgeDays,
+      filterKey: 'evidenceMaxAgeDays',
+    });
+  }
+
   return chips;
 }
 
@@ -149,6 +186,17 @@ export function removeFilterChip(
       return { ...next, hasHighlightVideos: false };
     case 'sprintSpeedMin':
       return { ...next, sprintSpeedMin: null };
+    case 'matchCountMin':
+      return { ...next, matchCountMin: null };
+    case 'roles':
+      return {
+        ...next,
+        roles: next.roles.filter((value) => value !== chip.filterValue),
+      };
+    case 'minEvidenceCoverage':
+      return { ...next, minEvidenceCoverage: null };
+    case 'evidenceMaxAgeDays':
+      return { ...next, evidenceMaxAgeDays: null };
     default:
       return { ...next, [chip.filterKey]: null };
   }

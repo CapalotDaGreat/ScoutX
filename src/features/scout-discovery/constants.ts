@@ -78,7 +78,7 @@ export const SEARCH_SUGGESTIONS = [
   'Brazil',
   'Ajax',
   'Bundesliga',
-  'High potential',
+  'Recent evidence',
   'Verified',
   'CM',
   'Available',

@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 import { ArrowUpRight, Film, CheckCircle2 } from 'lucide-react-native';
 import { PlayerIdentityPanel } from '@/components/player-card/PlayerIdentityPanel';
 import { cardEvidenceCount, playerInitials } from '@/components/player-card/playerCardPresentation';
+import { FreshnessLabel } from '@/components/evidence/FreshnessLabel';
 import { Badge } from '@/components/primitives/Badge';
 import { Text } from '@/components/primitives/Text';
 import { AnimatedListItem } from '@/components/feedback/AnimatedListItem';
@@ -36,6 +37,9 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({ player, o
   const { t } = useAppTranslation(['scout', 'trust']);
   const matches = cardEvidenceCount(player.matchCount);
   const analyses = cardEvidenceCount(player.analysisSampleCount);
+  const coverageLabel = player.evidenceCoverage?.consistency
+    ? t(`scout:intelligence.coverageState.${player.evidenceCoverage.consistency}`)
+    : null;
   const facts = joinKnown([
     player.age !== null ? t('scout:playerDetail.ageYears', { count: player.age }) : null,
     player.nationality || null,
@@ -67,8 +71,26 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({ player, o
                 <Text variant="caption" color="secondary">{t('scout:intelligence.matches')}</Text>
               </View>
               <View className="min-w-0 flex-1 gap-0.5 border-l border-divider px-3">
-                <Text variant="body-lg" weight="bold">{analyses ?? '\u2014'}</Text>
-                <Text variant="caption" color="secondary">{t('scout:playerCard.analysisSamples')}</Text>
+                {analyses !== null ? (
+                  <>
+                    <Text variant="body-lg" weight="bold">{analyses}</Text>
+                    <Text variant="caption" color="secondary">{t('scout:playerCard.analysisSamples')}</Text>
+                  </>
+                ) : (
+                  <>
+                    <Text variant="body-lg" weight="bold" numberOfLines={1}>
+                      {coverageLabel ?? '\u2014'}
+                    </Text>
+                    <Text variant="caption" color="secondary">
+                      {t('scout:playerCard.evidenceFreshness', { defaultValue: 'Evidence freshness' })}
+                    </Text>
+                    <FreshnessLabel
+                      updatedAt={player.lastEvidenceAt}
+                      sampleSize={player.matchCount}
+                      className="mt-0.5"
+                    />
+                  </>
+                )}
               </View>
               <View className="min-w-0 flex-1 gap-1 border-l border-divider pl-3">
                 <Film size={20} color={player.hasHighlightVideos ? colors.evidence : colors.textTertiary} />

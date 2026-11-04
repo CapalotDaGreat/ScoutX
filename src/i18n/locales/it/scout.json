@@ -444,7 +444,14 @@
       "match": "nuova partita",
       "video": "nuovo video"
     },
-    "watchFilterEmpty": "Nessun evento per questo filtro."
+    "watchFilterEmpty": "Nessun evento per questo filtro.",
+    "gapCodes": {
+      "no_matches": "logged matches",
+      "no_video": "match film",
+      "technical": "technical evidence",
+      "tactical": "tactical evidence",
+      "age_unknown": "age"
+    }
   },
   "coach": {
     "rosterTitle": "Rosa dell allenatore",
@@ -533,7 +540,11 @@
     "verified": "Verificato",
     "recentlyActive": "Attivo di recente",
     "hasVideos": "Con video",
-    "sprint": "Sprint {{value}}+ km/h"
+    "sprint": "Sprint {{value}}+ km/h",
+    "matchCount": "{{value}}+ matches",
+    "role": "Role: {{value}}",
+    "coverage": "Evidence {{value}}+",
+    "evidenceAge": "Evidence ≤{{value}}d"
   },
   "continueCard": {
     "a11y": "Continua lo scouting di {{name}}",

@@ -19,7 +19,11 @@ export function ScoutBriefCard({ brief }: ScoutBriefCardProps) {
       </Text>
       {brief.gaps.length > 0 ? (
         <Text variant="caption" color="secondary">
-          {t('scout:intelligence.gaps', { gaps: brief.gaps.join(', ') })}
+          {t('scout:intelligence.gaps', {
+            gaps: brief.gaps
+              .map((gap) => t(`scout:intelligence.gapCodes.${gap}`, { defaultValue: gap }))
+              .join(', '),
+          })}
         </Text>
       ) : null}
     </Card>

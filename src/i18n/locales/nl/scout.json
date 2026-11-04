@@ -444,7 +444,14 @@
       "match": "nieuwe wedstrijd",
       "video": "nieuwe video"
     },
-    "watchFilterEmpty": "Geen gebeurtenissen voor dit filter."
+    "watchFilterEmpty": "Geen gebeurtenissen voor dit filter.",
+    "gapCodes": {
+      "no_matches": "logged matches",
+      "no_video": "match film",
+      "technical": "technical evidence",
+      "tactical": "tactical evidence",
+      "age_unknown": "age"
+    }
   },
   "coach": {
     "rosterTitle": "Trainersselectie",
@@ -533,7 +540,11 @@
     "verified": "Geverifieerd",
     "recentlyActive": "Recent actief",
     "hasVideos": "Met video's",
-    "sprint": "Sprint {{value}}+ km/u"
+    "sprint": "Sprint {{value}}+ km/u",
+    "matchCount": "{{value}}+ matches",
+    "role": "Role: {{value}}",
+    "coverage": "Evidence {{value}}+",
+    "evidenceAge": "Evidence ≤{{value}}d"
   },
   "continueCard": {
     "a11y": "Verder scouten: {{name}}",

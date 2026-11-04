@@ -248,7 +248,11 @@ export type FilterChipKind =
   | 'verified'
   | 'recentlyActive'
   | 'hasVideos'
-  | 'sprint';
+  | 'sprint'
+  | 'matchCount'
+  | 'roles'
+  | 'coverage'
+  | 'evidenceAge';
 
 export type FilterChip = {
   id: string;

@@ -48,6 +48,18 @@ export function ActiveFilterChips({ filters, onChange, onClearAll }: ActiveFilte
         return t('chips.hasVideos');
       case 'sprint':
         return t('chips.sprint', { value: chip.value });
+      case 'matchCount':
+        return t('chips.matchCount', { value: chip.value });
+      case 'roles':
+        return t('chips.role', { value: chip.value });
+      case 'coverage':
+        return t('chips.coverage', {
+          value: t(`intelligence.coverageState.${String(chip.value)}`, {
+            defaultValue: String(chip.value),
+          }),
+        });
+      case 'evidenceAge':
+        return t('chips.evidenceAge', { value: chip.value });
       case 'raw':
         return String(chip.value ?? '');
     }

@@ -464,23 +464,18 @@ export function PlayerDetailScreen({
           <CollapsibleSection
             title={t('scout:playerDetail.movementIntelligence')}
             subtitle={
-              player.distanceKm !== null || player.sprintSpeedKmh !== null
+              player.sprintSpeedKmh !== null
                 ? t('scout:playerDetail.movementAvailable')
                 : t('scout:playerDetail.noGpsData')
             }
             persistKey={`detail-gps-${player.id}`}
             defaultOpen={false}
           >
-            {player.distanceKm !== null || player.sprintSpeedKmh !== null ? (
+            {player.sprintSpeedKmh !== null ? (
               <View className="flex-row flex-wrap gap-3">
                 <StatCard
-                  label={t('scout:playerDetail.distanceKm')}
-                  value={player.distanceKm !== null ? player.distanceKm.toFixed(1) : '—'}
-                  className="min-w-[45%] flex-1"
-                />
-                <StatCard
                   label={t('scout:playerDetail.sprintSpeed')}
-                  value={player.sprintSpeedKmh !== null ? player.sprintSpeedKmh.toFixed(1) : '—'}
+                  value={player.sprintSpeedKmh.toFixed(1)}
                   className="min-w-[45%] flex-1"
                 />
                 <Text variant="caption" color="secondary">

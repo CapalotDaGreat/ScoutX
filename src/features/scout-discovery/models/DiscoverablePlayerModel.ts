@@ -328,7 +328,33 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
             ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LW', 'RW', 'ST', 'CF'].includes(item),
         )
       : position.slice(1),
-    roleDescriptors: [],
+    roleDescriptors: Array.isArray(record.roleDescriptors)
+      ? record.roleDescriptors.flatMap((item) => {
+          if (!item || typeof item !== 'object') {
+            return [];
+          }
+          const row = item as Record<string, unknown>;
+          if (typeof row.label !== 'string' || row.label.trim().length === 0) {
+            return [];
+          }
+          const source =
+            row.source === 'match_derived' ||
+            row.source === 'coach_provided' ||
+            row.source === 'club_provided' ||
+            row.source === 'ai_derived' ||
+            row.source === 'self_reported'
+              ? row.source
+              : 'self_reported';
+          const confidence =
+            row.confidence === 'high' ||
+            row.confidence === 'moderate' ||
+            row.confidence === 'limited' ||
+            row.confidence === 'insufficient'
+              ? row.confidence
+              : 'limited';
+          return [{ label: row.label.trim(), source, confidence }];
+        })
+      : [],
     styleTags: Array.isArray(record.styleTags)
       ? record.styleTags.filter((item): item is string => typeof item === 'string')
       : [],
