@@ -10,7 +10,8 @@ export function playerImageKey(playerId: string, uri: string): string {
   return JSON.stringify([playerId, uri.trim()]);
 }
 
-export function cardEvidenceCount(value: number): number | null {
+export function cardEvidenceCount(value: number | null | undefined): number | null {
+  if (value === null || value === undefined) return null;
   return Number.isSafeInteger(value) && value >= 0 ? value : null;
 }
 

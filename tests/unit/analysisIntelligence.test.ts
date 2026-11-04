@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
+  assessCoachingSufficiency,
   buildQualityReport,
   buildStructuredCoaching,
   parseVideoSync,
@@ -108,6 +109,29 @@ describe('buildQualityReport', () => {
       code: 'weak_dimension',
       dimension: 'cameraCoverage',
     });
+  });
+});
+
+describe('assessCoachingSufficiency', () => {
+  it('blocks coaching until identity is confirmed and evidence exists', () => {
+    const report = {
+      coachingMoments: [],
+      events: [],
+      coverage: { visiblePct: 5, likelyOffCameraPct: 40, unknownPct: 55, confidenceLabel: 'Insufficient' as const },
+      estimatedStats: NULL_STATS,
+      pipelineStages: [],
+      confidenceDimensions: null,
+      strengths: [],
+      improvements: [],
+      tacticalSummary: null,
+      coachingNotes: '',
+    } as unknown as MatchAnalysisReport;
+    const blocked = assessCoachingSufficiency(report, { identityConfirmation: { state: 'pending', frameIds: [], confirmedAt: null } });
+    assert.equal(blocked.ready, false);
+    assert.equal(blocked.reason, 'identity_unconfirmed');
+    const stillSparse = assessCoachingSufficiency(report, { identityConfirmation: { state: 'confirmed', frameIds: ['f1'], confirmedAt: '2026-01-01' } });
+    assert.equal(stillSparse.ready, false);
+    assert.equal(stillSparse.reason, 'no_moments');
   });
 });
 

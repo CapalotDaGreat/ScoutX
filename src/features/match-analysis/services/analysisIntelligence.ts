@@ -128,6 +128,59 @@ const EVENT_METRIC: Partial<Record<MatchEventType, string>> = {
   duel: 'tackles',
 };
 
+export type CoachingSufficiency = {
+  ready: boolean;
+  reason:
+    | 'ok'
+    | 'identity_unconfirmed'
+    | 'no_moments'
+    | 'no_accepted_events'
+    | 'coverage_insufficient';
+  nextStep: string;
+};
+
+/**
+ * Whether stored evidence is enough for personalized coaching. Never invents advice when not ready.
+ */
+export function assessCoachingSufficiency(
+  report: MatchAnalysisReport,
+  context: { identityConfirmation?: IdentityConfirmation; moments?: readonly CoachingMoment[] } = {},
+): CoachingSufficiency {
+  const identityConfirmed = context.identityConfirmation?.state === 'confirmed';
+  if (!identityConfirmed) {
+    return {
+      ready: false,
+      reason: 'identity_unconfirmed',
+      nextStep: 'Confirm which player is you on the sampled frames, or mark the analysis as not you and re-run with clearer footage.',
+    };
+  }
+  const moments = context.moments ?? report.coachingMoments ?? [];
+  if (moments.length === 0) {
+    return {
+      ready: false,
+      reason: 'no_moments',
+      nextStep: 'Record a longer clip where you stay in frame, or add target anchors on frames where you are clearly visible.',
+    };
+  }
+  const events = report.events ?? [];
+  const accepted = events.filter((event) => event.validationStatus === 'accepted').length;
+  if (accepted === 0 && report.coverage.visiblePct < 15) {
+    return {
+      ready: false,
+      reason: 'coverage_insufficient',
+      nextStep: 'Film from a wider angle with more continuous coverage of your movement before requesting coaching.',
+    };
+  }
+  if (accepted === 0) {
+    return {
+      ready: false,
+      reason: 'no_accepted_events',
+      nextStep: 'Review suggested moments and confirm identity; coaching waits for accepted, attributed observations.',
+    };
+  }
+  return { ready: true, reason: 'ok', nextStep: 'Use the structured points below; each ties to a timestamp or accepted event.' };
+}
+
 /**
  * Coaching moments in a fixed structure. Every field comes from the stored moment; when a
  * field was not produced it stays null rather than being filled with generic advice.

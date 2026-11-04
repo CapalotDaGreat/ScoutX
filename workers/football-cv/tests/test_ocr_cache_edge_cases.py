@@ -5,7 +5,8 @@ Covers: empty / full / partial caches and cached no-text results; interrupted + 
 and wall-clock, including exhaustion right at a hit/miss boundary); pass order / different selections; colliding
 crop identifiers; stale provenance after Stage1Store re-extracts a chunk; truncated / malformed cache files. Tests
 named `test_defect_*` are characterisations of the DEFAULT behaviour (they pass while the defect exists); the
-matching `test_E_*` tests show candidate E (SCOUTX_OCR_CACHE_PROVENANCE=1, off by default) prevents it."""
+matching `test_E_*` tests show candidate E (SCOUTX_OCR_CACHE_PROVENANCE, ON by default) prevents it.
+The fixture pins E off so `test_defect_*` can characterise the legacy contract."""
 import json
 from pathlib import Path
 
@@ -42,9 +43,20 @@ def env(tmp_path, monkeypatch):
     reader = FakeReader(table)
     monkeypatch.setattr(an.cv2, "imread", lambda p, *a, **k: np.frombuffer(an.crop_key(str(p)).encode(), np.uint8).copy())
     monkeypatch.setattr(ocr, "shared_reader", lambda: reader)
-    monkeypatch.setattr(an, "OCR_CACHE_PROVENANCE", False)        # default contract; test_E_* turn E on explicitly
+    monkeypatch.setattr(an, "OCR_CACHE_PROVENANCE", False)  # pin legacy off for defect characterisation; test_E_* enables E
     return {"chunk": chunk, "paths": paths, "cache": tmp_path / "stage1" / "ocr_cache.json", "reader": reader,
             "table": table, "mp": monkeypatch}
+
+
+def test_default_is_provenance_on(monkeypatch):
+    """Release default: OCR cache provenance is ON unless SCOUTX_OCR_CACHE_PROVENANCE=0."""
+    monkeypatch.delenv("SCOUTX_OCR_CACHE_PROVENANCE", raising=False)
+    import importlib
+    assert importlib.reload(an).OCR_CACHE_PROVENANCE is True
+    monkeypatch.setenv("SCOUTX_OCR_CACHE_PROVENANCE", "0")
+    assert importlib.reload(an).OCR_CACHE_PROVENANCE is False
+    monkeypatch.delenv("SCOUTX_OCR_CACHE_PROVENANCE")
+    importlib.reload(an)
 
 
 def _run(e, crops=None, **kw):

@@ -1,16 +1,15 @@
 # PitchProof 5.3 verified blocker register
 
-**Verified:** 2026-11-04 submission-handoff pass  
+**Verified:** 2026-11-04 engine/cards engineering + handoff refresh  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** `3cddd366eaa6a7d7546f72e0a36abcec519849be`  
+**Full SHA:** resolve with `git rev-parse HEAD` after engine/cards commit (prior docs tip `6d1266c` **superseded** for shipping)  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream**  
-**Working tree:** clean at handoff freeze (docs tip may follow)  
 **productionApproval:** false  
 
-**Handoff:** `submission-handoff-2026-11-04.md` — **READY AFTER SPECIFIC NAMED EXTERNAL ACTIONS** (not submit-ready).  
-**Access re-verified:** Firebase `scoutx-230b0` + EAS `@boddibossi/scoutx`; TLS verify on via `--use-system-ca`.  
-**App Check live:** providers **not configured**; product Enforce **Off**.  
+**Handoff:** `submission-handoff-2026-11-04.md` — **READY AFTER SPECIFIC NAMED EXTERNAL ACTIONS**.  
+**Engineering:** `engine-cards-progress-2026-11-04.md` (E default ON; export privacy; coaching sufficiency; report corrections).  
+**App Check live (rechecked):** providers **not configured**; DeviceCheck **No**; Enforce **Off**.  
 
 **Classification key**
 
@@ -26,7 +25,9 @@ Apple sources used: [App Review Guidelines](https://developer.apple.com/app-stor
 Prior fixes verified present (do not reopen without new evidence):
 
 - C default ON: `OCR_CONSULTED_ONLY` default `"1"` (`6ebdd5c`)
+- E default ON: `OCR_CACHE_PROVENANCE` default `"1"` (engine/cards pass; opt-out `=0`)
 - Checklist model `google/gemini-2.5-flash`; entitlement product-ID wording (`0ebfbd8`)
+- D still not promoted; A/B still off
 
 ---
 

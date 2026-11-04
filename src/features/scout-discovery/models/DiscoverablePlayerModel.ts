@@ -224,7 +224,7 @@ export function buildDiscoverablePlayerFromProfile(profile: PlayerProfile): Disc
     weakFoot: parseStarRating(profile.identity.weakFootRating),
     skillMoves: parseStarRating(profile.identity.skillMovesRating),
     matchCount: matches.length,
-    analysisSampleCount: 0,
+    analysisSampleCount: null,
     recentlyActive: matches.some((match) => {
       const days = (Date.now() - new Date(match.date).getTime()) / (1000 * 60 * 60 * 24);
       return days <= 30;
@@ -368,7 +368,9 @@ export function parseDiscoverablePlayer(value: unknown): DiscoverablePlayer | nu
     skillMoves: parseStarRating(record.skillMoves),
     matchCount: typeof record.matchCount === 'number' ? record.matchCount : 0,
     analysisSampleCount:
-      typeof record.analysisSampleCount === 'number' ? record.analysisSampleCount : 0,
+      typeof record.analysisSampleCount === 'number' && Number.isSafeInteger(record.analysisSampleCount)
+        ? record.analysisSampleCount
+        : null,
     recentlyActive: record.recentlyActive === true,
     hasHighlightVideos: record.hasHighlightVideos === true,
     updatedAt: typeof record.updatedAt === 'string' ? record.updatedAt : new Date().toISOString(),

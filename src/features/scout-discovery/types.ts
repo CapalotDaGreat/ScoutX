@@ -100,7 +100,8 @@ export type DiscoverablePlayer = {
   weakFoot: number | null;
   skillMoves: number | null;
   matchCount: number;
-  analysisSampleCount: number;
+  /** Null when the projection does not know analysis sample size (never invent 0). */
+  analysisSampleCount: number | null;
   recentlyActive: boolean;
   hasHighlightVideos: boolean;
   updatedAt: string;

@@ -44,12 +44,14 @@ export function SharePortfolioSheet({
       position: '',
       club: '',
       nationality: '',
-      goals: 0,
-      assists: 0,
-      matches: 0,
-      endorsements: 0,
+      goals: null,
+      assists: null,
+      matches: null,
+      endorsements: null,
       portfolioUrl: shareUrl,
       tagline: t('shareSheet.tagline'),
+      includeStatistics: false,
+      includeEndorsements: false,
     },
   );
 
@@ -91,11 +93,18 @@ export function SharePortfolioSheet({
             <Button
               variant="accent"
               loading={isSharing}
-              disabled={!shareCardData}
+              disabled={!shareCardData || !portfolioData?.isPublic}
               onPress={() => void shareAsImage()}
             >
               {t('shareSheet.shareSocialCard')}
             </Button>
+            {!portfolioData?.isPublic ? (
+              <Text variant="caption" color="secondary" className="text-center">
+                {t('shareSheet.requiresPublicPassport', {
+                  defaultValue: 'Turn on your public Football Passport before sharing a card or CV.',
+                })}
+              </Text>
+            ) : null}
             <Button variant="secondary" onPress={() => void handleShareLink()}>
               {t('shareSheet.shareLink')}
             </Button>

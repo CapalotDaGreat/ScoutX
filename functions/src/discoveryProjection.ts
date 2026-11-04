@@ -215,7 +215,7 @@ export function buildDiscoverableProjection(input: {
     weakFoot: typeof identity.weakFootRating === 'number' ? identity.weakFootRating : null,
     skillMoves: typeof identity.skillMovesRating === 'number' ? identity.skillMovesRating : null,
     matchCount,
-    analysisSampleCount: 0,
+    analysisSampleCount: null,
     recentlyActive: Boolean(
       lastEvidenceAt && Date.now() - new Date(lastEvidenceAt).getTime() <= 30 * 24 * 60 * 60 * 1000,
     ),

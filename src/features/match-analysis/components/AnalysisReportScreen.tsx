@@ -16,6 +16,7 @@ import {
   StructuredCoachingCard,
 } from '@/features/match-analysis/components/AnalysisIntelligenceCards';
 import {
+  assessCoachingSufficiency,
   buildQualityReport,
   buildStructuredCoaching,
   parseVideoSync,
@@ -30,6 +31,7 @@ import type { GpsSession } from '@/features/gps/types';
 import { IdentityConfirmationCard } from '@/features/match-analysis/components/IdentityConfirmationCard';
 import { TargetAnchorPanel } from '@/features/match-analysis/components/TargetAnchorPanel';
 import { targetAnchorSelectionEnabled } from '@/features/match-analysis/hooks/useTargetAnchors';
+import { useAnalysisCorrections } from '@/features/match-analysis/hooks/useAnalysisCorrections';
 import { TechniqueAssessmentCard } from '@/features/match-analysis/components/TechniqueAssessmentCard';
 import { parseTechniqueAssessment } from '@/features/match-analysis/services/techniqueAssessment';
 import { getMatchAnalysisJob, subscribeMatchAnalysisJob, updateMatchAnalysisJob } from '@/features/match-analysis/repositories/MatchAnalysisRepository';
@@ -98,6 +100,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
   const { tracking } = useTracking(jobId);
   const progress = useTrackingProgress(jobId);
   const discovery = useTrackingDiscovery(jobId);
+  const corrections = useAnalysisCorrections(job);
   const reviewAvailable = tracking !== null || progress !== null;
   const [tabChosen, setTabChosen] = useState(false);
   useEffect(() => {
@@ -171,12 +174,22 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
     () => (job?.report ? buildQualityReport(job.report, { identityConfirmation: job.identityConfirmation, events: job.events }) : null),
     [job],
   );
-  const coaching = useMemo(
+  const coachingSufficiency = useMemo(
     () =>
       job?.report
+        ? assessCoachingSufficiency(job.report, {
+            identityConfirmation: job.identityConfirmation,
+            moments: job.report.coachingMoments,
+          })
+        : null,
+    [job],
+  );
+  const coaching = useMemo(
+    () =>
+      job?.report && coachingSufficiency?.ready
         ? buildStructuredCoaching(job.report.coachingMoments ?? [], job.events ?? job.report.events ?? [], goals)
         : [],
-    [goals, job],
+    [coachingSufficiency?.ready, goals, job],
   );
   const videoSync = parseVideoSync(job?.videoSync);
 
@@ -383,13 +396,23 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
 
           {tab === 'coaching' && report ? (
             <View className="gap-3">
-              <StructuredCoachingCard
-                items={coaching}
-                onSeek={seekTo}
-                onCreateGoal={handleCreateGoal}
-                canSeekVideo={canSeekVideo}
-              />
-              {report.coachingNotes.trim() ? (
+              {coachingSufficiency && !coachingSufficiency.ready ? (
+                <Card padding="lg" className="gap-2" testID="coaching-insufficient">
+                  <Heading level={3}>{t('coaching.title')}</Heading>
+                  <Text variant="body-sm" color="secondary">
+                    {t('ask.insufficient')}
+                  </Text>
+                  <Text variant="body-sm">{coachingSufficiency.nextStep}</Text>
+                </Card>
+              ) : (
+                <StructuredCoachingCard
+                  items={coaching}
+                  onSeek={seekTo}
+                  onCreateGoal={handleCreateGoal}
+                  canSeekVideo={canSeekVideo}
+                />
+              )}
+              {coachingSufficiency?.ready && report.coachingNotes.trim() ? (
                 <Card padding="lg" className="gap-2">
                   <Heading level={3}>{t('tabs.coaching')}</Heading>
                   <Text variant="body-sm">{report.coachingNotes}</Text>
@@ -438,6 +461,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
               onReject={() => void handleRejectIdentity()}
               frameUrls={frameUrls}
               busy={identityBusy}
+              corrections={corrections}
             />
           ) : null}
           {identityError ? <Text color="error" accessibilityRole="alert">{t('identity.saveError')}</Text> : null}

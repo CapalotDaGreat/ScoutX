@@ -260,7 +260,7 @@ function PlayerTabsContainer() {
               onSharePortfolioPress={privateMode ? undefined : () => setIsSharePortfolioVisible(true)}
               onInviteCoachPress={privateMode ? undefined : () => setIsCoachInviteVisible(true)}
               onExportCvPress={
-                portfolioPreview && !privateMode
+                portfolioPreview && !privateMode && portfolioPreview.isPublic
                   ? () => void exportFootballCvPdf(portfolioPreview)
                   : undefined
               }

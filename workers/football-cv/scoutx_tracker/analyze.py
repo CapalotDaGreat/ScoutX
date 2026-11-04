@@ -108,15 +108,15 @@ def load_ocr_cache(cache_path: Path) -> dict:
     return {crop_key(k): v for k, v in raw.items()}
 
 
-# 5.3 CANDIDATE E (off by default; SCOUTX_OCR_CACHE_PROVENANCE=1): OCR cache entries are only reused for the stage-1
-# chunk (detections) and OCR configuration they were produced from. Demonstrated defects without it
+# 5.3 CANDIDATE E (ON by default; SCOUTX_OCR_CACHE_PROVENANCE=0 restores legacy): OCR cache entries are only reused
+# for the stage-1 chunk (detections) and OCR configuration they were produced from. Demonstrated defects without it
 # (tests/test_ocr_cache_edge_cases.py): keys are '<chunk dir>/<frame>_<det>.jpg' only, so (1) a chunk that
 # Stage1Store re-extracts (other settings / corrupt) keeps the old reads under the same names, (2) caches combined
 # across runs or jobs collide on 'c_00000/...' names, (3) a truncated cache file makes every later resolve raise, and
 # (4) a malformed entry raises in the reads loop. With the flag: a sidecar '<cache>.provenance.json' records per
 # chunk dir a tag (detections.npz SHA-256 + OCR configuration); entries of a chunk whose tag is missing or differs
 # are dropped before use (and re-read when selected); unreadable files / malformed entries are discarded.
-OCR_CACHE_PROVENANCE = os.environ.get("SCOUTX_OCR_CACHE_PROVENANCE", "0") != "0"
+OCR_CACHE_PROVENANCE = os.environ.get("SCOUTX_OCR_CACHE_PROVENANCE", "1") != "0"
 _TAGS: dict = {}
 
 

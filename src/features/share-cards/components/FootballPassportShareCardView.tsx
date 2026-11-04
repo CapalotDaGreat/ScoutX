@@ -10,12 +10,22 @@ export type FootballPassportShareCardViewProps = {
   data: PassportShareCardData;
 };
 
+function formatStat(value: number | null): string {
+  return value === null ? '—' : String(value);
+}
+
 export function FootballPassportShareCardView({ data }: FootballPassportShareCardViewProps) {
   const stats = [
-    { label: 'Matches', value: String(data.matches) },
-    { label: 'Goals', value: String(data.goals) },
-    { label: 'Assists', value: String(data.assists) },
-    { label: 'Endorsements', value: String(data.endorsements) },
+    ...(data.includeStatistics
+      ? [
+          { label: 'Matches', value: formatStat(data.matches) },
+          { label: 'Goals', value: formatStat(data.goals) },
+          { label: 'Assists', value: formatStat(data.assists) },
+        ]
+      : [{ label: 'Stats', value: 'Private' }]),
+    ...(data.includeEndorsements
+      ? [{ label: 'Endorsements', value: formatStat(data.endorsements) }]
+      : [{ label: 'Endorsements', value: 'Private' }]),
   ];
 
   return (

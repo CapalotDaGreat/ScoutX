@@ -63,6 +63,35 @@ export function buildPublicPortfolioData(
   };
 }
 
+/**
+ * Stranger-view / export projection: omit sections the player hid and refuse private Passports.
+ * Image/PDF exports must call this so downloads never outrun on-screen privacy toggles.
+ */
+export function filterPortfolioForPublicExport(data: PublicPortfolioData): PublicPortfolioData | null {
+  if (!data.isPublic || !data.privacy.publicPortfolioEnabled) {
+    return null;
+  }
+  const privacy = data.privacy;
+  const profile = { ...data.profile };
+  if (!isPortfolioSectionVisible(privacy, 'statistics')) {
+    profile.statisticsMatches = [];
+  }
+  if (!isPortfolioSectionVisible(privacy, 'recommendations')) {
+    return {
+      ...data,
+      profile,
+      recommendations: [],
+      gpsHighlights: isPortfolioSectionVisible(privacy, 'gpsHighlights') ? data.gpsHighlights : [],
+    };
+  }
+  return {
+    ...data,
+    profile,
+    recommendations: filterVisibleRecommendations(data.recommendations, profile.hiddenEndorsementIds),
+    gpsHighlights: isPortfolioSectionVisible(privacy, 'gpsHighlights') ? data.gpsHighlights : [],
+  };
+}
+
 export function parsePortfolioPrivacyFromProfile(profile: PlayerProfile): PrivacySettings {
   return parsePrivacySettings(profile.privacy);
 }

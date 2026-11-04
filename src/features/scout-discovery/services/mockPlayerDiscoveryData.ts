@@ -54,7 +54,7 @@ function buildPlayer(
     roleDescriptors: partial.roleDescriptors ?? [],
     styleTags: partial.styleTags ?? [],
     verificationLevel: partial.verificationLevel ?? (partial.verified ? 'verified' : 'none'),
-    analysisSampleCount: partial.analysisSampleCount ?? 0,
+    analysisSampleCount: partial.analysisSampleCount ?? null,
     lastEvidenceAt: partial.lastEvidenceAt ?? partial.updatedAt ?? null,
     lastAnalyzedAt: partial.lastAnalyzedAt ?? null,
     evidenceCoverage: partial.evidenceCoverage ?? {
