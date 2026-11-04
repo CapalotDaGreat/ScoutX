@@ -167,13 +167,12 @@ describe('RevenueCat webhook', () => {
 describe('quota ledger', () => {
   test('charges once per reference, refuses over the limit and refunds', async () => {
     const first = await quota.consumeQuota(db, USER, 'reel_export', 'reel-a:v1');
-    assert.equal(first.remaining, 1);
+    assert.equal(first.remaining, 0);
     assert.equal((await quota.consumeQuota(db, USER, 'reel_export', 'reel-a:v1')).used, 1);
-    await quota.consumeQuota(db, USER, 'reel_export', 'reel-b:v1');
-    await expectCode(quota.consumeQuota(db, USER, 'reel_export', 'reel-c:v1'), 'resource-exhausted', 'quota_exceeded');
-    assert.equal(await quota.releaseQuota(db, USER, 'reel_export', 'reel-b:v1'), true);
-    assert.equal(await quota.releaseQuota(db, USER, 'reel_export', 'reel-b:v1'), false);
-    assert.equal((await quota.consumeQuota(db, USER, 'reel_export', 'reel-c:v1')).used, 2);
+    await expectCode(quota.consumeQuota(db, USER, 'reel_export', 'reel-b:v1'), 'resource-exhausted', 'quota_exceeded');
+    assert.equal(await quota.releaseQuota(db, USER, 'reel_export', 'reel-a:v1'), true);
+    assert.equal(await quota.releaseQuota(db, USER, 'reel_export', 'reel-a:v1'), false);
+    assert.equal((await quota.consumeQuota(db, USER, 'reel_export', 'reel-b:v1')).used, 1);
   });
 
   test('premium raises limits and the summary reports server numbers', async () => {
@@ -181,16 +180,23 @@ describe('quota ledger', () => {
     for (const ref of ['a', 'b', 'c']) await quota.consumeQuota(db, USER, 'reel_export', ref);
     const summary = await quota.getUsageSummary.run(call(USER, {}));
     assert.equal(summary.plan, 'premium');
-    assert.deepEqual(summary.features.reel_export, { used: 3, limit: 20, remaining: 17 });
+    assert.deepEqual(summary.features.reel_export, { used: 3, limit: 12, remaining: 9 });
     assert.ok(summary.resetAt);
     assert.ok(summary.neverPaywalled.includes('account_deletion'));
   });
 
   test('the next period starts with a fresh allowance', async () => {
-    await quota.consumeQuota(db, USER, 'full_match_analysis', 'job-1');
-    await expectCode(quota.consumeQuota(db, USER, 'full_match_analysis', 'job-2'), 'resource-exhausted', 'quota_exceeded');
+    await rc.applyRevenueCatEvent(db, rcEvent({}));
+    for (const ref of ['job-1', 'job-2', 'job-3', 'job-4']) {
+      await quota.consumeQuota(db, USER, 'full_match_analysis', ref);
+    }
+    await expectCode(quota.consumeQuota(db, USER, 'full_match_analysis', 'job-5'), 'resource-exhausted', 'quota_exceeded');
     const later = new Date(Date.now() + 31 * DAY);
-    assert.equal((await quota.consumeQuota(db, USER, 'full_match_analysis', 'job-2', later)).used, 1);
+    assert.equal((await quota.consumeQuota(db, USER, 'full_match_analysis', 'job-5', later)).used, 1);
+  });
+
+  test('free plan cannot start a full-match analysis', async () => {
+    await expectCode(quota.consumeQuota(db, USER, 'full_match_analysis', 'free-denied'), 'resource-exhausted', 'quota_exceeded');
   });
 
   test('getUsageSummary requires sign-in', async () => {
@@ -200,7 +206,7 @@ describe('quota ledger', () => {
 
 describe('server gating', () => {
   test('clip analysis is refused once the free allowance is used, before calling the model', async () => {
-    for (const ref of ['used-1', 'used-2', 'used-3']) await quota.consumeQuota(db, USER, 'frame_analysis', ref);
+    for (const ref of ['used-1', 'used-2']) await quota.consumeQuota(db, USER, 'frame_analysis', ref);
     await db.collection('matchAnalysisJobs').doc('quota-job').set({
       id: 'quota-job',
       playerId: USER,
@@ -214,10 +220,9 @@ describe('server gating', () => {
 
   test('reel export is refused once the free allowance is used', async () => {
     await quota.consumeQuota(db, USER, 'reel_export', 'x:v1');
-    await quota.consumeQuota(db, USER, 'reel_export', 'y:v1');
     await seedReelWithBrokenClip(USER, 'quota-reel');
     await expectCode(exportReel.run(call(USER, { reelId: 'quota-reel' })), 'resource-exhausted', 'quota_exceeded');
-    assert.equal((await quota.usageSummary(db, USER)).features.reel_export.used, 2);
+    assert.equal((await quota.usageSummary(db, USER)).features.reel_export.used, 1);
   });
 
   test('a failed render gives the export back', async () => {

@@ -195,34 +195,38 @@ describe('createUploadSession', () => {
     await createUploadSession.run(call(UID, request('job_l2', randomBytes(4096))));
     await expectCode(createUploadSession.run(call(UID, request('job_l3', randomBytes(4096)))), 'resource-exhausted');
   });
-  test('free plan: one full-match analysis per period, refunded for rejected or cancelled videos', async () => {
+  test('free plan cannot start a cloud full-match upload (quota is zero)', async () => {
     const FREE = 'upload-free';
     await seedUploader(FREE);
-    for (const jobId of ['job_q1', 'job_q2', 'job_q3']) await seedJob(jobId, FREE);
-    const usedNow = async () => {
-      const periods = await db.collection('usageLedger').doc(FREE).collection('periods').get();
-      return periods.docs.reduce((sum, doc) => sum + (doc.get('counts.full_match_analysis') ?? 0), 0);
-    };
-
-    const first = await createUploadSession.run(call(FREE, request('job_q1', randomBytes(4096))));
-    assert.equal(await usedNow(), 1);
-    await assert.rejects(createUploadSession.run(call(FREE, request('job_q2', randomBytes(4096)))), (error) => {
+    await seedJob('job_free_denied', FREE);
+    await assert.rejects(createUploadSession.run(call(FREE, request('job_free_denied', randomBytes(4096)))), (error) => {
       assert.equal(error.code, 'resource-exhausted');
       assert.equal(error.details?.reason, 'quota_exceeded');
       assert.equal(error.details?.feature, 'full_match_analysis');
       return true;
     });
+  });
 
-    const path = `quarantine/${FREE}/${first.uploadId}/source`;
+  test('premium: full-match quota is refunded for rejected or cancelled videos', async () => {
+    for (const jobId of ['job_q1', 'job_q2', 'job_q3']) await seedJob(jobId);
+    const usedNow = async () => {
+      const periods = await db.collection('usageLedger').doc(UID).collection('periods').get();
+      return periods.docs.reduce((sum, doc) => sum + (doc.get('counts.full_match_analysis') ?? 0), 0);
+    };
+
+    const first = await createUploadSession.run(call(UID, request('job_q1', randomBytes(4096))));
+    assert.equal(await usedNow(), 1);
+
+    const path = `quarantine/${UID}/${first.uploadId}/source`;
     await getStorage().bucket().file(path).save(randomBytes(4096));
     assert.equal(await processQuarantinedObject(db, path, 4096), 'rejected');
     assert.equal(await usedNow(), 0, 'a rejected video does not use the allowance');
 
-    await createUploadSession.run(call(FREE, request('job_q2', randomBytes(4096))));
+    await createUploadSession.run(call(UID, request('job_q2', randomBytes(4096))));
     assert.equal(await usedNow(), 1);
-    await cancelMatchAnalysis.run(call(FREE, { jobId: 'job_q2' }));
+    await cancelMatchAnalysis.run(call(UID, { jobId: 'job_q2' }));
     assert.equal(await usedNow(), 0, 'cancelling before analysis gives the allowance back');
-    await createUploadSession.run(call(FREE, request('job_q3', randomBytes(4096))));
+    await createUploadSession.run(call(UID, request('job_q3', randomBytes(4096))));
   });
 });
 

@@ -9,11 +9,14 @@ Statuses that unlock Premium limits: `premium`, `trial`, `grace`. Everything els
 
 ## Metered features (per 30-day period)
 
+Sized so Premium can subsidise free AI users after Apple’s cut. Recommended ASC prices:
+**$16.99 / month**, **$129.99 / year** (see `docs/release/cost-audit.md`).
+
 | Feature | Free | Premium | Server enforcement |
 | --- | --- | --- | --- |
-| Short-clip / frame analysis (`frame_analysis`) | 3 | 30 | `consumeQuota` on analysis start |
-| Full-match analysis (`full_match_analysis`) | 1 | 8 | `consumeQuota` on upload session |
-| Highlight reel export (`reel_export`) | 2 | 20 | `consumeQuota` on export |
+| Short-clip / frame analysis (`frame_analysis`) | 2 | 20 | `consumeQuota` on analysis start |
+| Full-match analysis (`full_match_analysis`) | 0 | 4 | `consumeQuota` on upload session |
+| Highlight reel export (`reel_export`) | 1 | 12 | `consumeQuota` on export |
 
 ## Capacity limits
 

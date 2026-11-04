@@ -21,11 +21,17 @@ export type Plan = {
 
 const GIB = 1024 * 1024 * 1024;
 
+/**
+ * Quotas sized so Premium list price can subsidise free AI users after Apple’s cut.
+ * Pricing recommendation (owner / ASC): $16.99/mo · $129.99/yr — see
+ * docs/release/cost-audit.md and the premium-pricing canvas. Free full-match is 0 so
+ * unpaid 90-minute vision jobs cannot dominate COGS.
+ */
 export const PLANS: Record<PlanId, Plan> = {
   free: {
     id: 'free',
     periodDays: 30,
-    limits: { frame_analysis: 3, full_match_analysis: 1, reel_export: 2 },
+    limits: { frame_analysis: 2, full_match_analysis: 0, reel_export: 1 },
     maxConcurrentJobs: 1,
     maxVideoDurationSec: 120 * 60,
     maxVideoBytes: 3 * GIB,
@@ -33,7 +39,7 @@ export const PLANS: Record<PlanId, Plan> = {
   premium: {
     id: 'premium',
     periodDays: 30,
-    limits: { frame_analysis: 30, full_match_analysis: 8, reel_export: 20 },
+    limits: { frame_analysis: 20, full_match_analysis: 4, reel_export: 12 },
     maxConcurrentJobs: 2,
     maxVideoDurationSec: 150 * 60,
     maxVideoBytes: 4 * GIB,
