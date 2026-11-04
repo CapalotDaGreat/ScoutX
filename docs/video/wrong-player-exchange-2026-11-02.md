@@ -875,3 +875,86 @@ The images were built locally and **not** committed, sent or uploaded.
 - the B set-piece paths;
 - the anchored continuations;
 - the remaining wrong / unmatched / ambiguous cases.
+
+### 11.8 Tests (Phase 6)
+
+**Run details:**
+
+- **Command:** `env $(cat env.txt) <flags> python3 -m pytest -q -p no:cacheprovider --junitxml=<run>.xml tests` (in `workers/football-cv`).
+- **Source:** `ed2b242` (the E-pin rerun at `3d22993`, and the proposal runs with the patch below applied).
+- **Environment:** Linux, Python 3.13.17, CPU, `cpu-onnx` settings.
+- **Evidence:** logs, JUnit and `accounting.json` are in `cd-validation-20261104/tests/`.
+
+| Run | Flags | Result | Exit code |
+|---|---|---|---|
+| default | none | 646 passed, 11 skipped, 6 xfailed | 0 |
+| opt-in | `SCOUTX_FULL_MATCH_REPLAY` | 654 passed, 0 skipped, 9 xfailed | 0 |
+| C | `SCOUTX_OCR_CONSULTED_ONLY=1` | 646 / 11 / 6 | 0 |
+| D | `SCOUTX_APPEARANCE_ONLY_LIKELY=0` | 646 / 11 / 6 | 0 |
+| C+D | both | 646 / 11 / 6 | 0 |
+| C+D opt-in | both + replay | 654 / 0 / 9 | 0 |
+| E, first attempt | `SCOUTX_OCR_CACHE_PROVENANCE=1` | **3 failed** | 1 |
+| E, after pinning E off in three default-contract tests (`3d22993`) | E | 646 / 11 / 6 | 0 |
+| default, rerun after the pin | none | 646 / 11 / 6 | 0 |
+| C-default proposal applied | none | 647 / 11 / 6 | 0 |
+| C-default proposal applied, opt-in | replay | 655 / 0 / 9 | 0 |
+
+**Why E failed on the first attempt:** the 3 tests build caches by hand without a provenance sidecar, and E drops such caches by design. That is the expected E behaviour, not a regression. The failed log is kept as `E_attempt1`.
+
+**Skips and xfails:**
+
+- **Skips (11):** the opt-in whole-match tests. They need the local 60 MB replay, which is not in git.
+- **Xfails (6 default, 9 opt-in):** strict, and none was weakened:
+  - P, E3 and E4 (×2 exchange flag);
+  - in opt-in runs also F6, F17 and the cache-state test. These tests pin today's default flags, so they stay xfail even under C+D.
+- **What D and C do in place of those xfails:** the dedicated D whole-match tests (`test_appearance_only_likely`) show D removes F6 and F17, and the C whole-match test shows warm = cold.
+
+**Known-failure replays:**
+
+| Failure | Status under these candidates |
+|---|---|
+| P (anchored) | unchanged by C and D |
+| E3 | removed by D on the HLG reference only |
+| E4 | CONFIRMED (number evidence), unchanged |
+
+### 11.9 Verdicts (separate)
+
+| Candidate | Verdict | Basis |
+|---|---|---|
+| **C** | **ready for a concrete default-change proposal** (11.10) | Fixes DEF-1. Cold runs are bit-identical (full match and 18 intervals). Warm = cold on the full match, the intervals and the polluted-cache test. No labelled frame is lost. All suites pass with the patch. |
+| **D** | **supported; not ready to propose** | Removes only appearance-only claims: 39 author-judged wrong + 16 unverified on the full match, 20 wrong/unmatched on the HLG reference. No labelled correct frame is lost. **Before a proposal:** independent review of the 16 unverified frames and of the #6 group, and a deliberate change to the LIKELY contract wording (DEF-4). |
+| **C+D** | **no combined proposal** | They compose without interaction (11.2), so each stands on its own evidence. Bundling them would hide D's unresolved review. |
+| **E** | **needs revision** | It works as specified, but: the first run after enabling it discards every legacy cache (full OCR cost); model weights are not in the tag; concurrency is untested; and it does not replace C. The atomic-write fix (DEF-3a) is already on unconditionally. |
+
+### 11.10 Proposal: make C the default (not applied; your decision)
+
+**Exact diff:** `cd-validation-20261104/proposal_C_default.patch`. It applies cleanly to `3d22993`. It:
+
+- changes `analyze.py` from `os.environ.get("SCOUTX_OCR_CONSULTED_ONLY", "0")` to `"1"`, and updates the comment;
+- adds `test_default_is_consulted_only`.
+
+**Behaviour change:**
+
+- **Cold runs (every first resolve): none.** Bit-identical, `fad444c1`.
+- **Warm reruns** (re-resolves, owner-correction resolves, retries on an existing stage-1 store) no longer take earlier runs' refinement reads as first-pass evidence. Instead they behave like a cold run over the same selected crops.
+- Budgeted runs still consult extra cached **selected** crops, by design.
+
+**Compatibility:**
+
+- No schema, API, app or functions change.
+- Stored results keep their states until the job is resolved again. A re-resolve of an old job can then differ from its last warm result, by moving back to cold-equivalent output.
+- No migration is needed.
+
+**Validation done:**
+
+- full match patched-default cold and warm, both `fad444c1`;
+- suites 647 / 11 / 6 and opt-in 655 / 0 / 9.
+
+**Not yet validated:** a production-path warm correction resolve on a real job, and GPU runs.
+
+**Rollback:**
+
+- Set `SCOUTX_OCR_CONSULTED_ONLY=0`. Verified with the patch applied: the warm run returns to the old `621ab26d` output.
+- Or revert the one-line change.
+
+**Not included:** D, E, deployment, and any change to the pinned GPU baseline.
