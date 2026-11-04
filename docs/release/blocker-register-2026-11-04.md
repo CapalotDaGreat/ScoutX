@@ -1,14 +1,16 @@
 # PitchProof 5.3 verified blocker register
 
-**Verified:** 2026-11-04 reauth + live App Check pass  
+**Verified:** 2026-11-04 submission-handoff pass  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** `aa4a0083db6fee88627c9e6b40d0fa22a6c26a73` (reauth report may tip later)  
+**Full SHA:** `5d2447a33e51f13a0e6f2bf4420d6399e4784d99`  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream**  
+**Working tree:** clean at handoff freeze (docs tip may follow)  
 **productionApproval:** false  
 
-**Final audit:** `final-release-audit-2026-11-04.md` — NOT READY.  
-**Reauth/TLS/App Check live:** `reauth-verification-2026-11-04.md` — Node `NODE_OPTIONS=--use-system-ca`; Firebase/EAS read-only OK; App Check providers **not configured**, product Enforce **Off**.  
+**Handoff:** `submission-handoff-2026-11-04.md` — **READY AFTER SPECIFIC NAMED EXTERNAL ACTIONS** (not submit-ready).  
+**Access re-verified:** Firebase `scoutx-230b0` + EAS `@boddibossi/scoutx`; TLS verify on via `--use-system-ca`.  
+**App Check live:** providers **not configured**; product Enforce **Off**.  
 
 **Classification key**
 
