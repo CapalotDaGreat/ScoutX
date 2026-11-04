@@ -1,14 +1,15 @@
 # PitchProof 5.3 verified blocker register
 
-**Verified:** 2026-11-04 evening re-pass  
+**Verified:** 2026-11-04 final audit  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** `d9411dc202b2cc0506b38d878f2926058cacdc3a` (docs tip; code tip includes pricing `86b59ba`; supersedes `4cebc63` / `103931c`)  
+**Full SHA:** `18dad67f6e40aab3dfa6e03d8d287626095d0999` (supersedes `4cebc63` / `86b59ba` notes)  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
-**Working tree:** clean at verification  
+**Working tree:** clean at audit start  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — branch has **no upstream tracking** (not pushed)  
 **productionApproval:** false  
 
-**Operator checklist for remaining externals:** `docs/release/external-verification-2026-11-04.md` (does not replace this register).  
+**Final audit:** `docs/release/final-release-audit-2026-11-04.md` — **NOT READY**; claimed external completions **not evidenced** in artifacts.  
+**Operator checklist:** `docs/release/external-verification-2026-11-04.md` (does not replace this register).  
 
 **Classification key**
 
