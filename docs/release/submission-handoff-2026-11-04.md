@@ -21,7 +21,7 @@ Local engineering for this tip is complete: privacy-safe share-card field select
 | Field | Value |
 |---|---|
 | Branch | `release/pitchproof-5-3-candidate` |
-| **Release candidate (full)** | *(set to tip SHA after commit of this handoff)* |
+| **Release candidate (full)** | `79c00d6e8009ed68a6139cd39467afa78e8b0aa1` |
 | Prior code RC (superseded) | `3c9f9835365d0a1bf1637dc7721947e426a85cc2` |
 | Prior docs tip (superseded) | `5293420aff2393888ff9b3a6e89e44a8edd48d2c` |
 | Bundle / version | `com.scoutx.app` / `1.0.0` |
@@ -103,7 +103,7 @@ Local engineering for this tip is complete: privacy-safe share-card field select
 
 - **Action:** `eas build -p ios --profile production` then later `eas submit`  
 - **Why:** No IPA exists for this tip; old build `1.0.0 (4)` @ `6679226` invalid  
-- **Commit:** *(full tip SHA after freeze commit)*  
+- **Commit:** `79c00d6e8009ed68a6139cd39467afa78e8b0aa1`  
 - **Project:** Expo `@boddibossi/scoutx` / ASC `6820059284`  
 - **Expected:** Finished iOS build whose provenance matches tip SHA; TestFlight install  
 - **Evidence to return:** EAS build ID, git commit on build page, TestFlight build number  

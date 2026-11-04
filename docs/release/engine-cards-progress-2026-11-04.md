@@ -1,6 +1,7 @@
 # Engine + player-card engineering progress (2026-11-04)
 
 **Supersedes for local engineering:** prior tip `5293420` / code freeze at `3c9f983` for **product code**.  
+**Product RC:** `79c00d6e8009ed68a6139cd39467afa78e8b0aa1`  
 External gate evidence (App Check, counsel, device, owner SEC) remains **open** and is **not** satisfied by this commit.
 
 **Branch:** `release/pitchproof-5-3-candidate`  
