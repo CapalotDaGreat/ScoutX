@@ -18,7 +18,7 @@
 
 # NOT READY — CONCRETE BLOCKERS REMAIN
 
-User statement that external checks are complete **does not replace missing artifacts**. No App Check console evidence, restore drill evidence, counsel sign-off, filled device protocol, or independent D `answers.csv` was found in the repo, `.local/`, agent stores, or related release docs. Release gate remains **BLOCKED (10 items)**. No signed archive exists in this workspace.
+User statement that external checks are complete **does not replace missing artifacts**. Follow-up reauth pass (`reauth-verification-2026-11-04.md`) restored Firebase/EAS read-only access and **verified live App Check: providers not configured; product Enforce Off**. Restore/counsel/device/D execution evidence still absent. Release gate remains **BLOCKED (10 items)**. No archive of the current tip; historical IPA `1.0.0 (4)` is 86 commits behind.
 
 ---
 

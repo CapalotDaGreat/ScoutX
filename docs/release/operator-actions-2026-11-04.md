@@ -107,21 +107,23 @@ Source: [Firestore pricing](https://cloud.google.com/firestore/pricing) (checked
 
 ## 3. Firebase / EAS CLI auth (this machine)
 
-### Observed
-- `npx firebase-tools use` → `scoutx-230b0`
-- `npx firebase-tools projects:list` → **failed** (re-login needed)
-- Host: Windows (no Xcode)
-- `functions/.env.scoutx-230b0` **absent** locally (expected)
+### Observed (updated 2026-11-04 reauth pass)
+- Root cause of prior Firebase/EAS failures: **AVG HTTPS scanning** MITM; Node default CA failed (`unable to verify the first certificate`). Fix: `NODE_OPTIONS=--use-system-ca` (TLS verification **on**). See `reauth-verification-2026-11-04.md`.
+- Firebase: logged in; `projects:list` includes **scoutx-230b0 (current)**; iOS app `1:141939766260:ios:c23d6b9fe65e8a65bd3fa1`.
+- EAS: authenticated; project `@boddibossi/scoutx`.
+- Host: Windows (no Xcode).
+- `functions/.env.scoutx-230b0` **absent** locally (**expected** for AI-off; do not create placeholders).
+- `docs/video/evaluation/approval.json` **absent** (**expected** for no-CV-worker; keeps `APPROVED_CV_WORKER=null`).
 
-### Steps
+### Steps (new shells)
 ```powershell
-npx firebase-tools login
+$env:NODE_OPTIONS='--use-system-ca'   # or: .\.local\use-system-ca.ps1
 npx firebase-tools projects:list
-npx eas-cli login
+npx firebase-tools experiments:enable appcheckadmin   # once per machine; enables providers/services CLI
+npx firebase-tools appcheck:providers:list --project scoutx-230b0 --app 1:141939766260:ios:c23d6b9fe65e8a65bd3fa1
 npx eas-cli whoami
-npx eas-cli env:list --environment production
+npx eas-cli env:list --environment production   # return NAMES only
 ```
-Return: logged-in emails, project list containing `scoutx-230b0`, env **names** only (redact values).
 
 ---
 

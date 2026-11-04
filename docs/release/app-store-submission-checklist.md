@@ -36,7 +36,10 @@ steps 4, 5, 7, 10.
    npx firebase-tools functions:secrets:set APPLE_PRIVATE_KEY      # Sign in with Apple .p8 contents
    ```
 
-   Functions env (`functions/.env.scoutx-230b0`, not committed): `GUARDIAN_LINK_BASE_URL=https://pitchproof.online`.
+   Functions env (`functions/.env.scoutx-230b0` or Secret Manager, not committed): set
+   `GUARDIAN_LINK_BASE_URL=https://pitchproof.online` on the **deploy** host when deploying Functions.
+   File absence locally is expected and does **not** block an AI-footage-off store binary; the release
+   gate correctly reports EXTERNAL until `AI_FOOTAGE_PROCESSING_APPROVED=true`.
    Add `AI_FOOTAGE_PROCESSING_APPROVED=true` **only** after the AI provider privacy review
    (AI_PRIVACY_CONFIGURATION_REQUIRED); until then video analysis uploads are refused with a
    translated "not available yet" message and the rest of the app works normally.
