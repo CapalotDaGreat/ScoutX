@@ -2,7 +2,7 @@
 
 **Verified:** 2026-11-04 submission-handoff pass  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** `5d2447a33e51f13a0e6f2bf4420d6399e4784d99`  
+**Full SHA:** `3cddd366eaa6a7d7546f72e0a36abcec519849be`  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream**  
 **Working tree:** clean at handoff freeze (docs tip may follow)  

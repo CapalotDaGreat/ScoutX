@@ -2,8 +2,8 @@
 
 **Workspace:** `C:/ZLI/M335/ScoutX-gpu-benchmark`  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**HEAD (full):** `18dad67f6e40aab3dfa6e03d8d287626095d0999` at final audit start; final report commit follows  
-**Prior:** external checklist `d9411dc`; pricing `86b59ba`; App Check docs/tests `4cebc63` / `065afcd`  
+**HEAD (full):** `3cddd366eaa6a7d7546f72e0a36abcec519849be` (submission handoff)  
+**Prior:** reauth `889e82f`; final audit `cb7daaa`; pricing `86b59ba`; App Check docs `065afcd`  
 **Pinned GPU baseline (immutable):** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream** for this branch (not pushed)  
 **productionApproval:** false  
@@ -101,3 +101,4 @@ Scoped **no-CV-worker** path can proceed as a **product decision** (REL-CPU) wit
 | external verify | Re-confirm 721 unit tests; restore script guards; D mapping SHA; Firebase CLI needs `--reauth`; write `external-verification-2026-11-04.md` | `d9411dc` |
 | final audit | External claims **not** evidenced; gate BLOCKED×10; unit 721; worker 619/16sk/6xf; typecheck+functions build PASS; no archive; D PENDING; write `final-release-audit-2026-11-04.md` | `cb7daaa` |
 | reauth TLS | AVG MITM diagnosed; `NODE_OPTIONS=--use-system-ca`; Firebase+EAS read-only OK; App Check live **not configured** / Enforce Off; EAS IPA 1.0.0(4) @ `6679226` not RC; unit 721; gate BLOCKED×10; `.env`/`approval.json`/`answers.csv` absent (expected for scoped release / D pending) | `889e82f` |
+| submission handoff | Re-verify access/App Check; unit 721; identity pytest 15p/6xf; gate BLOCKED×10 CODE0; write `submission-handoff-2026-11-04.md` — READY AFTER named externals | `3cddd36` |

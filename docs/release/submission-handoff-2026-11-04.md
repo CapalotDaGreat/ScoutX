@@ -19,7 +19,7 @@ Local engineering for a **scoped** release (Passport + subscriptions + honest â€
 | Field | Verified value |
 |---|---|
 | Branch | `release/pitchproof-5-3-candidate` |
-| Full commit | `5d2447a33e51f13a0e6f2bf4420d6399e4784d99` |
+| Full commit | `3cddd366eaa6a7d7546f72e0a36abcec519849be` (handoff docs tip; freeze this or later intentional tip for EAS) |
 | Upstream | **none** (not pushed) |
 | App version (source) | `1.0.0` (`app.json`) |
 | Bundle ID | `com.scoutx.app` |
