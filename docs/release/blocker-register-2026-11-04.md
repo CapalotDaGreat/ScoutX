@@ -2,9 +2,9 @@
 
 **Verified:** 2026-11-04 share-card preview + coaching scenarios + card labeling  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA (product RC):** `79c00d6e8009ed68a6139cd39467afa78e8b0aa1`  
-**Prior code RC (superseded):** `3c9f9835365d0a1bf1637dc7721947e426a85cc2`  
-**Prior docs tip (superseded):** `5293420aff2393888ff9b3a6e89e44a8edd48d2c`  
+**Full SHA (product RC):** `47e49cf037671d964180404ee0cfd6212ed76006`  
+**Prior product RC (superseded):** `79c00d6e8009ed68a6139cd39467afa78e8b0aa1`  
+**Prior docs tip (superseded):** `83c760097e6bcbb8cadc1be43a745a14a9e798d3`  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream**  
 **productionApproval:** false  

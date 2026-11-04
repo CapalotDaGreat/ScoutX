@@ -22,9 +22,9 @@ Local product UX honesty improved (Welcome/Discover/coaching gates/Performance t
 | Field | Value |
 |---|---|
 | Branch | `release/pitchproof-5-3-candidate` |
-| **Release candidate (full)** | `79c00d6e8009ed68a6139cd39467afa78e8b0aa1` |
-| Prior code RC (superseded) | `3c9f9835365d0a1bf1637dc7721947e426a85cc2` |
-| Prior docs tip (superseded) | `5293420aff2393888ff9b3a6e89e44a8edd48d2c` |
+| **Release candidate (full)** | `47e49cf037671d964180404ee0cfd6212ed76006` |
+| Prior product RC (superseded) | `79c00d6e8009ed68a6139cd39467afa78e8b0aa1` |
+| Prior docs tip (superseded) | `83c760097e6bcbb8cadc1be43a745a14a9e798d3` |
 | Bundle / version | `com.scoutx.app` / `1.0.0` |
 | ASC / Team | `6820059284` / `833CYAZ8XT` |
 | Firebase / iOS app | `scoutx-230b0` / `1:141939766260:ios:c23d6b9fe65e8a65bd3fa1` |
@@ -104,7 +104,7 @@ Local product UX honesty improved (Welcome/Discover/coaching gates/Performance t
 
 - **Action:** `eas build -p ios --profile production` then later `eas submit`  
 - **Why:** No IPA exists for this tip; old build `1.0.0 (4)` @ `6679226` invalid  
-- **Commit:** `79c00d6e8009ed68a6139cd39467afa78e8b0aa1`  
+- **Commit:** `47e49cf037671d964180404ee0cfd6212ed76006`  
 - **Project:** Expo `@boddibossi/scoutx` / ASC `6820059284`  
 - **Expected:** Finished iOS build whose provenance matches tip SHA; TestFlight install  
 - **Evidence to return:** EAS build ID, git commit on build page, TestFlight build number  
