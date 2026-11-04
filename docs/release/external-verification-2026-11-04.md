@@ -1,9 +1,9 @@
 # External blocker verification pass (2026-11-04 evening)
 
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** `86b59bae2ab113ccfbde035763a1d31719d52a48`  
-**Note:** User-reported HEAD `4cebc63` is an ancestor; pricing-quota commit `86b59ba` is current.  
-**Working tree:** clean  
+**Full SHA:** `d9411dc202b2cc0506b38d878f2926058cacdc3a` (this checklist commit)  
+**Code tip for TestFlight:** use `d9411dc…` or later; pricing/quotas landed in `86b59ba`. User-reported `4cebc63` is an ancestor.  
+**Working tree:** clean after this commit  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream** for this branch  
 **GPU baseline:** `51d41c9…` still ancestor  
 **productionApproval:** false · D not promoted · CV worker null · AI footage flag false  
@@ -58,7 +58,7 @@ Sources: [App Attest setup](https://firebase.google.com/docs/app-check/ios/app-a
 **Evidence:** screenshot Apps tab showing both providers; no tokens in chat.
 
 ### B. Metrics before product enforcement
-1. Install a **production-profile** TestFlight build at commit **`86b59ba…`** (or later on this branch).
+1. Install a **production-profile** TestFlight build at commit **`d9411dc…`** (or later on this branch).
 2. Sign in; exercise 2–3 authenticated callables (e.g. usage summary / consent).
 3. App Check → **APIs** → review Cloud Functions / Firestore / Storage metrics ([monitor](https://firebase.google.com/docs/app-check/monitor-metrics)): prefer almost all **Verified**.
 
@@ -149,7 +149,7 @@ Host: Windows — **no** local Xcode archive this session.
 ### Build (**APPROVAL REQUIRED** to queue EAS)
 ```powershell
 git checkout release/pitchproof-5-3-candidate
-git rev-parse HEAD   # expect 86b59ba… or newer intentional tip
+git rev-parse HEAD   # expect d9411dc… or newer intentional tip
 npx eas-cli login
 npx eas-cli env:list --environment production   # return NAMES only
 npx eas-cli build -p ios --profile production
@@ -187,7 +187,7 @@ Simulator / Expo Go ≠ device evidence. App Check cases in protocol §G depend 
 
 | ID | Ask |
 |---|---|
-| A1 | Queue EAS iOS production build (+ later submit TestFlight) for commit `86b59ba…` |
+| A1 | Queue EAS iOS production build (+ later submit TestFlight) for commit `d9411dc…` |
 | A2 | Enable Firestore PITR/schedules / Storage soft-delete (billable) |
 | A3 | Run isolated restore into new DB id + optional `--execute` on clone only |
 | A4 | Turn on App Check **product** Enforce for Firestore/Storage (after metrics) |

@@ -2,7 +2,7 @@
 
 **Verified:** 2026-11-04 evening re-pass  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** `86b59bae2ab113ccfbde035763a1d31719d52a48` (supersedes earlier notes at `4cebc63` / `103931c`)  
+**Full SHA:** `d9411dc202b2cc0506b38d878f2926058cacdc3a` (docs tip; code tip includes pricing `86b59ba`; supersedes `4cebc63` / `103931c`)  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Working tree:** clean at verification  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — branch has **no upstream tracking** (not pushed)  
