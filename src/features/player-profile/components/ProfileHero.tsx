@@ -44,7 +44,8 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
       <View className="px-4 py-4">
         <PlayerIdentityPanel expanded playerId={profile.id} name={profile.fullName} portrait={avatarUri}
           position={primaryPosition || null} context={identity.currentClub || profile.club}
-          facts={metaParts.join(' · ')} />
+          facts={metaParts.join(' · ')}
+          evidenceNote="Your profile · self-entered, not match-verified analysis" />
         <View className="mt-3 flex-row flex-wrap items-center justify-between gap-3">
           <Text variant="caption" color="secondary" className="min-w-0 flex-1">{t('passportHero.selfReportedNote')}</Text>
           {onEditPress ? (

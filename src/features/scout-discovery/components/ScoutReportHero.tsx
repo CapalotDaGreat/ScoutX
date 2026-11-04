@@ -27,7 +27,10 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
             <PlayerIdentityPanel expanded playerId={player.id} name={player.fullName} portrait={player.avatarUrl || player.coverImageUrl}
               position={player.position.join(' / ') || null} context={joinKnown([player.club, player.league])}
               facts={joinKnown([player.age !== null ? t('scout:playerDetail.ageYears', { count: player.age }) : null, player.nationality])}
-              verified={player.verified} />
+              verified={player.verified}
+              evidenceNote={player.verified
+                ? 'Trust-verified · logged matches only'
+                : 'Profile fields · not continuous match tracking'} />
           </View>
         </View>
       </View>

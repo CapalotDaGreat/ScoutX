@@ -48,7 +48,10 @@ export function FootballPassportHero({ data, username, verification }: FootballP
           <View className="w-full">
             <PlayerIdentityPanel expanded playerId={data.playerId} name={profile.fullName} portrait={profile.avatarUrl || ''}
               position={[profile.position, ...secondaryPositions].filter(Boolean).join(' / ') || null}
-              context={profile.club} facts={profile.nationality} verified={isVerified} />
+              context={profile.club} facts={profile.nationality} verified={isVerified}
+              evidenceNote={isVerified
+                ? 'Trust-verified identity · public Passport fields only'
+                : 'Player-entered Passport · not match-verified analysis'} />
           </View>
           <View className="min-w-[160px] flex-1 gap-2">
             {username ? (

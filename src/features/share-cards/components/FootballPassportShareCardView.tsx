@@ -1,7 +1,8 @@
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { darkColors } from '@/theme/tokens/colors';
 import { type PassportShareCardData } from '@/features/share-cards/services/passportShareCardData';
+import { playerInitials } from '@/components/player-card/playerCardPresentation';
 
 export const PASSPORT_SHARE_CARD_WIDTH = 360;
 export const PASSPORT_SHARE_CARD_HEIGHT = 480;
@@ -33,16 +34,34 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
       className="overflow-hidden rounded-lg"
       style={{ width: PASSPORT_SHARE_CARD_WIDTH, height: PASSPORT_SHARE_CARD_HEIGHT, backgroundColor: darkColors.background }}
     >
-      <View className="px-6 py-4 border-b" style={{ backgroundColor: darkColors.surface, borderColor: darkColors.border }}>
-        <Text variant="caption" style={{ color: darkColors.gold }}>
-          Football Passport
-        </Text>
-        <Text weight="semibold" className="text-2xl" numberOfLines={2} adjustsFontSizeToFit style={{ color: darkColors.textPrimary }}>
-          {data.playerName}
-        </Text>
-        <Text variant="body-sm" numberOfLines={2} style={{ color: darkColors.textSecondary }}>
-          {data.position} · {data.club} · {data.nationality}
-        </Text>
+      <View className="flex-row items-center gap-3 px-6 py-4 border-b" style={{ backgroundColor: darkColors.surface, borderColor: darkColors.border }}>
+        {data.includePhoto && data.photoUrl ? (
+          <Image
+            source={{ uri: data.photoUrl }}
+            accessibilityIgnoresInvertColors
+            style={{ width: 56, height: 72, borderRadius: 6, backgroundColor: darkColors.backgroundSecondary }}
+          />
+        ) : (
+          <View
+            className="items-center justify-center"
+            style={{ width: 56, height: 72, borderRadius: 6, backgroundColor: darkColors.backgroundSecondary }}
+          >
+            <Text weight="bold" style={{ color: darkColors.textSecondary, fontSize: 20 }}>
+              {playerInitials(data.playerName)}
+            </Text>
+          </View>
+        )}
+        <View className="min-w-0 flex-1">
+          <Text variant="caption" style={{ color: darkColors.gold }}>
+            Football Passport · profile
+          </Text>
+          <Text weight="semibold" className="text-2xl" numberOfLines={2} adjustsFontSizeToFit style={{ color: darkColors.textPrimary }}>
+            {data.playerName}
+          </Text>
+          <Text variant="body-sm" numberOfLines={2} style={{ color: darkColors.textSecondary }}>
+            {data.position} · {data.club} · {data.nationality}
+          </Text>
+        </View>
       </View>
 
       <View className="flex-1 justify-between p-6">

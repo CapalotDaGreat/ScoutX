@@ -52,4 +52,33 @@ describe('portfolio export privacy', () => {
     assert.equal(card!.includeEndorsements, false);
     assert.equal(card!.endorsements, null);
   });
+
+  it('lets the owner further omit fields that privacy already allows', () => {
+    const data = buildPublicPortfolioData({
+      id: 'p1',
+      fullName: 'Ada Player',
+      position: 'CM',
+      club: 'FC Test',
+      nationality: 'CH',
+      biography: 'Left-footed creator',
+      username: 'tester',
+      avatarUrl: 'https://example.com/a.jpg',
+      statisticsMatches: [{ id: 'm1', date: '2026-01-01', opponent: 'Rivals', goals: 2, assists: 1 }],
+      privacy: { ...defaultPrivacySettings(), publicPortfolioEnabled: true },
+      identity: { currentClub: 'FC Test' },
+      hiddenEndorsementIds: [],
+    } as never);
+    const card = buildPassportShareCardData(data, 'tester', {
+      includeStatistics: false,
+      includePhoto: false,
+      includeTagline: false,
+    });
+    assert.ok(card);
+    assert.equal(card!.includeStatistics, false);
+    assert.equal(card!.goals, null);
+    assert.equal(card!.photoUrl, null);
+    assert.equal(card!.tagline, 'Football Passport on PitchProof');
+    assert.match(card!.exportPreview, /Ada Player/);
+    assert.doesNotMatch(card!.exportPreview, /goals/i);
+  });
 });

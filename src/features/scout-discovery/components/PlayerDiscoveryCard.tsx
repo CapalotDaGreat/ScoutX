@@ -57,7 +57,10 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({ player, o
           <View className="gap-4 p-4">
             <PlayerIdentityPanel playerId={player.id} name={player.fullName} portrait={player.avatarUrl || player.coverImageUrl}
               position={joinKnown([player.primaryPosition, ...player.secondaryPositions.slice(0, 2)]) || null}
-              context={joinKnown([player.club || null, player.league || null])} facts={facts} verified={player.verified} />
+              context={joinKnown([player.club || null, player.league || null])} facts={facts} verified={player.verified}
+              evidenceNote={player.verified
+                ? t('scout:playerCard.verifiedEvidenceNote', { defaultValue: 'Trust-verified · logged matches only' })
+                : t('scout:playerCard.profileEvidenceNote', { defaultValue: 'Profile fields · analysis count shown only when known' })} />
             <View className="flex-row border-t border-divider pt-3">
               <View className="min-w-0 flex-1 gap-0.5 pr-2">
                 <Text variant="body-lg" weight="bold">{matches ?? '\u2014'}</Text>

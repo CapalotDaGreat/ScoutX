@@ -14,10 +14,22 @@ type Props = {
   facts?: string;
   verified?: boolean;
   expanded?: boolean;
+  /** Distinguishes trust-backed verification from self-entered profile fields. */
+  evidenceNote?: string | null;
 };
 
 /** Explicit identity fields only; the caller controls the public/private boundary. */
-export function PlayerIdentityPanel({ playerId, name, portrait, position, context, facts, verified = false, expanded = false }: Props) {
+export function PlayerIdentityPanel({
+  playerId,
+  name,
+  portrait,
+  position,
+  context,
+  facts,
+  verified = false,
+  expanded = false,
+  evidenceNote = null,
+}: Props) {
   const { colors } = useTheme();
   return (
     <View className="flex-row items-center gap-4">
@@ -32,10 +44,22 @@ export function PlayerIdentityPanel({ playerId, name, portrait, position, contex
           <Text accessibilityRole={expanded ? 'header' : undefined} weight="bold" numberOfLines={expanded ? 3 : 2} className="min-w-0 flex-1" style={{ fontSize: expanded ? 26 : 20, lineHeight: expanded ? 32 : 26 }}>
             {name.trim() || playerInitials(name)}
           </Text>
-          {verified ? <CheckCircle2 size={18} color={colors.verification} accessibilityElementsHidden /> : null}
+          {verified ? (
+            <CheckCircle2
+              size={18}
+              color={colors.verification}
+              accessibilityLabel="Verified profile"
+            />
+          ) : null}
         </View>
         {context ? <Text variant="body-sm" color="secondary" numberOfLines={2}>{context}</Text> : null}
         {facts ? <Text variant="caption" color="tertiary" numberOfLines={2}>{facts}</Text> : null}
+        <Text variant="caption" color="tertiary" numberOfLines={2}>
+          {evidenceNote
+            ?? (verified
+              ? 'Trust-verified identity · stats only when public and recorded'
+              : 'Player-entered profile · not match-verified analysis')}
+        </Text>
       </View>
     </View>
   );
