@@ -3,6 +3,7 @@
 **Date:** 2026-11-04  
 **Branch:** `release/pitchproof-5-3-candidate`  
 **Base SHA:** `905eed7a38d017c008df816917f04624b5637293`  
+**Candidate HEAD (this dossier):** `6ebdd5cd34874625e07914df425960ac1b71df0f`  
 **Pinned GPU baseline (immutable):** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac`  
 **productionApproval:** false  
 

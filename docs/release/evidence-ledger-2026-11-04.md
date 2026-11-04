@@ -82,8 +82,6 @@ Atomic OCR cache writes (part of E work) remain unconditional from earlier commi
 | When | Change | Commit |
 |---|---|---|
 | start | Fast-forwarded worktree to `905eed7`; created `release/pitchproof-5-3-candidate` | n/a |
-| | Applied C default (`"1"`) + opt-out + `test_default_is_consulted_only` | pending |
+| | Applied C default (`"1"`) + opt-out + `test_default_is_consulted_only`; release-gate fixture exclude; ledger/contracts/dossier | `6ebdd5c` |
 | | Worker env: installed deps; pinned `supervision==0.26.1` (<0.27 for ByteTrack) | local venv only |
-| | Worker suite 619/0 fail; app 718; functions build; rules 261 | n/a |
-| | Release-gate: exclude `tests/` from Test Store key scan (fixture false positive) | pending |
-| | Ledger + contracts + dossier | pending |
+| | Worker suite 619/0 fail; app 718; functions build; rules 261 | evidence under this commit |
