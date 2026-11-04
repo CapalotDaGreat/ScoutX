@@ -44,6 +44,7 @@ upgrade CTAs for minors outside Settings).
 
 ## Product IDs
 
-RevenueCat offering and App Store product IDs are **CONFIG_REQUIRED** in the RevenueCat dashboard
-and EAS secrets. They are not invented in this repository. Production builds refuse a `test_`
+Client product ID strings live in `src/features/premium/config.ts` (`PitchProven_Monthly` /
+`PitchProven_Yearly`). Attaching those IDs to a live RevenueCat offering, App Store Connect
+products, and EAS secrets remains **CONFIG_REQUIRED** outside this repository. Production builds refuse a `test_`
 public SDK key (`app.config.ts` + release gate).

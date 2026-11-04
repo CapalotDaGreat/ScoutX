@@ -53,7 +53,7 @@ Legal entity (fixed): CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switz
 ## AI
 
 - [ ] Provider privacy review of OpenRouter and the routed model provider for footage of minors (AI_PRIVACY_CONFIGURATION_REQUIRED)
-- [ ] Confirm zero-data-retention endpoints exist for the allowlisted model (`google/gemini-2.0-flash-001` default)
+- [ ] Confirm zero-data-retention endpoints exist for the allowlisted model (`google/gemini-2.5-flash` default; see `functions/src/ai/providerConfig.ts`)
 - [ ] Only after both: set `AI_FOOTAGE_PROCESSING_APPROVED=true` for the functions (until then uploads for analysis are refused with a translated "not available yet" message)
 - [ ] `OPENROUTER_MODEL` / `OPENROUTER_VISION_MODEL` are server env only and ignored unless allowlisted
 - [ ] OpenRouter spend limit on the key
