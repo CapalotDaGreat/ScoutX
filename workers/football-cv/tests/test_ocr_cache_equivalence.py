@@ -40,7 +40,7 @@ def test_early_stop_consults_only_the_crops_before_the_stop(tmp_path):
 
 def _replay(tmp_path, tag, flag, warm=None):
     env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": "0", "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_OCR_CONSULTED_ONLY": flag, "SCOUTX_APPEARANCE_ONLY_LIKELY": "1",
-           "PYTHONHASHSEED": "0"}
+           "SCOUTX_OCR_CACHE_PROVENANCE": "0", "PYTHONHASHSEED": "0"}   # E pinned off: hand-made caches have no sidecar
     out = tmp_path / tag
     cmd = [sys.executable, str(ROOT / "bench" / "regression_replay.py"), "run", "--replay", str(REPLAY), "--out", str(out)]
     if warm:

@@ -42,6 +42,7 @@ def env(tmp_path, monkeypatch):
     reader = FakeReader(table)
     monkeypatch.setattr(an.cv2, "imread", lambda p, *a, **k: np.frombuffer(an.crop_key(str(p)).encode(), np.uint8).copy())
     monkeypatch.setattr(ocr, "shared_reader", lambda: reader)
+    monkeypatch.setattr(an, "OCR_CACHE_PROVENANCE", False)        # default contract; test_E_* turn E on explicitly
     return {"chunk": chunk, "paths": paths, "cache": tmp_path / "stage1" / "ocr_cache.json", "reader": reader,
             "table": table, "mp": monkeypatch}
 
