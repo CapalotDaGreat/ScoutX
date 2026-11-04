@@ -327,7 +327,8 @@ check('RevenueCat production key is not a Test Store key', () => {
   const problems = [];
   const prodKey = readJson('eas.json').build?.production?.env?.EXPO_PUBLIC_REVENUECAT_IOS_KEY ?? '';
   if (prodKey.startsWith('test_')) problems.push('eas.json production uses a test_ key');
-  const tracked = scanTracked(/EXPO_PUBLIC_REVENUECAT_IOS_KEY[ \t]*[=:][ \t]*["']?test_/);
+  // Unit fixtures intentionally use test_ values to prove productionBuildProblems refuses them.
+  const tracked = scanTracked(/EXPO_PUBLIC_REVENUECAT_IOS_KEY[ \t]*[=:][ \t]*["']?test_/, { exclude: ['tests/'] });
   if (tracked.length) problems.push(`Test Store key in ${tracked.join(', ')}`);
   if (!/productionBuildProblems\(/.test(read('app.config.ts'))) {
     problems.push('production build guard in app.config.ts is missing');

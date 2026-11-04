@@ -1,4 +1,7 @@
-"""5.3 candidate C (SCOUTX_OCR_CONSULTED_ONLY, off by default): an OCR cache saves time but never adds evidence.
+"""5.3 candidate C (SCOUTX_OCR_CONSULTED_ONLY, ON by default on the release branch): an OCR cache saves time but never adds evidence.
+
+Opt out of the release default with SCOUTX_OCR_CONSULTED_ONLY=0 (restores the pre-promotion behaviour where foreign
+cache entries can become evidence).
 
 Verified failure (IMG_4809 full match, default decoder): `analyze` used EVERY entry of ocr_cache.json as first-pass
 evidence - also reads left there by a previous run's refinement passes - so a warm cache alone changed 36 claim
@@ -75,3 +78,15 @@ def test_characterisation_without_flag_foreign_cache_entries_become_evidence(tmp
     cold = _replay(tmp_path, "cold0", "0")
     warm = _replay(tmp_path, "warm0", "0", _polluted(tmp_path))
     assert not _same(cold, warm)
+
+
+def test_default_is_consulted_only(monkeypatch):
+    """Default contract after promotion: a cache never adds evidence unless SCOUTX_OCR_CONSULTED_ONLY=0."""
+    import importlib
+    from scoutx_tracker import analyze
+    monkeypatch.delenv("SCOUTX_OCR_CONSULTED_ONLY", raising=False)
+    assert importlib.reload(analyze).OCR_CONSULTED_ONLY is True
+    monkeypatch.setenv("SCOUTX_OCR_CONSULTED_ONLY", "0")
+    assert importlib.reload(analyze).OCR_CONSULTED_ONLY is False
+    monkeypatch.delenv("SCOUTX_OCR_CONSULTED_ONLY")
+    importlib.reload(analyze)

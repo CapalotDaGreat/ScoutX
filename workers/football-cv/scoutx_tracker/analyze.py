@@ -248,13 +248,13 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
     return cache
 
 
-# 5.3 CANDIDATE C (off by default; SCOUTX_OCR_CONSULTED_ONLY=1): cache equivalence. run_ocr returns the WHOLE cache
+# 5.3 CANDIDATE C (ON by default; SCOUTX_OCR_CONSULTED_ONLY=0 restores the old behaviour): cache equivalence. run_ocr returns the WHOLE cache
 # file; the first pass used every entry as evidence - including reads that a previous run's refinement passes (or other
 # runs) left in the cache - for number-conflict splits and identity. Verified on IMG_4809 (full match): a warm cache
 # alone changed 36 claim frames (8 confirmed-correct #20 frames weakened). With this flag the first pass uses only the
 # crops it selected and consulted itself; refinement passes already use only their own crops. A cache then only saves
 # OCR time and never adds evidence (a budgeted/deferred run can still read more crops when warm, by design).
-OCR_CONSULTED_ONLY = os.environ.get("SCOUTX_OCR_CONSULTED_ONLY", "0") != "0"
+OCR_CONSULTED_ONLY = os.environ.get("SCOUTX_OCR_CONSULTED_ONLY", "1") != "0"
 
 SCHEMA = "pitchproof.tracking.v3"
 OCR_DENSE = {"min_h": 120, "min_gap": 4, "per_tracklet": 10**6, "min_len": 3}
