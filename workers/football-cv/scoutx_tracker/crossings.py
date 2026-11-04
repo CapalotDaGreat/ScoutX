@@ -72,6 +72,12 @@ EXCHANGE_SPLIT = __import__("os").environ.get("SCOUTX_EXCHANGE_SPLIT", "0") != "
 # distorted by the overlap, so neither extrapolation reaches STEAL_IOU) - Y is cut there too and linked like a steal
 # (identity crosses only when appearance decides it).
 RESUME_SPLIT = __import__("os").environ.get("SCOUTX_RESUME_SPLIT", "0") != "0"
+# 5.3 one-frame detour through a detector merge (on by default; SCOUTX_DETOUR_SPLIT=0 disables).
+# IMG_4809 reference_i0225 w211 (E4): track A (#20) briefly lands on paused same-kit track B's box for one
+# frame, then returns to A's path while B resumes on the detour box. Contact/steal/exchange miss it (B's
+# last kit score can be below MATE_KIT on the pause frame; the return is not a mutual same-frame exchange).
+# Isolating the single detour row orphans it from number evidence (n < 3) so CONFIRMED cannot land on B.
+DETOUR_SPLIT = __import__("os").environ.get("SCOUTX_DETOUR_SPLIT", "1") != "0"
 
 
 @dataclass
@@ -230,6 +236,87 @@ def resume_rows(R: np.ndarray, steals: list[tuple[int, int]], skip: np.ndarray |
     return out
 
 
+def detour_rows(R: np.ndarray, row_kit: np.ndarray, skip: np.ndarray | None = None, mate: float = MATE_KIT,
+                look: int = STEAL_LOOK, min_iou: float = STEAL_IOU, lead: float = STEAL_LEAD
+                ) -> list[tuple[int, int, int]]:
+    """One-frame detours onto a paused same-kit track that resumes on the detour box.
+
+    Returns (mid, q, nxt) where mid is A's detour row, q is B's last row before its pause, and nxt is A's next
+    row (back on A's path). Two-sided signature required:
+      * mid matches B's last/extrapolated box better than A's own previous by `lead` (IoU >= min_iou);
+      * B resumes within `look` frames of mid on a box that matches mid (IoU >= min_iou);
+      * A's nxt does not continue the detour (IoU(mid, nxt) < min_iou).
+    B's kit may be below `mate` on the single pause-edge frame; the track median kit must still be >= mate.
+    """
+    if len(R) == 0:
+        return []
+    fr = R[:, 0].astype(int)
+    tid = R[:, 2].astype(int)
+    order = np.lexsort((fr, tid))
+    cont = tid[order[:-1]] == tid[order[1:]]
+    nxt_row = np.full(len(R), -1, np.int64)
+    nxt_row[order[:-1][cont]] = order[1:][cont]
+    prv_row = np.full(len(R), -1, np.int64)
+    prv_row[order[1:][cont]] = order[:-1][cont]
+    # Median kit per track (pause-edge frames can briefly dip below MATE_KIT).
+    kit_med: dict[int, float] = {}
+    for t in np.unique(tid):
+        kit_med[int(t)] = float(np.median(row_kit[tid == t]))
+    by_frame = np.argsort(fr, kind="stable")
+    fs = fr[by_frame]
+    out: list[tuple[int, int, int]] = []
+    seen: set[int] = set()
+    for mid in range(len(R)):
+        if mid in seen:
+            continue
+        p, n = int(prv_row[mid]), int(nxt_row[mid])
+        if p < 0 or n < 0:
+            continue
+        if fr[mid] - fr[p] > look or fr[n] - fr[mid] > look:
+            continue
+        if skip is not None and (skip[mid] or skip[p] or skip[n]):
+            continue
+        # Mid must look like the target kit; the previous row may be a detector merge with a dipped kit
+        # score (E4 w210 kit=0.258), so do not require kit on p.
+        if row_kit[mid] < mate or kit_med.get(int(tid[mid]), 0.0) < mate:
+            continue
+        own = float(_iou_many(R[mid, 3:7], R[p, 3:7][None])[0])
+        ret = float(_iou_many(R[mid, 3:7], R[n, 3:7][None])[0])
+        if ret >= min_iou:
+            continue  # not a detour: the next box continues mid
+        # Candidate B: same-kit tracks with a row within `look` before mid and no row at mid.
+        lo = np.searchsorted(fs, fr[mid] - look)
+        hi = np.searchsorted(fs, fr[mid], side="left")
+        cands = by_frame[lo:hi]
+        best_q, best_v = -1, 0.0
+        for q in cands:
+            if tid[q] == tid[mid] or kit_med.get(int(tid[q]), 0.0) < mate:
+                continue
+            # B paused through mid: next row of B is after mid (or none).
+            r = int(nxt_row[q])
+            if 0 <= r and fr[r] <= fr[mid]:
+                continue
+            pq = int(prv_row[q])
+            step = (R[q, 3:7] - R[pq, 3:7]) / (fr[q] - fr[pq]) if pq >= 0 and fr[q] > fr[pq] else 0.0
+            v_ex = float(_iou_many(R[q, 3:7] + step * (fr[mid] - fr[q]), R[mid, 3:7][None])[0])
+            v_raw = float(_iou_many(R[q, 3:7], R[mid, 3:7][None])[0])
+            v = max(v_ex, v_raw)
+            if v > best_v:
+                best_v, best_q = v, int(q)
+        # Inclusive lead (>=) matches the measured E4 margin (0.152 on a 0.15 threshold).
+        if best_q < 0 or best_v < min_iou or not (own < 1.0 - lead and best_v >= own + lead):
+            continue
+        # B resumes on the detour box at (or by) A's return frame.
+        r = int(nxt_row[best_q])
+        if r < 0 or fr[r] < fr[mid] or fr[r] > fr[mid] + look:
+            continue
+        if float(_iou_many(R[mid, 3:7], R[r, 3:7][None])[0]) < min_iou:
+            continue
+        out.append((int(mid), int(best_q), int(n)))
+        seen.add(mid)
+    return out
+
+
 def exchange_rows(R: np.ndarray, row_kit: np.ndarray, skip: np.ndarray | None = None, mate: float = MATE_KIT,
                   look: int = STEAL_LOOK, min_iou: float = STEAL_IOU, lead: float = STEAL_LEAD) -> list[tuple[int, int]]:
     """Mutual exchanges the steal rule cannot see because the victim's track did not pause. Returns (b, q) pairs in
@@ -353,6 +440,12 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
     if EXCHANGE_SPLIT:
         seen_b = {b for b, _ in stolen}
         stolen = stolen + [(b, q) for b, q in exchange_rows(R, row_kit, skip=occ) if b not in seen_b]
+    # Detours are applied after steals so a true steal at the same mid row wins first; remaining
+    # mid rows with the two-sided resume signature are isolated (orphan 1-frame piece + post piece).
+    detours = detour_rows(R, row_kit, skip=occ) if DETOUR_SPLIT else []
+    if detours:
+        stolen_mids = {b for b, _ in stolen}
+        detours = [(m, q, n) for m, q, n in detours if m not in stolen_mids]
     next_id = int(R[:, 2].max()) + 1 if len(R) else 1
     out = ContactSplit(R)
     order = np.lexsort((R[:, 0], R[:, 2]))
@@ -400,6 +493,27 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
             steals.append({"pre": old, "post": next_id, "q": int(q), "t": float(R[b, 1])})
             next_id += 1
         for st in steals:  # the other track's piece as it is after all cuts
+            st["other"] = int(R[st["q"], 2])
+    # Isolate each one-frame detour: mid becomes an orphan tid; from nxt onward a new post tid.
+    # No clear steal-link carries identity onto the orphan (n=1 excludes it from identity cands).
+    for mid, q, nxt in sorted(detours, key=lambda x: (R[x[0], 2], R[x[0], 0])):
+        old = int(R[mid, 2])
+        orphan, post = next_id, next_id + 1
+        next_id += 2
+        R[mid, 2] = orphan
+        out.origin[orphan] = out.origin.get(old, old)
+        ix = np.flatnonzero(R[:, 2] == old)
+        ix = ix[R[ix, 0] >= R[nxt, 0]]
+        R[ix, 2] = post
+        out.origin[post] = out.origin.get(old, old)
+        for c in contacts:
+            if c["pre"] == old and c["t0"] >= R[nxt, 1]:
+                c["pre"] = post
+                out.contact_pre[c["contact"]] = post
+        # Unclear link pre -> post (gap-bridged by identity handoff); orphan stays unlinked.
+        steals.append({"pre": old, "post": post, "q": int(q), "t": float(R[mid, 1]), "detour": True})
+    for st in steals:
+        if "other" not in st:
             st["other"] = int(R[st["q"], 2])
     out.steals = len(steals)
     out.rows = R
@@ -464,7 +578,9 @@ def split_at_contacts(R: np.ndarray, row_kit: np.ndarray, sigs: np.ndarray, time
         small = min([height(p, "pre") for p, _ in pres] + [height(p, "post") for p, _ in posts]) < SMALL_PX
         _link_event(out, pres, posts, cost, max(e["t1"] for e in comp), succ, small)
     for st in steals:
-        _link_steal(out, st, desc(st["pre"], "pre"), desc(st["other"], "pre"), desc(st["post"], "post"))
+        # Detours isolate a wrong-person frame; do not let B's appearance "swap" identity onto A's return.
+        other_desc = None if st.get("detour") else desc(st["other"], "pre")
+        _link_steal(out, st, desc(st["pre"], "pre"), other_desc, desc(st["post"], "post"))
     return out
 
 

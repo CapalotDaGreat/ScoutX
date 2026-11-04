@@ -116,9 +116,11 @@ def test_identity_follows_the_person_through_an_exchange_when_appearance_decides
     assert not by["unclear"].clear and by["unclear"].pre == 1                 # A's identity does not pass the jump
 
 
-def _replay(tmp_path, flag):
-    env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_OCR_CONSULTED_ONLY": "0", "SCOUTX_APPEARANCE_ONLY_LIKELY": "1", "PYTHONHASHSEED": "0"}
-    out = tmp_path / f"x{flag}"
+def _replay(tmp_path, flag, detour="0"):
+    # Pin DETOUR_SPLIT when isolating the exchange candidate from the E4 detour repair (default on).
+    env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_DETOUR_SPLIT": detour,
+           "SCOUTX_OCR_CONSULTED_ONLY": "0", "SCOUTX_APPEARANCE_ONLY_LIKELY": "1", "PYTHONHASHSEED": "0"}
+    out = tmp_path / f"x{flag}_d{detour}"
     subprocess.run([sys.executable, str(ROOT / "bench" / "regression_replay.py"), "run", "--replay", str(REPLAY),
                     "--out", str(out)], env=env, cwd=ROOT, check=True, capture_output=True)
     with np.load(out / "automatic" / "timeline.npz") as z:
@@ -130,10 +132,10 @@ def test_regression_replay_244s_wrong_player_confirmation(tmp_path):
     # window-local frames 176-191 (242.6-244.1 s): another orange player (labels N; visually confirmed) on the track
     # that took #20's detection at frame 194; frame 194 carries the only "20" read.
     other = [176, 177, 178, 179, 180, 181, 182, 184, 185, 186, 189, 190, 191]
-    base, rec = _replay(tmp_path, "0")
+    base, rec = _replay(tmp_path, "0", detour="0")
     assert all(rec["matchesOriginal"][k] for k in ("present", "states", "evidence"))   # the faulty baseline
     assert all(str(base["states"][f]) == "CONFIRMED_VISIBLE" and str(base["evidence"][f]) == "number" for f in other)
-    cand, _ = _replay(tmp_path, "1")
+    cand, _ = _replay(tmp_path, "1", detour="0")
     assert not any(str(cand["states"][f]) == "CONFIRMED_VISIBLE" for f in other)
     ref = {f: base["boxes"][f] for f in other}                               # the other player's boxes
     from pp_bench import iou  # noqa: PLC0415

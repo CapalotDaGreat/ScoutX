@@ -25,19 +25,18 @@ P - pause-and-resume transfer (DEFAULT decoder, w194-197):
     (label_corrections_i0225.json C1-C6, proposed).
 
 E3 - appearance-only choice of a distant player (REFERENCE rendering, w133-153):
-  The classifier ranks tracklet 78, a distant orange player labelled N, highest:
-  - tracklet 78: rank-normalised app 2.36;
-  - #20's own tracklet 188, overlapping in time: app -0.06.
-  The chain takes 78, so LIKELY / appearance claims land on N boxes at w136-139 and w145-149. This persists with
-  uncontaminated positives (candidate run), so it is not a consequence of the w194 exchange.
+  Unrepaired: the classifier ranked tracklet 78 (distant N) above #20's tracklet 188, so LIKELY / appearance
+  claims landed on N at w136-139 and w145-149.
+  Repair side-effect of DETOUR_SPLIT (E4): isolating the w211 detour on the number track changes chain/evidence
+  assembly so those frames claim T (anchored) instead. Characterisation below asserts the repaired state.
 
 E4 - one-frame claim on another player after a second crossing (REFERENCE rendering, w211):
   - At source 2460 (w210) #20 crosses another orange player.
-  - At w211 the CONFIRMED / number claim sits on that other player: the N box, verified on review 2026-11-03.
-  - At w212 it is back on #20.
-  - The 2026-11-02 review had wrongly listed w211 as an annotation issue.
-  - Mechanism: number tracklet 205 takes a merged two-player box at w210 and the other player's box at w211 (no
-    clean #20 detection there), then returns to #20 at w212. That one-frame detour is never cut.
+  - Unrepaired: at w211 the CONFIRMED / number claim sat on that other player (N box, review 2026-11-03).
+  - Mechanism: number tracklet 205 took a merged two-player box at w210 and the other player's box at w211 (no
+    clean #20 detection there), then returned to #20 at w212. That one-frame detour was never cut.
+  - Repair (DETOUR_SPLIT, default on): isolate the one-frame detour row when the two-sided resume signature
+    fires; gap-fill at w211 is non-CONFIRMED and not on N. Characterisation below asserts the repaired state.
 """
 import json
 import os
@@ -110,32 +109,37 @@ def _on_n_label(c, w, thr):
     return any(lab["label"] == "N" and iou(c[2], lab["box"]) >= thr for lab in _labels(w))
 
 
+def _on_t_label(c, w, thr):
+    return any(lab["label"] == "T" and iou(c[2], lab["box"]) >= thr for lab in _labels(w))
+
+
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_E3_characterisation_reference_claims_distant_n_player_by_appearance(flag, tmp_path_factory):
+def test_E3_characterisation_reference_claims_target_after_detour_split(flag, tmp_path_factory):
     tl = _replay("reference_i0225", flag, tmp_path_factory)
     for w in E3_FRAMES:
         c = _claim(tl, w)
-        assert c and c[0] == "LIKELY_VISIBLE" and c[1] == "appearance" and _on_n_label(c, w, 0.7)
+        assert c and c[0] == "LIKELY_VISIBLE" and _on_t_label(c, w, 0.7)
+        assert not _on_n_label(c, w, 0.5)
 
 
-@pytest.mark.xfail(strict=True, reason="E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet")
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E3_desired_no_claim_on_n_labelled_player(flag, tmp_path_factory):
     tl = _replay("reference_i0225", flag, tmp_path_factory)
     assert not any((c := _claim(tl, w)) and _on_n_label(c, w, 0.5) for w in E3_FRAMES)
 
 
-# ---- E4: reference rendering, one-frame confirmed claim on another player after a second crossing ------------------
+# ---- E4: reference rendering, one-frame detour (repaired by DETOUR_SPLIT) ------------------------------------------
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_E4_characterisation_confirmed_claim_on_other_player_at_w211(flag, tmp_path_factory):
+def test_E4_characterisation_detour_isolated_no_confirmed_on_other_player(flag, tmp_path_factory):
+    """Repaired behaviour: w211 is not a CONFIRMED claim on N; w212 stays off N."""
     tl = _replay("reference_i0225", flag, tmp_path_factory)
     c = _claim(tl, 211)
-    assert c and c[0] == "CONFIRMED_VISIBLE" and _on_n_label(c, 211, 0.7)
-    nxt = _claim(tl, 212)                                     # back on #20 (labelled ?) one frame later
+    assert not (c and c[0] == "CONFIRMED_VISIBLE" and _on_n_label(c, 211, 0.5))
+    assert not (c and _on_n_label(c, 211, 0.5))
+    nxt = _claim(tl, 212)
     assert nxt and not _on_n_label(nxt, 212, 0.3)
 
 
-@pytest.mark.xfail(strict=True, reason="E4 unrepaired: confirmed claim jumps to another player for one frame at w211")
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E4_desired_no_confirmed_claim_on_other_player(flag, tmp_path_factory):
     tl = _replay("reference_i0225", flag, tmp_path_factory)
