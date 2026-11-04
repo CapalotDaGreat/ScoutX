@@ -26,6 +26,13 @@ Do not remove a row to silence the gate. Do not mark ACCEPTED without a named ow
 | SEC-17 | Guardian = controller of entered email | _pending_ | | | |
 | SEC-18 | First under-13 band without re-auth | _pending_ | | | |
 
+## Scoped release decisions (identity / CV)
+
+| ID | Topic | Decision | Owner | Date | Notes |
+| --- | --- | --- | --- | --- | --- |
+| REL-D-OFF | Ship with candidate D still off (appearance-only LIKELY residual risk) | _pending_ | | | Accept residual risk **or** wait for independent D review — see `d-review-operator-brief-2026-11-04.md` |
+| REL-CPU | Scoped no-CV-worker release; defer CUDA gap | _pending_ | | | See `cpu-only-release-proposal-5-3.md` |
+
 ## External (not owner acceptance)
 
 | ID | Topic | Owner action |

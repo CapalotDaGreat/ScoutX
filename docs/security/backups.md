@@ -27,15 +27,17 @@ A backup can contain data of a user who later deleted their account. Before back
 2. After any restore, completed deletions must be re-applied before the data is used. Deletion
    receipts in `legalRetention` (kind `deletion_receipt`) store `subjectHash(uid)`, not the uid,
    so for every uid in the restored `users` collection compute `subjectHash(uid)` and, if a receipt
-   with that hash exists, run `deleteAllUserData(uid)` again. No script for this exists yet
-   (CODE WORK REQUIRED before backups are relied on).
+   with that hash exists, run `deleteAllUserData(uid)` again. Use
+   `scripts/reapply-deletions-after-restore.mjs` (**dry-run first**; refuses `(default)` unless
+   explicitly allowed). Operator steps: `docs/release/operator-actions-2026-11-04.md` §2.
 3. Backup buckets must be restricted to the operations account and excluded from analytics.
 
 ## Verification (NOT VALIDATED)
 
 - [ ] Restore Firestore PITR into a new database and compare document counts.
 - [ ] Restore one Storage object from soft delete.
-- [ ] Re-apply deletions after restore and confirm `verifyUserDataDeleted` returns nothing.
+- [ ] Re-apply deletions after restore (`reapply-deletions-after-restore.mjs --dry-run` then `--execute` on the **clone** DB) and confirm `verifyUserDataDeleted` returns nothing.
 - [ ] Record date, operator and result here, then remove the BACKUP_CONFIGURATION_REQUIRED marker.
 
 See `disaster-recovery.md` for the incident procedure.
+See also release register `docs/release/blocker-register-2026-11-04.md` (B-02).

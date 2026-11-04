@@ -65,7 +65,9 @@ steps 4, 5, 7, 10.
    build, so it matches the home-screen icon. The release gate fails if a placeholder returns.
 2. **Legal contacts.** Done: all four contacts are `support@pitchproof.online` in
    `src/config/legalConfig.ts`. Before submission, send a test mail to confirm Cloudflare Email
-   Routing delivers it. Legal documents are `final` with effective date 2026-10-08.
+   Routing delivers it. Legal documents under `legal/documents/` remain **drafts** with
+   `LEGAL_REVIEW_REQUIRED` markers until counsel sign-off (do not treat older “final / 2026-10-08”
+   notes as current).
 3. **EAS production environment** (`npx eas-cli env:create --environment production`):
    - All six `EXPO_PUBLIC_FIREBASE_*` values used by `src/config/firebase.ts`, from the production
      Firebase project, and `GOOGLE_SERVICES_PLIST` as an EAS file variable for that project's iOS app.
