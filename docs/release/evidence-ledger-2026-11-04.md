@@ -2,7 +2,7 @@
 
 **Workspace:** `C:/ZLI/M335/ScoutX-gpu-benchmark`  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**HEAD (full):** `103931cf54286eff67e2a040ba32a5aa7ab6e31d` at session resume; subsequent commits listed below  
+**HEAD (full):** `86b59bae2ab113ccfbde035763a1d31719d52a48` (pricing quotas); prior App Check doc/tests at `4cebc63` / `065afcd`  
 **Pinned GPU baseline (immutable):** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream** for this branch (not pushed)  
 **productionApproval:** false  
@@ -97,3 +97,4 @@ Scoped **no-CV-worker** path can proceed as a **product decision** (REL-CPU) wit
 | earlier | ledger SHA notes | `6f60361`, `103931c` |
 | blocker prep | register, operator actions, counsel, D brief, device protocol, CPU proposal, restore script, checklist/backups/owner updates | `f2a82d0` |
 | audit follow-up | Align `APP_CHECK.md` with runtime; privacy-label camera/mic + messaging note; unit tests for `shouldEnforceAppCheck` | `065afcd` |
+| external verify | Re-confirm 721 unit tests; restore script guards; D mapping SHA; Firebase CLI needs `--reauth`; write `external-verification-2026-11-04.md` | pending |

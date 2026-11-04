@@ -1,12 +1,14 @@
 # PitchProof 5.3 verified blocker register
 
-**Verified:** 2026-11-04 (Europe/Zurich session)  
+**Verified:** 2026-11-04 evening re-pass  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** `103931cf54286eff67e2a040ba32a5aa7ab6e31d`  
+**Full SHA:** `86b59bae2ab113ccfbde035763a1d31719d52a48` (supersedes earlier notes at `4cebc63` / `103931c`)  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
-**Working tree:** clean at verification start  
+**Working tree:** clean at verification  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — branch has **no upstream tracking** (not pushed)  
 **productionApproval:** false  
+
+**Operator checklist for remaining externals:** `docs/release/external-verification-2026-11-04.md` (does not replace this register).  
 
 **Classification key**
 
@@ -30,7 +32,7 @@ Prior fixes verified present (do not reopen without new evidence):
 
 | ID | Item | Class | User / release impact | Current evidence | Acceptance criterion | Available local work | Required external action | Owner | Status | Last verified |
 |---|---|---|---|---|---|---|---|---|---|---|
-| B-01 | Firebase App Check registration (App Attest + DeviceCheck) | **OPS_SAFE** (not Apple mandate) | Without console registration + metrics, production callables that enforce App Check can reject real devices once enforcement is live; unregistered apps cannot obtain valid tokens | Code: production provider `appAttestWithDeviceCheckFallback`; entitlement `production`; `enforceAppCheck` default on for callables (`ENFORCE_APP_CHECK !== 'false'`). Console registration **not** proven this session (`firebase projects:list` failed; MCP Firebase still loading) | App registered in Firebase Console → App Check; metrics show valid tokens from TestFlight build; enforcement decision recorded | Operator steps in `operator-actions-2026-11-04.md` §1 | Firebase Console + Apple DeviceCheck key if using DeviceCheck fallback | Operator | OPEN | 2026-11-04 |
+| B-01 | Firebase App Check registration (App Attest + DeviceCheck) | **OPS_SAFE** (not Apple mandate) | Without console registration + metrics, production callables that enforce App Check can reject real devices; unregistered apps cannot obtain valid tokens | Code OK (`shouldEnforceAppCheck({})===true`). Console **not** proven: `firebase projects:list` → **credentials no longer valid** (need `firebase login --reauth`). MCP Firebase unavailable | App registered; metrics verified from TestFlight; product Enforce decision recorded | Steps: `external-verification-2026-11-04.md` §1 + `operator-actions` §1 | Firebase reauth + Console + DeviceCheck `.p8` | Operator | OPEN | 2026-11-04 evening |
 | B-02 | Firestore / Storage / Auth backups + restore drill | **OPS_SAFE** | Data loss / inability to recover; also interacts with deletion promises | `docs/security/backups.md` still `BACKUP_CONFIGURATION_REQUIRED`; no restore evidence | PITR or schedules on; soft-delete/versioning policy set; isolated restore test recorded; deletions re-applied | Runbook + `scripts/reapply-deletions-after-restore.mjs` (dry-run) | GCP/Firebase console; **approval** before billable backup/PITR or restore DB | Operator | OPEN | 2026-11-04 |
 | B-03 | Counsel / privacy / ASC nutrition labels | **SUBMISSION** (accurate privacy answers + policy) + legal | Incorrect privacy answers / policy → App Review rejection or legal risk | Manifest `NSPrivacyTracking: false`; labels matrix; LEGAL_REVIEW_REQUIRED markers; website placeholders | Counsel sign-off or owner records counsel decision; ASC answers match manifests; website placeholders cleared | Counsel packet prepared | Counsel review; owner facts | Counsel + Owner | OPEN | 2026-11-04 |
 | B-04 | Owner acceptance SEC-10–14, 17–18 | **OPS_SAFE** | Release gate NOT VALIDATED until decisions recorded | `owner-acceptance.md` all `_pending_` | Each row Accept / Mitigate / Block with name+date | Packet of findings for owner | Owner decisions only | Owner | OPEN | 2026-11-04 |
