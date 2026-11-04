@@ -95,4 +95,4 @@ Scoped **no-CV-worker** path can proceed as a **product decision** (REL-CPU) wit
 | earlier | C default + dossier/ledger/contracts; release-gate fixture exclude | `6ebdd5c` |
 | earlier | gemini-2.5 + entitlement wording | `0ebfbd8` |
 | earlier | ledger SHA notes | `6f60361`, `103931c` |
-| blocker prep | register, operator actions, counsel, D brief, device protocol, CPU proposal, restore script, checklist/backups/owner updates | pending |
+| blocker prep | register, operator actions, counsel, D brief, device protocol, CPU proposal, restore script, checklist/backups/owner updates | `f2a82d0` |
