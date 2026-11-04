@@ -20,7 +20,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - [x] Screenshot recorded; **mock-only** clearly marked
 
 ### Tracking / analysis
-- [ ] Fresh full-match baseline reproduced with provenance (next)
+- [ ] Fresh full-match baseline reproduced with provenance — **blocked locally**: no 7-chunk stage1 work dir; proxy exists at `Downloads/Mobile Devices/IMG_4809_proxy_10fps.mp4` (stream hash in `bench/references/img4809_proxy_10fps.json`). Cold `full_match_benchmark.py` would be multi-hour CPU.
 - [x] E4 addressed with before/after on faithful `reference_i0225` replay
 - [x] No new confirmed-N frames on labelled reference window; likely-N cleared (E3 side-effect)
 - [x] E4 fixed; P remains xfail; E3 desired now passing under DETOUR
@@ -74,6 +74,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 | `1eebf5c009e88d9ac5adbc804abd5ac459d81cd0` | Scout UX honesty + research | UX audit screenshots / tip SHA |
 | `cd8ba966b3bc34751a06391f16952dcb4e2a1b1e` | DETOUR_SPLIT E4 (+ E3 side-effect) | Identity replay evidence; E3/E4 xfails |
 | `45a1ee5c789851ccb7c677a91d6b919be6be0edc` | Coaching confirmed/cited gates | Match-review / clip coaching evals |
+| `c0c840f4286c8f9f04b53ce0a34829101714d5ed` | Freeze tip SHAs in handoff/ledger | Docs tip |
 
 ---
 
@@ -91,8 +92,8 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 
 ## Next actions
 
-1. Commit scout UX and engine separately; update release handoff tip SHAs.
-2. Reproduce full-match baseline (cold cache) with DETOUR on; record provenance.
-3. P (pause-and-resume) narrow candidate or explicit bound.
-4. Coaching grounding eval pass.
-5. Scout authenticated journeys when Firebase keys available.
+1. **Full-match cold resolve with DETOUR:** either (a) obtain/reuse 7×300s stage1 work dir from prior FM run and `full_match_replay.py run`, or (b) authorize multi-hour CPU `full_match_benchmark.py` on proxy (`b1077af3…679c` file / `c0a48508…a66b` stream). Record conf/likely wrong-player vs prior `full-match-identity-20261103`.
+2. P (pause-and-resume) narrow candidate — still open; do not relax thresholds.
+3. Scout authenticated journeys when Firebase keys + seeded scout/player accounts available.
+4. Renew native/device evidence for Discover freshness (current PNG is **mock/web**).
+5. Optional: measurable drill objectives on deterministic `DRILLS` + `coachingMoments` population (flagship gap; larger than this tip).
