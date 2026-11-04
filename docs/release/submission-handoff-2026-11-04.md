@@ -16,12 +16,13 @@ Local engineering advanced (privacy-safe exports, coaching sufficiency, identity
 
 ---
 
-## 1. Freeze identity (pending commit tip — resolve with `git rev-parse HEAD` after landing)
+## 1. Freeze identity
 
 | Field | Value |
 |---|---|
 | Branch | `release/pitchproof-5-3-candidate` |
-| Prior reported tip | `6d1266cf58dd60958d12d6e4381d126d109466d6` (docs-only; **pre** engine/cards) |
+| **Release candidate (full)** | `3c9f9835365d0a1bf1637dc7721947e426a85cc2` |
+| Prior tip (superseded) | `6d1266cf58dd60958d12d6e4381d126d109466d6` |
 | Bundle / version | `com.scoutx.app` / `1.0.0` |
 | ASC / Team | `6820059284` / `833CYAZ8XT` |
 | Firebase / iOS app | `scoutx-230b0` / `1:141939766260:ios:c23d6b9fe65e8a65bd3fa1` |
@@ -83,7 +84,7 @@ Local engineering advanced (privacy-safe exports, coaching sufficiency, identity
 
 - **Action:** `eas build -p ios --profile production` then later `eas submit`  
 - **Why:** No IPA exists for the engine/cards tip; old build invalid  
-- **Commit:** full SHA after this commit lands  
+- **Commit:** `3c9f9835365d0a1bf1637dc7721947e426a85cc2`  
 - **Cost:** EAS build minutes  
 - **Rollback:** do not submit; expire TestFlight  
 - **Blocks:** submission and B-05/B-14  

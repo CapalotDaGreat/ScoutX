@@ -2,7 +2,7 @@
 
 **Verified:** 2026-11-04 engine/cards engineering + handoff refresh  
 **Branch:** `release/pitchproof-5-3-candidate`  
-**Full SHA:** resolve with `git rev-parse HEAD` after engine/cards commit (prior docs tip `6d1266c` **superseded** for shipping)  
+**Full SHA:** `3c9f9835365d0a1bf1637dc7721947e426a85cc2` (prior docs tip `6d1266c` **superseded** for shipping)  
 **Pinned GPU baseline:** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` (ancestor of HEAD)  
 **Remote:** `git@github.com-CapalotDaGreat/ScoutX.git` — **no upstream**  
 **productionApproval:** false  
