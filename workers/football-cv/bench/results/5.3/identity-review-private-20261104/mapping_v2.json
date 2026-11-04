@@ -1,0 +1,381 @@
+{
+ "R01": {
+  "category": "D_removed_unverified",
+  "why": "appearance-only LIKELY removed by candidate D"
+ },
+ "R02": {
+  "category": "control_other_player_N_label",
+  "why": "original label N (control)"
+ },
+ "R03": {
+  "category": "D_removed_unverified",
+  "why": "appearance-only LIKELY removed by candidate D"
+ },
+ "R04": {
+  "category": "setpiece_baseline_path",
+  "why": "crowded set piece, baseline claims"
+ },
+ "R05": {
+  "category": "default_unmatched_claims",
+  "why": "default unmatched claims at 225 s"
+ },
+ "R06": {
+  "category": "D_removed_unverified",
+  "why": "appearance-only LIKELY removed by candidate D"
+ },
+ "R07": {
+  "category": "default_unmatched_1159",
+  "why": "default unmatched claim at 1159.7 s"
+ },
+ "R08": {
+  "category": "control_20_T_label",
+  "why": "original label T (control)"
+ },
+ "R09": {
+  "category": "control_20_confirmed_241",
+  "why": "confirmed by number reads (control)"
+ },
+ "R10": {
+  "category": "D_removed_unverified",
+  "why": "appearance-only LIKELY removed by candidate D"
+ },
+ "R11": {
+  "category": "control_20_T_label",
+  "why": "original label T (control)"
+ },
+ "R12": {
+  "category": "anchored_after_1180",
+  "why": "anchored continuation after the labelled interval"
+ },
+ "R13": {
+  "category": "F17_claims",
+  "why": "appearance-only claims on an N-labelled player"
+ },
+ "R14": {
+  "category": "control_other_player_N_label",
+  "why": "original label N (control)"
+ },
+ "R15": {
+  "category": "control_other_player_N_label",
+  "why": "original label N (control)"
+ },
+ "R16": {
+  "category": "reference_1295_confirmed_unmatched",
+  "why": "HLG-reference CONFIRMED claims, partly on unlabelled boxes"
+ },
+ "R17": {
+  "category": "F6_claims",
+  "why": "appearance-only claims judged #6 by the author"
+ },
+ "R18": {
+  "category": "label_corrections",
+  "why": "proposed corrections C1-C8, reversed 2461 finding",
+  "originalLabels": {
+   "2441": [
+    "N",
+    "N",
+    "T",
+    "N"
+   ],
+   "2442": [
+    "N",
+    "N",
+    "?"
+   ],
+   "2443": [
+    "N",
+    "N",
+    "T"
+   ],
+   "2444": [
+    "N",
+    "N",
+    "T"
+   ],
+   "2445": [
+    "N",
+    "N",
+    "T",
+    "N"
+   ],
+   "2446": [
+    "N",
+    "N",
+    "T",
+    "N"
+   ],
+   "2447": [
+    "N",
+    "N",
+    "T",
+    "N"
+   ],
+   "2448": [
+    "N",
+    "N",
+    "?"
+   ],
+   "2449": [
+    "N",
+    "N",
+    "?"
+   ],
+   "2450": [
+    "N",
+    "N",
+    "?"
+   ],
+   "2451": [
+    "?",
+    "N",
+    "N",
+    "?"
+   ],
+   "2452": [
+    "?",
+    "N",
+    "N",
+    "?"
+   ],
+   "2453": [
+    "?",
+    "N",
+    "N",
+    "?"
+   ],
+   "2454": [
+    "?",
+    "N",
+    "N",
+    "?"
+   ],
+   "2455": [
+    "?",
+    "N",
+    "?"
+   ],
+   "2456": [
+    "?",
+    "N",
+    "?"
+   ],
+   "2457": [
+    "?",
+    "?",
+    "N",
+    "?"
+   ],
+   "2458": [
+    "?",
+    "?",
+    "N",
+    "N"
+   ],
+   "2459": [
+    "?",
+    "?",
+    "N",
+    "N"
+   ],
+   "2460": [
+    "?",
+    "?",
+    "N"
+   ],
+   "2461": [
+    "?",
+    "?",
+    "N",
+    "N",
+    "?"
+   ],
+   "2462": [
+    "?",
+    "?",
+    "N",
+    "N",
+    "?"
+   ],
+   "2463": [
+    "?",
+    "?",
+    "N",
+    "N",
+    "?"
+   ],
+   "2464": [
+    "?",
+    "?",
+    "N",
+    "N",
+    "?"
+   ]
+  },
+  "proposedCorrections": [
+   {
+    "id": "C1",
+    "sourceFrame": 2445,
+    "windowFrame": "i0225:195",
+    "labelIndex": 2,
+    "piece": 38,
+    "box": [
+     1277.8,
+     521.5,
+     1362.9,
+     640.1
+    ],
+    "from": "T",
+    "to": "N",
+    "confidence": "high",
+    "evidence": "This box is a different orange player (player A), face to the camera and running right, with no ball. #20, the ball carrier seen from behind, is the box labelled N at index 3."
+   },
+   {
+    "id": "C2",
+    "sourceFrame": 2445,
+    "windowFrame": "i0225:195",
+    "labelIndex": 3,
+    "piece": 39,
+    "box": [
+     1208.3,
+     522.1,
+     1278.8,
+     670.0
+    ],
+    "from": "N",
+    "to": "T",
+    "confidence": "high",
+    "evidence": "Direct continuity with the T box at 2444 (the frame read \"20\"): same person, back to the camera, keeps the ball, continues left."
+   },
+   {
+    "id": "C3",
+    "sourceFrame": 2446,
+    "windowFrame": "i0225:196",
+    "labelIndex": 2,
+    "piece": 38,
+    "box": [
+     1332.0,
+     524.4,
+     1392.8,
+     640.2
+    ],
+    "from": "T",
+    "to": "N",
+    "confidence": "high",
+    "evidence": "As C1: player A."
+   },
+   {
+    "id": "C4",
+    "sourceFrame": 2446,
+    "windowFrame": "i0225:196",
+    "labelIndex": 3,
+    "piece": 39,
+    "box": [
+     1197.0,
+     531.6,
+     1265.1,
+     672.0
+    ],
+    "from": "N",
+    "to": "T",
+    "confidence": "high",
+    "evidence": "As C2: the ball carrier, #20."
+   },
+   {
+    "id": "C5",
+    "sourceFrame": 2447,
+    "windowFrame": "i0225:197",
+    "labelIndex": 2,
+    "piece": 38,
+    "box": [
+     1380.3,
+     521.1,
+     1433.3,
+     641.9
+    ],
+    "from": "T",
+    "to": "N",
+    "confidence": "high",
+    "evidence": "As C1: player A."
+   },
+   {
+    "id": "C6",
+    "sourceFrame": 2447,
+    "windowFrame": "i0225:197",
+    "labelIndex": 3,
+    "piece": 39,
+    "box": [
+     1170.7,
+     527.3,
+     1249.2,
+     673.7
+    ],
+    "from": "N",
+    "to": "T",
+    "confidence": "high",
+    "evidence": "As C2: the ball carrier, #20."
+   },
+   {
+    "id": "C7",
+    "sourceFrame": 2458,
+    "windowFrame": "i0225:208",
+    "labelIndex": 2,
+    "piece": 33,
+    "box": [
+     1133.9,
+     551.0,
+     1181.4,
+     647.0
+    ],
+    "from": "N",
+    "to": "?",
+    "confidence": "medium-high",
+    "evidence": "Same person as the ball carrier labelled ? at 2448-2457 (back to the camera, dribbling left), so N contradicts the file's own ? labels. Set to ?, not T, to keep the annotator's uncertainty for this person over 2448-2457."
+   },
+   {
+    "id": "C8",
+    "sourceFrame": 2459,
+    "windowFrame": "i0225:209",
+    "labelIndex": 2,
+    "piece": 33,
+    "box": [
+     1122.2,
+     542.9,
+     1189.4,
+     645.6
+    ],
+    "from": "N",
+    "to": "?",
+    "confidence": "medium-high",
+    "evidence": "As C7."
+   }
+  ]
+ },
+ "R19": {
+  "category": "control_other_player_N_label",
+  "why": "original label N (control)"
+ },
+ "R20": {
+  "category": "control_20_confirmed_1955",
+  "why": "'20' legible (control)"
+ },
+ "R21": {
+  "category": "E3_reference_appearance_claims",
+  "why": "HLG-reference appearance claims on N labels (E3)"
+ },
+ "R22": {
+  "category": "claims_after_1955",
+  "why": "anchored continuation after a confirmed read"
+ },
+ "R23": {
+  "category": "setpiece_B_path",
+  "why": "crowded set piece, candidate-B claims"
+ },
+ "R24": {
+  "category": "control_other_player_N_label",
+  "why": "original label N (control)"
+ },
+ "R25": {
+  "category": "control_20_T_label",
+  "why": "original label T (control)"
+ }
+}

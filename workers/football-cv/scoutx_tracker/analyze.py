@@ -102,8 +102,94 @@ def det_of_crop(D) -> dict:
 
 
 def load_ocr_cache(cache_path: Path) -> dict:
+    if OCR_CACHE_PROVENANCE:
+        return _load_ocr_cache_checked(cache_path)
     raw = json.loads(cache_path.read_text()) if cache_path.exists() else {}
     return {crop_key(k): v for k, v in raw.items()}
+
+
+# 5.3 CANDIDATE E (off by default; SCOUTX_OCR_CACHE_PROVENANCE=1): OCR cache entries are only reused for the stage-1
+# chunk (detections) and OCR configuration they were produced from. Demonstrated defects without it
+# (tests/test_ocr_cache_edge_cases.py): keys are '<chunk dir>/<frame>_<det>.jpg' only, so (1) a chunk that
+# Stage1Store re-extracts (other settings / corrupt) keeps the old reads under the same names, (2) caches combined
+# across runs or jobs collide on 'c_00000/...' names, (3) a truncated cache file makes every later resolve raise, and
+# (4) a malformed entry raises in the reads loop. With the flag: a sidecar '<cache>.provenance.json' records per
+# chunk dir a tag (detections.npz SHA-256 + OCR configuration); entries of a chunk whose tag is missing or differs
+# are dropped before use (and re-read when selected); unreadable files / malformed entries are discarded.
+OCR_CACHE_PROVENANCE = os.environ.get("SCOUTX_OCR_CACHE_PROVENANCE", "0") != "0"
+_TAGS: dict = {}
+
+
+def _ocr_config_tag() -> str:
+    """OCR configuration that changes reads: preprocessing switch, recogniser modules' source, model files when known."""
+    import hashlib  # noqa: PLC0415
+
+    from . import ocr as _ocr  # noqa: PLC0415
+
+    h = hashlib.sha256()
+    h.update(os.environ.get("SCOUTX_OCR_ENHANCE", "0").encode())
+    h.update(Path(_ocr.__file__).read_bytes())
+    return h.hexdigest()[:16]
+
+
+def _chunk_tag(chunk_dir: Path) -> str | None:
+    det = chunk_dir / "detections.npz"
+    if not det.is_file():
+        return None
+    st = det.stat()
+    key = (str(det), st.st_mtime_ns, st.st_size)
+    if key not in _TAGS:
+        from .envinfo import sha256_file  # noqa: PLC0415
+
+        _TAGS[key] = f"{sha256_file(det)[:24]}:{_ocr_config_tag()}"
+    return _TAGS[key]
+
+
+def _valid_entry(v) -> bool:
+    return (isinstance(v, list) and len(v) == 3 and (v[0] is None or isinstance(v[0], str))
+            and isinstance(v[1], (int, float)) and (v[2] is None or isinstance(v[2], str)))
+
+
+def _load_ocr_cache_checked(cache_path: Path) -> dict:
+    try:
+        raw = json.loads(cache_path.read_text()) if cache_path.exists() else {}
+        if not isinstance(raw, dict):
+            raw = {}
+    except (OSError, ValueError):
+        raw = {}                                      # unreadable / truncated: start cold (reads are redone)
+    return {crop_key(k): v for k, v in raw.items() if _valid_entry(v)}
+
+
+def _provenance_path(cache_path: Path) -> Path:
+    return cache_path.with_name(cache_path.name + ".provenance.json")
+
+
+def _check_provenance(cache: dict, cache_path: Path, chunk_dirs: set) -> dict:
+    """Drop cached entries of chunks whose recorded tag is missing or differs from the chunk on disk; returns the
+    updated tag map (to be written with the cache)."""
+    pp = _provenance_path(cache_path)
+    try:
+        tags = json.loads(pp.read_text()) if pp.exists() else {}
+        if not isinstance(tags, dict):
+            tags = {}
+    except (OSError, ValueError):
+        tags = {}
+    for d in chunk_dirs:
+        cur = _chunk_tag(d)
+        if cur is None:
+            continue
+        if tags.get(d.name) != cur:
+            prefix = f"{d.name}/"
+            for k in [k for k in cache if k.startswith(prefix)]:
+                del cache[k]
+            tags[d.name] = cur
+    return tags
+
+
+def _write_json_atomic(path: Path, obj) -> None:
+    tmp = path.with_name(f"{path.name}.tmp-{os.getpid()}")
+    tmp.write_text(json.dumps(obj))
+    os.replace(tmp, path)
 
 
 def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: int = 2, log=print,
@@ -117,6 +203,10 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
     5.2: `max_new` bounds the NUMBER of uncached crops read (deferred-OCR follow-up); the crop
     order is deterministic, so repeated follow-ups make progress and never loop."""
     cache = load_ocr_cache(cache_path)
+    tags = None
+    if OCR_CACHE_PROVENANCE:
+        tags = _check_provenance(cache, cache_path, {Path(c).parent.parent for cs in crops_by_tid.values() for c in cs})
+        _write_json_atomic(_provenance_path(cache_path), tags)
     t_budget = time.perf_counter()
     n_new = 0
     reader = None
@@ -144,7 +234,7 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                 if read_new is not None:
                     read_new.append(key)
                 if done % 100 == 0:
-                    cache_path.write_text(json.dumps(cache))
+                    _write_json_atomic(cache_path, cache)
                     log(f"reading numbers: {done} crops ({(time.time() - t) / done:.2f}s each), tracklet {k + 1}/{len(crops_by_tid)}")
             if consulted is not None:
                 consulted.add(key)
@@ -154,7 +244,7 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                 if early_stop and counts[num] >= 2:
                     break
     if done:
-        cache_path.write_text(json.dumps(cache))
+        _write_json_atomic(cache_path, cache)
     return cache
 
 

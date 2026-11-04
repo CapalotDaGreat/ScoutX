@@ -1,0 +1,9 @@
+item,correctionId,sourceFrame,labelBoxIndex,box,originalLabel,proposedLabel,proposalEvidence,verdict(supported|unsupported|uncertain),notes
+R18,C1,2445,2,"[1277.8, 521.5, 1362.9, 640.1]",T,N,"This box is a different orange player (player A), face to the camera and running right, with no ball. #20, the ball carrier seen from behind, is the box labelled N at index 3.",,
+R18,C2,2445,3,"[1208.3, 522.1, 1278.8, 670.0]",N,T,"Direct continuity with the T box at 2444 (the frame read ""20""): same person, back to the camera, keeps the ball, continues left.",,
+R18,C3,2446,2,"[1332.0, 524.4, 1392.8, 640.2]",T,N,As C1: player A.,,
+R18,C4,2446,3,"[1197.0, 531.6, 1265.1, 672.0]",N,T,"As C2: the ball carrier, #20.",,
+R18,C5,2447,2,"[1380.3, 521.1, 1433.3, 641.9]",T,N,As C1: player A.,,
+R18,C6,2447,3,"[1170.7, 527.3, 1249.2, 673.7]",N,T,"As C2: the ball carrier, #20.",,
+R18,C7,2458,2,"[1133.9, 551.0, 1181.4, 647.0]",N,?,"Same person as the ball carrier labelled ? at 2448-2457 (back to the camera, dribbling left), so N contradicts the file's own ? labels. Set to ?, not T, to keep the annotator's uncertainty for this person over 2448-2457.",,
+R18,C8,2459,2,"[1122.2, 542.9, 1189.4, 645.6]",N,?,As C7.,,

@@ -39,6 +39,9 @@ def main(argv=None) -> int:
     out.mkdir(parents=True, exist_ok=True)
     cap = cv2.VideoCapture(a.video)
     rows = []
+    v2 = json.loads(Path(a.items).read_text()).get("schema", "").endswith("v2")
+    if v2:
+        return _v2(cap, gt, items, out)
     for it in items:
         d = out / it["id"]
         d.mkdir(exist_ok=True)
@@ -72,6 +75,58 @@ def main(argv=None) -> int:
         w.writeheader()
         w.writerows(rows)
     print(f"{len(rows)} boxes to review in {out}")
+    return 0
+
+
+RUBRIC = ("answer: target | other | uncertain  (target = the player wearing #20)",
+          "legibleNumber: the shirt number if you can READ it in this frame, else empty",
+          "uncertainty: none | occlusion | crowd/contact | small/blurred | identity continuity | other",
+          "notes: what the decision rests on (legible number, continuity from a frame with a legible number, ...)")
+
+
+def _v2(cap, gt, items, out: Path) -> int:
+    """v2 items: neutral ids, boxes to judge, context frames without boxes. One answers.csv row per box."""
+    import cv2  # noqa: PLC0415
+
+    def frame(f):
+        cap.set(cv2.CAP_PROP_POS_FRAMES, int(f))
+        ok, im = cap.read()
+        return im if ok else None
+
+    rows = []
+    for it in items:
+        d = out / it["id"]
+        d.mkdir(exist_ok=True)
+        targets = it["boxes"] if it["kind"] == "box" else it["frames"]
+        for f, boxes in sorted(targets.items(), key=lambda kv: int(kv[0])):
+            boxes = [boxes] if it["kind"] == "box" else boxes
+            im = frame(f)
+            if im is None:
+                continue
+            ctx = im.copy()
+            for j, b in enumerate(boxes):
+                x1, y1, x2, y2 = (int(v) for v in b)
+                tag = f"B{j}" if it["kind"] == "box" else f"L{j}"
+                cv2.rectangle(ctx, (x1, y1), (x2, y2), (255, 255, 255), 2)
+                cv2.putText(ctx, tag, (x1, max(0, y1 - 5)), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+                h = max(1, y2 - y1)
+                crop = im[max(0, y1 - h // 4):min(im.shape[0], y2 + h // 8), max(0, x1 - h // 4):min(im.shape[1], x2 + h // 4)]
+                if crop.size:
+                    cv2.imwrite(str(d / f"{f}_{tag}.jpg"), cv2.resize(crop, (240, int(240 * crop.shape[0] / crop.shape[1]))))
+                rows.append({"item": it["id"], "sourceFrame": int(f), "timeSec": round(int(f) / 10, 1), "box": tag,
+                             "coords": [round(float(v), 1) for v in b], "answer": "", "legibleNumber": "",
+                             "uncertainty": "", "notes": ""})
+            cv2.imwrite(str(d / f"{f}_context.jpg"), ctx)
+        for f in it.get("contextFrames", []):
+            im = frame(f)
+            if im is not None:
+                cv2.imwrite(str(d / f"ctx_{f}.jpg"), im)                    # surrounding footage, nothing drawn
+    with open(out / "answers.csv", "w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+    (out / "RUBRIC.txt").write_text("\n".join(RUBRIC) + "\n")
+    print(f"{len(rows)} boxes in {len(items)} items -> {out}")
     return 0
 
 

@@ -107,6 +107,9 @@ def run(replay: Path, out: Path, warm_cache: Path | None = None, dump: Path | No
         dirs.append(str(d))
     if warm_cache:
         shutil.copy2(warm_cache, stage / "ocr_cache.json")
+        side = Path(str(warm_cache) + ".provenance.json")          # candidate E sidecar, if the cache has one
+        if side.exists():
+            shutil.copy2(side, stage / "ocr_cache.json.provenance.json")
     reads = json.loads((replay / "ocr_reads.json").read_text())
     stats = {"served": 0, "neverReadInOriginal": [], "imageReads": 0}
     real_imread = cv2.imread
