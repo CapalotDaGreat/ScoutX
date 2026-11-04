@@ -134,8 +134,13 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
   const c = report.coverage;
   const out: Insight[] = [];
   const confirmedOnBall = cards.filter((m) => m.evidence === 'confirmed' && (m.category === 'on_ball' || m.category === 'passing'));
-  const completed = cards.filter((m) => m.titleKey === 'pass_attempt' && m.outcome === 'completed');
-  const incomplete = cards.filter((m) => m.titleKey === 'pass_attempt' && m.outcome === 'incomplete');
+  // Pass counts that label evidence "confirmed" must not include LIKELY_VISIBLE (estimated) moments.
+  const completed = cards.filter(
+    (m) => m.evidence === 'confirmed' && m.titleKey === 'pass_attempt' && m.outcome === 'completed',
+  );
+  const incomplete = cards.filter(
+    (m) => m.evidence === 'confirmed' && m.titleKey === 'pass_attempt' && m.outcome === 'incomplete',
+  );
   const carries = cards.filter((m) => m.titleKey === 'carry');
 
   if (confirmedOnBall.length >= 3) {

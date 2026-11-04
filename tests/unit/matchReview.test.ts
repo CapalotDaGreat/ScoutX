@@ -35,6 +35,8 @@ function synthetic(): TrackingReport {
         identityState: 'CONFIRMED_VISIBLE', candidate: false, outcome: 'completed', indicator: [[200, 0.1, 0.1, 0.05, 0.1]] },
       { id: 'm_2960', kind: 'pass_attempt', kinds: ['pass_attempt'], start: 300, end: 302, clipStart: 296, clipEnd: 304,
         identityState: 'CONFIRMED_VISIBLE', candidate: false, outcome: 'incomplete', indicator: [] },
+      { id: 'm_3460', kind: 'pass_attempt', kinds: ['pass_attempt'], start: 350, end: 352, clipStart: 346, clipEnd: 354,
+        identityState: 'CONFIRMED_VISIBLE', candidate: false, outcome: 'incomplete', indicator: [] },
       { id: 'm_3960', kind: 'pass_attempt', kinds: ['pass_attempt'], start: 400, end: 402, clipStart: 396, clipEnd: 404,
         identityState: 'LIKELY_VISIBLE', candidate: false, outcome: 'incomplete', indicator: [] },
       { id: 'm_4960', kind: 'carry', kinds: ['carry'], start: 500, end: 503, clipStart: 497, clipEnd: 505,
@@ -103,7 +105,9 @@ test('coach: at most two strengths and two improvements, each with evidence and 
   assert.deepEqual(passing?.momentIds.sort(), ['m_1960', 'm_960']);
   const fix = improve.find((i) => i.topic === 'passing_accuracy');
   assert.equal(fix?.params.count, 2);
+  assert.deepEqual(fix?.momentIds.sort(), ['m_2960', 'm_3460']);
   assert.ok(fix?.drill);
+  assert.ok(!insights.some((i) => i.momentIds.includes('m_3960')), 'LIKELY passes never feed confirmed coaching');
   assert.ok(!insights.some((i) => i.momentIds.includes('m_5960')), 'duel candidates never feed coaching');
   assert.equal(positionGroup('Left winger'), 'winger');
   assert.equal(positionGroup('Torwart'), 'goalkeeper');
@@ -118,7 +122,7 @@ test('coach: at most two strengths and two improvements, each with evidence and 
 test('moments: evidence labels, indicator interpolation, adjustable clip', () => {
   const r = synthetic();
   const cards = (r.moments ?? []).map(toMomentCard);
-  assert.deepEqual(cards.map((c) => c.evidence), ['confirmed', 'confirmed', 'confirmed', 'estimated', 'confirmed', 'needs_review']);
+  assert.deepEqual(cards.map((c) => c.evidence), ['confirmed', 'confirmed', 'confirmed', 'confirmed', 'estimated', 'confirmed', 'needs_review']);
   assert.equal(evidenceOf({ ...r.moments![0], kind: 'spell', identityState: 'LIKELY_VISIBLE' }), 'needs_review');
   const ind: Array<[number, number, number, number, number]> = [[10, 0, 0, 0.1, 0.2], [11, 0.2, 0.2, 0.1, 0.2]];
   assert.deepEqual(indicatorAt(ind, 10.5), { x: 0.1, y: 0.1, w: 0.1, h: 0.2 });
