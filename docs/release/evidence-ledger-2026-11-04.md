@@ -99,4 +99,4 @@ Scoped **no-CV-worker** path can proceed as a **product decision** (REL-CPU) wit
 | blocker prep | register, operator actions, counsel, D brief, device protocol, CPU proposal, restore script, checklist/backups/owner updates | `f2a82d0` |
 | audit follow-up | Align `APP_CHECK.md` with runtime; privacy-label camera/mic + messaging note; unit tests for `shouldEnforceAppCheck` | `065afcd` |
 | external verify | Re-confirm 721 unit tests; restore script guards; D mapping SHA; Firebase CLI needs `--reauth`; write `external-verification-2026-11-04.md` | `d9411dc` |
-| final audit | External claims **not** evidenced; gate BLOCKED×10; unit 721; worker 619/16sk/6xf; typecheck+functions build PASS; no archive; D PENDING; write `final-release-audit-2026-11-04.md` | pending |
+| final audit | External claims **not** evidenced; gate BLOCKED×10; unit 721; worker 619/16sk/6xf; typecheck+functions build PASS; no archive; D PENDING; write `final-release-audit-2026-11-04.md` | `cb7daaa` |
