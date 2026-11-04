@@ -85,4 +85,4 @@ Atomic OCR cache writes (part of E work) remain unconditional from earlier commi
 | | Applied C default (`"1"`) + opt-out + `test_default_is_consulted_only`; release-gate fixture exclude; ledger/contracts/dossier | `6ebdd5c` |
 | | Worker env: installed deps; pinned `supervision==0.26.1` (<0.27 for ByteTrack) | local venv only |
 | | Worker suite 619/0 fail; app 718; functions build; rules 261 | evidence under this commit |
-| | Audit follow-up: align checklist model allowlist (`gemini-2.5-flash`) + entitlement-matrix product-ID wording | pending |
+| | Audit follow-up: align checklist model allowlist (`gemini-2.5-flash`) + entitlement-matrix product-ID wording | `0ebfbd8` |
