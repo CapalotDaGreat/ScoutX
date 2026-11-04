@@ -36,4 +36,9 @@ Source for the "App Privacy" answers in App Store Connect. They must match the p
 | --- | --- |
 | `NSPhotoLibraryUsageDescription` | Pick videos and photos to upload |
 | `NSPhotoLibraryAddUsageDescription` | Save processed media |
+| Camera / microphone (`expo-image-picker` plugin) | Optional **on-device** recording of highlight clips. Uploaded recordings are declared under **Photos or Videos** (user content). The separate ASC **Audio** nutrition category stays **No** in this matrix pending counsel confirmation that video-with-audio uploads do not require a distinct Audio “collected” answer |
 | Location "When In Use" (expo-location plugin) | Distance and pitch heatmap during an active recording; background location disabled |
+
+## Store questionnaire note
+
+`store/listing.json` sets `messagingAndChat: true` because scouts can send **structured** requests / trial invitations (short text). The listing note states there is **no open chat**. Keep ASC “Messaging and Chat” aligned with that distinction — not a free-form messenger.

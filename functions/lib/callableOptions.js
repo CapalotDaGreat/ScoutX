@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.shouldEnforceAppCheck = shouldEnforceAppCheck;
 exports.resolveCallableCors = resolveCallableCors;
 exports.createCallableOptions = createCallableOptions;
-function isFunctionsEmulator() {
-    return process.env.FUNCTIONS_EMULATOR === 'true';
-}
-function shouldEnforceAppCheck() {
-    if (isFunctionsEmulator()) {
+/** Exported for unit tests. Emulator always off; production defaults on unless ENFORCE_APP_CHECK=false. */
+function shouldEnforceAppCheck(env = process.env) {
+    if (env.FUNCTIONS_EMULATOR === 'true') {
         return false;
     }
-    return process.env.ENFORCE_APP_CHECK !== 'false';
+    return env.ENFORCE_APP_CHECK !== 'false';
 }
 /**
  * Browser origins allowed to call functions. The iOS app sends no Origin header, so
@@ -26,10 +25,10 @@ function resolveCallableCors(env = process.env) {
         .filter((origin) => /^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(origin));
     return origins.length > 0 ? origins : false;
 }
-function createCallableOptions(overrides = {}) {
+function createCallableOptions(overrides = {}, env = process.env) {
     return {
-        cors: resolveCallableCors(),
-        enforceAppCheck: shouldEnforceAppCheck(),
+        cors: resolveCallableCors(env),
+        enforceAppCheck: shouldEnforceAppCheck(env),
         ...overrides,
     };
 }

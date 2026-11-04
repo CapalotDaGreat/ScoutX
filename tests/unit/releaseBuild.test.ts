@@ -5,6 +5,10 @@ import { productionBuildProblems } from '../../src/config/releaseBuildPolicy.ts'
 import { withFirebaseBuildProperties } from '../../src/config/nativeBuildPlugins.ts';
 import { resolveAppCheckPolicy } from '../../src/config/appCheckPolicy.ts';
 import { validationStates } from '../../scripts/lib/releaseValidation.mjs';
+import {
+  createCallableOptions,
+  shouldEnforceAppCheck,
+} from '../../functions/src/callableOptions.ts';
 
 const valid = {
   EXPO_PUBLIC_FIREBASE_API_KEY: 'fixture-api-key',
@@ -114,5 +118,25 @@ describe('manual acceptance release gate', () => {
   });
   test('handles different table layouts without counting notes or prose', () => {
     assert.deepEqual(validationStates('NOT VALIDATED\n| Case | Device | State |\n| --- | --- | --- |\n| Login | iPhone | PASS |\n\n| Item | State |\n| --- | --- |\n| SMTP | NOT VALIDATED |'), { failed: 0, pending: 1 });
+  });
+});
+
+describe('callable App Check enforcement', () => {
+  test('defaults on outside the emulator', () => {
+    assert.equal(shouldEnforceAppCheck({}), true);
+    assert.equal(shouldEnforceAppCheck({ ENFORCE_APP_CHECK: 'true' }), true);
+    assert.equal(shouldEnforceAppCheck({ ENFORCE_APP_CHECK: 'false' }), false);
+  });
+  test('stays off in the Functions emulator even if ENFORCE_APP_CHECK is unset', () => {
+    assert.equal(shouldEnforceAppCheck({ FUNCTIONS_EMULATOR: 'true' }), false);
+    assert.equal(shouldEnforceAppCheck({ FUNCTIONS_EMULATOR: 'true', ENFORCE_APP_CHECK: 'true' }), false);
+  });
+  test('createCallableOptions applies enforcement and allows explicit exemptions', () => {
+    assert.equal(createCallableOptions({}, {}).enforceAppCheck, true);
+    assert.equal(createCallableOptions({ enforceAppCheck: false }, {}).enforceAppCheck, false);
+    assert.equal(
+      createCallableOptions({}, { FUNCTIONS_EMULATOR: 'true' }).enforceAppCheck,
+      false,
+    );
   });
 });

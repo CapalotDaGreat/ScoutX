@@ -1,15 +1,14 @@
 import type { CallableOptions } from 'firebase-functions/v2/https';
 
-function isFunctionsEmulator(): boolean {
-  return process.env.FUNCTIONS_EMULATOR === 'true';
-}
-
-function shouldEnforceAppCheck(): boolean {
-  if (isFunctionsEmulator()) {
+/** Exported for unit tests. Emulator always off; production defaults on unless ENFORCE_APP_CHECK=false. */
+export function shouldEnforceAppCheck(
+  env: NodeJS.ProcessEnv = process.env,
+): boolean {
+  if (env.FUNCTIONS_EMULATOR === 'true') {
     return false;
   }
 
-  return process.env.ENFORCE_APP_CHECK !== 'false';
+  return env.ENFORCE_APP_CHECK !== 'false';
 }
 
 /**
@@ -30,10 +29,11 @@ export function resolveCallableCors(env: NodeJS.ProcessEnv = process.env): strin
 
 export function createCallableOptions(
   overrides: Partial<CallableOptions> = {},
+  env: NodeJS.ProcessEnv = process.env,
 ): CallableOptions {
   return {
-    cors: resolveCallableCors(),
-    enforceAppCheck: shouldEnforceAppCheck(),
+    cors: resolveCallableCors(env),
+    enforceAppCheck: shouldEnforceAppCheck(env),
     ...overrides,
   };
 }
