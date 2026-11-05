@@ -372,7 +372,13 @@ describe('segment review and synthesis', () => {
       {
         headline: 'Calm on the ball',
         strengths: [{ text: 'Good first touch', observationIds: ['s0_o1'] }, { text: 'Scored twice', observationIds: [] }],
-        opportunities: Array.from({ length: 5 }, (_, i) => ({ title: `T${i}`, drill: 'Rondo', observationIds: ['s0_o1'] })),
+        opportunities: Array.from({ length: 5 }, (_, i) => ({
+          title: `T${i}`,
+          why: 'The first touch sets the next action',
+          drill: 'Rondo',
+          successCriterion: 'Two clean receives in a row',
+          observationIds: ['s0_o1'],
+        })),
         decisionMoments: [{ situation: 'Under pressure', chosen: 'Played back', observationIds: ['s0_o1'] }],
       },
       observations,
@@ -385,9 +391,17 @@ describe('segment review and synthesis', () => {
     assert.equal(moments[0].timestampSec, 2);
     assert.deepEqual(moments[0].evidenceRefs, ['s0_o1']);
     assert.equal(moments[0].practiceIdea, 'Rondo');
-    assert.equal(moments[0].measurement, null);
+    assert.equal(moments[0].measurement, 'Two clean receives in a row');
+    assert.match(moments[0].context, /Cushions the ball/);
+    const missingCriterion = normalizeSynthesis(
+      {
+        opportunities: [{ title: 'Scan', why: 'Late', drill: 'Rondo', observationIds: ['s0_o1'] }],
+      },
+      observations,
+    );
+    assert.equal(missingCriterion.opportunities.length, 0);
     const empty = coachingMomentsFromSynthesis(
-      { ...synthesis, opportunities: [{ title: 'Uncited', why: 'x', drill: 'y', observationIds: ['missing'] }] },
+      { ...synthesis, opportunities: [{ title: 'Uncited', why: 'x', drill: 'y', successCriterion: 'z', observationIds: ['missing'] }] },
       observations,
     );
     assert.deepEqual(empty, []);
@@ -467,6 +481,44 @@ describe('report sections, versions and identity', () => {
       { playerId: 'u', status: 'complete', targeting: { jerseyNumber: '8', kitPrimaryColor: 'red', kitSecondaryColor: 'white' }, match: { opponent: '', competition: '', date: '' }, durationSec: 60, frames: [] },
     );
     assert.deepEqual(released.strengths, ['Strong first touch']);
+    assert.deepEqual(released.coachingMoments, []);
+    const withMoment = releasePendingCoaching(
+      {
+        strengths: [],
+        evidence: [{
+          id: 's1_o1',
+          kind: 'observation',
+          label: 'First touch',
+          detail: 'Cushions a pass with the right foot',
+          category: 'technique',
+          confidence: 0.5,
+          timestampSec: 12,
+          frameIds: ['frame_100'],
+        }],
+        sections: [],
+      },
+      {
+        strengths: ['Clean first touch'],
+        improvements: [],
+        coachingNotes: '',
+        techniqueAssessment: null,
+        opportunities: [{
+          title: 'Scan earlier',
+          why: 'Receives square-on',
+          drill: 'Rondo with scanning call',
+          successCriterion: 'Calls the scan before the ball arrives',
+          observationIds: ['s1_o1'],
+        }],
+        decisionMoments: [],
+        clipCoaching: null,
+      },
+      { playerId: 'u', status: 'complete', targeting: { jerseyNumber: '8', kitPrimaryColor: 'red', kitSecondaryColor: 'white' }, match: { opponent: '', competition: '', date: '' }, durationSec: 60, frames: [] },
+    );
+    const moments = withMoment.coachingMoments as Array<{ measurement: string; context: string; evidenceRefs: string[] }>;
+    assert.equal(moments.length, 1);
+    assert.equal(moments[0].measurement, 'Calls the scan before the ball arrives');
+    assert.match(moments[0].context, /Cushions a pass/);
+    assert.deepEqual(moments[0].evidenceRefs, ['s1_o1']);
     const rejected = markIdentityRejected(report);
     assert.equal(rejected.identityRejected, true);
   });

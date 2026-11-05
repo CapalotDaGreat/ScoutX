@@ -3,7 +3,7 @@
   "homeTitle": "Home",
   "homeSubtitle": "Il tuo gioco. I tuoi progressi.",
   "subtitle": "Il tuo Football Passport su PitchProof",
-  "loadingSubtitle": "Preparazione del profiloâ€¦",
+  "loadingSubtitle": "Preparazione del profilo…",
   "errorSubtitle": "Non siamo riusciti a caricare il tuo portfolio",
   "emptySubtitle": "Nessun dato del portfolio disponibile",
   "unavailableTitle": "Portfolio non disponibile",
@@ -29,8 +29,8 @@
   "recentMatches": "Partite recenti",
   "footballPassport": "Football Passport",
   "passportPreview": "Anteprima passport",
-  "passportSubtitle": "PitchProof shareable football rÃƒÂ©sumÃƒÂ©",
-  "loadingPassportSubtitle": "Loading shareable rÃƒÂ©sumÃƒÂ©",
+  "passportSubtitle": "PitchProof shareable football résumé",
+  "loadingPassportSubtitle": "Loading shareable résumé",
   "passportUnavailable": "Non disponibile",
   "privatePortfolioTitle": "Il portfolio è privato",
   "previewUnavailableDescription": "Impossibile caricare l'anteprima del portfolio.",
@@ -77,7 +77,7 @@
     "shareLink": "Condividi link",
     "shareSocialCard": "Condividi social card",
     "linkCopied": "Link copiato",
-    "shareTitle": "{{playerName}} Ã¢â‚¬â€ PitchProof Portfolio",
+    "shareTitle": "{{playerName}} — PitchProof Portfolio",
     "shareMessage": "Guarda il portfolio calcistico di {{playerName}} su PitchProof: {{url}}",
     "tagline": "Football Passport su PitchProof"
   },
@@ -85,7 +85,7 @@
     "title": "Privacy di portfolio e visibilità",
     "description": "Gestisci la tua identità calcistica condivisibile e la visibilità per gli scout.",
     "publicPortfolio": "Portfolio pubblico",
-    "publicPortfolioDescription": "Allow anyone with the link to view your football rÃƒÂ©sumÃƒÂ©.",
+    "publicPortfolioDescription": "Allow anyone with the link to view your football résumé.",
     "discoverable": "Visibile agli scout",
     "discoverableDescription": "Compari nella ricerca degli scout quando i club cercano talenti come te.",
     "careerTimeline": "Timeline della carriera",
@@ -118,7 +118,7 @@
     "claimFailedFallback": "Prova un altro username.",
     "placeholder": "il-tuo-nome",
     "available": "Username disponibile",
-    "checking": "Checking availabilityÃ¢â‚¬Â¦"
+    "checking": "Checking availability…"
   },
   "endorsementInvite": {
     "title": "Invita il tuo allenatore",

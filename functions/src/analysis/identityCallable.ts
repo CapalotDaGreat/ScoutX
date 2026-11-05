@@ -2,6 +2,14 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { getFirestore, type Firestore, type Transaction, type DocumentReference } from 'firebase-admin/firestore';
 import { createCallableOptions } from '../callableOptions';
 import { MATCH_COLLECTION, emptyStats, isGoalkeeperJob, type MatchJobDoc, type PendingCoaching } from './frameAnalysis';
+import {
+  OBSERVATION_CATEGORIES,
+  coachingMomentsFromSynthesis,
+  type ObservationCategory,
+  type Opportunity,
+  type SegmentObservation,
+  type Synthesis,
+} from './segmentReview';
 import { buildSections, type ReportSection } from './reportSections';
 import { normalizeTechniqueAssessment, parseSelfReportedStars } from './technique';
 import { VIDEO_CONSENT_COLLECTION, VIDEO_CONSENT_VERSION } from './videoConsent';
@@ -39,6 +47,52 @@ export function parseIdentityRequest(data: unknown): IdentityRequest | null {
   };
 }
 
+function asOpportunity(value: unknown): Opportunity | null {
+  if (!value || typeof value !== 'object') return null;
+  const row = value as Record<string, unknown>;
+  const observationIds = Array.isArray(row.observationIds)
+    ? row.observationIds.filter((id): id is string => typeof id === 'string')
+    : [];
+  if (
+    typeof row.title !== 'string' ||
+    typeof row.drill !== 'string' ||
+    typeof row.successCriterion !== 'string' ||
+    observationIds.length === 0
+  ) {
+    return null;
+  }
+  return {
+    title: row.title,
+    why: typeof row.why === 'string' ? row.why : '',
+    drill: row.drill,
+    successCriterion: row.successCriterion,
+    observationIds,
+  };
+}
+
+function observationsFromEvidence(report: Record<string, unknown>): SegmentObservation[] {
+  if (!Array.isArray(report.evidence)) return [];
+  const categories = OBSERVATION_CATEGORIES as readonly string[];
+  return report.evidence.flatMap((item) => {
+    if (!item || typeof item !== 'object') return [];
+    const row = item as Record<string, unknown>;
+    if (row.kind !== 'observation' || typeof row.id !== 'string' || typeof row.timestampSec !== 'number') return [];
+    const frameIds = Array.isArray(row.frameIds) ? row.frameIds.filter((id): id is string => typeof id === 'string') : [];
+    const category: ObservationCategory = typeof row.category === 'string' && categories.includes(row.category)
+      ? row.category as ObservationCategory
+      : 'other';
+    return [{
+      id: row.id,
+      frameId: frameIds[0] ?? '',
+      timestampSec: row.timestampSec,
+      category,
+      label: typeof row.label === 'string' ? row.label : '',
+      detail: typeof row.detail === 'string' ? row.detail : '',
+      confidence: row.confidence === 'medium' || row.confidence === 0.5 ? 'medium' : 'low',
+    }];
+  });
+}
+
 /** Merges held-back coaching into the report once the player confirmed which person they are. */
 export function releasePendingCoaching(report: Record<string, unknown>, pending: PendingCoaching | null, job: MatchJobDoc): Record<string, unknown> {
   const next: Record<string, unknown> = { ...report };
@@ -49,6 +103,15 @@ export function releasePendingCoaching(report: Record<string, unknown>, pending:
     if (pending.techniqueAssessment) next.techniqueAssessment = pending.techniqueAssessment;
     if (pending.opportunities.length) next.opportunities = pending.opportunities;
     if (pending.decisionMoments.length) next.decisionMoments = pending.decisionMoments;
+    const synthesis: Synthesis = {
+      headline: '',
+      strengths: [],
+      improvements: [],
+      opportunities: pending.opportunities.map(asOpportunity).filter((item): item is Opportunity => item !== null),
+      decisionMoments: [],
+      coachingNotes: '',
+    };
+    next.coachingMoments = coachingMomentsFromSynthesis(synthesis, observationsFromEvidence(report));
     if (pending.clipCoaching && report.clip && typeof report.clip === 'object') {
       next.clip = { ...(report.clip as Record<string, unknown>), ...pending.clipCoaching, identityBasis: 'confirmed' };
     }

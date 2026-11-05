@@ -4,13 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PlayerDiscoveryScreen } from '@/features/scout-discovery/components/PlayerDiscoveryScreen';
 import { useDiscoveryFilters } from '@/features/scout-discovery/hooks/useDiscoveryFilters';
-import { ScoutWorkspaceProvider, useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
+import { useScoutWorkspace } from '@/features/scout-discovery/hooks/useScoutWorkspace';
 import {
   type DiscoverablePlayer,
   type DiscoverySearchScope,
   type FilterPreset,
 } from '@/features/scout-discovery/types';
-import { RecruitmentProvider } from '@/features/scout-recruitment';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { type PlayerStackParamList } from '@/navigation/types';
 
@@ -91,14 +90,5 @@ function PlayerDiscoverContent() {
 }
 
 export function PlayerDiscoverTab() {
-  const { user } = useAuth();
-  const workspaceUserId = user?.uid ?? user?.id ?? null;
-
-  return (
-    <ScoutWorkspaceProvider scoutId={workspaceUserId}>
-      <RecruitmentProvider scoutId={null} scoutName={user?.name ?? 'Player'}>
-        <PlayerDiscoverContent />
-      </RecruitmentProvider>
-    </ScoutWorkspaceProvider>
-  );
+  return <PlayerDiscoverContent />;
 }

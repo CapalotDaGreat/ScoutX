@@ -1,12 +1,12 @@
 {
   "tabs": {
     "portfolio": "Portfolio",
-    "career": "CarriÃ¨re",
+    "career": "Carrière",
     "statistics": "Stats",
     "gps": "GPS",
     "trials": "Essais",
     "home": "Accueil",
-    "performance": "ProgrÃ¨s",
+    "performance": "Progrès",
     "track": "Suivi",
     "search": "Recherche",
     "discover": "Découvrir",
@@ -15,7 +15,7 @@
   },
   "segments": {
     "stats": "Stats",
-    "career": "CarriÃ¨re",
+    "career": "Carrière",
     "gps": "GPS",
     "trials": "Essais",
     "highlights": "Temps forts",
@@ -25,7 +25,7 @@
     "development": "Développement"
   },
   "screens": {
-    "settings": "ParamÃ¨tres",
+    "settings": "Paramètres",
     "settingsSubtitle": "Compte, notifications et langue",
     "activityInbox": "Activité",
     "playerComparison": "Comparaison de joueurs",

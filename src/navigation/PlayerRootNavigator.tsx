@@ -23,6 +23,8 @@ import { usePlayerTrialInvitations } from '@/features/trial-invitations/hooks/us
 import { FootballMemoryScreen } from '@/features/football-memory/components/FootballMemoryScreen';
 import { useFootballMemory } from '@/features/football-memory/hooks/useFootballMemory';
 import { PlayerDetailScreen } from '@/features/scout-discovery/components/PlayerDetailScreen';
+import { ScoutWorkspaceProvider } from '@/features/scout-discovery/hooks/useScoutWorkspace';
+import { RecruitmentProvider } from '@/features/scout-recruitment';
 import { RequestCenterScreen } from '@/features/request-center/components/RequestCenterScreen';
 import { PlayerTabNavigator } from '@/navigation/PlayerTabNavigator';
 import { type PlayerStackParamList, type RootStackParamList } from '@/navigation/types';
@@ -343,9 +345,17 @@ function PlayerStackContent() {
 }
 
 export function PlayerRootNavigator() {
+  const { user } = useAuth();
+  const workspaceUserId = user?.uid ?? user?.id ?? null;
+
   return (
     <PlayerWorkspaceProvider>
-      <PlayerStackContent />
+      <ScoutWorkspaceProvider scoutId={workspaceUserId}>
+        {/* Same boundary as the guest shell: detail is a stack screen, not inside the Discover tab. */}
+        <RecruitmentProvider scoutId={null} scoutName={user?.name ?? 'Player'}>
+          <PlayerStackContent />
+        </RecruitmentProvider>
+      </ScoutWorkspaceProvider>
     </PlayerWorkspaceProvider>
   );
 }

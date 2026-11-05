@@ -96,21 +96,13 @@ export function CollapsibleSection({
                 </Text>
               ) : null}
             </View>
-            {open ? (
-              <ChevronUp
-                size={18}
-                color={colors.gold}
-                accessibilityElementsHidden
-                importantForAccessibility="no"
-              />
-            ) : (
-              <ChevronDown
-                size={18}
-                color={colors.textSecondary}
-                accessibilityElementsHidden
-                importantForAccessibility="no"
-              />
-            )}
+            <View accessibilityElementsHidden importantForAccessibility="no">
+              {open ? (
+                <ChevronUp size={18} color={colors.gold} />
+              ) : (
+                <ChevronDown size={18} color={colors.textSecondary} />
+              )}
+            </View>
           </Pressable>
           {open ? (
             <View className="gap-5 border-t border-divider px-5 pb-5 pt-4">{children}</View>

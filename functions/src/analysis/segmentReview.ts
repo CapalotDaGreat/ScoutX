@@ -194,13 +194,14 @@ export function buildSynthesisPrompt(params: {
     },
     output: [
       `techniqueAssessment: give stars (1-5) only where at least ${MIN_TECHNIQUE_FRAMES} cited frames show that technique; else null.`,
-      'opportunities: at most 3, each with one concrete drill.',
+      'opportunities: at most 3. Each needs one concrete drill and one observable practice success criterion.',
+      'The success criterion is a check for the drill. Do not invent match speeds, distances, or statistics that are not in the cited observations.',
       'Return only this JSON object:',
       JSON.stringify({
         headline: 'string',
         strengths: [{ text: 'string', observationIds: ['s0_o1'] }],
         improvements: [{ text: 'string', observationIds: ['s0_o1'] }],
-        opportunities: [{ title: 'string', why: 'string', drill: 'string', observationIds: ['s0_o1'] }],
+        opportunities: [{ title: 'string', why: 'string', drill: 'string', successCriterion: 'string', observationIds: ['s0_o1'] }],
         decisionMoments: [{ situation: 'string', chosen: 'string', alternative: 'string', observationIds: ['s0_o1'] }],
         coachingNotes: 'string',
         techniqueAssessment: {
@@ -213,7 +214,13 @@ export function buildSynthesisPrompt(params: {
 }
 
 export type CitedText = { text: string; observationIds: string[] };
-export type Opportunity = { title: string; why: string; drill: string; observationIds: string[] };
+export type Opportunity = {
+  title: string;
+  why: string;
+  drill: string;
+  successCriterion: string;
+  observationIds: string[];
+};
 export type DecisionMoment = { situation: string; chosen: string; alternative: string; observationIds: string[]; timestampSec: number };
 
 export type Synthesis = {
@@ -248,8 +255,9 @@ export function normalizeSynthesis(raw: Record<string, unknown>, observations: S
     const observationIds = knownFrameIds(row.observationIds, known, 6);
     const title = cleanModelText(row.title, 100);
     const drill = cleanModelText(row.drill, 400);
-    if (observationIds.length === 0 || !title || !drill) continue;
-    opportunities.push({ title, why: cleanModelText(row.why, 300), drill, observationIds });
+    const successCriterion = cleanModelText(row.successCriterion, 200);
+    if (observationIds.length === 0 || !title || !drill || !successCriterion) continue;
+    opportunities.push({ title, why: cleanModelText(row.why, 300), drill, successCriterion, observationIds });
     if (opportunities.length >= 3) break;
   }
   const decisionMoments: DecisionMoment[] = [];
@@ -300,9 +308,11 @@ export function coachingMomentsFromSynthesis(
   const out: StoredCoachingMoment[] = [];
   synthesis.opportunities.forEach((item, index) => {
     const cited = item.observationIds.map((id) => byId.get(id)).filter((row): row is SegmentObservation => row !== undefined);
-    if (cited.length === 0 || !item.drill.trim()) return;
+    const successCriterion = item.successCriterion.trim();
+    if (cited.length === 0 || !item.drill.trim() || !successCriterion) return;
     const improvement = synthesis.improvements.find((row) => row.observationIds.some((id) => item.observationIds.includes(id)));
-    const context = item.why.trim() || cited.map((row) => row.detail || row.label).filter(Boolean).join(' ');
+    const observed = cited.map((row) => row.detail || row.label).filter(Boolean).join(' ');
+    const context = [observed, item.why.trim()].filter(Boolean).join(' ');
     const point = improvement?.text.trim() || item.title.trim();
     if (!context || !point) return;
     out.push({
@@ -313,7 +323,7 @@ export function coachingMomentsFromSynthesis(
       observationKind: 'observation',
       coachingPoint: point.slice(0, 240),
       practiceIdea: item.drill.trim().slice(0, 400),
-      measurement: null,
+      measurement: successCriterion.slice(0, 200),
       confidenceLabel: cited.every((row) => row.confidence === 'medium') ? 'Limited' : 'Insufficient',
       evidenceRefs: item.observationIds,
     });

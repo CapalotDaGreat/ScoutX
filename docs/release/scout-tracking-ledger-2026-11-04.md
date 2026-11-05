@@ -20,7 +20,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - [x] Screenshot recorded; **mock-only** clearly marked
 
 ### Tracking / analysis
-- [ ] Fresh full-match baseline reproduced with provenance — **blocked locally**: no 7-chunk stage1 work dir; proxy exists at `Downloads/Mobile Devices/IMG_4809_proxy_10fps.mp4` (stream hash in `bench/references/img4809_proxy_10fps.json`). Cold `full_match_benchmark.py` would be multi-hour CPU.
+- [ ] Fresh full-match baseline reproduced with provenance — **running** (not complete). Cold CPU baseline DETOUR=0 started 2026-11-05 08:27 CET from `32470ce0ebe09a68d2201c60ed3944c28d72eca8`. Output `C:\ZLI\M335\ScoutX\.local\fm-detour-cpu-20261105`. No 7-chunk stage-1 cache was reused. Candidate DETOUR=1 has not started.
 - [x] E4 addressed with before/after on faithful `reference_i0225` replay
 - [x] No new confirmed-N frames on labelled reference window; likely-N cleared (E3 side-effect)
 - [x] E4 fixed; P remains xfail; E3 desired now passing under DETOUR
@@ -52,7 +52,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - **Baseline (DETOUR=0):** w211 CONFIRMED/number on N; E3 LIKELY/appearance on N.
 - **Hypothesis:** isolate one-frame detour when A jumps onto paused same-kit B and B resumes on the detour box while A returns.
 - **Change:** `detour_rows` + isolate orphan mid + post cut; no B-appearance swap onto A’s return; default ON (`SCOUTX_DETOUR_SPLIT=0` kills).
-- **Selectivity:** 1 hit on `reference_i0225` (f211/tid98); 0 on `default_i0225`.
+- **Selectivity on the reference window only:** 1 hit on `reference_i0225` (f211/tid98); 0 on `default_i0225`. Full-match selectivity is not measured until the cold run finishes.
 - **reference_i0225 labelled metrics (T/N, IoU≥0.5, exclude `?`):**
 
 | | conf_T | conf_N | likely_T | likely_N |
@@ -78,6 +78,18 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 
 ---
 
+### 2026-11-05 — Cold full-match CPU run started; coaching release path and player-detail crash
+
+- Video SHA-256 verified `b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c` (1,413,632,177 bytes). Stream hash remains `c0a48508…a66b`. 1920×1080, 10 fps, 20,350 frames, 2035.0 s.
+- Runtime: `workers/football-cv/.venv`, torch 2.15.0+cpu (CUDA false, 8 threads), onnxruntime 1.31.1 CPUExecutionProvider, opencv 5.0.0.93. Decoder default (cv2). FFmpeg 9.0.2 on PATH for ffprobe.
+- Flags recorded in `baseline/full_match.json`: DETOUR 0, EXCHANGE 0, RESUME 0, OCR_CONSULTED_ONLY 1, OCR_CACHE_PROVENANCE 1, APPEARANCE_ONLY_LIKELY 1 (D not promoted), MODE balanced. Chunk 300 s, stride 1, imgsz 1280, discovery imgsz 416, device cpu. Model hashes matched `bench/references/model_hashes.json`.
+- Boundary: DETOUR runs only inside `split_at_contacts` after raw `track_rows`. The runner copies `discovery.json` and stage-1 chunk directories after baseline exit 0, and does not copy `ocr_cache.json` or `report/`. Candidate resolve has not started. A resumed stage-1 on the candidate is not a cold stage-1 timing.
+- Coaching: a segment opportunity becomes a stored moment only with a cited observation, a drill, and an observable success criterion (`measurement`). Identity confirmation releases those moments from pending coaching. Missing criterion drops the opportunity. No numeric match statistic is invented.
+- Player shell: Discover opened `PlayerDetail` outside `ScoutWorkspaceProvider` and the screen threw. Providers now wrap the player stack. Mock/web check: filtered Discover → Chris Walker detail renders. Public portfolio for mock id `pl-001` shows the private/missing state. Analysis `/match/missing-job` shows “This analysis could not be loaded.”
+- Small-screen tab label “Performance” stays on one line at 390 px. Mojibake repaired in de/es/fr/it/nl/pt navigation and portfolio strings. Filter sheet still offers sprint and attribute minimums; production mapping leaves those values null, so an explicit filter excludes unknown players. Mock data still contains sample sprint speeds.
+- Tests this pass: `npm run test:unit` 738 pass; coaching/synthesis file 50 pass; `tsc --noEmit` exit 0; `tsc -p functions` exit 0. Rules emulator suite not re-run. Worker pytest not re-run while the CPU match is using the machine.
+- Screenshots this pass are mock/web only and supersede the 2026-11-04 Discover PNG for layout, not for a live account.
+
 ## Blockers / approvals needed
 
 | Item | Why | Status |
@@ -86,14 +98,14 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 | Tip TestFlight / native device | Prior screenshots are web mocks | OPEN |
 | GPU VM | CUDA gap vs baseline `51d41c9` | Needs approval |
 | Independent D review | Appearance-only promotion | Do not promote |
-| Full-match cold replay | Confirm DETOUR selectivity + #6/#17 bounds | Next local |
+| Full-match cold replay | Confirm DETOUR selectivity + #6/#17 bounds | **Running** baseline DETOUR=0 since 08:27 CET; candidate not started |
 
 ---
 
 ## Next actions
 
-1. **Full-match cold resolve with DETOUR:** either (a) obtain/reuse 7×300s stage1 work dir from prior FM run and `full_match_replay.py run`, or (b) authorize multi-hour CPU `full_match_benchmark.py` on proxy (`b1077af3…679c` file / `c0a48508…a66b` stream). Record conf/likely wrong-player vs prior `full-match-identity-20261103`.
+1. Finish the authorized cold baseline, then the DETOUR=1 resolve with an empty OCR cache. Compare labelled intervals only. Do not call a resumed stage-1 cold.
 2. P (pause-and-resume) narrow candidate — still open; do not relax thresholds.
-3. Scout authenticated journeys when Firebase keys + seeded scout/player accounts available.
-4. Renew native/device evidence for Discover freshness (current PNG is **mock/web**).
-5. Optional: measurable drill objectives on deterministic `DRILLS` + `coachingMoments` population (flagship gap; larger than this tip).
+3. Scout authenticated journeys when Firebase keys + seeded scout/player accounts are approved. Do not create production users.
+4. Native/device evidence for the current tip. 2026-11-04 and 2026-11-05 screenshots are **mock/web**.
+5. External gates unchanged: App Check, backups, counsel, owner SEC, D review, GPU vs `51d41c9`, EAS/TestFlight. No paid build started.

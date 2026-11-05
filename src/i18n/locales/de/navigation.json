@@ -7,7 +7,7 @@
     "trials": "Probetrainings",
     "home": "Start",
     "performance": "Leistung",
-    "track": "AktivitÃ¤t",
+    "track": "Aktivität",
     "search": "Suche",
     "discover": "Entdecken",
     "pipeline": "Pipeline",
@@ -27,7 +27,7 @@
   "screens": {
     "settings": "Einstellungen",
     "settingsSubtitle": "Konto, Benachrichtigungen und Sprache",
-    "activityInbox": "AktivitÃ¤t",
+    "activityInbox": "Aktivität",
     "playerComparison": "Spieler vergleichen",
     "careerReplay": "Karriere-Replay",
     "publicPortfolio": "Football Passport",

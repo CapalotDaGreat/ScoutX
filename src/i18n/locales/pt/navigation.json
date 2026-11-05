@@ -5,7 +5,7 @@
     "statistics": "Estatísticas",
     "gps": "GPS",
     "trials": "Testes",
-    "home": "InÃ­cio",
+    "home": "Início",
     "performance": "Progresso",
     "track": "Atividade",
     "search": "Pesquisar",
@@ -25,7 +25,7 @@
     "development": "Desenvolvimento"
   },
   "screens": {
-    "settings": "DefiniÃ§Ãµes",
+    "settings": "Definições",
     "settingsSubtitle": "Conta, notificações e idioma",
     "activityInbox": "Atividade",
     "playerComparison": "Comparação de jogadores",

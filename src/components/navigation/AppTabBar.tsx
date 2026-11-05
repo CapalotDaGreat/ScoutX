@@ -80,10 +80,10 @@ function TabItem<T extends string>({
       </View>
       <Text
         variant="caption"
-        numberOfLines={2}
+        numberOfLines={1}
         adjustsFontSizeToFit
-        minimumFontScale={0.85}
-        className="h-8 w-full text-center"
+        minimumFontScale={0.8}
+        className="h-4 w-full text-center text-[11px] leading-4"
         weight="medium"
         color={isActive ? 'accent' : 'secondary'}
       >

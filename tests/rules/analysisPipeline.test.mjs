@@ -476,7 +476,7 @@ describe('segment review, synthesis and identity', () => {
     modelReply(JSON.stringify({
       headline: 'Tidy in possession',
       strengths: [{ text: 'Clean first touch', observationIds: ['s0_o1', 's1_o1'] }, { text: 'Scored a hat-trick', observationIds: ['s9_o9'] }],
-      opportunities: [{ title: 'Scan earlier', why: 'Receives square-on', drill: 'Rondo with scanning call', observationIds: ['s1_o1'] }],
+      opportunities: [{ title: 'Scan earlier', why: 'Receives square-on', drill: 'Rondo with scanning call', successCriterion: 'Calls the scan before the ball arrives', observationIds: ['s1_o1'] }],
       techniqueAssessment: { firstTouch: { stars: 4, summary: 'Soft', tip: 'Wall passes', frameIds: ['frame_0', 'frame_100'] } },
     }));
     await drain({ extractor: stubExtractor(3) });
@@ -517,6 +517,9 @@ describe('segment review, synthesis and identity', () => {
     state = await job('pipe-seg');
     assert.deepEqual(state.report.strengths, ['Clean first touch']);
     assert.equal(state.report.opportunities.length, 1);
+    assert.equal(state.report.coachingMoments.length, 1);
+    assert.equal(state.report.coachingMoments[0].measurement, 'Calls the scan before the ball arrives');
+    assert.match(state.report.coachingMoments[0].context, /Cushions a pass/);
     assert.equal(state.pendingCoaching, null);
     assert.equal(state.report.sections.find((section) => section.id === 'identity').availability, 'AVAILABLE');
   });

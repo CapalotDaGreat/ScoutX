@@ -3,7 +3,7 @@
   "homeTitle": "Inicio",
   "homeSubtitle": "Tu juego. Tu progreso.",
   "subtitle": "Tu Football Passport en PitchProof",
-  "loadingSubtitle": "Preparando tu perfilâ€¦",
+  "loadingSubtitle": "Preparando tu perfil…",
   "errorSubtitle": "No hemos podido cargar tu portfolio",
   "emptySubtitle": "No hay datos de portfolio",
   "unavailableTitle": "Portfolio no disponible",
@@ -29,8 +29,8 @@
   "recentMatches": "Partidos recientes",
   "footballPassport": "Football Passport",
   "passportPreview": "Vista previa del pasaporte",
-  "passportSubtitle": "PitchProof shareable football rÃƒÂ©sumÃƒÂ©",
-  "loadingPassportSubtitle": "Loading shareable rÃƒÂ©sumÃƒÂ©",
+  "passportSubtitle": "PitchProof shareable football résumé",
+  "loadingPassportSubtitle": "Loading shareable résumé",
   "passportUnavailable": "No disponible",
   "privatePortfolioTitle": "El portfolio es privado",
   "previewUnavailableDescription": "No se pudo cargar la vista previa del portfolio.",
@@ -46,7 +46,7 @@
       "subtitle": "Clubes, hitos y trayectoria futbolística"
     },
     "statistics": {
-      "title": "EstadÃƒÂ­sticas",
+      "title": "Estadísticas",
       "subtitle": "Rendimiento por temporada y partido"
     },
     "performanceCharts": {
@@ -77,7 +77,7 @@
     "shareLink": "Compartir enlace",
     "shareSocialCard": "Compartir tarjeta social",
     "linkCopied": "Enlace copiado",
-    "shareTitle": "{{playerName}} Ã¢â‚¬â€ PitchProof Portfolio",
+    "shareTitle": "{{playerName}} — PitchProof Portfolio",
     "shareMessage": "Mira el portfolio futbolístico de {{playerName}} en PitchProof: {{url}}",
     "tagline": "Football Passport en PitchProof"
   },
@@ -85,12 +85,12 @@
     "title": "Privacidad del portfolio y visibilidad",
     "description": "Controla tu identidad futbolística compartible y tu visibilidad para ojeadores.",
     "publicPortfolio": "Portfolio público",
-    "publicPortfolioDescription": "Allow anyone with the link to view your football rÃƒÂ©sumÃƒÂ©.",
+    "publicPortfolioDescription": "Allow anyone with the link to view your football résumé.",
     "discoverable": "Visible para ojeadores",
     "discoverableDescription": "Aparece en las búsquedas de ojeadores cuando los clubes buscan talento como tú.",
     "careerTimeline": "Cronología de carrera",
     "careerTimelineDescription": "Muestra tu trayectoria e historial de clubes en tu portfolio.",
-    "statistics": "EstadÃƒÂ­sticas",
+    "statistics": "Estadísticas",
     "statisticsDescription": "Muestra estadísticas de partidos y resumen de rendimiento.",
     "videos": "Vídeos",
     "videosDescription": "Muestra reels destacados en tu portfolio.",
@@ -118,7 +118,7 @@
     "claimFailedFallback": "Prueba con otro nombre de usuario.",
     "placeholder": "tu-nombre",
     "available": "El nombre de usuario está disponible",
-    "checking": "Checking availabilityÃ¢â‚¬Â¦"
+    "checking": "Checking availability…"
   },
   "endorsementInvite": {
     "title": "Invita a tu entrenador",
@@ -133,7 +133,7 @@
     "title": "Puntuación del Football Passport",
     "subtitle": "Preparación y nivel de completado general"
   },
-  "captain": "CapitÃ¡n",
+  "captain": "Capitán",
   "trialsQuickActionTitle": "Invitaciones a pruebas",
   "trialsQuickActionSubtitle": "Acepta, rechaza y sigue las invitaciones de ojeadores",
   "privacyManagedInSettings": "La privacidad del portfolio y la visibilidad se gestionan en Ajustes.",
