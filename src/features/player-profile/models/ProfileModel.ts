@@ -1,11 +1,9 @@
-import { useMockData } from '@/config/appMode';
 import { type PlayerProfile, type PlayerProfileStat, type PlayerProfilePerformanceItem } from '@/features/player-profile/types';
 import { type PlayerMatchStatistics } from '@/features/player-statistics/types';
 import {
   parseMatchReflection,
   serializeMatchStatistics,
 } from '@/features/player-statistics/models/MatchLogModel';
-import { mockPlayerStatisticsMatches } from '@/features/player-statistics/services/mockPlayerStatisticsService';
 import { mapMatchesToProfileStats } from '@/features/player-statistics/utils/profileStatsMapper';
 import {
   createDefaultFootballIdentity,
@@ -27,6 +25,15 @@ import {
   parsePrivacySettings,
   serializePrivacySettings,
 } from '@/features/player-profile/models/PrivacySettingsModel';
+
+function devMockMatches(): PlayerMatchStatistics[] {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return [];
+  if (process.env.EXPO_PUBLIC_USE_MOCK_DATA !== 'true') return [];
+  const loaded = require('@/features/player-statistics/services/mockPlayerStatisticsService') as {
+    mockPlayerStatisticsMatches: PlayerMatchStatistics[];
+  };
+  return loaded.mockPlayerStatisticsMatches;
+}
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -160,7 +167,7 @@ export class ProfileModel {
 
     const parsedMatches = parsePlayerMatchStatistics(data.statisticsMatches);
     const statisticsMatches =
-      parsedMatches.length > 0 ? parsedMatches : useMockData() ? mockPlayerStatisticsMatches : [];
+      parsedMatches.length > 0 ? parsedMatches : devMockMatches();
 
     const legacyFields = {
       club: typeof data.club === 'string' ? data.club : '',

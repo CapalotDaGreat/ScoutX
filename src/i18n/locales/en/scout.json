@@ -135,6 +135,7 @@
     "minShooting": "Min Shooting",
     "minDefending": "Min Defending",
     "minPhysical": "Min Physical",
+    "unrecordedMetrics": "Sprint speed, distance and attribute ratings are not recorded on profiles, so they are not filters.",
     "minWeakFoot": "Min Weak Foot",
     "minSkillMoves": "Min Skill Moves",
     "minMatches": "Min Matches",

@@ -108,6 +108,7 @@
     "minShooting": "Tiro mín.",
     "minDefending": "Defensa mín.",
     "minPhysical": "Físico mín.",
+    "unrecordedMetrics": "Sprint speed, distance and attribute ratings are not recorded on profiles, so they are not filters.",
     "minWeakFoot": "Pie malo mín.",
     "minSkillMoves": "Filigranas mín.",
     "minMatches": "Partidos mín.",

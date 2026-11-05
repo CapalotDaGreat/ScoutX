@@ -108,6 +108,7 @@
     "minShooting": "Min. schieten",
     "minDefending": "Min. verdedigen",
     "minPhysical": "Min. fysiek",
+    "unrecordedMetrics": "Sprint speed, distance and attribute ratings are not recorded on profiles, so they are not filters.",
     "minWeakFoot": "Min. zwakke voet",
     "minSkillMoves": "Min. skill moves",
     "minMatches": "Min. wedstrijden",

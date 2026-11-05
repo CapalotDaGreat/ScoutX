@@ -48,7 +48,27 @@ function compareNullable(a: number | null, b: number | null, direction: 'asc' | 
   return direction === 'desc' ? b - a : a - b;
 }
 
+/**
+ * Profiles do not record GPS distance, sprint speed, or 0–100 attribute grades.
+ * A minimum on those fields used to exclude every player. They are ignored until
+ * a real source exists.
+ */
+function applicableFilters(filters: DiscoveryFilters): DiscoveryFilters {
+  return {
+    ...filters,
+    overallMin: null,
+    potentialMin: null,
+    distanceMaxKm: null,
+    sprintSpeedMin: null,
+    passingMin: null,
+    shootingMin: null,
+    defendingMin: null,
+    physicalMin: null,
+  };
+}
+
 function matchesFilters(player: DiscoverablePlayer, filters: DiscoveryFilters): boolean {
+  filters = applicableFilters(filters);
   if (!meetsMin(player.age, filters.ageMin)) return false;
   if (!meetsMax(player.age, filters.ageMax)) return false;
   if (filters.positions.length > 0 && !filters.positions.some((p) => player.position.includes(p))) {
@@ -110,7 +130,9 @@ export function filterAndSortPlayers(
  * instead of ranking players by an invented composite.
  */
 export function normalizeDiscoverySort(sort: DiscoverySortOption): DiscoverySortOption {
-  return sort === 'overall' || sort === 'potential' || sort === 'newest' ? 'recently_updated' : sort;
+  return sort === 'overall' || sort === 'potential' || sort === 'newest' || sort === 'distance' || sort === 'sprint_speed'
+    ? 'recently_updated'
+    : sort;
 }
 
 export function sortPlayers(
@@ -154,6 +176,7 @@ export function sortPlayers(
 }
 
 export function countActiveFilters(filters: DiscoveryFilters): number {
+  filters = applicableFilters(filters);
   let count = 0;
   if (filters.ageMin !== null || filters.ageMax !== null) count += 1;
   if (filters.positions.length > 0) count += 1;

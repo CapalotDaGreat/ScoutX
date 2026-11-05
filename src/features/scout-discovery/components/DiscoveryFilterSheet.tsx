@@ -258,68 +258,9 @@ export function DiscoveryFilterSheet({
               }}
             />
 
-            <View className="flex-row gap-3">
-              <Input
-                label={t('scout:filters.maxDistance')}
-                value={filters.distanceMaxKm?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('distanceMaxKm', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
-              />
-              <Input
-                label={t('scout:filters.minSprint')}
-                value={filters.sprintSpeedMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('sprintSpeedMin', value ? Number(value) : null)
-                }
-                keyboardType="decimal-pad"
-                containerClassName="flex-1"
-              />
-            </View>
-
-            <View className="flex-row gap-3">
-              <Input
-                label={t('scout:filters.minPassing')}
-                value={filters.passingMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('passingMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
-              />
-              <Input
-                label={t('scout:filters.minShooting')}
-                value={filters.shootingMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('shootingMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
-              />
-            </View>
-
-            <View className="flex-row gap-3">
-              <Input
-                label={t('scout:filters.minDefending')}
-                value={filters.defendingMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('defendingMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
-              />
-              <Input
-                label={t('scout:filters.minPhysical')}
-                value={filters.physicalMin?.toString() ?? ''}
-                onChangeText={(value) =>
-                  onChange('physicalMin', value ? Number(value) : null)
-                }
-                keyboardType="number-pad"
-                containerClassName="flex-1"
-              />
-            </View>
+            <Text variant="caption" color="tertiary">
+              {t('scout:filters.unrecordedMetrics')}
+            </Text>
 
             <View className="gap-1">
               <Text variant="label">{t('scout:filters.minWeakFoot')}</Text>

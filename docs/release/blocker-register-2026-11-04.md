@@ -29,7 +29,7 @@ Apple sources used: [App Review Guidelines](https://developer.apple.com/app-stor
 Prior fixes verified present (do not reopen without new evidence):
 
 - C default ON: `OCR_CONSULTED_ONLY` default `"1"`
-- E default ON: `OCR_CACHE_PROVENANCE` default `"1"` (opt-out `=0`)
+- E code default is `"1"`, which was **not** approved. Contracts say needs revision, off. Do not treat the default as accepted. Revert it to off after the in-flight full-match candidate has loaded the current tracker.
 - Checklist model `google/gemini-2.5-flash`; entitlement product-ID wording
 - D still not promoted; A/B still off
 - E4 known wrong-player xfail retained (strict)

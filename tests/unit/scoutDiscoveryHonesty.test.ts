@@ -96,6 +96,29 @@ describe('discovery sort honesty', () => {
     );
   });
 
+  test('sprint, distance and attribute minimums do not hide players who have no recorded value', () => {
+    const plain = player({ id: 'plain' });
+    const result = filterAndSortPlayers([plain], {
+      search: '',
+      searchScope: 'all',
+      filters: {
+        ...defaultDiscoveryFilters,
+        sprintSpeedMin: 30,
+        passingMin: 80,
+        shootingMin: 80,
+        defendingMin: 80,
+        physicalMin: 80,
+        distanceMaxKm: 5,
+        overallMin: 90,
+        potentialMin: 90,
+      },
+      sort: 'recently_updated',
+    });
+    assert.deepEqual(result.map((item) => item.id), ['plain']);
+    assert.equal(normalizeDiscoverySort('sprint_speed'), 'recently_updated');
+    assert.equal(normalizeDiscoverySort('distance'), 'recently_updated');
+  });
+
   test('unknown values do not pass explicit numeric filters', () => {
     const unknownAge = player({ id: 'unknown-age', age: null });
     const knownAge = player({ id: 'known-age', age: 17 });

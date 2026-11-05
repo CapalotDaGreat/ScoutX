@@ -17,15 +17,23 @@ import { parseDiscoverablePlayer } from '@/features/scout-discovery/models/Disco
 import { filterAndSortPlayers, paginateDiscoveryPlayers } from '@/features/scout-discovery/services/discoveryQueryService';
 import { discoveryIndexQuery, readIndexedDiscoveryPage, SEARCH_BATCH_SIZE } from '../services/indexedDiscoveryPage';
 import {
-  getMockPlayerById,
-  mockDiscoverablePlayers,
-} from '@/features/scout-discovery/services/mockPlayerDiscoveryData';
-import {
   type DiscoverablePlayer,
   type DiscoveryPageResult,
   type DiscoveryQuery,
   type ScoutDashboardData,
 } from '@/features/scout-discovery/types';
+
+type DevMockDiscovery = {
+  mockDiscoverablePlayers: DiscoverablePlayer[];
+  getMockPlayerById: (playerId: string) => DiscoverablePlayer | undefined;
+};
+
+/** Loaded only in an explicit dev demo. Production bundles replace __DEV__ with false and drop the require. */
+function devMockDiscovery(): DevMockDiscovery | null {
+  if (typeof __DEV__ === 'undefined' || !__DEV__) return null;
+  if (process.env.EXPO_PUBLIC_USE_MOCK_DATA !== 'true') return null;
+  return require('@/features/scout-discovery/services/mockPlayerDiscoveryData') as DevMockDiscovery;
+}
 
 function emptyDashboard(): ScoutDashboardData {
   return {
@@ -76,8 +84,9 @@ export class PlayerDiscoveryRepository {
     cursor: string | null,
     pageSize = DISCOVERY_PAGE_SIZE,
   ): Promise<DiscoveryPageResult> {
-    if (useMockData()) {
-      return paginateDiscoveryPlayers(filterAndSortPlayers(mockDiscoverablePlayers, discoveryQuery), cursor, pageSize);
+    const mocks = devMockDiscovery();
+    if (useMockData() && mocks) {
+      return paginateDiscoveryPlayers(filterAndSortPlayers(mocks.mockDiscoverablePlayers, discoveryQuery), cursor, pageSize);
     }
     const db = getFirestoreDb();
     if (!db) throw new Error('Discovery database is unavailable.');
@@ -95,8 +104,9 @@ export class PlayerDiscoveryRepository {
   }
 
   public async fetchPlayerById(playerId: string): Promise<DiscoverablePlayer | null> {
-    if (useMockData()) {
-      return getMockPlayerById(playerId) ?? null;
+    const mocks = devMockDiscovery();
+    if (useMockData() && mocks) {
+      return mocks.getMockPlayerById(playerId) ?? null;
     }
 
     const db = getFirestoreDb();
@@ -118,7 +128,8 @@ export class PlayerDiscoveryRepository {
   }
 
   public async fetchAllDiscoverablePlayers(limitCount = 100): Promise<DiscoverablePlayer[]> {
-    if (useMockData()) return mockDiscoverablePlayers.slice(0, limitCount);
+    const mocks = devMockDiscovery();
+    if (useMockData() && mocks) return mocks.mockDiscoverablePlayers.slice(0, limitCount);
     const db = getFirestoreDb();
     if (!db) {
       throw new Error('Discovery database is unavailable.');

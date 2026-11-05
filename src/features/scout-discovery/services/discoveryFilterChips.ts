@@ -5,6 +5,12 @@ import {
 } from '@/features/scout-discovery/types';
 
 export function buildFilterChips(filters: DiscoveryFilters): FilterChip[] {
+  filters = {
+    ...filters,
+    overallMin: null,
+    potentialMin: null,
+    sprintSpeedMin: null,
+  };
   const chips: FilterChip[] = [];
 
   if (filters.ageMin !== null || filters.ageMax !== null) {
