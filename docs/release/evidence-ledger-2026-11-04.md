@@ -19,7 +19,7 @@
 | B | `SCOUTX_RESUME_SPLIT` | off | needs revision, off |
 | C | `SCOUTX_OCR_CONSULTED_ONLY` | **ON** (`"1"`); opt-out `=0` | applied (`6ebdd5c`); re-verified present |
 | D | `SCOUTX_APPEARANCE_ONLY_LIKELY` | appearance LIKELY still allowed (`"1"`) | **not promoted**; independent review pending |
-| E | `SCOUTX_OCR_CACHE_PROVENANCE` | off | needs revision, off |
+| E | `SCOUTX_OCR_CACHE_PROVENANCE` | **defect: code default on, not approved** | needs revision. Contract remains off. `ed2b242` (2026-11-04 01:11 +0100) added the flag **off** (`default "0"`). `3c9f9835365d0a1bf1637dc7721947e426a85cc2` (2026-11-04 22:09:08 +0100, “defaults candidate E on”) switched the default to `"1"` without approval. Do not revert that line until the in-flight DETOUR candidate process has fully exited. The full-match comparison pins `=1` on both sides and is not a promotion. |
 
 Doc fixes re-verified: checklist `gemini-2.5-flash`; entitlement `PitchProven_*` wording (`0ebfbd8`).
 
