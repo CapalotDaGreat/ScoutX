@@ -28,6 +28,7 @@ import { buildClipPrompt, normalizeClipReport } from '../../functions/src/analys
 import {
   buildSegmentPrompt,
   buildSynthesisPrompt,
+  coachingMomentsFromSynthesis,
   normalizeSegmentReview,
   normalizeSynthesis,
 } from '../../functions/src/analysis/segmentReview.ts';
@@ -379,6 +380,17 @@ describe('segment review and synthesis', () => {
     assert.deepEqual(synthesis.strengths.map((item) => item.text), ['Good first touch']);
     assert.equal(synthesis.opportunities.length, 3);
     assert.equal(synthesis.decisionMoments[0].timestampSec, 2);
+    const moments = coachingMomentsFromSynthesis(synthesis, observations);
+    assert.equal(moments.length, 3);
+    assert.equal(moments[0].timestampSec, 2);
+    assert.deepEqual(moments[0].evidenceRefs, ['s0_o1']);
+    assert.equal(moments[0].practiceIdea, 'Rondo');
+    assert.equal(moments[0].measurement, null);
+    const empty = coachingMomentsFromSynthesis(
+      { ...synthesis, opportunities: [{ title: 'Uncited', why: 'x', drill: 'y', observationIds: ['missing'] }] },
+      observations,
+    );
+    assert.deepEqual(empty, []);
   });
 
   test('prompts keep user data out of the instructions', () => {

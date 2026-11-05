@@ -215,6 +215,34 @@ describe('coaching scenario evaluations', () => {
     assert.equal(items[0]!.suggestedMetric, null);
   });
 
+  it('cited observations can ground coaching without tracker events', () => {
+    const report = baseReport({
+      coachingMoments: [
+        moment({
+          id: 'm-obs',
+          coachingPoint: 'Cushion the first touch',
+          evidenceRefs: ['s0_o1'],
+          eventIds: [],
+          timestampSec: 12,
+        }),
+      ],
+      events: [],
+      coverage: {
+        visiblePct: 40,
+        likelyOffCameraPct: 20,
+        unknownPct: 40,
+        confidenceLabel: 'Limited',
+        note: '',
+      },
+    });
+    const result = assessCoachingSufficiency(report, {
+      identityConfirmation: { state: 'confirmed', frameIds: ['f1'], confirmedAt: '2026-01-01' },
+      moments: report.coachingMoments,
+    });
+    assert.equal(result.ready, true);
+    assert.equal(result.reason, 'ok');
+  });
+
   it('provider / coverage failure style: low visibility without accepted events', () => {
     const report = baseReport({
       coachingMoments: [moment({ id: 'm1', coachingPoint: 'Stay higher' })],

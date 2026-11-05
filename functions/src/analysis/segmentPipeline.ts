@@ -32,6 +32,7 @@ import { buildSections, buildVersions } from './reportSections';
 import {
   buildSegmentPrompt,
   buildSynthesisPrompt,
+  coachingMomentsFromSynthesis,
   normalizeSegmentReview,
   normalizeSynthesis,
   type PossibleEvent,
@@ -404,7 +405,7 @@ export async function processSynthesisTask(
       )
       : null,
     events: [],
-    coachingMoments: [],
+    coachingMoments: identityConfirmed ? coachingMomentsFromSynthesis(synthesis, observations) : [],
     moments: evidence.slice(0, 8).map((item) => ({ timestampSec: item.timestampSec, label: item.label, detail: item.detail })),
     segmentSummaries: reviews.map((review) => ({
       segmentIndex: review.segmentIndex,

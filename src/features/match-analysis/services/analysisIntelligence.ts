@@ -162,8 +162,14 @@ export function assessCoachingSufficiency(
       nextStep: 'Record a longer clip where you stay in frame, or add target anchors on frames where you are clearly visible.',
     };
   }
+  const grounded = moments.filter(
+    (moment) => moment.evidenceRefs.length > 0 && moment.coachingPoint.trim().length > 0 && moment.timestampSec !== null,
+  );
   const events = report.events ?? [];
   const accepted = events.filter((event) => event.validationStatus === 'accepted').length;
+  if (grounded.length > 0 && report.coverage.visiblePct >= 15) {
+    return { ready: true, reason: 'ok', nextStep: 'Use the structured points below; each ties to a cited observation.' };
+  }
   if (accepted === 0 && report.coverage.visiblePct < 15) {
     return {
       ready: false,

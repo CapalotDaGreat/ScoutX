@@ -277,3 +277,46 @@ export function normalizeSynthesis(raw: Record<string, unknown>, observations: S
     coachingNotes: cleanModelText(raw.coachingNotes, 1200),
   };
 }
+
+export type StoredCoachingMoment = {
+  id: string;
+  timestampSec: number;
+  eventIds: string[];
+  context: string;
+  observationKind: 'observation';
+  coachingPoint: string;
+  practiceIdea: string | null;
+  measurement: string | null;
+  confidenceLabel: 'Limited' | 'Insufficient';
+  evidenceRefs: string[];
+};
+
+/** Cited opportunities become coaching moments. Uncited text never becomes a moment. */
+export function coachingMomentsFromSynthesis(
+  synthesis: Synthesis,
+  observations: SegmentObservation[],
+): StoredCoachingMoment[] {
+  const byId = new Map(observations.map((item) => [item.id, item]));
+  const out: StoredCoachingMoment[] = [];
+  synthesis.opportunities.forEach((item, index) => {
+    const cited = item.observationIds.map((id) => byId.get(id)).filter((row): row is SegmentObservation => row !== undefined);
+    if (cited.length === 0 || !item.drill.trim()) return;
+    const improvement = synthesis.improvements.find((row) => row.observationIds.some((id) => item.observationIds.includes(id)));
+    const context = item.why.trim() || cited.map((row) => row.detail || row.label).filter(Boolean).join(' ');
+    const point = improvement?.text.trim() || item.title.trim();
+    if (!context || !point) return;
+    out.push({
+      id: `coach_${index}_${cited[0].id}`,
+      timestampSec: Math.min(...cited.map((row) => row.timestampSec)),
+      eventIds: [],
+      context: context.slice(0, 400),
+      observationKind: 'observation',
+      coachingPoint: point.slice(0, 240),
+      practiceIdea: item.drill.trim().slice(0, 400),
+      measurement: null,
+      confidenceLabel: cited.every((row) => row.confidence === 'medium') ? 'Limited' : 'Insufficient',
+      evidenceRefs: item.observationIds,
+    });
+  });
+  return out.slice(0, 5);
+}
