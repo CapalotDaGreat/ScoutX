@@ -25,18 +25,17 @@ P - pause-and-resume transfer (DEFAULT decoder, w194-197):
     (label_corrections_i0225.json C1-C6, proposed).
 
 E3 - appearance-only choice of a distant player (REFERENCE rendering, w133-153):
-  Unrepaired: the classifier ranked tracklet 78 (distant N) above #20's tracklet 188, so LIKELY / appearance
-  claims landed on N at w136-139 and w145-149.
-  Repair side-effect of DETOUR_SPLIT (E4): isolating the w211 detour on the number track changes chain/evidence
-  assembly so those frames claim T (anchored) instead. Characterisation below asserts the repaired state.
+  The classifier ranked tracklet 78 (distant N) above #20's tracklet 188, so LIKELY / appearance
+  claims landed on N at w136-139 and w145-149. The characterisation below asserts that unrepaired state.
+  SCOUTX_DETOUR_SPLIT=1 changes it; that opt-in is a separate test and is not the release default.
 
 E4 - one-frame claim on another player after a second crossing (REFERENCE rendering, w211):
   - At source 2460 (w210) #20 crosses another orange player.
   - Unrepaired: at w211 the CONFIRMED / number claim sat on that other player (N box, review 2026-11-03).
   - Mechanism: number tracklet 205 took a merged two-player box at w210 and the other player's box at w211 (no
     clean #20 detection there), then returned to #20 at w212. That one-frame detour was never cut.
-  - Repair (SCOUTX_DETOUR_SPLIT=1, experimental, off by default): isolate the one-frame detour row when the two-sided resume signature
-    fires; gap-fill at w211 is non-CONFIRMED and not on N. Characterisation below asserts the repaired state.
+  The characterisation below asserts that unrepaired state. SCOUTX_DETOUR_SPLIT=1 isolates it; that opt-in is a
+  separate test and is not the release default.
 """
 import json
 import os
@@ -87,9 +86,8 @@ PLAYER_A_PIECE = 38            # w195-197: player A (labelled T in the original 
 
 # ---- P: default decoder, pause-and-resume transfer ---------------------------------------------------------------
 @pytest.mark.parametrize("flag", ["0", "1"])
-@pytest.mark.parametrize("detour", ["0", "1"])
-def test_P_characterisation_default_claims_player_a_after_pause_and_resume(flag, detour, tmp_path_factory):
-    tl = _replay("default_i0225", flag, tmp_path_factory, detour)
+def test_P_characterisation_default_claims_player_a_after_pause_and_resume(flag, tmp_path_factory):
+    tl = _replay("default_i0225", flag, tmp_path_factory)
     for w in (195, 196, 197):
         c = _claim(tl, w)
         assert c and c[0] == "LIKELY_VISIBLE" and iou(c[2], _piece_box(w, PLAYER_A_PIECE)) >= 0.75
@@ -97,9 +95,8 @@ def test_P_characterisation_default_claims_player_a_after_pause_and_resume(flag,
 
 @pytest.mark.xfail(strict=True, reason="P unrepaired: identity passes to player A when #20's paused track resumes on A")
 @pytest.mark.parametrize("flag", ["0", "1"])
-@pytest.mark.parametrize("detour", ["0", "1"])
-def test_P_desired_no_claim_on_player_a(flag, detour, tmp_path_factory):
-    tl = _replay("default_i0225", flag, tmp_path_factory, detour)
+def test_P_desired_no_claim_on_player_a(flag, tmp_path_factory):
+    tl = _replay("default_i0225", flag, tmp_path_factory)
     for w in (195, 196, 197):
         c = _claim(tl, w)
         assert not (c and c[0] in ("LIKELY_VISIBLE", "CONFIRMED_VISIBLE") and iou(c[2], _piece_box(w, PLAYER_A_PIECE)) >= 0.5)
@@ -118,7 +115,23 @@ def _on_t_label(c, w, thr):
 
 
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_E3_characterisation_reference_claims_target_after_detour_split(flag, tmp_path_factory):
+def test_E3_characterisation_reference_claims_distant_n_player_by_appearance(flag, tmp_path_factory):
+    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    for w in E3_FRAMES:
+        c = _claim(tl, w)
+        assert c and c[0] == "LIKELY_VISIBLE" and c[1] == "appearance" and _on_n_label(c, w, 0.7)
+
+
+@pytest.mark.xfail(strict=True, reason="E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet")
+@pytest.mark.parametrize("flag", ["0", "1"])
+def test_E3_desired_no_claim_on_n_labelled_player(flag, tmp_path_factory):
+    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    assert not any((c := _claim(tl, w)) and _on_n_label(c, w, 0.5) for w in E3_FRAMES)
+
+
+@pytest.mark.parametrize("flag", ["0", "1"])
+def test_E3_detour_opt_in_claims_the_target(flag, tmp_path_factory):
+    """SCOUTX_DETOUR_SPLIT=1 only. Not a replacement for the strict xfail above."""
     tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
     for w in E3_FRAMES:
         c = _claim(tl, w)
@@ -126,26 +139,30 @@ def test_E3_characterisation_reference_claims_target_after_detour_split(flag, tm
         assert not _on_n_label(c, w, 0.5)
 
 
+# ---- E4: reference rendering, one-frame confirmed claim on another player after a second crossing ------------------
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_E3_desired_no_claim_on_n_labelled_player(flag, tmp_path_factory):
-    tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
-    assert not any((c := _claim(tl, w)) and _on_n_label(c, w, 0.5) for w in E3_FRAMES)
+def test_E4_characterisation_confirmed_claim_on_other_player_at_w211(flag, tmp_path_factory):
+    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    c = _claim(tl, 211)
+    assert c and c[0] == "CONFIRMED_VISIBLE" and _on_n_label(c, 211, 0.7)
+    nxt = _claim(tl, 212)
+    assert nxt and not _on_n_label(nxt, 212, 0.3)
 
 
-# ---- E4: reference rendering, one-frame detour (repaired by DETOUR_SPLIT) ------------------------------------------
+@pytest.mark.xfail(strict=True, reason="E4 unrepaired: confirmed claim jumps to another player for one frame at w211")
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_E4_characterisation_detour_isolated_no_confirmed_on_other_player(flag, tmp_path_factory):
-    """Experimental repair, pinned on: w211 is not a CONFIRMED claim on N; w212 stays off N."""
+def test_E4_desired_no_confirmed_claim_on_other_player(flag, tmp_path_factory):
+    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    c = _claim(tl, 211)
+    assert not (c and _on_n_label(c, 211, 0.5))
+
+
+@pytest.mark.parametrize("flag", ["0", "1"])
+def test_E4_detour_opt_in_no_confirmed_claim_on_other_player(flag, tmp_path_factory):
+    """SCOUTX_DETOUR_SPLIT=1 only. Not a replacement for the strict xfail above."""
     tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
     c = _claim(tl, 211)
     assert not (c and c[0] == "CONFIRMED_VISIBLE" and _on_n_label(c, 211, 0.5))
     assert not (c and _on_n_label(c, 211, 0.5))
     nxt = _claim(tl, 212)
     assert nxt and not _on_n_label(nxt, 212, 0.3)
-
-
-@pytest.mark.parametrize("flag", ["0", "1"])
-def test_E4_desired_no_confirmed_claim_on_other_player(flag, tmp_path_factory):
-    tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
-    c = _claim(tl, 211)
-    assert not (c and _on_n_label(c, 211, 0.5))

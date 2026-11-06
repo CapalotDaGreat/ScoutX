@@ -108,7 +108,31 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - Aggregate stored basis: claimed correct 22.3 s both; confirmed correct 13.9 s both; wrong identity 0.5 s baseline (244.5, 244.6, 244.7, 245.8, 246.1) and 0.4 s candidate (246.1 removed). Recall 0.442 both. IDF1 0.609 vs 0.610.
 - DETOUR is not selective. State changes: 126 likely→ambiguous, 68 absent→ambiguous, 18 ambiguous→absent, 12 confirmed→likely, 9 ambiguous→likely, 3 likely→absent, 1 confirmed→ambiguous at 246.1 s, 1 absent→likely. Exchange window 244.3–245.0 s stays confirmed on both, so P is unchanged. #6 window 706–716 s is ambiguous on both (88 frames). #17 window 1301.6–1305.7 s is unchanged (19 confirmed, 16 ambiguous). Far changes include 140 s, 493–523 s, 608–609 s, 734–739 s, 1194–1196 s and 2031 s. DETOUR therefore stays experimental and the code default is off. `SCOUTX_DETOUR_SPLIT=1` remains the opt-in used for this candidate.
 - Verdict from this evidence: not ready. The resolve completes. Labelled full-match accuracy is partial. A static gate with zero code blockers does not change that.
-- Checks after that measurement, on the commit that turns DETOUR's default off and the two follow-up fixes: `npx tsc --noEmit` exit 0. `npm run test:unit` 739 pass, 0 fail. `npm run test:rules` 263 pass, 0 fail, which includes `npm run build --prefix functions`. Worker `pytest tests` 658 passed, 15 skipped, 4 xfailed (P), JUnit at `C:\ZLI\M335\ScoutX\.local\fm-detour-cpu-20261106-resolve\pytest-junit.xml`. The first pytest run failed one test because a stub detector had no `close`; the call is now optional. The rules run failed 4 analysis tests until the vision tests granted the owner a premium allowance; the free cap of 2 stays in `entitlements.test.mjs`. Static gate earlier the same day: 23 pass, 0 code blockers, 10 non-code items, rules skipped at that time. No browser pass was repeated after these commits. No paid build, deploy, or store submission.
+- Checks after that measurement, on the commit that turns DETOUR's default off and the two follow-up fixes: `npx tsc --noEmit` exit 0. `npm run test:unit` 739 pass, 0 fail. `npm run test:rules` 263 pass, 0 fail, which includes `npm run build --prefix functions`. The first worker pytest was 658 passed, 15 skipped, 4 xfailed. That count is reconciled below. Static gate earlier the same day: 23 pass, 0 code blockers, 10 non-code items, rules skipped at that time. No browser pass was repeated after these commits. No paid build, deploy, or store submission.
+
+### 2026-11-06 — Test accounting, memory-fix replay, and the 225–255 s counts
+
+The 2026-11-03 suite (`tests_night/summary.txt`) was 633 passed, 11 skipped, 6 xfailed. The 6 xfailed were strict. The 11 skips were the opt-in whole-match replay tests in `test_full_match_identity.py`.
+
+| Test | Old status | Status in the 4-xfail run | Why | Commit |
+|---|---|---|---|---|
+| `test_E3_desired_no_claim_on_n_labelled_player[0]` | strict xfail | passed | The desired assertion was rewritten to run with `SCOUTX_DETOUR_SPLIT=1`, so it no longer failed on the release default. | `cd8ba96` replaced the xfail; `f37479a` kept the passing opt-in form |
+| `test_E3_desired_no_claim_on_n_labelled_player[1]` | strict xfail | passed | Same as the exchange-flag pair above. | same |
+| `test_E4_desired_no_confirmed_claim_on_other_player[0]` | strict xfail | passed | Same rewrite. | same |
+| `test_E4_desired_no_confirmed_claim_on_other_player[1]` | strict xfail | passed | Same as the exchange-flag pair above. | same |
+| `test_P_desired_no_claim_on_player_a[0-0]`, `[0-1]`, `[1-0]`, `[1-1]` | two strict xfails, `[0]` and `[1]` | four strict xfails | An extra DETOUR parameter was added. All four still failed. | `f37479a` |
+| `test_benchmark_refuses_unverified_models` | passed when ffmpeg is on PATH | skipped, "ffmpeg not installed" | The pytest process did not have ffmpeg on PATH. The test was not changed. | run environment, not a commit |
+| `test_reference_identity_is_the_video_stream_not_the_container` | passed when ffmpeg is on PATH | skipped, same reason | same | same |
+| `test_benchmark_refuses_a_baseline_from_another_recording` | passed when ffmpeg is on PATH | skipped, same reason | same | same |
+| `test_benchmark_rejects_unvalidated_mode` | passed when ffmpeg is on PATH | skipped, same reason | same | same |
+
+The four E3/E4 desired tests are strict xfails again, and they run with DETOUR off. Their characterisations again assert the unrepaired behaviour. Separate opt-in tests pin `SCOUTX_DETOUR_SPLIT=1` and do not replace the xfails. The extra P parameter is removed, so P is again `[0]` and `[1]`, both strict xfail. With ffmpeg on PATH, `pytest tests` is 660 passed, 11 skipped, 6 xfailed, exit 0. The higher pass count versus 633 is tests added since 2026-11-03, not converted failures. JUnit: `pytest-junit-after-restore.xml`.
+
+Memory-fix proof, empty cache, flags pinned to the defaults of both commits (`DETOUR=1`, provenance off, consulted-only on, exchange off, resume off, appearance-likely on). `default_i0225` timeline SHA-256 is `210f5cbc824a6a57e3a797a0b4ceb2e690be481f7788913f2edacaf306f5d1d7` at `ea4fe06` and at `4d4d860`. `reference_i0225` is `8be4afab19075566d3a367f75d3c0686ba1a7897a0e6c5627bc59c50250eec42` at both. The memory fix does not change those timelines.
+
+225–255 s, original labels. The 3 wrong-player frames are target-labelled samples whose claim lands on another player: 244.5, 244.6 and 244.7 s, all `CONFIRMED_VISIBLE`. Each of those frames is labelled both T and N. Confirmed claims on other labelled players are a different count: the same three, plus 245.8 s on both runs, plus 246.1 s on the baseline only. 245.8 and 246.1 are labelled N and `?`, not T, so they are outside the 68-frame target denominator. The candidate removes only 246.1 s. Recall 0.442 is the labelled result: 1890–1920 s abstains on all 54 target frames, and 1295–1325 s has 15 claims that match no labelled box.
+
+Worker sizing: during baseline identity the process's private commit was about 16.9–17.2 GB while its working set was about 1.4–1.9 GB. `peakRssMiB` in the report is the ending working set (2708.8 and 3320.6), not the commit. A cloud worker for this resolve needs about 17 GB of commit (RAM plus page), not a 2 GB machine. This was a point sample, not a traced peak.
 
 ## Blockers / approvals needed
 

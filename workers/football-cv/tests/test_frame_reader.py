@@ -109,6 +109,9 @@ def test_extract_chunk_prefetch_matches_synchronous_output(tmp_path, monkeypatch
             return [(np.empty((0, 4), np.float32), np.empty(0, np.float32),
                      np.empty((0, 4), np.float32), np.empty(0, np.float32)) for _ in frames]
 
+        def close(self):
+            return None
+
     monkeypatch.setattr(extraction.cv2, "VideoCapture", open_video)
     monkeypatch.setattr(extraction, "Detector", Detector)
     for prefetch in (0, 4):
