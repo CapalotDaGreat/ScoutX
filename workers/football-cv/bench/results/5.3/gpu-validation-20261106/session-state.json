@@ -1,0 +1,49 @@
+{
+  "status": "stockout_exhausted",
+  "approved": true,
+  "filledUtc": "2026-11-07T00:16:00+01:00",
+  "partBCommitFrozen": "3381371014d37c91072ff257f280593df374b977",
+  "partBArchiveSha256": "da56133b282f7264bb041796c223c7f4be8b064a1989bb390a13920f6b3a788e",
+  "costCeilingUsd": 8.0,
+  "estimateAtMaxLifetimeUsd": 4.72,
+  "footageUploaded": false,
+  "archivesUploaded": false,
+  "vmCreated": false,
+  "estimatedComputeChargeUsd": 0,
+  "attempts": [
+    {
+      "n": 1,
+      "zone": "europe-west4-b",
+      "result": "STOCKOUT",
+      "reason": "resource_availability",
+      "log": "create-europe-west4-b.log"
+    },
+    {
+      "n": 2,
+      "zone": "europe-west4-c",
+      "result": "STOCKOUT",
+      "reason": "ZONE_RESOURCE_POOL_EXHAUSTED",
+      "log": "create-europe-west4-c.log"
+    },
+    {
+      "n": 3,
+      "zone": "europe-west4-a",
+      "result": "STOCKOUT",
+      "reason": "ZONE_RESOURCE_POOL_EXHAUSTED",
+      "log": "create-europe-west4-a.log"
+    },
+    {
+      "n": 4,
+      "zone": "europe-west4-b",
+      "result": "STOCKOUT",
+      "reason": "retry primary after all zones failed once",
+      "log": "create-europe-west4-b-retry.log"
+    }
+  ],
+  "finalCloud": {
+    "instances": 0,
+    "disks": 0,
+    "note": "Confirmed empty after each failed create before the next attempt. No runs/ objects uploaded."
+  },
+  "ownerNext": "New approval needed for a later retry, another region, or a different GPU type. The APPROVAL block was filled; capacity was not available in the approved zones."
+}

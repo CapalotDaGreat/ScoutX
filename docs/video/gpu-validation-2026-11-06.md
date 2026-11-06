@@ -1,6 +1,8 @@
 # GPU validation session plan (2026-11-06)
 
-**Status: APPROVED 2026-11-07.** Owner filled the APPROVAL block (chat: fill it and run). Part B tip frozen at `3381371014d37c91072ff257f280593df374b977`. IMG_5105 / IMG_4529 are **not** in this run.
+**Status: APPROVED 2026-11-07; session STOCKOUT.** Owner filled the APPROVAL block (chat: fill it and run). Part B tip frozen at `3381371014d37c91072ff257f280593df374b977`. IMG_5105 / IMG_4529 are **not** in this run.
+
+All four create attempts failed with zone stockout (west4-b, west4-c, west4-a, west4-b retry). No VM existed after any attempt. No archives or footage were uploaded. Estimated compute charge: **USD 0**. See `session-state.json` and the `create-*.log` files in `workers/football-cv/bench/results/5.3/gpu-validation-20261106/`. A later retry needs a new owner approval (time, zone set, or GPU type).
 
 ## Exact plan
 
