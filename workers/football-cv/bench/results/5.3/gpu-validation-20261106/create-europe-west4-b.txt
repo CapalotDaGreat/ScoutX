@@ -1,37 +1,37 @@
-〲㘲ㄭⴱ㜰ご㨰㤱㌺⸲㐶㐸㠰⬸㄰〺‰牣慥楴杮瀠瑩档牰潯ⵦ灧⵵慶⵬〲㘲ㄱ㜰椠⁮略潲数眭獥㑴戭਍cmd : WARNING: Some requests generated warnings:
-In Zeile:22 Zeichen:1
-+ cmd /c "set CLOUDSDK_PYTHON=$syspy&& set SSL_CERT_FILE=$bundle&& set  ...
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (WARNING: Some r...rated warnings::String) [], RemoteException
-    + FullyQualifiedErrorId : NativeCommandError
- 
- - Disk size: '200 GB' is larger than image size: '50 GB'. You might need to resize the root repartition manually if 
-the operating system does not support automatic resizing. See 
-https://cloud.google.com/compute/docs/disks/add-persistent-disk#resize_pd for details.
-
-ERROR: (gcloud.compute.instances.create) Could not fetch resource:
----
-code: ZONE_RESOURCE_POOL_EXHAUSTED_WITH_DETAILS
-errorDetails:
-- help:
-    links:
-    - description: Troubleshooting documentation
-      url: https://cloud.google.com/compute/docs/resource-error
-- localizedMessage:
-    locale: en-US
-    message: A g2-standard-8 VM instance with 1 nvidia-l4 accelerator(s) is currently
-      unavailable in the europe-west4-b zone. Alternatively, you can try your request
-      again with a different VM hardware configuration or at a later time. For more
-      information, see the troubleshooting documentation.
-- errorInfo:
-    domain: compute.googleapis.com
-    metadatas:
-      attachment: nvidia-l4:1
-      vmType: g2-standard-8
-      zone: europe-west4-b
-      zonesAvailable: ''
-    reason: resource_availability
-message: The zone 'projects/scoutx-230b0/zones/europe-west4-b' does not have enough
-  resources available to fulfill the request.  'NULL:0/NULL:0/NULL:0 (state:STOCKOUT,
-  sub-state:STOCKOUT, resource type:compute)'.
-
+〲㘲ㄭⴱ㜰ご㨰㤱㌺⸲㐶㐸㠰⬸㄰〺‰牣慥楴杮瀠瑩档牰潯ⵦ灧⵵慶⵬〲㘲ㄱ㜰椠⁮略潲数眭獥㑴戭਍cmd : WARNING: Some requests generated warnings:
+In Zeile:22 Zeichen:1
++ cmd /c "set CLOUDSDK_PYTHON=$syspy&& set SSL_CERT_FILE=$bundle&& set  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: Some r...rated warnings::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ - Disk size: '200 GB' is larger than image size: '50 GB'. You might need to resize the root repartition manually if 
+the operating system does not support automatic resizing. See 
+https://cloud.google.com/compute/docs/disks/add-persistent-disk#resize_pd for details.
+
+ERROR: (gcloud.compute.instances.create) Could not fetch resource:
+---
+code: ZONE_RESOURCE_POOL_EXHAUSTED_WITH_DETAILS
+errorDetails:
+- help:
+    links:
+    - description: Troubleshooting documentation
+      url: https://cloud.google.com/compute/docs/resource-error
+- localizedMessage:
+    locale: en-US
+    message: A g2-standard-8 VM instance with 1 nvidia-l4 accelerator(s) is currently
+      unavailable in the europe-west4-b zone. Alternatively, you can try your request
+      again with a different VM hardware configuration or at a later time. For more
+      information, see the troubleshooting documentation.
+- errorInfo:
+    domain: compute.googleapis.com
+    metadatas:
+      attachment: nvidia-l4:1
+      vmType: g2-standard-8
+      zone: europe-west4-b
+      zonesAvailable: ''
+    reason: resource_availability
+message: The zone 'projects/scoutx-230b0/zones/europe-west4-b' does not have enough
+  resources available to fulfill the request.  'NULL:0/NULL:0/NULL:0 (state:STOCKOUT,
+  sub-state:STOCKOUT, resource type:compute)'.
+
