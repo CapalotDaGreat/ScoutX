@@ -287,7 +287,9 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
             "width": width, "height": height, "seconds": round(time.time() - t_start, 1),
             "stageSeconds": {k: round(v, 2) for k, v in tm.items()}}
     (out / "meta.json").write_text(json.dumps(meta, indent=2))
-    det.close()
+    close = getattr(det, "close", None)
+    if close:
+        close()
     return meta
 
 

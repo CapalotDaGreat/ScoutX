@@ -242,6 +242,12 @@ function analysisRequest(uid, jobId) {
 }
 
 describe('analyzeMatchFootage (mocked OpenRouter vision)', () => {
+  before(async () => {
+    // Free accounts allow two frame analyses. This file checks model failures after those two
+    // successes, so the owner is premium here. The free cap is covered by entitlements.test.mjs.
+    await db.collection('entitlements').doc(OWNER).set({ status: 'premium', expiresAt: null });
+  });
+
   test('refuses to analyse after the video consent was revoked', async () => {
     await seedJob('job-revoked');
     await db.collection('videoProcessingConsents').doc('job-revoked').update({ revokedAt: new Date().toISOString() });
