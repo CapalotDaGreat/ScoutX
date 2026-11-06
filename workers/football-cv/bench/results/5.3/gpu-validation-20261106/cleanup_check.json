@@ -1,0 +1,141 @@
+{
+  "retrievedUtc": "2026-11-06T22:45:58.242366+00:00",
+  "project": "scoutx-230b0",
+  "account": "clusiola4@gmail.com",
+  "instances": 0,
+  "disks": 0,
+  "snapshots": 0,
+  "customImages": 0,
+  "bucketObjectCount": 111,
+  "bucketSample": [
+    "\ufeffgs://scoutx-230b0-benchmarks/results/fp32-20261101-0342-51d41c9/cleanup.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0342-51d41c9/create-instance.log",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0342-51d41c9/failure.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0342-51d41c9/region-quota.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0342-51d41c9/startup.sh",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0342-51d41c9/state.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/cleanup.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/create-instance-small.log",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/create-instance.log",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/europe-west6-b-catalog.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/europe-west6-c-catalog.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/failure.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/g2-standard-4-catalog.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/region-quota.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/startup-small.sh",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/startup.sh",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/state.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-0355-a-51d41c9/zurich-quota.json",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-f-51d41c9/create-europe-west3-a.log",
+    "gs://scoutx-230b0-benchmarks/results/fp32-20261101-f-51d41c9/create-europe-west3-b.log"
+  ],
+  "quotas": {
+    "europe-west4": {
+      "NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      },
+      "PREEMPTIBLE_NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      },
+      "COMMITTED_NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      }
+    },
+    "europe-west3": {
+      "NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      },
+      "PREEMPTIBLE_NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      },
+      "COMMITTED_NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      }
+    },
+    "europe-west6": {
+      "NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      },
+      "PREEMPTIBLE_NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      },
+      "COMMITTED_NVIDIA_L4_GPUS": {
+        "limit": 1.0,
+        "usage": 0.0
+      }
+    }
+  },
+  "image": {
+    "name": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+    "status": "READY",
+    "family": "common-cu129-ubuntu-2204-nvidia-580"
+  },
+  "familyLatest": [
+    {
+      "name": "common-cu129-ubuntu-2404-nvidia-580-v20261029",
+      "status": "READY",
+      "creationTimestamp": "2026-10-29T00:45:21.356-07:00"
+    },
+    {
+      "name": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+      "status": "READY",
+      "creationTimestamp": "2026-10-28T23:28:28.024-07:00"
+    }
+  ],
+  "accelerators": {
+    "accel_europe-west3-a": {
+      "ok": true,
+      "name": "nvidia-l4",
+      "error": null
+    },
+    "accel_europe-west3-b": {
+      "ok": true,
+      "name": "nvidia-l4",
+      "error": null
+    },
+    "accel_europe-west4-a": {
+      "ok": true,
+      "name": "nvidia-l4",
+      "error": null
+    },
+    "accel_europe-west4-b": {
+      "ok": true,
+      "name": "nvidia-l4",
+      "error": null
+    },
+    "accel_europe-west4-c": {
+      "ok": true,
+      "name": "nvidia-l4",
+      "error": null
+    },
+    "accel_europe-west6-b": {
+      "ok": true,
+      "name": "nvidia-l4",
+      "error": null
+    },
+    "accel_europe-west6-c": {
+      "ok": true,
+      "name": "nvidia-l4",
+      "error": null
+    }
+  },
+  "pricing": {
+    "retrievedUtc": "2026-11-06T22:47:09.554758+00:00",
+    "g2Standard8UsdPerHour": 0.3086,
+    "l4UsdPerHour": 0.588630286,
+    "pd200GiBUsdPerHour": 0.0301,
+    "externalIpUsdPerHour": 0.005,
+    "totalUsdPerHour": 0.9323,
+    "maxLifetime300MinUsd": 4.66,
+    "worstCaseWithEgressUsd": 4.72,
+    "note": "Estimate is not a cap. PD converted GiBy.mo/730."
+  }
+}

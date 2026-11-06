@@ -154,3 +154,15 @@ The release run now fails closed on that accounting. `workers/football-cv/bench/
 2. Scout authenticated journeys when Firebase keys + seeded scout/player accounts are approved. Do not create production users.
 3. Native/device evidence for the current tip. 2026-11-04 and 2026-11-05 screenshots are **mock/web**.
 4. External gates unchanged: legal review, AI footage approval, backups, owner SEC, App Check registration, production env and GoogleService-Info.plist, CV approval, GPU vs `51d41c9`. No paid build, deploy, or App Store submission.
+
+## GPU validation readiness (2026-11-06)
+
+Proposal: `docs/video/gpu-validation-2026-11-06.md`. GPU session **not approved** (APPROVAL block still a template). No VM created.
+
+- Part A archive SHA-256 `308c07a4…a62f` (matches pin). Part B tip `8e1b633` archive `5ecf3efb…a682`.
+- Model hashes match. Video SHA matches.
+- Startup dry-run exit 0 (`workers/football-cv/bench/results/5.3/gpu-validation-20261106/dry-run/`).
+- Cloud read-only: 0 instances, 0 disks, 0 snapshots; bucket 111 `results/` objects; L4 quota 1/0; image READY. `cleanup_check.json`.
+- Prices refreshed 2026-11-06T22:47Z: `.9323/h`, 300 min worst case ˜ `.72`. Proposed ceiling `.00`. Estimate is not a cap.
+- Full cold Linux CPU container job **in progress** (empty stage-1, empty OCR cache). Separate extract/resolve peaks will be recorded when it exits.
+- **GPU worker image memory is not yet measured.** Only the CPU measurement image has a container peak (resolve-only 1275.5 MiB).

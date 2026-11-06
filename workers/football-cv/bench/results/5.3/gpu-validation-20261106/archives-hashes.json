@@ -1,0 +1,16 @@
+{
+  "tip": "8e1b63355d725c36e217b3b6df6ce53c93da442e",
+  "expectedPartA": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f",
+  "archives": {
+    "part-a-51d41c9-workers-football-cv.tar": {
+      "sha256": "308c07a4e209e7b1dbf344247ce9add9cd80f8366e37a7573e040251e795a62f",
+      "bytes": 10772480,
+      "commit": "51d41c9"
+    },
+    "part-b-8e1b633-workers-football-cv.tar": {
+      "sha256": "5ecf3efbe1f9b446847e18f510d0c181918030fe1da61511c48ac0158d09a682",
+      "bytes": 47667200,
+      "commit": "8e1b63355d725c36e217b3b6df6ce53c93da442e"
+    }
+  }
+}
