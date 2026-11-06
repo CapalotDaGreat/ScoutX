@@ -41,9 +41,9 @@ def test_early_stop_consults_only_the_crops_before_the_stop(tmp_path):
     assert seen == {"p/0.jpg", "p/1.jpg"}
 
 
-def _replay(tmp_path, tag, flag, warm=None):
+def _replay(tmp_path, tag, flag, warm=None, provenance="0"):
     env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": "0", "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_OCR_CONSULTED_ONLY": flag, "SCOUTX_APPEARANCE_ONLY_LIKELY": "1",
-           "SCOUTX_OCR_CACHE_PROVENANCE": "0", "PYTHONHASHSEED": "0"}   # E pinned off: hand-made caches have no sidecar
+           "SCOUTX_OCR_CACHE_PROVENANCE": provenance, "PYTHONHASHSEED": "0"}   # E pinned: hand-made caches have no sidecar unless provenance is on and the test builds one
     out = tmp_path / tag
     cmd = [sys.executable, str(ROOT / "bench" / "regression_replay.py"), "run", "--replay", str(REPLAY), "--out", str(out)]
     if warm:
@@ -63,6 +63,14 @@ def _polluted(tmp_path):
 
 def _same(a, b):
     return all(np.array_equal(a[k], b[k]) for k in ("present", "states", "evidence")) and np.allclose(a["boxes"], b["boxes"])
+
+
+@pytest.mark.skipif(not REPLAY.exists(), reason="regression replay artifacts not present")
+def test_provenance_on_and_off_match_on_an_empty_cache(tmp_path):
+    """Candidate E does not change a cold resolve. The release default is off; =1 stays available."""
+    off = _replay(tmp_path, "prov0", "1", provenance="0")
+    on = _replay(tmp_path, "prov1", "1", provenance="1")
+    assert _same(off, on)
 
 
 @pytest.mark.skipif(not REPLAY.exists(), reason="regression replay artifacts not present")

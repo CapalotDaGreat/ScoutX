@@ -9,7 +9,7 @@ External gate evidence (App Check, counsel, device, owner SEC) remains **open** 
 **D:** still **not** promoted (`APPEARANCE_ONLY_LIKELY` default true)  
 **A/B:** still off  
 **C:** still ON  
-**E:** **ON** (`SCOUTX_OCR_CACHE_PROVENANCE` default `"1"`; opt out `=0`)
+**E:** **OFF** (`SCOUTX_OCR_CACHE_PROVENANCE` default `"0"`; opt in `=1`). The unapproved `"1"` default from `3c9f983` is reverted.
 
 ---
 

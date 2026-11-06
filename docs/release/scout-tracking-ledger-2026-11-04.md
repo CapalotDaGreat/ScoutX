@@ -20,7 +20,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - [x] Screenshot recorded; **mock-only** clearly marked
 
 ### Tracking / analysis
-- [ ] Fresh full-match baseline reproduced with provenance — **running** (not complete). Cold CPU baseline DETOUR=0 started 2026-11-05 08:27 CET from `32470ce0ebe09a68d2201c60ed3944c28d72eca8`. Output `C:\ZLI\M335\ScoutX\.local\fm-detour-cpu-20261105`. No 7-chunk stage-1 cache was reused. Candidate DETOUR=1 has not started.
+- [ ] Fresh full-match baseline reproduced with provenance — **failed, candidate not started**. Cold CPU baseline DETOUR=0 started 2026-11-05 08:27:56 CET from `32470ce0ebe09a68d2201c60ed3944c28d72eca8` and exited 2 at 15:03:19 CET. Output `C:\ZLI\M335\ScoutX\.local\fm-detour-cpu-20261105` is preserved. `baseline/full_match.json` status `failed`, `measuredTotalWallSec` 23013.589, `peakRssMiB` 3183.2, `RuntimeError` CPU allocator (`alloc_cpu.cpp:117`, 9600 bytes). Accuracy was not evaluated. Candidate DETOUR=1 was not started (`runner.log`).
 - [x] E4 addressed with before/after on faithful `reference_i0225` replay
 - [x] No new confirmed-N frames on labelled reference window; likely-N cleared (E3 side-effect)
 - [x] E4 fixed; P remains xfail; E3 desired now passing under DETOUR
@@ -83,14 +83,15 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - Video SHA-256 verified `b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c` (1,413,632,177 bytes). Stream hash remains `c0a48508…a66b`. 1920×1080, 10 fps, 20,350 frames, 2035.0 s.
 - Runtime: `workers/football-cv/.venv`, torch 2.15.0+cpu (CUDA false, 8 threads), onnxruntime 1.31.1 CPUExecutionProvider, opencv 5.0.0.93. Decoder default (cv2). FFmpeg 9.0.2 on PATH for ffprobe.
 - Flags recorded in `baseline/full_match.json`: DETOUR 0, EXCHANGE 0, RESUME 0, OCR_CONSULTED_ONLY 1, OCR_CACHE_PROVENANCE 1, APPEARANCE_ONLY_LIKELY 1 (D not promoted), MODE balanced. Chunk 300 s, stride 1, imgsz 1280, discovery imgsz 416, device cpu. Model hashes matched `bench/references/model_hashes.json`.
-- Boundary: DETOUR runs only inside `split_at_contacts` after raw `track_rows`. The runner copies `discovery.json` and stage-1 chunk directories after baseline exit 0, and does not copy `ocr_cache.json` or `report/`. Candidate resolve has not started. A resumed stage-1 on the candidate is not a cold stage-1 timing.
+- Boundary: DETOUR runs only inside `split_at_contacts` after raw `track_rows`. The runner copies `discovery.json` and stage-1 chunk directories after baseline exit 0, and does not copy `ocr_cache.json` or `report/`. The baseline exited 2, so that copy never ran. Candidate resolve has not started. A resumed stage-1 is not a cold stage-1 timing.
+- Failed-run inventory, preserved in place: `runner.log` (exit 2, “baseline failed; not starting candidate”), `baseline/benchmark.log` (no traceback; the handler stored only the exception type and message), `baseline/full_match.json` (extraction `timingComplete` true, no `stages.resolve`), `discovery.json` (3,176 bytes, 10 sightings, discovery wall 3511.6 s). Seven chunk directories `c_00000`–`c_00006` each have `checkpoint.json` and `detections.npz`. Stage-1 fingerprint `bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc`. Chunks are extracted outputs, not a finished resolve. `work/stage1/ocr_cache.json` (149,195 bytes) and its provenance sidecar are a partial resolve and must not be reused as a completed cache. No `report/`. Chunk 3 (900–1200 s) wall 5592.4 s (decode 869.77 s, detect 3515.11 s) while the other chunks were about 1079–2214 s. An `expo export` was also running on this machine during that window. Do not describe a later resume as this cold run.
 - Coaching: a segment opportunity becomes a stored moment only with a cited observation, a drill, and an observable success criterion (`measurement`). Identity confirmation releases those moments from pending coaching. Missing criterion drops the opportunity. No numeric match statistic is invented.
 - Player shell: Discover opened `PlayerDetail` outside `ScoutWorkspaceProvider` and the screen threw. Providers now wrap the player stack. Mock/web check: filtered Discover → Chris Walker detail renders. Public portfolio for mock id `pl-001` shows the private/missing state. Analysis `/match/missing-job` shows “This analysis could not be loaded.”
 - Small-screen tab label “Performance” stays on one line at 390 px. Mojibake repaired in de/es/fr/it/nl/pt navigation and portfolio strings. Sprint, distance, and attribute minimums are no longer filters (`adbbb1f`).
 - Tests this pass: `npm run test:unit` 738 pass; coaching/synthesis file 50 pass; `tsc --noEmit` exit 0; `tsc -p functions` exit 0. Rules emulator suite not re-run. Worker pytest not re-run while the CPU match is using the machine.
 - Screenshots this pass are mock/web only and supersede the 2026-11-04 Discover PNG for layout, not for a live account. They are not App Store screenshots and must not be uploaded to App Store Connect (guideline 2.3).
-- Tracker proof before the candidate starts: `git diff 32470ce0ebe09a68d2201c60ed3944c28d72eca8 HEAD -- workers/` is empty. Do not edit `workers/` until the candidate run has fully exited, not merely started.
-- **Defect, E default.** `ed2b242` (2026-11-04 01:11 +0100) added `SCOUTX_OCR_CACHE_PROVENANCE` off (`"0"`). `3c9f9835365d0a1bf1637dc7721947e426a85cc2` (2026-11-04 22:09:08 +0100) switched the default to `"1"` without approval. The tag hashes OCR source and the enhance switch, not model weights, and concurrent writes are untested. This comparison pins `=1` on both sides via the runner. That is not a promotion. After the candidate exits, revert the default to off in its own commit and prove one cold local replay is identical with the flag on and off.
+- Tracker proof before the failed baseline: `git diff 32470ce0ebe09a68d2201c60ed3944c28d72eca8` through the docs tip was empty for `workers/`. The candidate never started. The exit releases that hold.
+- **Defect, E default, restored to off.** `ed2b242` (2026-11-04 01:11 +0100) added `SCOUTX_OCR_CACHE_PROVENANCE` off (`"0"`). `3c9f9835365d0a1bf1637dc7721947e426a85cc2` (2026-11-04 22:09:08 +0100) switched the default to `"1"` without approval. The tag hashes OCR source and the enhance switch, not model weights, and concurrent writes are untested. The failed comparison pinned `=1` on the runner. That pin was not a promotion. The baseline has exited and the candidate never started, so the code default is `"0"` again. `SCOUTX_OCR_CACHE_PROVENANCE=1` still opts in. C (`SCOUTX_OCR_CONSULTED_ONLY` default `"1"`) and atomic cache writes are unchanged.
 
 ## Blockers / approvals needed
 
@@ -100,13 +101,13 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 | Tip TestFlight / native device | Prior screenshots are web mocks | OPEN |
 | GPU VM | CUDA gap vs baseline `51d41c9` | Needs approval |
 | Independent D review | Appearance-only promotion | Do not promote |
-| Full-match cold replay | Confirm DETOUR selectivity + #6/#17 bounds | **Running** baseline DETOUR=0 since 08:27 CET; candidate not started |
+| Full-match cold replay | Confirm DETOUR selectivity + #6/#17 bounds | **Failed** 2026-11-05 15:03 CET, exit 2, candidate not started. Stage-1 chunks exist; resolve did not finish. |
 
 ---
 
 ## Next actions
 
-1. Finish the authorized cold baseline, then the DETOUR=1 resolve with an empty OCR cache. Compare labelled intervals only. Do not call a resumed stage-1 cold.
+1. Do not overwrite `fm-detour-cpu-20261105`. Reuse its seven checkpointed chunks and `discovery.json` only. Run DETOUR=0 then DETOUR=1 resolves with independent empty OCR caches. Record those timings separately from the failed cold extraction. Do not call the resume cold.
 2. P (pause-and-resume) narrow candidate — still open; do not relax thresholds.
 3. Scout authenticated journeys when Firebase keys + seeded scout/player accounts are approved. Do not create production users.
 4. Native/device evidence for the current tip. 2026-11-04 and 2026-11-05 screenshots are **mock/web**.
