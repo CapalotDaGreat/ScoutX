@@ -102,3 +102,15 @@ def test_flag_off_keeps_baseline(monkeypatch):
     sigs[:, 0] = 1.0
     cs = split_at_contacts(R, kit, sigs, R[:, 1], 10.0)
     assert sorted(np.unique(cs.rows[:, 2]).astype(int)) == [1, 2]
+
+
+def test_release_default_is_off(monkeypatch):
+    """Full-match resolve changed claims away from the E4 crossing, so DETOUR stays opt-in."""
+    monkeypatch.delenv("SCOUTX_DETOUR_SPLIT", raising=False)
+    import importlib
+    from scoutx_tracker import crossings as crossings_mod
+    assert importlib.reload(crossings_mod).DETOUR_SPLIT is False
+    monkeypatch.setenv("SCOUTX_DETOUR_SPLIT", "1")
+    assert importlib.reload(crossings_mod).DETOUR_SPLIT is True
+    monkeypatch.delenv("SCOUTX_DETOUR_SPLIT")
+    importlib.reload(crossings_mod)

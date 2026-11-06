@@ -72,12 +72,14 @@ EXCHANGE_SPLIT = __import__("os").environ.get("SCOUTX_EXCHANGE_SPLIT", "0") != "
 # distorted by the overlap, so neither extrapolation reaches STEAL_IOU) - Y is cut there too and linked like a steal
 # (identity crosses only when appearance decides it).
 RESUME_SPLIT = __import__("os").environ.get("SCOUTX_RESUME_SPLIT", "0") != "0"
-# 5.3 one-frame detour through a detector merge (on by default; SCOUTX_DETOUR_SPLIT=0 disables).
+# 5.3 one-frame detour through a detector merge. OFF unless SCOUTX_DETOUR_SPLIT=1.
+# The reference-window repair is real, but the 2026-11-06 full-match resolve changed claims
+# far from that crossing, so the behaviour stays experimental.
 # IMG_4809 reference_i0225 w211 (E4): track A (#20) briefly lands on paused same-kit track B's box for one
 # frame, then returns to A's path while B resumes on the detour box. Contact/steal/exchange miss it (B's
 # last kit score can be below MATE_KIT on the pause frame; the return is not a mutual same-frame exchange).
 # Isolating the single detour row orphans it from number evidence (n < 3) so CONFIRMED cannot land on B.
-DETOUR_SPLIT = __import__("os").environ.get("SCOUTX_DETOUR_SPLIT", "1") != "0"
+DETOUR_SPLIT = __import__("os").environ.get("SCOUTX_DETOUR_SPLIT", "0") == "1"
 
 
 @dataclass

@@ -1,14 +1,24 @@
 # PitchProof 5.3 App Store submission handoff
 
-**Updated:** 2026-11-04 (~23:55 CET) after scout honesty + DETOUR_SPLIT (E4)  
-**Authoritative ledger:** `docs/release/blocker-register-2026-11-04.md`  
-**Engineering progress:** `docs/release/engine-cards-progress-2026-11-04.md`  
-**UX audit:** `docs/release/ux-audit-2026-11-04.md` (screenshots predate this tip — renew)  
-**Scout + tracking ledger:** `docs/release/scout-tracking-ledger-2026-11-04.md`
+**Updated:** 2026-11-06 after the resolve-only full-match comparison  
+**Authoritative record:** `docs/release/scout-tracking-ledger-2026-11-04.md`  
+**Earlier text below the verdict is the 2026-11-04 handoff and is not the current engine status.**
 
 ---
 
 ## Verdict
+
+# NOT READY
+
+The 2026-11-05 cold CPU baseline failed during resolve (exit 2, candidate not started). A later resolve-only reuse of its seven validated chunks completed both DETOUR=0 and DETOUR=1 (exit 0) and is not a cold run. Labelled recall stayed 0.442. One confirmed wrong-player frame at 246.1 s was removed with the flag on, and hundreds of other claim frames changed. DETOUR is therefore experimental and off unless `SCOUTX_DETOUR_SPLIT=1`. OCR cache provenance is off unless `SCOUTX_OCR_CACHE_PROVENANCE=1`. P, the residual confirmed frames at 244.5–245.8 s, and the historical #17 window remain open. GPU baseline `51d41c9` is untouched.
+
+Do not start a paid build, TestFlight upload, deploy, or App Store submission. External items still required before any of those: counsel on the legal pages and retention periods, `AI_FOOTAGE_PROCESSING_APPROVED`, backup/restore evidence, owner acceptance of SEC-10 through SEC-14, SEC-17 and SEC-18, a real device pass, production Firebase and RevenueCat values plus `GoogleService-Info.plist`, CV approval beyond still-frame review, and App Check provider registration. The 2026-11-06 static gate was 23 pass, 0 code blockers, 10 non-code items, rules skipped.
+
+**Superseded:** the 2026-11-04 "ready after named external actions" verdict, and any statement that DETOUR or E is on by default.
+
+---
+
+## Verdict as of 2026-11-04 (historical)
 
 # READY AFTER SPECIFIC NAMED EXTERNAL ACTIONS
 

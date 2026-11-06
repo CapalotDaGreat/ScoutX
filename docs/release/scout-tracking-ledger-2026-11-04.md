@@ -5,7 +5,7 @@
 **Starting docs tip:** `bfbda446dfd09acd9a9a1ec7afa2606da836989c`  
 **Starting product RC:** `47e49cf037671d964180404ee0cfd6212ed76006`  
 **GPU baseline (immutable):** `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac`  
-**Defaults:** C ON · E ON · D not promoted · A/B off · **DETOUR_SPLIT ON** (new) · AI/CV fail-closed  
+**Defaults:** C ON · E off unless `SCOUTX_OCR_CACHE_PROVENANCE=1` · D not promoted · A/B off · **DETOUR_SPLIT off unless `SCOUTX_DETOUR_SPLIT=1`** · AI/CV fail-closed  
 
 Update this file after every meaningful experiment. Do not treat “no improvement possible” as done.
 
@@ -98,8 +98,16 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - Chunk integrity: all seven `c_00000`–`c_00006` checkpoints match their recorded sizes and SHA-256. Crop counts match. Frames 3000×6 + 2350 = 20350. One settings fingerprint `bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc`. Detector `yolox_s@1280/onnx`. Video SHA prefix `b1077af3c975`. These chunks are reusable upstream evidence. The partial `ocr_cache.json` (3000 entries, 365 with a number) is not.
 - Memory: the failure is after extraction, inside resolve, at a 3000-crop cache flush (`peakRssMiB` is the RSS sample at the exception, not a high-water mark). `load_runs` held every npz open while copying. Discovery constructed a YOLO session and the shared OCR reader even when they were not needed for a resumed discovery, and each extract left its ONNX session to the garbage collector. The CPU ONNX arena keeps scratch blocks. Repair: close the session at the end of `extract`, disable the CPU arena (graph outputs unchanged), skip discovery model load when `discovery.json` is reused, copy each npz inside a closed `np.load`, drop each crop image after the read, and `gc.collect()` every 100 new reads. The benchmark now stores the traceback. This does not change image size, frame rate, detector weights, or identity thresholds.
 - E on vs E off: `tests/test_ocr_cache_equivalence.py::test_provenance_on_and_off_match_on_an_empty_cache` passed (empty cache, same timeline arrays). The resolve comparison pins `SCOUTX_OCR_CACHE_PROVENANCE=0` explicitly. That pin matches the restored default. It is not evidence that E should be promoted.
-- DETOUR remains the code default and is still not full-match validated. C stays on. D (`SCOUTX_APPEARANCE_ONLY_LIKELY=1`) is not promoted. A and B stay off.
-- Next measurement reuses the preserved chunks in a new directory. It is not a cold extraction. Original extraction wall stays 23013.589 s on the failed record.
+- C stays on. D (`SCOUTX_APPEARANCE_ONLY_LIKELY=1`) is not promoted. A and B stay off. DETOUR's default after the measurement below is off.
+
+### 2026-11-06 — Resolve-only comparison finished (not a cold run)
+
+- Code: `4d4d860fb05cea12fd5ba7ecf835bc8c863ef491`. Output: `C:\ZLI\M335\ScoutX\.local\fm-detour-cpu-20261106-resolve`. Video SHA-256 matched. Stage-1 fingerprint matched the preserved chunks. Both resolves exited 0. E pinned `SCOUTX_OCR_CACHE_PROVENANCE=0`. C=1, A=0, B=0, D not promoted. Only `SCOUTX_DETOUR_SPLIT` differed (0 then 1). Each resolve had its own empty OCR cache. Discovery and all seven chunks were resumed. Extraction wall is still the failed record's 23013.589 s. These resolve walls are separate: baseline 2157.997 s (resolve 1836.817 s), candidate 1892.688 s (resolve 1796.045 s). `timingComplete` is false on both.
+- Baseline timeline SHA-256 `4a33fd3be00a57e22a6bf80b6f990e3194b505b9a3f68d0547fb1e2cf1de70d7`. Candidate `895c8b37c8c4238fac8b802df6faa864361acecc67b740441b64ee25e2c11d16`. Claims: baseline `2497e05dd7b9ebf87791dfb0eb192a635032f75c5b483cdb2aa178647312bcbb` (12938 frames), candidate `12074c9097431667ef6ffa82b5aeddb5cda4e733fb32d344c802a1f912ded9cd` (12986 frames). Confirmed frames 564 vs 551. Likely frames 1460 vs 1353. End RSS 2708.8 MiB and 3320.6 MiB. During identity the baseline process committed about 17 GB while its working set was under 2 GB. That commit gap, not the 9600-byte request, is the shape of the 2026-11-05 allocator failure.
+- Labelled original ground truth, T frames, IoU ≥ 0.5. Both runs: 225–255 s correct 53 / wrong-player 3 / unmatched 0 / abstained 12 of 68, except candidate other-player confirmed claims 4 versus baseline 5. 1150–1180: 152 / 0 / 9 / 127 of 288. 1295–1325: 18 / 0 / 15 / 61 of 94. 1890–1920: 0 / 0 / 0 / 54 of 54. Intervals 400–430, 600–630, 1500–1530, 1680–1710 and 1800–1830 have labelled boxes and no T label; neither run placed a confirmed or likely claim on an N box there. Proposed +0.1 s time basis (boxes and player labels unchanged): 1150–1180 correct 161 and unmatched 0; 1295–1325 correct 33 and unmatched 0; abstentions unchanged. Same on both runs.
+- Aggregate stored basis: claimed correct 22.3 s both; confirmed correct 13.9 s both; wrong identity 0.5 s baseline (244.5, 244.6, 244.7, 245.8, 246.1) and 0.4 s candidate (246.1 removed). Recall 0.442 both. IDF1 0.609 vs 0.610.
+- DETOUR is not selective. State changes: 126 likely→ambiguous, 68 absent→ambiguous, 18 ambiguous→absent, 12 confirmed→likely, 9 ambiguous→likely, 3 likely→absent, 1 confirmed→ambiguous at 246.1 s, 1 absent→likely. Exchange window 244.3–245.0 s stays confirmed on both, so P is unchanged. #6 window 706–716 s is ambiguous on both (88 frames). #17 window 1301.6–1305.7 s is unchanged (19 confirmed, 16 ambiguous). Far changes include 140 s, 493–523 s, 608–609 s, 734–739 s, 1194–1196 s and 2031 s. DETOUR therefore stays experimental and the code default is off. `SCOUTX_DETOUR_SPLIT=1` remains the opt-in used for this candidate.
+- Verdict from this evidence: not ready. The resolve completes. Labelled full-match accuracy is partial. A static gate with zero code blockers does not change that.
 
 ## Blockers / approvals needed
 
@@ -109,14 +117,13 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 | Tip TestFlight / native device | Prior screenshots are web mocks | OPEN |
 | GPU VM | CUDA gap vs baseline `51d41c9` | Needs approval |
 | Independent D review | Appearance-only promotion | Do not promote |
-| Full-match cold replay | Confirm DETOUR selectivity + #6/#17 bounds | **Failed** 2026-11-05 15:03 CET, exit 2, candidate not started. Stage-1 chunks exist; resolve did not finish. |
+| Full-match resolve | DETOUR selectivity and #6/#17 | **Measured 2026-11-06, not cold.** See the 2026-11-06 section. DETOUR is experimental, default off. |
 
 ---
 
 ## Next actions
 
-1. Resolve-only comparison in a new directory, reusing the validated chunks and `discovery.json`, empty OCR caches, E pinned off. DETOUR=0 then DETOUR=1. Do not call it cold. Do not overwrite `fm-detour-cpu-20261105`.
-2. P (pause-and-resume) narrow candidate — still open; do not relax thresholds.
-3. Scout authenticated journeys when Firebase keys + seeded scout/player accounts are approved. Do not create production users.
-4. Native/device evidence for the current tip. 2026-11-04 and 2026-11-05 screenshots are **mock/web**.
-5. External gates unchanged: App Check, backups, counsel, owner SEC, D review, GPU vs `51d41c9`, EAS/TestFlight. No paid build started.
+1. Do not promote DETOUR. P, the residual confirmed frames at 244.5–245.8 s, and the #17 window stay open. Do not relax thresholds.
+2. Scout authenticated journeys when Firebase keys + seeded scout/player accounts are approved. Do not create production users.
+3. Native/device evidence for the current tip. 2026-11-04 and 2026-11-05 screenshots are **mock/web**.
+4. External gates unchanged: legal review, AI footage approval, backups, owner SEC, App Check registration, production env and GoogleService-Info.plist, CV approval, GPU vs `51d41c9`. No paid build, deploy, or App Store submission.

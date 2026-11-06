@@ -35,7 +35,7 @@ E4 - one-frame claim on another player after a second crossing (REFERENCE render
   - Unrepaired: at w211 the CONFIRMED / number claim sat on that other player (N box, review 2026-11-03).
   - Mechanism: number tracklet 205 took a merged two-player box at w210 and the other player's box at w211 (no
     clean #20 detection there), then returned to #20 at w212. That one-frame detour was never cut.
-  - Repair (DETOUR_SPLIT, default on): isolate the one-frame detour row when the two-sided resume signature
+  - Repair (SCOUTX_DETOUR_SPLIT=1, experimental, off by default): isolate the one-frame detour row when the two-sided resume signature
     fires; gap-fill at w211 is non-CONFIRMED and not on N. Characterisation below asserts the repaired state.
 """
 import json
@@ -57,15 +57,17 @@ pytestmark = pytest.mark.skipif(not (EV / "replays").exists(), reason="regressio
 _CACHE: dict = {}
 
 
-def _replay(name: str, flag: str, tmp_path_factory):
-    if (name, flag) not in _CACHE:
-        out = tmp_path_factory.mktemp(f"{name}_x{flag}") / "run"
-        env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_OCR_CONSULTED_ONLY": "0", "SCOUTX_APPEARANCE_ONLY_LIKELY": "1", "PYTHONHASHSEED": "0"}   # default behaviour
+def _replay(name: str, flag: str, tmp_path_factory, detour: str = "0"):
+    """`detour` is explicit. The release default is off; pass \"1\" only for the experimental repair."""
+    if (name, flag, detour) not in _CACHE:
+        out = tmp_path_factory.mktemp(f"{name}_x{flag}_d{detour}") / "run"
+        env = {**os.environ, "SCOUTX_EXCHANGE_SPLIT": flag, "SCOUTX_RESUME_SPLIT": "0", "SCOUTX_DETOUR_SPLIT": detour,
+               "SCOUTX_OCR_CONSULTED_ONLY": "0", "SCOUTX_APPEARANCE_ONLY_LIKELY": "1", "PYTHONHASHSEED": "0"}
         subprocess.run([sys.executable, str(ROOT / "bench" / "regression_replay.py"), "run", "--replay",
                         str(EV / "replays" / name), "--out", str(out)], env=env, cwd=ROOT, check=True, capture_output=True)
         with np.load(out / "automatic" / "timeline.npz") as z:
-            _CACHE[(name, flag)] = {k: z[k].copy() for k in ("present", "states", "evidence", "boxes")}
-    return _CACHE[(name, flag)]
+            _CACHE[(name, flag, detour)] = {k: z[k].copy() for k in ("present", "states", "evidence", "boxes")}
+    return _CACHE[(name, flag, detour)]
 
 
 def _labels(w: int):
@@ -85,8 +87,9 @@ PLAYER_A_PIECE = 38            # w195-197: player A (labelled T in the original 
 
 # ---- P: default decoder, pause-and-resume transfer ---------------------------------------------------------------
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_P_characterisation_default_claims_player_a_after_pause_and_resume(flag, tmp_path_factory):
-    tl = _replay("default_i0225", flag, tmp_path_factory)
+@pytest.mark.parametrize("detour", ["0", "1"])
+def test_P_characterisation_default_claims_player_a_after_pause_and_resume(flag, detour, tmp_path_factory):
+    tl = _replay("default_i0225", flag, tmp_path_factory, detour)
     for w in (195, 196, 197):
         c = _claim(tl, w)
         assert c and c[0] == "LIKELY_VISIBLE" and iou(c[2], _piece_box(w, PLAYER_A_PIECE)) >= 0.75
@@ -94,8 +97,9 @@ def test_P_characterisation_default_claims_player_a_after_pause_and_resume(flag,
 
 @pytest.mark.xfail(strict=True, reason="P unrepaired: identity passes to player A when #20's paused track resumes on A")
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_P_desired_no_claim_on_player_a(flag, tmp_path_factory):
-    tl = _replay("default_i0225", flag, tmp_path_factory)
+@pytest.mark.parametrize("detour", ["0", "1"])
+def test_P_desired_no_claim_on_player_a(flag, detour, tmp_path_factory):
+    tl = _replay("default_i0225", flag, tmp_path_factory, detour)
     for w in (195, 196, 197):
         c = _claim(tl, w)
         assert not (c and c[0] in ("LIKELY_VISIBLE", "CONFIRMED_VISIBLE") and iou(c[2], _piece_box(w, PLAYER_A_PIECE)) >= 0.5)
@@ -115,7 +119,7 @@ def _on_t_label(c, w, thr):
 
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E3_characterisation_reference_claims_target_after_detour_split(flag, tmp_path_factory):
-    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
     for w in E3_FRAMES:
         c = _claim(tl, w)
         assert c and c[0] == "LIKELY_VISIBLE" and _on_t_label(c, w, 0.7)
@@ -124,15 +128,15 @@ def test_E3_characterisation_reference_claims_target_after_detour_split(flag, tm
 
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E3_desired_no_claim_on_n_labelled_player(flag, tmp_path_factory):
-    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
     assert not any((c := _claim(tl, w)) and _on_n_label(c, w, 0.5) for w in E3_FRAMES)
 
 
 # ---- E4: reference rendering, one-frame detour (repaired by DETOUR_SPLIT) ------------------------------------------
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E4_characterisation_detour_isolated_no_confirmed_on_other_player(flag, tmp_path_factory):
-    """Repaired behaviour: w211 is not a CONFIRMED claim on N; w212 stays off N."""
-    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    """Experimental repair, pinned on: w211 is not a CONFIRMED claim on N; w212 stays off N."""
+    tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
     c = _claim(tl, 211)
     assert not (c and c[0] == "CONFIRMED_VISIBLE" and _on_n_label(c, 211, 0.5))
     assert not (c and _on_n_label(c, 211, 0.5))
@@ -142,6 +146,6 @@ def test_E4_characterisation_detour_isolated_no_confirmed_on_other_player(flag, 
 
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E4_desired_no_confirmed_claim_on_other_player(flag, tmp_path_factory):
-    tl = _replay("reference_i0225", flag, tmp_path_factory)
+    tl = _replay("reference_i0225", flag, tmp_path_factory, "1")
     c = _claim(tl, 211)
     assert not (c and _on_n_label(c, 211, 0.5))
