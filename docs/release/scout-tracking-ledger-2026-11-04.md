@@ -134,6 +134,8 @@ Memory-fix proof, empty cache, flags pinned to the defaults of both commits (`DE
 
 Worker sizing: during baseline identity the process's private commit was about 16.9–17.2 GB while its working set was about 1.4–1.9 GB. `peakRssMiB` in the report is the ending working set (2708.8 and 3320.6), not the commit. A cloud worker for this resolve needs about 17 GB of commit (RAM plus page), not a 2 GB machine. This was a point sample, not a traced peak.
 
+The release run now fails closed on that accounting. `workers/football-cv/bench/release_suite_pin.json` lists the six strict known-failure node ids and the eleven opt-in whole-match skips. `scripts/release-gate.mjs` runs the worker suite with `SCOUTX_RELEASE_SUITE=1`. The run fails if the strict xfail set differs from the pin, if one of those xfails is not `strict=True`, or if a skip is anything other than the opt-in whole-match replay. A missing ffmpeg fails that run instead of skipping the four benchmark tests. Changing either list means editing the pin and stating the reason in the commit message. The release run on 2026-11-06 was 664 passed, 11 skipped, 6 xfailed, exit 0. The four passes above the restored 660 are the pin checks themselves.
+
 ## Blockers / approvals needed
 
 | Item | Why | Status |

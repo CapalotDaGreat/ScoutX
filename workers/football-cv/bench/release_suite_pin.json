@@ -1,0 +1,24 @@
+{
+  "reason": "Release accounting for 2026-11-06. The six strict known-failure tests are the unrepaired P, E3 and E4 cases (both OCR-cache flags). The only skips the release run may report are the eleven opt-in whole-match replay tests, which stay skipped unless SCOUTX_FULL_MATCH_REPLAY points at a provenance file. Changing either list requires editing this file in a reviewed commit whose message states why.",
+  "strictXfail": [
+    "tests/test_known_identity_failures.py::test_P_desired_no_claim_on_player_a[0]",
+    "tests/test_known_identity_failures.py::test_P_desired_no_claim_on_player_a[1]",
+    "tests/test_known_identity_failures.py::test_E3_desired_no_claim_on_n_labelled_player[0]",
+    "tests/test_known_identity_failures.py::test_E3_desired_no_claim_on_n_labelled_player[1]",
+    "tests/test_known_identity_failures.py::test_E4_desired_no_confirmed_claim_on_other_player[0]",
+    "tests/test_known_identity_failures.py::test_E4_desired_no_confirmed_claim_on_other_player[1]"
+  ],
+  "allowedSkips": [
+    "tests/test_full_match_identity.py::test_replay_inputs_match_the_committed_provenance",
+    "tests/test_full_match_identity.py::test_replay_reproduces_the_full_match_baseline_exactly_and_repeatably",
+    "tests/test_full_match_identity.py::test_legitimate_confirmed_20_evidence_at_1161_is_kept",
+    "tests/test_full_match_identity.py::test_F6_characterisation_likely_appearance_claims_on_player_6",
+    "tests/test_full_match_identity.py::test_F6_desired_no_claim_on_player_6",
+    "tests/test_full_match_identity.py::test_F17_characterisation_likely_appearance_claims_on_player_17",
+    "tests/test_full_match_identity.py::test_F17_desired_no_claim_on_player_17",
+    "tests/test_full_match_identity.py::test_cache_state_characterisation_warm_ocr_cache_changes_identity",
+    "tests/test_full_match_identity.py::test_cache_state_desired_same_identity_warm_or_cold",
+    "tests/test_full_match_identity.py::test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline",
+    "tests/test_full_match_identity.py::test_candidate_D_removes_appearance_only_claims_and_keeps_confirmed_20"
+  ]
+}

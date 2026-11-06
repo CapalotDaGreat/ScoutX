@@ -2,7 +2,6 @@
 benchmark's failure handling. No GPU needed."""
 
 import json
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -249,8 +248,9 @@ def test_stage1_settings_capture_affecting_env_only():
 
 @pytest.fixture(scope="module")
 def tiny_video(tmp_path_factory):
-    if not shutil.which("ffmpeg"):
-        pytest.skip("ffmpeg not installed")
+    from bench.release_suite import require_release_ffmpeg
+
+    require_release_ffmpeg()
     p = tmp_path_factory.mktemp("v") / "tiny.mp4"
     subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "testsrc=size=320x180:rate=10:duration=2",
                     "-pix_fmt", "yuv420p", str(p)], check=True)

@@ -632,6 +632,39 @@ check('App Check enforcement defaults on outside the emulator', () => {
   return [EXTERNAL, 'App Check code defaults on; App Attest / provider registration still EXTERNAL (SEC-15)'];
 });
 
+check('Worker suite keeps the pinned known failures', () => {
+  if (skipTests) return [SKIPPED, '--skip-tests'];
+  const python = process.platform === 'win32'
+    ? join(root, 'workers/football-cv/.venv/Scripts/python.exe')
+    : join(root, 'workers/football-cv/.venv/bin/python');
+  if (!existsSync(python)) return [FAIL, `worker venv python is missing at ${python}`];
+  const env = { ...process.env, SCOUTX_RELEASE_SUITE: '1', PYTHONHASHSEED: '0' };
+  for (const key of [
+    'SCOUTX_DETOUR_SPLIT',
+    'SCOUTX_EXCHANGE_SPLIT',
+    'SCOUTX_RESUME_SPLIT',
+    'SCOUTX_OCR_CONSULTED_ONLY',
+    'SCOUTX_OCR_CACHE_PROVENANCE',
+    'SCOUTX_APPEARANCE_ONLY_LIKELY',
+    'SCOUTX_FULL_MATCH_REPLAY',
+  ]) delete env[key];
+  if (process.platform === 'win32' && process.env.LOCALAPPDATA) {
+    const links = join(process.env.LOCALAPPDATA, 'Microsoft', 'WinGet', 'Links');
+    if (existsSync(links)) env.PATH = `${links};${env.PATH || ''}`;
+  }
+  const result = spawnSync(python, ['-m', 'pytest', '-q', '--tb=line'], {
+    cwd: join(root, 'workers/football-cv'),
+    encoding: 'utf8',
+    env,
+    maxBuffer: 64 * 1024 * 1024,
+  });
+  const output = `${result.stdout || ''}\n${result.stderr || ''}`;
+  const summary = output.trim().split(/\r?\n/).filter(Boolean).slice(-4).join(' ');
+  return result.status === 0
+    ? [PASS, summary || 'pinned strict known-failures and opt-in skips only']
+    : [FAIL, `exit ${result.status}; ${summary || 'worker suite failed'}`];
+});
+
 check('Firestore and Storage rules suite', () => {
   if (skipTests) return [SKIPPED, '--skip-tests'];
   const result = spawnSync(npm, ['run', 'test:rules'], { cwd: root, encoding: 'utf8', shell: process.platform === 'win32', maxBuffer: 256 * 1024 * 1024 });
