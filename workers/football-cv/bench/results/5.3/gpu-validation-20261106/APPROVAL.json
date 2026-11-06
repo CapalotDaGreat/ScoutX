@@ -1,0 +1,28 @@
+{
+  "gpuSessionApproved": true,
+  "zonesInOrder": [
+    "europe-west4-b",
+    "europe-west4-c",
+    "europe-west4-a"
+  ],
+  "machine": "g2-standard-8",
+  "gpu": "1x NVIDIA L4",
+  "diskGb": 200,
+  "diskType": "pd-balanced",
+  "bootDiskAutoDelete": true,
+  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+  "partACommit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "partBCommit": "3381371014d37c91072ff257f280593df374b977",
+  "maxRunDurationMin": 300,
+  "guestShutdownMin": 290,
+  "costCeilingUsdBeforeTax": 8.0,
+  "footage": {
+    "IMG_4809": true,
+    "IMG_5105": false,
+    "IMG_4529": false
+  },
+  "maxCreateAttempts": 4,
+  "filledBy": "owner chat 2026-11-07",
+  "estimateAtMaxLifetimeUsd": 4.72,
+  "estimateIsNotACap": true
+}

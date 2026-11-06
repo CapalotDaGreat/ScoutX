@@ -1,8 +1,6 @@
 # GPU validation session plan (2026-11-06)
 
-**Status: proposal ready. GPU session is not approved.** The APPROVAL block in the launch prompt is still a template (`[YES / NO]`). No VM was created. No footage was uploaded. No cloud resources were changed.
-
-Tip used for Part B archive and dry run: `8e1b63355d725c36e217b3b6df6ce53c93da442e` on `release/pitchproof-5-3-candidate`. Freeze the tip again immediately before any approved launch.
+**Status: APPROVED 2026-11-07.** Owner filled the APPROVAL block (chat: fill it and run). Part B tip frozen at `3381371014d37c91072ff257f280593df374b977`. IMG_5105 / IMG_4529 are **not** in this run.
 
 ## Exact plan
 
@@ -123,19 +121,19 @@ Command (2026-11-06): Docker `ubuntu:24.04` with `SCOUTX_DRY_RUN=1`, Part A/B ar
 - Wrote `_DONE` (`exportComplete: true`, `dryRun: true`) and `export_manifest.json` with `mediaExcluded: true`
 - Proves export, manifest and cleanup paths only — not GPU behaviour
 
-## Proposed APPROVAL block (for the owner to fill)
+## APPROVAL (filled 2026-11-07)
 
 ```
 GPU session approved:                     YES
 Zones, in order:                          europe-west4-b, europe-west4-c, europe-west4-a
 Machine / GPU / disk / image:             g2-standard-8, 1× NVIDIA L4, 200 GB balanced PD auto-delete,
-                                          common-cu129-ubuntu-2204-nvidia-580-v20261029 (or family latest if still READY)
+                                          common-cu129-ubuntu-2204-nvidia-580-v20261029
 Commits:                                  Part A 51d41c9f5f333c7e93a606b7181ba8cb1cee8eac;
-                                          Part B <freeze tip at launch; currently 8e1b63355d725c36e217b3b6df6ce53c93da442e>
+                                          Part B 3381371014d37c91072ff257f280593df374b977
 Maximum VM lifetime (server-enforced):    300 min
 Cost ceiling, all-in, before tax:         USD 8.00
-Footage allowed:                          IMG_4809 proxy (b1077af3…fb679c); IMG_5105 / IMG_4529: NO unless named YES
+Footage allowed:                          IMG_4809 proxy (b1077af3…fb679c); IMG_5105 / IMG_4529: NO
 Maximum number of VM create attempts:     4
 ```
 
-Until that block is filled with YES and concrete values, no create runs.
+Also recorded in `C:\Users\masap\Downloads\PitchProof_GPU_validation_and_launch_prompt.md` section 2.
