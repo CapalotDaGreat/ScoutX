@@ -93,6 +93,14 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - Tracker proof before the failed baseline: `git diff 32470ce0ebe09a68d2201c60ed3944c28d72eca8` through the docs tip was empty for `workers/`. The candidate never started. The exit releases that hold.
 - **Defect, E default, restored to off.** `ed2b242` (2026-11-04 01:11 +0100) added `SCOUTX_OCR_CACHE_PROVENANCE` off (`"0"`). `3c9f9835365d0a1bf1637dc7721947e426a85cc2` (2026-11-04 22:09:08 +0100) switched the default to `"1"` without approval. The tag hashes OCR source and the enhance switch, not model weights, and concurrent writes are untested. The failed comparison pinned `=1` on the runner. That pin was not a promotion. The baseline has exited and the candidate never started, so the code default is `"0"` again. `SCOUTX_OCR_CACHE_PROVENANCE=1` still opts in. C (`SCOUTX_OCR_CONSULTED_ONLY` default `"1"`) and atomic cache writes are unchanged.
 
+### 2026-11-06 — Failed baseline preserved; E default off; resolve memory bound
+
+- Chunk integrity: all seven `c_00000`–`c_00006` checkpoints match their recorded sizes and SHA-256. Crop counts match. Frames 3000×6 + 2350 = 20350. One settings fingerprint `bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc`. Detector `yolox_s@1280/onnx`. Video SHA prefix `b1077af3c975`. These chunks are reusable upstream evidence. The partial `ocr_cache.json` (3000 entries, 365 with a number) is not.
+- Memory: the failure is after extraction, inside resolve, at a 3000-crop cache flush (`peakRssMiB` is the RSS sample at the exception, not a high-water mark). `load_runs` held every npz open while copying. Discovery constructed a YOLO session and the shared OCR reader even when they were not needed for a resumed discovery, and each extract left its ONNX session to the garbage collector. The CPU ONNX arena keeps scratch blocks. Repair: close the session at the end of `extract`, disable the CPU arena (graph outputs unchanged), skip discovery model load when `discovery.json` is reused, copy each npz inside a closed `np.load`, drop each crop image after the read, and `gc.collect()` every 100 new reads. The benchmark now stores the traceback. This does not change image size, frame rate, detector weights, or identity thresholds.
+- E on vs E off: `tests/test_ocr_cache_equivalence.py::test_provenance_on_and_off_match_on_an_empty_cache` passed (empty cache, same timeline arrays). The resolve comparison pins `SCOUTX_OCR_CACHE_PROVENANCE=0` explicitly. That pin matches the restored default. It is not evidence that E should be promoted.
+- DETOUR remains the code default and is still not full-match validated. C stays on. D (`SCOUTX_APPEARANCE_ONLY_LIKELY=1`) is not promoted. A and B stay off.
+- Next measurement reuses the preserved chunks in a new directory. It is not a cold extraction. Original extraction wall stays 23013.589 s on the failed record.
+
 ## Blockers / approvals needed
 
 | Item | Why | Status |
@@ -107,7 +115,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 
 ## Next actions
 
-1. Do not overwrite `fm-detour-cpu-20261105`. Reuse its seven checkpointed chunks and `discovery.json` only. Run DETOUR=0 then DETOUR=1 resolves with independent empty OCR caches. Record those timings separately from the failed cold extraction. Do not call the resume cold.
+1. Resolve-only comparison in a new directory, reusing the validated chunks and `discovery.json`, empty OCR caches, E pinned off. DETOUR=0 then DETOUR=1. Do not call it cold. Do not overwrite `fm-detour-cpu-20261105`.
 2. P (pause-and-resume) narrow candidate — still open; do not relax thresholds.
 3. Scout authenticated journeys when Firebase keys + seeded scout/player accounts are approved. Do not create production users.
 4. Native/device evidence for the current tip. 2026-11-04 and 2026-11-05 screenshots are **mock/web**.

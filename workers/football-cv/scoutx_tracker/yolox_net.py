@@ -297,6 +297,9 @@ class OnnxDetector:
             export_onnx(variant, weights, path, imgsz)
         so = ort.SessionOptions()
         so.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+        # The CPU arena keeps each session's scratch blocks until process exit. Repeated chunk
+        # sessions then sit on top of the OCR models. Disabling it does not change the graph outputs.
+        so.enable_cpu_mem_arena = False
         if threads:
             so.intra_op_num_threads = threads
         providers = ort_providers(ort.get_available_providers())
@@ -309,6 +312,10 @@ class OnnxDetector:
         self.on_gpu = self.providers[0] in ("CUDAExecutionProvider", "TensorrtExecutionProvider")
         self.imgsz = imgsz
         self.name = f"{variant}@{imgsz}/onnx" + ("-cuda" if self.on_gpu else "")
+
+    def close(self) -> None:
+        """Drop the ONNX session so its scratch memory returns before the next chunk or resolve."""
+        self.sess = None
 
     def __call__(self, images: list[np.ndarray], conf: float = 0.05):
         boxes, ratios = zip(*(letterbox(im, self.imgsz) for im in images))

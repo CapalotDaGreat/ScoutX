@@ -42,8 +42,9 @@ def load_runs(run_dirs: list[str]) -> Detections:
     parts = []
     for d in run_dirs:
         meta = json.loads((Path(d) / "meta.json").read_text())
-        z = np.load(Path(d) / "detections.npz")
-        parts.append((meta, z, Path(d)))
+        with np.load(Path(d) / "detections.npz") as z:
+            arrays = {k: z[k].copy() for k in z.files}
+        parts.append((meta, arrays, Path(d)))
     parts.sort(key=lambda p: p[0]["t0"] + p[0]["start"])
     D, S, EI, E, B, W, T, SEG, crops, sources, G, BW = [], [], [], [], [], [], [], [], {}, [], [], []
     foff = doff = 0
@@ -66,9 +67,9 @@ def load_runs(run_dirs: list[str]) -> Detections:
             crops[int(di) + doff] = str(p)
         D.append(dets); S.append(z["sigs"]); EI.append(z["emb_idx"] + doff); E.append(z["embs"])
         B.append(balls); W.append(z["warps"]); T.append(z["times"]); SEG.append(segs)
-        BW.append(z["ball_warm"].astype(np.float32) if "ball_warm" in z.files and len(z["ball_warm"]) == len(balls)
+        BW.append(z["ball_warm"].astype(np.float32) if "ball_warm" in z and len(z["ball_warm"]) == len(balls)
                   else np.full(len(balls), np.nan, np.float32))
-        if "grass" in z.files:
+        if "grass" in z:
             G.append(z["grass"].astype(np.float32))
         elif (path / "scene.npz").exists():
             G.append(np.load(path / "scene.npz")["grass"].astype(np.float32))

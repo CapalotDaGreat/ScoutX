@@ -253,13 +253,9 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
     rc = 0
     reused = False
     try:
-        t = time.perf_counter()
-        det = Detector(imgsz=settings["discoveryImgsz"])
-        reader = shared_reader()
-        record["stages"]["modelInitialization"] = {"wallSec": round(time.perf_counter() - t, 3), "discoveryDetector": det.name,
-                                                   "discoveryDetectorOnGpu": det.on_gpu}
-        save()
         # ---- discovery (checkpointed: sightings only)
+        # The discovery detector and OCR reader are created only when discovery actually runs.
+        # A resumed discovery must not keep a YOLO session and both OCR models resident through resolve.
         disc_fp = fingerprint({"video": record["input"]["sha256"], "number": a.number, "kit": a.kit, "settings": settings})
         disc_file = work / "discovery.json"
         prev = json.loads(disc_file.read_text()) if disc_file.exists() else None
@@ -270,12 +266,23 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
         if prev:
             reused = True
             sightings = [Sighting(**s) for s in prev["sightings"]]
+            record["stages"]["modelInitialization"] = {"status": "skipped", "reason": "discovery checkpoint reused"}
             record["stages"]["discovery"] = {**prev["record"], "status": "resumed"}
         else:
             t = time.perf_counter()
+            det = Detector(imgsz=settings["discoveryImgsz"])
+            reader = shared_reader()
+            record["stages"]["modelInitialization"] = {"wallSec": round(time.perf_counter() - t, 3), "discoveryDetector": det.name,
+                                                       "discoveryDetectorOnGpu": det.on_gpu, "status": "measured"}
+            save()
+            t = time.perf_counter()
             first: list = []
-            disc = discover(a.video, 0.0, duration, a.number, a.kit, lambda f: det(f)[:2], reader,
-                            crops_dir=str(work / "discovery_crops"), on_sighting=lambda _s, elapsed: first.append(elapsed))
+            try:
+                disc = discover(a.video, 0.0, duration, a.number, a.kit, lambda f: det(f)[:2], reader,
+                                crops_dir=str(work / "discovery_crops"), on_sighting=lambda _s, elapsed: first.append(elapsed))
+            finally:
+                det.close()
+                del det
             sightings = disc.sightings
             rec = {"wallSec": round(time.perf_counter() - t, 3),
                    "firstPlayableAfterDiscoveryStartSec": round(first[0], 3) if first else None,
@@ -311,6 +318,9 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
             save()
         record["input"]["effectiveProcessingFps"] = record["stages"]["extraction"]["effectiveProcessingFps"]
         # ---- resolve
+        import gc  # noqa: PLC0415
+
+        gc.collect()
         t = time.perf_counter()
         report = analyze([str(store.run_dir(i)) for i, _, _ in chunk_bounds(duration, a.chunk_sec)], str(work / "report"),
                          a.number, a.kit, kit2=a.kit2, sightings=[dataclasses.asdict(s) for s in sightings], log=lambda _m: None)
@@ -361,7 +371,10 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
     except KeyboardInterrupt:  # time budget (timeout --signal=INT) or operator: completed chunks stay checkpointed
         record["status"], record["error"], rc = "interrupted", {"type": "Interrupted", "message": "stopped by time budget or operator"}, EXIT_FAILED
     except Exception as exc:  # noqa: BLE001 - recorded, checkpoints kept for a resume
-        record["status"], record["error"], rc = "failed", {"type": type(exc).__name__, "message": str(exc)}, EXIT_FAILED
+        import traceback  # noqa: PLC0415
+
+        record["status"], record["error"], rc = "failed", {
+            "type": type(exc).__name__, "message": str(exc), "traceback": traceback.format_exc()}, EXIT_FAILED
     finally:
         elapsed = time.perf_counter() - started
         record["timing"] = {"measuredTotalWallSec": round(elapsed, 3), "timingComplete": not reused,

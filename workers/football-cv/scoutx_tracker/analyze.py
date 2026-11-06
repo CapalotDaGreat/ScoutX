@@ -230,6 +230,7 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                     reader = shared_reader()
                 img = cv2.imread(c)
                 num, conf, band = reader.read(img) if img is not None else (None, 0.0, None)
+                del img
                 cache[key] = [num, conf, band]
                 done += 1
                 n_new += 1
@@ -237,6 +238,9 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                     read_new.append(key)
                 if done % 100 == 0:
                     _write_json_atomic(cache_path, cache)
+                    import gc  # noqa: PLC0415
+
+                    gc.collect()
                     log(f"reading numbers: {done} crops ({(time.time() - t) / done:.2f}s each), tracklet {k + 1}/{len(crops_by_tid)}")
             if consulted is not None:
                 consulted.add(key)
