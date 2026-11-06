@@ -323,7 +323,7 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
         gc.collect()
         t = time.perf_counter()
         report = analyze([str(store.run_dir(i)) for i, _, _ in chunk_bounds(duration, a.chunk_sec)], str(work / "report"),
-                         a.number, a.kit, kit2=a.kit2, sightings=[dataclasses.asdict(s) for s in sightings], log=lambda _m: None)
+                         a.number, a.kit, kit2=a.kit2, sightings=[dataclasses.asdict(s) for s in sightings], log=print)
         record["stages"]["resolve"] = {"wallSec": round(time.perf_counter() - t, 3), "invariantsOk": report.get("invariants", {}).get("ok"),
                                        "timingsSec": report.get("engine", {}).get("timingsSec"),
                                        "ocrDeferred": report.get("engine", {}).get("ocrDeferred"),
