@@ -11,6 +11,7 @@ const https_1 = require("firebase-functions/v2/https");
 const firestore_1 = require("firebase-admin/firestore");
 const callableOptions_1 = require("../callableOptions");
 const frameAnalysis_1 = require("./frameAnalysis");
+const segmentReview_1 = require("./segmentReview");
 const reportSections_1 = require("./reportSections");
 const technique_1 = require("./technique");
 const videoConsent_1 = require("./videoConsent");
@@ -49,6 +50,52 @@ function parseIdentityRequest(data) {
         ...(input.expectedAnchorRevision !== undefined ? { expectedAnchorRevision: Number(input.expectedAnchorRevision) } : {}),
     };
 }
+function asOpportunity(value) {
+    if (!value || typeof value !== 'object')
+        return null;
+    const row = value;
+    const observationIds = Array.isArray(row.observationIds)
+        ? row.observationIds.filter((id) => typeof id === 'string')
+        : [];
+    if (typeof row.title !== 'string' ||
+        typeof row.drill !== 'string' ||
+        typeof row.successCriterion !== 'string' ||
+        observationIds.length === 0) {
+        return null;
+    }
+    return {
+        title: row.title,
+        why: typeof row.why === 'string' ? row.why : '',
+        drill: row.drill,
+        successCriterion: row.successCriterion,
+        observationIds,
+    };
+}
+function observationsFromEvidence(report) {
+    if (!Array.isArray(report.evidence))
+        return [];
+    const categories = segmentReview_1.OBSERVATION_CATEGORIES;
+    return report.evidence.flatMap((item) => {
+        if (!item || typeof item !== 'object')
+            return [];
+        const row = item;
+        if (row.kind !== 'observation' || typeof row.id !== 'string' || typeof row.timestampSec !== 'number')
+            return [];
+        const frameIds = Array.isArray(row.frameIds) ? row.frameIds.filter((id) => typeof id === 'string') : [];
+        const category = typeof row.category === 'string' && categories.includes(row.category)
+            ? row.category
+            : 'other';
+        return [{
+                id: row.id,
+                frameId: frameIds[0] ?? '',
+                timestampSec: row.timestampSec,
+                category,
+                label: typeof row.label === 'string' ? row.label : '',
+                detail: typeof row.detail === 'string' ? row.detail : '',
+                confidence: row.confidence === 'medium' || row.confidence === 0.5 ? 'medium' : 'low',
+            }];
+    });
+}
 /** Merges held-back coaching into the report once the player confirmed which person they are. */
 function releasePendingCoaching(report, pending, job) {
     const next = { ...report };
@@ -62,6 +109,15 @@ function releasePendingCoaching(report, pending, job) {
             next.opportunities = pending.opportunities;
         if (pending.decisionMoments.length)
             next.decisionMoments = pending.decisionMoments;
+        const synthesis = {
+            headline: '',
+            strengths: [],
+            improvements: [],
+            opportunities: pending.opportunities.map(asOpportunity).filter((item) => item !== null),
+            decisionMoments: [],
+            coachingNotes: '',
+        };
+        next.coachingMoments = (0, segmentReview_1.coachingMomentsFromSynthesis)(synthesis, observationsFromEvidence(report));
         if (pending.clipCoaching && report.clip && typeof report.clip === 'object') {
             next.clip = { ...report.clip, ...pending.clipCoaching, identityBasis: 'confirmed' };
         }

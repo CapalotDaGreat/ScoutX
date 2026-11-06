@@ -372,7 +372,7 @@ async function processSynthesisTask(db, task, options) {
             ]))
             : null,
         events: [],
-        coachingMoments: [],
+        coachingMoments: identityConfirmed ? (0, segmentReview_1.coachingMomentsFromSynthesis)(synthesis, observations) : [],
         moments: evidence.slice(0, 8).map((item) => ({ timestampSec: item.timestampSec, label: item.label, detail: item.detail })),
         segmentSummaries: reviews.map((review) => ({
             segmentIndex: review.segmentIndex,

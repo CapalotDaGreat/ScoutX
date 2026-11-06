@@ -91,7 +91,9 @@ function normalizeClipReport(params) {
     const known = new Set(params.frames.map((frame) => frame.id));
     const times = new Map(params.frames.map((frame) => [frame.id, frame.timestampSec]));
     const targetVisible = (0, outputValidator_1.oneOf)(raw.targetVisible, ['yes', 'no', 'unclear'], 'unclear');
-    const coach = targetVisible === 'yes';
+    const observable = claims(raw.observable, known, times, 8);
+    // Coaching requires target visible AND at least one cited observable frame — otherwise claims are ungrounded.
+    const coach = targetVisible === 'yes' && observable.length > 0;
     const technicalExecution = Array.isArray(raw.technicalExecution)
         ? raw.technicalExecution
             .map((item) => {
@@ -125,12 +127,14 @@ function normalizeClipReport(params) {
         }
     }
     const rawDrill = raw.drill;
-    const drill = coach && rawDrill && typeof rawDrill === 'object' && text(rawDrill.drill)
+    const drillObjective = rawDrill && typeof rawDrill === 'object' ? text(rawDrill.objective) : '';
+    const drillSuccess = rawDrill && typeof rawDrill === 'object' ? text(rawDrill.successCriteria) : '';
+    const drill = coach && rawDrill && typeof rawDrill === 'object' && text(rawDrill.drill) && drillObjective && drillSuccess
         ? {
-            objective: text(rawDrill.objective),
+            objective: drillObjective,
             drill: text(rawDrill.drill, 400),
             repetitions: text(rawDrill.repetitions, 120),
-            successCriteria: text(rawDrill.successCriteria),
+            successCriteria: drillSuccess,
             nextMatchFocus: text(rawDrill.nextMatchFocus),
         }
         : null;
@@ -148,7 +152,6 @@ function normalizeClipReport(params) {
             };
         }
     }
-    const observable = claims(raw.observable, known, times, 8);
     return {
         actionType: (0, outputValidator_1.oneOf)(raw.actionType, exports.CLIP_ACTIONS, 'unclear'),
         targetVisible,

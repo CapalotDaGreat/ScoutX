@@ -5,6 +5,7 @@ exports.buildSegmentPrompt = buildSegmentPrompt;
 exports.normalizeSegmentReview = normalizeSegmentReview;
 exports.buildSynthesisPrompt = buildSynthesisPrompt;
 exports.normalizeSynthesis = normalizeSynthesis;
+exports.coachingMomentsFromSynthesis = coachingMomentsFromSynthesis;
 const promptBuilder_1 = require("../ai/promptBuilder");
 const outputValidator_1 = require("../ai/outputValidator");
 const technique_1 = require("./technique");
@@ -141,13 +142,14 @@ function buildSynthesisPrompt(params) {
         },
         output: [
             `techniqueAssessment: give stars (1-5) only where at least ${technique_1.MIN_TECHNIQUE_FRAMES} cited frames show that technique; else null.`,
-            'opportunities: at most 3, each with one concrete drill.',
+            'opportunities: at most 3. Each needs one concrete drill and one observable practice success criterion.',
+            'The success criterion is a check for the drill. Do not invent match speeds, distances, or statistics that are not in the cited observations.',
             'Return only this JSON object:',
             JSON.stringify({
                 headline: 'string',
                 strengths: [{ text: 'string', observationIds: ['s0_o1'] }],
                 improvements: [{ text: 'string', observationIds: ['s0_o1'] }],
-                opportunities: [{ title: 'string', why: 'string', drill: 'string', observationIds: ['s0_o1'] }],
+                opportunities: [{ title: 'string', why: 'string', drill: 'string', successCriterion: 'string', observationIds: ['s0_o1'] }],
                 decisionMoments: [{ situation: 'string', chosen: 'string', alternative: 'string', observationIds: ['s0_o1'] }],
                 coachingNotes: 'string',
                 techniqueAssessment: {
@@ -183,9 +185,10 @@ function normalizeSynthesis(raw, observations) {
         const observationIds = (0, outputValidator_1.knownFrameIds)(row.observationIds, known, 6);
         const title = (0, outputValidator_1.cleanModelText)(row.title, 100);
         const drill = (0, outputValidator_1.cleanModelText)(row.drill, 400);
-        if (observationIds.length === 0 || !title || !drill)
+        const successCriterion = (0, outputValidator_1.cleanModelText)(row.successCriterion, 200);
+        if (observationIds.length === 0 || !title || !drill || !successCriterion)
             continue;
-        opportunities.push({ title, why: (0, outputValidator_1.cleanModelText)(row.why, 300), drill, observationIds });
+        opportunities.push({ title, why: (0, outputValidator_1.cleanModelText)(row.why, 300), drill, successCriterion, observationIds });
         if (opportunities.length >= 3)
             break;
     }
@@ -215,5 +218,35 @@ function normalizeSynthesis(raw, observations) {
         decisionMoments,
         coachingNotes: (0, outputValidator_1.cleanModelText)(raw.coachingNotes, 1200),
     };
+}
+/** Cited opportunities become coaching moments. Uncited text never becomes a moment. */
+function coachingMomentsFromSynthesis(synthesis, observations) {
+    const byId = new Map(observations.map((item) => [item.id, item]));
+    const out = [];
+    synthesis.opportunities.forEach((item, index) => {
+        const cited = item.observationIds.map((id) => byId.get(id)).filter((row) => row !== undefined);
+        const successCriterion = item.successCriterion.trim();
+        if (cited.length === 0 || !item.drill.trim() || !successCriterion)
+            return;
+        const improvement = synthesis.improvements.find((row) => row.observationIds.some((id) => item.observationIds.includes(id)));
+        const observed = cited.map((row) => row.detail || row.label).filter(Boolean).join(' ');
+        const context = [observed, item.why.trim()].filter(Boolean).join(' ');
+        const point = improvement?.text.trim() || item.title.trim();
+        if (!context || !point)
+            return;
+        out.push({
+            id: `coach_${index}_${cited[0].id}`,
+            timestampSec: Math.min(...cited.map((row) => row.timestampSec)),
+            eventIds: [],
+            context: context.slice(0, 400),
+            observationKind: 'observation',
+            coachingPoint: point.slice(0, 240),
+            practiceIdea: item.drill.trim().slice(0, 400),
+            measurement: successCriterion.slice(0, 200),
+            confidenceLabel: cited.every((row) => row.confidence === 'medium') ? 'Limited' : 'Insufficient',
+            evidenceRefs: item.observationIds,
+        });
+    });
+    return out.slice(0, 5);
 }
 //# sourceMappingURL=segmentReview.js.map
