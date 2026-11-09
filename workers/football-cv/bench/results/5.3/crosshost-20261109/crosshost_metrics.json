@@ -1,0 +1,3727 @@
+{
+  "scope": {
+    "linux": "C:\\ZLI\\M335\\ScoutX\\.local\\fm-linux-cold-20261106",
+    "windowsResolve": "C:\\ZLI\\M335\\ScoutX\\.local\\fm-detour-cpu-20261106-resolve\\baseline",
+    "windowsOriginal": "C:\\ZLI\\M335\\ScoutX\\.local\\fm-detour-cpu-20261105\\baseline"
+  },
+  "fingerprints": {
+    "linux": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+    "windows": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+    "match": true,
+    "settingsExactMatch": true,
+    "settings": {
+      "engine": "5.2.0",
+      "env": {
+        "SCOUTX_DETECTOR": null,
+        "SCOUTX_BACKEND": null,
+        "SCOUTX_DECODER": null,
+        "SCOUTX_HWACCEL": null,
+        "SCOUTX_KEYFRAME_EVERY": null,
+        "SCOUTX_PROP_SCORE_CAP": null,
+        "SCOUTX_BATCH": null,
+        "SCOUTX_ORT_PROVIDERS": null,
+        "SCOUTX_OCR_ENHANCE": null
+      },
+      "packages": {
+        "torch": "2.15.0+cpu",
+        "opencv-python": "5.0.0.93",
+        "opencv-python-headless": "5.0.0.93",
+        "numpy": "2.5.4",
+        "onnxruntime": "1.31.1",
+        "onnxruntime-gpu": null
+      },
+      "imgsz": 1280,
+      "stride": 1,
+      "discoveryImgsz": 416,
+      "device": "cpu"
+    }
+  },
+  "provenance": {
+    "linux": {
+      "python": "3.12.3",
+      "platform": "Linux-5.15.153.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "cpuCores": 16,
+      "packages": {
+        "torch": "2.15.0+cpu",
+        "torchvision": "0.29.2+cpu",
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "opencv-python": "5.0.0.93",
+        "opencv-python-headless": "5.0.0.93",
+        "easyocr": "1.7.2",
+        "python-doctr": "1.1.0",
+        "scikit-learn": "1.9.1",
+        "onnxruntime": "1.31.1",
+        "pillow": "13.0.0"
+      },
+      "torch": {
+        "version": "2.15.0+cpu",
+        "cuda": null,
+        "cudaAvailable": false,
+        "cudnn": null
+      },
+      "onnxruntime": {
+        "version": "1.31.1",
+        "availableProviders": [
+          "AzureExecutionProvider",
+          "CPUExecutionProvider"
+        ]
+      },
+      "opencv": {
+        "version": "5.0.0",
+        "videoIO": [
+          "FFMPEG:                      YES",
+          "GStreamer:                   NO"
+        ]
+      },
+      "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+      "scoutxEnv": {
+        "SCOUTX_APPEARANCE_ONLY_LIKELY": "1",
+        "SCOUTX_DETOUR_SPLIT": "0",
+        "SCOUTX_EXCHANGE_SPLIT": "0",
+        "SCOUTX_MODE": "balanced",
+        "SCOUTX_OCR_CACHE_PROVENANCE": "0",
+        "SCOUTX_OCR_CONSULTED_ONLY": "1",
+        "SCOUTX_RESUME_SPLIT": "0",
+        "SCOUTX_WEIGHTS_DIR": "/models/weights"
+      },
+      "stage1Device": "cpu",
+      "inputSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+      "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b",
+      "status": "complete"
+    },
+    "windowsResolve": {
+      "python": "3.12.10",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "cpuCores": 16,
+      "packages": {
+        "torch": "2.15.0+cpu",
+        "torchvision": "0.29.2+cpu",
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "opencv-python": "5.0.0.93",
+        "opencv-python-headless": "5.0.0.93",
+        "easyocr": "1.7.2",
+        "python-doctr": "1.1.0",
+        "scikit-learn": "1.9.1",
+        "onnxruntime": "1.31.1",
+        "av": "19.0.2",
+        "pillow": "13.0.0",
+        "fastapi": "0.162.0",
+        "pydantic": "2.14.2"
+      },
+      "torch": {
+        "version": "2.15.0+cpu",
+        "cuda": null,
+        "cudaAvailable": false,
+        "cudnn": null
+      },
+      "onnxruntime": {
+        "version": "1.31.1",
+        "availableProviders": [
+          "AzureExecutionProvider",
+          "CPUExecutionProvider"
+        ]
+      },
+      "opencv": {
+        "version": "5.0.0",
+        "videoIO": [
+          "FFMPEG:                      YES (prebuilt binaries)",
+          "GStreamer:                   NO"
+        ]
+      },
+      "ffmpeg": "ffmpeg version 9.0.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "scoutxEnv": {
+        "SCOUTX_APPEARANCE_ONLY_LIKELY": "1",
+        "SCOUTX_DETOUR_SPLIT": "0",
+        "SCOUTX_EXCHANGE_SPLIT": "0",
+        "SCOUTX_MODE": "balanced",
+        "SCOUTX_OCR_CACHE_PROVENANCE": "0",
+        "SCOUTX_OCR_CONSULTED_ONLY": "1",
+        "SCOUTX_RESUME_SPLIT": "0"
+      },
+      "stage1Device": "cpu",
+      "inputSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+      "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b",
+      "status": "complete"
+    },
+    "windowsOriginal": {
+      "python": "3.12.10",
+      "platform": "Windows-11-10.0.26300-SP0",
+      "cpuCores": 16,
+      "packages": {
+        "torch": "2.15.0+cpu",
+        "torchvision": "0.29.2+cpu",
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "opencv-python": "5.0.0.93",
+        "opencv-python-headless": "5.0.0.93",
+        "easyocr": "1.7.2",
+        "python-doctr": "1.1.0",
+        "scikit-learn": "1.9.1",
+        "onnxruntime": "1.31.1",
+        "av": "19.0.2",
+        "pillow": "13.0.0",
+        "fastapi": "0.162.0",
+        "pydantic": "2.14.2"
+      },
+      "torch": {
+        "version": "2.15.0+cpu",
+        "cuda": null,
+        "cudaAvailable": false,
+        "cudnn": null
+      },
+      "onnxruntime": {
+        "version": "1.31.1",
+        "availableProviders": [
+          "AzureExecutionProvider",
+          "CPUExecutionProvider"
+        ]
+      },
+      "opencv": {
+        "version": "5.0.0",
+        "videoIO": [
+          "FFMPEG:                      YES (prebuilt binaries)",
+          "GStreamer:                   NO"
+        ]
+      },
+      "ffmpeg": "ffmpeg version 9.0.2-full_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+      "scoutxEnv": {
+        "SCOUTX_APPEARANCE_ONLY_LIKELY": "1",
+        "SCOUTX_DETOUR_SPLIT": "0",
+        "SCOUTX_EXCHANGE_SPLIT": "0",
+        "SCOUTX_MODE": "balanced",
+        "SCOUTX_OCR_CACHE_PROVENANCE": "1",
+        "SCOUTX_OCR_CONSULTED_ONLY": "1",
+        "SCOUTX_RESUME_SPLIT": "0"
+      },
+      "stage1Device": "cpu",
+      "inputSha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+      "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b",
+      "status": "failed"
+    }
+  },
+  "chunks": [
+    {
+      "chunk": "c_00000",
+      "files": {
+        "detections.npz": {
+          "linuxSize": 8919799,
+          "windowsSize": 8416594,
+          "linuxSha256": "a060fb737daba69c2a128b3fb6c8b43a3e25a39f6e074b8343696ab56cd44f7a",
+          "windowsSha256": "0e9054b37e3ae44b41561709b1271b9face434c973c0662a2de96903aac0e63c"
+        },
+        "meta.json": {
+          "linuxSize": 399,
+          "windowsSize": 474,
+          "linuxSha256": "a2f99eb23222d2c051857ff603e73fc862fcb11919113bc82b5211118992de85",
+          "windowsSha256": "9baae4a4aa5a232b24965e937bb45029f11a9bc8da935f70a4c3c76e110b76d5"
+        }
+      },
+      "checkpoint": {
+        "linuxFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "windowsFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "settingsExactMatch": true,
+        "linuxWritten": "2026-11-07T00:02:33Z",
+        "windowsWritten": "2026-11-05T08:54:35Z"
+      },
+      "meta": {
+        "frames": {
+          "linux": 3000,
+          "windows": 3000,
+          "equal": true
+        },
+        "fps": {
+          "linux": 10.0,
+          "windows": 10.0,
+          "equal": true
+        },
+        "detector": {
+          "linux": "yolox_s@1280/onnx",
+          "windows": "yolox_s@1280/onnx",
+          "equal": true
+        },
+        "width": {
+          "linux": 1920,
+          "windows": 1920,
+          "equal": true
+        },
+        "height": {
+          "linux": 1080,
+          "windows": 1080,
+          "equal": true
+        },
+        "keyframeEvery": {
+          "linux": 1,
+          "windows": 1,
+          "equal": true
+        },
+        "t0": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "start": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "seconds": {
+          "linux": 2972.5,
+          "windows": 1650.2,
+          "equal": false
+        },
+        "stageSeconds": {
+          "linux": {
+            "decode": 138.67,
+            "detect": 2430.32,
+            "propagate": 0.0,
+            "scene_cmc": 229.61,
+            "colour_signature": 66.8,
+            "embedding": 15.79,
+            "crops_io": 94.4
+          },
+          "windows": {
+            "decode": 53.37,
+            "detect": 1374.25,
+            "propagate": 0.0,
+            "scene_cmc": 104.35,
+            "colour_signature": 67.32,
+            "embedding": 17.41,
+            "crops_io": 27.44
+          },
+          "equal": false
+        }
+      },
+      "arrayKeys": [
+        "ball_warm",
+        "balls",
+        "cuts",
+        "dets",
+        "emb_idx",
+        "embs",
+        "grass",
+        "propagated",
+        "sigs",
+        "times",
+        "warps"
+      ],
+      "arrays": {
+        "ball_warm": {
+          "shapeLinux": [
+            1735
+          ],
+          "shapeWindows": [
+            2203
+          ],
+          "shapeEqual": false
+        },
+        "balls": {
+          "shapeLinux": [
+            1735,
+            7
+          ],
+          "shapeWindows": [
+            2203,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "cuts": {
+          "shapeLinux": [
+            0
+          ],
+          "shapeWindows": [
+            0
+          ],
+          "shapeEqual": true
+        },
+        "dets": {
+          "shapeLinux": [
+            61153,
+            7
+          ],
+          "shapeWindows": [
+            62067,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "emb_idx": {
+          "shapeLinux": [
+            22353
+          ],
+          "shapeWindows": [
+            22310
+          ],
+          "shapeEqual": false
+        },
+        "embs": {
+          "shapeLinux": [
+            22353,
+            256
+          ],
+          "shapeWindows": [
+            22310,
+            256
+          ],
+          "shapeEqual": false
+        },
+        "grass": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.006650949954986572,
+          "maxAbsDiff": 0.017830848693847656,
+          "differingElements": 2997
+        },
+        "propagated": {
+          "shapeLinux": [
+            61153
+          ],
+          "shapeWindows": [
+            62067
+          ],
+          "shapeEqual": false
+        },
+        "sigs": {
+          "shapeLinux": [
+            61153,
+            80
+          ],
+          "shapeWindows": [
+            62067,
+            80
+          ],
+          "shapeEqual": false
+        },
+        "times": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": true,
+          "meanAbsDiff": 0.0,
+          "maxAbsDiff": 0.0,
+          "differingElements": 0
+        },
+        "warps": {
+          "shapeLinux": [
+            3000,
+            7
+          ],
+          "shapeWindows": [
+            3000,
+            7
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.1685525596773176,
+          "maxAbsDiff": 50.15865342353152,
+          "differingElements": 19916
+        }
+      },
+      "detectionComparison": {
+        "framesWithAnyDetections": 3000,
+        "differingFrames": 3000,
+        "countDifferingFrames": 2184,
+        "boxDifferingFrames": 816,
+        "scoreDifferingFrames": 816,
+        "firstDivergence": {
+          "localFrame": 0,
+          "globalFrame": 0,
+          "timestampSec": 0.0,
+          "reasons": [
+            "count"
+          ],
+          "linuxCount": 12,
+          "windowsCount": 15,
+          "linuxFirstRows": [
+            [
+              0.0,
+              0.0,
+              1692.798095703125,
+              189.65890502929688,
+              1917.2249755859375,
+              1090.978271484375,
+              0.8889307379722595
+            ],
+            [
+              0.0,
+              0.0,
+              873.387451171875,
+              482.8565368652344,
+              906.91259765625,
+              562.3335571289062,
+              0.8045095205307007
+            ],
+            [
+              0.0,
+              0.0,
+              841.8663940429688,
+              488.08245849609375,
+              861.6328125,
+              530.2978515625,
+              0.8038008213043213
+            ]
+          ],
+          "windowsFirstRows": [
+            [
+              0.0,
+              0.0,
+              1695.25634765625,
+              189.2530059814453,
+              1917.09521484375,
+              1091.817626953125,
+              0.8860556483268738
+            ],
+            [
+              0.0,
+              0.0,
+              873.41455078125,
+              482.3337707519531,
+              906.56982421875,
+              562.1878662109375,
+              0.8091581463813782
+            ],
+            [
+              0.0,
+              0.0,
+              368.4201965332031,
+              493.20623779296875,
+              407.75225830078125,
+              569.1695556640625,
+              0.8019771575927734
+            ]
+          ]
+        },
+        "boxMeanAbsDiffOnCountAlignedRows": 148.38418469504822,
+        "boxMaxAbsDiffOnCountAlignedRows": 1904.572497367859,
+        "scoreMeanAbsDiffOnCountAlignedRows": 0.021935613893088544,
+        "scoreMaxAbsDiffOnCountAlignedRows": 0.3263937532901764
+      },
+      "scoreHistogram": {
+        "linux": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            7955,
+            5470,
+            4211,
+            4193,
+            4991,
+            7335,
+            12393,
+            11733,
+            2872
+          ],
+          "mean": 0.578049198013041,
+          "min": 0.12000048905611038,
+          "max": 0.9514105319976807
+        },
+        "windows": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            7976,
+            5608,
+            4469,
+            4288,
+            5284,
+            7364,
+            12492,
+            11673,
+            2913
+          ],
+          "mean": 0.5763127751458641,
+          "min": 0.12001964449882507,
+          "max": 0.9525753855705261
+        }
+      },
+      "counts": {
+        "detsLinux": 61153,
+        "detsWindows": 62067,
+        "ballsLinux": 1735,
+        "ballsWindows": 2203,
+        "embsLinux": 22353,
+        "embsWindows": 22310,
+        "cutsLinux": 0,
+        "cutsWindows": 0
+      },
+      "resolveVsOriginalWindows": {
+        "detections.npz": {
+          "existsOriginal": true,
+          "sha256Resolve": "0e9054b37e3ae44b41561709b1271b9face434c973c0662a2de96903aac0e63c",
+          "sha256Original": "0e9054b37e3ae44b41561709b1271b9face434c973c0662a2de96903aac0e63c",
+          "same": true
+        },
+        "meta.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "9baae4a4aa5a232b24965e937bb45029f11a9bc8da935f70a4c3c76e110b76d5",
+          "sha256Original": "9baae4a4aa5a232b24965e937bb45029f11a9bc8da935f70a4c3c76e110b76d5",
+          "same": true
+        },
+        "checkpoint.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "0f65c9b99318acd9b16c013d773e2eedd0651c43ade3857f1f2ed7b2da7c3d63",
+          "sha256Original": "0f65c9b99318acd9b16c013d773e2eedd0651c43ade3857f1f2ed7b2da7c3d63",
+          "same": true
+        }
+      },
+      "cropComparison": {
+        "linuxCropCount": 5328,
+        "windowsCropCount": 5219,
+        "commonNames": 163,
+        "linuxOnlyNames": 5165,
+        "windowsOnlyNames": 5056,
+        "samples": [
+          {
+            "name": "000000_0.jpg",
+            "linuxSize": 57482,
+            "windowsSize": 46731,
+            "linuxSha256": "4ae3216ffbd0b3d35857ebd34431d3732f8d443ddd0ac580db1417fcd5f8f713",
+            "windowsSha256": "1eb6d18a25132500d84e7beffa5f9e714f2828fa5403555a35b521bcf2103986",
+            "shapeLinux": [
+              936,
+              273,
+              3
+            ],
+            "shapeWindows": [
+              936,
+              270,
+              3
+            ],
+            "linuxDetectionRow": [
+              0.0,
+              0.0,
+              1692.798095703125,
+              189.65890502929688,
+              1917.2249755859375,
+              1090.978271484375,
+              0.8889307379722595
+            ],
+            "windowsDetectionRow": [
+              0.0,
+              0.0,
+              1695.25634765625,
+              189.2530059814453,
+              1917.09521484375,
+              1091.817626953125,
+              0.8860556483268738
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 3.8332672119140625,
+            "detectionScoreAbsDiff": 0.002875089645385742
+          },
+          {
+            "name": "000252_4855.jpg",
+            "linuxSize": 39631,
+            "windowsSize": 3434,
+            "linuxSha256": "27a6f45b4c9e2c472aa98431d71189826cc3c7a7a0891f2e76d01beed7a417b6",
+            "windowsSha256": "a62bf94d2b184e9bcfb485408eaee8f908ce1e6962bad513554ee10e6d174a7e",
+            "shapeLinux": [
+              500,
+              196,
+              3
+            ],
+            "shapeWindows": [
+              106,
+              51,
+              3
+            ],
+            "linuxDetectionRow": [
+              252.0,
+              25.2,
+              234.50396728515625,
+              373.6119689941406,
+              384.8995361328125,
+              850.322265625,
+              0.8918339610099792
+            ],
+            "windowsDetectionRow": [
+              252.0,
+              25.2,
+              436.3444519042969,
+              511.4132995605469,
+              477.9267883300781,
+              612.0911865234375,
+              0.8456763029098511
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 670.900146484375,
+            "detectionScoreAbsDiff": 0.046157658100128174
+          },
+          {
+            "name": "000264_5046.jpg",
+            "linuxSize": 2531,
+            "windowsSize": 2323,
+            "linuxSha256": "1dc099d49a05d9358751b848ae9c4559799d2946d6c6c9860a6a5e9ee38bc3a5",
+            "windowsSha256": "422db013329de6d4b056711a253340a51ded4a06cb0ee58da112cf5e4a0df58f",
+            "shapeLinux": [
+              85,
+              38,
+              3
+            ],
+            "shapeWindows": [
+              84,
+              38,
+              3
+            ],
+            "linuxDetectionRow": [
+              264.0,
+              26.4,
+              995.5822143554688,
+              339.71173095703125,
+              1025.5380859375,
+              420.165283203125,
+              0.8391621708869934
+            ],
+            "windowsDetectionRow": [
+              264.0,
+              26.4,
+              995.5757446289062,
+              339.8369140625,
+              1025.6536865234375,
+              419.94268798828125,
+              0.8430449366569519
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 0.4698486328125,
+            "detectionScoreAbsDiff": 0.003882765769958496
+          },
+          {
+            "name": "000278_5228.jpg",
+            "linuxSize": 3008,
+            "windowsSize": 6882,
+            "linuxSha256": "80898abfe3e402c2c449a282a76dc9ca3580c168998b5f26765f4d68c0bbef2f",
+            "windowsSha256": "175eb1d43347af84cd03e6745e3a73a3b398394f2eb810a5d0c2fdc794356fb1",
+            "shapeLinux": [
+              109,
+              47,
+              3
+            ],
+            "shapeWindows": [
+              176,
+              73,
+              3
+            ],
+            "linuxDetectionRow": [
+              278.0,
+              27.8,
+              1173.0140380859375,
+              324.158203125,
+              1210.3602294921875,
+              428.0885009765625,
+              0.8581176400184631
+            ],
+            "windowsDetectionRow": [
+              278.0,
+              27.8,
+              829.171875,
+              358.31634521484375,
+              886.1334228515625,
+              526.1544799804688,
+              0.8589291572570801
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 800.2930908203125,
+            "detectionScoreAbsDiff": 0.0008115172386169434
+          },
+          {
+            "name": "000286_5370.jpg",
+            "linuxSize": 2539,
+            "windowsSize": 3335,
+            "linuxSha256": "e98e1fee96eada8cdafaf94f65c94853735b73609af215746092516b141514c8",
+            "windowsSha256": "f7c9bd3155d73f611c832a628cbb53944541e5e189ba9c3a520f5aa5a6befe7b",
+            "shapeLinux": [
+              93,
+              36,
+              3
+            ],
+            "shapeWindows": [
+              114,
+              46,
+              3
+            ],
+            "linuxDetectionRow": [
+              286.0,
+              28.6,
+              975.1253051757812,
+              385.51275634765625,
+              1003.4392700195312,
+              474.27825927734375,
+              0.8373652100563049
+            ],
+            "windowsDetectionRow": [
+              286.0,
+              28.6,
+              469.7535400390625,
+              446.4529724121094,
+              505.8246765136719,
+              555.0144653320312,
+              0.8383647203445435
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 1144.6627807617188,
+            "detectionScoreAbsDiff": 0.0009995102882385254
+          },
+          {
+            "name": "000302_5657.jpg",
+            "linuxSize": 3998,
+            "windowsSize": 8145,
+            "linuxSha256": "c6b6c5ae75adefe9e08f4f0c91fc92dd3a9217f8c1d120663622c9007883b7fe",
+            "windowsSha256": "d5bd60f3e267e319a25eee77b0390a246fc9068a555b613ea895c4fdf60d34c1",
+            "shapeLinux": [
+              121,
+              50,
+              3
+            ],
+            "shapeWindows": [
+              187,
+              101,
+              3
+            ],
+            "linuxDetectionRow": [
+              302.0,
+              30.2,
+              341.9307861328125,
+              530.6950073242188,
+              381.9526062011719,
+              646.2127075195312,
+              0.5593487620353699
+            ],
+            "windowsDetectionRow": [
+              302.0,
+              30.2,
+              1691.5220947265625,
+              350.28424072265625,
+              1776.0615234375,
+              529.9410400390625,
+              0.8771606683731079
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 3040.3826599121094,
+            "detectionScoreAbsDiff": 0.31781190633773804
+          }
+        ]
+      }
+    },
+    {
+      "chunk": "c_00001",
+      "files": {
+        "detections.npz": {
+          "linuxSize": 9680296,
+          "windowsSize": 9141537,
+          "linuxSha256": "98ceb2bda49a73d2d5ac839e36266c233eaf16fb4d1ef234a802c840e69b8816",
+          "windowsSha256": "be9b65eda7a73adb58b5719553d030ec852f218936add104d973d4e4e411729a"
+        },
+        "meta.json": {
+          "linuxSize": 404,
+          "windowsSize": 476,
+          "linuxSha256": "5e2770fbedcaea9cfb7c9f134d09f91caad297209247d789eff5d545d6400991",
+          "windowsSha256": "b450754226ff510eb7b46f1dc6eb7a30ce66bf8f586828a3bb41921abfeec268"
+        }
+      },
+      "checkpoint": {
+        "linuxFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "windowsFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "settingsExactMatch": true,
+        "linuxWritten": "2026-11-07T00:55:24Z",
+        "windowsWritten": "2026-11-05T09:25:52Z"
+      },
+      "meta": {
+        "frames": {
+          "linux": 3000,
+          "windows": 3000,
+          "equal": true
+        },
+        "fps": {
+          "linux": 10.0,
+          "windows": 10.0,
+          "equal": true
+        },
+        "detector": {
+          "linux": "yolox_s@1280/onnx",
+          "windows": "yolox_s@1280/onnx",
+          "equal": true
+        },
+        "width": {
+          "linux": 1920,
+          "windows": 1920,
+          "equal": true
+        },
+        "height": {
+          "linux": 1080,
+          "windows": 1080,
+          "equal": true
+        },
+        "keyframeEvery": {
+          "linux": 1,
+          "windows": 1,
+          "equal": true
+        },
+        "t0": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "start": {
+          "linux": 300.0,
+          "windows": 300.0,
+          "equal": true
+        },
+        "seconds": {
+          "linux": 3108.2,
+          "windows": 1873.0,
+          "equal": false
+        },
+        "stageSeconds": {
+          "linux": {
+            "decode": 141.17,
+            "detect": 2523.67,
+            "propagate": 0.0,
+            "scene_cmc": 250.45,
+            "colour_signature": 76.78,
+            "embedding": 18.04,
+            "crops_io": 102.15
+          },
+          "windows": {
+            "decode": 53.68,
+            "detect": 1592.79,
+            "propagate": 0.0,
+            "scene_cmc": 110.88,
+            "colour_signature": 63.53,
+            "embedding": 19.31,
+            "crops_io": 28.55
+          },
+          "equal": false
+        }
+      },
+      "arrayKeys": [
+        "ball_warm",
+        "balls",
+        "cuts",
+        "dets",
+        "emb_idx",
+        "embs",
+        "grass",
+        "propagated",
+        "sigs",
+        "times",
+        "warps"
+      ],
+      "arrays": {
+        "ball_warm": {
+          "shapeLinux": [
+            1712
+          ],
+          "shapeWindows": [
+            2509
+          ],
+          "shapeEqual": false
+        },
+        "balls": {
+          "shapeLinux": [
+            1712,
+            7
+          ],
+          "shapeWindows": [
+            2509,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "cuts": {
+          "shapeLinux": [
+            0
+          ],
+          "shapeWindows": [
+            0
+          ],
+          "shapeEqual": true
+        },
+        "dets": {
+          "shapeLinux": [
+            65230,
+            7
+          ],
+          "shapeWindows": [
+            66195,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "emb_idx": {
+          "shapeLinux": [
+            24122
+          ],
+          "shapeWindows": [
+            24313
+          ],
+          "shapeEqual": false
+        },
+        "embs": {
+          "shapeLinux": [
+            24122,
+            256
+          ],
+          "shapeWindows": [
+            24313,
+            256
+          ],
+          "shapeEqual": false
+        },
+        "grass": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.0036944549481074014,
+          "maxAbsDiff": 0.014338254928588867,
+          "differingElements": 2993
+        },
+        "propagated": {
+          "shapeLinux": [
+            65230
+          ],
+          "shapeWindows": [
+            66195
+          ],
+          "shapeEqual": false
+        },
+        "sigs": {
+          "shapeLinux": [
+            65230,
+            80
+          ],
+          "shapeWindows": [
+            66195,
+            80
+          ],
+          "shapeEqual": false
+        },
+        "times": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": true,
+          "meanAbsDiff": 0.0,
+          "maxAbsDiff": 0.0,
+          "differingElements": 0
+        },
+        "warps": {
+          "shapeLinux": [
+            3000,
+            7
+          ],
+          "shapeWindows": [
+            3000,
+            7
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.10660294476645582,
+          "maxAbsDiff": 48.05865729290705,
+          "differingElements": 19992
+        }
+      },
+      "detectionComparison": {
+        "framesWithAnyDetections": 3000,
+        "differingFrames": 3000,
+        "countDifferingFrames": 2309,
+        "boxDifferingFrames": 691,
+        "scoreDifferingFrames": 691,
+        "firstDivergence": {
+          "localFrame": 0,
+          "globalFrame": 3000,
+          "timestampSec": 300.0,
+          "reasons": [
+            "count"
+          ],
+          "linuxCount": 18,
+          "windowsCount": 19,
+          "linuxFirstRows": [
+            [
+              0.0,
+              300.0,
+              734.0801391601562,
+              474.5802917480469,
+              858.47119140625,
+              629.0474853515625,
+              0.9391440749168396
+            ],
+            [
+              0.0,
+              300.0,
+              215.01980590820312,
+              474.4999084472656,
+              308.2938537597656,
+              654.8173217773438,
+              0.9005029201507568
+            ],
+            [
+              0.0,
+              300.0,
+              131.0244598388672,
+              411.6419677734375,
+              257.6162414550781,
+              768.2402954101562,
+              0.8987315893173218
+            ]
+          ],
+          "windowsFirstRows": [
+            [
+              0.0,
+              300.0,
+              734.8309326171875,
+              475.9781799316406,
+              858.1961669921875,
+              628.8945922851562,
+              0.9400145411491394
+            ],
+            [
+              0.0,
+              300.0,
+              215.28282165527344,
+              474.48065185546875,
+              307.2706604003906,
+              654.6296997070312,
+              0.9044747352600098
+            ],
+            [
+              0.0,
+              300.0,
+              131.44126892089844,
+              412.5067138671875,
+              257.2105407714844,
+              767.2041625976562,
+              0.900408923625946
+            ]
+          ]
+        },
+        "boxMeanAbsDiffOnCountAlignedRows": 159.63762644645647,
+        "boxMaxAbsDiffOnCountAlignedRows": 1892.5477545261383,
+        "scoreMeanAbsDiffOnCountAlignedRows": 0.02156994554579858,
+        "scoreMaxAbsDiffOnCountAlignedRows": 0.3744201511144638
+      },
+      "scoreHistogram": {
+        "linux": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            9795,
+            6030,
+            4310,
+            4235,
+            5107,
+            7123,
+            13195,
+            13320,
+            2115
+          ],
+          "mean": 0.567046144872415,
+          "min": 0.12001225352287292,
+          "max": 0.9493221044540405
+        },
+        "windows": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            9484,
+            6232,
+            4479,
+            4479,
+            5378,
+            7399,
+            13351,
+            13220,
+            2173
+          ],
+          "mean": 0.5674957739676771,
+          "min": 0.12000036984682083,
+          "max": 0.9495587944984436
+        }
+      },
+      "counts": {
+        "detsLinux": 65230,
+        "detsWindows": 66195,
+        "ballsLinux": 1712,
+        "ballsWindows": 2509,
+        "embsLinux": 24122,
+        "embsWindows": 24313,
+        "cutsLinux": 0,
+        "cutsWindows": 0
+      },
+      "resolveVsOriginalWindows": {
+        "detections.npz": {
+          "existsOriginal": true,
+          "sha256Resolve": "be9b65eda7a73adb58b5719553d030ec852f218936add104d973d4e4e411729a",
+          "sha256Original": "be9b65eda7a73adb58b5719553d030ec852f218936add104d973d4e4e411729a",
+          "same": true
+        },
+        "meta.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "b450754226ff510eb7b46f1dc6eb7a30ce66bf8f586828a3bb41921abfeec268",
+          "sha256Original": "b450754226ff510eb7b46f1dc6eb7a30ce66bf8f586828a3bb41921abfeec268",
+          "same": true
+        },
+        "checkpoint.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "9616c973df3610cac24402665cd1f541396f504a54b07b2aed361c6d3e1b9dc5",
+          "sha256Original": "9616c973df3610cac24402665cd1f541396f504a54b07b2aed361c6d3e1b9dc5",
+          "same": true
+        }
+      }
+    },
+    {
+      "chunk": "c_00002",
+      "files": {
+        "detections.npz": {
+          "linuxSize": 9952784,
+          "windowsSize": 9263876,
+          "linuxSha256": "8aa71865b351e5e37245b396d9e6f50ed7e33ece4575b3b7e496b541c68baf05",
+          "windowsSha256": "a00799c8fc6d98686e57eef5a09be48fd292e25b09f52635ca06e90cbc14fc57"
+        },
+        "meta.json": {
+          "linuxSize": 401,
+          "windowsSize": 477,
+          "linuxSha256": "a543ef3a26edfd046928c723f2deab9f90e179fde66ce2b5f80af7eb50dbe292",
+          "windowsSha256": "181e9a5a9af892b3d436a95b7370be07667b29c745860d352c7f322552af77a4"
+        }
+      },
+      "checkpoint": {
+        "linuxFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "windowsFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "settingsExactMatch": true,
+        "linuxWritten": "2026-11-07T01:44:50Z",
+        "windowsWritten": "2026-11-05T10:02:48Z"
+      },
+      "meta": {
+        "frames": {
+          "linux": 3000,
+          "windows": 3000,
+          "equal": true
+        },
+        "fps": {
+          "linux": 10.0,
+          "windows": 10.0,
+          "equal": true
+        },
+        "detector": {
+          "linux": "yolox_s@1280/onnx",
+          "windows": "yolox_s@1280/onnx",
+          "equal": true
+        },
+        "width": {
+          "linux": 1920,
+          "windows": 1920,
+          "equal": true
+        },
+        "height": {
+          "linux": 1080,
+          "windows": 1080,
+          "equal": true
+        },
+        "keyframeEvery": {
+          "linux": 1,
+          "windows": 1,
+          "equal": true
+        },
+        "t0": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "start": {
+          "linux": 600.0,
+          "windows": 600.0,
+          "equal": true
+        },
+        "seconds": {
+          "linux": 2898.4,
+          "windows": 2212.2,
+          "equal": false
+        },
+        "stageSeconds": {
+          "linux": {
+            "decode": 126.7,
+            "detect": 2336.64,
+            "propagate": 0.0,
+            "scene_cmc": 241.9,
+            "colour_signature": 70.55,
+            "embedding": 13.93,
+            "crops_io": 114.5
+          },
+          "windows": {
+            "decode": 54.36,
+            "detect": 1812.13,
+            "propagate": 0.0,
+            "scene_cmc": 112.84,
+            "colour_signature": 170.63,
+            "embedding": 20.37,
+            "crops_io": 35.88
+          },
+          "equal": false
+        }
+      },
+      "arrayKeys": [
+        "ball_warm",
+        "balls",
+        "cuts",
+        "dets",
+        "emb_idx",
+        "embs",
+        "grass",
+        "propagated",
+        "sigs",
+        "times",
+        "warps"
+      ],
+      "arrays": {
+        "ball_warm": {
+          "shapeLinux": [
+            1342
+          ],
+          "shapeWindows": [
+            1370
+          ],
+          "shapeEqual": false
+        },
+        "balls": {
+          "shapeLinux": [
+            1342,
+            7
+          ],
+          "shapeWindows": [
+            1370,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "cuts": {
+          "shapeLinux": [
+            0
+          ],
+          "shapeWindows": [
+            0
+          ],
+          "shapeEqual": true
+        },
+        "dets": {
+          "shapeLinux": [
+            68949,
+            7
+          ],
+          "shapeWindows": [
+            69007,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "emb_idx": {
+          "shapeLinux": [
+            23830
+          ],
+          "shapeWindows": [
+            23876
+          ],
+          "shapeEqual": false
+        },
+        "embs": {
+          "shapeLinux": [
+            23830,
+            256
+          ],
+          "shapeWindows": [
+            23876,
+            256
+          ],
+          "shapeEqual": false
+        },
+        "grass": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.006171507728596528,
+          "maxAbsDiff": 0.022058844566345215,
+          "differingElements": 2991
+        },
+        "propagated": {
+          "shapeLinux": [
+            68949
+          ],
+          "shapeWindows": [
+            69007
+          ],
+          "shapeEqual": false
+        },
+        "sigs": {
+          "shapeLinux": [
+            68949,
+            80
+          ],
+          "shapeWindows": [
+            69007,
+            80
+          ],
+          "shapeEqual": false
+        },
+        "times": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": true,
+          "meanAbsDiff": 0.0,
+          "maxAbsDiff": 0.0,
+          "differingElements": 0
+        },
+        "warps": {
+          "shapeLinux": [
+            3000,
+            7
+          ],
+          "shapeWindows": [
+            3000,
+            7
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.17162074568932542,
+          "maxAbsDiff": 174.8067065260027,
+          "differingElements": 20289
+        }
+      },
+      "detectionComparison": {
+        "framesWithAnyDetections": 3000,
+        "differingFrames": 3000,
+        "countDifferingFrames": 2267,
+        "boxDifferingFrames": 733,
+        "scoreDifferingFrames": 733,
+        "firstDivergence": {
+          "localFrame": 0,
+          "globalFrame": 6000,
+          "timestampSec": 600.0,
+          "reasons": [
+            "box",
+            "score"
+          ],
+          "linuxCount": 20,
+          "windowsCount": 20,
+          "linuxFirstRows": [
+            [
+              0.0,
+              600.0,
+              0.2628307342529297,
+              382.866943359375,
+              62.77780532836914,
+              686.0660400390625,
+              0.8931941390037537
+            ],
+            [
+              0.0,
+              600.0,
+              1442.74609375,
+              424.8002014160156,
+              1476.3511962890625,
+              505.4327087402344,
+              0.8409532904624939
+            ],
+            [
+              0.0,
+              600.0,
+              1353.812744140625,
+              434.3357238769531,
+              1377.338134765625,
+              495.72100830078125,
+              0.8315180540084839
+            ]
+          ],
+          "windowsFirstRows": [
+            [
+              0.0,
+              600.0,
+              0.3092365264892578,
+              382.9237976074219,
+              62.567623138427734,
+              682.9951171875,
+              0.8886940479278564
+            ],
+            [
+              0.0,
+              600.0,
+              1504.5137939453125,
+              429.6513366699219,
+              1539.218017578125,
+              491.8704833984375,
+              0.8444914221763611
+            ],
+            [
+              0.0,
+              600.0,
+              1442.1768798828125,
+              425.8472900390625,
+              1476.2823486328125,
+              505.1458740234375,
+              0.8381094932556152
+            ]
+          ]
+        },
+        "boxMeanAbsDiffOnCountAlignedRows": 149.88369840060778,
+        "boxMaxAbsDiffOnCountAlignedRows": 1905.5063452720642,
+        "scoreMeanAbsDiffOnCountAlignedRows": 0.019581082083025367,
+        "scoreMaxAbsDiffOnCountAlignedRows": 0.310602068901062
+      },
+      "scoreHistogram": {
+        "linux": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            11850,
+            7318,
+            4972,
+            4322,
+            4580,
+            5785,
+            11764,
+            15804,
+            2554
+          ],
+          "mean": 0.5538721752053243,
+          "min": 0.12000274658203125,
+          "max": 0.9579097628593445
+        },
+        "windows": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            11570,
+            7194,
+            5199,
+            4519,
+            4491,
+            5788,
+            11944,
+            15723,
+            2579
+          ],
+          "mean": 0.5555429624839952,
+          "min": 0.1200079470872879,
+          "max": 0.9570119380950928
+        }
+      },
+      "counts": {
+        "detsLinux": 68949,
+        "detsWindows": 69007,
+        "ballsLinux": 1342,
+        "ballsWindows": 1370,
+        "embsLinux": 23830,
+        "embsWindows": 23876,
+        "cutsLinux": 0,
+        "cutsWindows": 0
+      },
+      "resolveVsOriginalWindows": {
+        "detections.npz": {
+          "existsOriginal": true,
+          "sha256Resolve": "a00799c8fc6d98686e57eef5a09be48fd292e25b09f52635ca06e90cbc14fc57",
+          "sha256Original": "a00799c8fc6d98686e57eef5a09be48fd292e25b09f52635ca06e90cbc14fc57",
+          "same": true
+        },
+        "meta.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "181e9a5a9af892b3d436a95b7370be07667b29c745860d352c7f322552af77a4",
+          "sha256Original": "181e9a5a9af892b3d436a95b7370be07667b29c745860d352c7f322552af77a4",
+          "same": true
+        },
+        "checkpoint.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "9e02a190d8779abee9333c1fd7064ba2133a47f8e7bb0e206090c2b553eaf9e6",
+          "sha256Original": "9e02a190d8779abee9333c1fd7064ba2133a47f8e7bb0e206090c2b553eaf9e6",
+          "same": true
+        }
+      }
+    },
+    {
+      "chunk": "c_00003",
+      "files": {
+        "detections.npz": {
+          "linuxSize": 10316529,
+          "windowsSize": 9655617,
+          "linuxSha256": "f209b87487971a30da9a86c642bd09d8b68f124bc4396d7308c53dbcc0c05900",
+          "windowsSha256": "e6e425a905befd3dc3f7bd52e379f3bee3c38f60a2022439ca89a5789c07f0b9"
+        },
+        "meta.json": {
+          "linuxSize": 402,
+          "windowsSize": 477,
+          "linuxSha256": "bb4006f4251df7de66c4fe0af5fc43320a6175bbed48bd08efd30b36148ff717",
+          "windowsSha256": "159e9c140434e3274471ca68e07c802da9b535735e4da6bd088f05b82d08b905"
+        }
+      },
+      "checkpoint": {
+        "linuxFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "windowsFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "settingsExactMatch": true,
+        "linuxWritten": "2026-11-07T02:36:20Z",
+        "windowsWritten": "2026-11-05T11:36:04Z"
+      },
+      "meta": {
+        "frames": {
+          "linux": 3000,
+          "windows": 3000,
+          "equal": true
+        },
+        "fps": {
+          "linux": 10.0,
+          "windows": 10.0,
+          "equal": true
+        },
+        "detector": {
+          "linux": "yolox_s@1280/onnx",
+          "windows": "yolox_s@1280/onnx",
+          "equal": true
+        },
+        "width": {
+          "linux": 1920,
+          "windows": 1920,
+          "equal": true
+        },
+        "height": {
+          "linux": 1080,
+          "windows": 1080,
+          "equal": true
+        },
+        "keyframeEvery": {
+          "linux": 1,
+          "windows": 1,
+          "equal": true
+        },
+        "t0": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "start": {
+          "linux": 900.0,
+          "windows": 900.0,
+          "equal": true
+        },
+        "seconds": {
+          "linux": 3018.9,
+          "windows": 5589.9,
+          "equal": false
+        },
+        "stageSeconds": {
+          "linux": {
+            "decode": 128.9,
+            "detect": 2458.58,
+            "propagate": 0.0,
+            "scene_cmc": 240.25,
+            "colour_signature": 75.46,
+            "embedding": 16.35,
+            "crops_io": 106.0
+          },
+          "windows": {
+            "decode": 869.77,
+            "detect": 3515.11,
+            "propagate": 0.0,
+            "scene_cmc": 731.83,
+            "colour_signature": 130.6,
+            "embedding": 37.06,
+            "crops_io": 24.14
+          },
+          "equal": false
+        }
+      },
+      "arrayKeys": [
+        "ball_warm",
+        "balls",
+        "cuts",
+        "dets",
+        "emb_idx",
+        "embs",
+        "grass",
+        "propagated",
+        "sigs",
+        "times",
+        "warps"
+      ],
+      "arrays": {
+        "ball_warm": {
+          "shapeLinux": [
+            1083
+          ],
+          "shapeWindows": [
+            1064
+          ],
+          "shapeEqual": false
+        },
+        "balls": {
+          "shapeLinux": [
+            1083,
+            7
+          ],
+          "shapeWindows": [
+            1064,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "cuts": {
+          "shapeLinux": [
+            0
+          ],
+          "shapeWindows": [
+            0
+          ],
+          "shapeEqual": true
+        },
+        "dets": {
+          "shapeLinux": [
+            71402,
+            7
+          ],
+          "shapeWindows": [
+            71824,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "emb_idx": {
+          "shapeLinux": [
+            24889
+          ],
+          "shapeWindows": [
+            24992
+          ],
+          "shapeEqual": false
+        },
+        "embs": {
+          "shapeLinux": [
+            24889,
+            256
+          ],
+          "shapeWindows": [
+            24992,
+            256
+          ],
+          "shapeEqual": false
+        },
+        "grass": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.004757812182108561,
+          "maxAbsDiff": 0.013970553874969482,
+          "differingElements": 2982
+        },
+        "propagated": {
+          "shapeLinux": [
+            71402
+          ],
+          "shapeWindows": [
+            71824
+          ],
+          "shapeEqual": false
+        },
+        "sigs": {
+          "shapeLinux": [
+            71402,
+            80
+          ],
+          "shapeWindows": [
+            71824,
+            80
+          ],
+          "shapeEqual": false
+        },
+        "times": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": true,
+          "meanAbsDiff": 0.0,
+          "maxAbsDiff": 0.0,
+          "differingElements": 0
+        },
+        "warps": {
+          "shapeLinux": [
+            3000,
+            7
+          ],
+          "shapeWindows": [
+            3000,
+            7
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.13650067881341996,
+          "maxAbsDiff": 35.63061402605747,
+          "differingElements": 19824
+        }
+      },
+      "detectionComparison": {
+        "framesWithAnyDetections": 3000,
+        "differingFrames": 3000,
+        "countDifferingFrames": 2222,
+        "boxDifferingFrames": 778,
+        "scoreDifferingFrames": 778,
+        "firstDivergence": {
+          "localFrame": 0,
+          "globalFrame": 9000,
+          "timestampSec": 900.0,
+          "reasons": [
+            "count"
+          ],
+          "linuxCount": 30,
+          "windowsCount": 27,
+          "linuxFirstRows": [
+            [
+              0.0,
+              900.0,
+              677.5186767578125,
+              468.25250244140625,
+              731.5818481445312,
+              573.4074096679688,
+              0.8741170167922974
+            ],
+            [
+              0.0,
+              900.0,
+              1257.939697265625,
+              478.46881103515625,
+              1285.6302490234375,
+              570.0545043945312,
+              0.8222762942314148
+            ],
+            [
+              0.0,
+              900.0,
+              96.45991516113281,
+              476.6444091796875,
+              118.58434295654297,
+              536.2238159179688,
+              0.805661141872406
+            ]
+          ],
+          "windowsFirstRows": [
+            [
+              0.0,
+              900.0,
+              676.849365234375,
+              468.18011474609375,
+              731.3446044921875,
+              573.121337890625,
+              0.8709325194358826
+            ],
+            [
+              0.0,
+              900.0,
+              1257.9268798828125,
+              478.5835266113281,
+              1285.76416015625,
+              570.2086791992188,
+              0.825610339641571
+            ],
+            [
+              0.0,
+              900.0,
+              96.4808120727539,
+              477.05487060546875,
+              118.86355590820312,
+              535.756103515625,
+              0.8040338754653931
+            ]
+          ]
+        },
+        "boxMeanAbsDiffOnCountAlignedRows": 145.7278840853289,
+        "boxMaxAbsDiffOnCountAlignedRows": 1906.5058393478394,
+        "scoreMeanAbsDiffOnCountAlignedRows": 0.0197144956200471,
+        "scoreMaxAbsDiffOnCountAlignedRows": 0.44686198234558105
+      },
+      "scoreHistogram": {
+        "linux": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            11349,
+            7532,
+            5393,
+            4955,
+            5603,
+            7505,
+            13175,
+            13494,
+            2396
+          ],
+          "mean": 0.5492558932796733,
+          "min": 0.12000196427106857,
+          "max": 0.9567155838012695
+        },
+        "windows": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            11231,
+            7571,
+            5663,
+            5206,
+            5761,
+            7663,
+            13073,
+            13235,
+            2421
+          ],
+          "mean": 0.5476343589445867,
+          "min": 0.1200026422739029,
+          "max": 0.9560484886169434
+        }
+      },
+      "counts": {
+        "detsLinux": 71402,
+        "detsWindows": 71824,
+        "ballsLinux": 1083,
+        "ballsWindows": 1064,
+        "embsLinux": 24889,
+        "embsWindows": 24992,
+        "cutsLinux": 0,
+        "cutsWindows": 0
+      },
+      "resolveVsOriginalWindows": {
+        "detections.npz": {
+          "existsOriginal": true,
+          "sha256Resolve": "e6e425a905befd3dc3f7bd52e379f3bee3c38f60a2022439ca89a5789c07f0b9",
+          "sha256Original": "e6e425a905befd3dc3f7bd52e379f3bee3c38f60a2022439ca89a5789c07f0b9",
+          "same": true
+        },
+        "meta.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "159e9c140434e3274471ca68e07c802da9b535735e4da6bd088f05b82d08b905",
+          "sha256Original": "159e9c140434e3274471ca68e07c802da9b535735e4da6bd088f05b82d08b905",
+          "same": true
+        },
+        "checkpoint.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "2abde5b348eea1c36ef3b0b9d85834e753703bd29c291667df8a5a70f289e7a9",
+          "sha256Original": "2abde5b348eea1c36ef3b0b9d85834e753703bd29c291667df8a5a70f289e7a9",
+          "same": true
+        }
+      },
+      "cropComparison": {
+        "linuxCropCount": 5992,
+        "windowsCropCount": 5898,
+        "commonNames": 4,
+        "linuxOnlyNames": 5988,
+        "windowsOnlyNames": 5894,
+        "samples": [
+          {
+            "name": "000000_0.jpg",
+            "linuxSize": 4036,
+            "windowsSize": 3969,
+            "linuxSha256": "20dc92fc5f7277e3172b5d90ff8f0cd0bd065f4f0a0bd24592f46d8e8d571fb2",
+            "windowsSha256": "998ade25ce9ed82fbb0cab37ea57b5d95eb46446b63d30ac489270598a4d4436",
+            "shapeLinux": [
+              110,
+              64,
+              3
+            ],
+            "shapeWindows": [
+              110,
+              65,
+              3
+            ],
+            "linuxDetectionRow": [
+              0.0,
+              900.0,
+              677.5186767578125,
+              468.25250244140625,
+              731.5818481445312,
+              573.4074096679688,
+              0.8741170167922974
+            ],
+            "windowsDetectionRow": [
+              0.0,
+              900.0,
+              676.849365234375,
+              468.18011474609375,
+              731.3446044921875,
+              573.121337890625,
+              0.8709325194358826
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 1.2650146484375,
+            "detectionScoreAbsDiff": 0.003184497356414795
+          },
+          {
+            "name": "000000_1.jpg",
+            "linuxSize": 2593,
+            "windowsSize": 2403,
+            "linuxSha256": "b072c4c6d7df343d70e554c9b55c263dd69fd1f72a521abbf6059bf701a652d1",
+            "windowsSha256": "cbeb40849576bc0b100d6daaba9f84d97088b96de3f510afa4e196f4cf2d2614",
+            "shapeLinux": [
+              96,
+              36,
+              3
+            ],
+            "shapeWindows": [
+              96,
+              36,
+              3
+            ],
+            "linuxDetectionRow": [
+              0.0,
+              900.0,
+              1257.939697265625,
+              478.46881103515625,
+              1285.6302490234375,
+              570.0545043945312,
+              0.8222762942314148
+            ],
+            "windowsDetectionRow": [
+              0.0,
+              900.0,
+              1257.9268798828125,
+              478.5835266113281,
+              1285.76416015625,
+              570.2086791992188,
+              0.825610339641571
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 0.415618896484375,
+            "detectionScoreAbsDiff": 0.00333404541015625,
+            "pixelMeanAbsDiff": 15.684413580246913,
+            "pixelMaxAbsDiff": 69,
+            "pixelEqual": false
+          },
+          {
+            "name": "000006_154.jpg",
+            "linuxSize": 3583,
+            "windowsSize": 3827,
+            "linuxSha256": "60df74bd782aea393b45db6dc2c1fb6fe8fef4b4760fc4d046499203dd9c45a5",
+            "windowsSha256": "5f42ccf8873691d23bf5bf1bc7698b22929981cbe9484307ebbe3717b915df5f",
+            "shapeLinux": [
+              98,
+              50,
+              3
+            ],
+            "shapeWindows": [
+              106,
+              64,
+              3
+            ],
+            "linuxDetectionRow": [
+              6.0,
+              900.6,
+              1254.9617919921875,
+              478.6689453125,
+              1296.352294921875,
+              572.6384887695312,
+              0.8532646894454956
+            ],
+            "windowsDetectionRow": [
+              6.0,
+              900.6,
+              628.9644165039062,
+              468.92340087890625,
+              682.2107543945312,
+              569.2547607421875,
+              0.8257672786712646
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 1253.2681884765625,
+            "detectionScoreAbsDiff": 0.027497410774230957
+          },
+          {
+            "name": "000008_200.jpg",
+            "linuxSize": 3746,
+            "windowsSize": 3024,
+            "linuxSha256": "7f95a2c4162cb69aed9bec554865cbccce07e65bcf04772267563ff2f9dd4ef2",
+            "windowsSha256": "f89910eb88f16f0d6bbc300abec78af03a80d2f1ff29cf59bc280b6dc8a4c9d0",
+            "shapeLinux": [
+              102,
+              53,
+              3
+            ],
+            "shapeWindows": [
+              110,
+              41,
+              3
+            ],
+            "linuxDetectionRow": [
+              8.0,
+              900.8,
+              1257.3505859375,
+              475.7734069824219,
+              1302.488525390625,
+              573.3670654296875,
+              0.844235897064209
+            ],
+            "windowsDetectionRow": [
+              8.0,
+              900.8,
+              619.84326171875,
+              464.49737548828125,
+              650.8523559570312,
+              569.2432250976562,
+              0.8281305432319641
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 1304.5433654785156,
+            "detectionScoreAbsDiff": 0.016105353832244873
+          }
+        ]
+      }
+    },
+    {
+      "chunk": "c_00004",
+      "files": {
+        "detections.npz": {
+          "linuxSize": 7737569,
+          "windowsSize": 7262733,
+          "linuxSha256": "3735a92ab7143cc3f2950f48dfe1a8c88986c9167f115a5b6686edcc6faf8776",
+          "windowsSha256": "f426558fcd65028fc684ec319bf1d6cca29d06c70c11002463aca6a97adda3e1"
+        },
+        "meta.json": {
+          "linuxSize": 405,
+          "windowsSize": 476,
+          "linuxSha256": "8adde8f730162251ba499d450385bdeeb7950e12e02db37d2eaad53a9b52a48f",
+          "windowsSha256": "8a53603e020c95913bc6603dd035fde40229559793c290ea17948eb9cc2ed801"
+        }
+      },
+      "checkpoint": {
+        "linuxFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "windowsFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "settingsExactMatch": true,
+        "linuxWritten": "2026-11-08T18:47:36Z",
+        "windowsWritten": "2026-11-05T11:59:05Z"
+      },
+      "meta": {
+        "frames": {
+          "linux": 3000,
+          "windows": 3000,
+          "equal": true
+        },
+        "fps": {
+          "linux": 10.0,
+          "windows": 10.0,
+          "equal": true
+        },
+        "detector": {
+          "linux": "yolox_s@1280/onnx",
+          "windows": "yolox_s@1280/onnx",
+          "equal": true
+        },
+        "width": {
+          "linux": 1920,
+          "windows": 1920,
+          "equal": true
+        },
+        "height": {
+          "linux": 1080,
+          "windows": 1080,
+          "equal": true
+        },
+        "keyframeEvery": {
+          "linux": 1,
+          "windows": 1,
+          "equal": true
+        },
+        "t0": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "start": {
+          "linux": 1200.0,
+          "windows": 1200.0,
+          "equal": true
+        },
+        "seconds": {
+          "linux": 144600.7,
+          "windows": 1377.1,
+          "equal": false
+        },
+        "stageSeconds": {
+          "linux": {
+            "decode": 128.89,
+            "detect": 2034.54,
+            "propagate": 0.0,
+            "scene_cmc": 203.11,
+            "colour_signature": 43.44,
+            "embedding": 8.81,
+            "crops_io": 95.61
+          },
+          "windows": {
+            "decode": 40.62,
+            "detect": 1170.36,
+            "propagate": 0.0,
+            "scene_cmc": 90.95,
+            "colour_signature": 45.28,
+            "embedding": 12.94,
+            "crops_io": 13.96
+          },
+          "equal": false
+        }
+      },
+      "arrayKeys": [
+        "ball_warm",
+        "balls",
+        "cuts",
+        "dets",
+        "emb_idx",
+        "embs",
+        "grass",
+        "propagated",
+        "sigs",
+        "times",
+        "warps"
+      ],
+      "arrays": {
+        "ball_warm": {
+          "shapeLinux": [
+            754
+          ],
+          "shapeWindows": [
+            732
+          ],
+          "shapeEqual": false
+        },
+        "balls": {
+          "shapeLinux": [
+            754,
+            7
+          ],
+          "shapeWindows": [
+            732,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "cuts": {
+          "shapeLinux": [
+            10
+          ],
+          "shapeWindows": [
+            8
+          ],
+          "shapeEqual": false
+        },
+        "dets": {
+          "shapeLinux": [
+            51867,
+            7
+          ],
+          "shapeWindows": [
+            52200,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "emb_idx": {
+          "shapeLinux": [
+            17926
+          ],
+          "shapeWindows": [
+            17986
+          ],
+          "shapeEqual": false
+        },
+        "embs": {
+          "shapeLinux": [
+            17926,
+            256
+          ],
+          "shapeWindows": [
+            17986,
+            256
+          ],
+          "shapeEqual": false
+        },
+        "grass": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.0036723344145721056,
+          "maxAbsDiff": 0.09788602590560913,
+          "differingElements": 2912
+        },
+        "propagated": {
+          "shapeLinux": [
+            51867
+          ],
+          "shapeWindows": [
+            52200
+          ],
+          "shapeEqual": false
+        },
+        "sigs": {
+          "shapeLinux": [
+            51867,
+            80
+          ],
+          "shapeWindows": [
+            52200,
+            80
+          ],
+          "shapeEqual": false
+        },
+        "times": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": true,
+          "meanAbsDiff": 0.0,
+          "maxAbsDiff": 0.0,
+          "differingElements": 0
+        },
+        "warps": {
+          "shapeLinux": [
+            3000,
+            7
+          ],
+          "shapeWindows": [
+            3000,
+            7
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 1.1078581110614723,
+          "maxAbsDiff": 3872.3033432757393,
+          "differingElements": 19705
+        }
+      },
+      "detectionComparison": {
+        "framesWithAnyDetections": 2644,
+        "differingFrames": 2644,
+        "countDifferingFrames": 1813,
+        "boxDifferingFrames": 831,
+        "scoreDifferingFrames": 831,
+        "firstDivergence": {
+          "localFrame": 0,
+          "globalFrame": 12000,
+          "timestampSec": 1200.0,
+          "reasons": [
+            "count"
+          ],
+          "linuxCount": 24,
+          "windowsCount": 23,
+          "linuxFirstRows": [
+            [
+              0.0,
+              1200.0,
+              1381.8250732421875,
+              490.25555419921875,
+              1449.6121826171875,
+              664.0570678710938,
+              0.9081608653068542
+            ],
+            [
+              0.0,
+              1200.0,
+              77.59695434570312,
+              524.9476318359375,
+              219.58937072753906,
+              772.1543579101562,
+              0.8615871071815491
+            ],
+            [
+              0.0,
+              1200.0,
+              1605.80615234375,
+              499.7362976074219,
+              1635.8468017578125,
+              582.2034301757812,
+              0.8565590381622314
+            ]
+          ],
+          "windowsFirstRows": [
+            [
+              0.0,
+              1200.0,
+              1381.552734375,
+              490.1315002441406,
+              1448.73193359375,
+              663.8837280273438,
+              0.9070809483528137
+            ],
+            [
+              0.0,
+              1200.0,
+              76.17974853515625,
+              520.5341186523438,
+              218.99903869628906,
+              772.7268676757812,
+              0.8744472861289978
+            ],
+            [
+              0.0,
+              1200.0,
+              1605.373291015625,
+              499.6709289550781,
+              1635.8167724609375,
+              581.3485717773438,
+              0.8638899326324463
+            ]
+          ]
+        },
+        "boxMeanAbsDiffOnCountAlignedRows": 158.15297326947203,
+        "boxMaxAbsDiffOnCountAlignedRows": 1854.9297924041748,
+        "scoreMeanAbsDiffOnCountAlignedRows": 0.020271758941273175,
+        "scoreMaxAbsDiffOnCountAlignedRows": 0.5279902219772339
+      },
+      "scoreHistogram": {
+        "linux": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            8547,
+            5321,
+            3914,
+            3486,
+            3680,
+            5201,
+            9850,
+            10436,
+            1432
+          ],
+          "mean": 0.5496053121822976,
+          "min": 0.12001160532236099,
+          "max": 0.9581613540649414
+        },
+        "windows": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            8347,
+            5241,
+            4004,
+            3617,
+            3923,
+            5237,
+            10023,
+            10343,
+            1465
+          ],
+          "mean": 0.5516858436912299,
+          "min": 0.1200011596083641,
+          "max": 0.9559942483901978
+        }
+      },
+      "counts": {
+        "detsLinux": 51867,
+        "detsWindows": 52200,
+        "ballsLinux": 754,
+        "ballsWindows": 732,
+        "embsLinux": 17926,
+        "embsWindows": 17986,
+        "cutsLinux": 10,
+        "cutsWindows": 8
+      },
+      "resolveVsOriginalWindows": {
+        "detections.npz": {
+          "existsOriginal": true,
+          "sha256Resolve": "f426558fcd65028fc684ec319bf1d6cca29d06c70c11002463aca6a97adda3e1",
+          "sha256Original": "f426558fcd65028fc684ec319bf1d6cca29d06c70c11002463aca6a97adda3e1",
+          "same": true
+        },
+        "meta.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "8a53603e020c95913bc6603dd035fde40229559793c290ea17948eb9cc2ed801",
+          "sha256Original": "8a53603e020c95913bc6603dd035fde40229559793c290ea17948eb9cc2ed801",
+          "same": true
+        },
+        "checkpoint.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "87c4569eda5acfcb1d930e77ebb4b6ada4a05b3c50af50df1facd847b78a00d3",
+          "sha256Original": "87c4569eda5acfcb1d930e77ebb4b6ada4a05b3c50af50df1facd847b78a00d3",
+          "same": true
+        }
+      }
+    },
+    {
+      "chunk": "c_00005",
+      "files": {
+        "detections.npz": {
+          "linuxSize": 6267075,
+          "windowsSize": 5925605,
+          "linuxSha256": "db35b4a2af37de6010331ba7ae4b4cdf2b4a165f8148d536237a47ee8f7c9daa",
+          "windowsSha256": "e1918f8eb1c048291c8d0f819e834787f426d3e3063c372b3b9d666f93fc3bb6"
+        },
+        "meta.json": {
+          "linuxSize": 401,
+          "windowsSize": 476,
+          "linuxSha256": "27c05a9f7f80cdd1d286317272b416136d5d44508682720c2ce71e5cdb7296ff",
+          "windowsSha256": "431f5f27603537f1c1b7b57c5068ca76af80b722aadf29ebafb844a8d28480a0"
+        }
+      },
+      "checkpoint": {
+        "linuxFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "windowsFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "settingsExactMatch": true,
+        "linuxWritten": "2026-11-08T19:11:22Z",
+        "windowsWritten": "2026-11-05T12:22:52Z"
+      },
+      "meta": {
+        "frames": {
+          "linux": 3000,
+          "windows": 3000,
+          "equal": true
+        },
+        "fps": {
+          "linux": 10.0,
+          "windows": 10.0,
+          "equal": true
+        },
+        "detector": {
+          "linux": "yolox_s@1280/onnx",
+          "windows": "yolox_s@1280/onnx",
+          "equal": true
+        },
+        "width": {
+          "linux": 1920,
+          "windows": 1920,
+          "equal": true
+        },
+        "height": {
+          "linux": 1080,
+          "windows": 1080,
+          "equal": true
+        },
+        "keyframeEvery": {
+          "linux": 1,
+          "windows": 1,
+          "equal": true
+        },
+        "t0": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "start": {
+          "linux": 1500.0,
+          "windows": 1500.0,
+          "equal": true
+        },
+        "seconds": {
+          "linux": 1383.5,
+          "windows": 1423.8,
+          "equal": false
+        },
+        "stageSeconds": {
+          "linux": {
+            "decode": 82.63,
+            "detect": 1121.19,
+            "propagate": 0.0,
+            "scene_cmc": 110.07,
+            "colour_signature": 21.75,
+            "embedding": 4.96,
+            "crops_io": 41.4
+          },
+          "windows": {
+            "decode": 46.58,
+            "detect": 1213.23,
+            "propagate": 0.0,
+            "scene_cmc": 95.81,
+            "colour_signature": 39.49,
+            "embedding": 11.23,
+            "crops_io": 14.92
+          },
+          "equal": false
+        }
+      },
+      "arrayKeys": [
+        "ball_warm",
+        "balls",
+        "cuts",
+        "dets",
+        "emb_idx",
+        "embs",
+        "grass",
+        "propagated",
+        "sigs",
+        "times",
+        "warps"
+      ],
+      "arrays": {
+        "ball_warm": {
+          "shapeLinux": [
+            859
+          ],
+          "shapeWindows": [
+            833
+          ],
+          "shapeEqual": false
+        },
+        "balls": {
+          "shapeLinux": [
+            859,
+            7
+          ],
+          "shapeWindows": [
+            833,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "cuts": {
+          "shapeLinux": [
+            8
+          ],
+          "shapeWindows": [
+            8
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 6.125,
+          "maxAbsDiff": 49.0,
+          "differingElements": 1
+        },
+        "dets": {
+          "shapeLinux": [
+            42283,
+            7
+          ],
+          "shapeWindows": [
+            43058,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "emb_idx": {
+          "shapeLinux": [
+            14277
+          ],
+          "shapeWindows": [
+            14282
+          ],
+          "shapeEqual": false
+        },
+        "embs": {
+          "shapeLinux": [
+            14277,
+            256
+          ],
+          "shapeWindows": [
+            14282,
+            256
+          ],
+          "shapeEqual": false
+        },
+        "grass": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.0031026960547824276,
+          "maxAbsDiff": 0.11755514144897461,
+          "differingElements": 2949
+        },
+        "propagated": {
+          "shapeLinux": [
+            42283
+          ],
+          "shapeWindows": [
+            43058
+          ],
+          "shapeEqual": false
+        },
+        "sigs": {
+          "shapeLinux": [
+            42283,
+            80
+          ],
+          "shapeWindows": [
+            43058,
+            80
+          ],
+          "shapeEqual": false
+        },
+        "times": {
+          "shapeLinux": [
+            3000
+          ],
+          "shapeWindows": [
+            3000
+          ],
+          "shapeEqual": true,
+          "exactEqual": true,
+          "meanAbsDiff": 0.0,
+          "maxAbsDiff": 0.0,
+          "differingElements": 0
+        },
+        "warps": {
+          "shapeLinux": [
+            3000,
+            7
+          ],
+          "shapeWindows": [
+            3000,
+            7
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 1.0805769408776407,
+          "maxAbsDiff": 3687.963452942125,
+          "differingElements": 19903
+        }
+      },
+      "detectionComparison": {
+        "framesWithAnyDetections": 2295,
+        "differingFrames": 2295,
+        "countDifferingFrames": 1521,
+        "boxDifferingFrames": 774,
+        "scoreDifferingFrames": 774,
+        "firstDivergence": {
+          "localFrame": 0,
+          "globalFrame": 15000,
+          "timestampSec": 1500.0,
+          "reasons": [
+            "count"
+          ],
+          "linuxCount": 25,
+          "windowsCount": 23,
+          "linuxFirstRows": [
+            [
+              0.0,
+              1500.0,
+              551.9551391601562,
+              492.9480285644531,
+              579.17431640625,
+              557.6488647460938,
+              0.8151232600212097
+            ],
+            [
+              0.0,
+              1500.0,
+              1281.249267578125,
+              433.9177551269531,
+              1311.551513671875,
+              497.9380187988281,
+              0.7932092547416687
+            ],
+            [
+              0.0,
+              1500.0,
+              1120.004150390625,
+              448.35308837890625,
+              1138.15234375,
+              491.6338195800781,
+              0.764929473400116
+            ]
+          ],
+          "windowsFirstRows": [
+            [
+              0.0,
+              1500.0,
+              552.0213012695312,
+              493.3262634277344,
+              579.017822265625,
+              557.654052734375,
+              0.820732593536377
+            ],
+            [
+              0.0,
+              1500.0,
+              1280.8341064453125,
+              434.0359802246094,
+              1311.540771484375,
+              498.1130065917969,
+              0.8156611323356628
+            ],
+            [
+              0.0,
+              1500.0,
+              1300.4915771484375,
+              430.05267333984375,
+              1331.8712158203125,
+              492.5050964355469,
+              0.7696914672851562
+            ]
+          ]
+        },
+        "boxMeanAbsDiffOnCountAlignedRows": 132.07942402951582,
+        "boxMaxAbsDiffOnCountAlignedRows": 1905.0323457717896,
+        "scoreMeanAbsDiffOnCountAlignedRows": 0.019606763446306387,
+        "scoreMaxAbsDiffOnCountAlignedRows": 0.40978869795799255
+      },
+      "scoreHistogram": {
+        "linux": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            7239,
+            4561,
+            3059,
+            2643,
+            2915,
+            3754,
+            6606,
+            9534,
+            1972
+          ],
+          "mean": 0.5539653717395252,
+          "min": 0.12000258266925812,
+          "max": 0.9498384594917297
+        },
+        "windows": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            7299,
+            4697,
+            3261,
+            2714,
+            3063,
+            3807,
+            6707,
+            9488,
+            2022
+          ],
+          "mean": 0.551751204810414,
+          "min": 0.12000599503517151,
+          "max": 0.9524031281471252
+        }
+      },
+      "counts": {
+        "detsLinux": 42283,
+        "detsWindows": 43058,
+        "ballsLinux": 859,
+        "ballsWindows": 833,
+        "embsLinux": 14277,
+        "embsWindows": 14282,
+        "cutsLinux": 8,
+        "cutsWindows": 8
+      },
+      "resolveVsOriginalWindows": {
+        "detections.npz": {
+          "existsOriginal": true,
+          "sha256Resolve": "e1918f8eb1c048291c8d0f819e834787f426d3e3063c372b3b9d666f93fc3bb6",
+          "sha256Original": "e1918f8eb1c048291c8d0f819e834787f426d3e3063c372b3b9d666f93fc3bb6",
+          "same": true
+        },
+        "meta.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "431f5f27603537f1c1b7b57c5068ca76af80b722aadf29ebafb844a8d28480a0",
+          "sha256Original": "431f5f27603537f1c1b7b57c5068ca76af80b722aadf29ebafb844a8d28480a0",
+          "same": true
+        },
+        "checkpoint.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "773a79a70f03bccc5de49452b36638129a2315d9f0bc700c208405b56848f5da",
+          "sha256Original": "773a79a70f03bccc5de49452b36638129a2315d9f0bc700c208405b56848f5da",
+          "same": true
+        }
+      }
+    },
+    {
+      "chunk": "c_00006",
+      "files": {
+        "detections.npz": {
+          "linuxSize": 7487815,
+          "windowsSize": 7068555,
+          "linuxSha256": "f2c358c68ab93437df0150f35d31068c1db751b148bbd81a424b11f163368b16",
+          "windowsSha256": "72e8a087d2df2371bc4fb8ee9914798cbd952f312681ec6e4e846c0e03cc1c5a"
+        },
+        "meta.json": {
+          "linuxSize": 399,
+          "windowsSize": 474,
+          "linuxSha256": "b398f2ffef70f2f7e2e87d8ff1df1cc2b8252f5fd0e108f5644961c21d6e747a",
+          "windowsSha256": "b5e0bc19455b878b3496dc268145cf17258f15ba844e22fabce959ec44c85f74"
+        }
+      },
+      "checkpoint": {
+        "linuxFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "windowsFingerprint": "bb0899ea6879091f77fde373ce4d4e682b6c1e5f3cc109e44e3d9ea8e81537bc",
+        "settingsExactMatch": true,
+        "linuxWritten": "2026-11-08T19:27:17Z",
+        "windowsWritten": "2026-11-05T12:40:53Z"
+      },
+      "meta": {
+        "frames": {
+          "linux": 2350,
+          "windows": 2350,
+          "equal": true
+        },
+        "fps": {
+          "linux": 10.0,
+          "windows": 10.0,
+          "equal": true
+        },
+        "detector": {
+          "linux": "yolox_s@1280/onnx",
+          "windows": "yolox_s@1280/onnx",
+          "equal": true
+        },
+        "width": {
+          "linux": 1920,
+          "windows": 1920,
+          "equal": true
+        },
+        "height": {
+          "linux": 1080,
+          "windows": 1080,
+          "equal": true
+        },
+        "keyframeEvery": {
+          "linux": 1,
+          "windows": 1,
+          "equal": true
+        },
+        "t0": {
+          "linux": 0.0,
+          "windows": 0.0,
+          "equal": true
+        },
+        "start": {
+          "linux": 1800.0,
+          "windows": 1800.0,
+          "equal": true
+        },
+        "seconds": {
+          "linux": 918.5,
+          "windows": 1078.2,
+          "equal": false
+        },
+        "stageSeconds": {
+          "linux": {
+            "decode": 52.33,
+            "detect": 719.73,
+            "propagate": 0.0,
+            "scene_cmc": 74.26,
+            "colour_signature": 21.28,
+            "embedding": 4.92,
+            "crops_io": 44.71
+          },
+          "windows": {
+            "decode": 28.27,
+            "detect": 902.63,
+            "propagate": 0.0,
+            "scene_cmc": 71.81,
+            "colour_signature": 42.51,
+            "embedding": 12.8,
+            "crops_io": 17.69
+          },
+          "equal": false
+        }
+      },
+      "arrayKeys": [
+        "ball_warm",
+        "balls",
+        "cuts",
+        "dets",
+        "emb_idx",
+        "embs",
+        "grass",
+        "propagated",
+        "sigs",
+        "times",
+        "warps"
+      ],
+      "arrays": {
+        "ball_warm": {
+          "shapeLinux": [
+            1106
+          ],
+          "shapeWindows": [
+            958
+          ],
+          "shapeEqual": false
+        },
+        "balls": {
+          "shapeLinux": [
+            1106,
+            7
+          ],
+          "shapeWindows": [
+            958,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "cuts": {
+          "shapeLinux": [
+            0
+          ],
+          "shapeWindows": [
+            0
+          ],
+          "shapeEqual": true
+        },
+        "dets": {
+          "shapeLinux": [
+            50010,
+            7
+          ],
+          "shapeWindows": [
+            51085,
+            7
+          ],
+          "shapeEqual": false
+        },
+        "emb_idx": {
+          "shapeLinux": [
+            17818
+          ],
+          "shapeWindows": [
+            17957
+          ],
+          "shapeEqual": false
+        },
+        "embs": {
+          "shapeLinux": [
+            17818,
+            256
+          ],
+          "shapeWindows": [
+            17957,
+            256
+          ],
+          "shapeEqual": false
+        },
+        "grass": {
+          "shapeLinux": [
+            2350
+          ],
+          "shapeWindows": [
+            2350
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.004765801505839571,
+          "maxAbsDiff": 0.018474221229553223,
+          "differingElements": 2347
+        },
+        "propagated": {
+          "shapeLinux": [
+            50010
+          ],
+          "shapeWindows": [
+            51085
+          ],
+          "shapeEqual": false
+        },
+        "sigs": {
+          "shapeLinux": [
+            50010,
+            80
+          ],
+          "shapeWindows": [
+            51085,
+            80
+          ],
+          "shapeEqual": false
+        },
+        "times": {
+          "shapeLinux": [
+            2350
+          ],
+          "shapeWindows": [
+            2350
+          ],
+          "shapeEqual": true,
+          "exactEqual": true,
+          "meanAbsDiff": 0.0,
+          "maxAbsDiff": 0.0,
+          "differingElements": 0
+        },
+        "warps": {
+          "shapeLinux": [
+            2350,
+            7
+          ],
+          "shapeWindows": [
+            2350,
+            7
+          ],
+          "shapeEqual": true,
+          "exactEqual": false,
+          "meanAbsDiff": 0.22982949783484327,
+          "maxAbsDiff": 58.74108296727324,
+          "differingElements": 16022
+        }
+      },
+      "detectionComparison": {
+        "framesWithAnyDetections": 2350,
+        "differingFrames": 2350,
+        "countDifferingFrames": 1666,
+        "boxDifferingFrames": 684,
+        "scoreDifferingFrames": 684,
+        "firstDivergence": {
+          "localFrame": 0,
+          "globalFrame": 18000,
+          "timestampSec": 1800.0,
+          "reasons": [
+            "count"
+          ],
+          "linuxCount": 15,
+          "windowsCount": 17,
+          "linuxFirstRows": [
+            [
+              0.0,
+              1800.0,
+              941.4540405273438,
+              486.1571960449219,
+              1125.955078125,
+              916.4564208984375,
+              0.9149836301803589
+            ],
+            [
+              0.0,
+              1800.0,
+              1444.25732421875,
+              564.2920532226562,
+              1486.082275390625,
+              670.884033203125,
+              0.8524488210678101
+            ],
+            [
+              0.0,
+              1800.0,
+              572.9443969726562,
+              551.660400390625,
+              601.572021484375,
+              633.7813720703125,
+              0.8511744141578674
+            ]
+          ],
+          "windowsFirstRows": [
+            [
+              0.0,
+              1800.0,
+              941.7631225585938,
+              486.0121765136719,
+              1125.0655517578125,
+              915.0960083007812,
+              0.9134555459022522
+            ],
+            [
+              0.0,
+              1800.0,
+              768.8866577148438,
+              558.95166015625,
+              793.5771484375,
+              630.5881958007812,
+              0.856025218963623
+            ],
+            [
+              0.0,
+              1800.0,
+              572.7833862304688,
+              551.632568359375,
+              601.3352661132812,
+              633.7410278320312,
+              0.8551868796348572
+            ]
+          ]
+        },
+        "boxMeanAbsDiffOnCountAlignedRows": 132.14422823333345,
+        "boxMaxAbsDiffOnCountAlignedRows": 1898.8993473052979,
+        "scoreMeanAbsDiffOnCountAlignedRows": 0.018361648772883696,
+        "scoreMaxAbsDiffOnCountAlignedRows": 0.36133888363838196
+      },
+      "scoreHistogram": {
+        "linux": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            7482,
+            4574,
+            3165,
+            2885,
+            3307,
+            4556,
+            8812,
+            12730,
+            2499
+          ],
+          "mean": 0.5837307287700783,
+          "min": 0.12000167369842529,
+          "max": 0.9570804238319397
+        },
+        "windows": {
+          "bins": [
+            0.0,
+            0.12,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.000001
+          ],
+          "counts": [
+            0,
+            7646,
+            4881,
+            3418,
+            3002,
+            3386,
+            4546,
+            8905,
+            12726,
+            2575
+          ],
+          "mean": 0.5796507554494659,
+          "min": 0.12000025808811188,
+          "max": 0.9554018378257751
+        }
+      },
+      "counts": {
+        "detsLinux": 50010,
+        "detsWindows": 51085,
+        "ballsLinux": 1106,
+        "ballsWindows": 958,
+        "embsLinux": 17818,
+        "embsWindows": 17957,
+        "cutsLinux": 0,
+        "cutsWindows": 0
+      },
+      "resolveVsOriginalWindows": {
+        "detections.npz": {
+          "existsOriginal": true,
+          "sha256Resolve": "72e8a087d2df2371bc4fb8ee9914798cbd952f312681ec6e4e846c0e03cc1c5a",
+          "sha256Original": "72e8a087d2df2371bc4fb8ee9914798cbd952f312681ec6e4e846c0e03cc1c5a",
+          "same": true
+        },
+        "meta.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "b5e0bc19455b878b3496dc268145cf17258f15ba844e22fabce959ec44c85f74",
+          "sha256Original": "b5e0bc19455b878b3496dc268145cf17258f15ba844e22fabce959ec44c85f74",
+          "same": true
+        },
+        "checkpoint.json": {
+          "existsOriginal": true,
+          "sha256Resolve": "07faf20018a12b40593f510ff5a0f8e8479320ce55a6d8e27e80c8b66c912180",
+          "sha256Original": "07faf20018a12b40593f510ff5a0f8e8479320ce55a6d8e27e80c8b66c912180",
+          "same": true
+        }
+      },
+      "cropComparison": {
+        "linuxCropCount": 5507,
+        "windowsCropCount": 5469,
+        "commonNames": 15,
+        "linuxOnlyNames": 5492,
+        "windowsOnlyNames": 5454,
+        "samples": [
+          {
+            "name": "000000_0.jpg",
+            "linuxSize": 36299,
+            "windowsSize": 32414,
+            "linuxSha256": "a102a3ef53c2d7a322456a6c4d693b95c0723346f7c0d418fabd575fcabe308f",
+            "windowsSha256": "597f7211459c1e44493ef1d70bc5a384a5708c37e92c4471854c90b8ec439b82",
+            "shapeLinux": [
+              451,
+              226,
+              3
+            ],
+            "shapeWindows": [
+              450,
+              226,
+              3
+            ],
+            "linuxDetectionRow": [
+              0.0,
+              1800.0,
+              941.4540405273438,
+              486.1571960449219,
+              1125.955078125,
+              916.4564208984375,
+              0.9149836301803589
+            ],
+            "windowsDetectionRow": [
+              0.0,
+              1800.0,
+              941.7631225585938,
+              486.0121765136719,
+              1125.0655517578125,
+              915.0960083007812,
+              0.9134555459022522
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 2.70404052734375,
+            "detectionScoreAbsDiff": 0.0015280842781066895
+          },
+          {
+            "name": "000000_4.jpg",
+            "linuxSize": 2776,
+            "windowsSize": 2549,
+            "linuxSha256": "7251c81d6391ab1f1f14a4f426815de16fc011ffc156cea1d05a78f2ec720bb2",
+            "windowsSha256": "e51100715c6e3175a380b7716c3116e5f87a194f9e92958082f670f834484f21",
+            "shapeLinux": [
+              93,
+              43,
+              3
+            ],
+            "shapeWindows": [
+              92,
+              43,
+              3
+            ],
+            "linuxDetectionRow": [
+              0.0,
+              1800.0,
+              366.6795654296875,
+              551.29833984375,
+              401.6742858886719,
+              640.84423828125,
+              0.8432000875473022
+            ],
+            "windowsDetectionRow": [
+              0.0,
+              1800.0,
+              366.15985107421875,
+              552.0485229492188,
+              401.7149963378906,
+              640.3760375976562,
+              0.8420063853263855
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 1.77880859375,
+            "detectionScoreAbsDiff": 0.001193702220916748
+          },
+          {
+            "name": "000002_39.jpg",
+            "linuxSize": 2646,
+            "windowsSize": 4924,
+            "linuxSha256": "0c9dc8647bfce7d546f3923d84126802a57ea0a25672d8b6f30591c9c7667d5a",
+            "windowsSha256": "b3bb69037d2e721577e0039896cb3e0c2ea1003864e51875fae3fafb52a7e4c8",
+            "shapeLinux": [
+              97,
+              51,
+              3
+            ],
+            "shapeWindows": [
+              122,
+              96,
+              3
+            ],
+            "linuxDetectionRow": [
+              2.0,
+              1800.2,
+              14.057394027709961,
+              548.360595703125,
+              57.78947067260742,
+              641.2014770507812,
+              0.8431455492973328
+            ],
+            "windowsDetectionRow": [
+              2.0,
+              1800.2,
+              1491.762939453125,
+              555.0993041992188,
+              1577.6416015625,
+              672.9049682617188,
+              0.9100271463394165
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 3035.999876022339,
+            "detectionScoreAbsDiff": 0.06688159704208374
+          },
+          {
+            "name": "000004_81.jpg",
+            "linuxSize": 25731,
+            "windowsSize": 2796,
+            "linuxSha256": "e16cf8d4dc877df6de04a3f13852e4d79f50cb58b61d392ca987bf036aa682ba",
+            "windowsSha256": "e5de40b15769e350c2d2759af80c1aaf1fb7bcb6d1f39290a5aac69392f88f80",
+            "shapeLinux": [
+              370,
+              173,
+              3
+            ],
+            "shapeWindows": [
+              97,
+              44,
+              3
+            ],
+            "linuxDetectionRow": [
+              4.0,
+              1800.4,
+              1025.6884765625,
+              524.8067626953125,
+              1164.6331787109375,
+              877.439208984375,
+              0.8910636901855469
+            ],
+            "windowsDetectionRow": [
+              4.0,
+              1800.4,
+              421.7774353027344,
+              552.4258422851562,
+              457.4828186035156,
+              645.7181396484375,
+              0.8609545230865479
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 1570.4015502929688,
+            "detectionScoreAbsDiff": 0.030109167098999023
+          },
+          {
+            "name": "000004_86.jpg",
+            "linuxSize": 2481,
+            "windowsSize": 2240,
+            "linuxSha256": "ac219735ab18676a78c5f8dab72c175eebca40807843643c27ead192036e9512",
+            "windowsSha256": "56e42b795a716bd7b38f1b76038ebf324bf0bd10c55cfb57c0cca1a486f71da3",
+            "shapeLinux": [
+              97,
+              46,
+              3
+            ],
+            "shapeWindows": [
+              95,
+              45,
+              3
+            ],
+            "linuxDetectionRow": [
+              4.0,
+              1800.4,
+              50.90842819213867,
+              551.8173828125,
+              88.8726577758789,
+              644.0803833007812,
+              0.7923093438148499
+            ],
+            "windowsDetectionRow": [
+              4.0,
+              1800.4,
+              50.93788528442383,
+              552.2366333007812,
+              87.3074722290039,
+              643.4932250976562,
+              0.7852630615234375
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 2.6010513305664062,
+            "detectionScoreAbsDiff": 0.0070462822914123535
+          },
+          {
+            "name": "000006_132.jpg",
+            "linuxSize": 2458,
+            "windowsSize": 4239,
+            "linuxSha256": "f4c97c324dc6a8942f6da0f7e3ef31f92d2493c818b2a7a554fb49b691acad89",
+            "windowsSha256": "aeac0e6c30934d12a76b6bf5d1f05679c4ac79b6577562d2a026687141e2145a",
+            "shapeLinux": [
+              86,
+              40,
+              3
+            ],
+            "shapeWindows": [
+              130,
+              65,
+              3
+            ],
+            "linuxDetectionRow": [
+              6.0,
+              1800.6,
+              1707.4976806640625,
+              564.5487670898438,
+              1739.8560791015625,
+              646.8319091796875,
+              0.7874388098716736
+            ],
+            "windowsDetectionRow": [
+              6.0,
+              1800.6,
+              1656.3406982421875,
+              551.5921020507812,
+              1709.970458984375,
+              675.25439453125,
+              0.8760999441146851
+            ],
+            "detectionFrameAligned": true,
+            "detectionBoxL1": 122.4217529296875,
+            "detectionScoreAbsDiff": 0.08866113424301147
+          }
+        ]
+      }
+    }
+  ],
+  "totals": {
+    "linuxDetections": 410894,
+    "windowsDetections": 415436,
+    "differingFrames": 19289,
+    "countDifferingFrames": 13982,
+    "boxDifferingFrames": 5307,
+    "scoreDifferingFrames": 5307
+  },
+  "earliestDivergence": {
+    "localFrame": 0,
+    "globalFrame": 0,
+    "timestampSec": 0.0,
+    "reasons": [
+      "count"
+    ],
+    "linuxCount": 12,
+    "windowsCount": 15,
+    "linuxFirstRows": [
+      [
+        0.0,
+        0.0,
+        1692.798095703125,
+        189.65890502929688,
+        1917.2249755859375,
+        1090.978271484375,
+        0.8889307379722595
+      ],
+      [
+        0.0,
+        0.0,
+        873.387451171875,
+        482.8565368652344,
+        906.91259765625,
+        562.3335571289062,
+        0.8045095205307007
+      ],
+      [
+        0.0,
+        0.0,
+        841.8663940429688,
+        488.08245849609375,
+        861.6328125,
+        530.2978515625,
+        0.8038008213043213
+      ]
+    ],
+    "windowsFirstRows": [
+      [
+        0.0,
+        0.0,
+        1695.25634765625,
+        189.2530059814453,
+        1917.09521484375,
+        1091.817626953125,
+        0.8860556483268738
+      ],
+      [
+        0.0,
+        0.0,
+        873.41455078125,
+        482.3337707519531,
+        906.56982421875,
+        562.1878662109375,
+        0.8091581463813782
+      ],
+      [
+        0.0,
+        0.0,
+        368.4201965332031,
+        493.20623779296875,
+        407.75225830078125,
+        569.1695556640625,
+        0.8019771575927734
+      ]
+    ]
+  },
+  "classification": {
+    "serializationOnly": false,
+    "differentFrameSelectionOrTimestamps": false,
+    "differentDecodedPixels": true,
+    "modelRuntimeOrNumerical": true,
+    "omittedFingerprintFields": true,
+    "incompleteWindowsArtifacts": false,
+    "mixed": true
+  }
+}

@@ -47,6 +47,54 @@ def fingerprint(obj: dict) -> str:
     return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(",", ":"), default=str).encode()).hexdigest()
 
 
+def host_provenance(env: dict | None = None) -> dict:
+    """Effective host/decode/runtime facts that can change stage-1 bytes without changing
+    `stage1_settings` env knobs. Recorded beside the fingerprint; never rewritten onto old
+    checkpoints. Cross-host resume is refused when both sides have comparable keys."""
+    import platform  # noqa: PLC0415
+    import sys  # noqa: PLC0415
+
+    env = dict(os.environ if env is None else env)
+    try:
+        import cv2  # noqa: PLC0415
+
+        build = cv2.getBuildInformation()
+        opencv = {
+            "version": cv2.__version__,
+            "buildSha256": hashlib.sha256(build.encode()).hexdigest(),
+            "videoIO": [ln.strip() for ln in build.splitlines() if "FFMPEG" in ln or "GStreamer" in ln][:8],
+        }
+    except Exception:  # noqa: BLE001 - provenance must not block extraction
+        opencv = {"version": None, "buildSha256": None, "videoIO": []}
+    return {
+        "schema": "pitchproof.stage1-host-provenance.v1",
+        "python": platform.python_version(),
+        "platform": sys.platform,
+        "machine": platform.machine(),
+        "requestedDecoder": env.get("SCOUTX_DECODER", "cv2"),
+        "requestedBackend": env.get("SCOUTX_BACKEND", "auto"),
+        "requestedOrtProviders": env.get("SCOUTX_ORT_PROVIDERS", "auto"),
+        "requestedBatch": env.get("SCOUTX_BATCH"),
+        "opencv": opencv,
+    }
+
+
+def _provenance_conflicts(saved: dict | None, current: dict) -> list[str]:
+    """Keys that prove a different decode/runtime host. Missing saved provenance is not a conflict
+    (historical checkpoints stay resumable on the same settings fingerprint)."""
+    if not saved:
+        return []
+    conflicts = []
+    for key in ("platform", "machine", "python"):
+        if key in saved and saved.get(key) != current.get(key):
+            conflicts.append(f"{key}: {saved.get(key)!r} != {current.get(key)!r}")
+    s_build = (saved.get("opencv") or {}).get("buildSha256")
+    c_build = (current.get("opencv") or {}).get("buildSha256")
+    if s_build and c_build and s_build != c_build:
+        conflicts.append(f"opencv.buildSha256: {s_build!r} != {c_build!r}")
+    return conflicts
+
+
 def stage1_settings(env: dict | None = None, **extra) -> dict:
     """Everything that changes stage-1 output. `env` = os.environ by default (the engine reads its
     knobs from SCOUTX_* variables); runtime-only knobs that cannot change results are excluded."""
@@ -81,7 +129,8 @@ class ChunkResult:
 
 class Stage1Store:
     def __init__(self, root: str | Path, video_sha256: str, settings: dict, policy: str = "fail",
-                 min_free_bytes: int = MIN_FREE_BYTES, check_space: bool = True) -> None:
+                 min_free_bytes: int = MIN_FREE_BYTES, check_space: bool = True,
+                 host_provenance_info: dict | None = None) -> None:
         if policy not in ("fail", "replace"):
             raise ValueError("policy must be 'fail' or 'replace'")
         self.root = Path(root)
@@ -92,9 +141,14 @@ class Stage1Store:
         self.min_free_bytes = min_free_bytes
         self.check_space = check_space
         self.bytes_per_sec: float | None = None
+        # Optional override for tests; production uses host_provenance() at write/compare time.
+        self.host_provenance_info = host_provenance_info
 
     def run_dir(self, i: int) -> Path:
         return self.root / f"c_{i:05d}"
+
+    def _current_host_provenance(self) -> dict:
+        return self.host_provenance_info if self.host_provenance_info is not None else host_provenance()
 
     def _expected(self, start: float, end: float) -> dict:
         return {"schema": SCHEMA, "videoSha256": self.video_sha256, "startSec": round(start, 3), "endSec": round(end, 3),
@@ -116,6 +170,9 @@ class Stage1Store:
         diff = [k for k in exp if c.get(k) != exp[k]]
         if diff:
             return "mismatch", ", ".join(f"{k}: {c.get(k)!r} != {exp[k]!r}" for k in diff)
+        host_diff = _provenance_conflicts(c.get("hostProvenance"), self._current_host_provenance())
+        if host_diff:
+            return "mismatch", "hostProvenance: " + "; ".join(host_diff)
         for name, f in c.get("files", {}).items():
             p = d / name
             if not p.is_file() or p.stat().st_size != f["size"] or ("sha256" in f and sha256_file(p) != f["sha256"]):
@@ -184,7 +241,8 @@ class Stage1Store:
             if not p.is_file():
                 raise RuntimeError(f"extraction produced no {name}")
             files[name] = {"size": p.stat().st_size, "sha256": sha256_file(p)}
-        cp = {**self._expected(start, end), "settings": self.settings, "files": files,
+        cp = {**self._expected(start, end), "settings": self.settings,
+              "hostProvenance": self._current_host_provenance(), "files": files,
               "crops": len(list((d / "crops").glob("*.jpg"))), "frames": meta.get("frames"),
               "written": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
         tmp = d / (CHECKPOINT + ".part")

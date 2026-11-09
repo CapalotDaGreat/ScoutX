@@ -1,0 +1,348 @@
+{
+  "schema": "pitchproof.disputed-cases-for-independent-review.v1",
+  "review_status": "not_performed",
+  "note": "Prepared for independent review; this file does not claim that independent review occurred.",
+  "cases": [
+    {
+      "time_sec": 244.4,
+      "frame_key": "2444",
+      "interval_sec": [
+        225,
+        255
+      ],
+      "classification": "missing_or_uncertain_annotation",
+      "reason": "Local crops at 243.4/244.4/245.4s show #20 and an adjacent orange player overlapping; the claim only clips the T box (IoU 0.088) and is centred toward the adjacent player, which has no separate annotation. Identity is therefore not established.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1154.1,
+      "frame_key": "11542",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.932.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1154.2,
+      "frame_key": "11543",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.961.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1154.5,
+      "frame_key": "11546",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.954.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1154.9,
+      "frame_key": "11550",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.936.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1155.2,
+      "frame_key": "11553",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.937.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1156.0,
+      "frame_key": "11561",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.757.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1162.6,
+      "frame_key": "11627",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.982.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1168.5,
+      "frame_key": "11686",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.885.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1173.8,
+      "frame_key": "11739",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.936.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1179.3,
+      "frame_key": "11794",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.922.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1179.4,
+      "frame_key": "11795",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.938.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1179.5,
+      "frame_key": "11796",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.953.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1179.6,
+      "frame_key": "11797",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.960.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1179.7,
+      "frame_key": "11798",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.935.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1179.8,
+      "frame_key": "11799",
+      "interval_sec": [
+        1150,
+        1180
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.983.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1300.7,
+      "frame_key": "13008",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.968.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1300.8,
+      "frame_key": "13009",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.935.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1302.6,
+      "frame_key": "13027",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.887.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1302.7,
+      "frame_key": "13028",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.954.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.0,
+      "frame_key": "13031",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.952.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.1,
+      "frame_key": "13032",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.974.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.2,
+      "frame_key": "13033",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.965.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.3,
+      "frame_key": "13034",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.977.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.4,
+      "frame_key": "13035",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.931.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.5,
+      "frame_key": "13036",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.966.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.6,
+      "frame_key": "13037",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.836.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.7,
+      "frame_key": "13038",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.922.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.8,
+      "frame_key": "13039",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.974.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1303.9,
+      "frame_key": "13040",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.885.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    },
+    {
+      "time_sec": 1304.0,
+      "frame_key": "13041",
+      "interval_sec": [
+        1295,
+        1325
+      ],
+      "classification": "evaluation_alignment_defect",
+      "reason": "The repository correction record shifts this interval's labels by +0.1s; the corrected claim pairing reaches T IoU 0.729.",
+      "review_request": "Independently inspect target identity, annotation geometry, occlusion, and \u00b11 frame alignment."
+    }
+  ]
+}

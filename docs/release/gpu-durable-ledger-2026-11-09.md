@@ -13,11 +13,11 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 
 | Field | Value |
 |---|---|
-| Approved search envelope | **NONE** (2026-11-07 exhausted by stockout) |
-| Next proposal | `docs/video/gpu-validation-proposal-2026-11-09.md` |
-| Active VM / disks | Last evidence: 0 / 0 (2026-11-07). `gcloud` unavailable in this agent shell — re-check before create. |
+| Approved search envelope | **NONE** (2026-11-07 exhausted; revised Session-1 proposal awaits APPROVAL) |
+| Next proposal | `docs/video/gpu-validation-proposal-2026-11-09.md` (**Part A only**, 180 min, USD 6 ceiling) |
+| Active VM / disks | Last evidence: 0 / 0 (2026-11-07). **`gcloud` binary missing** in 2026-11-09 agent shell — re-inventory before create. |
 | Footage uploaded | No |
-| Estimated compute charge | USD 0 (no VM) |
+| Estimated compute charge | USD 0 |
 
 ---
 
@@ -27,7 +27,7 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 |---|---|---|---|
 | 2026-11-07 | west4-b, west4-c, west4-a, west4-b retry | STOCKOUT ×4 | USD 0 |
 
-**Next retry:** only after the 2026-11-09 APPROVAL block is filled. Prefer west3 then west6 (L4 only).
+**Next retry:** only after Session-1 APPROVAL is filled. Prefer west3 then west6 (L4 only).
 
 ---
 
@@ -36,69 +36,77 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | Role | SHA | Status |
 |---|---|---|
 | GPU comparison baseline | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | Immutable |
-| 2026-11-07 Part B freeze | `3381371014d37c91072ff257f280593df374b977` | Stockout; no GPU data |
-| Cold Linux CPU full-match | `8e1b63355d725c36e217b3b6df6ce53c93da442e` | **Complete** (see below) |
-| Reliability + coaching candidate | `0584c1c177831fa362791739ed3494f406fae55f` | Local fixes + docs; **not** authorized for GPU until APPROVAL names it |
+| Cold Linux CPU full-match | `8e1b63355d725c36e217b3b6df6ce53c93da442e` | Complete |
+| Reliability + coaching gate | `0584c1c177831fa362791739ed3494f406fae55f` | Local; not GPU-authorized |
+| Host-provenance checkpoint | *tip after this ledger update* | Refuses cross-host resume when provenance recorded; historical fingerprints unchanged |
 
 ---
 
-## Completed profiles / runs
+## Verified vs uncertain
 
-### GPU matrix on L4 for `51d41c9`
+### Verified
 
-| Profile | Status |
-|---|---|
-| cpu-onnx / cpu-torch / gpu-fp16-b8 / gpu-fp32-b8 / gpu-fp32-b1 / gpu-fp32-b8-repeat | **Not run** (stockout) |
+- Cold Linux full-match exit 0, 20350 frames, timingComplete, labelled **313 / 0 / 31 / 160 of 504** (T, IoU≥0.5, original labels).
+- Zero matched wrong-player on that labelled partition is **not** full-match identity proof.
+- Of 31 unmatched: **30** become T IoU≥0.5 under documented +0.1 s label-time correction (evaluation alignment); **1** at 244.4 s remains uncertain annotation/occlusion.
+- Cross-host stage-1: same settings fingerprint, different decoded pixels from frame 0; Windows artifacts complete.
+- Defaults in source: C on, E off, DETOUR off, A/B off; D appearance-only LIKELY still code-default on / not promoted.
+- Coaching fixture harness (5/5) + unit suites; involvement improve requires `contactsConfirmedIdentity`.
 
-Older 2026-10-29 L4 balanced FP16 run exists on a different commit and **failed** the CPU-relative accuracy gate. It is not this matrix.
+### Uncertain / not done
 
-### Cold Linux CPU full-match (`fm-linux-cold-20261106`)
+- Any L4 Part A profile for `51d41c9`.
+- Live Cloud inventory/price refresh (no `gcloud` binary here).
+- Independent human review of disputed unmatched cases.
+- Live Firebase / device coaching journey.
+- Whether L4 cold full-match fits 300 min (CPU cold was 356 min).
+
+---
+
+## Unmatched-claim audit (cold Linux)
+
+Artifacts: `workers/football-cv/bench/results/5.3/unmatched-audit-20261109/`  
+Frames/crops kept only under `.local/_tmp_unmatched_audit/` (not git).
+
+| Class | Count |
+|---|---:|
+| evaluation_alignment_defect (+0.1 s time basis) | 30 |
+| missing_or_uncertain_annotation (244.4 s) | 1 |
+| possible_wrong_player / likely_correct_geometry_fail / ambiguous_overlap / unresolved | 0 |
+
+Disputed packet prepared: `disputed_for_independent_review.json` (`review_status: not_performed`).  
+Note: 1168.5 s has N closer than T on the **stored** basis (0.491 vs 0.459) but T after +0.1 s — include in independent review.
+
+`pp_bench.accuracy()` omits sub-0.5 claims from returned categories; ledger unmatched uses `classify_claim` / interval partition.
+
+---
+
+## Cross-host stage-1
+
+Artifacts: `workers/football-cv/bench/results/5.3/crosshost-20261109/`
+
+- Fingerprint `bb0899ea…` identical; **frame 0** first divergence (12 vs 15 dets).
+- ~19 289 frames differ; crop JPEG pixels differ on aligned boxes → decoded-pixel / OpenCV-FFmpeg build difference primary; ORT numerical effects possible secondary.
+- Fingerprint omitted host/OpenCV build; **fix:** new checkpoints store `hostProvenance` and refuse cross-host resume when both sides have it. Old checkpoints without the field remain resumable (no retroactive certainty).
+
+Do not treat Linux vs Windows identity score deltas as pure logic changes.
+
+---
+
+## Coaching
 
 | Check | Result |
 |---|---|
-| Exit | 0, `status=complete`, `timingComplete=true` |
-| Frames | 20350 / 20350, resumedChunks 0 |
-| Video / models | SHA matched; models ok |
-| Flags | DETOUR=0, E=0, C=1, A/B=0, D not promoted |
-| Wall | 21359.427 s (discovery 3094.8, extract 16882.5, resolve 897.6) |
-| Peak RSS | 2089.2 MiB; cgroup max 2473242624 B ≈ 2358.6 MiB |
-| Labelled T IoU≥0.5 | **313 correct / 0 wrong-player / 31 unmatched / 160 abstained of 504** |
-| Recall / IDF1 | 0.621 / 0.766 |
-| Aggregate wrong-identity sec | 0.0 |
-
-**Interpretation:** the 2026-11-05 Windows cold baseline allocator failure (`alloc_cpu.cpp`, ~6.39 h, exit 2) is **repaired for cold Linux CPU** under the memory/session fixes. This is **not** an L4 result and **not** full-match accuracy validation beyond the labelled intervals.
-
-**Confounder vs Windows resolve-only (`4d4d860`):** every stage-1 chunk hash differs despite the same settings fingerprint. Cold Linux ≠ resumed Windows chunks. Do not treat the recall lift (0.442 → 0.621) as a pure identity-logic improvement.
-
-### Windows resolve-only 2026-11-06 (prior)
-
-Resumed failed-run chunks; DETOUR=0 and DETOUR=1 both exit 0. DETOUR non-selective → remains experimental, default off.
+| Mode | Fixture / production-helper object graph — **not** live auth/device |
+| Evidence | `bench/results/5.3/coaching-e2e-20261109/coaching_e2e_results.json` + unit tests |
+| Cases | insufficient → limitations only; confirmed-contact gate; confirmed improve+drill; synthesis citation/drill/criterion; scout view without coaching cards |
+| Live product UI / Firebase | **Not executed** |
 
 ---
 
-## Open accuracy / reliability items
+## Completed GPU profiles
 
-| ID | Item | Status |
-|---|---|---|
-| P | Pause-and-resume wrong claim | Strict xfail; A/B off |
-| Exchange residual | Confirmed wrong-player 244.5–245.8 on Windows resolve | Cold Linux: those T frames match T as LIKELY; different extract |
-| #6 / #17 | Appearance-only windows | Opt-in full-match skips; D not promoted |
-| Stage-1 nondeterminism | Same fingerprint, different chunk hashes across hosts/runs | Documented; decoded-frame hashes required on GPU |
-| GPU gap | CUDA vs CPU accuracy | **Unmeasured** on `51d41c9` |
-
----
-
-## Local fixes this pass (candidate)
-
-Demonstrated defects → smallest changes:
-
-1. `extract()` closes detector in `finally` (retry must not keep prior session).  
-2. Torch `Detector.close()` + `cuda.empty_cache()` when on GPU.  
-3. Atomic `discovery.json` write.  
-4. Scoped `np.load` for `scene.npz` and `timeline.npz`.  
-5. Coaching `involvement_improve` requires `contactsConfirmedIdentity > 0`.  
-
-Tests: worker focused suite 33 passed / 6 xfailed; `matchReview` + unit suite 740 passed.
+None for `51d41c9`. Stockout only.
 
 ---
 
@@ -106,17 +114,14 @@ Tests: worker focused suite 33 passed / 6 xfailed; `matchReview` + unit suite 74
 
 | Resource | Status |
 |---|---|
-| 2026-11-07 VM/disks | Never created |
-| Bucket `runs/` for that session | Never uploaded |
-| Orphan check | Pending Cloud SDK on this host |
+| VMs/disks this task | None created |
+| Prior session orphans | Last check 2026-11-07 empty; re-check with Cloud SDK before next create |
 
 ---
 
 ## Next executable action
 
-1. Owner fills APPROVAL in `docs/video/gpu-validation-proposal-2026-11-09.md`.  
-2. From a shell with `gcloud`: refresh prices; list instances/disks/quotas; create at most one L4 in the approved zone order with server lifetime + auto-delete.  
-3. Run Part A on `51d41c9`; Part B only if lifetime remains and APPROVAL names the tip.  
-4. Export, verify manifests, delete runs/VM/disks, record costs.
-
-Until then: continue local identity work; do **not** allocate.
+1. Owner fills **Session-1 APPROVAL** in `docs/video/gpu-validation-proposal-2026-11-09.md` (Part A only).  
+2. On a machine with `gcloud`: `gcloud compute instances list --project=scoutx-230b0` (and disks/quotas); refresh Billing Catalog prices; create at most one L4 per envelope.  
+3. Run prioritized Part A plan; export; cleanup.  
+4. Separately approve Session 2 for Part B after Part A analysis.

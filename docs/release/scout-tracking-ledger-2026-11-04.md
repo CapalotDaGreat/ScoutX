@@ -177,3 +177,10 @@ Demonstrated defects repaired (separate candidate commit):
 Checks: worker focused 33 passed / 6 xfailed; `npm` unit 740 passed. Defaults unchanged: C on, E off, DETOUR off, A/B off, D not promoted.
 
 Stage-1 confounder: cold Linux chunk hashes differ from the 2026-11-05 Windows chunks despite the same settings fingerprint — host/run nondeterminism. GPU runs must capture decoded-frame hashes.
+
+## 2026-11-09 — Unmatched / cross-host / coaching / GPU plan
+
+- Unmatched 31 reproduced: 30 evaluation alignment (+0.1 s), 1 uncertain @ 244.4 s. `bench/results/5.3/unmatched-audit-20261109/`. Independent review not done.
+- Cross-host: decoded-pixel divergence from frame 0; host provenance recorded on new checkpoints. `bench/results/5.3/crosshost-20261109/`.
+- Coaching fixture E2E 5/5 (not live auth). `bench/results/5.3/coaching-e2e-20261109/`.
+- GPU proposal revised to **Session 1 = Part A only** (180 min, USD 6); Part B needs a separate approval. See `gpu-validation-proposal-2026-11-09.md` and `gpu-durable-ledger-2026-11-09.md`.

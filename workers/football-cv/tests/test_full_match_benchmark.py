@@ -13,7 +13,9 @@ BENCH = Path(__file__).resolve().parents[1] / "bench"
 sys.path.insert(0, str(BENCH))
 import pp_bench  # noqa: E402
 
-from scoutx_tracker.checkpoint import ConfigMismatch, DiskSpaceError, Stage1Store, fingerprint, stage1_settings  # noqa: E402
+from scoutx_tracker.checkpoint import (  # noqa: E402
+    ConfigMismatch, DiskSpaceError, Stage1Store, fingerprint, host_provenance, stage1_settings,
+)
 
 
 # ------------------------------------------------------------------ accuracy and gates
@@ -242,6 +244,41 @@ def test_stage1_settings_capture_affecting_env_only():
     b = stage1_settings({"SCOUTX_KEYFRAME_EVERY": "2"})
     assert fingerprint(a) != fingerprint(b) and "SCOUTX_MODE" not in a["env"] and "HOME" not in a["env"]
     assert fingerprint(a) == fingerprint(stage1_settings({"SCOUTX_KEYFRAME_EVERY": "1"}))
+
+
+def test_host_provenance_is_recorded_but_not_in_settings_fingerprint():
+    """Cross-host decode differences must be visible without rewriting historical fingerprints."""
+    settings = stage1_settings({"SCOUTX_KEYFRAME_EVERY": "1"})
+    prov = host_provenance({"SCOUTX_DECODER": "cv2", "SCOUTX_BACKEND": "auto"})
+    assert "hostProvenance" not in settings and "opencv" not in settings
+    assert prov["schema"] == "pitchproof.stage1-host-provenance.v1"
+    assert prov["requestedDecoder"] == "cv2"
+    assert fingerprint(settings) == fingerprint(stage1_settings({"SCOUTX_KEYFRAME_EVERY": "1"}))
+
+
+def test_checkpoint_refuses_cross_host_provenance_when_recorded(tmp_path):
+    calls = []
+    host_a = {"schema": "pitchproof.stage1-host-provenance.v1", "python": "3.12.3", "platform": "linux",
+              "machine": "x86_64", "opencv": {"buildSha256": "aaa", "version": "5.0.0", "videoIO": []}}
+    host_b = {**host_a, "platform": "win32", "opencv": {"buildSha256": "bbb", "version": "5.0.0", "videoIO": []}}
+    Stage1Store(tmp_path, "vid", {"a": 1}, min_free_bytes=0, host_provenance_info=host_a).chunk(
+        0, 0.0, 30.0, _fake_extract(calls))
+    cp = json.loads((tmp_path / "c_00000" / "checkpoint.json").read_text())
+    assert cp["hostProvenance"]["platform"] == "linux"
+    # Historical checkpoints without hostProvenance remain resumable on matching settings.
+    del cp["hostProvenance"]
+    (tmp_path / "c_00000" / "checkpoint.json").write_text(json.dumps(cp))
+    r = Stage1Store(tmp_path, "vid", {"a": 1}, min_free_bytes=0, host_provenance_info=host_b).chunk(
+        0, 0.0, 30.0, _fake_extract(calls))
+    assert r.status == "resumed" and len(calls) == 1
+    # Force a fresh write that records host A again, then refuse host B.
+    (tmp_path / "c_00000" / "detections.npz").write_bytes(b"damaged")
+    Stage1Store(tmp_path, "vid", {"a": 1}, min_free_bytes=0, host_provenance_info=host_a).chunk(
+        0, 0.0, 30.0, _fake_extract(calls))
+    assert json.loads((tmp_path / "c_00000" / "checkpoint.json").read_text())["hostProvenance"]["platform"] == "linux"
+    with pytest.raises(ConfigMismatch, match="hostProvenance"):
+        Stage1Store(tmp_path, "vid", {"a": 1}, min_free_bytes=0, host_provenance_info=host_b).chunk(
+            0, 0.0, 30.0, _fake_extract(calls))
 
 
 # ------------------------------------------------------------------ benchmark failure handling (end to end, CPU)
