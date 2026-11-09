@@ -1,0 +1,48 @@
+{
+  "gpuSessionApproved": true,
+  "operator": "Claude cloud workspace",
+  "cursorMustNotCreate": true,
+  "order": ["part_b", "part_a"],
+  "partBCommit": "84fefc570c001d6909e71ba7ec74fe8dc7755d54",
+  "partACommit": "51d41c9f5f333c7e93a606b7181ba8cb1cee8eac",
+  "zonesInOrder": [
+    "europe-west4-b",
+    "europe-west4-c",
+    "europe-west4-a",
+    "europe-west1-b",
+    "europe-west1-c",
+    "europe-west2-a",
+    "europe-west2-b",
+    "europe-west3-b",
+    "europe-west3-a",
+    "europe-west6-b",
+    "europe-west6-c"
+  ],
+  "machine": "g2-standard-8",
+  "gpu": "1x NVIDIA L4",
+  "diskGb": 200,
+  "diskType": "pd-balanced",
+  "bootDiskAutoDelete": true,
+  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+  "alternateGpuTypes": false,
+  "spot": false,
+  "maxRunDurationMin": 300,
+  "partBTimeoutMin": 120,
+  "partATimeoutMin": 100,
+  "maxCreateAttempts": 11,
+  "searchWindowHours": 6,
+  "costCeilingUsdBeforeTax": 8.0,
+  "footage": {
+    "IMG_4809": true,
+    "IMG_5105": false,
+    "IMG_4529": false
+  },
+  "maxBillableSessions": 1,
+  "priceRefreshRequiredBeforeCreate": true,
+  "filledUtc": "2026-11-09T16:16:00+01:00",
+  "ownerCorrections": [
+    "Part B before Part A with separate timeouts",
+    "Add europe-west1 and europe-west2",
+    "Freeze Part B at 84fefc5"
+  ]
+}
