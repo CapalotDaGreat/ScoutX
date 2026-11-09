@@ -38,7 +38,7 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | GPU comparison baseline | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | Immutable |
 | Cold Linux CPU full-match | `8e1b63355d725c36e217b3b6df6ce53c93da442e` | Complete |
 | Reliability + coaching gate | `0584c1c177831fa362791739ed3494f406fae55f` | Local; not GPU-authorized |
-| Host-provenance checkpoint | *tip after this ledger update* | Refuses cross-host resume when provenance recorded; historical fingerprints unchanged |
+| Host-provenance + audit tip | `01f265016180dde818f362b6ce50a27071912b33` | Refuses cross-host resume when provenance recorded; historical fingerprints unchanged |
 
 ---
 

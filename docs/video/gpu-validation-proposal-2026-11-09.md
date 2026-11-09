@@ -16,7 +16,7 @@ Previous approvals (2026-11-01, 2026-11-07) do **not** authorize this session. N
 | Role | Commit | Notes |
 |---|---|---|
 | **Immutable GPU baseline (Part A)** | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | Never overwritten. |
-| **Session-1 engine tip (startup/smoke helpers)** | *freeze at APPROVAL* — current tip includes host-provenance checkpoint refusal | Must be named in APPROVAL if guest scripts come from tip. |
+| **Session-1 docs/tip (not Part A archive)** | `01f265016180dde818f362b6ce50a27071912b33` | Host-provenance + audit docs. Part A still runs the immutable `51d41c9` archive. |
 | **Part B candidate (separate session)** | `0584c1c177831fa362791739ed3494f406fae55f` **or later tip named at approval** | Not authorized by Session-1 unless APPROVAL explicitly includes Part B (not recommended). |
 
 ## Recommended scope change: two sessions
