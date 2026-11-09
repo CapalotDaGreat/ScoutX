@@ -20,7 +20,7 @@ Update this file after every meaningful experiment. Do not treat “no improveme
 - [x] Screenshot recorded; **mock-only** clearly marked
 
 ### Tracking / analysis
-- [ ] Fresh full-match baseline reproduced with provenance — **failed, candidate not started**. Cold CPU baseline DETOUR=0 started 2026-11-05 08:27:56 CET from `32470ce0ebe09a68d2201c60ed3944c28d72eca8` and exited 2 at 15:03:19 CET. Output `C:\ZLI\M335\ScoutX\.local\fm-detour-cpu-20261105` is preserved. `baseline/full_match.json` status `failed`, `measuredTotalWallSec` 23013.589, `peakRssMiB` 3183.2, `RuntimeError` CPU allocator (`alloc_cpu.cpp:117`, 9600 bytes). Accuracy was not evaluated. Candidate DETOUR=1 was not started (`runner.log`).
+- [x] Fresh full-match baseline reproduced with provenance — **cold Linux CPU completed 2026-11-07**. Commit `8e1b63355d725c36e217b3b6df6ce53c93da442e`, output `C:\ZLI\M335\ScoutX\.local\fm-linux-cold-20261106`, exit 0, `timingComplete` true, 20350/20350 frames, peakRssMiB 2089.2, cgroup max ≈2358.6 MiB. Labelled T IoU≥0.5: 313/0/31/160 of 504 (recall 0.621, IDF1 0.766, wrong-identity 0.0 s). DETOUR=0. The earlier Windows cold run (`fm-detour-cpu-20261105`, exit 2, allocator failure) remains preserved as the failure that motivated the memory repairs. GPU matrix on `51d41c9` still not run (stockout).
 - [x] E4 addressed with before/after on faithful `reference_i0225` replay
 - [x] No new confirmed-N frames on labelled reference window; likely-N cleared (E3 side-effect)
 - [x] E4 fixed; P remains xfail; E3 desired now passing under DETOUR
@@ -155,14 +155,25 @@ The release run now fails closed on that accounting. `workers/football-cv/bench/
 3. Native/device evidence for the current tip. 2026-11-04 and 2026-11-05 screenshots are **mock/web**.
 4. External gates unchanged: legal review, AI footage approval, backups, owner SEC, App Check registration, production env and GoogleService-Info.plist, CV approval, GPU vs `51d41c9`. No paid build, deploy, or App Store submission.
 
-## GPU validation readiness (2026-11-06)
+## GPU validation readiness (updated 2026-11-09)
 
-Proposal: `docs/video/gpu-validation-2026-11-06.md`. GPU session **not approved** (APPROVAL block still a template). No VM created.
+Authoritative durable ledger: `docs/release/gpu-durable-ledger-2026-11-09.md`.  
+Next approval proposal: `docs/video/gpu-validation-proposal-2026-11-09.md`.
 
-- Part A archive SHA-256 `308c07a4�a62f` (matches pin). Part B tip `8e1b633` archive `5ecf3efb�a682`.
-- Model hashes match. Video SHA matches.
-- Startup dry-run exit 0 (`workers/football-cv/bench/results/5.3/gpu-validation-20261106/dry-run/`).
-- Cloud read-only: 0 instances, 0 disks, 0 snapshots; bucket 111 `results/` objects; L4 quota 1/0; image READY. `cleanup_check.json`.
-- Prices refreshed 2026-11-06T22:47Z: `.9323/h`, 300 min worst case � `.72`. Proposed ceiling `.00`. Estimate is not a cap.
-- Full cold Linux CPU container job **in progress** (empty stage-1, empty OCR cache). Separate extract/resolve peaks will be recorded when it exits.
-- **GPU worker image memory is not yet measured.** Only the CPU measurement image has a container peak (resolve-only 1275.5 MiB).
+- 2026-11-07 APPROVAL was filled then **STOCKOUT** across west4-b/c/a (4 attempts). No VM, no uploads, USD 0. See `session-state.json`.
+- Cold Linux CPU full-match **completed** (above). GPU worker image memory still unmeasured.
+- Part A on immutable baseline `51d41c9` still has **zero** completed GPU profiles.
+- `gcloud` not on PATH in the 2026-11-09 agent shell; re-inventory before any create.
+
+## 2026-11-09 — Reliability + coaching candidate (local)
+
+Demonstrated defects repaired (separate candidate commit):
+
+- `extract()` always closes the detector (`finally`) so chunk retries cannot keep the prior ONNX/Torch session.
+- Torch `Detector.close()` drops the module and calls `cuda.empty_cache()` when on GPU.
+- Atomic `discovery.json` write; scoped `np.load` for `scene.npz` / `timeline.npz`.
+- Match-review `involvement_improve` requires `contactsConfirmedIdentity > 0` (likely-only ball contacts no longer open that coaching improve).
+
+Checks: worker focused 33 passed / 6 xfailed; `npm` unit 740 passed. Defaults unchanged: C on, E off, DETOUR off, A/B off, D not promoted.
+
+Stage-1 confounder: cold Linux chunk hashes differ from the 2026-11-05 Windows chunks despite the same settings fingerprint — host/run nondeterminism. GPU runs must capture decoded-frame hashes.

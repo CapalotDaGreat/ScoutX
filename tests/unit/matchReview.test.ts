@@ -119,6 +119,24 @@ test('coach: at most two strengths and two improvements, each with evidence and 
   assert.equal(focus?.kind === 'skill' ? focus.matchesGoalId : null, 'g1');
 });
 
+test('coach: involvement improve needs a confirmed-identity ball contact, not likely-only contacts', () => {
+  const base = fixture('auto');
+  const lowInvolvement = {
+    ...base,
+    coverage: { ...base.coverage, confirmedVisibleSec: 400, analysedSec: 1000 },
+    moments: [],
+    events: [],
+    ball: { ...base.ball, contacts: 4, contactsConfirmedIdentity: 0 },
+  } as TrackingReport;
+  assert.ok(!buildCoachInsights(lowInvolvement, { position: 'winger' }).some((i) => i.id === 'involvement_improve'));
+
+  const withConfirmedContact = {
+    ...lowInvolvement,
+    ball: { ...lowInvolvement.ball, contacts: 4, contactsConfirmedIdentity: 2 },
+  } as TrackingReport;
+  assert.ok(buildCoachInsights(withConfirmedContact, { position: 'winger' }).some((i) => i.id === 'involvement_improve'));
+});
+
 test('moments: evidence labels, indicator interpolation, adjustable clip', () => {
   const r = synthetic();
   const cards = (r.moments ?? []).map(toMomentCard);

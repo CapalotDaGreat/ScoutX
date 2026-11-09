@@ -1,18 +1,18 @@
 # PitchProof 5.3 App Store submission handoff
 
-**Updated:** 2026-11-06 after the resolve-only full-match comparison  
-**Authoritative record:** `docs/release/scout-tracking-ledger-2026-11-04.md`  
-**Earlier text below the verdict is the 2026-11-04 handoff and is not the current engine status.**
+**Updated:** 2026-11-09 after cold Linux full-match completion + local reliability/coaching fixes  
+**Authoritative records:** `docs/release/scout-tracking-ledger-2026-11-04.md`, `docs/release/gpu-durable-ledger-2026-11-09.md`  
+**Earlier text below the verdict is historical and is not the current engine status.**
 
 ---
 
 ## Verdict
 
-# NOT READY
+# NOT READY — CONCRETE BLOCKERS REMAIN
 
-The 2026-11-05 cold CPU baseline failed during resolve (exit 2, candidate not started). A later resolve-only reuse of its seven validated chunks completed both DETOUR=0 and DETOUR=1 (exit 0) and is not a cold run. Labelled recall stayed 0.442. One confirmed wrong-player frame at 246.1 s was removed with the flag on, and hundreds of other claim frames changed. DETOUR is therefore experimental and off unless `SCOUTX_DETOUR_SPLIT=1`. OCR cache provenance is off unless `SCOUTX_OCR_CACHE_PROVENANCE=1`. P, the residual confirmed frames at 244.5–245.8 s, and the historical #17 window remain open. GPU baseline `51d41c9` is untouched.
+Cold Linux CPU full-match on `8e1b633` completed (exit 0, 20350 frames, labelled recall 0.621 / wrong-player 0 on the T IoU≥0.5 table). That repairs the 2026-11-05 Windows allocator failure for cold CPU processing. It does **not** close the GPU accuracy gap: the approved 2026-11-07 L4 session stocked out; Part A on `51d41c9` still has no completed GPU profiles. DETOUR and E remain off by default. P, #6/#17 appearance windows, and independent D review remain open. Stage-1 chunk hashes differ across cold Linux vs resumed Windows despite the same fingerprint — treat cross-host claim diffs carefully.
 
-Do not start a paid build, TestFlight upload, deploy, or App Store submission. External items still required before any of those: counsel on the legal pages and retention periods, `AI_FOOTAGE_PROCESSING_APPROVED`, backup/restore evidence, owner acceptance of SEC-10 through SEC-14, SEC-17 and SEC-18, a real device pass, production Firebase and RevenueCat values plus `GoogleService-Info.plist`, CV approval beyond still-frame review, and App Check provider registration. The 2026-11-06 static gate was 23 pass, 0 code blockers, 10 non-code items, rules skipped.
+Do not start a paid build, TestFlight upload, deploy, GPU allocation, or App Store submission without the named external actions / new GPU APPROVAL. External items still required: counsel, `AI_FOOTAGE_PROCESSING_APPROVED`, backup/restore evidence, owner SEC acceptance, real device pass, production Firebase/RevenueCat/`GoogleService-Info.plist`, CV approval, App Check registration, and (for GPU) the 2026-11-09 proposal APPROVAL.
 
 **Superseded:** the 2026-11-04 "ready after named external actions" verdict, and any statement that DETOUR or E is on by default.
 
@@ -47,15 +47,15 @@ Scout Discover honesty improved (freshness/coverage, no preference/potential ove
 
 ---
 
-## 2. Defaults (re-verified)
+## 2. Defaults (re-verified 2026-11-09)
 
 | Flag | State |
 |---|---|
 | C OCR consulted-only | **ON** |
-| E OCR cache provenance | **ON** |
-| D appearance-only LIKELY disabled | **not promoted** |
+| E OCR cache provenance | **OFF** unless `SCOUTX_OCR_CACHE_PROVENANCE=1` |
+| D appearance-only LIKELY disabled | **not promoted** (code default still allows appearance-only LIKELY) |
 | A/B | **off** |
-| DETOUR_SPLIT (E4 one-frame detour) | **ON** (default; `SCOUTX_DETOUR_SPLIT=0` disables) |
+| DETOUR_SPLIT (E4 one-frame detour) | **OFF** unless `SCOUTX_DETOUR_SPLIT=1` |
 | AI footage / CV worker | fail-closed / null |
 
 ---

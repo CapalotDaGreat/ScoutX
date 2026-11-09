@@ -244,6 +244,13 @@ class Detector:
             self.model.half()
         self.imgsz = imgsz
         self.name = f"{variant}@{imgsz}"
+        self.on_gpu = self.device.startswith("cuda")
+
+    def close(self) -> None:
+        """Drop the Torch module and return unused CUDA caching-allocator blocks when on GPU."""
+        self.model = None
+        if self.on_gpu and torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
     @torch.inference_mode()
     def __call__(self, images: list[np.ndarray], conf: float = 0.05):

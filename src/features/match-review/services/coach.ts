@@ -162,9 +162,10 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
       momentIds: ids(incomplete, () => true), tier: 1 });
   }
   if (c.confirmedVisibleSec >= MIN_CONFIRMED_FOR_COACHING_SEC && confirmedOnBall.length < 2) {
-    // Seen for long stretches but rarely on the ball: an involvement opportunity - only when the
-    // ball was actually trackable in this recording (otherwise it is a limitation, see below).
-    if (report.ball.contacts > 0) {
+    // Seen for long stretches but rarely on the ball: an involvement opportunity - only when a
+    // confirmed-identity ball contact proves the ball was trackable on the selected player.
+    // Likely-only contacts must not open a coaching improvement about that player.
+    if ((report.ball.contactsConfirmedIdentity ?? 0) > 0) {
       out.push({ id: 'involvement_improve', kind: 'improve', topic: 'involvement', evidence: 'estimated',
         params: { minutes: Math.round(c.confirmedVisibleSec / 60), count: confirmedOnBall.length },
         drill: pickDrill('involvement', position, age), momentIds: ids(cards, (m) => m.category === 'on_camera', 3), tier: 2 });

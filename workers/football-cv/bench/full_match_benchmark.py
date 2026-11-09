@@ -289,8 +289,12 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
                    "firstPlayableAfterModelInitSec": round(record["stages"]["modelInitialization"]["wallSec"] + first[0], 3) if first else None,
                    "sightings": len(sightings), "timingsSec": disc.timings, "status": "measured",
                    "effectiveDetectFps": round(disc.timings.get("samples", 0) / duration, 3) if duration else None}
-            disc_file.write_text(json.dumps({"fingerprint": disc_fp, "sightings": [dataclasses.asdict(s) for s in sightings],
-                                             "record": rec}, default=str))
+            # Atomic write: a killed mid-write must not leave a half JSON that the next run
+            # treats as a valid discovery checkpoint.
+            tmp = disc_file.with_name(f"{disc_file.name}.tmp-{os.getpid()}")
+            tmp.write_text(json.dumps({"fingerprint": disc_fp, "sightings": [dataclasses.asdict(s) for s in sightings],
+                                       "record": rec}, default=str))
+            os.replace(tmp, disc_file)
             shutil.rmtree(work / "discovery_crops", ignore_errors=True)   # thumbnails only - not used by resolve
             record["stages"]["discovery"] = rec
         save()
@@ -330,9 +334,9 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
                                        "coverage": report.get("coverage"), "identity": report.get("identity")}
         import numpy as np  # noqa: PLC0415
 
-        z = np.load(work / "report" / "timeline.npz", allow_pickle=False)
-        claims = [[round(float(z["times"][k]), 2), str(z["states"][k]), [round(float(v), 1) for v in z["boxes"][k]]]
-                  for k in range(len(z["times"])) if z["present"][k]]
+        with np.load(work / "report" / "timeline.npz", allow_pickle=False) as z:
+            claims = [[round(float(z["times"][k]), 2), str(z["states"][k]), [round(float(v), 1) for v in z["boxes"][k]]]
+                      for k in range(len(z["times"])) if z["present"][k]]
         claims_file = out.parent / (out.stem + "_claims.json")
         claims_file.write_text(json.dumps(claims), encoding="utf-8")
         record["claimsFile"] = {"file": claims_file.name, "sha256": sha256_file(claims_file), "frames": len(claims)}

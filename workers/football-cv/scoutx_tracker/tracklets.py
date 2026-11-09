@@ -72,7 +72,8 @@ def load_runs(run_dirs: list[str]) -> Detections:
         if "grass" in z:
             G.append(z["grass"].astype(np.float32))
         elif (path / "scene.npz").exists():
-            G.append(np.load(path / "scene.npz")["grass"].astype(np.float32))
+            with np.load(path / "scene.npz") as scene:
+                G.append(scene["grass"].astype(np.float32).copy())
         else:
             G.append(np.full(n_f, np.nan, np.float32))
         sources.append((meta["video"], foff, n_f, float(meta.get("start", 0.0))))

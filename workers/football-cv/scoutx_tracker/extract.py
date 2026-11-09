@@ -148,147 +148,151 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         k = int(round(start * fps_src)) - 1
         cap.set(cv2.CAP_PROP_POS_FRAMES, k + 1)
     det = Detector(imgsz=imgsz)
-    emb = GridEmbedder()
-    cmc = CameraMotion()
-    dets, sigs, embs, emb_idx, balls, warps, cuts, times, grass = [], [], [], [], [], [], [], [], []
-    ball_warm: list[float] = []
-    prev_small = None
-    fi = -1
-    t_start = time.time()
-    tm = {"decode": 0.0, "detect": 0.0, "propagate": 0.0, "scene_cmc": 0.0, "colour_signature": 0.0, "embedding": 0.0,
-          "crops_io": 0.0}
-    # 5.1 adaptive detection (propagate.py): detector on every `key_every`-th frame, boxes carried
-    # by optical flow in between. CPU path only (batch == 1); a scene cut always gets the detector.
-    from .propagate import BoxPropagator  # noqa: PLC0415
+    try:
+        emb = GridEmbedder()
+        cmc = CameraMotion()
+        dets, sigs, embs, emb_idx, balls, warps, cuts, times, grass = [], [], [], [], [], [], [], [], []
+        ball_warm: list[float] = []
+        prev_small = None
+        fi = -1
+        t_start = time.time()
+        tm = {"decode": 0.0, "detect": 0.0, "propagate": 0.0, "scene_cmc": 0.0, "colour_signature": 0.0, "embedding": 0.0,
+              "crops_io": 0.0}
+        # 5.1 adaptive detection (propagate.py): detector on every `key_every`-th frame, boxes carried
+        # by optical flow in between. CPU path only (batch == 1); a scene cut always gets the detector.
+        from .propagate import BoxPropagator  # noqa: PLC0415
 
-    prop = BoxPropagator() if key_every > 1 else None
-    prop_flags: list[bool] = []
-    last_small: list = [None]
-    # 4.1 batched inference: frames are detected in batches (default 8 on CUDA, 1 on CPU where
-    # batching gives no speed-up); everything after detection still runs frame by frame, in order.
-    if batch <= 0:
-        batch = 8 if det.on_gpu else 1
-    pending: list[tuple[float, np.ndarray]] = []
+        prop = BoxPropagator() if key_every > 1 else None
+        prop_flags: list[bool] = []
+        last_small: list = [None]
+        # 4.1 batched inference: frames are detected in batches (default 8 on CUDA, 1 on CPU where
+        # batching gives no speed-up); everything after detection still runs frame by frame, in order.
+        if batch <= 0:
+            batch = 8 if det.on_gpu else 1
+        pending: list[tuple[float, np.ndarray]] = []
 
-    def run_batch() -> None:
-        if not pending:
-            return
-        _tb = time.perf_counter()
-        results = det.batch([f for _, f in pending])
-        tm["detect"] += time.perf_counter() - _tb
-        for (tt, fr), r in zip(pending, results):
-            if prop is not None:
-                prop.key(fr, r[0], r[1])
-            consume(tt, fr, *r)
-        pending.clear()
+        def run_batch() -> None:
+            if not pending:
+                return
+            _tb = time.perf_counter()
+            results = det.batch([f for _, f in pending])
+            tm["detect"] += time.perf_counter() - _tb
+            for (tt, fr), r in zip(pending, results):
+                if prop is not None:
+                    prop.key(fr, r[0], r[1])
+                consume(tt, fr, *r)
+            pending.clear()
 
-    def consume(t, frame, pb, ps, bb, bs, propagated: bool = False) -> None:
-        nonlocal fi, prev_small
-        fi += 1
-        times.append(t)
-        _t = time.perf_counter()
-        grass.append(grass_fraction(frame))
-        small = last_small[0] if last_small[0] is not None and propagated else \
-            cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
-        if scene_cut(prev_small, small):
-            cuts.append(fi)
-            cmc.reset()
-        prev_small = small
-        warp, q = cmc.update(frame, pb[ps >= 0.3] if len(pb) else None)
-        warps.append(np.r_[warp.ravel(), q])
-        tm["scene_cmc"] += time.perf_counter() - _t
-        for b, s in zip(bb, bs):
-            balls.append([fi, t, *b, s])
-            ball_warm.append(warm_fraction(frame, b))
-        base = len(dets)
-        want_emb = []
-        _t = time.perf_counter()
-        _io = 0.0
-        for i, (b, s) in enumerate(zip(pb, ps)):
-            sig, _ = colour_signature(frame, b)
-            dets.append([fi, t, *b, s])
-            prop_flags.append(propagated)
-            sigs.append(sig.astype(np.float16))
-            h = b[3] - b[1]
-            if fi % 2 == 0 and h >= 36 and s >= 0.25:
-                want_emb.append(i)
-            if fi % 2 == 0 and h >= crop_min_h and s >= 0.4:
-                x1, y1, x2, y2 = (int(v) for v in b)
-                pad = int(0.05 * h)
-                crop = frame[max(0, y1 - pad): y2, max(0, x1 - pad): x2 + pad]
-                if crop.size:
-                    _w = time.perf_counter()
-                    cv2.imwrite(str(out / "crops" / f"{fi:06d}_{base + i}.jpg"), crop, [cv2.IMWRITE_JPEG_QUALITY, 92])
-                    _io += time.perf_counter() - _w
-        tm["colour_signature"] += time.perf_counter() - _t - _io
-        tm["crops_io"] += _io
-        _t = time.perf_counter()
-        if want_emb:
-            E = emb(frame, pb[want_emb])
-            for i, e in zip(want_emb, E):
-                emb_idx.append(base + i)
-                embs.append(e.astype(np.float16))
-        tm["embedding"] += time.perf_counter() - _t
-        if progress and fi % 100 == 0:
-            progress(fi, t, time.time() - t_start)
-
-    # 5.1: OpenCV decoding runs in a background thread with a bounded queue (backpressure:
-    # at most PREFETCH decoded frames in memory), overlapping decode with detection. Same pixels.
-    # Measured on 2 vCPU (IMG_4809, 60 s, YOLOX-s 1280): identical output, but no gain (235.7 s vs
-    # 224.5 s) - decode and detector compete for the same cores. Default (-1): on only when the
-    # detector runs on a GPU (not measured: no GPU available).
-    if prefetch < 0:
-        prefetch = 4 if det.on_gpu else 0
-    source = CaptureReader(cap, prefetch) if ff is None else nullcontext(None)
-    with source as reader:
-        while True:
+        def consume(t, frame, pb, ps, bb, bs, propagated: bool = False) -> None:
+            nonlocal fi, prev_small
+            fi += 1
+            times.append(t)
             _t = time.perf_counter()
-            if ff is not None:
-                nxt = next(ff, None)
-                ok, frame = (nxt is not None), (nxt[1] if nxt is not None else None)
-                if ok:
-                    k += stride - 1
-            else:
-                ok, frame = reader.read()
-            tm["decode"] += time.perf_counter() - _t
-            if not ok:
-                break
-            k += 1
-            if (k % stride) != 0:
-                continue
-            t = t0 + k / fps_src
-            if end is not None and k / fps_src >= end:
-                break
-            if prop is not None and batch == 1 and (fi + 1) % key_every != 0:
-                # in-between frame: propagate unless the scene changed (then detect)
-                small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
-                if not scene_cut(prev_small, small):
-                    _tp = time.perf_counter()
-                    pb, ps = prop.step(frame)
-                    tm["propagate"] += time.perf_counter() - _tp
-                    last_small[0] = small
-                    consume(t, frame, pb, ps, np.zeros((0, 4), np.float32), np.zeros(0, np.float32), propagated=True)
-                    last_small[0] = None
+            grass.append(grass_fraction(frame))
+            small = last_small[0] if last_small[0] is not None and propagated else \
+                cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
+            if scene_cut(prev_small, small):
+                cuts.append(fi)
+                cmc.reset()
+            prev_small = small
+            warp, q = cmc.update(frame, pb[ps >= 0.3] if len(pb) else None)
+            warps.append(np.r_[warp.ravel(), q])
+            tm["scene_cmc"] += time.perf_counter() - _t
+            for b, s in zip(bb, bs):
+                balls.append([fi, t, *b, s])
+                ball_warm.append(warm_fraction(frame, b))
+            base = len(dets)
+            want_emb = []
+            _t = time.perf_counter()
+            _io = 0.0
+            for i, (b, s) in enumerate(zip(pb, ps)):
+                sig, _ = colour_signature(frame, b)
+                dets.append([fi, t, *b, s])
+                prop_flags.append(propagated)
+                sigs.append(sig.astype(np.float16))
+                h = b[3] - b[1]
+                if fi % 2 == 0 and h >= 36 and s >= 0.25:
+                    want_emb.append(i)
+                if fi % 2 == 0 and h >= crop_min_h and s >= 0.4:
+                    x1, y1, x2, y2 = (int(v) for v in b)
+                    pad = int(0.05 * h)
+                    crop = frame[max(0, y1 - pad): y2, max(0, x1 - pad): x2 + pad]
+                    if crop.size:
+                        _w = time.perf_counter()
+                        cv2.imwrite(str(out / "crops" / f"{fi:06d}_{base + i}.jpg"), crop, [cv2.IMWRITE_JPEG_QUALITY, 92])
+                        _io += time.perf_counter() - _w
+            tm["colour_signature"] += time.perf_counter() - _t - _io
+            tm["crops_io"] += _io
+            _t = time.perf_counter()
+            if want_emb:
+                E = emb(frame, pb[want_emb])
+                for i, e in zip(want_emb, E):
+                    emb_idx.append(base + i)
+                    embs.append(e.astype(np.float16))
+            tm["embedding"] += time.perf_counter() - _t
+            if progress and fi % 100 == 0:
+                progress(fi, t, time.time() - t_start)
+
+        # 5.1: OpenCV decoding runs in a background thread with a bounded queue (backpressure:
+        # at most PREFETCH decoded frames in memory), overlapping decode with detection. Same pixels.
+        # Measured on 2 vCPU (IMG_4809, 60 s, YOLOX-s 1280): identical output, but no gain (235.7 s vs
+        # 224.5 s) - decode and detector compete for the same cores. Default (-1): on only when the
+        # detector runs on a GPU (not measured: no GPU available).
+        if prefetch < 0:
+            prefetch = 4 if det.on_gpu else 0
+        source = CaptureReader(cap, prefetch) if ff is None else nullcontext(None)
+        with source as reader:
+            while True:
+                _t = time.perf_counter()
+                if ff is not None:
+                    nxt = next(ff, None)
+                    ok, frame = (nxt is not None), (nxt[1] if nxt is not None else None)
+                    if ok:
+                        k += stride - 1
+                else:
+                    ok, frame = reader.read()
+                tm["decode"] += time.perf_counter() - _t
+                if not ok:
+                    break
+                k += 1
+                if (k % stride) != 0:
                     continue
-            pending.append((t, frame))
-            if len(pending) >= batch:
-                run_batch()
-        run_batch()
-    np.savez_compressed(
-        out / "detections.npz",
-        dets=np.array(dets, np.float64).reshape(-1, 7), sigs=np.array(sigs, np.float16).reshape(-1, SIG_DIM),
-        emb_idx=np.array(emb_idx, np.int64), embs=np.array(embs, np.float16).reshape(-1, EMB_DIM),
-        balls=np.array(balls, np.float64).reshape(-1, 7), ball_warm=np.array(ball_warm, np.float32),
-        warps=np.array(warps, np.float64).reshape(-1, 7),
-        cuts=np.array(cuts, np.int64), times=np.array(times, np.float64), grass=np.array(grass, np.float32),
-        propagated=np.array(prop_flags, bool),
-    )
-    meta = {"video": os.path.abspath(video), "detector": det.name, "keyframeEvery": key_every if prop is not None else 1, "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
-            "width": width, "height": height, "seconds": round(time.time() - t_start, 1),
-            "stageSeconds": {k: round(v, 2) for k, v in tm.items()}}
-    (out / "meta.json").write_text(json.dumps(meta, indent=2))
-    det.close()
-    return meta
+                t = t0 + k / fps_src
+                if end is not None and k / fps_src >= end:
+                    break
+                if prop is not None and batch == 1 and (fi + 1) % key_every != 0:
+                    # in-between frame: propagate unless the scene changed (then detect)
+                    small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
+                    if not scene_cut(prev_small, small):
+                        _tp = time.perf_counter()
+                        pb, ps = prop.step(frame)
+                        tm["propagate"] += time.perf_counter() - _tp
+                        last_small[0] = small
+                        consume(t, frame, pb, ps, np.zeros((0, 4), np.float32), np.zeros(0, np.float32), propagated=True)
+                        last_small[0] = None
+                        continue
+                pending.append((t, frame))
+                if len(pending) >= batch:
+                    run_batch()
+            run_batch()
+        np.savez_compressed(
+            out / "detections.npz",
+            dets=np.array(dets, np.float64).reshape(-1, 7), sigs=np.array(sigs, np.float16).reshape(-1, SIG_DIM),
+            emb_idx=np.array(emb_idx, np.int64), embs=np.array(embs, np.float16).reshape(-1, EMB_DIM),
+            balls=np.array(balls, np.float64).reshape(-1, 7), ball_warm=np.array(ball_warm, np.float32),
+            warps=np.array(warps, np.float64).reshape(-1, 7),
+            cuts=np.array(cuts, np.int64), times=np.array(times, np.float64), grass=np.array(grass, np.float32),
+            propagated=np.array(prop_flags, bool),
+        )
+        meta = {"video": os.path.abspath(video), "detector": det.name, "keyframeEvery": key_every if prop is not None else 1, "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
+                "width": width, "height": height, "seconds": round(time.time() - t_start, 1),
+                "stageSeconds": {k: round(v, 2) for k, v in tm.items()}}
+        (out / "meta.json").write_text(json.dumps(meta, indent=2))
+        return meta
+    finally:
+        # Chunk retries share one process. An exception mid-extract must still drop the session so
+        # the next attempt does not keep the previous arena/CUDA blocks beside OCR.
+        det.close()
 
 
 def main() -> None:

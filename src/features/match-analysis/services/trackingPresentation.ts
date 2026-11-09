@@ -31,7 +31,8 @@ export type TrackingReport = {
     thresholds: { sprint_kmh: number; hsr_kmh: number };
   };
   ball: { contacts: number; carries: number; passAttempts: number; completedPasses: number; incompletePasses: number;
-    unknownOutcomePasses: number; provenance: TrackingProvenance };
+    unknownOutcomePasses: number; contactsConfirmedIdentity?: number; duelCandidates?: number; tackleCandidates?: number;
+    provenance: TrackingProvenance };
   events: Array<{ type: 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate'; candidate?: true; start: number; end: number; identityState: TrackingIdentityState;
     outcome?: 'completed' | 'incomplete' | 'unknown' }>;
   reviewQuestions: TrackingQuestion[];
