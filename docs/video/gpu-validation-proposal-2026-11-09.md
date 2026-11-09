@@ -17,7 +17,7 @@ Previous approvals (2026-11-01, 2026-11-07) do **not** authorize this session. T
 | Role | Commit | Notes |
 |---|---|---|
 | **Immutable GPU baseline (Part A)** | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | FP32 comparison only. Never overwritten by later fixes. |
-| **Part B candidate (after local reliability commit)** | *freeze at approval time* to the tip that contains the detector-close / atomic-discovery / coaching-contact fixes | Must be named in the APPROVAL block. |
+| **Part B candidate** | `0584c1c177831fa362791739ed3494f406fae55f` | Detector-close / atomic-discovery / coaching-contact fixes. Must still be named explicitly in APPROVAL. |
 | Prior Part B freeze (superseded for a new session) | `3381371014d37c91072ff257f280593df374b977` | Used only by the stocked-out 2026-11-07 session. |
 
 ## Inputs (re-verified 2026-11-09)
@@ -93,7 +93,7 @@ Machine / GPU / disk / image:             g2-standard-8, 1× NVIDIA L4, 200 GB b
                                           common-cu129-ubuntu-2204-nvidia-580-v20261029
 Alternate GPU types:                      NO
 Part A commit:                            51d41c9f5f333c7e93a606b7181ba8cb1cee8eac
-Part B commit:                            <exact tip SHA after reliability candidate>
+Part B commit:                            0584c1c177831fa362791739ed3494f406fae55f
 Maximum VM lifetime (server-enforced):    300 min
 Max create attempts / search window:      6 / 6 h
 Cost ceiling, all-in, before tax:         USD 8.00

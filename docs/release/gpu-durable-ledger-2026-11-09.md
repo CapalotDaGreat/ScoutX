@@ -38,7 +38,7 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | GPU comparison baseline | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | Immutable |
 | 2026-11-07 Part B freeze | `3381371014d37c91072ff257f280593df374b977` | Stockout; no GPU data |
 | Cold Linux CPU full-match | `8e1b63355d725c36e217b3b6df6ce53c93da442e` | **Complete** (see below) |
-| Reliability + coaching candidate | *pending commit after this ledger* | Local fixes ready |
+| Reliability + coaching candidate | `0584c1c177831fa362791739ed3494f406fae55f` | Local fixes + docs; **not** authorized for GPU until APPROVAL names it |
 
 ---
 
