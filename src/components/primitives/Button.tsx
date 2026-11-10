@@ -12,7 +12,8 @@ import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 
 const variantStyles = {
-  primary: 'bg-primary border border-transparent active:opacity-90',
+  // One action colour: primary and accent render the same so two filled buttons never compete.
+  primary: 'bg-accent border border-transparent active:opacity-90',
   accent: 'bg-accent border border-transparent active:opacity-90',
   // Legacy name: renders as the single primary action colour so screens do not compete.
   prestige: 'bg-accent border border-transparent active:opacity-90',
@@ -29,7 +30,7 @@ const sizeStyles = {
 } as const;
 
 const textVariantStyles = {
-  primary: 'text-primary-foreground',
+  primary: 'text-accent-foreground',
   accent: 'text-accent-foreground',
   prestige: 'text-accent-foreground',
   secondary: 'text-foreground',
@@ -84,7 +85,7 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
 
   const labelColor =
     variant === 'primary'
-      ? colors.primaryForeground
+      ? colors.accentForeground
       : variant === 'accent'
         ? colors.accentForeground
         : variant === 'prestige'

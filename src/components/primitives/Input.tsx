@@ -79,7 +79,7 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
             onBlur?.(event);
           }}
           className={cn(
-            'flex-1 py-3 text-body',
+            'min-w-0 flex-1 py-3 text-body',
             inputClassName,
           )}
           style={[{ color: colors.textPrimary, letterSpacing: 0 }, style]}
