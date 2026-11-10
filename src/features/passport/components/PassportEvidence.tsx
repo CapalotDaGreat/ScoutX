@@ -53,9 +53,9 @@ export function ProofStack({ items }: { items: ProofItem[] }) {
           ? new Intl.DateTimeFormat(i18n.language, { day: 'numeric', month: 'short' }).format(new Date(item.occurredAt))
           : t('passport:proof.dateUnknown');
         return (
-          <View key={item.id} className="flex-row items-start gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-            <View className="min-w-0 flex-1">
-              <Text weight="semibold" numberOfLines={1}>
+          <View key={item.id} className="gap-2 rounded-lg bg-background-secondary px-4 py-3">
+            <View className="min-w-0">
+              <Text weight="semibold" numberOfLines={2}>
                 {item.title}
               </Text>
               <Text variant="caption" color="secondary" numberOfLines={2}>
@@ -75,8 +75,8 @@ export function EvidenceCoverageGrid({ coverage }: { coverage: EvidenceCoverage[
   return (
     <View className="gap-2">
       {coverage.map((item) => (
-        <View key={item.id} className="flex-row items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-          <View className="min-w-0 flex-1">
+        <View key={item.id} className="gap-2 rounded-lg bg-background-secondary px-4 py-3">
+          <View className="min-w-0">
             <Text weight="semibold">{dimensionLabel(t, item.id)}</Text>
             <Text variant="caption" color="secondary">
               {t('passport:coverage.sample', { have: item.sampleSize, need: item.requiredForStrong })}

@@ -1,15 +1,15 @@
 export const lightColors = {
   primary: '#141C1A', primaryForeground: '#FFFFFF',
-  accent: '#087F5B', accentForeground: '#FFFFFF', accentMuted: '#DCF3E8',
+  accent: '#07704F', accentForeground: '#FFFFFF', accentMuted: '#DCF3E8',
   // Keep legacy token names compatible while using restrained olive accents.
   gold: '#576B12', goldForeground: '#FFFFFF', goldMuted: '#EDF3D8',
   background: '#F3F5F1', backgroundSecondary: '#E8EDE7',
   surface: '#FFFFFF', surfaceElevated: '#FFFFFF', surfaceCool: '#EDF3F4',
   surfaceOverlay: 'rgba(13,19,17,0.48)',
   textPrimary: '#121A17', textSecondary: '#44544B', textTertiary: '#5E6D63',
-  textInverse: '#FFFFFF', textLink: '#087F5B',
+  textInverse: '#FFFFFF', textLink: '#07704F',
   border: '#D6E0DA', borderStrong: '#A7B9AD', divider: '#E4EBE6',
-  success: '#087F5B', successMuted: '#DCF3E8',
+  success: '#07704F', successMuted: '#DCF3E8',
   warning: '#92600A', warningMuted: '#FCF0D6',
   error: '#B33E3A', errorMuted: '#FBE6E4', info: '#256A80', infoMuted: '#E2F1F6',
   skeletonBase: '#E4EBE6', skeletonHighlight: '#F6F8F7',

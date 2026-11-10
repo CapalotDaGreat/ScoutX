@@ -54,9 +54,10 @@ export function PlayerIdentityPanel({
       ? 'Trust-verified identity · stats only when public and recorded'
       : 'Player-entered profile · not match-verified analysis');
   return (
+    <View className="gap-3">
     <View className="flex-row items-center gap-4">
       <PlayerCardImage playerId={playerId} uri={portrait}
-        className={expanded ? 'h-32 w-24 shrink-0 overflow-hidden rounded-xl' : 'h-[88px] w-[68px] shrink-0 overflow-hidden rounded-lg'}
+        className={expanded ? 'h-28 w-20 shrink-0 overflow-hidden rounded-xl' : 'h-[88px] w-[68px] shrink-0 overflow-hidden rounded-lg'}
         fallback={<View className="h-full w-full items-center justify-center" style={{ backgroundColor: frame }}>
           <Text className="font-display" style={{ color: inkMuted, fontSize: expanded ? 38 : 28, lineHeight: expanded ? 42 : 32 }}>{playerInitials(name)}</Text>
         </View>} />
@@ -76,6 +77,8 @@ export function PlayerIdentityPanel({
         </View>
         {context ? <Text variant="body-sm" numberOfLines={2} style={{ color: inkMuted }}>{context}</Text> : null}
         {facts ? <Text variant="caption" numberOfLines={2} style={{ color: inkQuiet }}>{facts}</Text> : null}
+        {expanded ? null : (
+          <>
         <View className="mt-0.5 flex-row items-start gap-1.5">
           <ProvenanceIcon
             size={14}
@@ -87,8 +90,26 @@ export function PlayerIdentityPanel({
             {provenance}
           </Text>
         </View>
+          </>
+        )}
       </View>
-      {showPositionPitch ? <PositionPitch position={position} width={expanded ? 56 : 44} tone={tone} /> : null}
+      {showPositionPitch ? <PositionPitch position={position} width={expanded ? 52 : 44} tone={tone} /> : null}
+    </View>
+    {expanded ? (
+      <>
+        <View className="mt-0.5 flex-row items-start gap-1.5">
+          <ProvenanceIcon
+            size={14}
+            color={verified ? (onPitch ? colors.highlight : colors.verification) : inkQuiet}
+            style={{ marginTop: 2 }}
+            accessibilityLabel={verified ? 'Verified profile' : undefined}
+          />
+          <Text variant="caption" numberOfLines={3} className="min-w-0 flex-1" style={{ color: inkQuiet }}>
+            {provenance}
+          </Text>
+        </View>
+      </>
+    ) : null}
     </View>
   );
 }

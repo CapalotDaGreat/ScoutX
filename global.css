@@ -9,7 +9,7 @@
 :root {
   --color-primary: #141C1A;
   --color-primary-foreground: #FFFFFF;
-  --color-accent: #087F5B;
+  --color-accent: #07704F;
   --color-accent-foreground: #FFFFFF;
   --color-accent-muted: #DCF3E8;
   --color-gold: #576B12;
@@ -27,7 +27,7 @@
   --color-border: #D6E0DA;
   --color-border-strong: #A7B9AD;
   --color-divider: #E4EBE6;
-  --color-success: #087F5B;
+  --color-success: #07704F;
   --color-success-muted: #DCF3E8;
   --color-warning: #92600A;
   --color-warning-muted: #FCF0D6;
