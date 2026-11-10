@@ -5,12 +5,14 @@ import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 
 const variantStyles = {
-  default: 'bg-surface border border-border',
+  default: 'bg-surface border border-divider',
   outlined: 'bg-surface border border-border',
-  elevated: 'bg-surface-elevated border border-border',
-  media: 'bg-surface border border-border overflow-hidden',
-  glass: 'bg-surface border border-border overflow-hidden',
-  prestige: 'bg-gold-muted border border-border',
+  elevated: 'bg-surface-elevated border border-divider',
+  media: 'bg-surface border border-divider overflow-hidden',
+  glass: 'bg-surface border border-divider overflow-hidden',
+  prestige: 'bg-gold-muted border border-divider',
+  /** Quiet inset panel on the page background: no border, used inside sections. */
+  tonal: 'bg-background-secondary',
 } as const;
 
 export type CardVariant = keyof typeof variantStyles;
@@ -50,12 +52,14 @@ export const Card = forwardRef<View, CardProps>(function Card(
       ? colors.surfaceElevated
       : variant === 'prestige'
         ? colors.goldMuted
-        : colors.surface;
+        : variant === 'tonal'
+          ? colors.backgroundSecondary
+          : colors.surface;
 
   const content = (
     <View
       className={cn(
-        'rounded-lg',
+        'rounded-xl',
         variantStyles[variant],
         paddingStyles[padding],
         className,
@@ -86,7 +90,7 @@ export const Card = forwardRef<View, CardProps>(function Card(
       ref={ref}
       accessibilityRole="button"
       onPress={handlePress}
-      className="rounded-lg"
+      className="rounded-xl"
       style={({ pressed }) =>
         pressed
           ? ({ opacity: 0.88 } satisfies ViewStyle)

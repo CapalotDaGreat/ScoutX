@@ -49,7 +49,7 @@ export function AiRecommendationList({ items, title }: AiRecommendationListProps
             {item.description}
           </Text>
           {item.category ? (
-            <Text variant="caption" color="secondary" className="mt-1 uppercase">
+            <Text variant="caption" color="secondary" className="mt-1">
               {item.category}
             </Text>
           ) : null}

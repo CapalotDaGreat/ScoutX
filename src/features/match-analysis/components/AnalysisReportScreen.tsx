@@ -294,7 +294,7 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
       {job ? (
         <View className="gap-4">
           {report ? (
-          <View className="gap-2 border-l-4 border-accent py-3 pl-4">
+          <View className="gap-2 rounded-xl bg-accent-muted p-4">
             <Heading level={3}>{report.headline}</Heading>
             <Text variant="caption" color="secondary">
               {t('report.coverageBand', {

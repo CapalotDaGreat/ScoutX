@@ -3,8 +3,10 @@
  * hero, passport score, onboarding, quick stats/activity, trust,
  * passport CTAs (no privacy editor), identity entry, Settings footer.
  */
-import { useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { View } from 'react-native';
+import { TabSegmentControl } from '@/components/navigation/TabSegmentControl';
+import { HomeIdentityStrip } from '@/features/player-profile/components/HomeIdentityStrip';
 import { Screen } from '@/components/layout/Screen';
 import { CollapsibleSection } from '@/components/layout/CollapsibleSection';
 import { EmptyState } from '@/components/feedback/EmptyState';
@@ -111,6 +113,11 @@ export function PlayerProfileScreen({
   );
 
   const screenProps = embeddedInTabShell ? { embeddedInTabShell: true as const } : {};
+  // Home answers "what now?"; the Passport segment holds the profile the player manages and shares.
+  const [segment, setSegment] = useState<'today' | 'passport'>('today');
+  useEffect(() => {
+    if (passportSettingsFocusKey !== null) setSegment('passport');
+  }, [passportSettingsFocusKey]);
 
   if (loading) {
     return (
@@ -192,19 +199,36 @@ export function PlayerProfileScreen({
         ) : undefined
       }
     >
+      <View className="-mx-5">
+        <TabSegmentControl
+          testID="home-segments"
+          segments={[
+            { id: 'today', label: t('portfolio:homeSegments.today') },
+            { id: 'passport', label: t('portfolio:homeSegments.passport') },
+          ]}
+          activeSegment={segment}
+          onSegmentChange={setSegment}
+        />
+      </View>
+      {segment === 'today' ? (
+        <View className="gap-6">
+          <HomeIdentityStrip profile={profile} onOpenPassport={() => setSegment('passport')} />
+          {todaySlot}
+          <ProfileStatsGrid stats={homeQuickStats} compact />
+          <HomePerformanceOverview
+            matches={profile.statisticsMatches}
+            onLogMatchPress={onLogMatchPress}
+            onViewAllMatchesPress={onViewPerformancePress}
+          />
+          {onActivityPress ? <ActivityFeedSection onViewAllPress={onActivityPress} limit={3} /> : null}
+          {!privateMode && onTrialsPress ? (
+            <HomeTrialsQuickAction pendingCount={pendingTrialsCount} onPress={onTrialsPress} />
+          ) : null}
+          {staffRole ? <AdminReviewCard staffRole={staffRole} /> : null}
+        </View>
+      ) : (
       <View className="gap-6">
         <ProfileHero profile={profile} trustProfile={trustProfile} onEditPress={onEditPress} />
-
-        {todaySlot}
-
-        <ProfileStatsGrid stats={homeQuickStats} compact />
-
-        <HomePerformanceOverview
-          matches={profile.statisticsMatches}
-          onLogMatchPress={onLogMatchPress}
-          onViewAllMatchesPress={onViewPerformancePress}
-        />
-
         {privateMode ? (
           <PrivateModeCard />
         ) : (
@@ -346,6 +370,7 @@ export function PlayerProfileScreen({
           </Button>
         ) : null}
       </View>
+      )}
     </Screen>
   );
 }

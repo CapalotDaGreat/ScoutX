@@ -33,12 +33,14 @@ function TabItem<T extends string>({
   onPress,
   accentColor,
   mutedColor,
+  activeFill,
 }: {
   tab: AppTabBarItem<T>;
   isActive: boolean;
   onPress: () => void;
   accentColor: string;
   mutedColor: string;
+  activeFill: string;
 }) {
   const Icon = tab.icon;
   const badge = tab.badge && tab.badge > 0 ? tab.badge : null;
@@ -52,9 +54,12 @@ function TabItem<T extends string>({
         badge ? `${tab.label}, ${badge} notifications` : tab.label
       }
       onPress={onPress}
-      className="min-h-[72px] flex-1 items-center justify-center gap-1 rounded-lg px-1 py-1"
+      className="min-h-[64px] flex-1 items-center justify-center gap-1 py-1"
     >
-      <View className="relative h-7 w-8 items-center justify-center overflow-visible">
+      <View
+        className="relative h-8 w-14 items-center justify-center overflow-visible rounded-full"
+        style={isActive ? { backgroundColor: activeFill } : undefined}
+      >
         <Icon
           size={22}
           color={isActive ? accentColor : mutedColor}
@@ -83,9 +88,9 @@ function TabItem<T extends string>({
         numberOfLines={1}
         adjustsFontSizeToFit
         minimumFontScale={0.8}
-        className="h-4 w-full text-center text-[11px] leading-4"
-        weight="medium"
-        color={isActive ? 'accent' : 'secondary'}
+        className="h-4 w-full text-center text-[11.5px] leading-4"
+        weight={isActive ? 'semibold' : 'medium'}
+        color={isActive ? 'primary' : 'secondary'}
       >
         {tab.label}
       </Text>
@@ -112,13 +117,13 @@ export function AppTabBar<T extends string>({
   return (
     <View
       testID={testID}
-      className="border-t border-divider bg-background px-2 pt-1.5"
+      className="border-t border-divider bg-surface px-1 pt-1.5"
       style={{
-        backgroundColor: colors.background,
-        paddingBottom: Math.max(insets.bottom, 10),
+        backgroundColor: colors.surface,
+        paddingBottom: Math.max(insets.bottom, 8),
       }}
     >
-      <View className="flex-row items-end overflow-visible">
+      <View className="flex-row items-center overflow-visible">
         {leftTabs.map((tab) => (
           <TabItem
             key={tab.id}
@@ -126,6 +131,7 @@ export function AppTabBar<T extends string>({
             isActive={activeTab === tab.id}
             accentColor={tabAccent}
             mutedColor={colors.textSecondary}
+            activeFill={colors.accentMuted}
             onPress={() => {
               void triggerHaptic('light');
               onTabChange(tab.id);
@@ -134,7 +140,7 @@ export function AppTabBar<T extends string>({
         ))}
 
         {onCenterAction ? (
-          <View className="mx-1 w-12 items-center justify-end pb-1.5">
+          <View className="w-14 items-center justify-center">
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={centerActionLabel}
@@ -142,12 +148,10 @@ export function AppTabBar<T extends string>({
                 void triggerHaptic('medium');
                 onCenterAction();
               }}
-              className="h-12 w-12 items-center justify-center rounded-lg bg-accent"
-              style={{
-                backgroundColor: colors.accent,
-              }}
+              className="h-[52px] w-[52px] items-center justify-center rounded-full bg-pitch active:opacity-90"
+              style={{ backgroundColor: colors.pitch }}
             >
-              <Plus size={28} color={colors.accentForeground} strokeWidth={2.5} />
+              <Plus size={26} color={colors.highlight} strokeWidth={2.5} />
             </Pressable>
           </View>
         ) : null}
@@ -159,6 +163,7 @@ export function AppTabBar<T extends string>({
             isActive={activeTab === tab.id}
             accentColor={tabAccent}
             mutedColor={colors.textSecondary}
+            activeFill={colors.accentMuted}
             onPress={() => {
               void triggerHaptic('light');
               onTabChange(tab.id);

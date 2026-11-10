@@ -35,7 +35,7 @@ export function ContinueScoutingCard({
       <Card variant="outlined" padding="md" className="overflow-hidden rounded-lg">
         <View className="gap-3">
           <View>
-            <Text variant="overline" color="secondary" className="uppercase">
+            <Text variant="overline" color="secondary">
               {t('continueCard.overline')}
             </Text>
             <Heading level={3} className="mt-1">

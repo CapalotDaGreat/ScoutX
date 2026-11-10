@@ -44,6 +44,7 @@
     "marketing:native:compose": "node scripts/marketing-native-compose.mjs"
   },
   "dependencies": {
+    "@expo-google-fonts/barlow-condensed": "^0.2.3",
     "@expo-google-fonts/inter": "^0.2.3",
     "@expo/metro-runtime": "~57.0.16",
     "@react-native-async-storage/async-storage": "2.2.0",

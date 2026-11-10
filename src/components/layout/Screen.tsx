@@ -153,7 +153,7 @@ export function Screen({
       ) : null}
 
       {hasHeaderChrome ? (
-        <View className={cn('mb-5 overflow-visible border-b border-divider pb-4', padded && 'px-5')}>
+        <View className={cn('mb-4 overflow-visible pb-1 pt-2', padded && 'px-5')}>
           {header ? (
             <View className="overflow-visible">{header}</View>
           ) : (
@@ -165,7 +165,7 @@ export function Screen({
                 <View className="min-w-0 flex-1">
                   {title ? <Heading level={1}>{title}</Heading> : null}
                   {subtitle ? (
-                    <Text variant="body-sm" color="secondary" className="mt-1.5 leading-5">
+                    <Text variant="body-sm" color="secondary" className="mt-1 leading-5">
                       {subtitle}
                     </Text>
                   ) : null}

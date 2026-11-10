@@ -33,7 +33,7 @@ export function ComparisonCareerSection({ profiles }: ComparisonCareerSectionPro
           </View>
 
           <View className="gap-2">
-            <Text variant="caption" color="secondary" className="uppercase">
+            <Text variant="caption" color="secondary">
               {t('comparisonUi.clubProgression')}
             </Text>
             {profile.career.clubs.map((club, clubIndex) => (

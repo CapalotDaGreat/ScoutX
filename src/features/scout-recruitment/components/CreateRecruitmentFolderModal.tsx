@@ -52,7 +52,7 @@ export function CreateRecruitmentFolderModal({
         />
 
         <View className="gap-2">
-          <Text variant="caption" color="secondary" className="uppercase">
+          <Text variant="caption" color="secondary">
             {t('pipelineUi.color')}
           </Text>
           <View className="flex-row flex-wrap gap-2">

@@ -29,7 +29,7 @@ import {
 } from '@/features/scout-discovery/types';
 import { useTheme } from '@/theme';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
-import { SlidersHorizontal } from 'lucide-react-native';
+import { SlidersHorizontal, Info } from 'lucide-react-native';
 import { HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 
 export type PlayerDiscoveryScreenProps = {
@@ -274,14 +274,11 @@ export function PlayerDiscoveryScreen({
         renderItem={renderItem}
         ListHeaderComponent={
           <>
-            <View className="flex-row items-start gap-2 border-b border-divider px-4 pb-4 pt-4">
-              <View className="min-w-0 flex-1 gap-2">
-                <Heading level={2}>{t('scout:discover.title')}</Heading>
+            <View className="flex-row items-start gap-2 px-4 pb-2 pt-4">
+              <View className="min-w-0 flex-1 gap-1">
+                <Heading level={1}>{t('scout:discover.title')}</Heading>
                 <Text variant="body-sm" color="secondary">
                   {t('scout:discover.subtitle')}
-                </Text>
-                <Text variant="caption" color="tertiary" accessibilityLiveRegion="polite">
-                  {t('scout:discover.evidenceNote')}
                 </Text>
               </View>
               {onSettingsPress ? (
@@ -292,6 +289,15 @@ export function PlayerDiscoveryScreen({
                   />
                 </View>
               ) : null}
+            </View>
+            <View
+              className="mx-4 mb-3 flex-row items-start gap-2 rounded-lg px-3 py-2.5"
+              style={{ backgroundColor: colors.infoMuted }}
+            >
+              <Info size={16} color={colors.info} style={{ marginTop: 2 }} />
+              <Text variant="caption" className="min-w-0 flex-1" style={{ color: colors.info }} accessibilityLiveRegion="polite">
+                {t('scout:discover.evidenceNote')}
+              </Text>
             </View>
             {listHeader}
           </>
