@@ -123,6 +123,14 @@ export function PublicPortfolioScreen({
       <Screen
         title={t('portfolio:footballPassport')}
         subtitle={t('portfolio:passportUnavailable')}
+        // With a load error the body is replaced by the error view, so keep the way back in the header.
+        headerLeading={
+          onBack && error ? (
+            <Button variant="ghost" size="sm" onPress={onBack}>
+              {t('portfolio:goBack')}
+            </Button>
+          ) : undefined
+        }
         safeArea
         onRetry={refresh}
         error={error}

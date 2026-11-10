@@ -117,6 +117,7 @@ export function AppTabBar<T extends string>({
   return (
     <View
       testID={testID}
+      accessibilityRole="tablist"
       className="border-t border-divider bg-surface px-1 pt-1.5"
       style={{
         backgroundColor: colors.surface,

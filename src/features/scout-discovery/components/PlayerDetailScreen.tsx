@@ -187,14 +187,24 @@ export function PlayerDetailScreen({
 
   if (error || !player) {
     return (
-      <Screen title={t('scout:playerDetail.report')} error={error ?? t('scout:playerDetail.playerNotFound')} onRetry={reload} safeArea>
-        <Button
-          variant="secondary"
-          leftIcon={<ArrowLeft size={18} color={colors.textPrimary} />}
-          onPress={onBack}
-        >
-          {t('scout:playerDetail.goBack')}
-        </Button>
+      <Screen
+        title={t('scout:playerDetail.report')}
+        // The error view replaces the body, so the way back has to live in the header or this is a dead end.
+        headerLeading={
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<ArrowLeft size={18} color={colors.textPrimary} />}
+            onPress={onBack}
+          >
+            {t('scout:playerDetail.goBack')}
+          </Button>
+        }
+        error={error ?? t('scout:playerDetail.playerNotFound')}
+        onRetry={reload}
+        safeArea
+      >
+        {null}
       </Screen>
     );
   }

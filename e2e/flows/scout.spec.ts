@@ -74,7 +74,11 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
     await page.getByRole('button', { name: 'Send request' }).click();
     await expect(page.getByRole('button', { name: 'Send request' })).toBeDisabled({ timeout: 20_000 });
 
-    const player = await (await browser.newContext()).newPage();
+    // Close the scout's page first and the player's context afterwards: two loaded apps at once
+    // were what pushed the browser past the memory limit of small CI machines.
+    await page.close();
+    const playerContext = await browser.newContext();
+    const player = await playerContext.newPage();
     await signIn(player, accounts.seededPlayer.email);
     await expect(player.getByText('Please log your next league match.').first()).toBeVisible({ timeout: 30_000 });
     await player.getByRole('button', { name: 'Decline' }).first().click();
@@ -83,6 +87,7 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
       await confirm.getByRole('button', { name: /Decline/ }).last().click();
     }
     await expect(player.getByText('Please log your next league match.')).toHaveCount(0, { timeout: 30_000 });
+    await playerContext.close();
   });
 
   test('invites the player to a trial and the player accepts', async ({ page, browser }) => {
@@ -97,7 +102,9 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
     await form.getByRole('button', { name: 'Send invitation' }).dispatchEvent('click');
     await expect(page.getByText('FC E2E Academy').first()).toBeVisible({ timeout: 30_000 });
 
-    const player = await (await browser.newContext()).newPage();
+    await page.close();
+    const playerContext = await browser.newContext();
+    const player = await playerContext.newPage();
     await signIn(player, accounts.seededPlayer.email);
     await player.goto('/player/trials');
     await expect(player.getByText('FC E2E Academy').first()).toBeVisible({ timeout: 30_000 });
@@ -106,5 +113,6 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
     await response.getByRole('button', { name: 'Accept', exact: true }).dispatchEvent('click');
     await expect(response).toBeHidden({ timeout: 20_000 });
     await expect(player.getByText('Accepted', { exact: true }).filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
+    await playerContext.close();
   });
 });
