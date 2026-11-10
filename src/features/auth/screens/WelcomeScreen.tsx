@@ -1,10 +1,10 @@
 import { View } from 'react-native';
-import { ArrowRight, Target, UserRound } from 'lucide-react-native';
+import { ArrowRight, Check, UserRound } from 'lucide-react-native';
 import { Button } from '@/components/primitives/Button';
 import { Heading } from '@/components/primitives/Heading';
 import { Screen } from '@/components/layout/Screen';
 import { Text } from '@/components/primitives/Text';
-import { AuthCard } from '@/features/auth/components/AuthCard';
+import { PitchSurface } from '@/components/football/PitchSurface';
 import { AuthOAuthActions } from '@/features/auth/components/AuthOAuthActions';
 import { LegalFooterLinks } from '@/components/legal/LegalFooterLinks';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
@@ -33,27 +33,33 @@ export function WelcomeScreen({
   return (
     <Screen safeArea>
       <View className="flex-1 justify-center py-6">
-        <AuthCard title={t('welcome.title')} subtitle={t('welcome.subtitle')}>
-          <View className="gap-3 border-b border-divider pb-6">
-            <Target size={36} color={colors.accent} strokeWidth={1.5} accessibilityElementsHidden importantForAccessibility="no" />
-            <Heading level={3}>
-              {t('welcome.heroTitle')}
+        <View className="w-full max-w-lg self-center gap-6 py-4">
+          <PitchSurface className="p-5">
+            <Heading level={1} style={{ color: colors.onPitch }}>
+              {t('welcome.title')}
             </Heading>
-            <Text variant="body-sm" color="secondary">
+            <Text variant="body-sm" className="mt-1" style={{ color: colors.onPitchMuted }}>
+              {t('welcome.subtitle')}
+            </Text>
+            <Text variant="body" weight="semibold" className="mt-5" style={{ color: colors.onPitch }}>
+              {t('welcome.heroTitle')}
+            </Text>
+            <Text variant="body-sm" className="mt-1" style={{ color: colors.onPitchMuted }}>
               {t('welcome.heroDescription')}
             </Text>
-            <View className="gap-2 pt-1" accessibilityRole="summary">
-              <Text variant="caption" color="tertiary">
-                · {t('welcome.trustMatch')}
-              </Text>
-              <Text variant="caption" color="tertiary">
-                · {t('welcome.trustFootage')}
-              </Text>
-              <Text variant="caption" color="tertiary">
-                · {t('welcome.trustShare')}
-              </Text>
+            <View className="mt-4 gap-2.5" accessibilityRole="summary">
+              {[t('welcome.trustMatch'), t('welcome.trustFootage'), t('welcome.trustShare')].map((line) => (
+                <View key={line} className="flex-row items-start gap-2.5">
+                  <View className="mt-0.5" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+                    <Check size={16} color={colors.highlight} strokeWidth={2.5} />
+                  </View>
+                  <Text variant="body-sm" className="min-w-0 flex-1" style={{ color: colors.onPitch }}>
+                    {line}
+                  </Text>
+                </View>
+              ))}
             </View>
-          </View>
+          </PitchSurface>
 
           <View className="gap-3">
             <Button
@@ -73,7 +79,7 @@ export function WelcomeScreen({
               appleButtonType="sign-in"
             />
             <Button
-              variant="secondary"
+              variant="ghost"
               loading={isSubmitting}
               onPress={onContinueAsGuest}
               leftIcon={<UserRound size={18} color={colors.textSecondary} strokeWidth={1.75} />}
@@ -88,7 +94,7 @@ export function WelcomeScreen({
             </Text>
           </View>
           <LegalFooterLinks className="pt-2" />
-        </AuthCard>
+        </View>
       </View>
     </Screen>
   );

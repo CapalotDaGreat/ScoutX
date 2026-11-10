@@ -1,4 +1,5 @@
 import { Image, View } from 'react-native';
+import { PitchSurface } from '@/components/football/PitchSurface';
 import { Text } from '@/components/primitives/Text';
 import { darkColors } from '@/theme/tokens/colors';
 import { type PassportShareCardData } from '@/features/share-cards/services/passportShareCardData';
@@ -29,71 +30,102 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
       : [{ label: 'Endorsements', value: 'Private' }]),
   ];
 
+  // The card is an image for other apps, so it uses one fixed scheme and fixed sizes: it must not follow
+  // the viewer's theme or text-size setting, or the captured picture would clip.
+  const c = darkColors;
+  const facts = [data.club, data.nationality].filter((part) => part?.trim()).join(' · ');
+  const fixed = { allowFontScaling: false, maxFontSizeMultiplier: 1 } as const;
+
   return (
-    <View
-      className="overflow-hidden rounded-lg"
-      style={{ width: PASSPORT_SHARE_CARD_WIDTH, height: PASSPORT_SHARE_CARD_HEIGHT, backgroundColor: darkColors.background }}
+    <PitchSurface
+      className="rounded-none"
+      style={{ width: PASSPORT_SHARE_CARD_WIDTH, height: PASSPORT_SHARE_CARD_HEIGHT, backgroundColor: c.pitch }}
     >
-      <View className="flex-row items-center gap-3 px-6 py-4 border-b" style={{ backgroundColor: darkColors.surface, borderColor: darkColors.border }}>
-        {data.includePhoto && data.photoUrl ? (
-          <Image
-            source={{ uri: data.photoUrl }}
-            accessibilityIgnoresInvertColors
-            style={{ width: 56, height: 72, borderRadius: 6, backgroundColor: darkColors.backgroundSecondary }}
-          />
-        ) : (
-          <View
-            className="items-center justify-center"
-            style={{ width: 56, height: 72, borderRadius: 6, backgroundColor: darkColors.backgroundSecondary }}
-          >
-            <Text weight="bold" style={{ color: darkColors.textSecondary, fontSize: 20 }}>
-              {playerInitials(data.playerName)}
-            </Text>
-          </View>
-        )}
-        <View className="min-w-0 flex-1">
-          <Text variant="caption" style={{ color: darkColors.gold }}>
+      <View className="flex-1 justify-between p-6">
+        <View>
+          <Text {...fixed} variant="caption" weight="bold" style={{ color: c.highlight }}>
             Football Passport · profile
           </Text>
-          <Text weight="semibold" className="text-2xl" numberOfLines={2} adjustsFontSizeToFit style={{ color: darkColors.textPrimary }}>
-            {data.playerName}
-          </Text>
-          <Text variant="body-sm" numberOfLines={2} style={{ color: darkColors.textSecondary }}>
-            {data.position} · {data.club} · {data.nationality}
-          </Text>
+          <View className="mt-4 flex-row items-center gap-4">
+            {data.includePhoto && data.photoUrl ? (
+              <Image
+                source={{ uri: data.photoUrl }}
+                accessibilityIgnoresInvertColors
+                style={{ width: 72, height: 92, borderRadius: 14, backgroundColor: c.pitchRaised }}
+              />
+            ) : (
+              <View
+                className="items-center justify-center"
+                style={{ width: 72, height: 92, borderRadius: 14, backgroundColor: c.pitchRaised }}
+              >
+                <Text {...fixed} className="font-display" style={{ color: c.onPitch, fontSize: 28, lineHeight: 32 }}>
+                  {playerInitials(data.playerName)}
+                </Text>
+              </View>
+            )}
+            <View className="min-w-0 flex-1">
+              {data.position?.trim() ? (
+                <View className="mb-1.5 self-start rounded-full px-2.5 py-0.5" style={{ backgroundColor: c.highlight }}>
+                  <Text {...fixed} variant="caption" weight="bold" numberOfLines={1} style={{ color: c.highlightForeground }}>
+                    {data.position}
+                  </Text>
+                </View>
+              ) : null}
+              <Text
+                {...fixed}
+                className="font-display"
+                numberOfLines={2}
+                adjustsFontSizeToFit
+                minimumFontScale={0.6}
+                style={{ color: c.onPitch, fontSize: 34, lineHeight: 36 }}
+              >
+                {data.playerName}
+              </Text>
+              {facts ? (
+                <Text {...fixed} variant="body-sm" numberOfLines={2} style={{ color: c.onPitchMuted }}>
+                  {facts}
+                </Text>
+              ) : null}
+            </View>
+          </View>
         </View>
-      </View>
 
-      <View className="flex-1 justify-between p-6">
-        <View className="flex-row flex-wrap gap-3">
+        <View className="flex-row flex-wrap gap-2.5">
           {stats.map((item) => (
             <View
               key={item.label}
-              className="min-w-[45%] flex-1 border-t px-3 py-3"
-              style={{ borderColor: darkColors.border }}
+              className="min-w-[45%] flex-1 rounded-xl px-3 py-2.5"
+              style={{ backgroundColor: c.pitchRaised }}
             >
-              <Text variant="caption" style={{ color: darkColors.textSecondary }}>
+              <Text {...fixed} variant="caption" numberOfLines={1} style={{ color: c.onPitchMuted }}>
                 {item.label}
               </Text>
-              <Text weight="semibold" className="text-2xl" style={{ color: darkColors.textPrimary }}>
+              <Text
+                {...fixed}
+                className={item.value === 'Private' ? 'font-sans-semibold' : 'font-display'}
+                numberOfLines={1}
+                style={{ color: c.onPitch, fontSize: item.value === 'Private' ? 16 : 28, lineHeight: 32 }}
+              >
                 {item.value}
               </Text>
             </View>
           ))}
         </View>
 
-        <View className="gap-2">
-          <Text variant="body-sm" numberOfLines={2} style={{ color: darkColors.textSecondary }}>
-            {data.tagline}
-          </Text>
-          <Text variant="caption" numberOfLines={2} style={{ color: darkColors.accent }}>
+        <View className="gap-1.5">
+          {data.tagline?.trim() ? (
+            <Text {...fixed} variant="body-sm" numberOfLines={2} style={{ color: c.onPitchMuted }}>
+              {data.tagline}
+            </Text>
+          ) : null}
+          <Text {...fixed} variant="body-sm" weight="semibold" numberOfLines={2} style={{ color: c.highlight }}>
             {data.portfolioUrl.replace('https://', '')}
           </Text>
-          <Text variant="caption" style={{ color: darkColors.textSecondary }}>
-            pitchproof.online · PitchProof Football Passport
+          <Text {...fixed} variant="caption" style={{ color: c.onPitchMuted }}>
+            PitchProof Football Passport · player-entered profile
           </Text>
         </View>
       </View>
-    </View>
+    </PitchSurface>
   );
 }

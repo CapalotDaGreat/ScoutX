@@ -4,7 +4,7 @@ Branch `redesign/pitchproof-ux-overhaul`, cut from `release/pitchproof-5-3-candi
 The 5.3 candidate and the GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` are untouched.
 Analysis thresholds, identity defaults, rules, functions and the CV worker are not changed by this branch.
 
-**Status: IN PROGRESS — tranche 2 of the overhaul. Not complete. Do not merge into the release branch yet.**
+**Status: IMPLEMENTED AND WEB-VERIFIED (tranche 3, 2026-11-10). Native, device and screen-reader validation NOT done; see section 9 before merging.**
 
 Evidence class for everything below: **Expo web + local Firebase emulators (demo project), seeded accounts**.
 No native, device, VoiceOver, Dynamic Type or TestFlight evidence exists for this branch.
@@ -77,8 +77,7 @@ intended 12.5 to 14 px instead of 15 px, app-wide. Every 5.3 screenshot differs 
 No route name, param list, deep-link path, Firestore/Functions call, entitlement check, privacy rule, analysis threshold or
 identity default was changed in either tranche. Changed files are presentation components, tokens, `cn.ts`, locale strings
 for three new labels, and tests. Checked by: `git diff 01f9459 -- src/navigation functions firestore.rules storage.rules` is empty,
-the unit suite, and the browser flows below. A per-feature matrix with one row per
-feature folder (64 folders under `src/features`) is **still to be written**.
+the unit suite, and the browser flows below. The per-feature matrix is in section 8.
 
 ## 5. Verification so far
 
@@ -88,16 +87,20 @@ feature folder (64 folders under `src/features`) is **still to be written**.
 - E2E flows: see section 7.
 - Rendered review: player tabs light + dark at 390 px, scout dashboard + Discover light.
 
-## 6. Remaining work (next actions, in order)
+## 6. Remaining work (cannot be done in this workspace, or deliberately left)
 
-1. Open the generated share-card image and the Football CV PDF and check clipping, portrait and links. Do not publish a real profile.
-2. Welcome / onboarding / role selection redesign; replace emoji glyphs in achievements with icons.
-3. State audit per screen (loading, partial, offline, error, denied, entitlement, long text, missing image, repeated tap).
-4. Large text, German long labels, tablet widths; pipeline list and board with saved players.
-5. Per-feature preservation matrix (64 feature folders).
-6. Post-implementation audit, then native/device validation, which this workspace cannot do.
-7. Renew release evidence: every 5.3 screenshot, marketing capture and device result predates this design.
-8. Page crashes in the Playwright runner (section 7) remain unexplained.
+1. **Native and device validation**: iOS and Android builds, VoiceOver/TalkBack, Dynamic Type / font scale, safe areas, keyboard,
+   haptics, native share sheet, `expo-print` PDF and `react-native-view-shot` image on a device. None of this was run. Web
+   captures are not evidence for any of it.
+2. **Renew release evidence**: every 5.3 screenshot, marketing capture and device result predates this design.
+3. The in-app **Welcome screen** is redesigned in code but was not seen rendered: on web the `/welcome` path serves the marketing
+   site, so the native first-run screen needs a device or simulator.
+4. **Discover list at tablet width** still stretches (it is a `FlatList` with its own layout); other screens use a 760 px column.
+5. Screens reviewed for coherence but without bespoke redesign: Settings, Privacy Center, Plan and usage, Trials, Request Center,
+   Activity, Comparison, Career Replay, Media library, Reel studio, GPS, Coach mode, Admin review. They inherit the system.
+6. Plan/usage, Privacy Center and a missing-report deep link were **not captured** (my capture paths were wrong and fell back to Home).
+7. Translations of the seven new provenance strings (de, es, fr, it, nl, pt) are mine and **not reviewed by a native speaker**.
+8. Gold tokens remain in the theme for milestone "new" states; the `prestige` card and button variants now render tonal/accent.
 
 ## 7. E2E result log
 
@@ -129,3 +132,62 @@ Browser flows, web-mobile, local emulators, fresh seed, `--retries=0`:
 - `visualStates.spec.ts:52` (tablet), which crashed in tranche 1, passed.
 - Horizontal overflow measured 0 px on every captured screen at 390 and 360 px. One real overflow found by probing element
   boxes (text inputs inside rows had no `min-w-0`) and fixed in `Input.tsx`.
+
+### 2026-11-10, tranche 3 (final web pass)
+
+Unit: **755/755**. Typecheck clean. ESLint on changed files: 0 errors (the two pre-existing quote errors in
+`footballCvExportService.ts` are gone because that file was rewritten).
+
+Browser flows, web-mobile, local emulators, fresh seed, `--retries=0`:
+
+- Full run (21 tests): **20 passed, 1 failed** — `scout.spec.ts:88`, "Page crashed" opening a second browser context.
+- Player + scout rerun after a fresh seed: **11 passed, 0 failed**.
+- **Cause of the crashes is now established**: the kernel log shows the container memory cgroup killing `chrome-headless`
+  (`Memory cgroup out of memory: Killed process … (chrome-headless)`). It is a limit of this workspace, not an app defect.
+  No test was changed, skipped or retried. A fully green single run still needs a machine with more memory.
+
+## 8. Feature preservation matrix (52 feature folders, diff against `01f9459`)
+
+"Presentation" means only files under `components/` or `screens/` changed (layout, classes, icons, copy keys).
+"Untouched" means no file in the folder changed; those features changed only through shared tokens and primitives.
+Nothing under `src/navigation`, `functions`, `firestore.rules`, `storage.rules`, services for auth, entitlements, deletion,
+uploads, analysis or identity was modified.
+
+| Feature folder | Change | Contract check |
+|---|---|---|
+| auth | Presentation: Welcome on pitch surface, role option, modal padding | player register and sign-in flows pass; OAuth buttons untouched |
+| player-profile, today, passport, player-onboarding | Presentation: Home split Today/Passport, hero, identity strip, evidence rows | player flows; `home-segments`; private-mode card on first screen |
+| public-portfolio | Presentation + **export**: CV template moved to pure `footballCvHtml.ts`; same privacy filter | `footballCvHtml.test.ts` (refusal when not public, hidden sections not leaked, escaping, dash for unrecorded), `portfolioExportPrivacy.test.ts` |
+| share-cards | Presentation: card image on pitch surface; same data object, same include flags | `portfolioExportPrivacy.test.ts`; web capture `t3-share-card-web.png` |
+| scout-discovery, scout-recruitment, player-comparison | Presentation: cards, detail hero, pills, pipeline card, modal padding | scout flows (brief, discover, why, save, request, trial) |
+| career-timeline | **Service**: new system entries no longer store an emoji prefix; display strips stored ones | `displayTitle.test.ts`; milestone ids, categories and triggers unchanged |
+| career-milestones, career-story, football-journey | Presentation: drawn icons, year-in-review tiles | unit suite |
+| development, player-statistics, ai-insights | Presentation: rows wrap, labels | unit suite |
+| match-analysis, match-review | Presentation: hero restyle, modal padding. **No pipeline, gate, threshold, identity default or evidence contract touched** | review preview from recorded fixtures; release suite pin unchanged |
+| reel-studio, highlight-videos, gps, football-sources | Presentation: padding, icon colour, label case | unit suite |
+| activity-feed, admin-review, career-replay, club-profiles, coach-mode, data-rights, evidence, football-memory, global-search, highlight-reel-studio, intelligence, legal, media-library, media-upload, notifications, performance-insights, player-growth, portfolio-analytics, premium, request-center, scout-intelligence, scouting-reports, settings, trial-invitations, trust-safety, trust-system, verification-system, weekly-report, youth-safety | Untouched | safety, guest and visual-state flows; unit suite |
+
+Shared changes that reach every feature: colour and radius tokens, type scale and its merge fix (4a), `Button`, `Card`,
+`Badge`, `Input` (`min-w-0`), `Text`, `Heading`, `CollapsibleSection`, `Screen` (760 px readable column), tab bars.
+
+## 9. Post-implementation audit (2026-11-10, web only)
+
+Found and fixed in this pass:
+
+| Finding | Fix |
+|---|---|
+| Ten bottom sheets and dialogs had no body padding; text and inputs touched the screen edge (pre-existing) | Padding added to each body |
+| Share card and CV still used the old dark/gold look; CV printed stray separators for empty fields and an unlinked URL | Both redesigned; CV link is clickable; empty fields omitted |
+| Milestones and stored timeline titles used emoji | Drawn icons; stored prefixes stripped at display |
+| Seven provenance notes were hard-coded English (three had no locale key at all) | Keys added in all seven locales |
+| German at 360 px: "Verstanden" clipped, stat names split mid-word, sort control truncated | Rows wrap; sort gets the row width |
+| Olive "prestige" panel behind Passport evidence in dark mode | Tonal panel |
+| Tablet width stretched every control edge to edge | 760 px column in `Screen` |
+
+Checked and found sound: no route, param or deep-link change; unknown values render as a dash, not zero (card, share card,
+CV, stat strips); no invented rating, potential, market value or verified status anywhere in the card family; provenance line
+on every identity surface; hidden sections named as private in exports; offline banner and loading skeletons render.
+
+Not verified (stated plainly): everything in section 6, items 1, 3 and 6; screen-reader order and labels; contrast of every
+text/background pair beyond the token pairs in `themeDesign.test.ts`; behaviour with real long names and missing portraits
+beyond the initials fallback seen in fixtures; error and permission-denied states, which were not triggered.

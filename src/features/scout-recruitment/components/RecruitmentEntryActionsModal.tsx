@@ -92,7 +92,7 @@ export function RecruitmentEntryActionsModal({
 
   return (
     <Modal visible={visible} onClose={onClose} title={entry.playerName} size="lg">
-      <View className="gap-5">
+      <View className="px-5 py-4 gap-5">
         <View className="gap-2">
           <Text variant="overline" color="secondary">
             {t('pipelineUi.stageTitle')}

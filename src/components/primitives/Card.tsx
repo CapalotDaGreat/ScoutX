@@ -10,7 +10,8 @@ const variantStyles = {
   elevated: 'bg-surface-elevated border border-divider',
   media: 'bg-surface border border-divider overflow-hidden',
   glass: 'bg-surface border border-divider overflow-hidden',
-  prestige: 'bg-gold-muted border border-divider',
+  // The old gold "prestige" panel read as an olive block in dark mode; it is now a quiet tonal group.
+  prestige: 'bg-background-secondary',
   /** Quiet inset panel on the page background: no border, used inside sections. */
   tonal: 'bg-background-secondary',
 } as const;
@@ -50,11 +51,9 @@ export const Card = forwardRef<View, CardProps>(function Card(
   const surfaceColor =
     variant === 'elevated'
       ? colors.surfaceElevated
-      : variant === 'prestige'
-        ? colors.goldMuted
-        : variant === 'tonal'
-          ? colors.backgroundSecondary
-          : colors.surface;
+      : variant === 'prestige' || variant === 'tonal'
+        ? colors.backgroundSecondary
+        : colors.surface;
 
   const content = (
     <View

@@ -683,6 +683,9 @@
     "noHighlights": "Sin destacados aún",
     "viewProfile": "Ver jugador",
     "openHint": "Abrir el perfil completo del jugador",
-    "footValue": "Pie {{foot}}"
+    "footValue": "Pie {{foot}}",
+    "verifiedEvidenceNote": "Verificado por confianza · solo partidos registrados",
+    "profileEvidenceNote": "Datos del perfil · análisis solo si se conocen",
+    "evidenceFreshness": "Actualidad de la evidencia"
   }
 }

@@ -36,6 +36,7 @@ import { useAuth } from '@/features/auth/store/AuthProvider';
 import { isGuestRole } from '@/features/auth/services/authAccess';
 import { type AuthRole } from '@/features/auth/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { displayTitle } from '@/utils/displayTitle';
 
 export type PublicPortfolioScreenProps = {
   playerId: string;
@@ -315,14 +316,14 @@ export function PublicPortfolioScreen({
                 .filter((entry) => entry.type === 'achievement')
                 .slice(0, 6)
                 .map((entry) => (
-                  <Badge key={entry.id} variant="prestige" label={entry.title} />
+                  <Badge key={entry.id} variant="prestige" label={displayTitle(entry.title)} />
                 ))}
               {profile.footballJourney?.entries
                 .filter((entry) => entry.type === 'achievement')
                 .slice(0, 6)
                 .map((entry) => (
                   <Text key={entry.id} variant="body-sm">
-                    {entry.title}
+                    {displayTitle(entry.title)}
                   </Text>
                 ))}
             </View>

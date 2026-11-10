@@ -96,7 +96,7 @@ export function appendSystemJourneyEvents(
     entries.unshift(
       createSystemEntry(
         'achievement',
-        `${milestone.icon} ${milestone.title}`,
+        milestone.title,
         milestone.description,
         new Date().toISOString(),
         { milestoneId: milestone.id, category: milestone.category },

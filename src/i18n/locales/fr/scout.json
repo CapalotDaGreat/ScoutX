@@ -683,6 +683,9 @@
     "noHighlights": "Pas encore de temps forts",
     "viewProfile": "Voir le joueur",
     "openHint": "Ouvrir le profil complet du joueur",
-    "footValue": "Pied {{foot}}"
+    "footValue": "Pied {{foot}}",
+    "verifiedEvidenceNote": "Vérifié · matchs enregistrés uniquement",
+    "profileEvidenceNote": "Champs du profil · analyses affichées seulement si connues",
+    "evidenceFreshness": "Fraîcheur des preuves"
   }
 }

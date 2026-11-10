@@ -238,7 +238,7 @@ export function PlayerDiscoveryScreen({
       <View className="flex-row items-end gap-3 border-t border-divider pt-3">
         <Button
           variant="secondary"
-          className="min-h-[44px] flex-1 rounded-md"
+          className="min-h-[44px]"
           leftIcon={<SlidersHorizontal size={18} color={colors.textPrimary} />}
           onPress={() => setFiltersVisible(true)}
         >

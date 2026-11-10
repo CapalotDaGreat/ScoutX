@@ -22,7 +22,7 @@ export type ProfileHeroProps = {
 
 /** Owner profile header of the player-card family: identity on the pitch surface, status chips below. */
 export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroProps) {
-  const { t } = useAppTranslation('portfolio');
+  const { t } = useAppTranslation(['portfolio', 'evidence']);
   const labels = useIdentityLabels();
   const reduceMotion = useReducedMotion();
   const { colors } = useTheme();
@@ -48,7 +48,7 @@ export function ProfileHero({ profile, trustProfile, onEditPress }: ProfileHeroP
           <PlayerIdentityPanel expanded tone="pitch" showPositionPitch playerId={profile.id} name={profile.fullName}
             portrait={avatarUri} position={primaryPosition || null} context={identity.currentClub || profile.club}
             facts={metaParts.join(' · ')}
-            evidenceNote="Your profile · self-entered, not match-verified analysis" />
+            evidenceNote={t('evidence:provenance.ownSelfEntered')} />
           {onEditPress ? (
             <Pressable
               accessibilityRole="button"

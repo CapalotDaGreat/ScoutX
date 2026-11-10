@@ -58,6 +58,12 @@ export type ScreenProps = ScrollViewProps & {
   contentClassName?: string;
 };
 
+/**
+ * On tablets and wide web windows the content keeps a readable column instead of stretching edge to edge.
+ * Phones are narrower than this, so nothing changes there.
+ */
+const READABLE_COLUMN = { width: '100%', maxWidth: 760, alignSelf: 'center' } as const;
+
 export function Screen({
   children,
   title,
@@ -153,7 +159,7 @@ export function Screen({
       ) : null}
 
       {hasHeaderChrome ? (
-        <View className={cn('mb-4 overflow-visible pb-1 pt-2', padded && 'px-5')}>
+        <View className={cn('mb-4 overflow-visible pb-1 pt-2', padded && 'px-5')} style={READABLE_COLUMN}>
           {header ? (
             <View className="overflow-visible">{header}</View>
           ) : (
@@ -183,7 +189,7 @@ export function Screen({
         </View>
       ) : null}
 
-      <View className={cn('flex-1', padded && 'px-5', contentClassName)}>
+      <View className={cn('flex-1', padded && 'px-5', contentClassName)} style={READABLE_COLUMN}>
         {renderContent()}
       </View>
 

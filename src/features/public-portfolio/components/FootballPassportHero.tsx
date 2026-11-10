@@ -51,8 +51,8 @@ export function FootballPassportHero({ data, username, verification }: FootballP
               position={[profile.position, ...secondaryPositions].filter(Boolean).join(' / ') || null}
               context={profile.club} facts={profile.nationality} verified={isVerified}
               evidenceNote={isVerified
-                ? 'Trust-verified identity · public Passport fields only'
-                : 'Player-entered Passport · not match-verified analysis'} />
+                ? t('evidence:provenance.passportVerified')
+                : t('evidence:provenance.passportPlayerEntered')} />
           </PitchSurface>
           <View className="min-w-[160px] flex-1 gap-2">
             {username ? (

@@ -41,7 +41,7 @@ export function ComparisonPlayerPickerModal({
 
   return (
     <Modal visible={visible} onClose={onClose} title={title} size="lg">
-      <View className="gap-4">
+      <View className="px-5 py-4 gap-4">
         <SearchBar
           value={search}
           onChangeText={setSearch}

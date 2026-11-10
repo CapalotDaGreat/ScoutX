@@ -32,8 +32,8 @@ export function ScoutReportHero({ player }: ScoutReportHeroProps) {
             facts={joinKnown([player.age !== null ? t('scout:playerDetail.ageYears', { count: player.age }) : null, player.nationality])}
             verified={player.verified}
             evidenceNote={player.verified
-              ? 'Trust-verified · logged matches only'
-              : 'Profile fields · not continuous match tracking'} />
+              ? t('evidence:provenance.verifiedLogged')
+              : t('evidence:provenance.profileNotTracking')} />
         </View>
       </PitchSurface>
 
