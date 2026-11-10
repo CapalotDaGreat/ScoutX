@@ -50,7 +50,8 @@ Routes, deep links and navigator param lists are unchanged.
 | Next-step card, review hero, analysis report hero | Restyled only | web |
 | Performance, Media, Settings, Log match, auth screens | Inherit tokens/primitives only; **not individually redesigned** | web captures reviewed for breakage only |
 | Scout dashboard, pipeline, trials, player detail, comparison | Inherit tokens/primitives only; **not individually redesigned** | dashboard/discover reviewed; detail/pipeline/trials not reviewed |
-| Public Passport, share card, CV/PDF export | Shares the redesigned identity panel; **layout and exports not reviewed** | none |
+| Public Passport hero | Identity on `PitchSurface` with position pitch; guest public-Passport flow tests pass; **not visually reviewed** | e2e only |
+| Share card, CV/PDF export | Share the redesigned identity panel; **exports not reviewed** | none |
 | Analysis report / match review layering | **Not started** (hero restyle only) | none |
 | Welcome / onboarding / role selection | **Not started** | none |
 | Empty, error, offline, restricted states per screen | **Not audited** | none |
@@ -60,13 +61,13 @@ Routes, deep links and navigator param lists are unchanged.
 - `npm run test:unit`: 746/746 pass (baseline on this tip before changes: 740/740).
 - `tsc`: clean except the pre-existing `scripts/review-preview/.generated/reports.json` missing-file error.
 - `npm run lint`: 2 pre-existing quote errors in `footballCvExportService.ts` (untouched).
-- E2E flows (guest, player, scout, safety; web-mobile, emulators): see section 7 for the recorded result.
+- E2E flows: see section 7.
 - Rendered review: player tabs light + dark at 390 px, scout dashboard + Discover light.
 
 ## 6. Remaining work (next actions, in order)
 
-1. Fix any E2E regressions from the Home split (tests that expect Passport controls on Home need the segment tap).
-2. Public Passport hero on `PitchSurface`; verify share card and CV/PDF export render (no clipping, portrait, links).
+1. Visually review the public Passport; verify share card and CV/PDF export render (no clipping, portrait, links).
+2. Find out why the Playwright runner crashes the page on a full reload in the cloud container (see section 7).
 3. Scout player detail header and pipeline/saved card variant from the same card family.
 4. Analysis report: summary → strengths → priorities → evidence → next objective layering, keeping every gate and safeguard.
 5. Welcome/onboarding/role selection; Performance and Media tab layouts; Settings grouping.
@@ -76,4 +77,16 @@ Routes, deep links and navigator param lists are unchanged.
 
 ## 7. E2E result log
 
-(appended as runs complete)
+2026-11-10, web-mobile project, local emulators (demo-scoutx), fresh seed, `--retries=0`,
+specs guest + player + safety + scout + visualStates: **19 passed, 2 failed** in the full run.
+
+- Two regressions from the Home split were found by the first run and fixed in the app, not in the tests:
+  the player's name is a heading again on Home > Today, and the under-13 private-mode card is on Today.
+- `scout.spec.ts:51` selector now filters to visible text. Its `.first()` resolved to hidden Scout Dashboard copy
+  ("Logged matches plus highlight film…", added 2026-11-04). Whether it also failed on the 5.3 tip was not checked.
+- `scout.spec.ts:88` (trial accept): "Page crashed" on a full reload in the full run; **passed** when rerun alone.
+- `visualStates.spec.ts:52` (tablet scout workspace): "Page crashed" on `goto /scout/discover` in the runner, twice.
+  A standalone Playwright probe at 1024 px signed in, opened Discover, measured 0 px overflow, 0 page errors and
+  reloaded the same URL successfully. Treated as an environment limit of this container (about 1.5 GB free), **not proven**.
+- The scout spec depends on the player spec having logged a recent match (30-day filter); run them in order.
+- Not run: footballSources, gpsImport, targetAnchors, marketingCapture flows; web-desktop project; rules tests.

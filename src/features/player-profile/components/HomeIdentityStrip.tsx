@@ -21,11 +21,8 @@ export function HomeIdentityStrip({ profile, onOpenPassport }: Props) {
   const club = profile.identity.currentClub || profile.club;
   const context = [position, club].filter(Boolean).join(' · ');
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${profile.fullName}. ${t('homeIdentity.openPassport')}`}
-      onPress={onOpenPassport}
-      className="min-h-[64px] flex-row items-center gap-3 rounded-xl bg-pitch px-3 py-2.5 active:opacity-90"
+    <View
+      className="min-h-[64px] flex-row items-center gap-3 rounded-xl bg-pitch py-2.5 pl-3 pr-1"
       style={{ backgroundColor: colors.pitch }}
     >
       <PlayerCardImage playerId={profile.id} uri={profile.avatarUrl}
@@ -34,15 +31,22 @@ export function HomeIdentityStrip({ profile, onOpenPassport }: Props) {
           <Text className="font-display" style={{ color: colors.onPitch, fontSize: 18, lineHeight: 22 }}>{playerInitials(profile.fullName)}</Text>
         </View>} />
       <View className="min-w-0 flex-1">
-        <Text numberOfLines={1} className="font-display" style={{ color: colors.onPitch, fontSize: 22, lineHeight: 24 }}>
+        <Text accessibilityRole="header" numberOfLines={1} className="font-display" style={{ color: colors.onPitch, fontSize: 22, lineHeight: 24 }}>
           {profile.fullName.trim() || playerInitials(profile.fullName)}
         </Text>
         {context ? (
           <Text variant="caption" numberOfLines={1} style={{ color: colors.onPitchMuted }}>{context}</Text>
         ) : null}
       </View>
-      <Text variant="caption" weight="semibold" style={{ color: colors.highlight }}>{t('homeSegments.passport')}</Text>
-      <ChevronRight size={18} color={colors.highlight} strokeWidth={2} />
-    </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('homeIdentity.openPassport')}
+        onPress={onOpenPassport}
+        className="min-h-[44px] flex-row items-center gap-1 rounded-full px-3 active:opacity-80"
+      >
+        <Text variant="caption" weight="semibold" style={{ color: colors.highlight }}>{t('homeSegments.passport')}</Text>
+        <ChevronRight size={18} color={colors.highlight} strokeWidth={2} />
+      </Pressable>
+    </View>
   );
 }

@@ -213,6 +213,8 @@ export function PlayerProfileScreen({
       {segment === 'today' ? (
         <View className="gap-6">
           <HomeIdentityStrip profile={profile} onOpenPassport={() => setSegment('passport')} />
+          {/* Under-13 private mode is safety information: it stays on the first screen. */}
+          {privateMode ? <PrivateModeCard /> : null}
           {todaySlot}
           <ProfileStatsGrid stats={homeQuickStats} compact />
           <HomePerformanceOverview
@@ -229,9 +231,7 @@ export function PlayerProfileScreen({
       ) : (
       <View className="gap-6">
         <ProfileHero profile={profile} trustProfile={trustProfile} onEditPress={onEditPress} />
-        {privateMode ? (
-          <PrivateModeCard />
-        ) : (
+        {privateMode ? null : (
           <FootballPassportScoreCard
             playerId={profile.id}
             profile={profile}

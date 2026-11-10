@@ -54,7 +54,7 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
 
     await expect(page.getByText('Why this player').first()).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Why you might wait' })).toBeVisible();
-    await expect(page.getByText('Only 2 logged matches.', { exact: false }).or(page.getByText('logged match', { exact: false })).first()).toBeVisible();
+    await expect(page.getByText('Only 2 logged matches.', { exact: false }).or(page.getByText('logged match', { exact: false })).filter({ visible: true }).first()).toBeVisible();
 
     const save = page.getByRole('button', { name: 'Save', exact: true });
     if (await save.isVisible()) {

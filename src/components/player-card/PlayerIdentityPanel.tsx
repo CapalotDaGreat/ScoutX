@@ -22,6 +22,8 @@ type Props = {
   tone?: 'surface' | 'pitch';
   /** Draws the stated position on a small pitch. Off for dense lists. */
   showPositionPitch?: boolean;
+  /** Primary position for the pitch marker when `position` lists several. */
+  pitchPosition?: string | null;
 };
 
 /**
@@ -41,6 +43,7 @@ export function PlayerIdentityPanel({
   evidenceNote = null,
   tone = 'surface',
   showPositionPitch = false,
+  pitchPosition,
 }: Props) {
   const { colors } = useTheme();
   const onPitch = tone === 'pitch';
@@ -93,7 +96,7 @@ export function PlayerIdentityPanel({
           </>
         )}
       </View>
-      {showPositionPitch ? <PositionPitch position={position} width={expanded ? 52 : 44} tone={tone} /> : null}
+      {showPositionPitch ? <PositionPitch position={pitchPosition ?? position} width={expanded ? 52 : 44} tone={tone} /> : null}
     </View>
     {expanded ? (
       <>
