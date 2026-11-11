@@ -193,19 +193,23 @@ export function Screen({
         {renderContent()}
       </View>
 
-      {footer ? (
-        <View
-          className="border-t border-divider bg-background px-5 pt-4"
-          style={{
-            backgroundColor: colors.background,
-            paddingBottom: Math.max(insets.bottom, 16),
-          }}
-        >
-          {footer}
-        </View>
-      ) : null}
     </>
   );
+
+  // The footer (Back on pushed screens) is pinned under the scrolling content. It used to scroll
+  // with it, so Back sat at the very end of long pages and moved while the page was still loading.
+  const footerNode = footer ? (
+        <View
+          className="border-t border-divider bg-background px-5 pt-3"
+          style={{
+            backgroundColor: colors.background,
+            // The root view already pads the bottom safe area when this screen owns that edge.
+            paddingBottom: 12,
+          }}
+        >
+          <View style={READABLE_COLUMN}>{footer}</View>
+        </View>
+  ) : null;
 
   const safeAreaStyle = safeArea ? getSafeAreaPadding(insets, resolvedSafeAreaEdges) : undefined;
 
@@ -221,6 +225,7 @@ export function Screen({
         style={rootStyle}
       >
         {body}
+        {footerNode}
       </View>
     );
   }
@@ -248,6 +253,7 @@ export function Screen({
       >
         {body}
       </ScrollView>
+      {footerNode}
     </View>
   );
 }

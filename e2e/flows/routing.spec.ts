@@ -38,6 +38,8 @@ test.describe('Player direct links', () => {
     await expect(page.getByRole('heading', { name: 'Home', exact: true })).toBeVisible({ timeout: 30_000 });
 
     await page.getByRole('button', { name: 'Settings', exact: true }).first().click();
+    // The privacy switches load above this button and push it down; wait for them so the tap lands on it.
+    await expect(page.getByText('Social feed visibility').filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
     await page.getByTestId('settings-open-privacy-center').click();
     await expect(page.getByTestId('privacy-center-consents')).toBeVisible({ timeout: 30_000 });
     await page.getByRole('button', { name: 'Back', exact: true }).click();

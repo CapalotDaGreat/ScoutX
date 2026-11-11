@@ -15,7 +15,6 @@ import { ScoutRootNavigator } from '@/navigation/ScoutRootNavigator';
 import { type RootStackParamList } from '@/navigation/types';
 import { resolveDeepLinkPath, resolutionToPath, type DeepLinkRole } from '@/navigation/deepLinkResolver';
 import { consumeResumePath, setDeepLinkSession } from '@/navigation/deepLinkSession';
-import { keepsLinkedScreen } from '@/navigation/rootSync';
 import { LinkUnavailableScreen } from '@/navigation/screens/LinkUnavailableScreen';
 import { GuardianLinkScreen } from '@/navigation/screens/GuardianLinkScreen';
 import { ReportLinkScreen } from '@/navigation/screens/ReportLinkScreen';
@@ -122,17 +121,12 @@ export function RootNavigator() {
       return;
     }
 
-    const previousKey = lastSyncedRootRef.current;
+    const isFirstSync = lastSyncedRootRef.current === null;
     lastSyncedRootRef.current = syncKey;
     // A cold start from a link already resolved into the right app: keep the linked screen.
     const rootState = navigation.getRootState();
     const linkedRoute = rootState?.routes[rootState.index ?? 0]?.name;
-    // First sync, or the same app whose account id only now became known (session restore reports
-    // "authenticated" a moment before the user record): not an account switch.
-    if (keepsLinkedScreen({ previousKey, rootRoute, linkedRoute, needsRole })) {
-      // The link has been honoured. Drop the remembered copy, or a later sync would re-open the
-      // linked screen after the user had already pressed Back.
-      if (linkAuthenticated) consumeResumePath();
+    if (isFirstSync && !needsRole && linkedRoute === rootRoute) {
       return;
     }
     // A standalone link screen (unavailable, guardian, report) stays until the user leaves it, on

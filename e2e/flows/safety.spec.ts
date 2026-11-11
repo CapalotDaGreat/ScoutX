@@ -148,6 +148,8 @@ test.describe.serial('Youth safety, reporting, privacy and plan', () => {
     const { playerId } = seedState();
     await signIn(page, accounts.seededPlayer.email);
     await page.goto('/player/settings');
+    // The privacy switches load above this button and push it down; wait for them so the tap lands on it.
+    await expect(page.getByText('Social feed visibility').filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
     await page.getByTestId('settings-open-privacy-center').click();
     await expect(page.getByTestId('privacy-center')).toBeVisible({ timeout: 30_000 });
     await expect(page.getByTestId('privacy-center-consents')).toBeVisible();
