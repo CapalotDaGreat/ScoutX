@@ -76,12 +76,12 @@ test.describe.serial('Player: register, log, goal, Passport, media', () => {
     const visitorContext = await browser.newContext();
     const visitor = await visitorContext.newPage();
     await visitor.goto(`/player/${accounts.seededPlayer.username}`, { waitUntil: 'domcontentloaded' });
-    await expect(visitor.getByText(accounts.seededPlayer.name).first()).toBeVisible({ timeout: 120_000 });
+    await expect(visitor.getByText(accounts.seededPlayer.name).filter({ visible: true }).first()).toBeVisible({ timeout: 120_000 });
     await expect
       .poll(
         async () => {
           await visitor.reload({ waitUntil: 'domcontentloaded' });
-          await visitor.getByText(accounts.seededPlayer.name).first().waitFor({ timeout: 60_000 });
+          await visitor.getByText(accounts.seededPlayer.name).filter({ visible: true }).first().waitFor({ timeout: 60_000 });
           return visitor.getByText('FC E2E Rivals').count();
         },
         { timeout: 90_000, intervals: [3_000] },

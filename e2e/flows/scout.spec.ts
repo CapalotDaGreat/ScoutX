@@ -72,7 +72,9 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
     await page.getByRole('button', { name: 'Match log', exact: true }).click();
     await page.getByRole('textbox', { name: 'Optional note for the player' }).fill('Please log your next league match.');
     await page.getByRole('button', { name: 'Send request' }).click();
-    await expect(page.getByRole('button', { name: 'Send request' })).toBeDisabled({ timeout: 20_000 });
+    // "Disabled" is also true while the call is still in flight; wait for the confirmation so the
+    // page is not closed before the request has reached the server.
+    await expect(page.getByText('Request sent.', { exact: true })).toBeVisible({ timeout: 20_000 });
 
     // Close the scout's page first and the player's context afterwards: two loaded apps at once
     // were what pushed the browser past the memory limit of small CI machines.
@@ -100,14 +102,17 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
     await form.getByLabel('Coach').fill('Kim Weber');
     await form.getByLabel('Location').fill('Pitch 2');
     await form.getByRole('button', { name: 'Send invitation' }).dispatchEvent('click');
-    await expect(page.getByText('FC E2E Academy').first()).toBeVisible({ timeout: 30_000 });
+    // The form closes only after the server has acknowledged the invitation; the list alone can
+    // show it from the local cache before that, and the page is closed right after this.
+    await expect(form).toBeHidden({ timeout: 30_000 });
+    await expect(page.getByText('FC E2E Academy').filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
 
     await page.close();
     const playerContext = await browser.newContext();
     const player = await playerContext.newPage();
     await signIn(player, accounts.seededPlayer.email);
     await player.goto('/player/trials');
-    await expect(player.getByText('FC E2E Academy').first()).toBeVisible({ timeout: 30_000 });
+    await expect(player.getByText('FC E2E Academy').filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
     await player.getByText('FC E2E Academy').filter({ visible: true }).last().click();
     const response = player.getByRole('dialog');
     await response.getByRole('button', { name: 'Accept', exact: true }).dispatchEvent('click');

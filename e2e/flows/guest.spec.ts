@@ -9,8 +9,9 @@ test.describe('Guest: public Football Passport', () => {
     const seeded = accounts.seededPlayer;
 
     await page.goto(`/player/${seeded.username}`, { waitUntil: 'domcontentloaded' });
-    await expect(page.getByText(seeded.name).first()).toBeVisible({ timeout: 120_000 });
-    await expect(page.getByText(seeded.club).first()).toBeVisible();
+    // The home screen sits underneath a linked screen (so Back works) and is hidden; assert on what is shown.
+    await expect(page.getByText(seeded.name).filter({ visible: true }).first()).toBeVisible({ timeout: 120_000 });
+    await expect(page.getByText(seeded.club).filter({ visible: true }).first()).toBeVisible();
 
     const body = await page.locator('body').innerText();
     expect(body).not.toContain(seeded.privateBiographyMarker);
@@ -21,7 +22,7 @@ test.describe('Guest: public Football Passport', () => {
 
   test('an unknown username does not invent a player', async ({ page }) => {
     await page.goto('/player/nobody-by-this-name', { waitUntil: 'domcontentloaded' });
-    await expect(page.getByText(accounts.seededPlayer.name)).toHaveCount(0);
+    await expect(page.getByText(accounts.seededPlayer.name).filter({ visible: true })).toHaveCount(0);
     await expect(page.getByText('nobody-by-this-name')).toHaveCount(0);
   });
 });
