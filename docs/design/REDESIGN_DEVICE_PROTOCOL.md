@@ -14,14 +14,15 @@ Record for every run: commit SHA, build ID, device, OS version, text-size settin
 | Android build and device or emulator | The last Android production build (2026-10-07) failed in prebuild; Android has never been validated for this design | Owner |
 | The emulator or a sandbox Firebase project reachable from the device | Test accounts and fixtures; never production users | Owner |
 
-Profiles (checked 2026-11-12): `preview` builds an **Ad Hoc device** binary (needs Apple signing and registered device
-UDIDs; cannot run in a simulator). `development` builds a **dev client** for the simulator that loads JavaScript from a
-running dev server, so it is not the release code. `simulator` (added in `459defc`) is the production configuration built
-for the iOS Simulator: release JavaScript, App Check on, no debug provider, no build-number increment.
+Profiles (rechecked 2026-11-12 evening):
 
-Simulator build command (not run, needs approval B): `eas build --platform ios --profile simulator --non-interactive`
-from a clean checkout of the approved commit. Artifact: a `.tar.gz` containing `PitchProof.app` for the iOS Simulator only.
-No Apple signing is used for simulator builds.
+| Artifact | Profile and command (not run) | Runs on | App Check | Signing | Covers | Cannot cover |
+|---|---|---|---|---|---|---|
+| D1 simulator build | `eas build --platform ios --profile simulator --non-interactive` | iOS Simulator only (`.tar.gz` with `PitchProof.app`) | debug provider, simulator only (`cef23db`); the token it prints must be registered (action C3) before protected requests succeed | none | L1-L12, A4, A6-A8, E1-E2 generation, S1, S7, S10, S11, and with C3 also onboarding, Discover, Plan, deletion (S6) | App Attest / DeviceCheck, VoiceOver in a cloud session, QR scanning, purchases (StoreKit sandbox needs a device or local StoreKit config), physical performance |
+| D2 physical-device build | `eas device:create` (register the tester's iPhone UDID), then `eas build --platform ios --profile preview --non-interactive` | registered iPhones only (Ad Hoc) | App Attest, DeviceCheck fallback; needs action C1 | Apple Distribution certificate and Ad Hoc provisioning profile, managed by EAS (Apple account sign-in by the owner) | S9, A1-A3 VoiceOver, A5 n/a (iOS), E1-E2 on device incl. QR and AirDrop, S2-S6, S8 sandbox purchases | anything about the simulator; not a TestFlight or store build |
+
+Both builds use the production Firebase project (no staging project exists) and need throwaway test accounts there;
+B-19 (Authentication not configured) blocks every signed-in row on both until action C0 is done.
 
 ### Which artifact covers which row
 

@@ -385,6 +385,18 @@ approval B. A simulator build cannot cover the screens behind enforced callables
 need a physical iPhone after App Attest is registered. Row-by-row coverage, tester steps and an answer template are in
 `docs/design/REDESIGN_DEVICE_PROTOCOL.md` sections 0, 5 and 6. No row is marked executed.
 
+## 15. Deployment planning, simulator App Check and enforcement (2026-11-12, evening; code candidate `cef23db`)
+
+| Topic | Result | Record |
+|---|---|---|
+| Backend inventory (B-17) | 81 deployed (europe-west6, gen 2): 75 outdated, 6 current; 14 missing (8 callables, 6 task queues); none deployed-but-removed; schedules and resources unchanged; rules older than release; production database empty (counts only) | `docs/release/backend-deploy-plan-2026-11-12.md` |
+| Scoped deploy | 80 functions in two ordered groups plus rules; 15 left alone (6 current, 8 refactor-only, `setTrackingPeriods`); new analysis functions stay inert without worker approval; git-ignored `functions/.env.scoutx-230b0` must exist | same |
+| Index fix (B-18) | query `accountRestrictions where state == 'suspended' and until <= now` needs `state ASC, until ASC`; deployed and release job use the identical query; 0 restrictions exist, so no backlog; job fails every hour since at least 2026-10-22 | branch `fix/account-restrictions-index` @ `9986c4f`, one line |
+| Simulator App Check | `cef23db`: deliberate, simulator-only debug provider; build blocked if any other profile sets it; production gate rejects it; no bundled token in release; 13 tests; guards shown with the real config loader | `docs/release/app-check-behaviour-2026-11-12.md` section 6 |
+| Callable enforcement as deployed | enforced, from deployed compiled code and configuration; no live response (proxy blocks the functions hosts) | same, sections 2 and 5 |
+| Firestore / Storage enforcement | not enforced: tokenless probes reached the security rules (403 from rules) | same, section 5 |
+| Firebase Authentication | **not configured in production** (B-19): no build can sign anyone in | same, section 5 |
+
 ## 12. Exact remaining actions
 
 1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.
