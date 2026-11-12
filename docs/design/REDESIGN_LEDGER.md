@@ -4,7 +4,7 @@ Branch `redesign/pitchproof-ux-overhaul`, cut from `release/pitchproof-5-3-candi
 The 5.3 candidate and the GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` are untouched.
 Analysis thresholds, identity defaults, rules, functions and the CV worker are not changed by this branch.
 
-**Status: READY FOR EXACT MERGE APPROVAL (web-verified on tree `72e9d351`; Back defect B-20 root-caused and fixed on web; native validation BLOCKED pending approvals and B-19; 2026-11-12). Code tip `0f6e3de`; documentation tip and integration SHA in the hand-off. Native, device and screen-reader validation NOT DONE.**
+**Status: READY FOR EXACT MERGE APPROVAL (web-verified; worker suite complete with PyTorch; index fix included; native validation BLOCKED pending approvals and B-19; 2026-11-13). Candidate SHA in the hand-off. Native, device and screen-reader validation NOT DONE.**
 
 Evidence class for everything below: **Expo web + local Firebase emulators (demo project), seeded accounts**.
 No native, device, VoiceOver, Dynamic Type or TestFlight evidence exists for this branch.
@@ -469,6 +469,78 @@ failure. Cause not established; no code change made for it. Must be checked on d
 Each browser run is reported whole. The B-20 regression test is part of both complete runs. Analysis thresholds, decoder and
 candidate defaults, identity safeguards, rules and functions are unchanged (`git diff 01f9459 -- functions workers
 firestore.rules storage.rules firestore.indexes.json` is empty).
+
+
+## 17. Worker suite with PyTorch, final candidate checks (2026-11-13)
+
+### 17.1 Worker environment and provenance
+
+* Source: redesign `a5e5b020fd687df14538b6f0c2fc7e0f26011845` (clean); `workers/football-cv` tree
+  `d860d6dbf6743f83c6d16403694a114bd3184e20`, byte-identical to the release `01f9459` and to the candidate.
+* Previously missing modules: `tests/test_52.py` and `tests/test_detector_release.py`. Both failed to import because
+  `scoutx_tracker/yolox_net.py` imports `torch` at module level. They need no weights; `test_52.py` uses committed fixtures
+  `tests/fixtures/img4809_*_slice.{json,npz}`.
+* Environment: an existing install was found rather than adding a new runtime: system CPython 3.13.17 (`/usr/bin/python3.13`)
+  with torch **2.14.1+cu130** (CPU execution; CUDA not available), torchvision 0.29.1, onnxruntime 1.29.0, numpy 2.5.3,
+  scipy 1.18.1, opencv 4.14.0, scikit-learn 1.9.1, supervision 0.26.1, python-doctr 1.1.0, easyocr 1.7.2, av 19.0.2,
+  fastapi 0.162.0. These match `requirements-gpu.lock` (torch 2.14.1, torchvision 0.29.1, numpy 2.5.3, opencv 4.14.0.94,
+  scipy 1.18.1, scikit-learn 1.9.1, doctr 1.1.0; the lock pins `onnxruntime-gpu` 1.29.0, here the CPU build of the same
+  version). The system pytest is 9.1.1, outside `requirements-dev.txt` (`pytest>=8,<9`). So the gate's `.venv` was
+  recreated as an isolated venv over the system packages (`--system-site-packages`) with **pytest 8.4.2** inside it. The
+  system environment was not changed; the earlier dev venv was kept as `.venv-dev-notorch`. No PyTorch was mocked.
+* Network: proxy variables removed and a pytest plugin refused and logged every non-loopback connection: **0 attempts**. The
+  whole-match replay subprocesses had no proxy, so no download could have succeeded. A download would have failed a test,
+  and none failed.
+* Flags: as the release gate sets them (`SCOUTX_RELEASE_SUITE=1`, `PYTHONHASHSEED=0`; `SCOUTX_DETOUR_SPLIT`,
+  `_EXCHANGE_SPLIT`, `_RESUME_SPLIT`, `_OCR_CONSULTED_ONLY`, `_OCR_CACHE_PROVENANCE`, `_APPEARANCE_ONLY_LIKELY`,
+  `_FULL_MATCH_REPLAY` unset, so the documented defaults apply). The flag variants are pinned inside the suite by the opt-in
+  characterisation tests (`test_detour_split`, `test_exchange_split`, `test_resume_split`, `test_appearance_only_likely`).
+* Whole-match replay fixture: `/home/claude/work/fmr/replay` (local, not in git; 60 MB of stage-1 numeric data, no
+  footage). All 19 file hashes equal `bench/results/5.3/full-match-identity-20261103/full_match_replay_provenance.json`
+  (checked before the run, and asserted again by the first opt-in test).
+
+### 17.2 Worker results
+
+| Run | Command | Exit | Result |
+|---|---|---|---|
+| The two missing modules | `pytest -p netguard -rA tests/test_52.py tests/test_detector_release.py` (without `SCOUTX_RELEASE_SUITE`, whose pin check needs the whole suite) | 0 | **13 passed** (9 + 4), 0 skipped |
+| Complete suite, release flags | `SCOUTX_RELEASE_SUITE=1 PYTHONHASHSEED=0 pytest -p netguard -q -rsxX --tb=line` | 0 | **669 passed, 11 skipped, 6 xfailed, 0 xpassed**, 0 failed (95 s) |
+| Opt-in whole-match replays | `SCOUTX_FULL_MATCH_REPLAY=/home/claude/work/fmr/replay pytest -p netguard -rA tests/test_full_match_identity.py` | 0 | **8 passed, 3 xfailed**, 0 xpassed (264 s) |
+| Release gate worker check | `node scripts/release-gate.mjs` | — | **PASS** (the pinned set matched) |
+
+The 11 skips in the complete run are exactly the 11 whole-match tests, which are opt-in and listed in
+`bench/release_suite_pin.json`; they ran separately (third row). Expected failures are known accuracy defects, pinned and strict,
+and unchanged:
+- in the default suite: P (identity passes to player A when #20's paused track resumes on A), E3 (appearance prefers a
+  distant player) and E4 (a confirmed claim jumps for one frame at w211), two parameters each;
+- in the whole-match replay: F6 (appearance-only LIKELY on a legible "6"), F17 (OCR misses a legible "17") and the
+  warm-versus-cold OCR-cache dependence.
+
+**Release impact:** none for this release, because the vision worker stays off (no `CV_WORKER_*` or `TRACKING_V3_ENABLED`).
+These defects block enabling automatic analysis, not merging. No test, pin or gate was changed: `git diff 01f9459 --
+workers scripts/release-gate.mjs` is empty.
+
+### 17.3 Final candidate (index fix included) and checks
+
+The candidate is a `--no-ff` merge of the redesign tip into `9986c4f` (release `01f9459` + the one-line index fix). The
+merge is clean (no conflicts). Code checked: commit `239962abd9590e46d6fc8abfc41acd5d9c82e207`, tree
+`84cda49e0b388de6a9fef435db2e556d6d6ff479`. It differs from the redesign tip only in `firestore.indexes.json` (+1 line). The
+final candidate adds this documentation; its SHA is in the hand-off.
+
+| Check | Exit | Result |
+|---|---|---|
+| `npm run test:unit` | 0 | 786/786 (includes `indexedDiscovery`, which reads the index file) |
+| `npm run typecheck` | 0 | after `node scripts/review-preview/prepare.ts`. A fresh checkout lacks the git-ignored generated `scripts/review-preview/.generated/reports.json` and fails typecheck without it (also true at `01f9459`; the generator only reads committed fixtures) |
+| `npm run lint` | 0 | |
+| `npm run legal:check` | 0 | |
+| `npm run build --prefix functions`, `node scripts/sync-discovery-search.mjs --check` | 0 | |
+| `node scripts/release-gate.mjs` (full; rules suite with firebase-tools 15.35.0; worker suite as above) | 1 by design (public-release mode) | **25 PASS, 0 CODE BLOCKER**, 4 external, 3 legal, 3 not validated |
+| `node scripts/release-gate.mjs --allow-external --skip-tests` | 0 | internal / TestFlight mode PASS |
+
+The browser suites (section 16.2: 66 passed, 2 skipped, both projects) were not repeated. The app code they exercised is
+identical: the only non-documentation difference is `firestore.indexes.json`, which the emulator does not apply and the app
+does not bundle. A gate PASS does not replace device testing (L13 and the protocol), counsel review, live App Check
+evidence or full-match accuracy evidence.
 
 ## 12. Exact remaining actions
 

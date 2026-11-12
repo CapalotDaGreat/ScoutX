@@ -538,7 +538,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     },
     {
       "name": "coordinateAnalysisTarget",
@@ -1030,7 +1031,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     },
     {
       "name": "getGuardianConsentRequest",
@@ -1208,7 +1210,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     },
     {
       "name": "listModerationQueue",
@@ -1279,7 +1282,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 1024,
       "timeoutSec": 540,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
     },
     {
       "name": "onActivityCreatedPush",
@@ -1380,7 +1384,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 540,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
     },
     {
       "name": "onFootballSourceWrittenReproject",
@@ -1480,7 +1485,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 540,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
     },
     {
       "name": "onMatchJobMediaLifecycle",
@@ -1510,7 +1516,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 1024,
       "timeoutSec": 540,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
     },
     {
       "name": "onMediaWrittenReproject",
@@ -2084,7 +2091,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 540,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
     },
     {
       "name": "persistAppleAuthorizationCode",
@@ -2209,7 +2217,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     },
     {
       "name": "recordConsent",
@@ -2755,7 +2764,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     },
     {
       "name": "respondGuardianConsent",
@@ -3144,7 +3154,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
     },
     {
       "name": "searchDiscoverablePlayers",
@@ -3293,7 +3304,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     },
     {
       "name": "setTrackingPeriods",
@@ -3320,7 +3332,11 @@
       "serviceAccount": "default compute (planned)",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "no caller: no client wrapper, UI control, test or backend call exists in the release or the candidate; owner-only callable that stores match period boundaries (kickoff, half-time, second half, full time) for a tracking v3 re-resolve; inert while TRACKING_V3_ENABLED/CV worker are off (stores feedback, enqueues nothing); if called while absent the client receives functions/not-found",
+      "laterDeploymentConditions": "ship together with a period-editing control in the tracking report (and its tests), after the vision worker is approved; or reword the \"halvesUnknown\" answer, which today tells the user to \"mark the half-time break in the match periods\" although no such control exists (blocker register B-21)",
+      "purpose": "record owner-set match period boundaries for tracking v3",
+      "featureFlags": "TRACKING_V3_ENABLED, CV_WORKER_URL/CV_WORKER_APPROVED (re-resolve only); no client flag"
     },
     {
       "name": "startLinkImport",
@@ -3501,7 +3517,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     },
     {
       "name": "submitPublicReport",
@@ -3705,7 +3722,8 @@
       "serviceAccount": "141939766260-compute",
       "memoryMiB": 256,
       "timeoutSec": 60,
-      "taskQueue": null
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
     }
   ],
   "notes": [

@@ -1,78 +1,106 @@
-# Approval requests (revised 2026-11-12, evening; none granted)
+# Approval requests (revised 2026-11-13; none granted)
 
-Each action stands alone: approving one approves nothing else, and silence approves nothing. Merge approval does not
-authorize a build; build approval does not authorize an upload; upload approval does not authorize App Review submission.
-This revision **supersedes** the earlier A-F list: the integration candidate, the Authentication provider set (Anonymous
-was missing) and the App Check validation wording changed, so approvals given for the earlier list would not carry over.
+Each action is approved on its own. Approving one approves nothing else, and silence approves nothing. Approving the merge
+does not authorize a build, approving a build does not authorize an upload, and approving an upload does not authorize App
+Review submission. This revision **supersedes** the 2026-11-12 lists, both the A-F list and the evening list. Since then the
+candidate has gained the index fix, IDX-1 has changed to a single `gcloud` create and the deployment preflight has
+changed. An approval given for an earlier version does not carry over.
 
-## Identities (verified 2026-11-12 with `git fetch` and `git ls-remote`)
+## Identities (re-verified 2026-11-13 with `git fetch origin` and `git ls-remote origin`)
 
 | Name | Full SHA | Notes |
 |---|---|---|
-| Remote | `origin` = `https://github.com/CapalotDaGreat/scoutx` | the only remote; name verified with `git remote -v` |
-| Release target `release/pitchproof-5-3-candidate` | `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` | unchanged on the remote |
-| Redesign tip `redesign/pitchproof-ux-overhaul` | see the hand-off message | contains the Back fix `0f6e3de559bd535eb326e8dfc023991fa57d5170` and the release as an ancestor |
-| Integration candidate | see the hand-off message | `git merge --no-ff` of the redesign tip onto `01f9459`, no conflicts; its tree equals the redesign tip's tree |
-| Index fix `fix/account-restrictions-index` | `9986c4fd320332d1f694a8e943d6c2dc3b60de87` | parent `01f9459`; local only; one added line |
-| GPU baseline (immutable, untouched) | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | |
+| Remote | `origin` → `https://github.com/CapalotDaGreat/scoutx` (GitHub reports the new location `CapalotDaGreat/ScoutX`; pushes are redirected) | the only remote (`git remote -v`) |
+| Release target `release/pitchproof-5-3-candidate` | `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` | has not moved on the remote |
+| Index fix `fix/account-restrictions-index` | `9986c4fd320332d1f694a8e943d6c2dc3b60de87` | parent `01f9459`; adds one line to `firestore.indexes.json`; local only. **Included in the candidate** |
+| Redesign tip `redesign/pitchproof-ux-overhaul` | given in the hand-off message (it contains this document) | contains the Back fix `0f6e3de559bd535eb326e8dfc023991fa57d5170`; pushed |
+| Integration candidate | given in the hand-off message | parents: `9986c4f` (release + index fix) and the redesign tip. Both merges are clean. Its tree is the redesign tree plus the one index line |
+| GPU baseline (immutable, not touched) | `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | |
 
-A document cannot contain the SHA of the commit that contains it, so the final redesign tip and integration SHA are given
-in the hand-off message and in the integration commit itself. Earlier candidates (`212cb2e`, `0df1cb9`) are superseded.
+The candidate merge commit exists only in the preparation workspace. GIT-1 therefore pushes it from there, and only after
+approval. Every other action uses commits that are already on the remote (`01f9459` and the redesign tip) or needs no
+checkout at all.
 
-## Dependency order
+## Dependencies
 
 ```
-IDX-1 (index) ──────────────► independent; first, because the live job fails hourly
-AUTH-1 (Authentication) ────► needed by every native session (BLD-1, BLD-2, BLD-4)
-BE-1 (rules) ─► BE-2 (group 1) ─► BE-3 (group 2) ─► needed for analysis/link import and quiet hours on any build
-APC-1 (App Attest) ─────────► needed by BLD-2 and BLD-4 (physical devices); not by the simulator
-BLD-1 (simulator build) ─► APC-3 (debug token, needs the token BLD-1 prints) ─► simulator session ─► APC-3 cleanup
-BLD-2 (Ad Hoc device build) ► needs AUTH-1, APC-1, BE-1..3 for full protocol coverage
-GIT-1 (merge/push) ─────────► independent of all of the above; BLD-3 needs it
-BLD-3 (production build) ───► needs GIT-1 and should follow BLD-1/BLD-2 results
-SUB-1 (TestFlight upload) ──► needs BLD-3 (and AUTH-1, APC-1, BE-1..3 for a usable build)
+                 ┌──────────── IDX-1 index ── gate: READY, then job HTTP 200
+ independent ────┼──────────── AUTH-1 Auth ── gate: accounts:lookup → INVALID_ID_TOKEN ──► TEST-1 test accounts
+                 ├── BE-1 rules ── BE-2 group 1 ══► BE-3 group 2 ── gate: 94 functions + App Check probe 4.1
+                 ├──────────── APC-1 App Attest (registration only; proven later by BLD-2 + TEST-1)
+                 ├──────────── GIT-1 merge/push ══► BLD-3 production build ══► SUB-1 TestFlight upload ─ ─► REV-1 review (not ready)
+                 └──────────── BLD-1 simulator build ══► APC-3 debug token ══► simulator session (signed-in rows need TEST-1)
+ BLD-2 Ad Hoc build: builds on its own; device validation needs AUTH-1, APC-1, TEST-1, BE-1..3
+ ══► hard prerequisite      ── recommended order      ─ ─► later, separate decision
 ```
 
-Can run in parallel: IDX-1, AUTH-1, APC-1, BE-1..3 (BE-3 after BE-2) and GIT-1 have no dependency on each other.
-Must wait: APC-3 (for BLD-1's token), BLD-2 (for AUTH-1, APC-1, BE), BLD-3 (for GIT-1), SUB-1 (for BLD-3).
-Recommended sequence: **IDX-1 → AUTH-1 → BE-1 → BE-2 → BE-3 → APC-1 → BLD-1 → APC-3 → BLD-2 → GIT-1 → BLD-3 → SUB-1**.
+| Action | Hard prerequisites (cannot work without) | Recommended before | Can run in parallel with | Gate before anything that depends on it |
+|---|---|---|---|---|
+| IDX-1 | none | — | all | index `READY`, then a 200 run of `releaseExpiredSuspensions` |
+| AUTH-1 | none | — | all | client probe answers `INVALID_ID_TOKEN`; admin `config` readable |
+| TEST-1 | AUTH-1 | BE-1..3 (quiet hours, new callables) | builds | accounts exist, named as tests, Discover visibility off |
+| BE-1 | preflight (section 3 of the deploy plan) | IDX-1 | IDX-1, AUTH-1, APC-1, GIT-1, BLD-1 | both rules releases updated |
+| BE-2 | preflight: `.env` key list is exactly `GUARDIAN_LINK_BASE_URL` | BE-1 | as BE-1 | 33 functions ACTIVE, 10 queues RUNNING, schedules unchanged, no new errors |
+| BE-3 | BE-2 gate passed: the new callables enqueue into group-1 queues | — | as BE-1 | 94 functions; App Check probe with log correlation |
+| APC-1 | none (the iOS app and Team ID exist) | — | all | registration visible. Token acquisition can only be shown on a physical device (BLD-2) |
+| BLD-1 | none to build | AUTH-1, BE-1..3 | all | EAS record shows the SHA and profile `simulator` |
+| APC-3 | BLD-1 running once (it prints the token) | — | — | protected screens load in that simulator |
+| BLD-2 | tester's iPhone registered (`eas device:create`); owner's Apple sign-in | AUTH-1, APC-1, BE-1..3, TEST-1 | BLD-1 | install works; protocol rows recorded |
+| GIT-1 | remote release tip is still `01f9459`; candidate commit present (preparation workspace) | BLD-1/BLD-2 results, so that a fix found on device does not need a second merge | all deploys | `git ls-remote` equals the candidate |
+| BLD-3 | GIT-1 (provenance: build the merged release commit) | AUTH-1, APC-1, BE-1..3, native results | — | EAS record SHA equals the release tip |
+| SUB-1 | BLD-3 | AUTH-1, APC-1, BE-1..3 (otherwise testers get a non-working app) | — | TestFlight processing complete |
+| REV-1 (not requested) | SUB-1 plus blockers B-01..B-21 | — | — | — |
+
+Circular dependencies, and how the plan breaks them:
+1. APC-3 needs the debug token, which only the BLD-1 app can print, while the simulator session needs APC-3. The order is: build, launch once to read the token, add the token, run the session, delete the token.
+2. AUTH-1 validation would need an account, but TEST-1 needs AUTH-1. AUTH-1 is validated with an account-free probe, and signing in is first shown under TEST-1.
+3. APC-1 can only be proven by device traffic, and devices need APC-1. Registration goes first; the proof is collected during BLD-2.
+4. Native builds would ideally use the merged commit, but the merge should wait for the native results. BLD-1 and BLD-2 build the pushed redesign tip, whose app source is identical to the candidate (the only difference is `firestore.indexes.json`, which is not bundled). BLD-3 builds the merged commit.
+
+"Independent" above means that an action can be executed and its own gate checked without the others. Where its full
+validation needs another action, the table says so.
 
 ## Actions
 
-| ID | Exact action | Source / artifact | Target | Command or console steps | Prerequisites | Expected change | Cost / operational impact | Validation | Stop / abort if | Rollback limits | Does **not** cover |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| **IDX-1** | Add composite index `accountRestrictions(state ASC, until ASC)` (B-18) | `firestore.indexes.json` at `9986c4fd320332d1f694a8e943d6c2dc3b60de87` | Firestore `(default)`, `scoutx-230b0` | clean checkout of that SHA; `firebase deploy --only firestore:indexes --project scoutx-230b0 --non-interactive` (preflight and counts in `backend-deploy-plan-2026-11-12.md` 3) | owner signed in to the Firebase CLI | 39 indexes (38 kept), field overrides unchanged | index build minutes (0 documents); no cost beyond index storage; ends 24 failed job runs a day | `gcloud firestore indexes composite list` shows it `READY`; then the next hourly `releaseExpiredSuspensions` run logs HTTP 200 and no `FAILED_PRECONDITION` | the CLI proposes deleting an index or override; the index is not READY within 30 min | deleting the index makes the job fail again; nothing else affected | pushing or merging the fix branch; rules; functions |
-| **AUTH-1** | Initialise Firebase Authentication and enable **Anonymous**, **Email/Password** and **Apple** (B-19). Google only if the owner will set `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`/`_IOS_CLIENT_ID` for the build | — | Authentication, `scoutx-230b0` | console: Build → Authentication → Get started → Sign-in method → Anonymous: Enable; Email/Password: Enable (email-link off); Apple: Enable (per Firebase's Apple-platform setup, native iOS sign-in needs no Services ID; the Services ID and key fields are for web/Android flows; token revocation already uses the `APPLE_*` function secrets). Authorized domains: keep defaults | owner decision on Google | sign-up, sign-in and guest sessions become possible; password-reset and verification emails are sent from Firebase's default template and sender | free at this volume; emails go to whatever address a user enters | client probe `POST accounts:lookup` with the public API key and a bogus token answers `INVALID_ID_TOKEN` instead of `CONFIGURATION_NOT_FOUND`; admin `config` readable | — | disabling providers stops new sign-ins; accounts created meanwhile remain and must be deleted individually | creating any account; App Check; email template or domain changes |
-| **BE-1** | Deploy Firestore and Storage rules (B-17) | `firestore.rules`, `storage.rules` at the approved release commit (identical at `01f9459`, the redesign and the candidate) | `scoutx-230b0` | `firebase deploy --only firestore:rules,storage --project scoutx-230b0` after the preflight in the plan | IDX-1 not required; preflight passes (`npm run test:rules` 263/263) | quiet-hours save accepted; server-only `mediaImportSources`; owner-read `tracking` data and images | none | live ruleset IDs change; enabling quiet hours on a test account succeeds (after AUTH-1) | the CLI reports a compile error or a different project | redeploy the saved live rulesets (`live-snapshot-2026-11-12/`) | functions; indexes |
-| **BE-2** | Deploy function group 1: 33 background functions (28 updated + 5 new task-queue functions; list in `backend-deploy-group1.txt`) | `functions/` at the approved release commit; manifest `backend-deploy-manifest-2026-11-12.json` | Cloud Functions gen 2, europe-west6 | `firebase deploy --project scoutx-230b0 --only "$(cat docs/release/backend-deploy-group1.txt)"` | BE-1; `functions/.env.scoutx-230b0` with `GUARDIAN_LINK_BASE_URL` present locally; live archives backed up (plan 3) | 33 functions with today's update time; 5 new queues | Cloud Build minutes; no minimum instances; new task queues idle until used | all 33 ACTIVE; no new ERROR logs for 1 h; analysis env vars absent | any deletion prompt; a function not ACTIVE; new ERROR lines | redeploy old code from the saved archives; data written, tasks queued and notifications sent meanwhile stay | group 2; enabling the vision worker (`CV_WORKER_*`, `TRACKING_V3_ENABLED`) |
-| **BE-3** | Deploy function group 2: 47 app-facing functions (39 updated + 8 new callables) | as BE-2, `backend-deploy-group2.txt` | as BE-2 | `firebase deploy --project scoutx-230b0 --only "$(cat docs/release/backend-deploy-group2.txt)"` | BE-2 complete and healthy | 94 functions in total, 80 updated today | as BE-2 | function count 94; App Check probe P4 with log correlation (`app-check-behaviour-2026-11-12.md` 4.1); error log quiet | as BE-2; count not 94 | as BE-2 | the 15 held functions; product enforcement |
-| **APC-1** | Register App Attest for the iOS app (B-01) | — | App Check, app `1:141939766260:ios:c23d6b9fe65e8a65bd3fa1` | console: App Check → Apps → iOS app → App Attest → Save (TTL 1 h) | Team ID on the app (present) | physical-device builds obtain tokens; no enforcement change | none | after BLD-2: App Check metrics show verified Cloud Functions requests; protocol S9 | — | unregister (device callables are then rejected again where enforced) | DeviceCheck (APC-2), debug tokens, product enforcement |
-| **APC-2** (optional) | Register DeviceCheck fallback | Apple DeviceCheck key (.p8) and key ID, team `833CYAZ8XT`, handled by the owner only | as APC-1 | same screen → DeviceCheck → upload | owner creates the key in Apple Developer | devices without App Attest obtain tokens | none | as APC-1 on an older device | the key would have to pass through chat, git or a ticket | unregister; revoke the key | anything else |
-| **APC-3** | Add the one simulator debug token, then delete it after the session | token printed by BLD-1's app in the Simulator log | as APC-1 | Manage debug tokens → Add (name: tester + date); afterwards delete it in the same screen | BLD-1 | that simulator passes App Check | anyone holding the token string can too: keep it short-lived, never in git or chat | protected screens work in the Simulator | token would need to be shared outside the owner's console | delete the token | physical-device or App Attest evidence |
-| **BLD-1** | One iOS simulator build plus EAS simulator session time | candidate SHA (hand-off) | Expo `@boddibossi/scoutx`, profile `simulator` (extends `production`, `EXPO_PUBLIC_APP_CHECK_SIMULATOR_DEBUG=simulator`) | `eas build --platform ios --profile simulator --non-interactive` from a clean checkout of the SHA; then an EAS simulator session (iPhone SE 3rd gen, iPhone 16, iPad 10th gen) or a Mac with Xcode (free) | AUTH-1 for any signed-in row; BE-1..3 for analysis rows | a simulator `.app`; no build-number use (`autoIncrement: false`); app talks to **production** | about $2 per iOS build (medium) and $0.10 per simulator minute, less plan credit (expo.dev pricing as read 2026-11-12); no Apple signing | EAS record shows the SHA and profile `simulator`; build log prints no "Build blocked"; protocol rows of section 0 incl. L13 | build record SHA differs; the app shows the App Check warning for a missing flag | delete the build | App Attest, DeviceCheck, physical performance, VoiceOver on hardware, purchases, TestFlight |
-| **BLD-2** | Register the tester's iPhone and make one Ad Hoc build | candidate SHA | Expo, profile `preview` (internal; production Firebase env) | `eas device:create`, then `eas build --platform ios --profile preview --non-interactive` | AUTH-1, APC-1, BE-1..3; owner signs in to Apple when EAS asks | Ad Hoc profile with the device; `preview` does not auto-increment the build number | about $2 per build | install on the registered iPhone; protocol S2-S9, A1-A3, E1-E2, L13 | build signed for another team or bundle | delete the build; revoke the profile | TestFlight, App Store |
-| **GIT-1** | Fast-forward the release branch to the integration candidate | integration SHA (hand-off) | GitHub `origin` | `git fetch origin && test "$(git rev-parse origin/release/pitchproof-5-3-candidate)" = 01f9459c2608bc939c96f5c7388b5e5ba98aac2d && git merge-base --is-ancestor 01f9459c2608bc939c96f5c7388b5e5ba98aac2d <SHA> && git push origin <SHA>:refs/heads/release/pitchproof-5-3-candidate` (plain push; no `--force`, no history rewrite) | none; abort if the release tip moved | release branch contains the redesign and the Back fix; every 5.3 screenshot and device result becomes outdated (B-16) | none | `git ls-remote origin refs/heads/release/pitchproof-5-3-candidate` prints the SHA | the release tip is not `01f9459` (re-integrate, re-test, re-request) | `git revert -m 1 <SHA>` on the release branch (a new commit) | any deploy, build, upload or submission; pushing the index-fix branch |
-| **BLD-3** | Production iOS build | the merged release commit (= integration SHA) | Expo, profile `production`, bundle `com.scoutx.app`, version 1.0.0 | `eas build --platform ios --profile production --non-interactive` | GIT-1; BLD-1/BLD-2 findings resolved | store-signed `.ipa`; build number auto-increments remotely (latest 4, next expected 5) | about $2; consumes a build number (never reused) | EAS record shows the SHA; App Check provider App Attest (no simulator flag: the build gate blocks it) | build gate prints "Build blocked" | builds expire; numbers are not reused | upload; submission |
-| **SUB-1** | Upload BLD-3 to App Store Connect for TestFlight only | BLD-3 build ID | App Store Connect app `6820059284` | `eas submit --platform ios --id <BLD-3 build id>` | BLD-3; AUTH-1, APC-1, BE-1..3 for a usable build | build appears in TestFlight after processing | none | TestFlight shows the build number and processing complete | the submit targets another app ID | expire the TestFlight build | external testing, App Review submission, release |
+| ID | Purpose / exact scope | Source / artifact | Target | Command or console steps | Expected change | Cost / impact | Validation to collect | Stop / abort | Rollback limits | Not authorized |
+|---|---|---|---|---|---|---|---|---|---|---|
+| **IDX-1** | Add the missing composite index `accountRestrictions(state ASC, until ASC)` (B-18) | equals the entry in `firestore.indexes.json` at `9986c4f` (in the candidate) | Firestore `(default)`, `scoutx-230b0` | three `gcloud firestore indexes composite …` commands in `backend-deploy-plan-2026-11-12.md` section 3, Step A | 39 indexes; nothing else | index storage only; ends the hourly HTTP 500 | READY state; first 200 run (plan section 4) | a count other than 38 before; not READY after 30 min | `gcloud firestore indexes composite delete <id>` brings the failures back | any other index or rule; deploying `firestore:indexes` from a file |
+| **AUTH-1** | Initialise Authentication; enable **Anonymous**, **Email/Password**, **Apple**. Google only if the owner will set `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`/`_IOS_CLIENT_ID` (no build profile does today) | — | Authentication, `scoutx-230b0` | console: Build → Authentication → Get started → Sign-in method: Anonymous → Enable; Email/Password → Enable (email-link off); Apple → Enable (native iOS needs no Services ID; Apple token revocation already uses the `APPLE_*` function secrets). Keep the default authorized domains and email templates | guest sessions, sign-up and sign-in become possible; verification and password-reset emails are sent from Firebase's default sender when users ask for them | free at this volume | `POST https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=<public iOS API key>` with body `{"idToken":"x"}` answers `INVALID_ID_TOKEN` (before: `CONFIGURATION_NOT_FOUND`) | the console offers an Identity Platform upgrade with billing: decline and stop | providers can be disabled; accounts created in the meantime stay | creating accounts; email template, domain or SMTP changes; App Check |
+| **TEST-1** | Owner creates at most 4 throwaway accounts and runs native sessions against production | — | `scoutx-230b0` | plan below | test accounts and their own data | free | the cleanup counts below | contact with any non-test profile; a non-test email address | delete in the app (protocol S6) | builds, App Check changes |
+| **BE-1** | Deploy Firestore and Storage rules (B-17) | `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` (rules identical in the candidate) | `scoutx-230b0` | `firebase deploy --only firestore:rules,storage --project scoutx-230b0` after preflight | quiet-hours save accepted; server-only `mediaImportSources`; owner-read `tracking` | none | both releases updated (plan section 4) | compile error; wrong project | redeploy `live-snapshot-2026-11-12/*.rules.live` | functions, indexes |
+| **BE-2** | Deploy group 1: 33 functions (28 updated, 5 new task queues) | `01f9459…`; list `docs/release/backend-deploy-group1.txt`; manifest `backend-deploy-manifest-2026-11-12.json` | Cloud Functions gen 2, europe-west6, `scoutx-230b0` | `firebase deploy --project scoutx-230b0 --only "$(cat docs/release/backend-deploy-group1.txt)"` | 33 updated/new functions; 5 queues created automatically by the CLI | Cloud Build minutes; no minimum instances | plan section 4 "After BE-2" | deletion prompt; a function not ACTIVE; new ERROR lines; any analysis flag in the env | redeploy from the saved source archives; data written and tasks queued in the meantime stay | group 2; enabling the vision worker or video reasoning |
+| **BE-3** | Deploy group 2: 47 functions (39 updated, 8 new callables) | as BE-2, `backend-deploy-group2.txt` | as BE-2 | `firebase deploy --project scoutx-230b0 --only "$(cat docs/release/backend-deploy-group2.txt)"` | 94 functions; the 15 held ones unchanged | as BE-2 | plan section 4 "After BE-3", including the App Check probe | as BE-2; a count other than 94 | as BE-2 | the 15 held functions (incl. `setTrackingPeriods`); App Check product enforcement |
+| **APC-1** | Register App Attest for the iOS app (B-01) | — | App Check, `1:141939766260:ios:c23d6b9fe65e8a65bd3fa1` | console: App Check → Apps → iOS app → App Attest → Save | devices can obtain tokens; no enforcement change | none | after BLD-2: App Check metrics show verified requests; protocol S9 | — | unregister | DeviceCheck (APC-2), debug tokens, enforcement |
+| **APC-2** (optional) | DeviceCheck fallback | Apple DeviceCheck key, handled only by the owner | as APC-1 | same screen → DeviceCheck → upload the key | older devices obtain tokens | none | as APC-1 | the key would have to pass through chat, git or a ticket | unregister; revoke the key | anything else |
+| **APC-3** | One simulator debug token for one session, deleted afterwards | the token printed by the BLD-1 app in the Simulator log | as APC-1 | Manage debug tokens → Add (name: tester + date); afterwards delete it | that simulator passes App Check | anyone holding the token can too; keep it short-lived, never in git or chat | protected screens load in the Simulator | the token would need to leave the owner's console | delete the token | physical-device or App Attest evidence |
+| **BLD-1** | One iOS simulator build + EAS simulator session time (or a Mac with Xcode, free) | the pushed redesign tip (hand-off SHA); app source identical to the candidate | Expo `@boddibossi/scoutx`, profile `simulator` (extends `production`; `EXPO_PUBLIC_APP_CHECK_SIMULATOR_DEBUG=simulator`) | from a clean checkout of that SHA: `eas build --platform ios --profile simulator --non-interactive` | a simulator `.app`; no build-number use (`autoIncrement: false`); talks to **production** | about $2 per iOS build (medium) and $0.10 per simulator minute, less plan credit (expo.dev pricing, read 2026-11-12) | EAS record shows the SHA and profile; the log shows no "Build blocked"; device protocol section 0 rows including L13 | the record SHA differs; the app shows the App Check configuration warning | delete the build | App Attest, DeviceCheck, physical performance, VoiceOver on hardware, purchases, TestFlight |
+| **BLD-2** | Register the tester's iPhone; one Ad Hoc build | as BLD-1 | Expo profile `preview` (internal; production Firebase env) | `eas device:create`, then `eas build --platform ios --profile preview --non-interactive` | Ad Hoc provisioning profile with that device; `preview` does not auto-increment the build number | about $2 per build | install on the registered iPhone; rows S2-S9, A1-A3, E1-E2, L13 | signed for another team or bundle | delete the build; revoke the profile | TestFlight, App Store |
+| **GIT-1** | Fast-forward `release/pitchproof-5-3-candidate` to the candidate | the candidate SHA (hand-off) | GitHub `origin` | from the preparation workspace: `git fetch origin && test "$(git rev-parse origin/release/pitchproof-5-3-candidate)" = 01f9459c2608bc939c96f5c7388b5e5ba98aac2d && git merge-base --is-ancestor 01f9459c2608bc939c96f5c7388b5e5ba98aac2d <SHA> && git push origin <SHA>:refs/heads/release/pitchproof-5-3-candidate`. A plain push: Git refuses it if the remote advanced (not a fast-forward); no `--force`, no history rewrite | the release branch gets the redesign, the Back fix and the index entry; every 5.3 screenshot and device result becomes outdated (B-16) | none | `git ls-remote origin refs/heads/release/pitchproof-5-3-candidate` prints the SHA | release tip ≠ `01f9459`: stop, re-integrate, re-test, re-request | `git revert -m 1 <SHA>` (a new commit) | any deploy, build, upload or submission; pushing the index-fix branch |
+| **BLD-3** | Production iOS build | the merged release commit (= candidate) | Expo profile `production`, bundle `com.scoutx.app`, version 1.0.0 | `eas build --platform ios --profile production --non-interactive` from a clean checkout of the release tip | store-signed `.ipa`; remote build number auto-increments (latest 4, next expected 5) | about $2; uses a build number permanently | EAS record SHA equals the release tip; the build gate passes (no simulator flag, no debug token) | "Build blocked"; SHA mismatch | builds expire; build numbers are never reused | upload; submission |
+| **SUB-1** | Upload BLD-3 to App Store Connect for TestFlight only | BLD-3 build ID | App Store Connect app `6820059284` | `eas submit --platform ios --id <BLD-3 build id>` | the build appears in TestFlight after processing | none | build number and processing status | the submit targets another app ID | expire the TestFlight build | external testing, App Review submission, release |
 
-## Production test plan (prepared; not executed; needs its own approval TEST-1)
+## Production test plan (TEST-1; prepared, not executed)
 
-There is no staging project, so native sessions use production `scoutx-230b0`.
+There is no staging project, so native sessions run against production `scoutx-230b0`. During preparation no user was
+created and no notification or email was sent.
 
 | Topic | Plan |
 |---|---|
-| Accounts | the owner creates at most four throwaway accounts after AUTH-1: player adult, player under 18 (guardian address = an owner-controlled mailbox), scout, coach; names `PP Test <role> <date>`, emails on an owner-controlled domain or `+test` aliases |
+| Accounts | after AUTH-1 the owner creates at most four: adult player, under-18 player (guardian = an owner-controlled mailbox), scout, coach. Names `PP Test <role> <date>`; emails on an owner-controlled domain or `+test` aliases |
 | Fixtures | only what the app creates through its own flows; no admin writes, no seeded documents |
-| Real users | none exist today (Auth never initialised, all collection groups empty, 2026-11-12); test accounts keep Discover visibility **off**, so no future real user sees them; never message, request, watch or rate a non-test profile |
-| Notifications | push tokens register on the test devices only; scheduled reminders (`sendDevelopmentReminders`, weekly reports) would reach test accounts only |
-| Email | Firebase verification/reset emails and guardian-consent emails go only to the owner-controlled addresses |
-| Payments | RevenueCat in sandbox (TestFlight/Ad Hoc use the App Store sandbox); no purchase with a real Apple ID; webhook events from sandbox are recorded by `revenueCatWebhook` against test accounts only |
-| Analysis | stays off (no `CV_WORKER_*`); test footage is the owner's own, never uploaded outside the app's flow |
-| Cleanup | at the end delete each account in the app (protocol S6), then check by count only that `profiles`, `discoverablePlayers`, `users` are back to 0 and the default bucket has 0 objects; delete APC-3's token; record what was deleted |
-| Permissions | owner approval TEST-1 covers account creation and the session; it does not cover BLD-* or APC-* |
+| Real users | none exist (Auth never initialised; every collection group empty, 2026-11-12). Test accounts keep Discover visibility **off**; never message, request, watch or rate a non-test profile |
+| Notifications | push tokens register on the test devices only; scheduled reminders and weekly reports would reach test accounts only |
+| Email | verification, reset and guardian-consent emails go only to owner-controlled addresses |
+| Payments | RevenueCat with the App Store sandbox (TestFlight and Ad Hoc builds use it); never a purchase with a real Apple ID |
+| Analysis / AI | stays off (no `CV_WORKER_*`, `TRACKING_V3_ENABLED`, `VIDEO_REASONING_ENABLED`, `AI_FOOTAGE_PROCESSING_APPROVED`); test footage is the owner's own |
+| Cleanup | delete each account in the app (protocol S6). Then, counts only: `profiles`, `users`, `discoverablePlayers` back to 0 and the default bucket at 0 objects. Delete the APC-3 token and record what was deleted |
+| Approval | TEST-1 covers account creation and the sessions; it does not cover any BLD-* or APC-* action |
 
-## Verdict inputs
+## Ready for approval now (dependency order)
 
-Evidence for each action is in `backend-deploy-plan-2026-11-12.md`, `backend-deploy-manifest-2026-11-12.json`,
-`app-check-behaviour-2026-11-12.md`, `blocker-register-2026-11-04.md` (B-16 to B-20) and `docs/design/REDESIGN_LEDGER.md`
-section 16 (tests on the candidate tree).
+IDX-1 · AUTH-1 · BE-1 · BE-2 · BE-3 (after the BE-2 gate) · APC-1 · BLD-1 · APC-3 (once BLD-1 has printed the token) ·
+TEST-1 (once AUTH-1 is done) · BLD-2 · GIT-1
+
+Not ready: **BLD-3** until GIT-1 is done (recommended also after the BLD-1/BLD-2 results); **SUB-1** until BLD-3 exists;
+**REV-1** (App Review) until the blocker register's submission items are closed: counsel review (B-03), device
+validation, backups (B-02), screenshots on the merged commit (B-16) and the other open B-items.

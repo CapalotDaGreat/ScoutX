@@ -45,11 +45,11 @@ So do Discover search, Plan and usage, uploads, analysis, playback, data export,
 | Build | Where | Provider | Token today | Firestore / Storage / Auth | Enforced callables (onboarding role/age/consent, Discover, Plan, upload, analysis, deletion) | Evidence |
 |---|---|---|---|---|---|---|
 | `development` (dev client) | Simulator | debug | No (0 debug tokens registered) | work | **rejected** if deployed functions enforce; message from 1. | code + live config; needs native run |
-| `development` + registered debug token | Simulator | debug | Yes | work | work | needs approval A2 and native run |
+| `development` + registered debug token | Simulator | debug | Yes | work | work | needs APC-3 and a native run |
 | `simulator` (release code) without a registered debug token | Simulator | **debug** (since `cef23db`; flag set only by this profile, active only in the Simulator) | No: the generated debug token is not registered | work | **rejected** (deployed callables enforce, see 5) | code + tests; needs native run |
-| `simulator` with its debug token registered (approval C3) | Simulator | debug | Yes | work | work | needs approvals C3 and D1 and a native run |
+| `simulator` with its debug token registered (APC-3) | Simulator | debug | Yes | work | work | needs APC-3 and D1 and a native run |
 | `simulator` build installed on a phone (not possible: simulator binaries do not run on devices) | — | — | — | — | — | n/a |
-| `preview` (internal, Ad Hoc) | iPhone | App Attest → DeviceCheck | No until App Attest is registered | work | **rejected** if enforced | needs approval A1 and a device |
+| `preview` (internal, Ad Hoc) | iPhone | App Attest → DeviceCheck | No until App Attest is registered | work | **rejected** if enforced | needs APC-1 and a device |
 | `production` / TestFlight | iPhone | App Attest → DeviceCheck | No until App Attest is registered; yes after | work | rejected until registered, then work | needs approvals A1 and D and a device |
 | Any build after Firestore/Storage/Auth enforcement is turned on | any | as above | as above | **rejected without a token** | as above | do not turn on until device metrics show valid tokens |
 | Web build against emulators (test only) | browser | none (skipped) | n/a | work | work (emulator never enforces) | **verified**: 65/65 browser runs |
@@ -94,7 +94,7 @@ Until this has been run, callable enforcement is a **code/configuration-based** 
 
 The SDK writes "verification passed" **before** enforcement (`https.js` 281-305, 461-472), so that line alone proves nothing.
 
-### 4.2 Register providers (approval A1). Registration does not turn enforcement on
+### 4.2 Register providers (APC-1, optional APC-2). Registration does not turn enforcement on
 
 1. Firebase console → project `scoutx-230b0` → Build → App Check → Apps → iOS app `com.scoutx.app`
    (`1:141939766260:ios:c23d6b9fe65e8a65bd3fa1`).
@@ -111,7 +111,7 @@ The SDK writes "verification passed" **before** enforcement (`https.js` 281-305,
 8. Evidence without secrets: console screenshot of the provider list showing "Registered" (no key shown), metrics chart,
    device protocol rows S9-S11 (below).
 
-### 4.3 Debug token for simulator journeys (approval A2, optional)
+### 4.3 Debug token for simulator journeys (APC-3, optional)
 
 Only for a `development` build in the Simulator. Start the dev build once, copy the debug token the native SDK prints in the
 Xcode/simulator log, then App Check → Apps → iOS app → Manage debug tokens → Add. Name it after the tester and date. Revoke
@@ -160,7 +160,7 @@ whatever App Check does. The app uses Email/Password, Sign in with Apple and Goo
 
 The `simulator` profile otherwise passes every production build check (Firebase settings, RevenueCat App Store key,
 `GOOGLE_SERVICES_PLIST`, no mock data, TLS on) and talks to the **production** project: there is no ScoutX staging project
-among the accessible Google Cloud projects. Testing it therefore needs throwaway test accounts in production (approval C/D).
+among the accessible Google Cloud projects. Testing it therefore needs throwaway test accounts in production (TEST-1).
 
 ## 7. Live actions prepared (none performed)
 
@@ -168,8 +168,8 @@ Project `scoutx-230b0`, iOS app `1:141939766260:ios:c23d6b9fe65e8a65bd3fa1`, bun
 
 | Action | Prerequisites | Console steps | Evidence to keep (no secrets) | Compatibility | Rollback |
 |---|---|---|---|---|---|
-| C0. Enable Firebase Authentication (B-19) | owner decision on providers | Build → Authentication → Get started; enable Email/Password and Apple (Services ID / key per `asc-readiness.md`); Google only if offered | provider list screenshot; `accounts:lookup` answers `INVALID_ID_TOKEN` instead of `CONFIGURATION_NOT_FOUND` | none: no users exist | disable providers (users created meanwhile remain) |
-| C1. Register App Attest | Team ID on the app (present) | App Check → Apps → iOS app → App Attest → Save | "Registered" status screenshot; App Check metrics after a device session | none for current users (no enforcement change) | unregister |
-| C2. Register DeviceCheck (optional fallback) | Apple DeviceCheck key (.p8) and key ID from the Apple Developer account; the key never goes into chat, git or a ticket | App Check → Apps → iOS app → DeviceCheck → upload key, key ID | status screenshot without the key | none | unregister; revoke the key in Apple Developer if no longer used |
-| C3. Temporary simulator debug token | a `simulator` build running in the iOS Simulator | copy the token line the SDK prints in the simulator log; App Check → Apps → iOS app → Manage debug tokens → Add (name: tester + date) | token **name** and date only | none | delete the token in the same screen after testing (record the date) |
-| C4. Product enforcement (Firestore, Storage, Auth) | not before App Attest metrics show nearly all requests verified | App Check → APIs → product → Enforce | metrics screenshot before and after | rejects every request without a valid token | switch back to Unenforced |
+| AUTH-1. Enable Firebase Authentication (B-19) | owner decision on providers | Build → Authentication → Get started; enable Email/Password and Apple (Services ID / key per `asc-readiness.md`); Google only if offered | provider list screenshot; `accounts:lookup` answers `INVALID_ID_TOKEN` instead of `CONFIGURATION_NOT_FOUND` | none: no users exist | disable providers (users created meanwhile remain) |
+| APC-1. Register App Attest | Team ID on the app (present) | App Check → Apps → iOS app → App Attest → Save | "Registered" status screenshot; App Check metrics after a device session | none for current users (no enforcement change) | unregister |
+| APC-2. Register DeviceCheck (optional fallback) | Apple DeviceCheck key (.p8) and key ID from the Apple Developer account; the key never goes into chat, git or a ticket | App Check → Apps → iOS app → DeviceCheck → upload key, key ID | status screenshot without the key | none | unregister; revoke the key in Apple Developer if no longer used |
+| APC-3. Temporary simulator debug token | a `simulator` build running in the iOS Simulator | copy the token line the SDK prints in the simulator log; App Check → Apps → iOS app → Manage debug tokens → Add (name: tester + date) | token **name** and date only | none | delete the token in the same screen after testing (record the date) |
+| APC-4 (not requested). Product enforcement (Firestore, Storage, Auth) | not before App Attest metrics show nearly all requests verified | App Check → APIs → product → Enforce | metrics screenshot before and after | rejects every request without a valid token | switch back to Unenforced |
