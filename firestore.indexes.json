@@ -1,5 +1,6 @@
 {
   "indexes": [
+    { "collectionGroup": "accountRestrictions", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "state", "order": "ASCENDING" }, { "fieldPath": "until", "order": "ASCENDING" }] },
     { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.relevance", "order": "ASCENDING" }] },
     { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.recently_updated", "order": "ASCENDING" }] },
     { "collectionGroup": "discoverablePlayers", "queryScope": "COLLECTION", "fields": [{ "fieldPath": "_search.tokens", "arrayConfig": "CONTAINS" }, { "fieldPath": "_search.order.age", "order": "ASCENDING" }] },
