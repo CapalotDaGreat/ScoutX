@@ -266,6 +266,8 @@ export function PlayerDiscoveryScreen({
 
   return (
     <AppSafeAreaView className="flex-1" edges={['top']}>
+      {/* Same readable column as other screens on tablets; two-column results get a wider one. Phones are unaffected. */}
+      <View style={{ flex: 1, width: '100%', maxWidth: columns === 2 ? 1180 : 760, alignSelf: 'center' }}>
       <FlashListView
         key={columns}
         numColumns={columns}
@@ -368,6 +370,7 @@ export function PlayerDiscoveryScreen({
           onSave={handleSavePreset}
         />
       ) : null}
+      </View>
     </AppSafeAreaView>
   );
 }

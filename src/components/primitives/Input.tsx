@@ -82,7 +82,9 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
             'min-w-0 flex-1 py-3 text-body',
             inputClassName,
           )}
-          style={[{ color: colors.textPrimary, letterSpacing: 0 }, style]}
+          // Size and padding as styles, not classes: on web the TextInput ignores className, which left a 17 px tall
+          // input inside the 48 px field, so taps near the field's edge did not focus it. The input now fills the field.
+          style={[{ color: colors.textPrimary, letterSpacing: 0, fontSize: 15, paddingVertical: 12, minHeight: 46, alignSelf: 'stretch' }, style]}
           {...props}
         />
 

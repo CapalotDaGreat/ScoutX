@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 import {
+  Platform,
   RefreshControl,
   ScrollView,
   View,
@@ -236,6 +237,9 @@ export function Screen({
       style={rootStyle}
     >
       <ScrollView
+        // Web: the scroller is a keyboard stop of its own, so screens whose content has no focusable control
+        // (Plan and usage without store products, error and empty states) can still be scrolled with the keyboard.
+        focusable={Platform.OS === 'web'}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: scrollBottomPadding }}

@@ -68,15 +68,17 @@ function TabItem<T extends string>({
         {badgeLabel ? (
           <View
             className={cn(
-              'absolute -right-1 -top-0.5 items-center justify-center rounded-full bg-accent',
-              badgeLabel.length > 1 ? 'min-w-[18px] px-1' : 'h-4 w-4',
+              'absolute -right-1.5 -top-1 items-center justify-center rounded-full bg-accent',
+              // 18 px circle with an 11 px numeral: the smallest size that stays legible; the count is also in the tab's name.
+              badgeLabel.length > 1 ? 'h-[18px] min-w-[18px] px-1' : 'h-[18px] w-[18px]',
             )}
           >
             <Text
               variant="caption"
               color="onAccent"
               weight="bold"
-              className="text-center text-[9px] leading-[11px]"
+              className="text-center text-[11px] leading-[13px]"
+              maxFontSizeMultiplier={1.2}
             >
               {badgeLabel}
             </Text>

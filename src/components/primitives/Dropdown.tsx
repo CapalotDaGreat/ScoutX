@@ -1,7 +1,6 @@
 import { useCallback, useState, type ReactNode } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
 import { ChevronDown, Check } from 'lucide-react-native';
-import { Input } from '@/components/primitives/Input';
 import { Text } from '@/components/primitives/Text';
 import { Modal } from '@/components/feedback/Modal';
 import { useTheme } from '@/theme';
@@ -67,17 +66,32 @@ export function Dropdown<T extends string = string>({
         disabled={disabled}
         onPress={() => setIsOpen(true)}
       >
+        {/* A drawn field, not a read-only TextInput: on web an <input> inside the button is a second focus stop
+            and screen readers announce it as an edit field nested in a button. */}
         <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          <Input
-            label={label}
-            value={selectedOption?.label ?? ''}
-            placeholder={placeholder}
-            editable={false}
-            fieldClassName={disabled ? undefined : 'opacity-100'}
-            rightIcon={
+          {label ? (
+            <Text variant="label" className="mb-1 text-foreground">
+              {label}
+            </Text>
+          ) : null}
+          <View
+            className={cn(
+              'min-h-12 flex-row items-center rounded-md border bg-surface px-4',
+              error ? 'border-error' : isOpen ? 'border-accent' : 'border-border',
+              disabled && 'opacity-50',
+            )}
+          >
+            <Text
+              className="min-w-0 flex-1 py-3"
+              color={selectedOption ? 'primary' : 'tertiary'}
+              numberOfLines={1}
+            >
+              {selectedOption?.label ?? placeholder ?? ''}
+            </Text>
+            <View className="ml-2">
               <ChevronDown size={20} color={colors.textSecondary} strokeWidth={1.75} />
-            }
-          />
+            </View>
+          </View>
         </View>
       </Pressable>
       {error ? <Text variant="caption" color="error" className="mt-1" accessibilityRole="alert">{error}</Text>

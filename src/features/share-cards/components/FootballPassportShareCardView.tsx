@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Image, View } from 'react-native';
 import { PitchSurface } from '@/components/football/PitchSurface';
 import { Text } from '@/components/primitives/Text';
@@ -33,6 +34,8 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
   // The card is an image for other apps, so it uses one fixed scheme and fixed sizes: it must not follow
   // the viewer's theme or text-size setting, or the captured picture would clip.
   const c = darkColors;
+  // If the portrait cannot be loaded the captured image shows initials, not an empty frame.
+  const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
   const facts = [data.club, data.nationality].filter((part) => part?.trim()).join(' · ');
   const fixed = { allowFontScaling: false, maxFontSizeMultiplier: 1 } as const;
 
@@ -47,9 +50,10 @@ export function FootballPassportShareCardView({ data }: FootballPassportShareCar
             Football Passport · profile
           </Text>
           <View className="mt-4 flex-row items-center gap-4">
-            {data.includePhoto && data.photoUrl ? (
+            {data.includePhoto && data.photoUrl && failedPhoto !== data.photoUrl ? (
               <Image
                 source={{ uri: data.photoUrl }}
+                onError={() => setFailedPhoto(data.photoUrl ?? null)}
                 accessibilityIgnoresInvertColors
                 style={{ width: 72, height: 92, borderRadius: 14, backgroundColor: c.pitchRaised }}
               />

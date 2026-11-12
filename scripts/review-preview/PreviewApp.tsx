@@ -3,13 +3,15 @@
  * and heuristic UX checks. Not part of the app bundle: it is only built by
  * scripts/review-preview/capture.mjs, which points the web export at this entry temporarily.
  *
- * URL hash: #<state>[&lang=<code>]  states: workspace | early | review | detailed | scout | coach | interrupted | player
+ * URL hash: #<state>[&lang=<code>]  states: workspace | early | review | review-auto | detailed | scout | coach | interrupted | player
+ *   | no-identity (worker found no identity-backed moment) | blocked-consent | cancelled
  */
 import '../../global.css';
 import { useEffect, useState } from 'react';
 import { Text as RNText, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, useFonts } from '@expo-google-fonts/inter';
+import { BarlowCondensed_600SemiBold, BarlowCondensed_700Bold } from '@expo-google-fonts/barlow-condensed';
 import { SnackbarProvider } from '@/components/feedback/Snackbar';
 import { ThemeProvider } from '@/theme';
 import { initI18n } from '@/i18n';
@@ -98,13 +100,20 @@ function scenario(state: string): { tracking: TrackingDoc | null; progress: Trac
           { id: 'g2', title: 'Work on: passing', evidenceIds: ['earlier:m_2', 'coach-topic:passing'] }] };
     case 'review-auto':
       return { tracking: doc(auto, 'full'), progress: null };
+    case 'no-identity':
+      // What reaches the app when nothing could be tied to the player: the same coverage, no moments.
+      return { tracking: doc({ ...auto, moments: [] }, 'full'), progress: null };
+    case 'blocked-consent':
+      return { tracking: null, progress: progress(0, 8, { blocked: 'consent_required' }) };
+    case 'cancelled':
+      return { tracking: null, progress: progress(2, 8, { outcome: 'cancelled' }) };
     default:
       return { tracking: doc(answers, 'full'), progress: null };
   }
 }
 
 export default function PreviewApp() {
-  const [fonts] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold });
+  const [fonts] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, BarlowCondensed_600SemiBold, BarlowCondensed_700Bold });
   const [ready, setReady] = useState(false);
   const hash = typeof window !== 'undefined' ? window.location.hash.slice(1) : '';
   const params = new URLSearchParams(hash.replace(/^([^&=]+)(&|$)/, 'state=$1$2'));

@@ -19,6 +19,7 @@ test.setTimeout(240_000);
 const LONG_NAME = 'Maximiliane-Alexandrina Wolfeschlegelsteinhausenbergerdorff';
 let longNameEmail = '';
 let longNameUid = '';
+const FIRESTORE = `http://127.0.0.1:8080/v1/projects/${accounts.projectId}/databases/(default)/documents`;
 
 async function assertNoPageOverflow(page: Page, label: string): Promise<void> {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
@@ -150,5 +151,62 @@ test.describe.serial('States and content extremes', () => {
     await expect(dialog.getByLabel('Opponent')).toHaveValue('FC Offline Draft');
     await context.setOffline(false);
     await expect(dialog.getByLabel('Opponent')).toHaveValue('FC Offline Draft');
+  });
+
+  test('a portrait that cannot be loaded shows initials, never an empty frame', async ({ browser }) => {
+    expect(longNameUid, 'set by the long-name test').not.toBe('');
+    // Controlled emulator write on the throwaway long-name account: an address that refuses connections.
+    const response = await fetch(`${FIRESTORE}/profiles/${longNameUid}?updateMask.fieldPaths=avatarUrl`, {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer owner', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: { avatarUrl: { stringValue: 'http://127.0.0.1:9/missing-portrait.jpg' } } }),
+    });
+    expect(response.ok).toBe(true);
+
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const errors = trackPageErrors(page);
+    await signIn(page, longNameEmail);
+    await expect(page.getByRole('heading', { name: LONG_NAME })).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText('MW', { exact: true }).first()).toBeVisible({ timeout: 30_000 });
+    // No broken image is left on screen in place of the portrait.
+    const brokenImages = await page.evaluate(() => Array.from(document.images)
+      .filter((image) => image.src.includes('missing-portrait') && image.offsetParent !== null).length);
+    expect(brokenImages).toBe(0);
+    expect(errors).toEqual([]);
+    await context.close();
+  });
+});
+
+test.describe('Session states', () => {
+  test('a signed-in session is restored in a new tab, and after sign-out player links show nothing private', async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const errors = trackPageErrors(page);
+    await signIn(page, accounts.seededPlayer.email);
+    await expect(page.getByRole('heading', { name: accounts.seededPlayer.name }).first()).toBeVisible({ timeout: 30_000 });
+
+    // Cold start in a second tab of the same browser profile: the stored session is restored without signing in.
+    const second = await context.newPage();
+    await second.goto('/player/settings');
+    await expect(second.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
+    await expect(second.getByText(accounts.seededPlayer.email).first()).toBeVisible();
+    await second.close();
+
+    await page.goto('/player/settings');
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Home' }).first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(accounts.seededPlayer.email)).toHaveCount(0);
+
+    // A player-only address after sign-out must not open the account's screens or reveal its data.
+    for (const path of ['/player/settings', '/player/plan', '/player/privacy']) {
+      await page.goto(path);
+      // Firestore keeps a long-poll open, so wait for a rendered screen rather than network idle.
+      await expect(page.getByRole('heading').first()).toBeVisible({ timeout: 60_000 });
+      await expect(page.getByText(accounts.seededPlayer.email)).toHaveCount(0);
+      await expect(page.getByRole('heading', { name: accounts.seededPlayer.name })).toHaveCount(0);
+    }
+    expect(errors).toEqual([]);
+    await context.close();
   });
 });
