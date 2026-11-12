@@ -13,7 +13,7 @@
 
 **Handoff:** `submission-handoff-2026-11-04.md` — **READY AFTER SPECIFIC NAMED EXTERNAL ACTIONS**.  
 **Engineering:** `engine-cards-progress-2026-11-04.md` (share-card field select + preview; coaching scenarios; evidence captions; E4 left xfail).  
-**App Check live (rechecked 2026-11-04):** providers **not configured**; product Enforce **Off**. Rechecked read-only 2026-11-12: no enforcement mode set for Firestore, Storage or Auth.  
+**App Check live (rechecked 2026-11-04):** providers **not configured**; product Enforce **Off**. Rechecked read-only 2026-11-12: no enforcement mode set for Firestore, Storage or Auth; DeviceCheck key not configured; 0 debug tokens; App Attest registration not provable via API (CLI 2026-11-04: not configured). Full matrix and remediation: `docs/release/app-check-behaviour-2026-11-12.md`.  
 
 **Classification key**
 
@@ -56,6 +56,8 @@ Prior fixes verified present (do not reopen without new evidence):
 | B-14 | Xcode Privacy Report merge | **SUBMISSION** | Nutrition labels must reflect SDKs | Merge NOT VALIDATED | Privacy Report from signed tip archive | Needs A1 archive | Operator | OPEN | 2026-11-04 |
 | B-15 | Branch not on remote | **REC** | Collaboration / CI | No upstream | Push when authorized | n/a | `git push -u` when approved | Operator | OPEN | 2026-11-04 |
 | B-16 | Redesign ("Touchline") native validation and evidence renewal | **SUBMISSION** when merged | Every 5.3 screenshot and device result predates the redesign; native layout, VoiceOver, Dynamic Type and on-device exports are unverified | Web only: complete browser passes at `f150d49` (65 passed, 2 opt-in skips, mobile and desktop), 763 unit, 263 rules, axe 0 critical/serious; see `docs/design/REDESIGN_LEDGER.md` sections 10 to 13 | `docs/design/REDESIGN_DEVICE_PROTOCOL.md` executed on a build of the merged commit; screenshots renewed; translation sheet reviewed | Protocol, review sheet and merge proposal prepared | Billed simulator or device build; a tester; native speakers | Owner / Operator | OPEN (added 2026-11-12) | 2026-11-12 |
+| B-17 | Live backend behind the release source | **TESTFLIGHT** | 14 functions in the release source are not deployed (current analysis flow `startPlayerAnalysis` and tracking tasks, link import); deployed functions date from 2026-10-08 and 2026-10-24, before the repository history starts, so their code cannot be matched to a commit | Read-only 2026-11-12: 81 deployed vs 95 exported; `ENFORCE_APP_CHECK` unset; see `docs/release/app-check-behaviour-2026-11-12.md` | Functions, rules and indexes deployed from the approved release commit; deployed list equals source exports | Diff and deploy plan prepared | `firebase deploy --only functions,firestore:rules,firestore:indexes,storage --project scoutx-230b0` from the approved commit (billable, live) | Owner | OPEN (added 2026-11-12) | 2026-11-12 |
+| B-18 | Scheduled `releaseExpiredSuspensions` fails every run | **OPS_SAFE** | Suspensions never expire automatically; 239 HTTP 500s in 45 days (missing composite index `accountRestrictions(state, until)`) | Cloud Logging 2026-11-12; live and repository index sets identical (38/38) | Index present and deployed; job returns 200 | One-line fix on local branch `fix/account-restrictions-index` @ `9986c4f` (not pushed) | Review, merge, deploy indexes | Owner | OPEN (added 2026-11-12) | 2026-11-12 |
 
 ---
 

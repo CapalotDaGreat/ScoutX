@@ -4,7 +4,7 @@ Branch `redesign/pitchproof-ux-overhaul`, cut from `release/pitchproof-5-3-candi
 The 5.3 candidate and the GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` are untouched.
 Analysis thresholds, identity defaults, rules, functions and the CV worker are not changed by this branch.
 
-**Status: READY FOR MERGE REVIEW AFTER NAMED EXTERNAL CHECKS (final audit 2026-11-12). Code candidate `f150d49a41be3f5be745901997cd1295e16a2da9`. Complete browser passes on both web projects at that commit; native, device and screen-reader validation NOT done. See sections 13 and 12.**
+**Status: READY FOR EXACT MERGE APPROVAL (web-verified; native validation BLOCKED pending approvals, 2026-11-12). Code candidate `459defc6cab769c48482ca9e31d06cd1908d68de`; see section 14 for the integration SHA. Native, device and screen-reader validation NOT done.**
 
 Evidence class for everything below: **Expo web + local Firebase emulators (demo project), seeded accounts**.
 No native, device, VoiceOver, Dynamic Type or TestFlight evidence exists for this branch.
@@ -344,9 +344,52 @@ Technical audit of the 11 English keys added or changed since `01f9459`, across 
 mismatches, 0 untranslated copies; 0 translation calls in code whose key is missing (no English fallback leakage).
 Linguistic review is still open: `docs/design/TRANSLATION_REVIEW_2026-11.md`, not reviewed by a native speaker.
 
+## 14. App Check verification and native-build preparation (2026-11-12, code candidate `459defc`)
+
+### 14.1 Changes since `f150d49`
+
+| Commit | Change | Why |
+|---|---|---|
+| `459defc` | `toUserMessage`: the Functions SDK's exact "Unauthenticated" rejection gets its own message instead of "Your session expired" | An App Check rejection would have told a signed-in user to sign in again. Traced through the installed SDK; unit tests for both cases |
+| `459defc` | `eas.json` profile `simulator`: production configuration built for the iOS Simulator, no build-number increment | No existing profile builds release code for the simulator (`preview` is Ad Hoc device, `development` is a dev client) |
+
+No change to analysis, rules, functions, indexes, entitlements, App Check policy or providers.
+
+### 14.2 Results at `459defc` (export built from `459defc`; uncommitted files during the run were the two new documents only)
+
+| Check | Result | Exit |
+|---|---|---|
+| Browser suite web-mobile, fresh emulators and seed, 1 worker, no retries | **65 passed, 2 skipped (opt-in), 0 failed** | 0 |
+| Browser suite web-desktop, same conditions | **65 passed, 2 skipped (opt-in), 0 failed** | 0 |
+| Kernel kills / peak memory | 0 / 3.0 GB | |
+| Unit (incl. `ambiguousIdentityTrace`, `footballCvHtml`, `portfolioExportPrivacy`, `userFacingError`, `releaseBuild`) | **765/765** | 0 |
+| Typecheck / lint | clean / 0 errors | 0 / 0 |
+| Rules (Firestore, Storage, deletion, entitlements, uploads, analysis pipeline) | **263/263** | 0 |
+| Legal check / release gate | pass / PASS (23 pass, 0 code blockers, 4 external, 3 legal, 3 not validated, 2 skipped by flag) | 0 / 0 |
+
+### 14.3 App Check: verified versus pending
+
+Full record: `docs/release/app-check-behaviour-2026-11-12.md`. Verified from code and installed SDK sources: release builds
+always use App Attest with DeviceCheck fallback and never the debug provider; failed tokens do not block requests on the
+device; app-facing callables enforce App Check in production source; onboarding depends on such callables. Verified live
+(read-only): iOS app registered with Team ID; DeviceCheck not configured; 0 debug tokens; Firestore/Storage/Auth enforcement off.
+**Not verified**: App Attest registration (API cannot show it; CLI on 2026-11-04 said not configured) and whether the
+*deployed* callables enforce (a direct test request was blocked by this workspace's network allowlist; one-line test in 4.1
+of that document). Also found: the live backend is behind the release source (blocker B-17) and a scheduled job fails on a
+missing index (B-18, fix on local branch `fix/account-restrictions-index` @ `9986c4f`).
+
+### 14.4 Native validation
+
+Not executed. This workspace cannot run a simulator (no KVM, no Xcode). EAS cloud simulators and builds are billed and need
+approval B. A simulator build cannot cover the screens behind enforced callables (a simulator never attests); those rows
+need a physical iPhone after App Attest is registered. Row-by-row coverage, tester steps and an answer template are in
+`docs/design/REDESIGN_DEVICE_PROTOCOL.md` sections 0, 5 and 6. No row is marked executed.
+
 ## 12. Exact remaining actions
 
-1. **Owner:** approve or decline the merge (hand-off message). Nothing was merged or pushed to the release branch.
+1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.
+1a. **Owner:** run the one-line enforcement test in `docs/release/app-check-behaviour-2026-11-12.md` 4.1 and approve or decline
+    App Attest registration (approval A), the simulator build (B) and, separately, the backend deploy (B-17).
 2. **Owner:** approve a billed simulator build and session, or run `docs/design/REDESIGN_DEVICE_PROTOCOL.md` on an iPhone.
    No native binary of this design exists; the newest build is production 1.0.0 (4) from 2026-10-22 at `6679226`.
 3. **Native speaker(s):** complete `docs/design/TRANSLATION_REVIEW_2026-11.md` (10 strings, 6 languages).

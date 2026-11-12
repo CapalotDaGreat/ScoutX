@@ -14,8 +14,26 @@ Record for every run: commit SHA, build ID, device, OS version, text-size settin
 | Android build and device or emulator | The last Android production build (2026-10-07) failed in prebuild; Android has never been validated for this design | Owner |
 | The emulator or a sandbox Firebase project reachable from the device | Test accounts and fixtures; never production users | Owner |
 
-Build command for a simulator binary (not run): `eas build --platform ios --profile preview` after confirming the
-profile in `eas.json` produces a simulator or internal build. Do not use `production` for this.
+Profiles (checked 2026-11-12): `preview` builds an **Ad Hoc device** binary (needs Apple signing and registered device
+UDIDs; cannot run in a simulator). `development` builds a **dev client** for the simulator that loads JavaScript from a
+running dev server, so it is not the release code. `simulator` (added in `459defc`) is the production configuration built
+for the iOS Simulator: release JavaScript, App Check on, no debug provider, no build-number increment.
+
+Simulator build command (not run, needs approval B): `eas build --platform ios --profile simulator --non-interactive`
+from a clean checkout of the approved commit. Artifact: a `.tar.gz` containing `PitchProof.app` for the iOS Simulator only.
+No Apple signing is used for simulator builds.
+
+### Which artifact covers which row
+
+| Rows | Simulator build (`simulator`) | Physical iPhone (Ad Hoc `preview` or TestFlight) |
+|---|---|---|
+| L1-L12 layout, A4 large text, A6 reduce motion, A7 colour, A8 targets | yes | yes |
+| A1-A3 VoiceOver | only with a person at a Mac running the simulator; a cloud session cannot drive VoiceOver | yes |
+| Screens behind enforced callables (role selection, age gate, consent, Discover, Plan and usage, upload, deletion) | **no**: a simulator can never attest, so these fail if the live functions enforce App Check (see `docs/release/app-check-behaviour-2026-11-12.md`) | yes, after App Attest is registered |
+| E1, E2 share card and CV | generation and the share sheet yes; QR scanning and AirDrop no | yes |
+| S9-S11 App Check | S10 only | yes |
+
+Simulator results are recorded as **simulator** and never count for a physical-device row.
 
 ## 1. Layout (iPhone SE 3rd gen, iPhone 15/16, iPad 10.9", light and dark)
 
@@ -70,3 +88,36 @@ profile in `eas.json` produces a simulator or internal build. Do not use `produc
 | S6 | **Settings → Delete account** | The native confirmation appears (it uses a system alert, which has no web equivalent and was never exercised on web); after confirming, the account and its data are removed and the app returns to the signed-out start. Use a throwaway test account only |
 | S7 | Broken portrait (test account whose photo file was deleted) | Initials shown in the identity strip, cards and share card; no empty frame |
 | S8 | Purchases and restore (StoreKit sandbox tester) | Purchase sheet, restore and the "confirming" state behave as in 5.3; never with a real payment method |
+| S9 | App Check success (physical iPhone, after App Attest registration) | Role selection, age gate and consent complete; Discover lists players; App Check console metrics show verified Cloud Functions requests |
+| S10 | App Check failure (simulator build, or device before registration) | Where a callable is rejected, the message reads "PitchProof couldn't verify this copy of the app…", never "Your session expired"; the app does not sign the user out or loop |
+| S11 | No debug provider in release | Release build log contains no App Check debug-token line; behaviour matches S9 or S10, never a silent success on a simulator |
+
+## 5. Installing and running (for the tester)
+
+**Simulator build on a Mac (Xcode 16 or later):**
+1. Download the build artefact from the EAS build page (the link is given in the approval follow-up), unpack it: `tar -xzf build.tar.gz`.
+2. `xcrun simctl boot "iPhone SE (3rd generation)"` (repeat later with "iPhone 16" and "iPad (10th generation)"); `open -a Simulator`.
+3. `xcrun simctl install booted PitchProof.app`, then `xcrun simctl launch booted com.scoutx.app`.
+4. Logs: `xcrun simctl spawn booted log stream --level debug --predicate 'process == "PitchProof"' > pitchproof-sim.log`
+   (stop with Ctrl-C after each row; logs contain no passwords, but check before sharing).
+5. Large text: Settings app in the simulator → Accessibility → Display & Text Size → Larger Text. Dark mode: Settings → Developer → Dark Appearance.
+6. VoiceOver in the simulator: Xcode → Open Developer Tool → Accessibility Inspector (Inspection and Audit); full VoiceOver needs a device.
+
+**Physical iPhone (Ad Hoc or TestFlight):** install from the EAS install link or TestFlight; logs via Mac Console.app with
+the phone connected (filter `PitchProof`), or Settings → Privacy & Security → Analytics & Improvements → Analytics Data for crashes.
+
+Use only the test accounts named in the approval follow-up. Never use a real player's profile or delete a real account.
+
+## 6. Answer template (one block per row)
+
+```
+Row:            (for example L11)
+Commit / build: 459defc… / EAS build id … / 1.0.0 (n)
+Device:         simulator | physical — model, iOS version
+Settings:       light|dark, text size, VoiceOver on|off
+Steps:          what you did
+Expected:       copy the "Pass when" text
+Actual:         what happened
+Result:         PASS | FAIL | NOT EXECUTED (reason)
+Evidence:       screenshot / screen recording / log file names
+```
