@@ -4,7 +4,7 @@ Branch `redesign/pitchproof-ux-overhaul`, cut from `release/pitchproof-5-3-candi
 The 5.3 candidate and the GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` are untouched.
 Analysis thresholds, identity defaults, rules, functions and the CV worker are not changed by this branch.
 
-**Status: READY FOR EXACT MERGE APPROVAL (web-verified; native validation BLOCKED pending approvals, 2026-11-12). Code candidate `459defc6cab769c48482ca9e31d06cd1908d68de`; see section 14 for the integration SHA. Native, device and screen-reader validation NOT done.**
+**Status: READY FOR EXACT MERGE APPROVAL (web-verified; native validation BLOCKED pending approvals and B-19; 2026-11-12). Code candidate `cef23db`; documentation tip and integration SHA in the hand-off. Native, device and screen-reader validation NOT done.**
 
 Evidence class for everything below: **Expo web + local Firebase emulators (demo project), seeded accounts**.
 No native, device, VoiceOver, Dynamic Type or TestFlight evidence exists for this branch.
@@ -396,6 +396,23 @@ need a physical iPhone after App Attest is registered. Row-by-row coverage, test
 | Callable enforcement as deployed | enforced, from deployed compiled code and configuration; no live response (proxy blocks the functions hosts) | same, sections 2 and 5 |
 | Firestore / Storage enforcement | not enforced: tokenless probes reached the security rules (403 from rules) | same, section 5 |
 | Firebase Authentication | **not configured in production** (B-19): no build can sign anyone in | same, section 5 |
+
+### 15.2 Results at `72292b7` (code `cef23db` + documentation; export built from a clean tree at `72292b7`)
+
+| Check | Run 1 | Run 2 |
+|---|---|---|
+| Browser suite, web-mobile, fresh emulators and seed, 1 worker, no retries | 64 passed, **1 failed**, 2 skipped, exit 1 (`routing.spec.ts:64`, Back on `/player/requests` did not navigate) | **65 passed, 2 skipped, 0 failed, exit 0** |
+| Browser suite, web-desktop, same conditions | 65 passed, 2 skipped, exit 0 | **65 passed, 2 skipped, exit 0** |
+| Kernel kills / peak memory | 0 / 2.7 GB | 0 / 2.7 GB |
+
+Each run is reported whole; no run was assembled from parts. Unit **778/778**, typecheck clean, lint 0 errors, rules **263/263**,
+legal check pass, release gate PASS (0 code blockers) — all at `72292b7`.
+
+**Known intermittent, still open:** Back on a page opened directly from a link occasionally does nothing on the first tap
+(web, emulator stack). Seen 2026-11-11 (`/player/settings`), today in run 1 (`/player/requests`) and once in 60 scripted
+attempts (`/player/settings`); 0 in a further 100 instrumented attempts. No "GO_BACK not handled" warning was logged, so the
+stack did contain Home. Separately, `/player/trials` re-creates its Back button after loading (13 of 25 runs) without any
+failure. Cause not established; no code change made for it. Must be checked on device (protocol L8 and L9).
 
 ## 12. Exact remaining actions
 
