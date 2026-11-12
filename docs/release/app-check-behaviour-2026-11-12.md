@@ -31,7 +31,7 @@ So do Discover search, Plan and usage, uploads, analysis, playback, data export,
 | App Attest | Resource readable with default 1 h token TTL; the API returns this default whether or not App Attest was ever saved, so registration is **not provable from this read**. The CLI check on 2026-11-04 reported providers **not configured** | App Check API `appAttestConfig` |
 | DeviceCheck | **Not configured**: no key ID, no private key | App Check API `deviceCheckConfig` |
 | Debug tokens | **0** registered | App Check API `debugTokens` |
-| Enforcement, Firestore / Storage / Auth | **Off** (no enforcement mode set; never updated) | App Check API `services/*` |
+| Enforcement, Firestore / Storage / Auth | **Off** (no enforcement mode set; never updated). Configuration evidence; the rejection probes P1/P2 cannot tell enforcement apart from security rules | App Check API `services/*` (`firebaseappcheck.services.get` held) |
 | Entitlement in the app | `com.apple.developer.devicecheck.appattest-environment = production` | `app.json` |
 | Deployed functions | 81 deployed (70 on 2026-10-08, 11 on 2026-10-24); `ENFORCE_APP_CHECK` unset on all | Cloud Functions API |
 | Deployed code vs source | **Behind.** 14 functions in the release source are not deployed: `answerTrackingQuestion, coordinateAnalysisTarget, discoverTrackingTask, explainTrackingMoment, extractTrackingSegmentTask, inspectVideoSource, processLinkImportTask, refreshTrackingOcrTask, resolveTrackingTask, saveAnalysisTargetAnchor, setTrackingPeriods, startLinkImport, startPlayerAnalysis, undoTrackingAnswer`. The repository history starts 2026-10-25, so the deployed code cannot be matched to a commit | function list vs `functions/lib` exports |
@@ -60,14 +60,39 @@ work against the live backend at all until the backend is deployed, whatever App
 
 ## 4. Remediation (prepared, not done)
 
-### 4.1 Confirm live callable enforcement (read-only test, run from any normal network)
+### 4.1 Confirm live callable enforcement (probe P4 plus log correlation; not yet run)
 
-```
-curl -sS -X POST -H 'Content-Type: application/json' -d '{"data":{}}' \
-  https://europe-west6-scoutx-230b0.cloudfunctions.net/getUsageSummary
-```
-No sign-in, no token, read-only callable, no side effect. Answer `{"error":{"message":"Unauthenticated","status":"UNAUTHENTICATED"}}`
-means App Check is enforced; `"message":"Sign in required."` means it is not enforced on that deployed function.
+The response text alone is **not** conclusive: the SDK answers `Unauthenticated` both for a missing App Check token on an
+enforcing function and for a rejected ID token, and an intermediary (proxy, Cloud Run IAM, a misrouted host) can also
+answer 401/403. The conclusion needs the full response **and** the function's own log entries for that request.
+Until this has been run, callable enforcement is a **code/configuration-based** conclusion (section 2), not an observation.
+
+1. Note the UTC time, then from any normal network (TLS verification on, no sign-in, no App Check header, no body
+   beyond `{"data":{}}`; `getUsageSummary` only reads):
+   ```
+   curl -sS -i -X POST -H 'Content-Type: application/json' -d '{"data":{}}' \
+     https://europe-west6-scoutx-230b0.cloudfunctions.net/getUsageSummary
+   ```
+   Keep the status line, the `content-type` header and the whole JSON body (no secrets are involved).
+2. Read the logs for that request (read-only; owner or a viewer role):
+   ```
+   gcloud logging read --project=scoutx-230b0 --freshness=15m --format=json \
+     'resource.type="cloud_run_revision" AND resource.labels.service_name="getusagesummary"
+      AND (labels."firebase-log-type"="callable-request-verification" OR httpRequest.status>=400 OR severity>=WARNING)'
+   ```
+   and the revision that served it: `gcloud run services describe getusagesummary --region=europe-west6
+   --project=scoutx-230b0 --format='value(status.latestReadyRevisionName,spec.template.spec.containers[0].env)'`
+   (shows only environment variable names and values set on the function; none are secrets; secrets are references).
+3. Decide by all three together:
+
+| Response | Log for that request | Rejecting layer | Conclusion |
+|---|---|---|---|
+| 401, JSON `{"error":{"message":"Unauthenticated","status":"UNAUTHENTICATED"}}` | `Callable request verification passed` with `verifications.app = "MISSING"`, `verifications.auth = "MISSING"`; request log 401; no function-code log line | callable SDK, App Check check | App Check **enforced** on that function |
+| 401, JSON `"message":"Sign in required."` | verification line with `app = "MISSING"`; function-code path ran | function code (auth check) | App Check **not enforced** on that function |
+| `Unauthenticated` but the verification line shows `auth = "INVALID"` | — | ID-token check | not an App Check result: the probe was not as described; repeat |
+| HTML page, 403 from a proxy, network error, or no matching request log | — | network / IAM / routing | no conclusion |
+
+The SDK writes "verification passed" **before** enforcement (`https.js` 281-305, 461-472), so that line alone proves nothing.
 
 ### 4.2 Register providers (approval A1). Registration does not turn enforcement on
 
@@ -110,15 +135,14 @@ Layer order on Google's side: App Check (only if enforced) → authentication �
 
 | # | Endpoint and method | Conditions | Rejection expected if App Check enforced | Observed | Conclusion |
 |---|---|---|---|---|---|
-| P1 | Firestore REST `GET documents/appCheckProbe/doesNotExist` | no auth, no App Check | HTTP 401 with an App Check error | HTTP 403 `PERMISSION_DENIED` "Missing or insufficient permissions." (server `ESF`) | request reached security rules: Firestore App Check **not enforced** |
-| P2 | Storage REST `GET /v0/b/scoutx-230b0.firebasestorage.app/o/appCheckProbe%2FdoesNotExist` | no auth, no App Check | HTTP 401 with an App Check error | HTTP 403 "Permission denied." (server `UploadServer`) | reached storage rules: Storage App Check **not enforced** |
+| P1 | Firestore REST `GET documents/appCheckProbe/doesNotExist` | no auth, no App Check | not reliably distinguishable: an enforced App Check rejection can also surface as 403 `PERMISSION_DENIED` | HTTP 403 `PERMISSION_DENIED` "Missing or insufficient permissions." (server `ESF`) | **not discriminating** on its own. Firestore enforcement **off** rests on the App Check service configuration (section 2: no enforcement mode ever set), i.e. configuration-based |
+| P2 | Storage REST `GET /v0/b/scoutx-230b0.firebasestorage.app/o/appCheckProbe%2FdoesNotExist` | no auth, no App Check | as P1 | HTTP 403 "Permission denied." (server `UploadServer`) | **not discriminating**; Storage enforcement **off** is configuration-based, as P1 |
 | P3 | Identity Toolkit `POST accounts:lookup` with the app's public API key and an invalid ID token | no App Check | App Check error | HTTP 400 `CONFIGURATION_NOT_FOUND` | **Firebase Authentication is not configured in this project** (confirmed read-only: admin config, Apple and Google provider configs and the user query all return `CONFIGURATION_NOT_FOUND`). Auth App Check enforcement cannot be probed until Auth exists |
-| P4 | Callable `getUsageSummary` (`cloudfunctions.net` and its Cloud Run address) | no auth, no App Check | `{"error":{"message":"Unauthenticated","status":"UNAUTHENTICATED"}}` | not sent: the workspace proxy refused both hosts (`CONNECT tunnel failed, response 403`) | see the deployed-code evidence above; one-line confirmation in 4.1 |
+| P4 | Callable `getUsageSummary` (`cloudfunctions.net` and its Cloud Run address) | no auth, no App Check | `{"error":{"message":"Unauthenticated","status":"UNAUTHENTICATED"}}` | not sent: the workspace proxy refused both hosts (`CONNECT tunnel failed, response 403`); not bypassed | **unverified live**; enforced according to deployed code and configuration (section 2); run 4.1 with log correlation to confirm |
 
-How to read P4 when it is run (from any normal network): "Unauthenticated" alone means the App Check layer (or a rejected
-ID token, which this request does not send) refused it; "Sign in required." means the function ran, so App Check is not
-enforced on it; an HTML page or a network error means a proxy or network problem, not the function. The full JSON body is
-the evidence; the HTTP status (401 in both of the first two cases) is not enough on its own.
+How to read P4: only with the table in 4.1 (response **and** the correlated log line and serving revision). The text
+"Unauthenticated" on its own is not evidence of App Check enforcement, and the HTTP status (401 in several cases) is not
+either.
 
 **New release blocker found by P3 (B-19):** without Firebase Authentication configured, no build can register or sign in,
 whatever App Check does. The app uses Email/Password, Sign in with Apple and Google sign-in.
