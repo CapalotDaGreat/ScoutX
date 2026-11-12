@@ -55,6 +55,7 @@ Prior fixes verified present (do not reopen without new evidence):
 | B-13 | Release with D still off | **OPS_SAFE** honesty | False attribution possible when LIKELY from appearance | Default appearance-only LIKELY on | Owner accepts residual risk **or** waits for D | Risk statement ready | Owner decision | Owner | DECISION NEEDED | 2026-11-04 |
 | B-14 | Xcode Privacy Report merge | **SUBMISSION** | Nutrition labels must reflect SDKs | Merge NOT VALIDATED | Privacy Report from signed tip archive | Needs A1 archive | Operator | OPEN | 2026-11-04 |
 | B-15 | Branch not on remote | **REC** | Collaboration / CI | No upstream | Push when authorized | n/a | `git push -u` when approved | Operator | OPEN | 2026-11-04 |
+| B-16 | Redesign ("Touchline") native validation and evidence renewal | **SUBMISSION** when merged | Every 5.3 screenshot and device result predates the redesign; native layout, VoiceOver, Dynamic Type and on-device exports are unverified | Web only: complete browser passes at `297ee6e` (63/63 mobile and desktop), 759 unit, 263 rules; see `docs/design/REDESIGN_LEDGER.md` sections 10 to 12 | `docs/design/REDESIGN_DEVICE_PROTOCOL.md` executed on a build of the merged commit; screenshots renewed; translation sheet reviewed | Protocol, review sheet and merge proposal prepared | Billed simulator or device build; a tester; native speakers | Owner / Operator | OPEN (added 2026-11-12) | 2026-11-12 |
 
 ---
 
