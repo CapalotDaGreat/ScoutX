@@ -12,6 +12,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { getFirestoreDb } from '@/config/firebase';
 import { isGuestRole } from '@/features/auth/services/authAccess';
 import { useAuthSession } from '@/features/auth/hooks/useAuthSession';
+import { isRestoringSession } from '@/features/auth/store/sessionBootstrap';
 import {
   resetPasswordWithFirebase,
   getPasswordResetSuccessMessage,
@@ -519,8 +520,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   });
 
   const isGuest = isGuestRole(state.role ?? undefined, state.user?.isAnonymous);
-  const isBootstrappingSession =
-    state.status === 'loading' && isLoading;
+  const isBootstrappingSession = isRestoringSession(state.status, isLoading, user !== null);
 
   const value = useMemo<AuthContextValue>(
     () => ({

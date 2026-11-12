@@ -71,6 +71,45 @@ test.describe('Player direct links', () => {
       await expect(page, path).toHaveURL(/\/player\/home$/, { timeout: 30_000 });
     }
   });
+
+  test('a cold link never exposes Back and then covers it again (B-20)', async ({ page }) => {
+    // Frame-by-frame: is the centre of Back on top? Before the fix it was for 40-80 ms, then the age/guardian
+    // gate's loading curtain covered it and a tap in that window did nothing.
+    await signIn(page, accounts.seededPlayer.email);
+    await page.addInitScript(() => {
+      const w = window as unknown as { __backHit: string[]; __backHitDone: boolean };
+      w.__backHit = [];
+      w.__backHitDone = false;
+      const t0 = performance.now();
+      const step = () => {
+        const back = [...document.querySelectorAll('button,[role=button]')].find(
+          (el) => ((el.getAttribute('aria-label') || (el as HTMLElement).innerText || '').trim() === 'Back'),
+        );
+        let sample = 'absent';
+        if (back) {
+          const r = back.getBoundingClientRect();
+          if (r.width > 0) {
+            const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+            sample = back.contains(top) ? 'hittable' : 'covered';
+          }
+        }
+        if (w.__backHit[w.__backHit.length - 1] !== sample) w.__backHit.push(sample);
+        if (performance.now() - t0 < 5000) requestAnimationFrame(step);
+        else w.__backHitDone = true;
+      };
+      requestAnimationFrame(step);
+    });
+    for (const path of ['/player/settings', '/player/requests']) {
+      await open(page, path);
+      await page.waitForFunction(() => (window as unknown as { __backHitDone?: boolean }).__backHitDone === true, null, { timeout: 30_000 });
+      const trace = await page.evaluate(() => (window as unknown as { __backHit: string[] }).__backHit);
+      const firstHittable = trace.indexOf('hittable');
+      expect(firstHittable, `${path}: ${trace.join(' > ')}`).toBeGreaterThan(-1);
+      expect(trace.slice(firstHittable).filter((s) => s === 'covered'), `${path}: ${trace.join(' > ')}`).toEqual([]);
+      await page.getByRole('button', { name: 'Back', exact: true }).first().click();
+      await expect(page, path).toHaveURL(/\/player\/home$/, { timeout: 30_000 });
+    }
+  });
 });
 
 test.describe('Scout direct links', () => {
