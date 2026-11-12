@@ -4,7 +4,7 @@ Branch `redesign/pitchproof-ux-overhaul`, cut from `release/pitchproof-5-3-candi
 The 5.3 candidate and the GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` are untouched.
 Analysis thresholds, identity defaults, rules, functions and the CV worker are not changed by this branch.
 
-**Status: READY FOR EXACT MERGE APPROVAL (web-verified; native validation BLOCKED pending approvals and B-19; 2026-11-12). Code candidate `cef23db`; documentation tip and integration SHA in the hand-off. Native, device and screen-reader validation NOT done.**
+**Status: READY FOR EXACT MERGE APPROVAL (web-verified on tree `72e9d351`; Back defect B-20 root-caused and fixed on web; native validation BLOCKED pending approvals and B-19; 2026-11-12). Code tip `0f6e3de`; documentation tip and integration SHA in the hand-off. Native, device and screen-reader validation NOT DONE.**
 
 Evidence class for everything below: **Expo web + local Firebase emulators (demo project), seeded accounts**.
 No native, device, VoiceOver, Dynamic Type or TestFlight evidence exists for this branch.
@@ -414,16 +414,71 @@ attempts (`/player/settings`); 0 in a further 100 instrumented attempts. No "GO_
 stack did contain Home. Separately, `/player/trials` re-creates its Back button after loading (13 of 25 runs) without any
 failure. Cause not established; no code change made for it. Must be checked on device (protocol L8 and L9).
 
+
+## 16. Back defect root cause, fix and final candidate checks (2026-11-12, late evening; tested tree `72e9d3512fb353baef70a3cf2128b3d2f2e5390d`)
+
+### 16.1 Back defect (blocker register B-20): cause, evidence, fix
+
+* **Mechanism, observed:** a frame-by-frame probe (each animation frame: is the centre of Back the top element?) after a cold
+  link showed, in 9 of 9 traces before the fix, `absent > covered (session curtain) > hittable (40-80 ms) > covered
+  (youth-gate-loading, z-30) > hittable`. The session curtain lifted when the Auth listener answered, one commit before the
+  auth state applied the restored user; the age/guardian gate then mounted its loading curtain for that account. A tap
+  dispatched into the exposed window, after the curtain mounted, landed on the curtain and did nothing.
+* **Forced reproduction:** holding the emulator's Firestore traffic (so the gate curtain stays up) and tapping Back with a raw
+  pointer tap made the tap hit `youth-gate-loading` every time, and the screen stayed put after release. Holding Auth traffic
+  made the tap hit the session curtain (correct: the app is not ready). With nothing held the tap navigated home.
+* **Why no warning before:** the tap never reached the button, so React Navigation never received GO_BACK. Earlier
+  hypotheses (stale stack, history `go(-1)`, resets) are excluded by the navigation log: the first sync kept the linked
+  stack and no reset followed.
+* **Fix (`0f6e3de`, smallest change):** `isRestoringSession` keeps the session curtain up while a restored user is known but not
+  yet applied, so curtain hands over to curtain with no exposed frame; visitors whose anonymous session is still being
+  created are unaffected. The safety record is now bound to the account it was read for (`recordForAccount`), so after an
+  account switch the new account stays gated until its own record arrives instead of passing for one render on the previous
+  account's age band. No guard was removed or delayed, no retry or timer added; navigation code is unchanged.
+* **Correct Back behaviour (unchanged, now reliable):** in-app entry pops to the previous screen; a cold link with no app
+  history goes to the role home (player Home, scout dashboard); after an auth redirect the restored screen's Back goes to
+  the role home; a missing or private resource shows its explanation with Back/Go to home; a scout cannot open player-only
+  addresses (lands on Pipeline). Covered by `routing.spec.ts` and `states.spec.ts` in both projects.
+* **Regression:** `routing.spec.ts` "a cold link never exposes Back and then covers it again (B-20)" **failed on the unfixed
+  build** (`absent > covered > hittable > covered > hittable`) and passes on the fix; unit `sessionGateTransitions.test.ts`
+  (8 tests). Repeated without retries: B-20 test and "every pushed player screen" each x15 per project = **30/30 mobile,
+  30/30 desktop**; scripted 200 cold-link Back attempts **0 failures** (note: the unfixed build also gave 0/200 in that
+  script, so the repeat count is not the evidence; the hit-test trace is). After the fix, traces are
+  `covered (session) > covered (youth gate) > hittable` with no exposed frame (6 of 6).
+* **Not verified:** native iOS (protocol row L13). The same components run natively, so the same gap is expected there.
+
+### 16.2 Results on tree `72e9d351…` (redesign `07294250235ad23599bea6bf264152f849203669`, clean; identical tree in the integration merge)
+
+| Check | Command / environment | Result |
+|---|---|---|
+| Unit | `npm run test:unit` | **786/786**, exit 0 |
+| Typecheck | `npm run typecheck` (app and tests) | exit 0 |
+| Lint | `npm run lint` | exit 0, 0 problems |
+| Browser, web-mobile | `fullsuite.sh`: fresh emulators (demo project) and seed, static `expo export --dev` built from the clean commit, `--retries=0`, 1 worker | **66 passed, 2 skipped, 0 failed**, exit 0 |
+| Browser, web-desktop | same, fresh stack | **66 passed, 2 skipped, 0 failed**, exit 0 |
+| Skips (both projects) | `marketingCapture.spec.ts` (opt-in capture), `targetAnchors.spec.ts:49` (experimental flag off) | expected |
+| Rules / API contracts | `npm run test:rules` (firebase-tools 15.35.0 from the workspace tools) | **263/263** |
+| App Check / build policy | `appCheckSimulator`, `releaseBuild`, `userFacingError` (in unit) | pass |
+| Identity safety, coaching downstream, export/privacy | `ambiguousIdentityTrace`, `identityCoordinator`, `identityEvidenceStaging`, `cvApproval`, `cvEvidence`, `aiPrivacyGate`, `footballCvHtml`, `playerCardPresentation`, `portfolioExportPrivacy` (in unit; also run on their own: 109/109 with the two above) | pass |
+| Worker suite (recorded-worker identity contract) | `pytest -q` in `workers/football-cv`, venv with dev requirements + OpenCV, SciPy, Pillow, scikit-learn, supervision; **torch unavailable** in this workspace (CPU wheel host blocked) | **partial:** 641 passed, 12 skipped, 6 xfailed (pinned strict), 0 failed, with `test_52.py` and `test_detector_release.py` not collected (need torch). `workers/` is byte-identical to the release |
+| Legal | `npm run legal:check` | pass |
+| Functions build / predeploy check | `npm run build --prefix functions`; `node scripts/sync-discovery-search.mjs --check` | pass |
+| Release gate | `node scripts/release-gate.mjs` | 24 PASS, 1 CODE BLOCKER (the worker suite above, environment: torch missing), 4 external, 3 legal, 3 not validated; exit 1 as designed for a public-release gate |
+| Kernel kills / peak memory | | 0 / 2.7 GB |
+
+Each browser run is reported whole. The B-20 regression test is part of both complete runs. Analysis thresholds, decoder and
+candidate defaults, identity safeguards, rules and functions are unchanged (`git diff 01f9459 -- functions workers
+firestore.rules storage.rules firestore.indexes.json` is empty).
+
 ## 12. Exact remaining actions
 
 1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.
-1a. **Owner:** run the one-line enforcement test in `docs/release/app-check-behaviour-2026-11-12.md` 4.1 and approve or decline
-    App Attest registration (approval A), the simulator build (B) and, separately, the backend deploy (B-17).
+1a. **Owner:** decide the separate actions in `docs/release/approval-requests-2026-11-12.md` (IDX-1, AUTH-1, BE-1..3, APC-1..3,
+    BLD-1..3, GIT-1, SUB-1); the App Check probe in `app-check-behaviour-2026-11-12.md` 4.1 needs the response **and** the log line.
 2. **Owner:** approve a billed simulator build and session, or run `docs/design/REDESIGN_DEVICE_PROTOCOL.md` on an iPhone.
    No native binary of this design exists; the newest build is production 1.0.0 (4) from 2026-10-22 at `6679226`.
 3. **Native speaker(s):** complete `docs/design/TRANSLATION_REVIEW_2026-11.md` (10 strings, 6 languages).
 4. **Owner:** decide whether the CV and share card ship in English only.
-5. **Engineering, not blocking merge:** the unexplained intermittent Back failure (10.2; not seen since); moderate axe
-   "landmark" notes (web-only concept).
+5. **Engineering, not blocking merge:** confirm the B-20 fix natively (protocol L13); moderate axe "landmark" notes (web-only concept).
 6. **Operator:** renew screenshots and device evidence on the merged commit; rerun the full device protocol.
-7. Unchanged external blockers B-01 to B-14 in `docs/release/blocker-register-2026-11-04.md` still gate App Store submission.
+7. External blockers B-01 to B-20 in `docs/release/blocker-register-2026-11-04.md` still gate App Store submission.

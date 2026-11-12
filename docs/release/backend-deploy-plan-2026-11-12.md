@@ -159,7 +159,7 @@ Preflight, from a clean checkout of the approved commit:
 git status --short                       # must print nothing
 git rev-parse HEAD                       # must equal the approved SHA
 npm ci && npm ci --prefix functions && npm run build --prefix functions
-npm run test:unit && npm run test:rules  # all pass; counts for the candidate are in REDESIGN_LEDGER section 15
+npm run test:unit && npm run test:rules  # all pass; counts for the candidate are in REDESIGN_LEDGER section 16
 firebase use scoutx-230b0 && firebase projects:list   # confirm the project, read-only
 # The live functions get GUARDIAN_LINK_BASE_URL from functions/.env.scoutx-230b0, which is git-ignored and therefore
 # absent from a clean checkout. Without it guardian consent links break. Copy it from the machine that deployed on
