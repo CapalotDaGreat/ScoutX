@@ -117,7 +117,6 @@ export function AppTabBar<T extends string>({
   return (
     <View
       testID={testID}
-      accessibilityRole="tablist"
       className="border-t border-divider bg-surface px-1 pt-1.5"
       style={{
         backgroundColor: colors.surface,
@@ -125,6 +124,8 @@ export function AppTabBar<T extends string>({
       }}
     >
       <View className="flex-row items-center overflow-visible">
+        {/* The centre action is a button, not a tab, so each side is its own tab list. */}
+        <View accessibilityRole="tablist" className="flex-1 flex-row items-center">
         {leftTabs.map((tab) => (
           <TabItem
             key={tab.id}
@@ -139,6 +140,7 @@ export function AppTabBar<T extends string>({
             }}
           />
         ))}
+        </View>
 
         {onCenterAction ? (
           <View className="w-14 items-center justify-center">
@@ -157,6 +159,8 @@ export function AppTabBar<T extends string>({
           </View>
         ) : null}
 
+        {rightTabs.length > 0 ? (
+        <View accessibilityRole="tablist" className="flex-1 flex-row items-center">
         {rightTabs.map((tab) => (
           <TabItem
             key={tab.id}
@@ -171,6 +175,8 @@ export function AppTabBar<T extends string>({
             }}
           />
         ))}
+        </View>
+        ) : null}
       </View>
     </View>
   );
