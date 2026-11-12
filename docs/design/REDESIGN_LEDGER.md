@@ -4,7 +4,7 @@ Branch `redesign/pitchproof-ux-overhaul`, cut from `release/pitchproof-5-3-candi
 The 5.3 candidate and the GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` are untouched.
 Analysis thresholds, identity defaults, rules, functions and the CV worker are not changed by this branch.
 
-**Status: READY FOR MERGE REVIEW AFTER NAMED EXTERNAL CHECKS (2026-11-12). Code candidate `297ee6e9c6f4d58b11f2c8b6e580f4f1d980d08b`. Web-verified with complete browser passes; native, device and screen-reader validation NOT done. See sections 10 to 12.**
+**Status: READY FOR MERGE REVIEW AFTER NAMED EXTERNAL CHECKS (final audit 2026-11-12). Code candidate `f150d49a41be3f5be745901997cd1295e16a2da9`. Complete browser passes on both web projects at that commit; native, device and screen-reader validation NOT done. See sections 13 and 12.**
 
 Evidence class for everything below: **Expo web + local Firebase emulators (demo project), seeded accounts**.
 No native, device, VoiceOver, Dynamic Type or TestFlight evidence exists for this branch.
@@ -269,6 +269,81 @@ Invalidated by the merge: every screenshot and device result for 5.3 (`docs/rele
 App Store screenshots), and any accessibility statement made for the old interface. Legal and privacy texts are unchanged;
 the redesign shows the same data under the same rules, but counsel's review of export wording should see the new CV and card.
 
+## 13. Final audit (2026-11-12, code candidate `f150d49`)
+
+Evidence class unchanged: Expo web (static `--dev` export) + local Firebase emulators (demo project) + seeded and throwaway test accounts.
+Target `release/pitchproof-5-3-candidate` re-fetched: still `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` (merge base; no new release commits).
+GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` is an ancestor and unchanged.
+
+### 13.1 Defects found and repaired
+
+| # | Defect | How it was shown | Repair |
+|---|---|---|---|
+| 8 | Text fields: on web the input ignored its classes, so it was 17 px tall inside a 48 px field and a tap near the field edge did not focus it (also on 5.3) | measured box and an edge tap: `focused false` | padding, size and height as styles: 46 px, edge tap `focused true` |
+| 9 | Sort control: read-only text input nested inside the button (axe serious, nested-interactive, 2 screens) | axe | drawn field face; the button is the only stop |
+| 10 | Plan and usage: page scroller not reachable by keyboard (axe serious) | axe | screen scroller is a keyboard stop on web |
+| 11 | Broken portrait URL: shared avatar and share card showed an empty frame | code review, then browser test | initials fallback; browser test with a refused address passes |
+| 12 | Discover list stretched edge to edge on tablets | capture at 1024 px | 760 px column (1180 px with two columns) |
+| 13 | Tab badge numeral 9 px | audit | 11 px in an 18 px circle; the count is also in the tab name |
+| 14 | A cancelled analysis said "Trying again will not help until this is fixed" | review preview capture | hint hidden when there is nothing to retry |
+
+### 13.2 Results at `f150d49` (exact commands in 10.2; export built from `f150d49`)
+
+| Check | Result | Exit |
+|---|---|---|
+| Browser suite, web-mobile (Pixel 7), fresh emulators and seed, 1 worker, no retries | **65 passed, 2 skipped, 0 failed** | 0 |
+| Browser suite, web-desktop (1280x720), fresh emulators and seed, 1 worker, no retries | **65 passed, 2 skipped, 0 failed** | 0 |
+| Kernel memory kills during both runs | 0 before, 0 after; peak 2.7 GB for the whole stack | |
+| `npm run test:unit` | **763/763** | 0 |
+| `npm run typecheck` | clean | 0 |
+| `npm run lint` | 0 errors | 0 |
+| `npm run test:rules` (Firestore and Storage authorization, deletion, entitlements, uploads, analysis pipeline) | **263/263** | 0 |
+| `npm run legal:check` | pass | 0 |
+| `node scripts/release-gate.mjs --allow-external --skip-tests` | PASS: 23 pass, 0 code blockers, 4 external, 3 legal review, 3 not validated, 2 skipped (rules and worker suite, covered below) | 0 |
+| axe (WCAG 2 A/AA + best practice), 23 screens, light and dark | **0 critical, 0 serious** (was 3 serious); 23 moderate "not in a landmark", 11 minor role notes | |
+
+Skips: `marketingCapture.spec.ts` (opt-in `MARKETING_CAPTURE`) and `targetAnchors.spec.ts` (opt-in experimental flag
+`EXPO_PUBLIC_EXPERIMENTAL_TARGET_ANCHORS`, off by default). The Python worker suite was not rerun: `functions`, rules, indexes,
+`bench` and the worker are byte-identical to `01f9459`, so its pinned state (6 strict xfails, 11 opt-in skips) is as on 5.3.
+The intermittent Back failure from 10.2 did not recur in either complete run (and 0 of 84 scripted attempts earlier); cause still unproven.
+
+### 13.3 Analysis and identity safety, traced
+
+- Server parser (`functions/src/analysis/trackingV3.ts`) refuses a whole report that contains a moment whose identity is not
+  confirmed or likely; nothing derived from it is stored. New test `ambiguousIdentityTrace.test.ts` runs the real recorded
+  worker output (IMG_4809) through the parser and every consumer: with no identity-backed moment there are 0 moments,
+  0 highlights in all six presets, 0 strength or improvement claims, 0 counted actions or passes, hero tone "none";
+  with likely-only identity everything stays "needs review" and nothing is confirmed or coached.
+- Cards, the public Passport, the share card and the CV read no analysis output: the server projection publishes
+  `analysisSampleCount: null`, shown as a dash.
+- Rendered outcomes from recorded fixtures (`t5-analysis-outcomes-preview-f150d49-web.png`): automatic result (1 confirmed,
+  5 to check), no identity ("could not confirm you", no best moments), consent required, cancelled, interrupted.
+  Partial and stopped analyses are never shown as complete.
+- Unchanged and still enforced by the unit suite: owner confirmation, automatic versus owner-assisted separation,
+  coaching blocked without identity, correction rules. Flags and defaults unchanged (C on, E off, D not promoted, A/B off,
+  DETOUR off, `productionApproval=false`). No live analysis was run.
+
+### 13.4 Native tooling and release configuration (read-only)
+
+- This workspace: Linux x86_64, no `/dev/kvm`, no Xcode, no Android SDK, so no local simulator or emulator.
+- Expo (`@boddibossi/scoutx`, project `a15ee8f0-…`): EAS simulator sessions and sandboxes exist as tools but are **billed**;
+  none was started. No simulator session has ever run for this project. Newest iOS build: production 1.0.0 (4), commit
+  `6679226`, 2026-10-22, artifact expires 2026-11-21. `appVersionSource: remote`, `autoIncrement` on `production`.
+- Firebase `scoutx-230b0`: project ACTIVE; App Check API enabled, but **no enforcement mode set** for Firestore, Storage or
+  Auth (read 2026-11-12). Matches blocker B-01; unchanged.
+- No change to `app.json`, `app.config.ts`, `eas.json`, bundle identifier `com.scoutx.app`, version, entitlements, privacy
+  manifest, purpose strings or the universal-link association file. `/player/*` already covers the new `player/plan` and
+  `player/privacy` addresses; `scout/privacy` opens through the app scheme only, like the other scout addresses.
+- Only new dependency: `@expo-google-fonts/barlow-condensed` 0.2.3. No schema change; stored results need no migration.
+- The app's web build is not hosted for users (Hosting serves `public/`), so native-only controls such as the Settings
+  account-deletion alert are not dead controls for real users. That flow is device protocol row S6.
+
+### 13.5 Translations
+
+Technical audit of the 11 English keys added or changed since `01f9459`, across 7 languages: 0 missing keys, 0 placeholder
+mismatches, 0 untranslated copies; 0 translation calls in code whose key is missing (no English fallback leakage).
+Linguistic review is still open: `docs/design/TRANSLATION_REVIEW_2026-11.md`, not reviewed by a native speaker.
+
 ## 12. Exact remaining actions
 
 1. **Owner:** approve or decline the merge (hand-off message). Nothing was merged or pushed to the release branch.
@@ -276,7 +351,7 @@ the redesign shows the same data under the same rules, but counsel's review of e
    No native binary of this design exists; the newest build is production 1.0.0 (4) from 2026-10-22 at `6679226`.
 3. **Native speaker(s):** complete `docs/design/TRANSLATION_REVIEW_2026-11.md` (10 strings, 6 languages).
 4. **Owner:** decide whether the CV and share card ship in English only.
-5. **Engineering, not blocking merge:** Sort control semantics and focusable scroll region (10.3); Discover list at tablet
-   width; 10 px badge numeral; the unexplained intermittent Back failure (10.2).
+5. **Engineering, not blocking merge:** the unexplained intermittent Back failure (10.2; not seen since); moderate axe
+   "landmark" notes (web-only concept).
 6. **Operator:** renew screenshots and device evidence on the merged commit; rerun the full device protocol.
 7. Unchanged external blockers B-01 to B-14 in `docs/release/blocker-register-2026-11-04.md` still gate App Store submission.

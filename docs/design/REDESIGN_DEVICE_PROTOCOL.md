@@ -30,7 +30,9 @@ profile in `eas.json` produces a simulator or internal build. Do not use `produc
 | L7 | Match review with owner confirmation | "Is this you?" choices fully visible; nothing attributed before confirmation |
 | L8 | Settings, Plan and usage, Privacy Center | Reachable from Settings and by link; Back returns |
 | L9 | Sheets and dialogs (share, log match, save filters, request endorsement, delete account) | 20 pt side padding; dismiss by swipe, backdrop and button; no double dismissal |
-| L10 | iPad | Content column no wider than 760 pt on Screen-based pages; Discover list acceptable |
+| L10 | iPad | Content column no wider than 760 pt on Screen-based pages and on the Discover list (1180 pt with two columns) |
+| L11 | Text fields (login, register, log match, notes) | A tap anywhere inside the field box focuses the field, including near its top and bottom edge (fixed on web in `f150d49`; the native TextInput must be checked) |
+| L12 | Sort control on Discover | One VoiceOver stop announced as a button with its value; no separate text field inside it |
 
 ## 2. Accessibility
 
@@ -58,5 +60,13 @@ profile in `eas.json` produces a simulator or internal build. Do not use `produc
 
 ## 4. States on device
 
-Airplane mode on Home, Discover and during match logging (input preserved); denied photo permission; interrupted upload;
-plan limit reached in Plan and usage; expired session; deleted account link.
+| # | State | Pass when |
+|---|---|---|
+| S1 | Airplane mode on Home, Discover and during match logging | Loaded content stays; half-written input is kept; banner shown |
+| S2 | Photo permission denied at upload | Message explains how to allow access; nothing crashes |
+| S3 | Upload interrupted (background the app, switch off network) | Upload resumes or fails with a clear retry; no duplicate match |
+| S4 | Plan limit reached (test account with exhausted quota on a sandbox project) | Limit card names the feature and what stays free; nothing is charged |
+| S5 | Expired session (revoke the test account's refresh token) | Returned to sign-in; no private data left on screen |
+| S6 | **Settings → Delete account** | The native confirmation appears (it uses a system alert, which has no web equivalent and was never exercised on web); after confirming, the account and its data are removed and the app returns to the signed-out start. Use a throwaway test account only |
+| S7 | Broken portrait (test account whose photo file was deleted) | Initials shown in the identity strip, cards and share card; no empty frame |
+| S8 | Purchases and restore (StoreKit sandbox tester) | Purchase sheet, restore and the "confirming" state behave as in 5.3; never with a real payment method |
