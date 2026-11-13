@@ -78,6 +78,8 @@ class IdentityResult:
     # Moments of reads that cannot be the target number (another number, or a digit the target
     # number does not contain). Hard evidence never reaches past the midpoint towards one.
     conflict_times: dict = field(default_factory=dict)
+    # 2026-11-14: what each user anchor resolved to: {"t", "tracklet" (summary index or None), "reason"}.
+    anchor_resolution: list = field(default_factory=list)
 
 
 def incompatible_with_target(num: str, target: str | None) -> bool:
@@ -110,11 +112,16 @@ def number_votes(reads: list[tuple], number: str | None) -> tuple[float, float, 
     return tw, ow, nt, no, top
 
 
-def locate(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -> list[int]:
-    """Map (t, x, y) points to the tracklet whose box contains them at that moment."""
-    out = []
+def locate_points(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -> list[tuple[int | None, str]]:
+    """2026-11-14: map each (t, x, y) user point to ONE tracklet, or to None with the reason.
+
+    A point resolves only when exactly one tracklet's own box (no padding) contains it at that moment, or, if no
+    box contains it, exactly one padded box does. Two players whose boxes both contain the tap (overlap, a duel,
+    one behind the other) make the answer ambiguous: it is not applied, so a tap can never silently pick the
+    nearer of two players. One result per input point, in order, so callers never misalign points and tracklets."""
+    out: list[tuple[int | None, str]] = []
     for t, x, y in points:
-        best, bd = None, 1e9
+        inner, padded = [], []
         for k, s in enumerate(summary):
             if not (s["t0"] - 0.3 <= t <= s["t1"] + 0.3):
                 continue
@@ -124,14 +131,23 @@ def locate(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -> list[
                 continue
             x1, y1, x2, y2 = r[3:7]
             pad = 0.15 * (y2 - y1)
-            if not (x1 - pad <= x <= x2 + pad and y1 - pad <= y <= y2 + pad):
-                continue
-            d = np.hypot((x1 + x2) / 2 - x, (y1 + y2) / 2 - y) / max(y2 - y1, 1)
-            if d < bd:
-                best, bd = k, d
-        if best is not None:
-            out.append(best)
+            if x1 <= x <= x2 and y1 <= y <= y2:
+                inner.append(k)
+            elif x1 - pad <= x <= x2 + pad and y1 - pad <= y <= y2 + pad:
+                padded.append(k)
+        hits = inner or padded
+        if len(hits) == 1:
+            out.append((hits[0], "inside" if inner else "near"))
+        elif hits:
+            out.append((None, f"ambiguous: {len(hits)} players at the tap"))
+        else:
+            out.append((None, "no player at the tap"))
     return out
+
+
+def locate(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -> list[int]:
+    """Tracklets of the points that resolve unambiguously (see locate_points); unresolved points are dropped."""
+    return [k for k, _ in locate_points(summary, rows, by_tid, points) if k is not None]
 
 
 def _zscore(values: np.ndarray, mask: np.ndarray) -> np.ndarray:
@@ -227,7 +243,8 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
             excluded[k] = f"shows #{votes[k][4]}"
         elif no[k] == 1 and nt[k] == 0 and ow[k] >= 0.97:
             excluded[k] = f"shows #{votes[k][4]}"
-    anchor_ix = set(locate(summary, rows, by_tid, target.anchors))
+    anchor_resolution = locate_points(summary, rows, by_tid, target.anchors)
+    anchor_ix = {k for k, _ in anchor_resolution if k is not None}
     for k in locate(summary, rows, by_tid, target.rejects):
         excluded[k] = "you said not me"
     anchor_ix -= set(excluded)
@@ -395,8 +412,11 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
         ix = by_tid[tid]
         fr_t = {int(rows[r, 0]): float(rows[r, 1]) for r in ix}
         ev_times[int(k)] = [fr_t[f] for f, num, _, _ in reads.get(tid, []) if num == target.number and f in fr_t]
-    for (t, _, _), k in zip(target.anchors, locate(summary, rows, by_tid, target.anchors)):
-        ev_times.setdefault(int(k), []).append(float(t))
+    # 2026-11-14: per-point resolution, so an unresolved earlier anchor can no longer shift a later anchor's time onto
+    # another tracklet (zip over a filtered list did), and an anchor on an excluded tracklet adds no evidence time.
+    for (t, _, _), (k, _) in zip(target.anchors, anchor_resolution):
+        if k is not None and k in anchor_ix:
+            ev_times.setdefault(int(k), []).append(float(t))
     conflicts: dict[int, list[float]] = {}
     for k in chosen:
         tid = summary[k]["tid"]
@@ -407,7 +427,10 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
             conflicts[int(k)] = sorted(ct)
     return IdentityResult(chosen, unary, evidence, confidence, seeds, list(map(int, cands)), history,
                           questions, {int(k): v for k, v in excluded.items()}, score,
-                          {int(k) for k in (anchor_ix | number_pos)}, ev_times, appearance_score, conflicts)
+                          {int(k) for k in (anchor_ix | number_pos)}, ev_times, appearance_score, conflicts,
+                          [{"t": float(t), "tracklet": None if k is None else int(k),
+                            "reason": "excluded: " + excluded[k] if k is not None and k in excluded else why}
+                           for (t, _, _), (k, why) in zip(target.anchors, anchor_resolution)])
 
 
 def _appearance_clusters(summary, ks: list[int], n_clusters: int = 10) -> dict[int, int]:
