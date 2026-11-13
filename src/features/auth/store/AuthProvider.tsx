@@ -486,6 +486,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signOut = useCallback(async () => {
     setState((current) => ({ ...current, isSubmitting: true, error: null, successMessage: null }));
+    // Sign-out starts the replacement guest session itself. Without this, the listener's user = null also
+    // started the anonymous bootstrap, two guest accounts were created at once, and the app could keep the
+    // one that is not Firebase's current user, so its reads were denied (B-23).
+    anonymousBootstrapStartedRef.current = true;
     await signOutFromFirebase();
 
     try {

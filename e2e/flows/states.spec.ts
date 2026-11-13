@@ -209,4 +209,41 @@ test.describe('Session states', () => {
     expect(errors).toEqual([]);
     await context.close();
   });
+  test('B-23: signing out of Settings starts one guest session, late responses change nothing, and the next account sees only its own data', async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const errors = trackPageErrors(page);
+    let guestSignUps = 0;
+    page.on('request', (request) => {
+      if (request.method() === 'POST' && request.url().includes('accounts:signUp')) guestSignUps += 1;
+    });
+    await signIn(page, accounts.seededPlayer.email);
+    await page.goto('/player/settings');
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByText(accounts.seededPlayer.email).first()).toBeVisible();
+
+    // Hold Firestore traffic while signing out, so the player's Settings loads answer only after the session changed.
+    const held: Array<() => Promise<void>> = [];
+    await page.route('**/127.0.0.1:8080/**', (route) => { held.push(() => route.continue().catch(() => undefined)); });
+    await page.route('**/localhost:8080/**', (route) => { held.push(() => route.continue().catch(() => undefined)); });
+    const before = guestSignUps;
+    await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+    await page.waitForTimeout(1_500);
+    await page.unroute('**/127.0.0.1:8080/**');
+    await page.unroute('**/localhost:8080/**');
+    for (const release of held) await release();
+    await expect(page.getByRole('heading', { name: 'Home' }).first()).toBeVisible({ timeout: 30_000 });
+    await page.waitForTimeout(2_000);
+    expect(guestSignUps - before, 'exactly one replacement guest session').toBe(1);
+    await expect(page.getByText(accounts.seededPlayer.email)).toHaveCount(0);
+
+    // Straight into another account: Settings shows the scout, never the player.
+    await signIn(page, accounts.scout.email);
+    await page.goto('/scout/settings');
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByText(accounts.scout.email).first()).toBeVisible();
+    await expect(page.getByText(accounts.seededPlayer.email)).toHaveCount(0);
+    expect(errors).toEqual([]);
+    await context.close();
+  });
 });
