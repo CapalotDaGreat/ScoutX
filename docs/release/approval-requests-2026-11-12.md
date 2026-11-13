@@ -156,3 +156,66 @@ BE-2b, BE-3b and BE-4 **completed and verified** (94 functions on nodejs22; ledg
 session's safety control: use the guarded owner command above. AUTH-1 waits for the console step. Builds wait for EAS access
 (network allowlist blocks `api.expo.dev`; no GitHub repository linked to the Expo project). No upload or submission is
 authorised or was made.
+
+## Current candidate and owner procedures (2026-11-13, 19:45 local; supersedes the GIT-1 and build commands above)
+
+| Item | Value |
+|---|---|
+| Release target (remote, unchanged) | `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` |
+| Redesign tip (pushed) | `9b40ed4d39bcef0f36f1ea0745a809628d343242`, later commits on that branch are documentation only |
+| **Candidate (published)** | `e8862104ec27e8d8605a21c3766c89f97cbe9504`, tree `bc666164321ce1850879a88c3f49fa2375bb6df4`, branch `integration/redesign-into-5-3-r6` on `origin` |
+| Candidate parents | `9c6d6edd7d6a1540b89eedf3f295b854144291a8` (= release `01f9459` + index fix `9986c4f` + Node 22 fix `0adacdf`) and the redesign tip `9b40ed4…` |
+| Difference from `5cc7af2` | B-23 fix (`AuthProvider.tsx`, `useNotificationPreferences.ts`, new `accountScopedResult.ts`, tests), operator rename (`legalConfig.ts`, regenerated public pages, hand-written site pages, `functions/src/safety/userSafety.ts` + compiled output, docs, tests). Server code differs from the deployed source `0adacdf` only in that one email sentence (B-24) |
+| Superseded | `5cc7af2` (r4), `9271cfb` (r5), every earlier SHA |
+
+### GIT-1, guarded owner merge (the session's safety control refused the push twice)
+
+```
+git fetch origin
+test "$(git rev-parse origin/release/pitchproof-5-3-candidate)" = 01f9459c2608bc939c96f5c7388b5e5ba98aac2d || { echo "release moved: stop"; exit 1; }
+test "$(git rev-parse origin/integration/redesign-into-5-3-r6)" = e8862104ec27e8d8605a21c3766c89f97cbe9504 || { echo "candidate changed: stop"; exit 1; }
+test "$(git rev-parse e8862104ec27e8d8605a21c3766c89f97cbe9504^{tree})" = bc666164321ce1850879a88c3f49fa2375bb6df4 || { echo "tree mismatch: stop"; exit 1; }
+git merge-base --is-ancestor 01f9459c2608bc939c96f5c7388b5e5ba98aac2d e8862104ec27e8d8605a21c3766c89f97cbe9504 || { echo "not a fast-forward: stop"; exit 1; }
+git push origin e8862104ec27e8d8605a21c3766c89f97cbe9504:refs/heads/release/pitchproof-5-3-candidate
+git ls-remote origin refs/heads/release/pitchproof-5-3-candidate   # must print e8862104ec27e8d8605a21c3766c89f97cbe9504
+```
+A plain push: Git refuses it if the branch moved; never add `--force`. If the repository requires a pull request, open one
+from `integration/redesign-into-5-3-r6` into `release/pitchproof-5-3-candidate` and merge it with "fast-forward" or
+"create a merge commit" (not squash, so the tested SHA stays in history). If a check fails: stop, do not retry with other
+options, and send the output.
+
+Rollback, matched to the structure: the release first-parent chain becomes `01f9459 → 9986c4f → 9c6d6ed → e886210`.
+`git revert -m 1 e8862104ec27e8d8605a21c3766c89f97cbe9504` removes the redesign, B-23 and the rename and keeps the index
+entry and Node 22 engines, which match production; do not revert `9c6d6ed` or `9986c4f` (that would put Node 20 back into
+the source and drop the live index from the file).
+
+### BE-5 (new; needs approval): guardian emails with the new operator name (B-24)
+
+From a clean checkout of the merged release `e8862104…` with `functions/.env.scoutx-230b0` (only `GUARDIAN_LINK_BASE_URL`):
+`firebase deploy --project scoutx-230b0 --only "functions:requestGuardianConsent,functions:respondGuardianConsent,functions:onTrialInvitationCreatedGuardian,functions:onTrialInvitationUpdatedGuardian,functions:requestEvidence"`.
+Expected: 5 new revisions on nodejs22; nothing else changes. Validation as for BE-3b. Forward repair only.
+
+### Builds (owner terminal; this workspace and the VM on the owner's PC cannot reach `api.expo.dev`, proxy 403)
+
+Preflight in a fresh clone (never the redesign worktree):
+```
+git clone https://github.com/CapalotDaGreat/ScoutX pp-build && cd pp-build
+git checkout e8862104ec27e8d8605a21c3766c89f97cbe9504      # BLD-3: the merged release SHA, which is this SHA after GIT-1
+git status --short                                         # must print nothing
+npm ci && npm ci --prefix functions && npm run typecheck && npm run test:unit
+npx eas-cli whoami                                         # the account that owns @boddibossi/scoutx
+npx eas-cli env:list --environment production              # names only: EXPO_PUBLIC_FIREBASE_* and GOOGLE_SERVICES_PLIST present
+npx eas-cli env:list --environment preview                 # the preview profile has no "environment": production, so check it too
+```
+No `autoSubmit`, submit hook or CI workflow exists in the repository; `eas.json` has a `submit` section that only `eas submit`
+uses. Never add `--auto-submit`; never run `eas submit`.
+
+| Build | Command | App Check | Signing / device | Build number | Cost (expo.dev/pricing.md, read 2026-11-13) |
+|---|---|---|---|---|---|
+| BLD-1 simulator | `npx eas-cli build --platform ios --profile simulator --non-interactive` | debug provider, only because the `simulator` profile sets the flag and the app runs in the Simulator; the app logs the debug token to register (APC-3) | none | not incremented | $2 |
+| BLD-2 Ad Hoc | `npx eas-cli device:create` (designated iPhone), then `npx eas-cli build --platform ios --profile preview --non-interactive` | App Attest (release build; cannot be switched off) | EAS-managed Ad Hoc profile, Apple sign-in by the owner | not auto-incremented | $2 |
+| BLD-3 production | after GIT-1: `npx eas-cli build --platform ios --profile production --non-interactive` | App Attest; the build gate refuses the simulator flag and bundled debug tokens | App Store distribution certificate | remote auto-increment (latest 4, next expected 5) | $2 |
+
+Artifact checks for each build: `npx eas-cli build:view <id>` shows commit `e8862104…`, the profile and the bundle
+`com.scoutx.app`; download the artifact and keep it. Do **not** upload the BLD-3 `.ipa` anywhere (no TestFlight, no
+Transporter). Simulator sessions still need a duration and spending cap.

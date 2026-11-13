@@ -607,6 +607,53 @@ owner's PC (proxy 403, not a login problem); the Expo connection can only build 
 linked; no build was started. GIT-1: the session's safety control refused the release-branch push again; the guarded owner
 command is in the approval packet. **NO BUILD WAS UPLOADED OR SUBMITTED TO APP STORE CONNECT OR TESTFLIGHT.**
 
+
+## 20. B-23 fix, operator rename, final candidate (2026-11-13 evening)
+
+**B-23 root cause (demonstrated):** at sign-out `signOut()` creates the replacement guest session, and the Auth listener's
+`user = null` also started the anonymous bootstrap. Every scripted sign-out on the unfixed build sent **two**
+`accounts:signUp` requests (12 of 12); the state could keep the guest that was not Firebase's current user, so Settings'
+`pushTokens/{uid}` read was denied (rule line 546) and its unhandled rejection became a page error (1 of 12 runs, 1 earlier
+desktop suite failure). **Fix** (`23dc0a8`): sign-out marks the bootstrap as started before signing out; Settings runs its loads
+through `settleForAccount`, drops results for an account that is no longer current, resets to defaults while a new account
+loads, and re-throws failures for the account that is still signed in. No rule or authorization change; no error is
+swallowed for the current account.
+
+| Evidence | Unfixed build | Fixed build |
+|---|---|---|
+| Guest sign-ups per sign-out (scripted, 12 runs) | 2, 2, 2, … (12/12) | 1 (12/12), 0 page errors |
+| B-23 browser test (held Firestore traffic during sign-out, then scout sign-in) | failed 3/3 ("expected 1, received 2") | passes; 8/8 per project in the repeat run |
+| Unit `accountScopedResult.test.ts` | — | 7/7: late response after sign-out dropped; old account's denial during sign-out not an error; rapid sign-out/sign-in shows only the new account; genuine denial for the signed-in account rethrown |
+
+Session expiry (listener goes to null without `signOut()`) creates one guest through the bootstrap; the stale-result rule
+covers it, but it was not exercised separately in the browser.
+
+**Operator rename:** the operator is registering the company as **Lusiola Software**; address and personal details are
+unchanged. `src/config/legalConfig.ts` feeds every in-app policy and the generated website; the hand-written site pages, the
+guardian email sentence in `functions/src/safety/userSafety.ts`, the current compliance, privacy and security documents and the
+tests were updated (`0a71917`). Policy versions were not bumped: the text resolves the name from configuration, and a bump
+would also change the server's accepted-version table and need a backend deploy; counsel should decide (B-03). No legal form,
+register or UID number was added: these follow from the registration. The deployed guardian emails still say CML Electronics
+until BE-5 (B-24). App Store Connect seller name and copyright fields are outside this repository.
+
+**Final candidate** `e8862104ec27e8d8605a21c3766c89f97cbe9504`, tree `bc666164321ce1850879a88c3f49fa2375bb6df4`, published as
+`integration/redesign-into-5-3-r6`; contains the release, index fix, Node 22 fix, clean-checkout fix, fail-closed contracts,
+Back fix, B-23 fix and rename (ancestry checked). It equals the redesign tip plus the index line and the engines change.
+
+| Check (Node 22.23.4) | Result |
+|---|---|
+| Complete browser suites (fresh emulators, export built from the clean candidate, `--retries=0`) | web-mobile **67 passed, 2 skipped**; web-desktop **67 passed, 2 skipped** |
+| Focused repeats (B-23, session restore, B-20, pushed screens; `--repeat-each=8`, no retries) | 32/32 mobile, 32/32 desktop |
+| Unit / typecheck / lint / legal / functions build / discovery check / legal build check | 805/805 / 0 / 0 / pass / pass / pass / up to date |
+| Release gate (full: rules 263, worker suite with PyTorch) | 26 PASS, 0 code blockers; 10 legal/external/not-validated items (public-release mode exit 1 by design) |
+| Fresh clone from `origin` with the README commands (`npm ci`, `npm ci --prefix functions`, typecheck, lint, unit, functions build) | all exit 0, 805/805, no tracked changes; preview data absent from the web export (0 of 8 samples) |
+
+Not repeated: the earlier fail-closed, worker and safeguard results apply unchanged (`git diff 01f9459 e886210 -- workers
+firestore.rules storage.rules` is empty; `functions/src` differs only in the email sentence). Backend: 94 functions nodejs22
+ACTIVE (unchanged since section 19). Auth still `CONFIGURATION_NOT_FOUND`; App Attest config present (`tokenTtl 3600s`).
+
+**NO BUILD WAS UPLOADED OR SUBMITTED TO APP STORE CONNECT OR TESTFLIGHT.**
+
 ## 12. Exact remaining actions
 
 1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.

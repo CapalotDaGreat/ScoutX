@@ -18,7 +18,7 @@ Profiles (rechecked 2026-11-12 evening):
 
 | Artifact | Profile and command (not run) | Runs on | App Check | Signing | Covers | Cannot cover |
 |---|---|---|---|---|---|---|
-| BLD-1 simulator build | `eas build --platform ios --profile simulator --non-interactive` | iOS Simulator only (`.tar.gz` with `PitchProof.app`) | debug provider, simulator only (`cef23db`); the token it prints must be registered (action APC-3) before protected requests succeed | none | L1-L13, A4, A6-A8, E1-E2 generation, S1, S7, S10, S11, and with C3 also onboarding, Discover, Plan, deletion (S6) | App Attest / DeviceCheck, VoiceOver in a cloud session, QR scanning, purchases (StoreKit sandbox needs a device or local StoreKit config), physical performance |
+| BLD-1 simulator build | `eas build --platform ios --profile simulator --non-interactive` | iOS Simulator only (`.tar.gz` with `PitchProof.app`) | debug provider, simulator only (`cef23db`); the token it prints must be registered (action APC-3) before protected requests succeed | none | L1-L15, A4, A6-A8, E1-E2 generation, S1, S7, S10, S11, and with C3 also onboarding, Discover, Plan, deletion (S6) | App Attest / DeviceCheck, VoiceOver in a cloud session, QR scanning, purchases (StoreKit sandbox needs a device or local StoreKit config), physical performance |
 | BLD-2 physical-device build | `eas device:create` (register the tester's iPhone UDID), then `eas build --platform ios --profile preview --non-interactive` | registered iPhones only (Ad Hoc) | App Attest, DeviceCheck fallback; needs action C1 | Apple Distribution certificate and Ad Hoc provisioning profile, managed by EAS (Apple account sign-in by the owner) | S9, A1-A3 VoiceOver, A5 n/a (iOS), E1-E2 on device incl. QR and AirDrop, S2-S6, S8 sandbox purchases | anything about the simulator; not a TestFlight or store build |
 
 Both builds use the production Firebase project (no staging project exists) and need throwaway test accounts there;
@@ -28,7 +28,7 @@ B-19 (Authentication not configured) blocks every signed-in row on both until ac
 
 | Rows | Simulator build (`simulator`) | Physical iPhone (Ad Hoc `preview` or TestFlight) |
 |---|---|---|
-| L1-L13 layout, A4 large text, A6 reduce motion, A7 colour, A8 targets | yes | yes |
+| L1-L15 layout, A4 large text, A6 reduce motion, A7 colour, A8 targets | yes | yes |
 | A1-A3 VoiceOver | only with a person at a Mac running the simulator; a cloud session cannot drive VoiceOver | yes |
 | Screens behind enforced callables (role selection, age gate, consent, Discover, Plan and usage, upload, deletion) | **no**: a simulator can never attest, so these fail if the live functions enforce App Check (see `docs/release/app-check-behaviour-2026-11-12.md`) | yes, after App Attest is registered |
 | E1, E2 share card and CV | generation and the share sheet yes; QR scanning and AirDrop no | yes |
@@ -53,6 +53,8 @@ Simulator results are recorded as **simulator** and never count for a physical-d
 | L11 | Text fields (login, register, log match, notes) | A tap anywhere inside the field box focuses the field, including near its top and bottom edge (fixed on web in `f150d49`; the native TextInput must be checked) |
 | L12 | Sort control on Discover | One VoiceOver stop announced as a button with its value; no separate text field inside it |
 | L13 | Cold link then immediate Back (B-20): open `pitchproof://` links to Settings, Requests and Trials from a killed app (signed in), tap Back as soon as it appears | The loading screen covers everything until the app is ready; the first visible Back works on the first tap and leads to Home; no flash of the screen before the loading screen; repeat 5 times per link. Also: sign out, open a private link, sign in, Back after the restored screen |
+| L14 | Settings sign-out and account switch (B-23): sign in as the test player, open Settings, tap Sign out; immediately sign in as the test scout and open Settings; repeat 3 times; also sign out with the network briefly off | Exactly one guest session (no error banner, no crash); after switching, Settings shows only the scout's email and preferences, never the player's; after sign-out, player links show nothing private |
+| L15 | Operator name (2026-11-13 rename) | Settings → Legal and the policy screens, the website footer and a guardian invitation email name **Lusiola Software** with the Dübendorf address (the email only after BE-5) |
 
 ## 2. Accessibility
 
