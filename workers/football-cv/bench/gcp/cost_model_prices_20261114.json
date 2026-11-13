@@ -1,0 +1,47 @@
+{
+  "retrieved": "2026-11-14",
+  "sources": {
+    "cloudRun": "https://cloud.google.com/run/pricing (instance-based billing; whole instance lifetime, minimum 1 minute, rounded up to 100 ms)",
+    "cloudRunGpu": "https://docs.cloud.google.com/run/docs/configuring/services/gpu (L4 in europe-west1 / europe-west4; min 4 vCPU 16 GiB, 8 vCPU 32 GiB recommended; ~5 s start with drivers)",
+    "computeEngine": "workers/football-cv/bench/results/5.3/l4-20261029-netherlands/prices.json (Cloud Billing Catalog API, europe-west4, retrieved 2026-10-29; g2-standard-8 + 200 GiB balanced PD)",
+    "llm": "https://ai.google.dev/gemini-api/docs/pricing (paid tier, gemini-2.5-flash $0.30 in / $2.50 out per 1M tokens; the route actually configured is OpenRouter -> Google AI Studio)",
+    "storage": "NOT re-verified on 2026-11-14 (the Cloud Storage pricing page could not be opened); 0.025 USD/GB-month kept from the 2026-10-29 snapshot",
+    "interRegionTransfer": "NOT verified; left null so totals exclude it and say so"
+  },
+  "prices": {
+    "cloudRunL4UsdPerSec": {"nonZonal": 0.0001867, "zonal": 0.0002909},
+    "cloudRunVcpuUsdPerSec": 0.000018,
+    "cloudRunGiBUsdPerSec": 0.000002,
+    "vmUsdPerHour": 0.9273387923013698,
+    "llmUsdPerMInput": 0.30,
+    "llmUsdPerMOutput": 2.50,
+    "storageUsdPerGbMonth": 0.025,
+    "interRegionTransferUsdPerGb": null
+  },
+  "scenarios": {
+    "default": {
+      "note": "Assumptions, not measurements: start/load times are guesses until a Cloud Run trial measures them.",
+      "zonalRedundancy": "nonZonal", "vcpu": 8, "memGiB": 32,
+      "containerStartSec": 60, "modelLoadSec": 15, "shutdownSec": 5, "vmBootSec": 120,
+      "failureRate": 0.05, "minInstances": 0, "jobsPerMonth": 200,
+      "llmInputTokens": 6000, "llmOutputTokens": 2000,
+      "crossRegion": true, "storageDays": 7
+    },
+    "zonal": {
+      "note": "Default Cloud Run GPU setting (zonal redundancy reserves capacity across zones).",
+      "zonalRedundancy": "zonal", "vcpu": 8, "memGiB": 32,
+      "containerStartSec": 60, "modelLoadSec": 15, "shutdownSec": 5, "vmBootSec": 120,
+      "failureRate": 0.05, "minInstances": 0, "jobsPerMonth": 200,
+      "llmInputTokens": 6000, "llmOutputTokens": 2000,
+      "crossRegion": true, "storageDays": 7
+    },
+    "warm1": {
+      "note": "One always-on minimum instance shared by jobsPerMonth analyses.",
+      "zonalRedundancy": "nonZonal", "vcpu": 8, "memGiB": 32,
+      "containerStartSec": 0, "modelLoadSec": 0, "shutdownSec": 0, "vmBootSec": 120,
+      "failureRate": 0.05, "minInstances": 1, "jobsPerMonth": 200,
+      "llmInputTokens": 6000, "llmOutputTokens": 2000,
+      "crossRegion": true, "storageDays": 7
+    }
+  }
+}
