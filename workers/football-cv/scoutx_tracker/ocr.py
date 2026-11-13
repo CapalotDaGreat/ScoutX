@@ -82,13 +82,29 @@ class NumberReader:
 
         gpu = torch.cuda.is_available()
         self.parseq = recognition_predictor("parseq", pretrained=True)
+        degraded: list[str] = []
         if gpu:  # 4.1: OCR on the GPU host too (both recognisers are torch models)
             try:
                 self.parseq = self.parseq.cuda()
-            except Exception:  # noqa: BLE001 - stays on CPU if the predictor cannot move
-                pass
+            except Exception as exc:  # noqa: BLE001 - recorded below, never silent (2026-11-14)
+                degraded.append(f"parseq stayed on CPU: {type(exc).__name__}: {str(exc)[:160]}")
         self.easy = easyocr.Reader(["en"], gpu=gpu, verbose=False)
         self.min_conf = min_conf
+        # 2026-11-14: report where each recogniser actually runs. A CUDA host whose OCR silently stayed on the CPU
+        # used to look like a GPU run; now it is a recorded degraded mode, and SCOUTX_REQUIRE_GPU_OCR=1 refuses it.
+        self.device_report = {"cudaAvailable": gpu, "parseq": module_device(self.parseq),
+                              "easyocr": str(getattr(self.easy, "device", "cpu"))}
+        if gpu:
+            for name in ("parseq", "easyocr"):
+                if not self.device_report[name].startswith("cuda"):
+                    degraded.append(f"{name} runs on {self.device_report[name]} although CUDA is available")
+        self.device_report["degraded"] = sorted(set(degraded))
+        if self.device_report["degraded"]:
+            import logging  # noqa: PLC0415
+
+            logging.getLogger(__name__).warning("OCR degraded mode: %s", "; ".join(self.device_report["degraded"]))
+            if os.environ.get("SCOUTX_REQUIRE_GPU_OCR", "0") == "1":
+                raise RuntimeError("OCR is not on the GPU: " + "; ".join(self.device_report["degraded"]))
 
     def _candidates(self, crop: np.ndarray) -> list[tuple[str, np.ndarray]]:
         h = crop.shape[0]
@@ -236,6 +252,25 @@ def open_torso_read(reader: "NumberReader", crop: np.ndarray, min_conf: float = 
     if best[top] < min_conf or any(v >= conflict_conf for k, v in best.items() if k != top):
         return None, 0.0
     return top, best[top]
+
+
+def module_device(predictor) -> str:
+    """Device of the first parameter of a torch predictor (docTR keeps the network in `.model`); 'unknown' if none."""
+    for candidate in (getattr(predictor, "model", None), predictor):
+        params = getattr(candidate, "parameters", None)
+        if callable(params):
+            try:
+                return str(next(iter(params())).device)
+            except StopIteration:
+                continue
+            except Exception:  # noqa: BLE001 - a predictor without torch parameters
+                continue
+    return "unknown"
+
+
+def reader_device_report() -> dict | None:
+    """Device report of the shared reader if one was created in this process, else None."""
+    return None if _SHARED is None else dict(_SHARED.device_report)
 
 
 _SHARED: "NumberReader | None" = None

@@ -392,6 +392,14 @@ def main(argv=None) -> int:  # noqa: C901, PLR0912, PLR0915 - one linear benchma
                                                  storage={"gb": round(record["input"]["sizeBytes"] / 1e9, 3), "days": 1},
                                                  video_sec=duration if not reused else None)
         record["gpuSampling"] = gpu.stop()
+        from scoutx_tracker.ocr import reader_device_report  # noqa: PLC0415
+
+        # 2026-11-14: where OCR actually ran (None = no reader was created in this process, e.g. a fully cached resolve).
+        record["ocrDevices"] = reader_device_report()
+        if a.require_gpu and record["ocrDevices"] and record["ocrDevices"].get("degraded"):
+            record["status"] = "refused"
+            record["error"] = {"type": "GpuVerification", "message": "; ".join(record["ocrDevices"]["degraded"])}
+            rc = EXIT_VERIFY
         record["peakRssMiB"] = peak_rss_mib()
         if cuda:
             record["peakTorchAllocatedGpuMiB"] = round(torch.cuda.max_memory_allocated() / 2**20, 2)
