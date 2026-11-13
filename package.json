@@ -20,6 +20,8 @@
     "ios": "node scripts/start-expo.mjs --ios --online",
     "web": "node scripts/start-expo.mjs --expo-go --web --online",
     "lint": "eslint . --ext .ts,.tsx",
+    "preview:prepare": "node scripts/review-preview/generate.mjs",
+    "pretypecheck": "npm run --silent preview:prepare",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tests",
     "test:unit": "node --import ./tests/unit/support/register.mjs --test --test-concurrency=2 \"tests/unit/*.test.ts\"",
     "test:rules": "npm run build --prefix functions && firebase emulators:exec --only firestore,storage --project demo-scoutx \"node --import ./tests/unit/support/register.mjs --test --test-concurrency=1 tests/rules/firestore.rules.test.mjs tests/rules/storage.rules.test.mjs tests/rules/accountDeletion.test.mjs tests/rules/aiCallables.test.mjs tests/rules/pushChain.test.mjs tests/rules/requestCenter.test.mjs tests/rules/reelExport.test.mjs tests/rules/moderation.test.mjs tests/rules/uploads.test.mjs tests/rules/analysisPipeline.test.mjs tests/rules/targetAnchors.test.mjs tests/rules/entitlements.test.mjs tests/rules/dataRights.test.mjs tests/rules/guardianFlow.test.mjs tests/rules/deletionAuth.test.mjs tests/rules/footballSources.test.mjs tests/rules/discoverySearch.test.mjs\"",
