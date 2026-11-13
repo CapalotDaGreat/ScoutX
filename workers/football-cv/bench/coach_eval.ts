@@ -72,7 +72,8 @@ const rows = insights.map((ins) => {
       labelledInterval: inLabelledInterval(m.start) || inLabelledInterval(m.end), labelSupport: support(m.start, m.end) };
   });
   const checked = cited.filter((c) => 'labelSupport' in c && c.labelledInterval);
-  const wrongPlayer = checked.filter((c) => 'labelSupport' in c && c.labelSupport.other > 0 && c.labelSupport.target === 0).length;
+  const wrongPlayer = checked.filter((c) => 'labelSupport' in c && c.labelSupport !== undefined
+    && c.labelSupport.other > 0 && c.labelSupport.target === 0).length;
   return { id: ins.id, kind: ins.kind, topic: ins.topic, tier: ins.tier, evidence: ins.evidence, params: ins.params,
     drill: ins.drill?.id ?? null, citedMoments: cited, checkableMoments: checked.length, momentsOnAnotherPlayer: wrongPlayer };
 });

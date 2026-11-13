@@ -15,7 +15,8 @@
  * (cvWorkerStatus() === 'available') plus TRACKING_V3_ENABLED=true.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ANSWERS = exports.DISCOVERY_MIN_CONFIRM_READS = exports.MIN_SEQUENCE_SEC = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.ANSWERS = exports.DISCOVERY_MIN_CONFIRM_READS = exports.MIN_SEQUENCE_SEC = exports.MAX_UNRESOLVED_ANSWERS = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.parseUnresolvedAnswers = parseUnresolvedAnswers;
 exports.parseOffballSequences = parseOffballSequences;
 exports.parseOffball = parseOffball;
 exports.decodeReviewImage = decodeReviewImage;
@@ -41,6 +42,19 @@ const EVENT_TYPES = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tack
 exports.MOMENT_KINDS = ['contact', 'carry', 'pass_attempt', 'duel_candidate', 'tackle_candidate', 'spell', 'sighting'];
 exports.MAX_MOMENTS = 80;
 exports.MAX_CLIP_SEC = 20;
+exports.MAX_UNRESOLVED_ANSWERS = 16;
+function parseUnresolvedAnswers(raw, recordingSec) {
+    const out = [];
+    for (const item of Array.isArray(raw) ? raw : []) {
+        const a = asRecord(item);
+        if (!a || !nonNeg(a.t) || a.t > recordingSec + 1)
+            continue;
+        if (a.status === 'ambiguous' || a.status === 'no_player' || a.status === 'excluded') {
+            out.push({ t: a.t, status: a.status });
+        }
+    }
+    return out.sort((x, y) => x.t - y.t).slice(0, exports.MAX_UNRESOLVED_ANSWERS);
+}
 exports.MIN_SEQUENCE_SEC = 6;
 /**
  * 5.0: keeps only sequences that lie entirely inside CONFIRMED_VISIBLE time of the state strip and
@@ -285,6 +299,7 @@ function parseTrackingReport(raw, timeline) {
                 ? { width: v.width, height: v.height } : null;
         })(),
         reviewQuestions: questions,
+        unresolvedAnswers: parseUnresolvedAnswers(r.anchorResolution, coverage.recordingSec),
         identity: { numberSightings: nonNeg(ident.numberSightings) ? ident.numberSightings : 0,
             confirmedByUser: nonNeg(ident.confirmedByUser) ? ident.confirmedByUser : 0 },
         heatmap: heatRaw && heatRaw.status === 'observed_only' ? { status: 'observed_only' }
