@@ -121,30 +121,37 @@ def locate_points(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -
     next); otherwise the answer is ambiguous and not applied. One result per input point, in order, so callers never misalign points and tracklets."""
     out: list[tuple[int | None, str]] = []
     for t, x, y in points:
-        inner, padded = [], []
+        # Boxes detected in the answered frame itself (|dt| <= half a frame at 10 fps) decide first; only when none
+        # contains the point are boxes up to 0.35 s away considered. Otherwise the end of one piece and the start of
+        # the next piece of the SAME player (a crossing split) count as two players (measured 2026-11-14: a clear,
+        # labelled target tap at 237.6 s was refused as "2 players").
+        inner, padded, near_inner, near_padded = [], [], [], []
         for k, s in enumerate(summary):
             if not (s["t0"] - 0.3 <= t <= s["t1"] + 0.3):
                 continue
             ix = by_tid[s["tid"]]
             r = rows[ix[np.argmin(np.abs(rows[ix, 1] - t))]]
-            if abs(r[1] - t) > 0.35:
+            dt = abs(r[1] - t)
+            if dt > 0.35:
                 continue
             x1, y1, x2, y2 = r[3:7]
             pad = 0.15 * (y2 - y1)
+            same = dt <= 0.051
             if x1 <= x <= x2 and y1 <= y <= y2:
-                inner.append(k)
+                (inner if same else near_inner).append(k)
             elif x1 - pad <= x <= x2 + pad and y1 - pad <= y <= y2 + pad:
-                padded.append(k)
-        hits = inner or padded
+                (padded if same else near_padded).append(k)
+        hits = inner or padded or near_inner or near_padded
         if len(hits) == 1:
-            out.append((hits[0], "inside" if inner else "near"))
+            out.append((hits[0], "inside" if (inner or (not padded and near_inner)) else "near"))
         elif hits:
             # Several players contain the point. Keep it only when it sits clearly on one of them: the nearest centre
             # (distance in box heights) at most half as far as the next. A review answer points at the centre of the
             # asked box, so it stays resolvable; a tap between two overlapping players does not.
             d = sorted((centre_distance(rows, by_tid, summary[k], t, x, y), k) for k in hits)
             if d[0][0] <= 0.5 * d[1][0]:
-                out.append((d[0][1], "inside, nearest of overlapping players" if inner else "near, nearest of overlapping players"))
+                out.append((d[0][1], "inside, nearest of overlapping players" if (inner or (not padded and near_inner))
+                            else "near, nearest of overlapping players"))
             else:
                 out.append((None, f"ambiguous: {len(hits)} players at the tap"))
         else:

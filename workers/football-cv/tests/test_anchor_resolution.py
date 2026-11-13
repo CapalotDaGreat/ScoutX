@@ -57,3 +57,17 @@ def test_results_stay_aligned_with_points():
     assert locate_points(summary, rows, by_tid, pts) == [(None, "no player at the tap"), (1, "inside"),
                                                            (None, "no player at the tap")]
     assert locate(summary, rows, by_tid, pts) == [1]
+
+
+def test_the_end_of_one_piece_and_the_start_of_the_next_do_not_make_a_tap_ambiguous():
+    # one player split at a crossing: piece A has rows up to 9.8 s, piece B from 10.0 s, same place
+    rows, summary, by_tid = [], [], {}
+    for tid, times in ((1, (9.6, 9.7, 9.8)), (2, (10.0, 10.1, 10.2))):
+        by_tid[tid] = []
+        for tt in times:
+            by_tid[tid].append(len(rows))
+            rows.append([0, tt, tid, 100, 100, 160, 250])
+        summary.append({"tid": tid, "t0": times[0], "t1": times[-1]})
+    by_tid = {k: np.array(v) for k, v in by_tid.items()}
+    rows = np.array(rows, dtype=float)
+    assert locate_points(summary, rows, by_tid, [(10.0, 120, 150)]) == [(1, "inside")]
