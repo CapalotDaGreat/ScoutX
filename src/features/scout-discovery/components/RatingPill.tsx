@@ -13,10 +13,8 @@ export function RatingPill({ label, value, emphasis = 'secondary', className }: 
   return (
     <View
       className={cn(
-        'rounded-lg px-3 py-2',
-        emphasis === 'primary'
-          ? 'border border-gold/35 bg-gold-muted'
-          : 'bg-background-secondary',
+        'rounded-xl px-3 py-2.5',
+        emphasis === 'primary' ? 'bg-accent-muted' : 'bg-background-secondary',
         className,
       )}
     >
@@ -24,10 +22,11 @@ export function RatingPill({ label, value, emphasis = 'secondary', className }: 
         {label}
       </Text>
       <Text
-        variant="body-sm"
         className={cn(
-          'font-sans-bold',
-          emphasis === 'primary' ? 'text-gold' : undefined,
+          'mt-0.5',
+          // Numbers and short codes read as scoreboard figures; words stay in the text face and may wrap.
+          String(value).length <= 5 ? 'font-display text-stat-lg' : 'font-sans-semibold text-body',
+          emphasis === 'primary' ? 'text-accent' : 'text-foreground',
         )}
       >
         {value}

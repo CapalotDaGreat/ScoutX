@@ -204,6 +204,7 @@ export function FootballIdentityFields({ identity, onChange }: FootballIdentityF
             value={identity.hasCaptainExperience}
             onValueChange={() => onChange('hasCaptainExperience', !identity.hasCaptainExperience)}
             accessibilityLabel={t('identity.fields.captain')}
+              aria-label={t('identity.fields.captain')}
             trackColor={{ false: colors.border, true: colors.accent }}
             style={{ minHeight: 44, minWidth: 44 }}
           />

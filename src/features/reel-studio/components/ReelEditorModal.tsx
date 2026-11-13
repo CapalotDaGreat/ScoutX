@@ -90,7 +90,7 @@ export function ReelEditorModal({
   if (!draft) {
     return (
       <Modal visible={visible} onClose={onClose} title={t('reel.editorTitle')}>
-        <Text variant="body-sm">{t('reel.missing')}</Text>
+        <Text variant="body-sm" className="px-5 py-4">{t('reel.missing')}</Text>
       </Modal>
     );
   }

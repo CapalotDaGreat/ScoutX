@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Modal } from '@/components/feedback/Modal';
 import { useSnackbar } from '@/components/feedback/Snackbar';
 import { Button } from '@/components/primitives/Button';
@@ -139,6 +139,7 @@ export function LogMatchModal({
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [savedPayload, setSavedPayload] = useState<MatchLogPayload | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const formRef = useRef(form);
   formRef.current = form;
@@ -236,6 +237,7 @@ export function LogMatchModal({
   }, [form, persistDraft, ready, visible]);
 
   const setField = <Key extends keyof MatchLogFormState>(key: Key, value: MatchLogFormState[Key]) => {
+    setFormError(null);
     setForm((current) => ({ ...current, [key]: value }));
   };
 
@@ -283,10 +285,13 @@ export function LogMatchModal({
   const handleSave = async () => {
     const validation = validateMatchLogForm(form);
     if (!validation.valid) {
-      Alert.alert(t('statistics:quickMatch.validationTitle'), validationMessage(t, validation.error));
+      // Shown in the form, next to Save: a system alert is easy to miss with a screen reader and
+      // does not exist on web, where an invalid form used to do nothing at all.
+      setFormError(validationMessage(t, validation.error));
       return;
     }
 
+    setFormError(null);
     setSubmitting(true);
     try {
       await onSave(validation.payload);
@@ -311,10 +316,8 @@ export function LogMatchModal({
         autosaveTimer.current = null;
       }
       await persistDraft(form);
-      Alert.alert(
-        t('statistics:quickMatch.saveFailedTitle'),
-        `${toUserMessage(err, t('statistics:quickMatch.saveFailed'))}\n\n${t('statistics:quickMatch.draftKept')}`,
-      );
+      const failure = `${toUserMessage(err, t('statistics:quickMatch.saveFailed'))} ${t('statistics:quickMatch.draftKept')}`;
+      setFormError(failure);
     } finally {
       setSubmitting(false);
     }
@@ -360,6 +363,11 @@ export function LogMatchModal({
 
   const footer = (
     <View className="gap-2">
+      {formError ? (
+        <Text variant="body-sm" color="error" accessibilityRole="alert" accessibilityLiveRegion="assertive" testID="log-match-error">
+          {formError}
+        </Text>
+      ) : null}
       {savedAt ? (
         <Text variant="caption" color="tertiary" className="text-center" accessibilityLiveRegion="polite">
           {t('statistics:quickMatch.draftSaved', { time: formatTime(savedAt) })}

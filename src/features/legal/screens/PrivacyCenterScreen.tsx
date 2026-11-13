@@ -123,6 +123,7 @@ export function PrivacyCenterScreen({ onBack, visibilitySection, dataSection }: 
                 trackColor={{ false: colors.border, true: colors.accent }}
                 thumbColor={colors.surface}
                 accessibilityLabel={t('legal:consents.ai.label')}
+              aria-label={t('legal:consents.ai.label')}
                 testID="privacy-center-ai-consent"
               />
             </View>

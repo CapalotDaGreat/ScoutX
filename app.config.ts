@@ -4,6 +4,7 @@ import type { ExpoConfig } from 'expo/config';
 import appJson from './app.json';
 import { missingRequiredLegalContacts } from './src/config/legalConfig.ts';
 import { productionBuildProblems } from './src/config/releaseBuildPolicy.ts';
+import { SIMULATOR_BUILD_PROFILE, simulatorDebugBuildProblem } from './src/config/appCheckPolicy.ts';
 import { withFirebaseBuildProperties } from './src/config/nativeBuildPlugins.ts';
 
 const baseConfig = appJson.expo as ExpoConfig;
@@ -144,12 +145,33 @@ if (configFileExists(googleServicesPlist)) {
   iosConfig.googleServicesFile = googleServicesPlist;
 }
 
-if (process.env.EAS_BUILD_PROFILE === 'production') {
+const simulatorFlagProblem = simulatorDebugBuildProblem(
+  process.env.EAS_BUILD_PROFILE, process.env.EXPO_PUBLIC_APP_CHECK_SIMULATOR_DEBUG,
+);
+if (simulatorFlagProblem) {
+  throw new Error(`Build blocked: ${simulatorFlagProblem}`);
+}
+
+// The simulator profile ships release code against the release backend, so it must pass every production check
+// except the one flag that selects the simulator-only debug provider.
+if (process.env.EAS_BUILD_PROFILE === SIMULATOR_BUILD_PROFILE) {
+  const problems = productionBuildProblems(
+    { ...process.env, EXPO_PUBLIC_APP_CHECK_SIMULATOR_DEBUG: '' },
+    process.env.EAS_BUILD_PLATFORM ?? 'ios', configFileExists(googleServicesPlist),
+  );
+  if (problems.length > 0) {
+    throw new Error(`Simulator build blocked:\n${problems.map((problem) => problem.message).join('\n')}`);
+  }
+}
+
+// Ad Hoc (preview) builds run release code against the production backend, so they pass the same checks; only the
+// legal-contact rule above is production-only.
+if (process.env.EAS_BUILD_PROFILE === 'production' || process.env.EAS_BUILD_PROFILE === 'preview') {
   const problems = productionBuildProblems(
     process.env, process.env.EAS_BUILD_PLATFORM ?? 'ios', configFileExists(googleServicesPlist),
   );
   if (problems.length > 0) {
-    throw new Error(`Production build blocked:\n${problems.map((problem) => problem.message).join('\n')}`);
+    throw new Error(`${process.env.EAS_BUILD_PROFILE === 'preview' ? 'Preview' : 'Production'} build blocked:\n${problems.map((problem) => problem.message).join('\n')}`);
   }
 }
 

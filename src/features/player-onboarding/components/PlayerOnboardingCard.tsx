@@ -38,6 +38,7 @@ export function PlayerOnboardingCard({
           className="h-1.5 overflow-hidden rounded-full bg-background-secondary"
           accessible
           accessibilityRole="progressbar"
+          accessibilityLabel={t('portfolio:onboarding.progress', { done: completedCount, total: totalCount })}
           accessibilityValue={{ min: 0, max: totalCount, now: completedCount }}
         >
           <View className="h-1.5 rounded-full bg-accent" style={{ width: `${pct}%` }} />

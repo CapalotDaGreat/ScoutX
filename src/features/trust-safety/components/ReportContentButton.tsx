@@ -125,6 +125,7 @@ export function ReportContentButton({
                 onPress={() => setReason(option)}
                 className="justify-start"
                 accessibilityRole="radio"
+                aria-checked={reason === option}
                 accessibilityState={{ selected: reason === option }}
               >
                 {t(`report.reasons.${option}`)}

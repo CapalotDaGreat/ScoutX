@@ -25,13 +25,13 @@ test('narrow German light, offline retained content, and dark guest states rende
   });
   await page.goto('/player/home');
   await expect(page.getByRole('heading', { name: 'Start', exact: true })).toBeVisible({ timeout: 90_000 });
-  await expect(page.getByText(accounts.seededPlayer.name).first()).toBeVisible({ timeout: 90_000 });
+  await expect(page.getByText(accounts.seededPlayer.name).filter({ visible: true }).first()).toBeVisible({ timeout: 90_000 });
   await page.evaluate(() => document.fonts.ready);
   await assertNoPageOverflow(page);
   await page.screenshot({ path: '.local/next-era-visual/player-de-light-320.png', animations: 'disabled' });
   await context.setOffline(true);
   await expect(page.getByText('Offline — Entwuerfe bleiben', { exact: false }).first()).toBeVisible();
-  await expect(page.getByText(accounts.seededPlayer.name).first()).toBeVisible();
+  await expect(page.getByText(accounts.seededPlayer.name).filter({ visible: true }).first()).toBeVisible();
   await page.screenshot({ path: '.local/next-era-visual/player-de-light-offline-320.png', animations: 'disabled' });
   await context.setOffline(false);
   expect(errors).toEqual([]);

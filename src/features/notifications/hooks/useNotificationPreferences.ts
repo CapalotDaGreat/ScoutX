@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { settleForAccount } from '@/features/auth/store/accountScopedResult';
 import { PushTokenRepository } from '@/features/notifications/repositories/PushTokenRepository';
 import {
   defaultNotificationPreferences,
@@ -22,6 +23,9 @@ export function useNotificationPreferences(userId: string | undefined) {
   const [hasToken, setHasToken] = useState(false);
   const [isLoading, setIsLoading] = useState(Boolean(userId));
   const [isUpdating, setIsUpdating] = useState(false);
+  // The account whose preferences this screen shows now. A load that finishes for another account is dropped.
+  const currentUserId = useRef(userId);
+  currentUserId.current = userId;
 
   const reload = useCallback(async () => {
     if (!userId) {
@@ -34,19 +38,37 @@ export function useNotificationPreferences(userId: string | undefined) {
     }
 
     setIsLoading(true);
+    // Never show one account's settings while another account's are loading.
+    setPushEnabled(true);
+    setCategories(defaultNotificationPreferences().categories);
+    setLockScreenPreview('details');
+    setQuietHoursState(null);
+    setHasToken(false);
+    let outcome: Awaited<ReturnType<typeof settleForAccount<[NotificationPreferences, boolean]>>>;
     try {
-      const [preferences, registered] = await Promise.all([
-        loadNotificationPreferences(userId),
-        PushTokenRepository.getInstance().hasRegisteredToken(userId),
-      ]);
-      setPushEnabled(preferences.pushEnabled);
-      setCategories(preferences.categories);
-      setLockScreenPreview(preferences.lockScreenPreview);
-      setQuietHoursState(preferences.quietHours ?? null);
-      setHasToken(registered);
-    } finally {
+      outcome = await settleForAccount(
+        userId,
+        () => currentUserId.current,
+        () => Promise.all([
+          loadNotificationPreferences(userId),
+          PushTokenRepository.getInstance().hasRegisteredToken(userId),
+        ]),
+      );
+    } catch (error) {
+      // A failure for the account that is still signed in is not expected: keep it visible.
       setIsLoading(false);
+      throw error;
     }
+    if (outcome.stale) {
+      return;
+    }
+    setIsLoading(false);
+    const [preferences, registered] = outcome.value;
+    setPushEnabled(preferences.pushEnabled);
+    setCategories(preferences.categories);
+    setLockScreenPreview(preferences.lockScreenPreview);
+    setQuietHoursState(preferences.quietHours ?? null);
+    setHasToken(registered);
   }, [userId]);
 
   useEffect(() => {

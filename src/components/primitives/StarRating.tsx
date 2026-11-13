@@ -83,6 +83,7 @@ export function StarRating({
           <Pressable
             key={level}
             accessibilityRole="radio"
+              aria-checked={stars === level}
             accessibilityState={{ checked: stars === level }}
             accessibilityLabel={t('stars.option', { count: level })}
             accessibilityHint={stars === level ? t('stars.clearHint') : undefined}

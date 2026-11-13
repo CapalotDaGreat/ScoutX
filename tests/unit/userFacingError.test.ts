@@ -31,4 +31,18 @@ describe('toUserMessage', () => {
   test('network failures get a connection hint', () => {
     assert.match(toUserMessage(new Error('Network request failed'), 'Fallback'), /connection/);
   });
+
+  test('an App Check rejection from the Functions SDK is not reported as an expired session', () => {
+    // Exact shape the SDK throws when a callable rejects a missing or invalid App Check token.
+    const message = toUserMessage(codedError('functions/unauthenticated', 'Unauthenticated'), 'Fallback');
+    assert.doesNotMatch(message, /session expired/i);
+    assert.match(message, /verify this copy of the app/);
+    assert.match(message, /up to date/);
+  });
+
+  test('our own functions\' sign-in rejection still says the session expired', () => {
+    assert.match(toUserMessage(codedError('functions/unauthenticated', 'Sign in required.'), 'Fallback'), /session expired/i);
+    assert.match(toUserMessage(codedError('storage/unauthenticated', 'User is not authenticated'), 'Fallback'), /session expired/i);
+  });
 });
+

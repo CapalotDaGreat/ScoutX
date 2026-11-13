@@ -1,6 +1,6 @@
 # Incident Response Plan
 
-Owner: CML Electronics. Security contact: support@pitchproof.online (set in
+Owner: Lusiola Software. Security contact: support@pitchproof.online (set in
 `src/config/legalConfig.ts`). Incident lead and deputy: not yet named, EXTERNAL CONFIGURATION REQUIRED.
 
 ## Severity
@@ -42,7 +42,7 @@ Owner: CML Electronics. Security contact: support@pitchproof.online (set in
   (Art. 24(4) FADP). For minors, inform the guardian as well.
 - **EU users**: if GDPR applies, notify the competent supervisory authority within 72 hours
   (Art. 33 GDPR). No EU representative is appointed; LEGAL REVIEW REQUIRED.
-- **Processors** must report breaches to CML Electronics without undue delay under their DPAs.
+- **Processors** must report breaches to Lusiola Software without undue delay under their DPAs.
 - Keep a breach record (facts, effects, measures) even when no notification is required.
 
 ## Secret leak

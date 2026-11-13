@@ -66,7 +66,9 @@ const shots = [
   ['09-review-de', 'review&lang=de'], ['10-early-es', 'early&lang=es'],
   ['14-discovering', 'discovering'], ['15-review-with-sightings', 'review-discovery'],
   ['16-review-50-offball', 'review-50'], ['17-focus-followup', 'review-50-followup'], ['18-review-50-de', 'review-50&lang=de'],
+  ['19-no-identity', 'no-identity'], ['20-blocked-consent', 'blocked-consent'], ['21-cancelled', 'cancelled'],
 ];
+if (process.env.ONLY) shots.splice(0, shots.length, ...shots.filter(([name]) => process.env.ONLY.split(',').some((key) => name.includes(key))));
 for (const [name, hash] of shots) {
   await page.goto(`http://localhost:8123/#${hash}`);
   await page.reload();

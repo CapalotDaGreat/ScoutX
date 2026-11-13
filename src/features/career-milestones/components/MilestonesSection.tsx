@@ -5,6 +5,8 @@ import { Button } from '@/components/primitives/Button';
 import { type MilestoneDefinition } from '@/features/career-milestones/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
 import { useState } from 'react';
+import { MilestoneIcon } from '@/features/career-milestones/components/MilestoneIcon';
+import { useTheme } from '@/theme';
 
 const MILESTONE_IDS = [
   'first_match',
@@ -43,6 +45,7 @@ export type MilestonesSectionProps = {
 
 function MilestoneBadge({ milestone, prestige }: { milestone: MilestoneDefinition; prestige?: boolean }) {
   const copy = useMilestoneCopy()(milestone);
+  const { colors } = useTheme();
   return (
     <View
       className={`min-w-[46%] flex-1 rounded-xl border p-3 ${
@@ -51,9 +54,13 @@ function MilestoneBadge({ milestone, prestige }: { milestone: MilestoneDefinitio
           : 'border-border bg-background-secondary'
       }`}
     >
-      <Text className="text-xl" accessibilityElementsHidden importantForAccessibility="no">
-        {milestone.icon}
-      </Text>
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        className={`h-9 w-9 items-center justify-center rounded-full ${prestige ? 'bg-surface' : 'bg-accent-muted'}`}
+      >
+        <MilestoneIcon milestone={milestone} color={prestige ? colors.gold : colors.accent} />
+      </View>
       <Text weight="medium" className="mt-1 text-sm">
         {copy.title}
       </Text>
@@ -95,7 +102,7 @@ export function MilestonesSection({
           </Text>
           {recentlyEarned.map((milestone) => (
             <Text key={milestone.id} variant="body-sm" color="prestige">
-              {milestone.icon} {milestoneCopy(milestone).title}
+              {milestoneCopy(milestone).title}
             </Text>
           ))}
         </View>

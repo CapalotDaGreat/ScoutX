@@ -1,0 +1,3732 @@
+{
+  "generated": "2026-11-12",
+  "project": "scoutx-230b0",
+  "releaseSource": "01f9459c2608bc939c96f5c7388b5e5ba98aac2d (functions/ identical in the redesign)",
+  "summary": {
+    "desiredExports": 95,
+    "deployedResources": 81,
+    "intersection": 81,
+    "missing": 14,
+    "retired": 0,
+    "byStatus": {
+      "changed": 67,
+      "missing": 14,
+      "changed-neutral": 8,
+      "unchanged": 6
+    },
+    "byAction": {
+      "deploy": 80,
+      "hold": 15
+    },
+    "check": "desired = unchanged + changed-neutral + changed + missing; deploy + hold + investigate = desired + retired"
+  },
+  "functions": [
+    {
+      "name": "addExternalFootballSource",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "footballSources/callables.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:45.569793862Z",
+        "revision": "addexternalfootballsource-00004-nem",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "discoverySearchIndex.ts",
+        "publicPassport.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, discoverySearchIndex.ts, publicPassport.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "football-sources/services/footballSourceService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "analyzeMatchFootage",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "matchAnalysis.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:11.014223207Z",
+        "revision": "analyzematchfootage-00006-jij",
+        "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/pipeline.ts",
+        "analysis/positionFramework.ts",
+        "analysis/taskDispatcher.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/frameAnalysis.ts, analysis/pipeline.ts, analysis/positionFramework.ts, analysis/taskDispatcher.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "match-analysis/services/matchAnalysisCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "liveSecrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 1024,
+      "timeoutSec": 300,
+      "taskQueue": null
+    },
+    {
+      "name": "analyzeMatchFrames",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/pipeline.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:13.404050662Z",
+        "revision": "analyzematchframes-00006-guf",
+        "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/pipeline.ts",
+        "analysis/positionFramework.ts",
+        "analysis/taskDispatcher.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/frameAnalysis.ts, analysis/pipeline.ts, analysis/positionFramework.ts, analysis/taskDispatcher.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "liveSecrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 1024,
+      "timeoutSec": 300,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": 600,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 30
+        },
+        "rate": {
+          "maxConcurrentDispatches": 4,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "answerTrackingQuestion",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/trackingCallables.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [
+        "match-analysis/services/trackingV3Service.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "applyModerationAction",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "moderation/actions.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:18.036140241Z",
+        "revision": "applymoderationaction-00007-fef",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "notificationPolicy.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, notificationPolicy.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "admin-review/services/adminReviewService.ts"
+      ],
+      "requiresSignIn": "staff only (assertStaff)",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "askThisMatch",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "askThisMatch.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:20.188358300Z",
+        "revision": "askthismatch-00006-luy",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "askThisMatch.ts",
+        "callableOptions.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: askThisMatch.ts, callableOptions.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "match-analysis/services/matchAnalysisCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "buildDataExport",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "taskQueue",
+      "sourceModule": "dataRights/dataExport.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:12.743340349Z",
+        "revision": "builddataexport-00007-tet",
+        "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "dataRights/dataExport.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, dataRights/dataExport.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 1024,
+      "timeoutSec": 1800,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": null,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 60
+        },
+        "rate": {
+          "maxConcurrentDispatches": 5,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "cancelMatchAnalysis",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "matchAnalysis.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:14.531380432Z",
+        "revision": "cancelmatchanalysis-00006-kit",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/pipeline.ts",
+        "analysis/positionFramework.ts",
+        "analysis/taskDispatcher.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/frameAnalysis.ts, analysis/pipeline.ts, analysis/positionFramework.ts, analysis/taskDispatcher.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "match-analysis/services/matchAnalysisCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "cancelUploadSession",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "uploads/sessions.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:55.057659046Z",
+        "revision": "canceluploadsession-00006-pet",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "media-upload/repositories/UploadSessionRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "cleanupAbandonedUploads",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "schedule every 24 hours UTC (default time zone; live Cloud Scheduler job: same schedule, UTC)",
+      "sourceModule": "uploads/sessions.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:46.587041590Z",
+        "revision": "cleanupabandoneduploads-00006-baw",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "confirmAnalysisIdentity",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "analysis/identityCallable.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:09.296143152Z",
+        "revision": "confirmanalysisidentity-00002-kam",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/identityCallable.ts",
+        "analysis/positionFramework.ts",
+        "analysis/segmentReview.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/frameAnalysis.ts, analysis/identityCallable.ts, analysis/positionFramework.ts, analysis/segmentReview.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "match-analysis/services/matchAnalysisCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "confirmRole",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "roleClaims.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:08.323213595Z",
+        "revision": "confirmrole-00006-xuf",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [
+        "auth/services/roleClaimService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    },
+    {
+      "name": "coordinateAnalysisTarget",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/identityCoordinator.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [
+        "match-analysis/services/matchAnalysisCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "EXPERIMENTAL_TARGET_ANCHORS"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "createUploadSession",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "uploads/sessions.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:50.577057015Z",
+        "revision": "createuploadsession-00006-mam",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "media-upload/repositories/UploadSessionRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "declareUploadChecksum",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "uploads/sessions.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:44.622614685Z",
+        "revision": "declareuploadchecksum-00001-dos",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "media-upload/repositories/UploadSessionRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "deleteAuthenticatedAccount",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "appleAuth.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:20.086044502Z",
+        "revision": "deleteauthenticatedaccount-00007-lad",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "auth/services/appleTokenPersistenceService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "liveSecrets": [
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "discoverTrackingTask",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/trackingOrchestrator.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 512,
+      "timeoutSec": 1800,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": null,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 30
+        },
+        "rate": {
+          "maxConcurrentDispatches": 6,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "explainTrackingMoment",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/trackingReasoning.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [
+        "match-analysis/services/trackingV3Service.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 180,
+      "taskQueue": null
+    },
+    {
+      "name": "exportReel",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "reelRender.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:18.227345011Z",
+        "revision": "exportreel-00006-fax",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "entitlements/plans.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, entitlements/plans.ts",
+      "clientCallers": [
+        "media-library/services/mediaAccessCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "extractMatchSegment",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/pipeline.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:54:25.027825385Z",
+        "revision": "extractmatchsegment-00006-jon",
+        "build": "ac92d5b1-ab74-4370-828d-e2b19b219c04",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/pipeline.ts",
+        "analysis/positionFramework.ts",
+        "analysis/taskDispatcher.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/frameAnalysis.ts, analysis/pipeline.ts, analysis/positionFramework.ts, analysis/taskDispatcher.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 2048,
+      "timeoutSec": 900,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": 600,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 30
+        },
+        "rate": {
+          "maxConcurrentDispatches": 6,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "extractTrackingSegmentTask",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/trackingOrchestrator.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 512,
+      "timeoutSec": 1800,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": null,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 60
+        },
+        "rate": {
+          "maxConcurrentDispatches": 6,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "fulfillEvidenceRequest",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "evidenceRequests.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:11.876302443Z",
+        "revision": "fulfillevidencerequest-00006-zer",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "notificationPolicy.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, notificationPolicy.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "request-center/repositories/RequestCenterRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "generateAiInsight",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "aiCoach.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:46.666928001Z",
+        "revision": "generateaiinsight-00006-hey",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "aiCoach.ts",
+        "callableOptions.ts",
+        "legal/legalVersions.generated.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, aiCoach.ts, callableOptions.ts, legal/legalVersions.generated.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "ai-insights/providers/cloudFunctionAiProvider.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "liveSecrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "generateHighlightReelPlan",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "highlightReelStudio.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:13.975829421Z",
+        "revision": "generatehighlightreelplan-00006-tiv",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    },
+    {
+      "name": "getGuardianConsentRequest",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "safety/youthConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:55.878116494Z",
+        "revision": "getguardianconsentrequest-00006-dos",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": "no (public guardian web page / public report; token or rate-limit checks in the function)",
+      "appCheck": "not enforced (explicit opt-out)",
+      "secrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "liveSecrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "getMediaPlaybackUrl",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "mediaAccess.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:19.583769955Z",
+        "revision": "getmediaplaybackurl-00006-nod",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "mediaAccess.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, mediaAccess.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "media-library/services/mediaAccessCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "getUsageSummary",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "entitlements/quotaService.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:54:22.555981270Z",
+        "revision": "getusagesummary-00006-liv",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "entitlements/plans.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, entitlements/plans.ts",
+      "clientCallers": [
+        "premium/services/usageService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "inspectVideoSource",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/videoSourceCallable.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called by the release app; refuses while analysis is unavailable",
+      "clientCallers": [
+        "match-analysis/services/trackingV3Service.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 30,
+      "taskQueue": null
+    },
+    {
+      "name": "listAdminReviewQueue",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "adminReview.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:14.734343941Z",
+        "revision": "listadminreviewqueue-00006-joz",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [
+        "admin-review/services/adminReviewService.ts"
+      ],
+      "requiresSignIn": "staff only (assertStaff)",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    },
+    {
+      "name": "listModerationQueue",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "moderation/actions.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:05.798594108Z",
+        "revision": "listmoderationqueue-00006-sem",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "discoverySearchIndex.ts",
+        "notificationPolicy.ts",
+        "publicPassport.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, discoverySearchIndex.ts, notificationPolicy.ts, publicPassport.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "admin-review/services/adminReviewService.ts"
+      ],
+      "requiresSignIn": "staff only (assertStaff)",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "mediaLifecycleSweep",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "schedule every 60 minutes",
+      "sourceModule": "analysis/mediaLifecycle.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:11.688967929Z",
+        "revision": "medialifecyclesweep-00002-haj",
+        "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "unchanged",
+      "changedFiles": [],
+      "action": "hold",
+      "justification": "source closure identical to the deployed archive",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 1024,
+      "timeoutSec": 540,
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
+    },
+    {
+      "name": "onActivityCreatedPush",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.created {\"document\":\"activities/{activityId}\"}",
+      "sourceModule": "pushDelivery.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:21.927815434Z",
+        "revision": "onactivitycreatedpush-00006-fiv",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts",
+        "pushDelivery.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts, pushDelivery.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "EXPO_PUSH_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onContentReportCreated",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.created {\"document\":\"contentReports/{reportId}\"}",
+      "sourceModule": "moderation/reports.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:12.487108653Z",
+        "revision": "oncontentreportcreated-00007-nel",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onDiscoverableSearchIndexWritten",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"discoverablePlayers/{playerId}\"}",
+      "sourceModule": "discoverySearchMaintenance.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:27.642197741Z",
+        "revision": "ondiscoverablesearchindexwritten-00001-xez",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "unchanged",
+      "changedFiles": [],
+      "action": "hold",
+      "justification": "source closure identical to the deployed archive",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
+    },
+    {
+      "name": "onFootballSourceWrittenReproject",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"players/{uid}/footballSources/{sourceId}\"}",
+      "sourceModule": "footballSources/callables.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:09.779353494Z",
+        "revision": "onfootballsourcewrittenreproject-00004-bav",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "discoverySearchIndex.ts",
+        "publicPassport.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, discoverySearchIndex.ts, publicPassport.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onMatchAnalysisJobFinishedNotify",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.updated {\"document\":\"matchAnalysisJobs/{jobId}\"}",
+      "sourceModule": "notificationProducers.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:18.099102045Z",
+        "revision": "onmatchanalysisjobfinishednotify-00006-daz",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onMatchJobDeleted",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.deleted {\"document\":\"matchAnalysisJobs/{jobId}\"}",
+      "sourceModule": "analysis/mediaLifecycle.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:58.282490898Z",
+        "revision": "onmatchjobdeleted-00002-vew",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "unchanged",
+      "changedFiles": [],
+      "action": "hold",
+      "justification": "source closure identical to the deployed archive",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
+    },
+    {
+      "name": "onMatchJobMediaLifecycle",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.updated {\"document\":\"matchAnalysisJobs/{jobId}\"}",
+      "sourceModule": "analysis/mediaLifecycle.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:11.556826343Z",
+        "revision": "onmatchjobmedialifecycle-00002-rew",
+        "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "unchanged",
+      "changedFiles": [],
+      "action": "hold",
+      "justification": "source closure identical to the deployed archive",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 1024,
+      "timeoutSec": 540,
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
+    },
+    {
+      "name": "onMediaWrittenReproject",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"players/{uid}/media/{mediaId}\"}",
+      "sourceModule": "moderation/reproject.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:10.373526250Z",
+        "revision": "onmediawrittenreproject-00007-muy",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onPassportSummaryWrittenNotifyOwner",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"passportSummaries/{playerId}\"}",
+      "sourceModule": "notificationProducers.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:21.741843460Z",
+        "revision": "onpassportsummarywrittennotifyowner-00006-kem",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onPassportSummaryWrittenNotifyWatchers",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"passportSummaries/{playerId}\"}",
+      "sourceModule": "watchlist.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:07.958502355Z",
+        "revision": "onpassportsummarywrittennotifywatchers-00006-pic",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onPassportSummaryWrittenProjectDiscovery",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"passportSummaries/{playerId}\"}",
+      "sourceModule": "discoveryProjection.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:10.629383384Z",
+        "revision": "onpassportsummarywrittenprojectdiscovery-00007-nek",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onProfileWrittenProjectDiscovery",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"profiles/{playerId}\"}",
+      "sourceModule": "discoveryProjection.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:12.288876825Z",
+        "revision": "onprofilewrittenprojectdiscovery-00007-som",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onProfileWrittenProjectPassport",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"profiles/{playerId}\"}",
+      "sourceModule": "publicPassport.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:04.195082911Z",
+        "revision": "onprofilewrittenprojectpassport-00006-gev",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "publicPassport.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, publicPassport.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onQuarantineObjectFinalized",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event google.cloud.storage.object.v1.finalized, bucket = project default storage bucket scoutx-230b0.firebasestorage.app (live trigger and adminSdkConfig.storageBucket read 2026-11-12; the local manifest showed demo-scoutx.appspot.com because it was built against the emulator project)",
+      "sourceModule": "uploads/quarantine.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:52.651719685Z",
+        "revision": "onquarantineobjectfinalized-00006-jeh",
+        "build": "f402c31b-ebcd-4fdc-9f9b-26c540c18ee1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/pipeline.ts",
+        "analysis/positionFramework.ts",
+        "analysis/taskDispatcher.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/frameAnalysis.ts, analysis/pipeline.ts, analysis/positionFramework.ts, analysis/taskDispatcher.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 4096,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onRecruitmentEntryWritten",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"recruitmentWorkspaces/{scoutId}/entries/{playerId}\"}",
+      "sourceModule": "watchlist.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:13.882038452Z",
+        "revision": "onrecruitmententrywritten-00006-duh",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onReelExportQueued",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.created {\"document\":\"reelExports/{exportId}\"}",
+      "sourceModule": "reelRender.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:11.076660490Z",
+        "revision": "onreelexportqueued-00006-ley",
+        "build": "ac92d5b1-ab74-4370-828d-e2b19b219c04",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "entitlements/plans.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, entitlements/plans.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 2048,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onTrialInvitationCreatedGuardian",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.created {\"document\":\"trialInvitations/{trialId}\"}",
+      "sourceModule": "safety/youthConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:14.740333668Z",
+        "revision": "ontrialinvitationcreatedguardian-00006-ray",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "liveSecrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onTrialInvitationCreatedNotify",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.created {\"document\":\"trialInvitations/{trialId}\"}",
+      "sourceModule": "notificationProducers.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:54:17.906646121Z",
+        "revision": "ontrialinvitationcreatednotify-00006-yah",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onTrialInvitationUpdatedGuardian",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.updated {\"document\":\"trialInvitations/{trialId}\"}",
+      "sourceModule": "safety/youthConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:56.016177139Z",
+        "revision": "ontrialinvitationupdatedguardian-00006-qoj",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "liveSecrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onTrialInvitationUpdatedNotify",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.updated {\"document\":\"trialInvitations/{trialId}\"}",
+      "sourceModule": "notificationProducers.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:56.667884310Z",
+        "revision": "ontrialinvitationupdatednotify-00006-dep",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onTrustRecommendationCreatedNotify",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.created {\"document\":\"trustRecommendations/{recommendationId}\"}",
+      "sourceModule": "notificationProducers.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:02.361210791Z",
+        "revision": "ontrustrecommendationcreatednotify-00006-sev",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onUserSafetyWrittenReproject",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"userSafety/{uid}\"}",
+      "sourceModule": "safety/projectionSync.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:12.969191591Z",
+        "revision": "onusersafetywrittenreproject-00007-kuf",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "onVerificationWrittenSyncTrust",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "event v1.written {\"document\":\"verificationStates/{stateId}\"}",
+      "sourceModule": "trustSync.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:15.416053046Z",
+        "revision": "onverificationwrittensynctrust-00006-suh",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "unchanged",
+      "changedFiles": [],
+      "action": "hold",
+      "justification": "source closure identical to the deployed archive",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
+    },
+    {
+      "name": "persistAppleAuthorizationCode",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "appleAuth.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:18.984043350Z",
+        "revision": "persistappleauthorizationcode-00007-von",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "auth/services/appleTokenPersistenceService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "liveSecrets": [
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "processLinkImportTask",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "taskQueue",
+      "sourceModule": "uploads/linkImportJobs.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called by the release app; refuses while analysis is unavailable",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 1024,
+      "timeoutSec": 1800,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 1,
+          "maxDoublings": null,
+          "maxBackoffSeconds": null,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": null
+        },
+        "rate": {
+          "maxConcurrentDispatches": 4,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "purgeLegacyGpsLocation",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "gpsPrivacy.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:55.925247289Z",
+        "revision": "purgelegacygpslocation-00006-jep",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [
+        "gps/repositories/GpsSessionRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    },
+    {
+      "name": "recordConsent",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "legal/consent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:18.440370259Z",
+        "revision": "recordconsent-00006-hud",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "legal/legalVersions.generated.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, legal/legalVersions.generated.ts",
+      "clientCallers": [
+        "legal/repositories/ConsentRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "recordDiscoverableView",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "discoveryProjection.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:09.929793257Z",
+        "revision": "recorddiscoverableview-00007-pip",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "scout-discovery/repositories/PlayerDiscoveryRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "recordPortfolioView",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "portfolioAnalytics.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:08.994587885Z",
+        "revision": "recordportfolioview-00006-mop",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, notificationPolicy.ts",
+      "clientCallers": [
+        "portfolio-analytics/repositories/PortfolioAnalyticsRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "recordVideoProcessingConsent",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "analysis/videoConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:13.854570238Z",
+        "revision": "recordvideoprocessingconsent-00002-yig",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "match-analysis/services/matchAnalysisCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "refreshPublicPassport",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "publicPassport.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:56.997612909Z",
+        "revision": "refreshpublicpassport-00006-wuh",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "publicPassport.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, publicPassport.ts",
+      "clientCallers": [
+        "public-portfolio/services/publicPassportSyncService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "refreshTrackingOcrTask",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/trackingCallables.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 900,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 2,
+          "maxDoublings": null,
+          "maxBackoffSeconds": null,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 60
+        },
+        "rate": {
+          "maxConcurrentDispatches": 2,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "releaseExpiredSuspensions",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "schedule every 60 minutes UTC (default time zone; live Cloud Scheduler job: same schedule, UTC)",
+      "sourceModule": "moderation/actions.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:13.024484769Z",
+        "revision": "releaseexpiredsuspensions-00007-jac",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "notificationPolicy.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, notificationPolicy.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "removeExternalFootballSource",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "footballSources/callables.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:59.785461318Z",
+        "revision": "removeexternalfootballsource-00004-fud",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "discoverySearchIndex.ts",
+        "publicPassport.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, discoverySearchIndex.ts, publicPassport.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "football-sources/services/footballSourceService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "requestDataExport",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "dataRights/dataExport.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:05.244900296Z",
+        "revision": "requestdataexport-00007-keb",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "dataRights/dataExport.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, dataRights/dataExport.ts",
+      "clientCallers": [
+        "data-rights/repositories/DataRightsRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "requestEvidence",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "evidenceRequests.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:14.746512383Z",
+        "revision": "requestevidence-00006-puv",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "notificationPolicy.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, notificationPolicy.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "scout-intelligence/components/EvidenceRequestComposer.tsx"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "requestGuardianConsent",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "safety/youthConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:07.661958890Z",
+        "revision": "requestguardianconsent-00006-dos",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "youth-safety/repositories/UserSafetyRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "liveSecrets": [
+        "GUARDIAN_LINK_SECRET"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "resolveAppeal",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "moderation/actions.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:12.646313343Z",
+        "revision": "resolveappeal-00007-dat",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "notificationPolicy.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, notificationPolicy.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "admin-review/services/adminReviewService.ts"
+      ],
+      "requiresSignIn": "staff only (assertStaff)",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "resolveTrackingTask",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/trackingCallables.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 900,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": null,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 30
+        },
+        "rate": {
+          "maxConcurrentDispatches": 4,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "resolveVerificationRequest",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "adminReview.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:13.753183324Z",
+        "revision": "resolveverificationrequest-00006-cab",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [
+        "admin-review/services/adminReviewService.ts"
+      ],
+      "requiresSignIn": "staff only (assertStaff)",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    },
+    {
+      "name": "respondGuardianConsent",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "safety/youthConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:08.394026644Z",
+        "revision": "respondguardianconsent-00006-hek",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": "no (public guardian web page / public report; token or rate-limit checks in the function)",
+      "appCheck": "not enforced (explicit opt-out)",
+      "secrets": [
+        "GUARDIAN_LINK_SECRET",
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "liveSecrets": [
+        "GUARDIAN_LINK_SECRET",
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 300,
+      "taskQueue": null
+    },
+    {
+      "name": "retentionCleanup",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "schedule every day 03:30 Europe/Zurich",
+      "sourceModule": "dataRights/retentionCleanup.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:05.563831335Z",
+        "revision": "retentioncleanup-00006-joj",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "liveSecrets": [
+        "APPLE_TEAM_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 540,
+      "taskQueue": null
+    },
+    {
+      "name": "revenueCatWebhook",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "https",
+      "sourceModule": "entitlements/revenueCat.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:54:23.537685225Z",
+        "revision": "revenuecatwebhook-00006-hed",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "entitlements/plans.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: entitlements/plans.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (server-to-server webhook)",
+      "secrets": [
+        "REVENUECAT_WEBHOOK_SECRET"
+      ],
+      "liveSecrets": [
+        "REVENUECAT_WEBHOOK_SECRET"
+      ],
+      "runtimeConfig": [
+        "REVENUECAT_ENTITLEMENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "reviewMatchSegment",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/segmentPipeline.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:53.535729015Z",
+        "revision": "reviewmatchsegment-00002-mer",
+        "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/cvContract.ts",
+        "analysis/cvWorker.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/positionFramework.ts",
+        "analysis/segmentPipeline.ts",
+        "analysis/segmentReview.ts",
+        "analysis/taskDispatcher.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/cvContract.ts, analysis/cvWorker.ts, analysis/frameAnalysis.ts, analysis/positionFramework.ts, analysis/segmentPipeline.ts, analysis/segmentReview.ts, analysis/taskDispatcher.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "liveSecrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 1024,
+      "timeoutSec": 900,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": 600,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 30
+        },
+        "rate": {
+          "maxConcurrentDispatches": 6,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "revokeGuardianConsent",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "safety/youthConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:05.486398464Z",
+        "revision": "revokeguardianconsent-00006-qit",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "youth-safety/repositories/UserSafetyRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "revokeVideoProcessingConsent",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "analysis/videoConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:09.845535749Z",
+        "revision": "revokevideoprocessingconsent-00002-taq",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "match-analysis/services/matchAnalysisCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "saveAnalysisTargetAnchor",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/targetAnchorCallable.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [
+        "match-analysis/hooks/useTargetAnchors.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "EXPERIMENTAL_TARGET_ANCHORS"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "saveReelToLibrary",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "reelRender.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:22.095967933Z",
+        "revision": "savereeltolibrary-00006-fix",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "entitlements/plans.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, entitlements/plans.ts",
+      "clientCallers": [
+        "media-library/services/mediaAccessCallable.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "scheduleWeeklyFootballReports",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "schedule every monday 08:00 Europe/Zurich",
+      "sourceModule": "weeklyReportScheduler.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:05.675539318Z",
+        "revision": "scheduleweeklyfootballreports-00006-mos",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "unchanged",
+      "changedFiles": [],
+      "action": "hold",
+      "justification": "source closure identical to the deployed archive",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "import closure identical to the deployed archive; nothing to deploy"
+    },
+    {
+      "name": "searchDiscoverablePlayers",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "discoveryProjection.ts",
+      "deployed": {
+        "updateTime": "2026-10-24T21:42:10.480302960Z",
+        "revision": "searchdiscoverableplayers-00007-fur",
+        "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-24",
+        "dependencyDrift": "none"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "sendDevelopmentReminders",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "schedule every wednesday 17:00 Europe/Zurich",
+      "sourceModule": "notificationProducers.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:04.285877585Z",
+        "revision": "senddevelopmentreminders-00007-gug",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "notificationPolicy.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: notificationPolicy.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "setAgeBand",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "safety/youthConsent.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:13.860668810Z",
+        "revision": "setageband-00006-wuj",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "accountDeletion.ts",
+        "ai/providerConfig.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: accountDeletion.ts, ai/providerConfig.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "youth-safety/repositories/UserSafetyRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED",
+        "APPLE_CLIENT_ID"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "setStaffRole",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "moderation/staff.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:07.985211046Z",
+        "revision": "setstaffrole-00006-coy",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [
+        "ADMIN_USER_IDS"
+      ],
+      "liveSecrets": [
+        "ADMIN_USER_IDS"
+      ],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    },
+    {
+      "name": "setTrackingPeriods",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/trackingCallables.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "hold",
+      "justification": "no caller in the release app; deploy later with the analysis rollout",
+      "clientCallers": [],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "no caller: no client wrapper, UI control, test or backend call exists in the release or the candidate; owner-only callable that stores match period boundaries (kickoff, half-time, second half, full time) for a tracking v3 re-resolve; inert while TRACKING_V3_ENABLED/CV worker are off (stores feedback, enqueues nothing); if called while absent the client receives functions/not-found",
+      "laterDeploymentConditions": "ship together with a period-editing control in the tracking report (and its tests), after the vision worker is approved; or reword the \"halvesUnknown\" answer, which today tells the user to \"mark the half-time break in the match periods\" although no such control exists (blocker register B-21)",
+      "purpose": "record owner-set match period boundaries for tracking v3",
+      "featureFlags": "TRACKING_V3_ENABLED, CV_WORKER_URL/CV_WORKER_APPROVED (re-resolve only); no client flag"
+    },
+    {
+      "name": "startLinkImport",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "uploads/linkImportJobs.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called by the release app; refuses while analysis is unavailable",
+      "clientCallers": [
+        "match-analysis/services/trackingV3Service.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "startPlayerAnalysis",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/trackingOrchestrator.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [
+        "match-analysis/services/trackingV3Service.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "submitAnalysisCorrection",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "analysis/corrections.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:44.510717760Z",
+        "revision": "submitanalysiscorrection-00001-zeq",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/corrections.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/identityCallable.ts",
+        "analysis/positionFramework.ts",
+        "analysis/segmentReview.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/corrections.ts, analysis/frameAnalysis.ts, analysis/identityCallable.ts, analysis/positionFramework.ts, analysis/segmentReview.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [
+        "match-analysis/services/analysisCorrections.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "submitAppeal",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "moderation/actions.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:07.858578849Z",
+        "revision": "submitappeal-00006-gur",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "discoverySearchIndex.ts",
+        "notificationPolicy.ts",
+        "publicPassport.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, discoverySearchIndex.ts, notificationPolicy.ts, publicPassport.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "trust-safety/repositories/ModerationNoticeRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "submitPrivacyRequest",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "dataRights/privacyRequests.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:05.431534615Z",
+        "revision": "submitprivacyrequest-00006-sed",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [
+        "data-rights/repositories/DataRightsRepository.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    },
+    {
+      "name": "submitPublicReport",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "moderation/reports.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:51:59.983316649Z",
+        "revision": "submitpublicreport-00006-riy",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "discoverySearchIndex.ts",
+        "publicPassport.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, discoverySearchIndex.ts, publicPassport.ts, security/rateLimit.ts",
+      "clientCallers": [],
+      "requiresSignIn": "no (public guardian web page / public report; token or rate-limit checks in the function)",
+      "appCheck": "not enforced (explicit opt-out)",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "synthesizeMatchReport",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "taskQueue",
+      "sourceModule": "analysis/segmentPipeline.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:10.767383437Z",
+        "revision": "synthesizematchreport-00002-qop",
+        "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "ai/providerConfig.ts",
+        "analysis/clipAnalysis.ts",
+        "analysis/cvContract.ts",
+        "analysis/cvWorker.ts",
+        "analysis/frameAnalysis.ts",
+        "analysis/positionFramework.ts",
+        "analysis/segmentPipeline.ts",
+        "analysis/segmentReview.ts",
+        "analysis/taskDispatcher.ts",
+        "analysis/videoConsent.ts",
+        "callableOptions.ts",
+        "entitlements/plans.ts",
+        "legal/legalVersions.generated.ts",
+        "uploads/sessions.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: ai/providerConfig.ts, analysis/clipAnalysis.ts, analysis/cvContract.ts, analysis/cvWorker.ts, analysis/frameAnalysis.ts, analysis/positionFramework.ts, analysis/segmentPipeline.ts, analysis/segmentReview.ts, analysis/taskDispatcher.ts, analysis/videoConsent.ts, callableOptions.ts, entitlements/plans.ts, legal/legalVersions.generated.ts, uploads/sessions.ts",
+      "clientCallers": [],
+      "requiresSignIn": null,
+      "appCheck": "n/a (not client-invoked)",
+      "secrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "liveSecrets": [
+        "OPENROUTER_API_KEY"
+      ],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 1024,
+      "timeoutSec": 300,
+      "taskQueue": {
+        "retry": {
+          "maxAttempts": 3,
+          "maxDoublings": null,
+          "maxBackoffSeconds": 600,
+          "maxRetrySeconds": null,
+          "minBackoffSeconds": 30
+        },
+        "rate": {
+          "maxConcurrentDispatches": 4,
+          "maxDispatchesPerSecond": null
+        }
+      }
+    },
+    {
+      "name": "undoTrackingAnswer",
+      "region": "europe-west6",
+      "generation": "GEN_2 (planned)",
+      "trigger": "callable",
+      "sourceModule": "analysis/trackingCallables.ts",
+      "deployed": null,
+      "status": "missing",
+      "changedFiles": null,
+      "action": "deploy",
+      "justification": "called or enqueued by the release code; inert while the vision worker is unapproved",
+      "clientCallers": [
+        "match-analysis/services/trackingV3Service.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL",
+        "CV_WORKER_URL",
+        "TRACKING_V3_ENABLED",
+        "CV_WORKER_APPROVED"
+      ],
+      "serviceAccount": "default compute (planned)",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "updateExternalFootballSource",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "footballSources/callables.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:52:03.756631320Z",
+        "revision": "updateexternalfootballsource-00004-pas",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed",
+      "changedFiles": [
+        "callableOptions.ts",
+        "discoveryProjection.ts",
+        "discoverySearchIndex.ts",
+        "publicPassport.ts",
+        "security/rateLimit.ts"
+      ],
+      "action": "deploy",
+      "justification": "behaviour differs: callableOptions.ts, discoveryProjection.ts, discoverySearchIndex.ts, publicPassport.ts, security/rateLimit.ts",
+      "clientCallers": [
+        "football-sources/services/footballSourceService.ts"
+      ],
+      "requiresSignIn": "yes",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [
+        "GUARDIAN_LINK_BASE_URL"
+      ],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null
+    },
+    {
+      "name": "updatePrivacyRequest",
+      "region": "europe-west6",
+      "generation": "GEN_2",
+      "trigger": "callable",
+      "sourceModule": "dataRights/privacyRequests.ts",
+      "deployed": {
+        "updateTime": "2026-10-08T23:53:04.984798612Z",
+        "revision": "updateprivacyrequest-00006-beb",
+        "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+        "runtime": "nodejs20",
+        "state": "ACTIVE",
+        "batch": "2026-10-08",
+        "dependencyDrift": "transitive body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1"
+      },
+      "status": "changed-neutral",
+      "changedFiles": [
+        "callableOptions.ts"
+      ],
+      "action": "hold",
+      "justification": "only the equivalent callableOptions.ts refactor differs",
+      "clientCallers": [],
+      "requiresSignIn": "staff only (assertStaff)",
+      "appCheck": "enforced in production",
+      "secrets": [],
+      "liveSecrets": [],
+      "runtimeConfig": [],
+      "serviceAccount": "141939766260-compute",
+      "memoryMiB": 256,
+      "timeoutSec": 60,
+      "taskQueue": null,
+      "holdReason": "only functions/src/callableOptions.ts differs from the deployed archive (2026-10-08): env is now an injectable parameter defaulting to process.env; cors and enforceAppCheck resolve to the same values at runtime (verified by diff 2026-11-13). Redeploying would only refresh transitive dependencies (body-parser 1.20.8->1.20.9, uuid 9.0.1->11.1.1)"
+    }
+  ],
+  "notes": [
+    "2026-11-12 audit: trigger text for schedules without a time zone and for the storage trigger corrected from the emulator-built manifest to the values the deploy resolves for scoutx-230b0 (checked against live Cloud Scheduler jobs, the live event filter and adminSdkConfig)."
+  ]
+}

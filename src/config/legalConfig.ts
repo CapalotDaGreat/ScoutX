@@ -38,7 +38,7 @@ export type LegalConfig = {
 
 export const LEGAL_CONFIG: LegalConfig = {
   entity: {
-    name: 'CML Electronics',
+    name: 'Lusiola Software',
     street: 'Höglerstrasse 55',
     postalCode: '8600',
     city: 'Dübendorf',

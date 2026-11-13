@@ -683,6 +683,9 @@
     "noHighlights": "No highlights yet",
     "viewProfile": "View player",
     "openHint": "Open full player profile",
-    "footValue": "{{foot}} foot"
+    "footValue": "{{foot}} foot",
+    "verifiedEvidenceNote": "Trust-verified · logged matches only",
+    "profileEvidenceNote": "Profile fields · analysis count shown only when known",
+    "evidenceFreshness": "Evidence freshness"
   }
 }

@@ -15,7 +15,7 @@ export function AuthCard({ title, subtitle, children, className, ...props }: Aut
   return (
     <View className={cn('w-full max-w-lg self-center py-4', className)} {...props}>
       <View className="gap-2">
-        <Heading level={2}>{title}</Heading>
+        <Heading level={1}>{title}</Heading>
         {subtitle ? (
           <Text variant="body-sm" color="secondary">
             {subtitle}

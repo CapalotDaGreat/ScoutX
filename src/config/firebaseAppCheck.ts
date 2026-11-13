@@ -56,6 +56,9 @@ function initializeWebAppCheck(app: FirebaseApp): AppCheck {
 
 async function initializeNativeAppCheck(app: FirebaseApp): Promise<AppCheck> {
   const config = getAppCheckRuntimeConfig();
+  if (config.warning) {
+    console.warn(config.warning);
+  }
   const { default: appCheck, ReactNativeFirebaseAppCheckProvider } =
     await loadReactNativeAppCheckModule();
   const rnfbProvider = new ReactNativeFirebaseAppCheckProvider();

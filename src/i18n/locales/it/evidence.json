@@ -11,7 +11,12 @@
     "unverified": "Non verificato",
     "observed": "Osservato",
     "inferred": "Dedotto",
-    "unknown": "Fonte sconosciuta"
+    "unknown": "Fonte sconosciuta",
+    "verifiedLogged": "Verificato · solo partite registrate",
+    "profileNotTracking": "Campi del profilo · nessun tracciamento continuo delle partite",
+    "ownSelfEntered": "Il tuo profilo · inserito da te, non un’analisi verificata in partita",
+    "passportVerified": "Identità verificata · solo campi pubblici del Passport",
+    "passportPlayerEntered": "Passport inserito dal giocatore · non un’analisi verificata in partita"
   },
   "state": {
     "available": "Prova disponibile",

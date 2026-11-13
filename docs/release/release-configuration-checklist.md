@@ -34,7 +34,7 @@ prove what is stored in the EAS console. Use the explicit `production` EAS envir
 - [ ] Legal translations (English is canonical; see `docs/compliance/translations.md`)
 - [ ] App Store privacy answers match `docs/compliance/app-store-privacy-labels.md`
 
-Legal entity (fixed): CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland.
+Legal entity (fixed): Lusiola Software, Höglerstrasse 55, 8600 Dübendorf, Switzerland.
 
 ## SECURITY
 

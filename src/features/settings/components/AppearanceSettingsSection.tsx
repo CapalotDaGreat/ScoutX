@@ -48,6 +48,7 @@ export function AppearanceSettingsSection() {
             <Pressable
               key={option.value}
               accessibilityRole="radio"
+              aria-checked={selected}
               accessibilityState={{ checked: selected }}
               onPress={() => void setPreference(option.value)}
               className={cn(

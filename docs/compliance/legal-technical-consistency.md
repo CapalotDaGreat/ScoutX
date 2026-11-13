@@ -9,7 +9,7 @@ configuration), **NOT VALIDATED**, **LEGAL REVIEW REQUIRED**.
 
 ## Local Legal-Page Review: 2026-10-22
 
-The operator confirmed CML Electronics and the configured Swiss address. Launch countries and
+The operator confirmed the configured Swiss address and, on 2026-11-13, the operating name **Lusiola Software** (company registration in progress; previously CML Electronics; address and personal details unchanged). Launch countries and
 the guardian-email provider have not been supplied. This review is not legal advice and not
 legal approval. No policy deployment or new app submission is authorised by this work.
 

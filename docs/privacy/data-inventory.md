@@ -1,6 +1,6 @@
 # Data Inventory and Processing Register
 
-Controller: CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland (`src/config/legalConfig.ts`).
+Controller: Lusiola Software, Höglerstrasse 55, 8600 Dübendorf, Switzerland (`src/config/legalConfig.ts`).
 Privacy contact: support@pitchproof.online. No data protection officer and no EU representative have been appointed.
 Governing law: Swiss law (revised FADP). The GDPR is considered where EU/EEA users are served.
 

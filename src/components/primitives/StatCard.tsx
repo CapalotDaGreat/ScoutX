@@ -40,10 +40,10 @@ export function StatCard({
     >
       <View className="flex-row items-start justify-between">
         <View className="flex-1">
-          <Text variant="caption" color="secondary" className="mb-1 uppercase tracking-wider">
+          <Text variant="caption" color="secondary" className="mb-1">
             {label}
           </Text>
-          <Text className="font-sans-bold text-stat-lg text-foreground">
+          <Text className="font-display text-stat-lg text-foreground" style={{ fontVariant: ['tabular-nums'] }}>
             {value}
           </Text>
           {trend ? (

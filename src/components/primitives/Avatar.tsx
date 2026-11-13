@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Image, View, type ImageSourcePropType } from 'react-native';
 import { Text } from '@/components/primitives/Text';
 import { useTheme } from '@/theme';
@@ -72,7 +73,10 @@ export function Avatar({
   const { t } = useAppTranslation('common');
   const initials = getInitials(name);
   const label = name ? t('a11y.avatarOf', { name }) : t('a11y.avatar');
-  const hasImage = isUsableImageSource(source);
+  const sourceKey = typeof source === 'object' && source && 'uri' in source ? String(source.uri ?? '') : String(source ?? '');
+  // A portrait that fails to load (expired link, deleted file, offline) falls back to initials, never an empty circle.
+  const [failedKey, setFailedKey] = useState<string | null>(null);
+  const hasImage = isUsableImageSource(source) && failedKey !== sourceKey;
 
   return (
     <View
@@ -92,6 +96,7 @@ export function Avatar({
           className="h-full w-full"
           resizeMode="cover"
           accessibilityLabel={label}
+          onError={() => setFailedKey(sourceKey)}
         />
       ) : (
         <Text

@@ -9,7 +9,7 @@ const variantStyles = {
   'body-sm': 'text-body-sm font-sans',
   label: 'text-label font-sans-medium',
   caption: 'text-caption font-sans-medium',
-  overline: 'text-overline font-sans-medium uppercase',
+  overline: 'text-overline font-sans-semibold',
   link: 'text-body font-sans',
   inverse: 'text-body font-sans',
 } as const;

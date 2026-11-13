@@ -205,6 +205,7 @@ export function SettingsScreen({
               disabled={notificationsLoading || isUpdating || !user?.uid}
               onValueChange={(value) => void setPushPreference(value)}
               accessibilityLabel={t('settings:pushNotifications')}
+              aria-label={t('settings:pushNotifications')}
             />
           </View>
           {pushEnabled && hasToken
@@ -216,6 +217,7 @@ export function SettingsScreen({
                     disabled={isUpdating || !user?.uid}
                     onValueChange={(value) => void setCategoryPreference(category, value)}
                     accessibilityLabel={t(`settings:category.${category}`)}
+              aria-label={t(`settings:category.${category}`)}
                   />
                 </View>
               ))
@@ -233,6 +235,7 @@ export function SettingsScreen({
                 disabled={safetyPolicy.genericLockScreenOnly || isUpdating || !user?.uid}
                 onValueChange={(value) => void setLockScreenPreference(value ? 'details' : 'generic')}
                 accessibilityLabel={t('settings:lockScreen.title')}
+              aria-label={t('settings:lockScreen.title')}
               />
             </View>
           ) : null}
@@ -247,6 +250,7 @@ export function SettingsScreen({
                 disabled={isUpdating || !user?.uid}
                 onValueChange={(value) => void setQuietHoursEnabled(value)}
                 accessibilityLabel={t('settings:quietHours.title')}
+              aria-label={t('settings:quietHours.title')}
               />
             </View>
           ) : null}

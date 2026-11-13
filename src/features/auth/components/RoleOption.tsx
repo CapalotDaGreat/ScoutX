@@ -31,16 +31,16 @@ export function RoleOption({ role, selected = false, ...props }: RoleOptionProps
       accessibilityRole="button"
       accessibilityState={{ selected }}
       className={cn(
-        'w-full rounded-xl border px-4 py-4',
+        'min-h-[72px] w-full rounded-xl border px-4 py-4 active:opacity-80',
         selected
           ? 'border-accent bg-accent-muted'
-          : 'border-border bg-surface',
+          : 'border-divider bg-surface',
       )}
       {...props}
     >
       <View className="flex-row items-start justify-between gap-3">
         <View className="min-w-0 flex-1 flex-row items-start gap-3">
-          <View className="mt-0.5 rounded-full bg-background-secondary p-2">
+          <View className={cn('mt-0.5 rounded-full p-2.5', selected ? 'bg-surface' : 'bg-background-secondary')}>
             <Icon size={18} color={selected ? colors.accent : colors.textSecondary} strokeWidth={1.75} />
           </View>
           <View className="flex-1">

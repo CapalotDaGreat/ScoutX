@@ -17,6 +17,8 @@ const sizeStyles = {
 
 export function PlayerFormStrip({ form, size = 'sm', className }: PlayerFormStripProps) {
   const { t } = useAppTranslation('scout');
+  // No results yet: render nothing instead of an empty strip that a screen reader announces as "Recent form:".
+  if (form.length === 0) return null;
   return (
     <View
       className={cn('flex-row gap-1', className)}

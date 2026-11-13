@@ -126,7 +126,13 @@ export function RootNavigator() {
     // A cold start from a link already resolved into the right app: keep the linked screen.
     const rootState = navigation.getRootState();
     const linkedRoute = rootState?.routes[rootState.index ?? 0]?.name;
-    if (isFirstSync && !needsRole && (linkedRoute === rootRoute || (linkedRoute && STANDALONE_LINK_ROUTES.has(linkedRoute)))) {
+    if (isFirstSync && !needsRole && linkedRoute === rootRoute) {
+      return;
+    }
+    // A standalone link screen (unavailable, guardian, report) stays until the user leaves it, on
+    // every sync: a visitor's anonymous session arrives a moment after a cold link and used to
+    // replace the explanation with Home before it could be read.
+    if (!needsRole && linkedRoute && STANDALONE_LINK_ROUTES.has(linkedRoute)) {
       return;
     }
     if (needsRole) {

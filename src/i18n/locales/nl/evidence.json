@@ -11,7 +11,12 @@
     "unverified": "Niet geverifieerd",
     "observed": "Waargenomen",
     "inferred": "Afgeleid",
-    "unknown": "Onbekende bron"
+    "unknown": "Onbekende bron",
+    "verifiedLogged": "Geverifieerd · alleen geregistreerde wedstrijden",
+    "profileNotTracking": "Profielvelden · geen doorlopende wedstrijdtracking",
+    "ownSelfEntered": "Jouw profiel · zelf ingevuld, geen in de wedstrijd geverifieerde analyse",
+    "passportVerified": "Geverifieerde identiteit · alleen openbare Passport-velden",
+    "passportPlayerEntered": "Door de speler ingevuld Passport · geen in de wedstrijd geverifieerde analyse"
   },
   "state": {
     "available": "Bewijs beschikbaar",

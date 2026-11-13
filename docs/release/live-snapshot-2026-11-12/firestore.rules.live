@@ -1,0 +1,859 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function publicPortfolioEnabled(userId) {
+      return exists(/databases/$(database)/documents/profiles/$(userId))
+        && get(/databases/$(database)/documents/profiles/$(userId)).data.privacy.publicPortfolioEnabled == true;
+    }
+
+    // Age band and guardian scopes are server-written (setAgeBand / guardian consent callables).
+    function isMinor(userId) {
+      return exists(/databases/$(database)/documents/userSafety/$(userId))
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.ageBand in ['under13', '13-17'];
+    }
+
+    // Under-13 accounts are private: nobody else may see, find, endorse or contact them,
+    // whatever scopes are stored.
+    function isChild(userId) {
+      return exists(/databases/$(database)/documents/userSafety/$(userId))
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.ageBand == 'under13';
+    }
+
+    function hasGuardianScope(userId, scope) {
+      return !isChild(userId)
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.guardianStatus == 'approved'
+        && get(/databases/$(database)/documents/userSafety/$(userId)).data.scopes.hasAny([scope]);
+    }
+
+    function isServerVerifiedPlayer(userId) {
+      return exists(/databases/$(database)/documents/verificationStates/$('player-' + userId))
+        && get(/databases/$(database)/documents/verificationStates/$('player-' + userId)).data.level == 'verified';
+    }
+
+    function isTrialParty(trialId) {
+      return trialId is string
+        && exists(/databases/$(database)/documents/trialInvitations/$(trialId))
+        && (
+          get(/databases/$(database)/documents/trialInvitations/$(trialId)).data.scoutId == request.auth.uid
+          || get(/databases/$(database)/documents/trialInvitations/$(trialId)).data.playerId == request.auth.uid
+        );
+    }
+
+    // Roles are asserted by the confirmRole Cloud Function as a custom auth claim. The
+    // client-writable users document is never trusted for authorization decisions.
+    function tokenRole() {
+      return request.auth.token.get('role', '');
+    }
+
+    function hasRecruiterRole() {
+      return isSignedIn() && tokenRole() in ['scout', 'coach', 'club', 'admin'];
+    }
+
+    function validMatchLog(data) {
+      return data.id is string
+        && data.id.size() > 0
+        && data.date is string
+        && data.opponent is string
+        && data.opponent.size() <= 120
+        && data.result is string
+        && data.minutes is number
+        && data.minutes >= 0
+        && data.minutes <= 150;
+    }
+
+    function onlyChanges(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    function validReportReason(reason) {
+      return reason in [
+        'spam', 'harassment', 'inappropriate', 'impersonation', 'inappropriate_contact', 'copyright',
+        'privacy', 'appears_in_video', 'minor_in_video', 'exploitation', 'safety_concern', 'other'
+      ];
+    }
+
+    // Owners choose private, a specific-scout grant or the Passport. Anything beyond private
+    // needs confirmed rights, no moderation hold and, for minors, the public_media scope.
+    // Children's media is always private.
+    function mediaVisibilityAllowed(userId, data) {
+      return data.visibility in ['private', 'grant', 'passport']
+        && (data.visibility == 'private' || (
+          !isChild(userId)
+          && data.get('rightsState', 'unconfirmed') == 'user_confirmed'
+          && data.get('moderationState', 'none') == 'none'
+          && (data.visibility == 'grant' || !isMinor(userId) || hasGuardianScope(userId, 'public_media'))
+        ));
+    }
+
+    function validMediaBase(userId, mediaId) {
+      return request.resource.data.ownerId == userId
+        && request.resource.data.id == mediaId
+        && request.resource.data.type in ['matchFootage', 'clip', 'highlight', 'reel']
+        && request.resource.data.storagePath is string;
+    }
+
+    function validVerificationLevel(level) {
+      return level in ['none', 'basic'];
+    }
+
+    function hasForbiddenCredentialFields(data) {
+      return data.keys().hasAny(['password', 'passwordHash', 'passwordSalt', 'credentials', 'secret']);
+    }
+
+    function validClientUserRole(role) {
+      return role in ['guest', 'player', 'scout', 'coach'];
+    }
+
+    function isValidUserCreate(userId) {
+      return !hasForbiddenCredentialFields(request.resource.data)
+        && request.resource.data.uid == userId
+        && request.resource.data.keys().hasOnly(['uid', 'name', 'email', 'role', 'isAnonymous', 'createdAt', 'updatedAt'])
+        && validClientUserRole(request.resource.data.role);
+    }
+
+    function isValidUserUpdate() {
+      return !hasForbiddenCredentialFields(request.resource.data)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt
+        // A role can be chosen once during onboarding; after confirmation it is immutable.
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])
+          || (
+            validClientUserRole(request.resource.data.role)
+            && resource.data.get('roleConfirmed', false) != true
+          )
+        )
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['roleConfirmed'])
+          || request.resource.data.roleConfirmed == true
+        );
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUserCreate(userId);
+      allow update: if isOwner(userId) && isValidUserUpdate();
+      allow delete: if isOwner(userId);
+    }
+
+    // The private profile is owner-only. Everyone else reads the server-projected
+    // publicPassports document, which already applies the player's privacy settings.
+    match /profiles/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update, delete: if isOwner(userId);
+    }
+
+    match /publicPassports/{userId} {
+      allow read: if isOwner(userId) || resource.data.isPublic == true;
+      allow write: if false;
+    }
+
+    match /passportSummaries/{userId} {
+      allow read: if isOwner(userId) || (isSignedIn() && resource.data.isPublic == true);
+      allow write: if false;
+    }
+
+    // Per-player subcollections. Match logs are the canonical evidence source for
+    // statistics; evidence items index other proof (videos, analyses, observations).
+    match /players/{userId}/matches/{matchId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && request.resource.data.id == matchId
+        && validMatchLog(request.resource.data);
+      allow update: if isOwner(userId)
+        && request.resource.data.id == matchId
+        && validMatchLog(request.resource.data);
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/evidenceItems/{evidenceId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == evidenceId
+        && request.resource.data.kind is string
+        && request.resource.data.provenance is string
+        && request.resource.data.state is string
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 200;
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/developmentGoals/{goalId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == goalId
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 160
+        && request.resource.data.category in ['technical', 'tactical', 'physical', 'mental', 'consistency']
+        && request.resource.data.status in ['not_started', 'active', 'improving', 'achieved', 'revisit'];
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/trainingSessions/{sessionId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == sessionId
+        && request.resource.data.date is string
+        && request.resource.data.focus is string
+        && request.resource.data.focus.size() > 0
+        && request.resource.data.focus.size() <= 200
+        && request.resource.data.type in ['team', 'individual', 'gym', 'recovery', 'match_prep', 'other'];
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/identitySnapshots/{snapshotId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.id == snapshotId
+        && request.resource.data.effectiveFrom is string
+        && request.resource.data.source in ['self_reported', 'club_provided', 'coach_provided'];
+      allow delete: if isOwner(userId);
+    }
+
+    match /players/{userId}/trialReflections/{trialId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.ownerId == userId
+        && request.resource.data.trialId == trialId;
+      allow delete: if isOwner(userId);
+    }
+
+    // rightsState beyond unconfirmed/user_confirmed and every moderationState are server-owned.
+    match /players/{userId}/media/{mediaId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && validMediaBase(userId, mediaId)
+        && !request.resource.data.keys().hasAny(['visibilityBeforeHold', 'rightsBeforeHold'])
+        && request.resource.data.get('moderationState', 'none') == 'none'
+        && request.resource.data.get('rightsState', 'unconfirmed') in ['unconfirmed', 'user_confirmed']
+        && mediaVisibilityAllowed(userId, request.resource.data);
+      allow update: if isOwner(userId)
+        && validMediaBase(userId, mediaId)
+        && request.resource.data.get('moderationState', 'none') == resource.data.get('moderationState', 'none')
+        && request.resource.data.get('visibilityBeforeHold', null) == resource.data.get('visibilityBeforeHold', null)
+        && request.resource.data.get('rightsBeforeHold', null) == resource.data.get('rightsBeforeHold', null)
+        && (
+          request.resource.data.get('rightsState', 'unconfirmed') == resource.data.get('rightsState', 'unconfirmed')
+          || (
+            resource.data.get('rightsState', 'unconfirmed') in ['unconfirmed', 'user_confirmed']
+            && request.resource.data.get('rightsState', 'unconfirmed') in ['unconfirmed', 'user_confirmed']
+          )
+        )
+        && mediaVisibilityAllowed(userId, request.resource.data);
+      allow delete: if isOwner(userId);
+    }
+
+    // External football source links. Every write goes through the add/update/remove
+    // callables, which re-validate https, host and provider against the allowlist and own
+    // status, provenance and reportCount. Clients cannot pick a host, provider or status.
+    match /players/{userId}/footballSources/{sourceId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Links shared with scouts, projected only while the player is discoverable.
+    match /scoutFootballSources/{playerId} {
+      allow read: if isOwner(playerId) || hasRecruiterRole();
+      allow write: if false;
+    }
+
+    // Trust scores are server-maintained; players must not be able to inflate their own.
+    match /trustProfiles/{playerId} {
+      allow read: if isOwner(playerId)
+        || (!isChild(playerId) && (isSignedIn() || publicPortfolioEnabled(playerId)));
+      allow create, update: if false;
+      allow delete: if isOwner(playerId);
+    }
+
+    match /trustRecommendations/{recommendationId} {
+      allow read: if (isSignedIn() && request.auth.uid == resource.data.playerId)
+        || (!isChild(resource.data.playerId)
+          && (isSignedIn() || publicPortfolioEnabled(resource.data.playerId)));
+      // No self-endorsement; author and subject are immutable after creation. Children
+      // cannot be endorsed.
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.authorId
+        && request.resource.data.playerId is string
+        && request.resource.data.playerId != request.auth.uid
+        && !isChild(request.resource.data.playerId);
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.authorId
+        && request.resource.data.authorId == resource.data.authorId
+        && request.resource.data.playerId == resource.data.playerId;
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.authorId;
+    }
+
+    match /scoutingReports/{reportId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.scoutId
+        && hasRecruiterRole();
+      allow create: if isSignedIn()
+        && hasRecruiterRole()
+        && request.auth.uid == request.resource.data.scoutId;
+      allow update, delete: if isSignedIn()
+        && hasRecruiterRole()
+        && request.auth.uid == resource.data.scoutId;
+    }
+
+    match /recruitmentWorkspaces/{scoutId} {
+      allow read: if isOwner(scoutId);
+      allow create: if isOwner(scoutId) && hasRecruiterRole();
+      allow update, delete: if isOwner(scoutId) && hasRecruiterRole();
+
+      match /entries/{playerId} {
+        allow read: if isOwner(scoutId);
+        allow create, update: if isOwner(scoutId)
+          && hasRecruiterRole()
+          && request.resource.data.scoutId == scoutId
+          && request.resource.data.playerId == playerId
+          && !isChild(playerId);
+        allow delete: if isOwner(scoutId) && hasRecruiterRole();
+      }
+    }
+
+    // Clients may only record activity in their own feed. Anything addressed to another user
+    // (trial invitations, recommendations, views) is written by Cloud Functions with fixed copy,
+    // so no user can send free text to another user's feed or lock screen.
+    match /activities/{activityId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.recipientId;
+      allow create: if isSignedIn()
+        && request.resource.data.recipientId == request.auth.uid
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 200
+        && request.resource.data.body is string
+        && request.resource.data.body.size() <= 2000
+        && request.resource.data.read == false
+        && (
+          request.resource.data.actorId == request.auth.uid
+          || (request.resource.data.actorId == 'system'
+            && request.resource.data.recipientId == request.auth.uid)
+        );
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId
+        && onlyChanges(['read']);
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.recipientId;
+    }
+
+    // Movement summaries are owner-only and must not carry coordinates, point tracks or
+    // pointers to uploaded tracks.
+    function gpsSessionLocationFree(data) {
+      return !data.keys().hasAny(['pointsStorageKey', 'points', 'latitude', 'longitude', 'location'])
+        && (!('heatmap' in data) || !(data.heatmap is map) || !data.heatmap.keys().hasAny(['bounds']));
+    }
+
+    match /gpsSessions/{sessionId} {
+      allow read: if isOwner(resource.data.playerId);
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId
+        && gpsSessionLocationFree(request.resource.data);
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId
+        && request.resource.data.playerId == resource.data.playerId
+        && gpsSessionLocationFree(request.resource.data);
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+    }
+
+    match /blockedUsers/{blockId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.blockerId
+        && resource.data.active != false;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.blockerId
+        && request.resource.data.active == true;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.blockerId
+        && request.resource.data.blockerId == resource.data.blockerId;
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.blockerId;
+    }
+
+    match /contentReports/{reportId} {
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.reporterId
+        && request.resource.data.keys().hasOnly([
+          'reporterId', 'targetType', 'targetId', 'targetOwnerId', 'reason', 'details', 'createdAt'
+        ])
+        && request.resource.data.targetType in [
+          'user', 'post', 'media', 'reel', 'passport', 'scout', 'evidenceRequest', 'trial', 'scoutingReport',
+          'external_football_source'
+        ]
+        && request.resource.data.targetId is string
+        && request.resource.data.targetId.size() > 0
+        // targetOwnerId lets account deletion find reports about a user's posts.
+        && request.resource.data.targetOwnerId is string
+        && request.resource.data.targetOwnerId.size() > 0
+        && (!(request.resource.data.targetType in ['user', 'passport', 'scout'])
+          || request.resource.data.targetOwnerId == request.resource.data.targetId)
+        && request.resource.data.targetOwnerId != request.auth.uid
+        && (!('details' in request.resource.data)
+          || (request.resource.data.details is string && request.resource.data.details.size() <= 1000))
+        && validReportReason(request.resource.data.reason)
+        && request.resource.data.createdAt is string;
+      allow read, update, delete: if false;
+    }
+
+    match /trialInvitations/{invitationId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.playerId
+        || request.auth.uid == resource.data.scoutId
+      );
+      // Minors can only be invited when their guardian allowed scout contact; guardian
+      // co-approval fields are server-written only.
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.scoutId
+        && request.resource.data.playerId is string
+        && request.resource.data.playerId != request.auth.uid
+        && request.resource.data.status == 'pending'
+        && hasRecruiterRole()
+        && !request.resource.data.keys().hasAny(['guardianApproval', 'guardianTokenHash', 'guardianDecidedAt'])
+        && (!isMinor(request.resource.data.playerId)
+          || hasGuardianScope(request.resource.data.playerId, 'scout_contact'));
+      // Scouts manage invitation details but never accept on the player's behalf; players may
+      // only accept or decline, and a minor can accept only after guardian co-approval.
+      allow update: if isSignedIn() && (
+        (
+          request.auth.uid == resource.data.scoutId
+          && request.resource.data.scoutId == resource.data.scoutId
+          && request.resource.data.playerId == resource.data.playerId
+          && (request.resource.data.status != 'accepted' || resource.data.status == 'accepted')
+          && request.resource.data.get('guardianApproval', null) == resource.data.get('guardianApproval', null)
+          && request.resource.data.get('guardianTokenHash', null) == resource.data.get('guardianTokenHash', null)
+        )
+        || (
+          request.auth.uid == resource.data.playerId
+          && onlyChanges(['status', 'history', 'updatedAt'])
+          && request.resource.data.status in ['accepted', 'declined']
+          && (request.resource.data.status != 'accepted'
+            || !isMinor(request.auth.uid)
+            || resource.data.get('guardianApproval', '') == 'approved')
+        )
+      );
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.scoutId;
+    }
+
+    match /trialNotifications/{notificationId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId;
+      allow create: if isSignedIn()
+        && isTrialParty(request.resource.data.trialInvitationId)
+        && request.resource.data.recipientId is string
+        && (
+          get(/databases/$(database)/documents/trialInvitations/$(request.resource.data.trialInvitationId)).data.scoutId == request.resource.data.recipientId
+          || get(/databases/$(database)/documents/trialInvitations/$(request.resource.data.trialInvitationId)).data.playerId == request.resource.data.recipientId
+        )
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.body is string
+        && request.resource.data.body.size() <= 500
+        && request.resource.data.read == false
+        // Free text to a minor stops as soon as the guardian withdraws scout contact.
+        && (request.resource.data.recipientId == request.auth.uid
+          || !isMinor(request.resource.data.recipientId)
+          || hasGuardianScope(request.resource.data.recipientId, 'scout_contact'));
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId
+        && onlyChanges(['read']);
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.recipientId;
+    }
+
+    // Discovery listings are projected by Cloud Functions. Clients may read signed-in
+    // but cannot write ratings, coverage, or a verified badge.
+    match /discoverablePlayers/{playerId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+    match /discoverySearchState/{stateId} {
+      allow get: if isSignedIn() && stateId == 'current';
+      allow list, write: if false;
+    }
+
+    match /scoutBriefs/{briefId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.scoutId;
+      allow create: if isSignedIn()
+        && hasRecruiterRole()
+        && request.auth.uid == request.resource.data.scoutId;
+      allow update, delete: if isSignedIn()
+        && hasRecruiterRole()
+        && request.auth.uid == resource.data.scoutId;
+    }
+
+    match /evidenceRequests/{requestId} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == resource.data.scoutId || request.auth.uid == resource.data.playerId);
+      allow create: if false;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId
+        && resource.data.status == 'pending'
+        && onlyChanges(['status', 'updatedAt'])
+        && request.resource.data.status == 'declined';
+      allow delete: if isSignedIn()
+        && (request.auth.uid == resource.data.scoutId || request.auth.uid == resource.data.playerId);
+    }
+
+    match /watchlistEvents/{eventId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.scoutId;
+      allow write: if false;
+    }
+
+    match /playerWatchers/{playerId} {
+      allow read: if false;
+      allow write: if false;
+      match /scouts/{scoutId} {
+        allow read, write: if false;
+      }
+    }
+
+    match /portfolioAnalytics/{playerId} {
+      allow read: if isOwner(playerId);
+      allow create, update, delete: if false;
+    }
+
+    // Usernames are first-come; only the current holder may change or release one. Children
+    // have no public username.
+    match /portfolioSlugs/{username} {
+      allow read: if true;
+      allow create: if isSignedIn()
+        && request.resource.data.playerId == request.auth.uid
+        && !isChild(request.auth.uid);
+      allow update: if isSignedIn()
+        && resource.data.playerId == request.auth.uid
+        && request.resource.data.playerId == request.auth.uid
+        && !isChild(request.auth.uid);
+      allow delete: if isSignedIn()
+        && resource.data.playerId == request.auth.uid;
+    }
+
+    match /pushTokens/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Age band, guardian status and scopes. Readable by the user; written only by callables.
+    match /userSafety/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Upload state is server-written; the session URI is a bearer credential and never readable.
+    match /mediaUploads/{uploadId} {
+      allow read: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow write: if false;
+    }
+    match /mediaUploadSessions/{uploadId} {
+      allow read, write: if false;
+    }
+    match /uploadSessionLimits/{limitId} {
+      allow read, write: if false;
+    }
+    // Per-callable abuse counters (Admin SDK only).
+    match /callableRateLimits/{limitId} {
+      allow read, write: if false;
+    }
+
+    // Moderation workflow and staff audit trail are server-only; staff use callables.
+    match /moderationCases/{caseId} {
+      allow read, write: if false;
+    }
+    match /moderationActions/{actionId} {
+      allow read, write: if false;
+    }
+    match /moderationHolds/{holdId} {
+      allow read, write: if false;
+    }
+    match /appeals/{caseId} {
+      allow read, write: if false;
+    }
+    match /accountRestrictions/{userId} {
+      allow read, write: if false;
+    }
+    match /adminAuditLog/{entryId} {
+      allow read, write: if false;
+    }
+    match /publicReportLimits/{limitId} {
+      allow read, write: if false;
+    }
+    match /publicReporterContacts/{reportId} {
+      allow read, write: if false;
+    }
+    // The affected user sees decisions about their content and can appeal through a callable.
+    match /moderationNotices/{userId}/items/{caseId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Consent proof is written only by recordConsent so versions and timestamps stay trustworthy.
+    match /consentRecords/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+
+      match /items/{itemId} {
+        allow read: if isOwner(userId);
+        allow write: if false;
+      }
+    }
+
+    // Guardian consent proof, guardian contact details and queued email (Trigger Email
+    // extension) are server-only.
+    match /youthConsents/{consentId} {
+      allow read, write: if false;
+    }
+    match /guardianContacts/{userId} {
+      allow read, write: if false;
+    }
+    match /mail/{mailId} {
+      allow read, write: if false;
+    }
+
+    // Read by the push trigger (Admin SDK) to enforce opt-outs server-side.
+    match /notificationPreferences/{userId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.keys().hasOnly(['pushEnabled', 'categories', 'lockScreenPreview', 'updatedAt'])
+        && request.resource.data.pushEnabled is bool
+        && request.resource.data.get('lockScreenPreview', 'details') in ['details', 'generic']
+        && request.resource.data.categories is map
+        && request.resource.data.categories.keys().hasOnly([
+          'match', 'analysis', 'development', 'scouting', 'trial', 'career', 'passport', 'system'
+        ])
+        && request.resource.data.updatedAt is string;
+    }
+
+    match /careerReplays/{replayId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId
+        && request.auth.uid == request.resource.data.playerId;
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+    }
+
+    // Analysis reports are written only by the analyzeMatchFootage function so clients
+    // cannot present fabricated AI results as real.
+    // Set only by server promotion after ffprobe validation.
+    match /matchAnalysisJobs/{jobId} {
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+      // Status, pipeline state, stages, segments, results and lease are server-owned; the
+      // app creates an uploading job and cancels through cancelMatchAnalysis.
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId
+        && request.resource.data.keys().hasOnly([
+          'id', 'playerId', 'status', 'targeting', 'match', 'durationSec', 'fileSizeBytes',
+          'frames', 'identityConfirmation', 'identityCandidates', 'idempotencyKey',
+          'analysisIntent', 'clipContext', 'createdAt', 'updatedAt',
+        ])
+        && request.resource.data.status == 'uploading'
+        && request.resource.data.get('analysisIntent', 'match') in ['match', 'training']
+        && request.resource.data.get('clipContext', 'auto') in ['auto', 'shot', 'save', 'pass', 'dribble', 'tackle', 'defensive', 'other']
+        && request.resource.data.get('frames', []).size() == 0;
+      // Device frames are accepted for consented short clips (the video stays on the phone) and
+      // for the fallback after server extraction failed. Mode and consent are server-set.
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.playerId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'identityConfirmation', 'identityCandidates', 'frames', 'videoSync', 'updatedAt',
+        ])
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['frames'])
+          || (resource.data.get('errorCode', null) == 'extraction_failed'
+            && resource.data.status == 'failed'
+            && request.resource.data.frames.size() <= 24)
+          || (resource.data.get('processingMode', null) == 'device_frames'
+            && resource.data.get('consentVersion', null) is string
+            && resource.data.status == 'uploading'
+            && request.resource.data.frames.size() <= 32)
+        );
+      allow delete: if isSignedIn()
+        && request.auth.uid == resource.data.playerId;
+
+      // Segment reviews, tracker results, archived report versions and the player's feedback
+      // records are server-written (feedback only through submitAnalysisCorrection).
+      match /{sub}/{docId} {
+        allow read: if isSignedIn()
+          && sub in ['segmentReviews', 'cvSegments', 'reports', 'corrections']
+          && get(/databases/$(database)/documents/matchAnalysisJobs/$(jobId)).data.playerId == request.auth.uid;
+        allow write: if false;
+      }
+    }
+
+    // Per-job video processing consent: written only by recordVideoProcessingConsent.
+    match /videoProcessingConsents/{jobId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.uid;
+      allow write: if false;
+    }
+
+    match /verificationRequests/{requestId} {
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.requesterId
+        && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.entityId == request.auth.uid
+        && request.resource.data.entityType == 'player'
+        && request.resource.data.status == 'pending'
+        && request.resource.data.evidence is string
+        && request.resource.data.evidence.size() > 0
+        && request.resource.data.createdAt is string;
+      allow read: if isSignedIn()
+        && request.auth.uid == resource.data.requesterId;
+      allow update, delete: if false;
+    }
+
+    match /verificationStates/{stateId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.entityId == request.auth.uid
+        && stateId == request.resource.data.entityType + '-' + request.auth.uid
+        && validVerificationLevel(request.resource.data.level);
+      allow update: if isSignedIn()
+        && resource.data.entityId == request.auth.uid
+        && request.resource.data.entityId == request.auth.uid
+        && (
+          (resource.data.level != 'verified' && validVerificationLevel(request.resource.data.level))
+          || (resource.data.level == 'verified' && request.resource.data.level == 'verified')
+        );
+    }
+
+    match /clubProfiles/{clubId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.ownerId;
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.ownerId
+        && request.auth.uid == request.resource.data.ownerId;
+    }
+
+    match /analysisQuotas/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    // Written only by the RevenueCat webhook; the app may display it but never decides access.
+    match /entitlements/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    match /usageLedger/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+      match /periods/{periodKey} {
+        allow read: if isOwner(userId);
+        allow write: if false;
+      }
+    }
+
+    match /revenueCatEvents/{eventId} {
+      allow read, write: if false;
+    }
+
+    // Deletion progress, data exports and privacy requests are written only by Cloud Functions.
+    match /deletionRequests/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if false;
+    }
+
+    match /dataExports/{exportId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
+    match /privacyRequests/{requestId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+
+    // Minimised records kept after deletion (hashed subject only); never readable by clients.
+    match /legalRetention/{recordId} {
+      allow read, write: if false;
+    }
+
+    match /reels/{reelId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.ownerId;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.ownerId
+        && request.resource.data.status in ['draft', 'review'];
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.ownerId
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.status in ['draft', 'review', 'approved'];
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.ownerId;
+    }
+
+    match /mediaGrants/{grantId} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == resource.data.ownerId || request.auth.uid == resource.data.granteeId);
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.ownerId
+        && request.resource.data.granteeId is string
+        && request.resource.data.granteeId != request.auth.uid
+        && request.resource.data.expiresAt is string
+        && !isChild(request.auth.uid);
+      allow update: if false;
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.ownerId;
+    }
+
+    match /careerSnapshots/{snapshotId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.playerId;
+      allow create: if isSignedIn()
+        && request.auth.uid == request.resource.data.playerId
+        && request.resource.data.narrative.label == 'generated_from_records';
+      allow update, delete: if false;
+    }
+
+    match /coachRosters/{coachId} {
+      allow read: if isOwner(coachId);
+      allow create, update: if isOwner(coachId)
+        && tokenRole() == 'coach'
+        && request.resource.data.coachId == coachId
+        && (!('playerIds' in request.resource.data) || request.resource.data.playerIds is list);
+      allow delete: if isOwner(coachId) && tokenRole() == 'coach';
+    }
+
+    match /coachObservations/{observationId} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == resource.data.coachId || request.auth.uid == resource.data.playerId);
+      allow create: if isSignedIn()
+        && tokenRole() == 'coach'
+        && request.auth.uid == request.resource.data.coachId
+        && request.resource.data.provenance == 'coach_provided'
+        && request.resource.data.playerId is string
+        && !isChild(request.resource.data.playerId);
+      allow update: if isSignedIn()
+        && request.auth.uid == resource.data.coachId
+        && request.resource.data.coachId == resource.data.coachId
+        && request.resource.data.playerId == resource.data.playerId
+        && request.resource.data.provenance == 'coach_provided';
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.coachId;
+    }
+
+    match /reelExports/{exportId} {
+      allow read: if isSignedIn() && request.auth.uid == resource.data.ownerId;
+      allow write: if false;
+    }
+
+    // Server-only Apple / OAuth provider tokens (Admin SDK). Never client-accessible.
+    match /authProviderTokens/{userId} {
+      allow read, write: if false;
+    }
+  }
+}

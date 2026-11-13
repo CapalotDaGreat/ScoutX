@@ -39,5 +39,11 @@ export function themeColorsToCssVars(colors: ThemeColors): Record<string, string
     '--color-verification': colors.verification,
     '--color-achievement': colors.achievement,
     '--color-disabled': colors.disabled,
+    '--color-pitch': colors.pitch,
+    '--color-pitch-raised': colors.pitchRaised,
+    '--color-on-pitch': colors.onPitch,
+    '--color-on-pitch-muted': colors.onPitchMuted,
+    '--color-highlight': colors.highlight,
+    '--color-highlight-foreground': colors.highlightForeground,
   };
 }

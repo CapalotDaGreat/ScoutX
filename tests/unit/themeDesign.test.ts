@@ -29,10 +29,27 @@ describe('Next Era semantic theme', () => {
       }
     });
   }
-  it('panels stay compact without changing circular avatar tokens', () => {
+  it('Touchline geometry stays soft but bounded, with round avatars unchanged', () => {
     for (const [name, value] of Object.entries(radii)) {
-      assert.ok(name === 'full' || value <= 8);
+      assert.ok(name === 'full' || value <= 22);
     }
     assert.equal(radii.full, 9999);
   });
+
+  for (const [name, colors] of Object.entries({ light: lightColors, dark: darkColors })) {
+    it(`${name} pitch surface text and highlight pairs meet 4.5:1 contrast`, () => {
+      const pairs = [
+        [colors.onPitch, colors.pitch], [colors.onPitchMuted, colors.pitch],
+        [colors.onPitch, colors.pitchRaised], [colors.onPitchMuted, colors.pitchRaised],
+        [colors.highlight, colors.pitch], [colors.highlightForeground, colors.highlight],
+        [colors.accent, colors.accentMuted], [colors.textSecondary, colors.backgroundSecondary],
+      ];
+      for (const [foreground, background] of pairs) {
+        const a = luminance(foreground);
+        const b = luminance(background);
+        const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        assert.ok(ratio >= 4.5, `${foreground} on ${background}: ${ratio.toFixed(2)}:1`);
+      }
+    });
+  }
 });

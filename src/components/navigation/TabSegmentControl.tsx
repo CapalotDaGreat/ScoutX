@@ -27,7 +27,7 @@ export function TabSegmentControl<T extends string>({
   return (
     <View
       testID={testID}
-      className="mx-5 mb-4 flex-row rounded-lg border border-border bg-background-secondary p-1"
+      className="mx-5 mb-4 flex-row rounded-full bg-background-secondary p-1"
       style={{ backgroundColor: colors.backgroundSecondary }}
     >
       {segments.map((segment) => {
@@ -42,15 +42,15 @@ export function TabSegmentControl<T extends string>({
               onSegmentChange(segment.id);
             }}
             className={cn(
-              'min-h-[44px] flex-1 items-center justify-center rounded-xl px-3 py-2.5',
-              isActive && 'bg-primary',
+              'min-h-[44px] flex-1 items-center justify-center rounded-full px-3 py-2.5',
+              isActive && 'bg-surface',
             )}
-            style={isActive ? { backgroundColor: colors.primary } : undefined}
+            style={isActive ? { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border } : { borderWidth: 1, borderColor: 'transparent' }}
           >
             <Text
               variant="label"
               weight={isActive ? 'semibold' : 'medium'}
-              color={isActive ? 'onPrimary' : 'secondary'}
+              color={isActive ? 'primary' : 'secondary'}
               className="text-center"
             >
               {segment.label}

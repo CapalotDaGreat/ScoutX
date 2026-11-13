@@ -1,0 +1,3926 @@
+{
+ "project": "scoutx-230b0",
+ "capturedAt": "2026-11-13T12:36:41Z",
+ "redaction": "environment values are SHA-256 prefixes only; secrets are names and versions only; no secret value was read",
+ "functions": [
+  {
+   "name": "addExternalFootballSource",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:45.569793862Z",
+   "revision": "addexternalfootballsource-00004-nem",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "addExternalFootballSource/function-source.zip",
+   "sourceGeneration": "1791503498561870",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "0d340bfcfa48337e",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "20b452c8136d6885",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "analyzeMatchFootage",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:11.014223207Z",
+   "revision": "analyzematchfootage-00006-jij",
+   "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+   "runtime": "nodejs20",
+   "sourceObject": "analyzeMatchFootage/function-source.zip",
+   "sourceGeneration": "1791503536633946",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "1024Mi",
+   "timeoutSec": 300,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "3a3de4d8969cd6d8",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_TARGET": "b61260520442268e",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "OPENROUTER_API_KEY->OPENROUTER_API_KEY@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "analyzeMatchFrames",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:13.404050662Z",
+   "revision": "analyzematchframes-00006-guf",
+   "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+   "runtime": "nodejs20",
+   "sourceObject": "analyzeMatchFrames/function-source.zip",
+   "sourceGeneration": "1791503584501233",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "1024Mi",
+   "timeoutSec": 300,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "1997985d2d6e754a",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "908ea6dff0e5e917",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "OPENROUTER_API_KEY->OPENROUTER_API_KEY@1"
+   ],
+   "trigger": "taskQueue"
+  },
+  {
+   "name": "applyModerationAction",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:18.036140241Z",
+   "revision": "applymoderationaction-00007-fef",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "applyModerationAction/function-source.zip",
+   "sourceGeneration": "1792878123279162",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "48111ad3cecf75d3",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "cf96864f22781efe",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "askThisMatch",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:20.188358300Z",
+   "revision": "askthismatch-00006-luy",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "askThisMatch/function-source.zip",
+   "sourceGeneration": "1791503526290876",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "94da75c8ea9b29f8",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "d71991d52d5cbe44",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "buildDataExport",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:12.743340349Z",
+   "revision": "builddataexport-00007-tet",
+   "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+   "runtime": "nodejs20",
+   "sourceObject": "buildDataExport/function-source.zip",
+   "sourceGeneration": "1791503584672590",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "1024Mi",
+   "timeoutSec": 1800,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "00f0ddb41599e1b8",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "16fdb674581cdc07",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "taskQueue"
+  },
+  {
+   "name": "cancelMatchAnalysis",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:14.531380432Z",
+   "revision": "cancelmatchanalysis-00006-kit",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "cancelMatchAnalysis/function-source.zip",
+   "sourceGeneration": "1791503499327143",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "4f7e471880c96104",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "640d31ad26a1377d",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "cancelUploadSession",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:55.057659046Z",
+   "revision": "canceluploadsession-00006-pet",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "cancelUploadSession/function-source.zip",
+   "sourceGeneration": "1791503499088895",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "2cb55506befd87aa",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "aafaf01623dc3113",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "cleanupAbandonedUploads",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:46.587041590Z",
+   "revision": "cleanupabandoneduploads-00006-baw",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "cleanupAbandonedUploads/function-source.zip",
+   "sourceGeneration": "1791503499252746",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "7fc4641adac2f6f4",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "f10b92cdf0415979",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "scheduled"
+  },
+  {
+   "name": "confirmAnalysisIdentity",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:09.296143152Z",
+   "revision": "confirmanalysisidentity-00002-kam",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "confirmAnalysisIdentity/function-source.zip",
+   "sourceGeneration": "1791503499066724",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "da792bbe1961a4e2",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "a93f0822ffdec6df",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "confirmRole",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:08.323213595Z",
+   "revision": "confirmrole-00006-xuf",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "confirmRole/function-source.zip",
+   "sourceGeneration": "1791503499314449",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "91a4c9014cd79dc9",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "9db0278449aae981",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "createUploadSession",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:50.577057015Z",
+   "revision": "createuploadsession-00006-mam",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "createUploadSession/function-source.zip",
+   "sourceGeneration": "1791503499130381",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "0bf14de9c7b6715a",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "7e654d4738c09932",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "declareUploadChecksum",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:44.622614685Z",
+   "revision": "declareuploadchecksum-00001-dos",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "declareUploadChecksum/function-source.zip",
+   "sourceGeneration": "1791503497473417",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": null,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "954c6f6c7ec962b3",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "f2beaba8e17bc900",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "deleteAuthenticatedAccount",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:20.086044502Z",
+   "revision": "deleteauthenticatedaccount-00007-lad",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "deleteAuthenticatedAccount/function-source.zip",
+   "sourceGeneration": "1791503526765572",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 540,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "23e4edeac24efe32",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "363ae6308de1528e",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "APPLE_KEY_ID->APPLE_KEY_ID@2",
+    "APPLE_PRIVATE_KEY->APPLE_PRIVATE_KEY@2",
+    "APPLE_TEAM_ID->APPLE_TEAM_ID@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "exportReel",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:18.227345011Z",
+   "revision": "exportreel-00006-fax",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "exportReel/function-source.zip",
+   "sourceGeneration": "1791503526468774",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "f5295fef2e825888",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "f6b8d0006929c61d",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "extractMatchSegment",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:54:25.027825385Z",
+   "revision": "extractmatchsegment-00006-jon",
+   "build": "ac92d5b1-ab74-4370-828d-e2b19b219c04",
+   "runtime": "nodejs20",
+   "sourceObject": "extractMatchSegment/function-source.zip",
+   "sourceGeneration": "1791503657315778",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "2Gi",
+   "timeoutSec": 900,
+   "minInstances": 0,
+   "maxInstances": 10,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "ab1eef5443ac10a0",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "6b2e3456be6eaeff",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "taskQueue"
+  },
+  {
+   "name": "fulfillEvidenceRequest",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:11.876302443Z",
+   "revision": "fulfillevidencerequest-00006-zer",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "fulfillEvidenceRequest/function-source.zip",
+   "sourceGeneration": "1791503516858726",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "27897b4cbd772007",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "98e456dfb478e83b",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "generateAiInsight",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:46.666928001Z",
+   "revision": "generateaiinsight-00006-hey",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "generateAiInsight/function-source.zip",
+   "sourceGeneration": "1791503498315581",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "27384e4a150d4c35",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "18bb7c9eb4194658",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "OPENROUTER_API_KEY->OPENROUTER_API_KEY@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "generateHighlightReelPlan",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:13.975829421Z",
+   "revision": "generatehighlightreelplan-00006-tiv",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "generateHighlightReelPlan/function-source.zip",
+   "sourceGeneration": "1791503499144424",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "2cf0505d66039ffa",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "e0a6badec02905e0",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "getGuardianConsentRequest",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:55.878116494Z",
+   "revision": "getguardianconsentrequest-00006-dos",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "getGuardianConsentRequest/function-source.zip",
+   "sourceGeneration": "1791503498813993",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "7268e5868c5e8834",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "472938bc5646a489",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "GUARDIAN_LINK_SECRET->GUARDIAN_LINK_SECRET@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "getMediaPlaybackUrl",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:19.583769955Z",
+   "revision": "getmediaplaybackurl-00006-nod",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "getMediaPlaybackUrl/function-source.zip",
+   "sourceGeneration": "1791503526485601",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "bef14a7c86c75796",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "c3fcad070b3f3ebe",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "getUsageSummary",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:54:22.555981270Z",
+   "revision": "getusagesummary-00006-liv",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "getUsageSummary/function-source.zip",
+   "sourceGeneration": "1791503655477682",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "cd36c0e8ff320112",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "0334cb087a520022",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "listAdminReviewQueue",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:14.734343941Z",
+   "revision": "listadminreviewqueue-00006-joz",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "listAdminReviewQueue/function-source.zip",
+   "sourceGeneration": "1791503499153427",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "b5b2e3671f8ea213",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "b03b0bcb8a63d154",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "listModerationQueue",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:05.798594108Z",
+   "revision": "listmoderationqueue-00006-sem",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "listModerationQueue/function-source.zip",
+   "sourceGeneration": "1791503499433659",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "8bd97485e14ee909",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "b8eb80e3a6e2b7a2",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "mediaLifecycleSweep",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:11.688967929Z",
+   "revision": "medialifecyclesweep-00002-haj",
+   "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+   "runtime": "nodejs20",
+   "sourceObject": "mediaLifecycleSweep/function-source.zip",
+   "sourceGeneration": "1791503584656728",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "1024Mi",
+   "timeoutSec": 540,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "1e686f9523b13506",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "ed98841040c5b0d9",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "scheduled"
+  },
+  {
+   "name": "onActivityCreatedPush",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:21.927815434Z",
+   "revision": "onactivitycreatedpush-00006-fiv",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onActivityCreatedPush/function-source.zip",
+   "sourceGeneration": "1791503527086393",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "160938951f18efcd",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "9a3fc1692beff657",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.created",
+    "filters": [
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "activities/{activityId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onContentReportCreated",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:12.487108653Z",
+   "revision": "oncontentreportcreated-00007-nel",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "onContentReportCreated/function-source.zip",
+   "sourceGeneration": "1792878123388748",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "e52eea5b4e4bf49c",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "0009c534a4e6f02f",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.created",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "contentReports/{reportId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onDiscoverableSearchIndexWritten",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:27.642197741Z",
+   "revision": "ondiscoverablesearchindexwritten-00001-xez",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "onDiscoverableSearchIndexWritten/function-source.zip",
+   "sourceGeneration": "1792878043131310",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": null,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "917a82a3540288be",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "850580d0eec1ff1b",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "discoverablePlayers/{playerId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onFootballSourceWrittenReproject",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:09.779353494Z",
+   "revision": "onfootballsourcewrittenreproject-00004-bav",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onFootballSourceWrittenReproject/function-source.zip",
+   "sourceGeneration": "1791503499619277",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "900482a78aa1df41",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "6993f1c42166ceb2",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "players/{uid}/footballSources/{sourceId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onMatchAnalysisJobFinishedNotify",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:18.099102045Z",
+   "revision": "onmatchanalysisjobfinishednotify-00006-daz",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onMatchAnalysisJobFinishedNotify/function-source.zip",
+   "sourceGeneration": "1791503527239023",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "8448c77bdcf2510c",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "1a8ff2794305308b",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.updated",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "matchAnalysisJobs/{jobId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onMatchJobDeleted",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:58.282490898Z",
+   "revision": "onmatchjobdeleted-00002-vew",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onMatchJobDeleted/function-source.zip",
+   "sourceGeneration": "1791503499374069",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "8f7199bdadf0e4e3",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "80b4db141ec3c38d",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.deleted",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "matchAnalysisJobs/{jobId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onMatchJobMediaLifecycle",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:11.556826343Z",
+   "revision": "onmatchjobmedialifecycle-00002-rew",
+   "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+   "runtime": "nodejs20",
+   "sourceObject": "onMatchJobMediaLifecycle/function-source.zip",
+   "sourceGeneration": "1791503584623159",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "1024Mi",
+   "timeoutSec": 540,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "27429f25a577276a",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "e767f81823efe7f6",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.updated",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "matchAnalysisJobs/{jobId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onMediaWrittenReproject",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:10.373526250Z",
+   "revision": "onmediawrittenreproject-00007-muy",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "onMediaWrittenReproject/function-source.zip",
+   "sourceGeneration": "1792878123389232",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "cf19701ca0b9f5a1",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "e6c46d77571dcf76",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "players/{uid}/media/{mediaId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onPassportSummaryWrittenNotifyOwner",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:21.741843460Z",
+   "revision": "onpassportsummarywrittennotifyowner-00006-kem",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onPassportSummaryWrittenNotifyOwner/function-source.zip",
+   "sourceGeneration": "1791503527118420",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "c44673b069d23f4c",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "81566a357cfe1887",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "passportSummaries/{playerId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onPassportSummaryWrittenNotifyWatchers",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:07.958502355Z",
+   "revision": "onpassportsummarywrittennotifywatchers-00006-pic",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onPassportSummaryWrittenNotifyWatchers/function-source.zip",
+   "sourceGeneration": "1791503516603569",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "afc609ad554ba340",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "6525f8e4bb54167e",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "passportSummaries/{playerId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onPassportSummaryWrittenProjectDiscovery",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:10.629383384Z",
+   "revision": "onpassportsummarywrittenprojectdiscovery-00007-nek",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "onPassportSummaryWrittenProjectDiscovery/function-source.zip",
+   "sourceGeneration": "1792878123326859",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "ce18f26b92366ddd",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "e71208f7239bdf62",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "passportSummaries/{playerId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onProfileWrittenProjectDiscovery",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:12.288876825Z",
+   "revision": "onprofilewrittenprojectdiscovery-00007-som",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "onProfileWrittenProjectDiscovery/function-source.zip",
+   "sourceGeneration": "1792878123368312",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "0dade42e7899cc96",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "0c06085fb5586f28",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "profiles/{playerId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onProfileWrittenProjectPassport",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:04.195082911Z",
+   "revision": "onprofilewrittenprojectpassport-00006-gev",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onProfileWrittenProjectPassport/function-source.zip",
+   "sourceGeneration": "1791503507496295",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "36e4dbe850d36acf",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "219c8edbeab216bc",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "profiles/{playerId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onQuarantineObjectFinalized",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:52.651719685Z",
+   "revision": "onquarantineobjectfinalized-00006-jeh",
+   "build": "f402c31b-ebcd-4fdc-9f9b-26c540c18ee1",
+   "runtime": "nodejs20",
+   "sourceObject": "onQuarantineObjectFinalized/function-source.zip",
+   "sourceGeneration": "1791503577496176",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "4Gi",
+   "timeoutSec": 540,
+   "minInstances": 0,
+   "maxInstances": 10,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "3d89c7307eed7811",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "d42e4a86bd4ff748",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.storage.object.v1.finalized",
+    "filters": [
+     {
+      "attribute": "bucket",
+      "value": "scoutx-230b0.firebasestorage.app"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onRecruitmentEntryWritten",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:13.882038452Z",
+   "revision": "onrecruitmententrywritten-00006-duh",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onRecruitmentEntryWritten/function-source.zip",
+   "sourceGeneration": "1791503516546830",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "a7320460e59d1e25",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "afbaf4b9f83891d5",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "recruitmentWorkspaces/{scoutId}/entries/{playerId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onReelExportQueued",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:11.076660490Z",
+   "revision": "onreelexportqueued-00006-ley",
+   "build": "ac92d5b1-ab74-4370-828d-e2b19b219c04",
+   "runtime": "nodejs20",
+   "sourceObject": "onReelExportQueued/function-source.zip",
+   "sourceGeneration": "1791503537256256",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "2Gi",
+   "timeoutSec": 540,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "08ad45b792fb0748",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "cc9222c3a7be0576",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.created",
+    "filters": [
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "reelExports/{exportId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onTrialInvitationCreatedGuardian",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:14.740333668Z",
+   "revision": "ontrialinvitationcreatedguardian-00006-ray",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onTrialInvitationCreatedGuardian/function-source.zip",
+   "sourceGeneration": "1791503499515697",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "496aed81ca76b2e2",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "0f959822a52d4bfe",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "GUARDIAN_LINK_SECRET->GUARDIAN_LINK_SECRET@1"
+   ],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.created",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "trialInvitations/{trialId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onTrialInvitationCreatedNotify",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:54:17.906646121Z",
+   "revision": "ontrialinvitationcreatednotify-00006-yah",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onTrialInvitationCreatedNotify/function-source.zip",
+   "sourceGeneration": "1791503649660786",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "22d22e2627ab3eb5",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "1213aa5e0d211787",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.created",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "trialInvitations/{trialId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onTrialInvitationUpdatedGuardian",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:56.016177139Z",
+   "revision": "ontrialinvitationupdatedguardian-00006-qoj",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onTrialInvitationUpdatedGuardian/function-source.zip",
+   "sourceGeneration": "1791503499504658",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "2ef74c2cbf0d4703",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "c859dcac3e5c4ac4",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "GUARDIAN_LINK_SECRET->GUARDIAN_LINK_SECRET@1"
+   ],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.updated",
+    "filters": [
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "trialInvitations/{trialId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onTrialInvitationUpdatedNotify",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:56.667884310Z",
+   "revision": "ontrialinvitationupdatednotify-00006-dep",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onTrialInvitationUpdatedNotify/function-source.zip",
+   "sourceGeneration": "1791503569554635",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "f61499b850dc8154",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "06cec7b625c40f30",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.updated",
+    "filters": [
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "trialInvitations/{trialId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onTrustRecommendationCreatedNotify",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:02.361210791Z",
+   "revision": "ontrustrecommendationcreatednotify-00006-sev",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onTrustRecommendationCreatedNotify/function-source.zip",
+   "sourceGeneration": "1791503574251131",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "9272eaf089600d77",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "10e835a7ce1858be",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.created",
+    "filters": [
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "trustRecommendations/{recommendationId}"
+     },
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onUserSafetyWrittenReproject",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:12.969191591Z",
+   "revision": "onusersafetywrittenreproject-00007-kuf",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "onUserSafetyWrittenReproject/function-source.zip",
+   "sourceGeneration": "1792878123280581",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "b9bfca24b749e967",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "2eedb3eb63cbb25c",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "userSafety/{uid}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "onVerificationWrittenSyncTrust",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:15.416053046Z",
+   "revision": "onverificationwrittensynctrust-00006-suh",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "onVerificationWrittenSyncTrust/function-source.zip",
+   "sourceGeneration": "1791503526134049",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "54564c2f635385f2",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "cba5d05154e2b13b",
+    "FUNCTION_TARGET": "178f261ff85a7d22",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": {
+    "eventType": "google.cloud.firestore.document.v1.written",
+    "filters": [
+     {
+      "attribute": "database",
+      "value": "(default)"
+     },
+     {
+      "attribute": "namespace",
+      "value": "(default)"
+     },
+     {
+      "attribute": "document",
+      "operator": "match-path-pattern",
+      "value": "verificationStates/{stateId}"
+     }
+    ],
+    "retry": "RETRY_POLICY_DO_NOT_RETRY"
+   }
+  },
+  {
+   "name": "persistAppleAuthorizationCode",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:18.984043350Z",
+   "revision": "persistappleauthorizationcode-00007-von",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "persistAppleAuthorizationCode/function-source.zip",
+   "sourceGeneration": "1791503526862339",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "e81fcec0495aa315",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "bc457595f2aac3ac",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "APPLE_KEY_ID->APPLE_KEY_ID@2",
+    "APPLE_PRIVATE_KEY->APPLE_PRIVATE_KEY@2",
+    "APPLE_TEAM_ID->APPLE_TEAM_ID@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "purgeLegacyGpsLocation",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:55.925247289Z",
+   "revision": "purgelegacygpslocation-00006-jep",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "purgeLegacyGpsLocation/function-source.zip",
+   "sourceGeneration": "1791503498995847",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "67a4e90fbad1df1a",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "c46888063daaf328",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "recordConsent",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:18.440370259Z",
+   "revision": "recordconsent-00006-hud",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "recordConsent/function-source.zip",
+   "sourceGeneration": "1791503499614839",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "794d7e6a73dc89d5",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "8f6a6122a7f899bc",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "recordDiscoverableView",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:09.929793257Z",
+   "revision": "recorddiscoverableview-00007-pip",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "recordDiscoverableView/function-source.zip",
+   "sourceGeneration": "1792878123280872",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "4401e64b3a7b84c1",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "1fe7b11849d43051",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "recordPortfolioView",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:08.994587885Z",
+   "revision": "recordportfolioview-00006-mop",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "recordPortfolioView/function-source.zip",
+   "sourceGeneration": "1791503498772595",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "b928e743bfbaf5a1",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "d971c531e96f734a",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "recordVideoProcessingConsent",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:13.854570238Z",
+   "revision": "recordvideoprocessingconsent-00002-yig",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "recordVideoProcessingConsent/function-source.zip",
+   "sourceGeneration": "1791503498942979",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "43af13be949fef0f",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "f87cc891b4eb2a87",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "refreshPublicPassport",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:56.997612909Z",
+   "revision": "refreshpublicpassport-00006-wuh",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "refreshPublicPassport/function-source.zip",
+   "sourceGeneration": "1791503507566908",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "f2ef6ef4dc648dd6",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "7f6796fb9cab157a",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "releaseExpiredSuspensions",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:13.024484769Z",
+   "revision": "releaseexpiredsuspensions-00007-jac",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "releaseExpiredSuspensions/function-source.zip",
+   "sourceGeneration": "1792878123282164",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "82e0726011109067",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "dd920c8f844cb5db",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "scheduled"
+  },
+  {
+   "name": "removeExternalFootballSource",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:59.785461318Z",
+   "revision": "removeexternalfootballsource-00004-fud",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "removeExternalFootballSource/function-source.zip",
+   "sourceGeneration": "1791503499722181",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "37b054712a6a966c",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "ac1baa966862a271",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "requestDataExport",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:05.244900296Z",
+   "revision": "requestdataexport-00007-keb",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "requestDataExport/function-source.zip",
+   "sourceGeneration": "1791503577954956",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "d676cb4e1a9e8632",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "2d2155e383555c90",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "requestEvidence",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:14.746512383Z",
+   "revision": "requestevidence-00006-puv",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "requestEvidence/function-source.zip",
+   "sourceGeneration": "1791503524975329",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "7c56e7bdc4d0ec09",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "ad9a5c90a5cf8f3f",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "requestGuardianConsent",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:07.661958890Z",
+   "revision": "requestguardianconsent-00006-dos",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "requestGuardianConsent/function-source.zip",
+   "sourceGeneration": "1791503498587528",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "7178cd77e232f4f8",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "ca110e2699161def",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "GUARDIAN_LINK_SECRET->GUARDIAN_LINK_SECRET@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "resolveAppeal",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:12.646313343Z",
+   "revision": "resolveappeal-00007-dat",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "resolveAppeal/function-source.zip",
+   "sourceGeneration": "1792878123250866",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "8a2f85a31d90f7f7",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "78272c4b2518aef3",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "resolveVerificationRequest",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:13.753183324Z",
+   "revision": "resolveverificationrequest-00006-cab",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "resolveVerificationRequest/function-source.zip",
+   "sourceGeneration": "1791503499117447",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "1e16eb64220316d1",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "2f192c3dda3a865e",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "respondGuardianConsent",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:08.394026644Z",
+   "revision": "respondguardianconsent-00006-hek",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "respondGuardianConsent/function-source.zip",
+   "sourceGeneration": "1791503499303923",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 300,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "2fb818964ca67157",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "4c3b66aa6df75576",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "APPLE_KEY_ID->APPLE_KEY_ID@2",
+    "APPLE_PRIVATE_KEY->APPLE_PRIVATE_KEY@2",
+    "APPLE_TEAM_ID->APPLE_TEAM_ID@1",
+    "GUARDIAN_LINK_SECRET->GUARDIAN_LINK_SECRET@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "retentionCleanup",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:05.563831335Z",
+   "revision": "retentioncleanup-00006-joj",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "retentionCleanup/function-source.zip",
+   "sourceGeneration": "1791503578332447",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 540,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "856d716ac1f4d9dc",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "0eefce95b5c3b94d",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "APPLE_KEY_ID->APPLE_KEY_ID@2",
+    "APPLE_PRIVATE_KEY->APPLE_PRIVATE_KEY@2",
+    "APPLE_TEAM_ID->APPLE_TEAM_ID@1"
+   ],
+   "trigger": "scheduled"
+  },
+  {
+   "name": "revenueCatWebhook",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:54:23.537685225Z",
+   "revision": "revenuecatwebhook-00006-hed",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "revenueCatWebhook/function-source.zip",
+   "sourceGeneration": "1791503656078857",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 10,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "c092737df4b2d70a",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "a9c9fd9826090fbd",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "REVENUECAT_WEBHOOK_SECRET->REVENUECAT_WEBHOOK_SECRET@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "reviewMatchSegment",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:53.535729015Z",
+   "revision": "reviewmatchsegment-00002-mer",
+   "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+   "runtime": "nodejs20",
+   "sourceObject": "reviewMatchSegment/function-source.zip",
+   "sourceGeneration": "1791503624725193",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "1024Mi",
+   "timeoutSec": 900,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "1fd2a75ffc5f812f",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "1dba1ef530c868aa",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "OPENROUTER_API_KEY->OPENROUTER_API_KEY@1"
+   ],
+   "trigger": "taskQueue"
+  },
+  {
+   "name": "revokeGuardianConsent",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:05.486398464Z",
+   "revision": "revokeguardianconsent-00006-qit",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "revokeGuardianConsent/function-source.zip",
+   "sourceGeneration": "1791503499126972",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "531eb9414c9884c5",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "f8aa69c2666d76cc",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "revokeVideoProcessingConsent",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:09.845535749Z",
+   "revision": "revokevideoprocessingconsent-00002-taq",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "revokeVideoProcessingConsent/function-source.zip",
+   "sourceGeneration": "1791503499373423",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "9c5a7d58d4608257",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "74de8d868b04641c",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "saveReelToLibrary",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:22.095967933Z",
+   "revision": "savereeltolibrary-00006-fix",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "saveReelToLibrary/function-source.zip",
+   "sourceGeneration": "1791503526710554",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "981bc8384e138802",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "042d265598ec644d",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "scheduleWeeklyFootballReports",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:05.675539318Z",
+   "revision": "scheduleweeklyfootballreports-00006-mos",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "scheduleWeeklyFootballReports/function-source.zip",
+   "sourceGeneration": "1791503498690263",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "149ae3da30348a9e",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "73dddce91fbf2e2e",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "scheduled"
+  },
+  {
+   "name": "searchDiscoverablePlayers",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-24T21:42:10.480302960Z",
+   "revision": "searchdiscoverableplayers-00007-fur",
+   "build": "630dc902-5a80-49db-a46b-e9b96728d8c1",
+   "runtime": "nodejs20",
+   "sourceObject": "searchDiscoverablePlayers/function-source.zip",
+   "sourceGeneration": "1792878123304120",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "de0f708cf8e5e306",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "8e462a999a90b99e",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "sendDevelopmentReminders",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:04.285877585Z",
+   "revision": "senddevelopmentreminders-00007-gug",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "sendDevelopmentReminders/function-source.zip",
+   "sourceGeneration": "1791503576308426",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "ba71bd530f7cd9ce",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "01c0817a446e98f4",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "scheduled"
+  },
+  {
+   "name": "setAgeBand",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:13.860668810Z",
+   "revision": "setageband-00006-wuj",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "setAgeBand/function-source.zip",
+   "sourceGeneration": "1791503499555800",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "5c760c01aee5834a",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "adf7983d033920c0",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "setStaffRole",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:07.985211046Z",
+   "revision": "setstaffrole-00006-coy",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "setStaffRole/function-source.zip",
+   "sourceGeneration": "1791503498894725",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "0099d762f7d8b3ae",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "17a73f398f7e4d3d",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "ADMIN_USER_IDS->ADMIN_USER_IDS@1"
+   ],
+   "trigger": "https"
+  },
+  {
+   "name": "submitAnalysisCorrection",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:44.510717760Z",
+   "revision": "submitanalysiscorrection-00001-zeq",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "submitAnalysisCorrection/function-source.zip",
+   "sourceGeneration": "1791503438361877",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": null,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "48baae8b724af062",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_TARGET": "863e8a5172bbd763",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "submitAppeal",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:07.858578849Z",
+   "revision": "submitappeal-00006-gur",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "submitAppeal/function-source.zip",
+   "sourceGeneration": "1791503499914486",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "def05f6e5e9d8e72",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "3b9ffdf5712a6bef",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "submitPrivacyRequest",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:05.431534615Z",
+   "revision": "submitprivacyrequest-00006-sed",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "submitPrivacyRequest/function-source.zip",
+   "sourceGeneration": "1791503578160045",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "474e35e1a21442c3",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "a66197b7fa8b7ce4",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "submitPublicReport",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:51:59.983316649Z",
+   "revision": "submitpublicreport-00006-riy",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "submitPublicReport/function-source.zip",
+   "sourceGeneration": "1791503499392589",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "81b7e3490c80a225",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "272f127ff08c8103",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "synthesizeMatchReport",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:10.767383437Z",
+   "revision": "synthesizematchreport-00002-qop",
+   "build": "16ad208d-758a-426b-98bf-e3fa519dd624",
+   "runtime": "nodejs20",
+   "sourceObject": "synthesizeMatchReport/function-source.zip",
+   "sourceGeneration": "1791503584482661",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "1024Mi",
+   "timeoutSec": 300,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "8e5dd49329c3f4f4",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "2d48bcc24fa9ccd4",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [
+    "OPENROUTER_API_KEY->OPENROUTER_API_KEY@1"
+   ],
+   "trigger": "taskQueue"
+  },
+  {
+   "name": "updateExternalFootballSource",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:52:03.756631320Z",
+   "revision": "updateexternalfootballsource-00004-pas",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "updateExternalFootballSource/function-source.zip",
+   "sourceGeneration": "1791503499508882",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "2b410e7ea866d6eb",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "600acfead950d79d",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  },
+  {
+   "name": "updatePrivacyRequest",
+   "region": "europe-west6",
+   "generation": "GEN_2",
+   "state": "ACTIVE",
+   "updateTime": "2026-10-08T23:53:04.984798612Z",
+   "revision": "updateprivacyrequest-00006-beb",
+   "build": "0873e26a-13cc-491c-a9b5-e10fe2cbd378",
+   "runtime": "nodejs20",
+   "sourceObject": "updatePrivacyRequest/function-source.zip",
+   "sourceGeneration": "1791503578156175",
+   "serviceAccount": "141939766260-compute@developer.gserviceaccount.com",
+   "memory": "256Mi",
+   "timeoutSec": 60,
+   "minInstances": 0,
+   "maxInstances": 20,
+   "ingress": "ALLOW_ALL",
+   "envKeys": [
+    "EVENTARC_CLOUD_EVENT_SOURCE",
+    "FIREBASE_CONFIG",
+    "FUNCTION_REGION",
+    "FUNCTION_SIGNATURE_TYPE",
+    "FUNCTION_TARGET",
+    "GCLOUD_PROJECT",
+    "GUARDIAN_LINK_BASE_URL",
+    "LOG_EXECUTION_ID"
+   ],
+   "envValueSha256_16": {
+    "EVENTARC_CLOUD_EVENT_SOURCE": "31ffce8590b381bc",
+    "FIREBASE_CONFIG": "875ea1f0cbdd6f91",
+    "FUNCTION_REGION": "dd8986d20095ef0c",
+    "FUNCTION_SIGNATURE_TYPE": "e0603c499aae47eb",
+    "FUNCTION_TARGET": "8533b6b16824d44f",
+    "GCLOUD_PROJECT": "7c39752774dd3611",
+    "GUARDIAN_LINK_BASE_URL": "29c6479420cce303",
+    "LOG_EXECUTION_ID": "b5bea41b6c623f7c"
+   },
+   "secretRefs": [],
+   "trigger": "https"
+  }
+ ],
+ "taskQueues": [
+  {
+   "name": "analyzeMatchFrames",
+   "state": "RUNNING",
+   "rateLimits": {
+    "maxBurstSize": 100,
+    "maxConcurrentDispatches": 4,
+    "maxDispatchesPerSecond": 500.0
+   },
+   "retryConfig": {
+    "maxAttempts": 3,
+    "maxBackoff": "600s",
+    "maxDoublings": 16,
+    "minBackoff": "30s"
+   }
+  },
+  {
+   "name": "buildDataExport",
+   "state": "RUNNING",
+   "rateLimits": {
+    "maxBurstSize": 100,
+    "maxConcurrentDispatches": 5,
+    "maxDispatchesPerSecond": 500.0
+   },
+   "retryConfig": {
+    "maxAttempts": 3,
+    "maxBackoff": "3600s",
+    "maxDoublings": 16,
+    "minBackoff": "60s"
+   }
+  },
+  {
+   "name": "extractMatchSegment",
+   "state": "RUNNING",
+   "rateLimits": {
+    "maxBurstSize": 100,
+    "maxConcurrentDispatches": 6,
+    "maxDispatchesPerSecond": 500.0
+   },
+   "retryConfig": {
+    "maxAttempts": 3,
+    "maxBackoff": "600s",
+    "maxDoublings": 16,
+    "minBackoff": "30s"
+   }
+  },
+  {
+   "name": "reviewMatchSegment",
+   "state": "RUNNING",
+   "rateLimits": {
+    "maxBurstSize": 100,
+    "maxConcurrentDispatches": 6,
+    "maxDispatchesPerSecond": 500.0
+   },
+   "retryConfig": {
+    "maxAttempts": 3,
+    "maxBackoff": "600s",
+    "maxDoublings": 16,
+    "minBackoff": "30s"
+   }
+  },
+  {
+   "name": "synthesizeMatchReport",
+   "state": "RUNNING",
+   "rateLimits": {
+    "maxBurstSize": 100,
+    "maxConcurrentDispatches": 4,
+    "maxDispatchesPerSecond": 500.0
+   },
+   "retryConfig": {
+    "maxAttempts": 3,
+    "maxBackoff": "600s",
+    "maxDoublings": 16,
+    "minBackoff": "30s"
+   }
+  }
+ ],
+ "schedulerJobs": [
+  {
+   "name": "firebase-schedule-scheduleWeeklyFootballReports-europe-west6",
+   "schedule": "every monday 08:00",
+   "timeZone": "Europe/Zurich",
+   "state": "ENABLED",
+   "target": "https://scheduleweeklyfootballreports-wa67aoyclq-oa.a.run.app/"
+  },
+  {
+   "name": "firebase-schedule-cleanupAbandonedUploads-europe-west6",
+   "schedule": "every 24 hours",
+   "timeZone": "UTC",
+   "state": "ENABLED",
+   "target": "https://cleanupabandoneduploads-wa67aoyclq-oa.a.run.app/"
+  },
+  {
+   "name": "firebase-schedule-sendDevelopmentReminders-europe-west6",
+   "schedule": "every wednesday 17:00",
+   "timeZone": "Europe/Zurich",
+   "state": "ENABLED",
+   "target": "https://senddevelopmentreminders-wa67aoyclq-oa.a.run.app/"
+  },
+  {
+   "name": "firebase-schedule-releaseExpiredSuspensions-europe-west6",
+   "schedule": "every 60 minutes",
+   "timeZone": "UTC",
+   "state": "ENABLED",
+   "target": "https://releaseexpiredsuspensions-wa67aoyclq-oa.a.run.app/"
+  },
+  {
+   "name": "firebase-schedule-retentionCleanup-europe-west6",
+   "schedule": "every day 03:30",
+   "timeZone": "Europe/Zurich",
+   "state": "ENABLED",
+   "target": "https://europe-west6-scoutx-230b0.cloudfunctions.net/retentionCleanup"
+  },
+  {
+   "name": "firebase-schedule-mediaLifecycleSweep-europe-west6",
+   "schedule": "every 60 minutes",
+   "timeZone": "UTC",
+   "state": "ENABLED",
+   "target": "https://europe-west6-scoutx-230b0.cloudfunctions.net/mediaLifecycleSweep"
+  }
+ ],
+ "secrets": [
+  {
+   "secret": "ADMIN_USER_IDS",
+   "versions": [
+    {
+     "createTime": "2026-10-08T14:39:12.836517Z",
+     "name": "projects/141939766260/secrets/ADMIN_USER_IDS/versions/1",
+     "state": "ENABLED"
+    }
+   ]
+  },
+  {
+   "secret": "APPLE_KEY_ID",
+   "versions": [
+    {
+     "createTime": "2026-10-08T15:06:55.815925Z",
+     "name": "projects/141939766260/secrets/APPLE_KEY_ID/versions/2",
+     "state": "ENABLED"
+    },
+    {
+     "createTime": "2026-10-08T14:39:02.409418Z",
+     "name": "projects/141939766260/secrets/APPLE_KEY_ID/versions/1",
+     "state": "ENABLED"
+    }
+   ]
+  },
+  {
+   "secret": "APPLE_PRIVATE_KEY",
+   "versions": [
+    {
+     "createTime": "2026-10-08T15:07:04.952484Z",
+     "name": "projects/141939766260/secrets/APPLE_PRIVATE_KEY/versions/2",
+     "state": "ENABLED"
+    },
+    {
+     "createTime": "2026-10-08T14:40:02.392452Z",
+     "name": "projects/141939766260/secrets/APPLE_PRIVATE_KEY/versions/1",
+     "state": "ENABLED"
+    }
+   ]
+  },
+  {
+   "secret": "APPLE_TEAM_ID",
+   "versions": [
+    {
+     "createTime": "2026-10-08T14:39:52.161835Z",
+     "name": "projects/141939766260/secrets/APPLE_TEAM_ID/versions/1",
+     "state": "ENABLED"
+    }
+   ]
+  },
+  {
+   "secret": "GUARDIAN_LINK_SECRET",
+   "versions": [
+    {
+     "createTime": "2026-10-08T14:39:32.597498Z",
+     "name": "projects/141939766260/secrets/GUARDIAN_LINK_SECRET/versions/1",
+     "state": "ENABLED"
+    }
+   ]
+  },
+  {
+   "secret": "OPENROUTER_API_KEY",
+   "versions": [
+    {
+     "createTime": "2026-10-08T14:39:42.664594Z",
+     "name": "projects/141939766260/secrets/OPENROUTER_API_KEY/versions/1",
+     "state": "ENABLED"
+    }
+   ]
+  },
+  {
+   "secret": "REVENUECAT_WEBHOOK_SECRET",
+   "versions": [
+    {
+     "createTime": "2026-10-08T14:39:23.123410Z",
+     "name": "projects/141939766260/secrets/REVENUECAT_WEBHOOK_SECRET/versions/1",
+     "state": "ENABLED"
+    }
+   ]
+  }
+ ],
+ "firestoreIndexes": {
+  "count": 38,
+  "sha256_16": "57689f027bfe730b",
+  "states": [
+   "READY"
+  ]
+ },
+ "fieldOverrides": [
+  "playerId",
+  "scoutId"
+ ],
+ "rulesReleases": [
+  {
+   "name": "cloud.firestore",
+   "ruleset": "53848835-b606-4400-8d30-db87c6f18f65",
+   "updateTime": "2026-10-24T21:40:00.821348Z"
+  },
+  {
+   "name": "scoutx-230b0.firebasestorage.app",
+   "ruleset": "59463b10-557f-4ef9-952a-f9da0a6484e7",
+   "updateTime": "2026-10-08T23:50:33.066775Z"
+  }
+ ],
+ "appCheck": {
+  "appAttestConfig": {
+   "name": "projects/141939766260/apps/1:141939766260:ios:c23d6b9fe65e8a65bd3fa1/appAttestConfig",
+   "tokenTtl": "3600s"
+  },
+  "services": [
+   {
+    "name": "projects/141939766260/services/oauth2.googleapis.com",
+    "updateTime": "1970-01-01T00:00:00Z",
+    "etag": "\"KXGgKnvQgeRTWnc=\""
+   }
+  ]
+ }
+}

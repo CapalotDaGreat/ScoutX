@@ -11,6 +11,7 @@ import {
   Inter_600SemiBold,
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
+import { BarlowCondensed_600SemiBold, BarlowCondensed_700Bold } from '@expo-google-fonts/barlow-condensed';
 import { StatusBar } from 'expo-status-bar';
 import { LoadingScreen } from '@/components';
 import { RoleAwareAmbientBackdrop } from '@/components/layout/RoleAwareAmbientBackdrop';
@@ -45,6 +46,8 @@ function AppContent() {
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
+    BarlowCondensed_600SemiBold,
+    BarlowCondensed_700Bold,
   });
 
   if (!fontsLoaded) {

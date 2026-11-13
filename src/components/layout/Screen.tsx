@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 import {
+  Platform,
   RefreshControl,
   ScrollView,
   View,
@@ -57,6 +58,12 @@ export type ScreenProps = ScrollViewProps & {
   className?: string;
   contentClassName?: string;
 };
+
+/**
+ * On tablets and wide web windows the content keeps a readable column instead of stretching edge to edge.
+ * Phones are narrower than this, so nothing changes there.
+ */
+const READABLE_COLUMN = { width: '100%', maxWidth: 760, alignSelf: 'center' } as const;
 
 export function Screen({
   children,
@@ -153,7 +160,7 @@ export function Screen({
       ) : null}
 
       {hasHeaderChrome ? (
-        <View className={cn('mb-5 overflow-visible border-b border-divider pb-4', padded && 'px-5')}>
+        <View className={cn('mb-4 overflow-visible pb-1 pt-2', padded && 'px-5')} style={READABLE_COLUMN}>
           {header ? (
             <View className="overflow-visible">{header}</View>
           ) : (
@@ -165,7 +172,7 @@ export function Screen({
                 <View className="min-w-0 flex-1">
                   {title ? <Heading level={1}>{title}</Heading> : null}
                   {subtitle ? (
-                    <Text variant="body-sm" color="secondary" className="mt-1.5 leading-5">
+                    <Text variant="body-sm" color="secondary" className="mt-1 leading-5">
                       {subtitle}
                     </Text>
                   ) : null}
@@ -183,23 +190,27 @@ export function Screen({
         </View>
       ) : null}
 
-      <View className={cn('flex-1', padded && 'px-5', contentClassName)}>
+      <View className={cn('flex-1', padded && 'px-5', contentClassName)} style={READABLE_COLUMN}>
         {renderContent()}
       </View>
 
-      {footer ? (
-        <View
-          className="border-t border-divider bg-background px-5 pt-4"
-          style={{
-            backgroundColor: colors.background,
-            paddingBottom: Math.max(insets.bottom, 16),
-          }}
-        >
-          {footer}
-        </View>
-      ) : null}
     </>
   );
+
+  // The footer (Back on pushed screens) is pinned under the scrolling content. It used to scroll
+  // with it, so Back sat at the very end of long pages and moved while the page was still loading.
+  const footerNode = footer ? (
+        <View
+          className="border-t border-divider bg-background px-5 pt-3"
+          style={{
+            backgroundColor: colors.background,
+            // The root view already pads the bottom safe area when this screen owns that edge.
+            paddingBottom: 12,
+          }}
+        >
+          <View style={READABLE_COLUMN}>{footer}</View>
+        </View>
+  ) : null;
 
   const safeAreaStyle = safeArea ? getSafeAreaPadding(insets, resolvedSafeAreaEdges) : undefined;
 
@@ -215,6 +226,7 @@ export function Screen({
         style={rootStyle}
       >
         {body}
+        {footerNode}
       </View>
     );
   }
@@ -225,6 +237,9 @@ export function Screen({
       style={rootStyle}
     >
       <ScrollView
+        // Web: the scroller is a keyboard stop of its own, so screens whose content has no focusable control
+        // (Plan and usage without store products, error and empty states) can still be scrolled with the keyboard.
+        focusable={Platform.OS === 'web'}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: scrollBottomPadding }}
@@ -242,6 +257,7 @@ export function Screen({
       >
         {body}
       </ScrollView>
+      {footerNode}
     </View>
   );
 }

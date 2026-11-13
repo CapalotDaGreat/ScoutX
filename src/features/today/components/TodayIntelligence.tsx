@@ -148,9 +148,9 @@ export function SinceLastVisitCard({
   return (
     <Card variant="default" padding="md" className="gap-3">
       <View className="flex-row items-center justify-between gap-2">
-        <View className="flex-row items-center gap-2">
+        <View className="min-w-0 flex-1 flex-row items-center gap-2">
           <History size={16} color={colors.textSecondary} />
-          <Text variant="label" weight="semibold" accessibilityRole="header">
+          <Text variant="label" weight="semibold" accessibilityRole="header" className="min-w-0 flex-1">
             {t('portfolio:today.changes.title')}
           </Text>
         </View>

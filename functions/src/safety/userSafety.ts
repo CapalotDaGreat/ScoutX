@@ -153,7 +153,7 @@ export function guardianEmail(kind: GuardianEmailKind, input: {
       'Messages stay inside PitchProof. If anything seems wrong, you can withdraw scout contact using the link in your consent confirmation email.',
     );
   }
-  paragraphs.push('PitchProof is provided by CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland.');
+  paragraphs.push('PitchProof is provided by Lusiola Software, Höglerstrasse 55, 8600 Dübendorf, Switzerland.');
   return {
     subject,
     text: paragraphs.join('\n\n'),
