@@ -718,6 +718,26 @@ The two skips are the known native-only cases. The analysis safeguards, threshol
 `git diff 01f9459 <candidate> -- workers firestore.rules storage.rules` is empty. Automatic analysis was not enabled. The
 export/privacy checks are in the browser suites and the gate.
 
+## 22. Merge, push and integration outcomes (2026-11-13, 22:40 local)
+
+| Step | Result |
+|---|---|
+| Remote tips rechecked immediately before | release `01f9459c2608bc939c96f5c7388b5e5ba98aac2d`, main `c7349d55376e1ace0a3ce67eae11785952160c24` (unchanged) |
+| Final candidate | `ebfb17c7bdaefcf14b7b83bb803caf6b60e9acf1`, tree `d2c6d17f56231b1a69d38389f033150784b26d8a`, published as `integration/redesign-into-5-3-r9`; differs from the code-frozen, fully checked `0e5ba28` only in `docs/` (ledger 21, packet) |
+| GIT-1: release branch | **fast-forwarded** `01f9459..ebfb17c` by a plain push (no force); `git ls-remote` confirms `ebfb17c…` |
+| main | main was an ancestor with 0 main-only commits, so it was **fast-forwarded** `c7349d5..ebfb17c` by a plain push; the main tree is the release tree, so the release checks apply unchanged |
+| This ledger entry | one docs-only commit on top of `ebfb17c`, pushed as a fast-forward to both branches; its SHA is the final release and main SHA (see the hand-off) |
+| GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` | unchanged; still an ancestor of main, release and `codex/gpu-benchmark-5-3` (not pushed to) |
+| Primary workspace `C:\ZLI\M335\ScoutX` | **not updated**: only its `.local` subfolder is connected to this session and the folder-access request went unanswered. Exact safe owner commands: packet, "Successor candidate and owner procedures" |
+| Native builds | **not started**: `api.expo.dev` is still blocked from this workspace (proxy 403), and the Expo connector needs a GitHub repository linked to the project. The last iOS build is still 1.0.0 (4) at `6679226` (2026-10-22) |
+
+Still open and unchanged by the merge: counsel review (B-03), backups, independent review, AUTH-1 console step
+(`CONFIGURATION_NOT_FOUND`), BE-5 guardian-email redeploy (B-24), B-21, B-25, App Check probe 4.1 from the owner's network,
+device protocol rows L13 to L15, translation review, App Store Connect seller and copyright fields. Merging into main does
+**not** make the app ready for public release.
+
+**NO BUILD WAS UPLOADED OR SUBMITTED TO APP STORE CONNECT OR TESTFLIGHT.**
+
 ## 12. Exact remaining actions
 
 1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.
