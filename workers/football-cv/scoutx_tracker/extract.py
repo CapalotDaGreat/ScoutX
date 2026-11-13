@@ -32,7 +32,7 @@ import numpy as np
 from .cmc import CameraMotion, scene_cut
 from .features import EMB_DIM, SIG_DIM, GridEmbedder, colour_signature, warm_fraction
 from .frame_reader import CaptureReader
-from .periods import grass_fraction
+from .periods import grass_fraction_small
 
 PERSON, BALL = 0, 32
 
@@ -188,9 +188,11 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
             fi += 1
             times.append(t)
             _t = time.perf_counter()
-            grass.append(grass_fraction(frame))
-            small = last_small[0] if last_small[0] is not None and propagated else \
-                cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
+            # 2026-11-14: one 160x90 INTER_AREA thumbnail serves the grass share and the scene-cut test (they resized the
+            # full frame twice). Same pixels, bit-identical grass/cuts/warps (bench/camera_state_profile.py).
+            thumb = cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA)
+            grass.append(grass_fraction_small(thumb))
+            small = last_small[0] if last_small[0] is not None and propagated else cv2.cvtColor(thumb, cv2.COLOR_BGR2HSV)
             if scene_cut(prev_small, small):
                 cuts.append(fi)
                 cmc.reset()

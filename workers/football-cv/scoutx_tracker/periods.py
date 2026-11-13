@@ -22,7 +22,13 @@ NON_FOOTBALL, CLOSE_UP, PLAY_VIEW = "NON_FOOTBALL", "CLOSE_UP", "PLAY_VIEW"
 
 def grass_fraction(frame_bgr: np.ndarray) -> float:
     """Share of pitch-green pixels in a downscaled frame (lower 3/4, the sky is ignored)."""
-    small = cv2.resize(frame_bgr, (160, 90), interpolation=cv2.INTER_AREA)[22:]
+    return grass_fraction_small(cv2.resize(frame_bgr, (160, 90), interpolation=cv2.INTER_AREA))
+
+
+def grass_fraction_small(thumb_bgr: np.ndarray) -> float:
+    """grass_fraction of an already downscaled 160x90 BGR thumbnail (2026-11-14: lets stage 1 resize each frame
+    to 160x90 once for both this and the scene-cut test; same pixels, same result)."""
+    small = thumb_bgr[22:]
     hsv = cv2.cvtColor(small, cv2.COLOR_BGR2HSV)
     h, s, v = hsv[..., 0], hsv[..., 1], hsv[..., 2]
     return float(((h >= 30) & (h < 90) & (s >= 50) & (v >= 40)).mean())
