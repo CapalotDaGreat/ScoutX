@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Browser, type Page } from '@playwright/test';
 import {
   acceptLegalGate,
   accounts,
@@ -41,6 +41,28 @@ async function clippedElements(page: Page): Promise<string[]> {
     }
     return found.slice(0, 5);
   });
+}
+
+/** Registers a fresh adult player through the app and returns its email and uid. */
+async function registerThrowawayPlayer(browser: Browser, label: string): Promise<{ email: string; uid: string }> {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  const email = `${label}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@e2e.scoutx.test`;
+  await openRegister(page);
+  await page.getByLabel('Full name').fill(`E2E ${label}`);
+  await page.getByLabel('Email', { exact: true }).fill(email);
+  await page.getByLabel('Password', { exact: true }).fill(accounts.password);
+  await page.getByLabel('Confirm password').fill(accounts.password);
+  await page.getByRole('button', { name: 'Create account' }).click();
+  await passAgeGateAsAdult(page);
+  await acceptLegalGate(page);
+  await page.getByRole('button', { name: /^Player / }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await expect(page.getByRole('heading', { name: `E2E ${label}` })).toBeVisible({ timeout: 30_000 });
+  const users = await queryCollection('users', 'email', email);
+  expect(users).toHaveLength(1);
+  await context.close();
+  return { email, uid: users[0].id };
 }
 
 test.describe.serial('States and content extremes', () => {
@@ -249,13 +271,13 @@ test.describe('Session states', () => {
     await context.close();
   });
   test('B-23: an expired or revoked session gets one replacement guest and no stale state; a refresh outage keeps the session', async ({ browser }) => {
-    expect(longNameEmail, 'set by the long-name test').not.toBe('');
-    // Controlled emulator fixture: the throwaway long-name account is disabled for this test and enabled again afterwards.
+    // Controlled emulator fixture: a throwaway player of this test's own, disabled during the test and enabled again afterwards.
+    const { email: expiryEmail, uid: expiryUid } = await registerThrowawayPlayer(browser, 'expiry');
     const setDisabled = async (disableUser: boolean) => {
       const response = await fetch(`http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/projects/${accounts.projectId}/accounts:update`, {
         method: 'POST',
         headers: { Authorization: 'Bearer owner', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ localId: longNameUid, disableUser }),
+        body: JSON.stringify({ localId: expiryUid, disableUser }),
       });
       expect(response.ok).toBe(true);
     };
@@ -271,10 +293,10 @@ test.describe('Session states', () => {
     page.on('response', (response) => {
       if (response.url().includes('securetoken.googleapis.com')) refreshStatuses.push(response.status());
     });
-    await signIn(page, longNameEmail);
+    await signIn(page, expiryEmail);
     await page.goto('/player/settings');
     await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
-    await expect(page.getByText(longNameEmail).first()).toBeVisible();
+    await expect(page.getByText(expiryEmail).first()).toBeVisible();
     await expect(page.getByTestId('youth-gate-loading')).toHaveCount(0, { timeout: 30_000 });
 
     // 1. The token expires while the refresh endpoint is unreachable: the session must survive, and no guest appears.
@@ -283,7 +305,7 @@ test.describe('Session states', () => {
     await page.clock.fastForward('01:05:00');
     await page.waitForTimeout(5_000);
     expect(guestSignUps - before, 'a refresh outage is not a sign-out').toBe(0);
-    await expect(page.getByText(longNameEmail).first()).toBeVisible();
+    await expect(page.getByText(expiryEmail).first()).toBeVisible();
     await context.unroute('**/securetoken.googleapis.com/**');
 
     // 2. The account is revoked and its token expires with Settings open: exactly one guest replaces it.
@@ -295,14 +317,14 @@ test.describe('Session states', () => {
       expect(refreshStatuses.some((status) => status === 400), 'the emulator refused the refresh').toBe(true);
       await page.waitForTimeout(3_000);
       expect(guestSignUps - before).toBe(1);
-      await expect(page.getByText(longNameEmail)).toHaveCount(0, { timeout: 30_000 });
+      await expect(page.getByText(expiryEmail)).toHaveCount(0, { timeout: 30_000 });
 
       // 3. Signing in to another account afterwards shows only that account.
       await signIn(page, accounts.scout.email);
       await page.goto('/scout/settings');
       await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
       await expect(page.getByText(accounts.scout.email).first()).toBeVisible();
-      await expect(page.getByText(longNameEmail)).toHaveCount(0);
+      await expect(page.getByText(expiryEmail)).toHaveCount(0);
       expect(errors).toEqual([]);
     } finally {
       await setDisabled(false);
