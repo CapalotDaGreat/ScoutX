@@ -25,12 +25,19 @@ def test_tap_inside_one_player_resolves():
     assert locate_points(summary, rows, by_tid, [(10.0, 120, 150)]) == [(0, "inside")]
 
 
-def test_tap_on_two_overlapping_players_is_ambiguous_not_the_nearer_one():
+def test_tap_between_two_overlapping_players_is_ambiguous_not_the_nearer_one():
     summary, rows, by_tid = _setup({1: (100, 100, 160, 250), 2: (130, 110, 190, 260)})
-    # inside both boxes, closer to player 1's centre: the old locator chose player 1
-    (k, why), = locate_points(summary, rows, by_tid, [(10.0, 140, 160)])
+    # inside both boxes, only slightly closer to player 1's centre: the old locator chose player 1
+    (k, why), = locate_points(summary, rows, by_tid, [(10.0, 142, 180)])
     assert k is None and why.startswith("ambiguous")
-    assert locate(summary, rows, by_tid, [(10.0, 140, 160)]) == []
+    assert locate(summary, rows, by_tid, [(10.0, 142, 180)]) == []
+
+
+def test_answer_at_the_centre_of_an_overlapping_box_still_resolves():
+    # a review answer points at the centre of the box it asked about
+    summary, rows, by_tid = _setup({1: (100, 100, 160, 250), 2: (130, 110, 190, 260)})
+    (k, why), = locate_points(summary, rows, by_tid, [(10.0, 160, 185)])
+    assert k == 1 and "nearest of overlapping" in why
 
 
 def test_inner_box_wins_over_a_padded_neighbour():

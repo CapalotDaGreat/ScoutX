@@ -116,9 +116,9 @@ def locate_points(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -
     """2026-11-14: map each (t, x, y) user point to ONE tracklet, or to None with the reason.
 
     A point resolves only when exactly one tracklet's own box (no padding) contains it at that moment, or, if no
-    box contains it, exactly one padded box does. Two players whose boxes both contain the tap (overlap, a duel,
-    one behind the other) make the answer ambiguous: it is not applied, so a tap can never silently pick the
-    nearer of two players. One result per input point, in order, so callers never misalign points and tracklets."""
+    box contains it, exactly one padded box does. When several players' boxes contain it (overlap, a duel, one
+    behind the other) it resolves only if it is clearly nearer one player's centre (at most half the distance of the
+    next); otherwise the answer is ambiguous and not applied. One result per input point, in order, so callers never misalign points and tracklets."""
     out: list[tuple[int | None, str]] = []
     for t, x, y in points:
         inner, padded = [], []
@@ -139,10 +139,24 @@ def locate_points(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -
         if len(hits) == 1:
             out.append((hits[0], "inside" if inner else "near"))
         elif hits:
-            out.append((None, f"ambiguous: {len(hits)} players at the tap"))
+            # Several players contain the point. Keep it only when it sits clearly on one of them: the nearest centre
+            # (distance in box heights) at most half as far as the next. A review answer points at the centre of the
+            # asked box, so it stays resolvable; a tap between two overlapping players does not.
+            d = sorted((centre_distance(rows, by_tid, summary[k], t, x, y), k) for k in hits)
+            if d[0][0] <= 0.5 * d[1][0]:
+                out.append((d[0][1], "inside, nearest of overlapping players" if inner else "near, nearest of overlapping players"))
+            else:
+                out.append((None, f"ambiguous: {len(hits)} players at the tap"))
         else:
             out.append((None, "no player at the tap"))
     return out
+
+
+def centre_distance(rows: np.ndarray, by_tid: dict, s: dict, t: float, x: float, y: float) -> float:
+    ix = by_tid[s["tid"]]
+    r = rows[ix[np.argmin(np.abs(rows[ix, 1] - t))]]
+    x1, y1, x2, y2 = r[3:7]
+    return float(np.hypot((x1 + x2) / 2 - x, (y1 + y2) / 2 - y) / max(y2 - y1, 1))
 
 
 def locate(summary: list[dict], rows: np.ndarray, by_tid: dict, points) -> list[int]:
