@@ -630,7 +630,12 @@
       "done": "All checks done - thank you!",
       "undo": "Undo last answer",
       "error": "Could not save your answer. Please try again.",
-      "privacy": "Answers only change this match's analysis. They are never used to train models."
+      "privacy": "Answers only change this match's analysis. They are never used to train models.",
+      "unresolved": {
+        "ambiguous": "{{count}} answer(s) could not be used: at {{time}} two players overlapped where you answered. Answer another moment where you stand clear.",
+        "no_player": "{{count}} answer(s) could not be used: at {{time}} no player was found where you answered. Answer another moment.",
+        "excluded": "{{count}} answer(s) could not be used: at {{time}} a different shirt number was read on that player. Check the moment, or answer another one."
+      }
     },
     "import": {
       "title": "Import from a link",

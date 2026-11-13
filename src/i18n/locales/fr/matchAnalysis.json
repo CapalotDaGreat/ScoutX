@@ -630,7 +630,12 @@
       "done": "Tout est vérifié - merci !",
       "undo": "Annuler la dernière réponse",
       "error": "Impossible d'enregistrer ta réponse. Réessaie.",
-      "privacy": "Les réponses ne modifient que l'analyse de ce match. Elles ne servent jamais à entraîner des modèles."
+      "privacy": "Les réponses ne modifient que l'analyse de ce match. Elles ne servent jamais à entraîner des modèles.",
+      "unresolved": {
+        "ambiguous": "{{count}} réponse(s) inutilisable(s) : à {{time}}, deux joueurs se chevauchaient à cet endroit. Réponds à un moment où tu es bien visible seul.",
+        "no_player": "{{count}} réponse(s) inutilisable(s) : à {{time}}, aucun joueur n’a été trouvé à cet endroit. Réponds à un autre moment.",
+        "excluded": "{{count}} réponse(s) inutilisable(s) : à {{time}}, un autre numéro a été lu sur ce joueur. Vérifie le moment ou réponds à un autre."
+      }
     },
     "import": {
       "title": "Importer depuis un lien",

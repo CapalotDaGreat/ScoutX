@@ -26,7 +26,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 JOB = re.compile(r"^[A-Za-z0-9_-]{1,80}$")
 TARGET_ONLY_KEYS = ("schema", "engine", "target", "timeline", "coverage", "identity", "physical", "ball", "events",
-                    "reviewQuestions", "invariants", "heatmap", "analysedRange", "videoSize", "offball")
+                    "reviewQuestions", "invariants", "heatmap", "analysedRange", "videoSize", "offball", "anchorResolution")
 MOMENT_KEYS = ("id", "kind", "kinds", "start", "end", "clipStart", "clipEnd", "identityState", "candidate", "outcome",
                "indicator")
 MAX_MOMENT_THUMBS = 40

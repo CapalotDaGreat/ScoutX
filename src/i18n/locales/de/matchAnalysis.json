@@ -630,7 +630,12 @@
       "done": "Alles geprüft - danke!",
       "undo": "Letzte Antwort rückgängig",
       "error": "Deine Antwort konnte nicht gespeichert werden. Bitte versuche es erneut.",
-      "privacy": "Antworten ändern nur die Analyse dieses Spiels. Sie werden nie zum Trainieren von Modellen verwendet."
+      "privacy": "Antworten ändern nur die Analyse dieses Spiels. Sie werden nie zum Trainieren von Modellen verwendet.",
+      "unresolved": {
+        "ambiguous": "{{count}} Antwort(en) konnten nicht verwendet werden: Um {{time}} überlappten sich dort zwei Spieler. Beantworte einen Moment, in dem du frei stehst.",
+        "no_player": "{{count}} Antwort(en) konnten nicht verwendet werden: Um {{time}} wurde dort kein Spieler gefunden. Beantworte einen anderen Moment.",
+        "excluded": "{{count}} Antwort(en) konnten nicht verwendet werden: Um {{time}} wurde bei diesem Spieler eine andere Rückennummer gelesen. Prüfe den Moment oder beantworte einen anderen."
+      }
     },
     "import": {
       "title": "Über einen Link importieren",

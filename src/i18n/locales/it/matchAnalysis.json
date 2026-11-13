@@ -630,7 +630,12 @@
       "done": "Tutto controllato - grazie!",
       "undo": "Annulla l'ultima risposta",
       "error": "Impossibile salvare la risposta. Riprova.",
-      "privacy": "Le risposte cambiano solo l'analisi di questa partita. Non vengono mai usate per addestrare modelli."
+      "privacy": "Le risposte cambiano solo l'analisi di questa partita. Non vengono mai usate per addestrare modelli.",
+      "unresolved": {
+        "ambiguous": "{{count}} risposta/e non utilizzabile/i: a {{time}} due giocatori si sovrapponevano dove hai risposto. Rispondi a un momento in cui sei ben distinto.",
+        "no_player": "{{count}} risposta/e non utilizzabile/i: a {{time}} non è stato trovato alcun giocatore dove hai risposto. Rispondi a un altro momento.",
+        "excluded": "{{count}} risposta/e non utilizzabile/i: a {{time}} su quel giocatore è stato letto un altro numero. Controlla il momento o rispondi a un altro."
+      }
     },
     "import": {
       "title": "Importa da un link",

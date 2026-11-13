@@ -69,7 +69,8 @@ export function TrackingReviewDeck({ jobId, report, updating }: TrackingReviewDe
     },
   })).current;
 
-  if (report.reviewQuestions.length === 0) return null;
+  const unresolved = report.unresolvedAnswers ?? [];
+  if (report.reviewQuestions.length === 0 && unresolved.length === 0) return null;
   const rotate = pan.x.interpolate({ inputRange: [-200, 0, 200], outputRange: ['-8deg', '0deg', '8deg'] });
 
   return (
@@ -77,6 +78,11 @@ export function TrackingReviewDeck({ jobId, report, updating }: TrackingReviewDe
       <Heading level={3}>{t('tracking.review.title')}</Heading>
       <Text color="secondary" variant="caption">{t('tracking.review.subtitle')}</Text>
       {updating ? <Text color="warning" variant="caption">{t('tracking.review.updating')}</Text> : null}
+      {unresolved.length > 0 ? (
+        <Text color="warning" variant="caption" testID="tracking-unresolved-answers">
+          {t(`tracking.review.unresolved.${unresolved[0].status}`, { count: unresolved.length, time: formatClock(unresolved[0].t) })}
+        </Text>
+      ) : null}
       {question ? (
         <>
           <Animated.View

@@ -564,11 +564,12 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
                           "parts": len(D.sources)},
         "tracklets": tracklets,
         "reviewQuestions": res.questions,
-        # 2026-11-14: what each "this is me" answer resolved to, so an ambiguous tap can be asked again instead of
-        # silently attaching to the nearer of two overlapping players.
-        "anchorResolution": [{"t": a["t"], "applied": a["tracklet"] is not None and not a["reason"].startswith("excluded"),
-                              "tid": T.summary[a["tracklet"]]["tid"] if a["tracklet"] is not None else None,
-                              "reason": a["reason"]} for a in res.anchor_resolution],
+        # 2026-11-14: what each "this is me" answer resolved to (target-only: no tracklet ids), so an answer that matched
+        # no player, two overlapping players, or a player excluded by another number can be asked again.
+        "anchorResolution": [{"t": round(a["t"], 2), "status": "excluded" if a["reason"].startswith("excluded")
+                              else "applied" if a["tracklet"] is not None
+                              else "ambiguous" if a["reason"].startswith("ambiguous") else "no_player"}
+                             for a in res.anchor_resolution],
         "referenceCrop": reference,
         "excluded": [{"tid": T.summary[k]["tid"], "t0": T.summary[k]["t0"], "t1": T.summary[k]["t1"], "why": why}
                      for k, why in res.excluded.items()],

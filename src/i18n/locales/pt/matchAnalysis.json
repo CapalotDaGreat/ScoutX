@@ -630,7 +630,12 @@
       "done": "Tudo verificado - obrigado!",
       "undo": "Anular a última resposta",
       "error": "Não foi possível guardar a resposta. Tenta novamente.",
-      "privacy": "As respostas só alteram a análise deste jogo. Nunca são usadas para treinar modelos."
+      "privacy": "As respostas só alteram a análise deste jogo. Nunca são usadas para treinar modelos.",
+      "unresolved": {
+        "ambiguous": "{{count}} resposta(s) não puderam ser usadas: às {{time}} dois jogadores estavam sobrepostos onde respondeste. Responde a outro momento em que estejas isolado.",
+        "no_player": "{{count}} resposta(s) não puderam ser usadas: às {{time}} não foi encontrado nenhum jogador onde respondeste. Responde a outro momento.",
+        "excluded": "{{count}} resposta(s) não puderam ser usadas: às {{time}} foi lido outro número nesse jogador. Verifica o momento ou responde a outro."
+      }
     },
     "import": {
       "title": "Importar de um link",

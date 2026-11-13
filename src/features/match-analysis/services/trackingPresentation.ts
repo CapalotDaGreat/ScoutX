@@ -36,6 +36,8 @@ export type TrackingReport = {
   events: Array<{ type: 'contact' | 'carry' | 'pass_attempt' | 'duel_candidate' | 'tackle_candidate'; candidate?: true; start: number; end: number; identityState: TrackingIdentityState;
     outcome?: 'completed' | 'incomplete' | 'unknown' }>;
   reviewQuestions: TrackingQuestion[];
+  /** Identity answers the analysis could not apply (no player there, two overlapping players, another number). */
+  unresolvedAnswers?: Array<{ t: number; status: 'ambiguous' | 'no_player' | 'excluded' }>;
   identity: { numberSightings: number; confirmedByUser: number };
   heatmap: { status: 'observed_only' | 'unavailable'; reason?: string };
   referenceImagePath?: string | null;

@@ -630,7 +630,12 @@
       "done": "Alles gecontroleerd - bedankt!",
       "undo": "Laatste antwoord ongedaan maken",
       "error": "Je antwoord kon niet worden opgeslagen. Probeer het opnieuw.",
-      "privacy": "Antwoorden veranderen alleen de analyse van deze wedstrijd. Ze worden nooit gebruikt om modellen te trainen."
+      "privacy": "Antwoorden veranderen alleen de analyse van deze wedstrijd. Ze worden nooit gebruikt om modellen te trainen.",
+      "unresolved": {
+        "ambiguous": "{{count}} antwoord(en) konden niet worden gebruikt: om {{time}} overlapten daar twee spelers. Beantwoord een moment waarop je vrij staat.",
+        "no_player": "{{count}} antwoord(en) konden niet worden gebruikt: om {{time}} werd daar geen speler gevonden. Beantwoord een ander moment.",
+        "excluded": "{{count}} antwoord(en) konden niet worden gebruikt: om {{time}} werd bij die speler een ander rugnummer gelezen. Controleer het moment of beantwoord een ander."
+      }
     },
     "import": {
       "title": "Importeren via een link",

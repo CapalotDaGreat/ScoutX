@@ -65,6 +65,21 @@ export type ReviewQuestion = {
   score: number; imagePath?: string | null;
 };
 
+export type UnresolvedAnswer = { t: number; status: 'ambiguous' | 'no_player' | 'excluded' };
+export const MAX_UNRESOLVED_ANSWERS = 16;
+
+export function parseUnresolvedAnswers(raw: unknown, recordingSec: number): UnresolvedAnswer[] {
+  const out: UnresolvedAnswer[] = [];
+  for (const item of Array.isArray(raw) ? raw : []) {
+    const a = asRecord(item);
+    if (!a || !nonNeg(a.t) || (a.t as number) > recordingSec + 1) continue;
+    if (a.status === 'ambiguous' || a.status === 'no_player' || a.status === 'excluded') {
+      out.push({ t: a.t as number, status: a.status });
+    }
+  }
+  return out.sort((x, y) => x.t - y.t).slice(0, MAX_UNRESOLVED_ANSWERS);
+}
+
 export type TrackingReport = {
   schema: typeof TRACKING_SCHEMA;
   engineVersion: string;
@@ -90,6 +105,11 @@ export type TrackingReport = {
     provenance: Provenance };
   events: TrackingEvent[];
   reviewQuestions: ReviewQuestion[];
+  /**
+   * 2026-11-14: identity answers the worker could not apply: no player at the answered point, two overlapping players
+   * there, or a player another shirt number excludes. The owner can answer again; nothing here is identity evidence.
+   */
+  unresolvedAnswers?: UnresolvedAnswer[];
   identity: { numberSightings: number; confirmedByUser: number };
   heatmap: { status: 'observed_only' | 'unavailable'; reason?: string };
   /** Owner-only Storage path of a number-confirmed sighting, shown next to each review card. */
@@ -345,6 +365,7 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
         ? { width: v.width, height: v.height } : null;
     })(),
     reviewQuestions: questions,
+    unresolvedAnswers: parseUnresolvedAnswers(r.anchorResolution, coverage.recordingSec),
     identity: { numberSightings: nonNeg(ident.numberSightings) ? ident.numberSightings as number : 0,
       confirmedByUser: nonNeg(ident.confirmedByUser) ? ident.confirmedByUser as number : 0 },
     heatmap: heatRaw && heatRaw.status === 'observed_only' ? { status: 'observed_only' }

@@ -630,7 +630,12 @@
       "done": "Todo comprobado, ¡gracias!",
       "undo": "Deshacer la última respuesta",
       "error": "No se pudo guardar tu respuesta. Inténtalo de nuevo.",
-      "privacy": "Las respuestas solo cambian el análisis de este partido. Nunca se usan para entrenar modelos."
+      "privacy": "Las respuestas solo cambian el análisis de este partido. Nunca se usan para entrenar modelos.",
+      "unresolved": {
+        "ambiguous": "{{count}} respuesta(s) no se pudieron usar: a las {{time}} dos jugadores se superponían donde respondiste. Responde otro momento en el que estés despejado.",
+        "no_player": "{{count}} respuesta(s) no se pudieron usar: a las {{time}} no se encontró ningún jugador donde respondiste. Responde otro momento.",
+        "excluded": "{{count}} respuesta(s) no se pudieron usar: a las {{time}} se leyó otro dorsal en ese jugador. Revisa el momento o responde otro."
+      }
     },
     "import": {
       "title": "Importar desde un enlace",
