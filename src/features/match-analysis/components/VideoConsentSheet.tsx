@@ -29,7 +29,8 @@ function OptionRow({ label, hint, value, onChange }: { label: string; hint: stri
           {hint}
         </Text>
       </View>
-      <Switch value={value} onValueChange={onChange} accessibilityLabel={label} />
+      <Switch value={value} onValueChange={onChange} accessibilityLabel={label}
+              aria-label={label} />
     </View>
   );
 }

@@ -44,7 +44,7 @@ export function RequestCoachEndorsementSheet({
 
   return (
     <Modal visible={visible} onClose={onClose} title={t('endorsementInvite.title')} size="md">
-      <View className="gap-4">
+      <View className="px-5 py-4 gap-4">
         <Text variant="body-sm" color="secondary">
           {t('endorsementInvite.description')}
         </Text>

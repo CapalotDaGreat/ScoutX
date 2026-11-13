@@ -1,0 +1,146 @@
+
+## guest-home [light]
+  minor aria-allowed-role x1
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x17
+     <div class="css-view-g5y9jx min-w-0 flex-1"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx h-11 w-11 shrink-0 overflow-hidden rounded-full"> :: Some page content is not contained by landmarks
+
+## public-passport [light]
+  moderate region x20
+     <div dir="auto" class="css-text-146c3p1 text-body font-sans-semibold text-accent" style="color: rgb(7, 112, 79); letter-spacing: 0px;">FOOTB :: Some page content is not contained by landmarks
+     <div aria-label="Unverified" class="css-view-g5y9jx self-start bg-background-secondary px-2.5 py-1 rounded-full" style="background-color: rg :: Some page content is not contained by landmarks
+
+## login [light]
+  moderate region x5
+     <div class="css-view-g5y9jx gap-2"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx w-full"> :: Some page content is not contained by landmarks
+  targets <44: 218x17 Email | 218x17 Password
+
+## player-home-today [light]
+  moderate region x22
+     <div class="css-view-g5y9jx min-w-0 flex-1"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx h-11 w-11 shrink-0 overflow-hidden rounded-full"> :: Some page content is not contained by landmarks
+
+## player-home-passport [light]
+  moderate region x14
+     <div class="css-view-g5y9jx min-w-0 flex-1"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx flex-row items-center gap-4"> :: Some page content is not contained by landmarks
+
+## log-match-dialog [light]
+  moderate region x14
+     <div class="css-view-g5y9jx min-w-0 flex-1"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx flex-row items-center gap-4"> :: Some page content is not contained by landmarks
+
+## performance [light]
+  minor aria-allowed-role x2
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x5
+     <div class="css-view-g5y9jx mb-4 overflow-visible pb-1 pt-2 px-5" style="width: 100%; max-width: 760px; align-self: center;"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx gap-4 border-t border-divider px-4 pb-4 pt-4"> :: Some page content is not contained by landmarks
+
+## media [light]
+  moderate region x9
+     <div class="css-view-g5y9jx mb-4 overflow-visible pb-1 pt-2 px-5" style="width: 100%; max-width: 760px; align-self: center;"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx gap-3"> :: Some page content is not contained by landmarks
+
+## player-discover [light]
+  minor aria-allowed-role x1
+     <input placeholder="Search by name, club, nationality, position..." autocapitalize="none" autocorrect="off" maxlength="256" autocomplete="on :: ARIA role search is not allowed for given element
+  moderate region x5
+     <div class="css-view-g5y9jx flex-row items-start gap-2 px-4 pb-2 pt-4"> :: Some page content is not contained by landmarks
+     <div dir="auto" class="css-text-146c3p1 text-label font-sans-medium text-foreground-secondary" style="color: rgb(68, 84, 75); letter-spacing :: Some page content is not contained by landmarks
+  targets <44: 192x43 Search by name, club, nation
+
+## settings [light]
+  moderate region x21
+     <div class="css-view-g5y9jx mb-4 overflow-visible pb-1 pt-2 px-5" style="width: 100%; max-width: 760px; align-self: center;"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx gap-2 border-b border-divider pb-4"> :: Some page content is not contained by landmarks
+  targets <44: 218x17 Current password | 218x17 New password | 218x17 Confirm new password | 40x20 Push notifications | 40x20 Public portfolio | 40x20 Discoverable by scouts | 40x20 Career timeline | 40x20 Statistics | 40x20 Videos | 40x20 Achievements | 40x20 Recommendations | 40x20 Performance charts | 40x20 Social feed visibility | 83x17 Privacy Policy
+
+## privacy-center [light]
+  moderate region x17
+     <div class="css-view-g5y9jx mb-4 overflow-visible pb-1 pt-2 px-5" style="width: 100%; max-width: 760px; align-self: center;"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx gap-3 border-t border-border pt-4" data-testid="privacy-center-consents"> :: Some page content is not contained by landmarks
+  targets <44: 40x20 AI analysis of my videos | 40x20 Public portfolio | 40x20 Discoverable by scouts | 40x20 Career timeline | 40x20 Statistics | 40x20 Videos | 40x20 Achievements | 40x20 Recommendations | 40x20 Performance charts | 40x20 Social feed visibility
+
+## plan-usage [light]
+  moderate region x2
+     <div tabindex="0" class="css-view-g5y9jx r-WebkitOverflowScrolling-150rngu r-flexDirection-eqz5dr r-flexGrow-16y2uox r-flexShrink-1wbh5a2 r- :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx r-alignItems-1awozwy r-backgroundColor-1che71a r-borderRadius-16uyjmq r-boxShadow-4wd2kf r-height-1ugchlj r-just :: Some page content is not contained by landmarks
+
+## player-trials [light]
+  minor aria-allowed-role x1
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x2
+     <div class="css-view-g5y9jx mb-4 overflow-visible pb-1 pt-2 px-5" style="width: 100%; max-width: 760px; align-self: center;"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx r-alignItems-1awozwy r-backgroundColor-1che71a r-borderRadius-16uyjmq r-boxShadow-4wd2kf r-height-1ugchlj r-just :: Some page content is not contained by landmarks
+
+## requests [light]
+  minor aria-allowed-role x1
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x2
+     <div class="css-view-g5y9jx mb-4 overflow-visible pb-1 pt-2 px-5" style="width: 100%; max-width: 760px; align-self: center;"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx r-alignItems-1awozwy r-backgroundColor-1che71a r-borderRadius-16uyjmq r-boxShadow-4wd2kf r-height-1ugchlj r-just :: Some page content is not contained by landmarks
+
+## missing-report [light]
+  minor aria-allowed-role x1
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x2
+     <div class="css-view-g5y9jx min-w-0 flex-1"><h1 dir="auto" role="heading" class="css-text-146c3p1 text-heading-1 font-display" style="color: :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx r-alignItems-1awozwy r-backgroundColor-1che71a r-borderRadius-16uyjmq r-boxShadow-4wd2kf r-height-1ugchlj r-just :: Some page content is not contained by landmarks
+
+## login [light]
+  moderate region x5
+     <div class="css-view-g5y9jx gap-2"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx w-full"> :: Some page content is not contained by landmarks
+  targets <44: 218x17 Email | 218x17 Password
+
+## scout-dashboard [light]
+  minor aria-allowed-role x2
+     <input placeholder="Search players, clubs, positions..." autocapitalize="none" autocorrect="off" autocomplete="on" dir="auto" enterkeyhint=" :: ARIA role search is not allowed for given element
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x15
+     <div class="css-view-g5y9jx gap-4"> :: Some page content is not contained by landmarks
+     <div role="presentation" class="css-view-g5y9jx" data-testid="scout-attention"> :: Some page content is not contained by landmarks
+  targets <44: 288x43 Search players, clubs, posit
+
+## scout-discover [light]
+  minor aria-allowed-role x1
+     <input placeholder="Search by name, club, nationality, position..." autocapitalize="none" autocorrect="off" maxlength="256" autocomplete="on :: ARIA role search is not allowed for given element
+  moderate region x4
+     <div class="css-view-g5y9jx min-w-0 flex-1 gap-1"> :: Some page content is not contained by landmarks
+     <div dir="auto" class="css-text-146c3p1 text-label font-sans-medium text-foreground-secondary" style="color: rgb(68, 84, 75); letter-spacing :: Some page content is not contained by landmarks
+  targets <44: 192x43 Search by name, club, nation
+
+## pipeline [light]
+  minor aria-allowed-role x1
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x3
+     <div class="css-view-g5y9jx min-w-0 flex-1"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx border-t border-divider bg-surface px-1 pt-1.5" data-testid="scout-tab-bar" style="background-color: rgb(255, 25 :: Some page content is not contained by landmarks
+
+## scout-trials [light]
+  minor aria-allowed-role x1
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x3
+     <div class="css-view-g5y9jx min-w-0 flex-1"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx border-t border-divider bg-surface px-1 pt-1.5" data-testid="scout-tab-bar" style="background-color: rgb(255, 25 :: Some page content is not contained by landmarks
+
+## compare [light]
+  minor aria-allowed-role x1
+     <section role="region" class="css-view-g5y9jx flex-1 items-center justify-center px-6 py-12"> :: ARIA role region is not allowed for given element
+  moderate region x2
+     <div class="css-view-g5y9jx mb-4 overflow-visible pb-1 pt-2 px-5" style="width: 100%; max-width: 760px; align-self: center;"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx r-alignItems-1awozwy r-backgroundColor-1che71a r-borderRadius-16uyjmq r-boxShadow-4wd2kf r-height-1ugchlj r-just :: Some page content is not contained by landmarks
+
+## activity [light]
+  moderate region x3
+     <div class="css-view-g5y9jx min-w-0 flex-1"> :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx gap-4"> :: Some page content is not contained by landmarks
+
+## scout-player-detail [light]
+  moderate region x17
+     <div dir="auto" class="css-text-146c3p1 text-overline font-sans-semibold" style="letter-spacing: 0px; color: rgb(191, 216, 204);">Scouting r :: Some page content is not contained by landmarks
+     <div class="css-view-g5y9jx flex-row items-center gap-4"> :: Some page content is not contained by landmarks

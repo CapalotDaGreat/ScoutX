@@ -135,7 +135,7 @@ function ImageEditor({ imageUri, onSave, disabled = false, initialBox }: TargetA
         </Button>
         {hoverReset ? <View pointerEvents="none" style={{ position: 'absolute', bottom: 52, left: 0, width: 160, backgroundColor: colors.surfaceElevated, padding: 8 }}><Text variant="caption">{t('targetAnchor.reset')}</Text></View> : null}
         </View>
-        <Button disabled={locked || !box || !!first} loading={busy} leftIcon={<Save size={18} color={colors.primaryForeground} />} onPress={() => void save()}>{t('targetAnchor.save')}</Button>
+        <Button disabled={locked || !box || !!first} loading={busy} leftIcon={<Save size={18} color={colors.accentForeground} />} onPress={() => void save()}>{t('targetAnchor.save')}</Button>
       </View>
     </View>
   );

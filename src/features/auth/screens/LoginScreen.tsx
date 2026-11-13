@@ -107,7 +107,7 @@ export function LoginScreen({
           onChangeText={(value) => updateValue('password', value)}
           secureTextEntry
           textContentType="password"
-          autoComplete="password"
+          autoComplete="current-password"
           error={errors.password}
           accessibilityLabel={t('login.password')}
         />

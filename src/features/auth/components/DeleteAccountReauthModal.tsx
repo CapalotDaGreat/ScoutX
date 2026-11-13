@@ -46,7 +46,7 @@ export function DeleteAccountReauthModal({ visible, methods, busy, error, onConf
 
   return (
     <Modal visible={visible} onClose={onCancel} title={t('deletion.reauth.title')} size="md">
-      <View className="gap-3" testID="delete-account-reauth">
+      <View className="px-5 py-4 gap-3" testID="delete-account-reauth">
         <Text variant="body-sm" color="secondary">
           {t('deletion.reauth.body')}
         </Text>

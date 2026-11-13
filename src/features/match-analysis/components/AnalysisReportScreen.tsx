@@ -87,6 +87,7 @@ function StatGrid({ stats }: { stats: MatchEstimatedStats }) {
 
 export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection }: AnalysisReportScreenProps) {
   const { t } = useAppTranslation('matchAnalysis');
+  const { t: tCommon } = useAppTranslation('common');
   const [studioVisible, setStudioVisible] = useState(false);
   const [job, setJob] = useState<MatchAnalysisJob | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -288,13 +289,14 @@ export function AnalysisReportScreen({ jobId, onBack, onOpenReel, initialSection
       loading={!job && !error}
     >
       {error ? (
-        <EmptyState title={t('report.title')} description={error}
+        // Missing, deleted and someone else's report all read the same: the copy must not reveal which.
+        <EmptyState title={tCommon('deepLink.not_found.title')} description={`${error} ${tCommon('deepLink.not_found.body')}`}
           actionLabel={t('report.back')} onAction={onBack} />
       ) : null}
       {job ? (
         <View className="gap-4">
           {report ? (
-          <View className="gap-2 border-l-4 border-accent py-3 pl-4">
+          <View className="gap-2 rounded-xl bg-accent-muted p-4">
             <Heading level={3}>{report.headline}</Heading>
             <Text variant="caption" color="secondary">
               {t('report.coverageBand', {

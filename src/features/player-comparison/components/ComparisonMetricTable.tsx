@@ -31,7 +31,7 @@ export const ComparisonMetricTable = memo(function ComparisonMetricTable({
     <View className="overflow-hidden border-y border-divider">
       <View className="flex-row border-b border-divider bg-background-secondary">
         <View className="w-[38%] justify-center px-3 py-3">
-          <Text variant="caption" className="font-sans-semibold uppercase text-foreground-secondary">
+          <Text variant="caption" className="font-sans-semibold text-foreground-secondary">
             {t('comparisonUi.metricHeader')}
           </Text>
         </View>

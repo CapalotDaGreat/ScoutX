@@ -27,7 +27,7 @@ export function HeaderIconButton({
         void triggerHaptic('light');
         onPress();
       }}
-      className="h-11 w-11 items-center justify-center rounded-full border border-border bg-surface"
+      className="h-11 w-11 items-center justify-center rounded-full bg-background-secondary"
       style={({ pressed }) =>
         pressed ? { opacity: 0.75, transform: [{ scale: 0.96 }] } : undefined
       }

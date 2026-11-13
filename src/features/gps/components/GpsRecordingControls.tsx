@@ -85,7 +85,7 @@ export function GpsRecordingControls({
           <Button
             variant="primary"
             className="flex-1"
-            leftIcon={<Square size={18} color={colors.primaryForeground} strokeWidth={2} />}
+            leftIcon={<Square size={18} color={colors.accentForeground} strokeWidth={2} />}
             loading={isSaving}
             onPress={onStop}
           >

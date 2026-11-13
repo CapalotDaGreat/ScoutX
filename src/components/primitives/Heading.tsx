@@ -3,9 +3,9 @@ import { useTheme } from '@/theme';
 import { cn } from '@/utils/cn';
 
 const levelStyles = {
-  'display-xl': 'text-display-xl font-sans-bold',
-  'display-lg': 'text-display-lg font-sans-bold',
-  1: 'text-heading-1 font-sans-semibold',
+  'display-xl': 'text-display-xl font-display',
+  'display-lg': 'text-display-lg font-display',
+  1: 'text-heading-1 font-display',
   2: 'text-heading-2 font-sans-semibold',
   3: 'text-heading-3 font-sans-semibold',
 } as const;

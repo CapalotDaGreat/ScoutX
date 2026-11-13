@@ -46,6 +46,7 @@ export function LanguageSettingsSection() {
       <Pressable
         onPress={() => void handleAutomatic()}
         accessibilityRole="radio"
+        aria-checked={isAutomatic}
         accessibilityState={{ checked: isAutomatic }}
         className={`min-h-[48px] justify-center rounded-lg border px-3 py-3 ${
           isAutomatic ? 'border-accent bg-accent-muted' : 'border-border'
@@ -62,6 +63,7 @@ export function LanguageSettingsSection() {
               key={language.code}
               onPress={() => void handleSelect(language.code)}
               accessibilityRole="radio"
+              aria-checked={selected}
               accessibilityState={{ checked: selected }}
               className={`min-h-[48px] justify-center rounded-lg border px-3 py-3 ${
                 selected ? 'border-accent bg-accent-muted' : 'border-border'

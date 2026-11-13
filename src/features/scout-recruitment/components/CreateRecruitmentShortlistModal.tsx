@@ -56,7 +56,7 @@ export function CreateRecruitmentShortlistModal({
 
   return (
     <Modal visible={visible} onClose={onClose} title={t('pipelineUi.createShortlist')} size="md">
-      <View className="gap-4">
+      <View className="px-5 py-4 gap-4">
         <Input
           label={t('pipelineUi.shortlistName')}
           value={name}

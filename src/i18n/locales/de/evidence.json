@@ -11,7 +11,12 @@
     "unverified": "Nicht verifiziert",
     "observed": "Beobachtet",
     "inferred": "Erschlossen",
-    "unknown": "Unbekannte Quelle"
+    "unknown": "Unbekannte Quelle",
+    "verifiedLogged": "Vertrauensgeprüft · nur erfasste Spiele",
+    "profileNotTracking": "Profilangaben · kein durchgehendes Spieltracking",
+    "ownSelfEntered": "Dein Profil · selbst eingetragen, keine spielgeprüfte Analyse",
+    "passportVerified": "Vertrauensgeprüfte Identität · nur öffentliche Passport-Felder",
+    "passportPlayerEntered": "Vom Spieler eingetragener Passport · keine spielgeprüfte Analyse"
   },
   "state": {
     "available": "Nachweis vorhanden",

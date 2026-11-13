@@ -15,6 +15,8 @@ async function stubProviders(context: BrowserContext) {
 
 async function openSourcesSection(page: Page) {
   await page.goto('/player/home');
+  // Sources live with the rest of the Passport since Home was split into Today and Passport.
+  await page.getByTestId('home-segments').getByText('Passport', { exact: true }).click({ timeout: 60_000 });
   const toggle = page.getByRole('button', { name: /^External football sources\./ });
   await expect(toggle).toBeVisible({ timeout: 60_000 });
   if (!(await page.getByTestId('football-sources-section').isVisible())) await toggle.click();
@@ -80,7 +82,8 @@ test.describe.serial('Player: external football source links', () => {
     const card = page.getByTestId('football-source-card').filter({ hasText: 'www.fvrz.ch/de/e2e-team/42' });
     const popup = context.waitForEvent('page');
     await card.getByTestId('football-source-open').click();
-    expect((await popup).url()).toBe(SOURCE_URL);
+    // The new tab reports an empty address until its navigation starts; wait for the real one.
+    await (await popup).waitForURL(SOURCE_URL, { timeout: 30_000 });
     await expect(page.locator('iframe')).toHaveCount(0);
   });
 
@@ -95,12 +98,12 @@ test.describe.serial('Player: external football source links', () => {
     await stubProviders(visitorContext);
     const visitor = await visitorContext.newPage();
     await visitor.goto(`/player/${accounts.seededPlayer.username}`, { waitUntil: 'domcontentloaded' });
-    await expect(visitor.getByText(accounts.seededPlayer.name).first()).toBeVisible({ timeout: 120_000 });
+    await expect(visitor.getByText(accounts.seededPlayer.name).filter({ visible: true }).first()).toBeVisible({ timeout: 120_000 });
     await expect
       .poll(
         async () => {
           await visitor.reload({ waitUntil: 'domcontentloaded' });
-          await visitor.getByText(accounts.seededPlayer.name).first().waitFor({ timeout: 60_000 });
+          await visitor.getByText(accounts.seededPlayer.name).filter({ visible: true }).first().waitFor({ timeout: 60_000 });
           return visitor.getByTestId('public-football-sources').count();
         },
         { timeout: 90_000, intervals: [3_000] },

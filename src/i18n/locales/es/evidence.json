@@ -11,7 +11,12 @@
     "unverified": "Sin verificar",
     "observed": "Observado",
     "inferred": "Inferido",
-    "unknown": "Fuente desconocida"
+    "unknown": "Fuente desconocida",
+    "verifiedLogged": "Verificado por confianza · solo partidos registrados",
+    "profileNotTracking": "Datos del perfil · sin seguimiento continuo de partidos",
+    "ownSelfEntered": "Tu perfil · introducido por ti, sin análisis verificado en partido",
+    "passportVerified": "Identidad verificada · solo campos públicos del Passport",
+    "passportPlayerEntered": "Passport introducido por el jugador · sin análisis verificado en partido"
   },
   "state": {
     "available": "Evidencia disponible",

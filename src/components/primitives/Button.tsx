@@ -12,25 +12,27 @@ import { cn } from '@/utils/cn';
 import { triggerHaptic } from '@/utils/haptics';
 
 const variantStyles = {
-  primary: 'bg-primary border border-transparent active:opacity-90',
+  // One action colour: primary and accent render the same so two filled buttons never compete.
+  primary: 'bg-accent border border-transparent active:opacity-90',
   accent: 'bg-accent border border-transparent active:opacity-90',
-  prestige: 'bg-gold border border-transparent active:opacity-90',
-  secondary: 'bg-surface border border-border active:opacity-80',
+  // Legacy name: renders as the single primary action colour so screens do not compete.
+  prestige: 'bg-accent border border-transparent active:opacity-90',
+  secondary: 'bg-surface border border-border-strong active:opacity-80',
   ghost: 'bg-transparent border border-transparent active:opacity-70',
   destructive: 'bg-error-muted border border-transparent active:opacity-90',
   link: 'bg-transparent border border-transparent',
 } as const;
 
 const sizeStyles = {
-  sm: 'min-h-[44px] px-3.5 rounded-md',
-  md: 'min-h-12 px-5 rounded-md',
-  lg: 'min-h-[52px] px-6 rounded-md',
+  sm: 'min-h-[44px] px-4 rounded-full',
+  md: 'min-h-12 px-5 rounded-full',
+  lg: 'min-h-[54px] px-6 rounded-full',
 } as const;
 
 const textVariantStyles = {
-  primary: 'text-primary-foreground',
+  primary: 'text-accent-foreground',
   accent: 'text-accent-foreground',
-  prestige: 'text-gold-foreground',
+  prestige: 'text-accent-foreground',
   secondary: 'text-foreground',
   ghost: 'text-foreground-secondary',
   destructive: 'text-error',
@@ -83,11 +85,11 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
 
   const labelColor =
     variant === 'primary'
-      ? colors.primaryForeground
+      ? colors.accentForeground
       : variant === 'accent'
         ? colors.accentForeground
         : variant === 'prestige'
-          ? colors.goldForeground
+          ? colors.accentForeground
           : variant === 'destructive'
             ? colors.error
             : variant === 'link'

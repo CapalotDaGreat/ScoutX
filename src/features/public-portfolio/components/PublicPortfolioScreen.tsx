@@ -36,6 +36,7 @@ import { useAuth } from '@/features/auth/store/AuthProvider';
 import { isGuestRole } from '@/features/auth/services/authAccess';
 import { type AuthRole } from '@/features/auth/types';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { displayTitle } from '@/utils/displayTitle';
 
 export type PublicPortfolioScreenProps = {
   playerId: string;
@@ -122,6 +123,14 @@ export function PublicPortfolioScreen({
       <Screen
         title={t('portfolio:footballPassport')}
         subtitle={t('portfolio:passportUnavailable')}
+        // With a load error the body is replaced by the error view, so keep the way back in the header.
+        headerLeading={
+          onBack && error ? (
+            <Button variant="ghost" size="sm" onPress={onBack}>
+              {t('portfolio:goBack')}
+            </Button>
+          ) : undefined
+        }
         safeArea
         onRetry={refresh}
         error={error}
@@ -315,14 +324,14 @@ export function PublicPortfolioScreen({
                 .filter((entry) => entry.type === 'achievement')
                 .slice(0, 6)
                 .map((entry) => (
-                  <Badge key={entry.id} variant="prestige" label={entry.title} />
+                  <Badge key={entry.id} variant="prestige" label={displayTitle(entry.title)} />
                 ))}
               {profile.footballJourney?.entries
                 .filter((entry) => entry.type === 'achievement')
                 .slice(0, 6)
                 .map((entry) => (
                   <Text key={entry.id} variant="body-sm">
-                    {entry.title}
+                    {displayTitle(entry.title)}
                   </Text>
                 ))}
             </View>

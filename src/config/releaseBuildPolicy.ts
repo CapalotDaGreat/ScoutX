@@ -39,6 +39,9 @@ export function productionBuildProblems(
   if (['false', '0'].includes(value('EXPO_PUBLIC_APP_CHECK_ENABLED').toLowerCase())) {
     unsafe('EXPO_PUBLIC_APP_CHECK_ENABLED', 'App Check must be enabled');
   }
+  if (value('EXPO_PUBLIC_APP_CHECK_SIMULATOR_DEBUG')) {
+    unsafe('EXPO_PUBLIC_APP_CHECK_SIMULATOR_DEBUG', 'The simulator App Check debug provider must not be enabled in a production build');
+  }
   if (value('NODE_TLS_REJECT_UNAUTHORIZED') === '0') {
     unsafe('NODE_TLS_REJECT_UNAUTHORIZED', 'TLS certificate verification must remain enabled');
   }

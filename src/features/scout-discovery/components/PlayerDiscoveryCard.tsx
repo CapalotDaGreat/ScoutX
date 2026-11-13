@@ -47,57 +47,46 @@ export const PlayerDiscoveryCard = memo(function PlayerDiscoveryCard({ player, o
   ]);
   return (
     <AnimatedListItem index={index}>
-      <View testID={`player-card-${player.id}`} className={cn('overflow-hidden rounded-lg border border-border bg-surface', className)}>
+      <View testID={`player-card-${player.id}`} className={cn('overflow-hidden rounded-xl border border-divider bg-surface', className)}>
         <Pressable accessibilityRole="button"
           accessibilityLabel={joinKnown([player.fullName.trim() || playerInitials(player.fullName), player.primaryPosition, player.club || null])}
           accessibilityHint={t('scout:playerCard.openHint')}
           onPress={() => { void triggerHaptic('light'); onPress(player); }}
           style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}>
-          <View className="flex-row flex-wrap items-center justify-between gap-2 border-b border-divider bg-background-secondary px-4 py-2.5">
-            <Text variant="caption" color="secondary">{t('scout:playerCard.scoutingProfile')}</Text>
+          <View className="gap-3 p-4">
             {player.availability ? <Badge label={t(`scout:filters.${availability[player.availability]}`)}
               variant={player.availability === 'available' ? 'success' : player.availability === 'on_loan' ? 'warning' : 'default'} size="sm" /> : null}
-          </View>
-          <View className="gap-4 p-4">
             <PlayerIdentityPanel playerId={player.id} name={player.fullName} portrait={player.avatarUrl || player.coverImageUrl}
               position={joinKnown([player.primaryPosition, ...player.secondaryPositions.slice(0, 2)]) || null}
               context={joinKnown([player.club || null, player.league || null])} facts={facts} verified={player.verified}
               evidenceNote={player.verified
                 ? t('scout:playerCard.verifiedEvidenceNote', { defaultValue: 'Trust-verified · logged matches only' })
                 : t('scout:playerCard.profileEvidenceNote', { defaultValue: 'Profile fields · analysis count shown only when known' })} />
-            <View className="flex-row border-t border-divider pt-3">
-              <View className="min-w-0 flex-1 gap-0.5 pr-2">
-                <Text variant="body-lg" weight="bold">{matches ?? '\u2014'}</Text>
-                <Text variant="caption" color="secondary">{t('scout:intelligence.matches')}</Text>
+            {/* Evidence indicators: counts of what exists, never a rating. Unknown stays an em dash. */}
+            <View className="flex-row rounded-lg bg-background-secondary px-1 py-3" style={{ backgroundColor: colors.backgroundSecondary }}>
+              <View className="min-w-0 flex-1 items-center gap-0.5 px-2">
+                <Text className="font-display" style={{ fontSize: 24, lineHeight: 26, fontVariant: ['tabular-nums'] }}>{matches ?? '\u2014'}</Text>
+                <Text variant="caption" color="secondary" className="text-center">{t('scout:intelligence.matches')}</Text>
               </View>
-              <View className="min-w-0 flex-1 gap-0.5 border-l border-divider px-3">
-                {analyses !== null ? (
-                  <>
-                    <Text variant="body-lg" weight="bold">{analyses}</Text>
-                    <Text variant="caption" color="secondary">{t('scout:playerCard.analysisSamples')}</Text>
-                  </>
-                ) : (
-                  <>
-                    <Text variant="body-lg" weight="bold" numberOfLines={1}>
-                      {coverageLabel ?? '\u2014'}
-                    </Text>
-                    <Text variant="caption" color="secondary">
-                      {t('scout:playerCard.evidenceFreshness', { defaultValue: 'Evidence freshness' })}
-                    </Text>
-                    <FreshnessLabel
-                      updatedAt={player.lastEvidenceAt}
-                      sampleSize={player.matchCount}
-                      className="mt-0.5"
-                    />
-                  </>
-                )}
+              <View className="min-w-0 flex-1 items-center gap-0.5 border-l border-divider px-2">
+                <Text className="font-display" style={{ fontSize: 24, lineHeight: 26, fontVariant: ['tabular-nums'] }}>{analyses ?? '\u2014'}</Text>
+                <Text variant="caption" color="secondary" className="text-center">{t('scout:playerCard.analysisSamples')}</Text>
               </View>
-              <View className="min-w-0 flex-1 gap-1 border-l border-divider pl-3">
-                <Film size={20} color={player.hasHighlightVideos ? colors.evidence : colors.textTertiary} />
-                <Text variant="caption" color="secondary">{t(player.hasHighlightVideos ? 'scout:discover.hasHighlights' : 'scout:playerCard.noHighlights')}</Text>
+              <View className="min-w-0 flex-1 items-center gap-1 border-l border-divider px-2">
+                <Film size={22} color={player.hasHighlightVideos ? colors.evidence : colors.textTertiary} />
+                <Text variant="caption" color="secondary" className="text-center">{t(player.hasHighlightVideos ? 'scout:discover.hasHighlights' : 'scout:playerCard.noHighlights')}</Text>
               </View>
             </View>
-            {player.verified ? <View className="flex-row items-center gap-1.5"><CheckCircle2 size={13} color={colors.verification} /><Text variant="caption" color="secondary">{t('trust:verified')}</Text></View> : null}
+            {analyses === null ? (
+              <View className="flex-row flex-wrap items-center gap-x-2 gap-y-1">
+                <Text variant="caption" color="secondary">
+                  {t('scout:playerCard.evidenceFreshness', { defaultValue: 'Evidence freshness' })}
+                  {coverageLabel ? `: ${coverageLabel}` : ''}
+                </Text>
+                <FreshnessLabel updatedAt={player.lastEvidenceAt} sampleSize={player.matchCount} />
+              </View>
+            ) : null}
+            {player.verified ? <View className="flex-row items-center gap-1.5"><CheckCircle2 size={14} color={colors.verification} /><Text variant="caption" color="secondary">{t('trust:verified')}</Text></View> : null}
           </View>
         </Pressable>
         <View className="flex-row items-center justify-between gap-2 border-t border-divider px-4 py-2">

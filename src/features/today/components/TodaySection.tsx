@@ -282,15 +282,15 @@ function PrimaryActionCard({ action, onAction }: { action: NextBestAction; onAct
   const { colors } = useTheme();
   const copy = actionCopy(t, action);
   return (
-    <View className="gap-3 border-l-4 border-accent bg-surface px-4 py-4">
-      <View className="flex-row items-center gap-2">
-        <Target size={16} color={colors.accent} accessibilityElementsHidden importantForAccessibility="no" />
-        <Text variant="overline" color="secondary">
+    <View className="gap-3 rounded-xl border border-divider bg-surface p-4" style={{ backgroundColor: colors.surface }}>
+      <View className="flex-row items-center gap-1.5 self-start rounded-full px-2.5 py-1" style={{ backgroundColor: colors.accentMuted }}>
+        <Target size={14} color={colors.accent} accessibilityElementsHidden importantForAccessibility="no" />
+        <Text variant="caption" weight="semibold" color="accent">
           {t('portfolio:today.nextBestAction')}
         </Text>
       </View>
       <View className="gap-1">
-        <Heading level={3}>{copy.title}</Heading>
+        <Heading level={2}>{copy.title}</Heading>
         <Text color="secondary">{copy.description}</Text>
       </View>
       <Text variant="caption" color="tertiary">

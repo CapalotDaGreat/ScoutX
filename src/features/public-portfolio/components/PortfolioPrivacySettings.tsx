@@ -37,6 +37,8 @@ function ToggleRow({ label, description, value, onValueChange, disabled }: Toggl
         value={value}
         onValueChange={onValueChange}
         disabled={disabled}
+        accessibilityLabel={label}
+        aria-label={label}
         trackColor={{ false: colors.border, true: colors.accent }}
         thumbColor={colors.surface}
       />

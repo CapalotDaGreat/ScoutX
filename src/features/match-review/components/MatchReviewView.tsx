@@ -359,7 +359,7 @@ export function MatchReviewView(props: MatchReviewViewProps) {
           </View>
 
           {/* A Hero */}
-          <View className="gap-2 border-l-4 border-accent py-2 pl-4" testID="review-hero">
+          <View className="gap-2 rounded-xl bg-accent-muted p-4" testID="review-hero">
             <View className="flex-row flex-wrap items-center gap-2">
               <Heading level={2}>{t(`review.hero.${review.hero.tone}`)}</Heading>
               {review.status === 'partial' ? <Badge size="sm" variant="info" label={t('review.preliminaryBadge')} /> : null}

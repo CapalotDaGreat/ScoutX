@@ -39,7 +39,7 @@ export function AccountUpgradePrompt({
         </View>
       }
     >
-      <Text variant="body-sm" color="secondary">
+      <Text variant="body-sm" color="secondary" className="px-5 py-4">
         {t('accountUpgrade.description')}
       </Text>
     </Modal>

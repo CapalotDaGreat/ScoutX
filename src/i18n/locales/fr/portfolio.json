@@ -616,5 +616,12 @@
     "hiddenTitle": "Invisible pour les inconnus",
     "hiddenBody": "Les personnes que tu n'as pas approuvées ne peuvent pas voir ton Passport pour l'instant. Active le Passport public dans tes paramètres de confidentialité. Si tu as moins de 18 ans, ton parent ou tuteur doit aussi l'autoriser. Les changements peuvent prendre un instant."
   },
-  "unavailableBody": "PitchProof could not sync your player profile. You can keep browsing Media and Discover, then try again."
+  "unavailableBody": "PitchProof could not sync your player profile. You can keep browsing Media and Discover, then try again.",
+  "homeSegments": {
+    "today": "Aujourd'hui",
+    "passport": "Passeport"
+  },
+  "homeIdentity": {
+    "openPassport": "Ouvrir ton Passeport"
+  }
 }

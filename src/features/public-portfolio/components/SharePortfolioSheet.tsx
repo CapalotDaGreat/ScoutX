@@ -105,7 +105,7 @@ export function SharePortfolioSheet({
     <>
       {shareCardData ? <ShareCaptureLayer /> : null}
       <Modal visible={visible} onClose={onClose} title={t('shareSheet.title')} size="md">
-        <View className="items-center gap-5">
+        <View className="px-5 py-4 items-center gap-5">
           <Text variant="body-sm" color="secondary" className="text-center">
             {t('shareSheet.description')}
           </Text>

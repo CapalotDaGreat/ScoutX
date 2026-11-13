@@ -11,7 +11,12 @@
     "unverified": "Não verificado",
     "observed": "Observado",
     "inferred": "Inferido",
-    "unknown": "Fonte desconhecida"
+    "unknown": "Fonte desconhecida",
+    "verifiedLogged": "Verificado · apenas jogos registados",
+    "profileNotTracking": "Campos do perfil · sem acompanhamento contínuo de jogos",
+    "ownSelfEntered": "O teu perfil · introduzido por ti, sem análise verificada em jogo",
+    "passportVerified": "Identidade verificada · apenas campos públicos do Passport",
+    "passportPlayerEntered": "Passport introduzido pelo jogador · sem análise verificada em jogo"
   },
   "state": {
     "available": "Evidência disponível",

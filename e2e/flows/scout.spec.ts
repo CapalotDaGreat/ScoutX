@@ -54,7 +54,7 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
 
     await expect(page.getByText('Why this player').first()).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Why you might wait' })).toBeVisible();
-    await expect(page.getByText('Only 2 logged matches.', { exact: false }).or(page.getByText('logged match', { exact: false })).first()).toBeVisible();
+    await expect(page.getByText('Only 2 logged matches.', { exact: false }).or(page.getByText('logged match', { exact: false })).filter({ visible: true }).first()).toBeVisible();
 
     const save = page.getByRole('button', { name: 'Save', exact: true });
     if (await save.isVisible()) {
@@ -72,9 +72,15 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
     await page.getByRole('button', { name: 'Match log', exact: true }).click();
     await page.getByRole('textbox', { name: 'Optional note for the player' }).fill('Please log your next league match.');
     await page.getByRole('button', { name: 'Send request' }).click();
-    await expect(page.getByRole('button', { name: 'Send request' })).toBeDisabled({ timeout: 20_000 });
+    // "Disabled" is also true while the call is still in flight; wait for the confirmation so the
+    // page is not closed before the request has reached the server.
+    await expect(page.getByText('Request sent.', { exact: true })).toBeVisible({ timeout: 20_000 });
 
-    const player = await (await browser.newContext()).newPage();
+    // Close the scout's page first and the player's context afterwards: two loaded apps at once
+    // were what pushed the browser past the memory limit of small CI machines.
+    await page.close();
+    const playerContext = await browser.newContext();
+    const player = await playerContext.newPage();
     await signIn(player, accounts.seededPlayer.email);
     await expect(player.getByText('Please log your next league match.').first()).toBeVisible({ timeout: 30_000 });
     await player.getByRole('button', { name: 'Decline' }).first().click();
@@ -83,6 +89,7 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
       await confirm.getByRole('button', { name: /Decline/ }).last().click();
     }
     await expect(player.getByText('Please log your next league match.')).toHaveCount(0, { timeout: 30_000 });
+    await playerContext.close();
   });
 
   test('invites the player to a trial and the player accepts', async ({ page, browser }) => {
@@ -95,16 +102,22 @@ test.describe.serial('Scout: brief, discover, why, save, request, trial', () => 
     await form.getByLabel('Coach').fill('Kim Weber');
     await form.getByLabel('Location').fill('Pitch 2');
     await form.getByRole('button', { name: 'Send invitation' }).dispatchEvent('click');
-    await expect(page.getByText('FC E2E Academy').first()).toBeVisible({ timeout: 30_000 });
+    // The form closes only after the server has acknowledged the invitation; the list alone can
+    // show it from the local cache before that, and the page is closed right after this.
+    await expect(form).toBeHidden({ timeout: 30_000 });
+    await expect(page.getByText('FC E2E Academy').filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
 
-    const player = await (await browser.newContext()).newPage();
+    await page.close();
+    const playerContext = await browser.newContext();
+    const player = await playerContext.newPage();
     await signIn(player, accounts.seededPlayer.email);
     await player.goto('/player/trials');
-    await expect(player.getByText('FC E2E Academy').first()).toBeVisible({ timeout: 30_000 });
+    await expect(player.getByText('FC E2E Academy').filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
     await player.getByText('FC E2E Academy').filter({ visible: true }).last().click();
     const response = player.getByRole('dialog');
     await response.getByRole('button', { name: 'Accept', exact: true }).dispatchEvent('click');
     await expect(response).toBeHidden({ timeout: 20_000 });
     await expect(player.getByText('Accepted', { exact: true }).filter({ visible: true }).first()).toBeVisible({ timeout: 30_000 });
+    await playerContext.close();
   });
 });

@@ -62,7 +62,7 @@ export function PlayerQuickActions({
           onPress={handleCompare}
           disabled={!isInComparison && !canAddToComparison}
           className={cn(
-            'h-9 w-9 items-center justify-center rounded-full border',
+            'h-11 w-11 items-center justify-center rounded-full border',
             isInComparison
               ? 'border-accent bg-accent-muted'
               : 'border-border bg-surface',
@@ -84,7 +84,7 @@ export function PlayerQuickActions({
           onPress={handleFavourite}
           disabled={favouriteDisabled}
           className={cn(
-            'h-9 w-9 items-center justify-center rounded-full border',
+            'h-11 w-11 items-center justify-center rounded-full border',
             isFavourite
               ? 'border-accent bg-accent-muted'
               : 'border-border bg-surface',
@@ -104,7 +104,7 @@ export function PlayerQuickActions({
           accessibilityLabel={t('scout:a11y.openReport')}
           hitSlop={4}
           onPress={onOpenReport}
-          className="h-9 w-9 items-center justify-center rounded-full border border-border bg-surface"
+          className="h-11 w-11 items-center justify-center rounded-full border border-border bg-surface"
         >
           <FileText size={16} color={colors.textSecondary} />
         </Pressable>

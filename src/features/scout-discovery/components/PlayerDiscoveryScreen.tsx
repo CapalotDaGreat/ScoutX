@@ -29,7 +29,7 @@ import {
 } from '@/features/scout-discovery/types';
 import { useTheme } from '@/theme';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
-import { SlidersHorizontal } from 'lucide-react-native';
+import { SlidersHorizontal, Info } from 'lucide-react-native';
 import { HeaderIconButton } from '@/components/navigation/HeaderIconButton';
 
 export type PlayerDiscoveryScreenProps = {
@@ -238,7 +238,7 @@ export function PlayerDiscoveryScreen({
       <View className="flex-row items-end gap-3 border-t border-divider pt-3">
         <Button
           variant="secondary"
-          className="min-h-[44px] flex-1 rounded-md"
+          className="min-h-[44px]"
           leftIcon={<SlidersHorizontal size={18} color={colors.textPrimary} />}
           onPress={() => setFiltersVisible(true)}
         >
@@ -266,6 +266,8 @@ export function PlayerDiscoveryScreen({
 
   return (
     <AppSafeAreaView className="flex-1" edges={['top']}>
+      {/* Same readable column as other screens on tablets; two-column results get a wider one. Phones are unaffected. */}
+      <View style={{ flex: 1, width: '100%', maxWidth: columns === 2 ? 1180 : 760, alignSelf: 'center' }}>
       <FlashListView
         key={columns}
         numColumns={columns}
@@ -274,14 +276,11 @@ export function PlayerDiscoveryScreen({
         renderItem={renderItem}
         ListHeaderComponent={
           <>
-            <View className="flex-row items-start gap-2 border-b border-divider px-4 pb-4 pt-4">
-              <View className="min-w-0 flex-1 gap-2">
-                <Heading level={2}>{t('scout:discover.title')}</Heading>
+            <View className="flex-row items-start gap-2 px-4 pb-2 pt-4">
+              <View className="min-w-0 flex-1 gap-1">
+                <Heading level={1}>{t('scout:discover.title')}</Heading>
                 <Text variant="body-sm" color="secondary">
                   {t('scout:discover.subtitle')}
-                </Text>
-                <Text variant="caption" color="tertiary" accessibilityLiveRegion="polite">
-                  {t('scout:discover.evidenceNote')}
                 </Text>
               </View>
               {onSettingsPress ? (
@@ -292,6 +291,15 @@ export function PlayerDiscoveryScreen({
                   />
                 </View>
               ) : null}
+            </View>
+            <View
+              className="mx-4 mb-3 flex-row items-start gap-2 rounded-lg px-3 py-2.5"
+              style={{ backgroundColor: colors.infoMuted }}
+            >
+              <Info size={16} color={colors.info} style={{ marginTop: 2 }} />
+              <Text variant="caption" className="min-w-0 flex-1" style={{ color: colors.info }} accessibilityLiveRegion="polite">
+                {t('scout:discover.evidenceNote')}
+              </Text>
             </View>
             {listHeader}
           </>
@@ -362,6 +370,7 @@ export function PlayerDiscoveryScreen({
           onSave={handleSavePreset}
         />
       ) : null}
+      </View>
     </AppSafeAreaView>
   );
 }

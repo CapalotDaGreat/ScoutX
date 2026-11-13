@@ -94,7 +94,7 @@ export function ChangePasswordSection({ email }: ChangePasswordSectionProps) {
         onChangeText={(value) => updateValue('currentPassword', value)}
         secureTextEntry
         textContentType="password"
-        autoComplete="password"
+        autoComplete="current-password"
         error={errors.currentPassword}
         accessibilityLabel={t('settings:currentPassword')}
       />

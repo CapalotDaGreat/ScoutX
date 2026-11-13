@@ -5,6 +5,7 @@ import {
   UserSafetyRepository,
   type UserSafetyRecord,
 } from '@/features/youth-safety/repositories/UserSafetyRepository';
+import { recordForAccount, type LoadedSafetyRecord } from '@/features/youth-safety/context/recordForAccount';
 
 type UserSafetyContextValue = {
   /** undefined while loading; null when no age band has been recorded yet. */
@@ -19,18 +20,27 @@ const UserSafetyContext = createContext<UserSafetyContextValue | null>(null);
 export function UserSafetyProvider({ children }: { children: ReactNode }) {
   const { status, user, isGuest } = useAuth();
   const uid = status === 'authenticated' && !isGuest ? (user?.uid ?? null) : null;
-  const [record, setRecord] = useState<UserSafetyRecord | null | undefined>(undefined);
+  const [loaded, setLoaded] = useState<LoadedSafetyRecord | null>(null);
 
   useEffect(() => {
-    setRecord(undefined);
     if (!uid) return undefined;
-    return UserSafetyRepository.subscribe(uid, setRecord, () => setRecord(null));
+    const unsubscribe = UserSafetyRepository.subscribe(
+      uid,
+      (record) => setLoaded({ uid, record }),
+      () => setLoaded({ uid, record: null }),
+    );
+    return () => {
+      unsubscribe();
+      // Signing back in to the same account waits for a fresh record, as before.
+      setLoaded(null);
+    };
   }, [uid]);
 
+  const record = recordForAccount(uid, loaded);
   const value = useMemo<UserSafetyContextValue>(
     () => ({
-      record: uid ? record : null,
-      policy: getUserSafetyPolicy(uid ? (record ?? null) : null),
+      record,
+      policy: getUserSafetyPolicy(record ?? null),
       gated: uid !== null,
     }),
     [record, uid],

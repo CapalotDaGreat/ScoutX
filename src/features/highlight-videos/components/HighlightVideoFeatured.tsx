@@ -43,7 +43,7 @@ export function HighlightVideoFeatured({ video, onPress }: HighlightVideoFeature
           <View className="absolute bottom-0 left-0 right-0 gap-1 p-4">
             <View className="flex-row items-center gap-1">
               <Star size={14} color={colors.warning} fill={colors.warning} />
-              <Text variant="caption" className="font-sans-semibold uppercase tracking-wider text-white/90">
+              <Text variant="caption" className="font-sans-semibold text-white/90">
                 {t('videos.spotlight')}
               </Text>
             </View>

@@ -133,6 +133,9 @@ export const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       PlayerApp: {
+        // A link that opens a pushed screen directly still gets the home screen underneath,
+        // so Back and the system back gesture have somewhere to go.
+        initialRouteName: 'PlayerTabs',
         screens: {
           PlayerTabs: {
             screens: {
@@ -144,6 +147,8 @@ export const linking: LinkingOptions<RootStackParamList> = {
           },
           PlayerDetail: 'player/detail/:playerId',
           Settings: 'player/settings',
+          PrivacyCenter: 'player/privacy',
+          PlanUsage: 'player/plan',
           Trials: 'player/trials',
           RequestCenter: 'player/requests',
           AnalysisReport: 'match/:jobId',
@@ -154,6 +159,9 @@ export const linking: LinkingOptions<RootStackParamList> = {
         },
       },
       ScoutApp: {
+        // A link that opens a pushed screen directly still gets the home screen underneath,
+        // so Back and the system back gesture have somewhere to go.
+        initialRouteName: 'ScoutTabs',
         screens: {
           ScoutTabs: {
             screens: {
@@ -167,10 +175,14 @@ export const linking: LinkingOptions<RootStackParamList> = {
           PlayerComparison: 'scout/compare',
           ActivityInbox: 'scout/activity',
           Settings: 'scout/settings',
+          PrivacyCenter: 'scout/privacy',
           GlobalSearch: 'scout/search',
         },
       },
       GuestApp: {
+        // A link that opens a pushed screen directly still gets the home screen underneath,
+        // so Back and the system back gesture have somewhere to go.
+        initialRouteName: 'GuestMain',
         screens: {
           GuestMain: 'guest',
           PlayerDetail: 'guest/player/:playerId',

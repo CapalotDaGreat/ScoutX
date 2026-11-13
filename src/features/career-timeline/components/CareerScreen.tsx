@@ -25,6 +25,7 @@ import { persistCareerSnapshot } from '@/features/career-story/services/persistC
 import { buildFootballStory, buildYearInReviewSnapshot } from '@/features/career-story/services/yearInReview';
 import { PlayerCoachObservationsCard } from '@/features/coach-mode/components/PlayerCoachObservationsCard';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { displayTitle } from '@/utils/displayTitle';
 
 export type CareerScreenProps = {
   embeddedInTabShell?: boolean;
@@ -60,7 +61,7 @@ export function CareerScreen({
       })),
       journey: profile?.footballJourney?.entries.map((entry) => ({
         id: entry.id,
-        title: entry.title,
+        title: displayTitle(entry.title),
         date: entry.date,
         subtitle: entry.subtitle,
       })),
