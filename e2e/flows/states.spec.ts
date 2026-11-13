@@ -248,4 +248,65 @@ test.describe('Session states', () => {
     expect(errors).toEqual([]);
     await context.close();
   });
+  test('B-23: an expired or revoked session gets one replacement guest and no stale state; a refresh outage keeps the session', async ({ browser }) => {
+    expect(longNameEmail, 'set by the long-name test').not.toBe('');
+    // Controlled emulator fixture: the throwaway long-name account is disabled for this test and enabled again afterwards.
+    const setDisabled = async (disableUser: boolean) => {
+      const response = await fetch(`http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/projects/${accounts.projectId}/accounts:update`, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer owner', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ localId: longNameUid, disableUser }),
+      });
+      expect(response.ok).toBe(true);
+    };
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    await page.clock.install();
+    const errors = trackPageErrors(page);
+    let guestSignUps = 0;
+    const refreshStatuses: number[] = [];
+    page.on('request', (request) => {
+      if (request.method() === 'POST' && request.url().includes('accounts:signUp')) guestSignUps += 1;
+    });
+    page.on('response', (response) => {
+      if (response.url().includes('securetoken.googleapis.com')) refreshStatuses.push(response.status());
+    });
+    await signIn(page, longNameEmail);
+    await page.goto('/player/settings');
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByText(longNameEmail).first()).toBeVisible();
+    await expect(page.getByTestId('youth-gate-loading')).toHaveCount(0, { timeout: 30_000 });
+
+    // 1. The token expires while the refresh endpoint is unreachable: the session must survive, and no guest appears.
+    await context.route('**/securetoken.googleapis.com/**', (route) => route.abort('connectionfailed'));
+    let before = guestSignUps;
+    await page.clock.fastForward('01:05:00');
+    await page.waitForTimeout(5_000);
+    expect(guestSignUps - before, 'a refresh outage is not a sign-out').toBe(0);
+    await expect(page.getByText(longNameEmail).first()).toBeVisible();
+    await context.unroute('**/securetoken.googleapis.com/**');
+
+    // 2. The account is revoked and its token expires with Settings open: exactly one guest replaces it.
+    await setDisabled(true);
+    try {
+      before = guestSignUps;
+      await page.clock.fastForward('01:05:00');
+      await expect.poll(() => guestSignUps - before, { timeout: 60_000, message: 'one replacement guest session' }).toBe(1);
+      expect(refreshStatuses.some((status) => status === 400), 'the emulator refused the refresh').toBe(true);
+      await page.waitForTimeout(3_000);
+      expect(guestSignUps - before).toBe(1);
+      await expect(page.getByText(longNameEmail)).toHaveCount(0, { timeout: 30_000 });
+
+      // 3. Signing in to another account afterwards shows only that account.
+      await signIn(page, accounts.scout.email);
+      await page.goto('/scout/settings');
+      await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
+      await expect(page.getByText(accounts.scout.email).first()).toBeVisible();
+      await expect(page.getByText(longNameEmail)).toHaveCount(0);
+      expect(errors).toEqual([]);
+    } finally {
+      await setDisabled(false);
+      await context.close();
+    }
+  });
 });
