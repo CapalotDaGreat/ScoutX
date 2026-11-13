@@ -221,6 +221,8 @@ test.describe('Session states', () => {
     await page.goto('/player/settings');
     await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
     await expect(page.getByText(accounts.seededPlayer.email).first()).toBeVisible();
+    // Settings is usable only once the age/guardian gate has its record; holding traffic before that keeps the curtain up.
+    await expect(page.getByTestId('youth-gate-loading')).toHaveCount(0, { timeout: 30_000 });
 
     // Hold Firestore traffic while signing out, so the player's Settings loads answer only after the session changed.
     const held: Array<() => Promise<void>> = [];
