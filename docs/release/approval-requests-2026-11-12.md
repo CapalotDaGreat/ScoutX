@@ -104,3 +104,18 @@ TEST-1 (once AUTH-1 is done) · BLD-2 · GIT-1
 Not ready: **BLD-3** until GIT-1 is done (recommended also after the BLD-1/BLD-2 results); **SUB-1** until BLD-3 exists;
 **REV-1** (App Review) until the blocker register's submission items are closed: counsel review (B-03), device
 validation, backups (B-02), screenshots on the merged commit (B-16) and the other open B-items.
+
+## Status after the approved execution (2026-11-13)
+
+IDX-1 executed (index READY; first job run pending) · BE-1 completed and verified · APC-1 executed (device proof pending) ·
+GIT-1 see the hand-off · **BE-2, BE-3 stopped** (Node.js 20 runtime decommissioned; source must change) · AUTH-1, TEST-1,
+BLD-1, APC-3, BLD-2, BLD-3, SUB-1 not executed (owner console step; no EAS build route from the preparation workspace).
+Details: `docs/design/REDESIGN_LEDGER.md` section 18.
+
+### Revised requests that replace BE-2/BE-3 (new approval needed: source and runtime changed)
+
+| ID | Exact scope | Source | Command | Changes vs. the approved BE-2/BE-3 | Validation / stop | Rollback limits |
+|---|---|---|---|---|---|---|
+| **BE-2b** | group 1 (33 functions), runtime **Node.js 22** | `fix/functions-node22` @ `0adacdf45f2d41f624de2f8263172771c33cf50b` (= `01f9459` + engines 20→22) or the merged release commit, clean | as BE-2 | every deployed function changes runtime from Node.js 20 to Node.js 22; function code unchanged | as BE-2; dry run passed 2026-11-13 | rollback to Node.js 20 is impossible (decommissioned): repair forward only |
+| **BE-3b** | group 2 (47 functions), Node.js 22 | as BE-2b | as BE-3 | as BE-2b | as BE-3 | as BE-2b |
+| **BE-4** (new) | the 14 held functions whose code is unchanged or refactor-only, runtime change only (`setTrackingPeriods` stays excluded) | as BE-2b | `firebase deploy --project scoutx-230b0 --only "functions:mediaLifecycleSweep,functions:onDiscoverableSearchIndexWritten,functions:onMatchJobDeleted,functions:onMatchJobMediaLifecycle,functions:onVerificationWrittenSyncTrust,functions:scheduleWeeklyFootballReports,functions:confirmRole,functions:generateHighlightReelPlan,functions:listAdminReviewQueue,functions:purgeLegacyGpsLocation,functions:resolveVerificationRequest,functions:setStaffRole,functions:submitPrivacyRequest,functions:updatePrivacyRequest"` | moves them off the decommissioned runtime, which "may be disabled" | ACTIVE on nodejs22; schedules unchanged; no new errors | forward repair only |

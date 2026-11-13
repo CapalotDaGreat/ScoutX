@@ -542,6 +542,26 @@ identical: the only non-documentation difference is `firestore.indexes.json`, wh
 does not bundle. A gate PASS does not replace device testing (L13 and the protocol), counsel review, live App Check
 evidence or full-match accuracy evidence.
 
+
+## 18. Approved execution, 2026-11-13 (owner approval of IDX-1, AUTH-1, BE-1..3, APC-1, BLD-1, APC-3, TEST-1, BLD-2, GIT-1, BLD-3, SUB-1)
+
+Recorded by action; times UTC. Logs of commands and outputs: preparation workspace `exec-log.txt` (secrets never printed).
+
+| Action | Status | Evidence |
+|---|---|---|
+| Clean checkout | **Fixed and verified** (`db5b96d`) | `npm ci` → `npm run typecheck` failed on a fresh clone (missing `.generated/reports.json`). Now `pretypecheck` runs `preview:prepare` (deterministic, idempotent, clear errors, no machine paths); a fresh clone at `db5b96d` with `npm ci && npm ci --prefix functions` passes typecheck, lint, 790/790 unit and the functions build. The app does not import the preview data (8/8 sampled 48-character data strings absent from the web export). EAS does not typecheck, so it needs no generator; no CI workflow exists in the repository |
+| Analysis fail-closed | **Verified** (`97dcf20`) | `tests/unit/analysisFailClosed.test.ts` (8 tests): with the live configuration, and with every runtime switch set but no compiled approval, tracking start/extract/discover/resolve/OCR follow-up never call the worker, enqueue nothing and write no report; no image reaches an AI provider; reasoning, tracking v3 and target anchors are off. A mutation (worker status forced to `available`) fails 3 tests. Footage gates also refuse upload sessions, link imports, consent recording, frame and segment analysis before any external call (code read); upload refusals show "Video analysis isn't available yet". Ambiguous identities stay unattributed (`ambiguousIdentityTrace`) |
+| Live configuration | **Snapshot** `docs/release/live-config-snapshot-2026-11-13.json` | 81 functions, one service account, one custom env key `GUARDIAN_LINK_BASE_URL` with the same value hash on all 81, 7 secrets referenced by name/version, 5 queues, 6 scheduler jobs, 38 indexes, rules releases, App Check configs. Source archives backed up (81 objects, 48 MB; the bucket is also versioned with 7-day soft delete). The deploy `.env` file was rebuilt from the live value (hash `29c6479420cce303` matches) with no other key |
+| IDX-1 | **Executed; READY; job check pending** | requested 12:41:50, index `CICAgNjpgYIK` (`state ASC, until ASC`, collection scope) READY by 12:53; 39 indexes READY; field overrides unchanged. The 12:42 job run (before READY) still returned 500; the 13:42 run is the check |
+| BE-1 | **Completed and verified** | from `01f9459` (clean): dry run, then `firebase deploy --only firestore:rules,storage` at 12:54:21; releases `cloud.firestore` → ruleset `6eb3e4c6…`, storage → `2bf85a3f…`; live ruleset text equals the source byte for byte. The quiet-hours save check needs AUTH-1 and TEST-1 |
+| BE-2, BE-3 | **Stopped: scope changed** | the group-1 dry run from `01f9459` failed: "Runtime Node.js 20 was decommissioned on 2026-10-30". Deploying needs the runtime change in `fix/functions-node22` @ `0adacdf45f2d41f624de2f8263172771c33cf50b` (engines 20 → 22 only; dry run of group 1 passes). That changes the source and the runtime of every deployed function, so it needs its own approval (B-22) |
+| APC-1 | **Executed; device verification pending** | `PATCH …/appAttestConfig?updateMask=tokenTtl` `{"tokenTtl":"3600s"}` returned the config; DeviceCheck untouched; Firestore, Storage and Auth enforcement unchanged (no enforcement mode). A token from a physical device is still the only proof |
+| AUTH-1 | **Not executed: owner step needed** | the only API that initialises Authentication (`identityPlatform:initializeAuth`) upgrades the project to Identity Platform, which the packet excludes; the console "Get started" path needs the owner (steps in the hand-off) |
+| TEST-1 | **Not executed** | needs AUTH-1 |
+| BLD-1, BLD-2, BLD-3, SUB-1 | **Not executed: prerequisite missing** | the Expo project has no linked GitHub repository ("No repository found"), and this workspace holds no EAS credentials, so builds must be started by the owner with `eas build`. BLD-2 also needs the owner's iPhone for `eas device:create`. Prices re-read 2026-11-13 from expo.dev/pricing.md: iOS medium $2 per build, simulator $0.10 per minute |
+| APC-3 | **Not executed** | needs the BLD-1 app's printed token; no simulator session was started (the packet sets no duration or spending bound) |
+| GIT-1 | see the hand-off | successor candidate: index fix + Node.js 22 fix + redesign |
+
 ## 12. Exact remaining actions
 
 1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.

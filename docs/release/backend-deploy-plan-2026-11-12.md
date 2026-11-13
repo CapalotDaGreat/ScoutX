@@ -154,8 +154,9 @@ Group 2 — app-facing (47: callables and the RevenueCat webhook):
 
 ## 3. Order and exact commands (run by the owner after approval; never with `--force`)
 
-Source for BE-1..BE-3: a clean checkout of release `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` (on the remote now), or of
-the merged release commit after GIT-1. `functions/`, `firestore.rules`, `storage.rules` and `firebase.json` are
+Source for BE-1: a clean checkout of release `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` (deployed 2026-11-13). Source for
+BE-2b/BE-3b/BE-4: `fix/functions-node22` @ `0adacdf45f2d41f624de2f8263172771c33cf50b` (Node.js 20 was decommissioned on
+2026-10-30 and the CLI refuses it; B-22), or the merged release commit after GIT-1, which contains it. `functions/`, `firestore.rules`, `storage.rules` and `firebase.json` are
 byte-identical in both (`git diff 01f9459 <candidate> -- functions firestore.rules storage.rules firebase.json` is empty).
 Never deploy from the redesign worktree, a dirty tree or a mixture of branches.
 
