@@ -209,6 +209,61 @@ def target_roi_confidence(reader: "NumberReader", crop: np.ndarray, number: str)
     return max((float(p) for t, p in reader.parseq(rois) if t.strip() == number), default=0.0)
 
 
+SHORTS_COLOUR_ROI = (0.46, 0.72, 0.10, 0.90)
+
+
+def colour_rois(crop: np.ndarray) -> list[tuple[str, np.ndarray]]:
+    """2026-11-14 experiment: the colour (not binarised) torso regions plus one colour shorts band, height 64, RGB."""
+    out = [(f"torso{i}", r) for i, r in enumerate(torso_rois(crop))]
+    h, w = crop.shape[:2]
+    ya, yb, xa, xb = SHORTS_COLOUR_ROI
+    t = crop[int(h * ya):int(h * yb), int(w * xa):int(w * xb)]
+    if t.shape[0] >= 6 and t.shape[1] >= 6:
+        t = cv2.resize(t, (max(8, int(t.shape[1] * 64 / t.shape[0])), 64), interpolation=cv2.INTER_CUBIC)
+        out.append(("shorts", cv2.cvtColor(t, cv2.COLOR_BGR2RGB)))
+    return out
+
+
+def colour_agreement_read(reader: "NumberReader", crop: np.ndarray, min_conf: float = 0.9) -> tuple[str | None, float, str | None]:
+    """EXPERIMENT (SCOUTX_OCR_VARIANT=colour_agree; off by default). Reads the colour regions instead of binarised
+    masks, with the SAME acceptance rule as the main reader: PARSeq and EasyOCR must agree on one 1-2 digit string
+    in the same region (or PARSeq near-certain on two digits), and a crop with two different accepted numbers
+    abstains. Regions of one crop share pixels, so agreement across regions is not counted as extra support."""
+    rois = colour_rois(crop)
+    if not rois:
+        return None, 0.0, None
+    votes: dict[str, tuple[float, str]] = {}
+    for (where, img), (text, conf) in zip(rois, reader.parseq([r for _, r in rois])):
+        text = text.strip()
+        if not _DIGITS.match(text):
+            continue
+        e = reader.easy.recognize(img, allowlist="0123456789", detail=1)
+        etext, econf = (str(e[0][1]).strip(), float(e[0][2])) if e else ("", 0.0)
+        score = 0.0
+        if text == etext:
+            score = max(float(conf), econf)
+        elif float(conf) >= 0.995 and len(text) == 2:
+            score = float(conf) * 0.95
+        if score >= min_conf and (text not in votes or score > votes[text][0]):
+            votes[text] = (score, f"colour:{where}")
+    if len(votes) != 1:
+        return None, 0.0, None
+    (num, (conf, where)), = votes.items()
+    return num, conf, where
+
+
+def combined_read(reader: "NumberReader", crop: np.ndarray) -> tuple[str | None, float, str | None]:
+    """EXPERIMENT: the main (binarised) reader first; the colour reader only when it abstains. Two different numbers
+    from the two readers on one crop abstain - conflicting evidence is never resolved by preference."""
+    num, conf, where = reader.read(crop)
+    alt, aconf, awhere = colour_agreement_read(reader, crop)
+    if num is not None and alt is not None and alt != num:
+        return None, 0.0, None
+    if num is not None:
+        return num, conf, where
+    return alt, aconf, awhere
+
+
 # 5.2 open-set torso reading (night / no localisable digits): colour torso windows at several
 # heights and widths, one PARSeq batch. Inside one crop the windows share pixels, so their
 # agreement is NOT independent evidence: the result is at most ONE weak read per crop.
