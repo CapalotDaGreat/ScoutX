@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { ShieldCheck } from 'lucide-react-native';
+import { PitchSurface } from '@/components/football/PitchSurface';
 import { PlayerIdentityPanel } from '@/components/player-card/PlayerIdentityPanel';
 import { Badge } from '@/components/primitives/Badge';
 import { StarRating } from '@/components/primitives/StarRating';
@@ -32,8 +33,8 @@ export function FootballPassportHero({ data, username, verification }: FootballP
       <View className="border-b border-divider px-4 py-3">
         <View className="flex-row flex-wrap items-center justify-between gap-2">
           <View className="min-w-0 flex-row items-center gap-2">
-            <ShieldCheck size={18} color={colors.gold} />
-            <Text weight="semibold" className="text-gold">
+            <ShieldCheck size={18} color={colors.accent} />
+            <Text weight="semibold" color="accent">
               {t('portfolio:passportHero.title')}
             </Text>
           </View>
@@ -45,14 +46,14 @@ export function FootballPassportHero({ data, username, verification }: FootballP
 
       <View className="gap-4 px-4 py-5">
         <View className="flex-row flex-wrap items-start gap-4">
-          <View className="w-full">
-            <PlayerIdentityPanel expanded playerId={data.playerId} name={profile.fullName} portrait={profile.avatarUrl || ''}
+          <PitchSurface className="w-full p-4">
+            <PlayerIdentityPanel expanded tone="pitch" showPositionPitch pitchPosition={profile.position || null} playerId={data.playerId} name={profile.fullName} portrait={profile.avatarUrl || ''}
               position={[profile.position, ...secondaryPositions].filter(Boolean).join(' / ') || null}
               context={profile.club} facts={profile.nationality} verified={isVerified}
               evidenceNote={isVerified
-                ? 'Trust-verified identity · public Passport fields only'
-                : 'Player-entered Passport · not match-verified analysis'} />
-          </View>
+                ? t('evidence:provenance.passportVerified')
+                : t('evidence:provenance.passportPlayerEntered')} />
+          </PitchSurface>
           <View className="min-w-[160px] flex-1 gap-2">
             {username ? (
               <Text variant="caption" color="secondary">

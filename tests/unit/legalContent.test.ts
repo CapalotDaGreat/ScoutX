@@ -102,7 +102,7 @@ describe('generated legal website', () => {
     assert.match(privacy, /Draft under legal review/);
     assert.match(privacy, /Effective date pending legal review/);
     const notice = files.find((file) => file.label === 'public/legal-notice/index.html')?.content ?? '';
-    assert.match(notice, /CML Electronics/);
+    assert.match(notice, /Lusiola Software/);
     assert.doesNotMatch(notice, /Commercial register \/ UID:/);
     const deletion = files.find((file) => file.label === 'public/account-deletion/index.html')?.content ?? '';
     assert.match(deletion, /does not cancel an Apple subscription/);
@@ -136,7 +136,7 @@ describe('legal config', () => {
     const text = resolveLegalTokens('{{entityName}}, {{entityAddress}} - {{privacyEmail}} / {{securityEmail}} / {{supportEmail}}', noContacts);
     assert.equal(
       text,
-      `CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland - ${PRIVACY_CONTACT_REQUIRED} / ${SECURITY_CONTACT_REQUIRED} / ${LEGAL_CONTACT_REQUIRED}`,
+      `Lusiola Software, Höglerstrasse 55, 8600 Dübendorf, Switzerland - ${PRIVACY_CONTACT_REQUIRED} / ${SECURITY_CONTACT_REQUIRED} / ${LEGAL_CONTACT_REQUIRED}`,
     );
     assert.match(text, CONTACT_PLACEHOLDER_PATTERN);
   });

@@ -19,11 +19,11 @@ function useDateFormat() {
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <View className="min-w-[22%] flex-1 rounded-xl bg-surface-elevated px-3 py-2" accessible accessibilityLabel={`${label}: ${value}`}>
-      <Text variant="caption" color="secondary">
+    <View className="min-w-[22%] flex-1 rounded-xl bg-surface-elevated px-2 py-2" accessible accessibilityLabel={`${label}: ${value}`}>
+      <Text variant="caption" color="secondary" numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
         {label}
       </Text>
-      <Text weight="semibold" className="text-lg">
+      <Text className="font-display text-stat-lg text-foreground">
         {value}
       </Text>
     </View>

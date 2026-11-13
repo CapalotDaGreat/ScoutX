@@ -2,7 +2,7 @@
 
 **Prepared:** 2026-11-04  
 **Branch / SHA:** `release/pitchproof-5-3-candidate` @ `103931cf54286eff67e2a040ba32a5aa7ab6e31d`  
-**Controller (as coded):** CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland  
+**Controller (as coded):** Lusiola Software, Höglerstrasse 55, 8600 Dübendorf, Switzerland (renamed from CML Electronics on 2026-11-13; registration in progress: counsel to confirm the legal form, register/UID details and whether the policy versions need a bump)  
 **Privacy / support contact:** support@pitchproof.online  
 **Governing law stated in inventory:** Swiss FADP; GDPR considered for EU/EEA users  
 

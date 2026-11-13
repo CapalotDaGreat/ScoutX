@@ -309,8 +309,8 @@ function BeforeVsNowRow({ comparison }: { comparison: BeforeVsNowComparison }) {
 function DnaRow({ trait }: { trait: PlayerDnaTrait }) {
   const { t } = useAppTranslation(['development']);
   return (
-    <View className="flex-row items-center gap-3 border-b border-border py-3">
-      <View className="min-w-0 flex-1">
+    <View className="flex-row flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-divider py-3">
+      <View className="min-w-[55%] flex-1">
         <Text weight="semibold">{dnaLabel(t, trait.id)}</Text>
         {trait.value === null ? (
           <Text variant="caption" color="tertiary">

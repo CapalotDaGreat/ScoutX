@@ -42,7 +42,7 @@ export function FilterPresetBar({
           {t('scout:search.savedFilters')}
         </Text>
         {onSaveCurrent ? (
-          <Pressable accessibilityRole="button" onPress={onSaveCurrent} hitSlop={8}>
+          <Pressable accessibilityRole="button" onPress={onSaveCurrent} hitSlop={8} className="min-h-[44px] justify-center">
             <Text variant="label" color="prestige">
               {t('scout:search.saveCurrent')}
             </Text>
@@ -59,7 +59,7 @@ export function FilterPresetBar({
               <View
                 key={preset.id}
                 className={cn(
-                  'flex-row items-center gap-1 rounded-full border px-3 py-2',
+                  'flex-row items-center gap-1 rounded-full border px-3',
                   isActive
                     ? 'border-gold bg-gold'
                     : 'border-border bg-surface',
@@ -70,6 +70,7 @@ export function FilterPresetBar({
                   accessibilityState={{ selected: isActive }}
                   onPress={() => onApplyPreset(preset)}
                   hitSlop={4}
+                  className="min-h-[44px] justify-center"
                 >
                   <Text
                     variant="body-sm"

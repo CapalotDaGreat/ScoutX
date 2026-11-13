@@ -141,7 +141,7 @@ export function MomentPlayerModal({ visible, onClose, jobId, moment, videoUrl, v
 
   return (
     <Modal visible={visible} onClose={onClose} title={t('review.player.title', { kind, time: formatClock(moment.actionAt) })} size="fullscreen">
-      <View className="gap-3">
+      <View className="px-5 py-4 gap-3">
         {videoUrl ? (
           <View className="overflow-hidden rounded-xl bg-black" style={{ height: 240 }}
             onLayout={(e: LayoutChangeEvent) => setView({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>

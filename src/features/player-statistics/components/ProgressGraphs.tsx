@@ -74,7 +74,7 @@ export function ProgressGraphs({ graphs }: ProgressGraphsProps) {
             >
               <View className="mb-2 flex-row items-start justify-between gap-2">
                 <View className="flex-1">
-                  <Text variant="caption" color="secondary" className="uppercase">
+                  <Text variant="caption" color="secondary">
                     {metricLabel}
                   </Text>
                   <Text weight="bold">{lastPoint?.formattedValue ?? '—'}</Text>

@@ -76,7 +76,7 @@ test('support links reach operator details and account-deletion instructions', a
     .toHaveAttribute('href', 'https://apps.apple.com/account/subscriptions');
   await page.screenshot({ path: resolve(`.local/legal-${testInfo.project.name}-deletion.png`), fullPage: true });
   await page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'Legal notice' }).click();
-  await expect(page.getByRole('main')).toContainText('CML Electronics');
+  await expect(page.getByRole('main')).toContainText('Lusiola Software');
   await expect(page.getByRole('main')).toContainText('8600 Dübendorf');
   await page.screenshot({ path: resolve(`.local/legal-${testInfo.project.name}-notice.png`), fullPage: true });
 });

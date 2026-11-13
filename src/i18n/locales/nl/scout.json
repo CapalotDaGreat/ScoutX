@@ -683,6 +683,9 @@
     "noHighlights": "Nog geen hoogtepunten",
     "viewProfile": "Bekijk speler",
     "openHint": "Open het volledige spelersprofiel",
-    "footValue": "Voet {{foot}}"
+    "footValue": "Voet {{foot}}",
+    "verifiedEvidenceNote": "Geverifieerd · alleen geregistreerde wedstrijden",
+    "profileEvidenceNote": "Profielvelden · analyses alleen getoond als ze bekend zijn",
+    "evidenceFreshness": "Actualiteit van het bewijs"
   }
 }

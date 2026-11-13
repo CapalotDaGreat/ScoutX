@@ -1,0 +1,621 @@
+# PitchProof UI/UX overhaul — implementation ledger
+
+Branch `redesign/pitchproof-ux-overhaul`, cut from `release/pitchproof-5-3-candidate` @ `01f9459c2608bc939c96f5c7388b5e5ba98aac2d`.
+The 5.3 candidate and the GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` are untouched.
+Analysis thresholds, identity defaults, rules, functions and the CV worker are not changed by this branch.
+
+**Status: TESTFLIGHT NOT REACHED (2026-11-13: index and rules live; functions blocked by the Node.js 20 decommission; merge, Auth and builds need owner steps). Previously: READY FOR EXACT MERGE APPROVAL (web-verified; worker suite complete with PyTorch; index fix included; native validation BLOCKED pending approvals and B-19; 2026-11-13). Candidate SHA in the hand-off. Native, device and screen-reader validation NOT DONE.**
+
+Evidence class for everything below: **Expo web + local Firebase emulators (demo project), seeded accounts**.
+No native, device, VoiceOver, Dynamic Type or TestFlight evidence exists for this branch.
+
+## 1. Research (accessed 2026-11-10; earlier research in `docs/release/scout-product-research-2026-11-04.md`)
+
+| Source | Observed / claimed | Decision |
+|---|---|---|
+| Football Manager 26 UI article — https://www.footballmanager.com/features/total-football-total-control-fm26s-reimagined-user-interface | Publisher's description: tiles show a snapshot, a tap opens a card with detail; home merged with inbox because the old home was underused | **Adapt**: Home > Today is the "what now" surface; detail sits one tap away. No game ratings. |
+| Veo Player Profile — https://www.veo.com/product/player-profile | Product page: header (number, name, team), key info, position map on a pitch graphic, clips grouped by match, one share link. "Scout-ready" is a marketing claim | **Adopt** position-on-pitch graphic for a stated position. **Reject** link-only privacy model; PitchProof keeps field-level controls. |
+| Sofascore Attribute Overview — https://www.sofascore.com/news/?p=71132 | Radial attribute graph from ratings; method not explained | **Reject** radar/ratings without evidence provenance. |
+| Hudl athlete profile guide — https://www.hudl.com/support/athletes-guide-to-hudl/guides/player-profile | Sections: basic, athletic, academic, recruiting opt-in | **Adopt** opt-in visibility as an explicit profile section (already present; kept under Passport). |
+
+## 2. Design system ("Touchline")
+
+- **Colour**: chalk background `#F3F5F1`, white surfaces, darker emerald action `#07704F` (raised from `#087F5B` because accent on accent-muted measured 4.30:1). New identity surface `pitch` (`#0F3D2E` / dark `#12392B`) with chalk lines and one floodlight `highlight` (`#D7F36B`). The pitch surface is reserved for identity (owner hero, Home identity strip, primary tab action).
+- **Type**: Inter for reading; **Barlow Condensed 600/700** (SIL OFL, `@expo-google-fonts/barlow-condensed`) for screen titles, player names and scoreboard numerals. Small text raised: body-sm 13→14, caption 12→12.5, overline 11→12 and no longer uppercase. Decorative uppercase removed from 13 labels.
+- **Geometry**: radii 6/10/14/18/22 (was max 8). Pill buttons, pill badges, pill segmented controls.
+- **Components**: `PitchSurface`, `PositionPitch` (+ pure `pitchSpotForPosition`), redesigned `PlayerIdentityPanel` (tone `surface|pitch`, optional position pitch, icon + text provenance), tab bar with filled active pill and round primary action, tonal `Card` variant, scoreboard stat strip.
+- **Rule kept**: state is never colour-only; unknown renders as an em dash, never zero; no overall/potential ratings.
+- `Button variant="prestige"` now renders as the single primary action colour (the olive button competed with green).
+- Test contract updated: `tests/unit/themeDesign.test.ts` radius bound 8→22 (deliberate design change) and **new** contrast checks for pitch/highlight/accent-muted pairs. New `tests/unit/positionPitch.test.ts`.
+
+## 3. Information architecture changes
+
+| Area | Before | Now |
+|---|---|---|
+| Player Home | One long scroll: hero, next step, stats, passport score, onboarding, activity, trials, insights, sharing, sources, trust, biography | Two segments. **Today**: identity strip, next step, continue, stats strip, recent matches, activity, trials. **Passport**: owner hero, passport score/evidence, onboarding checklist, insights, public Passport (preview/share/coach/CV), sources, trust, profile details. Onboarding "finish Passport" actions switch to the Passport segment. |
+| Discover header | Title + two paragraphs of caveats | Title, one-line scope, one info callout (same evidence note, still always visible) |
+| Discovery card | Header strip, truncated "Insufficie…" value | Identity panel + three evidence indicators (matches, analysis samples, film); freshness on its own line; unknown = em dash |
+
+Routes, deep links and navigator param lists are unchanged.
+
+## 4. Screen status (after tranche 2, 2026-11-10)
+
+"Reviewed" means I looked at a web capture from the local emulator stack (light 390 px; dark and 360 px where stated).
+None of this is native or device evidence.
+
+| Screen / surface | Status | Evidence |
+|---|---|---|
+| Design tokens, primitives, tab bars, segmented controls | Done | web light, dark, 360 px |
+| Type scale actually applied (see 4a) | Done | unit test `classMerge.test.ts` |
+| Filled buttons use one action colour (`primary` = `accent`) | Done | web |
+| Collapsible sections (used on about 30 screens) match cards; 56 px header, chevron chip | Done | web |
+| Player Home (Today / Passport), owner hero, identity strip | Done | `t2-dark…`, `t2-360px…` |
+| Discovery card, Discover header (player and scout) | Done | same |
+| Scout player detail header on `PitchSurface` with position pitch; evidence pills | Done | `t2-dark…`, `t2-360px…` |
+| Pipeline card (position pill, 44 px move control) | Restyled; **not seen with a saved player** in the list view | pipeline empty state reviewed |
+| Public Passport (guest route and owner preview) | Reviewed | `t2-share-public-passport…` |
+| Share sheet (QR, field selection, export preview, confirm box) | Reviewed on web; **share-card image and CV/PDF output not opened** | same |
+| Performance: Development, Stats, Career | Reviewed; year-in-review labels no longer split mid-word | `t2-performance-web.png` |
+| Log match, analysis consent modal, Media | Reviewed | same sheets |
+| Match review (verify → is this you → best moments → what to work on → next focus → reel → trend → ask) | Reviewed from recorded fixtures via `scripts/review-preview`; layering already matched the brief, **no logic, gate or threshold touched** | `t2-match-review-fixture-web.png` |
+| Scout dashboard, trials, comparison, activity, settings; player settings, trials, requests, search | Reviewed for coherence and breakage; **no bespoke redesign** | captures not committed |
+| Guest home, login, register, link-unavailable | Reviewed; **welcome / role selection not redesigned** | captures not committed |
+| Achievement and milestone rows still use emoji glyphs | **Open** | — |
+| Empty, error, offline, restricted states per screen | **Not audited** beyond the empty states seen above | — |
+| Large text, German long labels, tablet, screen reader | **Not checked** in tranche 2 | — |
+
+### 4a. Defect found and fixed: named type sizes were being dropped
+
+`cn()` (tailwind-merge) did not know the named sizes in `tailwind.config.js` (`text-caption`, `text-body-sm`, `text-stat-lg`…).
+It treated them as colours and removed them whenever a colour class followed, so any `<Text>` with a `color` prop rendered at the
+inherited size. This predates the redesign (it is on the 5.3 branch too). `src/utils/cn.ts` now registers the scale; a unit test
+reads the sizes from the Tailwind config so a new size cannot be forgotten. Effect: captions and small body text are now the
+intended 12.5 to 14 px instead of 15 px, app-wide. Every 5.3 screenshot differs for this reason alone.
+
+### 4b. Feature preservation (routes and contracts)
+
+No route name, param list, deep-link path, Firestore/Functions call, entitlement check, privacy rule, analysis threshold or
+identity default was changed in either tranche. Changed files are presentation components, tokens, `cn.ts`, locale strings
+for three new labels, and tests. Checked by: `git diff 01f9459 -- src/navigation functions firestore.rules storage.rules` is empty,
+the unit suite, and the browser flows below. The per-feature matrix is in section 8.
+
+## 5. Verification so far
+
+- `npm run test:unit`: 746/746 pass (baseline on this tip before changes: 740/740).
+- `tsc`: clean except the pre-existing `scripts/review-preview/.generated/reports.json` missing-file error.
+- `npm run lint`: 2 pre-existing quote errors in `footballCvExportService.ts` (untouched).
+- E2E flows: see section 7.
+- Rendered review: player tabs light + dark at 390 px, scout dashboard + Discover light.
+
+## 6. Remaining work
+
+Superseded by section 12 (exact remaining actions). Items 3 and 6 of the earlier list are resolved or re-scoped there.
+
+## 7. E2E result log
+
+2026-11-10, web-mobile project, local emulators (demo-scoutx), fresh seed, `--retries=0`,
+specs guest + player + safety + scout + visualStates: **19 passed, 2 failed** in the full run.
+
+- Two regressions from the Home split were found by the first run and fixed in the app, not in the tests:
+  the player's name is a heading again on Home > Today, and the under-13 private-mode card is on Today.
+- `scout.spec.ts:51` selector now filters to visible text. Its `.first()` resolved to hidden Scout Dashboard copy
+  ("Logged matches plus highlight film…", added 2026-11-04). Whether it also failed on the 5.3 tip was not checked.
+- `scout.spec.ts:88` (trial accept): "Page crashed" on a full reload in the full run; **passed** when rerun alone.
+- `visualStates.spec.ts:52` (tablet scout workspace): "Page crashed" on `goto /scout/discover` in the runner, twice.
+  A standalone Playwright probe at 1024 px signed in, opened Discover, measured 0 px overflow, 0 page errors and
+  reloaded the same URL successfully. Treated as an environment limit of this container (about 1.5 GB free), **not proven**.
+- The scout spec depends on the player spec having logged a recent match (30-day filter); run them in order.
+- Not run: footballSources, gpsImport, targetAnchors, marketingCapture flows; web-desktop project; rules tests.
+
+### 2026-11-10, tranche 2 (after the type-scale fix, button and section restyle)
+
+Unit: **749/749**. Typecheck and ESLint on changed files: clean.
+
+Browser flows, web-mobile, local emulators, fresh seed, `--retries=0`:
+
+- Full run (guest, player, safety, scout, visualStates): **20 passed, 1 failed** — `scout.spec.ts:88`, "Page crashed" on `goto /player/trials`.
+- Player + scout rerun after a fresh seed: **10 passed, 1 failed** — `player.spec.ts:132`, "Page crashed" on `goto`; `scout.spec.ts:88` passed.
+- Every one of the 21 tests passed in at least one of the two runs; no run was fully green. The crash moves between tests and
+  always happens on a full page load of the unminified dev bundle. The preview stack itself was later killed by the container
+  (exit 137, out of memory). Cause **not proven**; no test was changed, skipped or retried to hide it.
+- `visualStates.spec.ts:52` (tablet), which crashed in tranche 1, passed.
+- Horizontal overflow measured 0 px on every captured screen at 390 and 360 px. One real overflow found by probing element
+  boxes (text inputs inside rows had no `min-w-0`) and fixed in `Input.tsx`.
+
+### 2026-11-10, tranche 3 (final web pass)
+
+Unit: **755/755**. Typecheck clean. ESLint on changed files: 0 errors (the two pre-existing quote errors in
+`footballCvExportService.ts` are gone because that file was rewritten).
+
+Browser flows, web-mobile, local emulators, fresh seed, `--retries=0`:
+
+- Full run (21 tests): **20 passed, 1 failed** — `scout.spec.ts:88`, "Page crashed" opening a second browser context.
+- Player + scout rerun after a fresh seed: **11 passed, 0 failed**.
+- **Cause of the crashes is now established**: the kernel log shows the container memory cgroup killing `chrome-headless`
+  (`Memory cgroup out of memory: Killed process … (chrome-headless)`). It is a limit of this workspace, not an app defect.
+  No test was changed, skipped or retried. A fully green single run still needs a machine with more memory.
+
+## 8. Feature preservation matrix (52 feature folders, diff against `01f9459`)
+
+"Presentation" means only files under `components/` or `screens/` changed (layout, classes, icons, copy keys).
+"Untouched" means no file in the folder changed; those features changed only through shared tokens and primitives.
+Nothing under `src/navigation`, `functions`, `firestore.rules`, `storage.rules`, services for auth, entitlements, deletion,
+uploads, analysis or identity was modified.
+
+| Feature folder | Change | Contract check |
+|---|---|---|
+| auth | Presentation: Welcome on pitch surface, role option, modal padding | player register and sign-in flows pass; OAuth buttons untouched |
+| player-profile, today, passport, player-onboarding | Presentation: Home split Today/Passport, hero, identity strip, evidence rows | player flows; `home-segments`; private-mode card on first screen |
+| public-portfolio | Presentation + **export**: CV template moved to pure `footballCvHtml.ts`; same privacy filter | `footballCvHtml.test.ts` (refusal when not public, hidden sections not leaked, escaping, dash for unrecorded), `portfolioExportPrivacy.test.ts` |
+| share-cards | Presentation: card image on pitch surface; same data object, same include flags | `portfolioExportPrivacy.test.ts`; web capture `t3-share-card-web.png` |
+| scout-discovery, scout-recruitment, player-comparison | Presentation: cards, detail hero, pills, pipeline card, modal padding | scout flows (brief, discover, why, save, request, trial) |
+| career-timeline | **Service**: new system entries no longer store an emoji prefix; display strips stored ones | `displayTitle.test.ts`; milestone ids, categories and triggers unchanged |
+| career-milestones, career-story, football-journey | Presentation: drawn icons, year-in-review tiles | unit suite |
+| development, player-statistics, ai-insights | Presentation: rows wrap, labels | unit suite |
+| match-analysis, match-review | Presentation: hero restyle, modal padding. **No pipeline, gate, threshold, identity default or evidence contract touched** | review preview from recorded fixtures; release suite pin unchanged |
+| reel-studio, highlight-videos, gps, football-sources | Presentation: padding, icon colour, label case | unit suite |
+| activity-feed, admin-review, career-replay, club-profiles, coach-mode, data-rights, evidence, football-memory, global-search, highlight-reel-studio, intelligence, legal, media-library, media-upload, notifications, performance-insights, player-growth, portfolio-analytics, premium, request-center, scout-intelligence, scouting-reports, settings, trial-invitations, trust-safety, trust-system, verification-system, weekly-report, youth-safety | Untouched | safety, guest and visual-state flows; unit suite |
+
+Shared changes that reach every feature: colour and radius tokens, type scale and its merge fix (4a), `Button`, `Card`,
+`Badge`, `Input` (`min-w-0`), `Text`, `Heading`, `CollapsibleSection`, `Screen` (760 px readable column), tab bars.
+
+## 9. Post-implementation audit (2026-11-10, web only)
+
+Found and fixed in this pass:
+
+| Finding | Fix |
+|---|---|
+| Ten bottom sheets and dialogs had no body padding; text and inputs touched the screen edge (pre-existing) | Padding added to each body |
+| Share card and CV still used the old dark/gold look; CV printed stray separators for empty fields and an unlinked URL | Both redesigned; CV link is clickable; empty fields omitted |
+| Milestones and stored timeline titles used emoji | Drawn icons; stored prefixes stripped at display |
+| Seven provenance notes were hard-coded English (three had no locale key at all) | Keys added in all seven locales |
+| German at 360 px: "Verstanden" clipped, stat names split mid-word, sort control truncated | Rows wrap; sort gets the row width |
+| Olive "prestige" panel behind Passport evidence in dark mode | Tonal panel |
+| Tablet width stretched every control edge to edge | 760 px column in `Screen` |
+
+Checked and found sound: no route, param or deep-link change; unknown values render as a dash, not zero (card, share card,
+CV, stat strips); no invented rating, potential, market value or verified status anywhere in the card family; provenance line
+on every identity surface; hidden sections named as private in exports; offline banner and loading skeletons render.
+
+Not verified (stated plainly): everything in section 6, items 1, 3 and 6; screen-reader order and labels; contrast of every
+text/background pair beyond the token pairs in `themeDesign.test.ts`; behaviour with real long names and missing portraits
+beyond the initials fallback seen in fixtures; error and permission-denied states, which were not triggered.
+
+## 10. Validation and integration pass (2026-11-11 to 2026-11-12)
+
+Code candidate: `297ee6e9c6f4d58b11f2c8b6e580f4f1d980d08b` (commits after it on this branch change documents only).
+Target `release/pitchproof-5-3-candidate` was re-fetched and is still `01f9459c2608bc939c96f5c7388b5e5ba98aac2d`,
+which is also the merge base: the release branch has **no** commits the redesign lacks, so there is nothing to conflict.
+GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` is an ancestor and untouched.
+
+### 10.1 Defects found in this pass and repaired
+
+| # | Defect | How it was shown | Repair | Commit |
+|---|---|---|---|---|
+| 1 | Plan and usage and Privacy Center had no address; Back was dead on every screen opened from a link | browser probe | paths added; Home is placed under linked screens | `a21e79a` |
+| 2 | A missing match report fell back silently | browser probe | "No longer available" with a way back; same wording for missing, deleted and someone else's report | `a21e79a` |
+| 3 | Link-explanation screens were replaced by Home before they could be read | routing spec | kept until the user leaves | `2877335` |
+| 4 | Log match: an incomplete form did nothing on web | states spec | errors shown in the form | `a21e79a` |
+| 5 | **Back scrolled with the page** on nine pushed screens: it sat at the very end of long pages and moved while content loaded. Seen as a tap that did nothing (3 of 40 and 2 of 14 scripted attempts) | instrumented trace: the Back handler was never called | footer pinned under the scrolling content; 0 of 40 afterwards | `cacd447` |
+| 6 | Radios exposed no checked state, switches no name on the control, the tab bar listed a button inside a tab list | axe audit: 4 critical rule groups | fixed; 0 critical afterwards | `297ee6e` |
+| 7 | Test defects exposed by running the whole suite: scout page closed before its request reached the server; selectors took the first match, which is now the hidden Home under a linked screen; external sources moved to the Passport segment; new-tab address read too early | failing specs traced to cause | specs wait for the real outcome and assert on the visible screen. No assertion was removed | `4257ebf`, `cacd447` |
+
+Withdrawn: a root-navigator sync change made in `4257ebf` on a wrong hypothesis was reverted in `cacd447` after the trace disproved it.
+
+### 10.2 Why earlier runs were killed, and the complete passes
+
+The Functions emulator starts one worker process per function and keeps them: 36 workers, **5.7 GB**, against a 6.26 GB limit
+for commands in this container (`memory.limit_in_bytes`), so the kernel killed the browser. The Metro development server added
+about 1 GB. This is test-environment behaviour: with the emulator in single-process mode (`--inspect-functions`) and the
+exported web build served statically, the same suite peaks at **2.8 GB** with a flat browser footprint (400 to 900 MB), and no
+kill occurred (kernel kill counter 5 before, 5 after). No application memory leak was found; none was proven absent on native.
+
+Command, per project, each on a fresh emulator reset and seed (`node scripts/seed-emulators.mjs`, exit 0), `workers: 1`:
+`E2E_EMULATORS=1 PLAYWRIGHT_SKIP_WEBSERVER=1 PLAYWRIGHT_BASE_URL=http://localhost:8091 npx playwright test --project=<p> --retries=0`
+against `expo export -p web --dev` of the commit under test.
+
+| Commit | Project | Result | Exit |
+|---|---|---|---|
+| `297ee6e` | web-mobile (Pixel 7), whole suite | **63 passed, 2 skipped, 0 failed** | 0 |
+| `297ee6e` | web-desktop (1280x720), whole suite | **63 passed, 2 skipped, 0 failed** | 0 |
+| `cacd447` | web-mobile, run B | 63 passed, 2 skipped | 0 |
+| `cacd447` | web-desktop | 63 passed, 2 skipped | 0 |
+| `cacd447` | web-mobile, run A | 62 passed, **1 failed** (`routing.spec.ts:64`, Back on `/player/settings` straight after sign-in did not navigate) | 1 |
+
+The two skips are explicit opt-ins (`MARKETING_CAPTURE`, `EXPO_PUBLIC_EXPERIMENTAL_TARGET_ANCHORS`), unchanged.
+**Open:** the run-A failure was not reproduced in 84 scripted attempts (60 across four screens, 24 straight after a fresh
+sign-in) and did not recur at `297ee6e`, but its cause is not established. It is listed as a known intermittent in section 12.
+
+Other checks at `297ee6e` unless stated: `npm run typecheck` exit 0; `npm run lint` exit 0 (whole repository, 0 errors);
+`npm run test:unit` **759/759**, exit 0; at `cacd447`: `npm run test:rules` (Firestore and Storage authorization) **263/263**,
+`npm run legal:check` exit 0, `node scripts/release-gate.mjs --allow-external --skip-tests` **PASS** with 23 pass, 0 code
+blockers, 4 external configuration, 3 legal review, 3 not validated, 2 skipped by flag. Not rerun: the Python worker suite
+(`bench/`, CV worker): no file under `bench`, `functions` or the worker changed, so its pinned state (6 strict xfails) is as on 5.3.
+
+### 10.3 Rendered checks (web only)
+
+- Typography: every text element on 12 screens that were not redesigned (Settings, Privacy Center, Plan, Trials, Requests,
+  Search, Compare, Activity, both dashboards) resolves to its named size; no element carries two sizes; no contrast failure
+  below 4.5:1 (3:1 large) was measured in light mode. One 10 px numeral remains in the unread badge.
+- Accessibility (axe, WCAG 2 A/AA plus best practice, 23 screens, light and dark): 0 critical. 3 serious remain:
+  the Sort control nests a focusable select inside a button (Discover, player and scout), and one scroll region is not
+  keyboard-focusable on Plan and usage. "Content not in a landmark" (moderate) is reported on every screen.
+- States exercised by `states.spec.ts` and `routing.spec.ts`: 60-character name at 320 px, incomplete form, double tap on Save
+  (one match logged), scout opening a player who has not opted in (learns nothing), failed load with retry, offline with a
+  half-written form kept, missing report, unknown Passport address, scout on player-only addresses.
+- Not exercised: entitlement-restricted analysis, a broken portrait URL, permission-denied from the operating system,
+  purchases and restore, upload interruption, account deletion end to end, session expiry.
+
+### 10.4 Analysis and privacy contracts
+
+No file under `functions`, `firestore.rules`, `storage.rules`, `bench` or the CV worker differs from `01f9459`. In the analysis
+and match-review screens the cumulative diff is class names, one icon colour and the missing-report copy. Flags and defaults
+(C on, E off, D not promoted, A/B off, DETOUR off, `productionApproval=false`) are unchanged. The contracts are executed by
+the unit suite: `matchAnalysisHonesty`, `matchReview`, `matchReview50`, `identityCoordinator`, `identityEvidenceStaging`,
+`analysisCorrections`, `coachingScenarios` (missing or rejected identity blocks personalised coaching), `portfolioExportPrivacy`,
+`footballCvHtml`. A live analysis run through the redesigned screens was **not** performed (no approved footage processing).
+
+## 11. Integration
+
+The redesign contains the whole target, so integration is a merge with no conflicts. A local merge commit was prepared without
+touching the release branch (see the hand-off message for its SHA): parents `01f9459` and the redesign tip, tree identical to
+the redesign tip, so every result above applies to it byte for byte. Proposed method: `git merge --no-ff` so that the whole
+redesign can be reverted with one `git revert -m 1 <merge>`.
+
+New runtime dependency: `@expo-google-fonts/barlow-condensed` 0.2.3 (MIT package; two font files added to the bundle).
+No change to `app.json`, `app.config.ts`, `eas.json`, bundle identifier, version, entitlements, privacy manifest or purpose strings.
+
+Invalidated by the merge: every screenshot and device result for 5.3 (`docs/release/ux-audit-2026-11-04`, marketing captures,
+App Store screenshots), and any accessibility statement made for the old interface. Legal and privacy texts are unchanged;
+the redesign shows the same data under the same rules, but counsel's review of export wording should see the new CV and card.
+
+## 13. Final audit (2026-11-12, code candidate `f150d49`)
+
+Evidence class unchanged: Expo web (static `--dev` export) + local Firebase emulators (demo project) + seeded and throwaway test accounts.
+Target `release/pitchproof-5-3-candidate` re-fetched: still `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` (merge base; no new release commits).
+GPU baseline `51d41c9f5f333c7e93a606b7181ba8cb1cee8eac` is an ancestor and unchanged.
+
+### 13.1 Defects found and repaired
+
+| # | Defect | How it was shown | Repair |
+|---|---|---|---|
+| 8 | Text fields: on web the input ignored its classes, so it was 17 px tall inside a 48 px field and a tap near the field edge did not focus it (also on 5.3) | measured box and an edge tap: `focused false` | padding, size and height as styles: 46 px, edge tap `focused true` |
+| 9 | Sort control: read-only text input nested inside the button (axe serious, nested-interactive, 2 screens) | axe | drawn field face; the button is the only stop |
+| 10 | Plan and usage: page scroller not reachable by keyboard (axe serious) | axe | screen scroller is a keyboard stop on web |
+| 11 | Broken portrait URL: shared avatar and share card showed an empty frame | code review, then browser test | initials fallback; browser test with a refused address passes |
+| 12 | Discover list stretched edge to edge on tablets | capture at 1024 px | 760 px column (1180 px with two columns) |
+| 13 | Tab badge numeral 9 px | audit | 11 px in an 18 px circle; the count is also in the tab name |
+| 14 | A cancelled analysis said "Trying again will not help until this is fixed" | review preview capture | hint hidden when there is nothing to retry |
+
+### 13.2 Results at `f150d49` (exact commands in 10.2; export built from `f150d49`)
+
+| Check | Result | Exit |
+|---|---|---|
+| Browser suite, web-mobile (Pixel 7), fresh emulators and seed, 1 worker, no retries | **65 passed, 2 skipped, 0 failed** | 0 |
+| Browser suite, web-desktop (1280x720), fresh emulators and seed, 1 worker, no retries | **65 passed, 2 skipped, 0 failed** | 0 |
+| Kernel memory kills during both runs | 0 before, 0 after; peak 2.7 GB for the whole stack | |
+| `npm run test:unit` | **763/763** | 0 |
+| `npm run typecheck` | clean | 0 |
+| `npm run lint` | 0 errors | 0 |
+| `npm run test:rules` (Firestore and Storage authorization, deletion, entitlements, uploads, analysis pipeline) | **263/263** | 0 |
+| `npm run legal:check` | pass | 0 |
+| `node scripts/release-gate.mjs --allow-external --skip-tests` | PASS: 23 pass, 0 code blockers, 4 external, 3 legal review, 3 not validated, 2 skipped (rules and worker suite, covered below) | 0 |
+| axe (WCAG 2 A/AA + best practice), 23 screens, light and dark | **0 critical, 0 serious** (was 3 serious); 23 moderate "not in a landmark", 11 minor role notes | |
+
+Skips: `marketingCapture.spec.ts` (opt-in `MARKETING_CAPTURE`) and `targetAnchors.spec.ts` (opt-in experimental flag
+`EXPO_PUBLIC_EXPERIMENTAL_TARGET_ANCHORS`, off by default). The Python worker suite was not rerun: `functions`, rules, indexes,
+`bench` and the worker are byte-identical to `01f9459`, so its pinned state (6 strict xfails, 11 opt-in skips) is as on 5.3.
+The intermittent Back failure from 10.2 did not recur in either complete run (and 0 of 84 scripted attempts earlier); cause still unproven.
+
+### 13.3 Analysis and identity safety, traced
+
+- Server parser (`functions/src/analysis/trackingV3.ts`) refuses a whole report that contains a moment whose identity is not
+  confirmed or likely; nothing derived from it is stored. New test `ambiguousIdentityTrace.test.ts` runs the real recorded
+  worker output (IMG_4809) through the parser and every consumer: with no identity-backed moment there are 0 moments,
+  0 highlights in all six presets, 0 strength or improvement claims, 0 counted actions or passes, hero tone "none";
+  with likely-only identity everything stays "needs review" and nothing is confirmed or coached.
+- Cards, the public Passport, the share card and the CV read no analysis output: the server projection publishes
+  `analysisSampleCount: null`, shown as a dash.
+- Rendered outcomes from recorded fixtures (`t5-analysis-outcomes-preview-f150d49-web.png`): automatic result (1 confirmed,
+  5 to check), no identity ("could not confirm you", no best moments), consent required, cancelled, interrupted.
+  Partial and stopped analyses are never shown as complete.
+- Unchanged and still enforced by the unit suite: owner confirmation, automatic versus owner-assisted separation,
+  coaching blocked without identity, correction rules. Flags and defaults unchanged (C on, E off, D not promoted, A/B off,
+  DETOUR off, `productionApproval=false`). No live analysis was run.
+
+### 13.4 Native tooling and release configuration (read-only)
+
+- This workspace: Linux x86_64, no `/dev/kvm`, no Xcode, no Android SDK, so no local simulator or emulator.
+- Expo (`@boddibossi/scoutx`, project `a15ee8f0-…`): EAS simulator sessions and sandboxes exist as tools but are **billed**;
+  none was started. No simulator session has ever run for this project. Newest iOS build: production 1.0.0 (4), commit
+  `6679226`, 2026-10-22, artifact expires 2026-11-21. `appVersionSource: remote`, `autoIncrement` on `production`.
+- Firebase `scoutx-230b0`: project ACTIVE; App Check API enabled, but **no enforcement mode set** for Firestore, Storage or
+  Auth (read 2026-11-12). Matches blocker B-01; unchanged.
+- No change to `app.json`, `app.config.ts`, `eas.json`, bundle identifier `com.scoutx.app`, version, entitlements, privacy
+  manifest, purpose strings or the universal-link association file. `/player/*` already covers the new `player/plan` and
+  `player/privacy` addresses; `scout/privacy` opens through the app scheme only, like the other scout addresses.
+- Only new dependency: `@expo-google-fonts/barlow-condensed` 0.2.3. No schema change; stored results need no migration.
+- The app's web build is not hosted for users (Hosting serves `public/`), so native-only controls such as the Settings
+  account-deletion alert are not dead controls for real users. That flow is device protocol row S6.
+
+### 13.5 Translations
+
+Technical audit of the 11 English keys added or changed since `01f9459`, across 7 languages: 0 missing keys, 0 placeholder
+mismatches, 0 untranslated copies; 0 translation calls in code whose key is missing (no English fallback leakage).
+Linguistic review is still open: `docs/design/TRANSLATION_REVIEW_2026-11.md`, not reviewed by a native speaker.
+
+## 14. App Check verification and native-build preparation (2026-11-12, code candidate `459defc`)
+
+### 14.1 Changes since `f150d49`
+
+| Commit | Change | Why |
+|---|---|---|
+| `459defc` | `toUserMessage`: the Functions SDK's exact "Unauthenticated" rejection gets its own message instead of "Your session expired" | An App Check rejection would have told a signed-in user to sign in again. Traced through the installed SDK; unit tests for both cases |
+| `459defc` | `eas.json` profile `simulator`: production configuration built for the iOS Simulator, no build-number increment | No existing profile builds release code for the simulator (`preview` is Ad Hoc device, `development` is a dev client) |
+
+No change to analysis, rules, functions, indexes, entitlements, App Check policy or providers.
+
+### 14.2 Results at `459defc` (export built from `459defc`; uncommitted files during the run were the two new documents only)
+
+| Check | Result | Exit |
+|---|---|---|
+| Browser suite web-mobile, fresh emulators and seed, 1 worker, no retries | **65 passed, 2 skipped (opt-in), 0 failed** | 0 |
+| Browser suite web-desktop, same conditions | **65 passed, 2 skipped (opt-in), 0 failed** | 0 |
+| Kernel kills / peak memory | 0 / 3.0 GB | |
+| Unit (incl. `ambiguousIdentityTrace`, `footballCvHtml`, `portfolioExportPrivacy`, `userFacingError`, `releaseBuild`) | **765/765** | 0 |
+| Typecheck / lint | clean / 0 errors | 0 / 0 |
+| Rules (Firestore, Storage, deletion, entitlements, uploads, analysis pipeline) | **263/263** | 0 |
+| Legal check / release gate | pass / PASS (23 pass, 0 code blockers, 4 external, 3 legal, 3 not validated, 2 skipped by flag) | 0 / 0 |
+
+### 14.3 App Check: verified versus pending
+
+Full record: `docs/release/app-check-behaviour-2026-11-12.md`. Verified from code and installed SDK sources: release builds
+always use App Attest with DeviceCheck fallback and never the debug provider; failed tokens do not block requests on the
+device; app-facing callables enforce App Check in production source; onboarding depends on such callables. Verified live
+(read-only): iOS app registered with Team ID; DeviceCheck not configured; 0 debug tokens; Firestore/Storage/Auth enforcement off.
+**Not verified**: App Attest registration (API cannot show it; CLI on 2026-11-04 said not configured) and whether the
+*deployed* callables enforce (a direct test request was blocked by this workspace's network allowlist; one-line test in 4.1
+of that document). Also found: the live backend is behind the release source (blocker B-17) and a scheduled job fails on a
+missing index (B-18, fix on local branch `fix/account-restrictions-index` @ `9986c4f`).
+
+### 14.4 Native validation
+
+Not executed. This workspace cannot run a simulator (no KVM, no Xcode). EAS cloud simulators and builds are billed and need
+approval B. A simulator build cannot cover the screens behind enforced callables (a simulator never attests); those rows
+need a physical iPhone after App Attest is registered. Row-by-row coverage, tester steps and an answer template are in
+`docs/design/REDESIGN_DEVICE_PROTOCOL.md` sections 0, 5 and 6. No row is marked executed.
+
+## 15. Deployment planning, simulator App Check and enforcement (2026-11-12, evening; code candidate `cef23db`)
+
+| Topic | Result | Record |
+|---|---|---|
+| Backend inventory (B-17) | 81 deployed (europe-west6, gen 2): 75 outdated, 6 current; 14 missing (8 callables, 6 task queues); none deployed-but-removed; schedules and resources unchanged; rules older than release; production database empty (counts only) | `docs/release/backend-deploy-plan-2026-11-12.md` |
+| Scoped deploy | 80 functions in two ordered groups plus rules; 15 left alone (6 current, 8 refactor-only, `setTrackingPeriods`); new analysis functions stay inert without worker approval; git-ignored `functions/.env.scoutx-230b0` must exist | same |
+| Index fix (B-18) | query `accountRestrictions where state == 'suspended' and until <= now` needs `state ASC, until ASC`; deployed and release job use the identical query; 0 restrictions exist, so no backlog; job fails every hour since at least 2026-10-22 | branch `fix/account-restrictions-index` @ `9986c4f`, one line |
+| Simulator App Check | `cef23db`: deliberate, simulator-only debug provider; build blocked if any other profile sets it; production gate rejects it; no bundled token in release; 13 tests; guards shown with the real config loader | `docs/release/app-check-behaviour-2026-11-12.md` section 6 |
+| Callable enforcement as deployed | enforced, from deployed compiled code and configuration; no live response (proxy blocks the functions hosts) | same, sections 2 and 5 |
+| Firestore / Storage enforcement | not enforced: tokenless probes reached the security rules (403 from rules) | same, section 5 |
+| Firebase Authentication | **not configured in production** (B-19): no build can sign anyone in | same, section 5 |
+
+### 15.2 Results at `72292b7` (code `cef23db` + documentation; export built from a clean tree at `72292b7`)
+
+| Check | Run 1 | Run 2 |
+|---|---|---|
+| Browser suite, web-mobile, fresh emulators and seed, 1 worker, no retries | 64 passed, **1 failed**, 2 skipped, exit 1 (`routing.spec.ts:64`, Back on `/player/requests` did not navigate) | **65 passed, 2 skipped, 0 failed, exit 0** |
+| Browser suite, web-desktop, same conditions | 65 passed, 2 skipped, exit 0 | **65 passed, 2 skipped, exit 0** |
+| Kernel kills / peak memory | 0 / 2.7 GB | 0 / 2.7 GB |
+
+Each run is reported whole; no run was assembled from parts. Unit **778/778**, typecheck clean, lint 0 errors, rules **263/263**,
+legal check pass, release gate PASS (0 code blockers) — all at `72292b7`.
+
+**Known intermittent, still open:** Back on a page opened directly from a link occasionally does nothing on the first tap
+(web, emulator stack). Seen 2026-11-11 (`/player/settings`), today in run 1 (`/player/requests`) and once in 60 scripted
+attempts (`/player/settings`); 0 in a further 100 instrumented attempts. No "GO_BACK not handled" warning was logged, so the
+stack did contain Home. Separately, `/player/trials` re-creates its Back button after loading (13 of 25 runs) without any
+failure. Cause not established; no code change made for it. Must be checked on device (protocol L8 and L9).
+
+
+## 16. Back defect root cause, fix and final candidate checks (2026-11-12, late evening; tested tree `72e9d3512fb353baef70a3cf2128b3d2f2e5390d`)
+
+### 16.1 Back defect (blocker register B-20): cause, evidence, fix
+
+* **Mechanism, observed:** a frame-by-frame probe (each animation frame: is the centre of Back the top element?) after a cold
+  link showed, in 9 of 9 traces before the fix, `absent > covered (session curtain) > hittable (40-80 ms) > covered
+  (youth-gate-loading, z-30) > hittable`. The session curtain lifted when the Auth listener answered, one commit before the
+  auth state applied the restored user; the age/guardian gate then mounted its loading curtain for that account. A tap
+  dispatched into the exposed window, after the curtain mounted, landed on the curtain and did nothing.
+* **Forced reproduction:** holding the emulator's Firestore traffic (so the gate curtain stays up) and tapping Back with a raw
+  pointer tap made the tap hit `youth-gate-loading` every time, and the screen stayed put after release. Holding Auth traffic
+  made the tap hit the session curtain (correct: the app is not ready). With nothing held the tap navigated home.
+* **Why no warning before:** the tap never reached the button, so React Navigation never received GO_BACK. Earlier
+  hypotheses (stale stack, history `go(-1)`, resets) are excluded by the navigation log: the first sync kept the linked
+  stack and no reset followed.
+* **Fix (`0f6e3de`, smallest change):** `isRestoringSession` keeps the session curtain up while a restored user is known but not
+  yet applied, so curtain hands over to curtain with no exposed frame; visitors whose anonymous session is still being
+  created are unaffected. The safety record is now bound to the account it was read for (`recordForAccount`), so after an
+  account switch the new account stays gated until its own record arrives instead of passing for one render on the previous
+  account's age band. No guard was removed or delayed, no retry or timer added; navigation code is unchanged.
+* **Correct Back behaviour (unchanged, now reliable):** in-app entry pops to the previous screen; a cold link with no app
+  history goes to the role home (player Home, scout dashboard); after an auth redirect the restored screen's Back goes to
+  the role home; a missing or private resource shows its explanation with Back/Go to home; a scout cannot open player-only
+  addresses (lands on Pipeline). Covered by `routing.spec.ts` and `states.spec.ts` in both projects.
+* **Regression:** `routing.spec.ts` "a cold link never exposes Back and then covers it again (B-20)" **failed on the unfixed
+  build** (`absent > covered > hittable > covered > hittable`) and passes on the fix; unit `sessionGateTransitions.test.ts`
+  (8 tests). Repeated without retries: B-20 test and "every pushed player screen" each x15 per project = **30/30 mobile,
+  30/30 desktop**; scripted 200 cold-link Back attempts **0 failures** (note: the unfixed build also gave 0/200 in that
+  script, so the repeat count is not the evidence; the hit-test trace is). After the fix, traces are
+  `covered (session) > covered (youth gate) > hittable` with no exposed frame (6 of 6).
+* **Not verified:** native iOS (protocol row L13). The same components run natively, so the same gap is expected there.
+
+### 16.2 Results on tree `72e9d351…` (redesign `07294250235ad23599bea6bf264152f849203669`, clean; identical tree in the integration merge)
+
+| Check | Command / environment | Result |
+|---|---|---|
+| Unit | `npm run test:unit` | **786/786**, exit 0 |
+| Typecheck | `npm run typecheck` (app and tests) | exit 0 |
+| Lint | `npm run lint` | exit 0, 0 problems |
+| Browser, web-mobile | `fullsuite.sh`: fresh emulators (demo project) and seed, static `expo export --dev` built from the clean commit, `--retries=0`, 1 worker | **66 passed, 2 skipped, 0 failed**, exit 0 |
+| Browser, web-desktop | same, fresh stack | **66 passed, 2 skipped, 0 failed**, exit 0 |
+| Skips (both projects) | `marketingCapture.spec.ts` (opt-in capture), `targetAnchors.spec.ts:49` (experimental flag off) | expected |
+| Rules / API contracts | `npm run test:rules` (firebase-tools 15.35.0 from the workspace tools) | **263/263** |
+| App Check / build policy | `appCheckSimulator`, `releaseBuild`, `userFacingError` (in unit) | pass |
+| Identity safety, coaching downstream, export/privacy | `ambiguousIdentityTrace`, `identityCoordinator`, `identityEvidenceStaging`, `cvApproval`, `cvEvidence`, `aiPrivacyGate`, `footballCvHtml`, `playerCardPresentation`, `portfolioExportPrivacy` (in unit; also run on their own: 109/109 with the two above) | pass |
+| Worker suite (recorded-worker identity contract) | `pytest -q` in `workers/football-cv`, venv with dev requirements + OpenCV, SciPy, Pillow, scikit-learn, supervision; **torch unavailable** in this workspace (CPU wheel host blocked) | **partial:** 641 passed, 12 skipped, 6 xfailed (pinned strict), 0 failed, with `test_52.py` and `test_detector_release.py` not collected (need torch). `workers/` is byte-identical to the release |
+| Legal | `npm run legal:check` | pass |
+| Functions build / predeploy check | `npm run build --prefix functions`; `node scripts/sync-discovery-search.mjs --check` | pass |
+| Release gate | `node scripts/release-gate.mjs` | 24 PASS, 1 CODE BLOCKER (the worker suite above, environment: torch missing), 4 external, 3 legal, 3 not validated; exit 1 as designed for a public-release gate |
+| Kernel kills / peak memory | | 0 / 2.7 GB |
+
+Each browser run is reported whole. The B-20 regression test is part of both complete runs. Analysis thresholds, decoder and
+candidate defaults, identity safeguards, rules and functions are unchanged (`git diff 01f9459 -- functions workers
+firestore.rules storage.rules firestore.indexes.json` is empty).
+
+
+## 17. Worker suite with PyTorch, final candidate checks (2026-11-13)
+
+### 17.1 Worker environment and provenance
+
+* Source: redesign `a5e5b020fd687df14538b6f0c2fc7e0f26011845` (clean); `workers/football-cv` tree
+  `d860d6dbf6743f83c6d16403694a114bd3184e20`, byte-identical to the release `01f9459` and to the candidate.
+* Previously missing modules: `tests/test_52.py` and `tests/test_detector_release.py`. Both failed to import because
+  `scoutx_tracker/yolox_net.py` imports `torch` at module level. They need no weights; `test_52.py` uses committed fixtures
+  `tests/fixtures/img4809_*_slice.{json,npz}`.
+* Environment: an existing install was found rather than adding a new runtime: system CPython 3.13.17 (`/usr/bin/python3.13`)
+  with torch **2.14.1+cu130** (CPU execution; CUDA not available), torchvision 0.29.1, onnxruntime 1.29.0, numpy 2.5.3,
+  scipy 1.18.1, opencv 4.14.0, scikit-learn 1.9.1, supervision 0.26.1, python-doctr 1.1.0, easyocr 1.7.2, av 19.0.2,
+  fastapi 0.162.0. These match `requirements-gpu.lock` (torch 2.14.1, torchvision 0.29.1, numpy 2.5.3, opencv 4.14.0.94,
+  scipy 1.18.1, scikit-learn 1.9.1, doctr 1.1.0; the lock pins `onnxruntime-gpu` 1.29.0, here the CPU build of the same
+  version). The system pytest is 9.1.1, outside `requirements-dev.txt` (`pytest>=8,<9`). So the gate's `.venv` was
+  recreated as an isolated venv over the system packages (`--system-site-packages`) with **pytest 8.4.2** inside it. The
+  system environment was not changed; the earlier dev venv was kept as `.venv-dev-notorch`. No PyTorch was mocked.
+* Network: proxy variables removed and a pytest plugin refused and logged every non-loopback connection: **0 attempts**. The
+  whole-match replay subprocesses had no proxy, so no download could have succeeded. A download would have failed a test,
+  and none failed.
+* Flags: as the release gate sets them (`SCOUTX_RELEASE_SUITE=1`, `PYTHONHASHSEED=0`; `SCOUTX_DETOUR_SPLIT`,
+  `_EXCHANGE_SPLIT`, `_RESUME_SPLIT`, `_OCR_CONSULTED_ONLY`, `_OCR_CACHE_PROVENANCE`, `_APPEARANCE_ONLY_LIKELY`,
+  `_FULL_MATCH_REPLAY` unset, so the documented defaults apply). The flag variants are pinned inside the suite by the opt-in
+  characterisation tests (`test_detour_split`, `test_exchange_split`, `test_resume_split`, `test_appearance_only_likely`).
+* Whole-match replay fixture: `/home/claude/work/fmr/replay` (local, not in git; 60 MB of stage-1 numeric data, no
+  footage). All 19 file hashes equal `bench/results/5.3/full-match-identity-20261103/full_match_replay_provenance.json`
+  (checked before the run, and asserted again by the first opt-in test).
+
+### 17.2 Worker results
+
+| Run | Command | Exit | Result |
+|---|---|---|---|
+| The two missing modules | `pytest -p netguard -rA tests/test_52.py tests/test_detector_release.py` (without `SCOUTX_RELEASE_SUITE`, whose pin check needs the whole suite) | 0 | **13 passed** (9 + 4), 0 skipped |
+| Complete suite, release flags | `SCOUTX_RELEASE_SUITE=1 PYTHONHASHSEED=0 pytest -p netguard -q -rsxX --tb=line` | 0 | **669 passed, 11 skipped, 6 xfailed, 0 xpassed**, 0 failed (95 s) |
+| Opt-in whole-match replays | `SCOUTX_FULL_MATCH_REPLAY=/home/claude/work/fmr/replay pytest -p netguard -rA tests/test_full_match_identity.py` | 0 | **8 passed, 3 xfailed**, 0 xpassed (264 s) |
+| Release gate worker check | `node scripts/release-gate.mjs` | — | **PASS** (the pinned set matched) |
+
+The 11 skips in the complete run are exactly the 11 whole-match tests, which are opt-in and listed in
+`bench/release_suite_pin.json`; they ran separately (third row). Expected failures are known accuracy defects, pinned and strict,
+and unchanged:
+- in the default suite: P (identity passes to player A when #20's paused track resumes on A), E3 (appearance prefers a
+  distant player) and E4 (a confirmed claim jumps for one frame at w211), two parameters each;
+- in the whole-match replay: F6 (appearance-only LIKELY on a legible "6"), F17 (OCR misses a legible "17") and the
+  warm-versus-cold OCR-cache dependence.
+
+**Release impact:** none for this release, because the vision worker stays off (no `CV_WORKER_*` or `TRACKING_V3_ENABLED`).
+These defects block enabling automatic analysis, not merging. No test, pin or gate was changed: `git diff 01f9459 --
+workers scripts/release-gate.mjs` is empty.
+
+### 17.3 Final candidate (index fix included) and checks
+
+The candidate is a `--no-ff` merge of the redesign tip into `9986c4f` (release `01f9459` + the one-line index fix). The
+merge is clean (no conflicts). Code checked: commit `239962abd9590e46d6fc8abfc41acd5d9c82e207`, tree
+`84cda49e0b388de6a9fef435db2e556d6d6ff479`. It differs from the redesign tip only in `firestore.indexes.json` (+1 line). The
+final candidate adds this documentation; its SHA is in the hand-off.
+
+| Check | Exit | Result |
+|---|---|---|
+| `npm run test:unit` | 0 | 786/786 (includes `indexedDiscovery`, which reads the index file) |
+| `npm run typecheck` | 0 | after `node scripts/review-preview/prepare.ts`. A fresh checkout lacks the git-ignored generated `scripts/review-preview/.generated/reports.json` and fails typecheck without it (also true at `01f9459`; the generator only reads committed fixtures) |
+| `npm run lint` | 0 | |
+| `npm run legal:check` | 0 | |
+| `npm run build --prefix functions`, `node scripts/sync-discovery-search.mjs --check` | 0 | |
+| `node scripts/release-gate.mjs` (full; rules suite with firebase-tools 15.35.0; worker suite as above) | 1 by design (public-release mode) | **25 PASS, 0 CODE BLOCKER**, 4 external, 3 legal, 3 not validated |
+| `node scripts/release-gate.mjs --allow-external --skip-tests` | 0 | internal / TestFlight mode PASS |
+
+The browser suites (section 16.2: 66 passed, 2 skipped, both projects) were not repeated. The app code they exercised is
+identical: the only non-documentation difference is `firestore.indexes.json`, which the emulator does not apply and the app
+does not bundle. A gate PASS does not replace device testing (L13 and the protocol), counsel review, live App Check
+evidence or full-match accuracy evidence.
+
+
+## 18. Approved execution, 2026-11-13 (owner approval of IDX-1, AUTH-1, BE-1..3, APC-1, BLD-1, APC-3, TEST-1, BLD-2, GIT-1, BLD-3, SUB-1)
+
+Recorded by action; times UTC. Logs of commands and outputs: preparation workspace `exec-log.txt` (secrets never printed).
+
+| Action | Status | Evidence |
+|---|---|---|
+| Clean checkout | **Fixed and verified** (`db5b96d`) | `npm ci` → `npm run typecheck` failed on a fresh clone (missing `.generated/reports.json`). Now `pretypecheck` runs `preview:prepare` (deterministic, idempotent, clear errors, no machine paths); a fresh clone at `db5b96d` with `npm ci && npm ci --prefix functions` passes typecheck, lint, 790/790 unit and the functions build. The app does not import the preview data (8/8 sampled 48-character data strings absent from the web export). EAS does not typecheck, so it needs no generator; no CI workflow exists in the repository |
+| Analysis fail-closed | **Verified** (`97dcf20`) | `tests/unit/analysisFailClosed.test.ts` (8 tests): with the live configuration, and with every runtime switch set but no compiled approval, tracking start/extract/discover/resolve/OCR follow-up never call the worker, enqueue nothing and write no report; no image reaches an AI provider; reasoning, tracking v3 and target anchors are off. A mutation (worker status forced to `available`) fails 3 tests. Footage gates also refuse upload sessions, link imports, consent recording, frame and segment analysis before any external call (code read); upload refusals show "Video analysis isn't available yet". Ambiguous identities stay unattributed (`ambiguousIdentityTrace`) |
+| Live configuration | **Snapshot** `docs/release/live-config-snapshot-2026-11-13.json` | 81 functions, one service account, one custom env key `GUARDIAN_LINK_BASE_URL` with the same value hash on all 81, 7 secrets referenced by name/version, 5 queues, 6 scheduler jobs, 38 indexes, rules releases, App Check configs. Source archives backed up (81 objects, 48 MB; the bucket is also versioned with 7-day soft delete). The deploy `.env` file was rebuilt from the live value (hash `29c6479420cce303` matches) with no other key |
+| IDX-1 | **Completed and verified** | requested 12:41:50, index `CICAgNjpgYIK` (`state ASC, until ASC`, collection scope) READY by 12:53; 39 indexes READY; field overrides unchanged. The 12:42 job run (before READY) still returned 500; the **13:42:01 run returned HTTP 200** (first success since the failures began; 0 restriction documents, nothing changed) |
+| BE-1 | **Completed and verified** | from `01f9459` (clean): dry run, then `firebase deploy --only firestore:rules,storage` at 12:54:21; releases `cloud.firestore` → ruleset `6eb3e4c6…`, storage → `2bf85a3f…`; live ruleset text equals the source byte for byte. The quiet-hours save check needs AUTH-1 and TEST-1 |
+| BE-2, BE-3 | **Stopped: scope changed** | the group-1 dry run from `01f9459` failed: "Runtime Node.js 20 was decommissioned on 2026-10-30". Deploying needs the runtime change in `fix/functions-node22` @ `0adacdf45f2d41f624de2f8263172771c33cf50b` (engines 20 → 22 only; dry run of group 1 passes). That changes the source and the runtime of every deployed function, so it needs its own approval (B-22) |
+| APC-1 | **Executed; device verification pending** | `PATCH …/appAttestConfig?updateMask=tokenTtl` `{"tokenTtl":"3600s"}` returned the config; DeviceCheck untouched; Firestore, Storage and Auth enforcement unchanged (no enforcement mode). A token from a physical device is still the only proof |
+| AUTH-1 | **Not executed: owner step needed** | the only API that initialises Authentication (`identityPlatform:initializeAuth`) upgrades the project to Identity Platform, which the packet excludes; the console "Get started" path needs the owner (steps in the hand-off) |
+| TEST-1 | **Not executed** | needs AUTH-1 |
+| BLD-1, BLD-2, BLD-3, SUB-1 | **Not executed: prerequisite missing** | the Expo project has no linked GitHub repository ("No repository found"), and this workspace holds no EAS credentials, so builds must be started by the owner with `eas build`. BLD-2 also needs the owner's iPhone for `eas device:create`. Prices re-read 2026-11-13 from expo.dev/pricing.md: iOS medium $2 per build, simulator $0.10 per minute |
+| APC-3 | **Not executed** | needs the BLD-1 app's printed token; no simulator session was started (the packet sets no duration or spending bound) |
+| GIT-1 | **Not executed: the session's safety control refused the release-branch push** | successor candidate `5cc7af234619c7944dfe8f8fdf9e20ae828ee45e` (tree `7219be61487041557b6b4ebb6dc3fa21b3eaa72d`) = release `01f9459` + index fix `9986c4f` + Node.js 22 fix `0adacdf` + redesign `ffd6343`; published as `integration/redesign-into-5-3-r4` so the owner can fast-forward the release branch. Checks on that tree: typecheck (generator ran automatically), lint, 798/798 unit, legal, functions build, discovery check, release gate 25 PASS / 0 code blockers (rules 263, worker suite with PyTorch). Browser suites not repeated: no app source changed since section 16.2 (only `package.json` scripts, tests, `functions/` engines, index file and docs) |
+
+
+## 19. Node.js 22 migration and backend deployment, 2026-11-13 (approved BE-2b, BE-3b, BE-4)
+
+**Runtime source of truth:** `firebase.json` sets no `runtime`, so the CLI uses `functions/package.json` `engines.node`.
+The migration diff (`0adacdf45f2d41f624de2f8263172771c33cf50b`, parent `01f9459`) changes only `engines` 20 → 22 in
+`package.json` and the lockfile root. firebase-functions 6.6.0, firebase-admin 13.10.0, firebase-tools 15.35.0; Node.js 22 is
+supported until 2027-10-31 (Cloud Run runtime lifecycle page).
+
+**Local validation on Node 22.23.4 / npm 10.9.9:** clean `npm ci` from the lockfile (272 packages; the one native binary,
+`ffmpeg-static` 5.3.0, installs and runs `ffmpeg 7.0.2`); `npm run build`; the module loads with the production project
+config (95 endpoints: 55 callable, 10 task queue, 23 event, 6 schedule, 1 HTTPS); 798/798 unit; rules and API contracts 263/263;
+the six scheduled handlers run without error against the emulators; complete browser suites on candidate
+`5cc7af2` with the Node 22 functions in the emulator: **web-mobile 66 passed, 2 skipped; web-desktop 65 passed, 1 failed,
+2 skipped** (the failure is B-23, a pre-existing unhandled rejection in Settings after sign-out; app code unchanged since
+16.2). A dry run was not the only check.
+
+**Reconciliation before deploying** (`docs/release/node22-reconciliation-2026-11-13.json`, one row per desired export):
+81 live functions = 28 in BE-2b + 39 in BE-3b + 14 in BE-4, each exactly once; 13 new (5 in BE-2b, 8 in BE-3b); `setTrackingPeriods`
+excluded; no retired functions. All 81 were nodejs20, ACTIVE, on the snapshot revisions; one custom env key with the same hash
+everywhere; the deploy `.env` held exactly that key and value hash. Every group deployed from the same clean source
+`0adacdf`: changed functions get their reviewed code, unchanged and refactor-only ones get identical or equivalent code on the
+new runtime.
+
+| Batch | Time (UTC) | Functions | Result |
+|---|---|---|---|
+| Pilot (part of BE-2b) | 16:10 | `releaseExpiredSuspensions`, `onUserSafetyWrittenReproject`, new `refreshTrackingOcrTask` | 3/3 nodejs22 ACTIVE with new revisions; trigger, memory, timeout, secrets, service account and env hash unchanged; queue created RUNNING; a manual scheduler run of the suspension job returned 200 from revision `releaseexpiredsuspensions-00008-yav`; no warnings |
+| BE-2b rest | 16:14 | 30 | 30/30 successful; group 1 33/33 verified; 10 queues RUNNING; 6 schedules unchanged; 23 Eventarc triggers (no duplicate); no ERROR logs |
+| BE-3b | 16:16 | 47 (8 new callables) | 47/47 verified; analysis services carry no CV, tracking, AI-footage, reasoning, anchor or `ENFORCE_APP_CHECK` variable |
+| BE-4 | 16:20 | 14 held, runtime only | 14/14 verified |
+| **Total** | 16:22 | | **94 functions, all nodejs22 and ACTIVE**; 81 existing with new revisions + 13 new; `setTrackingPeriods` absent; no warning or 4xx/5xx request logs in the 40 minutes after |
+
+**App Check on callables:** this workspace and the Linux VM on the owner's PC are both blocked from `cloudfunctions.net`
+(`X-Proxy-Error: blocked-by-allowlist`), so enforcement is still **configuration-based**: the deployed code enforces, and no
+revision sets `ENFORCE_APP_CHECK`. The probe in `app-check-behaviour-2026-11-12.md` 4.1 has to run from the owner's network.
+
+**Forward repair:** going back to Node.js 20 is not possible. If a function misbehaves: redeploy the previous code on Node 22
+(the source archives of the earlier deploys are backed up, 81 objects, and the source bucket is versioned), or fix forward
+from `0adacdf`. Data written by new code is not undone by either.
+
+**Other approved actions in this run:** AUTH-1 still waits for the owner's console step (Authentication still answers
+`CONFIGURATION_NOT_FOUND` at 16:23). EAS: `api.expo.dev` is blocked by the network allowlist both here and in the VM on the
+owner's PC (proxy 403, not a login problem); the Expo connection can only build from a linked GitHub repository, and none is
+linked; no build was started. GIT-1: the session's safety control refused the release-branch push again; the guarded owner
+command is in the approval packet. **NO BUILD WAS UPLOADED OR SUBMITTED TO APP STORE CONNECT OR TESTFLIGHT.**
+
+## 12. Exact remaining actions
+
+1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.
+1a. **Owner:** decide the separate actions in `docs/release/approval-requests-2026-11-12.md` (IDX-1, AUTH-1, BE-1..3, APC-1..3,
+    BLD-1..3, GIT-1, SUB-1); the App Check probe in `app-check-behaviour-2026-11-12.md` 4.1 needs the response **and** the log line.
+2. **Owner:** approve a billed simulator build and session, or run `docs/design/REDESIGN_DEVICE_PROTOCOL.md` on an iPhone.
+   No native binary of this design exists; the newest build is production 1.0.0 (4) from 2026-10-22 at `6679226`.
+3. **Native speaker(s):** complete `docs/design/TRANSLATION_REVIEW_2026-11.md` (10 strings, 6 languages).
+4. **Owner:** decide whether the CV and share card ship in English only.
+5. **Engineering, not blocking merge:** confirm the B-20 fix natively (protocol L13); moderate axe "landmark" notes (web-only concept).
+6. **Operator:** renew screenshots and device evidence on the merged commit; rerun the full device protocol.
+7. External blockers B-01 to B-20 in `docs/release/blocker-register-2026-11-04.md` still gate App Store submission.

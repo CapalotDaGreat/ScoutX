@@ -101,6 +101,9 @@ export function Modal({
       animationType="none"
       statusBarTranslucent
       onRequestClose={handleClose}
+      // Names the dialog for screen readers; without it a sheet is announced only as "dialog".
+      accessibilityLabel={title}
+      accessibilityViewIsModal
     >
       <View style={themeCssVars} className="flex-1">
         <KeyboardAvoidingView

@@ -13,6 +13,7 @@ import {
 import { type JourneyEntry } from '@/features/football-journey/types';
 import { cn } from '@/utils/cn';
 import { useAppTranslation } from '@/i18n/hooks/useAppTranslation';
+import { displayTitle } from '@/utils/displayTitle';
 
 export type JourneyEntryCardProps = {
   entry: JourneyEntry;
@@ -55,7 +56,7 @@ export function JourneyEntryCard({ entry, index, isLast = false }: JourneyEntryC
         </View>
 
         <Text weight="semibold" className="mt-2">
-          {entry.title}
+          {displayTitle(entry.title)}
         </Text>
 
         {entry.subtitle ? (

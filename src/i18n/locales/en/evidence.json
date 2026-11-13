@@ -11,7 +11,12 @@
     "unverified": "Unverified",
     "observed": "Observed",
     "inferred": "Inferred",
-    "unknown": "Unknown source"
+    "unknown": "Unknown source",
+    "verifiedLogged": "Trust-verified · logged matches only",
+    "profileNotTracking": "Profile fields · not continuous match tracking",
+    "ownSelfEntered": "Your profile · self-entered, not match-verified analysis",
+    "passportVerified": "Trust-verified identity · public Passport fields only",
+    "passportPlayerEntered": "Player-entered Passport · not match-verified analysis"
   },
   "state": {
     "available": "Evidence available",

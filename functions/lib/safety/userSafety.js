@@ -101,7 +101,7 @@ function guardianEmail(kind, input) {
         subject = `A scout contacted ${name} on PitchProof`;
         paragraphs.push(`A scout sent ${name} a request through PitchProof. You are receiving this because you approved scout contact for their account.`, 'Messages stay inside PitchProof. If anything seems wrong, you can withdraw scout contact using the link in your consent confirmation email.');
     }
-    paragraphs.push('PitchProof is provided by CML Electronics, Höglerstrasse 55, 8600 Dübendorf, Switzerland.');
+    paragraphs.push('PitchProof is provided by Lusiola Software, Höglerstrasse 55, 8600 Dübendorf, Switzerland.');
     return {
         subject,
         text: paragraphs.join('\n\n'),

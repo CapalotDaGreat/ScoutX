@@ -84,6 +84,7 @@ function AgeBandStep() {
             key={option.band}
             variant={choice === option.band ? 'accent' : 'secondary'}
             accessibilityRole="radio"
+            aria-checked={choice === option.band}
             accessibilityState={{ selected: choice === option.band }}
             testID={`age-band-${option.band}`}
             onPress={() => {

@@ -1,11 +1,7 @@
 import * as Print from 'expo-print';
 import { type PublicPortfolioData } from '@/features/public-portfolio/types';
-import { buildPublicPortfolioUrl } from '@/features/public-portfolio/constants';
-import { filterPortfolioForPublicExport, isPortfolioSectionVisible } from '@/features/public-portfolio/models/PortfolioModel';
+import { buildFootballCvHtml } from '@/features/public-portfolio/services/footballCvHtml';
 import { shareFileUri } from '@/features/share-cards/services/shareCardService';
-import { escapeHtml } from '@/utils/htmlEscape';
-import { lightColors } from '@/theme/tokens/colors';
-import { formatRating } from '@/features/player-statistics/utils/recordedStats';
 
 export class PortfolioExportNotPublicError extends Error {
   constructor() {
@@ -15,79 +11,13 @@ export class PortfolioExportNotPublicError extends Error {
 }
 
 export async function exportFootballCvPdf(data: PublicPortfolioData): Promise<void> {
-  const filtered = filterPortfolioForPublicExport(data);
-  if (!filtered) {
+  const built = buildFootballCvHtml(data);
+  if (!built) {
     throw new PortfolioExportNotPublicError();
   }
-  const { profile, recommendations, privacy } = filtered;
-  const username = profile.username ?? null;
-  const url = buildPublicPortfolioUrl(profile.id, username);
-  const showStats = isPortfolioSectionVisible(privacy, 'statistics');
-  const showRecs = isPortfolioSectionVisible(privacy, 'recommendations');
-
-  const matchRows = showStats
-    ? (profile.statisticsMatches ?? [])
-        .slice(-8)
-        .map(
-          (match) =>
-            `<tr><td>${escapeHtml(match.date.slice(0, 10))}</td><td>${escapeHtml(match.opponent)}</td><td>${match.goals}</td><td>${match.assists}</td><td>${formatRating(match.matchRating)}</td></tr>`,
-        )
-        .join('')
-    : '';
-
-  const recommendationBlocks = showRecs
-    ? recommendations
-        .slice(0, 4)
-        .map(
-          (item) =>
-            `<div class="rec"><strong>${escapeHtml(item.authorName)} · ${escapeHtml(item.authorOrganization)}</strong><p>${escapeHtml(item.body)}</p></div>`,
-        )
-        .join('')
-    : '';
-
-  const statsSection = showStats
-    ? `<h2>Recent Matches</h2>
-        <table>
-          <thead><tr><th>Date</th><th>Opponent</th><th>G</th><th>A</th><th>Rating</th></tr></thead>
-          <tbody>${matchRows || '<tr><td colspan="5">No matches logged yet.</td></tr>'}</tbody>
-        </table>`
-    : `<h2>Recent Matches</h2><p>Match statistics are private on this Passport.</p>`;
-
-  const recsSection = showRecs
-    ? `<h2>Coach Endorsements</h2>${recommendationBlocks || '<p>No endorsements yet.</p>'}`
-    : `<h2>Coach Endorsements</h2><p>Endorsements are private on this Passport.</p>`;
-
-  const html = `
-    <html>
-      <head>
-        <meta charset="utf-8" />
-        <style>
-          body { font-family: Helvetica, Arial, sans-serif; color: ${lightColors.textPrimary}; padding: 32px; background: ${lightColors.background}; }
-          h1 { margin: 0 0 8px; font-size: 28px; }
-          h2 { margin: 24px 0 8px; font-size: 16px; color: ${lightColors.accent}; text-transform: uppercase; letter-spacing: 1px; }
-          .badge { display: inline-block; background: ${lightColors.goldMuted}; color: ${lightColors.verification}; padding: 4px 10px; border-radius: 999px; font-size: 12px; margin-right: 8px; font-weight: 600; }
-          .meta { color: ${lightColors.textSecondary}; margin-bottom: 16px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-          td, th { border-bottom: 1px solid ${lightColors.border}; padding: 8px; text-align: left; font-size: 12px; }
-          .rec { border-left: 3px solid ${lightColors.verification}; padding-left: 12px; margin: 12px 0; }
-          .footer { margin-top: 32px; font-size: 11px; color: ${lightColors.textTertiary}; }
-        </style>
-      </head>
-      <body>
-        <div class="badge">PitchProof Football CV</div>
-        <h1>${escapeHtml(profile.fullName)}</h1>
-        <div class="meta">${escapeHtml(profile.position)} · ${escapeHtml(profile.club)} · ${escapeHtml(profile.nationality)}</div>
-        <p>${profile.biography.trim() ? escapeHtml(profile.biography) : ''}</p>
-        ${statsSection}
-        ${recsSection}
-        <div class="footer">Public Football Passport: ${escapeHtml(url)}. Downloaded copies cannot be recalled if you later hide sections.</div>
-      </body>
-    </html>
-  `;
-
-  const file = await Print.printToFileAsync({ html });
+  const file = await Print.printToFileAsync({ html: built.html });
   await shareFileUri(file.uri, {
     mimeType: 'application/pdf',
-    dialogTitle: `${profile.fullName} — Football CV`,
+    dialogTitle: `${built.fullName} — Football CV`,
   });
 }

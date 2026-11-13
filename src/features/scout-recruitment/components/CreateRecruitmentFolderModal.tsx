@@ -43,7 +43,7 @@ export function CreateRecruitmentFolderModal({
 
   return (
     <Modal visible={visible} onClose={onClose} title={t('pipelineUi.createFolder')} size="md">
-      <View className="gap-4">
+      <View className="px-5 py-4 gap-4">
         <Input
           label={t('pipelineUi.folderName')}
           value={name}
@@ -52,7 +52,7 @@ export function CreateRecruitmentFolderModal({
         />
 
         <View className="gap-2">
-          <Text variant="caption" color="secondary" className="uppercase">
+          <Text variant="caption" color="secondary">
             {t('pipelineUi.color')}
           </Text>
           <View className="flex-row flex-wrap gap-2">

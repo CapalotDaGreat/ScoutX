@@ -616,5 +616,12 @@
     "body": "This is the exact version PitchProof shows people you haven't approved. It's built on our server from your privacy settings and safety rules, so it can hide more than your settings alone.",
     "hiddenTitle": "Not visible to strangers",
     "hiddenBody": "People you haven't approved can't see your Passport right now. Turn on the public Passport in your privacy settings. If you're under 18, your parent or guardian also needs to allow it. Changes can take a moment to appear."
+  },
+  "homeSegments": {
+    "today": "Today",
+    "passport": "Passport"
+  },
+  "homeIdentity": {
+    "openPassport": "Open your Passport"
   }
 }

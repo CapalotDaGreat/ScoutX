@@ -58,8 +58,23 @@ function isNetworkMessage(message: string): boolean {
   return lower.includes('network') || lower.includes('offline') || lower.includes('timed out');
 }
 
+/**
+ * The Cloud Functions SDK rejects a callable with exactly this message, before our code runs, when the App Check
+ * token is missing or invalid (or, rarely, when the sign-in token itself is rejected). Our own functions word
+ * sign-in failures differently ("Sign in required."). "Your session expired" would send a signed-in user in circles.
+ */
+const PLATFORM_VERIFICATION_MESSAGE =
+  "PitchProof couldn't verify this copy of the app. Make sure it's up to date and try again. If it keeps happening, sign out and back in, or contact support.";
+
+function isPlatformVerificationRejection(code: string | null, error: unknown): boolean {
+  return code === 'unauthenticated' && error instanceof Error && error.message.trim() === 'Unauthenticated';
+}
+
 export function toUserMessage(error: unknown, fallback: string): string {
   const code = extractCode(error);
+  if (isPlatformVerificationRejection(code, error)) {
+    return PLATFORM_VERIFICATION_MESSAGE;
+  }
   if (code && CODE_MESSAGES[code]) {
     return CODE_MESSAGES[code];
   }

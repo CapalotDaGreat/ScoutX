@@ -64,7 +64,7 @@ export function SaveSearchFiltersModal({
         </View>
       }
     >
-      <View className="gap-4">
+      <View className="px-5 py-4 gap-4">
         <Text variant="body-sm" color="secondary">
           {t('scout:search.saveFiltersDescription')}
         </Text>

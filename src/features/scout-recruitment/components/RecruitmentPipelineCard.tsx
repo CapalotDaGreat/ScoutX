@@ -37,7 +37,7 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
       accessibilityLabel={`${entry.playerName}, ${entry.playerClub}`}
       testID={`recruitment-card-${entry.playerId}`}
       onPress={() => onPress?.(entry)}
-      className="mb-2 overflow-hidden rounded-lg border border-border bg-surface"
+      className="mb-2 overflow-hidden rounded-xl border border-divider bg-surface active:opacity-80"
     >
       <View className="flex-row">
         <View className="flex-1 p-3">
@@ -61,14 +61,20 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
               </View>
             )}
             <View className="flex-1">
-              <Text weight="semibold" numberOfLines={1}>
-                {entry.playerName}
-              </Text>
+              <View className="flex-row items-center gap-2">
+                {entry.playerPosition ? (
+                  <View className="rounded-full bg-accent-muted px-2 py-0.5">
+                    <Text variant="caption" weight="bold" color="accent" numberOfLines={1}>
+                      {entry.playerPosition}
+                    </Text>
+                  </View>
+                ) : null}
+                <Text weight="semibold" numberOfLines={1} className="min-w-0 flex-1">
+                  {entry.playerName}
+                </Text>
+              </View>
               <Text variant="caption" color="secondary" numberOfLines={1}>
                 {entry.playerClub}
-              </Text>
-              <Text variant="caption" color="secondary" numberOfLines={1}>
-                {entry.playerPosition}
               </Text>
             </View>
             {onMovePress ? (
@@ -80,7 +86,7 @@ export const RecruitmentPipelineCard = memo(function RecruitmentPipelineCard({
                   event.stopPropagation();
                   onMovePress(entry);
                 }}
-                className="h-9 w-9 items-center justify-center rounded-md bg-background-secondary"
+                className="h-11 w-11 items-center justify-center rounded-full bg-background-secondary"
               >
                 <MoreHorizontal size={16} color={colors.textSecondary} />
               </Pressable>

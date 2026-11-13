@@ -69,7 +69,10 @@ export function AnalysisWorkspace({ journey, onProblemAction, busy, number }: An
         <View className="gap-2 rounded-md border border-border px-3 py-3" accessibilityRole="alert">
           <Text weight="semibold">{t(`review.problem.${problem.kind}.title`)}</Text>
           <Text variant="body-sm" color="secondary">{t(`review.problem.${problem.kind}.body`)}</Text>
-          <Text variant="caption" color="tertiary">{t(problem.retryHelps ? 'review.problem.retryHelps' : 'review.problem.retryNoHelp')}</Text>
+          {/* A cancelled analysis has nothing to retry; its body already says how to start again. */}
+          {problem.action !== 'none' ? (
+            <Text variant="caption" color="tertiary">{t(problem.retryHelps ? 'review.problem.retryHelps' : 'review.problem.retryNoHelp')}</Text>
+          ) : null}
           {problem.action !== 'none' && onProblemAction ? (
             <Button size="sm" variant="secondary" loading={busy} onPress={() => onProblemAction(problem.action)} testID="workspace-problem-action">
               {t(`review.problem.${problem.kind}.action`)}

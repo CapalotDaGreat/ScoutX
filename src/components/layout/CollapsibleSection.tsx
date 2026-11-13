@@ -67,18 +67,8 @@ export function CollapsibleSection({
     : `${title}. ${open ? 'Expanded' : 'Collapsed'}`;
 
   return (
-    <View
-      className={cn(
-        'overflow-hidden rounded-2xl border border-gold/25 bg-surface',
-        open && 'border-gold/40',
-        className,
-      )}
-    >
+    <View className={cn('overflow-hidden rounded-xl border border-divider bg-surface', className)}>
       <View className="flex-row">
-        <View
-          className="w-1 self-stretch"
-          style={{ backgroundColor: open ? colors.gold : colors.goldMuted }}
-        />
         <View className="min-w-0 flex-1">
           <Pressable
             accessibilityRole="button"
@@ -86,7 +76,7 @@ export function CollapsibleSection({
             accessibilityHint={t(open ? 'a11y.collapseSection' : 'a11y.expandSection')}
             accessibilityState={{ expanded: open }}
             onPress={toggle}
-            className="flex-row items-center justify-between gap-3 px-5 py-5"
+            className="min-h-[56px] flex-row items-center justify-between gap-3 px-4 py-4 active:opacity-70"
           >
             <View className="min-w-0 flex-1">
               <Text weight="semibold">{title}</Text>
@@ -96,16 +86,20 @@ export function CollapsibleSection({
                 </Text>
               ) : null}
             </View>
-            <View accessibilityElementsHidden importantForAccessibility="no">
+            <View
+              accessibilityElementsHidden
+              importantForAccessibility="no"
+              className={cn('h-8 w-8 items-center justify-center rounded-full', open ? 'bg-accent-muted' : 'bg-background-secondary')}
+            >
               {open ? (
-                <ChevronUp size={18} color={colors.gold} />
+                <ChevronUp size={18} color={colors.accent} />
               ) : (
                 <ChevronDown size={18} color={colors.textSecondary} />
               )}
             </View>
           </Pressable>
           {open ? (
-            <View className="gap-5 border-t border-divider px-5 pb-5 pt-4">{children}</View>
+            <View className="gap-4 border-t border-divider px-4 pb-4 pt-4">{children}</View>
           ) : null}
         </View>
       </View>

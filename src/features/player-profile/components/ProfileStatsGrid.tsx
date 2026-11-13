@@ -17,20 +17,23 @@ export function ProfileStatsGrid({ stats, compact = false }: ProfileStatsGridPro
   const reduceMotion = useReducedMotion();
   if (compact) {
     return (
-      <Animated.View
-        entering={reduceMotion ? undefined : FadeInUp.delay(80).duration(400)}
-        className="flex-row flex-wrap gap-3 border-y border-border py-4"
-      >
-        {stats.map((stat) => (
-          <View key={stat.label} className="min-w-[40%] flex-1 gap-1">
-            <Text weight="bold" className="text-stat-lg text-foreground">
-              {stat.value}
-            </Text>
-            <Text variant="caption" color="secondary">
-              {labels.profileStat(stat).label}
-            </Text>
-          </View>
-        ))}
+      <Animated.View entering={reduceMotion ? undefined : FadeInUp.delay(80).duration(400)}>
+        {/* Scoreboard strip: logged totals only; an em dash means not recorded, never zero. */}
+        <View className="flex-row rounded-xl border border-divider bg-surface py-3">
+          {stats.map((stat, index) => (
+            <View
+              key={stat.label}
+              className={index === 0 ? 'min-w-0 flex-1 items-center gap-0.5 px-1' : 'min-w-0 flex-1 items-center gap-0.5 border-l border-divider px-1'}
+            >
+              <Text className="font-display text-foreground" style={{ fontSize: 28, lineHeight: 30, fontVariant: ['tabular-nums'] }}>
+                {stat.value}
+              </Text>
+              <Text variant="caption" color="secondary" numberOfLines={2} className="text-center">
+                {labels.profileStat(stat).label}
+              </Text>
+            </View>
+          ))}
+        </View>
       </Animated.View>
     );
   }
