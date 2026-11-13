@@ -107,7 +107,7 @@ validation, backups (B-02), screenshots on the merged commit (B-16) and the othe
 
 ## Status after the approved execution (2026-11-13)
 
-IDX-1 executed (index READY; first job run pending) · BE-1 completed and verified · APC-1 executed (device proof pending) ·
+IDX-1 completed and verified (index READY; 13:42 UTC job run HTTP 200) · BE-1 completed and verified · APC-1 executed (device proof pending) ·
 GIT-1 see the hand-off · **BE-2, BE-3 stopped** (Node.js 20 runtime decommissioned; source must change) · AUTH-1, TEST-1,
 BLD-1, APC-3, BLD-2, BLD-3, SUB-1 not executed (owner console step; no EAS build route from the preparation workspace).
 Details: `docs/design/REDESIGN_LEDGER.md` section 18.
