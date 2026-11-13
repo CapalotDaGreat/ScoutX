@@ -219,3 +219,55 @@ uses. Never add `--auto-submit`; never run `eas submit`.
 Artifact checks for each build: `npx eas-cli build:view <id>` shows commit `e8862104…`, the profile and the bundle
 `com.scoutx.app`; download the artifact and keep it. Do **not** upload the BLD-3 `.ipa` anywhere (no TestFlight, no
 Transporter). Simulator sessions still need a duration and spending cap.
+
+## Successor candidate and owner procedures (2026-11-13, night; supersedes the section above)
+
+| Item | Value |
+|---|---|
+| Release target (remote) | `01f9459c2608bc939c96f5c7388b5e5ba98aac2d` (recheck before acting) |
+| main (remote) | `c7349d55376e1ace0a3ce67eae11785952160c24`; an ancestor of the release branch, no main-only commits, so main fast-forwards |
+| Code-frozen candidate (all checks, ledger section 21) | `0e5ba28a55361173a03f7dcf468793389ef17662`, tree `7142b759ddc409a95ec16ec90e3c2e0a32a287f6` |
+| **Final candidate** | the tip of `integration/redesign-into-5-3-r9` on `origin`: the same merge, made from the redesign tip that adds only ledger and packet text; `git diff 0e5ba28 <final> --stat` lists only files under `docs/` |
+| Superseded | `e886210` (r6), `60254e8` (r7), every earlier SHA |
+
+Merge authority: GIT-1 (release) and the main integration are **approved** by the owner (2026-11-13 brief); pushes are plain,
+non-force and subject to repository protections. If a push is refused, use these commands from the owner's terminal or a
+pull request; never `--force`.
+
+```
+git fetch origin
+F=$(git rev-parse origin/integration/redesign-into-5-3-r9)
+test "$(git rev-parse origin/release/pitchproof-5-3-candidate)" = 01f9459c2608bc939c96f5c7388b5e5ba98aac2d || { echo "release moved: stop"; exit 1; }
+git diff --quiet 0e5ba28a55361173a03f7dcf468793389ef17662 "$F" -- . ':!docs' || { echo "non-doc change since the tested tree: stop"; exit 1; }
+git merge-base --is-ancestor origin/release/pitchproof-5-3-candidate "$F" || { echo "not a fast-forward: stop"; exit 1; }
+git push origin "$F:refs/heads/release/pitchproof-5-3-candidate"
+git merge-base --is-ancestor origin/main "$F" && git push origin "$F:refs/heads/main"
+git ls-remote origin refs/heads/release/pitchproof-5-3-candidate refs/heads/main   # both must print $F
+```
+Pull-request route, if protections require one: PR `integration/redesign-into-5-3-r9` → `release/pitchproof-5-3-candidate`,
+then `release/pitchproof-5-3-candidate` → `main`; merge with "rebase and merge" off and "squash" off (fast-forward or merge
+commit) so the tested SHA stays in history.
+
+Primary workspace `C:\ZLI\M335\ScoutX` (owner, PowerShell), never `reset --hard` or `clean`:
+```
+cd C:\ZLI\M335\ScoutX
+git status --short --branch          # tracked changes? stop and commit them on a branch of their own first
+git stash list                        # note anything there; it is kept
+git fetch origin
+git switch main                       # refuses if a tracked change would be overwritten: that is the safe outcome
+git merge --ff-only origin/main
+git rev-parse HEAD                    # must equal the pushed main SHA
+git status --short --ignored | Select-String -NotMatch node_modules   # .env*, .local\, GoogleService-Info.plist stay
+```
+
+Builds (BLD-1 simulator, BLD-2 Ad Hoc, BLD-3 production) unchanged from the table above, but from the **final main SHA** and
+with the preflight first:
+```
+git clone https://github.com/CapalotDaGreat/ScoutX pp-build && cd pp-build && git checkout <final main SHA>
+npm ci && npm ci --prefix functions && npm run typecheck && npm run test:unit
+npx eas-cli env:pull --environment production --path ../pp-production.env      # outside the clone; delete afterwards
+npm run preflight:eas -- --profile simulator  --env-file ../pp-production.env   # then preview, production
+npx eas-cli build --platform ios --profile <simulator|preview|production> --non-interactive   # never --auto-submit
+```
+A simulator **session** still needs a duration and spending cap from the owner. No upload, `eas submit`, Transporter or App
+Review is authorised.

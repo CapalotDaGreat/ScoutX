@@ -645,7 +645,7 @@ Back fix, B-23 fix and rename (ancestry checked). It equals the redesign tip plu
 | Complete browser suites (fresh emulators, export built from the clean candidate, `--retries=0`) | web-mobile **67 passed, 2 skipped**; web-desktop **67 passed, 2 skipped** |
 | Focused repeats (B-23, session restore, B-20, pushed screens; `--repeat-each=8`, no retries) | 32/32 mobile, 32/32 desktop |
 | Unit / typecheck / lint / legal / functions build / discovery check / legal build check | 805/805 / 0 / 0 / pass / pass / pass / up to date |
-| Release gate (full: rules 263, worker suite with PyTorch) | 26 PASS, 0 code blockers; 10 legal/external/not-validated items (public-release mode exit 1 by design) |
+| Release gate (full: rules 263, worker suite with PyTorch) | 25 PASS (corrected in section 21: an earlier draft said 26), 0 code blockers; 10 legal/external/not-validated items (public-release mode exit 1 by design) |
 | Fresh clone from `origin` with the README commands (`npm ci`, `npm ci --prefix functions`, typecheck, lint, unit, functions build) | all exit 0, 805/805, no tracked changes; preview data absent from the web export (0 of 8 samples) |
 
 Not repeated: the earlier fail-closed, worker and safeguard results apply unchanged (`git diff 01f9459 e886210 -- workers
@@ -653,6 +653,70 @@ firestore.rules storage.rules` is empty; `functions/src` differs only in the ema
 ACTIVE (unchanged since section 19). Auth still `CONFIGURATION_NOT_FOUND`; App Attest config present (`tokenTtl 3600s`).
 
 **NO BUILD WAS UPLOADED OR SUBMITTED TO APP STORE CONNECT OR TESTFLIGHT.**
+
+## 21. Rollback safety, explicit EAS environments, session expiry, successor candidate (2026-11-13, night)
+
+### 21.1 Rollback
+The full analysis and per-layer recovery commands are in `docs/release/rollback-plan-2026-11-13.md`. The candidate's first
+parent is `9c6d6ed` (release `01f9459` + index `9986c4f` + Node 22 `0adacdf`), and `git diff 9c6d6ed <candidate> --
+firestore.indexes.json functions/package.json functions/package-lock.json firebase.json firestore.rules storage.rules` is
+**empty**. So `git revert -m 1 <candidate>` removes the redesign side only: the screens, the B-20, B-23 and EAS changes, the tests
+and the Lusiola Software rename. It keeps the Node 22 engines and the live index definition. No revert changes anything deployed.
+The preferred route is a selective revert or a forward repair that keeps the rename, the index and Node 22. Node 20 is not
+a rollback option.
+
+### 21.2 EAS environments (`5ece794`)
+EAS selects the environment variables from a profile's `environment` field, not from its name. `simulator`, `preview` and
+`production` now all set `"environment": "production"` explicitly; `development` is unchanged.
+- **Build gates.** `app.config.ts` used to gate only `production`. It now also refuses a `preview` build with missing
+  Firebase configuration, mock, emulator or debug switches, or bundled debug tokens. The simulator flag stays refused
+  outside the `simulator` profile.
+- **Preflight.** `npm run preflight:eas -- --profile <p> --env-file <pulled env>` evaluates the real `npx expo config` with
+  the profile's variables and prints names only. It checks: a clean tree, the explicit environment, no auto-submit, the
+  simulator flag only in the simulator profile, an `appl_` RevenueCat key, the native plist (`GOOGLE_SERVICES_PLIST`), bundle
+  `com.scoutx.app`, and the App Attest entitlement `production`.
+- **Preflight results.** All three profiles pass with placeholder values. It fails, as intended, on: missing variables; an
+  `sk_` key with mock data; the simulator flag in production.
+- **Unit tests.** `easProfiles.test.ts` (4) fixes the profile structure.
+- **Build numbers.** They are remote (`appVersionSource: remote`): production auto-increments; simulator and preview do not.
+- **Signing.** Signing stays EAS-managed; nothing about signing is in the repository.
+
+### 21.3 Session expiry (B-23 follow-up, `ac513ac`, made self-contained in `65f47ed`)
+Browser regression in `e2e/flows/states.spec.ts`. It registers its own throwaway player on the emulator, opens Settings,
+and drives the token clock with `page.clock`:
+
+| Case | Expected | Result |
+|---|---|---|
+| Token expires while the refresh endpoint is unreachable | session kept, **0** guest sign-ups, account still shown | pass |
+| Account disabled on the emulator (revocation), token expires with Settings open | refresh refused (400), **exactly 1** replacement guest, old account's data gone | pass |
+| Sign-in to another account (scout) afterwards | only the scout's data; no page errors | pass |
+| Genuine denial for the signed-in account | rethrown, visible (unit `accountScopedResult.test.ts`) | pass |
+
+- **Repeats.** Focused repeats (B-23 ×2, expiry, session restore, B-20, pushed screens; `--repeat-each=8`, no retries):
+  **40/40 mobile, 40/40 desktop**.
+- **First focused run.** It failed 8/8 per project because the test read the long-name test's account. That was a test
+  dependency, not an app defect; the test now creates its own account.
+- **New defect B-25 (pre-existing, not fixed).** A reload while offline with an expired token shows "Choose your role" and
+  an unhandled "client is offline" error.
+- **Not covered.** Native token expiry (protocol row L14).
+
+### 21.4 Successor candidate
+| | |
+|---|---|
+| Code-frozen candidate | `0e5ba28a55361173a03f7dcf468793389ef17662`, tree `7142b759ddc409a95ec16ec90e3c2e0a32a287f6`, parents `9c6d6ed` and redesign `65f47ed` |
+| Differs from `60254e8` (r7, where the complete suites ran) | `states.spec.ts` (expiry fixture only), rollback plan, register B-25. No app or server source |
+
+| Check (Node 22.23.4) | Tree | Result |
+|---|---|---|
+| Complete browser suites, fresh emulators, export built from the clean tree, `--retries=0` | r7 `60254e8` | web-mobile **68 passed, 2 skipped**, exit 0; web-desktop **68 passed, 2 skipped**, exit 0 |
+| Focused session/Back repeats | app of r7 + test of `65f47ed` | 40/40, 40/40 |
+| typecheck / lint / unit / functions build / discovery check / legal build check | r8 `0e5ba28` | exit 0 each; unit **809/809**; functions build leaves no tracked change |
+| Release gate (full: rules, worker suite with PyTorch) | r8 `0e5ba28` | **25 PASS, 0 code blockers**; 4 external, 3 legal, 3 not validated (public-release mode exit 1 by design); rules 263; worker 669 passed, 11 skipped, 6 xfailed |
+| `states.spec.ts` whole file (serial order with the new fixture) | r8 `0e5ba28` | 9/9 mobile, 9/9 desktop, exit 0 (fresh emulators, `--retries=0`) |
+
+The two skips are the known native-only cases. The analysis safeguards, thresholds and candidate defaults are unchanged:
+`git diff 01f9459 <candidate> -- workers firestore.rules storage.rules` is empty. Automatic analysis was not enabled. The
+export/privacy checks are in the browser suites and the gate.
 
 ## 12. Exact remaining actions
 
