@@ -164,12 +164,14 @@ if (process.env.EAS_BUILD_PROFILE === SIMULATOR_BUILD_PROFILE) {
   }
 }
 
-if (process.env.EAS_BUILD_PROFILE === 'production') {
+// Ad Hoc (preview) builds run release code against the production backend, so they pass the same checks; only the
+// legal-contact rule above is production-only.
+if (process.env.EAS_BUILD_PROFILE === 'production' || process.env.EAS_BUILD_PROFILE === 'preview') {
   const problems = productionBuildProblems(
     process.env, process.env.EAS_BUILD_PLATFORM ?? 'ios', configFileExists(googleServicesPlist),
   );
   if (problems.length > 0) {
-    throw new Error(`Production build blocked:\n${problems.map((problem) => problem.message).join('\n')}`);
+    throw new Error(`${process.env.EAS_BUILD_PROFILE === 'preview' ? 'Preview' : 'Production'} build blocked:\n${problems.map((problem) => problem.message).join('\n')}`);
   }
 }
 

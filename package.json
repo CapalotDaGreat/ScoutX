@@ -43,7 +43,8 @@
     "marketing:preview": "node scripts/marketing-preview.mjs",
     "marketing:test": "node scripts/marketing-test.mjs",
     "marketing:native:plan": "node scripts/marketing-native-compose.mjs --validate-plan",
-    "marketing:native:compose": "node scripts/marketing-native-compose.mjs"
+    "marketing:native:compose": "node scripts/marketing-native-compose.mjs",
+    "preflight:eas": "node scripts/eas-preflight.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/barlow-condensed": "^0.2.3",
