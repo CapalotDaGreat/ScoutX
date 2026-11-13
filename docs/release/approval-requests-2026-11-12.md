@@ -149,3 +149,10 @@ Details: `docs/design/REDESIGN_LEDGER.md` section 18.
 5. **Callable App Check probe** (after BE-3b; this workspace cannot reach `cloudfunctions.net`): run 4.1 of
    `app-check-behaviour-2026-11-12.md` from your network and send the full response with the UTC time; the session
    correlates it with the server log and revision.
+
+## Status 2026-11-13, 16:25 UTC
+
+BE-2b, BE-3b and BE-4 **completed and verified** (94 functions on nodejs22; ledger section 19). GIT-1 refused again by the
+session's safety control: use the guarded owner command above. AUTH-1 waits for the console step. Builds wait for EAS access
+(network allowlist blocks `api.expo.dev`; no GitHub repository linked to the Expo project). No upload or submission is
+authorised or was made.

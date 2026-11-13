@@ -562,6 +562,51 @@ Recorded by action; times UTC. Logs of commands and outputs: preparation workspa
 | APC-3 | **Not executed** | needs the BLD-1 app's printed token; no simulator session was started (the packet sets no duration or spending bound) |
 | GIT-1 | **Not executed: the session's safety control refused the release-branch push** | successor candidate `5cc7af234619c7944dfe8f8fdf9e20ae828ee45e` (tree `7219be61487041557b6b4ebb6dc3fa21b3eaa72d`) = release `01f9459` + index fix `9986c4f` + Node.js 22 fix `0adacdf` + redesign `ffd6343`; published as `integration/redesign-into-5-3-r4` so the owner can fast-forward the release branch. Checks on that tree: typecheck (generator ran automatically), lint, 798/798 unit, legal, functions build, discovery check, release gate 25 PASS / 0 code blockers (rules 263, worker suite with PyTorch). Browser suites not repeated: no app source changed since section 16.2 (only `package.json` scripts, tests, `functions/` engines, index file and docs) |
 
+
+## 19. Node.js 22 migration and backend deployment, 2026-11-13 (approved BE-2b, BE-3b, BE-4)
+
+**Runtime source of truth:** `firebase.json` sets no `runtime`, so the CLI uses `functions/package.json` `engines.node`.
+The migration diff (`0adacdf45f2d41f624de2f8263172771c33cf50b`, parent `01f9459`) changes only `engines` 20 → 22 in
+`package.json` and the lockfile root. firebase-functions 6.6.0, firebase-admin 13.10.0, firebase-tools 15.35.0; Node.js 22 is
+supported until 2027-10-31 (Cloud Run runtime lifecycle page).
+
+**Local validation on Node 22.23.4 / npm 10.9.9:** clean `npm ci` from the lockfile (272 packages; the one native binary,
+`ffmpeg-static` 5.3.0, installs and runs `ffmpeg 7.0.2`); `npm run build`; the module loads with the production project
+config (95 endpoints: 55 callable, 10 task queue, 23 event, 6 schedule, 1 HTTPS); 798/798 unit; rules and API contracts 263/263;
+the six scheduled handlers run without error against the emulators; complete browser suites on candidate
+`5cc7af2` with the Node 22 functions in the emulator: **web-mobile 66 passed, 2 skipped; web-desktop 65 passed, 1 failed,
+2 skipped** (the failure is B-23, a pre-existing unhandled rejection in Settings after sign-out; app code unchanged since
+16.2). A dry run was not the only check.
+
+**Reconciliation before deploying** (`docs/release/node22-reconciliation-2026-11-13.json`, one row per desired export):
+81 live functions = 28 in BE-2b + 39 in BE-3b + 14 in BE-4, each exactly once; 13 new (5 in BE-2b, 8 in BE-3b); `setTrackingPeriods`
+excluded; no retired functions. All 81 were nodejs20, ACTIVE, on the snapshot revisions; one custom env key with the same hash
+everywhere; the deploy `.env` held exactly that key and value hash. Every group deployed from the same clean source
+`0adacdf`: changed functions get their reviewed code, unchanged and refactor-only ones get identical or equivalent code on the
+new runtime.
+
+| Batch | Time (UTC) | Functions | Result |
+|---|---|---|---|
+| Pilot (part of BE-2b) | 16:10 | `releaseExpiredSuspensions`, `onUserSafetyWrittenReproject`, new `refreshTrackingOcrTask` | 3/3 nodejs22 ACTIVE with new revisions; trigger, memory, timeout, secrets, service account and env hash unchanged; queue created RUNNING; a manual scheduler run of the suspension job returned 200 from revision `releaseexpiredsuspensions-00008-yav`; no warnings |
+| BE-2b rest | 16:14 | 30 | 30/30 successful; group 1 33/33 verified; 10 queues RUNNING; 6 schedules unchanged; 23 Eventarc triggers (no duplicate); no ERROR logs |
+| BE-3b | 16:16 | 47 (8 new callables) | 47/47 verified; analysis services carry no CV, tracking, AI-footage, reasoning, anchor or `ENFORCE_APP_CHECK` variable |
+| BE-4 | 16:20 | 14 held, runtime only | 14/14 verified |
+| **Total** | 16:22 | | **94 functions, all nodejs22 and ACTIVE**; 81 existing with new revisions + 13 new; `setTrackingPeriods` absent; no warning or 4xx/5xx request logs in the 40 minutes after |
+
+**App Check on callables:** this workspace and the Linux VM on the owner's PC are both blocked from `cloudfunctions.net`
+(`X-Proxy-Error: blocked-by-allowlist`), so enforcement is still **configuration-based**: the deployed code enforces, and no
+revision sets `ENFORCE_APP_CHECK`. The probe in `app-check-behaviour-2026-11-12.md` 4.1 has to run from the owner's network.
+
+**Forward repair:** going back to Node.js 20 is not possible. If a function misbehaves: redeploy the previous code on Node 22
+(the source archives of the earlier deploys are backed up, 81 objects, and the source bucket is versioned), or fix forward
+from `0adacdf`. Data written by new code is not undone by either.
+
+**Other approved actions in this run:** AUTH-1 still waits for the owner's console step (Authentication still answers
+`CONFIGURATION_NOT_FOUND` at 16:23). EAS: `api.expo.dev` is blocked by the network allowlist both here and in the VM on the
+owner's PC (proxy 403, not a login problem); the Expo connection can only build from a linked GitHub repository, and none is
+linked; no build was started. GIT-1: the session's safety control refused the release-branch push again; the guarded owner
+command is in the approval packet. **NO BUILD WAS UPLOADED OR SUBMITTED TO APP STORE CONNECT OR TESTFLIGHT.**
+
 ## 12. Exact remaining actions
 
 1. **Owner:** approve or decline the exact merge (section 14 and the hand-off message). Nothing was merged or pushed to the release branch.
