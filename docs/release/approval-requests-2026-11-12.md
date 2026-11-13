@@ -119,3 +119,33 @@ Details: `docs/design/REDESIGN_LEDGER.md` section 18.
 | **BE-2b** | group 1 (33 functions), runtime **Node.js 22** | `fix/functions-node22` @ `0adacdf45f2d41f624de2f8263172771c33cf50b` (= `01f9459` + engines 20→22) or the merged release commit, clean | as BE-2 | every deployed function changes runtime from Node.js 20 to Node.js 22; function code unchanged | as BE-2; dry run passed 2026-11-13 | rollback to Node.js 20 is impossible (decommissioned): repair forward only |
 | **BE-3b** | group 2 (47 functions), Node.js 22 | as BE-2b | as BE-3 | as BE-2b | as BE-3 | as BE-2b |
 | **BE-4** (new) | the 14 held functions whose code is unchanged or refactor-only, runtime change only (`setTrackingPeriods` stays excluded) | as BE-2b | `firebase deploy --project scoutx-230b0 --only "functions:mediaLifecycleSweep,functions:onDiscoverableSearchIndexWritten,functions:onMatchJobDeleted,functions:onMatchJobMediaLifecycle,functions:onVerificationWrittenSyncTrust,functions:scheduleWeeklyFootballReports,functions:confirmRole,functions:generateHighlightReelPlan,functions:listAdminReviewQueue,functions:purgeLegacyGpsLocation,functions:resolveVerificationRequest,functions:setStaffRole,functions:submitPrivacyRequest,functions:updatePrivacyRequest"` | moves them off the decommissioned runtime, which "may be disabled" | ACTIVE on nodejs22; schedules unchanged; no new errors | forward repair only |
+
+## Owner steps that this workspace cannot perform (2026-11-13)
+
+1. **GIT-1** (approved; the push from the preparation workspace was refused by its safety control). From any clone:
+   ```
+   git fetch origin
+   test "$(git rev-parse origin/release/pitchproof-5-3-candidate)" = 01f9459c2608bc939c96f5c7388b5e5ba98aac2d
+   git fetch origin integration/redesign-into-5-3-r4
+   test "$(git rev-parse FETCH_HEAD)" = 5cc7af234619c7944dfe8f8fdf9e20ae828ee45e
+   git merge-base --is-ancestor 01f9459c2608bc939c96f5c7388b5e5ba98aac2d 5cc7af234619c7944dfe8f8fdf9e20ae828ee45e
+   git push origin 5cc7af234619c7944dfe8f8fdf9e20ae828ee45e:refs/heads/release/pitchproof-5-3-candidate
+   ```
+   A plain push; Git refuses it if the release branch moved. Rollback: `git revert -m 1 5cc7af234619c7944dfe8f8fdf9e20ae828ee45e`.
+2. **AUTH-1**: Firebase console → project `scoutx-230b0` → Build → Authentication → Get started → Sign-in method:
+   Anonymous → Enable → Save; Email/Password → Enable (leave "Email link" off) → Save; Apple → Enable → Save (no
+   Services ID needed for the iOS app). Decline any Identity Platform upgrade. Then tell the preparation session, which
+   checks it with the account-free `accounts:lookup` probe.
+3. **Builds** (EAS has no linked GitHub repository, so builds start from your machine where `eas` is signed in; or link
+   the repository in expo.dev → project → GitHub so the session can start them):
+   * BLD-1: `git clone https://github.com/CapalotDaGreat/ScoutX pp-bld1 && cd pp-bld1 && git checkout 5cc7af234619c7944dfe8f8fdf9e20ae828ee45e && npm ci && npx eas-cli build --platform ios --profile simulator --non-interactive`
+   * BLD-2: `npx eas-cli device:create` (open the link on the designated iPhone), then in the same checkout
+     `npx eas-cli build --platform ios --profile preview --non-interactive`
+   * BLD-3 (after GIT-1): fresh clone, `git checkout 5cc7af234619c7944dfe8f8fdf9e20ae828ee45e`, `npm ci`,
+     `npx eas-cli build --platform ios --profile production --non-interactive`. Send the build ID; SUB-1 can then be run
+     by the preparation session through the Expo connection after it has checked the build's commit.
+4. **Simulator session limit**: give a maximum duration and spending cap for the EAS simulator session (none is in this
+   packet), or run the protocol on a Mac.
+5. **Callable App Check probe** (after BE-3b; this workspace cannot reach `cloudfunctions.net`): run 4.1 of
+   `app-check-behaviour-2026-11-12.md` from your network and send the full response with the UTC time; the session
+   correlates it with the server log and revision.

@@ -560,7 +560,7 @@ Recorded by action; times UTC. Logs of commands and outputs: preparation workspa
 | TEST-1 | **Not executed** | needs AUTH-1 |
 | BLD-1, BLD-2, BLD-3, SUB-1 | **Not executed: prerequisite missing** | the Expo project has no linked GitHub repository ("No repository found"), and this workspace holds no EAS credentials, so builds must be started by the owner with `eas build`. BLD-2 also needs the owner's iPhone for `eas device:create`. Prices re-read 2026-11-13 from expo.dev/pricing.md: iOS medium $2 per build, simulator $0.10 per minute |
 | APC-3 | **Not executed** | needs the BLD-1 app's printed token; no simulator session was started (the packet sets no duration or spending bound) |
-| GIT-1 | see the hand-off | successor candidate: index fix + Node.js 22 fix + redesign |
+| GIT-1 | **Not executed: the session's safety control refused the release-branch push** | successor candidate `5cc7af234619c7944dfe8f8fdf9e20ae828ee45e` (tree `7219be61487041557b6b4ebb6dc3fa21b3eaa72d`) = release `01f9459` + index fix `9986c4f` + Node.js 22 fix `0adacdf` + redesign `ffd6343`; published as `integration/redesign-into-5-3-r4` so the owner can fast-forward the release branch. Checks on that tree: typecheck (generator ran automatically), lint, 798/798 unit, legal, functions build, discovery check, release gate 25 PASS / 0 code blockers (rules 263, worker suite with PyTorch). Browser suites not repeated: no app source changed since section 16.2 (only `package.json` scripts, tests, `functions/` engines, index file and docs) |
 
 ## 12. Exact remaining actions
 
