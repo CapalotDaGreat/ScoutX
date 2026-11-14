@@ -119,7 +119,20 @@ evidence covers the whole tracklet piece, so 1,151.1–1,153.5 s became **CONFIR
 labelled frames, IoU 0.72–0.96 with N boxes). A correct owner answer must not do that. The strict guard hid the
 problem only by refusing the tap. Candidate `0bae8d7` (`SCOUTX_TELEPORT_SPLIT=1`, off by default) cuts a track at a
 camera-compensated jump of more than 0.8 box heights (357 of 262,512 adjacent-frame steps exceed 0.7 heights, 71
-exceed 1.0). Runs queued: release with 4 taps (`rel_t4v`), the teleport split with 4 taps and with none.
+exceed 1.0).
+
+| Run (valid sources) | Taps applied | Correct | Abstained | Unmatched | Wrong player (all labels) | CONFIRMED wrong | Confirmed / likely visible |
+|---|---|---|---|---|---|---|---|
+| **Release** `32ab43f`, 4 taps (`rel_t4v`; resolve file verified from `ana`) | 4 (nearest centre) | 250 | 234 | 3 | **17** (17) | **1.7 s** (1,151.2–1,153.5) | 17.7 / 160.8 s |
+| Teleport split `0bae8d7`, 4 taps (`tp_t4`) | 4 | **421** | 82 | 1 | **0** (0) | **0** | 15.5 / 188.3 s |
+| Teleport split, no taps (`tp_0`) | 0 | 266 | 236 | 1 | 1 (11, the known 1,301–1,305 s LIKELY exchange) | 0 | 4.2 / 40.9 s |
+
+So the CONFIRMED wrong-player claims are a **release defect** a correct owner answer can trigger, not a regression of
+these candidates. With the teleport split the same four taps give 421 correct and no wrong frames. Without taps the
+split leaves every labelled outcome unchanged; across the whole match it changes 368 unlabelled frames between
+UNKNOWN and AMBIGUOUS, removes 6 LIKELY frames (1,379–1,380 s) and adds 4 LIKELY frames (1,881.3–1,883.6 s, unlabelled,
+need review). Tap results above are in-sample (every interval with target labels received a tap); leave-one-out runs
+(taps in three intervals, score the fourth) are queued.
 
 ## 5. E4: stage-1 CPU work (candidate `e092fc3`; rejected variant)
 
