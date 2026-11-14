@@ -112,6 +112,34 @@ target, 3 unsure, 1 unmatched, 0 on another player. The coach therefore fails ho
 identity coverage, not by the coaching text. The model-based clip explanation (`trackingReasoning.ts`) requires
 `VIDEO_REASONING_ENABLED`, the footage approval, AI consent and video consent, all off; it was not exercised.
 
+## 8. E2: jersey reading on colour regions (candidates `97a3463`, `3251e78`; off by default)
+
+Hypothesis: reading the colour torso/shorts regions with the production two-recogniser acceptance rule finds target
+numbers the binarised reader misses, without reading the target's number on team-mates. Offline, on every saved crop
+whose detection matches a labelled box (IoU ≥ 0.5, corrected label times): 1,466 crops = 245 target crops in 19 target
+pieces and 1,221 crops of other orange players in 118 pieces (`bench/ocr_crop_eval.py`, frozen worktree `97a3463`,
+output `exp1114/e2_ocr/ocr_eval_full.json`; recognition on correctly associated crops only).
+
+| Reader | Target crops read "20" | Target crops read another number | Team-mate crops read "20" | Team-mate crops read another number | Target pieces with a "20" | CPU s (1,466 crops, contended) |
+|---|---|---|---|---|---|---|
+| Production (binarised masks) | 5 | 28 (all lone digits: "1" 16, "7" 5, "4" 5, "2" 1, "5" 1) | **0** | 97 ("17" 46, "1" 26, …) | 3 of 19 | 3,643 |
+| Colour regions, same acceptance rule | 8 | **0** | **0** | 21 ("17" 12, "7" 4, …) | 4 of 19 | 5,405 |
+| Combined (production first, colour if it abstains, abstain on conflict) | **10** | 27 (lone digits, from production) | **0** | 111 | **5 of 19** | both |
+
+Reading the result honestly: the identity resolver already ignores lone digits (`incompatible_with_target` and
+`number_votes` count only reads with as many digits as the target), so the production reader's 28 lone-digit reads on
+the target do not exclude it. The relevant gain is two-digit evidence: target crops with a "20" go from 5 to 10 and
+target pieces from 3 to 5 of 19, with no "20" on any of 1,221 team-mate crops. Only two crops were read "20" by both
+readers; the colour reader's reads come from `torso1` (7) and `torso0` (1). Small sample, one recording, developer
+labels: this supports an end-to-end test, not promotion. Rejected earlier variant for context: the 5.2 open-set
+colour reader (no two-recogniser agreement) read 3 of 15 daylight crops wrongly.
+
+Cost: the colour reader roughly doubles OCR CPU time per crop it runs on; in the pipeline it would run only on crops
+the resolve already selects.
+
+End-to-end test (E2b): `bench/ocr_cache_variant.py` derives the combined reader's cache from the same OCR cache
+snapshot as E3, then the resolve runs with `SCOUTX_OCR_VARIANT=combined` (separate cache file).
+
 ## 9. Blocked work and exact requests
 
 | Work | Blocker | What is needed (request) |
