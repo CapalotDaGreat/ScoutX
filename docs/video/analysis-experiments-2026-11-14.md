@@ -182,8 +182,29 @@ colour reader (no two-recogniser agreement) read 3 of 15 daylight crops wrongly.
 Cost: the colour reader roughly doubles OCR CPU time per crop it runs on; in the pipeline it would run only on crops
 the resolve already selects.
 
-End-to-end test (E2b): `bench/ocr_cache_variant.py` derives the combined reader's cache from the same OCR cache
-snapshot as E3, then the resolve runs with `SCOUTX_OCR_VARIANT=combined` (separate cache file).
+**E2b, end to end (automatic, no taps).** `bench/ocr_cache_variant.py` (`8af205b`; the first build found no crops
+because of a path bug and changed nothing, rebuilt) derived the combined reader's cache from E0's OCR cache snapshot:
+of 5,728 crops the production resolve read, 85 gained a read (twenty-four 29, "20" 14, "7" 14, "17" 13, …), 12
+production reads (lone digits "1"/"4"/"9") became abstentions on a conflict, 475 kept; 5,980 CPU-s. Resolve with
+`SCOUTX_OCR_VARIANT=combined` on the same stage 1 (`e2b_comb_0`, resolve file verified from `frz-e2c`):
+
+| Measure | Release (E0) | Combined reader |
+|---|---|---|
+| Target frames correct / abstained / unmatched / wrong (of 504) | 266 / 236 / 1 / 1 | **309 / 194 / 1 / 0** |
+| Wrong identity, all labelled frames | 1.1 s (LIKELY) | **0** |
+| Confirmed-correct labelled time | 2.4 s | 13.5 s |
+| Confirmed / likely visible, whole match | 4.2 s / 41.1 s | **30.7 s / 108.9 s** |
+| Accepted number sightings | 7 | 11 |
+
+**Changed-claim review outside the labels (visual, crops of this local recording):** all 9 inspected new "20" reads
+(35.8, 1,392.0–1,392.2, 1,667–1,674, 1,957 s) show a legible white "20" on the target's back, missed by the binarised
+reader. But the resolve also made 1,000 new claim frames in 72 segments; the 24 longest were inspected: segments at
+**1,384.2 s (56 frames) and 1,388.2 s (19 frames) are LIKELY claims on the team-mate wearing #17** (number clearly
+visible), and several others (1,607 s; 1,821–1,876 s) cannot be confirmed from the crop. Cause: the extra confirmed
+sightings switch identity from the template to the per-match appearance classifier (positives 3 → 11), which extends
+LIKELY to a look-alike. These wrong claims are LIKELY, not CONFIRMED, and fall outside every labelled interval, so the
+labelled score cannot see them. **Verdict: needs revision.** The reads are better; the appearance-only LIKELY rule
+(candidate D, pending independent review) is the obvious companion, measured next (`e2b_comb_D_0`).
 
 ## 9. Blocked work and exact requests
 
