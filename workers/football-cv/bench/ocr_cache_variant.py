@@ -38,7 +38,8 @@ def main() -> int:
     reader = shared_reader()
     out, counts, t0 = {}, {"kept": 0, "added": 0, "conflictAbstained": 0, "unchangedAbstain": 0, "missingCrop": 0}, time.perf_counter()
     for i, (key, read) in enumerate(sorted(base.items())):
-        img = cv2.imread(str(Path(a.stage1) / key))
+        chunk, name = key.split("/", 1)                    # cache keys are '<chunk dir>/<frame>_<det>.jpg'
+        img = cv2.imread(str(Path(a.stage1) / chunk / "crops" / name))
         if img is None:
             out[key] = read
             counts["missingCrop"] += 1
