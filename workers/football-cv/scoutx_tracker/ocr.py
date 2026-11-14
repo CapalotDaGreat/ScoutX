@@ -11,6 +11,7 @@ A crop yields at most one number; conflicting numbers make it abstain.
 
 from __future__ import annotations
 
+import os
 import re
 
 import cv2
@@ -262,6 +263,22 @@ def combined_read(reader: "NumberReader", crop: np.ndarray) -> tuple[str | None,
     if num is not None:
         return num, conf, where
     return alt, aconf, awhere
+
+
+OCR_VARIANTS = ("binarised", "combined")
+
+
+def ocr_variant() -> str:
+    """EXPERIMENT switch for the resolve reader (2026-11-14). Default and production: 'binarised'. 'combined' adds the
+    colour reader when the binarised one abstains (combined_read). Unknown values fail loudly, never fall back."""
+    v = os.environ.get("SCOUTX_OCR_VARIANT", "binarised").strip() or "binarised"
+    if v not in OCR_VARIANTS:
+        raise ValueError(f"SCOUTX_OCR_VARIANT={v!r} is not one of {OCR_VARIANTS}")
+    return v
+
+
+def pipeline_read(reader: "NumberReader", crop: np.ndarray) -> tuple[str | None, float, str | None]:
+    return combined_read(reader, crop) if ocr_variant() == "combined" else reader.read(crop)
 
 
 # 5.2 open-set torso reading (night / no localisable digits): colour torso windows at several

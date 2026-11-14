@@ -101,6 +101,14 @@ def det_of_crop(D) -> dict:
     return memo(("det_of", _token(D)), lambda: {crop_key(v): k for k, v in D.crops.items()})
 
 
+def ocr_cache_name() -> str:
+    """2026-11-14: reads of an experimental reader variant never share a cache file with the production reader."""
+    from .ocr import ocr_variant  # noqa: PLC0415
+
+    v = ocr_variant()
+    return "ocr_cache.json" if v == "binarised" else f"ocr_cache.{v}.json"
+
+
 def load_ocr_cache(cache_path: Path) -> dict:
     if OCR_CACHE_PROVENANCE:
         return _load_ocr_cache_checked(cache_path)
@@ -228,8 +236,10 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
                     from .ocr import shared_reader  # noqa: PLC0415
 
                     reader = shared_reader()
+                from .ocr import pipeline_read  # noqa: PLC0415
+
                 img = cv2.imread(c)
-                num, conf, band = reader.read(img) if img is not None else (None, 0.0, None)
+                num, conf, band = pipeline_read(reader, img) if img is not None else (None, 0.0, None)
                 del img
                 cache[key] = [num, conf, band]
                 done += 1
@@ -398,7 +408,7 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         t_ocr0 = time.time()
         ocr_new: list = []
         consulted: set = set()
-        cache = run_ocr(crops, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log, early_stop=not ocr_dense,
+        cache = run_ocr(crops, Path(run_dirs[0]).parent / ocr_cache_name(), len(number), log, early_stop=not ocr_dense,
                         budget_sec=ocr_budget_sec, skipped=ocr_skipped, max_new=ocr_max_new, read_new=ocr_new,
                         consulted=consulted)
         if OCR_CONSULTED_ONLY:
@@ -445,7 +455,7 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         refined |= focus
         extra = select_ocr_crops([s_ for s_ in T.summary if s_["tid"] in focus], per_tracklet=40, min_gap=2, min_h=90)
         before = sum(len(v) for v in reads.values())
-        cache = run_ocr(extra, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log, early_stop=False,
+        cache = run_ocr(extra, Path(run_dirs[0]).parent / ocr_cache_name(), len(number), log, early_stop=False,
                         budget_sec=None if ocr_budget_sec is None else max(0.0, ocr_budget_sec - (time.time() - t_ocr0)),
                         skipped=ocr_skipped if (ocr and number) else None,
                         max_new=None if ocr_max_new is None else max(0, ocr_max_new - len(ocr_new)), read_new=ocr_new)
