@@ -89,6 +89,38 @@ Changes, in order, each with tests (`tests/test_anchor_resolution.py`, 7):
 
 Without anchors every candidate gives the release timeline bit for bit (E3 rel0 = cand0, SHA-256 `fad444c1…`).
 
+## 4b. E3: simulated owner taps on the full match (in progress)
+
+Design (`bench/anchor_replay.py`): resolve the same stage 1 with a private copy of the same OCR cache snapshot (E0's
+final cache, SHA-256 `3c94daf5…`), adding "this is me" taps placed on the labelled target box (centre x, 35 % of the
+height) in the first labelled target frame of an interval whose target box overlaps no other labelled box and is at
+least 80 px tall. Only intervals 0, 3, 4 and 8 have target frames (68 / 288 / 94 / 54 of the 504), and each has one
+such frame (237.6, 1,151.0, 1,299.7, 1,899.8 s). Simulated taps are perfect answers by construction.
+
+**Tooling error found and fixed:** the first "release" tap runs (`rel0`, `rel_t4`, `rel_t1`) actually ran the candidate
+resolve, because `audit_claim_outcomes` puts its own tree first on `sys.path`. They are invalid as release controls.
+`0b1f4ac` imports the resolve from `--source` first and refuses otherwise. The no-tap equivalence still stands: the genuine
+release run E0 (`full_match_benchmark.py` from `ana`) and the candidate `cand0` give the same timeline `fad444c1…`.
+
+| Run (corrected basis, 504 target frames) | Taps applied | Correct | Abstained | Unmatched | Wrong player | CONFIRMED wrong | Confirmed / likely visible (whole match) |
+|---|---|---|---|---|---|---|---|
+| No taps (E0 = cand0) | 0 | 266 | 236 | 1 | 1 (11 frames over all labels) | 0 | 4.2 s / 41.1 s |
+| 1 tap, strict guard (`3f305f2`) | 0 of 1 ("2 players") | 266 | 236 | 1 | 1 | 0 | 4.2 s / 41.1 s |
+| 4 taps, strict guard | 1 of 4 | 404 | 99 | 1 | 0 (3 frames over all labels) | 0 | 12.0 s / 161.0 s |
+| 1 tap, frame-first (`adb3111`) | 1 of 1 | 314 | 189 | 1 | 0 (0 over all labels) | 0 | 4.3 s / 88.5 s |
+| 4 taps, frame-first | 4 of 4 | 251 | 233 | 3 | **17** | **1.7 s** | 17.7 s / 146.9 s |
+
+Untapped intervals (only measurable with one tap): 241 → 248 correct, 193 → 187 abstained, 1 → 0 wrong.
+
+**Safety finding (pre-existing behaviour, release confirmation pending):** with all four perfect taps applied, the tap
+at 1,151.0 s resolved to the right detection (tracker track 2947, box IoU 0.94 with the labelled target), but that
+track jumps at 1,151.1 s by 0.92 box heights after camera compensation (warp quality 0.99) onto a team-mate. Anchor
+evidence covers the whole tracklet piece, so 1,151.1–1,153.5 s became **CONFIRMED_VISIBLE on another player** (17
+labelled frames, IoU 0.72–0.96 with N boxes). A correct owner answer must not do that. The strict guard hid the
+problem only by refusing the tap. Candidate `0bae8d7` (`SCOUTX_TELEPORT_SPLIT=1`, off by default) cuts a track at a
+camera-compensated jump of more than 0.8 box heights (357 of 262,512 adjacent-frame steps exceed 0.7 heights, 71
+exceed 1.0). Runs queued: release with 4 taps (`rel_t4v`), the teleport split with 4 taps and with none.
+
 ## 5. E4: stage-1 CPU work (candidate `e092fc3`; rejected variant)
 
 Profile (`bench/camera_state_profile.py`, 600 frames at 900–960 s, 2 vCPU, nothing else running): decode 55.0 ms/frame
