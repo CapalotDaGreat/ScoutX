@@ -265,12 +265,60 @@ def build_tracklets(D: Detections, kit_primary: str = "", kit_secondary: str = "
     return assemble(D, track_rows(D) if rows is None else rows, kit_primary, kit_secondary, det_reads)
 
 
+# 2026-11-14 candidate (OFF by default): a tracker row whose box, after camera-motion compensation, lands more than
+# TELEPORT_HEIGHTS box heights from the same track's box one frame earlier is not the same person. Found by the owner-
+# tap replay E3: a correct tap at 1,151.0 s on IMG_4809 confirmed a track that jumped 0.92 box heights in 0.1 s (warp
+# quality 0.99) onto a team-mate, giving 2.3 s of CONFIRMED wrong-player claims. Over the whole match 357 adjacent-frame
+# jumps exceed 0.7 heights (of 262,512), 71 exceed 1.0. Frames with an unreliable camera warp are never cut.
+TELEPORT_SPLIT = os.environ.get("SCOUTX_TELEPORT_SPLIT", "0") == "1"
+TELEPORT_HEIGHTS = 0.8
+TELEPORT_MIN_WARP_QUALITY = 0.5
+
+
+def split_on_teleports(R: np.ndarray, warps: np.ndarray, heights: float = TELEPORT_HEIGHTS,
+                       min_quality: float = TELEPORT_MIN_WARP_QUALITY) -> tuple[np.ndarray, int]:
+    """Gives the rows after each camera-compensated jump a new track id. Returns (rows, number of cuts)."""
+    if len(R) < 2:
+        return R, 0
+    R = R.copy()
+    fr = R[:, 0].astype(int)
+    tid = R[:, 2].astype(int)
+    order = np.lexsort((fr, tid))
+    a, b = order[:-1], order[1:]
+    adj = (tid[a] == tid[b]) & (fr[b] - fr[a] == 1) & (fr[b] < len(warps))
+    a, b = a[adj], b[adj]
+    if not len(a):
+        return R, 0
+    M = warps[fr[b], :6].reshape(-1, 2, 3)
+    q = warps[fr[b], 6]
+    cx, cy = (R[a, 3] + R[a, 5]) / 2, (R[a, 4] + R[a, 6]) / 2
+    px = M[:, 0, 0] * cx + M[:, 0, 1] * cy + M[:, 0, 2]
+    py = M[:, 1, 0] * cx + M[:, 1, 1] * cy + M[:, 1, 2]
+    h = np.maximum(R[a, 6] - R[a, 4], 1.0)
+    jump = np.hypot(px - (R[b, 3] + R[b, 5]) / 2, py - (R[b, 4] + R[b, 6]) / 2) / h
+    cut_at = set(b[(jump > heights) & (q >= min_quality)].tolist())
+    if not cut_at:
+        return R, 0
+    next_id = int(tid.max()) + 1
+    cur: dict[int, int] = {}
+    for r in order:                      # walk each track in frame order; ids change after every cut
+        t = int(tid[r])
+        if r in cut_at:
+            cur[t] = next_id
+            next_id += 1
+        if t in cur:
+            R[r, 2] = cur[t]
+    return R, len(cut_at)
+
+
 def assemble(D: Detections, R: np.ndarray, kit_primary: str = "", kit_secondary: str = "",
              det_reads: dict[int, str] | None = None, contact_split: bool | None = None,
              P: np.ndarray | None = None) -> Tracklets:
     """Cheap part: number-conflict splits, contact pieces (5.1), panorama coordinates and
     per-tracklet summaries. `P`: precomputed panorama transforms (they depend on stage 1 only)."""
     splits = 0
+    if TELEPORT_SPLIT:
+        R, _teleports = split_on_teleports(R, D.warps)
     if det_reads:
         R, splits = split_on_number_conflicts(R, D.sigs, det_reads)
     cs = None
