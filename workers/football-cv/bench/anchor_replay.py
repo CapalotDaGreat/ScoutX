@@ -27,8 +27,12 @@ _SRC = sys.argv[sys.argv.index("--source") + 1] if "--source" in sys.argv else s
 sys.path.insert(0, _SRC)
 sys.path.insert(1, str(HERE))
 
+import scoutx_tracker  # noqa: E402  (imported first, from _SRC: audit_claim_outcomes puts its own tree on sys.path)
 import pp_bench  # noqa: E402
 from audit_claim_outcomes import audit  # noqa: E402
+
+if Path(scoutx_tracker.__file__).resolve().parents[1] != Path(_SRC).resolve():
+    raise SystemExit(f"scoutx_tracker came from {scoutx_tracker.__file__}, not from --source {_SRC}")
 
 
 def clear_tap(gt: dict, interval: tuple[float, float]) -> tuple[float, float, float] | None:
@@ -107,7 +111,7 @@ def main() -> int:
                   for k in range(len(z["times"])) if z["present"][k]]
     untapped = [iv for i, iv in enumerate(intervals) if i not in tapped]
     rec = {
-        "schema": "pitchproof.anchor-replay.v1", "resolveSource": _SRC, "taps": taps, "tappedIntervals": tapped,
+        "schema": "pitchproof.anchor-replay.v1", "resolveSource": _SRC, "scoutxTrackerFile": scoutx_tracker.__file__, "taps": taps, "tappedIntervals": tapped,
         "tapKind": "simulated from developer labels (perfect answers)" if tapped else ("explicit" if taps else "none"),
         "anchorResolution": report.get("anchorResolution"),
         "coverage": report.get("coverage"), "identity": report.get("identity"),
