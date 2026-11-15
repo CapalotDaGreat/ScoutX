@@ -132,7 +132,39 @@ these candidates. With the teleport split the same four taps give 421 correct an
 split leaves every labelled outcome unchanged; across the whole match it changes 368 unlabelled frames between
 UNKNOWN and AMBIGUOUS, removes 6 LIKELY frames (1,379–1,380 s) and adds 4 LIKELY frames (1,881.3–1,883.6 s, unlabelled,
 need review). Tap results above are in-sample (every interval with target labels received a tap); leave-one-out runs
-(taps in three intervals, score the fourth) are queued.
+(taps in three intervals, score the fourth) follow.
+
+**Leave-one-out, teleport split on (`tp_loo_*`, all 3 taps applied in every run), scored only on the interval that got
+no tap:**
+
+| Left-out interval (target frames) | Correct | Abstained | Unmatched | Wrong player on labelled frames | CONFIRMED wrong |
+|---|---|---|---|---|---|
+| 0 (68) | 60 | 7 | 1 | 0 | 0 |
+| 3 (287) | 241 | 46 | 0 | 0 | 0 |
+| 4 (94) | 51 | 43 | 0 | **3** (LIKELY, on team-mate boxes) | 0 |
+| 8 (54) | 0 | 54 | 0 | 0 | 0 |
+| **Sum** | **352** | 150 | 1 | 3 | 0 |
+| Same intervals, no taps (release E0 and teleport split alike) | 266 | 235 | 1 | 1 | 0 |
+
+Out of sample, three correct taps raise correct target frames on an unseen interval from 266 to 352 (+32 %) with no
+CONFIRMED error, but one left-out interval gains 3 LIKELY wrong-player frames. Owner taps help; they are not a
+guarantee, and LIKELY claims still need the appearance-only rule (candidate D) or review.
+
+The planned run "combined reader + candidate D" (`e2b_comb_D_0`) was lost when the workspace restarted on 2026-11-15
+and has not been rerun.
+
+## 10. Primary workspace update (2026-11-15)
+
+`C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
+SSH alias the linked VM cannot reach, so the update came as a verified git bundle (`main-32ab43f.bundle`, SHA-256
+`8958fffb…`, same on both ends) placed in the ignored `.local/update-20261115/`. Before updating: none of the 988 paths
+the update adds existed locally (no untracked or ignored file overwritten); `core.autocrlf=false` and LF working files,
+so the Linux git in the VM writes the same bytes Windows git would. `git fetch <bundle>` then `git merge --ff-only
+FETCH_HEAD`: HEAD = `32ab43f1f5c6274c5d7672b25fa4ac37163bbb7c` on `main`, no lock files left, `git status` clean for
+tracked files. `.env`, `.env.local`, `GoogleService-Info.plist`, `.firebaserc` unchanged (same sizes and dates);
+`.local` (444 entries) untouched; expected files present (rollback plan, EAS preflight, Node 22 engines, index,
+Lusiola Software). The local remote-tracking ref still shows `ahead 162` until the owner runs `git fetch` once on
+Windows. No reset, clean or stash was used.
 
 ## 5. E4: stage-1 CPU work (candidate `e092fc3`; rejected variant)
 
