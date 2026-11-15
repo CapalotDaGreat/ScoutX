@@ -22,7 +22,7 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | Footage uploaded | Never (upload was gated on a VM existing) |
 | Estimated compute charge | USD 0 (no VM was ever created) |
 | **Envelope status** | **EXHAUSTED on 2026-11-09**: all 11 approved attempts used inside the 6 h window, every one `ZONE_RESOURCE_POOL_EXHAUSTED`. A new search needs a renewed approval (`docs/release/gpu-session-request-2026-11-15.md`) |
-| **GPU-2 (2026-11-15)** | **APPROVED by the owner in chat, with Part C** — same envelope, new 6 h window; plan frozen in the request file |
+| **GPU-2 (2026-11-15)** | Approved with Part C; **EXHAUSTED** the same day (11/11 stockouts). A further search needs GPU-3 |
 
 ---
 
@@ -31,6 +31,7 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | When | Zones | Result | Charge |
 |---|---|---|---|
 | 2026-11-07 | west4-b/c/a (+retry) | STOCKOUT ×4 | USD 0 |
+| 2026-11-15 17:26–20:27 UTC (Claude, GPU-2) | all 11 approved zones in order, backoff 5/10/20 min | **STOCKOUT ×11** (`ZONE_RESOURCE_POOL_EXHAUSTED`); 0 VMs, 0 disks, 0 uploads, no pending operations verified 20:30 UTC; evidence `workers/football-cv/bench/results/5.3/gpu-validation-20261115/` | USD 0 |
 | 2026-11-09 15:38–18:39 UTC (Claude) | all 11 approved zones in order, backoff 5/10/20 min | **STOCKOUT ×11** (`ZONE_RESOURCE_POOL_EXHAUSTED`, g2-standard-8 + 1× L4); 0 VMs, 0 disks, 0 uploads verified after; evidence `workers/football-cv/bench/results/5.3/gpu-validation-20261109/SESSION_OUTCOME.json`, `attempts.log` | USD 0 |
 
 ---

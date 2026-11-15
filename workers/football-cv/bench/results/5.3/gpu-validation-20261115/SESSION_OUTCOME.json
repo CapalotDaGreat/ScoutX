@@ -1,0 +1,104 @@
+{
+ "schema": "pitchproof.gpu-session-outcome.v1",
+ "run": "gpu-validation-20261115",
+ "approval": "GPU-2 + Part C, owner in chat 2026-11-15",
+ "operator": "Claude cloud workspace",
+ "outcome": "all_stocked_out",
+ "vmCreated": false,
+ "billableSessions": 0,
+ "actualCostUsd": 0.0,
+ "costCeilingUsd": 8.0,
+ "searchWindowStart": "2026-11-15T17:26:58Z",
+ "lastAttempt": "2026-11-15T20:27:33Z",
+ "attempts": [
+  {
+   "n": 1,
+   "zone": "europe-west4-b",
+   "at": "2026-11-15T17:26:58Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 2,
+   "zone": "europe-west4-c",
+   "at": "2026-11-15T17:32:30Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 3,
+   "zone": "europe-west4-a",
+   "at": "2026-11-15T17:43:06Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 4,
+   "zone": "europe-west1-b",
+   "at": "2026-11-15T18:03:43Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 5,
+   "zone": "europe-west1-c",
+   "at": "2026-11-15T18:24:19Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 6,
+   "zone": "europe-west2-a",
+   "at": "2026-11-15T18:44:52Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 7,
+   "zone": "europe-west2-b",
+   "at": "2026-11-15T19:05:24Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 8,
+   "zone": "europe-west3-b",
+   "at": "2026-11-15T19:25:56Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 9,
+   "zone": "europe-west3-a",
+   "at": "2026-11-15T19:46:26Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 10,
+   "zone": "europe-west6-b",
+   "at": "2026-11-15T20:06:58Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  },
+  {
+   "n": 11,
+   "zone": "europe-west6-c",
+   "at": "2026-11-15T20:27:33Z",
+   "result": "stockout",
+   "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED"
+  }
+ ],
+ "attemptsUsed": 11,
+ "attemptsApproved": 11,
+ "finalState": {
+  "verifiedAt": "2026-11-15T20:30Z",
+  "instances": 0,
+  "disks": 0,
+  "runsPrefixObjects": 0
+ },
+ "uploads": "none (upload gated on VM creation)",
+ "notes": [
+  "Part A, Part B and Part C did not run; GPU parity stays unverified."
+ ]
+}
