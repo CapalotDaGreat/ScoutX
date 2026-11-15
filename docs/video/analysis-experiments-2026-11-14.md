@@ -236,6 +236,32 @@ not labelled visible but the engine claimed a labelled team-mate; 11 frames × 0
 - Lost coverage from D: interval 4 left out → 51 correct frames lost together with the 3 wrong ones (section 4c).
 - Visual checks of new claims outside the labels are limited evidence, not ground truth.
 
+## 12. Seed conflicts and correlated reads (2026-11-15, rejected hypothesis)
+
+Hypothesis: a tracklet can become a number seed although it also holds a conflicting two-digit read, because
+`identity.py` seeds when `nt >= 1 and tw > ow`. Experiment: a diagnostic copy (`frz-diag`, a single logging hook, not
+a candidate) logged every seed's reads on the same stage 1 and cache snapshot.
+
+| Configuration | Seeds | Seeds with a conflicting read | Seeds resting on one read |
+|---|---:|---:|---:|
+| Flags off (release behaviour) | 3 | 0 | 0 |
+| T+D+C | 11 | 0 | 7 |
+
+The cause is structural: `split_on_number_conflicts` cuts a tracklet wherever shirt numbers disagree (26 splits on this
+match), before identity sees it. So conflicts are kept as separate pieces, not out-voted. Correlated reads (e.g.
+frames 2,418 and 2,420) do not change any seed decision, because a single agreed read already qualifies; they only
+make the `no >= 2` exclusion rule easier to trigger, which is the conservative direction. **Rejected: no code change.**
+Open risk: 7 of 11 candidate seeds rest on one crop where both recognisers agreed. That is the production acceptance
+rule, unchanged by C; it needs independent labels to quantify.
+
+## 13. Coaching on the candidate report (2026-11-15)
+
+`bench/coach_eval.ts` on E6 (`exp1114/e5_coach/coach_e6.json`): still **no strengths or improvements, three
+limitations** (positioning: 31 s confirmed < 60 s minimum; identity; physical). 0 statements about another player.
+The candidates triple confirmed coverage, but on this recording it stays below the evidence minimum. The coach
+declines honestly; no gate was lowered. Coaching remains blocked by identity coverage, so a longer, better-filmed
+recording (or owner taps: 42 s with four taps, still < 60 s) is the lever, not the coaching text.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an

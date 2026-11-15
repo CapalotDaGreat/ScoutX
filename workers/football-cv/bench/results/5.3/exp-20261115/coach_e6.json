@@ -1,0 +1,56 @@
+{
+ "schema": "pitchproof.coach-eval.v1",
+ "report": "/home/claude/work/exp1114/e6_all_fresh/work/report/result.json",
+ "insights": [
+  {
+   "id": "positioning_limit",
+   "kind": "limitation",
+   "topic": "positioning",
+   "tier": 4,
+   "evidence": "not_measurable",
+   "params": {
+    "confirmedSec": 31,
+    "minSec": 60
+   },
+   "drill": null,
+   "citedMoments": [],
+   "checkableMoments": 0,
+   "momentsOnAnotherPlayer": 0
+  },
+  {
+   "id": "identity_limit",
+   "kind": "limitation",
+   "topic": "identity",
+   "tier": 4,
+   "evidence": "not_measurable",
+   "params": {
+    "confirmedMin": 0.5,
+    "analysedMin": 31,
+    "review": 1
+   },
+   "drill": null,
+   "citedMoments": [],
+   "checkableMoments": 0,
+   "momentsOnAnotherPlayer": 0
+  },
+  {
+   "id": "physical_limit",
+   "kind": "limitation",
+   "topic": "physical",
+   "tier": 4,
+   "evidence": "not_measurable",
+   "params": {},
+   "drill": null,
+   "citedMoments": [],
+   "checkableMoments": 0,
+   "momentsOnAnotherPlayer": 0
+  }
+ ],
+ "summary": {
+  "insights": 3,
+  "strengthsOrImprovements": 0,
+  "withCheckableMoments": 0,
+  "citingAnotherPlayer": 0
+ },
+ "scope": "One development recording; interval labels; moments outside labelled intervals are unverifiable, not correct."
+}
