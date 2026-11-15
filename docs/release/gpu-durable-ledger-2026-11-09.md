@@ -22,7 +22,8 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | Footage uploaded | Never (upload was gated on a VM existing) |
 | Estimated compute charge | USD 0 (no VM was ever created) |
 | **Envelope status** | **EXHAUSTED on 2026-11-09**: all 11 approved attempts used inside the 6 h window, every one `ZONE_RESOURCE_POOL_EXHAUSTED`. A new search needs a renewed approval (`docs/release/gpu-session-request-2026-11-15.md`) |
-| **GPU-2 (2026-11-15)** | Approved with Part C; **EXHAUSTED** the same day (11/11 stockouts). A further search needs GPU-3 |
+| **GPU-2 (2026-11-15)** | Approved with Part C; **EXHAUSTED** the same day (11/11 stockouts) |
+| **GPU-3 (2026-11-15)** | **APPROVED as written** (`docs/release/gpu-session-request-gpu3-2026-11-15.md`): 72 h, ≤ 240 attempts, 1 VM, 2 sessions, USD 8/session, USD 16 total; controller `workers/football-cv/bench/gcp/gpu3/`, live state in its `state.json`/`attempts.jsonl` |
 
 ---
 

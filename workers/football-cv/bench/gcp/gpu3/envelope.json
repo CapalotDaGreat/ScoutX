@@ -1,6 +1,6 @@
 {
  "id": "gpu-validation-gpu3",
- "approved": false,
+ "approved": true,
  "approvalRecord": "docs/release/gpu-session-request-gpu3-2026-11-15.md",
  "project": "scoutx-230b0",
  "zones": [
@@ -38,5 +38,6 @@
  "machine": "g2-standard-8",
  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
  "diskGb": 200,
- "maxLifetimeMin": 300
+ "maxLifetimeMin": 300,
+ "approvedBy": "owner in chat 2026-11-15 ~21:05 UTC: \"Approve GPU-3 as written\""
 }

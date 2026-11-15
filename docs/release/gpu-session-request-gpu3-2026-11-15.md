@@ -1,4 +1,4 @@
-# GPU-3: sustained, resumable L4 capacity search (request, 2026-11-15) — NOT YET APPROVED
+# GPU-3: sustained, resumable L4 capacity search (2026-11-15) — APPROVED
 
 **Why:** GPU-1 (2026-11-09) and GPU-2 (2026-11-15 17:26–20:27 UTC) each used all 11 approved attempts with
 `ZONE_RESOURCE_POOL_EXHAUSTED` in every zone. One pass through the zones per approval is too little. GPU-3 asks
@@ -94,3 +94,5 @@ GPU-3 approved (sections A-C exactly):      YES / NO
 Search window start:                          on approval / date: ______
 Fallbacks D1 / D2 / D3 / D4:                  NO unless written here: ______
 ```
+
+**Owner answer in chat, 2026-11-15:** "Approve GPU-3 as written". Window starts at the first attempt. Fallbacks D1–D4: NO.
