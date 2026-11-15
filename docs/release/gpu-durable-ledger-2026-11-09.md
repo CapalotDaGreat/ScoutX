@@ -95,7 +95,20 @@ Evidence: `workers/football-cv/bench/results/5.3/gpu-validation-20261109/pricing
   balanced PD 0.11 /GiB-month → g2-standard-8 + 200 GB ≈ USD 0.927/h, unchanged.
 - Renewal request with the same plan: `docs/release/gpu-session-request-2026-11-15.md` (GPU-2).
 
-## Next executable action (Claude only, after GPU-2 is approved)
+## GPU-3 status (live state: `/home/claude/work/gpusearch/state.json`, mirrored here at each update)
+
+- 2026-11-15 22:24 UTC: attempts 3 of 240 (west4-b, west4-c, west4-a: `ZONE_RESOURCE_POOL_EXHAUSTED`, project
+  verified empty after each); window 21:49 UTC 15 Nov → 21:49 UTC 18 Nov; sessions 0 of 2; spent USD 0.
+- The controller runs in 115-minute slices. A follow-up is scheduled into this conversation every ~110 min to start
+  the next slice. Between slices, and whenever this workspace is not running, **no attempts happen**; gaps are
+  visible in `attempts.jsonl`.
+- Resume by hand: `cd workers/football-cv/bench/gcp/gpu3 && python3 gpu_search.py status` then
+  `python3 gpu_search.py run --max-runtime-min 115` (state files must be copied from the workspace first).
+  Stop: `python3 gpu_search.py stop "reason"` or say "stop GPU-3".
+- Local pre-allocation checks done: script syntax, config parsing, export filter (stage 1, crops and media excluded),
+  input hashes; the candidate tree with flags off reproduces the release tap failure locally (`c1_off_t4`).
+
+## Next executable action (historical, GPU-2)
 
 1. Refresh prices + list instances/disks (`--project=scoutx-230b0`).  
 2. Create ≤1 L4 in zone order under the APPROVAL.  
