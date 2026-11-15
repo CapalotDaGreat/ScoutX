@@ -1,0 +1,42 @@
+{
+ "id": "gpu-validation-gpu3",
+ "approved": false,
+ "approvalRecord": "docs/release/gpu-session-request-gpu3-2026-11-15.md",
+ "project": "scoutx-230b0",
+ "zones": [
+  "europe-west4-b",
+  "europe-west4-c",
+  "europe-west4-a",
+  "europe-west1-b",
+  "europe-west1-c",
+  "europe-west2-a",
+  "europe-west2-b",
+  "europe-west3-b",
+  "europe-west3-a",
+  "europe-west6-b",
+  "europe-west6-c"
+ ],
+ "minSpacingSec": 600,
+ "jitterSec": 180,
+ "roundGapSec": 1800,
+ "maxAttempts": 240,
+ "searchWindowHours": 72,
+ "maxBillableSessions": 2,
+ "perSessionCeilingUsd": 8.0,
+ "aggregateCeilingUsd": 16.0,
+ "startupScripts": [
+  {
+   "file": "startup-s1.sh",
+   "sha256": "dad55a117721a775dad697987185909eff3bdf360d70648685e62adfb6b65bca"
+  },
+  {
+   "file": "startup-s2.sh",
+   "sha256": "75d9264952d5ff018ecb0216df83f3cf9cf0c28b92f352673df0935e42fdd374"
+  }
+ ],
+ "vmName": "pp-gpu-val-gpu3",
+ "machine": "g2-standard-8",
+ "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
+ "diskGb": 200,
+ "maxLifetimeMin": 300
+}
