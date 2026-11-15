@@ -1,0 +1,181 @@
+{
+ "schema": "pitchproof.anchor-replay.v1",
+ "resolveSource": "/home/claude/work/frz-tp/workers/football-cv",
+ "scoutxTrackerFile": "/home/claude/work/frz-tp/workers/football-cv/scoutx_tracker/__init__.py",
+ "taps": [
+  [
+   237.6,
+   50.5,
+   479.2
+  ],
+  [
+   1151.0,
+   555.0,
+   554.1
+  ],
+  [
+   1899.8,
+   1004.1,
+   553.7
+  ]
+ ],
+ "tappedIntervals": [
+  0,
+  3,
+  8
+ ],
+ "tapKind": "simulated from developer labels (perfect answers)",
+ "anchorResolution": [
+  {
+   "t": 237.6,
+   "status": "applied"
+  },
+  {
+   "t": 1151.0,
+   "status": "applied"
+  },
+  {
+   "t": 1899.8,
+   "status": "applied"
+  }
+ ],
+ "coverage": {
+  "recordingSec": 2035.0,
+  "nonMatchSec": 0.0,
+  "offPitchSec": 0.0,
+  "matchSec": 2035.0,
+  "unobservedSec": 170.9,
+  "analysedSec": 1864.1,
+  "confirmedVisibleSec": 12.2,
+  "likelyVisibleSec": 48.7,
+  "ambiguousSec": 1543.0,
+  "notIdentifiedSec": 260.2,
+  "denominators": {
+   "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+   "note": "Percentages of the recording are not percentages of the player's playing time."
+  },
+  "visiblePctOfAnalysed": 3.3
+ },
+ "identity": {
+  "statesSec": {
+   "AMBIGUOUS": 1543.0,
+   "CONFIRMED_VISIBLE": 12.2,
+   "LIKELY_VISIBLE": 48.7,
+   "UNKNOWN": 431.1
+  },
+  "iterations": [
+   {
+    "iteration": 0,
+    "mode": "classifier",
+    "chosen": 442,
+    "seconds": 1173.8,
+    "positives": 6,
+    "negatives": 78
+   },
+   {
+    "iteration": 1,
+    "mode": "classifier",
+    "chosen": 442,
+    "seconds": 1173.8,
+    "positives": 6,
+    "negatives": 78
+   }
+  ],
+  "numberSightings": 3,
+  "confirmedByUser": 3,
+  "scoreNote": "Identity scores are uncalibrated (not probabilities)."
+ },
+ "invariantsOk": true,
+ "scores": {
+  "allIntervals": {
+   "storedBasis": {
+    "accuracy": {
+     "targetLabelledSec": 50.4,
+     "claimedCorrectSec": 34.0,
+     "confirmedCorrectSec": 6.2,
+     "wrongIdentitySec": 0.0,
+     "confirmedWrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0,
+     "falseAttributionSec": 0.0,
+     "claimedRecall": 0.675,
+     "IDF1": 0.806
+    },
+    "wrongIdentityTimes": [],
+    "outcomes": {
+     "allLabelledFrames": {
+      "abstained": 2182,
+      "correctClaim": 340,
+      "unmatchedClaim": 69,
+      "indeterminateLabelClaim": 61
+     },
+     "targetVisibleLabelledFrames": {
+      "correctClaim": 340,
+      "abstained": 136,
+      "unmatchedClaim": 28
+     },
+     "frameDurationSec": 0.1,
+     "timelineSha256": "1c12765198c613c30ee2cbbc2c239574282ade45c856e57b9f9fcf5bfbd622df",
+     "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+    }
+   },
+   "correctedBasis": {
+    "accuracy": {
+     "targetLabelledSec": 50.4,
+     "claimedCorrectSec": 36.6,
+     "confirmedCorrectSec": 6.4,
+     "wrongIdentitySec": 0.0,
+     "confirmedWrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0,
+     "falseAttributionSec": 0.0,
+     "claimedRecall": 0.726,
+     "IDF1": 0.841
+    },
+    "wrongIdentityTimes": [],
+    "outcomes": {
+     "allLabelledFrames": {
+      "abstained": 2184,
+      "correctClaim": 366,
+      "unmatchedClaim": 15,
+      "indeterminateLabelClaim": 87
+     },
+     "targetVisibleLabelledFrames": {
+      "correctClaim": 366,
+      "abstained": 137,
+      "unmatchedClaim": 1
+     },
+     "frameDurationSec": 0.1,
+     "timelineSha256": "1c12765198c613c30ee2cbbc2c239574282ade45c856e57b9f9fcf5bfbd622df",
+     "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+    }
+   }
+  },
+  "untappedIntervals": {
+   "correctedBasis": {
+    "accuracy": {
+     "targetLabelledSec": 9.4,
+     "claimedCorrectSec": 0.0,
+     "confirmedCorrectSec": 0.0,
+     "wrongIdentitySec": 0.0,
+     "confirmedWrongIdentitySec": 0.0,
+     "overlapAmbiguousSec": 0.0,
+     "falseAttributionSec": 0.0,
+     "claimedRecall": 0.0,
+     "IDF1": 0.0
+    },
+    "wrongIdentityTimes": [],
+    "outcomes": {
+     "allLabelledFrames": {
+      "abstained": 1751
+     },
+     "targetVisibleLabelledFrames": {
+      "abstained": 94
+     },
+     "frameDurationSec": 0.1,
+     "timelineSha256": "1c12765198c613c30ee2cbbc2c239574282ade45c856e57b9f9fcf5bfbd622df",
+     "unmatchedMeaning": "Claim does not match any annotated box at IoU >= 0.5; requires review, not proof of safety"
+    }
+   }
+  }
+ },
+ "claimsFrames": 11842
+}

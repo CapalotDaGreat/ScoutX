@@ -180,6 +180,26 @@ claim, at a recall cost); C supported for further validation only together with 
 before the fresh-cache full-match run (E6, below) and independent labels. Cache note: these replays share E0's OCR
 cache snapshot by design (controlled pairs); E6 checks the same configuration with fresh caches.
 
+### E6: all three candidates, fresh caches, full-match resolve (2026-11-15)
+
+`exp1114/e6_all_fresh/run.sh`: `bench/full_match_benchmark.py` from frozen `0bae8d7` with T+D+C, the hard-linked
+saved Linux CPU stage 1 and reused discovery like E0, **no OCR cache of any other run** (both caches built fresh).
+Exit 0, invariants ok, OCR on CPU with no degraded reader, peak RSS 1,765 MiB (E0 1,761 MiB), wall 1,686 s on a
+contended host (E0 1,633 s; not a timing measurement).
+
+| IMG_4809, 504 target frames, corrected basis | E0 release | **E6 candidates** |
+|---|---:|---:|
+| Correct / abstained / unmatched / wrong-player | 266 / 236 / 1 / 1 | **308 / 195 / 1 / 0** |
+| Wrong identity (any / CONFIRMED) | 1.1 s / 0 | **0 / 0** |
+| Confirmed / likely visible | 4.2 s / 41.1 s | 30.7 s / 31.8 s |
+| Moments (CONFIRMED / LIKELY) | 0 / 4 | 3 / 3 |
+
+The timeline is bit-identical (`6ce27026…`) to the controlled replay `all_0`, so the shared cache snapshot did not bias
+the replays. The CONFIRMED moments outside the labels (35.3–39.8 s, 1,674.1–1,678.3 s) were checked visually: the
+boxed player is orange with a front/back number consistent with "20" where legible, no contradicting number.
+**Combined verdict (T+D+C): supported for further validation; ready to write a separately reviewed promotion
+proposal only after independent labels (LABEL-1) and the GPU parity run.**
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
