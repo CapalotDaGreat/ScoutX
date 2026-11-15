@@ -1,0 +1,96 @@
+{
+ "schema": "pitchproof.gpu-session-outcome.v1",
+ "run": "gpu-validation-20261109",
+ "operator": "Claude cloud workspace",
+ "outcome": "all_stocked_out",
+ "vmCreated": false,
+ "billableSessions": 0,
+ "actualCostUsd": 0.0,
+ "costCeilingUsd": 8.0,
+ "searchWindowStart": "2026-11-09T15:38:33Z",
+ "lastAttempt": "2026-11-09T18:39:14Z",
+ "attempts": [
+  {
+   "n": 1,
+   "zone": "europe-west4-b",
+   "at": "2026-11-09T15:38:33Z",
+   "result": "stockout"
+  },
+  {
+   "n": 2,
+   "zone": "europe-west4-c",
+   "at": "2026-11-09T15:44:06Z",
+   "result": "stockout"
+  },
+  {
+   "n": 3,
+   "zone": "europe-west4-a",
+   "at": "2026-11-09T15:54:41Z",
+   "result": "stockout"
+  },
+  {
+   "n": 4,
+   "zone": "europe-west1-b",
+   "at": "2026-11-09T16:15:16Z",
+   "result": "stockout"
+  },
+  {
+   "n": 5,
+   "zone": "europe-west1-c",
+   "at": "2026-11-09T16:35:56Z",
+   "result": "stockout"
+  },
+  {
+   "n": 6,
+   "zone": "europe-west2-a",
+   "at": "2026-11-09T16:56:29Z",
+   "result": "stockout"
+  },
+  {
+   "n": 7,
+   "zone": "europe-west2-b",
+   "at": "2026-11-09T17:17:10Z",
+   "result": "stockout"
+  },
+  {
+   "n": 8,
+   "zone": "europe-west3-b",
+   "at": "2026-11-09T17:37:43Z",
+   "result": "stockout"
+  },
+  {
+   "n": 9,
+   "zone": "europe-west3-a",
+   "at": "2026-11-09T17:58:05Z",
+   "result": "stockout"
+  },
+  {
+   "n": 10,
+   "zone": "europe-west6-b",
+   "at": "2026-11-09T18:18:42Z",
+   "result": "stockout"
+  },
+  {
+   "n": 11,
+   "zone": "europe-west6-c",
+   "at": "2026-11-09T18:39:14Z",
+   "result": "stockout"
+  }
+ ],
+ "attemptsUsed": 11,
+ "attemptsApproved": 11,
+ "finalState": {
+  "verifiedAt": "2026-11-09T18:40Z",
+  "instances": 0,
+  "disks": 0,
+  "runsPrefixObjects": 0,
+  "bucketTopLevel": [
+   "results/"
+  ]
+ },
+ "uploads": "none (upload gated on VM creation)",
+ "notes": [
+  "Loop ran under a 2 h tool timeout and stopped after attempt 8; instances/disks verified empty, then resumed at attempt 9 within the same 6 h window (WINDOW_START/SKIP/INITIAL_WAIT added to create_loop.sh).",
+  "No Part A or Part B results exist. GPU launch rules in section 6 cannot be evaluated; GPU tier stays unverified for 5.3."
+ ]
+}

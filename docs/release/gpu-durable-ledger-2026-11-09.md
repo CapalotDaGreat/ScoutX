@@ -18,9 +18,10 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | Order | Part B first (`84fefc5`), then Part A (`51d41c9`), separate timeouts, export after each |
 | Zones | west4-b/c/a → west1-b/c → west2-a/b → west3-b/a → west6-b/c (11 attempts) |
 | Lifetime / ceiling | 300 min / USD 8.00 before tax |
-| Active VM / disks | 0 / 0 at owner refresh 2026-11-09 |
-| Footage uploaded | No (awaiting Claude session) |
-| Estimated compute charge | USD 0 so far |
+| Active VM / disks | 0 / 0 (verified 2026-11-15 17:25 UTC: `instances list`, `disks list` empty; last operations are the 11 failed inserts of 2026-11-09) |
+| Footage uploaded | Never (upload was gated on a VM existing) |
+| Estimated compute charge | USD 0 (no VM was ever created) |
+| **Envelope status** | **EXHAUSTED on 2026-11-09**: all 11 approved attempts used inside the 6 h window, every one `ZONE_RESOURCE_POOL_EXHAUSTED`. A new search needs a renewed approval (`docs/release/gpu-session-request-2026-11-15.md`) |
 
 ---
 
@@ -29,7 +30,7 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | When | Zones | Result | Charge |
 |---|---|---|---|
 | 2026-11-07 | west4-b/c/a (+retry) | STOCKOUT ×4 | USD 0 |
-| 2026-11-09 session | approved envelope above | **Not started by Cursor** | — |
+| 2026-11-09 15:38–18:39 UTC (Claude) | all 11 approved zones in order, backoff 5/10/20 min | **STOCKOUT ×11** (`ZONE_RESOURCE_POOL_EXHAUSTED`, g2-standard-8 + 1× L4); 0 VMs, 0 disks, 0 uploads verified after; evidence `workers/football-cv/bench/results/5.3/gpu-validation-20261109/SESSION_OUTCOME.json`, `attempts.log` | USD 0 |
 
 ---
 
@@ -83,7 +84,15 @@ Evidence: `workers/football-cv/bench/results/5.3/gpu-validation-20261109/pricing
 - No `gcloud` in Cursor Windows shell.  
 - Dual operators forbidden.
 
-## Next executable action (Claude only)
+## Status 2026-11-15
+
+- The 2026-11-09 envelope is used up (11 of 11 attempts, window closed). Its "1 billable session" was never consumed,
+  but attempts and window are the binding limits, so no allocation was made on 2026-11-15.
+- Prices refreshed 2026-11-15 (Cloud Billing catalog): europe-west4 G2 core 0.026264, RAM 0.003077 /GiB, L4 0.58863,
+  balanced PD 0.11 /GiB-month → g2-standard-8 + 200 GB ≈ USD 0.927/h, unchanged.
+- Renewal request with the same plan: `docs/release/gpu-session-request-2026-11-15.md` (GPU-2).
+
+## Next executable action (Claude only, after GPU-2 is approved)
 
 1. Refresh prices + list instances/disks (`--project=scoutx-230b0`).  
 2. Create ≤1 L4 in zone order under the APPROVAL.  
