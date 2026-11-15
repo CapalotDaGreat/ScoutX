@@ -153,6 +153,33 @@ guarantee, and LIKELY claims still need the appearance-only rule (candidate D) o
 The planned run "combined reader + candidate D" (`e2b_comb_D_0`) was lost when the workspace restarted on 2026-11-15
 (marked incomplete) and was rerun on 2026-11-15; results are in section 8.
 
+## 4c. Candidates combined, with simulated taps (2026-11-15, controlled replays)
+
+Same stage 1, same E0 cache snapshot; frozen tree `frz-tp` = `0bae8d7`. Flags: T = `SCOUTX_TELEPORT_SPLIT=1`,
+D = `SCOUTX_APPEARANCE_ONLY_LIKELY=0`, C = `SCOUTX_OCR_VARIANT=combined` (with the separately built combined cache).
+Counts are target-visible labelled frames correct/abstained/unmatched plus wrong-player frames (N labels).
+
+| Run | Taps | All 504 frames | Untapped interval | Confirmed / likely s |
+|---|---|---|---|---|
+| release `rel_t4v` | 0,3,4,8 | 250/234/3, **17 wrong (1.7 s CONFIRMED)** | — | 17.7 / 160.8 |
+| T `tp_t4` | 0,3,4,8 | 421/82/1, 0 wrong | — | 15.5 / 188.3 |
+| T+D `tp_t4_D` | 0,3,4,8 | 421/82/1, 0 wrong | — | 15.5 / 71.5 |
+| T+D+C `all_t4` | 0,3,4,8 | 407/96/1, 0 wrong | — | 42.0 / 62.7 |
+| T+D+C `all_0` | none | 308/195/1, 0 wrong | — | 30.7 / 31.8 |
+| T leave-one-out (0 / 3 / 4 / 8 left out) | other three | — | 60/7/1, 241/46/0, **51/43/0 + 3 wrong**, 0/54/0 | — |
+| T+D leave-one-out | other three | — | 60/7/1, 241/46/0, 0/94/0, 0/54/0; **0 wrong** | — |
+| T+D+C leave-one-out | other three | — | 58/9/1, 248/39/0, 0/94/0, 0/54/0; **0 wrong** | — |
+
+Readings: D changes nothing in the tapped runs except removing LIKELY time outside the labels (188 → 72 s); in the
+leave-one-out runs it removes exactly the 3 wrong-player frames of interval 4 (1,314.4–1,314.6 s, appearance-only
+LIKELY) and, with them, the 51 correct frames of that interval. That is the expected trade: fewer claims, no wrong
+ones. C adds confirmed time (15.5 → 42.0 s with taps) at a small labelled cost with all four taps (421 → 407).
+**Verdicts (controlled replays, one recording, one annotator):** T supported for further validation (fixes a release
+CONFIRMED wrong-player defect with taps); D supported for further validation (removes every observed wrong LIKELY
+claim, at a recall cost); C supported for further validation only together with D. None is ready for promotion
+before the fresh-cache full-match run (E6, below) and independent labels. Cache note: these replays share E0's OCR
+cache snapshot by design (controlled pairs); E6 checks the same configuration with fresh caches.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
