@@ -227,6 +227,11 @@ unmatched column, so they summed to 503 or 487. The release's single target-visi
 are different domains: 1 frame where T was visible and the claim was on another player, plus 10 frames in which T was
 not labelled visible but the engine claimed a labelled team-mate; 11 frames × 0.1 s = 1.1 s.
 
+**Endpoint effect (the other "503").** On the corrected basis, one target frame (stored 1,180.0 s → 1,180.1 s) moves
+just past the end of interval 3 (1,150–1,180 s). The frame-level audit still counts it (504), but anything that
+groups by interval counts 503 (68 + 287 + 94 + 54): the per-interval tables and the leave-one-out "untapped" scores.
+The labels are not changed; reports name the domain.
+
 **Checked:**
 - Fresh vs shared cache: E6 equals `all_0` bit for bit.
 - Flags per run are in each `anchor_replay.json` (`env` in the status log).
@@ -261,6 +266,38 @@ limitations** (positioning: 31 s confirmed < 60 s minimum; identity; physical). 
 The candidates triple confirmed coverage, but on this recording it stays below the evidence minimum. The coach
 declines honestly; no gate was lowered. Coaching remains blocked by identity coverage, so a longer, better-filmed
 recording (or owner taps: 42 s with four taps, still < 60 s) is the lever, not the coaching text.
+
+## 14. Acquisition delay and fragmentation (2026-11-15)
+
+`bench/results/5.3/exp-20261115/interval_metrics.py`. For each interval with target frames: the delay from the first
+labelled target frame to the first correct claim, and the number of separate correct-claim runs (fragments).
+
+| Run | i0 (68 f) | i3 (287 f) | i4 (94 f) | i8 (54 f) |
+|---|---|---|---|---|
+| E0 release, no taps | 4.0 s, 4 runs | 3.6 s, 10 runs | never | never |
+| E6 T+D+C, no taps | 0.1 s, 6 runs | 3.6 s, 6 runs | never | never |
+| Release + 4 taps | 0.1 s, 6 | 0.6 s, 7 | 0.0 s, 4 | 0.0 s, 3 (but 1.7 s CONFIRMED wrong in i3) |
+| T+D+C + 4 taps | 0.0 s, 3–9 | 0.0 s, 9 | 0.0 s, 3 | 0.0 s, 3 |
+
+Without taps, intervals 4 and 8 are never acquired by any configuration: no legible number there. That is the
+practical limit of number-only identity on this recording; a tap per uncovered stretch is the safe way to get it.
+
+## 15. E7: smaller players (Veo-like far view, simulated; diagnostic only)
+
+Saved IMG_4809 crops were scaled down and back up (0.5×, 0.35×) and read by all three readers
+(`frz-diag` evaluator option, not a candidate). 1,466 labelled crops (245 target, 1,221 same-kit team-mates):
+
+| Scale | Combined: target "20" crops / pieces | Combined: team-mate other-number misreads | "20" on a team-mate |
+|---|---|---|---|
+| 1× (E2) | 10 / 5 of 19 | 111 | 0 |
+| 0.5× | 6 / 3 of 19 | 149 | 0 |
+| 0.35× | 3 / 2 of 19 | 146 | 0 |
+
+Expected effect on far (Veo follow-cam) footage: far fewer number seeds, so more abstention and lower coverage, but
+no observed increase in putting the target's number on a team-mate. More other-number reads on target crops could
+exclude real target pieces ("shows #…"), which again costs coverage, not safety. Limits: resizing is not a real
+elevated 180° panorama (no seam, no top-down foreshortening). Real consented Veo recordings are needed (research
+notes, section 2).
 
 ## 10. Primary workspace update (2026-11-15)
 
