@@ -22,6 +22,7 @@ Update this file after every meaningful experiment. Do not treat stockout or a p
 | Footage uploaded | Never (upload was gated on a VM existing) |
 | Estimated compute charge | USD 0 (no VM was ever created) |
 | **Envelope status** | **EXHAUSTED on 2026-11-09**: all 11 approved attempts used inside the 6 h window, every one `ZONE_RESOURCE_POOL_EXHAUSTED`. A new search needs a renewed approval (`docs/release/gpu-session-request-2026-11-15.md`) |
+| **GPU-2 (2026-11-15)** | **APPROVED by the owner in chat, with Part C** — same envelope, new 6 h window; plan frozen in the request file |
 
 ---
 
