@@ -200,6 +200,42 @@ boxed player is orange with a front/back number consistent with "20" where legib
 **Combined verdict (T+D+C): supported for further validation; ready to write a separately reviewed promotion
 proposal only after independent labels (LABEL-1) and the GPU parity run.**
 
+## 11. Number audit (2026-11-15)
+
+Recomputed from the saved timelines with `bench/results/5.3/exp-20261115/score_timeline.py` (uses the repository's
+`pp_bench.accuracy` and `audit_claim_outcomes.audit`). Labels: `gt_img4809_intervals.json` (stored basis) and
+`gt_time_basis_corrections.json` (+0.1 s from 1,150 s) are kept separately; no label was changed.
+
+**Domains.**
+- 2,652 labelled frames in 9 intervals at 10 fps; 504 of them show the target (T).
+- Outcomes per labelled frame: correct, abstained, unmatched (no labelled box at IoU ≥ 0.5), wrong-player (best box
+  is another player, N), overlap-ambiguous, indeterminate (`?` label).
+- No endpoint exclusions: every label must have a prediction sample within 0.051 s, else the audit raises.
+- `wrongIdentitySec` = wrong-player frames over **all 2,652** labelled frames ÷ 10 fps. It also counts frames where
+  the target is not visible and the engine claims another player.
+
+| Run (corrected basis) | 504 target-visible frames: correct / abstained / unmatched / wrong-player | Wrong-player frames, all 2,652 labels (= s) | CONFIRMED wrong s |
+|---|---|---|---|
+| E0 release, no taps (`fad444c1…`) | 266 / 236 / 1 / **1** = 504 | 11 (1.1 s) | 0 |
+| Release + 4 taps (`rel_t4v`) | 250 / 234 / 3 / **17** = 504 | 17 (1.7 s) | 1.7 |
+| Candidate tree, flags off + 4 taps (`c1_off_t4`) | 251 / 233 / 3 / 17 = 504 | 17 (1.7 s, 1,151.2–1,153.5 s) | 1.7 |
+| T+D+C, no taps, fresh caches (E6, `6ce27026…`) | 308 / 195 / 1 / 0 = 504 | 0 | 0 |
+| T+D+C + 4 taps (`all_t4`) | 407 / 96 / 1 / 0 = 504 | 0 | 0 |
+
+**Reconciliation.** The short tables in the chat report of 2026-11-15 ("266 / 236 / 1", "250 / 234 / 17") left out the
+unmatched column, so they summed to 503 or 487. The release's single target-visible wrong-player frame and its 1.1 s
+are different domains: 1 frame where T was visible and the claim was on another player, plus 10 frames in which T was
+not labelled visible but the engine claimed a labelled team-mate; 11 frames × 0.1 s = 1.1 s.
+
+**Checked:**
+- Fresh vs shared cache: E6 equals `all_0` bit for bit.
+- Flags per run are in each `anchor_replay.json` (`env` in the status log).
+- The `c1_off_t4` control reproduces the release tap failure, but not bit for bit: likely time 146.9 vs 160.8 s,
+  because the candidate tree also carries the anchor-guard and OCR-device changes. It is a "candidate code, flags
+  off" control, not the release.
+- Lost coverage from D: interval 4 left out → 51 correct frames lost together with the 3 wrong ones (section 4c).
+- Visual checks of new claims outside the labels are limited evidence, not ground truth.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
