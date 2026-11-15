@@ -151,7 +151,7 @@ CONFIRMED error, but one left-out interval gains 3 LIKELY wrong-player frames. O
 guarantee, and LIKELY claims still need the appearance-only rule (candidate D) or review.
 
 The planned run "combined reader + candidate D" (`e2b_comb_D_0`) was lost when the workspace restarted on 2026-11-15
-and has not been rerun.
+(marked incomplete) and was rerun on 2026-11-15; results are in section 8.
 
 ## 10. Primary workspace update (2026-11-15)
 
@@ -238,11 +238,28 @@ LIKELY to a look-alike. These wrong claims are LIKELY, not CONFIRMED, and fall o
 labelled score cannot see them. **Verdict: needs revision.** The reads are better; the appearance-only LIKELY rule
 (candidate D, pending independent review) is the obvious companion, measured next (`e2b_comb_D_0`).
 
+**E2c: combined reader + candidate D (`SCOUTX_OCR_VARIANT=combined SCOUTX_APPEARANCE_ONLY_LIKELY=0`, frozen `frz-e2c`,
+same stage 1, same E0 cache snapshot plus the separately built combined cache, rerun 2026-11-15, rc 0):**
+
+| IMG_4809, 504 target frames | E2b combined | **E2c combined + D** |
+|---|---:|---:|
+| Correct / abstained / unmatched / wrong | 309 / 194 / 1 / 0 | **307 / 195 / 1 / 0** |
+| Confirmed / likely visible, whole match | 30.7 s / 108.9 s | **30.7 s / 31.9 s** |
+| CONFIRMED frames | 307 | 307 (identical set) |
+| LIKELY frames | 1,089 | 319 (a strict subset: D adds none) |
+
+D removes all LIKELY frames of the reviewed #17 segments (1,381.5–1,389.7 s) and the unverifiable 1,607 s and
+1,819–1,877 s segments; it costs 2 correct labelled frames. Remaining unlabelled LIKELY spans (1,299.6, 1,664.5–1,665.1,
+1,831.4, 1,956.7, 1,960.0–1,962.9 s) were reviewed visually: a small distant orange player each time, no contradicting
+number visible, identity not verifiable at that size. Timeline `8d9e7190…`. **Verdict: supported for further
+validation** (combined reader together with D, never the reader alone); not a promotion: one recording, one annotator,
+and D itself still needs its independent review.
+
 ## 9. Blocked work and exact requests
 
 | Work | Blocker | What is needed (request) |
 |---|---|---|
-| GPU correctness and speed (CUDA FP32 baseline, batch, FP16, ONNX CUDA, decoder/NVDEC, discovery/stage-1 shared decode) | No GPU here; no current approval (the 2026-11-09 envelope was for commits `84fefc5`/`51d41c9`, one session, USD 8, and was never run; later approvals exclude GPU VMs) | **GPU-1**: one L4 session, `g2-standard-8`, zones europe-west4-b/c/a then europe-west1-b/c, max lifetime 300 min, max 1 VM, cost ceiling USD 8 before tax (estimate, not a billing cap), IMG_4809 proxy only, exact commits: Part A `51d41c9…` (immutable FP32 matrix), Part B the candidate tip named in the handoff. Output: numeric exports only; cleanup verified |
+| GPU correctness and speed (CUDA FP32 baseline, batch, FP16, ONNX CUDA, decoder/NVDEC, discovery/stage-1 shared decode) | The 2026-11-09 envelope ran out (11/11 stockouts). **GPU-2 approved 2026-11-15 with Part C**; capacity search in progress, see `docs/release/gpu-durable-ledger-2026-11-09.md` | **GPU-1**: one L4 session, `g2-standard-8`, zones europe-west4-b/c/a then europe-west1-b/c, max lifetime 300 min, max 1 VM, cost ceiling USD 8 before tax (estimate, not a billing cap), IMG_4809 proxy only, exact commits: Part A `51d41c9…` (immutable FP32 matrix), Part B the candidate tip named in the handoff. Output: numeric exports only; cleanup verified |
 | Local vision-language second reader | Hugging Face API and weights blocked by the network allowlist (proxy); no GPU; 3 GB free disk; 7 GiB RAM | **VLM-1**: allowlist `huggingface.co` read-only for the official model card and weights of the chosen checkpoint (license check first), or run the experiment on the GPU session with the weights staged by the owner. Not started |
 | Coaching model benchmark (groundedness, criticism, drills, schema, latency, cost) | OpenRouter key is a production secret this workspace must not read; any call is billed; footage must not be sent | **COACH-1**: a separate test key with a USD 2 cap, text-only evidence packets built from validated reports (no frames), candidates `google/gemini-2.5-flash` (current), `google/gemini-3.1-flash-lite`, `google/gemini-3.5-flash-lite`; or the owner runs `bench/` packets locally |
 | Independent validation | Only one labelled recording (developer, single annotator); IMG_4529 / IMG_5105 replays exist but are unlabelled | **LABEL-1**: a second annotator labels the existing 9 IMG_4809 intervals blind, and target frames in at least two consented recordings that no experiment has used |
