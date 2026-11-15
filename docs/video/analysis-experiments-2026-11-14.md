@@ -299,6 +299,15 @@ exclude real target pieces ("shows #…"), which again costs coverage, not safet
 elevated 180° panorama (no seam, no top-down foreshortening). Real consented Veo recordings are needed (research
 notes, section 2).
 
+## 16. Teleports across short gaps (2026-11-15, measured; no change)
+
+`split_on_teleports` (candidate T) only checks consecutive frames of a track. Inside tracks there are 6,791 gaps of
+2–6 frames. Composing the camera warps over each gap (all warps quality ≥ 0.5; 122 gaps skipped as unreliable) and
+flagging jumps > 0.8 + 0.5·(gap − 1) box heights gives **19 gap-jumps in the match, 2 inside labelled intervals**
+(1,155.1 s track 2933; 1,503.5 s track 3833). Neither involves a labelled player box (IoU with every label < 0.5),
+so there is no observed identity failure to fix. Kept as a counterexample category for held-out footage
+(`exp1114/gap_teleports.json`); T is not extended without a failing case.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
