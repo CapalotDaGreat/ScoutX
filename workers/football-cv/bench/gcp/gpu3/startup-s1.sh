@@ -36,6 +36,14 @@ left() { echo $(( END - $(date +%s) - RESERVE_SEC )); }
 mn() { if [ "$1" -lt "$2" ]; then echo "$1"; else echo "$2"; fi; }
 
 mkdir -p /data/out /data/export /data/videos /data/src-a /data/src-b /data/src-c /data/tools
+# GPU-3 harness fix 2026-11-16 (session-1 failure: the image runs as uid 10001 and could not write the root-owned
+# output mounts). drun gives the output and scratch trees to that uid before every container start; nothing else changes.
+cat > /usr/local/bin/drun <<'DRUN'
+#!/bin/bash
+mkdir -p /data/out /data/c1; chown -R 10001:10001 /data/out /data/c1
+exec docker run "$@"
+DRUN
+chmod 755 /usr/local/bin/drun
 OUT=/data/out
 exec > >(tee -a /var/log/pp-gpu-gpu3.log) 2>&1
 shutdown -h "+${GUEST_SHUTDOWN_MIN}" 'approved PitchProof GPU validation safeguard' || true
@@ -148,7 +156,7 @@ build "$PART_B_COMMIT" /data/src-b "$OUT/part-b"; rcb=$?
 set -e
 echo "$rcb" > "$OUT/part-b/build_exit.txt"
 if [ "$rcb" -eq 0 ]; then
-  RUNB=(docker run --rm --gpus all --ipc=host -e HOME=/tmp -e PATH=$BASEPATH "${FLAGS[@]}" -v /data/prov:/run/prov:ro -v /data/videos:/videos:ro -v /data/tools:/tools:ro)
+  RUNB=(/usr/local/bin/drun --rm --gpus all --ipc=host -e HOME=/tmp -e PATH=$BASEPATH "${FLAGS[@]}" -v /data/prov:/run/prov:ro -v /data/videos:/videos:ro -v /data/tools:/tools:ro)
   "${RUNB[@]}" "pp-gpu:$PART_B_COMMIT" python -m scoutx_tracker.envinfo --require-gpu --require-models > "$OUT/part-b/envinfo.json" 2>"$OUT/part-b/envinfo.err" || echo "envinfo exit $?"
   phase part_b_full_match
   t=$(( $(bleft) - 900 )); echo "full-match timeout ${t}s" | tee "$OUT/part-b/full/timeout.txt"
@@ -173,7 +181,7 @@ if [ "$rcb" -eq 0 ]; then
   for s in 225 1150; do
     t=$(( $(bleft) - 60 )); [ "$t" -ge 600 ] || { echo "skip cpu $s (left $t)" >> "$OUT/part-b/intervals-cpu/skipped.txt"; continue; }
     phase "part_b_interval_cpu_$s"
-    timeout --signal=INT --kill-after=30 "$t" docker run --rm --name pp-iv --ipc=host -e HOME=/tmp -e PATH=$BASEPATH "${FLAGS[@]}" -v /data/prov:/run/prov:ro \
+    timeout --signal=INT --kill-after=30 "$t" /usr/local/bin/drun --rm --name pp-iv --ipc=host -e HOME=/tmp -e PATH=$BASEPATH "${FLAGS[@]}" -v /data/prov:/run/prov:ro \
       -v /data/videos:/videos:ro -v "$OUT/part-b/intervals-cpu:/out" "pp-gpu:$PART_B_COMMIT" \
       python bench/decoder_interval_eval.py --decoder default --video /videos/IMG_4809_proxy_10fps.mp4 --out-dir "/out/i$s" --intervals "$s" \
       > "$OUT/part-b/intervals-cpu/i$s.log" 2>&1; echo $? > "$OUT/part-b/intervals-cpu/i$s.exit"; docker rm -f pp-iv >/dev/null 2>&1
@@ -214,7 +222,7 @@ else
       for c in "$C"/stage1/c_*; do for f in checkpoint.json meta.json; do cp --remove-destination "$W/stage1/$(basename "$c")/$f" "$c/$f"; done; done
       rm -f "$C"/stage1/ocr_cache*.json "$C"/stage1/trackrows_*.npy; cp "$W/discovery.json" "$C/discovery.json"
       # shellcheck disable=SC2086
-      timeout --signal=INT --kill-after=30 "$t" docker run --rm --gpus all --ipc=host --name pp-c1 -e HOME=/tmp -e PATH=$BASEPATH \
+      timeout --signal=INT --kill-after=30 "$t" /usr/local/bin/drun --rm --gpus all --ipc=host --name pp-c1 -e HOME=/tmp -e PATH=$BASEPATH \
         -e PYTHONHASHSEED=0 -e SCOUTX_REQUIRE_GPU_OCR=1 $extra -v /data/prov:/run/prov:ro -v "$C:/in" -v "$OUT/part-c1/$name:/out" \
         "pp-gpu:$PART_C_COMMIT" python bench/anchor_replay.py --source /srv --stage1 /in/stage1 --discovery /in/discovery.json --out /out \
           --ground-truth bench/results/5.1/gt_img4809_intervals.json --time-basis bench/references/gt_time_basis_corrections.json \
@@ -235,7 +243,7 @@ A_END=$(( $(date +%s) + PART_A_MAX_SEC )); aleft() { mn $(( A_END - $(date +%s) 
 mkdir -p "$OUT/part-a"
 phase part_a_build
 build "$PART_A_COMMIT" /data/src-a "$OUT/part-a"
-RUNA=(docker run --rm --gpus all --ipc=host -e HOME=/tmp -e PATH=$BASEPATH -v /data/prov:/run/prov:ro -v /data/videos:/videos:ro -v "$OUT/part-a:/out")
+RUNA=(/usr/local/bin/drun --rm --gpus all --ipc=host -e HOME=/tmp -e PATH=$BASEPATH -v /data/prov:/run/prov:ro -v /data/videos:/videos:ro -v "$OUT/part-a:/out")
 "${RUNA[@]}" "pp-gpu:$PART_A_COMMIT" python -m scoutx_tracker.envinfo --require-gpu --require-models > "$OUT/part-a/envinfo.json"
 phase part_a_matrix
 t=$(( $(aleft) - 120 )); echo "$t" > "$OUT/part-a/budget_sec.txt"
@@ -263,7 +271,7 @@ if [ "$rcc" -eq 0 ]; then
     t=$(( $(left) - 60 )); [ "$t" -ge 300 ] || { echo "skip $v $s (left $t)" >> "$OUT/part-c/skipped.txt"; continue; }
     phase "part_c_${v}_$s"; mkdir -p "$OUT/part-c/$v"
     TS=0; [ "$v" = on ] && TS=1
-    timeout --signal=INT --kill-after=30 "$t" docker run --rm --gpus all --ipc=host --name pp-c -e HOME=/tmp -e PATH=$BASEPATH "${FLAGS[@]}" \
+    timeout --signal=INT --kill-after=30 "$t" /usr/local/bin/drun --rm --gpus all --ipc=host --name pp-c -e HOME=/tmp -e PATH=$BASEPATH "${FLAGS[@]}" \
       -e SCOUTX_TELEPORT_SPLIT=$TS -e PP_PROFILE=gpu-fp32-b8 -v /data/prov:/run/prov:ro -v /data/videos:/videos:ro -v /data/tools:/tools:ro \
       -v "$OUT/part-c/$v:/out" "pp-gpu:$PART_C_COMMIT" \
       python /tools/interval_profile_eval.py --decoder default --video /videos/IMG_4809_proxy_10fps.mp4 --out-dir "/out/i$s" --intervals "$s" \

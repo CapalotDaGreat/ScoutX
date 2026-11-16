@@ -96,3 +96,23 @@ Fallbacks D1 / D2 / D3 / D4:                  NO unless written here: ______
 ```
 
 **Owner answer in chat, 2026-11-15:** "Approve GPU-3 as written". Window starts at the first attempt. Fallbacks D1–D4: NO.
+
+## Session 1 result (2026-11-16) and amendment GPU-3a (pending)
+
+- **Allocation:** attempt 25, europe-west4-a, VM created 04:46:32 UTC. The controller stopped searching at once.
+  Inputs were hash-verified on the guest; the proxy (not the MOV) was uploaded 04:47:28–04:48:06.
+- **Failure:** every container failed within seconds with `PermissionError: '/out/...'`. The tracker image runs as
+  uid 10001 (`USER worker`, Dockerfile line 97–98, same in 51d41c9 and 84fefc5), and the guest script mounted
+  root-owned output directories. A harness bug, present since the 2026-11-09 script, which had never run before.
+  Part B produced no measurements; Part C1 was skipped (no stage 1).
+- **Cleanup:** the guest exported and self-deleted at 05:01:55 UTC (VM and disk gone, verified). The 5 `runs/` objects
+  (1.42 GiB, footage and sources) were deleted at about 06:00 UTC. Lifetime ≈ 15.5 min ≈ **USD 0.24** (estimate from
+  list price; not billing evidence). Note: the bucket keeps deleted objects for 7 days (soft delete), so the
+  proxy is recoverable until about 2026-11-23 unless the owner changes the bucket policy.
+- **Fix (harness only, no experiment commit changed):** `/usr/local/bin/drun` gives `/data/out` and `/data/c1` to uid
+  10001 before every container start. Reproduced and verified locally (uid 10001 cannot create the work dir
+  without it, can with it). New script hashes: s1 `d62ce907…`, s2 `383ec7ad…` (old `dad55a11…`, `75d92649…`).
+
+**GPU-3a asks:** (1) accept the harness fix (new script hashes); (2) allow **3 billable sessions instead of 2**, so
+that the failed session does not consume Part A's slot. Aggregate ceiling unchanged at USD 16 (0.24 spent; two more
+sessions at most 2 × 6.02 + extras). Window, zones, attempts, lifetime and footage are unchanged.

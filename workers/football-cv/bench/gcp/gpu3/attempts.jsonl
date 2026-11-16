@@ -22,3 +22,6 @@
 {"event": "stockout", "n": 20, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T03:15:36Z"}
 {"event": "stockout", "n": 21, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T03:28:13Z"}
 {"event": "stockout", "n": 22, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T03:39:39Z"}
+{"event": "stockout", "n": 23, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T04:22:18Z"}
+{"event": "stockout", "n": 24, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T04:34:10Z"}
+{"event": "created", "n": 25, "zone": "europe-west4-a", "at": "2026-11-16T04:46:41Z"}

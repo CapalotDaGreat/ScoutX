@@ -1,11 +1,15 @@
 {
- "attempts": 22,
+ "attempts": 25,
  "rounds": 2,
- "nextZone": 0,
- "sessions": 0,
- "spentUsdEstimate": 0.0,
+ "nextZone": 2,
+ "sessions": 1,
+ "spentUsdEstimate": 8.0,
  "windowStart": "2026-11-15T21:49:47Z",
- "lastAttemptAt": "2026-11-16T03:39:05Z",
- "outcome": "searching",
- "vm": null
+ "lastAttemptAt": "2026-11-16T04:46:29Z",
+ "outcome": "vm_created",
+ "vm": {
+  "name": "pp-gpu-val-gpu3",
+  "zone": "europe-west4-a",
+  "createdAt": "2026-11-16T04:46:41Z"
+ }
 }

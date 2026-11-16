@@ -1,0 +1,162 @@
+{
+ "timestampUtc": "2026-11-16T05:01:50.785137+00:00",
+ "files": [
+  {
+   "file": "part_c1_skipped.txt",
+   "bytes": 35,
+   "sha256": "ec6d926fe65522db16f2ace71ff8e8c996c201ad264ed4bc7351e697bb055400"
+  },
+  {
+   "file": "interval_profile_eval.py",
+   "bytes": 842,
+   "sha256": "c291066783c99fd866789b4db8abce7bdd04eef25b7c76835539fe6939dfffef"
+  },
+  {
+   "file": "nvidia-smi-final.txt",
+   "bytes": 1689,
+   "sha256": "58fa5a29a43876e1f1e1f47a60c8c4e5d1c22f0b171fd476c735ba9571d74f40"
+  },
+  {
+   "file": "part_b_commit.txt",
+   "bytes": 41,
+   "sha256": "10859f3da7404ee834cabdaf22b320e575a7157fb2c207301ee268fec08e0c02"
+  },
+  {
+   "file": "host_mem_samples.csv",
+   "bytes": 6571,
+   "sha256": "99620e761e1bb9b975a4b57c25cf26394e27d9d58f1cb445eb5f3031d8b02255"
+  },
+  {
+   "file": "gpu.txt",
+   "bytes": 46,
+   "sha256": "b3f17b89720d8472eb002074f3ec30a7827974a59ca231e58a52c68752fd0390"
+  },
+  {
+   "file": "gpu_samples.csv",
+   "bytes": 5137,
+   "sha256": "f0d34c0344488a3d35d16841cb7fc1688fff236cd4ba5dbed2f9de90a1d609aa"
+  },
+  {
+   "file": "run.log",
+   "bytes": 5193,
+   "sha256": "774b80f83961f92c283fa7acf902ff24374382022edb6e05365d6709239f5ba4"
+  },
+  {
+   "file": "host_used_mem_peak_bytes.txt",
+   "bytes": 11,
+   "sha256": "7ff62eaf57d04e2c61a98efca34018509bda6a46875f458b8f8b0ab028f95e31"
+  },
+  {
+   "file": "part_a_commit.txt",
+   "bytes": 41,
+   "sha256": "86f33d5ab813d79bbca78e9ffc354e689e902b985471c3c700d65c8c66844d34"
+  },
+  {
+   "file": "nvidia-smi-initial.txt",
+   "bytes": 1689,
+   "sha256": "d9a2509f229740486e2120ed56387a5cfa3d10edf296726d6ad5342be43cab3c"
+  },
+  {
+   "file": "startup_exit.txt",
+   "bytes": 2,
+   "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  {
+   "file": "timestamps.txt",
+   "bytes": 1317,
+   "sha256": "4adb76094548d89ffbb4568d69a948e04a57fec50c361bf6d799446d0f6ec836"
+  },
+  {
+   "file": "part-b/build_exit.txt",
+   "bytes": 2,
+   "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  {
+   "file": "part-b/envinfo.json",
+   "bytes": 3721,
+   "sha256": "7951dda9163f8a40f285d45156dd8e047d67669ad2c8c000f86f7ffb7e3b9c53"
+  },
+  {
+   "file": "part-b/build.log",
+   "bytes": 143533,
+   "sha256": "57ce041f5435eedb130db5075082e2de22170b87b82d2f5d5f97a63a6517041b"
+  },
+  {
+   "file": "part-b/full/benchmark.log",
+   "bytes": 510,
+   "sha256": "be292e2d542c38f28301b58eeced7dd9d7f3c001ebf167a5a54a8f582c6774ca"
+  },
+  {
+   "file": "part-b/full/exit.txt",
+   "bytes": 2,
+   "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  {
+   "file": "part-b/full/timeout.txt",
+   "bytes": 25,
+   "sha256": "65fbc8dbafaebe714cd7bd6c5d8de7e218dc75a20fab980c50b43c4f67bdb601"
+  },
+  {
+   "file": "part-b/intervals-gpu/i1500.log",
+   "bytes": 1870,
+   "sha256": "6a96d81d96e41d00e7907b9440471f12d33a195f1dd66c6bfde13446d1b804dc"
+  },
+  {
+   "file": "part-b/intervals-gpu/i400.log",
+   "bytes": 1868,
+   "sha256": "3b6b5a3c394fd6951df3c6d303dc79341192ddaeb64c063fe765be9179fec118"
+  },
+  {
+   "file": "part-b/intervals-gpu/i1150.log",
+   "bytes": 1870,
+   "sha256": "6af0a53b879da1dc0e458da01d0474d54cf2165a2f3261fd39b4a7234407e039"
+  },
+  {
+   "file": "part-b/intervals-gpu/i1295.log",
+   "bytes": 1870,
+   "sha256": "fa651fe7a993d6c56e9a590cb129d9d6172238f270f2890763255db59434dacf"
+  },
+  {
+   "file": "part-b/intervals-gpu/i1800.log",
+   "bytes": 1870,
+   "sha256": "656b01b4a608827becd42713a56239c4659288fa9b708652d39a3756170290a9"
+  },
+  {
+   "file": "part-b/intervals-gpu/i1680.log",
+   "bytes": 1870,
+   "sha256": "b172b2a1408551dc7e27db778831d4b767ed407e0591eea50486daba3ceb0375"
+  },
+  {
+   "file": "part-b/intervals-gpu/i600.log",
+   "bytes": 1868,
+   "sha256": "39f8bee3b587550c8981eb5f2c2354312882caf0358ea239492c5ea8301a2383"
+  },
+  {
+   "file": "part-b/intervals-gpu/i225.log",
+   "bytes": 1868,
+   "sha256": "8f029b9ece1c185be7b44e37d69e77b325f9f4913d69aa9e3a65a3112629e3bd"
+  },
+  {
+   "file": "part-b/intervals-gpu/i1890.log",
+   "bytes": 1870,
+   "sha256": "212db93962867aa840c5d2da55d3edf8028e3d3a685cd9a553df87a63bbe2e5f"
+  },
+  {
+   "file": "part-b/repeat/i225.log",
+   "bytes": 1868,
+   "sha256": "8f029b9ece1c185be7b44e37d69e77b325f9f4913d69aa9e3a65a3112629e3bd"
+  },
+  {
+   "file": "part-b/intervals-cpu/i1150.log",
+   "bytes": 1621,
+   "sha256": "2265f728254d1a4f8784086bee11f9895ce449d27916a7d7846d545ca35c5a3d"
+  },
+  {
+   "file": "part-b/intervals-cpu/i225.log",
+   "bytes": 1619,
+   "sha256": "5e2c600b79316314ecfae099d1225658d1816e03a41a4c429ab281836ecb96d6"
+  }
+ ],
+ "mediaExcluded": true,
+ "stage1Excluded": true
+}
