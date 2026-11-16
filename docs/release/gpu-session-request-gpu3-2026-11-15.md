@@ -97,7 +97,7 @@ Fallbacks D1 / D2 / D3 / D4:                  NO unless written here: ______
 
 **Owner answer in chat, 2026-11-15:** "Approve GPU-3 as written". Window starts at the first attempt. Fallbacks D1–D4: NO.
 
-## Session 1 result (2026-11-16) and amendment GPU-3a (pending)
+## Session 1 result (2026-11-16) and amendment GPU-3a (APPROVED)
 
 - **Allocation:** attempt 25, europe-west4-a, VM created 04:46:32 UTC. The controller stopped searching at once.
   Inputs were hash-verified on the guest; the proxy (not the MOV) was uploaded 04:47:28–04:48:06.
@@ -116,3 +116,5 @@ Fallbacks D1 / D2 / D3 / D4:                  NO unless written here: ______
 **GPU-3a asks:** (1) accept the harness fix (new script hashes); (2) allow **3 billable sessions instead of 2**, so
 that the failed session does not consume Part A's slot. Aggregate ceiling unchanged at USD 16 (0.24 spent; two more
 sessions at most 2 × 6.02 + extras). Window, zones, attempts, lifetime and footage are unchanged.
+
+**Owner answer in chat 2026-11-16: "Approve GPU-3a".** Applied: 3 sessions, spent reconciled to USD 0.24, search resumed 15:05:57 UTC (no attempts 05:02–15:05 UTC). The rerun writes to `results/gpu-validation-gpu3-s1b`; final s1 hash `94a04c1f…`.

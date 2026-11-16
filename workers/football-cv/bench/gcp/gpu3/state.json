@@ -3,13 +3,19 @@
  "rounds": 2,
  "nextZone": 2,
  "sessions": 1,
- "spentUsdEstimate": 8.0,
+ "spentUsdEstimate": 0.24,
  "windowStart": "2026-11-15T21:49:47Z",
- "lastAttemptAt": "2026-11-16T04:46:29Z",
- "outcome": "vm_created",
- "vm": {
-  "name": "pp-gpu-val-gpu3",
-  "zone": "europe-west4-a",
-  "createdAt": "2026-11-16T04:46:41Z"
- }
+ "lastAttemptAt": "2026-11-16T15:05:57Z",
+ "outcome": "searching",
+ "vm": null,
+ "sessionLog": [
+  {
+   "session": 1,
+   "zone": "europe-west4-a",
+   "created": "2026-11-16T04:46:32Z",
+   "deleted": "2026-11-16T05:01:55Z",
+   "estUsd": 0.24,
+   "result": "no measurements: output-mount permission bug"
+  }
+ ]
 }

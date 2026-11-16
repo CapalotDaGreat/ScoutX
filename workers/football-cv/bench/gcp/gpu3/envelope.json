@@ -21,17 +21,23 @@
  "roundGapSec": 1800,
  "maxAttempts": 240,
  "searchWindowHours": 72,
- "maxBillableSessions": 2,
+ "maxBillableSessions": 3,
  "perSessionCeilingUsd": 8.0,
  "aggregateCeilingUsd": 16.0,
  "startupScripts": [
   {
+   "file": "v1/startup-s1.sh",
+   "sha256": "dad55a117721a775dad697987185909eff3bdf360d70648685e62adfb6b65bca",
+   "note": "session 1, failed (permission bug)"
+  },
+  {
    "file": "startup-s1.sh",
-   "sha256": "dad55a117721a775dad697987185909eff3bdf360d70648685e62adfb6b65bca"
+   "sha256": "94a04c1fbc387bb6a4a3eadfb72ae8f4084554638bd66dfd1a4c485597ffce1c",
+   "note": "session 1 rerun; results prefix gpu-validation-gpu3-s1b so the failed session export stays separate"
   },
   {
    "file": "startup-s2.sh",
-   "sha256": "75d9264952d5ff018ecb0216df83f3cf9cf0c28b92f352673df0935e42fdd374"
+   "sha256": "383ec7ad8190dd199f5ca44db988ed9d9b604e5c6d8d796c502955940d6edd3b"
   }
  ],
  "vmName": "pp-gpu-val-gpu3",
@@ -39,5 +45,8 @@
  "image": "common-cu129-ubuntu-2204-nvidia-580-v20261029",
  "diskGb": 200,
  "maxLifetimeMin": 300,
- "approvedBy": "owner in chat 2026-11-15 ~21:05 UTC: \"Approve GPU-3 as written\""
+ "approvedBy": "owner in chat 2026-11-15 ~21:05 UTC: \"Approve GPU-3 as written\"",
+ "amendments": [
+  "GPU-3a approved by the owner in chat 2026-11-16 ~06:05 UTC: fixed scripts (drun ownership), 3 sessions, USD 16 total unchanged"
+ ]
 }
