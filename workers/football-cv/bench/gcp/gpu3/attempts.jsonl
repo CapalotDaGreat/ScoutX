@@ -25,3 +25,26 @@
 {"event": "stockout", "n": 23, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T04:22:18Z"}
 {"event": "stockout", "n": 24, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T04:34:10Z"}
 {"event": "created", "n": 25, "zone": "europe-west4-a", "at": "2026-11-16T04:46:41Z"}
+{"event": "resumed_after_session", "sessions": 1, "at": "2026-11-16T15:05:57Z"}
+{"event": "stockout", "n": 26, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T15:18:45Z"}
+{"event": "stockout", "n": 27, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T15:31:38Z"}
+{"event": "stockout", "n": 28, "zone": "europe-west1-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T15:44:02Z"}
+{"event": "stockout", "n": 29, "zone": "europe-west2-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T15:56:34Z"}
+{"event": "stockout", "n": 30, "zone": "europe-west2-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T16:07:35Z"}
+{"event": "stockout", "n": 31, "zone": "europe-west3-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T16:20:14Z"}
+{"event": "stockout", "n": 32, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T16:32:30Z"}
+{"event": "stockout", "n": 33, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T16:45:26Z"}
+{"event": "stockout", "n": 34, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T16:57:00Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-16T17:37:32Z", "attemptsLeft": 206, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-16T16:57:00Z"}
+{"event": "stockout", "n": 35, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T17:39:16Z"}
+{"event": "stockout", "n": 36, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T17:51:02Z"}
+{"event": "stockout", "n": 37, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T18:03:13Z"}
+{"event": "stockout", "n": 38, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T18:16:06Z"}
+{"event": "stockout", "n": 39, "zone": "europe-west1-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T18:28:58Z"}
+{"event": "stockout", "n": 40, "zone": "europe-west2-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T18:40:14Z"}
+{"event": "stockout", "n": 41, "zone": "europe-west2-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T18:52:20Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-16T19:04:46Z", "attemptsLeft": 199, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-16T18:52:20Z"}
+{"event": "stockout", "n": 42, "zone": "europe-west3-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T19:05:17Z"}
+{"event": "stockout", "n": 43, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T19:18:04Z"}
+{"event": "stockout", "n": 44, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T19:30:58Z"}
+{"event": "stockout", "n": 45, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T19:41:58Z"}
