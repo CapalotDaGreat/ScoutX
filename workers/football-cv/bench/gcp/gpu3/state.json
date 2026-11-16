@@ -1,0 +1,11 @@
+{
+ "attempts": 22,
+ "rounds": 2,
+ "nextZone": 0,
+ "sessions": 0,
+ "spentUsdEstimate": 0.0,
+ "windowStart": "2026-11-15T21:49:47Z",
+ "lastAttemptAt": "2026-11-16T03:39:05Z",
+ "outcome": "searching",
+ "vm": null
+}

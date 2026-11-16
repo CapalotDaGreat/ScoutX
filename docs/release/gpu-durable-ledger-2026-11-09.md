@@ -99,6 +99,8 @@ Evidence: `workers/football-cv/bench/results/5.3/gpu-validation-20261109/pricing
 
 - 2026-11-15 22:24 UTC: attempts 3 of 240 (west4-b, west4-c, west4-a: `ZONE_RESOURCE_POOL_EXHAUSTED`, project
   verified empty after each); window 21:49 UTC 15 Nov → 21:49 UTC 18 Nov; sessions 0 of 2; spent USD 0.
+- 2026-11-16 03:50 UTC: attempts 22 of 240, 2 full rounds, every attempt `ZONE_RESOURCE_POOL_EXHAUSTED`, project
+  empty after each; sessions 0; USD 0. Gap with no attempts: 15 Nov 22:24–23:44 UTC (workspace idle).
 - The controller runs in 115-minute slices. A follow-up is scheduled into this conversation every ~110 min to start
   the next slice. Between slices, and whenever this workspace is not running, **no attempts happen**; gaps are
   visible in `attempts.jsonl`.
