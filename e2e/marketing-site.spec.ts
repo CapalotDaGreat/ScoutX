@@ -76,12 +76,13 @@ test('hero states the product, keeps both audience actions on the first screen a
   await page.goto(`${origin}/welcome/`);
   await expect(page.getByRole('heading', { level: 1, name: 'Your football, on the record.', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'PitchProof home' })).toBeVisible();
-  await expect(page.locator('.hero .status-chip')).toHaveText('In development · not yet on the App Store');
+  await expect(page.locator('.hero .status-chip')).toHaveText('Coming soon · not yet on the App Store');
   await expect(page.getByRole('link', { name: 'I am a player' })).toHaveAttribute('href', '/players/');
   await expect(page.getByRole('link', { name: 'I am a scout' })).toHaveAttribute('href', '/scouts/');
   const actionsBottom = await page.locator('.hero .actions').evaluate((element) => element.getBoundingClientRect().bottom);
   expect(actionsBottom).toBeLessThan(await page.evaluate(() => innerHeight));
   await expect(page.locator('.hero-caption')).toHaveText('App screens · fictional demonstration data');
+  await expect(page.locator('.site-footer .release-label')).toHaveText('Coming soon · not yet on the App Store');
   for (const image of await page.locator('.hero-visual img').all()) {
     if (!(await image.isVisible())) continue;
     await expect(image).toHaveAttribute('src', /^\/welcome\/img\/app\/[a-z-]+-720\.webp$/);

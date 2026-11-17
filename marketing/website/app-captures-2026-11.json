@@ -258,7 +258,8 @@
  ],
  "openGraph": {
   "file": "public/welcome/img/app/open-graph.png",
-  "sha256": "31fc333f6a4edc251b08c8d66549a2d59d892bede0ec74acf4e39a0268ad9583",
-  "composition": "PIL composition of player-passport capture + Barlow Condensed/Inter text; no generated imagery"
+  "sha256": "20024d262c7a2f79b555efe56c55f29a10ae9d195c4ed811533b452f35d261e6",
+  "composition": "PIL composition of player-passport capture + Barlow Condensed/Inter text; no generated imagery",
+  "note": "Status chip changed to \"Coming soon \u00b7 not yet on the App Store\" on 2026-11-17"
  }
 }
