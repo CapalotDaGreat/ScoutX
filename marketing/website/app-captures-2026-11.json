@@ -1,0 +1,264 @@
+{
+ "schema": "pitchproof.website-captures.v1",
+ "capturedAt": "2026-11-17T15:17:48.677Z",
+ "appCommit": "32ab43f1f5c6274c5d7672b25fa4ac37163bbb7c",
+ "appSourceDirty": false,
+ "platform": "Expo web (expo export -p web --dev), Chromium headless via Playwright 1.61.1, Linux",
+ "notNative": "Web captures of the app. Not native iOS screenshots and not App Store evidence.",
+ "backend": "local Firebase emulators, demo project demo-scoutx, no credentials, no network",
+ "fixtures": [
+  "e2e/fixtures/accounts.json (scout account)",
+  "e2e/fixtures/marketing-demo.json (fictional adult players)"
+ ],
+ "demonstrationData": "Fictional adults; self-reported demonstration match lines; no real people, contact details, minors or footage.",
+ "locale": "en-GB",
+ "captures": [
+  {
+   "file": "public/welcome/img/app/development-360.webp",
+   "sha256": "ccf5fc649df2d367950cbdd94194672207a220d35c92919aa33671368eff306e",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "4477e83fe2d628bbea57d6df6143e14878e8d7a2355eb0382df280487a61d0bd",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/performance?segment=development",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/development-720.webp",
+   "sha256": "598ba5baa1eb9125d001f59425f7fbb74a7e6753be6ef0d0088b8b7e939a34cf",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "4477e83fe2d628bbea57d6df6143e14878e8d7a2355eb0382df280487a61d0bd",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/performance?segment=development",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/match-log-360.webp",
+   "sha256": "83cdbb665a8be1bec87a2d05a7b2cad600a030e5390cf03ac963b9a619312de7",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "c14583c8408f61cb9b6c00a7e39c3e51aab61ca24205c3e5f8af49c2ffa44de5",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/performance?segment=stats",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/match-log-720.webp",
+   "sha256": "8b22ee33946930a68c25705c799b16921fdb3f7fec77a1ead3a60f01c2a993e0",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "c14583c8408f61cb9b6c00a7e39c3e51aab61ca24205c3e5f8af49c2ffa44de5",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/performance?segment=stats",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/media-360.webp",
+   "sha256": "caee77d801e2649ce9f3ba98376fa1d230a294c537ef250c5fa844e0120dc84c",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "ce641ab3a7cdcba4327b062642236b99b0d4d24bb57bc5b5499bb71230730e38",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/media",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/media-720.webp",
+   "sha256": "b5abbb7fee7089bf5862215f0ca1da6abf074ba59091571cdcfbf12c3ffecd66",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "ce641ab3a7cdcba4327b062642236b99b0d4d24bb57bc5b5499bb71230730e38",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/media",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/passport-owner-360.webp",
+   "sha256": "10f77691088adf13ce5b74bdf4dc98312bb657456fbf2093b1c8447218f1dc3c",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "aaca2a79544f3e446cbf9cf8fe0c34b7a3855f39c6b1863af757997965654a9d",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/home",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/passport-owner-720.webp",
+   "sha256": "441966fabf77986599b24e6243270472c2539c71495de8e27920ce24e15dda40",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "aaca2a79544f3e446cbf9cf8fe0c34b7a3855f39c6b1863af757997965654a9d",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/home",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/public-passport-360.webp",
+   "sha256": "0906b428fb7c5b5d14e05fe30d29a517797a58fc867ab2ec0ea0ef72b9697e3c",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "169a351fef1f3a3da6a66850ba032f945b1f44d3392524a94d27a464eaedf6d9",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/mara-keller-demo",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/public-passport-720.webp",
+   "sha256": "c45e3084e1fe1792eb968edcdc40107b24e75644a6e86a71abba5c7d074c3a68",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "169a351fef1f3a3da6a66850ba032f945b1f44d3392524a94d27a464eaedf6d9",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/mara-keller-demo",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/review-ask-360.webp",
+   "sha256": "489d44fc7658502bfb2d4046eae20782b5fe034f6a1769d279c74e60a5ff142e",
+   "width": 360,
+   "height": 385,
+   "sourceSha256": "4f0657bbbfe4e13ff9940e70d72fab687ae09201d3b7d133109af9288697f959",
+   "origin": "scripts/review-preview/capture.mjs (match-review components rendered with committed recorded worker output, tests/fixtures/tracking40-img4809-*.json; no footage images)",
+   "state": "11-ask-km",
+   "viewport": "412x915@2x",
+   "status": "feature in development, not available in the app"
+  },
+  {
+   "file": "public/welcome/img/app/review-ask-720.webp",
+   "sha256": "ce8c02b490d50ffcc47e23dc2c28193a1c0187a368c95cbc8aa80bee76152275",
+   "width": 720,
+   "height": 769,
+   "sourceSha256": "4f0657bbbfe4e13ff9940e70d72fab687ae09201d3b7d133109af9288697f959",
+   "origin": "scripts/review-preview/capture.mjs (match-review components rendered with committed recorded worker output, tests/fixtures/tracking40-img4809-*.json; no footage images)",
+   "state": "11-ask-km",
+   "viewport": "412x915@2x",
+   "status": "feature in development, not available in the app"
+  },
+  {
+   "file": "public/welcome/img/app/review-preview-360.webp",
+   "sha256": "8856500bc88d5f2f395c02504dcd6521e1fd2cdd5dfd6b3f2f87de7ec879dca9",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "834e98fbfbac2ae1bdd9bfa6b8ff58e88dfbcad94774351979abc11544a48aa3",
+   "origin": "scripts/review-preview/capture.mjs (match-review components rendered with committed recorded worker output, tests/fixtures/tracking40-img4809-*.json; no footage images)",
+   "state": "03-review-simple",
+   "viewport": "412x915@2x",
+   "status": "feature in development, not available in the app"
+  },
+  {
+   "file": "public/welcome/img/app/review-preview-720.webp",
+   "sha256": "a01137de2862aaa63798d1ff480ab79f84e715b0f6ec63de4648def52b18fec2",
+   "width": 720,
+   "height": 1559,
+   "sourceSha256": "834e98fbfbac2ae1bdd9bfa6b8ff58e88dfbcad94774351979abc11544a48aa3",
+   "origin": "scripts/review-preview/capture.mjs (match-review components rendered with committed recorded worker output, tests/fixtures/tracking40-img4809-*.json; no footage images)",
+   "state": "03-review-simple",
+   "viewport": "412x915@2x",
+   "status": "feature in development, not available in the app"
+  },
+  {
+   "file": "public/welcome/img/app/scout-discover-360.webp",
+   "sha256": "c12fd24ae8d3528196e4a94bf2d669a0edaee3be4cdfae0ab12a2d26cc1d13f2",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "18e9455f67aed2a7a84ccd303a5d9f6c95244b19415f8c778f77004a9d8a7bd3",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/scout/discover",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/scout-discover-720.webp",
+   "sha256": "2b42bbe704dc7c48b4b846a59f0b99b30efce97368bd0dd7c2f1e7f5a2c03329",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "18e9455f67aed2a7a84ccd303a5d9f6c95244b19415f8c778f77004a9d8a7bd3",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/scout/discover",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/scout-pipeline-360.webp",
+   "sha256": "d52c936c573a59d385a271001a587f084be6bc5c9a3921fb8c085e46f2d125a7",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "d68dc95066f55a078c8fb3887bebea66beb510394ad6696c002069873691fd0a",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/scout/pipeline",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/scout-pipeline-720.webp",
+   "sha256": "441c407627e9b817a02b0c92da6ae63a5762aee8df463c9d4c0c12e80b621933",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "d68dc95066f55a078c8fb3887bebea66beb510394ad6696c002069873691fd0a",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/scout/pipeline",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/scout-report-360.webp",
+   "sha256": "11533089e2bbc951946b6310cd3d421bede4043dc9961e082a3f9e40dd31b18b",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "6fd3a66b92745858a0ad9fd081a93e5e7038394cbc7079e233cd339d683ec85f",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/scout/discover",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/scout-report-720.webp",
+   "sha256": "9caf840898e479f7fb01b890781fa14cba72fb1924137fb516672c585dfcbd20",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "6fd3a66b92745858a0ad9fd081a93e5e7038394cbc7079e233cd339d683ec85f",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/scout/discover",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/today-360.webp",
+   "sha256": "f4faab1bb0880408a9676769a16b5b95de6925511060b3ac6e7a34c4d4758e55",
+   "width": 360,
+   "height": 779,
+   "sourceSha256": "ef4c9502090c6ee05827d9bdb7712072ee4edb300b78c9705d6799c041871c8b",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/home",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  },
+  {
+   "file": "public/welcome/img/app/today-720.webp",
+   "sha256": "61062251c617888888396e723e6f62b76651e13ab5624178b58456be6dd0643c",
+   "width": 720,
+   "height": 1558,
+   "sourceSha256": "ef4c9502090c6ee05827d9bdb7712072ee4edb300b78c9705d6799c041871c8b",
+   "origin": "scripts/website-capture.mjs",
+   "route": "/player/home",
+   "viewport": "390x844@2x",
+   "theme": "light"
+  }
+ ],
+ "openGraph": {
+  "file": "public/welcome/img/app/open-graph.png",
+  "sha256": "31fc333f6a4edc251b08c8d66549a2d59d892bede0ec74acf4e39a0268ad9583",
+  "composition": "PIL composition of player-passport capture + Barlow Condensed/Inter text; no generated imagery"
+ }
+}

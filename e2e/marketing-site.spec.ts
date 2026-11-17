@@ -7,11 +7,11 @@ const publicRoot = resolve('public');
 const routes = ['welcome', 'features', 'players', 'scouts', 'about', 'faq', 'contact'];
 const mimeTypes: Record<string, string> = {
   html: 'text/html', css: 'text/css', js: 'text/javascript',
-  png: 'image/png', webp: 'image/webp', jpg: 'image/jpeg',
+  png: 'image/png', webp: 'image/webp', jpg: 'image/jpeg', woff2: 'font/woff2',
 };
 
 test('initial HTML includes route-specific canonical and social metadata', async () => {
-  const socialImage = 'https://pitchproof.online/welcome/img/next-era/open-graph.png';
+  const socialImage = 'https://pitchproof.online/welcome/img/app/open-graph.png';
   for (const route of routes) {
     const html = readFileSync(resolve(publicRoot, route, 'index.html'), 'utf8');
     const head = html.split('</head>')[0];
@@ -72,21 +72,21 @@ test('seven routes have accessible structure, valid links and stable responsive 
   expect(errors).toEqual([]);
 });
 
-test('hero identifies the brand and leaves the next section visible', async ({ page }) => {
+test('hero states the product, keeps both audience actions on the first screen and shows real app screens', async ({ page }) => {
   await page.goto(`${origin}/welcome/`);
-  await expect(page.getByRole('heading', { level: 1, name: 'PitchProof', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Your football, on the record.', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'PitchProof home' })).toBeVisible();
+  await expect(page.locator('.hero .status-chip')).toHaveText('In development · not yet on the App Store');
   await expect(page.getByRole('link', { name: 'I am a player' })).toHaveAttribute('href', '/players/');
   await expect(page.getByRole('link', { name: 'I am a scout' })).toHaveAttribute('href', '/scouts/');
-  const heroBottom = await page.locator('.hero').evaluate((element) => element.getBoundingClientRect().bottom);
-  expect(heroBottom).toBeLessThan(await page.evaluate(() => innerHeight));
-  const image = page.locator('.hero-photo');
-  await expect(image).toHaveAttribute('src', '/welcome/img/next-era/football-hero.webp');
-  await expect(page.locator('.hero picture source')).toHaveAttribute('media', '(max-width: 640px)');
-  await expect(page.locator('.hero picture source')).toHaveAttribute('srcset', '/welcome/img/next-era/football-hero-mobile.webp');
-  const expectedHero = await page.evaluate(() => matchMedia('(max-width: 640px)').matches)
-    ? 'football-hero-mobile.webp' : 'football-hero.webp';
-  await expect.poll(() => image.evaluate((element) => element instanceof HTMLImageElement ? element.currentSrc : '')).toContain(expectedHero);
-  expect(await image.evaluate((element) => element instanceof HTMLImageElement && element.complete && element.naturalWidth > 0)).toBe(true);
+  const actionsBottom = await page.locator('.hero .actions').evaluate((element) => element.getBoundingClientRect().bottom);
+  expect(actionsBottom).toBeLessThan(await page.evaluate(() => innerHeight));
+  await expect(page.locator('.hero-caption')).toHaveText('App screens · fictional demonstration data');
+  for (const image of await page.locator('.hero-visual img').all()) {
+    if (!(await image.isVisible())) continue;
+    await expect(image).toHaveAttribute('src', /^\/welcome\/img\/app\/[a-z-]+-720\.webp$/);
+    await expect.poll(() => image.evaluate((element) => element instanceof HTMLImageElement && element.complete && element.naturalWidth > 0)).toBe(true);
+  }
 });
 
 test('player and scout journeys reach real information and support', async ({ page }) => {
@@ -122,30 +122,39 @@ test('keyboard navigation and reduced motion work', async ({ page }) => {
   }
 });
 
-test('every product preview is explicitly identified as a web demonstration', async ({ page }) => {
+test('every app screen is a labelled capture of demonstration data with a meaningful description', async ({ page }) => {
   for (const route of ['welcome', 'features', 'players', 'scouts']) {
     await page.goto(`${origin}/${route}/`);
-    const figures = page.locator('.product-preview');
-    for (const figure of await figures.all()) {
-      await expect(figure.locator('figcaption')).toHaveText('Expo web preview · demonstration data');
-      await expect(figure.locator('img')).toHaveAttribute('width', '390');
-      await expect(figure.locator('img')).toHaveAttribute('height', '844');
-      await expect(figure.locator('img')).toHaveAttribute('src', /\/welcome\/img\/next-era\/(today|passport|performance|media|discovery|pipeline|trials)\.png/);
+    for (const figure of await page.locator('.product-preview').all()) {
+      await expect(figure.locator('figcaption')).toHaveText('App screen · fictional demonstration data');
     }
+    const images = page.locator('main img[src^="/welcome/img/app/"]');
+    expect(await images.count(), route).toBeGreaterThan(0);
+    for (const image of await images.all()) {
+      await expect(image).toHaveAttribute('src', /^\/welcome\/img\/app\/[a-z-]+-720\.webp$/);
+      await expect(image).toHaveAttribute('srcset', /-360\.webp 360w, .*-720\.webp 720w$/);
+      expect((await image.getAttribute('alt'))?.length ?? 0, route).toBeGreaterThan(30);
+      const width = Number(await image.getAttribute('width'));
+      const height = Number(await image.getAttribute('height'));
+      expect(width).toBe(720);
+      expect(height).toBeGreaterThan(700);
+    }
+    expect(await page.locator('main').innerText()).toMatch(/fictional demonstration data/);
   }
 });
 
-test('all seven supplied preview assets decode when the capture handoff is ready', async ({ page }) => {
-  const captures = ['today', 'passport', 'performance', 'media', 'discovery', 'pipeline', 'trials'];
-  const missing = captures.filter((capture) => !existsSync(resolve(publicRoot, 'welcome/img/next-era', `${capture}.png`)));
-  test.skip(missing.length > 0, `Parent capture handoff pending: ${missing.join(', ')}`);
-  for (const route of ['welcome', 'players', 'scouts']) {
+test('all app screens decode and the in-development review is labelled as unavailable', async ({ page }) => {
+  for (const route of ['welcome', 'features', 'players', 'scouts']) {
     await page.goto(`${origin}/${route}/`);
-    for (const image of await page.locator('.product-preview img').all()) {
+    for (const image of await page.locator('main img[src^="/welcome/img/app/"]').all()) {
+      if (!(await image.isVisible())) continue;
       await image.scrollIntoViewIfNeeded();
       await expect.poll(() => image.evaluate((element) => element instanceof HTMLImageElement && element.complete && element.naturalWidth > 0)).toBe(true);
     }
   }
+  await page.goto(`${origin}/welcome/`);
+  await expect(page.locator('#video .dev-label')).toHaveText('In development · not available in the app yet');
+  await expect(page.locator('#video')).toContainText('Automatic player tracking is still being validated on real matches and is switched off.');
 });
 
 test('content, menu and FAQ remain usable without JavaScript', async ({ page }) => {
@@ -167,11 +176,12 @@ test('hero composition remains stable at compact and wide viewport sizes', async
     await page.goto(`${origin}/welcome/`);
     const bounds = await page.locator('.hero').boundingBox();
     expect(bounds).not.toBeNull();
-    expect((bounds?.y ?? 0) + (bounds?.height ?? 0)).toBeLessThan(viewport.height);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
     const heading = await page.locator('.hero h1').boundingBox();
     const actions = await page.locator('.hero .actions').boundingBox();
     expect(heading?.y).toBeGreaterThanOrEqual(bounds?.y ?? 0);
+    // both audience actions are reachable without scrolling, inside the hero
+    expect((actions?.y ?? 0) + (actions?.height ?? 0)).toBeLessThan(viewport.height);
     expect((actions?.y ?? 0) + (actions?.height ?? 0)).toBeLessThan((bounds?.y ?? 0) + (bounds?.height ?? 0));
     await page.screenshot({ path: testInfo.outputPath(`hero-${viewport.width}.png`) });
   }

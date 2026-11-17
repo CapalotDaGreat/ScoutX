@@ -36,3 +36,4 @@ e2e/.seed-state.json
 # Match Review preview export (scripts/review-preview)
 .review-preview-dist/
 scripts/review-preview/.generated/
+e2e/.marketing-seed-state.json

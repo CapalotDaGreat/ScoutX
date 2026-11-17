@@ -1,0 +1,68 @@
+{
+  "note": "Fictional adult demonstration players for website captures on the local demo emulators only. Names, clubs and match lines are invented and self-reported; they are not measured performance and not real people.",
+  "players": [
+    {
+      "email": "mara.demo@e2e.scoutx.test",
+      "name": "Mara Keller",
+      "username": "mara-keller-demo",
+      "position": "CM",
+      "secondary": ["AM"],
+      "club": "Demo City FC",
+      "nationality": "Switzerland",
+      "foot": "right",
+      "biography": "Central midfielder who likes to receive between the lines. Working on my weaker left foot this season.",
+      "matches": [
+        { "date": "2026-10-25", "opponent": "Riverside Demo", "competition": "League", "result": "W", "minutes": 90, "goals": 0, "assists": 1 },
+        { "date": "2026-10-18", "opponent": "Northgate Demo", "competition": "League", "result": "D", "minutes": 78, "goals": 1, "assists": 0 },
+        { "date": "2026-10-11", "opponent": "Hillside Demo", "competition": "Cup", "result": "L", "minutes": 90, "goals": 0, "assists": 0 },
+        { "date": "2026-10-04", "opponent": "Lakeview Demo", "competition": "League", "result": "W", "minutes": 64, "goals": 0, "assists": 2 }
+      ],
+      "goals": [
+        { "title": "Use my left foot to switch play", "category": "technical", "target": "Two switches with the left in each match", "until": "2026-12-20", "status": "improving", "reflection": "Getting more comfortable when I scan first." },
+        { "title": "Scan before receiving", "category": "tactical", "target": "Check my shoulder before every pass I receive", "until": "2026-12-20", "status": "active" }
+      ]
+    },
+    {
+      "email": "jonas.demo@e2e.scoutx.test",
+      "name": "Jonas Brandt",
+      "username": "jonas-brandt-demo",
+      "position": "CB",
+      "club": "Riverside Demo",
+      "nationality": "Germany",
+      "foot": "left",
+      "biography": "Left-footed centre-back. Calm on the ball.",
+      "matches": [
+        { "date": "2026-10-25", "opponent": "Demo City FC", "competition": "League", "result": "L", "minutes": 90, "goals": 0, "assists": 0 },
+        { "date": "2026-10-18", "opponent": "Lakeview Demo", "competition": "League", "result": "W", "minutes": 90, "goals": 1, "assists": 0 }
+      ]
+    },
+    {
+      "email": "elif.demo@e2e.scoutx.test",
+      "name": "Elif Aydin",
+      "username": "elif-aydin-demo",
+      "position": "LW",
+      "club": "Northgate Demo",
+      "nationality": "Switzerland",
+      "foot": "right",
+      "biography": "Inverted winger who likes to cut inside.",
+      "matches": [
+        { "date": "2026-10-18", "opponent": "Demo City FC", "competition": "League", "result": "D", "minutes": 90, "goals": 1, "assists": 0 },
+        { "date": "2026-10-11", "opponent": "Riverside Demo", "competition": "League", "result": "W", "minutes": 72, "goals": 2, "assists": 0 },
+        { "date": "2026-10-04", "opponent": "Hillside Demo", "competition": "League", "result": "W", "minutes": 90, "goals": 0, "assists": 1 }
+      ]
+    },
+    {
+      "email": "luca.demo@e2e.scoutx.test",
+      "name": "Luca Romano",
+      "username": "luca-romano-demo",
+      "position": "ST",
+      "club": "Hillside Demo",
+      "nationality": "Italy",
+      "foot": "right",
+      "biography": "Striker. Strong in the air.",
+      "matches": [
+        { "date": "2026-10-11", "opponent": "Demo City FC", "competition": "Cup", "result": "W", "minutes": 90, "goals": 1, "assists": 0 }
+      ]
+    }
+  ]
+}

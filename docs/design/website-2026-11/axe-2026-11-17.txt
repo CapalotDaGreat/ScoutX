@@ -1,0 +1,15 @@
+axe-core 4.14.1, 2026-11-17T15:31:22.516Z
+desktop welcome: 0 violations, 41 passes, 1 incomplete
+desktop players: 0 violations, 37 passes, 0 incomplete
+desktop scouts: 0 violations, 37 passes, 0 incomplete
+desktop features: 0 violations, 37 passes, 0 incomplete
+desktop about: 0 violations, 34 passes, 0 incomplete
+desktop faq: 0 violations, 37 passes, 0 incomplete
+desktop contact: 0 violations, 34 passes, 0 incomplete
+mobile welcome: 0 violations, 41 passes, 1 incomplete
+mobile players: 0 violations, 38 passes, 0 incomplete
+mobile scouts: 0 violations, 38 passes, 0 incomplete
+mobile features: 0 violations, 38 passes, 0 incomplete
+mobile about: 0 violations, 36 passes, 0 incomplete
+mobile faq: 0 violations, 37 passes, 0 incomplete
+mobile contact: 0 violations, 36 passes, 0 incomplete

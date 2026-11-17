@@ -1,5 +1,7 @@
 # PitchProof campaign assets
 
+> **Website (2026-11-17):** the marketing pages no longer use `public/welcome/img/next-era` or the campaign art. App screens now come from `scripts/website-capture.mjs` and the match-review preview, with provenance in `marketing/website/app-captures-2026-11.json`; see `docs/design/WEBSITE_REDESIGN_2026-11.md`. `marketing:assets` still writes campaign exports, which the site does not reference.
+
 All campaign exports are generated illustration, not authentic player photography or native UI captures. The official shield is copied unchanged from `assets/icon.png`. No private account data, synthetic performance statistics or unsupported scouting/AI claims are composited.
 
 ## Reproduce
