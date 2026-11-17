@@ -139,3 +139,39 @@ Evidence: `workers/football-cv/bench/results/5.3/gpu-validation-20261109/pricing
 2. Create ≤1 L4 in zone order under the APPROVAL.  
 3. Part B (`84fefc5`) → export → Part A (`51d41c9`) → export → cleanup.  
 4. Append results, costs, cleanup to this ledger.
+
+## GPU-3 session 2 (2026-11-17): complete
+
+- **Run:**
+  - Attempt 110 created `pp-gpu-val-gpu3` in europe-west6-b at 18:22:32 UTC.
+  - Machine: 8 vCPU + NVIDIA L4. Image torch 2.14.1, onnxruntime-gpu 1.29.0, docTR 1.1.0.
+  - Startup script s1 with the `drun` permission fix; inputs verified by checksum.
+  - Finished 20:05:24 with exit 0; the VM was deleted at 20:06:42.
+- **Cleanup verified:** 0 instances and 0 disks in `scoutx-230b0`; `runs/gpu-validation-gpu3/` inputs were deleted (including the footage proxy). Results are under `results/gpu-validation-gpu3-s1b/` and exported to `bench/results/5.3/gpu3-s2-20261117/` (no footage).
+- **Cost:** estimated **USD 1.95** (1.74 h). Reconciled `spentUsdEstimate` = USD 2.19 (session 1 USD 0.24 + session 2).
+- **Search stopped** (STOP flag). The owner brief says 2 sessions while the record says 3 (GPU-3a). A third session needs explicit owner confirmation.
+
+**Timing:** release (E0), IMG_4809, 33.9 min at 10 fps.
+
+| Stage | CPU (2 cores) | GPU (L4, 8 vCPU) | Speed-up |
+|---|---|---|---|
+| Discovery / detection | 2,532 s | 510 s | 5.0× |
+| Resolve / identity | 1,582 s | 231 s | 6.8× |
+| Peak RSS | 1,761 MiB | 3,052 MiB | — |
+| End-to-end | — | 1,876 s (1.08× real time) | — |
+
+**Accuracy parity:** release benchmark summary.
+
+| Run | Claimed correct | Confirmed correct | Wrong identity | IDF1 |
+|---|---|---|---|---|
+| CPU | 25.3 s | 2.3 s | 1.1 s (LIKELY, 1,301.6–1,305.7 s) | 0.659 |
+| GPU | 24.9 s | 10.0 s | 0.0 s | 0.661 |
+
+**Candidate replays** (same cached stage-1 inputs on each side; `compare_frames.py`, CPU → GPU):
+- T+D+C + 4 taps: correct 406 → 318; 88 correct→abstain; no new wrong-player frames.
+- T+D+C without taps: correct 307 → 272; 69 correct→abstain, 34 abstain→correct; no new wrong-player frames.
+
+**Reading:**
+- **Parity is not exact.** The GPU path is safer or equal on wrong-player attribution in every run, but it abstains more on the candidates.
+- The CPU and GPU differ in fp16 inference and OCR/embedding numerics, so the identity decisions differ.
+- A promotion proposal needs the remaining gap explained (the likely source is the OCR read thresholds under fp16). Until then, the CPU numbers above are not a production forecast.

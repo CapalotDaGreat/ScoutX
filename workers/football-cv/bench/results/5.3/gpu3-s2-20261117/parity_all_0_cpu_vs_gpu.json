@@ -1,0 +1,4143 @@
+{
+ "base": "/home/claude/work/exp1114/e3/all_0/out/report/timeline.npz",
+ "cand": "/home/claude/work/gpu3res/s2/part-c1/all_0/report/timeline.npz",
+ "frames": 2647,
+ "baseCounts": {
+  "abstain": 2334,
+  "correct": 307,
+  "nolabel": 2,
+  "offtarget": 1,
+  "unsure": 3
+ },
+ "candCounts": {
+  "abstain": 2319,
+  "correct": 272,
+  "nolabel": 7,
+  "offtarget": 1,
+  "unsure": 48
+ },
+ "transitions": {
+  "correct->abstain": 69,
+  "abstain->unsure": 45,
+  "abstain->correct": 34,
+  "abstain->nolabel": 6,
+  "nolabel->abstain": 1
+ },
+ "newConfirmedWrong": [],
+ "changed": [
+  {
+   "t": 228.6,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 228.8,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 228.9,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.0,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.1,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.2,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.3,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.4,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.6,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.7,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.8,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 229.9,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 230.0,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 230.1,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 230.2,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 230.3,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 230.4,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 231.0,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 231.1,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 231.2,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 231.3,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 231.4,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 231.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 237.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 237.6,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 252.6,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 409.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 409.6,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 409.7,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 409.8,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 409.9,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 410.0,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 410.1,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 410.2,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 410.3,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 410.4,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 410.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 618.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 620.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 622.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 622.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "nolabel",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 624.7,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 624.8,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1154.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.7,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.8,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1154.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1155.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1156.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1157.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1158.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.8,
+   "base": [
+    "nolabel",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1159.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1160.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1161.1,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1161.2,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1161.3,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1161.4,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1164.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1164.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1165.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1165.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.2,
+   "base": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "unsure",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.3,
+   "base": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "unsure",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.4,
+   "base": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "unsure",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1168.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.8,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1169.9,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.0,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.1,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.2,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.3,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.4,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.5,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.6,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1170.7,
+   "base": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.1,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.2,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.3,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.4,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.5,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.6,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.7,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.8,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1175.9,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.0,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.1,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.2,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.3,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.4,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.5,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.6,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.7,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.8,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1176.9,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.0,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.1,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.2,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.3,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.4,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.5,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.6,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.7,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.8,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1177.9,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.0,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.1,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.2,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.3,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.4,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.5,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.6,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.7,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1178.8,
+   "base": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1295.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1296.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1297.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1298.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1298.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1298.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1298.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1298.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1298.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1298.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1299.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1300.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1301.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1301.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1301.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1301.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1301.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1301.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "nolabel",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1302.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "nolabel",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1302.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "nolabel",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1302.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "nolabel",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1302.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1302.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1302.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1303.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1304.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1304.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1304.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "nolabel",
+    "CONFIRMED_VISIBLE"
+   ]
+  },
+  {
+   "t": 1306.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "correct",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1509.0,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1509.6,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1509.7,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1510.0,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1511.7,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1523.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1523.9,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1528.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "unsure",
+    "LIKELY_VISIBLE"
+   ]
+  },
+  {
+   "t": 1695.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1695.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1695.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1695.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1695.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1696.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1696.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1696.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1696.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1696.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1696.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1697.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1697.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1697.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1698.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1699.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1699.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1699.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1699.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1700.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1701.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1701.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1701.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1701.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1701.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1701.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1701.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1702.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1702.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1702.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1702.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1702.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1702.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1702.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1703.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.2,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.3,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1704.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1705.4,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1705.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1705.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1705.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1705.8,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1705.9,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1706.0,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1706.1,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1706.5,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1706.6,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1706.7,
+   "base": [
+    "abstain",
+    "AMBIGUOUS"
+   ],
+   "cand": [
+    "abstain",
+    "UNKNOWN"
+   ]
+  },
+  {
+   "t": 1800.1,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1800.2,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1800.3,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1810.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1810.6,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1810.7,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1810.8,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1810.9,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1811.0,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1811.1,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1811.2,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1811.3,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1811.4,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1811.5,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1823.1,
+   "base": [
+    "abstain",
+    "UNKNOWN"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  }
+ ]
+}
