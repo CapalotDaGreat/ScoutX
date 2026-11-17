@@ -4,7 +4,7 @@ Branch `marketing/website-redesign-2026-11`, cut from `main` @ `32ab43f1f5c6274c
 contains the app redesign `redesign/pitchproof-ux-overhaul` @ `9dc9797`). Scope: the seven static marketing routes in
 `public/` (`welcome`, `features`, `players`, `scouts`, `about`, `faq`, `contact`) and their shared `welcome/site.css`.
 No app code, analysis threshold, identity safeguard, rule, function or backend authorization was changed.
-**Not deployed.**
+**Deployed 2026-11-17** (owner request in chat): `firebase deploy --only hosting --project scoutx-230b0` from `ea473b4`, which adds "Coming soon · not yet on the App Store" to the hero, footers, FAQ, metadata and social image.
 
 ## 1. What the site may claim (checked against `docs/release/feature-inventory.md` and the analysis ledgers)
 
@@ -163,3 +163,8 @@ node scripts/review-preview/capture.mjs <outDir>      # match review states
 
 Run the emulators with no `HTTPS_PROXY` and no application-default credentials, so that nothing can reach
 production.
+
+## 10. Deployment record
+
+- 2026-11-17 ~16:15 UTC: hosting release for site `scoutx-230b0` from `main` @ `ea473b423388ac5f6cf527e7676f6aea43714d42`; 71 files found, "Deploy complete". Live check through WebFetch on https://pitchproof.online/welcome/ and /faq/: new title and H1, "Coming soon · not yet on the App Store" in the hero chip and footer, FAQ answers as committed. Direct HTTP checks from this workspace were not possible (the network proxy blocks the domain).
+- Rollback: redeploy the previous `main` (`32ab43f`) with the same command, or roll back the release in the Firebase console (Hosting > Release history).
