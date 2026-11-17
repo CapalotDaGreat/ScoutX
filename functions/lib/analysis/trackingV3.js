@@ -17,6 +17,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ANSWERS = exports.DISCOVERY_MIN_CONFIRM_READS = exports.MIN_SEQUENCE_SEC = exports.MAX_UNRESOLVED_ANSWERS = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
 exports.parseUnresolvedAnswers = parseUnresolvedAnswers;
+exports.confirmedOnEveryFrame = confirmedOnEveryFrame;
 exports.parseOffballSequences = parseOffballSequences;
 exports.parseOffball = parseOffball;
 exports.decodeReviewImage = decodeReviewImage;
@@ -60,7 +61,41 @@ exports.MIN_SEQUENCE_SEC = 6;
  * 5.0: keeps only sequences that lie entirely inside CONFIRMED_VISIBLE time of the state strip and
  * are at least MIN_SEQUENCE_SEC long - a sequence observation is never built on uncertain identity.
  */
-function parseOffballSequences(raw, strip) {
+/**
+ * Sample-level check (2026-11-17): every timeline sample inside [a, b] is CONFIRMED_VISIBLE, consecutive samples are
+ * no further apart than the timeline's own sampling allows, and samples reach both ends within one sampling step.
+ * The worker uploads the timeline at about 2 samples/s, so this is the finest check the server can make; the worker
+ * builds sequences from every 10 fps frame. The 1-s majority strip alone rejected sequences that start mid-second
+ * after a LIKELY fraction (IMG_4809 1,170.8-1,178.8 s) and could admit a second that was only mostly confirmed.
+ */
+function confirmedOnEveryFrame(frames, a, b) {
+    const n = frames.times.length;
+    if (n < 2)
+        return false;
+    const steps = [];
+    for (let i = 1; i < n; i += 1)
+        steps.push(frames.times[i] - frames.times[i - 1]);
+    steps.sort((x, y) => x - y);
+    const step = Math.min(1, Math.max(0.05, steps[Math.floor(steps.length / 2)]));
+    const maxGap = Math.max(0.55, 1.5 * step);
+    const edge = step + 0.05;
+    let first = null;
+    let prev = null;
+    for (let i = 0; i < n; i += 1) {
+        const t = frames.times[i];
+        if (t < a || t > b)
+            continue;
+        if (frames.states[i] !== 'CONFIRMED_VISIBLE')
+            return false;
+        if (prev !== null && t - prev > maxGap)
+            return false;
+        if (first === null)
+            first = t;
+        prev = t;
+    }
+    return first !== null && prev !== null && first <= a + edge && prev >= b - edge;
+}
+function parseOffballSequences(raw, strip, frames) {
     const confirmed = strip.filter(([, , st]) => st === 'CONFIRMED_VISIBLE');
     // merge adjacent confirmed strip cells so a sequence may span several encoded runs
     const runs = [];
@@ -71,7 +106,10 @@ function parseOffballSequences(raw, strip) {
         else
             runs.push([s, e]);
     }
-    const within = (a, b) => runs.some(([s, e]) => a >= s - 0.15 && b <= e + 0.15);
+    const frameLevel = !!frames && frames.times.length > 0 && frames.times.length === frames.states.length;
+    const within = (a, b) => frameLevel
+        ? confirmedOnEveryFrame(frames, a, b)
+        : runs.some(([s, e]) => a >= s - 0.15 && b <= e + 0.15);
     const share = (v) => nonNeg(v) && v <= 1;
     return (Array.isArray(raw) ? raw.slice(0, 20) : []).map(asRecord)
         .filter((q) => !!q && nonNeg(q.start) && nonNeg(q.end)
@@ -290,7 +328,7 @@ function parseTrackingReport(raw, timeline) {
             if (!ob)
                 return null;
             const strip = timeline ? encodeStateStrip(timeline.times, timeline.states) : [];
-            const sequences = parseOffballSequences(asRecord(r.offball)?.sequences, strip);
+            const sequences = parseOffballSequences(asRecord(r.offball)?.sequences, strip, timeline);
             return sequences.length ? { ...ob, sequences } : ob;
         })(),
         videoSize: (() => {

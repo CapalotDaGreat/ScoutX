@@ -6,7 +6,7 @@ import {
 import { explainMoment } from '../../functions/src/analysis/trackingReasoning.ts';
 
 type Firestore = Parameters<typeof explainMoment>[4]['db'];
-import { parseOffballSequences } from '../../functions/src/analysis/trackingV3.ts';
+import { encodeStateStrip, parseOffballSequences } from '../../functions/src/analysis/trackingV3.ts';
 
 const moment = { id: 'd_360', kind: 'sighting', kinds: ['sighting'], start: 36, end: 36, clipStart: 31, clipEnd: 40,
   identityState: 'CONFIRMED_VISIBLE', candidate: false, evidence: 'number_read', indicator: [[36, 0.4, 0.3, 0.05, 0.2]] } as never;
@@ -107,4 +107,36 @@ test('5.0 off-ball sequences are kept only inside confirmed identity time and wh
   const seq = (start: number, end: number, kind = 'free') => ({ start, end, kind, measuredSec: 6, nearestOpponentMedianBH: 3.4, freeShare: 0.8, tightShare: 0 });
   const out = parseOffballSequences([seq(10.2, 18.5), seq(18, 26), seq(11, 14), seq(10, 17, 'bogus')], strip as never);
   assert.deepEqual(out.map((q) => [q.start, q.end]), [[10.2, 18.5]]);
+});
+
+test('2026-11-17: sequences are judged on every frame when the timeline is available', () => {
+  const frames = (likely: Array<[number, number]>) => {
+    const times: number[] = []; const states: string[] = [];
+    for (let k = 0; k <= 300; k += 1) {
+      const t = k / 10; times.push(t);
+      states.push(likely.some(([a, b]) => t >= a && t <= b) ? 'LIKELY_VISIBLE' : 'CONFIRMED_VISIBLE');
+    }
+    return { times, states };
+  };
+  const seq = (start: number, end: number) => ({ start, end, kind: 'tight', measuredSec: 7.6, nearestOpponentMedianBH: 0.75, freeShare: 0, tightShare: 0.816 });
+  // IMG_4809 1,170.8-1,178.8 s shape: the second 10 is mostly LIKELY (10.0-10.7), the sequence itself is all CONFIRMED.
+  const midSecond = frames([[10.0, 10.7]]);
+  const strip = encodeStateStrip(midSecond.times, midSecond.states);
+  assert.deepEqual(parseOffballSequences([seq(10.8, 18.8)], strip), [], 'the 1-s strip alone drops it (the defect)');
+  assert.deepEqual(parseOffballSequences([seq(10.8, 18.8)], strip, midSecond).map((q) => [q.start, q.end]), [[10.8, 18.8]]);
+  // Reverse: one LIKELY frame inside a mostly confirmed second is admitted by the strip but refused frame by frame.
+  const oneLikely = frames([[14.3, 14.3]]);
+  const strip2 = encodeStateStrip(oneLikely.times, oneLikely.states);
+  assert.equal(parseOffballSequences([seq(10.8, 18.8)], strip2).length, 1, 'the strip admits it');
+  assert.equal(parseOffballSequences([seq(10.8, 18.8)], strip2, oneLikely).length, 0);
+  // A gap in the timeline (no samples for 0.6 s) is refused.
+  const gap = frames([]);
+  const cut = { times: gap.times.filter((t) => t < 12 || t > 12.6), states: [] as string[] };
+  cut.states = cut.times.map(() => 'CONFIRMED_VISIBLE');
+  assert.equal(parseOffballSequences([seq(10.8, 18.8)], encodeStateStrip(cut.times, cut.states), cut).length, 0);
+  // The worker uploads 2 samples/s: the same rules hold at that rate (edges within one step, gaps up to 0.75 s).
+  const two = { times: midSecond.times.filter((_, i) => i % 5 === 0), states: midSecond.states.filter((_, i) => i % 5 === 0) };
+  assert.equal(parseOffballSequences([seq(10.8, 18.8)], encodeStateStrip(two.times, two.states), two).length, 1);
+  const twoLikely = { times: two.times, states: two.times.map((t) => (t === 14.5 ? 'LIKELY_VISIBLE' : 'CONFIRMED_VISIBLE')) };
+  assert.equal(parseOffballSequences([seq(10.8, 18.8)], encodeStateStrip(twoLikely.times, twoLikely.states), twoLikely).length, 0);
 });

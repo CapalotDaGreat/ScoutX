@@ -370,6 +370,33 @@ suite 825/825; `tsc` and eslint clean.
 - Coaching quality has not been reviewed independently. A football coach needs to rate these items blind against the
   clips (the review protocol is the `labelSupport` + clip list in the result files). My checks are not independent.
 
+## 18. Clip sequences dropped by the server (fix, 2026-11-17)
+
+**Defect.** `parseOffballSequences` checked the worker's clip sequences against the 1-s majority state strip. It
+dropped IMG_4809's 1,170.8–1,178.8 s sequence (every frame CONFIRMED, all 81 labelled frames the target), because
+second 1,170 is mostly LIKELY. It could also admit a second that was only mostly confirmed.
+
+**Fix** (`functions/src/analysis/trackingV3.ts`, `confirmedOnEveryFrame`): when the uploaded timeline is present,
+every sample inside the sequence must be CONFIRMED_VISIBLE. Samples must reach both ends within one sampling step
+and gaps may be at most max(0.55 s, 1.5 steps). The worker uploads about 2 samples/s (`app/tracking_v3.py`), so the
+server checks at that rate; the worker itself builds sequences from every 10 fps frame. The strip remains the
+fallback when no timeline is sent.
+
+**First attempt corrected.** A 10 fps-only edge rule broke the committed 5.0 fixture (2 Hz timeline,
+`sequence_free_1356`, first sample 0.4 s after the start). That sequence is fully confirmed in every uploaded sample,
+so the rule was too strict for real uploads, not the fixture too lenient. The tolerance now follows the sampling.
+
+**Results.**
+- E6 with the 2 Hz timeline: the 1,170.8 s sequence is kept, and the coach adds one clip observation (8 s, tight
+  82 %, median 0.75 body heights; tier 1; `coach_e6_fix.json`).
+- Match-level gates are unchanged (positioning still needs 60 s; still a limitation).
+- Tests: `tests/unit/videoReasoning50.test.ts`, new case covering the mid-second sequence, a single LIKELY sample
+  refused, a 0.6 s gap refused, and the same at 2 Hz. App unit suite 826/826, `tsc` and eslint clean,
+  `functions/lib` rebuilt.
+
+**Verdict:** supported for review as a server correctness fix (stricter where the strip was lenient, exact where it
+was too strict). Not deployed; tracking stays disabled for users.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an

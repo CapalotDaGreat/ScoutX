@@ -1,0 +1,72 @@
+{
+ "schema": "pitchproof.coach-eval.v1",
+ "report": "/home/claude/work/exp1114/e6_all_fresh/work/report/result.json",
+ "insights": [
+  {
+   "id": "sequence_tight_1171",
+   "kind": "observation",
+   "topic": "positioning",
+   "tier": 1,
+   "evidence": "confirmed",
+   "params": {
+    "seconds": 8,
+    "pct": 82,
+    "median": 0.75
+   },
+   "drill": null,
+   "citedMoments": [],
+   "checkableMoments": 0,
+   "momentsOnAnotherPlayer": 0
+  },
+  {
+   "id": "positioning_limit",
+   "kind": "limitation",
+   "topic": "positioning",
+   "tier": 4,
+   "evidence": "not_measurable",
+   "params": {
+    "confirmedSec": 31,
+    "minSec": 60
+   },
+   "drill": null,
+   "citedMoments": [],
+   "checkableMoments": 0,
+   "momentsOnAnotherPlayer": 0
+  },
+  {
+   "id": "identity_limit",
+   "kind": "limitation",
+   "topic": "identity",
+   "tier": 4,
+   "evidence": "not_measurable",
+   "params": {
+    "confirmedMin": 0.5,
+    "analysedMin": 31,
+    "review": 1
+   },
+   "drill": null,
+   "citedMoments": [],
+   "checkableMoments": 0,
+   "momentsOnAnotherPlayer": 0
+  },
+  {
+   "id": "physical_limit",
+   "kind": "limitation",
+   "topic": "physical",
+   "tier": 4,
+   "evidence": "not_measurable",
+   "params": {},
+   "drill": null,
+   "citedMoments": [],
+   "checkableMoments": 0,
+   "momentsOnAnotherPlayer": 0
+  }
+ ],
+ "summary": {
+  "insights": 4,
+  "strengthsOrImprovements": 0,
+  "withCheckableMoments": 0,
+  "citingAnotherPlayer": 0
+ },
+ "scope": "One development recording; interval labels; moments outside labelled intervals are unverifiable, not correct."
+}
