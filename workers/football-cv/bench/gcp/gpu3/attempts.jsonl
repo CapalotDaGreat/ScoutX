@@ -48,3 +48,27 @@
 {"event": "stockout", "n": 43, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T19:18:04Z"}
 {"event": "stockout", "n": 44, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T19:30:58Z"}
 {"event": "stockout", "n": 45, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T19:41:58Z"}
+{"event": "stockout", "n": 46, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T20:24:43Z"}
+{"event": "stockout", "n": 47, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T20:43:11Z"}
+{"event": "stockout", "n": 48, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T20:54:52Z"}
+{"event": "stockout", "n": 49, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T21:05:37Z"}
+{"event": "stockout", "n": 50, "zone": "europe-west1-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T21:18:26Z"}
+{"event": "stockout", "n": 51, "zone": "europe-west2-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T21:29:53Z"}
+{"event": "stockout", "n": 52, "zone": "europe-west2-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T21:42:16Z"}
+{"event": "stockout", "n": 53, "zone": "europe-west3-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T21:53:03Z"}
+{"event": "stockout", "n": 54, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T22:06:00Z"}
+{"event": "stockout", "n": 55, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T22:16:20Z"}
+{"event": "stockout", "n": 56, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T22:28:48Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-16T23:10:17Z", "attemptsLeft": 184, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-16T22:28:48Z"}
+{"event": "stockout", "n": 57, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T23:10:45Z"}
+{"event": "stockout", "n": 58, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T23:23:28Z"}
+{"event": "stockout", "n": 59, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T23:36:34Z"}
+{"event": "stockout", "n": 60, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-16T23:49:11Z"}
+{"event": "stockout", "n": 61, "zone": "europe-west1-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T00:01:55Z"}
+{"event": "stockout", "n": 62, "zone": "europe-west2-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T00:13:12Z"}
+{"event": "stockout", "n": 63, "zone": "europe-west2-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T00:24:47Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-17T00:36:06Z", "attemptsLeft": 177, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-17T00:24:47Z"}
+{"event": "stockout", "n": 64, "zone": "europe-west3-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T00:37:00Z"}
+{"event": "stockout", "n": 65, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T00:50:04Z"}
+{"event": "stockout", "n": 66, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T01:02:42Z"}
+{"event": "stockout", "n": 67, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T01:15:23Z"}

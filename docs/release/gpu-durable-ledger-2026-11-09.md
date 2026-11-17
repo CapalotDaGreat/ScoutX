@@ -103,6 +103,10 @@ Evidence: `workers/football-cv/bench/results/5.3/gpu-validation-20261109/pricing
   empty after each; sessions 0; USD 0. Gap with no attempts: 15 Nov 22:24–23:44 UTC (workspace idle).
 - 2026-11-16 19:52 UTC: attempts 45 of 240; session 1 used (attempt 25, failed on permissions, USD ≈ 0.24, cleaned
   up); GPU-3a approved; since the resume at 15:06 UTC every attempt stocked out. Sessions left 2; no VM; USD ≈ 0.24.
+- 2026-11-17 01:20 UTC: attempts 67 of 240 (6 rounds); one allocation so far (attempt 25, 16 Nov 04:46 UTC); all
+  42 attempts since the resume stocked out. Workspace restarts at 16 Nov 20:42 and 22:28 UTC ended the controller; it
+  was restarted from `state.json` each time after an empty inventory check. Stale session-1 upload markers were
+  archived (`s1-upload_*.txt`) so that the next VM gets its inputs.
 - The controller runs in 115-minute slices. A follow-up is scheduled into this conversation every ~110 min to start
   the next slice. Between slices, and whenever this workspace is not running, **no attempts happen**; gaps are
   visible in `attempts.jsonl`.
