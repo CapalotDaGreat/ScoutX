@@ -42,3 +42,21 @@ def test_missing_prediction_sample_is_an_error(tmp_path, monkeypatch):
         assert "no prediction sample" in str(e)
     else:
         raise AssertionError("expected an error")
+
+
+def test_compare_frames_categories(tmp_path, monkeypatch):
+    import compare_frames as cf
+    T, N = [100, 100, 150, 300], [600, 100, 650, 300]
+    gt = {"intervals": [[0, 0.5]], "times": {"a": 0.0, "b": 0.1, "c": 0.2, "d": 0.3},
+          "frames": {"a": [{"label": "T", "box": T}], "b": [{"label": "N", "box": N}],
+                     "c": [], "d": [{"label": "T", "box": T}, {"label": "N", "box": N}]}}
+    monkeypatch.setattr(cf, "load_labels", lambda stored: gt)
+    times = np.round(np.arange(0, 0.4, 0.1), 2)
+    for name, states in [("base", ["CONFIRMED_VISIBLE", "AMBIGUOUS", "AMBIGUOUS", "LIKELY_VISIBLE"]),
+                         ("cand", ["CONFIRMED_VISIBLE", "CONFIRMED_VISIBLE", "LIKELY_VISIBLE", "LIKELY_VISIBLE"])]:
+        np.savez(tmp_path / f"{name}.npz", times=times, boxes=np.array([T, N, [0, 0, 10, 10], [300, 0, 310, 10]], float),
+                 states=np.array(states), present=np.ones(4, bool))
+    r = cf.compare(tmp_path / "base.npz", tmp_path / "cand.npz")
+    assert r["candCounts"] == {"correct": 1, "wrong": 1, "nolabel": 1, "offtarget": 1}
+    assert [x["t"] for x in r["newConfirmedWrong"]] == [0.1]
+    assert r["transitions"] == {"abstain->wrong": 1, "abstain->nolabel": 1}

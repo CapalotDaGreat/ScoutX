@@ -438,6 +438,41 @@ interval-scored target frames (the 504th is the endpoint frame, section 11).
 **Use.** The table adds the standard detection and association split to the PitchProof audit; it does not replace
 it. Wrong-player attribution, abstention and owner-assisted runs stay reported separately (sections 11, 4c).
 
+## 20. Changed-frame reports (2026-11-17)
+
+`workers/football-cv/bench/compare_frames.py BASE.npz CAND.npz OUT.json` gives every labelled interval frame one
+outcome per run:
+- `correct`: on the target box.
+- `wrong`: on an N box, a demonstrated wrong-player claim.
+- `nolabel`: no box labelled, target not annotated.
+- `offtarget`: no match while the target is labelled elsewhere.
+- `unsure`: on a "?" box.
+- `abstain`.
+
+It lists every changed frame plus `newConfirmedWrong`. Tests are in `tests/test_trackeval_export.py`. Reports are in
+`bench/results/5.3/compare-20261117/`.
+
+| Base → candidate | Correct | Demonstrated wrong-player | New CONFIRMED wrong | Main transitions |
+|---|---|---|---|---|
+| E0 → E6 (T+D+C) | 266 → 307 | 11 → **0** | 0 | 43 abstain→correct, 11 wrong→abstain, 2 correct→abstain |
+| E0 → release + 4 taps | 266 → 250 | 11 → 17 | **17** (1,151.2–1,153.5 s) | 159 correct→abstain, 143 abstain→correct |
+| E6 → T+D+C + 4 taps | 307 → 406 | 0 → **0** | 0 | 100 abstain→correct, 17 abstain→nolabel, 128 abstain→unsure |
+
+The 17 `nolabel` frames added by the taps include 1,301.5–1,302.6 s, where the player is hidden behind #16 (section 19).
+
+## 21. E8b test-time augmentation for the "20" score: rejected (2026-11-17)
+
+Four variants of each crop were scored by docTR PARSeq for "20": CLAHE, gamma 0.7, gamma 1.4 and 1.5× scale.
+
+| Threshold | Target crops hit (any variant) | Target pieces | Other-player crops hit | Other-player pieces |
+|---|---|---|---|---|
+| 0.5 | 42 / 245 | 12 / 19 | **132 / 1,221** | **47 / 118** |
+| 0.7 | 31 / 245 | 9 / 19 | 101 / 1,221 | — |
+
+On un-augmented colour ROIs the same score never fired on another player (0 / 1,221, section 15). Augmentation
+manufactures "20" reads on 40 % of other players' pieces, so it would directly create wrong-player evidence.
+**Rejected.** No code change; the 5.0 rule (weak-only sightings are never identity evidence) stands.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
