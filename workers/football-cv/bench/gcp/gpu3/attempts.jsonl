@@ -72,3 +72,33 @@
 {"event": "stockout", "n": 65, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T00:50:04Z"}
 {"event": "stockout", "n": 66, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T01:02:42Z"}
 {"event": "stockout", "n": 67, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T01:15:23Z"}
+{"event": "stockout", "n": 68, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T01:57:16Z"}
+{"event": "stockout", "n": 69, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T02:09:30Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-17T02:21:36Z", "attemptsLeft": 171, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-17T02:09:30Z"}
+{"event": "stockout", "n": 70, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T02:21:41Z"}
+{"event": "stockout", "n": 71, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T02:33:48Z"}
+{"event": "stockout", "n": 72, "zone": "europe-west1-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T02:45:57Z"}
+{"event": "stockout", "n": 73, "zone": "europe-west2-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T02:58:22Z"}
+{"event": "stockout", "n": 74, "zone": "europe-west2-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T03:11:14Z"}
+{"event": "stockout", "n": 75, "zone": "europe-west3-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T03:24:13Z"}
+{"event": "stockout", "n": 76, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T03:36:02Z"}
+{"event": "stockout", "n": 77, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T03:49:02Z"}
+{"event": "stockout", "n": 78, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T04:00:56Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-17T04:43:00Z", "attemptsLeft": 162, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-17T04:00:56Z"}
+{"event": "stockout", "n": 79, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T04:43:23Z"}
+{"event": "stockout", "n": 80, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T04:56:08Z"}
+{"event": "stockout", "n": 81, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T05:08:45Z"}
+{"event": "stockout", "n": 82, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T05:20:39Z"}
+{"event": "stockout", "n": 83, "zone": "europe-west1-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T05:32:07Z"}
+{"event": "stockout", "n": 84, "zone": "europe-west2-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T05:44:45Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-17T05:56:23Z", "attemptsLeft": 156, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-17T05:54:55Z"}
+{"event": "stockout", "n": 85, "zone": "europe-west2-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T05:57:24Z"}
+{"event": "stockout", "n": 86, "zone": "europe-west3-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T06:09:41Z"}
+{"event": "stockout", "n": 87, "zone": "europe-west3-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T06:20:53Z"}
+{"event": "stockout", "n": 88, "zone": "europe-west6-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T06:32:10Z"}
+{"event": "stockout", "n": 89, "zone": "europe-west6-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T06:44:43Z"}
+{"event": "stockout", "n": 90, "zone": "europe-west4-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T07:26:41Z"}
+{"event": "stockout", "n": 91, "zone": "europe-west4-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T07:38:41Z"}
+{"event": "runtime_slice_over", "nextDueUtc": "2026-11-17T07:50:39Z", "attemptsLeft": 149, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-17T07:38:41Z"}
+{"event": "stockout", "n": 92, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T07:50:59Z"}
+{"event": "stockout", "n": 93, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T08:03:29Z"}

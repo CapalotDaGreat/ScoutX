@@ -1,11 +1,11 @@
 {
- "attempts": 67,
- "rounds": 6,
- "nextZone": 0,
+ "attempts": 94,
+ "rounds": 8,
+ "nextZone": 4,
  "sessions": 1,
  "spentUsdEstimate": 0.24,
  "windowStart": "2026-11-15T21:49:47Z",
- "lastAttemptAt": "2026-11-17T01:14:50Z",
+ "lastAttemptAt": "2026-11-17T12:39:31Z",
  "outcome": "searching",
  "vm": null,
  "sessionLog": [

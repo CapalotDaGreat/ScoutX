@@ -107,6 +107,9 @@ Evidence: `workers/football-cv/bench/results/5.3/gpu-validation-20261109/pricing
   42 attempts since the resume stocked out. Workspace restarts at 16 Nov 20:42 and 22:28 UTC ended the controller; it
   was restarted from `state.json` each time after an empty inventory check. Stale session-1 upload markers were
   archived (`s1-upload_*.txt`) so that the next VM gets its inputs.
+- 2026-11-17 12:39 UTC: attempts 93 of 240 (8 rounds), all stockouts since the resume; project empty; USD ≈ 0.24;
+  sessions left 2. **No attempts 08:03–12:39 UTC** (the workspace was idle and the controller had ended). Slice
+  restarted 12:39; window ends 2026-11-18 21:49 UTC. `check.sh` renews the bounded runner and the watcher.
 - The controller runs in 115-minute slices. A follow-up is scheduled into this conversation every ~110 min to start
   the next slice. Between slices, and whenever this workspace is not running, **no attempts happen**; gaps are
   visible in `attempts.jsonl`.
