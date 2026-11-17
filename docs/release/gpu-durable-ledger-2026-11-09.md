@@ -110,6 +110,20 @@ Evidence: `workers/football-cv/bench/results/5.3/gpu-validation-20261109/pricing
 - 2026-11-17 12:39 UTC: attempts 93 of 240 (8 rounds), all stockouts since the resume; project empty; USD ≈ 0.24;
   sessions left 2. **No attempts 08:03–12:39 UTC** (the workspace was idle and the controller had ended). Slice
   restarted 12:39; window ends 2026-11-18 21:49 UTC. `check.sh` renews the bounded runner and the watcher.
+- **Authorization check 2026-11-17 12:45 UTC** (against `docs/release/gpu-session-request-gpu3-2026-11-15.md`):
+  - Matches the record: 11 EU zones in the approved order; g2-standard-8 + 1× standard L4 with the pinned image;
+    D1–D4 off; 1 live VM; 300 min server lifetime; USD 8 per session and USD 16 total; 72 h / 240 attempts; window
+    start 2026-11-15 21:49:47 UTC, so the deadline is **2026-11-18 21:49 UTC** (it was never reset); IMG_4809 proxy
+    only; numeric exports only.
+  - **Discrepancy:** the 2026-11-17 brief says "at most two billable sessions". The record has **three**: GPU-3a,
+    approved in chat 2026-11-16, after session 1 failed on a harness bug. Following the record (1 used, 2 left).
+    The owner can lower it to two with `envelope.json` → `maxBillableSessions: 2` or by saying so.
+- Input check 2026-11-17: archives A, B, C, the tool and the proxy all match `inputs.sha256`. Script hashes:
+  s1 `94a04c1f…` (rerun, results prefix `-s1b`), s2 `383ec7ad…`.
+- Prices refreshed 2026-11-17 12:43 UTC (unchanged): 300 min costs ≤ USD 6.02 in the dearest zone (west6), within
+  USD 8. A lifetime limit is not a billing cap.
+- `check.sh` (used by scheduled continuations) now refuses to start anything after the deadline, at the attempt,
+  session or budget limit, with a STOP flag, or while a controller already runs.
 - The controller runs in 115-minute slices. A follow-up is scheduled into this conversation every ~110 min to start
   the next slice. Between slices, and whenever this workspace is not running, **no attempts happen**; gaps are
   visible in `attempts.jsonl`.

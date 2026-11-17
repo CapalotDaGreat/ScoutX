@@ -102,3 +102,4 @@
 {"event": "runtime_slice_over", "nextDueUtc": "2026-11-17T07:50:39Z", "attemptsLeft": 149, "sessionsLeft": 2, "windowEnd": "2026-11-18T21:49:47Z", "windowOver": false, "spentUsdEstimate": 0.24, "budgetLeftUsd": 15.76, "at": "2026-11-17T07:38:41Z"}
 {"event": "stockout", "n": 92, "zone": "europe-west4-a", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T07:50:59Z"}
 {"event": "stockout", "n": 93, "zone": "europe-west1-b", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T08:03:29Z"}
+{"event": "stockout", "n": 94, "zone": "europe-west1-c", "providerError": "ZONE_RESOURCE_POOL_EXHAUSTED", "verifiedEmpty": true, "at": "2026-11-17T12:40:06Z"}
