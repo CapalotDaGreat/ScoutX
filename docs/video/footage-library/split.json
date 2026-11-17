@@ -1,0 +1,46 @@
+{
+ "rule": "(predeclared 2026-11-17, owner brief c490c61b section 5):\n- Groups already inspected or used for tuning -> development (IMG_4809's match is development).\n- Every other group is assigned by SHA-256(group id): first byte < 0x66 (40 %) validation, else held-out.\n  The rule ignores performance and difficulty, so hard footage cannot be swapped out; stratification is\n  checked afterwards and reported, never fixed by moving groups.\n- Assignments are append-only; a held-out group whose results influence a fix is marked `exposed`, keeps its\n  partition label and is excluded from later untouched-evaluation claims.",
+ "groups": {
+  "m-img4809": {
+   "members": [
+    "IMG_4809.MOV"
+   ],
+   "partition": "development",
+   "exposedBeforeFreeze": "development and tuning data since 2026-10 (all 5.x work)",
+   "frozenAt": "2026-11-17T20:42:40Z"
+  },
+  "m-2024-03-27-night": {
+   "members": [
+    "IMG_4529.MOV"
+   ],
+   "partition": "held-out",
+   "exposedBeforeFreeze": null,
+   "frozenAt": "2026-11-17T20:42:40Z"
+  },
+  "m-2024-08-31-day": {
+   "members": [
+    "IMG_5105.MOV"
+   ],
+   "partition": "held-out",
+   "exposedBeforeFreeze": null,
+   "frozenAt": "2026-11-17T20:42:40Z"
+  }
+ },
+ "events": [
+  {
+   "at": "2026-11-17T20:42:40Z",
+   "event": "freeze",
+   "group": "m-img4809"
+  },
+  {
+   "at": "2026-11-17T20:42:40Z",
+   "event": "freeze",
+   "group": "m-2024-03-27-night"
+  },
+  {
+   "at": "2026-11-17T20:42:40Z",
+   "event": "freeze",
+   "group": "m-2024-08-31-day"
+  }
+ ]
+}
