@@ -397,6 +397,47 @@ so the rule was too strict for real uploads, not the fixture too lenient. The to
 **Verdict:** supported for review as a server correctness fix (stricter where the strip was lenient, exact where it
 was too strict). Not deployed; tracking stays disabled for users.
 
+## 19. TrackEval single-target evaluation (2026-11-17)
+
+`workers/football-cv/bench/trackeval_export.py` writes MOTChallenge files for the **selected player only** (one
+sequence per labelled interval). TrackEval (MIT, `12c8791`) runs isolated
+(`/home/claude/work/rights/trackeval-env/run_trackeval.py`); rights in `docs/video/github-rights-inventory-2026-11-17.md`.
+
+**Semantics.**
+- Abstention = no prediction row.
+- A claim on an annotator-unsure ("?") box is dropped from both sides and counted.
+- A missing prediction sample raises an error.
+- Frame indices keep their position.
+- Tests: `tests/test_trackeval_export.py` (2).
+
+Sparse selected-player labels cannot support multi-object HOTA claims; these are single-target numbers over 503
+interval-scored target frames (the 504th is the endpoint frame, section 11).
+
+| Run (corrected basis) | States | HOTA | DetA | AssA | IDF1 | IDP | IDR | TP | FN | FP | IDSW |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| E0 release, no taps | C+L | 0.607 | 0.491 | 0.752 | 0.679 | 0.950 | 0.529 | 266 | 237 | 14 | 0 |
+| E0 | C only | 0.055 | 0.046 | 0.066 | 0.091 | 1.000 | 0.048 | 24 | 479 | 0 | 0 |
+| E6 T+D+C, no taps | C+L | 0.683 | 0.575 | 0.811 | 0.755 | 0.990 | 0.610 | 307 | 196 | 3 | 0 |
+| E6 | C only | 0.326 | 0.259 | 0.409 | 0.423 | 1.000 | 0.268 | 135 | 368 | 0 | 0 |
+| Release + 4 taps | C+L | 0.489 | 0.434 | 0.553 | 0.632 | 0.868 | 0.497 | 250 | 253 | 38 | 0 |
+| Release + 4 taps | C only | 0.248 | 0.167 | 0.370 | 0.299 | 0.782 | 0.185 | 93 | 410 | 26 | 0 |
+| T+D+C + 4 taps | C+L | 0.759 | 0.731 | 0.787 | 0.874 | 0.953 | 0.807 | 406 | 97 | 20 | 0 |
+| T+D+C + 4 taps | C only | 0.409 | 0.384 | 0.436 | 0.573 | 0.976 | 0.406 | 204 | 299 | 5 | 0 |
+
+**Reading the false positives.**
+- TrackEval counts every claim that does not overlap a labelled target at IoU ≥ 0.5, including claims while the
+  target is unlabelled.
+- Release + 4 taps: 26 CONFIRMED FPs, including the known 1,151.1–1,153.5 s wrong-player transfer (claims on N
+  boxes at IoU 0.7–0.96 while T is visible elsewhere).
+- T+D+C + 4 taps: its 5 CONFIRMED FPs inside scored frames are 4 frames at 1,301.5–1,302.6 s plus 1 at 1,896.5 s.
+  - The 1,301.5–1,302.6 s frames were reviewed visually (private, local): the selected player is almost fully hidden
+    behind opponent #16 and the annotator left her unlabelled. The claim box sits where she is in the neighbouring
+    labelled frames. This is a **label gap**, not a demonstrated wrong-player claim; it cannot be verified either.
+  - The other CONFIRMED claims at 1,895.8–1,899.7 s sit on "?" boxes (annotator unsure) and are dropped from scoring.
+
+**Use.** The table adds the standard detection and association split to the PitchProof audit; it does not replace
+it. Wrong-player attribution, abstention and owner-assisted runs stay reported separately (sections 11, 4c).
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
