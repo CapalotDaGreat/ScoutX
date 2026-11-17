@@ -473,6 +473,31 @@ On un-augmented colour ROIs the same score never fired on another player (0 / 1,
 manufactures "20" reads on 40 % of other players' pieces, so it would directly create wrong-player evidence.
 **Rejected.** No code change; the 5.0 rule (weak-only sightings are never identity evidence) stands.
 
+## 22. Runtime, memory and candidate classification (2026-11-17)
+
+**Runtime and memory.** IMG_4809: 33.9 min, 20,350 frames at 10 fps, measured on 2 CPU cores with no GPU.
+- Discovery/detection stage (shared, cached): 2,532 s at 2.0 effective detect fps.
+- Resolve: E0 1,582 s; E6 T+D+C 1,628 s (+2.9 %).
+- Peak RSS: 1,761 vs 1,765 MiB.
+- T+D+C costs about 3 % more CPU time and no extra memory.
+- No optimisation was made. Detection dominates and needs GPU-3 parity numbers before any change is worth measuring.
+
+**Classification** (brief 1bb14b73 scale). Nothing is promoted; analysis stays disabled for users.
+
+| Candidate | Evidence | Class |
+|---|---|---|
+| T teleport split + D no appearance-only LIKELY + C combined OCR (E6) | Demonstrated wrong-player frames 11 → 0; correct 266 → 307; CONFIRMED correct 24 → 135; one match, one camera | **Supported for further validation.** Needs a second labelled match and GPU parity (GPU-3) before a promotion proposal |
+| T+D+C with owner taps | 406 correct, 0 demonstrated wrong-player frames; 17 unverifiable `nolabel` frames | Supported for further validation (owner-assisted, reported separately) |
+| Release + owner taps (current product path) | 17 CONFIRMED wrong-player frames at 1,151 s | **Needs revision.** The teleport split (T) is the fix; it is not in the release |
+| Server sequence check on every frame (9ba85c3) | Unit-tested; removes clips that only pass the 1-s majority | Ready for a separately reviewed promotion proposal (server-only, behind the disabled analysis flag) |
+| CLIP-EXP-1 clip coaching | 1 grounded observation on E6; 81/81 frames the target | Supported for further validation |
+| Weak "20" colour-ROI score (E8) | 15/245 target crops, 0/1,221 others | Needs revision. One match only; violates the 5.0 weak-evidence rule unless redesigned |
+| Test-time augmentation (E8b) | Creates "20" reads on 47/118 other-player pieces | **Rejected** |
+| Seed-conflict hypothesis | Not reproduced | Rejected |
+| TrackEval single-target export + changed-frame report | Tested; matches PitchProof counts | Adopted (evaluation tooling only) |
+| Schema / report proposal | Document only | Needs review |
+| E9 synthetic-digit fine-tune of PARSeq | Not run: CPU-only training is impractical on 2 cores, and disk is low | Open; better run on the GPU-3 VM if a session is granted |
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
