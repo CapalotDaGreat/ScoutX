@@ -1,0 +1,43 @@
+{
+ "schema": "pitchproof.clip-review-eval.v1",
+ "report": "/home/claude/work/exp1114/e6_all_fresh/work/report/result.json",
+ "line": "midfield",
+ "items": [
+  {
+   "clip": {
+    "start": 1170.8,
+    "end": 1178.8
+   },
+   "kind": "improve",
+   "identitySource": "automatic",
+   "observation": {
+    "pattern": "tight",
+    "seconds": 8,
+    "sharePct": 82,
+    "nearestOpponentMedianBH": 0.8
+   },
+   "observationKey": "clip.observation.tight",
+   "interpretationKey": "clip.interpretation.tight.midfield",
+   "practice": {
+    "drillId": "first_touch_away",
+    "successKey": "success.create_space_next_recording"
+   },
+   "scope": "this_clip_only",
+   "limitations": [
+    "image_plane_distance_not_metres",
+    "ball_and_teammates_not_assessed",
+    "one_clip_not_the_match"
+   ],
+   "text": "In this clip (1170.8-1178.8 s, 8 s) an opponent was close to you: a median 0.8 body heights in the picture, under 1 body height on 82% of the measured frames. This may mean you were closely marked; the clip cannot show whether you wanted the ball. Practice: move away before receiving (first touch away). Next recording: a 6 s clip where the opponent is more than 1 body height away most of the time. This is about this clip only.",
+   "textSource": "template",
+   "labelSupport": {
+    "target": 81,
+    "other": 0,
+    "unsure": 0,
+    "unmatched": 0,
+    "unlabelled": 0
+   }
+  }
+ ],
+ "insufficient": []
+}

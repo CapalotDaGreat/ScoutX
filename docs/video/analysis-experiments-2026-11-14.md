@@ -308,6 +308,68 @@ flagging jumps > 0.8 + 0.5·(gap − 1) box heights gives **19 gap-jumps in the 
 so there is no observed identity failure to fix. Kept as a counterexample category for held-out footage
 (`exp1114/gap_teleports.json`); T is not extended without a failing case.
 
+## 17. Clip-specific coaching experiment CLIP-EXP-1 (2026-11-17)
+
+**Current state checked.**
+- `buildCoachInsights` keeps its match-level gates unchanged: positioning needs 60 s confirmed; involvement needs 120 s.
+- It already has a narrow clip path: a sequence observation from one continuous CONFIRMED sequence of at least 6 s.
+- The worker reported one such sequence on E6 (1,170.8–1,178.8 s, "tight"). The coach still showed none.
+
+**Defect found (production parser, not changed).**
+- `parseOffballSequences` checks sequences against `encodeStateStrip`, which stores the majority state per whole second.
+- Second 1,170 is mostly LIKELY (1,170.0–1,170.7 s), so the strip cell reads [1,171, 1,179] and the clip starting at
+  1,170.8 s is rejected, although every frame in it is CONFIRMED.
+- The same rounding could also admit a clip whose second is mostly but not fully CONFIRMED.
+- Proposed fix for separate review: check sequences against the frame-level timeline the server already receives.
+  This is stricter where the strip was too lenient and exact where it was too strict.
+
+**Experiment.**
+- `src/features/match-review/services/clipReviewExperimental.ts` is imported by nothing in the app.
+- Production defaults and the match-level gate are unchanged.
+
+Contract for each item:
+- every frame of the clip is present and CONFIRMED (gap ≤ 0.55 s, edges covered);
+- the clip is at least 6 s long;
+- the opponent distance is measured on ≥ 70 % of the clip, and the values support the stated pattern
+  (free share ≥ 0.7 / tight share ≥ 0.6; shares ≤ 100 %);
+- no overlapping contradictory sequence;
+- no owner "not me" answer within 2 s;
+- inside the recording.
+
+What an item contains:
+- a numeric observation, an uncertain interpretation, and a drill with a measurable success criterion for the next
+  recording;
+- for midfield and attack: free = strength, tight = improvement. For defence: observation only;
+- scope "this clip only", plus limitations (image-plane distance, ball and team-mates not assessed, one clip);
+- owner taps up to 10 s before or inside the clip mark it `owner_assisted`. A tap never rescues frames that are not
+  confirmed.
+
+Refusals and text:
+- each refusal returns a reason and a recovery action;
+- a text provider may only rephrase. Numbers, units or claims it adds are rejected (speed, metres, team-mates,
+  intent, success), and the template is used instead; a provider failure also falls back to the template;
+- a review is stale once the owner's answers change.
+
+**Tests.** `tests/unit/clipReviewExperimental.test.ts`, 13 tests: positive, improvement, defensive observation,
+ambiguous identity (one LIKELY frame), mid-second regression, gaps and missing boxes, < 6 s, owner "not me", owner
+tap scoping, contradictory, invalid citations and values, provider failure and rejection, stale review. App unit
+suite 825/825; `tsc` and eslint clean.
+
+**Replay on saved reports** (`bench/clip_review_eval.ts`, results `bench/results/5.3/clip-exp-20261117/`):
+
+| Report | Clip | Item | Labels in the clip |
+|---|---|---|---|
+| E6, no taps | 1,170.8–1,178.8 s tight | improve (attack/midfield) / observation (defence), automatic | 81 of 81 frames are the target |
+| T+D+C + 4 taps | same | same | 81 / 81 target |
+| T+D+C + 4 taps | 1,895.8–1,903.5 s free | strength, **owner-assisted** | 38 target, 39 unsure (`?`), 1 unmatched, 0 other |
+
+**Verdict: needs revision before any product use, and supported for further validation.**
+- The contract produced one fully label-verified clip item on E6 without lowering any gate.
+- The owner-assisted clip is only half verifiable from the labels.
+- The observable is limited to image-plane closeness to an opponent; it says nothing about the ball or decisions.
+- Coaching quality has not been reviewed independently. A football coach needs to rate these items blind against the
+  clips (the review protocol is the `labelSupport` + clip list in the result files). My checks are not independent.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an

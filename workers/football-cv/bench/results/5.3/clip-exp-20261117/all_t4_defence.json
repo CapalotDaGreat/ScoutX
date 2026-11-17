@@ -1,0 +1,73 @@
+{
+ "schema": "pitchproof.clip-review-eval.v1",
+ "report": "/home/claude/work/exp1114/e3/all_t4/out/report/result.json",
+ "line": "defence",
+ "items": [
+  {
+   "clip": {
+    "start": 1170.8,
+    "end": 1178.8
+   },
+   "kind": "observation",
+   "identitySource": "automatic",
+   "observation": {
+    "pattern": "tight",
+    "seconds": 8,
+    "sharePct": 82,
+    "nearestOpponentMedianBH": 0.8
+   },
+   "observationKey": "clip.observation.tight",
+   "interpretationKey": "clip.interpretation.tight.defence",
+   "practice": null,
+   "scope": "this_clip_only",
+   "limitations": [
+    "image_plane_distance_not_metres",
+    "ball_and_teammates_not_assessed",
+    "one_clip_not_the_match"
+   ],
+   "text": "In this clip (1170.8-1178.8 s, 8 s) an opponent was close to you: a median 0.8 body heights in the picture, under 1 body height on 82% of the measured frames. This may mean you were closely marked; the clip cannot show whether you wanted the ball. This is about this clip only.",
+   "textSource": "template",
+   "labelSupport": {
+    "target": 81,
+    "other": 0,
+    "unsure": 0,
+    "unmatched": 0,
+    "unlabelled": 0
+   }
+  },
+  {
+   "clip": {
+    "start": 1895.8,
+    "end": 1903.5
+   },
+   "kind": "observation",
+   "identitySource": "owner_assisted",
+   "observation": {
+    "pattern": "free",
+    "seconds": 7.7,
+    "sharePct": 100,
+    "nearestOpponentMedianBH": 5.8
+   },
+   "observationKey": "clip.observation.free",
+   "interpretationKey": "clip.interpretation.free.defence",
+   "practice": null,
+   "scope": "this_clip_only",
+   "limitations": [
+    "image_plane_distance_not_metres",
+    "ball_and_teammates_not_assessed",
+    "one_clip_not_the_match",
+    "identity_relies_on_owner_tap"
+   ],
+   "text": "In this clip (1895.8-1903.5 s, 7.7 s) the nearest opponent was a median 5.8 body heights away in the picture; you were in open space on 100% of the measured frames. This may mean you made yourself available; the clip cannot show whether a pass was possible. This is about this clip only.",
+   "textSource": "template",
+   "labelSupport": {
+    "target": 38,
+    "other": 0,
+    "unsure": 39,
+    "unmatched": 1,
+    "unlabelled": 0
+   }
+  }
+ ],
+ "insufficient": []
+}
