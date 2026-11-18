@@ -1,0 +1,42 @@
+{
+ "match": "m-2024-03-27-night",
+ "recording": "IMG_4529.MOV",
+ "partition": "held-out",
+ "proxyVideoStreamSha256": "88e4fe5ca34b06e3c63e4a17280ec2df68f3d6a480817bd0f37eda4314f4e13a",
+ "runs": {
+  "r_release": {
+   "source": "32ab43f1f5c6274c5d7672b25fa4ac37163bbb7c",
+   "flags": "",
+   "mode": "automatic, no owner anchors",
+   "samples": 28217,
+   "states": {
+    "AMBIGUOUS": 23422,
+    "UNKNOWN": 4795
+   },
+   "claimedSec": 0.0,
+   "confirmedSec": 0.0,
+   "wallSec": 11002.03,
+   "resolveSec": 790.25,
+   "peakRssMiB": 2311.6,
+   "exit": "rc=0"
+  },
+  "r_tdc": {
+   "source": "0bae8d7ab3d7cd16645684e10500c9934e53cf9f",
+   "flags": "SCOUTX_TELEPORT_SPLIT=1 SCOUTX_APPEARANCE_ONLY_LIKELY=0 SCOUTX_OCR_VARIANT=combined",
+   "mode": "automatic, no owner anchors",
+   "samples": 28217,
+   "states": {
+    "AMBIGUOUS": 21263,
+    "UNKNOWN": 5622,
+    "LIKELY_VISIBLE": 682,
+    "CONFIRMED_VISIBLE": 650
+   },
+   "claimedSec": 133.2,
+   "confirmedSec": 65.0,
+   "wallSec": 446.862,
+   "resolveSec": 337.345,
+   "peakRssMiB": 2149.2,
+   "exit": "rc=0"
+  }
+ }
+}

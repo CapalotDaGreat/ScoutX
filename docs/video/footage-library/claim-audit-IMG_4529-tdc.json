@@ -1,0 +1,509 @@
+{
+"protocol": "agent-authored claim audit, prediction-exposed: one frame per claim segment (largest box), torso zoom; number read by eye; no owner review yet",
+"segments": [
+{
+"seg": 0,
+"start": 268.9,
+"end": 270.4,
+"t": 269.9,
+"state": "LIKELY_VISIBLE",
+"boxH": 88,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 1,
+"start": 270.6,
+"end": 281.8,
+"t": 276.1,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 102,
+"auditNumber": "20"
+},
+{
+"seg": 2,
+"start": 507.0,
+"end": 507.0,
+"t": 507.0,
+"state": "LIKELY_VISIBLE",
+"boxH": 54,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 3,
+"start": 513.2,
+"end": 513.2,
+"t": 513.2,
+"state": "LIKELY_VISIBLE",
+"boxH": 142,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 4,
+"start": 583.9,
+"end": 583.9,
+"t": 583.9,
+"state": "LIKELY_VISIBLE",
+"boxH": 64,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 5,
+"start": 601.2,
+"end": 601.3,
+"t": 601.2,
+"state": "LIKELY_VISIBLE",
+"boxH": 120,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 6,
+"start": 796.5,
+"end": 796.5,
+"t": 796.5,
+"state": "LIKELY_VISIBLE",
+"boxH": 174,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 7,
+"start": 972.7,
+"end": 975.3,
+"t": 972.8,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 228,
+"auditNumber": "20"
+},
+{
+"seg": 8,
+"start": 975.5,
+"end": 976.4,
+"t": 975.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 174,
+"auditNumber": "20"
+},
+{
+"seg": 9,
+"start": 1108.5,
+"end": 1108.5,
+"t": 1108.5,
+"state": "LIKELY_VISIBLE",
+"boxH": 107,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 10,
+"start": 1108.7,
+"end": 1108.7,
+"t": 1108.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 108,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 11,
+"start": 1142.1,
+"end": 1146.1,
+"t": 1142.1,
+"state": "LIKELY_VISIBLE",
+"boxH": 124,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 12,
+"start": 1146.3,
+"end": 1148.4,
+"t": 1147.3,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 127,
+"auditNumber": "20"
+},
+{
+"seg": 13,
+"start": 1148.6,
+"end": 1151.7,
+"t": 1150.7,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 126,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 14,
+"start": 1151.9,
+"end": 1153.2,
+"t": 1153.1,
+"state": "LIKELY_VISIBLE",
+"boxH": 124,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 15,
+"start": 1153.6,
+"end": 1154.9,
+"t": 1154.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 139,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 16,
+"start": 1157.2,
+"end": 1159.0,
+"t": 1157.2,
+"state": "LIKELY_VISIBLE",
+"boxH": 146,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 17,
+"start": 1159.3,
+"end": 1160.3,
+"t": 1160.1,
+"state": "LIKELY_VISIBLE",
+"boxH": 124,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 18,
+"start": 1294.9,
+"end": 1296.8,
+"t": 1296.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 156,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 19,
+"start": 1297.0,
+"end": 1298.1,
+"t": 1297.9,
+"state": "LIKELY_VISIBLE",
+"boxH": 174,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 20,
+"start": 1298.4,
+"end": 1298.6,
+"t": 1298.4,
+"state": "LIKELY_VISIBLE",
+"boxH": 173,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 21,
+"start": 1298.8,
+"end": 1320.7,
+"t": 1303.9,
+"state": "LIKELY_VISIBLE",
+"boxH": 214,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 22,
+"start": 1325.5,
+"end": 1335.5,
+"t": 1325.5,
+"state": "LIKELY_VISIBLE",
+"boxH": 130,
+"auditNumber": "20?"
+},
+{
+"seg": 23,
+"start": 1335.7,
+"end": 1336.0,
+"t": 1336.0,
+"state": "LIKELY_VISIBLE",
+"boxH": 113,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 24,
+"start": 1336.2,
+"end": 1337.0,
+"t": 1336.4,
+"state": "LIKELY_VISIBLE",
+"boxH": 124,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 25,
+"start": 1337.2,
+"end": 1338.5,
+"t": 1337.2,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 129,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 26,
+"start": 1338.7,
+"end": 1341.5,
+"t": 1339.9,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 118,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 27,
+"start": 1345.7,
+"end": 1372.8,
+"t": 1366.2,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 120,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 28,
+"start": 1373.0,
+"end": 1374.8,
+"t": 1373.1,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 113,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 29,
+"start": 1375.0,
+"end": 1375.0,
+"t": 1375.0,
+"state": "LIKELY_VISIBLE",
+"boxH": 102,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 30,
+"start": 1375.2,
+"end": 1375.6,
+"t": 1375.3,
+"state": "LIKELY_VISIBLE",
+"boxH": 113,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 31,
+"start": 1414.0,
+"end": 1414.1,
+"t": 1414.0,
+"state": "LIKELY_VISIBLE",
+"boxH": 86,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 32,
+"start": 1431.5,
+"end": 1434.8,
+"t": 1433.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 170,
+"auditNumber": "2? (illegible second digit)"
+},
+{
+"seg": 33,
+"start": 1435.0,
+"end": 1448.7,
+"t": 1435.0,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 156,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 34,
+"start": 1448.9,
+"end": 1449.7,
+"t": 1449.6,
+"state": "LIKELY_VISIBLE",
+"boxH": 110,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 35,
+"start": 1467.3,
+"end": 1476.0,
+"t": 1467.3,
+"state": "CONFIRMED_VISIBLE",
+"boxH": 160,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 36,
+"start": 1619.6,
+"end": 1619.6,
+"t": 1619.6,
+"state": "LIKELY_VISIBLE",
+"boxH": 117,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 37,
+"start": 1621.7,
+"end": 1621.7,
+"t": 1621.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 122,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 38,
+"start": 1704.4,
+"end": 1704.4,
+"t": 1704.4,
+"state": "LIKELY_VISIBLE",
+"boxH": 128,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 39,
+"start": 1719.8,
+"end": 1719.8,
+"t": 1719.8,
+"state": "LIKELY_VISIBLE",
+"boxH": 122,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 40,
+"start": 1743.7,
+"end": 1743.7,
+"t": 1743.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 285,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 41,
+"start": 1776.7,
+"end": 1776.7,
+"t": 1776.7,
+"state": "LIKELY_VISIBLE",
+"boxH": 147,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 42,
+"start": 1843.9,
+"end": 1843.9,
+"t": 1843.9,
+"state": "LIKELY_VISIBLE",
+"boxH": 122,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 43,
+"start": 1864.9,
+"end": 1864.9,
+"t": 1864.9,
+"state": "LIKELY_VISIBLE",
+"boxH": 187,
+"auditNumber": "29? (probably other)"
+},
+{
+"seg": 44,
+"start": 1978.4,
+"end": 1978.5,
+"t": 1978.5,
+"state": "LIKELY_VISIBLE",
+"boxH": 124,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 45,
+"start": 2036.9,
+"end": 2036.9,
+"t": 2036.9,
+"state": "LIKELY_VISIBLE",
+"boxH": 126,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 46,
+"start": 2040.3,
+"end": 2040.4,
+"t": 2040.3,
+"state": "LIKELY_VISIBLE",
+"boxH": 106,
+"auditNumber": "12"
+},
+{
+"seg": 47,
+"start": 2041.4,
+"end": 2041.4,
+"t": 2041.4,
+"state": "LIKELY_VISIBLE",
+"boxH": 99,
+"auditNumber": "12"
+},
+{
+"seg": 48,
+"start": 2401.3,
+"end": 2401.4,
+"t": 2401.3,
+"state": "LIKELY_VISIBLE",
+"boxH": 136,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 49,
+"start": 2492.4,
+"end": 2492.5,
+"t": 2492.5,
+"state": "LIKELY_VISIBLE",
+"boxH": 121,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 50,
+"start": 2494.2,
+"end": 2494.3,
+"t": 2494.3,
+"state": "LIKELY_VISIBLE",
+"boxH": 117,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 51,
+"start": 2495.5,
+"end": 2495.5,
+"t": 2495.5,
+"state": "LIKELY_VISIBLE",
+"boxH": 97,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 52,
+"start": 2499.1,
+"end": 2499.1,
+"t": 2499.1,
+"state": "LIKELY_VISIBLE",
+"boxH": 132,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 53,
+"start": 2523.6,
+"end": 2523.6,
+"t": 2523.6,
+"state": "LIKELY_VISIBLE",
+"boxH": 185,
+"auditNumber": "17"
+},
+{
+"seg": 54,
+"start": 2576.1,
+"end": 2576.1,
+"t": 2576.1,
+"state": "LIKELY_VISIBLE",
+"boxH": 131,
+"auditNumber": "illegible / not checked at number level"
+},
+{
+"seg": 55,
+"start": 2714.2,
+"end": 2714.2,
+"t": 2714.2,
+"state": "LIKELY_VISIBLE",
+"boxH": 105,
+"auditNumber": "illegible / not checked at number level"
+}
+]
+}

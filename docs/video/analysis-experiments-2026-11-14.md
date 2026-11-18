@@ -498,6 +498,57 @@ manufactures "20" reads on 40 % of other players' pieces, so it would directly c
 | Schema / report proposal | Document only | Needs review |
 | E9 synthetic-digit fine-tune of PARSeq | Not run: CPU-only training is impractical on 2 cores, and disk is low | Open; better run on the GPU-3 VM if a session is granted |
 
+## 23. First held-out match: IMG_4529 (2026-11-18)
+
+Briefs c490c61b / 7b64a65e. Details in `docs/video/footage-library/`.
+
+**Footage.**
+- IMG_4529: camera date 2024-03-27 (+01:00, high confidence). The file date says 2026-11-01, which is an iCloud
+  sync date.
+- 1080p30 H.264 SDR, 47.0 min, night, low sideline with spectators in front.
+- Proxy: 945 MB product-equivalent 10 fps, 28,217 frames. Joining was verified by decoded-frame MD5s; video stream
+  SHA-256 `88e4fe5c…e13a`.
+- Group `m-2024-03-27-night` is frozen as **held-out** by the hash rule before any prediction existed.
+
+**Identity.**
+- Team (orange) is visually verified.
+- A #20 is legible on the orange team at several close moments (e.g. 972.8 s, 1,147.3 s, 1,308.3 s), so the date
+  hypothesis "#20" is consistent.
+- That this #20 is the owner's player is **not owner-confirmed**.
+- Random far frames are unreadable even at source resolution (the source is 1080p), so no frame-level target labels
+  exist for this match.
+
+**Runs.**
+- Automatic, no anchors, identical proxy bytes, fresh OCR caches.
+- The candidate reused the release run's stage-1 detections (hard links) and discovery: T/D/C act only in resolve.
+- The workspace restarted twice. The checkpoint folders resumed both runs.
+
+| Run | Claimed | CONFIRMED | Wall time (2 CPU) | Peak RSS |
+|---|---|---|---|---|
+| Release 32ab43f | **0 s** (all AMBIGUOUS/UNKNOWN: 0/6 discovery sightings attached, 0 seeds) | 0 s | 11,002 s (0.26× real time) | 2,312 MiB |
+| T+D+C 0bae8d7 | 133.2 s in 56 segments (12 seeds) | 65.0 s in 15 runs | resolve 337 s | 2,149 MiB |
+
+**Claim audit** (`claim-audit-IMG_4529-tdc.json`).
+- Agent-authored and prediction-exposed: one frame per segment, number read by eye.
+- **CONFIRMED runs:** 5 of 15 show a legible "20", 10 are illegible, **0 show another number**.
+- **LIKELY:**
+  - 3 single-sample segments (0.4 s in total) show a legibly different number: #12 at 2,040.3–2,041.4 s and #17
+    at 2,523.6 s.
+  - 1 segment is probably #29 (1,864.9 s).
+  - These are wrong-player LIKELY claims, short flickers that the 1-s strip majority would mostly hide. They still
+    count as wrong attribution.
+
+**Unknowns.**
+- Recall and acquisition delay are unknown without target labels.
+- Owner confirmation of the #20 identity is pending.
+
+**Reading.**
+- Release: safe by abstaining completely on this footage. It produces no usable output.
+- The candidate gains confirmed coverage with no visible CONFIRMED wrong-player claim, but it makes brief LIKELY
+  wrong-player claims. This is the same pattern the D change was meant to remove on IMG_4809, which it does not
+  fully remove here.
+- One held-out match is not generalization evidence.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
