@@ -586,6 +586,93 @@ see packet §3.
 - Server every-frame sequence check: ready for a merge-only proposal after the suites are re-run.
 - **Pilot: NOT READY.**
 
+## 25. Confounders removed, GPU and coaching reconciled, suites re-run (2026-11-18/19)
+
+### Controlled matrix
+
+All cells use one frozen tree `f699669` (`/home/claude/work/frz-i`), automatic mode with no anchors, the same proxy
+bytes, stage 1 hard-linked, discovery reused and **fresh empty caches**. Recipe: `/home/claude/work/matrix/run_one.sh`.
+Reports are in `bench/results/5.3/compare-20261118/`.
+
+IMG_4809 (development, 2,647 scored frames, 503 target):
+
+| Cell | Correct | Wrong-player | Claims on "?" boxes | CONFIRMED / LIKELY samples (whole recording) |
+|---|---|---|---|---|
+| all flags off | 266 | 11 | 3 | 42 / 411 |
+| T | 266 | 11 | 3 | 42 / 409 |
+| D | 266 | **0** (11 wrong → abstain) | 3 | 42 / 356 |
+| C | 308 (+44, −2) | **0** | **231** (+228) | 307 / **1,089** |
+| D+I | 266 | 0 | 3 | identical to D (0 samples differ) |
+| T+D+C (E6, 0bae8d7) | 307 | 0 | 3 | 307 / 318 |
+| T+D+C+I (E6+I) | 307 | 0 | 3 | 307 / 315 |
+
+**Confounder result.**
+- *All flags off* on the candidate tree equals the historical release run (32ab43f) **exactly**: every state, every
+  evidence label and every box over all samples of IMG_4809 (20,350), IMG_4529 and IMG_5105.
+- So, in automatic mode, the extra tree differences (tap fixes, stage-1 refactor, OCR reporting) change nothing.
+  Release-vs-candidate automatic comparisons are therefore valid as flag effects.
+- Owner-assisted mode is **still** confounded by the tap fixes. No predeclared-anchor run exists.
+
+**Stage-1 "speed-only" change (e092fc3).** The release and candidate trees extracted IMG_4809 600–630 s (300
+frames) and were compared:
+- These arrays are identical element for element: `dets`, `sigs`, `embs`, `emb_idx`, `balls`, `ball_warm`,
+  `warps`, `cuts`, `times`, `grass`, `propagated`.
+- All 539 crop files are byte-identical. Only the timings in `meta.json` differ.
+- Limitation: that segment has no scene cut, so the cut path is equivalent by code inspection only. The same pixels
+  feed both tests.
+
+**Interactions.**
+- T has no effect on labelled automatic frames. Its target, the tap transfer at 1,151 s, is owner-assisted.
+- D removes all 11 wrong frames by itself.
+- C adds 42 net correct frames but also 678 more LIKELY samples, 228 of them on annotator-unsure boxes. With D they
+  shrink to 3.
+- The pattern that I caps (bordered interpolated fills) appears with C: 2 samples with C alone and 3 with T+D+C,
+  none with D alone. So **I is only active together with C**.
+- No labelled coverage was lost in any I cell.
+
+### GPU-3
+
+The original approval (`gpu-session-request-gpu3-2026-11-15.md`) said **max 2** billable sessions.
+- Amendment GPU-3a ("Approve GPU-3a", owner in chat on 2026-11-16) raised that to 3.
+- The owner's 2026-11-18 instruction is not to infer a third session, so the effective position is: **GPU-3 is
+  exhausted and expired**.
+- Usage: 2 VMs (s1 failed, USD 0.24; s1b complete, est. USD 1.95), 110 attempts, about USD 2.19 of USD 16.
+- The deadline (2026-11-18 21:49 UTC) has passed. The STOP flag is set and no scheduled resumptions exist.
+- At last check: 0 instances, 0 disks and no `runs/` objects.
+- Candidate I was never in GPU-3 scope. A GPU run of it needs a new written approval.
+
+### Coaching thresholds
+
+These are separate, legitimate contracts, not a defect:
+- **Off-ball positioning** (match-level, worker `offball.MIN_CONFIRMED_SEC = 60`, since 02f768d on 2026-10-27):
+  - counts CONFIRMED_VISIBLE samples anywhere in the match, with no continuity or diversity requirement;
+  - also needs ≥ 30 s with an opponent measurable;
+  - LIKELY never counts;
+  - owner anchors count because they make samples CONFIRMED.
+- **Involvement improvement** (app `coach.ts` `MIN_CONFIRMED_FOR_COACHING_SEC = 120`, since 7a17b9c): applies only
+  to the "seen a lot, rarely on the ball" insight.
+- **Clip observation**: ≥ 6 s of continuous every-frame CONFIRMED (worker `MIN_SEQUENCE_SEC`, server 9ba85c3).
+
+The decision packet had wrongly called 120 s "the" gate. On IMG_4529 T+D+C(+I), off-ball is *measured*
+(65.0 s confirmed, 61.2 s measured), so a match-level positioning observation would be shown. It rests on
+10 of 15 confirmed runs having no legible number, so it needs human coaching review. Gates unchanged;
+`tests/test_offball_gate.py` pins 60 s.
+
+### Suites
+
+Isolated Linux checkout on the owner PC VM, source `f5878036` (`git archive`, tar SHA-256 `9319d7e2…`):
+
+| Suite | Result |
+|---|---|
+| unit | 826 / 826 |
+| tsc (app, tests, functions) | exit 0 |
+| rules / emulators | 259 / 263 |
+
+The 4 rules failures are storage v0 raw-upload allow cases. They are a harness/emulator incompatibility: the same
+token and rules give 200 via v1. Neither the rules nor the test have changed since 2026-10-26.
+
+Worker suite: 725 passed, 11 skipped, 6 xfailed, plus the new tests (13 for I and the off-ball gate).
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an

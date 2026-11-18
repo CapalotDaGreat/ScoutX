@@ -1,0 +1,147 @@
+{
+ "base": "/home/claude/work/matrix/m4809_off/work/report/timeline.npz",
+ "cand": "/home/claude/work/matrix/m4809_D/work/report/timeline.npz",
+ "frames": 2647,
+ "baseCounts": {
+  "abstain": 2364,
+  "correct": 266,
+  "nolabel": 2,
+  "offtarget": 1,
+  "unsure": 3,
+  "wrong": 11
+ },
+ "candCounts": {
+  "abstain": 2375,
+  "correct": 266,
+  "nolabel": 2,
+  "offtarget": 1,
+  "unsure": 3
+ },
+ "transitions": {
+  "wrong->abstain": 11
+ },
+ "newConfirmedWrong": [],
+ "changed": [
+  {
+   "t": 1301.6,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1301.7,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1301.8,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1301.9,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1302.0,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1302.1,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1302.2,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1302.5,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1304.3,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1304.4,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  },
+  {
+   "t": 1305.7,
+   "base": [
+    "wrong",
+    "LIKELY_VISIBLE"
+   ],
+   "cand": [
+    "abstain",
+    "AMBIGUOUS"
+   ]
+  }
+ ]
+}
