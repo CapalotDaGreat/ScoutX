@@ -51,6 +51,37 @@ COMPETITOR = 0.35
 # 12 unmatched; every correct claim came from number / anchored / interpolated evidence. With the flag such frames
 # are AMBIGUOUS. Thresholds are unchanged; identity resolution itself is unchanged (states only).
 APPEARANCE_ONLY_LIKELY = os.environ.get("SCOUTX_APPEARANCE_ONLY_LIKELY", "1") != "0"
+# 5.3 CANDIDATE I (off by default; SCOUTX_INTERP_NO_UPGRADE=1 enables it): a gap filled by interpolation between two
+# chain tracklets (stats.timeline, evidence "interpolated") may not be claimed more strongly than the samples that
+# bound it. Before: the fill took conf = min(conf before, tracklet confidence) and went through the generic
+# conf >= LIKELY test, so a 1-2 sample gap between two AMBIGUOUS (appearance-only under D, contact_unclear or
+# conflict) samples became an isolated LIKELY claim. Found 2026-11-18 on held-out IMG_4529 under T+D+C (#12 at
+# 2,040.3-2,041.4 s, #17 at 2,523.6 s: all four wrong-player LIKELY samples were interpolated fills bordered by
+# AMBIGUOUS); the same pattern exists on development IMG_4809 E6 (51.8 / 1,299.6 / 1,831.4 s, unlabelled frames).
+INTERP_NO_UPGRADE = os.environ.get("SCOUTX_INTERP_NO_UPGRADE", "0") == "1"
+_CLAIMS = (CONFIRMED_VISIBLE, LIKELY_VISIBLE)
+
+
+def cap_interpolated(states: np.ndarray, ev: np.ndarray, present: np.ndarray) -> np.ndarray:
+    """Interpolated runs stay claimed only when both bounding samples are claims (or the run touches an end of the
+    recording and its one bounding sample is a claim). Never upgrades anything; only claim -> AMBIGUOUS."""
+    out = states.copy()
+    n = len(states)
+    i = 0
+    while i < n:
+        if present[i] and ev[i] == "interpolated" and states[i] in _CLAIMS:
+            j = i
+            while j + 1 < n and present[j + 1] and ev[j + 1] == "interpolated":
+                j += 1
+            before = states[i - 1] if i > 0 else None
+            after = states[j + 1] if j + 1 < n else None
+            bounds = [b for b in (before, after) if b is not None]
+            if not bounds or any(b not in _CLAIMS for b in bounds):
+                out[i:j + 1] = np.where(np.isin(states[i:j + 1], _CLAIMS), AMBIGUOUS, states[i:j + 1])
+            i = j + 1
+        else:
+            i += 1
+    return out
 
 
 def frame_states(T, res, tl, period_kind: np.ndarray, camera: np.ndarray | None = None,
@@ -89,6 +120,8 @@ def frame_states(T, res, tl, period_kind: np.ndarray, camera: np.ndarray | None 
     # A read on the followed box that cannot be the target: never claimed, at best ambiguous.
     states[contrary] = AMBIGUOUS
     states[~present & (comp >= competitor)] = AMBIGUOUS
+    if INTERP_NO_UPGRADE:
+        states = cap_interpolated(states, ev, present)
     if camera is not None:
         # A frame where the camera shows no football can't hold a visible target claim.
         states[(camera == "NON_FOOTBALL") & ~hard] = UNKNOWN
