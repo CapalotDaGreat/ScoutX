@@ -1,0 +1,162 @@
+{
+ "IMG_4529/r_release": {
+  "states": {
+   "AMBIGUOUS": 23422,
+   "UNKNOWN": 4795
+  },
+  "confirmedSec": 0.0,
+  "likelySec": 0.0,
+  "wallSec": 11002.03,
+  "resolveSec": 790.25,
+  "peakRssMiB": 2311.6,
+  "scoutxEnv": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_DISCOVERY_DET": "416",
+   "SCOUTX_KEYFRAME_EVERY": "1",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_OCR_ENHANCE": "0",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+  }
+ },
+ "IMG_4529/r_tdc": {
+  "states": {
+   "AMBIGUOUS": 21263,
+   "UNKNOWN": 5622,
+   "LIKELY_VISIBLE": 682,
+   "CONFIRMED_VISIBLE": 650
+  },
+  "confirmedSec": 65.0,
+  "likelySec": 68.2,
+  "wallSec": 446.862,
+  "resolveSec": 337.345,
+  "peakRssMiB": 2149.2,
+  "scoutxEnv": {
+   "SCOUTX_APPEARANCE_ONLY_LIKELY": "0",
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_DISCOVERY_DET": "416",
+   "SCOUTX_KEYFRAME_EVERY": "1",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_OCR_ENHANCE": "0",
+   "SCOUTX_OCR_VARIANT": "combined",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_TELEPORT_SPLIT": "1",
+   "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+  }
+ },
+ "IMG_4529/r_tdci": {
+  "states": {
+   "AMBIGUOUS": 21298,
+   "UNKNOWN": 5622,
+   "LIKELY_VISIBLE": 647,
+   "CONFIRMED_VISIBLE": 650
+  },
+  "confirmedSec": 65.0,
+  "likelySec": 64.7,
+  "wallSec": 2414.569,
+  "resolveSec": 2297.426,
+  "peakRssMiB": 2026.9,
+  "scoutxEnv": {
+   "SCOUTX_APPEARANCE_ONLY_LIKELY": "0",
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_DISCOVERY_DET": "416",
+   "SCOUTX_INTERP_NO_UPGRADE": "1",
+   "SCOUTX_KEYFRAME_EVERY": "1",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_OCR_ENHANCE": "0",
+   "SCOUTX_OCR_VARIANT": "combined",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_TELEPORT_SPLIT": "1",
+   "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+  }
+ },
+ "IMG_5105/r_release": {
+  "states": {
+   "AMBIGUOUS": 24588,
+   "UNKNOWN": 2988,
+   "LIKELY_VISIBLE": 64
+  },
+  "confirmedSec": 0.0,
+  "likelySec": 6.4,
+  "wallSec": 13721.046,
+  "resolveSec": 1751.142,
+  "peakRssMiB": 2360.7,
+  "scoutxEnv": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_DISCOVERY_DET": "416",
+   "SCOUTX_KEYFRAME_EVERY": "1",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_OCR_ENHANCE": "0",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+  }
+ },
+ "IMG_5105/r_tdc": {
+  "states": {
+   "AMBIGUOUS": 22583,
+   "UNKNOWN": 4989,
+   "LIKELY_VISIBLE": 9,
+   "CONFIRMED_VISIBLE": 59
+  },
+  "confirmedSec": 5.9,
+  "likelySec": 0.9,
+  "wallSec": 4170.07,
+  "resolveSec": 4069.051,
+  "peakRssMiB": 2174.1,
+  "scoutxEnv": {
+   "SCOUTX_APPEARANCE_ONLY_LIKELY": "0",
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_DISCOVERY_DET": "416",
+   "SCOUTX_KEYFRAME_EVERY": "1",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_OCR_ENHANCE": "0",
+   "SCOUTX_OCR_VARIANT": "combined",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_TELEPORT_SPLIT": "1",
+   "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+  }
+ },
+ "IMG_5105/r_tdci": {
+  "states": {
+   "AMBIGUOUS": 22592,
+   "UNKNOWN": 4989,
+   "CONFIRMED_VISIBLE": 59
+  },
+  "confirmedSec": 5.9,
+  "likelySec": 0.0,
+  "wallSec": 3742.665,
+  "resolveSec": 3651.485,
+  "peakRssMiB": 2176.9,
+  "scoutxEnv": {
+   "SCOUTX_APPEARANCE_ONLY_LIKELY": "0",
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_DISCOVERY_DET": "416",
+   "SCOUTX_INTERP_NO_UPGRADE": "1",
+   "SCOUTX_KEYFRAME_EVERY": "1",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_OCR_ENHANCE": "0",
+   "SCOUTX_OCR_VARIANT": "combined",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_TELEPORT_SPLIT": "1",
+   "SCOUTX_WEIGHTS_DIR": "/home/claude/work/det"
+  }
+ }
+}

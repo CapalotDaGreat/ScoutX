@@ -51,7 +51,7 @@ Other listed failure classes:
 | Comparison | Status | Notes |
 |---|---|---|
 | Release vs T+D+C (all matches) | **Partly confounded** | The candidate tree also contains the tap fixes and the stage-1 refactor. In automatic runs taps are inert and e092fc3 is bit-identical, so the difference is very likely T/D/C, but a flags-off 0bae8d7 control on the new matches was **not run** |
-| T+D+C vs T+D+C+I (IMG_4809, IMG_4529; IMG_5105 pending) | **Valid, isolated** | Same tree except I; identical OCR caches, boxes and evidence |
+| T+D+C vs T+D+C+I (IMG_4809, IMG_4529, IMG_5105) | **Valid, isolated** | Same tree except I; identical OCR caches, boxes and evidence |
 | Stage-1 reuse (hard links) and discovery reuse | Valid, documented | No T/D/C/I change touches stage 1. e092fc3 is bit-identical by its own test |
 | IMG_4529 T+D+C | Valid, *resumed* | Workspace restart; resumed from its **own** partial cache; equivalent to cold (identical caches) |
 | Release + 4 taps / T+D+C + 4 taps (IMG_4809) | Owner-assisted, **not a predeclared protocol** | Taps were placed in labelled intervals, so they are not evidence of automatic or generalised performance |
@@ -89,7 +89,7 @@ Under T+D+C+I, all 2,647 scored frames are identical to T+D+C. I changed only 3 
 |---|---|---|---|
 | Release | 0 s | 6.4 s in 19 segments (0 seeds: appearance-only) | All numbers unreadable; at least 2 visibly different players, so some are wrong; **unverified** |
 | T+D+C | 5.9 s (2,178.5–2,184.6 s) | 0.9 s, all interpolated fills bordered by AMBIGUOUS | CONFIRMED run shows "20" (probable, blurred); LIKELY unreadable |
-| T+D+C+I | see §24 of the ledger | | |
+| T+D+C+I | 5.9 s (unchanged) | **0 s**: all 9 interpolated LIKELY samples removed (rule fixed before this output was viewed) | Boxes, evidence and OCR cache identical to T+D+C |
 
 **Not measurable here:**
 - Recall, acquisition delay, switches and fragmentation on the new matches, because there are no target labels.

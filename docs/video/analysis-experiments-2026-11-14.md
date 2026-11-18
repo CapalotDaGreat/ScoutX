@@ -549,6 +549,43 @@ Briefs c490c61b / 7b64a65e. Details in `docs/video/footage-library/`.
   fully remove here.
 - One held-out match is not generalization evidence.
 
+## 24. Second held-out match, candidate I and audit (2026-11-18)
+
+Full packet: `pre-pilot-decision-2026-11-18.md`. Numbers: `footage-library/results-heldout-2026-11-18.json`.
+
+**IMG_5105** (camera date 2024-08-31, day, low sideline behind a railing, 46.1 min; proxy 1.34 GB, 27,640 frames,
+video stream SHA-256 `5c02d0bb…27e3`).
+- Pre-prediction sampling (46 frames, every 60 s) found no legible #20. #5, #7, #10 and others were readable.
+- Release: 0 seeds. 6.4 s appearance-only LIKELY in 19 segments, all numbers unreadable, at least 2 visibly
+  different players.
+- T+D+C: 1 seed.
+  - 5.9 s CONFIRMED at 2,178.5–2,184.6 s; the zoom shows a probable "20".
+  - 0.9 s LIKELY, all of it interpolated fills bordered by AMBIGUOUS.
+
+**Candidate I** (`f699669`, `SCOUTX_INTERP_NO_UPGRADE=1`).
+- Defect (found on held-out IMG_4529, so that match is now design-exposed): with D, interpolated 1–2-sample gap
+  fills between AMBIGUOUS samples kept LIKELY. All four legibly wrong LIKELY samples (#12, #17) and the probable
+  #29 were such fills.
+- Repair: a claimed interpolated run needs claims on both sides. 7 unit tests, including legitimate counterexamples.
+
+| Match | T+D+C → T+D+C+I | Labelled / audited effect |
+|---|---|---|
+| IMG_4809 (dev) | 3 samples LIKELY → AMBIGUOUS | All 2,647 scored frames identical (307 correct, 0 wrong) |
+| IMG_4529 | 35 samples (3.5 s) LIKELY → AMBIGUOUS | All 5 legibly or probably wrong samples removed; 0 legible-#20 samples removed |
+| IMG_5105 | 9 samples (0.9 s) LIKELY → AMBIGUOUS; LIKELY 0 s | Removed samples unreadable. The rule was committed before this output was viewed |
+
+**Determinism.** In all three pairs, boxes and evidence are identical and the combined OCR caches are byte-identical
+across independent cold/resumed runs (`b7f7ac50…`, `7f7532e1…`, `403eca73…`).
+
+**Confound noted.** Release-vs-candidate comparisons also include the 0bae8d7 tap fixes and the stage-1 refactor;
+see packet §3.
+
+**Verdicts.**
+- T, C, I: supported for further validation.
+- D: needs revision; evaluate only as D+I.
+- Server every-frame sequence check: ready for a merge-only proposal after the suites are re-run.
+- **Pilot: NOT READY.**
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
