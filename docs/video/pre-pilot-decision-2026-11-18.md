@@ -108,10 +108,18 @@ Under T+D+C+I, all 2,647 scored frames are identical to T+D+C. I changed only 3 
 What was checked from source and reports:
 - The server keeps only CONFIRMED/LIKELY events and moments (`trackingV3.ts:340,423`).
 - LIKELY moments are shown as *questions to the owner* (`moments.ts:62 askIdentity`).
-- Coaching uses CONFIRMED only, with gates of ≥120 s confirmed and ≥60 s for positioning (`coach.ts`).
-- IMG_4529 T+D+C produced 12 spell moments (6 LIKELY, 6 CONFIRMED) and 0 events. The wrong-player flickers never
-  became moments. With 65 s confirmed the match coaching gate is **not met**, so the correct product outcome is
-  "insufficient evidence".
+- **Corrected 2026-11-18 (see ledger §25):** there is no single 120-s coaching gate. Separate contracts:
+  - Match-level off-ball positioning: worker `offball.MIN_CONFIRMED_SEC = 60` s of CONFIRMED anywhere in the match,
+    plus ≥ 30 s with an opponent measurable.
+  - The "seen a lot, rarely on the ball" improvement: app `coach.ts` `MIN_CONFIRMED_FOR_COACHING_SEC = 120`.
+  - Clip observations: ≥ 6 s continuous CONFIRMED on every frame.
+- IMG_4529 T+D+C(+I): 12 spell moments (6 LIKELY, 6 CONFIRMED) and 0 events; the wrong-player flickers never became
+  moments.
+- With 65.0 s confirmed, off-ball is **measured** (61.2 s measured), so the app *would* show a match-level
+  positioning observation plus up to 2 clip observations. The earlier sentence "match coaching gate not met" was
+  wrong.
+- 10 of the 15 confirmed runs that feed it have no legible number. They are unverified, not demonstrated correct.
+  This is a human coaching-review item.
 
 Gaps:
 - App and backend tests last passed 826/826 at 9ba85c3 on 2026-11-17. There have been no app or backend changes
