@@ -15,7 +15,8 @@
    ],
    "partition": "held-out",
    "exposedBeforeFreeze": null,
-   "frozenAt": "2026-11-17T20:42:40Z"
+   "frozenAt": "2026-11-17T20:42:40Z",
+   "exposedAfterFreeze": "2026-11-18 agent inspected release and T+D+C predictions (claim audit); wrong-player LIKELY flickers here led to candidate I (design exposure). No longer untouched."
   },
   "m-2024-08-31-day": {
    "members": [
@@ -23,7 +24,8 @@
    ],
    "partition": "held-out",
    "exposedBeforeFreeze": null,
-   "frozenAt": "2026-11-17T20:42:40Z"
+   "frozenAt": "2026-11-17T20:42:40Z",
+   "exposedAfterFreeze": "2026-11-18 agent inspected release and T+D+C predictions (claim audit) AFTER candidate I was committed; not used to design any change. Previously-inspected evaluation, not untouched."
   }
  },
  "events": [
@@ -41,6 +43,18 @@
    "at": "2026-11-17T20:42:40Z",
    "event": "freeze",
    "group": "m-2024-08-31-day"
+  },
+  {
+   "at": "2026-11-18T17:09:23Z",
+   "event": "exposed",
+   "group": "m-2024-03-27-night",
+   "reason": "2026-11-18 agent inspected release and T+D+C predictions (claim audit); wrong-player LIKELY flickers here led to candidate I (design exposure). No longer untouched."
+  },
+  {
+   "at": "2026-11-18T17:09:23Z",
+   "event": "exposed",
+   "group": "m-2024-08-31-day",
+   "reason": "2026-11-18 agent inspected release and T+D+C predictions (claim audit) AFTER candidate I was committed; not used to design any change. Previously-inspected evaluation, not untouched."
   }
  ]
 }
