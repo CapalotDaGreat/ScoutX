@@ -47,3 +47,20 @@ def test_recording_edges():
 
 def test_flag_is_off_by_default():
     assert S.INTERP_NO_UPGRADE is False
+
+
+def test_absent_neighbour_does_not_support_a_fill():
+    # neighbour frame not present (target not followed there): UNKNOWN, so the fill is capped
+    assert run([U, L, C], ["", "interpolated", "number"], present=[False, True, True]) == [U, A, C]
+
+
+def test_no_chained_support_between_two_runs():
+    # two separate fills share an AMBIGUOUS sample between them: neither can support the other
+    st = [C, L, A, L, C]
+    ev = ["number", "interpolated", "appearance", "interpolated", "number"]
+    assert run(st, ev) == [C, A, A, A, C]
+
+
+def test_owner_anchored_neighbours_keep_the_fill():
+    # owner-assisted: anchor / anchored samples are claims, so a gap between them stays claimed
+    assert run([C, L, L], ["anchor", "interpolated", "anchored"]) == [C, L, L]
