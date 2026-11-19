@@ -673,6 +673,127 @@ token and rules give 200 via v1. Neither the rules nor the test have changed sin
 
 Worker suite: 725 passed, 11 skipped, 6 xfailed, plus the new tests (13 for I and the off-ball gate).
 
+## 26. Audit of section 25: corrections, equivalence scope, tap replays, storage tests (2026-11-19)
+
+**Naming.** In section 25, "C" meant `SCOUTX_OCR_VARIANT=combined`. In the early-November release documents "C" meant
+`SCOUTX_OCR_CONSULTED_ONLY=1`, which is default-on and was on in every run here. Authoritative mapping:
+`docs/video/flag-and-candidate-names.md`. From here on, full flag names are used.
+
+### Matrix re-audited from artifacts (`bench/matrix_audit.py`, `compare-20261118/matrix_audit.json`)
+
+Every cell:
+- tree `f699669`, rc=0, effective flags exactly as named;
+- runtime env identical; stage 1 hard-linked (shared inodes);
+- fresh caches, with only that cell's own cache files.
+
+The `no-appearance-only-likely` + `interp-no-upgrade` cell resumed once after a workspace restart, from its own cache.
+
+IMG_4809 corrected basis, 2,647 scored frames, of which **503 have a target box**:
+
+| Cell | Target frames: correct / abstain / other player / off-target | Non-target frames: wrong / unsure "?" / no label / abstain |
+|---|---|---|---|
+| all off | 266 / 235 / **1** / 1 | **10** / 3 / 2 / 2,129 |
+| `teleport-split` | 266 / 235 / 1 / 1 | 10 / 3 / 2 / 2,129 |
+| `no-appearance-only-likely` | 266 / 236 / 0 / 1 | 0 / 3 / 2 / 2,139 |
+| `combined-number-reader` | 308 / 194 / 0 / 1 | 0 / **231** / 7 / 1,906 |
+| `no-appearance-only-likely` + `interp-no-upgrade` | identical to `no-appearance-only-likely` | |
+
+**Correction.** The "11 wrong-player" frames of section 25 are 1 frame claimed on another player while the target
+was visible, plus 10 claims on non-target frames.
+
+**The combined reader's extra claims are unverified, not shown correct.**
+- All 231 claims on annotator-unsure boxes are LIKELY. None is CONFIRMED.
+- They fall in 16 runs: 408.5–418.5, 600.0–604.4, 621.0–621.9, 1,168.2–1,168.4, 1,295.1–1,299.5, 1,529.0–1,529.3,
+  1,819.0–1,830.0 s.
+- In a 14-frame sample (private), all were front-facing or unreadable players. Faces and builds vary between runs,
+  so several different players are probably involved.
+- Of the +678 LIKELY samples over the whole recording, the remainder fall outside the labelled intervals.
+
+**Interactions established only on IMG_4809 automatic.** These are not general:
+- `teleport-split` changed no labelled automatic frame.
+- `interp-no-upgrade` had nothing to act on without the combined reader.
+
+### Detection ("speed-only" e092fc3) equivalence, extended
+
+| Segment | Frames | Scene cuts | Frames with no detection | Arrays (dets, sigs, embs, emb_idx, balls, ball_warm, warps, cuts, times, grass, propagated) | Crops |
+|---|---|---|---|---|---|
+| IMG_4809 600–630 s, day | 300 | 0 | — | identical | 539 identical |
+| IMG_4809 1,440–1,475 s, day, cuts | 350 | 5 | 162 | identical | 134 identical |
+| IMG_4529 1,510–1,520 s, night, cut cluster | 100 | 11 | 61 | identical | 17 identical |
+| IMG_5105 568–588 s, day, many cuts | 200 | 12 | 141 | identical | 96 identical |
+
+- Tolerance used: **exact** equality (NaN-equal for floats). Only `seconds` and `stageSeconds` in `meta.json` differ.
+- Not exercised: variable or missing timestamps (all proxies are constant 10 fps), decode failure/recovery, and
+  checkpoint resume.
+- The diff touches only the 160×90 thumbnail used for the grass share and the scene-cut test. Chunking, checkpoint
+  and resume code are byte-identical between the trees (`bench/full_match_benchmark.py` differs only by OCR-device
+  reporting).
+- Scope: output-preserving on these 950 frames under these conditions, not proven globally.
+
+### Faithful tap/teleport replays (post-hoc **diagnostic**, not owner-assisted evaluation)
+
+Setup:
+- `bench/anchor_replay.py` on `f699669`, fresh caches.
+- 4 taps placed from developer labels in intervals 0, 3, 4 and 8 (237.6, 1,151.0, 1,299.7, 1,899.8 s), all "applied".
+
+| Flags | Correct (503 target frames, corrected basis) | CONFIRMED wrong | Script's own stored-basis score |
+|---|---|---|---|
+| all off | 251 | **17 (1,151.2–1,153.5 s)** | 0.9 s wrong, IDF1 0.585 |
+| `teleport-split` | 421 | **0** | 0.0 s wrong, IDF1 0.852 |
+| T + D + combined + interp | 406 | 0 | 0.0 s wrong, IDF1 0.836 |
+
+The known tap-transfer failure reproduces with flags off and `teleport-split` alone removes it. These taps are
+perfect, label-chosen answers, so this does not measure owner-assisted performance.
+
+### Storage rules tests fixed
+
+All 4 failures were in the *test helper*, not in the rules. A raw v0 upload never populates
+`request.resource.contentType` in the storage emulator (firebase-tools 13.35.1 and 14.27.0, storage rules runtime
+1.1.3, project `demo-scoutx`, bucket `demo-scoutx.appspot.com`).
+
+Probe with identical token and bytes:
+
+| Rule | raw v0 | multipart v0 | v1 media |
+|---|---|---|---|
+| open | 200 | — | 200 |
+| `request.auth != null` | 200 | — | 200 |
+| size | 200 | — | 200 |
+| uid | 200 | — | 200 |
+| `contentType.matches('image/.*')` | **403** | **200** (html: 403) | 200 |
+
+- The app uploads with `uploadBytes` / `uploadBytesResumable` and contentType metadata.
+- Fix `72aa6dd`: the helper sends SDK-style multipart metadata. Rules and assertions are unchanged; deny cases still
+  deny.
+- Full rules suite in the isolated checkout, 3 batches: **263 / 263** (121 + 79 + 63), exit 0. Command: `firebase
+  emulators:exec --only firestore,storage --project demo-scoutx "node --import ./tests/unit/support/register.mjs
+  --test --test-concurrency=1 <files>"`, with `JAVA_TOOL_OPTIONS` unset and ffmpeg-static linked to /usr/bin/ffmpeg.
+
+### GPU-3 closure (read-only checks, 2026-11-18 23:59 UTC)
+
+| Check | Result |
+|---|---|
+| Controller log | 108 stockouts and 2 `created` events (n 25 at 2026-11-16 04:46, n 110 at 2026-11-17 18:22), 110 attempts |
+| Cloud audit log | Consistent: last insert 18:22:21 UTC on 2026-11-17, europe-west6-b |
+| Resources | 0 instances, 0 disks, no `runs/` objects |
+| Controls | STOP flag present; no enabled scheduled tasks |
+| Spend | Estimate stays USD 2.19 (billing export not read) |
+
+**Exhausted and expired. Nothing to revive.**
+
+### Coaching semantics audit (wording in `src/i18n/locales/en/matchAnalysis.json`)
+
+- **Positioning observation.** The text is scoped: "On the {measuredMin} min where you are confirmed on video…".
+  It gives a caveat that the video cannot show passing lines, and attaches a drill.
+  - Gaps: no representativeness requirement (61.2 s from 15 stretches on IMG_4529, 10 unverified), and no
+    field-of-view check on team-mates.
+  - The drill is generic, but it reads as advice drawn from a possibly unrepresentative sample.
+- **Involvement improvement (120 s).** Requires a confirmed-identity ball contact, so a ball-tracking failure cannot
+  trigger it. It does not account for how much of the confirmed time the ball was visible.
+- **Clip observations (6 s).** Each says "This says nothing about the rest of your match". There is no tactical
+  judgement beyond the measured distance.
+- No gate was changed. Any representativeness threshold would be invented without human coaching review, so none
+  was added. Review need recorded in `docs/video/coaching-human-review-request-2026-11-19.md`.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an

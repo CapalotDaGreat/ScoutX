@@ -1,0 +1,285 @@
+[
+ {
+  "run": "/home/claude/work/matrix/m4809_off",
+  "rc": "rc=0",
+  "status": "complete",
+  "provenance": "tree=f699669d400eb92e5da43bcf9aced35ce06cd690 flags=[] video=/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4 stage1=/home/claude/work/exp1114/e6_all_fresh/work",
+  "experimentFlags": {},
+  "runtime": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_KEYFRAME_EVERY": "1"
+  },
+  "video": null,
+  "stage1Chunks": 7,
+  "stage1HardLinked": true,
+  "attempts": [],
+  "ocrCaches": [
+   "ocr_cache.json"
+  ],
+  "labelled": {
+   "scoredFrames": 2647,
+   "targetFrames": 503,
+   "onTargetFrames": {
+    "correct": 266,
+    "abstain": 235,
+    "offtarget": 1,
+    "wrong": 1
+   },
+   "onNonTargetFrames": {
+    "abstain": 2129,
+    "nolabel": 2,
+    "unsure": 3,
+    "wrong": 10
+   },
+   "byState": {
+    "correct:CONFIRMED_VISIBLE": 24,
+    "correct:LIKELY_VISIBLE": 242,
+    "nolabel:LIKELY_VISIBLE": 2,
+    "offtarget:LIKELY_VISIBLE": 1,
+    "unsure:LIKELY_VISIBLE": 3,
+    "wrong:LIKELY_VISIBLE": 11
+   }
+  }
+ },
+ {
+  "run": "/home/claude/work/matrix/m4809_T",
+  "rc": "rc=0",
+  "status": "complete",
+  "provenance": "tree=f699669d400eb92e5da43bcf9aced35ce06cd690 flags=[SCOUTX_TELEPORT_SPLIT=1] video=/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4 stage1=/home/claude/work/exp1114/e6_all_fresh/work",
+  "experimentFlags": {
+   "SCOUTX_TELEPORT_SPLIT": "1"
+  },
+  "runtime": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_KEYFRAME_EVERY": "1"
+  },
+  "video": null,
+  "stage1Chunks": 7,
+  "stage1HardLinked": true,
+  "attempts": [],
+  "ocrCaches": [
+   "ocr_cache.json"
+  ],
+  "labelled": {
+   "scoredFrames": 2647,
+   "targetFrames": 503,
+   "onTargetFrames": {
+    "correct": 266,
+    "abstain": 235,
+    "offtarget": 1,
+    "wrong": 1
+   },
+   "onNonTargetFrames": {
+    "abstain": 2129,
+    "nolabel": 2,
+    "unsure": 3,
+    "wrong": 10
+   },
+   "byState": {
+    "correct:CONFIRMED_VISIBLE": 24,
+    "correct:LIKELY_VISIBLE": 242,
+    "nolabel:LIKELY_VISIBLE": 2,
+    "offtarget:LIKELY_VISIBLE": 1,
+    "unsure:LIKELY_VISIBLE": 3,
+    "wrong:LIKELY_VISIBLE": 11
+   }
+  }
+ },
+ {
+  "run": "/home/claude/work/matrix/m4809_D",
+  "rc": "rc=0",
+  "status": "complete",
+  "provenance": "tree=f699669d400eb92e5da43bcf9aced35ce06cd690 flags=[SCOUTX_APPEARANCE_ONLY_LIKELY=0] video=/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4 stage1=/home/claude/work/exp1114/e6_all_fresh/work",
+  "experimentFlags": {
+   "SCOUTX_APPEARANCE_ONLY_LIKELY": "0"
+  },
+  "runtime": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_KEYFRAME_EVERY": "1"
+  },
+  "video": null,
+  "stage1Chunks": 7,
+  "stage1HardLinked": true,
+  "attempts": [],
+  "ocrCaches": [
+   "ocr_cache.json"
+  ],
+  "labelled": {
+   "scoredFrames": 2647,
+   "targetFrames": 503,
+   "onTargetFrames": {
+    "correct": 266,
+    "abstain": 236,
+    "offtarget": 1
+   },
+   "onNonTargetFrames": {
+    "abstain": 2139,
+    "nolabel": 2,
+    "unsure": 3
+   },
+   "byState": {
+    "correct:CONFIRMED_VISIBLE": 24,
+    "correct:LIKELY_VISIBLE": 242,
+    "nolabel:LIKELY_VISIBLE": 2,
+    "offtarget:LIKELY_VISIBLE": 1,
+    "unsure:LIKELY_VISIBLE": 3
+   }
+  }
+ },
+ {
+  "run": "/home/claude/work/matrix/m4809_C",
+  "rc": "rc=0",
+  "status": "complete",
+  "provenance": "tree=f699669d400eb92e5da43bcf9aced35ce06cd690 flags=[SCOUTX_OCR_VARIANT=combined] video=/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4 stage1=/home/claude/work/exp1114/e6_all_fresh/work",
+  "experimentFlags": {
+   "SCOUTX_OCR_VARIANT": "combined"
+  },
+  "runtime": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_KEYFRAME_EVERY": "1"
+  },
+  "video": null,
+  "stage1Chunks": 7,
+  "stage1HardLinked": true,
+  "attempts": [],
+  "ocrCaches": [
+   "ocr_cache.combined.json"
+  ],
+  "labelled": {
+   "scoredFrames": 2647,
+   "targetFrames": 503,
+   "onTargetFrames": {
+    "correct": 308,
+    "abstain": 194,
+    "offtarget": 1
+   },
+   "onNonTargetFrames": {
+    "abstain": 1906,
+    "nolabel": 7,
+    "unsure": 231
+   },
+   "byState": {
+    "correct:LIKELY_VISIBLE": 173,
+    "nolabel:LIKELY_VISIBLE": 7,
+    "correct:CONFIRMED_VISIBLE": 135,
+    "offtarget:LIKELY_VISIBLE": 1,
+    "unsure:LIKELY_VISIBLE": 231
+   }
+  }
+ },
+ {
+  "run": "/home/claude/work/matrix/m4809_DI",
+  "rc": "rc=0",
+  "status": "complete",
+  "provenance": "tree=f699669d400eb92e5da43bcf9aced35ce06cd690 flags=[SCOUTX_APPEARANCE_ONLY_LIKELY=0 SCOUTX_INTERP_NO_UPGRADE=1] video=/home/claude/work/ref/IMG_4809_proxy_10fps.exact.mp4 stage1=/home/claude/work/exp1114/e6_all_fresh/work",
+  "experimentFlags": {
+   "SCOUTX_APPEARANCE_ONLY_LIKELY": "0",
+   "SCOUTX_INTERP_NO_UPGRADE": "1"
+  },
+  "runtime": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_KEYFRAME_EVERY": "1"
+  },
+  "video": null,
+  "stage1Chunks": 7,
+  "stage1HardLinked": true,
+  "attempts": [
+   "run.attempt1.log"
+  ],
+  "ocrCaches": [
+   "ocr_cache.json"
+  ],
+  "labelled": {
+   "scoredFrames": 2647,
+   "targetFrames": 503,
+   "onTargetFrames": {
+    "correct": 266,
+    "abstain": 236,
+    "offtarget": 1
+   },
+   "onNonTargetFrames": {
+    "abstain": 2139,
+    "nolabel": 2,
+    "unsure": 3
+   },
+   "byState": {
+    "correct:CONFIRMED_VISIBLE": 24,
+    "correct:LIKELY_VISIBLE": 242,
+    "nolabel:LIKELY_VISIBLE": 2,
+    "offtarget:LIKELY_VISIBLE": 1,
+    "unsure:LIKELY_VISIBLE": 3
+   }
+  }
+ },
+ {
+  "run": "/home/claude/work/matrix/m4529_off",
+  "rc": "rc=0",
+  "status": "complete",
+  "provenance": "tree=f699669d400eb92e5da43bcf9aced35ce06cd690 flags=[] video=/home/claude/work/footage/IMG_4529/IMG_4529_proxy_10fps.mp4 stage1=/home/claude/work/footage/IMG_4529/r_release/work",
+  "experimentFlags": {},
+  "runtime": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_KEYFRAME_EVERY": "1"
+  },
+  "video": null,
+  "stage1Chunks": 10,
+  "stage1HardLinked": true,
+  "attempts": [],
+  "ocrCaches": [
+   "ocr_cache.json"
+  ]
+ },
+ {
+  "run": "/home/claude/work/matrix/m5105_off",
+  "rc": "rc=0",
+  "status": "complete",
+  "provenance": "tree=f699669d400eb92e5da43bcf9aced35ce06cd690 flags=[] video=/home/claude/work/footage/IMG_5105/IMG_5105_proxy_10fps.mp4 stage1=/home/claude/work/footage/IMG_5105/r_release/work",
+  "experimentFlags": {},
+  "runtime": {
+   "SCOUTX_BACKEND": "onnx",
+   "SCOUTX_BATCH": "1",
+   "SCOUTX_DECODER": "cv2",
+   "SCOUTX_DETECTOR": "yolox_s",
+   "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+   "SCOUTX_MODE": "balanced",
+   "SCOUTX_KEYFRAME_EVERY": "1"
+  },
+  "video": null,
+  "stage1Chunks": 10,
+  "stage1HardLinked": true,
+  "attempts": [],
+  "ocrCaches": [
+   "ocr_cache.json"
+  ]
+ }
+]

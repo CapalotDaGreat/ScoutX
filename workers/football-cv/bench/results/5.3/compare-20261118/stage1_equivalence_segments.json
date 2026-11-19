@@ -1,0 +1,44 @@
+{
+ "A": {
+  "frames": 350,
+  "cuts": 5,
+  "framesWithoutDetections": 162,
+  "arraysDiffer": [],
+  "crops": 134,
+  "cropsIdentical": true,
+  "metaDiffers": [
+   "seconds",
+   "stageSeconds"
+  ],
+  "timesMonotonic": true,
+  "medianStep": 0.09999999999990905
+ },
+ "B": {
+  "frames": 100,
+  "cuts": 11,
+  "framesWithoutDetections": 61,
+  "arraysDiffer": [],
+  "crops": 17,
+  "cropsIdentical": true,
+  "metaDiffers": [
+   "seconds",
+   "stageSeconds"
+  ],
+  "timesMonotonic": true,
+  "medianStep": 0.09999999999990905
+ },
+ "C": {
+  "frames": 200,
+  "cuts": 12,
+  "framesWithoutDetections": 141,
+  "arraysDiffer": [],
+  "crops": 96,
+  "cropsIdentical": true,
+  "metaDiffers": [
+   "seconds",
+   "stageSeconds"
+  ],
+  "timesMonotonic": true,
+  "medianStep": 0.10000000000002274
+ }
+}
