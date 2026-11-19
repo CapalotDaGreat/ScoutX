@@ -1,0 +1,3699 @@
+{
+ "project": "demo-pilot-reh",
+ "commit": "f9b7e2d2ef541cecd05d3944beacd15b836a8321",
+ "startedAt": "2026-11-19T19:23:43.181Z",
+ "steps": [
+  {
+   "at": "2026-11-19T19:23:43.259Z",
+   "name": "users",
+   "owner": "IHXg7LjZIbsTVsnNymIdb5MRbEKh",
+   "owner2": "5gh3NXZNlFTUAcUYmvL1kkXEADW9",
+   "owner3": "BqFueBPLDEMjIuSBMq83vPZQq0Lr",
+   "outsider": "7C7GpnBy1b38OWqLJ4Z1LVf2QPQ1",
+   "other": "XLyexzB0LxW2jDnYPMYaVuTNj4rx"
+  },
+  {
+   "at": "2026-11-19T19:23:43.260Z",
+   "name": "phase gate"
+  },
+  {
+   "at": "2026-11-19T19:24:01.274Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "g_missing"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:01.380Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "g_malformed"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:02.000Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh-other",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh-other\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:02.083Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "g_version"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:02.620Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:02.682Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "outsider",
+   "data": {
+    "jobId": "g_unlisted"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:02.742Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "other",
+   "data": {
+    "jobId": "g_missing"
+   },
+   "http": 403,
+   "result": null,
+   "error": {
+    "status": "PERMISSION_DENIED",
+    "message": "Only the owner can start this analysis.",
+    "details": null
+   }
+  },
+  {
+   "at": "2026-11-19T19:24:02.750Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "anonymous",
+   "data": {
+    "jobId": "g_missing"
+   },
+   "http": 401,
+   "result": null,
+   "error": {
+    "status": "UNAUTHENTICATED",
+    "message": "Sign in first.",
+    "details": null
+   }
+  },
+  {
+   "at": "2026-11-19T19:24:02.801Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "g_consent"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "consent_required"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:02.973Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "g_wrongmodel"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:08.351Z",
+   "name": "phase rollback"
+  },
+  {
+   "at": "2026-11-19T19:24:09.278Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:09.369Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "r_released"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:13.405Z",
+   "name": "callable getMediaPlaybackUrl",
+   "user": "owner",
+   "data": {
+    "storagePath": "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/pilotHeld/m_1_p1_r0.jpg"
+   },
+   "http": 403,
+   "result": null,
+   "error": {
+    "status": "PERMISSION_DENIED",
+    "message": "You cannot play this media.",
+    "details": null
+   }
+  },
+  {
+   "at": "2026-11-19T19:24:13.982Z",
+   "name": "ops held-images r_released",
+   "exit": 0,
+   "stdout": "{\"command\":\"held-images\",\"jobId\":\"r_released\",\"result\":[\"profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/pilotHeld/m_1_p1_r0.jpg\",\"profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/pilotHeld/q_123_1_r0.jpg\",\"profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/pilotHeld/reference.jpg\"]}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:14.641Z",
+   "name": "ops release r_released --reviewer rehearsal-reviewer",
+   "exit": 0,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"r_released\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:16.630Z",
+   "name": "callable answerTrackingQuestion",
+   "user": "owner",
+   "data": {
+    "jobId": "r_released",
+    "questionId": "q_123_1",
+    "answer": "yes",
+    "operationId": "op_rehearsal_0001"
+   },
+   "http": 200,
+   "result": {
+    "revision": 1,
+    "pending": null
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:17.786Z",
+   "name": "ops release r_released --reviewer rehearsal-reviewer",
+   "exit": 0,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"r_released\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:17.882Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "r_disc"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:23.053Z",
+   "name": "ops release r_disc --reviewer rehearsal-reviewer",
+   "exit": 0,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"r_disc\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:23.216Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "r_publish"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:23.280Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "r_running"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:23.333Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "r_queued"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:26.939Z",
+   "name": "enqueue resolveTrackingTask",
+   "payload": {
+    "jobId": "r_released",
+    "feedbackRevision": 1,
+    "scope": "full"
+   },
+   "opts": {
+    "scheduleDelaySeconds": 8
+   }
+  },
+  {
+   "at": "2026-11-19T19:24:27.369Z",
+   "name": "snapshot before_stop",
+   "state": {
+    "r_released": {
+     "progress": {
+      "generation": 1,
+      "outcome": null,
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": {
+       "scope": "full",
+       "at": "2026-11-19T19:24:16.725Z"
+      },
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:09.305Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": {
+      "hasReport": true,
+      "version": 2,
+      "stale": false,
+      "pendingReason": null,
+      "feedbackRevision": 1,
+      "producedBy": {
+       "workerVersion": "football-cv/0.7.0-reh",
+       "models": {
+        "detector": "yolox-reh",
+        "ocr": "parseq-reh"
+       }
+      },
+      "releasedBy": "rehearsal-reviewer"
+     },
+     "held": {
+      "hasReport": false,
+      "version": 1,
+      "withheldAt": null,
+      "heldAt": "2026-11-19T19:24:16.725Z",
+      "releasedAt": "2026-11-19T19:24:17.628Z",
+      "feedbackRevision": 1,
+      "producedBy": {
+       "workerVersion": "football-cv/0.7.0-reh",
+       "models": {
+        "detector": "yolox-reh",
+        "ocr": "parseq-reh"
+       }
+      }
+     },
+     "feedback": {
+      "revision": 1,
+      "entries": 1
+     },
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 200,
+     "ownerReadHeld": 403
+    },
+    "r_publish": {
+     "progress": {
+      "generation": 1,
+      "outcome": null,
+      "blocked": null,
+      "pilot": null,
+      "resolving": "full",
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.161Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_running": {
+     "progress": {
+      "generation": 1,
+      "outcome": null,
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.239Z",
+      "segments": {
+       "0": "running/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_queued": {
+     "progress": {
+      "generation": 1,
+      "outcome": null,
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.295Z",
+      "segments": {
+       "0": "queued/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T19:24:28.213Z",
+   "name": "ops stop",
+   "exit": 0,
+   "stdout": "{\"command\":\"stop\",\"jobId\":null,\"stopped\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:24:28.300Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner2",
+   "data": {
+    "jobId": "r_new_after_stop"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:24:32.647Z",
+   "name": "enqueue resolveTrackingTask",
+   "payload": {
+    "jobId": "r_publish",
+    "feedbackRevision": 0,
+    "scope": "full"
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T19:25:34.761Z",
+   "name": "snapshot after_stop",
+   "state": {
+    "r_released": {
+     "progress": {
+      "generation": 1,
+      "outcome": "interrupted",
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": {
+       "scope": "full",
+       "at": "2026-11-19T19:24:16.725Z"
+      },
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:09.305Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": {
+      "hasReport": true,
+      "version": 2,
+      "stale": false,
+      "pendingReason": null,
+      "feedbackRevision": 1,
+      "producedBy": {
+       "workerVersion": "football-cv/0.7.0-reh",
+       "models": {
+        "detector": "yolox-reh",
+        "ocr": "parseq-reh"
+       }
+      },
+      "releasedBy": "rehearsal-reviewer"
+     },
+     "held": {
+      "hasReport": false,
+      "version": 1,
+      "withheldAt": null,
+      "heldAt": "2026-11-19T19:24:16.725Z",
+      "releasedAt": "2026-11-19T19:24:17.628Z",
+      "feedbackRevision": 1,
+      "producedBy": {
+       "workerVersion": "football-cv/0.7.0-reh",
+       "models": {
+        "detector": "yolox-reh",
+        "ocr": "parseq-reh"
+       }
+      }
+     },
+     "feedback": {
+      "revision": 1,
+      "entries": 1
+     },
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 200,
+     "ownerReadHeld": 403
+    },
+    "r_publish": {
+     "progress": {
+      "generation": 1,
+      "outcome": "interrupted",
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.161Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_running": {
+     "progress": {
+      "generation": 1,
+      "outcome": "interrupted",
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.239Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_queued": {
+     "progress": {
+      "generation": 1,
+      "outcome": null,
+      "blocked": "worker_unavailable",
+      "pilot": "pilot_off",
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.295Z",
+      "segments": {
+       "0": "queued/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T19:25:34.771Z",
+   "name": "queue redelivery timing",
+   "firstAttemptAt": "2026-11-19T19:24:23.922Z",
+   "redeliveredAt": "2026-11-19T19:25:23.972Z",
+   "backoffSec": 60.05,
+   "configuredMinBackoffSec": 60
+  },
+  {
+   "at": "2026-11-19T19:25:34.801Z",
+   "name": "notifications after stop",
+   "list": [
+    {
+     "id": "tracking-started-g_wrongmodel-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_disc-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_publish-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_queued-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_released-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_running-g1",
+     "type": "analysis_started"
+    }
+   ]
+  },
+  {
+   "at": "2026-11-19T19:25:35.523Z",
+   "name": "ops withhold r_released --reason rehearsal-containment",
+   "exit": 0,
+   "stdout": "{\"command\":\"withhold\",\"jobId\":\"r_released\",\"result\":\"withheld\",\"ms\":369}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:35.598Z",
+   "name": "r2.issued urls around withholding",
+   "issued": [
+    {
+     "path": "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/m_1_p1_r1.jpg",
+     "http": 200,
+     "before": 200,
+     "after": 403,
+     "direct": 404,
+     "heldTwinWithToken": 403,
+     "heldTwinOwner": 403,
+     "hadToken": true
+    },
+    {
+     "path": "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/q_123_1_r1.jpg",
+     "http": 200,
+     "before": 200,
+     "after": 403,
+     "direct": 404,
+     "heldTwinWithToken": 403,
+     "heldTwinOwner": 403,
+     "hadToken": true
+    },
+    {
+     "path": "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/reference.jpg",
+     "http": 200,
+     "before": 200,
+     "after": 403,
+     "direct": 404,
+     "heldTwinWithToken": 403,
+     "heldTwinOwner": 403,
+     "hadToken": true
+    }
+   ],
+   "withholdMs": 369,
+   "checkedMsAfterWithhold": 75
+  },
+  {
+   "at": "2026-11-19T19:25:35.696Z",
+   "name": "callable answerTrackingQuestion",
+   "user": "owner",
+   "data": {
+    "jobId": "r_released",
+    "questionId": "q_123_1",
+    "answer": "not_me",
+    "operationId": "op_rehearsal_0002"
+   },
+   "http": 400,
+   "result": null,
+   "error": {
+    "status": "FAILED_PRECONDITION",
+    "message": "No tracking report yet.",
+    "details": null
+   }
+  },
+  {
+   "at": "2026-11-19T19:25:37.339Z",
+   "name": "callable explainTrackingMoment",
+   "user": "owner",
+   "data": {
+    "jobId": "r_released",
+    "momentId": "m_1",
+    "kind": "explain"
+   },
+   "http": 200,
+   "result": {
+    "status": "unavailable",
+    "reason": "report_not_current"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:25:37.339Z",
+   "name": "explain on withheld",
+   "http": 200,
+   "result": {
+    "status": "unavailable",
+    "reason": "report_not_current"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:25:39.096Z",
+   "name": "callable undoTrackingAnswer",
+   "user": "owner",
+   "data": {
+    "jobId": "r_released"
+   },
+   "http": 200,
+   "result": {
+    "revision": 2,
+    "pending": "withheld_for_review"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:25:40.909Z",
+   "name": "callable requestDataExport",
+   "user": "owner",
+   "data": {},
+   "http": 200,
+   "result": {
+    "exportId": "aMy5zLKhgevu4DCOx6JC",
+    "status": "queued",
+    "reused": false
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:25:43.420Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:43.425Z",
+   "name": "enqueue resolveTrackingTask",
+   "payload": {
+    "jobId": "r_publish",
+    "feedbackRevision": 0,
+    "scope": "full"
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T19:25:43.426Z",
+   "name": "enqueue extractTrackingSegmentTask",
+   "payload": {
+    "jobId": "r_running",
+    "generation": 1,
+    "index": 0
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T19:25:51.540Z",
+   "name": "snapshot after_reenable_old_deliveries",
+   "state": {
+    "r_publish": {
+     "progress": {
+      "generation": 1,
+      "outcome": "interrupted",
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.161Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_running": {
+     "progress": {
+      "generation": 1,
+      "outcome": "interrupted",
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.239Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_queued": {
+     "progress": {
+      "generation": 1,
+      "outcome": null,
+      "blocked": "worker_unavailable",
+      "pilot": "pilot_off",
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.295Z",
+      "segments": {
+       "0": "queued/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T19:25:51.617Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner2",
+   "data": {
+    "jobId": "r_new_after_enable"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:25:52.624Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "r_running"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:25:54.186Z",
+   "name": "ops release r_released --reviewer rehearsal-reviewer",
+   "exit": 0,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"r_released\",\"result\":\"withheld_requires_reprocess\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:54.767Z",
+   "name": "ops reprocess r_released",
+   "exit": 0,
+   "stdout": "{\"command\":\"reprocess\",\"jobId\":\"r_released\",\"result\":\"queued\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:56.245Z",
+   "name": "ops release r_released --reviewer rehearsal-reviewer",
+   "exit": 0,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"r_released\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:57.119Z",
+   "name": "ops prune-images r_released",
+   "exit": 0,
+   "stdout": "{\"command\":\"prune-images\",\"jobId\":\"r_released\",\"result\":{\"deleted\":[],\"contained\":[],\"kept\":7}}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:57.734Z",
+   "name": "ops prune-images r_released",
+   "exit": 0,
+   "stdout": "{\"command\":\"prune-images\",\"jobId\":\"r_released\",\"result\":{\"deleted\":[],\"contained\":[],\"kept\":7}}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:57.739Z",
+   "name": "worker log (all)",
+   "log": [
+    {
+     "at": "2026-11-19T19:24:06.208Z",
+     "route": "extract",
+     "jobId": "g_wrongmodel",
+     "action": "ok",
+     "segmentIndex": 0,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 28
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:08.173Z",
+     "route": "resolve",
+     "jobId": "g_wrongmodel",
+     "action": "wrong_models",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:10.282Z",
+     "route": "extract",
+     "jobId": "r_released",
+     "action": "ok",
+     "segmentIndex": 0,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 26
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:10.374Z",
+     "route": "resolve",
+     "jobId": "r_released",
+     "action": "ok",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:16.689Z",
+     "route": "resolve",
+     "jobId": "r_released",
+     "action": "ok",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:20.398Z",
+     "route": "discover",
+     "jobId": "r_disc",
+     "action": "ok",
+     "segmentIndex": null,
+     "chunkIndex": 0,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 22
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:20.604Z",
+     "route": "extract",
+     "jobId": "r_disc",
+     "action": "ok",
+     "segmentIndex": 0,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 22
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:20.696Z",
+     "route": "resolve",
+     "jobId": "r_disc",
+     "action": "ok",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:23.922Z",
+     "route": "extract",
+     "jobId": "r_queued",
+     "action": "fail",
+     "segmentIndex": 0,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 24
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:25.628Z",
+     "route": "extract",
+     "jobId": "r_running",
+     "action": "hold",
+     "segmentIndex": 0,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 25
+     },
+     "releasedAt": "2026-11-19T19:24:28.313Z"
+    },
+    {
+     "at": "2026-11-19T19:24:26.566Z",
+     "route": "extract",
+     "jobId": "r_publish",
+     "action": "ok",
+     "segmentIndex": 0,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 25
+     }
+    },
+    {
+     "at": "2026-11-19T19:24:26.650Z",
+     "route": "resolve",
+     "jobId": "r_publish",
+     "action": "hold",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "releasedAt": "2026-11-19T19:24:28.309Z"
+    },
+    {
+     "at": "2026-11-19T19:25:52.045Z",
+     "route": "extract",
+     "jobId": "r_new_after_enable",
+     "action": "ok",
+     "segmentIndex": 0,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     },
+     "source": {
+      "ok": true,
+      "bytes": 34
+     }
+    },
+    {
+     "at": "2026-11-19T19:25:52.105Z",
+     "route": "resolve",
+     "jobId": "r_new_after_enable",
+     "action": "ok",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     }
+    },
+    {
+     "at": "2026-11-19T19:25:53.263Z",
+     "route": "resolve",
+     "jobId": "r_running",
+     "action": "ok",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     }
+    },
+    {
+     "at": "2026-11-19T19:25:55.394Z",
+     "route": "resolve",
+     "jobId": "r_released",
+     "action": "ok",
+     "segmentIndex": null,
+     "chunkIndex": null,
+     "feedbackEntries": null,
+     "privacy": {
+      "retainNonTargetIdentities": false,
+      "faceRecognition": false,
+      "persistMedia": false
+     }
+    }
+   ]
+  },
+  {
+   "at": "2026-11-19T19:25:57.739Z",
+   "name": "phase race"
+  },
+  {
+   "at": "2026-11-19T19:25:58.246Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:25:59.839Z",
+   "name": "race stop_during_commit",
+   "jobId": "race_stop_during_commit_0je3q",
+   "outcome": "held",
+   "held": true,
+   "order": "publish_before_stop",
+   "heldNs": "1795116359820894000",
+   "stopNs": "1795116359825296000",
+   "stopWriteMs": 1528,
+   "stopCompletedBeforeRelease": false
+  },
+  {
+   "at": "2026-11-19T19:26:00.516Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:02.103Z",
+   "name": "race stop_during_commit",
+   "jobId": "race_stop_during_commit_qj6md",
+   "outcome": "held",
+   "held": true,
+   "order": "publish_before_stop",
+   "heldNs": "1795116362083442000",
+   "stopNs": "1795116362083928000",
+   "stopWriteMs": 1522,
+   "stopCompletedBeforeRelease": false
+  },
+  {
+   "at": "2026-11-19T19:26:02.758Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:04.339Z",
+   "name": "race stop_during_commit",
+   "jobId": "race_stop_during_commit_pklww",
+   "outcome": "held",
+   "held": true,
+   "order": "publish_before_stop",
+   "heldNs": "1795116364327423000",
+   "stopNs": "1795116364329677000",
+   "stopWriteMs": 1520,
+   "stopCompletedBeforeRelease": false
+  },
+  {
+   "at": "2026-11-19T19:26:04.845Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:04.925Z",
+   "name": "race no_stop",
+   "jobId": "race_no_stop_ypjn1",
+   "outcome": "held",
+   "held": true,
+   "order": null,
+   "heldNs": "1795116364903126000",
+   "stopNs": null,
+   "stopWriteMs": null,
+   "stopCompletedBeforeRelease": false
+  },
+  {
+   "at": "2026-11-19T19:26:04.925Z",
+   "name": "phase r4"
+  },
+  {
+   "at": "2026-11-19T19:26:05.532Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:05.632Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "p4_below"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:05.730Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "p4_exact"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:05.800Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "p4_above"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:05.888Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "p4_overlap"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:06.060Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "p4_gap"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:06.163Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "p4_likely"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:11.243Z",
+   "name": "r4 stored offball per case",
+   "got": {
+    "p4_below": {
+     "status": "insufficient",
+     "serverEligibleSec": 59.5,
+     "confirmedSec": 59.5,
+     "hasMeasurement": false
+    },
+    "p4_exact": {
+     "status": "measured",
+     "serverEligibleSec": 60,
+     "confirmedSec": 60,
+     "hasMeasurement": true
+    },
+    "p4_above": {
+     "status": "measured",
+     "serverEligibleSec": 60.5,
+     "confirmedSec": 60.5,
+     "hasMeasurement": true
+    },
+    "p4_overlap": {
+     "status": "insufficient",
+     "serverEligibleSec": 35,
+     "confirmedSec": 35,
+     "hasMeasurement": false
+    },
+    "p4_gap": {
+     "status": "insufficient",
+     "serverEligibleSec": 50,
+     "confirmedSec": 50,
+     "hasMeasurement": false
+    },
+    "p4_likely": {
+     "status": "insufficient",
+     "serverEligibleSec": 30,
+     "confirmedSec": 30,
+     "hasMeasurement": false
+    }
+   },
+   "workerClaimedConfirmedSec": 300
+  },
+  {
+   "at": "2026-11-19T19:26:12.086Z",
+   "name": "ops release p4_exact --reviewer rehearsal-reviewer",
+   "exit": 0,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"p4_exact\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:12.770Z",
+   "name": "ops release p4_below --reviewer rehearsal-reviewer",
+   "exit": 0,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"p4_below\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:12.815Z",
+   "name": "phase r1"
+  },
+  {
+   "at": "2026-11-19T19:26:13.320Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:13.447Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner2",
+   "data": {
+    "jobId": "t1_keep"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:13.506Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner2",
+   "data": {
+    "jobId": "t1_dup"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:14.569Z",
+   "name": "enqueue resolveTrackingTask",
+   "payload": {
+    "jobId": "t1_dup",
+    "feedbackRevision": 0,
+    "scope": "full"
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T19:26:14.573Z",
+   "name": "enqueue resolveTrackingTask",
+   "payload": {
+    "jobId": "t1_dup",
+    "feedbackRevision": 0,
+    "scope": "full"
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T19:26:14.575Z",
+   "name": "enqueue extractTrackingSegmentTask",
+   "payload": {
+    "jobId": "t1_dup",
+    "generation": 1,
+    "index": 0
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T19:26:22.638Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner2",
+   "data": {
+    "jobId": "t1_cancel"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:24.996Z",
+   "name": "callable cancelMatchAnalysis",
+   "user": "owner2",
+   "data": {
+    "jobId": "t1_cancel"
+   },
+   "http": 200,
+   "result": {
+    "jobId": "t1_cancel",
+    "status": "cancelled"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:31.511Z",
+   "name": "phase r2legacy"
+  },
+  {
+   "at": "2026-11-19T19:26:32.344Z",
+   "name": "ops prune-images l2_legacy",
+   "exit": 0,
+   "stdout": "{\"command\":\"prune-images\",\"jobId\":\"l2_legacy\",\"result\":{\"deleted\":[],\"contained\":[\"profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/l2_legacy/tracking/q_legacy_r0.jpg\"],\"kept\":2}}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:32.365Z",
+   "name": "phase legacy"
+  },
+  {
+   "at": "2026-11-19T19:26:34.057Z",
+   "name": "callable analyzeMatchFootage",
+   "user": "owner",
+   "data": {
+    "jobId": "l_frames"
+   },
+   "http": 400,
+   "result": null,
+   "error": {
+    "status": "FAILED_PRECONDITION",
+    "message": "Video analysis is not available yet.",
+    "details": {
+     "reason": "model_unavailable"
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T19:26:35.851Z",
+   "name": "callable generateAiInsight",
+   "user": "owner",
+   "data": {
+    "insightType": "video_summary",
+    "contextJson": "{\"playerId\":\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"matches\":[]}"
+   },
+   "http": 400,
+   "result": null,
+   "error": {
+    "status": "INVALID_ARGUMENT",
+    "message": "contextJson.player.playerId is required.",
+    "details": null
+   }
+  },
+  {
+   "at": "2026-11-19T19:26:37.536Z",
+   "name": "callable askThisMatch",
+   "user": "owner",
+   "data": {
+    "jobId": "l_frames",
+    "question": "What should I work on?"
+   },
+   "http": 200,
+   "result": {
+    "state": "insufficient",
+    "answer": "Not enough evidence yet",
+    "citations": []
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:37.577Z",
+   "name": "callable explainTrackingMoment",
+   "user": "owner2",
+   "data": {
+    "jobId": "r_new_after_enable",
+    "momentId": "m_1",
+    "kind": "explain"
+   },
+   "http": 200,
+   "result": {
+    "status": "unavailable",
+    "reason": "report_not_current"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:37.581Z",
+   "name": "phase cleanup"
+  },
+  {
+   "at": "2026-11-19T19:26:37.982Z",
+   "name": "cleanup inventory before",
+   "inventory": {
+    "c_complete": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/frames/frame_0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/frames/frame_1.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/owner-note.txt",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/tracking/q_1_r0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/video.mp4"
+    ],
+    "c_keep": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/frames/frame_0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/frames/frame_1.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/owner-note.txt",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/tracking/q_1_r0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/video.mp4"
+    ],
+    "c_cancel": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/frames/frame_0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/frames/frame_1.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/owner-note.txt",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/tracking/q_1_r0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/video.mp4"
+    ],
+    "c_failed": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_1.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/owner-note.txt",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/tracking/q_1_r0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/video.mp4"
+    ],
+    "c_failed2": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed2/frames/frame_0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed2/frames/frame_1.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed2/owner-note.txt",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed2/tracking/q_1_r0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed2/video.mp4"
+    ],
+    "c_complete2": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/frames/frame_0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/frames/frame_1.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/owner-note.txt",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/tracking/q_1_r0.jpg",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/video.mp4"
+    ],
+    "c_tracking_done": [
+     "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/frames/frame_0.jpg",
+     "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/frames/frame_1.jpg",
+     "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/owner-note.txt",
+     "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/q_1_r0.jpg",
+     "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/video.mp4"
+    ],
+    "c_other_owner": [
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/frames/frame_0.jpg",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/frames/frame_1.jpg",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/owner-note.txt",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/tracking/q_1_r0.jpg",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/video.mp4"
+    ]
+   }
+  },
+  {
+   "at": "2026-11-19T19:26:38.055Z",
+   "name": "callable cancelMatchAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "c_cancel"
+   },
+   "http": 200,
+   "result": {
+    "jobId": "c_cancel",
+    "status": "cancelled"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:39.340Z",
+   "name": "ops enable --allow IHXg7LjZIbsTVsnNymIdb5MRbEKh,5gh3NXZNlFTUAcUYmvL1kkXEADW9,BqFueBPLDEMjIuSBMq83vPZQq0Lr --worker-version football-cv/0.7.0-reh --hold false",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"IHXg7LjZIbsTVsnNymIdb5MRbEKh\",\"5gh3NXZNlFTUAcUYmvL1kkXEADW9\",\"BqFueBPLDEMjIuSBMq83vPZQq0Lr\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":false}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T19:26:39.399Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner2",
+   "data": {
+    "jobId": "c_tracking_done"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:40.787Z",
+   "name": "cleanup after triggers",
+   "after": {
+    "c_complete": {
+     "objects": [
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/frames/frame_0.jpg",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/owner-note.txt",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/tracking/q_1_r0.jpg"
+     ],
+     "state": "done",
+     "due": null
+    },
+    "c_keep": {
+     "objects": [
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/owner-note.txt",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/tracking/q_1_r0.jpg",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/video.mp4"
+     ],
+     "state": "done",
+     "due": null
+    },
+    "c_cancel": {
+     "objects": [
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/owner-note.txt",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/tracking/q_1_r0.jpg"
+     ],
+     "state": "done",
+     "due": null
+    },
+    "c_failed": {
+     "objects": [
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_0.jpg",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_1.jpg",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/owner-note.txt",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/tracking/q_1_r0.jpg",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/video.mp4"
+     ],
+     "state": "retry_window",
+     "due": "2026-11-20T19:26:38.568Z"
+    },
+    "c_complete2": {
+     "objects": [
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/owner-note.txt",
+      "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/tracking/q_1_r0.jpg"
+     ],
+     "state": "done",
+     "due": null
+    },
+    "c_tracking_done": {
+     "objects": [
+      "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/owner-note.txt",
+      "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/m_1_p1_r0.jpg",
+      "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/q_123_1_r0.jpg",
+      "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/q_1_r0.jpg",
+      "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/reference.jpg"
+     ],
+     "state": "done",
+     "due": null
+    },
+    "c_other_owner": {
+     "objects": [
+      "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/frames/frame_0.jpg",
+      "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/frames/frame_1.jpg",
+      "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/owner-note.txt",
+      "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/tracking/q_1_r0.jpg",
+      "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/video.mp4"
+     ]
+    }
+   },
+   "cancel": {
+    "http": 200,
+    "result": {
+     "jobId": "c_cancel",
+     "status": "cancelled"
+    },
+    "error": null
+   }
+  },
+  {
+   "at": "2026-11-19T19:26:40.787Z",
+   "name": "tracking-only completion",
+   "objects": [
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/owner-note.txt",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/m_1_p1_r0.jpg",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/q_123_1_r0.jpg",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/q_1_r0.jpg",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/reference.jpg"
+   ],
+   "state": "done"
+  },
+  {
+   "at": "2026-11-19T19:26:40.836Z",
+   "name": "callable explainTrackingMoment",
+   "user": "owner2",
+   "data": {
+    "jobId": "c_tracking_done",
+    "momentId": "m_1",
+    "kind": "explain"
+   },
+   "http": 200,
+   "result": {
+    "status": "unavailable",
+    "reason": "disabled"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T19:26:45.819Z",
+   "name": "rollback job objects remaining",
+   "remaining": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_disc/tracking/d_1_g1.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_disc/tracking/m_1_p1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_disc/tracking/q_123_1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_disc/tracking/reference.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/pilotHeld/m_1_p1_r1.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/pilotHeld/q_123_1_r1.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/m_1_p1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/m_1_p1_r2.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/q_123_1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/q_123_1_r2.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/reference.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_running/pilotHeld/m_1_p1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_running/pilotHeld/q_123_1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_running/pilotHeld/reference.jpg"
+   ]
+  },
+  {
+   "at": "2026-11-19T19:26:45.819Z",
+   "name": "phase r3"
+  },
+  {
+   "at": "2026-11-19T19:26:45.879Z",
+   "name": "callable requestDataExport",
+   "user": "owner2",
+   "data": {},
+   "http": 200,
+   "result": {
+    "exportId": "pcODIebJXClFCpDJJBtO",
+    "status": "queued",
+    "reused": false
+   },
+   "error": null
+  }
+ ],
+ "checks": [
+  {
+   "id": "gate.missing_config.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.malformed_config.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.version_mismatch.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.not_allowlisted.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.non_owner.permission_denied",
+   "ok": true,
+   "http": 403,
+   "result": null,
+   "error": {
+    "status": "PERMISSION_DENIED",
+    "message": "Only the owner can start this analysis.",
+    "details": null
+   }
+  },
+  {
+   "id": "gate.anonymous.unauthenticated",
+   "ok": true,
+   "http": 401,
+   "result": null,
+   "error": {
+    "status": "UNAUTHENTICATED",
+    "message": "Sign in first.",
+    "details": null
+   }
+  },
+  {
+   "id": "gate.consent_missing.blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "consent_required"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.wrong_models.rejected",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": "interrupted",
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": null,
+    "full": false,
+    "authorizedAt": "2026-11-19T19:24:02.834Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": null,
+   "held": null,
+   "feedback": null,
+   "discovery": null,
+   "heldDiscovery": null
+  },
+  {
+   "id": "gate.blocked_jobs.no_worker_calls",
+   "ok": true,
+   "noCalls": [
+    [
+     "g_missing",
+     0
+    ],
+    [
+     "g_malformed",
+     0
+    ],
+    [
+     "g_version",
+     0
+    ],
+    [
+     "g_unlisted",
+     0
+    ],
+    [
+     "g_consent",
+     0
+    ]
+   ]
+  },
+  {
+   "id": "hold.report_not_visible_before_review",
+   "ok": true,
+   "s": {
+    "progress": {
+     "generation": 1,
+     "outcome": null,
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": {
+      "at": "2026-11-19T19:24:10.521Z",
+      "scope": "full"
+     },
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:09.305Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": null,
+    "held": {
+     "hasReport": true,
+     "version": 1,
+     "withheldAt": null,
+     "heldAt": "2026-11-19T19:24:10.521Z",
+     "releasedAt": null,
+     "feedbackRevision": 0,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     }
+    },
+    "feedback": null,
+    "discovery": null,
+    "heldDiscovery": null
+   },
+   "readHeld": 403,
+   "readCur": 404
+  },
+  {
+   "id": "hold.no_completion_notice_while_held",
+   "ok": true,
+   "notifications": [
+    {
+     "id": "tracking-started-g_wrongmodel-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_released-g1",
+     "type": "analysis_started"
+    }
+   ]
+  },
+  {
+   "id": "r1.tracking_only_completion_cleans_source",
+   "ok": true,
+   "trackingState": "complete",
+   "mediaLifecycle": {
+    "source": "deleted",
+    "citedFramesKept": 0,
+    "deletedObjectCount": 3,
+    "evidenceClips": 0,
+    "imagesDeleted": 0,
+    "imagesContained": 0,
+    "cleanedAt": "2026-11-19T19:24:11.100Z",
+    "attempts": 1
+   },
+   "objsHeld": [
+    "pilotHeld/m_1_p1_r0.jpg",
+    "pilotHeld/q_123_1_r0.jpg",
+    "pilotHeld/reference.jpg"
+   ]
+  },
+  {
+   "id": "r2.held_images_server_only",
+   "ok": true,
+   "heldImgs": [
+    "pilotHeld/m_1_p1_r0.jpg",
+    "pilotHeld/q_123_1_r0.jpg",
+    "pilotHeld/reference.jpg"
+   ],
+   "heldAccess": [
+    [
+     "owner",
+     403
+    ],
+    [
+     "other",
+     403
+    ],
+    [
+     "anon",
+     403
+    ],
+    [
+     "owner",
+     403
+    ],
+    [
+     "other",
+     403
+    ],
+    [
+     "anon",
+     403
+    ],
+    [
+     "owner",
+     403
+    ],
+    [
+     "other",
+     403
+    ],
+    [
+     "anon",
+     403
+    ]
+   ],
+   "ownerPathWhileHeld": [
+    404,
+    404,
+    404
+   ],
+   "playHeld": {
+    "status": "PERMISSION_DENIED",
+    "message": "You cannot play this media.",
+    "details": null
+   },
+   "reviewer": "{\"command\":\"held-images\",\"jobId\":\"r_released\",\"result\":[\"profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/pilotHeld/m_1_p1_r0.jpg\",\"profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_re"
+  },
+  {
+   "id": "r2.release_restores_owner_image_access",
+   "ok": true,
+   "relReads": [
+    200,
+    200,
+    200
+   ],
+   "objsRel": [
+    "tracking/m_1_p1_r0.jpg",
+    "tracking/q_123_1_r0.jpg",
+    "tracking/reference.jpg"
+   ]
+  },
+  {
+   "id": "release.owner_reads_report",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": null,
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": {
+     "at": "2026-11-19T19:24:10.521Z",
+     "scope": "full"
+    },
+    "full": false,
+    "authorizedAt": "2026-11-19T19:24:09.305Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": {
+    "hasReport": true,
+    "version": 1,
+    "stale": false,
+    "pendingReason": null,
+    "feedbackRevision": 0,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    },
+    "releasedBy": "rehearsal-reviewer"
+   },
+   "held": {
+    "hasReport": false,
+    "version": 1,
+    "withheldAt": null,
+    "heldAt": "2026-11-19T19:24:10.521Z",
+    "releasedAt": "2026-11-19T19:24:14.479Z",
+    "feedbackRevision": 0,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    }
+   },
+   "feedback": null,
+   "discovery": null,
+   "heldDiscovery": null
+  },
+  {
+   "id": "correction.applied_and_released",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": null,
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": {
+     "scope": "full",
+     "at": "2026-11-19T19:24:16.725Z"
+    },
+    "full": false,
+    "authorizedAt": "2026-11-19T19:24:09.305Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": {
+    "hasReport": true,
+    "version": 2,
+    "stale": false,
+    "pendingReason": null,
+    "feedbackRevision": 1,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    },
+    "releasedBy": "rehearsal-reviewer"
+   },
+   "held": {
+    "hasReport": false,
+    "version": 1,
+    "withheldAt": null,
+    "heldAt": "2026-11-19T19:24:16.725Z",
+    "releasedAt": "2026-11-19T19:24:17.628Z",
+    "feedbackRevision": 1,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    }
+   },
+   "feedback": {
+    "revision": 1,
+    "entries": 1
+   },
+   "discovery": null,
+   "heldDiscovery": null
+  },
+  {
+   "id": "hold.discovery_sightings_not_visible_before_review",
+   "ok": true,
+   "disc": {
+    "progress": {
+     "generation": 1,
+     "outcome": null,
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": {
+      "at": "2026-11-19T19:24:20.762Z",
+      "scope": "full"
+     },
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:17.828Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": null,
+    "held": {
+     "hasReport": true,
+     "version": 1,
+     "withheldAt": null,
+     "heldAt": "2026-11-19T19:24:20.762Z",
+     "releasedAt": null,
+     "feedbackRevision": 0,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     }
+    },
+    "feedback": null,
+    "discovery": null,
+    "heldDiscovery": {
+     "moments": 1
+    }
+   },
+   "ownerHttp": 404,
+   "notifications": [
+    {
+     "id": "tracking-started-g_wrongmodel-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_disc-g1",
+     "type": "analysis_started"
+    },
+    {
+     "id": "tracking-started-r_released-g1",
+     "type": "analysis_started"
+    }
+   ]
+  },
+  {
+   "id": "release.discovery_and_report_visible_after_review",
+   "ok": true,
+   "http": 200,
+   "state": {
+    "progress": {
+     "generation": 1,
+     "outcome": null,
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": {
+      "at": "2026-11-19T19:24:20.762Z",
+      "scope": "full"
+     },
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:17.828Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": {
+     "hasReport": true,
+     "version": 1,
+     "stale": false,
+     "pendingReason": null,
+     "feedbackRevision": 0,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     },
+     "releasedBy": "rehearsal-reviewer"
+    },
+    "held": {
+     "hasReport": false,
+     "version": 1,
+     "withheldAt": null,
+     "heldAt": "2026-11-19T19:24:20.762Z",
+     "releasedAt": "2026-11-19T19:24:22.892Z",
+     "feedbackRevision": 0,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     }
+    },
+    "feedback": null,
+    "discovery": {
+     "moments": 1
+    },
+    "heldDiscovery": {
+     "moments": 0
+    }
+   }
+  },
+  {
+   "id": "r2.discovery_image_follows_release",
+   "ok": true,
+   "objects": [
+    "tracking/d_1_g1.jpg",
+    "tracking/m_1_p1_r0.jpg",
+    "tracking/q_123_1_r0.jpg",
+    "tracking/reference.jpg"
+   ]
+  },
+  {
+   "id": "barriers.reached",
+   "ok": true,
+   "publish": 1,
+   "running": 1,
+   "queued": {
+    "progress": {
+     "generation": 1,
+     "outcome": null,
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": null,
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:23.295Z",
+     "segments": {
+      "0": "queued/1"
+     }
+    },
+    "current": null,
+    "held": null,
+    "feedback": null,
+    "discovery": null,
+    "heldDiscovery": null
+   }
+  },
+  {
+   "id": "stop.new_request_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "stop.late_resolve_discarded",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": "interrupted",
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": null,
+    "full": false,
+    "authorizedAt": "2026-11-19T19:24:23.161Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": null,
+   "held": null,
+   "feedback": null,
+   "discovery": null,
+   "heldDiscovery": null,
+   "ownerReadCurrent": 404,
+   "ownerReadHeld": 403
+  },
+  {
+   "id": "stop.running_extract_cannot_publish",
+   "ok": true,
+   "state": {
+    "progress": {
+     "generation": 1,
+     "outcome": "interrupted",
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": null,
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:23.239Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": null,
+    "held": null,
+    "feedback": null,
+    "discovery": null,
+    "heldDiscovery": null,
+    "ownerReadCurrent": 404,
+    "ownerReadHeld": 403
+   },
+   "resolveCalls": 0
+  },
+  {
+   "id": "stop.queued_redelivery_fails_closed",
+   "ok": true,
+   "redelivered": {
+    "progress": {
+     "generation": 1,
+     "outcome": null,
+     "blocked": "worker_unavailable",
+     "pilot": "pilot_off",
+     "resolving": null,
+     "held": null,
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:23.295Z",
+     "segments": {
+      "0": "queued/1"
+     }
+    },
+    "current": null,
+    "held": null,
+    "feedback": null,
+    "discovery": null,
+    "heldDiscovery": null
+   },
+   "extractCalls": 1,
+   "backoffSec": 60.05
+  },
+  {
+   "id": "stop.old_scheduled_delivery_no_effect",
+   "ok": true,
+   "before": {
+    "progress": {
+     "generation": 1,
+     "outcome": null,
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": {
+      "scope": "full",
+      "at": "2026-11-19T19:24:16.725Z"
+     },
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:09.305Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": {
+     "hasReport": true,
+     "version": 2,
+     "stale": false,
+     "pendingReason": null,
+     "feedbackRevision": 1,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     },
+     "releasedBy": "rehearsal-reviewer"
+    },
+    "held": {
+     "hasReport": false,
+     "version": 1,
+     "withheldAt": null,
+     "heldAt": "2026-11-19T19:24:16.725Z",
+     "releasedAt": "2026-11-19T19:24:17.628Z",
+     "feedbackRevision": 1,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     }
+    },
+    "feedback": {
+     "revision": 1,
+     "entries": 1
+    },
+    "discovery": null,
+    "heldDiscovery": null,
+    "ownerReadCurrent": 200,
+    "ownerReadHeld": 403
+   },
+   "after": {
+    "progress": {
+     "generation": 1,
+     "outcome": "interrupted",
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": {
+      "scope": "full",
+      "at": "2026-11-19T19:24:16.725Z"
+     },
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:09.305Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": {
+     "hasReport": true,
+     "version": 2,
+     "stale": false,
+     "pendingReason": null,
+     "feedbackRevision": 1,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     },
+     "releasedBy": "rehearsal-reviewer"
+    },
+    "held": {
+     "hasReport": false,
+     "version": 1,
+     "withheldAt": null,
+     "heldAt": "2026-11-19T19:24:16.725Z",
+     "releasedAt": "2026-11-19T19:24:17.628Z",
+     "feedbackRevision": 1,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     }
+    },
+    "feedback": {
+     "revision": 1,
+     "entries": 1
+    },
+    "discovery": null,
+    "heldDiscovery": null,
+    "ownerReadCurrent": 200,
+    "ownerReadHeld": 403
+   },
+   "lateReleasedCalls": 0
+  },
+  {
+   "id": "stop.duplicate_delivery_no_worker_call",
+   "ok": true,
+   "resolveCalls": 1
+  },
+  {
+   "id": "stop.released_report_unchanged_until_withheld",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": "interrupted",
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": {
+     "scope": "full",
+     "at": "2026-11-19T19:24:16.725Z"
+    },
+    "full": false,
+    "authorizedAt": "2026-11-19T19:24:09.305Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": {
+    "hasReport": true,
+    "version": 2,
+    "stale": false,
+    "pendingReason": null,
+    "feedbackRevision": 1,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    },
+    "releasedBy": "rehearsal-reviewer"
+   },
+   "held": {
+    "hasReport": false,
+    "version": 1,
+    "withheldAt": null,
+    "heldAt": "2026-11-19T19:24:16.725Z",
+    "releasedAt": "2026-11-19T19:24:17.628Z",
+    "feedbackRevision": 1,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    }
+   },
+   "feedback": {
+    "revision": 1,
+    "entries": 1
+   },
+   "discovery": null,
+   "heldDiscovery": null,
+   "ownerReadCurrent": 200,
+   "ownerReadHeld": 403
+  },
+  {
+   "id": "r2.discarded_results_leave_no_images",
+   "ok": true,
+   "r_publish": [
+    "frames/frame_0.jpg",
+    "frames/frame_1.jpg",
+    "video.mp4"
+   ],
+   "r_running": [
+    "frames/frame_0.jpg",
+    "frames/frame_1.jpg",
+    "video.mp4"
+   ],
+   "r_queued": [
+    "frames/frame_0.jpg",
+    "frames/frame_1.jpg",
+    "video.mp4"
+   ]
+  },
+  {
+   "id": "r1.stopped_job_keeps_source_for_retry",
+   "ok": true,
+   "states": [
+    [
+     "r_publish",
+     "failed",
+     "retry_window",
+     "2026-11-20T19:24:28.587Z"
+    ],
+    [
+     "r_running",
+     "failed",
+     "retry_window",
+     "2026-11-20T19:24:30.619Z"
+    ],
+    [
+     "r_queued",
+     "failed",
+     "retry_window",
+     "2026-11-20T19:25:24.021Z"
+    ]
+   ]
+  },
+  {
+   "id": "r2.withhold_closes_images_and_issued_urls",
+   "ok": true,
+   "issued": [
+    {
+     "path": "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/m_1_p1_r1.jpg",
+     "http": 200,
+     "before": 200,
+     "after": 403,
+     "direct": 404,
+     "heldTwinWithToken": 403,
+     "heldTwinOwner": 403,
+     "hadToken": true
+    },
+    {
+     "path": "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/q_123_1_r1.jpg",
+     "http": 200,
+     "before": 200,
+     "after": 403,
+     "direct": 404,
+     "heldTwinWithToken": 403,
+     "heldTwinOwner": 403,
+     "hadToken": true
+    },
+    {
+     "path": "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/r_released/tracking/reference.jpg",
+     "http": 200,
+     "before": 200,
+     "after": 403,
+     "direct": 404,
+     "heldTwinWithToken": 403,
+     "heldTwinOwner": 403,
+     "hadToken": true
+    }
+   ]
+  },
+  {
+   "id": "withhold.owner_sees_no_report",
+   "ok": true,
+   "w": {
+    "progress": {
+     "generation": 1,
+     "outcome": "interrupted",
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": {
+      "scope": "full",
+      "at": "2026-11-19T19:24:16.725Z"
+     },
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:09.305Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": {
+     "hasReport": false,
+     "version": 3,
+     "stale": true,
+     "pendingReason": "withheld_for_review",
+     "feedbackRevision": 1,
+     "producedBy": null,
+     "releasedBy": null
+    },
+    "held": {
+     "hasReport": true,
+     "version": 2,
+     "withheldAt": "2026-11-19T19:25:35.501Z",
+     "heldAt": "2026-11-19T19:24:16.725Z",
+     "releasedAt": "2026-11-19T19:24:17.628Z",
+     "feedbackRevision": 1,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     }
+    },
+    "feedback": {
+     "revision": 1,
+     "entries": 1
+    },
+    "discovery": null,
+    "heldDiscovery": null
+   },
+   "ownerHttp": 200
+  },
+  {
+   "id": "withhold.held_copy_unreadable",
+   "ok": true
+  },
+  {
+   "id": "withhold.answer_refused_without_report",
+   "ok": true,
+   "http": 400,
+   "result": null,
+   "error": {
+    "status": "FAILED_PRECONDITION",
+    "message": "No tracking report yet.",
+    "details": null
+   }
+  },
+  {
+   "id": "withhold.explain_refused",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "unavailable",
+    "reason": "report_not_current"
+   },
+   "error": null
+  },
+  {
+   "id": "withhold.state_survives_owner_correction",
+   "ok": true,
+   "r": {
+    "http": 200,
+    "result": {
+     "revision": 2,
+     "pending": "withheld_for_review"
+    },
+    "error": null
+   },
+   "afterUndo": {
+    "progress": {
+     "generation": 1,
+     "outcome": "interrupted",
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": {
+      "scope": "full",
+      "at": "2026-11-19T19:24:16.725Z"
+     },
+     "full": false,
+     "authorizedAt": "2026-11-19T19:24:09.305Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": {
+     "hasReport": false,
+     "version": 3,
+     "stale": true,
+     "pendingReason": "withheld_for_review",
+     "feedbackRevision": 2,
+     "producedBy": null,
+     "releasedBy": null
+    },
+    "held": {
+     "hasReport": true,
+     "version": 2,
+     "withheldAt": "2026-11-19T19:25:35.501Z",
+     "heldAt": "2026-11-19T19:24:16.725Z",
+     "releasedAt": "2026-11-19T19:24:17.628Z",
+     "feedbackRevision": 1,
+     "producedBy": {
+      "workerVersion": "football-cv/0.7.0-reh",
+      "models": {
+       "detector": "yolox-reh",
+       "ocr": "parseq-reh"
+      }
+     }
+    },
+    "feedback": {
+     "revision": 2,
+     "entries": 0
+    },
+    "discovery": null,
+    "heldDiscovery": null
+   }
+  },
+  {
+   "id": "withhold.export_excludes_report",
+   "ok": true,
+   "exportStatus": "ready",
+   "bytes": 14458
+  },
+  {
+   "id": "r3.export_has_no_tracking_images_or_links",
+   "ok": true,
+   "bytes": 14458
+  },
+  {
+   "id": "reenable.old_delivery_not_authorized",
+   "ok": true,
+   "old": {
+    "r_publish": {
+     "progress": {
+      "generation": 1,
+      "outcome": "interrupted",
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.161Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_running": {
+     "progress": {
+      "generation": 1,
+      "outcome": "interrupted",
+      "blocked": null,
+      "pilot": null,
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.239Z",
+      "segments": {
+       "0": "done/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    },
+    "r_queued": {
+     "progress": {
+      "generation": 1,
+      "outcome": null,
+      "blocked": "worker_unavailable",
+      "pilot": "pilot_off",
+      "resolving": null,
+      "held": null,
+      "full": false,
+      "authorizedAt": "2026-11-19T19:24:23.295Z",
+      "segments": {
+       "0": "queued/1"
+      }
+     },
+     "current": null,
+     "held": null,
+     "feedback": null,
+     "discovery": null,
+     "heldDiscovery": null,
+     "ownerReadCurrent": 404,
+     "ownerReadHeld": 403
+    }
+   },
+   "resolvesBefore": 1,
+   "resolvesAfter": 1,
+   "enableAt": "2026-11-19T19:25:42.957Z"
+  },
+  {
+   "id": "reenable.new_request_runs_under_hold",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": null,
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": {
+     "at": "2026-11-19T19:25:52.136Z",
+     "scope": "full"
+    },
+    "full": false,
+    "authorizedAt": "2026-11-19T19:25:51.563Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": null,
+   "held": {
+    "hasReport": true,
+    "version": 1,
+    "withheldAt": null,
+    "heldAt": "2026-11-19T19:25:52.136Z",
+    "releasedAt": null,
+    "feedbackRevision": 0,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    }
+   },
+   "feedback": null,
+   "discovery": null,
+   "heldDiscovery": null
+  },
+  {
+   "id": "r1.retry_window_resume_then_completion_cleanup",
+   "ok": true,
+   "before": [
+    "failed",
+    "retry_window"
+   ],
+   "objectsBeforeResume": [
+    "frames/frame_0.jpg",
+    "frames/frame_1.jpg",
+    "video.mp4"
+   ],
+   "start": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "resumedCall": {
+    "at": "2026-11-19T19:25:53.263Z",
+    "route": "resolve",
+    "jobId": "r_running",
+    "action": "ok",
+    "segmentIndex": null,
+    "chunkIndex": null,
+    "feedbackEntries": null,
+    "privacy": {
+     "retainNonTargetIdentities": false,
+     "faceRecognition": false,
+     "persistMedia": false
+    }
+   },
+   "after": {
+    "source": "deleted",
+    "citedFramesKept": 0,
+    "deletedObjectCount": 3,
+    "evidenceClips": 0,
+    "imagesDeleted": 0,
+    "imagesContained": 0,
+    "cleanedAt": "2026-11-19T19:25:53.414Z",
+    "attempts": 1
+   },
+   "objects": [
+    "pilotHeld/m_1_p1_r0.jpg",
+    "pilotHeld/q_123_1_r0.jpg",
+    "pilotHeld/reference.jpg"
+   ]
+  },
+  {
+   "id": "withhold.release_without_reprocess_refused",
+   "ok": true,
+   "relW": {
+    "exit": 0,
+    "stdout": "{\"command\":\"release\",\"jobId\":\"r_released\",\"result\":\"withheld_requires_reprocess\"}",
+    "stderr": ""
+   }
+  },
+  {
+   "id": "reprocess.held_not_visible",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": null,
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": {
+     "scope": "full",
+     "at": "2026-11-19T19:25:55.413Z"
+    },
+    "full": false,
+    "authorizedAt": "2026-11-19T19:25:54.718Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": {
+    "hasReport": false,
+    "version": 3,
+    "stale": true,
+    "pendingReason": "withheld_for_review",
+    "feedbackRevision": 2,
+    "producedBy": null,
+    "releasedBy": null
+   },
+   "held": {
+    "hasReport": true,
+    "version": 1,
+    "withheldAt": null,
+    "heldAt": "2026-11-19T19:25:55.413Z",
+    "releasedAt": null,
+    "feedbackRevision": 2,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    }
+   },
+   "feedback": {
+    "revision": 2,
+    "entries": 0
+   },
+   "discovery": null,
+   "heldDiscovery": null
+  },
+  {
+   "id": "reprocess.release_restores_owner_view",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": null,
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": {
+     "scope": "full",
+     "at": "2026-11-19T19:25:55.413Z"
+    },
+    "full": false,
+    "authorizedAt": "2026-11-19T19:25:54.718Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": {
+    "hasReport": true,
+    "version": 4,
+    "stale": false,
+    "pendingReason": null,
+    "feedbackRevision": 2,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    },
+    "releasedBy": "rehearsal-reviewer"
+   },
+   "held": {
+    "hasReport": false,
+    "version": 1,
+    "withheldAt": null,
+    "heldAt": "2026-11-19T19:25:55.413Z",
+    "releasedAt": "2026-11-19T19:25:56.116Z",
+    "feedbackRevision": 2,
+    "producedBy": {
+     "workerVersion": "football-cv/0.7.0-reh",
+     "models": {
+      "detector": "yolox-reh",
+      "ocr": "parseq-reh"
+     }
+    }
+   },
+   "feedback": {
+    "revision": 2,
+    "entries": 0
+   },
+   "discovery": null,
+   "heldDiscovery": null
+  },
+  {
+   "id": "reprocess.corrections_preserved",
+   "ok": true,
+   "fbBefore": {
+    "entries": [],
+    "periods": {},
+    "offPitch": [],
+    "revision": 2,
+    "purpose": "this_match_only"
+   },
+   "fbAfter": {
+    "entries": [],
+    "periods": {},
+    "offPitch": [],
+    "revision": 2,
+    "purpose": "this_match_only"
+   }
+  },
+  {
+   "id": "reprocess.containment_record_kept",
+   "ok": true
+  },
+  {
+   "id": "reprocess.provenance_recorded",
+   "ok": true,
+   "hasReport": true,
+   "version": 4,
+   "stale": false,
+   "pendingReason": null,
+   "feedbackRevision": 2,
+   "producedBy": {
+    "workerVersion": "football-cv/0.7.0-reh",
+    "models": {
+     "detector": "yolox-reh",
+     "ocr": "parseq-reh"
+    }
+   },
+   "releasedBy": "rehearsal-reviewer"
+  },
+  {
+   "id": "r2.reprocessed_release_images_readable_old_urls_dead",
+   "ok": true,
+   "finImgs": [
+    "m_1_p1_r2.jpg",
+    "q_123_1_r2.jpg",
+    "reference.jpg"
+   ],
+   "finReads": [
+    200,
+    200,
+    200
+   ],
+   "oldUrls": [
+    403,
+    403,
+    403
+   ]
+  },
+  {
+   "id": "r4.reprocessed_report_gate_enforced",
+   "ok": true,
+   "offball": {
+    "status": "insufficient",
+    "confirmedSec": 10,
+    "minConfirmedSec": 60,
+    "serverEligibleSec": 10
+   }
+  },
+  {
+   "id": "codec.stored_strip_and_boxes_roundtrip",
+   "ok": true,
+   "strip0": {
+    "_tuple": [
+     0,
+     10,
+     "UNKNOWN"
+    ]
+   },
+   "ind0": {
+    "_tuple": [
+     11,
+     0.4,
+     0.3,
+     0.05,
+     0.2
+    ]
+   }
+  },
+  {
+   "id": "r2.prune_twice_safe",
+   "ok": true,
+   "p1": {
+    "deleted": [],
+    "contained": [],
+    "kept": 7
+   },
+   "p2": {
+    "deleted": [],
+    "contained": [],
+    "kept": 7
+   }
+  },
+  {
+   "id": "race.no_persist_after_stop",
+   "ok": true,
+   "outcome": "held",
+   "order": "publish_before_stop",
+   "stopCompletedBeforeRelease": false,
+   "stopWriteMs": 1528
+  },
+  {
+   "id": "race.no_persist_after_stop",
+   "ok": true,
+   "outcome": "held",
+   "order": "publish_before_stop",
+   "stopCompletedBeforeRelease": false,
+   "stopWriteMs": 1522
+  },
+  {
+   "id": "race.no_persist_after_stop",
+   "ok": true,
+   "outcome": "held",
+   "order": "publish_before_stop",
+   "stopCompletedBeforeRelease": false,
+   "stopWriteMs": 1520
+  },
+  {
+   "id": "race.control_publishes_held",
+   "ok": true,
+   "outcome": "held"
+  },
+  {
+   "id": "r4.server_gate_boundaries",
+   "ok": true,
+   "got": {
+    "p4_below": {
+     "status": "insufficient",
+     "serverEligibleSec": 59.5,
+     "confirmedSec": 59.5,
+     "hasMeasurement": false
+    },
+    "p4_exact": {
+     "status": "measured",
+     "serverEligibleSec": 60,
+     "confirmedSec": 60,
+     "hasMeasurement": true
+    },
+    "p4_above": {
+     "status": "measured",
+     "serverEligibleSec": 60.5,
+     "confirmedSec": 60.5,
+     "hasMeasurement": true
+    },
+    "p4_overlap": {
+     "status": "insufficient",
+     "serverEligibleSec": 35,
+     "confirmedSec": 35,
+     "hasMeasurement": false
+    },
+    "p4_gap": {
+     "status": "insufficient",
+     "serverEligibleSec": 50,
+     "confirmedSec": 50,
+     "hasMeasurement": false
+    },
+    "p4_likely": {
+     "status": "insufficient",
+     "serverEligibleSec": 30,
+     "confirmedSec": 30,
+     "hasMeasurement": false
+    }
+   }
+  },
+  {
+   "id": "r4.owner_reads_only_validated_measurement",
+   "ok": true,
+   "exact": "measured",
+   "below": "insufficient"
+  },
+  {
+   "id": "r1.keep_choice_retains_source",
+   "ok": true,
+   "keepObjs": [
+    "pilotHeld/m_1_p1_r0.jpg",
+    "pilotHeld/q_123_1_r0.jpg",
+    "pilotHeld/reference.jpg",
+    "video.mp4"
+   ],
+   "lifecycle": {
+    "source": "retained",
+    "citedFramesKept": 0,
+    "deletedObjectCount": 2,
+    "evidenceClips": 0,
+    "imagesDeleted": 0,
+    "imagesContained": 0,
+    "cleanedAt": "2026-11-19T19:26:14.466Z",
+    "attempts": 1
+   }
+  },
+  {
+   "id": "r1.duplicate_callbacks_after_completion_safe",
+   "ok": true,
+   "dupBefore": {
+    "objs": [
+     "pilotHeld/m_1_p1_r0.jpg",
+     "pilotHeld/q_123_1_r0.jpg",
+     "pilotHeld/reference.jpg"
+    ],
+    "attempts": 1,
+    "held": 1
+   },
+   "dupAfter": {
+    "objs": [
+     "pilotHeld/m_1_p1_r0.jpg",
+     "pilotHeld/q_123_1_r0.jpg",
+     "pilotHeld/reference.jpg"
+    ],
+    "attempts": 1,
+    "state": "complete",
+    "held": 3
+   }
+  },
+  {
+   "id": "r1.cancel_cleans_and_late_result_cannot_publish",
+   "ok": true,
+   "objsAtCancel": [],
+   "tc": {
+    "progress": {
+     "generation": 1,
+     "outcome": "interrupted",
+     "blocked": null,
+     "pilot": null,
+     "resolving": null,
+     "held": null,
+     "full": false,
+     "authorizedAt": "2026-11-19T19:26:22.602Z",
+     "segments": {
+      "0": "done/1"
+     }
+    },
+    "current": null,
+    "held": null,
+    "feedback": null,
+    "discovery": null,
+    "heldDiscovery": null
+   },
+   "after": []
+  },
+  {
+   "id": "r1.retry_window_boundary",
+   "ok": true,
+   "due": "2026-11-20T19:25:24.021Z",
+   "failedAt": "2026-11-19T19:25:23.979Z",
+   "early": 0,
+   "objEarly": [
+    "frames/frame_0.jpg",
+    "frames/frame_1.jpg",
+    "video.mp4"
+   ],
+   "at": 2,
+   "objAt": [],
+   "again": 0
+  },
+  {
+   "id": "r2.legacy_held_image_contained_released_kept",
+   "ok": true,
+   "before": 200,
+   "after": {
+    "held": 404,
+    "twin": 403,
+    "released": 200
+   },
+   "pr": {
+    "deleted": [],
+    "contained": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/l2_legacy/tracking/q_legacy_r0.jpg"
+    ],
+    "kept": 2
+   }
+  },
+  {
+   "id": "legacy.no_provider_calls",
+   "ok": true,
+   "sink": [],
+   "results": {
+    "analyzeMatchFootage": {
+     "http": 400,
+     "error": "FAILED_PRECONDITION",
+     "result": null
+    },
+    "generateAiInsight": {
+     "http": 400,
+     "error": "INVALID_ARGUMENT",
+     "result": null
+    },
+    "askThisMatch": {
+     "http": 200,
+     "error": null,
+     "result": "returned"
+    },
+    "explainTrackingMoment": {
+     "http": 200,
+     "error": null,
+     "result": "returned"
+    }
+   }
+  },
+  {
+   "id": "legacy.no_external_media_urls",
+   "ok": true,
+   "external": []
+  },
+  {
+   "id": "legacy.footage_ai_routes_refuse",
+   "ok": true,
+   "analyzeMatchFootage": {
+    "http": 400,
+    "result": null,
+    "error": {
+     "status": "FAILED_PRECONDITION",
+     "message": "Video analysis is not available yet.",
+     "details": {
+      "reason": "model_unavailable"
+     }
+    }
+   },
+   "generateAiInsight": {
+    "http": 400,
+    "result": null,
+    "error": {
+     "status": "INVALID_ARGUMENT",
+     "message": "contextJson.player.playerId is required.",
+     "details": null
+    }
+   },
+   "askThisMatch": {
+    "http": 200,
+    "result": {
+     "state": "insufficient",
+     "answer": "Not enough evidence yet",
+     "citations": []
+    },
+    "error": null
+   },
+   "explainTrackingMoment": {
+    "http": 200,
+    "result": {
+     "status": "unavailable",
+     "reason": "report_not_current"
+    },
+    "error": null
+   }
+  },
+  {
+   "id": "cleanup.complete_deletes_source_and_uncited",
+   "ok": true,
+   "objects": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/frames/frame_0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/tracking/q_1_r0.jpg"
+   ],
+   "state": "done",
+   "due": null
+  },
+  {
+   "id": "cleanup.retains_unrecognised_and_tracking_images",
+   "ok": true,
+   "objects": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/frames/frame_0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete/tracking/q_1_r0.jpg"
+   ],
+   "state": "done",
+   "due": null
+  },
+  {
+   "id": "cleanup.keep_video_retained",
+   "ok": true,
+   "objects": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/tracking/q_1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/video.mp4"
+   ],
+   "state": "done",
+   "due": null
+  },
+  {
+   "id": "cleanup.cancel_deletes_source",
+   "ok": true,
+   "objects": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_cancel/tracking/q_1_r0.jpg"
+   ],
+   "state": "done",
+   "due": null
+  },
+  {
+   "id": "cleanup.failed_waits_for_retry_window",
+   "ok": true,
+   "objects": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_1.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/tracking/q_1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/video.mp4"
+   ],
+   "state": "retry_window",
+   "due": "2026-11-20T19:26:38.568Z"
+  },
+  {
+   "id": "cleanup.no_cross_job_deletion",
+   "ok": true,
+   "other": {
+    "objects": [
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/frames/frame_0.jpg",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/frames/frame_1.jpg",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/owner-note.txt",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/tracking/q_1_r0.jpg",
+     "profiles/XLyexzB0LxW2jDnYPMYaVuTNj4rx/matchFootage/c_other_owner/video.mp4"
+    ]
+   },
+   "complete2": {
+    "objects": [
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/owner-note.txt",
+     "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_complete2/tracking/q_1_r0.jpg"
+    ],
+    "state": "done",
+    "due": null
+   }
+  },
+  {
+   "id": "r1.published_tracking_only_job_cleaned",
+   "ok": true,
+   "objects": [
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/owner-note.txt",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/m_1_p1_r0.jpg",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/q_123_1_r0.jpg",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/q_1_r0.jpg",
+    "profiles/5gh3NXZNlFTUAcUYmvL1kkXEADW9/matchFootage/c_tracking_done/tracking/reference.jpg"
+   ],
+   "state": "done",
+   "due": null
+  },
+  {
+   "id": "legacy.explain_on_published_report_no_provider_call",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "unavailable",
+    "reason": "disabled"
+   },
+   "error": null
+  },
+  {
+   "id": "cleanup.sweep_before_deadline_noop",
+   "ok": true,
+   "early": 0,
+   "failedEarly": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/frames/frame_1.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/tracking/q_1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/video.mp4"
+   ]
+  },
+  {
+   "id": "cleanup.sweep_at_deadline_cleans",
+   "ok": true,
+   "firstSweep": 1,
+   "failedAfter": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed/tracking/q_1_r0.jpg"
+   ]
+  },
+  {
+   "id": "cleanup.sweep_repeat_safe",
+   "ok": true,
+   "secondSweep": 0
+  },
+  {
+   "id": "cleanup.interrupted_cleanup_finished_by_sweep",
+   "ok": true,
+   "s3": 0,
+   "objects": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed2/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_failed2/tracking/q_1_r0.jpg"
+   ]
+  },
+  {
+   "id": "cleanup.job_delete_purges_own_prefix_only",
+   "ok": true,
+   "keep": [
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/owner-note.txt",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/tracking/q_1_r0.jpg",
+    "profiles/IHXg7LjZIbsTVsnNymIdb5MRbEKh/matchFootage/c_keep/video.mp4"
+   ]
+  },
+  {
+   "id": "r3.account_export_current_contract",
+   "ok": true,
+   "bytes": 14436,
+   "analyses": 6,
+   "analysisKeys": [
+    "createdAt",
+    "durationSec",
+    "errorCode",
+    "evidenceClips",
+    "frames",
+    "id",
+    "measuredDurationSec",
+    "mediaCleanupDueAt",
+    "mediaCleanupState",
+    "mediaLifecycle",
+    "pipelineState",
+    "playerId",
+    "status",
+    "targeting",
+    "trackingCompletedAt",
+    "trackingStartedAt",
+    "trackingState",
+    "updatedAt",
+    "videoStoragePath"
+   ],
+   "linkCount": 0
+  }
+ ],
+ "finishedAt": "2026-11-19T19:26:46.899Z",
+ "summary": {
+  "passed": 78,
+  "failed": []
+ }
+}

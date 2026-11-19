@@ -1013,6 +1013,100 @@ files exit 0, rules 265/265 (73 + 106 + 86; held-discovery cases added to `track
 Not ready. Integration evidence now exists for the emulator path, but R1–R4 are open, queue authentication/retry semantics
 need verification on real Cloud Tasks, the coach review has no response, and no shadow result exists.
 
+## 29. R1–R4 fixed, export contract checked, full rehearsal on candidate `f9b7e2d`; pilot decision (2026-11-19 night)
+
+Candidate: commit `f9b7e2d2ef541cecd05d3944beacd15b836a8321`, tree `4e4fdf9ede851f51fc1bd8453bf9a4318ad09102`, on
+`exp/analysis-dev-2026-11-14` (parent `a41692a`, working tree clean). GPU baseline `51d41c9f…` present, untouched.
+Effective rehearsal configuration: demo project `demo-pilot-reh`; `TRACKING_V3_ENABLED=true`, `CV_WORKER_APPROVED=true`,
+`CV_WORKER_URL=http://127.0.0.1:8790` (fake worker `football-cv/0.7.0-reh`, models `{detector: yolox-reh, ocr: parseq-reh}`,
+emulator approval seam), `OPENROUTER_BASE_URL` → local sink, no provider key, pilot doc written by `tracking-pilot-ops.mjs`.
+User-facing analysis stays disabled outside the emulator (`APPROVED_CV_WORKER = null`, `TRACKING_V3_ENABLED` unset).
+
+### Dispositions
+| Item | Disposition | Where |
+|---|---|---|
+| R1 tracking-only completion | **Fixed.** Job field `trackingState` (`running` at start, `complete` when a full report is stored or held, `failed` when a run is interrupted, never reopened once complete). The media lifecycle acts on `effectiveLifecycleStatus`: cancelled wins; running keeps the media even if the legacy pipeline failed (the pilot case: AI footage processing not approved); complete settles as a completed analysis once the legacy pipeline is not active; failed gets the existing 24 h / 7 d retry window. Retention rules themselves unchanged. | `mediaLifecycle.ts`, `trackingOrchestrator.ts`, `trackingCallables.ts` |
+| R2 review/discovery images | **Fixed.** Images are written only to the server-only twin `…/pilotHeld/<name>.jpg`; reports keep the owner path `…/tracking/<name>.jpg`, filled only on direct publication or reviewer release, emptied before a withhold commits. Moves re-write bytes without download tokens. Discarded attempts delete their images; the lifecycle discards unreferenced images; pre-R2 layouts are contained by `prune-images`. `getMediaPlaybackUrl` and export links refuse `/pilotHeld/`. Authorised review path: `ops held-images` with server credentials (no client role can read held media). | `trackingImages.ts`, `pilotGate.ts`, `mediaAccess.ts`, `dataExport.ts` |
+| R3 export | **Verified, policy decision pending** (below). No change to account-export behaviour. | — |
+| R4 60 s positioning gate | **Fixed.** Server recomputes confirmed duration from the uploaded timeline (`eligibleConfirmedSec`): each timestamp once, conflicting duplicates invalid, only `CONFIRMED_VISIBLE`, out-of-range/non-finite excluded, gaps count nothing, step = median sample spacing clamped to 50 ms–1 s (worker semantics: confirmed frames ÷ fps). `measured` kept only at ≥ 60 s (`minConfirmedSec` raised to 60 if lower); stored `confirmedSec`/`measuredSec` capped at the verified value; `serverEligibleSec` recorded. The app shows the observation, its drill, the Ask "space" suggestion and positioning follow-ups only with a validated `serverEligibleSec ≥ 60`; reports stored before R4 get none. 120 s involvement (app) and 6 s clip (server every-frame) gates unchanged. Opponent-measured share and distances remain worker claims. | `trackingV3.ts`, `coach.ts`, `ask.ts`, `development.ts` |
+
+### R3 export contract (traced)
+- **Ordinary report downloads:** none exist for tracking reports. Share cards, football CV, career replay and reel export
+  read no tracking data (code search); the report is only viewable in the app through `tracking/current` under rules.
+- **Account data export** (`requestDataExport` → Cloud Task `buildDataExport` → `exports/{uid}/{id}/scoutx-data-export.json`):
+  includes `matchAnalysisJobs` documents (now with `trackingState`, `mediaLifecycle`), `corrections`, `identityCoordination`;
+  **no** tracking report in any state, **no** review/discovery image paths or links. Rehearsal: exports with released,
+  held, withheld, reprocessed and cancelled jobs contained none (`withhold.export_excludes_report`,
+  `r3.export_has_no_tracking_images_or_links`, `r3.account_export_current_contract`; 0 usable links in the emulator).
+- **Policy:** `legal/documents/privacy-policy.md` ("You can access, correct, export and delete your data") and
+  `data-subject-rights.md` ("Portability does not cover every internal record") do not say whether a released tracking
+  report and its images belong in the export, nor how held/withheld/superseded copies are treated.
+- **Decision needed (owner or counsel):** should the account export include (a) the current released tracking report and
+  (b) its review images, and must held, withheld and superseded copies be excluded? Current behaviour (none of them) is
+  preserved. For a pilot, access requests for tracking reports would have to be answered manually within 30 days.
+
+### Full rehearsal on the candidate: 78/78 (`docs/release/pilot-rehearsal-2026-11-19/4-final-f9b7e2d.json`)
+Command: `FIREBASE_BIN=…/firebase-tools 15.35.0 scripts/pilot-rehearsal/run.sh out.json` (exit 0, 3 min 04 s). Phases: gate,
+rollback, race, r4, r1, r2legacy, legacy, cleanup, r3. The 56 historical checks all pass; 22 new:
+- **R1:** tracking-only completion deletes source and uncited frames (`mediaLifecycle.source=deleted`); keep-video retains
+  the source; duplicate full resolves and a duplicate extract after completion change nothing in state, storage or cleanup
+  attempts (the pending held copy is re-resolved, still held); cancellation while the worker runs deletes the source at once
+  and the late result publishes nothing; stopped jobs keep their source in `retry_window` (due = failure + 24 h, checked to
+  5 s); sweep 1 min before the deadline keeps it, 1 s after deletes it, a repeat does nothing; an owner resume inside the
+  window runs and completes, then cleans; other jobs' objects unchanged.
+- **R2:** while held only `pilotHeld/` twins exist; owner, other and anonymous get 403 on twins and 404 on owner paths;
+  `getMediaPlaybackUrl` on a twin → `PERMISSION_DENIED`; reviewer listing works. Release → owner 200, other/anon 403.
+  Discovery thumbnail follows release. Results discarded by the stop leave no image (480d8c2–a343caf left them).
+  **Issued URLs:** token URLs obtained by the owner while released returned 200, then non-200 right after `ops withhold`
+  (369 ms command; images are moved before the report transaction, so no image outlives report visibility), the same
+  token on the twin path fails, and after reprocessing + release the new images read 200 while the old URLs stay dead.
+  Prune twice: second run 0 changes. Pre-R2 held image at the owner path: readable before, contained by prune, released
+  image untouched.
+- **R4 through queue + worker + store:** 59.5 s → insufficient; 60.0 → measured; 60.5 → measured; 35 s uploaded twice →
+  insufficient (35); 25 + 25 s with a gap → insufficient (50); confirmed/likely conflicts → insufficient (30); worker claim
+  300 s in every case. Owner reads `measured` only for the 60 s case. Reprocessed report: still insufficient (10 s).
+- **Codec:** stored `stateStrip[0]` and moment `indicator[0]` are `{_tuple: …}` and decode to the worker tuple.
+- **Stop guarantees (race, 3 repeats):** the operator's stop write waits for an in-flight publishing transaction; the
+  held copy committed 0.5–4.4 ms before the stop. The stop takes effect when its write commits: a save that already read
+  the gate completes first (with hold on it lands held, not owner-visible); any save whose gate read comes later is refused.
+- Legacy AI routes: provider sink 0 requests; analyzeMatchFootage refused (no key; the emulator forces the footage flag on).
+
+### Delivery path and what stays unverified
+Real `taskQueue().enqueue()` → Cloud Tasks emulator → task functions; redelivery after `minBackoffSeconds` measured 60.05 s.
+Not verified (needs real Cloud Tasks): OIDC authentication of dispatch, production backoff/max-doublings/jitter,
+de-duplication by task name, dispatch deadlines under load, the hourly sweep schedule, Secret Manager, signed-URL
+issuance (the emulator cannot sign; `getMediaPlaybackUrl` returns `internal` there, the held-path refusal happens before).
+
+### Regression suites (owner PC VM; files md5-identical to the candidate, compiled lib identical)
+| Command | Exit | Result |
+|---|---|---|
+| `npm run test:unit` | 0 | 844/844 (836 + 8) |
+| `npm run typecheck` | 0 | app + tests |
+| `npx tsc -p functions` | 0 | |
+| `npx eslint <14 changed files>` | 0 | |
+| `npm run test:rules` (3 batches, firebase-tools 14.27.0) | 0 ×3 | 266/266 (73 + 106 + 87; held images server-only added) |
+| `pytest` identity safeguards (conflicting numbers, contact entry, unrelated handoff, simultaneous anchors, ambiguity, interp-no-upgrade, appearance-only) | 0 | 159/159 |
+
+### Recovery procedure (valid for `f9b7e2d` only)
+`scripts/tracking-pilot-ops.mjs` (emulator unless `--project <id> --production-authorized [--bucket <b>]`):
+`stop` → every task refuses, in-flight saves finish held or are discarded; `withhold <job> --reason r` → images closed,
+then report hidden; `reprocess <job>` → re-authorise + full resolve (held); `held-images <job>` → reviewer listing;
+`release <job> --reviewer n` → report then images published; `prune-images <job>` → reconcile images;
+`enable --allow … --worker-version … [--hold true]` → new epoch (older deliveries refused).
+
+### Pilot decision: **not proposed; pending**
+Engineering safeguards for the proposed scope pass on the candidate in the emulator. Missing prerequisites:
+1. Owner identity answers Q1–Q4 (`owner-review-2026-11-18\README.txt` unchanged since 2026-11-18 11:48 UTC). Smallest action:
+   write the answers into that file.
+2. Independent coach response: none returned (packet still private, Q1 needed first). Smallest action: answer Q1, then
+   send Part A per `_OWNER_ONLY_README.md`.
+3. Two-match shadow results: none; 0 of 10 batch-01 files downloaded. Smallest action: `hydrate.ps1 -Action Pin -Batch batch-01.txt`
+   plus target confirmation per match; then freeze and run `bench/shadow`.
+4. R3 export policy decision (above).
+5. Production-only queue behaviour (authentication, retry timing, de-duplication) unverified; needs an authorised staging
+   check before any live pilot.
+Automatic vs owner-assisted evidence: no owner-assisted run exists; all results above are automatic or synthetic.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
