@@ -4,7 +4,7 @@
  * player in BOTH matches. Anything else is listed as not comparable, with the reason.
  */
 import type { TrackingDoc, TrackingReport } from '@/features/match-analysis/services/trackingPresentation';
-import type { CoachTopic } from './coach';
+import { wholeMatchOffballEligible, type CoachTopic } from './coach';
 import { buildMomentsView } from './moments';
 
 export const MIN_CONFIRMED_SEC = 600; // 10 minutes of confirmed identity per match
@@ -101,7 +101,7 @@ export function focusFollowUps(goals: FocusGoal[], jobId: string, report: Tracki
     const base = { goalId: g.id, title: g.title, topic, momentIds: [] as string[], clips: [] as FocusFollowUp['clips'], params: {} };
     if (topic === 'positioning') {
       const seqs = (report.offball?.sequences ?? []).filter((q) => q.kind === 'free' || q.kind === 'tight');
-      const measured = report.offball?.status === 'measured';
+      const measured = wholeMatchOffballEligible(report.offball);
       out.push(measured || seqs.length
         ? { ...base, status: 'evidence', clips: seqs.slice(0, 3).map((q) => ({ start: q.start, end: q.end })), params: { count: seqs.length } }
         : { ...base, status: 'insufficient', params: { confirmedSec: Math.round(report.coverage.confirmedVisibleSec) } });

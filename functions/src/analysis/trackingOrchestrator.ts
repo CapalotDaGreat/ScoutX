@@ -32,8 +32,10 @@ import {
   type TrackingMoment,
 } from './trackingV3';
 import {
-  httpTrackingClient, storageImageStore, type ImageStore, type TrackingNotifier, type TrackingWorkerClient,
+  httpTrackingClient, imageBucketFor, markTrackingFailed, storageImageStore, type ImageStore, type TrackingNotifier,
+  type TrackingWorkerClient,
 } from './trackingCallables';
+import { IMAGE_ATTEMPT_MAX_MS, publishImages, pruneJobImages, readImageDocs, type ImageBucket } from './trackingImages';
 import {
   discoveryFinished, doneCount, newProgress, notificationId, planDiscovery, prioritisedSegments, shouldResolvePreliminary,
   type DiscoveryProgress, type ProgressBlock, type SegmentState, type TrackingProgress,
@@ -117,6 +119,8 @@ export async function startAnalysis(db: Firestore, uid: string, jobId: string, e
     const nextDiscovery = discovery ? { ...discovery, extractionQueued: !waitForDiscovery } : null;
     tx.set(progressRef(db, jobId), { ...base, segments, discovery: nextDiscovery, outcome: null, blocked: null, updatedAt: at,
       startedAt: existing?.outcome ? at : base.startedAt, pilotAuthorizedAt: at });
+    // R1: a running tracking analysis keeps its source (the media lifecycle waits for it to finish).
+    tx.set(jobRef, { trackingState: 'running', trackingStartedAt: at, updatedAt: at }, { merge: true });
     return { status: 'started' as const, generation: base.generation, segments: base.plan.length, toQueue, discoveryQueue,
       pendingSegments, job };
   });
@@ -167,6 +171,7 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   const pilot = (await pilotDecision(db, job.playerId, env, undefined, { authorizedAt: prog.pilotAuthorizedAt })).decision;
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available' || !job.videoStoragePath || pilot !== 'allowed') {
     await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
+    await markTrackingFailed(db, jobId, now());
     return 'unavailable';
   }
   await ref.set({ segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
@@ -182,6 +187,7 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
     await ref.set({ segments: { [String(index)]: { status: last ? 'failed' : 'queued', attempts: attempt + 1 } },
       ...(last ? { outcome: 'interrupted' } : {}), updatedAt: at }, { merge: true });
     if (!last) return 'retry';
+    await markTrackingFailed(db, jobId, new Date(at));
     await (notify ?? ((id, input) => writeSystemActivity(db, id, input)))(notificationId('interrupted', jobId, generation), {
       recipientId: job.playerId, recipientRole: 'player', type: 'analysis_interrupted', category: 'analysis',
       title: 'Analysis paused', body: 'Part of your match could not be analysed. Open it to resume - finished parts are kept.',
@@ -221,7 +227,8 @@ export const DISCOVERY_COLLECTION_DOC = 'discovery';
 export async function processDiscoverTask(db: Firestore, jobId: string, generation: number, index: number, attempt: number,
   client: TrackingWorkerClient | null, enqueue: Enqueue, env: NodeJS.ProcessEnv = process.env,
   sourceUrl: (path: string) => Promise<string> = async (p) => (await readableSourceFor(p, 60 * 60 * 1000)).url,
-  now: () => Date = () => new Date(), notify?: TrackingNotifier, storeImage: ImageStore = storageImageStore): Promise<DiscoverOutcome> {
+  now: () => Date = () => new Date(), notify?: TrackingNotifier, storeImage: ImageStore = storageImageStore,
+  images?: ImageBucket | null): Promise<DiscoverOutcome> {
   const ref = progressRef(db, jobId);
   const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
   const prog = (await ref.get()).data() as TrackingProgress | undefined;
@@ -237,6 +244,7 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   const pilot = (await pilotDecision(db, job.playerId, env, undefined, { authorizedAt: prog.pilotAuthorizedAt })).decision;
   if (pilot !== 'allowed') {
     await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
+    await markTrackingFailed(db, jobId, now());
     return 'unavailable';
   }
   const number = job.targeting?.jerseyNumber ?? '';
@@ -258,21 +266,24 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   }
   const raw = new Map<string, unknown>(((res?.moments ?? []) as Array<{ id?: unknown; imageJpegBase64?: unknown }>)
     .map((m) => [String(m?.id), m?.imageJpegBase64]));
+  const staged: string[] = [];
   for (const m of moments ?? []) {
     const jpeg = decodeReviewImage(raw.get(m.id));
     if (!jpeg) continue;
     const path = reviewImagePath(job.playerId, jobId, `${m.id}_g${generation}`);
     await storeImage(path, jpeg);
+    staged.push(path);
     m.imagePath = path;
   }
   const processingSec = typeof res?.processingSec === 'number' && Number.isFinite(res.processingSec) ? res.processingSec : undefined;
   return finishDiscovery(db, jobId, generation, index, moments ? 'done' : 'failed', moments ?? [], at, enqueue, processingSec ?? null,
-    notify, job.playerId, moments ? 'done' : 'failed', env);
+    notify, job.playerId, moments ? 'done' : 'failed', env, { staged, images: imageBucketFor(storeImage, images) });
 }
 
 async function finishDiscovery(db: Firestore, jobId: string, generation: number, index: number, status: 'done' | 'failed',
   moments: TrackingMoment[], at: string, enqueue: Enqueue, processingSec: number | null, notify: TrackingNotifier | undefined,
-  playerId: string, outcome: DiscoverOutcome, env: NodeJS.ProcessEnv = process.env): Promise<DiscoverOutcome> {
+  playerId: string, outcome: DiscoverOutcome, env: NodeJS.ProcessEnv = process.env,
+  media: { staged: string[]; images: ImageBucket | null } = { staged: [], images: null }): Promise<DiscoverOutcome> {
   const ref = progressRef(db, jobId);
   const publicRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc(DISCOVERY_COLLECTION_DOC);
   const heldRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(HELD_COLLECTION).doc(DISCOVERY_COLLECTION_DOC);
@@ -303,8 +314,17 @@ async function finishDiscovery(db: Firestore, jobId: string, generation: number,
     const pending = prog.plan.map((s) => s.index).filter((i) => prog.segments[String(i)]?.status !== 'done');
     return { first, queueExtraction, order: prioritisedSegments(prog.plan, d.sightingTimes).filter((i) => pending.includes(i)) };
   });
+  // R2: sightings' images follow the sightings (owner path only when not held); discarded ones are deleted.
+  if (media.images && media.staged.length) {
+    if (next && !heldOnly) await publishImages(media.images, media.staged);
+    await pruneJobImages(media.images, playerId, jobId, await readImageDocs(db, MATCH_COLLECTION, jobId),
+      { own: next ? [] : media.staged, olderThanMs: Date.parse(at) - IMAGE_ATTEMPT_MAX_MS });
+  }
   if (!next) {
-    if (stopped) await ref.set({ blocked: 'worker_unavailable', updatedAt: at }, { merge: true });
+    if (stopped) {
+      await ref.set({ blocked: 'worker_unavailable', updatedAt: at }, { merge: true });
+      await markTrackingFailed(db, jobId, new Date(at));
+    }
     return stopped ? 'unavailable' : 'stale';
   }
   if (next.first && !heldOnly) {

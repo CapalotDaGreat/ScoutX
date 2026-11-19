@@ -65,7 +65,8 @@ async function many(query, dropLocation = false) {
 /** Paths of the user's own media, turned into time-limited links where the platform can sign them. */
 async function mediaLinks(uid, paths, expiresAt) {
     const bucket = (0, storage_1.getStorage)().bucket();
-    const own = [...new Set(paths)].filter((path) => path.startsWith(`profiles/${uid}/`)).slice(0, 500);
+    // Held/withheld tracking images (…/pilotHeld/…) are never linked (R2/R3).
+    const own = [...new Set(paths)].filter((path) => path.startsWith(`profiles/${uid}/`) && !path.includes('/pilotHeld/')).slice(0, 500);
     return Promise.all(own.map(async (path) => {
         try {
             const [url] = await bucket.file(path).getSignedUrl({ action: 'read', expires: Date.parse(expiresAt) });

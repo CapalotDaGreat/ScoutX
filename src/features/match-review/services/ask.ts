@@ -6,7 +6,7 @@
  * explicit "I cannot verify ..." answer with the reason, never an estimate.
  */
 import type { TrackingReport } from '@/features/match-analysis/services/trackingPresentation';
-import { buildCoachInsights, type Insight } from './coach';
+import { buildCoachInsights, wholeMatchOffballEligible, type Insight } from './coach';
 import { buildMomentsView, type MomentCard } from './moments';
 
 export type AskIntent =
@@ -197,7 +197,7 @@ export function suggestedQuestions(report: TrackingReport | null): AskIntent[] {
   const out: AskIntent[] = [];
   if (view.moments.length > 0) out.push('best_moment');
   if (view.needsReview.length > 0) out.push('review');
-  if (report.offball?.status === 'measured' || (report.offball?.sequences ?? []).some((q) => q.kind === 'free' || q.kind === 'tight')) out.push('space');
+  if (wholeMatchOffballEligible(report.offball) || (report.offball?.sequences ?? []).some((q) => q.kind === 'free' || q.kind === 'tight')) out.push('space');
   out.push('improve', 'identity', 'distance');
   return out.slice(0, 4);
 }

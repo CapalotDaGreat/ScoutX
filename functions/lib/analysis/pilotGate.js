@@ -10,6 +10,7 @@ exports.authorizeRun = authorizeRun;
 exports.releaseHeldReport = releaseHeldReport;
 exports.withholdPublishedReport = withholdPublishedReport;
 const cvConfig_1 = require("./cvConfig");
+const trackingImages_1 = require("./trackingImages");
 /**
  * Pilot gate for full-match tracking (2026-11-19). Fail-closed runtime control that sits on top of
  * TRACKING_V3_ENABLED and the CV worker approval:
@@ -119,13 +120,14 @@ async function authorizeRun(db, matchCollection, trackingCollection, jobId, now 
     });
 }
 /** Reviewer action: publish a held report to the owner (no notification is sent here). */
-async function releaseHeldReport(db, matchCollection, trackingCollection, jobId, reviewer, now = () => new Date()) {
+async function releaseHeldReport(db, matchCollection, trackingCollection, jobId, reviewer, now = () => new Date(), images = null) {
     const job = db.collection(matchCollection).doc(jobId);
+    let releasedDocs = [];
     const held = job.collection(exports.HELD_COLLECTION).doc('current');
     const current = job.collection(trackingCollection).doc('current');
     const heldDiscovery = job.collection(exports.HELD_COLLECTION).doc('discovery');
     const discovery = job.collection(trackingCollection).doc('discovery');
-    return db.runTransaction(async (tx) => {
+    const result = await db.runTransaction(async (tx) => {
         const h = await tx.get(held);
         const cur = await tx.get(current);
         const hd = await tx.get(heldDiscovery);
@@ -138,6 +140,7 @@ async function releaseHeldReport(db, matchCollection, trackingCollection, jobId,
             return 'withheld_requires_reprocess';
         }
         const at = now().toISOString();
+        releasedDocs = [h.exists && h.get('report') ? h.data() : null, hd.exists && !hd.get('withheldAt') ? hd.data() : null];
         if (h.exists && h.get('report')) {
             tx.set(current, { ...h.data(), version: (cur.get('version') ?? 0) + 1, releasedAt: at,
                 releasedBy: reviewer });
@@ -149,15 +152,26 @@ async function releaseHeldReport(db, matchCollection, trackingCollection, jobId,
         }
         return 'released';
     });
+    // R2: the released report's images become owner-readable only now (held twins -> owner paths).
+    if (result === 'released' && images)
+        await (0, trackingImages_1.publishImages)(images, (0, trackingImages_1.referencedImagePaths)(...releasedDocs));
+    return result;
 }
 /** Containment: take an already published report away from the owner and keep it under hold with a reason. */
-async function withholdPublishedReport(db, matchCollection, trackingCollection, jobId, reason, now = () => new Date()) {
+async function withholdPublishedReport(db, matchCollection, trackingCollection, jobId, reason, now = () => new Date(), images = null) {
     const job = db.collection(matchCollection).doc(jobId);
+    // R2: close the image paths first, so no image outlives the report's visibility; undone if nothing was published.
+    let contained = new Set();
+    if (images) {
+        const [c, d] = await Promise.all([job.collection(trackingCollection).doc('current').get(), job.collection(trackingCollection).doc('discovery').get()]);
+        contained = (0, trackingImages_1.referencedImagePaths)(c.data() ?? null, d.data() ?? null);
+        await (0, trackingImages_1.containImages)(images, contained);
+    }
     const held = job.collection(exports.HELD_COLLECTION).doc('current');
     const current = job.collection(trackingCollection).doc('current');
     const discovery = job.collection(trackingCollection).doc('discovery');
     const heldDiscovery = job.collection(exports.HELD_COLLECTION).doc('discovery');
-    return db.runTransaction(async (tx) => {
+    const result = await db.runTransaction(async (tx) => {
         const cur = await tx.get(current);
         const disc = await tx.get(discovery);
         if ((!cur.exists || !cur.get('report')) && !(disc.exists && disc.get('moments')))
@@ -174,5 +188,8 @@ async function withholdPublishedReport(db, matchCollection, trackingCollection, 
             pendingReason: 'withheld_for_review', feedbackRevision: cur.get('feedbackRevision') ?? 0, updatedAt: at });
         return 'withheld';
     });
+    if (result !== 'withheld' && images)
+        await (0, trackingImages_1.publishImages)(images, contained);
+    return result;
 }
 //# sourceMappingURL=pilotGate.js.map

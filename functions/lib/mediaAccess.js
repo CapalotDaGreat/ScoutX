@@ -16,7 +16,8 @@ function asRecord(value) {
     return value;
 }
 function ownedStoragePath(uid, storagePath) {
-    return storagePath.startsWith(`profiles/${uid}/`) && !storagePath.includes('..');
+    // R2: held/withheld tracking images (…/pilotHeld/…) are server-only, even for their owner.
+    return storagePath.startsWith(`profiles/${uid}/`) && !storagePath.includes('..') && !storagePath.includes('/pilotHeld/');
 }
 async function grantedStoragePath(uid, storagePath, mediaId, reelId) {
     const now = new Date().toISOString();
@@ -73,7 +74,8 @@ exports.getMediaPlaybackUrl = (0, https_1.onCall)((0, callableOptions_1.createCa
         throw new https_1.HttpsError('invalid-argument', 'storagePath is required.');
     }
     const uid = request.auth.uid;
-    const allowed = ownedStoragePath(uid, storagePath) || (await grantedStoragePath(uid, storagePath, mediaId, reelId));
+    const allowed = !storagePath.includes('/pilotHeld/')
+        && (ownedStoragePath(uid, storagePath) || (await grantedStoragePath(uid, storagePath, mediaId, reelId)));
     if (!allowed) {
         throw new https_1.HttpsError('permission-denied', 'You cannot play this media.');
     }

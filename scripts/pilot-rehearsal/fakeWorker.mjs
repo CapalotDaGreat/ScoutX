@@ -34,10 +34,38 @@ function report(jobId) {
     reviewQuestions: [{ t: 12.3, box: [1, 2, 30, 90], affectedSec: 20, currentlyTarget: false, score: 0.5, imageJpegBase64: JPEG }],
     referenceImageJpegBase64: JPEG,
     analysedRange: { startSec: 0, endSec: 60, parts: 1 },
+    // R4: the worker CLAIMS a measured whole-match observation on 300 s confirmed; the server must check the timeline.
+    offball: { status: 'measured', confirmedSec: 300, minConfirmedSec: 60, measuredSec: 240,
+      nearestOpponentBodyHeights: { median: 2.2, p25: 1.1, p75: 3.4 }, nearestTeammateBodyHeights: { median: 2.9 },
+      freeShare: 0.3, tightShare: 0.1, freeEpisodes: [{ start: 12, end: 15 }], tightEpisodes: [] },
     moments: [{ id: 'm_1', kind: 'spell', kinds: ['spell'], start: 11, end: 18, clipStart: 10, clipEnd: 19, identityState: 'CONFIRMED_VISIBLE',
       candidate: false, indicator: [[11, 0.4, 0.3, 0.05, 0.2], [12, 0.41, 0.3, 0.05, 0.2]], imageJpegBase64: JPEG }],
     rehearsalJob: jobId,
   };
+}
+
+/**
+ * R4 timelines (uploaded identity samples). Default: 1 sample/s, 10 s CONFIRMED. p4_* jobs: 20 samples/s
+ * (the server clamps its step to >= 50 ms), so exact boundary values are representable inside the 60 s recording.
+ */
+function timelineFor(jobId) {
+  const C = 'CONFIRMED_VISIBLE';
+  const seq = (t0, n, state = C, step = 0.05) => Array.from({ length: n }, (_, i) => [Math.round((t0 + i * step) * 1000) / 1000, state]);
+  const pick = {
+    p4_below: () => seq(0, 1190),                                   // 59.5 s
+    p4_exact: () => seq(0, 1200),                                   // 60.0 s
+    p4_above: () => seq(0, 1210),                                   // 60.5 s (last sample at 60.45 s, inside the 0.5 s tolerance)
+    p4_overlap: () => [...seq(0, 700), ...seq(0, 700)],             // the same 35 s uploaded twice -> 35 s
+    p4_gap: () => [...seq(0, 500), ...seq(35, 500)],                // 25 s + 25 s around a 10 s hole -> 50 s
+    p4_likely: () => [...seq(0, 1000), ...seq(30, 600, 'LIKELY_VISIBLE')], // 30 s confirmed + likely/conflicting samples
+  }[jobId.replace(/_[a-z0-9]{4}$/, '')];
+  if (pick) {
+    const rows = pick();
+    return { times: rows.map((r) => r[0]), states: rows.map((r) => r[1]) };
+  }
+  const times = Array.from({ length: 61 }, (_, i) => i);
+  const states = times.map((t) => (t >= 10 && t < 20 ? C : t >= 20 && t < 30 ? 'LIKELY_VISIBLE' : 'UNKNOWN'));
+  return { times, states };
 }
 
 function nextAction(jobId, route) {
@@ -118,7 +146,6 @@ http.createServer(async (req, res) => {
   }
   const models = action === 'wrong_models' ? { ...MODELS, detector: 'unapproved' } : MODELS;
   const workerVersion = action === 'wrong_version' ? `${VERSION}-unapproved` : VERSION;
-  const times = Array.from({ length: 61 }, (_, i) => i);
-  const states = times.map((t) => (t >= 10 && t < 20 ? 'CONFIRMED_VISIBLE' : t >= 20 && t < 30 ? 'LIKELY_VISIBLE' : 'UNKNOWN'));
+  const { times, states } = timelineFor(jobId);
   return send(res, 200, { report: report(jobId), timeline: { times, states }, workerVersion, models });
 }).listen(PORT, '127.0.0.1', () => console.log(`fake worker on 127.0.0.1:${PORT} version ${VERSION}`));

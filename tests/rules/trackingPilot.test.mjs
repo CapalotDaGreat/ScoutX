@@ -39,3 +39,21 @@ test('a held report is invisible to its owner until released; the owner still re
   assert.ok(isAllowed(await getDocument(OWNER, `matchAnalysisJobs/${JOB}/tracking/current`)));
   assert.ok(isDenied(await getDocument(OTHER, `matchAnalysisJobs/${JOB}/tracking/current`)));
 });
+
+// R2 (2026-11-19): held/withheld review and discovery images live under …/pilotHeld/ and no client may read,
+// write or delete them; released images under …/tracking/ stay owner-only.
+test('held review images are server-only; released images are owner-only', async () => {
+  const { adminUploadObject, downloadObject, uploadObject, deleteObject } = await import('./emulator.mjs');
+  const held = `profiles/${OWNER}/matchFootage/${JOB}/pilotHeld/q_1_r0.jpg`;
+  const pub = `profiles/${OWNER}/matchFootage/${JOB}/tracking/q_1_r0.jpg`;
+  assert.ok(isAllowed(await adminUploadObject(held, 'image/jpeg')));
+  assert.ok(isAllowed(await adminUploadObject(pub, 'image/jpeg')));
+  for (const who of [OWNER, OTHER, null]) {
+    assert.ok(isDenied(await downloadObject(who, held)), `read held as ${who}`);
+    assert.ok(isDenied(await uploadObject(who, held, 'image/jpeg')), `write held as ${who}`);
+    assert.ok(isDenied(await deleteObject(who, held)), `delete held as ${who}`);
+  }
+  assert.ok(isAllowed(await downloadObject(OWNER, pub)));
+  assert.ok(isDenied(await downloadObject(OTHER, pub)));
+  assert.ok(isDenied(await downloadObject(null, pub)));
+});

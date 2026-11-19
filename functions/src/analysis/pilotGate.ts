@@ -1,5 +1,6 @@
 import type { Firestore, Transaction } from 'firebase-admin/firestore';
 import { cvApproval } from './cvConfig';
+import { containImages, publishImages, referencedImagePaths, type ImageBucket } from './trackingImages';
 
 /**
  * Pilot gate for full-match tracking (2026-11-19). Fail-closed runtime control that sits on top of
@@ -112,13 +113,15 @@ export async function authorizeRun(db: Firestore, matchCollection: string, track
 
 /** Reviewer action: publish a held report to the owner (no notification is sent here). */
 export async function releaseHeldReport(db: Firestore, matchCollection: string, trackingCollection: string, jobId: string,
-  reviewer: string, now: () => Date = () => new Date()): Promise<'released' | 'nothing_held' | 'withheld_requires_reprocess'> {
+  reviewer: string, now: () => Date = () => new Date(), images: ImageBucket | null = null):
+  Promise<'released' | 'nothing_held' | 'withheld_requires_reprocess'> {
   const job = db.collection(matchCollection).doc(jobId);
+  let releasedDocs: unknown[] = [];
   const held = job.collection(HELD_COLLECTION).doc('current');
   const current = job.collection(trackingCollection).doc('current');
   const heldDiscovery = job.collection(HELD_COLLECTION).doc('discovery');
   const discovery = job.collection(trackingCollection).doc('discovery');
-  return db.runTransaction(async (tx) => {
+  const result = await db.runTransaction(async (tx) => {
     const h = await tx.get(held);
     const cur = await tx.get(current);
     const hd = await tx.get(heldDiscovery);
@@ -129,6 +132,7 @@ export async function releaseHeldReport(db: Firestore, matchCollection: string, 
       return 'withheld_requires_reprocess' as const;
     }
     const at = now().toISOString();
+    releasedDocs = [h.exists && h.get('report') ? h.data() : null, hd.exists && !hd.get('withheldAt') ? hd.data() : null];
     if (h.exists && h.get('report')) {
       tx.set(current, { ...h.data(), version: ((cur.get('version') as number | undefined) ?? 0) + 1, releasedAt: at,
         releasedBy: reviewer });
@@ -140,17 +144,27 @@ export async function releaseHeldReport(db: Firestore, matchCollection: string, 
     }
     return 'released' as const;
   });
+  // R2: the released report's images become owner-readable only now (held twins -> owner paths).
+  if (result === 'released' && images) await publishImages(images, referencedImagePaths(...releasedDocs));
+  return result;
 }
 
 /** Containment: take an already published report away from the owner and keep it under hold with a reason. */
 export async function withholdPublishedReport(db: Firestore, matchCollection: string, trackingCollection: string,
-  jobId: string, reason: string, now: () => Date = () => new Date()): Promise<'withheld' | 'nothing_published'> {
+  jobId: string, reason: string, now: () => Date = () => new Date(), images: ImageBucket | null = null): Promise<'withheld' | 'nothing_published'> {
   const job = db.collection(matchCollection).doc(jobId);
+  // R2: close the image paths first, so no image outlives the report's visibility; undone if nothing was published.
+  let contained: Set<string> = new Set();
+  if (images) {
+    const [c, d] = await Promise.all([job.collection(trackingCollection).doc('current').get(), job.collection(trackingCollection).doc('discovery').get()]);
+    contained = referencedImagePaths(c.data() ?? null, d.data() ?? null);
+    await containImages(images, contained);
+  }
   const held = job.collection(HELD_COLLECTION).doc('current');
   const current = job.collection(trackingCollection).doc('current');
   const discovery = job.collection(trackingCollection).doc('discovery');
   const heldDiscovery = job.collection(HELD_COLLECTION).doc('discovery');
-  return db.runTransaction(async (tx) => {
+  const result = await db.runTransaction(async (tx) => {
     const cur = await tx.get(current);
     const disc = await tx.get(discovery);
     if ((!cur.exists || !cur.get('report')) && !(disc.exists && disc.get('moments'))) return 'nothing_published' as const;
@@ -165,4 +179,6 @@ export async function withholdPublishedReport(db: Firestore, matchCollection: st
       pendingReason: 'withheld_for_review', feedbackRevision: cur.get('feedbackRevision') ?? 0, updatedAt: at });
     return 'withheld' as const;
   });
+  if (result !== 'withheld' && images) await publishImages(images, contained);
+  return result;
 }

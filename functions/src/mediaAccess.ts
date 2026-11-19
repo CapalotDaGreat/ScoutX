@@ -16,7 +16,8 @@ function asRecord(value: unknown): Record<string, unknown> | null {
 }
 
 function ownedStoragePath(uid: string, storagePath: string): boolean {
-  return storagePath.startsWith(`profiles/${uid}/`) && !storagePath.includes('..');
+  // R2: held/withheld tracking images (…/pilotHeld/…) are server-only, even for their owner.
+  return storagePath.startsWith(`profiles/${uid}/`) && !storagePath.includes('..') && !storagePath.includes('/pilotHeld/');
 }
 
 type GrantDoc = {
@@ -96,8 +97,8 @@ export const getMediaPlaybackUrl = onCall(createCallableOptions(), async (reques
   }
 
   const uid = request.auth.uid;
-  const allowed =
-    ownedStoragePath(uid, storagePath) || (await grantedStoragePath(uid, storagePath, mediaId, reelId));
+  const allowed = !storagePath.includes('/pilotHeld/')
+    && (ownedStoragePath(uid, storagePath) || (await grantedStoragePath(uid, storagePath, mediaId, reelId)));
   if (!allowed) {
     throw new HttpsError('permission-denied', 'You cannot play this media.');
   }

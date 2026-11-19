@@ -161,6 +161,11 @@ export type OffballObservations = {
   status: 'measured' | 'insufficient';
   confirmedSec: number;
   minConfirmedSec: number;
+  /**
+   * R4 (2026-11-19): confirmed duration the server recomputed from the validated timeline. The worker's
+   * confirmedSec is only a claim; 'measured' is kept only when this is >= OFFBALL_MIN_CONFIRMED_SEC.
+   */
+  serverEligibleSec?: number;
   measuredSec?: number;
   nearestOpponentBodyHeights?: { median: number; p25: number; p75: number };
   nearestTeammateBodyHeights?: { median: number } | null;
@@ -237,6 +242,49 @@ export function parseOffballSequences(raw: unknown, strip: Array<[number, number
       : { start: q.start as number, end: q.end as number, kind: q.kind as OffballSequence['kind'], measuredSec: q.measuredSec as number,
           nearestOpponentMedianBH: q.nearestOpponentMedianBH as number, freeShare: q.freeShare as number, tightShare: q.tightShare as number,
           nearestTeammateMedianBH: nonNeg(q.nearestTeammateMedianBH) ? q.nearestTeammateMedianBH as number : null });
+}
+
+/** Whole-match off-ball observations need this much confirmed footage (worker offball.MIN_CONFIRMED_SEC). */
+export const OFFBALL_MIN_CONFIRMED_SEC = 60;
+
+/**
+ * R4: confirmed duration recomputed from the uploaded identity timeline, with the worker's semantics (confirmed
+ * samples x sampling step; the worker counts confirmed frames / fps). Each timestamp counts once (duplicates or
+ * overlapping uploads are merged; a timestamp reported with two different states is invalid and excluded);
+ * samples outside the recording, non-finite times and states other than CONFIRMED_VISIBLE (LIKELY, AMBIGUOUS,
+ * UNKNOWN, missing) contribute nothing; gaps contribute nothing (a sample stands for one step, never for the gap
+ * before it). No usable timeline -> 0.
+ */
+export function eligibleConfirmedSec(frames: { times: number[]; states: string[] } | undefined, recordingSec: number): number {
+  if (!frames || !Array.isArray(frames.times) || !Array.isArray(frames.states) || frames.times.length !== frames.states.length) return 0;
+  const byKey = new Map<number, string>();
+  for (let i = 0; i < frames.times.length; i += 1) {
+    const t = frames.times[i];
+    const s = frames.states[i];
+    if (!isNum(t) || t < 0 || (recordingSec > 0 && t > recordingSec + 0.5) || typeof s !== 'string') continue;
+    const k = Math.round(t * 1000);
+    const prev = byKey.get(k);
+    byKey.set(k, prev === undefined || prev === s ? s : 'INVALID_CONFLICT');
+  }
+  const keys = [...byKey.keys()].sort((a, b) => a - b);
+  if (keys.length < 2) return 0;
+  const steps: number[] = [];
+  for (let i = 1; i < keys.length; i += 1) steps.push(keys[i] - keys[i - 1]);
+  steps.sort((a, b) => a - b);
+  const stepMs = Math.min(1000, Math.max(50, steps[Math.floor(steps.length / 2)]));
+  const confirmed = keys.filter((k) => byKey.get(k) === 'CONFIRMED_VISIBLE').length;
+  return (confirmed * stepMs) / 1000;
+}
+
+/** R4: keep 'measured' only when the server's own count reaches the gate; never upgrade an 'insufficient' block. */
+export function enforceOffballGate(ob: OffballObservations, eligibleSec: number): OffballObservations {
+  const minConfirmedSec = Math.max(OFFBALL_MIN_CONFIRMED_SEC, ob.minConfirmedSec);
+  if (ob.status === 'measured' && eligibleSec >= minConfirmedSec) {
+    // Durations shown to the player ("on the N min where you are confirmed") never exceed what the server verified.
+    return { ...ob, minConfirmedSec, serverEligibleSec: eligibleSec, confirmedSec: Math.min(ob.confirmedSec, eligibleSec),
+      ...(ob.measuredSec !== undefined ? { measuredSec: Math.min(ob.measuredSec, eligibleSec) } : {}) };
+  }
+  return { status: 'insufficient', confirmedSec: Math.min(ob.confirmedSec, eligibleSec), minConfirmedSec, serverEligibleSec: eligibleSec };
 }
 
 /** Validates the worker's off-ball block; malformed -> null (the coach then says nothing about it). */
@@ -420,8 +468,9 @@ export function parseTrackingReport(raw: unknown, timeline?: { states: string[];
     moments,
     analysedRange,
     offball: (() => {
-      const ob = parseOffball(r.offball, coverage.recordingSec);
-      if (!ob) return null;
+      const parsed = parseOffball(r.offball, coverage.recordingSec);
+      if (!parsed) return null;
+      const ob = enforceOffballGate(parsed, eligibleConfirmedSec(timeline, coverage.recordingSec));
       const strip = timeline ? encodeStateStrip(timeline.times, timeline.states) : [];
       const sequences = parseOffballSequences(asRecord(r.offball)?.sequences, strip, timeline);
       return sequences.length ? { ...ob, sequences } : ob;

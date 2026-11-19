@@ -7,6 +7,10 @@ import { createCallableOptions } from '../callableOptions';
 import { taskQueueName } from '../region';
 import { cvWorkerStatus, cvWorkerUrl, isApprovedWorkerOutput } from './cvConfig';
 import { HELD_COLLECTION, pilotDecision } from './pilotGate';
+import {
+  IMAGE_ATTEMPT_MAX_MS, heldImagePath, publishImages, pruneJobImages, readImageDocs, referencedImagePaths, storageImageBucket,
+  type ImageBucket,
+} from './trackingImages';
 import { identityToken } from './cvWorker';
 import { MATCH_COLLECTION, type MatchJobDoc } from './frameAnalysis';
 import {
@@ -122,6 +126,17 @@ export const setTrackingPeriods = onCall(createCallableOptions(), async (request
   });
 });
 
+/** R1: tracking run state on the job document (server-only field; drives the media lifecycle). */
+export async function markTrackingFailed(db: Firestore, jobId: string, now = new Date()): Promise<void> {
+  const ref = db.collection(MATCH_COLLECTION).doc(jobId);
+  await db.runTransaction(async (tx) => {
+    const snap = await tx.get(ref);
+    // A finished run stays finished: a late failure of a duplicate task must not reopen the retry window.
+    if (!snap.exists || snap.get('trackingState') === 'complete') return;
+    tx.set(ref, { trackingState: 'failed', trackingFailedAt: now.toISOString(), updatedAt: now.toISOString() }, { merge: true });
+  });
+}
+
 // ------------------------------------------------------------------------------ re-resolve task
 
 export type TrackingWorkerClient = (body: Record<string, unknown>) => Promise<unknown | null>;
@@ -148,10 +163,16 @@ export function httpTrackingClient(baseUrl: string, env: NodeJS.ProcessEnv = pro
 
 export type ImageStore = (path: string, jpeg: Buffer) => Promise<void>;
 
+/** Writes the server-only held twin of a review image (R2, trackingImages.ts); the owner path is filled on release. */
 export const storageImageStore: ImageStore = async (path, jpeg) => {
-  await getStorage().bucket().file(path).save(jpeg, { contentType: 'image/jpeg', resumable: false,
+  await getStorage().bucket().file(heldImagePath(path)).save(jpeg, { contentType: 'image/jpeg', resumable: false,
     metadata: { cacheControl: 'private, max-age=3600' } });
 };
+
+/** Image moves run against Storage only on the production path (tests inject their own store and bucket). */
+export function imageBucketFor(storeImage: ImageStore, images?: ImageBucket | null): ImageBucket | null {
+  return images !== undefined ? images : storeImage === storageImageStore ? storageImageBucket : null;
+}
 
 /** Writes a server activity (push policy, preferences and de-duplication apply downstream). */
 export type TrackingNotifier = (activityId: string, input: SystemActivityInput) => Promise<boolean>;
@@ -177,6 +198,8 @@ export type ResolveOptions = {
   enqueueFollowUp?: FollowUpEnqueue;
   notify?: TrackingNotifier;
   now?: () => Date;
+  /** R2 image moves; defaults to Storage when the default image store is used. */
+  images?: ImageBucket | null;
 };
 
 type ProgressDoc = TrackingProgress;
@@ -222,11 +245,14 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   const rawReport = raw.report as { reviewQuestions?: Array<{ imageJpegBase64?: unknown }>;
     moments?: Array<{ id?: unknown; imageJpegBase64?: unknown }>; referenceImageJpegBase64?: unknown };
   const rawQuestions = rawReport.reviewQuestions ?? [];
+  const staged: string[] = [];
+  const attemptStartedMs = now().getTime();
   for (let i = 0; i < report.reviewQuestions.length; i += 1) {
     const jpeg = decodeReviewImage(rawQuestions[i]?.imageJpegBase64);
     if (!jpeg) continue;
     const path = reviewImagePath(job.playerId, jobId, `${report.reviewQuestions[i].id}_r${feedbackRevision}`);
     await storeImage(path, jpeg);
+    staged.push(path);
     report.reviewQuestions[i].imagePath = path;
   }
   // Moment thumbnails: the target's own close-up crop inside the clip, owner-only.
@@ -236,12 +262,14 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     if (!jpeg) continue;
     const path = reviewImagePath(job.playerId, jobId, `${m.id}_p${report.analysedRange.parts}_r${feedbackRevision}`);
     await storeImage(path, jpeg);
+    staged.push(path);
     m.imagePath = path;
   }
   const ref = decodeReviewImage(rawReport.referenceImageJpegBase64);
   if (ref) {
     const path = reviewImagePath(job.playerId, jobId, 'reference');
     await storeImage(path, ref);
+    staged.push(path);
     report.referenceImagePath = path;
   }
   const at = now().toISOString();
@@ -282,6 +310,10 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
       stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp,
       // Provenance for audits and rollback: exactly which approved worker build and models produced this report.
       producedBy: { workerVersion: raw.workerVersion, models: raw.models } };
+    // R1: a full report (published or held) finishes the tracking run; the media lifecycle takes it from here.
+    if (progress && scope === 'full') {
+      tx.set(db.collection(MATCH_COLLECTION).doc(jobId), { trackingState: 'complete', trackingCompletedAt: at, updatedAt: at }, { merge: true });
+    }
     if (held) {
       // Held for review: nothing reaches tracking/current (owner-readable) and no completion notice is sent.
       // Reprocessing a contained report keeps the containment record for audit.
@@ -299,6 +331,16 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     }
     return 'done' as const;
   });
+  // R2: images follow the report. Published -> owner paths; held -> stay server-only; anything else discards
+  // this attempt's images (and superseded images older than any attempt that could still be running).
+  const images = imageBucketFor(storeImage, opts.images);
+  if (images) {
+    if (outcome === 'done') await publishImages(images, referencedImagePaths(toStoredForm(report)));
+    if (outcome === 'done' || outcome === 'held' || staged.length) {
+      await pruneJobImages(images, job.playerId, jobId, await readImageDocs(db, MATCH_COLLECTION, jobId),
+        { own: outcome === 'done' || outcome === 'held' ? [] : staged, olderThanMs: attemptStartedMs - IMAGE_ATTEMPT_MAX_MS });
+    }
+  }
   const fu = followUp as OcrFollowUp | null;
   if ((outcome === 'done' || outcome === 'held') && fu && fu.status === 'scheduled') {
     await (opts.enqueueFollowUp ?? cloudTasksFollowUpEnqueue)({ jobId, feedbackRevision, round: fu.round },
@@ -405,4 +447,6 @@ export async function settleOrchestratedResolve(db: Firestore, jobId: string, sc
   const ref = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc('progress');
   const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped');
   await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
+  // R1: an interrupted run is resumable; the source stays for the failed-analysis retry window, then goes.
+  if (failed) await markTrackingFailed(db, jobId, now);
 }

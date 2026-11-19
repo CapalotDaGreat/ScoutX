@@ -115,6 +115,14 @@ export function pickDrill(topic: CoachTopic, position: PositionGroup, age: AgeBa
 }
 
 const MIN_CONFIRMED_FOR_COACHING_SEC = 120;
+/** Mirrors functions/src/analysis/trackingV3.ts OFFBALL_MIN_CONFIRMED_SEC (worker offball.MIN_CONFIRMED_SEC). */
+export const OFFBALL_MIN_CONFIRMED_SEC = 60;
+
+/** R4: a whole-match off-ball observation is usable only with the server-validated confirmed duration. */
+export function wholeMatchOffballEligible(ob: TrackingReport['offball'] | null | undefined): boolean {
+  const eligible = ob?.serverEligibleSec;
+  return ob?.status === 'measured' && typeof eligible === 'number' && eligible >= Math.max(OFFBALL_MIN_CONFIRMED_SEC, ob.minConfirmedSec);
+}
 
 function ids(cards: MomentCard[], pred: (c: MomentCard) => boolean, max = 5): string[] {
   return cards.filter(pred).sort((a, b) => b.rank - a.rank).slice(0, max).map((c) => c.id);
@@ -175,7 +183,9 @@ export function buildCoachInsights(report: TrackingReport | null, profile: { pos
   // Off-ball (4.1): measured on confirmed frames only; reported as an observation with a separate,
   // uncertain interpretation. Too little confirmed footage -> an explicit limitation instead.
   const ob = report.offball;
-  if (ob?.status === 'measured' && ob.nearestOpponentBodyHeights) {
+  // R4: a whole-match observation (and its drill) needs the server-validated confirmed duration. Reports stored
+  // before R4 carry no serverEligibleSec and get no whole-match positioning observation.
+  if (ob && wholeMatchOffballEligible(ob) && ob.nearestOpponentBodyHeights) {
     const episodes = [...(ob.freeEpisodes ?? []), ...(ob.tightEpisodes ?? [])].sort((a, b) => a.start - b.start).slice(0, 4);
     out.push({ id: 'positioning_observation', kind: 'observation', topic: 'positioning', evidence: 'confirmed',
       params: { freePct: Math.round((ob.freeShare ?? 0) * 100), tightPct: Math.round((ob.tightShare ?? 0) * 100),

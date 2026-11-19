@@ -11,6 +11,7 @@ import { logger } from 'firebase-functions';
 import { readableSourceFor } from '../uploads/mediaSource';
 import { footageMediaId } from '../uploads/model';
 import { logSafeError } from '../logging/redact';
+import { IMAGE_ATTEMPT_MAX_MS, pruneJobImages, readImageDocs, storageImageBucket } from './trackingImages';
 
 /**
  * Media lifecycle for match analysis. Source videos and extracted frames are temporary:
@@ -39,6 +40,8 @@ type FrameRef = { id?: string; index?: number; timestampSec?: number; storagePat
 export type LifecycleJob = {
   playerId: string;
   status: string;
+  /** R1: player-tracking run state (server-only; trackingOrchestrator/trackingCallables). */
+  trackingState?: 'running' | 'complete' | 'failed' | null;
   retainSource?: boolean;
   keepForRetry?: boolean;
   evidenceClipsRequested?: boolean;
@@ -61,6 +64,28 @@ export type LifecyclePlan = {
 
 export function isTerminalStatus(status: unknown): boolean {
   return typeof status === 'string' && (TERMINAL as readonly string[]).includes(status);
+}
+
+/** Legacy pipeline statuses that still need the source video. */
+const LEGACY_ACTIVE = ['queued', 'processing', 'extracting', 'analyzing'] as const;
+
+/**
+ * R1 (2026-11-19): the status the media lifecycle acts on. A job runs the legacy frame pipeline and, when
+ * started, the player-tracking analysis; the media is settled only when neither still needs it.
+ *  - cancelled (by the owner) always wins;
+ *  - a running tracking analysis keeps the media (even if the legacy pipeline already failed or finished);
+ *  - a completed tracking run settles the job as 'complete' once the legacy pipeline is not active;
+ *  - a failed (interrupted) tracking run settles it as 'failed' - the existing retry window applies;
+ *  - without tracking, the job's own status decides, exactly as before.
+ */
+export function effectiveLifecycleStatus(job: Pick<LifecycleJob, 'status' | 'trackingState'>): string {
+  const t = job.trackingState ?? null;
+  if (job.status === 'cancelled') return 'cancelled';
+  if (t === 'running') return 'processing';
+  if (t === null) return job.status;
+  if ((LEGACY_ACTIVE as readonly string[]).includes(job.status)) return job.status;
+  if (job.status === 'complete' || t === 'complete') return 'complete';
+  return 'failed';
 }
 
 export function jobMediaPrefix(uid: string, jobId: string): string {
@@ -215,6 +240,8 @@ export type LifecycleResult = {
   citedFramesKept: number;
   deletedObjectCount: number;
   evidenceClips: number;
+  imagesDeleted: number;
+  imagesContained: number;
 };
 
 /**
@@ -225,7 +252,8 @@ export async function applyMediaLifecycle(db: Firestore, jobId: string): Promise
   const ref = db.collection('matchAnalysisJobs').doc(jobId);
   const snap = await ref.get();
   if (!snap.exists) return null;
-  const job = snap.data() as LifecycleJob & { mediaCleanupState?: CleanupState; mediaLifecycle?: { attempts?: number } };
+  const raw = snap.data() as LifecycleJob & { mediaCleanupState?: CleanupState; mediaLifecycle?: { attempts?: number } };
+  const job = { ...raw, status: effectiveLifecycleStatus(raw) };
   if (!isTerminalStatus(job.status) || job.mediaCleanupState === 'done' || typeof job.playerId !== 'string') return null;
 
   const plan = planMediaLifecycle(job);
@@ -272,6 +300,10 @@ export async function applyMediaLifecycle(db: Firestore, jobId: string): Promise
     deleted += 1;
   }
   if (unrecognised > 0) logger.warn('Unrecognised objects left for review', { jobId, unrecognised });
+  // R2: review/discovery images no current, held or withheld document references are discarded; referenced ones
+  // stay (evidence of the report); images of held reports stay server-only.
+  const images = await pruneJobImages(storageImageBucket, job.playerId, jobId, await readImageDocs(db, 'matchAnalysisJobs', jobId),
+    { olderThanMs: Date.now() - IMAGE_ATTEMPT_MAX_MS });
   if (plan.deleteSource) {
     await db.collection('players').doc(job.playerId).collection('media').doc(footageMediaId(jobId)).delete();
   }
@@ -282,6 +314,8 @@ export async function applyMediaLifecycle(db: Firestore, jobId: string): Promise
     citedFramesKept: keepFrames.length,
     deletedObjectCount: deleted,
     evidenceClips: clipRecords.length,
+    imagesDeleted: images.deleted.length,
+    imagesContained: images.contained.length,
   };
   await ref.update({
     frames: keepFrames,
@@ -301,11 +335,14 @@ export async function applyMediaLifecycle(db: Firestore, jobId: string): Promise
 export async function onJobStatusChanged(
   db: Firestore,
   jobId: string,
-  before: { status?: unknown; mediaCleanupState?: unknown } | undefined,
-  after: LifecycleJob & { mediaCleanupState?: unknown },
+  before: { status?: unknown; mediaCleanupState?: unknown; trackingState?: unknown } | undefined,
+  rawAfter: LifecycleJob & { mediaCleanupState?: unknown },
   now: Date = new Date(),
 ): Promise<'cleaned' | 'scheduled' | 'reset' | 'ignored'> {
-  if (before?.status === after.status) return 'ignored';
+  const effBefore = before ? effectiveLifecycleStatus({ status: String(before.status ?? ''),
+    trackingState: (before.trackingState ?? null) as LifecycleJob['trackingState'] }) : undefined;
+  const after = { ...rawAfter, status: effectiveLifecycleStatus(rawAfter) };
+  if (effBefore === after.status) return 'ignored';
   const ref = db.collection('matchAnalysisJobs').doc(jobId);
   if (!isTerminalStatus(after.status)) {
     if (after.mediaCleanupState === 'retry_window') {

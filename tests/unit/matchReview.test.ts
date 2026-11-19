@@ -277,7 +277,7 @@ test('4.1 discovery: sightings are playable before any report, merge without dup
 
 test('4.1 coach + Ask: off-ball observation stays separate from interpretation; time retrieval; honest limits', async () => {
   const base = fixture('answers');
-  const measured: TrackingReport = { ...base, offball: { status: 'measured', confirmedSec: 300, minConfirmedSec: 60, measuredSec: 240,
+  const measured: TrackingReport = { ...base, offball: { status: 'measured', confirmedSec: 300, minConfirmedSec: 60, serverEligibleSec: 300, measuredSec: 240,
     nearestOpponentBodyHeights: { median: 2.4, p25: 1.2, p75: 4.1 }, nearestTeammateBodyHeights: { median: 3 }, freeShare: 0.31,
     tightShare: 0.12, freeEpisodes: [{ start: 100, end: 104 }], tightEpisodes: [{ start: 500, end: 503 }] } };
   const obs = buildCoachInsights(measured).find((i) => i.kind === 'observation');

@@ -46,6 +46,8 @@ export type TrackingReport = {
   /** 4.1: distances to nearest opponent/team-mate on confirmed frames (body heights, image plane). */
   offball?: {
     status: 'measured' | 'insufficient'; confirmedSec: number; minConfirmedSec: number; measuredSec?: number;
+    /** R4: confirmed duration recomputed by the server from the timeline (absent on reports stored before R4). */
+    serverEligibleSec?: number;
     nearestOpponentBodyHeights?: { median: number; p25: number; p75: number };
     nearestTeammateBodyHeights?: { median: number } | null;
     freeShare?: number; tightShare?: number;

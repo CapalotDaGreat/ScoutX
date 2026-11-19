@@ -35,6 +35,7 @@ const pilotGate_1 = require("./pilotGate");
 const frameAnalysis_1 = require("./frameAnalysis");
 const trackingV3_1 = require("./trackingV3");
 const trackingCallables_1 = require("./trackingCallables");
+const trackingImages_1 = require("./trackingImages");
 const trackingProgress_1 = require("./trackingProgress");
 const videoConsent_1 = require("./videoConsent");
 const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
@@ -108,6 +109,8 @@ async function startAnalysis(db, uid, jobId, enqueue, env = process.env, now = n
         const nextDiscovery = discovery ? { ...discovery, extractionQueued: !waitForDiscovery } : null;
         tx.set(progressRef(db, jobId), { ...base, segments, discovery: nextDiscovery, outcome: null, blocked: null, updatedAt: at,
             startedAt: existing?.outcome ? at : base.startedAt, pilotAuthorizedAt: at });
+        // R1: a running tracking analysis keeps its source (the media lifecycle waits for it to finish).
+        tx.set(jobRef, { trackingState: 'running', trackingStartedAt: at, updatedAt: at }, { merge: true });
         return { status: 'started', generation: base.generation, segments: base.plan.length, toQueue, discoveryQueue,
             pendingSegments, job };
     });
@@ -153,6 +156,7 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
     const pilot = (await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, undefined, { authorizedAt: prog.pilotAuthorizedAt })).decision;
     if (!client || !(0, trackingV3_1.trackingV3Enabled)(env) || (0, cvConfig_1.cvWorkerStatus)(env) !== 'available' || !job.videoStoragePath || pilot !== 'allowed') {
         await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
+        await (0, trackingCallables_1.markTrackingFailed)(db, jobId, now());
         return 'unavailable';
     }
     await ref.set({ segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
@@ -169,6 +173,7 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
             ...(last ? { outcome: 'interrupted' } : {}), updatedAt: at }, { merge: true });
         if (!last)
             return 'retry';
+        await (0, trackingCallables_1.markTrackingFailed)(db, jobId, new Date(at));
         await (notify ?? ((id, input) => (0, notificationProducers_1.writeSystemActivity)(db, id, input)))((0, trackingProgress_1.notificationId)('interrupted', jobId, generation), {
             recipientId: job.playerId, recipientRole: 'player', type: 'analysis_interrupted', category: 'analysis',
             title: 'Analysis paused', body: 'Part of your match could not be analysed. Open it to resume - finished parts are kept.',
@@ -206,7 +211,7 @@ exports.DISCOVERY_COLLECTION_DOC = 'discovery';
  * watch them while the full pass has not even started. The last chunk queues extraction with
  * segments containing sightings first.
  */
-async function processDiscoverTask(db, jobId, generation, index, attempt, client, enqueue, env = process.env, sourceUrl = async (p) => (await (0, mediaSource_1.readableSourceFor)(p, 60 * 60 * 1000)).url, now = () => new Date(), notify, storeImage = trackingCallables_1.storageImageStore) {
+async function processDiscoverTask(db, jobId, generation, index, attempt, client, enqueue, env = process.env, sourceUrl = async (p) => (await (0, mediaSource_1.readableSourceFor)(p, 60 * 60 * 1000)).url, now = () => new Date(), notify, storeImage = trackingCallables_1.storageImageStore, images) {
     const ref = progressRef(db, jobId);
     const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
     const prog = (await ref.get()).data();
@@ -225,6 +230,7 @@ async function processDiscoverTask(db, jobId, generation, index, attempt, client
     const pilot = (await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, undefined, { authorizedAt: prog.pilotAuthorizedAt })).decision;
     if (pilot !== 'allowed') {
         await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
+        await (0, trackingCallables_1.markTrackingFailed)(db, jobId, now());
         return 'unavailable';
     }
     const number = job.targeting?.jerseyNumber ?? '';
@@ -248,18 +254,20 @@ async function processDiscoverTask(db, jobId, generation, index, attempt, client
     }
     const raw = new Map((res?.moments ?? [])
         .map((m) => [String(m?.id), m?.imageJpegBase64]));
+    const staged = [];
     for (const m of moments ?? []) {
         const jpeg = (0, trackingV3_1.decodeReviewImage)(raw.get(m.id));
         if (!jpeg)
             continue;
         const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${m.id}_g${generation}`);
         await storeImage(path, jpeg);
+        staged.push(path);
         m.imagePath = path;
     }
     const processingSec = typeof res?.processingSec === 'number' && Number.isFinite(res.processingSec) ? res.processingSec : undefined;
-    return finishDiscovery(db, jobId, generation, index, moments ? 'done' : 'failed', moments ?? [], at, enqueue, processingSec ?? null, notify, job.playerId, moments ? 'done' : 'failed', env);
+    return finishDiscovery(db, jobId, generation, index, moments ? 'done' : 'failed', moments ?? [], at, enqueue, processingSec ?? null, notify, job.playerId, moments ? 'done' : 'failed', env, { staged, images: (0, trackingCallables_1.imageBucketFor)(storeImage, images) });
 }
-async function finishDiscovery(db, jobId, generation, index, status, moments, at, enqueue, processingSec, notify, playerId, outcome, env = process.env) {
+async function finishDiscovery(db, jobId, generation, index, status, moments, at, enqueue, processingSec, notify, playerId, outcome, env = process.env, media = { staged: [], images: null }) {
     const ref = progressRef(db, jobId);
     const publicRef = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc(exports.DISCOVERY_COLLECTION_DOC);
     const heldRef = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(pilotGate_1.HELD_COLLECTION).doc(exports.DISCOVERY_COLLECTION_DOC);
@@ -296,9 +304,17 @@ async function finishDiscovery(db, jobId, generation, index, status, moments, at
         const pending = prog.plan.map((s) => s.index).filter((i) => prog.segments[String(i)]?.status !== 'done');
         return { first, queueExtraction, order: (0, trackingProgress_1.prioritisedSegments)(prog.plan, d.sightingTimes).filter((i) => pending.includes(i)) };
     });
+    // R2: sightings' images follow the sightings (owner path only when not held); discarded ones are deleted.
+    if (media.images && media.staged.length) {
+        if (next && !heldOnly)
+            await (0, trackingImages_1.publishImages)(media.images, media.staged);
+        await (0, trackingImages_1.pruneJobImages)(media.images, playerId, jobId, await (0, trackingImages_1.readImageDocs)(db, frameAnalysis_1.MATCH_COLLECTION, jobId), { own: next ? [] : media.staged, olderThanMs: Date.parse(at) - trackingImages_1.IMAGE_ATTEMPT_MAX_MS });
+    }
     if (!next) {
-        if (stopped)
+        if (stopped) {
             await ref.set({ blocked: 'worker_unavailable', updatedAt: at }, { merge: true });
+            await (0, trackingCallables_1.markTrackingFailed)(db, jobId, new Date(at));
+        }
         return stopped ? 'unavailable' : 'stale';
     }
     if (next.first && !heldOnly) {
