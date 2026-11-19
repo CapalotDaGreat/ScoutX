@@ -1,0 +1,361 @@
+{
+ "target": "emulator",
+ "project": "demo-pilot-reh",
+ "commit": "b5c964c0cfa0eb354e9cded9886e711114a2cf1f+dirty",
+ "run": "irmwo0zfzz",
+ "startedAt": "2026-11-19T20:51:27.105Z",
+ "steps": [
+  {
+   "at": "2026-11-19T20:51:27.154Z",
+   "name": "users",
+   "owner": "ZCOflMxzj2bkyMOCbeMibIaOI7Qx",
+   "other": "9u2eG7vjkaTg4tWgkiXodKTxCOS3"
+  },
+  {
+   "at": "2026-11-19T20:51:27.825Z",
+   "name": "ops",
+   "args": [
+    "enable",
+    "--allow",
+    "ZCOflMxzj2bkyMOCbeMibIaOI7Qx",
+    "--worker-version",
+    "football-cv/0.7.0-reh",
+    "--hold",
+    "true"
+   ],
+   "exit": 0,
+   "ms": 670,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"ZCOflMxzj2bkyMOCbeMibIaOI7Qx\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:30.269Z",
+   "name": "start",
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T20:51:39.572Z",
+   "name": "ops",
+   "args": [
+    "held-images",
+    "irmwo0zfzz_rel"
+   ],
+   "exit": 0,
+   "ms": 866,
+   "stdout": "{\"command\":\"held-images\",\"jobId\":\"irmwo0zfzz_rel\",\"result\":[\"profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_rel/pilotHeld/m_1_p1_r0_mwo0zmyh.jpg\",\"profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_rel/pilotHeld/q_123_1_r0_mwo0zmyh.jpg\",\"profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_rel/pilotHeld/reference_mwo0zmyh.jpg\"]}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:40.642Z",
+   "name": "ops",
+   "args": [
+    "release",
+    "irmwo0zfzz_rel",
+    "--reviewer",
+    "staging-reviewer"
+   ],
+   "exit": 0,
+   "ms": 858,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"irmwo0zfzz_rel\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:41.651Z",
+   "name": "ops",
+   "args": [
+    "withhold",
+    "irmwo0zfzz_rel",
+    "--reason",
+    "staging-revocation-test"
+   ],
+   "exit": 0,
+   "ms": 791,
+   "stdout": "{\"command\":\"withhold\",\"jobId\":\"irmwo0zfzz_rel\",\"result\":\"withheld\",\"ms\":479}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:41.669Z",
+   "name": "revocation timing",
+   "withholdCommandMs": 791,
+   "urls": [
+    {
+     "path": "profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_rel/tracking/m_1_p1_r0_mwo0zmyh.jpg",
+     "before": 200,
+     "revoked": {
+      "status": 403,
+      "msFromWithholdStart": 798,
+      "msFromWithholdEnd": 7
+     }
+    },
+    {
+     "path": "profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_rel/tracking/q_123_1_r0_mwo0zmyh.jpg",
+     "before": 200,
+     "revoked": {
+      "status": 403,
+      "msFromWithholdStart": 804,
+      "msFromWithholdEnd": 13
+     }
+    },
+    {
+     "path": "profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_rel/tracking/reference_mwo0zmyh.jpg",
+     "before": 200,
+     "revoked": {
+      "status": 403,
+      "msFromWithholdStart": 808,
+      "msFromWithholdEnd": 17
+     }
+    }
+   ]
+  },
+  {
+   "at": "2026-11-19T20:51:47.298Z",
+   "name": "ops",
+   "args": [
+    "reprocess",
+    "irmwo0zfzz_rel"
+   ],
+   "exit": 0,
+   "ms": 652,
+   "stdout": "{\"command\":\"reprocess\",\"jobId\":\"irmwo0zfzz_rel\",\"result\":\"queued\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:49.025Z",
+   "name": "ops",
+   "args": [
+    "release",
+    "irmwo0zfzz_rel",
+    "--reviewer",
+    "staging-reviewer"
+   ],
+   "exit": 0,
+   "ms": 705,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"irmwo0zfzz_rel\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:50.769Z",
+   "name": "ops",
+   "args": [
+    "stop"
+   ],
+   "exit": 0,
+   "ms": 569,
+   "stdout": "{\"command\":\"stop\",\"jobId\":null,\"stopped\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:52.449Z",
+   "name": "ops",
+   "args": [
+    "enable",
+    "--allow",
+    "ZCOflMxzj2bkyMOCbeMibIaOI7Qx",
+    "--worker-version",
+    "football-cv/0.7.0-reh",
+    "--hold",
+    "true"
+   ],
+   "exit": 0,
+   "ms": 639,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"ZCOflMxzj2bkyMOCbeMibIaOI7Qx\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:53.090Z",
+   "name": "ops",
+   "args": [
+    "prune-images",
+    "irmwo0zfzz_legacy"
+   ],
+   "exit": 0,
+   "ms": 596,
+   "stdout": "{\"command\":\"prune-images\",\"jobId\":\"irmwo0zfzz_legacy\",\"result\":{\"deleted\":[],\"contained\":[\"profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_legacy/tracking/q_legacy_r0.jpg\"],\"kept\":1}}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:53.633Z",
+   "name": "ops",
+   "args": [
+    "prune-images",
+    "irmwo0zfzz_legacy"
+   ],
+   "exit": 0,
+   "ms": 543,
+   "stdout": "{\"command\":\"prune-images\",\"jobId\":\"irmwo0zfzz_legacy\",\"result\":{\"deleted\":[],\"contained\":[],\"kept\":1}}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T20:51:53.652Z",
+   "name": "downloaded copies",
+   "note": "Bytes a client already downloaded (browser or app image cache, 1 h private max-age) are outside server control; only live object access is revocable."
+  }
+ ],
+ "checks": [
+  {
+   "id": "held.reviewer_only",
+   "status": "passed",
+   "matrix": [
+    [
+     "owner",
+     403,
+     404
+    ],
+    [
+     "other",
+     403,
+     403
+    ],
+    [
+     "anon",
+     403,
+     403
+    ],
+    [
+     "owner",
+     403,
+     404
+    ],
+    [
+     "other",
+     403,
+     403
+    ],
+    [
+     "anon",
+     403,
+     403
+    ],
+    [
+     "owner",
+     403,
+     404
+    ],
+    [
+     "other",
+     403,
+     403
+    ],
+    [
+     "anon",
+     403,
+     403
+    ]
+   ],
+   "issue": {
+    "status": "PERMISSION_DENIED"
+   }
+  },
+  {
+   "id": "held.report_unreadable",
+   "status": "passed"
+  },
+  {
+   "id": "released.owner_only_and_urls_work",
+   "status": "passed",
+   "relM": [
+    [
+     200,
+     403,
+     403
+    ],
+    [
+     200,
+     403,
+     403
+    ],
+    [
+     200,
+     403,
+     403
+    ]
+   ],
+   "before": [
+    200,
+    200,
+    200
+   ],
+   "signedIssue": {
+    "status": "PERMISSION_DENIED"
+   }
+  },
+  {
+   "id": "withheld.urls_and_objects_closed",
+   "status": "passed",
+   "revoked": [
+    {
+     "status": 403,
+     "msFromWithholdStart": 798,
+     "msFromWithholdEnd": 7
+    },
+    {
+     "status": 403,
+     "msFromWithholdStart": 804,
+     "msFromWithholdEnd": 13
+    },
+    {
+     "status": 403,
+     "msFromWithholdStart": 808,
+     "msFromWithholdEnd": 17
+    }
+   ],
+   "reportField": [
+    "nullValue"
+   ]
+  },
+  {
+   "id": "export.no_tracking_report_or_images",
+   "status": "passed",
+   "bytes": 3752
+  },
+  {
+   "id": "reprocessed.old_urls_dead_new_access_works",
+   "status": "passed",
+   "old": [
+    403,
+    403,
+    403
+   ],
+   "fresh": [
+    200,
+    200,
+    200
+   ],
+   "renamed": true
+  },
+  {
+   "id": "discarded.no_images",
+   "status": "passed",
+   "dObjs": [
+    "video.mp4"
+   ]
+  },
+  {
+   "id": "legacy.contained_and_prune_idempotent",
+   "status": "passed",
+   "before": 200,
+   "p1": "{\"command\":\"prune-images\",\"jobId\":\"irmwo0zfzz_legacy\",\"result\":{\"deleted\":[],\"contained\":[\"profiles/ZCOflMxzj2bkyMOCbeMibIaOI7Qx/matchFootage/irmwo0zfzz_legacy/tracking/q_legacy_r0.jpg\"],\"kept\":1}}"
+  }
+ ],
+ "finishedAt": "2026-11-19T20:51:53.652Z",
+ "summary": {
+  "passed": [
+   "held.reviewer_only",
+   "held.report_unreadable",
+   "released.owner_only_and_urls_work",
+   "withheld.urls_and_objects_closed",
+   "export.no_tracking_report_or_images",
+   "reprocessed.old_urls_dead_new_access_works",
+   "discarded.no_images",
+   "legacy.contained_and_prune_idempotent"
+  ],
+  "failed": [],
+  "unexecuted": []
+ }
+}

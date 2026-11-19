@@ -1107,6 +1107,66 @@ Engineering safeguards for the proposed scope pass on the candidate in the emula
    check before any live pilot.
 Automatic vs owner-assisted evidence: no owner-assisted run exists; all results above are automatic or synthetic.
 
+## 30. Staging verification prepared; not executed (no staging project, no recorded approval); R3 question (2026-11-19 late)
+
+Scope today: local preparation and read-only checks. Three briefs arrived together (prepare, audit, execute). The
+execute brief presupposes an approved plan; none is recorded and no staging project exists (`.firebaserc` has only
+`scoutx-230b0`; `approval-requests-2026-11-12.md`: "There is no staging project"). **All staging actions are paused**;
+nothing was created, deployed or dispatched. Pilot: pending. User-facing analysis: disabled.
+
+### Candidate
+- §29 candidate `f9b7e2d` (tree `4e4fdf9e…`) would fail two staging pass criteria, both demonstrated locally: a repeated
+  full resolve re-called the worker and re-versioned the held report (§29 evidence, held version 1→3), and constant image
+  names (`reference.jpg`) allowed an old signed URL to address a re-released image.
+- **Proposed staging candidate `65d9868dab5bf8b3c2fd31fabff79ad2ac33ea08`** (tree `bd26af2282108f38aabe70d1878dd99726d93d75`);
+  tooling pin `ff149fd6f04753779e3ba2e1d0dfecc78ee7b1cb` (tree `ff6de9f1…`, overlay-script fix only). Changes vs `f9b7e2d`:
+  resolve idempotency (same feedback revision + run authorisation → no worker call, nothing stored; corrections, OCR
+  refresh and `authorizeRun` still resolve), attempt-aware extract lease, per-attempt image names, `getMediaPlaybackUrl`
+  refuses tracking image paths. Residual: two duplicate resolves arriving concurrently may both call the worker; only
+  one stores a report (in-transaction check).
+- Staging deploy artifact = `ff149fd` + staging CV approval for the fake worker `football-cv/0.7.0-staging` (2 generated
+  files; tree **`7d858509f510feff37b67485630c80bc1c571c4b`**, built by `scripts/pilot-staging/make-staging-overlay.sh`,
+  never merged).
+
+### Local results on the candidate
+| Check | Result |
+|---|---|
+| Full emulator rehearsal at `65d9868` | 79/79 (78 + `r2.no_signed_urls_for_tracking_images`); D3-type duplicate now leaves worker calls, held version, notices unchanged |
+| `npm run test:unit` | exit 0, 846/846 (+2: resolve idempotency, extract lease) |
+| `npm run typecheck`, `npx tsc -p functions`, eslint (6 files) | exit 0 |
+| `npm run test:rules` (3 batches) | exit 0, 266/266 |
+| Staging drivers against the emulators (runtime files equal to `65d9868`) | `image-revocation.mjs` 8/8; `probe-tasks.mjs` 6 passed (R1 gap 60.1 s, R2 gaps 60.1/120.1 s, D1 `task-already-exists` also after execution, D2 1 worker call, D3 no side effects, S1 0 calls), 5 unexecuted (A1–A4 need real OIDC; R3 needs the probe queue) |
+| Overlay builder | tree `7d858509…` reproduced; temp worktree removed, nothing pushed |
+
+### Read-only facts used by the plan (production `scoutx-230b0`, no changes)
+Task functions are 2nd gen on Cloud Run (`europe-west6`, 900 s, default compute SA with editor + run.invoker); the SDK
+handler does not verify tokens ("guarded by IAM"), so authentication must be proven at the platform layer; queue attempt
+logging is off (staging enables sampling 1.0); queue retry settings match the code; logs readable by the operator; two
+open billing accounts visible; org `clusiola4-org`. Production tracking functions were last deployed 2026-11-13 and do
+not have `TRACKING_V3_ENABLED`.
+
+### Prepared (for approval)
+- `docs/release/staging-verification-plan-2026-11-19.md`: actions STG-01…STG-10 (new project + USD 10 budget, Firebase,
+  overlay deploy of 15 functions, probe queues and `stg-no-invoker`, private fake worker, read-only preflight, probes,
+  image revocation, rollback boundary, redacted evidence, project deletion), exact commands, permissions, pass criteria,
+  rejection-layer evidence, ≤ 60 tasks / ≤ 150 attempts, expected spend < USD 2, stop conditions, cleanup verification.
+- `scripts/pilot-staging/`: `probe-tasks.mjs`, `image-revocation.mjs`, `collect-logs.mjs`, `lib.mjs` (redaction,
+  refuses production), `fake-worker/Dockerfile`, `make-staging-overlay.sh`, `staging.config.example.json`.
+
+### R3
+`docs/release/r3-export-decision-request-2026-11-19.md`: current behaviour verified (no ordinary tracking report download;
+the archive contains no tracking report or image in any state). The policy drafts are not approved
+(`LEGAL_REVIEW_REQUIRED`) and do not cover tracking material; four questions for owner and counsel (archive content;
+held/withheld/superseded/discarded material; images showing other people; manual process owner, verification, delivery and
+the 30-day/one-month deadline to be confirmed by counsel). No decision is recorded. It blocks the participant pilot, not
+staging.
+
+### Blockers (smallest action each)
+1. Staging approval: approve STG-01…STG-10 as written (including the overlay and the fake worker) and name the billing account.
+2. R3: answers to the four questions in the decision request.
+3. Owner identity answers Q1–Q4 (file unchanged since 2026-11-18 11:48 UTC); coach review not started (Q1 first).
+4. Shadow matches: 0/10 downloaded; `hydrate.ps1 -Action Pin -Batch batch-01.txt`, then target confirmation per match.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
