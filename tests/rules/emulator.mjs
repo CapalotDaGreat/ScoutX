@@ -102,11 +102,27 @@ function storageHeaders(uid, contentType) {
   return headers;
 }
 
+/**
+ * Client-style upload, as the Firebase JS SDK sends it (uploadBytes: v0 multipart with a JSON metadata part).
+ * 2026-11-19: the previous raw v0 POST relied on the Content-Type header reaching `request.resource.contentType`.
+ * The storage emulator (firebase-tools 13.35 / 14.27, rules runtime 1.1.3) does not populate it from a raw upload
+ * (probe: a `contentType.matches('image/.*')` rule denied a raw upload and allowed the same bytes sent as multipart
+ * or via the v1 media endpoint), so every content-type-gated *allow* test failed while deny tests passed for the
+ * wrong reason. The metadata now travels the way real clients send it; rules and assertions are unchanged.
+ */
 export async function uploadObject(uid, path, contentType, sizeBytes = 16) {
-  const response = await fetch(
-    `http://${STORAGE_HOST}/v0/b/${BUCKET}/o?name=${encodeURIComponent(path)}`,
-    { method: 'POST', headers: storageHeaders(uid, contentType), body: Buffer.alloc(sizeBytes, 1) },
-  );
+  const boundary = `scoutx-${Math.random().toString(16).slice(2)}`;
+  const metadata = JSON.stringify({ name: path, ...(contentType ? { contentType } : {}) });
+  const body = Buffer.concat([
+    Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=utf-8\r\n\r\n${metadata}\r\n`
+      + `--${boundary}\r\nContent-Type: ${contentType || 'application/octet-stream'}\r\n\r\n`),
+    Buffer.alloc(sizeBytes, 1),
+    Buffer.from(`\r\n--${boundary}--`),
+  ]);
+  const headers = { ...storageHeaders(uid), 'X-Goog-Upload-Protocol': 'multipart',
+    'Content-Type': `multipart/related; boundary=${boundary}` };
+  const response = await fetch(`http://${STORAGE_HOST}/v0/b/${BUCKET}/o?name=${encodeURIComponent(path)}`,
+    { method: 'POST', headers, body });
   return response.status;
 }
 
