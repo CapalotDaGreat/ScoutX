@@ -1,4 +1,6 @@
-import { getFirestore, type Firestore, type Transaction } from 'firebase-admin/firestore';
+import {
+  getFirestore, type CollectionReference, type DocumentReference, type Firestore, type Transaction,
+} from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
 import { getStorage } from 'firebase-admin/storage';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
@@ -126,6 +128,16 @@ export const setTrackingPeriods = onCall(createCallableOptions(), async (request
   });
 });
 
+/** A stored full report of this feedback revision produced under this run authorisation. */
+function sameRun(d: Record<string, unknown> | undefined, feedbackRevision: number, runAuth: string): boolean {
+  return Boolean(d && d.report && d.scope === 'full' && d.feedbackRevision === feedbackRevision && d.runAuthorizedAt === runAuth);
+}
+
+async function fullReportExists(base: CollectionReference, heldRef: DocumentReference, feedbackRevision: number, runAuth: string): Promise<boolean> {
+  const [cur, held] = await Promise.all([base.doc('current').get(), heldRef.get()]);
+  return sameRun(cur.data(), feedbackRevision, runAuth) || (!held.get('withheldAt') && sameRun(held.data(), feedbackRevision, runAuth));
+}
+
 /** R1: tracking run state on the job document (server-only field; drives the media lifecycle). */
 export async function markTrackingFailed(db: Firestore, jobId: string, now = new Date()): Promise<void> {
   const ref = db.collection(MATCH_COLLECTION).doc(jobId);
@@ -227,6 +239,12 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   const runAuth = (await base.doc('progress').get()).get('pilotAuthorizedAt') as string | null | undefined;
   if ((await pilotDecision(db, job.playerId, env, undefined, { authorizedAt: runAuth })).decision !== 'allowed') return 'unavailable';
   const refresh = opts.scope === 'refresh';
+  // Idempotency (2026-11-19 staging preparation): a repeated delivery of a resolve whose full report for this
+  // feedback revision and run authorisation already exists (published or held) does nothing - no worker call,
+  // no new version, notification or cleanup. A correction (new revision), an OCR refresh or an operator
+  // re-authorisation (authorizeRun) still resolves.
+  if (!refresh && runAuth && await fullReportExists(base, db.collection(MATCH_COLLECTION).doc(jobId).collection(HELD_COLLECTION).doc('current'),
+    feedbackRevision, runAuth)) return 'stale';
   const raw = await client({
     contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
     target: job.targeting ?? {}, feedback: workerFeedback(fb),
@@ -247,10 +265,13 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   const rawQuestions = rawReport.reviewQuestions ?? [];
   const staged: string[] = [];
   const attemptStartedMs = now().getTime();
+  // Every attempt writes new object names, so a URL issued for an earlier image (signed URL or download token)
+  // can never address a later one, even after withholding, reprocessing and release.
+  const attempt = attemptStartedMs.toString(36);
   for (let i = 0; i < report.reviewQuestions.length; i += 1) {
     const jpeg = decodeReviewImage(rawQuestions[i]?.imageJpegBase64);
     if (!jpeg) continue;
-    const path = reviewImagePath(job.playerId, jobId, `${report.reviewQuestions[i].id}_r${feedbackRevision}`);
+    const path = reviewImagePath(job.playerId, jobId, `${report.reviewQuestions[i].id}_r${feedbackRevision}_${attempt}`);
     await storeImage(path, jpeg);
     staged.push(path);
     report.reviewQuestions[i].imagePath = path;
@@ -260,14 +281,14 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   for (const m of report.moments) {
     const jpeg = decodeReviewImage(momentImages.get(m.id));
     if (!jpeg) continue;
-    const path = reviewImagePath(job.playerId, jobId, `${m.id}_p${report.analysedRange.parts}_r${feedbackRevision}`);
+    const path = reviewImagePath(job.playerId, jobId, `${m.id}_p${report.analysedRange.parts}_r${feedbackRevision}_${attempt}`);
     await storeImage(path, jpeg);
     staged.push(path);
     m.imagePath = path;
   }
   const ref = decodeReviewImage(rawReport.referenceImageJpegBase64);
   if (ref) {
-    const path = reviewImagePath(job.playerId, jobId, 'reference');
+    const path = reviewImagePath(job.playerId, jobId, `reference_${attempt}`);
     await storeImage(path, ref);
     staged.push(path);
     report.referenceImagePath = path;
@@ -306,8 +327,14 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
       tx.set(quotaRef, { uid: job.playerId, action: OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
         updatedAt: at }, { merge: true });
     }
+    // Same rule inside the transaction: of concurrent duplicate deliveries only the first one stores a report.
+    const runAuthTx = progTx.get('pilotAuthorizedAt') as string | null | undefined;
+    if (!refresh && runAuthTx && (sameRun(cur.data(), feedbackRevision, runAuthTx)
+      || sameRun(gate.hold && held?.exists && !held.get('withheldAt') ? held.data() : undefined, feedbackRevision, runAuthTx))) {
+      return 'stale' as const;
+    }
     const doc = { report: toStoredForm(report), version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp,
+      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp, runAuthorizedAt: runAuthTx ?? null,
       // Provenance for audits and rollback: exactly which approved worker build and models produced this report.
       producedBy: { workerVersion: raw.workerVersion, models: raw.models } };
     // R1: a full report (published or held) finishes the tracking run; the media lifecycle takes it from here.

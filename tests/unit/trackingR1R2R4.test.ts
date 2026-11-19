@@ -4,6 +4,7 @@ import { setEmulatorCvApproval } from '../../functions/src/analysis/cvConfig.ts'
 import { effectiveLifecycleStatus } from '../../functions/src/analysis/mediaLifecycle.ts';
 import { releaseHeldReport, withholdPublishedReport } from '../../functions/src/analysis/pilotGate.ts';
 import { processResolveTask } from '../../functions/src/analysis/trackingCallables.ts';
+import { processExtractTask } from '../../functions/src/analysis/trackingOrchestrator.ts';
 import {
   heldImagePath, pruneJobImages, referencedImagePaths, type ImageBucket,
 } from '../../functions/src/analysis/trackingImages.ts';
@@ -232,5 +233,59 @@ test('R2: a result discarded by the kill switch leaves no image behind; a finish
   assert.equal(await processResolveTask(f.db, 'job_1', 0, worker(stop), env, store, { scope: 'full', images: bucket }), 'stopped');
   assert.equal(bucket.objects.size, 0, 'the discarded attempt deleted its images');
   assert.equal((f.data.get('matchAnalysisJobs/job_1') as { trackingState: string }).trackingState, 'running', 'not completed by a discarded result');
+  setEmulatorCvApproval(null);
+});
+
+test('idempotency: a repeated full resolve of the same run and revision makes no worker call and no new version', async () => {
+  setEmulatorCvApproval(approval);
+  const f = fakeDb(seed(pilot()));
+  const bucket = memBucket();
+  const store = async (p: string, b: Buffer) => bucket.save(heldImagePath(p), b);
+  let calls = 0;
+  const counted = async () => { calls += 1; return worker()(); };
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, counted, env, store, { scope: 'full', images: bucket }), 'held');
+  const v1 = (f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { version: number }).version;
+  const names1 = [...bucket.objects.keys()].sort();
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, counted, env, store, { scope: 'full', images: bucket }), 'stale');
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, counted, env, store, { images: bucket }), 'stale', 'also a duplicate feedback-scope delivery');
+  assert.equal(calls, 1, 'no second worker call');
+  assert.equal((f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { version: number }).version, v1);
+  assert.deepEqual([...bucket.objects.keys()].sort(), names1, 'no new images');
+  // an operator re-authorisation (authorizeRun) is new work and resolves again, with new image names
+  f.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...(f.data.get('matchAnalysisJobs/job_1/tracking/progress') as object),
+    pilotAuthorizedAt: '2026-11-19T11:00:00.000Z' });
+  await new Promise((r) => setTimeout(r, 5));
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, counted, env, store, { scope: 'full', images: bucket }), 'held');
+  assert.equal(calls, 2);
+  const names2 = [...bucket.objects.keys()].filter((k) => !names1.includes(k));
+  assert.ok(names2.length >= 2, 'reprocessing writes new names, never re-using an earlier image path');
+  setEmulatorCvApproval(null);
+});
+
+test('idempotency: a duplicate extract task while an attempt runs makes no second worker call; a real retry proceeds', async () => {
+  setEmulatorCvApproval(approval);
+  const f = fakeDb(seed(pilot()));
+  f.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...(f.data.get('matchAnalysisJobs/job_1/tracking/progress') as object),
+    resolving: null, segments: { 0: { status: 'queued', attempts: 0 } } });
+  let calls = 0;
+  let duplicate: string | undefined;
+  const enqueue = async () => {};
+  const src = async () => 'https://storage.invalid/source';
+  const client = async () => {
+    calls += 1;
+    if (calls === 1) duplicate = await processExtractTask(f.db, 'job_1', 1, 0, 0, client as never, enqueue, env, src);
+    return { status: 'complete', processingSec: 1 };
+  };
+  assert.equal(await processExtractTask(f.db, 'job_1', 1, 0, 0, client as never, enqueue, env, src), 'done');
+  assert.equal(duplicate, 'stale', 'the concurrent duplicate saw the running attempt');
+  assert.equal(calls, 1);
+  // a crashed attempt 0 left "running"; the queue's retry (attempt 1) is not blocked
+  const g = fakeDb(seed(pilot()));
+  g.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...(g.data.get('matchAnalysisJobs/job_1/tracking/progress') as object),
+    resolving: null, segments: { 0: { status: 'running', attempts: 1, startedAt: new Date().toISOString() } } });
+  let retryCalls = 0;
+  const ok = async () => { retryCalls += 1; return { status: 'complete', processingSec: 1 }; };
+  assert.equal(await processExtractTask(g.db, 'job_1', 1, 0, 1, ok as never, enqueue, env, src), 'done');
+  assert.equal(retryCalls, 1);
   setEmulatorCvApproval(null);
 });

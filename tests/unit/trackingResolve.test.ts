@@ -74,9 +74,10 @@ test('re-resolve writes a validated target-only report with owner-only review im
   assert.equal(cur.stale, false);
   assert.equal(cur.version, 3);
   const qs = cur.report.reviewQuestions as Array<{ imagePath: string | null }>;
-  assert.match(String(qs[0].imagePath), /^profiles\/u1\/matchFootage\/job_1\/tracking\/q_123_1_r3\.jpg$/);
+  assert.match(String(qs[0].imagePath), /^profiles\/u1\/matchFootage\/job_1\/tracking\/q_123_1_r3_[a-z0-9]+\.jpg$/,
+    'per-attempt name: an earlier URL can never address this image');
   assert.equal(qs[1].imagePath, null, 'non-JPEG payload is ignored');
-  assert.equal(cur.report.referenceImagePath, 'profiles/u1/matchFootage/job_1/tracking/reference.jpg');
+  assert.match(String(cur.report.referenceImagePath), /^profiles\/u1\/matchFootage\/job_1\/tracking\/reference_[a-z0-9]+\.jpg$/);
   assert.equal(stored.length, 2);
   assert.ok(!JSON.stringify(cur.report).includes('imageJpegBase64'));
   setEmulatorCvApproval(null);

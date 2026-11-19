@@ -74,7 +74,10 @@ exports.getMediaPlaybackUrl = (0, https_1.onCall)((0, callableOptions_1.createCa
         throw new https_1.HttpsError('invalid-argument', 'storagePath is required.');
     }
     const uid = request.auth.uid;
-    const allowed = !storagePath.includes('/pilotHeld/')
+    // Tracking review images are reached only through the Storage rules + download tokens that move with the report
+    // (trackingImages.ts); a signed URL could outlive a withhold, so none is issued for them.
+    const trackingImage = /\/matchFootage\/[^/]+\/(pilotHeld|tracking)\//.test(storagePath);
+    const allowed = !trackingImage && !storagePath.includes('/pilotHeld/')
         && (ownedStoragePath(uid, storagePath) || (await grantedStoragePath(uid, storagePath, mediaId, reelId)));
     if (!allowed) {
         throw new https_1.HttpsError('permission-denied', 'You cannot play this media.');

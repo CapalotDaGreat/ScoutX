@@ -42,3 +42,4 @@ functions/rehearsal-entry/
 firebase.rehearsal.json
 rehearsal-evidence.json
 .rehearsal-logs/
+scripts/pilot-staging/staging.config.json

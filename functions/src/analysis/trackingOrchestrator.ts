@@ -152,6 +152,9 @@ export type ExtractOutcome = 'done' | 'cached' | 'stale' | 'cancelled' | 'retry'
  * One segment of stage 1. `attempt` is the Cloud Tasks retry count (0-based); a failure on the
  * last attempt marks the analysis interrupted and notifies the owner once.
  */
+/** Longer than the extract task's 900 s timeout: a lease this old belongs to an attempt that cannot still be running. */
+const EXTRACT_LEASE_MS = 16 * 60 * 1000;
+
 export async function processExtractTask(db: Firestore, jobId: string, generation: number, index: number, attempt: number,
   client: TrackingWorkerClient | null, enqueue: Enqueue, env: NodeJS.ProcessEnv = process.env,
   sourceUrl: (path: string) => Promise<string> = async (p) => (await readableSourceFor(p, 60 * 60 * 1000)).url,
@@ -174,8 +177,21 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
     await markTrackingFailed(db, jobId, now());
     return 'unavailable';
   }
-  await ref.set({ segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
-    updatedAt: now().toISOString() }, { merge: true });
+  // Idempotency: a second task for the same segment (duplicate creation or concurrent redelivery) while an
+  // attempt with the same or a later attempt number is running does not call the worker again. A genuine
+  // retry carries a higher attempt number (X-CloudTasks-TaskRetryCount) and proceeds; a lease older than
+  // the task timeout no longer blocks.
+  const claimed = await db.runTransaction(async (tx) => {
+    const cur = (await tx.get(ref)).data() as TrackingProgress | undefined;
+    const s = cur?.segments?.[String(index)] as { status?: string; attempts?: number; startedAt?: string } | undefined;
+    if (s?.status === 'done') return false;
+    if (s?.status === 'running' && (s.attempts ?? 0) > attempt && s.startedAt
+      && now().getTime() - Date.parse(s.startedAt) < EXTRACT_LEASE_MS) return false;
+    tx.set(ref, { segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
+      updatedAt: now().toISOString() }, { merge: true });
+    return true;
+  });
+  if (!claimed) return 'stale';
   const res = await client({
     contractVersion: 3, jobId, segmentIndex: index, startSec: seg.startSec, endSec: seg.endSec,
     source: { url: await sourceUrl(job.videoStoragePath) },
@@ -270,7 +286,7 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   for (const m of moments ?? []) {
     const jpeg = decodeReviewImage(raw.get(m.id));
     if (!jpeg) continue;
-    const path = reviewImagePath(job.playerId, jobId, `${m.id}_g${generation}`);
+    const path = reviewImagePath(job.playerId, jobId, `${m.id}_g${generation}_${Date.parse(at).toString(36)}`);
     await storeImage(path, jpeg);
     staged.push(path);
     m.imagePath = path;

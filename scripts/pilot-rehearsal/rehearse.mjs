@@ -254,6 +254,8 @@ async function phaseRollback() {
   ops('release', 'r_released', '--reviewer', 'rehearsal-reviewer');
   const objsRel = await jobObjects(A, 'r_released');
   const relReads = await Promise.all(ownerPaths.map((op) => clientRead(op, A)));
+  const playReleased = await callable('getMediaPlaybackUrl', { storagePath: ownerPaths[0] }, A);
+  check('r2.no_signed_urls_for_tracking_images', playReleased.error?.status === 'PERMISSION_DENIED', { playReleased: playReleased.error });
   check('r2.release_restores_owner_image_access', relReads.every((st) => st === 200) && !objsRel.some((o) => o.startsWith('pilotHeld/'))
     && (await clientRead(ownerPaths[0], users.other)) === 403 && (await clientRead(ownerPaths[0], null)) === 403, { relReads, objsRel });
   s = await trackingState('r_released');
@@ -282,9 +284,10 @@ async function phaseRollback() {
   check('release.discovery_and_report_visible_after_review', discRel.http === 200 && (await trackingState('r_disc')).current?.hasReport,
     { http: discRel.http, state: await trackingState('r_disc') });
   // R2: the sighting thumbnail followed the sightings: server-only while held, owner-readable after release.
-  const dImg = `profiles/${A.uid}/matchFootage/r_disc/tracking/d_1_g1.jpg`;
-  check('r2.discovery_image_follows_release', (await clientRead(dImg, A)) === 200 && !(await jobObjects(A, 'r_disc')).includes('pilotHeld/d_1_g1.jpg'),
-    { objects: await jobObjects(A, 'r_disc') });
+  const dName = (await jobObjects(A, 'r_disc')).find((o) => /^tracking\/d_1_g1_[a-z0-9]+\.jpg$/.test(o));
+  const dImg = dName ? `profiles/${A.uid}/matchFootage/r_disc/${dName}` : null;
+  check('r2.discovery_image_follows_release', dImg && (await clientRead(dImg, A)) === 200
+    && !(await jobObjects(A, 'r_disc')).some((o) => o.startsWith('pilotHeld/d_1_g1_')), { objects: await jobObjects(A, 'r_disc') });
 
   // 2. In-flight work at the moment of the stop.
   await ctl('plan', { jobId: 'r_publish', route: 'resolve', action: 'hold', times: 1 });
@@ -671,17 +674,20 @@ async function phaseR1() {
   check('r1.keep_choice_retains_source', keep && keepObjs.includes('video.mp4') && !keepObjs.some((o) => o.startsWith('frames/'))
     && keep.mediaLifecycle?.source === 'retained', { keepObjs, lifecycle: keep?.mediaLifecycle });
   const dup = await done('t1_dup');
-  const dupBefore = { objs: await jobObjects(A2, 't1_dup'), attempts: dup?.mediaLifecycle?.attempts, held: (await doc('matchAnalysisJobs/t1_dup/pilotHeld/current'))?.version };
+  const dupBefore = { objs: await jobObjects(A2, 't1_dup'), attempts: dup?.mediaLifecycle?.attempts, held: (await doc('matchAnalysisJobs/t1_dup/pilotHeld/current'))?.version,
+    workerCalls: (await workerLog()).filter((e) => e.jobId === 't1_dup').length, notices: (await notifications(A2.uid)).length };
   await enqueue('resolveTrackingTask', { jobId: 't1_dup', feedbackRevision: 0, scope: 'full' });
   await enqueue('resolveTrackingTask', { jobId: 't1_dup', feedbackRevision: 0, scope: 'full' });
   await enqueue('extractTrackingSegmentTask', { jobId: 't1_dup', generation: 1, index: 0 });
   await sleep(8000);
   const dupAfterDoc = await doc('matchAnalysisJobs/t1_dup');
   const dupAfter = { objs: await jobObjects(A2, 't1_dup'), attempts: dupAfterDoc?.mediaLifecycle?.attempts, state: dupAfterDoc?.trackingState,
-    held: (await doc('matchAnalysisJobs/t1_dup/pilotHeld/current'))?.version };
+    held: (await doc('matchAnalysisJobs/t1_dup/pilotHeld/current'))?.version,
+    workerCalls: (await workerLog()).filter((e) => e.jobId === 't1_dup').length, notices: (await notifications(A2.uid)).length };
   check('r1.duplicate_callbacks_after_completion_safe', dup && dupAfter.state === 'complete' && dupAfter.attempts === dupBefore.attempts
     && JSON.stringify(dupAfter.objs.filter((o) => !o.startsWith('pilotHeld/'))) === JSON.stringify(dupBefore.objs.filter((o) => !o.startsWith('pilotHeld/')))
-    && dupAfter.objs.filter((o) => o.startsWith('pilotHeld/')).length === dupBefore.objs.filter((o) => o.startsWith('pilotHeld/')).length,
+    && JSON.stringify(dupAfter.objs) === JSON.stringify(dupBefore.objs) && dupAfter.held === dupBefore.held
+    && dupAfter.workerCalls === dupBefore.workerCalls && dupAfter.notices === dupBefore.notices,
   { dupBefore, dupAfter });
   // Cancellation while the worker is running; the late result must not publish and the source is deleted at once.
   await ctl('plan', { jobId: 't1_cancel', route: 'extract', action: 'hold', times: 1 });

@@ -11,7 +11,7 @@
  */
 import http from 'node:http';
 
-const PORT = Number(process.env.FAKE_WORKER_PORT ?? 8790);
+const PORT = Number(process.env.FAKE_WORKER_PORT ?? process.env.PORT ?? 8790);
 const VERSION = process.env.FAKE_WORKER_VERSION ?? 'football-cv/0.7.0-reh';
 const MODELS = JSON.parse(process.env.FAKE_WORKER_MODELS ?? '{"detector":"yolox-reh","ocr":"parseq-reh"}');
 const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]).toString('base64');
@@ -79,7 +79,10 @@ function nextAction(jobId, route) {
 
 async function readSource(url) {
   // Proves the worker reads the job's own source from the local Storage emulator (bytes only counted).
-  if (typeof url !== 'string' || !url.startsWith('http://127.0.0.1:') && !url.startsWith('http://localhost:')) return { ok: false, bytes: 0, url };
+  const local = typeof url === 'string' && (url.startsWith('http://127.0.0.1:') || url.startsWith('http://localhost:'));
+  // Staging (Cloud Run): only the job's own signed Storage URL may be read (FAKE_WORKER_ALLOW_GCS=1).
+  const gcs = process.env.FAKE_WORKER_ALLOW_GCS === '1' && typeof url === 'string' && url.startsWith('https://storage.googleapis.com/');
+  if (!local && !gcs) return { ok: false, bytes: 0, url: typeof url === 'string' ? url.split('?')[0] : null };
   try {
     const r = await fetch(url, { headers: { Authorization: 'Bearer owner' } });
     const b = Buffer.from(await r.arrayBuffer());
@@ -148,4 +151,4 @@ http.createServer(async (req, res) => {
   const workerVersion = action === 'wrong_version' ? `${VERSION}-unapproved` : VERSION;
   const { times, states } = timelineFor(jobId);
   return send(res, 200, { report: report(jobId), timeline: { times, states }, workerVersion, models });
-}).listen(PORT, '127.0.0.1', () => console.log(`fake worker on 127.0.0.1:${PORT} version ${VERSION}`));
+}).listen(PORT, process.env.FAKE_WORKER_HOST ?? '127.0.0.1', () => console.log(`fake worker on ${process.env.FAKE_WORKER_HOST ?? '127.0.0.1'}:${PORT} version ${VERSION}`));

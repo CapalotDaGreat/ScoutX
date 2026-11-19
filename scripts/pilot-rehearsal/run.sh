@@ -67,9 +67,9 @@ trap cleanup EXIT
 sleep 1
 
 COMMIT="$(git rev-parse HEAD)$(git diff --quiet HEAD -- functions/src functions/lib || echo '+dirty')"
-REHEARSAL_COMMIT="$COMMIT" REHEARSAL_OUT="$OUT" REHEARSAL_PHASES="$PHASES" FAKE_WORKER_VERSION="$VERSION" \
+REHEARSAL_COMMIT="$COMMIT" REHEARSAL_OUT="$OUT" STAGING_CONFIG="${STAGING_CONFIG:-}" REHEARSAL_PHASES="$PHASES" FAKE_WORKER_VERSION="$VERSION" \
   $FIREBASE_BIN emulators:exec --config firebase.rehearsal.json --project "$PROJECT" --only auth,firestore,storage,functions,tasks \
-  "node scripts/pilot-rehearsal/rehearse.mjs" > "$LOGDIR/emulators.log" 2>&1
+  "node ${REHEARSAL_DRIVER:-scripts/pilot-rehearsal/rehearse.mjs}" > "$LOGDIR/emulators.log" 2>&1
 RC=$?
 cp firebase-debug.log "$LOGDIR/firebase-debug.log" 2>/dev/null || true
 echo "rehearsal exit=$RC evidence=$OUT logs=$LOGDIR"

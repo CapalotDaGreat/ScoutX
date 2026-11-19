@@ -241,7 +241,7 @@ test('resolve: preliminary then full, never overwritten by a smaller report, not
   assert.equal(await processResolveTask(db, 'job_1', 0, worker(1), env, store, { scope: 'preliminary', notify: r.notify }), 'done');
   let cur = data.get('matchAnalysisJobs/job_1/tracking/current') as { scope: string; parts: number; report: { moments: Array<{ imagePath: string | null; candidate: boolean }> } };
   assert.equal(cur.scope, 'preliminary');
-  assert.match(String(cur.report.moments[0].imagePath), /^profiles\/u1\/matchFootage\/job_1\/tracking\/m_360_p1_r0\.jpg$/);
+  assert.match(String(cur.report.moments[0].imagePath), /^profiles\/u1\/matchFootage\/job_1\/tracking\/m_360_p1_r0_[a-z0-9]+\.jpg$/);
   assert.equal(cur.report.moments[1].imagePath, null);
   assert.equal(cur.report.moments[1].candidate, true);
   let p = data.get(PROGRESS) as TrackingProgress;

@@ -1,0 +1,16 @@
+{
+  "_comment": "Copy to staging.config.json (git-ignored). No secrets: the Web API key of the STAGING app only, synthetic users only.",
+  "project": "pitchproof-stg-pilot",
+  "region": "europe-west6",
+  "bucket": "pitchproof-stg-pilot.firebasestorage.app",
+  "apiKey": "<staging web API key>",
+  "functionsBase": "https://europe-west6-pitchproof-stg-pilot.cloudfunctions.net",
+  "runtimeServiceAccount": "<project-number>-compute@developer.gserviceaccount.com",
+  "unauthorizedServiceAccount": "stg-no-invoker@pitchproof-stg-pilot.iam.gserviceaccount.com",
+  "authProbeQueue": "stg-auth-probe",
+  "exhaustProbeQueue": "stg-exhaust-probe",
+  "workerBase": "https://stg-fake-worker-<hash>-oa.a.run.app",
+  "workerAuth": "operator",
+  "workerVersion": "football-cv/0.7.0-staging",
+  "forbiddenProjects": ["scoutx-230b0"]
+}

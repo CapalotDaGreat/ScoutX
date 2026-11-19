@@ -122,6 +122,14 @@ exports.setTrackingPeriods = (0, https_1.onCall)((0, callableOptions_1.createCal
         return { ...fb, periods: clean };
     });
 });
+/** A stored full report of this feedback revision produced under this run authorisation. */
+function sameRun(d, feedbackRevision, runAuth) {
+    return Boolean(d && d.report && d.scope === 'full' && d.feedbackRevision === feedbackRevision && d.runAuthorizedAt === runAuth);
+}
+async function fullReportExists(base, heldRef, feedbackRevision, runAuth) {
+    const [cur, held] = await Promise.all([base.doc('current').get(), heldRef.get()]);
+    return sameRun(cur.data(), feedbackRevision, runAuth) || (!held.get('withheldAt') && sameRun(held.data(), feedbackRevision, runAuth));
+}
 /** R1: tracking run state on the job document (server-only field; drives the media lifecycle). */
 async function markTrackingFailed(db, jobId, now = new Date()) {
     const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId);
@@ -200,6 +208,12 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     if ((await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, undefined, { authorizedAt: runAuth })).decision !== 'allowed')
         return 'unavailable';
     const refresh = opts.scope === 'refresh';
+    // Idempotency (2026-11-19 staging preparation): a repeated delivery of a resolve whose full report for this
+    // feedback revision and run authorisation already exists (published or held) does nothing - no worker call,
+    // no new version, notification or cleanup. A correction (new revision), an OCR refresh or an operator
+    // re-authorisation (authorizeRun) still resolves.
+    if (!refresh && runAuth && await fullReportExists(base, db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(pilotGate_1.HELD_COLLECTION).doc('current'), feedbackRevision, runAuth))
+        return 'stale';
     const raw = await client({
         contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
         target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
@@ -220,11 +234,14 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const rawQuestions = rawReport.reviewQuestions ?? [];
     const staged = [];
     const attemptStartedMs = now().getTime();
+    // Every attempt writes new object names, so a URL issued for an earlier image (signed URL or download token)
+    // can never address a later one, even after withholding, reprocessing and release.
+    const attempt = attemptStartedMs.toString(36);
     for (let i = 0; i < report.reviewQuestions.length; i += 1) {
         const jpeg = (0, trackingV3_1.decodeReviewImage)(rawQuestions[i]?.imageJpegBase64);
         if (!jpeg)
             continue;
-        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${report.reviewQuestions[i].id}_r${feedbackRevision}`);
+        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${report.reviewQuestions[i].id}_r${feedbackRevision}_${attempt}`);
         await storeImage(path, jpeg);
         staged.push(path);
         report.reviewQuestions[i].imagePath = path;
@@ -235,14 +252,14 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         const jpeg = (0, trackingV3_1.decodeReviewImage)(momentImages.get(m.id));
         if (!jpeg)
             continue;
-        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${m.id}_p${report.analysedRange.parts}_r${feedbackRevision}`);
+        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${m.id}_p${report.analysedRange.parts}_r${feedbackRevision}_${attempt}`);
         await storeImage(path, jpeg);
         staged.push(path);
         m.imagePath = path;
     }
     const ref = (0, trackingV3_1.decodeReviewImage)(rawReport.referenceImageJpegBase64);
     if (ref) {
-        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, 'reference');
+        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `reference_${attempt}`);
         await storeImage(path, ref);
         staged.push(path);
         report.referenceImagePath = path;
@@ -282,8 +299,14 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
             tx.set(quotaRef, { uid: job.playerId, action: trackingFollowUp_1.OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
                 updatedAt: at }, { merge: true });
         }
+        // Same rule inside the transaction: of concurrent duplicate deliveries only the first one stores a report.
+        const runAuthTx = progTx.get('pilotAuthorizedAt');
+        if (!refresh && runAuthTx && (sameRun(cur.data(), feedbackRevision, runAuthTx)
+            || sameRun(gate.hold && held?.exists && !held.get('withheldAt') ? held.data() : undefined, feedbackRevision, runAuthTx))) {
+            return 'stale';
+        }
         const doc = { report: (0, trackingV3_1.toStoredForm)(report), version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-            stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp,
+            stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp, runAuthorizedAt: runAuthTx ?? null,
             // Provenance for audits and rollback: exactly which approved worker build and models produced this report.
             producedBy: { workerVersion: raw.workerVersion, models: raw.models } };
         // R1: a full report (published or held) finishes the tracking run; the media lifecycle takes it from here.
