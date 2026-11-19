@@ -783,7 +783,7 @@ Probe with identical token and bytes:
 ### Coaching semantics audit (wording in `src/i18n/locales/en/matchAnalysis.json`)
 
 - **Positioning observation.** The text is scoped: "On the {measuredMin} min where you are confirmed on video…".
-  It gives a caveat that the video cannot show passing lines, and attaches a drill.
+  It gives a caveat that the video cannot show passing lines, and attaches a drill only when a position is set (corrected in section 27).
   - Gaps: no representativeness requirement (61.2 s from 15 stretches on IMG_4529, 10 unverified), and no
     field-of-view check on team-mates.
   - The drill is generic, but it reads as advice drawn from a possibly unrepresentative sample.
@@ -793,6 +793,107 @@ Probe with identical token and bytes:
   judgement beyond the measured distance.
 - No gate was changed. Any representativeness threshold would be invented without human coaching review, so none
   was added. Review need recorded in `docs/video/coaching-human-review-request-2026-11-19.md`.
+
+## 27. Pilot controls, rollback rehearsal and coach review packet (2026-11-19)
+
+Scope: local and emulator work only. No production change, deployment, merge, participant contact, footage
+transfer or GPU session. User-facing analysis stays disabled (`TRACKING_V3_ENABLED` unset, `APPROVED_CV_WORKER = null`).
+
+### Pilot gate (commits `ff9615b`, `28607fa`; harness fix `72aa6dd`)
+
+Server-only document `opsConfig/trackingPilot` `{enabled, allowlist[], workerVersion, holdReports}`
+(`functions/src/analysis/pilotGate.ts`). Missing, malformed or disabled config fails closed. `holdReports` defaults to true.
+
+| Control | Allowed case | Denied case (tested) |
+|---|---|---|
+| Owner + consent | owner with `videoProcessingConsents/{jobId}` v`2026-10-video-v1` | non-owner; missing consent (start refused even when allowlisted) |
+| Default off | `enabled: true` | doc missing → `missing_config`; `enabled: false` → `pilot_off` |
+| Participant allowlist | uid listed | uid absent → `not_allowlisted` (start, extract, discover and resolve all refuse) |
+| Exact worker version | `workerVersion` equals the approved worker version | any other string → `version_mismatch`; existing `isApprovedWorkerOutput` still rejects wrong version/models in results |
+| Report withholding | resolve writes `pilotHeld/current` (owner cannot read), no notification; `releaseHeldReport` publishes with version+1, `releasedBy` | `holdReports:false` publishes directly; held doc never readable by the owner (rules test) |
+
+Entry points covered: `startAnalysis` (direct request), `processExtractTask` / `processDiscoverTask` /
+`processResolveTask` (queue handlers), follow-up resolves (retries/corrections), `settleOrchestratedResolve`.
+The gate is re-read **inside** the publishing transaction, so a kill switch flipped while a worker call is in
+flight discards the late result (`'stopped'`, nothing published or held).
+Test seam `TRACKING_PILOT_GATE=off` is honoured only when the emulator env vars are set (test 1 proves it is ignored otherwise).
+
+Legacy routes: the older AI clip pipelines are not behind this gate. They are gated separately by
+`AI_FOOTAGE_PROCESSING_APPROVED` (unset), so they stay off independently. A pilot would need that flag to stay unset.
+
+### Rollback rehearsal (unit test 7, `tests/unit/trackingPilotGate.test.ts`)
+
+Three jobs: `job_q` queued, `job_r` with the worker call in flight, `job_p` with a published report.
+1. Kill switch (`enabled:false`) → `job_r` late result discarded; `job_q` extraction refused with no worker call;
+   new `startAnalysis` refused (`worker_unavailable`, `pilot: pilot_off`).
+2. `withholdPublishedReport(job_p)` → `tracking/current` becomes `{report:null, stale:true, pendingReason:'withheld_for_review'}`;
+   the previous report moves to `pilotHeld/current` with `withheldAt/withheldReason`.
+3. Re-enable with a wrong `workerVersion` → still closed.
+4. Re-enable correctly → reprocessing returns `'held'`; release publishes version+1. Owner feedback
+   (`feedbackRevision 1`, feedback content) is unchanged; `engineVersion '3.0.0'` and
+   `producedBy.workerVersion 'football-cv/0.7.0'` + models recorded.
+
+Defect found and repaired: after containment, reprocessing returned `'stale'` because the withheld doc counted
+as the previous report. Fix: only a pending (not withheld) held doc counts (`pendingHeld`, `28607fa`).
+Mutation checks: removing the in-transaction stop fails test 5; removing the hold fails tests 4 and 6.
+
+### Suites (isolated VM checkout, files md5-identical to `28607fa`)
+
+| Command | Exit | Result |
+|---|---|---|
+| `npm run test:unit` | 0 | 833/833 (826 before + 7 new) |
+| `npm run typecheck` | 0 | app + tests |
+| `npx tsc -p functions` | 0 | lib rebuilt and committed |
+| `npm run test:rules` (firebase-tools 14.27.0, Firestore emulator 1.19.8; run in 3 batches for the 180 s call limit) | 0 ×3 | 265/265 (123 + 79 + 63): 263 before + 2 new pilot cases |
+
+Upload helper (`tests/rules/emulator.mjs`) still sends `contentType` (multipart metadata); forbidden-upload
+cases stay rejected within the 265.
+
+Not exercised: real HTTP callables and Cloud Tasks delivery through the Functions emulator (handlers were called
+directly with fakes); temporary-media cleanup beyond the existing `analysisPipeline` rules cases; cache
+compatibility beyond the provenance fields (no worker run).
+
+### Recovery instructions (valid for `28607fa` only)
+
+- Stop everything: set `opsConfig/trackingPilot.enabled=false` (Admin SDK/console; clients cannot write it). Takes
+  effect for queued, in-flight and new jobs without a deploy.
+- Contain a published report: call `withholdPublishedReport(db, 'matchAnalysisJobs', 'tracking', jobId, reason, now)`.
+- Reprocess after fixing: re-enable with the exact `workerVersion`, rerun resolve; result lands held; review; then `releaseHeldReport`.
+- Hard stop: unset `TRACKING_V3_ENABLED` (needs a redeploy; not rehearsed).
+Any later commit touching `pilotGate.ts`, `trackingCallables.ts` or `trackingOrchestrator.ts` invalidates these
+instructions until test 7 is rerun.
+
+### Correction to section 26
+
+Section 26 said the positioning observation "attaches a drill". The product path attaches one only when the
+player's position is set: midfielder/winger/forward → `show_for_ball`, defender/goalkeeper → `build_up_angles`,
+no position → none. The IMG_4529 render (no position) shows `drill: null`.
+
+### Coach review packet
+
+Local only: `C:\ZLI\M335\ScoutX\.local\footage-lib\coach-review-2026-11-19\` (not sent; text copy without clips in
+`docs/video/coach-review-packet-2026-11-19/`).
+- 8 clips, 3.7 min total, from IMG_4529 (SHA-256 `cd1f362d…`, matches inventory): all 15 confirmed runs of the
+  T+D+C+I report ±8 s, plus the 6-s example window 1170.8–1178.8 (earlier development report, labelled as such).
+  No overlays, no audio, no metadata.
+- Part A (blind, footage only) → Part B (sealed coaching text, Supported / Overstated / Insufficient evidence + timestamp)
+  → reviewer record (independence, prior exposure, compensation).
+- Text rendered via the product path at `28607fa`: positioning observation, ball-visibility limit, identity limit;
+  involvement note shown as wording only (not triggered: 65 s < 120 s, 0 confirmed contacts); six-second templates
+  with the one worked example.
+- Gates verified in source and unchanged: `offball.py:26` 60 s, `coach.ts:117` 120 s, `offball.py:29` and
+  `trackingV3.ts:147` 6 s.
+- Prerequisite: owner answer to Q1 (is orange #20 the player in IMG_4529) is still missing. No reviewer response exists.
+
+### Shadow evaluation: blocked
+
+- No owner answers to Q1–Q4 in `owner-review-2026-11-18/README.txt`.
+- `batch-01.txt` (10 files): 0 local; hydration not run.
+- So no match can be frozen, no identity confirmed, and no predictions were produced. The protocol in
+  `internal-shadow-evaluation-plan-2026-11-18.md` stands unchanged (frozen tree `f699669`, five configurations,
+  automatic first, abstentions in denominators, private withheld coaching only, stop conditions).
+- The server every-frame sequence check remains its own merge-only proposal
+  (`docs/release/proposal-server-sequence-check-2026-11-18.md`); the pilot gate is not part of it.
 
 ## 10. Primary workspace update (2026-11-15)
 
