@@ -3,7 +3,7 @@
 For: the owner, and counsel. Status: **open** (no decision recorded in the repository as of 2026-11-19). Current behaviour
 is kept until a decision is recorded; any change needs its own reviewed implementation and validation.
 
-## What the code does today (verified on candidate `65d9868`)
+## What the code does today (verified on candidate `65d9868`; re-verified on `5265405`, 2026-11-19 late)
 - **Ordinary report download:** none exists for tracking reports. Share cards, football CV, career replay and reel
   export read no tracking data; the report is only shown in the app from `tracking/current` under the database rules.
 - **Account archive** (Privacy Center → `requestDataExport` → Cloud Task `buildDataExport` →
@@ -12,6 +12,12 @@ is kept until a decision is recorded; any change needs its own reviewed implemen
   **no tracking report in any state** (released, held, withheld, discarded, superseded) and **no review or discovery image
   paths or links**; held paths are excluded from links by code. Emulator archives with released, held, withheld,
   reprocessed and cancelled jobs confirmed this (`r3.*` checks, ledger §29/§30).
+- Re-verification on `5265405` (export code unchanged since `65d9868`): the archive builder (`functions/src/dataRights/dataExport.ts`)
+  still links no `matchFootage/<job>/(tracking|pilotHeld)/` object; no share, CV, replay or reel service references tracking
+  data; emulator archives were inspected in the released, held and cancelled states (`r3.account_export_current_contract`,
+  rehearsal `12-final-5265405.json`) and the withheld state (`export.no_tracking_report_or_images`,
+  `14-staging-driver-image-revocation-emulator-5265405.json`); a discarded result leaves nothing to export. A repository
+  search found no owner or counsel decision (no decision record, no change to the drafts since 2026-10-25).
 - In the app, a released report and its images are visible to the owner only; held and withheld material is never
   client-readable; superseded and discarded images are deleted (retention matrix, 2026-11-19 rows).
 

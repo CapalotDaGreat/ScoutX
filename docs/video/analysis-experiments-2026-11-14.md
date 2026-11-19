@@ -1167,6 +1167,75 @@ staging.
 3. Owner identity answers Q1–Q4 (file unchanged since 2026-11-18 11:48 UTC); coach review not started (Q1 first).
 4. Shadow matches: 0/10 downloaded; `hydrate.ps1 -Action Pin -Batch batch-01.txt`, then target confirmation per match.
 
+## 31. Simultaneous delivery fixed, link revocation and spend controls verified locally; successor candidate `5265405`; staging still paused (2026-11-19 night)
+
+Scope: local repairs and read-only checks. No staging approval is recorded and no staging project exists, so nothing was
+created, deployed or dispatched. Pilot: pending. User-facing analysis: disabled. Identity safeguards unchanged.
+
+### Simultaneous delivery (reproduced, fixed)
+- Reproduced through the emulators with a deterministic barrier (each delivery paused at its first transactional read of
+  `tracking/progress` until both arrived) and with two unnamed tasks through the Functions + Cloud Tasks emulators.
+  `f9b7e2d`: duplicate extracts and resolves each called the worker twice and stored two report versions. `65d9868`:
+  simultaneous resolves still made 2 worker calls (one version); a resolve duplicate during execution published and cleared
+  `resolving`; an extract claimant returning after stop + re-enable recorded `done` and enqueued a resolve.
+- Fix `aa3d7a8`: extract claim token per attempt (lease 31 min, above the 1800 s timeout; was 16 min), outcome and failure
+  recorded only by the current claimant; resolve claim `progress.resolveClaim {key revision|scope|runAuthorizedAt, attempt,
+  token}`: a duplicate during execution or after a stored report is `busy` (no worker call, no settle, no queue retry), a
+  later attempt or an expired lease takes over, publication fenced by the token, failures free the key; per-attempt image
+  names carry a random suffix so a fenced claimant cannot delete the winner's images.
+- Counted separately at `5265405`: worker calls 1, report versions 1, notifications 0 from fenced claimants, enqueues only
+  by the current claimant; image objects only the winner's. Evidence `pilot-rehearsal-2026-11-19/8-…`, `9-…`, `10-…`, phase
+  `claim` 7/7 in `12-final-5265405.json`.
+- Remaining exposure: the worker has no idempotency key; a lost worker response means one re-execution (extract cached by
+  the stage-1 checkpoint, resolve deterministic, one stored version). Discovery chunks have no claim (single publication,
+  possible duplicate worker call). Cloud Tasks name de-duplication covers named creates only; the application claim covers
+  redelivery and unnamed duplicates.
+
+### Download-link revocation (token flow, emulator; staging version in the plan)
+`image-revocation.mjs` now covers review **and discovery** images; link issuance (token metadata read and the playback
+callable) for owner, unrelated account and anonymous caller while held, withheld and discarded; a successful pre-withhold
+fetch of every URL (required); a concurrent mint-and-fetch loop across the withhold; the identical URLs from fresh
+connections with caching disabled; reprocessing + re-release (old links dead, new links owner-only); legacy paths; cleanup.
+At `5265405`: 13/13. Exact URLs failed 10–22 ms after the withhold acknowledgment; the race loop (1431 iterations) had its
+last successful fetch end 683 ms **before** the acknowledgment and no issuance or fetch after it. Server access ends;
+bytes already downloaded by a device are outside server control.
+
+### Spending controls
+- Read-only recheck: `pitchproof-stg-pilot` not accessible (does not exist or no permission); Cloud Tasks, Cloud Run,
+  Cloud Functions and Firestore all list `europe-west6`; two open billing accounts visible (details not recorded).
+- Prices refreshed from the official pages (Cloud Run/functions, Cloud Tasks, Cloud Build, Artifact Registry, Logging,
+  Storage); Tier 2 bound = 1.5 × Tier 1, no free tier assumed.
+- `scripts/pilot-staging/limits.mjs`: per-case worst-case reservation; full matrix 28 tasks / 75 attempts against 60 / 150;
+  90-minute driver runtime watchdog; one state file shared by both drivers; stop procedure (pilot stop → max-attempts 1 →
+  pause → purge, fake-worker release-all, min-instances 0). Worst permitted combination ≈ USD 8.8 (runtime-bound; an
+  attempt-only bound would be ≈ USD 10.7, which is why runtime is the binding limit); expected well under USD 1. Budget
+  USD 10 with 50 % alert kept as monitoring. Guard tested locally (6 tests).
+- New probe D4 (resolve duplicate during execution). S1 made deterministic in the emulator (the tasks emulator once
+  dispatched a delayed task immediately); staging keeps the delayed variant.
+
+### R3
+Re-verified at `5265405`: no ordinary tracking report download; archives in the released, held, cancelled and withheld
+states contain no tracking report or image; no owner or counsel decision found. Request unchanged and open
+(`docs/release/r3-export-decision-request-2026-11-19.md`).
+
+### Candidate and checks (exact tree)
+Candidate **`52654050db07545053bdb808b1f10dc903c129d3`** (tree `4f45bd542868087f8274348c338d8461b2f0a7fc`); staging overlay
+tree **`b4537970126e42e8d4a29f0926654ea7fd1e5d4a`** (built twice, identical; never pushed).
+
+| Check | Result |
+|---|---|
+| Full emulator rollback rehearsal | 86/86 (`12-final-5265405.json`) |
+| Staging drivers against the emulators | probe 7 passed / 5 unexecuted (A1–A4, R3 need real OIDC or probe queues); images 13/13 |
+| Unit (VM, tree verified by sha256 manifest of 1824 files) | 860/860 |
+| `npm run typecheck`, `npx tsc -p functions`, eslint (9 files) | exit 0 |
+| Rules (4 batches) | 266/266 |
+
+### Awaiting approval
+Packet `docs/release/staging-verification-plan-2026-11-19.md` (revised): stable actions STG-01…STG-10c with commands,
+limits, stop conditions, evidence and cleanup, including a project identity check before deletion. **First action awaiting
+approval: STG-01**, which also needs the owner's choice of billing account. Other blockers unchanged: R3 answers, Q1–Q4,
+coach review, shadow footage.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an

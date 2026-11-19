@@ -1,0 +1,835 @@
+{
+ "target": "emulator",
+ "project": "demo-pilot-reh",
+ "commit": "52654050db07545053bdb808b1f10dc903c129d3",
+ "run": "irmwo45wcj",
+ "startedAt": "2026-11-19T22:20:27.060Z",
+ "steps": [
+  {
+   "at": "2026-11-19T22:20:27.118Z",
+   "name": "users",
+   "owner": "NPPjVeoVo7SZ7RtlPotFZ9yftALG",
+   "other": "LnCI4PtZu4ZFNS4Nnl7EbazEe8px"
+  },
+  {
+   "at": "2026-11-19T22:20:27.730Z",
+   "name": "ops",
+   "args": [
+    "enable",
+    "--allow",
+    "NPPjVeoVo7SZ7RtlPotFZ9yftALG",
+    "--worker-version",
+    "football-cv/0.7.0-reh",
+    "--hold",
+    "true"
+   ],
+   "exit": 0,
+   "ms": 610,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"NPPjVeoVo7SZ7RtlPotFZ9yftALG\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:29.807Z",
+   "name": "start",
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T22:20:39.417Z",
+   "name": "ops",
+   "args": [
+    "held-images",
+    "irmwo45wcj_rel"
+   ],
+   "exit": 0,
+   "ms": 550,
+   "stdout": "{\"command\":\"held-images\",\"jobId\":\"irmwo45wcj_rel\",\"result\":[\"profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/pilotHeld/d_1_g1_mwo460vlf1e012.jpg\",\"profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/pilotHeld/m_1_p1_r0_mwo463m2bd10d9.jpg\",\"profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/pilotHeld/q_123_1_r0_mwo463m2bd10d9.jpg\",\"profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/pilotHeld/reference_mwo463m2bd10d9.jpg\"]}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:40.561Z",
+   "name": "ops",
+   "args": [
+    "release",
+    "irmwo45wcj_rel",
+    "--reviewer",
+    "staging-reviewer"
+   ],
+   "exit": 0,
+   "ms": 622,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"irmwo45wcj_rel\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:42.870Z",
+   "name": "ops",
+   "args": [
+    "withhold",
+    "irmwo45wcj_rel",
+    "--reason",
+    "staging-revocation-test"
+   ],
+   "exit": 0,
+   "ms": 678,
+   "stdout": "{\"command\":\"withhold\",\"jobId\":\"irmwo45wcj_rel\",\"result\":\"withheld\",\"ms\":416}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:45.896Z",
+   "name": "revocation timing",
+   "withholdCommandMs": 678,
+   "urls": [
+    {
+     "path": "profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/tracking/m_1_p1_r0_mwo463m2bd10d9.jpg",
+     "before": 200,
+     "revoked": {
+      "status": 403,
+      "msFromWithholdStart": 688,
+      "msFromWithholdEnd": 10
+     }
+    },
+    {
+     "path": "profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/tracking/q_123_1_r0_mwo463m2bd10d9.jpg",
+     "before": 200,
+     "revoked": {
+      "status": 403,
+      "msFromWithholdStart": 692,
+      "msFromWithholdEnd": 14
+     }
+    },
+    {
+     "path": "profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/tracking/reference_mwo463m2bd10d9.jpg",
+     "before": 200,
+     "revoked": {
+      "status": 403,
+      "msFromWithholdStart": 696,
+      "msFromWithholdEnd": 18
+     }
+    },
+    {
+     "path": "profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_rel/tracking/d_1_g1_mwo460vlf1e012.jpg",
+     "before": 200,
+     "revoked": {
+      "status": 403,
+      "msFromWithholdStart": 700,
+      "msFromWithholdEnd": 22
+     }
+    }
+   ],
+   "race": {
+    "iterations": 1431,
+    "successfulBeforeWithhold": 296,
+    "lastSuccessfulFetchEndMsRelativeToAck": -683,
+    "lastSuccessfulFetchStartMsRelativeToAck": -687,
+    "issuedAfterAck": 0,
+    "fetchedAfterAck": 0
+   }
+  },
+  {
+   "at": "2026-11-19T22:20:51.208Z",
+   "name": "ops",
+   "args": [
+    "reprocess",
+    "irmwo45wcj_rel"
+   ],
+   "exit": 0,
+   "ms": 573,
+   "stdout": "{\"command\":\"reprocess\",\"jobId\":\"irmwo45wcj_rel\",\"result\":\"queued\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:54.018Z",
+   "name": "ops",
+   "args": [
+    "release",
+    "irmwo45wcj_rel",
+    "--reviewer",
+    "staging-reviewer"
+   ],
+   "exit": 0,
+   "ms": 784,
+   "stdout": "{\"command\":\"release\",\"jobId\":\"irmwo45wcj_rel\",\"result\":\"released\"}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:55.745Z",
+   "name": "ops",
+   "args": [
+    "stop"
+   ],
+   "exit": 0,
+   "ms": 514,
+   "stdout": "{\"command\":\"stop\",\"jobId\":null,\"stopped\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:57.270Z",
+   "name": "ops",
+   "args": [
+    "enable",
+    "--allow",
+    "NPPjVeoVo7SZ7RtlPotFZ9yftALG",
+    "--worker-version",
+    "football-cv/0.7.0-reh",
+    "--hold",
+    "true"
+   ],
+   "exit": 0,
+   "ms": 483,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"NPPjVeoVo7SZ7RtlPotFZ9yftALG\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:57.918Z",
+   "name": "ops",
+   "args": [
+    "prune-images",
+    "irmwo45wcj_legacy"
+   ],
+   "exit": 0,
+   "ms": 601,
+   "stdout": "{\"command\":\"prune-images\",\"jobId\":\"irmwo45wcj_legacy\",\"result\":{\"deleted\":[],\"contained\":[\"profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_legacy/tracking/q_legacy_r0.jpg\"],\"kept\":1}}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:58.521Z",
+   "name": "ops",
+   "args": [
+    "prune-images",
+    "irmwo45wcj_legacy"
+   ],
+   "exit": 0,
+   "ms": 603,
+   "stdout": "{\"command\":\"prune-images\",\"jobId\":\"irmwo45wcj_legacy\",\"result\":{\"deleted\":[],\"contained\":[],\"kept\":1}}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T22:20:58.542Z",
+   "name": "downloaded copies",
+   "note": "Bytes a client already downloaded (browser or app image cache, 1 h private max-age) are outside server control; only live object access is revocable."
+  },
+  {
+   "at": "2026-11-19T22:20:58.733Z",
+   "name": "limits",
+   "startedAt": 1795126457550,
+   "tasks": 28,
+   "attempts": 75,
+   "cases": [
+    {
+     "caseId": "A1",
+     "tasks": 2,
+     "attempts": 4,
+     "at": 1795126458329
+    },
+    {
+     "caseId": "A2",
+     "tasks": 1,
+     "attempts": 1,
+     "at": 1795126458578
+    },
+    {
+     "caseId": "A3",
+     "tasks": 1,
+     "attempts": 1,
+     "at": 1795126458620
+    },
+    {
+     "caseId": "A4",
+     "tasks": 1,
+     "attempts": 1,
+     "at": 1795126458676
+    },
+    {
+     "caseId": "R1",
+     "tasks": 2,
+     "attempts": 6,
+     "at": 1795126458725
+    },
+    {
+     "caseId": "R2",
+     "tasks": 1,
+     "attempts": 3,
+     "at": 1795126527472
+    },
+    {
+     "caseId": "R3",
+     "tasks": 1,
+     "attempts": 2,
+     "at": 1795126708475
+    },
+    {
+     "caseId": "D1",
+     "tasks": 2,
+     "attempts": 6,
+     "at": 1795126708511
+    },
+    {
+     "caseId": "D2",
+     "tasks": 3,
+     "attempts": 9,
+     "at": 1795126713548
+    },
+    {
+     "caseId": "D3",
+     "tasks": 4,
+     "attempts": 12,
+     "at": 1795126754618
+    },
+    {
+     "caseId": "D4",
+     "tasks": 2,
+     "attempts": 6,
+     "at": 1795126764856
+    },
+    {
+     "caseId": "S1",
+     "tasks": 1,
+     "attempts": 3,
+     "at": 1795126776929
+    },
+    {
+     "caseId": "IR",
+     "tasks": 7,
+     "attempts": 21,
+     "at": 1795126827063
+    }
+   ],
+   "tripped": null,
+   "observedAttempts": 11,
+   "limits": {
+    "maxTasks": 60,
+    "maxAttempts": 150,
+    "maxRuntimeMs": 5400000
+   }
+  }
+ ],
+ "checks": [
+  {
+   "id": "held.reviewer_only",
+   "status": "passed",
+   "matrix": [
+    [
+     "owner",
+     403,
+     404
+    ],
+    [
+     "other",
+     403,
+     403
+    ],
+    [
+     "anon",
+     403,
+     403
+    ],
+    [
+     "owner",
+     403,
+     404
+    ],
+    [
+     "other",
+     403,
+     403
+    ],
+    [
+     "anon",
+     403,
+     403
+    ],
+    [
+     "owner",
+     403,
+     404
+    ],
+    [
+     "other",
+     403,
+     403
+    ],
+    [
+     "anon",
+     403,
+     403
+    ],
+    [
+     "owner",
+     403,
+     404
+    ],
+    [
+     "other",
+     403,
+     403
+    ],
+    [
+     "anon",
+     403,
+     403
+    ]
+   ],
+   "issue": {
+    "status": "PERMISSION_DENIED"
+   },
+   "discoveryTwins": 1
+  },
+  {
+   "id": "held.no_link_issuance",
+   "status": "passed",
+   "heldIssuance": [
+    {
+     "who": "owner",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "held": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    },
+    {
+     "who": "owner",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "held": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    },
+    {
+     "who": "owner",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "held": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    },
+    {
+     "who": "owner",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "held": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "held": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    }
+   ]
+  },
+  {
+   "id": "held.report_unreadable",
+   "status": "passed"
+  },
+  {
+   "id": "released.owner_only_and_urls_work",
+   "status": "passed",
+   "relM": [
+    [
+     200,
+     403,
+     403
+    ],
+    [
+     200,
+     403,
+     403
+    ],
+    [
+     200,
+     403,
+     403
+    ],
+    [
+     200,
+     403,
+     403
+    ]
+   ],
+   "before": [
+    200,
+    200,
+    200,
+    200
+   ],
+   "signedIssue": {
+    "status": "PERMISSION_DENIED"
+   }
+  },
+  {
+   "id": "withheld.no_issuance_or_fetch_after_ack",
+   "status": "passed",
+   "iterations": 1431,
+   "successfulBeforeWithhold": 296,
+   "lastSuccessfulFetchEndMsRelativeToAck": -683,
+   "lastSuccessfulFetchStartMsRelativeToAck": -687,
+   "issuedAfterAck": 0,
+   "fetchedAfterAck": 0
+  },
+  {
+   "id": "withheld.no_link_issuance",
+   "status": "passed",
+   "withheldIssuance": [
+    {
+     "who": "owner",
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    },
+    {
+     "who": "owner",
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    },
+    {
+     "who": "owner",
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    },
+    {
+     "who": "owner",
+     "ownerPath": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "other",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "who": "anon",
+     "ownerPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     },
+     "heldPath": {
+      "meta": 403,
+      "callable": "UNAUTHENTICATED"
+     }
+    }
+   ]
+  },
+  {
+   "id": "withheld.urls_and_objects_closed",
+   "status": "passed",
+   "revoked": [
+    {
+     "status": 403,
+     "msFromWithholdStart": 688,
+     "msFromWithholdEnd": 10
+    },
+    {
+     "status": 403,
+     "msFromWithholdStart": 692,
+     "msFromWithholdEnd": 14
+    },
+    {
+     "status": 403,
+     "msFromWithholdStart": 696,
+     "msFromWithholdEnd": 18
+    },
+    {
+     "status": 403,
+     "msFromWithholdStart": 700,
+     "msFromWithholdEnd": 22
+    }
+   ],
+   "reportField": [
+    "nullValue"
+   ]
+  },
+  {
+   "id": "export.no_tracking_report_or_images",
+   "status": "passed",
+   "bytes": 3784
+  },
+  {
+   "id": "reprocessed.old_urls_dead_new_access_works",
+   "status": "passed",
+   "old": [
+    403,
+    403,
+    403,
+    403
+   ],
+   "fresh": [
+    200,
+    200,
+    200
+   ],
+   "newLinks": [
+    {
+     "owner": 200,
+     "other": 403,
+     "anon": 403
+    },
+    {
+     "owner": 200,
+     "other": 403,
+     "anon": 403
+    },
+    {
+     "owner": 200,
+     "other": 403,
+     "anon": 403
+    }
+   ],
+   "renamed": true,
+   "discoveryVisibleAfterReprocess": 0
+  },
+  {
+   "id": "discarded.no_link_issuance",
+   "status": "passed",
+   "discardedIssuance": [
+    {
+     "sub": "tracking",
+     "owner": {
+      "meta": 404,
+      "callable": "PERMISSION_DENIED"
+     }
+    },
+    {
+     "sub": "pilotHeld",
+     "owner": {
+      "meta": 403,
+      "callable": "PERMISSION_DENIED"
+     }
+    }
+   ]
+  },
+  {
+   "id": "discarded.no_images",
+   "status": "passed",
+   "dObjs": [
+    "video.mp4"
+   ]
+  },
+  {
+   "id": "legacy.contained_and_prune_idempotent",
+   "status": "passed",
+   "before": 200,
+   "p1": "{\"command\":\"prune-images\",\"jobId\":\"irmwo45wcj_legacy\",\"result\":{\"deleted\":[],\"contained\":[\"profiles/NPPjVeoVo7SZ7RtlPotFZ9yftALG/matchFootage/irmwo45wcj_legacy/tracking/q_legacy_r0.jpg\"],\"kept\":1}}"
+  },
+  {
+   "id": "cleanup.run_data_removed",
+   "status": "passed",
+   "objectsLeft": 0,
+   "jobDocsLeft": 0
+  }
+ ],
+ "finishedAt": "2026-11-19T22:20:58.734Z",
+ "summary": {
+  "passed": [
+   "held.reviewer_only",
+   "held.no_link_issuance",
+   "held.report_unreadable",
+   "released.owner_only_and_urls_work",
+   "withheld.no_issuance_or_fetch_after_ack",
+   "withheld.no_link_issuance",
+   "withheld.urls_and_objects_closed",
+   "export.no_tracking_report_or_images",
+   "reprocessed.old_urls_dead_new_access_works",
+   "discarded.no_link_issuance",
+   "discarded.no_images",
+   "legacy.contained_and_prune_idempotent",
+   "cleanup.run_data_removed"
+  ],
+  "failed": [],
+  "unexecuted": []
+ }
+}

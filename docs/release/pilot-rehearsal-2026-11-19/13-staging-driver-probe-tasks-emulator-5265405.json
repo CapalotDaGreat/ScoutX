@@ -1,0 +1,361 @@
+{
+ "target": "emulator",
+ "project": "demo-pilot-reh",
+ "commit": "52654050db07545053bdb808b1f10dc903c129d3",
+ "run": "ptmwo3xz10",
+ "dryRun": false,
+ "startedAt": "2026-11-19T22:14:16.981Z",
+ "steps": [
+  {
+   "at": "2026-11-19T22:14:18.328Z",
+   "name": "ops",
+   "args": [
+    "enable",
+    "--allow",
+    "KXfRR5NujKQqvTjBSyIOAi9FH1Kd",
+    "--worker-version",
+    "football-cv/0.7.0-reh",
+    "--hold",
+    "true"
+   ],
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"KXfRR5NujKQqvTjBSyIOAi9FH1Kd\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}"
+  },
+  {
+   "at": "2026-11-19T22:14:18.578Z",
+   "name": "createTask (not sent)",
+   "queue": "stg-auth-probe",
+   "task": {
+    "httpRequest": {
+     "httpMethod": "POST",
+     "url": "http://127.0.0.1:5001/demo-pilot-reh/europe-west6/extractTrackingSegmentTask",
+     "headers": {
+      "Content-Type": "application/json"
+     },
+     "body": "eyJkYXRhIjp7ImpvYklkIjoicHRtd28zeHoxMF9BMSIsImdlbmVyYXRpb24iOjEsImluZGV4IjowfX0="
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T22:14:18.620Z",
+   "name": "createTask (not sent)",
+   "queue": "stg-auth-probe",
+   "task": {
+    "httpRequest": {
+     "httpMethod": "POST",
+     "url": "http://127.0.0.1:5001/demo-pilot-reh/europe-west6/extractTrackingSegmentTask",
+     "headers": {
+      "Content-Type": "application/json"
+     },
+     "body": "eyJkYXRhIjp7ImpvYklkIjoicHRtd28zeHoxMF9BMiIsImdlbmVyYXRpb24iOjEsImluZGV4IjowfX0="
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T22:14:18.676Z",
+   "name": "createTask (not sent)",
+   "queue": "stg-auth-probe",
+   "task": {
+    "httpRequest": {
+     "httpMethod": "POST",
+     "url": "http://127.0.0.1:5001/demo-pilot-reh/europe-west6/extractTrackingSegmentTask",
+     "headers": {
+      "Content-Type": "application/json"
+     },
+     "body": "eyJkYXRhIjp7ImpvYklkIjoicHRtd28zeHoxMF9BMyIsImdlbmVyYXRpb24iOjEsImluZGV4IjowfX0="
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T22:14:18.725Z",
+   "name": "createTask (not sent)",
+   "queue": "stg-auth-probe",
+   "task": {
+    "httpRequest": {
+     "httpMethod": "POST",
+     "url": "http://127.0.0.1:5001/demo-pilot-reh/europe-west6/extractTrackingSegmentTask",
+     "headers": {
+      "Content-Type": "application/json"
+     },
+     "body": "eyJkYXRhIjp7ImpvYklkIjoicHRtd28zeHoxMF9BNCIsImdlbmVyYXRpb24iOjEsImluZGV4IjowfX0="
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T22:18:28.511Z",
+   "name": "createTask (not sent)",
+   "queue": "stg-exhaust-probe",
+   "task": {
+    "httpRequest": {
+     "httpMethod": "POST",
+     "url": "http://127.0.0.1:5001/demo-pilot-reh/europe-west6/extractTrackingSegmentTask",
+     "headers": {
+      "Content-Type": "application/json"
+     },
+     "body": "eyJkYXRhIjp7ImpvYklkIjoicHRtd28zeHoxMF9SMyIsImdlbmVyYXRpb24iOjEsImluZGV4IjowfX0="
+    }
+   }
+  },
+  {
+   "at": "2026-11-19T22:19:37.397Z",
+   "name": "ops",
+   "args": [
+    "stop"
+   ],
+   "exit": 0,
+   "stdout": "{\"command\":\"stop\",\"jobId\":null,\"stopped\":true}"
+  },
+  {
+   "at": "2026-11-19T22:19:39.849Z",
+   "name": "ops",
+   "args": [
+    "enable",
+    "--allow",
+    "KXfRR5NujKQqvTjBSyIOAi9FH1Kd",
+    "--worker-version",
+    "football-cv/0.7.0-reh",
+    "--hold",
+    "true"
+   ],
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"KXfRR5NujKQqvTjBSyIOAi9FH1Kd\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}"
+  },
+  {
+   "at": "2026-11-19T22:19:39.852Z",
+   "name": "S1 variant",
+   "createdBeforeStop": false
+  },
+  {
+   "at": "2026-11-19T22:19:59.864Z",
+   "name": "limits",
+   "startedAt": 1795126457550,
+   "tasks": 21,
+   "attempts": 54,
+   "cases": [
+    {
+     "caseId": "A1",
+     "tasks": 2,
+     "attempts": 4,
+     "at": 1795126458329
+    },
+    {
+     "caseId": "A2",
+     "tasks": 1,
+     "attempts": 1,
+     "at": 1795126458578
+    },
+    {
+     "caseId": "A3",
+     "tasks": 1,
+     "attempts": 1,
+     "at": 1795126458620
+    },
+    {
+     "caseId": "A4",
+     "tasks": 1,
+     "attempts": 1,
+     "at": 1795126458676
+    },
+    {
+     "caseId": "R1",
+     "tasks": 2,
+     "attempts": 6,
+     "at": 1795126458725
+    },
+    {
+     "caseId": "R2",
+     "tasks": 1,
+     "attempts": 3,
+     "at": 1795126527472
+    },
+    {
+     "caseId": "R3",
+     "tasks": 1,
+     "attempts": 2,
+     "at": 1795126708475
+    },
+    {
+     "caseId": "D1",
+     "tasks": 2,
+     "attempts": 6,
+     "at": 1795126708511
+    },
+    {
+     "caseId": "D2",
+     "tasks": 3,
+     "attempts": 9,
+     "at": 1795126713548
+    },
+    {
+     "caseId": "D3",
+     "tasks": 4,
+     "attempts": 12,
+     "at": 1795126754618
+    },
+    {
+     "caseId": "D4",
+     "tasks": 2,
+     "attempts": 6,
+     "at": 1795126764856
+    },
+    {
+     "caseId": "S1",
+     "tasks": 1,
+     "attempts": 3,
+     "at": 1795126776929
+    }
+   ],
+   "tripped": null,
+   "observedAttempts": 11,
+   "limits": {
+    "maxTasks": 60,
+    "maxAttempts": 150,
+    "maxRuntimeMs": 5400000
+   }
+  }
+ ],
+ "checks": [
+  {
+   "id": "A1.valid",
+   "status": "unexecuted",
+   "reason": "the emulator does not authenticate task dispatch"
+  },
+  {
+   "id": "A2.missing_credentials",
+   "status": "unexecuted",
+   "reason": "the emulator does not authenticate task dispatch"
+  },
+  {
+   "id": "A3.wrong_audience",
+   "status": "unexecuted",
+   "reason": "the emulator does not authenticate task dispatch"
+  },
+  {
+   "id": "A4.unauthorized_identity",
+   "status": "unexecuted",
+   "reason": "the emulator does not authenticate task dispatch"
+  },
+  {
+   "id": "R1.retryable_then_success",
+   "status": "passed",
+   "attempts": [
+    "2026-11-19T22:14:26.022Z",
+    "2026-11-19T22:15:26.168Z"
+   ],
+   "gapsSec": [
+    60.146
+   ],
+   "segment": {
+    "startedAt": "2026-11-19T22:15:26.159Z",
+    "attempts": 2,
+    "doneAt": "2026-11-19T22:15:26.173Z",
+    "processingSec": 1.5,
+    "claim": null,
+    "status": "done"
+   },
+   "trackingState": "running"
+  },
+  {
+   "id": "R2.permanent_failure_at_attempt_limit",
+   "status": "passed",
+   "attempts": [
+    "2026-11-19T22:15:27.705Z",
+    "2026-11-19T22:16:27.777Z",
+    "2026-11-19T22:18:27.839Z"
+   ],
+   "gapsSec": [
+    60.072,
+    120.062
+   ],
+   "segment": {
+    "startedAt": "2026-11-19T22:18:27.830Z",
+    "attempts": 3,
+    "claim": null,
+    "status": "failed"
+   },
+   "trackingState": "failed"
+  },
+  {
+   "id": "R3.queue_attempt_limit",
+   "status": "unexecuted",
+   "reason": "needs the dedicated probe queue"
+  },
+  {
+   "id": "D1.task_name_dedup",
+   "status": "passed",
+   "results": [
+    [
+     "first",
+     "created"
+    ],
+    [
+     "second_immediately",
+     "functions/task-already-exists"
+    ],
+    [
+     "after_execution",
+     "functions/task-already-exists"
+    ]
+   ],
+   "note": "after_execution is recorded, not asserted (Cloud Tasks documents a dedup window of up to 24 h after deletion)"
+  },
+  {
+   "id": "D2.redelivery_one_worker_call",
+   "status": "passed",
+   "extractCalls": 1
+  },
+  {
+   "id": "D3.repeated_resolve_no_side_effects",
+   "status": "passed",
+   "before": {
+    "resolves": 1,
+    "version": 1,
+    "lifecycle": 1,
+    "notices": 4
+   },
+   "after": {
+    "resolves": 1,
+    "version": 1,
+    "lifecycle": 1,
+    "notices": 4
+   }
+  },
+  {
+   "id": "D4.duplicate_resolve_during_execution",
+   "status": "passed",
+   "during": {
+    "calls": 1,
+    "resolving": "full"
+   },
+   "after": {
+    "calls": 1,
+    "version": 1
+   }
+  },
+  {
+   "id": "S1.pre_stop_task_stale_after_reenable",
+   "status": "passed",
+   "resolveCalls": 0
+  }
+ ],
+ "finishedAt": "2026-11-19T22:19:59.864Z",
+ "summary": {
+  "passed": [
+   "R1.retryable_then_success",
+   "R2.permanent_failure_at_attempt_limit",
+   "D1.task_name_dedup",
+   "D2.redelivery_one_worker_call",
+   "D3.repeated_resolve_no_side_effects",
+   "D4.duplicate_resolve_during_execution",
+   "S1.pre_stop_task_stale_after_reenable"
+  ],
+  "failed": [],
+  "unexecuted": [
+   "A1.valid",
+   "A2.missing_credentials",
+   "A3.wrong_audience",
+   "A4.unauthorized_identity",
+   "R3.queue_attempt_limit"
+  ]
+ }
+}
