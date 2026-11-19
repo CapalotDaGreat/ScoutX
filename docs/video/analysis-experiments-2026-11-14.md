@@ -1236,6 +1236,19 @@ limits, stop conditions, evidence and cleanup, including a project identity chec
 approval: STG-01**, which also needs the owner's choice of billing account. Other blockers unchanged: R3 answers, Q1–Q4,
 coach review, shadow footage.
 
+## 32. Staging approved but paused at STG-01 (billing name was a placeholder); audit; driver argument fix (2026-11-19, 23:40–24:00)
+
+The owner approved STG-01…STG-10c for `52654050db07545053bdb808b1f10dc903c129d3` twice. Both messages named the billing
+account with a template placeholder, which matches neither open account (exact comparison; the two real names are
+distinct). Per the approval's own rule, STG-01 is paused before any cloud write: **staging did not run**, nothing was
+created, cost USD 0, nothing to clean up, production unchanged (latest function update 2026-11-13). Clean checkout of the
+full SHA verified; overlay tree `b4537970…` as in §31. Export re-read from the exact code: no tracking report or image in
+any state, including superseded. Defect fixed on a separate commit: `probe-tasks.mjs --only X` without an output path used
+`X` as the file name (`parseDriverArgs` + regression test). Full record: `docs/release/staging-audit-2026-11-19.md`.
+
+Gates for the participant pilot (all open): staging pass (unrun), R3 decision (open), independent coach review (not
+started), owner-confirmed two-match shadow evaluation (0/10 footage local). Pilot pending; user-facing analysis off.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
