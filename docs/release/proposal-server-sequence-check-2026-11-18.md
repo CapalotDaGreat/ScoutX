@@ -23,15 +23,9 @@ the install script was skipped.
 | `tsc --noEmit` (app) | exit 0 |
 | `tsc --noEmit -p tests` | exit 0 |
 | `functions: tsc --noEmit` and `tsc` | exit 0 |
-| Rules/emulator suites (firebase-tools 14.27.0, firestore emulator 1.19.8, storage rules runtime 1.1.3), all 17 files in 3 batches | **259 / 263 pass** |
+| Rules/emulator suites (firebase-tools 14.27.0, firestore emulator 1.19.8, storage rules runtime 1.1.3), all 17 files in 3 batches | **263 / 263 pass** after the test-helper fix `72aa6dd` (2026-11-19); 259 / 263 before it |
 
-The 4 failures are all in `tests/rules/storage.rules.test.mjs`: every *allow* case of the `/v0/b/…/o?name=` raw
-upload returns 403.
-- The same token and the same rules give **200** through the `/upload/storage/v1` media endpoint (probe).
-- `storage.rules` and the test are unchanged since 8ad9170 (2026-10-26), and the change under review does not touch
-  Storage.
-- It is classed as a harness/emulator-version incompatibility. It needs its own fix and is **not** waived for
-  storage-rule changes.
+The 4 earlier failures were a test-helper defect: a raw v0 upload carries no contentType to the rules. It is fixed in `72aa6dd` (ledger §26); the rules are unchanged. The merge candidate should include `72aa6dd`, and the suites should be re-run on the exact merge commit.
 
 **Rollback.**
 - `git revert 9ba85c3`; check first that the diff is limited to the files above.
