@@ -15,6 +15,7 @@
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { accessToken, evidenceWriter, loadConfig, operatorIdentityToken, redact, requireFn, root, sleep, waitFor } from './lib.mjs';
+import { driverGuard } from './limits.mjs';
 
 const cfg = loadConfig();
 const args = process.argv.slice(2);
@@ -87,7 +88,11 @@ async function createRawTask(queue, url, data, { oidc, audience, name, scheduleD
 }
 const enqueue = (queue, payload, opts = {}) => getFunctions().taskQueue(taskQueueName(queue)).enqueue(payload, { dispatchDeadlineSeconds: 900, ...opts });
 
+let guard;
+/** Reserve the case's worst-case tasks/attempts (limits.mjs); a case that would exceed a limit stops the run. */
+const reserve = async (id) => { if (!DRY) await guard.reserve(id); };
 async function main() {
+  guard = await driverGuard(cfg, E, ops, spawnSync, operatorIdentityToken);
   const owner = await signUp('owner');
   if (!DRY) ops('enable', '--allow', owner.uid, '--worker-version', cfg.workerVersion, '--hold', 'true');
   const extract = fnUrl('extractTrackingSegmentTask');
@@ -101,6 +106,7 @@ async function main() {
   ];
   for (const [id, label, auth] of authCases) {
     if (!want(id)) continue;
+    await reserve(id);
     const job = `${RUN}_${id}`;
     if (!DRY) await probeJob(job, owner);
     const t0 = new Date().toISOString();
@@ -118,6 +124,7 @@ async function main() {
   // R: retries through the normal path (startPlayerAnalysis -> extract queue).
   for (const [id, label, fails] of [['R1', 'retryable_then_success', 1], ['R2', 'permanent_failure_at_attempt_limit', 3]]) {
     if (!want(id) || DRY) continue;
+    await reserve(id);
     const job = `${RUN}_${id}`;
     await probeJob(job, owner);
     await db.doc(`matchAnalysisJobs/${job}/tracking/progress`).delete();
@@ -133,6 +140,7 @@ async function main() {
 
   // R3: queue attempt limit below the handler's own limit (probe queue maxAttempts=2): the queue stops, the job stays queued.
   if (want('R3')) {
+    await reserve('R3');
     const job = `${RUN}_R3`;
     if (!DRY) { await probeJob(job, owner); await ctl('plan', { jobId: job, route: 'extract', action: 'fail', times: 9 }); }
     const created = await createRawTask(cfg.exhaustProbeQueue ?? 'stg-exhaust-probe', extract, { jobId: job, generation: 1, index: 0 }, { oidc: cfg.runtimeServiceAccount });
@@ -147,6 +155,7 @@ async function main() {
 
   // D1: queue-level de-duplication by task name (Admin SDK `id`, exactly the server's enqueue).
   if (want('D1') && !DRY) {
+    await reserve('D1');
     const job = `${RUN}_D1`;
     await probeJob(job, owner);
     await db.doc(`matchAnalysisJobs/${job}/tracking/progress`).set({ segments: { 0: { status: 'done', attempts: 1 } } }, { merge: true });
@@ -164,6 +173,7 @@ async function main() {
 
   // D2: two unnamed tasks for the same logical work, created back to back: one worker call (application lease).
   if (want('D2') && !DRY) {
+    await reserve('D2');
     const job = `${RUN}_D2`;
     await probeJob(job, owner);
     await ctl('plan', { jobId: job, route: 'extract', action: 'hold', times: 1 });
@@ -179,6 +189,7 @@ async function main() {
 
   // D3: a resolve repeated after the full report exists: no worker call, no new version, notice or cleanup.
   if (want('D3') && !DRY) {
+    await reserve('D3');
     const job = `${RUN}_D3`;
     await probeJob(job, owner);
     await db.doc(`matchAnalysisJobs/${job}/tracking/progress`).delete();
@@ -197,15 +208,42 @@ async function main() {
     E.check('D3.repeated_resolve_no_side_effects', JSON.stringify(before) === JSON.stringify(after), { before, after });
   }
 
+  // D4: two unnamed resolves for the same work while the first executes (claim): one worker call, one version,
+  // the duplicate leaves `resolving` alone and triggers no queue retry.
+  if (want('D4') && !DRY) {
+    await reserve('D4');
+    const job = `${RUN}_D4`;
+    await probeJob(job, owner);
+    await db.doc(`matchAnalysisJobs/${job}/tracking/progress`).set({ segments: { 0: { status: 'done', attempts: 1 } }, resolving: 'full' }, { merge: true });
+    await ctl('plan', { jobId: job, route: 'resolve', action: 'hold', times: 1 });
+    await enqueue('resolveTrackingTask', { jobId: job, feedbackRevision: 0, scope: 'full' });
+    await waitFor(async () => (await calls(job, 'resolve')).length === 1, 120000, 1000);
+    await enqueue('resolveTrackingTask', { jobId: job, feedbackRevision: 0, scope: 'full' });
+    await sleep(STAGING ? 30000 : 6000);
+    const during = { calls: (await calls(job, 'resolve')).length, resolving: (await doc(`matchAnalysisJobs/${job}/tracking/progress`))?.resolving ?? null };
+    await ctl('release', { jobId: job, route: 'resolve' });
+    await waitFor(async () => (await doc(`matchAnalysisJobs/${job}/pilotHeld/current`))?.report, 120000, 1000);
+    await sleep(STAGING ? 30000 : 4000);
+    const after = { calls: (await calls(job, 'resolve')).length, version: (await doc(`matchAnalysisJobs/${job}/pilotHeld/current`))?.version ?? null };
+    E.check('D4.duplicate_resolve_during_execution', during.calls === 1 && during.resolving === 'full' && after.calls === 1 && after.version === 1, { during, after });
+  }
+
   // S1: a task authorised before a stop, delivered after re-enable (delayed), stays stale.
   if (want('S1') && !DRY) {
+    await reserve('S1');
     const job = `${RUN}_S1`;
     await probeJob(job, owner);
     await db.doc(`matchAnalysisJobs/${job}/tracking/progress`).set({ segments: { 0: { status: 'done', attempts: 1 } } }, { merge: true });
-    await enqueue('resolveTrackingTask', { jobId: job, feedbackRevision: 0, scope: 'full' }, { scheduleDelaySeconds: STAGING ? 90 : 12 });
+    // Staging: the task is created before the stop and scheduled to arrive after the re-enable (Cloud Tasks honours
+    // scheduleTime). The tasks emulator was seen dispatching a delayed task at once when the queue had just been busy
+    // (2026-11-19), so there the task is created after the re-enable instead: the handler reads the run's authorisation
+    // from the progress document, which predates the stop either way.
+    if (STAGING) await enqueue('resolveTrackingTask', { jobId: job, feedbackRevision: 0, scope: 'full' }, { scheduleDelaySeconds: 90 });
     ops('stop');
     await sleep(2000);
     ops('enable', '--allow', owner.uid, '--worker-version', cfg.workerVersion, '--hold', 'true');
+    if (!STAGING) await enqueue('resolveTrackingTask', { jobId: job, feedbackRevision: 0, scope: 'full' });
+    E.step('S1 variant', { createdBeforeStop: STAGING });
     await sleep(STAGING ? 150000 : 20000);
     E.check('S1.pre_stop_task_stale_after_reenable', (await calls(job, 'resolve')).length === 0 && !(await doc(`matchAnalysisJobs/${job}/pilotHeld/current`))?.report,
       { resolveCalls: (await calls(job, 'resolve')).length });
@@ -213,5 +251,12 @@ async function main() {
 }
 
 let ok = false;
-try { await main(); } catch (e) { E.check('driver.completed', false, { error: redact(String(e?.stack ?? e)).slice(0, 1500) }); } finally { ok = E.write(); }
+try {
+  await main();
+  // Worker calls are a lower bound on delivery attempts (rejected deliveries never reach it); attempt logs give the rest.
+  if (!DRY) await guard.observe((await workerLog()).filter((e) => String(e.jobId).startsWith(RUN)).length);
+} catch (e) { E.check('driver.completed', false, { error: redact(String(e?.stack ?? e)).slice(0, 1500) }); } finally {
+  if (guard) E.step('limits', guard.summary());
+  ok = E.write();
+}
 process.exit(ok ? 0 : 1);

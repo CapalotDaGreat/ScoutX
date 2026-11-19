@@ -6,6 +6,8 @@
  *   POST /v3/tracking:{extract,discover,resolve}   worker routes (behaviour per job, see /_ctl)
  *   POST /_ctl/plan   {jobId, route, action: 'ok'|'hold'|'fail'|'wrong_version'|'wrong_models', times?}
  *   POST /_ctl/release {jobId, route}               releases every held request of that job/route
+ *   POST /_ctl/release-all                          releases every held request (staging stop procedure)
+ *   FAKE_WORKER_HOLD_MAX_MS                         a held request is released after this long anyway (default: never)
  *   GET  /_ctl/log                                  every request received, in order
  *   GET  /_ctl/waiting?jobId=&route=                number of requests currently held
  */
@@ -117,6 +119,11 @@ http.createServer(async (req, res) => {
     plans.set(key, [...(plans.get(key) ?? []), { action: b.action, times: b.times }]);
     return send(res, 200, { ok: true });
   }
+  if (url.pathname === '/_ctl/release-all') {
+    let n = 0;
+    for (const [k, fns] of held) { held.set(k, []); for (const f of fns) { f(); n += 1; } }
+    return send(res, 200, { released: n });
+  }
   if (url.pathname === '/_ctl/release') {
     const key = `${b.jobId}|${b.route}`;
     const fns = held.get(key) ?? [];
@@ -137,6 +144,9 @@ http.createServer(async (req, res) => {
     await new Promise((resolve) => {
       const key = `${jobId}|${route}`;
       held.set(key, [...(held.get(key) ?? []), resolve]);
+      // Bounded hold (staging): a forgotten release cannot keep a task function running until its timeout.
+      const cap = Number(process.env.FAKE_WORKER_HOLD_MAX_MS ?? 0);
+      if (cap > 0) setTimeout(() => { held.set(key, (held.get(key) ?? []).filter((f) => f !== resolve)); entry.autoReleased = true; resolve(); }, cap).unref?.();
     });
     entry.releasedAt = new Date().toISOString();
   }

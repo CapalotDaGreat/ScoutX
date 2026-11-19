@@ -4,6 +4,6 @@ FROM node:22-slim
 WORKDIR /app
 COPY scripts/pilot-rehearsal/fakeWorker.mjs ./fakeWorker.mjs
 ENV FAKE_WORKER_HOST=0.0.0.0 FAKE_WORKER_ALLOW_GCS=1 FAKE_WORKER_VERSION=football-cv/0.7.0-staging \
-    FAKE_WORKER_MODELS='{"detector":"yolox-staging","ocr":"parseq-staging"}'
+    FAKE_WORKER_MODELS='{"detector":"yolox-staging","ocr":"parseq-staging"}' FAKE_WORKER_HOLD_MAX_MS=180000
 USER node
 CMD ["node", "fakeWorker.mjs"]
