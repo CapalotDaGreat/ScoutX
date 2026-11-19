@@ -53,6 +53,8 @@ export type TrackingProgress = {
    * Extraction is queued when discovery finishes, segments with sightings first.
    */
   discovery?: DiscoveryProgress | null;
+  /** Pilot gate: when this run was authorised (start or operator re-authorisation); see pilotGate.ts. */
+  pilotAuthorizedAt?: string | null;
 };
 
 export type DiscoveryChunkState = { status: 'queued' | 'done' | 'failed'; attempts: number; processingSec?: number;

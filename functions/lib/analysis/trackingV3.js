@@ -16,6 +16,8 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ANSWERS = exports.DISCOVERY_MIN_CONFIRM_READS = exports.MIN_SEQUENCE_SEC = exports.MAX_UNRESOLVED_ANSWERS = exports.MAX_CLIP_SEC = exports.MAX_MOMENTS = exports.MOMENT_KINDS = exports.IDENTITY_STATES = exports.TRACKING_COLLECTION = exports.TRACKING_SCHEMA = void 0;
+exports.toStoredForm = toStoredForm;
+exports.fromStoredForm = fromStoredForm;
 exports.parseUnresolvedAnswers = parseUnresolvedAnswers;
 exports.confirmedOnEveryFrame = confirmedOnEveryFrame;
 exports.parseOffballSequences = parseOffballSequences;
@@ -36,6 +38,40 @@ exports.validPeriods = validPeriods;
 exports.trackingV3Enabled = trackingV3Enabled;
 exports.TRACKING_SCHEMA = 'pitchproof.tracking.v3';
 exports.TRACKING_COLLECTION = 'tracking';
+/**
+ * Firestore cannot store an array directly inside another array, but the report uses tuples (stateStrip
+ * [start, end, state], moment indicator [t, x, y, w, h]). Stored documents wrap each inner array as
+ * { _tuple: [...] }; readers unwrap. Plain (unwrapped) tuples are accepted on read, so the decoder is total.
+ * The app has the identical codec (src/features/match-analysis/services/trackingPresentation.ts).
+ */
+function toStoredForm(value) {
+    const enc = (v, inArray) => {
+        if (Array.isArray(v)) {
+            const arr = v.map((x) => enc(x, true));
+            return inArray ? { _tuple: arr } : arr;
+        }
+        if (v && typeof v === 'object') {
+            return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, enc(x, false)]));
+        }
+        return v;
+    };
+    return enc(value, false);
+}
+function fromStoredForm(value) {
+    const dec = (v) => {
+        if (Array.isArray(v))
+            return v.map(dec);
+        if (v && typeof v === 'object') {
+            const o = v;
+            const keys = Object.keys(o);
+            if (keys.length === 1 && keys[0] === '_tuple' && Array.isArray(o._tuple))
+                return o._tuple.map(dec);
+            return Object.fromEntries(keys.map((k) => [k, dec(o[k])]));
+        }
+        return v;
+    };
+    return dec(value);
+}
 exports.IDENTITY_STATES = [
     'CONFIRMED_VISIBLE', 'LIKELY_VISIBLE', 'AMBIGUOUS', 'OFF_CAMERA', 'CONFIRMED_OFF_PITCH', 'NON_MATCH_PERIOD', 'UNKNOWN',
 ];

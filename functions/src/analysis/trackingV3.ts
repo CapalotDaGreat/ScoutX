@@ -17,6 +17,40 @@
 export const TRACKING_SCHEMA = 'pitchproof.tracking.v3';
 export const TRACKING_COLLECTION = 'tracking';
 
+/**
+ * Firestore cannot store an array directly inside another array, but the report uses tuples (stateStrip
+ * [start, end, state], moment indicator [t, x, y, w, h]). Stored documents wrap each inner array as
+ * { _tuple: [...] }; readers unwrap. Plain (unwrapped) tuples are accepted on read, so the decoder is total.
+ * The app has the identical codec (src/features/match-analysis/services/trackingPresentation.ts).
+ */
+export function toStoredForm<T>(value: T): T {
+  const enc = (v: unknown, inArray: boolean): unknown => {
+    if (Array.isArray(v)) {
+      const arr = v.map((x) => enc(x, true));
+      return inArray ? { _tuple: arr } : arr;
+    }
+    if (v && typeof v === 'object') {
+      return Object.fromEntries(Object.entries(v as Record<string, unknown>).map(([k, x]) => [k, enc(x, false)]));
+    }
+    return v;
+  };
+  return enc(value, false) as T;
+}
+
+export function fromStoredForm<T>(value: T): T {
+  const dec = (v: unknown): unknown => {
+    if (Array.isArray(v)) return v.map(dec);
+    if (v && typeof v === 'object') {
+      const o = v as Record<string, unknown>;
+      const keys = Object.keys(o);
+      if (keys.length === 1 && keys[0] === '_tuple' && Array.isArray(o._tuple)) return (o._tuple as unknown[]).map(dec);
+      return Object.fromEntries(keys.map((k) => [k, dec(o[k])]));
+    }
+    return v;
+  };
+  return dec(value) as T;
+}
+
 export const IDENTITY_STATES = [
   'CONFIRMED_VISIBLE', 'LIKELY_VISIBLE', 'AMBIGUOUS', 'OFF_CAMERA', 'CONFIRMED_OFF_PITCH', 'NON_MATCH_PERIOD', 'UNKNOWN',
 ] as const;

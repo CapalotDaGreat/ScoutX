@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { setEmulatorCvApproval } from '../../functions/src/analysis/cvConfig.ts';
-import { decidePilot, parsePilotConfig, releaseHeldReport, withholdPublishedReport } from '../../functions/src/analysis/pilotGate.ts';
+import { authorizeRun, decidePilot, parsePilotConfig, releaseHeldReport, withholdPublishedReport } from '../../functions/src/analysis/pilotGate.ts';
 import { processResolveTask } from '../../functions/src/analysis/trackingCallables.ts';
 import { processExtractTask, startAnalysis, type Enqueue } from '../../functions/src/analysis/trackingOrchestrator.ts';
 import { VIDEO_CONSENT_VERSION } from '../../functions/src/analysis/videoConsent.ts';
@@ -49,7 +49,15 @@ const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]).toString('base64');
 const env = { FUNCTIONS_EMULATOR: 'true', CV_WORKER_URL: 'http://localhost:9', CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true' };
 const approval = { workerVersion: 'football-cv/0.7.0', models: { detector: 'd' }, eventsApproved: false } as never;
 const PILOT = 'opsConfig/trackingPilot';
-const pilot = (over: Record<string, unknown> = {}) => ({ enabled: true, allowlist: ['u1'], workerVersion: 'football-cv/0.7.0', ...over });
+const pilot = (over: Record<string, unknown> = {}) => ({ enabled: true, allowlist: ['u1'], workerVersion: 'football-cv/0.7.0',
+  enabledAt: '2026-11-19T09:00:00.000Z', ...over });
+/** Progress of a run authorised at 10:00 (after the 09:00 enable). */
+const progress = (id: string, authorizedAt: string | null = '2026-11-19T10:00:00.000Z') => ({
+  [`matchAnalysisJobs/${id}/tracking/progress`]: { schema: 'pitchproof.tracking-progress.v1', generation: 1, durationSec: 1020,
+    plan: [{ index: 0, startSec: 0, endSec: 1020 }], segments: { 0: { status: 'done', attempts: 1 } }, startedAt: '2026-11-19T10:00:00.000Z',
+    updatedAt: '2026-11-19T10:00:00.000Z', resolving: null, preliminary: null, full: null, outcome: null, blocked: null,
+    ...(authorizedAt ? { pilotAuthorizedAt: authorizedAt } : {}) },
+});
 
 function workerReport() {
   return {
@@ -95,6 +103,14 @@ test('decision: fails closed on missing, malformed, off, unlisted and wrong-vers
   assert.equal(parsePilotConfig({ enabled: 'yes', allowlist: ['u1'], workerVersion: 'x' }), null);
   assert.equal(parsePilotConfig({ enabled: true, allowlist: 'u1', workerVersion: 'x' }), null);
   assert.equal(parsePilotConfig({ enabled: true, allowlist: [''], workerVersion: 'x' }), null);
+  assert.equal(parsePilotConfig(pilot({ enabledAt: undefined })), null, 'an enable without its epoch is malformed');
+  assert.equal(parsePilotConfig(pilot({ enabledAt: 'not a time' })), null);
+  assert.ok(parsePilotConfig(pilot({ enabled: false, enabledAt: undefined })), 'a stopped config needs no epoch');
+  // Work authorised before the current enable is refused; work authorised after it is allowed.
+  const cfg = parsePilotConfig(pilot());
+  assert.equal(decidePilot(cfg, 'u1', env, { authorizedAt: '2026-11-19T08:59:59.000Z' }), 'stale_authorization');
+  assert.equal(decidePilot(cfg, 'u1', env, { authorizedAt: null }), 'stale_authorization');
+  assert.equal(decidePilot(cfg, 'u1', env, { authorizedAt: '2026-11-19T09:00:00.000Z' }), 'allowed');
   assert.equal(decidePilot(parsePilotConfig(pilot({ enabled: false })), 'u1', env), 'pilot_off');
   assert.equal(decidePilot(parsePilotConfig(pilot()), 'u2', env), 'not_allowlisted');
   assert.equal(decidePilot(parsePilotConfig(pilot({ workerVersion: 'football-cv/0.6.9' })), 'u1', env), 'version_mismatch');
@@ -149,25 +165,32 @@ test('resolve: held for review by default, published only when hold is off, neve
   setEmulatorCvApproval(approval);
   notes.length = 0;
   let calls: string[] = [];
-  let f = fakeDb(seed({ [PILOT]: pilot() }));
+  let f = fakeDb(seed({ [PILOT]: pilot(), ...progress('job_1') }));
   assert.equal(await processResolveTask(f.db, 'job_1', 2, okWorker(calls), env, noStore, { notify }), 'held');
   assert.equal((f.data.get('matchAnalysisJobs/job_1/tracking/current') as { report: unknown }).report, null, 'owner-visible doc untouched');
   assert.ok((f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { report: unknown }).report);
   assert.deepEqual(notes, [], 'no completion notification while held');
   calls = [];
-  f = fakeDb(seed({ [PILOT]: pilot({ allowlist: ['u9'] }) }));
+  f = fakeDb(seed({ [PILOT]: pilot({ allowlist: ['u9'] }), ...progress('job_1') }));
   assert.equal(await processResolveTask(f.db, 'job_1', 2, okWorker(calls), env, noStore, { notify }), 'unavailable');
   assert.deepEqual(calls, [], 'no worker call for an unlisted owner');
-  f = fakeDb(seed({ [PILOT]: pilot({ holdReports: false }) }));
+  f = fakeDb(seed({ [PILOT]: pilot({ holdReports: false }), ...progress('job_1') }));
   assert.equal(await processResolveTask(f.db, 'job_1', 2, okWorker(calls), env, noStore, { notify }), 'done');
   assert.ok((f.data.get('matchAnalysisJobs/job_1/tracking/current') as { report: unknown }).report);
+  // A run authorised before the current enable (a delivery queued before a stop) never reaches the worker.
+  calls = [];
+  f = fakeDb(seed({ [PILOT]: pilot({ enabledAt: '2026-11-19T11:00:00.000Z' }), ...progress('job_1') }));
+  assert.equal(await processResolveTask(f.db, 'job_1', 2, okWorker(calls), env, noStore, { notify }), 'unavailable');
+  assert.deepEqual(calls, []);
+  f = fakeDb(seed({ [PILOT]: pilot(), ...progress('job_1', null) }));
+  assert.equal(await processResolveTask(f.db, 'job_1', 2, okWorker(calls), env, noStore, { notify }), 'unavailable', 'no run authorisation: closed');
   setEmulatorCvApproval(null);
 });
 
 test('kill switch during an in-flight worker call: the late result is discarded, nothing is published or held', async () => {
   setEmulatorCvApproval(approval);
   notes.length = 0;
-  const f = fakeDb(seed({ [PILOT]: pilot({ holdReports: false }) }));
+  const f = fakeDb(seed({ [PILOT]: pilot({ holdReports: false }), ...progress('job_1') }));
   const stop = () => { f.db.runTransaction(async (tx) => { (tx as { set: (r: unknown, v: unknown) => void }).set({ path: PILOT }, pilot({ enabled: false, holdReports: false })); }); };
   const out = await processResolveTask(f.db, 'job_1', 2, okWorker([], stop), env, noStore, { notify });
   assert.equal(out, 'stopped');
@@ -179,7 +202,7 @@ test('kill switch during an in-flight worker call: the late result is discarded,
 
 test('reviewer release publishes the held report; containment withholds it again; owner corrections are untouched', async () => {
   setEmulatorCvApproval(approval);
-  const f = fakeDb(seed({ [PILOT]: pilot() }));
+  const f = fakeDb(seed({ [PILOT]: pilot(), ...progress('job_1') }));
   const feedbackBefore = structuredClone(f.data.get('matchAnalysisJobs/job_1/tracking/feedback'));
   assert.equal(await processResolveTask(f.db, 'job_1', 2, okWorker([]), env, noStore, { notify }), 'held');
   const heldDoc = f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { report: { engineVersion: string }; producedBy: unknown };
@@ -200,6 +223,9 @@ test('reviewer release publishes the held report; containment withholds it again
   assert.equal((f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { withheldReason: string }).withheldReason, 'wrong-player audit');
   assert.deepEqual(f.data.get('matchAnalysisJobs/job_1/tracking/feedback'), feedbackBefore);
   assert.equal(await withholdPublishedReport(f.db, M, T, 'job_1', 'again'), 'nothing_published');
+  assert.equal(await releaseHeldReport(f.db, M, T, 'job_1', 'reviewer-a'), 'withheld_requires_reprocess',
+    'a contained report returns to the owner only through reprocessing');
+  assert.equal((f.data.get('matchAnalysisJobs/job_1/tracking/current') as { report: unknown }).report, null);
   setEmulatorCvApproval(null);
 });
 
@@ -212,7 +238,7 @@ test('rollback rehearsal: queued, running and partially reported jobs under the 
     [`videoProcessingConsents/${id}`]: { uid: 'u1', revokedAt: null, policyVersion: VIDEO_CONSENT_VERSION },
     [`matchAnalysisJobs/${id}/tracking/feedback`]: { entries: [{ t: 40, answer: 'me' }], periods: {}, offPitch: [], revision: 1 },
   });
-  const f = fakeDb({ [PILOT]: pilot({ holdReports: false }), ...job('job_q'), ...job('job_r'), ...job('job_p') });
+  const f = fakeDb({ [PILOT]: pilot({ holdReports: false }), ...job('job_q'), ...job('job_r'), ...progress('job_r'), ...job('job_p'), ...progress('job_p') });
   const setPilot = (v: Record<string, unknown>) => f.db.runTransaction(async (tx) => {
     (tx as { set: (r: unknown, x: unknown) => void }).set({ path: PILOT }, v);
   });
@@ -240,9 +266,16 @@ test('rollback rehearsal: queued, running and partially reported jobs under the 
   // A wrong worker version keeps the gate closed even when re-enabled.
   await setPilot(pilot({ enabled: true, workerVersion: 'football-cv/0.6.0' }));
   assert.equal(await processResolveTask(f.db, 'job_p', 1, okWorker([]), env, noStore, { notify }), 'unavailable');
-  // Verified reprocessing: correct version, held, reviewed, released; corrections and provenance preserved.
-  await setPilot(pilot({ enabled: true }));
+  // Re-enabled with a new epoch: job_p's old authorisation (and any delivery queued before the stop) is refused.
+  await setPilot(pilot({ enabled: true, enabledAt: '2026-11-19T13:00:00.000Z' }));
+  const oldCalls: string[] = [];
+  assert.equal(await processResolveTask(f.db, 'job_p', 1, okWorker(oldCalls), env, noStore, { notify }), 'unavailable');
+  assert.deepEqual(oldCalls, []);
+  // Verified reprocessing: operator re-authorises, correct version, held, reviewed, released; corrections and provenance preserved.
+  assert.equal(await authorizeRun(f.db, 'matchAnalysisJobs', 'tracking', 'job_p', () => new Date('2026-11-19T13:05:00.000Z'), env), 'authorized');
   assert.equal(await processResolveTask(f.db, 'job_p', 1, okWorker([]), env, noStore, { notify }), 'held');
+  assert.equal((f.data.get('matchAnalysisJobs/job_p/pilotHeld/current') as { previousWithheld?: { withheldReason: string } })
+    .previousWithheld?.withheldReason, 'kill switch 2026-11-19', 'containment record kept for audit');
   assert.equal(await releaseHeldReport(f.db, 'matchAnalysisJobs', 'tracking', 'job_p', 'reviewer-a'), 'released');
   const pAfter = f.data.get('matchAnalysisJobs/job_p/tracking/current') as { version: number; feedbackRevision: number;
     report: { engineVersion: string }; producedBy: { workerVersion: string } };

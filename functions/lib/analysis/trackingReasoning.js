@@ -37,7 +37,7 @@ async function explainMoment(uid, jobId, momentId, kind, deps) {
         throw new https_1.HttpsError('permission-denied', 'Only the owner can use this.');
     const base = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION);
     const cur = await base.doc('current').get();
-    const report = (cur.get('report') ?? null);
+    const report = (0, trackingV3_1.fromStoredForm)((cur.get('report') ?? null));
     const version = Number(cur.get('version') ?? 0);
     if (!report || cur.get('stale') === true)
         return { status: 'unavailable', reason: 'report_not_current' };

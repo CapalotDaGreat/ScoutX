@@ -544,6 +544,7 @@
   },
   "tracking": {
     "processing": "O rastreamento do jogador está a ser preparado.",
+    "withheld": "Este relatório está a ser verificado antes de ser mostrado. As tuas respostas ficam guardadas.",
     "stale": "A atualizar após as tuas respostas - as estatísticas serão renovadas em breve.",
     "stalePending": "As tuas respostas foram guardadas. A análise será atualizada assim que o serviço de rastreamento estiver disponível.",
     "coverageTitle": "Quanto do jogo temos de ti",

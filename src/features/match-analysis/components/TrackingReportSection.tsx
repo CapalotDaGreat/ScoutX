@@ -26,7 +26,7 @@ export function TrackingReportSection({ jobId, tracking }: { jobId: string; trac
   if (!report) {
     return (
       <Card>
-        <Text>{t('tracking.processing')}</Text>
+        <Text>{tracking.pendingReason === 'withheld_for_review' ? t('tracking.withheld') : t('tracking.processing')}</Text>
       </Card>
     );
   }

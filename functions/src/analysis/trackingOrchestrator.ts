@@ -25,10 +25,11 @@ import { writeSystemActivity } from '../notificationProducers';
 import { assertCallableRateLimit } from '../security/rateLimit';
 import { readableSourceFor } from '../uploads/mediaSource';
 import { cvWorkerStatus, cvWorkerUrl } from './cvConfig';
-import { pilotDecision } from './pilotGate';
+import { HELD_COLLECTION, pilotDecision } from './pilotGate';
 import { MATCH_COLLECTION, type MatchJobDoc } from './frameAnalysis';
 import {
-  TRACKING_COLLECTION, decodeReviewImage, parseDiscoveryMoments, reviewImagePath, trackingV3Enabled, type TrackingMoment,
+  TRACKING_COLLECTION, decodeReviewImage, fromStoredForm, parseDiscoveryMoments, reviewImagePath, toStoredForm, trackingV3Enabled,
+  type TrackingMoment,
 } from './trackingV3';
 import {
   httpTrackingClient, storageImageStore, type ImageStore, type TrackingNotifier, type TrackingWorkerClient,
@@ -115,7 +116,7 @@ export async function startAnalysis(db: Firestore, uid: string, jobId: string, e
       .filter((i) => pendingSegments.includes(i));
     const nextDiscovery = discovery ? { ...discovery, extractionQueued: !waitForDiscovery } : null;
     tx.set(progressRef(db, jobId), { ...base, segments, discovery: nextDiscovery, outcome: null, blocked: null, updatedAt: at,
-      startedAt: existing?.outcome ? at : base.startedAt });
+      startedAt: existing?.outcome ? at : base.startedAt, pilotAuthorizedAt: at });
     return { status: 'started' as const, generation: base.generation, segments: base.plan.length, toQueue, discoveryQueue,
       pendingSegments, job };
   });
@@ -163,7 +164,7 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   }
   const seg = prog.plan.find((s) => s.index === index);
   if (!seg || prog.segments[String(index)]?.status === 'done') return 'stale';
-  const pilot = (await pilotDecision(db, job.playerId, env)).decision;
+  const pilot = (await pilotDecision(db, job.playerId, env, undefined, { authorizedAt: prog.pilotAuthorizedAt })).decision;
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available' || !job.videoStoragePath || pilot !== 'allowed') {
     await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
     return 'unavailable';
@@ -233,7 +234,11 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   const chunk = d.chunks.find((c) => c.index === index);
   if (!chunk || d.state[String(index)]?.status !== 'queued') return 'stale';
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available' || !job.videoStoragePath) return 'unavailable';
-  if ((await pilotDecision(db, job.playerId, env)).decision !== 'allowed') return 'unavailable';
+  const pilot = (await pilotDecision(db, job.playerId, env, undefined, { authorizedAt: prog.pilotAuthorizedAt })).decision;
+  if (pilot !== 'allowed') {
+    await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
+    return 'unavailable';
+  }
   const number = job.targeting?.jerseyNumber ?? '';
   const res = await client({
     contractVersion: 3, jobId, chunkIndex: index, startSec: chunk.startSec, endSec: chunk.endSec,
@@ -246,7 +251,7 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   let moments: TrackingMoment[] | null = null;
   if (res && (res.status === 'complete' || res.status === 'no_number')) {
     moments = parseDiscoveryMoments(res.moments ?? [], chunk, prog.durationSec, number);
-    if (!moments) return finishDiscovery(db, jobId, generation, index, 'failed', [], at, enqueue, null, notify, job.playerId, 'rejected');
+    if (!moments) return finishDiscovery(db, jobId, generation, index, 'failed', [], at, enqueue, null, notify, job.playerId, 'rejected', env);
   } else if (!lastAttempt) {
     await ref.set({ discovery: { state: { [String(index)]: { status: 'queued', attempts: attempt + 1 } } }, updatedAt: at }, { merge: true });
     return 'retry';
@@ -262,17 +267,25 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   }
   const processingSec = typeof res?.processingSec === 'number' && Number.isFinite(res.processingSec) ? res.processingSec : undefined;
   return finishDiscovery(db, jobId, generation, index, moments ? 'done' : 'failed', moments ?? [], at, enqueue, processingSec ?? null,
-    notify, job.playerId, moments ? 'done' : 'failed');
+    notify, job.playerId, moments ? 'done' : 'failed', env);
 }
 
 async function finishDiscovery(db: Firestore, jobId: string, generation: number, index: number, status: 'done' | 'failed',
   moments: TrackingMoment[], at: string, enqueue: Enqueue, processingSec: number | null, notify: TrackingNotifier | undefined,
-  playerId: string, outcome: DiscoverOutcome): Promise<DiscoverOutcome> {
+  playerId: string, outcome: DiscoverOutcome, env: NodeJS.ProcessEnv = process.env): Promise<DiscoverOutcome> {
   const ref = progressRef(db, jobId);
-  const docRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc(DISCOVERY_COLLECTION_DOC);
+  const publicRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc(DISCOVERY_COLLECTION_DOC);
+  const heldRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(HELD_COLLECTION).doc(DISCOVERY_COLLECTION_DOC);
+  let stopped = false;
+  let heldOnly = false;
   const next = await db.runTransaction(async (tx) => {
     const prog = (await tx.get(ref)).data() as TrackingProgress | undefined;
-    const cur = (await tx.get(docRef)).data() as { moments?: TrackingMoment[] } | undefined;
+    // Same rule as reports: a sighting that returns after a stop is discarded; while held it is not owner-visible.
+    const gate = await pilotDecision(db, playerId, env, tx, { authorizedAt: prog?.pilotAuthorizedAt });
+    if (gate.decision !== 'allowed') { stopped = true; return null; }
+    heldOnly = gate.hold;
+    const docRef = gate.hold ? heldRef : publicRef;
+    const cur = fromStoredForm((await tx.get(docRef)).data() as { moments?: TrackingMoment[] } | undefined);
     if (!prog?.discovery || prog.generation !== generation) return null;
     const d: DiscoveryProgress = { ...prog.discovery, state: { ...prog.discovery.state,
       [String(index)]: { status, attempts: (prog.discovery.state[String(index)]?.attempts ?? 0) + 1, doneAt: at,
@@ -285,13 +298,16 @@ async function finishDiscovery(db: Firestore, jobId: string, generation: number,
     const finished = discoveryFinished(d);
     const queueExtraction = finished && !d.extractionQueued;
     if (queueExtraction) d.extractionQueued = true;
-    tx.set(docRef, { moments: merged, generation, updatedAt: at });
+    tx.set(docRef, { moments: toStoredForm(merged), generation, updatedAt: at, ...(gate.hold ? { heldAt: at } : {}) });
     tx.set(ref, { discovery: d, updatedAt: at }, { merge: true });
     const pending = prog.plan.map((s) => s.index).filter((i) => prog.segments[String(i)]?.status !== 'done');
     return { first, queueExtraction, order: prioritisedSegments(prog.plan, d.sightingTimes).filter((i) => pending.includes(i)) };
   });
-  if (!next) return 'stale';
-  if (next.first) {
+  if (!next) {
+    if (stopped) await ref.set({ blocked: 'worker_unavailable', updatedAt: at }, { merge: true });
+    return stopped ? 'unavailable' : 'stale';
+  }
+  if (next.first && !heldOnly) {
     await (notify ?? ((id, input) => writeSystemActivity(db, id, input)))(notificationId('first_moments', jobId, generation), {
       recipientId: playerId, recipientRole: 'player', type: 'analysis_first_moments', category: 'analysis',
       title: 'Your first moments are ready', body: 'We found you on video. Watch your first moments while the rest of the match is analysed.',

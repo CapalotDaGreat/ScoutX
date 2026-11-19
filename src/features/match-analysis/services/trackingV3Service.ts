@@ -5,7 +5,7 @@ import { MATCH_ANALYSIS_COLLECTION } from '@/features/match-analysis/constants';
 import { createSecureId } from '@/utils/secureId';
 
 export * from '@/features/match-analysis/services/trackingPresentation';
-import type { TrackingAnswer, TrackingDiscoveryDoc, TrackingDoc, TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
+import { fromStoredForm, type TrackingAnswer, type TrackingDiscoveryDoc, type TrackingDoc, type TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
 
 /** Live discovery sightings (4.1): playable before the full analysis has a report. */
 export function subscribeTrackingDiscovery(jobId: string, onChange: (doc: TrackingDiscoveryDoc | null) => void,
@@ -16,7 +16,7 @@ export function subscribeTrackingDiscovery(jobId: string, onChange: (doc: Tracki
     return () => undefined;
   }
   return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'discovery'),
-    (snap) => onChange(snap.exists() ? (snap.data() as TrackingDiscoveryDoc) : null), onError);
+    (snap) => onChange(snap.exists() ? fromStoredForm(snap.data() as TrackingDiscoveryDoc) : null), onError);
 }
 
 /** Live progress facts of the progressive analysis (null when none was started). */
@@ -49,7 +49,7 @@ export function subscribeTracking(jobId: string, onChange: (doc: TrackingDoc | n
     return () => undefined;
   }
   return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'current'),
-    (snap) => onChange(snap.exists() ? (snap.data() as TrackingDoc) : null), onError);
+    (snap) => onChange(snap.exists() ? fromStoredForm(snap.data() as TrackingDoc) : null), onError);
 }
 
 export async function answerTrackingQuestion(jobId: string, questionId: string, answer: TrackingAnswer): Promise<void> {

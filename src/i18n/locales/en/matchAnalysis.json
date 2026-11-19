@@ -544,6 +544,7 @@
   },
   "tracking": {
     "processing": "Player tracking is being prepared.",
+    "withheld": "This report is being checked before it is shown. Your answers are kept.",
     "stale": "Updating after your answers - statistics will refresh shortly.",
     "stalePending": "Your answers are saved. The analysis updates as soon as the tracking service is available.",
     "coverageTitle": "How much of the match we have you",

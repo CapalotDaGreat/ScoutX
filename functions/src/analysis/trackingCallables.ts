@@ -10,7 +10,8 @@ import { HELD_COLLECTION, pilotDecision } from './pilotGate';
 import { identityToken } from './cvWorker';
 import { MATCH_COLLECTION, type MatchJobDoc } from './frameAnalysis';
 import {
-  ANSWERS, TRACKING_COLLECTION, applyAnswer, decodeReviewImage, emptyFeedback, parseTrackingReport, reviewImagePath,
+  ANSWERS, TRACKING_COLLECTION, applyAnswer, decodeReviewImage, emptyFeedback, fromStoredForm, parseTrackingReport, reviewImagePath,
+  toStoredForm,
   trackingV3Enabled, undoLast,
   validPeriods, workerFeedback, type Answer, type TrackingFeedback, type TrackingReport,
 } from './trackingV3';
@@ -60,17 +61,19 @@ async function mutateFeedback(uid: string, jobId: string,
     const curSnap = await tx.get(base.doc('current'));
     const fbSnap = await tx.get(base.doc('feedback'));
     if (!curSnap.exists) throw new HttpsError('failed-precondition', 'No tracking report yet.');
-    const cur = curSnap.data() as CurrentDoc;
+    const cur = fromStoredForm(curSnap.data() as CurrentDoc);
     const fb = (fbSnap.exists ? fbSnap.data() : { ...emptyFeedback(), revision: 0 }) as FeedbackDoc;
     const next = change(fb, cur, job);
     const revision = (fb.revision ?? 0) + 1;
-    const pending = trackingV3Enabled() && cvWorkerStatus() === 'available' ? null : 'worker_unavailable';
+    // A contained (withheld) report stays withheld: an owner correction must not turn it into "updating".
+    const pending = cur.pendingReason === 'withheld_for_review' ? 'withheld_for_review'
+      : trackingV3Enabled() && cvWorkerStatus() === 'available' ? null : 'worker_unavailable';
     tx.set(base.doc('feedback'), { ...next, revision, purpose: 'this_match_only' });
     tx.set(base.doc('current'), { stale: true, feedbackRevision: revision, pendingReason: pending,
       updatedAt: new Date().toISOString() }, { merge: true });
     return { revision, pending };
   });
-  if (!result.pending) {
+  if (!result.pending || result.pending === 'withheld_for_review') {
     await getFunctions().taskQueue(taskQueueName('resolveTrackingTask'))
       .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: 900 });
   }
@@ -196,8 +199,10 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   if ((fb.revision ?? 0) !== feedbackRevision) return 'superseded';
   const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
   if (!job || job.cancelRequested) return 'unavailable';
-  // Pilot gate (pilotGate.ts): checked before the worker call and again inside the publishing transaction.
-  if ((await pilotDecision(db, job.playerId, env)).decision !== 'allowed') return 'unavailable';
+  // Pilot gate (pilotGate.ts): checked before the worker call and again inside the publishing transaction, including
+  // the run's authorisation epoch (work authorised before the current enable never runs).
+  const runAuth = (await base.doc('progress').get()).get('pilotAuthorizedAt') as string | null | undefined;
+  if ((await pilotDecision(db, job.playerId, env, undefined, { authorizedAt: runAuth })).decision !== 'allowed') return 'unavailable';
   const refresh = opts.scope === 'refresh';
   const raw = await client({
     contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
@@ -246,7 +251,8 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     const fresh = await tx.get(base.doc('feedback'));
     const cur = await tx.get(base.doc('current'));
     // A result that comes back after the pilot was stopped (kill switch) or the owner was removed is discarded here.
-    const gate = await pilotDecision(db, job.playerId, env, tx);
+    const progTx = await tx.get(base.doc('progress'));
+    const gate = await pilotDecision(db, job.playerId, env, tx, { authorizedAt: progTx.get('pilotAuthorizedAt') as string | null | undefined });
     if (gate.decision !== 'allowed') return 'stopped' as const;
     const held = gate.hold ? await tx.get(heldRef) : null;
     if (((fresh.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded' as const;
@@ -272,13 +278,16 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
       tx.set(quotaRef, { uid: job.playerId, action: OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
         updatedAt: at }, { merge: true });
     }
-    const doc = { report, version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+    const doc = { report: toStoredForm(report), version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
       stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp,
       // Provenance for audits and rollback: exactly which approved worker build and models produced this report.
       producedBy: { workerVersion: raw.workerVersion, models: raw.models } };
     if (held) {
       // Held for review: nothing reaches tracking/current (owner-readable) and no completion notice is sent.
-      tx.set(heldRef, { ...doc, heldAt: at });
+      // Reprocessing a contained report keeps the containment record for audit.
+      const contained = held?.exists && held.get('withheldAt')
+        ? { previousWithheld: { withheldAt: held.get('withheldAt'), withheldReason: held.get('withheldReason') ?? null } } : {};
+      tx.set(heldRef, { ...doc, ...contained, heldAt: at });
       if (progress) tx.set(base.doc('progress'), { resolving: null, held: { scope, at }, updatedAt: at }, { merge: true });
       return 'held' as const;
     }

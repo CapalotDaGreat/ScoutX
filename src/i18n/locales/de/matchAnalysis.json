@@ -544,6 +544,7 @@
   },
   "tracking": {
     "processing": "Das Spieler-Tracking wird vorbereitet.",
+    "withheld": "Dieser Bericht wird geprüft, bevor er angezeigt wird. Deine Antworten bleiben gespeichert.",
     "stale": "Wird nach deinen Antworten aktualisiert - die Statistiken folgen in Kürze.",
     "stalePending": "Deine Antworten sind gespeichert. Die Analyse wird aktualisiert, sobald der Tracking-Dienst verfügbar ist.",
     "coverageTitle": "Wie viel vom Spiel wir von dir haben",

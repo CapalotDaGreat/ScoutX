@@ -544,6 +544,7 @@
   },
   "tracking": {
     "processing": "Il tracciamento del giocatore è in preparazione.",
+    "withheld": "Questo report viene controllato prima di essere mostrato. Le tue risposte restano salvate.",
     "stale": "Aggiornamento dopo le tue risposte - le statistiche si aggiorneranno a breve.",
     "stalePending": "Le tue risposte sono salvate. L'analisi si aggiornerà appena il servizio di tracciamento sarà disponibile.",
     "coverageTitle": "Quanta parte della partita abbiamo di te",

@@ -544,6 +544,7 @@
   },
   "tracking": {
     "processing": "Se está preparando el seguimiento del jugador.",
+    "withheld": "Este informe se está revisando antes de mostrarse. Tus respuestas se conservan.",
     "stale": "Actualizando tras tus respuestas: las estadísticas se renovarán en breve.",
     "stalePending": "Tus respuestas se han guardado. El análisis se actualizará en cuanto el servicio de seguimiento esté disponible.",
     "coverageTitle": "Cuánto del partido tenemos de ti",

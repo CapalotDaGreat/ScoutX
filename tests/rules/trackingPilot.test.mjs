@@ -17,6 +17,7 @@ beforeEach(async () => {
   await seed(`matchAnalysisJobs/${JOB}`, { playerId: OWNER, status: 'complete' });
   await seed('opsConfig/trackingPilot', { enabled: true, allowlist: [OWNER], workerVersion: 'football-cv/0.7.0' });
   await seed(`matchAnalysisJobs/${JOB}/pilotHeld/current`, { report: { moments: [] }, heldAt: 'now' });
+  await seed(`matchAnalysisJobs/${JOB}/pilotHeld/discovery`, { moments: [{ id: 'd_1' }], heldAt: 'now' });
   await seed(`matchAnalysisJobs/${JOB}/tracking/current`, { report: null, stale: true });
 });
 
@@ -32,6 +33,9 @@ test('a held report is invisible to its owner until released; the owner still re
   assert.ok(isDenied(await getDocument(OWNER, `matchAnalysisJobs/${JOB}/pilotHeld/current`)));
   assert.ok(isDenied(await getDocument(OTHER, `matchAnalysisJobs/${JOB}/pilotHeld/current`)));
   assert.ok(isDenied(await setDocument(OWNER, `matchAnalysisJobs/${JOB}/pilotHeld/current`, { report: null })));
+  // Held discovery sightings (2026-11-19 rehearsal fix) are as private as held reports.
+  assert.ok(isDenied(await getDocument(OWNER, `matchAnalysisJobs/${JOB}/pilotHeld/discovery`)));
+  assert.ok(isDenied(await setDocument(OWNER, `matchAnalysisJobs/${JOB}/pilotHeld/discovery`, { moments: [] })));
   assert.ok(isAllowed(await getDocument(OWNER, `matchAnalysisJobs/${JOB}/tracking/current`)));
   assert.ok(isDenied(await getDocument(OTHER, `matchAnalysisJobs/${JOB}/tracking/current`)));
 });

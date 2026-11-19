@@ -73,6 +73,21 @@ export type TrackingMoment = {
   readFrames?: number;
   weakFrames?: number;
 };
+/** Mirrors functions/src/analysis/trackingV3.ts fromStoredForm: unwraps Firestore-safe { _tuple: [...] } inner arrays. */
+export function fromStoredForm<T>(value: T): T {
+  const dec = (v: unknown): unknown => {
+    if (Array.isArray(v)) return v.map(dec);
+    if (v && typeof v === 'object') {
+      const o = v as Record<string, unknown>;
+      const keys = Object.keys(o);
+      if (keys.length === 1 && keys[0] === '_tuple' && Array.isArray(o._tuple)) return (o._tuple as unknown[]).map(dec);
+      return Object.fromEntries(keys.map((k) => [k, dec(o[k])]));
+    }
+    return v;
+  };
+  return dec(value) as T;
+}
+
 /** 4.1: number sightings found by the early discovery pass (owner-only, server-written). */
 export type TrackingDiscoveryDoc = { moments: TrackingMoment[]; generation: number; updatedAt: string };
 export type TrackingDoc = { report: TrackingReport | null; version: number; stale: boolean; pendingReason?: string | null;

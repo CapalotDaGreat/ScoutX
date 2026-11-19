@@ -16,7 +16,7 @@ import { assertCallableRateLimit, VIDEO_REASONING_LIMIT } from '../security/rate
 import { cvWorkerUrl } from './cvConfig';
 import { MATCH_COLLECTION, type MatchJobDoc } from './frameAnalysis';
 import { httpTrackingClient, type TrackingWorkerClient } from './trackingCallables';
-import { TRACKING_COLLECTION, type TrackingReport } from './trackingV3';
+import { TRACKING_COLLECTION, fromStoredForm, type TrackingReport } from './trackingV3';
 import { readableSourceFor } from '../uploads/mediaSource';
 import { VIDEO_CONSENT_COLLECTION, VIDEO_CONSENT_VERSION } from './videoConsent';
 import {
@@ -53,7 +53,7 @@ export async function explainMoment(uid: string, jobId: string, momentId: string
   if (job.playerId !== uid) throw new HttpsError('permission-denied', 'Only the owner can use this.');
   const base = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION);
   const cur = await base.doc('current').get();
-  const report = (cur.get('report') ?? null) as TrackingReport | null;
+  const report = fromStoredForm((cur.get('report') ?? null) as TrackingReport | null);
   const version = Number(cur.get('version') ?? 0);
   if (!report || cur.get('stale') === true) return { status: 'unavailable', reason: 'report_not_current' };
   const moment = (report.moments ?? []).find((m) => m.id === momentId) ?? null;

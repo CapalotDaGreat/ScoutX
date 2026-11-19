@@ -54,17 +54,19 @@ async function mutateFeedback(uid, jobId, change) {
         const fbSnap = await tx.get(base.doc('feedback'));
         if (!curSnap.exists)
             throw new https_1.HttpsError('failed-precondition', 'No tracking report yet.');
-        const cur = curSnap.data();
+        const cur = (0, trackingV3_1.fromStoredForm)(curSnap.data());
         const fb = (fbSnap.exists ? fbSnap.data() : { ...(0, trackingV3_1.emptyFeedback)(), revision: 0 });
         const next = change(fb, cur, job);
         const revision = (fb.revision ?? 0) + 1;
-        const pending = (0, trackingV3_1.trackingV3Enabled)() && (0, cvConfig_1.cvWorkerStatus)() === 'available' ? null : 'worker_unavailable';
+        // A contained (withheld) report stays withheld: an owner correction must not turn it into "updating".
+        const pending = cur.pendingReason === 'withheld_for_review' ? 'withheld_for_review'
+            : (0, trackingV3_1.trackingV3Enabled)() && (0, cvConfig_1.cvWorkerStatus)() === 'available' ? null : 'worker_unavailable';
         tx.set(base.doc('feedback'), { ...next, revision, purpose: 'this_match_only' });
         tx.set(base.doc('current'), { stale: true, feedbackRevision: revision, pendingReason: pending,
             updatedAt: new Date().toISOString() }, { merge: true });
         return { revision, pending };
     });
-    if (!result.pending) {
+    if (!result.pending || result.pending === 'withheld_for_review') {
         await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('resolveTrackingTask'))
             .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: 900 });
     }
@@ -173,8 +175,10 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
     if (!job || job.cancelRequested)
         return 'unavailable';
-    // Pilot gate (pilotGate.ts): checked before the worker call and again inside the publishing transaction.
-    if ((await (0, pilotGate_1.pilotDecision)(db, job.playerId, env)).decision !== 'allowed')
+    // Pilot gate (pilotGate.ts): checked before the worker call and again inside the publishing transaction, including
+    // the run's authorisation epoch (work authorised before the current enable never runs).
+    const runAuth = (await base.doc('progress').get()).get('pilotAuthorizedAt');
+    if ((await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, undefined, { authorizedAt: runAuth })).decision !== 'allowed')
         return 'unavailable';
     const refresh = opts.scope === 'refresh';
     const raw = await client({
@@ -226,7 +230,8 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         const fresh = await tx.get(base.doc('feedback'));
         const cur = await tx.get(base.doc('current'));
         // A result that comes back after the pilot was stopped (kill switch) or the owner was removed is discarded here.
-        const gate = await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, tx);
+        const progTx = await tx.get(base.doc('progress'));
+        const gate = await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, tx, { authorizedAt: progTx.get('pilotAuthorizedAt') });
         if (gate.decision !== 'allowed')
             return 'stopped';
         const held = gate.hold ? await tx.get(heldRef) : null;
@@ -253,13 +258,16 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
             tx.set(quotaRef, { uid: job.playerId, action: trackingFollowUp_1.OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
                 updatedAt: at }, { merge: true });
         }
-        const doc = { report, version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+        const doc = { report: (0, trackingV3_1.toStoredForm)(report), version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
             stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp,
             // Provenance for audits and rollback: exactly which approved worker build and models produced this report.
             producedBy: { workerVersion: raw.workerVersion, models: raw.models } };
         if (held) {
             // Held for review: nothing reaches tracking/current (owner-readable) and no completion notice is sent.
-            tx.set(heldRef, { ...doc, heldAt: at });
+            // Reprocessing a contained report keeps the containment record for audit.
+            const contained = held?.exists && held.get('withheldAt')
+                ? { previousWithheld: { withheldAt: held.get('withheldAt'), withheldReason: held.get('withheldReason') ?? null } } : {};
+            tx.set(heldRef, { ...doc, ...contained, heldAt: at });
             if (progress)
                 tx.set(base.doc('progress'), { resolving: null, held: { scope, at }, updatedAt: at }, { merge: true });
             return 'held';

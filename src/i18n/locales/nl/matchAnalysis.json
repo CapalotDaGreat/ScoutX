@@ -544,6 +544,7 @@
   },
   "tracking": {
     "processing": "Het spelersvolgen wordt voorbereid.",
+    "withheld": "Dit rapport wordt gecontroleerd voordat het wordt getoond. Je antwoorden blijven bewaard.",
     "stale": "Wordt bijgewerkt na je antwoorden - de statistieken volgen zo.",
     "stalePending": "Je antwoorden zijn opgeslagen. De analyse wordt bijgewerkt zodra de volgdienst beschikbaar is.",
     "coverageTitle": "Hoeveel van de wedstrijd we van jou hebben",
