@@ -398,12 +398,17 @@ async function phaseRace() {
     const outcome = await run;
     const stop = stopDone ? await stopDone : null;
     const heldSnap = await db.doc(`matchAnalysisJobs/${jobId}/pilotHeld/current`).get();
-    const heldMs = heldSnap.exists ? heldSnap.updateTime.toMillis() : null;
-    const stopMs = stop ? stop.writeTime.toMillis() : null;
-    const order = stop && heldSnap.exists ? (heldMs < stopMs ? 'publish_before_stop' : 'publish_after_stop') : null;
-    step(`race ${variant}`, { jobId, outcome, held: heldSnap.exists, order, heldMs, stopMs, stopWriteMs, stopCompletedBeforeRelease });
+    // Commit times at nanosecond precision (millisecond values can tie).
+    const ns = (ts) => BigInt(ts.seconds) * 1000000000n + BigInt(ts.nanoseconds);
+    const heldNs = heldSnap.exists ? ns(heldSnap.updateTime) : null;
+    const stopNs = stop ? ns(stop.writeTime) : null;
+    const order = stop && heldSnap.exists ? (heldNs < stopNs ? 'publish_before_stop' : heldNs === stopNs ? 'same_instant' : 'publish_after_stop') : null;
+    step(`race ${variant}`, { jobId, outcome, held: heldSnap.exists, order, heldNs: heldNs?.toString() ?? null, stopNs: stopNs?.toString() ?? null,
+      stopWriteMs, stopCompletedBeforeRelease });
     if (variant === 'stop_during_commit') {
-      check('race.no_persist_after_stop', outcome === 'stopped' ? !heldSnap.exists : order === 'publish_before_stop', { outcome, order });
+      // Either the transaction saw the stop (nothing persisted), or it committed first and the operator's write waited for it.
+      check('race.no_persist_after_stop', outcome === 'stopped' ? !heldSnap.exists : order === 'publish_before_stop' && !stopCompletedBeforeRelease,
+        { outcome, order, stopCompletedBeforeRelease, stopWriteMs });
     } else {
       check('race.control_publishes_held', outcome === 'held' && heldSnap.exists, { outcome });
     }
