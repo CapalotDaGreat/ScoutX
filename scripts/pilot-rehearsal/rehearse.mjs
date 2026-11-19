@@ -297,7 +297,8 @@ async function phaseRollback() {
   // Ordinary API paths on the withheld job.
   r = await callable('answerTrackingQuestion', { jobId: 'r_released', questionId: qid, answer: 'not_me', operationId: 'op_rehearsal_0002' }, A);
   check('withhold.answer_refused_without_report', r.http >= 400, r);
-  r = await callable('explainTrackingMoment', { jobId: 'r_released', momentId: 'm_1', kind: 'positioning' }, A);
+  r = await callable('explainTrackingMoment', { jobId: 'r_released', momentId: 'm_1', kind: 'explain' }, A);
+  check('withhold.explain_refused', r.http === 200 && r.result?.status === 'unavailable' && r.result?.reason === 'report_not_current', r);
   step('explain on withheld', r);
   r = await callable('undoTrackingAnswer', { jobId: 'r_released' }, A);
   const afterUndo = await trackingState('r_released');
@@ -426,14 +427,16 @@ async function phaseLegacy() {
   const sinkBefore = (await sinkLog()).length;
   const results = {};
   results.analyzeMatchFootage = await callable('analyzeMatchFootage', { jobId: 'l_frames' }, A);
-  results.generateAiInsight = await callable('generateAiInsight', { insightType: 'weekly_summary', contextJson: JSON.stringify({ playerId: A.uid }) }, A);
+  results.generateAiInsight = await callable('generateAiInsight', { insightType: 'video_summary', contextJson: JSON.stringify({ playerId: A.uid, matches: [] }) }, A);
   results.askThisMatch = await callable('askThisMatch', { jobId: 'l_frames', question: 'What should I work on?' }, A);
-  results.explainTrackingMoment = await callable('explainTrackingMoment', { jobId: 'r_new_after_enable', momentId: 'm_1', kind: 'positioning' }, A);
+  results.explainTrackingMoment = await callable('explainTrackingMoment', { jobId: 'r_new_after_enable', momentId: 'm_1', kind: 'explain' }, users.owner2);
   const sink = (await sinkLog()).slice(sinkBefore);
   const external = (await workerLog()).filter((e) => e.source && e.source.url && !/^http:\/\/(127\.0\.0\.1|localhost):/.test(e.source.url));
   check('legacy.no_provider_calls', sink.length === 0, { sink, results: Object.fromEntries(Object.entries(results).map(([k, v]) => [k, { http: v.http, error: v.error?.status ?? null, result: v.result ? 'returned' : null }])) });
   check('legacy.no_external_media_urls', external.length === 0, { external });
-  check('legacy.footage_ai_routes_refuse', results.analyzeMatchFootage.http >= 400, { analyze: results.analyzeMatchFootage });
+  check('legacy.footage_ai_routes_refuse', results.analyzeMatchFootage.http >= 400 && results.generateAiInsight.http >= 400
+    && results.explainTrackingMoment.result?.status === 'unavailable', results);
+
 }
 
 async function phaseCleanup() {
@@ -491,6 +494,10 @@ async function phaseCleanup() {
   check('cleanup.no_cross_job_deletion', after.c_other_owner.objects.length === inventory.c_other_owner.length
     && after.c_complete2.objects.length >= 1, { other: after.c_other_owner, complete2: after.c_complete2 });
   step('tracking-only completion', { objects: after.c_tracking_done.objects, state: after.c_tracking_done.state });
+  // Published tracking report (hold off): the explanation route reaches its own gates and stops there; no provider call.
+  const sinkN = (await sinkLog()).length;
+  const pub = await callable('explainTrackingMoment', { jobId: 'c_tracking_done', momentId: 'm_1', kind: 'explain' }, users.owner2);
+  check('legacy.explain_on_published_report_no_provider_call', (await sinkLog()).length === sinkN && pub.result?.status === 'unavailable', pub);
   // Sweep at the documented deadline (failedRetryHours) - the scheduled handler's body, called directly.
   const due = new Date(Date.parse(after.c_failed.due) + 1000);
   const early = await ml.sweepMediaLifecycle(db, new Date(Date.parse(after.c_failed.due) - 60_000));
