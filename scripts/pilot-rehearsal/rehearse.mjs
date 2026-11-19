@@ -274,7 +274,12 @@ async function phaseRollback() {
   check('stop.late_resolve_discarded', !after.r_publish.held?.hasReport && !after.r_publish.current?.hasReport, after.r_publish);
   check('stop.running_extract_cannot_publish', !after.r_running.held?.hasReport && !after.r_running.current?.hasReport
     && (await calls('r_running', 'resolve')) === 0, { state: after.r_running, resolveCalls: await calls('r_running', 'resolve') });
-  check('stop.queued_redelivery_fails_closed', redelivered && (await calls('r_queued', 'extract')) === 1, { redelivered, extractCalls: await calls('r_queued', 'extract') });
+  const firstAttemptAt = (await workerLog()).find((e) => e.jobId === 'r_queued' && e.route === 'extract')?.at ?? null;
+  const redeliveredAt = (await doc('matchAnalysisJobs/r_queued/tracking/progress'))?.updatedAt ?? null;
+  const backoffSec = firstAttemptAt && redeliveredAt ? (Date.parse(redeliveredAt) - Date.parse(firstAttemptAt)) / 1000 : null;
+  step('queue redelivery timing', { firstAttemptAt, redeliveredAt, backoffSec, configuredMinBackoffSec: 60 });
+  check('stop.queued_redelivery_fails_closed', redelivered && (await calls('r_queued', 'extract')) === 1 && backoffSec >= 59,
+    { redelivered, extractCalls: await calls('r_queued', 'extract'), backoffSec });
   const lateReleasedCalls = (await workerLog()).filter((e) => e.jobId === 'r_released' && e.route === 'resolve' && e.at >= stopAt).length;
   check('stop.old_scheduled_delivery_no_effect', after.r_released.current?.version === before.r_released.current?.version
     && lateReleasedCalls === 0, { before: before.r_released, after: after.r_released, lateReleasedCalls });
