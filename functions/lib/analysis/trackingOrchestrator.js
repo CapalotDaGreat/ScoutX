@@ -31,6 +31,7 @@ const notificationProducers_1 = require("../notificationProducers");
 const rateLimit_1 = require("../security/rateLimit");
 const mediaSource_1 = require("../uploads/mediaSource");
 const cvConfig_1 = require("./cvConfig");
+const pilotGate_1 = require("./pilotGate");
 const frameAnalysis_1 = require("./frameAnalysis");
 const trackingV3_1 = require("./trackingV3");
 const trackingCallables_1 = require("./trackingCallables");
@@ -60,6 +61,7 @@ async function startAnalysis(db, uid, jobId, enqueue, env = process.env, now = n
         const snap = await tx.get(jobRef);
         const consent = await tx.get(db.collection(videoConsent_1.VIDEO_CONSENT_COLLECTION).doc(jobId));
         const prog = await tx.get(progressRef(db, jobId));
+        const pilot = (await (0, pilotGate_1.pilotDecision)(db, uid, env, tx)).decision;
         if (!snap.exists)
             throw new https_1.HttpsError('not-found', 'Analysis not found.');
         const job = snap.data();
@@ -70,10 +72,10 @@ async function startAnalysis(db, uid, jobId, enqueue, env = process.env, now = n
         const block = !consent.exists || consent.get('uid') !== uid || consent.get('revokedAt') !== null
             || consent.get('policyVersion') !== videoConsent_1.VIDEO_CONSENT_VERSION ? 'consent_required'
             : !job.videoStoragePath || !(job.measuredDurationSec ?? job.durationSec) ? 'source_missing'
-                : !ready ? 'worker_unavailable' : null;
+                : !ready || pilot !== 'allowed' ? 'worker_unavailable' : null;
         if (block) {
             const p = existing ?? (0, trackingProgress_1.newProgress)(1, job.measuredDurationSec ?? job.durationSec ?? 0, at);
-            tx.set(progressRef(db, jobId), { ...p, blocked: block, updatedAt: at });
+            tx.set(progressRef(db, jobId), { ...p, blocked: block, ...(block === 'worker_unavailable' ? { pilot } : {}), updatedAt: at });
             return { status: 'blocked', generation: p.generation, segments: p.plan.length, blocked: block, toQueue: [], discoveryQueue: [], pendingSegments: [], job };
         }
         if (existing && !existing.outcome && !existing.blocked) {
@@ -148,8 +150,9 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
     const seg = prog.plan.find((s) => s.index === index);
     if (!seg || prog.segments[String(index)]?.status === 'done')
         return 'stale';
-    if (!client || !(0, trackingV3_1.trackingV3Enabled)(env) || (0, cvConfig_1.cvWorkerStatus)(env) !== 'available' || !job.videoStoragePath) {
-        await ref.set({ blocked: 'worker_unavailable', updatedAt: now().toISOString() }, { merge: true });
+    const pilot = (await (0, pilotGate_1.pilotDecision)(db, job.playerId, env)).decision;
+    if (!client || !(0, trackingV3_1.trackingV3Enabled)(env) || (0, cvConfig_1.cvWorkerStatus)(env) !== 'available' || !job.videoStoragePath || pilot !== 'allowed') {
+        await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
         return 'unavailable';
     }
     await ref.set({ segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
@@ -218,6 +221,8 @@ async function processDiscoverTask(db, jobId, generation, index, attempt, client
     if (!chunk || d.state[String(index)]?.status !== 'queued')
         return 'stale';
     if (!client || !(0, trackingV3_1.trackingV3Enabled)(env) || (0, cvConfig_1.cvWorkerStatus)(env) !== 'available' || !job.videoStoragePath)
+        return 'unavailable';
+    if ((await (0, pilotGate_1.pilotDecision)(db, job.playerId, env)).decision !== 'allowed')
         return 'unavailable';
     const number = job.targeting?.jerseyNumber ?? '';
     const res = await client({

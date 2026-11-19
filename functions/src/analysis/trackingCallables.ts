@@ -252,7 +252,10 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     if (((fresh.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded' as const;
     const curDoc = cur.data() as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
     if (refresh && !followUpRunnable(curDoc?.followUp, feedbackRevision, opts.followUpRound ?? -1)) return 'stale' as const;
-    const prevDoc = (held ? held.data() : curDoc) as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
+    // While held, only a report still awaiting review counts as "previous"; a withheld (contained) or released
+    // copy must not block verified reprocessing.
+    const pendingHeld = held?.exists && held.get('report') && !held.get('withheldAt') ? held.data() : undefined;
+    const prevDoc = (held ? pendingHeld : curDoc) as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
     if (!shouldReplaceReport(prevDoc?.report ? { parts: prevDoc.parts ?? 0, scope: prevDoc.scope } : null,
       { parts: report.analysedRange.parts, scope })) {
       return 'stale' as const;
@@ -270,7 +273,9 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
         updatedAt: at }, { merge: true });
     }
     const doc = { report, version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp };
+      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp,
+      // Provenance for audits and rollback: exactly which approved worker build and models produced this report.
+      producedBy: { workerVersion: raw.workerVersion, models: raw.models } };
     if (held) {
       // Held for review: nothing reaches tracking/current (owner-readable) and no completion notice is sent.
       tx.set(heldRef, { ...doc, heldAt: at });

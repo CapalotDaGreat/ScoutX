@@ -43,11 +43,6 @@ function fakeDb(seed: Record<string, Record<string, unknown>>) {
   return { db: db as unknown as Firestore, data };
 }
 
-// TRACKING_PILOT_GATE=off: emulator-only seam; the pilot gate itself is covered by trackingPilotGate.test.ts.
-const env = { FUNCTIONS_EMULATOR: 'true', CV_WORKER_URL: 'http://localhost:9', CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true', TRACKING_PILOT_GATE: 'off' };
-const approval = { workerVersion: 'football-cv/0.7.0', models: { detector: 'd' }, eventsApproved: false } as never;
-const PROGRESS = 'matchAnalysisJobs/job_1/tracking/progress';
-const T0 = Date.parse('2026-10-27T10:00:00Z');
 
 const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]).toString('base64');
 // No TRACKING_PILOT_GATE seam here: these tests exercise the real gate.
@@ -92,7 +87,7 @@ const okWorker = (calls: string[], before?: () => void) => async () => {
 };
 const noStore = async () => {};
 const notes: string[] = [];
-const notify = async (id: string) => { notes.push(id); };
+const notify = async (id: string) => { notes.push(id); return true; };
 
 test('decision: fails closed on missing, malformed, off, unlisted and wrong-version configuration', () => {
   setEmulatorCvApproval(approval);
@@ -187,11 +182,14 @@ test('reviewer release publishes the held report; containment withholds it again
   const f = fakeDb(seed({ [PILOT]: pilot() }));
   const feedbackBefore = structuredClone(f.data.get('matchAnalysisJobs/job_1/tracking/feedback'));
   assert.equal(await processResolveTask(f.db, 'job_1', 2, okWorker([]), env, noStore, { notify }), 'held');
-  const heldReport = (f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { report: { engine: unknown } }).report;
+  const heldDoc = f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { report: { engineVersion: string }; producedBy: unknown };
+  assert.deepEqual(heldDoc.producedBy, { workerVersion: 'football-cv/0.7.0', models: { detector: 'd' } });
   const M = 'matchAnalysisJobs', T = 'tracking';
   assert.equal(await releaseHeldReport(f.db, M, T, 'job_1', 'reviewer-a', () => new Date('2026-11-19T12:00:00Z')), 'released');
-  const cur = f.data.get('matchAnalysisJobs/job_1/tracking/current') as { report: { engine: unknown }; releasedBy: string; feedbackRevision: number };
-  assert.deepEqual(cur.report.engine, heldReport.engine, 'provenance (engine block) preserved');
+  const cur = f.data.get('matchAnalysisJobs/job_1/tracking/current') as { report: { engineVersion: string }; producedBy: unknown;
+    releasedBy: string; feedbackRevision: number };
+  assert.equal(cur.report.engineVersion, '3.0.0');
+  assert.deepEqual(cur.producedBy, heldDoc.producedBy, 'worker/model provenance preserved on release');
   assert.equal(cur.releasedBy, 'reviewer-a');
   assert.equal(cur.feedbackRevision, 2);
   assert.equal(await releaseHeldReport(f.db, M, T, 'job_1', 'reviewer-a'), 'nothing_held', 'release is not repeatable');
@@ -202,5 +200,56 @@ test('reviewer release publishes the held report; containment withholds it again
   assert.equal((f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { withheldReason: string }).withheldReason, 'wrong-player audit');
   assert.deepEqual(f.data.get('matchAnalysisJobs/job_1/tracking/feedback'), feedbackBefore);
   assert.equal(await withholdPublishedReport(f.db, M, T, 'job_1', 'again'), 'nothing_published');
+  setEmulatorCvApproval(null);
+});
+
+test('rollback rehearsal: queued, running and partially reported jobs under the kill switch, then verified reprocessing', async () => {
+  setEmulatorCvApproval(approval);
+  notes.length = 0;
+  const job = (id: string) => ({
+    [`matchAnalysisJobs/${id}`]: { playerId: 'u1', targeting: { jerseyNumber: '20', kitPrimaryColor: 'orange' },
+      videoStoragePath: `profiles/u1/matchFootage/${id}/source.mp4`, measuredDurationSec: 1020, durationSec: 1020 },
+    [`videoProcessingConsents/${id}`]: { uid: 'u1', revokedAt: null, policyVersion: VIDEO_CONSENT_VERSION },
+    [`matchAnalysisJobs/${id}/tracking/feedback`]: { entries: [{ t: 40, answer: 'me' }], periods: {}, offPitch: [], revision: 1 },
+  });
+  const f = fakeDb({ [PILOT]: pilot({ holdReports: false }), ...job('job_q'), ...job('job_r'), ...job('job_p') });
+  const setPilot = (v: Record<string, unknown>) => f.db.runTransaction(async (tx) => {
+    (tx as { set: (r: unknown, x: unknown) => void }).set({ path: PILOT }, v);
+  });
+  // Before: job_q started (extraction queued), job_p has a published report, job_r will be resolving.
+  const queued: string[] = [];
+  assert.equal((await startAnalysis(f.db, 'u1', 'job_q', async (q) => { queued.push(q); }, env, new Date('2026-11-19T10:00:00Z'), notify)).status, 'started');
+  assert.equal(await processResolveTask(f.db, 'job_p', 1, okWorker([]), env, noStore, { notify }), 'done');
+  const pBefore = structuredClone(f.data.get('matchAnalysisJobs/job_p/tracking/current')) as { version: number };
+  // Kill switch while job_r's worker call is in flight.
+  const rCalls: string[] = [];
+  const rOut = processResolveTask(f.db, 'job_r', 1, okWorker(rCalls, () => { void setPilot(pilot({ enabled: false, holdReports: false })); }),
+    env, noStore, { notify });
+  assert.equal(await rOut, 'stopped', 'late result after the stop is discarded');
+  assert.equal(f.data.has('matchAnalysisJobs/job_r/tracking/current'), false);
+  // Queued work does not reach the worker.
+  const qCalls: string[] = [];
+  assert.equal(await processExtractTask(f.db, 'job_q', 1, 0, 0, (async () => { qCalls.push('w'); return { status: 'complete' }; }) as never,
+    async () => {}, env, async () => 'https://x', () => new Date(), notify), 'unavailable');
+  assert.deepEqual(qCalls, []);
+  // New jobs are refused.
+  assert.equal((await startAnalysis(f.db, 'u1', 'job_p', async () => {}, env, new Date(), notify)).blocked, 'worker_unavailable');
+  // Containment of the already published report.
+  assert.equal(await withholdPublishedReport(f.db, 'matchAnalysisJobs', 'tracking', 'job_p', 'kill switch 2026-11-19'), 'withheld');
+  assert.equal((f.data.get('matchAnalysisJobs/job_p/tracking/current') as { report: unknown }).report, null);
+  // A wrong worker version keeps the gate closed even when re-enabled.
+  await setPilot(pilot({ enabled: true, workerVersion: 'football-cv/0.6.0' }));
+  assert.equal(await processResolveTask(f.db, 'job_p', 1, okWorker([]), env, noStore, { notify }), 'unavailable');
+  // Verified reprocessing: correct version, held, reviewed, released; corrections and provenance preserved.
+  await setPilot(pilot({ enabled: true }));
+  assert.equal(await processResolveTask(f.db, 'job_p', 1, okWorker([]), env, noStore, { notify }), 'held');
+  assert.equal(await releaseHeldReport(f.db, 'matchAnalysisJobs', 'tracking', 'job_p', 'reviewer-a'), 'released');
+  const pAfter = f.data.get('matchAnalysisJobs/job_p/tracking/current') as { version: number; feedbackRevision: number;
+    report: { engineVersion: string }; producedBy: { workerVersion: string } };
+  assert.ok(pAfter.version > pBefore.version);
+  assert.equal(pAfter.feedbackRevision, 1);
+  assert.deepEqual(f.data.get('matchAnalysisJobs/job_p/tracking/feedback'), job('job_p')['matchAnalysisJobs/job_p/tracking/feedback']);
+  assert.equal(pAfter.report.engineVersion, '3.0.0');
+  assert.equal(pAfter.producedBy.workerVersion, 'football-cv/0.7.0');
   setEmulatorCvApproval(null);
 });

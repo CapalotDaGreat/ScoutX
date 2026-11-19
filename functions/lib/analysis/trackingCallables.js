@@ -13,6 +13,7 @@ const tasks_1 = require("firebase-functions/v2/tasks");
 const callableOptions_1 = require("../callableOptions");
 const region_1 = require("../region");
 const cvConfig_1 = require("./cvConfig");
+const pilotGate_1 = require("./pilotGate");
 const cvWorker_1 = require("./cvWorker");
 const frameAnalysis_1 = require("./frameAnalysis");
 const trackingV3_1 = require("./trackingV3");
@@ -172,6 +173,9 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
     if (!job || job.cancelRequested)
         return 'unavailable';
+    // Pilot gate (pilotGate.ts): checked before the worker call and again inside the publishing transaction.
+    if ((await (0, pilotGate_1.pilotDecision)(db, job.playerId, env)).decision !== 'allowed')
+        return 'unavailable';
     const refresh = opts.scope === 'refresh';
     const raw = await client({
         contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
@@ -217,15 +221,25 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     }
     const at = now().toISOString();
     let followUp = null;
+    const heldRef = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(pilotGate_1.HELD_COLLECTION).doc('current');
     const outcome = await db.runTransaction(async (tx) => {
         const fresh = await tx.get(base.doc('feedback'));
         const cur = await tx.get(base.doc('current'));
+        // A result that comes back after the pilot was stopped (kill switch) or the owner was removed is discarded here.
+        const gate = await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, tx);
+        if (gate.decision !== 'allowed')
+            return 'stopped';
+        const held = gate.hold ? await tx.get(heldRef) : null;
         if ((fresh.data()?.revision ?? 0) !== feedbackRevision)
             return 'superseded';
         const curDoc = cur.data();
         if (refresh && !(0, trackingFollowUp_1.followUpRunnable)(curDoc?.followUp, feedbackRevision, opts.followUpRound ?? -1))
             return 'stale';
-        if (!(0, trackingProgress_1.shouldReplaceReport)(curDoc?.report ? { parts: curDoc.parts ?? 0, scope: curDoc.scope } : null, { parts: report.analysedRange.parts, scope })) {
+        // While held, only a report still awaiting review counts as "previous"; a withheld (contained) or released
+        // copy must not block verified reprocessing.
+        const pendingHeld = held?.exists && held.get('report') && !held.get('withheldAt') ? held.data() : undefined;
+        const prevDoc = (held ? pendingHeld : curDoc);
+        if (!(0, trackingProgress_1.shouldReplaceReport)(prevDoc?.report ? { parts: prevDoc.parts ?? 0, scope: prevDoc.scope } : null, { parts: report.analysedRange.parts, scope })) {
             return 'stale';
         }
         // 5.2 deferred OCR: decide the follow-up from facts; per-user daily quota in the same transaction
@@ -239,8 +253,18 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
             tx.set(quotaRef, { uid: job.playerId, action: trackingFollowUp_1.OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
                 updatedAt: at }, { merge: true });
         }
-        tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-            stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp });
+        const doc = { report, version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+            stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp,
+            // Provenance for audits and rollback: exactly which approved worker build and models produced this report.
+            producedBy: { workerVersion: raw.workerVersion, models: raw.models } };
+        if (held) {
+            // Held for review: nothing reaches tracking/current (owner-readable) and no completion notice is sent.
+            tx.set(heldRef, { ...doc, heldAt: at });
+            if (progress)
+                tx.set(base.doc('progress'), { resolving: null, held: { scope, at }, updatedAt: at }, { merge: true });
+            return 'held';
+        }
+        tx.set(base.doc('current'), doc);
         if (progress) {
             const published = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
                 moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };
@@ -249,7 +273,7 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         return 'done';
     });
     const fu = followUp;
-    if (outcome === 'done' && fu && fu.status === 'scheduled') {
+    if ((outcome === 'done' || outcome === 'held') && fu && fu.status === 'scheduled') {
         await (opts.enqueueFollowUp ?? exports.cloudTasksFollowUpEnqueue)({ jobId, feedbackRevision, round: fu.round }, (0, trackingFollowUp_1.followUpTaskId)(jobId, feedbackRevision, fu.round));
     }
     if (outcome !== 'done' || !progress || refresh)
@@ -339,10 +363,10 @@ exports.refreshTrackingOcrTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { 
  * (the owner can resume; cached segments are kept).
  */
 async function settleOrchestratedResolve(db, jobId, scope, outcome, now = new Date()) {
-    if (outcome === 'done')
+    if (outcome === 'done' || outcome === 'held')
         return;
     const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('progress');
-    const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable');
+    const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped');
     await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
 }
 //# sourceMappingURL=trackingCallables.js.map
