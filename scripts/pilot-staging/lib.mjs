@@ -84,6 +84,16 @@ export function evidenceWriter(out, meta) {
   };
 }
 
+/**
+ * Driver arguments: the output file is the first argument that is neither a flag nor the value of `--only`.
+ * @param {string[]} args
+ */
+export function parseDriverArgs(args) {
+  const onlyAt = args.indexOf('--only');
+  const only = onlyAt >= 0 ? String(args[onlyAt + 1] ?? '').split(',').filter(Boolean) : [];
+  const out = args.find((a, i) => !a.startsWith('--') && !(onlyAt >= 0 && i === onlyAt + 1)) ?? null;
+  return { out, only, dryRun: args.includes('--dry-run') };
+}
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 export async function waitFor(fn, ms = 30000, every = 250) {
   const end = Date.now() + ms;

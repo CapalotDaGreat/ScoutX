@@ -14,14 +14,15 @@
  */
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { accessToken, evidenceWriter, loadConfig, operatorIdentityToken, redact, requireFn, root, sleep, waitFor } from './lib.mjs';
+import { accessToken, evidenceWriter, loadConfig, operatorIdentityToken, parseDriverArgs, redact, requireFn, root, sleep, waitFor } from './lib.mjs';
 import { driverGuard } from './limits.mjs';
 
 const cfg = loadConfig();
 const args = process.argv.slice(2);
-const OUT = args.find((a) => !a.startsWith('--')) ?? process.env.REHEARSAL_OUT ?? 'probe-tasks-evidence.json';
-const DRY = args.includes('--dry-run');
-const ONLY = (args[args.indexOf('--only') + 1] ?? '').split(',').filter((x) => args.includes('--only') && x);
+const parsed = parseDriverArgs(args);
+const OUT = parsed.out ?? process.env.REHEARSAL_OUT ?? 'probe-tasks-evidence.json';
+const DRY = parsed.dryRun;
+const ONLY = parsed.only;
 const RUN = `pt${Date.now().toString(36)}`;
 const E = evidenceWriter(OUT, { target: cfg.target, project: cfg.project, commit: process.env.REHEARSAL_COMMIT ?? null, run: RUN, dryRun: DRY });
 const want = (id) => !ONLY.length || ONLY.includes(id);
