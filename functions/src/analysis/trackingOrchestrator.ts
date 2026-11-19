@@ -25,6 +25,7 @@ import { writeSystemActivity } from '../notificationProducers';
 import { assertCallableRateLimit } from '../security/rateLimit';
 import { readableSourceFor } from '../uploads/mediaSource';
 import { cvWorkerStatus, cvWorkerUrl } from './cvConfig';
+import { pilotDecision } from './pilotGate';
 import { MATCH_COLLECTION, type MatchJobDoc } from './frameAnalysis';
 import {
   TRACKING_COLLECTION, decodeReviewImage, parseDiscoveryMoments, reviewImagePath, trackingV3Enabled, type TrackingMoment,
@@ -70,6 +71,7 @@ export async function startAnalysis(db: Firestore, uid: string, jobId: string, e
     const snap = await tx.get(jobRef);
     const consent = await tx.get(db.collection(VIDEO_CONSENT_COLLECTION).doc(jobId));
     const prog = await tx.get(progressRef(db, jobId));
+    const pilot = (await pilotDecision(db, uid, env, tx)).decision;
     if (!snap.exists) throw new HttpsError('not-found', 'Analysis not found.');
     const job = snap.data() as MatchJobDoc;
     if (job.playerId !== uid) throw new HttpsError('permission-denied', 'Only the owner can start this analysis.');
@@ -78,10 +80,10 @@ export async function startAnalysis(db: Firestore, uid: string, jobId: string, e
     const block: ProgressBlock | null = !consent.exists || consent.get('uid') !== uid || consent.get('revokedAt') !== null
       || consent.get('policyVersion') !== VIDEO_CONSENT_VERSION ? 'consent_required'
       : !job.videoStoragePath || !(job.measuredDurationSec ?? job.durationSec) ? 'source_missing'
-        : !ready ? 'worker_unavailable' : null;
+        : !ready || pilot !== 'allowed' ? 'worker_unavailable' : null;
     if (block) {
       const p = existing ?? newProgress(1, job.measuredDurationSec ?? job.durationSec ?? 0, at);
-      tx.set(progressRef(db, jobId), { ...p, blocked: block, updatedAt: at });
+      tx.set(progressRef(db, jobId), { ...p, blocked: block, ...(block === 'worker_unavailable' ? { pilot } : {}), updatedAt: at });
       return { status: 'blocked' as const, generation: p.generation, segments: p.plan.length, blocked: block, toQueue: [] as number[], discoveryQueue: [] as number[], pendingSegments: [] as number[], job };
     }
     if (existing && !existing.outcome && !existing.blocked) {
@@ -161,8 +163,9 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   }
   const seg = prog.plan.find((s) => s.index === index);
   if (!seg || prog.segments[String(index)]?.status === 'done') return 'stale';
-  if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available' || !job.videoStoragePath) {
-    await ref.set({ blocked: 'worker_unavailable', updatedAt: now().toISOString() }, { merge: true });
+  const pilot = (await pilotDecision(db, job.playerId, env)).decision;
+  if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available' || !job.videoStoragePath || pilot !== 'allowed') {
+    await ref.set({ blocked: 'worker_unavailable', pilot, updatedAt: now().toISOString() }, { merge: true });
     return 'unavailable';
   }
   await ref.set({ segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
@@ -230,6 +233,7 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   const chunk = d.chunks.find((c) => c.index === index);
   if (!chunk || d.state[String(index)]?.status !== 'queued') return 'stale';
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available' || !job.videoStoragePath) return 'unavailable';
+  if ((await pilotDecision(db, job.playerId, env)).decision !== 'allowed') return 'unavailable';
   const number = job.targeting?.jerseyNumber ?? '';
   const res = await client({
     contractVersion: 3, jobId, chunkIndex: index, startSec: chunk.startSec, endSec: chunk.endSec,

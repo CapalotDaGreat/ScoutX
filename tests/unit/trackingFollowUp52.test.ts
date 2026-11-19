@@ -26,7 +26,8 @@ function fakeDb(seed: Record<string, Record<string, unknown>>) {
   return { db: db as unknown as Firestore, data };
 }
 
-const env = { FUNCTIONS_EMULATOR: 'true', CV_WORKER_URL: 'http://localhost:9', CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true' };
+// TRACKING_PILOT_GATE=off: emulator-only seam; the pilot gate itself is covered by trackingPilotGate.test.ts.
+const env = { FUNCTIONS_EMULATOR: 'true', CV_WORKER_URL: 'http://localhost:9', CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true', TRACKING_PILOT_GATE: 'off' };
 const approval = { workerVersion: 'football-cv/0.8.0', models: { detector: 'd' }, eventsApproved: false } as never;
 const CUR = 'matchAnalysisJobs/job_1/tracking/current';
 

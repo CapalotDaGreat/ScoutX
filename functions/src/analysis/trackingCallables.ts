@@ -6,6 +6,7 @@ import { onTaskDispatched } from 'firebase-functions/v2/tasks';
 import { createCallableOptions } from '../callableOptions';
 import { taskQueueName } from '../region';
 import { cvWorkerStatus, cvWorkerUrl, isApprovedWorkerOutput } from './cvConfig';
+import { HELD_COLLECTION, pilotDecision } from './pilotGate';
 import { identityToken } from './cvWorker';
 import { MATCH_COLLECTION, type MatchJobDoc } from './frameAnalysis';
 import {
@@ -186,7 +187,7 @@ type ProgressDoc = TrackingProgress;
  */
 export async function processResolveTask(db: Firestore, jobId: string, feedbackRevision: number,
   client: TrackingWorkerClient | null, env: NodeJS.ProcessEnv = process.env,
-  storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<'done' | 'superseded' | 'unavailable' | 'rejected' | 'stale'> {
+  storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'stale'> {
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available') return 'unavailable';
   const now = opts.now ?? (() => new Date());
   const base = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION);
@@ -195,6 +196,8 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   if ((fb.revision ?? 0) !== feedbackRevision) return 'superseded';
   const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
   if (!job || job.cancelRequested) return 'unavailable';
+  // Pilot gate (pilotGate.ts): checked before the worker call and again inside the publishing transaction.
+  if ((await pilotDecision(db, job.playerId, env)).decision !== 'allowed') return 'unavailable';
   const refresh = opts.scope === 'refresh';
   const raw = await client({
     contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
@@ -238,13 +241,19 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   }
   const at = now().toISOString();
   let followUp: OcrFollowUp | null = null;
+  const heldRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(HELD_COLLECTION).doc('current');
   const outcome = await db.runTransaction(async (tx) => {
     const fresh = await tx.get(base.doc('feedback'));
     const cur = await tx.get(base.doc('current'));
+    // A result that comes back after the pilot was stopped (kill switch) or the owner was removed is discarded here.
+    const gate = await pilotDecision(db, job.playerId, env, tx);
+    if (gate.decision !== 'allowed') return 'stopped' as const;
+    const held = gate.hold ? await tx.get(heldRef) : null;
     if (((fresh.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded' as const;
     const curDoc = cur.data() as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
     if (refresh && !followUpRunnable(curDoc?.followUp, feedbackRevision, opts.followUpRound ?? -1)) return 'stale' as const;
-    if (!shouldReplaceReport(curDoc?.report ? { parts: curDoc.parts ?? 0, scope: curDoc.scope } : null,
+    const prevDoc = (held ? held.data() : curDoc) as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
+    if (!shouldReplaceReport(prevDoc?.report ? { parts: prevDoc.parts ?? 0, scope: prevDoc.scope } : null,
       { parts: report.analysedRange.parts, scope })) {
       return 'stale' as const;
     }
@@ -260,8 +269,15 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
       tx.set(quotaRef, { uid: job.playerId, action: OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
         updatedAt: at }, { merge: true });
     }
-    tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp });
+    const doc = { report, version: (prevDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp };
+    if (held) {
+      // Held for review: nothing reaches tracking/current (owner-readable) and no completion notice is sent.
+      tx.set(heldRef, { ...doc, heldAt: at });
+      if (progress) tx.set(base.doc('progress'), { resolving: null, held: { scope, at }, updatedAt: at }, { merge: true });
+      return 'held' as const;
+    }
+    tx.set(base.doc('current'), doc);
     if (progress) {
       const published: PublishedReport = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
         moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };
@@ -270,7 +286,7 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     return 'done' as const;
   });
   const fu = followUp as OcrFollowUp | null;
-  if (outcome === 'done' && fu && fu.status === 'scheduled') {
+  if ((outcome === 'done' || outcome === 'held') && fu && fu.status === 'scheduled') {
     await (opts.enqueueFollowUp ?? cloudTasksFollowUpEnqueue)({ jobId, feedbackRevision, round: fu.round },
       followUpTaskId(jobId, feedbackRevision, fu.round));
   }
@@ -371,8 +387,8 @@ export const refreshTrackingOcrTask = onTaskDispatched(
  */
 export async function settleOrchestratedResolve(db: Firestore, jobId: string, scope: ReportScope,
   outcome: Awaited<ReturnType<typeof processResolveTask>>, now = new Date()): Promise<void> {
-  if (outcome === 'done') return;
+  if (outcome === 'done' || outcome === 'held') return;
   const ref = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc('progress');
-  const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable');
+  const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped');
   await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
 }

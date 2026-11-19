@@ -28,7 +28,8 @@ function fakeDb(seed: Record<string, Record<string, unknown>>) {
 }
 
 const JPEG = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]).toString('base64');
-const env = { FUNCTIONS_EMULATOR: 'true', CV_WORKER_URL: 'http://localhost:9', CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true' };
+// TRACKING_PILOT_GATE=off: emulator-only seam; the pilot gate itself is covered by trackingPilotGate.test.ts.
+const env = { FUNCTIONS_EMULATOR: 'true', CV_WORKER_URL: 'http://localhost:9', CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true', TRACKING_PILOT_GATE: 'off' };
 const approval = { workerVersion: 'football-cv/0.7.0', models: { detector: 'd' }, eventsApproved: false } as never;
 
 function workerReport() {
