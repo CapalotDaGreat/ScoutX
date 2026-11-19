@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refreshTrackingOcrTask = exports.resolveTrackingTask = exports.cloudTasksFollowUpEnqueue = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
+exports.refreshTrackingOcrTask = exports.resolveTrackingTask = exports.RESOLVE_LEASE_MS = exports.cloudTasksFollowUpEnqueue = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
 exports.markTrackingFailed = markTrackingFailed;
 exports.httpTrackingClient = httpTrackingClient;
 exports.imageBucketFor = imageBucketFor;
 exports.processResolveTask = processResolveTask;
 exports.processOcrFollowUpTask = processOcrFollowUpTask;
 exports.settleOrchestratedResolve = settleOrchestratedResolve;
+const node_crypto_1 = require("node:crypto");
 const firestore_1 = require("firebase-admin/firestore");
 const functions_1 = require("firebase-admin/functions");
 const storage_1 = require("firebase-admin/storage");
@@ -214,6 +215,57 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     // re-authorisation (authorizeRun) still resolves.
     if (!refresh && runAuth && await fullReportExists(base, db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(pilotGate_1.HELD_COLLECTION).doc('current'), feedbackRevision, runAuth))
         return 'stale';
+    // Atomic claim before the worker call (2026-11-19): of simultaneous deliveries of the same resolve only one
+    // calls the worker; the claim's token fences publication, so a claimant that was taken over cannot publish.
+    const claimKey = `${feedbackRevision}|${refresh ? `refresh:${opts.followUpRound ?? -1}` : opts.scope ?? 'feedback'}|${runAuth ?? '-'}`;
+    const claim = await claimResolve(db, base.doc('progress'), claimKey, opts.attempt ?? 0, now);
+    // A duplicate while another delivery holds a live claim, or after it stored its report: ends without side
+    // effects and without a queue retry.
+    if (claim === 'busy')
+        return 'busy';
+    let outcome = null;
+    try {
+        outcome = await resolveClaimed(db, jobId, feedbackRevision, client, env, storeImage, opts, job, fb, refresh, now, base, claim);
+        return outcome;
+    }
+    finally {
+        // A stored report keeps its claim as a completion record (a later duplicate of the same key is 'busy');
+        // anything else frees the key for the queue's retry.
+        if (claim)
+            await endResolveClaim(db, base.doc('progress'), claim, outcome === 'done' || outcome === 'held', now);
+    }
+}
+/** Lease of a resolve claim: longer than the resolve task's 900 s timeout. */
+exports.RESOLVE_LEASE_MS = 16 * 60 * 1000;
+/**
+ * Takes the resolve claim for `key` unless a live claim for the same key is held by this or a later attempt
+ * ('busy'). Returns the token, or null when the job has no progress document (nothing to fence against).
+ */
+async function claimResolve(db, progress, key, attempt, now) {
+    return db.runTransaction(async (tx) => {
+        const p = await tx.get(progress);
+        if (!p.exists)
+            return null;
+        const c = p.get('resolveClaim');
+        if (c && c.key === key && c.finishedAt)
+            return 'busy';
+        if (c && c.key === key && (c.attempt ?? 0) >= attempt && c.startedAt && now().getTime() - Date.parse(c.startedAt) < exports.RESOLVE_LEASE_MS) {
+            return 'busy';
+        }
+        const token = `${attempt}:${(0, node_crypto_1.randomUUID)()}`;
+        tx.set(progress, { resolveClaim: { key, attempt, startedAt: now().toISOString(), token, finishedAt: null } }, { merge: true });
+        return token;
+    });
+}
+async function endResolveClaim(db, progress, token, finished, now) {
+    await db.runTransaction(async (tx) => {
+        const p = await tx.get(progress);
+        if (p.get('resolveClaim')?.token !== token)
+            return; // taken over: not ours
+        tx.set(progress, { resolveClaim: finished ? { finishedAt: now().toISOString() } : null }, { merge: true });
+    });
+}
+async function resolveClaimed(db, jobId, feedbackRevision, client, env, storeImage, opts, job, fb, refresh, now, base, claimToken) {
     const raw = await client({
         contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
         target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
@@ -236,7 +288,9 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const attemptStartedMs = now().getTime();
     // Every attempt writes new object names, so a URL issued for an earlier image (signed URL or download token)
     // can never address a later one, even after withholding, reprocessing and release.
-    const attempt = attemptStartedMs.toString(36);
+    // The random part keeps two attempts in the same millisecond (a takeover) from sharing names, so a fenced
+    // claimant discarding its own images can never delete the current claimant's.
+    const attempt = `${attemptStartedMs.toString(36)}${(0, node_crypto_1.randomUUID)().replace(/-/g, '').slice(0, 6)}`;
     for (let i = 0; i < report.reviewQuestions.length; i += 1) {
         const jpeg = (0, trackingV3_1.decodeReviewImage)(rawQuestions[i]?.imageJpegBase64);
         if (!jpeg)
@@ -275,6 +329,9 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         const gate = await (0, pilotGate_1.pilotDecision)(db, job.playerId, env, tx, { authorizedAt: progTx.get('pilotAuthorizedAt') });
         if (gate.decision !== 'allowed')
             return 'stopped';
+        // Fenced: a claimant that was taken over (expired lease, later attempt, newer revision) publishes nothing.
+        if (claimToken && progTx.get('resolveClaim')?.token !== claimToken)
+            return 'stale';
         const held = gate.hold ? await tx.get(heldRef) : null;
         if ((fresh.data()?.revision ?? 0) !== feedbackRevision)
             return 'superseded';
@@ -381,7 +438,7 @@ exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { max
         const fb = await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(d.jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('feedback').get();
         fbRevision = fb.data()?.revision ?? 0;
     }
-    const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope });
+    const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope, attempt: request.retryCount ?? 0 });
     if (scope !== 'feedback')
         await settleOrchestratedResolve(db, d.jobId, scope, outcome);
 });
@@ -407,7 +464,7 @@ async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client
     const outcome = await processResolveTask(db, jobId, feedbackRevision, client, env, storeImage, { ...opts, scope: 'refresh', followUpRound: round });
     if (outcome !== 'done') {
         const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
-        const status = outcome === 'superseded' || outcome === 'stale' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
+        const status = outcome === 'superseded' || outcome === 'stale' || outcome === 'busy' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
         await db.runTransaction(async (tx) => {
             const cur = await tx.get(ref);
             const f = cur.data()?.followUp ?? null;
@@ -432,7 +489,8 @@ exports.refreshTrackingOcrTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { 
  * (the owner can resume; cached segments are kept).
  */
 async function settleOrchestratedResolve(db, jobId, scope, outcome, now = new Date()) {
-    if (outcome === 'done' || outcome === 'held')
+    // 'busy': another delivery holds the claim and settles the run itself.
+    if (outcome === 'done' || outcome === 'held' || outcome === 'busy')
         return;
     const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('progress');
     const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped');

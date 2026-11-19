@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 /**
  * Video Intelligence 4.0 - progressive, resumable player analysis.
  *
@@ -152,8 +153,11 @@ export type ExtractOutcome = 'done' | 'cached' | 'stale' | 'cancelled' | 'retry'
  * One segment of stage 1. `attempt` is the Cloud Tasks retry count (0-based); a failure on the
  * last attempt marks the analysis interrupted and notifies the owner once.
  */
-/** Longer than the extract task's 900 s timeout: a lease this old belongs to an attempt that cannot still be running. */
-const EXTRACT_LEASE_MS = 16 * 60 * 1000;
+/**
+ * Claim lease for one segment attempt: longer than the extract task's 1800 s timeout, so a claim this old belongs to an
+ * attempt that can no longer be running (2026-11-19: was 16 min, shorter than the timeout).
+ */
+export const EXTRACT_LEASE_MS = 31 * 60 * 1000;
 
 export async function processExtractTask(db: Firestore, jobId: string, generation: number, index: number, attempt: number,
   client: TrackingWorkerClient | null, enqueue: Enqueue, env: NodeJS.ProcessEnv = process.env,
@@ -181,17 +185,23 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   // attempt with the same or a later attempt number is running does not call the worker again. A genuine
   // retry carries a higher attempt number (X-CloudTasks-TaskRetryCount) and proceeds; a lease older than
   // the task timeout no longer blocks.
+  // The claim carries a fencing token: only the current claimant may record the outcome, so a claimant that
+  // was taken over (expired lease, queue retry) or whose run was reset (stop, resume) cannot overwrite state.
+  const token = `${attempt}:${randomUUID()}`;
   const claimed = await db.runTransaction(async (tx) => {
     const cur = (await tx.get(ref)).data() as TrackingProgress | undefined;
-    const s = cur?.segments?.[String(index)] as { status?: string; attempts?: number; startedAt?: string } | undefined;
+    if (!cur || cur.generation !== generation || cur.outcome) return false;
+    const s = cur.segments?.[String(index)] as { status?: string; attempts?: number; startedAt?: string } | undefined;
     if (s?.status === 'done') return false;
     if (s?.status === 'running' && (s.attempts ?? 0) > attempt && s.startedAt
       && now().getTime() - Date.parse(s.startedAt) < EXTRACT_LEASE_MS) return false;
-    tx.set(ref, { segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
+    tx.set(ref, { segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString(), claim: token } },
       updatedAt: now().toISOString() }, { merge: true });
     return true;
   });
   if (!claimed) return 'stale';
+  const stillMine = (p: TrackingProgress | undefined) => Boolean(p && p.generation === generation
+    && (p.segments?.[String(index)] as { claim?: string } | undefined)?.claim === token);
   const res = await client({
     contractVersion: 3, jobId, segmentIndex: index, startSec: seg.startSec, endSec: seg.endSec,
     source: { url: await sourceUrl(job.videoStoragePath) },
@@ -200,8 +210,14 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   const at = now().toISOString();
   if (!res || (res.status !== 'complete' && res.status !== 'cached')) {
     const last = attempt + 1 >= EXTRACT_MAX_ATTEMPTS;
-    await ref.set({ segments: { [String(index)]: { status: last ? 'failed' : 'queued', attempts: attempt + 1 } },
-      ...(last ? { outcome: 'interrupted' } : {}), updatedAt: at }, { merge: true });
+    const recorded = await db.runTransaction(async (tx) => {
+      if (!stillMine((await tx.get(ref)).data() as TrackingProgress | undefined)) return false;
+      tx.set(ref, { segments: { [String(index)]: { status: last ? 'failed' : 'queued', attempts: attempt + 1, claim: null } },
+        ...(last ? { outcome: 'interrupted' } : {}), updatedAt: at }, { merge: true });
+      return true;
+    });
+    // Taken over meanwhile: the current claimant owns the outcome; this delivery ends quietly (no queue retry).
+    if (!recorded) return 'stale';
     if (!last) return 'retry';
     await markTrackingFailed(db, jobId, new Date(at));
     await (notify ?? ((id, input) => writeSystemActivity(db, id, input)))(notificationId('interrupted', jobId, generation), {
@@ -216,7 +232,8 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   const next = await db.runTransaction(async (tx) => {
     const fresh = (await tx.get(ref)).data() as TrackingProgress | undefined;
     if (!fresh || fresh.generation !== generation) return null;
-    const segments = { ...fresh.segments, [String(index)]: { status: 'done' as const, attempts: attempt + 1, doneAt: at,
+    if (!stillMine(fresh)) return 'fenced' as const;
+    const segments = { ...fresh.segments, [String(index)]: { status: 'done' as const, attempts: attempt + 1, doneAt: at, claim: null,
       ...(processingSec !== undefined ? { processingSec } : {}) } };
     const done = doneCount({ segments });
     const total = fresh.plan.length;
@@ -226,6 +243,7 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
     tx.set(ref, { segments, updatedAt: at, ...(resolve ? { resolving: resolve } : {}) }, { merge: true });
     return resolve;
   });
+  if (next === 'fenced') return 'stale';
   if (next) await enqueue('resolveTrackingTask', { jobId, feedbackRevision: 0, scope: next });
   return res.status === 'cached' ? 'cached' : 'done';
 }
@@ -286,7 +304,7 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
   for (const m of moments ?? []) {
     const jpeg = decodeReviewImage(raw.get(m.id));
     if (!jpeg) continue;
-    const path = reviewImagePath(job.playerId, jobId, `${m.id}_g${generation}_${Date.parse(at).toString(36)}`);
+    const path = reviewImagePath(job.playerId, jobId, `${m.id}_g${generation}_${Date.parse(at).toString(36)}${randomUUID().replace(/-/g, '').slice(0, 6)}`);
     await storeImage(path, jpeg);
     staged.push(path);
     m.imagePath = path;

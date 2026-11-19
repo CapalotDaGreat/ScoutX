@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import {
   getFirestore, type CollectionReference, type DocumentReference, type Firestore, type Transaction,
 } from 'firebase-admin/firestore';
@@ -212,6 +213,8 @@ export type ResolveOptions = {
   now?: () => Date;
   /** R2 image moves; defaults to Storage when the default image store is used. */
   images?: ImageBucket | null;
+  /** Cloud Tasks retry count of this delivery (X-CloudTasks-TaskRetryCount); a higher attempt may take over a claim. */
+  attempt?: number;
 };
 
 type ProgressDoc = TrackingProgress;
@@ -225,7 +228,7 @@ type ProgressDoc = TrackingProgress;
  */
 export async function processResolveTask(db: Firestore, jobId: string, feedbackRevision: number,
   client: TrackingWorkerClient | null, env: NodeJS.ProcessEnv = process.env,
-  storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'stale'> {
+  storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'stale' | 'busy'> {
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available') return 'unavailable';
   const now = opts.now ?? (() => new Date());
   const base = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION);
@@ -245,6 +248,57 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   // re-authorisation (authorizeRun) still resolves.
   if (!refresh && runAuth && await fullReportExists(base, db.collection(MATCH_COLLECTION).doc(jobId).collection(HELD_COLLECTION).doc('current'),
     feedbackRevision, runAuth)) return 'stale';
+  // Atomic claim before the worker call (2026-11-19): of simultaneous deliveries of the same resolve only one
+  // calls the worker; the claim's token fences publication, so a claimant that was taken over cannot publish.
+  const claimKey = `${feedbackRevision}|${refresh ? `refresh:${opts.followUpRound ?? -1}` : opts.scope ?? 'feedback'}|${runAuth ?? '-'}`;
+  const claim = await claimResolve(db, base.doc('progress'), claimKey, opts.attempt ?? 0, now);
+  // A duplicate while another delivery holds a live claim, or after it stored its report: ends without side
+  // effects and without a queue retry.
+  if (claim === 'busy') return 'busy';
+  let outcome: Awaited<ReturnType<typeof resolveClaimed>> | null = null;
+  try {
+    outcome = await resolveClaimed(db, jobId, feedbackRevision, client, env, storeImage, opts, job, fb, refresh, now, base, claim);
+    return outcome;
+  } finally {
+    // A stored report keeps its claim as a completion record (a later duplicate of the same key is 'busy');
+    // anything else frees the key for the queue's retry.
+    if (claim) await endResolveClaim(db, base.doc('progress'), claim, outcome === 'done' || outcome === 'held', now);
+  }
+}
+
+/** Lease of a resolve claim: longer than the resolve task's 900 s timeout. */
+export const RESOLVE_LEASE_MS = 16 * 60 * 1000;
+
+/**
+ * Takes the resolve claim for `key` unless a live claim for the same key is held by this or a later attempt
+ * ('busy'). Returns the token, or null when the job has no progress document (nothing to fence against).
+ */
+async function claimResolve(db: Firestore, progress: DocumentReference, key: string, attempt: number, now: () => Date): Promise<string | null | 'busy'> {
+  return db.runTransaction(async (tx) => {
+    const p = await tx.get(progress);
+    if (!p.exists) return null;
+    const c = p.get('resolveClaim') as { key?: string; attempt?: number; startedAt?: string; finishedAt?: string | null } | null | undefined;
+    if (c && c.key === key && c.finishedAt) return 'busy' as const;
+    if (c && c.key === key && (c.attempt ?? 0) >= attempt && c.startedAt && now().getTime() - Date.parse(c.startedAt) < RESOLVE_LEASE_MS) {
+      return 'busy' as const;
+    }
+    const token = `${attempt}:${randomUUID()}`;
+    tx.set(progress, { resolveClaim: { key, attempt, startedAt: now().toISOString(), token, finishedAt: null } }, { merge: true });
+    return token;
+  });
+}
+
+async function endResolveClaim(db: Firestore, progress: DocumentReference, token: string, finished: boolean, now: () => Date): Promise<void> {
+  await db.runTransaction(async (tx) => {
+    const p = await tx.get(progress);
+    if ((p.get('resolveClaim') as { token?: string } | null | undefined)?.token !== token) return; // taken over: not ours
+    tx.set(progress, { resolveClaim: finished ? { finishedAt: now().toISOString() } : null }, { merge: true });
+  });
+}
+
+async function resolveClaimed(db: Firestore, jobId: string, feedbackRevision: number, client: TrackingWorkerClient,
+  env: NodeJS.ProcessEnv, storeImage: ImageStore, opts: ResolveOptions, job: MatchJobDoc, fb: FeedbackDoc, refresh: boolean,
+  now: () => Date, base: CollectionReference, claimToken: string | null): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'stale' | 'busy'> {
   const raw = await client({
     contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
     target: job.targeting ?? {}, feedback: workerFeedback(fb),
@@ -267,7 +321,9 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   const attemptStartedMs = now().getTime();
   // Every attempt writes new object names, so a URL issued for an earlier image (signed URL or download token)
   // can never address a later one, even after withholding, reprocessing and release.
-  const attempt = attemptStartedMs.toString(36);
+  // The random part keeps two attempts in the same millisecond (a takeover) from sharing names, so a fenced
+  // claimant discarding its own images can never delete the current claimant's.
+  const attempt = `${attemptStartedMs.toString(36)}${randomUUID().replace(/-/g, '').slice(0, 6)}`;
   for (let i = 0; i < report.reviewQuestions.length; i += 1) {
     const jpeg = decodeReviewImage(rawQuestions[i]?.imageJpegBase64);
     if (!jpeg) continue;
@@ -303,6 +359,8 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
     const progTx = await tx.get(base.doc('progress'));
     const gate = await pilotDecision(db, job.playerId, env, tx, { authorizedAt: progTx.get('pilotAuthorizedAt') as string | null | undefined });
     if (gate.decision !== 'allowed') return 'stopped' as const;
+    // Fenced: a claimant that was taken over (expired lease, later attempt, newer revision) publishes nothing.
+    if (claimToken && (progTx.get('resolveClaim') as { token?: string } | null | undefined)?.token !== claimToken) return 'stale' as const;
     const held = gate.hold ? await tx.get(heldRef) : null;
     if (((fresh.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded' as const;
     const curDoc = cur.data() as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
@@ -411,7 +469,7 @@ export const resolveTrackingTask = onTaskDispatched(
       fbRevision = (fb.data() as FeedbackDoc | undefined)?.revision ?? 0;
     }
     const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env,
-      storageImageStore, { scope });
+      storageImageStore, { scope, attempt: request.retryCount ?? 0 });
     if (scope !== 'feedback') await settleOrchestratedResolve(db, d.jobId, scope, outcome);
   },
 );
@@ -439,7 +497,7 @@ export async function processOcrFollowUpTask(db: Firestore, jobId: string, feedb
     { ...opts, scope: 'refresh', followUpRound: round });
   if (outcome !== 'done') {
     const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
-    const status = outcome === 'superseded' || outcome === 'stale' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
+    const status = outcome === 'superseded' || outcome === 'stale' || outcome === 'busy' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
     await db.runTransaction(async (tx) => {
       const cur = await tx.get(ref);
       const f = (cur.data() as CurrentDoc | undefined)?.followUp ?? null;
@@ -470,7 +528,8 @@ export const refreshTrackingOcrTask = onTaskDispatched(
  */
 export async function settleOrchestratedResolve(db: Firestore, jobId: string, scope: ReportScope,
   outcome: Awaited<ReturnType<typeof processResolveTask>>, now = new Date()): Promise<void> {
-  if (outcome === 'done' || outcome === 'held') return;
+  // 'busy': another delivery holds the claim and settles the run itself.
+  if (outcome === 'done' || outcome === 'held' || outcome === 'busy') return;
   const ref = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc('progress');
   const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped');
   await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });

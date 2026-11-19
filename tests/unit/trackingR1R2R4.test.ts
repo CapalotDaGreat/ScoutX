@@ -289,3 +289,179 @@ test('idempotency: a duplicate extract task while an attempt runs makes no secon
   assert.equal(retryCalls, 1);
   setEmulatorCvApproval(null);
 });
+
+// ---------------------------------------------------------------- simultaneous delivery: atomic claim + fencing
+/** Transactions run one at a time, as Firestore serialises conflicting transactions on one document. */
+function serial(f: ReturnType<typeof fakeDb>) {
+  const db = f.db as unknown as { runTransaction: (fn: (tx: unknown) => Promise<unknown>) => Promise<unknown> };
+  const inner = db.runTransaction.bind(db);
+  let chain: Promise<unknown> = Promise.resolve();
+  db.runTransaction = (fn) => { const run = chain.then(() => inner(fn)); chain = run.catch(() => undefined); return run; };
+  return f;
+}
+/** A barrier both deliveries reach before either may call the worker. */
+function barrier(n: number) {
+  let waiting = 0; let open!: () => void;
+  const gate = new Promise<void>((r) => { open = r; });
+  return async () => { waiting += 1; if (waiting >= n) open(); await gate; };
+}
+const progressOf = (f: ReturnType<typeof fakeDb>) => f.data.get('matchAnalysisJobs/job_1/tracking/progress') as Record<string, unknown>;
+const heldVersion = (f: ReturnType<typeof fakeDb>) => (f.data.get('matchAnalysisJobs/job_1/pilotHeld/current') as { version?: number } | undefined)?.version ?? 0;
+
+test('claim: two simultaneous deliveries of the same full resolve make one worker call and one report version', async () => {
+  setEmulatorCvApproval(approval);
+  const f = serial(fakeDb(seed(pilot())));
+  const bucket = memBucket();
+  const store = async (p: string, b: Buffer) => bucket.save(heldImagePath(p), b);
+  const both = barrier(2);
+  let calls = 0;
+  const client = async () => { calls += 1; return worker()(); };
+  // the barrier sits before the claim (after the read-only pre-checks), so both deliveries pass the
+  // idempotency pre-check before either has stored anything: the exact interleaving of the race
+  const deliver = async () => { await both(); return processResolveTask(f.db, 'job_1', 0, client, env, store, { scope: 'full', images: bucket }); };
+  const outcomes = (await Promise.all([deliver(), deliver()])).sort();
+  assert.deepEqual(outcomes, ['busy', 'held']);
+  assert.equal(calls, 1, 'one worker call');
+  assert.equal(heldVersion(f), 1, 'one report version');
+  assert.equal([...bucket.objects.keys()].length, 2, 'one set of images');
+  assert.ok((progressOf(f).resolveClaim as { finishedAt?: string }).finishedAt, 'the claim stays as the completion record');
+  // a third delivery of the same key long after (lease expired) is still a no-op: no worker call
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, client, env, store, { scope: 'full', images: bucket,
+    now: () => new Date(Date.now() + 60 * 60 * 1000) }), 'stale');
+  assert.equal(calls, 1);
+  setEmulatorCvApproval(null);
+});
+
+test('claim: a resolve taken over by a queue retry cannot publish; the retry publishes once; no stray images', async () => {
+  setEmulatorCvApproval(approval);
+  const f = serial(fakeDb(seed(pilot())));
+  const bucket = memBucket();
+  const store = async (p: string, b: Buffer) => bucket.save(heldImagePath(p), b);
+  let calls = 0;
+  let retry: string | undefined;
+  const client = async () => {
+    calls += 1;
+    // attempt 0 is "lost" after the worker accepted it (response never came back): Cloud Tasks redelivers as attempt 1
+    if (calls === 1) retry = await processResolveTask(f.db, 'job_1', 0, async () => { calls += 1; return worker()(); }, env, store,
+      { scope: 'full', images: bucket, attempt: 1 });
+    return worker()();
+  };
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, client, env, store, { scope: 'full', images: bucket, attempt: 0 }), 'stale');
+  assert.equal(retry, 'held');
+  assert.equal(calls, 2, 'documented exposure: a lost response re-executes the worker (no idempotency key in the worker contract)');
+  assert.equal(heldVersion(f), 1, 'but only one report version');
+  assert.equal([...bucket.objects.keys()].length, 2, 'the fenced attempt discarded its own images, not the retry\'s');
+  setEmulatorCvApproval(null);
+});
+
+test('claim: a live claim blocks a same-attempt duplicate; an expired claim or a later attempt recovers it', async () => {
+  setEmulatorCvApproval(approval);
+  const key = '0|full|2026-11-19T10:00:00.000Z';
+  for (const [startedAt, attempt, expect] of [
+    [new Date().toISOString(), 0, 'busy'],
+    [new Date(Date.now() - 17 * 60 * 1000).toISOString(), 0, 'held'],
+    [new Date().toISOString(), 1, 'held'],
+  ] as const) {
+    const f = serial(fakeDb(seed(pilot())));
+    f.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...progressOf(f), resolveClaim: { key, attempt: 0, startedAt, token: '0:crashed' } });
+    let calls = 0;
+    const bucket = memBucket();
+    const out = await processResolveTask(f.db, 'job_1', 0, async () => { calls += 1; return worker()(); }, env,
+      async (p, b) => bucket.save(heldImagePath(p), b), { scope: 'full', images: bucket, attempt });
+    assert.equal(out, expect, `${startedAt} attempt ${attempt}`);
+    assert.equal(calls, expect === 'busy' ? 0 : 1);
+  }
+  setEmulatorCvApproval(null);
+});
+
+test('claim: a claimant whose run was stopped and re-enabled meanwhile publishes nothing; the re-authorised run does', async () => {
+  setEmulatorCvApproval(approval);
+  const f = serial(fakeDb(seed(pilot())));
+  const bucket = memBucket();
+  const store = async (p: string, b: Buffer) => bucket.save(heldImagePath(p), b);
+  const restart = () => {
+    f.data.set('opsConfig/trackingPilot', pilot({ enabled: false }));
+    f.data.set('opsConfig/trackingPilot', pilot({ enabledAt: '2026-11-19T12:00:00.000Z' }));
+  };
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, worker(restart), env, store, { scope: 'full', images: bucket }), 'stopped');
+  assert.equal(heldVersion(f), 0);
+  assert.equal(bucket.objects.size, 0);
+  f.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...progressOf(f), pilotAuthorizedAt: '2026-11-19T12:30:00.000Z' });
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, worker(), env, store, { scope: 'full', images: bucket }), 'held');
+  assert.equal(heldVersion(f), 1);
+  setEmulatorCvApproval(null);
+});
+
+test('claim: simultaneous extract deliveries make one worker call and enqueue one resolve', async () => {
+  setEmulatorCvApproval(approval);
+  const f = serial(fakeDb(seed(pilot())));
+  f.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...progressOf(f), resolving: null, segments: { 0: { status: 'queued', attempts: 0 } } });
+  const both = barrier(2);
+  let calls = 0; const enqueued: unknown[] = [];
+  const client = async () => { calls += 1; return { status: 'complete', processingSec: 1 }; };
+  const deliver = async () => { await both(); return processExtractTask(f.db, 'job_1', 1, 0, 0, client as never, async (_n, p) => { enqueued.push(p); },
+    env, async () => 'https://storage.invalid/source'); };
+  assert.deepEqual((await Promise.all([deliver(), deliver()])).sort(), ['done', 'stale']);
+  assert.equal(calls, 1);
+  assert.equal(enqueued.length, 1, 'one resolve enqueued');
+  setEmulatorCvApproval(null);
+});
+
+test('claim: an extract claimant taken over (retry) or reset (resume) cannot record its outcome, success or failure', async () => {
+  setEmulatorCvApproval(approval);
+  for (const late of ['complete', 'failed'] as const) {
+    for (const interference of ['retry', 'resume'] as const) {
+      const f = serial(fakeDb(seed(pilot())));
+      f.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...progressOf(f), resolving: null, segments: { 0: { status: 'queued', attempts: 0 } } });
+      const enqueued: unknown[] = []; const notices: unknown[] = [];
+      const enqueue = async (_n: string, p: unknown) => { enqueued.push(p); };
+      const src = async () => 'https://storage.invalid/source';
+      let calls = 0;
+      const client = async () => {
+        calls += 1;
+        if (calls === 1) {
+          if (interference === 'retry') {
+            assert.equal(await processExtractTask(f.db, 'job_1', 1, 0, 2, (async () => { calls += 1; return { status: 'complete' }; }) as never, enqueue, env, src), 'done');
+          } else {
+            f.data.set('matchAnalysisJobs/job_1/tracking/progress', { ...progressOf(f), segments: { 0: { status: 'queued', attempts: 0 } } });
+          }
+        }
+        return late === 'complete' ? { status: 'complete' } : null;
+      };
+      // attempt 2 is the last one: a late failure would otherwise mark the run interrupted and notify the player
+      const out = await processExtractTask(f.db, 'job_1', 1, 0, interference === 'retry' ? 1 : 2, client as never, enqueue, env, src,
+        () => new Date(), async (id, input) => { notices.push([id, input]); });
+      assert.equal(out, 'stale', `${late}/${interference}`);
+      const seg = (progressOf(f).segments as Record<string, { status: string }>)['0'];
+      assert.equal(seg.status, interference === 'retry' ? 'done' : 'queued', `${late}/${interference}: state belongs to the current claimant`);
+      assert.equal(progressOf(f).outcome, null, 'not marked interrupted');
+      assert.equal(notices.length, 0, 'no notification');
+      assert.equal(enqueued.length, interference === 'retry' ? 1 : 0, 'resolve enqueued once, by the current claimant only');
+    }
+  }
+  setEmulatorCvApproval(null);
+});
+
+test('claim: a repeated delivery of a finished segment ("report finished" again) makes no call and no side effect', async () => {
+  setEmulatorCvApproval(approval);
+  const f = serial(fakeDb(seed(pilot())));
+  let calls = 0; const enqueued: unknown[] = [];
+  const before = JSON.stringify(progressOf(f));
+  assert.equal(await processExtractTask(f.db, 'job_1', 1, 0, 0, (async () => { calls += 1; return { status: 'complete' }; }) as never,
+    async (_n, p) => { enqueued.push(p); }, env, async () => 'x'), 'stale');
+  assert.equal(calls, 0); assert.equal(enqueued.length, 0);
+  assert.equal(JSON.stringify(progressOf(f)), before);
+  setEmulatorCvApproval(null);
+});
+
+test('claim: a failed resolve frees its claim so the queue retry runs; a stored report keeps it', async () => {
+  setEmulatorCvApproval(approval);
+  const f = serial(fakeDb(seed(pilot())));
+  const bucket = memBucket();
+  const store = async (p: string, b: Buffer) => bucket.save(heldImagePath(p), b);
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, async () => null, env, store, { scope: 'full', images: bucket }), 'rejected');
+  assert.equal(progressOf(f).resolveClaim, null, 'freed after a failure');
+  assert.equal(await processResolveTask(f.db, 'job_1', 0, worker(), env, store, { scope: 'full', images: bucket, attempt: 1 }), 'held');
+  assert.equal(heldVersion(f), 1);
+  setEmulatorCvApproval(null);
+});

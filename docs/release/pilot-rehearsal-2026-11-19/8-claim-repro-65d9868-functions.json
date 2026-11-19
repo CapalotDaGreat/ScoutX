@@ -1,0 +1,512 @@
+{
+ "project": "demo-pilot-reh",
+ "commit": "b0b5ceb60921e56157471084e211b29dc4bcd7ef",
+ "startedAt": "2026-11-19T21:29:42.583Z",
+ "steps": [
+  {
+   "at": "2026-11-19T21:29:42.642Z",
+   "name": "users",
+   "owner": "BHIM3HNWAmNiaJ2LCa1SYNS7GMa3",
+   "owner2": "zNalMysqYd2TKZncGhlI6FRz4wWv",
+   "owner3": "zJk9AxHtiC0Cq1d19vFvEdlHS2jy",
+   "outsider": "vCVZq8SbitYc6AMrdh5OZRyahoNA",
+   "other": "E5upUgcK4uvD8N1mydYsvk5JQC3h"
+  },
+  {
+   "at": "2026-11-19T21:29:42.642Z",
+   "name": "phase gate"
+  },
+  {
+   "at": "2026-11-19T21:29:58.651Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "g_missing"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T21:29:58.738Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "g_malformed"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T21:29:59.266Z",
+   "name": "ops enable --allow BHIM3HNWAmNiaJ2LCa1SYNS7GMa3,zNalMysqYd2TKZncGhlI6FRz4wWv,zJk9AxHtiC0Cq1d19vFvEdlHS2jy --worker-version football-cv/0.7.0-reh-other",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"BHIM3HNWAmNiaJ2LCa1SYNS7GMa3\",\"zNalMysqYd2TKZncGhlI6FRz4wWv\",\"zJk9AxHtiC0Cq1d19vFvEdlHS2jy\"],\"workerVersion\":\"football-cv/0.7.0-reh-other\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T21:29:59.376Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner3",
+   "data": {
+    "jobId": "g_version"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T21:29:59.924Z",
+   "name": "ops enable --allow BHIM3HNWAmNiaJ2LCa1SYNS7GMa3,zNalMysqYd2TKZncGhlI6FRz4wWv,zJk9AxHtiC0Cq1d19vFvEdlHS2jy --worker-version football-cv/0.7.0-reh",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"BHIM3HNWAmNiaJ2LCa1SYNS7GMa3\",\"zNalMysqYd2TKZncGhlI6FRz4wWv\",\"zJk9AxHtiC0Cq1d19vFvEdlHS2jy\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T21:30:00.022Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "outsider",
+   "data": {
+    "jobId": "g_unlisted"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T21:30:00.094Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "other",
+   "data": {
+    "jobId": "g_missing"
+   },
+   "http": 403,
+   "result": null,
+   "error": {
+    "status": "PERMISSION_DENIED",
+    "message": "Only the owner can start this analysis.",
+    "details": null
+   }
+  },
+  {
+   "at": "2026-11-19T21:30:00.107Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "anonymous",
+   "data": {
+    "jobId": "g_missing"
+   },
+   "http": 401,
+   "result": null,
+   "error": {
+    "status": "UNAUTHENTICATED",
+    "message": "Sign in first.",
+    "details": null
+   }
+  },
+  {
+   "at": "2026-11-19T21:30:00.165Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "g_consent"
+   },
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "consent_required"
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T21:30:00.284Z",
+   "name": "callable startPlayerAnalysis",
+   "user": "owner",
+   "data": {
+    "jobId": "g_wrongmodel"
+   },
+   "http": 200,
+   "result": {
+    "status": "started",
+    "generation": 1,
+    "segments": 1
+   },
+   "error": null
+  },
+  {
+   "at": "2026-11-19T21:30:05.648Z",
+   "name": "phase claim"
+  },
+  {
+   "at": "2026-11-19T21:30:06.177Z",
+   "name": "ops enable --allow BHIM3HNWAmNiaJ2LCa1SYNS7GMa3,zNalMysqYd2TKZncGhlI6FRz4wWv,zJk9AxHtiC0Cq1d19vFvEdlHS2jy --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"BHIM3HNWAmNiaJ2LCa1SYNS7GMa3\",\"zNalMysqYd2TKZncGhlI6FRz4wWv\",\"zJk9AxHtiC0Cq1d19vFvEdlHS2jy\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T21:30:09.595Z",
+   "name": "claim extract simultaneous",
+   "jobId": "claim_x_nzlr1",
+   "arrivedAtBarrier": 2,
+   "outcomes": [
+    "done",
+    "stale"
+   ],
+   "workerCalls": 1,
+   "resolvesEnqueued": 1,
+   "segment": {
+    "status": "done",
+    "attempts": 1
+   }
+  },
+  {
+   "at": "2026-11-19T21:30:12.825Z",
+   "name": "claim resolve simultaneous",
+   "jobId": "claim_r_xf5eq",
+   "arrivedAtBarrier": 2,
+   "outcomes": [
+    "held",
+    "stale"
+   ],
+   "workerCalls": 2,
+   "heldVersion": 1
+  },
+  {
+   "at": "2026-11-19T21:30:13.295Z",
+   "name": "claim resolve duplicate during execution",
+   "jobId": "claim_d_9gshs",
+   "duplicate": "held",
+   "first": "stale",
+   "workerCalls": 2,
+   "heldVersion": 1,
+   "resolvingDuringDuplicate": null
+  },
+  {
+   "at": "2026-11-19T21:30:13.726Z",
+   "name": "claim resolve takeover",
+   "jobId": "claim_t_3h4ff",
+   "retry": "held",
+   "late": "stale",
+   "workerCalls": 2,
+   "versionAfterRetry": 1,
+   "versionAfterLate": 1
+  },
+  {
+   "at": "2026-11-19T21:30:14.458Z",
+   "name": "ops stop",
+   "exit": 0,
+   "stdout": "{\"command\":\"stop\",\"jobId\":null,\"stopped\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T21:30:14.878Z",
+   "name": "ops enable --allow BHIM3HNWAmNiaJ2LCa1SYNS7GMa3,zNalMysqYd2TKZncGhlI6FRz4wWv,zJk9AxHtiC0Cq1d19vFvEdlHS2jy --worker-version football-cv/0.7.0-reh --hold true",
+   "exit": 0,
+   "stdout": "{\"command\":\"enable\",\"jobId\":\"--allow\",\"enabled\":true,\"allow\":[\"BHIM3HNWAmNiaJ2LCa1SYNS7GMa3\",\"zNalMysqYd2TKZncGhlI6FRz4wWv\",\"zJk9AxHtiC0Cq1d19vFvEdlHS2jy\"],\"workerVersion\":\"football-cv/0.7.0-reh\",\"holdReports\":true}",
+   "stderr": ""
+  },
+  {
+   "at": "2026-11-19T21:30:14.908Z",
+   "name": "claim extract after stop and re-enable",
+   "jobId": "claim_s_bv69m",
+   "late": "done",
+   "segment": {
+    "status": "done",
+    "attempts": 1
+   },
+   "resolvesEnqueued": 1
+  },
+  {
+   "at": "2026-11-19T21:30:14.958Z",
+   "name": "enqueue extractTrackingSegmentTask",
+   "payload": {
+    "jobId": "claim_qe_2kpru",
+    "generation": 1,
+    "index": 0
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T21:30:14.958Z",
+   "name": "enqueue extractTrackingSegmentTask",
+   "payload": {
+    "jobId": "claim_qe_2kpru",
+    "generation": 1,
+    "index": 0
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T21:30:25.048Z",
+   "name": "claim queue duplicate extract",
+   "jobId": "claim_qe_2kpru",
+   "callsWhileHeld": 1,
+   "workerCalls": 1,
+   "segments": {
+    "0": "done/1"
+   },
+   "heldVersion": 1,
+   "settled": true
+  },
+  {
+   "at": "2026-11-19T21:30:25.098Z",
+   "name": "enqueue resolveTrackingTask",
+   "payload": {
+    "jobId": "claim_qr_03tsc",
+    "feedbackRevision": 0,
+    "scope": "full"
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T21:30:25.099Z",
+   "name": "enqueue resolveTrackingTask",
+   "payload": {
+    "jobId": "claim_qr_03tsc",
+    "feedbackRevision": 0,
+    "scope": "full"
+   },
+   "opts": {}
+  },
+  {
+   "at": "2026-11-19T21:30:35.188Z",
+   "name": "claim queue duplicate resolve",
+   "jobId": "claim_qr_03tsc",
+   "callsWhileHeld": 2,
+   "workerCalls": 2,
+   "segments": {
+    "0": "done/1"
+   },
+   "heldVersion": 1,
+   "settled": true
+  }
+ ],
+ "checks": [
+  {
+   "id": "gate.missing_config.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.malformed_config.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.version_mismatch.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.not_allowlisted.start_blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "worker_unavailable"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.non_owner.permission_denied",
+   "ok": true,
+   "http": 403,
+   "result": null,
+   "error": {
+    "status": "PERMISSION_DENIED",
+    "message": "Only the owner can start this analysis.",
+    "details": null
+   }
+  },
+  {
+   "id": "gate.anonymous.unauthenticated",
+   "ok": true,
+   "http": 401,
+   "result": null,
+   "error": {
+    "status": "UNAUTHENTICATED",
+    "message": "Sign in first.",
+    "details": null
+   }
+  },
+  {
+   "id": "gate.consent_missing.blocked",
+   "ok": true,
+   "http": 200,
+   "result": {
+    "status": "blocked",
+    "generation": 1,
+    "segments": 1,
+    "blocked": "consent_required"
+   },
+   "error": null
+  },
+  {
+   "id": "gate.wrong_models.rejected",
+   "ok": true,
+   "progress": {
+    "generation": 1,
+    "outcome": "interrupted",
+    "blocked": null,
+    "pilot": null,
+    "resolving": null,
+    "held": null,
+    "full": false,
+    "authorizedAt": "2026-11-19T21:30:00.190Z",
+    "segments": {
+     "0": "done/1"
+    }
+   },
+   "current": null,
+   "held": null,
+   "feedback": null,
+   "discovery": null,
+   "heldDiscovery": null
+  },
+  {
+   "id": "gate.blocked_jobs.no_worker_calls",
+   "ok": true,
+   "noCalls": [
+    [
+     "g_missing",
+     0
+    ],
+    [
+     "g_malformed",
+     0
+    ],
+    [
+     "g_version",
+     0
+    ],
+    [
+     "g_unlisted",
+     0
+    ],
+    [
+     "g_consent",
+     0
+    ]
+   ]
+  },
+  {
+   "id": "claim.extract_simultaneous_one_worker_call",
+   "ok": true,
+   "outcomes": [
+    "done",
+    "stale"
+   ],
+   "calls": 1,
+   "enq": 1
+  },
+  {
+   "id": "claim.resolve_simultaneous_one_worker_call",
+   "ok": false,
+   "outcomes": [
+    "held",
+    "stale"
+   ],
+   "calls": 2,
+   "version": 1
+  },
+  {
+   "id": "claim.resolve_duplicate_during_execution_noop",
+   "ok": false,
+   "dup": "held",
+   "out": "stale",
+   "calls": 2
+  },
+  {
+   "id": "claim.stale_resolve_claimant_cannot_publish",
+   "ok": true,
+   "retry": "held",
+   "late": "stale",
+   "calls": 2,
+   "v1": 1,
+   "v": 1
+  },
+  {
+   "id": "claim.stale_extract_claimant_after_reenable_records_nothing",
+   "ok": false,
+   "late": "done",
+   "seg": "done",
+   "enq": 1
+  },
+  {
+   "id": "claim.queue_duplicate_extract_one_worker_call",
+   "ok": true,
+   "callsWhileHeld": 1,
+   "calls": 1,
+   "t": {
+    "0": "done/1"
+   },
+   "v": 1
+  },
+  {
+   "id": "claim.queue_duplicate_resolve_one_worker_call",
+   "ok": false,
+   "callsWhileHeld": 2,
+   "calls": 2,
+   "t": {
+    "0": "done/1"
+   },
+   "v": 1
+  }
+ ],
+ "finishedAt": "2026-11-19T21:30:35.188Z",
+ "summary": {
+  "passed": 12,
+  "failed": [
+   "claim.resolve_simultaneous_one_worker_call",
+   "claim.resolve_duplicate_during_execution_noop",
+   "claim.stale_extract_claimant_after_reenable_records_nothing",
+   "claim.queue_duplicate_resolve_one_worker_call"
+  ]
+ }
+}

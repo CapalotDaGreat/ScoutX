@@ -5,7 +5,7 @@
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT="${1:-$ROOT/rehearsal-evidence.json}"
-PHASES="${2:-gate,rollback,race,r4,r1,r2legacy,legacy,cleanup,r3}"
+PHASES="${2:-gate,rollback,race,claim,r4,r1,r2legacy,legacy,cleanup,r3}"
 PROJECT=demo-pilot-reh
 FIREBASE_BIN="${FIREBASE_BIN:-npx firebase}"
 VERSION=football-cv/0.7.0-reh

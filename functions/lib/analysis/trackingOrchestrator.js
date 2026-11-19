@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractTrackingSegmentTask = exports.startPlayerAnalysis = exports.discoverTrackingTask = exports.DISCOVERY_COLLECTION_DOC = exports.cloudTasksEnqueue = exports.EXTRACT_MAX_ATTEMPTS = exports.PLAYER_ANALYSIS_START_LIMIT = void 0;
+exports.extractTrackingSegmentTask = exports.startPlayerAnalysis = exports.discoverTrackingTask = exports.DISCOVERY_COLLECTION_DOC = exports.EXTRACT_LEASE_MS = exports.cloudTasksEnqueue = exports.EXTRACT_MAX_ATTEMPTS = exports.PLAYER_ANALYSIS_START_LIMIT = void 0;
 exports.startAnalysis = startAnalysis;
 exports.processExtractTask = processExtractTask;
 exports.processDiscoverTask = processDiscoverTask;
+const node_crypto_1 = require("node:crypto");
 /**
  * Video Intelligence 4.0 - progressive, resumable player analysis.
  *
@@ -138,8 +139,11 @@ async function startAnalysis(db, uid, jobId, enqueue, env = process.env, now = n
  * One segment of stage 1. `attempt` is the Cloud Tasks retry count (0-based); a failure on the
  * last attempt marks the analysis interrupted and notifies the owner once.
  */
-/** Longer than the extract task's 900 s timeout: a lease this old belongs to an attempt that cannot still be running. */
-const EXTRACT_LEASE_MS = 16 * 60 * 1000;
+/**
+ * Claim lease for one segment attempt: longer than the extract task's 1800 s timeout, so a claim this old belongs to an
+ * attempt that can no longer be running (2026-11-19: was 16 min, shorter than the timeout).
+ */
+exports.EXTRACT_LEASE_MS = 31 * 60 * 1000;
 async function processExtractTask(db, jobId, generation, index, attempt, client, enqueue, env = process.env, sourceUrl = async (p) => (await (0, mediaSource_1.readableSourceFor)(p, 60 * 60 * 1000)).url, now = () => new Date(), notify) {
     const ref = progressRef(db, jobId);
     const jobSnap = await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get();
@@ -165,20 +169,27 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
     // attempt with the same or a later attempt number is running does not call the worker again. A genuine
     // retry carries a higher attempt number (X-CloudTasks-TaskRetryCount) and proceeds; a lease older than
     // the task timeout no longer blocks.
+    // The claim carries a fencing token: only the current claimant may record the outcome, so a claimant that
+    // was taken over (expired lease, queue retry) or whose run was reset (stop, resume) cannot overwrite state.
+    const token = `${attempt}:${(0, node_crypto_1.randomUUID)()}`;
     const claimed = await db.runTransaction(async (tx) => {
         const cur = (await tx.get(ref)).data();
-        const s = cur?.segments?.[String(index)];
+        if (!cur || cur.generation !== generation || cur.outcome)
+            return false;
+        const s = cur.segments?.[String(index)];
         if (s?.status === 'done')
             return false;
         if (s?.status === 'running' && (s.attempts ?? 0) > attempt && s.startedAt
-            && now().getTime() - Date.parse(s.startedAt) < EXTRACT_LEASE_MS)
+            && now().getTime() - Date.parse(s.startedAt) < exports.EXTRACT_LEASE_MS)
             return false;
-        tx.set(ref, { segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString() } },
+        tx.set(ref, { segments: { [String(index)]: { status: 'running', attempts: attempt + 1, startedAt: now().toISOString(), claim: token } },
             updatedAt: now().toISOString() }, { merge: true });
         return true;
     });
     if (!claimed)
         return 'stale';
+    const stillMine = (p) => Boolean(p && p.generation === generation
+        && p.segments?.[String(index)]?.claim === token);
     const res = await client({
         contractVersion: 3, jobId, segmentIndex: index, startSec: seg.startSec, endSec: seg.endSec,
         source: { url: await sourceUrl(job.videoStoragePath) },
@@ -187,8 +198,16 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
     const at = now().toISOString();
     if (!res || (res.status !== 'complete' && res.status !== 'cached')) {
         const last = attempt + 1 >= exports.EXTRACT_MAX_ATTEMPTS;
-        await ref.set({ segments: { [String(index)]: { status: last ? 'failed' : 'queued', attempts: attempt + 1 } },
-            ...(last ? { outcome: 'interrupted' } : {}), updatedAt: at }, { merge: true });
+        const recorded = await db.runTransaction(async (tx) => {
+            if (!stillMine((await tx.get(ref)).data()))
+                return false;
+            tx.set(ref, { segments: { [String(index)]: { status: last ? 'failed' : 'queued', attempts: attempt + 1, claim: null } },
+                ...(last ? { outcome: 'interrupted' } : {}), updatedAt: at }, { merge: true });
+            return true;
+        });
+        // Taken over meanwhile: the current claimant owns the outcome; this delivery ends quietly (no queue retry).
+        if (!recorded)
+            return 'stale';
         if (!last)
             return 'retry';
         await (0, trackingCallables_1.markTrackingFailed)(db, jobId, new Date(at));
@@ -206,7 +225,9 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
         const fresh = (await tx.get(ref)).data();
         if (!fresh || fresh.generation !== generation)
             return null;
-        const segments = { ...fresh.segments, [String(index)]: { status: 'done', attempts: attempt + 1, doneAt: at,
+        if (!stillMine(fresh))
+            return 'fenced';
+        const segments = { ...fresh.segments, [String(index)]: { status: 'done', attempts: attempt + 1, doneAt: at, claim: null,
                 ...(processingSec !== undefined ? { processingSec } : {}) } };
         const done = (0, trackingProgress_1.doneCount)({ segments });
         const total = fresh.plan.length;
@@ -218,6 +239,8 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
         tx.set(ref, { segments, updatedAt: at, ...(resolve ? { resolving: resolve } : {}) }, { merge: true });
         return resolve;
     });
+    if (next === 'fenced')
+        return 'stale';
     if (next)
         await enqueue('resolveTrackingTask', { jobId, feedbackRevision: 0, scope: next });
     return res.status === 'cached' ? 'cached' : 'done';
@@ -277,7 +300,7 @@ async function processDiscoverTask(db, jobId, generation, index, attempt, client
         const jpeg = (0, trackingV3_1.decodeReviewImage)(raw.get(m.id));
         if (!jpeg)
             continue;
-        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${m.id}_g${generation}_${Date.parse(at).toString(36)}`);
+        const path = (0, trackingV3_1.reviewImagePath)(job.playerId, jobId, `${m.id}_g${generation}_${Date.parse(at).toString(36)}${(0, node_crypto_1.randomUUID)().replace(/-/g, '').slice(0, 6)}`);
         await storeImage(path, jpeg);
         staged.push(path);
         m.imagePath = path;

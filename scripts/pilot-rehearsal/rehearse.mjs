@@ -30,7 +30,7 @@ const SINK = 'http://127.0.0.1:8791';
 const BUCKET = `${PROJECT}.appspot.com`;
 const VERSION = process.env.FAKE_WORKER_VERSION ?? 'football-cv/0.7.0-reh';
 const OUT = process.env.REHEARSAL_OUT ?? path.join(root, 'rehearsal-evidence.json');
-const PHASES = (process.env.REHEARSAL_PHASES ?? 'gate,rollback,race,r4,r1,r2legacy,legacy,cleanup,r3').split(',');
+const PHASES = (process.env.REHEARSAL_PHASES ?? 'gate,rollback,race,claim,r4,r1,r2legacy,legacy,cleanup,r3').split(',');
 
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
@@ -528,6 +528,151 @@ async function phaseRace() {
   }
 }
 
+async function phaseClaim() {
+  // Simultaneous delivery of the same logical task (2026-11-19). In-process, the real processExtractTask /
+  // processResolveTask against the Firestore emulator and the HTTP fake worker (whose request log counts worker
+  // calls). Barrier: each delivery is paused at its first transactional read of tracking/progress (the claim; every
+  // read-only pre-check is done by then) until both have arrived, so neither can have claimed or called the worker
+  // before the other has passed its pre-checks. A build without a claim reads progress transactionally only after
+  // the worker call (resolve) - both calls then happen before the barrier and are counted; a 3 s cap prevents a
+  // deadlock if only one delivery ever arrives.
+  const lib = (p) => require(path.join(root, 'functions/lib/analysis', p));
+  const { setEmulatorCvApproval } = lib('cvConfig.js');
+  const { processResolveTask, httpTrackingClient } = lib('trackingCallables.js');
+  const { processExtractTask } = lib('trackingOrchestrator.js');
+  setEmulatorCvApproval({ workerVersion: VERSION, models: { detector: 'yolox-reh', ocr: 'parseq-reh' }, eventsApproved: false });
+  const env = { FUNCTIONS_EMULATOR: 'true', FIRESTORE_EMULATOR_HOST: process.env.FIRESTORE_EMULATOR_HOST, CV_WORKER_URL: WORKER,
+    CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true' };
+  const A = users.owner;
+  ops('enable', '--allow', ALLOW(), '--worker-version', VERSION, '--hold', 'true');
+  const enabledAt = (await doc('opsConfig/trackingPilot')).enabledAt;
+  const workerCalls = async (jobId, route) => (await (await fetch(`${WORKER}/_ctl/log`)).json()).filter((e) => e.jobId === jobId && e.route === route).length;
+  function barrierDb(n) {
+    let arrived = 0; let open; const gate = new Promise((r) => { open = r; });
+    setTimeout(() => open(), 3000).unref?.();
+    const arrive = async () => { arrived += 1; if (arrived >= n) open(); await gate; };
+    const make = () => { let first = true; return new Proxy(db, { get(t, p) {
+      if (p === 'runTransaction') {
+        return (fn, o) => t.runTransaction((tx) => fn(new Proxy(tx, { get(tt, pp) {
+          if (pp !== 'get') { const v = tt[pp]; return typeof v === 'function' ? v.bind(tt) : v; }
+          return async (ref) => { if (first && ref.path?.endsWith('/tracking/progress')) { first = false; await arrive(); } return tt.get(ref); };
+        } })), o);
+      }
+      const v = t[p]; return typeof v === 'function' ? v.bind(t) : v; } }); };
+    return { make, arrived: () => arrived };
+  }
+  async function seedRun(jobId, segments, extra = {}) {
+    await seedJob(jobId, A, { trackingState: 'running' });
+    await db.doc(`matchAnalysisJobs/${jobId}/tracking/progress`).set({ schema: 'pitchproof.tracking-progress.v1', generation: 1, durationSec: 60,
+      plan: [{ index: 0, startSec: 0, endSec: 60 }], segments, startedAt: enabledAt, updatedAt: enabledAt,
+      resolving: null, preliminary: null, full: null, outcome: null, blocked: null, pilotAuthorizedAt: new Date().toISOString(), ...extra });
+  }
+  const src = async () => `${WORKER}/no-source`;
+  // 1. Extract: two copies of segment 0 at the same moment.
+  {
+    const jobId = `claim_x_${Math.random().toString(36).slice(2, 7)}`;
+    await seedRun(jobId, { 0: { status: 'queued', attempts: 0 } });
+    const b = barrierDb(2); const enq = [];
+    const deliver = () => processExtractTask(b.make(), jobId, 1, 0, 0, httpTrackingClient(WORKER, env, 'extract'), async (n, p) => { enq.push([n, p]); }, env, src);
+    const outcomes = (await Promise.all([deliver(), deliver()])).sort();
+    const calls = await workerCalls(jobId, 'extract');
+    const seg = (await doc(`matchAnalysisJobs/${jobId}/tracking/progress`)).segments['0'];
+    step('claim extract simultaneous', { jobId, arrivedAtBarrier: b.arrived(), outcomes, workerCalls: calls, resolvesEnqueued: enq.length, segment: { status: seg.status, attempts: seg.attempts } });
+    check('claim.extract_simultaneous_one_worker_call', calls === 1 && enq.length === 1 && seg.status === 'done', { outcomes, calls, enq: enq.length });
+  }
+  // 2. Resolve: two copies of the full resolve at the same moment.
+  {
+    const jobId = `claim_r_${Math.random().toString(36).slice(2, 7)}`;
+    await seedRun(jobId, { 0: { status: 'done', attempts: 1 } }, { resolving: 'full' });
+    const b = barrierDb(2);
+    const deliver = () => processResolveTask(b.make(), jobId, 0, httpTrackingClient(WORKER, env, 'resolve'), env, async () => undefined, { scope: 'full' });
+    const outcomes = (await Promise.all([deliver(), deliver()])).sort();
+    const calls = await workerCalls(jobId, 'resolve');
+    const held = await doc(`matchAnalysisJobs/${jobId}/pilotHeld/current`);
+    step('claim resolve simultaneous', { jobId, arrivedAtBarrier: b.arrived(), outcomes, workerCalls: calls, heldVersion: held?.version ?? null });
+    check('claim.resolve_simultaneous_one_worker_call', calls === 1 && held?.version === 1, { outcomes, calls, version: held?.version ?? null });
+  }
+  // 3. Resolve duplicate arriving while the first is executing (held at the worker), then the first finishes.
+  {
+    const jobId = `claim_d_${Math.random().toString(36).slice(2, 7)}`;
+    await seedRun(jobId, { 0: { status: 'done', attempts: 1 } }, { resolving: 'full' });
+    await ctl('plan', { jobId, route: 'resolve', action: 'hold', times: 1 });
+    const first = processResolveTask(db, jobId, 0, httpTrackingClient(WORKER, env, 'resolve'), env, async () => undefined, { scope: 'full' });
+    await waitFor(async () => (await (await fetch(`${WORKER}/_ctl/waiting?jobId=${jobId}&route=resolve`)).json()).waiting === 1);
+    const dup = await processResolveTask(db, jobId, 0, httpTrackingClient(WORKER, env, 'resolve'), env, async () => undefined, { scope: 'full' });
+    const progressDuring = await doc(`matchAnalysisJobs/${jobId}/tracking/progress`);
+    await ctl('release', { jobId, route: 'resolve' });
+    const out = await first;
+    const calls = await workerCalls(jobId, 'resolve');
+    const held = await doc(`matchAnalysisJobs/${jobId}/pilotHeld/current`);
+    step('claim resolve duplicate during execution', { jobId, duplicate: dup, first: out, workerCalls: calls, heldVersion: held?.version ?? null,
+      resolvingDuringDuplicate: progressDuring.resolving ?? null });
+    check('claim.resolve_duplicate_during_execution_noop', dup === 'busy' && out === 'held' && calls === 1 && held?.version === 1
+      && progressDuring.resolving === 'full', { dup, out, calls });
+  }
+  // 4. Lost worker response: attempt 0 held at the worker; the queue's retry (attempt 1) takes over and publishes;
+  //    attempt 0 returns afterwards and is fenced.
+  {
+    const jobId = `claim_t_${Math.random().toString(36).slice(2, 7)}`;
+    await seedRun(jobId, { 0: { status: 'done', attempts: 1 } }, { resolving: 'full' });
+    await ctl('plan', { jobId, route: 'resolve', action: 'hold', times: 1 });
+    const stale = processResolveTask(db, jobId, 0, httpTrackingClient(WORKER, env, 'resolve'), env, async () => undefined, { scope: 'full', attempt: 0 });
+    await waitFor(async () => (await (await fetch(`${WORKER}/_ctl/waiting?jobId=${jobId}&route=resolve`)).json()).waiting === 1);
+    const retry = await processResolveTask(db, jobId, 0, httpTrackingClient(WORKER, env, 'resolve'), env, async () => undefined, { scope: 'full', attempt: 1 });
+    const v1 = (await doc(`matchAnalysisJobs/${jobId}/pilotHeld/current`))?.version ?? null;
+    await ctl('release', { jobId, route: 'resolve' });
+    const late = await stale;
+    const held = await doc(`matchAnalysisJobs/${jobId}/pilotHeld/current`);
+    const calls = await workerCalls(jobId, 'resolve');
+    step('claim resolve takeover', { jobId, retry, late, workerCalls: calls, versionAfterRetry: v1, versionAfterLate: held?.version ?? null });
+    check('claim.stale_resolve_claimant_cannot_publish', retry === 'held' && late === 'stale' && v1 === 1 && held?.version === 1,
+      { retry, late, calls, v1, v: held?.version ?? null });
+  }
+  // 5. Extract: attempt 0 held at the worker, the run is stopped and resumed (segment reset), attempt 0 returns: fenced.
+  {
+    const jobId = `claim_s_${Math.random().toString(36).slice(2, 7)}`;
+    await seedRun(jobId, { 0: { status: 'queued', attempts: 0 } });
+    await ctl('plan', { jobId, route: 'extract', action: 'hold', times: 1 });
+    const enq = [];
+    const stale = processExtractTask(db, jobId, 1, 0, 0, httpTrackingClient(WORKER, env, 'extract'), async (n, p) => { enq.push([n, p]); }, env, src);
+    await waitFor(async () => (await (await fetch(`${WORKER}/_ctl/waiting?jobId=${jobId}&route=extract`)).json()).waiting === 1);
+    ops('stop');
+    ops('enable', '--allow', ALLOW(), '--worker-version', VERSION, '--hold', 'true');
+    await db.doc(`matchAnalysisJobs/${jobId}/tracking/progress`).set({ segments: { 0: { status: 'queued', attempts: 0, claim: null } },
+      pilotAuthorizedAt: new Date().toISOString() }, { merge: true });
+    await ctl('release', { jobId, route: 'extract' });
+    const late = await stale;
+    const seg = (await doc(`matchAnalysisJobs/${jobId}/tracking/progress`)).segments['0'];
+    step('claim extract after stop and re-enable', { jobId, late, segment: { status: seg.status, attempts: seg.attempts }, resolvesEnqueued: enq.length });
+    check('claim.stale_extract_claimant_after_reenable_records_nothing', late === 'stale' && seg.status === 'queued' && enq.length === 0,
+      { late, seg: seg.status, enq: enq.length });
+  }
+  // 6. Through the Functions + Cloud Tasks emulators: two distinct tasks (no task names, so no queue
+  //    deduplication) for the same segment and two for the same full resolve, dispatched concurrently; the first
+  //    of each is held at the worker so the second arrives while it executes.
+  for (const [route, queue] of [['extract', 'extractTrackingSegmentTask'], ['resolve', 'resolveTrackingTask']]) {
+    const jobId = `claim_q${route[0]}_${Math.random().toString(36).slice(2, 7)}`;
+    await seedRun(jobId, route === 'extract' ? { 0: { status: 'queued', attempts: 0 } } : { 0: { status: 'done', attempts: 1 } },
+      route === 'resolve' ? { resolving: 'full' } : {});
+    await ctl('plan', { jobId, route, action: 'hold', times: 1 });
+    const payload = route === 'extract' ? { jobId, generation: 1, index: 0 } : { jobId, feedbackRevision: 0, scope: 'full' };
+    await Promise.all([enqueue(queue, payload), enqueue(queue, payload)]);
+    await waitFor(async () => (await (await fetch(`${WORKER}/_ctl/waiting?jobId=${jobId}&route=${route}`)).json()).waiting === 1, 60000);
+    await sleep(6000); // the second delivery has run to completion by now (it makes no worker call)
+    const callsWhileHeld = await workerCalls(jobId, route);
+    await ctl('release', { jobId, route });
+    const st = await waitFor(async () => { const t = await trackingState(jobId); return route === 'extract' ? (t.progress?.segments?.['0'] === 'done/1' && t)
+      : (t.held?.hasReport && t); }, 60000);
+    await sleep(3000);
+    const calls = await workerCalls(jobId, route);
+    const t = await trackingState(jobId);
+    step(`claim queue duplicate ${route}`, { jobId, callsWhileHeld, workerCalls: calls, segments: t.progress?.segments ?? null,
+      heldVersion: t.held?.version ?? null, settled: Boolean(st) });
+    check(`claim.queue_duplicate_${route}_one_worker_call`, callsWhileHeld === 1 && calls === 1
+      && (route === 'extract' ? t.progress?.segments?.['0'] === 'done/1' : t.held?.version === 1), { callsWhileHeld, calls, t: t.progress?.segments, v: t.held?.version });
+  }
+}
+
 async function phaseLegacy() {
   const A = users.owner;
   await seedJob('l_frames', A, { status: 'uploaded', pipelineState: 'validating', videoStoragePath: null });
@@ -757,6 +902,7 @@ try {
       if (p === 'gate') await phaseGate();
       if (p === 'rollback') await phaseRollback();
       if (p === 'race') await phaseRace();
+      if (p === 'claim') await phaseClaim();
       if (p === 'legacy') await phaseLegacy();
       if (p === 'cleanup') await phaseCleanup();
       if (p === 'r4') await phaseR4();
