@@ -24,15 +24,15 @@ the subject's off-ball positioning in that moment? *yes / partly / no*.
 **Q1. Positioning.** Taken together, do these stretches allow a judgement about the subject's positioning
 *across the match* (not just in these moments)?
 ☐ Yes ☐ Only about these moments ☐ No
-Reason and times:
+Reason and times:  How sure? (sure / fairly sure / unsure)
 
 **Q2. Involvement.** Is the ball visible often enough, near the subject, to judge how involved the subject
 was in play (e.g. showing for the ball, touches)?
 ☐ Yes ☐ Partly ☐ No
-Reason and times:
+Reason and times:  How sure? (sure / fairly sure / unsure)
 
 **Q3. Clip-level advice.** In which clips, if any, is there enough context to give the subject one concrete
-piece of off-ball advice about *that moment*? List the clips and the advice you would give.
+piece of off-ball advice about *that moment*? List the clips, the advice you would give, the time it rests on, and how sure you are.
 
 **Q4. Distances.** Can you judge from these camera angles whether an opponent is within about 1 body height,
 or more than about 3 body heights, of the subject? ☐ Usually ☐ Sometimes ☐ Rarely

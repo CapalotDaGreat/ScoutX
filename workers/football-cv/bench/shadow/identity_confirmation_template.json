@@ -1,0 +1,12 @@
+{
+  "group": "m-YYYY-MM-DD-...",
+  "sourceFile": "IMG_xxxx.MOV",
+  "sourceTimestampSec": 0.0,
+  "answer": "yes | no | not sure  (only 'yes' allows freezing)",
+  "shirtNumber": "20",
+  "kit": "orange",
+  "scope": "this recording | until <source time> (e.g. substitution) | this timestamp only",
+  "confirmedBy": "owner",
+  "confirmedAt": "<ISO time of the owner's answer>",
+  "how": "owner's written answer to question Qn in owner-review-YYYY-MM-DD/README.txt (quote it)"
+}

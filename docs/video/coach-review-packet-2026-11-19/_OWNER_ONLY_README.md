@@ -1,7 +1,16 @@
 # Coach review packet, 2026-11-19: owner notes (do not share this file)
 
-Share with the reviewer only: `01_REVIEWER_INSTRUCTIONS.md`, `02_PART_A_answer_sheet.md`,
-`04_reviewer_record.md`, `clips/`, and **after Part A is returned** `03_PART_B_SEALED.md`.
+**Status (re-verified 2026-11-19 evening):** ready locally, NOT to be shared yet. Q1 in
+`owner-review-2026-11-18\README.txt` is still unanswered, so the clips cannot yet be presented as evidence about
+your player. If your answer is "no" or "not sure", tell Claude first: the clip selection and the texts depend on
+that identity and will be re-derived before anything is shared.
+
+Order of sharing (after Q1 = yes):
+1. Send `05_HANDOFF_NOTE.md` (fill in your name), `01_REVIEWER_INSTRUCTIONS.md`, `04_reviewer_record.md`,
+   `02_PART_A_answer_sheet.md` and `clips/`. Tell the reviewer who the subject is (kit, number, starting side).
+2. When the completed Part A and reviewer record come back, keep them as received (photo or PDF with date).
+3. Only then send `03_PART_B_SEALED.md`.
+Never send this file or `_owner_only/`.
 Keep this file and `_owner_only/` to yourself. Nothing has been sent to anyone. Claude did not contact a
 reviewer and will not fill in or invent any answers.
 
@@ -59,13 +68,26 @@ position. Insights produced: positioning_observation, identity_limit, ball_limit
   confirmed, and none of the four T+D+C+I sequences is "free" or "tight". The worked example in B6 is from an
   earlier development report and is labelled as such.
 
-## Gates checked against source at 28607fa (kept in force; not changed)
+## Packet verification (2026-11-19 evening)
+
+- Source `IMG_4529.MOV` re-hashed: `cd1f362d…e15202`, unchanged and equal to the inventory.
+- All eight clip SHA-256 values equal the table above.
+- Timestamp mapping: a frame 2.0 s into each clip matches the source frame at clip start + 2.0 s (mean absolute
+  grey-level difference 0.5–2.2 of 255) and not the frame 1 s later (6.4–24.5), for all eight clips.
+- Answer sheets now ask, per item, for a verdict, the clip time relied on, whether visible action, ball,
+  camera coverage and context are each sufficient, and how sure the reviewer is.
+
+## Gates checked against source at a343caf (kept in force; unchanged since 28607fa)
 
 | Gate | Value | Where |
 |---|---|---|
 | Whole-match off-ball note | ≥ 60 s confirmed (plus opponent measurable) | `workers/football-cv/scoutx_tracker/offball.py:26 MIN_CONFIRMED_SEC = 60.0` |
 | Involvement / coaching improvement | ≥ 120 s confirmed | `src/features/match-review/services/coach.ts:117 MIN_CONFIRMED_FOR_COACHING_SEC = 120` |
-| Clip note | ≥ 6 s continuous confirmed | `offball.py:29 MIN_SEQUENCE_SEC = 6.0`; server `functions/src/analysis/trackingV3.ts:147 MIN_SEQUENCE_SEC = 6` |
+| Clip note | ≥ 6 s continuous confirmed (server accepts ≥ 5.95 s, every frame CONFIRMED) | `offball.py:29 MIN_SEQUENCE_SEC = 6.0`; server `functions/src/analysis/trackingV3.ts:181 MIN_SEQUENCE_SEC = 6`, check at :232 |
+
+Effective behaviour: the 60 s gate is applied by the worker only; the server accepts the worker's "measured"
+status without re-checking it (the 6 s clip gate, by contrast, is re-checked by the server on every frame). The
+120 s gate applies in the app (`coach.ts:164`) together with at least one confirmed-identity ball contact.
 
 ## What to send back to Claude
 

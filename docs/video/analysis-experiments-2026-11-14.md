@@ -895,6 +895,124 @@ Local only: `C:\ZLI\M335\ScoutX\.local\footage-lib\coach-review-2026-11-19\` (no
 - The server every-frame sequence check remains its own merge-only proposal
   (`docs/release/proposal-server-sequence-check-2026-11-18.md`); the pilot gate is not part of it.
 
+## 28. Rollback rehearsal through the Functions emulator and Cloud Tasks delivery; cleanup; coach packet; shadow kit (2026-11-19 evening)
+
+Scope: local only. Demo project `demo-pilot-reh`, synthetic users/jobs/media, no credentials (CLOUDSDK_CONFIG emptied,
+proxies unset: no route out of the sandbox), no production resource, no participant contact, no GPU.
+User-facing analysis stays disabled. Starting point verified: checkout `480d8c2` = remote `exp/analysis-dev-2026-11-14`;
+GPU baseline `51d41c9f…` present and untouched.
+
+### Delivery path exercised
+`scripts/pilot-rehearsal/run.sh` → `firebase emulators:exec` (firebase-tools 15.35.0; auth, firestore 1.22.0, storage, functions,
+**tasks**) with the real compiled `functions/lib` (entry wrapper only sets the emulator-only CV approval seam).
+- Callables over emulator HTTP with Auth-emulator ID tokens: startPlayerAnalysis, answerTrackingQuestion, undoTrackingAnswer,
+  cancelMatchAnalysis, requestDataExport, explainTrackingMoment, analyzeMatchFootage, askThisMatch, generateAiInsight.
+- Task functions reached only through real `taskQueue().enqueue()` (server's own and the operator script's) and Cloud Tasks
+  emulator delivery: extractTrackingSegmentTask, discoverTrackingTask, resolveTrackingTask, buildDataExport. Firestore triggers
+  (media lifecycle, job deletion) ran in the emulator.
+- Owner visibility read through Firestore/Storage REST with the owner's token (rules enforced).
+- Worker: `fakeWorker.mjs` (127.0.0.1, deterministic barriers: hold/release, fail once, wrong models). AI traffic would land in
+  `providerSink.mjs` (`OPENROUTER_BASE_URL`), which received **0** requests.
+- Exercised queue behaviour: enqueue, delivery, handler retry by throwing, emulator redelivery after `minBackoffSeconds`
+  (measured 60.06 s for 60 s configured), delayed delivery (`scheduleDelaySeconds`), duplicate payload delivery.
+- **Not verified (emulator limits):** OIDC authentication of task dispatch (the emulator sends none), production retry
+  jitter/max-doublings, task-name de-duplication across real Cloud Tasks, dispatch deadlines under load, the hourly
+  `mediaLifecycleSweep` schedule (its body was called directly at the deadline), real Secret Manager.
+
+### Defects found, preserved and fixed (`bfa63c7`; harness commits `cba96f2`, `621c905`, `a343caf`)
+Reproductions: `docs/release/pilot-rehearsal-2026-11-19/1-baseline-480d8c2.json` (24 pass, 4 fail) and
+`2-repro-after-storage-fix.json` (28 pass, 7 fail; 3 of those were harness errors: an invalid answer value and the
+10-starts/day rate limit hit by one test user, plus `reprocess` needing the new function).
+
+| # | Defect (product) | Evidence at 480d8c2 | Fix |
+|---|---|---|---|
+| 1 | **No report could ever be stored**: Firestore rejects arrays inside arrays (`stateStrip`, moment `indicator`); resolve failed with `INVALID_ARGUMENT … invalid nested entity`. Unit tests used an in-memory fake and never saw it. | run 1 | Stored form wraps inner arrays as `{_tuple: [...]}` (`toStoredForm`/`fromStoredForm`); server readers (corrections, reasoning, discovery merge) and the app subscriptions decode |
+| 2 | A delivery queued before the stop ran as new work after re-enabling (old resolve reached the worker) | run 2 `reenable.old_delivery_not_authorized` | `enabledAt` required while enabled (authorisation epoch); `pilotAuthorizedAt` stamped at start; every task refuses runs authorised before the current enable (`stale_authorization`); `authorizeRun()` for operator reprocessing |
+| 3 | Discovery sightings bypassed the hold (owner-readable, "first moments" notification) and the in-transaction stop | run 2 `hold.discovery…` | `pilotHeld/discovery` while held; gate read inside the merge transaction; release/withhold move it |
+| 4 | A withheld report could be released as is | run 2 (release restored it without reprocessing) | release returns `withheld_requires_reprocess`; reprocessing keeps `previousWithheld` |
+| 5 | An owner correction on a withheld report cleared `withheld_for_review` | run 2 `withhold.state_survives…` | pending reason kept |
+| 6 | App showed "being prepared" for a withheld report | code read | new `tracking.withheld` text (7 locales) |
+
+Caveat on fix 2: `enabledAt` is written from the operator's clock and compared with the server's start time; an operator
+clock running ahead refuses (never authorises) work started in that gap, which then needs a restart.
+
+### Final rehearsal at `a343caf` (product code = `bfa63c7`): 56/56 checks
+Evidence `3-final-a343caf.json` (every HTTP outcome, task, transition and visibility read).
+- **Fail closed** (start → `blocked`, no worker call): missing config, malformed config, wrong worker version,
+  non-allowlisted owner; non-owner 403; anonymous 401; missing consent `consent_required`; wrong model set → rejected, nothing held.
+- **Hold**: report only in `pilotHeld/current` (owner 403), no completion notice; release → owner reads it with `producedBy`.
+- **Barriers at the stop**: queued (first attempt failed, redelivered after 60 s → `blocked/pilot_off`, no second worker call);
+  running extract (released after stop → resolve refused, nothing held); about-to-publish resolve (released after stop →
+  `stopped`, nothing held); delayed delivery queued before the stop and a duplicate delivery after it → no worker call;
+  released report unchanged until withheld; new request after stop blocked.
+- **Commit race** (real `processResolveTask`, paused inside its transaction after the gate read, stop written concurrently,
+  3 repeats): the operator's write waits for the transaction (Firestore lock); the held report commits 0.5–1.3 ms before the
+  stop (nanosecond `updateTime`). An earlier "publish_after_stop" reading was a millisecond tie, superseded.
+- **Containment** (`ops withhold`): owner sees `report:null`, `withheld_for_review`; held copy 403; answer refused;
+  explain → `report_not_current`; owner correction keeps the state; data export (real `buildDataExport` task) contains no report.
+- **Re-enable**: old resolve and old extract deliveries refused (no worker call); a new start runs and lands under hold.
+- **Reprocessing**: `ops release` of the withheld copy refused; `ops reprocess` (authorise + real enqueue) → held → release;
+  owner reads again (version up), corrections identical byte-for-byte, `producedBy` worker + models, `releasedBy`,
+  containment record kept.
+- **Cache compatibility**: server side, only approved worker+model output is accepted (wrong models rejected above). Stage-1
+  cache compatibility lives in the worker: `pytest tests/test_full_match_benchmark.py tests/test_52.py` 40/40 (checkpoint never
+  mixes configurations, corrupt/interrupted chunks redone, cross-host provenance refused, extract never mixes attempts).
+- **Legacy AI routes** (own controls; emulator forces `AI_FOOTAGE_PROCESSING_APPROVED` true by design, so the closure seen here
+  comes from the missing provider key and the reasoning gates; the deployed flag is covered by `aiPrivacyGate`/
+  `analysisFailClosed` unit tests): analyzeMatchFootage 400 `model_unavailable`; explainTrackingMoment `report_not_current` /
+  `disabled`; askThisMatch deterministic "insufficient"; generateAiInsight stopped at input validation. Provider sink 0 requests;
+  no media URL outside 127.0.0.1. The segment AI pipeline tasks were not delivered.
+
+### Temporary-media cleanup (storage state, same run)
+Synthetic objects per job: `video.mp4`, `frames/frame_0|1.jpg`, `tracking/q_1_r0.jpg`, `owner-note.txt`.
+- Completion (trigger): source and uncited frame deleted, cited frame kept. Keep-video: source kept. Cancellation (callable →
+  trigger): source deleted, `done`. Failed: kept for the 24 h retry window; sweep 1 min before the deadline 0, at the deadline
+  cleaned, repeated sweep 0 (idempotent). Interrupted cleanup (`pending` left behind) finished by the sweep.
+- Isolation: another owner's job and a job whose `videoStoragePath` points into another job's folder lost nothing; job deletion
+  purged only its own prefix.
+- **Retained, with reason**: `tracking/*.jpg` and unknown names (`owner-note.txt`) are never deleted by cleanup (only
+  `video.mp4|frames/frame_N.jpg|clips/clip_N.mp4` are cleanup-owned); they go only with job deletion.
+- **Findings, not fixed (need a decision):**
+  - R1 A tracking-only run never sets a terminal job status, so a completed (or stopped) tracking job keeps its source video and
+    all review images until the job is deleted.
+  - R2 Review images of held, stopped or late-discarded reports are written before the gate transaction under the owner-readable
+    `tracking/` path (predictable names), and stay there. The report text is withheld; these crops are not.
+  - R3 The data export contains no tracking report at all (only `corrections`, `identityCoordination`) — safe for withholding,
+    but the owner's access copy is incomplete.
+
+### Coaching gates (tested source)
+60 s whole-match positioning: worker only (`offball.py:26`); the server accepts the worker's `measured` status without
+re-checking it (finding R4; a server re-check would be a separate merge-only proposal like the sequence check). 120 s
+low-involvement: app `coach.ts:117/164` plus ≥ 1 confirmed-identity contact. 6 s clip: worker `offball.py:29` and server
+`trackingV3.ts:181`, every frame CONFIRMED, ≥ 5.95 s accepted. None changed.
+
+### Coach packet
+`C:\ZLI\M335\ScoutX\.local\footage-lib\coach-review-2026-11-19\` re-verified: source SHA-256 unchanged; 8 clip hashes match; each
+clip frame at 2.0 s matches the source at start + 2.0 s (MAD 0.5–2.2) and not +1 s (6.4–24.5). Sheets now ask per item for
+verdict, timestamp, visible action / ball / camera coverage / context sufficiency and certainty; `05_HANDOFF_NOTE.md` added;
+superseded versions moved to `_owner_only/superseded/`. **Not shareable yet: Q1 (orange #20 in IMG_4529) unanswered.**
+
+### Two-match shadow evaluation: not started
+- Owner answers Q1–Q4: none (file unchanged since 2026-11-18 11:48 UTC). batch-01: 0 of 10 local (33.2 GB to download).
+- Readability and proxy mapping cannot be checked until files are local.
+- Prepared and smoke-tested on synthetic data: `workers/football-cv/bench/shadow/` (`sample_plan.py` deterministic seeded plan,
+  `freeze.py` refuses without an owner "yes" and freezes every hash/flag/rule, `run_shadow.sh` five configurations with fresh caches,
+  `score.py` with abstentions and missing output in recall denominators, label/difficult-stretch/identity forms, storage budget).
+- Workspace has ~1.6 GB free; one match needs ~2.1 GB peak, so ~1 GB of superseded scratch must be removed first.
+
+### Recovery commands (valid for `bfa63c7`/`a343caf` only; emulator unless separately authorised)
+`node scripts/tracking-pilot-ops.mjs stop | enable --allow <uids> --worker-version <approved> [--hold true] |
+withhold <job> --reason <r> | release <job> --reviewer <name> | reprocess <job>` (refuses without an emulator unless
+`--project <id> --production-authorized`). Rehearsal: `FIREBASE_BIN=<firebase-tools ≥13> scripts/pilot-rehearsal/run.sh out.json`.
+
+### Regression suites (owner PC VM, files md5-identical to `bfa63c7`)
+Unit 836/836 (833 + 3), typecheck exit 0, functions `tsc` exit 0 (lib identical to the committed lib), eslint on changed
+files exit 0, rules 265/265 (73 + 106 + 86; held-discovery cases added to `trackingPilot`).
+
+### Participant pilot readiness
+Not ready. Integration evidence now exists for the emulator path, but R1–R4 are open, queue authentication/retry semantics
+need verification on real Cloud Tasks, the coach review has no response, and no shadow result exists.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an

@@ -1,0 +1,3 @@
+sample_id,method,proxy_t,source_t,state,box_x,box_y,box_w,box_h,number_legible,contact,labeller,labeller_role,exposure,labelled_at,notes
+fixed_0001,fixed,5.00,5.00,target_visible,812,344,38,96,no,no,agent-claude,agent,"none: no predictions exist for this group",2026-11-20T10:00:00Z,example row - delete
+fixed_0002,fixed,15.00,15.00,occluded,,,,,na,na,agent-claude,agent,"none: no predictions exist for this group",2026-11-20T10:00:00Z,example row - delete
