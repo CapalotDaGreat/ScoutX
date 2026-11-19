@@ -430,7 +430,7 @@ test('claim: an extract claimant taken over (retry) or reset (resume) cannot rec
       };
       // attempt 2 is the last one: a late failure would otherwise mark the run interrupted and notify the player
       const out = await processExtractTask(f.db, 'job_1', 1, 0, interference === 'retry' ? 1 : 2, client as never, enqueue, env, src,
-        () => new Date(), async (id, input) => { notices.push([id, input]); });
+        () => new Date(), async (id, input) => { notices.push([id, input]); return true; });
       assert.equal(out, 'stale', `${late}/${interference}`);
       const seg = (progressOf(f).segments as Record<string, { status: string }>)['0'];
       assert.equal(seg.status, interference === 'retry' ? 'done' : 'queued', `${late}/${interference}: state belongs to the current claimant`);

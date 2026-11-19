@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
-// @ts-expect-error plain ESM driver module without types
 import { CASE_BUDGET, LIMITS, LimitError, QUEUES, createGuard, stopCommands } from '../../scripts/pilot-staging/limits.mjs';
 
 type Budget = Record<string, { tasks: number; attempts: number }>;

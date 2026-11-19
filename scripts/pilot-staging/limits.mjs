@@ -16,6 +16,8 @@
 import fs from 'node:fs';
 
 /** Driver runtime (STG-06..08, deployment excluded) is the binding cost control: see the plan's §6 worst case. */
+/** @typedef {{ maxTasks: number, maxAttempts: number, maxRuntimeMs: number }} Limits */
+/** @type {Readonly<Limits>} */
 export const LIMITS = Object.freeze({ maxTasks: 60, maxAttempts: 150, maxRuntimeMs: 90 * 60 * 1000 });
 
 /** Worst case per case: tasks the case creates (driver + app fan-out) and their maximum delivery attempts. */
@@ -52,7 +54,7 @@ export function stopCommands(project, region = 'europe-west6') {
 }
 
 /**
- * @param {{ stateFile: string, limits?: typeof LIMITS, now?: () => number, stop: (reason: string) => Promise<void> | void }} o
+ * @param {{ stateFile: string, limits?: Limits, now?: () => number, stop: (reason: string) => Promise<void> | void }} o
  */
 export function createGuard({ stateFile, limits = LIMITS, now = Date.now, stop }) {
   const load = () => {
@@ -99,7 +101,8 @@ export function createGuard({ stateFile, limits = LIMITS, now = Date.now, stop }
       }
     },
     /** Trips at the deadline even if a case hangs between reservations; `exit` ends the driver afterwards. */
-    watchdog(exit = () => process.exit(2)) {
+    /** @param {() => void} [exit] */
+    watchdog(exit = () => { process.exit(2); }) {
       const left = Math.max(0, limits.maxRuntimeMs - (now() - load().startedAt));
       const t = setTimeout(() => { trip(`runtime limit ${limits.maxRuntimeMs} ms reached (watchdog)`).catch(() => {}).finally(exit); }, left);
       t.unref?.();
