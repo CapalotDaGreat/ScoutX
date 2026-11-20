@@ -35,5 +35,6 @@ export function createCallableOptions(
     cors: resolveCallableCors(env),
     enforceAppCheck: shouldEnforceAppCheck(env),
     ...overrides,
+    invoker: 'private',
   };
 }

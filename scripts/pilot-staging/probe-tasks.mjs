@@ -14,7 +14,7 @@
  */
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { accessToken, evidenceWriter, loadConfig, operatorIdentityToken, parseDriverArgs, redact, requireFn, root, sleep, waitFor } from './lib.mjs';
+import { accessToken, callableHeaders, evidenceWriter, loadConfig, operatorIdentityToken, parseDriverArgs, redact, requireFn, root, sleep, waitFor } from './lib.mjs';
 import { driverGuard } from './limits.mjs';
 
 const cfg = loadConfig();
@@ -40,9 +40,9 @@ const { taskQueueName } = requireFn(path.join(root, 'functions/lib/region.js'));
 const doc = async (p) => { const s = await db.doc(p).get(); return s.exists ? s.data() : null; };
 const fnUrl = (name) => `${cfg.functionsBase}/${name}`;
 const queuePath = (q) => `projects/${cfg.project}/locations/${cfg.region}/queues/${q}`;
-const workerHeaders = () => (cfg.workerAuth === 'operator' ? { Authorization: `Bearer ${operatorIdentityToken()}` } : {});
-const workerLog = async () => (await fetch(`${cfg.workerBase}/_ctl/log`, { headers: workerHeaders() })).json();
-const ctl = async (p, b) => (await fetch(`${cfg.workerBase}/_ctl/${p}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...workerHeaders() }, body: JSON.stringify(b) })).json();
+const workerHeaders = async () => (cfg.workerAuth === 'operator' ? { Authorization: `Bearer ${await operatorIdentityToken(cfg.workerBase)}` } : {});
+const workerLog = async () => (await fetch(`${cfg.workerBase}/_ctl/log`, { headers: await workerHeaders() })).json();
+const ctl = async (p, b) => (await fetch(`${cfg.workerBase}/_ctl/${p}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...await workerHeaders() }, body: JSON.stringify(b) })).json();
 const calls = async (jobId, route) => (await workerLog()).filter((e) => e.jobId === jobId && (!route || e.route === route));
 
 function ops(...a) {
@@ -58,7 +58,7 @@ async function signUp(label) {
   return { uid: j.localId, token: j.idToken };
 }
 async function callable(name, data, user) {
-  const r = await fetch(fnUrl(name), { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${user.token}` }, body: JSON.stringify({ data }) });
+  const r = await fetch(cfg.callableUrls?.[name] ?? fnUrl(name), { method: 'POST', headers: await callableHeaders(cfg, user, name), body: JSON.stringify({ data }) });
   let j = null; try { j = await r.json(); } catch { /* none */ }
   return { http: r.status, result: j?.result ?? null };
 }

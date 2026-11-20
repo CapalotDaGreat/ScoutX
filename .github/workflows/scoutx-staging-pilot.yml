@@ -28,4 +28,45 @@ jobs:
       - name: Verify staging identity token exchange
         run: echo "GitHub exchanged its staging workflow identity for an audience-bound Google Cloud identity token."
 
-
+  pilot:
+    needs: identity
+    if: github.repository_id == '1286028676' && github.ref == 'refs/heads/codex/scoutx-staging-wif' && vars.SCOUTX_PILOT_ENABLED == 'true'
+    environment: pitchproof-stg-pilot2
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/315202089837/locations/global/workloadIdentityPools/scoutx-staging-gh/providers/github
+          service_account: stg-pilot-operator@pitchproof-stg-pilot2.iam.gserviceaccount.com
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Prepare watchdog inputs
+        env:
+          STAGING_CONFIG_JSON: ${{ vars.SCOUTX_PILOT_CONFIG_JSON }}
+          FUNCTIONS_ENV: ${{ vars.SCOUTX_PILOT_FUNCTIONS_ENV }}
+        run: |
+          test -n "$STAGING_CONFIG_JSON"
+          test -n "$FUNCTIONS_ENV"
+          printf '%s' "$STAGING_CONFIG_JSON" > "$RUNNER_TEMP/staging.json"
+          printf '%s\n' "$FUNCTIONS_ENV" > functions/.env.pitchproof-stg-pilot2
+          printf '%s\n' 'import os, sys' 'os.execvp("gcloud", ["gcloud", *sys.argv[1:]])' > "$RUNNER_TEMP/gcloud.py"
+          npm ci --prefix functions
+          npm install --prefix "$RUNNER_TEMP/firebase-cli" firebase-tools
+      - name: Run bounded staging pilot
+        env:
+          STAGING_CONFIG: ${{ runner.temp }}/staging.json
+          STAGING_GCLOUD_PY: ${{ runner.temp }}/gcloud.py
+          STAGING_FIREBASE_JS: ${{ runner.temp }}/firebase-cli/node_modules/firebase-tools/lib/bin/firebase.js
+          STAGING_EVIDENCE_DIR: ${{ runner.temp }}/pilot-evidence
+          STAGING_OPERATOR_MEMBER: serviceAccount:stg-pilot-operator@pitchproof-stg-pilot2.iam.gserviceaccount.com
+        run: python3 scripts/pilot-staging/staging-pilot.py
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: staging-pilot-evidence
+          path: ${{ runner.temp }}/pilot-evidence
+          if-no-files-found: ignore
