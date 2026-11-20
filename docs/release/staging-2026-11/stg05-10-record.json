@@ -1,0 +1,60 @@
+{
+ "recordedAt": "2026-11-20T01:30Z",
+ "candidate": "52654050db07545053bdb808b1f10dc903c129d3",
+ "overlayTree": "b4537970126e42e8d4a29f0926654ea7fd1e5d4a",
+ "project": {
+  "projectId": "pitchproof-stg-pilot",
+  "projectNumber": "371245693156",
+  "finalState": "DELETE_REQUESTED (deletion completes after Google's 30-day recovery window; not yet confirmed completed)"
+ },
+ "connectivity": {
+  "europe-west6-pitchproof-stg-pilot.cloudfunctions.net": "refused by this session's egress proxy at 2026-11-20T01:21Z: HTTP 403 to CONNECT ('no rule or network setting allows this host'); also unreachable from the owner PC VM",
+  "stg-fake-worker-371245693156.europe-west6.run.app": "same refusal; IAM behaviour therefore NOT established (no request reached Google)"
+ },
+ "dispatch": {
+  "tasksCreated": 0,
+  "deliveryAttempts": 0,
+  "workerRequests": 0,
+  "source": "Cloud Tasks queue logs (0 entries), worker request logs for /v3/ (0), queues empty"
+ },
+ "guard": "not started (no driver ran); watchdog and counters verified locally only (unit tests)",
+ "stg10a": {
+  "pilotConfig": "opsConfig/trackingPilot set enabled=false via Firestore REST (did not exist before; Admin SDK gRPC blocked by the proxy)",
+  "queues": [
+   "extractTrackingSegmentTask PAUSED\t1 tasks=0",
+   "discoverTrackingTask PAUSED\t1 tasks=0",
+   "resolveTrackingTask PAUSED\t1 tasks=0",
+   "refreshTrackingOcrTask PAUSED\t1 tasks=0",
+   "buildDataExport PAUSED\t1 tasks=0",
+   "stg-auth-probe PAUSED\t1 tasks=0",
+   "stg-exhaust-probe PAUSED\t1 tasks=0"
+  ],
+  "fakeWorkerMinInstances": 0,
+  "syntheticData": {
+   "authUsers": 0,
+   "jobDocuments": 0,
+   "storageObjects": 0
+  },
+  "publicInvokersRemoved": 7,
+  "policyOverride": "iam.allowedPolicyMemberDomains project override deleted; no project-level policies remain"
+ },
+ "stg10b": [
+  "projectId: record=pitchproof-stg-pilot live=pitchproof-stg-pilot MATCH",
+  "projectNumber: record=371245693156 live=371245693156 MATCH",
+  "parent: record={'id': '306756953523', 'type': 'organization'} live={'id': '306756953523', 'type': 'organization'} MATCH",
+  "purpose label: record=staging-verification live=staging-verification MATCH",
+  "createTime: record=2026-11-19T23:38:58.702Z live=2026-11-19T23:38:58.702Z MATCH",
+  "not production: record=pitchproof-stg-pilot live=pitchproof-stg-pilot MATCH",
+  "STG-10b PASSED"
+ ],
+ "stg10c": {
+  "budget": "deleted; 0 budgets left for projects/371245693156",
+  "billing": "unlinked; billingEnabled False",
+  "projectDelete": "DELETE_REQUESTED"
+ },
+ "production": "scoutx-230b0 latest function update still 2026-11-13T16:22Z; no API enabled there (one CLI prompt to enable orgpolicy was declined by default)",
+ "spend": {
+  "posted": "not yet available (billing export lag)",
+  "estimate": "under CHF 0.50: fake worker at min 1 for roughly 15 minutes, Cloud Build for 1 worker + 15 function builds (likely within the free tier), Artifact Registry images for under a day, idle functions"
+ }
+}

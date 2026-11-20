@@ -1249,6 +1249,26 @@ any state, including superseded. Defect fixed on a separate commit: `probe-tasks
 Gates for the participant pilot (all open): staging pass (unrun), R3 decision (open), independent coach review (not
 started), owner-confirmed two-match shadow evaluation (0/10 footage local). Pilot pending; user-facing analysis off.
 
+## 33. Staging run on `5265405`: built (STG-01–04), tests unrun (network), torn down (STG-10a–c) (2026-11-20, 00:34–02:30 Zurich)
+
+- **Built:** `pitchproof-stg-pilot` / 371245693156 under org 306756953523, label `purpose=staging-verification`; billing
+  "Firebase Payment" (account bills in CHF, budget CHF 9 at 50/90/100 %, owner's choice); Firestore and bucket
+  `europe-west6`; overlay tree `b4537970…` reproduced from the full SHA; private fake worker (no public invoker); all 15
+  functions ACTIVE; queues + probe queues + `stg-no-invoker`. Deviations recorded in
+  `docs/release/staging-2026-11/stg01-04-record.json` (runtime SA roles as in production, placeholder secrets, extra
+  services, project-only override of `iam.allowedPolicyMemberDomains`, owner-approved).
+- **Not tested:** the session's egress proxy refused `europe-west6-pitchproof-stg-pilot.cloudfunctions.net` and
+  `stg-fake-worker-371245693156.europe-west6.run.app` (HTTP 403 to CONNECT) even after the owner updated the allowlist; the
+  setting had not reached this session. STG-05 (endpoint part) and STG-06–08 are **unrun**; worker IAM behaviour is not
+  established. 0 tasks, 0 delivery attempts, 0 worker requests (queue and request logs).
+- **Torn down:** kill switch off, all queues max-attempts 1 / paused / empty, worker min 0, no synthetic data existed,
+  public invokers and the policy override removed; STG-10b identity check passed (id, number, org, label, create time);
+  budget deleted, billing disabled, project `DELETE_REQUESTED` (final deletion after the 30-day window, not yet confirmed).
+  Production unchanged. Spend: estimate under CHF 0.50, posted billing not yet available.
+- Real staging evidence of queue/link/rollback behaviour: **none**. All such results remain emulator-only (§31).
+- Gates (all open): staging (unrun), R3, independent coach review, two-match shadow evaluation. Pilot pending;
+  user-facing analysis off. A rerun needs a fresh STG-01–04 in a session whose allowlist includes the two hosts.
+
 ## 10. Primary workspace update (2026-11-15)
 
 `C:\ZLI\M335\ScoutX` was on `main` at `c7349d5`, tracked tree clean, one pre-existing stash kept. Its remote uses an
