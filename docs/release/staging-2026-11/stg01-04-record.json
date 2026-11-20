@@ -1,0 +1,95 @@
+{
+ "recordedAt": "2026-11-20 (Zurich)",
+ "candidate": "52654050db07545053bdb808b1f10dc903c129d3",
+ "candidateTree": "4f45bd542868087f8274348c338d8461b2f0a7fc",
+ "overlayTree": "b4537970126e42e8d4a29f0926654ea7fd1e5d4a",
+ "overlayCommitThisRun": "0f63b00298e3fec82ddfb9205cffc34584bedc18",
+ "project": {
+  "projectId": "pitchproof-stg-pilot",
+  "projectNumber": "371245693156",
+  "lifecycleState": "ACTIVE",
+  "parent": {
+   "id": "306756953523",
+   "type": "organization"
+  },
+  "labels": {
+   "owner": "pitchproof",
+   "purpose": "staging-verification"
+  },
+  "createTime": "2026-11-19T23:38:58.702Z"
+ },
+ "billing": {
+  "displayName": "Firebase Payment",
+  "matchesOpenAccounts": 1,
+  "currency": "CHF",
+  "linked": true,
+  "idRecorded": false
+ },
+ "budget": "budget id: 2a689e78-eb14-481f-b804-7ee07f5a4905 amount: {'specifiedAmount': {'currencyCode': 'CHF', 'units': '9'}} thresholds: [0.5, 0.9, 1.0] projects: ['projects/371245693156']",
+ "fakeWorker": {
+  "service": "stg-fake-worker",
+  "revision": "stg-fake-worker-00001-s7m",
+  "url": "https://stg-fake-worker-371245693156.europe-west6.run.app",
+  "dockerfileBlob": "4634186b737bf3eb0f069e6116aa1f8ff48b4f40",
+  "fakeWorkerBlob": "46e98130c345cf642af65d737e1a3d60373909cf",
+  "publicInvoker": false
+ },
+ "functions": [
+  "answerTrackingQuestion",
+  "buildDataExport",
+  "cancelMatchAnalysis",
+  "discoverTrackingTask",
+  "explainTrackingMoment",
+  "extractTrackingSegmentTask",
+  "getMediaPlaybackUrl",
+  "mediaLifecycleSweep",
+  "onMatchJobDeleted",
+  "onMatchJobMediaLifecycle",
+  "refreshTrackingOcrTask",
+  "requestDataExport",
+  "resolveTrackingTask",
+  "startPlayerAnalysis",
+  "undoTrackingAnswer"
+ ],
+ "runInvokers": [
+  "answertrackingquestion: [('run.invoker', ['allUsers'])]",
+  "builddataexport: []",
+  "cancelmatchanalysis: [('run.invoker', ['allUsers'])]",
+  "discovertrackingtask: []",
+  "explaintrackingmoment: [('run.invoker', ['allUsers'])]",
+  "extracttrackingsegmenttask: []",
+  "getmediaplaybackurl: [('run.invoker', ['allUsers'])]",
+  "medialifecyclesweep: [('run.invoker', ['serviceAccount'])]",
+  "onmatchjobdeleted: []",
+  "onmatchjobmedialifecycle: []",
+  "refreshtrackingocrtask: []",
+  "requestdataexport: [('run.invoker', ['allUsers'])]",
+  "resolvetrackingtask: []",
+  "startplayeranalysis: [('run.invoker', ['allUsers'])]",
+  "stg-fake-worker: []",
+  "undotrackinganswer: [('run.invoker', ['allUsers'])]"
+ ],
+ "queues": [
+  "buildDataExport RUNNING 3 60s 5 1.0",
+  "discoverTrackingTask RUNNING 3 30s 6 1.0",
+  "extractTrackingSegmentTask RUNNING 3 60s 6 1.0",
+  "refreshTrackingOcrTask RUNNING 2 60s 2 1.0",
+  "resolveTrackingTask RUNNING 3 30s 4 1.0",
+  "stg-auth-probe RUNNING 1 0.100s 1000 1.0",
+  "stg-exhaust-probe RUNNING 2 30s 1000 1.0"
+ ],
+ "deviationsFromPacket": [
+  "Budget CHF 9 instead of USD 10: the account bills in CHF and budgets must use its currency (owner chose CHF 9, 2026-11-20).",
+  "Runtime SA given roles/editor, run.invoker, eventarc.eventReceiver (production's set): the org disables automatic default-SA grants, so builds failed without them.",
+  "Extra services needed by deploy: firebasestorage, firebaserules, pubsub, cloudscheduler, secretmanager, orgpolicy, firebaseextensions (auto), cloudbilling.",
+  "Identity Platform initialised (initializeAuth) to enable email/password sign-in for synthetic users.",
+  "Seven Secret Manager secrets with non-functional placeholder values (deploy resolves every secret in the codebase); no real provider key, OPENROUTER_API_KEY is a placeholder.",
+  "Project-level override iam.allowedPolicyMemberDomains allowAll on pitchproof-stg-pilot only (owner approved 2026-11-20), so the 7 callables could get the public invoker production has; to be removed at STG-10a.",
+  "Fake worker deployed from a two-file build context identical (git blob hashes) to the overlay's Dockerfile and fakeWorker.mjs.",
+  "Fake worker scaled to min-instances 0 while dispatch waits for network access (back to 1 before STG-06)."
+ ],
+ "dispatched": {
+  "tasks": 0,
+  "attempts": 0
+ }
+}
