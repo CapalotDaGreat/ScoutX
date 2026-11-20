@@ -1,0 +1,28 @@
+name: ScoutX staging pilot identity check
+on:
+  push:
+    branches: [codex/scoutx-staging-wif]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: pitchproof-stg-pilot2
+  cancel-in-progress: false
+
+jobs:
+  identity:
+    if: github.repository_id == '1286028676' && github.ref == 'refs/heads/codex/scoutx-staging-wif'
+    environment: pitchproof-stg-pilot2
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/315202089837/locations/global/workloadIdentityPools/scoutx-staging-gh/providers/github
+          service_account: stg-pilot-operator@pitchproof-stg-pilot2.iam.gserviceaccount.com
+          token_format: access_token
+      - name: Verify staging identity token exchange
+        run: echo "GitHub exchanged its staging workflow identity for a Google Cloud access token."
+
