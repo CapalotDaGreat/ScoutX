@@ -22,7 +22,10 @@ jobs:
         with:
           workload_identity_provider: projects/315202089837/locations/global/workloadIdentityPools/scoutx-staging-gh/providers/github
           service_account: stg-pilot-operator@pitchproof-stg-pilot2.iam.gserviceaccount.com
-          token_format: access_token
+          token_format: id_token
+          id_token_audience: https://stg-fake-worker-315202089837.europe-west6.run.app
+          id_token_include_email: true
       - name: Verify staging identity token exchange
-        run: echo "GitHub exchanged its staging workflow identity for a Google Cloud access token."
+        run: echo "GitHub exchanged its staging workflow identity for an audience-bound Google Cloud identity token."
+
 
