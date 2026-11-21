@@ -6,9 +6,9 @@ import re
 import subprocess
 import time
 import ssl
+import urllib.error
 import urllib.request
-
-import artifact_repository
+from urllib.parse import quote
 from pathlib import Path
 
 PROJECT = "pitchproof-stg-pilot2"
@@ -34,6 +34,43 @@ def gcloud(*args):
     result = subprocess.run([sys.executable, cli, *args, "--quiet", "--format=json"],
                             check=True, capture_output=True, text=True, timeout=90)
     return json.loads(result.stdout) if result.stdout.strip() else None
+
+def access_token():
+    import sys
+    return subprocess.check_output(
+        [sys.executable, os.environ["STAGING_GCLOUD_PY"], "auth", "print-access-token", "--quiet"],
+        text=True, timeout=60
+    ).strip()
+
+
+def resource_present(url, token, opener=urllib.request.urlopen):
+    request = urllib.request.Request(url, headers={"Authorization": "Bearer " + token})
+    try:
+        with opener(request, timeout=30) as response:
+            if response.status != 200:
+                raise RuntimeError(f"Unexpected HTTP {response.status} from {url}")
+            return True
+    except urllib.error.HTTPError as error:
+        if error.code == 404:
+            return False
+        raise
+
+
+def check_exact_service(cli, exists, location, name, *, delete):
+    scope = (f"--project={PROJECT}", f"--region={location}")
+    url = f"https://run.googleapis.com/v2/projects/{PROJECT}/locations/{location}/services/{name}"
+    check_exact_resource(cli, exists, url, ("run", "services", "delete", name, *scope) if delete else None)
+
+
+def check_exact_resource(cli, exists, url, delete_args):
+    if exists(url):
+        if not delete_args:
+            raise RuntimeError(f"Unexpected resource present: {url}")
+        cli(*delete_args)
+        if exists(url):
+            raise RuntimeError(f"Resource still exists after deletion: {url}")
+    print(f"Verified HTTP 404: {url}", flush=True)
+
 
 def remove_web_app():
     raw_path = os.environ.get("STAGING_CONFIG")
@@ -75,11 +112,15 @@ def remove_web_app():
         raise RuntimeError("Firebase web app removal operation failed")
 
 
-def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
+def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app, exists=None):
     project = cli("projects", "describe", PROJECT)
     if (str(project.get("projectNumber")) != NUMBER
             or project.get("labels", {}).get("purpose") != "staging-verification"):
         raise RuntimeError("Staging project identity mismatch")
+    if exists is None:
+        token = access_token()
+        def exists(url):
+            return resource_present(url, token)
     errors = []
     for _ in range(2):
         for region in (REGION, "global"):
@@ -109,7 +150,6 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
             "refreshTrackingOcrTask", "buildDataExport", *probe_names,
         }),
         (("functions",), "regions", FUNCTIONS),
-        (("run", "services"), "region", {"stg-fake-worker"}),
     ):
         args = (*scope, f"--{location}={REGION}")
         try:
@@ -125,35 +165,20 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
                 raise RuntimeError(f"Pilot resources remain: {sorted(remaining & allowed)}")
         except Exception as error:
             errors.append(error)
-    for name in sorted(BUILD_REPOSITORIES):
+    for location in (REGION, "us-central1"):
         try:
-            artifact_repository.delete_and_verify(cli, name, *scope, f"--location={REGION}")
+            check_exact_service(cli, exists, location, "stg-fake-worker", delete=location == REGION)
         except Exception as error:
             errors.append(error)
-    # Only the European deployment is owned by this run. Check the extra
-    # locations by exact name and surface any unexpected resources for review.
-    for location in ("us-central1", "us"):
+    for location in (REGION, "us-central1", "us"):
         for name in sorted(BUILD_REPOSITORIES):
             try:
-                if artifact_repository.describe(cli, name, *scope, f"--location={location}") is not None:
-                    raise RuntimeError(f"Unexpected repository in {location}: {name}")
-                print(f"Verified NOT_FOUND for {location}/{name}", flush=True)
+                url = f"https://artifactregistry.googleapis.com/v1/projects/{PROJECT}/locations/{location}/repositories/{name}"
+                delete_args = ("artifacts", "repositories", "delete", name, *scope,
+                               f"--location={location}") if location == REGION else None
+                check_exact_resource(cli, exists, url, delete_args)
             except Exception as error:
                 errors.append(error)
-        if location == "us":
-            print("Cloud Run has no us multi-region endpoint; checked us-central1 separately", flush=True)
-            continue
-        try:
-            worker = "stg-fake-worker"
-            cli("run", "services", "describe", worker, *scope, f"--region={location}")
-            raise RuntimeError(f"Unexpected worker in {location}: {worker}")
-        except subprocess.CalledProcessError as error:
-            if artifact_repository.resource_absent(error.stderr):
-                print(f"Verified NOT_FOUND for {location}/{worker}", flush=True)
-            else:
-                errors.append(error)
-        except Exception as error:
-            errors.append(error)
     source = os.environ.get("STAGING_WORKER_SOURCE")
     if source:
         try:
@@ -165,7 +190,9 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
                 prefix = source.split("/", 3)[-1] + "/"
                 if not name.startswith(prefix):
                     raise RuntimeError("Unexpected object in staging build source listing")
-                cli("storage", "rm", f"gs://{PROJECT}_cloudbuild/{name}", f"--project={PROJECT}")
+                encoded = quote(name, safe="")
+                url = f"https://storage.googleapis.com/storage/v1/b/{PROJECT}_cloudbuild/o/{encoded}"
+                check_exact_resource(cli, exists, url, ("storage", "rm", f"gs://{PROJECT}_cloudbuild/{name}", f"--project={PROJECT}"))
             if cli("storage", "objects", "list", source + "/", f"--project={PROJECT}"):
                 raise RuntimeError("Staging build source objects remain")
         except Exception as error:
