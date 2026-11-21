@@ -1,0 +1,36 @@
+{
+ "clip": "IMG_4529 proxy 600-660 s (night, 10 fps, 1080p SDR H.264)",
+ "command": "scoutx_tracker.extract.extract(clip, out) with SCOUTX_WEIGHTS_DIR pointing at the FP32 or INT8 (body) ONNX; release defaults (decoder cv2, batch 1, key_every 1)",
+ "host": "cloud workspace, 2 vCPU Intel Xeon @2.3 GHz (AVX-512 VNNI, AMX), 7 GiB RAM, onnxruntime CPUExecutionProvider",
+ "int8Sha256": "6f694d427ef0ecd093176e21b558ac39740a9998593483008d090fe123cf9dd6 (re-quantised by the bench script; the stage-1 run used an earlier quantisation of the same recipe)",
+ "runs": {
+  "fp32": {
+   "frames": 600,
+   "stageSeconds": {
+    "decode": 1.2,
+    "detect": 282.6,
+    "propagate": 0.0,
+    "scene_cmc": 4.9,
+    "colour_signature": 3.0,
+    "embedding": 0.9,
+    "crops_io": 0.7
+   },
+   "detections": 12140,
+   "ocrCrops": 785
+  },
+  "int8": {
+   "frames": 600,
+   "stageSeconds": {
+    "decode": 1.1,
+    "detect": 107.7,
+    "propagate": 0.0,
+    "scene_cmc": 4.7,
+    "colour_signature": 3.0,
+    "embedding": 0.8,
+    "crops_io": 0.6
+   },
+   "detections": 12202,
+   "ocrCrops": 752
+  }
+ }
+}

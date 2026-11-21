@@ -1,0 +1,96 @@
+{
+ "variant": "body",
+ "fp32Sha256": "94fad91137c00f6bb2ae570f8c36c71b44c195f87d5b72bf4e38b15e808f58dd",
+ "int8Sha256": "6f694d427ef0ecd093176e21b558ac39740a9998593483008d090fe123cf9dd6",
+ "calibration": {
+  "clips": [
+   "IMG_4529_1200-1260s.mp4",
+   "IMG_5105_1800-1860s.mp4"
+  ],
+  "framesPerClip": 20
+ },
+ "clips": {
+  "IMG_4529_600-660s.mp4": {
+   "frames": 60,
+   "fp32MsPerFrameMedian": 405.5,
+   "int8MsPerFrameMedian": 174.1,
+   "person@0.12": {
+    "fp32Boxes": 1198,
+    "matched": 1182,
+    "recallVsFp32": 0.9866,
+    "int8OnlyBoxes": 40,
+    "meanIoU": 0.9355,
+    "p5IoU": 0.8376,
+    "meanAbsScoreDiff": 0.0217
+   },
+   "person@0.12,h>=80px": {
+    "fp32Boxes": 228,
+    "matched": 221,
+    "recallVsFp32": 0.9693,
+    "int8OnlyBoxes": 40,
+    "meanIoU": 0.9536,
+    "p5IoU": 0.8703,
+    "meanAbsScoreDiff": 0.0299
+   },
+   "person@0.4,h>=80px (OCR crops)": {
+    "fp32Boxes": 150,
+    "matched": 147,
+    "recallVsFp32": 0.98,
+    "int8OnlyBoxes": 30,
+    "meanIoU": 0.9615,
+    "p5IoU": 0.8998,
+    "meanAbsScoreDiff": 0.0163
+   },
+   "ball@0.05": {
+    "fp32Boxes": 16,
+    "matched": 14,
+    "recallVsFp32": 0.875,
+    "int8OnlyBoxes": 7,
+    "meanIoU": 0.9433,
+    "p5IoU": 0.9159,
+    "meanAbsScoreDiff": 0.0333
+   }
+  },
+  "IMG_5105_600-660s.mp4": {
+   "frames": 60,
+   "fp32MsPerFrameMedian": 417.6,
+   "int8MsPerFrameMedian": 159.9,
+   "person@0.12": {
+    "fp32Boxes": 1395,
+    "matched": 1360,
+    "recallVsFp32": 0.9749,
+    "int8OnlyBoxes": 21,
+    "meanIoU": 0.9444,
+    "p5IoU": 0.8444,
+    "meanAbsScoreDiff": 0.0182
+   },
+   "person@0.12,h>=80px": {
+    "fp32Boxes": 282,
+    "matched": 281,
+    "recallVsFp32": 0.9965,
+    "int8OnlyBoxes": 21,
+    "meanIoU": 0.9623,
+    "p5IoU": 0.901,
+    "meanAbsScoreDiff": 0.0137
+   },
+   "person@0.4,h>=80px (OCR crops)": {
+    "fp32Boxes": 250,
+    "matched": 249,
+    "recallVsFp32": 0.996,
+    "int8OnlyBoxes": 3,
+    "meanIoU": 0.97,
+    "p5IoU": 0.9421,
+    "meanAbsScoreDiff": 0.0069
+   },
+   "ball@0.05": {
+    "fp32Boxes": 68,
+    "matched": 64,
+    "recallVsFp32": 0.9412,
+    "int8OnlyBoxes": 2,
+    "meanIoU": 0.9578,
+    "p5IoU": 0.9212,
+    "meanAbsScoreDiff": 0.0293
+   }
+  }
+ }
+}
