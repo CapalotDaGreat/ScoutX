@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 import unittest
+from urllib.error import HTTPError
 from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("staging_pilot", Path(__file__).with_name("staging-pilot.py"))
@@ -82,6 +83,43 @@ class RepositoryAndQueueTest(unittest.TestCase):
             self.assertEqual(step.call_count, 4)
             self.assertNotEqual(first["authProbeQueue"], second["authProbeQueue"])
             self.assertNotEqual(first["exhaustProbeQueue"], second["exhaustProbeQueue"])
+
+
+class StructuredTeardownTest(unittest.TestCase):
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location("teardown_pilot", Path(__file__).with_name("teardown-pilot.py"))
+        self.teardown = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.teardown)
+        self.url = "https://artifactregistry.googleapis.com/v1/projects/staging/locations/us/repositories/example"
+
+    def test_404_is_absent_regardless_of_message(self):
+        def missing(*args, **kwargs):
+            raise HTTPError(self.url, 404, "a different message", {}, None)
+        self.assertFalse(self.teardown.resource_present(self.url, "fake", opener=missing))
+
+    def test_403_and_500_do_not_count_as_absence(self):
+        for status in (403, 500):
+            with self.subTest(status=status):
+                def denied(*args, **kwargs):
+                    raise HTTPError(self.url, status, "NOT_FOUND", {}, None)
+                with self.assertRaises(HTTPError) as raised:
+                    self.teardown.resource_present(self.url, "fake", opener=denied)
+                self.assertEqual(raised.exception.code, status)
+
+    def test_delete_is_followed_by_exact_readback(self):
+        calls = []
+        values = iter((True, False))
+        def exists(url):
+            calls.append(("GET", url))
+            return next(values)
+        self.teardown.check_exact_resource(
+            lambda *args: calls.append(("DELETE", args)), exists, self.url, ("exact", "name")
+        )
+        self.assertEqual(calls, [("GET", self.url), ("DELETE", ("exact", "name")), ("GET", self.url)])
+
+    def test_resource_still_present_fails(self):
+        with self.assertRaisesRegex(RuntimeError, "still exists"):
+            self.teardown.check_exact_resource(lambda *args: None, lambda url: True, self.url, ("exact", "name"))
 
 
 if __name__ == "__main__":
