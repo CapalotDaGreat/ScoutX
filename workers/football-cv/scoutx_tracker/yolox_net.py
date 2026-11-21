@@ -274,6 +274,12 @@ def export_onnx(variant: str, weights: str | Path, out: str | Path, imgsz: int =
     return Path(out)
 
 
+def onnx_is_quantised(path: str | Path) -> bool:
+    """True when the ONNX file holds QuantizeLinear/QLinear nodes (op types are stored as plain strings)."""
+    data = Path(path).read_bytes()
+    return b"QuantizeLinear" in data or b"QLinearConv" in data
+
+
 def ort_providers(available: list[str], wanted: str | None = None) -> list[str]:
     """5.2: ONNX Runtime execution providers. `SCOUTX_ORT_PROVIDERS` (comma list, e.g.
     "CUDAExecutionProvider,CPUExecutionProvider") or "auto": CUDA first when the installed
@@ -319,6 +325,10 @@ class OnnxDetector:
         self.on_gpu = self.providers[0] in ("CUDAExecutionProvider", "TensorrtExecutionProvider")
         self.imgsz = imgsz
         self.name = f"{variant}@{imgsz}/onnx" + ("-cuda" if self.on_gpu else "")
+        # 2026-11-21: a quantised export (bench/detector_int8_experiment.py) must never pass as the FP32 detector in
+        # run reports or stage-1 checkpoints. The FP32 export contains no QuantizeLinear node, so its name is unchanged.
+        if onnx_is_quantised(path):
+            self.name += "-int8"
 
     def close(self) -> None:
         """Drop the ONNX session so its scratch memory returns before the next chunk or resolve."""

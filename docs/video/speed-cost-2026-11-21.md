@@ -64,10 +64,16 @@ Stage 1, night window, end to end: 295.1 s → 119.4 s. Detections 12,140 → 12
 - 4 % fewer OCR crops means fewer chances to read the number. The measured bottleneck is already sparse reads
   (ledger §14, research §5).
 
-The smallest falsifiable test is a full identity replay. Re-extract stage 1 of IMG_4809 (the labelled development
-match) with the INT8 file, run T+D+C+I, and compare with `compare_frames.py`. Keep it if there is 0 new wrong-player
-frame on the 503 labelled target frames and the loss in correct frames is ≤ 1 %. With the measured speed-up, that
-replay costs about 1.5 h of CPU here.
+The smallest falsifiable test is a full identity replay on IMG_4809, judged by the repo's existing accuracy gate
+`bench/gates/balanced_5.2.json`, relative to the CPU FP32 run on the same decoded pixels:
+- wrong-identity seconds 0;
+- claimed-recall drop ≤ 0.02 and IDF1 drop ≤ 0.01;
+- confirmed-correct seconds drop ≤ 0.5;
+- state agreement ≥ 0.97.
+
+(Corrected 2026-11-21: this replaces an ad-hoc ≤ 1 % rule written earlier the same day.) Since 2026-11-21 a
+quantised ONNX export is reported as `yolox_s@1280/onnx-int8` (`yolox_net.onnx_is_quantised`). It can no longer
+pass as the FP32 detector in run reports or stage-1 checkpoints.
 
 ## 4. Cost per analysis: CPU Cloud Run vs L4 (list prices, estimates)
 
@@ -111,15 +117,19 @@ Not measured:
 ## 6. INT8 identity replay: how to run it (prepared, not run)
 
 The IMG_4809 proxy (`Downloads/Mobile Devices/IMG_4809_proxy_10fps.mp4` on the owner PC, 1.41 GB, see
-`bench/references/img4809_proxy_10fps.json`) was not in the folder shared with this session, so the replay did not
-run. Both arms must run in the same environment, because the package versions here differ from the 2026-11-18
-runtime:
+`bench/references/img4809_proxy_10fps.json`) was not in the folder shared with this session. Both arms must run in
+the same environment and on the same decoded pixels.
 
-1. FP32 arm: `SCOUTX_WEIGHTS_DIR=<dir with yolox_s.pth + FP32 yolox_s.1280.onnx>`. Run the full match with flags
-   T+D+C+I (`SCOUTX_TELEPORT_SPLIT=1 SCOUTX_APPEARANCE_ONLY_LIKELY=0 SCOUTX_OCR_VARIANT=combined
-   SCOUTX_INTERP_NO_UPGRADE=1`), with fresh caches.
-2. INT8 arm: the same, with `SCOUTX_WEIGHTS_DIR` pointing at a copy where `yolox_s.1280.onnx` is the INT8 file
-   (SHA-256 recorded in `bench/results/int8-20261121/detector_agreement.json`).
-3. Compare with `bench/compare_frames.py` against `bench/results/5.1/gt_img4809_intervals.json`, corrected basis.
-4. Keep rule (section 3): 0 new wrong-player frames and ≤ 1 % fewer correct frames on the 503 labelled target
-   frames.
+```bash
+COMMON="--video IMG_4809_proxy_10fps.mp4 --number 20 --kit orange --kit2 white \
+  --reference bench/references/img4809_proxy_10fps.json \
+  --ground-truth bench/results/5.1/gt_img4809_intervals.json --gate bench/gates/balanced_5.2.json"
+SCOUTX_WEIGHTS_DIR=det_fp32 python bench/full_match_benchmark.py $COMMON --out fp32/full_match.json --work-dir w_fp32
+SCOUTX_WEIGHTS_DIR=det_int8 python bench/full_match_benchmark.py $COMMON --out int8/full_match.json --work-dir w_int8
+python bench/compare_runs.py --reference fp32/full_match.json --candidate int8/full_match.json \
+  --gate bench/gates/balanced_5.2.json --out int8_vs_fp32.json      # exit 0 = gate passed, 3 = failed
+```
+
+`det_int8` holds `yolox_s.pth` plus the INT8 file renamed to `yolox_s.1280.onnx` (SHA-256 in
+`bench/results/int8-20261121/detector_agreement.json`). Expected CPU time here: about 2 h for FP32 and 1.2 h for
+INT8.

@@ -16,8 +16,8 @@ Variants (`--variant`):
   convs - quantise only Conv nodes outside the prediction convs (correct boxes, but little speed-up)
 
 To run stage 1 with the result, copy the .pth next to the INT8 file renamed to `yolox_s.1280.onnx` and point
-SCOUTX_WEIGHTS_DIR at that directory. The engine then reports `yolox_s@1280/onnx` - it does NOT label the precision,
-so never mix such a run with FP32 results.
+SCOUTX_WEIGHTS_DIR at that directory. The engine reports it as `yolox_s@1280/onnx-int8`. Judge it only with
+bench/gates/balanced_5.2.json against the CPU FP32 run (bench/compare_runs.py); box agreement here is not a gate.
 """
 
 from __future__ import annotations

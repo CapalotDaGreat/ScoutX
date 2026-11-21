@@ -99,3 +99,14 @@ def test_keep_rule_rejects_any_teammate_read_and_needs_a_clear_rise():
     assert decide(base, small)["keep"] is False
     other = score(rows, ["20"] * 6 + ["17"] + [None] * 5, "20")
     assert decide(base, other)["checks"]["noRiseInOtherNumberOnTarget"] is False
+
+
+def test_quantised_detector_export_is_labelled(tmp_path):
+    from scoutx_tracker.yolox_net import onnx_is_quantised
+
+    fp32 = tmp_path / "a.onnx"
+    fp32.write_bytes(b"\x08\x07Conv\x12Sigmoid")
+    q = tmp_path / "b.onnx"
+    q.write_bytes(b"\x08\x07QuantizeLinear\x12DequantizeLinear Conv")
+    assert onnx_is_quantised(fp32) is False
+    assert onnx_is_quantised(q) is True
