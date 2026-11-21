@@ -7,6 +7,8 @@ import subprocess
 import time
 import ssl
 import urllib.request
+
+import artifact_repository
 from pathlib import Path
 
 PROJECT = "pitchproof-stg-pilot2"
@@ -100,7 +102,6 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
         }),
         (("functions",), "regions", FUNCTIONS),
         (("run", "services"), "region", {"stg-fake-worker"}),
-        (("artifacts", "repositories"), "location", BUILD_REPOSITORIES),
     ):
         args = (*scope, f"--{location}={REGION}")
         try:
@@ -114,6 +115,11 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
             remaining = {resource_name(resource) for resource in cli(*group, "list", *args) or []}
             if remaining & allowed:
                 raise RuntimeError(f"Pilot resources remain: {sorted(remaining & allowed)}")
+        except Exception as error:
+            errors.append(error)
+    for name in sorted(BUILD_REPOSITORIES):
+        try:
+            artifact_repository.delete_and_verify(cli, name, *scope, f"--location={REGION}")
         except Exception as error:
             errors.append(error)
     source = os.environ.get("STAGING_WORKER_SOURCE")

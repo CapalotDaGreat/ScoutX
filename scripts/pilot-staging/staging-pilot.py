@@ -10,6 +10,8 @@ import urllib.error
 import urllib.request
 import uuid
 
+import artifact_repository
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 PROJECT = "pitchproof-stg-pilot2"
@@ -23,7 +25,7 @@ def step(command):
 def cloud_json(*args):
     return json.loads(subprocess.check_output(
         [sys.executable, os.environ["STAGING_GCLOUD_PY"], *args,
-         "--format=json", "--quiet"], text=True, timeout=60
+         "--format=json", "--quiet"], text=True, timeout=60, stderr=subprocess.PIPE
     ))
 
 def verify_budget():
@@ -73,8 +75,7 @@ def deploy_private_worker():
     cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
     scope = ["--project=" + PROJECT, "--quiet"]
     image = f"{region}-docker.pkg.dev/{PROJECT}/{repo}/stg-fake-worker:pilot"
-    step([*cli, "artifacts", "repositories", "create", repo,
-          "--repository-format=docker", "--location=" + region, *scope])
+    artifact_repository.ensure(cloud_json, repo, "--location=" + region, "--project=" + PROJECT)
     build_member = "serviceAccount:" + NUMBER + "-compute@developer.gserviceaccount.com"
     step([*cli, "artifacts", "repositories", "add-iam-policy-binding", repo,
           "--location=" + region, "--member=" + build_member,
