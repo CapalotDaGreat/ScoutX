@@ -110,3 +110,27 @@ def test_quantised_detector_export_is_labelled(tmp_path):
     q.write_bytes(b"\x08\x07QuantizeLinear\x12DequantizeLinear Conv")
     assert onnx_is_quantised(fp32) is False
     assert onnx_is_quantised(q) is True
+
+
+@pytest.mark.parametrize(("content", "name"), [(b"Conv Sigmoid", "yolox_s@1280/onnx"),
+                                               (b"QuantizeLinear Conv", "yolox_s@1280/onnx-int8")])
+def test_onnx_detector_reports_int8_in_its_name(tmp_path, monkeypatch, content, name):
+    import onnxruntime as ort
+
+    from scoutx_tracker.yolox_net import OnnxDetector
+
+    weights = tmp_path / "yolox_s.pth"
+    weights.write_bytes(b"x")
+    (tmp_path / "yolox_s.1280.onnx").write_bytes(content)
+
+    class _Sess:
+        def __init__(self, *a, **k):
+            pass
+
+        def get_providers(self):
+            return ["CPUExecutionProvider"]
+
+    monkeypatch.setattr(ort, "InferenceSession", _Sess)
+    monkeypatch.setattr(ort, "get_available_providers", lambda: ["CPUExecutionProvider"])
+    monkeypatch.delenv("SCOUTX_ORT_PROVIDERS", raising=False)
+    assert OnnxDetector("yolox_s", weights, 1280).name == name

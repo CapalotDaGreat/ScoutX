@@ -32,32 +32,43 @@ There is **no CPU tracker image** in the repo: `Dockerfile.tracker-gpu` installs
 3. If the pinned set cannot be installed any more, the image becomes a new reference and needs the full-match run
    plus the label-based gate again. It must not silently inherit the old pass.
 
-## 2. Does CPU fit the existing orchestrator?
+## 2. Does CPU fit the existing orchestrator? (corrected 2026-11-21 after owner review)
 
-`functions/src/analysis/trackingOrchestrator.ts` already fans out:
-- discovery in 600 s chunks;
-- extraction in a 120 s first segment, then 300 s segments (up to 900 s for very long recordings);
-- one resolve.
+The first version of this section measured every task against 1,800 s. That number only applies to discovery and
+extraction. These are the clocks in the code:
 
-Each runs as a Cloud Task with a **1,800 s deadline**. Segments run in parallel on separate instances
-(concurrency 1), so a CPU fleet shortens latency without new code.
-
-Rates from the 2-vCPU reference: discovery 2,532 s, stage 1 about 8,280 s, resolve 775 s for 2,035 s of proxy.
-Linear scaling is an assumption until measured.
-
-| Task | Input | Estimated wall on 2 vCPU | Fits 1,800 s? |
+| Task | Function timeout | Worker HTTP client (`httpTrackingClient`) | Concurrency |
 |---|---|---|---|
-| Discovery chunk | 600 s | ~750 s | Yes |
-| Extract segment | 300 s | ~1,220 s | Yes, with ~1.5× margin; a 900 s segment (~3,660 s) does **not** fit |
-| Resolve, 34-min match | whole match | 775 s | Yes |
-| Resolve, 90-min match | whole match | ~2,050 s if linear | **No.** Needs measurement, more vCPU, or a resolve that runs as a Cloud Run job |
+| `discoverTrackingTask` | 1,800 s | **1,680 s** (`28 * 60 * 1000`) | 6 |
+| `extractTrackingSegmentTask` | 1,800 s | **1,680 s** | 6 |
+| `resolveTrackingTask` | **900 s** | **600 s** (default `10 * 60 * 1000`); on abort it returns null, which a full resolve records as an interruption and retries | 4 |
+| `refreshTrackingOcrTask` | 900 s | 600 s (default) | 2 |
+| Worker Cloud Run service | — | only the 900 s example in the worker README | 1 per instance |
 
-Open items, in order:
-1. Measure segment extract and resolve on 4 and 8 vCPU in the pinned image. More vCPU only pays if
-   wall time falls faster than the vCPU count rises.
-2. Cap segments at 300 s on CPU (or derive the cap from measured throughput), so no extract task can exceed its
-   deadline.
-3. Decide the resolve path for matches over ~60 min, after it is measured.
+The phases run in series: extraction is queued only after every discovery chunk has finished. `planSegments` keeps
+300 s segments until the recording is longer than about 5 hours, so a 90-min match never gets a 900 s segment. Keep
+the 300 s cap anyway, so that a long upload cannot schedule a task that cannot finish.
+
+The rates are from the 2-vCPU audit split (discovery 2,532 s, stage 1 about 8,280 s, resolve 775 s for the 2,035 s
+proxy). They are **not** from the 7,528.287 s accuracy run. The 775 s resolve comes from a resumed run
+(`timingComplete=false`). Linear scaling is assumed.
+
+| Task | Estimate on 2 vCPU | Clock that applies | Fits? |
+|---|---|---|---|
+| Discovery, 600 s chunk | ~750 s | 1,680 s client | Yes |
+| Extract, 300 s | ~1,220 s | 1,680 s client | Yes, about 1.4× margin |
+| Extract, 900 s (only for recordings over ~5 h) | ~3,660 s | 1,680 s client | No; cap at 300 s |
+| Resolve, 34-min match | 775 s | **600 s client** | **No** |
+| Resolve, 90-min match | ~2,050 s | 600 s client, 900 s function | **No.** A Cloud Tasks handler will not extend past 30 min, so this needs a different design (for example a Cloud Run job) or a faster resolve |
+
+Before CPU can serve a match:
+1. The pinned CPU image passes `compare_runs.py` + balanced_5.2 against the recorded 7,528.287 s CPU run (exit 0).
+2. The CPU worker service's request timeout is set to at least the 1,800 s used by discovery and extraction. A
+   900 s service timeout would kill a 1,220 s extract in the worker while the function is still waiting.
+3. The resolve client timeout and `resolveTrackingTask.timeoutSeconds` are raised **together** (the client below
+   the function), and then measured with a non-resumed (`timingComplete=true`) resolve at 2, 4 and 8 vCPU. A
+   resolve that cannot finish inside a Cloud Tasks handler needs the job design above.
+4. `refreshTrackingOcrTask` is checked against the same measurements.
 
 ## 3. Cost (list prices, europe-west6, instance-based billing)
 
