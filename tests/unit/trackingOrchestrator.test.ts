@@ -85,6 +85,7 @@ test('segments: short first segment, contiguous, within worker limits, for 90 an
     for (let i = 1; i < plan.length; i += 1) assert.equal(plan[i].startSec, plan[i - 1].endSec);
     assert.ok(plan.every((s) => s.endSec - s.startSec <= 900 && s.endSec > s.startSec));
     assert.ok(plan.length <= 61);
+    if (duration <= 8400) assert.ok(plan.every((s) => s.endSec - s.startSec <= 300));
   }
   assert.equal(planSegments(5400)[0].endSec, 120, 'first results come from a short first segment');
   assert.equal(planSegments(5400).length, 19);

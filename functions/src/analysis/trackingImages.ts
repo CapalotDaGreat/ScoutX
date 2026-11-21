@@ -1,5 +1,6 @@
 import { getStorage } from 'firebase-admin/storage';
 import type { Firestore } from 'firebase-admin/firestore';
+import { TRACKING_ATTEMPT_LEASE_MS } from './trackingDeadlines';
 
 /**
  * R2 (2026-11-19): review and discovery images follow the report's visibility.
@@ -16,7 +17,8 @@ import type { Firestore } from 'firebase-admin/firestore';
  * wrote them, otherwise by the media lifecycle once older than a resolve can run).
  */
 export const HELD_IMAGE_DIR = 'pilotHeld';
-export const IMAGE_ATTEMPT_MAX_MS = 16 * 60 * 1000; // > the 900 s timeout of the tasks that write images
+/** Longer than the tracking task timeout, so a still-running attempt's images are not reaped. */
+export const IMAGE_ATTEMPT_MAX_MS = TRACKING_ATTEMPT_LEASE_MS;
 
 const OWNER_IMAGE = /^profiles\/[^/]+\/matchFootage\/[^/]+\/tracking\/[A-Za-z0-9_-]+\.jpg$/;
 

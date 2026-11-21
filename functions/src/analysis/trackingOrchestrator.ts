@@ -33,9 +33,10 @@ import {
   type TrackingMoment,
 } from './trackingV3';
 import {
-  httpTrackingClient, imageBucketFor, markTrackingFailed, storageImageStore, type ImageStore, type TrackingNotifier,
+  httpTrackingClient, imageBucketFor, markTrackingFailed, readWorker, storageImageStore, type ImageStore, type TrackingNotifier,
   type TrackingWorkerClient,
 } from './trackingCallables';
+import { TRACKING_ATTEMPT_LEASE_MS, TRACKING_TASK_TIMEOUT_SEC, TRACKING_WORKER_CLIENT_MS } from './trackingDeadlines';
 import { IMAGE_ATTEMPT_MAX_MS, publishImages, pruneJobImages, readImageDocs, type ImageBucket } from './trackingImages';
 import {
   discoveryFinished, doneCount, newProgress, notificationId, planDiscovery, prioritisedSegments, shouldResolvePreliminary,
@@ -51,7 +52,7 @@ export type Enqueue = (queue: 'discoverTrackingTask' | 'extractTrackingSegmentTa
   payload: Record<string, unknown>) => Promise<void>;
 
 export const cloudTasksEnqueue: Enqueue = async (queue, payload) => {
-  await getFunctions().taskQueue(taskQueueName(queue)).enqueue(payload, { dispatchDeadlineSeconds: 1800 });
+  await getFunctions().taskQueue(taskQueueName(queue)).enqueue(payload, { dispatchDeadlineSeconds: TRACKING_TASK_TIMEOUT_SEC });
 };
 
 function progressRef(db: Firestore, jobId: string) {
@@ -157,7 +158,7 @@ export type ExtractOutcome = 'done' | 'cached' | 'stale' | 'cancelled' | 'retry'
  * Claim lease for one segment attempt: longer than the extract task's 1800 s timeout, so a claim this old belongs to an
  * attempt that can no longer be running (2026-11-19: was 16 min, shorter than the timeout).
  */
-export const EXTRACT_LEASE_MS = 31 * 60 * 1000;
+export const EXTRACT_LEASE_MS = TRACKING_ATTEMPT_LEASE_MS;
 
 export async function processExtractTask(db: Firestore, jobId: string, generation: number, index: number, attempt: number,
   client: TrackingWorkerClient | null, enqueue: Enqueue, env: NodeJS.ProcessEnv = process.env,
@@ -202,7 +203,7 @@ export async function processExtractTask(db: Firestore, jobId: string, generatio
   if (!claimed) return 'stale';
   const stillMine = (p: TrackingProgress | undefined) => Boolean(p && p.generation === generation
     && (p.segments?.[String(index)] as { claim?: string } | undefined)?.claim === token);
-  const res = await client({
+  const res = await readWorker(client, {
     contractVersion: 3, jobId, segmentIndex: index, startSec: seg.startSec, endSec: seg.endSec,
     source: { url: await sourceUrl(job.videoStoragePath) },
     privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
@@ -282,7 +283,7 @@ export async function processDiscoverTask(db: Firestore, jobId: string, generati
     return 'unavailable';
   }
   const number = job.targeting?.jerseyNumber ?? '';
-  const res = await client({
+  const res = await readWorker(client, {
     contractVersion: 3, jobId, chunkIndex: index, startSec: chunk.startSec, endSec: chunk.endSec,
     source: { url: await sourceUrl(job.videoStoragePath) },
     target: { jerseyNumber: number, kitPrimaryColor: job.targeting?.kitPrimaryColor ?? '' },
@@ -382,7 +383,7 @@ export const discoverTrackingTask = onTaskDispatched(
       || !Number.isSafeInteger(d.index)) return;
     const url = cvWorkerUrl();
     const outcome = await processDiscoverTask(getFirestore(), d.jobId, d.generation as number, d.index as number,
-      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'discover', 28 * 60 * 1000) : null, cloudTasksEnqueue);
+      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'discover', TRACKING_WORKER_CLIENT_MS) : null, cloudTasksEnqueue);
     if (outcome === 'retry') throw new Error('discovery chunk failed; retrying');
   },
 );
@@ -405,7 +406,7 @@ export const extractTrackingSegmentTask = onTaskDispatched(
       || !Number.isSafeInteger(d.index)) return;
     const url = cvWorkerUrl();
     const outcome = await processExtractTask(getFirestore(), d.jobId, d.generation as number, d.index as number,
-      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'extract', 28 * 60 * 1000) : null, cloudTasksEnqueue);
+      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'extract', TRACKING_WORKER_CLIENT_MS) : null, cloudTasksEnqueue);
     // Throwing hands the retry (with backoff) to Cloud Tasks; finished segments are cached on the worker.
     if (outcome === 'retry') throw new Error('segment extraction failed; retrying');
   },

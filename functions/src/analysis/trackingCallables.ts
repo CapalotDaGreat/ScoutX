@@ -32,6 +32,10 @@ import {
   type OcrFollowUp,
 } from './trackingFollowUp';
 import { rateLimitDocId } from '../security/rateLimit';
+import {
+  OCR_REFRESH_MAX_ATTEMPTS, RESOLVE_MAX_ATTEMPTS, TRACKING_ATTEMPT_LEASE_MS, TRACKING_TASK_TIMEOUT_SEC,
+  TRACKING_WORKER_CLIENT_MS, TrackingWorkerTimeout, isWorkerTimeout, timeoutWillRetry,
+} from './trackingDeadlines';
 
 type CurrentDoc = { report: TrackingReport | null; version: number; stale: boolean; feedbackRevision: number;
   pendingReason?: string | null; updatedAt?: string; followUp?: OcrFollowUp | null };
@@ -82,7 +86,7 @@ async function mutateFeedback(uid: string, jobId: string,
   });
   if (!result.pending || result.pending === 'withheld_for_review') {
     await getFunctions().taskQueue(taskQueueName('resolveTrackingTask'))
-      .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: 900 });
+      .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: TRACKING_TASK_TIMEOUT_SEC });
   }
   return result;
 }
@@ -155,7 +159,8 @@ export async function markTrackingFailed(db: Firestore, jobId: string, now = new
 export type TrackingWorkerClient = (body: Record<string, unknown>) => Promise<unknown | null>;
 
 export function httpTrackingClient(baseUrl: string, env: NodeJS.ProcessEnv = process.env,
-  route: 'resolve' | 'extract' | 'discover' | 'clipFrames' = 'resolve', timeoutMs = 10 * 60 * 1000): TrackingWorkerClient {
+  route: 'resolve' | 'extract' | 'discover' | 'clipFrames' = 'resolve',
+  timeoutMs = TRACKING_WORKER_CLIENT_MS): TrackingWorkerClient {
   return async (body) => {
     const emulated = env.FUNCTIONS_EMULATOR === 'true';
     const token = emulated ? null : await identityToken(baseUrl);
@@ -168,10 +173,23 @@ export function httpTrackingClient(baseUrl: string, env: NodeJS.ProcessEnv = pro
         signal: AbortSignal.timeout(timeoutMs),
       });
       return res.ok ? await res.json() : null;
-    } catch {
+    } catch (error) {
+      // A deadline is retryable. Any other failure stays a null response, which resolve records
+      // as rejected and does not retry (a 500 is not the same as a slow match).
+      if (isWorkerTimeout(error)) throw new TrackingWorkerTimeout();
       return null;
     }
   };
+}
+
+/** Discovery and extraction already retry a null response. A client deadline is that same failure. */
+export async function readWorker(client: TrackingWorkerClient, body: Record<string, unknown>): Promise<unknown | null> {
+  try {
+    return await client(body);
+  } catch (error) {
+    if (error instanceof TrackingWorkerTimeout) return null;
+    throw error;
+  }
 }
 
 export type ImageStore = (path: string, jpeg: Buffer) => Promise<void>;
@@ -196,7 +214,7 @@ export type FollowUpEnqueue = (payload: { jobId: string; feedbackRevision: numbe
 export const cloudTasksFollowUpEnqueue: FollowUpEnqueue = async (payload, taskId) => {
   try {
     await getFunctions().taskQueue(taskQueueName('refreshTrackingOcrTask'))
-      .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: 900 });
+      .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: TRACKING_TASK_TIMEOUT_SEC });
   } catch (e) {
     // ALREADY_EXISTS: this round was scheduled before (a retried publish) - nothing to do
     if (!String((e as { code?: unknown })?.code ?? e).includes('already-exists')) throw e;
@@ -228,7 +246,7 @@ type ProgressDoc = TrackingProgress;
  */
 export async function processResolveTask(db: Firestore, jobId: string, feedbackRevision: number,
   client: TrackingWorkerClient | null, env: NodeJS.ProcessEnv = process.env,
-  storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'stale' | 'busy'> {
+  storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'timedOut' | 'stale' | 'busy'> {
   if (!client || !trackingV3Enabled(env) || cvWorkerStatus(env) !== 'available') return 'unavailable';
   const now = opts.now ?? (() => new Date());
   const base = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION);
@@ -266,8 +284,8 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   }
 }
 
-/** Lease of a resolve claim: longer than the resolve task's 900 s timeout. */
-export const RESOLVE_LEASE_MS = 16 * 60 * 1000;
+/** Lease of a resolve claim: longer than the resolve task timeout. */
+export const RESOLVE_LEASE_MS = TRACKING_ATTEMPT_LEASE_MS;
 
 /**
  * Takes the resolve claim for `key` unless a live claim for the same key is held by this or a later attempt
@@ -298,12 +316,18 @@ async function endResolveClaim(db: Firestore, progress: DocumentReference, token
 
 async function resolveClaimed(db: Firestore, jobId: string, feedbackRevision: number, client: TrackingWorkerClient,
   env: NodeJS.ProcessEnv, storeImage: ImageStore, opts: ResolveOptions, job: MatchJobDoc, fb: FeedbackDoc, refresh: boolean,
-  now: () => Date, base: CollectionReference, claimToken: string | null): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'stale' | 'busy'> {
-  const raw = await client({
-    contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
-    target: job.targeting ?? {}, feedback: workerFeedback(fb),
-    ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: OCR_FOLLOW_UP_MAX_CROPS } } : {}),
-  }) as { report?: unknown; timeline?: { times: number[]; states: string[] }; workerVersion?: string; models?: Record<string, string> } | null;
+  now: () => Date, base: CollectionReference, claimToken: string | null): Promise<'done' | 'held' | 'stopped' | 'superseded' | 'unavailable' | 'rejected' | 'timedOut' | 'stale' | 'busy'> {
+  let raw: { report?: unknown; timeline?: { times: number[]; states: string[] }; workerVersion?: string; models?: Record<string, string> } | null;
+  try {
+    raw = await client({
+      contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
+      target: job.targeting ?? {}, feedback: workerFeedback(fb),
+      ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: OCR_FOLLOW_UP_MAX_CROPS } } : {}),
+    }) as typeof raw;
+  } catch (error) {
+    if (error instanceof TrackingWorkerTimeout) return 'timedOut';
+    throw error;
+  }
   if (!raw || !raw.workerVersion || !raw.models || !isApprovedWorkerOutput({ workerVersion: raw.workerVersion, models: raw.models }, env)) {
     return 'rejected';
   }
@@ -455,7 +479,8 @@ async function resolveClaimed(db: Firestore, jobId: string, feedbackRevision: nu
 }
 
 export const resolveTrackingTask = onTaskDispatched(
-  { retryConfig: { maxAttempts: 3, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 4 }, timeoutSeconds: 900 },
+  { retryConfig: { maxAttempts: RESOLVE_MAX_ATTEMPTS, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 4 },
+    timeoutSeconds: TRACKING_TASK_TIMEOUT_SEC },
   async (request) => {
     const d = request.data as { jobId?: unknown; feedbackRevision?: unknown; scope?: unknown };
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision)) return;
@@ -468,8 +493,12 @@ export const resolveTrackingTask = onTaskDispatched(
       const fb = await db.collection(MATCH_COLLECTION).doc(d.jobId).collection(TRACKING_COLLECTION).doc('feedback').get();
       fbRevision = (fb.data() as FeedbackDoc | undefined)?.revision ?? 0;
     }
+    const attempt = request.retryCount ?? 0;
     const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env,
-      storageImageStore, { scope, attempt: request.retryCount ?? 0 });
+      storageImageStore, { scope, attempt });
+    // Earlier attempts throw, so Cloud Tasks retries. The last attempt falls through and, for a full
+    // resolve, settleOrchestratedResolve marks the job interrupted. Returning here would count as success.
+    if (outcome === 'timedOut' && timeoutWillRetry(attempt, RESOLVE_MAX_ATTEMPTS)) throw new TrackingWorkerTimeout();
     if (scope !== 'feedback') await settleOrchestratedResolve(db, d.jobId, scope, outcome);
   },
 );
@@ -495,6 +524,9 @@ export async function processOcrFollowUpTask(db: Firestore, jobId: string, feedb
   if (!claimed) return 'stale';
   const outcome = await processResolveTask(db, jobId, feedbackRevision, client, env, storeImage,
     { ...opts, scope: 'refresh', followUpRound: round });
+  if (outcome === 'timedOut' && timeoutWillRetry(opts.attempt ?? 0, OCR_REFRESH_MAX_ATTEMPTS)) {
+    throw new TrackingWorkerTimeout();
+  }
   if (outcome !== 'done') {
     const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
     const status = outcome === 'superseded' || outcome === 'stale' || outcome === 'busy' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
@@ -510,14 +542,15 @@ export async function processOcrFollowUpTask(db: Firestore, jobId: string, feedb
 }
 
 export const refreshTrackingOcrTask = onTaskDispatched(
-  { retryConfig: { maxAttempts: 2, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 2 }, timeoutSeconds: 900 },
+  { retryConfig: { maxAttempts: OCR_REFRESH_MAX_ATTEMPTS, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 2 },
+    timeoutSeconds: TRACKING_TASK_TIMEOUT_SEC },
   async (request) => {
     const d = request.data as { jobId?: unknown; feedbackRevision?: unknown; round?: unknown };
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision)
       || !Number.isSafeInteger(d.round) || (d.round as number) < 1) return;
     const url = cvWorkerUrl();
     await processOcrFollowUpTask(getFirestore(), d.jobId, d.feedbackRevision as number, d.round as number,
-      url ? httpTrackingClient(url) : null);
+      url ? httpTrackingClient(url) : null, process.env, storageImageStore, { attempt: request.retryCount ?? 0 });
   },
 );
 
@@ -531,7 +564,7 @@ export async function settleOrchestratedResolve(db: Firestore, jobId: string, sc
   // 'busy': another delivery holds the claim and settles the run itself.
   if (outcome === 'done' || outcome === 'held' || outcome === 'busy') return;
   const ref = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc('progress');
-  const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped');
+  const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped' || outcome === 'timedOut');
   await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
   // R1: an interrupted run is resumable; the source stays for the failed-analysis retry window, then goes.
   if (failed) await markTrackingFailed(db, jobId, now);
