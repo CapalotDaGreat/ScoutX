@@ -41,7 +41,7 @@ const SECRETISH = [
   [/eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/g, '<jwt>'],
   [/ya29\.[A-Za-z0-9._-]+/g, '<access-token>'],
   [/([?&](token|X-Goog-Signature|X-Goog-Credential|key)=)[^&"\s]+/gi, '$1<redacted>'],
-  [/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|invalid|ch)/g, (m) => (m.endsWith('.gserviceaccount.com') ? `<sa:${m.split('@')[0].slice(0, 12)}…>` : '<email>')],
+  [/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|net|org|invalid|ch)/g, (m) => (m.endsWith('.gserviceaccount.com') ? `<sa:${m.split('@')[0].slice(0, 12)}â€¦>` : '<email>')],
   [/"(downloadTokens|idToken|refreshToken|access_token|id_token)"\s*:\s*"[^"]*"/g, '"$1":"<redacted>"'],
 ];
 /** Redacts tokens, signatures, keys and e-mail addresses from any evidence before it is written. */
@@ -58,9 +58,46 @@ export async function accessToken() {
   return (await auth.getClient().then((c) => c.getAccessToken())).token;
 }
 
-/** Identity token of the operator for calling the private fake worker's control endpoints (staging). */
-export function operatorIdentityToken() {
-  return execFileSync('gcloud', ['auth', 'print-identity-token'], { encoding: 'utf8' }).trim();
+const WORKER_AUDIENCE = 'https://stg-fake-worker-315202089837.europe-west6.run.app';
+const OPERATOR = 'stg-pilot-operator@pitchproof-stg-pilot2.iam.gserviceaccount.com';
+
+export async function operatorIdentityToken(audience) {
+  if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    return execFileSync('gcloud', ['auth', 'print-identity-token'], { encoding: 'utf8' }).trim();
+  }
+  if (audience !== WORKER_AUDIENCE && !/^https:\/\/[a-z0-9-]+-315202089837\.europe-west6\.run\.app$/.test(audience)) {
+    throw new Error('Refusing a private invocation token outside staging');
+  }
+  const credentials = JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'utf8'));
+  if (credentials.type !== 'external_account' ||
+      credentials.audience !== '//iam.googleapis.com/projects/315202089837/locations/global/workloadIdentityPools/scoutx-staging-gh/providers/github') {
+    throw new Error('Expected ScoutX staging federation credentials');
+  }
+  delete credentials.service_account_impersonation_url;
+  const { GoogleAuth } = requireFn('google-auth-library');
+  const federated = await new GoogleAuth({ scopes: ['https://www.googleapis.com/auth/cloud-platform'] }).fromJSON(credentials).getAccessToken();
+  if (!federated.token) throw new Error('Federated access token unavailable');
+  const endpoint = 'https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/' + OPERATOR + ':generateIdToken';
+  const reply = await fetch(endpoint, {
+    method: 'POST', redirect: 'error', signal: AbortSignal.timeout(15000),
+    headers: { Authorization: 'Bearer ' + federated.token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ audience, includeEmail: true }),
+  });
+  if (!reply.ok) throw new Error('Staging identity token request failed with HTTP ' + reply.status);
+  const result = await reply.json();
+  if (!result.token) throw new Error('Staging identity token missing');
+  return result.token;
+}
+
+export async function callableHeaders(cfg, user, name, identityToken = operatorIdentityToken) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (user) headers.Authorization = 'Bearer ' + user.token;
+  if (cfg.target === 'staging') {
+    const endpoint = cfg.callableUrls?.[name];
+    if (!endpoint) throw new Error('Missing private endpoint for ' + name);
+    headers['X-Serverless-Authorization'] = 'Bearer ' + await identityToken(endpoint);
+  }
+  return headers;
 }
 
 export function evidenceWriter(out, meta) {

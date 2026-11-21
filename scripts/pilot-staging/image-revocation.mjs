@@ -9,7 +9,7 @@
  */
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { evidenceWriter, loadConfig, operatorIdentityToken, redact, requireFn, root, sleep, waitFor } from './lib.mjs';
+import { callableHeaders, evidenceWriter, loadConfig, operatorIdentityToken, redact, requireFn, root, sleep, waitFor } from './lib.mjs';
 import { driverGuard } from './limits.mjs';
 
 const cfg = loadConfig();
@@ -33,8 +33,7 @@ async function signUp(label) {
   return { label, uid: j.localId, token: j.idToken };
 }
 async function callable(name, data, user) {
-  const r = await fetch(`${cfg.functionsBase}/${name}`, { method: 'POST', headers: { 'Content-Type': 'application/json',
-    ...(user ? { Authorization: `Bearer ${user.token}` } : {}) }, body: JSON.stringify({ data }) });
+  const r = await fetch(cfg.callableUrls?.[name] ?? `${cfg.functionsBase}/${name}`, { method: 'POST', headers: await callableHeaders(cfg, user, name), body: JSON.stringify({ data }) });
   let j = null; try { j = await r.json(); } catch { /* none */ }
   return { http: r.status, result: j?.result ?? null, error: j?.error ? { status: j.error.status } : null };
 }
@@ -55,10 +54,10 @@ function ops(...args) {
   E.step('ops', out);
   return out;
 }
-const workerHeaders = () => (cfg.workerAuth === 'operator' ? { Authorization: `Bearer ${operatorIdentityToken()}` } : {});
-const ctl = async (p, b) => (await fetch(`${cfg.workerBase}/_ctl/${p}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...workerHeaders() },
+const workerHeaders = async () => (cfg.workerAuth === 'operator' ? { Authorization: `Bearer ${await operatorIdentityToken(cfg.workerBase)}` } : {});
+const ctl = async (p, b) => (await fetch(`${cfg.workerBase}/_ctl/${p}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...await workerHeaders() },
   body: JSON.stringify(b) })).json();
-const waiting = async (jobId, route) => (await (await fetch(`${cfg.workerBase}/_ctl/waiting?jobId=${jobId}&route=${route}`, { headers: workerHeaders() })).json()).waiting;
+const waiting = async (jobId, route) => (await (await fetch(`${cfg.workerBase}/_ctl/waiting?jobId=${jobId}&route=${route}`, { headers: await workerHeaders() })).json()).waiting;
 const objects = async (u, j) => (await bucket.getFiles({ prefix: `profiles/${u.uid}/matchFootage/${j}/` }))[0].map((f) => f.name.split(`/${j}/`)[1]).sort();
 const imagesIn = (d) => [...new Set([...JSON.stringify(d?.report ?? d?.moments ?? {}).matchAll(/"(profiles\/[^"]+\/tracking\/[^"]+\.jpg)"/g)].map((m) => m[1]))];
 /** Owner-visible review + discovery images of a job. */
