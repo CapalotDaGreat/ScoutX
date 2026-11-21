@@ -122,6 +122,30 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
             artifact_repository.delete_and_verify(cli, name, *scope, f"--location={REGION}")
         except Exception as error:
             errors.append(error)
+    # Only the European deployment is owned by this run. Check the extra
+    # locations by exact name and surface any unexpected resources for review.
+    for location in ("us-central1", "us"):
+        for name in sorted(BUILD_REPOSITORIES):
+            try:
+                if artifact_repository.describe(cli, name, *scope, f"--location={location}") is not None:
+                    raise RuntimeError(f"Unexpected repository in {location}: {name}")
+                print(f"Verified NOT_FOUND for {location}/{name}", flush=True)
+            except Exception as error:
+                errors.append(error)
+        if location == "us":
+            print("Cloud Run has no us multi-region endpoint; checked us-central1 separately", flush=True)
+            continue
+        try:
+            worker = "stg-fake-worker"
+            cli("run", "services", "describe", worker, *scope, f"--region={location}")
+            raise RuntimeError(f"Unexpected worker in {location}: {worker}")
+        except subprocess.CalledProcessError as error:
+            if re.search(r"(?<![A-Z_])NOT_FOUND(?![A-Z_])", error.stderr or ""):
+                print(f"Verified NOT_FOUND for {location}/{worker}", flush=True)
+            else:
+                errors.append(error)
+        except Exception as error:
+            errors.append(error)
     source = os.environ.get("STAGING_WORKER_SOURCE")
     if source:
         try:
