@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 import uuid
 
@@ -102,6 +103,9 @@ def provision_firebase_project():
     cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
     scope = ["--project=" + PROJECT, "--quiet"]
     step([*cli, "firestore", "databases", "create", "--location=europe-west6", *scope])
+    db = cloud_json("firestore", "databases", "describe", "--database=(default)", "--project=" + PROJECT)
+    Path(os.environ["STAGING_LIMITS_STATE"]).with_name("firestore-uid").write_text(db["uid"], encoding="utf-8")
+
 
 def verify_probe_account():
     expected = f"stg-no-invoker@{PROJECT}.iam.gserviceaccount.com"
@@ -131,8 +135,13 @@ def provision_auth_and_storage():
         return json.loads(data) if data else None
 
     identity = "https://identitytoolkit.googleapis.com"
-    request("POST", f"{identity}/v2/projects/{PROJECT}/identityPlatform:initializeAuth")
     config_url = f"{identity}/admin/v2/projects/{PROJECT}/config"
+    try:
+        request("GET", config_url)
+    except urllib.error.HTTPError as error:
+        if error.code != 404:
+            raise
+        request("POST", f"{identity}/v2/projects/{PROJECT}/identityPlatform:initializeAuth")
     request("PATCH", config_url + "?updateMask=signIn.email",
             {"signIn": {"email": {"enabled": True, "passwordRequired": True}}})
     email = request("GET", config_url)["signIn"]["email"]
@@ -141,7 +150,7 @@ def provision_auth_and_storage():
     bucket = request("POST",
                      f"https://firebasestorage.googleapis.com/v1alpha/projects/{PROJECT}/defaultBucket",
                      {"location": "europe-west6"})
-    if bucket["name"].split("/")[-1] != PROJECT + ".firebasestorage.app":
+    if bucket.get("bucket", {}).get("name", bucket["name"]).split("/")[-1] != PROJECT + ".firebasestorage.app":
         raise RuntimeError("Firebase returned an unexpected default bucket")
 
 def verify_runtime_iam():

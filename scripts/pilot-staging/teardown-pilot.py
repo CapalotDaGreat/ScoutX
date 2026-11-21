@@ -137,6 +137,22 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
             synthetic_cleanup()
         except Exception as error:
             errors.append(error)
+    limit_state = os.environ.get("STAGING_LIMITS_STATE")
+    marker = Path(limit_state).with_name("firestore-uid") if limit_state else None
+    if marker and marker.exists():
+        try:
+            scope = (f"--project={PROJECT}",)
+            databases = cli("firestore", "databases", "list", *scope) or []
+            for database in databases:
+                if database["name"].endswith("/databases/(default)"):
+                    if database["uid"] != marker.read_text(encoding="utf-8"):
+                        raise RuntimeError("Refusing to delete a database not created by this run")
+                    cli("firestore", "databases", "delete", "--database=(default)", *scope)
+            if any(db["name"].endswith("/databases/(default)")
+                   for db in cli("firestore", "databases", "list", *scope) or []):
+                raise RuntimeError("Pilot Firestore database is still active")
+        except Exception as error:
+            errors.append(error)
     try:
         web_cleanup()
     except Exception as error:
