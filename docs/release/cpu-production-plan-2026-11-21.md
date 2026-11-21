@@ -41,7 +41,7 @@ extraction. These are the clocks in the code:
 |---|---|---|---|
 | `discoverTrackingTask` | 1,800 s | **1,680 s** (`28 * 60 * 1000`) | 6 |
 | `extractTrackingSegmentTask` | 1,800 s | **1,680 s** | 6 |
-| `resolveTrackingTask` | **900 s** | **600 s** (default `10 * 60 * 1000`); on abort it returns null, which a full resolve records as an interruption and retries | 4 |
+| `resolveTrackingTask` | **900 s** | **600 s** (default `10 * 60 * 1000`); on abort it returns null; `processResolveTask` returns `rejected`, and `settleOrchestratedResolve` marks a full resolve `interrupted` and calls `markTrackingFailed`. The handler returns normally, so **the task is not retried** (`maxAttempts: 3` never applies on this path; discovery and extraction handlers throw and are retried) | 4 |
 | `refreshTrackingOcrTask` | 900 s | 600 s (default) | 2 |
 | Worker Cloud Run service | — | only the 900 s example in the worker README | 1 per instance |
 
