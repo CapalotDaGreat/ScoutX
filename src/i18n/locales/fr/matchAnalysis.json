@@ -1144,5 +1144,20 @@
       "insufficient": "Cet enregistrement n'en montre pas assez pour examiner cet objectif (vidéo confirmée de toi : {{confirmedSec}} s).",
       "note": "PitchProof montre des preuves sur ton objectif - il ne le note pas comme atteint ou manqué."
     }
+  },
+  "filmingTips": {
+    "title": "Conseils de tournage pour que PitchProof te retrouve",
+    "show": "Afficher les conseils de tournage",
+    "hide": "Masquer les conseils de tournage",
+    "intro": "PitchProof te reconnaît uniquement grâce à ton numéro et à ton maillot, jamais à ton visage. Ces étapes rendent ton numéro lisible :",
+    "items": {
+      "number": "Porte un grand numéro qui contraste avec le maillot, dans le dos et si possible devant. Rien ne doit le cacher (chasuble, veste).",
+      "unique": "Vérifie qu'aucun coéquipier ne porte le même numéro dans ce match.",
+      "height": "Filme le plus haut possible, près de la ligne médiane, à l'horizontale, sur un trépied ou un support.",
+      "steady": "Garde le jeu dans l'image et évite de zoomer et dézoomer.",
+      "quality": "Enregistre en 1080p ou plus. Le soir, filme du côté éclairé par les projecteurs.",
+      "whole": "Enregistre tout le match sans pause."
+    },
+    "why": "Si PitchProof ne peut pas te confirmer, il le dit au lieu de deviner. C'est un numéro lisible qui lui permet de te confirmer."
   }
 }

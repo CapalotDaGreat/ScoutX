@@ -61,6 +61,31 @@ def _digit_box(mask: np.ndarray):
     return x1, y1, x2, y2
 
 
+def apply_parseq_override(model, path: str | None = None, sha256: str | None = None) -> str:
+    """E9 (2026-11-21), experiment only, default off. `SCOUTX_PARSEQ_WEIGHTS` names a fine-tuned docTR PARSeq
+    state dict (bench/e9/finetune.py); `SCOUTX_PARSEQ_WEIGHTS_SHA256` must give its SHA-256 or loading is refused,
+    so a run can never use unrecorded weights. Returns "pretrained" or "override:<sha256>" for the run report."""
+    import hashlib  # noqa: PLC0415
+
+    path = path if path is not None else os.environ.get("SCOUTX_PARSEQ_WEIGHTS", "").strip()
+    if not path:
+        return "pretrained"
+    sha256 = (sha256 if sha256 is not None else os.environ.get("SCOUTX_PARSEQ_WEIGHTS_SHA256", "")).strip().lower()
+    with open(path, "rb") as fh:
+        data = fh.read()
+    got = hashlib.sha256(data).hexdigest()
+    if not sha256 or got != sha256:
+        raise RuntimeError(f"SCOUTX_PARSEQ_WEIGHTS {path}: SHA-256 {got} does not match SCOUTX_PARSEQ_WEIGHTS_SHA256")
+    import io  # noqa: PLC0415
+
+    import torch  # noqa: PLC0415
+
+    state = torch.load(io.BytesIO(data), map_location="cpu", weights_only=True)
+    model.load_state_dict(state, strict=True)
+    model.eval()
+    return f"override:{got}"
+
+
 def enhance(crop: np.ndarray) -> np.ndarray:
     """4.1 pre-processing: 2x cubic upscale for crops under 220 px, then an unsharp mask.
     Measured on 71 developer-labelled number crops: 14 full-number reads vs 10 without it, no
@@ -83,6 +108,7 @@ class NumberReader:
 
         gpu = torch.cuda.is_available()
         self.parseq = recognition_predictor("parseq", pretrained=True)
+        self.parseq_weights = apply_parseq_override(self.parseq.model)
         degraded: list[str] = []
         if gpu:  # 4.1: OCR on the GPU host too (both recognisers are torch models)
             try:
@@ -94,7 +120,8 @@ class NumberReader:
         # 2026-11-14: report where each recogniser actually runs. A CUDA host whose OCR silently stayed on the CPU
         # used to look like a GPU run; now it is a recorded degraded mode, and SCOUTX_REQUIRE_GPU_OCR=1 refuses it.
         self.device_report = {"cudaAvailable": gpu, "parseq": module_device(self.parseq),
-                              "easyocr": str(getattr(self.easy, "device", "cpu"))}
+                              "easyocr": str(getattr(self.easy, "device", "cpu")),
+                              "parseqWeights": self.parseq_weights}
         if gpu:
             for name in ("parseq", "easyocr"):
                 if not self.device_report[name].startswith("cuda"):

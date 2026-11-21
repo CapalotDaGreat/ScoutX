@@ -1144,5 +1144,20 @@
       "insufficient": "Esta grabación no muestra lo suficiente para revisar este objetivo (vídeo confirmado de ti: {{confirmedSec}} s).",
       "note": "PitchProof muestra pruebas sobre tu objetivo; no lo califica como logrado o no logrado."
     }
+  },
+  "filmingTips": {
+    "title": "Consejos de grabación para que PitchProof te encuentre",
+    "show": "Mostrar consejos de grabación",
+    "hide": "Ocultar consejos de grabación",
+    "intro": "PitchProof te reconoce solo por tu dorsal y tu equipación, nunca por tu cara. Estos pasos hacen que tu número se pueda leer:",
+    "items": {
+      "number": "Lleva un dorsal grande que contraste con la camiseta, en la espalda y si es posible delante. Que nada lo tape (peto, chaqueta).",
+      "unique": "Asegúrate de que ningún compañero lleve el mismo número en este partido.",
+      "height": "Graba desde lo más alto posible cerca de la línea de medio campo, en horizontal, con trípode o soporte.",
+      "steady": "Mantén el juego en la imagen y evita acercar y alejar el zoom.",
+      "quality": "Graba en 1080p o más. Por la noche, graba desde el lado iluminado por los focos.",
+      "whole": "Graba todo el partido sin pausas."
+    },
+    "why": "Si PitchProof no puede confirmarte, lo dice en lugar de adivinar. Un dorsal legible es lo que le permite confirmarte."
   }
 }

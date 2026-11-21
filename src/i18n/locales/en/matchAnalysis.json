@@ -1144,5 +1144,20 @@
       "insufficient": "This recording does not show enough to look at this focus (confirmed footage of you: {{confirmedSec}} s).",
       "note": "PitchProof shows evidence about your focus - it does not grade it as achieved or failed."
     }
+  },
+  "filmingTips": {
+    "title": "Filming tips that help PitchProof find you",
+    "show": "Show filming tips",
+    "hide": "Hide filming tips",
+    "intro": "PitchProof recognises you only by your shirt number and kit, never by your face. These steps make your number readable:",
+    "items": {
+      "number": "Wear a large shirt number that contrasts with the shirt, on the back and ideally the front. Nothing should cover it (bib, jacket).",
+      "unique": "Make sure no team-mate wears the same number in this match.",
+      "height": "Film from as high as possible near the halfway line, in landscape, on a tripod or stand.",
+      "steady": "Keep the play in the picture and avoid zooming in and out.",
+      "quality": "Record in 1080p or higher. In the evening, film from the floodlit side.",
+      "whole": "Record the whole match without pausing."
+    },
+    "why": "If PitchProof cannot confirm you, it says so instead of guessing. A readable number is what lets it confirm you."
   }
 }

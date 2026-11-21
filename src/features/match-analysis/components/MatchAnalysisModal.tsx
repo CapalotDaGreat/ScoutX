@@ -20,6 +20,7 @@ import {
   type MatchEstimatedStats,
 } from '@/features/match-analysis/types';
 import { AnalysisPreviewCard } from '@/features/match-analysis/components/AnalysisPreviewCard';
+import { FilmingTipsCard } from '@/features/match-analysis/components/FilmingTipsCard';
 import { AnalysisTrendsCard } from '@/features/match-analysis/components/AnalysisTrendsCard';
 import { IdentityConfirmationCard } from '@/features/match-analysis/components/IdentityConfirmationCard';
 import { buildAnalysisPreview } from '@/features/match-analysis/services/analysisPreviewService';
@@ -787,6 +788,7 @@ export function MatchAnalysisModal({
               </View>
             )}
             {preview ? <AnalysisPreviewCard preview={preview} loading={readingTrack} /> : null}
+            {!picked && !linked ? <FilmingTipsCard /> : null}
             {durationLabel ? (
               <Text variant="caption" color="secondary">
                 {durationLabel}

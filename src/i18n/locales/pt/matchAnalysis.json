@@ -1144,5 +1144,20 @@
       "insufficient": "Esta gravação não mostra o suficiente para analisar este foco (vídeo confirmado de ti: {{confirmedSec}} s).",
       "note": "O PitchProof mostra provas sobre o teu foco - não o classifica como alcançado ou falhado."
     }
+  },
+  "filmingTips": {
+    "title": "Dicas de filmagem para o PitchProof te encontrar",
+    "show": "Mostrar dicas de filmagem",
+    "hide": "Ocultar dicas de filmagem",
+    "intro": "O PitchProof reconhece você só pelo número da camisa e pelo uniforme, nunca pelo rosto. Estes passos deixam o seu número legível:",
+    "items": {
+      "number": "Use um número grande que contraste com a camisa, nas costas e de preferência na frente. Nada deve cobri-lo (colete, casaco).",
+      "unique": "Confirme que nenhum colega de equipe usa o mesmo número nesta partida.",
+      "height": "Filme do ponto mais alto possível perto da linha do meio-campo, na horizontal, com tripé ou suporte.",
+      "steady": "Mantenha o jogo no enquadramento e evite aproximar e afastar o zoom.",
+      "quality": "Grave em 1080p ou mais. À noite, filme do lado iluminado pelos refletores.",
+      "whole": "Grave a partida inteira sem pausas."
+    },
+    "why": "Se o PitchProof não conseguir confirmar você, ele avisa em vez de adivinhar. Um número legível é o que permite confirmar você."
   }
 }

@@ -1144,5 +1144,20 @@
       "insufficient": "Diese Aufnahme zeigt nicht genug, um diesen Fokus anzuschauen (bestätigtes Videomaterial von dir: {{confirmedSec}} s).",
       "note": "PitchProof zeigt Belege zu deinem Fokus - es bewertet ihn nicht als erreicht oder verfehlt."
     }
+  },
+  "filmingTips": {
+    "title": "Filmtipps, damit PitchProof dich findet",
+    "show": "Filmtipps anzeigen",
+    "hide": "Filmtipps ausblenden",
+    "intro": "PitchProof erkennt dich nur an Rückennummer und Trikot, nie am Gesicht. So wird deine Nummer lesbar:",
+    "items": {
+      "number": "Trage eine große Rückennummer, die sich vom Trikot abhebt, hinten und am besten auch vorne. Nichts darf sie verdecken (Leibchen, Jacke).",
+      "unique": "Achte darauf, dass in diesem Spiel kein Teamkollege dieselbe Nummer trägt.",
+      "height": "Filme möglichst von erhöhter Position nahe der Mittellinie, im Querformat, mit Stativ oder Halterung.",
+      "steady": "Halte das Spielgeschehen im Bild und vermeide häufiges Zoomen.",
+      "quality": "Nimm in 1080p oder höher auf. Abends von der Seite mit Flutlicht filmen.",
+      "whole": "Nimm das ganze Spiel ohne Pause auf."
+    },
+    "why": "Wenn PitchProof dich nicht bestätigen kann, sagt es das, statt zu raten. Eine lesbare Nummer ist das, womit es dich bestätigen kann."
   }
 }

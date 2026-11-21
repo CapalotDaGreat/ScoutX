@@ -107,3 +107,19 @@ Not measured:
    approval.
 4. Quality remains bounded by jersey reading on small digits. The synthetic-digit PARSeq fine-tune (E9) still needs a
    GPU session; it was not attempted here.
+
+## 6. INT8 identity replay: how to run it (prepared, not run)
+
+The IMG_4809 proxy (`Downloads/Mobile Devices/IMG_4809_proxy_10fps.mp4` on the owner PC, 1.41 GB, see
+`bench/references/img4809_proxy_10fps.json`) was not in the folder shared with this session, so the replay did not
+run. Both arms must run in the same environment, because the package versions here differ from the 2026-11-18
+runtime:
+
+1. FP32 arm: `SCOUTX_WEIGHTS_DIR=<dir with yolox_s.pth + FP32 yolox_s.1280.onnx>`. Run the full match with flags
+   T+D+C+I (`SCOUTX_TELEPORT_SPLIT=1 SCOUTX_APPEARANCE_ONLY_LIKELY=0 SCOUTX_OCR_VARIANT=combined
+   SCOUTX_INTERP_NO_UPGRADE=1`), with fresh caches.
+2. INT8 arm: the same, with `SCOUTX_WEIGHTS_DIR` pointing at a copy where `yolox_s.1280.onnx` is the INT8 file
+   (SHA-256 recorded in `bench/results/int8-20261121/detector_agreement.json`).
+3. Compare with `bench/compare_frames.py` against `bench/results/5.1/gt_img4809_intervals.json`, corrected basis.
+4. Keep rule (section 3): 0 new wrong-player frames and ≤ 1 % fewer correct frames on the 503 labelled target
+   frames.

@@ -1144,5 +1144,20 @@
       "insufficient": "Questa registrazione non mostra abbastanza per valutare questo obiettivo (video confermato di te: {{confirmedSec}} s).",
       "note": "PitchProof mostra prove sul tuo obiettivo - non lo valuta come raggiunto o mancato."
     }
+  },
+  "filmingTips": {
+    "title": "Consigli di ripresa per aiutare PitchProof a trovarti",
+    "show": "Mostra consigli di ripresa",
+    "hide": "Nascondi consigli di ripresa",
+    "intro": "PitchProof ti riconosce solo dal numero di maglia e dalla divisa, mai dal volto. Questi passi rendono leggibile il tuo numero:",
+    "items": {
+      "number": "Indossa un numero grande che contrasti con la maglia, sulla schiena e se possibile davanti. Niente deve coprirlo (casacca, giacca).",
+      "unique": "Assicurati che nessun compagno abbia lo stesso numero in questa partita.",
+      "height": "Riprendi dal punto più alto possibile vicino alla linea di metà campo, in orizzontale, con un treppiede o un supporto.",
+      "steady": "Tieni il gioco nell'inquadratura ed evita di zoomare avanti e indietro.",
+      "quality": "Registra in 1080p o più. La sera riprendi dal lato illuminato dai riflettori.",
+      "whole": "Registra tutta la partita senza pause."
+    },
+    "why": "Se PitchProof non riesce a confermarti, lo dice invece di tirare a indovinare. È un numero leggibile a permettergli di confermarti."
   }
 }

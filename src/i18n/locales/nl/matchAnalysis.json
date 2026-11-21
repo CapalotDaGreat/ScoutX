@@ -1144,5 +1144,20 @@
       "insufficient": "Deze opname laat niet genoeg zien om naar deze focus te kijken (bevestigde beelden van jou: {{confirmedSec}} s).",
       "note": "PitchProof toont bewijs over je focus - het beoordeelt hem niet als gehaald of niet gehaald."
     }
+  },
+  "filmingTips": {
+    "title": "Filmtips zodat PitchProof je vindt",
+    "show": "Filmtips tonen",
+    "hide": "Filmtips verbergen",
+    "intro": "PitchProof herkent je alleen aan je rugnummer en tenue, nooit aan je gezicht. Met deze stappen wordt je nummer leesbaar:",
+    "items": {
+      "number": "Draag een groot rugnummer dat afsteekt tegen het shirt, op de rug en liefst ook voorop. Niets mag het bedekken (hesje, jas).",
+      "unique": "Zorg dat geen teamgenoot in deze wedstrijd hetzelfde nummer draagt.",
+      "height": "Film zo hoog mogelijk bij de middenlijn, liggend, op een statief of standaard.",
+      "steady": "Houd het spel in beeld en zoom niet steeds in en uit.",
+      "quality": "Neem op in 1080p of hoger. Film 's avonds vanaf de kant met de lichtmasten.",
+      "whole": "Neem de hele wedstrijd zonder pauze op."
+    },
+    "why": "Als PitchProof je niet kan bevestigen, zegt het dat in plaats van te gokken. Een leesbaar nummer is wat bevestiging mogelijk maakt."
   }
 }

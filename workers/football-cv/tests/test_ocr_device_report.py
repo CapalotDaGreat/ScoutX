@@ -38,6 +38,8 @@ class _Predictor:
 def _install(monkeypatch, *, cuda: bool, fail_move: bool, easy_device: str) -> None:
     import torch
 
+    monkeypatch.delenv("SCOUTX_PARSEQ_WEIGHTS", raising=False)
+
     monkeypatch.setattr(torch.cuda, "is_available", lambda: cuda)
     doctr_models = types.ModuleType("doctr.models")
     doctr_models.recognition_predictor = lambda name, pretrained=True: _Predictor("cpu", fail_move)
@@ -56,7 +58,8 @@ def _install(monkeypatch, *, cuda: bool, fail_move: bool, easy_device: str) -> N
 def test_cpu_host_reports_cpu_and_is_not_degraded(monkeypatch):
     _install(monkeypatch, cuda=False, fail_move=False, easy_device="cpu")
     r = ocr.NumberReader()
-    assert r.device_report == {"cudaAvailable": False, "parseq": "cpu", "easyocr": "cpu", "degraded": []}
+    assert r.device_report == {"cudaAvailable": False, "parseq": "cpu", "easyocr": "cpu", "parseqWeights": "pretrained",
+                               "degraded": []}
 
 
 def test_cuda_host_with_both_on_gpu_is_clean(monkeypatch):
