@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import re
 import subprocess
 import time
 import ssl
@@ -113,6 +114,22 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
             remaining = {resource_name(resource) for resource in cli(*group, "list", *args) or []}
             if remaining & allowed:
                 raise RuntimeError(f"Pilot resources remain: {sorted(remaining & allowed)}")
+        except Exception as error:
+            errors.append(error)
+    source = os.environ.get("STAGING_WORKER_SOURCE")
+    if source:
+        try:
+            if not re.fullmatch(r"gs://pitchproof-stg-pilot2_cloudbuild/scoutx-pilot/[a-f0-9]{32}", source):
+                raise RuntimeError("Unexpected staging build source prefix")
+            objects = cli("storage", "objects", "list", source + "/", f"--project={PROJECT}") or []
+            for obj in objects:
+                name = obj["name"]
+                prefix = source.split("/", 3)[-1] + "/"
+                if not name.startswith(prefix):
+                    raise RuntimeError("Unexpected object in staging build source listing")
+                cli("storage", "rm", f"gs://{PROJECT}_cloudbuild/{name}", f"--project={PROJECT}")
+            if cli("storage", "objects", "list", source + "/", f"--project={PROJECT}"):
+                raise RuntimeError("Staging build source objects remain")
         except Exception as error:
             errors.append(error)
     if synthetic_cleanup is not None:

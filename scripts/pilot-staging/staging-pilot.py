@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import urllib.request
+import uuid
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
@@ -73,6 +74,11 @@ def deploy_private_worker():
     image = f"{region}-docker.pkg.dev/{PROJECT}/{repo}/stg-fake-worker:pilot"
     step([*cli, "artifacts", "repositories", "create", repo,
           "--repository-format=docker", "--location=" + region, *scope])
+    build_member = "serviceAccount:" + NUMBER + "-compute@developer.gserviceaccount.com"
+    step([*cli, "artifacts", "repositories", "add-iam-policy-binding", repo,
+          "--location=" + region, "--member=" + build_member,
+          "--role=roles/artifactregistry.writer", *scope])
+
     with tempfile.TemporaryDirectory(prefix="scoutx-fake-worker-") as directory:
         context = Path(directory)
         worker = context / "scripts" / "pilot-rehearsal"
@@ -81,7 +87,8 @@ def deploy_private_worker():
                         worker / "fakeWorker.mjs")
         shutil.copyfile(HERE / "fake-worker" / "Dockerfile", context / "Dockerfile")
         step([*cli, "builds", "submit", str(context), "--tag=" + image,
-              "--region=" + region, "--timeout=600s", *scope])
+              "--region=" + region, "--timeout=600s",
+              "--gcs-source-staging-dir=" + os.environ["STAGING_WORKER_SOURCE"], *scope])
     step([*cli, "run", "deploy", "stg-fake-worker", "--image=" + image,
           "--region=" + region, "--no-allow-unauthenticated", "--min-instances=0",
           "--max-instances=1", "--timeout=210s", "--cpu=1", "--memory=512Mi", *scope])
@@ -252,6 +259,7 @@ def main():
         tests()
     elif phase is None:
         with tempfile.TemporaryDirectory(prefix="scoutx-staging-") as directory:
+            os.environ["STAGING_WORKER_SOURCE"] = f"gs://{PROJECT}_cloudbuild/scoutx-pilot/{uuid.uuid4().hex}"
             os.environ["STAGING_LIMITS_STATE"] = str(Path(directory) / "limits.json")
             plan = Path(directory) / "plan.json"
             plan.write_text(json.dumps({
