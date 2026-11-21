@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import urllib.error
+import uuid
 import urllib.request
 
 import artifact_repository
@@ -106,7 +107,7 @@ def read_worker():
     try:
         worker = cloud_json("run", "services", "describe", WORKER, *WORKER_SCOPE)
     except subprocess.CalledProcessError as error:
-        if "NOT_FOUND" in (error.stderr or ""):
+        if artifact_repository.resource_absent(error.stderr):
             raise RuntimeError(f"Private staging worker is missing: {WORKER}") from error
         raise
     metadata = worker["metadata"]
@@ -244,7 +245,14 @@ def provision_web_app():
 
 def provision_probe_queues():
     cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
-    for queue, attempts in (("stg-auth-probe", 1), ("stg-exhaust-probe", 2)):
+    path = load_config()
+    config = json.loads(path.read_text(encoding="utf-8-sig"))
+    suffix = uuid.uuid4().hex
+    auth = config["authProbeQueue"] = f"stg-auth-probe-{suffix}"
+    exhaust = config["exhaustProbeQueue"] = f"stg-exhaust-probe-{suffix}"
+    # Record both names before creating either queue so partial setup can be cleaned.
+    path.write_text(json.dumps(config, indent=2), encoding="utf-8")
+    for queue, attempts in ((auth, 1), (exhaust, 2)):
         step([*cli, "tasks", "queues", "create", queue, "--project=" + PROJECT,
               "--location=europe-west6", f"--max-attempts={attempts}",
               "--max-concurrent-dispatches=1", "--max-dispatches-per-second=1",

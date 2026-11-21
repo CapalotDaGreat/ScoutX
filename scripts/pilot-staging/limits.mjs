@@ -2,7 +2,7 @@
  * Spending and runtime guard for the staging drivers (probe-tasks.mjs, image-revocation.mjs).
  *
  * Every case reserves its worst-case task creations and delivery attempts before it starts (CASE_BUDGET; derivation
- * in docs/release/staging-verification-plan-2026-11-19.md Â§6). Usage is kept in one state file shared by both drivers,
+ * in docs/release/staging-verification-plan-2026-11-19.md Ã‚Â§6). Usage is kept in one state file shared by both drivers,
  * so the limits hold for the whole run. A reservation that would exceed a limit, or a run past its deadline, trips the
  * guard once: the stop procedure runs and the case does not start.
  *
@@ -15,7 +15,7 @@
  */
 import fs from 'node:fs';
 
-/** Driver runtime (STG-06..08, deployment excluded) is the binding cost control: see the plan's Â§6 worst case. */
+/** Driver runtime (STG-06..08, deployment excluded) is the binding cost control: see the plan's Ã‚Â§6 worst case. */
 /** @typedef {{ maxTasks: number, maxAttempts: number, maxRuntimeMs: number }} Limits */
 /** @type {Readonly<Limits>} */
 export const LIMITS = Object.freeze({ maxTasks: 60, maxAttempts: 150, maxRuntimeMs: 90 * 60 * 1000 });
@@ -41,8 +41,8 @@ export const QUEUES = ['extractTrackingSegmentTask', 'discoverTrackingTask', 're
 export class LimitError extends Error {}
 
 /** The stop procedure as exact commands (no secrets; the project id is public configuration). */
-export function stopCommands(project, region = 'europe-west6') {
-  const q = (cmd) => QUEUES.map((name) => ['gcloud', 'tasks', 'queues', ...cmd(name), `--location=${region}`, `--project=${project}`]);
+export function stopCommands(project, region = 'europe-west6', queues = QUEUES) {
+  const q = (cmd) => queues.map((name) => ['gcloud', 'tasks', 'queues', ...cmd(name), `--location=${region}`, `--project=${project}`]);
   return [
     ['node', 'scripts/tracking-pilot-ops.mjs', 'stop', '--project', project, '--production-authorized'],
     ...q((n) => ['update', n, '--max-attempts=1']),
@@ -123,7 +123,8 @@ export async function driverGuard(cfg, E, ops, spawn, opIdToken = () => '') {
     stop: async (reason) => {
       E.step('limits.tripped', { reason });
       ops('stop');
-      const cmds = stopCommands(cfg.project).slice(1);
+      const queues = [...QUEUES.slice(0, -2), cfg.authProbeQueue ?? QUEUES.at(-2), cfg.exhaustProbeQueue ?? QUEUES.at(-1)];
+      const cmds = stopCommands(cfg.project, cfg.region, queues).slice(1);
       await fetch(`${cfg.workerBase}/_ctl/release-all`, { method: 'POST', headers: cfg.workerAuth === 'operator' ? { Authorization: `Bearer ${await opIdToken(cfg.workerBase)}` } : {} })
         .then((r) => E.step('limits.fake_worker_release_all', { http: r.status })).catch((e) => E.step('limits.fake_worker_release_all', { error: String(e) }));
       if (cfg.target !== 'staging') { E.step('limits.stop_procedure (recorded, emulator)', { commands: cmds.map((c) => c.join(' ')) }); return; }
