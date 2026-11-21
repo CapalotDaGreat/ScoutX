@@ -142,16 +142,22 @@ def provision_auth_and_storage():
     if bucket["name"].split("/")[-1] != PROJECT + ".firebasestorage.app":
         raise RuntimeError("Firebase returned an unexpected default bucket")
 
-def provision_runtime_iam():
-    cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
+def verify_runtime_iam():
     config = json.loads(load_config().read_text(encoding="utf-8-sig"))
     runtime = config["runtimeServiceAccount"]
     if runtime != NUMBER + "-compute@developer.gserviceaccount.com":
         raise RuntimeError("Unexpected staging runtime identity")
-    for role in ("roles/datastore.user", "roles/cloudtasks.enqueuer",
-                 "roles/eventarc.eventReceiver", "roles/logging.logWriter"):
-        step([*cli, "projects", "add-iam-policy-binding", PROJECT,
-              "--member=serviceAccount:" + runtime, "--role=" + role, "--quiet"])
+    account = cloud_json("iam", "service-accounts", "describe", runtime, "--project=" + PROJECT)
+    if account.get("email") != runtime or account.get("disabled"):
+        raise RuntimeError("Staging runtime account is missing or disabled")
+    policy = cloud_json("projects", "get-iam-policy", PROJECT)
+    granted = {binding["role"] for binding in policy.get("bindings", [])
+               if not binding.get("condition")
+               and "serviceAccount:" + runtime in binding.get("members", [])}
+    required = {"roles/datastore.user", "roles/cloudtasks.enqueuer",
+                "roles/eventarc.eventReceiver", "roles/logging.logWriter"}
+    if required - granted:
+        raise RuntimeError(f"Missing staging runtime roles: {sorted(required - granted)}")
 
 def provision_web_app():
     command = ["node", "--use-system-ca", os.environ["STAGING_FIREBASE_JS"]]
@@ -191,9 +197,9 @@ def deploy():
     billing = cloud_json("billing", "projects", "describe", PROJECT)
     if billing.get("billingEnabled") is not True:
         raise RuntimeError("Billing operator has not linked the staging project")
+    verify_runtime_iam()
     provision_firebase_project()
     provision_auth_and_storage()
-    provision_runtime_iam()
     provision_web_app()
     provision_probe_queues()
     deploy_private_worker()
