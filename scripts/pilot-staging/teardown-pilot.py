@@ -132,6 +132,9 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
                 print(f"Verified NOT_FOUND for {location}/{name}", flush=True)
             except Exception as error:
                 errors.append(error)
+        if location == "us":
+            print("Cloud Run has no us multi-region endpoint; checked us-central1 separately", flush=True)
+            continue
         try:
             worker = "stg-fake-worker"
             cli("run", "services", "describe", worker, *scope, f"--region={location}")
