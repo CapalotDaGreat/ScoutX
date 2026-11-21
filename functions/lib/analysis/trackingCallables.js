@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshTrackingOcrTask = exports.resolveTrackingTask = exports.RESOLVE_LEASE_MS = exports.cloudTasksFollowUpEnqueue = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
 exports.markTrackingFailed = markTrackingFailed;
 exports.httpTrackingClient = httpTrackingClient;
+exports.readWorker = readWorker;
 exports.imageBucketFor = imageBucketFor;
 exports.processResolveTask = processResolveTask;
 exports.processOcrFollowUpTask = processOcrFollowUpTask;
@@ -26,6 +27,7 @@ const notificationProducers_1 = require("../notificationProducers");
 const trackingProgress_1 = require("./trackingProgress");
 const trackingFollowUp_1 = require("./trackingFollowUp");
 const rateLimit_1 = require("../security/rateLimit");
+const trackingDeadlines_1 = require("./trackingDeadlines");
 const OP_ID = /^[A-Za-z0-9_-]{8,64}$/;
 const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
 async function ownedJob(tx, db, jobId, uid) {
@@ -72,7 +74,7 @@ async function mutateFeedback(uid, jobId, change) {
     });
     if (!result.pending || result.pending === 'withheld_for_review') {
         await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('resolveTrackingTask'))
-            .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: 900 });
+            .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC });
     }
     return result;
 }
@@ -142,7 +144,7 @@ async function markTrackingFailed(db, jobId, now = new Date()) {
         tx.set(ref, { trackingState: 'failed', trackingFailedAt: now.toISOString(), updatedAt: now.toISOString() }, { merge: true });
     });
 }
-function httpTrackingClient(baseUrl, env = process.env, route = 'resolve', timeoutMs = 10 * 60 * 1000) {
+function httpTrackingClient(baseUrl, env = process.env, route = 'resolve', timeoutMs = trackingDeadlines_1.TRACKING_WORKER_CLIENT_MS) {
     return async (body) => {
         const emulated = env.FUNCTIONS_EMULATOR === 'true';
         const token = emulated ? null : await (0, cvWorker_1.identityToken)(baseUrl);
@@ -157,10 +159,25 @@ function httpTrackingClient(baseUrl, env = process.env, route = 'resolve', timeo
             });
             return res.ok ? await res.json() : null;
         }
-        catch {
+        catch (error) {
+            // A deadline is retryable. Any other failure stays a null response, which resolve records
+            // as rejected and does not retry (a 500 is not the same as a slow match).
+            if ((0, trackingDeadlines_1.isWorkerTimeout)(error))
+                throw new trackingDeadlines_1.TrackingWorkerTimeout();
             return null;
         }
     };
+}
+/** Discovery and extraction already retry a null response. A client deadline is that same failure. */
+async function readWorker(client, body) {
+    try {
+        return await client(body);
+    }
+    catch (error) {
+        if (error instanceof trackingDeadlines_1.TrackingWorkerTimeout)
+            return null;
+        throw error;
+    }
 }
 /** Writes the server-only held twin of a review image (R2, trackingImages.ts); the owner path is filled on release. */
 const storageImageStore = async (path, jpeg) => {
@@ -175,7 +192,7 @@ function imageBucketFor(storeImage, images) {
 const cloudTasksFollowUpEnqueue = async (payload, taskId) => {
     try {
         await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('refreshTrackingOcrTask'))
-            .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: 900 });
+            .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC });
     }
     catch (e) {
         // ALREADY_EXISTS: this round was scheduled before (a retried publish) - nothing to do
@@ -235,8 +252,8 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
             await endResolveClaim(db, base.doc('progress'), claim, outcome === 'done' || outcome === 'held', now);
     }
 }
-/** Lease of a resolve claim: longer than the resolve task's 900 s timeout. */
-exports.RESOLVE_LEASE_MS = 16 * 60 * 1000;
+/** Lease of a resolve claim: longer than the resolve task timeout. */
+exports.RESOLVE_LEASE_MS = trackingDeadlines_1.TRACKING_ATTEMPT_LEASE_MS;
 /**
  * Takes the resolve claim for `key` unless a live claim for the same key is held by this or a later attempt
  * ('busy'). Returns the token, or null when the job has no progress document (nothing to fence against).
@@ -266,11 +283,19 @@ async function endResolveClaim(db, progress, token, finished, now) {
     });
 }
 async function resolveClaimed(db, jobId, feedbackRevision, client, env, storeImage, opts, job, fb, refresh, now, base, claimToken) {
-    const raw = await client({
-        contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
-        target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
-        ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: trackingFollowUp_1.OCR_FOLLOW_UP_MAX_CROPS } } : {}),
-    });
+    let raw;
+    try {
+        raw = await client({
+            contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
+            target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
+            ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: trackingFollowUp_1.OCR_FOLLOW_UP_MAX_CROPS } } : {}),
+        });
+    }
+    catch (error) {
+        if (error instanceof trackingDeadlines_1.TrackingWorkerTimeout)
+            return 'timedOut';
+        throw error;
+    }
     if (!raw || !raw.workerVersion || !raw.models || !(0, cvConfig_1.isApprovedWorkerOutput)({ workerVersion: raw.workerVersion, models: raw.models }, env)) {
         return 'rejected';
     }
@@ -425,7 +450,8 @@ async function resolveClaimed(db, jobId, feedbackRevision, client, env, storeIma
     }
     return outcome;
 }
-exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: 3, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 4 }, timeoutSeconds: 900 }, async (request) => {
+exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: trackingDeadlines_1.RESOLVE_MAX_ATTEMPTS, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 4 },
+    timeoutSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC }, async (request) => {
     const d = request.data;
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision))
         return;
@@ -438,7 +464,12 @@ exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { max
         const fb = await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(d.jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('feedback').get();
         fbRevision = fb.data()?.revision ?? 0;
     }
-    const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope, attempt: request.retryCount ?? 0 });
+    const attempt = request.retryCount ?? 0;
+    const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope, attempt });
+    // Earlier attempts throw, so Cloud Tasks retries. The last attempt falls through and, for a full
+    // resolve, settleOrchestratedResolve marks the job interrupted. Returning here would count as success.
+    if (outcome === 'timedOut' && (0, trackingDeadlines_1.timeoutWillRetry)(attempt, trackingDeadlines_1.RESOLVE_MAX_ATTEMPTS))
+        throw new trackingDeadlines_1.TrackingWorkerTimeout();
     if (scope !== 'feedback')
         await settleOrchestratedResolve(db, d.jobId, scope, outcome);
 });
@@ -462,6 +493,9 @@ async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client
     if (!claimed)
         return 'stale';
     const outcome = await processResolveTask(db, jobId, feedbackRevision, client, env, storeImage, { ...opts, scope: 'refresh', followUpRound: round });
+    if (outcome === 'timedOut' && (0, trackingDeadlines_1.timeoutWillRetry)(opts.attempt ?? 0, trackingDeadlines_1.OCR_REFRESH_MAX_ATTEMPTS)) {
+        throw new trackingDeadlines_1.TrackingWorkerTimeout();
+    }
     if (outcome !== 'done') {
         const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
         const status = outcome === 'superseded' || outcome === 'stale' || outcome === 'busy' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
@@ -475,13 +509,14 @@ async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client
     }
     return outcome;
 }
-exports.refreshTrackingOcrTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: 2, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 2 }, timeoutSeconds: 900 }, async (request) => {
+exports.refreshTrackingOcrTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: trackingDeadlines_1.OCR_REFRESH_MAX_ATTEMPTS, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 2 },
+    timeoutSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC }, async (request) => {
     const d = request.data;
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision)
         || !Number.isSafeInteger(d.round) || d.round < 1)
         return;
     const url = (0, cvConfig_1.cvWorkerUrl)();
-    await processOcrFollowUpTask((0, firestore_1.getFirestore)(), d.jobId, d.feedbackRevision, d.round, url ? httpTrackingClient(url) : null);
+    await processOcrFollowUpTask((0, firestore_1.getFirestore)(), d.jobId, d.feedbackRevision, d.round, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { attempt: request.retryCount ?? 0 });
 });
 /**
  * Releases the "resolving" slot after an orchestrated resolve that did not publish, so later
@@ -493,7 +528,7 @@ async function settleOrchestratedResolve(db, jobId, scope, outcome, now = new Da
     if (outcome === 'done' || outcome === 'held' || outcome === 'busy')
         return;
     const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('progress');
-    const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped');
+    const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'stopped' || outcome === 'timedOut');
     await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
     // R1: an interrupted run is resumable; the source stays for the failed-analysis retry window, then goes.
     if (failed)

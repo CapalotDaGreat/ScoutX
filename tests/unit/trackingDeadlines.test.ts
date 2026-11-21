@@ -66,7 +66,7 @@ test('the worker client throws on its own deadline and returns null on any other
 });
 
 test('a resolve deadline is timedOut and does not interrupt until the last attempt is settled', async () => {
-  setEmulatorCvApproval({ workerVersion: 'football-cv/0.7.0', models: { detector: 'd' }, eventsApproved: false });
+  setEmulatorCvApproval({ workerVersion: 'football-cv/0.7.0', models: { detector: 'd' }, eventsApproved: false } as never);
   const progress = { ...newProgress(1, 600, '2026-11-21T10:00:00.000Z'), resolving: 'full' as const };
   const { db, data } = fakeDb({
     'matchAnalysisJobs/job_1': { playerId: 'u1', targeting: { jerseyNumber: '20' }, cancelRequested: false },

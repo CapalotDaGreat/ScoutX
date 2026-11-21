@@ -36,6 +36,7 @@ const pilotGate_1 = require("./pilotGate");
 const frameAnalysis_1 = require("./frameAnalysis");
 const trackingV3_1 = require("./trackingV3");
 const trackingCallables_1 = require("./trackingCallables");
+const trackingDeadlines_1 = require("./trackingDeadlines");
 const trackingImages_1 = require("./trackingImages");
 const trackingProgress_1 = require("./trackingProgress");
 const videoConsent_1 = require("./videoConsent");
@@ -43,7 +44,7 @@ const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
 exports.PLAYER_ANALYSIS_START_LIMIT = { action: 'player_analysis_start', max: 10, window: 'day' };
 exports.EXTRACT_MAX_ATTEMPTS = 3;
 const cloudTasksEnqueue = async (queue, payload) => {
-    await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)(queue)).enqueue(payload, { dispatchDeadlineSeconds: 1800 });
+    await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)(queue)).enqueue(payload, { dispatchDeadlineSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC });
 };
 exports.cloudTasksEnqueue = cloudTasksEnqueue;
 function progressRef(db, jobId) {
@@ -143,7 +144,7 @@ async function startAnalysis(db, uid, jobId, enqueue, env = process.env, now = n
  * Claim lease for one segment attempt: longer than the extract task's 1800 s timeout, so a claim this old belongs to an
  * attempt that can no longer be running (2026-11-19: was 16 min, shorter than the timeout).
  */
-exports.EXTRACT_LEASE_MS = 31 * 60 * 1000;
+exports.EXTRACT_LEASE_MS = trackingDeadlines_1.TRACKING_ATTEMPT_LEASE_MS;
 async function processExtractTask(db, jobId, generation, index, attempt, client, enqueue, env = process.env, sourceUrl = async (p) => (await (0, mediaSource_1.readableSourceFor)(p, 60 * 60 * 1000)).url, now = () => new Date(), notify) {
     const ref = progressRef(db, jobId);
     const jobSnap = await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get();
@@ -190,7 +191,7 @@ async function processExtractTask(db, jobId, generation, index, attempt, client,
         return 'stale';
     const stillMine = (p) => Boolean(p && p.generation === generation
         && p.segments?.[String(index)]?.claim === token);
-    const res = await client({
+    const res = await (0, trackingCallables_1.readWorker)(client, {
         contractVersion: 3, jobId, segmentIndex: index, startSec: seg.startSec, endSec: seg.endSec,
         source: { url: await sourceUrl(job.videoStoragePath) },
         privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
@@ -275,7 +276,7 @@ async function processDiscoverTask(db, jobId, generation, index, attempt, client
         return 'unavailable';
     }
     const number = job.targeting?.jerseyNumber ?? '';
-    const res = await client({
+    const res = await (0, trackingCallables_1.readWorker)(client, {
         contractVersion: 3, jobId, chunkIndex: index, startSec: chunk.startSec, endSec: chunk.endSec,
         source: { url: await sourceUrl(job.videoStoragePath) },
         target: { jerseyNumber: number, kitPrimaryColor: job.targeting?.kitPrimaryColor ?? '' },
@@ -378,7 +379,7 @@ exports.discoverTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { ma
         || !Number.isSafeInteger(d.index))
         return;
     const url = (0, cvConfig_1.cvWorkerUrl)();
-    const outcome = await processDiscoverTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'discover', 28 * 60 * 1000) : null, exports.cloudTasksEnqueue);
+    const outcome = await processDiscoverTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'discover', trackingDeadlines_1.TRACKING_WORKER_CLIENT_MS) : null, exports.cloudTasksEnqueue);
     if (outcome === 'retry')
         throw new Error('discovery chunk failed; retrying');
 });
@@ -399,7 +400,7 @@ exports.extractTrackingSegmentTask = (0, tasks_1.onTaskDispatched)({ retryConfig
         || !Number.isSafeInteger(d.index))
         return;
     const url = (0, cvConfig_1.cvWorkerUrl)();
-    const outcome = await processExtractTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'extract', 28 * 60 * 1000) : null, exports.cloudTasksEnqueue);
+    const outcome = await processExtractTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'extract', trackingDeadlines_1.TRACKING_WORKER_CLIENT_MS) : null, exports.cloudTasksEnqueue);
     // Throwing hands the retry (with backoff) to Cloud Tasks; finished segments are cached on the worker.
     if (outcome === 'retry')
         throw new Error('segment extraction failed; retrying');

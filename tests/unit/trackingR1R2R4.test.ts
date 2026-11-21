@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { setEmulatorCvApproval } from '../../functions/src/analysis/cvConfig.ts';
 import { effectiveLifecycleStatus } from '../../functions/src/analysis/mediaLifecycle.ts';
 import { releaseHeldReport, withholdPublishedReport } from '../../functions/src/analysis/pilotGate.ts';
-import { processResolveTask } from '../../functions/src/analysis/trackingCallables.ts';
+import { processResolveTask, RESOLVE_LEASE_MS } from '../../functions/src/analysis/trackingCallables.ts';
 import { processExtractTask } from '../../functions/src/analysis/trackingOrchestrator.ts';
 import {
   heldImagePath, pruneJobImages, referencedImagePaths, type ImageBucket,
@@ -359,7 +359,8 @@ test('claim: a live claim blocks a same-attempt duplicate; an expired claim or a
   const key = '0|full|2026-11-19T10:00:00.000Z';
   for (const [startedAt, attempt, expect] of [
     [new Date().toISOString(), 0, 'busy'],
-    [new Date(Date.now() - 17 * 60 * 1000).toISOString(), 0, 'held'],
+    // Just past the lease, whatever the lease is (it moved from 16 to 31 min with the 1,800 s resolve task).
+    [new Date(Date.now() - RESOLVE_LEASE_MS - 60 * 1000).toISOString(), 0, 'held'],
     [new Date().toISOString(), 1, 'held'],
   ] as const) {
     const f = serial(fakeDb(seed(pilot())));

@@ -10,6 +10,7 @@ exports.containImages = containImages;
 exports.readImageDocs = readImageDocs;
 exports.pruneJobImages = pruneJobImages;
 const storage_1 = require("firebase-admin/storage");
+const trackingDeadlines_1 = require("./trackingDeadlines");
 /**
  * R2 (2026-11-19): review and discovery images follow the report's visibility.
  *
@@ -25,7 +26,8 @@ const storage_1 = require("firebase-admin/storage");
  * wrote them, otherwise by the media lifecycle once older than a resolve can run).
  */
 exports.HELD_IMAGE_DIR = 'pilotHeld';
-exports.IMAGE_ATTEMPT_MAX_MS = 16 * 60 * 1000; // > the 900 s timeout of the tasks that write images
+/** Longer than the tracking task timeout, so a still-running attempt's images are not reaped. */
+exports.IMAGE_ATTEMPT_MAX_MS = trackingDeadlines_1.TRACKING_ATTEMPT_LEASE_MS;
 const OWNER_IMAGE = /^profiles\/[^/]+\/matchFootage\/[^/]+\/tracking\/[A-Za-z0-9_-]+\.jpg$/;
 function isOwnerImagePath(path) {
     return OWNER_IMAGE.test(path);
