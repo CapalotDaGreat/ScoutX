@@ -106,8 +106,8 @@ Not measured:
 
 ## 5. Recommended order
 
-1. Owner decision: evaluate the CPU Cloud Run job path as the production candidate, instead of continuing the
-   blocked GPU parity search. It needs no new model work.
+1. **Decided 2026-11-21:** production device is CPU. L4 stays a V1 parity experiment. Plan and remaining gaps:
+   `docs/release/cpu-production-plan-2026-11-21.md`.
 2. INT8 identity replay on IMG_4809 (section 3). CPU only, offline, no billing.
 3. One staging measurement of CPU Cloud Run start/load time and the INT8 speed on its CPU. That needs a billing
    approval.
