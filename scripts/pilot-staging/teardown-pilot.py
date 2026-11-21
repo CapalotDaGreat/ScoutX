@@ -9,6 +9,8 @@ import ssl
 import urllib.error
 import urllib.request
 from urllib.parse import quote
+
+import worker_image
 from pathlib import Path
 
 PROJECT = "pitchproof-stg-pilot2"
@@ -179,6 +181,12 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app, exi
                 check_exact_resource(cli, exists, url, delete_args)
             except Exception as error:
                 errors.append(error)
+    image = os.environ.get("STAGING_WORKER_IMAGE")
+    if image:
+        try:
+            worker_image.delete_version(image, access_token())
+        except Exception as error:
+            errors.append(error)
     source = os.environ.get("STAGING_WORKER_SOURCE")
     if source:
         try:

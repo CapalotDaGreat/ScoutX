@@ -11,6 +11,7 @@ import uuid
 import urllib.request
 
 import artifact_repository
+import worker_image
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
@@ -69,34 +70,45 @@ def operator_member():
         raise RuntimeError("Expected the dedicated staging-only operator service account")
     return member
 
-def deploy_private_worker():
-    region = "europe-west6"
-    repo = "cloud-run-source-deploy"
-    cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
-    scope = ["--project=" + PROJECT, "--quiet"]
-    image = f"{region}-docker.pkg.dev/{PROJECT}/{repo}/stg-fake-worker:pilot"
-    artifact_repository.ensure(cloud_json, repo, "--location=" + region, "--project=" + PROJECT)
-    build_member = "serviceAccount:" + NUMBER + "-compute@developer.gserviceaccount.com"
-    step([*cli, "artifacts", "repositories", "add-iam-policy-binding", repo,
-          "--location=" + region, "--member=" + build_member,
-          "--role=roles/artifactregistry.writer", *scope])
-
-    with tempfile.TemporaryDirectory(prefix="scoutx-fake-worker-") as directory:
-        context = Path(directory)
-        worker = context / "scripts" / "pilot-rehearsal"
-        worker.mkdir(parents=True)
-        shutil.copyfile(ROOT / "scripts" / "pilot-rehearsal" / "fakeWorker.mjs",
-                        worker / "fakeWorker.mjs")
-        shutil.copyfile(HERE / "fake-worker" / "Dockerfile", context / "Dockerfile")
-        step([*cli, "builds", "submit", str(context), "--tag=" + image,
-              "--region=" + region, "--timeout=600s",
-              "--gcs-source-staging-dir=" + os.environ["STAGING_WORKER_SOURCE"], *scope])
-    step([*cli, "run", "deploy", "stg-fake-worker", "--image=" + image,
-          "--region=" + region, "--invoker-iam-check", "--min-instances=0",
-          "--max-instances=1", "--timeout=210s", "--cpu=1", "--memory=512Mi", *scope])
 WORKER = "stg-fake-worker"
 WORKER_SCOPE = ("--region=europe-west6", "--project=" + PROJECT)
-WORKER_IMAGE = f"europe-west6-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy/{WORKER}:pilot"
+WORKER_IMAGE = worker_image.IMAGE
+worker_image_digest = worker_image.validate
+
+
+def build_private_worker():
+    run_id = worker_image.verify_run_id(os.environ.get("STAGING_RUN_ID", ""))
+    receipt = Path(os.environ["STAGING_WORKER_RECEIPT"])
+    if receipt.exists():
+        raise RuntimeError("Refusing to overwrite a worker build receipt")
+    cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
+    with tempfile.TemporaryDirectory(prefix="scoutx-fake-worker-") as temporary:
+        context = Path(temporary)
+        worker = context / "scripts" / "pilot-rehearsal"
+        worker.mkdir(parents=True)
+        shutil.copyfile(ROOT / "scripts" / "pilot-rehearsal" / "fakeWorker.mjs", worker / "fakeWorker.mjs")
+        shutil.copyfile(HERE / "fake-worker" / "Dockerfile", context / "Dockerfile")
+        config = context / "cloudbuild.json"
+        config.write_text(json.dumps(worker_image.build_config(run_id)), encoding="utf-8")
+        build = subprocess.run(
+            [*cli, "builds", "submit", str(context), "--config=" + str(config),
+             "--region=europe-west6", "--project=" + PROJECT, "--quiet",
+             "--gcs-source-staging-dir=" + worker_image.source_prefix(run_id)],
+            check=True, timeout=720, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        )
+    image = worker_image.from_build_log(build.stdout)
+    receipt.write_text(json.dumps({"runId": run_id, "image": image}, indent=2), encoding="utf-8")
+    print(image, flush=True)
+
+
+def deploy_private_worker():
+    image = worker_image_digest(os.environ.get("STAGING_WORKER_IMAGE", ""))
+    cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
+    step([*cli, "run", "deploy", WORKER, "--image=" + image, *WORKER_SCOPE,
+          "--invoker-iam-check", "--min-instances=0", "--max-instances=1",
+          "--timeout=210s", "--cpu=1", "--memory=512Mi", "--quiet"])
+
+
 WORKER_INVOKERS = frozenset({
     f"serviceAccount:stg-pilot-operator@{PROJECT}.iam.gserviceaccount.com",
     f"serviceAccount:{NUMBER}-compute@developer.gserviceaccount.com",
@@ -116,14 +128,14 @@ def read_worker():
     template = worker["spec"]["template"]["spec"]
     containers = template.get("containers", [])
     images = [container.get("image", "") for container in containers]
-    expected_image = WORKER_IMAGE.rsplit(":", 1)[0]
     if (metadata.get("name") != WORKER
             or not any(c.get("type") == "Ready" and c.get("status") == "True"
                        for c in status.get("conditions", []))
             or annotations.get("run.googleapis.com/invoker-iam-disabled") == "true"
-            or len(images) != 1
-            or not (images[0] == WORKER_IMAGE or images[0].startswith(expected_image + "@sha256:"))):
+            or len(images) != 1):
         raise RuntimeError("Private staging worker is not ready or does not match the pilot deployment")
+    if worker_image_digest(images[0]) != worker_image_digest(os.environ.get("STAGING_WORKER_IMAGE", "")):
+        raise RuntimeError("Staging worker digest does not match this run")
     return worker
 
 
@@ -311,11 +323,9 @@ def tests():
 
 def main():
     phase = sys.argv[1] if len(sys.argv) > 1 else "watchdog"
-    if phase == "provision-worker":
-        scope = f"gs://{PROJECT}_cloudbuild/scoutx-pilot/"
-        source = os.environ["STAGING_WORKER_SOURCE"]
-        if not source.startswith(scope) or len(source.removeprefix(scope)) != 32 or any(c not in "0123456789abcdef" for c in source.removeprefix(scope)):
-            raise RuntimeError("Expected the staging controller's run-specific worker source prefix")
+    if phase == "build-worker":
+        build_private_worker()
+    elif phase == "provision-worker":
         deploy_private_worker()
     elif phase == "apply-worker-invokers":
         apply_worker_invokers()
