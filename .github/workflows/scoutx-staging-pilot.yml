@@ -80,6 +80,8 @@ jobs:
           STAGING_FIREBASE_JS: ${{ runner.temp }}/firebase-cli/node_modules/firebase-tools/lib/bin/firebase.js
           STAGING_EVIDENCE_DIR: ${{ runner.temp }}/pilot-evidence
           STAGING_OPERATOR_MEMBER: serviceAccount:stg-pilot-operator@pitchproof-stg-pilot2.iam.gserviceaccount.com
+          STAGING_WORKER_IMAGE: ${{ vars.SCOUTX_PILOT_WORKER_IMAGE }}
+          STAGING_WORKER_SOURCE: ${{ vars.SCOUTX_PILOT_WORKER_SOURCE }}
         run: python3 scripts/pilot-staging/staging-pilot.py
       - uses: actions/upload-artifact@v6
         if: always()
