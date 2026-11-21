@@ -15,22 +15,27 @@ compiled approval):
 
 Nothing below deploys anything or enables a flag.
 
-## 1. "CPU passed" applies to one environment only
+## 1. What "CPU passed" means (corrected 2026-11-21 from the run record)
 
-The passing reference is the recorded CPU run: 7,528.287 s for the 2,035 s IMG_4809 proxy, with its `environment`
-block in `full_match.json` (packages, decoder cv2, ffmpeg, model hashes). A different CPU stack is a new
-configuration. Today's workspace (torch 2.15, onnxruntime 1.32, OpenCV 5.1) is one example; it is newer than the
-reference.
+The passing reference is `bench/results/5.3/l4-20261029-netherlands/cpu/full_match.json` (7,528.287 s,
+`timingComplete=true`). Its `environment` block shows that it is **the GPU tracker image run with CUDA unavailable**:
+- built from `Dockerfile.tracker-gpu` at `3b8f3bb`, Ubuntu 24.04, Python 3.13.17, ffmpeg 6.1.1-3ubuntu5;
+- `requirements-gpu.lock`, SHA-256 `7a7dfa96…`, which is unchanged in this repo today;
+- torch 2.14.1+cu130 and onnxruntime-gpu 1.29.0 on the CPU execution provider;
+- **8 vCPU** (g2-standard-8, `cpuCores: 8`), peak RSS 2,188 MiB.
 
-There is **no CPU tracker image** in the repo: `Dockerfile.tracker-gpu` installs CUDA wheels, and the old
-`Dockerfile` is the 2.x reference worker. Required:
-1. `Dockerfile.tracker-cpu`, pinned to the reference CPU package set (CPU wheels, same model files per
-   `bench/references/model_hashes.json`, same decoder path).
-2. Acceptance: inside that image, run `bench/full_match_benchmark.py` on the IMG_4809 proxy, then run
-   `bench/compare_runs.py` against the recorded CPU reference with balanced_5.2. Exit 0 is required. Identical
-   stage-1 arrays on the three labelled windows (1150, 1880, 1073) are the cheaper first check.
-3. If the pinned set cannot be installed any more, the image becomes a new reference and needs the full-match run
-   plus the label-based gate again. It must not silently inherit the old pass.
+So step 1 does **not** need a new `Dockerfile.tracker-cpu` with CPU wheels. CPU wheels are a different build, which
+makes them a new configuration that would need its own gate pass. The shortest path to the passing configuration:
+1. Build `Dockerfile.tracker-gpu` unchanged from the same lock (model hashes are checked at build time).
+2. Deploy it on a **CPU-only** Cloud Run service with 8 vCPU, `SCOUTX_ORT_PROVIDERS=CPUExecutionProvider`, and a
+   request timeout of at least 1,800 s.
+3. Acceptance: run the full-match benchmark there, then `compare_runs.py` against the recorded run with
+   balanced_5.2, exit 0. This still matters with identical packages: ONNX Runtime and oneDNN choose kernels by CPU
+   instruction set, so a different Cloud Run CPU generation can change the last bits.
+4. Fewer vCPUs (2 or 4) is also a different configuration, because the thread count changes. It needs its own exit
+   0. It is the cheaper option (section 3).
+
+The image is large because of the CUDA wheels. That costs storage and cold-start time, not accuracy.
 
 ## 2. Does CPU fit the existing orchestrator? (clocks aligned 2026-11-21)
 
@@ -66,6 +71,18 @@ The rates are from the 2-vCPU audit split (discovery 2,532 s, stage 1 about 8,28
 | Resolve, 34-min match | 775 s, resumed | 1,680 s client | Only if a non-resumed run stays under 1,680 s. Not yet measured |
 | Resolve, 90-min match | ~2,050 s if linear | 1,680 s client, 1,800 s function | No. Cloud Tasks will not extend past 30 min |
 
+**Measured on the passing configuration (8 vCPU, non-resumed run):**
+
+| Task | Measured | Applies to | Fits 1,680 s client? |
+|---|---|---|---|
+| Discovery, whole 2,035 s recording | 1,129 s (OCR 510 s, detect 318 s, decode 84 s) | ~333 s per 600 s chunk, if linear | Yes |
+| Extract, 300 s chunk | 834–856 s (7 chunks; last 235 s chunk 664 s) | every football segment | Yes, ~2× margin |
+| Resolve, 34-min match | **579 s** (`timingComplete=true`; numbers/OCR 339 s, identity 178 s, tracklets 58 s) | whole match | Yes (it would have fit the old 600 s client by 21 s) |
+| Resolve, 90-min match | ~1,535 s if linear | whole match | Tight (about 1.09×). Measure before serving long matches |
+
+So step 3 (resolve without resume) already exists at 8 vCPU. The 2- and 4-vCPU measurements are still open, and
+they matter only if a smaller instance is chosen.
+
 Before CPU can serve a match:
 1. The pinned CPU image passes `compare_runs.py` + balanced_5.2 against the recorded 7,528.287 s CPU run (exit 0).
 2. The deployed worker's request timeout is at least 1,800 s. The README example matches; no service has been deployed.
@@ -73,14 +90,20 @@ Before CPU can serve a match:
 4. A resolve that cannot finish inside 1,680 s needs a different design (for example a Cloud Run job). Retrying it
    three times still cannot, because each attempt hits the same deadline.
 
-## 3. Cost (list prices, europe-west6, instance-based billing)
+## 3. Cost (list prices, europe-west6, instance-based billing; corrected 2026-11-21)
 
-$0.000018 per vCPU-s and $0.000002 per GiB-s, checked 2026-11-21.
-- 2 vCPU / 4 GiB costs $0.000044/s, so the 7,528 s reference costs about **$0.33** in compute.
-- A 47-min match is about $0.51 with assumed start overhead and 5 % retries (speed-cost doc §4).
-- The free tier is 240,000 vCPU-s per month.
+Prices: $0.000018 per vCPU-s, $0.000002 per GiB-s; L4 non-zonal $0.0001867/s.
+- **Passing configuration, 8 vCPU / 8 GiB:** 7,528 s × $0.00016/s ≈ **$1.20 per 34-min match** in compute, before
+  per-task start overhead.
+- **The recorded L4 run** (8 vCPU / 32 GiB + L4, 1,854 s + 80 s) ≈ $0.76, but it failed the gate.
+- So **at the passing configuration, CPU costs about 1.6× the L4 run, not half.** An earlier version of this file
+  and of the speed-cost doc said "about half". That figure came from the 2-vCPU audit run (11,587 s total,
+  ≈ $0.51 for 2 vCPU / 4 GiB), which is a different configuration.
+- vCPU efficiency: 2 vCPU used 23,174 vCPU-s, 8 vCPU used 60,224 vCPU-s. Going from 2 to 8 cores gave only 1.54×
+  more speed, so a gate-passing 2- or 4-vCPU configuration would be the cheap option, at 3+ h latency.
+- The free tier (240,000 vCPU-s per month) covers about 4 matches at 8 vCPU, or about 10 at 2 vCPU.
 
-The recorded L4 run is $0.46–$0.93 per orchestration, depending on assumptions, and it failed the gate.
+The case for CPU is accuracy: it is the only configuration that has passed. It is not the cheaper choice at 8 vCPU.
 
 ## 4. What does not change
 

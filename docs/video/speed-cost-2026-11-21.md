@@ -89,7 +89,8 @@ unmeasured, as in `cost_model.py`.
 | L4, scaled from the only full L4 run (1,854 s for 34 min) | ~2,563 s | L4 + 8 vCPU / 32 GiB | **$1.09** |
 
 What this means:
-- **The CPU path costs about half of the L4 path.** About 10 CPU matches per month fit in the free tier.
+- **Corrected 2026-11-21:** the 'about half' figure holds only for 2 vCPU, which has not passed the gate. The configuration that passed (8 vCPU) costs about 1.6× the L4 run; see `docs/release/cpu-production-plan-2026-11-21.md` §3.
+- **2 vCPU (not gate-verified):** about half the L4 path. About 10 CPU matches per month fit in the free tier.
 - **It is also the path all accuracy evidence was measured on.** CPU/GPU parity is pre-pilot blocker 4, and the GPU
   path abstains more.
 - The cost is latency: about 3–4 h per match on 2 vCPU.
