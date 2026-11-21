@@ -95,10 +95,18 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
                 errors.append(error)
     # Preserve the existing staging project. Remove the known pilot services and queues.
     scope = (f"--project={PROJECT}",)
+    probe_names = set()
+    config_path = os.environ.get("STAGING_CONFIG")
+    if config_path:
+        config = json.loads(Path(config_path).read_text(encoding="utf-8-sig"))
+        for key, prefix in (("authProbeQueue", "stg-auth-probe"), ("exhaustProbeQueue", "stg-exhaust-probe")):
+            value = config.get(key, "")
+            if re.fullmatch(prefix + r"-[a-f0-9]{32}", value):
+                probe_names.add(value)
     for group, location, allowed in (
         (("tasks", "queues"), "location", {
             "extractTrackingSegmentTask", "discoverTrackingTask", "resolveTrackingTask",
-            "refreshTrackingOcrTask", "buildDataExport", "stg-auth-probe", "stg-exhaust-probe",
+            "refreshTrackingOcrTask", "buildDataExport", *probe_names,
         }),
         (("functions",), "regions", FUNCTIONS),
         (("run", "services"), "region", {"stg-fake-worker"}),
@@ -140,7 +148,7 @@ def teardown(cli=gcloud, synthetic_cleanup=None, web_cleanup=remove_web_app):
             cli("run", "services", "describe", worker, *scope, f"--region={location}")
             raise RuntimeError(f"Unexpected worker in {location}: {worker}")
         except subprocess.CalledProcessError as error:
-            if re.search(r"(?<![A-Z_])NOT_FOUND(?![A-Z_])", error.stderr or ""):
+            if artifact_repository.resource_absent(error.stderr):
                 print(f"Verified NOT_FOUND for {location}/{worker}", flush=True)
             else:
                 errors.append(error)

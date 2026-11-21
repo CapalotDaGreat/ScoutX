@@ -3,11 +3,20 @@ import re
 import subprocess
 
 
+def resource_absent(message):
+    """Distinguish a missing resource from access or transport failure."""
+    return bool(re.search(
+        r"\bNOT_FOUND\b|\bCannot find service\s*\[|\bHTTP(?: Error|/\d(?:\.\d)?)?\s*[: ]?\s*404\b|\bnot found:\s*404\b",
+        message or "",
+        re.IGNORECASE,
+    ))
+
+
 def describe(cli, name, *scope):
     try:
         return cli("artifacts", "repositories", "describe", name, *scope)
     except subprocess.CalledProcessError as error:
-        if re.search(r"(?<![A-Z_])NOT_FOUND(?![A-Z_])", error.stderr or ""):
+        if resource_absent(error.stderr):
             return None
         raise
 
