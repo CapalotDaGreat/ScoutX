@@ -105,11 +105,16 @@ def provision_firebase_project():
     step(["node", "--use-system-ca", os.environ["STAGING_FIREBASE_JS"],
           "projects:addfirebase", PROJECT, "--non-interactive"])
     step([*cli, "firestore", "databases", "create", "--location=europe-west6", *scope])
-    step([*cli, "iam", "service-accounts", "create", "stg-no-invoker", *scope])
-    step([*cli, "iam", "service-accounts", "add-iam-policy-binding",
-          "stg-no-invoker@" + PROJECT + ".iam.gserviceaccount.com",
-          "--role=roles/iam.serviceAccountUser",
-          "--member=user:" + os.environ["STAGING_OPERATOR_EMAIL"], *scope])
+
+def verify_probe_account():
+    expected = f"stg-no-invoker@{PROJECT}.iam.gserviceaccount.com"
+    config = json.loads(load_config().read_text(encoding="utf-8-sig"))
+    if config.get("unauthorizedServiceAccount") != expected:
+        raise RuntimeError("Unexpected probe identity")
+    probe = cloud_json("iam", "service-accounts", "describe", expected, "--project=" + PROJECT)
+    if probe.get("email") != expected or probe.get("disabled"):
+        raise RuntimeError("Staging probe account is missing or disabled")
+
 
 def provision_auth_and_storage():
     token = subprocess.check_output(
@@ -198,6 +203,7 @@ def deploy():
     if billing.get("billingEnabled") is not True:
         raise RuntimeError("Billing operator has not linked the staging project")
     verify_runtime_iam()
+    verify_probe_account()
     provision_firebase_project()
     provision_auth_and_storage()
     provision_web_app()
