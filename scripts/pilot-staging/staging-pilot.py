@@ -8,7 +8,6 @@ import sys
 import tempfile
 import urllib.error
 import urllib.request
-import uuid
 
 import artifact_repository
 
@@ -92,13 +91,65 @@ def deploy_private_worker():
               "--region=" + region, "--timeout=600s",
               "--gcs-source-staging-dir=" + os.environ["STAGING_WORKER_SOURCE"], *scope])
     step([*cli, "run", "deploy", "stg-fake-worker", "--image=" + image,
-          "--region=" + region, "--no-allow-unauthenticated", "--min-instances=0",
+          "--region=" + region, "--invoker-iam-check", "--min-instances=0",
           "--max-instances=1", "--timeout=210s", "--cpu=1", "--memory=512Mi", *scope])
-    config = json.loads(load_config().read_text(encoding="utf-8-sig"))
-    for member in (operator_member(),
-                   "serviceAccount:" + config["runtimeServiceAccount"]):
-        step([*cli, "run", "services", "add-iam-policy-binding", "stg-fake-worker",
-              "--region=" + region, "--role=roles/run.invoker", "--member=" + member, *scope])
+WORKER = "stg-fake-worker"
+WORKER_SCOPE = ("--region=europe-west6", "--project=" + PROJECT)
+WORKER_IMAGE = f"europe-west6-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy/{WORKER}:pilot"
+WORKER_INVOKERS = frozenset({
+    f"serviceAccount:stg-pilot-operator@{PROJECT}.iam.gserviceaccount.com",
+    f"serviceAccount:{NUMBER}-compute@developer.gserviceaccount.com",
+})
+
+
+def read_worker():
+    try:
+        worker = cloud_json("run", "services", "describe", WORKER, *WORKER_SCOPE)
+    except subprocess.CalledProcessError as error:
+        if "NOT_FOUND" in (error.stderr or ""):
+            raise RuntimeError(f"Private staging worker is missing: {WORKER}") from error
+        raise
+    metadata = worker["metadata"]
+    status = worker["status"]
+    annotations = metadata.get("annotations", {})
+    template = worker["spec"]["template"]["spec"]
+    containers = template.get("containers", [])
+    images = [container.get("image", "") for container in containers]
+    expected_image = WORKER_IMAGE.rsplit(":", 1)[0]
+    if (metadata.get("name") != WORKER
+            or not any(c.get("type") == "Ready" and c.get("status") == "True"
+                       for c in status.get("conditions", []))
+            or annotations.get("run.googleapis.com/invoker-iam-disabled") == "true"
+            or len(images) != 1
+            or not (images[0] == WORKER_IMAGE or images[0].startswith(expected_image + "@sha256:"))):
+        raise RuntimeError("Private staging worker is not ready or does not match the pilot deployment")
+    return worker
+
+
+def read_worker_bindings():
+    policy = cloud_json("run", "services", "get-iam-policy", WORKER, *WORKER_SCOPE)
+    bindings = policy.get("bindings", [])
+    if any(b.get("role") != "roles/run.invoker" or b.get("condition") for b in bindings):
+        raise RuntimeError("Unexpected service-level IAM on staging worker")
+    return {member for binding in bindings for member in binding.get("members", [])}
+
+
+def verify_private_worker():
+    read_worker()
+    if read_worker_bindings() != WORKER_INVOKERS:
+        raise RuntimeError("Private staging worker invoker binding does not exactly match the pilot callers")
+
+
+def apply_worker_invokers():
+    read_worker()
+    current = read_worker_bindings()
+    if current - WORKER_INVOKERS:
+        raise RuntimeError("Refusing to change worker IAM with unexpected invokers")
+    for member in sorted(WORKER_INVOKERS - current):
+        cloud_json("run", "services", "add-iam-policy-binding", WORKER, *WORKER_SCOPE,
+                   "--member=" + member, "--role=roles/run.invoker")
+    verify_private_worker()
+
 
 def provision_firebase_project():
     cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
@@ -200,6 +251,7 @@ def provision_probe_queues():
               "--min-backoff=30s", "--log-sampling-ratio=1.0", "--quiet"])
 
 def deploy():
+    verify_private_worker()
     config_env = ROOT / "functions" / (".env." + PROJECT)
     if not config_env.is_file():
         raise RuntimeError("Staging-only Functions environment has not been provisioned")
@@ -215,7 +267,6 @@ def deploy():
     provision_auth_and_storage()
     provision_web_app()
     provision_probe_queues()
-    deploy_private_worker()
     functions = (
         "startPlayerAnalysis,answerTrackingQuestion,undoTrackingAnswer,"
         "cancelMatchAnalysis,explainTrackingMoment,getMediaPlaybackUrl,requestDataExport,"
@@ -251,15 +302,25 @@ def tests():
         step(["node", "--use-system-ca", str(HERE / script), *args])
 
 def main():
-    os.environ["STAGING_CONFIG"] = str(load_config())
-    phase = sys.argv[1] if len(sys.argv) > 1 else None
-    if phase == "deploy":
+    phase = sys.argv[1] if len(sys.argv) > 1 else "watchdog"
+    if phase == "provision-worker":
+        scope = f"gs://{PROJECT}_cloudbuild/scoutx-pilot/"
+        source = os.environ["STAGING_WORKER_SOURCE"]
+        if not source.startswith(scope) or len(source.removeprefix(scope)) != 32 or any(c not in "0123456789abcdef" for c in source.removeprefix(scope)):
+            raise RuntimeError("Expected the staging controller's run-specific worker source prefix")
+        deploy_private_worker()
+    elif phase == "apply-worker-invokers":
+        apply_worker_invokers()
+    elif phase == "deploy":
+        os.environ["STAGING_CONFIG"] = str(load_config())
         deploy()
     elif phase == "test":
+        os.environ["STAGING_CONFIG"] = str(load_config())
         tests()
-    elif phase is None:
+    elif phase == "watchdog":
+        os.environ["STAGING_CONFIG"] = str(load_config())
+        verify_private_worker()
         with tempfile.TemporaryDirectory(prefix="scoutx-staging-") as directory:
-            os.environ["STAGING_WORKER_SOURCE"] = f"gs://{PROJECT}_cloudbuild/scoutx-pilot/{uuid.uuid4().hex}"
             os.environ["STAGING_LIMITS_STATE"] = str(Path(directory) / "limits.json")
             plan = Path(directory) / "plan.json"
             plan.write_text(json.dumps({
