@@ -101,16 +101,6 @@ def deploy_private_worker():
 def provision_firebase_project():
     cli = [sys.executable, os.environ["STAGING_GCLOUD_PY"]]
     scope = ["--project=" + PROJECT, "--quiet"]
-    step([*cli, "services", "enable",
-          "firebase.googleapis.com", "firestore.googleapis.com", "storage.googleapis.com",
-          "firebasestorage.googleapis.com", "firebaserules.googleapis.com",
-          "identitytoolkit.googleapis.com", "iamcredentials.googleapis.com",
-          "cloudfunctions.googleapis.com", "run.googleapis.com", "cloudtasks.googleapis.com",
-          "cloudbuild.googleapis.com", "artifactregistry.googleapis.com",
-          "eventarc.googleapis.com", "pubsub.googleapis.com", "secretmanager.googleapis.com",
-          "cloudscheduler.googleapis.com", *scope])
-    step(["node", "--use-system-ca", os.environ["STAGING_FIREBASE_JS"],
-          "projects:addfirebase", PROJECT, "--non-interactive"])
     step([*cli, "firestore", "databases", "create", "--location=europe-west6", *scope])
 
 def verify_probe_account():
