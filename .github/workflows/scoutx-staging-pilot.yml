@@ -28,6 +28,23 @@ jobs:
       - name: Verify staging identity token exchange
         run: echo "GitHub exchanged its staging workflow identity for an audience-bound Google Cloud identity token."
 
+      - uses: actions/checkout@v6
+      - uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/315202089837/locations/global/workloadIdentityPools/scoutx-staging-gh/providers/github
+          service_account: stg-pilot-operator@pitchproof-stg-pilot2.iam.gserviceaccount.com
+      - uses: google-github-actions/setup-gcloud@v3
+      - name: Verify staging permissions without deploying
+        run: |
+          set -euo pipefail
+          project=pitchproof-stg-pilot2
+          test "$(gcloud projects describe "$project" --format='value(projectNumber)')" = 315202089837
+          test "$(gcloud projects describe "$project" --format='value(labels.purpose)')" = staging-verification
+          gcloud projects get-iam-policy "$project" --format=none
+          for account in 315202089837-compute@developer.gserviceaccount.com stg-no-invoker@pitchproof-stg-pilot2.iam.gserviceaccount.com; do
+            test "$(gcloud iam service-accounts describe "$account" --project="$project" --format='value(email)')" = "$account"
+          done
+
   pilot:
     needs: identity
     if: github.repository_id == '1286028676' && github.ref == 'refs/heads/codex/scoutx-staging-wif' && vars.SCOUTX_PILOT_ENABLED == 'true'
