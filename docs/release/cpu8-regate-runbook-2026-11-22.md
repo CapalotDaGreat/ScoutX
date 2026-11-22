@@ -10,23 +10,20 @@ Owner-approved scope (2026-11-22), and only that:
 There are no production flags, INT8, E9 or L4 in this session. If the gate fails, stop: do not try 2 or 4 vCPU in
 the same session.
 
-## 0. One point the owner must confirm before billing
+## 0. Owner decisions (approved 2026-11-22, 01:10 Zurich)
 
-**A Cloud Run *service* cannot run step 3.** A service request times out after at most 3,600 s, and the reference
-benchmark took 7,528 s in one process. A Cloud Run **job** allows task timeouts of up to 168 h on CPU.
+1. **A job, not a service.** Step 3 runs as a one-task Cloud Run job from the same image digest: 8 vCPU,
+   `SCOUTX_ORT_PROVIDERS=CPUExecutionProvider`, 32 GiB, 4 h task timeout, `--max-retries 0`. A service request is
+   capped at 3,600 s, and the reference run took 7,528 s.
+2. **No service in this session.** It is not deployed, not even for a smoke test. The gate result comes from the
+   job alone.
+3. **The proxy may be uploaded, for this session only.** The bucket is private, in `pitchproof-stg-pilot2` /
+   europe-west6, with uniform access and public-access prevention, and it is deleted and verified gone during
+   cleanup. The run record must state that the file left the owner's machine: time, bucket, object name, SHA-256,
+   and the deletion time with its 404 check.
 
-Proposal:
-- Run step 3 as a one-task Cloud Run **job** from the same image digest, with the same CPU settings (8 vCPU,
-  `SCOUTX_ORT_PROVIDERS=CPUExecutionProvider`, concurrency is not applicable).
-- Either skip the service in step 2, or deploy it only for a `/healthz` check and delete it right away. The gate
-  result comes from the job either way.
-
-Also confirm two things:
-- **Footage:** this uploads the IMG_4809 proxy (1.41 GB, the owner's own footage) to a private bucket in
-  `pitchproof-stg-pilot2` (europe-west6), deleted at the end.
-- **CPU platform:** jobs and services both run on Cloud Run's second-generation environment, but Google does not
-  promise the same CPU model. A pass on the job is evidence for that image at 8 vCPU on Cloud Run. It is not proof
-  for every host the service might later run on.
+What a pass means: this image at 8 vCPU on that job host. It does not cover every future Cloud Run CPU. No
+production flags, INT8, E9, L4, and no 2/4-vCPU retry if the gate fails.
 
 ## 1. Preconditions
 
@@ -67,6 +64,8 @@ IMAGE=$REGION-docker.pkg.dev/$PROJECT/$REPO/tracker@$DIGEST
 gcloud storage buckets create $BUCKET --project $PROJECT --location $REGION --uniform-bucket-level-access \
   --public-access-prevention
 gcloud storage cp IMG_4809_proxy_10fps.mp4 $BUCKET/in/
+# Footage egress record (owner decision 3)
+echo "{\"left_owner_machine_utc\": \"$(date -u +%FT%TZ)\", \"object\": \"$BUCKET/in/IMG_4809_proxy_10fps.mp4\", \"sha256\": \"$(sha256sum IMG_4809_proxy_10fps.mp4 | cut -d' ' -f1)\"}" > footage_egress.json
 
 # 3. One-task job: 8 vCPU / 32 GiB (the reference host had 32 GiB; work dir is in-memory /tmp)
 gcloud run jobs create $JOB --project $PROJECT --region $REGION --image $IMAGE \
@@ -94,7 +93,7 @@ python workers/football-cv/bench/compare_runs.py \
 gcloud run jobs delete $JOB --project $PROJECT --region $REGION --quiet
 gcloud run jobs describe $JOB --project $PROJECT --region $REGION 2>&1 | grep -q NOT_FOUND
 gcloud storage rm -r $BUCKET --quiet
-gcloud storage buckets describe $BUCKET 2>&1 | grep -q -i 'not found\|404'
+gcloud storage buckets describe $BUCKET 2>&1 | grep -q -i 'not found\|404' && echo "deleted_utc $(date -u +%FT%TZ)" >> footage_egress.json
 gcloud artifacts docker images delete $IMAGE --project $PROJECT --delete-tags --quiet
 gcloud builds list --project $PROJECT --region $REGION --ongoing --format='value(id)'   # must be empty
 # Cloud Build source archive: delete this build's object in gs://${PROJECT}_cloudbuild and confirm 404
