@@ -1,0 +1,111 @@
+{
+  "datasetId": "img4809-development-fixture-replay",
+  "thresholdStatus": "proposed",
+  "evaluator": "pitchproof-report-eval/1",
+  "development": {
+    "labelFingerprint": "86fbc652f6cee8c3b22bd3b8f9e9985cae83d0ea503032a421ab856d33ec0c78",
+    "split": "development",
+    "clips": 1,
+    "labelledClips": 1,
+    "syntheticClips": 0,
+    "wrongPlayerClaims": 0,
+    "claims": 15,
+    "wrongPlayerRate": null,
+    "wrongPlayerRateCi95": null,
+    "supportedClaimShare": 0,
+    "unverifiedClaims": 15,
+    "eventPrecision": null,
+    "eventRecall": null,
+    "meanTimestampErrorSec": null,
+    "narrativeSupport": null,
+    "usableReports": 0,
+    "usableShare": 0,
+    "usableShareCi95": [
+      0,
+      0.7934567085261071
+    ],
+    "firstUsefulSec": {
+      "n": 0,
+      "p50": null,
+      "p95": null
+    },
+    "fullSec": {
+      "n": 0,
+      "p50": null,
+      "p95": null
+    },
+    "valid": true,
+    "invalidReasons": [],
+    "thresholdChecks": {
+      "falseConfirmRate": null,
+      "eventPrecision": null,
+      "eventRecall": null,
+      "meanTimestampErrorSec": null
+    }
+  },
+  "heldout": {
+    "labelFingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "split": "heldout",
+    "clips": 0,
+    "labelledClips": 0,
+    "syntheticClips": 0,
+    "wrongPlayerClaims": 0,
+    "claims": 0,
+    "wrongPlayerRate": null,
+    "wrongPlayerRateCi95": null,
+    "supportedClaimShare": null,
+    "unverifiedClaims": 0,
+    "eventPrecision": null,
+    "eventRecall": null,
+    "meanTimestampErrorSec": null,
+    "narrativeSupport": null,
+    "usableReports": 0,
+    "usableShare": null,
+    "usableShareCi95": null,
+    "firstUsefulSec": {
+      "n": 0,
+      "p50": null,
+      "p95": null
+    },
+    "fullSec": {
+      "n": 0,
+      "p50": null,
+      "p95": null
+    },
+    "valid": false,
+    "invalidReasons": [
+      "only 0 labelled held-out clips; the proposed threshold file asks for at least 30",
+      "held-out evidence needs at least 30 distinct source recordings"
+    ],
+    "thresholdChecks": {
+      "falseConfirmRate": null,
+      "eventPrecision": null,
+      "eventRecall": null,
+      "meanTimestampErrorSec": null
+    }
+  },
+  "releaseEvidence": "insufficient",
+  "perClip": [
+    {
+      "clipId": "img4809-dev",
+      "split": "development",
+      "labelled": true,
+      "synthetic": false,
+      "claims": 15,
+      "claimsSupported": 0,
+      "claimsWrongPlayer": 0,
+      "claimsUnverified": 15,
+      "eventsPredicted": 0,
+      "eventsTruth": 0,
+      "eventsMatched": 0,
+      "timestampErrorSumSec": 0,
+      "answers": 0,
+      "answersSupported": 0,
+      "hasClaim": true,
+      "fullReport": true,
+      "usable": false,
+      "firstUsefulSec": null,
+      "fullSec": null
+    }
+  ]
+}

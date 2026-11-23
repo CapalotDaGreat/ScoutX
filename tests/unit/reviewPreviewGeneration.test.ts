@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 const root = new URL('../../', import.meta.url);
 const generated = new URL('scripts/review-preview/.generated/reports.json', root);
@@ -39,7 +40,7 @@ describe('clean checkout: the review-preview data is generated, not hand-made', 
         else if (/\.(ts|tsx|js|jsx)$/.test(name) && /review-preview|\.generated\/reports/.test(readFileSync(path, 'utf8'))) offenders.push(path);
       }
     };
-    walk(new URL('src', root).pathname);
+    walk(fileURLToPath(new URL('src', root)));
     for (const entry of ['App.tsx', 'index.ts', 'app.config.ts']) {
       try {
         if (/review-preview/.test(readFileSync(new URL(entry, root), 'utf8'))) offenders.push(entry);

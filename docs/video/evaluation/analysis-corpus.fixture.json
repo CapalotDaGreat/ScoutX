@@ -1,0 +1,13 @@
+{
+  "datasetId": "img4809-development-fixture-replay",
+  "note": "Fixture replay of the recorded IMG_4809 worker output against single-annotator developer labels in nine 30 s windows. Development split only; not accuracy evidence for unseen matches. No held-out clips exist.",
+  "clips": [
+    {
+      "clipId": "img4809-dev",
+      "split": "development",
+      "scope": "full",
+      "report": "../../../tests/fixtures/tracking50-img4809-auto.json",
+      "labels": "img4809-dev.labels.json"
+    }
+  ]
+}

@@ -16,7 +16,7 @@ import {
 import { VIDEO_CONSENT_COLLECTION, VIDEO_CONSENT_VERSION } from './videoConsent';
 import { writeSystemActivity, type SystemActivityInput } from '../notificationProducers';
 import {
-  notificationId, reviewNeeded, shouldReplaceReport, type PublishedReport, type ReportScope, type TrackingProgress,
+  doneCount, notificationId, reviewNeeded, shouldReplaceReport, type PublishedReport, type ReportScope, type TrackingProgress,
 } from './trackingProgress';
 import {
   OCR_FOLLOW_UP_ACTION, OCR_FOLLOW_UP_DAILY_LIMIT, OCR_FOLLOW_UP_MAX_CROPS, followUpRunnable, followUpTaskId, planOcrFollowUp,
@@ -196,6 +196,12 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   const job = (await db.collection(MATCH_COLLECTION).doc(jobId).get()).data() as MatchJobDoc | undefined;
   if (!job || job.cancelRequested) return 'unavailable';
   const refresh = opts.scope === 'refresh';
+  // A preliminary report adds nothing once every segment is finished (the full resolve reads the same cached
+  // artifacts) or the full report is already published, so it must not cost a worker resolve.
+  if (opts.scope === 'preliminary') {
+    const early = (await base.doc('progress').get()).data() as ProgressDoc | undefined;
+    if (early && (early.full || (early.plan.length > 0 && doneCount(early) >= early.plan.length))) return 'stale';
+  }
   const raw = await client({
     contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
     target: job.targeting ?? {}, feedback: workerFeedback(fb),
@@ -210,6 +216,19 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
   const progress = progressSnap.exists ? progressSnap.data() as ProgressDoc : null;
   const totalParts = progress?.plan.length ?? 0;
   const scope: ReportScope = !progress || report.analysedRange.parts >= totalParts ? 'full' : 'preliminary';
+  // Do not store review images for a report that cannot be published: the owner's storage would keep thumbnails no
+  // report references. The transaction below stays the authority (current only ever grows, so a rejection here is
+  // also a rejection there); these reads only avoid the wasted uploads. Follow-up refreshes keep their own check.
+  if (!refresh) {
+    const [fbNow, curNow, jobNow] = await Promise.all([
+      base.doc('feedback').get(), base.doc('current').get(), db.collection(MATCH_COLLECTION).doc(jobId).get(),
+    ]);
+    if (!jobNow.exists || jobNow.get('cancelRequested') === true || jobNow.get('playerId') !== job.playerId) return 'unavailable';
+    if (((fbNow.data() as FeedbackDoc | undefined)?.revision ?? 0) !== feedbackRevision) return 'superseded';
+    const cd = curNow.data() as (CurrentDoc & { scope?: ReportScope; parts?: number }) | undefined;
+    if (!shouldReplaceReport(cd?.report ? { parts: cd.parts ?? 0, scope: cd.scope } : null,
+      { parts: report.analysedRange.parts, scope })) return 'stale';
+  }
   // Review-card images: stored owner-only; a question without a valid image keeps imagePath null.
   const rawReport = raw.report as { reviewQuestions?: Array<{ imageJpegBase64?: unknown }>;
     moments?: Array<{ id?: unknown; imageJpegBase64?: unknown }>; referenceImageJpegBase64?: unknown };

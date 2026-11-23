@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { describe, test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import { isFootageProcessingApproved } from '../../functions/src/ai/providerConfig.ts';
 import { APPROVED_CV_WORKER } from '../../functions/src/analysis/cvApproval.generated.ts';
@@ -137,7 +138,7 @@ describe('analysis fails closed in the release configuration', () => {
 });
 
 describe('every outbound path to the worker or an AI provider passes a gate first', () => {
-  const root = new URL('../../functions/src/', import.meta.url).pathname;
+  const root = fileURLToPath(new URL('../../functions/src/', import.meta.url));
   const files: string[] = [];
   const walk = (dir: string) => {
     for (const name of readdirSync(dir)) {
@@ -148,7 +149,7 @@ describe('every outbound path to the worker or an AI provider passes a gate firs
   };
   walk(root);
   const source = (path: string) => readFileSync(path, 'utf8');
-  const rel = (path: string) => path.slice(root.length);
+  const rel = (path: string) => relative(root, path).split(sep).join('/');
 
   test('only the reviewed modules attach images to a provider request, each behind the footage gate', () => {
     const imageSenders = files.filter((f) => /type: 'image_url'/.test(source(f))).map(rel).sort();

@@ -1,0 +1,302 @@
+{
+  "schema": "pitchproof.analysis-bench.v1",
+  "revision": "32ab43f1-baseline",
+  "fixture": "IMG_4809 recorded worker output (tracking50-img4809-auto, tracking41-img4809-discovery), 2035 s",
+  "scenarios": [
+    {
+      "id": "cold_prompt",
+      "description": "Cold analysis, 2035 s recorded match, shirt number given; resolve tasks run promptly.",
+      "samples": 30,
+      "counts": {
+        "workerRequests": {
+          "discover": 4,
+          "extract": 8,
+          "resolve": 3,
+          "frames": 0
+        },
+        "workerCachedHits": 0,
+        "retries": 0,
+        "imageWrites": 72,
+        "imageBytesSynthetic": 1440000,
+        "notifications": 4,
+        "firestoreReads": 61,
+        "firestoreWrites": 31,
+        "publishes": 3,
+        "storedObjects": 54,
+        "unreferencedObjects": 30,
+        "workerCallsBeforeFirstReport": 6,
+        "segmentsDoneAtFirstReport": 1,
+        "workerCallsAtLastPublish": 15
+      },
+      "published": {
+        "version": 3,
+        "scope": "full",
+        "parts": 8,
+        "reportSha256": "e510d2825a84f44756541ce474bc11582bf77cabe13f9181d03fa059c8985dc0",
+        "moments": 15
+      },
+      "outcome": null,
+      "cpuMs": {
+        "coldFirstRun": 33.226,
+        "p50": 11.231,
+        "p95": 22.657
+      }
+    },
+    {
+      "id": "cold_delayed_resolve",
+      "description": "Same, but resolve tasks are delayed until extraction ends (busy worker or backoff retry).",
+      "samples": 30,
+      "counts": {
+        "workerRequests": {
+          "discover": 4,
+          "extract": 8,
+          "resolve": 2,
+          "frames": 0
+        },
+        "workerCachedHits": 0,
+        "retries": 0,
+        "imageWrites": 48,
+        "imageBytesSynthetic": 960000,
+        "notifications": 4,
+        "firestoreReads": 55,
+        "firestoreWrites": 29,
+        "publishes": 2,
+        "storedObjects": 24,
+        "unreferencedObjects": 0,
+        "workerCallsBeforeFirstReport": 13,
+        "segmentsDoneAtFirstReport": 8,
+        "workerCallsAtLastPublish": 14
+      },
+      "published": {
+        "version": 2,
+        "scope": "full",
+        "parts": 8,
+        "reportSha256": "e510d2825a84f44756541ce474bc11582bf77cabe13f9181d03fa059c8985dc0",
+        "moments": 15
+      },
+      "outcome": null,
+      "cpuMs": {
+        "coldFirstRun": 7.062,
+        "p50": 6.827,
+        "p95": 9.643
+      }
+    },
+    {
+      "id": "cold_no_number_prompt",
+      "description": "Cold analysis without a shirt number (no discovery pass), prompt resolves.",
+      "samples": 30,
+      "counts": {
+        "workerRequests": {
+          "discover": 0,
+          "extract": 8,
+          "resolve": 3,
+          "frames": 0
+        },
+        "workerCachedHits": 0,
+        "retries": 0,
+        "imageWrites": 72,
+        "imageBytesSynthetic": 1440000,
+        "notifications": 4,
+        "firestoreReads": 45,
+        "firestoreWrites": 23,
+        "publishes": 3,
+        "storedObjects": 54,
+        "unreferencedObjects": 30,
+        "workerCallsBeforeFirstReport": 2,
+        "segmentsDoneAtFirstReport": 1,
+        "workerCallsAtLastPublish": 11
+      },
+      "published": {
+        "version": 3,
+        "scope": "full",
+        "parts": 8,
+        "reportSha256": "e510d2825a84f44756541ce474bc11582bf77cabe13f9181d03fa059c8985dc0",
+        "moments": 15
+      },
+      "outcome": null,
+      "cpuMs": {
+        "coldFirstRun": 9.189,
+        "p50": 9.189,
+        "p95": 11.16
+      }
+    },
+    {
+      "id": "transient_failures",
+      "description": "Segment 2 fails twice and segment 4 once, then succeed within the 3-attempt budget.",
+      "samples": 30,
+      "counts": {
+        "workerRequests": {
+          "discover": 4,
+          "extract": 11,
+          "resolve": 3,
+          "frames": 0
+        },
+        "workerCachedHits": 0,
+        "retries": 3,
+        "imageWrites": 72,
+        "imageBytesSynthetic": 1440000,
+        "notifications": 4,
+        "firestoreReads": 67,
+        "firestoreWrites": 37,
+        "publishes": 3,
+        "storedObjects": 54,
+        "unreferencedObjects": 30,
+        "workerCallsBeforeFirstReport": 6,
+        "segmentsDoneAtFirstReport": 1,
+        "workerCallsAtLastPublish": 18
+      },
+      "published": {
+        "version": 3,
+        "scope": "full",
+        "parts": 8,
+        "reportSha256": "e510d2825a84f44756541ce474bc11582bf77cabe13f9181d03fa059c8985dc0",
+        "moments": 15
+      },
+      "outcome": null,
+      "cpuMs": {
+        "coldFirstRun": 11.361,
+        "p50": 10.363,
+        "p95": 11.923
+      }
+    },
+    {
+      "id": "interrupted_then_resumed",
+      "description": "Segment 3 fails every attempt (analysis interrupted), then the owner resumes: finished segments must not run again.",
+      "samples": 30,
+      "counts": {
+        "workerRequests": {
+          "discover": 4,
+          "extract": 11,
+          "resolve": 3,
+          "frames": 0
+        },
+        "workerCachedHits": 0,
+        "retries": 2,
+        "imageWrites": 72,
+        "imageBytesSynthetic": 1440000,
+        "notifications": 8,
+        "firestoreReads": 70,
+        "firestoreWrites": 38,
+        "publishes": 3,
+        "storedObjects": 54,
+        "unreferencedObjects": 30,
+        "workerCallsBeforeFirstReport": 6,
+        "segmentsDoneAtFirstReport": 1,
+        "workerCallsAtLastPublish": 18
+      },
+      "published": {
+        "version": 3,
+        "scope": "full",
+        "parts": 8,
+        "reportSha256": "e510d2825a84f44756541ce474bc11582bf77cabe13f9181d03fa059c8985dc0",
+        "moments": 15
+      },
+      "outcome": null,
+      "cpuMs": {
+        "coldFirstRun": 12.726,
+        "p50": 10.343,
+        "p95": 14.118
+      }
+    }
+  ],
+  "reasoning": {
+    "repeat_answered": {
+      "taps": 3,
+      "statuses": [
+        "answered",
+        "answered_cached",
+        "answered_cached"
+      ],
+      "workerFrameCalls": 1,
+      "providerRequests": 1,
+      "providerImages": 2,
+      "cachedAnswers": 2
+    },
+    "repeat_rejected": {
+      "taps": 3,
+      "statuses": [
+        "rejected",
+        "rejected",
+        "rejected"
+      ],
+      "workerFrameCalls": 3,
+      "providerRequests": 3,
+      "providerImages": 6,
+      "cachedAnswers": 0
+    },
+    "double_submit": {
+      "taps": 2,
+      "statuses": [
+        "answered",
+        "answered"
+      ],
+      "workerFrameCalls": 2,
+      "providerRequests": 2,
+      "providerImages": 4,
+      "cachedAnswers": 0
+    },
+    "after_correction": {
+      "taps": 3,
+      "statuses": [
+        "answered",
+        "answered",
+        "answered_cached"
+      ],
+      "workerFrameCalls": 2,
+      "providerRequests": 2,
+      "providerImages": 4,
+      "cachedAnswers": 1
+    },
+    "consent_revoked": {
+      "taps": 2,
+      "statuses": [
+        "answered",
+        "unavailable"
+      ],
+      "workerFrameCalls": 1,
+      "providerRequests": 1,
+      "providerImages": 2,
+      "cachedAnswers": 0
+    }
+  },
+  "correction": {
+    "meter": {
+      "worker": {
+        "discover": 0,
+        "extract": 0,
+        "resolve": 1,
+        "frames": 0
+      },
+      "workerCachedHits": 0,
+      "imageWrites": 24,
+      "imageBytes": 480000,
+      "notifications": 4,
+      "retries": 0,
+      "workerCallsBeforeFirstReport": 6,
+      "segmentsDoneAtFirstReport": 1,
+      "workerCallsAtLastPublish": 15,
+      "provider": {
+        "requests": 0,
+        "images": 0,
+        "requestBytes": 0
+      }
+    },
+    "db": {
+      "reads": 6,
+      "writes": 2,
+      "publishes": 1
+    },
+    "published": {
+      "version": 4,
+      "scope": "full",
+      "parts": 8,
+      "reportSha256": "62bddf77af669f7af062e50854dc909f045056b22ccaf8d1250a3a5875784bb6",
+      "moments": 0
+    }
+  },
+  "usageCapture": {
+    "usageSurfaced": false,
+    "usage": null
+  },
+  "segments": 8
+}

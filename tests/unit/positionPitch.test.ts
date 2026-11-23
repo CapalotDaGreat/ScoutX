@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { pitchSpotForPosition } from '../../src/components/football/positionPitch.ts';
+import { pitchSpotForPosition } from '../../src/components/football/pitchSpot.ts';
 
 describe('position pitch marker', () => {
   it('places common codes in the right third and flank', () => {

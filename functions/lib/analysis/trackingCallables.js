@@ -173,6 +173,13 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     if (!job || job.cancelRequested)
         return 'unavailable';
     const refresh = opts.scope === 'refresh';
+    // A preliminary report adds nothing once every segment is finished (the full resolve reads the same cached
+    // artifacts) or the full report is already published, so it must not cost a worker resolve.
+    if (opts.scope === 'preliminary') {
+        const early = (await base.doc('progress').get()).data();
+        if (early && (early.full || (early.plan.length > 0 && (0, trackingProgress_1.doneCount)(early) >= early.plan.length)))
+            return 'stale';
+    }
     const raw = await client({
         contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
         target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
@@ -188,6 +195,21 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const progress = progressSnap.exists ? progressSnap.data() : null;
     const totalParts = progress?.plan.length ?? 0;
     const scope = !progress || report.analysedRange.parts >= totalParts ? 'full' : 'preliminary';
+    // Do not store review images for a report that cannot be published: the owner's storage would keep thumbnails no
+    // report references. The transaction below stays the authority (current only ever grows, so a rejection here is
+    // also a rejection there); these reads only avoid the wasted uploads. Follow-up refreshes keep their own check.
+    if (!refresh) {
+        const [fbNow, curNow, jobNow] = await Promise.all([
+            base.doc('feedback').get(), base.doc('current').get(), db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get(),
+        ]);
+        if (!jobNow.exists || jobNow.get('cancelRequested') === true || jobNow.get('playerId') !== job.playerId)
+            return 'unavailable';
+        if ((fbNow.data()?.revision ?? 0) !== feedbackRevision)
+            return 'superseded';
+        const cd = curNow.data();
+        if (!(0, trackingProgress_1.shouldReplaceReport)(cd?.report ? { parts: cd.parts ?? 0, scope: cd.scope } : null, { parts: report.analysedRange.parts, scope }))
+            return 'stale';
+    }
     // Review-card images: stored owner-only; a question without a valid image keeps imagePath null.
     const rawReport = raw.report;
     const rawQuestions = rawReport.reviewQuestions ?? [];

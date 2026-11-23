@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import Svg, { Circle, Line, Path, Rect } from 'react-native-svg';
 
 import { useTheme } from '@/theme';
-import { pitchSpotForPosition } from './positionPitch';
+import { pitchSpotForPosition } from './pitchSpot';
 
 export type PositionPitchProps = {
   /** The player's stated position (self-entered profile field). */

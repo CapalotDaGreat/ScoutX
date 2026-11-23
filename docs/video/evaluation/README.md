@@ -1,8 +1,9 @@
 # Computer-vision evaluation evidence
 
-This folder holds the evidence that approves one exact build of the football-cv worker. It is empty
-on purpose: no real-footage evaluation has been done. Never put footage or annotations with
-personal data here; the manifest and report contain ids, hashes and counts only.
+This folder holds development fixtures and, once available, the evidence that approves one exact build of the football-cv
+worker. The IMG_4809 single-annotator development labels and fixture replay do not approve a release: no independent
+held-out evaluation exists. Never put footage or annotations with personal data here; approval manifests and reports
+contain ids, hashes and counts only.
 
 Files, once an evaluation exists:
 
