@@ -29,3 +29,21 @@ Provenance notes:
   is the one recorded in the run).
 - Footage: the IMG_4809 proxy (SHA-256 b1077af3…) left the owner machine for this run. The bucket was created
   2026-11-22 00:27 UTC. Deletion is recorded in the runbook result.
+
+## Cleanup record (2026-11-23, Cloud console in the owner's browser, no Cloud Shell authorization)
+
+The run itself finished on 2026-11-22 at about 03:04 UTC (outputs written then). Cleanup and the billing unlink
+were not done in that session, so billing stayed linked from 2026-11-22 00:26 UTC until 2026-11-23 14:45 UTC
+(about 38 h). Only storage was idle-billed during that time; no compute ran.
+
+| Resource | Action 2026-11-23 | State |
+|---|---|---|
+| Cloud Run job `scoutx-cpu8-regate` (europe-west6) | deleted | jobs list empty |
+| Cloud Run services | none existed | none |
+| Bucket `pitchproof-stg-pilot2-cpu8-regate` (proxy + outputs, 4 objects) | object soft-delete disabled, bucket deleted 14:40:51 UTC | **bucket is in Google's bucket-level soft delete until about 2026-11-29/30, then permanently deleted**; restore was not attempted (blocked) |
+| Cloud Build source `gs://pitchproof-stg-pilot2_cloudbuild/source/1795307691.901668-2bc6ecbc….tgz` (code only) | deleted | soft-deleted for 7 days (bucket policy) |
+| Cloud Build | build `f37b0c79` finished (13 min 23 s) | no builds running |
+| Image `europe-west6-docker.pkg.dev/pitchproof-stg-pilot2/scoutx-pilot-images/tracker@sha256:7e8d48728c75…` (tag bc5a9d1…, 7.3 GB) | **kept, owner decision pending**: it is the exact digest that passed | present |
+| Billing (Firebase Payment) | disabled for `pitchproof-stg-pilot2` only, about 14:45 UTC | "This project is not linked to a billing account" |
+
+Production `scoutx-230b0` was not touched. No product flags, INT8, E9 or L4.

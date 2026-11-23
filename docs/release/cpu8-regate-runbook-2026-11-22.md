@@ -62,7 +62,7 @@ IMAGE=$REGION-docker.pkg.dev/$PROJECT/$REPO/tracker@$DIGEST
 
 # 2. Footage, private bucket in the same region
 gcloud storage buckets create $BUCKET --project $PROJECT --location $REGION --uniform-bucket-level-access \
-  --public-access-prevention
+  --public-access-prevention --soft-delete-duration=0   # otherwise deleted footage stays recoverable for 7 days
 gcloud storage cp IMG_4809_proxy_10fps.mp4 $BUCKET/in/
 # Footage egress record (owner decision 3)
 echo "{\"left_owner_machine_utc\": \"$(date -u +%FT%TZ)\", \"object\": \"$BUCKET/in/IMG_4809_proxy_10fps.mp4\", \"sha256\": \"$(sha256sum IMG_4809_proxy_10fps.mp4 | cut -d' ' -f1)\"}" > footage_egress.json
