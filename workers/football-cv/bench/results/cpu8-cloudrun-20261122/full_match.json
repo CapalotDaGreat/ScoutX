@@ -1,0 +1,515 @@
+{
+  "schema": "pitchproof.full-match-benchmark.v2",
+  "status": "complete",
+  "timestampUtc": "2026-11-22T01:13:26.778601+00:00",
+  "target": {
+    "number": "20",
+    "kit": "orange",
+    "kit2": "white"
+  },
+  "notes": [
+    "Single sequential worker; not a Cloud Tasks / parallel-segment test.",
+    "firstPlayable = time after model initialisation, not upload-to-play latency.",
+    "No footage, crops or images are written to this JSON or the claims file."
+  ],
+  "environment": {
+    "python": "3.13.17",
+    "platform": "Linux-6.18.60-x86_64-with-glibc2.39",
+    "cpuCores": 9,
+    "packages": {
+      "torch": "2.14.1",
+      "torchvision": "0.29.1",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "opencv-python": "4.14.0.94",
+      "opencv-python-headless": "4.14.0.94",
+      "easyocr": "1.7.2",
+      "python-doctr": "1.1.0",
+      "scikit-learn": "1.9.1",
+      "onnxruntime-gpu": "1.29.0",
+      "av": "19.0.2",
+      "pillow": "12.3.0",
+      "fastapi": "0.162.0",
+      "pydantic": "2.13.5"
+    },
+    "torch": {
+      "version": "2.14.1+cu130",
+      "cuda": "13.0",
+      "cudaAvailable": false,
+      "cudnn": 92400
+    },
+    "onnxruntime": {
+      "version": "1.29.0",
+      "availableProviders": [
+        "TensorrtExecutionProvider",
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "opencv": {
+      "version": "4.14.0",
+      "videoIO": [
+        "FFMPEG:                      YES",
+        "GStreamer:                   NO"
+      ]
+    },
+    "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+    "nvidiaSmi": null,
+    "driverMajor": null,
+    "engineVersion": "5.2.0",
+    "image": {
+      "gitCommit": "bc5a9d13f669bc92f869b6937ad4085b26551d2b",
+      "built": null,
+      "baseImage": "ubuntu:24.04",
+      "lockSha256": null
+    },
+    "scoutxEnv": {
+      "SCOUTX_BACKEND": "auto",
+      "SCOUTX_BASE_IMAGE": "ubuntu:24.04",
+      "SCOUTX_DETECTOR": "yolox_s",
+      "SCOUTX_DISCOVERY_DET": "416",
+      "SCOUTX_GIT_COMMIT": "bc5a9d13f669bc92f869b6937ad4085b26551d2b",
+      "SCOUTX_MODE": "balanced",
+      "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+      "SCOUTX_WEIGHTS_DIR": "/opt/models/yolox"
+    }
+  },
+  "models": {
+    "ok": true,
+    "files": {
+      "yolox/yolox_s.pth": {
+        "path": "/opt/models/yolox/yolox_s.pth",
+        "sha256": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "expected": "f55ded7181e1b0c13285c56e7790b8f0e8f8db590fe4edb37f0b7f345c913a30",
+        "ok": true
+      },
+      "easyocr/model/craft_mlt_25k.pth": {
+        "path": "/opt/models/easyocr/model/craft_mlt_25k.pth",
+        "sha256": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "expected": "4a5efbfb48b4081100544e75e1e2b57f8de3d84f213004b14b85fd4b3748db17",
+        "ok": true
+      },
+      "easyocr/model/english_g2.pth": {
+        "path": "/opt/models/easyocr/model/english_g2.pth",
+        "sha256": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "expected": "e2272681d9d67a04e2dff396b6e95077bc19001f8f6d3593c307b9852e1c29e8",
+        "ok": true
+      },
+      "doctr/models/parseq-56125471.pt": {
+        "path": "/opt/models/doctr/models/parseq-56125471.pt",
+        "sha256": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "expected": "56125471b17e660253c4179c3fbf3c906c34606d898148895dbb84db257d98ba",
+        "ok": true
+      }
+    }
+  },
+  "input": {
+    "basename": "IMG_4809_proxy_10fps.mp4",
+    "container": "mov,mp4,m4a,3gp,3g2,mj2",
+    "codec": "h264",
+    "profile": "High 10",
+    "pixFmt": "yuv420p10le",
+    "colorTransfer": "arib-std-b67",
+    "colorPrimaries": "bt2020",
+    "colorSpace": "bt2020nc",
+    "hdr": "HLG",
+    "width": 1920,
+    "height": 1080,
+    "rotation": null,
+    "fps": 10.0,
+    "avgFps": 10.0,
+    "frames": 20350,
+    "durationSec": 2035.0,
+    "sizeBytes": 1413632177,
+    "bitRate": 5557276,
+    "sha256": "b1077af3c975e0e1b5d15a9f0dc3895ac87fa296cad4f41d267368c260fb679c",
+    "videoStreamSha256": "c0a4850861e118cc3b4753dc23ddab56729f5f1cdead26aaa3cbd5d3b6f3a66b",
+    "referenceMatch": {
+      "isReference": true,
+      "reference": "IMG_4809 10 fps proxy (validated reference)",
+      "sameFileBytes": true,
+      "differences": {}
+    },
+    "effectiveProcessingFps": 10.0
+  },
+  "groundTruth": {
+    "file": "gt_img4809_intervals.json",
+    "sha256": "36b16fbae5091ca524f1c47c697e56db6da2d191e79dc0ab4f880815dc995078"
+  },
+  "configuration": {
+    "chunkSec": 300,
+    "mode": "balanced",
+    "stage1Settings": {
+      "engine": "5.2.0",
+      "env": {
+        "SCOUTX_DETECTOR": "yolox_s",
+        "SCOUTX_BACKEND": "auto",
+        "SCOUTX_DECODER": null,
+        "SCOUTX_HWACCEL": null,
+        "SCOUTX_KEYFRAME_EVERY": null,
+        "SCOUTX_PROP_SCORE_CAP": null,
+        "SCOUTX_BATCH": null,
+        "SCOUTX_ORT_PROVIDERS": "CPUExecutionProvider",
+        "SCOUTX_OCR_ENHANCE": null
+      },
+      "packages": {
+        "torch": "2.14.1",
+        "opencv-python": "4.14.0.94",
+        "opencv-python-headless": "4.14.0.94",
+        "numpy": "2.5.3",
+        "onnxruntime": null,
+        "onnxruntime-gpu": "1.29.0"
+      },
+      "imgsz": 1280,
+      "stride": 1,
+      "discoveryImgsz": 416,
+      "device": "cpu"
+    },
+    "stage1Fingerprint": "c641b0a34ea14286205b51b5b72b5d89e637383bd6d1bfa2f0bd84092d513521",
+    "resumePolicy": "fail",
+    "retries": 1
+  },
+  "stages": {
+    "cleanupBefore": [],
+    "modelInitialization": {
+      "wallSec": 17.488,
+      "discoveryDetector": "yolox_s@416/onnx",
+      "discoveryDetectorOnGpu": false,
+      "status": "measured"
+    },
+    "discovery": {
+      "wallSec": 1035.395,
+      "firstPlayableAfterDiscoveryStartSec": 20.005,
+      "firstPlayableAfterModelInitSec": 37.493,
+      "sightings": 10,
+      "timingsSec": {
+        "decode": 72.31,
+        "convert": 0.04,
+        "detect": 269.95,
+        "kit": 12.18,
+        "ocr": 499.21,
+        "wall": 1035.4,
+        "samples": 4070,
+        "candidates": 1916,
+        "reads": 2961,
+        "skipped": 357
+      },
+      "status": "measured",
+      "effectiveDetectFps": 2.0
+    },
+    "extraction": {
+      "chunks": [
+        {
+          "index": 0,
+          "startSec": 0.0,
+          "endSec": 300.0,
+          "status": "extracted",
+          "attempts": 1,
+          "wallSec": 726.288,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": {
+            "decode": 80.96,
+            "detect": 575.03,
+            "propagate": 0.0,
+            "scene_cmc": 38.18,
+            "colour_signature": 20.38,
+            "embedding": 7.06,
+            "crops_io": 1.91
+          }
+        },
+        {
+          "index": 1,
+          "startSec": 300.0,
+          "endSec": 600.0,
+          "status": "extracted",
+          "attempts": 1,
+          "wallSec": 720.741,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": {
+            "decode": 80.51,
+            "detect": 567.88,
+            "propagate": 0.0,
+            "scene_cmc": 38.41,
+            "colour_signature": 21.67,
+            "embedding": 7.55,
+            "crops_io": 1.99
+          }
+        },
+        {
+          "index": 2,
+          "startSec": 600.0,
+          "endSec": 900.0,
+          "status": "extracted",
+          "attempts": 1,
+          "wallSec": 716.739,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": {
+            "decode": 79.52,
+            "detect": 564.8,
+            "propagate": 0.0,
+            "scene_cmc": 37.55,
+            "colour_signature": 22.97,
+            "embedding": 7.28,
+            "crops_io": 1.91
+          }
+        },
+        {
+          "index": 3,
+          "startSec": 900.0,
+          "endSec": 1200.0,
+          "status": "extracted",
+          "attempts": 1,
+          "wallSec": 721.823,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": {
+            "decode": 78.98,
+            "detect": 569.76,
+            "propagate": 0.0,
+            "scene_cmc": 37.4,
+            "colour_signature": 23.35,
+            "embedding": 7.71,
+            "crops_io": 1.9
+          }
+        },
+        {
+          "index": 4,
+          "startSec": 1200.0,
+          "endSec": 1500.0,
+          "status": "extracted",
+          "attempts": 1,
+          "wallSec": 723.954,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": {
+            "decode": 82.02,
+            "detect": 576.91,
+            "propagate": 0.0,
+            "scene_cmc": 37.87,
+            "colour_signature": 17.9,
+            "embedding": 5.57,
+            "crops_io": 1.47
+          }
+        },
+        {
+          "index": 5,
+          "startSec": 1500.0,
+          "endSec": 1800.0,
+          "status": "extracted",
+          "attempts": 1,
+          "wallSec": 722.638,
+          "replaced": null,
+          "frames": 3000,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": {
+            "decode": 83.42,
+            "detect": 577.23,
+            "propagate": 0.0,
+            "scene_cmc": 38.53,
+            "colour_signature": 15.11,
+            "embedding": 4.76,
+            "crops_io": 1.65
+          }
+        },
+        {
+          "index": 6,
+          "startSec": 1800.0,
+          "endSec": 2035.0,
+          "status": "extracted",
+          "attempts": 1,
+          "wallSec": 565.581,
+          "replaced": null,
+          "frames": 2350,
+          "fps": 10.0,
+          "detector": "yolox_s@1280/onnx",
+          "stageSeconds": {
+            "decode": 61.99,
+            "detect": 447.25,
+            "propagate": 0.0,
+            "scene_cmc": 29.22,
+            "colour_signature": 17.41,
+            "embedding": 5.69,
+            "crops_io": 1.87
+          }
+        }
+      ],
+      "wallSecMeasured": 4897.764,
+      "resumedChunks": 0,
+      "stageSecondsTotal": {
+        "decode": 547.4,
+        "detect": 3878.86,
+        "propagate": 0.0,
+        "scene_cmc": 257.16,
+        "colour_signature": 138.79,
+        "embedding": 45.62,
+        "crops_io": 12.7
+      },
+      "framesProcessed": 20350,
+      "effectiveProcessingFps": 10.0,
+      "diskBytesPerVideoSec": 253244,
+      "freeBytes": 33880084480
+    },
+    "resolve": {
+      "wallSec": 610.872,
+      "invariantsOk": true,
+      "timingsSec": {
+        "load": 1.5,
+        "tracklets": 58.7,
+        "numbers": 357.9,
+        "identity": 190.3,
+        "timeline_metrics_events": 2.2
+      },
+      "ocrDeferred": 0,
+      "coverage": {
+        "recordingSec": 2035.0,
+        "nonMatchSec": 0.0,
+        "offPitchSec": 0.0,
+        "matchSec": 2035.0,
+        "unobservedSec": 170.9,
+        "analysedSec": 1864.1,
+        "confirmedVisibleSec": 23.3,
+        "likelyVisibleSec": 124.7,
+        "ambiguousSec": 1504.8,
+        "notIdentifiedSec": 211.3,
+        "denominators": {
+          "visiblePctOfAnalysed": "(confirmed + likely) / analysed match time (camera on play)",
+          "note": "Percentages of the recording are not percentages of the player's playing time."
+        },
+        "visiblePctOfAnalysed": 7.9
+      },
+      "identity": {
+        "statesSec": {
+          "AMBIGUOUS": 1504.8,
+          "CONFIRMED_VISIBLE": 23.3,
+          "LIKELY_VISIBLE": 124.7,
+          "UNKNOWN": 382.2
+        },
+        "iterations": [
+          {
+            "iteration": 0,
+            "mode": "classifier",
+            "chosen": 427,
+            "seconds": 1271.3,
+            "positives": 7,
+            "negatives": 109
+          },
+          {
+            "iteration": 1,
+            "mode": "classifier",
+            "chosen": 427,
+            "seconds": 1271.3,
+            "positives": 7,
+            "negatives": 109
+          }
+        ],
+        "numberSightings": 7,
+        "confirmedByUser": 0,
+        "scoreNote": "Identity scores are uncalibrated (not probabilities)."
+      }
+    }
+  },
+  "claimsFile": {
+    "file": "full_match_claims.json",
+    "sha256": "cbd2dbb8576954acde3d0d156f19db8ae91f225b3802f93b7aad5e871592b846",
+    "frames": 12644
+  },
+  "accuracy": {
+    "targetLabelledSec": 50.4,
+    "claimedCorrectSec": 31.3,
+    "confirmedCorrectSec": 10.5,
+    "wrongIdentitySec": 0.0,
+    "confirmedWrongIdentitySec": 0.0,
+    "overlapAmbiguousSec": 0.0,
+    "falseAttributionSec": 0.0,
+    "claimedRecall": 0.621,
+    "IDF1": 0.766,
+    "wrongIdentityTimes": []
+  },
+  "gate": {
+    "gate": "balanced-5.2",
+    "passed": true,
+    "failures": [],
+    "checked": [
+      "wrongIdentitySec",
+      "confirmedWrongIdentitySec",
+      "overlapAmbiguousSec"
+    ],
+    "baselineUsed": false
+  },
+  "timing": {
+    "measuredTotalWallSec": 6628.491,
+    "timingComplete": true,
+    "note": null,
+    "videoSecondsPerWallSecond": 0.307
+  },
+  "cost": {
+    "status": "estimate",
+    "label": "ESTIMATE from list prices x measured durations - not an invoice charge",
+    "currency": "USD",
+    "prices": {
+      "source": "Google Cloud Billing Catalog API (services 6F81-5844-456A Compute Engine, 95FF-2EF5-5EA1 Cloud Storage), on-demand list prices, USD, no discounts or taxes",
+      "retrieved": "2026-10-28",
+      "region": "europe-west6",
+      "machine": "g2-standard-8 (8 vCPU, 32 GB, 1x NVIDIA L4) + 200 GB balanced persistent disk",
+      "components": {
+        "l4GpuUsdPerHour": 0.78344,
+        "g2VcpuUsdPerHour": 0.032736,
+        "g2RamUsdPerGibHour": 0.003835,
+        "balancedPdUsdPerGbMonth": 0.13
+      },
+      "vmUsdPerHour": 1.2036,
+      "vmUsdPerHourFormula": "8*0.032736 + 32*0.003835 + 0.78344 + 200*0.13/730",
+      "storageUsdPerGbMonth": 0.025,
+      "egressUsdPerGb": null,
+      "egressNote": "results (a few MB) leave Google only when downloaded; not priced here - same-region bucket -> VM reads are free"
+    },
+    "measuredComputeSec": 6628.5,
+    "computeUsd": 2.2161,
+    "storage": {
+      "gb": 1.414,
+      "days": 1,
+      "usd": 0.0012
+    },
+    "recurringPerMatchEstimate": {
+      "basis": "measured compute seconds per video second on THIS recording x match length; warm worker with the image already built (no VM boot/build); excludes storage, queueing and idle capacity",
+      "computeSecPerVideoSec": 3.2572,
+      "34min": {
+        "computeSec": 6644.8,
+        "usd": 2.2216
+      },
+      "90min": {
+        "computeSec": 17589.1,
+        "usd": 5.8806
+      },
+      "140min": {
+        "computeSec": 27360.8,
+        "usd": 9.1476
+      }
+    }
+  },
+  "gpuSampling": {
+    "status": "not_sampled"
+  },
+  "ocrDevices": {
+    "cudaAvailable": false,
+    "parseq": "cpu",
+    "easyocr": "cpu",
+    "parseqWeights": "pretrained",
+    "degraded": []
+  },
+  "peakRssMiB": 2095.3
+}

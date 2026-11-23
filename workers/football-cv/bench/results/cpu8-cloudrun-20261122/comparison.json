@@ -1,0 +1,223 @@
+{
+  "reference": {
+    "status": "complete",
+    "device": "cpu"
+  },
+  "candidate": {
+    "status": "complete",
+    "device": "cpu"
+  },
+  "notComparable": [],
+  "chunkSpeed": [
+    {
+      "index": 0,
+      "startSec": 0.0,
+      "endSec": 300.0,
+      "referenceSec": 833.418,
+      "candidateSec": 726.288,
+      "speedup": 1.15,
+      "referenceStages": {
+        "decode": 104.72,
+        "detect": 640.43,
+        "propagate": 0.0,
+        "scene_cmc": 54.09,
+        "colour_signature": 22.21,
+        "embedding": 7.33,
+        "crops_io": 2.16
+      },
+      "candidateStages": {
+        "decode": 80.96,
+        "detect": 575.03,
+        "propagate": 0.0,
+        "scene_cmc": 38.18,
+        "colour_signature": 20.38,
+        "embedding": 7.06,
+        "crops_io": 1.91
+      }
+    },
+    {
+      "index": 1,
+      "startSec": 300.0,
+      "endSec": 600.0,
+      "referenceSec": 856.153,
+      "candidateSec": 720.741,
+      "speedup": 1.19,
+      "referenceStages": {
+        "decode": 104.23,
+        "detect": 659.8,
+        "propagate": 0.0,
+        "scene_cmc": 55.06,
+        "colour_signature": 24.03,
+        "embedding": 8.04,
+        "crops_io": 2.31
+      },
+      "candidateStages": {
+        "decode": 80.51,
+        "detect": 567.88,
+        "propagate": 0.0,
+        "scene_cmc": 38.41,
+        "colour_signature": 21.67,
+        "embedding": 7.55,
+        "crops_io": 1.99
+      }
+    },
+    {
+      "index": 2,
+      "startSec": 600.0,
+      "endSec": 900.0,
+      "referenceSec": 846.609,
+      "candidateSec": 716.739,
+      "speedup": 1.18,
+      "referenceStages": {
+        "decode": 102.7,
+        "detect": 651.46,
+        "propagate": 0.0,
+        "scene_cmc": 54.42,
+        "colour_signature": 25.46,
+        "embedding": 7.66,
+        "crops_io": 2.24
+      },
+      "candidateStages": {
+        "decode": 79.52,
+        "detect": 564.8,
+        "propagate": 0.0,
+        "scene_cmc": 37.55,
+        "colour_signature": 22.97,
+        "embedding": 7.28,
+        "crops_io": 1.91
+      }
+    },
+    {
+      "index": 3,
+      "startSec": 900.0,
+      "endSec": 1200.0,
+      "referenceSec": 854.808,
+      "candidateSec": 721.823,
+      "speedup": 1.18,
+      "referenceStages": {
+        "decode": 102.38,
+        "detect": 659.31,
+        "propagate": 0.0,
+        "scene_cmc": 53.82,
+        "colour_signature": 26.22,
+        "embedding": 8.16,
+        "crops_io": 2.23
+      },
+      "candidateStages": {
+        "decode": 78.98,
+        "detect": 569.76,
+        "propagate": 0.0,
+        "scene_cmc": 37.4,
+        "colour_signature": 23.35,
+        "embedding": 7.71,
+        "crops_io": 1.9
+      }
+    },
+    {
+      "index": 4,
+      "startSec": 1200.0,
+      "endSec": 1500.0,
+      "referenceSec": 849.982,
+      "candidateSec": 723.954,
+      "speedup": 1.17,
+      "referenceStages": {
+        "decode": 106.04,
+        "detect": 659.56,
+        "propagate": 0.0,
+        "scene_cmc": 54.83,
+        "colour_signature": 19.9,
+        "embedding": 5.87,
+        "crops_io": 1.65
+      },
+      "candidateStages": {
+        "decode": 82.02,
+        "detect": 576.91,
+        "propagate": 0.0,
+        "scene_cmc": 37.87,
+        "colour_signature": 17.9,
+        "embedding": 5.57,
+        "crops_io": 1.47
+      }
+    },
+    {
+      "index": 5,
+      "startSec": 1500.0,
+      "endSec": 1800.0,
+      "referenceSec": 840.128,
+      "candidateSec": 722.638,
+      "speedup": 1.16,
+      "referenceStages": {
+        "decode": 108.15,
+        "detect": 650.7,
+        "propagate": 0.0,
+        "scene_cmc": 55.82,
+        "colour_signature": 16.67,
+        "embedding": 5.03,
+        "crops_io": 1.87
+      },
+      "candidateStages": {
+        "decode": 83.42,
+        "detect": 577.23,
+        "propagate": 0.0,
+        "scene_cmc": 38.53,
+        "colour_signature": 15.11,
+        "embedding": 4.76,
+        "crops_io": 1.65
+      }
+    },
+    {
+      "index": 6,
+      "startSec": 1800.0,
+      "endSec": 2035.0,
+      "referenceSec": 663.944,
+      "candidateSec": 565.581,
+      "speedup": 1.17,
+      "referenceStages": {
+        "decode": 80.57,
+        "detect": 511.68,
+        "propagate": 0.0,
+        "scene_cmc": 42.22,
+        "colour_signature": 19.25,
+        "embedding": 6.0,
+        "crops_io": 2.11
+      },
+      "candidateStages": {
+        "decode": 61.99,
+        "detect": 447.25,
+        "propagate": 0.0,
+        "scene_cmc": 29.22,
+        "colour_signature": 17.41,
+        "embedding": 5.69,
+        "crops_io": 1.87
+      }
+    }
+  ],
+  "speedup": 1.14,
+  "agreement": {
+    "framesCompared": 12644,
+    "framesInUnion": 12644,
+    "unmatchedInFirst": 0,
+    "unmatchedInSecond": 0,
+    "stateAgreement": 0.9984,
+    "boxAgreementWhenBothClaim": 1.0,
+    "claimedOnlyInFirst": 20,
+    "claimedOnlyInSecond": 0
+  },
+  "gate": {
+    "gate": "balanced-5.2",
+    "passed": true,
+    "failures": [],
+    "checked": [
+      "wrongIdentitySec",
+      "confirmedWrongIdentitySec",
+      "overlapAmbiguousSec",
+      "IDF1 vs baseline",
+      "claimedRecall vs baseline",
+      "confirmedCorrectSec vs baseline",
+      "overlapAmbiguousSec vs baseline"
+    ],
+    "baselineUsed": true
+  },
+  "result": "PASSED",
+  "exitCode": 0
+}
