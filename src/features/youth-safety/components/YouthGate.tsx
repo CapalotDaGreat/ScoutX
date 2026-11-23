@@ -272,8 +272,8 @@ function GuardianStep({ resend }: { resend: boolean }) {
 
 /** True while YouthGate covers the app, so later gates can wait their turn. */
 export function useYouthGateActive(): boolean {
-  const { gated, record, policy } = useUserSafety();
-  return gated && (record === undefined || policy.needsAgeBand || policy.awaitingGuardian);
+  const { gated, record, policy, unavailable } = useUserSafety();
+  return gated && (unavailable || record === undefined || policy.needsAgeBand || policy.awaitingGuardian);
 }
 
 /**
@@ -281,9 +281,12 @@ export function useYouthGateActive(): boolean {
  * parent or guardian approves. Under-13 accounts then run in private mode.
  */
 export function YouthGate() {
-  const { gated, record, policy } = useUserSafety();
+  const { gated, record, policy, unavailable } = useUserSafety();
 
   if (!gated) return null;
+  // A failed read is not "no age band". The session overlay asks to retry; this gate must not
+  // collect a new age while the existing record is unreachable.
+  if (unavailable) return null;
   if (record === undefined) {
     return (
       <View className="absolute inset-0 z-30 items-center justify-center bg-background" testID="youth-gate-loading">

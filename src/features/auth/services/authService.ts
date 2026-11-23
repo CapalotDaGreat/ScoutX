@@ -50,6 +50,7 @@ import {
 } from '@/features/auth/services/mockAuthService';
 import { UserModel } from '@/features/player-profile/models/UserModel';
 import { ProfileModel } from '@/features/player-profile/models/ProfileModel';
+import { decideRestoredSession, isUnreadableProfileError } from '@/features/auth/services/restoredSession';
 
 const ROLE_CLAIM_TIMEOUT_MS = 1_500;
 const ROLE_DOC_TIMEOUT_MS = 2_000;
@@ -129,7 +130,9 @@ function getCurrentFirebaseUser(): User | null {
   return getFirebaseAuth()?.currentUser ?? null;
 }
 
-export function initializeAuthListener(callback: (user: AuthUser | null) => void): () => void {
+export function initializeAuthListener(
+  callback: (user: AuthUser | null, meta?: { profileOffline: boolean }) => void,
+): () => void {
   assertProductionAuthConfigured();
 
   if (shouldUseMockAuth()) {
@@ -156,9 +159,9 @@ export function initializeAuthListener(callback: (user: AuthUser | null) => void
       return;
     }
 
-    const emitIfCurrent = (next: AuthUser) => {
+    const emitIfCurrent = (next: AuthUser, profileOffline = false) => {
       if (latestUid === user.uid) {
-        callback(next);
+        callback(next, { profileOffline });
       }
     };
 
@@ -168,6 +171,8 @@ export function initializeAuthListener(callback: (user: AuthUser | null) => void
 
     // A signed-in user emitted without a role reads as "needs role selection" and resets
     // navigation, so resolve the role from the cached token claim before the first emit.
+    // A read that cannot reach Firestore is not a missing profile: role selection would
+    // overwrite a role the server already stored (B-25).
     void withTimeout(user.getIdTokenResult(), ROLE_CLAIM_TIMEOUT_MS)
       .then((token) => parseRoleClaim(token?.claims.role))
       .catch(() => undefined)
@@ -175,26 +180,41 @@ export function initializeAuthListener(callback: (user: AuthUser | null) => void
         if (!user.isAnonymous && claimRole) {
           emitIfCurrent(mapFirebaseUser(user, claimRole));
         }
-        try {
-          const pending = resolveAuthUserFromFirestore(user);
-          const resolved = await withTimeout(pending, ROLE_DOC_TIMEOUT_MS);
-          if (resolved) {
-            emitIfCurrent(resolved);
-          } else {
-            emitIfCurrent(mapFirebaseUser(user, claimRole));
-            void pending.then(emitIfCurrent).catch(() => undefined);
+        const guarded = resolveAuthUserFromFirestore(user).then(
+          (resolved) => ({ ok: true as const, resolved }),
+          (error: unknown) => ({ ok: false as const, error }),
+        );
+        const apply = (outcome: Awaited<typeof guarded>) => {
+          if (latestUid !== user.uid) return;
+          if (outcome.ok) {
+            emitIfCurrent(outcome.resolved, false);
+            return;
           }
-        } catch (error) {
-          if (!user.isAnonymous && !claimRole) {
-            emitIfCurrent(mapFirebaseUser(user));
+          const decision = decideRestoredSession({
+            anonymous: user.isAnonymous,
+            claimRole,
+            read: isUnreadableProfileError(outcome.error) ? { status: 'unreadable' } : { status: 'missing' },
+          });
+          if (decision.action === 'hold-offline') {
+            emitIfCurrent(mapFirebaseUser(user), true);
+            return;
           }
-          if (__DEV__) {
-            console.error('Error resolving auth user.');
-            if (error instanceof Error) {
-              console.error(error.message);
-            }
-          }
+          emitIfCurrent(mapFirebaseUser(user, decision.role), false);
+        };
+        const raced = await withTimeout(guarded, ROLE_DOC_TIMEOUT_MS);
+        if (raced) {
+          apply(raced);
+          return;
         }
+        const provisional = decideRestoredSession({
+          anonymous: user.isAnonymous,
+          claimRole,
+          read: { status: 'unreadable' },
+        });
+        if (provisional.action === 'hold-offline') {
+          emitIfCurrent(mapFirebaseUser(user), true);
+        }
+        void guarded.then(apply);
       });
   });
 }
@@ -451,6 +471,28 @@ export async function signOutFromFirebase(): Promise<void> {
   }
 
   await firebaseSignOut(auth);
+}
+
+/** Re-read the signed-in profile after an offline cold start. Null when nobody is signed in. */
+export async function rereadCurrentProfile(): Promise<{ user: AuthUser; profileOffline: boolean } | null> {
+  const user = getCurrentFirebaseUser();
+  if (!user) return null;
+  const claimRole = await withTimeout(user.getIdTokenResult(), ROLE_CLAIM_TIMEOUT_MS)
+    .then((token) => parseRoleClaim(token?.claims.role))
+    .catch(() => undefined);
+  try {
+    return { user: await resolveAuthUserFromFirestore(user), profileOffline: false };
+  } catch (error) {
+    const decision = decideRestoredSession({
+      anonymous: user.isAnonymous,
+      claimRole,
+      read: isUnreadableProfileError(error) ? { status: 'unreadable' } : { status: 'missing' },
+    });
+    if (decision.action === 'hold-offline') {
+      return { user: mapFirebaseUser(user), profileOffline: true };
+    }
+    return { user: mapFirebaseUser(user, decision.role), profileOffline: false };
+  }
 }
 
 export function getCurrentAuthUserSnapshot(): AuthUser | null {

@@ -1073,7 +1073,7 @@
         "spaceUnavailable": "Diese Analyse enthält noch keine Messungen ohne Ball.",
         "spaceClip": "Über das ganze Spiel kann ich deinen Raum nicht beschreiben, aber in {{count}} kurzen bestätigten Clip(s) schon. Hier ist einer ({{seconds}} s):",
         "halves": "Im Video bestätigt: {{firstMin}} min in der ersten und {{secondMin}} min in der zweiten Halbzeit, mit {{firstMoments}} und {{secondMoments}} Momenten. Das vergleicht, was die Kamera von dir gezeigt hat, nicht wie gut du gespielt hast.",
-        "halvesUnknown": "Ich weiß nicht, wann in dieser Aufnahme Halbzeit war, deshalb kann ich sie nicht aufteilen. Markiere die Halbzeitpause in den Spielphasen und frag noch einmal.",
+        "halvesUnknown": "Ich weiß nicht, wann in dieser Aufnahme Halbzeit war, deshalb kann ich sie nicht aufteilen.",
         "defendingCandidates": "Ich habe {{count}} mögliche Tacklings oder Zweikämpfe in deiner Nähe gefunden. Es sind Kandidaten, die das Tracking nicht überprüfen konnte - schau sie an und urteile selbst:",
         "noDefending": "Ich habe keine Tacklings oder Zweikämpfe von dir gefunden, die das Video belegt. Das heißt nicht, dass es keine gab - Ball und Zweikämpfe waren in dieser Aufnahme selten verfolgbar.",
         "practice": "Nach dem, was dieses Spiel zeigt, übe das:",

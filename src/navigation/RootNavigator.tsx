@@ -1,9 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { NavigationContainer, CommonActions, getStateFromPath } from '@react-navigation/native';
 import type { NavigationContainerRef } from '@react-navigation/native';
 import { SessionLoadingScreen } from '@/features/auth/screens/SessionLoadingScreen';
+import { SessionOfflineScreen } from '@/features/auth/screens/SessionOfflineScreen';
 import { useAuth } from '@/features/auth/store/AuthProvider';
 import { consumePendingAuthAction } from '@/features/auth/services/pendingAuthDeepLinkService';
 import { AuthStackNavigator } from '@/navigation/AuthStackNavigator';
@@ -18,6 +19,7 @@ import { consumeResumePath, setDeepLinkSession } from '@/navigation/deepLinkSess
 import { LinkUnavailableScreen } from '@/navigation/screens/LinkUnavailableScreen';
 import { GuardianLinkScreen } from '@/navigation/screens/GuardianLinkScreen';
 import { ReportLinkScreen } from '@/navigation/screens/ReportLinkScreen';
+import { useUserSafety } from '@/features/youth-safety/context/UserSafetyProvider';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -62,7 +64,9 @@ const STANDALONE_LINK_ROUTES: ReadonlySet<string> = new Set(['LinkUnavailable', 
 
 export function RootNavigator() {
   const navigationTheme = useNavigationTheme();
-  const { status, pendingRoleSelection, isGuest, role, isBootstrappingSession, user } = useAuth();
+  const { status, pendingRoleSelection, isGuest, role, isBootstrappingSession, user, profileOffline, retryProfile } = useAuth();
+  const { unavailable: safetyUnavailable, retrySafety } = useUserSafety();
+  const [retryingSession, setRetryingSession] = useState(false);
   const sessionUid = user?.uid ?? null;
   const navigationRef = useRef<NavigationContainerRef<RootStackParamList>>(null);
   // Keyed by root route and account, so switching accounts within the same app also resets.
@@ -74,13 +78,14 @@ export function RootNavigator() {
   );
 
   const showBootstrapOverlay = isBootstrappingSession;
+  const showOfflineOverlay = !showBootstrapOverlay && (profileOffline || safetyUnavailable);
 
   const linkRole: DeepLinkRole = isGuest ? 'guest' : role === 'scout' || role === 'coach' || role === 'player' ? role : null;
   const linkAuthenticated = status === 'authenticated' && !pendingRoleSelection && !isBootstrappingSession;
   setDeepLinkSession({ authenticated: linkAuthenticated, role: linkRole });
 
   useEffect(() => {
-    if (showBootstrapOverlay || status === 'loading') {
+    if (showBootstrapOverlay || showOfflineOverlay || status === 'loading') {
       return;
     }
 
@@ -161,7 +166,7 @@ export function RootNavigator() {
         routes: [{ name: rootRoute }],
       }),
     );
-  }, [showBootstrapOverlay, status, rootRoute, pendingRoleSelection, isGuest, role, linkAuthenticated, linkRole, sessionUid]);
+  }, [showBootstrapOverlay, showOfflineOverlay, status, rootRoute, pendingRoleSelection, isGuest, role, linkAuthenticated, linkRole, sessionUid]);
 
   return (
     <NavigationContainer ref={navigationRef} linking={linking} theme={navigationTheme}>
@@ -184,6 +189,22 @@ export function RootNavigator() {
             <SessionLoadingScreen />
           </View>
         ) : null}
+        {showOfflineOverlay ? (
+          <View style={styles.offlineOverlay} pointerEvents="auto">
+            <SessionOfflineScreen
+              onRetry={async () => {
+                if (retryingSession) return;
+                setRetryingSession(true);
+                try {
+                  retrySafety();
+                  await retryProfile();
+                } finally {
+                  setRetryingSession(false);
+                }
+              }}
+            />
+          </View>
+        ) : null}
       </View>
     </NavigationContainer>
   );
@@ -196,5 +217,9 @@ const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFill,
     zIndex: 20,
+  },
+  offlineOverlay: {
+    ...StyleSheet.absoluteFill,
+    zIndex: 40,
   },
 });

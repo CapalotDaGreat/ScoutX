@@ -1073,7 +1073,7 @@
         "spaceUnavailable": "Este análisis aún no incluye mediciones sin balón.",
         "spaceClip": "No puedo describir tu espacio en todo el partido, pero sí en {{count}} clip(s) corto(s) confirmado(s). Aquí tienes uno ({{seconds}} s):",
         "halves": "Confirmado en vídeo: {{firstMin}} min en el primer tiempo y {{secondMin}} min en el segundo, con {{firstMoments}} y {{secondMoments}} momentos. Esto compara lo que la cámara mostró de ti, no lo bien que jugaste.",
-        "halvesUnknown": "No sé cuándo fue el descanso en esta grabación, así que no puedo dividirla en dos tiempos. Marca el descanso en los periodos del partido y vuelve a preguntar.",
+        "halvesUnknown": "No sé cuándo fue el descanso en esta grabación, así que no puedo dividirla en dos tiempos.",
         "defendingCandidates": "Encontré {{count}} posibles entradas o duelos cerca de ti. Son candidatos que el seguimiento no pudo verificar: míralos y juzga tú mismo:",
         "noDefending": "No encontré entradas ni duelos tuyos que el vídeo respalde. Eso no significa que no los hubiera: el balón y los duelos rara vez se pudieron seguir en esta grabación.",
         "practice": "Según lo que muestra este partido, practica esto:",

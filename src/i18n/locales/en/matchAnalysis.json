@@ -1073,7 +1073,7 @@
         "spaceUnavailable": "This analysis does not include off-ball measurements yet.",
         "spaceClip": "I can't describe your space across the whole match, but in {{count}} short confirmed clip(s) I can. Here is one ({{seconds}} s):",
         "halves": "Confirmed on video: {{firstMin}} min in the first half and {{secondMin}} min in the second, with {{firstMoments}} and {{secondMoments}} moments. This compares what the camera showed of you, not how well you played.",
-        "halvesUnknown": "I don't know when half-time was in this recording, so I can't split it into halves. Mark the half-time break in the match periods and ask again.",
+        "halvesUnknown": "I don't know when half-time was in this recording, so I can't split it into halves.",
         "defendingCandidates": "I found {{count}} possible tackles or duels near you. They are candidates the tracking could not verify - watch them and judge for yourself:",
         "noDefending": "I found no tackles or duels of yours that the footage supports. That does not mean there were none - the ball and challenges were rarely trackable in this recording.",
         "practice": "Based on what this match shows, practise this:",

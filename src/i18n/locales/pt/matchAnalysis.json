@@ -1073,7 +1073,7 @@
         "spaceUnavailable": "Esta análise ainda não inclui medições sem bola.",
         "spaceClip": "Não consigo descrever o teu espaço no jogo inteiro, mas consigo em {{count}} clipe(s) curto(s) confirmado(s). Aqui está um ({{seconds}} s):",
         "halves": "Confirmado em vídeo: {{firstMin}} min no primeiro tempo e {{secondMin}} min no segundo, com {{firstMoments}} e {{secondMoments}} momentos. Isto compara o que a câmara mostrou de ti, não o quão bem jogaste.",
-        "halvesUnknown": "Não sei quando foi o intervalo nesta gravação, por isso não a consigo dividir em tempos. Marca o intervalo nos períodos do jogo e pergunta de novo.",
+        "halvesUnknown": "Não sei quando foi o intervalo nesta gravação, por isso não a consigo dividir em tempos.",
         "defendingCandidates": "Encontrei {{count}} possíveis desarmes ou duelos perto de ti. São candidatos que o seguimento não conseguiu verificar - vê-os e julga por ti:",
         "noDefending": "Não encontrei desarmes nem duelos teus confirmados pelo vídeo. Isso não quer dizer que não houve - a bola e os duelos raramente puderam ser seguidos nesta gravação.",
         "practice": "Com base no que este jogo mostra, treina isto:",

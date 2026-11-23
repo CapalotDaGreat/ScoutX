@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
+import { decideRestoredSession, isUnreadableProfileError } from '../../src/features/auth/services/restoredSession.ts';
 import { isRestoringSession } from '../../src/features/auth/store/sessionBootstrap.ts';
-import { recordForAccount } from '../../src/features/youth-safety/context/recordForAccount.ts';
+import { recordForAccount, safetyLoadFailed } from '../../src/features/youth-safety/context/recordForAccount.ts';
 
 const adult = { ageBand: '18plus', guardianStatus: 'not_required', scopes: [], consentExpiresAt: null, guardianEmailMasked: null, childDeleteAfter: null } as const;
 
@@ -46,5 +47,52 @@ describe('B-20: the age/guardian gate never reuses another account\'s record', (
   test('the account\'s own record, or its confirmed absence, is used', () => {
     assert.deepEqual(recordForAccount('a', { uid: 'a', record: adult }), adult);
     assert.equal(recordForAccount('a', { uid: 'a', record: null }), null);
+  });
+
+  test('a failed read is not a missing age band', () => {
+    const failed = { uid: 'a', record: null, unavailable: true };
+    assert.equal(recordForAccount('a', failed), undefined);
+    assert.equal(safetyLoadFailed('a', failed), true);
+    assert.equal(safetyLoadFailed('a', { uid: 'a', record: null }), false);
+    assert.equal(safetyLoadFailed(null, failed), false);
+  });
+});
+
+describe('B-25: an unreadable restored profile is not role selection', () => {
+  test('offline or unavailable profile errors are unreadable', () => {
+    assert.equal(isUnreadableProfileError(Object.assign(new Error('Failed to get document because the client is offline.'), { code: 'unavailable' })), true);
+    assert.equal(isUnreadableProfileError(new Error('Missing or insufficient permissions.')), false);
+  });
+
+  test('a signed-in account whose profile cannot be read is held, not asked to choose a role', () => {
+    assert.deepEqual(
+      decideRestoredSession({ anonymous: false, claimRole: undefined, read: { status: 'unreadable' } }),
+      { action: 'hold-offline' },
+    );
+  });
+
+  test('a cached role claim is kept when the profile read fails', () => {
+    assert.deepEqual(
+      decideRestoredSession({ anonymous: false, claimRole: 'scout', read: { status: 'unreadable' } }),
+      { action: 'emit', role: 'scout', pendingRoleSelection: false },
+    );
+  });
+
+  test('a missing profile still needs a role, and a found role does not', () => {
+    assert.deepEqual(
+      decideRestoredSession({ anonymous: false, claimRole: undefined, read: { status: 'missing' } }),
+      { action: 'emit', role: undefined, pendingRoleSelection: true },
+    );
+    assert.deepEqual(
+      decideRestoredSession({ anonymous: false, claimRole: undefined, read: { status: 'found', role: 'player' } }),
+      { action: 'emit', role: 'player', pendingRoleSelection: false },
+    );
+  });
+
+  test('an anonymous session stays a guest', () => {
+    assert.deepEqual(
+      decideRestoredSession({ anonymous: true, claimRole: undefined, read: { status: 'unreadable' } }),
+      { action: 'emit', role: 'guest', pendingRoleSelection: false },
+    );
   });
 });

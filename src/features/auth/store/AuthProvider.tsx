@@ -45,6 +45,8 @@ type AuthContextValue = {
   isGuest: boolean;
   isBootstrappingSession: boolean;
   pendingRoleSelection: boolean;
+  /** The signed-in profile could not be read. Role selection stays closed. */
+  profileOffline: boolean;
   upgradeIntent: AccountUpgradeIntent | null;
   isSubmitting: boolean;
   error: string | null;
@@ -60,6 +62,7 @@ type AuthContextValue = {
   clearUpgrade: () => void;
   signOut: () => Promise<void>;
   clearMessages: () => void;
+  retryProfile: () => Promise<void>;
 };
 
 type AuthProviderProps = {
@@ -91,7 +94,7 @@ const initialState: AuthState = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { user, isLoading } = useAuthSession();
+  const { user, isLoading, profileOffline, retryProfile } = useAuthSession();
   const [state, setState] = useState<AuthState>(initialState);
   const [isEnsuringAnonymousSession, setIsEnsuringAnonymousSession] = useState(false);
   const [anonymousBootstrapFailed, setAnonymousBootstrapFailed] = useState(false);
@@ -141,14 +144,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const isGuest = isGuestRole(user.role, user.isAnonymous);
-    const pendingRoleSelection = Boolean(
-      !isGuest &&
-        (user.role === undefined ||
-          (user.role !== 'player' &&
-            user.role !== 'scout' &&
-            user.role !== 'coach' &&
-            user.role !== 'club')),
-    );
+    const pendingRoleSelection = profileOffline
+      ? false
+      : Boolean(
+          !isGuest &&
+            (user.role === undefined ||
+              (user.role !== 'player' &&
+                user.role !== 'scout' &&
+                user.role !== 'coach' &&
+                user.role !== 'club')),
+        );
 
     setState((current) => ({
       ...current,
@@ -158,7 +163,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       pendingRoleSelection,
       error: current.isSubmitting ? current.error : null,
     }));
-  }, [isEnsuringAnonymousSession, isLoading, user]);
+  }, [isEnsuringAnonymousSession, isLoading, profileOffline, user]);
 
   useEffect(() => {
     syncSession();
@@ -534,6 +539,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isGuest,
       isBootstrappingSession,
       pendingRoleSelection: state.pendingRoleSelection,
+      profileOffline,
       upgradeIntent: state.upgradeIntent,
       isSubmitting: state.isSubmitting,
       error: state.error,
@@ -549,6 +555,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       clearUpgrade,
       signOut,
       clearMessages,
+      retryProfile,
     }),
     [
       beginUpgrade,
@@ -557,6 +564,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       forgotPassword,
       isBootstrappingSession,
       isGuest,
+      profileOffline,
+      retryProfile,
       selectRole,
       signIn,
       signInWithApple,

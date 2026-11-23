@@ -331,4 +331,27 @@ test.describe('Session states', () => {
       await context.close();
     }
   });
+
+  test('B-25: a cold start offline with an expired token offers a retry instead of role selection', async ({ browser }) => {
+    const { email } = await registerThrowawayPlayer(browser, 'offline-cold');
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    await page.clock.install();
+    const errors = trackPageErrors(page);
+    await signIn(page, email);
+    await page.goto('/player/settings');
+    await expect(page.getByRole('heading', { name: 'Settings', exact: true })).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByTestId('youth-gate-loading')).toHaveCount(0, { timeout: 30_000 });
+
+    await context.route('**/securetoken.googleapis.com/**', (route) => route.abort('connectionfailed'));
+    await context.route('**/127.0.0.1:8080/**', (route) => route.abort('connectionfailed'));
+    await context.route('**/localhost:8080/**', (route) => route.abort('connectionfailed'));
+    await page.clock.fastForward('01:05:00');
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await expect(page.getByTestId('session-offline')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByRole('heading', { name: 'Choose your role' })).toHaveCount(0);
+    await expect(page.getByTestId('youth-gate-age')).toHaveCount(0);
+    expect(errors.filter((message) => /offline|Failed to get document/i.test(message))).toEqual([]);
+    await context.close();
+  });
 });

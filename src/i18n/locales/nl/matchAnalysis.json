@@ -1073,7 +1073,7 @@
         "spaceUnavailable": "Deze analyse bevat nog geen metingen zonder bal.",
         "spaceClip": "Over de hele wedstrijd kan ik je ruimte niet beschrijven, maar in {{count}} korte bevestigde clip(s) wel. Hier is er een ({{seconds}} s):",
         "halves": "Bevestigd in beeld: {{firstMin}} min in de eerste en {{secondMin}} min in de tweede helft, met {{firstMoments}} en {{secondMoments}} momenten. Dit vergelijkt wat de camera van je liet zien, niet hoe goed je speelde.",
-        "halvesUnknown": "Ik weet niet wanneer de rust was in deze opname, dus ik kan hem niet in helften splitsen. Markeer de rust bij de wedstrijdperiodes en vraag het opnieuw.",
+        "halvesUnknown": "Ik weet niet wanneer de rust was in deze opname, dus ik kan hem niet in helften splitsen.",
         "defendingCandidates": "Ik vond {{count}} mogelijke tackles of duels bij je in de buurt. Het zijn kandidaten die de tracking niet kon controleren - bekijk ze en oordeel zelf:",
         "noDefending": "Ik vond geen tackles of duels van je die de beelden onderbouwen. Dat betekent niet dat er geen waren - de bal en duels waren in deze opname zelden te volgen.",
         "practice": "Op basis van wat deze wedstrijd laat zien, oefen dit:",

@@ -1073,7 +1073,7 @@
         "spaceUnavailable": "Questa analisi non include ancora misure senza palla.",
         "spaceClip": "Non posso descrivere il tuo spazio in tutta la partita, ma posso farlo in {{count}} breve/i clip confermata/e. Eccone una ({{seconds}} s):",
         "halves": "Confermato in video: {{firstMin}} min nel primo tempo e {{secondMin}} min nel secondo, con {{firstMoments}} e {{secondMoments}} momenti. Questo confronta ciò che la telecamera ha mostrato di te, non quanto hai giocato bene.",
-        "halvesUnknown": "Non so quando c'è stato l'intervallo in questa registrazione, quindi non posso dividerla in tempi. Segna l'intervallo nei periodi della partita e chiedi di nuovo.",
+        "halvesUnknown": "Non so quando c'è stato l'intervallo in questa registrazione, quindi non posso dividerla in tempi.",
         "defendingCandidates": "Ho trovato {{count}} possibili contrasti o duelli vicino a te. Sono candidati che il tracciamento non ha potuto verificare - guardali e giudica tu:",
         "noDefending": "Non ho trovato contrasti o duelli tuoi supportati dal video. Non significa che non ce ne siano stati - palla e duelli erano raramente tracciabili in questa registrazione.",
         "practice": "In base a ciò che mostra questa partita, allena questo:",

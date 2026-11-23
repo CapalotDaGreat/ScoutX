@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { initializeAuthListener } from '@/features/auth/services/authService';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { initializeAuthListener, rereadCurrentProfile } from '@/features/auth/services/authService';
 import { type AuthUser } from '@/features/auth/types';
 
 const AUTH_LISTENER_TIMEOUT_MS = 4_000;
@@ -11,18 +11,20 @@ const AUTH_LISTENER_TIMEOUT_MS = 4_000;
 export function useAuthSession() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profileOffline, setProfileOffline] = useState(false);
   const hasSettledRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
 
-    const markReady = (nextUser: AuthUser | null) => {
+    const markReady = (nextUser: AuthUser | null, offline = false) => {
       if (cancelled) {
         return;
       }
 
       hasSettledRef.current = true;
       setUser(nextUser);
+      setProfileOffline(Boolean(offline && nextUser));
       setIsLoading(false);
     };
 
@@ -42,7 +44,7 @@ export function useAuthSession() {
     let unsubscribe: () => void = () => undefined;
 
     try {
-      unsubscribe = initializeAuthListener((nextUser) => {
+      unsubscribe = initializeAuthListener((nextUser, meta) => {
         if (cancelled) {
           return;
         }
@@ -50,6 +52,7 @@ export function useAuthSession() {
         clearTimeout(timeoutId);
         hasSettledRef.current = true;
         setUser(nextUser);
+        setProfileOffline(Boolean(meta?.profileOffline && nextUser));
         setIsLoading(false);
       });
     } catch (error) {
@@ -67,5 +70,17 @@ export function useAuthSession() {
     };
   }, []);
 
-  return useMemo(() => ({ user, isLoading }), [isLoading, user]);
+  const retryProfile = useCallback(async () => {
+    const next = await rereadCurrentProfile();
+    if (!next) return;
+    hasSettledRef.current = true;
+    setUser(next.user);
+    setProfileOffline(next.profileOffline);
+    setIsLoading(false);
+  }, []);
+
+  return useMemo(
+    () => ({ user, isLoading, profileOffline, retryProfile }),
+    [isLoading, profileOffline, retryProfile, user],
+  );
 }

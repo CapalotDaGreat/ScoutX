@@ -1073,7 +1073,7 @@
         "spaceUnavailable": "Cette analyse ne contient pas encore de mesures sans ballon.",
         "spaceClip": "Je ne peux pas décrire ton espace sur tout le match, mais je peux le faire sur {{count}} court(s) extrait(s) confirmé(s). En voici un ({{seconds}} s) :",
         "halves": "Confirmé en vidéo : {{firstMin}} min en première et {{secondMin}} min en seconde mi-temps, avec {{firstMoments}} et {{secondMoments}} moments. Cela compare ce que la caméra a montré de toi, pas la qualité de ton jeu.",
-        "halvesUnknown": "Je ne sais pas quand a eu lieu la mi-temps dans cet enregistrement, donc je ne peux pas le séparer en deux. Indique la pause dans les périodes du match et repose la question.",
+        "halvesUnknown": "Je ne sais pas quand a eu lieu la mi-temps dans cet enregistrement, donc je ne peux pas le séparer en deux.",
         "defendingCandidates": "J'ai trouvé {{count}} tacles ou duels possibles près de toi. Ce sont des candidats que le suivi n'a pas pu vérifier - regarde-les et juge toi-même :",
         "noDefending": "Je n'ai trouvé aucun tacle ou duel de ta part que la vidéo confirme. Cela ne veut pas dire qu'il n'y en a pas eu - le ballon et les duels étaient rarement suivables dans cet enregistrement.",
         "practice": "D'après ce que montre ce match, travaille ceci :",
