@@ -1,0 +1,87 @@
+{
+ "clipId": "img4809-dev",
+ "split": "development",
+ "sourceSha256": "6450a5bbcbddd593447b30b531c4e8925640e944ff9a776533179b5a3cdaaaaf",
+ "synthetic": false,
+ "reviewers": [
+  "developer-single-annotator"
+ ],
+ "blinded": false,
+ "eventsLabelled": false,
+ "visibleIntervals": [
+  [
+   237.6,
+   240
+  ],
+  [
+   240.1,
+   241.3
+  ],
+  [
+   241.4,
+   243.3
+  ],
+  [
+   243.4,
+   244.2
+  ],
+  [
+   244.3,
+   244.8
+  ],
+  [
+   1150.3,
+   1151.6
+  ],
+  [
+   1151.7,
+   1151.9
+  ],
+  [
+   1152,
+   1154.6
+  ],
+  [
+   1154.8,
+   1159.7
+  ],
+  [
+   1159.8,
+   1167.9
+  ],
+  [
+   1168.4,
+   1180.1
+  ],
+  [
+   1299.6,
+   1301.4
+  ],
+  [
+   1302.6,
+   1304.1
+  ],
+  [
+   1304.4,
+   1310.5
+  ],
+  [
+   1899.7,
+   1903.5
+  ],
+  [
+   1903.7,
+   1905.3
+  ]
+ ],
+ "absentIntervals": [],
+ "events": [],
+ "tags": [
+  "developer_labels",
+  "nine_30s_windows",
+  "orange_pieces_over_50px",
+  "label_times_unshifted",
+  "presence_only_partial_box_annotations"
+ ],
+ "note": "Developer labels (single annotator), evaluation only. Pieces of orange players >= 50 px in 9 sampled 30 s intervals; T = target #20 (number visible or direct continuity with a visible number), N = not the target, ? = unsure (excluded)."
+}

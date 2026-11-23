@@ -5,7 +5,7 @@ import {
   UserSafetyRepository,
   type UserSafetyRecord,
 } from '@/features/youth-safety/repositories/UserSafetyRepository';
-import { recordForAccount, safetyLoadFailed, type LoadedSafetyRecord } from '@/features/youth-safety/context/recordForAccount';
+import { failedSafetyRead, recordForAccount, safetyLoadFailed, type LoadedSafetyRecord } from '@/features/youth-safety/context/recordForAccount';
 
 type UserSafetyContextValue = {
   /** undefined while loading or unreadable; null when no age band has been recorded yet. */
@@ -32,15 +32,7 @@ export function UserSafetyProvider({ children }: { children: ReactNode }) {
     const unsubscribe = UserSafetyRepository.subscribe(
       uid,
       (record) => setLoaded({ uid, record }),
-      (error) => {
-        const code = 'code' in error && typeof error.code === 'string' ? error.code.toLowerCase() : '';
-        const offline = code === 'unavailable' || code.endsWith('/unavailable') || /offline|unavailable|network/i.test(error.message);
-        setLoaded((current) => {
-          // A record already shown for this account stays. An offline failure is not "no age band".
-          if (offline && current?.uid === uid && current.unavailable !== true) return current;
-          return offline ? { uid, record: null, unavailable: true } : { uid, record: null };
-        });
-      },
+      () => setLoaded((current) => failedSafetyRead(uid, current)),
     );
     return () => {
       unsubscribe();

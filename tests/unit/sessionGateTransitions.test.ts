@@ -3,7 +3,7 @@ import { describe, test } from 'node:test';
 
 import { decideRestoredSession, isUnreadableProfileError } from '../../src/features/auth/services/restoredSession.ts';
 import { isRestoringSession } from '../../src/features/auth/store/sessionBootstrap.ts';
-import { recordForAccount, safetyLoadFailed } from '../../src/features/youth-safety/context/recordForAccount.ts';
+import { failedSafetyRead, recordForAccount, safetyLoadFailed } from '../../src/features/youth-safety/context/recordForAccount.ts';
 
 const adult = { ageBand: '18plus', guardianStatus: 'not_required', scopes: [], consentExpiresAt: null, guardianEmailMasked: null, childDeleteAfter: null } as const;
 
@@ -55,6 +55,23 @@ describe('B-20: the age/guardian gate never reuses another account\'s record', (
     assert.equal(safetyLoadFailed('a', failed), true);
     assert.equal(safetyLoadFailed('a', { uid: 'a', record: null }), false);
     assert.equal(safetyLoadFailed(null, failed), false);
+  });
+
+  test('any subscription failure holds an unread account instead of requesting a new age band', () => {
+    const failed = failedSafetyRead('a', null);
+    assert.equal(recordForAccount('a', failed), undefined);
+    assert.equal(safetyLoadFailed('a', failed), true);
+    assert.deepEqual(failedSafetyRead('a', failed), failed, 'repeated errors remain unreadable');
+  });
+
+  test('a subscription failure preserves a loaded record or confirmed absence only for its own account', () => {
+    const loaded = { uid: 'a', record: adult };
+    assert.equal(failedSafetyRead('a', loaded), loaded);
+    const missing = { uid: 'a', record: null };
+    assert.equal(failedSafetyRead('a', missing), missing);
+    const switched = failedSafetyRead('b', loaded);
+    assert.equal(recordForAccount('b', switched), undefined);
+    assert.equal(safetyLoadFailed('b', switched), true);
   });
 });
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { initializeAuthListener, rereadCurrentProfile } from '@/features/auth/services/authService';
+import { getCurrentAuthUserSnapshot, initializeAuthListener, rereadCurrentProfile } from '@/features/auth/services/authService';
+import { createProfileRetry } from '@/features/auth/services/profileRetry';
 import { type AuthUser } from '@/features/auth/types';
 
 const AUTH_LISTENER_TIMEOUT_MS = 4_000;
@@ -13,6 +14,15 @@ export function useAuthSession() {
   const [isLoading, setIsLoading] = useState(true);
   const [profileOffline, setProfileOffline] = useState(false);
   const hasSettledRef = useRef(false);
+  const profileRetry = useMemo(() => createProfileRetry(
+    () => getCurrentAuthUserSnapshot()?.uid ?? null,
+    (next) => {
+      hasSettledRef.current = true;
+      setUser(next.user);
+      setProfileOffline(next.profileOffline);
+      setIsLoading(false);
+    },
+  ), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -23,6 +33,7 @@ export function useAuthSession() {
       }
 
       hasSettledRef.current = true;
+      profileRetry.invalidate();
       setUser(nextUser);
       setProfileOffline(Boolean(offline && nextUser));
       setIsLoading(false);
@@ -50,6 +61,7 @@ export function useAuthSession() {
         }
 
         clearTimeout(timeoutId);
+        profileRetry.invalidate();
         hasSettledRef.current = true;
         setUser(nextUser);
         setProfileOffline(Boolean(meta?.profileOffline && nextUser));
@@ -65,19 +77,15 @@ export function useAuthSession() {
 
     return () => {
       cancelled = true;
+      profileRetry.invalidate();
       clearTimeout(timeoutId);
       unsubscribe();
     };
-  }, []);
+  }, [profileRetry]);
 
   const retryProfile = useCallback(async () => {
-    const next = await rereadCurrentProfile();
-    if (!next) return;
-    hasSettledRef.current = true;
-    setUser(next.user);
-    setProfileOffline(next.profileOffline);
-    setIsLoading(false);
-  }, []);
+    await profileRetry.retry(rereadCurrentProfile);
+  }, [profileRetry]);
 
   return useMemo(
     () => ({ user, isLoading, profileOffline, retryProfile }),
