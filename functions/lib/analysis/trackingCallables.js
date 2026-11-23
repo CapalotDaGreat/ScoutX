@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshTrackingOcrTask = exports.resolveTrackingTask = exports.cloudTasksFollowUpEnqueue = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
 exports.httpTrackingClient = httpTrackingClient;
 exports.processResolveTask = processResolveTask;
+exports.runResolveTaskAttempt = runResolveTaskAttempt;
 exports.processOcrFollowUpTask = processOcrFollowUpTask;
 exports.settleOrchestratedResolve = settleOrchestratedResolve;
 const firestore_1 = require("firebase-admin/firestore");
@@ -21,6 +22,8 @@ const notificationProducers_1 = require("../notificationProducers");
 const trackingProgress_1 = require("./trackingProgress");
 const trackingFollowUp_1 = require("./trackingFollowUp");
 const rateLimit_1 = require("../security/rateLimit");
+const trackingDeadlines_1 = require("./trackingDeadlines");
+const trackingTaskLeases_1 = require("./trackingTaskLeases");
 const OP_ID = /^[A-Za-z0-9_-]{8,64}$/;
 const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
 async function ownedJob(tx, db, jobId, uid) {
@@ -65,7 +68,7 @@ async function mutateFeedback(uid, jobId, change) {
     });
     if (!result.pending) {
         await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('resolveTrackingTask'))
-            .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: 900 });
+            .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC });
     }
     return result;
 }
@@ -116,7 +119,7 @@ exports.setTrackingPeriods = (0, https_1.onCall)((0, callableOptions_1.createCal
         return { ...fb, periods: clean };
     });
 });
-function httpTrackingClient(baseUrl, env = process.env, route = 'resolve', timeoutMs = 10 * 60 * 1000) {
+function httpTrackingClient(baseUrl, env = process.env, route = 'resolve', timeoutMs = trackingDeadlines_1.TRACKING_WORKER_CLIENT_MS) {
     return async (body) => {
         const emulated = env.FUNCTIONS_EMULATOR === 'true';
         const token = emulated ? null : await (0, cvWorker_1.identityToken)(baseUrl);
@@ -131,7 +134,10 @@ function httpTrackingClient(baseUrl, env = process.env, route = 'resolve', timeo
             });
             return res.ok ? await res.json() : null;
         }
-        catch {
+        catch (error) {
+            // Discovery/extraction already retry null responses; clipFrames keeps its existing unavailable fallback.
+            if (route === 'resolve' && (0, trackingDeadlines_1.isAbortTimeout)(error))
+                throw new trackingDeadlines_1.TrackingWorkerTimeout();
             return null;
         }
     };
@@ -144,7 +150,7 @@ exports.storageImageStore = storageImageStore;
 const cloudTasksFollowUpEnqueue = async (payload, taskId) => {
     try {
         await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('refreshTrackingOcrTask'))
-            .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: 900 });
+            .enqueue(payload, { id: taskId, scheduleDelaySeconds: 5, dispatchDeadlineSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC });
     }
     catch (e) {
         // ALREADY_EXISTS: this round was scheduled before (a retried publish) - nothing to do
@@ -180,17 +186,27 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
         if (early && (early.full || (early.plan.length > 0 && (0, trackingProgress_1.doneCount)(early) >= early.plan.length)))
             return 'stale';
     }
-    const raw = await client({
-        contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
-        target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
-        ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: trackingFollowUp_1.OCR_FOLLOW_UP_MAX_CROPS } } : {}),
-    });
+    let raw;
+    try {
+        raw = await client({
+            contractVersion: 3, jobId, privacy: { retainNonTargetIdentities: false, faceRecognition: false, persistMedia: false },
+            target: job.targeting ?? {}, feedback: (0, trackingV3_1.workerFeedback)(fb),
+            ...(refresh ? { ocr: { mode: 'refresh', maxNewCrops: trackingFollowUp_1.OCR_FOLLOW_UP_MAX_CROPS } } : {}),
+        });
+    }
+    catch (error) {
+        if (error instanceof trackingDeadlines_1.TrackingWorkerTimeout)
+            return 'timedOut';
+        throw error;
+    }
     if (!raw || !raw.workerVersion || !raw.models || !(0, cvConfig_1.isApprovedWorkerOutput)({ workerVersion: raw.workerVersion, models: raw.models }, env)) {
         return 'rejected';
     }
     const report = (0, trackingV3_1.parseTrackingReport)(raw.report, raw.timeline);
     if (!report)
         return 'rejected';
+    if (opts.lease && !await db.runTransaction((tx) => (0, trackingTaskLeases_1.trackingLeaseCurrent)(tx, db, jobId, opts.lease, now())))
+        return 'stale';
     const progressSnap = await base.doc('progress').get();
     const progress = progressSnap.exists ? progressSnap.data() : null;
     const totalParts = progress?.plan.length ?? 0;
@@ -242,6 +258,8 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     const outcome = await db.runTransaction(async (tx) => {
         const fresh = await tx.get(base.doc('feedback'));
         const cur = await tx.get(base.doc('current'));
+        if (opts.lease && !await (0, trackingTaskLeases_1.trackingLeaseCurrent)(tx, db, jobId, opts.lease, now()))
+            return 'stale';
         if ((fresh.data()?.revision ?? 0) !== feedbackRevision)
             return 'superseded';
         const curDoc = cur.data();
@@ -297,7 +315,33 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
     }
     return outcome;
 }
-exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: 3, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 4 }, timeoutSeconds: 900 }, async (request) => {
+/** A timed-out worker may still be running remotely: keep its lease until expiry, then retry after backoff. */
+async function runResolveTaskAttempt(db, jobId, feedbackRevision, client, env = process.env, storeImage = exports.storageImageStore, opts = {}) {
+    const now = opts.now ?? (() => new Date());
+    const scope = opts.scope ?? 'feedback';
+    const lease = await (0, trackingTaskLeases_1.claimTrackingTask)(db, jobId, feedbackRevision, scope, opts.followUpRound, now);
+    if (typeof lease === 'string')
+        return lease;
+    let retainLease = false;
+    try {
+        const outcome = await processResolveTask(db, jobId, feedbackRevision, client, env, storeImage, { ...opts, lease });
+        if (outcome === 'timedOut') {
+            retainLease = true;
+            if ((0, trackingDeadlines_1.timeoutWillRetry)(opts.attempt ?? 0, trackingDeadlines_1.RESOLVE_MAX_ATTEMPTS))
+                throw new trackingDeadlines_1.TrackingWorkerTimeout();
+        }
+        if (scope === 'full' || scope === 'preliminary') {
+            await settleOrchestratedResolve(db, jobId, scope, outcome, now(), lease);
+        }
+        return outcome;
+    }
+    finally {
+        if (!retainLease)
+            await (0, trackingTaskLeases_1.releaseTrackingTask)(db, lease);
+    }
+}
+exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: trackingDeadlines_1.RESOLVE_MAX_ATTEMPTS, minBackoffSeconds: trackingDeadlines_1.TRACKING_TIMEOUT_BACKOFF_SEC },
+    rateLimits: { maxConcurrentDispatches: 4 }, timeoutSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC }, async (request) => {
     const d = request.data;
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision))
         return;
@@ -310,9 +354,7 @@ exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { max
         const fb = await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(d.jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('feedback').get();
         fbRevision = fb.data()?.revision ?? 0;
     }
-    const outcome = await processResolveTask(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope });
-    if (scope !== 'feedback')
-        await settleOrchestratedResolve(db, d.jobId, scope, outcome);
+    await runResolveTaskAttempt(db, d.jobId, fbRevision, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { scope, attempt: request.retryCount ?? 0 });
 });
 /**
  * 5.2 deferred-OCR follow-up round: runs only if it is still the current round of the current
@@ -321,6 +363,20 @@ exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { max
  * scheduled by processResolveTask when this one made progress (trackingFollowUp.ts).
  */
 async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client, env = process.env, storeImage = exports.storageImageStore, opts = {}) {
+    const now = opts.now ?? (() => new Date());
+    const lease = await (0, trackingTaskLeases_1.claimTrackingTask)(db, jobId, feedbackRevision, 'refresh', round, now);
+    if (typeof lease === 'string')
+        return lease;
+    let retainLease = false;
+    try {
+        return await refreshClaimed(db, jobId, feedbackRevision, round, client, env, storeImage, { ...opts, lease }, () => { retainLease = true; });
+    }
+    finally {
+        if (!retainLease)
+            await (0, trackingTaskLeases_1.releaseTrackingTask)(db, lease);
+    }
+}
+async function refreshClaimed(db, jobId, feedbackRevision, round, client, env, storeImage, opts, retainLease) {
     const now = opts.now ?? (() => new Date());
     const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('current');
     const claimed = await db.runTransaction(async (tx) => {
@@ -334,11 +390,18 @@ async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client
     if (!claimed)
         return 'stale';
     const outcome = await processResolveTask(db, jobId, feedbackRevision, client, env, storeImage, { ...opts, scope: 'refresh', followUpRound: round });
+    if (outcome === 'timedOut') {
+        retainLease();
+        if ((0, trackingDeadlines_1.timeoutWillRetry)(opts.attempt ?? 0, trackingDeadlines_1.OCR_REFRESH_MAX_ATTEMPTS))
+            throw new trackingDeadlines_1.TrackingWorkerTimeout();
+    }
     if (outcome !== 'done') {
         const job = (await db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).get()).data();
         const status = outcome === 'superseded' || outcome === 'stale' ? 'stale' : job?.cancelRequested ? 'cancelled' : 'failed';
         await db.runTransaction(async (tx) => {
             const cur = await tx.get(ref);
+            if (opts.lease && !await (0, trackingTaskLeases_1.trackingLeaseCurrent)(tx, db, jobId, opts.lease, now(), true))
+                return;
             const f = cur.data()?.followUp ?? null;
             if (f && f.revision === feedbackRevision && f.round === round && ['scheduled', 'running'].includes(f.status)) {
                 tx.set(ref, { followUp: { ...f, status, updatedAt: now().toISOString() } }, { merge: true });
@@ -347,24 +410,34 @@ async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client
     }
     return outcome;
 }
-exports.refreshTrackingOcrTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: 2, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 2 }, timeoutSeconds: 900 }, async (request) => {
+exports.refreshTrackingOcrTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: trackingDeadlines_1.OCR_REFRESH_MAX_ATTEMPTS, minBackoffSeconds: trackingDeadlines_1.TRACKING_TIMEOUT_BACKOFF_SEC },
+    rateLimits: { maxConcurrentDispatches: 2 }, timeoutSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC }, async (request) => {
     const d = request.data;
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.feedbackRevision)
         || !Number.isSafeInteger(d.round) || d.round < 1)
         return;
     const url = (0, cvConfig_1.cvWorkerUrl)();
-    await processOcrFollowUpTask((0, firestore_1.getFirestore)(), d.jobId, d.feedbackRevision, d.round, url ? httpTrackingClient(url) : null);
+    await processOcrFollowUpTask((0, firestore_1.getFirestore)(), d.jobId, d.feedbackRevision, d.round, url ? httpTrackingClient(url) : null, process.env, exports.storageImageStore, { attempt: request.retryCount ?? 0 });
 });
 /**
  * Releases the "resolving" slot after an orchestrated resolve that did not publish, so later
  * segments can schedule another one. A full report that cannot be built interrupts the analysis
  * (the owner can resume; cached segments are kept).
  */
-async function settleOrchestratedResolve(db, jobId, scope, outcome, now = new Date()) {
-    if (outcome === 'done')
+async function settleOrchestratedResolve(db, jobId, scope, outcome, now = new Date(), lease) {
+    if (outcome === 'done' || outcome === 'busy')
         return;
     const ref = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc('progress');
-    const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable');
-    await ref.set({ resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
+    const failed = scope === 'full' && (outcome === 'rejected' || outcome === 'unavailable' || outcome === 'timedOut');
+    await db.runTransaction(async (tx) => {
+        const progress = await tx.get(ref);
+        if (lease && !await (0, trackingTaskLeases_1.trackingLeaseCurrent)(tx, db, jobId, lease, now))
+            return;
+        if (progress.get('outcome') === 'cancelled')
+            return;
+        if (progress.get('resolving') && progress.get('resolving') !== scope)
+            return;
+        tx.set(ref, { resolving: null, updatedAt: now.toISOString(), ...(failed ? { outcome: 'interrupted' } : {}) }, { merge: true });
+    });
 }
 //# sourceMappingURL=trackingCallables.js.map

@@ -25,6 +25,7 @@ const firestore_1 = require("firebase-admin/firestore");
 const functions_1 = require("firebase-admin/functions");
 const https_1 = require("firebase-functions/v2/https");
 const tasks_1 = require("firebase-functions/v2/tasks");
+const trackingDeadlines_1 = require("./trackingDeadlines");
 const callableOptions_1 = require("../callableOptions");
 const region_1 = require("../region");
 const notificationProducers_1 = require("../notificationProducers");
@@ -40,7 +41,7 @@ const JOB_ID = /^[A-Za-z0-9_-]{1,80}$/;
 exports.PLAYER_ANALYSIS_START_LIMIT = { action: 'player_analysis_start', max: 10, window: 'day' };
 exports.EXTRACT_MAX_ATTEMPTS = 3;
 const cloudTasksEnqueue = async (queue, payload) => {
-    await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)(queue)).enqueue(payload, { dispatchDeadlineSeconds: 1800 });
+    await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)(queue)).enqueue(payload, { dispatchDeadlineSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC });
 };
 exports.cloudTasksEnqueue = cloudTasksEnqueue;
 function progressRef(db, jobId) {
@@ -293,13 +294,13 @@ async function finishDiscovery(db, jobId, generation, index, status, moments, at
     return outcome;
 }
 exports.discoverTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: exports.EXTRACT_MAX_ATTEMPTS, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 6 },
-    timeoutSeconds: 1800, memory: '512MiB' }, async (request) => {
+    timeoutSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC, memory: '512MiB' }, async (request) => {
     const d = request.data;
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.generation)
         || !Number.isSafeInteger(d.index))
         return;
     const url = (0, cvConfig_1.cvWorkerUrl)();
-    const outcome = await processDiscoverTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'discover', 28 * 60 * 1000) : null, exports.cloudTasksEnqueue);
+    const outcome = await processDiscoverTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'discover', trackingDeadlines_1.TRACKING_WORKER_CLIENT_MS) : null, exports.cloudTasksEnqueue);
     if (outcome === 'retry')
         throw new Error('discovery chunk failed; retrying');
 });
@@ -314,13 +315,13 @@ exports.startPlayerAnalysis = (0, https_1.onCall)((0, callableOptions_1.createCa
     return startAnalysis((0, firestore_1.getFirestore)(), uid, jobId, exports.cloudTasksEnqueue);
 });
 exports.extractTrackingSegmentTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { maxAttempts: exports.EXTRACT_MAX_ATTEMPTS, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 6 },
-    timeoutSeconds: 1800, memory: '512MiB' }, async (request) => {
+    timeoutSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC, memory: '512MiB' }, async (request) => {
     const d = request.data;
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.generation)
         || !Number.isSafeInteger(d.index))
         return;
     const url = (0, cvConfig_1.cvWorkerUrl)();
-    const outcome = await processExtractTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'extract', 28 * 60 * 1000) : null, exports.cloudTasksEnqueue);
+    const outcome = await processExtractTask((0, firestore_1.getFirestore)(), d.jobId, d.generation, d.index, request.retryCount ?? 0, url ? (0, trackingCallables_1.httpTrackingClient)(url, process.env, 'extract', trackingDeadlines_1.TRACKING_WORKER_CLIENT_MS) : null, exports.cloudTasksEnqueue);
     // Throwing hands the retry (with backoff) to Cloud Tasks; finished segments are cached on the worker.
     if (outcome === 'retry')
         throw new Error('segment extraction failed; retrying');

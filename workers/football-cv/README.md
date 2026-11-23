@@ -61,12 +61,17 @@ gcloud builds submit --tag europe-west6-docker.pkg.dev/scoutx-230b0/CONFIG_REQUI
 gcloud run deploy football-cv `
   --image europe-west6-docker.pkg.dev/scoutx-230b0/CONFIG_REQUIRED/football-cv:CONFIG_REQUIRED `
   --region CONFIG_REQUIRED --gpu 1 --gpu-type nvidia-l4 --cpu 4 --memory 16Gi `
-  --no-allow-unauthenticated --concurrency 1 --max-instances CONFIG_REQUIRED --timeout 900
+  --no-allow-unauthenticated --concurrency 1 --max-instances CONFIG_REQUIRED --timeout 1800
 
 # Only the Functions runtime service account may invoke it
 gcloud run services add-iam-policy-binding football-cv --region CONFIG_REQUIRED `
   --member serviceAccount:CONFIG_REQUIRED --role roles/run.invoker
 ```
+
+The worker request timeout must be at least 1800 seconds to match the tracking task deadline
+(`functions/src/analysis/trackingDeadlines.ts`). Resolve clients abort after 1680 seconds. Their
+31-minute leases are retained after a timeout; a minimum four-minute retry backoff allows the old lease to expire.
+These are deployment requirements; changing this example does not change a running service.
 
 Then, in the Functions environment:
 

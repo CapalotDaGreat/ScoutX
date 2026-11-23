@@ -19,6 +19,7 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { onTaskDispatched } from 'firebase-functions/v2/tasks';
+import { TRACKING_TASK_TIMEOUT_SEC, TRACKING_WORKER_CLIENT_MS } from './trackingDeadlines';
 import { createCallableOptions } from '../callableOptions';
 import { taskQueueName } from '../region';
 import { writeSystemActivity } from '../notificationProducers';
@@ -46,7 +47,7 @@ export type Enqueue = (queue: 'discoverTrackingTask' | 'extractTrackingSegmentTa
   payload: Record<string, unknown>) => Promise<void>;
 
 export const cloudTasksEnqueue: Enqueue = async (queue, payload) => {
-  await getFunctions().taskQueue(taskQueueName(queue)).enqueue(payload, { dispatchDeadlineSeconds: 1800 });
+  await getFunctions().taskQueue(taskQueueName(queue)).enqueue(payload, { dispatchDeadlineSeconds: TRACKING_TASK_TIMEOUT_SEC });
 };
 
 function progressRef(db: Firestore, jobId: string) {
@@ -301,14 +302,14 @@ async function finishDiscovery(db: Firestore, jobId: string, generation: number,
 
 export const discoverTrackingTask = onTaskDispatched(
   { retryConfig: { maxAttempts: EXTRACT_MAX_ATTEMPTS, minBackoffSeconds: 30 }, rateLimits: { maxConcurrentDispatches: 6 },
-    timeoutSeconds: 1800, memory: '512MiB' },
+    timeoutSeconds: TRACKING_TASK_TIMEOUT_SEC, memory: '512MiB' },
   async (request) => {
     const d = request.data as { jobId?: unknown; generation?: unknown; index?: unknown };
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.generation)
       || !Number.isSafeInteger(d.index)) return;
     const url = cvWorkerUrl();
     const outcome = await processDiscoverTask(getFirestore(), d.jobId, d.generation as number, d.index as number,
-      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'discover', 28 * 60 * 1000) : null, cloudTasksEnqueue);
+      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'discover', TRACKING_WORKER_CLIENT_MS) : null, cloudTasksEnqueue);
     if (outcome === 'retry') throw new Error('discovery chunk failed; retrying');
   },
 );
@@ -324,14 +325,14 @@ export const startPlayerAnalysis = onCall(createCallableOptions(), async (reques
 
 export const extractTrackingSegmentTask = onTaskDispatched(
   { retryConfig: { maxAttempts: EXTRACT_MAX_ATTEMPTS, minBackoffSeconds: 60 }, rateLimits: { maxConcurrentDispatches: 6 },
-    timeoutSeconds: 1800, memory: '512MiB' },
+    timeoutSeconds: TRACKING_TASK_TIMEOUT_SEC, memory: '512MiB' },
   async (request) => {
     const d = request.data as { jobId?: unknown; generation?: unknown; index?: unknown };
     if (typeof d.jobId !== 'string' || !JOB_ID.test(d.jobId) || !Number.isSafeInteger(d.generation)
       || !Number.isSafeInteger(d.index)) return;
     const url = cvWorkerUrl();
     const outcome = await processExtractTask(getFirestore(), d.jobId, d.generation as number, d.index as number,
-      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'extract', 28 * 60 * 1000) : null, cloudTasksEnqueue);
+      request.retryCount ?? 0, url ? httpTrackingClient(url, process.env, 'extract', TRACKING_WORKER_CLIENT_MS) : null, cloudTasksEnqueue);
     // Throwing hands the retry (with backoff) to Cloud Tasks; finished segments are cached on the worker.
     if (outcome === 'retry') throw new Error('segment extraction failed; retrying');
   },
