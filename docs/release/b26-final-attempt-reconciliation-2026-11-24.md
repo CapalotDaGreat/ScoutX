@@ -68,3 +68,34 @@ procedure. Disabling it immediately leaves those tickets pending; lease expiry a
 Never restore short task/client deadlines against already queued long-running work. The existing
 [integration/capacity runbook](b26-integration-capacity-runbook-2026-11-23.md) supplies the broader rollback and
 cleanup protocol. Billing stays unlinked throughout this implementation task.
+
+
+## Firestore-emulator integration evidence (2026-11-24)
+
+Run `npm run test:b26:integration` from the repository root. This builds the committed Functions code and runs only
+Firestore locally under `demo-scoutx`; the suite refuses a missing/non-loopback `FIRESTORE_EMULATOR_HOST`. It is also
+included in `npm run test:rules`. Java and the Firebase CLI/emulator are required. No Google credentials, cloud
+services, Storage emulator, provider calls, footage or actual inference are used. An injected clock crosses the
+31-minute deadline without a real-time wait. Tests use two independent Admin SDK clients and real transactions,
+not the unit suite's fake database. Generated job ids and their exact ticket ids are cleaned up without a global
+emulator database reset. Emulators are stopped by `emulators:exec` on completion.
+
+The 16 integration cases cover expiry-boundary settlement, duplicate reconcilers, simultaneous final claims,
+competing expired-lease takeovers, concurrent new-generation takeover versus old reconciliation, full and OCR
+late-result fencing, version-preserving publication, expired-owner rejection, round-only failure and quota
+preservation, feedback/new-round/same-generation-resume/cancellation/deletion fences, the indexed due query and
+client denial of ticket reads/writes. A controlled image-write barrier also forces takeover after the preflight
+check and before the publication transaction: the old report is rejected, although an image callback already in
+flight can finish. Transaction fencing does not roll back external image writes.
+
+**Separate persistence limitation found:** the recorded fixture's nonempty `moments[].indicator` contains arrays
+of numeric arrays. Firestore rejects that report with INVALID_ARGUMENT (invalid nested entity). A characterization
+case retains the unmodified indicator payload and proves final-attempt reconciliation recovers from its publication
+failure without replacing the saved report. Successful-publication fence cases deliberately use empty indicators
+and no state-strip input, so they test only Firestore-compatible payloads; they do not validate production report
+serialization. `stateStrip` uses nested tuple arrays too when populated and needs the same serialization review.
+A reviewed storage representation/reader contract and populated-payload round-trip tests remain a production
+prerequisite. Update this characterization when that fix lands; do not treat rejection as the desired report UX.
+
+These emulator tests supply local database integration evidence, not live Cloud Tasks/Scheduler delivery, process
+kill, resource-capacity or accuracy evidence. B-26 remains open and no production enablement is authorized.

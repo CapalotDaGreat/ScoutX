@@ -1,0 +1,287 @@
+/** B-26 real Firestore transactions; synthetic worker replies, no inference or cloud access. */
+import assert from 'node:assert/strict';
+import { after, afterEach, before, beforeEach, test as nodeTest } from 'node:test';
+import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
+import { PROJECT_ID, getDocument, setDocument } from './emulator.mjs';
+
+// Fail before Admin initialization if this file is invoked outside a loopback emulator.
+assert.match(process.env.FIRESTORE_EMULATOR_HOST ?? '', /^(127\.0\.0\.1|localhost|\[::1\]):\d+$/,
+  'B-26 integration requires a loopback FIRESTORE_EMULATOR_HOST');
+assert.ok(PROJECT_ID.startsWith('demo-'));
+const require = createRequire(new URL('../../functions/package.json', import.meta.url));
+const { initializeApp, deleteApp } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
+const { claimTrackingTask, releaseTrackingTask, RECONCILIATION_COLLECTION } = require('./lib/analysis/trackingTaskLeases.js');
+const { reconcileTrackingAttempt, sweepTrackingAttempts } = require('./lib/analysis/trackingReconciliation.js');
+const { processResolveTask, runResolveTaskAttempt, processOcrFollowUpTask } = require('./lib/analysis/trackingCallables.js');
+const { TRACKING_ATTEMPT_LEASE_MS, RESOLVE_MAX_ATTEMPTS, OCR_REFRESH_MAX_ATTEMPTS } = require('./lib/analysis/trackingDeadlines.js');
+const { newProgress } = require('./lib/analysis/trackingProgress.js');
+const { emptyFeedback } = require('./lib/analysis/trackingV3.js');
+const { setEmulatorCvApproval } = require('./lib/analysis/cvConfig.js');
+const { rateLimitDocId } = require('./lib/security/rateLimit.js');
+const { OCR_FOLLOW_UP_ACTION } = require('./lib/analysis/trackingFollowUp.js');
+
+const test = (name, fn) => nodeTest(name, { timeout: 60000 }, fn);
+
+const T0 = Date.parse('2026-11-24T12:00:00Z');
+const EXPIRED = T0 + TRACKING_ATTEMPT_LEASE_MS + 1;
+const ENV = { FIRESTORE_EMULATOR_HOST: process.env.FIRESTORE_EMULATOR_HOST,
+  CV_WORKER_URL: 'http://localhost:9', CV_WORKER_APPROVED: 'true', TRACKING_V3_ENABLED: 'true' };
+const APPROVAL = { workerVersion: 'b26-emulator', models: { detector: 'synthetic' }, eventsApproved: false };
+const fixture = JSON.parse(readFileSync(new URL('../fixtures/tracking50-img4809-auto.json', import.meta.url), 'utf8')).report;
+let apps, clients, db, jobId, job, base, clock, effects;
+const jobs = new Set();
+const tokens = new Set();
+const now = () => new Date(clock);
+const options = (scope = 'full') => ({ scope, now, notify: async () => { effects.notifications += 1; return false; },
+  enqueueFollowUp: async () => { effects.enqueue += 1; } });
+const store = async () => { effects.images += 1; };
+const snapshot = async (ref) => (await ref.get()).data();
+const ticket = (token) => db.collection(RECONCILIATION_COLLECTION).doc(token);
+
+function deferred() {
+  let resolve;
+  const promise = new Promise((done) => { resolve = done; });
+  return { promise, resolve };
+}
+function reply() {
+  const report = structuredClone(fixture);
+  report.engine = { ...report.engine, ocrDeferred: 0 };
+  // Keep the successful-publication fixture Firestore-compatible. The unmodified
+  // nested indicator payload has a separate explicit failure/recovery test below.
+  report.moments = report.moments.map((moment) => ({ ...moment, indicator: [] }));
+  report.analysedRange = { startSec: 0, endSec: 2035, parts: newProgress(1, 2035, '').plan.length };
+  return { workerVersion: APPROVAL.workerVersion, models: APPROVAL.models, report };
+}
+async function claim(scope = 'full', client = db, attempt = scope === 'refresh' ? OCR_REFRESH_MAX_ATTEMPTS - 1 : RESOLVE_MAX_ATTEMPTS - 1) {
+  const lease = await claimTrackingTask(client, jobId, 0, scope, scope === 'refresh' ? 1 : undefined, now, attempt);
+  if (typeof lease !== 'string') tokens.add(lease.token);
+  return lease;
+}
+async function owned(scope = 'full') {
+  const lease = await claim(scope);
+  assert.notEqual(typeof lease, 'string');
+  return lease;
+}
+
+before(() => {
+  apps = [0, 1].map((i) => initializeApp({ projectId: PROJECT_ID }, `b26-${process.pid}-${i}`));
+  clients = apps.map((app) => getFirestore(app));
+  [db] = clients;
+});
+beforeEach(async () => {
+  clock = T0;
+  effects = { images: 0, notifications: 0, enqueue: 0 };
+  setEmulatorCvApproval(APPROVAL);
+  jobId = `b26_${randomUUID().replaceAll('-', '')}`;
+  jobs.add(jobId);
+  job = db.collection('matchAnalysisJobs').doc(jobId);
+  base = job.collection('tracking');
+  const progress = newProgress(1, 2035, now().toISOString());
+  progress.resolving = 'full';
+  const batch = db.batch();
+  batch.set(job, { playerId: 'b26-emulator-owner', targeting: { jerseyNumber: '20' } });
+  batch.set(base.doc('progress'), progress);
+  batch.set(base.doc('feedback'), { ...emptyFeedback(), revision: 0 });
+  batch.set(base.doc('current'), { version: 1, report: { retained: true }, stale: true, feedbackRevision: 0,
+    followUp: { revision: 0, round: 1, status: 'scheduled', deferredBefore: 20, deferredAfter: null, updatedAt: now().toISOString() } });
+  await batch.commit();
+});
+afterEach(async () => {
+  setEmulatorCvApproval(null);
+  // Remove only this suite's generated ticket namespaces; never clear the emulator database globally.
+  const records = await db.collection(RECONCILIATION_COLLECTION).where('jobId', '==', jobId).get();
+  for (const doc of records.docs) tokens.add(doc.id);
+  await Promise.all(records.docs.map((doc) => doc.ref.delete()));
+  await db.recursiveDelete(job);
+});
+after(async () => {
+  // Cleanup remains bounded to exact test-created ids even after a failed assertion.
+  if (!db) return;
+  await Promise.all([...tokens].map((token) => ticket(token).delete()));
+  for (const id of jobs) await db.recursiveDelete(db.collection('matchAnalysisJobs').doc(id));
+  await Promise.all(apps.map(deleteApp));
+});
+
+test('atomic final claim, expiry boundary and duplicate reconcilers settle once', async () => {
+  const lease = await owned();
+  assert.equal((await snapshot(ticket(lease.token))).dueAtMs, T0 + TRACKING_ATTEMPT_LEASE_MS);
+  assert.equal(await reconcileTrackingAttempt(db, lease.token, now()), 'waiting');
+  const at = new Date(T0 + TRACKING_ATTEMPT_LEASE_MS);
+  const results = await Promise.all(clients.map((client) => reconcileTrackingAttempt(client, lease.token, at)));
+  assert.deepEqual(results.sort(), ['discarded', 'settled']);
+  assert.equal((await snapshot(base.doc('progress'))).outcome, 'interrupted');
+  assert.equal((await snapshot(base.doc('progress'))).resolving, null);
+  assert.equal((await snapshot(base.doc('lease_full'))).token, null);
+  assert.equal((await ticket(lease.token).get()).exists, false);
+});
+
+test('concurrent final claims create one owner and one matching durable ticket', async () => {
+  const results = await Promise.all(clients.map((client) => claim('full', client)));
+  const owners = results.filter((result) => typeof result !== 'string');
+  assert.equal(owners.length, 1);
+  assert.equal(results.filter((result) => result === 'busy').length, 1);
+  const records = await db.collection(RECONCILIATION_COLLECTION).where('jobId', '==', jobId).get();
+  assert.equal(records.size, 1);
+  assert.equal(records.docs[0].id, owners[0].token);
+  assert.equal((await snapshot(base.doc('lease_full'))).token, owners[0].token);
+});
+
+test('concurrent expired-lease takeovers select one replacement; old reconciliation/release cannot clear it', async () => {
+  const old = await owned();
+  clock = EXPIRED;
+  const contenders = await Promise.all(clients.map((client) => claim('full', client)));
+  const next = contenders.find((result) => typeof result !== 'string');
+  assert.ok(next && next.token !== old.token);
+  assert.equal(contenders.filter((result) => result === 'busy').length, 1);
+  assert.equal(await reconcileTrackingAttempt(db, old.token, now()), 'discarded');
+  await releaseTrackingTask(clients[1], old);
+  assert.equal((await snapshot(base.doc('lease_full'))).token, next.token);
+  assert.equal((await snapshot(base.doc('progress'))).outcome, null);
+});
+
+test('new lifecycle takeover races old-ticket reconciliation without interrupting replacement work', async () => {
+  const old = await owned();
+  clock = EXPIRED;
+  await base.doc('progress').update({ generation: 2, startedAt: now().toISOString() });
+  const [next, outcome] = await Promise.all([claim('full', clients[1]), reconcileTrackingAttempt(db, old.token, now())]);
+  assert.notEqual(typeof next, 'string');
+  assert.equal(outcome, 'discarded');
+  assert.equal((await snapshot(base.doc('progress'))).outcome, null);
+  assert.equal((await snapshot(base.doc('lease_full'))).token, next.token);
+});
+
+for (const scope of ['full', 'refresh']) {
+  test(`late ${scope} worker reply cannot publish after takeover or reconcile the newer report`, async () => {
+    const entered = deferred();
+    const finish = deferred();
+    const worker = async () => { entered.resolve(); return finish.promise; };
+    const opts = { ...options(scope), attempt: scope === 'refresh' ? 1 : 2 };
+    const first = scope === 'refresh'
+      ? processOcrFollowUpTask(db, jobId, 0, 1, worker, ENV, store, opts)
+      : runResolveTaskAttempt(db, jobId, 0, worker, ENV, store, opts);
+    await entered.promise;
+    const oldToken = (await snapshot(base.doc(`lease_${scope}`))).token;
+    tokens.add(oldToken);
+    clock = EXPIRED;
+    const next = await claim(scope, clients[1]);
+    assert.notEqual(typeof next, 'string');
+    // Publish through the real parser, version transaction and lease fence with a synthetic worker response.
+    const accepted = await processResolveTask(clients[1], jobId, 0, async () => reply(), ENV, store,
+      { ...options(scope), lease: next, ...(scope === 'refresh' ? { followUpRound: 1 } : {}) });
+    assert.equal(accepted, 'done');
+    const current = await snapshot(base.doc('current'));
+    const progress = await snapshot(base.doc('progress'));
+    const effectsBefore = { ...effects };
+    finish.resolve(reply());
+    assert.equal(await first, 'stale');
+    assert.deepEqual(await snapshot(base.doc('current')), current);
+    assert.deepEqual(await snapshot(base.doc('progress')), progress);
+    assert.deepEqual(effects, effectsBefore, 'stale reply must not store images, notify or enqueue');
+    assert.equal((await snapshot(base.doc(`lease_${scope}`))).token, next.token);
+    assert.equal(await reconcileTrackingAttempt(db, oldToken, now()), 'discarded');
+    clock += TRACKING_ATTEMPT_LEASE_MS + 1;
+    assert.equal(await reconcileTrackingAttempt(db, next.token, now()), 'discarded', 'published version survives expiry');
+    assert.deepEqual(await snapshot(base.doc('current')), current);
+  });
+}
+
+test('expired/reconciled owner cannot publish even without a replacement', async () => {
+  const old = await owned();
+  clock = EXPIRED;
+  assert.equal(await reconcileTrackingAttempt(db, old.token, now()), 'settled');
+  const current = await snapshot(base.doc('current'));
+  assert.equal(await processResolveTask(db, jobId, 0, async () => reply(), ENV, store,
+    { ...options(), lease: old }), 'stale');
+  assert.deepEqual(await snapshot(base.doc('current')), current);
+  assert.deepEqual(effects, { images: 0, notifications: 0, enqueue: 0 });
+});
+
+test('OCR expiry fails only its runnable round; quota and saved report are unchanged', async () => {
+  const old = await owned('refresh');
+  const quota = db.collection('callableRateLimits').doc(rateLimitDocId('b26-emulator-owner', OCR_FOLLOW_UP_ACTION, 'day', now()));
+  await quota.set({ count: 7 });
+  try {
+    const before = await snapshot(base.doc('current'));
+    clock = EXPIRED;
+    assert.equal(await reconcileTrackingAttempt(db, old.token, now()), 'settled');
+    const current = await snapshot(base.doc('current'));
+    assert.equal(current.followUp.status, 'failed');
+    assert.deepEqual(current.report, before.report);
+    assert.equal(current.version, before.version);
+    assert.equal((await snapshot(quota)).count, 7);
+    assert.equal((await snapshot(base.doc('progress'))).outcome, null);
+  } finally { await quota.delete(); }
+});
+
+for (const change of ['feedback', 'round', 'resume', 'cancelled', 'deleted']) {
+  test(`real transactions discard expired OCR ticket after ${change}`, async () => {
+    const old = await owned('refresh');
+    if (change === 'feedback') await base.doc('feedback').update({ revision: 1 });
+    if (change === 'round') await base.doc('current').update({ 'followUp.round': 2 });
+    if (change === 'resume') await base.doc('progress').update({ startedAt: new Date(T0 + 1).toISOString() });
+    if (change === 'cancelled') await job.update({ cancelRequested: true });
+    if (change === 'deleted') await job.delete();
+    const before = await snapshot(base.doc('current'));
+    clock = EXPIRED;
+    assert.equal(await reconcileTrackingAttempt(db, old.token, now()), 'discarded');
+    assert.deepEqual(await snapshot(base.doc('current')), before);
+    if (change === 'deleted') assert.equal((await job.get()).exists, false);
+  });
+}
+
+test('due-query sweep settles expired tickets and leaves future tickets; collection is client-denied', async () => {
+  const full = await owned();
+  clock += 1000;
+  const refresh = await owned('refresh');
+  const at = new Date(T0 + TRACKING_ATTEMPT_LEASE_MS);
+  assert.equal(await sweepTrackingAttempts(db, at), 1);
+  assert.equal((await ticket(full.token).get()).exists, false);
+  assert.equal((await ticket(refresh.token).get()).exists, true);
+  const path = `${RECONCILIATION_COLLECTION}/${refresh.token}`;
+  assert.equal(await getDocument('b26-emulator-owner', path), 403);
+  assert.equal(await getDocument(null, path), 403);
+  assert.equal(await setDocument('b26-emulator-owner', path, { token: 'forged' }), 403);
+});
+
+
+test('publication transaction fences takeover after preflight, while an image write was in flight', async () => {
+  const old = await owned();
+  const entered = deferred();
+  const finish = deferred();
+  const raw = reply();
+  raw.report.referenceImageJpegBase64 = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3, 4]).toString('base64');
+  const imageStore = async () => { effects.images += 1; entered.resolve(); await finish.promise; };
+  const result = processResolveTask(db, jobId, 0, async () => raw, ENV, imageStore, { ...options(), lease: old });
+  await entered.promise;
+  try {
+    clock = EXPIRED;
+    const next = await claim('full', clients[1]);
+    assert.notEqual(typeof next, 'string');
+    const before = await snapshot(base.doc('current'));
+    finish.resolve();
+    assert.equal(await result, 'stale');
+    assert.deepEqual(await snapshot(base.doc('current')), before);
+    assert.equal((await snapshot(base.doc('lease_full'))).token, next.token);
+    assert.deepEqual(effects, { images: 1, notifications: 0, enqueue: 0 }, 'an in-flight image callback may finish, but no publication side effects follow');
+  } finally { finish.resolve(); await result; }
+});
+
+
+test('real Firestore nested-indicator publication failure retains final recovery and cannot replace current report', async () => {
+  const raw = reply();
+  raw.report.moments = structuredClone(fixture.moments);
+  const before = await snapshot(base.doc('current'));
+  await assert.rejects(runResolveTaskAttempt(db, jobId, 0, async () => raw, ENV, store,
+    { ...options(), attempt: RESOLVE_MAX_ATTEMPTS - 1 }),
+  (error) => error.code === 3 && /invalid nested entity/i.test(error.message));
+  assert.deepEqual(await snapshot(base.doc('current')), before);
+  const lease = await snapshot(base.doc('lease_full'));
+  tokens.add(lease.token);
+  assert.equal((await ticket(lease.token).get()).exists, true);
+  clock = EXPIRED;
+  assert.equal(await reconcileTrackingAttempt(db, lease.token, now()), 'settled');
+  assert.equal((await snapshot(base.doc('progress'))).outcome, 'interrupted');
+});
