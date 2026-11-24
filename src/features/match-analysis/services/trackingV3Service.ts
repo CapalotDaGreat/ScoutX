@@ -59,9 +59,12 @@ export type PlayerAnalysisStart = { status: 'started' | 'running' | 'complete' |
 export async function startPlayerAnalysis(jobId: string): Promise<PlayerAnalysisStart> {
   const callable = createCallableFunction<{ jobId: string }>('startPlayerAnalysis');
   if (!callable) throw new Error('Cloud Functions unavailable.');
-  const result = await callable({ jobId });
-  resumeTrackingPolls(jobId);
-  return result.data as PlayerAnalysisStart;
+  try {
+    const result = await callable({ jobId });
+    return result.data as PlayerAnalysisStart;
+  } finally {
+    resumeTrackingPolls(jobId);
+  }
 }
 
 export function subscribeTracking(jobId: string, onChange: (doc: TrackingDoc | null) => void, onError?: (e: Error) => void): Unsubscribe {
@@ -71,15 +74,21 @@ export function subscribeTracking(jobId: string, onChange: (doc: TrackingDoc | n
 export async function answerTrackingQuestion(jobId: string, questionId: string, answer: TrackingAnswer): Promise<void> {
   const callable = createCallableFunction<{ jobId: string; questionId: string; answer: TrackingAnswer; operationId: string }>('answerTrackingQuestion');
   if (!callable) throw new Error('Cloud Functions unavailable.');
-  await callable({ jobId, questionId, answer, operationId: createSecureId('op', 16) });
-  resumeTrackingPolls(jobId);
+  try {
+    await callable({ jobId, questionId, answer, operationId: createSecureId('op', 16) });
+  } finally {
+    resumeTrackingPolls(jobId);
+  }
 }
 
 export async function undoTrackingAnswer(jobId: string): Promise<void> {
   const callable = createCallableFunction<{ jobId: string }>('undoTrackingAnswer');
   if (!callable) throw new Error('Cloud Functions unavailable.');
-  await callable({ jobId });
-  resumeTrackingPolls(jobId);
+  try {
+    await callable({ jobId });
+  } finally {
+    resumeTrackingPolls(jobId);
+  }
 }
 
 export type VideoSourceInspection = {

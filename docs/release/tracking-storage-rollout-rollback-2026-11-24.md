@@ -232,7 +232,8 @@ sends the last `updateTime` token so an unchanged document is not downloaded aga
 request in that loop. A full, not-stale report with no pending reason and no scheduled or running follow-up
 slows that loop to three minutes, so a worker refresh, a rerun, a deletion, or an answer on another device still
 appears while the screen stays open. Answering, undoing, or starting analysis on this device asks again
-immediately and keeps the 15-second pace until the commit time changes. A discovery-only screen has no report
+immediately, including when the callable response is lost after the write, and keeps the 15-second pace until
+the commit time changes. A discovery-only screen has no report
 finality signal and keeps the 15-second pace until it unmounts. The loop stops when its last screen unmounts,
 starts a new session if that job is opened again, and is keyed by the signed-in account so a switch cannot reuse
 the previous loop. Network, rate-limit, and storage errors keep the last good result and back off to at most
