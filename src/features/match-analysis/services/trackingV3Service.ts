@@ -1,5 +1,4 @@
-import { TRACKING_STORAGE_ENCODING } from '@/features/match-analysis/services/trackingStorage';
-import { pollTrackingReader, type TrackingRead } from './trackingReader';
+import { resumeTrackingPolls, subscribeTrackingSlot } from './trackingReader';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot, type Unsubscribe } from 'firebase/firestore';
 import { getFirebaseAuth, getFirestoreDb, isFirebaseConfiguredForProject } from '@/config/firebase';
@@ -12,27 +11,33 @@ import type { TrackingAnswer, TrackingDiscoveryDoc, TrackingDoc, TrackingProgres
 
 
 /** Each auth change cancels pending results before another account can receive them. */
-function subscribeCompatibleTracking(onChange: (value: TrackingRead | null) => void, jobId: string,
-  onError?: (error: Error) => void): Unsubscribe {
+function subscribeCompatibleTracking(slot: 'current' | 'discovery', jobId: string,
+  onChange: (doc: Record<string, unknown> | null) => void, onError?: (error: Error) => void): Unsubscribe {
   const auth = getFirebaseAuth();
   if (!auth || !isFirebaseConfiguredForProject()) { onChange(null); return () => undefined; }
   let stop = () => undefined as void;
+  let generation = 0;
   const unsubscribe = onAuthStateChanged(auth, (user) => {
     stop();
+    generation += 1;
+    const epoch = generation;
     onChange(null);
     if (!user) return;
-    const callable = createCallableFunction<{ jobId: string; readerEncoding: string }>('readTrackingStorageV1');
+    const callable = createCallableFunction<{ jobId: string; readerEncoding: string; documents: Array<'current' | 'discovery'>;
+      since?: { current?: string; discovery?: string } }>('readTrackingStorageV1');
     if (!callable) { onError?.(new Error('Tracking reader unavailable')); return; }
-    stop = pollTrackingReader(async () => (await callable({ jobId, readerEncoding: TRACKING_STORAGE_ENCODING })).data,
-      onChange, onError);
-  }, (error) => { stop(); onChange(null); onError?.(error); });
-  return () => { unsubscribe(); stop(); };
+    stop = subscribeTrackingSlot({ key: `${user.uid}\n${jobId}`, jobId, slot,
+      read: async (request) => (await callable(request)).data,
+      onChange: (doc) => { if (generation === epoch) onChange(doc); },
+      onError: (error) => { if (generation === epoch) onError?.(error); } });
+  }, (error) => { stop(); generation += 1; onChange(null); onError?.(error); });
+  return () => { generation += 1; unsubscribe(); stop(); };
 }
 
 /** Live discovery sightings (4.1): playable before the full analysis has a report. */
 export function subscribeTrackingDiscovery(jobId: string, onChange: (doc: TrackingDiscoveryDoc | null) => void,
   onError?: (e: Error) => void): Unsubscribe {
-  return subscribeCompatibleTracking((value) => onChange(value?.discovery as unknown as TrackingDiscoveryDoc | null ?? null), jobId, onError);
+  return subscribeCompatibleTracking('discovery', jobId, (doc) => onChange(doc as unknown as TrackingDiscoveryDoc | null), onError);
 }
 
 /** Live progress facts of the progressive analysis (null when none was started). */
@@ -55,23 +60,26 @@ export async function startPlayerAnalysis(jobId: string): Promise<PlayerAnalysis
   const callable = createCallableFunction<{ jobId: string }>('startPlayerAnalysis');
   if (!callable) throw new Error('Cloud Functions unavailable.');
   const result = await callable({ jobId });
+  resumeTrackingPolls(jobId);
   return result.data as PlayerAnalysisStart;
 }
 
 export function subscribeTracking(jobId: string, onChange: (doc: TrackingDoc | null) => void, onError?: (e: Error) => void): Unsubscribe {
-  return subscribeCompatibleTracking((value) => onChange(value?.current as unknown as TrackingDoc | null ?? null), jobId, onError);
+  return subscribeCompatibleTracking('current', jobId, (doc) => onChange(doc as unknown as TrackingDoc | null), onError);
 }
 
 export async function answerTrackingQuestion(jobId: string, questionId: string, answer: TrackingAnswer): Promise<void> {
   const callable = createCallableFunction<{ jobId: string; questionId: string; answer: TrackingAnswer; operationId: string }>('answerTrackingQuestion');
   if (!callable) throw new Error('Cloud Functions unavailable.');
   await callable({ jobId, questionId, answer, operationId: createSecureId('op', 16) });
+  resumeTrackingPolls(jobId);
 }
 
 export async function undoTrackingAnswer(jobId: string): Promise<void> {
   const callable = createCallableFunction<{ jobId: string }>('undoTrackingAnswer');
   if (!callable) throw new Error('Cloud Functions unavailable.');
   await callable({ jobId });
+  resumeTrackingPolls(jobId);
 }
 
 export type VideoSourceInspection = {

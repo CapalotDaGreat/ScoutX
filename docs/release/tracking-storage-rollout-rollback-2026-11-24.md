@@ -112,8 +112,9 @@ npm run test:b26:integration
 The recorded codec validation was 71 relevant unit tests and 18 Firestore-emulator cases, plus typechecks, build
 and targeted lint. Reader-enforcement validation on this source change reran typecheck, the functions build, the
 unit command above (76 tests), targeted lint, and the emulator suite (19 tests, standard edition, including
-negotiated-read denial). The emulator runner uses loopback Firestore and `demo-scoutx`, injected clocks, synthetic
-worker responses and exact generated test ids. It proves local database behavior, not live delivery, capacity,
+negotiated-read denial). The read-only shared-poll change reran typecheck, the functions build, lint, the full
+unit suite (906 tests) and the same 19 emulator tests. The emulator runner uses loopback Firestore and
+`demo-scoutx`, injected clocks, synthetic worker responses and exact generated test ids. It proves local database behavior, not live delivery, capacity,
 identity or client rollout. These checks do not rerun the match benchmark.
 
 Only after separate authorization, validate on isolated synthetic canary documents without real match inference.
@@ -205,11 +206,13 @@ current and discovery data so a missing or unknown marker cannot become a compat
 
 `readTrackingStorageV1` is the only app read path for those two documents. It requires authentication, the exact
 `readerEncoding: "pitchproof.tracking.tuples.v1"` and a validated job id; unknown request fields are rejected.
-Its read transaction checks the current owner and obtains both documents consistently. The response carries the
-negotiated encoding and decoded tuple documents, or null for missing documents. Unknown/malformed storage fails
-the whole response without returning partial data. Requests from another owner or for a deleted/missing job are
-refused. The callable uses normal App Check/CORS defaults, a 30-second function limit, five-instance cap and a
-per-user limit of 1,200 requests/hour. These are source defaults, not deployed resource/cost measurements.
+The caller names `documents` (`current`, `discovery`, or both when omitted). A read-only transaction checks the
+current owner and reads only those documents, so a poll does not lock worker writes. When `since` carries that
+document's ISO `updatedAt`, the response sets `unchanged` and omits the body. Otherwise it returns the negotiated
+encoding and the decoded document, or null when the document is missing. Unknown/malformed storage fails the whole
+response without returning partial data. Requests from another owner or for a deleted/missing job are refused.
+The callable uses normal App Check/CORS defaults, a 30-second function limit, five-instance cap and a per-user
+limit of 1,200 requests/hour. These are source defaults, not deployed resource/cost measurements.
 
 Negotiation is **a request protocol contract, not cryptographic proof of an installed binary or decoder**. A client
 that explicitly implements/emulates this request may obtain its own data after ownership checks. It grants no
@@ -218,15 +221,17 @@ Firestore listener. Old binaries that only use the old direct path cannot receiv
 after their owner's other device negotiated v1. Do not describe a self-reported app version or protocol field as
 build attestation. If verified build admission is required, that is a separate reviewed control.
 
-The app uses auth-scoped polling, not Firestore snapshots, for these reports/sightings. Each subscriber requests
-both documents immediately, then waits 15 seconds after completion before the next read; there is no overlapping
-request within a subscription. Errors clear the value, surface through the error callback and back off to at most
-five minutes; a successful response resets the interval. Unsubscribe and auth changes discard in-flight results
-and cancel timers. No raw Firestore fallback or persistent tracking cache is added. Report and discovery
-subscriptions are independent: two mounted listeners can make about 480 calls/hour for one job, plus startup,
-reconnects and other devices, against the same user quota. Evaluate that callable/Firestore read-write cost and
-15-second freshness before rollout; progress remains on its direct Firestore listener. This task does not enable
-billing or authorize live polling. Offline failures are unavailable/error states, not invented cached results.
+The app uses auth-scoped polling, not Firestore snapshots, for these reports/sightings. Listeners for one signed-in
+user and job share one loop. The loop asks only for the mounted documents, waits 15 seconds after a success, and
+sends the last `updatedAt` so an unchanged document is not downloaded again. There is no overlapping request in
+that loop. A full, not-stale report with no pending reason and no scheduled or running follow-up stops the loop.
+Answering, undoing, or starting analysis resumes it until `updatedAt` changes, so a replacement is not missed.
+A discovery-only screen has no report finality signal and keeps polling until it unmounts. Network, rate-limit,
+and storage errors keep the last good result and back off to at most five minutes. Unauthenticated and
+permission-denied responses clear it. Unsubscribe and auth changes discard in-flight results and cancel timers.
+No raw Firestore fallback or persistent disk cache is added. Two devices still share the 1,200-request hourly
+quota. Evaluate that callable cost and 15-second freshness before rollout; progress remains on its direct
+Firestore listener. This task does not enable billing or authorize live polling.
 
 Rules cannot revoke bytes already cached by a previously deployed reader. Before expanding an environment that
 already exposed v1 documents, inventory old cached/offline sessions and apply the separately approved client/cache
@@ -245,6 +250,7 @@ Scheduler/Tasks recovery, capacity and B-09 identity gates remain separate.
 
 Regression evidence includes protocol opt-in on every read, cross-owner/unauthenticated rejection, missing and
 future encodings, direct/list denial, same-uid old-device denial after a successful opt-in, legacy/null responses,
-client response validation, in-flight cancellation and the existing publication/takeover/round-trip cases. Local
-unit/emulator evidence does not establish deployed rules, binary attestation or live capacity. All operational
-execution remains separately authorized; billing stays unlinked during source preparation.
+read-only selective snapshots, unchanged responses, one shared poller, final-report stop/resume, retained results
+after transport errors, client response validation, in-flight cancellation and the existing publication/takeover/round-trip
+cases. Local unit/emulator evidence does not establish deployed rules, binary attestation or live capacity. All
+operational execution remains separately authorized; billing stays unlinked during source preparation.

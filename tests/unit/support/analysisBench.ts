@@ -59,11 +59,13 @@ function deepMerge(a: Doc, b: Doc): Doc {
 }
 
 export type DbCounters = { reads: number; writes: number; publishes: number };
+export type TransactionOptions = { readOnly?: boolean };
 
 /** In-memory Firestore with Firestore's deep-merge semantics, counting reads, writes and report publishes. */
 export function fakeDb(seed: Record<string, Doc>) {
   const data = new Map<string, Doc>(Object.entries(structuredClone(seed)));
   const counters: DbCounters = { reads: 0, writes: 0, publishes: 0 };
+  const transactionOptions: Array<TransactionOptions | undefined> = [];
   const write = (path: string, value: Doc, opts?: { merge?: boolean }) => {
     counters.writes += 1;
     if (path.endsWith('/tracking/current')) counters.publishes += 1;
@@ -82,13 +84,16 @@ export function fakeDb(seed: Record<string, Doc>) {
   const collectionRef = (path: string) => ({ doc: (id: string) => docRef(`${path}/${id}`) });
   const db = {
     collection: collectionRef,
-    runTransaction: async <T>(fn: (tx: unknown) => Promise<T>) => fn({
-      get: async (ref: { path: string }) => snap(ref.path),
-      set: (ref: { path: string }, value: Doc, opts?: { merge?: boolean }) => write(ref.path, value, opts),
-      delete: (ref: { path: string }) => { counters.writes += 1; data.delete(ref.path); },
-    }),
+    runTransaction: async <T>(fn: (tx: unknown) => Promise<T>, options?: TransactionOptions) => {
+      transactionOptions.push(options);
+      return fn({
+        get: async (ref: { path: string }) => snap(ref.path),
+        set: (ref: { path: string }, value: Doc, opts?: { merge?: boolean }) => write(ref.path, value, opts),
+        delete: (ref: { path: string }) => { counters.writes += 1; data.delete(ref.path); },
+      });
+    },
   };
-  return { db: db as unknown as Firestore, data, counters };
+  return { db: db as unknown as Firestore, data, counters, transactionOptions };
 }
 
 export type Meter = {

@@ -8,7 +8,7 @@ export function useTrackingDiscovery(jobId: string | null): TrackingDiscoveryDoc
   const [doc, setDoc] = useState<TrackingDiscoveryDoc | null>(null);
   useEffect(() => {
     if (!jobId) return undefined;
-    return subscribeTrackingDiscovery(jobId, setDoc, () => setDoc(null));
+    return subscribeTrackingDiscovery(jobId, setDoc);
   }, [jobId]);
   return doc;
 }

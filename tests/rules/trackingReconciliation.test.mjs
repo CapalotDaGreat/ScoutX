@@ -379,6 +379,14 @@ test('v1 readers must negotiate the callable protocol; direct owner/old-device a
   // A successful opt-in does not authorize another same-uid session's legacy read path.
   assert.equal(await getDocument('b26-emulator-owner', `matchAnalysisJobs/${jobId}/tracking/current`), 403);
   assert.equal(await getDocument('b26-emulator-owner', `matchAnalysisJobs/${jobId}/tracking/progress`), 200);
+  const stamp = '2026-11-24T12:00:00.000Z';
+  await base.doc('current').set(encodeTrackingStorage({ report, version: 2, updatedAt: stamp }));
+  const selected = await readCompatibleTracking(db, 'b26-emulator-owner', { ...request, documents: ['current'] });
+  assert.equal(Object.hasOwn(selected, 'discovery'), false);
+  assert.equal(selected.current.updatedAt, stamp);
+  const same = await readCompatibleTracking(db, 'b26-emulator-owner', { ...request, documents: ['current'], since: { current: stamp } });
+  assert.equal(Object.hasOwn(same, 'current'), false);
+  assert.deepEqual(same.unchanged, { current: true });
   await base.doc('current').set({ report: null, version: 0 });
   assert.equal((await readCompatibleTracking(db, 'b26-emulator-owner', request)).current.report, null);
   assert.equal(await getDocument('b26-emulator-owner', `matchAnalysisJobs/${jobId}/tracking/current`), 403, 'no unmarked-data bypass');
