@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readTrackingStorageV1 = void 0;
+exports.trackingUpdateToken = trackingUpdateToken;
 exports.trackingReaderRequest = trackingReaderRequest;
 exports.readCompatibleTracking = readCompatibleTracking;
 const firestore_1 = require("firebase-admin/firestore");
@@ -11,7 +12,14 @@ const trackingStorage_1 = require("./trackingStorage");
 const frameAnalysis_1 = require("./frameAnalysis");
 const trackingV3_1 = require("./trackingV3");
 const SLOTS = ['current', 'discovery'];
-const UPDATED_AT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+/** Firestore updateTime, seconds plus zero-padded nanoseconds. Not a millisecond field. */
+const UPDATE_TOKEN = /^\d{1,16}\.\d{9}$/;
+function trackingUpdateToken(time) {
+    if (!time || !Number.isSafeInteger(time.seconds) || time.seconds < 0
+        || !Number.isSafeInteger(time.nanoseconds) || time.nanoseconds < 0 || time.nanoseconds > 999_999_999)
+        return null;
+    return `${time.seconds}.${String(time.nanoseconds).padStart(9, '0')}`;
+}
 function invalid() {
     throw new https_1.HttpsError('invalid-argument', 'Invalid tracking read request.');
 }
@@ -38,7 +46,7 @@ function trackingReaderRequest(input) {
         for (const slot of SLOTS) {
             if (source[slot] === undefined)
                 continue;
-            if (!documents.includes(slot) || typeof source[slot] !== 'string' || !UPDATED_AT.test(source[slot]))
+            if (!documents.includes(slot) || typeof source[slot] !== 'string' || !UPDATE_TOKEN.test(source[slot]))
                 invalid();
             since[slot] = source[slot];
         }
@@ -48,7 +56,7 @@ function trackingReaderRequest(input) {
 /**
  * Owner-checked snapshot of the requested tracking documents.
  * Read-only so a poll does not lock the documents the worker writes.
- * A matching updatedAt returns no document body.
+ * A matching Firestore updateTime returns no document body.
  */
 async function readCompatibleTracking(db, uid, input) {
     if (!uid)
@@ -61,26 +69,31 @@ async function readCompatibleTracking(db, uid, input) {
             throw new https_1.HttpsError('permission-denied', 'Analysis unavailable.');
         const out = { readerEncoding: trackingStorage_1.TRACKING_STORAGE_ENCODING };
         const unchanged = {};
+        const updateTime = {};
         for (const slot of documents) {
             const snap = await tx.get(job.collection(trackingV3_1.TRACKING_COLLECTION).doc(slot));
             if (!snap.exists) {
                 out[slot] = null;
                 continue;
             }
-            const stored = snap.data() ?? {};
-            if (typeof stored.updatedAt === 'string' && since[slot] === stored.updatedAt && UPDATED_AT.test(stored.updatedAt)) {
+            const token = trackingUpdateToken(snap.updateTime);
+            if (token && since[slot] === token) {
                 unchanged[slot] = true;
                 continue;
             }
             try {
-                out[slot] = (0, trackingStorage_1.decodeTrackingStorage)(stored);
+                out[slot] = (0, trackingStorage_1.decodeTrackingStorage)(snap.data());
             }
             catch {
                 throw new https_1.HttpsError('failed-precondition', 'Tracking storage cannot be read.', { reason: 'tracking_storage_invalid' });
             }
+            if (token)
+                updateTime[slot] = token;
         }
         if (unchanged.current || unchanged.discovery)
             out.unchanged = unchanged;
+        if (updateTime.current || updateTime.discovery)
+            out.updateTime = updateTime;
         return out;
     }, { readOnly: true });
 }

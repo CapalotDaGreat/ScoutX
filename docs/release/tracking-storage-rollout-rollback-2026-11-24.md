@@ -113,7 +113,9 @@ The recorded codec validation was 71 relevant unit tests and 18 Firestore-emulat
 and targeted lint. Reader-enforcement validation on this source change reran typecheck, the functions build, the
 unit command above (76 tests), targeted lint, and the emulator suite (19 tests, standard edition, including
 negotiated-read denial). The read-only shared-poll change reran typecheck, the functions build, lint, the full
-unit suite (906 tests) and the same 19 emulator tests. The emulator runner uses loopback Firestore and
+unit suite (908 tests) and the same 19 emulator tests. Commit-time comparison now uses Firestore `updateTime` to the
+nanosecond, final reports keep a three-minute poll, and one test checks every current and discovery writer moves
+`updatedAt`. The emulator runner uses loopback Firestore and
 `demo-scoutx`, injected clocks, synthetic worker responses and exact generated test ids. It proves local database behavior, not live delivery, capacity,
 identity or client rollout. These checks do not rerun the match benchmark.
 
@@ -207,9 +209,12 @@ current and discovery data so a missing or unknown marker cannot become a compat
 `readTrackingStorageV1` is the only app read path for those two documents. It requires authentication, the exact
 `readerEncoding: "pitchproof.tracking.tuples.v1"` and a validated job id; unknown request fields are rejected.
 The caller names `documents` (`current`, `discovery`, or both when omitted). A read-only transaction checks the
-current owner and reads only those documents, so a poll does not lock worker writes. When `since` carries that
-document's ISO `updatedAt`, the response sets `unchanged` and omits the body. Otherwise it returns the negotiated
-encoding and the decoded document, or null when the document is missing. Unknown/malformed storage fails the whole
+current owner and reads only those documents, so a poll does not lock worker writes. `since` carries that
+document's Firestore `updateTime` as `seconds` plus nine-digit nanoseconds (`1700000000.000000001`). A matching
+commit time sets `unchanged` and omits the body. A different commit returns the negotiated encoding, the decoded
+document, and the new `updateTime` token, or null when the document is missing. The comparison uses the commit
+time, not the millisecond `updatedAt` field, so two writes in the same millisecond both remain visible. Every
+writer of these two documents also sets top-level `updatedAt`. Unknown/malformed storage fails the whole
 response without returning partial data. Requests from another owner or for a deleted/missing job are refused.
 The callable uses normal App Check/CORS defaults, a 30-second function limit, five-instance cap and a per-user
 limit of 1,200 requests/hour. These are source defaults, not deployed resource/cost measurements.
@@ -223,15 +228,18 @@ build attestation. If verified build admission is required, that is a separate r
 
 The app uses auth-scoped polling, not Firestore snapshots, for these reports/sightings. Listeners for one signed-in
 user and job share one loop. The loop asks only for the mounted documents, waits 15 seconds after a success, and
-sends the last `updatedAt` so an unchanged document is not downloaded again. There is no overlapping request in
-that loop. A full, not-stale report with no pending reason and no scheduled or running follow-up stops the loop.
-Answering, undoing, or starting analysis resumes it until `updatedAt` changes, so a replacement is not missed.
-A discovery-only screen has no report finality signal and keeps polling until it unmounts. Network, rate-limit,
-and storage errors keep the last good result and back off to at most five minutes. Unauthenticated and
-permission-denied responses clear it. Unsubscribe and auth changes discard in-flight results and cancel timers.
-No raw Firestore fallback or persistent disk cache is added. Two devices still share the 1,200-request hourly
-quota. Evaluate that callable cost and 15-second freshness before rollout; progress remains on its direct
-Firestore listener. This task does not enable billing or authorize live polling.
+sends the last `updateTime` token so an unchanged document is not downloaded again. There is no overlapping
+request in that loop. A full, not-stale report with no pending reason and no scheduled or running follow-up
+slows that loop to three minutes, so a worker refresh, a rerun, a deletion, or an answer on another device still
+appears while the screen stays open. Answering, undoing, or starting analysis on this device asks again
+immediately and keeps the 15-second pace until the commit time changes. A discovery-only screen has no report
+finality signal and keeps the 15-second pace until it unmounts. The loop stops when its last screen unmounts,
+starts a new session if that job is opened again, and is keyed by the signed-in account so a switch cannot reuse
+the previous loop. Network, rate-limit, and storage errors keep the last good result and back off to at most
+five minutes. Unauthenticated and permission-denied responses clear it. Unsubscribe and auth changes discard
+in-flight results and cancel timers. No raw Firestore fallback or persistent disk cache is added. Two devices
+still share the 1,200-request hourly quota. Evaluate that callable cost and 15-second freshness before rollout;
+progress remains on its direct Firestore listener. This task does not enable billing or authorize live polling.
 
 Rules cannot revoke bytes already cached by a previously deployed reader. Before expanding an environment that
 already exposed v1 documents, inventory old cached/offline sessions and apply the separately approved client/cache

@@ -2,7 +2,9 @@
 import { TRACKING_STORAGE_ENCODING, decodeTrackingStorage } from './trackingStorage';
 
 export const TRACKING_READ_INTERVAL_MS = 15000;
-const UPDATED_AT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+/** A final report can still change on another device or in the worker. Check it, but not every 15 seconds. */
+export const TRACKING_FINAL_INTERVAL_MS = 180_000;
+const UPDATE_TOKEN = /^\d{1,16}\.\d{9}$/;
 const ACTIVE_FOLLOW_UP = new Set(['scheduled', 'running']);
 export type TrackingSlot = 'current' | 'discovery';
 export type TrackingPollRequest = {
@@ -16,7 +18,7 @@ type Timer = ReturnType<typeof setTimeout>;
 type Timers = { schedule: (fn: () => void, delay: number) => Timer; cancel: (id: Timer) => void };
 const defaultTimers: Timers = { schedule: (fn, delay) => setTimeout(fn, delay), cancel: (id) => clearTimeout(id) };
 
-/** A full report with no pending publish and no queued follow-up will not change until the user acts. */
+/** A full report with no pending publish and no queued follow-up is quiet, not frozen. */
 export function trackingReportIsFinal(current: Doc | null): boolean {
   if (!current || current.scope !== 'full' || current.stale !== false || current.pendingReason) return false;
   const follow = current.followUp;
@@ -33,17 +35,17 @@ export function trackingReadClearsValue(error: unknown): boolean {
   return code === 'unauthenticated' || code === 'permission-denied';
 }
 
-function stampOf(doc: Doc | null): string | undefined {
-  const value = doc?.updatedAt;
-  return typeof value === 'string' && UPDATED_AT.test(value) ? value : undefined;
+function tokenOf(value: unknown): string | undefined {
+  return typeof value === 'string' && UPDATE_TOKEN.test(value) ? value : undefined;
 }
 
 type Sub = { slot: TrackingSlot; onChange: (doc: Doc | null) => void; onError?: (error: Error) => void };
 type Session = {
   key: string; jobId: string; read: (request: TrackingPollRequest) => Promise<unknown>; timers: Timers; subs: Set<Sub>;
   cache: { current: Doc | null; discovery: Doc | null }; seen: { current: boolean; discovery: boolean };
+  tokens: { current?: string; discovery?: string };
   failures: number; generation: number; inflight: boolean; inflightDocuments: TrackingSlot[]; kickQueued: boolean;
-  rerun: boolean; stopped: boolean; ignoreFinalUntilChange: boolean; finalStamp: string; timer?: Timer;
+  rerun: boolean; pace: 'live' | 'final'; ignoreFinalUntilChange: boolean; finalToken: string; timer?: Timer;
 };
 const sessions = new Map<string, Session>();
 
@@ -59,11 +61,14 @@ function notify(session: Session, slot: TrackingSlot): void {
 }
 
 function applyResponse(session: Session, raw: unknown, documents: TrackingSlot[]): void {
-  const body = raw as { readerEncoding?: unknown; unchanged?: Partial<Record<TrackingSlot, unknown>> } | null;
+  const body = raw as { readerEncoding?: unknown; unchanged?: Partial<Record<TrackingSlot, unknown>>;
+    updateTime?: Partial<Record<TrackingSlot, unknown>> } | null;
   if (!body || body.readerEncoding !== TRACKING_STORAGE_ENCODING) throw new Error('Compatible tracking reader response required');
   const unchanged = body.unchanged ?? {};
+  const updateTime = body.updateTime ?? {};
   const cache = { ...session.cache };
   const seen = { ...session.seen };
+  const tokens = { ...session.tokens };
   const delivered: TrackingSlot[] = [];
   for (const slot of documents) {
     if (unchanged[slot] === true) {
@@ -74,30 +79,34 @@ function applyResponse(session: Session, raw: unknown, documents: TrackingSlot[]
     const value = (body as Record<string, unknown>)[slot];
     cache[slot] = value === null ? null : decodeTrackingStorage(value);
     seen[slot] = true;
+    const token = tokenOf(updateTime[slot]);
+    if (token) tokens[slot] = token;
+    else delete tokens[slot];
     delivered.push(slot);
   }
   session.cache = cache;
   session.seen = seen;
+  session.tokens = tokens;
   for (const slot of delivered) notify(session, slot);
-  if (!documents.includes('current') || !session.seen.current) return;
-  const stamp = stampOf(session.cache.current) ?? '';
-  if (session.ignoreFinalUntilChange && (stamp !== session.finalStamp || !trackingReportIsFinal(session.cache.current))) {
+  if (!documents.includes('current') || !session.seen.current) { session.pace = 'live'; return; }
+  const token = session.tokens.current ?? '';
+  if (session.ignoreFinalUntilChange && (token !== session.finalToken || !trackingReportIsFinal(session.cache.current))) {
     session.ignoreFinalUntilChange = false;
   }
   if (!session.ignoreFinalUntilChange && trackingReportIsFinal(session.cache.current)) {
-    session.stopped = true;
-    session.finalStamp = stamp;
-  }
+    session.pace = 'final';
+    session.finalToken = token;
+  } else session.pace = 'live';
 }
 
 async function pollSession(session: Session): Promise<void> {
-  if (session.stopped || session.subs.size === 0) return;
+  if (session.subs.size === 0) return;
   const generation = session.generation;
   const documents = orderedSlots(session);
   const since: NonNullable<TrackingPollRequest['since']> = {};
   for (const slot of documents) {
-    const stamp = stampOf(session.cache[slot]);
-    if (session.seen[slot] && stamp) since[slot] = stamp;
+    const token = session.tokens[slot];
+    if (session.seen[slot] && token) since[slot] = token;
   }
   session.inflight = true;
   session.inflightDocuments = documents;
@@ -115,6 +124,7 @@ async function pollSession(session: Session): Promise<void> {
       for (const slot of documents) {
         session.cache[slot] = null;
         session.seen[slot] = false;
+        delete session.tokens[slot];
         notify(session, slot);
       }
     }
@@ -128,19 +138,19 @@ async function pollSession(session: Session): Promise<void> {
       kick(session);
       return;
     }
-    if (!session.stopped) {
-      const delay = Math.min(300000, TRACKING_READ_INTERVAL_MS * 2 ** session.failures);
-      session.timer = session.timers.schedule(() => { session.timer = undefined; void pollSession(session); }, delay);
-    }
+    const delay = session.failures > 0
+      ? Math.min(300000, TRACKING_READ_INTERVAL_MS * 2 ** session.failures)
+      : session.pace === 'final' ? TRACKING_FINAL_INTERVAL_MS : TRACKING_READ_INTERVAL_MS;
+    session.timer = session.timers.schedule(() => { session.timer = undefined; void pollSession(session); }, delay);
   }
 }
 
 function kick(session: Session): void {
-  if (session.inflight || session.kickQueued || session.stopped || session.subs.size === 0) return;
+  if (session.inflight || session.kickQueued || session.subs.size === 0) return;
   session.kickQueued = true;
   queueMicrotask(() => {
     session.kickQueued = false;
-    if (!session.inflight && !session.stopped && session.subs.size > 0 && session.timer === undefined) void pollSession(session);
+    if (!session.inflight && session.subs.size > 0 && session.timer === undefined) void pollSession(session);
   });
 }
 
@@ -160,15 +170,14 @@ export function subscribeTrackingSlot(options: {
   let session = sessions.get(options.key);
   if (!session) {
     session = { key: options.key, jobId: options.jobId, read: options.read, timers: options.timers ?? defaultTimers, subs: new Set(),
-      cache: { current: null, discovery: null }, seen: { current: false, discovery: false }, failures: 0, generation: 0,
-      inflight: false, inflightDocuments: [], kickQueued: false, rerun: false, stopped: false, ignoreFinalUntilChange: false, finalStamp: '' };
+      cache: { current: null, discovery: null }, seen: { current: false, discovery: false }, tokens: {}, failures: 0, generation: 0,
+      inflight: false, inflightDocuments: [], kickQueued: false, rerun: false, pace: 'live', ignoreFinalUntilChange: false, finalToken: '' };
     sessions.set(options.key, session);
   }
   const sub: Sub = { slot: options.slot, onChange: options.onChange, onError: options.onError };
   session.subs.add(sub);
   if (session.seen[options.slot]) options.onChange(session.cache[options.slot]);
   if (!session.seen[options.slot]) {
-    if (session.stopped) session.stopped = false;
     if (session.inflight && !session.inflightDocuments.includes(options.slot)) session.rerun = true;
     if (session.timer !== undefined) { session.timers.cancel(session.timer); session.timer = undefined; }
     kick(session);
@@ -177,12 +186,12 @@ export function subscribeTrackingSlot(options: {
   return () => { active.subs.delete(sub); if (active.subs.size === 0) dispose(active); };
 }
 
-/** Keep watching after a user action. A still-final snapshot must not stop the loop before its replacement arrives. */
+/** Ask again immediately after a user action. A still-final snapshot keeps the slow interval until its update time changes. */
 export function resumeTrackingPolls(jobId: string): void {
   for (const session of sessions.values()) {
     if (session.jobId !== jobId || session.subs.size === 0) continue;
     session.ignoreFinalUntilChange = true;
-    session.stopped = false;
+    session.pace = 'live';
     session.failures = 0;
     if (session.timer !== undefined) { session.timers.cancel(session.timer); session.timer = undefined; }
     if (!session.inflight) kick(session);

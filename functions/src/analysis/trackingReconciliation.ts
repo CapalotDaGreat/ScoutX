@@ -45,7 +45,7 @@ export async function reconcileTrackingAttempt(db: Firestore, id: string, now = 
       if (t.scope === 'refresh') {
         const followUp = current.get('followUp') as OcrFollowUp | undefined;
         if (followUpRunnable(followUp, t.revision, t.round)) {
-          tx.set(base.doc('current'), { followUp: { ...followUp!, status: 'failed', updatedAt } }, { merge: true });
+          tx.set(base.doc('current'), { updatedAt, followUp: { ...followUp!, status: 'failed', updatedAt } }, { merge: true });
           settled = true;
         }
       } else if (t.scope === 'feedback') {

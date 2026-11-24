@@ -1,13 +1,15 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { readCompatibleTracking, trackingReaderRequest } from '../../functions/src/analysis/trackingReader.ts';
+import { readCompatibleTracking, trackingReaderRequest, trackingUpdateToken } from '../../functions/src/analysis/trackingReader.ts';
 import { TRACKING_STORAGE_ENCODING, encodeTrackingStorage } from '../../functions/src/analysis/trackingStorage.ts';
-import { resumeTrackingPolls, subscribeTrackingSlot, trackingReportIsFinal, type TrackingPollRequest } from '../../src/features/match-analysis/services/trackingReader.ts';
+import { TRACKING_FINAL_INTERVAL_MS, TRACKING_READ_INTERVAL_MS, resumeTrackingPolls, subscribeTrackingSlot, trackingReportIsFinal, type TrackingPollRequest } from '../../src/features/match-analysis/services/trackingReader.ts';
 import { fakeDb } from './support/analysisBench.ts';
 
 const request = { jobId: 'reader_job', readerEncoding: TRACKING_STORAGE_ENCODING };
 const stamp = '2026-11-24T12:00:00.000Z';
-const later = '2026-11-24T12:05:00.000Z';
+const currentToken = '1700000000.000000001';
+const discoveryToken = '1700000000.000000002';
+const otherToken = '1700000001.000000000';
 const code = (expected: string) => (error: unknown) => { assert.equal((error as { code: string }).code, expected); return true; };
 const tick = () => new Promise<void>((resolve) => setImmediate(resolve));
 const manualTimers = () => {
@@ -47,16 +49,21 @@ test('request paths and unknown fields cannot escape the owner-scoped pair of do
 test('a read-only snapshot skips unrequested documents and unchanged bodies', async () => {
   const f = fakeDb({ 'matchAnalysisJobs/reader_job': { playerId: 'owner' },
     'matchAnalysisJobs/reader_job/tracking/current': currentDoc,
-    'matchAnalysisJobs/reader_job/tracking/discovery': encodeTrackingStorage({ moments: [], generation: 1, updatedAt: later }) });
+    'matchAnalysisJobs/reader_job/tracking/discovery': encodeTrackingStorage({ moments: [], generation: 1, updatedAt: stamp }) });
   const one = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'] });
   assert.equal(f.counters.reads, 2, 'job owner plus the one requested document');
   assert.equal(Object.hasOwn(one, 'discovery'), false);
-  assert.equal(one.current?.updatedAt, stamp);
-  const same = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'], since: { current: stamp } });
+  assert.equal(one.updateTime?.current, trackingUpdateToken(f.updateTimes.get('matchAnalysisJobs/reader_job/tracking/current')));
+  const same = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'], since: { current: one.updateTime?.current } });
   assert.equal(f.counters.reads, 4);
   assert.equal(Object.hasOwn(same, 'current'), false);
   assert.deepEqual(same.unchanged, { current: true });
-  const changed = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['discovery'], since: { discovery: stamp } });
+  const stored = f.data.get('matchAnalysisJobs/reader_job/tracking/current')!;
+  await f.db.collection('matchAnalysisJobs').doc('reader_job').collection('tracking').doc('current').set({ ...stored, updatedAt: stamp });
+  const moved = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'], since: { current: one.updateTime?.current } });
+  assert.equal(moved.current?.updatedAt, stamp);
+  assert.notEqual(moved.updateTime?.current, one.updateTime?.current, 'same millisecond field still has a new commit time');
+  const changed = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['discovery'], since: { discovery: otherToken } });
   assert.equal(changed.discovery?.generation, 1);
   assert.equal(changed.unchanged, undefined);
 });
@@ -65,9 +72,10 @@ test('future or malformed stored encoding fails without returning a partially de
   const f = fakeDb({ 'matchAnalysisJobs/reader_job': { playerId: 'owner' },
     'matchAnalysisJobs/reader_job/tracking/current': { tupleEncoding: 'future', updatedAt: stamp } });
   await assert.rejects(readCompatibleTracking(f.db, 'owner', request), code('failed-precondition'));
-  const skipped = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'], since: { current: stamp } });
+  const token = trackingUpdateToken(f.updateTimes.get('matchAnalysisJobs/reader_job/tracking/current'));
+  const skipped = await readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'], since: { current: token } });
   assert.equal(Object.hasOwn(skipped, 'current'), false, 'a matching update time is not downloaded or decoded again');
-  await assert.rejects(readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'], since: { current: later } }), code('failed-precondition'));
+  await assert.rejects(readCompatibleTracking(f.db, 'owner', { ...request, documents: ['current'], since: { current: otherToken } }), code('failed-precondition'));
 });
 
 test('final means a full unstale report whose follow-up is not still queued', () => {
@@ -88,9 +96,9 @@ test('one job poller asks only for mounted documents and skips unchanged bodies'
   const currentSeen: unknown[] = [];
   const discoverySeen: unknown[] = [];
   const { scheduled, timers } = manualTimers();
-  let response: unknown = { readerEncoding: TRACKING_STORAGE_ENCODING,
+  let response: unknown = { readerEncoding: TRACKING_STORAGE_ENCODING, updateTime: { current: currentToken, discovery: discoveryToken },
     current: { report: { stateStrip: [[0, 1, 'UNKNOWN']] }, version: 1, scope: 'preliminary', stale: true, updatedAt: stamp },
-    discovery: { moments: [{ indicator: [[1, 2, 3, 4, 5]] }], generation: 1, updatedAt: later } };
+    discovery: { moments: [{ indicator: [[1, 2, 3, 4, 5]] }], generation: 1, updatedAt: stamp } };
   const read = async (input: TrackingPollRequest) => { reads.push(input); return response; };
   const stopCurrent = subscribeTrackingSlot({ key: 'owner\njob', jobId: 'job', slot: 'current', read, onChange: (doc) => currentSeen.push(doc), timers });
   const stopDiscovery = subscribeTrackingSlot({ key: 'owner\njob', jobId: 'job', slot: 'discovery', read, onChange: (doc) => discoverySeen.push(doc), timers });
@@ -103,14 +111,14 @@ test('one job poller asks only for mounted documents and skips unchanged bodies'
   response = { readerEncoding: TRACKING_STORAGE_ENCODING, unchanged: { current: true, discovery: true } };
   assert.equal(scheduled.length, 1);
   scheduled.shift()?.fn(); await tick();
-  assert.deepEqual(reads[1].since, { current: stamp, discovery: later });
+  assert.deepEqual(reads[1].since, { current: currentToken, discovery: discoveryToken });
   assert.equal(currentSeen.length, 1);
   assert.equal(discoverySeen.length, 1);
   stopCurrent();
   assert.equal(scheduled.length, 1);
   scheduled.shift()?.fn(); await tick();
   assert.deepEqual(reads[2].documents, ['discovery']);
-  assert.deepEqual(reads[2].since, { discovery: later });
+  assert.deepEqual(reads[2].since, { discovery: discoveryToken });
   stopDiscovery();
 });
 
@@ -134,21 +142,54 @@ test('network errors keep the last report; permission errors clear it', async ()
   stop();
 });
 
-test('resume keeps polling a final snapshot until its update time changes', async () => {
+test('a final report slows the loop, and resume waits for a new commit time', async () => {
   const seen: unknown[] = [];
   const { scheduled, timers } = manualTimers();
+  let token = currentToken;
   let current: Record<string, unknown> = { version: 1, scope: 'full', stale: false, updatedAt: stamp, report: null };
   const stop = subscribeTrackingSlot({ key: 'resume\njob', jobId: 'job', slot: 'current', timers,
-    read: async () => ({ readerEncoding: TRACKING_STORAGE_ENCODING, current }), onChange: (doc) => seen.push(doc) });
+    read: async () => ({ readerEncoding: TRACKING_STORAGE_ENCODING, current, updateTime: { current: token } }), onChange: (doc) => seen.push(doc) });
   await tick();
-  assert.equal(scheduled.length, 0);
+  assert.equal(scheduled.at(-1)?.delay, TRACKING_FINAL_INTERVAL_MS);
   resumeTrackingPolls('job'); await tick();
-  assert.equal(scheduled.length, 1, 'the same final snapshot does not stop the resumed loop');
-  current = { version: 2, scope: 'full', stale: true, updatedAt: later, report: null };
+  assert.equal(scheduled.at(-1)?.delay, TRACKING_READ_INTERVAL_MS, 'the same commit stays live until it actually changes');
+  token = otherToken;
+  current = { version: 2, scope: 'full', stale: true, updatedAt: stamp, report: null };
   scheduled.shift()?.fn(); await tick();
   assert.equal((seen.at(-1) as { stale: boolean }).stale, true);
+  assert.equal(scheduled.at(-1)?.delay, TRACKING_READ_INTERVAL_MS);
+  stop();
+});
+
+test('the loop ends with its last screen, restarts clean, and does not follow an account switch', async () => {
+  const { scheduled, timers } = manualTimers();
+  const reads: string[] = [];
+  let version = 1;
+  const stop = subscribeTrackingSlot({ key: 'owner\nagain', jobId: 'again', slot: 'current', timers,
+    read: async () => { reads.push('owner'); return { readerEncoding: TRACKING_STORAGE_ENCODING, current: { version, scope: 'preliminary', stale: true, report: null }, updateTime: { current: currentToken } }; },
+    onChange: () => undefined });
+  await tick();
   assert.equal(scheduled.length, 1);
   stop();
+  scheduled.shift()?.fn(); await tick();
+  assert.deepEqual(reads, ['owner'], 'unmount cancels the next read');
+  version = 2;
+  const seen: number[] = [];
+  const again = subscribeTrackingSlot({ key: 'owner\nagain', jobId: 'again', slot: 'current', timers,
+    read: async (input) => { reads.push(input.since ? 'since' : 'fresh'); return { readerEncoding: TRACKING_STORAGE_ENCODING, current: { version, scope: 'preliminary', stale: true, report: null }, updateTime: { current: discoveryToken } }; },
+    onChange: (doc) => seen.push((doc as { version: number }).version) });
+  await tick();
+  assert.deepEqual(reads, ['owner', 'fresh']);
+  assert.deepEqual(seen, [2]);
+  again();
+  const otherSeen: number[] = [];
+  const other = subscribeTrackingSlot({ key: 'other\nagain', jobId: 'again', slot: 'current', timers,
+    read: async () => ({ readerEncoding: TRACKING_STORAGE_ENCODING, current: { version: 9, scope: 'preliminary', stale: true, report: null }, updateTime: { current: otherToken } }),
+    onChange: (doc) => otherSeen.push((doc as { version: number }).version) });
+  await tick();
+  assert.deepEqual(otherSeen, [9]);
+  assert.equal(seen.length, 1, 'the other account does not reuse the previous loop');
+  other();
 });
 
 test('unsubscribe discards an in-flight result and schedules no more reads', async () => {

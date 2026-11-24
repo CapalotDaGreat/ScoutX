@@ -384,9 +384,16 @@ test('v1 readers must negotiate the callable protocol; direct owner/old-device a
   const selected = await readCompatibleTracking(db, 'b26-emulator-owner', { ...request, documents: ['current'] });
   assert.equal(Object.hasOwn(selected, 'discovery'), false);
   assert.equal(selected.current.updatedAt, stamp);
-  const same = await readCompatibleTracking(db, 'b26-emulator-owner', { ...request, documents: ['current'], since: { current: stamp } });
+  const token = selected.updateTime?.current;
+  assert.match(token, /^\d+\.\d{9}$/);
+  const same = await readCompatibleTracking(db, 'b26-emulator-owner', { ...request, documents: ['current'], since: { current: token } });
   assert.equal(Object.hasOwn(same, 'current'), false);
   assert.deepEqual(same.unchanged, { current: true });
+  await base.doc('current').set(encodeTrackingStorage({ report, version: 3, updatedAt: stamp }));
+  const again = await readCompatibleTracking(db, 'b26-emulator-owner', { ...request, documents: ['current'], since: { current: token } });
+  assert.equal(again.current.version, 3);
+  assert.equal(again.current.updatedAt, stamp);
+  assert.notEqual(again.updateTime?.current, token, 'a second commit with the same millisecond field is still visible');
   await base.doc('current').set({ report: null, version: 0 });
   assert.equal((await readCompatibleTracking(db, 'b26-emulator-owner', request)).current.report, null);
   assert.equal(await getDocument('b26-emulator-owner', `matchAnalysisJobs/${jobId}/tracking/current`), 403, 'no unmarked-data bypass');

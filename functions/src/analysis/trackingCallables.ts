@@ -55,12 +55,11 @@ async function ownedJob(tx: Transaction, db: Firestore, jobId: string, uid: stri
  * Stores the change, invalidates the current report (dependent statistics are stale immediately)
  * and schedules a re-resolve. Answers only affect this match; they are not training data.
  */
-async function mutateFeedback(uid: string, jobId: string,
+export async function writeTrackingFeedback(db: Firestore, uid: string, jobId: string,
   change: (fb: TrackingFeedback, cur: CurrentDoc, job: MatchJobDoc) => TrackingFeedback): Promise<{ revision: number; pending: string | null }> {
   if (!JOB_ID.test(jobId)) throw new HttpsError('invalid-argument', 'Invalid analysis.');
-  const db = getFirestore();
   const base = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION);
-  const result = await db.runTransaction(async (tx) => {
+  return db.runTransaction(async (tx) => {
     const job = await ownedJob(tx, db, jobId, uid);
     const curSnap = await tx.get(base.doc('current'));
     const fbSnap = await tx.get(base.doc('feedback'));
@@ -75,6 +74,11 @@ async function mutateFeedback(uid: string, jobId: string,
       updatedAt: new Date().toISOString() }, { merge: true });
     return { revision, pending };
   });
+}
+
+async function mutateFeedback(uid: string, jobId: string,
+  change: (fb: TrackingFeedback, cur: CurrentDoc, job: MatchJobDoc) => TrackingFeedback): Promise<{ revision: number; pending: string | null }> {
+  const result = await writeTrackingFeedback(getFirestore(), uid, jobId, change);
   if (!result.pending) {
     await getFunctions().taskQueue(taskQueueName('resolveTrackingTask'))
       .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: TRACKING_TASK_TIMEOUT_SEC });
@@ -415,7 +419,8 @@ async function refreshClaimed(db: Firestore, jobId: string, feedbackRevision: nu
     const cur = await tx.get(ref);
     const f = (cur.data() as CurrentDoc | undefined)?.followUp ?? null;
     if (!followUpRunnable(f, feedbackRevision, round)) return false;
-    tx.set(ref, { followUp: { ...(f as OcrFollowUp), status: 'running', updatedAt: now().toISOString() } }, { merge: true });
+    const at = now().toISOString();
+    tx.set(ref, { updatedAt: at, followUp: { ...(f as OcrFollowUp), status: 'running', updatedAt: at } }, { merge: true });
     return true;
   });
   if (!claimed) return 'stale';
@@ -433,7 +438,8 @@ async function refreshClaimed(db: Firestore, jobId: string, feedbackRevision: nu
       if (opts.lease && !await trackingLeaseCurrent(tx, db, jobId, opts.lease, now(), true)) return;
       const f = (cur.data() as CurrentDoc | undefined)?.followUp ?? null;
       if (f && f.revision === feedbackRevision && f.round === round && ['scheduled', 'running'].includes(f.status)) {
-        tx.set(ref, { followUp: { ...f, status, updatedAt: now().toISOString() } }, { merge: true });
+        const at = now().toISOString();
+        tx.set(ref, { updatedAt: at, followUp: { ...f, status, updatedAt: at } }, { merge: true });
       }
     });
   }

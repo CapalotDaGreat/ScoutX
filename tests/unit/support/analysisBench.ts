@@ -66,14 +66,26 @@ export function fakeDb(seed: Record<string, Doc>) {
   const data = new Map<string, Doc>(Object.entries(structuredClone(seed)));
   const counters: DbCounters = { reads: 0, writes: 0, publishes: 0 };
   const transactionOptions: Array<TransactionOptions | undefined> = [];
+  const updateTimes = new Map<string, { seconds: number; nanoseconds: number }>();
+  const touch = (path: string) => {
+    const prev = updateTimes.get(path);
+    if (!prev) updateTimes.set(path, { seconds: 1_700_000_000, nanoseconds: 1 });
+    else updateTimes.set(path, prev.nanoseconds >= 999_999_999
+      ? { seconds: prev.seconds + 1, nanoseconds: 0 }
+      : { seconds: prev.seconds, nanoseconds: prev.nanoseconds + 1 });
+  };
   const write = (path: string, value: Doc, opts?: { merge?: boolean }) => {
     counters.writes += 1;
     if (path.endsWith('/tracking/current')) counters.publishes += 1;
     data.set(path, opts?.merge ? deepMerge(data.get(path) ?? {}, structuredClone(value)) : structuredClone(value));
+    touch(path);
   };
+  for (const path of data.keys()) touch(path);
   const snap = (path: string) => {
     counters.reads += 1;
-    return { exists: data.has(path), data: () => structuredClone(data.get(path)), get: (k: string) => data.get(path)?.[k] };
+    const time = updateTimes.get(path);
+    return { exists: data.has(path), data: () => structuredClone(data.get(path)), get: (k: string) => data.get(path)?.[k],
+      updateTime: data.has(path) && time ? { seconds: time.seconds, nanoseconds: time.nanoseconds } : undefined };
   };
   const docRef = (path: string): unknown => ({
     path,
@@ -89,11 +101,11 @@ export function fakeDb(seed: Record<string, Doc>) {
       return fn({
         get: async (ref: { path: string }) => snap(ref.path),
         set: (ref: { path: string }, value: Doc, opts?: { merge?: boolean }) => write(ref.path, value, opts),
-        delete: (ref: { path: string }) => { counters.writes += 1; data.delete(ref.path); },
+        delete: (ref: { path: string }) => { counters.writes += 1; data.delete(ref.path); updateTimes.delete(ref.path); },
       });
     },
   };
-  return { db: db as unknown as Firestore, data, counters, transactionOptions };
+  return { db: db as unknown as Firestore, data, counters, transactionOptions, updateTimes };
 }
 
 export type Meter = {

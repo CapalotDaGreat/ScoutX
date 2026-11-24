@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.refreshTrackingOcrTask = exports.resolveTrackingTask = exports.cloudTasksFollowUpEnqueue = exports.storageImageStore = exports.setTrackingPeriods = exports.undoTrackingAnswer = exports.answerTrackingQuestion = void 0;
+exports.writeTrackingFeedback = writeTrackingFeedback;
 exports.httpTrackingClient = httpTrackingClient;
 exports.processResolveTask = processResolveTask;
 exports.runResolveTaskAttempt = runResolveTaskAttempt;
@@ -46,12 +47,11 @@ async function ownedJob(tx, db, jobId, uid) {
  * Stores the change, invalidates the current report (dependent statistics are stale immediately)
  * and schedules a re-resolve. Answers only affect this match; they are not training data.
  */
-async function mutateFeedback(uid, jobId, change) {
+async function writeTrackingFeedback(db, uid, jobId, change) {
     if (!JOB_ID.test(jobId))
         throw new https_1.HttpsError('invalid-argument', 'Invalid analysis.');
-    const db = (0, firestore_1.getFirestore)();
     const base = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION);
-    const result = await db.runTransaction(async (tx) => {
+    return db.runTransaction(async (tx) => {
         const job = await ownedJob(tx, db, jobId, uid);
         const curSnap = await tx.get(base.doc('current'));
         const fbSnap = await tx.get(base.doc('feedback'));
@@ -67,6 +67,9 @@ async function mutateFeedback(uid, jobId, change) {
             updatedAt: new Date().toISOString() }, { merge: true });
         return { revision, pending };
     });
+}
+async function mutateFeedback(uid, jobId, change) {
+    const result = await writeTrackingFeedback((0, firestore_1.getFirestore)(), uid, jobId, change);
     if (!result.pending) {
         await (0, functions_1.getFunctions)().taskQueue((0, region_1.taskQueueName)('resolveTrackingTask'))
             .enqueue({ jobId, feedbackRevision: result.revision }, { dispatchDeadlineSeconds: trackingDeadlines_1.TRACKING_TASK_TIMEOUT_SEC });
@@ -395,7 +398,8 @@ async function refreshClaimed(db, jobId, feedbackRevision, round, client, env, s
         const f = cur.data()?.followUp ?? null;
         if (!(0, trackingFollowUp_1.followUpRunnable)(f, feedbackRevision, round))
             return false;
-        tx.set(ref, { followUp: { ...f, status: 'running', updatedAt: now().toISOString() } }, { merge: true });
+        const at = now().toISOString();
+        tx.set(ref, { updatedAt: at, followUp: { ...f, status: 'running', updatedAt: at } }, { merge: true });
         return true;
     });
     if (!claimed)
@@ -415,7 +419,8 @@ async function refreshClaimed(db, jobId, feedbackRevision, round, client, env, s
                 return;
             const f = cur.data()?.followUp ?? null;
             if (f && f.revision === feedbackRevision && f.round === round && ['scheduled', 'running'].includes(f.status)) {
-                tx.set(ref, { followUp: { ...f, status, updatedAt: now().toISOString() } }, { merge: true });
+                const at = now().toISOString();
+                tx.set(ref, { updatedAt: at, followUp: { ...f, status, updatedAt: at } }, { merge: true });
             }
         });
     }

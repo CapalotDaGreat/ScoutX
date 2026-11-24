@@ -51,7 +51,7 @@ async function reconcileTrackingAttempt(db, id, now = new Date()) {
             if (t.scope === 'refresh') {
                 const followUp = current.get('followUp');
                 if ((0, trackingFollowUp_1.followUpRunnable)(followUp, t.revision, t.round)) {
-                    tx.set(base.doc('current'), { followUp: { ...followUp, status: 'failed', updatedAt } }, { merge: true });
+                    tx.set(base.doc('current'), { updatedAt, followUp: { ...followUp, status: 'failed', updatedAt } }, { merge: true });
                     settled = true;
                 }
             }
