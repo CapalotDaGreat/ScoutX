@@ -45,10 +45,11 @@ wait, HTTP 429/503 responses and retry exhaustion in this check.
 3. Production `APPROVED_CV_WORKER` is null. Emulator approval seams are for local tests only. Do not set emulator
    environment variables on a cloud service or fabricate a production approval to get through the gate. A live
    validation path must be independently authorized and isolated from production users before deployment.
-4. Specify recovery when the last task attempt is killed before it can write terminal state. Lease expiry does
-   not schedule another delivery or itself mark an analysis interrupted. No completed live reconciliation proof
-   is recorded on `main`; design/review the operator or reconciler procedure and test it rather than hiding a
-   stuck `running` record with a manual edit and calling the retry successful.
+4. Final-attempt reconciliation is implemented locally (not deployed): an atomic server-only ticket accompanies
+   the final resolve/OCR lease claim, and a bounded scheduled sweep settles abandoned state after expiry. See
+   [reconciliation contract](b26-final-attempt-reconciliation-2026-11-24.md). Synthetic tests cover owner/lifecycle
+   fencing, but actual scheduler delivery, transaction races, outage/backlog recovery and killed-process behavior
+   still need separately authorized integration validation. Lease expiry alone does not run the sweep.
 
 ## 2. Evidence bundle and execution order
 

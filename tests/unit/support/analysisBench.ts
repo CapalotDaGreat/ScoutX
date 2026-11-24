@@ -85,6 +85,7 @@ export function fakeDb(seed: Record<string, Doc>) {
     runTransaction: async <T>(fn: (tx: unknown) => Promise<T>) => fn({
       get: async (ref: { path: string }) => snap(ref.path),
       set: (ref: { path: string }, value: Doc, opts?: { merge?: boolean }) => write(ref.path, value, opts),
+      delete: (ref: { path: string }) => { counters.writes += 1; data.delete(ref.path); },
     }),
   };
   return { db: db as unknown as Firestore, data, counters };

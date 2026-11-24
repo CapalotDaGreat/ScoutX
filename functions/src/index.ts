@@ -89,3 +89,4 @@ export { answerTrackingQuestion, undoTrackingAnswer, setTrackingPeriods, resolve
 export { startPlayerAnalysis, extractTrackingSegmentTask, discoverTrackingTask } from './analysis/trackingOrchestrator';
 export { explainTrackingMoment } from './analysis/trackingReasoning';
 export { startLinkImport, processLinkImportTask } from './uploads/linkImportJobs';
+export { reconcileTrackingAttempts } from './analysis/trackingReconciliation';

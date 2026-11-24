@@ -1,3 +1,4 @@
+import { reconcileTrackingAttempt } from '../../functions/src/analysis/trackingReconciliation.ts';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -215,3 +216,21 @@ test('a stale OCR round cannot steal or release a newer round\'s lease', async (
   await releaseTrackingTask(f.db, old);
   assert.equal(f.data.get(`${BASE}/lease_refresh`)?.token, next.token);
 });
+
+
+test('unexpected final resolve/OCR exceptions keep durable reconciliation instead of losing terminal settlement', () => approved(async () => {
+  for (const refresh of [false, true]) {
+    const f = setup(refresh);
+    const crash = async () => { throw new Error('unexpected publication/worker failure'); };
+    const work = refresh
+      ? processOcrFollowUpTask(f.db, JOB, 0, 1, crash, ENV, store, { ...f.opts, attempt: OCR_REFRESH_MAX_ATTEMPTS - 1 })
+      : runResolveTaskAttempt(f.db, JOB, 0, crash, ENV, store, { ...f.opts, attempt: RESOLVE_MAX_ATTEMPTS - 1 });
+    await assert.rejects(work, /unexpected/);
+    const token = f.data.get(`${BASE}/lease_${refresh ? 'refresh' : 'full'}`)?.token;
+    assert.equal(typeof token, 'string');
+    f.advance();
+    assert.equal(await reconcileTrackingAttempt(f.db, token as string, f.opts.now()), 'settled');
+    if (refresh) assert.equal((f.data.get(`${BASE}/current`)?.followUp as { status: string }).status, 'failed');
+    else assert.equal(f.data.get(`${BASE}/progress`)?.outcome, 'interrupted');
+  }
+}));

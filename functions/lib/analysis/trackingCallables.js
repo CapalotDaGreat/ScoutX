@@ -319,7 +319,7 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
 async function runResolveTaskAttempt(db, jobId, feedbackRevision, client, env = process.env, storeImage = exports.storageImageStore, opts = {}) {
     const now = opts.now ?? (() => new Date());
     const scope = opts.scope ?? 'feedback';
-    const lease = await (0, trackingTaskLeases_1.claimTrackingTask)(db, jobId, feedbackRevision, scope, opts.followUpRound, now);
+    const lease = await (0, trackingTaskLeases_1.claimTrackingTask)(db, jobId, feedbackRevision, scope, opts.followUpRound, now, opts.attempt ?? 0);
     if (typeof lease === 'string')
         return lease;
     let retainLease = false;
@@ -334,6 +334,11 @@ async function runResolveTaskAttempt(db, jobId, feedbackRevision, client, env = 
             await settleOrchestratedResolve(db, jobId, scope, outcome, now(), lease);
         }
         return outcome;
+    }
+    catch (error) {
+        if (!(0, trackingDeadlines_1.timeoutWillRetry)(opts.attempt ?? 0, trackingDeadlines_1.RESOLVE_MAX_ATTEMPTS))
+            retainLease = true;
+        throw error;
     }
     finally {
         if (!retainLease)
@@ -364,12 +369,17 @@ exports.resolveTrackingTask = (0, tasks_1.onTaskDispatched)({ retryConfig: { max
  */
 async function processOcrFollowUpTask(db, jobId, feedbackRevision, round, client, env = process.env, storeImage = exports.storageImageStore, opts = {}) {
     const now = opts.now ?? (() => new Date());
-    const lease = await (0, trackingTaskLeases_1.claimTrackingTask)(db, jobId, feedbackRevision, 'refresh', round, now);
+    const lease = await (0, trackingTaskLeases_1.claimTrackingTask)(db, jobId, feedbackRevision, 'refresh', round, now, opts.attempt ?? 0);
     if (typeof lease === 'string')
         return lease;
     let retainLease = false;
     try {
         return await refreshClaimed(db, jobId, feedbackRevision, round, client, env, storeImage, { ...opts, lease }, () => { retainLease = true; });
+    }
+    catch (error) {
+        if (!(0, trackingDeadlines_1.timeoutWillRetry)(opts.attempt ?? 0, trackingDeadlines_1.OCR_REFRESH_MAX_ATTEMPTS))
+            retainLease = true;
+        throw error;
     }
     finally {
         if (!retainLease)

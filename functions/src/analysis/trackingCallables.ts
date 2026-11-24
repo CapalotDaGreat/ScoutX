@@ -341,7 +341,7 @@ export async function runResolveTaskAttempt(db: Firestore, jobId: string, feedba
   storeImage: ImageStore = storageImageStore, opts: ResolveOptions = {}): Promise<Awaited<ReturnType<typeof processResolveTask>>> {
   const now = opts.now ?? (() => new Date());
   const scope = opts.scope ?? 'feedback';
-  const lease = await claimTrackingTask(db, jobId, feedbackRevision, scope, opts.followUpRound, now);
+  const lease = await claimTrackingTask(db, jobId, feedbackRevision, scope, opts.followUpRound, now, opts.attempt ?? 0);
   if (typeof lease === 'string') return lease;
   let retainLease = false;
   try {
@@ -354,6 +354,9 @@ export async function runResolveTaskAttempt(db: Firestore, jobId: string, feedba
       await settleOrchestratedResolve(db, jobId, scope, outcome, now(), lease);
     }
     return outcome;
+  } catch (error) {
+    if (!timeoutWillRetry(opts.attempt ?? 0, RESOLVE_MAX_ATTEMPTS)) retainLease = true;
+    throw error;
   } finally {
     if (!retainLease) await releaseTrackingTask(db, lease);
   }
@@ -389,11 +392,14 @@ export async function processOcrFollowUpTask(db: Firestore, jobId: string, feedb
   client: TrackingWorkerClient | null, env: NodeJS.ProcessEnv = process.env, storeImage: ImageStore = storageImageStore,
   opts: Omit<ResolveOptions, 'scope' | 'followUpRound'> = {}): Promise<Awaited<ReturnType<typeof processResolveTask>>> {
   const now = opts.now ?? (() => new Date());
-  const lease = await claimTrackingTask(db, jobId, feedbackRevision, 'refresh', round, now);
+  const lease = await claimTrackingTask(db, jobId, feedbackRevision, 'refresh', round, now, opts.attempt ?? 0);
   if (typeof lease === 'string') return lease;
   let retainLease = false;
   try {
     return await refreshClaimed(db, jobId, feedbackRevision, round, client, env, storeImage, { ...opts, lease }, () => { retainLease = true; });
+  } catch (error) {
+    if (!timeoutWillRetry(opts.attempt ?? 0, OCR_REFRESH_MAX_ATTEMPTS)) retainLease = true;
+    throw error;
   } finally {
     if (!retainLease) await releaseTrackingTask(db, lease);
   }
